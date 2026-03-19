@@ -20,13 +20,11 @@ static var FILTER_KEYS: Array[String] = ["all", "food", "danger", "shelter", "so
 static var FILTER_LOCALE: Array[String] = ["UI_FILTER_ALL", "UI_FILTER_FOOD", "UI_FILTER_DANGER", "UI_FILTER_SHELTER", "UI_FILTER_SOCIAL"]
 
 
-func init(entity_manager) -> void:
+func init(sim_engine, entity_manager = null) -> void:
+	if sim_engine is RefCounted:
+		_sim_engine = sim_engine
 	if entity_manager is RefCounted:
 		_entity_manager = entity_manager
-
-
-func set_sim_engine(sim_engine: RefCounted) -> void:
-	_sim_engine = sim_engine
 
 
 func _ready() -> void:

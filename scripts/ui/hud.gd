@@ -278,8 +278,6 @@ var _stone_trend: String = ""
 var _resource_trends_initialized: bool = false
 const ALERT_REFRESH_INTERVAL: float = 2.0
 const RESOURCE_TREND_INTERVAL: float = 3.0
-var _factions_refresh_timer: float = 0.0
-var _history_refresh_timer: float = 0.0
 var _diplomacy_refresh_timer: float = 0.0
 
 
@@ -355,7 +353,7 @@ func _build_minimap_and_stats() -> void:
 
 	# Chronicle panel
 	_chronicle_panel = ChroniclePanelClass.new()
-	_chronicle_panel.init(_entity_manager)
+	_chronicle_panel.init(_sim_engine, _entity_manager)
 	_build_right_sidebar()
 
 	# List panel
@@ -540,8 +538,14 @@ func _build_right_sidebar() -> void:
 		_settlement_detail_panel.visible = false
 		_right_panel_tab_content.add_child(_settlement_detail_panel)
 
-	_factions_panel = _build_factions_panel()
+	var FactionsSidebarClass = preload("res://scripts/ui/panels/factions_sidebar_panel.gd")
+	_factions_panel = FactionsSidebarClass.new()
+	_factions_panel.init(_sim_engine)
 	_factions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_factions_panel.offset_left = 0.0
+	_factions_panel.offset_top = 0.0
+	_factions_panel.offset_right = 0.0
+	_factions_panel.offset_bottom = 0.0
 	_factions_panel.visible = false
 	_right_panel_tab_content.add_child(_factions_panel)
 
@@ -556,8 +560,13 @@ func _build_right_sidebar() -> void:
 	_sidebar_stats_panel.visible = false
 	_right_panel_tab_content.add_child(_sidebar_stats_panel)
 
-	_history_panel = _build_history_panel()
+	var HistorySidebarClass = preload("res://scripts/ui/panels/history_sidebar_panel.gd")
+	_history_panel = HistorySidebarClass.new()
 	_history_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_history_panel.offset_left = 0.0
+	_history_panel.offset_top = 0.0
+	_history_panel.offset_right = 0.0
+	_history_panel.offset_bottom = 0.0
 	_history_panel.visible = false
 	_right_panel_tab_content.add_child(_history_panel)
 
@@ -659,6 +668,9 @@ func _switch_right_panel_tab(index: int) -> void:
 			and not show_settlement_detail
 		)
 	if _chronicle_panel != null:
+		if not _chronicle_panel.is_inside_tree() and _right_panel_tab_content != null:
+			_chronicle_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_right_panel_tab_content.add_child(_chronicle_panel)
 		_chronicle_panel.visible = (index == RIGHT_PANEL_TAB_CHRONICLE)
 	if _band_detail_panel != null:
 		_band_detail_panel.visible = show_band_detail
@@ -669,6 +681,9 @@ func _switch_right_panel_tab(index: int) -> void:
 	if _settlement_detail_panel != null:
 		_settlement_detail_panel.visible = show_settlement_detail
 	if _factions_panel != null:
+		if not _factions_panel.is_inside_tree() and _right_panel_tab_content != null:
+			_factions_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_right_panel_tab_content.add_child(_factions_panel)
 		_factions_panel.visible = (index == RIGHT_PANEL_TAB_FACTIONS)
 	if _sidebar_stats_panel != null:
 		if not _sidebar_stats_panel.is_inside_tree() and _right_panel_tab_content != null:
@@ -676,17 +691,20 @@ func _switch_right_panel_tab(index: int) -> void:
 			_right_panel_tab_content.add_child(_sidebar_stats_panel)
 		_sidebar_stats_panel.visible = (index == RIGHT_PANEL_TAB_STATS)
 	if _history_panel != null:
+		if not _history_panel.is_inside_tree() and _right_panel_tab_content != null:
+			_history_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_right_panel_tab_content.add_child(_history_panel)
 		_history_panel.visible = (index == RIGHT_PANEL_TAB_HISTORY)
 	if _diplomacy_panel != null:
 		_diplomacy_panel.visible = (index == RIGHT_PANEL_TAB_DIPLOMACY)
 	if index == RIGHT_PANEL_TAB_CHRONICLE:
 		_chronicle_tab_flash_timer = 0.0
 	elif index == RIGHT_PANEL_TAB_FACTIONS:
-		_refresh_factions_panel()
+		pass
 	elif index == RIGHT_PANEL_TAB_STATS:
 		pass
 	elif index == RIGHT_PANEL_TAB_HISTORY:
-		_refresh_history_panel()
+		pass
 	elif index == RIGHT_PANEL_TAB_DIPLOMACY:
 		_refresh_diplomacy_panel()
 	_set_right_panel_tab_state()
@@ -773,14 +791,8 @@ func _build_sidebar_text_panel(content_name: String, meta_handler: Callable = Ca
 	return panel
 
 
-func _build_factions_panel() -> Control:
-	return _build_sidebar_text_panel("FactionContent", _on_sidebar_meta_clicked)
 
 
-
-
-func _build_history_panel() -> Control:
-	return _build_sidebar_text_panel("HistoryContent", _on_sidebar_meta_clicked)
 
 
 func _build_diplomacy_panel() -> Control:
@@ -807,99 +819,10 @@ func _on_sidebar_meta_clicked(meta: Variant) -> void:
 			SimulationBus.civilization_selected.emit(civ_id)
 
 
-func _refresh_factions_panel() -> void:
-	if _factions_panel == null:
-		return
-	var content_node: Node = _factions_panel.find_child("FactionContent", true, false)
-	if not (content_node is RichTextLabel):
-		return
-	var content: RichTextLabel = content_node
-	content.clear()
-
-	var text := ""
-	var bands: Array = _sim_engine.get_band_list() if _sim_engine != null and _sim_engine.has_method("get_band_list") else []
-	text += "[b]%s (%d)[/b]\n\n" % [Locale.ltr("UI_TAB_FACTIONS_BANDS"), bands.size()]
-	for band_raw: Variant in bands:
-		if not (band_raw is Dictionary):
-			continue
-		var band: Dictionary = band_raw
-		var band_id: int = int(band.get("id", -1))
-		var band_name: String = str(band.get("name", Locale.ltr("UI_UNKNOWN")))
-		var member_count: int = int(band.get("member_count", 0))
-		var leader_name: String = str(band.get("leader_name", ""))
-		var leader_id: int = int(band.get("leader_id", -1))
-		var is_promoted: bool = bool(band.get("is_promoted", false))
-		var status_text: String = Locale.ltr("UI_BAND_PROMOTED") if is_promoted else Locale.ltr("UI_BAND_PROVISIONAL")
-		var band_title: String = "[b]%s[/b]" % band_name
-		if band_id >= 0:
-			band_title = "[url=band:%d][b]%s[/b][/url]" % [band_id, band_name]
-		text += "[color=#c89030]■[/color] %s [color=#506878][%s][/color] %s\n" % [
-			band_title,
-			status_text,
-			"%d%s" % [member_count, Locale.ltr("UI_MEMBERS_SUFFIX")],
-		]
-		if not leader_name.is_empty() and leader_id >= 0:
-			text += "  %s: [url=entity:%d]%s[/url]\n" % [Locale.ltr("UI_LEADER"), leader_id, leader_name]
-		text += "\n"
-
-	var summary: Dictionary = _get_world_summary()
-	var settlements: Array = summary.get("settlement_summaries", [])
-	text += "[b]%s (%d)[/b]\n\n" % [Locale.ltr("UI_TAB_FACTIONS_SETTS"), settlements.size()]
-	for settlement_raw: Variant in settlements:
-		if not (settlement_raw is Dictionary):
-			continue
-		var settlement_summary: Dictionary = settlement_raw
-		var settlement_id: int = int(settlement_summary.get("id", -1))
-		var settlement_detail_raw: Variant = settlement_summary.get("settlement", {})
-		var settlement_detail: Dictionary = settlement_detail_raw if settlement_detail_raw is Dictionary else {}
-		var settlement_name: String = str(settlement_detail.get("name", settlement_summary.get("name", Locale.ltr("UI_UNKNOWN"))))
-		var population: int = int(settlement_summary.get("pop", 0))
-		if settlement_id >= 0:
-			text += "[color=#d45454]■[/color] [url=sett:%d][b]%s[/b][/url] %s\n\n" % [
-				settlement_id,
-				settlement_name,
-				Locale.trf1("UI_POP_FMT", "n", population),
-			]
-		else:
-			text += "[color=#d45454]■[/color] [b]%s[/b] %s\n\n" % [
-				settlement_name,
-				Locale.trf1("UI_POP_FMT", "n", population),
-			]
-
-	content.append_text(text)
 
 
 
 
-func _refresh_history_panel() -> void:
-	if _history_panel == null:
-		return
-	var content_node: Node = _history_panel.find_child("HistoryContent", true, false)
-	if not (content_node is RichTextLabel):
-		return
-	var content: RichTextLabel = content_node
-	content.clear()
-
-	var text := "[b]%s[/b]\n\n" % Locale.ltr("UI_HISTORY_TITLE")
-	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
-	var events_raw: Variant = response.get("items", [])
-	var events: Array = events_raw if events_raw is Array else []
-	if events.is_empty():
-		text += "[color=#354050]%s[/color]\n" % Locale.ltr("UI_HISTORY_EMPTY")
-	else:
-		for event_raw: Variant in events:
-			if not (event_raw is Dictionary):
-				continue
-			var event: Dictionary = event_raw
-			var tick: int = int(event.get("tick", event.get("end_tick", 0)))
-			var date: String = GameCalendar.format_short_date(tick)
-			var desc: String = _history_event_text(event)
-			var event_type: String = str(event.get("cause_id", event.get("event_type", "")))
-			text += "[color=#506878]%s[/color]  [color=%s]%s[/color]\n\n" % [
-				date,
-				_history_type_color(event_type),
-				desc,
-			]
 
 	content.append_text(text)
 
@@ -2583,17 +2506,7 @@ func _process(delta: float) -> void:
 	# Notification fade
 	_update_notifications(delta)
 	_update_right_panel_chronicle_attention(delta)
-	if _factions_panel != null and _factions_panel.visible:
-		_factions_refresh_timer += maxf(delta, 0.0)
-		if _factions_refresh_timer >= 2.0:
-			_factions_refresh_timer = 0.0
-			_refresh_factions_panel()
-	# stats_sidebar_panel has its own _process with refresh timer — no hud refresh needed
-	if _history_panel != null and _history_panel.visible:
-		_history_refresh_timer += maxf(delta, 0.0)
-		if _history_refresh_timer >= 3.0:
-			_history_refresh_timer = 0.0
-			_refresh_history_panel()
+	# factions/stats/history panels have their own _process with refresh timers
 	if _diplomacy_panel != null and _diplomacy_panel.visible:
 		_diplomacy_refresh_timer += maxf(delta, 0.0)
 		if _diplomacy_refresh_timer >= 5.0:
@@ -3259,12 +3172,12 @@ func _refresh_hud_texts() -> void:
 		_show_resource_popup()
 	if _band_popup != null and _band_popup.visible:
 		_show_band_popup()
-	if _factions_panel != null and _factions_panel.visible:
-		_refresh_factions_panel()
+	if _factions_panel != null and _factions_panel.visible and _factions_panel.has_method("_refresh"):
+		_factions_panel._refresh()
 	if _sidebar_stats_panel != null and _sidebar_stats_panel.visible and _sidebar_stats_panel.has_method("_refresh"):
 		_sidebar_stats_panel._refresh()
-	if _history_panel != null and _history_panel.visible:
-		_refresh_history_panel()
+	if _history_panel != null and _history_panel.visible and _history_panel.has_method("_refresh"):
+		_history_panel._refresh()
 	if _diplomacy_panel != null and _diplomacy_panel.visible:
 		_refresh_diplomacy_panel()
 	if _cast_bar != null:
