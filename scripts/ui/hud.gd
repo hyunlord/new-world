@@ -3238,6 +3238,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				_hide_pause_overlay()
 				get_viewport().set_input_as_handled()
 				return
+			if _camera != null and _camera.has_method("is_following") and _camera.is_following():
+				_camera.stop_following()
+				get_viewport().set_input_as_handled()
+				return
 			if _entity_detail_panel_open:
 				_selected_entity_id = -1
 				_selected_building_id = -1

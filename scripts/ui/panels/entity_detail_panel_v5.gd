@@ -466,6 +466,12 @@ func _refresh_header() -> void:
 		action_line += "\n" + Locale.trf2("UI_ACTION_TIMER_FMT", "current", timer_current, "total", timer_total)
 	_header_action_label.text = action_line
 
+	# Update follow button icon based on camera state
+	if _follow_button != null:
+		var cam: Camera2D = get_viewport().get_camera_2d()
+		var following: bool = cam != null and cam.has_method("is_following") and cam.is_following()
+		_follow_button.text = Locale.ltr("UI_BTN_FOLLOWING") if following else Locale.ltr("UI_BTN_FOLLOW")
+
 
 func _refresh_overview() -> void:
 	if _overview_alert_label == null or _detail.is_empty():
@@ -1070,8 +1076,13 @@ func _family_member_name(raw: Variant, fallback: String = "") -> String:
 
 
 func _on_follow_pressed() -> void:
-	if _selected_entity_id >= 0:
-		SimulationBus.follow_entity_requested.emit(_selected_entity_id)
+	if _selected_entity_id < 0:
+		return
+	var camera: Camera2D = get_viewport().get_camera_2d()
+	if camera != null and camera.has_method("is_following") and camera.is_following():
+		camera.stop_following()
+		return
+	SimulationBus.follow_entity_requested.emit(_selected_entity_id)
 
 
 func _on_favorite_pressed() -> void:
