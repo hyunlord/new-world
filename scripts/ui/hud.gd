@@ -29,7 +29,9 @@ const RIGHT_PANEL_TAB_HISTORY: int = 4
 const RIGHT_PANEL_TAB_DIPLOMACY: int = 5
 const RIGHT_PANEL_CHRONICLE_FLASH_DURATION: float = 2.0
 const RIGHT_PANEL_CHRONICLE_POLL_INTERVAL: float = 1.0
+const TOP_BAR_HEIGHT: float = 34.0
 const BOTTOM_BAR_HEIGHT: float = 40.0
+const MINIMAP_DEFAULT_SIZE: int = 160
 const BOTTOM_BAR_CLEARANCE: float = 48.0
 const BOTTOM_BAR_PERF_SAMPLE_WINDOW: float = 0.25
 const ZOOM_LEVEL_LABELS: Array[String] = ["Z1", "Z2", "Z3", "Z4", "Z5"]
@@ -159,6 +161,7 @@ var _probe_observation_mode: bool = false
 ## Reserved: stats panel toggle (currently always visible)
 
 var _minimap_size_index: int = 0
+var _hud_control_root: Control
 
 ## UI scale tracking
 var _tracked_labels: Array = []
@@ -302,6 +305,11 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 
 func _ready() -> void:
 	layer = 10
+	# Control wrapper — CanvasLayer is not Control, anchors need a Control parent
+	_hud_control_root = Control.new()
+	_hud_control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_hud_control_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_hud_control_root)
 	_build_top_bar()
 	_build_entity_panel()
 	_build_building_panel()
@@ -399,9 +407,17 @@ func _build_minimap() -> void:
 		return
 	_minimap_panel = MinimapPanelClass.new()
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
-	add_child(_minimap_panel)
+	_hud_control_root.add_child(_minimap_panel)
+	_minimap_panel.anchor_left = 0.0
+	_minimap_panel.anchor_top = 0.0
+	_minimap_panel.anchor_right = 0.0
+	_minimap_panel.anchor_bottom = 0.0
+	_minimap_panel.offset_left = 0.0
+	_minimap_panel.offset_top = TOP_BAR_HEIGHT
+	_minimap_panel.offset_right = float(MINIMAP_DEFAULT_SIZE)
+	_minimap_panel.offset_bottom = TOP_BAR_HEIGHT + float(MINIMAP_DEFAULT_SIZE)
 	if _minimap_panel.has_method("resize"):
-		_minimap_panel.call("resize", 160)
+		_minimap_panel.call("resize", MINIMAP_DEFAULT_SIZE)
 	if _minimap_panel.has_method("request_update"):
 		_minimap_panel.call("request_update")
 
@@ -1176,7 +1192,15 @@ func _build_overlay_legend() -> void:
 	_overlay_legend_panel.add_theme_stylebox_override("panel", legend_style)
 	_overlay_legend_panel.visible = false
 	_overlay_legend_panel.custom_minimum_size = Vector2(120, 40)
-	add_child(_overlay_legend_panel)
+	_hud_control_root.add_child(_overlay_legend_panel)
+	_overlay_legend_panel.anchor_left = 0.0
+	_overlay_legend_panel.anchor_top = 0.0
+	_overlay_legend_panel.anchor_right = 0.0
+	_overlay_legend_panel.anchor_bottom = 0.0
+	_overlay_legend_panel.offset_left = 0.0
+	_overlay_legend_panel.offset_top = TOP_BAR_HEIGHT + float(MINIMAP_DEFAULT_SIZE) + 2.0
+	_overlay_legend_panel.offset_right = 140.0
+	_overlay_legend_panel.offset_bottom = TOP_BAR_HEIGHT + float(MINIMAP_DEFAULT_SIZE) + 48.0
 
 	var legend_vbox := VBoxContainer.new()
 	legend_vbox.add_theme_constant_override("separation", 2)
@@ -1976,7 +2000,7 @@ func _connect_signals() -> void:
 func _build_top_bar() -> void:
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_bottom = 34
+	bar.offset_bottom = TOP_BAR_HEIGHT
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0.05, 0.05, 0.08, 0.92)
@@ -2474,14 +2498,6 @@ func _process(delta: float) -> void:
 		_fps_label.text = str(Engine.get_frames_per_second())
 	_update_bottom_bar_perf(delta)
 	_sync_zoom_level_from_camera()
-
-	# Position minimap top-left, below top bar
-	if _minimap_panel != null and _minimap_panel.visible:
-		_minimap_panel.position.x = 0.0
-		_minimap_panel.position.y = 34.0
-	if _overlay_legend_panel != null and _overlay_legend_panel.visible and _minimap_panel != null:
-		_overlay_legend_panel.position.x = 0.0
-		_overlay_legend_panel.position.y = _minimap_panel.position.y + _minimap_panel.size.y + 2.0
 
 	# Sidebar fade at irrelevant zoom (lerpf per frame for smooth transition)
 	if _right_panel_container != null and _entity_detail_panel_open:
@@ -3331,6 +3347,11 @@ func toggle_minimap() -> void:
 		_minimap_visible = true
 		_minimap_panel.visible = true
 		_minimap_panel.resize(new_size)
+		_minimap_panel.offset_right = float(new_size)
+		_minimap_panel.offset_bottom = TOP_BAR_HEIGHT + float(new_size)
+		if _overlay_legend_panel != null:
+			_overlay_legend_panel.offset_top = TOP_BAR_HEIGHT + float(new_size) + 2.0
+			_overlay_legend_panel.offset_bottom = _overlay_legend_panel.offset_top + 46.0
 		if _minimap_panel.has_method("request_update"):
 			_minimap_panel.call("request_update")
 

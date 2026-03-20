@@ -59,7 +59,7 @@ func _draw() -> void:
 	var rect_w: float = viewport_size.x / float(GameConfig.TILE_SIZE) * scale_x
 	var rect_h: float = viewport_size.y / float(GameConfig.TILE_SIZE) * scale_y
 
-	draw_rect(Rect2(rect_x, rect_y, rect_w, rect_h), Color(1, 1, 1, 0.35), false, 0.5)
+	draw_rect(Rect2(rect_x, rect_y, rect_w, rect_h), Color(1, 1, 1, 0.3), false, 0.5)
 
 	# Settlement labels
 	var settlements: Array = _get_runtime_settlements()
