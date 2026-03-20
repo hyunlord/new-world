@@ -305,11 +305,16 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 
 func _ready() -> void:
 	layer = 10
+	# CanvasLayer is NOT a Control — need a Control wrapper for anchors to work
+	var _hud_control_root := Control.new()
+	_hud_control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_hud_control_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_hud_control_root)
 	# Root layout — guarantees top/center/bottom never overlap
 	_hud_root = VBoxContainer.new()
 	_hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_hud_root.add_theme_constant_override("separation", 0)
-	add_child(_hud_root)
+	_hud_control_root.add_child(_hud_root)
 	_build_top_bar()
 	_build_entity_panel()
 	_build_building_panel()
