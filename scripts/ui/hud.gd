@@ -93,6 +93,7 @@ var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
+var _left_bottom_column: VBoxContainer
 var _overlay_legend_panel: PanelContainer
 var _overlay_legend_gradient: ColorRect
 var _overlay_legend_title: Label
@@ -312,6 +313,20 @@ func _ready() -> void:
 	_build_probe_verification_overlay()
 	_build_key_hints()
 	_build_bottom_bar()
+	# Left-bottom column — sits above bottom bar, holds minimap + legend
+	_left_bottom_column = VBoxContainer.new()
+	_left_bottom_column.anchor_top = 1.0
+	_left_bottom_column.anchor_bottom = 1.0
+	_left_bottom_column.anchor_left = 0.0
+	_left_bottom_column.anchor_right = 0.0
+	_left_bottom_column.offset_left = 8.0
+	_left_bottom_column.offset_right = 168.0
+	_left_bottom_column.offset_bottom = -BOTTOM_BAR_HEIGHT - 4.0
+	_left_bottom_column.offset_top = _left_bottom_column.offset_bottom - 300.0
+	_left_bottom_column.add_theme_constant_override("separation", 4)
+	_left_bottom_column.alignment = BoxContainer.ALIGNMENT_END
+	_left_bottom_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_left_bottom_column)
 	_build_overlay_legend()
 	_build_overlay_probe()
 	_build_pause_overlay()
@@ -399,12 +414,11 @@ func _build_minimap() -> void:
 		return
 	_minimap_panel = MinimapPanelClass.new()
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
-	add_child(_minimap_panel)
+	_left_bottom_column.add_child(_minimap_panel)
 	if _minimap_panel.has_method("resize"):
 		_minimap_panel.call("resize", 140)
 	if _minimap_panel.has_method("request_update"):
 		_minimap_panel.call("request_update")
-	call_deferred("_layout_overlay_legend")
 
 
 func _build_right_sidebar() -> void:
@@ -1176,9 +1190,8 @@ func _build_overlay_legend() -> void:
 	legend_style.content_margin_bottom = 4
 	_overlay_legend_panel.add_theme_stylebox_override("panel", legend_style)
 	_overlay_legend_panel.visible = false
-	_overlay_legend_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	_overlay_legend_panel.custom_minimum_size = Vector2(120, 40)
-	add_child(_overlay_legend_panel)
+	_left_bottom_column.add_child(_overlay_legend_panel)
 
 	var legend_vbox := VBoxContainer.new()
 	legend_vbox.add_theme_constant_override("separation", 2)
@@ -1208,22 +1221,6 @@ func _build_overlay_legend() -> void:
 	_overlay_legend_max.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
 	gradient_row.add_child(_overlay_legend_max)
 
-	_layout_overlay_legend()
-
-
-func _layout_overlay_legend() -> void:
-	if _overlay_legend_panel == null:
-		return
-	var left_offset: float = 12.0
-	if _minimap_panel != null and _minimap_panel.visible:
-		var minimap_width: float = _minimap_panel.size.x
-		if minimap_width <= 0.0:
-			minimap_width = _minimap_panel.custom_minimum_size.x
-		left_offset += minimap_width + 10.0
-	_overlay_legend_panel.offset_left = left_offset
-	_overlay_legend_panel.offset_right = left_offset + 140.0
-	_overlay_legend_panel.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
-	_overlay_legend_panel.offset_top = -(BOTTOM_BAR_HEIGHT + 52.0)
 
 
 func _build_overlay_probe() -> void:
@@ -1848,7 +1845,6 @@ func _on_band_popup_band_pressed(band_id: int) -> void:
 func _refresh_overlay_legend() -> void:
 	if _overlay_legend_panel == null:
 		return
-	_layout_overlay_legend()
 	if _bottom_bar_active_overlays.is_empty():
 		_overlay_legend_panel.visible = false
 		return
@@ -3344,7 +3340,6 @@ func toggle_minimap() -> void:
 		_minimap_panel.resize(new_size)
 		if _minimap_panel.has_method("request_update"):
 			_minimap_panel.call("request_update")
-	_layout_overlay_legend()
 
 
 ## Opens or closes the statistics detail panel via the popup manager.
@@ -3843,7 +3838,6 @@ func _toggle_entity_detail_sidebar() -> void:
 
 func _on_viewport_size_changed() -> void:
 	_layout_entity_detail_sidebar(_entity_detail_panel_open)
-	_layout_overlay_legend()
 
 
 func _update_right_panel_chronicle_attention(delta: float) -> void:
@@ -4230,7 +4224,6 @@ func apply_ui_scale() -> void:
 		var current_size: int = sizes[_minimap_size_index]
 		if current_size > 0:
 			_minimap_panel.resize(current_size)
-	_layout_overlay_legend()
 
 	# Update stats panel
 	if _stats_panel != null and _stats_panel.has_method("apply_ui_scale"):
