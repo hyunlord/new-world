@@ -93,8 +93,6 @@ var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
-var _hud_control_root: Control
-var _hud_root: VBoxContainer
 var _overlay_legend_panel: PanelContainer
 var _overlay_legend_gradient: ColorRect
 var _overlay_legend_title: Label
@@ -304,16 +302,6 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 
 func _ready() -> void:
 	layer = 10
-	# CanvasLayer is NOT a Control — need a Control wrapper for anchors to work
-	_hud_control_root = Control.new()
-	_hud_control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_hud_control_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_hud_control_root)
-	# Root layout — guarantees top/center/bottom never overlap
-	_hud_root = VBoxContainer.new()
-	_hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_hud_root.add_theme_constant_override("separation", 0)
-	_hud_control_root.add_child(_hud_root)
 	_build_top_bar()
 	_build_entity_panel()
 	_build_building_panel()
@@ -411,7 +399,7 @@ func _build_minimap() -> void:
 		return
 	_minimap_panel = MinimapPanelClass.new()
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
-	_hud_control_root.add_child(_minimap_panel)
+	add_child(_minimap_panel)
 	if _minimap_panel.has_method("resize"):
 		_minimap_panel.call("resize", 140)
 	if _minimap_panel.has_method("request_update"):
@@ -896,8 +884,9 @@ func _build_bottom_bar() -> void:
 	if _bottom_bar != null:
 		return
 	_bottom_bar = PanelContainer.new()
-	_bottom_bar.size_flags_vertical = Control.SIZE_SHRINK_END
-	_bottom_bar.custom_minimum_size.y = BOTTOM_BAR_HEIGHT
+	_bottom_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_bottom_bar.offset_top = -BOTTOM_BAR_HEIGHT
+	_bottom_bar.offset_bottom = 0.0
 	_bottom_bar.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	var bg := StyleBoxFlat.new()
@@ -936,7 +925,7 @@ func _build_bottom_bar() -> void:
 	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_perf_section())
 
-	_hud_root.add_child(_bottom_bar)
+	add_child(_bottom_bar)
 	_bottom_bar.move_to_front()
 	if _fps_label != null:
 		_fps_label.visible = false
@@ -1187,7 +1176,7 @@ func _build_overlay_legend() -> void:
 	_overlay_legend_panel.add_theme_stylebox_override("panel", legend_style)
 	_overlay_legend_panel.visible = false
 	_overlay_legend_panel.custom_minimum_size = Vector2(120, 40)
-	_hud_control_root.add_child(_overlay_legend_panel)
+	add_child(_overlay_legend_panel)
 
 	var legend_vbox := VBoxContainer.new()
 	legend_vbox.add_theme_constant_override("separation", 2)
@@ -1986,8 +1975,8 @@ func _connect_signals() -> void:
 
 func _build_top_bar() -> void:
 	var bar := HBoxContainer.new()
-	bar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	bar.custom_minimum_size.y = 36.0
+	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	bar.offset_bottom = 34
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0.05, 0.05, 0.08, 0.92)
@@ -2055,7 +2044,7 @@ func _build_top_bar() -> void:
 
 	panel.add_child(hbox)
 	bar.add_child(panel)
-	_hud_root.add_child(bar)
+	add_child(bar)
 
 
 func _build_entity_panel() -> void:
