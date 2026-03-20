@@ -86,7 +86,7 @@ var _relationships_container: VBoxContainer
 # Inventory tab
 var _inventory_panel: VBoxContainer
 var _inventory_empty_label: Label
-var _inventory_container: GridContainer
+var _inventory_container: VBoxContainer
 
 # Family tab
 var _family_panel: VBoxContainer
@@ -912,10 +912,8 @@ func _build_inventory_tab() -> void:
 	_inventory_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
 	_inventory_panel.add_child(_inventory_empty_label)
 
-	_inventory_container = GridContainer.new()
-	_inventory_container.columns = 5
-	_inventory_container.add_theme_constant_override("h_separation", 3)
-	_inventory_container.add_theme_constant_override("v_separation", 3)
+	_inventory_container = VBoxContainer.new()
+	_inventory_container.add_theme_constant_override("separation", ROW_SPACING)
 	_inventory_panel.add_child(_inventory_container)
 
 
@@ -931,45 +929,69 @@ func _refresh_inventory() -> void:
 	if items.is_empty():
 		return
 
+	# Group items by template_id
+	var grouped: Dictionary = {}
 	for item_raw: Variant in items:
 		if not (item_raw is Dictionary):
 			continue
 		var item: Dictionary = item_raw
-		var template_id: String = str(item.get("template_id", ""))
-		var icon: String = _inventory_icon(template_id)
-		var display_name: String = _display_token(template_id)
+		var template_id: String = str(item.get("template_id", "unknown"))
 		var stack_count: int = maxi(1, int(item.get("stack_count", 1)))
 		var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
+		if grouped.has(template_id):
+			grouped[template_id]["count"] += stack_count
+			grouped[template_id]["quality_sum"] += quality * float(stack_count)
+		else:
+			grouped[template_id] = {"count": stack_count, "quality_sum": quality * float(stack_count)}
 
-		var slot := PanelContainer.new()
-		slot.custom_minimum_size = Vector2(36, 36)
-		var slot_style := StyleBoxFlat.new()
-		slot_style.bg_color = Color(0.04, 0.06, 0.10)
-		slot_style.border_color = Color(0.10, 0.14, 0.20)
-		slot_style.set_border_width_all(1)
-		slot_style.set_corner_radius_all(3)
-		slot.add_theme_stylebox_override("panel", slot_style)
+	for tid_variant: Variant in grouped.keys():
+		var tid: String = str(tid_variant)
+		var group: Dictionary = grouped[tid]
+		var total_count: int = int(group["count"])
+		var avg_quality: float = group["quality_sum"] / float(maxi(total_count, 1))
+		var icon: String = _inventory_icon(tid)
+		var display_name: String = _display_token(tid)
 
-		var slot_vbox := VBoxContainer.new()
-		slot_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-		slot.add_child(slot_vbox)
+		var hbox := HBoxContainer.new()
+		hbox.add_theme_constant_override("separation", 6)
+		_inventory_container.add_child(hbox)
 
-		var icon_label := Label.new()
-		icon_label.text = icon
-		icon_label.add_theme_font_size_override("font_size", 16)
-		icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		slot_vbox.add_child(icon_label)
+		var item_label := Label.new()
+		var count_text: String = " x%d" % total_count if total_count > 1 else ""
+		item_label.text = "%s %s%s" % [icon, display_name, count_text]
+		item_label.custom_minimum_size.x = 120.0
+		item_label.add_theme_font_size_override("font_size", 10)
+		item_label.add_theme_color_override("font_color", Color(0.85, 0.82, 0.63))
+		item_label.tooltip_text = "%s\n%s: %d\n%s: %d%%" % [
+			display_name, Locale.ltr("UI_QUANTITY"), total_count,
+			Locale.ltr("UI_QUALITY"), int(avg_quality * 100)]
+		item_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		hbox.add_child(item_label)
 
-		if stack_count > 1:
-			var qty_label := Label.new()
-			qty_label.text = "×%d" % stack_count
-			qty_label.add_theme_font_size_override("font_size", 7)
-			qty_label.add_theme_color_override("font_color", Color(0.7, 0.8, 0.9))
-			qty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			slot_vbox.add_child(qty_label)
+		var bar := ProgressBar.new()
+		bar.min_value = 0.0
+		bar.max_value = 1.0
+		bar.value = avg_quality
+		bar.show_percentage = false
+		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bar.custom_minimum_size.y = BAR_HEIGHT
+		var bar_bg := StyleBoxFlat.new()
+		bar_bg.bg_color = Color(0.09, 0.14, 0.19)
+		bar_bg.set_corner_radius_all(2)
+		bar.add_theme_stylebox_override("background", bar_bg)
+		var bar_fill := StyleBoxFlat.new()
+		bar_fill.bg_color = Color(0.58, 0.68, 0.32)
+		bar_fill.set_corner_radius_all(2)
+		bar.add_theme_stylebox_override("fill", bar_fill)
+		hbox.add_child(bar)
 
-		slot.tooltip_text = "%s\n%s: %d%%" % [display_name, Locale.ltr("UI_QUALITY"), int(quality * 100)]
-		_inventory_container.add_child(slot)
+		var pct_label := Label.new()
+		pct_label.text = "%d%%" % int(round(avg_quality * 100.0))
+		pct_label.custom_minimum_size.x = PCT_MIN_WIDTH
+		pct_label.add_theme_font_size_override("font_size", 10)
+		pct_label.add_theme_color_override("font_color", COLOR_PCT)
+		pct_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		hbox.add_child(pct_label)
 
 
 # ---------------------------------------------------------------------------
