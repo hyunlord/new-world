@@ -8,7 +8,6 @@ var _camera: Camera2D
 var _sim_engine: RefCounted
 
 var _minimap_texture: ImageTexture
-var _minimap_rect: TextureRect
 var _needs_update: bool = true
 var _runtime_snapshot_cache: Dictionary = {}
 var _runtime_snapshot_cache_tick: int = -1
@@ -29,19 +28,17 @@ func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: 
 func _ready() -> void:
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
-	_minimap_rect = TextureRect.new()
-	_minimap_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_minimap_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_minimap_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_minimap_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_minimap_rect)
-
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func _draw() -> void:
 	# Background
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.03, 0.06, 0.85))
+
+	# Map texture — always fills current size
+	if _minimap_texture != null:
+		draw_texture_rect(_minimap_texture, Rect2(Vector2.ZERO, size), false)
+
 	# Border
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.25, 0.30, 0.38), false, 1.5)
 
@@ -170,7 +167,6 @@ func update_minimap() -> void:
 
 	if _minimap_texture == null:
 		_minimap_texture = ImageTexture.create_from_image(img)
-		_minimap_rect.texture = _minimap_texture
 	else:
 		_minimap_texture.update(img)
 
@@ -187,9 +183,6 @@ func resize(new_size: int) -> void:
 	minimap_size = new_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
-	if _minimap_rect != null:
-		_minimap_rect.custom_minimum_size = Vector2(minimap_size, minimap_size)
-		_minimap_rect.size = Vector2(minimap_size, minimap_size)
 	_needs_update = true
 	queue_redraw()
 
