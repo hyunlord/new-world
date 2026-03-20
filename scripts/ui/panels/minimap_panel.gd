@@ -187,7 +187,11 @@ func resize(new_size: int) -> void:
 	minimap_size = new_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
+	if _minimap_rect != null:
+		_minimap_rect.custom_minimum_size = Vector2(minimap_size, minimap_size)
+		_minimap_rect.size = Vector2(minimap_size, minimap_size)
 	_needs_update = true
+	queue_redraw()
 
 
 func apply_ui_scale(base_size: int) -> void:
