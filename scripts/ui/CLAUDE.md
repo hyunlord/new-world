@@ -122,3 +122,58 @@ var positions: PackedFloat64Array = SimBridge.get_entity_positions()
 - Hardcode any user-visible string
 - Use `await` for data that should be available synchronously
 - Show raw internal identifiers (entity IDs, enum names) to players
+
+---
+
+## GDScript UI Patterns [MANDATORY -- Read before any UI work]
+
+These rules were learned from repeated failures. Every rule prevented at least one multi-hour debugging session.
+
+### Layout: Container-Based, Never Manual Offsets
+
+Use VBoxContainer, HBoxContainer, MarginContainer for all layout.
+Manual pixel offsets break on different resolutions and UI scales.
+If two elements overlap, the fix is NEVER adjusting offsets -- it's restructuring the container hierarchy.
+
+### Panel Lifecycle: `_ensure_ui()` Pattern
+
+`_build_ui()` in `_ready()` alone is unreliable -- `set_data()` may be called before `_ready()`.
+Call `_ensure_ui()` from ALL THREE entry points: `set_XXX_id()`, `_ready()`, `_process()`.
+
+### Panel Lifecycle: Force-Tree Guard
+
+Panels added via `add_child()` in init may not be in the scene tree when `open_XXX()` is called.
+Always check: `if not _panel.is_inside_tree(): _parent.add_child(_panel)`
+
+### Panel Lifecycle: Data Before Visibility
+
+Set data FIRST, then make visible. Showing an empty panel gives it size (0,0) that never recovers.
+
+### Refresh: Cache Check Before queue_free
+
+Check if data count changed BEFORE calling `queue_free()` on children.
+Destroying then returning early = empty container = 3-second flicker cycle.
+
+### Signals: Prevent Duplicate Connections
+
+Anonymous lambdas in `connect()` accumulate on every refresh. Use a `Dictionary` keyed by `get_instance_id()` to track and disconnect old callables before reconnecting.
+
+### Signals: No Recursive Emit
+
+The function that implements an action must NOT emit the signal that triggers it. `follow_entity()` must not emit `follow_entity_requested`.
+
+### Camera: Probe Mode Bypass
+
+`_probe_observation_mode = true` skips `match current_state:`. Any state (FOLLOW) that should work in probe mode needs explicit handling in the probe block.
+
+### Rendering: Minimum Alpha Values
+
+`alpha = 0.06` is invisible. Minimums: fill >= 0.15, border >= 0.40, text >= 0.50.
+
+### Data Updates: _process vs Event-Driven
+
+Data that changes every tick must be updated in `_process`, not only on events. Label text set once on zoom change shows stale data forever.
+
+### BBCode: Deprecated
+
+All new UI uses Godot native nodes (Label, ProgressBar, PanelContainer). RichTextLabel with BBCode is forbidden for new UI.

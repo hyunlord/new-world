@@ -398,6 +398,12 @@ git push origin lead/main
 13. Forgetting `ko/` translations when adding localization keys
 14. Adding Godot-specific types in hot-path Rust code
 15. Using `String` matching in Rust hot paths instead of enums
+16. Using manual pixel offsets (`offset_left`, `offset_bottom`) instead of Container layout for UI positioning
+17. Calling `panel.visible = true` before `panel.set_data()` -- empty panel gets size (0,0)
+18. Calling `queue_free()` on children before cache check -- causes flicker every refresh cycle
+19. Connecting anonymous lambdas to signals in `_refresh()` without disconnecting old ones -- accumulates N connections
+20. Fixing the same UI problem 3+ times with parameter tweaks instead of architectural fix
+21. Not checking `is_inside_tree()` before operating on dynamically added panels
 
 ---
 

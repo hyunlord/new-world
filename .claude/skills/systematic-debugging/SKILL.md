@@ -287,6 +287,25 @@ These techniques are part of systematic debugging and available in this director
 - **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
 - **superpowers:verification-before-completion** - Verify fix worked before claiming success
 
+## WorldSim-Specific Debugging Axioms
+
+### The Three-Fix Rule
+If the same problem has been "fixed" 3+ times and still persists, **the approach is wrong**.
+Stop fixing. Step back. The root cause is architectural, not parametric.
+
+### Verify Coordinate Direction Before Changing Values
+`offset_bottom = -50 to -52` moves the element **closer** to bottom, not further.
+Before any offset/position change, confirm: which direction does increasing the value go?
+
+### grep Is Not Verification
+Code existing in a file does not equal code running correctly at runtime.
+After any UI change, **take an in-game screenshot**. Static code analysis misses timing, tree, signal ordering, and visibility issues.
+
+### Add Runtime Debug Prints Before Guessing
+When a UI element doesn't appear: print in creation, data, and show functions. The first print with unexpected values = root cause location.
+
+---
+
 ## Real-World Impact
 
 From debugging sessions:
