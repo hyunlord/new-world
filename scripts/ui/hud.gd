@@ -401,7 +401,7 @@ func _build_minimap() -> void:
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
 	add_child(_minimap_panel)
 	if _minimap_panel.has_method("resize"):
-		_minimap_panel.call("resize", 140)
+		_minimap_panel.call("resize", 160)
 	if _minimap_panel.has_method("request_update"):
 		_minimap_panel.call("request_update")
 
@@ -2478,7 +2478,7 @@ func _process(delta: float) -> void:
 	# Position minimap top-left, below top bar
 	if _minimap_panel != null and _minimap_panel.visible:
 		_minimap_panel.position.x = 0.0
-		_minimap_panel.position.y = 36.0
+		_minimap_panel.position.y = 34.0
 	if _overlay_legend_panel != null and _overlay_legend_panel.visible and _minimap_panel != null:
 		_overlay_legend_panel.position.x = 0.0
 		_overlay_legend_panel.position.y = _minimap_panel.position.y + _minimap_panel.size.y + 2.0
@@ -3321,7 +3321,7 @@ func _refresh_hud_texts() -> void:
 func toggle_minimap() -> void:
 	if _minimap_panel == null:
 		return
-	var sizes: Array[int] = [140, 180, 0]
+	var sizes: Array[int] = [160, 260, 0]
 	_minimap_size_index = (_minimap_size_index + 1) % sizes.size()
 	var new_size: int = sizes[_minimap_size_index]
 	if new_size == 0:
