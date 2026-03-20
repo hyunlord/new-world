@@ -93,9 +93,8 @@ var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
-var _left_bottom_column: VBoxContainer
+var _hud_control_root: Control
 var _hud_root: VBoxContainer
-var _hud_center: HBoxContainer
 var _overlay_legend_panel: PanelContainer
 var _overlay_legend_gradient: ColorRect
 var _overlay_legend_title: Label
@@ -306,7 +305,7 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 func _ready() -> void:
 	layer = 10
 	# CanvasLayer is NOT a Control — need a Control wrapper for anchors to work
-	var _hud_control_root := Control.new()
+	_hud_control_root = Control.new()
 	_hud_control_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_hud_control_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_hud_control_root)
@@ -324,28 +323,6 @@ func _ready() -> void:
 	_build_resource_legend()
 	_build_probe_verification_overlay()
 	_build_key_hints()
-	# Center area — world view + left column
-	_hud_center = HBoxContainer.new()
-	_hud_center.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_hud_center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_hud_center.add_theme_constant_override("separation", 0)
-	_hud_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hud_root.add_child(_hud_center)
-	# Left margin — adds gap between minimap and bottom bar / screen edge
-	var _left_margin := MarginContainer.new()
-	_left_margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_left_margin.add_theme_constant_override("margin_bottom", 16)
-	_left_margin.add_theme_constant_override("margin_left", 8)
-	_left_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hud_center.add_child(_left_margin)
-	# Left-bottom column — holds minimap + legend, stacked from bottom
-	_left_bottom_column = VBoxContainer.new()
-	_left_bottom_column.add_theme_constant_override("separation", 4)
-	_left_bottom_column.alignment = BoxContainer.ALIGNMENT_END
-	_left_bottom_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_left_bottom_column.custom_minimum_size.x = 160.0
-	_left_bottom_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_left_margin.add_child(_left_bottom_column)
 	_build_bottom_bar()
 	_build_overlay_legend()
 	_build_overlay_probe()
@@ -434,7 +411,7 @@ func _build_minimap() -> void:
 		return
 	_minimap_panel = MinimapPanelClass.new()
 	_minimap_panel.init(_world_data, null, null, null, _camera, _sim_engine)
-	_left_bottom_column.add_child(_minimap_panel)
+	_hud_control_root.add_child(_minimap_panel)
 	if _minimap_panel.has_method("resize"):
 		_minimap_panel.call("resize", 140)
 	if _minimap_panel.has_method("request_update"):
@@ -1210,7 +1187,7 @@ func _build_overlay_legend() -> void:
 	_overlay_legend_panel.add_theme_stylebox_override("panel", legend_style)
 	_overlay_legend_panel.visible = false
 	_overlay_legend_panel.custom_minimum_size = Vector2(120, 40)
-	_left_bottom_column.add_child(_overlay_legend_panel)
+	_hud_control_root.add_child(_overlay_legend_panel)
 
 	var legend_vbox := VBoxContainer.new()
 	legend_vbox.add_theme_constant_override("separation", 2)
@@ -2508,6 +2485,14 @@ func _process(delta: float) -> void:
 		_fps_label.text = str(Engine.get_frames_per_second())
 	_update_bottom_bar_perf(delta)
 	_sync_zoom_level_from_camera()
+
+	# Position minimap top-left, below top bar
+	if _minimap_panel != null and _minimap_panel.visible:
+		_minimap_panel.position.x = 8.0
+		_minimap_panel.position.y = 44.0
+	if _overlay_legend_panel != null and _overlay_legend_panel.visible and _minimap_panel != null:
+		_overlay_legend_panel.position.x = 8.0
+		_overlay_legend_panel.position.y = _minimap_panel.position.y + _minimap_panel.size.y + 4.0
 
 	# Sidebar fade at irrelevant zoom (lerpf per frame for smooth transition)
 	if _right_panel_container != null and _entity_detail_panel_open:
