@@ -4783,6 +4783,7 @@ UI_BTN_FAVORITE = Favorite
 UI_BTN_FOLLOWING = Following
 UI_BTN_FAVORITED = ★ Favorite
 UI_QUALITY = Quality
+UI_QUANTITY = Qty
 UI_PEOPLE_SUFFIX = { " " }people
 UI_ZOOM_NEARBY = active nearby
 UI_WORLD_VIEW = World View
