@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4779,
+    "active_key_count": 4781,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4779,
+    "key_count": 4781,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4116,6 +4116,7 @@
     "UI_HEXACO_X_HIGH": "사교적이고 활발한",
     "UI_HEXACO_X_LOW": "내성적이고 조용한",
     "UI_HIDE_PRACTITIONERS": "보유자 목록 접기",
+    "UI_HIGH": "높음",
     "UI_HIGHEST_CHARISMA": "최고 카리스마",
     "UI_HIGHEST_CREATIVITY": "최고 창의력",
     "UI_HIGHEST_INTIMIDATION": "최고 위압감",
@@ -4185,6 +4186,7 @@
     "UI_LOAD_GAME": "불러오기",
     "UI_LOCATION": "위치",
     "UI_LOVE": "애정",
+    "UI_LOW": "낮음",
     "UI_MAIN_MENU": "메인 메뉴로",
     "UI_MALE": "남",
     "UI_MAP_BIOME_BEACH": "해변",

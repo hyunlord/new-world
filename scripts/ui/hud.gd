@@ -93,6 +93,11 @@ var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
+var _overlay_legend_panel: PanelContainer
+var _overlay_legend_gradient: ColorRect
+var _overlay_legend_title: Label
+var _overlay_legend_min: Label
+var _overlay_legend_max: Label
 var _overlay_probe_label: PanelContainer
 var _overlay_probe_text: Label
 var _bottom_bar_sel_label: Label
@@ -1151,20 +1156,64 @@ func _update_layer_button_states() -> void:
 
 
 func _build_overlay_legend() -> void:
-	if _overlay_legend != null:
+	if _overlay_legend_panel != null:
 		return
+	# Legacy label (hidden, kept for compatibility)
 	_overlay_legend = _make_label("", "hud_secondary", Color(0.53, 0.60, 0.65))
-	_overlay_legend.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_overlay_legend.offset_top = -(BOTTOM_BAR_HEIGHT + 28.0)
-	_overlay_legend.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
-	_overlay_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_overlay_legend.visible = false
 	add_child(_overlay_legend)
+
+	# New panel-based legend
+	_overlay_legend_panel = PanelContainer.new()
+	var legend_style := StyleBoxFlat.new()
+	legend_style.bg_color = Color(0.05, 0.07, 0.10, 0.85)
+	legend_style.corner_radius_top_left = 4
+	legend_style.corner_radius_top_right = 4
+	legend_style.corner_radius_bottom_left = 4
+	legend_style.corner_radius_bottom_right = 4
+	legend_style.content_margin_left = 8
+	legend_style.content_margin_right = 8
+	legend_style.content_margin_top = 4
+	legend_style.content_margin_bottom = 4
+	_overlay_legend_panel.add_theme_stylebox_override("panel", legend_style)
+	_overlay_legend_panel.visible = false
+	_overlay_legend_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_overlay_legend_panel.custom_minimum_size = Vector2(120, 40)
+	add_child(_overlay_legend_panel)
+
+	var legend_vbox := VBoxContainer.new()
+	legend_vbox.add_theme_constant_override("separation", 2)
+	_overlay_legend_panel.add_child(legend_vbox)
+
+	_overlay_legend_title = Label.new()
+	_overlay_legend_title.add_theme_font_size_override("font_size", 9)
+	_overlay_legend_title.add_theme_color_override("font_color", Color.WHITE)
+	legend_vbox.add_child(_overlay_legend_title)
+
+	var gradient_row := HBoxContainer.new()
+	gradient_row.add_theme_constant_override("separation", 4)
+	legend_vbox.add_child(gradient_row)
+
+	_overlay_legend_min = Label.new()
+	_overlay_legend_min.add_theme_font_size_override("font_size", 8)
+	_overlay_legend_min.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
+	gradient_row.add_child(_overlay_legend_min)
+
+	_overlay_legend_gradient = ColorRect.new()
+	_overlay_legend_gradient.custom_minimum_size = Vector2(70, 8)
+	_overlay_legend_gradient.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	gradient_row.add_child(_overlay_legend_gradient)
+
+	_overlay_legend_max = Label.new()
+	_overlay_legend_max.add_theme_font_size_override("font_size", 8)
+	_overlay_legend_max.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
+	gradient_row.add_child(_overlay_legend_max)
+
 	_layout_overlay_legend()
 
 
 func _layout_overlay_legend() -> void:
-	if _overlay_legend == null:
+	if _overlay_legend_panel == null:
 		return
 	var left_offset: float = 12.0
 	if _minimap_panel != null and _minimap_panel.visible:
@@ -1172,8 +1221,10 @@ func _layout_overlay_legend() -> void:
 		if minimap_width <= 0.0:
 			minimap_width = _minimap_panel.custom_minimum_size.x
 		left_offset += minimap_width + 10.0
-	_overlay_legend.offset_left = left_offset
-	_overlay_legend.offset_right = left_offset + 240.0
+	_overlay_legend_panel.offset_left = left_offset
+	_overlay_legend_panel.offset_right = left_offset + 140.0
+	_overlay_legend_panel.offset_bottom = -(BOTTOM_BAR_HEIGHT + 6.0)
+	_overlay_legend_panel.offset_top = -(BOTTOM_BAR_HEIGHT + 52.0)
 
 
 func _build_overlay_probe() -> void:
@@ -1796,25 +1847,23 @@ func _on_band_popup_band_pressed(band_id: int) -> void:
 
 
 func _refresh_overlay_legend() -> void:
-	if _overlay_legend == null:
+	if _overlay_legend_panel == null:
 		return
 	_layout_overlay_legend()
 	if _bottom_bar_active_overlays.is_empty():
-		_overlay_legend.text = ""
-		_overlay_legend.visible = false
+		_overlay_legend_panel.visible = false
 		return
 	var channel: String = _bottom_bar_active_overlays[0]
+	var accent: Color = _bottom_bar_overlay_accents.get(channel, Color.WHITE)
 	var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
 	var locale_key: String = ""
 	if button != null:
 		locale_key = str(button.get_meta("locale_key", ""))
-	var legend_text: String = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
-	_overlay_legend.text = "▮ " + legend_text
-	_overlay_legend.add_theme_color_override(
-		"font_color",
-		_bottom_bar_overlay_accents.get(channel, Color(0.53, 0.60, 0.65))
-	)
-	_overlay_legend.visible = true
+	_overlay_legend_title.text = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
+	_overlay_legend_gradient.color = accent
+	_overlay_legend_min.text = Locale.ltr("UI_LOW")
+	_overlay_legend_max.text = Locale.ltr("UI_HIGH")
+	_overlay_legend_panel.visible = true
 
 
 func _sync_zoom_level_from_camera(force_refresh: bool = false) -> void:
