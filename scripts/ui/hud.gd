@@ -161,6 +161,7 @@ var _probe_observation_mode: bool = false
 ## Reserved: stats panel toggle (currently always visible)
 
 var _minimap_size_index: int = 0
+var _favorite_entity_ids: Array[int] = []
 var _hud_control_root: Control
 
 ## UI scale tracking
@@ -1991,6 +1992,7 @@ func _connect_signals() -> void:
 	SimulationBus.ui_notification.connect(_on_ui_notification)
 	SimulationBus.follow_entity_requested.connect(_on_follow_entity)
 	SimulationBus.follow_entity_stopped.connect(_on_follow_stopped)
+	SimulationBus.favorite_toggled.connect(_on_favorite_toggled)
 	SimulationBus.tech_state_changed.connect(_on_tech_state_changed)
 	SimulationBus.tech_regression_started.connect(_on_tech_regression_started)
 	SimulationBus.tech_lost.connect(_on_tech_lost)
@@ -3408,6 +3410,21 @@ func _unhandled_input(event: InputEvent) -> void:
 				_switch_right_panel_tab(RIGHT_PANEL_TAB_INSPECTOR)
 			get_viewport().set_input_as_handled()
 			return
+		elif event.keycode == KEY_F1:
+			if not _favorite_entity_ids.is_empty():
+				SimulationBus.entity_selected.emit(_favorite_entity_ids[0])
+				get_viewport().set_input_as_handled()
+				return
+		elif event.keycode == KEY_F2:
+			if _favorite_entity_ids.size() >= 2:
+				SimulationBus.entity_selected.emit(_favorite_entity_ids[1])
+				get_viewport().set_input_as_handled()
+				return
+		elif event.keycode == KEY_F4:
+			if _favorite_entity_ids.size() >= 4:
+				SimulationBus.entity_selected.emit(_favorite_entity_ids[3])
+				get_viewport().set_input_as_handled()
+				return
 		elif event.keycode == KEY_ESCAPE:
 			if _pause_overlay != null and _pause_overlay.visible:
 				_hide_pause_overlay()
@@ -3725,6 +3742,18 @@ func _on_follow_entity(entity_id: int) -> void:
 func _on_follow_stopped() -> void:
 	_following_entity_id = -1
 	_follow_label.visible = false
+
+
+func _on_favorite_toggled(entity_id: int) -> void:
+	if entity_id in _favorite_entity_ids:
+		_favorite_entity_ids.erase(entity_id)
+	else:
+		_favorite_entity_ids.append(entity_id)
+	if _entity_detail_panel != null and _entity_detail_panel.has_method("update_favorite_state"):
+		_entity_detail_panel.update_favorite_state(entity_id in _favorite_entity_ids)
+
+func is_favorite(entity_id: int) -> bool:
+	return entity_id in _favorite_entity_ids
 
 
 ## Shows or hides the resource overlay colour legend.
@@ -4311,7 +4340,8 @@ func _refresh_selection_summary() -> void:
 	if _selected_entity_id >= 0 and _sim_engine != null:
 		var detail: Dictionary = _sim_engine.get_entity_detail(_selected_entity_id)
 		var entity_name: String = str(detail.get("name", ""))
-		_bottom_bar_sel_label.text = "👤 " + entity_name if not entity_name.is_empty() else ""
+		var fav_mark: String = " ★" if _selected_entity_id in _favorite_entity_ids else ""
+		_bottom_bar_sel_label.text = ("👤 " + entity_name + fav_mark) if not entity_name.is_empty() else ""
 		return
 	if _selected_band_id >= 0 and _sim_engine != null:
 		var band_detail: Dictionary = _sim_engine.get_band_detail(_selected_band_id)
