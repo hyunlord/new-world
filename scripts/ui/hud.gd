@@ -94,6 +94,8 @@ var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
 var _left_bottom_column: VBoxContainer
+var _hud_root: VBoxContainer
+var _hud_center: HBoxContainer
 var _overlay_legend_panel: PanelContainer
 var _overlay_legend_gradient: ColorRect
 var _overlay_legend_title: Label
@@ -303,6 +305,11 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 
 func _ready() -> void:
 	layer = 10
+	# Root layout — guarantees top/center/bottom never overlap
+	_hud_root = VBoxContainer.new()
+	_hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_hud_root.add_theme_constant_override("separation", 0)
+	add_child(_hud_root)
 	_build_top_bar()
 	_build_entity_panel()
 	_build_building_panel()
@@ -312,21 +319,22 @@ func _ready() -> void:
 	_build_resource_legend()
 	_build_probe_verification_overlay()
 	_build_key_hints()
-	_build_bottom_bar()
-	# Left-bottom column — sits above bottom bar, holds minimap + legend
+	# Center area — world view + left column
+	_hud_center = HBoxContainer.new()
+	_hud_center.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_hud_center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_hud_center.add_theme_constant_override("separation", 0)
+	_hud_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_root.add_child(_hud_center)
+	# Left-bottom column — holds minimap + legend, stacked from bottom
 	_left_bottom_column = VBoxContainer.new()
-	_left_bottom_column.anchor_top = 1.0
-	_left_bottom_column.anchor_bottom = 1.0
-	_left_bottom_column.anchor_left = 0.0
-	_left_bottom_column.anchor_right = 0.0
-	_left_bottom_column.offset_left = 8.0
-	_left_bottom_column.offset_right = 168.0
-	_left_bottom_column.offset_bottom = -BOTTOM_BAR_HEIGHT - 4.0
-	_left_bottom_column.offset_top = _left_bottom_column.offset_bottom - 300.0
 	_left_bottom_column.add_theme_constant_override("separation", 4)
 	_left_bottom_column.alignment = BoxContainer.ALIGNMENT_END
+	_left_bottom_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_left_bottom_column.custom_minimum_size.x = 160.0
 	_left_bottom_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_left_bottom_column)
+	_hud_center.add_child(_left_bottom_column)
+	_build_bottom_bar()
 	_build_overlay_legend()
 	_build_overlay_probe()
 	_build_pause_overlay()
@@ -899,9 +907,8 @@ func _build_bottom_bar() -> void:
 	if _bottom_bar != null:
 		return
 	_bottom_bar = PanelContainer.new()
-	_bottom_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_bottom_bar.offset_top = -BOTTOM_BAR_HEIGHT
-	_bottom_bar.offset_bottom = 0.0
+	_bottom_bar.size_flags_vertical = Control.SIZE_SHRINK_END
+	_bottom_bar.custom_minimum_size.y = BOTTOM_BAR_HEIGHT
 	_bottom_bar.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	var bg := StyleBoxFlat.new()
@@ -940,7 +947,7 @@ func _build_bottom_bar() -> void:
 	root.add_child(_make_vertical_separator())
 	root.add_child(_build_bottom_bar_perf_section())
 
-	add_child(_bottom_bar)
+	_hud_root.add_child(_bottom_bar)
 	_bottom_bar.move_to_front()
 	if _fps_label != null:
 		_fps_label.visible = false
@@ -1990,8 +1997,8 @@ func _connect_signals() -> void:
 
 func _build_top_bar() -> void:
 	var bar := HBoxContainer.new()
-	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_bottom = 34
+	bar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	bar.custom_minimum_size.y = 36.0
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0.05, 0.05, 0.08, 0.92)
@@ -2059,7 +2066,7 @@ func _build_top_bar() -> void:
 
 	panel.add_child(hbox)
 	bar.add_child(panel)
-	add_child(bar)
+	_hud_root.add_child(bar)
 
 
 func _build_entity_panel() -> void:
