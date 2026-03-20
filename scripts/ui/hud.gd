@@ -1119,9 +1119,8 @@ func _on_bottom_bar_zoom_pressed(level: int) -> void:
 
 func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	if channel in _bottom_bar_active_overlays:
-		_bottom_bar_active_overlays.clear()
+		_bottom_bar_active_overlays.erase(channel)
 	else:
-		_bottom_bar_active_overlays.clear()
 		_bottom_bar_active_overlays.append(channel)
 	_update_bottom_bar_button_states()
 	SimulationBus.overlay_channel_changed.emit(

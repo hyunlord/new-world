@@ -1325,13 +1325,13 @@ func _draw_band_territories(zoom_level: float) -> void:
 		var band: Dictionary = band_raw
 		var leader_id: int = int(band.get("leader_id", -1))
 		var member_count: int = int(band.get("member_count", 0))
-		if leader_id < 0 or member_count < 2:
+		if leader_id < 0 or member_count < 1:
 			continue
 		var center: Vector2 = _get_entity_world_position(leader_id)
 		if center == Vector2.INF:
 			continue
 		var band_name: String = str(band.get("name", ""))
-		var base_radius: float = tile_size * (2.4 + float(member_count) * 0.8)
+		var base_radius: float = tile_size * (1.8 + float(member_count) * 0.6)
 		var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
 		var points: PackedVector2Array = PackedVector2Array()
 		for point_index: int in range(24):
