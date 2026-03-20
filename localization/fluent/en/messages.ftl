@@ -4784,3 +4784,5 @@ UI_BTN_FOLLOWING = Following
 UI_PEOPLE_SUFFIX = { " " }people
 UI_ZOOM_NEARBY = active nearby
 UI_WORLD_VIEW = World View
+UI_LOW = Low
+UI_HIGH = High

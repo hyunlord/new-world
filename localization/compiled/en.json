@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4779,
+    "active_key_count": 4781,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4779,
+    "key_count": 4781,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4116,6 +4116,7 @@
     "UI_HEXACO_X_HIGH": "sociable and lively",
     "UI_HEXACO_X_LOW": "introverted and quiet",
     "UI_HIDE_PRACTITIONERS": "Hide practitioners",
+    "UI_HIGH": "High",
     "UI_HIGHEST_CHARISMA": "Highest Charisma",
     "UI_HIGHEST_CREATIVITY": "Highest Creativity",
     "UI_HIGHEST_INTIMIDATION": "Highest Intimidation",
@@ -4185,6 +4186,7 @@
     "UI_LOAD_GAME": "Load Game",
     "UI_LOCATION": "Location",
     "UI_LOVE": "Love",
+    "UI_LOW": "Low",
     "UI_MAIN_MENU": "Main Menu",
     "UI_MALE": "Male",
     "UI_MAP_BIOME_BEACH": "Beach",

@@ -1271,6 +1271,17 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 						label_font_size_far,
 						Color(0.88, 0.82, 0.66, 0.95)
 					)
+					# Population count next to dot
+					if population > 0:
+						draw_string(
+							font,
+							center + Vector2(dot_radius + 4.0, 4.0),
+							str(population),
+							HORIZONTAL_ALIGNMENT_LEFT,
+							40.0,
+							int(clampf(8.0 / maxf(zoom_level, 0.18), 8.0, 28.0)),
+							Color(0.7, 0.7, 0.7, 0.7)
+						)
 			continue
 		var radius: float = tile_size * (3.5 + sqrt(float(maxi(population, 1))) * 1.4)
 		var color: Color = Color(0.82, 0.46, 0.34, 0.20)
@@ -1289,6 +1300,15 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 				8,
 				Color(0.88, 0.82, 0.66, 0.95)
 			)
+			# Mini population bar under the label
+			var bar_width: float = 40.0
+			var bar_height: float = 3.0
+			var bar_x: float = center.x - bar_width * 0.5
+			var bar_y: float = center.y - radius - 6.0 + 4.0
+			var fill_ratio: float = clampf(float(population) / 100.0, 0.0, 1.0)
+			draw_rect(Rect2(bar_x, bar_y, bar_width, bar_height), Color(0.2, 0.2, 0.2, 0.5), true)
+			var fill_color: Color = Color(0.3, 0.8, 0.3, 0.7) if population > 10 else Color(0.8, 0.5, 0.2, 0.7)
+			draw_rect(Rect2(bar_x, bar_y, bar_width * fill_ratio, bar_height), fill_color, true)
 
 
 func _draw_band_territories(zoom_level: float) -> void:
@@ -1314,15 +1334,15 @@ func _draw_band_territories(zoom_level: float) -> void:
 		var base_radius: float = tile_size * (2.4 + float(member_count) * 0.8)
 		var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
 		var points: PackedVector2Array = PackedVector2Array()
-		for point_index: int in range(16):
-			var angle: float = float(point_index) / 16.0 * TAU
-			var noise: float = sin(angle * 3.0 + phase) * 0.15 + cos(angle * 5.0 + phase * 0.5) * 0.10
+		for point_index: int in range(24):
+			var angle: float = float(point_index) / 24.0 * TAU
+			var noise: float = sin(angle * 3.0 + phase) * 0.18 + cos(angle * 5.0 + phase * 0.5) * 0.12
 			var radius: float = base_radius * (1.0 + noise)
 			points.append(center + Vector2(cos(angle), sin(angle)) * radius)
-		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.08))
+		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.06))
 		for point_index: int in range(points.size()):
 			var next_index: int = (point_index + 1) % points.size()
-			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.22), 1.0, true)
+			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.25), 1.5, true)
 		if not band_name.is_empty():
 			var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
 			draw_string(

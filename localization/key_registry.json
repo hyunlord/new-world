@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4779,
-  "key_count": 4779,
+  "active_key_count": 4781,
+  "key_count": 4781,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4078,6 +4078,7 @@
     "UI_HEXACO_X_HIGH": 4125,
     "UI_HEXACO_X_LOW": 4126,
     "UI_HIDE_PRACTITIONERS": 3591,
+    "UI_HIGH": 4779,
     "UI_HIGHEST_CHARISMA": 3592,
     "UI_HIGHEST_CREATIVITY": 3593,
     "UI_HIGHEST_INTIMIDATION": 3594,
@@ -4147,6 +4148,7 @@
     "UI_LOAD_GAME": 3632,
     "UI_LOCATION": 3633,
     "UI_LOVE": 3634,
+    "UI_LOW": 4780,
     "UI_MAIN_MENU": 3635,
     "UI_MALE": 3636,
     "UI_MAP_BIOME_BEACH": 3637,
@@ -9561,7 +9563,9 @@
     "UI_BTN_FOLLOWING",
     "UI_PEOPLE_SUFFIX",
     "UI_WORLD_VIEW",
-    "UI_ZOOM_NEARBY"
+    "UI_ZOOM_NEARBY",
+    "UI_HIGH",
+    "UI_LOW"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

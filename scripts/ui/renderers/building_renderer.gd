@@ -157,6 +157,18 @@ func _draw() -> void:
 				9,
 				Color(0.95, 0.84, 0.58, 0.92)
 			)
+			# Worker count under building name (safe — defaults to 0 if not in data)
+			var worker_count: int = int(_building_value(b, "worker_count", _building_value(b, "assigned_workers", 0)))
+			if worker_count > 0:
+				draw_string(
+					font,
+					Vector2(cx, cy - (tile_size * 0.8) + 8.0),
+					"%d" % worker_count,
+					HORIZONTAL_ALIGNMENT_CENTER,
+					64.0,
+					7,
+					Color(0.6, 0.7, 0.6, 0.6)
+				)
 
 	# Settlement labels at settlement-scale zoom
 	if _current_lod == 0 and zl >= 0.4 and zl < 0.8:
