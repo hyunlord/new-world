@@ -49,6 +49,8 @@ signal couple_formed(entity_a_id: int, entity_a_name: String, entity_b_id: int, 
 signal follow_entity_requested(entity_id: int)
 @warning_ignore("unused_signal")
 signal follow_entity_stopped()
+@warning_ignore("unused_signal")
+signal favorite_toggled(entity_id: int)
 
 ## Trauma Scar events (Phase 3A)
 @warning_ignore("unused_signal")

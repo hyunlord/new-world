@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4781,
-  "key_count": 4781,
+  "active_key_count": 4783,
+  "key_count": 4783,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -3816,6 +3816,7 @@
     "UI_BODY_TOU": 3467,
     "UI_BORN": 3468,
     "UI_BTN_FAVORITE": 4773,
+    "UI_BTN_FAVORITED": 4781,
     "UI_BTN_FOLLOW": 4774,
     "UI_BTN_FOLLOWING": 4775,
     "UI_BUILDERS": 4303,
@@ -4339,6 +4340,7 @@
     "UI_PRONOUN_HE": 4137,
     "UI_PRONOUN_SHE": 4138,
     "UI_PROPAGATION_ACTIVITY": 3749,
+    "UI_QUALITY": 4782,
     "UI_QUIT": 3750,
     "UI_RECENT_ACTIONS": 3751,
     "UI_RECENT_CHANGES": 3752,
@@ -9565,7 +9567,9 @@
     "UI_WORLD_VIEW",
     "UI_ZOOM_NEARBY",
     "UI_HIGH",
-    "UI_LOW"
+    "UI_LOW",
+    "UI_BTN_FAVORITED",
+    "UI_QUALITY"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
