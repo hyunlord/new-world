@@ -2477,11 +2477,11 @@ func _process(delta: float) -> void:
 
 	# Position minimap top-left, below top bar
 	if _minimap_panel != null and _minimap_panel.visible:
-		_minimap_panel.position.x = 8.0
-		_minimap_panel.position.y = 44.0
+		_minimap_panel.position.x = 0.0
+		_minimap_panel.position.y = 36.0
 	if _overlay_legend_panel != null and _overlay_legend_panel.visible and _minimap_panel != null:
-		_overlay_legend_panel.position.x = 8.0
-		_overlay_legend_panel.position.y = _minimap_panel.position.y + _minimap_panel.size.y + 4.0
+		_overlay_legend_panel.position.x = 0.0
+		_overlay_legend_panel.position.y = _minimap_panel.position.y + _minimap_panel.size.y + 2.0
 
 	# Sidebar fade at irrelevant zoom (lerpf per frame for smooth transition)
 	if _right_panel_container != null and _entity_detail_panel_open:
