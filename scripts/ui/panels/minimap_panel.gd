@@ -27,13 +27,8 @@ func init(world_data: RefCounted, entity_manager: RefCounted, building_manager: 
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	offset_left = 8
-	offset_right = 8 + minimap_size
-	offset_bottom = -110
-	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
-
+	size = Vector2(minimap_size, minimap_size)
 	_minimap_rect = TextureRect.new()
 	_minimap_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_minimap_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -190,10 +185,6 @@ func _draw_marker(img: Image, tx: int, ty: int, color: Color, w: int, h: int) ->
 
 func resize(new_size: int) -> void:
 	minimap_size = new_size
-	offset_left = 8
-	offset_right = 8 + minimap_size
-	offset_bottom = -110
-	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
 	_needs_update = true
