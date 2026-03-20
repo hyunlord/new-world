@@ -30,7 +30,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	offset_left = 8
 	offset_right = 8 + minimap_size
-	offset_bottom = -88
+	offset_bottom = -110
 	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 
@@ -192,7 +192,7 @@ func resize(new_size: int) -> void:
 	minimap_size = new_size
 	offset_left = 8
 	offset_right = 8 + minimap_size
-	offset_bottom = -88
+	offset_bottom = -110
 	offset_top = offset_bottom - minimap_size
 	custom_minimum_size = Vector2(minimap_size, minimap_size)
 	size = Vector2(minimap_size, minimap_size)
