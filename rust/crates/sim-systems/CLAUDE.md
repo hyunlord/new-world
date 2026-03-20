@@ -169,6 +169,27 @@ if new_intensity < config::EMOTION_MIN_THRESHOLD → set to 0.0
 
 ---
 
+## Simulation Balancing Principles
+
+Hard-learned from band formation debugging. These apply to ALL social/group systems.
+
+### Trust Accumulation Must Match Interaction Frequency
+- At +0.01 per talk, reaching trust 0.5 requires 50 interactions -- months of game time
+- Stone Age agents interact ~1-3 times per day -- trust gain per interaction should be 0.03-0.08
+- Rule of thumb: an agent pair that interacts daily should reach "trusted" (0.5) within 1-2 game months
+
+### Proximity Range Must Cover Agent Behavior Radius
+- If agents forage 20-40 tiles from camp, `GFS_PROXIMITY_MAX_DISTANCE` must be >= 50
+- Setting it to 30 means agents are "too far" while doing normal activities -- GFS drops -- group dissolves
+- Rule: proximity range = 1.5x typical behavior radius
+
+### Provisional Groups Need Survival Inertia
+- Re-evaluating groups every N ticks with zero inertia = constant formation/dissolution cycle
+- Promotion period must be achievable: 12-20 consecutive successful evaluations, not 40+
+- If a group forms and dissolves 3+ times with the same members, thresholds are too strict
+
+---
+
 ## Do NOT
 
 - Call one system from another — use EventBus
