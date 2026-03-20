@@ -334,7 +334,7 @@ func _ready() -> void:
 	# Left margin — adds gap between minimap and bottom bar / screen edge
 	var _left_margin := MarginContainer.new()
 	_left_margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_left_margin.add_theme_constant_override("margin_bottom", 8)
+	_left_margin.add_theme_constant_override("margin_bottom", 16)
 	_left_margin.add_theme_constant_override("margin_left", 8)
 	_left_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud_center.add_child(_left_margin)
