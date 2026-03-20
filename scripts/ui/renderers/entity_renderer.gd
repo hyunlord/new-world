@@ -1339,10 +1339,10 @@ func _draw_band_territories(zoom_level: float) -> void:
 			var noise: float = sin(angle * 3.0 + phase) * 0.18 + cos(angle * 5.0 + phase * 0.5) * 0.12
 			var radius: float = base_radius * (1.0 + noise)
 			points.append(center + Vector2(cos(angle), sin(angle)) * radius)
-		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.06))
+		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.18))
 		for point_index: int in range(points.size()):
 			var next_index: int = (point_index + 1) % points.size()
-			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.25), 1.5, true)
+			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.55), 2.0, true)
 		if not band_name.is_empty():
 			var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
 			draw_string(
