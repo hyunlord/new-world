@@ -70,8 +70,6 @@ func _build_ui() -> void:
 func _refresh() -> void:
 	if _events_container == null:
 		return
-	for child in _events_container.get_children():
-		child.queue_free()
 
 	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
 	var events_raw: Variant = response.get("items", [])
@@ -84,10 +82,13 @@ func _refresh() -> void:
 		return tick_a > tick_b
 	)
 
-	# Skip rebuild if event count unchanged
+	# Cache check BEFORE destroying children
 	if events.size() == _cached_event_count:
 		return
 	_cached_event_count = events.size()
+
+	for child in _events_container.get_children():
+		child.queue_free()
 
 	if events.is_empty():
 		var empty := Label.new()

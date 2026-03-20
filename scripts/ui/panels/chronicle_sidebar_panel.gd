@@ -13,6 +13,7 @@ var _filter_bar: HBoxContainer
 var _events_container: VBoxContainer
 
 var _current_filter: String = "all"
+var _cached_event_count: int = -1
 
 const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
 const COLOR_SECTION: Color = Color(0.16, 0.22, 0.28)
@@ -95,14 +96,13 @@ func _build_ui() -> void:
 
 func _on_filter_pressed(filter: String) -> void:
 	_current_filter = filter
+	_cached_event_count = -1
 	_refresh()
 
 
 func _refresh() -> void:
 	if _events_container == null:
 		return
-	for child in _events_container.get_children():
-		child.queue_free()
 
 	var all_events: Array = []
 	if _sim_engine != null and _sim_engine.has_method("get_chronicle_events"):
@@ -116,6 +116,14 @@ func _refresh() -> void:
 				filtered.append(ev)
 
 	_count_label.text = "%d %s" % [filtered.size(), Locale.ltr("UI_EVENTS")]
+
+	# Cache check BEFORE destroying children
+	if filtered.size() == _cached_event_count:
+		return
+	_cached_event_count = filtered.size()
+
+	for child in _events_container.get_children():
+		child.queue_free()
 
 	if filtered.is_empty():
 		var empty := Label.new()

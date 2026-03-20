@@ -74,8 +74,6 @@ func _build_ui() -> void:
 func _refresh() -> void:
 	if _sim_engine == null or _bands_container == null:
 		return
-	for child in _bands_container.get_children():
-		child.queue_free()
 
 	var bands: Array = []
 	if _sim_engine.has_method("get_band_list"):
@@ -83,10 +81,13 @@ func _refresh() -> void:
 
 	_title_label.text = "%s (%d)" % [Locale.ltr("UI_TAB_FACTIONS_BANDS"), bands.size()]
 
-	# Skip rebuild if band count unchanged
+	# Cache check BEFORE destroying children
 	if bands.size() == _cached_band_count:
 		return
 	_cached_band_count = bands.size()
+
+	for child in _bands_container.get_children():
+		child.queue_free()
 
 	if bands.is_empty():
 		var empty := Label.new()
