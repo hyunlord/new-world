@@ -2139,7 +2139,7 @@ mod tests {
             1,
             0,
             Some(SettlementId(1)),
-            Some(small_band_id),
+            None,
             0.5,
             0.5,
             0.5,
@@ -2182,7 +2182,7 @@ mod tests {
         resources.band_store.insert(Band {
             id: small_band_id,
             name: "Small".to_string(),
-            members: vec![EntityId(a.id() as u64), EntityId(b.id() as u64)],
+            members: vec![EntityId(a.id() as u64)],
             leader: None,
             provisional_since: 10,
             promoted_tick: None,
