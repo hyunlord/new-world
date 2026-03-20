@@ -211,15 +211,15 @@ pub const INTERACTION_MAX_PER_TICK: u32 = 1;
 pub const SOCIAL_EDGE_CAP: usize = 50;
 
 /// Talk trust delta.
-pub const INTERACTION_TALK_TRUST_DELTA: f64 = 0.01;
+pub const INTERACTION_TALK_TRUST_DELTA: f64 = 0.03;
 /// Cooperate trust delta.
-pub const INTERACTION_COOPERATE_TRUST_DELTA: f64 = 0.03;
+pub const INTERACTION_COOPERATE_TRUST_DELTA: f64 = 0.08;
 /// Share trust delta.
-pub const INTERACTION_SHARE_TRUST_DELTA: f64 = 0.05;
+pub const INTERACTION_SHARE_TRUST_DELTA: f64 = 0.12;
 /// Conflict trust delta.
 pub const INTERACTION_CONFLICT_TRUST_DELTA: f64 = -0.05;
 /// Comfort trust delta.
-pub const INTERACTION_COMFORT_TRUST_DELTA: f64 = 0.02;
+pub const INTERACTION_COMFORT_TRUST_DELTA: f64 = 0.05;
 
 /// Talk affinity delta.
 pub const INTERACTION_TALK_AFFINITY_DELTA: f64 = 1.0;
@@ -236,17 +236,17 @@ pub const INTERACTION_COMFORT_AFFINITY_DELTA: f64 = 2.0;
 pub const INTERACTION_FAMILIARITY_DELTA: f64 = 0.02;
 
 /// Minimum GFS required to create a social graph edge for band formation.
-pub const GFS_THRESHOLD: f64 = 0.6;
+pub const GFS_THRESHOLD: f64 = 0.45;
 /// Maximum distance for proximity-based GFS contribution.
-pub const GFS_PROXIMITY_MAX_DISTANCE: f64 = 30.0;
+pub const GFS_PROXIMITY_MAX_DISTANCE: f64 = 50.0;
 /// Minimum connected-component size needed to create a provisional band.
-pub const BAND_MIN_SIZE_PROVISIONAL: usize = 3;
+pub const BAND_MIN_SIZE_PROVISIONAL: usize = 2;
 /// Minimum member count required before promotion to an established band.
-pub const BAND_MIN_SIZE_PROMOTED: usize = 5;
+pub const BAND_MIN_SIZE_PROMOTED: usize = 3;
 /// Maximum stable band size before truncation.
 pub const BAND_MAX_SIZE: usize = 30;
 /// Ticks a provisional group must survive before promotion.
-pub const BAND_PROMOTION_TICKS: u64 = 2400;
+pub const BAND_PROMOTION_TICKS: u64 = 720;
 /// Baseline Granovetter participation threshold before personality shifts.
 pub const BAND_GRANOVETTER_BASE_THRESHOLD: f64 = 0.5;
 /// Scheduler priority for band formation.
@@ -268,7 +268,7 @@ pub const BAND_FISSION_VALUES_THRESHOLD: f64 = 0.4;
 /// Search radius used when loners evaluate nearby promoted bands.
 pub const LONER_SEARCH_RADIUS: f64 = 15.0;
 /// Minimum average GFS needed for a loner to join a band.
-pub const LONER_JOIN_GFS_THRESHOLD: f64 = 0.5;
+pub const LONER_JOIN_GFS_THRESHOLD: f64 = 0.35;
 
 // ── Weber Authority [Weber 1922] ──────────────────────────────────────────────
 pub const AUTHORITY_TRADITIONAL_TRADITION_MIN: f64 = 0.30;
