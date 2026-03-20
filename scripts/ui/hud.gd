@@ -331,6 +331,13 @@ func _ready() -> void:
 	_hud_center.add_theme_constant_override("separation", 0)
 	_hud_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hud_root.add_child(_hud_center)
+	# Left margin — adds gap between minimap and bottom bar / screen edge
+	var _left_margin := MarginContainer.new()
+	_left_margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_left_margin.add_theme_constant_override("margin_bottom", 8)
+	_left_margin.add_theme_constant_override("margin_left", 8)
+	_left_margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hud_center.add_child(_left_margin)
 	# Left-bottom column — holds minimap + legend, stacked from bottom
 	_left_bottom_column = VBoxContainer.new()
 	_left_bottom_column.add_theme_constant_override("separation", 4)
@@ -338,7 +345,7 @@ func _ready() -> void:
 	_left_bottom_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_left_bottom_column.custom_minimum_size.x = 160.0
 	_left_bottom_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hud_center.add_child(_left_bottom_column)
+	_left_margin.add_child(_left_bottom_column)
 	_build_bottom_bar()
 	_build_overlay_legend()
 	_build_overlay_probe()
