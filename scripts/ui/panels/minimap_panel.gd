@@ -40,7 +40,7 @@ func _draw() -> void:
 		draw_texture_rect(_minimap_texture, Rect2(Vector2.ZERO, size), false)
 
 	# Border
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.25, 0.30, 0.38), false, 1.5)
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.20, 0.25, 0.32), false, 1.0)
 
 	# Camera viewport rectangle
 	if _camera == null:
@@ -59,7 +59,7 @@ func _draw() -> void:
 	var rect_w: float = viewport_size.x / float(GameConfig.TILE_SIZE) * scale_x
 	var rect_h: float = viewport_size.y / float(GameConfig.TILE_SIZE) * scale_y
 
-	draw_rect(Rect2(rect_x, rect_y, rect_w, rect_h), Color(1, 1, 1, 0.6), false, 1.0)
+	draw_rect(Rect2(rect_x, rect_y, rect_w, rect_h), Color(1, 1, 1, 0.35), false, 0.5)
 
 	# Settlement labels
 	var settlements: Array = _get_runtime_settlements()
