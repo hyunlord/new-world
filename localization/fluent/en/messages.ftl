@@ -4266,6 +4266,7 @@ UI_OVERLAY_HAPPINESS = Happiness
 UI_OVERLAY_PRODUCTIVITY = Productivity
 UI_OVERLAY_TRADE = Trade
 UI_OVERLAY_MILITARY = Military
+UI_RES_POPUP_TITLE = Settlement Resources
 UI_OVERWRITE_CONFIRM = Overwrite save in Slot {slot}?
 UI_PAIN = Pain
 UI_PANEL_ACE = ACE Score

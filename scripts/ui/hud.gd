@@ -1138,8 +1138,9 @@ func _on_bottom_bar_zoom_pressed(level: int) -> void:
 
 func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	if channel in _bottom_bar_active_overlays:
-		_bottom_bar_active_overlays.erase(channel)
+		_bottom_bar_active_overlays.clear()
 	else:
+		_bottom_bar_active_overlays.clear()
 		_bottom_bar_active_overlays.append(channel)
 	_update_bottom_bar_button_states()
 	SimulationBus.overlay_channel_changed.emit(
@@ -1466,7 +1467,7 @@ func _show_resource_popup() -> void:
 
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 6)
-	box.add_child(_make_label(Locale.ltr("UI_RES_POPUP_HEADER"), "panel_small", Color(0.62, 0.68, 0.75)))
+	box.add_child(_make_label(Locale.ltr("UI_RES_POPUP_TITLE"), "panel_small", Color(0.62, 0.68, 0.75)))
 
 	var summary: Dictionary = _get_world_summary()
 	var settlements: Array = summary.get("settlement_summaries", [])
@@ -1497,20 +1498,24 @@ func _show_resource_popup() -> void:
 			open_button.pressed.connect(_on_resource_popup_settlement_pressed.bind(settlement_id))
 			card.add_child(open_button)
 
-			card.add_child(
-				_make_label(
-					"%s: %.0f  %s: %.0f  %s: %.0f" % [
-						Locale.ltr("UI_RES_FOOD_SHORT"),
-						food,
-						Locale.ltr("UI_RES_WOOD_SHORT"),
-						wood,
-						Locale.ltr("UI_RES_STONE_SHORT"),
-						stone,
-					],
-					"panel_small",
-					Color(0.44, 0.53, 0.60)
-				)
-			)
+			var res_defs: Array = [
+				{"key": "UI_RES_FOOD_SHORT", "value": food, "max_val": 80.0, "color": Color(0.28, 0.66, 0.16)},
+				{"key": "UI_RES_WOOD_SHORT", "value": wood, "max_val": 50.0, "color": Color(0.54, 0.35, 0.16)},
+				{"key": "UI_RES_STONE_SHORT", "value": stone, "max_val": 30.0, "color": Color(0.41, 0.53, 0.66)},
+			]
+			for rd: Dictionary in res_defs:
+				var bar_result: Array = _make_bar_row(Locale.ltr(str(rd["key"])), rd["color"])
+				var bar: ProgressBar = bar_result[0]
+				var pct_label: Label = bar_result[1]
+				var row: HBoxContainer = bar_result[2]
+				var name_label: Label = bar_result[3]
+				name_label.custom_minimum_size.x = 36
+				bar.custom_minimum_size = Vector2(100, 8)
+				var val: float = float(rd["value"])
+				bar.max_value = float(rd["max_val"])
+				bar.value = clampf(val, 0.0, float(rd["max_val"]))
+				pct_label.text = "%.0f" % val
+				card.add_child(row)
 			box.add_child(card)
 
 	_resource_popup.add_child(box)
@@ -3381,6 +3386,22 @@ func _input(event: InputEvent) -> void:
 
 ## Toggles the debug overlay (F3). Cycles OFF -> COMPACT -> OFF.
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var any_popup_open: bool = (
+			(_resource_popup != null and _resource_popup.visible)
+			or (_band_popup != null and _band_popup.visible)
+		)
+		if any_popup_open:
+			var click_pos: Vector2 = event.global_position
+			var inside_popup: bool = false
+			if _resource_popup != null and _resource_popup.visible:
+				if _resource_popup.get_global_rect().has_point(click_pos):
+					inside_popup = true
+			if _band_popup != null and _band_popup.visible:
+				if _band_popup.get_global_rect().has_point(click_pos):
+					inside_popup = true
+			if not inside_popup:
+				_close_hud_popups()
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F3:
 			_toggle_debug()

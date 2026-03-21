@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4788,
+    "active_key_count": 4789,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4788,
+    "key_count": 4789,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4413,6 +4413,7 @@
     "UI_RESOURCE_TOTALS": "전체 자원",
     "UI_RES_FOOD_FMT": "식:{n}",
     "UI_RES_FOOD_SHORT": "식",
+    "UI_RES_POPUP_TITLE": "정착지별 자원",
     "UI_RES_STONE_FMT": "석:{n}",
     "UI_RES_STONE_SHORT": "석",
     "UI_RES_WOOD_FMT": "목:{n}",
