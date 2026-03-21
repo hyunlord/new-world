@@ -236,7 +236,7 @@ func _build_header() -> void:
 	_header_action_label = Label.new()
 	_header_action_label.add_theme_font_size_override("font_size", 10)
 	_header_action_label.add_theme_color_override("font_color", Color(0.5, 0.58, 0.65))
-	_header_action_label.custom_minimum_size.y = 24.0
+	_header_action_label.custom_minimum_size.y = 30.0
 	info_vbox.add_child(_header_action_label)
 
 	# Action buttons (right side of header)
@@ -467,6 +467,8 @@ func _refresh_header() -> void:
 	var action_line: String = action_text + " — " + motivation
 	if timer_total > 0:
 		action_line += "\n" + Locale.trf2("UI_ACTION_TIMER_FMT", "current", timer_current, "total", timer_total)
+	else:
+		action_line += "\n "
 	_header_action_label.text = action_line
 
 	# Update follow button icon based on camera state
@@ -1027,18 +1029,16 @@ func _refresh_inventory() -> void:
 
 
 ## Creates a 36x36 inventory slot for a non-stackable tool/weapon item.
-func _create_tool_slot(item: Dictionary, is_equipped: bool) -> Panel:
-	var slot := Panel.new()
+func _create_tool_slot(item: Dictionary, is_equipped: bool) -> Button:
+	var slot := Button.new()
+	slot.flat = true
+	slot.focus_mode = Control.FOCUS_NONE
+	slot.text = ""
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
 	var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
 	var border_color: Color = _quality_border_color(quality)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.04, 0.06, 0.09, 1.0)
-	style.border_color = border_color
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(3)
-	slot.add_theme_stylebox_override("panel", style)
+	_apply_slot_style(slot, Color(0.04, 0.06, 0.09, 1.0), border_color, 2, 3)
 
 	var tid: String = str(item.get("template_id", ""))
 	var mid: String = str(item.get("material_id", ""))
@@ -1103,16 +1103,14 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> Panel:
 
 
 ## Creates a 36x36 inventory slot for a stack of identical raw materials.
-func _create_stack_slot(group: Dictionary) -> Panel:
-	var slot := Panel.new()
+func _create_stack_slot(group: Dictionary) -> Button:
+	var slot := Button.new()
+	slot.flat = true
+	slot.focus_mode = Control.FOCUS_NONE
+	slot.text = ""
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.04, 0.06, 0.09, 1.0)
-	style.border_color = Color(0.09, 0.14, 0.19)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(3)
-	slot.add_theme_stylebox_override("panel", style)
+	_apply_slot_style(slot, Color(0.04, 0.06, 0.09, 1.0), Color(0.09, 0.14, 0.19), 1, 3)
 
 	var tid: String = str(group.get("template_id", ""))
 	var mid: String = str(group.get("material_id", ""))
@@ -1155,16 +1153,14 @@ func _create_stack_slot(group: Dictionary) -> Panel:
 
 
 ## Creates a dim 36x36 empty inventory slot.
-func _create_empty_slot() -> Panel:
-	var slot := Panel.new()
+func _create_empty_slot() -> Button:
+	var slot := Button.new()
+	slot.flat = true
+	slot.focus_mode = Control.FOCUS_NONE
+	slot.text = ""
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.04, 0.06, 0.09, 0.3)
-	style.border_color = Color(0.09, 0.14, 0.19, 0.3)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(3)
-	slot.add_theme_stylebox_override("panel", style)
+	_apply_slot_style(slot, Color(0.04, 0.06, 0.09, 0.3), Color(0.09, 0.14, 0.19, 0.3), 1, 3)
 	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	return slot
@@ -1180,6 +1176,17 @@ func _quality_border_color(quality: float) -> Color:
 		return Color(0.20, 0.25, 0.30)  # Default — normal
 	else:
 		return Color(0.35, 0.35, 0.38)  # Gray — poor
+
+
+## Applies the same StyleBox to all button states so the slot looks static.
+func _apply_slot_style(button: Button, bg_color: Color, border_color: Color, border_width: int, corner_radius: int) -> void:
+	for state: String in ["normal", "hover", "pressed", "disabled", "focus"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = bg_color
+		sb.border_color = border_color
+		sb.set_border_width_all(border_width)
+		sb.set_corner_radius_all(corner_radius)
+		button.add_theme_stylebox_override(state, sb)
 
 
 ## Returns a localized equipment slot label.
