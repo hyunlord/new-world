@@ -1138,14 +1138,11 @@ func _on_bottom_bar_zoom_pressed(level: int) -> void:
 
 func _on_bottom_bar_overlay_pressed(channel: String) -> void:
 	if channel in _bottom_bar_active_overlays:
-		_bottom_bar_active_overlays.clear()
+		_bottom_bar_active_overlays.erase(channel)
 	else:
-		_bottom_bar_active_overlays.clear()
 		_bottom_bar_active_overlays.append(channel)
 	_update_bottom_bar_button_states()
-	SimulationBus.overlay_channel_changed.emit(
-		_bottom_bar_active_overlays[0] if not _bottom_bar_active_overlays.is_empty() else ""
-	)
+	SimulationBus.overlay_channels_changed.emit(_bottom_bar_active_overlays.duplicate())
 	_refresh_overlay_legend()
 
 
@@ -1456,11 +1453,16 @@ func _show_resource_popup() -> void:
 		popup_style.content_margin_bottom = 8
 		_resource_popup.add_theme_stylebox_override("panel", popup_style)
 		_resource_popup.set_anchors_preset(Control.PRESET_TOP_LEFT)
-		_resource_popup.offset_left = 192.0
 		_resource_popup.offset_top = 38.0
 		_resource_popup.custom_minimum_size = Vector2(260.0, 0.0)
 		_resource_popup.mouse_filter = Control.MOUSE_FILTER_STOP
 		add_child(_resource_popup)
+
+	# Dynamic position: always to the right of minimap
+	var minimap_right: float = 0.0
+	if _minimap_panel != null and _minimap_panel.visible:
+		minimap_right = _minimap_panel.offset_right
+	_resource_popup.offset_left = minimap_right + 8.0
 
 	for child: Node in _resource_popup.get_children():
 		child.queue_free()
@@ -1900,10 +1902,14 @@ func _update_overlay_buttons_for_zoom() -> void:
 	var allowed_lookup: Dictionary = {}
 	for channel_value: Variant in allowed_channels:
 		allowed_lookup[str(channel_value)] = true
-	var active_channel: String = _bottom_bar_active_overlays[0] if not _bottom_bar_active_overlays.is_empty() else ""
-	if not active_channel.is_empty() and not allowed_lookup.has(active_channel):
-		_bottom_bar_active_overlays.clear()
-		SimulationBus.overlay_channel_changed.emit("")
+	var to_remove: Array[String] = []
+	for active_key: String in _bottom_bar_active_overlays:
+		if not allowed_lookup.has(active_key):
+			to_remove.append(active_key)
+	for key: String in to_remove:
+		_bottom_bar_active_overlays.erase(key)
+	if not to_remove.is_empty():
+		SimulationBus.overlay_channels_changed.emit(_bottom_bar_active_overlays.duplicate())
 	for channel_variant: Variant in _bottom_bar_overlay_buttons.keys():
 		var channel: String = str(channel_variant)
 		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)

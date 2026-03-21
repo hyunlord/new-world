@@ -34,7 +34,7 @@ signal speed_changed(speed_index: int)
 @warning_ignore("unused_signal")
 signal pause_changed(paused: bool)
 @warning_ignore("unused_signal")
-signal overlay_channel_changed(channel: String)
+signal overlay_channels_changed(channels: Array)
 
 ## Entity lifecycle (for ChronicleSystem)
 @warning_ignore("unused_signal")
