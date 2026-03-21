@@ -1197,7 +1197,7 @@ func _build_overlay_legend() -> void:
 	_overlay_legend_panel.anchor_bottom = 0.0
 	_overlay_legend_panel.offset_left = 0.0
 	_overlay_legend_panel.offset_top = TOP_BAR_HEIGHT + float(MINIMAP_DEFAULT_SIZE) + 2.0
-	_overlay_legend_panel.offset_right = 140.0
+	_overlay_legend_panel.offset_right = float(MINIMAP_DEFAULT_SIZE)
 	_overlay_legend_panel.offset_bottom = TOP_BAR_HEIGHT + float(MINIMAP_DEFAULT_SIZE) + 48.0
 
 	var legend_vbox := VBoxContainer.new()
@@ -1880,10 +1880,19 @@ func _refresh_overlay_legend() -> void:
 		low_label.add_theme_color_override("font_color", Color(0.4, 0.45, 0.5))
 		row.add_child(low_label)
 
-		var gradient := ColorRect.new()
-		gradient.custom_minimum_size = Vector2(40, 8)
-		gradient.color = accent
-		row.add_child(gradient)
+		var grad_tex := GradientTexture1D.new()
+		var grad := Gradient.new()
+		grad.set_color(0, Color(accent.r * 0.1, accent.g * 0.1, accent.b * 0.1, 0.8))
+		grad.add_point(0.5, Color(accent.r * 0.5, accent.g * 0.5, accent.b * 0.5, 0.9))
+		grad.set_color(1, Color(accent.r, accent.g, accent.b, 1.0))
+		grad_tex.gradient = grad
+		grad_tex.width = 64
+		var gradient_rect := TextureRect.new()
+		gradient_rect.texture = grad_tex
+		gradient_rect.custom_minimum_size = Vector2(50, 8)
+		gradient_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		gradient_rect.stretch_mode = TextureRect.STRETCH_SCALE
+		row.add_child(gradient_rect)
 
 		var high_label := Label.new()
 		high_label.text = Locale.ltr("UI_HIGH")
@@ -1900,6 +1909,8 @@ func _refresh_overlay_legend() -> void:
 	var minimap_bottom: float = TOP_BAR_HEIGHT + float(current_minimap_size)
 	_overlay_legend_panel.offset_top = minimap_bottom + 2.0
 	_overlay_legend_panel.offset_bottom = minimap_bottom + 2.0 + needed_height
+	var legend_width: float = float(current_minimap_size) if current_minimap_size > 0 else 160.0
+	_overlay_legend_panel.offset_right = legend_width
 
 	_overlay_legend_panel.visible = true
 
@@ -3391,6 +3402,7 @@ func toggle_minimap() -> void:
 		if _overlay_legend_panel != null:
 			_overlay_legend_panel.offset_top = TOP_BAR_HEIGHT + float(new_size) + 2.0
 			_overlay_legend_panel.offset_bottom = _overlay_legend_panel.offset_top + 46.0
+			_overlay_legend_panel.offset_right = float(new_size) if new_size > 0 else 160.0
 		if _minimap_panel.has_method("request_update"):
 			_minimap_panel.call("request_update")
 	# Close resource popup on minimap resize to avoid overlap
