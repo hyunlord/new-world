@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4784,
+    "active_key_count": 4788,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4784,
+    "key_count": 4788,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4316,9 +4316,13 @@
     "UI_OUTPUT": "Output",
     "UI_OVERLAY_DANGER": "Danger",
     "UI_OVERLAY_FOOD": "Food",
+    "UI_OVERLAY_HAPPINESS": "Happiness",
     "UI_OVERLAY_KNOWLEDGE": "Knowledge",
+    "UI_OVERLAY_MILITARY": "Military",
+    "UI_OVERLAY_PRODUCTIVITY": "Productivity",
     "UI_OVERLAY_RESOURCE": "Resources",
     "UI_OVERLAY_SOCIAL": "Social",
+    "UI_OVERLAY_TRADE": "Trade",
     "UI_OVERLAY_WARMTH": "Warmth",
     "UI_OVERWRITE_CONFIRM": "Overwrite save in Slot {slot}?",
     "UI_PAIN": "Pain",

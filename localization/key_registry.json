@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4784,
-  "key_count": 4784,
+  "active_key_count": 4788,
+  "key_count": 4788,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4278,9 +4278,13 @@
     "UI_OUTPUT": 4741,
     "UI_OVERLAY_DANGER": 4415,
     "UI_OVERLAY_FOOD": 4416,
+    "UI_OVERLAY_HAPPINESS": 4784,
     "UI_OVERLAY_KNOWLEDGE": 4605,
+    "UI_OVERLAY_MILITARY": 4785,
+    "UI_OVERLAY_PRODUCTIVITY": 4786,
     "UI_OVERLAY_RESOURCE": 4606,
     "UI_OVERLAY_SOCIAL": 4417,
+    "UI_OVERLAY_TRADE": 4787,
     "UI_OVERLAY_WARMTH": 4418,
     "UI_OVERWRITE_CONFIRM": 3726,
     "UI_PAIN": 4694,
@@ -9571,7 +9575,11 @@
     "UI_LOW",
     "UI_BTN_FAVORITED",
     "UI_QUALITY",
-    "UI_QUANTITY"
+    "UI_QUANTITY",
+    "UI_OVERLAY_HAPPINESS",
+    "UI_OVERLAY_MILITARY",
+    "UI_OVERLAY_PRODUCTIVITY",
+    "UI_OVERLAY_TRADE"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
