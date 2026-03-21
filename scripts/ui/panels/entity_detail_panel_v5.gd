@@ -87,6 +87,7 @@ var _relationships_container: VBoxContainer
 var _inventory_panel: VBoxContainer
 var _inventory_empty_label: Label
 var _inventory_container: GridContainer
+var _inv_data_hash: int = 0
 
 # Family tab
 var _family_panel: VBoxContainer
@@ -132,6 +133,7 @@ func _reload_data() -> void:
 		return
 	_is_reloading = true
 	_detail = _sim_engine.get_entity_detail(_selected_entity_id)
+	_inv_data_hash = 0  # Force inventory rebuild on entity data reload
 	if _detail.is_empty():
 		_is_reloading = false
 		visible = false
@@ -927,6 +929,16 @@ func _build_inventory_tab() -> void:
 func _refresh_inventory() -> void:
 	if _inventory_panel == null:
 		return
+
+	var items_raw: Variant = _detail.get("inv_items", [])
+	var items: Array = items_raw if items_raw is Array else []
+
+	# Skip rebuild if data hasn't changed — preserves tooltips
+	var new_hash: int = _compute_inv_fingerprint(items)
+	if new_hash == _inv_data_hash and _inventory_container.get_child_count() > 0:
+		return
+	_inv_data_hash = new_hash
+
 	for child in _inventory_container.get_children():
 		child.queue_free()
 	# Remove any previously added equipped labels below the grid
@@ -936,8 +948,6 @@ func _refresh_inventory() -> void:
 		_inventory_panel.remove_child(extra)
 		extra.queue_free()
 
-	var items_raw: Variant = _detail.get("inv_items", [])
-	var items: Array = items_raw if items_raw is Array else []
 	_inventory_empty_label.visible = items.is_empty()
 	if items.is_empty():
 		for i in range(INV_MAX_DISPLAY_SLOTS):
@@ -1051,10 +1061,11 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	# Equipped marker
 	if is_equipped:
 		var star := Label.new()
-		star.text = "★"
+		star.text = " ★"
 		star.add_theme_font_size_override("font_size", 8)
 		star.add_theme_color_override("font_color", Color(0.78, 0.60, 0.15))
-		star.position = Vector2(2, 0)
+		star.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		star.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(star)
 
@@ -1161,6 +1172,22 @@ func _equip_slot_label(slot_key: String) -> String:
 			return Locale.ltr("UI_SLOT_OFF_HAND")
 		_:
 			return slot_key
+
+
+## Computes a fast fingerprint of inventory data to detect changes.
+func _compute_inv_fingerprint(items: Array) -> int:
+	var h: int = items.size()
+	for item_raw: Variant in items:
+		if not (item_raw is Dictionary):
+			continue
+		var item: Dictionary = item_raw
+		h = h * 31 + int(item.get("id", 0))
+		h = h * 31 + int(item.get("stack_count", 0))
+		h = h * 31 + int(float(item.get("current_durability", 0)) * 10.0)
+		h = h * 31 + int(float(item.get("quality", 0)) * 100.0)
+		var equip_str: String = str(item.get("equipped_slot", ""))
+		h = h * 31 + equip_str.hash()
+	return h
 
 
 # ---------------------------------------------------------------------------
