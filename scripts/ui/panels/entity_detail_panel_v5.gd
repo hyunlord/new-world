@@ -110,6 +110,12 @@ var _v5_refresh_timer: float = 0.0
 # Lifecycle
 # ---------------------------------------------------------------------------
 
+## Override v3.set_entity_id to reset inventory hash on entity change.
+func set_entity_id(entity_id: int) -> void:
+	_inv_data_hash = -1
+	super.set_entity_id(entity_id)
+
+
 func _process(delta: float) -> void:
 	if not visible or _selected_entity_id < 0:
 		return
@@ -133,7 +139,6 @@ func _reload_data() -> void:
 		return
 	_is_reloading = true
 	_detail = _sim_engine.get_entity_detail(_selected_entity_id)
-	_inv_data_hash = 0  # Force inventory rebuild on entity data reload
 	if _detail.is_empty():
 		_is_reloading = false
 		visible = false
@@ -288,6 +293,7 @@ func _build_tab_bar() -> void:
 
 func _on_tab_changed(tab_index: int) -> void:
 	_switch_tab(tab_index)
+	_refresh_all()
 
 
 func _switch_tab(index: int) -> void:
@@ -432,16 +438,21 @@ func _refresh_all() -> void:
 	if _detail.is_empty():
 		return
 	_refresh_header()
-	_refresh_overview()
-	_refresh_needs()
-	_refresh_emotion()
-	_refresh_personality()
-	_refresh_health()
-	_refresh_knowledge()
-	_refresh_relationships()
-	_refresh_inventory()
-	_refresh_family()
-	_refresh_events()
+	# Only refresh the currently visible tab — avoids unnecessary queue_free
+	# on hidden tabs which causes layout jitter and kills tooltips
+	if _tab_bar == null:
+		return
+	match _tab_bar.current_tab:
+		0: _refresh_overview()
+		1: _refresh_needs()
+		2: _refresh_emotion()
+		3: _refresh_personality()
+		4: _refresh_health()
+		5: _refresh_knowledge()
+		6: _refresh_relationships()
+		7: _refresh_inventory()
+		8: _refresh_family()
+		9: _refresh_events()
 
 
 func _refresh_header() -> void:
