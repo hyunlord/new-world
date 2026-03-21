@@ -1883,7 +1883,7 @@ func _refresh_overlay_legend() -> void:
 		# Derive low/high from accent — no separate ramp dictionary needed
 		# Low = pale/faded version: blend accent 55% toward neutral gray
 		# High = the accent itself (vivid)
-		var color_low: Color = accent.lerp(Color(0.55, 0.55, 0.55, 1.0), 0.55)
+		var color_low: Color = accent.lerp(Color(0.45, 0.45, 0.45, 1.0), 0.75)
 		var color_high: Color = accent
 
 		# 2-stop gradient ONLY — do NOT use add_point (causes index shift bug)
