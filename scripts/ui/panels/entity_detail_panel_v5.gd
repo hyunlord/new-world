@@ -963,12 +963,17 @@ func _refresh_inventory() -> void:
 		if not (item_raw is Dictionary):
 			continue
 		var item: Dictionary = item_raw
-		var is_stackable: bool = bool(item.get("is_stackable", false))
 		var equipped_slot: String = str(item.get("equipped_slot", ""))
+		var cur_dur: float = float(item.get("current_durability", 100.0))
+		var max_dur: float = float(item.get("max_durability", 100.0))
+		# Display grouping: equipped → individual, worn → individual, rest → group
+		var is_worn: bool = max_dur > 0.0 and cur_dur < max_dur * 0.99
 
 		if not equipped_slot.is_empty():
 			equipped_items.append(item)
-		elif is_stackable:
+		elif is_worn:
+			individual_items.append(item)
+		else:
 			var tid: String = str(item.get("template_id", "unknown"))
 			var mid: String = str(item.get("material_id", ""))
 			var group_key: String = tid + "|" + mid
@@ -981,8 +986,6 @@ func _refresh_inventory() -> void:
 					"template_id": tid,
 					"material_id": mid,
 				}
-		else:
-			individual_items.append(item)
 
 	# Build grid slots: equipped first, then tools, then stacked materials
 	var slot_count: int = 0
@@ -1055,7 +1058,16 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
+	icon_label.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUALITY"), quality_pct,
+		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
+		Locale.ltr("UI_DAMAGE"), damage,
+		Locale.ltr("UI_SPEED"), speed,
+	]
+	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
+	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	slot.add_child(icon_label)
 
 	# Equipped marker
@@ -1069,14 +1081,6 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(star)
 
-	# Tooltip
-	slot.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUALITY"), quality_pct,
-		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
-		Locale.ltr("UI_DAMAGE"), damage,
-		Locale.ltr("UI_SPEED"), speed,
-	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
@@ -1109,7 +1113,13 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
+	icon_label.tooltip_text = "%s (%s)\n%s: %d" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUANTITY"), count,
+	]
+	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
+	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	slot.add_child(icon_label)
 
 	# Quantity badge (bottom-right) — only if count > 1
@@ -1125,11 +1135,6 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 		qty_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(qty_label)
 
-	# Tooltip
-	slot.tooltip_text = "%s (%s)\n%s: %d" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUANTITY"), count,
-	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
@@ -1515,18 +1520,29 @@ func _knowledge_channels() -> Array[Dictionary]:
 
 func _inventory_icon(template_id: String) -> String:
 	var token: String = template_id.to_lower()
-	if token.contains("axe"):
-		return "🪓"
-	if token.contains("spear") or token.contains("knife"):
-		return "🗡️"
-	if token.contains("stone"):
-		return "🪨"
-	if token.contains("wood") or token.contains("log"):
-		return "🪵"
-	if token.contains("food") or token.contains("meat"):
-		return "🍖"
-	if token.contains("fiber") or token.contains("cloth"):
-		return "🧵"
+	# Tools
+	if token.contains("axe"): return "🪓"
+	if token.contains("spear"): return "🗡️"
+	if token.contains("knife"): return "🔪"
+	if token.contains("pick") or token.contains("pickaxe"): return "⛏️"
+	if token.contains("hammer"): return "🔨"
+	if token.contains("needle"): return "🪡"
+	if token.contains("pot") or token.contains("vessel"): return "🏺"
+	# Raw materials
+	if token.contains("stone") or token.contains("flint") or token.contains("obsidian"): return "🪨"
+	if token.contains("wood") or token.contains("log") or token.contains("stick"): return "🪵"
+	if token.contains("bone"): return "🦴"
+	if token.contains("hide") or token.contains("leather") or token.contains("pelt"): return "🦴"
+	if token.contains("fiber") or token.contains("rope") or token.contains("cordage"): return "🧵"
+	if token.contains("clay"): return "🧱"
+	# Food
+	if token.contains("berries") or token.contains("berry") or token.contains("fruit"): return "🫐"
+	if token.contains("mushroom") or token.contains("fungus"): return "🍄"
+	if token.contains("herb") or token.contains("plant"): return "🌿"
+	if token.contains("fish"): return "🐟"
+	if token.contains("meat") or token.contains("food"): return "🍖"
+	if token.contains("seed") or token.contains("grain"): return "🌾"
+	# Default
 	return "📦"
 
 
