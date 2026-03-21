@@ -86,7 +86,7 @@ var _relationships_container: VBoxContainer
 # Inventory tab
 var _inventory_panel: VBoxContainer
 var _inventory_empty_label: Label
-var _inventory_container: VBoxContainer
+var _inventory_container: GridContainer
 
 # Family tab
 var _family_panel: VBoxContainer
@@ -899,6 +899,10 @@ func _refresh_relationships() -> void:
 # Inventory tab
 # ---------------------------------------------------------------------------
 
+const INV_SLOT_SIZE: float = 36.0
+const INV_MAX_DISPLAY_SLOTS: int = 10
+
+
 func _build_inventory_tab() -> void:
 	_inventory_panel = VBoxContainer.new()
 	_inventory_panel.add_theme_constant_override("separation", ROW_SPACING)
@@ -912,8 +916,11 @@ func _build_inventory_tab() -> void:
 	_inventory_empty_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
 	_inventory_panel.add_child(_inventory_empty_label)
 
-	_inventory_container = VBoxContainer.new()
-	_inventory_container.add_theme_constant_override("separation", ROW_SPACING)
+	# Grid container — 5 columns
+	_inventory_container = GridContainer.new()
+	_inventory_container.columns = 5
+	_inventory_container.add_theme_constant_override("h_separation", 3)
+	_inventory_container.add_theme_constant_override("v_separation", 3)
 	_inventory_panel.add_child(_inventory_container)
 
 
@@ -922,76 +929,238 @@ func _refresh_inventory() -> void:
 		return
 	for child in _inventory_container.get_children():
 		child.queue_free()
+	# Remove any previously added equipped labels below the grid
+	var grid_idx: int = _inventory_container.get_index()
+	while _inventory_panel.get_child_count() > grid_idx + 1:
+		var extra: Node = _inventory_panel.get_child(grid_idx + 1)
+		_inventory_panel.remove_child(extra)
+		extra.queue_free()
 
 	var items_raw: Variant = _detail.get("inv_items", [])
 	var items: Array = items_raw if items_raw is Array else []
 	_inventory_empty_label.visible = items.is_empty()
 	if items.is_empty():
+		for i in range(INV_MAX_DISPLAY_SLOTS):
+			_inventory_container.add_child(_create_empty_slot())
 		return
 
-	# Group items by template_id
-	var grouped: Dictionary = {}
+	# Separate stackable vs non-stackable
+	var stackable_groups: Dictionary = {}
+	var individual_items: Array[Dictionary] = []
+	var equipped_items: Array[Dictionary] = []
+
 	for item_raw: Variant in items:
 		if not (item_raw is Dictionary):
 			continue
 		var item: Dictionary = item_raw
-		var template_id: String = str(item.get("template_id", "unknown"))
-		var stack_count: int = maxi(1, int(item.get("stack_count", 1)))
-		var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
-		if grouped.has(template_id):
-			grouped[template_id]["count"] += stack_count
-			grouped[template_id]["quality_sum"] += quality * float(stack_count)
+		var is_stackable: bool = bool(item.get("is_stackable", false))
+		var equipped_slot: String = str(item.get("equipped_slot", ""))
+
+		if not equipped_slot.is_empty():
+			equipped_items.append(item)
+		elif is_stackable:
+			var tid: String = str(item.get("template_id", "unknown"))
+			var mid: String = str(item.get("material_id", ""))
+			var group_key: String = tid + "|" + mid
+			var stack_count: int = maxi(1, int(item.get("stack_count", 1)))
+			if stackable_groups.has(group_key):
+				stackable_groups[group_key]["count"] += stack_count
+			else:
+				stackable_groups[group_key] = {
+					"count": stack_count,
+					"template_id": tid,
+					"material_id": mid,
+				}
 		else:
-			grouped[template_id] = {"count": stack_count, "quality_sum": quality * float(stack_count)}
+			individual_items.append(item)
 
-	for tid_variant: Variant in grouped.keys():
-		var tid: String = str(tid_variant)
-		var group: Dictionary = grouped[tid]
-		var total_count: int = int(group["count"])
-		var avg_quality: float = group["quality_sum"] / float(maxi(total_count, 1))
-		var icon: String = _inventory_icon(tid)
-		var display_name: String = _display_token(tid)
+	# Build grid slots: equipped first, then tools, then stacked materials
+	var slot_count: int = 0
 
-		var hbox := HBoxContainer.new()
-		hbox.add_theme_constant_override("separation", 6)
-		_inventory_container.add_child(hbox)
+	for item: Dictionary in equipped_items:
+		_inventory_container.add_child(_create_tool_slot(item, true))
+		slot_count += 1
 
-		var item_label := Label.new()
-		var count_text: String = " x%d" % total_count if total_count > 1 else ""
-		item_label.text = "%s %s%s" % [icon, display_name, count_text]
-		item_label.custom_minimum_size.x = 120.0
-		item_label.add_theme_font_size_override("font_size", 10)
-		item_label.add_theme_color_override("font_color", Color(0.85, 0.82, 0.63))
-		item_label.tooltip_text = "%s\n%s: %d\n%s: %d%%" % [
-			display_name, Locale.ltr("UI_QUANTITY"), total_count,
-			Locale.ltr("UI_QUALITY"), int(avg_quality * 100)]
-		item_label.mouse_filter = Control.MOUSE_FILTER_STOP
-		hbox.add_child(item_label)
+	for item: Dictionary in individual_items:
+		_inventory_container.add_child(_create_tool_slot(item, false))
+		slot_count += 1
 
-		var bar := ProgressBar.new()
-		bar.min_value = 0.0
-		bar.max_value = 1.0
-		bar.value = avg_quality
-		bar.show_percentage = false
-		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		bar.custom_minimum_size.y = BAR_HEIGHT
-		var bar_bg := StyleBoxFlat.new()
-		bar_bg.bg_color = Color(0.09, 0.14, 0.19)
-		bar_bg.set_corner_radius_all(2)
-		bar.add_theme_stylebox_override("background", bar_bg)
-		var bar_fill := StyleBoxFlat.new()
-		bar_fill.bg_color = Color(0.58, 0.68, 0.32)
-		bar_fill.set_corner_radius_all(2)
-		bar.add_theme_stylebox_override("fill", bar_fill)
-		hbox.add_child(bar)
+	for group_key_variant: Variant in stackable_groups.keys():
+		var group: Dictionary = stackable_groups[str(group_key_variant)]
+		_inventory_container.add_child(_create_stack_slot(group))
+		slot_count += 1
 
-		var pct_label := Label.new()
-		pct_label.text = "%d%%" % int(round(avg_quality * 100.0))
-		pct_label.custom_minimum_size.x = PCT_MIN_WIDTH
-		pct_label.add_theme_font_size_override("font_size", 10)
-		pct_label.add_theme_color_override("font_color", COLOR_PCT)
-		pct_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		hbox.add_child(pct_label)
+	# Fill remaining with empty slots
+	for i in range(slot_count, INV_MAX_DISPLAY_SLOTS):
+		_inventory_container.add_child(_create_empty_slot())
+
+	# Equipped summary below grid (simple text, Phase 3 will add silhouette)
+	if not equipped_items.is_empty():
+		_add_section_spacer(_inventory_panel)
+		_add_section_title(_inventory_panel, "PANEL_EQUIPPED_TITLE")
+		for item: Dictionary in equipped_items:
+			var tid: String = str(item.get("template_id", ""))
+			var mid: String = str(item.get("material_id", ""))
+			var slot_name: String = str(item.get("equipped_slot", ""))
+			var display_name: String = _display_token(tid)
+			var material_name: String = _display_token(mid)
+			var slot_label: String = _equip_slot_label(slot_name)
+			var equip_label := Label.new()
+			equip_label.text = "%s %s (%s) — %s" % [_inventory_icon(tid), display_name, material_name, slot_label]
+			equip_label.add_theme_font_size_override("font_size", 9)
+			equip_label.add_theme_color_override("font_color", Color(0.78, 0.60, 0.15))
+			_inventory_panel.add_child(equip_label)
+
+
+## Creates a 36x36 inventory slot for a non-stackable tool/weapon item.
+func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
+	var slot := PanelContainer.new()
+	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
+
+	var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
+	var border_color: Color = _quality_border_color(quality)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.06, 0.09, 1.0)
+	style.border_color = border_color
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(3)
+	slot.add_theme_stylebox_override("panel", style)
+
+	var tid: String = str(item.get("template_id", ""))
+	var mid: String = str(item.get("material_id", ""))
+	var icon: String = _inventory_icon(tid)
+	var display_name: String = _display_token(tid)
+	var material_name: String = _display_token(mid)
+	var cur_dur: float = _safe_scalar(item.get("current_durability", 100.0), 100.0)
+	var max_dur: float = _safe_scalar(item.get("max_durability", 100.0), 100.0)
+	var damage: float = _safe_scalar(item.get("damage", 1.0), 1.0)
+	var speed: float = _safe_scalar(item.get("speed", 1.0), 1.0)
+	var quality_pct: int = int(quality * 100.0)
+
+	# Center icon
+	var icon_label := Label.new()
+	icon_label.text = icon
+	icon_label.add_theme_font_size_override("font_size", 16)
+	icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(icon_label)
+
+	# Equipped marker
+	if is_equipped:
+		var star := Label.new()
+		star.text = "★"
+		star.add_theme_font_size_override("font_size", 8)
+		star.add_theme_color_override("font_color", Color(0.78, 0.60, 0.15))
+		star.position = Vector2(2, 0)
+		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		slot.add_child(star)
+
+	# Tooltip
+	slot.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUALITY"), quality_pct,
+		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
+		Locale.ltr("UI_DAMAGE"), damage,
+		Locale.ltr("UI_SPEED"), speed,
+	]
+	slot.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	return slot
+
+
+## Creates a 36x36 inventory slot for a stack of identical raw materials.
+func _create_stack_slot(group: Dictionary) -> PanelContainer:
+	var slot := PanelContainer.new()
+	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.06, 0.09, 1.0)
+	style.border_color = Color(0.09, 0.14, 0.19)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(3)
+	slot.add_theme_stylebox_override("panel", style)
+
+	var tid: String = str(group.get("template_id", ""))
+	var mid: String = str(group.get("material_id", ""))
+	var count: int = int(group.get("count", 1))
+	var icon: String = _inventory_icon(tid)
+	var display_name: String = _display_token(tid)
+	var material_name: String = _display_token(mid)
+
+	# Center icon
+	var icon_label := Label.new()
+	icon_label.text = icon
+	icon_label.add_theme_font_size_override("font_size", 16)
+	icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(icon_label)
+
+	# Quantity badge (bottom-right) — only if count > 1
+	if count > 1:
+		var qty_label := Label.new()
+		qty_label.text = "×%d" % count
+		qty_label.add_theme_font_size_override("font_size", 8)
+		qty_label.add_theme_color_override("font_color", Color(0.72, 0.78, 0.85))
+		qty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		qty_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		qty_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		qty_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		qty_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		slot.add_child(qty_label)
+
+	# Tooltip
+	slot.tooltip_text = "%s (%s)\n%s: %d" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUANTITY"), count,
+	]
+	slot.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	return slot
+
+
+## Creates a dim 36x36 empty inventory slot.
+func _create_empty_slot() -> PanelContainer:
+	var slot := PanelContainer.new()
+	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.06, 0.09, 0.3)
+	style.border_color = Color(0.09, 0.14, 0.19, 0.3)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(3)
+	slot.add_theme_stylebox_override("panel", style)
+	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	return slot
+
+
+## Returns a border color based on item quality tier.
+func _quality_border_color(quality: float) -> Color:
+	if quality >= 0.85:
+		return Color(0.75, 0.60, 0.15)  # Gold — excellent
+	elif quality >= 0.6:
+		return Color(0.25, 0.55, 0.20)  # Green — good
+	elif quality >= 0.3:
+		return Color(0.20, 0.25, 0.30)  # Default — normal
+	else:
+		return Color(0.35, 0.35, 0.38)  # Gray — poor
+
+
+## Returns a localized equipment slot label.
+func _equip_slot_label(slot_key: String) -> String:
+	match slot_key:
+		"main_hand":
+			return Locale.ltr("UI_SLOT_MAIN_HAND")
+		"off_hand":
+			return Locale.ltr("UI_SLOT_OFF_HAND")
+		_:
+			return slot_key
 
 
 # ---------------------------------------------------------------------------

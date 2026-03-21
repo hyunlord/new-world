@@ -51,7 +51,7 @@ use sim_core::components::{
     PART_NAMES, PART_TO_GROUP, PART_VITAL,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
-use sim_core::{BandId, ChannelId, EntityId, Settlement, SettlementId, Temperament};
+use sim_core::{BandId, ChannelId, EntityId, EquipSlot, Settlement, SettlementId, Temperament};
 use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
@@ -2438,6 +2438,15 @@ impl WorldSimRuntime {
                     item_dict.set("current_durability", item.current_durability as f32);
                     item_dict.set("quality", item.quality as f32);
                     item_dict.set("stack_count", item.stack_count as i64);
+                    item_dict.set("is_stackable", item.is_stackable());
+                    item_dict.set(
+                        "equipped_slot",
+                        match &item.equipped_slot {
+                            Some(EquipSlot::MainHand) => "main_hand",
+                            Some(EquipSlot::OffHand) => "off_hand",
+                            None => "",
+                        },
+                    );
                     inv_items.push(&item_dict);
                 }
             }

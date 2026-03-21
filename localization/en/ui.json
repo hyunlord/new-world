@@ -2214,5 +2214,12 @@
   "UI_ELDERS": "Elders",
   "UI_PRODUCTION_CONSUMPTION": "Production / Consumption",
   "UI_SETTLEMENT_STATUS": "Settlement Status",
-  "UI_HAPPINESS_FACTORS": "Happiness Factors"
+  "UI_HAPPINESS_FACTORS": "Happiness Factors",
+  "UI_QUALITY": "Quality",
+  "UI_QUANTITY": "Qty",
+  "UI_DURABILITY": "Durability",
+  "UI_DAMAGE": "Damage",
+  "UI_SLOT_MAIN_HAND": "Main hand",
+  "UI_SLOT_OFF_HAND": "Off hand",
+  "PANEL_EQUIPPED_TITLE": "Equipped"
 }

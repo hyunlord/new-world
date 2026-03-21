@@ -69,17 +69,6 @@ const OVERLAY_BY_ZOOM := [
 	["danger", "trade", "military", "happiness"],         # Z4
 	["trade", "military", "danger"],                      # Z5
 ]
-const LEGEND_COLOR_RAMPS: Dictionary = {
-	"food":         {"low": Color(0.55, 0.72, 0.48), "high": Color(0.18, 0.88, 0.12)},
-	"danger":       {"low": Color(0.75, 0.45, 0.42), "high": Color(0.95, 0.12, 0.08)},
-	"warmth":       {"low": Color(0.72, 0.62, 0.45), "high": Color(0.96, 0.58, 0.08)},
-	"social":       {"low": Color(0.50, 0.58, 0.75), "high": Color(0.20, 0.42, 0.96)},
-	"resource":     {"low": Color(0.70, 0.62, 0.45), "high": Color(0.92, 0.68, 0.12)},
-	"happiness":    {"low": Color(0.52, 0.68, 0.52), "high": Color(0.22, 0.82, 0.35)},
-	"productivity": {"low": Color(0.68, 0.62, 0.42), "high": Color(0.88, 0.68, 0.08)},
-	"trade":        {"low": Color(0.48, 0.65, 0.65), "high": Color(0.12, 0.85, 0.85)},
-	"military":     {"low": Color(0.68, 0.42, 0.40), "high": Color(0.88, 0.15, 0.12)},
-}
 
 # References
 var _sim_engine: RefCounted
@@ -1891,18 +1880,18 @@ func _refresh_overlay_legend() -> void:
 		low_label.add_theme_color_override("font_color", Color(0.4, 0.45, 0.5))
 		row.add_child(low_label)
 
-		var ramp: Dictionary = LEGEND_COLOR_RAMPS.get(channel, {})
-		var color_low: Color = ramp.get("low", Color(accent.r * 0.6, accent.g * 0.6, accent.b * 0.6))
-		var color_high: Color = ramp.get("high", accent)
-		var color_mid: Color = Color(
-			(color_low.r + color_high.r) * 0.5,
-			(color_low.g + color_high.g) * 0.5,
-			(color_low.b + color_high.b) * 0.5, 1.0)
-		var grad_tex := GradientTexture1D.new()
+		# Derive low/high from accent — no separate ramp dictionary needed
+		# Low = pale/faded version: blend accent 55% toward neutral gray
+		# High = the accent itself (vivid)
+		var color_low: Color = accent.lerp(Color(0.45, 0.45, 0.45, 1.0), 0.75)
+		var color_high: Color = accent
+
+		# 2-stop gradient ONLY — do NOT use add_point (causes index shift bug)
 		var grad := Gradient.new()
-		grad.set_color(0, color_low)
-		grad.add_point(0.5, color_mid)
-		grad.set_color(1, color_high)
+		grad.set_color(0, color_low)   # index 0 = offset 0.0 = leftmost (pale)
+		grad.set_color(1, color_high)  # index 1 = offset 1.0 = rightmost (vivid)
+
+		var grad_tex := GradientTexture1D.new()
 		grad_tex.gradient = grad
 		grad_tex.width = 64
 		var gradient_rect := TextureRect.new()
@@ -1922,13 +1911,13 @@ func _refresh_overlay_legend() -> void:
 
 	var row_count: int = _bottom_bar_active_overlays.size()
 	var needed_height: float = float(row_count) * 18.0 + 12.0
-	var current_minimap_size: int = 0
+	var current_minimap_width: float = 0.0
 	if _minimap_panel != null and _minimap_panel.visible:
-		current_minimap_size = int(_minimap_panel.size.x)
-	var minimap_bottom: float = TOP_BAR_HEIGHT + float(current_minimap_size)
+		current_minimap_width = _minimap_panel.size.x
+	var minimap_bottom: float = TOP_BAR_HEIGHT + current_minimap_width
 	_overlay_legend_panel.offset_top = minimap_bottom + 2.0
 	_overlay_legend_panel.offset_bottom = minimap_bottom + 2.0 + needed_height
-	_overlay_legend_panel.offset_right = maxf(float(current_minimap_size), 160.0)
+	_overlay_legend_panel.offset_right = maxf(current_minimap_width, 160.0)
 
 	_overlay_legend_panel.visible = true
 
@@ -3411,6 +3400,13 @@ func toggle_minimap() -> void:
 	if new_size == 0:
 		_minimap_visible = false
 		_minimap_panel.visible = false
+		# Move legend to top (below top bar) with default width
+		if _overlay_legend_panel != null:
+			_overlay_legend_panel.offset_top = TOP_BAR_HEIGHT + 2.0
+			var row_count: int = _bottom_bar_active_overlays.size()
+			var legend_height: float = maxf(float(row_count) * 18.0 + 12.0, 46.0)
+			_overlay_legend_panel.offset_bottom = TOP_BAR_HEIGHT + 2.0 + legend_height
+			_overlay_legend_panel.offset_right = 160.0
 	else:
 		_minimap_visible = true
 		_minimap_panel.visible = true
