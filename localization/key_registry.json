@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4788,
-  "key_count": 4788,
+  "active_key_count": 4789,
+  "key_count": 4789,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4375,6 +4375,7 @@
     "UI_RESOURCE_TOTALS": 3765,
     "UI_RES_FOOD_FMT": 3766,
     "UI_RES_FOOD_SHORT": 4069,
+    "UI_RES_POPUP_TITLE": 4788,
     "UI_RES_STONE_FMT": 3767,
     "UI_RES_STONE_SHORT": 4070,
     "UI_RES_WOOD_FMT": 3768,
@@ -9579,7 +9580,8 @@
     "UI_OVERLAY_HAPPINESS",
     "UI_OVERLAY_MILITARY",
     "UI_OVERLAY_PRODUCTIVITY",
-    "UI_OVERLAY_TRADE"
+    "UI_OVERLAY_TRADE",
+    "UI_RES_POPUP_TITLE"
   ],
   "removed_key_count": 0,
   "removed_keys": [],
