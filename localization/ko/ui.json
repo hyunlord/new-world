@@ -2214,5 +2214,12 @@
   "UI_ELDERS": "노인",
   "UI_PRODUCTION_CONSUMPTION": "생산/소비",
   "UI_SETTLEMENT_STATUS": "정착지 상태",
-  "UI_HAPPINESS_FACTORS": "행복도 요인"
+  "UI_HAPPINESS_FACTORS": "행복도 요인",
+  "UI_QUALITY": "품질",
+  "UI_QUANTITY": "수량",
+  "UI_DURABILITY": "내구도",
+  "UI_DAMAGE": "공격력",
+  "UI_SLOT_MAIN_HAND": "주무기",
+  "UI_SLOT_OFF_HAND": "보조",
+  "PANEL_EQUIPPED_TITLE": "장착 중"
 }
