@@ -1035,7 +1035,7 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.04, 0.06, 0.09, 1.0)
 	style.border_color = border_color
-	style.set_border_width_all(1)
+	style.set_border_width_all(2)
 	style.set_corner_radius_all(3)
 	slot.add_theme_stylebox_override("panel", style)
 
@@ -1058,17 +1058,24 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
-	icon_label.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUALITY"), quality_pct,
-		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
-		Locale.ltr("UI_DAMAGE"), damage,
-		Locale.ltr("UI_SPEED"), speed,
-	]
-	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
+
+	# Durability mini-bar (bottom of slot)
+	var dur_ratio: float = clampf(cur_dur / maxf(max_dur, 1.0), 0.0, 1.0)
+	var dur_color: Color
+	if dur_ratio > 0.6:
+		dur_color = Color(0.28, 0.66, 0.16)
+	elif dur_ratio > 0.3:
+		dur_color = Color(0.80, 0.65, 0.12)
+	else:
+		dur_color = Color(0.78, 0.22, 0.15)
+	var dur_bar := ColorRect.new()
+	dur_bar.color = dur_color
+	dur_bar.custom_minimum_size = Vector2((INV_SLOT_SIZE - 4) * dur_ratio, 3)
+	dur_bar.position = Vector2(2, INV_SLOT_SIZE - 5)
+	dur_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(dur_bar)
 
 	# Equipped marker
 	if is_equipped:
@@ -1081,6 +1088,14 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(star)
 
+	# Tooltip on slot — hash check prevents rebuild so tooltip survives
+	slot.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUALITY"), quality_pct,
+		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
+		Locale.ltr("UI_DAMAGE"), damage,
+		Locale.ltr("UI_SPEED"), speed,
+	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
@@ -1113,13 +1128,7 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
-	icon_label.tooltip_text = "%s (%s)\n%s: %d" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUANTITY"), count,
-	]
-	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
 
 	# Quantity badge (bottom-right) — only if count > 1
@@ -1135,6 +1144,11 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 		qty_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(qty_label)
 
+	# Tooltip on slot — hash check prevents rebuild so tooltip survives
+	slot.tooltip_text = "%s (%s)\n%s: %d" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUANTITY"), count,
+	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
