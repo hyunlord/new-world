@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4784,
+    "active_key_count": 4788,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4784,
+    "key_count": 4788,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4316,9 +4316,13 @@
     "UI_OUTPUT": "출력",
     "UI_OVERLAY_DANGER": "위험",
     "UI_OVERLAY_FOOD": "식량",
+    "UI_OVERLAY_HAPPINESS": "행복",
     "UI_OVERLAY_KNOWLEDGE": "지식",
+    "UI_OVERLAY_MILITARY": "군사",
+    "UI_OVERLAY_PRODUCTIVITY": "생산성",
     "UI_OVERLAY_RESOURCE": "자원",
     "UI_OVERLAY_SOCIAL": "사회",
+    "UI_OVERLAY_TRADE": "교역",
     "UI_OVERLAY_WARMTH": "온도",
     "UI_OVERWRITE_CONFIRM": "슬롯 {slot}의 기존 세이브를 덮어씁니다. 계속할까요?",
     "UI_PAIN": "통증",

@@ -47,8 +47,11 @@ const OVERLAY_BUTTON_DEFS: Array[Dictionary] = [
 	{"key": "danger", "label": "UI_OVERLAY_DANGER", "color": Color(0.90, 0.20, 0.15)},
 	{"key": "warmth", "label": "UI_OVERLAY_WARMTH", "color": Color(0.90, 0.60, 0.10)},
 	{"key": "social", "label": "UI_OVERLAY_SOCIAL", "color": Color(0.30, 0.50, 0.90)},
-	{"key": "knowledge", "label": "UI_OVERLAY_KNOWLEDGE", "color": Color(0.70, 0.40, 0.80)},
 	{"key": "resource", "label": "UI_OVERLAY_RESOURCE", "color": Color(0.80, 0.60, 0.20)},
+	{"key": "happiness", "label": "UI_OVERLAY_HAPPINESS", "color": Color(0.31, 0.63, 0.31)},
+	{"key": "productivity", "label": "UI_OVERLAY_PRODUCTIVITY", "color": Color(0.72, 0.56, 0.13)},
+	{"key": "trade", "label": "UI_OVERLAY_TRADE", "color": Color(0.22, 0.72, 0.72)},
+	{"key": "military", "label": "UI_OVERLAY_MILITARY", "color": Color(0.72, 0.22, 0.22)},
 ]
 const LAYER_BUTTON_DEFS: Array[Dictionary] = [
 	{"key": "band", "label": "UI_LAYER_BAND", "color": Color(0.78, 0.56, 0.19)},
@@ -60,11 +63,11 @@ const LAYER_BUTTON_DEFS: Array[Dictionary] = [
 	{"key": "border", "label": "UI_LAYER_BORDER", "color": Color(0.78, 0.75, 0.60)},
 ]
 const OVERLAY_BY_ZOOM := [
-	["food", "danger", "warmth", "social", "resource"],
-	["food", "danger", "warmth", "social", "resource"],
-	["food", "danger", "knowledge"],
-	["danger", "knowledge"],
-	["danger"],
+	["food", "danger", "warmth", "social", "resource"],  # Z1
+	["food", "danger", "warmth", "social", "resource"],  # Z2
+	["food", "danger", "happiness", "productivity"],      # Z3
+	["danger", "trade", "military", "happiness"],         # Z4
+	["trade", "military", "danger"],                      # Z5
 ]
 
 # References
