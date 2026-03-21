@@ -99,10 +99,6 @@ var _band_badge: Label
 var _settlement_badge: Label
 var _overlay_legend: Label
 var _overlay_legend_panel: PanelContainer
-var _overlay_legend_gradient: ColorRect
-var _overlay_legend_title: Label
-var _overlay_legend_min: Label
-var _overlay_legend_max: Label
 var _overlay_probe_label: PanelContainer
 var _overlay_probe_text: Label
 var _bottom_bar_sel_label: Label
@@ -1208,30 +1204,6 @@ func _build_overlay_legend() -> void:
 	legend_vbox.add_theme_constant_override("separation", 2)
 	_overlay_legend_panel.add_child(legend_vbox)
 
-	_overlay_legend_title = Label.new()
-	_overlay_legend_title.add_theme_font_size_override("font_size", 9)
-	_overlay_legend_title.add_theme_color_override("font_color", Color.WHITE)
-	legend_vbox.add_child(_overlay_legend_title)
-
-	var gradient_row := HBoxContainer.new()
-	gradient_row.add_theme_constant_override("separation", 4)
-	legend_vbox.add_child(gradient_row)
-
-	_overlay_legend_min = Label.new()
-	_overlay_legend_min.add_theme_font_size_override("font_size", 8)
-	_overlay_legend_min.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
-	gradient_row.add_child(_overlay_legend_min)
-
-	_overlay_legend_gradient = ColorRect.new()
-	_overlay_legend_gradient.custom_minimum_size = Vector2(70, 8)
-	_overlay_legend_gradient.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	gradient_row.add_child(_overlay_legend_gradient)
-
-	_overlay_legend_max = Label.new()
-	_overlay_legend_max.add_theme_font_size_override("font_size", 8)
-	_overlay_legend_max.add_theme_color_override("font_color", Color(0.5, 0.55, 0.6))
-	gradient_row.add_child(_overlay_legend_max)
-
 
 
 func _build_overlay_probe() -> void:
@@ -1456,12 +1428,12 @@ func _show_resource_popup() -> void:
 		_resource_popup.offset_top = 38.0
 		_resource_popup.custom_minimum_size = Vector2(260.0, 0.0)
 		_resource_popup.mouse_filter = Control.MOUSE_FILTER_STOP
-		add_child(_resource_popup)
+		_hud_control_root.add_child(_resource_popup)
 
 	# Dynamic position: always to the right of minimap
 	var minimap_right: float = 0.0
 	if _minimap_panel != null and _minimap_panel.visible:
-		minimap_right = _minimap_panel.offset_right
+		minimap_right = _minimap_panel.position.x + _minimap_panel.size.x
 	_resource_popup.offset_left = minimap_right + 8.0
 
 	for child: Node in _resource_popup.get_children():
@@ -1868,16 +1840,67 @@ func _refresh_overlay_legend() -> void:
 	if _bottom_bar_active_overlays.is_empty():
 		_overlay_legend_panel.visible = false
 		return
-	var channel: String = _bottom_bar_active_overlays[0]
-	var accent: Color = _bottom_bar_overlay_accents.get(channel, Color.WHITE)
-	var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
-	var locale_key: String = ""
-	if button != null:
-		locale_key = str(button.get_meta("locale_key", ""))
-	_overlay_legend_title.text = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
-	_overlay_legend_gradient.color = accent
-	_overlay_legend_min.text = Locale.ltr("UI_LOW")
-	_overlay_legend_max.text = Locale.ltr("UI_HIGH")
+
+	var legend_vbox: VBoxContainer = null
+	if _overlay_legend_panel.get_child_count() > 0:
+		legend_vbox = _overlay_legend_panel.get_child(0) as VBoxContainer
+	if legend_vbox == null:
+		_overlay_legend_panel.visible = false
+		return
+
+	for child: Node in legend_vbox.get_children():
+		child.queue_free()
+
+	for channel: String in _bottom_bar_active_overlays:
+		var accent: Color = _bottom_bar_overlay_accents.get(channel, Color.WHITE)
+		var button: Button = _bottom_bar_overlay_buttons.get(channel, null)
+		var locale_key: String = ""
+		if button != null:
+			locale_key = str(button.get_meta("locale_key", ""))
+		var channel_name: String = Locale.ltr(locale_key) if not locale_key.is_empty() else channel
+
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+
+		var swatch := ColorRect.new()
+		swatch.custom_minimum_size = Vector2(8, 8)
+		swatch.color = accent
+		row.add_child(swatch)
+
+		var name_label := Label.new()
+		name_label.text = channel_name
+		name_label.add_theme_font_size_override("font_size", 9)
+		name_label.add_theme_color_override("font_color", accent)
+		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(name_label)
+
+		var low_label := Label.new()
+		low_label.text = Locale.ltr("UI_LOW")
+		low_label.add_theme_font_size_override("font_size", 7)
+		low_label.add_theme_color_override("font_color", Color(0.4, 0.45, 0.5))
+		row.add_child(low_label)
+
+		var gradient := ColorRect.new()
+		gradient.custom_minimum_size = Vector2(40, 8)
+		gradient.color = accent
+		row.add_child(gradient)
+
+		var high_label := Label.new()
+		high_label.text = Locale.ltr("UI_HIGH")
+		high_label.add_theme_font_size_override("font_size", 7)
+		high_label.add_theme_color_override("font_color", Color(0.4, 0.45, 0.5))
+		row.add_child(high_label)
+
+		legend_vbox.add_child(row)
+
+	var row_count: int = _bottom_bar_active_overlays.size()
+	var needed_height: float = float(row_count) * 18.0 + 12.0
+	var sizes: Array[int] = [160, 260, 0]
+	var current_minimap_size: int = sizes[_minimap_size_index] if _minimap_size_index < sizes.size() else 160
+	var minimap_bottom: float = TOP_BAR_HEIGHT + float(current_minimap_size)
+	_overlay_legend_panel.offset_top = minimap_bottom + 2.0
+	_overlay_legend_panel.offset_bottom = minimap_bottom + 2.0 + needed_height
+
 	_overlay_legend_panel.visible = true
 
 
@@ -3370,6 +3393,9 @@ func toggle_minimap() -> void:
 			_overlay_legend_panel.offset_bottom = _overlay_legend_panel.offset_top + 46.0
 		if _minimap_panel.has_method("request_update"):
 			_minimap_panel.call("request_update")
+	# Close resource popup on minimap resize to avoid overlap
+	if _resource_popup != null and _resource_popup.visible:
+		_resource_popup.visible = false
 
 
 ## Opens or closes the statistics detail panel via the popup manager.
