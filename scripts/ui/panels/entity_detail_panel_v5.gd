@@ -1058,16 +1058,7 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
-	icon_label.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUALITY"), quality_pct,
-		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
-		Locale.ltr("UI_DAMAGE"), damage,
-		Locale.ltr("UI_SPEED"), speed,
-	]
-	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
 
 	# Equipped marker
@@ -1081,6 +1072,14 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(star)
 
+	# Tooltip on slot — hash check prevents rebuild so tooltip survives
+	slot.tooltip_text = "%s (%s)\n%s: %d%%\n%s: %d/%d\n%s: %.1f  %s: %.1f" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUALITY"), quality_pct,
+		Locale.ltr("UI_DURABILITY"), int(cur_dur), int(max_dur),
+		Locale.ltr("UI_DAMAGE"), damage,
+		Locale.ltr("UI_SPEED"), speed,
+	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
@@ -1113,13 +1112,7 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Tooltip on icon_label — it fills the slot via SIZE_EXPAND_FILL
-	icon_label.tooltip_text = "%s (%s)\n%s: %d" % [
-		display_name, material_name,
-		Locale.ltr("UI_QUANTITY"), count,
-	]
-	icon_label.mouse_filter = Control.MOUSE_FILTER_PASS
-	icon_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
 
 	# Quantity badge (bottom-right) — only if count > 1
@@ -1135,6 +1128,11 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 		qty_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(qty_label)
 
+	# Tooltip on slot — hash check prevents rebuild so tooltip survives
+	slot.tooltip_text = "%s (%s)\n%s: %d" % [
+		display_name, material_name,
+		Locale.ltr("UI_QUANTITY"), count,
+	]
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	return slot
