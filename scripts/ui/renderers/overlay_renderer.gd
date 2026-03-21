@@ -83,8 +83,8 @@ func init(sim_engine: RefCounted, reference_renderer: Sprite2D = null) -> void:
 
 
 func _ready() -> void:
-	if not SimulationBus.overlay_channel_changed.is_connected(_on_overlay_channel_changed):
-		SimulationBus.overlay_channel_changed.connect(_on_overlay_channel_changed)
+	if not SimulationBus.overlay_channels_changed.is_connected(_on_overlay_channels_changed):
+		SimulationBus.overlay_channels_changed.connect(_on_overlay_channels_changed)
 
 
 func sync_with_world_renderer(reference_renderer: Sprite2D) -> void:
@@ -127,11 +127,11 @@ func _process(delta: float) -> void:
 		_refresh_data()
 
 
-func _on_overlay_channel_changed(channel: String) -> void:
-	if channel.is_empty():
+func _on_overlay_channels_changed(channels: Array) -> void:
+	if channels.is_empty():
 		clear_overlay()
 	else:
-		set_active_channel(channel)
+		set_active_channel(str(channels[0]))
 
 
 func _refresh_data() -> void:
