@@ -236,6 +236,7 @@ func _build_header() -> void:
 	_header_action_label = Label.new()
 	_header_action_label.add_theme_font_size_override("font_size", 10)
 	_header_action_label.add_theme_color_override("font_color", Color(0.5, 0.58, 0.65))
+	_header_action_label.custom_minimum_size.y = 24.0
 	info_vbox.add_child(_header_action_label)
 
 	# Action buttons (right side of header)
@@ -1026,8 +1027,8 @@ func _refresh_inventory() -> void:
 
 
 ## Creates a 36x36 inventory slot for a non-stackable tool/weapon item.
-func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
-	var slot := PanelContainer.new()
+func _create_tool_slot(item: Dictionary, is_equipped: bool) -> Panel:
+	var slot := Panel.new()
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
 	var quality: float = clampf(_safe_scalar(item.get("quality", 0.5), 0.5), 0.0, 1.0)
@@ -1056,8 +1057,8 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 	icon_label.add_theme_font_size_override("font_size", 16)
 	icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	icon_label.position = Vector2(0, 0)
+	icon_label.size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
 
@@ -1072,19 +1073,19 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 		dur_color = Color(0.78, 0.22, 0.15)
 	var dur_bar := ColorRect.new()
 	dur_bar.color = dur_color
-	dur_bar.custom_minimum_size = Vector2((INV_SLOT_SIZE - 4) * dur_ratio, 3)
 	dur_bar.position = Vector2(2, INV_SLOT_SIZE - 5)
+	dur_bar.size = Vector2((INV_SLOT_SIZE - 4) * dur_ratio, 3)
 	dur_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(dur_bar)
 
 	# Equipped marker
 	if is_equipped:
 		var star := Label.new()
-		star.text = " ★"
+		star.text = "★"
 		star.add_theme_font_size_override("font_size", 8)
 		star.add_theme_color_override("font_color", Color(0.78, 0.60, 0.15))
-		star.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		star.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+		star.position = Vector2(2, 1)
+		star.size = Vector2(16, 12)
 		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(star)
 
@@ -1102,8 +1103,8 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> PanelContainer:
 
 
 ## Creates a 36x36 inventory slot for a stack of identical raw materials.
-func _create_stack_slot(group: Dictionary) -> PanelContainer:
-	var slot := PanelContainer.new()
+func _create_stack_slot(group: Dictionary) -> Panel:
+	var slot := Panel.new()
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
 	var style := StyleBoxFlat.new()
@@ -1126,8 +1127,8 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 	icon_label.add_theme_font_size_override("font_size", 16)
 	icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	icon_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	icon_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	icon_label.position = Vector2(0, 0)
+	icon_label.size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 	icon_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	slot.add_child(icon_label)
 
@@ -1138,9 +1139,8 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 		qty_label.add_theme_font_size_override("font_size", 8)
 		qty_label.add_theme_color_override("font_color", Color(0.72, 0.78, 0.85))
 		qty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		qty_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-		qty_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		qty_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		qty_label.position = Vector2(0, INV_SLOT_SIZE - 12)
+		qty_label.size = Vector2(INV_SLOT_SIZE - 2, 12)
 		qty_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.add_child(qty_label)
 
@@ -1155,8 +1155,8 @@ func _create_stack_slot(group: Dictionary) -> PanelContainer:
 
 
 ## Creates a dim 36x36 empty inventory slot.
-func _create_empty_slot() -> PanelContainer:
-	var slot := PanelContainer.new()
+func _create_empty_slot() -> Panel:
+	var slot := Panel.new()
 	slot.custom_minimum_size = Vector2(INV_SLOT_SIZE, INV_SLOT_SIZE)
 
 	var style := StyleBoxFlat.new()
