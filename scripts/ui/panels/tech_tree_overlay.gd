@@ -31,6 +31,7 @@ var _tech_tree_manager: RefCounted
 var _sim_engine: RefCounted
 var _selected_entity_id: int = -1
 var _entity_knowledge: Dictionary = {}
+var _style_cache: Dictionary = {}
 
 var _zoom: float = 1.0
 var _pan: Vector2 = Vector2.ZERO
@@ -354,7 +355,7 @@ func _show_detail_panel(tech_id: String) -> void:
 	# Agent proficiency
 	var entry: Dictionary = _entity_knowledge.get(tech_id, {})
 	if not entry.is_empty():
-		var prof: float = clampf(float(entry.get("proficiency", 0.0)), 0.0, 1.0)
+		var prof: float = clampf(_safe_float(entry.get("proficiency", 0.0)), 0.0, 1.0)
 		var source_code: int = int(entry.get("source", 0))
 		var prof_label := Label.new()
 		prof_label.text = "%s: %d%% — %s: %s" % [
@@ -445,7 +446,7 @@ func _refresh_node_overlays() -> void:
 		var cat_color: Color = _category_color(def.get("categories", []))
 
 		if not entry.is_empty():
-			var prof: float = clampf(float(entry.get("proficiency", 0.0)), 0.0, 1.0)
+			var prof: float = clampf(_safe_float(entry.get("proficiency", 0.0)), 0.0, 1.0)
 			var bright: float = 0.3 + prof * 0.7
 			_apply_node_style(btn, Color(cat_color.r * bright, cat_color.g * bright, cat_color.b * bright))
 		else:
@@ -462,13 +463,25 @@ func _category_color(categories: Array) -> Color:
 
 
 func _apply_node_style(btn: Button, bg_color: Color) -> void:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg_color
-	sb.border_color = Color(minf(bg_color.r + 0.1, 1.0), minf(bg_color.g + 0.1, 1.0), minf(bg_color.b + 0.1, 1.0), 0.6)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(6)
+	var key: String = "%d_%d_%d" % [int(bg_color.r * 20), int(bg_color.g * 20), int(bg_color.b * 20)]
+	var sb: StyleBoxFlat
+	if _style_cache.has(key):
+		sb = _style_cache[key]
+	else:
+		sb = StyleBoxFlat.new()
+		sb.bg_color = bg_color
+		sb.border_color = Color(minf(bg_color.r + 0.1, 1.0), minf(bg_color.g + 0.1, 1.0), minf(bg_color.b + 0.1, 1.0), 0.6)
+		sb.set_border_width_all(1)
+		sb.set_corner_radius_all(6)
+		_style_cache[key] = sb
 	for state: String in ["normal", "hover", "pressed", "disabled", "focus"]:
 		btn.add_theme_stylebox_override(state, sb)
+
+
+func _safe_float(raw: Variant) -> float:
+	if raw is float or raw is int:
+		return float(raw)
+	return 0.0
 
 
 func _source_icon(source_code: int) -> String:

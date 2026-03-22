@@ -3106,10 +3106,14 @@ func _on_entity_selected(entity_id: int) -> void:
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
 	_open_entity_detail_sidebar(entity_id)
+	if _tech_tree_overlay != null and _tech_tree_overlay.visible:
+		_tech_tree_overlay.set_entity(entity_id)
 
 
 func _on_entity_deselected() -> void:
 	_selected_entity_id = -1
+	if _tech_tree_overlay != null and _tech_tree_overlay.visible:
+		_tech_tree_overlay.set_entity(-1)
 	_entity_panel_update_timer = 0.0
 	_cached_rust_snapshot = {}
 	_cached_rust_snapshot_tick = -1
