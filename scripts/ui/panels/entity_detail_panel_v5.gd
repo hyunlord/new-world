@@ -43,9 +43,13 @@ var _overview_panel: VBoxContainer
 var _needs_panel: VBoxContainer
 
 # Overview sub-nodes
-var _overview_alert_label: Label
-var _overview_info_label: Label
+var _overview_alert_container: VBoxContainer
+var _overview_info_grid: GridContainer
+var _overview_info_cells: Array[Label] = []
 var _overview_need_rows: Array[Dictionary] = []
+var _overview_knowledge_label: Label
+var _overview_family_label: Label
+var _overview_trait_container: HBoxContainer
 
 # Need rows cache (reusable — update values, don't recreate)
 var _v5_need_rows: Array[Dictionary] = []
@@ -328,25 +332,64 @@ func _build_overview_tab() -> void:
 	_overview_panel.add_theme_constant_override("separation", 6)
 	_tab_container.add_child(_overview_panel)
 
-	_overview_alert_label = Label.new()
-	_overview_alert_label.add_theme_font_size_override("font_size", 11)
-	_overview_alert_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	_overview_panel.add_child(_overview_alert_label)
+	# --- Alert Cards Section ---
+	_add_section_title(_overview_panel, "PANEL_OVERVIEW_ALERTS")
+	_overview_alert_container = VBoxContainer.new()
+	_overview_alert_container.add_theme_constant_override("separation", 2)
+	_overview_panel.add_child(_overview_alert_container)
 
-	_overview_info_label = Label.new()
-	_overview_info_label.add_theme_font_size_override("font_size", 10)
-	_overview_info_label.add_theme_color_override("font_color", COLOR_LABEL)
-	_overview_info_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	_overview_panel.add_child(_overview_info_label)
+	# --- Basic Info 2x2 Grid ---
+	_add_section_title(_overview_panel, "PANEL_OVERVIEW_BASIC")
+	_overview_info_grid = GridContainer.new()
+	_overview_info_grid.columns = 2
+	_overview_info_grid.add_theme_constant_override("h_separation", 4)
+	_overview_info_grid.add_theme_constant_override("v_separation", 3)
+	_overview_panel.add_child(_overview_info_grid)
 
-	var needs_title := Label.new()
-	needs_title.text = Locale.ltr("PANEL_OVERVIEW_NEEDS")
-	needs_title.add_theme_font_size_override("font_size", 11)
-	needs_title.add_theme_color_override("font_color", COLOR_SECTION_TITLE)
-	_overview_panel.add_child(needs_title)
+	_overview_info_cells.clear()
+	for _idx: int in range(4):
+		var cell := PanelContainer.new()
+		var cell_style := StyleBoxFlat.new()
+		cell_style.bg_color = Color(0.03, 0.04, 0.06, 1.0)
+		cell_style.set_corner_radius_all(2)
+		cell_style.content_margin_left = 5
+		cell_style.content_margin_right = 5
+		cell_style.content_margin_top = 3
+		cell_style.content_margin_bottom = 3
+		cell.add_theme_stylebox_override("panel", cell_style)
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_overview_info_grid.add_child(cell)
 
+		var cell_label := Label.new()
+		cell_label.add_theme_font_size_override("font_size", 10)
+		cell_label.add_theme_color_override("font_color", Color(0.66, 0.72, 0.78))
+		cell.add_child(cell_label)
+		_overview_info_cells.append(cell_label)
+
+	# --- Needs Bars ---
+	_add_section_title(_overview_panel, "PANEL_OVERVIEW_NEEDS")
 	for i in range(4):
 		_overview_need_rows.append(_create_bar_row(_overview_panel))
+
+	# --- Knowledge Summary ---
+	_add_section_title(_overview_panel, "PANEL_OVERVIEW_KNOWLEDGE")
+	_overview_knowledge_label = Label.new()
+	_overview_knowledge_label.add_theme_font_size_override("font_size", 10)
+	_overview_knowledge_label.add_theme_color_override("font_color", Color(0.44, 0.53, 0.60))
+	_overview_panel.add_child(_overview_knowledge_label)
+
+	# --- Family Summary ---
+	_add_section_title(_overview_panel, "PANEL_OVERVIEW_FAMILY")
+	_overview_family_label = Label.new()
+	_overview_family_label.add_theme_font_size_override("font_size", 10)
+	_overview_family_label.add_theme_color_override("font_color", Color(0.44, 0.53, 0.60))
+	_overview_panel.add_child(_overview_family_label)
+
+	# --- Trait Chips ---
+	_add_section_title(_overview_panel, "UI_TRAITS_TITLE")
+	_overview_trait_container = HBoxContainer.new()
+	_overview_trait_container.add_theme_constant_override("separation", 3)
+	_overview_panel.add_child(_overview_trait_container)
 
 
 # ---------------------------------------------------------------------------
@@ -490,37 +533,47 @@ func _refresh_header() -> void:
 
 
 func _refresh_overview() -> void:
-	if _overview_alert_label == null or _detail.is_empty():
+	if _overview_panel == null or _detail.is_empty():
 		return
 
-	var alerts: PackedStringArray = PackedStringArray()
+	# --- 1. Alert Cards ---
+	for child in _overview_alert_container.get_children():
+		child.queue_free()
+
+	var alerts: Array[Dictionary] = []
 	var hunger: float = _safe_float(_detail, "need_hunger", 1.0)
 	var sleep_val: float = _safe_float(_detail, "need_sleep", 1.0)
 	var stress: float = _normalized_stress()
+	var health_tab_data: Dictionary = _health_tab if not _health_tab.is_empty() else {}
+	var damaged: Array = health_tab_data.get("damaged_parts", []) if health_tab_data is Dictionary else []
+
 	if hunger < 0.35:
-		alerts.append("⚠ " + Locale.ltr("ALERT_HUNGRY"))
+		alerts.append({"text": Locale.ltr("ALERT_HUNGRY"), "detail": Locale.ltr("ALERT_HUNGRY_DETAIL"), "color": COLOR_ALERT_BAD})
 	if sleep_val < 0.30:
-		alerts.append("⚠ " + Locale.ltr("ALERT_TIRED"))
+		alerts.append({"text": Locale.ltr("ALERT_TIRED"), "detail": Locale.ltr("ALERT_TIRED_DETAIL"), "color": Color(0.78, 0.55, 0.10)})
 	if stress > 0.30:
-		alerts.append("⚠ " + Locale.ltr("ALERT_STRESSED"))
+		alerts.append({"text": Locale.ltr("ALERT_STRESSED"), "detail": Locale.ltr("ALERT_STRESSED_DETAIL"), "color": COLOR_ALERT_BAD})
+	if damaged is Array and not damaged.is_empty():
+		alerts.append({"text": Locale.ltr("ALERT_INJURED"), "detail": Locale.trf1("ALERT_INJURED_DETAIL", "n", damaged.size()), "color": COLOR_ALERT_BAD})
+
 	if alerts.is_empty():
-		_overview_alert_label.text = "✓ " + Locale.ltr("ALERT_ALL_GOOD")
-		_overview_alert_label.add_theme_color_override("font_color", COLOR_ALERT_GOOD)
+		_overview_alert_container.add_child(_create_alert_card(Locale.ltr("ALERT_ALL_GOOD"), "", COLOR_ALERT_GOOD))
 	else:
-		_overview_alert_label.text = "\n".join(alerts)
-		_overview_alert_label.add_theme_color_override("font_color", COLOR_ALERT_BAD)
+		for alert: Dictionary in alerts:
+			_overview_alert_container.add_child(_create_alert_card(str(alert["text"]), str(alert["detail"]), alert["color"]))
 
-	var occ: String = _localized_action_text(str(_detail.get("occupation", "none")))
-	var age: int = int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0)))
-	var action: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
-	var band: String = _band_label()
-	_overview_info_label.text = "%s %s   %s %d%s\n%s %s   %s %s" % [
-		Locale.ltr("UI_JOB"), occ,
-		Locale.ltr("UI_AGE"), age, Locale.ltr("UI_AGE_UNIT"),
-		Locale.ltr("UI_ACTION"), action,
-		Locale.ltr("UI_BAND"), band,
-	]
+	# --- 2. Info Grid ---
+	if _overview_info_cells.size() >= 4:
+		var occ: String = _localized_action_text(str(_detail.get("occupation", "none")))
+		var age: int = int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0)))
+		var action: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
+		var band: String = _band_label()
+		_overview_info_cells[0].text = "%s %s" % [Locale.ltr("UI_JOB"), occ]
+		_overview_info_cells[1].text = "%s %d%s" % [Locale.ltr("UI_AGE"), age, Locale.ltr("UI_AGE_UNIT")]
+		_overview_info_cells[2].text = "%s %s" % [Locale.ltr("UI_ACTION"), action]
+		_overview_info_cells[3].text = "%s %s" % [Locale.ltr("UI_BAND"), band]
 
+	# --- 3. Need Bars ---
 	var entries: Array[Dictionary] = _build_sorted_need_entries(4)
 	for i in range(4):
 		if i < entries.size():
@@ -528,6 +581,40 @@ func _refresh_overview() -> void:
 			_overview_need_rows[i].container.visible = true
 		else:
 			_overview_need_rows[i].container.visible = false
+
+	# --- 4. Knowledge Summary ---
+	if _overview_knowledge_label != null:
+		var k_count: int = int(_safe_panel_scalar(_detail.get("knowledge_count", 0), 0))
+		var is_learning: bool = bool(_detail.get("is_learning", false))
+		var k_text: String = Locale.trf1("OVERVIEW_KNOWLEDGE_FMT", "n", k_count)
+		if is_learning:
+			k_text += " · " + Locale.ltr("OVERVIEW_LEARNING")
+		_overview_knowledge_label.text = k_text
+
+	# --- 5. Family Summary ---
+	if _overview_family_label != null:
+		var has_spouse: bool = bool(_detail.get("has_spouse", false))
+		var child_count: int = int(_safe_panel_scalar(_detail.get("children_count", 0), 0))
+		var spouse_text: String = Locale.ltr("OVERVIEW_MARRIED") if has_spouse else Locale.ltr("OVERVIEW_SINGLE")
+		var f_text: String = spouse_text
+		if child_count > 0:
+			f_text += " · " + Locale.trf1("OVERVIEW_CHILDREN_FMT", "n", child_count)
+		_overview_family_label.text = f_text
+
+	# --- 6. Trait Chips ---
+	if _overview_trait_container != null:
+		for child in _overview_trait_container.get_children():
+			child.queue_free()
+		var tags: PackedStringArray = _build_trait_tag_texts()
+		if tags.is_empty():
+			var none_label := Label.new()
+			none_label.text = "—"
+			none_label.add_theme_font_size_override("font_size", 9)
+			none_label.add_theme_color_override("font_color", Color(0.22, 0.28, 0.31))
+			_overview_trait_container.add_child(none_label)
+		else:
+			for tag_text: String in tags:
+				_overview_trait_container.add_child(_create_trait_chip(tag_text))
 
 
 func _refresh_needs() -> void:
@@ -1187,6 +1274,66 @@ func _quality_border_color(quality: float) -> Color:
 		return Color(0.20, 0.25, 0.30)  # Default — normal
 	else:
 		return Color(0.35, 0.35, 0.38)  # Gray — poor
+
+
+## Creates a colored alert card with left border accent.
+func _create_alert_card(title: String, detail: String, color: Color) -> PanelContainer:
+	var card := PanelContainer.new()
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color(color.r, color.g, color.b, 0.06)
+	card_style.border_color = color
+	card_style.border_width_left = 3
+	card_style.border_width_top = 0
+	card_style.border_width_right = 0
+	card_style.border_width_bottom = 0
+	card_style.set_corner_radius_all(3)
+	card_style.content_margin_left = 6
+	card_style.content_margin_right = 6
+	card_style.content_margin_top = 3
+	card_style.content_margin_bottom = 3
+	card.add_theme_stylebox_override("panel", card_style)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 1)
+	card.add_child(vbox)
+
+	var title_label := Label.new()
+	title_label.text = title
+	title_label.add_theme_font_size_override("font_size", 10)
+	title_label.add_theme_color_override("font_color", color)
+	vbox.add_child(title_label)
+
+	if not detail.is_empty():
+		var detail_label := Label.new()
+		detail_label.text = detail
+		detail_label.add_theme_font_size_override("font_size", 9)
+		detail_label.add_theme_color_override("font_color", Color(0.53, 0.60, 0.66))
+		vbox.add_child(detail_label)
+
+	return card
+
+
+## Creates a small colored tag chip for trait display.
+func _create_trait_chip(text: String) -> PanelContainer:
+	var chip := PanelContainer.new()
+	var chip_style := StyleBoxFlat.new()
+	chip_style.bg_color = Color(0.06, 0.10, 0.18)
+	chip_style.border_color = Color(0.09, 0.14, 0.19)
+	chip_style.set_border_width_all(1)
+	chip_style.set_corner_radius_all(2)
+	chip_style.content_margin_left = 4
+	chip_style.content_margin_right = 4
+	chip_style.content_margin_top = 1
+	chip_style.content_margin_bottom = 1
+	chip.add_theme_stylebox_override("panel", chip_style)
+
+	var label := Label.new()
+	label.text = text
+	label.add_theme_font_size_override("font_size", 9)
+	label.add_theme_color_override("font_color", Color(0.41, 0.53, 0.66))
+	chip.add_child(label)
+
+	return chip
 
 
 ## Applies the same StyleBox to all button states so the slot looks static.
