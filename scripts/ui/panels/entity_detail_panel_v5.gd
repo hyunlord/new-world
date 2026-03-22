@@ -896,6 +896,13 @@ func _build_knowledge_tab() -> void:
 	_knowledge_channel_container.add_theme_constant_override("separation", ROW_SPACING)
 	_knowledge_panel.add_child(_knowledge_channel_container)
 
+	var open_map_btn := Button.new()
+	open_map_btn.text = Locale.ltr("UI_OPEN_TECH_MAP")
+	open_map_btn.add_theme_font_size_override("font_size", 10)
+	open_map_btn.custom_minimum_size = Vector2(0, 28)
+	open_map_btn.pressed.connect(_on_open_tech_map)
+	_knowledge_panel.add_child(open_map_btn)
+
 
 func _refresh_knowledge() -> void:
 	if _knowledge_panel == null:
@@ -1373,6 +1380,11 @@ func _apply_slot_style(button: Button, bg_color: Color, border_color: Color, bor
 
 
 ## Returns an icon for the knowledge transmission source.
+func _on_open_tech_map() -> void:
+	# Use group call to tell HUD to open tech tree
+	get_tree().call_group("hud", "_toggle_tech_tree")
+
+
 func _knowledge_source_icon(source_code: int) -> String:
 	match source_code:
 		0: return "🗣️"

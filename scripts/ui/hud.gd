@@ -105,6 +105,8 @@ var _bottom_bar_sel_label: Label
 var _resource_popup: PanelContainer
 var _band_popup: PanelContainer
 var _pause_overlay: Control = null
+var _tech_tree_manager_ref: RefCounted
+var _tech_tree_overlay: Control
 var _pause_overlay_was_running: bool = false
 var _oracle_button: Button
 var _oracle_panel: Control
@@ -304,6 +306,7 @@ func init(sim_engine: RefCounted, entity_manager: RefCounted, building_manager: 
 
 
 func _ready() -> void:
+	add_to_group("hud")
 	layer = 10
 	# Control wrapper — CanvasLayer is not Control, anchors need a Control parent
 	_hud_control_root = Control.new()
@@ -3312,10 +3315,24 @@ func _update_era_label() -> void:
 
 ## Sets the TechTreeManager reference for tech-related UI sections.
 func set_tech_tree_manager(ttm: RefCounted) -> void:
+	_tech_tree_manager_ref = ttm
 	if _stats_detail_panel != null:
 		_stats_detail_panel.set_tech_tree_manager(ttm)
 	if _settlement_detail_panel != null:
 		_settlement_detail_panel._tech_tree_manager = ttm
+
+
+func _toggle_tech_tree() -> void:
+	if _tech_tree_overlay == null:
+		var overlay_script: GDScript = load("res://scripts/ui/panels/tech_tree_overlay.gd")
+		_tech_tree_overlay = overlay_script.new()
+		_tech_tree_overlay.setup(_tech_tree_manager_ref, _sim_engine)
+		_tech_tree_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_tech_tree_overlay.visible = false
+		_hud_control_root.add_child(_tech_tree_overlay)
+	_tech_tree_overlay.visible = not _tech_tree_overlay.visible
+	if _tech_tree_overlay.visible and _selected_entity_id >= 0:
+		_tech_tree_overlay.set_entity(_selected_entity_id)
 
 
 func _on_locale_changed(_new_locale: String) -> void:
@@ -3438,6 +3455,10 @@ func _input(event: InputEvent) -> void:
 			return
 		if event.keycode == KEY_L:
 			toggle_event_log()
+			get_viewport().set_input_as_handled()
+			return
+		if event.keycode == KEY_T:
+			_toggle_tech_tree()
 			get_viewport().set_input_as_handled()
 			return
 
