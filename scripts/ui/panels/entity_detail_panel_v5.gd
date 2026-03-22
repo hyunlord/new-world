@@ -23,6 +23,7 @@ const COLOR_BORDER: Color = Color(0.20, 0.25, 0.30, 0.70)
 const COLOR_LABEL: Color = Color(0.31, 0.41, 0.47)
 const COLOR_SECTION_TITLE: Color = Color(0.16, 0.22, 0.28)
 const COLOR_ALERT_GOOD: Color = Color(0.28, 0.66, 0.16)
+const COLOR_ALERT_WARN: Color = Color(0.80, 0.65, 0.12)
 const COLOR_ALERT_BAD: Color = Color(0.78, 0.22, 0.15)
 const COLOR_PCT: Color = Color(0.53, 0.60, 0.66)
 
@@ -93,7 +94,7 @@ var _relationships_container: VBoxContainer
 var _inventory_panel: VBoxContainer
 var _inventory_empty_label: Label
 var _inventory_container: GridContainer
-var _inv_data_hash: int = 0
+var _inv_data_hash: int = -1
 
 # Family tab
 var _family_panel: VBoxContainer
@@ -553,7 +554,7 @@ func _refresh_overview() -> void:
 	if hunger < 0.35:
 		alerts.append({"text": Locale.ltr("ALERT_HUNGRY"), "detail": Locale.ltr("ALERT_HUNGRY_DETAIL"), "color": COLOR_ALERT_BAD})
 	if sleep_val < 0.30:
-		alerts.append({"text": Locale.ltr("ALERT_TIRED"), "detail": Locale.ltr("ALERT_TIRED_DETAIL"), "color": Color(0.78, 0.55, 0.10)})
+		alerts.append({"text": Locale.ltr("ALERT_TIRED"), "detail": Locale.ltr("ALERT_TIRED_DETAIL"), "color": COLOR_ALERT_WARN})
 	if stress > 0.30:
 		alerts.append({"text": Locale.ltr("ALERT_STRESSED"), "detail": Locale.ltr("ALERT_STRESSED_DETAIL"), "color": COLOR_ALERT_BAD})
 	if damaged is Array and not damaged.is_empty():
@@ -970,6 +971,7 @@ func _refresh_relationships() -> void:
 		return
 	for child in _relationships_container.get_children():
 		child.queue_free()
+	_clickable_callables.clear()
 
 	var entries: Array[Dictionary] = _build_relationship_entries(15)
 	_relationships_empty_label.visible = entries.is_empty()
@@ -1088,8 +1090,8 @@ func _refresh_inventory() -> void:
 			continue
 		var item: Dictionary = item_raw
 		var equipped_slot: String = str(item.get("equipped_slot", ""))
-		var cur_dur: float = float(item.get("current_durability", 100.0))
-		var max_dur: float = float(item.get("max_durability", 100.0))
+		var cur_dur: float = _safe_scalar(item.get("current_durability", 100.0), 100.0)
+		var max_dur: float = _safe_scalar(item.get("max_durability", 100.0), 100.0)
 		# Display grouping: equipped → individual, worn → individual, rest → group
 		var is_worn: bool = max_dur > 0.0 and cur_dur < max_dur * 0.99
 
@@ -1187,11 +1189,11 @@ func _create_tool_slot(item: Dictionary, is_equipped: bool) -> Button:
 	var dur_ratio: float = clampf(cur_dur / maxf(max_dur, 1.0), 0.0, 1.0)
 	var dur_color: Color
 	if dur_ratio > 0.6:
-		dur_color = Color(0.28, 0.66, 0.16)
+		dur_color = COLOR_ALERT_GOOD
 	elif dur_ratio > 0.3:
-		dur_color = Color(0.80, 0.65, 0.12)
+		dur_color = COLOR_ALERT_WARN
 	else:
-		dur_color = Color(0.78, 0.22, 0.15)
+		dur_color = COLOR_ALERT_BAD
 	var dur_bar := ColorRect.new()
 	dur_bar.color = dur_color
 	dur_bar.position = Vector2(2, INV_SLOT_SIZE - 5)
@@ -1361,12 +1363,12 @@ func _create_trait_chip(text: String) -> PanelContainer:
 
 ## Applies the same StyleBox to all button states so the slot looks static.
 func _apply_slot_style(button: Button, bg_color: Color, border_color: Color, border_width: int, corner_radius: int) -> void:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg_color
+	sb.border_color = border_color
+	sb.set_border_width_all(border_width)
+	sb.set_corner_radius_all(corner_radius)
 	for state: String in ["normal", "hover", "pressed", "disabled", "focus"]:
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = bg_color
-		sb.border_color = border_color
-		sb.set_border_width_all(border_width)
-		sb.set_corner_radius_all(corner_radius)
 		button.add_theme_stylebox_override(state, sb)
 
 
@@ -1754,16 +1756,6 @@ func _merged_health_groups() -> Array[Dictionary]:
 		{"label": "BODY_GROUP_LEG_R", "value": values[7]},
 	]
 
-
-func _knowledge_channels() -> Array[Dictionary]:
-	return [
-		{"icon": "🗣️", "label": "UI_CHANNEL_ORAL", "status": "UI_ACTIVE", "locked": false},
-		{"icon": "👁️", "label": "UI_CHANNEL_OBSERVE", "status": "UI_ACTIVE", "locked": false},
-		{"icon": "🔨", "label": "UI_CHANNEL_APPRENTICE", "status": "UI_ACTIVE", "locked": false},
-		{"icon": "📜", "label": "UI_CHANNEL_RECORD", "status": "UI_REQUIRES_WRITING", "locked": true},
-		{"icon": "🏛️", "label": "UI_CHANNEL_SCHOOL", "status": "UI_REQUIRES_WRITING", "locked": true},
-		{"icon": "💡", "label": "UI_CHANNEL_DISCOVERY", "status": "UI_ACTIVE", "locked": false},
-	]
 
 
 func _inventory_icon(template_id: String) -> String:
