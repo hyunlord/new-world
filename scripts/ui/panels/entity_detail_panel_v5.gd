@@ -81,6 +81,8 @@ var _knowledge_panel: VBoxContainer
 var _knowledge_empty_label: Label
 var _knowledge_rows: Array[Dictionary] = []
 var _knowledge_channel_container: VBoxContainer
+var _knowledge_summary_label: Label
+var _knowledge_learning_label: Label
 
 # Relationships tab
 var _relationships_panel: VBoxContainer
@@ -100,6 +102,7 @@ var _family_mother_label: Label
 var _family_spouse_label: Label
 var _family_children_label: Label
 var _family_kinship_label: Label
+var _family_summary_label: Label
 
 # Events tab
 var _events_panel: VBoxContainer
@@ -564,7 +567,10 @@ func _refresh_overview() -> void:
 
 	# --- 2. Info Grid ---
 	if _overview_info_cells.size() >= 4:
-		var occ: String = _localized_action_text(str(_detail.get("occupation", "none")))
+		var occ_raw: String = str(_detail.get("occupation", "none")).strip_edges()
+		if occ_raw.is_empty():
+			occ_raw = "none"
+		var occ: String = Locale.ltr("OCCUPATION_" + occ_raw.to_upper())
 		var age: int = int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0)))
 		var action: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
 		var band: String = _band_label()
@@ -865,6 +871,18 @@ func _build_knowledge_tab() -> void:
 	_knowledge_panel.add_theme_constant_override("separation", ROW_SPACING)
 	_tab_container.add_child(_knowledge_panel)
 
+	_knowledge_summary_label = Label.new()
+	_knowledge_summary_label.add_theme_font_size_override("font_size", 11)
+	_knowledge_summary_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+	_knowledge_panel.add_child(_knowledge_summary_label)
+
+	_knowledge_learning_label = Label.new()
+	_knowledge_learning_label.add_theme_font_size_override("font_size", 10)
+	_knowledge_learning_label.add_theme_color_override("font_color", Color(0.45, 0.62, 0.84))
+	_knowledge_learning_label.visible = false
+	_knowledge_panel.add_child(_knowledge_learning_label)
+
+	_add_section_spacer(_knowledge_panel)
 	_add_section_title(_knowledge_panel, "PANEL_KNOWLEDGE_TITLE")
 
 	_knowledge_empty_label = Label.new()
@@ -887,6 +905,22 @@ func _refresh_knowledge() -> void:
 
 	var known_raw: Variant = _knowledge_tab.get("known", [])
 	var known: Array = known_raw if known_raw is Array else []
+
+	var k_count: int = known.size()
+	_knowledge_summary_label.text = Locale.trf1("OVERVIEW_KNOWLEDGE_FMT", "n", k_count)
+
+	var learning_raw: Variant = _knowledge_tab.get("learning", null)
+	if learning_raw is Dictionary and not (learning_raw as Dictionary).is_empty():
+		var learning: Dictionary = learning_raw
+		var learning_id: String = str(learning.get("knowledge_id", ""))
+		var progress: float = clampf(_safe_scalar(learning.get("progress", 0.0), 0.0), 0.0, 1.0)
+		var progress_pct: int = int(progress * 100.0)
+		var learning_name: String = _display_token(learning_id)
+		_knowledge_learning_label.text = Locale.ltr("OVERVIEW_LEARNING_LABEL") + ": %s (%d%%)" % [learning_name, progress_pct]
+		_knowledge_learning_label.visible = true
+	else:
+		_knowledge_learning_label.visible = false
+
 	_knowledge_empty_label.visible = known.is_empty()
 	if known.is_empty():
 		return
@@ -898,26 +932,15 @@ func _refresh_knowledge() -> void:
 		var knowledge_id: String = str(knowledge.get("id", ""))
 		var display_name: String = _display_token(knowledge_id)
 		var proficiency: float = clampf(_safe_scalar(knowledge.get("proficiency", 0.0), 0.0), 0.0, 1.0)
+		var source_code: int = int(knowledge.get("source", 0))
+		var source_icon: String = _knowledge_source_icon(source_code)
+
 		var row: Dictionary = _create_bar_row(_knowledge_channel_container)
 		_update_bar_row(row, {
-			"label": display_name,
+			"label": "%s %s" % [source_icon, display_name],
 			"value": proficiency,
-			"color": Color(0.45, 0.62, 0.84),
 		})
 		_knowledge_rows.append(row)
-
-	_add_section_spacer(_knowledge_channel_container)
-	_add_section_title(_knowledge_channel_container, "PANEL_KNOWLEDGE_CHANNELS")
-	for channel: Dictionary in _knowledge_channels():
-		var channel_label := Label.new()
-		var icon: String = str(channel.get("icon", ""))
-		var name_text: String = Locale.ltr(str(channel.get("label", "")))
-		var status_text: String = Locale.ltr(str(channel.get("status", "")))
-		var locked: bool = bool(channel.get("locked", false))
-		channel_label.text = "%s %s — %s" % [icon, name_text, status_text]
-		channel_label.add_theme_font_size_override("font_size", 10)
-		channel_label.add_theme_color_override("font_color", Color(0.35, 0.40, 0.48) if locked else Color(0.50, 0.60, 0.70))
-		_knowledge_channel_container.add_child(channel_label)
 
 
 # ---------------------------------------------------------------------------
@@ -1347,6 +1370,18 @@ func _apply_slot_style(button: Button, bg_color: Color, border_color: Color, bor
 		button.add_theme_stylebox_override(state, sb)
 
 
+## Returns an icon for the knowledge transmission source.
+func _knowledge_source_icon(source_code: int) -> String:
+	match source_code:
+		0: return "🗣️"
+		1: return "👁️"
+		2: return "🔨"
+		3: return "📜"
+		4: return "🏛️"
+		5: return "💡"
+		_: return "❓"
+
+
 ## Returns a localized equipment slot label.
 func _equip_slot_label(slot_key: String) -> String:
 	match slot_key:
@@ -1383,6 +1418,12 @@ func _build_family_tab() -> void:
 	_family_panel.add_theme_constant_override("separation", 4)
 	_tab_container.add_child(_family_panel)
 
+	_family_summary_label = Label.new()
+	_family_summary_label.add_theme_font_size_override("font_size", 11)
+	_family_summary_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+	_family_panel.add_child(_family_summary_label)
+
+	_add_section_spacer(_family_panel)
 	_add_section_title(_family_panel, "PANEL_FAMILY_TITLE")
 
 	var pairs: Array[Array] = [
@@ -1419,6 +1460,28 @@ func _build_family_tab() -> void:
 func _refresh_family() -> void:
 	if _family_panel == null:
 		return
+
+	if _family_summary_label != null:
+		var has_spouse: bool = false
+		var child_count: int = 0
+		var generation: int = 0
+
+		if not _family_tab.is_empty():
+			var spouse_raw: Variant = _family_tab.get("spouse", {})
+			has_spouse = spouse_raw is Dictionary and not (spouse_raw as Dictionary).is_empty()
+			var children_raw: Variant = _family_tab.get("children", [])
+			child_count = (children_raw as Array).size() if children_raw is Array else 0
+			generation = int(_family_tab.get("generation", 0))
+
+		var spouse_text: String = Locale.ltr("OVERVIEW_MARRIED") if has_spouse else Locale.ltr("OVERVIEW_SINGLE")
+		var summary_parts: PackedStringArray = PackedStringArray()
+		summary_parts.append(spouse_text)
+		if child_count > 0:
+			summary_parts.append(Locale.trf1("OVERVIEW_CHILDREN_FMT", "n", child_count))
+		if generation > 0:
+			summary_parts.append(Locale.trf1("FAMILY_GENERATION_FMT", "n", generation))
+		_family_summary_label.text = " · ".join(summary_parts)
+
 	if _family_tab.is_empty():
 		_family_father_label.text = Locale.ltr("PANEL_FAMILY_UNKNOWN")
 		_family_mother_label.text = Locale.ltr("PANEL_FAMILY_UNKNOWN")
@@ -1443,13 +1506,19 @@ func _refresh_family() -> void:
 	if children.is_empty():
 		_family_children_label.text = Locale.ltr("UI_NONE")
 	else:
-		var names: PackedStringArray = PackedStringArray()
+		var entries: PackedStringArray = PackedStringArray()
 		for child_raw: Variant in children:
 			if child_raw is Dictionary:
-				names.append(str((child_raw as Dictionary).get("name", "?")))
-		_family_children_label.text = ", ".join(names) if not names.is_empty() else Locale.ltr("UI_NONE")
+				var child: Dictionary = child_raw
+				var child_name: String = str(child.get("name", "?"))
+				var child_age: int = int(child.get("age", 0))
+				if child_age > 0:
+					entries.append("%s (%d%s)" % [child_name, child_age, Locale.ltr("UI_AGE_UNIT")])
+				else:
+					entries.append(child_name)
+		_family_children_label.text = ", ".join(entries) if not entries.is_empty() else Locale.ltr("UI_NONE")
 
-	var kinship_index: int = clampi(int(_family_tab.get("kinship_system", 0)), 0, 2)
+	var kinship_index: int = clampi(int(_family_tab.get("kinship_type", 0)), 0, 2)
 	var kinship_keys: Array[String] = ["KINSHIP_BILATERAL", "KINSHIP_PATRILINEAL", "KINSHIP_MATRILINEAL"]
 	_family_kinship_label.text = "%s: %s" % [Locale.ltr("PANEL_FAMILY_KINSHIP"), Locale.ltr(kinship_keys[kinship_index])]
 

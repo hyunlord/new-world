@@ -4826,3 +4826,6 @@ UI_POPUP_NO_BANDS = No bands formed yet
 UI_RES_POPUP_HEADER = Resources by Settlement
 UI_SLOT_MAIN_HAND = Main hand
 UI_SLOT_OFF_HAND = Off hand
+OVERVIEW_LEARNING_LABEL = Learning
+FAMILY_GENERATION_FMT = Gen {n}
+TECH_FORAGING = Foraging

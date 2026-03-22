@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4820,
+    "active_key_count": 4823,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4821,
+    "key_count": 4824,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1184,6 +1184,7 @@
     "FACET_X_SOCIABILITY": "Sociability",
     "FACET_X_SOCIAL_BOLDNESS": "Social Boldness",
     "FACET_X_SOCIAL_SELF_ESTEEM": "Social Self-Esteem",
+    "FAMILY_GENERATION_FMT": "Gen {n}",
     "GAS_STAGE_ALARM": "Alarm",
     "GAS_STAGE_EXHAUSTION": "Exhaustion",
     "GAS_STAGE_NORMAL": "Normal",
@@ -1472,6 +1473,7 @@
     "OVERVIEW_CHILDREN_FMT": "{n} children",
     "OVERVIEW_KNOWLEDGE_FMT": "{n} known",
     "OVERVIEW_LEARNING": "Learning...",
+    "OVERVIEW_LEARNING_LABEL": "Learning",
     "OVERVIEW_MARRIED": "Married",
     "OVERVIEW_SINGLE": "Single",
     "PANEL_ACTIVE": "Active",
@@ -1940,6 +1942,7 @@
     "TECH_FLUTE_MAKING_DESC": "Carving hollow bone or reed into musical instruments, evidence of a mind capable of art, ritual, and abstract expression.",
     "TECH_FOOD_PRESERVATION": "Food Preservation",
     "TECH_FOOD_PRESERVATION_DESC": "Drying, salting, smoking, and fermenting foods to extend their safe storage life through seasons of scarcity.",
+    "TECH_FORAGING": "Foraging",
     "TECH_FORMAL_EDUCATION": "Formal Education",
     "TECH_FORMAL_EDUCATION_DESC": "Establishing scribal schools and academies where knowledge is systematically transmitted to selected students, creating professional intellectual classes.",
     "TECH_FRESCO_PAINTING": "Fresco Painting",
