@@ -564,7 +564,10 @@ func _refresh_overview() -> void:
 
 	# --- 2. Info Grid ---
 	if _overview_info_cells.size() >= 4:
-		var occ: String = _localized_action_text(str(_detail.get("occupation", "none")))
+		var occ_raw: String = str(_detail.get("occupation", "none")).strip_edges()
+		if occ_raw.is_empty():
+			occ_raw = "none"
+		var occ: String = Locale.ltr("OCCUPATION_" + occ_raw.to_upper())
 		var age: int = int(round(_safe_panel_scalar(_detail.get("age_years", 0.0), 0.0)))
 		var action: String = _localized_action_text(str(_detail.get("current_action", "Idle")))
 		var band: String = _band_label()
