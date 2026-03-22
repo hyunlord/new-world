@@ -1467,10 +1467,10 @@ func _refresh_family() -> void:
 		var generation: int = 0
 
 		if not _family_tab.is_empty():
-			var spouse_raw: Variant = _family_tab.get("spouse", {})
-			has_spouse = spouse_raw is Dictionary and not (spouse_raw as Dictionary).is_empty()
-			var children_raw: Variant = _family_tab.get("children", [])
-			child_count = (children_raw as Array).size() if children_raw is Array else 0
+			var s_raw: Variant = _family_tab.get("spouse", {})
+			has_spouse = s_raw is Dictionary and not (s_raw as Dictionary).is_empty()
+			var c_raw: Variant = _family_tab.get("children", [])
+			child_count = (c_raw as Array).size() if c_raw is Array else 0
 			generation = int(_family_tab.get("generation", 0))
 
 		var spouse_text: String = Locale.ltr("OVERVIEW_MARRIED") if has_spouse else Locale.ltr("OVERVIEW_SINGLE")
