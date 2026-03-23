@@ -149,12 +149,39 @@ func get_following_id() -> int:
 	return follow_target_id
 
 
+var _zoom_tween: Tween
+
 func set_target_zoom(value: float) -> void:
 	_mark_player_input(false)
 	_note_camera_move("manual_input")
 	_target_zoom = clampf(value, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
 	zoom = zoom.lerp(Vector2(_target_zoom, _target_zoom), GameConfig.CAMERA_ZOOM_SPEED)
 	position = _clamp_to_world_position(position)
+
+
+## Smooth zoom transition for UI button clicks (faster than per-frame lerp).
+func animate_zoom_to(target_value: float, duration: float = 0.35) -> void:
+	_mark_player_input(false)
+	_note_camera_move("zoom_button")
+	target_value = clampf(target_value, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
+
+	# Flash overlay for large jumps
+	var current_zoom: float = zoom.x
+	var zoom_ratio: float = maxf(current_zoom, target_value) / maxf(minf(current_zoom, target_value), 0.01)
+	if zoom_ratio > 3.0:
+		_show_flash()
+		duration = 0.25
+
+	_target_zoom = target_value
+
+	if _zoom_tween != null:
+		_zoom_tween.kill()
+
+	_zoom_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	_zoom_tween.tween_property(self, "zoom", Vector2(target_value, target_value), duration)
+	_zoom_tween.tween_callback(func() -> void:
+		position = _clamp_to_world_position(position)
+	)
 
 
 func get_zoom_level() -> int:
@@ -563,6 +590,9 @@ func _lerp_alpha(delta: float, speed: float) -> float:
 
 
 func _smooth_zoom(target: Vector2, delta: float) -> void:
+	if _zoom_tween != null and _zoom_tween.is_running():
+		position = _clamp_to_world_position(position)
+		return
 	zoom = zoom.lerp(target, 1.0 - pow(0.1, delta * 4.0))
 
 

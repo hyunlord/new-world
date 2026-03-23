@@ -1129,7 +1129,9 @@ func _on_bottom_bar_zoom_pressed(level: int) -> void:
 	_bottom_bar_current_zoom_level = clampi(level, 0, ZOOM_LEVEL_LABELS.size() - 1)
 	if _camera != null:
 		var target_zoom: float = float(GameConfig.CAMERA_ZOOM_LEVELS[_bottom_bar_current_zoom_level])
-		if _camera.has_method("set_target_zoom"):
+		if _camera.has_method("animate_zoom_to"):
+			_camera.call("animate_zoom_to", target_zoom)
+		elif _camera.has_method("set_target_zoom"):
 			_camera.call("set_target_zoom", target_zoom)
 		else:
 			_camera.zoom = Vector2.ONE * target_zoom
