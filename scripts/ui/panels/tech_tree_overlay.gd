@@ -615,16 +615,19 @@ func _show_detail_panel(tech_id: String) -> void:
 
 	# Non-tech requirements
 	var env_items: Array[String] = []
-	var biomes: Array = requirements.get("biomes_nearby", [])
+	var biomes_raw: Variant = requirements.get("biomes_nearby", [])
+	var biomes: Array = biomes_raw if biomes_raw is Array else []
 	for b: String in biomes:
 		env_items.append(Locale.ltr("TECH_DETAIL_BIOME_REQ").replace("{name}", b))
-	var resources: Array = requirements.get("resources_nearby", [])
+	var resources_raw: Variant = requirements.get("resources_nearby", [])
+	var resources: Array = resources_raw if resources_raw is Array else []
 	for r: String in resources:
 		env_items.append(Locale.ltr("TECH_DETAIL_RESOURCE_REQ").replace("{name}", r))
 	var req_pop: int = int(discovery.get("required_population", 0))
 	if req_pop > 0:
 		env_items.append(Locale.ltr("TECH_DETAIL_POP_REQ").replace("{n}", str(req_pop)))
-	var req_skills: Array = discovery.get("required_skills", [])
+	var req_skills_raw: Variant = discovery.get("required_skills", [])
+	var req_skills: Array = req_skills_raw if req_skills_raw is Array else []
 	for skill_raw: Variant in req_skills:
 		if skill_raw is Dictionary:
 			var s: Dictionary = skill_raw
