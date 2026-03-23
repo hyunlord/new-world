@@ -185,6 +185,7 @@ var _building_detail_panel: Control
 var _chronicle_panel: Control
 var _list_panel: Control
 var _settlement_detail_panel: Control
+var _pending_settlement_return_id: int = -1
 var _cast_bar = null
 var _story_notification_manager = null
 var _edge_awareness = null
@@ -3114,6 +3115,10 @@ func _on_entity_selected(entity_id: int) -> void:
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(entity_id)
 	_open_entity_detail_sidebar(entity_id)
+	if _pending_settlement_return_id >= 0:
+		if _entity_detail_panel != null and _entity_detail_panel.has_method("set_return_to_settlement"):
+			_entity_detail_panel.set_return_to_settlement(_pending_settlement_return_id)
+		_pending_settlement_return_id = -1
 	if _tech_tree_overlay != null and _tech_tree_overlay.visible:
 		_tech_tree_overlay.set_entity(entity_id)
 
@@ -3873,6 +3878,10 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		toggle_chronicle()
 	elif msg == "open_list":
 		toggle_list()
+	elif msg.begins_with("nav_from_settlement_"):
+		var sid_str: String = msg.replace("nav_from_settlement_", "")
+		if sid_str.is_valid_int():
+			_pending_settlement_return_id = int(sid_str)
 	elif msg.begins_with("open_settlement_"):
 		var sid_str: String = msg.replace("open_settlement_", "")
 		if sid_str.is_valid_int():

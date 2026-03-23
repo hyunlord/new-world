@@ -1796,13 +1796,20 @@ impl WorldSimRuntime {
             {
                 let sx = entry.settlement_x.unwrap_or(entry.x);
                 let sy = entry.settlement_y.unwrap_or(entry.y);
-                let settlement = Settlement::new(
+                let mut settlement = Settlement::new(
                     settlement_id,
                     format!("Settlement {}", settlement_id.0),
                     sx,
                     sy,
                     0,
                 );
+                // Initialize all stone-age techs as Unknown so TechDiscovery can find them
+                for tech_id in sim_core::STONE_AGE_TECH_IDS {
+                    settlement.tech_states.insert(
+                        tech_id.to_string(),
+                        sim_core::TechState::Unknown,
+                    );
+                }
                 state
                     .engine
                     .resources_mut()

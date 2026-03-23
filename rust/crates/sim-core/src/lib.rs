@@ -45,7 +45,7 @@ pub use influence_grid::{EmitterRecord, FalloffType, InfluenceGrid};
 pub use item::{EquipSlot, ItemDerivedStats, ItemId, ItemInstance, ItemOwner};
 pub use item_store::ItemStore;
 pub use room::{assign_room_ids, detect_rooms, Room, RoomId, RoomRole};
-pub use settlement::Settlement;
+pub use settlement::{Settlement, STONE_AGE_TECH_IDS};
 pub use temperament::{
     Temperament, TemperamentAxes, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
     TemperamentShiftRuleView,

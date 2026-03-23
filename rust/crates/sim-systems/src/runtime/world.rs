@@ -969,6 +969,13 @@ impl SimSystem for MigrationRuntimeSystem {
             );
             new_settlement.stockpile_food = config::MIGRATION_STARTUP_FOOD;
             new_settlement.members = migrated_member_ids.clone();
+            // Initialize all stone-age techs as Unknown so TechDiscovery can find them
+            for tech_id in sim_core::STONE_AGE_TECH_IDS {
+                new_settlement.tech_states.insert(
+                    tech_id.to_string(),
+                    sim_core::TechState::Unknown,
+                );
+            }
             resources
                 .settlements
                 .insert(next_settlement_id, new_settlement);
