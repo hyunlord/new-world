@@ -268,7 +268,7 @@ func _build_header() -> void:
 	_return_to_settlement_btn.text = "S"
 	_return_to_settlement_btn.flat = false
 	_return_to_settlement_btn.custom_minimum_size = Vector2(32, 28)
-	_return_to_settlement_btn.add_theme_font_size_override("font_size", 14)
+	_return_to_settlement_btn.add_theme_font_size_override("font_size", 13)
 	_return_to_settlement_btn.focus_mode = Control.FOCUS_NONE
 	_return_to_settlement_btn.visible = false
 	_return_to_settlement_btn.tooltip_text = Locale.ltr("UI_RETURN_TO_SETTLEMENT")

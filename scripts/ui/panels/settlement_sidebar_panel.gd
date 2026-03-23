@@ -288,6 +288,13 @@ func _load_data() -> void:
 		return
 	if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
 		var detail: Dictionary = _sim_engine.get_settlement_detail(_settlement_id)
+		if OS.is_debug_build() and not detail.is_empty():
+			if detail.has("tech_states"):
+				var ts: Variant = detail["tech_states"]
+				if ts is Dictionary:
+					print("[SettlementPanel] _load_data: tech_states.size=%d" % (ts as Dictionary).size())
+			else:
+				print("[SettlementPanel] _load_data: NO 'tech_states' key! keys=%s" % str(detail.keys()).left(300))
 		if not detail.is_empty():
 			_cached_data = detail
 			return
