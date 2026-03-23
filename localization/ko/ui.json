@@ -2275,6 +2275,8 @@
   "TECH_SETT_STATE_STABLE": "안정",
   "TECH_SETT_STATE_LOW": "위험",
   "TECH_SETT_STATE_FORGOTTEN": "소실",
+  "UI_CLOSE": "닫기",
+  "TECH_MAP_TITLE": "기술 맵",
   "UI_QUALITY": "품질",
   "UI_QUANTITY": "수량",
   "UI_DURABILITY": "내구도",

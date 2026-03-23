@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4866,
-  "key_count": 4867,
+  "active_key_count": 4868,
+  "key_count": 4869,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -1971,6 +1971,7 @@
     "TECH_LUNAR_CALENDAR_DESC": 1615,
     "TECH_MAP_MAKING": 1616,
     "TECH_MAP_MAKING_DESC": 1617,
+    "TECH_MAP_TITLE": 4867,
     "TECH_MARKET_SQUARE": 1618,
     "TECH_MARKET_SQUARE_DESC": 1619,
     "TECH_MARRIAGE_ALLIANCE": 1620,
@@ -3956,6 +3957,7 @@
     "UI_CLAN": 4677,
     "UI_CLAN_PLACEHOLDER": 4678,
     "UI_CLICK_TO_SELECT": 3488,
+    "UI_CLOSE": 4868,
     "UI_COMBAT": 4679,
     "UI_COMBAT_SKILL": 3489,
     "UI_COMBAT_STATS": 3490,
@@ -9737,7 +9739,9 @@
     "TECH_SETT_STATE_STABLE",
     "TECH_VIEW_AGENT",
     "TECH_VIEW_BAND",
-    "TECH_VIEW_SETTLEMENT"
+    "TECH_VIEW_SETTLEMENT",
+    "TECH_MAP_TITLE",
+    "UI_CLOSE"
   ],
   "removed_key_count": 1,
   "removed_keys": [

@@ -2275,6 +2275,8 @@
   "TECH_SETT_STATE_STABLE": "Stable",
   "TECH_SETT_STATE_LOW": "At Risk",
   "TECH_SETT_STATE_FORGOTTEN": "Forgotten",
+  "UI_CLOSE": "Close",
+  "TECH_MAP_TITLE": "Tech Map",
   "UI_QUALITY": "Quality",
   "UI_QUANTITY": "Qty",
   "UI_DURABILITY": "Durability",
