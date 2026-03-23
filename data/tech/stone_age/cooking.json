@@ -89,7 +89,7 @@
         "group": "Food Production",
         "subgroup": "Processing",
         "icon": "icon_cooking",
-        "tree_x": 2,
+        "tree_x": 1,
         "tree_y": 3
     }
 }

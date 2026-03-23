@@ -91,7 +91,7 @@
         "group": "Construction",
         "subgroup": "Basics",
         "icon": "icon_shelter",
-        "tree_x": 2,
+        "tree_x": 1,
         "tree_y": 1
     }
 }

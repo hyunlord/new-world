@@ -85,7 +85,7 @@
         "group": "Food Production",
         "subgroup": "Processing",
         "icon": "icon_seeds",
-        "tree_x": 2,
+        "tree_x": 1,
         "tree_y": 4
     }
 }

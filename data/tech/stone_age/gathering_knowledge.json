@@ -85,7 +85,7 @@
         "group": "Food Production",
         "subgroup": "Gathering",
         "icon": "icon_gathering",
-        "tree_x": 1,
+        "tree_x": 0,
         "tree_y": 4
     }
 }

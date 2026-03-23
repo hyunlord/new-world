@@ -92,7 +92,7 @@
         "group": "Social Organization",
         "subgroup": "Religion",
         "icon": "icon_animism",
-        "tree_x": 1,
+        "tree_x": 0,
         "tree_y": 13
     }
 }
