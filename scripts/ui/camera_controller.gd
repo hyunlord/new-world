@@ -164,14 +164,6 @@ func animate_zoom_to(target_value: float, duration: float = 0.35) -> void:
 	_mark_player_input(false)
 	_note_camera_move("zoom_button")
 	target_value = clampf(target_value, GameConfig.CAMERA_ZOOM_MIN, GameConfig.CAMERA_ZOOM_MAX)
-
-	# Flash overlay for large jumps
-	var current_zoom: float = zoom.x
-	var zoom_ratio: float = maxf(current_zoom, target_value) / maxf(minf(current_zoom, target_value), 0.01)
-	if zoom_ratio > 3.0:
-		_show_flash()
-		duration = 0.25
-
 	_target_zoom = target_value
 
 	if _zoom_tween != null:
