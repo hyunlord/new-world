@@ -247,6 +247,14 @@ fn bootstrap_world_core(
     settlement.stockpile_wood = payload.founding_settlement.stockpile_wood.max(0.0);
     settlement.stockpile_stone = payload.founding_settlement.stockpile_stone.max(0.0);
 
+    // Initialize all stone-age techs as Unknown so TechDiscovery can find them
+    for tech_id in sim_core::STONE_AGE_TECH_IDS {
+        settlement.tech_states.insert(
+            tech_id.to_string(),
+            sim_core::TechState::Unknown,
+        );
+    }
+
     let stockpile_building_id = BuildingId(1);
     if settlement.stockpile_food > 0.0
         || settlement.stockpile_wood > 0.0
