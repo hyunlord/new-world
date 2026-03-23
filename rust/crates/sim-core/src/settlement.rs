@@ -3,6 +3,18 @@ use crate::ids::{BuildingId, EntityId, SettlementId, TechId};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// All stone-age technology IDs. Used to initialize tech_states on settlement creation.
+pub const STONE_AGE_TECH_IDS: &[&str] = &[
+    "TECH_FIRE_MAKING", "TECH_STONE_KNAPPING", "TECH_GATHERING_KNOWLEDGE",
+    "TECH_CORDAGE", "TECH_BASIC_TOOLS", "TECH_COOKING", "TECH_ROOT_DIGGING",
+    "TECH_NUT_PROCESSING", "TECH_BASIC_FISHING", "TECH_TRACKING",
+    "TECH_SEED_ROASTING", "TECH_CONTROLLED_BURN", "TECH_TRAPPING",
+    "TECH_BASIC_HUNTING", "TECH_SHELTER_BUILDING", "TECH_MICROLITH_TOOLS",
+    "TECH_BONE_TOOLS", "TECH_HIDE_WORKING", "TECH_SWIMMING",
+    "TECH_WEATHER_LORE", "TECH_ORAL_TRADITION", "TECH_OCHRE_PAINTING",
+    "TECH_FLUTE_MAKING", "TECH_KINSHIP_GROUP", "TECH_ANIMISM",
+];
+
 /// Settlement data
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Settlement {

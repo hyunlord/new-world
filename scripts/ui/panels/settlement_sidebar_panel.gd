@@ -42,6 +42,7 @@ var _pop_detail_label: Label
 var _age_dist_label: Label
 var _gender_dist_label: Label
 var _member_list_container: VBoxContainer
+var _member_summary_label: Label
 
 # Tab 3: Economy
 var _economy_panel: VBoxContainer
@@ -235,6 +236,9 @@ func _build_population_tab() -> void:
 	_add_section_title(_population_panel, "UI_GENDER_DISTRIBUTION")
 	_gender_dist_label = _add_info_label(_population_panel)
 	_add_section_spacer(_population_panel)
+	_add_section_title(_population_panel, "UI_MEMBER_SUMMARY")
+	_member_summary_label = _add_info_label(_population_panel)
+	_add_section_spacer(_population_panel)
 	_add_section_title(_population_panel, "UI_MEMBER_LIST")
 	_member_list_container = VBoxContainer.new()
 	_member_list_container.add_theme_constant_override("separation", 2)
@@ -339,6 +343,7 @@ func _refresh_overview() -> void:
 			var captured_leader_id: int = leader_id
 			_leader_label.gui_input.connect(func(event: InputEvent) -> void:
 				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.ui_notification.emit("nav_from_settlement_%d" % _settlement_id, "command")
 					SimulationBus.entity_selected.emit(captured_leader_id)
 					SimulationBus.ui_notification.emit("focus_entity_%d" % captured_leader_id, "command")
 			)
@@ -464,9 +469,39 @@ func _refresh_population() -> void:
 			child.queue_free()
 		var members_raw: Variant = _get_data_value("members", [])
 		var members: Array = members_raw if members_raw is Array else []
-		var show_count: int = mini(members.size(), 20)
+		if _member_summary_label != null:
+			var youngest_name: String = ""
+			var youngest_age: float = 9999.0
+			var oldest_name: String = ""
+			var oldest_age: float = 0.0
+			for m: Variant in members:
+				if not (m is Dictionary):
+					continue
+				var md: Dictionary = m as Dictionary
+				var m_age_raw: Variant = md.get("age_years", 0.0)
+				var m_age_val: float = float(m_age_raw) if (m_age_raw is float or m_age_raw is int) else 0.0
+				var m_n: String = str(md.get("name", "?"))
+				if m_age_val < youngest_age:
+					youngest_age = m_age_val
+					youngest_name = m_n
+				if m_age_val > oldest_age:
+					oldest_age = m_age_val
+					oldest_name = m_n
+			var summary_parts: PackedStringArray = []
+			if not oldest_name.is_empty():
+				summary_parts.append("%s: %s (%d)" % [Locale.ltr("UI_OLDEST"), oldest_name, int(oldest_age)])
+			if not youngest_name.is_empty():
+				summary_parts.append("%s: %s (%d)" % [Locale.ltr("UI_YOUNGEST"), youngest_name, int(youngest_age)])
+			_member_summary_label.text = " · ".join(summary_parts)
+		var sorted_members: Array = members.duplicate()
+		sorted_members.sort_custom(func(a: Variant, b: Variant) -> bool:
+			var aa: float = float((a as Dictionary).get("age_years", 0.0)) if a is Dictionary else 0.0
+			var ba: float = float((b as Dictionary).get("age_years", 0.0)) if b is Dictionary else 0.0
+			return aa > ba
+		)
+		var show_count: int = sorted_members.size()
 		for i: int in range(show_count):
-			var m: Variant = members[i]
+			var m: Variant = sorted_members[i]
 			if not (m is Dictionary):
 				continue
 			var md: Dictionary = m as Dictionary
@@ -487,15 +522,10 @@ func _refresh_population() -> void:
 				var captured: int = entity_id
 				row.gui_input.connect(func(event: InputEvent) -> void:
 					if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+						SimulationBus.ui_notification.emit("nav_from_settlement_%d" % _settlement_id, "command")
 						SimulationBus.entity_selected.emit(captured)
 				)
 			_member_list_container.add_child(row)
-		if members.size() > show_count:
-			var more := Label.new()
-			more.text = "+%d" % (members.size() - show_count)
-			more.add_theme_font_size_override("font_size", 9)
-			more.add_theme_color_override("font_color", Color(0.35, 0.45, 0.55))
-			_member_list_container.add_child(more)
 
 
 func _refresh_economy() -> void:
@@ -505,14 +535,16 @@ func _refresh_economy() -> void:
 	var wood: float = _safe_resource("stockpile_wood")
 	var stone: float = _safe_resource("stockpile_stone")
 	var pop: int = maxi(int(_get_data_value("population", 1)), 1)
-	var cap: float = maxf(float(pop) * 100.0, 100.0)
-	_update_bar_row(_food_bar, {"label": Locale.ltr("UI_FOOD"), "value": clampf(food / cap, 0.0, 1.0)})
+	var food_cap: float = maxf(float(pop) * 10.0, 50.0)
+	var wood_cap: float = maxf(float(pop) * 5.0, 30.0)
+	var stone_cap: float = maxf(float(pop) * 3.0, 20.0)
+	_update_bar_row(_food_bar, {"label": Locale.ltr("UI_FOOD"), "value": clampf(food / food_cap, 0.0, 1.0)})
 	if _food_bar.has("pct"):
 		(_food_bar["pct"] as Label).text = "%d" % int(food)
-	_update_bar_row(_wood_bar, {"label": Locale.ltr("UI_WOOD"), "value": clampf(wood / cap, 0.0, 1.0)})
+	_update_bar_row(_wood_bar, {"label": Locale.ltr("UI_WOOD"), "value": clampf(wood / wood_cap, 0.0, 1.0)})
 	if _wood_bar.has("pct"):
 		(_wood_bar["pct"] as Label).text = "%d" % int(wood)
-	_update_bar_row(_stone_bar, {"label": Locale.ltr("UI_STONE"), "value": clampf(stone / cap, 0.0, 1.0)})
+	_update_bar_row(_stone_bar, {"label": Locale.ltr("UI_STONE"), "value": clampf(stone / stone_cap, 0.0, 1.0)})
 	if _stone_bar.has("pct"):
 		(_stone_bar["pct"] as Label).text = "%d" % int(stone)
 	if _economy_summary_label != null:

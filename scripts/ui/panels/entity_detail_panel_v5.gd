@@ -35,6 +35,8 @@ var _header_name_label: Label
 var _back_button: Button
 var _nav_history: Array[int] = []
 const NAV_HISTORY_MAX: int = 10
+var _return_to_settlement_id: int = -1
+var _return_to_settlement_btn: Button
 var _header_meta_label: Label
 var _header_action_label: Label
 var _follow_button: Button
@@ -261,6 +263,18 @@ func _build_header() -> void:
 	_back_button.modulate.a = 0.3
 	_back_button.pressed.connect(_on_back_pressed)
 	name_row.add_child(_back_button)
+
+	_return_to_settlement_btn = Button.new()
+	_return_to_settlement_btn.text = "S"
+	_return_to_settlement_btn.flat = true
+	_return_to_settlement_btn.custom_minimum_size = Vector2(28, 28)
+	_return_to_settlement_btn.add_theme_font_size_override("font_size", 12)
+	_return_to_settlement_btn.add_theme_color_override("font_color", Color(0.5, 0.6, 0.7))
+	_return_to_settlement_btn.focus_mode = Control.FOCUS_NONE
+	_return_to_settlement_btn.visible = false
+	_return_to_settlement_btn.tooltip_text = Locale.ltr("UI_RETURN_TO_SETTLEMENT")
+	_return_to_settlement_btn.pressed.connect(_on_return_to_settlement)
+	name_row.add_child(_return_to_settlement_btn)
 
 	_header_name_label = Label.new()
 	_header_name_label.add_theme_font_size_override("font_size", 14)
@@ -1655,6 +1669,22 @@ func _update_back_button() -> void:
 	if _back_button != null:
 		_back_button.disabled = _nav_history.is_empty()
 		_back_button.modulate.a = 1.0 if not _nav_history.is_empty() else 0.3
+
+
+func set_return_to_settlement(settlement_id: int) -> void:
+	_return_to_settlement_id = settlement_id
+	if _return_to_settlement_btn != null:
+		_return_to_settlement_btn.visible = settlement_id >= 0
+
+
+func _on_return_to_settlement() -> void:
+	if _return_to_settlement_id < 0:
+		return
+	var sid: int = _return_to_settlement_id
+	_return_to_settlement_id = -1
+	if _return_to_settlement_btn != null:
+		_return_to_settlement_btn.visible = false
+	SimulationBus.ui_notification.emit("open_settlement_%d" % sid, "command")
 
 
 func _on_header_name_clicked(event: InputEvent) -> void:
