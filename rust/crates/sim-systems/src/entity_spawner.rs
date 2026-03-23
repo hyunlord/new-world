@@ -816,30 +816,47 @@ pub fn spawn_agent(
 
     if age_years >= 15.0 {
         if let Ok(mut knowledge) = world.get::<&mut AgentKnowledge>(entity) {
-            knowledge.learn(KnowledgeEntry {
-                knowledge_id: "TECH_FIRE_MAKING".to_string(),
-                proficiency: 0.6 + resources.rng.gen::<f64>() * 0.3,
-                source: TransmissionSource::Oral,
-                acquired_tick: 0,
-                last_used_tick: 0,
-                teacher_id: 0,
-            });
-            knowledge.learn(KnowledgeEntry {
-                knowledge_id: "TECH_STONE_KNAPPING".to_string(),
-                proficiency: 0.5 + resources.rng.gen::<f64>() * 0.3,
-                source: TransmissionSource::Observed,
-                acquired_tick: 0,
-                last_used_tick: 0,
-                teacher_id: 0,
-            });
-            knowledge.learn(KnowledgeEntry {
-                knowledge_id: "TECH_FORAGING".to_string(),
-                proficiency: 0.7 + resources.rng.gen::<f64>() * 0.2,
-                source: TransmissionSource::Oral,
-                acquired_tick: 0,
-                last_used_tick: 0,
-                teacher_id: 0,
-            });
+            // Universal basics — all adults know these
+            let starter_techs: &[(&str, f64, f64, TransmissionSource)] = &[
+                ("TECH_FIRE_MAKING", 0.6, 0.3, TransmissionSource::Oral),
+                ("TECH_STONE_KNAPPING", 0.5, 0.3, TransmissionSource::Observed),
+                ("TECH_GATHERING_KNOWLEDGE", 0.7, 0.2, TransmissionSource::Oral),
+                ("TECH_CORDAGE", 0.3, 0.3, TransmissionSource::Observed),
+                ("TECH_COOKING", 0.4, 0.3, TransmissionSource::Oral),
+                ("TECH_ROOT_DIGGING", 0.5, 0.2, TransmissionSource::Oral),
+                ("TECH_TRACKING", 0.3, 0.3, TransmissionSource::Observed),
+                ("TECH_ORAL_TRADITION", 0.4, 0.2, TransmissionSource::Oral),
+            ];
+            for &(id, base, spread, ref source) in starter_techs {
+                knowledge.learn(KnowledgeEntry {
+                    knowledge_id: id.to_string(),
+                    proficiency: base + resources.rng.gen::<f64>() * spread,
+                    source: *source,
+                    acquired_tick: 0,
+                    last_used_tick: 0,
+                    teacher_id: 0,
+                });
+            }
+            // Probabilistic extras
+            let extras: &[(&str, f64, f64, f64, TransmissionSource)] = &[
+                ("TECH_BASIC_TOOLS", 0.5, 0.3, 0.4, TransmissionSource::Oral),
+                ("TECH_BASIC_HUNTING", 0.5, 0.2, 0.3, TransmissionSource::Observed),
+                ("TECH_KINSHIP_GROUP", 0.4, 0.3, 0.2, TransmissionSource::Oral),
+                ("TECH_SHELTER_BUILDING", 0.3, 0.2, 0.3, TransmissionSource::Observed),
+                ("TECH_BASIC_FISHING", 0.3, 0.2, 0.3, TransmissionSource::Observed),
+            ];
+            for &(id, threshold, base, spread, ref source) in extras {
+                if resources.rng.gen::<f64>() > threshold {
+                    knowledge.learn(KnowledgeEntry {
+                        knowledge_id: id.to_string(),
+                        proficiency: base + resources.rng.gen::<f64>() * spread,
+                        source: *source,
+                        acquired_tick: 0,
+                        last_used_tick: 0,
+                        teacher_id: 0,
+                    });
+                }
+            }
             knowledge.innovation_potential = innovation_potential;
         }
     }
@@ -1054,7 +1071,7 @@ mod tests {
     }
 
     #[test]
-    fn adult_spawn_starts_with_three_knowledge_entries() {
+    fn adult_spawn_starts_with_starter_knowledge() {
         let mut world = hecs::World::new();
         let mut resources = make_resources();
 
@@ -1072,10 +1089,16 @@ mod tests {
             .get::<&AgentKnowledge>(entity)
             .expect("AgentKnowledge missing");
 
-        assert_eq!(knowledge.known_count(), 3);
+        // 8 guaranteed + 0-5 probabilistic
+        assert!(knowledge.known_count() >= 8);
         assert!(knowledge.has_knowledge("TECH_FIRE_MAKING"));
         assert!(knowledge.has_knowledge("TECH_STONE_KNAPPING"));
-        assert!(knowledge.has_knowledge("TECH_FORAGING"));
+        assert!(knowledge.has_knowledge("TECH_GATHERING_KNOWLEDGE"));
+        assert!(knowledge.has_knowledge("TECH_CORDAGE"));
+        assert!(knowledge.has_knowledge("TECH_COOKING"));
+        assert!(knowledge.has_knowledge("TECH_ROOT_DIGGING"));
+        assert!(knowledge.has_knowledge("TECH_TRACKING"));
+        assert!(knowledge.has_knowledge("TECH_ORAL_TRADITION"));
         assert!(knowledge.learning.is_none());
         assert!(knowledge.teaching_target.is_none());
         assert!(
