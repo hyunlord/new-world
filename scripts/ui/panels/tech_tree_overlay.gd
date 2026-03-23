@@ -16,7 +16,7 @@ const RING_WIDTH: float = 3.0
 const EDGE_WIDTH: float = 1.5
 const EDGE_HIGHLIGHT_WIDTH: float = 2.5
 const LABEL_FONT_SIZE: int = 9
-const TOP_BAR_HEIGHT: float = 42.0
+const TOP_BAR_HEIGHT: float = 46.0
 const DETAIL_PANEL_WIDTH: float = 420.0
 
 const CATEGORY_COLORS: Dictionary = {
@@ -106,54 +106,98 @@ func setup(tech_tree_manager: RefCounted, sim_engine: RefCounted, settlement_man
 
 
 func _build_top_bar() -> void:
+	var bar_panel := PanelContainer.new()
+	bar_panel.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	bar_panel.offset_bottom = TOP_BAR_HEIGHT
+	var bar_style := StyleBoxFlat.new()
+	bar_style.bg_color = Color(0.047, 0.063, 0.094, 0.95)
+	bar_style.border_width_bottom = 1
+	bar_style.border_color = Color(0.082, 0.118, 0.165)
+	bar_style.content_margin_left = 16
+	bar_style.content_margin_right = 16
+	bar_panel.add_theme_stylebox_override("panel", bar_style)
+	bar_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(bar_panel)
+
 	var top_bar := HBoxContainer.new()
-	top_bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	top_bar.offset_bottom = TOP_BAR_HEIGHT
-	top_bar.add_theme_constant_override("separation", 4)
-	add_child(top_bar)
+	top_bar.add_theme_constant_override("separation", 8)
+	bar_panel.add_child(top_bar)
+
+	var title := Label.new()
+	title.text = Locale.ltr("TECH_MAP_TITLE")
+	title.add_theme_font_size_override("font_size", 14)
+	title.add_theme_color_override("font_color", Color(0.82, 0.85, 0.88))
+	top_bar.add_child(title)
+
+	_add_bar_separator(top_bar)
 
 	for era_info: Array in [["ERA_STONE_AGE", true], ["ERA_TRIBAL", false], ["ERA_BRONZE_AGE", false]]:
 		var btn := Button.new()
 		btn.text = Locale.ltr(str(era_info[0]))
 		btn.flat = true
 		btn.disabled = not bool(era_info[1])
-		btn.add_theme_font_size_override("font_size", 12)
-		btn.custom_minimum_size = Vector2(80, 28)
 		btn.focus_mode = Control.FOCUS_NONE
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.custom_minimum_size = Vector2(80, 32)
+		if bool(era_info[1]):
+			var era_sb := StyleBoxFlat.new()
+			era_sb.bg_color = Color(0.094, 0.125, 0.188)
+			era_sb.border_color = Color(0.165, 0.227, 0.310)
+			era_sb.set_border_width_all(1)
+			era_sb.set_corner_radius_all(5)
+			era_sb.content_margin_left = 12
+			era_sb.content_margin_right = 12
+			for state: String in ["normal", "hover", "pressed", "focus"]:
+				btn.add_theme_stylebox_override(state, era_sb)
+			btn.add_theme_color_override("font_color", Color(0.82, 0.85, 0.88))
+		else:
+			btn.add_theme_color_override("font_color", Color(0.165, 0.216, 0.27))
 		top_bar.add_child(btn)
 
-	var sep := VSeparator.new()
-	sep.custom_minimum_size.x = 1
-	top_bar.add_child(sep)
+	_add_bar_separator(top_bar)
 
 	_agent_button = Button.new()
 	_agent_button.text = "🧑 ?"
 	_agent_button.flat = true
-	_agent_button.add_theme_font_size_override("font_size", 11)
+	_agent_button.add_theme_font_size_override("font_size", 12)
 	_agent_button.focus_mode = Control.FOCUS_NONE
+	_agent_button.custom_minimum_size = Vector2(0, 32)
 	_agent_button.pressed.connect(_switch_to_agent_view)
+	var agent_sb := StyleBoxFlat.new()
+	agent_sb.bg_color = Color(0.094, 0.125, 0.188)
+	agent_sb.border_color = Color(0.165, 0.247, 0.380)
+	agent_sb.set_border_width_all(1)
+	agent_sb.set_corner_radius_all(5)
+	agent_sb.content_margin_left = 10
+	agent_sb.content_margin_right = 10
+	for state: String in ["normal", "hover", "pressed", "focus"]:
+		_agent_button.add_theme_stylebox_override(state, agent_sb)
 	top_bar.add_child(_agent_button)
 
 	_settlement_dropdown = MenuButton.new()
 	_settlement_dropdown.text = Locale.ltr("TECH_VIEW_SETTLEMENT")
 	_settlement_dropdown.flat = true
-	_settlement_dropdown.add_theme_font_size_override("font_size", 11)
+	_settlement_dropdown.add_theme_font_size_override("font_size", 12)
 	_settlement_dropdown.focus_mode = Control.FOCUS_NONE
+	_settlement_dropdown.custom_minimum_size = Vector2(0, 32)
 	top_bar.add_child(_settlement_dropdown)
 	_settlement_dropdown.get_popup().id_pressed.connect(_on_settlement_selected)
 
 	_band_dropdown = MenuButton.new()
 	_band_dropdown.text = Locale.ltr("TECH_VIEW_BAND")
 	_band_dropdown.flat = true
-	_band_dropdown.add_theme_font_size_override("font_size", 11)
+	_band_dropdown.add_theme_font_size_override("font_size", 12)
 	_band_dropdown.focus_mode = Control.FOCUS_NONE
+	_band_dropdown.custom_minimum_size = Vector2(0, 32)
 	top_bar.add_child(_band_dropdown)
 	_band_dropdown.get_popup().id_pressed.connect(_on_band_selected)
+
+	_add_bar_separator(top_bar)
 
 	_entity_label = Label.new()
 	_entity_label.text = ""
 	_entity_label.add_theme_font_size_override("font_size", 11)
-	_entity_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.68))
+	_entity_label.add_theme_color_override("font_color", Color(0.35, 0.48, 0.60))
 	top_bar.add_child(_entity_label)
 
 	var spacer := Control.new()
@@ -163,10 +207,19 @@ func _build_top_bar() -> void:
 	var close_btn := Button.new()
 	close_btn.text = Locale.ltr("UI_CLOSE")
 	close_btn.flat = true
-	close_btn.add_theme_font_size_override("font_size", 14)
+	close_btn.add_theme_font_size_override("font_size", 12)
+	close_btn.add_theme_color_override("font_color", Color(0.29, 0.35, 0.42))
 	close_btn.focus_mode = Control.FOCUS_NONE
-	close_btn.pressed.connect(func() -> void: visible = false; closed.emit())
+	close_btn.custom_minimum_size = Vector2(0, 32)
+	close_btn.pressed.connect(_on_close)
 	top_bar.add_child(close_btn)
+
+
+func _add_bar_separator(parent: Control) -> void:
+	var line := ColorRect.new()
+	line.custom_minimum_size = Vector2(1, 20)
+	line.color = Color(0.10, 0.15, 0.21)
+	parent.add_child(line)
 
 
 func _build_detail_panel() -> void:
@@ -744,38 +797,45 @@ func _load_band_knowledge() -> void:
 
 
 func _populate_dropdowns() -> void:
-	# Settlements
 	var s_popup: PopupMenu = _settlement_dropdown.get_popup()
 	s_popup.clear()
 	if _settlement_manager != null and _settlement_manager.has_method("get_all_settlements"):
 		var settlements: Array = _settlement_manager.get_all_settlements()
+		if OS.is_debug_build():
+			print("[TechTree] populate: %d settlements" % settlements.size())
 		for i: int in range(settlements.size()):
 			var s: Variant = settlements[i]
-			var s_id: int = -1
+			var s_id: int = i
 			if s is RefCounted and "id" in s:
 				s_id = int(s.id)
 			elif s is Dictionary:
-				s_id = int(s.get("id", -1))
-			var s_name: String = "Settlement %d" % (s_id if s_id >= 0 else i)
-			if _sim_engine != null and s_id >= 0 and _sim_engine.has_method("get_settlement_detail"):
+				s_id = int(s.get("id", i))
+			var s_name: String = ""
+			if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
 				var detail: Dictionary = _sim_engine.get_settlement_detail(s_id)
-				var dname: String = str(detail.get("name", ""))
-				if not dname.is_empty():
-					s_name = dname
-			s_popup.add_item("🏘️ " + s_name, i)
+				s_name = str(detail.get("name", ""))
+			if s_name.is_empty():
+				s_name = Locale.ltr("TECH_VIEW_SETTLEMENT") + " %d" % s_id
+			s_popup.add_item(s_name, i)
 	_settlement_dropdown.disabled = s_popup.item_count == 0
+	if s_popup.item_count > 0:
+		_settlement_dropdown.text = Locale.ltr("TECH_VIEW_SETTLEMENT") + " (%d)" % s_popup.item_count
 
-	# Bands
 	var b_popup: PopupMenu = _band_dropdown.get_popup()
 	b_popup.clear()
 	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
 		var bands: Array = _sim_engine.get_band_list()
+		if OS.is_debug_build():
+			print("[TechTree] populate: %d bands" % bands.size())
 		for i: int in range(bands.size()):
-			var b: Dictionary = bands[i] if bands[i] is Dictionary else {}
-			var b_name: String = str(b.get("name", "Band %d" % i))
-			var b_count: int = int(b.get("member_count", 0))
-			b_popup.add_item("👥 %s (%d)" % [b_name, b_count], i)
+			var b: Variant = bands[i]
+			var b_dict: Dictionary = b if b is Dictionary else {}
+			var b_name: String = str(b_dict.get("name", "Band %d" % i))
+			var b_count: int = int(b_dict.get("member_count", 0))
+			b_popup.add_item("%s (%d)" % [b_name, b_count], i)
 	_band_dropdown.disabled = b_popup.item_count == 0
+	if b_popup.item_count > 0:
+		_band_dropdown.text = Locale.ltr("TECH_VIEW_BAND") + " (%d)" % b_popup.item_count
 
 
 func _world_to_screen(p: Vector2) -> Vector2:
@@ -937,6 +997,13 @@ func _show_detail_panel(tech_id: String) -> void:
 			_detail_vbox.add_child(u_label)
 
 	_detail_panel.visible = true
+	# Auto-pan so selected node is not behind detail panel
+	var node_pos: Vector2 = _node_world_pos.get(tech_id, Vector2.ZERO)
+	var screen_node: Vector2 = _world_to_screen(node_pos)
+	var safe_right: float = size.x - DETAIL_PANEL_WIDTH - 80.0
+	if screen_node.x + NODE_W * _zoom > safe_right:
+		_pan.x -= (screen_node.x + NODE_W * _zoom - safe_right)
+		_on_view_changed()
 
 
 func _add_detail_section(title_text: String) -> void:

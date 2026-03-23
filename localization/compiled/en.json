@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4866,
+    "active_key_count": 4868,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4867,
+    "key_count": 4869,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -2009,6 +2009,7 @@
     "TECH_LUNAR_CALENDAR_DESC": "Counting the moon's cycles to track time across months, coordinating planting, festivals, and inter-tribal gatherings.",
     "TECH_MAP_MAKING": "Map Making",
     "TECH_MAP_MAKING_DESC": "Rendering the spatial relationship of places on a surface, externalizing geographic knowledge and enabling planning beyond memory's reach.",
+    "TECH_MAP_TITLE": "Tech Map",
     "TECH_MARKET_SQUARE": "Market Square",
     "TECH_MARKET_SQUARE_DESC": "Designating a regular public space and time for trade, transforming occasional barter into a predictable, expanding commercial institution.",
     "TECH_MARRIAGE_ALLIANCE": "Marriage Alliance",
@@ -3994,6 +3995,7 @@
     "UI_CLAN": "Clan",
     "UI_CLAN_PLACEHOLDER": "Clans emerge after settlement [Phase 4]",
     "UI_CLICK_TO_SELECT": "Click to select",
+    "UI_CLOSE": "Close",
     "UI_COMBAT": "Combat",
     "UI_COMBAT_SKILL": "Combat Skill",
     "UI_COMBAT_STATS": "Combat",

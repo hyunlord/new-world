@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4866,
+    "active_key_count": 4868,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4867,
+    "key_count": 4869,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -2009,6 +2009,7 @@
     "TECH_LUNAR_CALENDAR_DESC": "달의 위상 주기를 관찰하여 시간을 측정하는 역법. 의례·파종·이동의 일정을 조율한다.",
     "TECH_MAP_MAKING": "지도 제작",
     "TECH_MAP_MAKING_DESC": "지형과 도로·수계를 도식으로 기록하는 기술. 군사 작전과 교역로 계획의 필수 도구.",
+    "TECH_MAP_TITLE": "기술 맵",
     "TECH_MARKET_SQUARE": "시장 광장",
     "TECH_MARKET_SQUARE_DESC": "정기적으로 상품과 서비스를 교환하는 공공 공간. 도시 경제의 심장부이자 정보 유통의 중심지.",
     "TECH_MARRIAGE_ALLIANCE": "혼인 동맹",
@@ -3994,6 +3995,7 @@
     "UI_CLAN": "가문",
     "UI_CLAN_PLACEHOLDER": "정착 후 가문 창발 [Phase 4]",
     "UI_CLICK_TO_SELECT": "클릭하여 선택",
+    "UI_CLOSE": "닫기",
     "UI_COMBAT": "전투",
     "UI_COMBAT_SKILL": "전투 숙련도",
     "UI_COMBAT_STATS": "전투 능력",
