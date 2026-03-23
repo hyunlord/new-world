@@ -1815,6 +1815,21 @@ impl WorldSimRuntime {
                     .resources_mut()
                     .settlements
                     .insert(settlement_id, settlement);
+            } else {
+                // Patch existing settlements that have empty tech_states (created before init code)
+                let sett = state.engine.resources_mut().settlements.get_mut(&settlement_id);
+                if let Some(sett) = sett {
+                    if sett.tech_states.is_empty() {
+                        for tech_id in sim_core::STONE_AGE_TECH_IDS {
+                            sett.tech_states.insert(
+                                tech_id.to_string(),
+                                sim_core::TechState::Unknown,
+                            );
+                        }
+                        log::info!("[SimBridge] Patched settlement {} with {} stone-age techs",
+                            settlement_id.0, sett.tech_states.len());
+                    }
+                }
             }
 
             let config = entity_spawner::SpawnConfig {
