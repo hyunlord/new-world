@@ -563,6 +563,27 @@ func _draw_node(tech_id: String) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	# Trackpad pan gesture (macOS two-finger scroll)
+	if event is InputEventPanGesture:
+		var pg := event as InputEventPanGesture
+		if pg.ctrl_pressed:
+			var zd: float = -pg.delta.y * 0.1
+			_set_zoom(clampf(_zoom + zd, ZOOM_MIN, ZOOM_MAX), pg.position)
+		else:
+			_pan.x -= pg.delta.x * 40.0
+			_pan.y -= pg.delta.y * 40.0
+			_on_view_changed()
+		accept_event()
+		return
+
+	# Trackpad pinch gesture (macOS pinch zoom)
+	if event is InputEventMagnifyGesture:
+		var mg := event as InputEventMagnifyGesture
+		var zd: float = (mg.factor - 1.0) * 0.5
+		_set_zoom(clampf(_zoom + zd, ZOOM_MIN, ZOOM_MAX), mg.position)
+		accept_event()
+		return
+
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.ctrl_pressed:
