@@ -3353,7 +3353,8 @@ func _toggle_tech_tree() -> void:
 			_right_panel_container.visible = false
 	else:
 		if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
-			_right_panel_container.visible = true
+			_open_right_sidebar()
+		_sidebar_was_open_before_tech_tree = false
 
 
 func _on_tech_tree_closed() -> void:
@@ -3362,7 +3363,7 @@ func _on_tech_tree_closed() -> void:
 	if _bottom_bar != null:
 		_bottom_bar.visible = true
 	if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
-		_right_panel_container.visible = true
+		_open_right_sidebar()
 	_sidebar_was_open_before_tech_tree = false
 
 
