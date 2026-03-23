@@ -29,6 +29,9 @@ var _tech_progress_label: Label
 var _stability_bar: Dictionary = {}
 var _happiness_bar: Dictionary = {}
 var _storage_label: Label
+var _stress_bar: Dictionary = {}
+var _gender_label: Label
+var _location_label: Label
 
 # Tab 1: Buildings
 var _buildings_panel: VBoxContainer
@@ -38,15 +41,20 @@ var _buildings_container: VBoxContainer
 var _population_panel: VBoxContainer
 var _pop_detail_label: Label
 var _age_dist_label: Label
-var _job_dist_label: Label
+var _gender_dist_label: Label
+var _member_list_container: VBoxContainer
 
 # Tab 3: Economy
 var _economy_panel: VBoxContainer
-var _economy_label: Label
+var _food_bar: Dictionary = {}
+var _wood_bar: Dictionary = {}
+var _stone_bar: Dictionary = {}
+var _economy_summary_label: Label
 
 # Tab 4: Tech
 var _tech_panel: VBoxContainer
 var _tech_container: VBoxContainer
+var _tech_era_label: Label
 
 # Tab 5: Military
 var _military_panel: VBoxContainer
@@ -203,6 +211,11 @@ func _build_overview_tab() -> void:
 	_add_section_spacer(_overview_panel)
 	_add_section_title(_overview_panel, "UI_PRODUCTION_CONSUMPTION")
 	_storage_label = _add_info_label(_overview_panel)
+	_stress_bar = _create_bar_row(_overview_panel)
+	_add_section_spacer(_overview_panel)
+	_add_section_title(_overview_panel, "UI_DEMOGRAPHICS")
+	_gender_label = _add_info_label(_overview_panel)
+	_location_label = _add_info_label(_overview_panel)
 
 
 func _build_buildings_tab() -> void:
@@ -223,16 +236,25 @@ func _build_population_tab() -> void:
 	_pop_detail_label = _add_info_label(_population_panel)
 	_add_section_title(_population_panel, "UI_AGE_DISTRIBUTION")
 	_age_dist_label = _add_info_label(_population_panel)
-	_add_section_title(_population_panel, "UI_JOB_DISTRIBUTION")
-	_job_dist_label = _add_info_label(_population_panel)
+	_add_section_title(_population_panel, "UI_GENDER_DISTRIBUTION")
+	_gender_dist_label = _add_info_label(_population_panel)
+	_add_section_spacer(_population_panel)
+	_add_section_title(_population_panel, "UI_MEMBER_LIST")
+	_member_list_container = VBoxContainer.new()
+	_member_list_container.add_theme_constant_override("separation", 2)
+	_population_panel.add_child(_member_list_container)
 
 
 func _build_economy_tab() -> void:
 	_economy_panel = VBoxContainer.new()
 	_economy_panel.add_theme_constant_override("separation", 4)
 	_tab_container.add_child(_economy_panel)
-	_add_section_title(_economy_panel, "UI_RESOURCE_HEADER")
-	_economy_label = _add_info_label(_economy_panel)
+	_add_section_title(_economy_panel, "UI_STOCKPILE")
+	_food_bar = _create_bar_row(_economy_panel)
+	_wood_bar = _create_bar_row(_economy_panel)
+	_stone_bar = _create_bar_row(_economy_panel)
+	_add_section_spacer(_economy_panel)
+	_economy_summary_label = _add_info_label(_economy_panel)
 
 
 func _build_tech_tab() -> void:
@@ -240,6 +262,9 @@ func _build_tech_tab() -> void:
 	_tech_panel.add_theme_constant_override("separation", 4)
 	_tab_container.add_child(_tech_panel)
 	_add_section_title(_tech_panel, "UI_TAB_TECH")
+	_tech_era_label = _add_info_label(_tech_panel)
+	_add_section_spacer(_tech_panel)
+	_add_section_title(_tech_panel, "UI_KNOWN_TECHS")
 	_tech_container = VBoxContainer.new()
 	_tech_container.add_theme_constant_override("separation", 2)
 	_tech_panel.add_child(_tech_container)
@@ -306,7 +331,7 @@ func _refresh_overview() -> void:
 		var leader_name: String = str((leader as Dictionary).get("name", ""))
 		var charisma_raw: Variant = (leader as Dictionary).get("charisma", 0.0)
 		var charisma: float = float(charisma_raw) if (charisma_raw is float or charisma_raw is int) else 0.0
-		_leader_label.text = "★ %s: %s (%s: %.2f)" % [Locale.ltr("UI_LEADER"), leader_name, Locale.ltr("UI_CHARISMA"), charisma]
+		_leader_label.text = "* %s: %s (%s: %.2f)" % [Locale.ltr("UI_LEADER"), leader_name, Locale.ltr("UI_CHARISMA"), charisma]
 	else:
 		_leader_label.text = Locale.ltr("UI_NO_LEADER")
 
@@ -327,6 +352,20 @@ func _refresh_overview() -> void:
 		Locale.ltr("UI_FOOD"), int(food),
 		Locale.ltr("UI_WOOD"), int(wood),
 		Locale.ltr("UI_STONE"), int(stone)]
+	# Stress bar
+	var avg_stress_raw: Variant = _get_data_value("avg_stress", 0.0)
+	var avg_stress: float = float(avg_stress_raw) if (avg_stress_raw is float or avg_stress_raw is int) else 0.0
+	_update_bar_row(_stress_bar, {"label": Locale.ltr("UI_AVG_STRESS"), "value": clampf(avg_stress, 0.0, 1.0)})
+	# Gender ratio
+	var male: int = int(_get_data_value("male_count", 0))
+	var female: int = int(_get_data_value("female_count", 0))
+	if _gender_label != null:
+		_gender_label.text = "%s: %d / %d" % [Locale.ltr("UI_GENDER_RATIO"), male, female]
+	# Location
+	var cx: int = int(_get_data_value("center_x", 0))
+	var cy: int = int(_get_data_value("center_y", 0))
+	if _location_label != null:
+		_location_label.text = "%s: (%d, %d)" % [Locale.ltr("UI_LOCATION"), cx, cy]
 
 
 func _refresh_buildings() -> void:
@@ -349,45 +388,132 @@ func _refresh_buildings() -> void:
 		var bld: Dictionary = bld_raw
 		var btype: String = str(bld.get("building_type", ""))
 		var is_built: bool = bool(bld.get("is_built", false))
-		var status_text: String = Locale.ltr("UI_BUILT") if is_built else Locale.ltr("UI_UNDER_CONSTRUCTION")
-		var row := Label.new()
-		row.text = "• %s — %s" % [Locale.tr_id("BUILDING", btype), status_text]
-		row.add_theme_font_size_override("font_size", 10)
-		row.add_theme_color_override("font_color", COLOR_VALUE)
+		var progress_raw: Variant = bld.get("build_progress", 0.0)
+		var progress: float = float(progress_raw) if (progress_raw is float or progress_raw is int) else 0.0
+		var row := VBoxContainer.new()
+		row.add_theme_constant_override("separation", 2)
+		var header := Label.new()
+		var type_name: String = Locale.tr_id("BUILDING", btype)
+		if is_built:
+			header.text = "%s — %s" % [type_name, Locale.ltr("UI_BUILT")]
+			header.add_theme_color_override("font_color", Color(0.55, 0.75, 0.55))
+		else:
+			header.text = "%s (%d%%)" % [type_name, int(progress * 100.0)]
+			header.add_theme_color_override("font_color", Color(0.75, 0.65, 0.40))
+		header.add_theme_font_size_override("font_size", 11)
+		row.add_child(header)
+		if not is_built:
+			var prog_bar := ProgressBar.new()
+			prog_bar.custom_minimum_size = Vector2(0, 6)
+			prog_bar.value = progress * 100.0
+			prog_bar.max_value = 100.0
+			prog_bar.show_percentage = false
+			row.add_child(prog_bar)
+		var storage: Variant = bld.get("storage", {})
+		if storage is Dictionary and not (storage as Dictionary).is_empty():
+			var storage_dict: Dictionary = storage as Dictionary
+			var s_food_raw: Variant = storage_dict.get("food", 0.0)
+			var s_wood_raw: Variant = storage_dict.get("wood", 0.0)
+			var s_stone_raw: Variant = storage_dict.get("stone", 0.0)
+			var s_food: float = float(s_food_raw) if (s_food_raw is float or s_food_raw is int) else 0.0
+			var s_wood: float = float(s_wood_raw) if (s_wood_raw is float or s_wood_raw is int) else 0.0
+			var s_stone: float = float(s_stone_raw) if (s_stone_raw is float or s_stone_raw is int) else 0.0
+			if s_food > 0 or s_wood > 0 or s_stone > 0:
+				var stor_label := Label.new()
+				stor_label.text = "  %s:%d  %s:%d  %s:%d" % [
+					Locale.ltr("UI_FOOD"), int(s_food),
+					Locale.ltr("UI_WOOD"), int(s_wood),
+					Locale.ltr("UI_STONE"), int(s_stone)]
+				stor_label.add_theme_font_size_override("font_size", 9)
+				stor_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.65))
+				row.add_child(stor_label)
 		_buildings_container.add_child(row)
+		var sep := HSeparator.new()
+		sep.add_theme_constant_override("separation", 2)
+		_buildings_container.add_child(sep)
 
 
 func _refresh_population() -> void:
 	if _pop_detail_label == null:
 		return
-	var members_raw: Variant = _get_data_value("members", [])
-	var members: Array = members_raw if members_raw is Array else []
-	var pop: int = int(_get_data_value("population", members.size()))
-	var adults: int = 0
-	var children: int = 0
-	var elders: int = 0
-	for m: Variant in members:
-		if not (m is Dictionary):
-			continue
-		var stage: String = str((m as Dictionary).get("growth_stage", "adult")).to_lower()
-		if stage == "child" or stage == "infant":
-			children += 1
-		elif stage == "elder":
-			elders += 1
-		else:
-			adults += 1
+	var pop: int = int(_get_data_value("population", 0))
+	var adults: int = int(_get_data_value("adults", 0))
+	var teens: int = int(_get_data_value("teens", 0))
+	var children: int = int(_get_data_value("children", 0))
+	var elders: int = int(_get_data_value("elders", 0))
+	var male: int = int(_get_data_value("male_count", 0))
+	var female: int = int(_get_data_value("female_count", 0))
 	_pop_detail_label.text = Locale.trf1("UI_TOTAL_POP_FMT", "n", pop)
-	_age_dist_label.text = "%s %d, %s %d, %s %d" % [
+	_age_dist_label.text = "%s %d · %s %d · %s %d · %s %d" % [
 		Locale.ltr("UI_ADULTS"), adults,
+		Locale.ltr("UI_TEENS"), teens,
 		Locale.ltr("UI_CHILDREN"), children,
 		Locale.ltr("UI_ELDERS"), elders]
-	_job_dist_label.text = ""
+	if _gender_dist_label != null:
+		_gender_dist_label.text = "%s %d / %s %d" % [Locale.ltr("UI_MALE"), male, Locale.ltr("UI_FEMALE"), female]
+	if _member_list_container != null:
+		for child in _member_list_container.get_children():
+			child.queue_free()
+		var members_raw: Variant = _get_data_value("members", [])
+		var members: Array = members_raw if members_raw is Array else []
+		var show_count: int = mini(members.size(), 20)
+		for i: int in range(show_count):
+			var m: Variant = members[i]
+			if not (m is Dictionary):
+				continue
+			var md: Dictionary = m as Dictionary
+			var m_name: String = str(md.get("name", "?"))
+			var m_age_raw: Variant = md.get("age_years", 0.0)
+			var m_age: float = float(m_age_raw) if (m_age_raw is float or m_age_raw is int) else 0.0
+			var m_gender: String = str(md.get("gender", ""))
+			var gender_prefix: String = Locale.ltr("UI_GENDER_MALE_SHORT") if m_gender == "male" else Locale.ltr("UI_GENDER_FEMALE_SHORT")
+			var row := Label.new()
+			row.text = "%s %s (%d)" % [gender_prefix, m_name, int(m_age)]
+			row.add_theme_font_size_override("font_size", 10)
+			row.add_theme_color_override("font_color", COLOR_VALUE)
+			row.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			row.mouse_filter = Control.MOUSE_FILTER_STOP
+			var entity_id_raw: Variant = md.get("id", -1)
+			var entity_id: int = int(entity_id_raw) if (entity_id_raw is float or entity_id_raw is int) else -1
+			if entity_id >= 0:
+				var captured: int = entity_id
+				row.gui_input.connect(func(event: InputEvent) -> void:
+					if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+						SimulationBus.entity_selected.emit(captured)
+				)
+			_member_list_container.add_child(row)
+		if members.size() > show_count:
+			var more := Label.new()
+			more.text = "+%d" % (members.size() - show_count)
+			more.add_theme_font_size_override("font_size", 9)
+			more.add_theme_color_override("font_color", Color(0.35, 0.45, 0.55))
+			_member_list_container.add_child(more)
 
 
 func _refresh_economy() -> void:
-	if _economy_label == null:
+	if _economy_panel == null:
 		return
-	_economy_label.text = _storage_label.text if _storage_label != null else ""
+	var food: float = _safe_resource("stockpile_food")
+	var wood: float = _safe_resource("stockpile_wood")
+	var stone: float = _safe_resource("stockpile_stone")
+	var pop: int = maxi(int(_get_data_value("population", 1)), 1)
+	var cap: float = maxf(float(pop) * 100.0, 100.0)
+	_update_bar_row(_food_bar, {"label": Locale.ltr("UI_FOOD"), "value": clampf(food / cap, 0.0, 1.0)})
+	if _food_bar.has("pct"):
+		(_food_bar["pct"] as Label).text = "%d" % int(food)
+	_update_bar_row(_wood_bar, {"label": Locale.ltr("UI_WOOD"), "value": clampf(wood / cap, 0.0, 1.0)})
+	if _wood_bar.has("pct"):
+		(_wood_bar["pct"] as Label).text = "%d" % int(wood)
+	_update_bar_row(_stone_bar, {"label": Locale.ltr("UI_STONE"), "value": clampf(stone / cap, 0.0, 1.0)})
+	if _stone_bar.has("pct"):
+		(_stone_bar["pct"] as Label).text = "%d" % int(stone)
+	if _economy_summary_label != null:
+		if pop > 0:
+			_economy_summary_label.text = "%s: %.1f / %.1f / %.1f" % [
+				Locale.ltr("UI_PER_CAPITA"),
+				food / float(pop), wood / float(pop), stone / float(pop)]
+		else:
+			_economy_summary_label.text = ""
 
 
 func _refresh_tech() -> void:
@@ -396,17 +522,71 @@ func _refresh_tech() -> void:
 	for child in _tech_container.get_children():
 		child.queue_free()
 	var era: String = str(_get_data_value("tech_era", "stone_age"))
-	var tech_label := Label.new()
-	tech_label.text = "%s: %s" % [Locale.ltr("UI_CURRENT_ERA"), Locale.ltr("ERA_" + era.to_upper())]
-	tech_label.add_theme_font_size_override("font_size", 10)
-	tech_label.add_theme_color_override("font_color", COLOR_VALUE)
-	_tech_container.add_child(tech_label)
+	if _tech_era_label != null:
+		_tech_era_label.text = "%s: %s" % [Locale.ltr("UI_CURRENT_ERA"), Locale.ltr("ERA_" + era.to_upper())]
+	var tech_states: Variant = _get_data_value("tech_states", {})
+	if not (tech_states is Dictionary):
+		return
+	var ts: Dictionary = tech_states as Dictionary
+	if ts.is_empty():
+		var empty := Label.new()
+		empty.text = Locale.ltr("UI_NO_TECHS")
+		empty.add_theme_font_size_override("font_size", 10)
+		empty.add_theme_color_override("font_color", COLOR_LABEL)
+		_tech_container.add_child(empty)
+		return
+	var tech_ids: Array = ts.keys()
+	tech_ids.sort()
+	for tech_id_raw: Variant in tech_ids:
+		var tech_id: String = str(tech_id_raw)
+		var entry: Variant = ts.get(tech_id, {})
+		if not (entry is Dictionary):
+			continue
+		var ed: Dictionary = entry as Dictionary
+		var state: String = str(ed.get("state", "unknown"))
+		var practitioners: int = int(ed.get("practitioner_count", 0))
+		var status_color: Color = COLOR_VALUE
+		match state:
+			"known_stable":
+				status_color = Color(0.45, 0.72, 0.45)
+			"known_low":
+				status_color = Color(0.80, 0.65, 0.25)
+			"forgotten_recent":
+				status_color = Color(0.72, 0.30, 0.30)
+			"forgotten_long":
+				status_color = Color(0.35, 0.35, 0.40)
+			_:
+				status_color = Color(0.40, 0.45, 0.50)
+		var tech_name: String = Locale.ltr(tech_id)
+		var row := Label.new()
+		row.text = "%s" % tech_name
+		if practitioners > 0:
+			row.text += " (%d)" % practitioners
+		row.add_theme_font_size_override("font_size", 10)
+		row.add_theme_color_override("font_color", status_color)
+		_tech_container.add_child(row)
 
 
 func _refresh_military() -> void:
 	if _military_label == null:
 		return
-	_military_label.text = Locale.ltr("UI_SETTLEMENT_NO_FORTIFICATIONS")
+	var adults: int = int(_get_data_value("adults", 0))
+	var pop: int = int(_get_data_value("population", 0))
+	var buildings_raw: Variant = _get_data_value("buildings", [])
+	var buildings: Array = buildings_raw if buildings_raw is Array else []
+	var defensive_count: int = 0
+	for bld_raw: Variant in buildings:
+		if bld_raw is Dictionary:
+			var bt: String = str((bld_raw as Dictionary).get("building_type", ""))
+			if bt.contains("wall") or bt.contains("watchtower") or bt.contains("palisade") or bt.contains("gate"):
+				defensive_count += 1
+	var lines: PackedStringArray = []
+	lines.append("%s: %d / %d" % [Locale.ltr("UI_ABLE_WARRIORS"), adults, pop])
+	if defensive_count > 0:
+		lines.append("%s: %d" % [Locale.ltr("UI_DEFENSES"), defensive_count])
+	else:
+		lines.append(Locale.ltr("UI_SETTLEMENT_NO_FORTIFICATIONS"))
+	_military_label.text = "\n".join(lines)
 
 
 func _post_refresh_log() -> void:
