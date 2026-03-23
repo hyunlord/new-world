@@ -73,6 +73,9 @@ var _hovered_id: String = ""
 var _selected_id: String = ""
 
 var _icon_labels: Dictionary = {}
+var _chain_edges: Dictionary = {}
+var _chain_nodes: Dictionary = {}
+var _entity_label: Label
 var _detail_panel: PanelContainer
 var _detail_vbox: VBoxContainer
 
@@ -105,6 +108,16 @@ func _build_top_bar() -> void:
 		btn.custom_minimum_size = Vector2(80, 28)
 		btn.focus_mode = Control.FOCUS_NONE
 		top_bar.add_child(btn)
+
+	var sep := VSeparator.new()
+	sep.custom_minimum_size.x = 1
+	top_bar.add_child(sep)
+
+	_entity_label = Label.new()
+	_entity_label.text = ""
+	_entity_label.add_theme_font_size_override("font_size", 11)
+	_entity_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.68))
+	top_bar.add_child(_entity_label)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -273,7 +286,7 @@ func _update_label_positions() -> void:
 			NodeState.DISCOVERABLE:
 				label.modulate = Color(0.7, 0.7, 0.7, 0.45)
 			_:
-				label.modulate = Color(0.4, 0.4, 0.4, 0.12)
+				label.modulate = Color(0.5, 0.5, 0.5, 0.25)
 
 
 func _compute_node_states() -> void:
@@ -335,7 +348,8 @@ func _draw() -> void:
 		var mx: float = (p0.x + p3.x) * 0.5
 		var p1 := Vector2(mx, p0.y)
 		var p2 := Vector2(mx, p3.y)
-		var is_highlight: bool = active_id != "" and (str(edge["from_id"]) == active_id or str(edge["to_id"]) == active_id)
+		var edge_key: String = str(edge["from_id"]) + "->" + str(edge["to_id"])
+		var is_highlight: bool = _chain_edges.has(edge_key)
 		var edge_color: Color
 		var edge_w: float
 		if is_highlight:
@@ -379,11 +393,14 @@ func _draw_node(tech_id: String) -> void:
 			fill_color = Color(cat_color.r, cat_color.g, cat_color.b, 0.03)
 			stroke_color = Color(cat_color.r, cat_color.g, cat_color.b, 0.12)
 		_:
-			fill_color = Color(0.027, 0.035, 0.047, 1.0)
-			stroke_color = Color(0.055, 0.07, 0.09, 1.0)
+			fill_color = Color(0.05, 0.06, 0.08, 1.0)
+			stroke_color = Color(0.10, 0.12, 0.16, 1.0)
 
+	var in_chain: bool = _chain_nodes.has(tech_id)
 	if is_active:
 		stroke_color = Color(0.42, 0.63, 0.85, 0.8)
+	elif in_chain:
+		stroke_color = Color(0.23, 0.42, 0.56, 0.4)
 
 	var node_rect := Rect2(screen_pos, screen_size)
 	draw_rect(node_rect, fill_color)
@@ -392,6 +409,9 @@ func _draw_node(tech_id: String) -> void:
 	if is_active:
 		var glow_rect := Rect2(screen_pos - Vector2(2, 2) * _zoom, screen_size + Vector2(4, 4) * _zoom)
 		draw_rect(glow_rect, Color(0.31, 0.56, 0.75, 0.2), false, 1.0 * _zoom)
+	elif in_chain:
+		var chain_rect := Rect2(screen_pos - Vector2(1, 1) * _zoom, screen_size + Vector2(2, 2) * _zoom)
+		draw_rect(chain_rect, Color(0.23, 0.42, 0.56, 0.15), false, 0.8 * _zoom)
 
 	# Proficiency ring
 	if state == NodeState.KNOWN and prof > 0.0:
@@ -407,7 +427,7 @@ func _draw_node(tech_id: String) -> void:
 	match state:
 		NodeState.KNOWN: label_color = Color(0.56, 0.63, 0.69)
 		NodeState.DISCOVERABLE: label_color = Color(0.23, 0.29, 0.35)
-		_: label_color = Color(0.08, 0.10, 0.13)
+		_: label_color = Color(0.15, 0.18, 0.22)
 
 	var display_key: String = str(def.get("display_key", tech_id))
 	var display_name: String = Locale.ltr(display_key)
@@ -474,11 +494,13 @@ func _gui_input(event: InputEvent) -> void:
 			var clicked: String = _hit_test(mb.position)
 			if clicked != "":
 				_selected_id = clicked
+				_update_active_chain()
 				_show_detail_panel(clicked)
 				queue_redraw()
 				accept_event()
 				return
 			_selected_id = ""
+			_update_active_chain()
 			_detail_panel.visible = false
 			queue_redraw()
 
@@ -502,7 +524,54 @@ func _process(_delta: float) -> void:
 	var new_hover: String = _hit_test(mouse_pos)
 	if new_hover != _hovered_id:
 		_hovered_id = new_hover
+		_update_active_chain()
 		queue_redraw()
+
+
+func _update_active_chain() -> void:
+	var active: String = _selected_id if _selected_id != "" else _hovered_id
+	if active == "":
+		_chain_edges.clear()
+		_chain_nodes.clear()
+	else:
+		var chain: Dictionary = _compute_chain(active)
+		_chain_edges = chain["edges"]
+		_chain_nodes = chain["nodes"]
+
+
+func _compute_chain(tech_id: String) -> Dictionary:
+	var chain_edges: Dictionary = {}
+	var chain_nodes: Dictionary = {}
+	chain_nodes[tech_id] = true
+	# Walk UP: all ancestors
+	var up_queue: Array[String] = [tech_id]
+	while not up_queue.is_empty():
+		var current: String = up_queue.pop_back()
+		var def: Dictionary = _tech_defs.get(current, {})
+		var prereqs: Array = def.get("prereq_logic", {}).get("all_of", [])
+		for pid_raw: Variant in prereqs:
+			var pid: String = str(pid_raw)
+			var ek: String = pid + "->" + current
+			if not chain_edges.has(ek) and _tech_defs.has(pid):
+				chain_edges[ek] = true
+				chain_nodes[pid] = true
+				up_queue.append(pid)
+	# Walk DOWN: all descendants
+	var down_queue: Array[String] = [tech_id]
+	while not down_queue.is_empty():
+		var current: String = down_queue.pop_back()
+		for tid: String in _tech_defs:
+			var def: Dictionary = _tech_defs[tid]
+			var prereqs: Array = def.get("prereq_logic", {}).get("all_of", [])
+			for pid_raw: Variant in prereqs:
+				if str(pid_raw) == current:
+					var ek: String = current + "->" + tid
+					if not chain_edges.has(ek):
+						chain_edges[ek] = true
+						chain_nodes[tid] = true
+						down_queue.append(tid)
+					break
+	return {"edges": chain_edges, "nodes": chain_nodes}
 
 
 func _world_to_screen(p: Vector2) -> Vector2:
@@ -615,16 +684,19 @@ func _show_detail_panel(tech_id: String) -> void:
 
 	# Non-tech requirements
 	var env_items: Array[String] = []
-	var biomes: Array = requirements.get("biomes_nearby", [])
+	var biomes_raw: Variant = requirements.get("biomes_nearby", [])
+	var biomes: Array = biomes_raw if biomes_raw is Array else []
 	for b: String in biomes:
 		env_items.append(Locale.ltr("TECH_DETAIL_BIOME_REQ").replace("{name}", b))
-	var resources: Array = requirements.get("resources_nearby", [])
+	var resources_raw: Variant = requirements.get("resources_nearby", [])
+	var resources: Array = resources_raw if resources_raw is Array else []
 	for r: String in resources:
 		env_items.append(Locale.ltr("TECH_DETAIL_RESOURCE_REQ").replace("{name}", r))
 	var req_pop: int = int(discovery.get("required_population", 0))
 	if req_pop > 0:
 		env_items.append(Locale.ltr("TECH_DETAIL_POP_REQ").replace("{n}", str(req_pop)))
-	var req_skills: Array = discovery.get("required_skills", [])
+	var req_skills_raw: Variant = discovery.get("required_skills", [])
+	var req_skills: Array = req_skills_raw if req_skills_raw is Array else []
 	for skill_raw: Variant in req_skills:
 		if skill_raw is Dictionary:
 			var s: Dictionary = skill_raw
@@ -678,10 +750,17 @@ func set_entity(entity_id: int) -> void:
 	_selected_entity_id = entity_id
 	_entity_knowledge.clear()
 	if _sim_engine == null or entity_id < 0:
+		if _entity_label != null:
+			_entity_label.text = ""
 		_compute_node_states()
 		queue_redraw()
 		_update_label_positions()
 		return
+	# Show entity name in top bar
+	if _entity_label != null:
+		var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
+		var entity_name: String = str(detail.get("name", "?"))
+		_entity_label.text = "  %s" % entity_name
 	var knowledge_tab: Dictionary = _sim_engine.get_entity_tab(entity_id, "knowledge")
 	var known_raw: Variant = knowledge_tab.get("known", [])
 	var known: Array = known_raw if known_raw is Array else []
