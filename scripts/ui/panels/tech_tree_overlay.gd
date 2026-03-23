@@ -107,11 +107,8 @@ func setup(tech_tree_manager: RefCounted, sim_engine: RefCounted, settlement_man
 	_compute_layout()
 	_cache_edges()
 	_create_icon_labels()
-	# Center tree content in view
-	var bounds: Rect2 = _get_content_bounds()
-	_pan.x = (size.x * 0.5) - (bounds.position.x + bounds.size.x * 0.5)
-	_pan.y = TOP_BAR_HEIGHT + 20.0 - bounds.position.y
-	_clamp_pan()
+	# Initial centering happens in _notification(VISIBILITY_CHANGED)
+	# because size is (0,0) at this point.
 
 
 func _build_top_bar() -> void:
@@ -656,6 +653,29 @@ func _gui_input(event: InputEvent) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
 		_populate_dropdowns()
+		_center_content()
+	if what == NOTIFICATION_RESIZED and visible:
+		_clamp_pan()
+		_on_view_changed()
+
+
+func _center_content() -> void:
+	var bounds: Rect2 = _get_content_bounds()
+	var view_w: float = size.x
+	var view_h: float = size.y
+	if view_w < 10.0:
+		return  # not laid out yet
+	var content_w: float = bounds.size.x * _zoom
+	var content_left: float = bounds.position.x * _zoom
+	# Center horizontally if fits, else align left edge
+	if content_w <= view_w:
+		_pan.x = (view_w - content_w) * 0.5 - content_left
+	else:
+		_pan.x = -content_left + 40.0
+	# Position at top
+	_pan.y = TOP_BAR_HEIGHT + 20.0 - bounds.position.y * _zoom
+	_clamp_pan()
+	_on_view_changed()
 
 
 func _process(_delta: float) -> void:
@@ -898,16 +918,44 @@ func _get_content_bounds() -> Rect2:
 	return Rect2(min_x - 40.0, min_y - 40.0, max_x - min_x + 80.0, max_y - min_y + 80.0)
 
 
+## Clamp pan so tree content stays within the visible area.
+## If content fits within viewport, center it on that axis.
+## If content is larger, allow scrolling but keep edges visible.
 func _clamp_pan() -> void:
 	var bounds: Rect2 = _get_content_bounds()
 	var view_w: float = size.x
-	var view_h: float = size.y - TOP_BAR_HEIGHT
-	var min_pan_x: float = view_w - (bounds.position.x + bounds.size.x) * _zoom - 100.0
-	var max_pan_x: float = -(bounds.position.x * _zoom) + 100.0
-	_pan.x = clampf(_pan.x, min_pan_x, max_pan_x)
-	var min_pan_y: float = view_h - (bounds.position.y + bounds.size.y) * _zoom - 100.0
-	var max_pan_y: float = -(bounds.position.y * _zoom) + TOP_BAR_HEIGHT + 50.0
-	_pan.y = clampf(_pan.y, min_pan_y, max_pan_y)
+	var view_h: float = size.y
+
+	# Abort if size not yet known (during setup before layout)
+	if view_w < 10.0 or view_h < 10.0:
+		return
+
+	var content_w: float = bounds.size.x * _zoom
+	var content_h: float = bounds.size.y * _zoom
+	var content_left: float = bounds.position.x * _zoom
+	var content_top: float = bounds.position.y * _zoom
+
+	# ── Horizontal ──
+	if content_w <= view_w:
+		# Content fits: center horizontally
+		_pan.x = (view_w - content_w) * 0.5 - content_left
+	else:
+		# Content wider than view: allow scroll with margin
+		var margin: float = 60.0
+		var max_pan_x: float = -content_left + margin
+		var min_pan_x: float = view_w - content_left - content_w - margin
+		_pan.x = clampf(_pan.x, min_pan_x, max_pan_x)
+
+	# ── Vertical ──
+	if content_h <= view_h - TOP_BAR_HEIGHT:
+		# Content fits: position at top with padding
+		_pan.y = TOP_BAR_HEIGHT + 20.0 - content_top
+	else:
+		# Content taller than view: allow scroll
+		var margin: float = 60.0
+		var max_pan_y: float = -content_top + TOP_BAR_HEIGHT + margin
+		var min_pan_y: float = view_h - content_top - content_h - margin
+		_pan.y = clampf(_pan.y, min_pan_y, max_pan_y)
 
 
 func _on_view_changed() -> void:
