@@ -274,7 +274,7 @@ func _build_tech_tab() -> void:
 	open_map_btn.custom_minimum_size = Vector2(0, 30)
 	open_map_btn.focus_mode = Control.FOCUS_NONE
 	open_map_btn.pressed.connect(func() -> void:
-		get_tree().call_group("hud", "_toggle_tech_tree")
+		SimulationBus.ui_notification.emit("open_tech_tree_settlement_%d" % _settlement_id, "command")
 	)
 	_tech_panel.add_child(open_map_btn)
 
