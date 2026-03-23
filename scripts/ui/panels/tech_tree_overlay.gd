@@ -215,6 +215,11 @@ func _build_top_bar() -> void:
 	top_bar.add_child(close_btn)
 
 
+func _on_close() -> void:
+	visible = false
+	closed.emit()
+
+
 func _add_bar_separator(parent: Control) -> void:
 	var line := ColorRect.new()
 	line.custom_minimum_size = Vector2(1, 20)
