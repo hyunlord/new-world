@@ -79,10 +79,21 @@ var _entity_label: Label
 var _detail_panel: PanelContainer
 var _detail_vbox: VBoxContainer
 
+enum ViewMode { AGENT, SETTLEMENT, BAND }
+var _view_mode: int = ViewMode.AGENT
+var _settlement_manager: RefCounted
+var _current_band_id: int = -1
+var _band_knowledge_cache: Dictionary = {}
+var _agent_knowledge_backup: Dictionary = {}
+var _agent_button: Button
+var _settlement_dropdown: MenuButton
+var _band_dropdown: MenuButton
 
-func setup(tech_tree_manager: RefCounted, sim_engine: RefCounted) -> void:
+
+func setup(tech_tree_manager: RefCounted, sim_engine: RefCounted, settlement_manager: RefCounted = null) -> void:
 	_tech_tree_manager = tech_tree_manager
 	_sim_engine = sim_engine
+	_settlement_manager = settlement_manager
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_top_bar()
 	_build_detail_panel()
@@ -112,6 +123,30 @@ func _build_top_bar() -> void:
 	var sep := VSeparator.new()
 	sep.custom_minimum_size.x = 1
 	top_bar.add_child(sep)
+
+	_agent_button = Button.new()
+	_agent_button.text = "🧑 ?"
+	_agent_button.flat = true
+	_agent_button.add_theme_font_size_override("font_size", 11)
+	_agent_button.focus_mode = Control.FOCUS_NONE
+	_agent_button.pressed.connect(_switch_to_agent_view)
+	top_bar.add_child(_agent_button)
+
+	_settlement_dropdown = MenuButton.new()
+	_settlement_dropdown.text = Locale.ltr("TECH_VIEW_SETTLEMENT")
+	_settlement_dropdown.flat = true
+	_settlement_dropdown.add_theme_font_size_override("font_size", 11)
+	_settlement_dropdown.focus_mode = Control.FOCUS_NONE
+	top_bar.add_child(_settlement_dropdown)
+	_settlement_dropdown.get_popup().id_pressed.connect(_on_settlement_selected)
+
+	_band_dropdown = MenuButton.new()
+	_band_dropdown.text = Locale.ltr("TECH_VIEW_BAND")
+	_band_dropdown.flat = true
+	_band_dropdown.add_theme_font_size_override("font_size", 11)
+	_band_dropdown.focus_mode = Control.FOCUS_NONE
+	top_bar.add_child(_band_dropdown)
+	_band_dropdown.get_popup().id_pressed.connect(_on_band_selected)
 
 	_entity_label = Label.new()
 	_entity_label.text = ""
@@ -413,13 +448,24 @@ func _draw_node(tech_id: String) -> void:
 		var chain_rect := Rect2(screen_pos - Vector2(1, 1) * _zoom, screen_size + Vector2(2, 2) * _zoom)
 		draw_rect(chain_rect, Color(0.23, 0.42, 0.56, 0.15), false, 0.8 * _zoom)
 
-	# Proficiency ring
-	if state == NodeState.KNOWN and prof > 0.0:
+	# Proficiency / ratio ring
+	if state == NodeState.KNOWN:
 		var center := screen_pos + screen_size * 0.5
 		var r: float = RING_RADIUS * _zoom
-		draw_arc(center, r, 0.0, TAU, 32, Color(0.08, 0.10, 0.14), RING_WIDTH * _zoom)
-		var end_angle: float = -PI * 0.5 + TAU * prof
-		draw_arc(center, r, -PI * 0.5, end_angle, 32, _prof_color(prof), RING_WIDTH * _zoom)
+		if _view_mode == ViewMode.AGENT and prof > 0.0:
+			draw_arc(center, r, 0.0, TAU, 32, Color(0.08, 0.10, 0.14), RING_WIDTH * _zoom)
+			draw_arc(center, r, -PI * 0.5, -PI * 0.5 + TAU * prof, 32, _prof_color(prof), RING_WIDTH * _zoom)
+		elif _view_mode == ViewMode.BAND:
+			var cache: Dictionary = _band_knowledge_cache.get(tech_id, {})
+			var count: int = int(cache.get("count", 0))
+			var btotal: int = maxi(int(cache.get("total", 1)), 1)
+			var ratio: float = float(count) / float(btotal)
+			draw_arc(center, r, 0.0, TAU, 32, Color(0.08, 0.10, 0.14), RING_WIDTH * _zoom)
+			var ratio_color: Color = Color(0.30, 0.69, 0.31) if ratio >= 0.8 else (Color(0.96, 0.62, 0.04) if ratio >= 0.4 else Color(0.86, 0.15, 0.15))
+			draw_arc(center, r, -PI * 0.5, -PI * 0.5 + TAU * ratio, 32, ratio_color, RING_WIDTH * _zoom)
+		elif _view_mode == ViewMode.SETTLEMENT:
+			draw_rect(Rect2(screen_pos - Vector2(1, 1) * _zoom, screen_size + Vector2(2, 2) * _zoom),
+				Color(0.30, 0.69, 0.31, 0.4), false, 2.0 * _zoom)
 
 	# Name label
 	var label_y: float = screen_pos.y + screen_size.y + 10.0 * _zoom
@@ -438,9 +484,15 @@ func _draw_node(tech_id: String) -> void:
 		int(LABEL_FONT_SIZE * _zoom), label_color)
 
 	if state == NodeState.KNOWN:
+		var sub_text: String = ""
+		if _view_mode == ViewMode.BAND:
+			var cache: Dictionary = _band_knowledge_cache.get(tech_id, {})
+			sub_text = "%d/%d" % [int(cache.get("count", 0)), int(cache.get("total", 0))]
+		else:
+			sub_text = "%d%%" % int(prof * 100.0)
 		draw_string(ThemeDB.fallback_font,
 			Vector2(screen_pos.x + screen_size.x * 0.5, label_y + 12.0 * _zoom),
-			"%d%%" % int(prof * 100.0), HORIZONTAL_ALIGNMENT_CENTER,
+			sub_text, HORIZONTAL_ALIGNMENT_CENTER,
 			int(screen_size.x), int(8.0 * _zoom), _prof_color(prof))
 	elif state == NodeState.DISCOVERABLE:
 		draw_string(ThemeDB.fallback_font,
@@ -517,6 +569,11 @@ func _gui_input(event: InputEvent) -> void:
 			accept_event()
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		_populate_dropdowns()
+
+
 func _process(_delta: float) -> void:
 	if not visible:
 		return
@@ -572,6 +629,125 @@ func _compute_chain(tech_id: String) -> Dictionary:
 						down_queue.append(tid)
 					break
 	return {"edges": chain_edges, "nodes": chain_nodes}
+
+
+func _switch_to_agent_view() -> void:
+	_view_mode = ViewMode.AGENT
+	_entity_knowledge = _agent_knowledge_backup.duplicate()
+	_compute_node_states()
+	_update_active_chain()
+	queue_redraw()
+	_update_label_positions()
+
+
+func _on_settlement_selected(index: int) -> void:
+	if _settlement_manager == null:
+		return
+	if not _settlement_manager.has_method("get_all_settlements"):
+		return
+	var settlements: Array = _settlement_manager.get_all_settlements()
+	if index < 0 or index >= settlements.size():
+		return
+	_view_mode = ViewMode.SETTLEMENT
+	_load_settlement_knowledge(settlements[index])
+	_compute_node_states()
+	_update_active_chain()
+	queue_redraw()
+	_update_label_positions()
+	if _entity_label != null:
+		_entity_label.text = "🏘️ " + str(index)
+
+
+func _on_band_selected(index: int) -> void:
+	if _sim_engine == null or not _sim_engine.has_method("runtime_get_band_list"):
+		return
+	var bands: Array = _sim_engine.runtime_get_band_list()
+	if index < 0 or index >= bands.size():
+		return
+	var band: Dictionary = bands[index] if bands[index] is Dictionary else {}
+	_current_band_id = int(band.get("id", -1))
+	_view_mode = ViewMode.BAND
+	_load_band_knowledge()
+	_compute_node_states()
+	_update_active_chain()
+	queue_redraw()
+	_update_label_positions()
+	if _entity_label != null:
+		_entity_label.text = "👥 " + str(band.get("name", "?"))
+
+
+func _load_settlement_knowledge(settlement: Variant) -> void:
+	_entity_knowledge.clear()
+	_band_knowledge_cache.clear()
+	if settlement == null:
+		return
+	if settlement is Dictionary:
+		var tech_states: Dictionary = settlement.get("tech_states", {})
+		for tech_id: String in tech_states:
+			_entity_knowledge[tech_id] = {
+				"proficiency": 1.0,
+				"source": 0,
+			}
+
+
+func _load_band_knowledge() -> void:
+	_entity_knowledge.clear()
+	_band_knowledge_cache.clear()
+	if _sim_engine == null or _current_band_id < 0:
+		return
+	if not _sim_engine.has_method("runtime_get_band_detail"):
+		return
+	var band_detail: Dictionary = _sim_engine.runtime_get_band_detail(_current_band_id)
+	var member_ids_raw: Variant = band_detail.get("member_ids", [])
+	var member_ids: Array = member_ids_raw if member_ids_raw is Array else []
+	var total: int = member_ids.size()
+	if total == 0:
+		return
+	var tech_counts: Dictionary = {}
+	for member_id: Variant in member_ids:
+		var mid: int = int(member_id)
+		var k_tab: Dictionary = _sim_engine.get_entity_tab(mid, "knowledge")
+		var known_raw: Variant = k_tab.get("known", [])
+		var known: Array = known_raw if known_raw is Array else []
+		for entry_raw: Variant in known:
+			if entry_raw is Dictionary:
+				var kid: String = str((entry_raw as Dictionary).get("id", ""))
+				if not kid.is_empty():
+					tech_counts[kid] = tech_counts.get(kid, 0) + 1
+	for tech_id: String in tech_counts:
+		var count: int = tech_counts[tech_id]
+		_entity_knowledge[tech_id] = {
+			"proficiency": float(count) / float(total),
+			"source": 0,
+		}
+		_band_knowledge_cache[tech_id] = {"count": count, "total": total}
+
+
+func _populate_dropdowns() -> void:
+	# Settlements
+	var s_popup: PopupMenu = _settlement_dropdown.get_popup()
+	s_popup.clear()
+	if _settlement_manager != null and _settlement_manager.has_method("get_all_settlements"):
+		var settlements: Array = _settlement_manager.get_all_settlements()
+		for i: int in range(settlements.size()):
+			var s: Variant = settlements[i]
+			var s_name: String = "Settlement %d" % i
+			if s is Dictionary:
+				s_name = str(s.get("name", s_name))
+			s_popup.add_item("🏘️ " + s_name, i)
+	_settlement_dropdown.disabled = s_popup.item_count == 0
+
+	# Bands
+	var b_popup: PopupMenu = _band_dropdown.get_popup()
+	b_popup.clear()
+	if _sim_engine != null and _sim_engine.has_method("runtime_get_band_list"):
+		var bands: Array = _sim_engine.runtime_get_band_list()
+		for i: int in range(bands.size()):
+			var b: Dictionary = bands[i] if bands[i] is Dictionary else {}
+			var b_name: String = str(b.get("name", "Band %d" % i))
+			var b_count: int = int(b.get("member_count", 0))
+			b_popup.add_item("👥 %s (%d)" % [b_name, b_count], i)
+	_band_dropdown.disabled = b_popup.item_count == 0
 
 
 func _world_to_screen(p: Vector2) -> Vector2:
@@ -761,6 +937,7 @@ func set_entity(entity_id: int) -> void:
 		var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
 		var entity_name: String = str(detail.get("name", "?"))
 		_entity_label.text = "  %s" % entity_name
+		_agent_button.text = "🧑 %s" % entity_name
 	var knowledge_tab: Dictionary = _sim_engine.get_entity_tab(entity_id, "knowledge")
 	var known_raw: Variant = knowledge_tab.get("known", [])
 	var known: Array = known_raw if known_raw is Array else []
@@ -770,6 +947,8 @@ func set_entity(entity_id: int) -> void:
 			var kid: String = str(entry.get("id", ""))
 			if not kid.is_empty():
 				_entity_knowledge[kid] = entry
+	_agent_knowledge_backup = _entity_knowledge.duplicate()
+	_view_mode = ViewMode.AGENT
 	_compute_node_states()
 	queue_redraw()
 	_update_label_positions()

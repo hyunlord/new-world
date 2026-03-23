@@ -3330,7 +3330,7 @@ func _toggle_tech_tree() -> void:
 	if _tech_tree_overlay == null:
 		var overlay_script: GDScript = load("res://scripts/ui/panels/tech_tree_overlay.gd")
 		_tech_tree_overlay = overlay_script.new()
-		_tech_tree_overlay.setup(_tech_tree_manager_ref, _sim_engine)
+		_tech_tree_overlay.setup(_tech_tree_manager_ref, _sim_engine, _settlement_manager)
 		_tech_tree_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_tech_tree_overlay.visible = false
 		_hud_control_root.add_child(_tech_tree_overlay)
