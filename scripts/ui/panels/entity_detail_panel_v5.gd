@@ -32,6 +32,9 @@ var _scroll: ScrollContainer
 var _content: VBoxContainer
 var _header_panel: PanelContainer
 var _header_name_label: Label
+var _back_button: Button
+var _nav_history: Array[int] = []
+const NAV_HISTORY_MAX: int = 10
 var _header_meta_label: Label
 var _header_action_label: Label
 var _follow_button: Button
@@ -122,6 +125,7 @@ var _v5_refresh_timer: float = 0.0
 func set_entity_id(entity_id: int) -> void:
 	_inv_data_hash = -1
 	super.set_entity_id(entity_id)
+	_update_back_button()
 
 
 func _process(delta: float) -> void:
@@ -236,10 +240,29 @@ func _build_header() -> void:
 	info_vbox.add_theme_constant_override("separation", 1)
 	hbox.add_child(info_vbox)
 
+	var name_row := HBoxContainer.new()
+	name_row.add_theme_constant_override("separation", 6)
+	info_vbox.add_child(name_row)
+
+	_back_button = Button.new()
+	_back_button.text = "←"
+	_back_button.flat = true
+	_back_button.custom_minimum_size = Vector2(28, 28)
+	_back_button.add_theme_font_size_override("font_size", 14)
+	_back_button.add_theme_color_override("font_color", Color(0.5, 0.6, 0.7))
+	_back_button.focus_mode = Control.FOCUS_NONE
+	_back_button.disabled = true
+	_back_button.modulate.a = 0.3
+	_back_button.pressed.connect(_on_back_pressed)
+	name_row.add_child(_back_button)
+
 	_header_name_label = Label.new()
 	_header_name_label.add_theme_font_size_override("font_size", 14)
 	_header_name_label.add_theme_color_override("font_color", Color.WHITE)
-	info_vbox.add_child(_header_name_label)
+	_header_name_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_header_name_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	_header_name_label.gui_input.connect(_on_header_name_clicked)
+	name_row.add_child(_header_name_label)
 
 	_header_meta_label = Label.new()
 	_header_meta_label.add_theme_font_size_override("font_size", 10)
@@ -1603,8 +1626,35 @@ func _make_clickable_label(label: Label, entity_id: int) -> void:
 func _navigate_to_entity(entity_id: int) -> void:
 	if entity_id < 0:
 		return
+	# Push current entity to history before navigating
+	if _selected_entity_id >= 0:
+		_nav_history.append(_selected_entity_id)
+		if _nav_history.size() > NAV_HISTORY_MAX:
+			_nav_history.remove_at(0)
+	_update_back_button()
 	SimulationBus.entity_selected.emit(entity_id)
 	SimulationBus.ui_notification.emit("focus_entity_%d" % entity_id, "command")
+
+
+func _on_back_pressed() -> void:
+	if _nav_history.is_empty():
+		return
+	var prev_id: int = _nav_history.pop_back()
+	_update_back_button()
+	SimulationBus.entity_selected.emit(prev_id)
+	SimulationBus.ui_notification.emit("focus_entity_%d" % prev_id, "command")
+
+
+func _update_back_button() -> void:
+	if _back_button != null:
+		_back_button.disabled = _nav_history.is_empty()
+		_back_button.modulate.a = 1.0 if not _nav_history.is_empty() else 0.3
+
+
+func _on_header_name_clicked(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if _selected_entity_id >= 0:
+			SimulationBus.ui_notification.emit("focus_entity_%d" % _selected_entity_id, "command")
 
 
 # ---------------------------------------------------------------------------
