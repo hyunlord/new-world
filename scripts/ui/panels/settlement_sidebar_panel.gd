@@ -565,6 +565,11 @@ func _refresh_tech() -> void:
 	if _tech_era_label != null:
 		_tech_era_label.text = "%s: %s" % [Locale.ltr("UI_CURRENT_ERA"), Locale.ltr("ERA_" + era.to_upper())]
 	var tech_states: Variant = _get_data_value("tech_states", {})
+	if OS.is_debug_build():
+		if tech_states is Dictionary:
+			print("[SettlementPanel] _refresh_tech: %d tech entries" % (tech_states as Dictionary).size())
+		else:
+			print("[SettlementPanel] _refresh_tech: tech_states type=%s, raw=%s" % [typeof(tech_states), str(tech_states).left(200)])
 	if not (tech_states is Dictionary):
 		return
 	var ts: Dictionary = tech_states as Dictionary
