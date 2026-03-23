@@ -204,6 +204,7 @@ var _sidebar_stats_panel: Control
 var _history_panel: Control
 var _diplomacy_panel: Control
 var _bottom_bar: PanelContainer
+var _hud_top_bar: HBoxContainer
 var _bottom_bar_tps_label: Label
 var _bottom_bar_fps_label: Label
 var _bottom_bar_zoom_buttons: Array[Button] = []
@@ -2058,9 +2059,9 @@ func _connect_signals() -> void:
 
 
 func _build_top_bar() -> void:
-	var bar := HBoxContainer.new()
-	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_bottom = TOP_BAR_HEIGHT
+	_hud_top_bar = HBoxContainer.new()
+	_hud_top_bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_hud_top_bar.offset_bottom = TOP_BAR_HEIGHT
 
 	var bg := StyleBoxFlat.new()
 	bg.bg_color = Color(0.05, 0.05, 0.08, 0.92)
@@ -2127,8 +2128,8 @@ func _build_top_bar() -> void:
 	hbox.add_child(_fps_label)
 
 	panel.add_child(hbox)
-	bar.add_child(panel)
-	add_child(bar)
+	_hud_top_bar.add_child(panel)
+	add_child(_hud_top_bar)
 
 
 func _build_entity_panel() -> void:
@@ -3334,9 +3335,24 @@ func _toggle_tech_tree() -> void:
 		_tech_tree_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_tech_tree_overlay.visible = false
 		_hud_control_root.add_child(_tech_tree_overlay)
+		if _tech_tree_overlay.has_signal("closed"):
+			_tech_tree_overlay.closed.connect(_on_tech_tree_closed)
 	_tech_tree_overlay.visible = not _tech_tree_overlay.visible
 	if _tech_tree_overlay.visible and _selected_entity_id >= 0:
 		_tech_tree_overlay.set_entity(_selected_entity_id)
+	# Hide/show HUD bars
+	var show_hud: bool = not _tech_tree_overlay.visible
+	if _hud_top_bar != null:
+		_hud_top_bar.visible = show_hud
+	if _bottom_bar != null:
+		_bottom_bar.visible = show_hud
+
+
+func _on_tech_tree_closed() -> void:
+	if _hud_top_bar != null:
+		_hud_top_bar.visible = true
+	if _bottom_bar != null:
+		_bottom_bar.visible = true
 
 
 func _on_locale_changed(_new_locale: String) -> void:

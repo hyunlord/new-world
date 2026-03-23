@@ -1,6 +1,8 @@
 extends Control
 class_name TechTreeOverlay
 
+signal closed
+
 const NODE_W: float = 64.0
 const NODE_H: float = 64.0
 const SPACING_X: float = 160.0
@@ -163,7 +165,7 @@ func _build_top_bar() -> void:
 	close_btn.flat = true
 	close_btn.add_theme_font_size_override("font_size", 14)
 	close_btn.focus_mode = Control.FOCUS_NONE
-	close_btn.pressed.connect(func() -> void: visible = false)
+	close_btn.pressed.connect(func() -> void: visible = false; closed.emit())
 	top_bar.add_child(close_btn)
 
 
@@ -566,6 +568,7 @@ func _gui_input(event: InputEvent) -> void:
 		var key := event as InputEventKey
 		if key.pressed and key.keycode == KEY_ESCAPE:
 			visible = false
+			closed.emit()
 			accept_event()
 
 
