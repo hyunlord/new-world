@@ -651,20 +651,29 @@ func _on_settlement_selected(index: int) -> void:
 	var settlements: Array = _settlement_manager.get_all_settlements()
 	if index < 0 or index >= settlements.size():
 		return
+	var settlement: Variant = settlements[index]
 	_view_mode = ViewMode.SETTLEMENT
-	_load_settlement_knowledge(settlements[index])
+	_load_settlement_knowledge(settlement)
 	_compute_node_states()
 	_update_active_chain()
 	queue_redraw()
 	_update_label_positions()
+	# Get settlement name from SimBridge
+	var s_id: int = -1
+	if settlement is RefCounted and "id" in settlement:
+		s_id = int(settlement.id)
+	var s_name: String = "Settlement %d" % index
+	if _sim_engine != null and s_id >= 0 and _sim_engine.has_method("get_settlement_detail"):
+		var detail: Dictionary = _sim_engine.get_settlement_detail(s_id)
+		s_name = str(detail.get("name", s_name))
 	if _entity_label != null:
-		_entity_label.text = "🏘️ " + str(index)
+		_entity_label.text = "🏘️ " + s_name
 
 
 func _on_band_selected(index: int) -> void:
-	if _sim_engine == null or not _sim_engine.has_method("runtime_get_band_list"):
+	if _sim_engine == null or not _sim_engine.has_method("get_band_list"):
 		return
-	var bands: Array = _sim_engine.runtime_get_band_list()
+	var bands: Array = _sim_engine.get_band_list()
 	if index < 0 or index >= bands.size():
 		return
 	var band: Dictionary = bands[index] if bands[index] is Dictionary else {}
@@ -684,10 +693,18 @@ func _load_settlement_knowledge(settlement: Variant) -> void:
 	_band_knowledge_cache.clear()
 	if settlement == null:
 		return
-	if settlement is Dictionary:
-		var tech_states: Dictionary = settlement.get("tech_states", {})
-		for tech_id: String in tech_states:
-			_entity_knowledge[tech_id] = {
+	var tech_states: Dictionary = {}
+	if settlement is RefCounted and "tech_states" in settlement:
+		tech_states = settlement.tech_states
+	elif settlement is Dictionary:
+		tech_states = settlement.get("tech_states", {})
+	for tech_id_raw: Variant in tech_states:
+		var tid: String = str(tech_id_raw)
+		var is_active: bool = true
+		if settlement is RefCounted and settlement.has_method("has_tech"):
+			is_active = settlement.has_tech(tid)
+		if is_active:
+			_entity_knowledge[tid] = {
 				"proficiency": 1.0,
 				"source": 0,
 			}
@@ -698,9 +715,9 @@ func _load_band_knowledge() -> void:
 	_band_knowledge_cache.clear()
 	if _sim_engine == null or _current_band_id < 0:
 		return
-	if not _sim_engine.has_method("runtime_get_band_detail"):
+	if not _sim_engine.has_method("get_band_detail"):
 		return
-	var band_detail: Dictionary = _sim_engine.runtime_get_band_detail(_current_band_id)
+	var band_detail: Dictionary = _sim_engine.get_band_detail(_current_band_id)
 	var member_ids_raw: Variant = band_detail.get("member_ids", [])
 	var member_ids: Array = member_ids_raw if member_ids_raw is Array else []
 	var total: int = member_ids.size()
@@ -734,17 +751,25 @@ func _populate_dropdowns() -> void:
 		var settlements: Array = _settlement_manager.get_all_settlements()
 		for i: int in range(settlements.size()):
 			var s: Variant = settlements[i]
-			var s_name: String = "Settlement %d" % i
-			if s is Dictionary:
-				s_name = str(s.get("name", s_name))
+			var s_id: int = -1
+			if s is RefCounted and "id" in s:
+				s_id = int(s.id)
+			elif s is Dictionary:
+				s_id = int(s.get("id", -1))
+			var s_name: String = "Settlement %d" % (s_id if s_id >= 0 else i)
+			if _sim_engine != null and s_id >= 0 and _sim_engine.has_method("get_settlement_detail"):
+				var detail: Dictionary = _sim_engine.get_settlement_detail(s_id)
+				var dname: String = str(detail.get("name", ""))
+				if not dname.is_empty():
+					s_name = dname
 			s_popup.add_item("🏘️ " + s_name, i)
 	_settlement_dropdown.disabled = s_popup.item_count == 0
 
 	# Bands
 	var b_popup: PopupMenu = _band_dropdown.get_popup()
 	b_popup.clear()
-	if _sim_engine != null and _sim_engine.has_method("runtime_get_band_list"):
-		var bands: Array = _sim_engine.runtime_get_band_list()
+	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
+		var bands: Array = _sim_engine.get_band_list()
 		for i: int in range(bands.size()):
 			var b: Dictionary = bands[i] if bands[i] is Dictionary else {}
 			var b_name: String = str(b.get("name", "Band %d" % i))

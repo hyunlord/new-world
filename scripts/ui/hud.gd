@@ -3549,6 +3549,12 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 		elif event.keycode == KEY_ESCAPE:
+			# Tech tree overlay: close first
+			if _tech_tree_overlay != null and _tech_tree_overlay.visible:
+				_tech_tree_overlay.visible = false
+				_on_tech_tree_closed()
+				get_viewport().set_input_as_handled()
+				return
 			if _pause_overlay != null and _pause_overlay.visible:
 				_hide_pause_overlay()
 				get_viewport().set_input_as_handled()
