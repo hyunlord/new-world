@@ -1479,10 +1479,14 @@ func _show_resource_popup() -> void:
 			open_button.pressed.connect(_on_resource_popup_settlement_pressed.bind(settlement_id))
 			card.add_child(open_button)
 
+			var pop_f: float = maxf(float(population), 1.0)
+			var food_cap: float = maxf(pop_f * 10.0, 50.0)
+			var wood_cap: float = maxf(pop_f * 5.0, 30.0)
+			var stone_cap: float = maxf(pop_f * 3.0, 20.0)
 			var res_defs: Array = [
-				{"key": "UI_RES_FOOD_SHORT", "value": food, "max_val": 80.0, "color": Color(0.28, 0.66, 0.16)},
-				{"key": "UI_RES_WOOD_SHORT", "value": wood, "max_val": 50.0, "color": Color(0.54, 0.35, 0.16)},
-				{"key": "UI_RES_STONE_SHORT", "value": stone, "max_val": 30.0, "color": Color(0.41, 0.53, 0.66)},
+				{"key": "UI_RES_FOOD_SHORT", "value": food, "max_val": food_cap, "color": Color(0.28, 0.66, 0.16)},
+				{"key": "UI_RES_WOOD_SHORT", "value": wood, "max_val": wood_cap, "color": Color(0.54, 0.35, 0.16)},
+				{"key": "UI_RES_STONE_SHORT", "value": stone, "max_val": stone_cap, "color": Color(0.41, 0.53, 0.66)},
 			]
 			for rd: Dictionary in res_defs:
 				var bar_result: Array = _make_bar_row(Locale.ltr(str(rd["key"])), rd["color"])

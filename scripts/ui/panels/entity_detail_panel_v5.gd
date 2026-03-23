@@ -123,6 +123,12 @@ var _v5_refresh_timer: float = 0.0
 
 ## Override v3.set_entity_id to reset inventory hash on entity change.
 func set_entity_id(entity_id: int) -> void:
+	# Push previous entity to history for back navigation (with double-push guard)
+	if _selected_entity_id >= 0 and _selected_entity_id != entity_id:
+		if _nav_history.is_empty() or _nav_history.back() != _selected_entity_id:
+			_nav_history.append(_selected_entity_id)
+			if _nav_history.size() > NAV_HISTORY_MAX:
+				_nav_history.remove_at(0)
 	_inv_data_hash = -1
 	super.set_entity_id(entity_id)
 	_update_back_button()

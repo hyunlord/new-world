@@ -28,7 +28,6 @@ var _leader_label: Label
 var _tech_progress_label: Label
 var _stability_bar: Dictionary = {}
 var _happiness_bar: Dictionary = {}
-var _storage_label: Label
 var _stress_bar: Dictionary = {}
 var _gender_label: Label
 var _location_label: Label
@@ -208,9 +207,6 @@ func _build_overview_tab() -> void:
 	_add_section_title(_overview_panel, "UI_SETTLEMENT_STATUS")
 	_stability_bar = _create_bar_row(_overview_panel)
 	_happiness_bar = _create_bar_row(_overview_panel)
-	_add_section_spacer(_overview_panel)
-	_add_section_title(_overview_panel, "UI_PRODUCTION_CONSUMPTION")
-	_storage_label = _add_info_label(_overview_panel)
 	_stress_bar = _create_bar_row(_overview_panel)
 	_add_section_spacer(_overview_panel)
 	_add_section_title(_overview_panel, "UI_DEMOGRAPHICS")
@@ -332,8 +328,27 @@ func _refresh_overview() -> void:
 		var charisma_raw: Variant = (leader as Dictionary).get("charisma", 0.0)
 		var charisma: float = float(charisma_raw) if (charisma_raw is float or charisma_raw is int) else 0.0
 		_leader_label.text = "* %s: %s (%s: %.2f)" % [Locale.ltr("UI_LEADER"), leader_name, Locale.ltr("UI_CHARISMA"), charisma]
+		var leader_id: int = int(_get_data_value("leader_id", -1))
+		if leader_id >= 0:
+			_leader_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			_leader_label.mouse_filter = Control.MOUSE_FILTER_STOP
+			_leader_label.add_theme_color_override("font_color", Color(0.7, 0.8, 1.0))
+			var conns: Array = _leader_label.gui_input.get_connections()
+			for conn: Dictionary in conns:
+				_leader_label.gui_input.disconnect(conn["callable"])
+			var captured_leader_id: int = leader_id
+			_leader_label.gui_input.connect(func(event: InputEvent) -> void:
+				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.entity_selected.emit(captured_leader_id)
+					SimulationBus.ui_notification.emit("focus_entity_%d" % captured_leader_id, "command")
+			)
+		else:
+			_leader_label.mouse_default_cursor_shape = Control.CURSOR_ARROW
+			_leader_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	else:
 		_leader_label.text = Locale.ltr("UI_NO_LEADER")
+		_leader_label.mouse_default_cursor_shape = Control.CURSOR_ARROW
+		_leader_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var tech_era: String = str(_get_data_value("tech_era", "stone_age"))
 	_tech_progress_label.text = "%s: %s" % [Locale.ltr("UI_ERA_SECTION"), Locale.ltr("ERA_" + tech_era.to_upper())]
@@ -345,13 +360,6 @@ func _refresh_overview() -> void:
 		_update_bar_row(_stability_bar, {"label": Locale.ltr("UI_STABILITY"), "value": clampf(avg_happiness, 0.0, 1.0)})
 		_update_bar_row(_happiness_bar, {"label": Locale.ltr("UI_AVG_HAPPINESS"), "value": clampf(avg_happiness, 0.0, 1.0)})
 
-	var food: float = _safe_resource("stockpile_food")
-	var wood: float = _safe_resource("stockpile_wood")
-	var stone: float = _safe_resource("stockpile_stone")
-	_storage_label.text = "%s: %d   %s: %d   %s: %d" % [
-		Locale.ltr("UI_FOOD"), int(food),
-		Locale.ltr("UI_WOOD"), int(wood),
-		Locale.ltr("UI_STONE"), int(stone)]
 	# Stress bar
 	var avg_stress_raw: Variant = _get_data_value("avg_stress", 0.0)
 	var avg_stress: float = float(avg_stress_raw) if (avg_stress_raw is float or avg_stress_raw is int) else 0.0
@@ -466,7 +474,7 @@ func _refresh_population() -> void:
 			var m_age_raw: Variant = md.get("age_years", 0.0)
 			var m_age: float = float(m_age_raw) if (m_age_raw is float or m_age_raw is int) else 0.0
 			var m_gender: String = str(md.get("gender", ""))
-			var gender_prefix: String = Locale.ltr("UI_GENDER_MALE_SHORT") if m_gender == "male" else Locale.ltr("UI_GENDER_FEMALE_SHORT")
+			var gender_prefix: String = "♂" if m_gender == "male" else "♀"
 			var row := Label.new()
 			row.text = "%s %s (%d)" % [gender_prefix, m_name, int(m_age)]
 			row.add_theme_font_size_override("font_size", 10)
@@ -546,20 +554,26 @@ func _refresh_tech() -> void:
 		var state: String = str(ed.get("state", "unknown"))
 		var practitioners: int = int(ed.get("practitioner_count", 0))
 		var status_color: Color = COLOR_VALUE
+		var status_icon: String = ""
 		match state:
 			"known_stable":
+				status_icon = "🟢"
 				status_color = Color(0.45, 0.72, 0.45)
 			"known_low":
+				status_icon = "🟡"
 				status_color = Color(0.80, 0.65, 0.25)
 			"forgotten_recent":
+				status_icon = "🔴"
 				status_color = Color(0.72, 0.30, 0.30)
 			"forgotten_long":
+				status_icon = "⚫"
 				status_color = Color(0.35, 0.35, 0.40)
 			_:
+				status_icon = "❓"
 				status_color = Color(0.40, 0.45, 0.50)
 		var tech_name: String = Locale.ltr(tech_id)
 		var row := Label.new()
-		row.text = "%s" % tech_name
+		row.text = "%s %s" % [status_icon, tech_name]
 		if practitioners > 0:
 			row.text += " (%d)" % practitioners
 		row.add_theme_font_size_override("font_size", 10)
