@@ -89,7 +89,7 @@
         "group": "Food Production",
         "subgroup": "Land Management",
         "icon": "icon_burn",
-        "tree_x": 2,
+        "tree_x": 1,
         "tree_y": 5
     }
 }

@@ -100,7 +100,7 @@
         "group": "Food Production",
         "subgroup": "Basics",
         "icon": "icon_fire",
-        "tree_x": 1,
+        "tree_x": 0,
         "tree_y": 3
     }
 }

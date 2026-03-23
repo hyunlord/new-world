@@ -86,7 +86,7 @@
         "group": "Materials Crafting",
         "subgroup": "Bone",
         "icon": "icon_bone_tools",
-        "tree_x": 1,
+        "tree_x": 2,
         "tree_y": 2
     }
 }
