@@ -667,11 +667,8 @@ func _center_content() -> void:
 		return  # not laid out yet
 	var content_w: float = bounds.size.x * _zoom
 	var content_left: float = bounds.position.x * _zoom
-	# Center horizontally if fits, else align left edge
-	if content_w <= view_w:
-		_pan.x = (view_w - content_w) * 0.5 - content_left
-	else:
-		_pan.x = -content_left + 40.0
+	# Left-align with padding (tech tree reads left to right)
+	_pan.x = 20.0 - content_left
 	# Position at top
 	_pan.y = TOP_BAR_HEIGHT + 20.0 - bounds.position.y * _zoom
 	_clamp_pan()
@@ -937,14 +934,18 @@ func _clamp_pan() -> void:
 
 	# ── Horizontal ──
 	if content_w <= view_w:
-		# Content fits: center horizontally
-		_pan.x = (view_w - content_w) * 0.5 - content_left
+		# Content fits: left-align with padding (tech tree reads left to right)
+		_pan.x = 20.0 - content_left
 	else:
 		# Content wider than view: allow scroll with margin
 		var margin: float = 60.0
 		var max_pan_x: float = -content_left + margin
 		var min_pan_x: float = view_w - content_left - content_w - margin
-		_pan.x = clampf(_pan.x, min_pan_x, max_pan_x)
+		if min_pan_x > max_pan_x:
+			# Safety: if inverted, just left-align
+			_pan.x = 20.0 - content_left
+		else:
+			_pan.x = clampf(_pan.x, min_pan_x, max_pan_x)
 
 	# ── Vertical ──
 	if content_h <= view_h - TOP_BAR_HEIGHT:
@@ -955,7 +956,10 @@ func _clamp_pan() -> void:
 		var margin: float = 60.0
 		var max_pan_y: float = -content_top + TOP_BAR_HEIGHT + margin
 		var min_pan_y: float = view_h - content_top - content_h - margin
-		_pan.y = clampf(_pan.y, min_pan_y, max_pan_y)
+		if min_pan_y > max_pan_y:
+			_pan.y = TOP_BAR_HEIGHT + 20.0 - content_top
+		else:
+			_pan.y = clampf(_pan.y, min_pan_y, max_pan_y)
 
 
 func _on_view_changed() -> void:
