@@ -702,30 +702,29 @@ func _switch_to_agent_view() -> void:
 
 
 func _on_settlement_selected(index: int) -> void:
-	if _settlement_manager == null:
+	if _sim_engine == null:
 		return
-	if not _settlement_manager.has_method("get_all_settlements"):
+	var summary: Dictionary = _sim_engine.get_world_summary()
+	var sett_summaries_raw: Variant = summary.get("settlement_summaries", [])
+	var sett_summaries: Array = sett_summaries_raw if sett_summaries_raw is Array else []
+	if index < 0 or index >= sett_summaries.size():
 		return
-	var settlements: Array = _settlement_manager.get_all_settlements()
-	if index < 0 or index >= settlements.size():
+	var s_dict: Dictionary = sett_summaries[index] if sett_summaries[index] is Dictionary else {}
+	var s_id: int = int(s_dict.get("id", -1))
+	if s_id < 0:
 		return
-	var settlement: Variant = settlements[index]
 	_view_mode = ViewMode.SETTLEMENT
-	_load_settlement_knowledge(settlement)
+	_load_settlement_knowledge_from_rust(s_id)
 	_compute_node_states()
 	_update_active_chain()
 	queue_redraw()
 	_update_label_positions()
-	# Get settlement name from SimBridge
-	var s_id: int = -1
-	if settlement is RefCounted and "id" in settlement:
-		s_id = int(settlement.id)
-	var s_name: String = "Settlement %d" % index
-	if _sim_engine != null and s_id >= 0 and _sim_engine.has_method("get_settlement_detail"):
+	var s_name: String = str(s_dict.get("name", ""))
+	if s_name.is_empty() and _sim_engine.has_method("get_settlement_detail"):
 		var detail: Dictionary = _sim_engine.get_settlement_detail(s_id)
-		s_name = str(detail.get("name", s_name))
+		s_name = str(detail.get("name", "Settlement %d" % s_id))
 	if _entity_label != null:
-		_entity_label.text = "🏘️ " + s_name
+		_entity_label.text = s_name
 
 
 func _on_band_selected(index: int) -> void:
@@ -746,26 +745,34 @@ func _on_band_selected(index: int) -> void:
 		_entity_label.text = "👥 " + str(band.get("name", "?"))
 
 
-func _load_settlement_knowledge(settlement: Variant) -> void:
+func _load_settlement_knowledge_from_rust(settlement_id: int) -> void:
 	_entity_knowledge.clear()
 	_band_knowledge_cache.clear()
-	if settlement == null:
+	if _sim_engine == null or not _sim_engine.has_method("get_settlement_detail"):
 		return
-	var tech_states: Dictionary = {}
-	if settlement is RefCounted and "tech_states" in settlement:
-		tech_states = settlement.tech_states
-	elif settlement is Dictionary:
-		tech_states = settlement.get("tech_states", {})
-	for tech_id_raw: Variant in tech_states:
-		var tid: String = str(tech_id_raw)
-		var is_active: bool = true
-		if settlement is RefCounted and settlement.has_method("has_tech"):
-			is_active = settlement.has_tech(tid)
-		if is_active:
-			_entity_knowledge[tid] = {
-				"proficiency": 1.0,
-				"source": 0,
-			}
+	var detail: Dictionary = _sim_engine.get_settlement_detail(settlement_id)
+	var member_ids_raw: Variant = detail.get("member_ids", [])
+	var member_ids: Array = member_ids_raw if member_ids_raw is Array else []
+	var total: int = member_ids.size()
+	if total == 0:
+		return
+	var tech_counts: Dictionary = {}
+	for member_id: Variant in member_ids:
+		var mid: int = int(member_id)
+		var k_tab: Dictionary = _sim_engine.get_entity_tab(mid, "knowledge")
+		var known_raw: Variant = k_tab.get("known", [])
+		var known: Array = known_raw if known_raw is Array else []
+		for entry_raw: Variant in known:
+			if entry_raw is Dictionary:
+				var kid: String = str((entry_raw as Dictionary).get("id", ""))
+				if not kid.is_empty():
+					tech_counts[kid] = tech_counts.get(kid, 0) + 1
+	for tech_id: String in tech_counts:
+		var count: int = tech_counts[tech_id]
+		_entity_knowledge[tech_id] = {"proficiency": float(count) / float(total), "source": 0}
+		_band_knowledge_cache[tech_id] = {"count": count, "total": total}
+	if OS.is_debug_build():
+		print("[TechTree] settlement %d: %d members, %d techs" % [settlement_id, total, tech_counts.size()])
 
 
 func _load_band_knowledge() -> void:
@@ -802,45 +809,49 @@ func _load_band_knowledge() -> void:
 
 
 func _populate_dropdowns() -> void:
+	# Settlements: get from Rust via world summary (GDScript settlement_manager is empty)
 	var s_popup: PopupMenu = _settlement_dropdown.get_popup()
 	s_popup.clear()
-	if _settlement_manager != null and _settlement_manager.has_method("get_all_settlements"):
-		var settlements: Array = _settlement_manager.get_all_settlements()
+	if _sim_engine != null and _sim_engine.has_method("get_world_summary"):
+		var summary: Dictionary = _sim_engine.get_world_summary()
+		var sett_summaries_raw: Variant = summary.get("settlement_summaries", [])
+		var sett_summaries: Array = sett_summaries_raw if sett_summaries_raw is Array else []
 		if OS.is_debug_build():
-			print("[TechTree] populate: %d settlements" % settlements.size())
-		for i: int in range(settlements.size()):
-			var s: Variant = settlements[i]
-			var s_id: int = i
-			if s is RefCounted and "id" in s:
-				s_id = int(s.id)
-			elif s is Dictionary:
-				s_id = int(s.get("id", i))
-			var s_name: String = ""
-			if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
+			print("[TechTree] populate: %d settlements (from world_summary)" % sett_summaries.size())
+		for i: int in range(sett_summaries.size()):
+			var s_dict: Dictionary = sett_summaries[i] if sett_summaries[i] is Dictionary else {}
+			var s_id: int = int(s_dict.get("id", i))
+			var s_name: String = str(s_dict.get("name", ""))
+			if s_name.is_empty() and _sim_engine.has_method("get_settlement_detail"):
 				var detail: Dictionary = _sim_engine.get_settlement_detail(s_id)
 				s_name = str(detail.get("name", ""))
 			if s_name.is_empty():
-				s_name = Locale.ltr("TECH_VIEW_SETTLEMENT") + " %d" % s_id
-			s_popup.add_item(s_name, i)
+				s_name = "%s %d" % [Locale.ltr("TECH_VIEW_SETTLEMENT"), s_id]
+			var s_pop: int = int(s_dict.get("pop", 0))
+			s_popup.add_item("%s (%d)" % [s_name, s_pop], i)
 	_settlement_dropdown.disabled = s_popup.item_count == 0
 	if s_popup.item_count > 0:
-		_settlement_dropdown.text = Locale.ltr("TECH_VIEW_SETTLEMENT") + " (%d)" % s_popup.item_count
+		_settlement_dropdown.text = "%s (%d)" % [Locale.ltr("TECH_VIEW_SETTLEMENT"), s_popup.item_count]
+	else:
+		_settlement_dropdown.text = Locale.ltr("TECH_VIEW_SETTLEMENT")
 
+	# Bands: get from Rust via get_band_list
 	var b_popup: PopupMenu = _band_dropdown.get_popup()
 	b_popup.clear()
 	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
 		var bands: Array = _sim_engine.get_band_list()
 		if OS.is_debug_build():
-			print("[TechTree] populate: %d bands" % bands.size())
+			print("[TechTree] populate: %d bands (from get_band_list)" % bands.size())
 		for i: int in range(bands.size()):
-			var b: Variant = bands[i]
-			var b_dict: Dictionary = b if b is Dictionary else {}
+			var b_dict: Dictionary = bands[i] if bands[i] is Dictionary else {}
 			var b_name: String = str(b_dict.get("name", "Band %d" % i))
 			var b_count: int = int(b_dict.get("member_count", 0))
 			b_popup.add_item("%s (%d)" % [b_name, b_count], i)
 	_band_dropdown.disabled = b_popup.item_count == 0
 	if b_popup.item_count > 0:
-		_band_dropdown.text = Locale.ltr("TECH_VIEW_BAND") + " (%d)" % b_popup.item_count
+		_band_dropdown.text = "%s (%d)" % [Locale.ltr("TECH_VIEW_BAND"), b_popup.item_count]
+	else:
+		_band_dropdown.text = Locale.ltr("TECH_VIEW_BAND")
 
 
 func _world_to_screen(p: Vector2) -> Vector2:
@@ -1003,11 +1014,11 @@ func _show_detail_panel(tech_id: String) -> void:
 
 	_detail_panel.visible = true
 	# Auto-pan so selected node is not behind detail panel
-	var node_pos: Vector2 = _node_world_pos.get(tech_id, Vector2.ZERO)
-	var screen_node: Vector2 = _world_to_screen(node_pos)
+	var node_wp: Vector2 = _node_world_pos.get(tech_id, Vector2.ZERO)
+	var node_sp: Vector2 = _world_to_screen(node_wp)
 	var safe_right: float = size.x - DETAIL_PANEL_WIDTH - 80.0
-	if screen_node.x + NODE_W * _zoom > safe_right:
-		_pan.x -= (screen_node.x + NODE_W * _zoom - safe_right)
+	if node_sp.x + NODE_W * _zoom > safe_right:
+		_pan.x -= (node_sp.x + NODE_W * _zoom - safe_right)
 		_on_view_changed()
 
 

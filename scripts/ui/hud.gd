@@ -174,6 +174,7 @@ var _building_detail_btn: Button
 var _popup_manager: Node
 var _stats_detail_panel: Control
 var _right_panel_container: Control
+var _sidebar_was_open_before_tech_tree: bool = false
 var _right_panel_tab_bar: HBoxContainer
 var _right_panel_tab_content: Control
 var _entity_detail_panel: Control
@@ -3340,12 +3341,19 @@ func _toggle_tech_tree() -> void:
 	_tech_tree_overlay.visible = not _tech_tree_overlay.visible
 	if _tech_tree_overlay.visible and _selected_entity_id >= 0:
 		_tech_tree_overlay.set_entity(_selected_entity_id)
-	# Hide/show HUD bars
+	# Hide/show HUD bars + sidebar
 	var show_hud: bool = not _tech_tree_overlay.visible
 	if _hud_top_bar != null:
 		_hud_top_bar.visible = show_hud
 	if _bottom_bar != null:
 		_bottom_bar.visible = show_hud
+	if _tech_tree_overlay.visible:
+		_sidebar_was_open_before_tech_tree = _entity_detail_panel_open
+		if _right_panel_container != null and _right_panel_container.visible:
+			_right_panel_container.visible = false
+	else:
+		if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
+			_right_panel_container.visible = true
 
 
 func _on_tech_tree_closed() -> void:
@@ -3353,6 +3361,9 @@ func _on_tech_tree_closed() -> void:
 		_hud_top_bar.visible = true
 	if _bottom_bar != null:
 		_bottom_bar.visible = true
+	if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
+		_right_panel_container.visible = true
+	_sidebar_was_open_before_tech_tree = false
 
 
 func _on_locale_changed(_new_locale: String) -> void:
