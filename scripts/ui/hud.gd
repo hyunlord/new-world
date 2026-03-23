@@ -3349,11 +3349,22 @@ func _toggle_tech_tree() -> void:
 		_bottom_bar.visible = show_hud
 	if _tech_tree_overlay.visible:
 		_sidebar_was_open_before_tech_tree = _entity_detail_panel_open
-		if _right_panel_container != null and _right_panel_container.visible:
+		if _entity_detail_panel_tween != null:
+			_entity_detail_panel_tween.kill()
+			_entity_detail_panel_tween = null
+		if _right_panel_container != null:
 			_right_panel_container.visible = false
 	else:
-		if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
-			_open_right_sidebar()
+		if _sidebar_was_open_before_tech_tree:
+			_entity_detail_panel_open = true
+			if _right_panel_container != null:
+				_right_panel_container.visible = true
+				_right_panel_container.move_to_front()
+				var pw: float = _entity_detail_sidebar_width()
+				_right_panel_container.offset_left = -pw
+				_right_panel_container.offset_right = 0.0
+				_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+				_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
 		_sidebar_was_open_before_tech_tree = false
 
 
@@ -3362,8 +3373,16 @@ func _on_tech_tree_closed() -> void:
 		_hud_top_bar.visible = true
 	if _bottom_bar != null:
 		_bottom_bar.visible = true
-	if _sidebar_was_open_before_tech_tree and _right_panel_container != null:
-		_open_right_sidebar()
+	if _sidebar_was_open_before_tech_tree:
+		_entity_detail_panel_open = true
+		if _right_panel_container != null:
+			_right_panel_container.visible = true
+			_right_panel_container.move_to_front()
+			var pw: float = _entity_detail_sidebar_width()
+			_right_panel_container.offset_left = -pw
+			_right_panel_container.offset_right = 0.0
+			_right_panel_container.offset_top = ENTITY_DETAIL_SIDEBAR_TOP
+			_right_panel_container.offset_bottom = -ENTITY_DETAIL_SIDEBAR_BOTTOM
 	_sidebar_was_open_before_tech_tree = false
 
 

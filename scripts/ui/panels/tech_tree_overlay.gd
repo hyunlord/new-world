@@ -52,6 +52,10 @@ const PROFICIENCY_COLOR_ZERO: Color = Color(0.42, 0.45, 0.50)
 const COLUMN_HEADERS: Array[String] = ["TECH_COL_BASIC", "TECH_COL_APPLIED", "TECH_COL_ADVANCED", "TECH_COL_EXPERT"]
 const SOURCE_ICONS: Array[String] = ["🗣️", "👁️", "🔨", "📜", "🏛️", "💡"]
 
+const LEGACY_KNOWLEDGE_IDS: Dictionary = {
+	"TECH_FORAGING": "TECH_GATHERING_KNOWLEDGE",
+}
+
 enum NodeState { KNOWN, DISCOVERABLE, LOCKED }
 
 var _tech_tree_manager: RefCounted
@@ -103,6 +107,11 @@ func setup(tech_tree_manager: RefCounted, sim_engine: RefCounted, settlement_man
 	_compute_layout()
 	_cache_edges()
 	_create_icon_labels()
+	# Center tree content in view
+	var bounds: Rect2 = _get_content_bounds()
+	_pan.x = (size.x * 0.5) - (bounds.position.x + bounds.size.x * 0.5)
+	_pan.y = TOP_BAR_HEIGHT + 20.0 - bounds.position.y
+	_clamp_pan()
 
 
 func _build_top_bar() -> void:
@@ -566,52 +575,44 @@ func _gui_input(event: InputEvent) -> void:
 	# Trackpad pan gesture (macOS two-finger scroll)
 	if event is InputEventPanGesture:
 		var pg := event as InputEventPanGesture
-		if pg.ctrl_pressed:
-			var zd: float = -pg.delta.y * 0.1
-			_set_zoom(clampf(_zoom + zd, ZOOM_MIN, ZOOM_MAX), pg.position)
-		else:
-			_pan.x -= pg.delta.x * 40.0
-			_pan.y -= pg.delta.y * 40.0
-			_on_view_changed()
+		_pan.x -= pg.delta.x * 40.0
+		_pan.y -= pg.delta.y * 40.0
+		_clamp_pan()
+		_on_view_changed()
 		accept_event()
 		return
 
 	# Trackpad pinch gesture (macOS pinch zoom)
 	if event is InputEventMagnifyGesture:
-		var mg := event as InputEventMagnifyGesture
-		var zd: float = (mg.factor - 1.0) * 0.5
-		_set_zoom(clampf(_zoom + zd, ZOOM_MIN, ZOOM_MAX), mg.position)
 		accept_event()
 		return
 
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.ctrl_pressed:
-			if mb.button_index == MOUSE_BUTTON_WHEEL_UP and mb.pressed:
-				_set_zoom(clampf(_zoom + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX), mb.position)
-				accept_event()
-				return
-			if mb.button_index == MOUSE_BUTTON_WHEEL_DOWN and mb.pressed:
-				_set_zoom(clampf(_zoom - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX), mb.position)
-				accept_event()
-				return
+			accept_event()
+			return
 		if mb.button_index == MOUSE_BUTTON_WHEEL_UP and mb.pressed:
 			_pan.y += 40.0
+			_clamp_pan()
 			_on_view_changed()
 			accept_event()
 			return
 		if mb.button_index == MOUSE_BUTTON_WHEEL_DOWN and mb.pressed:
 			_pan.y -= 40.0
+			_clamp_pan()
 			_on_view_changed()
 			accept_event()
 			return
 		if mb.button_index == MOUSE_BUTTON_WHEEL_LEFT and mb.pressed:
 			_pan.x += 40.0
+			_clamp_pan()
 			_on_view_changed()
 			accept_event()
 			return
 		if mb.button_index == MOUSE_BUTTON_WHEEL_RIGHT and mb.pressed:
 			_pan.x -= 40.0
+			_clamp_pan()
 			_on_view_changed()
 			accept_event()
 			return
@@ -640,6 +641,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and _is_panning:
 		var mm := event as InputEventMouseMotion
 		_pan = _pan_start + (mm.position - _pan_anchor)
+		_clamp_pan()
 		_on_view_changed()
 		accept_event()
 
@@ -787,7 +789,8 @@ func _load_settlement_knowledge_from_rust(settlement_id: int) -> void:
 			if entry_raw is Dictionary:
 				var kid: String = str((entry_raw as Dictionary).get("id", ""))
 				if not kid.is_empty():
-					tech_counts[kid] = tech_counts.get(kid, 0) + 1
+					var mapped_kid: String = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+					tech_counts[mapped_kid] = tech_counts.get(mapped_kid, 0) + 1
 	for tech_id: String in tech_counts:
 		var count: int = tech_counts[tech_id]
 		_entity_knowledge[tech_id] = {"proficiency": float(count) / float(total), "source": 0}
@@ -819,7 +822,8 @@ func _load_band_knowledge() -> void:
 			if entry_raw is Dictionary:
 				var kid: String = str((entry_raw as Dictionary).get("id", ""))
 				if not kid.is_empty():
-					tech_counts[kid] = tech_counts.get(kid, 0) + 1
+					var mapped_kid: String = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+					tech_counts[mapped_kid] = tech_counts.get(mapped_kid, 0) + 1
 	for tech_id: String in tech_counts:
 		var count: int = tech_counts[tech_id]
 		_entity_knowledge[tech_id] = {
@@ -879,11 +883,31 @@ func _world_to_screen(p: Vector2) -> Vector2:
 	return (p * _zoom) + _pan
 
 
-func _set_zoom(new_zoom: float, pivot: Vector2) -> void:
-	var world_before: Vector2 = (pivot - _pan) / _zoom
-	_zoom = new_zoom
-	_pan = pivot - world_before * _zoom
-	_on_view_changed()
+func _get_content_bounds() -> Rect2:
+	if _node_world_pos.is_empty():
+		return Rect2(0, 0, 800, 600)
+	var min_x: float = INF
+	var min_y: float = INF
+	var max_x: float = -INF
+	var max_y: float = -INF
+	for pos: Vector2 in _node_world_pos.values():
+		min_x = minf(min_x, pos.x)
+		min_y = minf(min_y, pos.y)
+		max_x = maxf(max_x, pos.x + NODE_W)
+		max_y = maxf(max_y, pos.y + NODE_H + 30.0)
+	return Rect2(min_x - 40.0, min_y - 40.0, max_x - min_x + 80.0, max_y - min_y + 80.0)
+
+
+func _clamp_pan() -> void:
+	var bounds: Rect2 = _get_content_bounds()
+	var view_w: float = size.x
+	var view_h: float = size.y - TOP_BAR_HEIGHT
+	var min_pan_x: float = view_w - (bounds.position.x + bounds.size.x) * _zoom - 100.0
+	var max_pan_x: float = -(bounds.position.x * _zoom) + 100.0
+	_pan.x = clampf(_pan.x, min_pan_x, max_pan_x)
+	var min_pan_y: float = view_h - (bounds.position.y + bounds.size.y) * _zoom - 100.0
+	var max_pan_y: float = -(bounds.position.y * _zoom) + TOP_BAR_HEIGHT + 50.0
+	_pan.y = clampf(_pan.y, min_pan_y, max_pan_y)
 
 
 func _on_view_changed() -> void:
@@ -1040,6 +1064,7 @@ func _show_detail_panel(tech_id: String) -> void:
 	var safe_right: float = size.x - DETAIL_PANEL_WIDTH - 80.0
 	if node_sp.x + NODE_W * _zoom > safe_right:
 		_pan.x -= (node_sp.x + NODE_W * _zoom - safe_right)
+		_clamp_pan()
 		_on_view_changed()
 
 
@@ -1078,7 +1103,8 @@ func set_entity(entity_id: int) -> void:
 			var entry: Dictionary = entry_raw
 			var kid: String = str(entry.get("id", ""))
 			if not kid.is_empty():
-				_entity_knowledge[kid] = entry
+				var mapped_id: String = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+				_entity_knowledge[mapped_id] = entry
 	_agent_knowledge_backup = _entity_knowledge.duplicate()
 	_view_mode = ViewMode.AGENT
 	_compute_node_states()
