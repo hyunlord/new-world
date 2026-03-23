@@ -266,14 +266,22 @@ func _build_header() -> void:
 
 	_return_to_settlement_btn = Button.new()
 	_return_to_settlement_btn.text = "S"
-	_return_to_settlement_btn.flat = true
-	_return_to_settlement_btn.custom_minimum_size = Vector2(28, 28)
-	_return_to_settlement_btn.add_theme_font_size_override("font_size", 12)
-	_return_to_settlement_btn.add_theme_color_override("font_color", Color(0.5, 0.6, 0.7))
+	_return_to_settlement_btn.flat = false
+	_return_to_settlement_btn.custom_minimum_size = Vector2(32, 28)
+	_return_to_settlement_btn.add_theme_font_size_override("font_size", 14)
 	_return_to_settlement_btn.focus_mode = Control.FOCUS_NONE
 	_return_to_settlement_btn.visible = false
 	_return_to_settlement_btn.tooltip_text = Locale.ltr("UI_RETURN_TO_SETTLEMENT")
 	_return_to_settlement_btn.pressed.connect(_on_return_to_settlement)
+	var sett_btn_style := StyleBoxFlat.new()
+	sett_btn_style.bg_color = Color(0.12, 0.18, 0.25)
+	sett_btn_style.border_color = Color(0.20, 0.30, 0.40)
+	sett_btn_style.set_border_width_all(1)
+	sett_btn_style.set_corner_radius_all(4)
+	sett_btn_style.content_margin_left = 6
+	sett_btn_style.content_margin_right = 6
+	for state_name: String in ["normal", "hover", "pressed", "focus"]:
+		_return_to_settlement_btn.add_theme_stylebox_override(state_name, sett_btn_style)
 	name_row.add_child(_return_to_settlement_btn)
 
 	_header_name_label = Label.new()
@@ -1675,12 +1683,16 @@ func set_return_to_settlement(settlement_id: int) -> void:
 	_return_to_settlement_id = settlement_id
 	if _return_to_settlement_btn != null:
 		_return_to_settlement_btn.visible = settlement_id >= 0
+	if OS.is_debug_build():
+		print("[EntityPanel] set_return_to_settlement: id=%d, btn_visible=%s" % [settlement_id, str(settlement_id >= 0)])
 
 
 func _on_return_to_settlement() -> void:
 	if _return_to_settlement_id < 0:
 		return
 	var sid: int = _return_to_settlement_id
+	if OS.is_debug_build():
+		print("[EntityPanel] _on_return_to_settlement: returning to settlement %d" % sid)
 	_return_to_settlement_id = -1
 	if _return_to_settlement_btn != null:
 		_return_to_settlement_btn.visible = false
