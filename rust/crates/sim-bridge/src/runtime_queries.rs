@@ -1,7 +1,8 @@
 use godot::builtin::{Array, PackedInt32Array, VarDictionary};
 use hecs::{Entity, World};
 use sim_core::components::{
-    Age, Behavior, Emotion, Identity, Needs, Personality, Position, Skills, Social, Stress,
+    Age, AgentKnowledge, Behavior, Emotion, Identity, Needs, Personality, Position, Skills, Social,
+    Stress,
 };
 use sim_core::config;
 use sim_core::enums::{ActionType, NeedType, RelationType, Sex, TechState, TerrainType};
@@ -295,6 +296,36 @@ fn bootstrap_world_core(
         }
         settlement.members.push(EntityId(entity.id() as u64));
         spawned_entities.push(entity);
+    }
+
+    // ── Sync agent knowledge → settlement tech_states ──
+    {
+        let world = state.engine.world();
+        let mut tech_counts: HashMap<String, usize> = HashMap::new();
+        for entity in &spawned_entities {
+            if let Ok(knowledge) = world.get::<&AgentKnowledge>(*entity) {
+                for entry in &knowledge.known {
+                    *tech_counts.entry(entry.knowledge_id.clone()).or_insert(0) += 1;
+                }
+            }
+        }
+        let total = spawned_entities.len();
+        for (tech_id, count) in &tech_counts {
+            if settlement.tech_states.contains_key(tech_id) {
+                let new_state = if *count >= 3 {
+                    TechState::KnownStable
+                } else {
+                    TechState::KnownLow
+                };
+                settlement.tech_states.insert(tech_id.clone(), new_state);
+            }
+        }
+        log::info!(
+            "[Bootstrap] Settlement tech sync: {} agents, {} techs known (of {} total)",
+            total,
+            tech_counts.len(),
+            settlement.tech_states.len()
+        );
     }
 
     settlement.leader_id = pick_leader(state.engine.world(), &spawned_entities)
