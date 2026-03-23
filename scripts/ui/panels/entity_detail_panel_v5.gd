@@ -1683,16 +1683,12 @@ func set_return_to_settlement(settlement_id: int) -> void:
 	_return_to_settlement_id = settlement_id
 	if _return_to_settlement_btn != null:
 		_return_to_settlement_btn.visible = settlement_id >= 0
-	if OS.is_debug_build():
-		print("[EntityPanel] set_return_to_settlement: id=%d, btn_visible=%s" % [settlement_id, str(settlement_id >= 0)])
 
 
 func _on_return_to_settlement() -> void:
 	if _return_to_settlement_id < 0:
 		return
 	var sid: int = _return_to_settlement_id
-	if OS.is_debug_build():
-		print("[EntityPanel] _on_return_to_settlement: returning to settlement %d" % sid)
 	_return_to_settlement_id = -1
 	if _return_to_settlement_btn != null:
 		_return_to_settlement_btn.visible = false

@@ -264,10 +264,19 @@ func _build_tech_tab() -> void:
 	_add_section_title(_tech_panel, "UI_TAB_TECH")
 	_tech_era_label = _add_info_label(_tech_panel)
 	_add_section_spacer(_tech_panel)
-	_add_section_title(_tech_panel, "UI_KNOWN_TECHS")
 	_tech_container = VBoxContainer.new()
-	_tech_container.add_theme_constant_override("separation", 2)
+	_tech_container.add_theme_constant_override("separation", 4)
 	_tech_panel.add_child(_tech_container)
+	_add_section_spacer(_tech_panel)
+	var open_map_btn := Button.new()
+	open_map_btn.text = Locale.ltr("UI_OPEN_TECH_MAP")
+	open_map_btn.add_theme_font_size_override("font_size", 11)
+	open_map_btn.custom_minimum_size = Vector2(0, 30)
+	open_map_btn.focus_mode = Control.FOCUS_NONE
+	open_map_btn.pressed.connect(func() -> void:
+		get_tree().call_group("hud", "_toggle_tech_tree")
+	)
+	_tech_panel.add_child(open_map_btn)
 
 
 func _build_military_tab() -> void:
@@ -288,13 +297,6 @@ func _load_data() -> void:
 		return
 	if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
 		var detail: Dictionary = _sim_engine.get_settlement_detail(_settlement_id)
-		if OS.is_debug_build() and not detail.is_empty():
-			if detail.has("tech_states"):
-				var ts: Variant = detail["tech_states"]
-				if ts is Dictionary:
-					print("[SettlementPanel] _load_data: tech_states.size=%d" % (ts as Dictionary).size())
-			else:
-				print("[SettlementPanel] _load_data: NO 'tech_states' key! keys=%s" % str(detail.keys()).left(300))
 		if not detail.is_empty():
 			_cached_data = detail
 			return
@@ -571,34 +573,80 @@ func _refresh_tech() -> void:
 	var era: String = str(_get_data_value("tech_era", "stone_age"))
 	if _tech_era_label != null:
 		_tech_era_label.text = "%s: %s" % [Locale.ltr("UI_CURRENT_ERA"), Locale.ltr("ERA_" + era.to_upper())]
+	var tech_holders: Dictionary = {}
+	var members_raw: Variant = _get_data_value("members", [])
+	var members: Array = members_raw if members_raw is Array else []
+	var member_ids_raw: Variant = _get_data_value("member_ids", [])
+	var member_ids: Array = member_ids_raw if member_ids_raw is Array else []
+	for mid_raw: Variant in member_ids:
+		var mid: int = int(mid_raw)
+		if _sim_engine == null:
+			break
+		var k_tab: Dictionary = _sim_engine.get_entity_tab(mid, "knowledge")
+		var known_raw: Variant = k_tab.get("known", [])
+		var known: Array = known_raw if known_raw is Array else []
+		var m_name: String = "?"
+		for m: Variant in members:
+			if m is Dictionary and int((m as Dictionary).get("id", -1)) == mid:
+				m_name = str((m as Dictionary).get("name", "?"))
+				break
+		for entry_raw: Variant in known:
+			if not (entry_raw is Dictionary):
+				continue
+			var entry: Dictionary = entry_raw
+			var kid: String = str(entry.get("id", ""))
+			if kid == "TECH_FORAGING":
+				kid = "TECH_GATHERING_KNOWLEDGE"
+			if kid.is_empty():
+				continue
+			var prof_raw: Variant = entry.get("proficiency", 0.0)
+			var prof: float = float(prof_raw) if (prof_raw is float or prof_raw is int) else 0.0
+			if not tech_holders.has(kid):
+				tech_holders[kid] = []
+			tech_holders[kid].append({"name": m_name, "proficiency": prof, "id": mid})
 	var tech_states: Variant = _get_data_value("tech_states", {})
-	if OS.is_debug_build():
-		if tech_states is Dictionary:
-			print("[SettlementPanel] _refresh_tech: %d tech entries" % (tech_states as Dictionary).size())
-		else:
-			print("[SettlementPanel] _refresh_tech: tech_states type=%s, raw=%s" % [typeof(tech_states), str(tech_states).left(200)])
-	if not (tech_states is Dictionary):
-		return
-	var ts: Dictionary = tech_states as Dictionary
-	if ts.is_empty():
-		var empty := Label.new()
-		empty.text = Locale.ltr("UI_NO_TECHS")
-		empty.add_theme_font_size_override("font_size", 10)
-		empty.add_theme_color_override("font_color", COLOR_LABEL)
-		_tech_container.add_child(empty)
-		return
-	var tech_ids: Array = ts.keys()
-	tech_ids.sort()
-	for tech_id_raw: Variant in tech_ids:
+	var ts: Dictionary = tech_states as Dictionary if tech_states is Dictionary else {}
+	var known_techs: Array = []
+	var unknown_techs: Array = []
+	for tech_id_raw: Variant in ts.keys():
 		var tech_id: String = str(tech_id_raw)
-		var entry: Variant = ts.get(tech_id, {})
-		if not (entry is Dictionary):
-			continue
-		var ed: Dictionary = entry as Dictionary
-		var state: String = str(ed.get("state", "unknown"))
-		var practitioners: int = int(ed.get("practitioner_count", 0))
-		var status_color: Color = COLOR_VALUE
+		var state_val: Variant = ts.get(tech_id, {})
+		var state: String = str((state_val as Dictionary).get("state", "unknown")) if state_val is Dictionary else "unknown"
+		if state.begins_with("known") or tech_holders.has(tech_id):
+			known_techs.append(tech_id)
+		else:
+			unknown_techs.append(tech_id)
+	known_techs.sort()
+	unknown_techs.sort()
+	var summary := Label.new()
+	summary.text = "%s %d / %d" % [Locale.ltr("UI_KNOWN_TECHS"), known_techs.size(), ts.size()]
+	summary.add_theme_font_size_override("font_size", 11)
+	summary.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75))
+	_tech_container.add_child(summary)
+	_tech_container.add_child(HSeparator.new())
+	for tech_id: String in known_techs:
+		var tech_name: String = Locale.ltr(tech_id)
+		var holders: Array = tech_holders.get(tech_id, [])
+		var holder_count: int = holders.size()
+		var pop: int = member_ids.size()
+		var best_name: String = ""
+		var best_prof: float = 0.0
+		var avg_prof: float = 0.0
+		for h: Variant in holders:
+			if h is Dictionary:
+				var hp_raw: Variant = (h as Dictionary).get("proficiency", 0.0)
+				var hp: float = float(hp_raw) if (hp_raw is float or hp_raw is int) else 0.0
+				avg_prof += hp
+				if hp > best_prof:
+					best_prof = hp
+					best_name = str((h as Dictionary).get("name", "?"))
+		if holder_count > 0:
+			avg_prof /= float(holder_count)
+		var state: String = "unknown"
+		if ts.has(tech_id) and ts[tech_id] is Dictionary:
+			state = str((ts[tech_id] as Dictionary).get("state", "unknown"))
 		var status_icon: String = ""
+		var status_color: Color = Color(0.45, 0.55, 0.65)
 		match state:
 			"known_stable":
 				status_icon = "🟢"
@@ -609,20 +657,39 @@ func _refresh_tech() -> void:
 			"forgotten_recent":
 				status_icon = "🔴"
 				status_color = Color(0.72, 0.30, 0.30)
-			"forgotten_long":
-				status_icon = "⚫"
-				status_color = Color(0.35, 0.35, 0.40)
 			_:
-				status_icon = "❓"
-				status_color = Color(0.40, 0.45, 0.50)
-		var tech_name: String = Locale.ltr(tech_id)
-		var row := Label.new()
-		row.text = "%s %s" % [status_icon, tech_name]
-		if practitioners > 0:
-			row.text += " (%d)" % practitioners
-		row.add_theme_font_size_override("font_size", 10)
-		row.add_theme_color_override("font_color", status_color)
+				if holder_count > 0:
+					status_icon = "🟢" if holder_count >= 3 else "🟡"
+					status_color = Color(0.45, 0.72, 0.45) if holder_count >= 3 else Color(0.80, 0.65, 0.25)
+				else:
+					status_icon = "❓"
+		var row := VBoxContainer.new()
+		row.add_theme_constant_override("separation", 1)
+		var header := Label.new()
+		header.text = "%s %s  —  %d/%d  %d%%" % [status_icon, tech_name, holder_count, pop, int(avg_prof * 100)]
+		header.add_theme_font_size_override("font_size", 10)
+		header.add_theme_color_override("font_color", status_color)
+		row.add_child(header)
+		if not best_name.is_empty():
+			var best_label := Label.new()
+			best_label.text = "  ★ %s (%d%%)" % [best_name, int(best_prof * 100)]
+			best_label.add_theme_font_size_override("font_size", 9)
+			best_label.add_theme_color_override("font_color", Color(0.40, 0.50, 0.60))
+			row.add_child(best_label)
 		_tech_container.add_child(row)
+	if not unknown_techs.is_empty():
+		_tech_container.add_child(HSeparator.new())
+		var unknown_header := Label.new()
+		unknown_header.text = "❓ %s (%d)" % [Locale.ltr("TECH_STATE_LOCKED"), unknown_techs.size()]
+		unknown_header.add_theme_font_size_override("font_size", 10)
+		unknown_header.add_theme_color_override("font_color", Color(0.30, 0.35, 0.42))
+		_tech_container.add_child(unknown_header)
+		for tech_id: String in unknown_techs:
+			var u_label := Label.new()
+			u_label.text = "  · %s" % Locale.ltr(tech_id)
+			u_label.add_theme_font_size_override("font_size", 9)
+			u_label.add_theme_color_override("font_color", Color(0.25, 0.30, 0.38))
+			_tech_container.add_child(u_label)
 
 
 func _refresh_military() -> void:

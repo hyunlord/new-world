@@ -812,8 +812,6 @@ func _load_settlement_knowledge_from_rust(settlement_id: int) -> void:
 		var count: int = tech_counts[tech_id]
 		_entity_knowledge[tech_id] = {"proficiency": float(count) / float(total), "source": 0}
 		_band_knowledge_cache[tech_id] = {"count": count, "total": total}
-	if OS.is_debug_build():
-		print("[TechTree] settlement %d: %d members, %d techs" % [settlement_id, total, tech_counts.size()])
 
 
 func _load_band_knowledge() -> void:
@@ -858,8 +856,6 @@ func _populate_dropdowns() -> void:
 		var summary: Dictionary = _sim_engine.get_world_summary()
 		var sett_summaries_raw: Variant = summary.get("settlement_summaries", [])
 		var sett_summaries: Array = sett_summaries_raw if sett_summaries_raw is Array else []
-		if OS.is_debug_build():
-			print("[TechTree] populate: %d settlements (from world_summary)" % sett_summaries.size())
 		for i: int in range(sett_summaries.size()):
 			var s_dict: Dictionary = sett_summaries[i] if sett_summaries[i] is Dictionary else {}
 			var s_id: int = int(s_dict.get("id", i))
@@ -882,8 +878,6 @@ func _populate_dropdowns() -> void:
 	b_popup.clear()
 	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
 		var bands: Array = _sim_engine.get_band_list()
-		if OS.is_debug_build():
-			print("[TechTree] populate: %d bands (from get_band_list)" % bands.size())
 		for i: int in range(bands.size()):
 			var b_dict: Dictionary = bands[i] if bands[i] is Dictionary else {}
 			var b_name: String = str(b_dict.get("name", "Band %d" % i))
