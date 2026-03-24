@@ -56,6 +56,9 @@ var _overview_need_rows: Array[Dictionary] = []
 var _overview_knowledge_label: Label
 var _overview_family_label: Label
 var _overview_trait_container: HBoxContainer
+var _overview_nav_container: HBoxContainer
+var _overview_settlement_btn: Button
+var _overview_band_btn: Button
 
 # Need rows cache (reusable — update values, don't recreate)
 var _v5_need_rows: Array[Dictionary] = []
@@ -446,6 +449,26 @@ func _build_overview_tab() -> void:
 	_overview_trait_container.add_theme_constant_override("separation", 3)
 	_overview_panel.add_child(_overview_trait_container)
 
+	# --- Belongs To ---
+	_add_section_title(_overview_panel, "UI_BELONGS_TO")
+	_overview_nav_container = HBoxContainer.new()
+	_overview_nav_container.add_theme_constant_override("separation", 8)
+	_overview_panel.add_child(_overview_nav_container)
+
+	_overview_settlement_btn = Button.new()
+	_overview_settlement_btn.flat = true
+	_overview_settlement_btn.focus_mode = Control.FOCUS_NONE
+	_overview_settlement_btn.add_theme_font_size_override("font_size", 10)
+	_overview_settlement_btn.visible = false
+	_overview_nav_container.add_child(_overview_settlement_btn)
+
+	_overview_band_btn = Button.new()
+	_overview_band_btn.flat = true
+	_overview_band_btn.focus_mode = Control.FOCUS_NONE
+	_overview_band_btn.add_theme_font_size_override("font_size", 10)
+	_overview_band_btn.visible = false
+	_overview_nav_container.add_child(_overview_band_btn)
+
 
 # ---------------------------------------------------------------------------
 # S4: Needs tab
@@ -673,6 +696,39 @@ func _refresh_overview() -> void:
 		else:
 			for tag_text: String in tags:
 				_overview_trait_container.add_child(_create_trait_chip(tag_text))
+
+	# --- 7. Belongs To Navigation ---
+	var sett_id: int = int(_detail.get("settlement_id", -1))
+	if _overview_settlement_btn != null:
+		if sett_id >= 0:
+			var sett_name: String = "S%d" % sett_id
+			if _sim_engine != null and _sim_engine.has_method("get_settlement_detail"):
+				var sd: Dictionary = _sim_engine.get_settlement_detail(sett_id)
+				if sd is Dictionary and not sd.is_empty():
+					sett_name = str(sd.get("name", sett_name))
+			_overview_settlement_btn.text = "\U0001F3D8 %s" % sett_name
+			_overview_settlement_btn.visible = true
+			for conn in _overview_settlement_btn.pressed.get_connections():
+				_overview_settlement_btn.pressed.disconnect(conn["callable"])
+			var captured_sid: int = sett_id
+			_overview_settlement_btn.pressed.connect(func() -> void:
+				SimulationBus.ui_notification.emit("open_settlement_%d" % captured_sid, "command"))
+		else:
+			_overview_settlement_btn.visible = false
+
+	var band_id: int = int(_detail.get("band_id", -1))
+	var band_nav_name: String = str(_detail.get("band_name", ""))
+	if _overview_band_btn != null:
+		if band_id >= 0 and not band_nav_name.is_empty():
+			_overview_band_btn.text = "\U0001F465 %s" % band_nav_name
+			_overview_band_btn.visible = true
+			for conn in _overview_band_btn.pressed.get_connections():
+				_overview_band_btn.pressed.disconnect(conn["callable"])
+			var captured_bid: int = band_id
+			_overview_band_btn.pressed.connect(func() -> void:
+				SimulationBus.band_selected.emit(captured_bid))
+		else:
+			_overview_band_btn.visible = false
 
 
 func _refresh_needs() -> void:

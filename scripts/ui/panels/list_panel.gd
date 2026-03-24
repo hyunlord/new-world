@@ -5,9 +5,10 @@ const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
 var _settlement_manager: RefCounted
+var _sim_engine: RefCounted
 
 ## Tab state
-var _current_tab: int = 0  # 0=entities, 1=buildings
+var _current_tab: int = 0  # 0=entities, 1=buildings, 2=settlements, 3=bands
 
 ## Sort state
 var _sort_key: String = "name"
@@ -51,6 +52,7 @@ const ENTITY_COLUMNS: Array = [
 	{"key": "job", "label": "UI_JOB", "min_width": 55, "weight": 10},
 	{"key": "status", "label": "UI_STATUS", "min_width": 80, "weight": 17},
 	{"key": "settlement", "label": "UI_SETTLEMENT", "min_width": 28, "weight": 5},
+	{"key": "band", "label": "UI_BAND", "min_width": 28, "weight": 5},
 	{"key": "hunger", "label": "UI_HUNGER", "min_width": 42, "weight": 8},
 ]
 
@@ -68,11 +70,12 @@ func _ready() -> void:
 		Locale.locale_changed.connect(_on_locale_changed)
 
 
-## Initializes the panel with EntityManager, BuildingManager, and SettlementManager references for list display.
-func init(entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null) -> void:
+## Initializes the panel with EntityManager, BuildingManager, SettlementManager, and SimEngine references for list display.
+func init(entity_manager: RefCounted, building_manager: RefCounted = null, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
 	_entity_manager = entity_manager
 	_building_manager = building_manager
 	_settlement_manager = settlement_manager
+	_sim_engine = sim_engine
 
 
 func _on_locale_changed(_locale: String) -> void:
@@ -90,6 +93,8 @@ func _refresh_locale_cache() -> void:
 	_cached_tab_labels = [
 		Locale.ltr("UI_ENTITIES"),
 		Locale.ltr("UI_BUILDINGS"),
+		Locale.ltr("UI_TAB_SETTLEMENTS"),
+		Locale.ltr("UI_TAB_BANDS"),
 	]
 	_cached_deceased_label = Locale.ltr("UI_DECEASED")
 	_cached_sort_asc_label = Locale.ltr("UI_SORT_ASC")
@@ -187,10 +192,16 @@ func _gui_input(event: InputEvent) -> void:
 				_scroll_offset = 0.0
 				accept_event()
 				return
-			# Entity click
+			# Row click (entity, settlement, or band)
 			for cr in _click_regions:
 				if cr.rect.has_point(event.position):
-					_on_entity_clicked(cr.entity_id, cr.get("deceased", false))
+					match cr.get("type", "entity"):
+						"settlement":
+							SimulationBus.ui_notification.emit("open_settlement_%d" % int(cr.get("id", -1)), "command")
+						"band":
+							SimulationBus.band_selected.emit(int(cr.get("id", -1)))
+						_:
+							_on_entity_clicked(int(cr.get("entity_id", cr.get("id", -1))), cr.get("deceased", false))
 					accept_event()
 					return
 	elif event is InputEventPanGesture:
@@ -233,7 +244,7 @@ func _draw() -> void:
 
 	# Tabs
 	var tab_x: float = cx
-	for i in range(2):
+	for i in range(4):
 		var label: String = _get_tab_label(i)
 		var tw: float = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, fs_body).x + 16
 		var tab_rect := Rect2(tab_x, cy, tw, 24)
@@ -255,10 +266,15 @@ func _draw() -> void:
 
 	cy += 30.0
 
-	if _current_tab == 0:
-		_draw_entity_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
-	else:
-		_draw_building_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
+	match _current_tab:
+		0:
+			_draw_entity_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
+		1:
+			_draw_building_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
+		2:
+			_draw_settlement_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
+		3:
+			_draw_band_list(font, cx, cy, panel_w, panel_h, fs_body, fs_small)
 	_draw_scrollbar()
 
 
@@ -335,7 +351,7 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 						"job": r.get("job", ""),
 						"job_display": Locale.tr_id("JOB", str(r.get("job", ""))),
 						"status": Locale.trf1("UI_DECEASED_STATUS_FMT", "cause", cause_loc), "settlement": r.get("settlement_id", -1),
-						"hunger": 0.0, "deceased": true, "is_leader": false,
+						"band_name": "", "hunger": 0.0, "deceased": true, "is_leader": false,
 					})
 
 	# Sort
@@ -442,11 +458,18 @@ func _draw_entity_list(font: Font, cx: float, start_cy: float, panel_w: float, p
 		draw_string(font, Vector2(col_x, draw_y + 14), sett_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[6]) - 2, fs_small, text_color)
 		col_x += col_widths[6] + COL_PAD
 
+		# Band
+		var band_text: String = str(row.get("band_name", ""))
+		if band_text.is_empty():
+			band_text = "-"
+		draw_string(font, Vector2(col_x, draw_y + 14), band_text, HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[7]) - 2, fs_small, text_color)
+		col_x += col_widths[7] + COL_PAD
+
 		# Hunger
 		if not is_deceased:
 			var h: float = row.hunger
 			var h_color: Color = Color(0.9, 0.2, 0.2) if h < 0.3 else (Color(0.9, 0.8, 0.2) if h < 0.6 else Color(0.3, 0.8, 0.3))
-			draw_string(font, Vector2(col_x, draw_y + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[7]) - 2, fs_small, h_color)
+			draw_string(font, Vector2(col_x, draw_y + 14), "%d%%" % int(h * 100), HORIZONTAL_ALIGNMENT_LEFT, int(col_widths[8]) - 2, fs_small, h_color)
 
 		# Register click region
 		_click_regions.append({"rect": row_rect, "entity_id": row.id, "deceased": is_deceased})
@@ -520,6 +543,143 @@ func _draw_building_list(font: Font, cx: float, start_cy: float, panel_w: float,
 	_content_height = cy + 40.0
 
 
+func _draw_settlement_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, _fs_body: int, fs_small: int) -> void:
+	var cy: float = start_cy
+
+	var sim_bridge: Object = _get_sim_bridge()
+	var settlements: Array = []
+	if sim_bridge != null and sim_bridge.has_method("runtime_get_world_summary"):
+		var raw: Variant = sim_bridge.call("runtime_get_world_summary")
+		if raw is Dictionary:
+			for ss: Variant in raw.get("settlement_summaries", []):
+				if ss is Dictionary:
+					settlements.append(ss)
+
+	if settlements.is_empty():
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_NONE"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.5, 0.5, 0.5))
+		_content_height = cy + 40.0
+		return
+
+	# Column headers
+	draw_string(font, Vector2(cx + 5, cy + 12), Locale.ltr("UI_NAME"), HORIZONTAL_ALIGNMENT_LEFT, 100, fs_small, Color(0.8, 0.8, 0.3))
+	draw_string(font, Vector2(cx + 130, cy + 12), Locale.ltr("UI_POPULATION"), HORIZONTAL_ALIGNMENT_LEFT, 70, fs_small, Color(0.8, 0.8, 0.3))
+	draw_string(font, Vector2(cx + 210, cy + 12), Locale.ltr("UI_ERA"), HORIZONTAL_ALIGNMENT_LEFT, 80, fs_small, Color(0.8, 0.8, 0.3))
+	cy += 18.0
+	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
+	cy += 4.0
+
+	var row_area_top: float = cy
+	var row_area_height: float = panel_h - cy - 30.0
+	_content_height = float(settlements.size()) * ROW_HEIGHT + 80.0
+
+	var row_y: float = 0.0
+	for i in range(settlements.size()):
+		var ss: Dictionary = settlements[i]
+		var sett: Dictionary = ss.get("settlement", {}) if ss.get("settlement") is Dictionary else {}
+		var sett_id: int = int(ss.get("id", sett.get("id", -1)))
+		var sett_name: String = str(ss.get("name", sett.get("name", "S%d" % sett_id)))
+		var pop: int = int(ss.get("population", sett.get("entity_count", ss.get("entity_count", 0))))
+		var era: String = str(ss.get("era", sett.get("era", "")))
+
+		if row_y + ROW_HEIGHT < _scroll_offset:
+			row_y += ROW_HEIGHT
+			continue
+		if row_y - _scroll_offset > row_area_height:
+			break
+
+		var draw_y: float = row_area_top + row_y - _scroll_offset
+		if draw_y < row_area_top:
+			row_y += ROW_HEIGHT
+			continue
+
+		var row_rect := Rect2(cx, draw_y, panel_w - 30, ROW_HEIGHT)
+		if (i % 2) == 1:
+			draw_rect(row_rect, Color(0.1, 0.1, 0.1, 0.3))
+
+		draw_string(font, Vector2(cx + 5, draw_y + 14), sett_name, HORIZONTAL_ALIGNMENT_LEFT, 120, fs_small, Color(0.8, 0.8, 0.8))
+		draw_string(font, Vector2(cx + 130, draw_y + 14), str(pop), HORIZONTAL_ALIGNMENT_LEFT, 70, fs_small, Color(0.6, 0.8, 0.6))
+		draw_string(font, Vector2(cx + 210, draw_y + 14), era, HORIZONTAL_ALIGNMENT_LEFT, 80, fs_small, Color(0.6, 0.6, 0.8))
+
+		if sett_id >= 0:
+			_click_regions.append({"rect": row_rect, "type": "settlement", "id": sett_id})
+		row_y += ROW_HEIGHT
+
+	var footer_y: float = panel_h - 24
+	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), Locale.trf1("UI_ENTITIES_COUNT_FMT", "n", settlements.size()), HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
+
+
+func _draw_band_list(font: Font, cx: float, start_cy: float, panel_w: float, panel_h: float, _fs_body: int, fs_small: int) -> void:
+	var cy: float = start_cy
+
+	var bands: Array = []
+	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
+		bands = _sim_engine.get_band_list()
+	if bands.is_empty():
+		var sim_bridge: Object = _get_sim_bridge()
+		if sim_bridge != null and sim_bridge.has_method("runtime_get_band_list"):
+			var raw: Variant = sim_bridge.call("runtime_get_band_list")
+			if raw is Array:
+				bands = raw
+
+	if bands.is_empty():
+		draw_string(font, Vector2(cx, cy + 14), Locale.ltr("UI_POPUP_NO_BANDS"), HORIZONTAL_ALIGNMENT_LEFT, -1, fs_small, Color(0.5, 0.5, 0.5))
+		_content_height = cy + 40.0
+		return
+
+	# Column headers
+	draw_string(font, Vector2(cx + 5, cy + 12), Locale.ltr("UI_NAME"), HORIZONTAL_ALIGNMENT_LEFT, 100, fs_small, Color(0.8, 0.8, 0.3))
+	draw_string(font, Vector2(cx + 130, cy + 12), Locale.ltr("UI_MEMBERS"), HORIZONTAL_ALIGNMENT_LEFT, 50, fs_small, Color(0.8, 0.8, 0.3))
+	draw_string(font, Vector2(cx + 190, cy + 12), Locale.ltr("UI_STATUS"), HORIZONTAL_ALIGNMENT_LEFT, 60, fs_small, Color(0.8, 0.8, 0.3))
+	draw_string(font, Vector2(cx + 260, cy + 12), Locale.ltr("UI_LEADER"), HORIZONTAL_ALIGNMENT_LEFT, 80, fs_small, Color(0.8, 0.8, 0.3))
+	cy += 18.0
+	draw_line(Vector2(cx, cy), Vector2(panel_w - 15, cy), Color(0.3, 0.3, 0.3), 1.0)
+	cy += 4.0
+
+	var row_area_top: float = cy
+	var row_area_height: float = panel_h - cy - 30.0
+	_content_height = float(bands.size()) * ROW_HEIGHT + 80.0
+
+	var row_y: float = 0.0
+	for i in range(bands.size()):
+		if not (bands[i] is Dictionary):
+			continue
+		var band: Dictionary = bands[i]
+		var band_id: int = int(band.get("id", -1))
+		var band_name: String = str(band.get("name", "?"))
+		var member_count: int = int(band.get("member_count", 0))
+		var is_promoted: bool = bool(band.get("is_promoted", false))
+		var leader_name: String = str(band.get("leader_name", ""))
+		var status_text: String = Locale.ltr("UI_BAND_PROMOTED") if is_promoted else Locale.ltr("UI_BAND_PROVISIONAL")
+
+		if row_y + ROW_HEIGHT < _scroll_offset:
+			row_y += ROW_HEIGHT
+			continue
+		if row_y - _scroll_offset > row_area_height:
+			break
+
+		var draw_y: float = row_area_top + row_y - _scroll_offset
+		if draw_y < row_area_top:
+			row_y += ROW_HEIGHT
+			continue
+
+		var row_rect := Rect2(cx, draw_y, panel_w - 30, ROW_HEIGHT)
+		if (i % 2) == 1:
+			draw_rect(row_rect, Color(0.1, 0.1, 0.1, 0.3))
+
+		draw_string(font, Vector2(cx + 5, draw_y + 14), band_name, HORIZONTAL_ALIGNMENT_LEFT, 120, fs_small, Color(0.8, 0.8, 0.8))
+		draw_string(font, Vector2(cx + 130, draw_y + 14), str(member_count), HORIZONTAL_ALIGNMENT_LEFT, 50, fs_small, Color(0.6, 0.8, 0.6))
+		var status_color: Color = Color(0.4, 0.7, 0.4) if is_promoted else Color(0.7, 0.7, 0.4)
+		draw_string(font, Vector2(cx + 190, draw_y + 14), status_text, HORIZONTAL_ALIGNMENT_LEFT, 60, fs_small, status_color)
+		draw_string(font, Vector2(cx + 260, draw_y + 14), leader_name, HORIZONTAL_ALIGNMENT_LEFT, 80, fs_small, Color(0.7, 0.7, 0.7))
+
+		if band_id >= 0:
+			_click_regions.append({"rect": row_rect, "type": "band", "id": band_id})
+		row_y += ROW_HEIGHT
+
+	var footer_y: float = panel_h - 24
+	draw_string(font, Vector2(panel_w * 0.5 - 40, footer_y + 12), Locale.trf1("UI_ENTITIES_COUNT_FMT", "n", bands.size()), HORIZONTAL_ALIGNMENT_CENTER, -1, fs_small, Color(0.6, 0.6, 0.6))
+
+
 func _on_entity_clicked(entity_id: int, is_deceased: bool) -> void:
 	if is_deceased:
 		SimulationBus.ui_notification.emit("open_deceased_%d" % entity_id, "command")
@@ -556,6 +716,7 @@ func _get_entity_rows_from_bridge() -> Array:
 			"died": 9999999, "died_display": "-",
 			"job": job_raw, "job_display": Locale.tr_id("JOB", job_raw),
 			"status": _localized_status_text(action_raw), "settlement": settlement_id,
+			"band_name": str(item.get("band_name", "")),
 			"hunger": float(item.get("hunger", 0.0)),
 			"deceased": false,
 			"is_leader": bool(item.get("is_leader", false)),
