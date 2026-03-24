@@ -3350,8 +3350,13 @@ func _toggle_tech_tree() -> void:
 		if _tech_tree_overlay.has_signal("closed"):
 			_tech_tree_overlay.closed.connect(_on_tech_tree_closed)
 	_tech_tree_overlay.visible = not _tech_tree_overlay.visible
-	if _tech_tree_overlay.visible and _selected_entity_id >= 0:
-		_tech_tree_overlay.set_entity(_selected_entity_id)
+	if _tech_tree_overlay.visible:
+		if _tech_tree_overlay.has_method("restore_saved_view"):
+			var restored: bool = _tech_tree_overlay.restore_saved_view()
+			if not restored and _selected_entity_id >= 0:
+				_tech_tree_overlay.set_entity(_selected_entity_id)
+		elif _selected_entity_id >= 0:
+			_tech_tree_overlay.set_entity(_selected_entity_id)
 	# Hide/show HUD bars + sidebar
 	var show_hud: bool = not _tech_tree_overlay.visible
 	if _hud_top_bar != null:

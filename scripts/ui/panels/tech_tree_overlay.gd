@@ -90,6 +90,9 @@ var _view_mode: int = ViewMode.AGENT
 var _settlement_manager: RefCounted
 var _current_band_id: int = -1
 var _current_settlement_id: int = -1
+var _saved_view_mode: int = 0  # ViewMode.AGENT
+var _saved_settlement_id: int = -1
+var _saved_band_id: int = -1
 var _band_knowledge_cache: Dictionary = {}
 var _agent_knowledge_backup: Dictionary = {}
 var _agent_button: Button
@@ -652,9 +655,14 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
-		_populate_dropdowns()
-		_center_content()
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		if visible:
+			_populate_dropdowns()
+			_center_content()
+		else:
+			_saved_view_mode = _view_mode
+			_saved_settlement_id = _current_settlement_id
+			_saved_band_id = _current_band_id
 	if what == NOTIFICATION_RESIZED and visible:
 		_clamp_pan()
 		_on_view_changed()
@@ -780,6 +788,21 @@ func set_settlement_view(settlement_id: int) -> void:
 		if s is Dictionary and int((s as Dictionary).get("id", -1)) == settlement_id:
 			_on_settlement_selected(i)
 			return
+
+
+func restore_saved_view() -> bool:
+	if _saved_view_mode == ViewMode.SETTLEMENT and _saved_settlement_id >= 0:
+		set_settlement_view(_saved_settlement_id)
+		return true
+	elif _saved_view_mode == ViewMode.BAND and _saved_band_id >= 0:
+		_current_band_id = _saved_band_id
+		_view_mode = ViewMode.BAND
+		_load_band_knowledge()
+		_compute_node_states()
+		queue_redraw()
+		_update_label_positions()
+		return true
+	return false
 
 
 func _on_band_selected(index: int) -> void:
@@ -1112,7 +1135,12 @@ func _show_detail_panel(tech_id: String) -> void:
 			var captured_id: int = int(h.get("id", -1))
 			h_label.gui_input.connect(func(event: InputEvent) -> void:
 				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-					SimulationBus.entity_selected.emit(captured_id)
+					visible = false
+					closed.emit()
+					get_tree().create_timer(0.05).timeout.connect(func() -> void:
+						SimulationBus.entity_selected.emit(captured_id)
+						SimulationBus.ui_notification.emit("focus_entity_%d" % captured_id, "command")
+					)
 			)
 			_detail_vbox.add_child(h_label)
 		if holder_list.size() > show_max:
