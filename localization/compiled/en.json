@@ -1925,6 +1925,7 @@
     "TECH_DEFORESTATION_TRAP_DESC": "Clearing forests at scale for farmland and timber. The land yields abundantly — right up until the rains stop holding.",
     "TECH_DETAIL_BIOME_REQ": "Biome: {name}",
     "TECH_DETAIL_ENV_REQS": "Environment / Social",
+    "TECH_DETAIL_HOLDERS": "Practitioners",
     "TECH_DETAIL_POP_REQ": "Pop. {n}+ required",
     "TECH_DETAIL_PREREQS": "Tech Prerequisites",
     "TECH_DETAIL_RESOURCE_REQ": "Resource: {name}",

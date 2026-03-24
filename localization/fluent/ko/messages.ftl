@@ -4879,6 +4879,7 @@ TECH_DETAIL_POP_REQ = 인구 {n}명 이상
 TECH_DETAIL_BIOME_REQ = 인근 바이옴: {name}
 TECH_DETAIL_RESOURCE_REQ = 인근 자원: {name}
 TECH_DETAIL_SKILL_REQ = {name} Lv{n}
+TECH_DETAIL_HOLDERS = 보유자
 TECH_STATE_LOCKED = 잠김
 TECH_STATE_LOCKED_DESC = 전제 조건이 충족되지 않았습니다
 TECH_STATE_DISC_DESC = 전제 조건 충족. 발견하거나 전승받을 수 있습니다

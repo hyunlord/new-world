@@ -1925,6 +1925,7 @@
     "TECH_DEFORESTATION_TRAP_DESC": "목재와 경작지를 얻기 위해 대규모 삼림을 제거하는 행위. 지금은 번창하는 것처럼 보인다 — 그러나 토양은 기억한다.",
     "TECH_DETAIL_BIOME_REQ": "인근 바이옴: {name}",
     "TECH_DETAIL_ENV_REQS": "환경 / 사회 조건",
+    "TECH_DETAIL_HOLDERS": "보유자",
     "TECH_DETAIL_POP_REQ": "인구 {n}명 이상",
     "TECH_DETAIL_PREREQS": "기술 전제 조건",
     "TECH_DETAIL_RESOURCE_REQ": "인근 자원: {name}",
