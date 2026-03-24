@@ -56,8 +56,8 @@ use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
     ChronicleHistorySliceResponse, ChronicleRecallSliceResponse, ChronicleSnapshotRevision,
-    ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
-    SimEventType,
+    ChronicleEventType, ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant,
+    LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -1798,7 +1798,7 @@ impl WorldSimRuntime {
                 let sy = entry.settlement_y.unwrap_or(entry.y);
                 let mut settlement = Settlement::new(
                     settlement_id,
-                    format!("Settlement {}", settlement_id.0),
+                    runtime_queries::generate_settlement_name(settlement_id),
                     sx,
                     sy,
                     0,
@@ -3338,7 +3338,17 @@ impl WorldSimRuntime {
 
         let mut aggregated_events: Vec<&ChronicleEvent> = Vec::new();
         for member_id in &band.members {
-            aggregated_events.extend(resources.chronicle_log.query_by_entity(*member_id, 8));
+            let member_events = resources.chronicle_log.query_by_entity(*member_id, 20);
+            for event in member_events {
+                match event.event_type {
+                    ChronicleEventType::BandLifecycle
+                    | ChronicleEventType::GatheringFormation
+                    | ChronicleEventType::ResourceDiscovery => {
+                        aggregated_events.push(event);
+                    }
+                    _ => {}
+                }
+            }
         }
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {

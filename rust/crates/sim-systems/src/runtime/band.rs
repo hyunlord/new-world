@@ -1265,8 +1265,21 @@ fn apply_identity_band_ids(world: &mut World, final_bands: &BTreeMap<BandId, Ban
     }
 }
 
+/// Generates a Korean nature-themed band name from the band ID.
+/// 15 × 15 = 225 unique combinations before repeating with a numeric suffix.
 fn generate_band_name(band_id: BandId) -> String {
-    format!("band_{}", band_id.0)
+    const PREFIXES: &[&str] = &[
+        "붉은", "푸른", "검은", "흰", "금빛", "은빛", "높은", "깊은", "넓은", "밝은", "어둔",
+        "거센", "고요한", "빠른", "강한",
+    ];
+    const SUFFIXES: &[&str] = &[
+        "바위", "산", "강", "숲", "바람", "불꽃", "이슬", "달빛", "별빛", "여울", "구름",
+        "뿌리", "이끼", "매", "늑대",
+    ];
+    let idx = band_id.0 as usize;
+    let prefix = PREFIXES[idx % PREFIXES.len()];
+    let suffix = SUFFIXES[(idx / PREFIXES.len()) % SUFFIXES.len()];
+    format!("{} {}", prefix, suffix)
 }
 
 fn push_band_causal(
@@ -2725,7 +2738,14 @@ mod tests {
     }
 
     #[test]
-    fn band_names_are_deterministic_and_locale_neutral() {
-        assert_eq!(generate_band_name(BandId(7)), "band_7");
+    fn band_names_are_deterministic_and_unique() {
+        // BandId(7): idx=7, prefix=PREFIXES[7%15]="깊은", suffix=SUFFIXES[0%15]="바위"
+        assert_eq!(generate_band_name(BandId(7)), "깊은 바위");
+        // BandId(0): idx=0, prefix="붉은", suffix="바위"
+        assert_eq!(generate_band_name(BandId(0)), "붉은 바위");
+        // BandId(15): idx=15, prefix="붉은", suffix="산" (wraps prefix, advances suffix)
+        assert_eq!(generate_band_name(BandId(15)), "붉은 산");
+        // Same id always produces same name
+        assert_eq!(generate_band_name(BandId(7)), generate_band_name(BandId(7)));
     }
 }

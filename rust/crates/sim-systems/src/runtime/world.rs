@@ -718,6 +718,22 @@ impl SimSystem for TechPropagationRuntimeSystem {
     }
 }
 
+/// Generates a Korean place-name for a new migration settlement based on its ID.
+/// 20 unique names before appending a numeric suffix.
+fn generate_settlement_name(id: SettlementId) -> String {
+    const NAMES: &[&str] = &[
+        "돌무지", "새벽골", "물가마을", "높은둔덕", "갈대밭", "바람재", "솔밭", "어울터",
+        "큰바위", "나루터", "별빛골", "참나무", "이끼언덕", "갈밭", "여울목", "달빛마을",
+        "소나무골", "안골", "고인돌", "둥지",
+    ];
+    let idx = id.0.saturating_sub(1) as usize;
+    if idx < NAMES.len() {
+        NAMES[idx].to_string()
+    } else {
+        format!("{} {}", NAMES[idx % NAMES.len()], idx / NAMES.len() + 1)
+    }
+}
+
 #[inline]
 fn migration_count_shelters(resources: &SimResources, settlement_id: SettlementId) -> usize {
     resources
@@ -962,7 +978,7 @@ impl SimSystem for MigrationRuntimeSystem {
 
             let mut new_settlement = sim_core::Settlement::new(
                 next_settlement_id,
-                format!("settlement_{}", next_settlement_raw),
+                generate_settlement_name(next_settlement_id),
                 site_x,
                 site_y,
                 tick,
