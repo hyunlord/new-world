@@ -507,6 +507,32 @@ func runtime_get_building_detail(building_id: int) -> Dictionary:
 	return {}
 
 
+## Returns band list from Rust runtime.
+func runtime_get_band_list() -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("runtime_get_band_list"):
+		return []
+	var result: Variant = runtime.call("runtime_get_band_list")
+	if result is Array:
+		return result
+	return []
+
+
+## Returns band detail from Rust runtime.
+func runtime_get_band_detail(band_id: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_band_detail"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_band_detail", band_id)
+	if result is Dictionary:
+		return result
+	return {}
+
+
 ## Returns a world summary snapshot from Rust runtime.
 func runtime_get_world_summary() -> Dictionary:
 	var runtime: Object = _get_native_runtime()
