@@ -1126,8 +1126,7 @@ func _show_detail_panel(tech_id: String) -> void:
 		holder_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 			return float(a.get("proficiency", 0.0)) > float(b.get("proficiency", 0.0))
 		)
-		var show_max: int = mini(holder_list.size(), 8)
-		for i: int in range(show_max):
+		for i: int in range(holder_list.size()):
 			var h: Dictionary = holder_list[i]
 			var h_label := Label.new()
 			var prof_pct: int = int(float(h.get("proficiency", 0.0)) * 100.0)
@@ -1143,12 +1142,6 @@ func _show_detail_panel(tech_id: String) -> void:
 					_show_mini_profile(captured_id)
 			)
 			_detail_vbox.add_child(h_label)
-		if holder_list.size() > show_max:
-			var more := Label.new()
-			more.text = "… +%d" % (holder_list.size() - show_max)
-			more.add_theme_font_size_override("font_size", 9)
-			more.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
-			_detail_vbox.add_child(more)
 
 	# Tech prerequisites
 	var all_of: Array = prereqs.get("all_of", [])
@@ -1204,10 +1197,25 @@ func _show_detail_panel(tech_id: String) -> void:
 	if not all_unlocks.is_empty():
 		_add_detail_section(Locale.ltr("TECH_DETAIL_UNLOCKS"))
 		for unlock_id: String in all_unlocks:
-			var u_key: String = unlock_id.to_upper()
-			var u_text: String = Locale.ltr(u_key)
-			if u_text == u_key:
+			var u_text: String = ""
+			var try_keys: Array[String] = [
+				unlock_id.to_upper(),
+				"SKILL_" + unlock_id.to_upper(),
+				"BUILDING_" + unlock_id.to_upper(),
+				"ACTION_" + unlock_id.to_upper(),
+				unlock_id,
+			]
+			for try_key: String in try_keys:
+				var result: String = Locale.ltr(try_key)
+				if result != try_key and not result.is_empty():
+					u_text = result
+					break
+			if u_text.is_empty():
 				u_text = unlock_id.replace("_", " ").capitalize()
+				for prefix: String in ["Skill ", "Building ", "Action "]:
+					if u_text.begins_with(prefix):
+						u_text = u_text.substr(prefix.length())
+						break
 			var u_label := Label.new()
 			u_label.text = "• " + u_text
 			u_label.add_theme_font_size_override("font_size", 10)
@@ -1372,7 +1380,7 @@ func _show_mini_profile(entity_id: int) -> void:
 	status_line.add_theme_color_override("font_color", stress_color)
 	cc.add_child(status_line)
 	var need_keys: Array[String] = ["need_hunger", "need_thirst", "need_sleep", "need_warmth", "need_safety", "need_belonging"]
-	var need_labels: Array[String] = ["UI_NEED_HUNGER", "UI_NEED_THIRST", "UI_NEED_SLEEP", "UI_NEED_WARMTH", "UI_NEED_SAFETY", "UI_NEED_BELONGING"]
+	var need_labels: Array[String] = ["NEED_HUNGER", "NEED_THIRST", "NEED_SLEEP", "NEED_WARMTH", "NEED_SAFETY", "NEED_BELONGING"]
 	var need_pairs: Array = []
 	for i: int in range(need_keys.size()):
 		var nv: Variant = detail.get(need_keys[i], 0.5)
@@ -1429,7 +1437,7 @@ func _show_mini_profile(entity_id: int) -> void:
 		tech_section.add_theme_font_size_override("font_size", 10)
 		tech_section.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
 		cc.add_child(tech_section)
-		var show_tech_count: int = mini(6, all_known.size())
+		var show_tech_count: int = all_known.size()
 		var line_text: String = ""
 		for i: int in range(show_tech_count):
 			var tk: Dictionary = all_known[i]
@@ -1450,12 +1458,6 @@ func _show_mini_profile(entity_id: int) -> void:
 				tl.autowrap_mode = TextServer.AUTOWRAP_WORD
 				cc.add_child(tl)
 				line_text = ""
-		if all_known.size() > show_tech_count:
-			var more := Label.new()
-			more.text = "…+%d" % (all_known.size() - show_tech_count)
-			more.add_theme_font_size_override("font_size", 9)
-			more.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
-			cc.add_child(more)
 	cc.add_child(_mini_spacer(8))
 	# View Detail button
 	var detail_btn := Button.new()

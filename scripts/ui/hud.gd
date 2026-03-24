@@ -3365,22 +3365,16 @@ func _toggle_tech_tree() -> void:
 		_bottom_bar.visible = show_hud
 	if _tech_tree_overlay.visible:
 		_sidebar_was_open_before_tech_tree = _entity_detail_panel_open
-		if OS.is_debug_build():
-			print("[TechTree] OPEN: _entity_detail_panel_open=%s, saving to _sidebar_was_open=%s" % [_entity_detail_panel_open, _sidebar_was_open_before_tech_tree])
 		if _entity_detail_panel_tween != null:
 			_entity_detail_panel_tween.kill()
 			_entity_detail_panel_tween = null
 		if _right_panel_container != null:
 			_right_panel_container.visible = false
 	else:
-		if OS.is_debug_build():
-			print("[TechTree] CLOSE via toggle: _sidebar_was_open=%s, _entity_detail_panel_open=%s" % [_sidebar_was_open_before_tech_tree, _entity_detail_panel_open])
 		_restore_sidebar_after_tech_tree()
 
 
 func _on_tech_tree_closed() -> void:
-	if OS.is_debug_build():
-		print("[TechTree] CLOSE via signal: _sidebar_was_open=%s" % _sidebar_was_open_before_tech_tree)
 	if _hud_top_bar != null:
 		_hud_top_bar.visible = true
 	if _bottom_bar != null:
@@ -3422,8 +3416,6 @@ func _restore_sidebar_after_tech_tree() -> void:
 	_entity_detail_panel_open = true
 	if _right_panel_container == null:
 		return
-	if OS.is_debug_build():
-		print("[TechTree] RESTORING sidebar: setting visible=true, offsets, move_to_front")
 	_right_panel_container.visible = true
 	_right_panel_container.move_to_front()
 	var pw: float = _entity_detail_sidebar_width()
@@ -3632,8 +3624,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			# Tech tree overlay: close first
 			if _tech_tree_overlay != null and _tech_tree_overlay.visible:
 				_tech_tree_overlay.visible = false
-				if OS.is_debug_build():
-					print("[TechTree] CLOSE via ESC")
 				_on_tech_tree_closed()
 				get_viewport().set_input_as_handled()
 				return

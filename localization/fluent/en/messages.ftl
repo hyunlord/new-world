@@ -4879,6 +4879,7 @@ TECH_DETAIL_POP_REQ = Pop. {n}+ required
 TECH_DETAIL_BIOME_REQ = Biome: {name}
 TECH_DETAIL_RESOURCE_REQ = Resource: {name}
 TECH_DETAIL_SKILL_REQ = {name} Lv{n}
+TECH_DETAIL_HOLDERS = Practitioners
 TECH_STATE_LOCKED = Locked
 TECH_STATE_LOCKED_DESC = Prerequisites not met
 TECH_STATE_DISC_DESC = Ready to discover or learn
