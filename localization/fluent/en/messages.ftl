@@ -4848,6 +4848,7 @@ ERA_TRIBAL = Tribal
 ERA_BRONZE_AGE = Bronze Age
 UI_OPEN_TECH_MAP = Open Tech Map
 UI_PROFICIENCY = Proficiency
+UI_VIEW_DETAIL = View Detail
 UI_SOURCE = Source
 TECH_NOT_KNOWN = Not known
 TECH_PREREQS = Prerequisites
