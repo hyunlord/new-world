@@ -1249,44 +1249,75 @@ func _show_mini_profile(entity_id: int) -> void:
 	if detail.is_empty():
 		return
 	_mini_profile_container = VBoxContainer.new()
-	_mini_profile_container.add_theme_constant_override("separation", 4)
+	_mini_profile_container.add_theme_constant_override("separation", 0)
 	var card := PanelContainer.new()
 	var card_style := StyleBoxFlat.new()
-	card_style.bg_color = Color(0.08, 0.10, 0.14, 0.95)
-	card_style.border_color = Color(0.20, 0.30, 0.42)
+	card_style.bg_color = Color(0.06, 0.08, 0.12, 0.97)
+	card_style.border_color = Color(0.18, 0.26, 0.38)
 	card_style.set_border_width_all(1)
 	card_style.set_corner_radius_all(6)
-	card_style.content_margin_left = 10
-	card_style.content_margin_right = 10
-	card_style.content_margin_top = 8
-	card_style.content_margin_bottom = 8
+	card_style.content_margin_left = 12
+	card_style.content_margin_right = 12
+	card_style.content_margin_top = 10
+	card_style.content_margin_bottom = 10
 	card.add_theme_stylebox_override("panel", card_style)
-	var card_content := VBoxContainer.new()
-	card_content.add_theme_constant_override("separation", 3)
-	card.add_child(card_content)
+	var cc := VBoxContainer.new()
+	cc.add_theme_constant_override("separation", 4)
+	card.add_child(cc)
+	# Row 1: Name [Archetype]
 	var name_text: String = str(detail.get("name", "?"))
 	var archetype: String = str(detail.get("archetype_key", ""))
 	var header := Label.new()
 	header.text = name_text
 	if not archetype.is_empty():
-		header.text += " [%s]" % Locale.ltr(archetype)
-	header.add_theme_font_size_override("font_size", 12)
+		header.text += "  [%s]" % Locale.ltr(archetype)
+	header.add_theme_font_size_override("font_size", 13)
 	header.add_theme_color_override("font_color", Color.WHITE)
-	card_content.add_child(header)
+	cc.add_child(header)
+	# Row 2: Gender Age Stage Settlement
 	var age_raw: Variant = detail.get("age_years", 0.0)
 	var age_val: float = float(age_raw) if (age_raw is float or age_raw is int) else 0.0
 	var sex: String = str(detail.get("sex", ""))
 	var gender_icon: String = "♂" if sex == "male" else "♀"
 	var growth: String = str(detail.get("growth_stage", "adult"))
-	var info := Label.new()
-	info.text = "%s %d · %s" % [gender_icon, int(age_val), growth]
-	info.add_theme_font_size_override("font_size", 10)
-	info.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
-	card_content.add_child(info)
+	var sett_id_raw: Variant = detail.get("settlement_id", -1)
+	var sett_id: int = int(sett_id_raw) if (sett_id_raw is int or sett_id_raw is float) else -1
+	var sett_name: String = ""
+	if sett_id >= 0 and _sim_engine.has_method("get_settlement_detail"):
+		var sd: Dictionary = _sim_engine.get_settlement_detail(sett_id)
+		sett_name = str(sd.get("name", ""))
+	var line2 := Label.new()
+	var line2_parts: PackedStringArray = ["%s %d · %s" % [gender_icon, int(age_val), growth]]
+	if not sett_name.is_empty():
+		line2_parts.append(sett_name)
+	line2.text = " · ".join(line2_parts)
+	line2.add_theme_font_size_override("font_size", 10)
+	line2.add_theme_color_override("font_color", Color(0.50, 0.58, 0.66))
+	cc.add_child(line2)
+	# Row 3: Band + Action
+	var band_name: String = str(detail.get("band_name", ""))
+	var current_action: String = str(detail.get("current_action", ""))
+	if not band_name.is_empty() or not current_action.is_empty():
+		var line3 := Label.new()
+		var parts3: PackedStringArray = []
+		if not band_name.is_empty():
+			parts3.append(band_name)
+		if not current_action.is_empty():
+			var action_display: String = Locale.ltr("ACTION_" + current_action.to_upper())
+			if action_display.begins_with("ACTION_"):
+				action_display = current_action.replace("_", " ").capitalize()
+			parts3.append(action_display)
+		line3.text = " · ".join(parts3)
+		line3.add_theme_font_size_override("font_size", 10)
+		line3.add_theme_color_override("font_color", Color(0.45, 0.52, 0.60))
+		cc.add_child(line3)
+	cc.add_child(_mini_spacer(6))
+	# This tech proficiency
 	if _mini_profile_tech_id != "":
 		var k_tab: Dictionary = _sim_engine.get_entity_tab(entity_id, "knowledge")
 		var known_raw: Variant = k_tab.get("known", [])
 		var known: Array = known_raw if known_raw is Array else []
+		var found_tech: bool = false
 		for entry_raw: Variant in known:
 			if not (entry_raw is Dictionary):
 				continue
@@ -1298,12 +1329,135 @@ func _show_mini_profile(entity_id: int) -> void:
 				var prof: float = float(prof_raw) if (prof_raw is float or prof_raw is int) else 0.0
 				var source_code: int = int(e.get("source", 0))
 				var source_icon: String = SOURCE_ICONS[clampi(source_code, 0, SOURCE_ICONS.size() - 1)]
-				var prof_label := Label.new()
-				prof_label.text = "%s: %d%% — %s" % [Locale.ltr("UI_PROFICIENCY"), int(prof * 100), source_icon]
-				prof_label.add_theme_font_size_override("font_size", 11)
-				prof_label.add_theme_color_override("font_color", _prof_color(prof))
-				card_content.add_child(prof_label)
+				var bar_row := HBoxContainer.new()
+				bar_row.add_theme_constant_override("separation", 6)
+				var bar_label := Label.new()
+				bar_label.text = "%s: " % Locale.ltr("UI_PROFICIENCY")
+				bar_label.custom_minimum_size.x = 50
+				bar_label.add_theme_font_size_override("font_size", 10)
+				bar_label.add_theme_color_override("font_color", Color(0.45, 0.52, 0.60))
+				bar_row.add_child(bar_label)
+				var bar := ProgressBar.new()
+				bar.custom_minimum_size = Vector2(120, 10)
+				bar.max_value = 100.0
+				bar.value = prof * 100.0
+				bar.show_percentage = false
+				bar_row.add_child(bar)
+				var bar_pct := Label.new()
+				bar_pct.text = "%d%% %s" % [int(prof * 100), source_icon]
+				bar_pct.add_theme_font_size_override("font_size", 10)
+				bar_pct.add_theme_color_override("font_color", _prof_color(prof))
+				bar_row.add_child(bar_pct)
+				cc.add_child(bar_row)
+				found_tech = true
 				break
+		if not found_tech:
+			var no_prof := Label.new()
+			no_prof.text = Locale.ltr("TECH_STATE_LOCKED")
+			no_prof.add_theme_font_size_override("font_size", 10)
+			no_prof.add_theme_color_override("font_color", Color(0.35, 0.40, 0.48))
+			cc.add_child(no_prof)
+	cc.add_child(_mini_spacer(6))
+	# Status: emotion + stress + top 3 needs
+	var dom_emotion: String = str(detail.get("dominant_emotion", ""))
+	var stress_raw: Variant = detail.get("stress_level", 0.0)
+	var stress: float = float(stress_raw) if (stress_raw is float or stress_raw is int) else 0.0
+	var emotion_display: String = Locale.ltr("EMOTION_" + dom_emotion.to_upper()) if not dom_emotion.is_empty() else "—"
+	if emotion_display.begins_with("EMOTION_"):
+		emotion_display = dom_emotion.capitalize()
+	var status_line := Label.new()
+	status_line.text = "%s · %s: %d%%" % [emotion_display, Locale.ltr("UI_STRESS"), int(stress * 100)]
+	status_line.add_theme_font_size_override("font_size", 10)
+	var stress_color: Color = Color(0.45, 0.72, 0.45) if stress < 0.3 else (Color(0.80, 0.65, 0.25) if stress < 0.6 else Color(0.72, 0.30, 0.30))
+	status_line.add_theme_color_override("font_color", stress_color)
+	cc.add_child(status_line)
+	var need_keys: Array[String] = ["need_hunger", "need_thirst", "need_sleep", "need_warmth", "need_safety", "need_belonging"]
+	var need_labels: Array[String] = ["UI_NEED_HUNGER", "UI_NEED_THIRST", "UI_NEED_SLEEP", "UI_NEED_WARMTH", "UI_NEED_SAFETY", "UI_NEED_BELONGING"]
+	var need_pairs: Array = []
+	for i: int in range(need_keys.size()):
+		var nv: Variant = detail.get(need_keys[i], 0.5)
+		var nf: float = float(nv) if (nv is float or nv is int) else 0.5
+		need_pairs.append({"key": need_labels[i], "value": nf})
+	need_pairs.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["value"]) < float(b["value"])
+	)
+	var show_needs: int = mini(3, need_pairs.size())
+	for i: int in range(show_needs):
+		var np: Dictionary = need_pairs[i]
+		var nval: float = float(np["value"])
+		var need_row := HBoxContainer.new()
+		need_row.add_theme_constant_override("separation", 4)
+		var need_name := Label.new()
+		need_name.text = Locale.ltr(str(np["key"]))
+		need_name.custom_minimum_size.x = 50
+		need_name.add_theme_font_size_override("font_size", 9)
+		need_name.add_theme_color_override("font_color", Color(0.40, 0.48, 0.56))
+		need_row.add_child(need_name)
+		var need_bar := ProgressBar.new()
+		need_bar.custom_minimum_size = Vector2(100, 8)
+		need_bar.max_value = 1.0
+		need_bar.value = nval
+		need_bar.show_percentage = false
+		need_row.add_child(need_bar)
+		var need_pct := Label.new()
+		need_pct.text = "%d%%" % int(nval * 100)
+		need_pct.add_theme_font_size_override("font_size", 9)
+		var nc: Color = Color(0.72, 0.30, 0.30) if nval < 0.3 else (Color(0.80, 0.65, 0.25) if nval < 0.5 else Color(0.45, 0.65, 0.45))
+		need_pct.add_theme_color_override("font_color", nc)
+		need_row.add_child(need_pct)
+		cc.add_child(need_row)
+	cc.add_child(_mini_spacer(6))
+	# All knowledge compact
+	var all_known: Array = []
+	var k_tab_all: Dictionary = _sim_engine.get_entity_tab(entity_id, "knowledge")
+	var known_all_raw: Variant = k_tab_all.get("known", [])
+	var known_all: Array = known_all_raw if known_all_raw is Array else []
+	for entry_raw: Variant in known_all:
+		if entry_raw is Dictionary:
+			var e: Dictionary = entry_raw
+			var kid: String = str(e.get("id", ""))
+			kid = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+			var prof_raw: Variant = e.get("proficiency", 0.0)
+			var prof: float = float(prof_raw) if (prof_raw is float or prof_raw is int) else 0.0
+			all_known.append({"id": kid, "proficiency": prof})
+	all_known.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a["proficiency"]) > float(b["proficiency"])
+	)
+	if not all_known.is_empty():
+		var tech_section := Label.new()
+		tech_section.text = "%s (%d)" % [Locale.ltr("UI_TAB_TECH"), all_known.size()]
+		tech_section.add_theme_font_size_override("font_size", 10)
+		tech_section.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
+		cc.add_child(tech_section)
+		var show_tech_count: int = mini(6, all_known.size())
+		var line_text: String = ""
+		for i: int in range(show_tech_count):
+			var tk: Dictionary = all_known[i]
+			var tid: String = str(tk["id"])
+			var tprof: int = int(float(tk["proficiency"]) * 100.0)
+			var tname: String = Locale.ltr(tid)
+			var is_current: bool = tid == _mini_profile_tech_id
+			if is_current:
+				line_text += "★"
+			line_text += "%s %d%%" % [tname, tprof]
+			if i < show_tech_count - 1:
+				line_text += " · "
+			if (i + 1) % 2 == 0 or i == show_tech_count - 1:
+				var tl := Label.new()
+				tl.text = line_text
+				tl.add_theme_font_size_override("font_size", 9)
+				tl.add_theme_color_override("font_color", Color(0.48, 0.56, 0.64))
+				tl.autowrap_mode = TextServer.AUTOWRAP_WORD
+				cc.add_child(tl)
+				line_text = ""
+		if all_known.size() > show_tech_count:
+			var more := Label.new()
+			more.text = "…+%d" % (all_known.size() - show_tech_count)
+			more.add_theme_font_size_override("font_size", 9)
+			more.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
+			cc.add_child(more)
+	cc.add_child(_mini_spacer(8))
+	# View Detail button
 	var detail_btn := Button.new()
 	detail_btn.text = Locale.ltr("UI_VIEW_DETAIL") + " →"
 	detail_btn.add_theme_font_size_override("font_size", 10)
@@ -1318,7 +1472,7 @@ func _show_mini_profile(entity_id: int) -> void:
 			SimulationBus.ui_notification.emit("focus_entity_%d" % captured_eid, "command")
 		)
 	)
-	card_content.add_child(detail_btn)
+	cc.add_child(detail_btn)
 	_mini_profile_container.add_child(card)
 	_detail_vbox.add_child(_mini_profile_container)
 
@@ -1328,6 +1482,12 @@ func _clear_mini_profile() -> void:
 		_mini_profile_container.queue_free()
 		_mini_profile_container = null
 	_mini_profile_entity_id = -1
+
+
+func _mini_spacer(height: float) -> Control:
+	var s := Control.new()
+	s.custom_minimum_size.y = height
+	return s
 
 
 func _add_detail_section(title_text: String) -> void:
