@@ -84,6 +84,9 @@ var _chain_nodes: Dictionary = {}
 var _entity_label: Label
 var _detail_panel: PanelContainer
 var _detail_vbox: VBoxContainer
+var _mini_profile_container: VBoxContainer
+var _mini_profile_entity_id: int = -1
+var _mini_profile_tech_id: String = ""
 
 enum ViewMode { AGENT, SETTLEMENT, BAND }
 var _view_mode: int = ViewMode.AGENT
@@ -1010,6 +1013,8 @@ func _hit_test(screen_pos: Vector2) -> String:
 
 
 func _show_detail_panel(tech_id: String) -> void:
+	_mini_profile_tech_id = tech_id
+	_clear_mini_profile()
 	for child in _detail_vbox.get_children():
 		child.queue_free()
 
@@ -1135,12 +1140,7 @@ func _show_detail_panel(tech_id: String) -> void:
 			var captured_id: int = int(h.get("id", -1))
 			h_label.gui_input.connect(func(event: InputEvent) -> void:
 				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-					visible = false
-					closed.emit()
-					get_tree().create_timer(0.05).timeout.connect(func() -> void:
-						SimulationBus.entity_selected.emit(captured_id)
-						SimulationBus.ui_notification.emit("focus_entity_%d" % captured_id, "command")
-					)
+					_show_mini_profile(captured_id)
 			)
 			_detail_vbox.add_child(h_label)
 		if holder_list.size() > show_max:
@@ -1238,6 +1238,96 @@ func _get_member_ids_for_current_view() -> Array:
 			var ids_raw: Variant = bd.get("member_ids", [])
 			return ids_raw if ids_raw is Array else []
 	return []
+
+
+func _show_mini_profile(entity_id: int) -> void:
+	_clear_mini_profile()
+	if _sim_engine == null or entity_id < 0:
+		return
+	_mini_profile_entity_id = entity_id
+	var detail: Dictionary = _sim_engine.get_entity_detail(entity_id)
+	if detail.is_empty():
+		return
+	_mini_profile_container = VBoxContainer.new()
+	_mini_profile_container.add_theme_constant_override("separation", 4)
+	var card := PanelContainer.new()
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color(0.08, 0.10, 0.14, 0.95)
+	card_style.border_color = Color(0.20, 0.30, 0.42)
+	card_style.set_border_width_all(1)
+	card_style.set_corner_radius_all(6)
+	card_style.content_margin_left = 10
+	card_style.content_margin_right = 10
+	card_style.content_margin_top = 8
+	card_style.content_margin_bottom = 8
+	card.add_theme_stylebox_override("panel", card_style)
+	var card_content := VBoxContainer.new()
+	card_content.add_theme_constant_override("separation", 3)
+	card.add_child(card_content)
+	var name_text: String = str(detail.get("name", "?"))
+	var archetype: String = str(detail.get("archetype_key", ""))
+	var header := Label.new()
+	header.text = name_text
+	if not archetype.is_empty():
+		header.text += " [%s]" % Locale.ltr(archetype)
+	header.add_theme_font_size_override("font_size", 12)
+	header.add_theme_color_override("font_color", Color.WHITE)
+	card_content.add_child(header)
+	var age_raw: Variant = detail.get("age_years", 0.0)
+	var age_val: float = float(age_raw) if (age_raw is float or age_raw is int) else 0.0
+	var sex: String = str(detail.get("sex", ""))
+	var gender_icon: String = "♂" if sex == "male" else "♀"
+	var growth: String = str(detail.get("growth_stage", "adult"))
+	var info := Label.new()
+	info.text = "%s %d · %s" % [gender_icon, int(age_val), growth]
+	info.add_theme_font_size_override("font_size", 10)
+	info.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+	card_content.add_child(info)
+	if _mini_profile_tech_id != "":
+		var k_tab: Dictionary = _sim_engine.get_entity_tab(entity_id, "knowledge")
+		var known_raw: Variant = k_tab.get("known", [])
+		var known: Array = known_raw if known_raw is Array else []
+		for entry_raw: Variant in known:
+			if not (entry_raw is Dictionary):
+				continue
+			var e: Dictionary = entry_raw
+			var kid: String = str(e.get("id", ""))
+			kid = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+			if kid == _mini_profile_tech_id:
+				var prof_raw: Variant = e.get("proficiency", 0.0)
+				var prof: float = float(prof_raw) if (prof_raw is float or prof_raw is int) else 0.0
+				var source_code: int = int(e.get("source", 0))
+				var source_icon: String = SOURCE_ICONS[clampi(source_code, 0, SOURCE_ICONS.size() - 1)]
+				var prof_label := Label.new()
+				prof_label.text = "%s: %d%% — %s" % [Locale.ltr("UI_PROFICIENCY"), int(prof * 100), source_icon]
+				prof_label.add_theme_font_size_override("font_size", 11)
+				prof_label.add_theme_color_override("font_color", _prof_color(prof))
+				card_content.add_child(prof_label)
+				break
+	var detail_btn := Button.new()
+	detail_btn.text = Locale.ltr("UI_VIEW_DETAIL") + " →"
+	detail_btn.add_theme_font_size_override("font_size", 10)
+	detail_btn.custom_minimum_size = Vector2(0, 26)
+	detail_btn.focus_mode = Control.FOCUS_NONE
+	var captured_eid: int = entity_id
+	detail_btn.pressed.connect(func() -> void:
+		visible = false
+		closed.emit()
+		get_tree().create_timer(0.05).timeout.connect(func() -> void:
+			SimulationBus.entity_selected.emit(captured_eid)
+			SimulationBus.ui_notification.emit("focus_entity_%d" % captured_eid, "command")
+		)
+	)
+	card_content.add_child(detail_btn)
+	_mini_profile_container.add_child(card)
+	_detail_vbox.add_child(_mini_profile_container)
+
+
+func _clear_mini_profile() -> void:
+	if _mini_profile_container != null and is_instance_valid(_mini_profile_container):
+		_mini_profile_container.queue_free()
+		_mini_profile_container = null
+	_mini_profile_entity_id = -1
 
 
 func _add_detail_section(title_text: String) -> void:
