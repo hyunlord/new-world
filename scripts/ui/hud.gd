@@ -3383,6 +3383,32 @@ func _on_tech_tree_closed() -> void:
 	_restore_sidebar_after_tech_tree()
 
 
+func _open_tech_tree_for_settlement(settlement_id: int) -> void:
+	if _tech_tree_overlay == null:
+		var overlay_script: GDScript = load("res://scripts/ui/panels/tech_tree_overlay.gd")
+		_tech_tree_overlay = overlay_script.new()
+		_tech_tree_overlay.setup(_tech_tree_manager_ref, _sim_engine, _settlement_manager)
+		_tech_tree_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_tech_tree_overlay.visible = false
+		_hud_control_root.add_child(_tech_tree_overlay)
+		if _tech_tree_overlay.has_signal("closed"):
+			_tech_tree_overlay.closed.connect(_on_tech_tree_closed)
+	if not _tech_tree_overlay.visible:
+		_tech_tree_overlay.visible = true
+		if _hud_top_bar != null:
+			_hud_top_bar.visible = false
+		if _bottom_bar != null:
+			_bottom_bar.visible = false
+		_sidebar_was_open_before_tech_tree = _entity_detail_panel_open
+		if _entity_detail_panel_tween != null:
+			_entity_detail_panel_tween.kill()
+			_entity_detail_panel_tween = null
+		if _right_panel_container != null:
+			_right_panel_container.visible = false
+	if _tech_tree_overlay.has_method("set_settlement_view"):
+		_tech_tree_overlay.set_settlement_view(settlement_id)
+
+
 func _restore_sidebar_after_tech_tree() -> void:
 	if not _sidebar_was_open_before_tech_tree:
 		_sidebar_was_open_before_tech_tree = false
@@ -3882,6 +3908,10 @@ func _on_ui_notification(msg: String, _category: String) -> void:
 		var sid_str: String = msg.replace("nav_from_settlement_", "")
 		if sid_str.is_valid_int():
 			_pending_settlement_return_id = int(sid_str)
+	elif msg.begins_with("open_tech_tree_settlement_"):
+		var sid_str: String = msg.replace("open_tech_tree_settlement_", "")
+		if sid_str.is_valid_int():
+			_open_tech_tree_for_settlement(int(sid_str))
 	elif msg.begins_with("open_settlement_"):
 		var sid_str: String = msg.replace("open_settlement_", "")
 		if sid_str.is_valid_int():

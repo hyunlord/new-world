@@ -89,6 +89,7 @@ enum ViewMode { AGENT, SETTLEMENT, BAND }
 var _view_mode: int = ViewMode.AGENT
 var _settlement_manager: RefCounted
 var _current_band_id: int = -1
+var _current_settlement_id: int = -1
 var _band_knowledge_cache: Dictionary = {}
 var _agent_knowledge_backup: Dictionary = {}
 var _agent_button: Button
@@ -753,6 +754,7 @@ func _on_settlement_selected(index: int) -> void:
 	var s_id: int = int(s_dict.get("id", -1))
 	if s_id < 0:
 		return
+	_current_settlement_id = s_id
 	_view_mode = ViewMode.SETTLEMENT
 	_load_settlement_knowledge_from_rust(s_id)
 	_compute_node_states()
@@ -765,6 +767,19 @@ func _on_settlement_selected(index: int) -> void:
 		s_name = str(detail.get("name", "Settlement %d" % s_id))
 	if _entity_label != null:
 		_entity_label.text = s_name
+
+
+func set_settlement_view(settlement_id: int) -> void:
+	if _sim_engine == null:
+		return
+	var summary: Dictionary = _sim_engine.get_world_summary()
+	var sett_summaries_raw: Variant = summary.get("settlement_summaries", [])
+	var sett_summaries: Array = sett_summaries_raw if sett_summaries_raw is Array else []
+	for i: int in range(sett_summaries.size()):
+		var s: Variant = sett_summaries[i]
+		if s is Dictionary and int((s as Dictionary).get("id", -1)) == settlement_id:
+			_on_settlement_selected(i)
+			return
 
 
 func _on_band_selected(index: int) -> void:
@@ -1039,6 +1054,74 @@ func _show_detail_panel(tech_id: String) -> void:
 		state_label.add_theme_font_size_override("font_size", 11)
 		_detail_vbox.add_child(state_label)
 
+	# ── Settlement/Band view: holder details ──
+	if _view_mode == ViewMode.SETTLEMENT or _view_mode == ViewMode.BAND:
+		var cache: Dictionary = _band_knowledge_cache.get(tech_id, {})
+		var count: int = int(cache.get("count", 0))
+		var total: int = maxi(int(cache.get("total", 1)), 1)
+		_add_detail_section(Locale.ltr("TECH_DETAIL_HOLDERS"))
+		var ratio_label := Label.new()
+		ratio_label.text = "%d / %d (%d%%)" % [count, total, int(float(count) / float(total) * 100)]
+		ratio_label.add_theme_font_size_override("font_size", 12)
+		var ratio: float = float(count) / float(total)
+		if ratio >= 0.5:
+			ratio_label.add_theme_color_override("font_color", Color(0.45, 0.72, 0.45))
+		elif ratio >= 0.2:
+			ratio_label.add_theme_color_override("font_color", Color(0.80, 0.65, 0.25))
+		else:
+			ratio_label.add_theme_color_override("font_color", Color(0.72, 0.30, 0.30))
+		_detail_vbox.add_child(ratio_label)
+		var holder_list: Array = []
+		var member_ids: Array = _get_member_ids_for_current_view()
+		for mid_raw: Variant in member_ids:
+			var mid: int = int(mid_raw)
+			if _sim_engine == null:
+				break
+			var k_tab: Dictionary = _sim_engine.get_entity_tab(mid, "knowledge")
+			var known_raw: Variant = k_tab.get("known", [])
+			var known_arr: Array = known_raw if known_raw is Array else []
+			for entry_raw: Variant in known_arr:
+				if not (entry_raw is Dictionary):
+					continue
+				var e: Dictionary = entry_raw
+				var kid: String = str(e.get("id", ""))
+				kid = LEGACY_KNOWLEDGE_IDS.get(kid, kid)
+				if kid == tech_id:
+					var m_detail: Dictionary = _sim_engine.get_entity_detail(mid)
+					var prof_raw: Variant = e.get("proficiency", 0.0)
+					holder_list.append({
+						"name": str(m_detail.get("name", "?")),
+						"proficiency": float(prof_raw) if (prof_raw is float or prof_raw is int) else 0.0,
+						"id": mid,
+					})
+					break
+		holder_list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return float(a.get("proficiency", 0.0)) > float(b.get("proficiency", 0.0))
+		)
+		var show_max: int = mini(holder_list.size(), 8)
+		for i: int in range(show_max):
+			var h: Dictionary = holder_list[i]
+			var h_label := Label.new()
+			var prof_pct: int = int(float(h.get("proficiency", 0.0)) * 100.0)
+			var star: String = "★" if i == 0 else "·"
+			h_label.text = "%s %s (%d%%)" % [star, str(h.get("name", "?")), prof_pct]
+			h_label.add_theme_font_size_override("font_size", 10)
+			h_label.add_theme_color_override("font_color", Color(0.65, 0.75, 0.50) if i == 0 else Color(0.50, 0.60, 0.70))
+			h_label.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			h_label.mouse_filter = Control.MOUSE_FILTER_STOP
+			var captured_id: int = int(h.get("id", -1))
+			h_label.gui_input.connect(func(event: InputEvent) -> void:
+				if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.entity_selected.emit(captured_id)
+			)
+			_detail_vbox.add_child(h_label)
+		if holder_list.size() > show_max:
+			var more := Label.new()
+			more.text = "… +%d" % (holder_list.size() - show_max)
+			more.add_theme_font_size_override("font_size", 9)
+			more.add_theme_color_override("font_color", Color(0.35, 0.42, 0.50))
+			_detail_vbox.add_child(more)
+
 	# Tech prerequisites
 	var all_of: Array = prereqs.get("all_of", [])
 	if not all_of.is_empty():
@@ -1112,6 +1195,21 @@ func _show_detail_panel(tech_id: String) -> void:
 		_pan.x -= (node_sp.x + NODE_W * _zoom - safe_right)
 		_clamp_pan()
 		_on_view_changed()
+
+
+func _get_member_ids_for_current_view() -> Array:
+	if _sim_engine == null:
+		return []
+	if _view_mode == ViewMode.SETTLEMENT and _current_settlement_id >= 0:
+		var detail: Dictionary = _sim_engine.get_settlement_detail(_current_settlement_id)
+		var ids_raw: Variant = detail.get("member_ids", [])
+		return ids_raw if ids_raw is Array else []
+	elif _view_mode == ViewMode.BAND and _current_band_id >= 0:
+		if _sim_engine.has_method("get_band_detail"):
+			var bd: Dictionary = _sim_engine.get_band_detail(_current_band_id)
+			var ids_raw: Variant = bd.get("member_ids", [])
+			return ids_raw if ids_raw is Array else []
+	return []
 
 
 func _add_detail_section(title_text: String) -> void:
