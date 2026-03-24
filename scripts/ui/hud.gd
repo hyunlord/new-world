@@ -378,7 +378,7 @@ func _build_minimap_and_stats() -> void:
 
 	# List panel
 	_list_panel = ListPanelClass.new()
-	_list_panel.init(_entity_manager, _building_manager, _settlement_manager)
+	_list_panel.init(_entity_manager, _building_manager, _settlement_manager, _sim_engine)
 	_popup_manager.add_list_panel(_list_panel)
 
 	# Settlement detail panel
@@ -1583,6 +1583,11 @@ func _show_band_popup() -> void:
 	var bands: Array = []
 	if _sim_engine != null and _sim_engine.has_method("get_band_list"):
 		bands = _sim_engine.get_band_list()
+	if OS.is_debug_build():
+		print("[BandPopup] _sim_engine=%s has_method=%s bands.size=%d" % [
+			str(_sim_engine != null),
+			str(_sim_engine != null and _sim_engine.has_method("get_band_list")),
+			bands.size()])
 	if bands.is_empty():
 		box.add_child(_make_label(Locale.ltr("UI_POPUP_NO_BANDS"), "panel_small", Color(0.56, 0.62, 0.69)))
 	else:
