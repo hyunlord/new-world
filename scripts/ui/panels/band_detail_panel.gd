@@ -569,7 +569,15 @@ func _refresh_events() -> void:
 		var ev: Dictionary = ev_raw as Dictionary
 		var tick: int = int(ev.get("tick", 0))
 		var text_key: String = str(ev.get("text_key", ev.get("text", "")))
-		var display_text: String = Locale.ltr(text_key) if Locale.has_key(text_key) else text_key
+		var params_raw: Variant = ev.get("params", {})
+		var params: Dictionary = params_raw if params_raw is Dictionary else {}
+		var display_text: String = ""
+		if not params.is_empty() and Locale.has_key(text_key):
+			display_text = Locale.trf(text_key, params)
+		elif Locale.has_key(text_key):
+			display_text = Locale.ltr(text_key)
+		else:
+			display_text = text_key
 
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
