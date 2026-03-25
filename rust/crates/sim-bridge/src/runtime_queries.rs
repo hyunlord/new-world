@@ -194,6 +194,22 @@ pub(crate) fn bootstrap_world(
     out
 }
 
+/// Generates a Korean place-name for a settlement based on its ID.
+/// 20 unique names before appending a numeric suffix.
+pub(crate) fn generate_settlement_name(id: sim_core::SettlementId) -> String {
+    const NAMES: &[&str] = &[
+        "돌무지", "새벽골", "물가마을", "높은둔덕", "갈대밭", "바람재", "솔밭", "어울터",
+        "큰바위", "나루터", "별빛골", "참나무", "이끼언덕", "갈밭", "여울목", "달빛마을",
+        "소나무골", "안골", "고인돌", "둥지",
+    ];
+    let idx = id.0.saturating_sub(1) as usize;
+    if idx < NAMES.len() {
+        NAMES[idx].to_string()
+    } else {
+        format!("{} {}", NAMES[idx % NAMES.len()], idx / NAMES.len() + 1)
+    }
+}
+
 fn bootstrap_world_core(
     state: &mut RuntimeState,
     payload: RuntimeBootstrapPayload,
@@ -236,7 +252,7 @@ fn bootstrap_world_core(
     let mut settlement = Settlement::new(
         settlement_id,
         if payload.founding_settlement.name.trim().is_empty() {
-            format!("Settlement {}", settlement_id.0)
+            generate_settlement_name(settlement_id)
         } else {
             payload.founding_settlement.name.clone()
         },

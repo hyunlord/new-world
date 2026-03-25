@@ -4929,6 +4929,12 @@
     "UI_TAB_SETTLEMENTS": "정착지",
     "UI_TAB_BANDS": "무리",
     "UI_ERA": "시대",
-    "UI_MEMBERS": "구성원"
+    "UI_MEMBERS": "구성원",
+    "CAUSE_INFLUENCE_DANGER_GRADIENT": "위험 회피 이동",
+    "CAUSE_INFLUENCE_FOOD_GRADIENT": "식량 탐색 이동",
+    "CAUSE_INFLUENCE_SHELTER_GRADIENT": "은신처 탐색 이동",
+    "CAUSE_INFLUENCE_SOCIAL_GRADIENT": "사회적 접근 이동",
+    "CAUSE_INFLUENCE_WARMTH_GRADIENT": "온기 탐색 이동",
+    "CAUSE_HUNGER_DECAY": "허기 증가"
   }
 }

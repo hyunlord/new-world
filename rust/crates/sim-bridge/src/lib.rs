@@ -56,8 +56,8 @@ use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
     ChronicleHistorySliceResponse, ChronicleRecallSliceResponse, ChronicleSnapshotRevision,
-    ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant, LlmRequest, SimEvent,
-    SimEventType,
+    ChronicleEventType, ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant,
+    LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -1798,7 +1798,7 @@ impl WorldSimRuntime {
                 let sy = entry.settlement_y.unwrap_or(entry.y);
                 let mut settlement = Settlement::new(
                     settlement_id,
-                    format!("Settlement {}", settlement_id.0),
+                    runtime_queries::generate_settlement_name(settlement_id),
                     sx,
                     sy,
                     0,
@@ -3336,10 +3336,19 @@ impl WorldSimRuntime {
         }
         dict.set("members", members);
 
-        let mut aggregated_events: Vec<&ChronicleEvent> = Vec::new();
-        for member_id in &band.members {
-            aggregated_events.extend(resources.chronicle_log.query_by_entity(*member_id, 8));
-        }
+        // Query world_events (1000 capacity) instead of personal_events (20/entity)
+        // to avoid movement events pushing band lifecycle events out of the buffer.
+        let member_set: std::collections::HashSet<EntityId> =
+            band.members.iter().copied().collect();
+        let mut aggregated_events: Vec<&ChronicleEvent> = resources
+            .chronicle_log
+            .recent_events(500)
+            .into_iter()
+            .filter(|event| {
+                event.event_type == ChronicleEventType::BandLifecycle
+                    && member_set.contains(&event.entity_id)
+            })
+            .collect();
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {
             left.tick == right.tick
