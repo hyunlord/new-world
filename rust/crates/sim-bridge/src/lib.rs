@@ -3336,20 +3336,19 @@ impl WorldSimRuntime {
         }
         dict.set("members", members);
 
-        let mut aggregated_events: Vec<&ChronicleEvent> = Vec::new();
-        for member_id in &band.members {
-            let member_events = resources.chronicle_log.query_by_entity(*member_id, 20);
-            for event in member_events {
-                match event.event_type {
-                    ChronicleEventType::BandLifecycle
-                    | ChronicleEventType::GatheringFormation
-                    | ChronicleEventType::ResourceDiscovery => {
-                        aggregated_events.push(event);
-                    }
-                    _ => {}
-                }
-            }
-        }
+        // Query world_events (1000 capacity) instead of personal_events (20/entity)
+        // to avoid movement events pushing band lifecycle events out of the buffer.
+        let member_set: std::collections::HashSet<EntityId> =
+            band.members.iter().copied().collect();
+        let mut aggregated_events: Vec<&ChronicleEvent> = resources
+            .chronicle_log
+            .recent_events(500)
+            .into_iter()
+            .filter(|event| {
+                event.event_type == ChronicleEventType::BandLifecycle
+                    && member_set.contains(&event.entity_id)
+            })
+            .collect();
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {
             left.tick == right.tick
