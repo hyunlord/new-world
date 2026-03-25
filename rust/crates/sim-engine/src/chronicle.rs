@@ -1839,6 +1839,9 @@ pub struct ChronicleLog {
     personal_events: BTreeMap<EntityId, VecDeque<ChronicleEvent>>,
     max_world_events: usize,
     max_per_entity_events: usize,
+    /// Dedicated buffer for BandLifecycle events only — never evicted by movement noise.
+    #[serde(default)]
+    band_events: VecDeque<ChronicleEvent>,
 }
 
 impl ChronicleLog {
@@ -1849,15 +1852,26 @@ impl ChronicleLog {
             personal_events: BTreeMap::new(),
             max_world_events: config::CHRONICLE_LOG_MAX_EVENTS,
             max_per_entity_events: config::CHRONICLE_LOG_MAX_PER_ENTITY,
+            band_events: VecDeque::with_capacity(200),
         }
     }
 
     /// Appends one event to the world log and entity-local ring buffer.
+    /// BandLifecycle events are also stored in the dedicated `band_events` buffer
+    /// so they are never evicted by high-frequency movement events.
     pub fn append_event(&mut self, event: ChronicleEvent) {
         if self.world_events.len() >= self.max_world_events {
             self.world_events.pop_front();
         }
         self.world_events.push_back(event.clone());
+
+        // Dedicated band buffer — only BandLifecycle events, capacity 200.
+        if event.event_type == ChronicleEventType::BandLifecycle {
+            if self.band_events.len() >= 200 {
+                self.band_events.pop_front();
+            }
+            self.band_events.push_back(event.clone());
+        }
 
         let personal = self
             .personal_events
@@ -1872,6 +1886,12 @@ impl ChronicleLog {
     /// Returns recent world events, newest first.
     pub fn recent_events(&self, count: usize) -> Vec<&ChronicleEvent> {
         self.world_events.iter().rev().take(count).collect()
+    }
+
+    /// Returns recent band lifecycle events, newest first.
+    /// This buffer is never polluted by movement events.
+    pub fn recent_band_events(&self, count: usize) -> Vec<&ChronicleEvent> {
+        self.band_events.iter().rev().take(count).collect()
     }
 
     /// Returns recent events for one entity, newest first.
@@ -1889,10 +1909,11 @@ impl ChronicleLog {
             .and_then(VecDeque::back)
     }
 
-    /// Clears all world and personal events.
+    /// Clears all world, personal, and band events.
     pub fn clear(&mut self) {
         self.world_events.clear();
         self.personal_events.clear();
+        self.band_events.clear();
     }
 
     /// Returns the current world-event count.

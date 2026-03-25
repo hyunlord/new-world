@@ -56,7 +56,7 @@ use sim_engine::{
     AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
     ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
     ChronicleHistorySliceResponse, ChronicleRecallSliceResponse, ChronicleSnapshotRevision,
-    ChronicleEventType, ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant,
+    ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant,
     LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
@@ -3336,18 +3336,14 @@ impl WorldSimRuntime {
         }
         dict.set("members", members);
 
-        // Query world_events (1000 capacity) instead of personal_events (20/entity)
-        // to avoid movement events pushing band lifecycle events out of the buffer.
+        // Use dedicated band_events buffer — never evicted by movement events.
         let member_set: std::collections::HashSet<EntityId> =
             band.members.iter().copied().collect();
         let mut aggregated_events: Vec<&ChronicleEvent> = resources
             .chronicle_log
-            .recent_events(500)
+            .recent_band_events(200)
             .into_iter()
-            .filter(|event| {
-                event.event_type == ChronicleEventType::BandLifecycle
-                    && member_set.contains(&event.entity_id)
-            })
+            .filter(|event| member_set.contains(&event.entity_id))
             .collect();
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {
