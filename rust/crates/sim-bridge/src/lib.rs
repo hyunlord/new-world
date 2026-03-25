@@ -3360,6 +3360,11 @@ impl WorldSimRuntime {
             event_dict.set("text", event.summary_key.clone());
             event_dict.set("text_key", event.summary_key.clone());
             event_dict.set("type", format!("{:?}", event.event_type));
+            let mut params_dict = VarDictionary::new();
+            for (key, value) in &event.summary_params {
+                params_dict.set(key.as_str(), value.as_str());
+            }
+            event_dict.set("params", params_dict);
             event_arr.push(&event_dict);
         }
         dict.set("events", event_arr);
