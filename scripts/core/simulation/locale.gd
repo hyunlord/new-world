@@ -135,6 +135,9 @@ func key_index_version() -> int:
 func trf(key: String, params: Dictionary = {}) -> String:
 	var rust_text: String = _try_rust_fluent_format(key, params)
 	if not rust_text.is_empty():
+		if not params.is_empty():
+			for p in params:
+				rust_text = rust_text.replace("{%s}" % p, str(params[p]))
 		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
 	if key_id_cached == -2:

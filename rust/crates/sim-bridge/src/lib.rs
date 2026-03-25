@@ -3342,11 +3342,6 @@ impl WorldSimRuntime {
         let mut aggregated_events: Vec<&ChronicleEvent> = resources
             .chronicle_log
             .recent_band_events(200);
-        eprintln!(
-            "[BAND_DEBUG] runtime_get_band_detail band_id={} recent_band_events.len={}",
-            band_id,
-            aggregated_events.len()
-        );
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {
             left.tick == right.tick
