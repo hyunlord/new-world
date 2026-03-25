@@ -1871,6 +1871,12 @@ impl ChronicleLog {
                 self.band_events.pop_front();
             }
             self.band_events.push_back(event.clone());
+            eprintln!(
+                "[BAND_DEBUG] append BandLifecycle: key={} entity={:?} band_events.len={}",
+                event.summary_key,
+                event.entity_id,
+                self.band_events.len()
+            );
         }
 
         let personal = self

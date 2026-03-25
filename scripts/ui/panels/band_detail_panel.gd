@@ -545,6 +545,7 @@ func _refresh_events() -> void:
 		child.queue_free()
 
 	var events: Array = _detail.get("events", [])
+	print("[BAND_DEBUG] _refresh_events: events.size=%d, band_id=%d" % [events.size(), _band_id])
 	_events_header.text = "%s (%d)" % [Locale.ltr("UI_BAND_TAB_EVENTS"), events.size()]
 
 	if events.is_empty():
