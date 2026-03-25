@@ -3337,14 +3337,11 @@ impl WorldSimRuntime {
         dict.set("members", members);
 
         // Use dedicated band_events buffer — never evicted by movement events.
-        let member_set: std::collections::HashSet<EntityId> =
-            band.members.iter().copied().collect();
+        // No member filter: the buffer only contains BandLifecycle events (max 200),
+        // and filtering by current members drops events from agents who have since left.
         let mut aggregated_events: Vec<&ChronicleEvent> = resources
             .chronicle_log
-            .recent_band_events(200)
-            .into_iter()
-            .filter(|event| member_set.contains(&event.entity_id))
-            .collect();
+            .recent_band_events(200);
         aggregated_events.sort_by_key(|event| std::cmp::Reverse(event.tick));
         aggregated_events.dedup_by(|left, right| {
             left.tick == right.tick
