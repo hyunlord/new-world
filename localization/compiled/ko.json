@@ -4935,6 +4935,13 @@
     "CAUSE_INFLUENCE_SHELTER_GRADIENT": "은신처 탐색 이동",
     "CAUSE_INFLUENCE_SOCIAL_GRADIENT": "사회적 접근 이동",
     "CAUSE_INFLUENCE_WARMTH_GRADIENT": "온기 탐색 이동",
-    "CAUSE_HUNGER_DECAY": "허기 증가"
+    "CAUSE_HUNGER_DECAY": "허기 증가",
+    "UI_TILES": "타일",
+    "EFFECT_RADIUS": "효과 반경",
+    "EFFECT_SOCIAL_BOOST": "소속감 증가",
+    "EFFECT_WARMTH": "온기 영향",
+    "EFFECT_CAPACITY": "수용 인원",
+    "EFFECT_ENERGY_RESTORE": "에너지 회복",
+    "EFFECT_SAFETY_BOOST": "안전감 증가"
   }
 }
