@@ -3231,7 +3231,8 @@ impl WorldSimRuntime {
             let mut leader_name = String::new();
             if let Some(leader_id) = band.leader {
                 if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, leader_id.0) {
-                    leader_runtime_id = runtime_id;
+                    // Snapshot stores entity.id() (lower 32 bits); mask to match.
+                    leader_runtime_id = runtime_id & 0xFFFF_FFFF;
                 }
                 leader_name =
                     entity_name_from_raw_id(world, &raw_lookup, leader_id.0).unwrap_or_default();
