@@ -3248,6 +3248,12 @@ impl WorldSimRuntime {
     /// `runtime_get_band_detail` returns one band snapshot for the sidebar inspector.
     #[func]
     fn runtime_get_band_detail(&self, band_id: i64) -> VarDictionary {
+        use std::sync::atomic::{AtomicBool, Ordering};
+        static LOGGED: AtomicBool = AtomicBool::new(false);
+        if !LOGGED.swap(true, Ordering::Relaxed) {
+            eprintln!("[WorldSim] runtime_get_band_detail: band_events feature ACTIVE (v2)");
+        }
+
         let mut dict = VarDictionary::new();
         let Some(state) = self.state.as_ref() else {
             return dict;
