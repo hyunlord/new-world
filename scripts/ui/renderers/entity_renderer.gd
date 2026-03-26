@@ -1370,6 +1370,9 @@ func _draw_band_territories(zoom_level: float) -> void:
 				continue
 
 			var smooth: PackedVector2Array = _smooth_polygon(hull, 2)
+			if Geometry2D.triangulate_polygon(smooth).is_empty():
+				_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
+				continue
 			draw_colored_polygon(smooth, Color(0.78, 0.56, 0.19, 0.12))
 			for i: int in range(smooth.size()):
 				var next: int = (i + 1) % smooth.size()
