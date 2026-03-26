@@ -3240,6 +3240,16 @@ impl WorldSimRuntime {
 
             dict.set("leader_id", leader_runtime_id);
             dict.set("leader_name", leader_name);
+
+            // Member entity IDs in 32-bit snapshot format for overlay rendering.
+            let mut member_ids = Array::<i64>::new();
+            for member_id in &band.members {
+                if let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, member_id.0) {
+                    member_ids.push(runtime_id & 0xFFFF_FFFF);
+                }
+            }
+            dict.set("member_ids", member_ids);
+
             result.push(&dict);
         }
 

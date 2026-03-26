@@ -1319,41 +1319,135 @@ func _draw_band_territories(zoom_level: float) -> void:
 		return
 	var font: Font = ThemeDB.fallback_font
 	var tile_size: float = float(GameConfig.TILE_SIZE)
+
 	for band_raw: Variant in bands:
 		if not (band_raw is Dictionary):
 			continue
 		var band: Dictionary = band_raw
-		var leader_id: int = int(band.get("leader_id", -1))
+		var member_ids_raw: Variant = band.get("member_ids", [])
+		var member_ids: Array = member_ids_raw if member_ids_raw is Array else []
 		var member_count: int = int(band.get("member_count", 0))
-		if leader_id < 0 or member_count < 1:
+		if member_ids.is_empty() or member_count < 1:
 			continue
-		var center: Vector2 = _get_entity_world_position(leader_id)
-		if center == Vector2.INF:
+
+		# Collect world positions of all members.
+		var positions: PackedVector2Array = PackedVector2Array()
+		for mid_raw: Variant in member_ids:
+			var mid: int = int(mid_raw)
+			var pos: Vector2 = _get_entity_world_position(mid)
+			if pos != Vector2.INF:
+				positions.append(pos)
+		if positions.is_empty():
 			continue
+
+		# Centroid of all member positions.
+		var center: Vector2 = Vector2.ZERO
+		for pos: Vector2 in positions:
+			center += pos
+		center /= float(positions.size())
+
 		var band_name: String = str(band.get("name", ""))
-		var base_radius: float = tile_size * (1.8 + float(member_count) * 0.6)
-		var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
-		var points: PackedVector2Array = PackedVector2Array()
-		for point_index: int in range(24):
-			var angle: float = float(point_index) / 24.0 * TAU
-			var noise: float = sin(angle * 3.0 + phase) * 0.18 + cos(angle * 5.0 + phase * 0.5) * 0.12
-			var radius: float = base_radius * (1.0 + noise)
-			points.append(center + Vector2(cos(angle), sin(angle)) * radius)
-		draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.18))
-		for point_index: int in range(points.size()):
-			var next_index: int = (point_index + 1) % points.size()
-			draw_line(points[point_index], points[next_index], Color(0.78, 0.56, 0.19, 0.55), 2.0, true)
-		if not band_name.is_empty():
-			var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
-			draw_string(
-				font,
-				center + Vector2(0.0, -base_radius - 6.0),
-				"%s · %d" % [band_name, member_count],
-				HORIZONTAL_ALIGNMENT_CENTER,
-				110.0,
-				label_font_size,
-				Color(0.86, 0.66, 0.28, 0.95)
-			)
+
+		if positions.size() == 1:
+			_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
+		else:
+			# Expand each position outward from centroid to create soft boundary.
+			var padding: float = tile_size * 2.0
+			var expanded: PackedVector2Array = PackedVector2Array()
+			for pos: Vector2 in positions:
+				var dir: Vector2 = pos - center
+				if dir.length() > 0.01:
+					expanded.append(pos + dir.normalized() * padding)
+				else:
+					expanded.append(pos + Vector2(padding, 0.0))
+					expanded.append(pos + Vector2(-padding, 0.0))
+					expanded.append(pos + Vector2(0.0, padding))
+					expanded.append(pos + Vector2(0.0, -padding))
+
+			var hull: PackedVector2Array = _convex_hull(expanded)
+			if hull.size() < 3:
+				_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
+				continue
+
+			var smooth: PackedVector2Array = _smooth_polygon(hull, 2)
+			draw_colored_polygon(smooth, Color(0.78, 0.56, 0.19, 0.12))
+			for i: int in range(smooth.size()):
+				var next: int = (i + 1) % smooth.size()
+				draw_line(smooth[i], smooth[next], Color(0.78, 0.56, 0.19, 0.40), 1.5, true)
+			if not band_name.is_empty():
+				var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
+				draw_string(font, center + Vector2(0.0, -12.0),
+					"%s · %d" % [band_name, member_count],
+					HORIZONTAL_ALIGNMENT_CENTER, 200.0, label_font_size,
+					Color(0.86, 0.66, 0.28, 0.90))
+
+
+func _draw_band_blob(center: Vector2, radius: float, band_name: String, member_count: int, font: Font, zoom_level: float) -> void:
+	var points: PackedVector2Array = PackedVector2Array()
+	var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
+	for i: int in range(20):
+		var angle: float = float(i) / 20.0 * TAU
+		var noise: float = sin(angle * 3.0 + phase) * 0.15 + cos(angle * 5.0 + phase * 0.5) * 0.10
+		var r: float = radius * (1.0 + noise)
+		points.append(center + Vector2(cos(angle), sin(angle)) * r)
+	draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.12))
+	for i: int in range(points.size()):
+		var next: int = (i + 1) % points.size()
+		draw_line(points[i], points[next], Color(0.78, 0.56, 0.19, 0.40), 1.5, true)
+	if not band_name.is_empty():
+		var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
+		draw_string(font, center + Vector2(0.0, -radius - 6.0),
+			"%s · %d" % [band_name, member_count],
+			HORIZONTAL_ALIGNMENT_CENTER, 150.0, label_font_size,
+			Color(0.86, 0.66, 0.28, 0.90))
+
+
+func _convex_hull(points: PackedVector2Array) -> PackedVector2Array:
+	if points.size() < 3:
+		return points
+	var sorted: Array = []
+	for p: Vector2 in points:
+		sorted.append(p)
+	sorted.sort_custom(func(a: Vector2, b: Vector2) -> bool:
+		if a.y != b.y:
+			return a.y < b.y
+		return a.x < b.x
+	)
+	var pivot: Vector2 = sorted[0]
+	sorted.remove_at(0)
+	sorted.sort_custom(func(a: Vector2, b: Vector2) -> bool:
+		var cross: float = (a - pivot).cross(b - pivot)
+		if abs(cross) < 0.001:
+			return (a - pivot).length_squared() < (b - pivot).length_squared()
+		return cross > 0
+	)
+	var hull: Array = [pivot]
+	for p: Vector2 in sorted:
+		while hull.size() > 1:
+			var a: Vector2 = hull[hull.size() - 2]
+			var b: Vector2 = hull[hull.size() - 1]
+			if (b - a).cross(p - a) <= 0:
+				hull.pop_back()
+			else:
+				break
+		hull.append(p)
+	var result: PackedVector2Array = PackedVector2Array()
+	for p: Vector2 in hull:
+		result.append(p)
+	return result
+
+
+func _smooth_polygon(polygon: PackedVector2Array, iterations: int) -> PackedVector2Array:
+	var current: PackedVector2Array = polygon
+	for _iter: int in range(iterations):
+		var smoothed: PackedVector2Array = PackedVector2Array()
+		var n: int = current.size()
+		for i: int in range(n):
+			var prev_idx: int = (i - 1 + n) % n
+			var next_idx: int = (i + 1) % n
+			smoothed.append(current[i] * 0.75 + current[prev_idx] * 0.125 + current[next_idx] * 0.125)
+		current = smoothed
+	return current
 
 
 func _draw_civilization_regions(_zoom_level: float) -> void:

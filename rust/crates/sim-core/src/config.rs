@@ -308,11 +308,11 @@ pub const MOVEMENT_SYSTEM_PRIORITY: u32 = 30; // TODO(A-5): -> MovementSystem sc
 pub const BEHAVIOR_TOP_N_SELECTION: usize = 3; // TODO(A-5): -> BehaviorSystem tuning data
 pub const STEERING_NEIGHBOR_RADIUS: f64 = 80.0; // TODO(A-5): -> steering metadata
 pub const STEERING_MAX_FORCE: f64 = 100.0; // TODO(A-5): -> steering metadata
-pub const STEERING_MAX_SPEED: f64 = 120.0; // TODO(A-5): -> steering metadata
+pub const STEERING_MAX_SPEED: f64 = 28.0; // TODO(A-5): -> steering metadata
 /// Base agent movement speed in pixels per second.
-pub const AGENT_BASE_SPEED: f64 = 30.0;
+pub const AGENT_BASE_SPEED: f64 = 7.0;
 /// Random per-tick speed variation as a fraction of `AGENT_BASE_SPEED`.
-pub const AGENT_SPEED_VARIANCE: f64 = 0.08;
+pub const AGENT_SPEED_VARIANCE: f64 = 0.05;
 pub const STEERING_INFLUENCE_FORCE_WEIGHT: f64 = 0.85; // TODO(A-5): -> steering metadata
 pub const STEERING_INFLUENCE_MIN_GRADIENT: f64 = 0.01; // TODO(A-5): -> steering metadata
 pub const STEERING_HUNGER_INFLUENCE_WEIGHT: f64 = 1.20; // TODO(A-5): -> behavior/influence metadata
