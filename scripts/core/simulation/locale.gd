@@ -81,11 +81,15 @@ func load_locale(locale: String) -> void:
 	_ltr_key_id_cache.clear()
 	_rust_fluent_ready = false
 	_registry_keys.clear()
-	if _use_fluent_runtime and _load_fluent_locale(locale):
-		_refresh_month_key_ids()
-		_key_index_version += 1
-		return
-	if _load_compiled_locale(locale):
+	var fluent_ok: bool = false
+	if _use_fluent_runtime:
+		fluent_ok = _load_fluent_locale(locale)
+
+	# Always load compiled as fallback — fluent keys take priority, compiled fills gaps.
+	# This ensures keys present in compiled but absent from fluent are still visible in-game.
+	var compiled_ok: bool = _load_compiled_locale_as_fallback(locale)
+
+	if fluent_ok or compiled_ok:
 		_refresh_month_key_ids()
 		_key_index_version += 1
 		return
@@ -447,6 +451,40 @@ func _load_compiled_locale(locale: String) -> bool:
 		var key: String = str(keys[i])
 		_flat_strings[key] = str(strings[key])
 	_rebuild_key_index(root, strings, _load_key_registry_keys())
+	return true
+
+
+## Load compiled locale JSON and merge keys missing from _flat_strings.
+## Fluent keys already in _flat_strings are never overwritten — compiled acts as fallback only.
+func _load_compiled_locale_as_fallback(locale: String) -> bool:
+	var path: String = LOCALES_DIR + _compiled_dir + "/" + locale + ".json"
+	if not FileAccess.file_exists(path):
+		if locale != "en":
+			path = LOCALES_DIR + _compiled_dir + "/en.json"
+		if not FileAccess.file_exists(path):
+			return false
+
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	var json: JSON = JSON.new()
+	var parse_err: int = json.parse(file.get_as_text())
+	if parse_err != OK:
+		return false
+	if not (json.data is Dictionary):
+		return false
+
+	var root: Dictionary = json.data
+	if not root.has("strings") or not (root["strings"] is Dictionary):
+		return false
+
+	var strings: Dictionary = root["strings"]
+	var added: int = 0
+	for key: Variant in strings:
+		var k: String = str(key)
+		if not _flat_strings.has(k):
+			_flat_strings[k] = str(strings[key])
+			added += 1
+	if added > 0:
+		_rebuild_key_index_from_flat()
 	return true
 
 
