@@ -137,6 +137,7 @@ func trf(key: String, params: Dictionary = {}) -> String:
 	if not rust_text.is_empty():
 		if not params.is_empty():
 			for p in params:
+				rust_text = rust_text.replace("{$%s}" % p, str(params[p]))
 				rust_text = rust_text.replace("{%s}" % p, str(params[p]))
 		return rust_text
 	var key_id_cached: int = int(_trf_key_id_cache.get(key, -2))
@@ -151,6 +152,7 @@ func trf(key: String, params: Dictionary = {}) -> String:
 	if params.is_empty():
 		return text
 	for p in params:
+		text = text.replace("{$%s}" % p, str(params[p]))
 		text = text.replace("{%s}" % p, str(params[p]))
 	return text
 
