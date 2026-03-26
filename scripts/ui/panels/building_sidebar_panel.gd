@@ -249,7 +249,7 @@ func _refresh() -> void:
 	# Storage (from settlement stockpile)
 	var storage_raw: Variant = building.get("storage", {})
 	var storage: Dictionary = storage_raw if storage_raw is Dictionary else {}
-	_storage_section.visible = not storage.is_empty()
+	_storage_section.visible = btype == "stockpile" and not storage.is_empty()
 	if not storage.is_empty():
 		var food: float = _safe_float(storage, "food", 0.0)
 		var wood: float = _safe_float(storage, "wood", 0.0)
