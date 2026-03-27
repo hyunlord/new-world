@@ -415,6 +415,17 @@ func get_band_detail(band_id: int) -> Dictionary:
 	return {}
 
 
+## Returns chronicle events from Rust runtime (last 100 entries).
+func get_chronicle_events() -> Array:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_chronicle_timeline"):
+		return []
+	var raw: Variant = sim_bridge.call("runtime_get_chronicle_timeline", 100)
+	if raw is Array:
+		return raw
+	return []
+
+
 func get_influence_texture(channel: String) -> PackedByteArray:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_texture"):

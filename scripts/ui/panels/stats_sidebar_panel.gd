@@ -22,6 +22,10 @@ var _food_label: Label
 var _wood_label: Label
 var _stone_label: Label
 
+var _gender_label: Label
+var _age_dist_label: Label
+var _avg_stress_label: Label
+
 var _settlements_container: VBoxContainer
 
 const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
@@ -97,6 +101,12 @@ func _build_ui() -> void:
 	_stone_label = _add_stat_row("UI_STONE")
 
 	_add_spacer()
+	_add_title("UI_DEMOGRAPHICS")
+	_gender_label = _add_stat_row("UI_GENDER_DISTRIBUTION")
+	_age_dist_label = _add_stat_row("UI_AGE_DISTRIBUTION")
+	_avg_stress_label = _add_stat_row("UI_AVG_STRESS")
+
+	_add_spacer()
 	_add_title("UI_PER_SETTLEMENT")
 	_settlements_container = VBoxContainer.new()
 	_settlements_container.add_theme_constant_override("separation", 4)
@@ -126,6 +136,40 @@ func _refresh() -> void:
 	_food_label.text = str(int(summary.get("food", 0)))
 	_wood_label.text = str(int(summary.get("wood", 0)))
 	_stone_label.text = str(int(summary.get("stone", 0)))
+
+	# Demographics
+	var total_male: int = 0
+	var total_female: int = 0
+	var total_adults: int = 0
+	var total_children: int = 0
+	var total_teens: int = 0
+	var total_elders: int = 0
+	var settlements_arr: Variant = summary.get("settlement_summaries", [])
+	if settlements_arr is Array:
+		for s_raw: Variant in settlements_arr:
+			if not (s_raw is Dictionary):
+				continue
+			var s: Dictionary = s_raw
+			total_male += int(s.get("male", 0))
+			total_female += int(s.get("female", 0))
+			var sd_raw: Variant = s.get("settlement", {})
+			var sd: Dictionary = sd_raw if sd_raw is Dictionary else {}
+			total_adults += int(sd.get("adults", 0))
+			total_children += int(sd.get("children", 0))
+			total_teens += int(sd.get("teens", 0))
+			total_elders += int(sd.get("elders", 0))
+	if _gender_label != null:
+		_gender_label.text = "♂ %d / ♀ %d" % [total_male, total_female]
+	if _age_dist_label != null:
+		_age_dist_label.text = "%s %d · %s %d · %s %d · %s %d" % [
+			Locale.ltr("UI_ADULTS"), total_adults,
+			Locale.ltr("UI_TEENS"), total_teens,
+			Locale.ltr("UI_CHILDREN"), total_children,
+			Locale.ltr("UI_ELDERS"), total_elders]
+	if _avg_stress_label != null:
+		var avg_stress_raw: Variant = summary.get("avg_stress", 0.0)
+		var avg_stress: float = float(avg_stress_raw) if (avg_stress_raw is float or avg_stress_raw is int) else 0.0
+		_avg_stress_label.text = "%d%%" % int(avg_stress * 100.0)
 
 	for child in _settlements_container.get_children():
 		child.queue_free()

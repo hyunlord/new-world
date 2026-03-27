@@ -181,6 +181,16 @@ func _refresh() -> void:
 			detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 			vbox.add_child(detail_label)
 
+		var actor_id: int = int(ev.get("actor_id", ev.get("entity_id", -1)))
+		if actor_id >= 0:
+			event_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+			event_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			var captured: int = actor_id
+			event_panel.gui_input.connect(func(input_event: InputEvent) -> void:
+				if input_event is InputEventMouseButton and input_event.pressed and input_event.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.entity_selected.emit(captured)
+			)
+
 
 func _category_badge(cat: String) -> String:
 	match cat.to_lower():
