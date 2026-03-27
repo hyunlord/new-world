@@ -31,6 +31,8 @@ var _builders_inner: VBoxContainer
 var _cost_section: VBoxContainer
 var _cost_label: Label
 
+var _last_btype: String = ""
+
 const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
 const COLOR_LABEL: Color = Color(0.50, 0.58, 0.65)
 const COLOR_SECTION: Color = Color(0.72, 0.78, 0.85)
@@ -188,6 +190,7 @@ func _refresh() -> void:
 		_storage_section.visible = false
 		_construction_section.visible = false
 		_cost_section.visible = false
+		_last_btype = ""
 		return
 
 	var btype: String = str(building.get("building_type", ""))
@@ -226,9 +229,10 @@ func _refresh() -> void:
 		var condition: float = clampf(_safe_float(building, "condition", 1.0), 0.0, 1.0)
 		_update_bar_row(_condition_bar, {"label": Locale.ltr("UI_BUILDING_CONDITION"), "value": condition})
 
-	# Effects (only when built, type-specific)
+	# Effects (only when built, type-specific — rebuilt only when btype changes)
 	_effects_section.visible = is_built
-	if is_built:
+	if is_built and btype != _last_btype:
+		_last_btype = btype
 		for child in _effects_inner.get_children():
 			child.queue_free()
 		match btype:
@@ -236,7 +240,7 @@ func _refresh() -> void:
 				_add_effect_line("UI_CAMPFIRE_EFFECT", "")
 				_add_effect_line("EFFECT_RADIUS", "%d %s" % [5, Locale.ltr("UI_TILES")])
 				_add_effect_line("EFFECT_SOCIAL_BOOST", "+0.02/tick")
-				_add_effect_line("EFFECT_WARMTH", "0.28")
+				_add_effect_line("EFFECT_WARMTH", "0.8")
 			"shelter":
 				_add_effect_line("UI_SHELTER_EFFECT", "")
 				_add_effect_line("EFFECT_CAPACITY", "%d %s" % [6, Locale.ltr("UI_PEOPLE_SUFFIX")])
