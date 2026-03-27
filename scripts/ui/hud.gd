@@ -1525,14 +1525,21 @@ func _on_settlement_badge_clicked(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var summary: Dictionary = _get_world_summary()
 		var settlements: Variant = summary.get("settlement_summaries", [])
-		if settlements is Array and not settlements.is_empty():
-			var first: Variant = settlements[0]
-			if first is Dictionary:
-				var sett_id: int = int(first.get("id", -1))
-				if sett_id >= 0:
-					open_settlement_detail(sett_id)
-					get_viewport().set_input_as_handled()
-					return
+		if settlements is Array:
+			if settlements.size() == 1:
+				var first: Variant = settlements[0]
+				if first is Dictionary:
+					var sett_id: int = int(first.get("id", -1))
+					if sett_id >= 0:
+						open_settlement_detail(sett_id)
+						get_viewport().set_input_as_handled()
+						return
+			elif settlements.size() > 1:
+				if _list_panel != null and _list_panel.has_method("set_tab"):
+					_list_panel.set_tab(2)
+				_popup_manager.open_list()
+				get_viewport().set_input_as_handled()
+				return
 		_switch_right_panel_tab(RIGHT_PANEL_TAB_STATS)
 		get_viewport().set_input_as_handled()
 

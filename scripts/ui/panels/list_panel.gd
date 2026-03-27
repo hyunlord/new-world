@@ -578,8 +578,8 @@ func _draw_settlement_list(font: Font, cx: float, start_cy: float, panel_w: floa
 		var sett: Dictionary = ss.get("settlement", {}) if ss.get("settlement") is Dictionary else {}
 		var sett_id: int = int(ss.get("id", sett.get("id", -1)))
 		var sett_name: String = str(ss.get("name", sett.get("name", "S%d" % sett_id)))
-		var pop: int = int(ss.get("population", sett.get("entity_count", ss.get("entity_count", 0))))
-		var era: String = str(ss.get("era", sett.get("era", "")))
+		var pop: int = int(ss.get("pop", sett.get("population", 0)))
+		var era: String = str(ss.get("tech_era", sett.get("tech_era", "")))
 
 		if row_y + ROW_HEIGHT < _scroll_offset:
 			row_y += ROW_HEIGHT
@@ -774,6 +774,13 @@ func _building_row_value(building: Variant, key: String, default_value: Variant)
 	if building == null:
 		return default_value
 	return building.get(key)
+
+
+## Programmatically switch to a tab (0=entities, 1=buildings, 2=settlements, 3=bands).
+func set_tab(tab_index: int) -> void:
+	_current_tab = clampi(tab_index, 0, 3)
+	_scroll_offset = 0.0
+	queue_redraw()
 
 
 func _get_sim_bridge() -> Object:

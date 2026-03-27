@@ -98,6 +98,7 @@ func _refresh() -> void:
 		_events_container.add_child(empty)
 		return
 
+	var last_date: String = ""
 	for event_raw: Variant in events:
 		if not (event_raw is Dictionary):
 			continue
@@ -105,6 +106,16 @@ func _refresh() -> void:
 		var tick: int = int(event.get("tick", event.get("end_tick", 0)))
 		var date: String = GameCalendar.format_short_date(tick)
 		var desc: String = _event_text(event)
+
+		# Date group header when date changes
+		if date != last_date:
+			last_date = date
+			var date_header := Label.new()
+			date_header.text = "── %s ──" % date
+			date_header.add_theme_font_size_override("font_size", 10)
+			date_header.add_theme_color_override("font_color", Color(0.55, 0.50, 0.38))
+			date_header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_events_container.add_child(date_header)
 
 		var card := PanelContainer.new()
 		var card_style := StyleBoxFlat.new()
