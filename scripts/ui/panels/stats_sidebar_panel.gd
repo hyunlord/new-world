@@ -9,22 +9,22 @@ var _refresh_timer: float = 0.0
 var _scroll: ScrollContainer
 var _content: VBoxContainer
 
-var _pop_label: Label
-var _max_pop_label: Label
+## Bar rows — each dict has {bar: ProgressBar, value: Label}
+var _pop_bar: Dictionary = {}
+var _food_bar: Dictionary = {}
+var _wood_bar: Dictionary = {}
+var _stone_bar: Dictionary = {}
+var _happy_bar: Dictionary = {}
+var _stress_bar: Dictionary = {}
+
+## Plain-text stat labels
 var _settlement_count_label: Label
 var _band_count_label: Label
 var _building_count_label: Label
 var _birth_death_label: Label
 var _avg_age_label: Label
-var _avg_happiness_label: Label
-
-var _food_label: Label
-var _wood_label: Label
-var _stone_label: Label
-
 var _gender_label: Label
 var _age_dist_label: Label
-var _avg_stress_label: Label
 
 var _settlements_container: VBoxContainer
 
@@ -85,26 +85,28 @@ func _build_ui() -> void:
 	_scroll.add_child(_content)
 
 	_add_title("UI_WORLD_STATS")
-	_pop_label = _add_stat_row("UI_POPULATION")
-	_max_pop_label = _add_stat_row("UI_MAX_POP")
+	_pop_bar = _create_stat_bar("UI_POPULATION", Color(0.35, 0.58, 0.82))
 	_settlement_count_label = _add_stat_row("UI_SETTLEMENTS")
 	_band_count_label = _add_stat_row("UI_BANDS")
 	_building_count_label = _add_stat_row("UI_BUILDINGS")
 	_birth_death_label = _add_stat_row("UI_BIRTHS_DEATHS")
 	_avg_age_label = _add_stat_row("UI_AVG_AGE")
-	_avg_happiness_label = _add_stat_row("UI_AVG_HAPPINESS")
 
 	_add_spacer()
 	_add_title("UI_RESOURCES")
-	_food_label = _add_stat_row("UI_FOOD")
-	_wood_label = _add_stat_row("UI_WOOD")
-	_stone_label = _add_stat_row("UI_STONE")
+	_food_bar = _create_stat_bar("UI_FOOD", Color(0.35, 0.75, 0.40))
+	_wood_bar = _create_stat_bar("UI_WOOD", Color(0.72, 0.52, 0.28))
+	_stone_bar = _create_stat_bar("UI_STONE", Color(0.60, 0.60, 0.65))
+
+	_add_spacer()
+	_add_title("UI_HEALTH")
+	_happy_bar = _create_stat_bar("UI_AVG_HAPPINESS", Color(0.85, 0.75, 0.25))
+	_stress_bar = _create_stat_bar("UI_AVG_STRESS", Color(0.82, 0.32, 0.28))
 
 	_add_spacer()
 	_add_title("UI_DEMOGRAPHICS")
 	_gender_label = _add_stat_row("UI_GENDER_DISTRIBUTION")
 	_age_dist_label = _add_stat_row("UI_AGE_DISTRIBUTION")
-	_avg_stress_label = _add_stat_row("UI_AVG_STRESS")
 
 	_add_spacer()
 	_add_title("UI_PER_SETTLEMENT")
@@ -114,28 +116,58 @@ func _build_ui() -> void:
 
 
 func _refresh() -> void:
-	if _sim_engine == null or _pop_label == null:
+	if _sim_engine == null or _pop_bar.is_empty():
 		return
 	if not _sim_engine.has_method("get_world_summary"):
 		return
 	var summary: Dictionary = _sim_engine.get_world_summary()
 	if summary.is_empty():
 		return
+
+	# Population
 	var pop: int = int(summary.get("total_population", 0))
-	_pop_label.text = str(pop)
-	_max_pop_label.text = str(int(summary.get("max_population", pop)))
+	var max_pop: int = int(summary.get("max_population", maxi(pop, 1)))
+	var pop_f: float = maxf(float(pop), 1.0)
+	_pop_bar.bar.max_value = float(maxi(max_pop, 1))
+	_pop_bar.bar.value = float(pop)
+	_pop_bar.value.text = "%d/%d" % [pop, max_pop]
+
+	# World stats
 	_settlement_count_label.text = str(int(summary.get("settlement_count", 0)))
 	_band_count_label.text = str(int(summary.get("band_count", 0)))
 	_building_count_label.text = str(int(summary.get("building_count", 0)))
 	_birth_death_label.text = "%d / %d" % [int(summary.get("total_births", 0)), int(summary.get("total_deaths", 0))]
 	var avg_age_raw: Variant = summary.get("avg_age", 0.0)
 	_avg_age_label.text = "%.1f" % (float(avg_age_raw) if (avg_age_raw is float or avg_age_raw is int) else 0.0)
+
+	# Resources
+	var food_raw: Variant = summary.get("food", 0)
+	var food: float = float(food_raw) if (food_raw is float or food_raw is int) else 0.0
+	var wood_raw: Variant = summary.get("wood", 0)
+	var wood: float = float(wood_raw) if (wood_raw is float or wood_raw is int) else 0.0
+	var stone_raw: Variant = summary.get("stone", 0)
+	var stone: float = float(stone_raw) if (stone_raw is float or stone_raw is int) else 0.0
+	_food_bar.bar.max_value = maxf(pop_f * 10.0, 50.0)
+	_food_bar.bar.value = food
+	_food_bar.value.text = str(int(food))
+	_wood_bar.bar.max_value = maxf(pop_f * 5.0, 30.0)
+	_wood_bar.bar.value = wood
+	_wood_bar.value.text = str(int(wood))
+	_stone_bar.bar.max_value = maxf(pop_f * 3.0, 20.0)
+	_stone_bar.bar.value = stone
+	_stone_bar.value.text = str(int(stone))
+
+	# Health
 	var avg_hap_raw: Variant = summary.get("avg_happiness", 0.0)
 	var avg_hap: float = float(avg_hap_raw) if (avg_hap_raw is float or avg_hap_raw is int) else 0.0
-	_avg_happiness_label.text = "%d%%" % int(avg_hap * 100.0)
-	_food_label.text = str(int(summary.get("food", 0)))
-	_wood_label.text = str(int(summary.get("wood", 0)))
-	_stone_label.text = str(int(summary.get("stone", 0)))
+	_happy_bar.bar.max_value = 1.0
+	_happy_bar.bar.value = avg_hap
+	_happy_bar.value.text = "%d%%" % int(avg_hap * 100.0)
+	var avg_stress_raw: Variant = summary.get("avg_stress", 0.0)
+	var avg_stress: float = float(avg_stress_raw) if (avg_stress_raw is float or avg_stress_raw is int) else 0.0
+	_stress_bar.bar.max_value = 1.0
+	_stress_bar.bar.value = avg_stress
+	_stress_bar.value.text = "%d%%" % int(avg_stress * 100.0)
 
 	# Demographics
 	var total_male: int = 0
@@ -158,19 +190,14 @@ func _refresh() -> void:
 			total_children += int(sd.get("children", 0))
 			total_teens += int(sd.get("teens", 0))
 			total_elders += int(sd.get("elders", 0))
-	if _gender_label != null:
-		_gender_label.text = "♂ %d / ♀ %d" % [total_male, total_female]
-	if _age_dist_label != null:
-		_age_dist_label.text = "%s %d · %s %d · %s %d · %s %d" % [
-			Locale.ltr("UI_ADULTS"), total_adults,
-			Locale.ltr("UI_TEENS"), total_teens,
-			Locale.ltr("UI_CHILDREN"), total_children,
-			Locale.ltr("UI_ELDERS"), total_elders]
-	if _avg_stress_label != null:
-		var avg_stress_raw: Variant = summary.get("avg_stress", 0.0)
-		var avg_stress: float = float(avg_stress_raw) if (avg_stress_raw is float or avg_stress_raw is int) else 0.0
-		_avg_stress_label.text = "%d%%" % int(avg_stress * 100.0)
+	_gender_label.text = "♂ %d / ♀ %d" % [total_male, total_female]
+	_age_dist_label.text = "%s %d · %s %d · %s %d · %s %d" % [
+		Locale.ltr("UI_ADULTS"), total_adults,
+		Locale.ltr("UI_TEENS"), total_teens,
+		Locale.ltr("UI_CHILDREN"), total_children,
+		Locale.ltr("UI_ELDERS"), total_elders]
 
+	# Per-settlement cards
 	for child in _settlements_container.get_children():
 		child.queue_free()
 	var settlements_raw: Variant = summary.get("settlement_summaries", [])
@@ -180,14 +207,83 @@ func _refresh() -> void:
 		if not (sett_raw is Dictionary):
 			continue
 		var sett: Dictionary = sett_raw
-		var sett_data: Variant = sett.get("settlement", {})
-		var sett_name: String = str((sett_data as Dictionary).get("name", "")) if sett_data is Dictionary else "Settlement"
+		var sid: int = int(sett.get("id", -1))
+		var sd2_raw: Variant = sett.get("settlement", {})
+		var sd2: Dictionary = sd2_raw if sd2_raw is Dictionary else {}
+		var sett_name: String = str(sd2.get("name", "S%d" % sid)) if not sd2.is_empty() else "S%d" % sid
 		var sett_pop: int = int(sett.get("pop", 0))
-		var row := Label.new()
-		row.text = "%s — %s %d" % [sett_name, Locale.ltr("UI_POPULATION"), sett_pop]
-		row.add_theme_font_size_override("font_size", 10)
-		row.add_theme_color_override("font_color", COLOR_VALUE)
-		_settlements_container.add_child(row)
+		var sfood_raw: Variant = sett.get("food", 0)
+		var sfood: float = float(sfood_raw) if (sfood_raw is float or sfood_raw is int) else 0.0
+		var swood_raw: Variant = sett.get("wood", 0)
+		var swood: float = float(swood_raw) if (swood_raw is float or swood_raw is int) else 0.0
+		var sstone_raw: Variant = sett.get("stone", 0)
+		var sstone: float = float(sstone_raw) if (sstone_raw is float or sstone_raw is int) else 0.0
+
+		var card := Button.new()
+		card.text = "%s — %s %d" % [sett_name, Locale.ltr("UI_POPULATION"), sett_pop]
+		card.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		card.focus_mode = Control.FOCUS_NONE
+		card.add_theme_font_size_override("font_size", 10)
+		if sid >= 0:
+			var captured: int = sid
+			card.pressed.connect(func() -> void:
+				SimulationBus.ui_notification.emit("open_settlement_%d" % captured, "command")
+			)
+		_settlements_container.add_child(card)
+
+		var res_label := Label.new()
+		res_label.text = "%s %d  %s %d  %s %d" % [
+			Locale.ltr("UI_FOOD"), int(sfood),
+			Locale.ltr("UI_WOOD"), int(swood),
+			Locale.ltr("UI_STONE"), int(sstone)]
+		res_label.add_theme_font_size_override("font_size", 9)
+		res_label.add_theme_color_override("font_color", Color(0.45, 0.55, 0.62))
+		_settlements_container.add_child(res_label)
+
+
+func _create_stat_bar(label_key: String, bar_color: Color) -> Dictionary:
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 6)
+	hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content.add_child(hbox)
+
+	var lbl := Label.new()
+	lbl.text = Locale.ltr(label_key)
+	lbl.custom_minimum_size.x = 80.0
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.add_theme_color_override("font_color", COLOR_LABEL)
+	hbox.add_child(lbl)
+
+	var bar := ProgressBar.new()
+	bar.custom_minimum_size = Vector2(60.0, 10.0)
+	bar.max_value = 100.0
+	bar.value = 0.0
+	bar.show_percentage = false
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var fill_style := StyleBoxFlat.new()
+	fill_style.bg_color = bar_color
+	fill_style.corner_radius_top_left = 2
+	fill_style.corner_radius_top_right = 2
+	fill_style.corner_radius_bottom_left = 2
+	fill_style.corner_radius_bottom_right = 2
+	bar.add_theme_stylebox_override("fill", fill_style)
+	var bg_style := StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.12, 0.14, 0.18)
+	bg_style.corner_radius_top_left = 2
+	bg_style.corner_radius_top_right = 2
+	bg_style.corner_radius_bottom_left = 2
+	bg_style.corner_radius_bottom_right = 2
+	bar.add_theme_stylebox_override("background", bg_style)
+	hbox.add_child(bar)
+
+	var val_lbl := Label.new()
+	val_lbl.custom_minimum_size.x = 45.0
+	val_lbl.add_theme_font_size_override("font_size", 10)
+	val_lbl.add_theme_color_override("font_color", COLOR_VALUE)
+	val_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	hbox.add_child(val_lbl)
+
+	return {"bar": bar, "value": val_lbl}
 
 
 func _add_title(key: String) -> void:
