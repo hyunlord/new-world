@@ -21,6 +21,13 @@ const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
 const COLOR_SECTION: Color = Color(0.16, 0.22, 0.28)
 static var FILTER_KEYS: Array[String] = ["all", "food", "danger", "shelter", "social"]
 static var FILTER_LOCALE: Array[String] = ["UI_FILTER_ALL", "UI_FILTER_FOOD", "UI_FILTER_DANGER", "UI_FILTER_SHELTER", "UI_FILTER_SOCIAL"]
+## Maps UI filter keys to the Rust category_id values they should match.
+static var FILTER_CATEGORY_MAP: Dictionary = {
+	"food": ["food"],
+	"danger": ["danger"],
+	"shelter": ["warmth"],
+	"social": ["social", "social_group"],
+}
 
 
 func init(sim_engine, entity_manager = null) -> void:
@@ -113,9 +120,12 @@ func _refresh() -> void:
 	var filtered: Array = all_events
 	if _current_filter != "all":
 		filtered = []
+		var match_cats: Array = FILTER_CATEGORY_MAP.get(_current_filter, [_current_filter])
 		for ev: Variant in all_events:
-			if ev is Dictionary and str((ev as Dictionary).get("category_id", (ev as Dictionary).get("category", ""))).to_lower() == _current_filter:
-				filtered.append(ev)
+			if ev is Dictionary:
+				var ev_cat: String = str((ev as Dictionary).get("category_id", (ev as Dictionary).get("category", ""))).to_lower()
+				if ev_cat in match_cats:
+					filtered.append(ev)
 
 	_count_label.text = "%d %s" % [filtered.size(), Locale.ltr("UI_EVENTS")]
 
@@ -212,16 +222,6 @@ func _refresh() -> void:
 				detail_label.add_theme_color_override("font_color", Color(0.55, 0.60, 0.68))
 				detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 				vbox.add_child(detail_label)
-
-		var actor_id: int = int(ev.get("actor_id", ev.get("entity_id", -1)))
-		if actor_id >= 0:
-			event_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-			event_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-			var captured: int = actor_id
-			event_panel.gui_input.connect(func(input_event: InputEvent) -> void:
-				if input_event is InputEventMouseButton and input_event.pressed and input_event.button_index == MOUSE_BUTTON_LEFT:
-					SimulationBus.entity_selected.emit(captured)
-			)
 
 		var actor_id: int = int(ev.get("actor_id", ev.get("entity_id", -1)))
 		if actor_id >= 0:
