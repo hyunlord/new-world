@@ -21,7 +21,7 @@ const COLOR_BG: Color = Color(0.05, 0.07, 0.10, 0.92)
 const COLOR_SECTION: Color = Color(0.16, 0.22, 0.28)
 static var FILTER_KEYS: Array[String] = ["all", "food", "danger", "shelter", "social"]
 static var FILTER_LOCALE: Array[String] = ["UI_FILTER_ALL", "UI_FILTER_FOOD", "UI_FILTER_DANGER", "UI_FILTER_SHELTER", "UI_FILTER_SOCIAL"]
-## Maps UI filter keys to the Rust category_id values they should match.
+## Maps UI filter keys to the Rust cause_id values they should match.
 static var FILTER_CATEGORY_MAP: Dictionary = {
 	"food": ["food"],
 	"danger": ["danger"],
@@ -123,7 +123,7 @@ func _refresh() -> void:
 		var match_cats: Array = FILTER_CATEGORY_MAP.get(_current_filter, [_current_filter])
 		for ev: Variant in all_events:
 			if ev is Dictionary:
-				var ev_cat: String = str((ev as Dictionary).get("category_id", (ev as Dictionary).get("category", ""))).to_lower()
+				var ev_cat: String = str((ev as Dictionary).get("cause_id", "")).to_lower()
 				if ev_cat in match_cats:
 					filtered.append(ev)
 
@@ -175,7 +175,7 @@ func _refresh() -> void:
 		time_label.add_theme_color_override("font_color", Color(0.45, 0.50, 0.58))
 		vbox.add_child(time_label)
 
-		var cat: String = str(ev.get("category_id", ev.get("category", "")))
+		var cat: String = str(ev.get("cause_id", ""))
 		var headline_key: String = str(ev.get("headline_key", ev.get("title_key", "")))
 		var headline_params_raw: Variant = ev.get("headline_params", {})
 		var headline_params: Dictionary = headline_params_raw if headline_params_raw is Dictionary else {}
