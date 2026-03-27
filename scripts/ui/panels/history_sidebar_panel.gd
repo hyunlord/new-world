@@ -2,9 +2,12 @@ extends PanelContainer
 
 const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
 
+const MIN_SIGNIFICANCE: float = 2.0
+
 var _ui_built: bool = false
 var _refresh_timer: float = 0.0
 var _cached_event_count: int = -1
+var _show_all: bool = false
 
 var _scroll: ScrollContainer
 var _content: VBoxContainer
@@ -62,6 +65,19 @@ func _build_ui() -> void:
 	_title_label.add_theme_color_override("font_color", Color.WHITE)
 	_content.add_child(_title_label)
 
+	var toggle := Button.new()
+	toggle.text = Locale.ltr("UI_SHOW_ALL_EVENTS")
+	toggle.toggle_mode = true
+	toggle.button_pressed = false
+	toggle.focus_mode = Control.FOCUS_NONE
+	toggle.add_theme_font_size_override("font_size", 9)
+	toggle.toggled.connect(func(pressed: bool) -> void:
+		_show_all = pressed
+		_cached_event_count = -1
+		_refresh()
+	)
+	_content.add_child(toggle)
+
 	_events_container = VBoxContainer.new()
 	_events_container.add_theme_constant_override("separation", 4)
 	_content.add_child(_events_container)
@@ -74,6 +90,17 @@ func _refresh() -> void:
 	var response: Dictionary = SimBridge.runtime_get_chronicle_feed(200)
 	var events_raw: Variant = response.get("items", [])
 	var events: Array = events_raw if events_raw is Array else []
+
+	# Filter low-significance events unless show-all is active
+	if not _show_all:
+		var significant: Array = []
+		for ev_raw: Variant in events:
+			if ev_raw is Dictionary:
+				var sig_raw: Variant = (ev_raw as Dictionary).get("significance", 0.0)
+				var sig: float = float(sig_raw) if (sig_raw is float or sig_raw is int) else 0.0
+				if sig >= MIN_SIGNIFICANCE:
+					significant.append(ev_raw)
+		events = significant
 
 	# Sort by tick descending (newest first)
 	events.sort_custom(func(a: Variant, b: Variant) -> bool:
