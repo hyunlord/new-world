@@ -1406,38 +1406,7 @@ func _draw_band_blob(center: Vector2, radius: float, band_name: String, member_c
 
 
 func _convex_hull(points: PackedVector2Array) -> PackedVector2Array:
-	if points.size() < 3:
-		return points
-	var sorted: Array = []
-	for p: Vector2 in points:
-		sorted.append(p)
-	sorted.sort_custom(func(a: Vector2, b: Vector2) -> bool:
-		if a.y != b.y:
-			return a.y < b.y
-		return a.x < b.x
-	)
-	var pivot: Vector2 = sorted[0]
-	sorted.remove_at(0)
-	sorted.sort_custom(func(a: Vector2, b: Vector2) -> bool:
-		var cross: float = (a - pivot).cross(b - pivot)
-		if abs(cross) < 0.001:
-			return (a - pivot).length_squared() < (b - pivot).length_squared()
-		return cross > 0
-	)
-	var hull: Array = [pivot]
-	for p: Vector2 in sorted:
-		while hull.size() > 1:
-			var a: Vector2 = hull[hull.size() - 2]
-			var b: Vector2 = hull[hull.size() - 1]
-			if (b - a).cross(p - a) <= 0:
-				hull.pop_back()
-			else:
-				break
-		hull.append(p)
-	var result: PackedVector2Array = PackedVector2Array()
-	for p: Vector2 in hull:
-		result.append(p)
-	return result
+	return Geometry2D.convex_hull(points)
 
 
 func _smooth_polygon(polygon: PackedVector2Array, iterations: int) -> PackedVector2Array:

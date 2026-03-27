@@ -422,34 +422,36 @@ func _load_manifest() -> void:
 		current_locale = _default_locale
 
 
-func _load_compiled_locale(locale: String) -> bool:
+## Parse the compiled locale JSON. Returns {"root": dict, "strings": dict} or {} on failure.
+func _read_compiled_json(locale: String) -> Dictionary:
 	var path: String = LOCALES_DIR + _compiled_dir + "/" + locale + ".json"
 	if not FileAccess.file_exists(path):
 		if locale != "en":
 			path = LOCALES_DIR + _compiled_dir + "/en.json"
 		if not FileAccess.file_exists(path):
-			return false
-
+			return {}
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	var json: JSON = JSON.new()
-	var parse_err: int = json.parse(file.get_as_text())
-	if parse_err != OK:
-		return false
+	if json.parse(file.get_as_text()) != OK:
+		return {}
 	if not (json.data is Dictionary):
-		return false
-
+		return {}
 	var root: Dictionary = json.data
-	if not root.has("strings"):
-		return false
-	if not (root["strings"] is Dictionary):
-		return false
+	if not root.has("strings") or not (root["strings"] is Dictionary):
+		return {}
+	return {"root": root, "strings": root["strings"]}
 
-	var strings: Dictionary = root["strings"]
+
+func _load_compiled_locale(locale: String) -> bool:
+	var parsed: Dictionary = _read_compiled_json(locale)
+	if parsed.is_empty():
+		return false
+	var root: Dictionary = parsed["root"]
+	var strings: Dictionary = parsed["strings"]
 	_strings["compiled"] = strings
 	var keys: Array = strings.keys()
 	for i in range(keys.size()):
-		var key: String = str(keys[i])
-		_flat_strings[key] = str(strings[key])
+		_flat_strings[str(keys[i])] = str(strings[keys[i]])
 	_rebuild_key_index(root, strings, _load_key_registry_keys())
 	return true
 
@@ -457,26 +459,10 @@ func _load_compiled_locale(locale: String) -> bool:
 ## Load compiled locale JSON and merge keys missing from _flat_strings.
 ## Fluent keys already in _flat_strings are never overwritten — compiled acts as fallback only.
 func _load_compiled_locale_as_fallback(locale: String) -> bool:
-	var path: String = LOCALES_DIR + _compiled_dir + "/" + locale + ".json"
-	if not FileAccess.file_exists(path):
-		if locale != "en":
-			path = LOCALES_DIR + _compiled_dir + "/en.json"
-		if not FileAccess.file_exists(path):
-			return false
-
-	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-	var json: JSON = JSON.new()
-	var parse_err: int = json.parse(file.get_as_text())
-	if parse_err != OK:
+	var parsed: Dictionary = _read_compiled_json(locale)
+	if parsed.is_empty():
 		return false
-	if not (json.data is Dictionary):
-		return false
-
-	var root: Dictionary = json.data
-	if not root.has("strings") or not (root["strings"] is Dictionary):
-		return false
-
-	var strings: Dictionary = root["strings"]
+	var strings: Dictionary = parsed["strings"]
 	var added: int = 0
 	for key: Variant in strings:
 		var k: String = str(key)
