@@ -1,5 +1,7 @@
 extends PanelContainer
 
+const GameCalendar = preload("res://scripts/core/simulation/game_calendar.gd")
+
 var _sim_engine: RefCounted
 @warning_ignore("unused_private_class_variable")
 var _entity_manager: RefCounted  # Set by hud.gd init
@@ -112,7 +114,7 @@ func _refresh() -> void:
 	if _current_filter != "all":
 		filtered = []
 		for ev: Variant in all_events:
-			if ev is Dictionary and str((ev as Dictionary).get("category", "")).to_lower() == _current_filter:
+			if ev is Dictionary and str((ev as Dictionary).get("category_id", (ev as Dictionary).get("category", ""))).to_lower() == _current_filter:
 				filtered.append(ev)
 
 	_count_label.text = "%d %s" % [filtered.size(), Locale.ltr("UI_EVENTS")]
@@ -155,15 +157,37 @@ func _refresh() -> void:
 		vbox.add_theme_constant_override("separation", 1)
 		event_panel.add_child(vbox)
 
-		var time_text: String = str(ev.get("time", ""))
+		var tick: int = int(ev.get("tick", ev.get("end_tick", 0)))
+		var time_text: String = GameCalendar.format_short_date(tick) if tick > 0 else ""
 		var time_label := Label.new()
 		time_label.text = time_text
 		time_label.add_theme_font_size_override("font_size", 9)
 		time_label.add_theme_color_override("font_color", Color(0.45, 0.50, 0.58))
 		vbox.add_child(time_label)
 
-		var cat: String = str(ev.get("category", ""))
-		var title_text: String = str(ev.get("title", ev.get("message", "")))
+		var cat: String = str(ev.get("category_id", ev.get("category", "")))
+		var headline_key: String = str(ev.get("headline_key", ev.get("title_key", "")))
+		var headline_params_raw: Variant = ev.get("headline_params", {})
+		var headline_params: Dictionary = headline_params_raw if headline_params_raw is Dictionary else {}
+		var title_text: String = ""
+		if not headline_key.is_empty():
+			if not headline_params.is_empty():
+				title_text = Locale.trf(headline_key, headline_params)
+			elif Locale.has_key(headline_key):
+				title_text = Locale.ltr(headline_key)
+			else:
+				title_text = headline_key
+		if title_text.is_empty():
+			var capsule_key_fb: String = str(ev.get("capsule_key", ev.get("description", "")))
+			var capsule_params_fb_raw: Variant = ev.get("capsule_params", ev.get("l10n_params", {}))
+			var capsule_params_fb: Dictionary = capsule_params_fb_raw if capsule_params_fb_raw is Dictionary else {}
+			if not capsule_key_fb.is_empty():
+				if not capsule_params_fb.is_empty():
+					title_text = Locale.trf(capsule_key_fb, capsule_params_fb)
+				elif Locale.has_key(capsule_key_fb):
+					title_text = Locale.ltr(capsule_key_fb)
+				else:
+					title_text = capsule_key_fb
 		var title_label := Label.new()
 		var badge: String = _category_badge(cat)
 		title_label.text = "%s %s" % [badge, title_text] if not badge.is_empty() else title_text
@@ -172,14 +196,32 @@ func _refresh() -> void:
 		title_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		vbox.add_child(title_label)
 
-		var detail_text: String = str(ev.get("detail", ""))
-		if not detail_text.is_empty():
-			var detail_label := Label.new()
-			detail_label.text = detail_text
-			detail_label.add_theme_font_size_override("font_size", 9)
-			detail_label.add_theme_color_override("font_color", Color(0.55, 0.60, 0.68))
-			detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-			vbox.add_child(detail_label)
+		var detail_capsule_key: String = str(ev.get("capsule_key", ""))
+		if not detail_capsule_key.is_empty() and detail_capsule_key != headline_key:
+			var detail_params_raw: Variant = ev.get("capsule_params", {})
+			var detail_params: Dictionary = detail_params_raw if detail_params_raw is Dictionary else {}
+			var detail_text: String = ""
+			if not detail_params.is_empty():
+				detail_text = Locale.trf(detail_capsule_key, detail_params)
+			elif Locale.has_key(detail_capsule_key):
+				detail_text = Locale.ltr(detail_capsule_key)
+			if not detail_text.is_empty():
+				var detail_label := Label.new()
+				detail_label.text = detail_text
+				detail_label.add_theme_font_size_override("font_size", 9)
+				detail_label.add_theme_color_override("font_color", Color(0.55, 0.60, 0.68))
+				detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+				vbox.add_child(detail_label)
+
+		var actor_id: int = int(ev.get("actor_id", ev.get("entity_id", -1)))
+		if actor_id >= 0:
+			event_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+			event_panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			var captured: int = actor_id
+			event_panel.gui_input.connect(func(input_event: InputEvent) -> void:
+				if input_event is InputEventMouseButton and input_event.pressed and input_event.button_index == MOUSE_BUTTON_LEFT:
+					SimulationBus.entity_selected.emit(captured)
+			)
 
 		var actor_id: int = int(ev.get("actor_id", ev.get("entity_id", -1)))
 		if actor_id >= 0:
