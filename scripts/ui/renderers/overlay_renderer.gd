@@ -56,6 +56,7 @@ var _active_channel: String = ""
 var _update_timer: float = 0.0
 var _shader_material: ShaderMaterial = null
 var _data_texture: ImageTexture = null
+var _diagnostic_logged: bool = false
 
 
 func init(sim_engine: RefCounted, reference_renderer: Sprite2D = null) -> void:
@@ -89,13 +90,17 @@ func _ready() -> void:
 
 func sync_with_world_renderer(reference_renderer: Sprite2D) -> void:
 	if reference_renderer == null:
-		scale = Vector2(GameConfig.TILE_SIZE, GameConfig.TILE_SIZE)
 		position = Vector2.ZERO
+		scale = Vector2(GameConfig.TILE_SIZE, GameConfig.TILE_SIZE)
+		z_index = 5
+		print("[OverlayRenderer] sync fallback: pos=%s scale=%s z=%d" % [str(position), str(scale), z_index])
 		return
 	centered = reference_renderer.centered
 	position = reference_renderer.position
-	scale = reference_renderer.scale
+	scale = Vector2(float(GameConfig.TILE_SIZE), float(GameConfig.TILE_SIZE))
 	z_index = reference_renderer.z_index + 1
+	print("[OverlayRenderer] sync with renderer: pos=%s scale=%s z=%d ref_z=%d" % [
+		str(position), str(scale), z_index, reference_renderer.z_index])
 
 
 func set_active_channel(channel: String) -> void:
@@ -103,6 +108,7 @@ func set_active_channel(channel: String) -> void:
 		return
 	_active_channel = channel
 	_update_timer = 0.0
+	_diagnostic_logged = false
 	if _active_channel.is_empty():
 		clear_overlay()
 		return
@@ -140,6 +146,15 @@ func _refresh_data() -> void:
 		return
 	var bytes: PackedByteArray = _sim_engine.get_influence_texture(_active_channel)
 	var expected_size: int = _grid_size.x * _grid_size.y
+	if not _diagnostic_logged:
+		_diagnostic_logged = true
+		var max_val: int = 0
+		for i in range(mini(bytes.size(), expected_size)):
+			if bytes[i] > max_val:
+				max_val = bytes[i]
+		print("[OverlayRenderer] channel=%s bytes.size=%d expected=%d grid=%s max_val=%d visible=%s pos=%s scale=%s z=%d" % [
+			_active_channel, bytes.size(), expected_size, str(_grid_size),
+			max_val, str(visible), str(position), str(scale), z_index])
 	if bytes.is_empty() or bytes.size() != expected_size:
 		_create_blank_texture()
 		return
@@ -169,6 +184,7 @@ func _update_texture_from_image(image: Image) -> void:
 func _apply_channel_colors(channel: String) -> void:
 	if _shader_material == null:
 		return
+	_shader_material.set_shader_parameter("threshold", 0.005)
 	var preset: Dictionary = CHANNEL_PRESETS.get(channel, {})
 	_shader_material.set_shader_parameter("color_low", preset.get("color_low", Color(0.10, 0.20, 0.80, 1.0)))
 	_shader_material.set_shader_parameter("color_mid_low", preset.get("color_mid_low", Color(0.10, 0.70, 0.70, 1.0)))

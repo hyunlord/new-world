@@ -582,6 +582,32 @@ func runtime_apply_commands_v2(commands: Array) -> void:
 	runtime.call("runtime_apply_commands_v2", commands)
 
 
+## Returns influence heatmap data for the given channel as a PackedByteArray.
+func runtime_get_influence_texture(channel_name: String) -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("runtime_get_influence_texture"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("runtime_get_influence_texture", channel_name)
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
+## Returns the influence grid dimensions as Vector2i.
+func runtime_get_influence_grid_size() -> Vector2i:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return Vector2i.ZERO
+	if not runtime.has_method("runtime_get_influence_grid_size"):
+		return Vector2i.ZERO
+	var result: Variant = runtime.call("runtime_get_influence_grid_size")
+	if result is Vector2i:
+		return result
+	return Vector2i.ZERO
+
+
 ## Enables or disables Rust debug mode (activates PerfTracker).
 func enable_debug_mode(enabled: bool) -> void:
 	var runtime: Object = _get_native_runtime()
