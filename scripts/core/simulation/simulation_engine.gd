@@ -436,6 +436,16 @@ func get_influence_texture(channel: String) -> PackedByteArray:
 	return PackedByteArray()
 
 
+func get_band_territory_texture() -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_band_territory_texture"):
+		return {}
+	var raw: Variant = sim_bridge.call("runtime_get_band_territory_texture")
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
 func get_influence_grid_size() -> Vector2i:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_influence_grid_size"):
