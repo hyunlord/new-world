@@ -8,6 +8,16 @@ const SocialBubbleScene = preload("res://scenes/ui/social_bubble.tscn")
 const AGENT_TEXTURE_PATH: String = "res://assets/sprites/agent_base.png"
 const AGENT_PALETTE_LUT_PATH: String = "res://assets/sprites/palette_lut.png"
 const AGENT_VISUAL_SHADER_PATH: String = "res://shaders/stress_phase.gdshader"
+const BAND_COLORS: Array[Color] = [
+	Color(0.85, 0.45, 0.20),
+	Color(0.30, 0.65, 0.85),
+	Color(0.75, 0.35, 0.65),
+	Color(0.40, 0.78, 0.40),
+	Color(0.90, 0.72, 0.25),
+	Color(0.55, 0.40, 0.80),
+	Color(0.80, 0.30, 0.30),
+	Color(0.30, 0.75, 0.70),
+]
 
 var _entity_manager: RefCounted
 var _building_manager: RefCounted
@@ -1311,6 +1321,11 @@ func _draw_settlement_boundaries(zoom_level: float) -> void:
 			draw_rect(Rect2(bar_x, bar_y, bar_width * fill_ratio, bar_height), fill_color, true)
 
 
+func _band_color(band_name: String) -> Color:
+	var h: int = abs(band_name.hash()) % BAND_COLORS.size()
+	return BAND_COLORS[h]
+
+
 func _draw_band_territories(zoom_level: float) -> void:
 	if zoom_level < 0.2 or zoom_level > 2.0:
 		return
@@ -1347,6 +1362,7 @@ func _draw_band_territories(zoom_level: float) -> void:
 		center /= float(positions.size())
 
 		var band_name: String = str(band.get("name", ""))
+		var band_color: Color = _band_color(band_name)
 
 		if positions.size() == 1:
 			_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
@@ -1373,19 +1389,20 @@ func _draw_band_territories(zoom_level: float) -> void:
 			if Geometry2D.triangulate_polygon(smooth).is_empty():
 				_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
 				continue
-			draw_colored_polygon(smooth, Color(0.78, 0.56, 0.19, 0.12))
+			draw_colored_polygon(smooth, Color(band_color.r, band_color.g, band_color.b, 0.12))
 			for i: int in range(smooth.size()):
 				var next: int = (i + 1) % smooth.size()
-				draw_line(smooth[i], smooth[next], Color(0.78, 0.56, 0.19, 0.40), 1.5, true)
+				draw_line(smooth[i], smooth[next], Color(band_color.r, band_color.g, band_color.b, 0.40), 1.5, true)
 			if not band_name.is_empty():
 				var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
 				draw_string(font, center + Vector2(0.0, -12.0),
 					"%s · %d" % [band_name, member_count],
 					HORIZONTAL_ALIGNMENT_CENTER, 200.0, label_font_size,
-					Color(0.86, 0.66, 0.28, 0.90))
+					Color(band_color.r, band_color.g, band_color.b, 0.90))
 
 
 func _draw_band_blob(center: Vector2, radius: float, band_name: String, member_count: int, font: Font, zoom_level: float) -> void:
+	var band_color: Color = _band_color(band_name)
 	var points: PackedVector2Array = PackedVector2Array()
 	var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
 	for i: int in range(20):
@@ -1393,16 +1410,16 @@ func _draw_band_blob(center: Vector2, radius: float, band_name: String, member_c
 		var noise: float = sin(angle * 3.0 + phase) * 0.15 + cos(angle * 5.0 + phase * 0.5) * 0.10
 		var r: float = radius * (1.0 + noise)
 		points.append(center + Vector2(cos(angle), sin(angle)) * r)
-	draw_colored_polygon(points, Color(0.78, 0.56, 0.19, 0.12))
+	draw_colored_polygon(points, Color(band_color.r, band_color.g, band_color.b, 0.12))
 	for i: int in range(points.size()):
 		var next: int = (i + 1) % points.size()
-		draw_line(points[i], points[next], Color(0.78, 0.56, 0.19, 0.40), 1.5, true)
+		draw_line(points[i], points[next], Color(band_color.r, band_color.g, band_color.b, 0.40), 1.5, true)
 	if not band_name.is_empty():
 		var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
 		draw_string(font, center + Vector2(0.0, -radius - 6.0),
 			"%s · %d" % [band_name, member_count],
 			HORIZONTAL_ALIGNMENT_CENTER, 150.0, label_font_size,
-			Color(0.86, 0.66, 0.28, 0.90))
+			Color(band_color.r, band_color.g, band_color.b, 0.90))
 
 
 func _convex_hull(points: PackedVector2Array) -> PackedVector2Array:

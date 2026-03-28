@@ -60,6 +60,7 @@ var _shader_material: ShaderMaterial = null
 var _desat_shader_material: ShaderMaterial = null
 var _data_texture: ImageTexture = null
 var _diagnostic_logged: bool = false
+var _current_zoom_level: int = -1
 
 
 func init(sim_engine: RefCounted, reference_renderer: Sprite2D = null) -> void:
@@ -133,6 +134,12 @@ func clear_overlay() -> void:
 func _process(delta: float) -> void:
 	if not visible or _active_channel.is_empty():
 		return
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	if cam != null and cam.has_method("get_zoom_level"):
+		var zl: int = int(cam.call("get_zoom_level"))
+		if zl != _current_zoom_level:
+			_current_zoom_level = zl
+			_update_zoom_filter(zl)
 	_update_timer += maxf(delta, 0.0)
 	if _update_timer >= UPDATE_INTERVAL:
 		_update_timer = 0.0
@@ -185,6 +192,15 @@ func _update_texture_from_image(image: Image) -> void:
 	texture = _data_texture
 	if _shader_material != null:
 		_shader_material.set_shader_parameter("data_texture", _data_texture)
+
+
+func _update_zoom_filter(zoom_level: int) -> void:
+	# Z3 (level 2): nearest for blocky tile-level data
+	# All others: linear for smooth gradients
+	if zoom_level == 2:
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	else:
+		texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 
 func _apply_desaturation() -> void:
