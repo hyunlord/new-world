@@ -137,6 +137,8 @@ pub struct SimResources {
     pub item_store: ItemStore,
     /// Central registry for provisional and promoted bands.
     pub band_store: BandStore,
+    /// Per-faction territory influence grid (building-anchored, decaying).
+    pub territory_grid: sim_core::territory_grid::TerritoryGrid,
     /// Reverse index parent → child ids for genealogy lookups.
     pub children_index: ChildrenIndex,
     /// World-rules resource regen multipliers keyed by rule target tag.
@@ -219,6 +221,8 @@ impl SimResources {
     /// - `map`: world map (call `WorldMap::new(...)` or use world gen)
     /// - `seed`: RNG seed — same seed = identical simulation run
     pub fn new(calendar: GameCalendar, map: WorldMap, seed: u64) -> Self {
+        let map_w = map.width;
+        let map_h = map.height;
         let influence_grid =
             InfluenceGrid::new(map.width, map.height, ChannelId::default_channels());
         let tile_grid = TileGrid::new(map.width, map.height);
@@ -250,6 +254,7 @@ impl SimResources {
             effect_queue: EffectQueue::new(),
             item_store: ItemStore::new(),
             band_store: BandStore::new(),
+            territory_grid: sim_core::territory_grid::TerritoryGrid::new(map_w, map_h),
             children_index: ChildrenIndex::default(),
             resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),

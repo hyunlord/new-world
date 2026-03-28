@@ -23,6 +23,7 @@ pub mod world;
 
 pub mod building;
 pub mod band;
+pub mod territory_grid;
 pub mod settlement;
 
 // Re-export commonly used types for convenience

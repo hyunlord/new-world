@@ -3380,6 +3380,42 @@ impl WorldSimRuntime {
         dict
     }
 
+    /// Returns dominant-faction territory texture for shader rendering.
+    #[func]
+    fn runtime_get_territory_texture(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        let grid = &state.engine.resources().territory_grid;
+        let (faction_map, density_map) = grid.export_dominant();
+        let factions = grid.active_factions();
+
+        let palette: [(f32, f32, f32); 8] = [
+            (0.85, 0.45, 0.20),
+            (0.30, 0.65, 0.85),
+            (0.75, 0.35, 0.65),
+            (0.40, 0.78, 0.40),
+            (0.90, 0.72, 0.25),
+            (0.55, 0.40, 0.80),
+            (0.80, 0.30, 0.30),
+            (0.30, 0.75, 0.70),
+        ];
+        let mut colors: Array<Vector3> = Array::new();
+        for (i, _) in factions.iter().enumerate() {
+            let (r, g, b) = palette[i % palette.len()];
+            colors.push(Vector3::new(r, g, b));
+        }
+
+        let mut dict = VarDictionary::new();
+        dict.set("faction_ids", PackedByteArray::from(faction_map));
+        dict.set("density", PackedByteArray::from(density_map));
+        dict.set("colors", colors);
+        dict.set("faction_count", factions.len() as i64);
+        dict.set("width", grid.width as i64);
+        dict.set("height", grid.height as i64);
+        dict
+    }
+
     /// Returns band territory density textures for shader-based metaball rendering.
     #[func]
     fn runtime_get_band_territory_texture(&self) -> VarDictionary {
