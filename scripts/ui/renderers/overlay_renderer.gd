@@ -50,6 +50,13 @@ const CHANNEL_PRESETS: Dictionary = {
 		"color_mid_high": Color(0.88, 0.68, 0.24, 1.0),
 		"color_high": Color(1.00, 0.80, 0.20, 1.0),
 	},
+	"authority": {
+		"color_low": Color(0.15, 0.08, 0.25, 1.0),
+		"color_mid_low": Color(0.28, 0.12, 0.45, 1.0),
+		"color_mid": Color(0.50, 0.20, 0.65, 1.0),
+		"color_mid_high": Color(0.70, 0.30, 0.85, 1.0),
+		"color_high": Color(0.90, 0.45, 1.00, 1.0),
+	},
 }
 
 var _sim_engine: RefCounted = null
@@ -57,7 +64,6 @@ var _world_renderer: Sprite2D = null
 var _grid_size: Vector2i = Vector2i.ZERO
 var _update_timer: float = 0.0
 var _desat_shader_material: ShaderMaterial = null
-var _diagnostic_logged: bool = false
 var _current_zoom_level: int = -1
 var _active_channels: Array[String] = []
 var _channel_layers: Dictionary = {}
@@ -132,7 +138,6 @@ func _on_overlay_channels_changed(channels: Array) -> void:
 	else:
 		_apply_desaturation()
 
-	_diagnostic_logged = false
 	_update_timer = 0.0
 	_refresh_all_layers()
 
@@ -197,19 +202,9 @@ func _refresh_channel_data(channel: String, layer: Sprite2D) -> void:
 		return
 	var bytes: PackedByteArray = _sim_engine.get_influence_texture(channel)
 	var expected_size: int = _grid_size.x * _grid_size.y
-
-	if not _diagnostic_logged:
-		_diagnostic_logged = true
-		var max_val: int = 0
-		for i in range(mini(bytes.size(), expected_size)):
-			if bytes[i] > max_val:
-				max_val = bytes[i]
-		print("[OverlayRenderer] channels=%s ch=%s bytes=%d max=%d layers=%d" % [
-			str(_active_channels), channel, bytes.size(), max_val, _channel_layers.size()])
-
 	if bytes.is_empty() or bytes.size() != expected_size:
 		return
-	var image := Image.create_from_data(_grid_size.x, _grid_size.y, false, Image.FORMAT_L8, bytes)
+	var image: Image = Image.create_from_data(_grid_size.x, _grid_size.y, false, Image.FORMAT_L8, bytes)
 	if image == null:
 		return
 	var tex: ImageTexture = layer.texture as ImageTexture

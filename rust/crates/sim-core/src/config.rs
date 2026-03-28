@@ -423,9 +423,13 @@ pub const INFLUENCE_AUTHORITY_DECAY_RATE: f64 = 0.10;
 /// Authority channel default radius in tiles.
 pub const INFLUENCE_AUTHORITY_DEFAULT_RADIUS: f64 = 5.0;
 /// Authority channel maximum propagation radius in tiles.
-pub const INFLUENCE_AUTHORITY_MAX_RADIUS: u32 = 8;
+pub const INFLUENCE_AUTHORITY_MAX_RADIUS: u32 = 30;
 /// Authority channel default wall attenuation sensitivity.
 pub const INFLUENCE_AUTHORITY_WALL_BLOCK: f64 = 0.1;
+/// Authority influence intensity per settlement member.
+pub const INFLUENCE_AUTHORITY_PER_MEMBER: f64 = 0.04;
+/// Authority influence maximum intensity (clamped).
+pub const INFLUENCE_AUTHORITY_MAX_INTENSITY: f64 = 1.0;
 /// Disease channel per-tick decay rate.
 pub const INFLUENCE_DISEASE_DECAY_RATE: f64 = 0.18;
 /// Disease channel default radius in tiles.

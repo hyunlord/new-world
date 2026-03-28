@@ -81,6 +81,7 @@ fn collect_runtime_emitters(world: &World, resources: &SimResources) -> Vec<Emit
     collect_map_emitters(resources, &mut emitters);
     collect_building_emitters(resources, &mut emitters);
     collect_component_emitters(world, &mut emitters);
+    collect_settlement_authority_emitters(resources, &mut emitters);
     emitters
 }
 
@@ -402,6 +403,34 @@ fn wall_hp_from_material(registry: Option<&DataRegistry>, material_id: &str) -> 
     registry
         .and_then(|loaded| loaded.material_wall_hit_points(material_id))
         .unwrap_or(10.0)
+}
+
+/// Authority: each settlement center emits authority influence scaled by population.
+fn collect_settlement_authority_emitters(
+    resources: &SimResources,
+    emitters: &mut Vec<EmitterRecord>,
+) {
+    for settlement in resources.settlements.values() {
+        if settlement.members.is_empty() {
+            continue;
+        }
+        let member_count = settlement.members.len() as f64;
+        let radius =
+            (8.0 + member_count.sqrt() * 3.0).min(f64::from(config::INFLUENCE_AUTHORITY_MAX_RADIUS));
+        let intensity = (member_count * config::INFLUENCE_AUTHORITY_PER_MEMBER)
+            .clamp(0.0, config::INFLUENCE_AUTHORITY_MAX_INTENSITY);
+        emitters.push(EmitterRecord {
+            x: settlement.x.max(0) as u32,
+            y: settlement.y.max(0) as u32,
+            channel: ChannelId::Authority,
+            base_intensity: intensity,
+            radius,
+            falloff: FalloffType::Gaussian,
+            decay_rate: None,
+            tags: Vec::new(),
+            dirty: true,
+        });
+    }
 }
 
 fn collect_component_emitters(world: &World, emitters: &mut Vec<EmitterRecord>) {
