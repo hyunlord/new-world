@@ -4393,6 +4393,7 @@
     "UI_OVERLAY_FOOD": "식량",
     "UI_OVERLAY_HAPPINESS": "행복",
     "UI_OVERLAY_KNOWLEDGE": "지식",
+    "UI_OVERLAY_AUTHORITY": "권위",
     "UI_OVERLAY_MILITARY": "군사",
     "UI_OVERLAY_PRODUCTIVITY": "생산성",
     "UI_OVERLAY_RESOURCE": "자원",
