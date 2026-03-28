@@ -218,12 +218,12 @@ func _refresh_channel_data(channel: String, layer: Sprite2D) -> void:
 
 
 func _update_zoom_filter(zoom_level: int) -> void:
-	var filter_mode: int = CanvasItem.TEXTURE_FILTER_LINEAR
-	if zoom_level == 2:
-		filter_mode = CanvasItem.TEXTURE_FILTER_NEAREST
 	for channel: String in _channel_layers:
 		var layer: Sprite2D = _channel_layers[channel]
-		layer.texture_filter = filter_mode
+		if zoom_level == 2:
+			layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		else:
+			layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 
 func _apply_channel_colors_to_material(mat: ShaderMaterial, channel: String) -> void:
