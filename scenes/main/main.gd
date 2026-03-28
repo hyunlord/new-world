@@ -35,7 +35,7 @@ var _loading_overlay: CanvasLayer = null
 var _loading_bar: ProgressBar = null
 var _loading_label: Label = null
 var _loading_count_label: Label = null
-var _overlay_renderer: Sprite2D = null
+var _overlay_renderer: Node2D = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
