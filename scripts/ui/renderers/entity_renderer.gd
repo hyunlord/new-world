@@ -24,6 +24,13 @@ var _building_manager: RefCounted
 var _resource_map: RefCounted
 var _settlement_manager: RefCounted = null
 var _sim_engine: RefCounted = null
+var _band_territory_sprite: Sprite2D = null
+var _band_territory_material: ShaderMaterial = null
+var _band_id_texture: ImageTexture = null
+var _band_density_texture: ImageTexture = null
+var _band_territory_timer: float = 0.0
+const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
+const BAND_TERRITORY_INTERVAL: float = 0.5
 var _snapshot_decoder = SnapshotDecoderClass.new()
 var _runtime_world_summary_cache: Dictionary = {}
 var _runtime_world_summary_cache_tick: int = -1
@@ -284,6 +291,7 @@ func _process(_delta: float) -> void:
 	_hover_screen_pos = get_viewport().get_mouse_position()
 	_update_hover()
 	_update_agent_sprites()
+	_update_band_territory(_delta)
 	if _binary_snapshot_available or _hover_entity_id >= 0:
 		queue_redraw()
 
@@ -520,7 +528,7 @@ func _draw() -> void:
 	if bool(active_layers.get("settlement", false)):
 		_draw_settlement_boundaries(zl)
 	if bool(active_layers.get("band", false)):
-		_draw_band_territories(zl)
+		_draw_band_labels(zl)
 
 	if _current_lod == 0:
 		_draw_hover_tooltip()
@@ -638,7 +646,7 @@ func _draw_binary_snapshots() -> void:
 	if bool(active_layers.get("settlement", false)):
 		_draw_settlement_boundaries(zl)
 	if bool(active_layers.get("band", false)):
-		_draw_band_territories(zl)
+		_draw_band_labels(zl)
 
 	if _current_lod == 0:
 		_draw_hover_tooltip()
@@ -1326,15 +1334,13 @@ func _band_color(band_name: String) -> Color:
 	return BAND_COLORS[h]
 
 
-func _draw_band_territories(zoom_level: float) -> void:
+func _draw_band_labels(zoom_level: float) -> void:
 	if zoom_level < 0.2 or zoom_level > 2.0:
 		return
 	var bands: Array = _get_runtime_band_list()
 	if bands.is_empty():
 		return
 	var font: Font = ThemeDB.fallback_font
-	var tile_size: float = float(GameConfig.TILE_SIZE)
-
 	for band_raw: Variant in bands:
 		if not (band_raw is Dictionary):
 			continue
@@ -1344,99 +1350,112 @@ func _draw_band_territories(zoom_level: float) -> void:
 		var member_count: int = int(band.get("member_count", 0))
 		if member_ids.is_empty() or member_count < 1:
 			continue
-
-		# Collect world positions of all members.
-		var positions: PackedVector2Array = PackedVector2Array()
-		for mid_raw: Variant in member_ids:
-			var mid: int = int(mid_raw)
-			var pos: Vector2 = _get_entity_world_position(mid)
-			if pos != Vector2.INF:
-				positions.append(pos)
-		if positions.is_empty():
-			continue
-
-		# Centroid of all member positions.
 		var center: Vector2 = Vector2.ZERO
-		for pos: Vector2 in positions:
-			center += pos
-		center /= float(positions.size())
-
+		var count: int = 0
+		for mid_raw: Variant in member_ids:
+			var pos: Vector2 = _get_entity_world_position(int(mid_raw))
+			if pos != Vector2.INF:
+				center += pos
+				count += 1
+		if count == 0:
+			continue
+		center /= float(count)
 		var band_name: String = str(band.get("name", ""))
+		if band_name.is_empty():
+			continue
 		var band_color: Color = _band_color(band_name)
-
-		if positions.size() == 1:
-			_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
-		else:
-			# Expand each position outward from centroid to create soft boundary.
-			var padding: float = tile_size * 2.0
-			var expanded: PackedVector2Array = PackedVector2Array()
-			for pos: Vector2 in positions:
-				var dir: Vector2 = pos - center
-				if dir.length() > 0.01:
-					expanded.append(pos + dir.normalized() * padding)
-				else:
-					expanded.append(pos + Vector2(padding, 0.0))
-					expanded.append(pos + Vector2(-padding, 0.0))
-					expanded.append(pos + Vector2(0.0, padding))
-					expanded.append(pos + Vector2(0.0, -padding))
-
-			var hull: PackedVector2Array = _convex_hull(expanded)
-			if hull.size() < 3:
-				_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
-				continue
-
-			var smooth: PackedVector2Array = _smooth_polygon(hull, 2)
-			if Geometry2D.triangulate_polygon(smooth).is_empty():
-				_draw_band_blob(center, tile_size * 2.5, band_name, member_count, font, zoom_level)
-				continue
-			draw_colored_polygon(smooth, Color(band_color.r, band_color.g, band_color.b, 0.12))
-			for i: int in range(smooth.size()):
-				var next: int = (i + 1) % smooth.size()
-				draw_line(smooth[i], smooth[next], Color(band_color.r, band_color.g, band_color.b, 0.40), 1.5, true)
-			if not band_name.is_empty():
-				var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
-				draw_string(font, center + Vector2(0.0, -12.0),
-					"%s · %d" % [band_name, member_count],
-					HORIZONTAL_ALIGNMENT_CENTER, 200.0, label_font_size,
-					Color(band_color.r, band_color.g, band_color.b, 0.90))
-
-
-func _draw_band_blob(center: Vector2, radius: float, band_name: String, member_count: int, font: Font, zoom_level: float) -> void:
-	var band_color: Color = _band_color(band_name)
-	var points: PackedVector2Array = PackedVector2Array()
-	var phase: float = float(abs(int(band_name.hash())) % 360) * PI / 180.0
-	for i: int in range(20):
-		var angle: float = float(i) / 20.0 * TAU
-		var noise: float = sin(angle * 3.0 + phase) * 0.15 + cos(angle * 5.0 + phase * 0.5) * 0.10
-		var r: float = radius * (1.0 + noise)
-		points.append(center + Vector2(cos(angle), sin(angle)) * r)
-	draw_colored_polygon(points, Color(band_color.r, band_color.g, band_color.b, 0.12))
-	for i: int in range(points.size()):
-		var next: int = (i + 1) % points.size()
-		draw_line(points[i], points[next], Color(band_color.r, band_color.g, band_color.b, 0.40), 1.5, true)
-	if not band_name.is_empty():
 		var label_font_size: int = int(clampf(8.0 / maxf(zoom_level, 0.2), 8.0, 36.0))
-		draw_string(font, center + Vector2(0.0, -radius - 6.0),
+		draw_string(font, center + Vector2(0.0, -12.0),
 			"%s · %d" % [band_name, member_count],
-			HORIZONTAL_ALIGNMENT_CENTER, 150.0, label_font_size,
+			HORIZONTAL_ALIGNMENT_CENTER, 200.0, label_font_size,
 			Color(band_color.r, band_color.g, band_color.b, 0.90))
 
 
-func _convex_hull(points: PackedVector2Array) -> PackedVector2Array:
-	return Geometry2D.convex_hull(points)
+func _update_band_territory(delta: float) -> void:
+	var band_active: bool = bool(active_layers.get("band", false))
+	if _band_territory_sprite != null:
+		_band_territory_sprite.visible = band_active
+	if not band_active:
+		_band_territory_timer = 0.0
+		return
+	_band_territory_timer += maxf(delta, 0.0)
+	if _band_territory_timer < BAND_TERRITORY_INTERVAL:
+		return
+	_band_territory_timer = 0.0
+	_refresh_band_territory()
 
 
-func _smooth_polygon(polygon: PackedVector2Array, iterations: int) -> PackedVector2Array:
-	var current: PackedVector2Array = polygon
-	for _iter: int in range(iterations):
-		var smoothed: PackedVector2Array = PackedVector2Array()
-		var n: int = current.size()
-		for i: int in range(n):
-			var prev_idx: int = (i - 1 + n) % n
-			var next_idx: int = (i + 1) % n
-			smoothed.append(current[i] * 0.75 + current[prev_idx] * 0.125 + current[next_idx] * 0.125)
-		current = smoothed
-	return current
+func _refresh_band_territory() -> void:
+	if _sim_engine == null or not _sim_engine.has_method("get_band_territory_texture"):
+		return
+	var data: Dictionary = _sim_engine.get_band_territory_texture()
+	if data.is_empty():
+		return
+	var band_ids: PackedByteArray = data.get("band_ids", PackedByteArray())
+	var density: PackedByteArray = data.get("density", PackedByteArray())
+	var colors: Array = data.get("colors", [])
+	var band_count: int = int(data.get("band_count", 0))
+	if band_ids.is_empty() or density.is_empty():
+		return
+
+	_ensure_band_territory_sprite()
+	if _band_territory_material == null:
+		return
+
+	var grid_size: Vector2i = GameConfig.WORLD_SIZE
+	if _sim_engine.has_method("get_influence_grid_size"):
+		grid_size = _sim_engine.get_influence_grid_size()
+	var w: int = grid_size.x
+	var h: int = grid_size.y
+
+	var id_image: Image = Image.create_from_data(w, h, false, Image.FORMAT_L8, band_ids)
+	var density_image: Image = Image.create_from_data(w, h, false, Image.FORMAT_L8, density)
+	if id_image == null or density_image == null:
+		return
+
+	if _band_id_texture == null:
+		_band_id_texture = ImageTexture.create_from_image(id_image)
+	else:
+		_band_id_texture.update(id_image)
+	if _band_density_texture == null:
+		_band_density_texture = ImageTexture.create_from_image(density_image)
+	else:
+		_band_density_texture.update(density_image)
+
+	_band_territory_material.set_shader_parameter("band_id_tex", _band_id_texture)
+	_band_territory_material.set_shader_parameter("density_tex", _band_density_texture)
+	_band_territory_material.set_shader_parameter("band_count", mini(band_count, 8))
+
+	var shader_colors: Array[Vector3] = []
+	for i in range(mini(colors.size(), 8)):
+		var c: Variant = colors[i]
+		if c is Vector3:
+			shader_colors.append(c)
+		else:
+			shader_colors.append(Vector3(0.5, 0.5, 0.5))
+	while shader_colors.size() < 8:
+		shader_colors.append(Vector3(0.5, 0.5, 0.5))
+	_band_territory_material.set_shader_parameter("band_colors", shader_colors)
+	_band_territory_sprite.texture = _band_density_texture
+
+
+func _ensure_band_territory_sprite() -> void:
+	if _band_territory_sprite != null:
+		return
+	var shader: Shader = load(BAND_TERRITORY_SHADER_PATH)
+	if shader == null:
+		return
+	_band_territory_sprite = Sprite2D.new()
+	_band_territory_sprite.name = "BandTerritorySprite"
+	_band_territory_sprite.centered = false
+	_band_territory_sprite.position = Vector2.ZERO
+	_band_territory_sprite.scale = Vector2(float(GameConfig.TILE_SIZE), float(GameConfig.TILE_SIZE))
+	_band_territory_sprite.z_index = -1
+	_band_territory_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	_band_territory_material = ShaderMaterial.new()
+	_band_territory_material.shader = shader
+	_band_territory_sprite.material = _band_territory_material
+	add_child(_band_territory_sprite)
 
 
 func _draw_civilization_regions(_zoom_level: float) -> void:

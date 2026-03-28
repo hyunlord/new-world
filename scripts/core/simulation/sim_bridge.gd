@@ -608,6 +608,19 @@ func runtime_get_influence_grid_size() -> Vector2i:
 	return Vector2i.ZERO
 
 
+## Returns band territory density textures for shader-based metaball rendering.
+func runtime_get_band_territory_texture() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_band_territory_texture"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_band_territory_texture")
+	if result is Dictionary:
+		return result
+	return {}
+
+
 ## Enables or disables Rust debug mode (activates PerfTracker).
 func enable_debug_mode(enabled: bool) -> void:
 	var runtime: Object = _get_native_runtime()
