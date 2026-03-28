@@ -3,6 +3,7 @@ extends Sprite2D
 const GameConfig = preload("res://scripts/core/simulation/game_config.gd")
 
 const SHADER_PATH: String = "res://shaders/heatmap_overlay.gdshader"
+const DESAT_SHADER_PATH: String = "res://shaders/terrain_desaturate.gdshader"
 const UPDATE_INTERVAL: float = 0.5
 
 const CHANNEL_PRESETS: Dictionary = {
@@ -51,16 +52,19 @@ const CHANNEL_PRESETS: Dictionary = {
 }
 
 var _sim_engine: RefCounted = null
+var _world_renderer: Sprite2D = null
 var _grid_size: Vector2i = Vector2i.ZERO
 var _active_channel: String = ""
 var _update_timer: float = 0.0
 var _shader_material: ShaderMaterial = null
+var _desat_shader_material: ShaderMaterial = null
 var _data_texture: ImageTexture = null
 var _diagnostic_logged: bool = false
 
 
 func init(sim_engine: RefCounted, reference_renderer: Sprite2D = null) -> void:
 	_sim_engine = sim_engine
+	_world_renderer = reference_renderer
 	_grid_size = Vector2i.ZERO
 	if _sim_engine != null and _sim_engine.has_method("get_influence_grid_size"):
 		_grid_size = _sim_engine.get_influence_grid_size()
@@ -112,6 +116,7 @@ func set_active_channel(channel: String) -> void:
 	if _active_channel.is_empty():
 		clear_overlay()
 		return
+	_apply_desaturation()
 	_apply_channel_colors(_active_channel)
 	visible = true
 	_refresh_data()
@@ -122,6 +127,7 @@ func clear_overlay() -> void:
 	_update_timer = 0.0
 	visible = false
 	_create_blank_texture()
+	_remove_desaturation()
 
 
 func _process(delta: float) -> void:
@@ -181,10 +187,28 @@ func _update_texture_from_image(image: Image) -> void:
 		_shader_material.set_shader_parameter("data_texture", _data_texture)
 
 
+func _apply_desaturation() -> void:
+	if _world_renderer == null:
+		return
+	if _desat_shader_material == null:
+		var desat_shader: Shader = load(DESAT_SHADER_PATH)
+		if desat_shader == null:
+			return
+		_desat_shader_material = ShaderMaterial.new()
+		_desat_shader_material.shader = desat_shader
+	_desat_shader_material.set_shader_parameter("saturation", 0.30)
+	_desat_shader_material.set_shader_parameter("brightness", 0.80)
+	_world_renderer.material = _desat_shader_material
+
+
+func _remove_desaturation() -> void:
+	if _world_renderer != null:
+		_world_renderer.material = null
+
+
 func _apply_channel_colors(channel: String) -> void:
 	if _shader_material == null:
 		return
-	_shader_material.set_shader_parameter("threshold", 0.005)
 	var preset: Dictionary = CHANNEL_PRESETS.get(channel, {})
 	_shader_material.set_shader_parameter("color_low", preset.get("color_low", Color(0.10, 0.20, 0.80, 1.0)))
 	_shader_material.set_shader_parameter("color_mid_low", preset.get("color_mid_low", Color(0.10, 0.70, 0.70, 1.0)))
