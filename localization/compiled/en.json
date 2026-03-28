@@ -4392,6 +4392,7 @@
     "UI_OVERLAY_FOOD": "Food",
     "UI_OVERLAY_HAPPINESS": "Happiness",
     "UI_OVERLAY_KNOWLEDGE": "Knowledge",
+    "UI_OVERLAY_AUTHORITY": "Authority",
     "UI_OVERLAY_MILITARY": "Military",
     "UI_OVERLAY_PRODUCTIVITY": "Productivity",
     "UI_OVERLAY_RESOURCE": "Resources",
