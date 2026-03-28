@@ -2,7 +2,7 @@ use sim_core::config;
 use sim_engine::SimEngine;
 use sim_systems::runtime::{
     AceTrackerRuntimeSystem, AgeRuntimeSystem, AttachmentRuntimeSystem, BehaviorRuntimeSystem,
-    BandBehaviorSystem, BandFormationSystem, BuildingEffectRuntimeSystem,
+    BandBehaviorSystem, BandFormationSystem, BuildingEffectRuntimeSystem, TerritoryRuntimeSystem,
     ChildStressProcessorRuntimeSystem,
     ChildcareRuntimeSystem, ChronicleRuntimeSystem, ConstructionRuntimeSystem,
     ContagionRuntimeSystem, CopingRuntimeSystem, CraftingRuntimeSystem,
@@ -91,6 +91,7 @@ pub(crate) enum RuntimeSystemId {
     PairwiseInteraction = 61,
     BandFormation = 62,
     BandBehavior = 63,
+    Territory = 64,
 }
 
 impl RuntimeSystemId {
@@ -161,6 +162,7 @@ impl RuntimeSystemId {
             Self::PairwiseInteraction => "pairwise_interaction_system",
             Self::BandFormation => "band_formation_system",
             Self::BandBehavior => "band_behavior_system",
+            Self::Territory => "territory_system",
         }
     }
 
@@ -231,6 +233,7 @@ impl RuntimeSystemId {
             Self::BandFormation,
             Self::BandBehavior,
             Self::EffectApply,
+            Self::Territory,
         ]
     }
 }
@@ -252,7 +255,7 @@ pub(crate) const DEFAULT_DISABLED_RUNTIME_SYSTEMS: [RuntimeSystemId; 4] = [
 ];
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -549,6 +552,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 60] = [
         tick_interval: 1,
     },
     DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::Territory,
+        priority: 55,
+        tick_interval: 5,
+    },
+    DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::EffectApply,
         priority: 9999,
         tick_interval: 1,
@@ -721,6 +729,9 @@ pub(crate) fn register_runtime_system(
         }
         RuntimeSystemId::BandBehavior => {
             engine.register(BandBehaviorSystem::new(priority_u32, tick_interval_u64))
+        }
+        RuntimeSystemId::Territory => {
+            engine.register(TerritoryRuntimeSystem::new(priority_u32, tick_interval_u64))
         }
         RuntimeSystemId::Reputation => engine.register(ReputationRuntimeSystem::new(
             priority_u32,

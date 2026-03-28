@@ -24,6 +24,7 @@ mod social;
 mod steering;
 mod steering_derive;
 mod story_sifter;
+pub mod territory;
 mod world;
 
 // ---- biology ----
@@ -48,6 +49,9 @@ pub use effect_apply::EffectApplySystem;
 
 // ---- influence ----
 pub use influence::InfluenceRuntimeSystem;
+
+// ---- territory ----
+pub use territory::TerritoryRuntimeSystem;
 
 // ---- llm ----
 pub use llm_request_system::LlmRequestRuntimeSystem;

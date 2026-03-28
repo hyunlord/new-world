@@ -608,6 +608,19 @@ func runtime_get_influence_grid_size() -> Vector2i:
 	return Vector2i.ZERO
 
 
+## Returns dominant-faction territory texture for shader rendering.
+func runtime_get_territory_texture() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_territory_texture"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_territory_texture")
+	if result is Dictionary:
+		return result
+	return {}
+
+
 ## Returns band territory density textures for shader-based metaball rendering.
 func runtime_get_band_territory_texture() -> Dictionary:
 	var runtime: Object = _get_native_runtime()

@@ -1366,6 +1366,36 @@ impl SimConfig {
     }
 }
 
+// ── Territory Grid ──────────────────────────────────────────────────────────
+/// Decay multiplier per tick for territory influence (0.998 ≈ 82% after 100 ticks).
+pub const TERRITORY_DECAY_RATE: f32 = 0.998;
+/// Minimum territory value before zeroing (noise floor).
+pub const TERRITORY_MIN_THRESHOLD: f32 = 0.005;
+/// Territory system priority (runs after influence system).
+pub const TERRITORY_SYSTEM_PRIORITY: u32 = 55;
+/// Territory system tick interval (every 5 ticks).
+pub const TERRITORY_SYSTEM_INTERVAL: u64 = 5;
+/// Campfire territory emission radius in tiles.
+pub const TERRITORY_CAMPFIRE_RADIUS: f32 = 10.0;
+/// Campfire territory emission intensity.
+pub const TERRITORY_CAMPFIRE_INTENSITY: f32 = 0.15;
+/// Stockpile territory emission radius in tiles.
+pub const TERRITORY_STOCKPILE_RADIUS: f32 = 8.0;
+/// Stockpile territory emission intensity.
+pub const TERRITORY_STOCKPILE_INTENSITY: f32 = 0.20;
+/// Shelter territory emission radius in tiles.
+pub const TERRITORY_SHELTER_RADIUS: f32 = 6.0;
+/// Shelter territory emission intensity.
+pub const TERRITORY_SHELTER_INTENSITY: f32 = 0.25;
+/// Default territory emission radius for unknown building types.
+pub const TERRITORY_DEFAULT_RADIUS: f32 = 6.0;
+/// Default territory emission intensity for unknown building types.
+pub const TERRITORY_DEFAULT_INTENSITY: f32 = 0.10;
+/// Weak territory emission intensity for band leaders without buildings.
+pub const TERRITORY_LEADER_INTENSITY: f32 = 0.08;
+/// Weak territory emission radius for band leaders.
+pub const TERRITORY_LEADER_RADIUS: f32 = 5.0;
+
 #[cfg(test)]
 mod tests {
     use super::*;
