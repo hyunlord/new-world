@@ -3583,6 +3583,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F3:
 			_toggle_debug()
+		elif event.keycode >= KEY_F1 and event.keycode <= KEY_F9 and event.keycode != KEY_F3:
+			var f_index: int = event.keycode - KEY_F1
+			var visible_channels: Array[String] = []
+			for ch: String in _bottom_bar_overlay_buttons:
+				var btn: Button = _bottom_bar_overlay_buttons[ch]
+				if btn != null and btn.visible:
+					visible_channels.append(ch)
+			if f_index < visible_channels.size():
+				_on_bottom_bar_overlay_pressed(visible_channels[f_index])
+				get_viewport().set_input_as_handled()
+				return
 		elif event.keycode == KEY_TAB:
 			if (_selected_entity_id >= 0 or _entity_detail_panel_open) and (_popup_manager == null or not _popup_manager.is_any_visible()):
 				_toggle_entity_detail_sidebar()
