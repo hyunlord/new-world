@@ -7,6 +7,7 @@ use sim_engine::{SimResources, SimSystem};
 pub struct TerritoryRuntimeSystem {
     priority: u32,
     tick_interval: u64,
+    diagnostic_logged: bool,
 }
 
 impl TerritoryRuntimeSystem {
@@ -15,6 +16,7 @@ impl TerritoryRuntimeSystem {
         Self {
             priority,
             tick_interval: tick_interval.max(1),
+            diagnostic_logged: false,
         }
     }
 }
@@ -37,6 +39,25 @@ impl SimSystem for TerritoryRuntimeSystem {
 
         // Step 1: Decay all existing territory values
         grid.decay_all(config::TERRITORY_DECAY_RATE, config::TERRITORY_MIN_THRESHOLD);
+
+        // ONE-TIME diagnostic after tick 100
+        #[cfg(debug_assertions)]
+        if !self.diagnostic_logged && _tick > 100 {
+            self.diagnostic_logged = true;
+            let building_count = resources.buildings.len();
+            let complete_count = resources.buildings.values().filter(|b| b.is_complete).count();
+            let faction_count = grid.active_factions().len();
+            eprintln!(
+                "[TerritorySystem] tick={} buildings={} complete={} factions={} grid={}x{}",
+                _tick, building_count, complete_count, faction_count, grid.width, grid.height
+            );
+            for (id, b) in resources.buildings.iter().take(5) {
+                eprintln!(
+                    "[TerritorySystem]   building {:?} type={} pos=({},{}) complete={} settlement={:?}",
+                    id, b.building_type, b.x, b.y, b.is_complete, b.settlement_id
+                );
+            }
+        }
 
         // Step 2: Each completed building stamps Gaussian into its settlement's faction channel
         for building in resources.buildings.values() {
