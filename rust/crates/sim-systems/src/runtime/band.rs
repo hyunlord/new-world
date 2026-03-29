@@ -2410,14 +2410,15 @@ mod tests {
         }
         seed_band(&mut resources, band_id, &members, true, 10);
 
+        // Intra-cluster trust 0.3 → avg across all 15 pairs = 6×0.3/15 = 0.12 < 0.15
         for left in 0..3 {
             for right in (left + 1)..3 {
-                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+                set_mutual_trust(&mut world, members[left], members[right], 0.3);
             }
         }
         for left in 3..6 {
             for right in (left + 1)..6 {
-                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+                set_mutual_trust(&mut world, members[left], members[right], 0.3);
             }
         }
 
@@ -2552,14 +2553,15 @@ mod tests {
         }
         seed_band(&mut resources, band_id, &members, true, 10);
 
+        // Intra-cluster trust 0.3 → avg across all 15 pairs = 6×0.3/15 = 0.12 < 0.15
         for left in 0..3 {
             for right in (left + 1)..3 {
-                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+                set_mutual_trust(&mut world, members[left], members[right], 0.3);
             }
         }
         for left in 3..6 {
             for right in (left + 1)..6 {
-                set_mutual_trust(&mut world, members[left], members[right], 0.7);
+                set_mutual_trust(&mut world, members[left], members[right], 0.3);
             }
         }
 
@@ -2732,7 +2734,7 @@ mod tests {
         };
 
         assert_eq!(
-            determine_split_cause(&band, 0.8, 0.2),
+            determine_split_cause(&band, 0.8, 0.10),
             Some(BandSplitCause::ValueClash)
         );
     }
