@@ -1386,15 +1386,15 @@ func _update_band_territory(delta: float) -> void:
 
 
 func _refresh_band_territory() -> void:
-	if _sim_engine == null or not _sim_engine.has_method("get_band_territory_texture"):
+	if _sim_engine == null or not _sim_engine.has_method("get_territory_texture"):
 		return
-	var data: Dictionary = _sim_engine.get_band_territory_texture()
+	var data: Dictionary = _sim_engine.get_territory_texture()
 	if data.is_empty():
 		return
-	var band_ids: PackedByteArray = data.get("band_ids", PackedByteArray())
+	var band_ids: PackedByteArray = data.get("faction_ids", PackedByteArray())
 	var density: PackedByteArray = data.get("density", PackedByteArray())
 	var colors: Array = data.get("colors", [])
-	var band_count: int = int(data.get("band_count", 0))
+	var band_count: int = int(data.get("faction_count", 0))
 	if band_ids.is_empty() or density.is_empty():
 		return
 

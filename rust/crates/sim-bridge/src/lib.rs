@@ -3416,42 +3416,6 @@ impl WorldSimRuntime {
         dict
     }
 
-    /// Returns band territory density textures for shader-based metaball rendering.
-    #[func]
-    fn runtime_get_band_territory_texture(&self) -> VarDictionary {
-        let Some(state) = self.state.as_ref() else {
-            return VarDictionary::new();
-        };
-        let world = state.engine.world();
-        let resources = state.engine.resources();
-        let (band_id_map, density_map) =
-            runtime_queries::compute_band_territory_textures(world, resources);
-
-        let bands: Vec<&sim_core::band::Band> = resources.band_store.all().collect();
-        let palette: [(f32, f32, f32); 8] = [
-            (0.85, 0.45, 0.20),
-            (0.30, 0.65, 0.85),
-            (0.75, 0.35, 0.65),
-            (0.40, 0.78, 0.40),
-            (0.90, 0.72, 0.25),
-            (0.55, 0.40, 0.80),
-            (0.80, 0.30, 0.30),
-            (0.30, 0.75, 0.70),
-        ];
-        let mut colors: Array<Vector3> = Array::new();
-        for (i, _band) in bands.iter().enumerate() {
-            let (r, g, b) = palette[i % palette.len()];
-            colors.push(Vector3::new(r, g, b));
-        }
-
-        let mut dict = VarDictionary::new();
-        dict.set("band_ids", PackedByteArray::from(band_id_map));
-        dict.set("density", PackedByteArray::from(density_map));
-        dict.set("colors", colors);
-        dict.set("band_count", bands.len() as i64);
-        dict
-    }
-
     /// Exports one influence-grid channel as normalized `u8` bytes for GPU heatmap rendering.
     #[func]
     fn runtime_get_influence_texture(&self, channel_name: GString) -> PackedByteArray {
