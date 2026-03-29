@@ -240,13 +240,13 @@ pub const GFS_THRESHOLD: f64 = 0.45;
 /// Maximum distance for proximity-based GFS contribution.
 pub const GFS_PROXIMITY_MAX_DISTANCE: f64 = 50.0;
 /// Minimum connected-component size needed to create a provisional band.
-pub const BAND_MIN_SIZE_PROVISIONAL: usize = 2;
+pub const BAND_MIN_SIZE_PROVISIONAL: usize = 3;
 /// Minimum member count required before promotion to an established band.
 pub const BAND_MIN_SIZE_PROMOTED: usize = 3;
 /// Maximum stable band size before truncation.
 pub const BAND_MAX_SIZE: usize = 30;
 /// Ticks a provisional group must survive before promotion.
-pub const BAND_PROMOTION_TICKS: u64 = 720;
+pub const BAND_PROMOTION_TICKS: u64 = 1440;
 /// Baseline Granovetter participation threshold before personality shifts.
 pub const BAND_GRANOVETTER_BASE_THRESHOLD: f64 = 0.5;
 /// Scheduler priority for band formation.
@@ -262,9 +262,9 @@ pub const BAND_COHESION_WEIGHT: f64 = 0.8;
 /// Extra separation multiplier applied against non-band outsiders.
 pub const BAND_OUTSIDER_SEPARATION_MULT: f64 = 1.5;
 /// Average trust threshold below which a band may split.
-pub const BAND_FISSION_TRUST_THRESHOLD: f64 = 0.3;
+pub const BAND_FISSION_TRUST_THRESHOLD: f64 = 0.15;
 /// Average value alignment threshold below which a band may split.
-pub const BAND_FISSION_VALUES_THRESHOLD: f64 = 0.4;
+pub const BAND_FISSION_VALUES_THRESHOLD: f64 = 0.20;
 /// Search radius used when loners evaluate nearby promoted bands.
 pub const LONER_SEARCH_RADIUS: f64 = 15.0;
 /// Minimum average GFS needed for a loner to join a band.

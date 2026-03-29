@@ -1066,9 +1066,15 @@ fn behavior_assign_action(
         ActionType::GatherStone => find_nearest_terrain_tile(
             position,
             resources,
-            15,
+            40,
             &[TerrainType::Hill, TerrainType::Mountain],
         )
+        .or_else(|| find_nearest_terrain_tile(
+            position,
+            resources,
+            20,
+            &[TerrainType::Beach],
+        ))
         .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
         ActionType::Build => build_target
             .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
