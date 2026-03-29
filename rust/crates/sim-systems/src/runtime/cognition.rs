@@ -594,6 +594,8 @@ fn behavior_select_action(
     has_settlement: bool,
     has_food_item: bool,
     has_tool: bool,
+    settlement_stone: f64,
+    settlement_wood: f64,
     rng: &mut impl Rng,
 ) -> ActionType {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -731,6 +733,28 @@ fn behavior_select_action(
         }
         _ => {}
     }
+
+    // Settlement resource deficit boosts gathering priorities
+    if has_settlement {
+        let stone_deficit = if settlement_stone < 2.0 {
+            ((2.0 - settlement_stone) / 2.0).clamp(0.0, 1.0) as f32
+        } else {
+            0.0
+        };
+        if stone_deficit > 0.0 && behavior.job == "miner" {
+            behavior_score_add(&mut scores, ActionType::GatherStone, stone_deficit * 0.80);
+        }
+
+        let wood_deficit = if settlement_wood < 5.0 {
+            ((5.0 - settlement_wood) / 5.0).clamp(0.0, 1.0) as f32
+        } else {
+            0.0
+        };
+        if wood_deficit > 0.0 && behavior.job == "lumberjack" {
+            behavior_score_add(&mut scores, ActionType::GatherWood, wood_deficit * 0.60);
+        }
+    }
+
     if matches!(age_stage, GrowthStage::Teen) {
         scores.remove(&ActionType::GatherStone);
         behavior_score_mul(&mut scores, ActionType::GatherWood, 0.70);
@@ -1210,6 +1234,11 @@ impl SimSystem for BehaviorRuntimeSystem {
                 })
                 .unwrap_or(false);
             let has_tool = crafting::inventory_has_tool(inventory_opt, resources);
+            let (settlement_stone, settlement_wood) = identity_opt
+                .and_then(|id| id.settlement_id)
+                .and_then(|sid| resources.settlements.get(&sid))
+                .map(|s| (s.stockpile_stone, s.stockpile_wood))
+                .unwrap_or((0.0, 0.0));
             let next_action = behavior_select_action(
                 age.stage,
                 needs,
@@ -1221,6 +1250,8 @@ impl SimSystem for BehaviorRuntimeSystem {
                 has_settlement,
                 has_food_item,
                 has_tool,
+                settlement_stone,
+                settlement_wood,
                 &mut resources.rng,
             );
             let previous_action = behavior.current_action;
@@ -1544,6 +1575,8 @@ mod tests {
             true,
             true,
             false,
+            0.0,
+            0.0,
             &mut rng,
         );
 
@@ -1571,6 +1604,8 @@ mod tests {
             true,
             false,
             false,
+            0.0,
+            0.0,
             &mut rng,
         );
 
@@ -1598,6 +1633,8 @@ mod tests {
             true,
             false,
             false,
+            0.0,
+            0.0,
             &mut rng,
         );
 
@@ -1625,6 +1662,8 @@ mod tests {
             true,
             false,
             false,
+            0.0,
+            0.0,
             &mut rng,
         );
 
