@@ -4,8 +4,8 @@ uniform sampler2D band_id_tex : filter_nearest, repeat_disable;
 uniform sampler2D density_tex : filter_linear, repeat_disable;
 uniform vec3 band_colors[8];
 uniform int band_count = 0;
-uniform float fill_alpha : hint_range(0.0, 1.0) = 0.12;
-uniform float border_alpha : hint_range(0.0, 1.0) = 0.50;
+uniform float fill_alpha : hint_range(0.0, 1.0) = 0.20;
+uniform float border_alpha : hint_range(0.0, 1.0) = 0.60;
 uniform float density_threshold : hint_range(0.0, 1.0) = 0.08;
 
 void fragment() {
