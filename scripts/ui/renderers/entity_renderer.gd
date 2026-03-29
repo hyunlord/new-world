@@ -29,7 +29,6 @@ var _band_territory_material: ShaderMaterial = null
 var _band_id_texture: ImageTexture = null
 var _band_density_texture: ImageTexture = null
 var _band_territory_timer: float = 0.0
-var _territory_diag_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
 var _snapshot_decoder = SnapshotDecoderClass.new()
@@ -1397,20 +1396,6 @@ func _refresh_band_territory() -> void:
 	var colors: Array = data.get("colors", [])
 	var band_count: int = int(data.get("faction_count", 0))
 
-	_territory_diag_timer -= BAND_TERRITORY_INTERVAL
-	if _territory_diag_timer <= 0.0:
-		_territory_diag_timer = 30.0
-		var max_density: int = 0
-		for i in range(mini(density.size(), 65536)):
-			if density[i] > max_density:
-				max_density = density[i]
-		var max_faction: int = 0
-		for i in range(mini(band_ids.size(), 65536)):
-			if band_ids[i] > max_faction:
-				max_faction = band_ids[i]
-		print("[Territory] ids=%d density=%d factions=%d max_d=%d max_f=%d colors=%d" % [
-			band_ids.size(), density.size(), band_count, max_density, max_faction, colors.size()])
-
 	if band_ids.is_empty() or density.is_empty():
 		return
 
@@ -1466,7 +1451,7 @@ func _ensure_band_territory_sprite() -> void:
 	_band_territory_sprite.centered = false
 	_band_territory_sprite.position = Vector2.ZERO
 	_band_territory_sprite.scale = Vector2(float(GameConfig.TILE_SIZE), float(GameConfig.TILE_SIZE))
-	_band_territory_sprite.z_index = -1
+	_band_territory_sprite.z_index = 1  # Above terrain (0), below entities (2+)
 	_band_territory_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_band_territory_material = ShaderMaterial.new()
 	_band_territory_material.shader = shader
