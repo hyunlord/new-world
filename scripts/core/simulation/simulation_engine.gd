@@ -436,11 +436,11 @@ func get_influence_texture(channel: String) -> PackedByteArray:
 	return PackedByteArray()
 
 
-func get_band_territory_texture() -> Dictionary:
+func get_territory_texture() -> Dictionary:
 	var sim_bridge: Object = _get_sim_bridge()
-	if sim_bridge == null or not sim_bridge.has_method("runtime_get_band_territory_texture"):
+	if sim_bridge == null or not sim_bridge.has_method("runtime_get_territory_texture"):
 		return {}
-	var raw: Variant = sim_bridge.call("runtime_get_band_territory_texture")
+	var raw: Variant = sim_bridge.call("runtime_get_territory_texture")
 	if raw is Dictionary:
 		return raw
 	return {}
