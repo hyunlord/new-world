@@ -71,6 +71,8 @@ var _hover_tooltip_lines: PackedStringArray = PackedStringArray()
 var _hover_screen_pos: Vector2 = Vector2.ZERO
 var _hover_check_interval: int = 0
 
+var _job_check_done: bool = false
+
 ## Double-click detection
 var _last_click_time: float = 0.0
 var _last_click_pos: Vector2 = Vector2.ZERO
@@ -286,6 +288,18 @@ func _on_simulation_event(event: Dictionary) -> void:
 
 
 func _process(_delta: float) -> void:
+	if not _job_check_done and Engine.get_process_frames() > 300:
+		_job_check_done = true
+		if _sim_engine != null and _sim_engine.has_method("get_snapshot"):
+			var snapshot: Dictionary = _sim_engine.get_snapshot()
+			var entities: Array = snapshot.get("entities", [])
+			var job_counts: Dictionary = {}
+			for e: Variant in entities:
+				if not (e is Dictionary):
+					continue
+				var job: String = str(e.get("job", "unknown"))
+				job_counts[job] = int(job_counts.get(job, 0)) + 1
+			print("[JobCheck] %s" % str(job_counts))
 	_update_binary_snapshots()
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
