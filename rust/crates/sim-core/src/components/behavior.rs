@@ -57,7 +57,7 @@ impl Default for Behavior {
             action_timer: 0,
             action_duration: 0,
             carry: 0.0,
-            job: "gatherer".to_string(),
+            job: "none".to_string(),
             job_satisfaction: 0.5,
             occupation: String::new(),
             occupation_satisfaction: 0.5,
