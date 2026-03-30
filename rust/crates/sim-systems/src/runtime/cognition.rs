@@ -1144,7 +1144,6 @@ fn behavior_assign_action(
 pub struct BehaviorRuntimeSystem {
     priority: u32,
     tick_interval: u64,
-    diagnostic_logged: bool,
 }
 
 impl BehaviorRuntimeSystem {
@@ -1152,7 +1151,6 @@ impl BehaviorRuntimeSystem {
         Self {
             priority,
             tick_interval: tick_interval.max(1),
-            diagnostic_logged: false,
         }
     }
 }
@@ -1302,41 +1300,6 @@ impl SimSystem for BehaviorRuntimeSystem {
                     value: f64::from(behavior.action_timer),
                 });
             }
-        }
-        drop(query);
-
-        // One-time miner/stone diagnostic after tick 500
-        if !self.diagnostic_logged && tick > 500 {
-            self.diagnostic_logged = true;
-            let mut miner_count = 0u32;
-            let mut miner_actions: Vec<String> = Vec::new();
-            let mut diag_query = world.query::<(&Behavior, &Identity)>();
-            for (_entity, (behavior, identity)) in diag_query.iter() {
-                if behavior.job == "miner" {
-                    miner_count += 1;
-                    miner_actions.push(format!(
-                        "action={:?} settlement={:?}",
-                        behavior.current_action, identity.settlement_id
-                    ));
-                }
-            }
-            drop(diag_query);
-
-            let mut stone_stockpiles: Vec<String> = Vec::new();
-            for (sid, settlement) in &resources.settlements {
-                stone_stockpiles.push(format!(
-                    "S{}: stone={:.1} wood={:.1}",
-                    sid.0, settlement.stockpile_stone, settlement.stockpile_wood
-                ));
-            }
-
-            eprintln!(
-                "[BehaviorDiag] tick={} miners={} actions=[{}] stockpiles=[{}]",
-                tick,
-                miner_count,
-                miner_actions.join(", "),
-                stone_stockpiles.join(", ")
-            );
         }
     }
 }

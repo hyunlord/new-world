@@ -64,6 +64,7 @@ var _agent_texture: Texture2D = null
 var _agent_palette_lut: Texture2D = null
 var _agent_visual_shader: Shader = null
 var _relationship_overlay = null
+var _miner_diag_done: bool = false
 
 ## Hover tooltip state
 var _hover_entity_id: int = -1
@@ -294,6 +295,27 @@ func _process(_delta: float) -> void:
 	_update_band_territory(_delta)
 	if _binary_snapshot_available or _hover_entity_id >= 0:
 		queue_redraw()
+	if not _miner_diag_done and Engine.get_process_frames() > 600:
+		_miner_diag_done = true
+		var miner_count: int = 0
+		var miner_actions: Array[String] = []
+		for e_raw: Variant in _get_legacy_snapshots():
+			if not (e_raw is Dictionary):
+				continue
+			var e: Dictionary = e_raw
+			if str(e.get("job", "")) == "miner":
+				miner_count += 1
+				miner_actions.append("action=%s sid=%s" % [str(e.get("current_action", "?")), str(e.get("settlement_id", "?"))])
+		var world_summary: Dictionary = _get_runtime_world_summary()
+		var stockpiles: Array[String] = []
+		for s_raw: Variant in world_summary.get("settlement_summaries", []):
+			if not (s_raw is Dictionary):
+				continue
+			var s: Dictionary = s_raw
+			var sd_raw: Variant = s.get("settlement", {})
+			var sd: Dictionary = sd_raw if sd_raw is Dictionary else {}
+			stockpiles.append("S%d: stone=%.1f wood=%.1f" % [int(s.get("id", -1)), float(sd.get("stockpile_stone", 0.0)), float(sd.get("stockpile_wood", 0.0))])
+		print("[MinerDiag] miners=%d actions=[%s] stockpiles=[%s]" % [miner_count, ", ".join(miner_actions), ", ".join(stockpiles)])
 
 
 func _update_hover() -> void:
