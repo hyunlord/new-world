@@ -29,6 +29,7 @@ var _band_territory_material: ShaderMaterial = null
 var _band_id_texture: ImageTexture = null
 var _band_density_texture: ImageTexture = null
 var _band_territory_timer: float = 0.0
+var _job_check_done: bool = false
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
 var _snapshot_decoder = SnapshotDecoderClass.new()
@@ -70,8 +71,6 @@ var _hover_entity_id: int = -1
 var _hover_tooltip_lines: PackedStringArray = PackedStringArray()
 var _hover_screen_pos: Vector2 = Vector2.ZERO
 var _hover_check_interval: int = 0
-
-var _job_check_done: bool = false
 
 ## Double-click detection
 var _last_click_time: float = 0.0
@@ -290,16 +289,16 @@ func _on_simulation_event(event: Dictionary) -> void:
 func _process(_delta: float) -> void:
 	if not _job_check_done and Engine.get_process_frames() > 300:
 		_job_check_done = true
-		if _sim_engine != null and _sim_engine.has_method("get_snapshot"):
-			var snapshot: Dictionary = _sim_engine.get_snapshot()
-			var entities: Array = snapshot.get("entities", [])
+		if _sim_engine != null and _sim_engine.has_method("get_agent_snapshots"):
+			var agents: Array = _sim_engine.get_agent_snapshots()
 			var job_counts: Dictionary = {}
-			for e: Variant in entities:
-				if not (e is Dictionary):
-					continue
-				var job: String = str(e.get("job", "unknown"))
-				job_counts[job] = int(job_counts.get(job, 0)) + 1
-			print("[JobCheck] %s" % str(job_counts))
+			for a: Variant in agents:
+				if a is Dictionary:
+					var job: String = str(a.get("job", "?"))
+					job_counts[job] = int(job_counts.get(job, 0)) + 1
+			print("[JobCheck] agents=%d jobs=%s" % [agents.size(), str(job_counts)])
+		else:
+			print("[JobCheck] FAIL: no get_agent_snapshots")
 	_update_binary_snapshots()
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
