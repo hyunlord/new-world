@@ -684,7 +684,11 @@ impl SimSystem for JobAssignmentRuntimeSystem {
                     if behavior.job == surplus_job
                         && matches!(
                             behavior.current_action,
-                            ActionType::Idle | ActionType::Wander | ActionType::Rest | ActionType::Socialize
+                            ActionType::Idle
+                                | ActionType::Wander
+                                | ActionType::Rest
+                                | ActionType::Socialize
+                                | ActionType::Forage
                         )
                     {
                         behavior.job = deficit_job.to_string();
