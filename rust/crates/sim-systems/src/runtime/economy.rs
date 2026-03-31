@@ -95,6 +95,7 @@ impl SimSystem for ResourceRegenSystem {
 pub struct JobAssignmentRuntimeSystem {
     priority: u32,
     tick_interval: u64,
+    first_run: bool,
 }
 
 impl JobAssignmentRuntimeSystem {
@@ -102,6 +103,7 @@ impl JobAssignmentRuntimeSystem {
         Self {
             priority,
             tick_interval: tick_interval.max(1),
+            first_run: true,
         }
     }
 }
@@ -590,6 +592,22 @@ impl SimSystem for JobAssignmentRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        // On first run, reset all adult jobs to "none" for proper ratio-based distribution
+        if self.first_run {
+            self.first_run = false;
+            let mut reset_query = world.query::<(&Age, &mut Behavior)>();
+            for (_, (age, behavior)) in &mut reset_query {
+                if matches!(age.stage, GrowthStage::Adult | GrowthStage::Teen | GrowthStage::Elder)
+                    && (behavior.occupation.is_empty()
+                        || behavior.occupation == "none"
+                        || behavior.occupation == "laborer")
+                {
+                    behavior.job = "none".to_string();
+                }
+            }
+            drop(reset_query);
+        }
+
         let mut alive_count: i32 = 0;
         let mut job_counts: [i32; 4] = [0; 4];
         let mut unassigned: Vec<(Entity, GrowthStage)> = Vec::new();
