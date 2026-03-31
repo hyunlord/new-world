@@ -78,6 +78,62 @@ impl TerritoryGrid {
         }
     }
 
+    /// Stamp Gaussian influence, skipping impassable tiles.
+    /// `is_passable` returns true if (x, y) is a valid territory tile.
+    pub fn stamp_gaussian_terrain(
+        &mut self,
+        faction_id: FactionId,
+        cx: u32,
+        cy: u32,
+        intensity: f32,
+        radius: f32,
+        is_passable: impl Fn(u32, u32) -> bool,
+    ) {
+        self.ensure_faction(faction_id);
+        let w = self.width as i32;
+        let h = self.height as i32;
+        let data = self.channels.get_mut(&faction_id).unwrap_or_else(|| unreachable!());
+        let sigma = radius / 2.5;
+        let sigma_sq_2 = 2.0 * sigma * sigma;
+        let search = radius.ceil() as i32;
+
+        for dy in -search..=search {
+            let ty = cy as i32 + dy;
+            if ty < 0 || ty >= h {
+                continue;
+            }
+            for dx in -search..=search {
+                let tx = cx as i32 + dx;
+                if tx < 0 || tx >= w {
+                    continue;
+                }
+                if !is_passable(tx as u32, ty as u32) {
+                    continue;
+                }
+                let dist_sq = (dx * dx + dy * dy) as f32;
+                if dist_sq > radius * radius {
+                    continue;
+                }
+                let value = intensity * (-dist_sq / sigma_sq_2).exp();
+                let idx = ty as usize * self.width as usize + tx as usize;
+                data[idx] = (data[idx] + value).min(1.0);
+            }
+        }
+    }
+
+    /// Stamp a single tile with activity value (no Gaussian spread).
+    /// Used for agent activity accumulation — agents deposit territorial influence
+    /// on tiles where they perform productive actions.
+    pub fn stamp_tile(&mut self, faction_id: FactionId, x: u32, y: u32, intensity: f32) {
+        self.ensure_faction(faction_id);
+        if x >= self.width || y >= self.height {
+            return;
+        }
+        let data = self.channels.get_mut(&faction_id).unwrap_or_else(|| unreachable!());
+        let idx = y as usize * self.width as usize + x as usize;
+        data[idx] = (data[idx] + intensity).min(1.0);
+    }
+
     /// Apply decay to all factions. Values below min_threshold are zeroed.
     pub fn decay_all(&mut self, decay_rate: f32, min_threshold: f32) {
         for data in self.channels.values_mut() {
@@ -179,5 +235,50 @@ mod tests {
         grid.decay_all(0.1, 0.005);
         let data = grid.get(1).unwrap();
         assert_eq!(data[2 * 4 + 2], 0.0);
+    }
+
+    #[test]
+    fn stamp_gaussian_terrain_skips_impassable() {
+        let mut grid = TerritoryGrid::new(16, 16);
+        // Center tile (8,8) is impassable; adjacent tiles should still receive influence
+        grid.stamp_gaussian_terrain(1, 8, 8, 1.0, 4.0, |x, y| !(x == 8 && y == 8));
+        let data = grid.get(1).unwrap();
+        assert_eq!(data[8 * 16 + 8], 0.0); // Center skipped
+        assert!(data[8 * 16 + 9] > 0.0);   // Adjacent passable tile has value
+    }
+
+    #[test]
+    fn stamp_gaussian_terrain_all_blocked_is_noop() {
+        let mut grid = TerritoryGrid::new(8, 8);
+        grid.stamp_gaussian_terrain(1, 4, 4, 1.0, 3.0, |_, _| false);
+        let data = grid.get(1).unwrap();
+        assert!(data.iter().all(|&v| v == 0.0));
+    }
+
+    #[test]
+    fn stamp_tile_adds_value() {
+        let mut grid = TerritoryGrid::new(16, 16);
+        grid.stamp_tile(1, 5, 5, 0.1);
+        grid.stamp_tile(1, 5, 5, 0.1);
+        let data = grid.get(1).unwrap();
+        assert!((data[5 * 16 + 5] - 0.2).abs() < 0.001);
+    }
+
+    #[test]
+    fn stamp_tile_clamps_at_one() {
+        let mut grid = TerritoryGrid::new(8, 8);
+        grid.stamp_tile(1, 2, 2, 0.8);
+        grid.stamp_tile(1, 2, 2, 0.8);
+        let data = grid.get(1).unwrap();
+        assert!((data[2 * 8 + 2] - 1.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn stamp_tile_out_of_bounds_is_noop() {
+        let mut grid = TerritoryGrid::new(8, 8);
+        grid.stamp_tile(1, 100, 100, 0.5); // Should not panic
+        // Faction channel created but all zeros
+        let data = grid.get(1).unwrap();
+        assert!(data.iter().all(|&v| v == 0.0));
     }
 }

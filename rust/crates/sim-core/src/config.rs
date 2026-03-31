@@ -1395,6 +1395,9 @@ pub const TERRITORY_DEFAULT_INTENSITY: f32 = 0.10;
 pub const TERRITORY_LEADER_INTENSITY: f32 = 0.08;
 /// Weak territory emission radius for band leaders.
 pub const TERRITORY_LEADER_RADIUS: f32 = 5.0;
+/// Territory boost per agent action tick for productive actions
+/// (Forage, Hunt, GatherWood, GatherStone, Build, Craft).
+pub const TERRITORY_ACTIVITY_INTENSITY: f32 = 0.02;
 
 #[cfg(test)]
 mod tests {
