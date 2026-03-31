@@ -860,7 +860,8 @@ impl SimSystem for OccupationRuntimeSystem {
                 if behavior.occupation != new_occupation {
                     behavior.occupation = new_occupation.to_string();
                 }
-                behavior.job = occupation_to_legacy_job(new_occupation).to_string();
+                // Do NOT overwrite job for "none"/"laborer" occupation —
+                // let JobAssignmentRuntimeSystem handle job distribution
                 continue;
             }
 
