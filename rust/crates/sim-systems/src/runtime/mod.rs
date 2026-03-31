@@ -1527,7 +1527,7 @@ mod tests {
             };
             let behavior = Behavior {
                 job: "builder".to_string(),
-                occupation: "none".to_string(),
+                occupation: "builder".to_string(),
                 current_action: ActionType::Idle,
                 ..Behavior::default()
             };
@@ -1540,7 +1540,7 @@ mod tests {
             };
             let behavior = Behavior {
                 job: job.to_string(),
-                occupation: "none".to_string(),
+                occupation: job.to_string(),
                 current_action: ActionType::Idle,
                 ..Behavior::default()
             };
