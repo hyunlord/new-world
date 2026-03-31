@@ -681,7 +681,12 @@ impl SimSystem for JobAssignmentRuntimeSystem {
                 let deficit_job = JOB_ASSIGNMENT_ORDER[deficit_idx as usize];
                 let mut rebalance_query = world.query::<&mut Behavior>();
                 for (_, behavior) in &mut rebalance_query {
-                    if behavior.job == surplus_job && behavior.current_action == ActionType::Idle {
+                    if behavior.job == surplus_job
+                        && matches!(
+                            behavior.current_action,
+                            ActionType::Idle | ActionType::Wander | ActionType::Rest | ActionType::Socialize
+                        )
+                    {
                         behavior.job = deficit_job.to_string();
                         break;
                     }
