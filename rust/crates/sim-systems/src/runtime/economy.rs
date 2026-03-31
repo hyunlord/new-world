@@ -596,22 +596,22 @@ impl SimSystem for JobAssignmentRuntimeSystem {
 
         let mut query = world.query::<(&Age, &mut Behavior)>();
         for (entity, (age, behavior)) in &mut query {
-            alive_count += 1;
             match age.stage {
                 GrowthStage::Infant | GrowthStage::Toddler => {
                     if behavior.job != "none" {
                         behavior.job = "none".to_string();
                     }
-                    continue;
+                    continue; // Don't count in alive_count — not eligible for job assignment
                 }
                 GrowthStage::Child => {
                     if behavior.job != "gatherer" {
                         behavior.job = "gatherer".to_string();
                     }
-                    continue;
+                    continue; // Don't count in alive_count — force-assigned, not eligible
                 }
                 _ => {}
             }
+            alive_count += 1; // Only count Adult/Teen/Elder
 
             if !behavior.occupation.is_empty()
                 && behavior.occupation != "none"
