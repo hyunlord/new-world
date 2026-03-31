@@ -287,26 +287,13 @@ func _on_simulation_event(event: Dictionary) -> void:
 
 
 func _process(_delta: float) -> void:
-	if not _job_check_done and Engine.get_process_frames() > 300:
+	if not _job_check_done and Engine.get_process_frames() > 300 and _binary_snapshot_available:
 		_job_check_done = true
-		if _entity_manager == null:
-			print("[JobCheck] FAIL: entity_manager null")
-		else:
-			var alive: Array = _entity_manager.get_alive_entities()
-			var job_counts: Dictionary = {}
-			for entity: Variant in alive:
-				if entity == null or not (entity is RefCounted):
-					continue
-				var eid: int = int(entity.get("id")) if entity.has_method("get") else -1
-				if eid < 0:
-					# Try .id property
-					eid = int(entity.id) if "id" in entity else -1
-				if eid < 0:
-					continue
-				var detail: Dictionary = _sim_engine.get_entity_detail(eid) if _sim_engine != null else {}
-				var job: String = str(detail.get("job", "?"))
-				job_counts[job] = int(job_counts.get(job, 0)) + 1
-			print("[JobCheck] alive=%d jobs=%s" % [alive.size(), str(job_counts)])
+		var job_counts: Dictionary = {}
+		for index in range(_snapshot_decoder.agent_count):
+			var job_key: String = _binary_job_key(_snapshot_decoder.get_job_icon(index))
+			job_counts[job_key] = int(job_counts.get(job_key, 0)) + 1
+		print("[JobCheck] agents=%d jobs=%s" % [_snapshot_decoder.agent_count, str(job_counts)])
 	_update_binary_snapshots()
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
