@@ -145,6 +145,18 @@ pub enum GameEvent {
         settlement_id: SettlementId,
         new_era: String,
     },
+
+    // ── Territory ─────────────────────────────────────────────────────────────
+    /// Emitted when border friction between two settlements crosses the dispute threshold.
+    TerritoryDisputeDetected {
+        settlement_a: SettlementId,
+        settlement_b: SettlementId,
+        overlap_tile_count: u32,
+        friction: f64,
+        epicenter_x: u32,
+        epicenter_y: u32,
+    },
+
     Llm(LlmEvent),
 }
 
@@ -178,6 +190,7 @@ impl GameEvent {
             GameEvent::FamilyFormed { .. } => "family_formed",
             GameEvent::TechDiscovered { .. } => "tech_discovered",
             GameEvent::EraAdvanced { .. } => "era_advanced",
+            GameEvent::TerritoryDisputeDetected { .. } => "territory_dispute_detected",
             GameEvent::Llm(event) => match event {
                 LlmEvent::RequestSubmitted { .. } => "llm_request_submitted",
                 LlmEvent::ResponseReceived { .. } => "llm_response_received",

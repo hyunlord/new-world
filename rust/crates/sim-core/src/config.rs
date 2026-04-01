@@ -1423,6 +1423,26 @@ pub const TERRITORY_LEADER_RADIUS: f32 = 5.0;
 /// (Forage, Hunt, GatherWood, GatherStone, Build, Craft).
 pub const TERRITORY_ACTIVITY_INTENSITY: f32 = 0.02;
 
+// ── Territory Dispute Detection (Phase 4) ────────────────────────────────────
+
+/// How often (in ticks) to check for territory disputes.
+pub const TERRITORY_DISPUTE_CHECK_INTERVAL: u64 = 50;
+
+/// Minimum territory strength for a faction to count as "present" on a tile.
+pub const TERRITORY_DISPUTE_MIN_STRENGTH: f32 = 0.03;
+
+/// Friction accumulated per overlapping tile per check interval.
+pub const TERRITORY_FRICTION_PER_TILE: f64 = 0.01;
+
+/// Maximum friction score between any two settlements.
+pub const TERRITORY_FRICTION_MAX: f64 = 100.0;
+
+/// Friction threshold that triggers a TerritoryDisputeDetected event.
+pub const TERRITORY_FRICTION_DISPUTE_THRESHOLD: f64 = 5.0;
+
+/// Friction decay multiplier when overlap ceases (applied per check interval).
+pub const TERRITORY_FRICTION_DECAY: f64 = 0.95;
+
 #[cfg(test)]
 mod tests {
     use super::*;

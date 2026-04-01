@@ -2875,6 +2875,36 @@ func _reload_gdextension() -> bool:
 	return int(manager.call("load_extension", _GDEXTENSION_PATH)) == OK
 
 
+## Returns a width×height PackedByteArray encoding dispute intensity per tile.
+## Each byte is 0 (no contest) to 255 (maximum overlap). Used by renderers to
+## visualize contested border zones between settlements.
+func get_territory_dispute_texture() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("runtime_get_territory_dispute_texture"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("runtime_get_territory_dispute_texture")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
+## Returns current border friction scores as a Dictionary.
+## Keys are "<settlement_a_id>_<settlement_b_id>" strings (canonical min-first ordering).
+## Values are float friction scores in the range 0.0 to TERRITORY_FRICTION_MAX.
+func get_border_friction() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_get_border_friction"):
+		return {}
+	var result: Variant = runtime.call("runtime_get_border_friction")
+	if result is Dictionary:
+		return result
+	return {}
+
+
 func _reset_native_extension_cache() -> void:
 	_native_checked = false
 	_native_bridge = null

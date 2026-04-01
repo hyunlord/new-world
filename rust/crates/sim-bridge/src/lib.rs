@@ -3781,6 +3781,41 @@ impl WorldSimRuntime {
         };
         debug_api::query_entities_by_condition(state, &condition.to_string(), threshold)
     }
+
+    /// Returns a width×height u8 array representing dispute intensity per tile.
+    ///
+    /// Each byte encodes the second-strongest faction's influence on that tile (0 = no contest,
+    /// 255 = max). Tiles with fewer than two factions above threshold are zero.
+    /// Used by the renderer to visualize contested border zones.
+    #[func]
+    fn runtime_get_territory_dispute_texture(&self) -> PackedByteArray {
+        let Some(state) = self.state.as_ref() else {
+            return PackedByteArray::new();
+        };
+        let dispute_map = state
+            .engine
+            .resources()
+            .territory_grid
+            .export_dispute_map(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
+        PackedByteArray::from(dispute_map.as_slice())
+    }
+
+    /// Returns current border friction scores as a Dictionary.
+    ///
+    /// Keys are `"<settlement_a_id>_<settlement_b_id>"` strings (canonical min-first ordering).
+    /// Values are f32 friction scores in the range 0.0..=TERRITORY_FRICTION_MAX.
+    #[func]
+    fn runtime_get_border_friction(&self) -> VarDictionary {
+        let mut dict = VarDictionary::new();
+        let Some(state) = self.state.as_ref() else {
+            return dict;
+        };
+        for ((a, b), friction) in &state.engine.resources().border_friction {
+            let key = format!("{}_{}", a.0, b.0);
+            dict.set(key, *friction as f32);
+        }
+        dict
+    }
 }
 
 #[derive(GodotClass)]

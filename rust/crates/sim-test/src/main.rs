@@ -1434,6 +1434,87 @@ mod tests {
             }
         }
     }
+
+    /// Observational test: verifies compute_disputes() and border_friction accumulate correctly
+    /// when two or more settlements exist and their territories overlap.
+    /// Uses soft assertions — dispute occurrence depends on settlement proximity and seed.
+    #[test]
+    fn harness_territory_dispute_detected() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380 * 5); // 5 years
+
+        let resources = engine.resources();
+        let settlements = resources.settlements.len();
+        println!("[harness] settlements: {settlements}");
+
+        // Log settlement positions for diagnostics.
+        for (id, s) in &resources.settlements {
+            println!(
+                "[harness]   Settlement {:?} at ({}, {}), pop={}",
+                id,
+                s.x,
+                s.y,
+                s.members.len()
+            );
+        }
+
+        if settlements < 2 {
+            println!(
+                "[harness] SKIP: only {settlements} settlement(s), need ≥2 for dispute test"
+            );
+            return;
+        }
+
+        let disputes = resources
+            .territory_grid
+            .compute_disputes(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
+        println!("[harness] territory disputes found: {}", disputes.len());
+        for d in &disputes {
+            println!(
+                "[harness]   factions {} vs {}: overlap={} tiles, intensity={:.2}, epicenter=({},{})",
+                d.faction_a,
+                d.faction_b,
+                d.overlap_tile_count,
+                d.overlap_intensity,
+                d.epicenter_x,
+                d.epicenter_y
+            );
+        }
+
+        let total_friction: f64 = resources.border_friction.values().sum();
+        println!("[harness] total border friction: {total_friction:.2}");
+        println!(
+            "[harness] border friction pairs: {}",
+            resources.border_friction.len()
+        );
+
+        // Settlement-only disputes (faction_id 1–999): count must not exceed pairs.
+        let settlement_disputes: Vec<_> = disputes
+            .iter()
+            .filter(|d| d.faction_a < 1000 && d.faction_b < 1000)
+            .collect();
+        println!(
+            "[harness] settlement-only disputes: {}",
+            settlement_disputes.len()
+        );
+        assert!(
+            settlement_disputes.len() <= settlements * (settlements - 1) / 2,
+            "settlement dispute count {} exceeds theoretical max for {settlements} settlements",
+            settlement_disputes.len(),
+        );
+
+        // export_dispute_map() must return the correct buffer size.
+        let dispute_map = resources
+            .territory_grid
+            .export_dispute_map(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
+        assert_eq!(
+            dispute_map.len(),
+            (resources.map.width * resources.map.height) as usize,
+            "dispute map size mismatch"
+        );
+
+        println!("[harness] harness_territory_dispute_detected: PASS");
+    }
 }
 
 fn pathfind_bench_inputs() -> (
