@@ -286,6 +286,18 @@ func _populate_resources(world_data: RefCounted, resource_map: RefCounted,
 			if stone_base > 0.0:
 				var noise: float = rng.randf_range(0.7, 1.3)
 				resource_map.set_stone(x, y, minf(stone_base * noise, 15.0))
+			# Surface stone scatter on flat terrain — deterministic hash, no rng consumed.
+			# Scatters sparse stone deposits on biomes that lack natural stone.
+			var sh: int = (x * 2749 + y * 5281) % 100
+			var sh2: int = (x * 1237 + y * 4567) % 100
+			if biome == GameConfig.Biome.GRASSLAND and sh < 8:
+				resource_map.set_stone(x, y, 15.0 + float(sh2 % 26))   # 15–40 units
+			elif biome == GameConfig.Biome.FOREST and sh < 5:
+				resource_map.set_stone(x, y, 10.0 + float(sh2 % 16))   # 10–25 units
+			elif biome == GameConfig.Biome.BEACH and sh < 12:
+				resource_map.set_stone(x, y, 10.0 + float(sh2 % 21))   # 10–30 units
+			elif biome == GameConfig.Biome.HILL and sh < 30:
+				resource_map.set_stone(x, y, 50.0 + float(sh2 % 51))   # 50–100 units (rich deposit)
 
 
 ## ── 스폰 위치 추천 ────────────────────────────────────────────────────────────

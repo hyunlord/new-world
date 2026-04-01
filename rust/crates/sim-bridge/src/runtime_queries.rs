@@ -248,6 +248,13 @@ fn bootstrap_world_core(
         sync_world_tiles(resources, &payload.world);
     }
 
+    // Validate settlement location has stone access; shift spawn point if needed.
+    let (sx, sy) = state.engine.resources().map.find_settlement_location_with_stone(
+        payload.founding_settlement.x,
+        payload.founding_settlement.y,
+        config::SETTLEMENT_STONE_ACCESS_RADIUS,
+    );
+
     let settlement_id = SettlementId(payload.founding_settlement.id.max(1));
     let mut settlement = Settlement::new(
         settlement_id,
@@ -256,8 +263,8 @@ fn bootstrap_world_core(
         } else {
             payload.founding_settlement.name.clone()
         },
-        payload.founding_settlement.x,
-        payload.founding_settlement.y,
+        sx,
+        sy,
         state.engine.current_tick(),
     );
     settlement.stockpile_food = payload.founding_settlement.stockpile_food.max(0.0);
