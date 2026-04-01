@@ -739,6 +739,10 @@ pub const ACTION_TIMER_DEFAULT: i32 = 4;
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;
 pub const HUNGER_EAT_THRESHOLD: f64 = 0.5;
+/// Food deposited to settlement stockpile each time a Forage action completes.
+/// Ensures foragers contribute food even when they can't reach a resource tile
+/// within the action timer window.
+pub const FORAGE_STOCKPILE_YIELD: f64 = 2.0;
 pub const FORAGE_BERRIES_DROP_CHANCE: f64 = 0.30;
 pub const FORAGE_FOOD_BUFFER_SLOTS: usize = 3;
 /// Probe bootstrap hunger for the primary observed settler.
@@ -867,14 +871,14 @@ pub const SETTLEMENT_MIN_DISTANCE: i32 = 25;
 pub const SETTLEMENT_BUILD_RADIUS: i32 = 15;
 pub const BUILDING_MIN_SPACING: i32 = 2;
 pub const MIGRATION_TICK_INTERVAL: u64 = 100;
-pub const MIGRATION_MIN_POP: u32 = 40;
-pub const MIGRATION_GROUP_SIZE_MIN: u32 = 5;
-pub const MIGRATION_GROUP_SIZE_MAX: u32 = 7;
-pub const MIGRATION_CHANCE: f64 = 0.05;
+pub const MIGRATION_MIN_POP: u32 = 30;
+pub const MIGRATION_GROUP_SIZE_MIN: u32 = 4;
+pub const MIGRATION_GROUP_SIZE_MAX: u32 = 8;
+pub const MIGRATION_CHANCE: f64 = 0.12;
 pub const MIGRATION_SEARCH_RADIUS_MIN: i32 = 30;
 pub const MIGRATION_SEARCH_RADIUS_MAX: i32 = 80;
-pub const MAX_SETTLEMENTS: u32 = 5;
-pub const MIGRATION_COOLDOWN_TICKS: u64 = 500;
+pub const MAX_SETTLEMENTS: u32 = 8;
+pub const MIGRATION_COOLDOWN_TICKS: u64 = 1000;
 pub const MIGRATION_STARTUP_FOOD: f64 = 30.0;
 pub const MIGRATION_STARTUP_WOOD: f64 = 10.0;
 pub const MIGRATION_STARTUP_STONE: f64 = 3.0;

@@ -812,6 +812,12 @@ fn migration_find_site(
         if food_score <= 3.0 {
             continue;
         }
+        if !resources
+            .map
+            .has_stone_access(x, y, config::SETTLEMENT_STONE_ACCESS_RADIUS)
+        {
+            continue;
+        }
         return Some((x, y));
     }
     None
@@ -970,6 +976,10 @@ impl SimSystem for MigrationRuntimeSystem {
             if let Some(source_settlement) = resources.settlements.get_mut(&source_id) {
                 source_settlement.stockpile_food =
                     (source_settlement.stockpile_food - config::MIGRATION_STARTUP_FOOD).max(0.0);
+                source_settlement.stockpile_wood =
+                    (source_settlement.stockpile_wood - config::MIGRATION_STARTUP_WOOD).max(0.0);
+                source_settlement.stockpile_stone =
+                    (source_settlement.stockpile_stone - config::MIGRATION_STARTUP_STONE).max(0.0);
                 source_settlement.migration_cooldown = config::MIGRATION_COOLDOWN_TICKS as u32;
                 source_settlement
                     .members
@@ -984,6 +994,8 @@ impl SimSystem for MigrationRuntimeSystem {
                 tick,
             );
             new_settlement.stockpile_food = config::MIGRATION_STARTUP_FOOD;
+            new_settlement.stockpile_wood = config::MIGRATION_STARTUP_WOOD;
+            new_settlement.stockpile_stone = config::MIGRATION_STARTUP_STONE;
             new_settlement.members = migrated_member_ids.clone();
             // Initialize all stone-age techs as Unknown so TechDiscovery can find them
             for tech_id in sim_core::STONE_AGE_TECH_IDS {
@@ -1052,8 +1064,9 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&mut Needs>,
             Option<&Age>,
             Option<&mut Inventory>,
+            Option<&Identity>,
         )>();
-        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt)) in &mut query
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt)) in &mut query
         {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
@@ -1143,6 +1156,16 @@ impl SimSystem for MovementRuntimeSystem {
                             );
                         }
                         if matches!(completed_action, ActionType::Forage) {
+                            // Deposit food to settlement stockpile on forage completion.
+                            // Foragers often can't reach a resource tile within the action
+                            // timer window, so this ensures settlement food accumulates.
+                            if let Some(sid) = identity_opt.and_then(|id| id.settlement_id) {
+                                if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                                    settlement.stockpile_food = (settlement.stockpile_food
+                                        + config::FORAGE_STOCKPILE_YIELD)
+                                        .max(0.0);
+                                }
+                            }
                             maybe_grant_forage_berries(
                                 EntityId(entity.id() as u64),
                                 &mut inventory_opt,

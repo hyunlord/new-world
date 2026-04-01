@@ -1900,9 +1900,12 @@ pub fn population_birth_block_code(
     if alive_count < min_population {
         return 2;
     }
-    if alive_count >= free_population_cap
-        && total_shelters.max(0) * shelter_capacity_per_building.max(0) < alive_count
-    {
+    // Births block only when the total housing (free slots + all shelter capacity)
+    // is exhausted.  free_population_cap agents need no shelter; each shelter
+    // building covers shelter_capacity_per_building additional agents.
+    let max_housing =
+        free_population_cap + total_shelters.max(0) * shelter_capacity_per_building.max(0);
+    if alive_count >= max_housing {
         return 3;
     }
     if total_food < alive_count.max(0) as f32 * food_per_alive {
@@ -3830,7 +3833,8 @@ mod tests {
     fn population_birth_block_code_follows_gate_order() {
         let maxed = population_birth_block_code(100, 100, 10, 1000.0, 5, 25, 6, 0.5);
         let too_few = population_birth_block_code(3, 100, 10, 1000.0, 5, 25, 6, 0.5);
-        let housing = population_birth_block_code(40, 100, 6, 1000.0, 5, 25, 6, 0.5);
+        // alive=65, free_cap=25, shelters=6, capacity=6 → max_housing=25+36=61 < 65 → block
+        let housing = population_birth_block_code(65, 100, 6, 1000.0, 5, 25, 6, 0.5);
         let food = population_birth_block_code(40, 100, 10, 5.0, 5, 25, 6, 0.5);
         let allow = population_birth_block_code(40, 100, 10, 1000.0, 5, 25, 6, 0.5);
         assert_eq!(maxed, 1);
