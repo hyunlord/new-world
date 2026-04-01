@@ -381,6 +381,56 @@ git push origin lead/main
 
 ---
 
+### Harness-Driven Development (HDD)
+
+Every feature implementation MUST follow RED → GREEN → GATE:
+
+**RED (test first):**
+1. Decompose feature into testable assertions
+2. Add `harness_<feature>_<assertion>` test to `rust/crates/sim-test/src/main.rs`
+3. Run: `cargo test -p sim-test harness_<name> -- --nocapture` → MUST FAIL
+
+**GREEN (implement):**
+1. Write minimum code to pass the test
+2. Run: `cargo test -p sim-test harness_<name> -- --nocapture` → MUST PASS
+
+**GATE:**
+```bash
+cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+```
+
+**RETRY on failure:**
+1. Read assertion error message
+2. Add diagnostic `println!` INSIDE the test (never in game code)
+3. Fix root cause
+4. Max 3 retry attempts. If still failing: STOP and report to user.
+
+**Harness test patterns:**
+```rust
+// Standard setup
+let mut engine = make_stage1_engine(42, 20);
+engine.run_ticks(N);
+
+// ECS queries
+let world = engine.world();
+for (_, (behavior, identity)) in world.query::<(&Behavior, &Identity)>().iter() { ... }
+
+// SimResources checks
+let resources = engine.resources();
+assert!(resources.settlements.values().any(|s| s.stockpile_stone > 0.0));
+```
+
+**Naming convention:** `harness_<category>_<assertion>`
+Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `economy`
+
+**When NOT to use sim-test (use Godot headless harness instead):**
+- SimBridge FFI boundary issues
+- Shader/rendering verification
+- UI panel data display
+- Save/load cycle
+
+---
+
 ## Common Mistakes [READ BEFORE EVERY TASK]
 
 1. Writing simulation logic in GDScript instead of Rust

@@ -3383,11 +3383,6 @@ impl WorldSimRuntime {
     /// Returns dominant-faction territory texture for shader rendering.
     #[func]
     fn runtime_get_territory_texture(&self) -> VarDictionary {
-        static MARKER_PRINTED: std::sync::atomic::AtomicBool =
-            std::sync::atomic::AtomicBool::new(false);
-        if !MARKER_PRINTED.swap(true, std::sync::atomic::Ordering::Relaxed) {
-            godot_print!("[BUILD] rebalance-fix-applied 2026-03-31");
-        }
         let Some(state) = self.state.as_ref() else {
             return VarDictionary::new();
         };
