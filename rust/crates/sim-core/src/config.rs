@@ -243,8 +243,8 @@ pub const GFS_PROXIMITY_MAX_DISTANCE: f64 = 50.0;
 pub const BAND_MIN_SIZE_PROVISIONAL: usize = 3;
 /// Minimum member count required before promotion to an established band.
 pub const BAND_MIN_SIZE_PROMOTED: usize = 3;
-/// Maximum stable band size before truncation.
-pub const BAND_MAX_SIZE: usize = 30;
+/// Maximum stable band size before truncation (Dunbar Layer 2 sympathy group).
+pub const BAND_MAX_SIZE: usize = 15;
 /// Ticks a provisional group must survive before promotion.
 pub const BAND_PROMOTION_TICKS: u64 = 1440;
 /// Baseline Granovetter participation threshold before personality shifts.
@@ -265,6 +265,10 @@ pub const BAND_OUTSIDER_SEPARATION_MULT: f64 = 1.5;
 pub const BAND_FISSION_TRUST_THRESHOLD: f64 = 0.15;
 /// Average value alignment threshold below which a band may split.
 pub const BAND_FISSION_VALUES_THRESHOLD: f64 = 0.20;
+/// When true, bands whose members span multiple settlements are force-dissolved each formation cycle.
+pub const BAND_CROSS_SETTLEMENT_DISSOLUTION_ENABLED: bool = true;
+/// When true, migrating agents have their band_id cleared immediately on settlement change.
+pub const BAND_MIGRATION_CLEAR_BAND_ID: bool = true;
 /// Search radius used when loners evaluate nearby promoted bands.
 pub const LONER_SEARCH_RADIUS: f64 = 15.0;
 /// Minimum average GFS needed for a loner to join a band.

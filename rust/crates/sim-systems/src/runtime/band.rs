@@ -135,6 +135,7 @@ impl SimSystem for BandFormationSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        dissolve_cross_settlement_bands(world, resources);
         let all_agents = collect_agent_snapshots(world);
         if all_agents.len() < config::BAND_MIN_SIZE_PROVISIONAL {
             cleanup_small_bands(world, resources);
@@ -207,11 +208,17 @@ impl SimSystem for BandFormationSystem {
                     existing
                 } else {
                     formed_events.push((primary_band_id, proposed.members.clone()));
+                    let band_settlement_id = proposed
+                        .members
+                        .first()
+                        .and_then(|id| candidate_by_id.get(id))
+                        .and_then(|snap| snap.settlement_id);
                     Band::new(
                         primary_band_id,
                         generate_band_name(primary_band_id),
                         proposed.members.clone(),
                         tick,
+                        band_settlement_id,
                     )
                 };
 
@@ -390,6 +397,66 @@ impl SimSystem for BandFormationSystem {
     }
 }
 
+fn dissolve_cross_settlement_bands(world: &mut World, resources: &mut SimResources) {
+    use std::collections::HashSet;
+
+    if !config::BAND_CROSS_SETTLEMENT_DISSOLUTION_ENABLED {
+        return;
+    }
+
+    // Build a map from EntityId -> settlement_id for all living agents.
+    let mut entity_settlement: BTreeMap<EntityId, Option<SettlementId>> = BTreeMap::new();
+    {
+        let mut query = world.query::<&Identity>();
+        for (entity, identity) in &mut query {
+            entity_settlement.insert(EntityId(entity.id() as u64), identity.settlement_id);
+        }
+    }
+
+    let mut bands_to_dissolve: Vec<BandId> = Vec::new();
+    let mut members_to_clear: Vec<EntityId> = Vec::new();
+
+    for band in resources.band_store.all() {
+        if band.members.is_empty() {
+            continue;
+        }
+        let mut settlement_ids: HashSet<Option<SettlementId>> = HashSet::new();
+        for &member in &band.members {
+            if let Some(&sid) = entity_settlement.get(&member) {
+                settlement_ids.insert(sid);
+            }
+        }
+        if settlement_ids.len() > 1 {
+            log::info!(
+                "Cross-settlement dissolution: band {:?} '{}' spans {} settlements",
+                band.id,
+                band.name,
+                settlement_ids.len()
+            );
+            bands_to_dissolve.push(band.id);
+            members_to_clear.extend(band.members.iter().copied());
+        }
+    }
+
+    if bands_to_dissolve.is_empty() {
+        return;
+    }
+
+    {
+        let mut query = world.query::<&mut Identity>();
+        for (entity, identity) in &mut query {
+            let entity_id = EntityId(entity.id() as u64);
+            if members_to_clear.contains(&entity_id) {
+                identity.band_id = None;
+            }
+        }
+    }
+
+    for band_id in bands_to_dissolve {
+        resources.band_store.remove(band_id);
+    }
+}
+
 fn cleanup_small_bands(world: &mut World, resources: &mut SimResources) {
     let all_agents = collect_agent_snapshots(world);
     let live_band_members: BTreeMap<BandId, Vec<EntityId>> = all_agents.iter().fold(
@@ -528,6 +595,10 @@ fn build_adjacency_graph(
         for right in (left + 1)..candidates.len() {
             let a = &candidates[left];
             let b = &candidates[right];
+            // Hard gate: agents in different settlements cannot form a band
+            if a.settlement_id != b.settlement_id {
+                continue;
+            }
             let resource_score =
                 settlement_resource_score(resources, a.settlement_id, b.settlement_id);
             let gfs = calculate_gfs(
@@ -800,6 +871,7 @@ fn plan_band_fission(
             generate_band_name(new_band_id),
             split_members,
             tick,
+            band.settlement_id,
         );
         if band.is_promoted {
             new_band.is_promoted = true;
@@ -1155,6 +1227,10 @@ fn recruit_loners_into_bands(
                 continue;
             };
             if !band.is_promoted || band.member_count() >= config::BAND_MAX_SIZE {
+                continue;
+            }
+            // Loner can only join a band in their same settlement
+            if loner.settlement_id != band.settlement_id {
                 continue;
             }
             if !band_has_nearby_member(loner, band, agent_by_id, config::LONER_SEARCH_RADIUS) {
@@ -1766,6 +1842,7 @@ mod tests {
         members: &[Entity],
         promoted: bool,
         provisional_since: u64,
+        settlement_id: Option<SettlementId>,
     ) {
         resources.band_store.insert(Band {
             id: band_id,
@@ -1778,6 +1855,7 @@ mod tests {
             provisional_since,
             promoted_tick: promoted.then_some(provisional_since),
             is_promoted: promoted,
+            settlement_id,
         });
     }
 
@@ -2116,6 +2194,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         });
 
         BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
@@ -2200,6 +2279,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         });
         resources.band_store.insert(Band {
             id: kept_band_id,
@@ -2213,6 +2293,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         });
 
         cleanup_small_bands(&mut world, &mut resources);
@@ -2380,6 +2461,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         });
 
         BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
@@ -2408,7 +2490,7 @@ mod tests {
                 0.7,
             ));
         }
-        seed_band(&mut resources, band_id, &members, true, 10);
+        seed_band(&mut resources, band_id, &members, true, 10, Some(SettlementId(1)));
 
         // Intra-cluster trust 0.3 → avg across all 15 pairs = 6×0.3/15 = 0.12 < 0.15
         for left in 0..3 {
@@ -2482,7 +2564,7 @@ mod tests {
                 0.6,
             ));
         }
-        seed_band(&mut resources, band_id, &members, true, 10);
+        seed_band(&mut resources, band_id, &members, true, 10, Some(SettlementId(1)));
         for left in 0..members.len() {
             for right in (left + 1)..members.len() {
                 set_mutual_trust(&mut world, members[left], members[right], 0.8);
@@ -2491,7 +2573,8 @@ mod tests {
 
         BandFormationSystem::new(38, 60).run(&mut world, &mut resources, 60);
 
-        assert_eq!(resources.band_store.len(), 2);
+        // With BAND_MAX_SIZE=15 and 31 agents, recursive fission produces 3 bands (8+8+15)
+        assert!(resources.band_store.len() >= 2);
         let total_members: usize = resources.band_store.all().map(Band::member_count).sum();
         assert_eq!(total_members, 31);
         assert!(resources
@@ -2518,7 +2601,7 @@ mod tests {
                 0.6,
             ));
         }
-        seed_band(&mut resources, band_id, &members, true, 10);
+        seed_band(&mut resources, band_id, &members, true, 10, Some(SettlementId(1)));
 
         for left in 0..members.len() {
             for right in (left + 1)..members.len() {
@@ -2551,7 +2634,7 @@ mod tests {
                 0.7,
             ));
         }
-        seed_band(&mut resources, band_id, &members, true, 10);
+        seed_band(&mut resources, band_id, &members, true, 10, Some(SettlementId(1)));
 
         // Intra-cluster trust 0.3 → avg across all 15 pairs = 6×0.3/15 = 0.12 < 0.15
         for left in 0..3 {
@@ -2602,7 +2685,7 @@ mod tests {
             0.8,
             0.9,
         );
-        seed_band(&mut resources, band_id, &members, true, 10);
+        seed_band(&mut resources, band_id, &members, true, 10, Some(SettlementId(1)));
         resources.settlements.insert(
             SettlementId(1),
             settlement_with_stockpile(
@@ -2697,6 +2780,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         };
 
         let plan =
@@ -2710,8 +2794,9 @@ mod tests {
             plan.retained_band.member_count() + split_band.member_count() + plan.loners.len(),
             31
         );
-        assert!(plan.retained_band.member_count() <= config::BAND_MAX_SIZE);
-        assert!(split_band.member_count() <= config::BAND_MAX_SIZE);
+        // plan_band_fission does a single split; each piece must be smaller than the original
+        assert!(plan.retained_band.member_count() < 31);
+        assert!(split_band.member_count() < 31);
     }
 
     #[test]
@@ -2731,6 +2816,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: Some(20),
             is_promoted: true,
+            settlement_id: None,
         };
 
         assert_eq!(

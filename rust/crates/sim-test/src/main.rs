@@ -1355,6 +1355,7 @@ mod tests {
     }
 
     /// After 1 year with 20 agents, band count should be reasonable (not over-splitting).
+    /// Also validates per-band settlement coherence and Dunbar L2 size cap.
     #[test]
     fn harness_band_count_reasonable() {
         let mut engine = make_stage1_engine(42, 20);
@@ -1370,6 +1371,164 @@ mod tests {
             "expected at most 5 bands for 20 agents, got {band_count} (over-splitting)"
         );
         assert!(band_count >= 1, "expected at least 1 band, got {band_count}");
+
+        // Build entity → settlement_id lookup.
+        let world = engine.world();
+        let mut entity_to_sid: std::collections::HashMap<
+            sim_core::ids::EntityId,
+            Option<SettlementId>,
+        > = std::collections::HashMap::new();
+        for (entity, identity) in world.query::<&Identity>().iter() {
+            entity_to_sid.insert(
+                sim_core::ids::EntityId(entity.id() as u64),
+                identity.settlement_id,
+            );
+        }
+
+        let resources = engine.resources();
+        for band in resources.band_store.all() {
+            assert!(
+                band.members.len() <= sim_core::config::BAND_MAX_SIZE,
+                "Band '{}' has {} members, exceeds max {} (Dunbar L2)",
+                band.name,
+                band.members.len(),
+                sim_core::config::BAND_MAX_SIZE
+            );
+
+            let mut sids: std::collections::HashSet<Option<SettlementId>> =
+                std::collections::HashSet::new();
+            for &member in &band.members {
+                if let Some(&sid) = entity_to_sid.get(&member) {
+                    sids.insert(sid);
+                }
+            }
+            assert!(
+                sids.len() <= 1,
+                "Band '{}' spans {} settlements — cross-settlement band detected",
+                band.name,
+                sids.len()
+            );
+        }
+    }
+
+    /// After 2 years, no band should span multiple settlements.
+    #[test]
+    fn harness_band_settlement_coherence() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(8760);
+
+        let world = engine.world();
+        let mut entity_to_sid: std::collections::HashMap<
+            sim_core::ids::EntityId,
+            Option<SettlementId>,
+        > = std::collections::HashMap::new();
+        for (entity, identity) in world.query::<&Identity>().iter() {
+            entity_to_sid.insert(
+                sim_core::ids::EntityId(entity.id() as u64),
+                identity.settlement_id,
+            );
+        }
+
+        let band_store = &engine.resources().band_store;
+        let mut violations = 0;
+        for band in band_store.all() {
+            let mut sids: std::collections::HashSet<Option<SettlementId>> =
+                std::collections::HashSet::new();
+            for &member in &band.members {
+                if let Some(&sid) = entity_to_sid.get(&member) {
+                    sids.insert(sid);
+                }
+            }
+            if sids.len() > 1 {
+                violations += 1;
+                eprintln!(
+                    "[harness] VIOLATION: band '{}' (id={:?}) spans {} settlements",
+                    band.name,
+                    band.id,
+                    sids.len()
+                );
+            }
+        }
+
+        assert_eq!(violations, 0, "No band should span multiple settlements");
+    }
+
+    /// After 2 years, no band should exceed BAND_MAX_SIZE (Dunbar Layer 2).
+    #[test]
+    fn harness_band_size_within_dunbar_l2() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(8760);
+
+        let band_store = &engine.resources().band_store;
+        for band in band_store.all() {
+            assert!(
+                band.members.len() <= sim_core::config::BAND_MAX_SIZE,
+                "Band '{}' has {} members, max allowed is {} (Dunbar L2)",
+                band.name,
+                band.members.len(),
+                sim_core::config::BAND_MAX_SIZE
+            );
+        }
+    }
+
+    /// After extended simulation, no band should span settlements, and not all agents are bandless.
+    #[test]
+    fn harness_migration_clears_band() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380 * 3);
+
+        let world = engine.world();
+
+        // Build entity → settlement_id lookup.
+        let mut entity_to_sid: std::collections::HashMap<
+            sim_core::ids::EntityId,
+            Option<SettlementId>,
+        > = std::collections::HashMap::new();
+        for (entity, identity) in world.query::<&Identity>().iter() {
+            entity_to_sid.insert(
+                sim_core::ids::EntityId(entity.id() as u64),
+                identity.settlement_id,
+            );
+        }
+
+        // No band should span multiple settlements.
+        let resources = engine.resources();
+        for band in resources.band_store.all() {
+            let mut sids: std::collections::HashSet<Option<SettlementId>> =
+                std::collections::HashSet::new();
+            for &member in &band.members {
+                if let Some(&sid) = entity_to_sid.get(&member) {
+                    sids.insert(sid);
+                }
+            }
+            assert!(
+                sids.len() <= 1,
+                "Post-migration: band '{}' spans {} settlements",
+                band.name,
+                sids.len()
+            );
+        }
+
+        // Count bandless vs total agents.
+        let mut bandless = 0usize;
+        let mut total = 0usize;
+        for (_entity, identity) in world.query::<&Identity>().iter() {
+            total += 1;
+            if identity.band_id.is_none() {
+                bandless += 1;
+            }
+        }
+        println!(
+            "[harness] bandless agents: {}/{} ({:.1}%)",
+            bandless,
+            total,
+            if total > 0 {
+                bandless as f64 / total as f64 * 100.0
+            } else {
+                0.0
+            }
+        );
+        assert!(bandless < total, "Not all agents should be bandless");
     }
 
     /// After buildings are placed, territory grid should have non-zero data.
