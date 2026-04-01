@@ -3,9 +3,9 @@ name: kanban-workflow
 description: |
   Kanban board integration, Codex dispatch rules, autopilot/ultrapilot workflow,
   ticket management, and batch lifecycle. Use when dispatching tickets via
-  codex_dispatch.sh, creating batches, running autopilot workflow, or managing
+  codex MCP tool, creating batches, running autopilot workflow, or managing
   progress tracker files and ticket templates.
-  Updated for Rust-first development: dispatch routing for Rust vs GDScript tickets.
+  Updated for Rust-first development: all tickets dispatched via codex MCP tool.
 ---
 
 # Kanban & Dispatch Workflow — SKILL.md
@@ -24,7 +24,7 @@ Key points:
 - Kanban server: `http://localhost:8800`
 - Batch creation: `kanban_create_batch`
 - Ticket creation: `kanban_create_ticket`
-- Two dispatch paths: codex_dispatch.sh (auto-kanban) vs ask_codex MCP (manual kanban)
+- One dispatch path: `codex` MCP tool (manual kanban update required)
 
 ---
 
@@ -33,40 +33,35 @@ Key points:
 ### ⚠️ DISPATCH TOOL ROUTING [ABSOLUTE RULE]
 
 **✅ VALID Codex dispatch methods:**
-- `bash tools/codex_dispatch.sh tickets/<file>.md` — GDScript/Godot tickets
-- `ask_codex` MCP tool — Rust tickets AND any other language
+- `codex` MCP tool — ALL tickets (Rust, GDScript, any language)
+  - `approval-policy: "never"`, `sandbox: "workspace-write"`
+- `codex-reply` MCP tool — Continue existing session (follow-up, error fixes)
+  - Requires `threadId` from previous `codex` call
 
 **❌ INVALID — NOT Codex dispatch:**
 - `Task` tool — counts as DIRECT, not dispatch
 - Implementing code yourself — not dispatch
+- `ask_codex` — DEPRECATED, do not use
+- `codex_dispatch.sh` — DEPRECATED, do not use
 
-### Dispatch Route Selection (Rust-first)
+### Dispatch Route Selection
 
 ```
-What language is this ticket?
-  │
-  ├─ Rust (sim-core, sim-systems, sim-engine, sim-data, sim-test)
-  │   └─ ask_codex MCP
-  │      - Include Rust AGENTS.md rules in prompt
-  │      - Verification: cargo test + cargo clippy
-  │      - No Godot required (pure Rust crates)
-  │
-  ├─ Rust (sim-bridge — GDExtension)
-  │   └─ ask_codex MCP
-  │      - Requires Godot headers for build
-  │      - May need local verification
-  │
-  ├─ GDScript (scripts/ui/, scripts/core/)
-  │   └─ codex_dispatch.sh OR ask_codex MPC
-  │      - AGENTS.md auto-referenced
-  │      - Localization verification required
-  │
-  └─ Mixed (Rust system + SimBridge getter + GDScript UI)
-      └─ Split into 3 separate tickets:
-         1. Rust system logic → ask_codex (Rust)
-         2. SimBridge getter → ask_codex (Rust+gdext)
-         3. GDScript UI connection → codex_dispatch.sh (GDScript)
+Ticket ready?
+  ↓
+Call `codex` MCP tool with full ticket as prompt
+  + approval-policy: "never"
+  + sandbox: "workspace-write"
+  ↓
+Codex completes → check result
+  ↓
+Need follow-up? → Call `codex-reply` with threadId
+  ↓
+Integration + gate check by Claude Code (lead worktree)
 ```
+
+모든 언어(Rust, GDScript) 동일하게 `codex` MCP tool 사용.
+Mixed 티켓은 여전히 3개로 분리하되, 각각 `codex` MCP tool로 디스패치.
 
 ### Default is DISPATCH. DIRECT is the exception.
 
@@ -117,9 +112,9 @@ Same format as before, with added fields:
 | Ticket | Title | Language | Action | Dispatch Tool | Reason |
 |--------|-------|----------|--------|---------------|--------|
 | t-XXX | Component | Rust | 🔴 DIRECT | — | shared type |
-| t-XXX | System | Rust | 🟢 DISPATCH | ask_codex | pure Rust |
-| t-XXX | Bridge | Rust | 🟢 DISPATCH | ask_codex | sim-bridge |
-| t-XXX | UI panel | GDScript | 🟢 DISPATCH | codex_dispatch | UI only |
+| t-XXX | System | Rust | 🟢 DISPATCH | codex MCP | pure Rust |
+| t-XXX | Bridge | Rust | 🟢 DISPATCH | codex MCP | sim-bridge |
+| t-XXX | UI panel | GDScript | 🟢 DISPATCH | codex MCP | UI only |
 ```
 
 ---
