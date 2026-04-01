@@ -1674,6 +1674,100 @@ mod tests {
 
         println!("[harness] harness_territory_dispute_detected: PASS");
     }
+
+    /// After 2 years, territory_hardness should be populated.
+    /// Settlement factions must be within [HARDNESS_MIN, HARDNESS_MAX].
+    /// Band factions must not exceed TERRITORY_HARDNESS_BAND_CAP.
+    #[test]
+    fn harness_territory_hardness_scales_with_settlement() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(8760);
+
+        let resources = engine.resources();
+        let hardness_map = &resources.territory_hardness;
+
+        // Must have at least one settlement faction entry.
+        let settlement_factions: Vec<(u16, f32)> = hardness_map
+            .iter()
+            .filter(|(&fid, _)| fid < 1000)
+            .map(|(&fid, &h)| (fid, h))
+            .collect();
+
+        assert!(
+            !settlement_factions.is_empty(),
+            "Expected at least one settlement faction in territory_hardness, got 0"
+        );
+
+        for (fid, hardness) in &settlement_factions {
+            eprintln!(
+                "[harness] Settlement faction {}: hardness = {:.3}",
+                fid, hardness
+            );
+            assert!(
+                *hardness >= sim_core::config::TERRITORY_HARDNESS_MIN,
+                "Faction {} hardness {:.3} below minimum {:.3}",
+                fid,
+                hardness,
+                sim_core::config::TERRITORY_HARDNESS_MIN
+            );
+            assert!(
+                *hardness <= sim_core::config::TERRITORY_HARDNESS_MAX,
+                "Faction {} hardness {:.3} above maximum {:.3}",
+                fid,
+                hardness,
+                sim_core::config::TERRITORY_HARDNESS_MAX
+            );
+        }
+
+        // Band factions must be capped.
+        let band_factions: Vec<(u16, f32)> = hardness_map
+            .iter()
+            .filter(|(&fid, _)| fid >= 1000)
+            .map(|(&fid, &h)| (fid, h))
+            .collect();
+
+        for (fid, hardness) in &band_factions {
+            eprintln!(
+                "[harness] Band faction {}: hardness = {:.3}",
+                fid, hardness
+            );
+            assert!(
+                *hardness <= sim_core::config::TERRITORY_HARDNESS_BAND_CAP + 0.01,
+                "Band faction {} hardness {:.3} exceeds cap {:.3}",
+                fid,
+                hardness,
+                sim_core::config::TERRITORY_HARDNESS_BAND_CAP
+            );
+        }
+
+        // If population > 20 and buildings > 3, max hardness should be meaningful.
+        let total_pop: usize = resources.settlements.values().map(|s| s.population()).sum();
+        let total_buildings: usize = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete)
+            .count();
+        eprintln!(
+            "[harness] total pop: {}, completed buildings: {}",
+            total_pop, total_buildings
+        );
+
+        if total_pop > 20 && total_buildings > 3 {
+            let max_hardness = settlement_factions
+                .iter()
+                .map(|(_, h)| *h)
+                .fold(0.0_f32, f32::max);
+            assert!(
+                max_hardness > 0.25,
+                "With pop={} buildings={}, max settlement hardness should be >0.25, got {:.3}",
+                total_pop,
+                total_buildings,
+                max_hardness
+            );
+        }
+
+        println!("[harness] harness_territory_hardness_scales_with_settlement: PASS");
+    }
 }
 
 fn pathfind_bench_inputs() -> (

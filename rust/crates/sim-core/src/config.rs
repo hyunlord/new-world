@@ -1447,6 +1447,21 @@ pub const TERRITORY_FRICTION_DISPUTE_THRESHOLD: f64 = 5.0;
 /// Friction decay multiplier when overlap ceases (applied per check interval).
 pub const TERRITORY_FRICTION_DECAY: f64 = 0.95;
 
+/// Minimum border_hardness for any faction (nomadic band at start).
+pub const TERRITORY_HARDNESS_MIN: f32 = 0.1;
+/// Maximum border_hardness reachable (large established settlement).
+pub const TERRITORY_HARDNESS_MAX: f32 = 0.9;
+/// Weight of population contribution to border_hardness (0.0–1.0).
+pub const TERRITORY_HARDNESS_POP_WEIGHT: f32 = 0.4;
+/// Weight of completed building count contribution to border_hardness.
+pub const TERRITORY_HARDNESS_BUILDING_WEIGHT: f32 = 0.6;
+/// Population at which the population factor saturates at 1.0.
+pub const TERRITORY_HARDNESS_POP_SCALE: f32 = 50.0;
+/// Completed building count at which the building factor saturates at 1.0.
+pub const TERRITORY_HARDNESS_BUILDING_SCALE: f32 = 15.0;
+/// Maximum border_hardness allowed for band factions (bands have no buildings → stay soft).
+pub const TERRITORY_HARDNESS_BAND_CAP: f32 = 0.3;
+
 #[cfg(test)]
 mod tests {
     use super::*;
