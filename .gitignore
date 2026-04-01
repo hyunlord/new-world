@@ -64,3 +64,6 @@ reports/
 
 # Migration commit logs
 migration_commit_logs/
+
+# env
+.env
