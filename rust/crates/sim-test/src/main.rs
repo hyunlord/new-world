@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 62;
+const EXPECTED_SYSTEM_COUNT: usize = 64;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -28,6 +28,9 @@ use sim_systems::entity_spawner;
 use sim_systems::runtime::{
     // biology
     AceTrackerRuntimeSystem,
+    // influence / territory
+    InfluenceRuntimeSystem,
+    TerritoryRuntimeSystem,
     AgeRuntimeSystem,
     AttachmentRuntimeSystem,
     // cognition
@@ -477,6 +480,14 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(AceTrackerRuntimeSystem::new(99, 100));
     engine.register(TraitRuntimeSystem::new(100, 10));
     engine.register(ChronicleRuntimeSystem::new(101, 1));
+    engine.register(InfluenceRuntimeSystem::new(
+        sim_core::config::INFLUENCE_SYSTEM_PRIORITY,
+        sim_core::config::INFLUENCE_SYSTEM_INTERVAL,
+    ));
+    engine.register(TerritoryRuntimeSystem::new(
+        sim_core::config::TERRITORY_SYSTEM_PRIORITY,
+        sim_core::config::TERRITORY_SYSTEM_INTERVAL,
+    ));
     engine.register(EffectApplySystem::new(9999, 1));
 }
 
@@ -839,6 +850,36 @@ mod tests {
                 SettlementId(1),
             );
         }
+        // Seed tile resources near settlement spawn point (128, 128).
+        // In production, world generation populates tile resources; headless tests must do it explicitly.
+        {
+            let resources = engine.resources_mut();
+            for dy in -30_i32..=30 {
+                for dx in -30_i32..=30 {
+                    let tx = 128_i32 + dx;
+                    let ty = 128_i32 + dy;
+                    if tx < 0 || ty < 0 || tx >= 256 || ty >= 256 {
+                        continue;
+                    }
+                    let tile = resources.map.get_mut(tx as u32, ty as u32);
+                    if !tile.passable {
+                        continue;
+                    }
+                    let pattern = ((dx.abs() + dy.abs()) % 3) as u32;
+                    let resource_type = match pattern {
+                        0 => sim_core::ResourceType::Stone,
+                        1 => sim_core::ResourceType::Wood,
+                        _ => sim_core::ResourceType::Food,
+                    };
+                    tile.resources.push(sim_core::world::TileResource {
+                        resource_type,
+                        amount: 100.0,
+                        max_amount: 100.0,
+                        regen_rate: 0.1,
+                    });
+                }
+            }
+        }
         engine
     }
 
@@ -1044,6 +1085,171 @@ mod tests {
             .map(|(entity, _)| entity.to_bits().get())
             .collect();
         assert_eq!(identities.len(), 5);
+    }
+
+    /// After 2000 ticks (~3.3 minutes game time), job distribution should include miners.
+    #[test]
+    fn harness_job_distribution_includes_miner() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let world = engine.world();
+        let mut job_counts: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
+        for (_, behavior) in world.query::<&Behavior>().iter() {
+            *job_counts.entry(behavior.job.clone()).or_insert(0) += 1;
+        }
+
+        let miner_count = *job_counts.get("miner").unwrap_or(&0);
+        let lumberjack_count = *job_counts.get("lumberjack").unwrap_or(&0);
+        let builder_count = *job_counts.get("builder").unwrap_or(&0);
+        let gatherer_count = *job_counts.get("gatherer").unwrap_or(&0);
+
+        println!(
+            "[harness] jobs: gatherer={} lumberjack={} builder={} miner={}",
+            gatherer_count, lumberjack_count, builder_count, miner_count
+        );
+
+        assert!(
+            miner_count >= 1,
+            "expected at least 1 miner, got {miner_count}. jobs={job_counts:?}"
+        );
+        assert!(
+            lumberjack_count >= 1,
+            "expected at least 1 lumberjack, got {lumberjack_count}"
+        );
+        assert!(
+            builder_count >= 1,
+            "expected at least 1 builder, got {builder_count}"
+        );
+    }
+
+    /// After 1 year (4380 ticks), settlement should have accumulated some stone.
+    #[test]
+    fn harness_stone_collected_after_one_year() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let total_stone: f64 = resources.settlements.values().map(|s| s.stockpile_stone).sum();
+        let total_wood: f64 = resources.settlements.values().map(|s| s.stockpile_wood).sum();
+
+        println!(
+            "[harness] stockpile: stone={:.1} wood={:.1}",
+            total_stone, total_wood
+        );
+
+        assert!(
+            total_stone > 0.0,
+            "expected stone > 0 after 1 year, got {total_stone}"
+        );
+    }
+
+    /// After 1 year, at least one shelter should be built (total completed buildings > 2).
+    #[test]
+    fn harness_shelter_built_after_one_year() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let building_count = resources.buildings.len();
+        let complete_count = resources.buildings.values().filter(|b| b.is_complete).count();
+        let shelter_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "shelter")
+            .count();
+
+        println!(
+            "[harness] buildings: total={} complete={} shelters={}",
+            building_count, complete_count, shelter_count
+        );
+
+        assert!(
+            complete_count >= 3,
+            "expected at least 3 completed buildings (campfire+stockpile+shelter), got {complete_count}"
+        );
+    }
+
+    /// After 1 year with 20 agents, band count should be reasonable (not over-splitting).
+    #[test]
+    fn harness_band_count_reasonable() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let band_count = resources.band_store.all().count();
+
+        println!("[harness] bands: {}", band_count);
+
+        assert!(
+            band_count <= 5,
+            "expected at most 5 bands for 20 agents, got {band_count} (over-splitting)"
+        );
+        assert!(band_count >= 1, "expected at least 1 band, got {band_count}");
+    }
+
+    /// After buildings are placed, territory grid should have non-zero data.
+    #[test]
+    fn harness_territory_grid_has_data() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let resources = engine.resources();
+        let factions = resources.territory_grid.active_factions();
+
+        println!("[harness] territory factions: {}", factions.len());
+
+        assert!(
+            !factions.is_empty(),
+            "expected at least one territory faction after 2000 ticks"
+        );
+
+        let mut max_value: f32 = 0.0;
+        for faction_id in &factions {
+            if let Some(data) = resources.territory_grid.get(*faction_id) {
+                for &val in data {
+                    if val > max_value {
+                        max_value = val;
+                    }
+                }
+            }
+        }
+
+        println!("[harness] territory max_value: {:.4}", max_value);
+        assert!(
+            max_value > 0.01,
+            "expected non-trivial territory values, max={max_value}"
+        );
+    }
+
+    /// Territory should not exist on impassable tiles (water).
+    #[test]
+    fn harness_territory_not_on_water() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let resources = engine.resources();
+        let map_w = resources.map.width as usize;
+
+        for faction_id in resources.territory_grid.active_factions() {
+            if let Some(data) = resources.territory_grid.get(faction_id) {
+                for y in 0..resources.map.height {
+                    for x in 0..resources.map.width {
+                        let tile = resources.map.get(x, y);
+                        if !tile.passable && data[y as usize * map_w + x as usize] > 0.001 {
+                            panic!(
+                                "territory found on impassable tile ({},{}) terrain={:?} value={:.4}",
+                                x,
+                                y,
+                                tile.terrain,
+                                data[y as usize * map_w + x as usize]
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
