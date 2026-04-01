@@ -143,6 +143,9 @@ pub struct SimResources {
     /// Key = (min_id, max_id) canonical ordering. Value = 0.0..=TERRITORY_FRICTION_MAX.
     /// Increases when settlement territories overlap, decays when overlap ceases.
     pub border_friction: HashMap<(SettlementId, SettlementId), f64>,
+    /// Per-faction border hardness (0.0 = soft heatmap, 1.0 = crisp political boundary).
+    /// Computed by TerritoryRuntimeSystem each cycle. Key = FactionId (u16).
+    pub territory_hardness: HashMap<u16, f32>,
     /// Reverse index parent → child ids for genealogy lookups.
     pub children_index: ChildrenIndex,
     /// World-rules resource regen multipliers keyed by rule target tag.
@@ -260,6 +263,7 @@ impl SimResources {
             band_store: BandStore::new(),
             territory_grid: sim_core::territory_grid::TerritoryGrid::new(map_w, map_h),
             border_friction: HashMap::new(),
+            territory_hardness: HashMap::new(),
             children_index: ChildrenIndex::default(),
             resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),

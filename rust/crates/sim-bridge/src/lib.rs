@@ -3370,9 +3370,14 @@ impl WorldSimRuntime {
         let Some(state) = self.state.as_ref() else {
             return VarDictionary::new();
         };
-        let grid = &state.engine.resources().territory_grid;
-        let (faction_map, density_map) = grid.export_dominant();
-        let factions = grid.active_factions();
+        let (faction_map, density_map, factions, grid_width, grid_height) = {
+            let grid = &state.engine.resources().territory_grid;
+            let (fm, dm) = grid.export_dominant();
+            let fa = grid.active_factions();
+            let w = grid.width;
+            let h = grid.height;
+            (fm, dm, fa, w, h)
+        };
 
         let palette: [(f32, f32, f32); 8] = [
             (0.85, 0.45, 0.20),
@@ -3390,13 +3395,27 @@ impl WorldSimRuntime {
             colors.push(Vector3::new(r, g, b));
         }
 
+        // Per-faction border_hardness values — parallel array to colors.
+        let mut hardness_arr: Array<f32> = Array::new();
+        for fid in &factions {
+            let h = state
+                .engine
+                .resources()
+                .territory_hardness
+                .get(fid)
+                .copied()
+                .unwrap_or(0.2);
+            hardness_arr.push(h);
+        }
+
         let mut dict = VarDictionary::new();
         dict.set("faction_ids", PackedByteArray::from(faction_map));
         dict.set("density", PackedByteArray::from(density_map));
         dict.set("colors", colors);
+        dict.set("hardness", hardness_arr);
         dict.set("faction_count", factions.len() as i64);
-        dict.set("width", grid.width as i64);
-        dict.set("height", grid.height as i64);
+        dict.set("width", grid_width as i64);
+        dict.set("height", grid_height as i64);
         dict
     }
 
@@ -3782,6 +3801,33 @@ impl WorldSimRuntime {
             .territory_grid
             .export_dispute_map(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
         PackedByteArray::from(dispute_map.as_slice())
+    }
+
+    /// Returns a per-tile hardness texture (map_width × map_height bytes, FORMAT_L8).
+    /// Each byte encodes the hardness of the dominant faction at that tile (0 = no faction/soft).
+    /// Used by the territory shader for per-tile visual interpolation.
+    #[func]
+    fn runtime_get_territory_hardness_texture(&self) -> PackedByteArray {
+        let Some(state) = self.state.as_ref() else {
+            return PackedByteArray::new();
+        };
+        let (faction_map, _density_map) = state.engine.resources().territory_grid.export_dominant();
+        let hardness_map = state.engine.resources().territory_hardness.clone();
+
+        let bytes: Vec<u8> = faction_map
+            .iter()
+            .map(|&encoded| {
+                // encoded = faction_id + 1 (0 means no faction)
+                if encoded == 0 {
+                    return 0u8;
+                }
+                let fid = encoded as u16;
+                let h = hardness_map.get(&fid).copied().unwrap_or(0.0);
+                (h.clamp(0.0, 1.0) * 255.0) as u8
+            })
+            .collect();
+
+        PackedByteArray::from(bytes.as_slice())
     }
 
     /// Returns current border friction scores as a Dictionary.

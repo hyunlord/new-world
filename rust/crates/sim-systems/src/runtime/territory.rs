@@ -221,6 +221,56 @@ impl SimSystem for TerritoryRuntimeSystem {
                 }
             });
         }
+
+        // Step 6: Compute per-faction border_hardness for visualization.
+        compute_faction_hardness(resources);
+    }
+}
+
+/// Computes `border_hardness` (0.0–1.0) for each active faction and stores it in
+/// `resources.territory_hardness`.
+///
+/// - Settlement factions (faction_id 1–999): based on population + completed building count.
+/// - Band factions (faction_id 1000+): capped at `TERRITORY_HARDNESS_BAND_CAP`.
+fn compute_faction_hardness(resources: &mut SimResources) {
+    resources.territory_hardness.clear();
+
+    // Settlement factions: faction_id = settlement_id.0 as u16 + 1
+    for (settlement_id, settlement) in &resources.settlements {
+        let faction_id = (settlement_id.0 as u16).wrapping_add(1);
+
+        let pop = settlement.population() as f32;
+        let pop_factor = (pop / config::TERRITORY_HARDNESS_POP_SCALE).min(1.0);
+
+        let building_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.settlement_id == *settlement_id && b.is_complete)
+            .count() as f32;
+        let building_factor =
+            (building_count / config::TERRITORY_HARDNESS_BUILDING_SCALE).min(1.0);
+
+        let raw = config::TERRITORY_HARDNESS_POP_WEIGHT * pop_factor
+            + config::TERRITORY_HARDNESS_BUILDING_WEIGHT * building_factor;
+
+        let hardness = config::TERRITORY_HARDNESS_MIN
+            + raw * (config::TERRITORY_HARDNESS_MAX - config::TERRITORY_HARDNESS_MIN);
+
+        resources.territory_hardness.insert(
+            faction_id,
+            hardness.clamp(
+                config::TERRITORY_HARDNESS_MIN,
+                config::TERRITORY_HARDNESS_MAX,
+            ),
+        );
+    }
+
+    // Band factions: faction_id = band_id.0 as u16 + 1000
+    for band in resources.band_store.all() {
+        let faction_id = (band.id.0 as u16).wrapping_add(1000);
+        resources
+            .territory_hardness
+            .insert(faction_id, config::TERRITORY_HARDNESS_BAND_CAP);
     }
 }
 

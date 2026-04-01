@@ -2875,6 +2875,20 @@ func _reload_gdextension() -> bool:
 	return int(manager.call("load_extension", _GDEXTENSION_PATH)) == OK
 
 
+## Returns per-tile hardness texture (FORMAT_L8, map_width × map_height bytes).
+## Each byte = hardness of dominant faction at that tile (0 = soft/unowned).
+func get_territory_hardness_texture() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("runtime_get_territory_hardness_texture"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("runtime_get_territory_hardness_texture")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
 ## Returns a width×height PackedByteArray encoding dispute intensity per tile.
 ## Each byte is 0 (no contest) to 255 (maximum overlap). Used by renderers to
 ## visualize contested border zones between settlements.
