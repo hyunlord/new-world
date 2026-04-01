@@ -4261,6 +4261,12 @@ mod tests {
                     max_amount: 8.0,
                     regen_rate: 0.0,
                 });
+                map.get_mut(x, y).resources.push(TileResource {
+                    resource_type: ResourceType::Stone,
+                    amount: 50.0,
+                    max_amount: 50.0,
+                    regen_rate: 0.0,
+                });
             }
         }
         let mut resources = SimResources::new(calendar, map, 91);

@@ -823,7 +823,7 @@ fn run_needs_math_bench(args: &[String]) {
 #[cfg(test)]
 mod tests {
     use super::{entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT};
-    use sim_core::components::{Behavior, Identity, Personality, Position, SteeringParams};
+    use sim_core::components::{Age, Behavior, Identity, Personality, Position, SteeringParams};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
     use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
@@ -899,6 +899,15 @@ mod tests {
             }
         }
         engine
+    }
+
+    fn count_alive(engine: &SimEngine) -> usize {
+        engine
+            .world()
+            .query::<&Age>()
+            .iter()
+            .filter(|(_, age)| age.alive)
+            .count()
     }
 
     fn collect_positions(engine: &SimEngine) -> Vec<(u64, (f64, f64))> {
@@ -1249,6 +1258,74 @@ mod tests {
             total_stone > 50.0,
             "flatland settlement must gather >50 stone in 1 year via TileResource search, got {total_stone:.1}"
         );
+    }
+
+    /// Over 3 years, population must grow beyond 20 and approach the migration threshold (30).
+    /// Validates that birth/death balance supports net positive growth.
+    #[test]
+    fn harness_population_growth_reaches_migration_threshold() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        engine.run_ticks(4380);
+        let alive_y1 = count_alive(&engine);
+        let settlements_y1 = engine.resources().settlements.len();
+        println!("[harness] Year 1: alive={alive_y1}, settlements={settlements_y1}");
+
+        engine.run_ticks(4380);
+        let alive_y2 = count_alive(&engine);
+        let settlements_y2 = engine.resources().settlements.len();
+        println!("[harness] Year 2: alive={alive_y2}, settlements={settlements_y2}");
+
+        engine.run_ticks(4380);
+        let alive_y3 = count_alive(&engine);
+        let settlements_y3 = engine.resources().settlements.len();
+        println!("[harness] Year 3: alive={alive_y3}, settlements={settlements_y3}");
+
+        let peak = alive_y1.max(alive_y2).max(alive_y3);
+        println!("[harness] Growth: Y1={alive_y1} Y2={alive_y2} Y3={alive_y3} peak={peak}");
+
+        assert!(
+            alive_y3 > 20,
+            "Population should grow beyond initial 20 in 3 years, got {alive_y3}"
+        );
+        assert!(
+            peak >= 28,
+            "Peak population should approach migration threshold (30), got {peak}"
+        );
+    }
+
+    /// Over 5 years, a second settlement must form via migration.
+    /// Validates the full chain: population growth → migration trigger → new settlement.
+    #[test]
+    fn harness_multi_settlement_emerges() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380 * 5);
+
+        let alive = count_alive(&engine);
+        let settlements = engine.resources().settlements.len();
+
+        println!("[harness] 5-year result: alive={alive}, settlements={settlements}");
+        for (id, settlement) in engine.resources().settlements.iter() {
+            println!(
+                "[harness]   Settlement {:?}: members={}, food={:.1}, stone={:.1}",
+                id,
+                settlement.members.len(),
+                settlement.stockpile_food,
+                settlement.stockpile_stone
+            );
+        }
+
+        assert!(
+            settlements >= 2,
+            "Expected ≥2 settlements after 5 years, got {settlements}. Population was {alive}."
+        );
+        for (id, settlement) in engine.resources().settlements.iter() {
+            assert!(
+                !settlement.members.is_empty(),
+                "Settlement {:?} has no members",
+                id
+            );
+        }
     }
 
     /// After 1 year, at least one shelter should be built (total completed buildings > 2).
