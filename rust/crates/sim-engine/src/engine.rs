@@ -139,6 +139,10 @@ pub struct SimResources {
     pub band_store: BandStore,
     /// Per-faction territory influence grid (building-anchored, decaying).
     pub territory_grid: sim_core::territory_grid::TerritoryGrid,
+    /// Accumulated border friction between settlement pairs.
+    /// Key = (min_id, max_id) canonical ordering. Value = 0.0..=TERRITORY_FRICTION_MAX.
+    /// Increases when settlement territories overlap, decays when overlap ceases.
+    pub border_friction: HashMap<(SettlementId, SettlementId), f64>,
     /// Reverse index parent → child ids for genealogy lookups.
     pub children_index: ChildrenIndex,
     /// World-rules resource regen multipliers keyed by rule target tag.
@@ -255,6 +259,7 @@ impl SimResources {
             item_store: ItemStore::new(),
             band_store: BandStore::new(),
             territory_grid: sim_core::territory_grid::TerritoryGrid::new(map_w, map_h),
+            border_friction: HashMap::new(),
             children_index: ChildrenIndex::default(),
             resource_regen_multipliers: BTreeMap::new(),
             explain_log: ExplainLog::new(),

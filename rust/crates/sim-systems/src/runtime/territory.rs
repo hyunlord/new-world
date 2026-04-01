@@ -2,7 +2,9 @@ use hecs::World;
 use sim_core::components::{Behavior, Identity, Position};
 use sim_core::config;
 use sim_core::enums::ActionType;
-use sim_engine::{SimResources, SimSystem};
+use sim_core::ids::SettlementId;
+use sim_engine::{GameEvent, SimResources, SimSystem};
+use std::collections::HashSet;
 
 /// Stamps building-anchored territory with terrain blocking and accumulates
 /// activity-based territory from agent productive actions.
@@ -34,7 +36,7 @@ impl SimSystem for TerritoryRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         // Build passability cache BEFORE borrowing territory_grid to avoid double-borrow.
         let map_w = resources.map.width as usize;
         let map_h = resources.map.height as usize;
@@ -144,6 +146,80 @@ impl SimSystem for TerritoryRuntimeSystem {
                     break;
                 }
             }
+        }
+
+        // Step 5: Dispute detection and friction accumulation.
+        // Only run every TERRITORY_DISPUTE_CHECK_INTERVAL ticks.
+        if tick.is_multiple_of(config::TERRITORY_DISPUTE_CHECK_INTERVAL) {
+            let disputes =
+                resources
+                    .territory_grid
+                    .compute_disputes(config::TERRITORY_DISPUTE_MIN_STRENGTH);
+
+            // Collect active settlement-pair keys for friction decay.
+            let active_pairs: HashSet<(SettlementId, SettlementId)> = disputes
+                .iter()
+                .filter(|d| d.faction_a < 1000 && d.faction_b < 1000)
+                .map(|d| {
+                    let a = SettlementId((d.faction_a as u64).wrapping_sub(1));
+                    let b = SettlementId((d.faction_b as u64).wrapping_sub(1));
+                    if a.0 < b.0 { (a, b) } else { (b, a) }
+                })
+                .collect();
+
+            for dispute in &disputes {
+                // Skip band factions (band faction_id >= 1000).
+                if dispute.faction_a >= 1000 || dispute.faction_b >= 1000 {
+                    continue;
+                }
+
+                let settle_a = SettlementId((dispute.faction_a as u64).wrapping_sub(1));
+                let settle_b = SettlementId((dispute.faction_b as u64).wrapping_sub(1));
+
+                // Verify both settlements exist.
+                if !resources.settlements.contains_key(&settle_a)
+                    || !resources.settlements.contains_key(&settle_b)
+                {
+                    continue;
+                }
+
+                let key = if settle_a.0 < settle_b.0 {
+                    (settle_a, settle_b)
+                } else {
+                    (settle_b, settle_a)
+                };
+
+                let friction_delta = dispute.overlap_tile_count as f64
+                    * config::TERRITORY_FRICTION_PER_TILE;
+                let friction = resources.border_friction.entry(key).or_insert(0.0);
+                let prev_friction = *friction;
+                *friction =
+                    (*friction + friction_delta).min(config::TERRITORY_FRICTION_MAX);
+
+                // Emit event on threshold crossing (rising edge only).
+                if *friction >= config::TERRITORY_FRICTION_DISPUTE_THRESHOLD
+                    && prev_friction < config::TERRITORY_FRICTION_DISPUTE_THRESHOLD
+                {
+                    resources.event_bus.emit(GameEvent::TerritoryDisputeDetected {
+                        settlement_a: settle_a,
+                        settlement_b: settle_b,
+                        overlap_tile_count: dispute.overlap_tile_count,
+                        friction: *friction,
+                        epicenter_x: dispute.epicenter_x,
+                        epicenter_y: dispute.epicenter_y,
+                    });
+                }
+            }
+
+            // Decay friction for pairs that no longer have active overlap.
+            resources.border_friction.retain(|key, friction| {
+                if !active_pairs.contains(key) {
+                    *friction *= config::TERRITORY_FRICTION_DECAY;
+                    *friction > 0.01
+                } else {
+                    true
+                }
+            });
         }
     }
 }

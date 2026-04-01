@@ -4,6 +4,22 @@ use std::collections::HashMap;
 /// Maps to settlement_id+1 (for settlements) or band_id+1000 (for bands).
 pub type FactionId = u16;
 
+/// A dispute between two factions with overlapping territory.
+#[derive(Debug, Clone)]
+pub struct TerritoryDispute {
+    /// The two factions with overlapping territory.
+    pub faction_a: FactionId,
+    pub faction_b: FactionId,
+    /// Number of tiles where both factions have strength above the dispute threshold.
+    pub overlap_tile_count: u32,
+    /// Sum of the weaker faction's strength across all overlap tiles.
+    /// Higher = more contested.
+    pub overlap_intensity: f32,
+    /// The tile (x, y) with the highest combined strength (epicenter).
+    pub epicenter_x: u32,
+    pub epicenter_y: u32,
+}
+
 /// Per-faction territory influence grid.
 /// Each faction has a width×height f32 channel representing territorial influence.
 #[derive(Debug, Clone)]
@@ -186,6 +202,120 @@ impl TerritoryGrid {
     /// Remove a faction's channel entirely.
     pub fn remove_faction(&mut self, faction_id: FactionId) {
         self.channels.remove(&faction_id);
+    }
+
+    /// Compute all faction-pair disputes where two factions both exceed `min_strength` on the same tile.
+    ///
+    /// Returns one `TerritoryDispute` per faction pair. Settlement factions use IDs 1–999;
+    /// band factions use 1000+. Callers can filter by faction range as needed.
+    pub fn compute_disputes(&self, min_strength: f32) -> Vec<TerritoryDispute> {
+        struct PairStats {
+            overlap_count: u32,
+            overlap_intensity: f32,
+            best_x: u32,
+            best_y: u32,
+            best_combined: f32,
+        }
+        let mut pair_stats: HashMap<(FactionId, FactionId), PairStats> = HashMap::new();
+
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let idx = (y * self.width + x) as usize;
+
+                // Find top-2 factions at this tile that exceed min_strength.
+                let mut first: Option<(FactionId, f32)> = None;
+                let mut second: Option<(FactionId, f32)> = None;
+
+                for (&fid, data) in &self.channels {
+                    let val = data[idx];
+                    if val < min_strength {
+                        continue;
+                    }
+                    match first {
+                        None => {
+                            first = Some((fid, val));
+                        }
+                        Some((_, fv)) if val > fv => {
+                            second = first;
+                            first = Some((fid, val));
+                        }
+                        _ => match second {
+                            None => {
+                                second = Some((fid, val));
+                            }
+                            Some((_, sv)) if val > sv => {
+                                second = Some((fid, val));
+                            }
+                            _ => {}
+                        },
+                    }
+                }
+
+                // Both factions present above threshold → overlap.
+                if let (Some((fa, va)), Some((fb, vb))) = (first, second) {
+                    let key = if fa < fb { (fa, fb) } else { (fb, fa) };
+                    let weaker = va.min(vb);
+                    let combined = va + vb;
+                    let entry = pair_stats.entry(key).or_insert(PairStats {
+                        overlap_count: 0,
+                        overlap_intensity: 0.0,
+                        best_x: x,
+                        best_y: y,
+                        best_combined: 0.0,
+                    });
+                    entry.overlap_count += 1;
+                    entry.overlap_intensity += weaker;
+                    if combined > entry.best_combined {
+                        entry.best_x = x;
+                        entry.best_y = y;
+                        entry.best_combined = combined;
+                    }
+                }
+            }
+        }
+
+        pair_stats
+            .into_iter()
+            .map(|((fa, fb), stats)| TerritoryDispute {
+                faction_a: fa,
+                faction_b: fb,
+                overlap_tile_count: stats.overlap_count,
+                overlap_intensity: stats.overlap_intensity,
+                epicenter_x: stats.best_x,
+                epicenter_y: stats.best_y,
+            })
+            .collect()
+    }
+
+    /// Export a dispute intensity map as a 256×256 u8 array.
+    ///
+    /// Each cell's value represents the strength of the second-strongest faction (the "invader"
+    /// strength). Cells where fewer than two factions exceed `min_strength` are zero.
+    /// Used for visualizing contested territory in the renderer.
+    pub fn export_dispute_map(&self, min_strength: f32) -> Vec<u8> {
+        let cell_count = (self.width * self.height) as usize;
+        let mut result = vec![0_u8; cell_count];
+
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let idx = (y * self.width + x) as usize;
+
+                let mut strengths: Vec<f32> = self
+                    .channels
+                    .values()
+                    .map(|data| data[idx])
+                    .filter(|&val| val >= min_strength)
+                    .collect();
+
+                if strengths.len() >= 2 {
+                    strengths.sort_unstable_by(|a, b| {
+                        b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal)
+                    });
+                    result[idx] = (strengths[1].clamp(0.0, 1.0) * 255.0) as u8;
+                }
+            }
+        }
+        result
     }
 }
 
