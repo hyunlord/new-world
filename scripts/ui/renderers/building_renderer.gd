@@ -97,7 +97,7 @@ func _draw() -> void:
 		var cy: float = float(tile_y) * tile_size + half
 		var alpha: float = 1.0 if is_built else 0.4
 
-		if _current_lod == 0:
+		if _current_lod >= GameConfig.ZOOM_Z3:
 			if zl < 0.4:
 				continue
 			var strategic_color: Color = Color(0.6, 0.35, 0.15, alpha)
@@ -132,7 +132,7 @@ func _draw() -> void:
 			draw_rect(Rect2(bar_x, bar_y, bar_w, bar_h), Color(0.2, 0.2, 0.2, 0.6))
 			draw_rect(Rect2(bar_x, bar_y, bar_w * build_progress, bar_h), Color(0.2, 0.8, 0.2, 0.8))
 
-		if _current_lod == 2 and building_type == "stockpile" and is_built:
+		if _current_lod == GameConfig.ZOOM_Z1 and building_type == "stockpile" and is_built:
 			var storage: Dictionary = {}
 			var storage_raw: Variant = _building_value(b, "storage", {})
 			if storage_raw is Dictionary:
@@ -142,7 +142,7 @@ func _draw() -> void:
 			var stone: int = int(round(storage.get("stone", 0.0)))
 			var text: String = Locale.trf3("UI_STATS_RESOURCES_FMT", "food", food, "wood", wood, "stone", stone)
 			draw_string(font, Vector2(cx - 20, cy + half + 14), text, HORIZONTAL_ALIGNMENT_CENTER, -1, font_size, Color.WHITE)
-		elif _current_lod >= 1:
+		elif _current_lod <= GameConfig.ZOOM_Z2:
 			var building_label: String = Locale.tr_id("BUILDING", building_type)
 			if building_label.is_empty() or building_label == building_type:
 				building_label = Locale.tr_id("BUILDING_TYPE", building_type)
@@ -171,7 +171,7 @@ func _draw() -> void:
 				)
 
 	# Settlement labels at settlement-scale zoom
-	if _current_lod == 0 and zl >= 0.4 and zl < 0.8:
+	if _current_lod >= GameConfig.ZOOM_Z3 and zl >= 0.4 and zl < 0.8:
 		var settlements: Array = _get_runtime_settlements()
 		if settlements.is_empty() and _settlement_manager != null:
 			settlements = _settlement_manager.get_active_settlements()
@@ -186,18 +186,14 @@ func _draw() -> void:
 
 
 func _update_lod(zl: float) -> void:
-	match _current_lod:
-		0:
-			if zl >= 0.9:
-				_current_lod = 1
-		1:
-			if zl < 0.75:
-				_current_lod = 0
-			elif zl >= 2.2:
-				_current_lod = 2
-		2:
-			if zl < 2.0:
-				_current_lod = 1
+	_current_lod = _compute_zoom_tier(zl)
+
+
+static func _compute_zoom_tier(zoom_value: float) -> int:
+	for i in range(GameConfig.ZOOM_TIER_BOUNDARIES.size()):
+		if zoom_value >= GameConfig.ZOOM_TIER_BOUNDARIES[i]:
+			return i
+	return GameConfig.ZOOM_TIER_COUNT - 1
 
 
 func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:

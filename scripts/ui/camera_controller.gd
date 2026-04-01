@@ -178,15 +178,10 @@ func animate_zoom_to(target_value: float, duration: float = 0.35) -> void:
 
 func get_zoom_level() -> int:
 	var zoom_value: float = _target_zoom if _is_player_active() else zoom.x
-	if zoom_value >= 2.0:
-		return 0
-	if zoom_value >= 0.8:
-		return 1
-	if zoom_value >= 0.4:
-		return 2
-	if zoom_value >= 0.25:
-		return 3
-	return 4
+	for i in range(GameConfig.ZOOM_TIER_BOUNDARIES.size()):
+		if zoom_value >= GameConfig.ZOOM_TIER_BOUNDARIES[i]:
+			return i
+	return GameConfig.ZOOM_TIER_COUNT - 1
 
 
 func focus_world_tile(tile_position: Vector2, reason: String = "manual_focus") -> void:

@@ -220,7 +220,7 @@ func _refresh_channel_data(channel: String, layer: Sprite2D) -> void:
 func _update_zoom_filter(zoom_level: int) -> void:
 	for channel: String in _channel_layers:
 		var layer: Sprite2D = _channel_layers[channel]
-		if zoom_level == 2:
+		if zoom_level == GameConfig.ZOOM_Z1:
 			layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		else:
 			layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
