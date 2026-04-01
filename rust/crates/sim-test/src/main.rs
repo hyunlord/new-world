@@ -825,7 +825,7 @@ mod tests {
     use super::{entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT};
     use sim_core::components::{Behavior, Identity, Personality, Position, SteeringParams};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
-    use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, WorldMap};
+    use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
     use sim_systems::entity_spawner::SpawnConfig;
     use sim_systems::runtime::derive_steering_params;
@@ -1142,6 +1142,65 @@ mod tests {
         assert!(
             total_stone > 0.0,
             "expected stone > 0 after 1 year, got {total_stone}"
+        );
+    }
+
+    /// On an all-Grassland map with stone only at radius 60–80 (beyond normal wander range),
+    /// agents must actively seek TileResource::Stone via progressive search.
+    /// Validates Fix C: find_nearest_tile_with_resource in GatherStone chain.
+    #[test]
+    fn harness_resource_stone_accessible_from_flatland() {
+        let mut engine = make_stage1_engine(42, 20);
+        {
+            let resources = engine.resources_mut();
+            // Step 1: clear ALL tile resources within radius 50 of settlement (128,128).
+            for dy in -55_i32..=55 {
+                for dx in -55_i32..=55 {
+                    let tx = 128 + dx;
+                    let ty = 128 + dy;
+                    if tx < 0 || ty < 0 || tx >= 256 || ty >= 256 {
+                        continue;
+                    }
+                    resources.map.get_mut(tx as u32, ty as u32).resources.clear();
+                }
+            }
+            // Step 2: place stone-only at radius 60–75 (beyond wander reach).
+            for dy in -75_i32..=75 {
+                for dx in -75_i32..=75 {
+                    let manhattan = dx.abs() + dy.abs();
+                    if manhattan < 60 || manhattan > 75 {
+                        continue;
+                    }
+                    let tx = 128 + dx;
+                    let ty = 128 + dy;
+                    if tx < 0 || ty < 0 || tx >= 256 || ty >= 256 {
+                        continue;
+                    }
+                    let tile = resources.map.get_mut(tx as u32, ty as u32);
+                    tile.terrain = TerrainType::Grassland;
+                    tile.resources.push(sim_core::world::TileResource {
+                        resource_type: sim_core::ResourceType::Stone,
+                        amount: 200.0,
+                        max_amount: 200.0,
+                        regen_rate: 0.0,
+                    });
+                }
+            }
+            // Step 3: override all terrain to Grassland (no Hill/Mountain).
+            for y in 0..256u32 {
+                for x in 0..256u32 {
+                    resources.map.get_mut(x, y).terrain = TerrainType::Grassland;
+                }
+            }
+        }
+        engine.run_ticks(4380); // 1 year
+
+        let resources = engine.resources();
+        let total_stone: f64 = resources.settlements.values().map(|s| s.stockpile_stone).sum();
+        println!("[harness] distant-only stone after 1 year: {total_stone:.1}");
+        assert!(
+            total_stone > 20.0,
+            "agents must gather >20 stone from radius-60+ tiles in 1 year (directed search), got {total_stone:.1}"
         );
     }
 
