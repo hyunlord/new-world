@@ -880,6 +880,24 @@ mod tests {
                 }
             }
         }
+        // Add Hill terrain tiles to give test maps terrain diversity.
+        // Ensures the terrain-search path in GatherStone is exercised alongside
+        // the TileResource-search path.
+        {
+            let resources = engine.resources_mut();
+            for dy in 25_i32..=30 {
+                for dx in 25_i32..=30 {
+                    let tx = 128 + dx;
+                    let ty = 128 + dy;
+                    if tx < 256 && ty < 256 {
+                        resources
+                            .map
+                            .get_mut(tx as u32, ty as u32)
+                            .terrain = TerrainType::Hill;
+                    }
+                }
+            }
+        }
         engine
     }
 
@@ -1201,6 +1219,35 @@ mod tests {
         assert!(
             total_stone > 20.0,
             "agents must gather >20 stone from radius-60+ tiles in 1 year (directed search), got {total_stone:.1}"
+        );
+    }
+
+    /// On an all-Grassland map with TileResource::Stone within radius 30,
+    /// agents must gather >50 stone in 1 year using find_nearest_tile_with_resource.
+    /// Validates Fix A+C: stone nodes on flat terrain + progressive search chain.
+    #[test]
+    fn harness_stone_accessible_from_flatland() {
+        let mut engine = make_stage1_engine(42, 20);
+        // Override all terrain to Grassland — no Hill/Mountain for terrain-search
+        {
+            let resources = engine.resources_mut();
+            for y in 0..256u32 {
+                for x in 0..256u32 {
+                    resources.map.get_mut(x, y).terrain = TerrainType::Grassland;
+                }
+            }
+        }
+        engine.run_ticks(4380); // 1 year
+        let resources = engine.resources();
+        let total_stone: f64 = resources
+            .settlements
+            .values()
+            .map(|s| s.stockpile_stone)
+            .sum();
+        println!("[harness] flatland stone after 1 year: {total_stone:.1}");
+        assert!(
+            total_stone > 50.0,
+            "flatland settlement must gather >50 stone in 1 year via TileResource search, got {total_stone:.1}"
         );
     }
 
