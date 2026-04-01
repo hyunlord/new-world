@@ -431,6 +431,36 @@ Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `e
 
 ---
 
+### Codex MCP Dispatch
+
+Claude Code can dispatch tasks to the Codex MCP server for parallel execution.
+
+**When to use codex MCP (vs ask_codex):**
+- `ask_codex`: 단순 1회성 디스패치
+- `codex MCP`: 복잡한 작업, 대화 이어가기(threadId), 병렬 실행, HDD retry 루프
+
+**Usage pattern:**
+1. Start a session via `codex` tool — returns `threadId`
+2. Continue via `codex-reply` using that `threadId`
+3. If harness test fails: `codex-reply` with error output → auto-fix → re-test
+
+**HDD + Codex MCP loop:**
+```
+Claude Code:
+  1. harness test 작성 (RED)
+  2. codex MCP로 구현 디스패치
+  3. codex-reply: "cargo test -p sim-test harness_X -- --nocapture"
+  4. 실패 시 codex-reply에 에러 전달 → 수정 → 재시도 (max 3회)
+  5. 통과 시 완료
+```
+
+**Dispatch rules:**
+- Rust tickets → codex MCP (복잡) or ask_codex (단순)
+- GDScript tickets → codex MCP
+- Dispatch ratio ≥ 60%
+
+---
+
 ## Common Mistakes [READ BEFORE EVERY TASK]
 
 1. Writing simulation logic in GDScript instead of Rust
