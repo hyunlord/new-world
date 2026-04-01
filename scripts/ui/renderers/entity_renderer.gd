@@ -29,7 +29,6 @@ var _band_territory_material: ShaderMaterial = null
 var _band_id_texture: ImageTexture = null
 var _band_density_texture: ImageTexture = null
 var _band_territory_timer: float = 0.0
-var _job_check_done: bool = false
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
 var _snapshot_decoder = SnapshotDecoderClass.new()
@@ -287,13 +286,6 @@ func _on_simulation_event(event: Dictionary) -> void:
 
 
 func _process(_delta: float) -> void:
-	if not _job_check_done and Engine.get_process_frames() > 300 and _binary_snapshot_available:
-		_job_check_done = true
-		var job_counts: Dictionary = {}
-		for index in range(_snapshot_decoder.agent_count):
-			var job_key: String = _binary_job_key(_snapshot_decoder.get_job_icon(index))
-			job_counts[job_key] = int(job_counts.get(job_key, 0)) + 1
-		print("[JobCheck] agents=%d jobs=%s" % [_snapshot_decoder.agent_count, str(job_counts)])
 	_update_binary_snapshots()
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
