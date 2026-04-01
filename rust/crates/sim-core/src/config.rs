@@ -801,6 +801,26 @@ pub const WOOD_REGEN_RATE: f64 = 0.3;
 pub const STONE_REGEN_RATE: f64 = 0.0;
 pub const RESOURCE_REGEN_TICK_INTERVAL: u64 = 120;
 
+// ── Stone scattering (world generation) ──────────────────────────────────────
+/// Minimum radius within which a settlement must have stone access.
+pub const SETTLEMENT_STONE_ACCESS_RADIUS: i32 = 60;
+/// Percentage of Grassland tiles that get surface stone deposits (0–100).
+pub const GRASSLAND_STONE_SCATTER_PCT: u32 = 8;
+/// Percentage of Forest tiles that get surface stone deposits (0–100).
+pub const FOREST_STONE_SCATTER_PCT: u32 = 5;
+/// Percentage of Beach tiles that get surface stone deposits (0–100).
+pub const BEACH_STONE_SCATTER_PCT: u32 = 12;
+/// Percentage of Hill tiles that get surface stone deposits (0–100).
+pub const HILL_STONE_SCATTER_PCT: u32 = 30;
+/// Stone amount range for Grassland scatter (min, max).
+pub const GRASSLAND_STONE_AMOUNT: (f64, f64) = (15.0, 40.0);
+/// Stone amount range for Forest scatter.
+pub const FOREST_STONE_AMOUNT: (f64, f64) = (10.0, 25.0);
+/// Stone amount range for Beach scatter.
+pub const BEACH_STONE_AMOUNT: (f64, f64) = (10.0, 30.0);
+/// Stone amount range for Hill scatter.
+pub const HILL_STONE_AMOUNT: (f64, f64) = (50.0, 100.0);
+
 // ── Pathfinding ───────────────────────────────────────────────────────────────
 pub const PATHFIND_MAX_STEPS: u32 = 200;
 

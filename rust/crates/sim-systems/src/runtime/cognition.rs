@@ -976,6 +976,20 @@ fn find_best_influence_tile(
     best
 }
 
+/// Finds nearest passable tile that has a TileResource of the given type with amount > 0.
+fn find_nearest_tile_with_resource(
+    position: &Position,
+    resources: &SimResources,
+    radius: i32,
+    resource_type: ResourceType,
+) -> Option<(i32, i32)> {
+    find_nearest_tile(position, resources, radius, |tile| {
+        tile.resources
+            .iter()
+            .any(|r| r.resource_type == resource_type && r.amount > 0.0)
+    })
+}
+
 /// Finds nearest passable tile with one of the specified terrain types.
 fn find_nearest_terrain_tile(
     position: &Position,
@@ -1093,11 +1107,20 @@ fn behavior_assign_action(
             40,
             &[TerrainType::Hill, TerrainType::Mountain],
         )
+        .or_else(|| find_nearest_tile_with_resource(
+            position, resources, 40, ResourceType::Stone,
+        ))
         .or_else(|| find_nearest_terrain_tile(
             position,
             resources,
-            20,
+            40,
             &[TerrainType::Beach],
+        ))
+        .or_else(|| find_nearest_tile_with_resource(
+            position, resources, 80, ResourceType::Stone,
+        ))
+        .or_else(|| find_nearest_tile_with_resource(
+            position, resources, 120, ResourceType::Stone,
         ))
         .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
         ActionType::Build => build_target
