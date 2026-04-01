@@ -435,9 +435,9 @@ Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `e
 
 Claude Code can dispatch tasks to the Codex MCP server for parallel execution.
 
-**When to use codex MCP (vs ask_codex):**
-- `ask_codex`: 단순 1회성 디스패치
-- `codex MCP`: 복잡한 작업, 대화 이어가기(threadId), 병렬 실행, HDD retry 루프
+**Codex MCP 도구 사용법:**
+- `codex` MCP tool — 모든 티켓의 기본 디스패치 (Rust, GDScript, 모든 언어)
+- `codex-reply` MCP tool — 기존 세션 이어가기 (follow-up, 에러 수정)
 
 **Usage pattern:**
 1. Start a session via `codex` tool — returns `threadId`
@@ -455,8 +455,8 @@ Claude Code:
 ```
 
 **Dispatch rules:**
-- Rust tickets → codex MCP (복잡) or ask_codex (단순)
-- GDScript tickets → codex MCP
+- 모든 티켓 → `codex` MCP tool (`approval-policy: "never"`, `sandbox: "workspace-write"`)
+- follow-up 필요 시 → `codex-reply` with `threadId`
 - Dispatch ratio ≥ 60%
 
 ---
