@@ -407,6 +407,21 @@ const CAMERA_ZOOM_LEVELS := [3.0, 1.2, 0.6, 0.3, 0.18]
 const CAMERA_PAN_SPEED: float = 500.0
 const CAMERA_ZOOM_SPEED: float = 0.15
 
+## Unified zoom tier system (D1-A).
+## Camera zoom >= ZOOM_TIER_BOUNDARIES[i] → tier i, else tier i+1.
+const ZOOM_TIER_BOUNDARIES := [2.0, 0.8, 0.4, 0.25]
+## Snap targets for Z1..Z5 zoom buttons (mirrors CAMERA_ZOOM_LEVELS).
+const ZOOM_SNAP_TARGETS := [3.0, 1.2, 0.6, 0.3, 0.18]
+## Hysteresis offset for tier transitions to prevent LOD flicker.
+const ZOOM_TIER_HYSTERESIS: float = 0.05
+const ZOOM_TIER_COUNT: int = 5
+## Named tier indices for readability.
+const ZOOM_Z1: int = 0  ## Individual
+const ZOOM_Z2: int = 1  ## Village
+const ZOOM_Z3: int = 2  ## Settlement
+const ZOOM_Z4: int = 3  ## Region
+const ZOOM_Z5: int = 4  ## World
+
 ## System tick intervals
 const NEEDS_TICK_INTERVAL: int = 4
 const STRESS_SYSTEM_TICK_INTERVAL: int = 4

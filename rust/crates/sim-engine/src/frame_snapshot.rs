@@ -37,14 +37,18 @@ pub struct AgentSnapshot {
     pub action_state: u8,
     /// Movement direction `0..=7`.
     pub movement_dir: u8,
-    /// Packed sprite-variation placeholder bits.
-    pub sprite_var: u8,
+    /// Packed atlas variant: upper nibble job variant, lower nibble anim frame.
+    pub atlas_var: u8,
     /// Danger bitflags for renderer overlays.
     pub danger_icon: u8,
-    /// Faction color placeholder.
-    pub faction_color: u8,
-    /// Explicit alignment pad to preserve 36-byte stride.
-    pub _pad: [u8; 4],
+    /// Band color index or `0xFF` when the agent has no band.
+    pub band_color_idx: u8,
+    /// Low byte of the encoded band id or `0xFF` when the agent has no band.
+    pub band_id_lo: u8,
+    /// High byte of the encoded band id or `0xFF` when the agent has no band.
+    pub band_id_hi: u8,
+    /// Reserved bytes kept to preserve the 36-byte stride contract.
+    pub _reserved: [u8; 2],
 }
 
 const _: () = assert!(std::mem::size_of::<AgentSnapshot>() == 36);
@@ -66,10 +70,12 @@ impl AgentSnapshot {
         let active_break = self.active_break;
         let action_state = self.action_state;
         let movement_dir = self.movement_dir;
-        let sprite_var = self.sprite_var;
+        let atlas_var = self.atlas_var;
         let danger_icon = self.danger_icon;
-        let faction_color = self.faction_color;
-        let pad = self._pad;
+        let band_color_idx = self.band_color_idx;
+        let band_id_lo = self.band_id_lo;
+        let band_id_hi = self.band_id_hi;
+        let reserved = self._reserved;
 
         out.extend_from_slice(&entity_id.to_le_bytes());
         out.extend_from_slice(&x.to_le_bytes());
@@ -85,10 +91,12 @@ impl AgentSnapshot {
         out.push(active_break);
         out.push(action_state);
         out.push(movement_dir);
-        out.push(sprite_var);
+        out.push(atlas_var);
         out.push(danger_icon);
-        out.push(faction_color);
-        out.extend_from_slice(&pad);
+        out.push(band_color_idx);
+        out.push(band_id_lo);
+        out.push(band_id_hi);
+        out.extend_from_slice(&reserved);
     }
 }
 
@@ -128,6 +136,21 @@ pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
         let behavior = behavior_opt.unwrap_or(&behavior_default);
         let body = body_opt.unwrap_or(&body_default);
 
+        // `0xFF`/`0xFFFF` reserve the "no band" sentinel in the byte protocol.
+        let band_raw: u64 = identity.band_id.map(|bid| bid.0).unwrap_or(u64::MAX);
+        let (band_color_idx, band_id_lo, band_id_hi) = if band_raw == u64::MAX {
+            (0xFF_u8, 0xFF_u8, 0xFF_u8)
+        } else {
+            let color_idx = (band_raw % 8) as u8;
+            let id_lo = (band_raw & 0xFF) as u8;
+            let id_hi = ((band_raw >> 8) & 0xFF) as u8;
+            (color_idx, id_lo, id_hi)
+        };
+
+        let job_variant = job_icon_code(behavior.job.as_str()) & 0x0F;
+        let anim_frame = 0_u8;
+        let atlas_var = (job_variant << 4) | anim_frame;
+
         snapshots.push(AgentSnapshot {
             entity_id: entity.id(),
             x: position.x as f32,
@@ -143,10 +166,12 @@ pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
             active_break: mental_break_code(stress.active_mental_break),
             action_state: action_state_code(behavior.current_action),
             movement_dir: position.movement_dir,
-            sprite_var: compute_sprite_var(body, identity, age),
+            atlas_var,
             danger_icon: compute_danger_flags(body, needs, stress),
-            faction_color: 0,
-            _pad: [0_u8; 4],
+            band_color_idx,
+            band_id_lo,
+            band_id_hi,
+            _reserved: [0_u8; 2],
         });
     }
 
@@ -173,13 +198,6 @@ fn compute_health_tier(body: &Body) -> u8 {
     } else {
         2
     }
-}
-
-fn compute_sprite_var(body: &Body, identity: &Identity, age: &Age) -> u8 {
-    let hair = (identity.name.len() % 8) as u8;
-    let body_type = ((body.height.clamp(0.0, 0.999) * 4.0).floor() as u8) & 0b11;
-    let skin = growth_stage_code(age.stage) & 0b111;
-    (hair << 5) | (body_type << 3) | skin
 }
 
 fn compute_danger_flags(body: &Body, needs: &Needs, stress: &Stress) -> u8 {
@@ -318,10 +336,12 @@ mod tests {
             active_break: 0,
             action_state: 7,
             movement_dir: 6,
-            sprite_var: 12,
+            atlas_var: 12,
             danger_icon: 3,
-            faction_color: 0,
-            _pad: [0_u8; 4],
+            band_color_idx: 0,
+            band_id_lo: 0,
+            band_id_hi: 0,
+            _reserved: [0_u8; 2],
         };
         let mut out = Vec::new();
         snapshot.write_bytes(&mut out);
@@ -375,7 +395,7 @@ mod tests {
             mood_color: 3,
             stress_phase: 2,
             active_break: 1,
-            sprite_var: 0b1101_0011,
+            atlas_var: 0b1101_0011,
             ..AgentSnapshot::default()
         };
         let mut out = Vec::new();
@@ -414,7 +434,7 @@ mod tests {
             active_break: 0,
             action_state: 5,
             movement_dir: 7,
-            sprite_var: 0b1101_0011,
+            atlas_var: 0b1101_0011,
             ..AgentSnapshot::default()
         };
 
@@ -447,13 +467,11 @@ mod tests {
     }
 
     #[test]
-    fn stage1_sprite_var_bit_encoding_roundtrips() {
-        let sprite_var: u8 = 0b1101_0011;
-        let hair = (sprite_var >> 5) & 0x07;
-        let body = (sprite_var >> 3) & 0x03;
-        let skin = sprite_var & 0x07;
-        assert_eq!(hair, 6);
-        assert_eq!(body, 2);
-        assert_eq!(skin, 3);
+    fn stage1_atlas_var_bit_encoding_roundtrips() {
+        let atlas_var: u8 = 0b1101_0011;
+        let job_variant = (atlas_var >> 4) & 0x0F;
+        let anim_frame = atlas_var & 0x0F;
+        assert_eq!(job_variant, 13);
+        assert_eq!(anim_frame, 3);
     }
 }

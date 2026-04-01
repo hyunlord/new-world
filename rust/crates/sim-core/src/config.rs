@@ -1462,6 +1462,18 @@ pub const TERRITORY_HARDNESS_BUILDING_SCALE: f32 = 15.0;
 /// Maximum border_hardness allowed for band factions (bands have no buildings → stay soft).
 pub const TERRITORY_HARDNESS_BAND_CAP: f32 = 0.3;
 
+// ── Zoom Tier System (D1-A) ──────────────────────────────────────────────────
+/// Unified 5-tier zoom boundary array.
+/// Camera zoom >= ZOOM_TIER_BOUNDARIES[i] → tier i, else tier i+1.
+/// Index 0 = Z1/Z2 boundary, index 3 = Z4/Z5 boundary.
+pub const ZOOM_TIER_BOUNDARIES: [f64; 4] = [2.0, 0.8, 0.4, 0.25];
+/// Snap-to targets for the Z1..Z5 zoom buttons.
+pub const ZOOM_SNAP_TARGETS: [f64; 5] = [3.0, 1.2, 0.6, 0.3, 0.18];
+/// Hysteresis offset applied to tier transitions to prevent rapid LOD flicker.
+pub const ZOOM_TIER_HYSTERESIS: f64 = 0.05;
+/// Total number of zoom tiers.
+pub const ZOOM_TIER_COUNT: usize = 5;
+
 #[cfg(test)]
 mod tests {
     use super::*;

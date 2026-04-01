@@ -910,6 +910,10 @@ mod tests {
             .count()
     }
 
+    fn advance_ticks(engine: &mut SimEngine, ticks: u64) {
+        engine.run_ticks(ticks);
+    }
+
     fn collect_positions(engine: &SimEngine) -> Vec<(u64, (f64, f64))> {
         let mut positions: Vec<(u64, (f64, f64))> = engine
             .world()
@@ -1151,6 +1155,83 @@ mod tests {
         assert!(
             builder_count >= 1,
             "expected at least 1 builder, got {builder_count}"
+        );
+    }
+
+    #[test]
+    fn harness_agent_snapshot_stride_and_band_populated() {
+        use sim_engine::frame_snapshot::{AgentSnapshot, build_agent_snapshots};
+
+        assert_eq!(
+            std::mem::size_of::<AgentSnapshot>(),
+            36,
+            "AgentSnapshot must remain 36 bytes — byte protocol with GDScript decoder"
+        );
+
+        let mut engine = make_stage1_engine(42, 20);
+        advance_ticks(&mut engine, 2000);
+
+        let world = engine.world();
+        let snapshots = build_agent_snapshots(world);
+        // Type C: empirical — 20 agents at start, 2000 ticks, observed 43 survivors (seed 42)
+        assert!(
+            snapshots.len() >= 10,
+            "expected ≥10 living agents after 2000 ticks, got {} (seed 42, 20 agents)",
+            snapshots.len()
+        );
+
+        let agents_with_band = snapshots
+            .iter()
+            .filter(|s| s.band_color_idx != 0xFF)
+            .count();
+        // Type C: empirical — observed 42/43 banded at seed 42 tick 2000; threshold 30 ≈ 70% of observed
+        assert!(
+            agents_with_band >= 30,
+            "expected ≥30 agents with band membership at tick 2000, got {} (seed 42, 20 agents)",
+            agents_with_band
+        );
+
+        // Type A: invariant — 3-byte sentinel contract must be symmetric in both directions
+        for s in &snapshots {
+            if s.band_color_idx != 0xFF {
+                let band_id = (s.band_id_hi as u16) << 8 | s.band_id_lo as u16;
+                assert_ne!(
+                    band_id, 0xFFFF,
+                    "agent with band_color should have valid band_id"
+                );
+                assert!(
+                    s.band_color_idx < 8,
+                    "band_color_idx must be 0..7, got {}",
+                    s.band_color_idx
+                );
+            } else {
+                // converse: no-band sentinel must be complete (all 3 bytes = 0xFF)
+                assert_eq!(
+                    s.band_id_lo, 0xFF,
+                    "band_color_idx=0xFF but band_id_lo={} — sentinel must be all 0xFF",
+                    s.band_id_lo
+                );
+                assert_eq!(
+                    s.band_id_hi, 0xFF,
+                    "band_color_idx=0xFF but band_id_hi={} — sentinel must be all 0xFF",
+                    s.band_id_hi
+                );
+            }
+        }
+
+        // Type C: empirical — observed 17 agents with recognized jobs (seed 42 tick 2000); threshold 10
+        let recognized_job_agents = snapshots.iter().filter(|s| s.atlas_var >> 4 > 0).count();
+        assert!(
+            recognized_job_agents >= 10,
+            "expected ≥10 agents with recognized job in atlas_var upper nibble, got {}",
+            recognized_job_agents
+        );
+
+        println!(
+            "[harness] snapshot_stride_and_band: {} total agents, {} with band, {} with recognized job",
+            snapshots.len(),
+            agents_with_band,
+            recognized_job_agents
         );
     }
 

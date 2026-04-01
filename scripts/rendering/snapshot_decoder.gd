@@ -16,8 +16,13 @@ const OFF_STRESS: int = 25
 const OFF_BREAK: int = 26
 const OFF_ACTION: int = 27
 const OFF_DIR: int = 28
-const OFF_SPRITE: int = 29
+const OFF_ATLAS_VAR: int = 29   ## was OFF_SPRITE — upper 4 bits = job variant, lower 4 bits = anim frame
 const OFF_DANGER: int = 30
+const OFF_BAND_COLOR: int = 31  ## was OFF_FACTION — band color palette index (0..7, 0xFF = no band)
+const OFF_BAND_ID_LO: int = 32  ## band_id low byte (was _pad[0])
+const OFF_BAND_ID_HI: int = 33  ## band_id high byte (was _pad[1])
+## Deprecated aliases kept for transition period:
+const OFF_SPRITE: int = 29
 const OFF_FACTION: int = 31
 
 var prev_data: PackedByteArray = PackedByteArray()
@@ -122,6 +127,20 @@ func get_danger_icon(index: int) -> int:
 
 func get_faction_color(index: int) -> int:
 	return _get_u8(index, OFF_FACTION)
+
+
+func get_atlas_var(index: int) -> int:
+	return _get_u8(index, OFF_ATLAS_VAR)
+
+
+func get_band_color_idx(index: int) -> int:
+	return _get_u8(index, OFF_BAND_COLOR)
+
+
+func get_band_id(index: int) -> int:
+	var lo: int = _get_u8(index, OFF_BAND_ID_LO)
+	var hi: int = _get_u8(index, OFF_BAND_ID_HI)
+	return (hi << 8) | lo
 
 
 func _get_u8(index: int, offset: int) -> int:

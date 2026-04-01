@@ -531,7 +531,7 @@ func _draw() -> void:
 	if bool(active_layers.get("band", false)):
 		_draw_band_labels(zl)
 
-	if _current_lod == 0:
+	if _current_lod >= GameConfig.ZOOM_Z3:
 		_draw_hover_tooltip()
 		return
 
@@ -584,7 +584,7 @@ func _draw() -> void:
 		if eage_stage == "elder":
 			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
-		if _current_lod >= 1:
+		if _current_lod <= GameConfig.ZOOM_Z2:
 			# Carrying indicator: skipped for snapshot entities (no carry data)
 
 			# Hunger warning
@@ -649,12 +649,12 @@ func _draw_binary_snapshots() -> void:
 	if bool(active_layers.get("band", false)):
 		_draw_band_labels(zl)
 
-	if _current_lod == 0:
+	if _current_lod >= GameConfig.ZOOM_Z3:
 		_draw_hover_tooltip()
 		return
 
 	# At LOD1+, sprites handle agent rendering — only draw selection + tooltip
-	if _current_lod >= 1:
+	if _current_lod <= GameConfig.ZOOM_Z2:
 		if selected_entity_id >= 0 and _snapshot_decoder.has_data():
 			for index in range(_snapshot_decoder.agent_count):
 				if _snapshot_decoder.get_entity_id(index) == selected_entity_id:
@@ -680,7 +680,7 @@ func _draw_binary_snapshots() -> void:
 		var vis: Dictionary = JOB_VISUALS.get(job_key, JOB_VISUALS["none"])
 		var size: float = float(vis["size"]) * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
 
-		if _current_lod >= 1:
+		if _current_lod <= GameConfig.ZOOM_Z2:
 			var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
 			if danger_flags & 0b0010 != 0 and not probe_observation_mode:
 				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
@@ -709,14 +709,13 @@ func _draw_binary_snapshots() -> void:
 
 
 func _update_lod(zoom_level: float) -> void:
-	if _current_lod == 0 and zoom_level >= 0.8:
-		_current_lod = 1
-	elif _current_lod == 1 and zoom_level < 0.8:
-		_current_lod = 0
-	elif _current_lod == 1 and zoom_level >= 2.0:
-		_current_lod = 2
-	elif _current_lod == 2 and zoom_level < 2.0:
-		_current_lod = 1
+	_current_lod = _compute_zoom_tier(zoom_level)
+
+static func _compute_zoom_tier(zoom_value: float) -> int:
+	for i in range(GameConfig.ZOOM_TIER_BOUNDARIES.size()):
+		if zoom_value >= GameConfig.ZOOM_TIER_BOUNDARIES[i]:
+			return i
+	return GameConfig.ZOOM_TIER_COUNT - 1
 
 
 func _entity_color_for_probe(color: Color, is_selected: bool) -> Color:
@@ -733,8 +732,8 @@ func _outline_color_for_probe(is_selected: bool) -> Color:
 
 func _should_draw_name(is_selected: bool) -> bool:
 	if probe_observation_mode:
-		return is_selected and _current_lod >= 1
-	return _current_lod == 2
+		return is_selected and _current_lod <= GameConfig.ZOOM_Z2
+	return _current_lod == GameConfig.ZOOM_Z1
 
 
 func _draw_selection_indicator(pos: Vector2, radius: float, points: int) -> void:
@@ -768,7 +767,7 @@ func _draw_probe_selected_forage_overlay(selected_pos: Vector2) -> void:
 	draw_line(selected_pos, target_pos, marker_color, PROBE_FORAGE_LINE_WIDTH, true)
 	draw_circle(target_pos, 9.0, Color(marker_color.r, marker_color.g, marker_color.b, halo_alpha))
 	draw_arc(target_pos, 7.5, 0.0, TAU, 24, marker_color, 2.0)
-	if _current_lod >= 1:
+	if _current_lod <= GameConfig.ZOOM_Z2:
 		var resource_font: Font = ThemeDB.fallback_font
 		var camera: Camera2D = get_viewport().get_camera_2d()
 		var camera_zoom: float = camera.zoom.x if camera != null else 1.0
@@ -791,7 +790,7 @@ func _draw_probe_survival_indicators(
 	is_selected: bool,
 	danger_flags: int = -1
 ) -> void:
-	if not probe_observation_mode or _current_lod < 1:
+	if not probe_observation_mode or _current_lod >= GameConfig.ZOOM_Z3:
 		return
 	var indicators: Array[Dictionary] = _probe_survival_indicators(entity_id, danger_flags)
 	if indicators.is_empty():
@@ -956,7 +955,7 @@ func _update_agent_sprites() -> void:
 	var cam: Camera2D = get_viewport().get_camera_2d()
 	var zoom_level: float = cam.zoom.x if cam else 1.0
 	_update_lod(zoom_level)
-	if _current_lod == 0:
+	if _current_lod >= GameConfig.ZOOM_Z3:
 		_hide_agent_sprites()
 		return
 
@@ -1631,7 +1630,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 	if _sim_engine != null:
 		var cam: Camera2D = get_viewport().get_camera_2d()
 		var zoom_level: float = cam.zoom.x if cam != null else 1.0
-		if zoom_level < 0.8 and zoom_level >= 0.2:
+		if _compute_zoom_tier(zoom_level) >= GameConfig.ZOOM_Z3 and zoom_level >= 0.2:
 			var summary: Dictionary = _get_runtime_world_summary()
 			var settlements_raw: Variant = summary.get("settlement_summaries", [])
 			if settlements_raw is Array:

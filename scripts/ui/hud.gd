@@ -63,6 +63,10 @@ const LAYER_BUTTON_DEFS: Array[Dictionary] = [
 	{"key": "religion", "label": "UI_LAYER_RELIGION", "color": Color(0.53, 0.41, 0.75)},
 	{"key": "border", "label": "UI_LAYER_BORDER", "color": Color(0.78, 0.75, 0.60)},
 ]
+## Overlay channel lists by zoom tier.
+## Index 0 = Z1 (Individual), 1 = Z2 (Village), 2 = Z3 (Settlement),
+## 3 = Z4 (Region), 4 = Z5 (World).
+## See GameConfig.ZOOM_Z1..ZOOM_Z5 for tier constants.
 const OVERLAY_BY_ZOOM := [
 	["food", "danger", "warmth", "social", "authority", "resource"],  # Z1
 	["food", "danger", "warmth", "social", "authority", "resource"],  # Z2
@@ -1130,6 +1134,7 @@ func _refresh_bottom_bar_locale() -> void:
 func _on_bottom_bar_zoom_pressed(level: int) -> void:
 	_bottom_bar_current_zoom_level = clampi(level, 0, ZOOM_LEVEL_LABELS.size() - 1)
 	if _camera != null:
+		## See also GameConfig.ZOOM_SNAP_TARGETS
 		var target_zoom: float = float(GameConfig.CAMERA_ZOOM_LEVELS[_bottom_bar_current_zoom_level])
 		if _camera.has_method("animate_zoom_to"):
 			_camera.call("animate_zoom_to", target_zoom)
