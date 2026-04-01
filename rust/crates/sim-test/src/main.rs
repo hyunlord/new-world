@@ -1137,14 +1137,17 @@ mod tests {
             gatherer_count, lumberjack_count, builder_count, miner_count
         );
 
+        // Type A: Stone deficit requires miners. 0 miners = JobDistributionSystem bug.
         assert!(
             miner_count >= 1,
             "expected at least 1 miner, got {miner_count}. jobs={job_counts:?}"
         );
+        // Type A: Wood deficit requires lumberjacks. 0 = assignment bug.
         assert!(
             lumberjack_count >= 1,
             "expected at least 1 lumberjack, got {lumberjack_count}"
         );
+        // Type A: Incomplete buildings require builders. 0 = assignment bug.
         assert!(
             builder_count >= 1,
             "expected at least 1 builder, got {builder_count}"
@@ -1166,6 +1169,7 @@ mod tests {
             total_stone, total_wood
         );
 
+        // Type C: Observed 368.0 at seed=42 (2026-04-01). Threshold > 0 is intentionally weak — predates v2 criteria. Consider tightening to > 50.
         assert!(
             total_stone > 0.0,
             "expected stone > 0 after 1 year, got {total_stone}"
@@ -1225,6 +1229,7 @@ mod tests {
         let resources = engine.resources();
         let total_stone: f64 = resources.settlements.values().map(|s| s.stockpile_stone).sum();
         println!("[harness] distant-only stone after 1 year: {total_stone:.1}");
+        // Type D: Regression guard for GatherStone 6-stage progressive fallback (2026-04-01). Agents must reach radius-60+ stone tiles.
         assert!(
             total_stone > 20.0,
             "agents must gather >20 stone from radius-60+ tiles in 1 year (directed search), got {total_stone:.1}"
@@ -1254,6 +1259,7 @@ mod tests {
             .map(|s| s.stockpile_stone)
             .sum();
         println!("[harness] flatland stone after 1 year: {total_stone:.1}");
+        // Type D: Regression guard for Fix A+C — stone TileResource on flat terrain + progressive search chain (2026-04-01). Observed 94.0 at seed=42.
         assert!(
             total_stone > 50.0,
             "flatland settlement must gather >50 stone in 1 year via TileResource search, got {total_stone:.1}"
@@ -1284,10 +1290,12 @@ mod tests {
         let peak = alive_y1.max(alive_y2).max(alive_y3);
         println!("[harness] Growth: Y1={alive_y1} Y2={alive_y2} Y3={alive_y3} peak={peak}");
 
+        // Type C: Observed 49 at seed=42 (2026-04-01). 20 = initial count, must grow beyond it. Threshold = initial value (weak, consider tightening).
         assert!(
             alive_y3 > 20,
             "Population should grow beyond initial 20 in 3 years, got {alive_y3}"
         );
+        // Type B: Ethnographic hunter-gatherer band sizes 25-30 before fission (Service 1962). Peak must approach migration threshold (config MIGRATION_MIN_POP=30).
         assert!(
             peak >= 28,
             "Peak population should approach migration threshold (30), got {peak}"
@@ -1315,11 +1323,13 @@ mod tests {
             );
         }
 
+        // Type C: Observed 3 settlements at seed=42 (2026-04-01). Threshold 2 = minimum for migration validation. Margin 1.5×.
         assert!(
             settlements >= 2,
             "Expected ≥2 settlements after 5 years, got {settlements}. Population was {alive}."
         );
         for (id, settlement) in engine.resources().settlements.iter() {
+            // Type A: Every settlement must have at least 1 member. Empty settlement = migration or cleanup bug.
             assert!(
                 !settlement.members.is_empty(),
                 "Settlement {:?} has no members",
@@ -1348,6 +1358,7 @@ mod tests {
             building_count, complete_count, shelter_count
         );
 
+        // Type C: Observed 10 buildings at seed=42 (2026-04-01). Threshold 3 = minimum viable (campfire+stockpile+shelter). Margin 3.3×.
         assert!(
             complete_count >= 3,
             "expected at least 3 completed buildings (campfire+stockpile+shelter), got {complete_count}"
@@ -1366,10 +1377,12 @@ mod tests {
 
         println!("[harness] bands: {}", band_count);
 
+        // Type B: 20 agents ÷ Dunbar L2 (15) ≈ 1-2 bands. Max 5 prevents over-fission. (Hill et al. 2011)
         assert!(
             band_count <= 5,
             "expected at most 5 bands for 20 agents, got {band_count} (over-splitting)"
         );
+        // Type A: BandFormationSystem must produce at least 1 band from 20 agents with GFS threshold 0.5.
         assert!(band_count >= 1, "expected at least 1 band, got {band_count}");
 
         // Build entity → settlement_id lookup.
@@ -1387,6 +1400,7 @@ mod tests {
 
         let resources = engine.resources();
         for band in resources.band_store.all() {
+            // Type A: Config-enforced cap. BAND_MAX_SIZE (15) = Dunbar Layer 2. Violation = fission not triggering.
             assert!(
                 band.members.len() <= sim_core::config::BAND_MAX_SIZE,
                 "Band '{}' has {} members, exceeds max {} (Dunbar L2)",
@@ -1402,6 +1416,7 @@ mod tests {
                     sids.insert(sid);
                 }
             }
+            // Type A: Band = co-residential group. Cross-settlement membership = broken invariant (fixed 2026-04-01).
             assert!(
                 sids.len() <= 1,
                 "Band '{}' spans {} settlements — cross-settlement band detected",
@@ -1450,6 +1465,7 @@ mod tests {
             }
         }
 
+        // Type A: Band = co-residential invariant. Any cross-settlement membership is a structural bug (fixed 2026-04-01).
         assert_eq!(violations, 0, "No band should span multiple settlements");
     }
 
@@ -1461,6 +1477,7 @@ mod tests {
 
         let band_store = &engine.resources().band_store;
         for band in band_store.all() {
+            // Type A: Config-enforced cap. BAND_MAX_SIZE (15) = Dunbar Layer 2 sympathy group (Hill et al. 2011). Violation = fission not triggering.
             assert!(
                 band.members.len() <= sim_core::config::BAND_MAX_SIZE,
                 "Band '{}' has {} members, max allowed is {} (Dunbar L2)",
@@ -1501,6 +1518,7 @@ mod tests {
                     sids.insert(sid);
                 }
             }
+            // Type D: Regression guard for migration-band fix (2026-04-01). MigrationRuntimeSystem must clear band_id on settlement change.
             assert!(
                 sids.len() <= 1,
                 "Post-migration: band '{}' spans {} settlements",
@@ -1528,6 +1546,7 @@ mod tests {
                 0.0
             }
         );
+        // Type A: If all agents are bandless, BandFormationSystem is broken. Some must form bands.
         assert!(bandless < total, "Not all agents should be bandless");
     }
 
@@ -1542,6 +1561,7 @@ mod tests {
 
         println!("[harness] territory factions: {}", factions.len());
 
+        // Type A: At least 1 settlement exists with buildings → at least 1 territory faction must exist.
         assert!(
             !factions.is_empty(),
             "expected at least one territory faction after 2000 ticks"
@@ -1559,6 +1579,7 @@ mod tests {
         }
 
         println!("[harness] territory max_value: {:.4}", max_value);
+        // Type A: Buildings stamp intensity ≥ 0.10 via Gaussian. Max territory value must be nonzero.
         assert!(
             max_value > 0.01,
             "expected non-trivial territory values, max={max_value}"
@@ -1656,6 +1677,7 @@ mod tests {
             "[harness] settlement-only disputes: {}",
             settlement_disputes.len()
         );
+        // Type A: Settlement dispute count cannot exceed C(n,2) = n×(n-1)/2 pairs. Violation = double-counting bug.
         assert!(
             settlement_disputes.len() <= settlements * (settlements - 1) / 2,
             "settlement dispute count {} exceeds theoretical max for {settlements} settlements",
@@ -1666,6 +1688,7 @@ mod tests {
         let dispute_map = resources
             .territory_grid
             .export_dispute_map(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
+        // Type A: export_dispute_map() must return width×height buffer. Size mismatch = export bug.
         assert_eq!(
             dispute_map.len(),
             (resources.map.width * resources.map.height) as usize,
@@ -1693,6 +1716,7 @@ mod tests {
             .map(|(&fid, &h)| (fid, h))
             .collect();
 
+        // Type A: At least 1 settlement exists → at least 1 settlement faction in territory_hardness.
         assert!(
             !settlement_factions.is_empty(),
             "Expected at least one settlement faction in territory_hardness, got 0"
@@ -1703,6 +1727,7 @@ mod tests {
                 "[harness] Settlement faction {}: hardness = {:.3}",
                 fid, hardness
             );
+            // Type A: Hardness is clamped by formula to [HARDNESS_MIN, HARDNESS_MAX]. Violation = arithmetic bug.
             assert!(
                 *hardness >= sim_core::config::TERRITORY_HARDNESS_MIN,
                 "Faction {} hardness {:.3} below minimum {:.3}",
@@ -1710,6 +1735,7 @@ mod tests {
                 hardness,
                 sim_core::config::TERRITORY_HARDNESS_MIN
             );
+            // Type A: Hardness is clamped by formula to [HARDNESS_MIN, HARDNESS_MAX]. Violation = arithmetic bug.
             assert!(
                 *hardness <= sim_core::config::TERRITORY_HARDNESS_MAX,
                 "Faction {} hardness {:.3} above maximum {:.3}",
@@ -1731,6 +1757,7 @@ mod tests {
                 "[harness] Band faction {}: hardness = {:.3}",
                 fid, hardness
             );
+            // Type A: Band factions are capped at TERRITORY_HARDNESS_BAND_CAP. Violation = cap not applied.
             assert!(
                 *hardness <= sim_core::config::TERRITORY_HARDNESS_BAND_CAP + 0.01,
                 "Band faction {} hardness {:.3} exceeds cap {:.3}",
@@ -1757,6 +1784,7 @@ mod tests {
                 .iter()
                 .map(|(_, h)| *h)
                 .fold(0.0_f32, f32::max);
+            // Type E (soft): With 20+ pop and 3+ buildings, hardness formula gives ~0.32. Sanity check, not invariant.
             assert!(
                 max_hardness > 0.25,
                 "With pop={} buildings={}, max settlement hardness should be >0.25, got {:.3}",
