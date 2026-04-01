@@ -1,199 +1,185 @@
-# Harness Evaluation Criteria
+# Harness Evaluation Criteria v2
 
-Pass/fail conditions and root cause checklists per test category.
-Use this when a harness test fails — work through the checklist before retrying.
+> How to decide pass/fail thresholds for harness tests.
+> Every threshold must have a documented rationale.
+> Updated: 2026-04-01
 
 ---
 
-## Job System
+## Part 1: Threshold Decision Framework
 
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| miner count | ≥ 1 | 2000 |
-| lumberjack count | ≥ 1 | 2000 |
-| builder count | ≥ 1 | 2000 |
-| no single job > 80% of agents | — | 2000 |
+Every harness assertion threshold must be justified by ONE of these 5 rationale types. If a threshold doesn't fit any type, it's arbitrary and must be reconsidered.
 
-### Fail: root cause checklist
+### Type A: Physical / Mathematical Invariant
 
-- [ ] **Default job not cleared**: `OccupationSystem` must reset job on first run — check `first_run` flag logic
-- [ ] **alive_count wrong**: `JobDistributionSystem` uses `alive_count` from resources; stale value → wrong ratios
-- [ ] **Rebalance interval**: system only rebalances every N ticks; run enough ticks (≥ 2000)
-- [ ] **Specialization lock**: `OccupationSystem` may overwrite job for unspecialized agents — check interaction with `JobDistributionSystem`
-- [ ] **Settlement missing**: job distribution requires a settlement in `resources.settlements` — `make_stage1_engine` sets one up, verify it persists
+The threshold is logically necessary — violation means a bug, not a tuning issue.
 
-### Diagnostic pattern
+| Example | Threshold | Rationale |
+|---------|-----------|-----------|
+| Territory on water tiles | = 0 | Water is impassable. Any value > 0 is a stamping bug. |
+| Band members all same settlement | violations = 0 | Band = co-residential group. Cross-settlement = broken invariant. |
+| Band size ≤ BAND_MAX_SIZE | always true | Config enforces this. Violation = fission not triggering. |
+| Hardness within [MIN, MAX] | always true | Clamped by formula. Violation = arithmetic bug. |
+
+**Rule**: Use exact assertions (== 0, always true/false). No ranges needed.
+
+### Type B: Anthropological / Academic Reference
+
+The threshold derives from published research or established game design constants.
+
+| Example | Threshold | Source |
+|---------|-----------|--------|
+| Band size cap | ≤ 15 | Dunbar Layer 2 sympathy group (Hill et al. 2011) |
+| Settlement fission pop | ≥ 28 peak | Ethnographic band sizes 25-30 (Service 1962) |
+| Band count per 20 agents | 1-5 | 20 agents ÷ Dunbar L2 (15) ≈ 1-2 bands, with formation dynamics up to ~5 |
+
+**Rule**: Cite the source. Thresholds should have ±30% tolerance from the academic value to account for simulation stochasticity.
+
+### Type C: Empirical Baseline (Measured from Seed 42)
+
+The threshold is derived from running seed=42 with current code and observing actual values. Document the observed value and set the threshold with explicit margin.
+
+| Example | Observed (seed 42) | Threshold | Margin |
+|---------|-------------------|-----------|--------|
+| Stone after 1 year | 368.0 | > 50 | 7.3× margin (robust) |
+| Buildings after 1 year | 10 | ≥ 3 | 3.3× margin (robust) |
+| Population 3-year peak | 49 | ≥ 28 | 1.75× margin (moderate) |
+
+**Rule**: Run seed 42 first. Set threshold at **≥30% of observed value** (lower bound) or **≤200% of observed value** (upper bound). Document the observed value in a comment next to the assertion:
+
 ```rust
-let world = engine.world();
-let mut counts: HashMap<String, usize> = HashMap::new();
-for (_, behavior) in world.query::<&Behavior>().iter() {
-    *counts.entry(behavior.job.clone()).or_insert(0) += 1;
-}
-println!("[diag] job counts: {:?}", counts);
-println!("[diag] alive agents: {}", world.len());
+// Type C: Observed 368.0 at seed=42 (2026-04-01). Threshold = 50 (7.3× margin).
+assert!(stone > 50.0, "expected stone > 50, got {stone}");
 ```
 
+### Type D: Regression Guard
+
+The threshold prevents a known bug from reoccurring. Reference the fix date/ticket.
+
+| Example | Threshold | Fixed Bug |
+|---------|-----------|-----------|
+| Flatland stone > 50 | > 50 | 2026-04-01: GatherStone search radius too small |
+| Forage yield > 0 | > 0 | 2026-04-01: FORAGE_STOCKPILE_YIELD was 0 |
+| Migration clears band_id | cross-settlement violations = 0 | 2026-04-01: MigrationSystem didn't touch band_id |
+
+**Rule**: Reference the bug fix. Threshold should be tight enough to catch regression but loose enough for seed variation.
+
+### Type E: Soft / Observational (Last Resort)
+
+The threshold captures expected emergent behavior without a hard theoretical basis. These tests are informational — a failure suggests investigation, not necessarily a bug.
+
+| Example | Threshold | Note |
+|---------|-----------|------|
+| Territory dispute detected | overlap_tiles > 0 (soft) | Depends on settlement spacing |
+| Bandless agents after migration | bandless < total | Some should be bandless, not all |
+| Hardness > 0.25 with 20pop+3buildings | > 0.25 | Sanity check, not invariant |
+
+**Rule**: Mark these tests as `(soft)` in the test name or comment. Soft tests should use `eprintln!` to report values even on pass, for monitoring trends.
+
 ---
 
-## Resource Collection
+## Part 2: Threshold Consistency Rules
 
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| stockpile_stone (sum all settlements) | > 0.0 | 4380 |
-| stockpile_wood (sum all settlements) | > 0.0 | 4380 |
+### Rule 1: One threshold, one rationale type
 
-### Fail: root cause checklist
+Every `assert!()` in a harness test must have exactly ONE rationale type (A/B/C/D/E) documented in a comment above it. No "I think this is about right" thresholds.
 
-- [ ] **Miner not assigned**: stone requires miners; check job distribution first
-- [ ] **Search radius too small**: miner searches within radius 40 for stone tiles; `make_stage1_engine` seeds tiles at dx/dy ≤ 30 from (128,128)
-- [ ] **Tile resource depleted**: tiles start at 100.0 — check if `regen_rate: 0.1` is applied
-- [ ] **Beach fallback**: if all tiles in radius are water/impassable, miner falls back to gathering — verify tile passability
-- [ ] **Deficit scoring not triggering**: `ResourceDeficitSystem` must flag stone as deficit before miners are assigned — check deficit threshold
-- [ ] **Gathering vs mining**: "gatherer" gathers food, "miner" gathers stone — check job string matches exactly
+### Rule 2: New thresholds require seed-42 measurement
 
-### Diagnostic pattern
-```rust
-let resources = engine.resources();
-for (sid, settlement) in &resources.settlements {
-    println!("[diag] settlement {:?}: stone={:.1} wood={:.1} food={:.1}",
-        sid, settlement.stockpile_stone, settlement.stockpile_wood, settlement.stockpile_food);
-}
-let map = &resources.map;
-let mut stone_tiles = 0usize;
-for y in 110..150u32 { for x in 110..150u32 {
-    let tile = map.get(x, y);
-    if tile.resources.iter().any(|r| matches!(r.resource_type, sim_core::ResourceType::Stone)) {
-        stone_tiles += 1;
-    }
-}}
-println!("[diag] stone tiles near spawn: {}", stone_tiles);
+Before committing a new harness test, run seed 42 and record the actual observed value. Even Type A invariants should have the observed value documented (for debugging reference).
+
+### Rule 3: Threshold review on config changes
+
+When a config constant that affects test outcomes changes (e.g., `BAND_MAX_SIZE` 30→15), all harness tests that depend on that constant must be reviewed and thresholds updated.
+
+### Rule 4: No "> 0" without justification
+
+`> 0` is almost always too weak. If the observed value is 368, asserting `> 0` is meaningless — it won't catch a regression from 368 to 1. Use at least 10% of observed value, or state why `> 0` is the correct threshold (Type A: existence check).
+
+### Rule 5: Upper bounds prevent runaway
+
+Every lower-bound assertion should consider whether an upper bound is also needed. If stone goes from 368 to 50000, that might indicate a duplication bug. Add upper bounds with 5-10× observed margin.
+
+---
+
+## Part 3: Per-Category Criteria (Updated)
+
+### Job System
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| miner count | ≥ 1 | A | Stone deficit requires miners. 0 = assignment bug. |
+| lumberjack count | ≥ 1 | A | Wood deficit requires lumberjacks. |
+| builder count | ≥ 1 | A | Incomplete buildings require builders. |
+| no single job > 80% of agents | ≤ 80% | B | Balanced economy requires diversification. |
+| Ticks | 2000 | — | Steady state reached after ~50 game minutes. |
+
+### Resource Collection
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| stockpile_stone (all settlements) | > 50 | C | Observed 368 at seed 42 (2026-04-01). 50 = 13.6% margin. |
+| stockpile_wood (all settlements) | > 100 | C | Observed 711 at seed 42. 100 = 14.1% margin. |
+| flatland stone access | > 50 | D | Regression guard for GatherStone radius fix. |
+| Ticks | 4380 (1 year) | — | Resources need time to accumulate. |
+
+### Building Construction
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| complete buildings | ≥ 3 | C | Observed 10 at seed 42. 3 = min viable (campfire+stockpile+shelter). |
+| Ticks | 4380 (1 year) | — | Construction requires resources first. |
+
+### Band Stability
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| band count | ≥ 1 | A | BandFormationSystem must produce at least 1 band. |
+| band count | ≤ 5 | B | 20 agents ÷ Dunbar L2 (15) ≈ 1-2. Max 5 prevents over-fission. |
+| band size | ≤ BAND_MAX_SIZE (15) | A | Config-enforced cap. |
+| cross-settlement violations | = 0 | A | Band = co-residential invariant. |
+| Ticks | 4380 (1 year) | — | Formation + promotion need time. |
+
+### Territory System
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| active factions | ≥ 1 | A | At least 1 settlement exists → 1 faction. |
+| territory on impassable | = 0 | A | stamp_gaussian_terrain skips impassable. |
+| max territory value | > 0.01 | A | Buildings stamp intensity ≥ 0.10. Must have nonzero. |
+| hardness ∈ [MIN, MAX] | always | A | Clamped by formula. |
+| hardness for bands ≤ CAP | always | A | Band cap enforced. |
+| hardness > 0.25 for established settlement | > 0.25 | E (soft) | Sanity check. 20pop + 3buildings → formula gives ~0.32. |
+| dispute overlap_tiles > 0 | > 0 | E (soft) | Depends on settlement proximity. |
+| Ticks | 2000 (territory), 8760+ (disputes) | — | Territory needs buildings; disputes need 2+ settlements. |
+
+### Population & Migration
+
+| Assertion | Threshold | Type | Rationale |
+|-----------|-----------|:----:|-----------|
+| 3-year population peak | ≥ 28 | B | Ethnographic band size 25-30 before fission (Service 1962). |
+| multi-settlement after 5y | ≥ 2 | C | Observed 3 at seed 42. Migration triggers at pop 30. |
+| migration clears band_id | violations = 0 | D | Regression guard for migration-band fix. |
+| bandless < total | always | A | If all agents bandless, formation is broken. |
+
+---
+
+## Part 4: Template for Documenting New Thresholds
+
+When adding a new harness test, include this block in the PR or commit message:
+
+```
+New harness: harness_<category>_<assertion>
+Ticks: N
+Assertions:
+  - <assertion 1>: threshold=X, type=<A/B/C/D/E>, rationale="..."
+  - <assertion 2>: threshold=Y, type=<A/B/C/D/E>, rationale="..."
+Observed at seed 42: value1=..., value2=...
 ```
 
----
+And in the test code:
 
-## Building Construction
-
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| complete buildings (total) | ≥ 3 | 4380 |
-| complete buildings of type "shelter" | ≥ 1 | 4380 |
-
-Baseline 3 = campfire + stockpile_pile + shelter (all auto-constructed in stage 1).
-
-### Fail: root cause checklist
-
-- [ ] **Stone not available**: shelter requires stone — check resource collection first
-- [ ] **Shelter build cost**: verify `shelter.ron` cost matches available stockpile
-- [ ] **has_incomplete_site**: `ConstructionSystem` only assigns builders when `has_incomplete_site` is true — check site blueprint spawning
-- [ ] **Builder count zero**: building requires builders; check job distribution
-- [ ] **Building not marked complete**: `ConstructionSystem` sets `is_complete = true` when `progress >= cost` — check progress accumulation
-- [ ] **Wrong building type string**: test matches `building_type == "shelter"` — must match RON file key exactly
-
-### Diagnostic pattern
 ```rust
-let resources = engine.resources();
-for (bid, building) in &resources.buildings {
-    println!("[diag] building {:?}: type={} complete={} progress={:.1}",
-        bid, building.building_type, building.is_complete, building.progress);
-}
+// Type C: Observed 368 at seed=42 (2026-04-01). Threshold 50 = 13.6% of observed.
+assert!(stone > 50.0, "...");
 ```
-
----
-
-## Band Stability
-
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| band count | ≥ 1 | 4380 |
-| band count | ≤ 5 | 4380 |
-
-≤ 5 for 20 agents prevents runaway fission splitting every agent into its own band.
-
-### Fail: root cause checklist
-
-- [ ] **Fission threshold too low**: fission triggers when tension > 0.15 (warning) / 0.20 (split) — check `TensionSystem` output
-- [ ] **Minimum band size**: bands must have ≥ 3 members to fission; with 20 agents max ~6 bands possible
-- [ ] **Promotion ticks**: leader promotion requires 1440 ticks (1 game day) — run enough ticks
-- [ ] **Band store not initialised**: `BandFormationSystem` must have run at least once — check system registration
-- [ ] **band_store.all()** counts including disbanded bands: verify `all()` returns only active bands
-
-### Diagnostic pattern
-```rust
-let resources = engine.resources();
-let band_count = resources.band_store.all().count();
-println!("[diag] active bands: {}", band_count);
-for band in resources.band_store.all() {
-    println!("[diag]   band {:?}: members={} leader={:?}",
-        band.id, band.members.len(), band.leader);
-}
-```
-
----
-
-## Territory System
-
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| active factions | ≥ 1 | 2000 |
-| max territory value | > 0.01 | 2000 |
-| territory on impassable tiles | = 0 (negative) | 2000 |
-
-### Fail: root cause checklist
-
-- [ ] **System not registered**: `TerritoryRuntimeSystem` must be in `register_all_systems()` — check with `grep "TerritoryRuntimeSystem" rust/crates/sim-test/src/main.rs`
-- [ ] **InfluenceRuntimeSystem missing**: territory depends on influence grid being populated first
-- [ ] **Buildings not complete**: territory stamping triggers on building completion — if no buildings, no territory
-- [ ] **stamp_gaussian_terrain not called**: `TerritoryRuntimeSystem` calls this; check it filters by `passable`
-- [ ] **passable_cache stale**: influence grid caches passability at init — check cache invalidation on map changes
-- [ ] **Faction ID mismatch**: `active_factions()` returns faction IDs that must match keys in territory grid
-
-### Diagnostic pattern
-```rust
-let resources = engine.resources();
-let factions = resources.territory_grid.active_factions();
-println!("[diag] territory factions: {}", factions.len());
-for fid in &factions {
-    if let Some(data) = resources.territory_grid.get(*fid) {
-        let max: f32 = data.iter().cloned().fold(0.0_f32, f32::max);
-        let nonzero = data.iter().filter(|&&v| v > 0.001).count();
-        println!("[diag]   faction {:?}: max={:.4} nonzero_cells={}", fid, max, nonzero);
-    }
-}
-```
-
----
-
-## Population
-
-### Pass conditions (future tests)
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| agent count after 1 year | ≥ 15 (no mass death) | 4380 |
-| births in 2 years | ≥ 1 | 8760 |
-
-### Fail: root cause checklist
-
-- [ ] **Starvation**: food stockpile depleted → agents die; check gatherer assignment
-- [ ] **Stress cascade**: high stress → death; check stress/coping system
-- [ ] **Birth conditions**: requires adult pair in same band + food + shelter — all must be satisfied
-
----
-
-## Economy (future tests)
-
-### Pass conditions
-| Assertion | Threshold | Ticks |
-|-----------|-----------|-------|
-| crafting output ≥ 1 item | — | 4380 |
-| trade route established | — | 8760 |
-
-### Fail: root cause checklist
-
-- [ ] **Recipe prerequisites**: `CraftingSystem` checks tag+threshold recipe — materials must meet threshold
-- [ ] **Workbench required**: some recipes need a building of specific type present and complete
-- [ ] **Crafter job**: dedicated crafter job must be assigned (future — currently gatherer may craft opportunistically)
