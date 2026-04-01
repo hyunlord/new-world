@@ -3293,28 +3293,12 @@ impl WorldSimRuntime {
         }
         dict.set("leader", leader_dict);
 
-        let mut settlement_id: i64 = -1;
-        let mut settlement_name = String::new();
-        for member_id in &band.members {
-            let Some(runtime_id) = runtime_bits_from_raw_id(&raw_lookup, member_id.0) else {
-                continue;
-            };
-            let Some(member_entity) = resolve_runtime_entity(world, runtime_id) else {
-                continue;
-            };
-            let Ok(identity) = world.get::<&Identity>(member_entity) else {
-                continue;
-            };
-            let Some(member_settlement_id) = identity.settlement_id else {
-                continue;
-            };
-            settlement_id = member_settlement_id.0 as i64;
-            if let Some(settlement) = resources.settlements.get(&member_settlement_id) {
-                settlement_name = settlement.name.clone();
-            }
-            break;
-        }
-        dict.set("settlement_id", settlement_id);
+        dict.set("settlement_id", band.settlement_id.map(|s| s.0 as i64).unwrap_or(-1i64));
+        let settlement_name = band
+            .settlement_id
+            .and_then(|sid| resources.settlements.get(&sid))
+            .map(|s| s.name.clone())
+            .unwrap_or_default();
         dict.set("settlement_name", settlement_name);
 
         let mut members = Array::<VarDictionary>::new();
@@ -7526,7 +7510,7 @@ mod tests {
         hungry_behavior.current_action = ActionType::GatherWood;
         let hungry_entity = world.spawn((hungry_identity, hungry_age, hungry_needs, hungry_behavior));
         let hungry_entity_id = EntityId(hungry_entity.id() as u64);
-        let mut band = Band::new(band_id, "Oak".to_string(), vec![hungry_entity_id], 0);
+        let mut band = Band::new(band_id, "Oak".to_string(), vec![hungry_entity_id], 0, None);
         band.leader = Some(hungry_entity_id);
         band_store.insert(band);
 

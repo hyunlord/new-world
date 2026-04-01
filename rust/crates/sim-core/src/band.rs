@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::ids::{BandId, EntityId};
+use crate::ids::{BandId, EntityId, SettlementId};
 
 /// A hunter-gatherer band or provisional party.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,11 +21,20 @@ pub struct Band {
     pub promoted_tick: Option<u64>,
     /// True when the band has been promoted from provisional status.
     pub is_promoted: bool,
+    /// The settlement this band belongs to. All members must share this settlement.
+    /// `None` for nomadic groups with no fixed settlement.
+    pub settlement_id: Option<SettlementId>,
 }
 
 impl Band {
     /// Creates a new provisional band.
-    pub fn new(id: BandId, name: String, members: Vec<EntityId>, tick: u64) -> Self {
+    pub fn new(
+        id: BandId,
+        name: String,
+        members: Vec<EntityId>,
+        tick: u64,
+        settlement_id: Option<SettlementId>,
+    ) -> Self {
         Self {
             id,
             name,
@@ -34,6 +43,7 @@ impl Band {
             provisional_since: tick,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id,
         }
     }
 
@@ -139,7 +149,7 @@ mod tests {
 
     #[test]
     fn band_tracks_members_without_duplicates() {
-        let mut band = Band::new(BandId(1), "Oak".to_string(), vec![EntityId(2)], 12);
+        let mut band = Band::new(BandId(1), "Oak".to_string(), vec![EntityId(2)], 12, None);
         band.add_member(EntityId(3));
         band.add_member(EntityId(2));
         assert_eq!(band.member_count(), 2);
@@ -153,6 +163,7 @@ mod tests {
             "Oak".to_string(),
             vec![EntityId(2), EntityId(3)],
             12,
+            None,
         );
         band.remove_member(EntityId(2));
         assert!(!band.contains(EntityId(2)));
@@ -171,7 +182,7 @@ mod tests {
     fn band_store_insert_find_and_remove() {
         let mut store = BandStore::new();
         let id = store.allocate_id();
-        store.insert(Band::new(id, "Oak".to_string(), vec![EntityId(7)], 3));
+        store.insert(Band::new(id, "Oak".to_string(), vec![EntityId(7)], 3, None));
 
         assert_eq!(store.find_band_for(EntityId(7)), Some(id));
         assert!(store.get(id).is_some());

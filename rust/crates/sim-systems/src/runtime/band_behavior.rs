@@ -153,6 +153,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: Some(20),
             is_promoted: true,
+            settlement_id: None,
         });
 
         refresh_band_behavior_state(&mut world, &resources);
@@ -212,6 +213,7 @@ mod tests {
             provisional_since: 10,
             promoted_tick: None,
             is_promoted: false,
+            settlement_id: None,
         });
 
         refresh_band_behavior_state(&mut world, &resources);

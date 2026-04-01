@@ -957,6 +957,20 @@ impl SimSystem for MigrationRuntimeSystem {
                     world.query_one::<(&mut Identity, Option<&mut Behavior>)>(entity)
                 {
                     if let Some((identity, behavior_opt)) = one.get() {
+                        let old_band_id = identity.band_id;
+                        if config::BAND_MIGRATION_CLEAR_BAND_ID {
+                            if let Some(bid) = old_band_id {
+                                if let Some(band) = resources.band_store.get_mut(bid) {
+                                    let entity_id = EntityId(entity.id() as u64);
+                                    band.members.retain(|&m| m != entity_id);
+                                }
+                            }
+                            identity.band_id = None;
+                            log::debug!(
+                                "Migration: agent {:?} cleared band_id (was {:?}), moving to settlement {:?}",
+                                EntityId(entity.id() as u64), old_band_id, next_settlement_id
+                            );
+                        }
                         identity.settlement_id = Some(next_settlement_id);
                         if let Some(behavior) = behavior_opt {
                             behavior.current_action = ActionType::Migrate;
