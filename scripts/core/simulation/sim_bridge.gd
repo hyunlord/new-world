@@ -2919,6 +2919,21 @@ func get_border_friction() -> Dictionary:
 	return {}
 
 
+## Returns flat PackedFloat32Array with 14 floats per alive agent for MultiMesh rendering.
+## Layout per instance: Transform2D (6) + Color (4) + CustomData (4).
+## count = buffer.size() / 14
+func runtime_get_agent_multimesh_buffer() -> PackedFloat32Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedFloat32Array()
+	if not runtime.has_method("runtime_get_agent_multimesh_buffer"):
+		return PackedFloat32Array()
+	var result: Variant = runtime.call("runtime_get_agent_multimesh_buffer")
+	if result is PackedFloat32Array:
+		return result
+	return PackedFloat32Array()
+
+
 func _reset_native_extension_cache() -> void:
 	_native_checked = false
 	_native_bridge = null
