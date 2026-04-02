@@ -927,7 +927,7 @@ func _ensure_agent_multimesh() -> void:
 	_agent_multimesh.instance_count = MULTIMESH_INITIAL_CAPACITY
 	_agent_multimesh.visible_instance_count = 0
 	var quad := QuadMesh.new()
-	quad.size = Vector2(1.0, 1.0)
+	quad.size = Vector2(12.0, 12.0)
 	_agent_multimesh.mesh = quad
 	_agent_multimesh_instance = MultiMeshInstance2D.new()
 	_agent_multimesh_instance.name = "AgentMultiMesh"
