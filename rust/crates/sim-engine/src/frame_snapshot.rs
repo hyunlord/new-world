@@ -185,15 +185,17 @@ pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
 /// (14) floats laid out as:
 ///
 /// ```text
-/// Godot TRANSFORM_2D column-major layout (8 floats) + Color (4) + CustomData (4) = 16 total.
-/// [0]  col-a.x = scale   (Transform2D column 0, x)
-/// [1]  col-a.y = 0.0     (Transform2D column 0, y)
-/// [2]  col-b.x = 0.0     (Transform2D column 1, x)
-/// [3]  col-b.y = scale   (Transform2D column 1, y)
-/// [4]  origin.x (pixels)
-/// [5]  origin.y (pixels)
-/// [6]  0.0 (padding — Godot TRANSFORM_2D stride = 8 floats)
-/// [7]  0.0 (padding)
+/// Godot TRANSFORM_2D 2×vec4 row layout (8 floats) + Color (4) + CustomData (4) = 16 total.
+/// row0: [col_a.x, col_b.x, pad, origin.x]
+/// row1: [col_a.y, col_b.y, pad, origin.y]
+/// [0]  col_a.x = scale   (x scale, no rotation)
+/// [1]  col_b.x = 0.0     (no rotation)
+/// [2]  0.0 (PADDING — vec4 GPU alignment)
+/// [3]  origin.x (pixels)
+/// [4]  col_a.y = 0.0     (no rotation)
+/// [5]  col_b.y = scale   (y scale)
+/// [6]  0.0 (PADDING — vec4 GPU alignment)
+/// [7]  origin.y (pixels)
 /// [8]  color.r  (job × gender blend)
 /// [9]  color.g
 /// [10] color.b
@@ -277,15 +279,17 @@ pub fn build_agent_multimesh_buffer(world: &World) -> (Vec<f32>, usize) {
             .unwrap_or(-1.0_f32);
         let growth_norm = stage_code as f32 / 5.0;
 
-        // Append 16 floats — Godot TRANSFORM_2D column-major + 2 padding + Color + CustomData
-        buffer.push(scale);           // [0]  col-a.x
-        buffer.push(0.0_f32);         // [1]  col-a.y
-        buffer.push(0.0_f32);         // [2]  col-b.x
-        buffer.push(scale);           // [3]  col-b.y
-        buffer.push(ox);              // [4]  origin.x
-        buffer.push(oy);              // [5]  origin.y
-        buffer.push(0.0_f32);         // [6]  padding (stride = 8)
-        buffer.push(0.0_f32);         // [7]  padding
+        // Append 16 floats — Godot TRANSFORM_2D 2×vec4 row layout + Color + CustomData
+        // row0: [col_a.x, col_b.x, pad, origin.x]
+        // row1: [col_a.y, col_b.y, pad, origin.y]
+        buffer.push(scale);           // [0]  col_a.x
+        buffer.push(0.0_f32);         // [1]  col_b.x  (no rotation)
+        buffer.push(0.0_f32);         // [2]  PADDING  (vec4 alignment)
+        buffer.push(ox);              // [3]  origin.x
+        buffer.push(0.0_f32);         // [4]  col_a.y  (no rotation)
+        buffer.push(scale);           // [5]  col_b.y
+        buffer.push(0.0_f32);         // [6]  PADDING  (vec4 alignment)
+        buffer.push(oy);              // [7]  origin.y
         buffer.push(cr);              // [8]  color.r
         buffer.push(cg);              // [9]  color.g
         buffer.push(cb);              // [10] color.b
