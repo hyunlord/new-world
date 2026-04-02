@@ -29,7 +29,6 @@ var _band_territory_material: ShaderMaterial = null
 var _band_id_texture: ImageTexture = null
 var _band_density_texture: ImageTexture = null
 var _band_hardness_texture: ImageTexture = null
-var _band_dispute_texture: ImageTexture = null
 var _band_territory_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
@@ -1450,19 +1449,6 @@ func _refresh_band_territory() -> void:
 			else:
 				_band_hardness_texture.update(hardness_image)
 			_band_territory_material.set_shader_parameter("hardness_tex", _band_hardness_texture)
-
-	# Dispute texture — per-tile overlap intensity encoded as FORMAT_L8
-	var dispute_bytes: PackedByteArray = PackedByteArray()
-	if _sim_engine != null and _sim_engine.has_method("get_territory_dispute_texture"):
-		dispute_bytes = _sim_engine.call("get_territory_dispute_texture")
-	if not dispute_bytes.is_empty():
-		var dispute_image: Image = Image.create_from_data(w, h, false, Image.FORMAT_L8, dispute_bytes)
-		if dispute_image != null:
-			if _band_dispute_texture == null:
-				_band_dispute_texture = ImageTexture.create_from_image(dispute_image)
-			else:
-				_band_dispute_texture.update(dispute_image)
-			_band_territory_material.set_shader_parameter("dispute_tex", _band_dispute_texture)
 
 	# Zoom-adaptive shader parameter
 	var cam: Camera2D = get_viewport().get_camera_2d() if get_viewport() != null else null

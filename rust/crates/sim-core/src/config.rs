@@ -1433,7 +1433,7 @@ pub const TERRITORY_ACTIVITY_INTENSITY: f32 = 0.02;
 pub const TERRITORY_DISPUTE_CHECK_INTERVAL: u64 = 50;
 
 /// Minimum territory strength for a faction to count as "present" on a tile.
-pub const TERRITORY_DISPUTE_MIN_STRENGTH: f32 = 0.03;
+pub const TERRITORY_DISPUTE_MIN_STRENGTH: f32 = 0.15;
 
 /// Friction accumulated per overlapping tile per check interval.
 pub const TERRITORY_FRICTION_PER_TILE: f64 = 0.01;
