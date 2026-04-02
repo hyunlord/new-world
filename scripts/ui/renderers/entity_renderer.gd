@@ -933,6 +933,13 @@ func _ensure_agent_multimesh() -> void:
 	_agent_multimesh_instance.name = "AgentMultiMesh"
 	_agent_multimesh_instance.multimesh = _agent_multimesh
 	_agent_multimesh_instance.z_index = 2
+
+	# CRITICAL: MultiMeshInstance2D needs a texture to render in 2D.
+	# Create a solid white 8×8 texture — per-instance COLOR tints it.
+	var img := Image.create(8, 8, false, Image.FORMAT_RGBA8)
+	img.fill(Color.WHITE)
+	_agent_multimesh_instance.texture = ImageTexture.create_from_image(img)
+
 	add_child(_agent_multimesh_instance)
 
 
