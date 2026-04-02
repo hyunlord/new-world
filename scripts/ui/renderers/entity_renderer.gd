@@ -32,7 +32,6 @@ var _agent_multimesh_instance: MultiMeshInstance2D = null
 var _agent_multimesh: MultiMesh = null
 const MULTIMESH_FLOATS_PER_INSTANCE: int = 16
 const MULTIMESH_INITIAL_CAPACITY: int = 256
-var _multimesh_debug_printed: bool = false
 var _band_territory_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
@@ -937,7 +936,7 @@ func _ensure_agent_multimesh() -> void:
 
 	# CRITICAL: MultiMeshInstance2D needs a texture to render in 2D.
 	# Create a solid white 8×8 texture — per-instance COLOR tints it.
-	var img := Image.create(8, 8, false, Image.FORMAT_RGBA8)
+	var img := Image.create(12, 12, false, Image.FORMAT_RGBA8)
 	img.fill(Color.WHITE)
 	_agent_multimesh_instance.texture = ImageTexture.create_from_image(img)
 
@@ -962,20 +961,6 @@ func _update_agent_multimesh() -> void:
 	_agent_multimesh.instance_count = count
 	_agent_multimesh.visible_instance_count = count
 	_agent_multimesh.set_buffer(buffer)
-
-	# DEBUG: print first agent's data once
-	if not _multimesh_debug_printed and count > 0:
-		_multimesh_debug_printed = true
-		print("[MultiMesh DEBUG] count=%d, buffer_size=%d, stride=%d" % [count, buffer.size(), MULTIMESH_FLOATS_PER_INSTANCE])
-		print("[MultiMesh DEBUG] instance_count=%d, visible=%d" % [_agent_multimesh.instance_count, _agent_multimesh.visible_instance_count])
-		print("[MultiMesh DEBUG] Agent 0 transform: ax=%f bx=%f pad=%f ox=%f | ay=%f by=%f pad=%f oy=%f" % [
-			buffer[0], buffer[1], buffer[2], buffer[3],
-			buffer[4], buffer[5], buffer[6], buffer[7]])
-		print("[MultiMesh DEBUG] Agent 0 color: r=%f g=%f b=%f a=%f" % [buffer[8], buffer[9], buffer[10], buffer[11]])
-		print("[MultiMesh DEBUG] Agent 0 custom: %f %f %f %f" % [buffer[12], buffer[13], buffer[14], buffer[15]])
-		print("[MultiMesh DEBUG] texture=%s, mesh=%s" % [str(_agent_multimesh_instance.texture), str(_agent_multimesh.mesh)])
-		print("[MultiMesh DEBUG] multimesh_instance visible=%s, z_index=%d, position=%s" % [
-			str(_agent_multimesh_instance.visible), _agent_multimesh_instance.z_index, str(_agent_multimesh_instance.global_position)])
 
 
 func _ensure_agent_visual_resources() -> bool:
