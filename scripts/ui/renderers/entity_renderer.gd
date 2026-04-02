@@ -1202,7 +1202,7 @@ func _runtime_entity_name(entity_id: int) -> String:
 
 
 func _draw_action_icon(entity_id: int, pos: Vector2, size: float) -> void:
-	if _current_lod != 2:
+	if _current_lod != GameConfig.ZOOM_Z1:
 		return
 	var detail: Dictionary = _get_probe_entity_detail(entity_id)
 	if detail.is_empty():
