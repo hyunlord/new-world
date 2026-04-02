@@ -3803,9 +3803,9 @@ impl WorldSimRuntime {
         PackedByteArray::from(dispute_map.as_slice())
     }
 
-    /// Returns a flat PackedFloat32Array with 14 floats per alive agent for MultiMesh rendering.
-    /// Layout per instance: Transform2D (6) + Color (4) + CustomData (4).
-    /// GDScript: count = buffer.size() / 14.
+    /// Returns a flat PackedFloat32Array with 16 floats per alive agent for MultiMesh rendering.
+    /// Layout per instance: Transform2D (8, column-major + 2 padding) + Color (4) + CustomData (4).
+    /// GDScript: count = buffer.size() / 16.
     #[func]
     fn runtime_get_agent_multimesh_buffer(&self) -> PackedFloat32Array {
         let Some(state) = self.state.as_ref() else {

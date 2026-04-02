@@ -1889,18 +1889,18 @@ mod tests {
 
         // Type A: count must be positive
         assert!(count >= 10, "expected ≥10 alive agents, got {}", count);
-        // Type A: buffer length must be count × 14
-        assert_eq!(buffer.len(), count * 14, "buffer length must be count × 14 floats");
+        // Type A: buffer length must be count × 16
+        assert_eq!(buffer.len(), count * 16, "buffer length must be count × 16 floats");
 
         for i in 0..count {
-            let base = i * 14;
-            let scale_x = buffer[base];
-            let scale_y = buffer[base + 4];
-            let ox = buffer[base + 2];
-            let oy = buffer[base + 5];
-            let cr = buffer[base + 6];
-            let cg = buffer[base + 7];
-            let cb = buffer[base + 8];
+            let base = i * 16;
+            let scale_x = buffer[base];     // col-a.x
+            let scale_y = buffer[base + 3]; // col-b.y
+            let ox = buffer[base + 4];      // origin.x
+            let oy = buffer[base + 5];      // origin.y
+            let cr = buffer[base + 8];      // color.r
+            let cg = buffer[base + 9];      // color.g
+            let cb = buffer[base + 10];     // color.b
 
             // Type B: scale must be positive and uniform
             assert!(scale_x > 0.0 && scale_x <= 2.0, "scale_x out of range: {}", scale_x);

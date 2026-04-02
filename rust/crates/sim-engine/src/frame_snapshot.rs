@@ -185,23 +185,26 @@ pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
 /// (14) floats laid out as:
 ///
 /// ```text
-/// [0]  transform col-a.x = scale
-/// [1]  transform col-b.x = 0.0
-/// [2]  origin.x (pixels)
-/// [3]  transform col-a.y = 0.0
-/// [4]  transform col-b.y = scale
+/// Godot TRANSFORM_2D column-major layout (8 floats) + Color (4) + CustomData (4) = 16 total.
+/// [0]  col-a.x = scale   (Transform2D column 0, x)
+/// [1]  col-a.y = 0.0     (Transform2D column 0, y)
+/// [2]  col-b.x = 0.0     (Transform2D column 1, x)
+/// [3]  col-b.y = scale   (Transform2D column 1, y)
+/// [4]  origin.x (pixels)
 /// [5]  origin.y (pixels)
-/// [6]  color.r  (job × gender blend)
-/// [7]  color.g
-/// [8]  color.b
-/// [9]  color.a  = 1.0
-/// [10] custom.r = movement_dir sprite frame  (dir * 4 / 255)
-/// [11] custom.g = mood                       (mood / 4)
-/// [12] custom.b = band_color_idx             (idx / 8, or -1.0 if no band)
-/// [13] custom.a = growth stage               (stage / 5)
+/// [6]  0.0 (padding — Godot TRANSFORM_2D stride = 8 floats)
+/// [7]  0.0 (padding)
+/// [8]  color.r  (job × gender blend)
+/// [9]  color.g
+/// [10] color.b
+/// [11] color.a  = 1.0
+/// [12] custom.r = movement_dir sprite frame  (dir * 4 / 255)
+/// [13] custom.g = mood                       (mood / 4)
+/// [14] custom.b = band_color_idx             (idx / 8, or -1.0 if no band)
+/// [15] custom.a = growth stage               (stage / 5)
 /// ```
 ///
-/// Returns `(buffer, count)` where `buffer.len() == count * 14`.
+/// Returns `(buffer, count)` where `buffer.len() == count * 16`.
 pub fn build_agent_multimesh_buffer(world: &World) -> (Vec<f32>, usize) {
     const MALE_TINT: (f32, f32, f32) = (0.2, 0.4, 0.85);
     const FEMALE_TINT: (f32, f32, f32) = (0.9, 0.3, 0.45);
@@ -274,21 +277,23 @@ pub fn build_agent_multimesh_buffer(world: &World) -> (Vec<f32>, usize) {
             .unwrap_or(-1.0_f32);
         let growth_norm = stage_code as f32 / 5.0;
 
-        // Append 14 floats
+        // Append 16 floats — Godot TRANSFORM_2D column-major + 2 padding + Color + CustomData
         buffer.push(scale);           // [0]  col-a.x
-        buffer.push(0.0_f32);         // [1]  col-b.x
-        buffer.push(ox);              // [2]  origin.x
-        buffer.push(0.0_f32);         // [3]  col-a.y
-        buffer.push(scale);           // [4]  col-b.y
+        buffer.push(0.0_f32);         // [1]  col-a.y
+        buffer.push(0.0_f32);         // [2]  col-b.x
+        buffer.push(scale);           // [3]  col-b.y
+        buffer.push(ox);              // [4]  origin.x
         buffer.push(oy);              // [5]  origin.y
-        buffer.push(cr);              // [6]  color.r
-        buffer.push(cg);              // [7]  color.g
-        buffer.push(cb);              // [8]  color.b
-        buffer.push(1.0_f32);         // [9]  color.a
-        buffer.push((movement_dir as f32 * 4.0) / 255.0); // [10] custom.r
-        buffer.push(mood as f32 / 4.0);                   // [11] custom.g
-        buffer.push(band_color);      // [12] custom.b
-        buffer.push(growth_norm);     // [13] custom.a
+        buffer.push(0.0_f32);         // [6]  padding (stride = 8)
+        buffer.push(0.0_f32);         // [7]  padding
+        buffer.push(cr);              // [8]  color.r
+        buffer.push(cg);              // [9]  color.g
+        buffer.push(cb);              // [10] color.b
+        buffer.push(1.0_f32);         // [11] color.a
+        buffer.push((movement_dir as f32 * 4.0) / 255.0); // [12] custom.r
+        buffer.push(mood as f32 / 4.0);                   // [13] custom.g
+        buffer.push(band_color);      // [14] custom.b
+        buffer.push(growth_norm);     // [15] custom.a
 
         count += 1;
     }
