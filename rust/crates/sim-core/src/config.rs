@@ -1462,6 +1462,34 @@ pub const TERRITORY_HARDNESS_BUILDING_SCALE: f32 = 15.0;
 /// Maximum border_hardness allowed for band factions (bands have no buildings → stay soft).
 pub const TERRITORY_HARDNESS_BAND_CAP: f32 = 0.3;
 
+// === CATEGORY C: Engine-internal constants (keep in config.rs) ===
+// ── MultiMesh Rendering ───────────────────────────────────────────────────────
+
+/// Number of floats per agent instance in the MultiMesh buffer.
+/// Layout: Transform2D (6) + Color (4) + CustomData (4) = 14.
+pub const MULTIMESH_FLOATS_PER_INSTANCE: usize = 14;
+
+/// Job-to-RGB color mapping for MultiMesh instance tinting.
+/// Index matches job_icon_code(): 0=none, 1=gatherer, 2=lumberjack, 3=builder, 4=miner.
+pub const JOB_COLORS: [(f32, f32, f32); 5] = [
+    (0.6, 0.6, 0.6),  // 0: none
+    (0.3, 0.8, 0.2),  // 1: gatherer
+    (0.6, 0.35, 0.1), // 2: lumberjack
+    (0.9, 0.6, 0.1),  // 3: builder
+    (0.5, 0.6, 0.75), // 4: miner
+];
+
+/// Per-growth-stage scale multipliers for MultiMesh agent rendering.
+/// Index matches growth_stage_code(): 0=Infant … 5=Elder.
+pub const AGE_SIZE_MULTIPLIERS: [f32; 6] = [
+    0.45, // 0: infant
+    0.55, // 1: toddler
+    0.65, // 2: child
+    0.85, // 3: teen
+    1.0,  // 4: adult
+    0.9,  // 5: elder
+];
+
 // ── Zoom Tier System (D1-A) ──────────────────────────────────────────────────
 /// Unified 5-tier zoom boundary array.
 /// Camera zoom >= ZOOM_TIER_BOUNDARIES[i] → tier i, else tier i+1.

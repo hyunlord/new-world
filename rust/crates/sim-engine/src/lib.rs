@@ -64,7 +64,7 @@ pub use event_bus::{EventBus, Subscriber};
 pub use event_store::{EventStore, SimEvent, SimEventType};
 pub use events::{GameEvent, LlmEvent};
 pub use explain_log::{ExplainEntry, ExplainLog};
-pub use frame_snapshot::{build_agent_snapshots, AgentSnapshot};
+pub use frame_snapshot::{build_agent_multimesh_buffer, build_agent_snapshots, AgentSnapshot};
 pub use llm_prompt::{
     ActionOption, HexacoDescriptors, LlmPromptContext, LlmPromptTemplates, PromptPayload,
     SpeechRegister,

@@ -1,5 +1,6 @@
 use hecs::World;
 use sim_core::components::{Age, Behavior, Body, Emotion, Identity, Needs, Position, Stress};
+use sim_core::config;
 use sim_core::enums::{ActionType, EmotionType, GrowthStage, MentalBreakType, Sex, StressState};
 
 /// Per-agent render snapshot encoded as a fixed 36-byte record.
@@ -177,6 +178,122 @@ pub fn build_agent_snapshots(world: &World) -> Vec<AgentSnapshot> {
 
     snapshots.sort_unstable_by_key(|snapshot| snapshot.entity_id);
     snapshots
+}
+
+/// Builds a flat `f32` buffer for Godot `MultiMeshInstance2D` with `use_colors=true,
+/// use_custom_data=true`. Each agent occupies exactly [`config::MULTIMESH_FLOATS_PER_INSTANCE`]
+/// (14) floats laid out as:
+///
+/// ```text
+/// [0]  transform col-a.x = scale
+/// [1]  transform col-b.x = 0.0
+/// [2]  origin.x (pixels)
+/// [3]  transform col-a.y = 0.0
+/// [4]  transform col-b.y = scale
+/// [5]  origin.y (pixels)
+/// [6]  color.r  (job × gender blend)
+/// [7]  color.g
+/// [8]  color.b
+/// [9]  color.a  = 1.0
+/// [10] custom.r = movement_dir sprite frame  (dir * 4 / 255)
+/// [11] custom.g = mood                       (mood / 4)
+/// [12] custom.b = band_color_idx             (idx / 8, or -1.0 if no band)
+/// [13] custom.a = growth stage               (stage / 5)
+/// ```
+///
+/// Returns `(buffer, count)` where `buffer.len() == count * 14`.
+pub fn build_agent_multimesh_buffer(world: &World) -> (Vec<f32>, usize) {
+    const MALE_TINT: (f32, f32, f32) = (0.2, 0.4, 0.85);
+    const FEMALE_TINT: (f32, f32, f32) = (0.9, 0.3, 0.45);
+    const GENDER_TINT_WEIGHT: f32 = 0.2;
+    const TILE_F: f32 = config::TILE_SIZE as f32;
+
+    let mut buffer: Vec<f32> = Vec::new();
+    let mut count: usize = 0;
+
+    for (
+        _entity,
+        (position, identity, age, emotion_opt, needs_opt, behavior_opt),
+    ) in world
+        .query::<(
+            &Position,
+            &Identity,
+            &Age,
+            Option<&Emotion>,
+            Option<&Needs>,
+            Option<&Behavior>,
+        )>()
+        .iter()
+    {
+        if !age.alive {
+            continue;
+        }
+
+        let emotion_default = Emotion::default();
+        let needs_default = Needs::default();
+        let behavior_default = Behavior::default();
+
+        let emotion = emotion_opt.unwrap_or(&emotion_default);
+        let needs = needs_opt.unwrap_or(&needs_default);
+        let behavior = behavior_opt.unwrap_or(&behavior_default);
+
+        // Scale from growth stage
+        let stage_code = growth_stage_code(identity.growth_stage) as usize;
+        let scale = config::AGE_SIZE_MULTIPLIERS
+            .get(stage_code)
+            .copied()
+            .unwrap_or(1.0_f32);
+
+        // Pixel-space origin (center of tile)
+        let ox = position.x as f32 * TILE_F + TILE_F * 0.5;
+        let oy = position.y as f32 * TILE_F + TILE_F * 0.5;
+
+        // Job color
+        let job_code = job_icon_code(behavior.job.as_str()) as usize;
+        let (jr, jg, jb) = config::JOB_COLORS
+            .get(job_code)
+            .copied()
+            .unwrap_or(config::JOB_COLORS[0]);
+
+        // Gender tint blend
+        let (tr, tg, tb) = match identity.sex {
+            Sex::Male => MALE_TINT,
+            Sex::Female => FEMALE_TINT,
+        };
+        let w = GENDER_TINT_WEIGHT;
+        let cr = (jr * (1.0 - w) + tr * w).clamp(0.0, 1.0);
+        let cg = (jg * (1.0 - w) + tg * w).clamp(0.0, 1.0);
+        let cb = (jb * (1.0 - w) + tb * w).clamp(0.0, 1.0);
+
+        // Custom data
+        let mood = compute_mood_color(emotion, needs);
+        let movement_dir = position.movement_dir;
+        let band_color = identity
+            .band_id
+            .map(|bid| ((bid.0 % 8) as f32) / 8.0)
+            .unwrap_or(-1.0_f32);
+        let growth_norm = stage_code as f32 / 5.0;
+
+        // Append 14 floats
+        buffer.push(scale);           // [0]  col-a.x
+        buffer.push(0.0_f32);         // [1]  col-b.x
+        buffer.push(ox);              // [2]  origin.x
+        buffer.push(0.0_f32);         // [3]  col-a.y
+        buffer.push(scale);           // [4]  col-b.y
+        buffer.push(oy);              // [5]  origin.y
+        buffer.push(cr);              // [6]  color.r
+        buffer.push(cg);              // [7]  color.g
+        buffer.push(cb);              // [8]  color.b
+        buffer.push(1.0_f32);         // [9]  color.a
+        buffer.push((movement_dir as f32 * 4.0) / 255.0); // [10] custom.r
+        buffer.push(mood as f32 / 4.0);                   // [11] custom.g
+        buffer.push(band_color);      // [12] custom.b
+        buffer.push(growth_norm);     // [13] custom.a
+
+        count += 1;
+    }
+
+    (buffer, count)
 }
 
 fn compute_mood_color(emotion: &Emotion, _needs: &Needs) -> u8 {

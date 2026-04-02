@@ -1877,6 +1877,45 @@ mod tests {
 
         println!("[harness] harness_territory_hardness_scales_with_settlement: PASS");
     }
+
+    #[test]
+    fn harness_multimesh_buffer_valid() {
+        use sim_engine::build_agent_multimesh_buffer;
+
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(500);
+
+        let (buffer, count) = build_agent_multimesh_buffer(engine.world());
+
+        // Type A: count must be positive
+        assert!(count >= 10, "expected ≥10 alive agents, got {}", count);
+        // Type A: buffer length must be count × 14
+        assert_eq!(buffer.len(), count * 14, "buffer length must be count × 14 floats");
+
+        for i in 0..count {
+            let base = i * 14;
+            let scale_x = buffer[base];
+            let scale_y = buffer[base + 4];
+            let ox = buffer[base + 2];
+            let oy = buffer[base + 5];
+            let cr = buffer[base + 6];
+            let cg = buffer[base + 7];
+            let cb = buffer[base + 8];
+
+            // Type B: scale must be positive and uniform
+            assert!(scale_x > 0.0 && scale_x <= 2.0, "scale_x out of range: {}", scale_x);
+            assert!((scale_x - scale_y).abs() < 1e-5, "scale must be uniform");
+            // Type B: position must be within world pixel bounds (256*16=4096)
+            assert!(ox >= 0.0 && ox <= 4096.0, "ox out of world range: {}", ox);
+            assert!(oy >= 0.0 && oy <= 4096.0, "oy out of world range: {}", oy);
+            // Type B: color channels in [0,1]
+            assert!(cr >= 0.0 && cr <= 1.0, "color.r={}", cr);
+            assert!(cg >= 0.0 && cg <= 1.0, "color.g={}", cg);
+            assert!(cb >= 0.0 && cb <= 1.0, "color.b={}", cb);
+        }
+
+        println!("[harness] multimesh_buffer: {} agents, {} floats, all valid", count, buffer.len());
+    }
 }
 
 fn pathfind_bench_inputs() -> (

@@ -53,11 +53,11 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{BandId, ChannelId, EntityId, EquipSlot, Settlement, SettlementId, Temperament};
 use sim_engine::{
-    AgentSnapshot, ChronicleEntryDetailSnapshot, ChronicleEntryId, ChronicleEntryLite,
-    ChronicleEvent, ChronicleFeedItemSnapshot, ChronicleFeedResponse,
-    ChronicleHistorySliceResponse, ChronicleRecallSliceResponse, ChronicleSnapshotRevision,
-    ChronicleThreadListResponse, EngineSnapshot, GameEvent, LlmPromptVariant,
-    LlmRequest, SimEvent, SimEventType,
+    build_agent_multimesh_buffer, AgentSnapshot, ChronicleEntryDetailSnapshot,
+    ChronicleEntryId, ChronicleEntryLite, ChronicleEvent, ChronicleFeedItemSnapshot,
+    ChronicleFeedResponse, ChronicleHistorySliceResponse, ChronicleRecallSliceResponse,
+    ChronicleSnapshotRevision, ChronicleThreadListResponse, EngineSnapshot, GameEvent,
+    LlmPromptVariant, LlmRequest, SimEvent, SimEventType,
 };
 use sim_systems::{body, drain_and_apply_llm_responses, entity_spawner, stat_curve};
 use std::fs;
@@ -3801,6 +3801,18 @@ impl WorldSimRuntime {
             .territory_grid
             .export_dispute_map(sim_core::config::TERRITORY_DISPUTE_MIN_STRENGTH);
         PackedByteArray::from(dispute_map.as_slice())
+    }
+
+    /// Returns a flat PackedFloat32Array with 14 floats per alive agent for MultiMesh rendering.
+    /// Layout per instance: Transform2D (6) + Color (4) + CustomData (4).
+    /// GDScript: count = buffer.size() / 14.
+    #[func]
+    fn runtime_get_agent_multimesh_buffer(&self) -> PackedFloat32Array {
+        let Some(state) = self.state.as_ref() else {
+            return PackedFloat32Array::new();
+        };
+        let (buffer, _count) = build_agent_multimesh_buffer(state.engine.world());
+        PackedFloat32Array::from(buffer.as_slice())
     }
 
     /// Returns a per-tile hardness texture (map_width × map_height bytes, FORMAT_L8).
