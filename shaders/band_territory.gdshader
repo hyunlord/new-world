@@ -39,8 +39,7 @@ void fragment() {
 		} else {
 			COLOR = vec4(0.0);
 		}
-		return;
-	}
+	} else {
 
 	vec3 color = band_colors[band_id];
 	float hardness = texture(hardness_tex, UV).r;
@@ -97,5 +96,6 @@ void fragment() {
 			fill_col = mix(fill_col, dispute_color, stripe_mask * dispute * 0.4);
 		}
 		COLOR = vec4(fill_col, clamp(fill_alpha * density_alpha, 0.0, 1.0));
+	}
 	}
 }

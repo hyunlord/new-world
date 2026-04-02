@@ -13,8 +13,7 @@ void fragment() {
 	vec4 tex = texture(TEXTURE, UV);
 	if (tex.a <= 0.01) {
 		COLOR = tex;
-		return;
-	}
+	} else {
 
 	float row_selector = tex.g;
 	float row_index = 1.0;
@@ -33,4 +32,5 @@ void fragment() {
 
 	vec4 palette_color = texture(palette_lut, palette_uv(row_index, column_index));
 	COLOR = vec4(palette_color.rgb, tex.a);
+	}
 }
