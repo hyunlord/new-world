@@ -952,12 +952,13 @@ func _update_agent_multimesh() -> void:
 	if buffer.is_empty():
 		_agent_multimesh.visible_instance_count = 0
 		return
+	@warning_ignore("integer_division")
 	var count: int = buffer.size() / MULTIMESH_FLOATS_PER_INSTANCE
 	if count <= 0:
 		_agent_multimesh.visible_instance_count = 0
 		return
-	if _agent_multimesh.instance_count < count:
-		_agent_multimesh.instance_count = count + 64
+	# set_buffer() requires buffer.size() == stride * instance_count exactly.
+	_agent_multimesh.instance_count = count
 	_agent_multimesh.visible_instance_count = count
 	_agent_multimesh.set_buffer(buffer)
 
