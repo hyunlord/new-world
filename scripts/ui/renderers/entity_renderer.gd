@@ -4,6 +4,7 @@ const EntityDataClass = preload("res://scripts/core/entity/entity_data.gd")
 const EntityManagerClass = preload("res://scripts/core/entity/entity_manager.gd")
 const SnapshotDecoderClass = preload("res://scripts/rendering/snapshot_decoder.gd")
 const RelationshipOverlayClass = preload("res://scripts/ui/relationship_overlay.gd")
+const SocialBubbleScene = preload("res://scenes/ui/social_bubble.tscn")
 const AGENT_TEXTURE_PATH: String = "res://assets/sprites/agent_base.png"
 const AGENT_PALETTE_LUT_PATH: String = "res://assets/sprites/palette_lut.png"
 const AGENT_VISUAL_SHADER_PATH: String = "res://shaders/stress_phase.gdshader"
@@ -32,6 +33,8 @@ var _agent_multimesh_instance: MultiMeshInstance2D = null
 var _agent_multimesh: MultiMesh = null
 const MULTIMESH_FLOATS_PER_INSTANCE: int = 16
 const MULTIMESH_INITIAL_CAPACITY: int = 256
+var _agent_sprites: Array[Sprite2D] = []
+var _agent_bubbles: Array = []
 var _band_territory_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
@@ -259,7 +262,8 @@ func _update_binary_snapshots() -> void:
 
 
 func _ready() -> void:
-	_ensure_agent_visual_resources()
+	if _ensure_agent_visual_resources():
+		_ensure_agent_sprite_capacity(32)
 	SimulationBus.tick_completed.connect(_on_tick)
 	var on_sim_event := Callable(self, "_on_simulation_event")
 	if not SimulationBus.simulation_event.is_connected(on_sim_event):
@@ -291,7 +295,8 @@ func _process(_delta: float) -> void:
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
 	_update_hover()
-	_update_agent_multimesh()
+	_update_agent_sprites()
+	# _update_agent_multimesh()  # disabled — re-enable when sprite atlas is ready
 	_update_band_territory(_delta)
 	if _binary_snapshot_available or _hover_entity_id >= 0:
 		queue_redraw()
@@ -547,16 +552,41 @@ func _draw() -> void:
 
 		var pos := Vector2(ex, ey) * GameConfig.TILE_SIZE + half_tile
 		var ejob: String = str(entity.get("job", "none"))
+		var esex: String = str(entity.get("sex", "male"))
 		var eage_stage: String = str(entity.get("growth_stage", "adult"))
 		var eid: int = int(entity.get("entity_id", -1))
 		var ename: String = str(entity.get("name", ""))
 
 		var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
 		var base_size: float = vis["size"]
+		var color: Color = vis["color"]
 		var is_selected: bool = eid == selected_entity_id
+
+		# Gender tint
+		var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
+		color = color.lerp(tint, GENDER_TINT_WEIGHT)
+		color = _entity_color_for_probe(color, is_selected)
+		var outline_color: Color = _outline_color_for_probe(is_selected)
 
 		# Age size scaling
 		var size: float = base_size * AGE_SIZE_MULT.get(eage_stage, 1.0)
+
+		# Draw outlined shape
+		match ejob:
+			"lumberjack":
+				_draw_triangle_outlined(pos, size, color)
+			"builder":
+				_draw_square_outlined(pos, size, color)
+			"miner":
+				_draw_diamond_outlined(pos, size, color)
+			_:
+				# Circle with outline
+				draw_circle(pos, size + OUTLINE_WIDTH, outline_color)
+				draw_circle(pos, size, color)
+
+		# Elder white dot (gray hair indicator)
+		if eage_stage == "elder":
+			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
 
 		if _current_lod <= GameConfig.ZOOM_Z2:
 			# Carrying indicator: skipped for snapshot entities (no carry data)
@@ -915,6 +945,129 @@ func _get_selected_runtime_detail() -> Dictionary:
 		_selected_runtime_detail_cache_id = selected_entity_id
 		_selected_runtime_detail_cache = _get_probe_entity_detail(selected_entity_id)
 	return _selected_runtime_detail_cache
+
+
+func _update_agent_sprites() -> void:
+	if not _binary_snapshot_available or not _snapshot_decoder.has_data():
+		_hide_agent_sprites()
+		return
+
+	if not _ensure_agent_visual_resources():
+		_hide_agent_sprites()
+		return
+
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	var zoom_level: float = cam.zoom.x if cam else 1.0
+	_update_lod(zoom_level)
+	if _current_lod >= GameConfig.ZOOM_Z3:
+		_hide_agent_sprites()
+		return
+
+	_ensure_agent_sprite_capacity(_snapshot_decoder.agent_count)
+
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var cam_pos: Vector2 = cam.global_position if cam else Vector2.ZERO
+	var half_view: Vector2 = viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
+	var min_tile_x: float = float(int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2)
+	var max_tile_x: float = float(int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2)
+	var min_tile_y: float = float(int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2)
+	var max_tile_y: float = float(int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2)
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+
+	for index in range(_snapshot_decoder.agent_count):
+		var sprite: Sprite2D = _agent_sprites[index]
+		var social_bubble = _agent_bubbles[index]
+		var tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+		if tile_pos.x < min_tile_x or tile_pos.x > max_tile_x or tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
+			sprite.visible = false
+			if social_bubble != null:
+				social_bubble.visible = false
+			continue
+
+		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var is_selected: bool = entity_id == selected_entity_id
+		var emphasize_probe: bool = probe_observation_mode and selected_entity_id >= 0
+		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
+		var velocity: Vector2 = _snapshot_decoder.get_velocity(index)
+		var action_state: int = _snapshot_decoder.get_action_state(index)
+		var movement_dir: int = _resolve_social_facing_direction(index, action_state, _snapshot_decoder.get_movement_dir(index))
+		var frame_data: Dictionary = _sprite_frame_data(movement_dir, velocity.length())
+		var shader_material: ShaderMaterial = sprite.material as ShaderMaterial
+
+		sprite.position = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+		sprite.scale = Vector2.ONE * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
+		sprite.flip_h = bool(frame_data.get("flip_h", false))
+		sprite.frame = int(frame_data.get("frame", 0))
+		sprite.modulate = Color(1.0, 1.0, 1.0, 1.0 if (not emphasize_probe or is_selected) else 0.58)
+		sprite.z_index = 2 if is_selected else 1
+		sprite.visible = true
+
+		_apply_palette(shader_material, _snapshot_decoder.get_sprite_var(index))
+		_apply_stress(
+			shader_material,
+			_snapshot_decoder.get_stress_phase(index),
+			_snapshot_decoder.get_mood_color(index),
+			_snapshot_decoder.get_active_break(index) > 0
+		)
+		_apply_breathing(shader_material, entity_id, velocity.length())
+		if social_bubble != null:
+			social_bubble.update_state(action_state)
+			if emphasize_probe and not is_selected:
+				social_bubble.visible = false
+
+	for index in range(_snapshot_decoder.agent_count, _agent_sprites.size()):
+		_agent_sprites[index].visible = false
+		if index < _agent_bubbles.size() and _agent_bubbles[index] != null:
+			_agent_bubbles[index].visible = false
+
+
+func _ensure_agent_sprite_capacity(required: int) -> void:
+	while _agent_sprites.size() < required:
+		var sprite: Sprite2D = Sprite2D.new()
+		var sprite_material: ShaderMaterial = ShaderMaterial.new()
+		sprite_material.resource_local_to_scene = true
+		sprite_material.shader = _agent_visual_shader
+		sprite_material.set_shader_parameter("palette_lut", _agent_palette_lut)
+		sprite.texture = _agent_texture
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sprite.centered = true
+		sprite.offset = AGENT_TEXTURE_OFFSET
+		sprite.hframes = AGENT_FRAME_COLUMNS
+		sprite.vframes = AGENT_FRAME_ROWS
+		sprite.material = sprite_material
+		sprite.visible = false
+		sprite.z_index = 1
+		var social_bubble = SocialBubbleScene.instantiate()
+		sprite.add_child(social_bubble)
+		add_child(sprite)
+		_agent_sprites.append(sprite)
+		_agent_bubbles.append(social_bubble)
+
+
+func _hide_agent_sprites() -> void:
+	for sprite in _agent_sprites:
+		sprite.visible = false
+	for bubble in _agent_bubbles:
+		if bubble != null:
+			bubble.visible = false
+
+
+func _apply_palette(shader_material: ShaderMaterial, sprite_var: int) -> void:
+	var hair_index: int = (sprite_var >> 5) & 0x07
+	var body_index: int = (sprite_var >> 3) & 0x03
+	var skin_index: int = sprite_var & 0x07
+	shader_material.set_shader_parameter("hair_index", float(hair_index))
+	shader_material.set_shader_parameter("body_index", float(body_index))
+	shader_material.set_shader_parameter("skin_index", float(skin_index))
+
+
+func _apply_stress(shader_material: ShaderMaterial, stress_phase: int, mood_color_index: int, is_break: bool) -> void:
+	var clamped_stress: int = clampi(stress_phase, 0, STRESS_OUTLINE_COLORS.size() - 1)
+	var clamped_mood: int = clampi(mood_color_index, 0, MOOD_COLORS.size() - 1)
+	shader_material.set_shader_parameter("stress_phase", clamped_stress)
+	shader_material.set_shader_parameter("mood_color", MOOD_COLORS[clamped_mood])
+	shader_material.set_shader_parameter("outline_color", STRESS_OUTLINE_COLORS[clamped_stress])
+	shader_material.set_shader_parameter("active_break", is_break)
 
 
 func _ensure_agent_multimesh() -> void:
@@ -1467,6 +1620,18 @@ func _draw_diamond_outlined(center: Vector2, s: float, color: Color) -> void:
 	])
 	draw_colored_polygon(outline_points, OUTLINE_COLOR)
 	_draw_diamond(center, s, color)
+
+
+func _draw_heart(center: Vector2, size: float, color: Color) -> void:
+	var points := PackedVector2Array([
+		center + Vector2(0, size * 0.4),
+		center + Vector2(-size, -size * 0.2),
+		center + Vector2(-size * 0.5, -size * 0.7),
+		center + Vector2(0, -size * 0.3),
+		center + Vector2(size * 0.5, -size * 0.7),
+		center + Vector2(size, -size * 0.2),
+	])
+	draw_colored_polygon(points, color)
 
 
 func _get_dominant_resource(entity: RefCounted) -> String:
