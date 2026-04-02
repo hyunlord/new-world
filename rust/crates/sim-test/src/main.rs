@@ -1894,10 +1894,10 @@ mod tests {
 
         for i in 0..count {
             let base = i * 16;
-            let scale_x = buffer[base];     // col-a.x
-            let scale_y = buffer[base + 3]; // col-b.y
-            let ox = buffer[base + 4];      // origin.x
-            let oy = buffer[base + 5];      // origin.y
+            let scale_x = buffer[base];     // [0] col_a.x
+            let scale_y = buffer[base + 5]; // [5] col_b.y
+            let ox = buffer[base + 3];      // [3] origin.x
+            let oy = buffer[base + 7];      // [7] origin.y
             let cr = buffer[base + 8];      // color.r
             let cg = buffer[base + 9];      // color.g
             let cb = buffer[base + 10];     // color.b
