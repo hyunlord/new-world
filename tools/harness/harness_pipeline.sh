@@ -15,11 +15,14 @@ set -euo pipefail
 #
 # Pipeline:
 #   Step 1a: PLANNER      (Claude Code agent)  → plan_draft.md
-#   Step 1b: CHALLENGER   (Codex dispatch)      → challenge_report.md  [skipped with --quick]
+#   Step 1b: CHALLENGER   (Claude Code -p)      → challenge_report.md  [skipped with --quick]
 #   Step 1c: PLANNER      (Claude Code agent)  → plan_final.md         [skipped with --quick]
-#   Step 2:  GENERATOR    (Codex dispatch)      → code + gen_result.md
-#   Step 3:  EVALUATOR    (Codex dispatch)      → review.md + verdict
-#   Step 4:  INTEGRATOR   (Claude Code agent)  → commit / retry / stop
+#   Step 2:  GENERATOR    (Claude Code -p)      → code + gen_result.md
+#   Step 3:  EVALUATOR    (Claude Code -p)      → review.md + verdict
+#   Step 4:  INTEGRATOR   (script logic)        → commit / retry / stop
+#
+# Each step runs as a separate `claude -p` session, providing natural
+# context isolation — no session can see another's reasoning.
 #
 # Retry logic:
 #   RE-CODE:  → Step 2 (max 3 code attempts)
@@ -54,9 +57,54 @@ MAX_CODE_ATTEMPTS=3
 log() { echo "[harness $(date +%H:%M:%S)] $*"; }
 die() { log "FATAL: $*"; exit 1; }
 
+# --- Template rendering (multiline-safe) ---
+# Usage: render_template template_file output_file KEY1=val1 KEY2=@filepath ...
+# Values prefixed with @ are read from file. Uses python3 for safe replacement.
+render_template() {
+    local template="$1"
+    local output="$2"
+    shift 2
+
+    cp "$template" "$output"
+
+    for arg in "$@"; do
+        local key="${arg%%=*}"
+        local val="${arg#*=}"
+
+        # If value starts with @, read from file
+        if [[ "$val" == @* ]]; then
+            local filepath="${val#@}"
+            if [[ -f "$filepath" ]]; then
+                val=$(cat "$filepath")
+            else
+                val="(file not found: $filepath)"
+            fi
+        fi
+
+        # Write value to temp file to avoid shell arg length limits
+        local tmpval
+        tmpval=$(mktemp)
+        printf '%s' "$val" > "$tmpval"
+
+        python3 -c "
+import sys
+key = '{{' + sys.argv[1] + '}}'
+with open(sys.argv[2]) as vf:
+    val = vf.read()
+with open(sys.argv[3]) as f:
+    content = f.read()
+with open(sys.argv[3], 'w') as f:
+    f.write(content.replace(key, val))
+" "$key" "$tmpval" "$output"
+
+        rm -f "$tmpval"
+    done
+}
+
 # --- Check prerequisites ---
 [[ -f "$PROMPT_FILE" ]] || die "Prompt file not found: $PROMPT_FILE"
 command -v claude >/dev/null 2>&1 || die "claude CLI not found"
+command -v python3 >/dev/null 2>&1 || die "python3 not found (needed for template rendering)"
 
 # ============================================================
 # STEP 1a: PLANNER (Claude Code agent — harness-planner)
@@ -85,9 +133,8 @@ You are the PLANNER. Read the feature description above and produce a test plan.
 You do NOT write code. You write a plan that tells the Generator WHAT to test.
 
 ## Output Format
-Write your plan to: $PLAN_DIR/plan_draft.md
+Output your test plan directly using this exact structure:
 
-Use this exact structure:
 \`\`\`
 ---
 feature: $FEATURE
@@ -126,49 +173,41 @@ agent_count: 20
 $feedback_arg
 PLANNER_EOF
 
-    # Run planner agent
+    # Run planner agent — capture stdout as plan
+    log "Running Planner agent..."
     claude --agent harness-planner \
-           --input-file "$PLAN_DIR/planner_input.md" \
-           --output-dir "$PLAN_DIR" \
-           --max-tokens 4000 \
-           2>&1 | tee "$PLAN_DIR/planner_log.txt"
+           -p "$(cat "$PLAN_DIR/planner_input.md")" \
+           --output-format text \
+           > "$PLAN_DIR/plan_draft.md" \
+           2> >(tee "$PLAN_DIR/planner_log.txt" >&2)
 
-    # Verify output exists
-    [[ -f "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
+    # Verify output exists and is non-empty
+    [[ -s "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
     log "Plan draft created: $PLAN_DIR/plan_draft.md"
 }
 
 # ============================================================
-# STEP 1b: CHALLENGER (Codex dispatch — isolated context)
+# STEP 1b: CHALLENGER (separate Claude session — isolated context)
 # ============================================================
 run_challenger() {
     log "=== Step 1b: CHALLENGER ==="
 
-    # Build challenger prompt from template
-    local challenger_prompt
-    challenger_prompt=$(sed \
-        -e "s|{{FEATURE}}|$FEATURE|g" \
-        -e "s|{{PLAN_DRAFT}}|$(cat "$PLAN_DIR/plan_draft.md")|g" \
-        "$TEMPLATES_DIR/challenger_prompt.md")
+    # Build challenger prompt from template (multiline-safe)
+    render_template \
+        "$TEMPLATES_DIR/challenger_prompt.md" \
+        "$PLAN_DIR/challenger_input.md" \
+        "FEATURE=$FEATURE" \
+        "PLAN_DRAFT=@$PLAN_DIR/plan_draft.md"
 
-    # Write prompt to file for Codex
-    echo "$challenger_prompt" > "$PLAN_DIR/challenger_input.md"
+    # Run in isolated session — cannot see Planner's reasoning
+    log "Running Challenger (isolated session)..."
+    claude -p "$(cat "$PLAN_DIR/challenger_input.md")" \
+           --output-format text \
+           > "$PLAN_DIR/challenge_report.md" \
+           2> >(tee "$PLAN_DIR/challenger_log.txt" >&2)
 
-    # Dispatch to Codex (isolated context — cannot see Planner's reasoning)
-    cat > "$PLAN_DIR/challenger_dispatch.md" << DISPATCH_EOF
-Read the file at $PLAN_DIR/challenger_input.md and follow its instructions.
-Write your output to $PLAN_DIR/challenge_report.md.
-Do NOT modify any other files.
-DISPATCH_EOF
-
-    log "Dispatching Challenger to Codex..."
-    claude --input-file "$PLAN_DIR/challenger_dispatch.md" \
-           --tool codex \
-           --max-tokens 3000 \
-           2>&1 | tee "$PLAN_DIR/challenger_log.txt"
-
-    [[ -f "$PLAN_DIR/challenge_report.md" ]] || {
-        log "WARNING: Challenger did not produce challenge_report.md — continuing with unreviewed plan"
+    [[ -s "$PLAN_DIR/challenge_report.md" ]] || {
+        log "WARNING: Challenger produced empty output — continuing with unreviewed plan"
         echo "No challenges raised (Challenger did not respond)." > "$PLAN_DIR/challenge_report.md"
     }
     log "Challenge report: $PLAN_DIR/challenge_report.md"
@@ -192,25 +231,25 @@ $(cat "$PLAN_DIR/challenge_report.md")
 ## Your Task
 Revise the plan to address the Challenger's valid points.
 If a challenge is invalid, explain why and keep the original.
-Write the final plan to: $PLAN_DIR/plan_final.md
-Use the same format as the original plan.
+Output the final revised plan directly, using the same format as the original plan.
 REVISION_EOF
 
+    log "Running Planner revision..."
     claude --agent harness-planner \
-           --input-file "$PLAN_DIR/revision_input.md" \
-           --output-dir "$PLAN_DIR" \
-           --max-tokens 4000 \
-           2>&1 | tee "$PLAN_DIR/revision_log.txt"
+           -p "$(cat "$PLAN_DIR/revision_input.md")" \
+           --output-format text \
+           > "$PLAN_DIR/plan_final.md" \
+           2> >(tee "$PLAN_DIR/revision_log.txt" >&2)
 
-    [[ -f "$PLAN_DIR/plan_final.md" ]] || {
-        log "WARNING: Revision did not produce plan_final.md — using draft as final"
+    [[ -s "$PLAN_DIR/plan_final.md" ]] || {
+        log "WARNING: Revision produced empty output — using draft as final"
         cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
     }
     log "Final plan: $PLAN_DIR/plan_final.md"
 }
 
 # ============================================================
-# STEP 2: GENERATOR (Codex dispatch — isolated context)
+# STEP 2: GENERATOR (separate Claude session — isolated context)
 # ============================================================
 run_generator() {
     local attempt=$1
@@ -220,7 +259,7 @@ run_generator() {
     local plan_file="$PLAN_DIR/plan_final.md"
     [[ -f "$plan_file" ]] || plan_file="$PLAN_DIR/plan_draft.md"
 
-    # Build generator prompt from template
+    # Build feedback section for retries
     local feedback_section=""
     if [[ -f "$REVIEW_DIR/review_latest.md" ]] && [[ $attempt -gt 1 ]]; then
         feedback_section="
@@ -229,24 +268,21 @@ run_generator() {
 $(cat "$REVIEW_DIR/review_latest.md")"
     fi
 
-    sed \
-        -e "s|{{FEATURE}}|$FEATURE|g" \
-        -e "s|{{PLAN}}|$(cat "$plan_file")|g" \
-        -e "s|{{FEATURE_PROMPT}}|$(cat "$PROMPT_FILE")|g" \
-        -e "s|{{CODE_ATTEMPT}}|$attempt|g" \
-        -e "s|{{FEEDBACK}}|$feedback_section|g" \
+    # Render generator prompt from template (multiline-safe)
+    render_template \
         "$TEMPLATES_DIR/generator_prompt.md" \
-        > "$RESULT_DIR/generator_input_attempt${attempt}.md"
+        "$RESULT_DIR/generator_input_attempt${attempt}.md" \
+        "FEATURE=$FEATURE" \
+        "PLAN=@$plan_file" \
+        "FEATURE_PROMPT=@$PROMPT_FILE" \
+        "CODE_ATTEMPT=$attempt" \
+        "FEEDBACK=$feedback_section"
 
-    cat > "$RESULT_DIR/generator_dispatch.md" << DISPATCH_EOF
-Read the file at $RESULT_DIR/generator_input_attempt${attempt}.md and follow its instructions.
-Write your result summary to $RESULT_DIR/gen_result_attempt${attempt}.md.
-DISPATCH_EOF
-
-    log "Dispatching Generator to Codex (attempt $attempt)..."
-    claude --input-file "$RESULT_DIR/generator_dispatch.md" \
-           --tool codex \
-           --max-tokens 8000 \
+    # Generator needs tool access to write code — use --dangerously-skip-permissions
+    log "Running Generator (isolated session, attempt $attempt)..."
+    claude -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
+           --dangerously-skip-permissions \
+           --output-format text \
            2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
 
     # Run gate
@@ -296,7 +332,7 @@ RESULT_EOF
 }
 
 # ============================================================
-# STEP 3: EVALUATOR (Codex dispatch — isolated context)
+# STEP 3: EVALUATOR (separate Claude session — isolated context)
 # ============================================================
 run_evaluator() {
     log "=== Step 3: EVALUATOR ==="
@@ -308,27 +344,28 @@ run_evaluator() {
     local test_code
     test_code=$(grep -A 200 "fn harness_.*$FEATURE" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null || echo "No matching harness test found in sim-test")
 
-    sed \
-        -e "s|{{FEATURE}}|$FEATURE|g" \
-        -e "s|{{PLAN}}|$(cat "$plan_file")|g" \
-        -e "s|{{GEN_RESULT}}|$(cat "$RESULT_DIR/gen_result_latest.md")|g" \
-        -e "s|{{HARNESS_RESULT}}|$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt")|g" \
-        -e "s|{{TEST_CODE}}|$test_code|g" \
+    # Capture harness output tail
+    local harness_tail
+    harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
+
+    # Render evaluator prompt from template (multiline-safe)
+    render_template \
         "$TEMPLATES_DIR/evaluator_prompt.md" \
-        > "$REVIEW_DIR/evaluator_input.md"
+        "$REVIEW_DIR/evaluator_input.md" \
+        "FEATURE=$FEATURE" \
+        "PLAN=@$plan_file" \
+        "GEN_RESULT=@$RESULT_DIR/gen_result_latest.md" \
+        "HARNESS_RESULT=$harness_tail" \
+        "TEST_CODE=$test_code"
 
-    cat > "$REVIEW_DIR/evaluator_dispatch.md" << DISPATCH_EOF
-Read the file at $REVIEW_DIR/evaluator_input.md and follow its instructions.
-Write your review to $REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md.
-DISPATCH_EOF
+    # Run in isolated session — cannot see Generator's reasoning
+    log "Running Evaluator (isolated session)..."
+    claude -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
+           --output-format text \
+           > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
+           2> >(tee "$REVIEW_DIR/evaluator_log.txt" >&2)
 
-    log "Dispatching Evaluator to Codex..."
-    claude --input-file "$REVIEW_DIR/evaluator_dispatch.md" \
-           --tool codex \
-           --max-tokens 4000 \
-           2>&1 | tee "$REVIEW_DIR/evaluator_log.txt"
-
-    [[ -f "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]] || die "Evaluator did not produce review"
+    [[ -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]] || die "Evaluator did not produce review"
 
     # Symlink latest
     ln -sf "review_attempt${CODE_ATTEMPT}.md" "$REVIEW_DIR/review_latest.md"
@@ -409,7 +446,7 @@ main() {
                     # Mark as approved for pre-commit hook
                     echo "APPROVED" > "$REVIEW_DIR/verdict"
                     echo "$FEATURE" >> "$REVIEW_DIR/verdict"
-                    date -u +"%Y-%m-%dT%H:%M:%SZ" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     log "=========================================="
                     log "Pipeline COMPLETE — $FEATURE approved"
                     log "Plan attempts: $PLAN_ATTEMPT, Code attempts: $CODE_ATTEMPT"

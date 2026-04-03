@@ -50,8 +50,10 @@ bash tools/harness/harness_pipeline.sh territory_water_check prompts/territory-f
 
 Install:
 ```bash
-cp hooks/pre-commit-harness .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
+# Works for both regular repos and worktrees:
+HOOKS_DIR="$(git rev-parse --git-common-dir)/hooks"
+cp hooks/pre-commit-harness "$HOOKS_DIR/pre-commit"
+chmod +x "$HOOKS_DIR/pre-commit"
 ```
 
 Any commit touching `rust/crates/sim-*` will be blocked unless a recent APPROVED verdict exists.
