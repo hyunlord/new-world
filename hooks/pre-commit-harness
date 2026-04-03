@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Pre-commit hook: reject commits that modify sim-* crates without harness approval
+set -euo pipefail
+
+# Check if any sim-* Rust files are staged
+STAGED_SIM=$(git diff --cached --name-only | grep -E "^rust/crates/sim-" || true)
+
+if [[ -z "$STAGED_SIM" ]]; then
+    # No simulation files changed — allow commit
+    exit 0
+fi
+
+# Simulation files are staged — check for harness approval
+HARNESS_DIR=".harness"
+APPROVED=false
+
+# Look for any recent APPROVED verdict (within last 30 minutes)
+if [[ -d "$HARNESS_DIR/reviews" ]]; then
+    while IFS= read -r -d '' verdict_file; do
+        if [[ -f "$verdict_file" ]]; then
+            first_line=$(head -1 "$verdict_file")
+            if [[ "$first_line" == "APPROVED" ]]; then
+                # Check timestamp (third line)
+                timestamp=$(sed -n '3p' "$verdict_file" 2>/dev/null || echo "")
+                if [[ -n "$timestamp" ]]; then
+                    # macOS date -j / Linux date -d fallback
+                    file_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$timestamp" +%s 2>/dev/null \
+                        || date -d "$timestamp" +%s 2>/dev/null \
+                        || echo 0)
+                    now_epoch=$(date +%s)
+                    file_age=$(( now_epoch - file_epoch ))
+                    if [[ $file_age -lt 1800 ]]; then
+                        APPROVED=true
+                        break
+                    fi
+                fi
+            fi
+        fi
+    done < <(find "$HARNESS_DIR/reviews" -name "verdict" -print0 2>/dev/null)
+fi
+
+if [[ "$APPROVED" != "true" ]]; then
+    echo ""
+    echo "==========================================================="
+    echo "  BLOCKED: Simulation code changes require harness approval"
+    echo "==========================================================="
+    echo ""
+    echo "  Staged sim-* files:"
+    echo "$STAGED_SIM" | sed 's/^/    /'
+    echo ""
+    echo "  Run the harness pipeline first:"
+    echo "    bash tools/harness/harness_pipeline.sh <feature> <prompt.md>"
+    echo ""
+    echo "  Or skip for non-simulation changes:"
+    echo "    git commit --no-verify"
+    echo ""
+    echo "==========================================================="
+    exit 1
+fi

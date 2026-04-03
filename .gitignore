@@ -65,5 +65,10 @@ reports/
 # Migration commit logs
 migration_commit_logs/
 
+# Harness pipeline runtime artifacts
+.harness/plans/
+.harness/results/
+.harness/reviews/
+
 # env
 .env
