@@ -14,12 +14,14 @@ set -euo pipefail
 #   --quick:             Skip Challenger step (for Type A invariants only)
 #
 # Pipeline:
-#   Step 1a: PLANNER      (Claude Code agent)  → plan_draft.md
-#   Step 1b: CHALLENGER   (Claude Code -p)      → challenge_report.md  [skipped with --quick]
-#   Step 1c: PLANNER      (Claude Code agent)  → plan_final.md         [skipped with --quick]
-#   Step 2:  GENERATOR    (Claude Code -p)      → code + gen_result.md
-#   Step 3:  EVALUATOR    (Claude Code -p)      → review.md + verdict
-#   Step 4:  INTEGRATOR   (script logic)        → commit / retry / stop
+#   Step 1a:  PLANNER       (Claude Code agent)  → plan_draft.md
+#   Step 1b:  CHALLENGER    (Claude Code -p)      → challenge_report.md  [skipped with --quick]
+#   Step 1c:  PLANNER       (Claude Code agent)  → plan_final.md         [skipped with --quick]
+#   Step 2:   GENERATOR     (Claude Code -p)      → code + gen_result.md
+#   Step 2.5a: VISUAL VERIFY (Godot local)        → screenshots + data    [non-blocking]
+#   Step 2.5b: VLM ANALYSIS  (Claude -p)          → visual_analysis.txt   [non-blocking]
+#   Step 3:   EVALUATOR     (Claude Code -p)      → review.md + verdict
+#   Step 4:   INTEGRATOR    (script logic)        → commit / retry / stop
 #
 # Each step runs as a separate `claude -p` session, providing natural
 # context isolation — no session can see another's reasoning.
@@ -332,6 +334,188 @@ RESULT_EOF
 }
 
 # ============================================================
+# STEP 2.5a: VISUAL VERIFY (Godot — local execution)
+# ============================================================
+run_visual_verify() {
+    log "=== Step 2.5a: VISUAL VERIFY ==="
+
+    local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
+    mkdir -p "$evidence_dir"
+
+    # Resolve Godot binary
+    local godot_bin="${GODOT:-}"
+    if [[ -z "$godot_bin" ]]; then
+        for candidate in \
+            "/Applications/Godot.app/Contents/MacOS/Godot" \
+            "$HOME/Downloads/Godot.app/Contents/MacOS/Godot" \
+            "$HOME/Applications/Godot.app/Contents/MacOS/Godot"; do
+            if [[ -x "$candidate" ]]; then
+                godot_bin="$candidate"
+                break
+            fi
+        done
+    fi
+    if [[ -z "$godot_bin" ]] && command -v godot >/dev/null 2>&1; then
+        godot_bin="$(command -v godot)"
+    fi
+
+    if [[ -z "$godot_bin" ]] || [[ ! -x "$godot_bin" ]]; then
+        log "WARNING: Godot not found — skipping visual verification"
+        log "Set GODOT env var or install godot to enable visual verification"
+        echo "Godot not found — visual verification skipped" > "$evidence_dir/skip_reason.txt"
+        return 0
+    fi
+
+    # Determine ticks from plan
+    local ticks=4380
+    if [[ -f "$PLAN_DIR/plan_final.md" ]]; then
+        local plan_ticks
+        plan_ticks=$(grep -oP 'ticks:\s*\K\d+' "$PLAN_DIR/plan_final.md" 2>/dev/null | sort -rn | head -1 || echo "")
+        if [[ -n "$plan_ticks" ]]; then
+            ticks="$plan_ticks"
+        fi
+    fi
+
+    # Run Godot with visual verify script (windowed for screenshots)
+    log "Running Godot visual verification (ticks=$ticks)..."
+    timeout 300 "$godot_bin" \
+        --path "$PROJECT_ROOT" \
+        --script scripts/test/harness_visual_verify.gd \
+        -- --feature "$FEATURE" --ticks "$ticks" \
+        2>&1 | tee "$evidence_dir/godot_output.txt" || {
+            local exit_code=$?
+            if [[ $exit_code -eq 124 ]]; then
+                log "WARNING: Godot visual verification timed out (5 min)"
+                echo "TIMEOUT after 5 minutes" > "$evidence_dir/timeout.txt"
+            else
+                log "WARNING: Godot visual verification exited with code $exit_code"
+                echo "EXIT CODE: $exit_code" > "$evidence_dir/exit_error.txt"
+            fi
+            # Non-fatal — continue pipeline even if visual verify fails
+            return 0
+        }
+
+    log "Visual evidence captured to: $evidence_dir"
+    ls -la "$evidence_dir/" 2>/dev/null || true
+}
+
+# ============================================================
+# STEP 2.5b: VLM ANALYSIS (Claude vision — screenshot → text)
+# ============================================================
+run_vlm_analysis() {
+    log "=== Step 2.5b: VLM ANALYSIS ==="
+
+    local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
+
+    # Check if we have any screenshots
+    local screenshot_count
+    screenshot_count=$(find "$evidence_dir" -name "screenshot_*.png" 2>/dev/null | wc -l | tr -d ' ')
+
+    if [[ "$screenshot_count" -eq 0 ]]; then
+        log "No screenshots found — generating text-only analysis from data files"
+
+        # Build analysis input from text data files
+        local analysis_input=""
+        for datafile in entity_summary.txt performance.txt console_log.txt; do
+            if [[ -f "$evidence_dir/$datafile" ]]; then
+                analysis_input+="
+## $datafile
+$(cat "$evidence_dir/$datafile")
+"
+            fi
+        done
+
+        if [[ -z "$analysis_input" ]]; then
+            log "No visual evidence at all — skipping VLM analysis"
+            echo "No visual evidence available (Godot verification was skipped or failed)" \
+                > "$evidence_dir/visual_analysis.txt"
+            return 0
+        fi
+
+        # Text-only analysis (no images)
+        local vlm_prompt
+        vlm_prompt=$(cat <<VLM_EOF
+You are a visual verification analyst for a game simulation.
+Analyze this data and determine if there are signs of problems.
+
+$analysis_input
+
+Answer with this format:
+## Visual Analysis: $FEATURE
+
+### Data Assessment
+<your analysis of entity summary, performance, console log>
+
+### Visual Verdict
+VISUAL_OK | VISUAL_WARNING(<reason>) | VISUAL_FAIL(<reason>)
+VLM_EOF
+        )
+
+        claude -p "$vlm_prompt" \
+            --output-format text \
+            > "$evidence_dir/visual_analysis.txt" \
+            2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
+
+    else
+        log "Found $screenshot_count screenshots — running VLM analysis"
+
+        # Build image file args for claude CLI
+        local image_args=""
+        for img in "$evidence_dir"/screenshot_*.png; do
+            image_args+=" --file $img"
+        done
+
+        # Collect text data
+        local text_data=""
+        for datafile in entity_summary.txt performance.txt console_log.txt; do
+            if [[ -f "$evidence_dir/$datafile" ]]; then
+                text_data+="
+## $datafile
+$(cat "$evidence_dir/$datafile")
+"
+            fi
+        done
+
+        # Extract feature-specific visual checks from plan if present
+        local visual_checks=""
+        if [[ -f "$PLAN_DIR/plan_final.md" ]]; then
+            visual_checks=$(grep -A 20 "## Visual Checks\|## Visual Verification\|## In-Game" \
+                "$PLAN_DIR/plan_final.md" 2>/dev/null || echo "No feature-specific visual checks in plan")
+        fi
+
+        # Render visual checklist
+        render_template \
+            "$TEMPLATES_DIR/visual_checklist.md" \
+            "$evidence_dir/visual_checklist_rendered.md" \
+            "FEATURE=$FEATURE" \
+            "VISUAL_CHECKS=$visual_checks"
+
+        # Run Claude with images + text
+        local vlm_input
+        vlm_input=$(cat "$evidence_dir/visual_checklist_rendered.md")
+        vlm_input+="
+
+## Data Files
+$text_data
+
+Analyze the screenshots and data above. Answer every question in the checklist."
+
+        claude -p "$vlm_input" \
+            $image_args \
+            --output-format text \
+            > "$evidence_dir/visual_analysis.txt" \
+            2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
+    fi
+
+    if [[ ! -s "$evidence_dir/visual_analysis.txt" ]]; then
+        log "WARNING: VLM analysis produced empty output"
+        echo "VLM analysis failed to produce output" > "$evidence_dir/visual_analysis.txt"
+    fi
+
+    log "Visual analysis: $evidence_dir/visual_analysis.txt"
+}
+
+# ============================================================
 # STEP 3: EVALUATOR (separate Claude session — isolated context)
 # ============================================================
 run_evaluator() {
@@ -348,6 +532,14 @@ run_evaluator() {
     local harness_tail
     harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
 
+    # Collect visual analysis if available
+    local visual_analysis=""
+    if [[ -f "$HARNESS_DIR/evidence/$FEATURE/visual_analysis.txt" ]]; then
+        visual_analysis=$(cat "$HARNESS_DIR/evidence/$FEATURE/visual_analysis.txt")
+    else
+        visual_analysis="Visual verification was not performed (Godot not available or failed)."
+    fi
+
     # Render evaluator prompt from template (multiline-safe)
     render_template \
         "$TEMPLATES_DIR/evaluator_prompt.md" \
@@ -356,7 +548,8 @@ run_evaluator() {
         "PLAN=@$plan_file" \
         "GEN_RESULT=@$RESULT_DIR/gen_result_latest.md" \
         "HARNESS_RESULT=$harness_tail" \
-        "TEST_CODE=$test_code"
+        "TEST_CODE=$test_code" \
+        "VISUAL_ANALYSIS=$visual_analysis"
 
     # Run in isolated session — cannot see Generator's reasoning
     log "Running Evaluator (isolated session)..."
@@ -436,6 +629,8 @@ main() {
             CODE_ATTEMPT=$((CODE_ATTEMPT + 1))
 
             run_generator $CODE_ATTEMPT
+            run_visual_verify
+            run_vlm_analysis
             run_evaluator
 
             parse_verdict

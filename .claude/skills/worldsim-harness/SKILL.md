@@ -54,7 +54,10 @@ Feature Prompt
  2  GENERATOR (Codex, isolated) ---> code + tests + gen_result.md
       |
       v
- 3  EVALUATOR (Codex, isolated) ---> review.md + verdict
+ 2.5 VISUAL VERIFY (Godot + Claude VLM) --> screenshots + visual_analysis.txt
+      |
+      v
+ 3  EVALUATOR (Codex, isolated) ---> review.md + verdict (now includes visual evidence)
       |
       +--- APPROVE --> commit
       +--- RE-CODE --> Step 2 (max 3)

@@ -69,6 +69,7 @@ migration_commit_logs/
 .harness/plans/
 .harness/results/
 .harness/reviews/
+.harness/evidence/
 
 # env
 .env
