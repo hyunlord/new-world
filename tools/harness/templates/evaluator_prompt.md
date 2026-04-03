@@ -20,6 +20,14 @@ You are the EVALUATOR. You are an adversarial reviewer who checks whether the im
 {{TEST_CODE}}
 ```
 
+## Visual Evidence
+
+{{VISUAL_ANALYSIS}}
+
+Note: If visual analysis shows "skipped" or "no evidence", this is non-blocking
+for the evaluation — focus on code quality and test validity. But if visual
+evidence IS present and shows problems, these are serious concerns.
+
 ## Your Task
 
 Review the implementation against these criteria:
@@ -50,6 +58,14 @@ Review the implementation against these criteria:
 - Did clippy pass?
 - Did all existing harness tests still pass? (no regressions)
 
+### 5. Visual Verification (if available)
+- Does the visual analysis report VISUAL_OK?
+- If VISUAL_WARNING: is it related to this feature or pre-existing?
+- If VISUAL_FAIL: this should heavily influence your verdict
+- Are agents moving? (position spread > 5 in entity_summary)
+- FPS acceptable? (avg tick < 50ms for 20 TPS target)
+- Console errors? (any errors in console_log = investigate)
+
 ## Output Format
 
 Write your review with this exact structure:
@@ -72,6 +88,10 @@ Write your review with this exact structure:
 - cargo test: PASS|FAIL
 - clippy: PASS|FAIL
 - harness regressions: NONE|<list>
+
+### Visual Status
+- visual_verdict: VISUAL_OK | VISUAL_WARNING | VISUAL_FAIL | SKIPPED
+- <detail if warning/fail>
 
 ### Overall Assessment
 <1-2 sentence summary>
