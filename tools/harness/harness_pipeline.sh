@@ -459,10 +459,11 @@ VLM_EOF
     else
         log "Found $screenshot_count screenshots — running VLM analysis"
 
-        # Build image file args for claude CLI
-        local image_args=""
+        # Build image path list for the prompt (Claude reads via Read tool)
+        local image_paths=""
         for img in "$evidence_dir"/screenshot_*.png; do
-            image_args+=" --file $img"
+            image_paths+="- $img
+"
         done
 
         # Collect text data
@@ -490,18 +491,22 @@ $(cat "$evidence_dir/$datafile")
             "FEATURE=$FEATURE" \
             "VISUAL_CHECKS=$visual_checks"
 
-        # Run Claude with images + text
+        # Run Claude with image paths in prompt + tool access to read them
         local vlm_input
         vlm_input=$(cat "$evidence_dir/visual_checklist_rendered.md")
         vlm_input+="
 
+## Screenshot Files
+Use the Read tool to view each screenshot image below:
+$image_paths
 ## Data Files
 $text_data
 
-Analyze the screenshots and data above. Answer every question in the checklist."
+Read each screenshot file listed above, then analyze the screenshots and data.
+Answer every question in the checklist."
 
         claude -p "$vlm_input" \
-            $image_args \
+            --dangerously-skip-permissions \
             --output-format text \
             > "$evidence_dir/visual_analysis.txt" \
             2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
