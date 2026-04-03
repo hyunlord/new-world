@@ -20,13 +20,10 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
         if [[ -f "$verdict_file" ]]; then
             first_line=$(head -1 "$verdict_file")
             if [[ "$first_line" == "APPROVED" ]]; then
-                # Check timestamp (third line)
-                timestamp=$(sed -n '3p' "$verdict_file" 2>/dev/null || echo "")
-                if [[ -n "$timestamp" ]]; then
-                    # macOS date -j / Linux date -d fallback
-                    file_epoch=$(date -j -f "%Y-%m-%dT%H:%M:%SZ" "$timestamp" +%s 2>/dev/null \
-                        || date -d "$timestamp" +%s 2>/dev/null \
-                        || echo 0)
+                # Third line is unix epoch timestamp
+                file_epoch=$(sed -n '3p' "$verdict_file" 2>/dev/null || echo "0")
+                # Validate it looks like an epoch (all digits)
+                if [[ "$file_epoch" =~ ^[0-9]+$ ]]; then
                     now_epoch=$(date +%s)
                     file_age=$(( now_epoch - file_epoch ))
                     if [[ $file_age -lt 1800 ]]; then
