@@ -431,6 +431,21 @@ Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `e
 
 ---
 
+### Harness Pipeline (Mandatory for Simulation Code)
+
+Any change to `rust/crates/sim-core/`, `sim-systems/`, `sim-engine/`, or `sim-bridge/`
+MUST go through the harness pipeline:
+
+```bash
+bash tools/harness/harness_pipeline.sh <feature> <prompt.md> [--quick]
+```
+
+The pre-commit hook blocks sim-* commits without an APPROVED verdict.
+See `tools/harness/README.md` for details.
+See `.claude/skills/worldsim-harness/SKILL.md` for when to use --quick vs full.
+
+---
+
 ### Codex MCP Dispatch
 
 Claude Code can dispatch tasks to the Codex MCP server for parallel execution.
