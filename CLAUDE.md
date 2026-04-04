@@ -431,18 +431,31 @@ Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `e
 
 ---
 
-### Harness Pipeline (Mandatory for Simulation Code)
+### Harness Pipeline (Mandatory for All Code Changes)
 
-Any change to `rust/crates/sim-core/`, `sim-systems/`, `sim-engine/`, or `sim-bridge/`
-MUST go through the harness pipeline:
+**ALL changes to code, shaders, assets, data, or scenes** MUST go through the harness pipeline:
 
 ```bash
 bash tools/harness/harness_pipeline.sh <feature> <prompt.md> [--quick]
 ```
 
-The pre-commit hook blocks sim-* commits without an APPROVED verdict.
+The pre-commit hook blocks commits containing code/asset files without an APPROVED verdict.
+
+**Exempt from pipeline** (commit normally):
+- Documentation only (.md, .txt)
+- Localization JSON (localization/*.json)
+- Harness infrastructure itself (tools/harness/*, .claude/skills/worldsim-harness/*)
+
+**Pipeline modes:**
+- Full (default): Planner → Challenger → Planner revision → Generator → Visual Verify → Evaluator
+- `--quick`: Skip Challenger. Use for Type A invariants, bug fixes < 30 lines, config tuning
+
 See `tools/harness/README.md` for details.
-See `.claude/skills/worldsim-harness/SKILL.md` for when to use --quick vs full.
+See `.claude/skills/worldsim-harness/SKILL.md` for mode selection guide.
+
+**NEVER use `git commit --no-verify` to bypass the pipeline for code changes.**
+The only acceptable use of `--no-verify` is for documentation-only commits or emergency hotfixes
+(which must get a regression harness test added in the next commit).
 
 ---
 

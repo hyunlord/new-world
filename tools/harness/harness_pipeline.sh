@@ -2,11 +2,15 @@
 set -euo pipefail
 
 # ============================================================
-# WorldSim Harness Pipeline v3 — Enforced Multi-Agent
+# WorldSim Harness Pipeline v3.1 — Enforced Multi-Agent (All Code Changes)
 # ============================================================
 #
 # Usage:
 #   bash tools/harness/harness_pipeline.sh <feature_name> <feature_prompt_file> [--quick]
+#
+# Scope: ALL code, shader, asset, data, and scene changes go through this pipeline.
+# Exempt: docs (.md/.txt), localization JSON, harness infra itself.
+# The pre-commit hook enforces this — code commits without APPROVED verdict are blocked.
 #
 # Arguments:
 #   feature_name:        Short identifier (e.g., "temperament_cognition")

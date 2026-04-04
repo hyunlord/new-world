@@ -15,26 +15,54 @@ description: |
 
 ## How to Use
 
-### For simulation code changes (sim-core, sim-systems, sim-engine):
+### For ANY code, shader, asset, data, or scene change:
 
 ```bash
 bash tools/harness/harness_pipeline.sh <feature_name> <prompt_file.md> [--quick]
 ```
 
-- `--quick`: Skip Challenger step. Use ONLY for Type A invariant tests.
-- Without `--quick`: Full 5-step pipeline with adversarial review.
+This includes:
+- Rust simulation code (sim-core, sim-systems, sim-engine, sim-bridge)
+- GDScript (scripts/ui/, scripts/core/, scripts/debug/, etc.)
+- Shaders (.gdshader)
+- Assets (sprites, textures, audio)
+- Data files (.ron, .json in data/)
+- Scene files (.tscn)
+- Python scripts (tools/, scripts/)
+- Any file that affects game behavior or appearance
 
-### For non-simulation changes (UI, config, docs):
+### Exempt (commit normally, no pipeline):
 
-No pipeline required. Commit normally.
+- Documentation (.md, .txt) — `git commit -m "docs: ..."`
+- Localization JSON (localization/*.json) — `git commit -m "i18n: ..."`
+- Harness infrastructure (tools/harness/*, .claude/skills/worldsim-harness/*) — `git commit --no-verify -m "harness: ..."`
 
-### For hotfixes:
+### Pipeline mode selection:
+
+| Change Type | Mode | Rationale |
+|-------------|------|-----------|
+| New system / feature (>100 lines) | full | Needs plan debate + adversarial review |
+| Bug fix (<30 lines) | --quick | Add regression test, minimal planning |
+| UI panel / renderer change | full | Visual verify catches rendering bugs |
+| Shader change | full | Visual verify is essential |
+| Asset replacement (sprites, audio) | --quick | Visual verify confirms it looks right |
+| Data file change (.ron, .json) | --quick | Numeric tests verify data loads correctly |
+| Config tuning (threshold values) | --quick | Just changing numbers |
+| New Rust system | full | Complex logic needs plan review |
+| SimBridge addition | full | FFI boundary — needs careful review |
+| Refactoring (no behavior change) | --quick | Existing tests catch regressions |
+
+### For emergency hotfixes:
 
 ```bash
 git commit --no-verify -m "hotfix: <description>"
 ```
 
-Use sparingly. Every hotfix should get a regression harness test added later.
+Rules:
+- Only when the game is broken and needs immediate fix
+- MUST add a regression harness test in the very next commit
+- MUST run the pipeline for that regression test
+- Document the hotfix in PROGRESS.md
 
 ## Pipeline Overview
 
