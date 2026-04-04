@@ -5,12 +5,34 @@ Enforced multi-agent test-driven development for WorldSim simulation code.
 ## Quick Start
 
 ```bash
-# Full pipeline (with Challenger review)
+# Full pipeline — for new features, UI changes, shader modifications
 bash tools/harness/harness_pipeline.sh temperament_cognition prompts/a8-temperament.md
 
-# Quick pipeline (skip Challenger — for Type A invariants only)
-bash tools/harness/harness_pipeline.sh territory_water_check prompts/territory-fix.md --quick
+# Quick pipeline — for bug fixes, config tuning, asset swaps
+bash tools/harness/harness_pipeline.sh sprite_upgrade prompts/sprite-fix.md --quick
+
+# Documentation only — no pipeline needed
+git commit -m "docs: update session summary"
+
+# Localization only — no pipeline needed
+git commit -m "i18n: add Korean translations for new keys"
 ```
+
+## What Requires the Pipeline
+
+**Everything that changes game behavior or appearance:**
+- `.rs` (Rust) — simulation, bridge, data loading
+- `.gd` (GDScript) — UI, rendering, input, debug
+- `.gdshader` — visual effects
+- `.png`, `.svg`, `.wav` — assets
+- `.ron`, `.json` (in data/) — game data definitions
+- `.tscn`, `.tres` — scenes and resources
+- `.py` (in tools/) — build/generation scripts
+
+**Exempt:**
+- `.md`, `.txt` — documentation
+- `localization/*.json` — translations
+- `tools/harness/*` — harness infrastructure itself
 
 ## Pipeline Steps
 

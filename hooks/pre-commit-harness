@@ -1,28 +1,56 @@
 #!/usr/bin/env bash
-# Pre-commit hook: reject commits that modify sim-* crates without harness approval
+# Pre-commit hook: reject commits without harness approval
+# Exempt: docs-only commits (only .md, .txt, .json locale files)
 set -euo pipefail
 
-# Check if any sim-* Rust files are staged
-STAGED_SIM=$(git diff --cached --name-only | grep -E "^rust/crates/sim-" || true)
+# Get list of staged files
+STAGED=$(git diff --cached --name-only)
 
-if [[ -z "$STAGED_SIM" ]]; then
-    # No simulation files changed — allow commit
+if [[ -z "$STAGED" ]]; then
     exit 0
 fi
 
-# Simulation files are staged — check for harness approval
+# Classify staged files
+CODE_FILES=""
+DOCS_ONLY=true
+
+while IFS= read -r file; do
+    case "$file" in
+        # Documentation — always exempt
+        *.md|*.txt|PROGRESS.md|CLAUDE.md|AGENTS.md)
+            ;;
+        # Localization JSON — exempt (data, not logic)
+        localization/*.json)
+            ;;
+        # Harness infrastructure itself — exempt (bootstrapping)
+        tools/harness/*|.claude/skills/worldsim-harness/*|.claude/agents/harness-*|hooks/pre-commit-harness)
+            ;;
+        # .gitignore, .editorconfig, etc — exempt
+        .gitignore|.editorconfig|.gitattributes)
+            ;;
+        # Everything else is code/assets that needs approval
+        *)
+            CODE_FILES+="$file"$'\n'
+            DOCS_ONLY=false
+            ;;
+    esac
+done <<< "$STAGED"
+
+if [[ "$DOCS_ONLY" == "true" ]]; then
+    # Only docs/config changed — allow without approval
+    exit 0
+fi
+
+# Code/asset files are staged — check for harness approval
 HARNESS_DIR=".harness"
 APPROVED=false
 
-# Look for any recent APPROVED verdict (within last 30 minutes)
 if [[ -d "$HARNESS_DIR/reviews" ]]; then
     while IFS= read -r -d '' verdict_file; do
         if [[ -f "$verdict_file" ]]; then
             first_line=$(head -1 "$verdict_file")
             if [[ "$first_line" == "APPROVED" ]]; then
-                # Third line is unix epoch timestamp
                 file_epoch=$(sed -n '3p' "$verdict_file" 2>/dev/null || echo "0")
-                # Validate it looks like an epoch (all digits)
                 if [[ "$file_epoch" =~ ^[0-9]+$ ]]; then
                     now_epoch=$(date +%s)
                     file_age=$(( now_epoch - file_epoch ))
@@ -39,17 +67,20 @@ fi
 if [[ "$APPROVED" != "true" ]]; then
     echo ""
     echo "==========================================================="
-    echo "  BLOCKED: Simulation code changes require harness approval"
+    echo "  BLOCKED: Code/asset changes require harness approval"
     echo "==========================================================="
     echo ""
-    echo "  Staged sim-* files:"
-    echo "$STAGED_SIM" | sed 's/^/    /'
+    echo "  Staged files requiring approval:"
+    echo "$CODE_FILES" | sed '/^$/d' | sed 's/^/    /'
     echo ""
     echo "  Run the harness pipeline first:"
     echo "    bash tools/harness/harness_pipeline.sh <feature> <prompt.md>"
     echo ""
-    echo "  Or skip for non-simulation changes:"
-    echo "    git commit --no-verify"
+    echo "  Or for documentation/config-only changes:"
+    echo "    git commit --no-verify -m \"docs: ...\""
+    echo ""
+    echo "  Exempt file types: .md, .txt, localization/*.json,"
+    echo "  tools/harness/*, .claude/skills/*, .gitignore"
     echo ""
     echo "==========================================================="
     exit 1
