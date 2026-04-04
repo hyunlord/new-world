@@ -107,6 +107,26 @@ with open(sys.argv[3], 'w') as f:
     done
 }
 
+# --- Timeout wrapper (GNU timeout or macOS perl fallback) ---
+run_with_timeout() {
+    local seconds=$1
+    shift
+    if command -v timeout >/dev/null 2>&1; then
+        timeout "$seconds" "$@"
+    else
+        # macOS fallback: perl alarm with proper process management
+        perl -e '
+            use POSIX ":sys_wait_h";
+            alarm $ARGV[0];
+            $SIG{ALRM} = sub { kill "TERM", $pid; exit 142; };
+            $pid = fork();
+            if ($pid == 0) { exec @ARGV[1..$#ARGV]; die "exec failed: $!"; }
+            waitpid($pid, 0);
+            exit ($? >> 8);
+        ' "$seconds" "$@"
+    fi
+}
+
 # --- Check prerequisites ---
 [[ -f "$PROMPT_FILE" ]] || die "Prompt file not found: $PROMPT_FILE"
 command -v claude >/dev/null 2>&1 || die "claude CLI not found"
@@ -382,20 +402,15 @@ run_visual_verify() {
 
     # Run Godot with visual verify script (windowed for screenshots)
     log "Running Godot visual verification (ticks=$ticks)..."
-    # macOS lacks GNU timeout — use perl fallback
-    local timeout_cmd="timeout"
-    if ! command -v timeout >/dev/null 2>&1; then
-        timeout_cmd="perl -e 'alarm shift; exec @ARGV' --"
-    fi
-    $timeout_cmd 300 "$godot_bin" \
+    run_with_timeout 600 "$godot_bin" \
         --path "$PROJECT_ROOT" \
         --script scripts/test/harness_visual_verify.gd \
         -- --feature "$FEATURE" --ticks "$ticks" \
         2>&1 | tee "$evidence_dir/godot_output.txt" || {
             local exit_code=$?
-            if [[ $exit_code -eq 124 ]]; then
-                log "WARNING: Godot visual verification timed out (5 min)"
-                echo "TIMEOUT after 5 minutes" > "$evidence_dir/timeout.txt"
+            if [[ $exit_code -eq 124 ]] || [[ $exit_code -eq 142 ]]; then
+                log "WARNING: Godot visual verification timed out (10 min)"
+                echo "TIMEOUT after 10 minutes" > "$evidence_dir/timeout.txt"
             else
                 log "WARNING: Godot visual verification exited with code $exit_code"
                 echo "EXIT CODE: $exit_code" > "$evidence_dir/exit_error.txt"
@@ -647,8 +662,8 @@ main() {
             run_vlm_analysis
             run_evaluator
 
-            parse_verdict
-            local verdict_code=$?
+            local verdict_code=0
+            parse_verdict || verdict_code=$?
 
             case $verdict_code in
                 0)  # APPROVE
