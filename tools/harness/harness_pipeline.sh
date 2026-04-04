@@ -382,7 +382,12 @@ run_visual_verify() {
 
     # Run Godot with visual verify script (windowed for screenshots)
     log "Running Godot visual verification (ticks=$ticks)..."
-    timeout 300 "$godot_bin" \
+    # macOS lacks GNU timeout — use perl fallback
+    local timeout_cmd="timeout"
+    if ! command -v timeout >/dev/null 2>&1; then
+        timeout_cmd="perl -e 'alarm shift; exec @ARGV' --"
+    fi
+    $timeout_cmd 300 "$godot_bin" \
         --path "$PROJECT_ROOT" \
         --script scripts/test/harness_visual_verify.gd \
         -- --feature "$FEATURE" --ticks "$ticks" \
@@ -581,8 +586,8 @@ parse_verdict() {
     local review_file="$REVIEW_DIR/review_latest.md"
     local verdict
 
-    # Extract verdict line
-    verdict=$(grep -i "^verdict:" "$review_file" | head -1 | awk '{print toupper($2)}' || echo "UNKNOWN")
+    # Extract verdict line (strip markdown bold/italic markers before matching)
+    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' || echo "UNKNOWN")
 
     case "$verdict" in
         APPROVE)
