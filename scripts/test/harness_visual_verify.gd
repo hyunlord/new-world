@@ -157,6 +157,8 @@ func _process(delta: float) -> bool:
 			if _wait_frames <= 0:
 				_capture_screenshot(_pending_screenshot_label)
 				_pending_screenshot_label = ""
+				# Write partial data after each screenshot so timeout doesn't lose all data
+				_write_partial_data()
 				if _ticks_done >= _total_ticks:
 					_phase = PHASE_FINAL
 				else:
@@ -202,6 +204,14 @@ func _capture_screenshot(label: String) -> void:
 		print("[visual-verify] Screenshot: %s" % path)
 	else:
 		print("[visual-verify] Screenshot save error: %s" % error_string(err))
+
+
+## Write data files with current progress. Called after each screenshot so
+## data survives even if the process is killed by timeout.
+func _write_partial_data() -> void:
+	_write_entity_summary()
+	_write_performance_data()
+	# Console log only at final (reads log file which grows during execution)
 
 
 ## Write entity summary: agent counts, job distribution, position spread.
