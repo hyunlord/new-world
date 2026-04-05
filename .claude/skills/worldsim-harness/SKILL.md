@@ -70,22 +70,30 @@ Rules:
 Feature Prompt
       |
       v
- 1a PLANNER (Claude Code)---------> plan_draft.md
+ 1a DRAFTER (Claude agent)----------> plan_draft.md
+      |
+      v  ┌─────────────────────────────────────────┐
+      |  │ Debate Loop (max 2 rounds)              │
+ 1b CHALLENGER (Claude agent)-------> challenge_report.md
+      |                                             │
+      v                                             │
+ 1c DRAFTER REVISION (Claude agent)-> plan_revised.md
+      |                                             │
+      v                                             │
+ 1d QUALITY CHECKER (Claude agent)--> quality_review.md
+      |                                             │
+      +--- PLAN_APPROVED --> plan_final.md          │
+      +--- PLAN_REVISE  --> back to 1b ─────────────┘
+      +--- PLAN_FAIL    --> stop + report
       |
       v
- 1b CHALLENGER (Codex, isolated)---> challenge_report.md
-      |
-      v
- 1c PLANNER (Claude Code)---------> plan_final.md
-      |
-      v
- 2  GENERATOR (Codex, isolated) ---> code + tests + gen_result.md
+ 2  GENERATOR (Claude -p, isolated) -> code + tests + gen_result.md
       |
       v
  2.5 VISUAL VERIFY (Godot + Claude VLM) --> screenshots + visual_analysis.txt
       |
       v
- 3  EVALUATOR (Codex, isolated) ---> review.md + verdict (now includes visual evidence)
+ 3  EVALUATOR (Claude -p, isolated) -> review.md + verdict
       |
       +--- APPROVE --> commit
       +--- RE-CODE --> Step 2 (max 3)
@@ -97,10 +105,11 @@ Feature Prompt
 
 | Agent | Context | Cannot See |
 |-------|---------|------------|
-| Planner | Full feature context + evaluation criteria | — |
-| Challenger | plan_draft.md ONLY | Planner's reasoning, feature prompt details |
-| Generator | plan_final.md + feature prompt | Planner's reasoning, Challenger's report |
-| Evaluator | plan + result + test code | Generator's implementation reasoning |
+| Drafter | Full feature context + evaluation criteria | — |
+| Challenger | plan (draft or revised) ONLY | Drafter's reasoning, feature prompt |
+| Quality Checker | draft + challenge + revision | Feature prompt, Drafter's reasoning |
+| Generator | plan_final.md + feature prompt | Drafter's reasoning, Challenger's report |
+| Evaluator | plan + result + test code + visual | Generator's implementation reasoning |
 
 This isolation prevents confirmation bias — each agent judges independently.
 

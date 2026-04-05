@@ -36,19 +36,26 @@ git commit -m "i18n: add Korean translations for new keys"
 
 ## Pipeline Steps
 
-| Step | Agent | Runs In | Sees | Produces |
-|------|-------|---------|------|----------|
-| 1a | Planner | Claude Code | Feature prompt | plan_draft.md |
-| 1b | Challenger | Codex (isolated) | plan_draft.md ONLY | challenge_report.md |
-| 1c | Planner | Claude Code | plan_draft + challenge | plan_final.md |
-| 2 | Generator | Codex (isolated) | plan_final + feature prompt | code + gen_result.md |
+| Step | Agent | Agent File | Sees | Produces |
+|------|-------|-----------|------|----------|
+| 1a | Drafter | `harness-drafter.md` | Feature prompt | plan_draft.md |
+| 1b | Challenger | `harness-challenger.md` | plan ONLY | challenge_report.md |
+| 1c | Drafter | `harness-drafter.md` | draft + challenge + QC feedback | plan_revised.md |
+| 1d | Quality Checker | `harness-quality-checker.md` | draft + challenge + revision | quality_review.md |
+| 2 | Generator | Claude -p (isolated) | plan_final + feature prompt | code + gen_result.md |
 | 2.5a | Visual Verify | Godot (local) | Running game | screenshots + logs |
 | 2.5b | VLM Analysis | Claude -p | screenshots + data | visual_analysis.txt |
-| 3 | Evaluator | Codex (isolated) | plan + result + test code + visual | review.md + verdict |
-| 4 | Integrator | Claude Code | review.md | commit or retry |
+| 3 | Evaluator | Claude -p (isolated) | plan + result + test code + visual | review.md + verdict |
+| 4 | Integrator | Script logic | review.md | commit or retry |
 
 ## Retry Logic
 
+### Planning Phase (Debate Loop)
+- **PLAN_APPROVED**: Quality Checker approves → plan_final.md
+- **PLAN_REVISE**: Back to Step 1b with QC feedback (max 2 rounds)
+- **PLAN_FAIL**: Stop, report to user
+
+### Implementation Phase
 - **RE-CODE**: Generator retry with Evaluator feedback (max 3)
 - **RE-PLAN**: Back to Step 1a with Evaluator feedback (max 2)
 - **FAIL**: Stop, report to user
@@ -61,6 +68,8 @@ git commit -m "i18n: add Korean translations for new keys"
 ├── plans/<feature>/
 │   ├── plan_draft.md
 │   ├── challenge_report.md
+│   ├── plan_revised.md
+│   ├── quality_review_round1.md
 │   └── plan_final.md
 ├── results/<feature>/
 │   ├── gen_result_attempt1.md
