@@ -133,7 +133,7 @@ command -v claude >/dev/null 2>&1 || die "claude CLI not found"
 command -v python3 >/dev/null 2>&1 || die "python3 not found (needed for template rendering)"
 
 # ============================================================
-# STEP 1a: PLANNER (Claude Code agent — harness-planner)
+# STEP 1a: DRAFTER (Claude Code agent — harness-drafter)
 # ============================================================
 run_planner() {
     local attempt=$1
@@ -201,7 +201,7 @@ PLANNER_EOF
 
     # Run planner agent — capture stdout as plan
     log "Running Planner agent..."
-    claude --agent harness-planner \
+    claude --agent harness-drafter \
            -p "$(cat "$PLAN_DIR/planner_input.md")" \
            --output-format text \
            > "$PLAN_DIR/plan_draft.md" \
@@ -213,37 +213,53 @@ PLANNER_EOF
 }
 
 # ============================================================
-# STEP 1b: CHALLENGER (separate Claude session — isolated context)
+# STEP 1b: CHALLENGER (agent session — isolated context)
 # ============================================================
 run_challenger() {
-    log "=== Step 1b: CHALLENGER ==="
+    local round=${1:-1}
+    log "=== Step 1b: CHALLENGER (round $round) ==="
 
-    # Build challenger prompt from template (multiline-safe)
+    # On round 2+, challenge the revised plan instead of the draft
+    local plan_to_challenge="$PLAN_DIR/plan_draft.md"
+    if [[ $round -gt 1 ]] && [[ -f "$PLAN_DIR/plan_revised.md" ]]; then
+        plan_to_challenge="$PLAN_DIR/plan_revised.md"
+    fi
+
     render_template \
         "$TEMPLATES_DIR/challenger_prompt.md" \
-        "$PLAN_DIR/challenger_input.md" \
+        "$PLAN_DIR/challenger_input_round${round}.md" \
         "FEATURE=$FEATURE" \
-        "PLAN_DRAFT=@$PLAN_DIR/plan_draft.md"
+        "PLAN_DRAFT=@$plan_to_challenge"
 
-    # Run in isolated session — cannot see Planner's reasoning
-    log "Running Challenger (isolated session)..."
-    claude -p "$(cat "$PLAN_DIR/challenger_input.md")" \
+    log "Running Challenger (isolated session, round $round)..."
+    claude --agent harness-challenger \
+           -p "$(cat "$PLAN_DIR/challenger_input_round${round}.md")" \
            --output-format text \
            > "$PLAN_DIR/challenge_report.md" \
-           2> >(tee "$PLAN_DIR/challenger_log.txt" >&2)
+           2> >(tee "$PLAN_DIR/challenger_log_round${round}.txt" >&2)
 
     [[ -s "$PLAN_DIR/challenge_report.md" ]] || {
-        log "WARNING: Challenger produced empty output — continuing with unreviewed plan"
-        echo "No challenges raised (Challenger did not respond)." > "$PLAN_DIR/challenge_report.md"
+        log "WARNING: Challenger produced empty output"
+        echo "No challenges raised." > "$PLAN_DIR/challenge_report.md"
     }
     log "Challenge report: $PLAN_DIR/challenge_report.md"
 }
 
 # ============================================================
-# STEP 1c: PLANNER REVISION (Claude Code agent)
+# STEP 1c: DRAFTER REVISION (Claude Code agent)
 # ============================================================
 run_planner_revision() {
-    log "=== Step 1c: PLANNER REVISION ==="
+    log "=== Step 1c: DRAFTER REVISION ==="
+
+    local qc_feedback=""
+    if [[ -f "$PLAN_DIR/quality_review_latest.md" ]]; then
+        qc_feedback="
+
+## Quality Checker Feedback (address these specific issues):
+$(cat "$PLAN_DIR/quality_review_latest.md")
+
+IMPORTANT: The Quality Checker found issues with your previous revision. Address EVERY item in their 'Fix These' list."
+    fi
 
     cat > "$PLAN_DIR/revision_input.md" << REVISION_EOF
 # Revise Test Plan
@@ -253,6 +269,7 @@ $(cat "$PLAN_DIR/plan_draft.md")
 
 ## Challenger's Feedback
 $(cat "$PLAN_DIR/challenge_report.md")
+$qc_feedback
 
 ## Your Task
 Revise the plan to address the Challenger's valid points.
@@ -260,18 +277,70 @@ If a challenge is invalid, explain why and keep the original.
 Output the final revised plan directly, using the same format as the original plan.
 REVISION_EOF
 
-    log "Running Planner revision..."
-    claude --agent harness-planner \
+    log "Running Drafter revision..."
+    claude --agent harness-drafter \
            -p "$(cat "$PLAN_DIR/revision_input.md")" \
            --output-format text \
-           > "$PLAN_DIR/plan_final.md" \
+           > "$PLAN_DIR/plan_revised.md" \
            2> >(tee "$PLAN_DIR/revision_log.txt" >&2)
 
-    [[ -s "$PLAN_DIR/plan_final.md" ]] || {
-        log "WARNING: Revision produced empty output — using draft as final"
-        cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
+    [[ -s "$PLAN_DIR/plan_revised.md" ]] || {
+        log "WARNING: Revision produced empty output — using draft"
+        cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_revised.md"
     }
-    log "Final plan: $PLAN_DIR/plan_final.md"
+    log "Revised plan: $PLAN_DIR/plan_revised.md"
+}
+
+# ============================================================
+# STEP 1d: QUALITY CHECKER (separate Claude session — isolated)
+# ============================================================
+run_quality_checker() {
+    local round=$1
+    log "=== Step 1d: QUALITY CHECKER (round $round) ==="
+
+    render_template \
+        "$TEMPLATES_DIR/quality_checker_prompt.md" \
+        "$PLAN_DIR/qc_input_round${round}.md" \
+        "FEATURE=$FEATURE" \
+        "PLAN_DRAFT=@$PLAN_DIR/plan_draft.md" \
+        "CHALLENGE_REPORT=@$PLAN_DIR/challenge_report.md" \
+        "PLAN_REVISED=@$PLAN_DIR/plan_revised.md"
+
+    log "Running Quality Checker (isolated session, round $round)..."
+    claude --agent harness-quality-checker \
+           -p "$(cat "$PLAN_DIR/qc_input_round${round}.md")" \
+           --output-format text \
+           > "$PLAN_DIR/quality_review_round${round}.md" \
+           2> >(tee "$PLAN_DIR/qc_log_round${round}.txt" >&2)
+
+    [[ -s "$PLAN_DIR/quality_review_round${round}.md" ]] || {
+        log "WARNING: Quality Checker produced empty output — treating as PLAN_APPROVED"
+        echo "verdict: PLAN_APPROVED" > "$PLAN_DIR/quality_review_round${round}.md"
+    }
+
+    ln -sf "quality_review_round${round}.md" "$PLAN_DIR/quality_review_latest.md"
+    log "Quality review: $PLAN_DIR/quality_review_round${round}.md"
+}
+
+parse_plan_verdict() {
+    local review_file="$PLAN_DIR/quality_review_latest.md"
+    local verdict
+    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' || echo "UNKNOWN")
+
+    case "$verdict" in
+        PLANAPPROVED|PLAN-APPROVED|APPROVED)
+            log "PLAN APPROVED by Quality Checker"
+            return 0 ;;
+        PLANREVISE|PLAN-REVISE|REVISE)
+            log "PLAN REVISE requested by Quality Checker"
+            return 1 ;;
+        PLANFAIL|PLAN-FAIL|FAIL)
+            log "PLAN FAIL — Quality Checker rejected the plan"
+            return 2 ;;
+        *)
+            log "Unknown plan verdict: $verdict — treating as PLAN_APPROVED"
+            return 0 ;;
+    esac
 }
 
 # ============================================================
@@ -306,7 +375,8 @@ $(cat "$REVIEW_DIR/review_latest.md")"
 
     # Generator needs tool access to write code — use --dangerously-skip-permissions
     log "Running Generator (isolated session, attempt $attempt)..."
-    claude -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
+    claude --agent harness-generator \
+           -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
            --dangerously-skip-permissions \
            --output-format text \
            2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
@@ -475,7 +545,8 @@ VISUAL_OK | VISUAL_WARNING(<reason>) | VISUAL_FAIL(<reason>)
 VLM_EOF
         )
 
-        claude -p "$vlm_prompt" \
+        claude --agent harness-vlm-analyzer \
+            -p "$vlm_prompt" \
             --output-format text \
             > "$evidence_dir/visual_analysis.txt" \
             2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
@@ -529,7 +600,8 @@ $text_data
 Read each screenshot file listed above, then analyze the screenshots and data.
 Answer every question in the checklist."
 
-        claude -p "$vlm_input" \
+        claude --agent harness-vlm-analyzer \
+            -p "$vlm_input" \
             --dangerously-skip-permissions \
             --output-format text \
             > "$evidence_dir/visual_analysis.txt" \
@@ -582,7 +654,8 @@ run_evaluator() {
 
     # Run in isolated session — cannot see Generator's reasoning
     log "Running Evaluator (isolated session)..."
-    claude -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
+    claude --agent harness-evaluator \
+           -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
            --output-format text \
            > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
            2> >(tee "$REVIEW_DIR/evaluator_log.txt" >&2)
@@ -642,14 +715,56 @@ main() {
         PLAN_ATTEMPT=$((PLAN_ATTEMPT + 1))
         CODE_ATTEMPT=0
 
-        # --- Step 1: Planning ---
+        # --- Step 1: Planning (debate loop) ---
         run_planner $PLAN_ATTEMPT
 
         if [[ "$MODE" != "--quick" ]]; then
-            run_challenger
-            run_planner_revision
+            local PLAN_ROUND=0
+            local MAX_PLAN_ROUNDS=2
+            local plan_approved=false
+
+            while [[ $PLAN_ROUND -lt $MAX_PLAN_ROUNDS ]]; do
+                PLAN_ROUND=$((PLAN_ROUND + 1))
+                log "=== Plan debate round $PLAN_ROUND / $MAX_PLAN_ROUNDS ==="
+
+                run_challenger $PLAN_ROUND
+                run_planner_revision
+
+                run_quality_checker $PLAN_ROUND
+
+                local plan_verdict=0
+                parse_plan_verdict || plan_verdict=$?
+
+                case $plan_verdict in
+                    0)  # PLAN_APPROVED
+                        cp "$PLAN_DIR/plan_revised.md" "$PLAN_DIR/plan_final.md"
+                        log "Plan approved after $PLAN_ROUND debate round(s)"
+                        plan_approved=true
+                        break
+                        ;;
+                    1)  # PLAN_REVISE
+                        if [[ $PLAN_ROUND -ge $MAX_PLAN_ROUNDS ]]; then
+                            log "Max plan rounds ($MAX_PLAN_ROUNDS) reached — using current revision"
+                            cp "$PLAN_DIR/plan_revised.md" "$PLAN_DIR/plan_final.md"
+                            plan_approved=true
+                            break
+                        fi
+                        log "Quality Checker requested revision — starting round $((PLAN_ROUND + 1))"
+                        ;;
+                    2)  # PLAN_FAIL
+                        die "Quality Checker verdict: PLAN_FAIL. Cannot proceed.
+Feature: $FEATURE
+Quality review: $PLAN_DIR/quality_review_latest.md"
+                        ;;
+                esac
+            done
+
+            if [[ "$plan_approved" != "true" ]]; then
+                cp "$PLAN_DIR/plan_revised.md" "$PLAN_DIR/plan_final.md" 2>/dev/null || \
+                cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
+            fi
         else
-            log "Quick mode — skipping Challenger"
+            log "Quick mode — skipping debate"
             cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
         fi
 
