@@ -375,7 +375,8 @@ $(cat "$REVIEW_DIR/review_latest.md")"
 
     # Generator needs tool access to write code — use --dangerously-skip-permissions
     log "Running Generator (isolated session, attempt $attempt)..."
-    claude -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
+    claude --agent harness-generator \
+           -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
            --dangerously-skip-permissions \
            --output-format text \
            2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
@@ -544,7 +545,8 @@ VISUAL_OK | VISUAL_WARNING(<reason>) | VISUAL_FAIL(<reason>)
 VLM_EOF
         )
 
-        claude -p "$vlm_prompt" \
+        claude --agent harness-vlm-analyzer \
+            -p "$vlm_prompt" \
             --output-format text \
             > "$evidence_dir/visual_analysis.txt" \
             2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
@@ -598,7 +600,8 @@ $text_data
 Read each screenshot file listed above, then analyze the screenshots and data.
 Answer every question in the checklist."
 
-        claude -p "$vlm_input" \
+        claude --agent harness-vlm-analyzer \
+            -p "$vlm_input" \
             --dangerously-skip-permissions \
             --output-format text \
             > "$evidence_dir/visual_analysis.txt" \
@@ -651,7 +654,8 @@ run_evaluator() {
 
     # Run in isolated session — cannot see Generator's reasoning
     log "Running Evaluator (isolated session)..."
-    claude -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
+    claude --agent harness-evaluator \
+           -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
            --output-format text \
            > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
            2> >(tee "$REVIEW_DIR/evaluator_log.txt" >&2)
