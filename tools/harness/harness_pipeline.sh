@@ -399,10 +399,14 @@ $(cat "$REVIEW_DIR/review_latest.md")"
     fi
     cd "$PROJECT_ROOT"
 
-    # Run harness tests specifically
+    # Run harness tests specifically (|| true: failures handled by Evaluator, not set -e)
     log "Running harness tests..."
     cd "$PROJECT_ROOT/rust"
-    cargo test -p sim-test harness_ -- --nocapture 2>&1 | tee "$RESULT_DIR/harness_result_attempt${attempt}.txt"
+    if cargo test -p sim-test harness_ -- --nocapture 2>&1 | tee "$RESULT_DIR/harness_result_attempt${attempt}.txt"; then
+        log "Harness: all tests PASSED"
+    else
+        log "Harness: some tests FAILED (Evaluator will review)"
+    fi
     cd "$PROJECT_ROOT"
 
     # Create result summary if Generator didn't
