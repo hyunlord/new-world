@@ -42,6 +42,15 @@ HARNESS_DIR="$PROJECT_ROOT/.harness"
 TEMPLATES_DIR="$SCRIPT_DIR/templates"
 
 # --- Args ---
+# --- Ensure pre-commit hook is installed ---
+_git_dir=$(git rev-parse --git-common-dir 2>/dev/null || git rev-parse --git-dir)
+if [[ ! -f "$_git_dir/hooks/pre-commit" ]] || ! grep -q "harness approval" "$_git_dir/hooks/pre-commit" 2>/dev/null; then
+    log "Installing pre-commit hook..."
+    cp "$PROJECT_ROOT/hooks/pre-commit-harness" "$_git_dir/hooks/pre-commit"
+    chmod +x "$_git_dir/hooks/pre-commit"
+    log "Pre-commit hook installed at $_git_dir/hooks/pre-commit"
+fi
+
 FEATURE="${1:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
 PROMPT_FILE="${2:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
 MODE="${3:-full}"  # "full" or "--quick"

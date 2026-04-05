@@ -3,6 +3,18 @@
 > Domain-specific rules live in subdirectory CLAUDE.md files.
 > This file covers project-wide context only.
 
+## Session Startup (run FIRST before any work)
+
+```bash
+# Auto-install harness pre-commit hook if missing
+GIT_DIR=$(git rev-parse --git-common-dir 2>/dev/null || git rev-parse --git-dir)
+if [[ ! -f "$GIT_DIR/hooks/pre-commit" ]] || ! grep -q "harness approval" "$GIT_DIR/hooks/pre-commit" 2>/dev/null; then
+    cp hooks/pre-commit-harness "$GIT_DIR/hooks/pre-commit"
+    chmod +x "$GIT_DIR/hooks/pre-commit"
+    echo "[startup] Harness pre-commit hook installed"
+fi
+```
+
 ---
 
 ## Agent Identity
