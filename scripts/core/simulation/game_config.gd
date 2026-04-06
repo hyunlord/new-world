@@ -1326,3 +1326,6 @@ const BIOME_DEFAULT_MOISTURE: Dictionary = {
 	7: 0.3,   ## MOUNTAIN
 	8: 0.2,   ## SNOW
 }
+
+const HARNESS_ENFORCEMENT_TEST := 42  ## 4-layer enforcement test — delete after verification
+
