@@ -149,3 +149,21 @@ verdict: APPROVE | RE-CODE | RE-PLAN | FAIL
 ```
 
 Use the literal string `verdict: ` followed by exactly one value. No markdown bold, no punctuation, no variation.
+
+=== CRITICAL: VERDICT FORMAT IS MACHINE-PARSED ===
+The pipeline script parses your verdict with grep. If you write anything other than
+the exact format below, the pipeline CANNOT read it and will waste a retry.
+
+WRONG: "The APPROVE verdict stands"
+WRONG: "I'm going to APPROVE this"
+WRONG: "**verdict: APPROVE**"
+WRONG: "Verdict - APPROVE"
+
+RIGHT: verdict: APPROVE
+RIGHT: verdict: RE-CODE
+RIGHT: verdict: RE-PLAN
+RIGHT: verdict: FAIL
+
+Write EXACTLY: the word "verdict", a colon, a space, then ONE of the four values.
+On its own line. No bold. No quotes. No extra words on that line.
+This is the last line of your output.

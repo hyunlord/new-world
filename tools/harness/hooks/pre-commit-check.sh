@@ -1,13 +1,28 @@
 #!/usr/bin/env bash
-# Layer 1: Claude Code PreToolUse hook
+# Layer 1: Claude Code PreToolUse hook for Bash tool
 # Blocks git commit/push if code files are staged without harness approval.
-# Exit 0 = allow, Exit 2 = block (exit 1 = non-blocking warning in Claude Code)
+# Exit 0 = allow, Exit 2 = hard block
+# NOTE: This runs on EVERY Bash tool call. Must exit 0 fast for non-git commands.
 set -uo pipefail
-
-# Ensure we're in the project root
 cd "$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
 
-# Get staged files from git
+# Read stdin JSON to get the command
+INPUT=$(cat 2>/dev/null || echo "{}")
+CMD=$(echo "$INPUT" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print(d.get('tool_input', {}).get('command', ''))
+except:
+    print('')
+" 2>/dev/null || echo "")
+
+# Only care about git commit and git push
+if ! echo "$CMD" | grep -qE '^\s*git\s+(commit|push)'; then
+    exit 0
+fi
+
+# It's a git commit/push — check for staged code files
 STAGED=$(git diff --cached --name-only 2>/dev/null || echo "")
 
 if [[ -z "$STAGED" ]]; then
@@ -18,9 +33,10 @@ fi
 NEEDS_APPROVAL=false
 CODE_FILES=""
 while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
     case "$file" in
         *.md|*.txt|localization/*.json|tools/harness/*|.claude/*|hooks/*|.gitignore|.editorconfig|.gitattributes)
-            ;;  # exempt
+            ;;
         *)
             NEEDS_APPROVAL=true
             CODE_FILES+="  $file"$'\n'
@@ -32,7 +48,7 @@ if [[ "$NEEDS_APPROVAL" != "true" ]]; then
     exit 0
 fi
 
-# Check for valid verdict
+# Check for valid verdict (within last hour)
 HARNESS_DIR=".harness"
 if [[ -d "$HARNESS_DIR/reviews" ]]; then
     while IFS= read -r -d '' verdict_file; do
@@ -43,7 +59,7 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                 now_epoch=$(date +%s)
                 age=$(( now_epoch - file_epoch ))
                 if [[ $age -lt 3600 ]]; then
-                    exit 0  # Valid approval found
+                    exit 0
                 fi
             fi
         fi
@@ -51,10 +67,8 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
 fi
 
 # No valid approval — BLOCK
-echo ""
-echo "BLOCKED: Harness pipeline approval required."
-echo "Staged code/asset files:"
-echo "$CODE_FILES"
-echo "Run: bash tools/harness/harness_pipeline.sh <feature> <prompt.md>"
-echo ""
+echo "BLOCKED: Harness pipeline approval required for git commit/push." >&2
+echo "Staged code/asset files:" >&2
+echo "$CODE_FILES" >&2
+echo "Run: bash tools/harness/harness_pipeline.sh <feature> <prompt.md>" >&2
 exit 2
