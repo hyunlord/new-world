@@ -23,7 +23,10 @@ while IFS= read -r file; do
         localization/*.json)
             ;;
         # Harness infrastructure itself — exempt (bootstrapping)
-        tools/harness/*|.claude/skills/worldsim-harness/*|.claude/agents/harness-*|hooks/pre-commit-harness)
+        tools/harness/*|tools/harness/*/*|.claude/skills/worldsim-harness/*|.claude/agents/harness-*|hooks/pre-commit-harness)
+            ;;
+        # Claude Code config — exempt (hooks, settings)
+        .claude/settings.json|.claude/*)
             ;;
         # .gitignore, .editorconfig, etc — exempt
         .gitignore|.editorconfig|.gitattributes)
