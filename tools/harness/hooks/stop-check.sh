@@ -4,6 +4,9 @@
 # Exit 0 = allow stop, Exit 2 = force continue
 set -uo pipefail
 
+# Ensure we're in the project root
+cd "$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
+
 # Check for modified (unstaged + staged) code/asset files
 MODIFIED=$(git diff --name-only HEAD 2>/dev/null; git diff --cached --name-only 2>/dev/null)
 MODIFIED=$(echo "$MODIFIED" | sort -u)
@@ -50,10 +53,17 @@ fi
 
 # Code changed but no approval — BLOCK STOP
 # Read from stdin to check stop_hook_active flag (prevent infinite loop)
-INPUT=$(cat)
-STOP_HOOK_ACTIVE=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('stop_hook_active', False))" 2>/dev/null || echo "False")
+INPUT=$(cat 2>/dev/null || echo "{}")
+STOP_HOOK_ACTIVE=$(echo "$INPUT" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print(str(d.get('stop_hook_active', False)).lower())
+except:
+    print('false')
+" 2>/dev/null || echo "false")
 
-if [[ "$STOP_HOOK_ACTIVE" == "True" || "$STOP_HOOK_ACTIVE" == "true" ]]; then
+if [[ "$STOP_HOOK_ACTIVE" == "true" ]]; then
     # Already retried — let it stop to avoid infinite loop
     echo "WARNING: Code/asset files modified without harness approval. Allowing stop to prevent loop."
     exit 0

@@ -4,6 +4,9 @@
 # Exit 0 = allow, Exit 2 = block (exit 1 = non-blocking warning in Claude Code)
 set -uo pipefail
 
+# Ensure we're in the project root
+cd "$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
+
 # Get staged files from git
 STAGED=$(git diff --cached --name-only 2>/dev/null || echo "")
 
