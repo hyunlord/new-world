@@ -15,6 +15,18 @@ description: |
 
 ## How to Use
 
+### Before any work — verify hook is installed
+
+```bash
+GIT_DIR=$(git rev-parse --git-common-dir 2>/dev/null || git rev-parse --git-dir)
+if [[ ! -f "$GIT_DIR/hooks/pre-commit" ]]; then
+    cp hooks/pre-commit-harness "$GIT_DIR/hooks/pre-commit"
+    chmod +x "$GIT_DIR/hooks/pre-commit"
+fi
+```
+
+If the hook is not installed, ALL pipeline enforcement is bypassed.
+
 ### For ANY code, shader, asset, data, or scene change:
 
 ```bash

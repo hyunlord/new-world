@@ -42,6 +42,15 @@ HARNESS_DIR="$PROJECT_ROOT/.harness"
 TEMPLATES_DIR="$SCRIPT_DIR/templates"
 
 # --- Args ---
+# --- Ensure pre-commit hook is installed ---
+_git_dir=$(git rev-parse --git-common-dir 2>/dev/null || git rev-parse --git-dir)
+if [[ ! -f "$_git_dir/hooks/pre-commit" ]] || ! grep -q "harness approval" "$_git_dir/hooks/pre-commit" 2>/dev/null; then
+    log "Installing pre-commit hook..."
+    cp "$PROJECT_ROOT/hooks/pre-commit-harness" "$_git_dir/hooks/pre-commit"
+    chmod +x "$_git_dir/hooks/pre-commit"
+    log "Pre-commit hook installed at $_git_dir/hooks/pre-commit"
+fi
+
 FEATURE="${1:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
 PROMPT_FILE="${2:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
 MODE="${3:-full}"  # "full" or "--quick"
@@ -706,6 +715,26 @@ parse_verdict() {
 }
 
 # ============================================================
+# COMMIT MESSAGE FORMATTER
+# ============================================================
+format_commit_message() {
+    local feature="$1"
+    local plan_attempts="$2"
+    local code_attempts="$3"
+    local qc_rounds
+    qc_rounds=$(ls "$PLAN_DIR"/quality_review_round*.md 2>/dev/null | wc -l | tr -d ' ')
+    local visual_verdict="SKIP"
+    if [[ -f "$HARNESS_DIR/evidence/$feature/visual_analysis.txt" ]]; then
+        local raw_verdict
+        raw_verdict=$(grep -o "VISUAL_[A-Z]*" "$HARNESS_DIR/evidence/$feature/visual_analysis.txt" | tail -1 || echo "")
+        if [[ -n "$raw_verdict" ]]; then
+            visual_verdict="${raw_verdict#VISUAL_}"
+        fi
+    fi
+    echo "feat($feature): implementation [harness: plan x${plan_attempts}(QC:r${qc_rounds}) code x${code_attempts} eval:APPROVE visual:${visual_verdict}]"
+}
+
+# ============================================================
 # MAIN LOOP
 # ============================================================
 main() {
@@ -786,13 +815,26 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             case $verdict_code in
                 0)  # APPROVE
-                    # Mark as approved for pre-commit hook
+                    # Layer 4: Generate pipeline report (immutable audit trail)
+                    local report_path
+                    report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" 2>/dev/null || echo "")
+                    if [[ -n "$report_path" ]]; then
+                        log "Pipeline report: $report_path"
+                    fi
+
+                    # Mark as approved for pre-commit hook (Layer 1 + Layer 3 read this)
                     echo "APPROVED" > "$REVIEW_DIR/verdict"
                     echo "$FEATURE" >> "$REVIEW_DIR/verdict"
                     date +%s >> "$REVIEW_DIR/verdict"
+
+                    # Suggest commit message with evidence metadata
+                    local commit_msg
+                    commit_msg=$(format_commit_message "$FEATURE" "$PLAN_ATTEMPT" "$CODE_ATTEMPT")
+                    echo "$commit_msg" > "$REVIEW_DIR/commit_message.txt"
                     log "=========================================="
                     log "Pipeline COMPLETE — $FEATURE approved"
                     log "Plan attempts: $PLAN_ATTEMPT, Code attempts: $CODE_ATTEMPT"
+                    log "Suggested commit: $commit_msg"
                     log "=========================================="
                     exit 0
                     ;;
