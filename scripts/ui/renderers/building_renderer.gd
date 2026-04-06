@@ -4,6 +4,7 @@ var _building_manager: RefCounted
 var _settlement_manager: RefCounted
 var _sim_engine: RefCounted
 var _current_lod: int = 1
+var _building_textures: Dictionary = {}
 var _runtime_minimap_cache: Dictionary = {}
 var _runtime_minimap_cache_tick: int = -1
 var _runtime_world_summary_cache: Dictionary = {}
@@ -111,15 +112,7 @@ func _draw() -> void:
 			draw_rect(Rect2(cx - 1.5, cy - 1.5, 3.0, 3.0), strategic_color, true)
 			continue
 
-			match building_type:
-				"stockpile":
-					_draw_stockpile(cx, cy, alpha, tile_size, zl)
-				"shelter":
-					_draw_shelter(cx, cy, alpha, tile_size, zl)
-				"campfire":
-					_draw_campfire(cx, cy, alpha, tile_size, zl)
-				_:
-					pass
+		_draw_building_sprite(building_type, cx, cy, alpha, tile_size, zl)
 		_draw_building_interior(b, tile_x, tile_y, tile_size, zl)
 
 		# Construction progress bar
@@ -196,7 +189,42 @@ static func _compute_zoom_tier(zoom_value: float) -> int:
 	return GameConfig.ZOOM_TIER_COUNT - 1
 
 
-func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+func _load_building_texture(building_type: String) -> Texture2D:
+	if _building_textures.has(building_type):
+		return _building_textures[building_type]
+	var path: String = "res://assets/sprites/buildings/" + building_type + ".png"
+	if not FileAccess.file_exists(path):
+		_building_textures[building_type] = null
+		return null
+	var image: Image = Image.load_from_file(path)
+	if image == null:
+		_building_textures[building_type] = null
+		return null
+	var tex: ImageTexture = ImageTexture.create_from_image(image)
+	_building_textures[building_type] = tex
+	return tex
+
+
+func _draw_building_sprite(building_type: String, cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+	var tex: Texture2D = _load_building_texture(building_type)
+	if tex == null:
+		match building_type:
+			"campfire":
+				_draw_campfire_fallback(cx, cy, alpha, tile_size, zoom_level)
+			"shelter":
+				_draw_shelter_fallback(cx, cy, alpha, tile_size, zoom_level)
+			"stockpile":
+				_draw_stockpile_fallback(cx, cy, alpha, tile_size, zoom_level)
+		return
+
+	var scale_factor: float = float(tile_size) * 2.0 / 32.0 * _zoom_shape_scale(zoom_level)
+	var draw_size: Vector2 = Vector2(32.0, 32.0) * scale_factor
+	var draw_pos: Vector2 = Vector2(cx - draw_size.x * 0.5, cy - draw_size.y * 0.5)
+	var modulate: Color = Color(1.0, 1.0, 1.0, alpha)
+	draw_texture_rect(tex, Rect2(draw_pos, draw_size), false, modulate)
+
+
+func _draw_stockpile_fallback(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
 	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var half_size: float = size * 0.5
 	var fill_color := Color(0.55, 0.35, 0.15, alpha)
@@ -206,7 +234,7 @@ func _draw_stockpile(cx: float, cy: float, alpha: float, tile_size: int, zoom_le
 	draw_rect(Rect2(cx - half_size, cy - half_size, size, size), outline_color, false, 2.0)
 
 
-func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+func _draw_shelter_fallback(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
 	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var half_size: float = size * 0.5
 	var fill_color := Color(0.7, 0.4, 0.2, alpha)
@@ -222,7 +250,7 @@ func _draw_shelter(cx: float, cy: float, alpha: float, tile_size: int, zoom_leve
 	draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[0]]), outline_color, 2.0)
 
 
-func _draw_campfire(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+func _draw_campfire_fallback(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
 	var size: float = tile_size * 0.8 * _zoom_shape_scale(zoom_level)
 	var radius: float = size * 0.35
 	var fill_color := Color(1.0, 0.4, 0.1, alpha)

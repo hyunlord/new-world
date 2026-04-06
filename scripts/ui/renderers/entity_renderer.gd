@@ -509,122 +509,16 @@ func _draw() -> void:
 		_draw_binary_snapshots()
 		return
 
-	var alive: Array = _get_legacy_snapshots()
-	if alive.is_empty() and _entity_manager == null:
-		return
+	# Legacy fallback — only draw overlays, not agent bodies
+	# (Sprite2D system handles agent rendering now)
 	var cam := get_viewport().get_camera_2d()
 	var zl: float = cam.zoom.x if cam else 1.0
-
-	# LOD transitions with hysteresis
 	_update_lod(zl)
-
-	# Viewport culling: compute visible tile range
-	var viewport_size := get_viewport_rect().size
-	var cam_pos := cam.global_position if cam else Vector2.ZERO
-	var half_view := viewport_size / cam.zoom * 0.5 if cam else viewport_size * 0.5
-	var min_tile_x: int = int((cam_pos.x - half_view.x) / GameConfig.TILE_SIZE) - 2
-	var max_tile_x: int = int((cam_pos.x + half_view.x) / GameConfig.TILE_SIZE) + 2
-	var min_tile_y: int = int((cam_pos.y - half_view.y) / GameConfig.TILE_SIZE) - 2
-	var max_tile_y: int = int((cam_pos.y + half_view.y) / GameConfig.TILE_SIZE) + 2
-
-	var half_tile := Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
-	var selected_probe_pos: Vector2 = Vector2.INF
 	_draw_civilization_regions(zl)
 	if bool(active_layers.get("settlement", false)):
 		_draw_settlement_boundaries(zl)
 	if bool(active_layers.get("band", false)):
 		_draw_band_labels(zl)
-
-	if _current_lod >= GameConfig.ZOOM_Z3:
-		_draw_hover_tooltip()
-		return
-
-	for i in range(alive.size()):
-		var entity: Dictionary = alive[i]
-		var ex: float = float(entity.get("x", 0.0))
-		var ey: float = float(entity.get("y", 0.0))
-
-		# Viewport culling
-		if ex < min_tile_x or ex > max_tile_x:
-			continue
-		if ey < min_tile_y or ey > max_tile_y:
-			continue
-
-		var pos := Vector2(ex, ey) * GameConfig.TILE_SIZE + half_tile
-		var ejob: String = str(entity.get("job", "none"))
-		var esex: String = str(entity.get("sex", "male"))
-		var eage_stage: String = str(entity.get("growth_stage", "adult"))
-		var eid: int = int(entity.get("entity_id", -1))
-		var ename: String = str(entity.get("name", ""))
-
-		var vis: Dictionary = JOB_VISUALS.get(ejob, JOB_VISUALS["none"])
-		var base_size: float = vis["size"]
-		var color: Color = vis["color"]
-		var is_selected: bool = eid == selected_entity_id
-
-		# Gender tint
-		var tint: Color = MALE_TINT if esex == "male" else FEMALE_TINT
-		color = color.lerp(tint, GENDER_TINT_WEIGHT)
-		color = _entity_color_for_probe(color, is_selected)
-		var outline_color: Color = _outline_color_for_probe(is_selected)
-
-		# Age size scaling
-		var size: float = base_size * AGE_SIZE_MULT.get(eage_stage, 1.0)
-
-		# Draw outlined shape
-		match ejob:
-			"lumberjack":
-				_draw_triangle_outlined(pos, size, color)
-			"builder":
-				_draw_square_outlined(pos, size, color)
-			"miner":
-				_draw_diamond_outlined(pos, size, color)
-			_:
-				# Circle with outline
-				draw_circle(pos, size + OUTLINE_WIDTH, outline_color)
-				draw_circle(pos, size, color)
-
-		# Elder white dot (gray hair indicator)
-		if eage_stage == "elder":
-			draw_circle(pos + Vector2(0, -(size + 1.5)), 1.2, Color(0.9, 0.9, 0.9))
-
-		if _current_lod <= GameConfig.ZOOM_Z2:
-			# Carrying indicator: skipped for snapshot entities (no carry data)
-
-			# Hunger warning
-			if float(entity.get("hunger", 1.0)) < HUNGER_WARNING_THRESHOLD and not probe_observation_mode:
-				draw_circle(pos + Vector2(0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
-
-			## Leader crown [♛ = Unicode U+265B, locale-exempt symbol]
-			if false: # TODO: leader check needs entity detail panel
-				var crown_font: Font = ThemeDB.fallback_font
-				draw_string(crown_font, pos + Vector2(-3.0, -(size + 10.0)), "\u265B", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1.0, 0.82, 0.1))
-
-			# Selection highlight
-			if is_selected:
-				_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
-				selected_probe_pos = pos
-				# Partner heart marker: skipped for snapshot entities
-				if false: # TODO: partner check needs entity detail panel
-					pass
-
-			_draw_probe_survival_indicators(pos, size, eid, is_selected)
-
-		# LOD 2: Show names for all entities
-		if _should_draw_name(is_selected):
-			var entity_name: String = ename
-			# Background rect for readability
-			var name_font: Font = ThemeDB.fallback_font
-			var name_size: Vector2 = name_font.get_string_size(entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11)
-			var bg_alpha: float = 0.82 if probe_observation_mode and is_selected else 0.6
-			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
-			draw_rect(Rect2(pos.x + size + 2, pos.y - size - 4 - name_size.y, name_size.x + 4, name_size.y + 2), Color(0, 0, 0, bg_alpha))
-			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
-			_draw_action_icon(eid, pos, size)
-
-	if selected_probe_pos != Vector2.INF:
-		_draw_probe_selected_forage_overlay(selected_probe_pos)
-
 	_draw_hover_tooltip()
 
 
@@ -676,16 +570,20 @@ func _draw_binary_snapshots() -> void:
 		if tile_pos.y < min_tile_y or tile_pos.y > max_tile_y:
 			continue
 
+		var entity_id: int = _snapshot_decoder.get_entity_id(index)
+		var is_selected: bool = entity_id == selected_entity_id
+		var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
+		var needs_overlay: bool = is_selected or (danger_flags & 0b0010 != 0) or probe_observation_mode or _should_draw_name(is_selected)
+		if not needs_overlay:
+			continue
+
 		var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
 		var job_key: String = _binary_job_key(_snapshot_decoder.get_job_icon(index))
 		var growth_stage_key: String = _binary_growth_stage_key(_snapshot_decoder.get_growth_stage(index))
-		var entity_id: int = _snapshot_decoder.get_entity_id(index)
-		var is_selected: bool = entity_id == selected_entity_id
 		var vis: Dictionary = JOB_VISUALS.get(job_key, JOB_VISUALS["none"])
 		var size: float = float(vis["size"]) * float(AGE_SIZE_MULT.get(growth_stage_key, 1.0))
 
 		if _current_lod <= GameConfig.ZOOM_Z2:
-			var danger_flags: int = _snapshot_decoder.get_danger_icon(index)
 			if danger_flags & 0b0010 != 0 and not probe_observation_mode:
 				draw_circle(pos + Vector2(0.0, -(size + 5.0)), HUNGER_WARNING_RADIUS, Color.RED)
 			if is_selected:
