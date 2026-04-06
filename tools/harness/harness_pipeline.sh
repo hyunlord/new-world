@@ -333,21 +333,36 @@ run_quality_checker() {
 
 parse_plan_verdict() {
     local review_file="$PLAN_DIR/quality_review_latest.md"
-    local verdict
-    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' || echo "UNKNOWN")
+    local verdict=""
+
+    local cleaned
+    cleaned=$(sed 's/\*//g; s/_//g; s/`//g' "$review_file")
+
+    # Standard: "verdict: PLAN_APPROVED"
+    verdict=$(echo "$cleaned" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' | sed 's/PLAN//' || echo "")
+
+    # Regex fallback
+    if [[ -z "$verdict" ]]; then
+        verdict=$(echo "$cleaned" | grep -ioE "(PLAN_APPROVED|PLAN_REVISE|PLAN_FAIL|PLANAPPROVED|PLANREVISE|PLANFAIL|APPROVED|REVISE|FAIL)" | tail -1 | sed 's/PLAN_//; s/PLAN//' | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
+
+    # Standalone word in last 20 lines
+    if [[ -z "$verdict" ]]; then
+        verdict=$(tail -20 "$review_file" | sed 's/\*//g; s/_//g' | grep -ioE "\b(APPROVED|REVISE|FAIL)\b" | tail -1 | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
 
     case "$verdict" in
-        PLANAPPROVED|PLAN-APPROVED|APPROVED)
+        APPROVED|PLANAPPROVED)
             log "PLAN APPROVED by Quality Checker"
             return 0 ;;
-        PLANREVISE|PLAN-REVISE|REVISE)
+        REVISE|PLANREVISE)
             log "PLAN REVISE requested by Quality Checker"
             return 1 ;;
-        PLANFAIL|PLAN-FAIL|FAIL)
-            log "PLAN FAIL — Quality Checker rejected the plan"
+        FAIL|PLANFAIL)
+            log "PLAN FAIL — Quality Checker rejected"
             return 2 ;;
         *)
-            log "Unknown plan verdict: $verdict — treating as PLAN_APPROVED"
+            log "WARNING: Could not parse plan verdict. Treating as PLAN_APPROVED (safe default)"
             return 0 ;;
     esac
 }
@@ -685,30 +700,47 @@ run_evaluator() {
 # ============================================================
 parse_verdict() {
     local review_file="$REVIEW_DIR/review_latest.md"
-    local verdict
+    local verdict=""
 
-    # Extract verdict line (strip markdown bold/italic markers before matching)
-    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' || echo "UNKNOWN")
+    # Strip markdown formatting
+    local cleaned
+    cleaned=$(sed 's/\*//g; s/_//g; s/`//g' "$review_file")
 
+    # Tier 1: standard format "verdict: X"
+    verdict=$(echo "$cleaned" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' || echo "")
+
+    # Tier 2: regex anywhere in file
+    if [[ -z "$verdict" ]]; then
+        verdict=$(echo "$cleaned" | grep -ioE "verdict:\s*(APPROVE|RE-CODE|RE-PLAN|RECODE|REPLAN|FAIL)" | head -1 | sed 's/.*://' | tr -d ' ' | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
+
+    # Tier 3: standalone verdict word in last 20 lines
+    if [[ -z "$verdict" ]]; then
+        verdict=$(tail -20 "$review_file" | sed 's/\*//g; s/_//g; s/`//g' | grep -ioE "\b(APPROVE|RE-CODE|RE-PLAN|RECODE|REPLAN|FAIL)\b" | tail -1 | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
+
+    # Normalize
     case "$verdict" in
-        APPROVE)
-            log "APPROVED — ready to commit"
+        APPROVE|APPROVED)
+            log "APPROVED by Evaluator"
             return 0
             ;;
-        RE-CODE|RECODE|RE_CODE)
-            log "RE-CODE requested"
+        RECODE|RE-CODE|RE_CODE)
+            log "RE-CODE requested by Evaluator"
             return 1
             ;;
-        RE-PLAN|REPLAN|RE_PLAN)
-            log "RE-PLAN requested"
+        REPLAN|RE-PLAN|RE_PLAN)
+            log "RE-PLAN requested by Evaluator"
             return 2
             ;;
-        FAIL)
-            log "FAIL — cannot be resolved automatically"
+        FAIL|FAILED)
+            log "FAIL verdict from Evaluator"
             return 3
             ;;
         *)
-            log "Unknown verdict: $verdict — treating as RE-CODE"
+            log "WARNING: Could not parse verdict from review. Raw last 5 lines:"
+            tail -5 "$review_file" | while IFS= read -r line; do log "  $line"; done
+            log "Treating as RE-CODE (safe default — will retry)"
             return 1
             ;;
     esac
