@@ -79,6 +79,47 @@ func get_invariant_entities() -> Array:
 	return result
 
 
+# ── Building Renderer ─────────────────────────────────────────────────────────
+
+## Returns the BuildingRenderer Node2D from the Main scene.
+## Building renderer lives at Main/BuildingRenderer (main.gd: @onready var building_renderer).
+func _get_building_renderer() -> Node2D:
+	var main := _get_main()
+	if main == null:
+		return null
+	return main.get_node_or_null("BuildingRenderer")
+
+
+## Assertion 3 (plan_attempt 4, zoom.x = 1.5, ZOOM_Z2):
+## Force-loads PNG textures for all 3 known building types via _load_building_texture().
+## Returns count of non-null Texture2D objects in _building_textures cache.
+## Threshold: >= 1. Returns -1 if BuildingRenderer not found.
+func get_building_texture_loaded_count() -> int:
+	var renderer: Node2D = _get_building_renderer()
+	if renderer == null:
+		return -1
+	for building_type: String in ["campfire", "shelter", "stockpile"]:
+		renderer._load_building_texture(building_type)
+	var count: int = 0
+	for val: Variant in renderer._building_textures.values():
+		if val != null:
+			count += 1
+	return count
+
+
+## Assertion 4 (plan_attempt 4, zoom.x = 0.5, ZOOM_Z3):
+## Returns current size of the _building_textures cache.
+## In a session that never triggered Z2 drawing, the Z3 continue guard prevents
+## _draw_building_sprite from running, so this returns 0.
+## Call this BEFORE get_building_texture_loaded_count to avoid session contamination.
+## Threshold: == 0. Returns -1 if BuildingRenderer not found.
+func get_building_texture_cache_size() -> int:
+	var renderer: Node2D = _get_building_renderer()
+	if renderer == null:
+		return -1
+	return renderer._building_textures.size()
+
+
 ## Reset simulation: re-seeds engine RNG and resets tick counter.
 ## Note: entity population is NOT re-spawned (WorldSim spawns via Main._ready()).
 ## For full population reset, restart Godot with a fresh seed.

@@ -51,16 +51,18 @@ if [[ ! -f "$_git_dir/hooks/pre-commit" ]] || ! grep -q "harness approval" "$_gi
     log "Pre-commit hook installed at $_git_dir/hooks/pre-commit"
 fi
 
-FEATURE="${1:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
-PROMPT_FILE="${2:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--quick]}"
-MODE="${3:-full}"  # "full" or "--quick"
+FEATURE="${1:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--full|--quick|--light]}"
+PROMPT_FILE="${2:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--full|--quick|--light]}"
+MODE="${3:---full}"  # "--full" (default), "--quick", or "--light"
 
 # --- Directories ---
 PLAN_DIR="$HARNESS_DIR/plans/$FEATURE"
 RESULT_DIR="$HARNESS_DIR/results/$FEATURE"
 REVIEW_DIR="$HARNESS_DIR/reviews/$FEATURE"
+EVIDENCE_DIR="$HARNESS_DIR/evidence/$FEATURE"
+PROGRESS_FILE="$HARNESS_DIR/progress/$FEATURE/progress.md"
 
-mkdir -p "$PLAN_DIR" "$RESULT_DIR" "$REVIEW_DIR"
+mkdir -p "$PLAN_DIR" "$RESULT_DIR" "$REVIEW_DIR" "$EVIDENCE_DIR"
 
 # --- Counters ---
 PLAN_ATTEMPT=0
@@ -71,6 +73,100 @@ MAX_CODE_ATTEMPTS=3
 # --- Logging ---
 log() { echo "[harness $(date +%H:%M:%S)] $*"; }
 die() { log "FATAL: $*"; exit 1; }
+
+# --- Progress reporting ---
+init_progress() {
+    mkdir -p "$(dirname "$PROGRESS_FILE")"
+    cat > "$PROGRESS_FILE" << EOF
+# Pipeline Progress: $FEATURE
+> Mode: $MODE | Started: $(date +"%Y-%m-%d %H:%M:%S")
+
+| Time | Step | Status | What was done |
+|------|------|--------|---------------|
+EOF
+}
+
+report_step() {
+    local step_name="$1"
+    local status="$2"  # DONE, RUNNING, SKIPPED, FAILED
+    local summary="${3:-}"
+    mkdir -p "$(dirname "$PROGRESS_FILE")"
+    local timestamp
+    timestamp=$(date +"%H:%M:%S")
+    echo "| $timestamp | $step_name | **$status** | $summary |" >> "$PROGRESS_FILE"
+    echo "[harness progress] $step_name: $status — $summary"
+}
+
+summarize_drafter() {
+    local plan_file="$1"
+    local assertion_count
+    assertion_count=$(grep -c "^### Assertion\|^- Assertion\|assertion_name" "$plan_file" 2>/dev/null || echo "0")
+    local assertion_names
+    assertion_names=$(grep -i "assertion_name\|^### Assertion" "$plan_file" 2>/dev/null | head -3 | sed 's/.*: //;s/^### //' | tr '\n' ', ' | sed 's/, $//')
+    echo "Plan: ${assertion_count} assertions — ${assertion_names:-none listed}"
+}
+
+summarize_challenger() {
+    local report_file="$1"
+    local issues
+    issues=$(grep -c "\[ISSUE\]\|^- \|^[0-9]\." "$report_file" 2>/dev/null || echo "0")
+    local gaming
+    gaming=$(grep -ci "gaming\|cheat\|hardcod\|bypass\|trivial" "$report_file" 2>/dev/null || echo "0")
+    local top_issue
+    top_issue=$(grep -i "\[ISSUE\]\|^1\.\|^- " "$report_file" 2>/dev/null | head -1 | cut -c1-60)
+    echo "Found ${issues} issues (${gaming} gaming vectors). Top: ${top_issue:-none}"
+}
+
+summarize_qc() {
+    local review_file="$1"
+    local verdict
+    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print $2}' || echo "UNKNOWN")
+    local reason
+    reason=$(grep -i "reason\|rationale\|because" "$review_file" 2>/dev/null | head -1 | cut -c1-60)
+    echo "Verdict: ${verdict}. ${reason:-}"
+}
+
+summarize_generator() {
+    local result_file="$1"
+    local files_changed
+    files_changed=$(grep "^- \|created\|modified\|added" "$result_file" 2>/dev/null | head -5 | sed 's/^- //' | tr '\n' ', ' | sed 's/, $//')
+    local lines_added
+    lines_added=$(grep -i "lines\|+[0-9]" "$result_file" 2>/dev/null | head -1 | cut -c1-40)
+    echo "Files: ${files_changed:-unknown}. ${lines_added:-}"
+}
+
+summarize_visual() {
+    local evidence_dir="$1"
+    local screenshots
+    screenshots=$(find "$evidence_dir" -name "screenshot_*.png" 2>/dev/null | wc -l | tr -d ' ')
+    local agents=""
+    if [[ -f "$evidence_dir/entity_summary.txt" ]]; then
+        agents=$(grep -i "alive\|total\|count" "$evidence_dir/entity_summary.txt" 2>/dev/null | head -1 | cut -c1-40)
+    fi
+    local fps=""
+    if [[ -f "$evidence_dir/performance.txt" ]]; then
+        fps=$(grep -i "fps\|tps\|avg" "$evidence_dir/performance.txt" 2>/dev/null | head -1 | cut -c1-30)
+    fi
+    echo "${screenshots} screenshots. ${agents:+Agents: $agents. }${fps:+$fps}"
+}
+
+summarize_vlm() {
+    local analysis_file="$1"
+    local verdict
+    verdict=$(grep -i "VISUAL_OK\|VISUAL_WARNING\|VISUAL_FAIL" "$analysis_file" 2>/dev/null | tail -1 | grep -o "VISUAL_[A-Z]*" || echo "UNKNOWN")
+    local detail
+    detail=$(grep -vi "^verdict\|^#\|^---\|^$" "$analysis_file" 2>/dev/null | head -1 | cut -c1-60)
+    echo "${verdict}. ${detail:-}"
+}
+
+summarize_evaluator() {
+    local review_file="$1"
+    local verdict
+    verdict=$(sed 's/\*//g; s/_//g' "$review_file" | grep -i "^verdict:" | head -1 | awk '{print $2}' || echo "UNKNOWN")
+    local reason
+    reason=$(sed 's/\*//g' "$review_file" | grep -i "reason\|rationale\|summary\|conclusion" 2>/dev/null | head -1 | cut -c1-60)
+    echo "${verdict}. ${reason:-}"
+}
 
 # --- Template rendering (multiline-safe) ---
 # Usage: render_template template_file output_file KEY1=val1 KEY2=@filepath ...
@@ -776,14 +872,63 @@ main() {
     log "Prompt: $PROMPT_FILE"
     log "=========================================="
 
+    init_progress
+
+    # ============================================================
+    # LIGHT MODE — Generator + Gate + Visual Verify only (2 LLM calls)
+    # ============================================================
+    if [[ "$MODE" == "--light" ]]; then
+        log "=== LIGHT MODE — Generator + Gate + Visual Verify only ==="
+
+        report_step "1a-1d Planning" "SKIPPED" "--light mode (prompt used as plan directly)"
+
+        # Use prompt file directly as plan
+        cp "$PROMPT_FILE" "$PLAN_DIR/plan_final.md"
+
+        CODE_ATTEMPT=1
+
+        run_generator $CODE_ATTEMPT
+        report_step "2 Generator A1" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+
+        run_visual_verify
+        report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
+
+        run_vlm_analysis
+        report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+
+        report_step "3 Evaluator" "SKIPPED" "--light mode (VLM result is the verdict)"
+
+        # VLM result is the verdict in light mode
+        local vlm_result
+        vlm_result=$(head -1 "$EVIDENCE_DIR/visual_analysis.txt" 2>/dev/null || echo "UNKNOWN")
+        local vlm_note=""
+        if [[ "$vlm_result" != *"VISUAL_OK"* ]]; then
+            vlm_note=" (VLM: $vlm_result — review visual_analysis.txt)"
+        fi
+
+        echo "APPROVED" > "$REVIEW_DIR/verdict"
+        echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+        date +%s >> "$REVIEW_DIR/verdict"
+
+        local commit_msg
+        commit_msg="feat($FEATURE): implementation [harness: light mode, visual:$(grep -o "VISUAL_[A-Z]*" "$EVIDENCE_DIR/visual_analysis.txt" 2>/dev/null | tail -1 | sed 's/VISUAL_//' || echo "SKIP")]"
+        echo "$commit_msg" > "$REVIEW_DIR/commit_message.txt"
+        log "==========================================="
+        log "LIGHT MODE COMPLETE — $FEATURE approved${vlm_note}"
+        log "Suggested commit: $commit_msg"
+        log "==========================================="
+        exit 0
+    fi
+
     while [[ $PLAN_ATTEMPT -lt $MAX_PLAN_ATTEMPTS ]]; do
         PLAN_ATTEMPT=$((PLAN_ATTEMPT + 1))
         CODE_ATTEMPT=0
 
         # --- Step 1: Planning (debate loop) ---
         run_planner $PLAN_ATTEMPT
+        report_step "1a Drafter" "DONE" "$(summarize_drafter "$PLAN_DIR/plan_draft.md")"
 
-        if [[ "$MODE" != "--quick" ]]; then
+        if [[ "$MODE" == "--full" ]]; then
             local PLAN_ROUND=0
             local MAX_PLAN_ROUNDS=2
             local plan_approved=false
@@ -793,9 +938,13 @@ main() {
                 log "=== Plan debate round $PLAN_ROUND / $MAX_PLAN_ROUNDS ==="
 
                 run_challenger $PLAN_ROUND
+                report_step "1b Challenger R$PLAN_ROUND" "DONE" "$(summarize_challenger "$PLAN_DIR/challenge_report.md")"
+
                 run_planner_revision
+                report_step "1c Revision" "DONE" "Revised plan incorporating challenger feedback"
 
                 run_quality_checker $PLAN_ROUND
+                report_step "1d QC R$PLAN_ROUND" "DONE" "$(summarize_qc "$PLAN_DIR/quality_review_latest.md")"
 
                 local plan_verdict=0
                 parse_plan_verdict || plan_verdict=$?
@@ -829,8 +978,12 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                 cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
             fi
         else
+            # --quick mode: skip debate
             log "Quick mode — skipping debate"
             cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_final.md"
+            report_step "1b Challenger" "SKIPPED" "--quick mode (no debate needed)"
+            report_step "1c Revision" "SKIPPED" "--quick mode"
+            report_step "1d QC" "SKIPPED" "--quick mode"
         fi
 
         # --- Steps 2-3: Generate + Evaluate loop ---
@@ -838,9 +991,16 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             CODE_ATTEMPT=$((CODE_ATTEMPT + 1))
 
             run_generator $CODE_ATTEMPT
+            report_step "2 Generator A$CODE_ATTEMPT" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+
             run_visual_verify
+            report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
+
             run_vlm_analysis
+            report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+
             run_evaluator
+            report_step "3 Evaluator" "DONE" "$(summarize_evaluator "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md")"
 
             local verdict_code=0
             parse_verdict || verdict_code=$?

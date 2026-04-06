@@ -445,10 +445,25 @@ Categories: `job`, `resource`, `building`, `band`, `territory`, `population`, `e
 
 ### Harness Pipeline (Mandatory for All Code Changes)
 
-**ALL changes to code, shaders, assets, data, or scenes** MUST go through the harness pipeline:
+**ALL changes to code, shaders, assets, data, or scenes** MUST go through the harness pipeline.
 
+## Harness Pipeline Modes
+
+| Mode | Command | LLM Calls | Use When |
+|------|---------|:---------:|----------|
+| `--full` | `harness_pipeline.sh feat prompt.md --full` | 7-16 | New simulation features (sim-core/systems/engine) |
+| `--quick` | `harness_pipeline.sh feat prompt.md --quick` | 4-10 | GDScript, shaders, sim-data/test/bridge, refactoring |
+| `--light` | `harness_pipeline.sh feat prompt.md --light` | 2 | Assets, RON data files |
+
+### Hook tiers (auto-detected by pre-commit)
+- `sim-core/sim-systems/sim-engine` `.rs` → `--full` (Planning debate + Visual Verify + Evaluator)
+- `.gd`, `.gdshader`, `sim-data/test/bridge` `.rs` → `--quick` (Visual Verify + Evaluator, no debate)
+- `.png`, `.ron`, `.wav`, `.tscn`, `.tres` assets → `--light` (Visual Verify + VLM only)
+- Docs, tools, config → free commit (no harness required)
+
+### Bypass
 ```bash
-bash tools/harness/harness_pipeline.sh <feature> <prompt.md> [--quick]
+HARNESS_SKIP=1 git commit -m "..."
 ```
 
 The pre-commit hook blocks commits containing code/asset files without an APPROVED verdict.
@@ -457,10 +472,6 @@ The pre-commit hook blocks commits containing code/asset files without an APPROV
 - Documentation only (.md, .txt)
 - Localization JSON (localization/*.json)
 - Harness infrastructure itself (tools/harness/*, .claude/skills/worldsim-harness/*)
-
-**Pipeline modes:**
-- Full (default): Planner → Challenger → Planner revision → Generator → Visual Verify → Evaluator
-- `--quick`: Skip Challenger. Use for Type A invariants, bug fixes < 30 lines, config tuning
 
 See `tools/harness/README.md` for details.
 See `.claude/skills/worldsim-harness/SKILL.md` for mode selection guide.

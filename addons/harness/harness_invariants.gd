@@ -21,6 +21,8 @@ func _ready() -> void:
 	_register("age_non_negative", _check_age_non_negative)
 	_register("stress_non_negative", _check_stress_non_negative)
 	_register("no_duplicate_traits", _check_no_duplicate_traits)
+	_register("building_sprite_textures_load_at_z2", _check_building_sprite_textures_load_at_z2)
+	_register("building_sprite_cache_empty_at_z3", _check_building_sprite_cache_empty_at_z3)
 
 
 func _register(name: String, callable: Callable) -> void:
@@ -265,3 +267,44 @@ func _check_no_duplicate_traits(entities: Array) -> Array:
 			else:
 				seen[trait_id] = true
 	return violations
+
+
+func _check_building_sprite_textures_load_at_z2(_entities: Array) -> Array:
+	## Assertion 3 (plan_attempt 4): building_renderer loads PNG sprites at Z2 zoom.
+	## get_building_texture_loaded_count() force-loads all 3 known building PNGs and
+	## returns count of non-null Texture2D objects. Threshold: >= 1.
+	## RED if adapter lacks the method; GREEN once worldsim_adapter implements it.
+	if _adapter == null:
+		return [{"check": "building_sprite_textures_load_at_z2", "error": "adapter_null"}]
+	if not _adapter.has_method("get_building_texture_loaded_count"):
+		return [{"check": "building_sprite_textures_load_at_z2",
+				"error": "adapter_missing_method:get_building_texture_loaded_count"}]
+	var count: int = _adapter.get_building_texture_loaded_count()
+	if count < 0:
+		return [{"check": "building_sprite_textures_load_at_z2",
+				"error": "BuildingRenderer not found in scene tree (count=%d)" % count}]
+	if count < 1:
+		return [{"check": "building_sprite_textures_load_at_z2",
+				"expected": ">= 1 non-null Texture2D", "actual": count}]
+	return []
+
+
+func _check_building_sprite_cache_empty_at_z3(_entities: Array) -> Array:
+	## Assertion 4 (plan_attempt 4): At Z3 zoom (zoom.x = 0.5), the continue guard in
+	## _draw() prevents _draw_building_sprite from running, so _building_textures stays
+	## empty. Valid in a session that has not yet called get_building_texture_loaded_count.
+	## Call this BEFORE building_sprite_textures_load_at_z2 to avoid cross-session contamination.
+	## Threshold: cache_size == 0.
+	if _adapter == null:
+		return [{"check": "building_sprite_cache_empty_at_z3", "error": "adapter_null"}]
+	if not _adapter.has_method("get_building_texture_cache_size"):
+		return [{"check": "building_sprite_cache_empty_at_z3",
+				"error": "adapter_missing_method:get_building_texture_cache_size"}]
+	var size: int = _adapter.get_building_texture_cache_size()
+	if size < 0:
+		return [{"check": "building_sprite_cache_empty_at_z3",
+				"error": "BuildingRenderer not found in scene tree (size=%d)" % size}]
+	if size != 0:
+		return [{"check": "building_sprite_cache_empty_at_z3",
+				"expected": "cache_size == 0 (Z3 guard active)", "actual": size}]
+	return []

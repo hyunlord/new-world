@@ -70,6 +70,7 @@ migration_commit_logs/
 .harness/results/
 .harness/reviews/
 .harness/evidence/
+.harness/progress/
 
 # env
 .env
