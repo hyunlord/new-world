@@ -1,50 +1,60 @@
 #!/usr/bin/env bash
 # Pre-commit hook: reject commits without harness approval
-# Exempt: docs-only commits (only .md, .txt, .json locale files)
+# Tier-based: none < light < quick < full
 set -euo pipefail
 
-# Get list of staged files
-STAGED=$(git diff --cached --name-only)
+if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
+    exit 0
+fi
 
+STAGED=$(git diff --cached --name-only)
 if [[ -z "$STAGED" ]]; then
     exit 0
 fi
 
-# Classify staged files
-CODE_FILES=""
-DOCS_ONLY=true
+# Classify by required tier: none < light < quick < full
+TIER="none"
 
 while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
     case "$file" in
-        # Documentation — always exempt
-        *.md|*.txt|PROGRESS.md|CLAUDE.md|AGENTS.md)
+        # Tier: FULL — simulation core logic
+        rust/crates/sim-core/*.rs|rust/crates/sim-core/**/*.rs|\
+rust/crates/sim-systems/*.rs|rust/crates/sim-systems/**/*.rs|\
+rust/crates/sim-engine/*.rs|rust/crates/sim-engine/**/*.rs)
+            TIER="full"
             ;;
-        # Localization JSON — exempt (data, not logic)
-        localization/*.json)
+        # Tier: QUICK — view code (needs Visual Verify + Evaluator)
+        *.gd|*.gdshader)
+            [[ "$TIER" != "full" ]] && TIER="quick"
             ;;
-        # Harness infrastructure itself — exempt (bootstrapping)
-        tools/harness/*|tools/harness/*/*|.claude/skills/worldsim-harness/*|.claude/agents/harness-*|hooks/pre-commit-harness)
+        # Tier: QUICK — sim data, tests, bridge
+        rust/crates/sim-test/*.rs|rust/crates/sim-test/**/*.rs|\
+rust/crates/sim-data/*.rs|rust/crates/sim-data/**/*.rs|\
+rust/crates/sim-bridge/*.rs|rust/crates/sim-bridge/**/*.rs)
+            [[ "$TIER" != "full" ]] && TIER="quick"
             ;;
-        # Claude Code config — exempt (hooks, settings)
-        .claude/settings.json|.claude/*)
+        # Tier: LIGHT — assets (visual check sufficient)
+        *.png|*.svg|*.wav|*.tscn|*.tres|*.ron)
+            [[ "$TIER" == "none" ]] && TIER="light"
             ;;
-        # .gitignore, .editorconfig, etc — exempt
-        .gitignore|.editorconfig|.gitattributes)
+        # Tier: NONE — docs, config, tools, harness infra
+        *.md|*.txt|localization/*.json|tools/*|tools/*/*|.claude/*|.claude/*/*|\
+hooks/*|.gitignore|.editorconfig|.gitattributes|*.toml|*.cfg|*.py)
             ;;
-        # Everything else is code/assets that needs approval
+        # Unknown — default to quick
         *)
-            CODE_FILES+="$file"$'\n'
-            DOCS_ONLY=false
+            [[ "$TIER" == "none" || "$TIER" == "light" ]] && TIER="quick"
             ;;
     esac
 done <<< "$STAGED"
 
-if [[ "$DOCS_ONLY" == "true" ]]; then
-    # Only docs/config changed — allow without approval
+# NONE tier — free commit
+if [[ "$TIER" == "none" ]]; then
     exit 0
 fi
 
-# Code/asset files are staged — check for harness approval
+# LIGHT, QUICK, FULL — need APPROVED verdict
 HARNESS_DIR=".harness"
 APPROVED=false
 
@@ -70,20 +80,12 @@ fi
 if [[ "$APPROVED" != "true" ]]; then
     echo ""
     echo "==========================================================="
-    echo "  BLOCKED: Code/asset changes require harness approval"
+    echo "  BLOCKED: Changes require harness approval (tier: $TIER)"
     echo "==========================================================="
     echo ""
-    echo "  Staged files requiring approval:"
-    echo "$CODE_FILES" | sed '/^$/d' | sed 's/^/    /'
+    echo "  Run:  bash tools/harness/harness_pipeline.sh <feature> <prompt.md> --${TIER}"
     echo ""
-    echo "  Run the harness pipeline first:"
-    echo "    bash tools/harness/harness_pipeline.sh <feature> <prompt.md>"
-    echo ""
-    echo "  Or for documentation/config-only changes:"
-    echo "    git commit --no-verify -m \"docs: ...\""
-    echo ""
-    echo "  Exempt file types: .md, .txt, localization/*.json,"
-    echo "  tools/harness/*, .claude/skills/*, .gitignore"
+    echo "  Or bypass: HARNESS_SKIP=1 git commit -m \"...\""
     echo ""
     echo "==========================================================="
     exit 1

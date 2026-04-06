@@ -823,7 +823,7 @@ fn run_needs_math_bench(args: &[String]) {
 #[cfg(test)]
 mod tests {
     use super::{entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT};
-    use sim_core::components::{Age, Behavior, Identity, Personality, Position, SteeringParams};
+    use sim_core::components::{Age, Behavior, Identity, Needs, Personality, Position, SteeringParams};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
     use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
@@ -1915,6 +1915,149 @@ mod tests {
         }
 
         println!("[harness] multimesh_buffer: {} agents, {} floats, all valid", count, buffer.len());
+    }
+
+    /// b3_fps_optimization — Assertion 1 (Type A)
+    /// Agent count must be exactly 20 after 2000 ticks (seed 42).
+    /// A silent despawn of even one agent is a bug that would permanently
+    /// break the name-draw path verified by visual verification.
+    #[test]
+    fn harness_renderer_agent_count_stable_2000_ticks() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        // Type A: exactly 20 alive agents — not ≥1
+        let alive = count_alive(&engine);
+        assert_eq!(
+            alive,
+            20,
+            "expected exactly 20 alive agents after 2000 ticks, got {}",
+            alive
+        );
+        println!("[harness] renderer_agent_count_stable: alive={}", alive);
+    }
+
+    /// b3_fps_optimization — Assertion 2 (Type A)
+    /// No Identity.name must be empty after 2000 ticks (seed 42).
+    /// The `identity.rs` default is "Unknown" (non-empty).
+    /// An empty name means the init path is broken and permanently
+    /// prevents name-draw from the early-continue path.
+    #[test]
+    fn harness_renderer_no_empty_identity_name() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let world = engine.world();
+        let mut empty_count = 0usize;
+        let mut total = 0usize;
+        for (_, identity) in world.query::<&Identity>().iter() {
+            total += 1;
+            // Type A: identity name must be non-empty
+            if identity.name.is_empty() {
+                empty_count += 1;
+            }
+            println!("[harness] identity name: {:?}", identity.name);
+        }
+        assert_eq!(
+            empty_count,
+            0,
+            "{} of {} Identity components have empty names",
+            empty_count,
+            total
+        );
+        println!("[harness] renderer_no_empty_identity_name: total={}, empty={}", total, empty_count);
+    }
+
+    /// b3_fps_optimization — Assertion 3 (Type A)
+    /// All agent positions must be within [0.0, 256.0] after 2000 ticks (seed 42).
+    /// WorldMap is 256×256 tiles. Out-of-bounds positions corrupt screen
+    /// coordinate projection in `_draw_binary_snapshots()`.
+    #[test]
+    fn harness_renderer_positions_within_bounds() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let world = engine.world();
+        let mut out_of_bounds = 0usize;
+        let mut total = 0usize;
+        for (_, position) in world.query::<&Position>().iter() {
+            total += 1;
+            // Type A: confirmed bounds from position.rs — world is 256×256 tiles
+            let in_bounds = position.x >= 0.0
+                && position.x <= 256.0
+                && position.y >= 0.0
+                && position.y <= 256.0;
+            if !in_bounds {
+                eprintln!(
+                    "[harness] OUT OF BOUNDS position: ({}, {})",
+                    position.x, position.y
+                );
+                out_of_bounds += 1;
+            }
+        }
+        assert_eq!(
+            out_of_bounds,
+            0,
+            "{} of {} positions are outside [0.0, 256.0] bounds",
+            out_of_bounds,
+            total
+        );
+        println!(
+            "[harness] renderer_positions_within_bounds: total={}, out_of_bounds={}",
+            total, out_of_bounds
+        );
+    }
+
+    /// b3_fps_optimization — Assertion 4 (Type E soft)
+    /// At least 2 agents must have Needs.values[Hunger] < 0.30 at tick 4380.
+    /// `BEHAVIOR_FORCE_FORAGE_HUNGER_MAX = 0.30` is a named config constant.
+    /// If 0–1 agents reach this, hunger decay is not running and the
+    /// `danger_flags` visual path exercised by the early-continue is untestable.
+    /// Generator emits actual distribution for building a Type C baseline.
+    #[test]
+    fn harness_renderer_hunger_distribution_soft() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let world = engine.world();
+        let mut below_threshold = 0usize;
+        let mut total = 0usize;
+        let threshold = sim_core::config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX;
+
+        for (_, needs) in world.query::<&Needs>().iter() {
+            total += 1;
+            // NeedType::Hunger = 0
+            let hunger = needs.values[0];
+            if hunger < threshold {
+                below_threshold += 1;
+            }
+        }
+
+        // Emit distribution for Type C baseline building
+        eprintln!(
+            "[harness] hunger_distribution: total={}, below_threshold({})={}, ratio={:.2}",
+            total,
+            threshold,
+            below_threshold,
+            if total > 0 {
+                below_threshold as f64 / total as f64
+            } else {
+                0.0
+            }
+        );
+
+        // Type E soft: at least 2 agents should have hunger < BEHAVIOR_FORCE_FORAGE_HUNGER_MAX
+        assert!(
+            below_threshold >= 2,
+            "expected ≥2 agents with hunger < {} at tick 4380, got {} of {} (hunger decay not running?)",
+            threshold,
+            below_threshold,
+            total
+        );
+        println!(
+            "[harness] renderer_hunger_distribution_soft: {}/{} agents below threshold {}",
+            below_threshold, total, threshold
+        );
     }
 }
 
