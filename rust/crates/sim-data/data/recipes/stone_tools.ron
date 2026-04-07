@@ -19,7 +19,7 @@
         ),
         time_ticks: 60,
         skill_tag: Some("knapping"),
-        min_skill_level: Some(0.1),
+        min_skill_level: Some(0.0),
     ),
     RecipeDef(
         id: "stone_axe",
@@ -48,6 +48,6 @@
         ),
         time_ticks: 90,
         skill_tag: Some("knapping"),
-        min_skill_level: Some(0.2),
+        min_skill_level: Some(0.0),
     ),
 ]
