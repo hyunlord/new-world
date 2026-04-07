@@ -76,8 +76,41 @@ pub struct RuleResourceModifier {
 pub struct RuleSpecialZone {
     /// Zone type identifier.
     pub kind: String,
-    /// Inclusive count range.
+    /// Inclusive count range (min, max).
     pub count: (u32, u32),
+    /// Cluster radius in tiles.
+    #[serde(default = "default_zone_radius")]
+    pub radius: u32,
+    /// Terrain type to apply to tiles within the zone (matches `TerrainType` variant name).
+    #[serde(default)]
+    pub terrain_override: Option<String>,
+    /// Resource to add or boost within the zone.
+    #[serde(default)]
+    pub resource_boost: Option<ZoneResourceBoost>,
+    /// Temperature delta applied to zone tiles (positive = warmer, negative = colder).
+    #[serde(default)]
+    pub temperature_mod: Option<f32>,
+    /// Moisture delta applied to zone tiles.
+    #[serde(default)]
+    pub moisture_mod: Option<f32>,
+}
+
+fn default_zone_radius() -> u32 {
+    3
+}
+
+/// Resource modification applied to each tile inside a special zone.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct ZoneResourceBoost {
+    /// Resource type identifier (matches `ResourceType` variant name, e.g. `"Food"`).
+    pub resource: String,
+    /// Amount added to the tile resource (or used as initial amount if absent).
+    pub amount: f64,
+    /// Max-amount cap; an existing resource's cap is raised to this value if lower.
+    pub max_amount: f64,
+    /// Regen rate; an existing resource's rate is raised to this value if lower.
+    pub regen_rate: f64,
 }
 
 /// Special resource definition.
@@ -160,5 +193,49 @@ mod tests {
         assert_eq!(ruleset.name, "BaseRules");
         assert_eq!(ruleset.resource_modifiers.len(), 1);
         assert_eq!(ruleset.influence_channels.len(), 1);
+    }
+
+    #[test]
+    fn parses_rule_special_zone_with_all_fields() {
+        let zone: RuleSpecialZone = ron::from_str(
+            r#"RuleSpecialZone(
+                kind: "hot_spring",
+                count: (2, 4),
+                radius: 3,
+                terrain_override: Some("Grassland"),
+                resource_boost: Some(ZoneResourceBoost(
+                    resource: "Food",
+                    amount: 8.0,
+                    max_amount: 12.0,
+                    regen_rate: 0.5,
+                )),
+                temperature_mod: Some(0.3),
+                moisture_mod: Some(0.2),
+            )"#,
+        )
+        .expect("RuleSpecialZone with all fields should parse");
+
+        assert_eq!(zone.kind, "hot_spring");
+        assert_eq!(zone.count, (2, 4));
+        assert_eq!(zone.radius, 3);
+        assert_eq!(zone.terrain_override.as_deref(), Some("Grassland"));
+        let boost = zone.resource_boost.as_ref().expect("resource_boost must be Some");
+        assert_eq!(boost.resource, "Food");
+        assert!((boost.amount - 8.0).abs() < 1e-6);
+        assert_eq!(zone.temperature_mod, Some(0.3));
+    }
+
+    #[test]
+    fn parses_rule_special_zone_defaults() {
+        let zone: RuleSpecialZone = ron::from_str(
+            r#"RuleSpecialZone(kind: "dungeon_node", count: (1, 3))"#,
+        )
+        .expect("RuleSpecialZone with only required fields should parse");
+
+        assert_eq!(zone.radius, 3, "default radius should be 3");
+        assert!(zone.terrain_override.is_none());
+        assert!(zone.resource_boost.is_none());
+        assert!(zone.temperature_mod.is_none());
+        assert!(zone.moisture_mod.is_none());
     }
 }
