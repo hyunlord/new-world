@@ -2587,6 +2587,103 @@ mod tests {
         );
     }
 
+    /// Assertion T4/T5 — Combined: NS bias drives exploratory action rate AND all TCI axes stay in [0,1].
+    /// Runs 2000 ticks (1900 warm-up + 100 sample). NS ≥ 0.7 group must select Explore/Forage
+    /// at least as often as NS ≤ 0.3 group (10pp noise margin). All expressed axes must be finite
+    /// and within [0.0, 1.0] after the full run.
+    #[test]
+    fn harness_temperament_biases_behavior() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(1900);
+
+        // Sample over 100 ticks to catch full action cycles (Explore=12t, Forage=24t).
+        let mut high_ns_explore = 0u32;
+        let mut low_ns_explore = 0u32;
+        let mut high_ns_samples = 0u32;
+        let mut low_ns_samples = 0u32;
+
+        for _ in 0..100 {
+            engine.run_ticks(1);
+            let world = engine.world();
+            for (_, (behavior, temperament, age)) in
+                world.query::<(&Behavior, &Temperament, &Age)>().iter()
+            {
+                if !age.alive {
+                    continue;
+                }
+                let ns = temperament.expressed.ns;
+                let is_exploratory = matches!(
+                    behavior.current_action,
+                    ActionType::Explore | ActionType::Forage
+                );
+                if ns >= 0.70 {
+                    high_ns_samples += 1;
+                    if is_exploratory {
+                        high_ns_explore += 1;
+                    }
+                } else if ns <= 0.30 {
+                    low_ns_samples += 1;
+                    if is_exploratory {
+                        low_ns_explore += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness] temperament_biases_behavior: \
+             high_ns(≥0.70) samples={} explore={} | low_ns(≤0.30) samples={} explore={}",
+            high_ns_samples, high_ns_explore, low_ns_samples, low_ns_explore
+        );
+
+        // Prerequisite: distribution must be wide enough for thresholds 0.70/0.30.
+        assert!(
+            high_ns_samples >= 10 && low_ns_samples >= 10,
+            "NS distribution too narrow for ≥0.70/≤0.30 thresholds \
+             (high_samples={} low_samples={}). Check PRS weight spread.",
+            high_ns_samples, low_ns_samples
+        );
+
+        // Directional: high-NS group must not be worse than low-NS by more than 10pp.
+        let high_rate = high_ns_explore as f64 / high_ns_samples as f64;
+        let low_rate = low_ns_explore as f64 / low_ns_samples as f64;
+        eprintln!(
+            "[harness] temperament_biases_behavior: high_rate={:.3} low_rate={:.3}",
+            high_rate, low_rate
+        );
+        assert!(
+            high_rate >= low_rate - 0.10,
+            "NS bias inverted or absent: high_ns_rate={:.3} low_ns_rate={:.3} gap={:.3}. \
+             NS ≥ 0.70 agents should select Explore/Forage at least as often as NS ≤ 0.30.",
+            high_rate, low_rate, low_rate - high_rate
+        );
+
+        // Bounds: all expressed TCI axes must be finite and in [0.0, 1.0] after 2000 ticks.
+        let world = engine.world();
+        let mut axis_violations = 0usize;
+        for (_, temperament) in world.query::<&Temperament>().iter() {
+            for (name, val) in [
+                ("ns", temperament.expressed.ns),
+                ("ha", temperament.expressed.ha),
+                ("rd", temperament.expressed.rd),
+                ("p", temperament.expressed.p),
+            ] {
+                if !val.is_finite() || val < 0.0 || val > 1.0 {
+                    eprintln!(
+                        "[harness] temperament_biases_behavior: axis {} = {:.6} out of [0,1]",
+                        name, val
+                    );
+                    axis_violations += 1;
+                }
+            }
+        }
+        assert_eq!(
+            axis_violations, 0,
+            "{} TCI axis violations at tick 2000 (NaN/inf or out of [0,1]).",
+            axis_violations
+        );
+    }
+
     /// Assertion 13 — Type A: archetype_label_key() returns exactly one of the 4 valid locale keys.
     #[test]
     fn harness_archetype_label_is_valid_string() {

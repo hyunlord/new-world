@@ -72,6 +72,7 @@ var _stress_row: Dictionary = {}
 var _personality_panel: VBoxContainer
 var _personality_archetype_label: Label
 var _personality_temperament_label: Label
+var _personality_awakened_label: Label
 var _tci_rows: Array[Dictionary] = []
 var _hexaco_rows: Array[Dictionary] = []
 var _trait_tags_label: Label
@@ -816,6 +817,12 @@ func _build_personality_tab() -> void:
 	_personality_temperament_label.add_theme_color_override("font_color", Color(0.44, 0.53, 0.63))
 	_personality_panel.add_child(_personality_temperament_label)
 
+	_personality_awakened_label = Label.new()
+	_personality_awakened_label.add_theme_font_size_override("font_size", 10)
+	_personality_awakened_label.add_theme_color_override("font_color", Color(0.80, 0.65, 0.12))
+	_personality_awakened_label.visible = false
+	_personality_panel.add_child(_personality_awakened_label)
+
 	_add_section_spacer(_personality_panel)
 
 	_add_section_title(_personality_panel, "UI_TCI_TITLE")
@@ -853,6 +860,10 @@ func _refresh_personality() -> void:
 	var temp_key: String = str(_detail.get("temperament_label_key", ""))
 	_personality_temperament_label.text = Locale.ltr(temp_key) if not temp_key.is_empty() else ""
 	_personality_temperament_label.visible = not temp_key.is_empty()
+
+	var awakened: bool = _detail.get("temperament_awakened", false)
+	_personality_awakened_label.text = Locale.ltr("TEMPERAMENT_AWAKENED") if awakened else ""
+	_personality_awakened_label.visible = awakened
 
 	var tci_fields: Array[String] = ["tci_ns", "tci_ha", "tci_rd", "tci_p"]
 	var tci_keys: Array[String] = ["UI_TCI_NS", "UI_TCI_HA", "UI_TCI_RD", "UI_TCI_P"]
