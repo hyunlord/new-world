@@ -2781,6 +2781,85 @@ mod tests {
         );
     }
 
+    /// Verifies the end-to-end crafting loop:
+    /// cognition selects Craft → CraftingRuntimeSystem assigns recipe → world.rs
+    /// completes craft → item appears in agent inventory → causal log records the event.
+    ///
+    /// Requires the authoritative RON data registry (loaded explicitly here because
+    /// make_stage1_engine does not load it by default).
+    #[test]
+    fn harness_crafting_produces_tool() {
+        use sim_core::components::Inventory;
+        use sim_core::ids::EntityId;
+        use std::sync::Arc;
+
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Load RON data registry — CraftingRuntimeSystem returns early without it.
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data directory must be resolvable");
+        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("authoritative RON registry must load cleanly for crafting harness");
+        engine.resources_mut().data_registry = Some(Arc::new(registry));
+
+        // Pre-seed stone stockpile so crafting can begin on tick 1 (gathering also
+        // accumulates stone over time, but seeding avoids a cold-start race).
+        if let Some(s) = engine.resources_mut().settlements.get_mut(&SettlementId(1)) {
+            s.stockpile_stone = 100.0;
+            s.stockpile_wood = 50.0;
+        }
+
+        // Two game years — enough for agents to gather, craft, use, and re-craft tools.
+        engine.run_ticks(8760);
+
+        let world = engine.world();
+        let resources = engine.resources();
+
+        // Scan every agent's causal log for crafting_system entries.
+        let mut craft_events: u32 = 0;
+        for (entity, (_,)) in world.query::<(&Identity,)>().iter() {
+            let entity_id = EntityId(entity.id() as u64);
+            for entry in resources.causal_log.recent(entity_id, 32) {
+                if entry.cause.system == "crafting_system" {
+                    craft_events += 1;
+                }
+            }
+        }
+
+        // Count agents currently holding a tool in inventory.
+        let mut agents_with_tools: u32 = 0;
+        for (_entity, (inventory,)) in world.query::<(&Inventory,)>().iter() {
+            let has_tool = inventory.items.iter().any(|&item_id| {
+                resources.item_store.get(item_id).map_or(false, |item| {
+                    matches!(
+                        item.template_id.as_str(),
+                        "knife" | "axe" | "scraper" | "rope"
+                    )
+                })
+            });
+            if has_tool {
+                agents_with_tools += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness] crafting: craft_events={craft_events} \
+             agents_with_tools={agents_with_tools} item_store_total={}",
+            resources.item_store.len()
+        );
+
+        // Type C (seed=42, 2026-04-07): after 2 years with crafting enabled,
+        // at least one agent must be holding a crafted tool.
+        // Note: causal_log is a 32-slot ring buffer per entity; after 8760 ticks other
+        // systems overwrite early craft events, so inventory presence is the reliable check.
+        assert!(
+            agents_with_tools >= 1,
+            "Expected ≥1 agent with a crafted tool after 8760 ticks, got {agents_with_tools}. \
+             craft_events={craft_events}, item_store_total={}",
+            resources.item_store.len()
+        );
+    }
+
 }
 
 fn pathfind_bench_inputs() -> (

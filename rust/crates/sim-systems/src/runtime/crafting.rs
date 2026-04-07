@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
 use hecs::World;
-use sim_core::components::{Behavior, Identity, Inventory};
+use sim_core::components::{Behavior, Identity, Inventory, Skills};
 use sim_core::config;
 use sim_core::{
     ActionType, CausalEvent, CauseRef, EntityId, ItemDerivedStats, ItemId, ItemInstance, ItemOwner,
@@ -52,9 +52,13 @@ impl SimSystem for CraftingRuntimeSystem {
             return;
         };
         let registry = registry_arc.as_ref();
-        let mut query = world.query::<(&mut Behavior, &Identity, Option<&Inventory>)>();
+        // No recipes currently require buildings or tech; these empty sets future-proof the check.
+        let empty_tech: HashSet<String> = HashSet::new();
+        let empty_buildings: HashSet<String> = HashSet::new();
+        let mut query =
+            world.query::<(&mut Behavior, &Identity, Option<&Inventory>, Option<&Skills>)>();
 
-        for (_, (behavior, identity, inventory_opt)) in &mut query {
+        for (_, (behavior, identity, inventory_opt, skills_opt)) in &mut query {
             if behavior.current_action != ActionType::Craft {
                 continue;
             }
@@ -75,7 +79,9 @@ impl SimSystem for CraftingRuntimeSystem {
                 continue;
             };
 
-            let Some(selection) = select_best_recipe(registry, settlement) else {
+            let Some(selection) =
+                select_best_recipe(registry, settlement, &empty_tech, &empty_buildings, skills_opt)
+            else {
                 clear_craft_behavior(behavior);
                 continue;
             };
@@ -340,7 +346,20 @@ fn recipe_stockpile_costs(recipe: &RecipeDef) -> Option<BTreeMap<String, f64>> {
     Some(costs)
 }
 
-fn select_best_recipe(registry: &DataRegistry, settlement: &Settlement) -> Option<CraftSelection> {
+/// Selects the best craftable recipe for an agent given settlement stockpile,
+/// recipe prerequisites, and agent skill level.
+///
+/// `tech_unlocked` and `building_tags` gate `RecipeRequires`; pass empty sets when
+/// no buildings or technologies exist yet (Stone Age baseline).
+/// `skills_opt` is `None` when the agent has no `Skills` component, which is
+/// treated as skill level 0.0 — passing any recipe with `min_skill_level: 0.0`.
+fn select_best_recipe(
+    registry: &DataRegistry,
+    settlement: &Settlement,
+    tech_unlocked: &HashSet<String>,
+    building_tags: &HashSet<String>,
+    skills_opt: Option<&Skills>,
+) -> Option<CraftSelection> {
     let mut recipe_ids: Vec<&str> = registry.recipes.keys().map(String::as_str).collect();
     recipe_ids.sort_unstable();
 
@@ -349,6 +368,33 @@ fn select_best_recipe(registry: &DataRegistry, settlement: &Settlement) -> Optio
         let Some(recipe) = registry.recipes.get(recipe_id) else {
             continue;
         };
+
+        // Enforce building + technology prerequisites.
+        if let Some(requires) = &recipe.requires {
+            if let Some(ref tech_id) = requires.tech {
+                if !tech_unlocked.contains(tech_id) {
+                    continue;
+                }
+            }
+            if let Some(ref building_tag) = requires.building_tag {
+                if !building_tags.contains(building_tag) {
+                    continue;
+                }
+            }
+        }
+
+        // Enforce minimum skill level (normalized: level 0–100 → 0.0–1.0).
+        if let Some(ref skill_tag) = recipe.skill_tag {
+            if let Some(min_level) = recipe.min_skill_level {
+                let agent_skill = skills_opt
+                    .map(|s| s.get_level(skill_tag) as f64 / 100.0)
+                    .unwrap_or(0.0);
+                if agent_skill < min_level {
+                    continue;
+                }
+            }
+        }
+
         let Some(costs) = recipe_stockpile_costs(recipe.as_ref()) else {
             continue;
         };
