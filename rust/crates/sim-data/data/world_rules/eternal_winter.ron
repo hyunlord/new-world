@@ -1,0 +1,23 @@
+[
+    WorldRuleset(
+        name: "EternalWinter",
+        priority: 10,
+        resource_modifiers: [
+            RuleResourceModifier(target: "surface_foraging", multiplier: 0.3),
+        ],
+        special_zones: [],
+        special_resources: [],
+        agent_modifiers: [],
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: Some("eternal_winter"),
+            hunger_decay_mul: Some(1.3),
+            warmth_decay_mul: Some(2.0),
+            food_regen_mul: Some(0.2),
+            wood_regen_mul: Some(0.5),
+            farming_enabled: Some(false),
+            temperature_bias: Some(-0.7),
+            disaster_frequency_mul: None,
+        )),
+    ),
+]

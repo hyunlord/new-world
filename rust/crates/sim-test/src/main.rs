@@ -2905,6 +2905,60 @@ mod tests {
         );
     }
 
+    #[test]
+    fn harness_world_rules_global_constants() {
+        // Type A: SimResources must initialize global-constant fields from config defaults.
+        // After make_stage1_engine (which loads base_rules.ron with global_constants: None),
+        // all runtime fields must equal the hardcoded config defaults.
+        let engine = make_stage1_engine(42, 20);
+        let resources = engine.resources();
+
+        assert!(
+            (resources.hunger_decay_rate - sim_core::config::HUNGER_DECAY_RATE).abs() < 1e-9,
+            "hunger_decay_rate must default to config::HUNGER_DECAY_RATE, got {}",
+            resources.hunger_decay_rate
+        );
+        assert!(
+            (resources.warmth_decay_rate - sim_core::config::WARMTH_DECAY_RATE).abs() < 1e-9,
+            "warmth_decay_rate must default to config::WARMTH_DECAY_RATE, got {}",
+            resources.warmth_decay_rate
+        );
+        assert!(
+            (resources.food_regen_mul - 1.0).abs() < 1e-9,
+            "food_regen_mul must default to 1.0, got {}",
+            resources.food_regen_mul
+        );
+        assert!(
+            (resources.wood_regen_mul - 1.0).abs() < 1e-9,
+            "wood_regen_mul must default to 1.0, got {}",
+            resources.wood_regen_mul
+        );
+        assert!(
+            resources.farming_enabled,
+            "farming_enabled must default to true"
+        );
+        assert_eq!(
+            resources.season_mode, "default",
+            "season_mode must default to \"default\""
+        );
+        assert!(
+            (resources.temperature_bias - 0.0).abs() < 1e-9,
+            "temperature_bias must default to 0.0, got {}",
+            resources.temperature_bias
+        );
+
+        eprintln!(
+            "[harness] world_rules_global_constants: hunger_decay={:.4} warmth_decay={:.4} \
+             food_regen={:.2} wood_regen={:.2} farming={} season={}",
+            resources.hunger_decay_rate,
+            resources.warmth_decay_rate,
+            resources.food_regen_mul,
+            resources.wood_regen_mul,
+            resources.farming_enabled,
+            resources.season_mode,
+        );
+    }
+
 }
 
 fn pathfind_bench_inputs() -> (

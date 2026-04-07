@@ -187,7 +187,7 @@ impl SimSystem for NeedsRuntimeSystem {
 
             let decays = body::needs_base_decay_step(
                 needs.get(NeedType::Hunger) as f32,
-                config::HUNGER_DECAY_RATE as f32,
+                resources.hunger_decay_rate as f32,
                 1.0,
                 config::HUNGER_METABOLIC_MIN as f32,
                 config::HUNGER_METABOLIC_RANGE as f32,
@@ -195,7 +195,7 @@ impl SimSystem for NeedsRuntimeSystem {
                 config::SOCIAL_DECAY_RATE as f32,
                 config::SAFETY_DECAY_RATE as f32,
                 config::THIRST_DECAY_RATE as f32,
-                config::WARMTH_DECAY_RATE as f32,
+                resources.warmth_decay_rate as f32,
                 tile_temp,
                 has_tile_temp,
                 config::WARMTH_TEMP_NEUTRAL as f32,

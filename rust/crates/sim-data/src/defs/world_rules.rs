@@ -1,5 +1,37 @@
 use serde::{Deserialize, Serialize};
 
+/// Global simulation constant overrides applied at world-load time.
+///
+/// Each field is `Option<_>` — `None` means "use the hardcoded config default".
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct GlobalConstants {
+    /// Season mode override: "default", "eternal_winter", "eternal_summer", "no_seasons".
+    #[serde(default)]
+    pub season_mode: Option<String>,
+    /// Hunger decay rate multiplier (1.0 = default, 2.0 = twice as fast).
+    #[serde(default)]
+    pub hunger_decay_mul: Option<f64>,
+    /// Warmth decay rate multiplier (1.0 = default).
+    #[serde(default)]
+    pub warmth_decay_mul: Option<f64>,
+    /// Food regeneration multiplier (0.0 = no food regrows, 1.0 = default).
+    #[serde(default)]
+    pub food_regen_mul: Option<f64>,
+    /// Wood regeneration multiplier.
+    #[serde(default)]
+    pub wood_regen_mul: Option<f64>,
+    /// Whether farming/agriculture is enabled.
+    #[serde(default)]
+    pub farming_enabled: Option<bool>,
+    /// Base temperature bias (-1.0 = frigid, 0.0 = default, 1.0 = scorching).
+    #[serde(default)]
+    pub temperature_bias: Option<f64>,
+    /// Disaster frequency multiplier (0.0 = no disasters, 1.0 = default, 2.0 = double).
+    #[serde(default)]
+    pub disaster_frequency_mul: Option<f64>,
+}
+
 /// Declarative world ruleset definition.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
@@ -23,6 +55,9 @@ pub struct WorldRuleset {
     /// Optional influence-channel metadata overrides.
     #[serde(default)]
     pub influence_channels: Vec<InfluenceChannelRule>,
+    /// Global simulation constant overrides applied at world-load time.
+    #[serde(default)]
+    pub global_constants: Option<GlobalConstants>,
 }
 
 /// Resource-economy modifier rule.

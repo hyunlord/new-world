@@ -75,7 +75,12 @@ impl SimSystem for ResourceRegenSystem {
                         .get(resource_type_to_rule_tag(deposit.resource_type))
                         .copied()
                         .unwrap_or(1.0);
-                    let next_amount = deposit.amount + deposit.regen_rate * multiplier;
+                    let type_mul = match deposit.resource_type {
+                        ResourceType::Food => resources.food_regen_mul,
+                        ResourceType::Wood => resources.wood_regen_mul,
+                        _ => 1.0,
+                    };
+                    let next_amount = deposit.amount + deposit.regen_rate * multiplier * type_mul;
                     deposit.amount = next_amount.min(deposit.max_amount);
                 }
             }
