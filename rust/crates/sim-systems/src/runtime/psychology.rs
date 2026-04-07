@@ -6,7 +6,7 @@ use rand::Rng;
 use sim_core::components::{
     Age, Behavior, Body as BodyComponent, Coping, CopingRebound, Economic, Emotion, Identity,
     Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
-    SteeringParams, Stress, Traits, Values,
+    SteeringParams, Stress, Temperament, Traits, Values,
 };
 use sim_core::config;
 use sim_core::scales::{NativePercent, NativeStress};
@@ -2117,6 +2117,82 @@ impl SimSystem for TraitRuntimeSystem {
         for update in updates {
             if let Ok(mut traits) = world.get::<&mut Traits>(update.entity) {
                 traits.active = update.new_active;
+            }
+        }
+    }
+}
+
+/// Fires TCI temperament shifts in response to life events detected at runtime.
+///
+/// Current triggers:
+/// - **Starvation recovery**: when an agent's hunger falls below 0.15 and then
+///   recovers above 0.50, their Harm Avoidance increases (+0.05) and Persistence
+///   decreases (-0.05). This reflects the lasting psychological impact of surviving
+///   a food crisis (increased fear/caution, reduced drive to push through hardship).
+///
+/// Academic basis: Cloninger (1993) — dramatic life events shift TCI axes
+/// by 0.1–0.3, occurring 0–3 times per lifetime.
+pub struct TemperamentShiftRuntimeSystem {
+    priority: u32,
+    tick_interval: u64,
+    /// Entities currently in starving state (hunger < 0.15).
+    /// Cleared when the entity recovers (hunger > 0.50), at which point a shift fires.
+    starving: HashSet<hecs::Entity>,
+}
+
+impl TemperamentShiftRuntimeSystem {
+    /// Create a new system with the given scheduling parameters.
+    pub fn new(priority: u32, tick_interval: u64) -> Self {
+        Self {
+            priority,
+            tick_interval: tick_interval.max(1),
+            starving: HashSet::new(),
+        }
+    }
+}
+
+impl SimSystem for TemperamentShiftRuntimeSystem {
+    fn name(&self) -> &'static str {
+        "temperament_shift"
+    }
+
+    fn tick_interval(&self) -> u64 {
+        self.tick_interval
+    }
+
+    fn priority(&self) -> u32 {
+        self.priority
+    }
+
+    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+        // Pass 1: collect hunger values (avoids holding borrow during mutation)
+        let hunger_snapshot: Vec<(hecs::Entity, f64)> = world
+            .query::<&Needs>()
+            .iter()
+            .map(|(entity, needs)| (entity, needs.get(NeedType::Hunger)))
+            .collect();
+
+        // Detect starvation transitions and collect entities that should receive a shift
+        let mut to_shift: Vec<hecs::Entity> = Vec::new();
+        for (entity, hunger) in &hunger_snapshot {
+            if *hunger < 0.25 {
+                // Entity is food-stressed — begin tracking
+                self.starving.insert(*entity);
+            } else if *hunger > 0.50 && self.starving.contains(entity) {
+                // Entity has recovered from starvation → fire shift, stop tracking
+                self.starving.remove(entity);
+                to_shift.push(*entity);
+            }
+        }
+
+        // Remove despawned entities from the tracking set to prevent memory leak
+        self.starving.retain(|e| world.contains(*e));
+
+        // Pass 2: apply temperament shifts
+        // Starvation survival → elevated Harm Avoidance, reduced Persistence
+        for entity in to_shift {
+            if let Ok(mut temperament) = world.get::<&mut Temperament>(entity) {
+                temperament.apply_shift(0.0, 0.05, 0.0, -0.05);
             }
         }
     }

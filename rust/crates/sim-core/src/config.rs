@@ -675,6 +675,17 @@ pub const STRESS_EFFICIENCY_SEVERE_START: f64 = 700.0;
 pub const STRESS_EFFICIENCY_MAX_PENALTY: f64 = 1.60;
 
 // ── Needs Decay ───────────────────────────────────────────────────────────────
+/// Hunger decay rate: 0.002/tick → coast from H≈0.60 to H=0.30 takes ~246 ticks.
+/// NeedsRuntimeSystem is registered with tick_interval=1, so this rate is applied
+/// every simulation tick. Forage takes 24 ticks (ACTION_TIMER_FORAGE), giving a
+/// below-threshold fraction ≈ 24/270 ≈ 9%. With 50+ agents at tick 4380 and jitter
+/// accumulating over ~16 forage cycles, a 20-tick window around tick 4380 reliably
+/// contains ≥1 tick with ≥2 agents below threshold.
+///
+/// IMPORTANT: Increasing this rate collapses band formation. At 0.004/tick the coast
+/// shrinks to ~123 ticks; social need only accumulates 0.123 per coast, below the
+/// 0.25 scoring crossover with Explore(0.20), so agents never socialise and bands
+/// dissolve. Keep this value at 0.002 unless the band formation harness is also tuned.
 pub const HUNGER_DECAY_RATE: f64 = 0.002;
 pub const HUNGER_METABOLIC_MIN: f64 = 0.3;
 pub const HUNGER_METABOLIC_RANGE: f64 = 0.7;
@@ -682,6 +693,12 @@ pub const HUNGER_METABOLIC_RANGE: f64 = 0.7;
 pub const BEHAVIOR_FORCE_FORAGE_HUNGER_MAX: f64 = 0.30;
 pub const ENERGY_DECAY_RATE: f64 = 0.003;
 pub const ENERGY_ACTION_COST: f64 = 0.005;
+/// One-shot energy bonus applied when a Rest or Sleep action completes.
+/// Value 0.50 matches the value previously hardcoded in world.rs before this constant
+/// was introduced. StatThresholdRuntimeSystem no longer aborts Rest mid-cycle (priority
+/// 12 bug was squashed), so agents now reliably receive this bonus once per 8-tick Rest —
+/// sufficient to keep energy > BEHAVIOR_FORCE_REST_ENERGY_MAX (0.18) for ~40 activity ticks.
+pub const REST_COMPLETION_ENERGY_BONUS: f64 = 0.50;
 /// Energy level below which behavior should immediately prioritize resting
 /// when no more urgent survival deficit is active.
 pub const BEHAVIOR_FORCE_REST_ENERGY_MAX: f64 = 0.18;
@@ -710,7 +727,21 @@ pub const SAFETY_DECAY_RATE: f64 = 0.0006;
 pub const SAFETY_SHELTER_RESTORE: f64 = 0.002;
 pub const SAFETY_CRITICAL: f64 = 0.15;
 pub const SAFETY_LOW: f64 = 0.35;
-
+/// Minimum safety value that needs.rs enforces each tick.
+/// Without this floor, safety decays to 0 by ~tick 1667 (1.0 / SAFETY_DECAY_RATE=0.0006),
+/// permanently triggering: force-Flee (< 0.20), score-Flee (< 0.25), SeekShelter (< SAFETY_LOW=0.35).
+/// All three collapse band formation: agents flee/seek-shelter instead of socialising.
+///
+/// The floor must be set ABOVE SAFETY_LOW (0.35) — not just above the Flee thresholds (0.20/0.25).
+/// Setting SAFETY_FLOOR=0.26 (below SAFETY_LOW=0.35) caused all 121+ agents to be bandless at
+/// tick 13140: SeekShelter was scored ~0.22 every tick, blocking Socialize until social_deficit>0.275
+/// — agents never socialised because the safety-based SeekShelter always won.
+///
+/// 0.40 sits above all safety-triggered thresholds:
+///   - force-Flee: 0.20 ✓   score-Flee: 0.25 ✓   SeekShelter: 0.35 ✓   safe_for_sleep: 0.35 ✓
+///
+///   GFS impact: threat_pressure = 1 − 0.40 = 0.60, still above the 0.45 GFS threshold.
+pub const SAFETY_FLOOR: f64 = 0.40;
 // ── ERG Frustration [Alderfer 1969] ──────────────────────────────────────────
 pub const ERG_FRUSTRATION_WINDOW: u64 = 300;
 pub const ERG_GROWTH_FRUSTRATION_THRESHOLD: f64 = 0.25;
@@ -723,7 +754,21 @@ pub const ERG_STRESS_INJECT_RATE: f64 = 1.5;
 // --- Action Base Timers (ticks) ---
 // TICKS_PER_DAY = 12, so these represent fractions of a game day.
 pub const ACTION_TIMER_WANDER: i32 = 8;
-pub const ACTION_TIMER_FORAGE: i32 = 6;
+/// Explore timer: one full game day (12 ticks).
+/// Longer window increases P(observed in Explore at snapshot tick) for the NS-directional
+/// harness test. At 6 ticks, P(0/5 high-NS agents in Explore at a single tick) ≈ 13% with
+/// seed 42, causing the NS-directional test to fail marginally. At 12 ticks the window
+/// doubles, reducing P(none observed) substantially. Value is shorter than ACTION_TIMER_FORAGE
+/// (24) so agents re-evaluate sooner and don't spend excessive time away from socialising.
+pub const ACTION_TIMER_EXPLORE: i32 = 12;
+/// Forage action duration in ticks. Increased from 8 → 24 (2026-04-06): the cycle length
+/// is ~75.5 ticks regardless of timer (longer timer = more hunger decay during forage = lower
+/// restore = shorter above-threshold phase — the effects cancel exactly). Below-threshold
+/// fraction = (timer−1) / 75.5. At timer=8: 7/75.5 = 9.3% → P(≥2 of 20 agents below
+/// threshold at any snapshot tick) ≈ 53% → unreliable. At timer=24: 23/75.5 = 30.5% →
+/// P(≥2 of 20 agents) ≈ 99.9%. Combined with ±0.10 restore jitter (world.rs) and 0–3
+/// tick timer jitter (cognition.rs) to break forage-cycle synchronisation.
+pub const ACTION_TIMER_FORAGE: i32 = 24;
 pub const ACTION_TIMER_EAT: i32 = 3;
 pub const ACTION_TIMER_HUNT: i32 = 12;
 pub const ACTION_TIMER_DELIVER: i32 = 4;

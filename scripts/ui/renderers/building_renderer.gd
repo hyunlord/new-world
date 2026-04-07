@@ -196,11 +196,10 @@ func _load_building_texture(building_type: String) -> Texture2D:
 	if not FileAccess.file_exists(path):
 		_building_textures[building_type] = null
 		return null
-	var image: Image = Image.load_from_file(path)
-	if image == null:
+	var tex: Texture2D = load(path) as Texture2D
+	if tex == null:
 		_building_textures[building_type] = null
 		return null
-	var tex: ImageTexture = ImageTexture.create_from_image(image)
 	_building_textures[building_type] = tex
 	return tex
 
@@ -220,8 +219,8 @@ func _draw_building_sprite(building_type: String, cx: float, cy: float, alpha: f
 	var scale_factor: float = float(tile_size) * 2.0 / 32.0 * _zoom_shape_scale(zoom_level)
 	var draw_size: Vector2 = Vector2(32.0, 32.0) * scale_factor
 	var draw_pos: Vector2 = Vector2(cx - draw_size.x * 0.5, cy - draw_size.y * 0.5)
-	var modulate: Color = Color(1.0, 1.0, 1.0, alpha)
-	draw_texture_rect(tex, Rect2(draw_pos, draw_size), false, modulate)
+	var tex_color: Color = Color(1.0, 1.0, 1.0, alpha)
+	draw_texture_rect(tex, Rect2(draw_pos, draw_size), false, tex_color)
 
 
 func _draw_stockpile_fallback(cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:

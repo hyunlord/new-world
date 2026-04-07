@@ -2096,6 +2096,7 @@ TECH_YURT_TENT = 유르트
 TECH_YURT_TENT_DESC = 이동식 원형 천막. 초원 유목민의 이동 생활에 최적화된 조립식 주거 — 빠르게 세우고 빠르게 걷는다.
 TECH_ZIGGURAT = 지구라트
 TECH_ZIGGURAT_DESC = 계단식 피라미드형 신전 구조물. 하늘과 땅을 잇는 신성한 산 — 신의 집이자 도시 권력의 눈에 보이는 정점.
+TEMPERAMENT_AWAKENED = 각성됨
 TEMPERAMENT_CHOLERIC = 담즙질
 TEMPERAMENT_MELANCHOLIC = 우울질
 TEMPERAMENT_PHLEGMATIC = 점액질

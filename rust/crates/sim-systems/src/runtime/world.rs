@@ -1122,7 +1122,8 @@ impl SimSystem for MovementRuntimeSystem {
                     }
                     ActionType::Rest | ActionType::Sleep => {
                         if let Some(needs) = needs_opt.as_mut() {
-                            needs.energy = (needs.energy + 0.5).clamp(0.0, 1.0);
+                            needs.energy =
+                                (needs.energy + config::REST_COMPLETION_ENERGY_BONUS).clamp(0.0, 1.0);
                             needs.set(NeedType::Sleep, needs.energy);
                         }
                     }
@@ -1166,7 +1167,8 @@ impl SimSystem for MovementRuntimeSystem {
                         if let Some(needs) = needs_opt.as_mut() {
                             needs.set(
                                 NeedType::Hunger,
-                                needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE,
+                                (needs.get(NeedType::Hunger) + config::FOOD_HUNGER_RESTORE)
+                                    .clamp(0.0, 1.0),
                             );
                         }
                         if matches!(completed_action, ActionType::Forage) {

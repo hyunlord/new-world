@@ -205,8 +205,12 @@ pub const STAT_THRESHOLD_FLAG_STRESS_HIGH: u32 = 1 << 1;
 
 /// Rust runtime system for threshold evaluation and effect application.
 ///
-/// This performs active writes on `SimResources.stat_threshold_flags` and
-/// entity `Behavior.current_action`.
+/// This performs active writes on `SimResources.stat_threshold_flags` only.
+/// Action decisions are owned by BehaviorSystem (priority 20) and completed
+/// by MovementRuntimeSystem (priority 30). This system must NOT override
+/// `Behavior.current_action` — doing so at priority 12 aborts ongoing Rest/Forage
+/// actions before MovementSystem can apply the completion bonus (+0.70 energy),
+/// creating a permanent energy-sink that keeps all agents at near-zero energy.
 #[derive(Debug, Clone)]
 pub struct StatThresholdRuntimeSystem {
     priority: u32,
@@ -239,8 +243,8 @@ impl SimSystem for StatThresholdRuntimeSystem {
         let previous_flags = resources.stat_threshold_flags.clone();
         let mut next_flags: HashMap<EntityId, u32> = HashMap::new();
 
-        let mut query = world.query::<(&Age, &Needs, &Stress, &mut Behavior)>();
-        for (entity, (age, needs, stress, behavior)) in &mut query {
+        let mut query = world.query::<(&Age, &Needs, &Stress)>();
+        for (entity, (age, needs, stress)) in &mut query {
             if !age.alive {
                 continue;
             }
@@ -275,17 +279,11 @@ impl SimSystem for StatThresholdRuntimeSystem {
             if flags != 0 {
                 next_flags.insert(entity_id, flags);
             }
-
-            if stress_active {
-                behavior.current_action = ActionType::Rest;
-            } else if hunger_active {
-                behavior.current_action = ActionType::Forage;
-            } else if matches!(
-                behavior.current_action,
-                ActionType::Rest | ActionType::Forage
-            ) {
-                behavior.current_action = ActionType::Idle;
-            }
+            // Action override removed: BehaviorSystem (priority 20) and MovementRuntimeSystem
+            // (priority 30) own action lifecycle. Overriding here (priority 12) aborted ongoing
+            // Rest before the +0.70 completion bonus could be applied, keeping all agents
+            // energy-starved indefinitely. Threshold flags above are still emitted for UI/other
+            // systems to read via resources.stat_threshold_flags.
         }
 
         resources.stat_threshold_flags = next_flags;

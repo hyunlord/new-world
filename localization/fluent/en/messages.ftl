@@ -2096,6 +2096,7 @@ TECH_YURT_TENT = Yurt
 TECH_YURT_TENT_DESC = A collapsible felt and lattice-pole dwelling designed to be assembled and struck in hours, perfectly adapted to nomadic steppe life.
 TECH_ZIGGURAT = Ziggurat
 TECH_ZIGGURAT_DESC = A tiered mud-brick temple mountain rising above the flat Mesopotamian plain, the physical and spiritual axis of a city-state.
+TEMPERAMENT_AWAKENED = Awakened
 TEMPERAMENT_CHOLERIC = Choleric
 TEMPERAMENT_MELANCHOLIC = Melancholic
 TEMPERAMENT_PHLEGMATIC = Phlegmatic
