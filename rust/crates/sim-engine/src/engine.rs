@@ -162,6 +162,20 @@ pub struct SimResources {
     pub notification_history: Vec<SimNotification>,
     /// External llama-server process + worker runtime.
     pub llm_runtime: LlmRuntime,
+    /// Hunger decay rate (default from config, overridable by WorldRuleset global_constants).
+    pub hunger_decay_rate: f64,
+    /// Warmth decay rate (default from config, overridable by WorldRuleset global_constants).
+    pub warmth_decay_rate: f64,
+    /// Food tile regen multiplier (default 1.0, overridable by WorldRuleset global_constants).
+    pub food_regen_mul: f64,
+    /// Wood tile regen multiplier (default 1.0, overridable by WorldRuleset global_constants).
+    pub wood_regen_mul: f64,
+    /// Whether farming/agriculture is enabled (default true).
+    pub farming_enabled: bool,
+    /// Base temperature bias applied to all tiles (-1.0 = frigid, 0.0 = default, 1.0 = scorching).
+    pub temperature_bias: f64,
+    /// Active season mode string (default "default").
+    pub season_mode: String,
 }
 
 fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
@@ -272,6 +286,13 @@ impl SimResources {
             pending_notifications: Vec::new(),
             notification_history: Vec::new(),
             llm_runtime: LlmRuntime::default(),
+            hunger_decay_rate: sim_core::config::HUNGER_DECAY_RATE,
+            warmth_decay_rate: sim_core::config::WARMTH_DECAY_RATE,
+            food_regen_mul: 1.0,
+            wood_regen_mul: 1.0,
+            farming_enabled: true,
+            temperature_bias: 0.0,
+            season_mode: "default".to_string(),
         }
     }
 
@@ -294,6 +315,35 @@ impl SimResources {
 
         apply_world_rules_to_grid(&mut self.influence_grid, &rules);
         self.resource_regen_multipliers = extract_resource_multipliers(&rules);
+
+        // Apply global constant overrides (multipliers relative to config defaults).
+        if let Some(globals) = &rules.global_constants {
+            if let Some(mul) = globals.hunger_decay_mul {
+                self.hunger_decay_rate = sim_core::config::HUNGER_DECAY_RATE * mul;
+            }
+            if let Some(mul) = globals.warmth_decay_mul {
+                self.warmth_decay_rate = sim_core::config::WARMTH_DECAY_RATE * mul;
+            }
+            if let Some(mul) = globals.food_regen_mul {
+                self.food_regen_mul = mul;
+            }
+            if let Some(mul) = globals.wood_regen_mul {
+                self.wood_regen_mul = mul;
+            }
+            if let Some(enabled) = globals.farming_enabled {
+                self.farming_enabled = enabled;
+            }
+            if let Some(bias) = globals.temperature_bias {
+                self.temperature_bias = bias.clamp(-1.0, 1.0);
+            }
+            if let Some(ref mode) = globals.season_mode {
+                self.season_mode = mode.clone();
+            }
+            info!(
+                "[WorldRules] global constants applied: hunger_decay={:.4}, warmth_decay={:.4}, food_regen={:.2}, season={}",
+                self.hunger_decay_rate, self.warmth_decay_rate, self.food_regen_mul, self.season_mode
+            );
+        }
 
         info!(
             "[WorldRules] applied ruleset '{}' with {} resource modifiers",

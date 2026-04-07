@@ -8,6 +8,7 @@
         special_zones: [],
         special_resources: [],
         agent_modifiers: [],
+        global_constants: None,
         influence_channels: [
             InfluenceChannelRule(
                 channel: "food",
