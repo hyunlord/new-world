@@ -13,11 +13,12 @@ use crate::system_trait::{SimSystem, SystemEntry};
 use hecs::World;
 use log::{debug, info, warn};
 use rand::rngs::SmallRng;
-use rand::SeedableRng;
+use rand::{Rng, SeedableRng};
+use sim_core::world::TileResource;
 use sim_core::{
     BandStore, Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, ChildrenIndex,
-    EffectQueue, EntityId, GameCalendar, InfluenceGrid, ItemStore, Room, Settlement, SettlementId,
-    SimConfig, TileGrid, WorldMap,
+    EffectQueue, EntityId, GameCalendar, InfluenceGrid, ItemStore, ResourceType, Room, Settlement,
+    SettlementId, SimConfig, TerrainType, TileGrid, WorldMap,
 };
 use sim_data::{
     DataRegistry, InfluenceClampPolicyDef, NameGenerator, PersonalityDistribution, WorldRuleset,
@@ -226,6 +227,141 @@ fn apply_world_rules_to_grid(grid: &mut InfluenceGrid, rules: &WorldRuleset) {
     }
 }
 
+/// Spawns special-zone tile clusters defined by a `WorldRuleset`.
+///
+/// Runs once during world initialization as part of `apply_world_rules`. Each zone
+/// definition specifies a count range; a random number in that range of circular clusters
+/// is placed on valid (passable, non-water) terrain and modifies tile terrain, resources,
+/// temperature, and moisture. Zone placement is deterministic given `seed`.
+fn spawn_special_zones(map: &mut WorldMap, zones: &[sim_data::RuleSpecialZone], seed: u64) {
+    use rand::rngs::StdRng;
+
+    if zones.is_empty() {
+        return;
+    }
+
+    let mut rng = StdRng::seed_from_u64(seed.wrapping_add(7777));
+
+    for zone_def in zones {
+        let r = zone_def.radius;
+        // Guard: map must be wide/tall enough to fit the zone radius with margin.
+        if map.width <= 2 * r || map.height <= 2 * r {
+            warn!(
+                "[WorldRules] zone '{}' radius {} too large for map {}×{}; skipping",
+                zone_def.kind, r, map.width, map.height
+            );
+            continue;
+        }
+
+        let count_lo = zone_def.count.0.min(zone_def.count.1);
+        let count_hi = zone_def.count.0.max(zone_def.count.1);
+        let zone_count = rng.gen_range(count_lo..=count_hi);
+
+        for _ in 0..zone_count {
+            // Find a valid center tile (passable, non-water).
+            let mut center_x = r;
+            let mut center_y = r;
+            for attempt in 0..200_u32 {
+                let x = rng.gen_range(r..map.width - r);
+                let y = rng.gen_range(r..map.height - r);
+                let tile = map.get(x, y);
+                if tile.passable
+                    && !matches!(tile.terrain, TerrainType::DeepWater | TerrainType::ShallowWater)
+                {
+                    center_x = x;
+                    center_y = y;
+                    break;
+                }
+                if attempt == 199 {
+                    center_x = x;
+                    center_y = y;
+                    warn!(
+                        "[WorldRules] zone '{}' could not find valid terrain after 200 attempts; placing at ({}, {})",
+                        zone_def.kind, x, y
+                    );
+                }
+            }
+
+            // Apply effects to all tiles within the circular cluster.
+            let ri = r as i32;
+            for dy in -ri..=ri {
+                for dx in -ri..=ri {
+                    if dx * dx + dy * dy > ri * ri {
+                        continue; // circular mask
+                    }
+                    let tx = center_x as i32 + dx;
+                    let ty = center_y as i32 + dy;
+                    if !map.in_bounds(tx, ty) {
+                        continue;
+                    }
+                    let tile = map.get_mut(tx as u32, ty as u32);
+
+                    if let Some(ref terrain_str) = zone_def.terrain_override {
+                        match terrain_str.parse::<TerrainType>() {
+                            Ok(terrain) => {
+                                tile.terrain = terrain;
+                                tile.passable = !matches!(
+                                    terrain,
+                                    TerrainType::DeepWater | TerrainType::Mountain
+                                );
+                            }
+                            Err(_) => {
+                                warn!(
+                                    "[WorldRules] unknown terrain_override '{}' in zone '{}'",
+                                    terrain_str, zone_def.kind
+                                );
+                            }
+                        }
+                    }
+
+                    if let Some(temp_mod) = zone_def.temperature_mod {
+                        tile.temperature = (tile.temperature + temp_mod).clamp(0.0, 1.0);
+                    }
+                    if let Some(moist_mod) = zone_def.moisture_mod {
+                        tile.moisture = (tile.moisture + moist_mod).clamp(0.0, 1.0);
+                    }
+
+                    if let Some(ref boost) = zone_def.resource_boost {
+                        match boost.resource.parse::<ResourceType>() {
+                            Ok(resource_type) => {
+                                if let Some(existing) = tile
+                                    .resources
+                                    .iter_mut()
+                                    .find(|r| r.resource_type == resource_type)
+                                {
+                                    existing.amount += boost.amount;
+                                    existing.max_amount =
+                                        existing.max_amount.max(boost.max_amount);
+                                    existing.regen_rate =
+                                        existing.regen_rate.max(boost.regen_rate);
+                                } else {
+                                    tile.resources.push(TileResource {
+                                        resource_type,
+                                        amount: boost.amount,
+                                        max_amount: boost.max_amount,
+                                        regen_rate: boost.regen_rate,
+                                    });
+                                }
+                            }
+                            Err(_) => {
+                                warn!(
+                                    "[WorldRules] unknown resource '{}' in zone '{}'",
+                                    boost.resource, zone_def.kind
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            info!(
+                "[WorldRules] spawned zone '{}' at ({}, {}), radius {}",
+                zone_def.kind, center_x, center_y, r
+            );
+        }
+    }
+}
+
 fn extract_resource_multipliers(rules: &WorldRuleset) -> BTreeMap<String, f64> {
     let mut multipliers = BTreeMap::new();
     for modifier in &rules.resource_modifiers {
@@ -342,6 +478,16 @@ impl SimResources {
             info!(
                 "[WorldRules] global constants applied: hunger_decay={:.4}, warmth_decay={:.4}, food_regen={:.2}, season={}",
                 self.hunger_decay_rate, self.warmth_decay_rate, self.food_regen_mul, self.season_mode
+            );
+        }
+
+        // Spawn special-zone tile clusters (one-shot, runs at world init).
+        if !rules.special_zones.is_empty() {
+            let map_seed = self.map.seed;
+            spawn_special_zones(&mut self.map, &rules.special_zones, map_seed);
+            info!(
+                "[WorldRules] spawned {} zone type(s)",
+                rules.special_zones.len()
             );
         }
 
@@ -968,6 +1114,7 @@ mod tests {
                 wall_blocking_sensitivity: None,
                 clamp_policy: None,
             }],
+            global_constants: None,
         });
         resources.data_registry = Some(Arc::new(registry));
 
@@ -1001,5 +1148,69 @@ mod tests {
         let default_food_meta = ChannelId::Food.default_meta();
         assert_eq!(food_meta, &default_food_meta);
         assert!(resources.resource_regen_multipliers.is_empty());
+    }
+
+    #[test]
+    fn spawn_zones_adds_resource_to_tiles() {
+        let mut map = WorldMap::new(50, 50, 42);
+        let zones = [sim_data::RuleSpecialZone {
+            kind: "test_oasis".to_string(),
+            count: (1, 1),
+            radius: 3,
+            terrain_override: None,
+            resource_boost: Some(sim_data::ZoneResourceBoost {
+                resource: "Food".to_string(),
+                amount: 15.0,
+                max_amount: 20.0,
+                regen_rate: 0.5,
+            }),
+            temperature_mod: None,
+            moisture_mod: None,
+        }];
+        spawn_special_zones(&mut map, &zones, 42);
+        let has_zone_food = (0..50_u32).any(|y| {
+            (0..50_u32).any(|x| {
+                map.get(x, y)
+                    .resources
+                    .iter()
+                    .any(|r| r.resource_type == ResourceType::Food && r.regen_rate >= 0.49)
+            })
+        });
+        assert!(has_zone_food, "spawn_special_zones should place Food tiles with boosted regen");
+    }
+
+    #[test]
+    fn spawn_zones_overrides_terrain() {
+        let mut map = WorldMap::new(50, 50, 99);
+        let zones = [sim_data::RuleSpecialZone {
+            kind: "snow_patch".to_string(),
+            count: (1, 1),
+            radius: 2,
+            terrain_override: Some("Snow".to_string()),
+            resource_boost: None,
+            temperature_mod: None,
+            moisture_mod: None,
+        }];
+        spawn_special_zones(&mut map, &zones, 99);
+        let has_snow = (0..50_u32)
+            .any(|y| (0..50_u32).any(|x| map.get(x, y).terrain == TerrainType::Snow));
+        assert!(has_snow, "spawn_special_zones should override terrain to Snow");
+    }
+
+    #[test]
+    fn spawn_zones_empty_list_is_noop() {
+        let mut map = WorldMap::new(20, 20, 0);
+        spawn_special_zones(&mut map, &[], 0);
+        for y in 0..20_u32 {
+            for x in 0..20_u32 {
+                let tile = map.get(x, y);
+                assert!(tile.resources.is_empty(), "empty zones must not add resources");
+                assert_eq!(
+                    tile.terrain,
+                    TerrainType::Grassland,
+                    "empty zones must not change terrain"
+                );
+            }
+        }
     }
 }

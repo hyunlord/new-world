@@ -19,7 +19,7 @@ pub use temperament::{
 };
 pub use world_rules::{
     InfluenceChannelRule, InfluenceClampPolicyDef, RuleAgentModifier, RuleResourceModifier,
-    RuleResourceSpawn, RuleSpecialZone, WorldRuleset,
+    RuleResourceSpawn, RuleSpecialZone, WorldRuleset, ZoneResourceBoost,
 };
 
 #[cfg(test)]

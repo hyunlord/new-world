@@ -5,7 +5,22 @@
         resource_modifiers: [
             RuleResourceModifier(target: "surface_foraging", multiplier: 0.3),
         ],
-        special_zones: [],
+        special_zones: [
+            RuleSpecialZone(
+                kind: "hot_spring",
+                count: (2, 4),
+                radius: 3,
+                terrain_override: Some("Grassland"),
+                resource_boost: Some(ZoneResourceBoost(
+                    resource: "Food",
+                    amount: 8.0,
+                    max_amount: 12.0,
+                    regen_rate: 0.5,
+                )),
+                temperature_mod: Some(0.3),
+                moisture_mod: Some(0.2),
+            ),
+        ],
         special_resources: [],
         agent_modifiers: [],
         influence_channels: [],

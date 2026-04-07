@@ -31,6 +31,7 @@ pub use defs::{
     RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition, RuleAgentModifier,
     RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition, StructureDef,
     StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule, WorldRuleset,
+    ZoneResourceBoost,
 };
 pub use developmental_stages::{
     load_developmental_stages, DevelopmentalStageDef, DevelopmentalStages,
