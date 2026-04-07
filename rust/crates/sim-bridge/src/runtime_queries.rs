@@ -290,6 +290,8 @@ fn bootstrap_world_core(
             settlement_id,
             payload.founding_settlement.x,
             payload.founding_settlement.y,
+            2,
+            2,
             state.engine.current_tick(),
         );
         stockpile.construction_progress = 1.0;
@@ -469,6 +471,8 @@ pub(crate) fn building_detail(state: &RuntimeState, building_id_raw: i64) -> Var
     out.set("settlement_id", building.settlement_id.0 as i64);
     out.set("tile_x", building.x as i64);
     out.set("tile_y", building.y as i64);
+    out.set("width", building.width as i64);
+    out.set("height", building.height as i64);
     out.set("is_constructed", building.is_complete);
     out.set("is_built", building.is_complete);
     out.set(
@@ -729,6 +733,8 @@ pub(crate) fn minimap_snapshot(state: &RuntimeState) -> VarDictionary {
         d.set("building_type", building.building_type.clone());
         d.set("tile_x", building.x as i64);
         d.set("tile_y", building.y as i64);
+        d.set("width", building.width as i64);
+        d.set("height", building.height as i64);
         buildings.push(&d);
     }
 
@@ -1102,6 +1108,8 @@ fn collect_building_summaries(
             out.set("building_type", building.building_type.clone());
             out.set("tile_x", building.x as i64);
             out.set("tile_y", building.y as i64);
+            out.set("width", building.width as i64);
+            out.set("height", building.height as i64);
             out.set("settlement_id", building.settlement_id.0 as i64);
             out.set("is_constructed", building.is_complete);
             out.set("is_built", building.is_complete);
@@ -1584,6 +1592,8 @@ mod tests {
             construction_progress: 0.4,
             is_complete: false,
             construction_started_tick: 0,
+            width: 1,
+            height: 1,
             condition: 1.0,
         };
 
@@ -1615,6 +1625,8 @@ mod tests {
                     construction_progress: 0.4,
                     is_complete: false,
                     construction_started_tick: 0,
+                    width: 1,
+                    height: 1,
                     condition: 1.0,
                 },
                 0.0,

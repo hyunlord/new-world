@@ -1499,6 +1499,8 @@ mod tests {
                 construction_progress: 0.0,
                 is_complete: false,
                 construction_started_tick: 0,
+                width: 1,
+                height: 1,
                 condition: 1.0,
             },
         );
@@ -1513,6 +1515,8 @@ mod tests {
                 construction_progress: 0.0,
                 is_complete: false,
                 construction_started_tick: 0,
+                width: 1,
+                height: 1,
                 condition: 1.0,
             },
         );
