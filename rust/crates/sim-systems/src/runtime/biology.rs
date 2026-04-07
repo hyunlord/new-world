@@ -303,6 +303,36 @@ impl SimSystem for PopulationRuntimeSystem {
             }
         }
 
+        // Seed bilateral trust=0.40 edges between newborn and all co-settlement agents.
+        // Newborns from spawn_agent start with empty Social; without seeding they dilute
+        // band avg_trust below BAND_FISSION_TRUST_THRESHOLD (0.15) as population grows,
+        // causing all promoted bands to fission. Mirrors spawn_initial_population seeding
+        // (Hill & Dunbar 2003 "known co-habitant" baseline trust).
+        let co_settlers: Vec<(Entity, EntityId)> = world
+            .query::<&Identity>()
+            .iter()
+            .filter_map(|(e, identity)| {
+                let eid = EntityId(e.id() as u64);
+                if identity.settlement_id == Some(settlement_id) && eid != entity_id {
+                    Some((e, eid))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        for (co_entity, co_id) in &co_settlers {
+            if let Ok(mut social) = world.get::<&mut Social>(entity) {
+                let edge = social.get_or_create_edge(*co_id);
+                edge.trust = 0.40;
+                edge.familiarity = 0.10;
+            }
+            if let Ok(mut social) = world.get::<&mut Social>(*co_entity) {
+                let edge = social.get_or_create_edge(entity_id);
+                edge.trust = 0.40;
+                edge.familiarity = 0.10;
+            }
+        }
+
         if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
             if !settlement.members.contains(&entity_id) {
                 settlement.members.push(entity_id);

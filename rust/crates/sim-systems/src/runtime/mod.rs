@@ -64,8 +64,9 @@ pub use needs::{ChildStressProcessorRuntimeSystem, NeedsRuntimeSystem, UpperNeed
 // ---- psychology ----
 pub use psychology::{
     ContagionRuntimeSystem, CopingRuntimeSystem, EmotionRuntimeSystem, MentalBreakRuntimeSystem,
-    MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem, StressRuntimeSystem, TraitCondition,
-    TraitConditionSource, TraitDefinition, TraitDirection, TraitRuntimeSystem,
+    MoraleRuntimeSystem, PersonalityMaturationRuntimeSystem, StressRuntimeSystem,
+    TemperamentShiftRuntimeSystem, TraitCondition, TraitConditionSource, TraitDefinition,
+    TraitDirection, TraitRuntimeSystem,
     TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
 };
 
@@ -4006,7 +4007,9 @@ mod tests {
         let behavior = world
             .get::<&Behavior>(entity)
             .expect("behavior should be queryable");
-        assert_eq!(behavior.current_action, ActionType::Forage);
+        // StatThresholdRuntimeSystem no longer overrides current_action — it only
+        // sets threshold flags. BehaviorSystem (priority 20) owns action lifecycle.
+        assert_eq!(behavior.current_action, ActionType::Idle);
         let flags = resources
             .stat_threshold_flags
             .get(&EntityId(entity.id() as u64))

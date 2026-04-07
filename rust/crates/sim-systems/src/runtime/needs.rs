@@ -257,7 +257,8 @@ impl SimSystem for NeedsRuntimeSystem {
             );
             needs.set(
                 NeedType::Safety,
-                (needs.get(NeedType::Safety) as f32 - decays[5]) as f64,
+                ((needs.get(NeedType::Safety) as f32 - decays[5]) as f64)
+                    .max(config::SAFETY_FLOOR),
             );
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);

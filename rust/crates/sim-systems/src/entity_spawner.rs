@@ -17,7 +17,7 @@ use sim_core::components::{
     KnowledgeEntry, LlmCapable, Memory, NarrativeCache, Needs, Personality, Position, Skills,
     Social, Stress, Temperament, Traits, TransmissionSource,
 };
-use sim_core::enums::{GrowthStage, Sex};
+use sim_core::enums::{GrowthStage, RelationType, Sex};
 use sim_core::{
     EntityId, SettlementId, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
     TemperamentShiftRuleView,
@@ -892,6 +892,11 @@ pub fn spawn_agent(
 }
 
 /// Spawn `count` agents near the center of the map.
+///
+/// After spawning, creates bilateral [`Social`] edges between every co-settlement
+/// pair with an initial trust of 0.40 (known co-habitant, Hill & Dunbar 2003).
+/// Without these seed edges, [`SocialEventRuntimeSystem`] has nothing to update and
+/// trust stays at 0.0 permanently — causing band fission at first promotion cycle.
 pub fn spawn_initial_population(
     world: &mut hecs::World,
     resources: &mut SimResources,
@@ -900,6 +905,8 @@ pub fn spawn_initial_population(
 ) {
     let center_x = (resources.map.width / 2) as i32;
     let center_y = (resources.map.height / 2) as i32;
+
+    let mut spawned: Vec<hecs::Entity> = Vec::with_capacity(count);
 
     for _ in 0..count {
         let age_years = weighted_random_age(&mut resources.rng);
@@ -923,9 +930,46 @@ pub fn spawn_initial_population(
             parent_b: None,
         };
 
-        spawn_agent(world, resources, &config);
+        let entity = spawn_agent(world, resources, &config);
+        spawned.push(entity);
     }
-    log::info!("[entity_spawner] Spawned {} agents into hecs::World", count);
+
+    // Seed bilateral social edges between all co-settlement agents.
+    // Stone Age small-band settlers know and minimally trust their neighbours from
+    // the outset (trust=0.40 ≈ "acquaintance you share food with").
+    // Without these edges SocialEventRuntimeSystem has no edges to update and
+    // avg_trust stays 0.0, triggering TrustCollapse fission at every promotion.
+    let ids: Vec<EntityId> = spawned
+        .iter()
+        .map(|e| EntityId(e.id() as u64))
+        .collect();
+
+    for i in 0..spawned.len() {
+        for j in (i + 1)..spawned.len() {
+            let id_i = ids[i];
+            let id_j = ids[j];
+            if let Ok(mut social) = world.get::<&mut Social>(spawned[i]) {
+                let edge = social.get_or_create_edge(id_j);
+                edge.trust = 0.40;
+                edge.familiarity = 0.10;
+                edge.affinity = 30.0;
+                edge.relation_type = RelationType::Friend;
+            }
+            if let Ok(mut social) = world.get::<&mut Social>(spawned[j]) {
+                let edge = social.get_or_create_edge(id_i);
+                edge.trust = 0.40;
+                edge.familiarity = 0.10;
+                edge.affinity = 30.0;
+                edge.relation_type = RelationType::Friend;
+            }
+        }
+    }
+
+    log::info!(
+        "[entity_spawner] Spawned {} agents, seeded {} bilateral social edges",
+        count,
+        count.saturating_sub(1) * count / 2,
+    );
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
