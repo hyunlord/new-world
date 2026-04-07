@@ -827,7 +827,7 @@ mod tests {
     use super::{entity_spawner, register_all_systems, EXPECTED_SYSTEM_COUNT};
     use sim_core::components::{Age, Behavior, Identity, Needs, Personality, Position, SteeringParams, Temperament};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
-    use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
+    use sim_core::{ActionType, Building, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
     use sim_systems::entity_spawner::SpawnConfig;
     use sim_systems::runtime::derive_steering_params;
@@ -2778,6 +2778,51 @@ mod tests {
             "{} label-quadrant mismatches found. \
              archetype_label_key() threshold logic is incorrect.",
             mismatches
+        );
+    }
+
+    /// Verifies that completed buildings have valid footprints (width/height ≥ 1)
+    /// and that no two buildings overlap after 1 year of simulation.
+    #[test]
+    fn harness_buildings_no_overlap() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let buildings: Vec<&Building> = resources.buildings.values().collect();
+
+        // Type A: every building must have valid dimensions.
+        for b in &buildings {
+            assert!(b.width >= 1, "building {} has width 0", b.id.0);
+            assert!(b.height >= 1, "building {} has height 0", b.id.0);
+        }
+
+        // Type A: no two building footprints may overlap.
+        for i in 0..buildings.len() {
+            for j in (i + 1)..buildings.len() {
+                let a = buildings[i];
+                let b = buildings[j];
+                assert!(
+                    !a.overlaps(b.x, b.y, b.width, b.height),
+                    "buildings {} ({} {}×{} at {},{}) and {} ({} {}×{} at {},{}) overlap",
+                    a.id.0, a.building_type, a.width, a.height, a.x, a.y,
+                    b.id.0, b.building_type, b.width, b.height, b.x, b.y,
+                );
+            }
+        }
+
+        let complete_count = buildings.iter().filter(|b| b.is_complete).count();
+        eprintln!(
+            "[harness] buildings_no_overlap: total={} complete={} checked={} pairs",
+            buildings.len(),
+            complete_count,
+            buildings.len() * buildings.len().saturating_sub(1) / 2,
+        );
+
+        // Type C (seed=42, 2026-04-07): matches harness_shelter_built_after_one_year threshold.
+        assert!(
+            complete_count >= 3,
+            "expected ≥3 completed buildings, got {complete_count}"
         );
     }
 

@@ -342,18 +342,33 @@ fn choose_early_structure_plan(
     None
 }
 
+/// Returns true when all tiles in the `width × height` footprint starting at `(x, y)`
+/// are in-bounds, passable, and do not overlap any existing building footprint
+/// (with a 1-tile gap enforced around each existing building).
 #[inline]
-fn building_site_is_available(resources: &SimResources, x: i32, y: i32) -> bool {
-    if !resources.map.in_bounds(x, y) {
-        return false;
+fn building_site_is_available(
+    resources: &SimResources,
+    x: i32,
+    y: i32,
+    width: u32,
+    height: u32,
+) -> bool {
+    // All tiles in the footprint must be in bounds and passable.
+    for dy in 0..height as i32 {
+        for dx in 0..width as i32 {
+            let tx = x + dx;
+            let ty = y + dy;
+            if !resources.map.in_bounds(tx, ty) {
+                return false;
+            }
+            if !resources.map.get(tx as u32, ty as u32).passable {
+                return false;
+            }
+        }
     }
-    if !resources.map.get(x as u32, y as u32).passable {
-        return false;
-    }
+    // No overlap with existing buildings (1-tile spacing enforced).
     for building in resources.buildings.values() {
-        if (building.x - x).abs() <= config::BUILDING_MIN_SPACING
-            && (building.y - y).abs() <= config::BUILDING_MIN_SPACING
-        {
+        if building.overlaps(x - 1, y - 1, width + 2, height + 2) {
             return false;
         }
     }
@@ -361,7 +376,13 @@ fn building_site_is_available(resources: &SimResources, x: i32, y: i32) -> bool 
 }
 
 #[inline]
-fn find_build_site(resources: &SimResources, origin_x: i32, origin_y: i32) -> Option<(i32, i32)> {
+fn find_build_site(
+    resources: &SimResources,
+    origin_x: i32,
+    origin_y: i32,
+    width: u32,
+    height: u32,
+) -> Option<(i32, i32)> {
     let search_radius = config::SETTLEMENT_BUILD_RADIUS.max(1);
     for radius in 1..=search_radius {
         for dy in -radius..=radius {
@@ -371,7 +392,7 @@ fn find_build_site(resources: &SimResources, origin_x: i32, origin_y: i32) -> Op
                 }
                 let x = origin_x + dx;
                 let y = origin_y + dy;
-                if building_site_is_available(resources, x, y) {
+                if building_site_is_available(resources, x, y, width, height) {
                     return Some((x, y));
                 }
             }
@@ -404,14 +425,25 @@ fn place_early_structure_site(
         .settlements
         .get(&settlement_id)
         .map(|settlement| (settlement.x, settlement.y))?;
-    let (site_x, site_y) = find_build_site(resources, origin_x, origin_y)?;
+    // Read footprint from StructureDef when the data registry is loaded;
+    // fall back to 1×1 for backward compatibility (e.g. headless harness tests).
+    let building_type = plan.building_type();
+    let (width, height) = resources
+        .data_registry
+        .as_deref()
+        .and_then(|reg| reg.structures.get(building_type))
+        .map(|def| def.min_size)
+        .unwrap_or((1, 1));
+    let (site_x, site_y) = find_build_site(resources, origin_x, origin_y, width, height)?;
     let building_id = next_building_id(resources);
     let building = Building::new(
         building_id,
-        plan.building_type().to_string(),
+        building_type.to_string(),
         settlement_id,
         site_x,
         site_y,
+        width,
+        height,
         tick,
     );
     resources.buildings.insert(building_id, building);
@@ -1383,6 +1415,8 @@ mod tests {
                 construction_progress: 1.0,
                 is_complete: true,
                 construction_started_tick: 0,
+                width: 1,
+                height: 1,
                 condition: 1.0,
             },
         );
@@ -1456,6 +1490,8 @@ mod tests {
                 construction_progress: 0.0,
                 is_complete: false,
                 construction_started_tick: 0,
+                width: 1,
+                height: 1,
                 condition: 1.0,
             },
         );

@@ -301,7 +301,7 @@ mod tests {
         let mut world = World::new();
         let mut resources = make_resources();
         let mut campfire =
-            Building::new(BuildingId(1), "campfire".to_string(), SettlementId(1), 8, 8, 0);
+            Building::new(BuildingId(1), "campfire".to_string(), SettlementId(1), 8, 8, 1, 1, 0);
         campfire.is_complete = true;
         campfire.construction_progress = 1.0;
         resources.buildings.insert(BuildingId(1), campfire);
@@ -343,7 +343,7 @@ mod tests {
         }
 
         let mut campfire =
-            Building::new(BuildingId(1), "campfire".to_string(), SettlementId(1), 8, 8, 0);
+            Building::new(BuildingId(1), "campfire".to_string(), SettlementId(1), 8, 8, 1, 1, 0);
         campfire.is_complete = true;
         resources.buildings.insert(BuildingId(1), campfire);
 
