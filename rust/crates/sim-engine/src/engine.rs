@@ -458,6 +458,21 @@ impl SimResources {
             .set_channel_meta(&ChannelId::default_channels());
         self.resource_regen_multipliers.clear();
 
+        if let Some(registry) = self.data_registry.as_ref() {
+            let count = registry.world_rules_raw.len();
+            if count > 0 {
+                let names: Vec<&str> = registry
+                    .world_rules_raw
+                    .iter()
+                    .map(|ruleset| ruleset.name.as_str())
+                    .collect();
+                info!(
+                    "[WorldRules] merging {} ruleset(s): {:?}",
+                    count, names
+                );
+            }
+        }
+
         let rules = self
             .data_registry
             .as_ref()
@@ -1127,12 +1142,16 @@ mod tests {
         assert_eq!(food_meta.max_radius, 14);
         assert!((food_meta.wall_blocking_sensitivity - 0.2).abs() < f64::EPSILON);
         assert_eq!(food_meta.clamp_policy, ChannelClampPolicy::UnitInterval);
+        // After A-9 multi-ruleset merge, the authoritative canonical registry
+        // merges base_rules.ron (priority 0, surface_foraging × 1.0) with
+        // scenarios/eternal_winter.ron (priority 10, surface_foraging × 0.3).
+        // Highest-priority overlay wins: the merged multiplier is 0.3.
         assert_eq!(
             resources
                 .resource_regen_multipliers
                 .get("surface_foraging")
                 .copied(),
-            Some(1.0)
+            Some(0.3)
         );
     }
 

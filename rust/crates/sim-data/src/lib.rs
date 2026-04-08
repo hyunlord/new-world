@@ -25,10 +25,10 @@ pub mod values_seed;
 pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
 pub use defs::{
-    ActionCategory, ActionCondition, ActionDef, ActionEffect, AxisShift, BiasMatrixRow,
-    CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceChannelRule,
-    InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory, MaterialDef, MaterialProperties,
-    AgentConstants, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
+    ActionCategory, ActionCondition, ActionDef, ActionEffect, AgentConstants, AxisShift,
+    BiasMatrixRow, CauseTrigger, DerivedRuleOverride, FurnitureDef, GlobalConstants,
+    InfluenceChannelRule, InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory,
+    MaterialDef, MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
     RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition, StructureDef,
     StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule, WorldRuleset,
     ZoneResourceBoost,
@@ -52,7 +52,7 @@ pub use personality_distribution::{
     load_personality_distribution, CorrelationMatrix, MaturationEntry, OuParameters,
     PersonalityDistribution,
 };
-pub use registry::{DataRegistry, DerivedStats};
+pub use registry::{merge_world_rules, DataRegistry, DerivedStats};
 pub use species::{load_species_catalog, SpeciesCatalog, SpeciesDefinition};
 pub use stressor_events::{load_stressor_events, StressorEventDef, StressorEvents};
 pub use tag_index::TagIndex;

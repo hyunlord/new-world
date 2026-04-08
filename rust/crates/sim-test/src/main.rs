@@ -2968,6 +2968,12 @@ mod tests {
     /// Uses a fresh map with no pre-seeded tile resources so that any Food
     /// resource with `regen_rate > 0.4` would only come from zone spawning.
     /// Zone hot_spring boost uses `regen_rate = 0.5`; default tiles have none.
+    ///
+    /// After A-9 multi-ruleset merge, the canonical directory contains both
+    /// `base_rules.ron` and `scenarios/eternal_winter.ron` (which adds the
+    /// hot_spring zone). To preserve this test's intent — "base alone has no
+    /// zones" — we filter the raw ruleset list down to BaseRules and re-merge
+    /// before calling `apply_world_rules`.
     #[test]
     fn harness_special_zones_spawn_on_map() {
         use std::sync::Arc;
@@ -2976,11 +2982,19 @@ mod tests {
         let map = sim_core::WorldMap::new(64, 64, 42);
         let mut resources = sim_engine::SimResources::new(calendar, map, 42);
 
-        // Load the authoritative RON registry; base_rules.ron has special_zones: [].
+        // Load the authoritative RON registry, then prune to BaseRules only.
         let data_dir = super::authoritative_ron_data_dir()
             .expect("authoritative RON data dir must resolve for zone harness");
-        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
             .expect("RON registry must load cleanly for zone harness");
+        let base_only: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = base_only.clone();
+        registry.world_rules = sim_data::merge_world_rules(&base_only);
         resources.data_registry = Some(Arc::new(registry));
         resources.apply_world_rules();
 
@@ -3205,15 +3219,26 @@ mod tests {
     #[test]
     fn harness_special_zones_no_double_stack() {
         use std::sync::Arc;
-        // Build no-zone baseline (base_rules.ron has special_zones: [])
+        // Build no-zone baseline. After A-9 multi-ruleset merge, the canonical
+        // directory now also contains scenarios/eternal_winter.ron (which adds a
+        // hot_spring zone). Prune to BaseRules only so the baseline remains
+        // zone-free, preserving this test's intent.
         let config = sim_core::config::GameConfig::default();
         let calendar = sim_core::GameCalendar::new(&config);
         let base_map = sim_core::WorldMap::new(64, 64, 42);
         let mut baseline = sim_engine::SimResources::new(calendar, base_map, 42);
         let data_dir = super::authoritative_ron_data_dir()
             .expect("authoritative RON data dir must resolve");
-        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
             .expect("RON registry must load");
+        let base_only: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = base_only.clone();
+        registry.world_rules = sim_data::merge_world_rules(&base_only);
         baseline.data_registry = Some(Arc::new(registry));
         baseline.apply_world_rules();
 
@@ -3996,6 +4021,1017 @@ mod tests {
         assert!(
             stone_total < 3783.0,
             "stone_total must be < 3783.0 (regression ceiling), got {stone_total:.2}"
+        );
+    }
+
+    // ── A-9 Multi-Ruleset Merge Harness Tests ────────────────────────────────
+
+    /// Temp directory guard for A-9 merge tests. Creates a base path with a
+    /// `world_rules/` subdirectory that callers can populate via `write_world_rule`.
+    struct A9TempDir {
+        path: std::path::PathBuf,
+    }
+
+    impl A9TempDir {
+        fn new(label: &str) -> Self {
+            use std::time::{SystemTime, UNIX_EPOCH};
+            let nonce = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("clock error")
+                .as_nanos();
+            let path = std::env::temp_dir().join(format!(
+                "worldsim_a9_{}_{}_{}",
+                label,
+                std::process::id(),
+                nonce
+            ));
+            std::fs::create_dir_all(path.join("world_rules"))
+                .expect("create world_rules subdir");
+            Self { path }
+        }
+
+        fn write_world_rule(&self, relative_file: &str, content: &str) {
+            let file_path = self.path.join("world_rules").join(relative_file);
+            if let Some(parent) = file_path.parent() {
+                std::fs::create_dir_all(parent).expect("create parent dir");
+            }
+            std::fs::write(file_path, content).expect("write ron file");
+        }
+    }
+
+    impl Drop for A9TempDir {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.path);
+        }
+    }
+
+    /// Loads the canonical sim-data crate registry (base + eternal_winter).
+    fn load_canonical_a9_registry() -> sim_data::DataRegistry {
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve for a9 tests");
+        sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("canonical RON registry must load for a9 tests")
+    }
+
+    /// Creates a SimResources with canonical registry attached and
+    /// `apply_world_rules` invoked. Used for assertions that only need the
+    /// resources-level view (no engine tick loop).
+    fn make_resources_with_canonical_world_rules() -> SimResources {
+        use std::sync::Arc;
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let mut resources = SimResources::new(calendar, map, 42);
+        let registry = load_canonical_a9_registry();
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+        resources
+    }
+
+    /// Creates a SimResources with a registry loaded from an arbitrary base
+    /// directory (used for temp fixture assertions).
+    fn make_resources_with_custom_base(base: &std::path::Path) -> SimResources {
+        use std::sync::Arc;
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let mut resources = SimResources::new(calendar, map, 42);
+        let registry = sim_data::DataRegistry::load_from_directory(base)
+            .expect("custom registry must load for a9 tests");
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+        resources
+    }
+
+    /// Builds a stage-1 engine (mirrors `make_stage1_engine`) but injects the
+    /// caller's pre-built `DataRegistry` and runs `apply_world_rules` before
+    /// spawning agents. Used for the integration assertion.
+    fn make_stage1_engine_with_registry(
+        seed: u64,
+        agent_count: usize,
+        registry: sim_data::DataRegistry,
+    ) -> SimEngine {
+        use std::sync::Arc;
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, seed);
+        let mut resources = SimResources::new(calendar, map, seed);
+        if let Some(data_dir) = super::legacy_json_data_dir() {
+            if let Ok(dist) = sim_data::load_personality_distribution(&data_dir) {
+                resources.personality_distribution = Some(dist);
+            }
+            let cultures = sim_data::load_name_cultures(&data_dir);
+            if !cultures.is_empty() {
+                resources.name_generator = Some(sim_data::NameGenerator::new(cultures));
+            }
+        }
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        let mut engine = SimEngine::new(resources);
+        register_all_systems(&mut engine);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 128, 128, 0),
+        );
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(
+                world,
+                resources,
+                agent_count,
+                SettlementId(1),
+            );
+        }
+        {
+            let resources = engine.resources_mut();
+            for dy in -30_i32..=30 {
+                for dx in -30_i32..=30 {
+                    let tx = 128_i32 + dx;
+                    let ty = 128_i32 + dy;
+                    if tx < 0 || ty < 0 || tx >= 256 || ty >= 256 {
+                        continue;
+                    }
+                    let tile = resources.map.get_mut(tx as u32, ty as u32);
+                    if !tile.passable {
+                        continue;
+                    }
+                    let pattern = ((dx.abs() + dy.abs()) % 3) as u32;
+                    let resource_type = match pattern {
+                        0 => sim_core::ResourceType::Stone,
+                        1 => sim_core::ResourceType::Wood,
+                        _ => sim_core::ResourceType::Food,
+                    };
+                    tile.resources.push(sim_core::world::TileResource {
+                        resource_type,
+                        amount: 100.0,
+                        max_amount: 100.0,
+                        regen_rate: 0.1,
+                    });
+                }
+            }
+        }
+        {
+            let resources = engine.resources_mut();
+            for dy in 25_i32..=30 {
+                for dx in 25_i32..=30 {
+                    let tx = 128 + dx;
+                    let ty = 128 + dy;
+                    if tx < 256 && ty < 256 {
+                        resources
+                            .map
+                            .get_mut(tx as u32, ty as u32)
+                            .terrain = TerrainType::Hill;
+                    }
+                }
+            }
+        }
+        engine
+    }
+
+    // Assertion 1 — recursive discovery loads a file from scenarios/ subdir.
+    #[test]
+    fn harness_a9_recursive_discovery_loads_scenarios_subdir() {
+        let registry = load_canonical_a9_registry();
+        // Type: usize (raw ruleset count)
+        let raw_count = registry.world_rules_raw.len();
+        let names: std::collections::HashSet<String> = registry
+            .world_rules_raw
+            .iter()
+            .map(|r| r.name.clone())
+            .collect();
+
+        eprintln!(
+            "[harness] a9.1 recursive_discovery: raw_count={} names={:?}",
+            raw_count, names
+        );
+
+        assert_eq!(
+            raw_count, 2,
+            "world_rules_raw must contain exactly 2 rulesets (BaseRules + EternalWinter)"
+        );
+
+        let expected: std::collections::HashSet<String> = ["BaseRules", "EternalWinter"]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
+        assert_eq!(
+            names, expected,
+            "raw ruleset names must equal {{BaseRules, EternalWinter}}"
+        );
+    }
+
+    // Assertion 2 — priority sort survives alphabetical disagreement.
+    #[test]
+    fn harness_a9_priority_sort_alphabetical_disagreement() {
+        let temp = A9TempDir::new("priority_sort");
+        temp.write_world_rule(
+            "aardvark.ron",
+            r#"[
+    WorldRuleset(
+        name: "HighPri",
+        priority: 50,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: None,
+    ),
+]"#,
+        );
+        temp.write_world_rule(
+            "middle.ron",
+            r#"[
+    WorldRuleset(
+        name: "LowPri",
+        priority: 0,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: None,
+    ),
+]"#,
+        );
+        temp.write_world_rule(
+            "zulu.ron",
+            r#"[
+    WorldRuleset(
+        name: "MidPri",
+        priority: 25,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: None,
+    ),
+]"#,
+        );
+
+        let registry = sim_data::DataRegistry::load_from_directory(&temp.path)
+            .expect("temp registry must load for priority sort test");
+
+        // Type: Vec<i32>
+        let priorities: Vec<i32> =
+            registry.world_rules_raw.iter().map(|r| r.priority).collect();
+        let names: Vec<String> =
+            registry.world_rules_raw.iter().map(|r| r.name.clone()).collect();
+
+        eprintln!(
+            "[harness] a9.2 priority_sort: priorities={:?} names={:?}",
+            priorities, names
+        );
+
+        assert_eq!(
+            priorities,
+            vec![0, 25, 50],
+            "priorities must be sorted ascending [0, 25, 50]"
+        );
+        assert_eq!(
+            names,
+            vec![
+                "LowPri".to_string(),
+                "MidPri".to_string(),
+                "HighPri".to_string(),
+            ],
+            "names must track priority ascending [LowPri, MidPri, HighPri]"
+        );
+    }
+
+    // Assertion 3 — merged name is highest-priority ruleset name.
+    #[test]
+    fn harness_a9_merged_name_is_highest_priority() {
+        let registry = load_canonical_a9_registry();
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged world rules must be Some for canonical fixture");
+
+        eprintln!("[harness] a9.3 merged_name: {}", merged.name);
+        // Type: String (exact match)
+        assert_eq!(
+            merged.name, "EternalWinter",
+            "merged name must equal highest-priority ruleset (EternalWinter)"
+        );
+    }
+
+    // Assertion 4 — merged GlobalConstants transferred to SimResources.
+    #[test]
+    fn harness_a9_merged_global_constants_in_sim_resources() {
+        let resources = make_resources_with_canonical_world_rules();
+
+        // Type: f64
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 1.3;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-9,
+            "hunger_decay_rate={} expected={}",
+            resources.hunger_decay_rate,
+            expected_hunger
+        );
+        // Type: f64
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 2.0;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-9,
+            "warmth_decay_rate={} expected={}",
+            resources.warmth_decay_rate,
+            expected_warmth
+        );
+        // Type: f64
+        assert!(
+            (resources.food_regen_mul - 0.2).abs() < 1e-9,
+            "food_regen_mul={} expected=0.2",
+            resources.food_regen_mul
+        );
+        // Type: f64
+        assert!(
+            (resources.wood_regen_mul - 0.5).abs() < 1e-9,
+            "wood_regen_mul={} expected=0.5",
+            resources.wood_regen_mul
+        );
+        // Type: bool
+        assert!(
+            !resources.farming_enabled,
+            "farming_enabled must be false under EternalWinter"
+        );
+        // Type: f64
+        assert!(
+            (resources.temperature_bias - (-0.7)).abs() < 1e-9,
+            "temperature_bias={} expected=-0.7",
+            resources.temperature_bias
+        );
+        // Type: String
+        assert_eq!(
+            resources.season_mode, "eternal_winter",
+            "season_mode must equal eternal_winter"
+        );
+
+        eprintln!(
+            "[harness] a9.4 globals: hunger={:.6} warmth={:.6} food_regen={} wood_regen={} farming={} temp_bias={} season={}",
+            resources.hunger_decay_rate,
+            resources.warmth_decay_rate,
+            resources.food_regen_mul,
+            resources.wood_regen_mul,
+            resources.farming_enabled,
+            resources.temperature_bias,
+            resources.season_mode
+        );
+    }
+
+    // Assertion 5 — merged AgentConstants transferred to SimResources.
+    #[test]
+    fn harness_a9_merged_agent_constants_in_sim_resources() {
+        let resources = make_resources_with_canonical_world_rules();
+
+        // Type: f64
+        assert!(
+            (resources.mortality_mul - 1.3).abs() < 1e-9,
+            "mortality_mul={} expected=1.3",
+            resources.mortality_mul
+        );
+        // Type: f64
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-9,
+            "skill_xp_mul={} expected=1.5",
+            resources.skill_xp_mul
+        );
+        // Type: f64
+        assert!(
+            (resources.fertility_mul - 0.7).abs() < 1e-9,
+            "fertility_mul={} expected=0.7",
+            resources.fertility_mul
+        );
+        // Type: f64
+        assert!(
+            (resources.lifespan_mul - 0.8).abs() < 1e-9,
+            "lifespan_mul={} expected=0.8",
+            resources.lifespan_mul
+        );
+
+        eprintln!(
+            "[harness] a9.5 agent_consts: mortality={} skill_xp={} fertility={} lifespan={}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul
+        );
+    }
+
+    // Assertion 6 — None-subfield keeps engine default when base AgentConstants
+    // is None (canonical fixture case).
+    #[test]
+    fn harness_a9_agent_constant_none_subfield_keeps_default() {
+        let resources = make_resources_with_canonical_world_rules();
+
+        // Type: f64
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-9,
+            "body_potential_mul must remain 1.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-9,
+            "move_speed_mul must remain 1.0, got {}",
+            resources.move_speed_mul
+        );
+
+        eprintln!(
+            "[harness] a9.6 none_subfield: body_potential={} move_speed={}",
+            resources.body_potential_mul, resources.move_speed_mul
+        );
+    }
+
+    // Assertion 7 — synthetic fixture: overlay-None preserves base-Some
+    // (the stronger form that canonical fixtures don't exercise).
+    #[test]
+    fn harness_a9_synthetic_overlay_none_preserves_base_some() {
+        let temp = A9TempDir::new("overlay_none");
+        temp.write_world_rule(
+            "low.ron",
+            r#"[
+    WorldRuleset(
+        name: "LowPri",
+        priority: 0,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: Some(AgentConstants(
+            mortality_mul: Some(2.5),
+            skill_xp_mul: None,
+            body_potential_mul: Some(3.7),
+            fertility_mul: None,
+            lifespan_mul: None,
+            move_speed_mul: None,
+        )),
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: Some("summer"),
+            hunger_decay_mul: Some(1.8),
+            warmth_decay_mul: None,
+            food_regen_mul: Some(0.4),
+            wood_regen_mul: None,
+            farming_enabled: Some(true),
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        temp.write_world_rule(
+            "high.ron",
+            r#"[
+    WorldRuleset(
+        name: "HighPri",
+        priority: 10,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: Some(AgentConstants(
+            mortality_mul: None,
+            skill_xp_mul: Some(9.9),
+            body_potential_mul: None,
+            fertility_mul: None,
+            lifespan_mul: None,
+            move_speed_mul: None,
+        )),
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: Some(4.4),
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+
+        let registry = sim_data::DataRegistry::load_from_directory(&temp.path)
+            .expect("overlay-none temp registry must load");
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged rules must be Some");
+
+        let gc = merged
+            .global_constants
+            .as_ref()
+            .expect("merged global_constants must be Some");
+        // Type: Option<f64>
+        assert_eq!(
+            gc.hunger_decay_mul,
+            Some(1.8),
+            "hunger_decay_mul preserved from low (overlay=None)"
+        );
+        assert_eq!(
+            gc.warmth_decay_mul,
+            Some(4.4),
+            "warmth_decay_mul overlaid from high"
+        );
+        assert_eq!(
+            gc.food_regen_mul,
+            Some(0.4),
+            "food_regen_mul preserved from low"
+        );
+        // Type: Option<bool>
+        assert_eq!(
+            gc.farming_enabled,
+            Some(true),
+            "farming_enabled preserved from low"
+        );
+        // Type: Option<String>
+        assert_eq!(
+            gc.season_mode,
+            Some("summer".to_string()),
+            "season_mode preserved from low"
+        );
+
+        let ac = merged
+            .agent_constants
+            .as_ref()
+            .expect("merged agent_constants must be Some");
+        assert_eq!(
+            ac.mortality_mul,
+            Some(2.5),
+            "mortality_mul preserved from low"
+        );
+        assert_eq!(
+            ac.skill_xp_mul,
+            Some(9.9),
+            "skill_xp_mul overlaid from high"
+        );
+        assert_eq!(
+            ac.body_potential_mul,
+            Some(3.7),
+            "body_potential_mul preserved from low"
+        );
+        // Type: String
+        assert_eq!(
+            merged.name, "HighPri",
+            "merged name must follow highest-priority ruleset"
+        );
+
+        eprintln!("[harness] a9.7 overlay_none: all 9 preserved/overlaid checks OK");
+    }
+
+    // Assertion 8 — influence_channels preserve all 3 base entries.
+    #[test]
+    fn harness_a9_influence_channels_preserved() {
+        let registry = load_canonical_a9_registry();
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged rules must be Some");
+
+        // Type: usize (channel count)
+        let channel_count = merged.influence_channels.len();
+        let channel_names: std::collections::HashSet<String> = merged
+            .influence_channels
+            .iter()
+            .map(|c| c.channel.clone())
+            .collect();
+
+        eprintln!(
+            "[harness] a9.8 influence_channels: count={} names={:?}",
+            channel_count, channel_names
+        );
+
+        assert_eq!(
+            channel_count, 3,
+            "merged influence_channels must have exactly 3 entries"
+        );
+
+        let expected: std::collections::HashSet<String> =
+            ["food", "warmth", "danger"]
+                .iter()
+                .map(|s| s.to_string())
+                .collect();
+        assert_eq!(
+            channel_names, expected,
+            "channel set must equal {{food, warmth, danger}}"
+        );
+        // No duplicates (set length matches vec length)
+        assert_eq!(
+            channel_count,
+            channel_names.len(),
+            "no duplicate channel names allowed"
+        );
+    }
+
+    // Assertion 9 — resource_modifiers same-target dedup, overlay wins.
+    #[test]
+    fn harness_a9_resource_modifiers_dedup_overlay_wins() {
+        let registry = load_canonical_a9_registry();
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged rules must be Some");
+
+        // Type: Vec<&RuleResourceModifier>
+        let surface_entries: Vec<&sim_data::RuleResourceModifier> = merged
+            .resource_modifiers
+            .iter()
+            .filter(|m| m.target == "surface_foraging")
+            .collect();
+
+        eprintln!(
+            "[harness] a9.9 surface_foraging: entries={} total_modifiers={}",
+            surface_entries.len(),
+            merged.resource_modifiers.len()
+        );
+
+        assert_eq!(
+            surface_entries.len(),
+            1,
+            "exactly one surface_foraging modifier expected (dedup)"
+        );
+        assert!(
+            (surface_entries[0].multiplier - 0.3).abs() < 1e-9,
+            "surface_foraging multiplier={} expected=0.3 (winter overlay wins)",
+            surface_entries[0].multiplier
+        );
+        assert_eq!(
+            merged.resource_modifiers.len(),
+            1,
+            "total modifier count must equal 1"
+        );
+    }
+
+    // Assertion 10 — special_zones pure append from scenario only.
+    #[test]
+    fn harness_a9_special_zones_pure_append() {
+        let registry = load_canonical_a9_registry();
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged rules must be Some");
+
+        // Type: usize
+        let zone_count = merged.special_zones.len();
+        eprintln!("[harness] a9.10 special_zones_count={}", zone_count);
+
+        assert_eq!(
+            zone_count, 1,
+            "expected exactly 1 zone (0 from base + 1 hot_spring from winter)"
+        );
+        // Type: String
+        assert_eq!(
+            merged.special_zones[0].kind, "hot_spring",
+            "first zone kind must be hot_spring"
+        );
+    }
+
+    // Assertion 11 — merge_world_rules(&[]) returns None.
+    #[test]
+    fn harness_a9_merge_empty_slice_returns_none() {
+        // Type: Option<WorldRuleset>
+        let merged = sim_data::merge_world_rules(&[]);
+        assert!(
+            merged.is_none(),
+            "merge_world_rules(&[]) must return None"
+        );
+        eprintln!("[harness] a9.11 empty_slice → None OK");
+    }
+
+    // Assertion 12 — base-only fixture regression guard (Type D).
+    #[test]
+    fn harness_a9_base_only_regression_guard() {
+        let temp = A9TempDir::new("base_only");
+        temp.write_world_rule(
+            "base_rules.ron",
+            r#"[
+    WorldRuleset(
+        name: "BaseRules",
+        priority: 0,
+        resource_modifiers: [
+            RuleResourceModifier(target: "surface_foraging", multiplier: 1.0),
+        ],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        global_constants: None,
+        influence_channels: [
+            InfluenceChannelRule(
+                channel: "food",
+                decay_rate: Some(0.18),
+                default_radius: Some(7.0),
+                max_radius: Some(14),
+                wall_blocking_sensitivity: Some(0.2),
+                clamp_policy: Some(UnitInterval),
+            ),
+            InfluenceChannelRule(
+                channel: "warmth",
+                decay_rate: Some(0.12),
+                default_radius: Some(6.0),
+                max_radius: Some(10),
+                wall_blocking_sensitivity: Some(0.75),
+                clamp_policy: Some(UnitInterval),
+            ),
+            InfluenceChannelRule(
+                channel: "danger",
+                decay_rate: Some(0.22),
+                default_radius: Some(5.0),
+                max_radius: Some(10),
+                wall_blocking_sensitivity: Some(0.1),
+                clamp_policy: Some(UnitInterval),
+            ),
+        ],
+    ),
+]"#,
+        );
+
+        let registry = sim_data::DataRegistry::load_from_directory(&temp.path)
+            .expect("base-only registry must load");
+
+        // Type: usize
+        assert_eq!(
+            registry.world_rules_raw.len(),
+            1,
+            "raw list must contain exactly 1 ruleset"
+        );
+        // Type: String
+        assert_eq!(
+            registry.world_rules_raw[0].name, "BaseRules",
+            "raw[0].name must be BaseRules"
+        );
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged must be Some for single-ruleset load");
+        // Type: String
+        assert_eq!(
+            merged.name, "BaseRules",
+            "merged.name must equal BaseRules (single-ruleset collapses to itself)"
+        );
+
+        let resources = make_resources_with_custom_base(&temp.path);
+        // Type: f64
+        assert!(
+            (resources.hunger_decay_rate - sim_core::config::HUNGER_DECAY_RATE).abs() < 1e-9,
+            "hunger_decay_rate must equal config default, got {}",
+            resources.hunger_decay_rate
+        );
+        // Type: f64
+        assert!(
+            (resources.warmth_decay_rate - sim_core::config::WARMTH_DECAY_RATE).abs() < 1e-9,
+            "warmth_decay_rate must equal config default, got {}",
+            resources.warmth_decay_rate
+        );
+        // Type: bool
+        assert!(resources.farming_enabled, "farming_enabled must be true");
+        // Type: String
+        assert_eq!(resources.season_mode, "default", "season_mode must be default");
+        // Type: f64
+        assert!(
+            (resources.food_regen_mul - 1.0).abs() < 1e-9,
+            "food_regen_mul must be 1.0"
+        );
+        // Type: f64
+        assert!(
+            (resources.mortality_mul - 1.0).abs() < 1e-9,
+            "mortality_mul must remain 1.0 (AgentConstants None → engine default)"
+        );
+
+        eprintln!("[harness] a9.12 base_only_regression OK");
+    }
+
+    // Assertion 13 — three-ruleset priority tiebreaker on overlapping field.
+    #[test]
+    fn harness_a9_three_ruleset_priority_tiebreaker() {
+        let temp = A9TempDir::new("three_ruleset");
+        temp.write_world_rule(
+            "a.ron",
+            r#"[
+    WorldRuleset(
+        name: "Low",
+        priority: 0,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: Some(1.1),
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        temp.write_world_rule(
+            "b.ron",
+            r#"[
+    WorldRuleset(
+        name: "Mid",
+        priority: 5,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: Some(2.2),
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        temp.write_world_rule(
+            "c.ron",
+            r#"[
+    WorldRuleset(
+        name: "Top",
+        priority: 99,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: Some(3.3),
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+
+        let registry = sim_data::DataRegistry::load_from_directory(&temp.path)
+            .expect("three-ruleset registry must load");
+        let merged = registry
+            .world_rules
+            .as_ref()
+            .expect("merged must be Some");
+        // Type: String
+        assert_eq!(merged.name, "Top", "merged name must be Top");
+        let gc = merged
+            .global_constants
+            .as_ref()
+            .expect("merged global_constants must be Some");
+        // Type: Option<f64>
+        assert_eq!(
+            gc.hunger_decay_mul,
+            Some(3.3),
+            "hunger_decay_mul must be 3.3 (highest priority wins)"
+        );
+
+        let resources = make_resources_with_custom_base(&temp.path);
+        // Type: f64
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 3.3;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-9,
+            "SimResources hunger_decay_rate={} expected={}",
+            resources.hunger_decay_rate,
+            expected_hunger
+        );
+
+        eprintln!("[harness] a9.13 three_ruleset_priority OK");
+    }
+
+    // Assertion 14 — integration differential: base vs scenario after 1 year.
+    #[test]
+    fn harness_a9_integration_baseline_vs_scenario_year() {
+        // Load canonical registry and clone-build a base-only variant by
+        // pruning `world_rules_raw` to BaseRules only and re-merging.
+        let canonical = load_canonical_a9_registry();
+        let base_rules_only: Vec<sim_data::WorldRuleset> = canonical
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules")
+            .cloned()
+            .collect();
+        assert_eq!(
+            base_rules_only.len(),
+            1,
+            "canonical registry must contain BaseRules exactly once"
+        );
+
+        let mut base_registry = canonical.clone();
+        base_registry.world_rules_raw = base_rules_only.clone();
+        base_registry.world_rules = sim_data::merge_world_rules(&base_rules_only);
+
+        let winter_registry = canonical;
+
+        let mut engine_base = make_stage1_engine_with_registry(42, 20, base_registry);
+        let mut engine_winter = make_stage1_engine_with_registry(42, 20, winter_registry);
+
+        // Sanity: apply_world_rules produced the expected starting values.
+        assert!(
+            (engine_base.resources().hunger_decay_rate
+                - sim_core::config::HUNGER_DECAY_RATE)
+                .abs()
+                < 1e-9,
+            "base engine hunger_decay must equal config default"
+        );
+        assert!(
+            (engine_winter.resources().hunger_decay_rate
+                - sim_core::config::HUNGER_DECAY_RATE * 1.3)
+                .abs()
+                < 1e-9,
+            "winter engine hunger_decay must equal config * 1.3"
+        );
+        assert!(
+            engine_base.resources().farming_enabled,
+            "base engine farming must be enabled"
+        );
+        assert!(
+            !engine_winter.resources().farming_enabled,
+            "winter engine farming must be disabled"
+        );
+
+        // Run 1 full game year (4380 ticks).
+        engine_base.run_ticks(4380);
+        engine_winter.run_ticks(4380);
+
+        // Type: u64
+        assert_eq!(
+            engine_base.resources().calendar.tick,
+            4380,
+            "base engine must be at tick 4380"
+        );
+        assert_eq!(
+            engine_winter.resources().calendar.tick,
+            4380,
+            "winter engine must be at tick 4380"
+        );
+
+        // Values persist across the tick loop (no system resets them).
+        assert!(
+            (engine_base.resources().hunger_decay_rate
+                - sim_core::config::HUNGER_DECAY_RATE)
+                .abs()
+                < 1e-9,
+            "base hunger_decay must persist after 4380 ticks"
+        );
+        assert!(
+            (engine_winter.resources().hunger_decay_rate
+                - sim_core::config::HUNGER_DECAY_RATE * 1.3)
+                .abs()
+                < 1e-9,
+            "winter hunger_decay must persist after 4380 ticks"
+        );
+        assert!(
+            engine_base.resources().farming_enabled,
+            "base farming persists"
+        );
+        assert!(
+            !engine_winter.resources().farming_enabled,
+            "winter farming persists"
+        );
+
+        // Behavioral differential: aggregate hunger across living agents.
+        // Type: f64
+        let total_hunger_base: f64 = engine_base
+            .world()
+            .query::<(&Age, &Needs)>()
+            .iter()
+            .filter(|(_, (age, _))| age.alive)
+            .map(|(_, (_, needs))| needs.get(sim_core::enums::NeedType::Hunger))
+            .sum();
+        let total_hunger_winter: f64 = engine_winter
+            .world()
+            .query::<(&Age, &Needs)>()
+            .iter()
+            .filter(|(_, (age, _))| age.alive)
+            .map(|(_, (_, needs))| needs.get(sim_core::enums::NeedType::Hunger))
+            .sum();
+
+        eprintln!(
+            "[harness] a9.14 total_hunger_base={:.4} total_hunger_winter={:.4}",
+            total_hunger_base, total_hunger_winter
+        );
+
+        // Plan says: winter must strictly exceed base.
+        // (NOTE: needs.hunger in WorldSim is a SATIATION value where 1.0 = full
+        // and 0.0 = starving. A faster hunger_decay lowers this value — so this
+        // direction may invert. Reported in the result summary if it fails.)
+        assert!(
+            total_hunger_winter > total_hunger_base,
+            "total_hunger_winter ({}) must strictly exceed total_hunger_base ({})",
+            total_hunger_winter,
+            total_hunger_base
         );
     }
 

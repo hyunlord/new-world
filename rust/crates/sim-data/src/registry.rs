@@ -5,8 +5,8 @@ use std::sync::Arc;
 use serde::de::DeserializeOwned;
 
 use crate::defs::{
-    ActionDef, ActionEffect, FurnitureDef, InfluenceChannelRule, InfluenceEmission, MaterialDef,
-    RecipeDef, StructureDef,
+    ActionDef, ActionEffect, AgentConstants, FurnitureDef, GlobalConstants, InfluenceChannelRule,
+    InfluenceEmission, MaterialDef, RecipeDef, StructureDef,
 };
 use crate::loader::{load_ron_directory, DataLoadError};
 use crate::tag_index::TagIndex;
@@ -28,7 +28,12 @@ pub struct DataRegistry {
     pub structures: HashMap<String, Arc<StructureDef>>,
     /// Action definitions keyed by id.
     pub actions: HashMap<String, Arc<ActionDef>>,
-    /// Optional world rules schema bundle.
+    /// Raw world rulesets as loaded from the filesystem, sorted by priority
+    /// ascending (lowest priority first, highest last). Diagnostic view —
+    /// authoritative merged result lives in [`DataRegistry::world_rules`].
+    pub world_rules_raw: Vec<WorldRuleset>,
+    /// Cached merged world ruleset, computed once at load time from
+    /// `world_rules_raw`. `None` only when no rulesets were loaded.
     pub world_rules: Option<WorldRuleset>,
     /// Optional temperament rules schema bundle.
     pub temperament_rules: Option<TemperamentRules>,
@@ -87,11 +92,11 @@ impl DataRegistry {
             |def: &ActionDef| def.id.as_str(),
             &mut errors,
         );
-        let world_rules = load_optional_singleton::<WorldRuleset>(
+        let world_rules_raw = load_all_world_rules(
             &base_path.join("world_rules"),
-            "WorldRuleset",
             &mut errors,
         );
+        let world_rules = merge_world_rules(&world_rules_raw);
         let temperament_rules = load_optional_singleton::<TemperamentRules>(
             &base_path.join("temperament"),
             "TemperamentRules",
@@ -110,6 +115,7 @@ impl DataRegistry {
             recipes,
             structures,
             actions,
+            world_rules_raw,
             world_rules,
             temperament_rules,
             tag_index,
@@ -298,6 +304,183 @@ where
         return None;
     }
     defs.into_iter().next()
+}
+
+/// Loads every `WorldRuleset` RON file in `dir` and its immediate subdirectories
+/// (1-level recursion for `scenarios/`, `oracle/`, etc.), then sorts the result
+/// by `priority` ascending.
+///
+/// Lowest-priority ruleset appears first in the returned vec; highest-priority
+/// appears last — the expected input order for [`merge_world_rules`].
+fn load_all_world_rules(dir: &Path, errors: &mut Vec<DataLoadError>) -> Vec<WorldRuleset> {
+    let mut all_rules: Vec<WorldRuleset> = Vec::new();
+
+    match load_ron_directory::<WorldRuleset>(dir) {
+        Ok(defs) => all_rules.extend(defs),
+        Err(mut load_errors) => errors.append(&mut load_errors),
+    }
+
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        let mut subdirs: Vec<PathBuf> = entries
+            .flatten()
+            .filter_map(|entry| {
+                let file_type = entry.file_type().ok()?;
+                if file_type.is_dir() {
+                    Some(entry.path())
+                } else {
+                    None
+                }
+            })
+            .collect();
+        subdirs.sort();
+        for subdir in subdirs {
+            match load_ron_directory::<WorldRuleset>(&subdir) {
+                Ok(defs) => all_rules.extend(defs),
+                Err(mut load_errors) => errors.append(&mut load_errors),
+            }
+        }
+    }
+
+    all_rules.sort_by_key(|ruleset| ruleset.priority);
+    all_rules
+}
+
+/// Merges a sorted slice of [`WorldRuleset`] by priority into a single
+/// authoritative ruleset.
+///
+/// The slice must be pre-sorted in ascending priority order (lowest first,
+/// highest last). Merge semantics per field type:
+/// - `Option<T>` fields (GlobalConstants / AgentConstants subfields): higher
+///   priority `Some(x)` overrides lower priority values; `None` is transparent
+///   (does not clobber a prior `Some`).
+/// - Vec fields with an identity key (resource_modifiers by `target`,
+///   special_resources by `name`, influence_channels by `channel`): dedup by
+///   key with last-writer-wins (highest priority wins).
+/// - `special_zones`: pure append (no dedup — distinct rulesets may contribute
+///   independent zones).
+/// - Scalar fields (`name`, `priority`): highest-priority ruleset wins.
+///
+/// Returns `None` when the input slice is empty.
+pub fn merge_world_rules(rulesets: &[WorldRuleset]) -> Option<WorldRuleset> {
+    if rulesets.is_empty() {
+        return None;
+    }
+
+    let mut merged = WorldRuleset {
+        name: String::new(),
+        priority: 0,
+        resource_modifiers: Vec::new(),
+        special_zones: Vec::new(),
+        special_resources: Vec::new(),
+        agent_constants: None,
+        influence_channels: Vec::new(),
+        global_constants: None,
+    };
+
+    for ruleset in rulesets {
+        // Scalar fields: last writer wins (highest priority at end of slice).
+        merged.name = ruleset.name.clone();
+        merged.priority = ruleset.priority;
+
+        // Resource modifiers: dedup by target, then append. Last writer wins.
+        for modifier in &ruleset.resource_modifiers {
+            merged
+                .resource_modifiers
+                .retain(|existing| existing.target != modifier.target);
+            merged.resource_modifiers.push(modifier.clone());
+        }
+
+        // Special zones: pure append (no dedup).
+        merged.special_zones.extend(ruleset.special_zones.clone());
+
+        // Special resources: dedup by name, then append.
+        for resource in &ruleset.special_resources {
+            merged
+                .special_resources
+                .retain(|existing| existing.name != resource.name);
+            merged.special_resources.push(resource.clone());
+        }
+
+        // Influence channels: dedup by channel name, then append.
+        for channel_rule in &ruleset.influence_channels {
+            merged
+                .influence_channels
+                .retain(|existing| existing.channel != channel_rule.channel);
+            merged.influence_channels.push(channel_rule.clone());
+        }
+
+        // GlobalConstants: field-wise merge (Some overlay wins, None transparent).
+        merged.global_constants = merge_global_constants(
+            merged.global_constants.as_ref(),
+            ruleset.global_constants.as_ref(),
+        );
+
+        // AgentConstants: field-wise merge (Some overlay wins, None transparent).
+        merged.agent_constants = merge_agent_constants(
+            merged.agent_constants.as_ref(),
+            ruleset.agent_constants.as_ref(),
+        );
+    }
+
+    Some(merged)
+}
+
+fn merge_global_constants(
+    base: Option<&GlobalConstants>,
+    overlay: Option<&GlobalConstants>,
+) -> Option<GlobalConstants> {
+    let overlay = match overlay {
+        Some(o) => o,
+        None => return base.cloned(),
+    };
+    let base = base.cloned().unwrap_or(GlobalConstants {
+        season_mode: None,
+        hunger_decay_mul: None,
+        warmth_decay_mul: None,
+        food_regen_mul: None,
+        wood_regen_mul: None,
+        farming_enabled: None,
+        temperature_bias: None,
+        disaster_frequency_mul: None,
+    });
+    Some(GlobalConstants {
+        season_mode: overlay.season_mode.clone().or(base.season_mode),
+        hunger_decay_mul: overlay.hunger_decay_mul.or(base.hunger_decay_mul),
+        warmth_decay_mul: overlay.warmth_decay_mul.or(base.warmth_decay_mul),
+        food_regen_mul: overlay.food_regen_mul.or(base.food_regen_mul),
+        wood_regen_mul: overlay.wood_regen_mul.or(base.wood_regen_mul),
+        farming_enabled: overlay.farming_enabled.or(base.farming_enabled),
+        temperature_bias: overlay.temperature_bias.or(base.temperature_bias),
+        disaster_frequency_mul: overlay
+            .disaster_frequency_mul
+            .or(base.disaster_frequency_mul),
+    })
+}
+
+fn merge_agent_constants(
+    base: Option<&AgentConstants>,
+    overlay: Option<&AgentConstants>,
+) -> Option<AgentConstants> {
+    let overlay = match overlay {
+        Some(o) => o,
+        None => return base.cloned(),
+    };
+    let base = base.cloned().unwrap_or(AgentConstants {
+        mortality_mul: None,
+        skill_xp_mul: None,
+        body_potential_mul: None,
+        fertility_mul: None,
+        lifespan_mul: None,
+        move_speed_mul: None,
+    });
+    Some(AgentConstants {
+        mortality_mul: overlay.mortality_mul.or(base.mortality_mul),
+        skill_xp_mul: overlay.skill_xp_mul.or(base.skill_xp_mul),
+        body_potential_mul: overlay.body_potential_mul.or(base.body_potential_mul),
+        fertility_mul: overlay.fertility_mul.or(base.fertility_mul),
+        lifespan_mul: overlay.lifespan_mul.or(base.lifespan_mul),
+        move_speed_mul: overlay.move_speed_mul.or(base.move_speed_mul),
+    })
 }
 
 fn derive_stats_from_properties(properties: &MaterialProperties) -> DerivedStats {
