@@ -25,6 +25,11 @@ const DAWN_COLOR: Color = Color(0.85, 0.75, 0.70)    # 04:00–08:00
 
 var _sim_engine: RefCounted = null
 
+## Target color computed from simulation hour (set each tick).
+var _target_color: Color = DAY_COLOR
+## Lerp speed — lower = smoother transition. 0.8 per second feels natural.
+const TRANSITION_SPEED: float = 0.8
+
 
 ## Wire the day/night cycle to the Rust simulation engine. Call once after
 ## the engine is constructed.
@@ -32,8 +37,8 @@ func setup(sim_engine: RefCounted) -> void:
 	_sim_engine = sim_engine
 
 
-## Recompute the modulate color from the current tick. Call from main.gd's
-## _process(). Cheap (one modulo, one int multiply, one piecewise lerp).
+## Recompute the target color from the current tick. Call from main.gd's
+## _process() or on tick advance. The visual lerp happens in _process().
 func update_cycle() -> void:
 	if _sim_engine == null:
 		return
@@ -43,7 +48,11 @@ func update_cycle() -> void:
 	if current_tick < 0:
 		return
 	var hour: int = (current_tick % GameConfig.TICKS_PER_DAY) * GameConfig.TICK_HOURS
-	color = _hour_to_color(hour)
+	_target_color = _hour_to_color(hour)
+
+
+func _process(delta: float) -> void:
+	color = color.lerp(_target_color, clampf(TRANSITION_SPEED * delta, 0.0, 1.0))
 
 
 ## Translate a discrete game hour (0, 2, 4, …, 22) into a tint color.
@@ -65,5 +74,5 @@ func _hour_to_color(hour: int) -> Color:
 		var t: float = (h - 2.0) / 4.0
 		return NIGHT_COLOR.lerp(DAWN_COLOR, t)
 	# 6 <= h < 8
-	var t: float = (h - 6.0) / 2.0
-	return DAWN_COLOR.lerp(DAY_COLOR, t)
+	var dawn_t: float = (h - 6.0) / 2.0
+	return DAWN_COLOR.lerp(DAY_COLOR, dawn_t)
