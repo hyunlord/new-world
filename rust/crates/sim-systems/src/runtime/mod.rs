@@ -48,7 +48,7 @@ pub use economy::{
 pub use effect_apply::EffectApplySystem;
 
 // ---- influence ----
-pub use influence::InfluenceRuntimeSystem;
+pub use influence::{apply_room_effects, assign_room_roles_from_buildings, InfluenceRuntimeSystem};
 
 // ---- territory ----
 pub use territory::TerritoryRuntimeSystem;

@@ -447,7 +447,7 @@ func _draw() -> void:
 				Color(0.10, 0.14, 0.21))
 
 	# 4. Bezier edges
-	var active_id: String = _selected_id if _selected_id != "" else _hovered_id
+	var _active_id: String = _selected_id if _selected_id != "" else _hovered_id
 	for edge: Dictionary in _edge_list:
 		var from_pos: Vector2 = edge["from_pos"]
 		var to_pos: Vector2 = edge["to_pos"]
@@ -674,10 +674,10 @@ func _notification(what: int) -> void:
 func _center_content() -> void:
 	var bounds: Rect2 = _get_content_bounds()
 	var view_w: float = size.x
-	var view_h: float = size.y
+	var _view_h: float = size.y
 	if view_w < 10.0:
 		return  # not laid out yet
-	var content_w: float = bounds.size.x * _zoom
+	var _content_w: float = bounds.size.x * _zoom
 	var content_left: float = bounds.position.x * _zoom
 	# Left-align with padding (tech tree reads left to right)
 	_pan.x = 20.0 - content_left
