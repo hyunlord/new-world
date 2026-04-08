@@ -5035,6 +5035,430 @@ mod tests {
         );
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // phase1-visual-polish harness tests
+    //
+    // These tests protect Rust-side invariants that the GDScript visual polish
+    // (action icons, resource tint, day/night CanvasModulate) depends on.
+    //
+    // Feature spec: .harness/prompts/phase1-visual.md
+    // Plan: .harness/runs/phase1-visual-polish/plan_final.md
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn harness_action_enum_discriminants_contiguous() {
+        // Type A: Mathematical invariant. The GDScript `_action_int_to_icon`
+        // function in entity_renderer.gd hardcodes 28 sequential discriminants
+        // 0..27. The snapshot encoder (`action_state_code` in frame_snapshot.rs)
+        // writes `action as u8`, so the GDScript icon mapping is meaningful
+        // only as long as the Rust enum order matches.
+        //
+        // A reorder, an inserted variant, or a 29th variant silently breaks
+        // the visual mapping (wrong icons, or new actions invisible).
+        use sim_core::ActionType;
+
+        assert_eq!(ActionType::Idle as u8, 0);
+        assert_eq!(ActionType::Forage as u8, 1);
+        assert_eq!(ActionType::Hunt as u8, 2);
+        assert_eq!(ActionType::Fish as u8, 3);
+        assert_eq!(ActionType::Build as u8, 4);
+        assert_eq!(ActionType::Craft as u8, 5);
+        assert_eq!(ActionType::Socialize as u8, 6);
+        assert_eq!(ActionType::Rest as u8, 7);
+        assert_eq!(ActionType::Sleep as u8, 8);
+        assert_eq!(ActionType::Eat as u8, 9);
+        assert_eq!(ActionType::Drink as u8, 10);
+        assert_eq!(ActionType::Explore as u8, 11);
+        assert_eq!(ActionType::Flee as u8, 12);
+        assert_eq!(ActionType::Fight as u8, 13);
+        assert_eq!(ActionType::Migrate as u8, 14);
+        assert_eq!(ActionType::Teach as u8, 15);
+        assert_eq!(ActionType::Learn as u8, 16);
+        assert_eq!(ActionType::MentalBreak as u8, 17);
+        assert_eq!(ActionType::Pray as u8, 18);
+        assert_eq!(ActionType::Wander as u8, 19);
+        assert_eq!(ActionType::GatherWood as u8, 20);
+        assert_eq!(ActionType::GatherStone as u8, 21);
+        assert_eq!(ActionType::GatherHerbs as u8, 22);
+        assert_eq!(ActionType::DeliverToStockpile as u8, 23);
+        assert_eq!(ActionType::TakeFromStockpile as u8, 24);
+        assert_eq!(ActionType::SeekShelter as u8, 25);
+        assert_eq!(ActionType::SitByFire as u8, 26);
+        assert_eq!(ActionType::VisitPartner as u8, 27);
+
+        // Cardinality check — exactly 28 variants. If someone adds a 29th,
+        // this array's exhaustive match (in action_state_code) would also
+        // fail to compile, but this assertion gives a clearer error.
+        let all_variants = [
+            ActionType::Idle,
+            ActionType::Forage,
+            ActionType::Hunt,
+            ActionType::Fish,
+            ActionType::Build,
+            ActionType::Craft,
+            ActionType::Socialize,
+            ActionType::Rest,
+            ActionType::Sleep,
+            ActionType::Eat,
+            ActionType::Drink,
+            ActionType::Explore,
+            ActionType::Flee,
+            ActionType::Fight,
+            ActionType::Migrate,
+            ActionType::Teach,
+            ActionType::Learn,
+            ActionType::MentalBreak,
+            ActionType::Pray,
+            ActionType::Wander,
+            ActionType::GatherWood,
+            ActionType::GatherStone,
+            ActionType::GatherHerbs,
+            ActionType::DeliverToStockpile,
+            ActionType::TakeFromStockpile,
+            ActionType::SeekShelter,
+            ActionType::SitByFire,
+            ActionType::VisitPartner,
+        ];
+        assert_eq!(
+            all_variants.len(),
+            28,
+            "ActionType must have exactly 28 variants (GDScript icon map depends on this)"
+        );
+        let max_discriminant = all_variants
+            .iter()
+            .map(|a| *a as u8)
+            .max()
+            .expect("non-empty");
+        assert_eq!(max_discriminant, 27);
+    }
+
+    #[test]
+    fn harness_action_snapshot_byte_range() {
+        // Type A: Pairs with harness_action_enum_discriminants_contiguous.
+        // Even if the enum has 28 variants today, this catches the case where
+        // someone adds a 29th variant AND a system starts emitting it before
+        // GDScript is updated. Range violation = icon map fall-through.
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let world = engine.world();
+        let mut max_observed: u8 = 0;
+        let mut count: usize = 0;
+        for (_, behavior) in world.query::<&Behavior>().iter() {
+            let code = behavior.current_action as u8;
+            if code > max_observed {
+                max_observed = code;
+            }
+            count += 1;
+        }
+        assert!(count > 0, "no Behavior components found after 4380 ticks");
+        assert!(
+            max_observed <= 27,
+            "action discriminant {} exceeds icon-map domain 0..=27",
+            max_observed
+        );
+        // `min >= 0` is trivially true for u8 (cannot be negative); included
+        // as a no-op here for plan fidelity.
+    }
+
+    #[test]
+    fn harness_action_diversity_over_year() {
+        // Type C: Hard floor 5 is the lowest defensible value: Forage, Sleep,
+        // Eat, GatherWood, GatherStone are all expected to fire at least once
+        // in a year. This assertion guarantees the icon visualization is not
+        // silently empty.
+        //
+        // Type C: Observed 15 distinct non-Idle actions at seed=42 over 4380
+        // ticks (2026-04-08). Discriminants observed:
+        // [1 Forage, 2 Hunt, 4 Build, 5 Craft, 6 Socialize, 7 Rest, 8 Sleep,
+        //  9 Eat, 10 Drink, 11 Explore, 14 Migrate, 19 Wander, 20 GatherWood,
+        //  21 GatherStone, 25 SeekShelter]
+        // Threshold 5 = 33% of observed (67% margin below observed).
+        let mut engine = make_stage1_engine(42, 20);
+        let mut distinct_non_idle: std::collections::HashSet<u8> =
+            std::collections::HashSet::new();
+        // Sample every tick — ensures we catch short-lived actions that only
+        // last 1-2 ticks before transitioning.
+        for _ in 0..4380 {
+            engine.run_ticks(1);
+            for (_, behavior) in engine.world().query::<&Behavior>().iter() {
+                let code = behavior.current_action as u8;
+                if code != 0 {
+                    distinct_non_idle.insert(code);
+                }
+            }
+        }
+        let count = distinct_non_idle.len();
+        let mut sorted: Vec<u8> = distinct_non_idle.into_iter().collect();
+        sorted.sort();
+        eprintln!(
+            "[harness phase1-visual] diversity: {} distinct non-Idle actions at seed=42 over 4380 ticks: {:?}",
+            count, sorted
+        );
+        assert!(
+            count >= 5,
+            "expected at least 5 distinct non-Idle actions over 4380 ticks, got {}: {:?}",
+            count,
+            sorted
+        );
+    }
+
+    #[test]
+    fn harness_action_non_idle_ratio_steady_state() {
+        // Type C: Hard floor 0.30 because in a survival simulation more than
+        // 70% of agents being Idle indicates either dead agents, behavior
+        // selection failure, or job-assignment collapse — all of which would
+        // also empty the icon visualization.
+        //
+        // Type C: Observed 0.857 non-Idle (42/49) at seed=42 tick 4380
+        // (2026-04-08; total includes agents born during the year).
+        // Threshold 0.30 = 35% of observed (robust 65% margin).
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let world = engine.world();
+        let mut total: usize = 0;
+        let mut non_idle: usize = 0;
+        for (_, (behavior, age)) in world.query::<(&Behavior, &Age)>().iter() {
+            if !age.alive {
+                continue;
+            }
+            total += 1;
+            if behavior.current_action as u8 != 0 {
+                non_idle += 1;
+            }
+        }
+        assert!(total > 0, "no living agents at tick 4380");
+        let ratio = non_idle as f64 / total as f64;
+        eprintln!(
+            "[harness phase1-visual] non_idle_ratio: {:.4} ({}/{}) at seed=42 tick 4380",
+            ratio, non_idle, total
+        );
+        assert!(
+            ratio >= 0.30,
+            "non-Idle ratio {:.3} below 0.30 at tick 4380 ({} non-idle / {} total)",
+            ratio,
+            non_idle,
+            total
+        );
+    }
+
+    #[test]
+    fn harness_resource_food_tiles_above_threshold() {
+        // Type C: Counts tiles where any Food TileResource amount > 4.0
+        // (the GDScript icon-display threshold from world_renderer.gd).
+        //
+        // Type C: Observed 1240 food>4.0 tiles at seed=42 t=0 (2026-04-08).
+        // Hard floor 50 (very permissive baseline). 30%-of-baseline floor 372
+        // catches regressions that destroy >70% of food tiles even if the
+        // visualization is technically still non-empty.
+        // (make_stage1_engine seeds a 61×61 area around (128,128) with
+        // TileResources at amount=100.0, stamping Food/Wood/Stone alternately.
+        // Food tiles correspond to `(|dx|+|dy|) % 3 == 2`.)
+        const FOOD_BASELINE: usize = 1240; // observed at seed=42 t=0 (2026-04-08)
+        let engine = make_stage1_engine(42, 20);
+        let map = &engine.resources().map;
+        let mut count: usize = 0;
+        for y in 0..map.height {
+            for x in 0..map.width {
+                let tile = map.get(x, y);
+                let food_amount: f64 = tile
+                    .resources
+                    .iter()
+                    .filter(|r| r.resource_type == sim_core::ResourceType::Food)
+                    .map(|r| r.amount)
+                    .fold(0.0_f64, f64::max);
+                if food_amount > 4.0 {
+                    count += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness phase1-visual] food_tiles_above_4: {} at seed=42 t=0",
+            count
+        );
+        assert!(
+            count >= 50,
+            "only {} tiles with food > 4.0 — resource visualization would be empty",
+            count
+        );
+        let baseline_floor = (FOOD_BASELINE as f64 * 0.30) as usize;
+        assert!(
+            count >= baseline_floor,
+            "food tile count {} dropped below 30% of measured baseline {} (floor {})",
+            count,
+            FOOD_BASELINE,
+            baseline_floor
+        );
+    }
+
+    #[test]
+    fn harness_resource_wood_tiles_above_threshold() {
+        // Type C: Observed 1240 wood>5.0 tiles at seed=42 t=0 (2026-04-08).
+        // Hard floor 50 (very permissive baseline). 30%-of-baseline floor 372
+        // catches regressions that destroy >70% of wood tiles.
+        // (Wood tiles correspond to `(|dx|+|dy|) % 3 == 1` in the
+        // make_stage1_engine seeding loop.)
+        const WOOD_BASELINE: usize = 1240; // observed at seed=42 t=0 (2026-04-08)
+        let engine = make_stage1_engine(42, 20);
+        let map = &engine.resources().map;
+        let mut count: usize = 0;
+        for y in 0..map.height {
+            for x in 0..map.width {
+                let tile = map.get(x, y);
+                let wood_amount: f64 = tile
+                    .resources
+                    .iter()
+                    .filter(|r| r.resource_type == sim_core::ResourceType::Wood)
+                    .map(|r| r.amount)
+                    .fold(0.0_f64, f64::max);
+                if wood_amount > 5.0 {
+                    count += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness phase1-visual] wood_tiles_above_5: {} at seed=42 t=0",
+            count
+        );
+        assert!(
+            count >= 50,
+            "only {} tiles with wood > 5.0 — resource visualization would be empty",
+            count
+        );
+        let baseline_floor = (WOOD_BASELINE as f64 * 0.30) as usize;
+        assert!(
+            count >= baseline_floor,
+            "wood tile count {} dropped below 30% of measured baseline {} (floor {})",
+            count,
+            WOOD_BASELINE,
+            baseline_floor
+        );
+    }
+
+    #[test]
+    fn harness_resource_stone_tiles_above_threshold() {
+        // Type C: Observed 1241 stone>3.0 tiles at seed=42 t=0 (2026-04-08).
+        // (Stone tiles correspond to `(|dx|+|dy|) % 3 == 0` in the
+        // make_stage1_engine seeding loop. The +1 over food/wood comes from
+        // the centerline tile (0,0) which has dx==dy==0 → pattern 0.)
+        // Hard floor 50 (very permissive baseline). 30%-of-baseline floor 372
+        // catches regressions that destroy >70% of stone tiles.
+        const STONE_BASELINE: usize = 1241; // observed at seed=42 t=0 (2026-04-08)
+        let engine = make_stage1_engine(42, 20);
+        let map = &engine.resources().map;
+        let mut count: usize = 0;
+        for y in 0..map.height {
+            for x in 0..map.width {
+                let tile = map.get(x, y);
+                let stone_amount: f64 = tile
+                    .resources
+                    .iter()
+                    .filter(|r| r.resource_type == sim_core::ResourceType::Stone)
+                    .map(|r| r.amount)
+                    .fold(0.0_f64, f64::max);
+                if stone_amount > 3.0 {
+                    count += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness phase1-visual] stone_tiles_above_3: {} at seed=42 t=0",
+            count
+        );
+        assert!(
+            count >= 50,
+            "only {} tiles with stone > 3.0 — resource visualization would be empty",
+            count
+        );
+        let baseline_floor = (STONE_BASELINE as f64 * 0.30) as usize;
+        assert!(
+            count >= baseline_floor,
+            "stone tile count {} dropped below 30% of measured baseline {} (floor {})",
+            count,
+            STONE_BASELINE,
+            baseline_floor
+        );
+    }
+
+    #[test]
+    fn harness_calendar_ticks_per_day_matches_gdscript() {
+        // Type A: Mathematical invariant. The GDScript day/night cycle
+        // (day_night.gd) computes `hour_of_day = (current_tick % 12) * 2`
+        // with hardcoded 12 and 2. The Rust calendar's ticks_per_day must
+        // match GameConfig.TICKS_PER_DAY = 12. If Rust changes to 16
+        // ticks/day, the GDScript hour math silently produces wrong values
+        // and day/night colors decouple from in-game time.
+        let engine = make_stage1_engine(42, 20);
+        let ticks_per_day = engine.resources().calendar.ticks_per_day;
+        assert_eq!(
+            ticks_per_day, 12,
+            "calendar.ticks_per_day must equal 12 (GDScript GameConfig.TICKS_PER_DAY)"
+        );
+    }
+
+    #[test]
+    fn harness_calendar_hour_formula_consistency() {
+        // Type A: Mathematical invariant. The GDScript day/night cycle depends
+        // on calendar.tick advancing by exactly 1 per engine tick and the
+        // modulo-12 formula producing 12 distinct hours per day. Without this,
+        // day/night could freeze, jump, or run backwards.
+        let mut engine = make_stage1_engine(42, 20);
+        let expected_sequence: [u64; 13] = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 0];
+        let start_tick = engine.resources().calendar.tick;
+        for (i, expected_hour) in expected_sequence.iter().enumerate() {
+            let current_tick = engine.resources().calendar.tick;
+            assert_eq!(
+                current_tick,
+                start_tick + i as u64,
+                "calendar.tick expected {} after {} engine ticks, got {}",
+                start_tick + i as u64,
+                i,
+                current_tick
+            );
+            let hour = (current_tick % 12) * 2;
+            assert_eq!(
+                hour, *expected_hour,
+                "hour formula mismatch at step {} (tick={}, expected hour={}, got {})",
+                i, current_tick, expected_hour, hour
+            );
+            if i < 12 {
+                engine.run_ticks(1);
+            }
+        }
+    }
+
+    #[test]
+    fn harness_calendar_tick_monotonic() {
+        // Type A: Mathematical invariant. The GDScript hour formula assumes
+        // calendar.tick is a monotonically increasing non-negative integer.
+        // A regression that resets tick mid-run, makes it signed/negative,
+        // or freezes it would cause the day/night cycle to malfunction.
+        let mut engine = make_stage1_engine(42, 20);
+        let t0 = engine.resources().calendar.tick;
+        engine.run_ticks(100);
+        let t100 = engine.resources().calendar.tick;
+        engine.run_ticks(900); // 100 -> 1000
+        let t1000 = engine.resources().calendar.tick;
+        engine.run_ticks(3380); // 1000 -> 4380
+        let t4380 = engine.resources().calendar.tick;
+        assert!(
+            t0 < t100,
+            "calendar.tick did not advance over ticks 0..100 ({} !< {})",
+            t0,
+            t100
+        );
+        assert!(
+            t100 < t1000,
+            "calendar.tick did not advance over ticks 100..1000 ({} !< {})",
+            t100,
+            t1000
+        );
+        assert!(
+            t1000 < t4380,
+            "calendar.tick did not advance over ticks 1000..4380 ({} !< {})",
+            t1000,
+            t4380
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (

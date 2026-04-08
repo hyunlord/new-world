@@ -15,6 +15,7 @@ const ReputationManagerScript = preload("res://scripts/core/social/reputation_ma
 const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager.gd")
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
 const OverlayRendererClass = preload("res://scripts/ui/renderers/overlay_renderer.gd")
+const DayNightCycleClass = preload("res://scripts/ui/renderers/day_night.gd")
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -36,6 +37,7 @@ var _loading_bar: ProgressBar = null
 var _loading_label: Label = null
 var _loading_count_label: Label = null
 var _overlay_renderer: Node2D = null
+var _day_night_cycle: CanvasModulate = null
 
 @onready var world_renderer: Sprite2D = $WorldRenderer
 @onready var entity_renderer: Node2D = $EntityRenderer
@@ -97,6 +99,15 @@ func _ready() -> void:
 	add_child(_overlay_renderer)
 	move_child(_overlay_renderer, world_renderer.get_index() + 1)
 	_overlay_renderer.init(sim_engine, world_renderer)
+
+	# Day/night cycle (CanvasModulate child of Main — affects world/entities/
+	# buildings, NOT the HUD CanvasLayer which has its own separate canvas).
+	_day_night_cycle = DayNightCycleClass.new()
+	_day_night_cycle.name = "DayNightCycle"
+	_day_night_cycle.setup(sim_engine)
+	add_child(_day_night_cycle)
+	# Reset the legacy modulate fallback so we don't double-tint.
+	world_renderer.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	hud.init(sim_engine, entity_manager, building_manager, settlement_manager, world_data, camera, null, relationship_manager, reputation_manager)
 	_ensure_ambience_manager()
 	hud.call_deferred("set_tech_tree_manager", tech_tree_manager)
@@ -531,7 +542,6 @@ func _weighted_random_age(rng: RandomNumberGenerator) -> int:
 var _last_overlay_tick: int = 0
 var _last_minimap_tick: int = 0
 var _last_balance_tick: int = 0
-var _current_day_color: Color = Color(1.0, 1.0, 1.0)
 var _day_night_enabled: bool = true
 
 
@@ -561,27 +571,10 @@ func _process(delta: float) -> void:
 		_last_balance_tick = current_tick
 		_log_balance(current_tick)
 
-	# Day/night cycle (smooth lerp, slower at high speed)
-	if sim_engine and _day_night_enabled:
-		var gt: Dictionary = sim_engine.get_game_time()
-		var hour_f: float = float(gt.get("hour", 0))
-		var target_color: Color = _get_daylight_color(hour_f)
-		var lerp_speed: float = 0.3 * delta
-		if sim_engine.speed_index >= 3:
-			lerp_speed = 0.05 * delta
-		_current_day_color = _current_day_color.lerp(target_color, minf(lerp_speed, 1.0))
-		world_renderer.modulate = _current_day_color
-
-
-func _get_daylight_color(hour: float) -> Color:
-	if hour >= 7.0 and hour < 17.0:
-		return Color(1.0, 1.0, 1.0)           # Day
-	elif hour >= 17.0 and hour < 19.0:
-		return Color(1.0, 0.88, 0.75)          # Sunset
-	elif hour >= 19.0 or hour < 5.0:
-		return Color(0.55, 0.55, 0.7)          # Night
-	else:  # 5~7
-		return Color(0.8, 0.8, 0.9)            # Dawn
+	# Day/night cycle — driven by the DayNightCycle CanvasModulate node.
+	# CanvasModulate tints world/entities/buildings; HUD CanvasLayer is unaffected.
+	if _day_night_cycle != null and _day_night_enabled:
+		_day_night_cycle.update_cycle()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -638,9 +631,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					hud.toggle_help()
 				KEY_N:
 					_day_night_enabled = not _day_night_enabled
-					if not _day_night_enabled:
-						_current_day_color = Color(1.0, 1.0, 1.0)
-						world_renderer.modulate = Color(1.0, 1.0, 1.0)
+					if not _day_night_enabled and _day_night_cycle != null:
+						_day_night_cycle.color = Color(1.0, 1.0, 1.0, 1.0)
 				KEY_C:
 					hud.toggle_chronicle()
 				KEY_P:

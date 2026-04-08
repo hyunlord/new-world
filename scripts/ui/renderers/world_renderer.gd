@@ -9,6 +9,23 @@ var _resource_map_ref: RefCounted
 var _img: Image
 
 
+## Subtle resource node tint thresholds and colors blended into the base
+## terrain image. Mirrored from the GDScript icon-display thresholds and
+## guarded by Rust-side harness assertions:
+##   harness_resource_food_tiles_above_threshold (food > 4.0)
+##   harness_resource_wood_tiles_above_threshold (wood > 5.0)
+##   harness_resource_stone_tiles_above_threshold (stone > 3.0)
+const RESOURCE_TINT_FOOD_THRESHOLD: float = 4.0
+const RESOURCE_TINT_WOOD_THRESHOLD: float = 5.0
+const RESOURCE_TINT_STONE_THRESHOLD: float = 3.0
+const RESOURCE_TINT_FOOD_COLOR: Color = Color(0.30, 0.70, 0.15)
+const RESOURCE_TINT_WOOD_COLOR: Color = Color(0.45, 0.30, 0.12)
+const RESOURCE_TINT_STONE_COLOR: Color = Color(0.60, 0.60, 0.55)
+const RESOURCE_TINT_FOOD_BLEND: float = 0.20
+const RESOURCE_TINT_WOOD_BLEND: float = 0.15
+const RESOURCE_TINT_STONE_BLEND: float = 0.18
+
+
 ## Render the entire world as a single image texture
 func render_world(world_data: RefCounted, resource_map: RefCounted = null) -> void:
 	_world_data_ref = world_data
@@ -29,6 +46,19 @@ func render_world(world_data: RefCounted, resource_map: RefCounted = null) -> vo
 				clampf(base_color.g * brightness, 0.0, 1.0),
 				clampf(base_color.b * brightness, 0.0, 1.0),
 			)
+			# Subtle resource node tint blended into base terrain.
+			# Zero per-frame cost (only computed during initial render_world).
+			# Priority: food (most important to spot), then stone, then wood.
+			if resource_map != null:
+				var food: float = resource_map.get_food(x, y)
+				var wood: float = resource_map.get_wood(x, y)
+				var stone: float = resource_map.get_stone(x, y)
+				if food > RESOURCE_TINT_FOOD_THRESHOLD:
+					final_color = final_color.lerp(RESOURCE_TINT_FOOD_COLOR, RESOURCE_TINT_FOOD_BLEND)
+				if stone > RESOURCE_TINT_STONE_THRESHOLD:
+					final_color = final_color.lerp(RESOURCE_TINT_STONE_COLOR, RESOURCE_TINT_STONE_BLEND)
+				if wood > RESOURCE_TINT_WOOD_THRESHOLD:
+					final_color = final_color.lerp(RESOURCE_TINT_WOOD_COLOR, RESOURCE_TINT_WOOD_BLEND)
 			img.set_pixel(x, y, final_color)
 
 	_img = img
