@@ -177,6 +177,18 @@ pub struct SimResources {
     pub temperature_bias: f64,
     /// Active season mode string (default "default").
     pub season_mode: String,
+    /// Mortality rate multiplier (default 1.0, overridable by WorldRuleset agent_constants).
+    pub mortality_mul: f64,
+    /// Global skill XP gain multiplier (default 1.0, overridable by WorldRuleset agent_constants).
+    pub skill_xp_mul: f64,
+    /// Body stat potential multiplier (default 1.0, overridable by WorldRuleset agent_constants).
+    pub body_potential_mul: f64,
+    /// Fertility/birth rate multiplier (default 1.0, overridable by WorldRuleset agent_constants).
+    pub fertility_mul: f64,
+    /// Lifespan multiplier for Siler model (default 1.0, overridable by WorldRuleset agent_constants).
+    pub lifespan_mul: f64,
+    /// Movement speed multiplier (default 1.0, overridable by WorldRuleset agent_constants).
+    pub move_speed_mul: f64,
 }
 
 fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
@@ -429,6 +441,12 @@ impl SimResources {
             farming_enabled: true,
             temperature_bias: 0.0,
             season_mode: "default".to_string(),
+            mortality_mul: 1.0,
+            skill_xp_mul: 1.0,
+            body_potential_mul: 1.0,
+            fertility_mul: 1.0,
+            lifespan_mul: 1.0,
+            move_speed_mul: 1.0,
         }
     }
 
@@ -478,6 +496,32 @@ impl SimResources {
             info!(
                 "[WorldRules] global constants applied: hunger_decay={:.4}, warmth_decay={:.4}, food_regen={:.2}, season={}",
                 self.hunger_decay_rate, self.warmth_decay_rate, self.food_regen_mul, self.season_mode
+            );
+        }
+
+        // Apply agent constant overrides (stored only — consumer integration out of scope).
+        if let Some(ref agent) = rules.agent_constants {
+            if let Some(mul) = agent.mortality_mul {
+                self.mortality_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.skill_xp_mul {
+                self.skill_xp_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.body_potential_mul {
+                self.body_potential_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.fertility_mul {
+                self.fertility_mul = mul.clamp(0.0, 10.0);
+            }
+            if let Some(mul) = agent.lifespan_mul {
+                self.lifespan_mul = mul.max(0.1);
+            }
+            if let Some(mul) = agent.move_speed_mul {
+                self.move_speed_mul = mul.clamp(0.1, 5.0);
+            }
+            info!(
+                "[WorldRules] agent constants: mortality={:.2}, skill_xp={:.2}, lifespan={:.2}, fertility={:.2}",
+                self.mortality_mul, self.skill_xp_mul, self.lifespan_mul, self.fertility_mul
             );
         }
 
@@ -1105,7 +1149,7 @@ mod tests {
             resource_modifiers: Vec::new(),
             special_zones: Vec::new(),
             special_resources: Vec::new(),
-            agent_modifiers: Vec::new(),
+            agent_constants: None,
             influence_channels: vec![InfluenceChannelRule {
                 channel: "food".to_string(),
                 decay_rate: Some(0.42),

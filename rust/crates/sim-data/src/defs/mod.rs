@@ -18,7 +18,7 @@ pub use temperament::{
     TemperamentShiftRule,
 };
 pub use world_rules::{
-    InfluenceChannelRule, InfluenceClampPolicyDef, RuleAgentModifier, RuleResourceModifier,
+    AgentConstants, InfluenceChannelRule, InfluenceClampPolicyDef, RuleResourceModifier,
     RuleResourceSpawn, RuleSpecialZone, WorldRuleset, ZoneResourceBoost,
 };
 

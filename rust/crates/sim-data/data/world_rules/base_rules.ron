@@ -7,7 +7,7 @@
         ],
         special_zones: [],
         special_resources: [],
-        agent_modifiers: [],
+        agent_constants: None,
         global_constants: None,
         influence_channels: [
             InfluenceChannelRule(
