@@ -1812,6 +1812,12 @@ mod tests {
             },
         );
 
+        // P2-B2: shelter now has a 5x5 footprint (wall_radius=2). The wall
+        // ring covers (3..=7, 3..=7) with the door at (5, 7). Agents are
+        // repositioned so that:
+        //   inside  = (5, 5) — shelter interior, same tile as campfire
+        //   open    = (5, 9) — outside, below the door, unblocked path
+        //   blocked = (9, 5) — outside, past the east wall at (7, 5)
         let mut inside_needs = Needs::default();
         inside_needs.set(NeedType::Warmth, 0.20);
         let inside = engine
@@ -1820,13 +1826,13 @@ mod tests {
 
         let mut open_needs = Needs::default();
         open_needs.set(NeedType::Warmth, 0.20);
-        let open = engine.world_mut().spawn((Position::new(5, 7), open_needs));
+        let open = engine.world_mut().spawn((Position::new(5, 9), open_needs));
 
         let mut blocked_needs = Needs::default();
         blocked_needs.set(NeedType::Warmth, 0.20);
         let blocked = engine
             .world_mut()
-            .spawn((Position::new(7, 5), blocked_needs));
+            .spawn((Position::new(9, 5), blocked_needs));
 
         engine.tick();
 
@@ -1850,14 +1856,16 @@ mod tests {
         drop(open_after_first);
         drop(blocked_after_first);
 
+        // East wall at (7, 5) stamps wall blocking.
         assert!(
-            (engine.resources().influence_grid.wall_blocking_at(6, 5)
+            (engine.resources().influence_grid.wall_blocking_at(7, 5)
                 - sim_core::config::BUILDING_SHELTER_WALL_BLOCK)
                 .abs()
                 < 1e-6
         );
+        // Door at (5, 7) does NOT stamp wall blocking (passable opening).
         assert_eq!(
-            engine.resources().influence_grid.wall_blocking_at(5, 6),
+            engine.resources().influence_grid.wall_blocking_at(5, 7),
             0.0
         );
 
@@ -1868,11 +1876,11 @@ mod tests {
         let open_signal = engine
             .resources()
             .influence_grid
-            .sample(5, 7, ChannelId::Warmth);
+            .sample(5, 9, ChannelId::Warmth);
         let blocked_signal = engine
             .resources()
             .influence_grid
-            .sample(7, 5, ChannelId::Warmth);
+            .sample(9, 5, ChannelId::Warmth);
         assert!(inside_signal > open_signal);
         assert!(open_signal > blocked_signal);
 

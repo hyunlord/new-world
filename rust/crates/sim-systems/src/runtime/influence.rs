@@ -471,7 +471,11 @@ fn refresh_structural_context(resources: &mut SimResources) {
             continue;
         }
         if building.building_type == BUILDING_TYPE_SHELTER {
-            stamp_shelter_structure(resources, building.x, building.y, building.settlement_id);
+            // building.x/y is the top-left corner; compute the center of the
+            // footprint so the wall ring aligns with the reserved tiles.
+            let center_x = building.x + (building.width as i32) / 2;
+            let center_y = building.y + (building.height as i32) / 2;
+            stamp_shelter_structure(resources, center_x, center_y, building.settlement_id);
         }
     }
 
@@ -495,16 +499,28 @@ fn stamp_shelter_structure(
     let floor_material = wall_material.clone();
     let roof_material = resolve_shelter_roof_material(resources);
     let wall_hp = wall_hp_from_material(resources.data_registry.as_deref(), wall_material.as_str());
-    let center_x_u32 = center_x as u32;
-    let center_y_u32 = center_y as u32;
-    resources
-        .tile_grid
-        .set_floor(center_x_u32, center_y_u32, floor_material);
-    resources
-        .tile_grid
-        .set_roof(center_x_u32, center_y_u32, roof_material);
 
     let wall_radius = config::BUILDING_SHELTER_WALL_RING_RADIUS.max(1);
+    let interior_radius = wall_radius - 1;
+
+    // 1. Stamp floor + roof on ALL interior tiles (inside the wall ring).
+    //    For wall_radius=2 this covers a 3x3 interior = 9 floor tiles.
+    //    For wall_radius=1 this covers a 1x1 interior = just the center.
+    for offset_y in -interior_radius..=interior_radius {
+        for offset_x in -interior_radius..=interior_radius {
+            let tile_x = center_x + offset_x;
+            let tile_y = center_y + offset_y;
+            if !resources.map.in_bounds(tile_x, tile_y) {
+                continue;
+            }
+            let tx = tile_x as u32;
+            let ty = tile_y as u32;
+            resources.tile_grid.set_floor(tx, ty, floor_material.clone());
+            resources.tile_grid.set_roof(tx, ty, roof_material.clone());
+        }
+    }
+
+    // 2. Stamp perimeter walls, marking the door tile as a door instead of wall.
     for offset_y in -wall_radius..=wall_radius {
         for offset_x in -wall_radius..=wall_radius {
             let is_perimeter =
@@ -512,19 +528,22 @@ fn stamp_shelter_structure(
             if !is_perimeter {
                 continue;
             }
-            if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
-                && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
-            {
-                continue;
-            }
             let tile_x = center_x + offset_x;
             let tile_y = center_y + offset_y;
             if !resources.map.in_bounds(tile_x, tile_y) {
                 continue;
             }
+            let tx = tile_x as u32;
+            let ty = tile_y as u32;
+            if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
+                && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
+            {
+                resources.tile_grid.set_door(tx, ty);
+                continue;
+            }
             resources.tile_grid.set_wall(
-                tile_x as u32,
-                tile_y as u32,
+                tx,
+                ty,
                 wall_material.clone(),
                 wall_hp,
             );
@@ -809,15 +828,25 @@ mod tests {
             InfluenceRuntimeSystem::new(config::INFLUENCE_SYSTEM_PRIORITY, config::INFLUENCE_SYSTEM_INTERVAL);
         system.run(&mut world, &mut resources, 1);
 
+        // P2-B2: with wall_radius=2, a 5x5 shelter centered on (5,5) has a
+        // 3x3 interior (4..=6, 4..=6) and perimeter walls at 3..=7. The door
+        // sits at (5, 7). This forms an enclosed room of 9 floor tiles.
         assert_eq!(resources.rooms.len(), 1);
-        assert!(!resources.rooms[0].enclosed);
-        assert_eq!(resources.tile_grid.get(5, 5).room_id, Some(resources.rooms[0].id));
         assert!(
-            (resources.influence_grid.wall_blocking_at(6, 5) - config::BUILDING_SHELTER_WALL_BLOCK)
+            resources.rooms[0].enclosed,
+            "5x5 shelter with sealed door should produce enclosed room"
+        );
+        assert_eq!(resources.rooms[0].tiles.len(), 9);
+        assert_eq!(resources.tile_grid.get(5, 5).room_id, Some(resources.rooms[0].id));
+        // East wall at (7, 5) should apply the configured wall blocking.
+        assert!(
+            (resources.influence_grid.wall_blocking_at(7, 5) - config::BUILDING_SHELTER_WALL_BLOCK)
                 .abs()
                 < 1e-6
         );
-        assert_eq!(resources.influence_grid.wall_blocking_at(5, 6), 0.0);
+        // Door tile (5, 7) should NOT stamp wall blocking (doors are passable).
+        assert_eq!(resources.influence_grid.wall_blocking_at(5, 7), 0.0);
+        assert!(resources.tile_grid.get(5, 7).is_door);
     }
 
     #[test]
@@ -1079,7 +1108,10 @@ mod tests {
         );
         system.run(&mut world, &mut resources, 1);
 
-        let stamped_material = resources.tile_grid.get(6, 5).wall_material.clone();
+        // P2-B2: wall ring radius=2 — walls sit on the 5x5 perimeter. Probe
+        // the east wall at (7, 5), which is a perimeter position and not the
+        // door (door is at offset (+0, +2) = (5, 7)).
+        let stamped_material = resources.tile_grid.get(7, 5).wall_material.clone();
         let expected_hp = resources
             .data_registry
             .as_ref()
@@ -1091,7 +1123,7 @@ mod tests {
             .expect("selected wall material should derive hit points");
 
         assert!(stamped_material.is_some());
-        assert!((resources.tile_grid.get(6, 5).wall_hp - expected_hp).abs() < 1e-6);
+        assert!((resources.tile_grid.get(7, 5).wall_hp - expected_hp).abs() < 1e-6);
     }
 
     #[test]
