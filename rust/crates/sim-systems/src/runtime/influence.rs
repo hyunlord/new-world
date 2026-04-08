@@ -563,7 +563,11 @@ fn apply_wall_blocking_from_tile_grid(resources: &mut SimResources) {
 
 /// Assigns room roles based on which buildings occupy each room's tiles.
 /// Called after `detect_rooms` + `assign_room_ids` in `refresh_structural_context`.
-fn assign_room_roles_from_buildings(resources: &mut SimResources) {
+///
+/// Exposed as `pub` so fixture tests can invoke the real role-assignment
+/// pipeline after populating `resources.rooms` and `resources.buildings`
+/// manually.
+pub fn assign_room_roles_from_buildings(resources: &mut SimResources) {
     let mut role_votes: HashMap<RoomId, Vec<&'static str>> = HashMap::new();
 
     let mut building_ids: Vec<BuildingId> = resources.buildings.keys().copied().collect();
@@ -624,7 +628,10 @@ fn majority_role(votes: &[&str]) -> RoomRole {
 
 /// Enqueues per-tick stat bonuses for agents standing inside enclosed rooms.
 /// Uses EffectQueue so CausalLog records the source of each bonus.
-fn apply_room_effects(world: &World, resources: &mut SimResources) {
+///
+/// Exposed as `pub` so fixture tests can invoke the real room-effect pass
+/// directly without going through the full InfluenceRuntimeSystem.
+pub fn apply_room_effects(world: &World, resources: &mut SimResources) {
     if resources.rooms.is_empty() {
         return;
     }

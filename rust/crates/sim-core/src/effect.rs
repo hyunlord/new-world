@@ -214,6 +214,11 @@ impl EffectQueue {
         self.pending.len()
     }
 
+    /// Returns a read-only view of the pending buffer for test inspection.
+    pub fn pending(&self) -> &[EffectEntry] {
+        &self.pending
+    }
+
     /// Returns the number of entries available in the active buffer.
     pub fn active_len(&self) -> usize {
         self.active.len()
