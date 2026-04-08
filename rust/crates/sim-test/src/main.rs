@@ -3042,7 +3042,7 @@ mod tests {
                 moisture_mod: Some(0.2),
             }],
             special_resources: vec![],
-            agent_modifiers: vec![],
+            agent_constants: None,
             influence_channels: vec![],
             global_constants: None,
         });
@@ -3248,6 +3248,754 @@ mod tests {
         assert_eq!(
             violations, 0,
             "double-stack violations: {violations} tiles have Food amount > baseline + 8.001"
+        );
+    }
+
+    // ── A-9: Agent Constants ─────────────────────────────────────────────────
+
+    /// Helper: create fresh SimResources at 1.0 defaults (no world rules applied).
+    fn make_fresh_resources_seed42() -> SimResources {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(24, 12, 42);
+        SimResources::new(calendar, map, 42)
+    }
+
+    /// Helper: apply a specific AgentConstants to a SimResources via apply_world_rules().
+    /// Precondition: caller verifies resources fields are at 1.0 before calling.
+    fn apply_agent_constants_to_resources(
+        resources: &mut SimResources,
+        agent_constants: sim_data::AgentConstants,
+    ) {
+        use std::sync::Arc;
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve for agent constants harness");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load for agent constants harness");
+        registry.world_rules = Some(sim_data::WorldRuleset {
+            name: "harness_agent_constants".to_string(),
+            priority: 0,
+            resource_modifiers: vec![],
+            special_zones: vec![],
+            special_resources: vec![],
+            agent_constants: Some(agent_constants),
+            influence_channels: vec![],
+            global_constants: None,
+        });
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+    }
+
+    // Assertion 1: all six fields initialize to 1.0 when base_rules has no agent_constants
+    #[test]
+    fn harness_agent_constants_defaults() {
+        // Type A: multiplicative identity 1.0 for all six agent-constant fields.
+        // make_stage1_engine loads base_rules.ron (agent_constants: None) and does not
+        // call apply_world_rules, so SimResources::new() initial values are the tested state.
+        let engine = make_stage1_engine(42, 20);
+        let resources = engine.resources();
+
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.mortality_mul - 1.0).abs() < 1e-9,
+            "mortality_mul must default to 1.0, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 1.0).abs() < 1e-9,
+            "skill_xp_mul must default to 1.0, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-9,
+            "body_potential_mul must default to 1.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.fertility_mul - 1.0).abs() < 1e-9,
+            "fertility_mul must default to 1.0, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 1.0).abs() < 1e-9,
+            "lifespan_mul must default to 1.0, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 1.0 (within 1e-9)
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-9,
+            "move_speed_mul must default to 1.0, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_defaults: mortality={:.2} xp={:.2} body={:.2} \
+             fertility={:.2} lifespan={:.2} speed={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 2: apply_world_rules() transfers non-None AgentConstants values exactly
+    #[test]
+    fn harness_agent_constants_transfer() {
+        // Type A: Some values transferred exactly; None fields must not overwrite 1.0 default.
+        // Precondition: make_fresh_resources_seed42() returns SimResources with all six fields == 1.0.
+        let mut resources = make_fresh_resources_seed42();
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: Some(1.3),
+                skill_xp_mul: Some(1.5),
+                body_potential_mul: None,
+                fertility_mul: Some(0.7),
+                lifespan_mul: Some(0.8),
+                move_speed_mul: None,
+            },
+        );
+
+        // Type: f64; threshold: == 1.3 (within 1e-9)
+        assert!(
+            (resources.mortality_mul - 1.3).abs() < 1e-9,
+            "mortality_mul must be 1.3, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 1.5 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-9,
+            "skill_xp_mul must be 1.5, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 1.0 (None must not overwrite 1.0 default)
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-9,
+            "body_potential_mul (None) must remain 1.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.7 (within 1e-9)
+        assert!(
+            (resources.fertility_mul - 0.7).abs() < 1e-9,
+            "fertility_mul must be 0.7, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.8 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 0.8).abs() < 1e-9,
+            "lifespan_mul must be 0.8, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 1.0 (None must not overwrite 1.0 default)
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-9,
+            "move_speed_mul (None) must remain 1.0, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_transfer: mortality={:.2} xp={:.2} body={:.2} \
+             fertility={:.2} lifespan={:.2} speed={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 3: Some(AgentConstants { all None }) is a strict no-op
+    #[test]
+    fn harness_agent_constants_all_none_noop() {
+        // Type A: outer Some entered but all inner fields None — fields must stay at 1.0.
+        // Distinct code path from A1 (A1: outer None; A3: outer Some with all inner None).
+        // Precondition: make_fresh_resources_seed42() returns all six fields == 1.0.
+        let mut resources = make_fresh_resources_seed42();
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: None,
+                skill_xp_mul: None,
+                body_potential_mul: None,
+                fertility_mul: None,
+                lifespan_mul: None,
+                move_speed_mul: None,
+            },
+        );
+
+        // Type: f64; threshold: each == 1.0 (within 1e-9) — all-None inner is strict no-op
+        assert!(
+            (resources.mortality_mul - 1.0).abs() < 1e-9,
+            "mortality_mul (inner None) must remain 1.0, got {}",
+            resources.mortality_mul
+        );
+        assert!(
+            (resources.skill_xp_mul - 1.0).abs() < 1e-9,
+            "skill_xp_mul (inner None) must remain 1.0, got {}",
+            resources.skill_xp_mul
+        );
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-9,
+            "body_potential_mul (inner None) must remain 1.0, got {}",
+            resources.body_potential_mul
+        );
+        assert!(
+            (resources.fertility_mul - 1.0).abs() < 1e-9,
+            "fertility_mul (inner None) must remain 1.0, got {}",
+            resources.fertility_mul
+        );
+        assert!(
+            (resources.lifespan_mul - 1.0).abs() < 1e-9,
+            "lifespan_mul (inner None) must remain 1.0, got {}",
+            resources.lifespan_mul
+        );
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-9,
+            "move_speed_mul (inner None) must remain 1.0, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!("[harness] agent_constants_all_none_noop: PASS (all fields == 1.0)");
+    }
+
+    // Assertion 4: lower-bound clamping prevents negative and sub-minimum values
+    #[test]
+    fn harness_agent_constants_lower_bound_clamp() {
+        // Type A: values strictly below each field's floor must be clamped up to floor.
+        let mut resources = make_fresh_resources_seed42();
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: Some(-1.0),
+                skill_xp_mul: Some(-0.5),
+                body_potential_mul: Some(-2.0),
+                fertility_mul: Some(-3.0),
+                lifespan_mul: Some(0.05),
+                move_speed_mul: Some(0.0),
+            },
+        );
+
+        // Type: f64; threshold: == 0.0 (clamped from -1.0 by .max(0.0))
+        assert!(
+            resources.mortality_mul.abs() < 1e-9,
+            "mortality_mul(-1.0) must clamp to 0.0, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 0.0 (clamped from -0.5 by .max(0.0))
+        assert!(
+            resources.skill_xp_mul.abs() < 1e-9,
+            "skill_xp_mul(-0.5) must clamp to 0.0, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 0.0 (clamped from -2.0 by .max(0.0))
+        assert!(
+            resources.body_potential_mul.abs() < 1e-9,
+            "body_potential_mul(-2.0) must clamp to 0.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.0 (clamped from -3.0 by .clamp(0.0, 10.0))
+        assert!(
+            resources.fertility_mul.abs() < 1e-9,
+            "fertility_mul(-3.0) must clamp to 0.0, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.1 (clamped from 0.05 by .max(0.1))
+        assert!(
+            (resources.lifespan_mul - 0.1).abs() < 1e-9,
+            "lifespan_mul(0.05) must clamp to 0.1, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 0.1 (clamped from 0.0 by .clamp(0.1, 5.0))
+        assert!(
+            (resources.move_speed_mul - 0.1).abs() < 1e-9,
+            "move_speed_mul(0.0) must clamp to 0.1, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_lower_bound_clamp: mortality={:.3} xp={:.3} body={:.3} \
+             fertility={:.3} lifespan={:.3} speed={:.3}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 5: upper-bound clamping (sub-test A: over-max; sub-test B: exact boundary)
+    #[test]
+    fn harness_agent_constants_upper_bound_clamp() {
+        // Sub-test A: values strictly above ceiling must be clamped down to ceiling.
+        {
+            let mut resources = make_fresh_resources_seed42();
+            apply_agent_constants_to_resources(
+                &mut resources,
+                sim_data::AgentConstants {
+                    mortality_mul: None,
+                    skill_xp_mul: None,
+                    body_potential_mul: None,
+                    fertility_mul: Some(15.0),
+                    lifespan_mul: None,
+                    move_speed_mul: Some(8.0),
+                },
+            );
+            // Type: f64; threshold: == 10.0 (clamped from 15.0)
+            assert!(
+                (resources.fertility_mul - 10.0).abs() < 1e-9,
+                "fertility_mul(15.0) must clamp to 10.0, got {}",
+                resources.fertility_mul
+            );
+            // Type: f64; threshold: == 5.0 (clamped from 8.0)
+            assert!(
+                (resources.move_speed_mul - 5.0).abs() < 1e-9,
+                "move_speed_mul(8.0) must clamp to 5.0, got {}",
+                resources.move_speed_mul
+            );
+        }
+        // Sub-test B: exact-max boundary must be preserved (inclusive <=, not exclusive <).
+        {
+            let mut resources = make_fresh_resources_seed42();
+            apply_agent_constants_to_resources(
+                &mut resources,
+                sim_data::AgentConstants {
+                    mortality_mul: None,
+                    skill_xp_mul: None,
+                    body_potential_mul: None,
+                    fertility_mul: Some(10.0),
+                    lifespan_mul: None,
+                    move_speed_mul: Some(5.0),
+                },
+            );
+            // Type: f64; threshold: == 10.0 (exact boundary inclusive; must not be pushed below)
+            assert!(
+                (resources.fertility_mul - 10.0).abs() < 1e-9,
+                "fertility_mul(10.0) exact boundary must be preserved, got {}",
+                resources.fertility_mul
+            );
+            // Type: f64; threshold: == 5.0 (exact boundary inclusive; must not be pushed below)
+            assert!(
+                (resources.move_speed_mul - 5.0).abs() < 1e-9,
+                "move_speed_mul(5.0) exact boundary must be preserved, got {}",
+                resources.move_speed_mul
+            );
+        }
+        eprintln!("[harness] agent_constants_upper_bound_clamp: PASS (both sub-tests)");
+    }
+
+    // Assertion 6: exact lower-boundary values are preserved, not over-clamped
+    #[test]
+    fn harness_agent_constants_exact_lower_boundary() {
+        // Type A: each field set to its exact specified minimum — must not be pushed above.
+        let mut resources = make_fresh_resources_seed42();
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: Some(0.0),
+                skill_xp_mul: Some(0.0),
+                body_potential_mul: Some(0.0),
+                fertility_mul: Some(0.0),
+                lifespan_mul: Some(0.1),
+                move_speed_mul: Some(0.1),
+            },
+        );
+
+        // Type: f64; threshold: == 0.0 (floor; .max(0.0) must not push positive)
+        assert!(
+            resources.mortality_mul.abs() < 1e-9,
+            "mortality_mul(0.0) must be preserved at 0.0, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 0.0 (floor; .max(0.0) must not push positive)
+        assert!(
+            resources.skill_xp_mul.abs() < 1e-9,
+            "skill_xp_mul(0.0) must be preserved at 0.0, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 0.0 (floor; .max(0.0) must not push positive)
+        assert!(
+            resources.body_potential_mul.abs() < 1e-9,
+            "body_potential_mul(0.0) must be preserved at 0.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.0 (floor; .clamp(0.0, 10.0) must not push positive)
+        assert!(
+            resources.fertility_mul.abs() < 1e-9,
+            "fertility_mul(0.0) must be preserved at 0.0, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.1 (spec minimum; .max(0.1) must not push above 0.1)
+        assert!(
+            (resources.lifespan_mul - 0.1).abs() < 1e-9,
+            "lifespan_mul(0.1) must be preserved at 0.1, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 0.1 (spec minimum; .clamp(0.1, 5.0) must not push above 0.1)
+        assert!(
+            (resources.move_speed_mul - 0.1).abs() < 1e-9,
+            "move_speed_mul(0.1) must be preserved at 0.1, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_exact_lower_boundary: mortality={:.4} xp={:.4} body={:.4} \
+             fertility={:.4} lifespan={:.4} speed={:.4}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 7: declared-unbounded fields accept large values without silent clamping
+    #[test]
+    fn harness_agent_constants_unbounded_fields() {
+        // Type A: mortality_mul, skill_xp_mul, body_potential_mul, lifespan_mul have only
+        // lower bounds — no upper clamp. Large values must pass through unchanged.
+        let mut resources = make_fresh_resources_seed42();
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: Some(100.0),
+                skill_xp_mul: Some(100.0),
+                body_potential_mul: Some(50.0),
+                fertility_mul: None,
+                lifespan_mul: Some(100.0),
+                move_speed_mul: None,
+            },
+        );
+
+        // Type: f64; threshold: == 100.0 (within 1e-9; no hidden upper clamp permitted)
+        assert!(
+            (resources.mortality_mul - 100.0).abs() < 1e-9,
+            "mortality_mul(100.0) must not be silently clamped, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 100.0 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 100.0).abs() < 1e-9,
+            "skill_xp_mul(100.0) must not be silently clamped, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 50.0 (within 1e-9)
+        assert!(
+            (resources.body_potential_mul - 50.0).abs() < 1e-9,
+            "body_potential_mul(50.0) must not be silently clamped, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 100.0 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 100.0).abs() < 1e-9,
+            "lifespan_mul(100.0) must not be silently clamped, got {}",
+            resources.lifespan_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_unbounded_fields: mortality={:.2} xp={:.2} body={:.2} lifespan={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.lifespan_mul,
+        );
+    }
+
+    // Assertion 8: RON deserialization of AgentConstants from a complete WorldRuleset document
+    #[test]
+    fn harness_agent_constants_ron_deserialization() {
+        // Type A: serde RON path (production entry point) must correctly populate
+        // AgentConstants fields. This is the EXACT RON document from the test plan.
+        const RON_DOC: &str = r#"[
+    WorldRuleset(
+        name: "TestAgentConstants",
+        priority: 10,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: Some(AgentConstants(
+            mortality_mul: Some(1.3),
+            skill_xp_mul: Some(1.5),
+            body_potential_mul: None,
+            fertility_mul: Some(0.7),
+            lifespan_mul: Some(0.8),
+            move_speed_mul: None,
+        )),
+        global_constants: None,
+    ),
+]"#;
+
+        // Parse using ron — same serde deserialization path as production RON loader.
+        let rulesets: Vec<sim_data::WorldRuleset> =
+            ron::from_str(RON_DOC).expect("RON document must parse without error or panic");
+        assert_eq!(
+            rulesets.len(),
+            1,
+            "expected exactly one WorldRuleset in the document"
+        );
+        let ruleset = rulesets.into_iter().next().unwrap();
+
+        // Apply the deserialized ruleset to a fresh SimResources (fields at 1.0).
+        let mut resources = make_fresh_resources_seed42();
+        {
+            use std::sync::Arc;
+            let data_dir = super::authoritative_ron_data_dir()
+                .expect("authoritative RON data dir must resolve");
+            let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+                .expect("RON registry must load");
+            registry.world_rules = Some(ruleset);
+            resources.data_registry = Some(Arc::new(registry));
+        }
+        resources.apply_world_rules();
+
+        // Type: f64; threshold: == 1.3 (within 1e-9)
+        assert!(
+            (resources.mortality_mul - 1.3).abs() < 1e-9,
+            "RON: mortality_mul must be 1.3, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 1.5 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-9,
+            "RON: skill_xp_mul must be 1.5, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 1.0 (None → no-op, stays at 1.0 default)
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-9,
+            "RON: body_potential_mul (None) must remain 1.0, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.7 (within 1e-9)
+        assert!(
+            (resources.fertility_mul - 0.7).abs() < 1e-9,
+            "RON: fertility_mul must be 0.7, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.8 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 0.8).abs() < 1e-9,
+            "RON: lifespan_mul must be 0.8, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 1.0 (None → no-op, stays at 1.0 default)
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-9,
+            "RON: move_speed_mul (None) must remain 1.0, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_ron_deserialization: mortality={:.2} xp={:.2} body={:.2} \
+             fertility={:.2} lifespan={:.2} speed={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 9: SimResources agent-constant fields persist unchanged across 100 ticks
+    #[test]
+    fn harness_agent_constants_persist_across_ticks() {
+        // Type A: world-rules multipliers are persistent config, not transient state.
+        // 100 ticks exercises all Hot-tier and Warm-tier systems that might reset fields.
+        use std::sync::Arc;
+        let mut engine = make_stage1_engine(42, 20);
+        {
+            let data_dir = super::authoritative_ron_data_dir()
+                .expect("authoritative RON data dir must resolve");
+            let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+                .expect("RON registry must load");
+            registry.world_rules = Some(sim_data::WorldRuleset {
+                name: "harness_persist".to_string(),
+                priority: 0,
+                resource_modifiers: vec![],
+                special_zones: vec![],
+                special_resources: vec![],
+                agent_constants: Some(sim_data::AgentConstants {
+                    mortality_mul: Some(1.3),
+                    skill_xp_mul: Some(1.5),
+                    body_potential_mul: Some(0.8),
+                    fertility_mul: Some(0.7),
+                    lifespan_mul: Some(0.9),
+                    move_speed_mul: Some(1.2),
+                }),
+                influence_channels: vec![],
+                global_constants: None,
+            });
+            engine.resources_mut().data_registry = Some(Arc::new(registry));
+            engine.resources_mut().apply_world_rules();
+        }
+        engine.run_ticks(100);
+        let resources = engine.resources();
+
+        // Type: f64; threshold: == 1.3 (within 1e-9) — must persist across 100 ticks
+        assert!(
+            (resources.mortality_mul - 1.3).abs() < 1e-9,
+            "mortality_mul must remain 1.3 after 100 ticks, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 1.5 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-9,
+            "skill_xp_mul must remain 1.5 after 100 ticks, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 0.8 (within 1e-9)
+        assert!(
+            (resources.body_potential_mul - 0.8).abs() < 1e-9,
+            "body_potential_mul must remain 0.8 after 100 ticks, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.7 (within 1e-9)
+        assert!(
+            (resources.fertility_mul - 0.7).abs() < 1e-9,
+            "fertility_mul must remain 0.7 after 100 ticks, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.9 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 0.9).abs() < 1e-9,
+            "lifespan_mul must remain 0.9 after 100 ticks, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 1.2 (within 1e-9)
+        assert!(
+            (resources.move_speed_mul - 1.2).abs() < 1e-9,
+            "move_speed_mul must remain 1.2 after 100 ticks, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_persist_across_ticks: mortality={:.2} xp={:.2} body={:.2} \
+             fertility={:.2} lifespan={:.2} speed={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 10: second apply_world_rules() with outer-None agent_constants does not reset
+    #[test]
+    fn harness_agent_constants_second_none_does_not_reset() {
+        // Type A: None in a later ruleset means "no operation" — not "reset to default".
+        // This tests the layered WorldRuleset composition pattern.
+        let mut resources = make_fresh_resources_seed42();
+
+        // Step 1: apply WorldRuleset A with concrete AgentConstants.
+        apply_agent_constants_to_resources(
+            &mut resources,
+            sim_data::AgentConstants {
+                mortality_mul: Some(1.4),
+                skill_xp_mul: Some(1.6),
+                body_potential_mul: Some(0.9),
+                fertility_mul: Some(0.6),
+                lifespan_mul: Some(0.85),
+                move_speed_mul: Some(1.1),
+            },
+        );
+
+        // Step 2: apply WorldRuleset B with agent_constants: None (outer None).
+        {
+            use std::sync::Arc;
+            let data_dir = super::authoritative_ron_data_dir()
+                .expect("authoritative RON data dir must resolve");
+            let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+                .expect("RON registry must load");
+            registry.world_rules = Some(sim_data::WorldRuleset {
+                name: "harness_none_override".to_string(),
+                priority: 0,
+                resource_modifiers: vec![],
+                special_zones: vec![],
+                special_resources: vec![],
+                agent_constants: None,
+                influence_channels: vec![],
+                global_constants: None,
+            });
+            resources.data_registry = Some(Arc::new(registry));
+            resources.apply_world_rules();
+        }
+
+        // Type: f64; threshold: == 1.4 (within 1e-9) — must not be reset to 0.0 or 1.0
+        assert!(
+            (resources.mortality_mul - 1.4).abs() < 1e-9,
+            "mortality_mul must remain 1.4 after None ruleset, got {}",
+            resources.mortality_mul
+        );
+        // Type: f64; threshold: == 1.6 (within 1e-9)
+        assert!(
+            (resources.skill_xp_mul - 1.6).abs() < 1e-9,
+            "skill_xp_mul must remain 1.6 after None ruleset, got {}",
+            resources.skill_xp_mul
+        );
+        // Type: f64; threshold: == 0.9 (within 1e-9)
+        assert!(
+            (resources.body_potential_mul - 0.9).abs() < 1e-9,
+            "body_potential_mul must remain 0.9 after None ruleset, got {}",
+            resources.body_potential_mul
+        );
+        // Type: f64; threshold: == 0.6 (within 1e-9)
+        assert!(
+            (resources.fertility_mul - 0.6).abs() < 1e-9,
+            "fertility_mul must remain 0.6 after None ruleset, got {}",
+            resources.fertility_mul
+        );
+        // Type: f64; threshold: == 0.85 (within 1e-9)
+        assert!(
+            (resources.lifespan_mul - 0.85).abs() < 1e-9,
+            "lifespan_mul must remain 0.85 after None ruleset, got {}",
+            resources.lifespan_mul
+        );
+        // Type: f64; threshold: == 1.1 (within 1e-9)
+        assert!(
+            (resources.move_speed_mul - 1.1).abs() < 1e-9,
+            "move_speed_mul must remain 1.1 after None ruleset, got {}",
+            resources.move_speed_mul
+        );
+        eprintln!(
+            "[harness] agent_constants_second_none_does_not_reset: mortality={:.2} xp={:.2} \
+             body={:.2} fertility={:.2} lifespan={:.2} speed={:.2}",
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.body_potential_mul,
+            resources.fertility_mul,
+            resources.lifespan_mul,
+            resources.move_speed_mul,
+        );
+    }
+
+    // Assertion 11: new SimResources fields do not break existing simulation output (regression)
+    #[test]
+    fn harness_agent_constants_regression_stone() {
+        // Type C: adding 6 new fields initialized to 1.0 must not affect stone accumulation.
+        // Observed ≈ 1891.5 at seed=42 after feat(a9-special-zones) raised the baseline.
+        // Thresholds recalibrated: floor=500.0, ceiling=3783.0 (2x observed).
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        // Type: f64; threshold: > 500.0 AND < 3783.0
+        let stone_total: f64 = resources
+            .settlements
+            .values()
+            .map(|s| s.stockpile_stone)
+            .sum();
+        eprintln!(
+            "[harness] agent_constants_regression_stone: stone_total={:.2}",
+            stone_total
+        );
+        assert!(
+            stone_total > 500.0,
+            "stone_total must be > 500.0 (regression floor), got {stone_total:.2}"
+        );
+        assert!(
+            stone_total < 3783.0,
+            "stone_total must be < 3783.0 (regression ceiling), got {stone_total:.2}"
         );
     }
 

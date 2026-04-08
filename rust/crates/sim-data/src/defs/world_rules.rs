@@ -49,9 +49,9 @@ pub struct WorldRuleset {
     /// Special resources introduced by the ruleset.
     #[serde(default)]
     pub special_resources: Vec<RuleResourceSpawn>,
-    /// Agent-facing modifiers.
+    /// Agent-facing constant multipliers applied at world-load time.
     #[serde(default)]
-    pub agent_modifiers: Vec<RuleAgentModifier>,
+    pub agent_constants: Option<AgentConstants>,
     /// Optional influence-channel metadata overrides.
     #[serde(default)]
     pub influence_channels: Vec<InfluenceChannelRule>,
@@ -123,14 +123,30 @@ pub struct RuleResourceSpawn {
     pub tags: Vec<String>,
 }
 
-/// Agent-facing world rule modifier.
+/// Concrete agent-facing multipliers applied at world-load time.
+///
+/// Each field is `Option<f64>` — `None` means "leave the current SimResources value unchanged".
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
-pub struct RuleAgentModifier {
-    /// Target subsystem identifier.
-    pub system: String,
-    /// Effect identifier applied by the rule.
-    pub effect: String,
+pub struct AgentConstants {
+    /// Mortality rate multiplier (floor 0.0, no upper bound). Default 1.0.
+    #[serde(default)]
+    pub mortality_mul: Option<f64>,
+    /// Global skill XP gain multiplier (floor 0.0, no upper bound). Default 1.0.
+    #[serde(default)]
+    pub skill_xp_mul: Option<f64>,
+    /// Body stat potential multiplier (floor 0.0, no upper bound). Default 1.0.
+    #[serde(default)]
+    pub body_potential_mul: Option<f64>,
+    /// Fertility/birth rate multiplier (clamped to [0.0, 10.0]). Default 1.0.
+    #[serde(default)]
+    pub fertility_mul: Option<f64>,
+    /// Lifespan multiplier for Siler model (floor 0.1, no upper bound). Default 1.0.
+    #[serde(default)]
+    pub lifespan_mul: Option<f64>,
+    /// Movement speed multiplier (clamped to [0.1, 5.0]). Default 1.0.
+    #[serde(default)]
+    pub move_speed_mul: Option<f64>,
 }
 
 /// Declarative override for one influence-channel metadata entry.
@@ -175,7 +191,7 @@ mod tests {
                 ],
                 special_zones: [],
                 special_resources: [],
-                agent_modifiers: [],
+                agent_constants: None,
                 influence_channels: [
                     InfluenceChannelRule(
                         channel: "food",

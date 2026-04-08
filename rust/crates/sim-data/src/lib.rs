@@ -28,7 +28,7 @@ pub use defs::{
     ActionCategory, ActionCondition, ActionDef, ActionEffect, AxisShift, BiasMatrixRow,
     CauseTrigger, DerivedRuleOverride, FurnitureDef, InfluenceChannelRule,
     InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory, MaterialDef, MaterialProperties,
-    RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition, RuleAgentModifier,
+    AgentConstants, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
     RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition, StructureDef,
     StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule, WorldRuleset,
     ZoneResourceBoost,

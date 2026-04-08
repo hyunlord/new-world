@@ -15,6 +15,7 @@ sim-data = { path = "../sim-data" }
 sim-bridge = { path = "../sim-bridge" }
 env_logger = { workspace = true }
 log = { workspace = true }
+ron = "0.8"
 
 [lints]
 workspace = true
