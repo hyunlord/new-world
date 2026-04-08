@@ -427,6 +427,7 @@ mod tests {
             recipes,
             structures: HashMap::<String, Arc<StructureDef>>::new(),
             actions,
+            world_rules_raw: Vec::new(),
             world_rules: None,
             temperament_rules: None,
             tag_index: TagIndex::build(&HashMap::from([(
