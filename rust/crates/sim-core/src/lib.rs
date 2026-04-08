@@ -28,7 +28,7 @@ pub mod settlement;
 
 // Re-export commonly used types for convenience
 pub use band::{Band, BandStore};
-pub use building::Building;
+pub use building::{Building, FurniturePlan, WallPlan};
 pub use calendar::GameCalendar;
 pub use causal_log::{CausalEvent, CausalLog, CauseRef};
 pub use children_index::ChildrenIndex;

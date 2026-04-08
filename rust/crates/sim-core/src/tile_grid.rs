@@ -20,6 +20,11 @@ pub struct StructuralTile {
     /// distinguished from walls by downstream pathfinding/influence systems.
     #[serde(default)]
     pub is_door: bool,
+    /// Optional furniture id placed on this tile (P2-B3 component building).
+    /// Walls and furniture can coexist on the same tile (e.g. an interior
+    /// fire pit inside a wall ring), so this is independent of `wall_material`.
+    #[serde(default)]
+    pub furniture_id: Option<String>,
 }
 
 impl StructuralTile {
@@ -111,6 +116,16 @@ impl TileGrid {
     /// systems distinguish doors from solid walls.
     pub fn set_door(&mut self, x: u32, y: u32) {
         self.get_mut(x, y).is_door = true;
+    }
+
+    /// Sets a furniture id on a tile (P2-B3 component building).
+    pub fn set_furniture(&mut self, x: u32, y: u32, furniture_id: impl Into<String>) {
+        self.get_mut(x, y).furniture_id = Some(furniture_id.into());
+    }
+
+    /// Returns the furniture id on a tile, if any.
+    pub fn get_furniture(&self, x: u32, y: u32) -> Option<&str> {
+        self.get(x, y).furniture_id.as_deref()
     }
 
     /// Assigns a room id to one tile.

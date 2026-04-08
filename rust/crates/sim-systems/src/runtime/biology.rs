@@ -176,11 +176,61 @@ impl SimSystem for PopulationRuntimeSystem {
             }
         }
 
-        let total_shelters: i32 = resources
-            .buildings
-            .values()
-            .filter(|building| building.building_type == "shelter")
-            .count() as i32;
+        let total_shelters: i32 = {
+            // Legacy Building entries with type "shelter".
+            let building_shelters = resources
+                .buildings
+                .values()
+                .filter(|building| building.building_type == "shelter")
+                .count() as i32;
+            // P2-B3: count settlements that have an active shelter — either
+            // pending wall/furniture plans (under construction) or a completed
+            // wall ring on the tile_grid (walls placed, plans consumed).
+            let plan_or_ring_shelters = resources
+                .settlements
+                .values()
+                .filter(|s| {
+                    let sid = s.id;
+                    // Pending plans → shelter under construction
+                    let has_plans = resources
+                        .wall_plans
+                        .iter()
+                        .any(|p| p.settlement_id == sid)
+                        || resources
+                            .furniture_plans
+                            .iter()
+                            .any(|p| p.settlement_id == sid);
+                    if has_plans {
+                        return true;
+                    }
+                    // Check for walls at the settlement-center perimeter
+                    let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
+                    let mut wall_count = 0_i32;
+                    for oy in -r..=r {
+                        for ox in -r..=r {
+                            let is_peri = ox.abs() == r || oy.abs() == r;
+                            if !is_peri {
+                                continue;
+                            }
+                            let tx = s.x + ox;
+                            let ty = s.y + oy;
+                            if resources.tile_grid.in_bounds(tx, ty)
+                                && resources
+                                    .tile_grid
+                                    .get(tx as u32, ty as u32)
+                                    .wall_material
+                                    .is_some()
+                            {
+                                wall_count += 1;
+                            }
+                        }
+                    }
+                    // At least half the ring → count as shelter
+                    wall_count >= (4 * r)
+                })
+                .count() as i32;
+            building_shelters.max(plan_or_ring_shelters)
+        };
 
         let total_food: f32 = resources
             .settlements

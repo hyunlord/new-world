@@ -1214,6 +1214,119 @@ impl SimSystem for MovementRuntimeSystem {
                             }
                         }
                     }
+                    ActionType::PlaceWall => {
+                        // P2-B3: stamp the planned wall onto tile_grid, deduct
+                        // material cost from the settlement, and remove the
+                        // claimed plan. Only fires if the agent is adjacent
+                        // to the target tile (otherwise the action lapses
+                        // without effect).
+                        let entity_id = EntityId(entity.id() as u64);
+                        let target = behavior
+                            .action_target_x
+                            .zip(behavior.action_target_y);
+                        if let Some((tx, ty)) = target {
+                            let dist_x = (position.x - f64::from(tx)).abs();
+                            let dist_y = (position.y - f64::from(ty)).abs();
+                            // Allow up to 3.5 tiles proximity — the agent
+                            // needs to be near, not exactly on, the target.
+                            // Walls often have neighbouring walls so the
+                            // agent stops a tile away. Corner positions of
+                            // the wall ring are especially hard to reach
+                            // because the agent's path may be obstructed by
+                            // the campfire/stockpile that sit just inside.
+                            let close_enough = dist_x <= 3.5 && dist_y <= 3.5;
+                            // Locate the plan claimed by this entity at this tile.
+                            let plan_idx = resources
+                                .wall_plans
+                                .iter()
+                                .position(|p| {
+                                    p.claimed_by == Some(entity_id) && p.x == tx && p.y == ty
+                                });
+                            if close_enough {
+                                if let Some(idx) = plan_idx {
+                                    let plan = resources.wall_plans.remove(idx);
+                                    if resources.tile_grid.in_bounds(tx, ty) {
+                                        // Skip if a wall is already there.
+                                        let already = resources
+                                            .tile_grid
+                                            .get(tx as u32, ty as u32)
+                                            .wall_material
+                                            .is_some();
+                                        if !already {
+                                            resources.tile_grid.set_wall(
+                                                tx as u32,
+                                                ty as u32,
+                                                plan.material_id.clone(),
+                                                10.0,
+                                            );
+                                            // Deduct material cost from settlement stockpile.
+                                            if let Some(settlement) = resources
+                                                .settlements
+                                                .get_mut(&plan.settlement_id)
+                                            {
+                                                let is_stone = plan
+                                                    .material_id
+                                                    .contains("stone")
+                                                    || plan.material_id == "granite"
+                                                    || plan.material_id == "flint"
+                                                    || plan.material_id == "obsidian";
+                                                let is_wood = plan
+                                                    .material_id
+                                                    .contains("wood")
+                                                    || plan.material_id == "oak"
+                                                    || plan.material_id == "pine"
+                                                    || plan.material_id == "birch";
+                                                if is_stone {
+                                                    settlement.stockpile_stone = (settlement
+                                                        .stockpile_stone
+                                                        - config::BUILDING_SHELTER_STONE_COST_PER_WALL)
+                                                        .max(0.0);
+                                                }
+                                                if is_wood {
+                                                    settlement.stockpile_wood = (settlement
+                                                        .stockpile_wood
+                                                        - config::BUILDING_SHELTER_WOOD_COST_PER_WALL)
+                                                        .max(0.0);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ActionType::PlaceFurniture => {
+                        // P2-B3: stamp the planned furniture onto tile_grid
+                        // and remove the claimed plan. Same proximity check
+                        // as PlaceWall.
+                        let entity_id = EntityId(entity.id() as u64);
+                        let target = behavior
+                            .action_target_x
+                            .zip(behavior.action_target_y);
+                        if let Some((tx, ty)) = target {
+                            let dist_x = (position.x - f64::from(tx)).abs();
+                            let dist_y = (position.y - f64::from(ty)).abs();
+                            let close_enough = dist_x <= 2.5 && dist_y <= 2.5;
+                            let plan_idx = resources
+                                .furniture_plans
+                                .iter()
+                                .position(|p| {
+                                    p.claimed_by == Some(entity_id) && p.x == tx && p.y == ty
+                                });
+                            if close_enough {
+                                if let Some(idx) = plan_idx {
+                                    let plan = resources.furniture_plans.remove(idx);
+                                    if resources.tile_grid.in_bounds(tx, ty) {
+                                        resources.tile_grid.set_furniture(
+                                            tx as u32,
+                                            ty as u32,
+                                            plan.furniture_id.clone(),
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
                     _ => {}
                 }
                 let tool_item_id =

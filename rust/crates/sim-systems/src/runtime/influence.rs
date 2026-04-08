@@ -458,7 +458,11 @@ fn collect_component_emitters(world: &World, emitters: &mut Vec<EmitterRecord>) 
 }
 
 fn refresh_structural_context(resources: &mut SimResources) {
-    resources.tile_grid.clear();
+    // P2-B3: walls placed by PlaceWall actions must persist between refresh
+    // cycles. Only room ids are reset; the legacy `stamp_shelter_structure`
+    // call below remains idempotent so any pre-existing shelter Buildings
+    // continue to re-stamp their walls each cycle.
+    resources.tile_grid.clear_room_ids();
     resources.influence_grid.clear_wall_blocking();
 
     let mut building_ids: Vec<BuildingId> = resources.buildings.keys().copied().collect();

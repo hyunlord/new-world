@@ -427,6 +427,8 @@ fn action_state_code(action: ActionType) -> u8 {
         ActionType::SeekShelter => 25,
         ActionType::SitByFire => 26,
         ActionType::VisitPartner => 27,
+        ActionType::PlaceWall => 28,
+        ActionType::PlaceFurniture => 29,
     }
 }
 
