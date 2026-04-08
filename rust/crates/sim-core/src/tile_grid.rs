@@ -15,12 +15,19 @@ pub struct StructuralTile {
     pub wall_hp: f64,
     /// Optional detected room id.
     pub room_id: Option<RoomId>,
+    /// True if this tile is a door opening. Doors block room flow for
+    /// detection purposes (so BFS treats them as boundaries) but can be
+    /// distinguished from walls by downstream pathfinding/influence systems.
+    #[serde(default)]
+    pub is_door: bool,
 }
 
 impl StructuralTile {
     /// Returns true when this tile currently blocks room traversal.
+    /// Walls AND doors both block BFS so enclosed rooms can form without
+    /// leaking through the door opening.
     pub fn blocks_room_flow(&self) -> bool {
-        self.wall_material.is_some()
+        self.wall_material.is_some() || self.is_door
     }
 
     /// Returns true when this tile can participate in room detection.
@@ -97,6 +104,13 @@ impl TileGrid {
     /// Sets the roof material on a tile.
     pub fn set_roof(&mut self, x: u32, y: u32, material_id: impl Into<String>) {
         self.get_mut(x, y).roof_material = Some(material_id.into());
+    }
+
+    /// Marks a tile as a door opening. Doors block room flow (so BFS treats
+    /// them as boundaries) without having a wall_material, letting downstream
+    /// systems distinguish doors from solid walls.
+    pub fn set_door(&mut self, x: u32, y: u32) {
+        self.get_mut(x, y).is_door = true;
     }
 
     /// Assigns a room id to one tile.

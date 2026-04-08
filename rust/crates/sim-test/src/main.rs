@@ -6363,6 +6363,103 @@ mod tests {
             safety_warmth_count
         );
     }
+
+    #[test]
+    fn harness_shelter_creates_enclosed_room() {
+        // P2-B2: after the shelter stamp fix + wall ring radius=2, completed
+        // shelters should produce enclosed rooms via the real detection pipeline.
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380); // 1 year — shelters should have time to complete
+
+        let resources = engine.resources();
+
+        let complete_shelters = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "shelter")
+            .count();
+
+        let enclosed_rooms = resources.rooms.iter().filter(|r| r.enclosed).count();
+
+        eprintln!(
+            "[harness] complete shelters: {}, enclosed rooms: {}, total rooms: {}",
+            complete_shelters,
+            enclosed_rooms,
+            resources.rooms.len()
+        );
+
+        // Type C: if shelters exist, at least one enclosed room must exist.
+        // The stamp fix guarantees shelter walls + door block BFS and interior
+        // floor tiles form a valid room.
+        if complete_shelters > 0 {
+            assert!(
+                enclosed_rooms > 0,
+                "expected enclosed rooms from {} complete shelters, found 0",
+                complete_shelters
+            );
+        }
+
+        // Type A: door tile count must match shelter count (1 door per shelter).
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut door_count = 0usize;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).is_door {
+                    door_count += 1;
+                }
+            }
+        }
+        assert!(
+            door_count >= complete_shelters,
+            "expected at least {} doors for {} shelters, found {}",
+            complete_shelters,
+            complete_shelters,
+            door_count
+        );
+
+        // Type A: door tiles must block room flow (they're boundaries).
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.is_door {
+                    assert!(
+                        tile.blocks_room_flow(),
+                        "door tile ({},{}) must block room flow",
+                        x,
+                        y
+                    );
+                    assert!(
+                        !tile.is_room_floor(),
+                        "door tile ({},{}) must not be a room floor",
+                        x,
+                        y
+                    );
+                }
+            }
+        }
+
+        // Type A: interior floor count check — with wall_radius=2, each shelter
+        // has a 3x3 interior = 9 floor tiles. Multi-shelter overlap is possible
+        // at the footprint boundary, so check a lower bound only.
+        let mut floor_count = 0usize;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.floor_material.is_some() && !tile.blocks_room_flow() {
+                    floor_count += 1;
+                }
+            }
+        }
+        if complete_shelters > 0 {
+            // At minimum one shelter worth of interior floor (9 tiles).
+            assert!(
+                floor_count >= 9,
+                "expected >= 9 interior floor tiles for {} shelters, found {}",
+                complete_shelters,
+                floor_count
+            );
+        }
+    }
 }
 
 fn pathfind_bench_inputs() -> (

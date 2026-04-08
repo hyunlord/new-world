@@ -2,7 +2,7 @@
     StructureDef(
         id: "shelter",
         display_name_key: "BUILDING_TYPE_SHELTER",
-        min_size: (2, 2),
+        min_size: (5, 5),
         required_components: [
             Wall(count: 8, tags: ["building_material"]),
             Roof(tags: ["roof_material"]),

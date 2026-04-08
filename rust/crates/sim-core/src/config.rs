@@ -900,12 +900,14 @@ pub const BUILDING_SHELTER_COST_WOOD: f64 = 4.0;
 pub const BUILDING_SHELTER_COST_STONE: f64 = 1.0;
 /// Resident capacity contributed by one completed shelter in the early loop.
 pub const BUILDING_SHELTER_CAPACITY: usize = 6;
-/// One-tile shelter interior uses a one-tile wall ring for runtime blocking.
-pub const BUILDING_SHELTER_WALL_RING_RADIUS: i32 = 1;
+/// Shelter wall ring radius. Radius=2 produces a 5x5 footprint with a 3x3
+/// interior = 9 floor tiles, enough for a meaningful enclosed room. Must
+/// match the shelter StructureDef `min_size` in sim-data/data/structures.
+pub const BUILDING_SHELTER_WALL_RING_RADIUS: i32 = 2;
 /// Current shelter doorway x offset inside the wall ring footprint.
 pub const BUILDING_SHELTER_DOOR_OFFSET_X: i32 = 0;
 /// Current shelter doorway y offset inside the wall ring footprint.
-pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 1;
+pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 2;
 /// Runtime wall blocking coefficient stamped by completed shelter walls.
 pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
