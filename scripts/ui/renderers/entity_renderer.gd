@@ -560,6 +560,37 @@ func _draw_binary_snapshots() -> void:
 					var pos: Vector2 = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
 					_draw_selection_indicator(pos, SELECTION_RADIUS, 24)
 					break
+		# Action icons above each visible agent — snapshot-based, no FFI calls.
+		# Reads the `action_state` byte already in the binary snapshot
+		# (snapshot_decoder.gd OFF_ACTION). Maps the ActionType discriminant
+		# to an emoji via _action_int_to_icon(). Filtered by viewport bounds
+		# so off-screen agents are skipped.
+		var font: Font = ThemeDB.fallback_font
+		var icon_font_size: int = 10 if _current_lod == GameConfig.ZOOM_Z1 else 8
+		var icon_color: Color = Color(1.0, 1.0, 1.0, 0.85)
+		for index in range(_snapshot_decoder.agent_count):
+			var action_code: int = _snapshot_decoder.get_action_state(index)
+			if action_code == 0:
+				continue
+			var icon_text: String = _action_int_to_icon(action_code)
+			if icon_text.is_empty():
+				continue
+			var icon_tile_pos: Vector2 = _snapshot_decoder.get_interpolated_position(index, _render_alpha)
+			if icon_tile_pos.x < min_tile_x or icon_tile_pos.x > max_tile_x:
+				continue
+			if icon_tile_pos.y < min_tile_y or icon_tile_pos.y > max_tile_y:
+				continue
+			var icon_pos: Vector2 = icon_tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+			icon_pos.y -= float(GameConfig.TILE_SIZE) * 0.5 + 6.0
+			draw_string(
+				font,
+				icon_pos,
+				icon_text,
+				HORIZONTAL_ALIGNMENT_CENTER,
+				-1,
+				icon_font_size,
+				icon_color
+			)
 		_draw_hover_tooltip()
 		return
 
@@ -602,7 +633,8 @@ func _draw_binary_snapshots() -> void:
 			var text_color: Color = PROBE_SELECTION_COLOR if probe_observation_mode and is_selected else Color.WHITE
 			draw_rect(Rect2(pos.x + size + 2.0, pos.y - size - 4.0 - name_size.y, name_size.x + 4.0, name_size.y + 2.0), Color(0.0, 0.0, 0.0, bg_alpha))
 			draw_string(name_font, pos + Vector2(size + 4.0, -size - 3.0), entity_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, text_color)
-			_draw_action_icon(entity_id, pos, size)
+			# Action icon rendering moved to the Z1/Z2 branch above (snapshot-based,
+			# no FFI calls). See _draw_binary_snapshots() and _action_int_to_icon().
 
 	if selected_probe_pos != Vector2.INF:
 		_draw_probe_selected_forage_overlay(selected_probe_pos)
@@ -1149,51 +1181,46 @@ func _runtime_entity_name(entity_id: int) -> String:
 	return str(detail.get("name", ""))
 
 
-func _draw_action_icon(entity_id: int, pos: Vector2, size: float) -> void:
-	if _current_lod != GameConfig.ZOOM_Z1:
-		return
-	var detail: Dictionary = _get_probe_entity_detail(entity_id)
-	if detail.is_empty():
-		return
-	var icon: String = _action_to_icon(str(detail.get("current_action", "")))
-	if icon.is_empty():
-		return
-	var font: Font = ThemeDB.fallback_font
-	draw_string(
-		font,
-		pos + Vector2(0.0, -(size + 10.0)),
-		icon,
-		HORIZONTAL_ALIGNMENT_CENTER,
-		-1,
-		9,
-		Color(1.0, 1.0, 1.0, 0.95)
-	)
-
-
-func _action_to_icon(action: String) -> String:
-	match action.to_lower():
-		"build", "construct":
-			return "🔨"
-		"gather_wood", "gatherwood", "chop", "woodcut":
-			return "🪓"
-		"forage", "gather", "gather_food":
-			return "🌿"
-		"socialize", "chat", "social":
-			return "💬"
-		"eat", "consume":
-			return "🍖"
-		"rest", "sleep":
-			return "💤"
-		"wander", "explore":
-			return "👣"
-		"gather_stone", "gatherstone", "mine":
-			return "⛏️"
-		"fight", "combat":
-			return "⚔️"
-		"hunt":
-			return "🏹"
-		_:
-			return ""
+## Map ActionType discriminant (u8 from snapshot OFF_ACTION) to display emoji.
+##
+## MUST stay synchronized with sim_core::enums::ActionType variant order
+## (see action_state_code() in rust/crates/sim-engine/src/frame_snapshot.rs).
+## The Rust harness test `harness_action_enum_discriminants_contiguous` in
+## sim-test/src/main.rs guards this 1:1 mapping.
+##
+## Returns "" for actions that should not display an icon (Idle, MentalBreak,
+## Wander — already visually communicated by other channels).
+func _action_int_to_icon(action: int) -> String:
+	match action:
+		0:  return ""        # Idle
+		1:  return "🌿"      # Forage
+		2:  return "🏹"      # Hunt
+		3:  return "🐟"      # Fish
+		4:  return "🔨"      # Build
+		5:  return "⚒"       # Craft
+		6:  return "💬"      # Socialize
+		7:  return "😴"      # Rest
+		8:  return "💤"      # Sleep
+		9:  return "🍖"      # Eat
+		10: return "💧"      # Drink
+		11: return "🧭"      # Explore
+		12: return "🏃"      # Flee
+		13: return "⚔"       # Fight
+		14: return "🚶"      # Migrate
+		15: return "📖"      # Teach
+		16: return "📝"      # Learn
+		17: return ""        # MentalBreak (stress shader expresses this)
+		18: return "🙏"      # Pray
+		19: return ""        # Wander (visually similar to Idle)
+		20: return "🪓"      # GatherWood
+		21: return "⛏"       # GatherStone
+		22: return "🌿"      # GatherHerbs
+		23: return "📦"      # DeliverToStockpile
+		24: return "📦"      # TakeFromStockpile
+		25: return "🏠"      # SeekShelter
+		26: return "🔥"      # SitByFire
+		27: return "❤"       # VisitPartner
+		_:  return ""
 
 
 func _draw_settlement_boundaries(zoom_level: float) -> void:

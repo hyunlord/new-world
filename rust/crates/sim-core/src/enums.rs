@@ -369,6 +369,7 @@ pub const INTELLIGENCE_COUNT: usize = 8;
 #[derive(
     Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, Default,
 )]
+#[repr(u8)]
 pub enum ActionType {
     #[default]
     Idle,
