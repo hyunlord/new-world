@@ -78,6 +78,89 @@ For EACH assertion in the plan:
 - Cross-check: does entity_summary data match harness test observations?
 - If visual evidence is "skipped" — this is non-blocking, focus on other evidence
 
+### 6. Design Quality
+Evaluate whether the implementation follows WorldSim's architectural principles:
+
+**Separation of concerns:**
+- Simulation logic ONLY in Rust (sim-core, sim-systems, sim-engine)?
+- No simulation logic leaked into GDScript?
+- Data definitions in sim-data, not hardcoded in systems?
+- SimBridge only exposes data, doesn't compute?
+
+**Code organization:**
+- Functions under 80 lines? (Over 80 = RED FLAG, should be split)
+- Single responsibility per function?
+- Constants in config.rs, not magic numbers in system code?
+- New structs in the right crate? (component → sim-core, system → sim-systems, data → sim-data)
+
+**Pattern consistency:**
+- New systems follow `SimSystem` trait pattern (name, priority, tick_interval, run)?
+- ECS queries match existing patterns in the codebase?
+- Error handling matches surrounding code (no .unwrap() islands in .unwrap_or() territory)?
+- Naming conventions consistent? (snake_case functions, CamelCase types, SCREAMING_SNAKE constants)
+
+**Data-driven design:**
+- Can the behavior be changed by editing RON files without recompiling?
+- Are thresholds/constants in config.rs or RON, not buried in logic?
+- Would adding a new variant (new building type, new resource, new recipe) require code changes or just data?
+
+**WorldSim 적합성 (독창성):**
+- 기존 인프라 활용: Effect Primitive 6종 / Influence Grid / TagIndex / EffectQueue / CausalLog 중 활용 가능한 것을 새로 만들지 않고 사용했는가? 이미 존재하는 시스템을 재발명하면 RE-CODE.
+- "Every event has causality" 원칙: 에이전트 상태를 변경하는 모든 곳에 CausalLog 기록이 있는가? 인과 추적 없는 상태 변경은 WorldSim의 핵심 원칙 위반.
+- 확장성: 새 콘텐츠(건물 타입, 레시피, 자원, 세계관) 추가 시 코드 변경 없이 RON/데이터만으로 가능한 구조인가? 하드코딩된 match 분기에 새 variant를 추가해야 하는 구조는 감점.
+- 과잉 엔지니어링 방지: 현재 Phase에 필요한 범위만 구현했는가? 미래 기능을 위해 불필요한 추상화 레이어를 만들지 않았는가? YAGNI 원칙.
+- 인과 일관성: 시스템 A가 쓴 값을 시스템 B가 읽을 때, 두 시스템의 tick priority가 올바른 순서인가? 데이터 흐름이 단방향(Intent→Resolver→Committer)을 따르는가?
+
+Score: CLEAN / ACCEPTABLE / NEEDS_REFACTOR
+- CLEAN: follows all patterns, well-organized, leverages existing infrastructure
+- ACCEPTABLE: minor deviations, functional, no architectural debt
+- NEEDS_REFACTOR: architecture issues, reinvented existing systems, missing causality → RE-CODE
+
+### 7. Completeness Check
+Compare the Generator's output against the ORIGINAL PROMPT (feature specification).
+
+**Prompt coverage audit:**
+For each Part/Section in the original prompt:
+- Part A: IMPLEMENTED / PARTIAL / MISSING
+- Part B: IMPLEMENTED / PARTIAL / MISSING
+- Part C: IMPLEMENTED / PARTIAL / MISSING
+- (continue for all parts)
+
+**Rules:**
+- If ANY Part is MISSING entirely → RE-CODE with specific instruction to implement it
+- If a Part is PARTIAL (some fields missing, some logic skipped) → RE-CODE with specific gaps listed
+- If ALL Parts are IMPLEMENTED → PASS this check
+
+**Common Generator shortcuts to watch for:**
+- Declares a struct but never uses it in any system
+- Adds a field to SimResources but no system reads it
+- Creates a RON schema but no loader reads it
+- Writes "TODO" or "placeholder" in production code
+- Implements the easy parts and silently drops the hard parts
+- Adds the harness test but doesn't actually implement the feature (test passes because it tests defaults)
+
+### 8. Functionality Verification
+Does the feature actually DO what the prompt describes?
+
+**Behavioral check:**
+- If the prompt says "high-NS agents explore more" — does the code actually bias exploration scores by NS?
+- If the prompt says "buildings can't overlap" — does the overlap check actually run during placement?
+- If the prompt says "starvation shifts temperament" — is there code that detects starvation and calls apply_shift()?
+
+**Integration check:**
+- Is the new code called from somewhere? (A function that exists but is never called = dead code)
+- Does the data flow end-to-end? (RON → loader → runtime struct → system reads it → behavior changes)
+- If SimBridge fields are added, does the UI actually read them?
+
+**Regression sanity:**
+- Could this change break an existing feature that isn't covered by harness tests?
+- Are there side effects on shared state (SimResources fields, ECS components) that other systems depend on?
+
+Score: FUNCTIONAL / PARTIALLY_FUNCTIONAL / NON_FUNCTIONAL
+- FUNCTIONAL: feature does what prompt describes, end-to-end
+- PARTIALLY_FUNCTIONAL: some paths work, others are dead code or stubs → RE-CODE
+- NON_FUNCTIONAL: feature doesn't actually work despite tests passing → RE-CODE
+
 === RECOGNIZE YOUR OWN RATIONALIZATIONS ===
 You will feel the urge to approve. These are the exact excuses you reach for:
 - "The tests pass, so it must be correct" — tests can be circular. Read the test code.
@@ -95,6 +178,9 @@ Verify:
 3. You found no `.unwrap()` in production code
 4. Gate output shows all tests pass (not just the Generator's claim)
 5. No regression in existing harness tests
+6. Design Quality is CLEAN or ACCEPTABLE (not NEEDS_REFACTOR)
+7. Completeness: ALL Parts from the prompt are IMPLEMENTED (not PARTIAL/MISSING)
+8. Functionality is FUNCTIONAL (not PARTIALLY_FUNCTIONAL)
 If you skipped any of these checks, go back. An APPROVE without full verification is a defect.
 
 === BEFORE ISSUING RE-CODE ===
@@ -134,6 +220,19 @@ For each plan assertion:
 ### Visual Status
 - visual_verdict: VISUAL_OK | VISUAL_WARNING | VISUAL_FAIL | SKIPPED
 - <detail if warning/fail>
+
+### Design Quality
+- Score: CLEAN | ACCEPTABLE | NEEDS_REFACTOR
+- <specific issues if not CLEAN>
+
+### Completeness
+- Part A: IMPLEMENTED | PARTIAL | MISSING — <detail>
+- Part B: IMPLEMENTED | PARTIAL | MISSING — <detail>
+- (all parts from prompt)
+
+### Functionality
+- Score: FUNCTIONAL | PARTIALLY_FUNCTIONAL | NON_FUNCTIONAL
+- <behavioral/integration issues if not FUNCTIONAL>
 
 ### Overall Assessment
 <1-2 sentence summary — be direct>
