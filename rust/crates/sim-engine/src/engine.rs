@@ -17,8 +17,8 @@ use rand::{Rng, SeedableRng};
 use sim_core::world::TileResource;
 use sim_core::{
     BandStore, Building, BuildingId, CausalLog, ChannelClampPolicy, ChannelId, ChildrenIndex,
-    EffectQueue, EntityId, GameCalendar, InfluenceGrid, ItemStore, ResourceType, Room, Settlement,
-    SettlementId, SimConfig, TerrainType, TileGrid, WorldMap,
+    EffectQueue, EntityId, FurniturePlan, GameCalendar, InfluenceGrid, ItemStore, ResourceType,
+    Room, Settlement, SettlementId, SimConfig, TerrainType, TileGrid, WallPlan, WorldMap,
 };
 use sim_data::{
     DataRegistry, InfluenceClampPolicyDef, NameGenerator, PersonalityDistribution, WorldRuleset,
@@ -189,6 +189,12 @@ pub struct SimResources {
     pub lifespan_mul: f64,
     /// Movement speed multiplier (default 1.0, overridable by WorldRuleset agent_constants).
     pub move_speed_mul: f64,
+    /// P2-B3: pending wall placement plans queued by `generate_wall_ring_plans`.
+    pub wall_plans: Vec<WallPlan>,
+    /// P2-B3: pending furniture placement plans queued by `generate_wall_ring_plans`.
+    pub furniture_plans: Vec<FurniturePlan>,
+    /// P2-B3: monotonically increasing id source for new wall/furniture plans.
+    pub next_plan_id: u64,
 }
 
 fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
@@ -447,6 +453,9 @@ impl SimResources {
             fertility_mul: 1.0,
             lifespan_mul: 1.0,
             move_speed_mul: 1.0,
+            wall_plans: Vec::new(),
+            furniture_plans: Vec::new(),
+            next_plan_id: 1,
         }
     }
 

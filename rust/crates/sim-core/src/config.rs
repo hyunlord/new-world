@@ -912,6 +912,23 @@ pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 2;
 pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
 pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
+/// Stone consumed per individual wall placement under the P2-B3 component
+/// building flow. Total per-shelter ring (~15 walls at R=2) thus consumes
+/// roughly 1.5 stone — comparable to the legacy total `BUILDING_SHELTER_COST_STONE`.
+pub const BUILDING_SHELTER_STONE_COST_PER_WALL: f64 = 0.10;
+/// Wood consumed per individual wall placement under the P2-B3 component
+/// building flow. Total per-shelter ring (~15 walls at R=2) thus consumes
+/// roughly 3.75 wood, comparable to the legacy total `BUILDING_SHELTER_COST_WOOD`.
+pub const BUILDING_SHELTER_WOOD_COST_PER_WALL: f64 = 0.25;
+/// Maximum age (in ticks) of an unclaimed wall/furniture plan before the
+/// economy system removes it as stale (P2-B3 plan lifecycle).
+pub const BUILDING_PLAN_STALE_TICKS: u64 = 1_000;
+/// Tick budget for placing one wall under the P2-B3 component building flow.
+/// Set high enough that the agent has time to walk from anywhere in the
+/// settlement footprint to the target tile before the action expires.
+pub const ACTION_TIMER_PLACE_WALL: i32 = 32;
+/// Tick budget for placing one furniture item under the P2-B3 flow.
+pub const ACTION_TIMER_PLACE_FURNITURE: i32 = 32;
 /// Minimum hunger level for builders to keep construction as their forced action.
 pub const BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN: f64 = 0.30;
 /// Minimum energy level for builders to keep construction as their forced action.

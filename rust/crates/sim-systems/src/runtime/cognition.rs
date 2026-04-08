@@ -550,6 +550,8 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::Flee => config::ACTION_TIMER_FLEE,
         ActionType::SitByFire => config::ACTION_TIMER_SIT_BY_FIRE,
         ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
+        ActionType::PlaceWall => config::ACTION_TIMER_PLACE_WALL,
+        ActionType::PlaceFurniture => config::ACTION_TIMER_PLACE_FURNITURE,
         _ => config::ACTION_TIMER_DEFAULT,
     }
 }
@@ -610,6 +612,7 @@ fn behavior_pick_wander_target(
     (origin_x, origin_y)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn behavior_select_action(
     age_stage: GrowthStage,
     needs: &Needs,
@@ -619,6 +622,8 @@ fn behavior_select_action(
     temperament_opt: Option<&Temperament>,
     behavior: &Behavior,
     has_build_target: bool,
+    has_wall_plan_target: bool,
+    has_furniture_plan_target: bool,
     has_settlement: bool,
     has_food_item: bool,
     has_tool: bool,
@@ -692,15 +697,23 @@ fn behavior_select_action(
         return ActionType::Forage;
     }
 
-    if matches!(age_stage, GrowthStage::Adult)
+    let builder_survival_ok = matches!(age_stage, GrowthStage::Adult)
         && behavior.job == "builder"
-        && has_build_target
         && hunger >= config::BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN as f32
         && thirst >= config::THIRST_LOW as f32
         && warmth >= config::WARMTH_LOW as f32
         && safety >= config::SAFETY_LOW as f32
-        && energy >= config::BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN as f32
-    {
+        && energy >= config::BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN as f32;
+
+    // P2-B3: builders prefer wall placement plans, then furniture plans,
+    // then fall back to the legacy Build action if a Building exists.
+    if builder_survival_ok && has_wall_plan_target {
+        return ActionType::PlaceWall;
+    }
+    if builder_survival_ok && has_furniture_plan_target {
+        return ActionType::PlaceFurniture;
+    }
+    if builder_survival_ok && has_build_target {
         return ActionType::Build;
     }
 
@@ -1142,6 +1155,66 @@ fn find_passable_adjacent(
     best
 }
 
+/// P2-B3: returns (x, y, plan_id) of the nearest unclaimed wall plan in the
+/// agent's settlement, or None.
+fn find_nearest_unclaimed_wall_plan(
+    position: &Position,
+    resources: &SimResources,
+    settlement_id: Option<SettlementId>,
+) -> Option<(i32, i32, u64)> {
+    let sid = settlement_id?;
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
+    let mut best: Option<(i32, i32, u64)> = None;
+    let mut best_dist = i32::MAX;
+    for plan in resources.wall_plans.iter() {
+        if plan.settlement_id != sid {
+            continue;
+        }
+        if plan.claimed_by.is_some() {
+            continue;
+        }
+        let dist = (plan.x - origin_x).abs() + (plan.y - origin_y).abs();
+        if dist < best_dist
+            || (dist == best_dist && best.map(|(_, _, id)| plan.id < id).unwrap_or(true))
+        {
+            best_dist = dist;
+            best = Some((plan.x, plan.y, plan.id));
+        }
+    }
+    best
+}
+
+/// P2-B3: returns (x, y, plan_id) of the nearest unclaimed furniture plan in
+/// the agent's settlement, or None.
+fn find_nearest_unclaimed_furniture_plan(
+    position: &Position,
+    resources: &SimResources,
+    settlement_id: Option<SettlementId>,
+) -> Option<(i32, i32, u64)> {
+    let sid = settlement_id?;
+    let origin_x = position.tile_x();
+    let origin_y = position.tile_y();
+    let mut best: Option<(i32, i32, u64)> = None;
+    let mut best_dist = i32::MAX;
+    for plan in resources.furniture_plans.iter() {
+        if plan.settlement_id != sid {
+            continue;
+        }
+        if plan.claimed_by.is_some() {
+            continue;
+        }
+        let dist = (plan.x - origin_x).abs() + (plan.y - origin_y).abs();
+        if dist < best_dist
+            || (dist == best_dist && best.map(|(_, _, id)| plan.id < id).unwrap_or(true))
+        {
+            best_dist = dist;
+            best = Some((plan.x, plan.y, plan.id));
+        }
+    }
+    best
+}
+
 fn find_nearest_incomplete_building(
     position: &Position,
     resources: &SimResources,
@@ -1172,6 +1245,7 @@ fn find_nearest_incomplete_building(
     best
 }
 
+#[allow(clippy::too_many_arguments)]
 fn behavior_assign_action(
     behavior: &mut Behavior,
     position: &Position,
@@ -1181,6 +1255,8 @@ fn behavior_assign_action(
     entity_raw: u64,
     action: ActionType,
     build_target: Option<(i32, i32)>,
+    wall_plan_target: Option<(i32, i32, u64)>,
+    furniture_plan_target: Option<(i32, i32, u64)>,
     stress_level: f32,
     allostatic_load: f32,
 ) {
@@ -1235,6 +1311,46 @@ fn behavior_assign_action(
         .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
         ActionType::Build => build_target
             .unwrap_or_else(|| behavior_pick_wander_target(position, resources, tick, entity_raw)),
+        // P2-B3: PlaceWall / PlaceFurniture target the planned tile and
+        // claim the plan so other agents won't double-claim it. We first
+        // release any prior claims this entity holds, so abandoned plans
+        // re-enter the unclaimed pool.
+        ActionType::PlaceWall => {
+            let entity_id = EntityId(entity_raw);
+            for plan in resources.wall_plans.iter_mut() {
+                if plan.claimed_by == Some(entity_id) {
+                    plan.claimed_by = None;
+                }
+            }
+            if let Some((tx, ty, plan_id)) = wall_plan_target {
+                if let Some(plan) =
+                    resources.wall_plans.iter_mut().find(|p| p.id == plan_id)
+                {
+                    plan.claimed_by = Some(entity_id);
+                }
+                (tx, ty)
+            } else {
+                behavior_pick_wander_target(position, resources, tick, entity_raw)
+            }
+        }
+        ActionType::PlaceFurniture => {
+            let entity_id = EntityId(entity_raw);
+            for plan in resources.furniture_plans.iter_mut() {
+                if plan.claimed_by == Some(entity_id) {
+                    plan.claimed_by = None;
+                }
+            }
+            if let Some((tx, ty, plan_id)) = furniture_plan_target {
+                if let Some(plan) =
+                    resources.furniture_plans.iter_mut().find(|p| p.id == plan_id)
+                {
+                    plan.claimed_by = Some(entity_id);
+                }
+                (tx, ty)
+            } else {
+                behavior_pick_wander_target(position, resources, tick, entity_raw)
+            }
+        }
         ActionType::Socialize | ActionType::VisitPartner | ActionType::Explore => {
             behavior_pick_wander_target(position, resources, tick, entity_raw)
         }
@@ -1361,6 +1477,26 @@ impl SimSystem for BehaviorRuntimeSystem {
                 resources,
                 identity_opt.and_then(|identity| identity.settlement_id),
             );
+            // P2-B3: builders look for component-building plans before falling
+            // back to legacy Buildings.
+            let wall_plan_target = if behavior.job == "builder" {
+                find_nearest_unclaimed_wall_plan(
+                    position,
+                    resources,
+                    identity_opt.and_then(|identity| identity.settlement_id),
+                )
+            } else {
+                None
+            };
+            let furniture_plan_target = if behavior.job == "builder" {
+                find_nearest_unclaimed_furniture_plan(
+                    position,
+                    resources,
+                    identity_opt.and_then(|identity| identity.settlement_id),
+                )
+            } else {
+                None
+            };
             let has_settlement = identity_opt
                 .and_then(|identity| identity.settlement_id)
                 .is_some();
@@ -1399,6 +1535,8 @@ impl SimSystem for BehaviorRuntimeSystem {
                 temperament_opt,
                 behavior,
                 build_target.is_some(),
+                wall_plan_target.is_some(),
+                furniture_plan_target.is_some(),
                 has_settlement,
                 has_food_item,
                 has_tool,
@@ -1424,6 +1562,8 @@ impl SimSystem for BehaviorRuntimeSystem {
                 entity.id() as u64,
                 next_action,
                 build_target,
+                wall_plan_target,
+                furniture_plan_target,
                 stress_level,
                 allostatic_load,
             );
@@ -1738,7 +1878,9 @@ mod tests {
             None,
             None, // temperament_opt
             &Behavior::default(),
-            false,
+            false, // has_build_target
+            false, // has_wall_plan_target (P2-B3)
+            false, // has_furniture_plan_target (P2-B3)
             true,
             true,
             false,
@@ -1768,7 +1910,9 @@ mod tests {
             None,
             None, // temperament_opt
             &Behavior::default(),
-            false,
+            false, // has_build_target
+            false, // has_wall_plan_target (P2-B3)
+            false, // has_furniture_plan_target (P2-B3)
             true,
             false,
             false,
@@ -1801,7 +1945,9 @@ mod tests {
             None,
             None, // temperament_opt
             &Behavior::default(),
-            false,
+            false, // has_build_target
+            false, // has_wall_plan_target (P2-B3)
+            false, // has_furniture_plan_target (P2-B3)
             true,
             false,
             false,
@@ -1831,7 +1977,9 @@ mod tests {
             None,
             None, // temperament_opt
             &Behavior::default(),
-            false,
+            false, // has_build_target
+            false, // has_wall_plan_target (P2-B3)
+            false, // has_furniture_plan_target (P2-B3)
             true,
             false,
             false,

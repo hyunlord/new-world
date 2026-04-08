@@ -1448,21 +1448,35 @@ mod tests {
         let resources = engine.resources();
         let building_count = resources.buildings.len();
         let complete_count = resources.buildings.values().filter(|b| b.is_complete).count();
-        let shelter_count = resources
-            .buildings
-            .values()
-            .filter(|b| b.is_complete && b.building_type == "shelter")
-            .count();
+        // P2-B3: shelter is no longer a Building entry — it manifests as a
+        // wall ring on tile_grid placed by individual PlaceWall actions.
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut shelter_walls = 0usize;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).wall_material.is_some() {
+                    shelter_walls += 1;
+                }
+            }
+        }
 
         println!(
-            "[harness] buildings: total={} complete={} shelters={}",
-            building_count, complete_count, shelter_count
+            "[harness] buildings: total={} complete={} shelter_walls={}",
+            building_count, complete_count, shelter_walls
         );
 
-        // Type C: Observed 10 buildings at seed=42 (2026-04-01). Threshold 3 = minimum viable (campfire+stockpile+shelter). Margin 3.3×.
+        // Type C: stockpile + campfire still use the legacy Building path
+        // (P2-B3 spec Section 3 coexistence). With one settlement at seed=42
+        // we expect at minimum the stockpile + the campfire.
         assert!(
-            complete_count >= 3,
-            "expected at least 3 completed buildings (campfire+stockpile+shelter), got {complete_count}"
+            complete_count >= 2,
+            "expected at least 2 completed buildings (stockpile+campfire), got {complete_count}"
+        );
+        // Type A: with 8R-1 walls in the ring (R=2 → 15) the shelter wall
+        // count should reach the lower bound after one game year.
+        assert!(
+            shelter_walls >= 15,
+            "expected at least 15 shelter wall tiles after 4380 ticks, got {shelter_walls}"
         );
     }
 
@@ -2822,10 +2836,12 @@ mod tests {
             buildings.len() * buildings.len().saturating_sub(1) / 2,
         );
 
-        // Type C (seed=42, 2026-04-07): matches harness_shelter_built_after_one_year threshold.
+        // Type C (seed=42): with P2-B3 the shelter no longer becomes a
+        // Building entry, so the legacy lower bound drops to stockpile +
+        // campfire = 2.
         assert!(
-            complete_count >= 3,
-            "expected ≥3 completed buildings, got {complete_count}"
+            complete_count >= 2,
+            "expected ≥2 completed buildings, got {complete_count}"
         );
     }
 
@@ -5085,8 +5101,11 @@ mod tests {
         assert_eq!(ActionType::SeekShelter as u8, 25);
         assert_eq!(ActionType::SitByFire as u8, 26);
         assert_eq!(ActionType::VisitPartner as u8, 27);
+        // P2-B3 component building additions.
+        assert_eq!(ActionType::PlaceWall as u8, 28);
+        assert_eq!(ActionType::PlaceFurniture as u8, 29);
 
-        // Cardinality check — exactly 28 variants. If someone adds a 29th,
+        // Cardinality check — exactly 30 variants. If someone adds a 31st,
         // this array's exhaustive match (in action_state_code) would also
         // fail to compile, but this assertion gives a clearer error.
         let all_variants = [
@@ -5118,18 +5137,20 @@ mod tests {
             ActionType::SeekShelter,
             ActionType::SitByFire,
             ActionType::VisitPartner,
+            ActionType::PlaceWall,
+            ActionType::PlaceFurniture,
         ];
         assert_eq!(
             all_variants.len(),
-            28,
-            "ActionType must have exactly 28 variants (GDScript icon map depends on this)"
+            30,
+            "ActionType must have exactly 30 variants (GDScript icon map depends on this)"
         );
         let max_discriminant = all_variants
             .iter()
             .map(|a| *a as u8)
             .max()
             .expect("non-empty");
-        assert_eq!(max_discriminant, 27);
+        assert_eq!(max_discriminant, 29);
     }
 
     #[test]
@@ -5152,8 +5173,8 @@ mod tests {
         }
         assert!(count > 0, "no Behavior components found after 4380 ticks");
         assert!(
-            max_observed <= 27,
-            "action discriminant {} exceeds icon-map domain 0..=27",
+            max_observed <= 29,
+            "action discriminant {} exceeds icon-map domain 0..=29",
             max_observed
         );
         // `min >= 0` is trivially true for u8 (cannot be negative); included
@@ -6459,6 +6480,376 @@ mod tests {
                 floor_count
             );
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // p2-component-building harness test
+    //
+    // Feature: Independent wall/furniture entities. Shelter no longer creates
+    // a Building; instead WallPlan + FurniturePlan queues are populated, and
+    // builder agents pick them up via PlaceWall/PlaceFurniture actions.
+    //
+    // The test exercises 16 assertions in one simulation run (see plan_final.md):
+    //   A1-A2:   wall tile count bounded (>= 8R-1 and <= 150)
+    //   A3:      every wall has a non-None material
+    //   A4:      walls within Chebyshev distance R from settlement center
+    //   A5:      door tile is wall-free
+    //   A6:      fire pit furniture at settlement center
+    //   A7:      zero shelter entries in legacy `buildings` resource
+    //   A8-A9:   stockpile/campfire regression guards
+    //   A10-A11: stone/wood economy sane after wall consumption
+    //   A12:     builder presence sampled across multiple ticks
+    //   A13-A14: stale plan cleanup + bounded queue
+    //   A15:     no orphaned claims (deceased agents)
+    //   A16:     exactly 1 settlement throughout the run (precondition)
+    //
+    // Note: A12 uses `behavior.job == "builder"` (string) because Behavior.job
+    // is currently a String, not the Job enum the plan references.
+    // ─────────────────────────────────────────────────────────────────────────
+    #[test]
+    fn harness_component_building_wall_placement() {
+        use sim_core::ActionType;
+        use sim_core::config;
+
+        let mut engine = make_stage1_engine(42, 20);
+
+        // ── Multi-tick sampling for A12 (builder presence) and A16 (settlement count).
+        // We run in chunks so we can take snapshots at ticks 2000, 4380, 6000, 8760.
+        let mut builder_samples: [u32; 4] = [0; 4];
+        let mut settlement_samples: [usize; 3] = [0; 3];
+
+        // Sample at tick 2000.
+        engine.run_ticks(2000);
+        builder_samples[0] = count_builders(&engine);
+        settlement_samples[0] = engine.resources().settlements.len();
+
+        // Sample at tick 4380.
+        engine.run_ticks(2380);
+        builder_samples[1] = count_builders(&engine);
+        settlement_samples[1] = engine.resources().settlements.len();
+
+        // Sample at tick 6000.
+        engine.run_ticks(1620);
+        builder_samples[2] = count_builders(&engine);
+
+        // Sample at tick 8760.
+        engine.run_ticks(2760);
+        builder_samples[3] = count_builders(&engine);
+        settlement_samples[2] = engine.resources().settlements.len();
+
+        let resources = engine.resources();
+        let world = engine.world();
+
+        // ── A16: exactly one settlement at all sample points.
+        // Type A precondition — ring-scale assertions assume single settlement.
+        for (idx, &count) in settlement_samples.iter().enumerate() {
+            assert_eq!(
+                count, 1,
+                "[A16] expected exactly 1 settlement at sample {}, got {}",
+                idx, count
+            );
+        }
+        let (cx, cy) = {
+            let s = resources.settlements.values().next()
+                .expect("[A16] settlement must exist");
+            (s.x, s.y)
+        };
+
+        // ── Count wall tiles.
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut wall_count = 0u32;
+        let mut wall_count_stone = 0u32;
+        let mut wall_count_wood = 0u32;
+        let mut max_chebyshev: i32 = 0;
+        let mut walls_with_invalid_material = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                let Some(material_id) = tile.wall_material.as_deref() else {
+                    continue;
+                };
+                wall_count += 1;
+                // A3: validate material against registry if loaded; otherwise
+                // require non-empty string (set by impl, not None sentinel).
+                if material_id.is_empty() {
+                    walls_with_invalid_material += 1;
+                }
+                if let Some(reg) = resources.data_registry.as_deref() {
+                    if !reg.materials.contains_key(material_id) {
+                        walls_with_invalid_material += 1;
+                    }
+                }
+                // A4: track max Chebyshev distance from settlement center.
+                let dx = (x as i32 - cx).abs();
+                let dy = (y as i32 - cy).abs();
+                let cheb = dx.max(dy);
+                if cheb > max_chebyshev {
+                    max_chebyshev = cheb;
+                }
+                // Categorize walls by material category for A10/A11.
+                // Without registry, fall back to id substring matching.
+                let is_stone = if let Some(reg) = resources.data_registry.as_deref() {
+                    reg.materials.get(material_id).is_some_and(|m| {
+                        m.tags.iter().any(|t| t == "stone")
+                    })
+                } else {
+                    material_id.contains("stone") || material_id == "granite"
+                        || material_id == "flint" || material_id == "obsidian"
+                };
+                let is_wood = if let Some(reg) = resources.data_registry.as_deref() {
+                    reg.materials.get(material_id).is_some_and(|m| {
+                        m.tags.iter().any(|t| t == "wood")
+                    })
+                } else {
+                    material_id.contains("wood") || material_id == "oak"
+                        || material_id == "pine" || material_id == "birch"
+                };
+                if is_stone {
+                    wall_count_stone += 1;
+                }
+                if is_wood {
+                    wall_count_wood += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_component_building] walls={} (stone={} wood={}) max_cheb={} \
+             builder_samples={:?} wall_plans={} furniture_plans={}",
+            wall_count, wall_count_stone, wall_count_wood, max_chebyshev,
+            builder_samples, resources.wall_plans.len(), resources.furniture_plans.len(),
+        );
+
+        // ── A1: wall count >= max(1, 8R - 1) — read constant at runtime.
+        let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let lower_bound = (8 * r - 1).max(1) as u32;
+        assert!(
+            wall_count >= lower_bound,
+            "[A1] wall count {} < lower bound {} (8R-1 with R={})",
+            wall_count, lower_bound, r
+        );
+
+        // ── A2: wall count <= 150 (runaway guard).
+        assert!(
+            wall_count <= 150,
+            "[A2] wall count {} > 150 (runaway guard)",
+            wall_count
+        );
+
+        // ── A3: every wall has a valid material.
+        assert_eq!(
+            walls_with_invalid_material, 0,
+            "[A3] {} walls have invalid/missing material",
+            walls_with_invalid_material
+        );
+
+        // ── A4: walls within Chebyshev distance R from settlement center.
+        assert!(
+            max_chebyshev <= r,
+            "[A4] max Chebyshev distance {} > R={}",
+            max_chebyshev, r
+        );
+
+        // ── A5: door tile is wall-free, with explicit in-bounds precondition.
+        let door_x = cx + config::BUILDING_SHELTER_DOOR_OFFSET_X;
+        let door_y = cy + config::BUILDING_SHELTER_DOOR_OFFSET_Y;
+        assert!(
+            resources.tile_grid.in_bounds(door_x, door_y),
+            "[A5] door tile ({}, {}) out of grid bounds — precondition failed",
+            door_x, door_y
+        );
+        let door_tile = resources.tile_grid.get(door_x as u32, door_y as u32);
+        assert!(
+            door_tile.wall_material.is_none(),
+            "[A5] door tile ({}, {}) has wall material {:?}",
+            door_x, door_y, door_tile.wall_material
+        );
+
+        // ── A6: fire pit furniture at settlement center.
+        let center_tile = resources.tile_grid.get(cx as u32, cy as u32);
+        assert_eq!(
+            center_tile.furniture_id.as_deref(),
+            Some("fire_pit"),
+            "[A6] expected fire_pit furniture at settlement center ({}, {}), got {:?}",
+            cx, cy, center_tile.furniture_id
+        );
+
+        // ── A7: zero shelter entries in legacy `buildings` resource.
+        // Look up the legacy literal at runtime: BUILDING_TYPE_SHELTER = "shelter".
+        // We collect all observed building_type strings for diagnostic clarity, then
+        // assert no entry contains "shelter" (case-insensitive).
+        let mut observed_types: Vec<String> = resources
+            .buildings
+            .values()
+            .map(|b| b.building_type.clone())
+            .collect();
+        observed_types.sort();
+        observed_types.dedup();
+        let shelter_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.building_type.to_lowercase().contains("shelter"))
+            .count();
+        assert_eq!(
+            shelter_count, 0,
+            "[A7] expected 0 shelter entries in legacy `buildings`, got {} \
+             (observed building_types: {:?})",
+            shelter_count, observed_types
+        );
+
+        // ── A8: stockpile buildings still complete (regression guard).
+        let stockpile_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "stockpile")
+            .count();
+        assert!(
+            stockpile_count >= 1,
+            "[A8] expected >= 1 complete stockpile, got {} \
+             (observed building_types: {:?})",
+            stockpile_count, observed_types
+        );
+
+        // ── A9: campfire buildings still complete (regression guard).
+        let campfire_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "campfire")
+            .count();
+        assert!(
+            campfire_count >= 1,
+            "[A9] expected >= 1 complete campfire, got {} \
+             (observed building_types: {:?})",
+            campfire_count, observed_types
+        );
+
+        // ── A10: stone economy sane after wall consumption.
+        let final_stone: f64 = resources
+            .settlements
+            .values()
+            .map(|s| s.stockpile_stone)
+            .sum();
+        let stone_per_wall = config::BUILDING_SHELTER_STONE_COST_PER_WALL;
+        let expected_stone_consumed = f64::from(wall_count_stone) * stone_per_wall;
+        assert!(
+            final_stone >= 0.0,
+            "[A10] final_stone={} negative",
+            final_stone
+        );
+        let stone_lower = (368.0 - expected_stone_consumed - 50.0).max(0.0);
+        assert!(
+            final_stone >= stone_lower,
+            "[A10] final_stone={} < lower={} (baseline 368 - consumed {} - margin 50)",
+            final_stone, stone_lower, expected_stone_consumed
+        );
+
+        // ── A11: wood economy sane after wall consumption.
+        let final_wood: f64 = resources
+            .settlements
+            .values()
+            .map(|s| s.stockpile_wood)
+            .sum();
+        let wood_per_wall = config::BUILDING_SHELTER_WOOD_COST_PER_WALL;
+        let expected_wood_consumed = f64::from(wall_count_wood) * wood_per_wall;
+        assert!(
+            final_wood >= 0.0,
+            "[A11] final_wood={} negative",
+            final_wood
+        );
+        let wood_lower = (711.0 - expected_wood_consumed - 100.0).max(0.0);
+        assert!(
+            final_wood >= wood_lower,
+            "[A11] final_wood={} < lower={} (baseline 711 - consumed {} - margin 100)",
+            final_wood, wood_lower, expected_wood_consumed
+        );
+
+        // ── A12: builder presence sampled across multiple ticks.
+        let max_b = *builder_samples.iter().max().unwrap_or(&0);
+        let sum_b: u32 = builder_samples.iter().sum();
+        assert!(
+            max_b >= 1,
+            "[A12] no builder seen in samples {:?}",
+            builder_samples
+        );
+        assert!(
+            max_b <= 15,
+            "[A12] runaway builders: max {} > 15 in samples {:?}",
+            max_b, builder_samples
+        );
+        assert!(
+            sum_b >= 2,
+            "[A12] sum of builder samples {} < 2 (samples {:?})",
+            sum_b, builder_samples
+        );
+
+        // ── A13: stale wall plans cleaned up.
+        let current_tick = engine.current_tick();
+        let stale_threshold = config::BUILDING_PLAN_STALE_TICKS;
+        let stale_count = resources
+            .wall_plans
+            .iter()
+            .filter(|p| {
+                p.claimed_by.is_none() && current_tick.saturating_sub(p.created_tick) > stale_threshold
+            })
+            .count();
+        assert_eq!(
+            stale_count, 0,
+            "[A13] {} stale unclaimed wall_plans (>{} ticks old)",
+            stale_count, stale_threshold
+        );
+
+        // ── A14: wall_plans bounded.
+        assert!(
+            resources.wall_plans.len() <= 100,
+            "[A14] wall_plans.len()={} > 100",
+            resources.wall_plans.len()
+        );
+
+        // ── A15: no orphaned claims (claim references a deceased entity).
+        // Build the alive-entity slot-id set once, then test plan claims
+        // against it. Slot ids (no generation) match the storage format
+        // used by `cognition::find_nearest_unclaimed_*` and
+        // `economy::cleanup_stale_plans`.
+        let alive_bits: std::collections::HashSet<u64> = world
+            .iter()
+            .map(|entity_ref| entity_ref.entity().id() as u64)
+            .collect();
+        let mut orphaned = 0u32;
+        for plan in resources.wall_plans.iter() {
+            if let Some(entity_id) = plan.claimed_by {
+                if !alive_bits.contains(&entity_id.0) {
+                    orphaned += 1;
+                }
+            }
+        }
+        for plan in resources.furniture_plans.iter() {
+            if let Some(entity_id) = plan.claimed_by {
+                if !alive_bits.contains(&entity_id.0) {
+                    orphaned += 1;
+                }
+            }
+        }
+        assert_eq!(
+            orphaned, 0,
+            "[A15] {} orphaned claims (referenced entity no longer in world)",
+            orphaned
+        );
+
+        // Touch ActionType variants so the import is exercised even if the
+        // action discriminants change in future migrations.
+        let _ = ActionType::PlaceWall;
+        let _ = ActionType::PlaceFurniture;
+    }
+
+    /// Helper: count agents currently holding the "builder" job.
+    fn count_builders(engine: &SimEngine) -> u32 {
+        let mut n = 0u32;
+        for (_, behavior) in engine.world().query::<&Behavior>().iter() {
+            if behavior.job == "builder" {
+                n += 1;
+            }
+        }
+        n
     }
 }
 

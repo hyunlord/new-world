@@ -400,6 +400,10 @@ pub enum ActionType {
     SeekShelter,
     SitByFire,
     VisitPartner,
+    /// P2-B3: place a single wall tile via a builder action.
+    PlaceWall,
+    /// P2-B3: place a single furniture item on a tile via a builder action.
+    PlaceFurniture,
 }
 
 // ═══════════════════════════════════════
