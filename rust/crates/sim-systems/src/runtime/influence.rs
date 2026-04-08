@@ -1,9 +1,12 @@
+use std::collections::HashMap;
+
 use hecs::World;
 use sim_core::components::{InfluenceEmitter, Position};
 use sim_core::config;
 use sim_core::{
-    assign_room_ids, detect_rooms, BuildingId, ChannelId, EmitterRecord, FalloffType, ResourceType,
-    SettlementId, TerrainType,
+    assign_room_ids, detect_rooms, BuildingId, ChannelId, EffectEntry, EffectPrimitive,
+    EffectSource, EffectStat, EmitterRecord, EntityId, FalloffType, ResourceType, RoomId,
+    RoomRole, SettlementId, TerrainType,
 };
 use sim_data::{DataRegistry, InfluenceEmission, StructureRequirement};
 use sim_engine::{SimResources, SimSystem};
@@ -51,6 +54,7 @@ impl SimSystem for InfluenceRuntimeSystem {
             refresh_structural_context(resources);
             self.last_structure_signature = Some(structure_signature);
         }
+        apply_room_effects(world, resources);
         let emitters = collect_runtime_emitters(world, resources);
         resources.influence_grid.replace_emitters(emitters);
     }
@@ -474,6 +478,7 @@ fn refresh_structural_context(resources: &mut SimResources) {
     let rooms = detect_rooms(&resources.tile_grid);
     assign_room_ids(&mut resources.tile_grid, &rooms);
     resources.rooms = rooms;
+    assign_room_roles_from_buildings(resources);
     apply_wall_blocking_from_tile_grid(resources);
 }
 
@@ -553,6 +558,137 @@ fn apply_wall_blocking_from_tile_grid(resources: &mut SimResources) {
                     .set_wall_blocking(x, y, blocking);
             }
         }
+    }
+}
+
+/// Assigns room roles based on which buildings occupy each room's tiles.
+/// Called after `detect_rooms` + `assign_room_ids` in `refresh_structural_context`.
+fn assign_room_roles_from_buildings(resources: &mut SimResources) {
+    let mut role_votes: HashMap<RoomId, Vec<&'static str>> = HashMap::new();
+
+    let mut building_ids: Vec<BuildingId> = resources.buildings.keys().copied().collect();
+    building_ids.sort_by_key(|id| id.0);
+    for building_id in building_ids {
+        let Some(building) = resources.buildings.get(&building_id) else {
+            continue;
+        };
+        if !building.is_complete {
+            continue;
+        }
+        let bx = building.x.max(0) as u32;
+        let by = building.y.max(0) as u32;
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        if bx >= grid_w || by >= grid_h {
+            continue;
+        }
+        let Some(room_id) = resources.tile_grid.get(bx, by).room_id else {
+            continue;
+        };
+        let role = match building.building_type.as_str() {
+            BUILDING_TYPE_CAMPFIRE => Some("hearth"),
+            BUILDING_TYPE_SHELTER => Some("shelter"),
+            "stockpile" => Some("storage"),
+            "workbench" => Some("crafting"),
+            _ => None,
+        };
+        if let Some(role_str) = role {
+            role_votes.entry(room_id).or_default().push(role_str);
+        }
+    }
+
+    for room in &mut resources.rooms {
+        if !room.enclosed {
+            room.role = RoomRole::Unknown;
+            continue;
+        }
+        room.role = match role_votes.get(&room.id) {
+            None => RoomRole::Shelter,
+            Some(votes) => majority_role(votes),
+        };
+    }
+}
+
+fn majority_role(votes: &[&str]) -> RoomRole {
+    let mut counts: HashMap<&str, usize> = HashMap::new();
+    for &vote in votes {
+        *counts.entry(vote).or_default() += 1;
+    }
+    match counts.into_iter().max_by_key(|(_, c)| *c).map(|(r, _)| r) {
+        Some("hearth") => RoomRole::Hearth,
+        Some("shelter") => RoomRole::Shelter,
+        Some("storage") => RoomRole::Storage,
+        Some("crafting") => RoomRole::Crafting,
+        _ => RoomRole::Shelter,
+    }
+}
+
+/// Enqueues per-tick stat bonuses for agents standing inside enclosed rooms.
+/// Uses EffectQueue so CausalLog records the source of each bonus.
+fn apply_room_effects(world: &World, resources: &mut SimResources) {
+    if resources.rooms.is_empty() {
+        return;
+    }
+
+    // Build room lookup: tile position → (role, enclosed)
+    let room_map: HashMap<(u32, u32), (RoomRole, bool)> = resources
+        .rooms
+        .iter()
+        .flat_map(|room| {
+            room.tiles
+                .iter()
+                .map(move |&tile| (tile, (room.role, room.enclosed)))
+        })
+        .collect();
+
+    let (grid_w, grid_h) = resources.tile_grid.dimensions();
+    let mut entries: Vec<EffectEntry> = Vec::new();
+
+    for (entity, position) in world.query::<&Position>().iter() {
+        let tx = position.tile_x().max(0) as u32;
+        let ty = position.tile_y().max(0) as u32;
+        if tx >= grid_w || ty >= grid_h {
+            continue;
+        }
+        let Some(&(role, enclosed)) = room_map.get(&(tx, ty)) else {
+            continue;
+        };
+        if !enclosed {
+            continue;
+        }
+        let entity_id = EntityId(entity.id() as u64);
+        match role {
+            RoomRole::Shelter => {
+                entries.push(EffectEntry {
+                    entity: entity_id,
+                    effect: EffectPrimitive::AddStat {
+                        stat: EffectStat::Safety,
+                        amount: 0.02,
+                    },
+                    source: EffectSource {
+                        system: "room_effect".to_string(),
+                        kind: "shelter_safety".to_string(),
+                    },
+                });
+            }
+            RoomRole::Hearth => {
+                entries.push(EffectEntry {
+                    entity: entity_id,
+                    effect: EffectPrimitive::AddStat {
+                        stat: EffectStat::Warmth,
+                        amount: 0.03,
+                    },
+                    source: EffectSource {
+                        system: "room_effect".to_string(),
+                        kind: "hearth_warmth".to_string(),
+                    },
+                });
+            }
+            RoomRole::Unknown | RoomRole::Storage | RoomRole::Crafting => {}
+        }
+    }
+
+    for entry in entries {
+        resources.effect_queue.push(entry);
     }
 }
 

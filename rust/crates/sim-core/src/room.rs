@@ -19,6 +19,8 @@ pub enum RoomRole {
     Hearth,
     /// Storage-oriented room.
     Storage,
+    /// Crafting-oriented room.
+    Crafting,
 }
 
 /// Result of one room-detection pass.

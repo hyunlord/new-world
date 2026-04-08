@@ -2418,6 +2418,19 @@ impl WorldSimRuntime {
                     ChannelId::Warmth,
                 );
                 dict.set("warmth_influence", warmth_influence as f32);
+
+                // Room data — set defaults first so GDScript can always read these keys
+                dict.set("room_id", -1_i64);
+                dict.set("room_role", "Unknown");
+                dict.set("room_enclosed", false);
+                let tile = resources.tile_grid.get(tile_x as u32, tile_y as u32);
+                if let Some(room_id) = tile.room_id {
+                    dict.set("room_id", room_id.0 as i64);
+                    if let Some(room) = resources.rooms.iter().find(|r| r.id == room_id) {
+                        dict.set("room_role", format!("{:?}", room.role));
+                        dict.set("room_enclosed", room.enclosed);
+                    }
+                }
             }
         }
 

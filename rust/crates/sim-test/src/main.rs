@@ -5459,6 +5459,62 @@ mod tests {
             t4380
         );
     }
+
+    #[test]
+    fn harness_rooms_have_role_from_buildings() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380); // 1 year — buildings should be constructed
+
+        let resources = engine.resources();
+
+        // Type A: all room tiles must be valid grid coordinates
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        for room in &resources.rooms {
+            for &(x, y) in &room.tiles {
+                assert!(
+                    x < grid_w && y < grid_h,
+                    "room tile ({},{}) out of bounds (grid {}x{})",
+                    x,
+                    y,
+                    grid_w,
+                    grid_h
+                );
+            }
+        }
+
+        // Type B: if complete buildings exist, enclosed rooms should be detected
+        let complete_building_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete)
+            .count();
+
+        eprintln!(
+            "[harness] complete buildings: {}, rooms: {}, enclosed: {}",
+            complete_building_count,
+            resources.rooms.len(),
+            resources.rooms.iter().filter(|r| r.enclosed).count()
+        );
+
+        if complete_building_count >= 3 {
+            assert!(
+                !resources.rooms.is_empty(),
+                "expected rooms to be detected with {} complete buildings",
+                complete_building_count
+            );
+        }
+
+        // Type C: enclosed rooms must have a non-Unknown role
+        for room in resources.rooms.iter().filter(|r| r.enclosed) {
+            use sim_core::RoomRole;
+            assert_ne!(
+                room.role,
+                RoomRole::Unknown,
+                "enclosed room {:?} should not have Unknown role",
+                room.id
+            );
+        }
+    }
 }
 
 fn pathfind_bench_inputs() -> (
