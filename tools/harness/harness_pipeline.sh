@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ============================================================
-# WorldSim Harness Pipeline v3.1 — Enforced Multi-Agent (All Code Changes)
+# WorldSim Harness Pipeline v3.2 — Codex 3-Role Integration (All Code Changes)
 # ============================================================
 #
 # Usage:
@@ -24,7 +24,9 @@ set -euo pipefail
 #   Step 2:   GENERATOR     (Claude Code -p)      → code + gen_result.md
 #   Step 2.5a: VISUAL VERIFY (Godot local)        → screenshots + data    [non-blocking]
 #   Step 2.5b: VLM ANALYSIS  (Claude -p)          → visual_analysis.txt   [non-blocking]
-#   Step 3:   EVALUATOR     (Claude Code -p)      → review.md + verdict
+#   Step 2.5c: FFI VERIFY    (Codex)              → ffi_chain_verify.txt  [if sim-bridge changed]
+#   Step 2.7:  REGR. GUARD   (Codex)              → regression_guard.txt  [always]
+#   Step 3:   EVALUATOR     (Codex)               → review.md + verdict   [independent from Generator]
 #   Step 4:   INTEGRATOR    (script logic)        → commit / retry / stop
 #
 # Each step runs as a separate `claude -p` session, providing natural
@@ -69,6 +71,10 @@ PLAN_ATTEMPT=0
 MAX_PLAN_ATTEMPTS=2
 CODE_ATTEMPT=0
 MAX_CODE_ATTEMPTS=3
+
+# --- Codex config ---
+CODEX_MODEL="${CODEX_MODEL:-}"  # empty = codex default; override with e.g. "o3" or "gpt-4.1"
+CODEX_BIN="${CODEX_BIN:-codex}"
 
 # --- Logging ---
 log() { echo "[harness $(date +%H:%M:%S)] $*"; }
@@ -235,6 +241,7 @@ run_with_timeout() {
 # --- Check prerequisites ---
 [[ -f "$PROMPT_FILE" ]] || die "Prompt file not found: $PROMPT_FILE"
 command -v claude >/dev/null 2>&1 || die "claude CLI not found"
+command -v "$CODEX_BIN" >/dev/null 2>&1 || die "codex CLI not found (set CODEX_BIN to override path)"
 command -v python3 >/dev/null 2>&1 || die "python3 not found (needed for template rendering)"
 
 # ============================================================
@@ -741,7 +748,293 @@ Answer every question in the checklist."
 }
 
 # ============================================================
-# STEP 3: EVALUATOR (separate Claude session — isolated context)
+# HELPER: Detect if sim-bridge was modified by Generator
+# ============================================================
+changed_sim_bridge() {
+    # Check if sim-bridge lib.rs has uncommitted changes
+    git diff --name-only HEAD -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null | grep -q .
+}
+
+# ============================================================
+# HELPER: Build codex exec command array
+# ============================================================
+run_codex() {
+    local sandbox="$1"
+    local output_file="$2"
+    local prompt_file="$3"
+
+    local cmd=("$CODEX_BIN" exec)
+    if [[ -n "$CODEX_MODEL" ]]; then
+        cmd+=(-m "$CODEX_MODEL")
+    fi
+    cmd+=(-s "$sandbox" -o "$output_file" --ephemeral)
+
+    "${cmd[@]}" < "$prompt_file"
+}
+
+# ============================================================
+# STEP 2.5c: FFI CHAIN VERIFY (Codex — conditional on sim-bridge changes)
+# ============================================================
+run_ffi_verify() {
+    log "=== Step 2.5c: FFI CHAIN VERIFY (Codex) ==="
+
+    local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
+    mkdir -p "$evidence_dir"
+
+    # Extract #[func] method names from sim-bridge
+    local rust_methods
+    rust_methods=$(grep -B0 -A1 '#\[func\]' "$PROJECT_ROOT/rust/crates/sim-bridge/src/lib.rs" \
+        | grep 'fn ' \
+        | sed 's/.*fn \([a-z_][a-z_0-9]*\).*/\1/' \
+        | sort -u)
+
+    # Build prompt
+    local ffi_prompt_file
+    ffi_prompt_file=$(mktemp)
+    cat > "$ffi_prompt_file" << 'FFI_HEADER'
+You are an FFI chain verifier for WorldSim.
+
+Your ONLY job is to verify that every Rust #[func] method in SimBridge has a complete proxy chain through GDScript.
+
+The chain for each method is:
+1. rust/crates/sim-bridge/src/lib.rs — #[func] fn <name>
+2. scripts/core/simulation/sim_bridge.gd — func <name> calling _get_native_runtime().<name>
+3. scripts/core/simulation/simulation_engine.gd — func <name> calling sim_bridge.<name>
+
+INSTRUCTIONS:
+- For each method listed below, check if the proxy exists in both GDScript files
+- Use grep to search the files
+- Only report methods that are BROKEN or were recently added (check git diff)
+
+Output format (one block per broken/new method):
+METHOD: <name>
+  lib.rs: OK
+  sim_bridge.gd: OK/MISSING
+  simulation_engine.gd: OK/MISSING/N/A
+  chain: COMPLETE/BROKEN
+
+At the end, output a summary line:
+ffi_overall: ALL_COMPLETE | HAS_BROKEN
+
+FFI_HEADER
+
+    cat >> "$ffi_prompt_file" << FFI_METHODS
+The Rust SimBridge exposes these #[func] methods:
+$rust_methods
+
+Check the proxy chain for each method. Focus especially on methods that appear in recent git changes:
+$(cd "$PROJECT_ROOT" && git diff --name-only HEAD -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null || echo "(no recent changes detected)")
+FFI_METHODS
+
+    log "Running FFI Chain Verify via Codex..."
+    if run_codex "read-only" "$evidence_dir/ffi_chain_verify.txt" "$ffi_prompt_file" 2> "$evidence_dir/ffi_verify_log.txt"; then
+        log "FFI chain verify complete"
+    else
+        log "WARNING: FFI chain verify failed (exit $?) — continuing pipeline"
+        echo "FFI chain verification failed to execute" > "$evidence_dir/ffi_chain_verify.txt"
+    fi
+
+    rm -f "$ffi_prompt_file"
+
+    # Check for BROKEN chains
+    if grep -qi "BROKEN\|HAS_BROKEN" "$evidence_dir/ffi_chain_verify.txt" 2>/dev/null; then
+        log "FFI CHAIN BROKEN detected — Evaluator will see this evidence"
+    else
+        log "FFI chains: all complete (or no new methods)"
+    fi
+}
+
+summarize_ffi_verify() {
+    local verify_file="$1"
+    local broken
+    broken=$(grep -ci "BROKEN" "$verify_file" 2>/dev/null || echo "0")
+    local overall
+    overall=$(grep -o "ALL_COMPLETE\|HAS_BROKEN" "$verify_file" 2>/dev/null | tail -1 || echo "UNKNOWN")
+    echo "${overall}. ${broken} broken chain(s)"
+}
+
+# ============================================================
+# STEP 2.7: REGRESSION GUARD (Codex — runs every attempt)
+# ============================================================
+run_regression_guard() {
+    log "=== Step 2.7: REGRESSION GUARD (Codex) ==="
+
+    local guard_prompt_file
+    guard_prompt_file=$(mktemp)
+    cat > "$guard_prompt_file" << 'GUARD_EOF'
+You are a regression guard for WorldSim. Your ONLY job is to verify nothing broke.
+
+Run these checks IN ORDER. Do NOT skip any.
+
+1. Run the full gate:
+   cd rust && cargo test --workspace 2>&1
+   Report: total passed, total failed, any new failures.
+
+2. Run all harness tests:
+   cd rust && cargo test -p sim-test harness_ -- --nocapture 2>&1
+   Count total harness tests. Report any FAILING tests by name.
+
+3. Check GDScript for obvious errors:
+   grep -rn 'func.*(' scripts/ui/renderers/ | head -10
+   Look for obvious syntax issues (unmatched brackets, missing colons).
+
+4. Check for broken input handling:
+   grep -n '_input\|_unhandled_input\|mouse_filter' scripts/ui/renderers/entity_renderer.gd | head -10
+   grep -n '_input\|_unhandled_input' scripts/ui/renderers/building_renderer.gd | head -10
+   Verify input handlers still exist and aren't accidentally removed.
+
+5. Check FFI evidence if it exists:
+   cat .harness/evidence/*/ffi_chain_verify.txt 2>/dev/null
+   cat .harness/evidence/*/ffi_verify.txt 2>/dev/null
+   Any MISSING or BROKEN methods = regression.
+
+OUTPUT FORMAT (must be machine-parseable):
+After your analysis, output EXACTLY one of these lines at the end:
+regression_status: CLEAN
+regression_status: REGRESSION_DETECTED
+
+If REGRESSION_DETECTED, also output:
+regression_details: <specific test or feature that broke>
+GUARD_EOF
+
+    log "Running Regression Guard via Codex..."
+    if run_codex "workspace-write" "$REVIEW_DIR/regression_guard.txt" "$guard_prompt_file" 2> "$REVIEW_DIR/regression_guard_log.txt"; then
+        log "Regression guard complete"
+    else
+        log "WARNING: Regression guard failed (exit $?) — continuing pipeline"
+        echo "regression_status: CLEAN" > "$REVIEW_DIR/regression_guard.txt"
+        echo "(Regression guard execution failed — defaulting to CLEAN)" >> "$REVIEW_DIR/regression_guard.txt"
+    fi
+
+    rm -f "$guard_prompt_file"
+
+    if grep -q "REGRESSION_DETECTED" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
+        log "REGRESSION DETECTED — Evaluator will incorporate this evidence"
+        local details
+        details=$(grep "regression_details:" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null | head -1 || echo "")
+        if [[ -n "$details" ]]; then
+            log "  $details"
+        fi
+    else
+        log "Regression guard: CLEAN"
+    fi
+}
+
+summarize_regression_guard() {
+    local guard_file="$1"
+    local status
+    status=$(grep -o "CLEAN\|REGRESSION_DETECTED" "$guard_file" 2>/dev/null | tail -1 || echo "UNKNOWN")
+    local details
+    details=$(grep "regression_details:" "$guard_file" 2>/dev/null | head -1 | sed 's/regression_details: //' | cut -c1-50 || echo "")
+    echo "${status}${details:+: $details}"
+}
+
+# ============================================================
+# STEP 3: CODEX EVALUATOR (Codex — independent from Generator)
+# ============================================================
+run_codex_evaluator() {
+    log "=== Step 3: CODEX EVALUATOR ==="
+
+    local plan_file="$PLAN_DIR/plan_final.md"
+    [[ -f "$plan_file" ]] || plan_file="$PLAN_DIR/plan_draft.md"
+
+    # Collect the actual test code that was written
+    local test_code
+    test_code=$(grep -A 200 "fn harness_.*$FEATURE" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null || echo "No matching harness test found in sim-test")
+
+    # Capture harness output tail
+    local harness_tail
+    harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
+
+    # Collect visual analysis if available
+    local visual_analysis=""
+    if [[ -f "$HARNESS_DIR/evidence/$FEATURE/visual_analysis.txt" ]]; then
+        visual_analysis=$(cat "$HARNESS_DIR/evidence/$FEATURE/visual_analysis.txt")
+    else
+        visual_analysis="Visual verification was not performed (Godot not available or failed)."
+    fi
+
+    # Collect FFI chain verify if available
+    local ffi_evidence=""
+    if [[ -f "$HARNESS_DIR/evidence/$FEATURE/ffi_chain_verify.txt" ]]; then
+        ffi_evidence="
+## FFI Chain Verification (Codex-verified)
+$(cat "$HARNESS_DIR/evidence/$FEATURE/ffi_chain_verify.txt")"
+    fi
+
+    # Collect regression guard if available
+    local regression_evidence=""
+    if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
+        regression_evidence="
+## Regression Guard (Codex-verified)
+$(cat "$REVIEW_DIR/regression_guard.txt")"
+    fi
+
+    # Build the full evaluator prompt: instructions + data
+    local evaluator_prompt_file
+    evaluator_prompt_file=$(mktemp)
+
+    # Read the agent instructions
+    local agent_instructions
+    agent_instructions=$(cat "$PROJECT_ROOT/.claude/agents/harness-codex-evaluator.md" 2>/dev/null || echo "ERROR: Agent instructions not found")
+
+    # Render data section from template
+    render_template \
+        "$TEMPLATES_DIR/evaluator_prompt.md" \
+        "$REVIEW_DIR/evaluator_data_attempt${CODE_ATTEMPT}.md" \
+        "FEATURE=$FEATURE" \
+        "PLAN=@$plan_file" \
+        "GEN_RESULT=@$RESULT_DIR/gen_result_latest.md" \
+        "HARNESS_RESULT=$harness_tail" \
+        "TEST_CODE=$test_code" \
+        "VISUAL_ANALYSIS=$visual_analysis"
+
+    # Combine: agent instructions + rendered data + extra evidence
+    cat > "$evaluator_prompt_file" << EVAL_COMBINE
+$agent_instructions
+
+---
+
+$(cat "$REVIEW_DIR/evaluator_data_attempt${CODE_ATTEMPT}.md")
+$ffi_evidence
+$regression_evidence
+
+---
+
+You are evaluating feature: $FEATURE (code attempt $CODE_ATTEMPT).
+Working directory: $PROJECT_ROOT
+
+Run your mandatory execution checks (cargo test, anti-circular, FFI chain).
+Then follow the evaluation protocol and output format defined above.
+End with verdict: APPROVE, RE-CODE, RE-PLAN, or FAIL.
+EVAL_COMBINE
+
+    # Also save the full input for audit trail
+    cp "$evaluator_prompt_file" "$REVIEW_DIR/evaluator_input_attempt${CODE_ATTEMPT}.md"
+
+    # Run via Codex (workspace-write: needs to run cargo test)
+    log "Running Codex Evaluator (independent session, attempt $CODE_ATTEMPT)..."
+    if run_codex "workspace-write" "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" "$evaluator_prompt_file" 2> "$REVIEW_DIR/codex_evaluator_log.txt"; then
+        log "Codex Evaluator complete"
+    else
+        local exit_code=$?
+        log "WARNING: Codex Evaluator exited with code $exit_code"
+        if [[ ! -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]]; then
+            die "Codex Evaluator failed and produced no output (exit $exit_code). Check $REVIEW_DIR/codex_evaluator_log.txt"
+        fi
+    fi
+
+    rm -f "$evaluator_prompt_file"
+
+    [[ -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]] || die "Codex Evaluator did not produce review"
+
+    # Symlink latest
+    ln -sf "review_attempt${CODE_ATTEMPT}.md" "$REVIEW_DIR/review_latest.md"
+    log "Review: $REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md"
+}
+
+# ============================================================
+# STEP 3 (LEGACY): EVALUATOR via Claude Code — kept as fallback
 # ============================================================
 run_evaluator() {
     log "=== Step 3: EVALUATOR ==="
@@ -859,7 +1152,15 @@ format_commit_message() {
             visual_verdict="${raw_verdict#VISUAL_}"
         fi
     fi
-    echo "feat($feature): implementation [harness: plan x${plan_attempts}(QC:r${qc_rounds}) code x${code_attempts} eval:APPROVE visual:${visual_verdict}]"
+    local regression="SKIP"
+    if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
+        regression=$(grep -o "CLEAN\|REGRESSION_DETECTED" "$REVIEW_DIR/regression_guard.txt" | tail -1 || echo "SKIP")
+    fi
+    local ffi="SKIP"
+    if [[ -f "$HARNESS_DIR/evidence/$feature/ffi_chain_verify.txt" ]]; then
+        ffi=$(grep -o "ALL_COMPLETE\|HAS_BROKEN" "$HARNESS_DIR/evidence/$feature/ffi_chain_verify.txt" | tail -1 || echo "SKIP")
+    fi
+    echo "feat($feature): implementation [harness: plan x${plan_attempts}(QC:r${qc_rounds}) code x${code_attempts} eval:APPROVE(codex) visual:${visual_verdict} ffi:${ffi} regr:${regression}]"
 }
 
 # ============================================================
@@ -999,8 +1300,23 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             run_vlm_analysis
             report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
 
-            run_evaluator
-            report_step "3 Evaluator" "DONE" "$(summarize_evaluator "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md")"
+            # --- Codex verification steps (independent from Generator) ---
+
+            # Step 2.5c: FFI Chain Verify — only when sim-bridge changed
+            if changed_sim_bridge; then
+                run_ffi_verify
+                report_step "2.5c FFI Verify (Codex)" "DONE" "$(summarize_ffi_verify "$HARNESS_DIR/evidence/$FEATURE/ffi_chain_verify.txt")"
+            else
+                report_step "2.5c FFI Verify (Codex)" "SKIPPED" "sim-bridge not modified"
+            fi
+
+            # Step 2.7: Regression Guard — always runs
+            run_regression_guard
+            report_step "2.7 Regression Guard (Codex)" "DONE" "$(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+
+            # Step 3: Codex Evaluator — replaces Claude Code evaluator for bias isolation
+            run_codex_evaluator
+            report_step "3 Evaluator (Codex)" "DONE" "$(summarize_evaluator "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md")"
 
             local verdict_code=0
             parse_verdict || verdict_code=$?
