@@ -82,7 +82,7 @@ func _draw() -> void:
 	var font_size: int = 10
 
 	# === Tile grid wall/floor/furniture rendering (P2-B3.5) ===
-	if _sim_engine != null and _current_lod <= GameConfig.ZOOM_Z2:
+	if _sim_engine != null:
 		_draw_tile_grid_walls(tile_size, min_tile_x, max_tile_x, min_tile_y, max_tile_y)
 
 	for i in range(buildings.size()):
@@ -100,7 +100,7 @@ func _draw() -> void:
 		if tile_y < min_tile_y or tile_y > max_tile_y:
 			continue
 
-		# Skip old shelter sprite when tile_grid walls exist nearby
+		# Skip old shelter sprite at ALL zoom levels when tile_grid walls exist
 		if building_type == "shelter" and _has_tile_grid_walls_at(tile_x, tile_y):
 			continue
 
@@ -451,10 +451,11 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 			continue
 		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.25, 0.20, 0.12, 0.35), true)
 
-	# Draw walls
+	# Draw walls — at Z3+ fill the full tile so adjacent walls merge visually
 	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
 	var wall_ys: PackedInt32Array = data.get("wall_y", PackedInt32Array())
 	var wall_mats: PackedStringArray = data.get("wall_material", PackedStringArray())
+	var wall_inset: float = 1.0 if _current_lod < GameConfig.ZOOM_Z3 else 0.0
 	for i in range(wall_xs.size()):
 		var wx: int = wall_xs[i]
 		var wy: int = wall_ys[i]
@@ -462,9 +463,10 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 			continue
 		var mat: String = wall_mats[i] if i < wall_mats.size() else ""
 		var wall_color: Color = _wall_material_color(mat)
-		var rect := Rect2(float(wx) * ts + 1.0, float(wy) * ts + 1.0, ts - 2.0, ts - 2.0)
+		var rect := Rect2(float(wx) * ts + wall_inset, float(wy) * ts + wall_inset, ts - wall_inset * 2.0, ts - wall_inset * 2.0)
 		draw_rect(rect, wall_color, true)
-		draw_rect(rect, wall_color.darkened(0.3), false, 1.0)
+		if wall_inset > 0.0:
+			draw_rect(rect, wall_color.darkened(0.3), false, 1.0)
 
 	# Draw doors (gap indicator)
 	var door_xs: PackedInt32Array = data.get("door_x", PackedInt32Array())
