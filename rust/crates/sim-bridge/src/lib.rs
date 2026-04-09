@@ -3491,6 +3491,16 @@ impl WorldSimRuntime {
         bridge_minimap_snapshot(state)
     }
 
+    /// Tile-grid wall/floor/door/furniture data for the structural renderer.
+    /// Returns packed arrays for efficient GDScript drawing.
+    #[func]
+    fn get_tile_grid_walls(&self) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        runtime_queries::tile_grid_walls(state)
+    }
+
     /// Entity list snapshot — lightweight summary of every agent.
     /// Used by the population list panel.
     #[func]

@@ -1,4 +1,4 @@
-use godot::builtin::{Array, PackedInt32Array, VarDictionary};
+use godot::builtin::{Array, GString, PackedInt32Array, PackedStringArray, VarDictionary};
 use hecs::{Entity, World};
 use sim_core::components::{
     Age, AgentKnowledge, Behavior, Emotion, Identity, Needs, Personality, Position, Skills, Social,
@@ -1304,6 +1304,64 @@ fn runtime_history_array(history: &[RuntimeStatsSnapshot]) -> Array<VarDictionar
         entry.set("stone", snapshot.stone);
         out.push(&entry);
     }
+    out
+}
+
+/// Returns tile-grid wall/floor/door/furniture data as packed arrays for
+/// efficient GDScript rendering. Only non-empty tiles are included.
+pub(crate) fn tile_grid_walls(state: &RuntimeState) -> VarDictionary {
+    let resources = state.engine.resources();
+    let (width, height) = resources.tile_grid.dimensions();
+
+    let mut wall_x = PackedInt32Array::new();
+    let mut wall_y = PackedInt32Array::new();
+    let mut wall_material = PackedStringArray::new();
+
+    let mut floor_x = PackedInt32Array::new();
+    let mut floor_y = PackedInt32Array::new();
+
+    let mut door_x = PackedInt32Array::new();
+    let mut door_y = PackedInt32Array::new();
+
+    let mut furniture_x = PackedInt32Array::new();
+    let mut furniture_y = PackedInt32Array::new();
+    let mut furniture_ids = PackedStringArray::new();
+
+    for y in 0..height {
+        for x in 0..width {
+            let tile = resources.tile_grid.get(x, y);
+            if let Some(ref mat) = tile.wall_material {
+                wall_x.push(x as i32);
+                wall_y.push(y as i32);
+                wall_material.push(&GString::from(mat.as_str()));
+            }
+            if tile.floor_material.is_some() {
+                floor_x.push(x as i32);
+                floor_y.push(y as i32);
+            }
+            if tile.is_door {
+                door_x.push(x as i32);
+                door_y.push(y as i32);
+            }
+            if let Some(ref furn) = tile.furniture_id {
+                furniture_x.push(x as i32);
+                furniture_y.push(y as i32);
+                furniture_ids.push(&GString::from(furn.as_str()));
+            }
+        }
+    }
+
+    let mut out = VarDictionary::new();
+    out.set("wall_x", wall_x);
+    out.set("wall_y", wall_y);
+    out.set("wall_material", wall_material);
+    out.set("floor_x", floor_x);
+    out.set("floor_y", floor_y);
+    out.set("door_x", door_x);
+    out.set("door_y", door_y);
+    out.set("furniture_x", furniture_x);
+    out.set("furniture_y", furniture_y);
+    out.set("furniture_id", furniture_ids);
     out
 }
 

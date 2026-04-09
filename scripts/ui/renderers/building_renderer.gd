@@ -13,6 +13,8 @@ var _last_redraw_cam_pos: Vector2 = Vector2.INF
 var _last_redraw_zoom: float = -1.0
 var _last_redraw_tick: int = -1
 var _redraw_cooldown: float = 0.0
+var _tile_grid_cache: Dictionary = {}
+var _tile_grid_cache_tick: int = -1
 
 
 func init(building_manager: RefCounted, settlement_manager: RefCounted = null, sim_engine: RefCounted = null) -> void:
@@ -79,6 +81,10 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 	var font_size: int = 10
 
+	# === Tile grid wall/floor/furniture rendering (P2-B3.5) ===
+	if _sim_engine != null and _current_lod <= GameConfig.ZOOM_Z2:
+		_draw_tile_grid_walls(tile_size, min_tile_x, max_tile_x, min_tile_y, max_tile_y)
+
 	for i in range(buildings.size()):
 		var b = buildings[i]
 
@@ -92,6 +98,10 @@ func _draw() -> void:
 		if tile_x < min_tile_x or tile_x > max_tile_x:
 			continue
 		if tile_y < min_tile_y or tile_y > max_tile_y:
+			continue
+
+		# Skip old shelter sprite when tile_grid walls exist nearby
+		if building_type == "shelter" and _has_tile_grid_walls_at(tile_x, tile_y):
 			continue
 
 		var cx: float = float(tile_x) * tile_size + half
@@ -410,3 +420,110 @@ func _get_runtime_world_summary() -> Dictionary:
 		_runtime_world_summary_cache_tick = tick
 		_runtime_world_summary_cache = _sim_engine.get_world_summary()
 	return _runtime_world_summary_cache
+
+
+# === Tile grid wall/floor/furniture rendering (P2-B3.5) ===
+
+func _get_tile_grid_data() -> Dictionary:
+	if _sim_engine == null or not _sim_engine.has_method("get_tile_grid_walls"):
+		return {}
+	var tick: int = int(_sim_engine.current_tick)
+	if tick != _tile_grid_cache_tick:
+		_tile_grid_cache_tick = tick
+		_tile_grid_cache = _sim_engine.get_tile_grid_walls()
+	return _tile_grid_cache
+
+
+func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, max_y: int) -> void:
+	var data: Dictionary = _get_tile_grid_data()
+	if data.is_empty():
+		return
+
+	var ts: float = float(tile_size)
+
+	# Draw floors first (under walls)
+	var floor_xs: PackedInt32Array = data.get("floor_x", PackedInt32Array())
+	var floor_ys: PackedInt32Array = data.get("floor_y", PackedInt32Array())
+	for i in range(floor_xs.size()):
+		var fx: int = floor_xs[i]
+		var fy: int = floor_ys[i]
+		if fx < min_x or fx > max_x or fy < min_y or fy > max_y:
+			continue
+		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.25, 0.20, 0.12, 0.35), true)
+
+	# Draw walls
+	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
+	var wall_ys: PackedInt32Array = data.get("wall_y", PackedInt32Array())
+	var wall_mats: PackedStringArray = data.get("wall_material", PackedStringArray())
+	for i in range(wall_xs.size()):
+		var wx: int = wall_xs[i]
+		var wy: int = wall_ys[i]
+		if wx < min_x or wx > max_x or wy < min_y or wy > max_y:
+			continue
+		var mat: String = wall_mats[i] if i < wall_mats.size() else ""
+		var wall_color: Color = _wall_material_color(mat)
+		var rect := Rect2(float(wx) * ts + 1.0, float(wy) * ts + 1.0, ts - 2.0, ts - 2.0)
+		draw_rect(rect, wall_color, true)
+		draw_rect(rect, wall_color.darkened(0.3), false, 1.0)
+
+	# Draw doors (gap indicator)
+	var door_xs: PackedInt32Array = data.get("door_x", PackedInt32Array())
+	var door_ys: PackedInt32Array = data.get("door_y", PackedInt32Array())
+	for i in range(door_xs.size()):
+		var dx: int = door_xs[i]
+		var dy: int = door_ys[i]
+		if dx < min_x or dx > max_x or dy < min_y or dy > max_y:
+			continue
+		draw_rect(Rect2(float(dx) * ts + 2.0, float(dy) * ts + 2.0, ts - 4.0, ts - 4.0), Color(0.45, 0.30, 0.12, 0.5), true)
+
+	# Draw furniture
+	var furn_xs: PackedInt32Array = data.get("furniture_x", PackedInt32Array())
+	var furn_ys: PackedInt32Array = data.get("furniture_y", PackedInt32Array())
+	var furn_ids: PackedStringArray = data.get("furniture_id", PackedStringArray())
+	var furn_font: Font = ThemeDB.fallback_font
+	for i in range(furn_xs.size()):
+		var fux: int = furn_xs[i]
+		var fuy: int = furn_ys[i]
+		if fux < min_x or fux > max_x or fuy < min_y or fuy > max_y:
+			continue
+		var fid: String = furn_ids[i] if i < furn_ids.size() else ""
+		var icon: String = _tile_furniture_icon(fid)
+		if not icon.is_empty():
+			draw_string(
+				furn_font,
+				Vector2(float(fux) * ts + ts * 0.5, float(fuy) * ts + ts * 0.6),
+				icon, HORIZONTAL_ALIGNMENT_CENTER, -1,
+				int(ts * 0.6), Color(1.0, 1.0, 1.0, 0.85)
+			)
+
+
+func _wall_material_color(material_id: String) -> Color:
+	match material_id:
+		"granite", "basalt":
+			return Color(0.45, 0.42, 0.38, 0.85)
+		"limestone", "sandstone":
+			return Color(0.55, 0.50, 0.40, 0.85)
+		"oak", "birch", "pine":
+			return Color(0.50, 0.35, 0.18, 0.85)
+		_:
+			return Color(0.50, 0.45, 0.38, 0.85)
+
+
+func _tile_furniture_icon(furniture_id: String) -> String:
+	match furniture_id:
+		"fire_pit": return "🔥"
+		"lean_to": return "🛏"
+		"storage_pit": return "📦"
+		"workbench": return "⚒"
+		"drying_rack": return "🪓"
+		_: return ""
+
+
+func _has_tile_grid_walls_at(tile_x: int, tile_y: int) -> bool:
+	var data: Dictionary = _get_tile_grid_data()
+	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
+	var wall_ys: PackedInt32Array = data.get("wall_y", PackedInt32Array())
+	for i in range(wall_xs.size()):
+		if absi(wall_xs[i] - tile_x) <= 3 and absi(wall_ys[i] - tile_y) <= 3:
+			return true
+	return false
