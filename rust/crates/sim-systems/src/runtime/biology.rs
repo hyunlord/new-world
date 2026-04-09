@@ -203,7 +203,10 @@ impl SimSystem for PopulationRuntimeSystem {
                     if has_plans {
                         return true;
                     }
-                    // Check for walls at the settlement-center perimeter
+                    // Check for walls at the shelter ring perimeter
+                    let (scx, scy) = s
+                        .shelter_center
+                        .unwrap_or((s.x, s.y));
                     let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
                     let mut wall_count = 0_i32;
                     for oy in -r..=r {
@@ -212,8 +215,8 @@ impl SimSystem for PopulationRuntimeSystem {
                             if !is_peri {
                                 continue;
                             }
-                            let tx = s.x + ox;
-                            let ty = s.y + oy;
+                            let tx = scx + ox;
+                            let ty = scy + oy;
                             if resources.tile_grid.in_bounds(tx, ty)
                                 && resources
                                     .tile_grid

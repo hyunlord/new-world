@@ -52,6 +52,11 @@ pub struct Settlement {
     /// Stratification phase label (`egalitarian`, `transitional`, `stratified`)
     #[serde(default)]
     pub stratification_phase: String,
+    /// Center of the shelter wall ring placed via `find_build_site`.
+    /// `None` until a shelter is first placed; used by `shelter_walls_present`
+    /// and biology shelter detection so they check the actual ring location.
+    #[serde(default)]
+    pub shelter_center: Option<(i32, i32)>,
 }
 
 impl Settlement {
@@ -75,6 +80,7 @@ impl Settlement {
             gini_coefficient: 0.0,
             leveling_effectiveness: 0.0,
             stratification_phase: "egalitarian".to_string(),
+            shelter_center: None,
         }
     }
 

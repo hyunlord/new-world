@@ -6549,11 +6549,11 @@ mod tests {
                 idx, count
             );
         }
-        let (cx, cy) = {
-            let s = resources.settlements.values().next()
-                .expect("[A16] settlement must exist");
-            (s.x, s.y)
-        };
+        // Shelter ring center: use shelter_center (set by find_build_site)
+        // rather than settlement center, since the ring may be offset.
+        let s = resources.settlements.values().next()
+            .expect("[A16] settlement must exist");
+        let (cx, cy) = s.shelter_center.unwrap_or((s.x, s.y));
 
         // ── Count wall tiles.
         let (grid_w, grid_h) = resources.tile_grid.dimensions();
@@ -6579,7 +6579,7 @@ mod tests {
                         walls_with_invalid_material += 1;
                     }
                 }
-                // A4: track max Chebyshev distance from settlement center.
+                // A4: track max Chebyshev distance from shelter ring center.
                 let dx = (x as i32 - cx).abs();
                 let dy = (y as i32 - cy).abs();
                 let cheb = dx.max(dy);
@@ -6643,11 +6643,11 @@ mod tests {
             walls_with_invalid_material
         );
 
-        // ── A4: walls within Chebyshev distance R from settlement center.
+        // ── A4: walls within Chebyshev distance R from shelter ring center.
         assert!(
             max_chebyshev <= r,
-            "[A4] max Chebyshev distance {} > R={}",
-            max_chebyshev, r
+            "[A4] max Chebyshev distance {} > R={} (ring center=({},{}))",
+            max_chebyshev, r, cx, cy
         );
 
         // ── A5: door tile is wall-free, with explicit in-bounds precondition.
@@ -6665,12 +6665,12 @@ mod tests {
             door_x, door_y, door_tile.wall_material
         );
 
-        // ── A6: fire pit furniture at settlement center.
+        // ── A6: fire pit furniture at shelter ring center.
         let center_tile = resources.tile_grid.get(cx as u32, cy as u32);
         assert_eq!(
             center_tile.furniture_id.as_deref(),
             Some("fire_pit"),
-            "[A6] expected fire_pit furniture at settlement center ({}, {}), got {:?}",
+            "[A6] expected fire_pit furniture at ring center ({}, {}), got {:?}",
             cx, cy, center_tile.furniture_id
         );
 
@@ -6989,8 +6989,8 @@ mod tests {
 
         // ── Single-tick execution loop from tick 1 through tick 4380.
         const RUN_END: u64 = 4380;
-        const PER_TICK_START: u64 = 100; // earliest tick we examine for A1/A6
-        const STABILITY_START: u64 = 500; // earliest tick for A2/A3
+        const PER_TICK_START: u64 = 1; // earliest tick we examine for A1/A6
+        const STABILITY_START: u64 = 1; // earliest tick for A2/A3
 
         for tick in 1..=RUN_END {
             engine.run_ticks(1);
@@ -7026,7 +7026,7 @@ mod tests {
             }
 
             // A2/A3: per-entity (job, current_action) observations within
-            // [500, 4380].
+            // [STABILITY_START, 4380].
             if tick >= STABILITY_START {
                 let world = engine.world();
                 for (entity, behavior) in world.query::<&Behavior>().iter() {
