@@ -3501,6 +3501,14 @@ impl WorldSimRuntime {
         runtime_queries::tile_grid_walls(state)
     }
 
+    /// Number of pending wall plans in the simulation.
+    /// Used by building_renderer debug logging.
+    #[func]
+    fn get_wall_plans_count(&self) -> i64 {
+        let Some(state) = self.state.as_ref() else { return -1; };
+        state.engine.resources().wall_plans.len() as i64
+    }
+
     /// Entity list snapshot — lightweight summary of every agent.
     /// Used by the population list panel.
     #[func]

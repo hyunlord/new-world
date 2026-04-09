@@ -395,6 +395,14 @@ func get_world_summary() -> Dictionary:
 	return {}
 
 
+## Returns the number of pending wall plans from Rust simulation.
+func get_wall_plans_count() -> int:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_wall_plans_count"):
+		return -1
+	return int(sim_bridge.call("get_wall_plans_count"))
+
+
 func get_band_list() -> Array:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_band_list"):
