@@ -468,6 +468,19 @@ func runtime_get_entity_tab(entity_id: int, tab: String) -> Dictionary:
 	return {}
 
 
+## Returns tile grid wall/floor/furniture data from Rust simulation.
+func get_tile_grid_walls() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("get_tile_grid_walls"):
+		return {}
+	var raw: Variant = runtime.call("get_tile_grid_walls")
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
 ## Returns the number of pending wall plans from Rust simulation.
 func get_wall_plans_count() -> int:
 	var runtime: Object = _get_native_runtime()
