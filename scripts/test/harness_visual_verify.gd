@@ -13,6 +13,7 @@
 ##   entity_summary.txt        — agent counts, jobs, position spread
 ##   performance.txt           — tick timing stats
 ##   console_log.txt           — captured errors/warnings from Godot log
+##   ffi_verify.txt            — FFI method chain + data sanity verification
 ##   manifest.txt              — list of all evidence files produced
 
 extends SceneTree
@@ -38,6 +39,7 @@ var _wait_frames: int = 0
 var _is_headless: bool = false
 var _pending_screenshot_label: String = ""
 var _batch_size: int = 20
+var _ffi_verified: bool = false
 
 
 func _init() -> void:
@@ -137,6 +139,12 @@ func _process(delta: float) -> bool:
 				var total_ms := float(tick_end - tick_start) / 1000.0
 				_tick_times.append(total_ms / float(batch))
 				_ticks_done += batch
+
+			# FFI verification at ~50% progress
+			if _ticks_done >= _total_ticks / 2 and not _ffi_verified:
+				_ffi_verified = true
+				var ffi_results: Dictionary = _verify_ffi_chain()
+				_write_ffi_verify(ffi_results)
 
 			# Progress logging
 			if _ticks_done % 500 < _batch_size or _ticks_done >= _total_ticks:
@@ -396,6 +404,81 @@ func _write_manifest() -> void:
 		dir.list_dir_end()
 
 	_write_text("manifest.txt", "\n".join(lines))
+
+
+## Verify that all expected FFI methods are callable and return sane data.
+func _verify_ffi_chain() -> Dictionary:
+	var results: Dictionary = {}
+
+	# Core methods that must always work
+	var required_methods: Array[String] = [
+		"get_minimap_snapshot",
+		"get_world_summary",
+		"get_agent_snapshots",
+		"get_frame_snapshots",
+	]
+
+	# Feature-specific methods (added by recent features)
+	var feature_methods: Array[String] = [
+		"get_tile_grid_walls",
+		"get_wall_plans_count",
+	]
+
+	for method in required_methods:
+		var has: bool = _sim_engine != null and _sim_engine.has_method(method)
+		results["ffi_required_" + method] = "OK" if has else "MISSING"
+
+	for method in feature_methods:
+		var has: bool = _sim_engine != null and _sim_engine.has_method(method)
+		results["ffi_feature_" + method] = "OK" if has else "MISSING"
+
+	# Data sanity: call methods and check non-empty returns
+	if _sim_engine != null:
+		if _sim_engine.has_method("get_minimap_snapshot"):
+			var snap: Dictionary = _sim_engine.get_minimap_snapshot()
+			results["data_minimap_buildings"] = str(snap.get("buildings", []).size())
+			results["data_minimap_entities"] = str(snap.get("entities", []).size())
+
+		if _sim_engine.has_method("get_tile_grid_walls"):
+			var tile_data: Dictionary = _sim_engine.get_tile_grid_walls()
+			var wall_x_raw: Variant = tile_data.get("wall_x", PackedInt32Array())
+			var wall_count: int = (wall_x_raw as PackedInt32Array).size() if wall_x_raw is PackedInt32Array else 0
+			var floor_x_raw: Variant = tile_data.get("floor_x", PackedInt32Array())
+			var floor_count: int = (floor_x_raw as PackedInt32Array).size() if floor_x_raw is PackedInt32Array else 0
+			results["data_tile_grid_walls"] = str(wall_count)
+			results["data_tile_grid_floors"] = str(floor_count)
+
+		if _sim_engine.has_method("get_wall_plans_count"):
+			results["data_wall_plans"] = str(_sim_engine.get_wall_plans_count())
+
+	print("[visual-verify] FFI chain verified: %d checks" % results.size())
+	return results
+
+
+## Write FFI verification results to evidence directory.
+func _write_ffi_verify(results: Dictionary) -> void:
+	var lines := PackedStringArray()
+	lines.append("=== FFI Chain Verification ===")
+	lines.append("tick: %d" % _ticks_done)
+	lines.append("")
+
+	var all_ok: bool = true
+	var sorted_keys: Array = results.keys()
+	sorted_keys.sort()
+	for key in sorted_keys:
+		var value: String = str(results[key])
+		var status: String = "OK"
+		if value == "MISSING":
+			status = "FAIL"
+			all_ok = false
+		elif key.begins_with("data_") and value == "0":
+			status = "WARN"
+		lines.append("%s: %s [%s]" % [key, value, status])
+
+	lines.append("")
+	lines.append("overall: %s" % ("PASS" if all_ok else "FAIL"))
+
+	_write_text("ffi_verify.txt", "\n".join(lines))
 
 
 ## Write a text file to the evidence directory.

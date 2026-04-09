@@ -78,6 +78,14 @@ For EACH assertion in the plan:
 - Cross-check: does entity_summary data match harness test observations?
 - If visual evidence is "skipped" — this is non-blocking, focus on other evidence
 
+### 5b. FFI Verification (if ffi_verify.txt exists)
+- Read ffi_verify.txt from the evidence directory
+- ANY "MISSING" required method → RE-CODE (FFI proxy chain broken)
+- ANY "MISSING" feature method → RE-CODE (SimBridge proxy not added for new #[func])
+- "WARN" on data fields → investigate (data may legitimately be 0 early in simulation)
+- "overall: FAIL" → automatic RE-CODE regardless of other evidence
+- This catches the P2-B3 class of bugs: Rust #[func] exists but GDScript proxy missing
+
 ### 6. Design Quality
 Evaluate whether the implementation follows WorldSim's architectural principles:
 

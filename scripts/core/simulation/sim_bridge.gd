@@ -468,6 +468,16 @@ func runtime_get_entity_tab(entity_id: int, tab: String) -> Dictionary:
 	return {}
 
 
+## Returns the number of pending wall plans from Rust simulation.
+func get_wall_plans_count() -> int:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return -1
+	if not runtime.has_method("get_wall_plans_count"):
+		return -1
+	return int(runtime.call("get_wall_plans_count"))
+
+
 ## Returns entity list from Rust runtime.
 func runtime_get_entity_list() -> Array:
 	var runtime: Object = _get_native_runtime()
