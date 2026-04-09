@@ -6851,6 +6851,467 @@ mod tests {
         }
         n
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // P2-B3-FIX harness — strict 9-assertion plan_attempt=2 spec.
+    //
+    // This test is the regression guard for the named bug:
+    // "builder bucketed as available_builders mid-PlaceWall and retasked every
+    //  tick — wall plans queued but never stamped to tile_grid."
+    //
+    // The fix lives in economy.rs: (a) wall/furniture plan positions are
+    // first-class pending sites, and (b) the assigned-action predicate
+    // recognizes PlaceWall/PlaceFurniture as well as legacy Build.
+    //
+    // Assertions (all Type D except A4 and A5 which are Type A invariants):
+    //   A1: wall_plans queue reaches ≥8 entries clustered near a settlement
+    //       (geometric ring-minimum + hardcoded-dummy rejection)
+    //   A2: a single entity holds job="builder" across 10 consecutive ticks,
+    //       with current_action=PlaceWall at ≥2 distinct ticks within the
+    //       window (the retask-thrash regression guard)
+    //   A3: PlaceWall action observed at ≥5 distinct ticks across window
+    //   A4: tile_grid wall count at end ≥8 (geometric ring minimum)
+    //   A5: zero entries in `buildings` with building_type == "shelter"
+    //       (P2-B3 architecture invariant: shelter is wall-plan queue, not
+    //       a Building entity)
+    //   A6: plan → builder → PlaceWall → stamp pipeline correlates:
+    //       wall_plans populated at some tick, peak ≥8, Δ walls ≥8 after
+    //       the first plan appears
+    //   A7: tile_grid wall count at end ≤200 (runaway regression guard)
+    //   A8: survival jobs persist during construction (non-regression
+    //       against the rejected "force builder into survival ratios" fix)
+    //   A9: builder role persists across ≥50% of construction-window samples
+    //
+    // Canonical source-of-truth references:
+    //   - ActionType::PlaceWall / PlaceFurniture — enum variants in
+    //     sim_core::enums::ActionType (canonical)
+    //   - "builder" — literal matches production at economy.rs:774
+    //     (retask_builder_for_construction sets behavior.job = "builder")
+    //   - "shelter" — literal matches production BUILDING_TYPE_SHELTER
+    //     at economy.rs:125 (module-local const, not re-exported; reference
+    //     it by value the same way the existing A7 assertion does)
+    //   - "gatherer" / "hunter" / "forager" — literal per the plan's exact
+    //     specification; production names are "gatherer" / "hunter" (see
+    //     economy.rs JOB_ASSIGNMENT_ORDER and job_satisfaction profiles);
+    //     "forager" is a plan-level synonym that contributes 0 matches in
+    //     current production, leaving gatherer+hunter to carry A8.
+    // ─────────────────────────────────────────────────────────────────────────
+    #[test]
+    fn harness_p2b3_builder_assigns_and_places_wall() {
+        use sim_core::ActionType;
+        use std::collections::HashMap;
+        use std::collections::HashSet;
+
+        // Canonical job-name literals mirrored from production. Keep these in
+        // sync with rust/crates/sim-systems/src/runtime/economy.rs.
+        const BUILDER_JOB: &str = "builder";
+        const BUILDING_TYPE_SHELTER: &str = "shelter";
+        const SURVIVAL_JOBS: [&str; 3] = ["gatherer", "forager", "hunter"];
+
+        let mut engine = make_stage1_engine(42, 20);
+
+        // ── Settlement origin snapshot (used by A1 proximity clause).
+        // Seed 42 with 20 agents yields exactly one settlement at (128, 128)
+        // per make_stage1_engine; we collect all settlement origins defensively
+        // in case future seeding changes the layout.
+        let settlement_origins: Vec<(i32, i32)> = engine
+            .resources()
+            .settlements
+            .values()
+            .map(|s| (s.x, s.y))
+            .collect();
+        assert!(
+            !settlement_origins.is_empty(),
+            "[precondition] no settlements present — seed 42 spawn pathology; \
+             cannot run P2-B3-FIX harness"
+        );
+
+        // ── Per-tick records.
+        //
+        // A1 needs to find any tick where wall_plans.len() ≥ 8 AND all plan
+        // entries are within Chebyshev 40 of some settlement origin. We
+        // record the full set of plan coordinates at each tick the queue is
+        // non-empty.
+        //
+        // A2 needs per-entity streak tracking. We stream: every tick, for
+        // every entity with job == "builder", update its streak; if the
+        // streak is broken (entity absent from query, or job != builder),
+        // reset it.
+        //
+        // A3 counts distinct ticks with ≥1 PlaceWall agent.
+        //
+        // A6 needs: T_first (earliest tick wall_plans.len() ≥ 1),
+        // start_walls (wall_count scan at T_first), end_walls (scan at 4380),
+        // peak_plans (max len across window).
+
+        // Per-tick snapshots for A1 diagnostics (tick, len, entries).
+        let mut a1_qualifying_tick: Option<u64> = None;
+
+        // A6 state.
+        let mut t_first: Option<u64> = None;
+        let mut start_walls: i64 = -1;
+        let mut peak_plans: usize = 0;
+
+        // A2 streak state, keyed by entity-bits (u64 from hecs::Entity).
+        // Each entry is (streak_start_tick, last_seen_tick,
+        //                place_wall_ticks_in_streak).
+        // When we see an entity at tick T:
+        //   - if last_seen_tick == T-1 AND still builder, extend streak
+        //   - else reset streak to start at T
+        //   - when we process a tick, any entity not seen this pass is
+        //     implicitly broken — but to avoid scanning the full map, we
+        //     check "streak still valid" at the moment of decision.
+        //
+        // Simpler approach: record per-entity (tick → (is_builder,
+        // is_place_wall)) in a compact vector. Then scan per entity for
+        // consecutive builder runs. Memory: ~20 agents * 4380 ticks * 2 bytes
+        // ≈ 175 KB, trivial.
+        //
+        // We store as HashMap<entity_bits, Vec<(tick, is_builder,
+        // is_place_wall)>> — only record ticks where the entity was present
+        // in the query with either flag.
+        let mut per_entity_observations: HashMap<u64, Vec<(u64, bool, bool)>> =
+            HashMap::new();
+
+        // A3: distinct-tick set.
+        let mut place_wall_ticks: HashSet<u64> = HashSet::new();
+
+        // A8 survival-job samples.
+        let a8_sample_ticks: [u64; 5] = [1500, 1800, 2000, 2200, 2500];
+        let mut a8_counts: [u32; 5] = [0; 5];
+
+        // A9 builder-persistence samples.
+        let a9_sample_ticks: [u64; 13] = [
+            600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000, 3300, 3600,
+            3900, 4200,
+        ];
+        let mut a9_counts: [u32; 13] = [0; 13];
+
+        // ── Single-tick execution loop from tick 1 through tick 4380.
+        const RUN_END: u64 = 4380;
+        const PER_TICK_START: u64 = 100; // earliest tick we examine for A1/A6
+        const STABILITY_START: u64 = 500; // earliest tick for A2/A3
+
+        for tick in 1..=RUN_END {
+            engine.run_ticks(1);
+
+            // A6/A1: wall_plans observations within [100, 4380].
+            if tick >= PER_TICK_START {
+                let plans_len = engine.resources().wall_plans.len();
+                if plans_len > peak_plans {
+                    peak_plans = plans_len;
+                }
+                if plans_len >= 1 && t_first.is_none() {
+                    t_first = Some(tick);
+                    // Scan wall_count now to capture start_walls baseline.
+                    start_walls = count_wall_tiles(&engine) as i64;
+                }
+
+                // A1: check "≥8 plans all within Chebyshev 40 of any
+                // settlement origin" at this tick. We only need to find ONE
+                // such tick; if already found, skip.
+                if a1_qualifying_tick.is_none() && plans_len >= 8 {
+                    let resources = engine.resources();
+                    let all_near = resources.wall_plans.iter().all(|plan| {
+                        settlement_origins.iter().any(|&(ox, oy)| {
+                            let dx = (plan.x - ox).abs();
+                            let dy = (plan.y - oy).abs();
+                            dx.max(dy) <= 40
+                        })
+                    });
+                    if all_near {
+                        a1_qualifying_tick = Some(tick);
+                    }
+                }
+            }
+
+            // A2/A3: per-entity (job, current_action) observations within
+            // [500, 4380].
+            if tick >= STABILITY_START {
+                let world = engine.world();
+                for (entity, behavior) in world.query::<&Behavior>().iter() {
+                    let is_builder = behavior.job == BUILDER_JOB;
+                    let is_place_wall =
+                        behavior.current_action == ActionType::PlaceWall;
+                    if is_place_wall {
+                        place_wall_ticks.insert(tick);
+                    }
+                    if is_builder || is_place_wall {
+                        let key = entity.to_bits().get();
+                        per_entity_observations
+                            .entry(key)
+                            .or_default()
+                            .push((tick, is_builder, is_place_wall));
+                    }
+                }
+            }
+
+            // A8: strided survival-job samples.
+            if let Some(idx) =
+                a8_sample_ticks.iter().position(|&t| t == tick)
+            {
+                let world = engine.world();
+                let mut count = 0u32;
+                for (_, behavior) in world.query::<&Behavior>().iter() {
+                    if SURVIVAL_JOBS.iter().any(|&j| j == behavior.job) {
+                        count += 1;
+                    }
+                }
+                a8_counts[idx] = count;
+            }
+
+            // A9: strided builder-persistence samples.
+            if let Some(idx) =
+                a9_sample_ticks.iter().position(|&t| t == tick)
+            {
+                a9_counts[idx] = count_builders(&engine);
+            }
+        }
+
+        // ── Post-run: final wall_count scan at tick 4380.
+        let end_walls = count_wall_tiles(&engine) as i64;
+        // If wall_plans never populated we still need a baseline for the
+        // delta clause in A6 to fail cleanly; start_walls stays -1.
+        if start_walls < 0 {
+            // The pipeline never produced plans. A6 clause (i) below will
+            // flag this as the authoritative failure message.
+            start_walls = end_walls; // placeholder — delta would be 0 anyway
+        }
+
+        let resources = engine.resources();
+
+        // ── A5: zero shelter Buildings in `buildings` at end state. (Type A
+        // invariant — checked before plan-heavy assertions so the failure
+        // message is the architectural one, not a downstream effect.)
+        let shelter_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.building_type == BUILDING_TYPE_SHELTER)
+            .count();
+        assert_eq!(
+            shelter_count, 0,
+            "[A5] expected 0 shelter Buildings (P2-B3 architecture: shelter \
+             is wall-plan queue, not Building); got {}",
+            shelter_count
+        );
+
+        // ── A4: tile_grid walls at tick 4380 ≥ 8 (Type A — geometric
+        // minimum of any closed rectangular ring).
+        assert!(
+            end_walls >= 8,
+            "[A4] tile_grid walls at tick {} == {}, expected ≥ 8 \
+             (geometric ring minimum: 3×3 exterior enclosing 1×1 interior)",
+            RUN_END, end_walls
+        );
+
+        // ── A7: tile_grid walls at tick 4380 ≤ 200 (runaway guard).
+        assert!(
+            end_walls <= 200,
+            "[A7] tile_grid walls at tick {} == {}, expected ≤ 200 \
+             (runaway regression guard — plan duplication or stamper loop)",
+            RUN_END, end_walls
+        );
+
+        // ── A6: plan → wall pipeline correlation.
+        // Clause (i) — wall_plans populated at least once.
+        assert!(
+            t_first.is_some(),
+            "[A6.i] wall_plans never populated across ticks [{}, {}] — \
+             Link 1 (economy.generate_wall_ring_plans) is broken",
+            PER_TICK_START, RUN_END
+        );
+        // Clause (ii) — peak plans reached geometric minimum.
+        assert!(
+            peak_plans >= 8,
+            "[A6.ii] peak wall_plans.len() across window == {}, expected ≥ 8 \
+             (plans are being queued in micro-batches, not as a full ring)",
+            peak_plans
+        );
+        // Clause (iii) — walls actually landed in tile_grid after plans
+        // appeared.
+        let wall_delta = end_walls - start_walls;
+        assert!(
+            wall_delta >= 8,
+            "[A6.iii] walls stamped after first plan (Δ = end {} - start {}) \
+             == {}, expected ≥ 8 — plan/builder/PlaceWall/stamp pipeline is \
+             broken downstream of the plan queue",
+            end_walls, start_walls, wall_delta
+        );
+
+        // ── A1: wall_plans_generated_near_settlement.
+        assert!(
+            a1_qualifying_tick.is_some(),
+            "[A1] no tick in [{}, {}] had wall_plans.len() ≥ 8 with all \
+             entries within Chebyshev 40 of a settlement origin. \
+             peak_plans={}, t_first={:?}, settlement_origins={:?}",
+            PER_TICK_START, RUN_END, peak_plans, t_first, settlement_origins
+        );
+
+        // ── A2: at least one entity held job==\"builder\" across 10
+        // consecutive ticks with ≥2 distinct PlaceWall ticks inside the
+        // window.
+        let mut stable_window_found = false;
+        let mut best_observed_streak: usize = 0;
+        let mut best_observed_placewall_in_streak: usize = 0;
+        'entities: for (_ent_bits, obs) in per_entity_observations.iter() {
+            if obs.len() < 10 {
+                continue;
+            }
+            // obs is already sorted ascending by tick because we pushed in
+            // loop order; still, be defensive.
+            let mut sorted: Vec<(u64, bool, bool)> = obs.clone();
+            sorted.sort_by_key(|(t, _, _)| *t);
+
+            // Identify maximal consecutive runs where is_builder is true and
+            // ticks are tick-contiguous. A run is a sequence of observations
+            // at ticks T, T+1, T+2, ... where is_builder is always true.
+            let mut run_start_idx: Option<usize> = None;
+            let mut prev_tick: Option<u64> = None;
+            for i in 0..sorted.len() {
+                let (t, is_b, _) = sorted[i];
+                let contiguous = match prev_tick {
+                    Some(pt) if pt + 1 == t => true,
+                    None => true,
+                    _ => false,
+                };
+                let extending = is_b && contiguous;
+                if extending {
+                    if run_start_idx.is_none() {
+                        run_start_idx = Some(i);
+                    }
+                } else {
+                    // Close prior run and evaluate if length ≥ 10.
+                    if let Some(start) = run_start_idx {
+                        let run_end = if is_b && !contiguous { i } else { i };
+                        let run_len = run_end - start;
+                        if run_len > best_observed_streak {
+                            best_observed_streak = run_len;
+                        }
+                        if run_len >= 10 {
+                            // Slide a 10-tick window across [start, run_end-10].
+                            for w_start in start..=(run_end - 10) {
+                                let w_end = w_start + 10;
+                                let place_wall_count = sorted[w_start..w_end]
+                                    .iter()
+                                    .filter(|(_, _, pw)| *pw)
+                                    .count();
+                                if place_wall_count
+                                    > best_observed_placewall_in_streak
+                                {
+                                    best_observed_placewall_in_streak =
+                                        place_wall_count;
+                                }
+                                if place_wall_count >= 2 {
+                                    stable_window_found = true;
+                                    break 'entities;
+                                }
+                            }
+                        }
+                    }
+                    // Restart run if the current tick itself qualifies.
+                    run_start_idx = if is_b { Some(i) } else { None };
+                }
+                prev_tick = Some(t);
+            }
+            // Close trailing run.
+            if let Some(start) = run_start_idx {
+                let run_len = sorted.len() - start;
+                if run_len > best_observed_streak {
+                    best_observed_streak = run_len;
+                }
+                if run_len >= 10 {
+                    for w_start in start..=(sorted.len() - 10) {
+                        let w_end = w_start + 10;
+                        let place_wall_count = sorted[w_start..w_end]
+                            .iter()
+                            .filter(|(_, _, pw)| *pw)
+                            .count();
+                        if place_wall_count > best_observed_placewall_in_streak
+                        {
+                            best_observed_placewall_in_streak = place_wall_count;
+                        }
+                        if place_wall_count >= 2 {
+                            stable_window_found = true;
+                            break 'entities;
+                        }
+                    }
+                }
+            }
+        }
+        assert!(
+            stable_window_found,
+            "[A2] no entity had job==\"builder\" across 10 consecutive ticks \
+             with ≥2 PlaceWall ticks in window. best_streak={}, \
+             best_placewall_in_any_10_window={}. This is the retask-thrash \
+             regression: builders are being pulled off PlaceWall mid-stream.",
+            best_observed_streak, best_observed_placewall_in_streak
+        );
+
+        // ── A3: distinct-tick PlaceWall reachability.
+        let distinct_place_wall_ticks = place_wall_ticks.len();
+        assert!(
+            distinct_place_wall_ticks >= 5,
+            "[A3] PlaceWall observed at only {} distinct ticks across \
+             [{}, {}], expected ≥ 5",
+            distinct_place_wall_ticks, STABILITY_START, RUN_END
+        );
+
+        // ── A8: survival-job minimum across 5-sample window.
+        let a8_min = *a8_counts.iter().min().unwrap_or(&0);
+        assert!(
+            a8_min >= 5,
+            "[A8] survival-job count min across {:?} == {} (samples: {:?}), \
+             expected ≥ 5 — job-ratio regression: survival roles collapsed",
+            a8_sample_ticks, a8_min, a8_counts
+        );
+
+        // ── A9: builder persistence across ≥50% of 13 samples.
+        let a9_occupied = a9_counts.iter().filter(|&&c| c >= 1).count();
+        let a9_fraction = a9_occupied as f64 / a9_counts.len() as f64;
+        assert!(
+            a9_fraction >= 0.5,
+            "[A9] builder-present sample fraction == {:.3} ({}/{}), \
+             expected ≥ 0.5. samples: {:?} at ticks {:?}",
+            a9_fraction,
+            a9_occupied,
+            a9_counts.len(),
+            a9_counts,
+            a9_sample_ticks
+        );
+
+        eprintln!(
+            "[harness_p2b3] PASS \
+             t_first={:?} peak_plans={} start_walls={} end_walls={} \
+             delta={} distinct_pw_ticks={} a8_counts={:?} a9_counts={:?} \
+             best_streak={} best_pw_in_streak={}",
+            t_first,
+            peak_plans,
+            start_walls,
+            end_walls,
+            wall_delta,
+            distinct_place_wall_ticks,
+            a8_counts,
+            a9_counts,
+            best_observed_streak,
+            best_observed_placewall_in_streak
+        );
+    }
+
+    /// Helper: count wall-material tiles across the full tile_grid.
+    /// Used by harness_p2b3_builder_assigns_and_places_wall (A4, A6, A7).
+    fn count_wall_tiles(engine: &SimEngine) -> u32 {
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut n = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).wall_material.is_some() {
+                    n += 1;
+                }
+            }
+        }
+        n
+    }
 }
 
 fn pathfind_bench_inputs() -> (

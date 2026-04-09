@@ -434,7 +434,8 @@ func _get_tile_grid_data() -> Dictionary:
 		_tile_grid_cache = _sim_engine.get_tile_grid_walls()
 		var wall_count: int = (_tile_grid_cache.get("wall_x", PackedInt32Array()) as PackedInt32Array).size()
 		if wall_count > 0 or tick % 100 == 0:
-			print("[TILE_GRID] tick=", tick, " walls=", wall_count, " floors=", (_tile_grid_cache.get("floor_x", PackedInt32Array()) as PackedInt32Array).size())
+			var plan_count: int = _sim_engine.get_wall_plans_count() if _sim_engine.has_method("get_wall_plans_count") else -1
+			print("[P2-B3] tick=", tick, " wall_plans=", plan_count, " grid_walls=", wall_count, " floors=", (_tile_grid_cache.get("floor_x", PackedInt32Array()) as PackedInt32Array).size())
 	return _tile_grid_cache
 
 
