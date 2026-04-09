@@ -472,6 +472,17 @@ func get_minimap_snapshot() -> Dictionary:
 	return {}
 
 
+## Returns tile grid wall data from Rust runtime.
+func get_tile_grid_walls() -> Dictionary:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_tile_grid_walls"):
+		return {}
+	var raw: Variant = sim_bridge.call("get_tile_grid_walls")
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
 func _flush_llm_debug_log() -> void:
 	# Keep draining the bridge-side debug ring buffer so it does not retain stale
 	# lines between frames, but stop mirroring `[LLM-DEBUG]` traffic to stdout.
