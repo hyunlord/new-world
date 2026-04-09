@@ -353,6 +353,14 @@ fn generate_wall_ring_plans(
             if !resources.tile_grid.in_bounds(tile_x, tile_y) {
                 continue;
             }
+            // Skip tiles that overlap an existing building (stockpile, campfire, etc.).
+            if resources
+                .buildings
+                .values()
+                .any(|b| b.overlaps(tile_x, tile_y, 1, 1))
+            {
+                continue;
+            }
             // Skip if a wall is already there (idempotent generation).
             if resources
                 .tile_grid
