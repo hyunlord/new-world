@@ -820,7 +820,7 @@ impl SimEngine {
         self.current_tick += 1;
 
         // P2-B3 debug: wall pipeline diagnostics every 1000 ticks
-        if tick % 1000 == 0 {
+        if tick.is_multiple_of(1000) {
             let wall_plans_total = self.resources.wall_plans.len();
             let wall_plans_unclaimed = self.resources.wall_plans.iter().filter(|p| p.claimed_by.is_none()).count();
             let furniture_plans_total = self.resources.furniture_plans.len();

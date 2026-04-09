@@ -756,6 +756,9 @@ fn collect_pending_site_targets(
     resources: &SimResources,
 ) -> HashMap<SettlementId, HashSet<(i32, i32)>> {
     let mut out: HashMap<SettlementId, HashSet<(i32, i32)>> = HashMap::new();
+
+    // Legacy Building-based sites (stockpile, campfire, and any residual
+    // shelter Buildings that pre-date the P2-B3 plan-queue model).
     for building in resources.buildings.values() {
         if building.is_complete {
             continue;
@@ -764,6 +767,22 @@ fn collect_pending_site_targets(
             .or_default()
             .insert((building.x, building.y));
     }
+
+    // P2-B3: wall/furniture plans are first-class pending sites. Unclaimed
+    // plans force builder assignment; claimed plans keep the existing claimer
+    // recognized as "assigned" via target_matches so the retask-if-no-assigned
+    // loop below does not pull a working builder off PlaceWall / PlaceFurniture.
+    for plan in &resources.wall_plans {
+        out.entry(plan.settlement_id)
+            .or_default()
+            .insert((plan.x, plan.y));
+    }
+    for plan in &resources.furniture_plans {
+        out.entry(plan.settlement_id)
+            .or_default()
+            .insert((plan.x, plan.y));
+    }
+
     out
 }
 
@@ -818,7 +837,16 @@ fn ensure_pending_sites_have_builder(world: &mut World, resources: &SimResources
             (Some(x), Some(y)) if targets.contains(&(x, y))
         );
         if behavior.job == "builder" {
-            if behavior.current_action == ActionType::Build && target_matches {
+            // P2-B3: recognize the new plan-queue construction actions
+            // alongside the legacy Build action so a builder mid-PlaceWall
+            // (or mid-PlaceFurniture) is counted as already assigned
+            // rather than bucketed into available_builders and retasked
+            // every tick.
+            let is_construction_action = matches!(
+                behavior.current_action,
+                ActionType::Build | ActionType::PlaceWall | ActionType::PlaceFurniture
+            );
+            if is_construction_action && target_matches {
                 status.assigned_builder_count += 1;
             } else {
                 status.available_builders.push(entity);
