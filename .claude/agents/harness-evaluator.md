@@ -140,12 +140,35 @@ For each Part/Section in the original prompt:
 - Adds the harness test but doesn't actually implement the feature (test passes because it tests defaults)
 
 ### 8. Functionality Verification
-Does the feature actually DO what the prompt describes?
+Does the feature actually DO what the prompt describes? This is NOT a code review — this is a runtime verification.
 
 **Behavioral check:**
 - If the prompt says "high-NS agents explore more" — does the code actually bias exploration scores by NS?
 - If the prompt says "buildings can't overlap" — does the overlap check actually run during placement?
 - If the prompt says "starvation shifts temperament" — is there code that detects starvation and calls apply_shift()?
+
+**§8a. New-vs-Old Path Discrimination:**
+When the feature adds a NEW code path alongside an EXISTING one:
+- Could the harness test pass if the NEW code were completely deleted/commented out?
+- If YES → the test is CIRCULAR and proves nothing about the new feature → RE-CODE
+- The test MUST include an assertion that ONLY the new code path can satisfy
+- Example: If adding PlaceWall alongside stamp_shelter_structure(), test must check that PlaceWall was executed (e.g., count agents with current_action == PlaceWall, or check a plan was claimed and completed)
+- RED FLAG: Test asserts a metric that the old system already produces (wall_count > 0 when stamp already makes walls)
+
+**§8b. Execution Evidence (mandatory for behavioral features):**
+- Read the harness test OUTPUT (eprintln/diagnostic lines), not just pass/fail
+- For agent behavior features: at least one agent must have executed the new action during the test run
+- For system features: the new system must have produced at least one observable side effect
+- The Generator MUST include diagnostic counters in harness tests: "agents_doing_X=N" where N > 0 is required
+- If diagnostics show the new code path executed 0 times → NON_FUNCTIONAL → RE-CODE
+
+**§8c. Precondition Chain Verification:**
+For features that depend on a chain (A → B → C → D → result):
+- Identify every precondition in the chain from the prompt
+- Check that each precondition is either (a) guaranteed by test setup, or (b) asserted in the test
+- If the chain has an UNVERIFIED link, the test can pass by coincidence → RE-CODE
+- Example chain for PlaceWall: wall_plans generated → builder assigned → survival_ok → PlaceWall selected → completed → tile_grid updated
+- Each link needs evidence in the test output or assertions
 
 **Integration check:**
 - Is the new code called from somewhere? (A function that exists but is never called = dead code)
@@ -157,9 +180,9 @@ Does the feature actually DO what the prompt describes?
 - Are there side effects on shared state (SimResources fields, ECS components) that other systems depend on?
 
 Score: FUNCTIONAL / PARTIALLY_FUNCTIONAL / NON_FUNCTIONAL
-- FUNCTIONAL: feature does what prompt describes, end-to-end
+- FUNCTIONAL: new code path executes, produces correct results, distinguishable from old paths
 - PARTIALLY_FUNCTIONAL: some paths work, others are dead code or stubs → RE-CODE
-- NON_FUNCTIONAL: feature doesn't actually work despite tests passing → RE-CODE
+- NON_FUNCTIONAL: feature doesn't work, or test passes via old system → RE-CODE
 
 === RECOGNIZE YOUR OWN RATIONALIZATIONS ===
 You will feel the urge to approve. These are the exact excuses you reach for:

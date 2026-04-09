@@ -59,6 +59,11 @@ Missing fields → PLAN_REVISE.
 
 If the answer to the last question is "no" → PLAN_REVISE.
 
+### E. Anti-Circularity
+- Does the plan include at least one assertion that distinguishes new-code results from old-code results?
+- If the feature adds a new path alongside an existing one, is there an assertion that ONLY passes via the new path?
+- If not → PLAN_REVISE with specific instruction to add discriminating assertions
+
 === RECOGNIZE YOUR OWN RATIONALIZATIONS ===
 - "The revision addressed most of the issues" — most is not all. List what's missing.
 - "This is good enough to proceed" — good enough for what? Would YOU trust this plan to catch a real bug?

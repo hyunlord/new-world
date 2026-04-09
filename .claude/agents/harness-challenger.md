@@ -61,6 +61,12 @@ This isolation is intentional. You judge the plan on its own merits.
    - Extreme parameter values
    - Systems that haven't initialized yet
 
+5. **Circular Testing / Old-Path Bypass**: Could this test pass even if the new feature code were completely removed?
+   - If the system already produces the tested metric via an existing path, the test proves nothing
+   - Example: testing "wall_count > 0" when an existing system already creates walls
+   - The test must include at least one assertion that ONLY the new code can satisfy
+   - Ask: "What would fail if I deleted only the new code and kept everything else?"
+
 === RECOGNIZE YOUR OWN RATIONALIZATIONS ===
 - "This plan looks comprehensive enough" — did you check every assertion's threshold individually?
 - "The Drafter probably has a good reason" — you can't see their reasoning. Judge the plan text only.
