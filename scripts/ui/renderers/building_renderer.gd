@@ -426,11 +426,15 @@ func _get_runtime_world_summary() -> Dictionary:
 
 func _get_tile_grid_data() -> Dictionary:
 	if _sim_engine == null or not _sim_engine.has_method("get_tile_grid_walls"):
+		print("[TILE_GRID] sim_engine null or no method")
 		return {}
 	var tick: int = int(_sim_engine.current_tick)
 	if tick != _tile_grid_cache_tick:
 		_tile_grid_cache_tick = tick
 		_tile_grid_cache = _sim_engine.get_tile_grid_walls()
+		var wall_count: int = (_tile_grid_cache.get("wall_x", PackedInt32Array()) as PackedInt32Array).size()
+		if wall_count > 0 or tick % 100 == 0:
+			print("[TILE_GRID] tick=", tick, " walls=", wall_count, " floors=", (_tile_grid_cache.get("floor_x", PackedInt32Array()) as PackedInt32Array).size())
 	return _tile_grid_cache
 
 
