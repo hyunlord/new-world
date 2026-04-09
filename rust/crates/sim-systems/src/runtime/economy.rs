@@ -334,10 +334,6 @@ fn generate_wall_ring_plans(
     center_y: i32,
     tick: u64,
 ) {
-    eprintln!(
-        "[P2-B3 DEBUG] generate_wall_ring_plans called: settlement={:?}, center=({},{}), tick={}",
-        settlement_id, center_x, center_y, tick
-    );
     let wall_material = resolve_shelter_wall_material_for_plans(resources, settlement_id);
     let wall_radius = config::BUILDING_SHELTER_WALL_RING_RADIUS;
 
@@ -598,10 +594,6 @@ fn choose_early_structure_plan(
         && !snapshot.has_incomplete_shelter
         && can_place_early_structure_plan(settlement, EarlyStructurePlan::Shelter, registry)
     {
-        eprintln!(
-            "[P2-B3 DEBUG] choose_early_structure_plan -> Shelter (capacity={}, adults={}, incomplete={})",
-            shelter_capacity, alive_adults, snapshot.has_incomplete_shelter
-        );
         return Some(EarlyStructurePlan::Shelter);
     }
     None

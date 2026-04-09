@@ -819,37 +819,6 @@ impl SimEngine {
 
         self.current_tick += 1;
 
-        // P2-B3 debug: wall pipeline diagnostics every 1000 ticks
-        if tick.is_multiple_of(1000) {
-            let wall_plans_total = self.resources.wall_plans.len();
-            let wall_plans_unclaimed = self.resources.wall_plans.iter().filter(|p| p.claimed_by.is_none()).count();
-            let furniture_plans_total = self.resources.furniture_plans.len();
-            let (tw, th) = self.resources.tile_grid.dimensions();
-            let mut grid_walls = 0_usize;
-            let mut grid_floors = 0_usize;
-            for y in 0..th {
-                for x in 0..tw {
-                    let tile = self.resources.tile_grid.get(x, y);
-                    if tile.wall_material.is_some() { grid_walls += 1; }
-                    if tile.floor_material.is_some() { grid_floors += 1; }
-                }
-            }
-            let mut builder_count = 0_usize;
-            let mut builder_placing_wall = 0_usize;
-            for (_entity, behavior) in self.world.query::<&sim_core::components::Behavior>().iter() {
-                if behavior.job == "builder" {
-                    builder_count += 1;
-                    if behavior.current_action == sim_core::enums::ActionType::PlaceWall {
-                        builder_placing_wall += 1;
-                    }
-                }
-            }
-            info!(
-                "[P2-B3-DEBUG] tick={} wall_plans={} (unclaimed={}) furniture_plans={} grid_walls={} grid_floors={} builders={} placing_wall={}",
-                tick, wall_plans_total, wall_plans_unclaimed, furniture_plans_total, grid_walls, grid_floors, builder_count, builder_placing_wall
-            );
-        }
-
         self.frame_snapshots = build_agent_snapshots(&self.world);
     }
 
