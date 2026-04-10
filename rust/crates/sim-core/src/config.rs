@@ -934,6 +934,45 @@ pub const BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN: f64 = 0.30;
 /// Minimum energy level for builders to keep construction as their forced action.
 pub const BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN: f64 = 0.25;
 
+// ── Building Renderer Visual Config (P2-B3.5) ───────────────────────────────
+/// Floor tile fill alpha for the structural building renderer.
+/// Changed from 0.35 to 0.55 for improved visibility at Z1-Z2 zoom.
+pub const BUILDING_FLOOR_ALPHA: f64 = 0.55;
+/// Floor tile border outline width in pixels.
+pub const BUILDING_FLOOR_BORDER_WIDTH: f64 = 0.5;
+/// Furniture icon scale factor relative to tile size.
+/// Changed from 0.6 to 0.7 for better readability at Z1 zoom.
+pub const BUILDING_FURNITURE_ICON_SCALE: f64 = 0.7;
+/// Whether adjacent wall tiles should render connecting bridge rects.
+pub const BUILDING_WALL_AUTOTILE_ENABLED: bool = true;
+/// Width in pixels of the bridge rect connecting adjacent wall tiles.
+pub const BUILDING_WALL_AUTOTILE_BRIDGE_PX: f64 = 2.0;
+
+/// Bundle of render config exported via `tile_grid_walls()` bridge function.
+/// Both the sim-bridge export and harness tests use this struct,
+/// creating compile-time coupling: if the bridge changes which fields
+/// it exports, the shared struct and its consumers must also update.
+#[derive(Debug, Clone)]
+pub struct BuildingRenderConfig {
+    pub floor_alpha: f64,
+    pub floor_border_width: f64,
+    pub furniture_icon_scale: f64,
+    pub wall_autotile_enabled: bool,
+    pub wall_autotile_bridge_px: f64,
+}
+
+/// Returns the building render config bundle used by `tile_grid_walls()`.
+/// Harness tests call this to verify the same values the bridge exports.
+pub fn building_render_config() -> BuildingRenderConfig {
+    BuildingRenderConfig {
+        floor_alpha: BUILDING_FLOOR_ALPHA,
+        floor_border_width: BUILDING_FLOOR_BORDER_WIDTH,
+        furniture_icon_scale: BUILDING_FURNITURE_ICON_SCALE,
+        wall_autotile_enabled: BUILDING_WALL_AUTOTILE_ENABLED,
+        wall_autotile_bridge_px: BUILDING_WALL_AUTOTILE_BRIDGE_PX,
+    }
+}
+
 // ── Settlement & Migration ────────────────────────────────────────────────────
 pub const SETTLEMENT_MIN_DISTANCE: i32 = 25;
 pub const SETTLEMENT_BUILD_RADIUS: i32 = 15;

@@ -1351,6 +1351,23 @@ pub(crate) fn tile_grid_walls(state: &RuntimeState) -> VarDictionary {
         }
     }
 
+    // Compute adjacency counts for autotile bridge rendering
+    let mut adj_right_count: i32 = 0;
+    let mut adj_down_count: i32 = 0;
+    for y in 0..height {
+        for x in 0..width {
+            if resources.tile_grid.get(x, y).wall_material.is_none() {
+                continue;
+            }
+            if x + 1 < width && resources.tile_grid.get(x + 1, y).wall_material.is_some() {
+                adj_right_count += 1;
+            }
+            if y + 1 < height && resources.tile_grid.get(x, y + 1).wall_material.is_some() {
+                adj_down_count += 1;
+            }
+        }
+    }
+
     let mut out = VarDictionary::new();
     out.set("wall_x", wall_x);
     out.set("wall_y", wall_y);
@@ -1362,6 +1379,17 @@ pub(crate) fn tile_grid_walls(state: &RuntimeState) -> VarDictionary {
     out.set("furniture_x", furniture_x);
     out.set("furniture_y", furniture_y);
     out.set("furniture_id", furniture_ids);
+
+    // Render config — Rust-authoritative values read by building_renderer.gd.
+    // Uses building_render_config() for compile-time coupling with harness tests.
+    let render_cfg = sim_core::config::building_render_config();
+    out.set("render_floor_alpha", render_cfg.floor_alpha);
+    out.set("render_floor_border_width", render_cfg.floor_border_width);
+    out.set("render_furniture_icon_scale", render_cfg.furniture_icon_scale);
+    out.set("render_wall_autotile", render_cfg.wall_autotile_enabled);
+    out.set("render_wall_bridge_px", render_cfg.wall_autotile_bridge_px);
+    out.set("wall_adj_right_count", adj_right_count as i64);
+    out.set("wall_adj_down_count", adj_down_count as i64);
     out
 }
 

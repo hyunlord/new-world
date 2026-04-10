@@ -454,6 +454,13 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 
 	var ts: float = float(tile_size)
 
+	# Render config — Rust-authoritative values via tile_grid_walls() bridge output
+	var r_floor_alpha: float = float(data.get("render_floor_alpha", 0.55))
+	var r_floor_border: float = float(data.get("render_floor_border_width", 0.5))
+	var r_icon_scale: float = float(data.get("render_furniture_icon_scale", 0.7))
+	var r_autotile: bool = bool(data.get("render_wall_autotile", true))
+	var r_bridge_px: float = float(data.get("render_wall_bridge_px", 2.0))
+
 	# Draw floors first (under walls)
 	var floor_xs: PackedInt32Array = data.get("floor_x", PackedInt32Array())
 	var floor_ys: PackedInt32Array = data.get("floor_y", PackedInt32Array())
@@ -462,8 +469,8 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 		var fy: int = floor_ys[i]
 		if fx < min_x or fx > max_x or fy < min_y or fy > max_y:
 			continue
-		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.30, 0.25, 0.15, 0.55), true)
-		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.35, 0.28, 0.14, 0.3), false, 0.5)
+		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.30, 0.25, 0.15, r_floor_alpha), true)
+		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.35, 0.28, 0.14, 0.3), false, r_floor_border)
 
 	# Draw walls — at Z3+ fill the full tile so adjacent walls merge visually
 	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
@@ -481,7 +488,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 			continue
 		var mat: String = wall_mats[i] if i < wall_mats.size() else ""
 		var wall_color: Color = _wall_material_color(mat)
-		_draw_wall_tile(wx, wy, ts, wall_color, wall_set, wall_inset)
+		_draw_wall_tile(wx, wy, ts, wall_color, wall_set, wall_inset, r_autotile, r_bridge_px)
 
 	# Draw doors (gap indicator)
 	var door_xs: PackedInt32Array = data.get("door_x", PackedInt32Array())
@@ -512,7 +519,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 				furn_font,
 				Vector2(pos_x, pos_y),
 				icon, HORIZONTAL_ALIGNMENT_CENTER, -1,
-				int(ts * 0.7), Color(1.0, 1.0, 1.0, 0.85)
+				int(ts * r_icon_scale), Color(1.0, 1.0, 1.0, 0.85)
 			)
 			if fid == "storage_pit":
 				draw_string(
@@ -524,16 +531,18 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 				)
 
 
-func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float) -> void:
+func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
 	# Base wall tile
 	draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color, true)
 	if inset > 0.0:
 		draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color.darkened(0.3), false, 1.0)
 	# Adjacent wall connections (right + down only to avoid duplicates)
-	if wall_set.has(Vector2i(wx + 1, wy)):
-		draw_rect(Rect2(float(wx + 1) * ts - 1.0, float(wy) * ts + inset, 2.0, ts - 2.0 * inset), color, true)
-	if wall_set.has(Vector2i(wx, wy + 1)):
-		draw_rect(Rect2(float(wx) * ts + inset, float(wy + 1) * ts - 1.0, ts - 2.0 * inset, 2.0), color, true)
+	if autotile:
+		var half_bridge: float = bridge_px * 0.5
+		if wall_set.has(Vector2i(wx + 1, wy)):
+			draw_rect(Rect2(float(wx + 1) * ts - half_bridge, float(wy) * ts + inset, bridge_px, ts - 2.0 * inset), color, true)
+		if wall_set.has(Vector2i(wx, wy + 1)):
+			draw_rect(Rect2(float(wx) * ts + inset, float(wy + 1) * ts - half_bridge, ts - 2.0 * inset, bridge_px), color, true)
 
 
 func _wall_material_color(material_id: String) -> Color:

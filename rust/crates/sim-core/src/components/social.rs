@@ -93,7 +93,10 @@ impl Social {
             &mut self.edges[pos]
         } else {
             self.edges.push(RelationshipEdge::new(target));
-            self.edges.last_mut().unwrap()
+            // Safety: we just pushed, so last_mut() is guaranteed Some
+            self.edges
+                .last_mut()
+                .expect("edges non-empty after push")
         }
     }
 
