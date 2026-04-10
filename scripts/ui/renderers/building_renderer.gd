@@ -462,13 +462,18 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 		var fy: int = floor_ys[i]
 		if fx < min_x or fx > max_x or fy < min_y or fy > max_y:
 			continue
-		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.25, 0.20, 0.12, 0.35), true)
+		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.30, 0.25, 0.15, 0.55), true)
+		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.35, 0.28, 0.14, 0.3), false, 0.5)
 
 	# Draw walls — at Z3+ fill the full tile so adjacent walls merge visually
 	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
 	var wall_ys: PackedInt32Array = data.get("wall_y", PackedInt32Array())
 	var wall_mats: PackedStringArray = data.get("wall_material", PackedStringArray())
 	var wall_inset: float = 1.0 if _current_lod < GameConfig.ZOOM_Z3 else 0.0
+	# Build wall_set for autotile adjacency lookup
+	var wall_set: Dictionary = {}
+	for i in range(wall_xs.size()):
+		wall_set[Vector2i(wall_xs[i], wall_ys[i])] = true
 	for i in range(wall_xs.size()):
 		var wx: int = wall_xs[i]
 		var wy: int = wall_ys[i]
@@ -476,10 +481,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 			continue
 		var mat: String = wall_mats[i] if i < wall_mats.size() else ""
 		var wall_color: Color = _wall_material_color(mat)
-		var rect := Rect2(float(wx) * ts + wall_inset, float(wy) * ts + wall_inset, ts - wall_inset * 2.0, ts - wall_inset * 2.0)
-		draw_rect(rect, wall_color, true)
-		if wall_inset > 0.0:
-			draw_rect(rect, wall_color.darkened(0.3), false, 1.0)
+		_draw_wall_tile(wx, wy, ts, wall_color, wall_set, wall_inset)
 
 	# Draw doors (gap indicator)
 	var door_xs: PackedInt32Array = data.get("door_x", PackedInt32Array())
@@ -504,12 +506,34 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 		var fid: String = furn_ids[i] if i < furn_ids.size() else ""
 		var icon: String = _tile_furniture_icon(fid)
 		if not icon.is_empty():
+			var pos_x: float = float(fux) * ts + ts * 0.5
+			var pos_y: float = float(fuy) * ts + ts * 0.6
 			draw_string(
 				furn_font,
-				Vector2(float(fux) * ts + ts * 0.5, float(fuy) * ts + ts * 0.6),
+				Vector2(pos_x, pos_y),
 				icon, HORIZONTAL_ALIGNMENT_CENTER, -1,
-				int(ts * 0.6), Color(1.0, 1.0, 1.0, 0.85)
+				int(ts * 0.7), Color(1.0, 1.0, 1.0, 0.85)
 			)
+			if fid == "storage_pit":
+				draw_string(
+					furn_font,
+					Vector2(pos_x, pos_y + ts * 0.3),
+					Locale.ltr("BUILDING_TYPE_STOCKPILE"),
+					HORIZONTAL_ALIGNMENT_CENTER, -1, 8,
+					Color(0.95, 0.84, 0.58, 0.9)
+				)
+
+
+func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float) -> void:
+	# Base wall tile
+	draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color, true)
+	if inset > 0.0:
+		draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color.darkened(0.3), false, 1.0)
+	# Adjacent wall connections (right + down only to avoid duplicates)
+	if wall_set.has(Vector2i(wx + 1, wy)):
+		draw_rect(Rect2(float(wx + 1) * ts - 1.0, float(wy) * ts + inset, 2.0, ts - 2.0 * inset), color, true)
+	if wall_set.has(Vector2i(wx, wy + 1)):
+		draw_rect(Rect2(float(wx) * ts + inset, float(wy + 1) * ts - 1.0, ts - 2.0 * inset, 2.0), color, true)
 
 
 func _wall_material_color(material_id: String) -> Color:
