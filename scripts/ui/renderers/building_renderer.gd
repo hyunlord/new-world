@@ -62,6 +62,19 @@ func _draw() -> void:
 	var zl: float = cam.zoom.x if cam else 1.0
 	_update_lod(zl)
 
+	# === DEBUG: one-shot building/wall position log ===
+	if _sim_engine != null:
+		var tick: int = int(_sim_engine.get("current_tick"))
+		if tick % 500 == 0 and tick > 0:
+			var dbg_buildings: Array = _get_runtime_buildings()
+			for b in dbg_buildings:
+				print("[BUILDING] type=", b.get("building_type", ""), " x=", b.get("tile_x", 0), " y=", b.get("tile_y", 0), " w=", b.get("width", 0), " h=", b.get("height", 0))
+			var dbg_data: Dictionary = _get_tile_grid_data()
+			var wxs: PackedInt32Array = dbg_data.get("wall_x", PackedInt32Array())
+			var wys: PackedInt32Array = dbg_data.get("wall_y", PackedInt32Array())
+			if wxs.size() > 0:
+				print("[WALLS] count=", wxs.size(), " first=(", wxs[0], ",", wys[0], ") last=(", wxs[wxs.size()-1], ",", wys[wys.size()-1], ")")
+
 	# Viewport culling
 	var viewport_size := get_viewport_rect().size
 	var cam_pos := cam.global_position if cam else Vector2.ZERO
@@ -285,10 +298,10 @@ func _draw_building_interior(building: Variant, tile_x: int, tile_y: int, tile_s
 	var width_px: float = float(width_tiles * tile_size)
 	var height_px: float = float(height_tiles * tile_size)
 
-	if building_type != "campfire":
+	if building_type not in ["campfire", "stockpile"]:
 		draw_rect(Rect2(px, py, width_px, height_px), Color(0.10, 0.08, 0.03, 0.32), true)
 
-	if building_type in ["shelter", "stockpile", "workshop"]:
+	if building_type == "workshop":
 		var wall_color := Color(0.35, 0.29, 0.16, 0.8)
 		var wall_width: float = maxf(2.0, tile_size * 0.18)
 		var door_left: float = px + width_px * 0.5 - tile_size * 0.4

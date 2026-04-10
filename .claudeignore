@@ -1,0 +1,35 @@
+# === Build artifacts ===
+rust/target/
+.godot/
+
+# === Binary assets (Claude can't read these) ===
+assets/sprites/**/*.png
+assets/audio/**/*.wav
+assets/audio/**/*.ogg
+assets/audio/**/*.mp3
+
+# === Harness intermediate artifacts ===
+.harness/evidence/
+.harness/progress/
+.harness/plans/
+tools/harness/results/
+
+# === Stats JSON (198 files, rarely edited, data-only) ===
+stats/
+
+# === Localization compiled (duplicates source) ===
+localization/compiled/
+
+# === Godot import cache ===
+*.import
+*.uid
+
+# === Old/legacy GDScript skills (Godot-only patterns, not WorldSim-specific) ===
+.claude/skills/godot/assets/
+.claude/skills/godot/scripts/
+.claude/skills/godot/references/
+
+# === Codex dispatch artifacts ===
+.codex-prompts/
+.codex/
+tickets/
