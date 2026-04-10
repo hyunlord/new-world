@@ -113,8 +113,8 @@ func _draw() -> void:
 		if tile_y < min_tile_y or tile_y > max_tile_y:
 			continue
 
-		# Skip old shelter sprite at ALL zoom levels when tile_grid walls exist
-		if building_type == "shelter" and _has_tile_grid_walls_at(tile_x, tile_y):
+		# Skip legacy building sprite when tile_grid has data for this building
+		if _has_tile_grid_data_at(tile_x, tile_y):
 			continue
 
 		var cx: float = float(tile_x) * tile_size + half
@@ -532,6 +532,20 @@ func _tile_furniture_icon(furniture_id: String) -> String:
 		"workbench": return "⚒"
 		"drying_rack": return "🪓"
 		_: return ""
+
+
+func _has_tile_grid_data_at(tile_x: int, tile_y: int) -> bool:
+	return _has_tile_grid_walls_at(tile_x, tile_y) or _has_tile_grid_furniture_at(tile_x, tile_y)
+
+
+func _has_tile_grid_furniture_at(tile_x: int, tile_y: int) -> bool:
+	var data: Dictionary = _get_tile_grid_data()
+	var furn_xs: PackedInt32Array = data.get("furniture_x", PackedInt32Array())
+	var furn_ys: PackedInt32Array = data.get("furniture_y", PackedInt32Array())
+	for i in range(furn_xs.size()):
+		if absi(furn_xs[i] - tile_x) <= 3 and absi(furn_ys[i] - tile_y) <= 3:
+			return true
+	return false
 
 
 func _has_tile_grid_walls_at(tile_x: int, tile_y: int) -> bool:
