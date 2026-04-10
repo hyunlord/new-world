@@ -1138,6 +1138,7 @@ dependencies = [
  "env_logger",
  "log",
  "ron",
+ "serde_json",
  "sim-bridge",
  "sim-core",
  "sim-data",

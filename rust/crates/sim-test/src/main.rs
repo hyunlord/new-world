@@ -7312,6 +7312,248 @@ mod tests {
         }
         n
     }
+
+    // =========================================================================
+    // Harness: building-visuals — data prerequisite tests for GDScript renderer
+    // =========================================================================
+
+    /// Harness: building-visuals A1 — Floor tiles stamped in tile grid after construction
+    /// Type: C (convergence threshold)
+    /// Threshold: ≥ 6 floor tiles after 4380 ticks (seed 42, 20 agents)
+    #[test]
+    fn harness_building_visuals_floor_tiles_stamped() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut floor_count: u32 = 0;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).floor_material.is_some() {
+                    floor_count += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_building_visuals_floor_tiles_stamped] floor_count={}",
+            floor_count
+        );
+
+        // Type C: ≥ 6 floor tiles
+        assert!(
+            floor_count >= 6,
+            "Expected ≥6 floor tiles after 4380 ticks, observed {}",
+            floor_count
+        );
+    }
+
+    /// Harness: building-visuals A2 — Wall tiles exist with recognized material strings
+    /// Type: A (absolute threshold)
+    /// Threshold: wall count ≥ 8 AND zero walls with empty-string material
+    #[test]
+    fn harness_building_visuals_wall_material_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut wall_count: u32 = 0;
+        let mut empty_material_count: u32 = 0;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if let Some(ref mat) = tile.wall_material {
+                    wall_count += 1;
+                    if mat.is_empty() {
+                        empty_material_count += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_building_visuals_wall_material_valid] wall_count={} empty_material_count={}",
+            wall_count, empty_material_count
+        );
+
+        // Type A: wall count ≥ 8
+        assert!(
+            wall_count >= 8,
+            "Expected ≥8 wall tiles after 4380 ticks, observed {}",
+            wall_count
+        );
+        // Type A: zero walls with empty-string material
+        assert!(
+            empty_material_count == 0,
+            "Expected zero empty-string wall materials, observed {}",
+            empty_material_count
+        );
+    }
+
+    /// Harness: building-visuals A3 — Adjacent wall tile pairs exist (autotile bridge prerequisite)
+    /// Type: A (absolute threshold)
+    /// Threshold: ≥ 4 right/down adjacent wall pairs
+    #[test]
+    fn harness_building_visuals_adjacent_wall_pairs() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+
+        // Count rightward and downward adjacent wall pairs only (avoids double-counting)
+        let mut adjacent_pairs: u32 = 0;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).wall_material.is_none() {
+                    continue;
+                }
+                // Check right neighbor
+                if x + 1 < grid_w
+                    && resources.tile_grid.get(x + 1, y).wall_material.is_some()
+                {
+                    adjacent_pairs += 1;
+                }
+                // Check down neighbor
+                if y + 1 < grid_h
+                    && resources.tile_grid.get(x, y + 1).wall_material.is_some()
+                {
+                    adjacent_pairs += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_building_visuals_adjacent_wall_pairs] adjacent_pairs={}",
+            adjacent_pairs
+        );
+
+        // Type A: ≥ 4 adjacent wall pairs
+        assert!(
+            adjacent_pairs >= 4,
+            "Expected ≥4 adjacent wall tile pairs, observed {}",
+            adjacent_pairs
+        );
+    }
+
+    /// Harness: building-visuals A4 — storage_pit furniture present in tile grid
+    /// Type: A (absolute threshold)
+    /// Threshold: ≥ 1 storage_pit furniture tile
+    #[test]
+    fn harness_building_visuals_storage_pit_present() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut storage_pit_count: u32 = 0;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if let Some(ref fid) = resources.tile_grid.get(x, y).furniture_id {
+                    if fid == "storage_pit" {
+                        storage_pit_count += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_building_visuals_storage_pit_present] storage_pit_count={}",
+            storage_pit_count
+        );
+
+        // Type A: ≥ 1 storage_pit furniture
+        assert!(
+            storage_pit_count >= 1,
+            "Expected ≥1 storage_pit furniture tiles, observed {}",
+            storage_pit_count
+        );
+    }
+
+    /// Harness: building-visuals A5 — Localization key BUILDING_TYPE_STOCKPILE exists in both languages
+    /// Type: A (absolute threshold — static file check, no simulation required)
+    /// Threshold: key present and non-empty in en/ui.json AND ko/ui.json
+    #[test]
+    fn harness_building_visuals_localization_stockpile() {
+        let en_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../localization/en/ui.json");
+        let en_content = std::fs::read_to_string(&en_path)
+            .unwrap_or_else(|e| panic!("Failed to read {:?}: {}", en_path, e));
+        let en_json: serde_json::Value = serde_json::from_str(&en_content)
+            .unwrap_or_else(|e| panic!("en/ui.json is not valid JSON: {}", e));
+
+        // Type A: key must be present and map to a non-empty string
+        let en_val = en_json
+            .get("BUILDING_TYPE_STOCKPILE")
+            .expect("BUILDING_TYPE_STOCKPILE key missing from en/ui.json");
+        let en_str = en_val
+            .as_str()
+            .expect("BUILDING_TYPE_STOCKPILE in en/ui.json is not a string");
+        assert!(
+            !en_str.is_empty(),
+            "BUILDING_TYPE_STOCKPILE has empty value in en/ui.json"
+        );
+        eprintln!(
+            "[harness_building_visuals_localization_stockpile] en value = {:?}",
+            en_str
+        );
+
+        let ko_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../localization/ko/ui.json");
+        let ko_content = std::fs::read_to_string(&ko_path)
+            .unwrap_or_else(|e| panic!("Failed to read {:?}: {}", ko_path, e));
+        let ko_json: serde_json::Value = serde_json::from_str(&ko_content)
+            .unwrap_or_else(|e| panic!("ko/ui.json is not valid JSON: {}", e));
+
+        // Type A: key must be present and map to a non-empty string
+        let ko_val = ko_json
+            .get("BUILDING_TYPE_STOCKPILE")
+            .expect("BUILDING_TYPE_STOCKPILE key missing from ko/ui.json");
+        let ko_str = ko_val
+            .as_str()
+            .expect("BUILDING_TYPE_STOCKPILE in ko/ui.json is not a string");
+        assert!(
+            !ko_str.is_empty(),
+            "BUILDING_TYPE_STOCKPILE has empty value in ko/ui.json"
+        );
+        eprintln!(
+            "[harness_building_visuals_localization_stockpile] ko value = {:?}",
+            ko_str
+        );
+
+        eprintln!(
+            "[harness_building_visuals_localization_stockpile] PASS — key found in both en + ko"
+        );
+    }
+
+    /// Harness: building-visuals A6 — Floor tile count bounded above (runaway guard)
+    /// Type: E (soft — envelope threshold)
+    /// Threshold: ≤ 500 floor tiles
+    #[test]
+    fn harness_building_visuals_floor_count_bounded() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut floor_count: u32 = 0;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                if resources.tile_grid.get(x, y).floor_material.is_some() {
+                    floor_count += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_building_visuals_floor_count_bounded] floor_count={}",
+            floor_count
+        );
+
+        // Type E (soft): ≤ 500 floor tiles
+        assert!(
+            floor_count <= 500,
+            "Expected ≤500 floor tiles (runaway guard), observed {}",
+            floor_count
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
