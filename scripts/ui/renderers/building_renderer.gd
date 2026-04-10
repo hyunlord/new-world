@@ -298,10 +298,10 @@ func _draw_building_interior(building: Variant, tile_x: int, tile_y: int, tile_s
 	var width_px: float = float(width_tiles * tile_size)
 	var height_px: float = float(height_tiles * tile_size)
 
-	if building_type != "campfire":
+	if building_type not in ["campfire", "stockpile"]:
 		draw_rect(Rect2(px, py, width_px, height_px), Color(0.10, 0.08, 0.03, 0.32), true)
 
-	if building_type in ["shelter", "stockpile", "workshop"]:
+	if building_type == "workshop":
 		var wall_color := Color(0.35, 0.29, 0.16, 0.8)
 		var wall_width: float = maxf(2.0, tile_size * 0.18)
 		var door_left: float = px + width_px * 0.5 - tile_size * 0.4
