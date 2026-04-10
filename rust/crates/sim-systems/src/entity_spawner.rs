@@ -250,7 +250,9 @@ fn generate_personality(
 // ── Body generation ───────────────────────────────────────────────────────────
 
 fn sample_normal_clamped(mean: f64, sd: f64, min: i32, max: i32, rng: &mut impl Rng) -> i32 {
-    let normal = Normal::new(mean, sd).unwrap_or_else(|_| Normal::new(mean, 1.0).unwrap());
+    let normal = Normal::new(mean, sd)
+        .or_else(|_| Normal::new(mean, 1.0))
+        .unwrap_or_else(|_| Normal::new(0.0, 1.0).expect("hardcoded Normal(0,1) must succeed"));
     let v: f64 = normal.sample(rng);
     (v.round() as i32).clamp(min, max)
 }

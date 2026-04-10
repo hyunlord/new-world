@@ -480,6 +480,17 @@ func get_minimap_snapshot() -> Dictionary:
 	return {}
 
 
+## Returns current packed frame snapshots (36 bytes per agent).
+func get_frame_snapshots() -> PackedByteArray:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_frame_snapshots"):
+		return PackedByteArray()
+	var raw: Variant = sim_bridge.call("get_frame_snapshots")
+	if raw is PackedByteArray:
+		return raw
+	return PackedByteArray()
+
+
 ## Returns tile grid wall data from Rust runtime.
 func get_tile_grid_walls() -> Dictionary:
 	var sim_bridge: Object = _get_sim_bridge()

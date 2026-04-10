@@ -244,6 +244,49 @@ command -v claude >/dev/null 2>&1 || die "claude CLI not found"
 command -v "$CODEX_BIN" >/dev/null 2>&1 || die "codex CLI not found (set CODEX_BIN to override path)"
 command -v python3 >/dev/null 2>&1 || die "python3 not found (needed for template rendering)"
 
+# ── CRITICAL: Prevent nested session detection ──
+# Claude Code sets CLAUDECODE=1. When harness_pipeline.sh runs
+# inside a Claude Code session and calls `claude --agent`, the child
+# process inherits CLAUDECODE=1 and refuses to start.
+# Setting CLAUDECODE="" disables the check.
+# Ref: https://github.com/anthropics/claude-agent-sdk-python/issues/573
+export CLAUDECODE=""
+unset CLAUDE_CODE_ENTRYPOINT 2>/dev/null || true
+
+# ============================================================
+# STEP 0: MECHANICAL GATE (0-token — cargo test + clippy + FFI)
+# ============================================================
+run_mechanical_gate() {
+    log "=== Step 0: MECHANICAL GATE (0-token) ==="
+
+    cd "$PROJECT_ROOT/rust"
+
+    # 0a. cargo test
+    if ! cargo test --workspace --quiet 2>&1 | tail -20 | tee "$RESULT_DIR/step0_test.txt"; then
+        cd "$PROJECT_ROOT"
+        die "MECHANICAL GATE FAILED: cargo test. Fix before running harness."
+    fi
+
+    # 0b. cargo clippy
+    if ! cargo clippy --workspace -- -D warnings 2>&1 | tail -20 | tee "$RESULT_DIR/step0_clippy.txt"; then
+        cd "$PROJECT_ROOT"
+        die "MECHANICAL GATE FAILED: cargo clippy. Fix before running harness."
+    fi
+
+    cd "$PROJECT_ROOT"
+
+    # 0c. FFI chain check (newly added #[func] methods)
+    if [[ -x "$SCRIPT_DIR/ffi_chain_check.sh" ]]; then
+        if ! bash "$SCRIPT_DIR/ffi_chain_check.sh" "$PROJECT_ROOT" 2>&1 | tee "$RESULT_DIR/step0_ffi.txt"; then
+            log "WARNING: FFI chain issues detected (non-blocking at Step 0)"
+        fi
+    else
+        log "FFI chain check script not found — skipping"
+    fi
+
+    log "MECHANICAL GATE: PASS"
+}
+
 # ============================================================
 # STEP 1a: DRAFTER (Claude Code agent — harness-drafter)
 # ============================================================
@@ -481,13 +524,20 @@ run_generator() {
     local plan_file="$PLAN_DIR/plan_final.md"
     [[ -f "$plan_file" ]] || plan_file="$PLAN_DIR/plan_draft.md"
 
-    # Build feedback section for retries
+    # Build feedback section for retries (information isolation: issues only, no scores/verdicts)
     local feedback_section=""
-    if [[ -f "$REVIEW_DIR/review_latest.md" ]] && [[ $attempt -gt 1 ]]; then
-        feedback_section="
+    if [[ $attempt -gt 1 ]]; then
+        if [[ -f "$REVIEW_DIR/issues_latest.md" ]] && [[ -s "$REVIEW_DIR/issues_latest.md" ]]; then
+            feedback_section="
+
+## Previous Issues to Fix:
+$(cat "$REVIEW_DIR/issues_latest.md")"
+        elif [[ -f "$REVIEW_DIR/review_latest.md" ]]; then
+            feedback_section="
 
 ## Previous Evaluator Feedback (fix these issues):
 $(cat "$REVIEW_DIR/review_latest.md")"
+        fi
     fi
 
     # Render generator prompt from template (multiline-safe)
@@ -535,6 +585,16 @@ $(cat "$REVIEW_DIR/review_latest.md")"
         log "Harness: some tests FAILED (Evaluator will review)"
     fi
     cd "$PROJECT_ROOT"
+
+    # PostCode FFI check — verify proxy chain after Generator changes
+    if changed_sim_bridge && [[ -x "$SCRIPT_DIR/ffi_chain_check.sh" ]]; then
+        log "Running PostCode FFI chain check..."
+        if ! bash "$SCRIPT_DIR/ffi_chain_check.sh" "$PROJECT_ROOT" 2>&1 | tee "$RESULT_DIR/postcode_ffi_attempt${attempt}.txt"; then
+            log "POST-CODE FFI CHAIN BROKEN — RE-CODE"
+            echo "FFI chain broken. See postcode_ffi_attempt${attempt}.txt" > "$REVIEW_DIR/issues_latest.md"
+            return 1
+        fi
+    fi
 
     # Create result summary if Generator didn't
     if [[ ! -f "$RESULT_DIR/gen_result_attempt${attempt}.md" ]]; then
@@ -1031,6 +1091,15 @@ EVAL_COMBINE
     # Symlink latest
     ln -sf "review_attempt${CODE_ATTEMPT}.md" "$REVIEW_DIR/review_latest.md"
     log "Review: $REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md"
+
+    # Information isolation: extract only issues, never scores/verdicts
+    # When RE-CODE, Generator only sees issue descriptions — not scores or verdict rationale
+    if grep -qi "RE-CODE\|RE_CODE\|RECODE" "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" 2>/dev/null; then
+        sed -n '/Issues\|Fix These\|Problems Found\|RE-CODE because/,/^## \|^---\|^$/p' \
+            "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
+            | grep -v "^Score:\|^Verdict:\|APPROVE\|RE-PLAN\|FAIL\|^§[0-9]" \
+            > "$REVIEW_DIR/issues_latest.md" 2>/dev/null || true
+    fi
 }
 
 # ============================================================
@@ -1168,12 +1237,16 @@ format_commit_message() {
 # ============================================================
 main() {
     log "=========================================="
-    log "Harness Pipeline v3 — $FEATURE"
+    log "Harness Pipeline v4 — $FEATURE"
     log "Mode: $MODE"
     log "Prompt: $PROMPT_FILE"
     log "=========================================="
 
     init_progress
+
+    # Step 0: Mechanical Gate (0-token — must pass before any LLM calls)
+    run_mechanical_gate
+    report_step "0 Mechanical Gate" "DONE" "cargo test + clippy + FFI check"
 
     # ============================================================
     # LIGHT MODE — Generator + Gate + Visual Verify only (2 LLM calls)

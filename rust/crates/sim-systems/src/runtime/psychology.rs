@@ -2175,7 +2175,7 @@ impl SimSystem for TemperamentShiftRuntimeSystem {
         // Detect starvation transitions and collect entities that should receive a shift
         let mut to_shift: Vec<hecs::Entity> = Vec::new();
         for (entity, hunger) in &hunger_snapshot {
-            if *hunger < 0.25 {
+            if *hunger < 0.35 {
                 // Entity is food-stressed — begin tracking
                 self.starving.insert(*entity);
             } else if *hunger > 0.50 && self.starving.contains(entity) {

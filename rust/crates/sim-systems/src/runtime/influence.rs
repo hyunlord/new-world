@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 use hecs::World;
 use sim_core::components::{InfluenceEmitter, Position};
@@ -82,6 +82,14 @@ fn building_structure_signature(resources: &SimResources) -> u64 {
             .wrapping_add(building.x as u64)
             .wrapping_add((building.y as u64) << 16);
     }
+    // P2-B3.5: Include wall_plans + furniture_plans counts so the signature
+    // changes when PlaceWall/PlaceFurniture actions consume plans, triggering
+    // refresh_structural_context to detect enclosed areas and stamp floors.
+    signature = signature
+        .wrapping_mul(131)
+        .wrapping_add(resources.wall_plans.len() as u64)
+        .wrapping_mul(131)
+        .wrapping_add(resources.furniture_plans.len() as u64);
     signature
 }
 
@@ -503,6 +511,11 @@ fn refresh_structural_context(resources: &mut SimResources) {
         }
     }
 
+    // P2-B3.5: PlaceWall-based shelters don't have Building entities, so
+    // stamp_shelter_structure never runs for them. Detect wall-enclosed
+    // areas and stamp floors + seal door gaps so room detection works.
+    stamp_enclosed_floors(resources);
+
     let rooms = detect_rooms(&resources.tile_grid);
     assign_room_ids(&mut resources.tile_grid, &rooms);
     resources.rooms = rooms;
@@ -617,6 +630,133 @@ fn stamp_campfire_structure(resources: &mut SimResources, x: i32, y: i32) {
     resources
         .tile_grid
         .set_furniture(x as u32, y as u32, "fire_pit");
+}
+
+/// Stamps `packed_earth` floor on non-wall tiles fully enclosed by walls.
+///
+/// PlaceWall-based shelters (P2-B3) create wall rings on the tile_grid
+/// without a Building entity, so `stamp_shelter_structure` never runs for
+/// them.  This function:
+/// 1. Seals single-tile gaps in wall perimeters (walls on opposite sides
+///    → door), so room detection treats them as boundaries.
+/// 2. Flood-fills from the grid edges to find "outside" tiles.
+/// 3. Stamps floor on any enclosed non-wall tile that lacks one.
+fn stamp_enclosed_floors(resources: &mut SimResources) {
+    let (w, h) = resources.tile_grid.dimensions();
+    if w < 3 || h < 3 {
+        return;
+    }
+
+    // --- Step 0: clean up stale is_door on tiles that now have wall_material ---
+    // Race condition: a door may have been detected on a previous tick before
+    // a PlaceWall action placed a wall at that position.  A tile that is both
+    // a wall and a door is structurally invalid — the wall takes precedence.
+    for y in 0..h {
+        for x in 0..w {
+            let has_wall = resources.tile_grid.get(x, y).wall_material.is_some();
+            let has_door = resources.tile_grid.get(x, y).is_door;
+            if has_wall && has_door {
+                resources.tile_grid.get_mut(x, y).is_door = false;
+            }
+        }
+    }
+
+    // --- Step 1: seal single-tile gaps that look like door openings ---
+    let mut doors: Vec<(u32, u32)> = Vec::new();
+    for y in 0..h {
+        for x in 0..w {
+            if resources.tile_grid.get(x, y).blocks_room_flow() {
+                continue;
+            }
+            let wall_left = x > 0
+                && resources
+                    .tile_grid
+                    .get(x - 1, y)
+                    .wall_material
+                    .is_some();
+            let wall_right = x + 1 < w
+                && resources
+                    .tile_grid
+                    .get(x + 1, y)
+                    .wall_material
+                    .is_some();
+            let wall_up = y > 0
+                && resources
+                    .tile_grid
+                    .get(x, y - 1)
+                    .wall_material
+                    .is_some();
+            let wall_down = y + 1 < h
+                && resources
+                    .tile_grid
+                    .get(x, y + 1)
+                    .wall_material
+                    .is_some();
+            if (wall_left && wall_right) || (wall_up && wall_down) {
+                doors.push((x, y));
+            }
+        }
+    }
+    for &(x, y) in &doors {
+        if !resources.tile_grid.get(x, y).blocks_room_flow() {
+            resources.tile_grid.set_door(x, y);
+        }
+    }
+
+    // --- Step 2: flood-fill from grid edges to mark "outside" tiles ---
+    let total = (w * h) as usize;
+    let mut outside = vec![false; total];
+    let mut queue = VecDeque::new();
+
+    // Seed all non-blocking edge tiles
+    for x in 0..w {
+        for &y in &[0, h - 1] {
+            let idx = (y * w + x) as usize;
+            if !outside[idx] && !resources.tile_grid.get(x, y).blocks_room_flow() {
+                outside[idx] = true;
+                queue.push_back((x, y));
+            }
+        }
+    }
+    for y in 1..h.saturating_sub(1) {
+        for &x in &[0, w - 1] {
+            let idx = (y * w + x) as usize;
+            if !outside[idx] && !resources.tile_grid.get(x, y).blocks_room_flow() {
+                outside[idx] = true;
+                queue.push_back((x, y));
+            }
+        }
+    }
+
+    while let Some((cx, cy)) = queue.pop_front() {
+        for (dx, dy) in [(0i32, -1i32), (1, 0), (0, 1), (-1, 0)] {
+            let nx = cx as i32 + dx;
+            let ny = cy as i32 + dy;
+            if nx < 0 || ny < 0 || nx >= w as i32 || ny >= h as i32 {
+                continue;
+            }
+            let (nx, ny) = (nx as u32, ny as u32);
+            let nidx = (ny * w + nx) as usize;
+            if outside[nidx] || resources.tile_grid.get(nx, ny).blocks_room_flow() {
+                continue;
+            }
+            outside[nidx] = true;
+            queue.push_back((nx, ny));
+        }
+    }
+
+    // --- Step 3: stamp floor on enclosed non-wall tiles ---
+    for y in 0..h {
+        for x in 0..w {
+            let idx = (y * w + x) as usize;
+            if outside[idx] || resources.tile_grid.get(x, y).blocks_room_flow() {
+                continue;
+            }
+            if resources.tile_grid.get(x, y).floor_material.is_none() {
+                resources.tile_grid.set_floor(x, y, "packed_earth");
+            }
+        }
+    }
 }
 
 fn apply_wall_blocking_from_tile_grid(resources: &mut SimResources) {
