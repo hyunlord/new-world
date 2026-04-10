@@ -13,6 +13,7 @@ use sim_engine::{SimResources, SimSystem};
 
 const BUILDING_TYPE_CAMPFIRE: &str = "campfire";
 const BUILDING_TYPE_SHELTER: &str = "shelter";
+const BUILDING_TYPE_STOCKPILE: &str = "stockpile";
 const DEFAULT_WALL_MATERIAL_ID: &str = "oak";
 const DEFAULT_ROOF_MATERIAL_ID: &str = "oak";
 
@@ -49,7 +50,7 @@ impl SimSystem for InfluenceRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
-        let structure_signature = shelter_structure_signature(resources);
+        let structure_signature = building_structure_signature(resources);
         if self.last_structure_signature != Some(structure_signature) {
             refresh_structural_context(resources);
             self.last_structure_signature = Some(structure_signature);
@@ -60,7 +61,7 @@ impl SimSystem for InfluenceRuntimeSystem {
     }
 }
 
-fn shelter_structure_signature(resources: &SimResources) -> u64 {
+fn building_structure_signature(resources: &SimResources) -> u64 {
     let mut signature = 0_u64;
     let mut building_ids: Vec<BuildingId> = resources.buildings.keys().copied().collect();
     building_ids.sort_by_key(|building_id| building_id.0);
@@ -68,8 +69,12 @@ fn shelter_structure_signature(resources: &SimResources) -> u64 {
         let Some(building) = resources.buildings.get(&building_id) else {
             continue;
         };
-        if !building.is_complete || building.building_type != BUILDING_TYPE_SHELTER {
+        if !building.is_complete {
             continue;
+        }
+        match building.building_type.as_str() {
+            BUILDING_TYPE_SHELTER | BUILDING_TYPE_STOCKPILE | BUILDING_TYPE_CAMPFIRE => {}
+            _ => continue,
         }
         signature = signature
             .wrapping_mul(131)
@@ -474,12 +479,27 @@ fn refresh_structural_context(resources: &mut SimResources) {
         if !building.is_complete {
             continue;
         }
-        if building.building_type == BUILDING_TYPE_SHELTER {
-            // building.x/y is the top-left corner; compute the center of the
-            // footprint so the wall ring aligns with the reserved tiles.
-            let center_x = building.x + (building.width as i32) / 2;
-            let center_y = building.y + (building.height as i32) / 2;
-            stamp_shelter_structure(resources, center_x, center_y, building.settlement_id);
+        match building.building_type.as_str() {
+            BUILDING_TYPE_SHELTER => {
+                // building.x/y is the top-left corner; compute the center of the
+                // footprint so the wall ring aligns with the reserved tiles.
+                let center_x = building.x + (building.width as i32) / 2;
+                let center_y = building.y + (building.height as i32) / 2;
+                stamp_shelter_structure(resources, center_x, center_y, building.settlement_id);
+            }
+            BUILDING_TYPE_STOCKPILE => {
+                stamp_stockpile_structure(
+                    resources,
+                    building.x,
+                    building.y,
+                    building.width,
+                    building.height,
+                );
+            }
+            BUILDING_TYPE_CAMPFIRE => {
+                stamp_campfire_structure(resources, building.x, building.y);
+            }
+            _ => {}
         }
     }
 
@@ -553,6 +573,50 @@ fn stamp_shelter_structure(
             );
         }
     }
+}
+
+/// Stamps floor tiles and a central storage_pit furniture for a completed stockpile.
+/// No walls or roof — stockpiles are open-air storage areas.
+fn stamp_stockpile_structure(
+    resources: &mut SimResources,
+    x: i32,
+    y: i32,
+    width: u32,
+    height: u32,
+) {
+    let w = width.max(1) as i32;
+    let h = height.max(1) as i32;
+    for dy in 0..h {
+        for dx in 0..w {
+            let tx = x + dx;
+            let ty = y + dy;
+            if !resources.map.in_bounds(tx, ty) {
+                continue;
+            }
+            resources
+                .tile_grid
+                .set_floor(tx as u32, ty as u32, "packed_earth");
+        }
+    }
+    // Place storage_pit furniture at the center tile.
+    let center_x = x + w / 2;
+    let center_y = y + h / 2;
+    if resources.map.in_bounds(center_x, center_y) {
+        resources
+            .tile_grid
+            .set_furniture(center_x as u32, center_y as u32, "storage_pit");
+    }
+}
+
+/// Stamps a fire_pit furniture on the campfire tile.
+/// No walls, no floor, no roof — campfires are a single outdoor furniture piece.
+fn stamp_campfire_structure(resources: &mut SimResources, x: i32, y: i32) {
+    if !resources.map.in_bounds(x, y) {
+        return;
+    }
+    resources
+        .tile_grid
+        .set_furniture(x as u32, y as u32, "fire_pit");
 }
 
 fn apply_wall_blocking_from_tile_grid(resources: &mut SimResources) {
