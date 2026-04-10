@@ -198,31 +198,6 @@ Then: Phase 2 (Social + Band + Building Structure, ~4 weeks)
 
 ## Runtime Topology
 
-```
-┌─────────────────────────────────────────┐
-│           Godot 4.6 (GDScript)          │
-│  UI Panels │ Renderers │ Camera │ HUD   │
-│  Locale    │ MapEditor │ Input  │       │
-└──────────────────┬──────────────────────┘
-                   │ GDExtension FFI (sim-bridge)
-                   │ - get_frame_snapshot()
-                   │ - get_entity_detail(id)
-                   │ - push_command(cmd)
-                   │ - tick() / set_speed()
-┌──────────────────┴──────────────────────┐
-│          Rust Simulation Core            │
-│                                          │
-│  sim-bridge  → GDExtension ↔ Rust types │
-│  sim-engine  → Tick loop, scheduling     │
-│  sim-systems → All 30+ simulation systems│
-│  sim-core    → ECS world, components     │
-│  sim-data    → RON loaders, validation   │
-│  sim-test    → Headless test binary      │
-└──────────────────────────────────────────┘
-```
-
-### What lives where
-
 | Component | Location | Language | Reason |
 |-----------|----------|----------|--------|
 | SimulationEngine (tick loop) | `rust/crates/sim-engine/` | Rust | Performance core |
@@ -293,7 +268,6 @@ tools/
 | 3 | SimulationBusV2 | scripts/core/simulation/simulation_bus_v2.gd | Extended event relay |
 | 4 | Locale | scripts/core/locale.gd | i18n — `Locale.ltr()` for all UI text |
 | 5 | SimBridge | rust/worldsim.gdextension | GDExtension entry — Rust simulation interface |
-| 6 | ComputeBackend | scripts/core/compute_backend.gd | Runtime mode routing (Rust/GDScript) |
 
 ---
 
@@ -484,31 +458,7 @@ The only acceptable use of `--no-verify` is for documentation-only commits or em
 
 ### Codex MCP Dispatch
 
-Claude Code can dispatch tasks to the Codex MCP server for parallel execution.
-
-**Codex MCP 도구 사용법:**
-- `codex` MCP tool — 모든 티켓의 기본 디스패치 (Rust, GDScript, 모든 언어)
-- `codex-reply` MCP tool — 기존 세션 이어가기 (follow-up, 에러 수정)
-
-**Usage pattern:**
-1. Start a session via `codex` tool — returns `threadId`
-2. Continue via `codex-reply` using that `threadId`
-3. If harness test fails: `codex-reply` with error output → auto-fix → re-test
-
-**HDD + Codex MCP loop:**
-```
-Claude Code:
-  1. harness test 작성 (RED)
-  2. codex MCP로 구현 디스패치
-  3. codex-reply: "cargo test -p sim-test harness_X -- --nocapture"
-  4. 실패 시 codex-reply에 에러 전달 → 수정 → 재시도 (max 3회)
-  5. 통과 시 완료
-```
-
-**Dispatch rules:**
-- 모든 티켓 → `codex` MCP tool (`approval-policy: "never"`, `sandbox: "workspace-write"`)
-- follow-up 필요 시 → `codex-reply` with `threadId`
-- Dispatch ratio ≥ 60%
+See `.claude/skills/worldsim-code/SKILL.md` for Codex MCP dispatch protocol.
 
 ---
 
@@ -529,12 +479,7 @@ Claude Code:
 13. Forgetting `ko/` translations when adding localization keys
 14. Adding Godot-specific types in hot-path Rust code
 15. Using `String` matching in Rust hot paths instead of enums
-16. Using manual pixel offsets (`offset_left`, `offset_bottom`) instead of Container layout for UI positioning
-17. Calling `panel.visible = true` before `panel.set_data()` -- empty panel gets size (0,0)
-18. Calling `queue_free()` on children before cache check -- causes flicker every refresh cycle
-19. Connecting anonymous lambdas to signals in `_refresh()` without disconnecting old ones -- accumulates N connections
-20. Fixing the same UI problem 3+ times with parameter tweaks instead of architectural fix
-21. Not checking `is_inside_tree()` before operating on dynamically added panels
+16-21. UI-specific mistakes → see `scripts/ui/CLAUDE.md` "GDScript UI Patterns" section
 
 ---
 
@@ -560,10 +505,8 @@ Before any work touching these areas, read the corresponding SKILL.md:
 
 | Skill | Path | When |
 |-------|------|------|
-| worldsim-code | `.claude/skills/worldsim-code/SKILL.md` | Any GDScript UI work (localization, patterns) |
-| godot | `.claude/skills/godot/SKILL.md` | Godot scene/resource file work |
-| systematic-debugging | `.claude/skills/systematic-debugging/SKILL.md` | Any bug or test failure |
-| verification-before-completion | `.claude/skills/verification-before-completion/SKILL.md` | Before claiming any task complete |
+| worldsim-code | `.claude/skills/worldsim-code/SKILL.md` | Any Rust/GDScript work (localization, coding standards, Codex dispatch) |
+| worldsim-harness | `.claude/skills/worldsim-harness/SKILL.md` | Harness pipeline execution |
 ---
 
 ## Current State (2026-03-17)
@@ -590,71 +533,10 @@ Before any work touching these areas, read the corresponding SKILL.md:
 | `scripts/ui/camera_controller.gd` | ~735 | 5-stage zoom + camera limits |
 | `rust/crates/sim-bridge/src/lib.rs` | ~8200 | ALL Rust↔Godot FFI |
 
-### Known Crash Pattern
-When accessing Rust FFI data in GDScript, field types can vary by entity:
-- Entity A: `hex_c = 0.65` (float) → `float(0.65)` OK
-- Entity B: `hex_c = {facets: [...]}` (Dictionary) → `float(Dictionary)` → CRASH
-
-**Rule: NEVER use raw `float(dict.get("key"))`. Always use `_safe_float(dict, "key", default)`.**
-
-### GDScript Safety Pattern
-```gdscript
-# BAD — crashes on non-numeric Variant:
-var value: float = float(_detail.get("hex_c", 0.0))
-
-# GOOD — safe type conversion:
-func _safe_float(dict: Dictionary, key: String, default_value: float) -> float:
-    var raw: Variant = dict.get(key, default_value)
-    if raw is float or raw is int:
-        return clampf(float(raw), 0.0, 1.0)
-    return clampf(default_value, 0.0, 1.0)
-```
+**FFI Safety**: Never use raw `float(dict.get("key"))` — use `_safe_float()`. See `scripts/ui/CLAUDE.md`.
 
 ---
 
 ## Harness MCP — Runtime Verification
 
-Installed at `addons/harness/`. Provides MCP tools to run simulation and check invariants from Claude Code.
-
-### Files
-- `addons/harness/harness_server.gd` — WebSocket JSON-RPC server (activates on `--headless`)
-- `addons/harness/harness_router.gd` — Command dispatcher
-- `addons/harness/harness_invariants.gd` — Invariant checks
-- `addons/harness/worldsim_adapter.gd` — **WorldSim-specific API bridge** (edit this when WorldSim API changes)
-- `addons/harness/worldsim_mapping.md` — Interface mapping reference
-
-### MCP Server
-Register in `.mcp.json`:
-```json
-{
-  "mcpServers": {
-    "godot-rust-harness": {
-      "command": "python",
-      "args": ["-m", "godot_rust_harness"],
-      "env": {
-        "PROJECT_ROOT": "/Users/rexxa/github/Godot-Rust-MCP",
-        "GODOT_BIN": "/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot"
-      }
-    }
-  }
-}
-```
-
-### Usage
-After simulation code changes:
-- `godot_start` → starts WorldSim headless (HarnessServer auto-activates)
-- `godot_reset(seed=42)` → resets tick counter + RNG
-- `godot_tick(n=100)` → advance 100 ticks via `advance_ticks()`
-- `godot_snapshot` → entity count + positions
-- `godot_invariant` → run all 7 invariant checks
-- `godot_stop` → terminate process
-- `verify()` → full pipeline in one call
-
-### Adapter architecture
-WorldSim's `SimulationEngine` and `EntityManager` are `RefCounted` objects, not autoloads.
-The adapter finds them via `get_tree().root.get_node_or_null("Main")`.
-Edit **only** `worldsim_adapter.gd` when WorldSim's API changes; harness core stays generic.
-
-### Reset limitation
-`godot_reset` calls `sim_engine.init_with_seed(seed)` which resets tick+RNG but NOT entity population.
-For full population reset, use `godot_stop` + `godot_start`.
+See `tools/harness/README.md` and `addons/harness/worldsim_mapping.md` for details.
