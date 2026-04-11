@@ -7628,6 +7628,165 @@ mod tests {
             wall_count
         );
     }
+
+    // =========================================================================
+    // Harness: wall-autotile — GDScript renderer discriminator
+    // =========================================================================
+    //
+    // This test reads the GDScript source to verify the new perimeter-outline
+    // algorithm is present in _draw_wall_tile. It discriminates between:
+    //   NEW: inset=0, 4-direction adjacency → draw_line (perimeter outlines)
+    //   OLD: inset=1.0 (conditional), bridge_px → draw_rect (bridge rects)
+    // If the GDScript is reverted, this test fails.
+
+    /// Harness: wall-autotile discriminator — GDScript renderer uses perimeter-outline algorithm
+    /// Type: D (deterministic — static file content analysis)
+    /// Threshold: 7 new-pattern markers present, 0 old-pattern markers
+    /// Rationale: Only the perimeter-outline _draw_wall_tile satisfies all checks.
+    /// The old bridge-rect code used conditional inset, multiple draw_rect calls
+    /// in _draw_wall_tile, and lacked 4-direction adjacency checks.
+    #[test]
+    fn harness_wall_autotile_gdscript_discriminator() {
+        let gd_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../scripts/ui/renderers/building_renderer.gd");
+        let source = std::fs::read_to_string(&gd_path)
+            .unwrap_or_else(|e| panic!("Failed to read {:?}: {}", gd_path, e));
+
+        // === NEW pattern markers (must ALL be present) ===
+
+        // Type D: wall_inset must be unconditionally 0.0 (not zoom-conditional)
+        // Old: var wall_inset: float = 1.0 if _current_lod < GameConfig.ZOOM_Z3 else 0.0
+        // New: var wall_inset: float = 0.0
+        assert!(
+            source.contains("var wall_inset: float = 0.0"),
+            "wall_inset must be unconditionally 0.0 — conditional or non-zero inset found"
+        );
+
+        // Type D: Four cardinal direction adjacency checks in _draw_wall_tile
+        let direction_checks: [(&str, &str); 4] = [
+            ("wy - 1", "top/up"),
+            ("wy + 1", "bottom/down"),
+            ("wx - 1", "left"),
+            ("wx + 1", "right"),
+        ];
+        for (pattern, direction) in &direction_checks {
+            assert!(
+                source.contains(pattern),
+                "Missing {} adjacency check: expected '{}' in _draw_wall_tile",
+                direction, pattern
+            );
+        }
+
+        // Type D: Outline color uses darkened(0.35) — 35% brightness reduction
+        assert!(
+            source.contains("color.darkened(0.35)"),
+            "Outline color must use color.darkened(0.35)"
+        );
+
+        // Type D: Extract _draw_wall_tile body and verify draw_line count ≥ 4
+        let wall_tile_fn = source
+            .split("func _draw_wall_tile")
+            .nth(1)
+            .expect("_draw_wall_tile function not found in building_renderer.gd");
+        let fn_end = wall_tile_fn.find("\nfunc ").unwrap_or(wall_tile_fn.len());
+        let wall_tile_body = &wall_tile_fn[..fn_end];
+
+        let draw_line_count = wall_tile_body.matches("draw_line(").count();
+        assert!(
+            draw_line_count >= 4,
+            "Expected ≥4 draw_line() in _draw_wall_tile (one per direction), found {}",
+            draw_line_count
+        );
+
+        // Type D: Exactly 1 draw_rect in _draw_wall_tile (the fill rect only)
+        // Old bridge-rect code had 2-3 draw_rect calls (fill + bridge connections)
+        let draw_rect_count = wall_tile_body.matches("draw_rect(").count();
+        assert!(
+            draw_rect_count == 1,
+            "Expected exactly 1 draw_rect() in _draw_wall_tile (fill only), found {} \
+             — multiple draw_rect suggests old bridge-rect pattern still present",
+            draw_rect_count
+        );
+
+        // === OLD pattern markers (must be ABSENT) ===
+
+        // Type D: Old zoom-conditional inset must not be present anywhere
+        assert!(
+            !source.contains("1.0 if _current_lod < GameConfig.ZOOM_Z3 else 0.0"),
+            "Old zoom-conditional wall_inset pattern still present"
+        );
+
+        eprintln!(
+            "[harness_wall_autotile_gdscript_discriminator] PASS — \
+             wall_inset=0.0, 4-dir adjacency checks, draw_line={}, \
+             draw_rect={} (fill only), darkened(0.35), no old bridge-rect pattern",
+            draw_line_count, draw_rect_count
+        );
+    }
+
+    /// Harness: wall-autotile A5 — Material colors: ≥3 distinct color groups
+    /// Type: A (absolute threshold — static source analysis)
+    /// Threshold: ≥3 distinct Color() returns in _wall_material_color
+    ///           covering stone, wood, and default material categories
+    #[test]
+    fn harness_wall_autotile_material_colors() {
+        let gd_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../scripts/ui/renderers/building_renderer.gd");
+        let source = std::fs::read_to_string(&gd_path)
+            .unwrap_or_else(|e| panic!("Failed to read {:?}: {}", gd_path, e));
+
+        // Extract _wall_material_color function body
+        let fn_body = source
+            .split("func _wall_material_color")
+            .nth(1)
+            .expect("_wall_material_color function not found in building_renderer.gd");
+        let fn_end = fn_body.find("\nfunc ").unwrap_or(fn_body.len());
+        let material_body = &fn_body[..fn_end];
+
+        // Type A: Count distinct Color() return values — must be ≥ 3
+        let color_count = material_body.matches("return Color(").count();
+        eprintln!(
+            "[harness_wall_autotile_material_colors] distinct_color_returns={}",
+            color_count
+        );
+        assert!(
+            color_count >= 3,
+            "Expected ≥3 distinct Color() returns in _wall_material_color \
+             for stone/wood/default, found {}",
+            color_count
+        );
+
+        // Type A: Stone material category present (at least one stone type)
+        let has_stone = material_body.contains("granite")
+            || material_body.contains("basalt")
+            || material_body.contains("limestone")
+            || material_body.contains("sandstone");
+        assert!(
+            has_stone,
+            "Expected at least one stone material name in _wall_material_color"
+        );
+
+        // Type A: Wood material category present (at least one wood type)
+        let has_wood = material_body.contains("oak")
+            || material_body.contains("birch")
+            || material_body.contains("pine");
+        assert!(
+            has_wood,
+            "Expected at least one wood material name in _wall_material_color"
+        );
+
+        // Type A: Default case present (catch-all for unknown materials)
+        assert!(
+            material_body.contains("_:"),
+            "Expected default case (_:) in _wall_material_color for unknown materials"
+        );
+
+        eprintln!(
+            "[harness_wall_autotile_material_colors] PASS — \
+             {} distinct colors, stone=true, wood=true, default=true",
+            color_count
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (

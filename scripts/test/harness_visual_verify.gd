@@ -10,6 +10,8 @@
 ##   screenshot_tick0000.png   — initial state
 ##   screenshot_tick<NN>.png   — at 25%, 50%, 75% progress
 ##   screenshot_tickFINAL.png  — final state
+##   screenshot_closeup_Z1.png — Z1 close-up centered on wall cluster (zoom 3.0)
+##   screenshot_closeup_Z2.png — Z2 close-up centered on wall cluster (zoom 1.5)
 ##   entity_summary.txt        — agent counts, jobs, position spread
 ##   performance.txt           — tick timing stats
 ##   console_log.txt           — captured errors/warnings from Godot log
@@ -24,6 +26,8 @@ const PHASE_WAIT_SETUP: int = 1
 const PHASE_RUNNING: int = 2
 const PHASE_SCREENSHOT_WAIT: int = 3
 const PHASE_FINAL: int = 4
+const PHASE_CLOSEUP: int = 5
+const PHASE_CLOSEUP_WAIT: int = 6
 
 var _feature: String = "unknown"
 var _total_ticks: int = 4380
@@ -40,6 +44,11 @@ var _is_headless: bool = false
 var _pending_screenshot_label: String = ""
 var _batch_size: int = 20
 var _ffi_verified: bool = false
+var _closeup_zooms: Array = [5.0, 3.0]
+var _closeup_labels: Array = ["closeup_Z1", "closeup_Z2"]
+var _closeup_idx: int = 0
+var _saved_cam_pos: Vector2 = Vector2.ZERO
+var _saved_cam_zoom: Vector2 = Vector2.ONE
 
 
 func _init() -> void:
@@ -168,9 +177,35 @@ func _process(delta: float) -> bool:
 				# Write partial data after each screenshot so timeout doesn't lose all data
 				_write_partial_data()
 				if _ticks_done >= _total_ticks:
-					_phase = PHASE_FINAL
+					_phase = PHASE_CLOSEUP
 				else:
 					_phase = PHASE_RUNNING
+
+		PHASE_CLOSEUP:
+			if _is_headless or _closeup_idx >= _closeup_zooms.size():
+				_restore_camera()
+				_phase = PHASE_FINAL
+			else:
+				if _closeup_idx == 0:
+					_save_camera()
+				var target: Vector2 = _find_building_center()
+				if target == Vector2.ZERO:
+					print("[visual-verify] No buildings found — skipping close-up screenshots")
+					_restore_camera()
+					_phase = PHASE_FINAL
+				else:
+					_set_camera(target, _closeup_zooms[_closeup_idx])
+					_phase = PHASE_CLOSEUP_WAIT
+					_wait_frames = 10
+
+		PHASE_CLOSEUP_WAIT:
+			_wait_frames -= 1
+			if _wait_frames <= 0:
+				_capture_screenshot(_closeup_labels[_closeup_idx])
+				print("[visual-verify] Close-up captured: %s (zoom=%.1f)" % [
+					_closeup_labels[_closeup_idx], _closeup_zooms[_closeup_idx]])
+				_closeup_idx += 1
+				_phase = PHASE_CLOSEUP
 
 		PHASE_FINAL:
 			_write_entity_summary()
@@ -479,6 +514,80 @@ func _write_ffi_verify(results: Dictionary) -> void:
 	lines.append("overall: %s" % ("PASS" if all_ok else "FAIL"))
 
 	_write_text("ffi_verify.txt", "\n".join(lines))
+
+
+## Save current camera state for later restoration.
+func _save_camera() -> void:
+	var cam: Camera2D = root.get_viewport().get_camera_2d()
+	if cam:
+		_saved_cam_pos = cam.global_position
+		_saved_cam_zoom = cam.zoom
+		# Disable camera controller _process so it doesn't override our zoom
+		cam.set_process(false)
+		cam.set_physics_process(false)
+
+
+## Restore camera to saved state.
+func _restore_camera() -> void:
+	var cam: Camera2D = root.get_viewport().get_camera_2d()
+	if cam:
+		cam.global_position = _saved_cam_pos
+		cam.zoom = _saved_cam_zoom
+		cam.set_process(true)
+		cam.set_physics_process(true)
+
+
+## Set camera position and zoom for close-up capture.
+func _set_camera(target: Vector2, zoom_level: float) -> void:
+	var cam: Camera2D = root.get_viewport().get_camera_2d()
+	if cam:
+		cam.global_position = target
+		cam.zoom = Vector2(zoom_level, zoom_level)
+		# Also set _target_zoom so if process re-enables it stays put
+		if cam.has_method("set_target_zoom"):
+			cam.set_target_zoom(zoom_level)
+		print("[visual-verify] Camera set: pos=(%.1f, %.1f) zoom=%.1f" % [target.x, target.y, zoom_level])
+
+
+## Find the center of wall tile clusters for close-up screenshots.
+## Uses tile_grid_walls bridge data, falls back to minimap building positions.
+func _find_building_center() -> Vector2:
+	if _sim_engine == null:
+		return Vector2.ZERO
+
+	# Try tile_grid_walls first (most accurate for wall rendering close-ups)
+	if _sim_engine.has_method("get_tile_grid_walls"):
+		var data: Dictionary = _sim_engine.get_tile_grid_walls()
+		var wall_xs = data.get("wall_x", PackedInt32Array())
+		var wall_ys = data.get("wall_y", PackedInt32Array())
+		if wall_xs is PackedInt32Array and wall_xs.size() > 0:
+			var sum_x: float = 0.0
+			var sum_y: float = 0.0
+			for idx in range(wall_xs.size()):
+				sum_x += float(wall_xs[idx])
+				sum_y += float(wall_ys[idx])
+			var avg_x: float = sum_x / float(wall_xs.size())
+			var avg_y: float = sum_y / float(wall_ys.size())
+			# Convert tile coords to pixel coords (TILE_SIZE = 16)
+			var center: Vector2 = Vector2(avg_x * 16.0 + 8.0, avg_y * 16.0 + 8.0)
+			print("[visual-verify] Building center from tile_grid: (%.1f, %.1f) — %d wall tiles" % [
+				center.x, center.y, wall_xs.size()])
+			return center
+
+	# Fallback to minimap buildings
+	if _sim_engine.has_method("get_minimap_snapshot"):
+		var snap: Dictionary = _sim_engine.get_minimap_snapshot()
+		var buildings = snap.get("buildings", [])
+		if buildings is Array and buildings.size() > 0:
+			var b = buildings[0]
+			if b is Dictionary:
+				var tx: float = float(b.get("tile_x", 0))
+				var ty: float = float(b.get("tile_y", 0))
+				var center: Vector2 = Vector2(tx * 16.0 + 16.0, ty * 16.0 + 16.0)
+				print("[visual-verify] Building center from minimap: (%.1f, %.1f)" % [center.x, center.y])
+				return center
+
+	return Vector2.ZERO
 
 
 ## Write a text file to the evidence directory.
