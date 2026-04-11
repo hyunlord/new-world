@@ -476,7 +476,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
 	var wall_ys: PackedInt32Array = data.get("wall_y", PackedInt32Array())
 	var wall_mats: PackedStringArray = data.get("wall_material", PackedStringArray())
-	var wall_inset: float = 1.0 if _current_lod < GameConfig.ZOOM_Z3 else 0.0
+	var wall_inset: float = 0.0
 	# Build wall_set for autotile adjacency lookup
 	var wall_set: Dictionary = {}
 	for i in range(wall_xs.size()):
@@ -532,17 +532,28 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 
 
 func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
-	# Base wall tile
-	draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color, true)
-	if inset > 0.0:
-		draw_rect(Rect2(float(wx) * ts + inset, float(wy) * ts + inset, ts - 2.0 * inset, ts - 2.0 * inset), color.darkened(0.3), false, 1.0)
-	# Adjacent wall connections (right + down only to avoid duplicates)
-	if autotile:
-		var half_bridge: float = bridge_px * 0.5
-		if wall_set.has(Vector2i(wx + 1, wy)):
-			draw_rect(Rect2(float(wx + 1) * ts - half_bridge, float(wy) * ts + inset, bridge_px, ts - 2.0 * inset), color, true)
-		if wall_set.has(Vector2i(wx, wy + 1)):
-			draw_rect(Rect2(float(wx) * ts + inset, float(wy + 1) * ts - half_bridge, ts - 2.0 * inset, bridge_px), color, true)
+	var px: float = float(wx) * ts
+	var py: float = float(wy) * ts
+
+	# Fill the wall tile (full tile area — inset=0 means seamless adjacent fill)
+	draw_rect(Rect2(px, py, ts, ts), color, true)
+
+	# Draw outline only on edges where there is NO adjacent wall (perimeter edges)
+	var outline_color: Color = color.darkened(0.35)
+	var line_w: float = maxf(1.0, ts * 0.08)
+
+	# Top edge — no wall above
+	if not wall_set.has(Vector2i(wx, wy - 1)):
+		draw_line(Vector2(px, py), Vector2(px + ts, py), outline_color, line_w)
+	# Bottom edge — no wall below
+	if not wall_set.has(Vector2i(wx, wy + 1)):
+		draw_line(Vector2(px, py + ts), Vector2(px + ts, py + ts), outline_color, line_w)
+	# Left edge — no wall left
+	if not wall_set.has(Vector2i(wx - 1, wy)):
+		draw_line(Vector2(px, py), Vector2(px, py + ts), outline_color, line_w)
+	# Right edge — no wall right
+	if not wall_set.has(Vector2i(wx + 1, wy)):
+		draw_line(Vector2(px + ts, py), Vector2(px + ts, py + ts), outline_color, line_w)
 
 
 func _wall_material_color(material_id: String) -> Color:
