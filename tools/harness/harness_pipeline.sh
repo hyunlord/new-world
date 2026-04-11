@@ -647,7 +647,12 @@ run_visual_verify() {
     if [[ -z "$godot_bin" ]] || [[ ! -x "$godot_bin" ]]; then
         log "WARNING: Godot not found — skipping visual verification"
         log "Set GODOT env var or install godot to enable visual verification"
-        echo "Godot not found — visual verification skipped" > "$evidence_dir/skip_reason.txt"
+        cat > "$evidence_dir/skip_reason.txt" <<'SKIP_EOF'
+Godot not found — visual verification skipped
+VISUAL_SKIPPED: GDScript rendering changes cannot be pixel-verified without Godot.
+Evaluator should assess GDScript changes via code review only.
+Do NOT RE-CODE solely because rendering parameters cannot be visually confirmed.
+SKIP_EOF
         return 0
     fi
 
@@ -940,8 +945,8 @@ Run these checks IN ORDER. Do NOT skip any.
 
 4. Check for broken input handling:
    grep -n '_input\|_unhandled_input\|mouse_filter' scripts/ui/renderers/entity_renderer.gd | head -10
-   grep -n '_input\|_unhandled_input' scripts/ui/renderers/building_renderer.gd | head -10
-   Verify input handlers still exist and aren't accidentally removed.
+   Verify input handlers still exist in entity_renderer and aren't accidentally removed.
+   NOTE: building_renderer.gd intentionally has NO _input handler — do NOT flag its absence.
 
 5. Check FFI evidence if it exists:
    cat .harness/evidence/*/ffi_chain_verify.txt 2>/dev/null
@@ -1095,10 +1100,28 @@ EVAL_COMBINE
     # Information isolation: extract only issues, never scores/verdicts
     # When RE-CODE, Generator only sees issue descriptions — not scores or verdict rationale
     if grep -qi "RE-CODE\|RE_CODE\|RECODE" "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" 2>/dev/null; then
-        sed -n '/Issues\|Fix These\|Problems Found\|RE-CODE because/,/^## \|^---\|^$/p' \
-            "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
-            | grep -v "^Score:\|^Verdict:\|APPROVE\|RE-PLAN\|FAIL\|^§[0-9]" \
+        # Extract actionable issues from "Issues" and "Fix These" sections
+        # Uses flag-based approach (not range) because headers match both start/end patterns
+        awk 'BEGIN{p=0}
+            /^### Issues/{p=1;next}
+            /^### If RE-CODE.*Fix/{p=1;next}
+            /^### /{p=0}
+            /^verdict:/{p=0}
+            p{print}' "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
+            | grep -v "^Score:\|^verdict:\|APPROVE\|RE-PLAN\|FAIL\|^§[0-9]" \
             > "$REVIEW_DIR/issues_latest.md" 2>/dev/null || true
+
+        # Fallback: if empty or contains only headers (no actionable items), extract numbered lines
+        if [[ ! -s "$REVIEW_DIR/issues_latest.md" ]] || ! grep -q '^[0-9]' "$REVIEW_DIR/issues_latest.md" 2>/dev/null; then
+            grep '^[0-9]\+\.' "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
+                > "$REVIEW_DIR/issues_latest.md" 2>/dev/null || true
+        fi
+
+        # Final fallback: write a generic message so Generator knows RE-CODE happened
+        if [[ ! -s "$REVIEW_DIR/issues_latest.md" ]]; then
+            echo "Evaluator requested RE-CODE but specific issues could not be extracted. Check review_attempt${CODE_ATTEMPT}.md manually." \
+                > "$REVIEW_DIR/issues_latest.md"
+        fi
     fi
 }
 

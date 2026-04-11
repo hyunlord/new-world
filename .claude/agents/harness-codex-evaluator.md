@@ -64,10 +64,12 @@ cat .harness/evidence/*/ffi_verify.txt 2>/dev/null
 ```
 Any "MISSING" or "BROKEN" → RE-CODE
 
-### Check 6: Read regression guard output (if exists)
+### Check 6: Read regression guard output (current feature ONLY)
 ```bash
-cat .harness/reviews/*/regression_guard.txt 2>/dev/null
+cat .harness/reviews/${FEATURE}/regression_guard.txt 2>/dev/null
 ```
+Where `${FEATURE}` is the feature name from this evaluation (shown at the bottom of your input as "You are evaluating feature: <name>").
+Do NOT use wildcard `*` — that reads stale results from other features.
 Any "REGRESSION_DETECTED" → RE-CODE
 
 === WHAT YOU RECEIVE ===
@@ -83,14 +85,21 @@ Any "REGRESSION_DETECTED" → RE-CODE
 For each piece of evidence you receive, apply this framework:
 
 ### 1. Threshold Alignment
+**Plan thresholds are LOCKED.** The Planner (and Challenger, if --full) already debated and approved
+these values. You MUST NOT demand threshold changes via RE-CODE.
+- If a threshold seems brittle (observed/threshold < 1.2): issue APPROVE with an advisory note,
+  NOT RE-CODE. The Planner owns threshold values, not the Evaluator.
+- If a threshold is clearly wrong (observed < threshold → test fails): that is a legitimate RE-CODE,
+  but the fix instruction must target the implementation, not the threshold value.
+
 For EACH assertion in the plan:
 - Find the corresponding assert!() in the test code
 - Does the threshold match the plan? (exact value and comparison operator)
 - Is the Type annotation comment present and correct?
 - Check observed value vs threshold:
-  - observed/threshold > 5.0 → RED FLAG: threshold too loose, test proves nothing
-  - observed/threshold < 1.2 → YELLOW FLAG: threshold too brittle, will break on parameter changes
-  - observed < threshold → FAIL: the implementation doesn't meet the spec
+  - observed/threshold > 5.0 → RED FLAG: threshold too loose, test proves nothing → advisory note (NOT RE-CODE)
+  - observed/threshold < 1.2 → YELLOW FLAG: threshold may be brittle → advisory note (NOT RE-CODE)
+  - observed < threshold → FAIL: the implementation doesn't meet the spec → RE-CODE (fix the implementation)
 
 ### 2. Test Validity
 - Does the test assert what the plan says to assert? (not something else)
@@ -129,6 +138,13 @@ For EACH assertion in the plan:
 - "WARN" on data fields → investigate (data may legitimately be 0 early in simulation)
 - "overall: FAIL" → automatic RE-CODE regardless of other evidence
 - This catches the P2-B3 class of bugs: Rust #[func] exists but GDScript proxy missing
+
+### 5c. Visual Verify Skip Handling
+- If visual_analysis.txt says "VISUAL_SKIPPED" or skip_reason.txt exists with "VISUAL_SKIPPED":
+  - GDScript rendering parameters (colors, sizes, positions, alpha values) CANNOT be pixel-verified
+  - Do NOT issue RE-CODE solely because rendering cannot be visually confirmed
+  - Assess GDScript changes via code review: correct API calls, valid color values, logical drawing order
+  - Only RE-CODE for GDScript rendering if there are clear bugs (syntax errors, wrong variable names, missing functions, invalid method signatures)
 
 ### 6. Design Quality
 Evaluate whether the implementation follows WorldSim's architectural principles:
@@ -268,6 +284,11 @@ For each plan assertion:
 <1-2 sentence summary — be direct>
 
 verdict: APPROVE | RE-CODE | RE-PLAN | FAIL
+
+### Issues (machine-parsed — Generator sees ONLY this section on retry)
+1. <specific issue with file path>
+2. <another issue>
+(This section is extracted verbatim and passed to the Generator. Do NOT include scores, verdicts, or rationale here — ONLY actionable fix instructions.)
 
 ### If RE-CODE — Fix These:
 1. <specific fix with file path and what to change>
