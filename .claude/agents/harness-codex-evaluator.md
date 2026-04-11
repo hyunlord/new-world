@@ -121,9 +121,19 @@ For EACH assertion in the plan:
 
 ### 4. Gate Compliance
 - YOU RAN the gate yourself (Check 1 above). Use YOUR output, not the Generator's summary.
-- cargo test: count "test result: ok" lines. Any "FAILED" = automatic RE-CODE
+- cargo test: count "test result: ok" lines.
 - clippy: any warnings = RE-CODE
 - All EXISTING harness tests still pass? (regression check)
+
+**Pre-existing vs feature-introduced gate failures:**
+If `cargo test` fails, check whether the regression guard (Check 6) says `CLEAN`.
+- If regression_guard says `CLEAN` AND the failing test is NOT in the `harness_<feature>` set
+  AND the failure is timing/performance-based (e.g., `tick_under_budget`):
+  → This is a **pre-existing flaky test**, not a feature regression.
+  → Issue APPROVE with advisory note, NOT RE-CODE.
+  → The Generator cannot fix pre-existing environmental timing variance.
+- If regression_guard says `REGRESSION_DETECTED` OR the failing test IS a feature harness test:
+  → This IS a feature regression → RE-CODE as normal.
 
 ### 5. Visual Evidence (if available)
 - What does the VLM analysis say? Is it VISUAL_OK?
