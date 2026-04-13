@@ -629,8 +629,10 @@ fn behavior_select_action(
     has_tool: bool,
     settlement_stone: f64,
     settlement_wood: f64,
+    settlement_food: f64,
+    settlement_population: usize,
     rng: &mut impl Rng,
-) -> ActionType {
+) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
     let thirst = needs.get(NeedType::Thirst) as f32;
     let warmth = needs.get(NeedType::Warmth) as f32;
@@ -638,6 +640,7 @@ fn behavior_select_action(
     let social = needs.get(NeedType::Belonging) as f32;
     let energy = needs.energy as f32;
 
+    let mut scarcity_boost_applied = false;
     let hunger_deficit = behavior_urgency(1.0 - hunger);
     let energy_deficit = behavior_urgency(1.0 - energy);
     let social_deficit = behavior_urgency(1.0 - social);
@@ -651,7 +654,7 @@ fn behavior_select_action(
     // and energy<0.18 loop in Flee forever (Flee target = current position), drain to 0,
     // and die without ever completing a Rest cycle.
     if safety < 0.20 && energy >= config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32 {
-        return ActionType::Flee;
+        return (ActionType::Flee, false);
     }
     // Eat when agent has food AND hunger is critically low (same threshold as force-Forage).
     // Placing force-Eat at < BEHAVIOR_FORCE_FORAGE_HUNGER_MAX (0.30) before force-Forage
@@ -663,7 +666,7 @@ fn behavior_select_action(
     // 23 ticks for Forage) is reliably observable. No deadlock: force-Eat fires BEFORE
     // force-Forage in the force chain, so when hungry < 0.30 with food, agent eats (not forages).
     if has_food_item && hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
-        return ActionType::Eat;
+        return (ActionType::Eat, false);
     }
     // Force-Hunt removed (2026-04-06): the old guard fired at hunger [0.30, 0.35),
     // intercepting adults BEFORE force-Forage (< 0.30) could fire. Adults bounced in
@@ -674,14 +677,14 @@ fn behavior_select_action(
     // now correctly fires when hunger < 0.30, giving 8 ticks of below-threshold time
     // per cycle and reliably yielding ≥2 hungry agents at any snapshot tick.
     if energy < 0.25 && energy >= config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32 && safe_for_sleep {
-        return ActionType::Sleep;
+        return (ActionType::Sleep, false);
     }
     // Force-Rest: when critically exhausted, rest unconditionally regardless of
     // safe_for_sleep. An exhausted agent cannot meaningfully Flee, Drink, or Forage —
     // they collapse and recover. Without safe_for_sleep guard, agents in unsafe areas
     // (low thirst/warmth/safety) can still recover and avoid the energy death spiral.
     if energy < config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32 {
-        return ActionType::Rest;
+        return (ActionType::Rest, false);
     }
     // Force-Drink: when critically dehydrated, drink before foraging.
     // config::THIRST_CRITICAL (0.15) existed but was never wired into the force chain.
@@ -691,10 +694,10 @@ fn behavior_select_action(
     // has enough energy to move to water; placing it before force-Forage ensures thirst
     // is addressed before hunger when both are critical.
     if thirst < config::THIRST_CRITICAL as f32 {
-        return ActionType::Drink;
+        return (ActionType::Drink, false);
     }
     if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
-        return ActionType::Forage;
+        return (ActionType::Forage, false);
     }
 
     let builder_survival_ok = matches!(age_stage, GrowthStage::Adult)
@@ -708,13 +711,13 @@ fn behavior_select_action(
     // P2-B3: builders prefer wall placement plans, then furniture plans,
     // then fall back to the legacy Build action if a Building exists.
     if builder_survival_ok && has_wall_plan_target {
-        return ActionType::PlaceWall;
+        return (ActionType::PlaceWall, false);
     }
     if builder_survival_ok && has_furniture_plan_target {
-        return ActionType::PlaceFurniture;
+        return (ActionType::PlaceFurniture, false);
     }
     if builder_survival_ok && has_build_target {
-        return ActionType::Build;
+        return (ActionType::Build, false);
     }
 
     let mut scores: HashMap<ActionType, f32> = HashMap::new();
@@ -795,23 +798,6 @@ fn behavior_select_action(
         }
     }
 
-    if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
-        scores.insert(ActionType::Forage, 1.0);
-    }
-
-    // Soft-force Forage at [BEHAVIOR_FORCE_FORAGE_HUNGER_MAX, +0.05) = [0.30, 0.35):
-    // At hunger=0.344, voluntary Hunt score (0.656)²×1.60=0.689 would win, cycling
-    // agents between 0.344→0.644 via hunting without reaching force-Forage threshold (0.30).
-    // Forage score 0.85 overrides Hunt in this critical zone. Forage uses the same
-    // find_best_influence_tile(Food) movement target as Hunt — maintaining convergent
-    // clustering for GFS ≥ 0.45 band cohesion. The 24-tick Forage timer allows hunger
-    // to decay below 0.30 → force-Forage (early-return) fires → harness test passes.
-    if hunger >= config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32
-        && hunger < (config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 + 0.05)
-    {
-        scores.insert(ActionType::Forage, 0.85);
-    }
-
     if thirst < config::THIRST_LOW as f32 {
         behavior_score_add(
             &mut scores,
@@ -833,7 +819,7 @@ fn behavior_select_action(
     }
 
     match behavior.job.as_str() {
-        "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 1.50),
+        "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 2.0),
         "lumberjack" => behavior_score_add(&mut scores, ActionType::GatherWood, 0.45),
         "miner" => behavior_score_add(&mut scores, ActionType::GatherStone, 0.40),
         "builder" if matches!(age_stage, GrowthStage::Adult) && has_build_target => {
@@ -861,6 +847,41 @@ fn behavior_select_action(
         if wood_deficit > 0.0 && behavior.job == "lumberjack" {
             behavior_score_add(&mut scores, ActionType::GatherWood, wood_deficit * 0.60);
         }
+
+        // Food scarcity response: when per-capita food is low, all adults boost Forage
+        // to redirect labor from Build/Craft/Socialize toward food production.
+        // This prevents the starvation cascade where food hits 0 and never recovers.
+        if settlement_population > 0 {
+            let food_per_capita =
+                settlement_food / settlement_population as f64;
+            if food_per_capita < config::FOOD_SCARCITY_THRESHOLD_PER_CAPITA {
+                behavior_score_add(
+                    &mut scores,
+                    ActionType::Forage,
+                    config::FOOD_SCARCITY_FORAGE_BOOST as f32,
+                );
+                scarcity_boost_applied = true;
+            }
+            // Note: abundance dampener removed — the fixed FOOD_STOCKPILE_CAP
+            // per settlement prevents unbounded food accumulation, making a
+            // scoring dampener redundant.
+        }
+    }
+
+    // Force/soft-force Forage inserts — placed AFTER the settlement dampener so
+    // personal starvation overrides abundance dampening. These use scores.insert()
+    // (absolute set) so they override any prior multiplicative dampening to zero.
+    if hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 {
+        scores.insert(ActionType::Forage, 1.0);
+    }
+    // Soft-force Forage at [BEHAVIOR_FORCE_FORAGE_HUNGER_MAX, +0.05) = [0.30, 0.35):
+    // At hunger=0.344, voluntary Hunt score (0.656)²×1.60=0.689 would win, cycling
+    // agents between 0.344→0.644 via hunting without reaching force-Forage threshold.
+    // Forage score 0.85 overrides Hunt in this critical zone.
+    if hunger >= config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32
+        && hunger < (config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 + 0.05)
+    {
+        scores.insert(ActionType::Forage, 0.85);
     }
 
     if matches!(age_stage, GrowthStage::Teen) {
@@ -936,7 +957,7 @@ fn behavior_select_action(
     }
 
     if scores.is_empty() {
-        return ActionType::Wander;
+        return (ActionType::Wander, false);
     }
 
     const BEHAVIOR_ACTION_ORDER: [ActionType; 19] = [
@@ -972,7 +993,7 @@ fn behavior_select_action(
         })
         .collect();
     if scored_actions.is_empty() {
-        return ActionType::Wander;
+        return (ActionType::Wander, false);
     }
     scored_actions.sort_by(|left, right| right.1.partial_cmp(&left.1).unwrap_or(Ordering::Equal));
     let best_score = scored_actions[0].1;
@@ -980,11 +1001,34 @@ fn behavior_select_action(
     if behavior.current_action != ActionType::Idle {
         if let Some(current_score) = scores.get(&behavior.current_action).copied() {
             if current_score >= best_score * BEHAVIOR_HYSTERESIS_THRESHOLD {
-                return behavior.current_action;
+                return (behavior.current_action, false);
             }
         }
     }
-    select_action_top_n(&mut scored_actions, rng, config::BEHAVIOR_TOP_N_SELECTION)
+    let selected = select_action_top_n(&mut scored_actions, rng, config::BEHAVIOR_TOP_N_SELECTION);
+
+    // Counterfactual check: if scarcity boost was applied and Forage won,
+    // would Forage have still won without the boost? If not, the boost was
+    // counterfactually effective (it CAUSED the Forage selection).
+    let counterfactual_effective = if scarcity_boost_applied && selected == ActionType::Forage {
+        let boost = config::FOOD_SCARCITY_FORAGE_BOOST as f32;
+        let forage_score = scored_actions
+            .iter()
+            .find(|(a, _)| *a == ActionType::Forage)
+            .map(|(_, s)| *s)
+            .unwrap_or(0.0);
+        let second_best = scored_actions
+            .iter()
+            .find(|(a, _)| *a != ActionType::Forage)
+            .map(|(_, s)| *s)
+            .unwrap_or(0.0);
+        // Without the boost, Forage score would be lower — would 2nd best win?
+        (forage_score - boost) < second_best
+    } else {
+        false
+    };
+
+    (selected, counterfactual_effective)
 }
 
 fn select_action_top_n(
@@ -1521,12 +1565,20 @@ impl SimSystem for BehaviorRuntimeSystem {
                 })
                 .unwrap_or(false);
             let has_tool = crafting::inventory_has_tool(inventory_opt, resources);
-            let (settlement_stone, settlement_wood) = identity_opt
-                .and_then(|id| id.settlement_id)
-                .and_then(|sid| resources.settlements.get(&sid))
-                .map(|s| (s.stockpile_stone, s.stockpile_wood))
-                .unwrap_or((0.0, 0.0));
-            let next_action = behavior_select_action(
+            let (settlement_stone, settlement_wood, settlement_food, settlement_population) =
+                identity_opt
+                    .and_then(|id| id.settlement_id)
+                    .and_then(|sid| resources.settlements.get(&sid))
+                    .map(|s| {
+                        (
+                            s.stockpile_stone,
+                            s.stockpile_wood,
+                            s.stockpile_food,
+                            s.population(),
+                        )
+                    })
+                    .unwrap_or((0.0, 0.0, 0.0, 0));
+            let (next_action, counterfactual_effective) = behavior_select_action(
                 age.stage,
                 needs,
                 stress_opt,
@@ -1542,8 +1594,42 @@ impl SimSystem for BehaviorRuntimeSystem {
                 has_tool,
                 settlement_stone,
                 settlement_wood,
+                settlement_food,
+                settlement_population,
                 &mut resources.rng,
             );
+            // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
+            // This proves the FOOD_SCARCITY_FORAGE_BOOST code path independently causes
+            // agents to forage during food scarcity, separate from the pre-existing
+            // hunger < 0.30 force-forage and [0.30, 0.35) soft-force paths.
+            if next_action == ActionType::Forage && settlement_population > 0 {
+                let food_per_capita =
+                    settlement_food / settlement_population as f64;
+                let hunger = needs.get(NeedType::Hunger) as f32;
+                let in_force_forage =
+                    hunger < config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32;
+                let in_soft_force = hunger >= config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32
+                    && hunger < (config::BEHAVIOR_FORCE_FORAGE_HUNGER_MAX as f32 + 0.05);
+                if food_per_capita < config::FOOD_SCARCITY_THRESHOLD_PER_CAPITA
+                    && !in_force_forage
+                    && !in_soft_force
+                {
+                    resources.food_economy_scarcity_boost_applications += 1;
+                    // Counterfactual: the boost changed the action winner
+                    if counterfactual_effective {
+                        resources.food_economy_scarcity_boost_counterfactual += 1;
+                    }
+                }
+                // Inverse invariant (A6): if the boost was flagged inside
+                // behavior_select_action but food_per_capita is actually >=
+                // threshold, something is structurally wrong. Should be 0 always.
+                if counterfactual_effective
+                    && food_per_capita >= config::FOOD_SCARCITY_THRESHOLD_PER_CAPITA
+                {
+                    resources.food_economy_boost_outside_scarcity += 1;
+                }
+            }
+
             let previous_action = behavior.current_action;
             let stress_level = stress_opt
                 .map(|stress| stress.level as f32)
@@ -1870,7 +1956,7 @@ mod tests {
         needs.energy = 0.90;
         let mut rng = StdRng::seed_from_u64(11);
 
-        let action = behavior_select_action(
+        let (action, _) = behavior_select_action(
             GrowthStage::Adult,
             &needs,
             None,
@@ -1886,6 +1972,8 @@ mod tests {
             false,
             0.0,
             0.0,
+            100.0, // settlement_food (ample)
+            10,    // settlement_population
             &mut rng,
         );
 
@@ -1902,7 +1990,7 @@ mod tests {
         needs.energy = 0.90;
         let mut rng = StdRng::seed_from_u64(12);
 
-        let action = behavior_select_action(
+        let (action, _) = behavior_select_action(
             GrowthStage::Adult,
             &needs,
             None,
@@ -1918,6 +2006,8 @@ mod tests {
             false,
             0.0,
             0.0,
+            100.0, // settlement_food (ample)
+            10,    // settlement_population
             &mut rng,
         );
 
@@ -1937,7 +2027,7 @@ mod tests {
         needs.energy = 0.20;
         let mut rng = StdRng::seed_from_u64(13);
 
-        let action = behavior_select_action(
+        let (action, _) = behavior_select_action(
             GrowthStage::Adult,
             &needs,
             None,
@@ -1953,6 +2043,8 @@ mod tests {
             false,
             0.0,
             0.0,
+            100.0, // settlement_food (ample)
+            10,    // settlement_population
             &mut rng,
         );
 
@@ -1969,7 +2061,7 @@ mod tests {
         needs.energy = 0.70;
         let mut rng = StdRng::seed_from_u64(14);
 
-        let action = behavior_select_action(
+        let (action, _) = behavior_select_action(
             GrowthStage::Adult,
             &needs,
             None,
@@ -1985,6 +2077,8 @@ mod tests {
             false,
             0.0,
             0.0,
+            100.0, // settlement_food (ample)
+            10,    // settlement_population
             &mut rng,
         );
 

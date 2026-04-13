@@ -195,6 +195,26 @@ pub struct SimResources {
     pub furniture_plans: Vec<FurniturePlan>,
     /// P2-B3: monotonically increasing id source for new wall/furniture plans.
     pub next_plan_id: u64,
+    /// Food economy diagnostic: total forage action completions.
+    pub food_economy_forage_completions: u64,
+    /// Food economy diagnostic: total food deposited by foraging (sum of yields).
+    pub food_economy_produced: f64,
+    /// Food economy diagnostic: total food withdrawn by childcare feeding.
+    pub food_economy_childcare_drain: f64,
+    /// Food economy diagnostic: total food consumed by births.
+    pub food_economy_birth_drain: f64,
+    /// Food economy diagnostic: total food consumed by crafting recipes.
+    pub food_economy_craft_drain: f64,
+    /// Food economy diagnostic: times the FOOD_SCARCITY_FORAGE_BOOST code path
+    /// was exercised AND the agent chose Forage (excluding hunger force/soft-force).
+    pub food_economy_scarcity_boost_applications: u64,
+    /// Food economy diagnostic: times the scarcity boost was counterfactually
+    /// effective — i.e., Forage won the action selection AND removing the 0.40
+    /// boost would have made a different action win (Forage score - boost < 2nd best).
+    pub food_economy_scarcity_boost_counterfactual: u64,
+    /// Food economy inverse invariant: times the boost was flagged as applied
+    /// but food_per_capita was >= threshold. Should ALWAYS be 0 by code construction.
+    pub food_economy_boost_outside_scarcity: u64,
 }
 
 fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
@@ -456,6 +476,14 @@ impl SimResources {
             wall_plans: Vec::new(),
             furniture_plans: Vec::new(),
             next_plan_id: 1,
+            food_economy_forage_completions: 0,
+            food_economy_produced: 0.0,
+            food_economy_childcare_drain: 0.0,
+            food_economy_birth_drain: 0.0,
+            food_economy_craft_drain: 0.0,
+            food_economy_scarcity_boost_applications: 0,
+            food_economy_scarcity_boost_counterfactual: 0,
+            food_economy_boost_outside_scarcity: 0,
         }
     }
 

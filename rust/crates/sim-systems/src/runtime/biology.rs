@@ -109,6 +109,7 @@ impl SimSystem for ChildcareRuntimeSystem {
                 continue;
             }
             settlement.stockpile_food = (available - withdrawn).max(0.0);
+            resources.food_economy_childcare_drain += withdrawn;
 
             if let Ok(mut needs) = world.get::<&mut Needs>(entity) {
                 let next = body::childcare_hunger_after(
@@ -277,6 +278,7 @@ impl SimSystem for PopulationRuntimeSystem {
         if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
             settlement.stockpile_food =
                 (settlement.stockpile_food - config::BIRTH_FOOD_COST).max(0.0);
+            resources.food_economy_birth_drain += config::BIRTH_FOOD_COST;
         }
 
         let mut adults_by_id: HashMap<EntityId, (Entity, Sex, Option<EntityId>)> = HashMap::new();
