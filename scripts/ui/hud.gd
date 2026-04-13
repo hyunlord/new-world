@@ -137,6 +137,11 @@ var _building_info_label: Label
 var _building_storage_label: Label
 var _building_status_label: Label
 
+# Tile info panel (wall/floor/furniture click)
+var _tile_info_panel: PanelContainer
+var _tile_info_title_label: Label
+var _tile_info_body_label: Label
+
 # Notification system
 var _notification_container: Control
 var _notifications: Array = []
@@ -255,6 +260,9 @@ var _selected_building_id: int = -1
 var _selected_settlement_id: int = -1
 var _selected_band_id: int = -1
 var _selected_civ_id: int = -1
+var _selected_tile_info: Dictionary = {}
+var _selected_tile_x: int = -1
+var _selected_tile_y: int = -1
 var _startup_mode: String = GameConfig.STARTUP_MODE_SANDBOX
 var _entity_panel_update_timer: float = 0.0
 var _building_panel_update_timer: float = 0.0
@@ -324,6 +332,7 @@ func _ready() -> void:
 	_build_top_bar()
 	_build_entity_panel()
 	_build_building_panel()
+	_build_tile_info_panel()
 	_build_notification_area()
 	_build_alert_cards()
 	_build_help_overlay()
@@ -2066,6 +2075,8 @@ func _connect_signals() -> void:
 	SimulationBus.civilization_deselected.connect(_on_civ_deselected)
 	SimulationBus.building_selected.connect(_on_building_selected)
 	SimulationBus.building_deselected.connect(_on_building_deselected)
+	SimulationBus.tile_selected.connect(_on_tile_selected)
+	SimulationBus.tile_deselected.connect(_on_tile_deselected)
 	SimulationBus.speed_changed.connect(_on_speed_changed)
 	SimulationBus.pause_changed.connect(_on_pause_changed)
 	SimulationBus.simulation_event.connect(_on_simulation_event)
@@ -2285,6 +2296,42 @@ func _build_building_panel() -> void:
 
 	_building_panel.add_child(vbox)
 	add_child(_building_panel)
+
+
+func _build_tile_info_panel() -> void:
+	_tile_info_panel = PanelContainer.new()
+	_tile_info_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_tile_info_panel.offset_left = 10
+	_tile_info_panel.offset_bottom = -BOTTOM_BAR_CLEARANCE
+	_tile_info_panel.offset_top = -(160.0 + BOTTOM_BAR_CLEARANCE)
+	_tile_info_panel.offset_right = 320
+	_tile_info_panel.visible = false
+
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.06, 0.06, 0.10, 0.88)
+	bg.corner_radius_top_left = 4
+	bg.corner_radius_top_right = 4
+	bg.corner_radius_bottom_left = 4
+	bg.corner_radius_bottom_right = 4
+	bg.content_margin_left = 10
+	bg.content_margin_right = 10
+	bg.content_margin_top = 8
+	bg.content_margin_bottom = 8
+	_tile_info_panel.add_theme_stylebox_override("panel", bg)
+
+	var vbox_tile := VBoxContainer.new()
+	vbox_tile.add_theme_constant_override("separation", 4)
+
+	_tile_info_title_label = _make_label(Locale.ltr("UI_TILE_INFO"), "panel_title")
+	_tile_info_body_label = _make_label("", "panel_body")
+	_tile_info_body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	vbox_tile.add_child(_tile_info_title_label)
+	vbox_tile.add_child(_make_separator())
+	vbox_tile.add_child(_tile_info_body_label)
+
+	_tile_info_panel.add_child(vbox_tile)
+	add_child(_tile_info_panel)
 
 
 func _build_notification_area() -> void:
@@ -3115,6 +3162,9 @@ func _on_entity_selected(entity_id: int) -> void:
 	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
 	_entity_panel_update_timer = ENTITY_PANEL_UPDATE_INTERVAL
 	_cached_rust_snapshot = {}
 	_cached_rust_snapshot_tick = -1
@@ -3122,6 +3172,7 @@ func _on_entity_selected(entity_id: int) -> void:
 	_close_hud_popups()
 	_entity_panel.visible = false
 	_building_panel.visible = false
+	_tile_info_panel.visible = false
 	_selected_building_id = -1
 	_building_panel_update_timer = 0.0
 	_refresh_selection_summary()
@@ -3156,10 +3207,14 @@ func _on_building_selected(building_id: int) -> void:
 	_selected_settlement_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
 	_building_panel_update_timer = BUILDING_PANEL_UPDATE_INTERVAL
 	_close_hud_popups()
 	_building_panel.visible = false
 	_entity_panel.visible = false
+	_tile_info_panel.visible = false
 	_selected_entity_id = -1
 	_entity_panel_update_timer = 0.0
 	_cached_rust_snapshot = {}
@@ -3177,6 +3232,34 @@ func _on_building_deselected() -> void:
 	_building_panel.visible = false
 	if _building_detail_panel != null:
 		_building_detail_panel.visible = false
+	_refresh_selection_summary()
+
+
+func _on_tile_selected(tile_x: int, tile_y: int, tile_info: Dictionary) -> void:
+	_selected_tile_x = tile_x
+	_selected_tile_y = tile_y
+	_selected_tile_info = tile_info
+	_selected_building_id = -1
+	_selected_entity_id = -1
+	_selected_settlement_id = -1
+	_selected_band_id = -1
+	_selected_civ_id = -1
+	_close_hud_popups()
+	_entity_panel.visible = false
+	_building_panel.visible = false
+	if _building_detail_panel != null:
+		_building_detail_panel.visible = false
+	# Show tile info sidebar panel
+	_populate_tile_info_panel(tile_x, tile_y, tile_info)
+	_tile_info_panel.visible = true
+	_refresh_selection_summary()
+
+
+func _on_tile_deselected() -> void:
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
+	_tile_info_panel.visible = false
 	_refresh_selection_summary()
 
 
@@ -3785,9 +3868,13 @@ func open_settlement_detail(settlement_id: int) -> void:
 	_selected_building_id = -1
 	_selected_band_id = -1
 	_selected_civ_id = -1
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
 	_close_hud_popups()
 	_entity_panel.visible = false
 	_building_panel.visible = false
+	_tile_info_panel.visible = false
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(-1)
 	if _popup_manager != null:
@@ -3824,9 +3911,13 @@ func open_band_detail(band_id: int) -> void:
 	_selected_civ_id = -1
 	_selected_entity_id = -1
 	_selected_building_id = -1
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
 	_close_hud_popups()
 	_entity_panel.visible = false
 	_building_panel.visible = false
+	_tile_info_panel.visible = false
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(-1)
 	if _band_detail_panel.has_method("set_band_id"):
@@ -3847,9 +3938,13 @@ func open_civ_detail(civ_id: int) -> void:
 	_selected_band_id = -1
 	_selected_entity_id = -1
 	_selected_building_id = -1
+	_selected_tile_info = {}
+	_selected_tile_x = -1
+	_selected_tile_y = -1
 	_close_hud_popups()
 	_entity_panel.visible = false
 	_building_panel.visible = false
+	_tile_info_panel.visible = false
 	if _cast_bar != null:
 		_cast_bar.set_selected_entity(-1)
 	if _civ_detail_panel.has_method("set_civ_id"):
@@ -4602,6 +4697,11 @@ func _refresh_selection_summary() -> void:
 				building_name = building_type
 			_bottom_bar_sel_label.text = "🏗 " + building_name
 			return
+	if not _selected_tile_info.is_empty():
+		var tile_label: String = _get_tile_selection_label()
+		if not tile_label.is_empty():
+			_bottom_bar_sel_label.text = tile_label
+			return
 	# No selection — show zoom-dependent context
 	match _bottom_bar_current_zoom_level:
 		2:
@@ -4612,3 +4712,82 @@ func _refresh_selection_summary() -> void:
 			_bottom_bar_sel_label.text = Locale.ltr("UI_WORLD_VIEW")
 		_:
 			_bottom_bar_sel_label.text = ""
+
+
+func _get_tile_selection_label() -> String:
+	var info: Dictionary = _selected_tile_info
+	if info.is_empty():
+		return ""
+	var parts: PackedStringArray = PackedStringArray()
+	if info.get("has_wall", false):
+		var mat_id: String = str(info.get("wall_material", ""))
+		var mat_name: String = Locale.ltr("MAT_" + mat_id.to_upper())
+		if mat_name == "MAT_" + mat_id.to_upper() or mat_name.is_empty():
+			mat_name = mat_id
+		parts.append(Locale.ltr("UI_WALL") + ": " + mat_name)
+		var hp: int = int(info.get("wall_hp", 0))
+		parts.append(Locale.ltr("UI_WALL_HP") + ": " + str(hp))
+	if info.get("has_floor", false):
+		var mat_id: String = str(info.get("floor_material", ""))
+		var mat_name: String = Locale.ltr("MAT_" + mat_id.to_upper())
+		if mat_name == "MAT_" + mat_id.to_upper() or mat_name.is_empty():
+			mat_name = mat_id
+		parts.append(Locale.ltr("UI_FLOOR") + ": " + mat_name)
+	if info.get("has_furniture", false):
+		var furn_id: String = str(info.get("furniture_id", ""))
+		var furn_name: String = Locale.ltr("FURN_" + furn_id.to_upper())
+		if furn_name == "FURN_" + furn_id.to_upper() or furn_name.is_empty():
+			furn_name = furn_id
+		parts.append(Locale.ltr("UI_FURNITURE") + ": " + furn_name)
+	if info.get("is_door", false):
+		parts.append(Locale.ltr("UI_DOOR"))
+	if info.has("room_id"):
+		var role_key: String = str(info.get("room_role", "unknown"))
+		var role_name: String = Locale.ltr("ROOM_ROLE_" + role_key.to_upper())
+		if role_name == "ROOM_ROLE_" + role_key.to_upper() or role_name.is_empty():
+			role_name = role_key
+		parts.append(Locale.ltr("UI_ROOM") + " #" + str(info.get("room_id", 0)) + " (" + role_name + ")")
+	if parts.is_empty():
+		return ""
+	return "🧱 " + " | ".join(parts)
+
+
+func _populate_tile_info_panel(tile_x: int, tile_y: int, info: Dictionary) -> void:
+	if _tile_info_panel == null:
+		return
+	_tile_info_title_label.text = Locale.ltr("UI_TILE_INFO") + " (%d, %d)" % [tile_x, tile_y]
+	var lines: PackedStringArray = PackedStringArray()
+	if info.get("has_wall", false):
+		var mat_id: String = str(info.get("wall_material", ""))
+		var mat_name: String = Locale.ltr("MAT_" + mat_id.to_upper())
+		if mat_name == "MAT_" + mat_id.to_upper() or mat_name.is_empty():
+			mat_name = mat_id
+		lines.append(Locale.ltr("UI_WALL") + ": " + mat_name)
+		var hp: int = int(info.get("wall_hp", 0))
+		lines.append(Locale.ltr("UI_WALL_HP") + ": " + str(hp))
+	if info.get("has_floor", false):
+		var mat_id: String = str(info.get("floor_material", ""))
+		var mat_name: String = Locale.ltr("MAT_" + mat_id.to_upper())
+		if mat_name == "MAT_" + mat_id.to_upper() or mat_name.is_empty():
+			mat_name = mat_id
+		lines.append(Locale.ltr("UI_FLOOR") + ": " + mat_name)
+	if info.get("has_furniture", false):
+		var furn_id: String = str(info.get("furniture_id", ""))
+		var furn_name: String = Locale.ltr("FURN_" + furn_id.to_upper())
+		if furn_name == "FURN_" + furn_id.to_upper() or furn_name.is_empty():
+			furn_name = furn_id
+		lines.append(Locale.ltr("UI_FURNITURE") + ": " + furn_name)
+	if info.get("is_door", false):
+		lines.append(Locale.ltr("UI_DOOR"))
+	if info.has("room_id"):
+		var role_key: String = str(info.get("room_role", "unknown"))
+		var role_name: String = Locale.ltr("ROOM_ROLE_" + role_key.to_upper())
+		if role_name == "ROOM_ROLE_" + role_key.to_upper() or role_name.is_empty():
+			role_name = role_key
+		lines.append(Locale.ltr("UI_ROOM") + " #" + str(info.get("room_id", 0)))
+		lines.append(Locale.ltr("UI_ROOM_ROLE") + ": " + role_name)
+		if info.get("room_enclosed", false):
+			lines.append(Locale.ltr("UI_ROOM_ENCLOSED") + ": ✓")
+		else:
+			lines.append(Locale.ltr("UI_ROOM_ENCLOSED") + ": ✗")
+	_tile_info_body_label.text = "\n".join(lines)

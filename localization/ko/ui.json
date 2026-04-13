@@ -2303,5 +2303,20 @@
   "EFFECT_WARMTH": "온기 영향",
   "EFFECT_CAPACITY": "수용 인원",
   "EFFECT_ENERGY_RESTORE": "에너지 회복",
-  "EFFECT_SAFETY_BOOST": "안전감 증가"
+  "EFFECT_SAFETY_BOOST": "안전감 증가",
+  "UI_TILE_INFO": "타일 정보",
+  "UI_WALL": "벽",
+  "UI_WALL_HP": "내구도",
+  "UI_FLOOR": "바닥",
+  "UI_FURNITURE": "가구",
+  "UI_ROOM": "방",
+  "UI_ROOM_ROLE": "역할",
+  "UI_ROOM_ENCLOSED": "밀폐",
+  "UI_DOOR": "문",
+  "UI_POSITION": "위치",
+  "ROOM_ROLE_UNKNOWN": "미지정",
+  "ROOM_ROLE_SHELTER": "거처",
+  "ROOM_ROLE_HEARTH": "화로방",
+  "ROOM_ROLE_STORAGE": "저장소",
+  "ROOM_ROLE_CRAFTING": "공방"
 }

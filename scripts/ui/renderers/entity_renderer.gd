@@ -1620,6 +1620,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 					_last_click_building_id = -1
 					_last_click_time = now
 					_last_click_pos = screen_pos
+					SimulationBus.tile_deselected.emit()
 					SimulationBus.settlement_panel_requested.emit(settlement_id)
 					return
 
@@ -1646,6 +1647,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 
 			selected_entity_id = -1
 			SimulationBus.entity_deselected.emit()
+			SimulationBus.tile_deselected.emit()
 			SimulationBus.building_selected.emit(building_id)
 
 			if is_double:
@@ -1687,6 +1689,7 @@ func _handle_click(screen_pos: Vector2) -> void:
 
 		selected_entity_id = best_entity_id
 		SimulationBus.building_deselected.emit()
+		SimulationBus.tile_deselected.emit()
 		SimulationBus.entity_selected.emit(best_entity_id)
 
 		if is_double:
@@ -1697,11 +1700,24 @@ func _handle_click(screen_pos: Vector2) -> void:
 		_last_click_time = now
 		_last_click_pos = screen_pos
 	else:
+		# No entity found — check tile_grid structural info (building > entity > tile_info)
+		if _sim_engine != null and _sim_engine.has_method("get_tile_info"):
+			var tile_info: Dictionary = _sim_engine.get_tile_info(tile.x, tile.y)
+			if tile_info.get("has_wall", false) or tile_info.get("has_furniture", false) or tile_info.get("has_floor", false) or tile_info.has("room_id") or tile_info.get("is_door", false):
+				selected_entity_id = -1
+				SimulationBus.entity_deselected.emit()
+				SimulationBus.tile_selected.emit(tile.x, tile.y, tile_info)
+				_last_click_building_id = -1
+				_last_click_entity_id = -1
+				_last_click_time = now
+				_last_click_pos = screen_pos
+				return
 		selected_entity_id = -1
 		_last_click_entity_id = -1
 		_last_click_building_id = -1
 		SimulationBus.entity_deselected.emit()
 		SimulationBus.building_deselected.emit()
+		SimulationBus.tile_deselected.emit()
 
 
 func _settlement_center_tile(settlement: Dictionary) -> Vector2:

@@ -2303,5 +2303,20 @@
   "EFFECT_WARMTH": "Warmth Influence",
   "EFFECT_CAPACITY": "Capacity",
   "EFFECT_ENERGY_RESTORE": "Energy Restore",
-  "EFFECT_SAFETY_BOOST": "Safety Boost"
+  "EFFECT_SAFETY_BOOST": "Safety Boost",
+  "UI_TILE_INFO": "Tile Info",
+  "UI_WALL": "Wall",
+  "UI_WALL_HP": "Durability",
+  "UI_FLOOR": "Floor",
+  "UI_FURNITURE": "Furniture",
+  "UI_ROOM": "Room",
+  "UI_ROOM_ROLE": "Role",
+  "UI_ROOM_ENCLOSED": "Enclosed",
+  "UI_DOOR": "Door",
+  "UI_POSITION": "Position",
+  "ROOM_ROLE_UNKNOWN": "Unknown",
+  "ROOM_ROLE_SHELTER": "Shelter",
+  "ROOM_ROLE_HEARTH": "Hearth",
+  "ROOM_ROLE_STORAGE": "Storage",
+  "ROOM_ROLE_CRAFTING": "Crafting"
 }
