@@ -1359,8 +1359,12 @@ impl SimSystem for GatheringRuntimeSystem {
                     let gathered_f64 = harvested as f64;
                     match resource_type {
                         ResourceType::Food => {
+                            let before = settlement.stockpile_food;
+                            let cap = config::FOOD_STOCKPILE_CAP;
                             settlement.stockpile_food =
-                                (settlement.stockpile_food + gathered_f64).max(0.0);
+                                (settlement.stockpile_food + gathered_f64).min(cap).max(0.0);
+                            let actual = (settlement.stockpile_food - before).max(0.0);
+                            resources.food_economy_produced += actual;
                         }
                         ResourceType::Wood => {
                             settlement.stockpile_wood =

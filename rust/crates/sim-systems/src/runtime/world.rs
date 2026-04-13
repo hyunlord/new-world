@@ -1177,9 +1177,16 @@ impl SimSystem for MovementRuntimeSystem {
                             // timer window, so this ensures settlement food accumulates.
                             if let Some(sid) = identity_opt.and_then(|id| id.settlement_id) {
                                 if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                                    let before = settlement.stockpile_food;
+                                    let cap = config::FOOD_STOCKPILE_CAP;
                                     settlement.stockpile_food = (settlement.stockpile_food
                                         + config::FORAGE_STOCKPILE_YIELD)
+                                        .min(cap)
                                         .max(0.0);
+                                    resources.food_economy_forage_completions += 1;
+                                    let actual =
+                                        (settlement.stockpile_food - before).max(0.0);
+                                    resources.food_economy_produced += actual;
                                 }
                             }
                             maybe_grant_forage_berries(

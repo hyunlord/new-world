@@ -90,10 +90,11 @@ impl SimSystem for CraftingRuntimeSystem {
                 continue;
             };
 
-            if !deduct_recipe_costs(settlement, recipe.as_ref()) {
+            let Some(food_cost) = deduct_recipe_costs(settlement, recipe.as_ref()) else {
                 clear_craft_behavior(behavior);
                 continue;
-            }
+            };
+            resources.food_economy_craft_drain += food_cost;
 
             behavior.craft_recipe_id = Some(selection.recipe_id);
             behavior.craft_material_id = Some(selection.material_id);
@@ -471,22 +472,27 @@ fn select_best_recipe(
     )
 }
 
-fn deduct_recipe_costs(settlement: &mut Settlement, recipe: &RecipeDef) -> bool {
-    let Some(costs) = recipe_stockpile_costs(recipe) else {
-        return false;
-    };
+/// Deducts recipe costs from settlement stockpiles.
+/// Returns `Some(food_cost)` on success (food_cost may be 0.0 if no food used),
+/// or `None` if the settlement lacks sufficient resources.
+fn deduct_recipe_costs(settlement: &mut Settlement, recipe: &RecipeDef) -> Option<f64> {
+    let costs = recipe_stockpile_costs(recipe)?;
     if costs
         .iter()
         .any(|(resource, amount)| stockpile_amount(settlement, resource.as_str()) < *amount)
     {
-        return false;
+        return None;
     }
+    let mut food_cost = 0.0f64;
     for (resource, amount) in costs {
+        if resource == "food" {
+            food_cost += amount;
+        }
         if !deduct_stockpile(settlement, resource.as_str(), amount) {
-            return false;
+            return None;
         }
     }
-    true
+    Some(food_cost)
 }
 
 #[cfg(test)]

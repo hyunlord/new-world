@@ -791,9 +791,33 @@ pub const HUNGER_EAT_THRESHOLD: f64 = 0.5;
 /// Food deposited to settlement stockpile each time a Forage action completes.
 /// Ensures foragers contribute food even when they can't reach a resource tile
 /// within the action timer window.
-pub const FORAGE_STOCKPILE_YIELD: f64 = 2.0;
+///
+/// Increased from 2.0 → 3.0 (2026-04-13): at population 31 with 10 children/teens,
+/// childcare drain + birth costs (3.0 each) + crafting outpaced forage production.
+/// Food crashed to 0 by tick 2200 and never recovered, triggering starvation cascade.
+/// At 3.0 per completion (24 ticks), a single forager produces 0.125 food/tick —
+/// 10 active foragers sustain ~30 agents + childcare + births with margin.
+pub const FORAGE_STOCKPILE_YIELD: f64 = 3.0;
 pub const FORAGE_BERRIES_DROP_CHANCE: f64 = 0.30;
 pub const FORAGE_FOOD_BUFFER_SLOTS: usize = 3;
+
+/// Per-capita food threshold below which food scarcity response activates.
+/// When stockpile_food / population < this value, all adults get a Forage score
+/// boost to prioritize food production over other activities.
+/// Set to 1.5: at cap=52 food, scarcity triggers when pop > 34 (52/34=1.529),
+/// so populations 20-34 have margin while larger groups trigger scarcity response.
+pub const FOOD_SCARCITY_THRESHOLD_PER_CAPITA: f64 = 1.5;
+/// Forage score boost applied to all adults when food scarcity is detected.
+/// Must exceed Craft (0.35) and Build (0.45) base scores to redirect labor.
+pub const FOOD_SCARCITY_FORAGE_BOOST: f64 = 0.40;
+/// Hard per-capita cap on settlement food stockpile. Models finite storage
+/// capacity. Gathering and forage deposits are clamped to this ceiling.
+/// Fixed food stockpile cap per settlement. Models finite storage capacity.
+/// NOT per-capita — a fixed cap means that as population grows, per-capita
+/// food decreases, naturally triggering scarcity response when pop exceeds
+/// ~32 (52/32=1.625 > 1.6; at 33: 52/33=1.576 < 1.6 → scarcity).
+/// Well under 200.0 physical invariant even with multiple settlements.
+pub const FOOD_STOCKPILE_CAP: f64 = 52.0;
 /// Probe bootstrap hunger for the primary observed settler.
 pub const PROBE_START_PRIMARY_HUNGER: f64 = 0.22;
 /// Probe bootstrap energy for the primary observed settler.
