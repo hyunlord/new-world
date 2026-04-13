@@ -19,5 +19,8 @@
   "MAT_BIRCH": "Birch",
   "MAT_WILLOW": "Willow",
   "MAT_BAMBOO": "Bamboo",
-  "MAT_PLANT": "Plant"
+  "MAT_PLANT": "Plant",
+  "MAT_PACKED_EARTH": "Packed Earth",
+  "MAT_LIMESTONE": "Limestone",
+  "MAT_BASALT": "Basalt"
 }

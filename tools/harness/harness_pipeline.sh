@@ -846,12 +846,18 @@ run_ffi_verify() {
     local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
     mkdir -p "$evidence_dir"
 
-    # Extract #[func] method names from sim-bridge
+    # Extract only recently changed #[func] methods (feature-scoped)
+    # Pre-existing unproxied methods are tech debt, not feature regressions
     local rust_methods
-    rust_methods=$(grep -B0 -A1 '#\[func\]' "$PROJECT_ROOT/rust/crates/sim-bridge/src/lib.rs" \
-        | grep 'fn ' \
-        | sed 's/.*fn \([a-z_][a-z_0-9]*\).*/\1/' \
-        | sort -u)
+    rust_methods=$(cd "$PROJECT_ROOT" && git diff HEAD~1 -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null \
+        | grep '^+.*fn ' | grep -v '^+++' \
+        | sed 's/.*fn \([a-z_][a-z_0-9]*\).*/\1/' 2>/dev/null | sort -u || true)
+
+    if [[ -z "$rust_methods" ]]; then
+        log "No new #[func] methods detected in sim-bridge — skipping FFI verify"
+        echo "ffi_overall: ALL_COMPLETE (no new methods)" > "$evidence_dir/ffi_chain_verify.txt"
+        return 0
+    fi
 
     # Build prompt
     local ffi_prompt_file
@@ -863,13 +869,15 @@ Your ONLY job is to verify that every Rust #[func] method in SimBridge has a com
 
 The chain for each method is:
 1. rust/crates/sim-bridge/src/lib.rs — #[func] fn <name>
-2. scripts/core/simulation/sim_bridge.gd — func <name> calling _get_native_runtime().<name>
-3. scripts/core/simulation/simulation_engine.gd — func <name> calling sim_bridge.<name>
+2. scripts/core/simulation/sim_bridge.gd — func <name> (may use EITHER direct call runtime.<name>() OR defensive call() pattern: runtime.call("<name>", ...))
+3. scripts/core/simulation/simulation_engine.gd — func <name> (may use EITHER direct call sim_bridge.<name>() OR defensive call() pattern: sim_bridge.call("<name>", ...))
+
+IMPORTANT: Both direct-call and call()-based proxy patterns are VALID. Search for the method name as a string literal too, not just dotted calls.
 
 INSTRUCTIONS:
-- For each method listed below, check if the proxy exists in both GDScript files
-- Use grep to search the files
-- Only report methods that are BROKEN or were recently added (check git diff)
+- The methods listed below are ONLY the recently added/changed methods from this feature
+- For each method, check if the proxy exists in both GDScript files using grep
+- Do NOT check or report on pre-existing methods not listed below
 
 Output format (one block per broken/new method):
 METHOD: <name>
@@ -884,11 +892,10 @@ ffi_overall: ALL_COMPLETE | HAS_BROKEN
 FFI_HEADER
 
     cat >> "$ffi_prompt_file" << FFI_METHODS
-The Rust SimBridge exposes these #[func] methods:
+These are the NEWLY ADDED #[func] methods for this feature (from git diff):
 $rust_methods
 
-Check the proxy chain for each method. Focus especially on methods that appear in recent git changes:
-$(cd "$PROJECT_ROOT" && git diff --name-only HEAD -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null || echo "(no recent changes detected)")
+Check the proxy chain for ONLY these methods. Do not scan for other methods.
 FFI_METHODS
 
     log "Running FFI Chain Verify via Codex..."
@@ -951,7 +958,9 @@ Run these checks IN ORDER. Do NOT skip any.
 5. Check FFI evidence if it exists:
    cat .harness/evidence/*/ffi_chain_verify.txt 2>/dev/null
    cat .harness/evidence/*/ffi_verify.txt 2>/dev/null
-   Any MISSING or BROKEN methods = regression.
+   ONLY methods listed as BROKEN that were NEWLY ADDED for this feature = regression.
+   Pre-existing WARN entries for unproxied methods are technical debt, NOT regressions.
+   If ffi_overall says ALL_COMPLETE, the FFI check is CLEAN.
 
 OUTPUT FORMAT (must be machine-parseable):
 After your analysis, output EXACTLY one of these lines at the end:

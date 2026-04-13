@@ -167,6 +167,10 @@ signal era_changed(settlement_id: int, old_era: String, new_era: String)
 
 ## [C-1h] Settlement detail panel open/close
 @warning_ignore("unused_signal")
+signal tile_selected(tile_x: int, tile_y: int, tile_info: Dictionary)
+@warning_ignore("unused_signal")
+signal tile_deselected()
+
 signal settlement_panel_requested(settlement_id: int)
 @warning_ignore("unused_signal")
 signal settlement_panel_closed()

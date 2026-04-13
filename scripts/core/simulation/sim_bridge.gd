@@ -481,6 +481,18 @@ func get_tile_grid_walls() -> Dictionary:
 	return {}
 
 
+## Returns tile-grid structural data for a single tile coordinate.
+## Used by tile-click info panel to display wall/floor/furniture/room details.
+func get_tile_info(tile_x: int, tile_y: int) -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null or not runtime.has_method("get_tile_info"):
+		return {}
+	var raw: Variant = runtime.call("get_tile_info", tile_x, tile_y)
+	if raw is Dictionary:
+		return raw
+	return {}
+
+
 ## Returns the number of pending wall plans from Rust simulation.
 func get_wall_plans_count() -> int:
 	var runtime: Object = _get_native_runtime()

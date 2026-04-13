@@ -21,6 +21,7 @@ mod runtime_queries;
 mod runtime_registry;
 mod runtime_system;
 mod snapshot_buffer;
+pub mod tile_info;
 mod ws2_codec;
 
 use body_bindings::{
@@ -2421,13 +2422,13 @@ impl WorldSimRuntime {
 
                 // Room data — set defaults first so GDScript can always read these keys
                 dict.set("room_id", -1_i64);
-                dict.set("room_role", "Unknown");
+                dict.set("room_role", "unknown");
                 dict.set("room_enclosed", false);
                 let tile = resources.tile_grid.get(tile_x as u32, tile_y as u32);
                 if let Some(room_id) = tile.room_id {
                     dict.set("room_id", room_id.0 as i64);
                     if let Some(room) = resources.rooms.iter().find(|r| r.id == room_id) {
-                        dict.set("room_role", format!("{:?}", room.role));
+                        dict.set("room_role", tile_info::room_role_locale_key(room.role));
                         dict.set("room_enclosed", room.enclosed);
                     }
                 }
@@ -3507,6 +3508,72 @@ impl WorldSimRuntime {
     fn get_wall_plans_count(&self) -> i64 {
         let Some(state) = self.state.as_ref() else { return -1; };
         state.engine.resources().wall_plans.len() as i64
+    }
+
+    /// Returns tile-grid structural data for a single tile coordinate.
+    /// Used by the tile-click info panel to display wall/floor/furniture/room
+    /// details for the clicked tile. Returns an empty dictionary if the
+    /// coordinate is out of bounds or the simulation is not running.
+    /// Delegates to [`tile_info::extract_tile_info`] for the core extraction logic.
+    #[func]
+    fn get_tile_info(&self, tile_x: i64, tile_y: i64) -> VarDictionary {
+        let Some(state) = self.state.as_ref() else {
+            return VarDictionary::new();
+        };
+        let resources = state.engine.resources();
+        let Some(info) = tile_info::extract_tile_info(
+            &resources.tile_grid,
+            &resources.rooms,
+            tile_x as i32,
+            tile_y as i32,
+        ) else {
+            return VarDictionary::new();
+        };
+
+        // Return empty dict for completely empty tiles (no structural data)
+        if !info.has_structural_data() {
+            return VarDictionary::new();
+        }
+
+        let mut out = VarDictionary::new();
+
+        // Wall info
+        out.set("has_wall", info.has_wall);
+        if let Some(ref mat) = info.wall_material {
+            out.set("wall_material", GString::from(mat.as_str()));
+        }
+        out.set("wall_hp", info.wall_hp);
+        out.set("is_door", info.is_door);
+
+        // Floor info
+        out.set("has_floor", info.has_floor);
+        if let Some(ref mat) = info.floor_material {
+            out.set("floor_material", GString::from(mat.as_str()));
+        }
+
+        // Furniture info
+        out.set("has_furniture", info.has_furniture);
+        if let Some(ref fid) = info.furniture_id {
+            out.set("furniture_id", GString::from(fid.as_str()));
+        }
+
+        // Room info — room_role is a locale-safe key (lowercase)
+        if let Some(room_id) = info.room_id {
+            out.set("room_id", room_id as i64);
+            if let Some(ref role_key) = info.room_role_key {
+                out.set("room_role", GString::from(role_key.as_str()));
+            }
+            if let Some(enclosed) = info.room_enclosed {
+                out.set("room_enclosed", enclosed);
+            }
+            if let Some(tile_count) = info.room_tile_count {
+                out.set("room_tile_count", tile_count as i64);
+            }
+        }
+
+        out.set("tile_x", tile_x);
+        out.set("tile_y", tile_y);
+        out
     }
 
     /// Entity list snapshot — lightweight summary of every agent.

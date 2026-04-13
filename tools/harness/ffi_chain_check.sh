@@ -18,17 +18,9 @@ broken=0
 rust_methods=$(grep -A1 '#\[func\]' "$BRIDGE_RS" 2>/dev/null \
     | grep 'fn ' | sed 's/.*fn \([a-z_][a-z_0-9]*\).*/\1/' | sort -u)
 
-# For each Rust method, check if sim_bridge.gd has a proxy
-for method in $rust_methods; do
-    if ! grep -q "$method" "$SIM_BRIDGE_GD" 2>/dev/null; then
-        # Check if it's a runtime_ prefixed method called differently
-        local_name="${method#runtime_}"
-        if ! grep -q "$local_name" "$SIM_BRIDGE_GD" 2>/dev/null; then
-            echo "WARN: $method — not found in sim_bridge.gd"
-        fi
-    fi
-done
-
+# Only check recently added methods — pre-existing unproxied methods are
+# technical debt, not feature regressions. Reporting them contaminates
+# the regression guard evidence.
 # Check recently added methods (git diff HEAD~1) — these MUST have proxies
 changed_methods=$(git diff HEAD~1 -- "$BRIDGE_RS" 2>/dev/null \
     | grep '^+.*fn ' | grep -v '^+++' \

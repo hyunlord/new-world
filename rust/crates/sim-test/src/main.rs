@@ -828,6 +828,7 @@ mod tests {
     use sim_core::components::{Age, Behavior, Identity, Needs, Personality, Position, SteeringParams, Temperament};
     use sim_core::config::{GameConfig, TICKS_PER_YEAR};
     use sim_core::{ActionType, Building, GameCalendar, Settlement, SettlementId, TerrainType, WorldMap};
+    use sim_bridge::tile_info::{extract_tile_info, room_role_locale_key};
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
     use sim_systems::entity_spawner::SpawnConfig;
     use sim_systems::runtime::derive_steering_params;
@@ -7786,6 +7787,1181 @@ mod tests {
              {} distinct colors, stone=true, wood=true, default=true",
             color_count
         );
+    }
+
+    // =========================================================================
+    // Harness: wall-click-info — tile_grid data integrity for get_tile_info API
+    // =========================================================================
+
+    /// Harness: wall-click-info A1 — Every wall tile has positive HP and non-empty material
+    /// Type: A (absolute invariant)
+    /// Threshold: = 0 violations
+    #[test]
+    fn harness_wall_click_info_wall_hp_and_material_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if let Some(ref mat) = tile.wall_material {
+                    if mat.is_empty() {
+                        eprintln!(
+                            "[harness_wall_click_info_A1] violation: wall at ({},{}) has empty material string",
+                            x, y
+                        );
+                        violations += 1;
+                    }
+                    if tile.wall_hp <= 0.0 {
+                        eprintln!(
+                            "[harness_wall_click_info_A1] violation: wall at ({},{}) has wall_hp={} (expected >0.0)",
+                            x, y, tile.wall_hp
+                        );
+                        violations += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A1] wall_hp_and_material violations={}",
+            violations
+        );
+        // Type A: = 0 violations
+        assert!(
+            violations == 0,
+            "Expected 0 wall tiles with empty material or non-positive HP, found {}",
+            violations
+        );
+    }
+
+    /// Harness: wall-click-info A2 — Every floor tile has non-empty material string
+    /// Type: A (absolute invariant)
+    /// Threshold: = 0 violations
+    #[test]
+    fn harness_wall_click_info_floor_material_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if let Some(ref mat) = tile.floor_material {
+                    if mat.is_empty() {
+                        eprintln!(
+                            "[harness_wall_click_info_A2] violation: floor at ({},{}) has empty material string",
+                            x, y
+                        );
+                        violations += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A2] floor_material violations={}",
+            violations
+        );
+        // Type A: = 0 violations
+        assert!(
+            violations == 0,
+            "Expected 0 floor tiles with empty material string, found {}",
+            violations
+        );
+    }
+
+    /// Harness: wall-click-info A3 — Every furniture tile has non-empty furniture_id string
+    /// Type: A (absolute invariant)
+    /// Threshold: = 0 violations
+    #[test]
+    fn harness_wall_click_info_furniture_id_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if let Some(ref fid) = tile.furniture_id {
+                    if fid.is_empty() {
+                        eprintln!(
+                            "[harness_wall_click_info_A3] violation: furniture at ({},{}) has empty furniture_id",
+                            x, y
+                        );
+                        violations += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A3] furniture_id violations={}",
+            violations
+        );
+        // Type A: = 0 violations
+        assert!(
+            violations == 0,
+            "Expected 0 furniture tiles with empty furniture_id, found {}",
+            violations
+        );
+    }
+
+    /// Harness: wall-click-info A4 — Every tile room_id maps to an existing Room
+    /// Type: A (referential integrity)
+    /// Threshold: = 0 orphaned room_id references
+    #[test]
+    fn harness_wall_click_info_room_id_referential_integrity() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut orphaned = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if let Some(room_id) = tile.room_id {
+                    let room_exists = resources.rooms.iter().any(|r| r.id == room_id);
+                    if !room_exists {
+                        eprintln!(
+                            "[harness_wall_click_info_A4] orphaned room_id {:?} at ({},{})",
+                            room_id, x, y
+                        );
+                        orphaned += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A4] orphaned_room_ids={}",
+            orphaned
+        );
+        // Type A: = 0 orphaned room_id references
+        assert!(
+            orphaned == 0,
+            "Expected 0 orphaned tile room_ids, found {}",
+            orphaned
+        );
+    }
+
+    /// Harness: wall-click-info A5 — Room-assigned tiles have floor_material
+    /// Type: A (cross-field consistency)
+    /// Threshold: = 0 violations
+    #[test]
+    fn harness_wall_click_info_room_tile_has_floor() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.room_id.is_some() && tile.floor_material.is_none() {
+                    eprintln!(
+                        "[harness_wall_click_info_A5] violation: tile ({},{}) has room_id={:?} but no floor_material",
+                        x, y, tile.room_id
+                    );
+                    violations += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A5] room_tile_without_floor violations={}",
+            violations
+        );
+        // Type A: = 0 violations
+        assert!(
+            violations == 0,
+            "Expected 0 room tiles without floor_material, found {}",
+            violations
+        );
+    }
+
+    /// Harness: wall-click-info A6 — Door tiles have is_door=true and wall_material=None
+    /// Type: A (architectural invariant)
+    /// Threshold: = 0 violations
+    #[test]
+    fn harness_wall_click_info_door_no_wall_material() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.is_door && tile.wall_material.is_some() {
+                    eprintln!(
+                        "[harness_wall_click_info_A6] violation: door at ({},{}) has wall_material={:?}",
+                        x, y, tile.wall_material
+                    );
+                    violations += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A6] door_with_wall_material violations={}",
+            violations
+        );
+        // Type A: = 0 violations
+        assert!(
+            violations == 0,
+            "Expected 0 door tiles with wall_material, found {}",
+            violations
+        );
+    }
+
+    /// Harness: wall-click-info A7 — extract_tile_info has_structural_data display completeness
+    /// Type: A (feature-path invariant)
+    /// Threshold: every tile with wall/floor/furniture/room/door returns has_structural_data()=true
+    #[test]
+    fn harness_wall_click_info_a7_display_completeness() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut checked = 0u32;
+        let mut violations = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                let has_any = tile.wall_material.is_some()
+                    || tile.floor_material.is_some()
+                    || tile.furniture_id.is_some()
+                    || tile.room_id.is_some()
+                    || tile.is_door;
+                if !has_any {
+                    continue;
+                }
+                checked += 1;
+                let result = extract_tile_info(
+                    &resources.tile_grid,
+                    &resources.rooms,
+                    x as i32,
+                    y as i32,
+                );
+                match result {
+                    Some(info) => {
+                        if !info.has_structural_data() {
+                            eprintln!(
+                                "[harness_wall_click_info_A7] violation: ({},{}) structural data but has_structural_data()=false",
+                                x, y
+                            );
+                            violations += 1;
+                        }
+                    }
+                    None => {
+                        eprintln!(
+                            "[harness_wall_click_info_A7] violation: ({},{}) in-bounds but extract_tile_info=None",
+                            x, y
+                        );
+                        violations += 1;
+                    }
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A7] checked={} violations={}",
+            checked, violations
+        );
+        // Type A: = 0 violations — all structural tiles must report has_structural_data()=true
+        assert!(
+            violations == 0,
+            "Expected all structural tiles to have has_structural_data()=true, {} violations of {} checked",
+            violations, checked
+        );
+        assert!(checked > 0, "No structural tiles found to check display completeness");
+    }
+
+    /// Harness: wall-click-info A13 — Room enclosed completeness
+    /// Type: A (data completeness invariant)
+    /// Threshold: extract_tile_info returns Some(bool) for room_enclosed on ALL rooms
+    /// Plan v2 addition: guards against HUD only displaying enclosed=true
+    #[test]
+    fn harness_wall_click_info_a13_room_enclosed_completeness() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let mut rooms_checked = 0u32;
+        let mut enclosed_true_count = 0u32;
+        let mut enclosed_false_count = 0u32;
+        let mut violations = 0u32;
+
+        for room in &resources.rooms {
+            // Pick the first tile of the room to query
+            if let Some(&(tx, ty)) = room.tiles.first() {
+                let result = extract_tile_info(
+                    &resources.tile_grid,
+                    &resources.rooms,
+                    tx as i32,
+                    ty as i32,
+                );
+                // Type A: extract_tile_info must return Some for in-bounds room tile
+                assert!(
+                    result.is_some(),
+                    "extract_tile_info returned None for room tile ({},{}) of room {:?}",
+                    tx, ty, room.id
+                );
+                let info = result.unwrap();
+                // Type A: room_enclosed must be Some(bool) — never None for resolved rooms
+                match info.room_enclosed {
+                    Some(true) => enclosed_true_count += 1,
+                    Some(false) => enclosed_false_count += 1,
+                    None => {
+                        eprintln!(
+                            "[harness_wall_click_info_A13] violation: room {:?} tile ({},{}) has room_enclosed=None",
+                            room.id, tx, ty
+                        );
+                        violations += 1;
+                    }
+                }
+                rooms_checked += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A13] rooms_checked={} enclosed_true={} enclosed_false={} violations={}",
+            rooms_checked, enclosed_true_count, enclosed_false_count, violations
+        );
+        // Type A: = 0 violations (room_enclosed must always be Some for resolved rooms)
+        assert!(
+            violations == 0,
+            "Expected room_enclosed=Some(bool) for all rooms, found {} with None",
+            violations
+        );
+        // Type A: at least 1 room must exist to have been checked
+        assert!(
+            rooms_checked > 0,
+            "No rooms found to verify enclosed completeness"
+        );
+        // Type A: both enclosed states must be observed (plan v2 requirement)
+        assert!(
+            enclosed_true_count > 0,
+            "Expected at least one enclosed=true room, found none in {} rooms",
+            rooms_checked
+        );
+        assert!(
+            enclosed_false_count > 0,
+            "Expected at least one enclosed=false room, found none in {} rooms",
+            rooms_checked
+        );
+    }
+
+    /// Harness: wall-click-info A8 — Building-tile structural overlap
+    /// Type: A (cross-system invariant)
+    /// Threshold: every completed building has ≥1 tile with structural data in tile_grid
+    /// Plan v2 addition: establishes data overlap precondition for click-precedence
+    #[test]
+    fn harness_wall_click_info_building_tile_overlap() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let mut completed_buildings = 0u32;
+        let mut buildings_with_tile_data = 0u32;
+        let mut violations = 0u32;
+
+        for building in resources.buildings.values() {
+            if !building.is_complete {
+                continue;
+            }
+            completed_buildings += 1;
+
+            // Check all tiles in the building's footprint for structural data
+            let mut has_structural = false;
+            for dy in 0..building.height {
+                for dx in 0..building.width {
+                    let tx = building.x + dx as i32;
+                    let ty = building.y + dy as i32;
+                    if !resources.tile_grid.in_bounds(tx, ty) {
+                        continue;
+                    }
+                    let tile = resources.tile_grid.get(tx as u32, ty as u32);
+                    if tile.wall_material.is_some()
+                        || tile.floor_material.is_some()
+                        || tile.furniture_id.is_some()
+                    {
+                        has_structural = true;
+                        break;
+                    }
+                }
+                if has_structural {
+                    break;
+                }
+            }
+
+            if has_structural {
+                buildings_with_tile_data += 1;
+            } else {
+                eprintln!(
+                    "[harness_wall_click_info_A8] violation: completed building '{}' (id={:?}) at ({},{}) {}x{} has no tile_grid structural data",
+                    building.building_type, building.id, building.x, building.y, building.width, building.height
+                );
+                violations += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A8] completed_buildings={} with_tile_data={} violations={}",
+            completed_buildings, buildings_with_tile_data, violations
+        );
+        // Type A: = 0 violations (all completed buildings must stamp structural data)
+        assert!(
+            violations == 0,
+            "Expected all {} completed buildings to have tile_grid structural data, {} missing",
+            completed_buildings, violations
+        );
+        // Type C: at least 1 completed building must exist
+        assert!(
+            completed_buildings > 0,
+            "No completed buildings found to verify tile overlap"
+        );
+    }
+
+    /// Harness: wall-click-info C9 — Tile data diversity lower bounds (plan assertions 1,4,5)
+    /// Type: C (convergence)
+    /// Threshold: wall≥8, floor≥1, furniture≥1 (plan locked — do NOT change)
+    #[test]
+    fn harness_wall_click_info_tile_data_diversity_lower() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut wall_tiles = 0u32;
+        let mut floor_tiles = 0u32;
+        let mut furniture_tiles = 0u32;
+        let mut room_tiles = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.wall_material.is_some() {
+                    wall_tiles += 1;
+                }
+                if tile.floor_material.is_some() {
+                    floor_tiles += 1;
+                }
+                if tile.furniture_id.is_some() {
+                    furniture_tiles += 1;
+                }
+                if tile.room_id.is_some() {
+                    room_tiles += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_C9] wall_tiles={} floor_tiles={} furniture_tiles={} room_tiles={}",
+            wall_tiles, floor_tiles, furniture_tiles, room_tiles
+        );
+        // Type C: convergence lower bounds (plan locked thresholds — do NOT change)
+        // Plan assertion 1: wall tiles ≥ 8
+        assert!(
+            wall_tiles >= 8,
+            "Expected ≥8 wall tiles, observed {}",
+            wall_tiles
+        );
+        // Plan assertion 5: floor tiles ≥ 1
+        assert!(
+            floor_tiles >= 1,
+            "Expected ≥1 floor tiles, observed {}",
+            floor_tiles
+        );
+        // Plan assertion 4: furniture tiles ≥ 1
+        assert!(
+            furniture_tiles >= 1,
+            "Expected ≥1 furniture tiles, observed {}",
+            furniture_tiles
+        );
+    }
+
+    /// Harness: wall-click-info C10 — Tile data diversity upper bounds
+    /// Type: C (convergence)
+    /// Threshold: wall≤75, floor≤50, furniture≤30, room≤50
+    #[test]
+    fn harness_wall_click_info_tile_data_diversity_upper() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        let mut wall_tiles = 0u32;
+        let mut floor_tiles = 0u32;
+        let mut furniture_tiles = 0u32;
+        let mut room_tiles = 0u32;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.wall_material.is_some() {
+                    wall_tiles += 1;
+                }
+                if tile.floor_material.is_some() {
+                    floor_tiles += 1;
+                }
+                if tile.furniture_id.is_some() {
+                    furniture_tiles += 1;
+                }
+                if tile.room_id.is_some() {
+                    room_tiles += 1;
+                }
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_C10] wall_tiles={} floor_tiles={} furniture_tiles={} room_tiles={}",
+            wall_tiles, floor_tiles, furniture_tiles, room_tiles
+        );
+        // Type C: convergence upper bounds (plan-locked thresholds)
+        assert!(
+            wall_tiles <= 75,
+            "Expected ≤75 wall tiles, observed {}",
+            wall_tiles
+        );
+        assert!(
+            floor_tiles <= 50,
+            "Expected ≤50 floor tiles, observed {}",
+            floor_tiles
+        );
+        assert!(
+            furniture_tiles <= 30,
+            "Expected ≤30 furniture tiles, observed {}",
+            furniture_tiles
+        );
+        assert!(
+            room_tiles <= 50,
+            "Expected ≤50 room tiles, observed {}",
+            room_tiles
+        );
+    }
+
+    /// Harness: wall-click-info plan assertion 6 — Out-of-bounds returns None
+    /// Type: A (absolute invariant — FFI safety)
+    /// Threshold: extract_tile_info returns None for all 4 out-of-bounds coordinates
+    #[test]
+    fn harness_wall_click_info_a11_oob_rejection() {
+        let engine = make_stage1_engine(42, 20);
+        // No ticks needed — unit test
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+
+        let invalid_coords: [(i32, i32); 4] = [
+            (-1, 0),
+            (0, -1),
+            (grid_w as i32, 0),
+            (0, grid_h as i32),
+        ];
+        let mut false_positives = 0u32;
+        for (x, y) in &invalid_coords {
+            // Plan assertion 6: extract_tile_info must return None for OOB
+            let result = extract_tile_info(
+                &resources.tile_grid,
+                &resources.rooms,
+                *x,
+                *y,
+            );
+            if result.is_some() {
+                eprintln!(
+                    "[harness_wall_click_info_A11] false positive: extract_tile_info({},{}) returned Some",
+                    x, y
+                );
+                false_positives += 1;
+            }
+        }
+        eprintln!(
+            "[harness_wall_click_info_A11] false_positives={}",
+            false_positives
+        );
+        // Type A: = 0 false positives — all OOB coords must yield None
+        assert!(
+            false_positives == 0,
+            "Expected extract_tile_info to return None for all 4 OOB coordinates, {} returned Some",
+            false_positives
+        );
+    }
+
+    /// Harness: wall-click-info plan assertion 8 — Empty tile has no structural data
+    /// Type: A (absolute invariant — prevents noise UI panels)
+    /// Threshold: extract_tile_info returns has_structural_data()==false for empty tile
+    #[test]
+    fn harness_wall_click_info_a12_empty_tile_defaults() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        // (0,0) is a corner tile that should remain empty after simulation
+        // Plan assertion 8: empty tile must return Some with has_structural_data()==false
+        let result = extract_tile_info(
+            &resources.tile_grid,
+            &resources.rooms,
+            0,
+            0,
+        );
+        // extract_tile_info returns Some for in-bounds tiles (even empty ones)
+        assert!(
+            result.is_some(),
+            "extract_tile_info(0,0) returned None for in-bounds tile"
+        );
+        let info = result.unwrap();
+        eprintln!(
+            "[harness_wall_click_info_A12] (0,0) has_structural_data={} has_wall={} has_floor={} has_furniture={} is_door={} room_id={:?}",
+            info.has_structural_data(), info.has_wall, info.has_floor, info.has_furniture, info.is_door, info.room_id
+        );
+        // Type A: empty tile must NOT have structural data — prevents noise UI panels
+        assert!(
+            !info.has_structural_data(),
+            "Expected empty tile (0,0) to have has_structural_data()=false, but it returned true: {:?}",
+            info
+        );
+    }
+
+    /// Harness: wall-click-info plan assertion 9 — Door flag propagated through extract_tile_info
+    /// Type: A (absolute invariant — doors must be distinct from walls in UI)
+    /// Threshold: extract_tile_info correctly propagates is_door=true for a door tile
+    ///           and is_door=false for a non-door tile
+    #[test]
+    fn harness_wall_click_info_door_flag_propagated() {
+        // Unit test — manually stamp a door tile and verify extract_tile_info reads it
+        use sim_core::tile_grid::TileGrid;
+        let mut grid = TileGrid::new(10, 10);
+        let rooms: Vec<sim_core::room::Room> = Vec::new();
+
+        // Stamp a door at (3,3)
+        grid.set_door(3, 3);
+
+        // Plan assertion 9: extract_tile_info must propagate is_door=true
+        let result = extract_tile_info(&grid, &rooms, 3, 3);
+        assert!(result.is_some(), "extract_tile_info returned None for in-bounds door tile");
+        let info = result.unwrap();
+        assert!(
+            info.is_door,
+            "extract_tile_info must propagate is_door=true for door tile (3,3), got false"
+        );
+        // Door tiles should report has_structural_data()=true (distinct from walls in UI)
+        assert!(
+            info.has_structural_data(),
+            "Door tile (3,3) must have has_structural_data()=true"
+        );
+        // Door should NOT have wall_material (architectural invariant)
+        assert!(
+            !info.has_wall,
+            "Door tile (3,3) should have has_wall=false, got true"
+        );
+
+        // Verify non-door tile has is_door=false
+        grid.set_wall(5, 5, "granite", 100.0);
+        let wall_result = extract_tile_info(&grid, &rooms, 5, 5);
+        assert!(wall_result.is_some(), "extract_tile_info returned None for wall tile");
+        let wall_info = wall_result.unwrap();
+        assert!(
+            !wall_info.is_door,
+            "Wall tile (5,5) must have is_door=false, got true"
+        );
+        assert!(
+            wall_info.has_wall,
+            "Wall tile (5,5) must have has_wall=true"
+        );
+
+        eprintln!(
+            "[harness_wall_click_info_door_flag] PASS — door is_door={} has_structural={}, wall is_door={} has_wall={}",
+            info.is_door, info.has_structural_data(), wall_info.is_door, wall_info.has_wall
+        );
+    }
+
+    /// Harness: wall-click-info A14 — extract_tile_info structural coupling (wall/floor/furniture)
+    /// Type: A (feature-path coupling)
+    /// Threshold: extract_tile_info correctly reads wall/floor/furniture from tile_grid
+    /// If extract_tile_info is removed or broken, this test fails.
+    #[test]
+    fn harness_wall_click_info_a14_structural_coupling() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+
+        let mut found_wall = false;
+        let mut found_floor = false;
+        let mut found_furniture = false;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+
+                // Test wall tile via extract_tile_info
+                if tile.wall_material.is_some() && !found_wall {
+                    let result = extract_tile_info(
+                        &resources.tile_grid,
+                        &resources.rooms,
+                        x as i32,
+                        y as i32,
+                    );
+                    // Type A: extract_tile_info must return Some for in-bounds tile
+                    assert!(
+                        result.is_some(),
+                        "extract_tile_info returned None for in-bounds wall tile ({},{})",
+                        x, y
+                    );
+                    let info = result.unwrap();
+                    // Type A: wall fields must match tile_grid data
+                    assert!(info.has_wall, "has_wall should be true at ({},{})", x, y);
+                    assert_eq!(
+                        info.wall_material.as_deref(),
+                        tile.wall_material.as_deref(),
+                        "wall_material mismatch at ({},{})", x, y
+                    );
+                    assert!(
+                        info.wall_hp > 0.0,
+                        "wall_hp should be > 0.0 at ({},{}), got {}", x, y, info.wall_hp
+                    );
+                    eprintln!(
+                        "[harness_wall_click_info_A14] wall at ({},{}) mat={:?} hp={}",
+                        x, y, info.wall_material, info.wall_hp
+                    );
+                    found_wall = true;
+                }
+
+                // Test floor tile via extract_tile_info
+                if tile.floor_material.is_some() && !found_floor {
+                    let info = extract_tile_info(
+                        &resources.tile_grid, &resources.rooms, x as i32, y as i32,
+                    ).expect("extract_tile_info None for floor tile");
+                    // Type A: floor fields must match
+                    assert!(info.has_floor, "has_floor should be true at ({},{})", x, y);
+                    assert_eq!(
+                        info.floor_material.as_deref(),
+                        tile.floor_material.as_deref(),
+                        "floor_material mismatch at ({},{})", x, y
+                    );
+                    eprintln!(
+                        "[harness_wall_click_info_A14] floor at ({},{}) mat={:?}",
+                        x, y, info.floor_material
+                    );
+                    found_floor = true;
+                }
+
+                // Test furniture tile via extract_tile_info
+                if tile.furniture_id.is_some() && !found_furniture {
+                    let info = extract_tile_info(
+                        &resources.tile_grid, &resources.rooms, x as i32, y as i32,
+                    ).expect("extract_tile_info None for furniture tile");
+                    // Type A: furniture fields must match
+                    assert!(info.has_furniture, "has_furniture should be true at ({},{})", x, y);
+                    assert_eq!(
+                        info.furniture_id.as_deref(),
+                        tile.furniture_id.as_deref(),
+                        "furniture_id mismatch at ({},{})", x, y
+                    );
+                    eprintln!(
+                        "[harness_wall_click_info_A14] furniture at ({},{}) id={:?}",
+                        x, y, info.furniture_id
+                    );
+                    found_furniture = true;
+                }
+
+                if found_wall && found_floor && found_furniture {
+                    break;
+                }
+            }
+            if found_wall && found_floor && found_furniture {
+                break;
+            }
+        }
+        // Type A: at least one of each structural type must exist
+        assert!(found_wall, "No wall tiles found to test extract_tile_info");
+        assert!(found_floor, "No floor tiles found to test extract_tile_info");
+        assert!(found_furniture, "No furniture tiles found to test extract_tile_info");
+        eprintln!(
+            "[harness_wall_click_info_A14] PASS — wall={} floor={} furniture={}",
+            found_wall, found_floor, found_furniture
+        );
+    }
+
+    /// Harness: wall-click-info A15 — extract_tile_info room data coupling
+    /// Type: A (feature-path coupling)
+    /// Threshold: room_id/role_key/enclosed/tile_count all Some for room tiles
+    #[test]
+    fn harness_wall_click_info_a15_room_coupling() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+
+        let mut found_room_tile = false;
+        for y in 0..grid_h {
+            for x in 0..grid_w {
+                let tile = resources.tile_grid.get(x, y);
+                if tile.room_id.is_some() && !found_room_tile {
+                    let info = extract_tile_info(
+                        &resources.tile_grid, &resources.rooms, x as i32, y as i32,
+                    ).expect("extract_tile_info None for room tile");
+                    // Type A: room_id must be Some and match tile data
+                    assert!(
+                        info.room_id.is_some(),
+                        "room_id should be Some at ({},{}) for tile room_id={:?}",
+                        x, y, tile.room_id
+                    );
+                    assert_eq!(
+                        info.room_id.map(|id| sim_core::RoomId(id)),
+                        tile.room_id,
+                        "room_id mismatch at ({},{})", x, y
+                    );
+                    // Type A: room_role_key must be Some and lowercase
+                    let role_key = info.room_role_key.as_deref()
+                        .expect("room_role_key should be Some");
+                    assert!(
+                        role_key.chars().all(|c| c.is_lowercase() || c == '_'),
+                        "room_role_key '{}' at ({},{}) is not lowercase", role_key, x, y
+                    );
+                    // Type A: room_enclosed must be Some
+                    assert!(
+                        info.room_enclosed.is_some(),
+                        "room_enclosed should be Some at ({},{})", x, y
+                    );
+                    // Type A: room_tile_count must be Some and > 0
+                    let tile_count = info.room_tile_count
+                        .expect("room_tile_count should be Some");
+                    assert!(
+                        tile_count > 0,
+                        "room_tile_count should be > 0 at ({},{}), got {}", x, y, tile_count
+                    );
+                    eprintln!(
+                        "[harness_wall_click_info_A15] room at ({},{}) id={:?} role={:?} enclosed={:?} tiles={:?}",
+                        x, y, info.room_id, info.room_role_key, info.room_enclosed, info.room_tile_count
+                    );
+                    found_room_tile = true;
+                }
+                if found_room_tile { break; }
+            }
+            if found_room_tile { break; }
+        }
+        assert!(found_room_tile, "No room tiles found to test extract_tile_info room data path");
+    }
+
+    /// Harness: wall-click-info A16 — room_role_locale_key contract
+    /// Type: A (locale contract invariant)
+    /// Threshold: ALL RoomRole variants produce lowercase valid keys (not just observed)
+    /// Evaluator v2: validates every variant directly, not only seeded-run roles
+    #[test]
+    fn harness_wall_click_info_a16_room_role_locale_key() {
+        use sim_core::RoomRole;
+
+        // Exhaustive: every RoomRole variant must be tested directly
+        let all_roles = [
+            RoomRole::Unknown,
+            RoomRole::Shelter,
+            RoomRole::Hearth,
+            RoomRole::Storage,
+            RoomRole::Crafting,
+        ];
+        let valid_keys = ["unknown", "shelter", "hearth", "storage", "crafting"];
+
+        let mut seen_keys = std::collections::HashSet::new();
+        for role in &all_roles {
+            let key = room_role_locale_key(*role);
+            // Type A: key must be one of the known set
+            assert!(
+                valid_keys.contains(&key),
+                "room_role_locale_key({:?}) returned '{}', expected one of {:?}",
+                role, key, valid_keys
+            );
+            // Type A: must be lowercase (locale key, not Debug format)
+            assert!(
+                key.chars().all(|c| c.is_lowercase() || c == '_'),
+                "room_role_locale_key({:?}) returned '{}' which is not lowercase",
+                role, key
+            );
+            // Type A: no duplicate keys across variants
+            assert!(
+                seen_keys.insert(key.to_string()),
+                "room_role_locale_key produced duplicate key '{}' for {:?}",
+                key, role
+            );
+        }
+        eprintln!(
+            "[harness_wall_click_info_A16] PASS — all {} RoomRole variants produce valid unique lowercase keys: {:?}",
+            all_roles.len(), seen_keys
+        );
+    }
+
+    /// Harness: wall-click-info A18 — GDScript click-routing contract
+    /// Type: A (source-level interaction contract)
+    /// Threshold: entity_renderer.gd must emit building_selected BEFORE entity_selected
+    ///            BEFORE tile_selected — guarantees building > entity > tile precedence
+    /// Evaluator v2 addition: catches click-precedence regressions that Rust-only tests miss
+    #[test]
+    fn harness_wall_click_info_a18_click_routing_contract() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let source = std::fs::read_to_string(
+            project_root.join("scripts/ui/renderers/entity_renderer.gd"),
+        )
+        .expect("Failed to read entity_renderer.gd");
+
+        // Find first occurrence of each signal emission in the click handler
+        let building_pos = source
+            .find("building_selected.emit")
+            .expect("entity_renderer.gd must contain building_selected.emit");
+        let entity_pos = source
+            .find("entity_selected.emit")
+            .expect("entity_renderer.gd must contain entity_selected.emit");
+        let tile_pos = source
+            .find("tile_selected.emit")
+            .expect("entity_renderer.gd must contain tile_selected.emit");
+
+        eprintln!(
+            "[harness_wall_click_info_A18] signal positions: building_selected@{} entity_selected@{} tile_selected@{}",
+            building_pos, entity_pos, tile_pos
+        );
+
+        // Type A: building_selected must appear before entity_selected in source
+        assert!(
+            building_pos < entity_pos,
+            "Click routing contract violation: building_selected.emit (pos={}) must appear before entity_selected.emit (pos={}) — building clicks must take highest precedence",
+            building_pos, entity_pos
+        );
+        // Type A: entity_selected must appear before tile_selected in source
+        assert!(
+            entity_pos < tile_pos,
+            "Click routing contract violation: entity_selected.emit (pos={}) must appear before tile_selected.emit (pos={}) — entity clicks must take precedence over tile info",
+            entity_pos, tile_pos
+        );
+
+        // Verify tile_selected is gated behind no-entity condition
+        // Find the line containing tile_selected.emit and check it's inside an else block
+        // The else: guard is ~7 lines (~600 chars) before tile_selected.emit
+        let tile_line_start = source[..tile_pos].rfind('\n').unwrap_or(0);
+        let tile_context_start = if tile_pos > 800 { tile_pos - 800 } else { 0 };
+        let context_before_tile = &source[tile_context_start..tile_pos];
+        // The tile_selected block should be after an else branch (no entity found)
+        // or inside a conditional that excludes entity matches
+        let has_else_guard = context_before_tile.contains("else:");
+        eprintln!(
+            "[harness_wall_click_info_A18] tile_selected has else-guard: {}",
+            has_else_guard
+        );
+        assert!(
+            has_else_guard,
+            "Click routing contract violation: tile_selected.emit must be inside an else-block (no entity found guard). \
+             Context before tile_selected: ...{}",
+            &source[tile_line_start..tile_pos]
+        );
+
+        eprintln!(
+            "[harness_wall_click_info_A18] PASS — click routing order: building@{} < entity@{} < tile@{} (else-guarded)",
+            building_pos, entity_pos, tile_pos
+        );
+    }
+
+    /// Harness: wall-click-info A19 — get_tile_info FFI dictionary key contract
+    /// Type: A (source-level FFI contract)
+    /// Threshold: lib.rs get_tile_info must set all dictionary keys consumed by GDScript
+    /// Evaluator v3: catches key-name or serialization regressions at FFI boundary
+    #[test]
+    fn harness_wall_click_info_a19_ffi_dictionary_key_contract() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let source = std::fs::read_to_string(
+            project_root.join("rust/crates/sim-bridge/src/lib.rs"),
+        )
+        .expect("Failed to read sim-bridge/src/lib.rs");
+
+        // All dictionary keys that GDScript consumers (entity_renderer.gd, hud.gd) depend on
+        let required_keys = [
+            "has_wall", "wall_material", "wall_hp", "is_door",
+            "has_floor", "floor_material",
+            "has_furniture", "furniture_id",
+            "room_id", "room_role", "room_enclosed", "room_tile_count",
+            "tile_x", "tile_y",
+        ];
+
+        // Find the get_tile_info function in source
+        let fn_start = source.find("fn get_tile_info")
+            .expect("lib.rs must contain fn get_tile_info");
+        // Approximate end: next #[func] or end of impl block (~500 lines)
+        let fn_region_end = std::cmp::min(fn_start + 3000, source.len());
+        let fn_body = &source[fn_start..fn_region_end];
+
+        let mut missing_keys = Vec::new();
+        for key in &required_keys {
+            let set_pattern = format!("\"{}\"", key);
+            if !fn_body.contains(&set_pattern) {
+                missing_keys.push(*key);
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A19] checked {} required dictionary keys in get_tile_info",
+            required_keys.len()
+        );
+        assert!(
+            missing_keys.is_empty(),
+            "FFI dictionary key contract violation: get_tile_info is missing keys: {:?}",
+            missing_keys
+        );
+        eprintln!("[harness_wall_click_info_A19] PASS — all {} keys present in get_tile_info", required_keys.len());
+    }
+
+    /// Harness: wall-click-info A20 — HUD tile_selected wiring contract
+    /// Type: A (source-level UI contract)
+    /// Threshold: hud.gd must connect tile_selected signal and have handler + panel visibility
+    /// Evaluator v3: catches HUD wiring regressions that Rust-only tests miss
+    #[test]
+    fn harness_wall_click_info_a20_hud_wiring_contract() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let source = std::fs::read_to_string(
+            project_root.join("scripts/ui/hud.gd"),
+        )
+        .expect("Failed to read hud.gd");
+
+        // 1. Must connect tile_selected signal
+        assert!(
+            source.contains("tile_selected.connect"),
+            "hud.gd must connect SimulationBus.tile_selected signal"
+        );
+
+        // 2. Must have _on_tile_selected handler
+        assert!(
+            source.contains("func _on_tile_selected"),
+            "hud.gd must define _on_tile_selected handler"
+        );
+
+        // 3. Must have _on_tile_deselected handler
+        assert!(
+            source.contains("func _on_tile_deselected"),
+            "hud.gd must define _on_tile_deselected handler"
+        );
+
+        // 4. Handler must populate tile info panel (calls _populate_tile_info_panel or sets panel visible)
+        let has_populate = source.contains("_populate_tile_info_panel")
+            || source.contains("_tile_info_panel.visible = true")
+            || source.contains("_tile_info_panel.show()");
+        assert!(
+            has_populate,
+            "hud.gd must make tile info panel visible in response to tile_selected"
+        );
+
+        // 5. Deselect handler must hide panel
+        let has_hide = source.contains("_tile_info_panel.visible = false")
+            || source.contains("_tile_info_panel.hide()");
+        assert!(
+            has_hide,
+            "hud.gd must hide tile info panel on tile_deselected"
+        );
+
+        eprintln!("[harness_wall_click_info_A20] PASS — hud.gd tile_selected wiring verified: connect + handler + populate + deselect");
+    }
+
+    /// Harness: wall-click-info locale coverage — every material/furniture ID in the tile grid
+    /// has a corresponding locale key in materials.json / furniture.json.
+    /// Type: A (absolute invariant — locale keys must exist for all surfaced values)
+    /// Threshold: = 0 missing keys
+    #[test]
+    fn harness_wall_click_info_a17_locale_key_coverage() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let grid = &resources.tile_grid;
+        let (w, h) = grid.dimensions();
+
+        // ── Collect all unique material and furniture IDs from the tile grid ──
+        let mut material_ids: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+        let mut furniture_ids: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+
+        for y in 0..h {
+            for x in 0..w {
+                let tile = grid.get(x, y);
+                if let Some(ref mat) = tile.wall_material {
+                    material_ids.insert(mat.clone());
+                }
+                if let Some(ref mat) = tile.floor_material {
+                    material_ids.insert(mat.clone());
+                }
+                if let Some(ref fid) = tile.furniture_id {
+                    furniture_ids.insert(fid.clone());
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A17] unique materials={:?} unique furniture={:?}",
+            material_ids, furniture_ids
+        );
+
+        // ── Read locale JSON files ──
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let materials_json = std::fs::read_to_string(project_root.join("localization/en/materials.json"))
+            .expect("Failed to read localization/en/materials.json");
+        let furniture_json = std::fs::read_to_string(project_root.join("localization/en/furniture.json"))
+            .expect("Failed to read localization/en/furniture.json");
+
+        // ── Assert every tile grid material has a MAT_<UPPER> key ──
+        let mut missing_mat_keys = Vec::new();
+        for mat_id in &material_ids {
+            let expected_key = format!("MAT_{}", mat_id.to_uppercase());
+            if !materials_json.contains(&format!("\"{}\"", expected_key)) {
+                missing_mat_keys.push((mat_id.clone(), expected_key));
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A17] missing_material_keys={:?}",
+            missing_mat_keys
+        );
+        // Type A: 0 missing material locale keys
+        assert!(
+            missing_mat_keys.is_empty(),
+            "Missing material locale keys in materials.json: {:?}",
+            missing_mat_keys
+        );
+
+        // ── Assert every tile grid furniture has a FURN_<UPPER> key ──
+        let mut missing_furn_keys = Vec::new();
+        for furn_id in &furniture_ids {
+            let expected_key = format!("FURN_{}", furn_id.to_uppercase());
+            if !furniture_json.contains(&format!("\"{}\"", expected_key)) {
+                missing_furn_keys.push((furn_id.clone(), expected_key));
+            }
+        }
+
+        eprintln!(
+            "[harness_wall_click_info_A17] missing_furniture_keys={:?}",
+            missing_furn_keys
+        );
+        // Type A: 0 missing furniture locale keys
+        assert!(
+            missing_furn_keys.is_empty(),
+            "Missing furniture locale keys in furniture.json: {:?}",
+            missing_furn_keys
+        );
+
+        // ── Verify no dead MATERIAL_*/FURNITURE_* keys in ui.json ──
+        let ui_json = std::fs::read_to_string(project_root.join("localization/en/ui.json"))
+            .expect("Failed to read localization/en/ui.json");
+        let has_dead_material = ui_json.contains("\"MATERIAL_");
+        let has_dead_furniture = ui_json.contains("\"FURNITURE_");
+
+        eprintln!(
+            "[harness_wall_click_info_A17] dead_MATERIAL_keys={} dead_FURNITURE_keys={}",
+            has_dead_material, has_dead_furniture
+        );
+        // Type A: no dead duplicate keys with wrong prefix
+        assert!(
+            !has_dead_material,
+            "ui.json still contains dead MATERIAL_* keys (should use MAT_* in materials.json)"
+        );
+        assert!(
+            !has_dead_furniture,
+            "ui.json still contains dead FURNITURE_* keys (should use FURN_* in furniture.json)"
+        );
+
+        eprintln!("[harness_wall_click_info_A17] PASS — all locale keys present, no dead keys");
     }
 }
 
