@@ -21,5 +21,46 @@
         influence_when_complete: [
             InfluenceEmission(channel: "shelter", radius: 4.0, intensity: 0.5),
         ],
+        blueprint: Some(Blueprint(
+            walls: [
+                // Top row
+                BlueprintTile(offset: (-2, -2), material_tag: "building_material"),
+                BlueprintTile(offset: (-1, -2), material_tag: "building_material"),
+                BlueprintTile(offset: (0, -2), material_tag: "building_material"),
+                BlueprintTile(offset: (1, -2), material_tag: "building_material"),
+                BlueprintTile(offset: (2, -2), material_tag: "building_material"),
+                // Left column
+                BlueprintTile(offset: (-2, -1), material_tag: "building_material"),
+                BlueprintTile(offset: (-2, 0), material_tag: "building_material"),
+                BlueprintTile(offset: (-2, 1), material_tag: "building_material"),
+                // Right column
+                BlueprintTile(offset: (2, -1), material_tag: "building_material"),
+                BlueprintTile(offset: (2, 0), material_tag: "building_material"),
+                BlueprintTile(offset: (2, 1), material_tag: "building_material"),
+                // Bottom row (door gap at (0, 2))
+                BlueprintTile(offset: (-2, 2), material_tag: "building_material"),
+                BlueprintTile(offset: (-1, 2), material_tag: "building_material"),
+                // door at (0, 2) — omitted
+                BlueprintTile(offset: (1, 2), material_tag: "building_material"),
+                BlueprintTile(offset: (2, 2), material_tag: "building_material"),
+            ],
+            floors: [
+                // Interior 3x3
+                BlueprintTile(offset: (-1, -1), material_tag: "packed_earth"),
+                BlueprintTile(offset: (0, -1), material_tag: "packed_earth"),
+                BlueprintTile(offset: (1, -1), material_tag: "packed_earth"),
+                BlueprintTile(offset: (-1, 0), material_tag: "packed_earth"),
+                BlueprintTile(offset: (0, 0), material_tag: "packed_earth"),
+                BlueprintTile(offset: (1, 0), material_tag: "packed_earth"),
+                BlueprintTile(offset: (-1, 1), material_tag: "packed_earth"),
+                BlueprintTile(offset: (0, 1), material_tag: "packed_earth"),
+                BlueprintTile(offset: (1, 1), material_tag: "packed_earth"),
+            ],
+            furniture: [
+                BlueprintFurniture(offset: (0, 0), furniture_id: "fire_pit"),
+                BlueprintFurniture(offset: (-1, -1), furniture_id: "lean_to"),
+            ],
+            doors: [(0, 2)],
+        )),
     ),
 ]

@@ -406,6 +406,7 @@ impl SimSystem for PopulationRuntimeSystem {
             cause: "birth".to_string(),
             value: 1.0,
         });
+        resources.stats_total_births += 1;
     }
 }
 
@@ -987,6 +988,7 @@ impl SimSystem for MortalityRuntimeSystem {
                     },
                     value: q_check as f64,
                 });
+                resources.stats_total_deaths += 1;
             }
         }
     }

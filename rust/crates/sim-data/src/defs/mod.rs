@@ -12,7 +12,10 @@ pub use action::{ActionCategory, ActionCondition, ActionDef, ActionEffect};
 pub use furniture::{FurnitureDef, InfluenceEmission};
 pub use material::{MaterialCategory, MaterialDef, MaterialProperties};
 pub use recipe::{RecipeDef, RecipeOutput, RecipeRequires, TagRequirement};
-pub use structure::{RoleRecognition, StructureDef, StructureRequirement};
+pub use structure::{
+    Blueprint, BlueprintFurniture, BlueprintTile, RoleRecognition, StructureDef,
+    StructureRequirement,
+};
 pub use temperament::{
     AxisShift, BiasMatrixRow, CauseTrigger, DerivedRuleOverride, ShiftCondition, TemperamentRules,
     TemperamentShiftRule,

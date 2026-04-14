@@ -284,6 +284,88 @@ fn shelter_walls_present(resources: &SimResources, settlement_id: SettlementId) 
     wall_count >= required
 }
 
+/// Checks whether the shelter wall ring for the given settlement is
+/// substantially built and, if so, marks the corresponding incomplete
+/// shelter `Building` record as complete. This bridges the plan-queue
+/// shelter lifecycle (P2-B3/B4) with the `resources.buildings` records
+/// that other systems (migration, world) depend on for shelter counting.
+///
+/// Uses a threshold of `required - 2` placed walls (tolerating 1-2
+/// positions that may overlap pre-existing buildings or take extra time)
+/// rather than requiring perfect wall completion.
+fn finalize_shelter_if_complete(
+    resources: &mut SimResources,
+    settlement_id: SettlementId,
+) {
+    let Some(settlement) = resources.settlements.get(&settlement_id) else {
+        return;
+    };
+    let Some((cx, cy)) = settlement.shelter_center else {
+        return;
+    };
+
+    // Count actually placed walls at perimeter positions.
+    let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
+    let required = (8 * r - 1).max(1);
+    // Tolerate up to 2 missing walls (overlap with pre-existing buildings,
+    // pending plans that haven't been claimed yet, etc.).
+    let completion_threshold = required - 2;
+    let mut wall_count = 0_i32;
+    for offset_y in -r..=r {
+        for offset_x in -r..=r {
+            let is_perimeter = offset_x.abs() == r || offset_y.abs() == r;
+            if !is_perimeter {
+                continue;
+            }
+            if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
+                && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
+            {
+                continue;
+            }
+            let tile_x = cx + offset_x;
+            let tile_y = cy + offset_y;
+            if !resources.tile_grid.in_bounds(tile_x, tile_y) {
+                continue;
+            }
+            if resources
+                .tile_grid
+                .get(tile_x as u32, tile_y as u32)
+                .wall_material
+                .is_some()
+            {
+                wall_count += 1;
+            }
+        }
+    }
+    if wall_count < completion_threshold {
+        return;
+    }
+
+    // Find the first incomplete shelter Building for this settlement.
+    let shelter_building_id = resources
+        .buildings
+        .iter()
+        .find(|(_, b)| {
+            b.settlement_id == settlement_id
+                && b.building_type == BUILDING_TYPE_SHELTER
+                && !b.is_complete
+        })
+        .map(|(id, _)| *id);
+
+    if let Some(building_id) = shelter_building_id {
+        if let Some(building) = resources.buildings.get_mut(&building_id) {
+            building.construction_progress = 1.0;
+            building.is_complete = true;
+        }
+        resources
+            .event_bus
+            .emit(sim_engine::GameEvent::BuildingConstructed {
+                building_id,
+                building_type: BUILDING_TYPE_SHELTER.to_string(),
+            });
+    }
+}
+
 /// Resolves the wall material id used by P2-B3 shelter ring plans.
 ///
 /// Picks stone if the settlement has enough stone stockpiled to build a
@@ -411,6 +493,116 @@ fn generate_wall_ring_plans(
     }
 }
 
+/// Generates wall plans, floor stamps, furniture plans, and door markers
+/// from a data-driven [`Blueprint`] definition. Replaces the hardcoded
+/// `generate_wall_ring_plans()` for structures that define a blueprint
+/// in their RON `StructureDef`.
+///
+/// Walls and furniture are generated as plans (for builders to claim).
+/// Floors and doors are stamped immediately (not plan-based).
+fn generate_plans_from_blueprint(
+    resources: &mut SimResources,
+    settlement_id: SettlementId,
+    center_x: i32,
+    center_y: i32,
+    blueprint: &sim_data::Blueprint,
+    tick: u64,
+) {
+    let wall_material = resolve_shelter_wall_material_for_plans(resources, settlement_id);
+
+    // Generate wall plans from blueprint
+    for wall_tile in &blueprint.walls {
+        let tile_x = center_x + wall_tile.offset.0;
+        let tile_y = center_y + wall_tile.offset.1;
+
+        if !resources.tile_grid.in_bounds(tile_x, tile_y) {
+            continue;
+        }
+        // Skip tiles that overlap an existing building footprint.
+        if resources
+            .buildings
+            .values()
+            .any(|b| b.overlaps(tile_x, tile_y, 1, 1))
+        {
+            continue;
+        }
+        // Skip if a wall is already there (idempotent generation).
+        if resources
+            .tile_grid
+            .get(tile_x as u32, tile_y as u32)
+            .wall_material
+            .is_some()
+        {
+            continue;
+        }
+
+        let plan_id = resources.next_plan_id;
+        resources.next_plan_id = resources.next_plan_id.saturating_add(1);
+        resources.wall_plans.push(WallPlan {
+            id: plan_id,
+            settlement_id,
+            x: tile_x,
+            y: tile_y,
+            material_id: wall_material.clone(),
+            claimed_by: None,
+            created_tick: tick,
+        });
+    }
+
+    // Stamp floors from blueprint (immediate, not plan-based)
+    for floor_tile in &blueprint.floors {
+        let tile_x = center_x + floor_tile.offset.0;
+        let tile_y = center_y + floor_tile.offset.1;
+        if resources.tile_grid.in_bounds(tile_x, tile_y) {
+            resources
+                .tile_grid
+                .set_floor(tile_x as u32, tile_y as u32, &floor_tile.material_tag);
+        }
+    }
+
+    // Generate furniture plans from blueprint (same lifecycle as walls).
+    // Builders claim and place furniture via PlaceFurniture action, keeping
+    // blueprint furniture on the same code path as legacy fire_pit plans.
+    for furn in &blueprint.furniture {
+        let tile_x = center_x + furn.offset.0;
+        let tile_y = center_y + furn.offset.1;
+        if !resources.tile_grid.in_bounds(tile_x, tile_y) {
+            continue;
+        }
+        // Skip if furniture already placed at this position.
+        if resources
+            .tile_grid
+            .get(tile_x as u32, tile_y as u32)
+            .furniture_id
+            .is_some()
+        {
+            continue;
+        }
+        let plan_id = resources.next_plan_id;
+        resources.next_plan_id = resources.next_plan_id.saturating_add(1);
+        resources.furniture_plans.push(FurniturePlan {
+            id: plan_id,
+            settlement_id,
+            x: tile_x,
+            y: tile_y,
+            furniture_id: furn.furniture_id.clone(),
+            claimed_by: None,
+            created_tick: tick,
+        });
+    }
+
+    // Mark door positions (immediate, not plan-based)
+    for &(dx, dy) in &blueprint.doors {
+        let tile_x = center_x + dx;
+        let tile_y = center_y + dy;
+        if resources.tile_grid.in_bounds(tile_x, tile_y) {
+            resources
+                .tile_grid
+                .set_door(tile_x as u32, tile_y as u32);
+        }
+    }
+}
+
 /// Removes wall/furniture plans that have lingered unclaimed beyond
 /// `BUILDING_PLAN_STALE_TICKS`. Also drops orphaned claims pointing at
 /// entities that are no longer in the world, and unclaims plans whose
@@ -460,14 +652,42 @@ fn cleanup_stale_plans(world: &World, resources: &mut SimResources, tick: u64) {
         }
     }
 
+    // Pre-compute settlements that have ANY shelter building (complete or
+    // incomplete).  Wall plans only need protection while the shelter is
+    // under construction, but furniture plans (lean_to, fire_pit) must
+    // persist until a builder actually places them — which can happen well
+    // after the shelter walls are finalized.
+    let shelter_in_progress: HashSet<SettlementId> = resources
+        .buildings
+        .values()
+        .filter(|b| b.building_type == BUILDING_TYPE_SHELTER && !b.is_complete)
+        .map(|b| b.settlement_id)
+        .collect();
+    let shelter_any: HashSet<SettlementId> = resources
+        .buildings
+        .values()
+        .filter(|b| b.building_type == BUILDING_TYPE_SHELTER)
+        .map(|b| b.settlement_id)
+        .collect();
+
     resources.wall_plans.retain(|plan| {
         if plan.claimed_by.is_some() {
+            return true;
+        }
+        if shelter_in_progress.contains(&plan.settlement_id) {
             return true;
         }
         tick.saturating_sub(plan.created_tick) <= stale_threshold
     });
     resources.furniture_plans.retain(|plan| {
         if plan.claimed_by.is_some() {
+            return true;
+        }
+        // Furniture plans are protected as long as the settlement has a
+        // shelter building — even after wall completion.  This prevents
+        // lean_to / fire_pit plans from being garbage-collected before a
+        // builder can claim them.
+        if shelter_any.contains(&plan.settlement_id) {
             return true;
         }
         tick.saturating_sub(plan.created_tick) <= stale_threshold
@@ -732,6 +952,11 @@ fn ensure_early_construction_sites(world: &World, resources: &mut SimResources, 
     settlement_ids.sort_by_key(|settlement_id| settlement_id.0);
 
     for settlement_id in settlement_ids {
+        // P2-B4: check if an in-progress shelter is now complete (all
+        // walls placed) and finalize its Building record so downstream
+        // consumers (migration, world) see it as a completed shelter.
+        finalize_shelter_if_complete(resources, settlement_id);
+
         let plan = {
             let Some(settlement) = resources.settlements.get(&settlement_id) else {
                 continue;
@@ -747,10 +972,18 @@ fn ensure_early_construction_sites(world: &World, resources: &mut SimResources, 
         let Some(plan) = plan else {
             continue;
         };
-        // P2-B3: shelter no longer becomes a Building. Instead the economy
-        // system queues per-tile WallPlan + FurniturePlan entries for builder
-        // agents to pick up. Stockpile and Campfire still use the old path.
+        // P2-B3/B4: shelter queues per-tile WallPlan + FurniturePlan entries
+        // for builder agents. If a Blueprint is defined in the StructureDef,
+        // use the data-driven path; otherwise fall back to the legacy hardcoded ring.
+        // Stockpile and Campfire still use place_early_structure_site().
         if matches!(plan, EarlyStructurePlan::Shelter) {
+            let blueprint = resources
+                .data_registry
+                .as_deref()
+                .and_then(|reg| reg.structures.get("shelter"))
+                .and_then(|def| def.blueprint.as_ref())
+                .cloned();
+
             let origin = resources
                 .settlements
                 .get(&settlement_id)
@@ -772,13 +1005,47 @@ fn ensure_early_construction_sites(world: &World, resources: &mut SimResources, 
                     if let Some(s) = resources.settlements.get_mut(&settlement_id) {
                         s.shelter_center = Some((cx, cy));
                     }
-                    generate_wall_ring_plans(
-                        resources,
+                    if let Some(ref bp) = blueprint {
+                        generate_plans_from_blueprint(
+                            resources,
+                            settlement_id,
+                            cx,
+                            cy,
+                            bp,
+                            tick,
+                        );
+                    } else {
+                        // Fallback to legacy hardcoded ring
+                        generate_wall_ring_plans(
+                            resources,
+                            settlement_id,
+                            cx,
+                            cy,
+                            tick,
+                        );
+                    }
+                    // Create an incomplete shelter Building record so
+                    // the construction lifecycle can track and finalize
+                    // the shelter once all walls are placed.
+                    let building_id = next_building_id(resources);
+                    let building = Building::new(
+                        building_id,
+                        BUILDING_TYPE_SHELTER.to_string(),
                         settlement_id,
-                        cx,
-                        cy,
+                        site_x,
+                        site_y,
+                        footprint,
+                        footprint,
                         tick,
                     );
+                    resources.buildings.insert(building_id, building);
+                    if let Some(s) =
+                        resources.settlements.get_mut(&settlement_id)
+                    {
+                        if !s.buildings.contains(&building_id) {
+                            s.buildings.push(building_id);
+                        }
+                    }
                 }
             }
             continue;

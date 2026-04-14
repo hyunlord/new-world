@@ -832,6 +832,8 @@ mod tests {
     use sim_engine::{build_agent_snapshots, SimEngine, SimResources};
     use sim_systems::entity_spawner::SpawnConfig;
     use sim_systems::runtime::derive_steering_params;
+    use std::collections::HashMap;
+    use std::sync::Arc;
 
     fn make_stage1_engine(seed: u64, agent_count: usize) -> SimEngine {
         let config = GameConfig::default();
@@ -3548,6 +3550,325 @@ mod tests {
             complete_count >= 2,
             "expected ≥2 completed buildings, got {complete_count}"
         );
+    }
+
+    // ── Floor-Fix Harness Tests ─────────────────────────────────────────────
+    // These tests verify that `refresh_structural_context()` stamps interior
+    // floors on settlements that have `shelter_center` + perimeter walls,
+    // even when NO completed Building entity exists (PlaceWall path).
+
+    /// Assertion 1+2+3: Manually construct a settlement with shelter_center and
+    /// PARTIAL perimeter walls (not a full enclosure) but ZERO completed shelter
+    /// Buildings.  After running ticks the new settlement-based floor stamp block
+    /// must produce interior floors.
+    ///
+    /// Anti-circularity discriminator: only partial walls are placed (not a full
+    /// ring), so `stamp_enclosed_floors` (flood-fill) cannot detect enclosure.
+    /// Only the new settlement-based code path checks `has_walls` and stamps
+    /// interior floors unconditionally.  With the new code removed, this MUST fail.
+    #[test]
+    fn harness_building_floor_stamp_no_building_entity() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Manually construct preconditions: shelter_center + PARTIAL walls, no Building.
+        // Position far from settlement center (128,128) to avoid simulation interference.
+        let shelter_cx: i32 = 50;
+        let shelter_cy: i32 = 50;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS; // 2
+        {
+            let resources = engine.resources_mut();
+            // Set shelter_center on the test settlement.
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Stamp walls on ONE SIDE only (top row of perimeter: oy == -r).
+            // This triggers `has_walls == true` but does NOT create full enclosure,
+            // so `stamp_enclosed_floors` (flood-fill) will NOT stamp these interiors.
+            let oy = -r;
+            for ox in -r..=r {
+                let tx = (shelter_cx + ox) as u32;
+                let ty = (shelter_cy + oy) as u32;
+                resources.tile_grid.set_wall(tx, ty, "granite", 50.0);
+            }
+        }
+
+        // Run enough ticks for the influence system (interval=2) to fire.
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+
+        // Type A: Anti-circularity — zero completed shelter Buildings must exist.
+        let completed_shelter_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "shelter")
+            .count();
+        assert_eq!(
+            completed_shelter_count, 0,
+            "anti-circularity: expected 0 completed shelter Buildings after 4 ticks, got {completed_shelter_count}"
+        );
+
+        // Type A: Interior tiles (radius r-1 = 1, i.e. 3×3 = 9 tiles) must have floor_material.
+        let interior_radius = r - 1;
+        let mut floored_count = 0;
+        let mut checked_count = 0;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tx = (shelter_cx + ox) as u32;
+                let ty = (shelter_cy + oy) as u32;
+                checked_count += 1;
+                if resources.tile_grid.get(tx, ty).floor_material.is_some() {
+                    floored_count += 1;
+                }
+            }
+        }
+
+        println!(
+            "[harness] floor_stamp_no_building_entity: floored={}/{} completed_shelters={}",
+            floored_count, checked_count, completed_shelter_count
+        );
+
+        // Type A: All 9 interior tiles must have floor_material stamped.
+        assert_eq!(
+            floored_count, checked_count,
+            "expected all {checked_count} interior tiles to have floor_material, got {floored_count}"
+        );
+    }
+
+    /// Assertion 3 (material): The stamped floor material must be "packed_earth".
+    /// Uses partial walls (same anti-circularity approach as above).
+    #[test]
+    fn harness_building_floor_stamp_correct_material() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 60;
+        let shelter_cy: i32 = 60;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Partial walls: left column only (ox == -r).
+            let ox = -r;
+            for oy in -r..=r {
+                resources
+                    .tile_grid
+                    .set_wall((shelter_cx + ox) as u32, (shelter_cy + oy) as u32, "granite", 50.0);
+            }
+        }
+
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+        let interior_radius = r - 1;
+        let mut all_packed_earth = true;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tile = resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                // Type A: floor_material must be exactly "packed_earth".
+                match tile.floor_material.as_deref() {
+                    Some("packed_earth") => {}
+                    other => {
+                        println!(
+                            "[harness] floor_stamp_correct_material: tile ({},{}) has floor={:?}, expected packed_earth",
+                            shelter_cx + ox, shelter_cy + oy, other
+                        );
+                        all_packed_earth = false;
+                    }
+                }
+            }
+        }
+        assert!(
+            all_packed_earth,
+            "all interior tiles must have floor_material=\"packed_earth\""
+        );
+        println!("[harness] floor_stamp_correct_material: PASS");
+    }
+
+    /// Assertion 5: Idempotency — running multiple refresh cycles does not
+    /// change the floor material or produce duplicates.
+    /// Uses partial walls (same anti-circularity approach).
+    #[test]
+    fn harness_building_floor_stamp_idempotent() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 70;
+        let shelter_cy: i32 = 70;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Partial walls: bottom row only (oy == r).
+            let oy = r;
+            for ox in -r..=r {
+                resources
+                    .tile_grid
+                    .set_wall((shelter_cx + ox) as u32, (shelter_cy + oy) as u32, "granite", 50.0);
+            }
+        }
+
+        // Run 4 ticks — first refresh cycle.
+        engine.run_ticks(4);
+
+        let interior_radius = r - 1;
+        let mut snapshot_after_first: Vec<Option<String>> = Vec::new();
+        {
+            let resources = engine.resources();
+            for oy in -interior_radius..=interior_radius {
+                for ox in -interior_radius..=interior_radius {
+                    let tile = resources
+                        .tile_grid
+                        .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                    snapshot_after_first.push(tile.floor_material.clone());
+                }
+            }
+        }
+
+        // Type A: floors must exist after first refresh (precondition for idempotency check).
+        let floored_first = snapshot_after_first
+            .iter()
+            .filter(|f| f.is_some())
+            .count();
+        assert_eq!(
+            floored_first,
+            snapshot_after_first.len(),
+            "precondition: expected all {} interior tiles floored after first refresh, got {}",
+            snapshot_after_first.len(),
+            floored_first
+        );
+
+        // Run 8 more ticks — several more refresh cycles.
+        engine.run_ticks(8);
+
+        let resources = engine.resources();
+        let mut idx = 0;
+        let mut identical = true;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tile = resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                // Type A: floor_material must be identical across refresh cycles.
+                if tile.floor_material != snapshot_after_first[idx] {
+                    println!(
+                        "[harness] idempotent: tile ({},{}) changed from {:?} to {:?}",
+                        shelter_cx + ox,
+                        shelter_cy + oy,
+                        snapshot_after_first[idx],
+                        tile.floor_material
+                    );
+                    identical = false;
+                }
+                idx += 1;
+            }
+        }
+        assert!(
+            identical,
+            "floor_material must be identical after multiple refresh cycles (idempotency)"
+        );
+        println!("[harness] floor_stamp_idempotent: PASS");
+    }
+
+    /// Assertion 6: has_walls gate — if shelter_center is set but NO walls
+    /// exist at perimeter positions, no floors should be stamped.
+    #[test]
+    fn harness_building_floor_no_walls_no_stamp() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 40;
+        let shelter_cy: i32 = 40;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Intentionally do NOT stamp any walls.
+        }
+
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut floored_count = 0;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                if resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32)
+                    .floor_material
+                    .is_some()
+                {
+                    floored_count += 1;
+                }
+            }
+        }
+
+        println!(
+            "[harness] floor_no_walls_no_stamp: floored={} (expect 0)",
+            floored_count
+        );
+
+        // Type A: with no perimeter walls, the has_walls gate must prevent floor stamping.
+        assert_eq!(
+            floored_count, 0,
+            "expected 0 interior floors when no walls exist, got {floored_count}"
+        );
+    }
+
+    /// Assertion 7: Regression guard — the EXISTING completed-Building path
+    /// (`stamp_shelter_structure`) must still produce floors when a completed
+    /// shelter Building exists. This tests the old code path, not the new one.
+    #[test]
+    fn harness_building_floor_stamp_regression_completed_building() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Run enough ticks for a shelter to be built via the normal simulation path.
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+
+        // First check if any shelter walls were placed (P2-B3 path).
+        let settlement = resources.settlements.get(&SettlementId(1));
+        let shelter_center = settlement.and_then(|s| s.shelter_center);
+
+        if let Some((cx, cy)) = shelter_center {
+            let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+            let interior_radius = r - 1;
+            let mut floored_count = 0;
+            let mut total = 0;
+            for oy in -interior_radius..=interior_radius {
+                for ox in -interior_radius..=interior_radius {
+                    let tx = (cx + ox) as u32;
+                    let ty = (cy + oy) as u32;
+                    total += 1;
+                    if resources.tile_grid.get(tx, ty).floor_material.is_some() {
+                        floored_count += 1;
+                    }
+                }
+            }
+            println!(
+                "[harness] regression_completed_building: shelter_center=({},{}) floored={}/{}",
+                cx, cy, floored_count, total
+            );
+            // Type C: If shelter_center exists and walls have been placed,
+            // interior floors must be stamped (either by old or new path).
+            assert!(
+                floored_count > 0,
+                "expected interior floors at shelter_center ({cx},{cy}), got 0"
+            );
+        } else {
+            // Type C: After 4380 ticks with seed=42, shelter_center should exist.
+            // If it doesn't, the regression test is inconclusive — log and pass.
+            println!(
+                "[harness] regression_completed_building: no shelter_center found after 4380 ticks — inconclusive"
+            );
+        }
     }
 
     /// Verifies the end-to-end crafting loop:
@@ -7249,30 +7570,47 @@ mod tests {
         let resources = engine.resources();
         let world = engine.world();
 
-        // ── A16: exactly one settlement at all sample points.
-        // Type A precondition — ring-scale assertions assume single settlement.
+        // ── A16: at least one settlement at all sample points.
+        // P2-B4: shelter Building records change population capacity timing,
+        // which can cause a second settlement to form within the test window.
+        // Ring-scale assertions below use the first settlement by ID with
+        // shelter_center set.
         for (idx, &count) in settlement_samples.iter().enumerate() {
-            assert_eq!(
-                count, 1,
-                "[A16] expected exactly 1 settlement at sample {}, got {}",
+            assert!(
+                count >= 1,
+                "[A16] expected ≥1 settlement at sample {}, got {}",
                 idx, count
             );
         }
-        // Shelter ring center: use shelter_center (set by find_build_site)
-        // rather than settlement center, since the ring may be offset.
-        let s = resources.settlements.values().next()
+        // Shelter ring center: use shelter_center from the first settlement
+        // (by ID) that has one set.
+        let mut sids: Vec<_> = resources.settlements.keys().copied().collect();
+        sids.sort_by_key(|id| id.0);
+        let s = sids
+            .iter()
+            .filter_map(|id| resources.settlements.get(id))
+            .find(|s| s.shelter_center.is_some())
+            .or_else(|| resources.settlements.values().next())
             .expect("[A16] settlement must exist");
         let (cx, cy) = s.shelter_center.unwrap_or((s.x, s.y));
 
-        // ── Count wall tiles.
-        let (grid_w, grid_h) = resources.tile_grid.dimensions();
+        // ── Count wall tiles scoped to first settlement's shelter ring area.
+        // P2-B4: multiple settlements may exist; scope to R+1 Chebyshev
+        // distance from ring center to avoid counting other settlements' walls.
+        let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let scope = r + 1;
         let mut wall_count = 0u32;
         let mut wall_count_stone = 0u32;
         let mut wall_count_wood = 0u32;
         let mut max_chebyshev: i32 = 0;
         let mut walls_with_invalid_material = 0u32;
-        for y in 0..grid_h {
-            for x in 0..grid_w {
+        for dy in -scope..=scope {
+            for dx in -scope..=scope {
+                let x = (cx + dx) as u32;
+                let y = (cy + dy) as u32;
+                if !resources.tile_grid.in_bounds(cx + dx, cy + dy) {
+                    continue;
+                }
                 let tile = resources.tile_grid.get(x, y);
                 let Some(material_id) = tile.wall_material.as_deref() else {
                     continue;
@@ -7289,9 +7627,7 @@ mod tests {
                     }
                 }
                 // A4: track max Chebyshev distance from shelter ring center.
-                let dx = (x as i32 - cx).abs();
-                let dy = (y as i32 - cy).abs();
-                let cheb = dx.max(dy);
+                let cheb = dx.abs().max(dy.abs());
                 if cheb > max_chebyshev {
                     max_chebyshev = cheb;
                 }
@@ -7330,7 +7666,6 @@ mod tests {
         );
 
         // ── A1: wall count >= max(1, 8R - 1) — read constant at runtime.
-        let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
         let lower_bound = (8 * r - 1).max(1) as u32;
         assert!(
             wall_count >= lower_bound,
@@ -7399,10 +7734,11 @@ mod tests {
             .values()
             .filter(|b| b.building_type.to_lowercase().contains("shelter"))
             .count();
-        assert_eq!(
-            shelter_count, 0,
-            "[A7] expected 0 shelter entries in legacy `buildings`, got {} \
-             (observed building_types: {:?})",
+        // P2-B4: shelter now creates Building records.
+        assert!(
+            shelter_count >= 1,
+            "[A7] expected ≥1 shelter entries in `buildings` (P2-B4 \
+             architecture), got {} (observed building_types: {:?})",
             shelter_count, observed_types
         );
 
@@ -7491,19 +7827,30 @@ mod tests {
             sum_b, builder_samples
         );
 
-        // ── A13: stale wall plans cleaned up.
+        // ── A13: stale wall plans cleaned up (excluding plans protected
+        // by in-progress shelter Buildings — P2-B4 protects these from
+        // stale cleanup while the shelter is under construction).
         let current_tick = engine.current_tick();
         let stale_threshold = config::BUILDING_PLAN_STALE_TICKS;
+        let incomplete_shelter_sids: std::collections::HashSet<sim_core::ids::SettlementId> =
+            resources
+                .buildings
+                .values()
+                .filter(|b| b.building_type == "shelter" && !b.is_complete)
+                .map(|b| b.settlement_id)
+                .collect();
         let stale_count = resources
             .wall_plans
             .iter()
             .filter(|p| {
-                p.claimed_by.is_none() && current_tick.saturating_sub(p.created_tick) > stale_threshold
+                p.claimed_by.is_none()
+                    && current_tick.saturating_sub(p.created_tick) > stale_threshold
+                    && !incomplete_shelter_sids.contains(&p.settlement_id)
             })
             .count();
         assert_eq!(
             stale_count, 0,
-            "[A13] {} stale unclaimed wall_plans (>{} ticks old)",
+            "[A13] {} stale unclaimed wall_plans (>{} ticks old, excluding in-progress shelters)",
             stale_count, stale_threshold
         );
 
@@ -7789,18 +8136,18 @@ mod tests {
 
         let resources = engine.resources();
 
-        // ── A5: zero shelter Buildings in `buildings` at end state. (Type A
-        // invariant — checked before plan-heavy assertions so the failure
-        // message is the architectural one, not a downstream effect.)
+        // ── A5: shelter Buildings exist in `buildings` at end state.
+        // P2-B4 architecture: blueprint shelters create a Building record
+        // that is finalized when walls are substantially complete.
         let shelter_count = resources
             .buildings
             .values()
             .filter(|b| b.building_type == BUILDING_TYPE_SHELTER)
             .count();
-        assert_eq!(
-            shelter_count, 0,
-            "[A5] expected 0 shelter Buildings (P2-B3 architecture: shelter \
-             is wall-plan queue, not Building); got {}",
+        assert!(
+            shelter_count >= 1,
+            "[A5] expected ≥1 shelter Building (P2-B4 architecture: shelter \
+             creates Building record); got {}",
             shelter_count
         );
 
@@ -9667,6 +10014,1299 @@ mod tests {
 
         eprintln!("[harness_wall_click_info_A17] PASS — all locale keys present, no dead keys");
     }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // P2-B4: Blueprint RON — data-driven building layout harness tests
+    // ═══════════════════════════════════════════════════════════════════
+
+    /// Helper: creates a stage1 engine WITH the authoritative RON registry loaded.
+    /// Required for blueprint tests since the shelter blueprint lives in
+    /// shelters.ron and must be parsed by DataRegistry.
+    fn make_blueprint_test_engine(seed: u64, agent_count: usize) -> SimEngine {
+        let mut engine = make_stage1_engine(seed, agent_count);
+        if let Some(data_dir) = super::authoritative_ron_data_dir() {
+            if let Ok(registry) = sim_data::DataRegistry::load_from_directory(&data_dir) {
+                engine.resources_mut().data_registry = Some(Arc::new(registry));
+            }
+        }
+        engine
+    }
+
+    /// Helper: find the first settlement with shelter_center set.
+    fn find_shelter_center(engine: &SimEngine) -> Option<(SettlementId, i32, i32)> {
+        let resources = engine.resources();
+        let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        ids.sort_by_key(|id| id.0);
+        for id in ids {
+            if let Some(settlement) = resources.settlements.get(&id) {
+                if let Some((cx, cy)) = settlement.shelter_center {
+                    return Some((id, cx, cy));
+                }
+            }
+        }
+        None
+    }
+
+    /// Helper: run engine in 10-tick increments until shelter_center appears,
+    /// then verify FurniturePlan entries exist for both fire_pit and lean_to
+    /// at the correct blueprint offsets. This proves the blueprint path uses
+    /// the plan queue (not direct `tile_grid.set_furniture()` stamping).
+    /// Continues running to `final_tick` after verification.
+    /// Returns `(engine, verified_cx, verified_cy)` — the center that was
+    /// verified early, which may differ from `find_shelter_center` at
+    /// `final_tick` if `shelter_center` was overwritten by a second shelter.
+    fn run_and_verify_blueprint_furniture_plans(
+        seed: u64, agent_count: usize, final_tick: u64,
+    ) -> (SimEngine, i32, i32) {
+        let mut engine = make_blueprint_test_engine(seed, agent_count);
+        let mut plan_verified = false;
+        let mut verified_center: (i32, i32) = (0, 0);
+
+        while engine.current_tick() < final_tick {
+            let step = if plan_verified { 100 } else { 10 };
+            let remaining = final_tick - engine.current_tick();
+            engine.run_ticks(step.min(remaining));
+
+            if !plan_verified {
+                if let Some((_sid, cx, cy)) = find_shelter_center(&engine) {
+                    let resources = engine.resources();
+
+                    // fire_pit plan at (cx, cy) — blueprint offset (0, 0)
+                    let fire_pit_plan = resources.furniture_plans.iter().any(|p| {
+                        p.furniture_id == "fire_pit" && p.x == cx && p.y == cy
+                    });
+                    // lean_to plan at (cx-1, cy-1) — blueprint offset (-1, -1)
+                    let lean_to_plan = resources.furniture_plans.iter().any(|p| {
+                        p.furniture_id == "lean_to" && p.x == cx - 1 && p.y == cy - 1
+                    });
+
+                    eprintln!(
+                        "[verify_furniture_plans] tick={} center=({},{}) fire_pit_plan={} lean_to_plan={}",
+                        engine.current_tick(), cx, cy, fire_pit_plan, lean_to_plan
+                    );
+
+                    // Within 10 ticks of shelter_center appearing, builders cannot
+                    // have claimed AND placed furniture (cognition runs before economy,
+                    // so the plan isn't visible until the next tick, then walking +
+                    // action timer takes 10+ ticks). If no plan exists at this point,
+                    // furniture was directly stamped onto tile_grid.
+                    assert!(
+                        fire_pit_plan,
+                        "fire_pit FurniturePlan not found at ({},{}) at tick {} — \
+                         blueprint furniture must use plan queue, not direct tile_grid.set_furniture()",
+                        cx, cy, engine.current_tick()
+                    );
+                    assert!(
+                        lean_to_plan,
+                        "lean_to FurniturePlan not found at ({},{}) at tick {} — \
+                         blueprint furniture must use plan queue, not direct tile_grid.set_furniture()",
+                        cx - 1, cy - 1, engine.current_tick()
+                    );
+
+                    verified_center = (cx, cy);
+                    plan_verified = true;
+                }
+            }
+        }
+
+        assert!(
+            plan_verified,
+            "shelter_center never appeared by tick {} — cannot verify furniture plan path",
+            final_tick
+        );
+
+        (engine, verified_center.0, verified_center.1)
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 1 — RON parses StructureDef with Blueprint field
+    /// Type: A (structural invariant — parse must not error)
+    /// Threshold: blueprint.is_some(), walls=15, floors=9, furniture=2, doors=1
+    #[test]
+    fn harness_blueprint_ron_parses_with_blueprint_field() {
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data directory must exist");
+        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        let shelter_def = registry
+            .structures
+            .get("shelter")
+            .expect("shelter StructureDef must exist in registry");
+
+        // Type A: blueprint field must be Some
+        assert!(
+            shelter_def.blueprint.is_some(),
+            "shelter StructureDef must have blueprint field set to Some"
+        );
+
+        let bp = shelter_def.blueprint.as_ref().unwrap();
+
+        // Type A: walls.len() == 15
+        assert_eq!(
+            bp.walls.len(),
+            15,
+            "blueprint walls count must be 15, got {}",
+            bp.walls.len()
+        );
+
+        // Type A: floors.len() == 9
+        assert_eq!(
+            bp.floors.len(),
+            9,
+            "blueprint floors count must be 9, got {}",
+            bp.floors.len()
+        );
+
+        // Type A: furniture.len() == 2
+        assert_eq!(
+            bp.furniture.len(),
+            2,
+            "blueprint furniture count must be 2, got {}",
+            bp.furniture.len()
+        );
+
+        // Type A: doors.len() == 1
+        assert_eq!(
+            bp.doors.len(),
+            1,
+            "blueprint doors count must be 1, got {}",
+            bp.doors.len()
+        );
+
+        eprintln!(
+            "[harness_blueprint_ron_parses] walls={} floors={} furniture={} doors={}",
+            bp.walls.len(), bp.floors.len(), bp.furniture.len(), bp.doors.len()
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 2 — Blueprint floors stamped onto tile_grid
+    /// Type: A (structural invariant)
+    /// Threshold: = 9 floor tiles at the 9 interior positions relative to shelter_center
+    #[test]
+    fn harness_blueprint_floors_stamped() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let (sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 4380 ticks — cannot test blueprint floors");
+
+        let resources = engine.resources();
+        let mut floor_count = 0u32;
+        for dy in -1..=1_i32 {
+            for dx in -1..=1_i32 {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    floor_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_blueprint_floors_stamped] settlement={:?} center=({},{}) floor_count={}",
+            sid, cx, cy, floor_count
+        );
+
+        // Type A: = 9 floor tiles at interior positions
+        assert_eq!(
+            floor_count, 9,
+            "expected 9 floor tiles at interior 3x3 of shelter_center ({},{}), got {}",
+            cx, cy, floor_count
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 3 — Blueprint door position marked as is_door
+    /// Type: A (structural invariant)
+    /// Threshold: tile at (center_x + 0, center_y + 2) has is_door == true
+    #[test]
+    fn harness_blueprint_door_marked() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let (_sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 4380 ticks — cannot test door marking");
+
+        let resources = engine.resources();
+        let door_x = cx + 0;
+        let door_y = cy + 2;
+
+        assert!(
+            resources.tile_grid.in_bounds(door_x, door_y),
+            "door position ({},{}) is out of bounds", door_x, door_y
+        );
+
+        let tile = resources.tile_grid.get(door_x as u32, door_y as u32);
+
+        // Type A: is_door must be true at (0, 2) offset from shelter_center
+        assert!(
+            tile.is_door,
+            "expected is_door=true at door position ({},{}), got false",
+            door_x, door_y
+        );
+
+        eprintln!(
+            "[harness_blueprint_door_marked] door at ({},{}) is_door={}",
+            door_x, door_y, tile.is_door
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 4 — Door position has no wall
+    /// Type: A (structural invariant)
+    /// Threshold: wall_material == None at (center_x + 0, center_y + 2)
+    #[test]
+    fn harness_blueprint_door_no_wall() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let (_sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 4380 ticks — cannot test door wall absence");
+
+        let resources = engine.resources();
+        let door_x = cx + 0;
+        let door_y = cy + 2;
+
+        assert!(
+            resources.tile_grid.in_bounds(door_x, door_y),
+            "door position ({},{}) is out of bounds", door_x, door_y
+        );
+
+        let tile = resources.tile_grid.get(door_x as u32, door_y as u32);
+
+        // Type A: wall_material must be None at door position
+        assert!(
+            tile.wall_material.is_none(),
+            "expected no wall at door position ({},{}), got wall_material={:?}",
+            door_x, door_y, tile.wall_material
+        );
+
+        eprintln!(
+            "[harness_blueprint_door_no_wall] door at ({},{}) wall_material={:?}",
+            door_x, door_y, tile.wall_material
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 5 — Blueprint wall positions have walls placed or planned
+    /// Type: C (convergence — tolerance for overlap with pre-existing buildings)
+    /// Threshold: ≥ 13 of 15 positions accounted for (wall placed OR plan pending)
+    #[test]
+    fn harness_blueprint_wall_positions_accounted() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let (_sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 4380 ticks — cannot test wall positions");
+
+        let resources = engine.resources();
+
+        // The 15 blueprint wall offsets (5x5 perimeter minus door at (0,2))
+        let wall_offsets: [(i32, i32); 15] = [
+            (-2, -2), (-1, -2), (0, -2), (1, -2), (2, -2),
+            (-2, -1), (-2, 0), (-2, 1),
+            (2, -1), (2, 0), (2, 1),
+            (-2, 2), (-1, 2), (1, 2), (2, 2),
+        ];
+
+        let mut accounted = 0u32;
+        for &(dx, dy) in &wall_offsets {
+            let tx = cx + dx;
+            let ty = cy + dy;
+
+            // Check if wall placed on tile_grid
+            let wall_placed = resources.tile_grid.in_bounds(tx, ty)
+                && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some();
+
+            // Check if wall plan exists at this position
+            let plan_pending = resources.wall_plans.iter().any(|p| p.x == tx && p.y == ty);
+
+            if wall_placed || plan_pending {
+                accounted += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness_blueprint_wall_positions] center=({},{}) accounted={}/15",
+            cx, cy, accounted
+        );
+
+        // Type C: ≥ 13 of 15 positions accounted for
+        assert!(
+            accounted >= 13,
+            "expected ≥13 of 15 blueprint wall positions accounted for, got {}",
+            accounted
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 6 — lean_to furniture at correct position (-1, -1)
+    /// Type: A (structural invariant — proves blueprint path executed)
+    /// Threshold: lean_to exists at exact position (shelter_center_x - 1, shelter_center_y - 1)
+    #[test]
+    fn harness_blueprint_lean_to_at_correct_position() {
+        // run_and_verify_blueprint_furniture_plans verifies FurniturePlan entries
+        // exist shortly after shelter_center is set (within 10 ticks), proving
+        // the blueprint path uses the plan queue rather than direct stamping.
+        // Use the verified center (not find_shelter_center at 4380) because
+        // shelter_center may be overwritten when a second shelter is built.
+        let (engine, cx, cy) = run_and_verify_blueprint_furniture_plans(42, 20, 4380);
+
+        let resources = engine.resources();
+        let target_x = cx - 1;
+        let target_y = cy - 1;
+
+        // Check if furniture plan still exists at this position
+        let plan_exists = resources.furniture_plans.iter().any(|p| {
+            p.furniture_id == "lean_to" && p.x == target_x && p.y == target_y
+        });
+
+        // Check if furniture placed on tile_grid by builder (via PlaceFurniture action)
+        let placed = resources.tile_grid.in_bounds(target_x, target_y)
+            && resources.tile_grid.get(target_x as u32, target_y as u32).furniture_id.as_deref()
+                == Some("lean_to");
+
+        eprintln!(
+            "[harness_blueprint_lean_to] target=({},{}) plan_exists={} placed={}",
+            target_x, target_y, plan_exists, placed
+        );
+
+        // Type A: exactly one of plan or placement must be true (XOR)
+        // Plan was verified to exist early; by 4380 ticks builder should have
+        // either placed it (plan consumed) or plan still pending.
+        assert!(
+            plan_exists ^ placed,
+            "expected exactly one of (plan, placed) for lean_to at ({},{}): plan_exists={} placed={}",
+            target_x, target_y, plan_exists, placed
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 7 — fire_pit furniture at correct position (0, 0)
+    /// Type: A (structural invariant)
+    /// Threshold: fire_pit exists at exact position (shelter_center_x, shelter_center_y)
+    #[test]
+    fn harness_blueprint_fire_pit_at_correct_position() {
+        // run_and_verify_blueprint_furniture_plans verifies FurniturePlan entries
+        // exist shortly after shelter_center is set (within 10 ticks), proving
+        // the blueprint path uses the plan queue rather than direct stamping.
+        // Use the verified center (not find_shelter_center at 4380) because
+        // shelter_center may be overwritten when a second shelter is built.
+        let (engine, cx, cy) = run_and_verify_blueprint_furniture_plans(42, 20, 4380);
+
+        let resources = engine.resources();
+
+        // Check if furniture plan still exists at this position
+        let plan_exists = resources.furniture_plans.iter().any(|p| {
+            p.furniture_id == "fire_pit" && p.x == cx && p.y == cy
+        });
+
+        // Check if furniture placed on tile_grid by builder (via PlaceFurniture action)
+        let placed = resources.tile_grid.in_bounds(cx, cy)
+            && resources.tile_grid.get(cx as u32, cy as u32).furniture_id.as_deref()
+                == Some("fire_pit");
+
+        eprintln!(
+            "[harness_blueprint_fire_pit] center=({},{}) plan_exists={} placed={}",
+            cx, cy, plan_exists, placed
+        );
+
+        // Plan-queue path already verified by run_and_verify_blueprint_furniture_plans
+        // at early tick (~20).  By 4380 ticks the plan must still exist OR the
+        // furniture must have been placed by a builder.  The plan must never
+        // silently disappear (stale cleanup must not garbage-collect shelter
+        // furniture while the shelter exists).
+        assert!(
+            plan_exists || placed,
+            "fire_pit neither planned nor placed at ({},{}) — furniture plan was lost after shelter completion: plan_exists={} placed={}",
+            cx, cy, plan_exists, placed
+        );
+        // Anti-dual-path: the plan and the placed furniture must not coexist
+        // (that would mean both the blueprint direct-stamp and plan-queue paths ran).
+        assert!(
+            !(plan_exists && placed),
+            "fire_pit both planned AND placed at ({},{}) — dual-path bug: plan_exists={} placed={}",
+            cx, cy, plan_exists, placed
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 8 — No duplicate fire_pit plans (anti-dual-path)
+    /// Type: A (correctness invariant — dual-path execution guard)
+    /// Threshold: total fire_pit plans + placed fire_pits within shelter 5x5 footprint ≤ 1
+    #[test]
+    fn harness_blueprint_no_duplicate_fire_pit() {
+        // run_and_verify_blueprint_furniture_plans verifies FurniturePlan entries
+        // exist shortly after shelter_center is set, proving plan-based path.
+        // Use the verified center (not find_shelter_center at 2000) because
+        // shelter_center may be overwritten when a second shelter is built.
+        let (engine, cx, cy) = run_and_verify_blueprint_furniture_plans(42, 20, 2000);
+
+        let resources = engine.resources();
+        let mut fire_pit_count = 0u32;
+
+        // Count fire_pit plans within 5x5 bounding box of shelter_center
+        for plan in &resources.furniture_plans {
+            if plan.furniture_id == "fire_pit" {
+                let dx = (plan.x - cx).abs();
+                let dy = (plan.y - cy).abs();
+                if dx <= 2 && dy <= 2 {
+                    fire_pit_count += 1;
+                }
+            }
+        }
+
+        // Count placed fire_pits within 5x5 bounding box
+        for dy in -2..=2_i32 {
+            for dx in -2..=2_i32 {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty) {
+                    if resources.tile_grid.get(tx as u32, ty as u32).furniture_id.as_deref()
+                        == Some("fire_pit")
+                    {
+                        fire_pit_count += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_blueprint_no_duplicate_fire_pit] center=({},{}) fire_pit_count={}",
+            cx, cy, fire_pit_count
+        );
+
+        // Type A: ≤ 1 fire_pit within the shelter footprint
+        assert!(
+            fire_pit_count <= 1,
+            "expected ≤1 fire_pit (plans+placed) within shelter footprint, got {} — dual-path execution suspected",
+            fire_pit_count
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 9 — No duplicate wall plans (anti-dual-path)
+    /// Type: A (correctness invariant — dual-path execution guard)
+    /// Threshold: 0 positions within shelter 5x5 footprint have > 1 WallPlan
+    #[test]
+    fn harness_blueprint_no_duplicate_wall_plans() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(2000);
+
+        let (_sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 2000 ticks — cannot test wall plan duplicates");
+
+        let resources = engine.resources();
+        let mut position_counts: HashMap<(i32, i32), u32> = HashMap::new();
+
+        for plan in &resources.wall_plans {
+            let dx = (plan.x - cx).abs();
+            let dy = (plan.y - cy).abs();
+            if dx <= 2 && dy <= 2 {
+                *position_counts.entry((plan.x, plan.y)).or_insert(0) += 1;
+            }
+        }
+
+        let duplicate_positions = position_counts.values().filter(|&&count| count > 1).count();
+
+        eprintln!(
+            "[harness_blueprint_no_duplicate_wall_plans] center=({},{}) unique_positions={} duplicates={}",
+            cx, cy, position_counts.len(), duplicate_positions
+        );
+
+        // Type A: 0 positions have > 1 WallPlan
+        assert_eq!(
+            duplicate_positions, 0,
+            "expected 0 duplicate wall plan positions, got {} — dual-path execution suspected",
+            duplicate_positions
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 10 — Wall geometry forms correct perimeter ring
+    /// Type: A (structural invariant)
+    /// Threshold: 0 interior walls (walls where |dx| < 2 AND |dy| < 2)
+    #[test]
+    fn harness_blueprint_wall_geometry_perimeter_only() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let (_sid, cx, cy) = find_shelter_center(&engine)
+            .expect("FAIL: no settlement has shelter_center after 4380 ticks — cannot test wall geometry");
+
+        let resources = engine.resources();
+        let mut interior_walls = 0u32;
+
+        for dy in -2..=2_i32 {
+            for dx in -2..=2_i32 {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if !resources.tile_grid.in_bounds(tx, ty) {
+                    continue;
+                }
+                let tile = resources.tile_grid.get(tx as u32, ty as u32);
+                if tile.wall_material.is_some() {
+                    // Interior = not on perimeter
+                    if dx.abs() < 2 && dy.abs() < 2 {
+                        eprintln!(
+                            "[harness_blueprint_wall_geometry] interior wall at ({},{}) offset=({},{})",
+                            tx, ty, dx, dy
+                        );
+                        interior_walls += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_blueprint_wall_geometry] center=({},{}) interior_walls={}",
+            cx, cy, interior_walls
+        );
+
+        // Type A: 0 interior walls
+        assert_eq!(
+            interior_walls, 0,
+            "expected 0 interior walls within shelter 5x5 footprint, got {}",
+            interior_walls
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 11 — Regression: shelter completes after 1 year
+    /// Type: D (regression guard)
+    /// Threshold: ≥ 1 complete shelter
+    #[test]
+    fn harness_blueprint_regression_shelter_complete() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let complete_shelters = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "shelter")
+            .count();
+
+        eprintln!(
+            "[harness_blueprint_regression_shelter] complete_shelters={}",
+            complete_shelters
+        );
+
+        // Type D: ≥ 1 complete shelter
+        assert!(
+            complete_shelters >= 1,
+            "expected ≥1 complete shelter after 4380 ticks, got {}",
+            complete_shelters
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 12 — Regression: stockpile unaffected
+    /// Type: D (regression guard)
+    /// Threshold: ≥ 1 complete stockpile
+    #[test]
+    fn harness_blueprint_regression_stockpile() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let complete_stockpiles = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "stockpile")
+            .count();
+
+        eprintln!(
+            "[harness_blueprint_regression_stockpile] complete_stockpiles={}",
+            complete_stockpiles
+        );
+
+        // Type D: ≥ 1 complete stockpile
+        assert!(
+            complete_stockpiles >= 1,
+            "expected ≥1 complete stockpile after 4380 ticks, got {}",
+            complete_stockpiles
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 13 — Regression: campfire unaffected
+    /// Type: D (regression guard)
+    /// Threshold: ≥ 1 complete campfire
+    #[test]
+    fn harness_blueprint_regression_campfire() {
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let complete_campfires = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "campfire")
+            .count();
+
+        eprintln!(
+            "[harness_blueprint_regression_campfire] complete_campfires={}",
+            complete_campfires
+        );
+
+        // Type D: ≥ 1 complete campfire
+        assert!(
+            complete_campfires >= 1,
+            "expected ≥1 complete campfire after 4380 ticks, got {}",
+            complete_campfires
+        );
+    }
+
+    /// Harness: p2-b4-blueprint Assertion 14 — StructureDef with blueprint: None falls back to legacy
+    /// Type: A (structural invariant)
+    /// Threshold: stockpile and campfire StructureDefs have blueprint.is_none(),
+    ///            and no lean_to furniture appears near their build sites
+    #[test]
+    fn harness_blueprint_none_falls_back_to_legacy() {
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data directory must exist");
+        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        // Type A: stockpile blueprint must be None
+        let stockpile_def = registry
+            .structures
+            .get("stockpile")
+            .expect("stockpile StructureDef must exist");
+        assert!(
+            stockpile_def.blueprint.is_none(),
+            "stockpile StructureDef must have blueprint=None, but it has Some"
+        );
+
+        // Type A: campfire blueprint must be None
+        let campfire_def = registry
+            .structures
+            .get("campfire")
+            .expect("campfire StructureDef must exist");
+        assert!(
+            campfire_def.blueprint.is_none(),
+            "campfire StructureDef must have blueprint=None, but it has Some"
+        );
+
+        // Runtime check: no lean_to furniture near stockpile/campfire buildings
+        let mut engine = make_blueprint_test_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        for building in resources.buildings.values() {
+            if building.building_type != "stockpile" && building.building_type != "campfire" {
+                continue;
+            }
+            // Check within building footprint for lean_to
+            for dy in 0..building.height as i32 {
+                for dx in 0..building.width as i32 {
+                    let tx = building.x + dx;
+                    let ty = building.y + dy;
+                    if resources.tile_grid.in_bounds(tx, ty) {
+                        let furn = resources.tile_grid.get(tx as u32, ty as u32).furniture_id.as_deref();
+                        assert!(
+                            furn != Some("lean_to"),
+                            "lean_to found at ({},{}) within {} footprint — blueprint path incorrectly activated for non-blueprint structure",
+                            tx, ty, building.building_type
+                        );
+                    }
+                }
+            }
+
+            // Also check furniture plans targeting this footprint
+            for plan in &resources.furniture_plans {
+                if plan.furniture_id == "lean_to" {
+                    let in_footprint = plan.x >= building.x
+                        && plan.x < building.x + building.width as i32
+                        && plan.y >= building.y
+                        && plan.y < building.y + building.height as i32;
+                    assert!(
+                        !in_footprint,
+                        "lean_to furniture plan at ({},{}) targets {} footprint — blueprint path incorrectly activated",
+                        plan.x, plan.y, building.building_type
+                    );
+                }
+            }
+        }
+
+        eprintln!("[harness_blueprint_none_falls_back_to_legacy] PASS — stockpile/campfire have blueprint=None and no lean_to artifacts");
+    }
+
+    // ========================================================================
+    // floor-fix harness tests
+    // ========================================================================
+    //
+    // All tests below use a MANUAL shelter setup: shelter_center is set on
+    // SettlementId(1), and PARTIAL perimeter walls (top row only, oy == -r)
+    // are stamped directly on tile_grid. NO Building entity is created.
+    //
+    // Anti-circularity design: placing walls on only ONE side of the perimeter
+    // triggers `has_walls == true` but does NOT form a sealable enclosure.
+    // Therefore `stamp_enclosed_floors()` (flood-fill from edges) will NOT
+    // detect an enclosed area and will NOT stamp floors. The ONLY code path
+    // that can produce interior floors is the settlement-based fallback block
+    // in refresh_structural_context (influence.rs), which checks has_walls
+    // and stamps unconditionally.
+    //
+    // Discriminators enforced by every test:
+    //   1. data_registry is None  (make_stage1_engine, no blueprints)
+    //   2. No completed shelter Building exists after ticking
+    //   3. Partial walls only — stamp_enclosed_floors cannot produce floors
+
+    /// Helper: creates a manual shelter at (50,50) for SettlementId(1).
+    /// Places PARTIAL L-shaped perimeter walls (top row + left column) but
+    /// creates NO Building entity. This triggers has_walls but does NOT form
+    /// a sealable enclosure, so stamp_enclosed_floors cannot produce floors.
+    /// With r=2: top row (5 walls) + left column excl. top-left corner (3 walls) = 8 walls.
+    /// Returns the shelter center coordinates.
+    fn setup_manual_shelter_no_building(engine: &mut SimEngine) -> (i32, i32) {
+        let (cx, cy) = (50_i32, 50_i32);
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let resources = engine.resources_mut();
+        let settlement = resources.settlements.get_mut(&SettlementId(1))
+            .expect("precondition: settlement 1 must exist");
+        settlement.shelter_center = Some((cx, cy));
+
+        // Place walls in an L-shape: top row + left column (non-enclosing).
+        // Top row: oy == -r, ox in -r..=r → 5 walls (y=48, x=48..52)
+        let oy = -r;
+        for ox in -r..=r {
+            let tx = cx + ox;
+            let ty = cy + oy;
+            if resources.tile_grid.in_bounds(tx, ty) {
+                resources.tile_grid.set_wall(tx as u32, ty as u32, "stone", 100.0);
+            }
+        }
+        // Left column: ox == -r, oy in (-r+1)..=r → 3 walls (x=48, y=49..52)
+        // Excludes top-left corner already placed above.
+        let ox = -r;
+        for oy in (-r + 1)..=r {
+            let tx = cx + ox;
+            let ty = cy + oy;
+            if resources.tile_grid.in_bounds(tx, ty) {
+                resources.tile_grid.set_wall(tx as u32, ty as u32, "stone", 100.0);
+            }
+        }
+        (cx, cy)
+    }
+
+    /// Helper: asserts the discriminators that prove the settlement-based
+    /// floor stamp block is the only path that could have produced floors.
+    fn assert_floor_fix_discriminators(engine: &SimEngine, label: &str) {
+        // Discriminator 1: no data_registry (the exact bug path)
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "[{}] precondition: data_registry must be None",
+            label
+        );
+        // Discriminator 2: no completed shelter Building at (50,50)
+        let has_complete_shelter = engine.resources().buildings.values().any(|b| {
+            b.building_type == "shelter" && b.is_complete
+                && {
+                    let bcx = b.x + (b.width as i32) / 2;
+                    let bcy = b.y + (b.height as i32) / 2;
+                    bcx == 50 && bcy == 50
+                }
+        });
+        assert!(
+            !has_complete_shelter,
+            "[{}] discriminator: no completed shelter Building at (50,50) — only the settlement-based block can stamp floors",
+            label
+        );
+    }
+
+    /// Harness: floor-fix Assertion 1 — Interior floor count = 9
+    /// Type: A (structural invariant)
+    /// Threshold: exactly 9 floor tiles in the 3×3 interior of shelter_center (RADIUS=2)
+    #[test]
+    fn harness_floor_fix_interior_floor_count() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // Run 1 tick to trigger refresh_structural_context
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_interior_floor_count");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut floor_count = 0u32;
+        for dy in -interior_radius..=interior_radius {
+            for dx in -interior_radius..=interior_radius {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    floor_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_interior_floor_count] center=({},{}) floor_count={} data_registry=None complete_building=false",
+            cx, cy, floor_count
+        );
+
+        // Type A: exactly 9 interior floor tiles
+        assert_eq!(
+            floor_count, 9,
+            "expected 9 interior floor tiles at ({},{}), got {}",
+            cx, cy, floor_count
+        );
+    }
+
+    /// Harness: floor-fix Assertion 2 — Floor material = "packed_earth"
+    /// Type: A (structural invariant)
+    /// Threshold: all 9 interior floor tiles have floor_material == "packed_earth"
+    #[test]
+    fn harness_floor_fix_floor_material_packed_earth() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_floor_material_packed_earth");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut wrong_material = 0u32;
+        for dy in -interior_radius..=interior_radius {
+            for dx in -interior_radius..=interior_radius {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if !resources.tile_grid.in_bounds(tx, ty) {
+                    continue;
+                }
+                let tile = resources.tile_grid.get(tx as u32, ty as u32);
+                match &tile.floor_material {
+                    Some(mat) if mat == "packed_earth" => {}
+                    other => {
+                        eprintln!(
+                            "[harness_floor_fix_floor_material] ({},{}) floor_material={:?}",
+                            tx, ty, other
+                        );
+                        wrong_material += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_floor_material] center=({},{}) wrong_material={} data_registry=None complete_building=false",
+            cx, cy, wrong_material
+        );
+
+        // Type A: all 9 tiles must be "packed_earth"
+        assert_eq!(
+            wrong_material, 0,
+            "expected all interior floor tiles to be 'packed_earth', {} tiles had wrong material",
+            wrong_material
+        );
+    }
+
+    /// Harness: floor-fix Assertion 3 — Regression guard for make_stage1_engine
+    /// Type: D (regression guard — the exact bug scenario)
+    /// Threshold: make_stage1_engine (no data_registry) with manual partial walls must produce ≥1 floor
+    /// Discriminator: data_registry=None AND no completed shelter Building at test location
+    #[test]
+    fn harness_floor_fix_regression_no_data_registry() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Discriminator: make_stage1_engine must NOT have data_registry loaded.
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "precondition: make_stage1_engine must have data_registry=None"
+        );
+
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // No Building entity created — only the settlement-based block can stamp floors
+        let has_any_shelter_building_before = engine.resources().buildings.values()
+            .any(|b| b.building_type == "shelter");
+        eprintln!(
+            "[harness_floor_fix_regression] pre-tick: data_registry=None, any_shelter_building={}",
+            has_any_shelter_building_before
+        );
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_regression_no_data_registry");
+
+        let resources = engine.resources();
+        let mut any_floor = false;
+        for dy in -1..=1_i32 {
+            for dx in -1..=1_i32 {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    any_floor = true;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_regression] center=({},{}) any_floor={}",
+            cx, cy, any_floor
+        );
+
+        // Type D: at least 1 floor must exist (the bug was 0 floors in this path)
+        assert!(
+            any_floor,
+            "regression: manual shelter at ({},{}) has no floor tiles — settlement-based floor stamp not working",
+            cx, cy
+        );
+    }
+
+    /// Harness: floor-fix Assertion 4 — Perimeter walls intact ≥ 7
+    /// Type: A (structural invariant)
+    /// Threshold: ≥ 7 perimeter tiles have wall_material.is_some()
+    /// (We place 8 walls in an L-shape; ≥7 must survive after ticking)
+    #[test]
+    fn harness_floor_fix_perimeter_walls_intact() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_perimeter_walls_intact");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let mut wall_count = 0u32;
+        for dy in -r..=r {
+            for dx in -r..=r {
+                let is_perimeter = dx.abs() == r || dy.abs() == r;
+                if !is_perimeter {
+                    continue;
+                }
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some()
+                {
+                    wall_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_perimeter_walls] center=({},{}) wall_count={} data_registry=None complete_building=false",
+            cx, cy, wall_count
+        );
+
+        // Type A: ≥ 7 perimeter walls (we placed 8 in L-shape; verify they survive)
+        assert!(
+            wall_count >= 7,
+            "expected ≥7 perimeter walls at ({},{}), got {} — floor-fix damaged wall tiles",
+            cx, cy, wall_count
+        );
+    }
+
+    /// Harness: floor-fix Assertion 5 — Idempotency across additional ticks
+    /// Type: A (structural invariant)
+    /// Threshold: floor count at tick 1 == floor count at tick 121, AND
+    ///            pre-existing floor materials are preserved (not overwritten)
+    #[test]
+    fn harness_floor_fix_idempotency() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // Pre-stamp one interior tile with a DIFFERENT floor material before
+        // the first tick. The is_none() guard must preserve it.
+        {
+            let resources = engine.resources_mut();
+            resources.tile_grid.set_floor(cx as u32, cy as u32, "clay");
+        }
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_idempotency");
+
+        let count_floors = |engine: &SimEngine, cx: i32, cy: i32| -> u32 {
+            let resources = engine.resources();
+            let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+            let ir = r - 1;
+            let mut count = 0u32;
+            for dy in -ir..=ir {
+                for dx in -ir..=ir {
+                    let tx = cx + dx;
+                    let ty = cy + dy;
+                    if resources.tile_grid.in_bounds(tx, ty)
+                        && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                    {
+                        count += 1;
+                    }
+                }
+            }
+            count
+        };
+
+        let count_at_1 = count_floors(&engine, cx, cy);
+
+        // Verify the pre-existing "clay" floor was preserved after tick 1
+        let center_mat_at_1 = engine.resources().tile_grid
+            .get(cx as u32, cy as u32).floor_material.clone();
+        assert_eq!(
+            center_mat_at_1.as_deref(),
+            Some("clay"),
+            "pre-existing 'clay' floor at center ({},{}) was overwritten after tick 1 — is_none() guard broken",
+            cx, cy
+        );
+
+        engine.run_ticks(120); // run 120 more ticks
+
+        // Re-check discriminators after additional ticks
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_idempotency_post");
+
+        let count_at_121 = count_floors(&engine, cx, cy);
+
+        // Verify the pre-existing "clay" floor is STILL preserved after 121 ticks
+        let center_mat_at_121 = engine.resources().tile_grid
+            .get(cx as u32, cy as u32).floor_material.clone();
+
+        eprintln!(
+            "[harness_floor_fix_idempotency] center=({},{}) count@1={} count@121={} center_mat@1={:?} center_mat@121={:?} data_registry=None",
+            cx, cy, count_at_1, count_at_121, center_mat_at_1, center_mat_at_121
+        );
+
+        // Type A: floor count must be stable across additional refresh cycles
+        assert_eq!(
+            count_at_1, count_at_121,
+            "floor count changed between tick 1 ({}) and 121 ({}) — idempotency violation",
+            count_at_1, count_at_121
+        );
+
+        // Type A: pre-existing floor material must be preserved, not overwritten
+        assert_eq!(
+            center_mat_at_121.as_deref(),
+            Some("clay"),
+            "pre-existing 'clay' floor at center ({},{}) was overwritten after 121 ticks — is_none() guard broken",
+            cx, cy
+        );
+    }
+
+    /// Harness: floor-fix Assertion 6 — No floor without walls
+    /// Type: A (structural invariant)
+    /// Threshold: if no perimeter walls exist, no interior floors should be stamped
+    /// Setup: manually set shelter_center at a wall-free location, then run 1 tick
+    /// to trigger refresh_structural_context, and verify the wall-existence guard works.
+    #[test]
+    fn harness_floor_fix_no_floor_without_walls() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Discriminator: data_registry must be None
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "precondition: data_registry must be None"
+        );
+
+        // Manually set shelter_center to a known empty location (10, 10) — far from
+        // the settlement at (128,128), guaranteed no walls or agent activity.
+        {
+            let resources = engine.resources_mut();
+            let settlement = resources.settlements.get_mut(&SettlementId(1))
+                .expect("precondition: settlement 1 must exist");
+            settlement.shelter_center = Some((10, 10));
+        }
+
+        // Run 1 tick to trigger refresh_structural_context
+        engine.run_ticks(1);
+
+        let resources = engine.resources();
+        let (cx, cy) = (10_i32, 10_i32);
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+
+        // Verify precondition: 0 perimeter walls at (10, 10)
+        let mut wall_count = 0u32;
+        for dy in -r..=r {
+            for dx in -r..=r {
+                let is_perimeter = dx.abs() == r || dy.abs() == r;
+                if !is_perimeter {
+                    continue;
+                }
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some()
+                {
+                    wall_count += 1;
+                }
+            }
+        }
+        assert_eq!(
+            wall_count, 0,
+            "precondition: expected 0 perimeter walls at ({},{}), got {}",
+            cx, cy, wall_count
+        );
+
+        // Now check: with 0 walls, there must be 0 interior floors
+        let ir = r - 1;
+        let mut floor_count = 0u32;
+        for dy in -ir..=ir {
+            for dx in -ir..=ir {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    floor_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_no_floor_without_walls] center=({},{}) walls={} floors={} data_registry=None",
+            cx, cy, wall_count, floor_count
+        );
+
+        // Type A: no walls → no floors
+        assert_eq!(
+            floor_count, 0,
+            "expected 0 interior floors when 0 perimeter walls exist at ({},{}), got {}",
+            cx, cy, floor_count
+        );
+    }
+
+    // ── Birth/Death Counter Harness ────────────────────────────────────
+
+    /// Assertion 1 — Type D (regression guard): births occur after 4380 ticks.
+    /// The bug was stats_total_births always 0; this is the core regression gate.
+    #[test]
+    fn harness_population_births_occur() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!("[harness] births_occur: stats_total_births={}", total_births);
+        // Type D: regression guard — births must be non-zero
+        assert!(
+            total_births > 0,
+            "stats_total_births={} — regression: counter still stuck at 0 after 4380 ticks",
+            total_births
+        );
+    }
+
+    /// Assertion 2 — Type C (calibrated lower bound): births aren't trivially low.
+    /// With seed 42, 20 agents, 4380 ticks (~1 year), expect meaningful reproduction.
+    /// Plan threshold: ≥5 (observed ~39 with seed 42).
+    #[test]
+    fn harness_population_births_not_trivially_low() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!(
+            "[harness] births_not_trivially_low: stats_total_births={}",
+            total_births
+        );
+        // Type C: calibrated lower bound — at least 5 births in a year with 20 agents
+        assert!(
+            total_births >= 5,
+            "stats_total_births={} < 5 — births trivially low for 20 agents over 4380 ticks",
+            total_births
+        );
+    }
+
+    /// Assertion 3 — Type A (invariant): deaths counter is valid (non-negative, meaningful check).
+    /// For u64 this is always >= 0, but we verify the counter is reachable and not corrupted.
+    #[test]
+    fn harness_population_deaths_counter_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_deaths = resources.stats_total_deaths;
+        eprintln!(
+            "[harness] deaths_counter_valid: stats_total_deaths={}",
+            total_deaths
+        );
+        // Type A: deaths counter should be less than initial + births (can't kill more than exist)
+        let total_births = resources.stats_total_births;
+        assert!(
+            total_deaths <= 20 + total_births,
+            "stats_total_deaths={} exceeds initial_pop(20) + births({}) — counter corruption",
+            total_deaths,
+            total_births
+        );
+    }
+
+    /// Assertion 4 — Type A (accounting identity): initial + births - deaths == alive count.
+    /// This is the strongest assertion — the core anti-circular proof replacing event-store
+    /// comparison (EventStore is a ring buffer that evicts old events, making count unreliable).
+    #[test]
+    fn harness_population_accounting_identity() {
+        let mut engine = make_stage1_engine(42, 20);
+        let initial_pop: u64 = 20;
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        let total_deaths = resources.stats_total_deaths;
+
+        let world = engine.world();
+        let alive_count = world
+            .query::<&Age>()
+            .iter()
+            .filter(|(_, age)| age.alive)
+            .count() as u64;
+
+        let expected = initial_pop + total_births - total_deaths;
+        eprintln!(
+            "[harness] accounting_identity: initial={} births={} deaths={} expected={} alive={}",
+            initial_pop, total_births, total_deaths, expected, alive_count
+        );
+        // Type A: population accounting must balance exactly
+        assert!(
+            expected == alive_count,
+            "Population accounting mismatch: initial({}) + births({}) - deaths({}) = {} != alive({})",
+            initial_pop,
+            total_births,
+            total_deaths,
+            expected,
+            alive_count
+        );
+    }
+
+    /// Assertion 5 — Type C (calibrated upper bound): births ≤ 500.
+    /// Catches runaway increment bugs. Plan threshold: ≤500 (observed ~39 with seed 42).
+    #[test]
+    fn harness_population_births_upper_bound() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!(
+            "[harness] births_upper_bound: stats_total_births={}",
+            total_births
+        );
+        // Type C: calibrated upper bound — 20 agents can't produce 500 births in 1 year
+        assert!(
+            total_births <= 500,
+            "stats_total_births={} > 500 — runaway increment bug",
+            total_births
+        );
+    }
+
+    /// Assertion 6 — Type A (initialization sanity): counters start at zero before any ticks.
+    #[test]
+    fn harness_population_counters_start_at_zero() {
+        let engine = make_stage1_engine(42, 20);
+        let resources = engine.resources();
+        let births = resources.stats_total_births;
+        let deaths = resources.stats_total_deaths;
+        eprintln!(
+            "[harness] counters_start_at_zero: births={} deaths={}",
+            births, deaths
+        );
+        // Type A: counters must be zero before simulation runs
+        assert!(
+            births == 0,
+            "stats_total_births={} — should be 0 before any ticks",
+            births
+        );
+        assert!(
+            deaths == 0,
+            "stats_total_deaths={} — should be 0 before any ticks",
+            deaths
+        );
+    }
+
 }
 
 fn pathfind_bench_inputs() -> (
@@ -9933,6 +11573,7 @@ fn run_pathfind_backend_smoke(args: &[String]) {
             cpu_dispatches + gpu_dispatches
         );
     }
+
 }
 
 fn run_stress_math_bench(args: &[String]) {

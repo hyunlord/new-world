@@ -30,6 +30,50 @@ pub struct StructureDef {
     /// Influence emitted when the structure is complete.
     #[serde(default)]
     pub influence_when_complete: Vec<InfluenceEmission>,
+    /// Layout blueprint: relative tile positions for walls, floors, furniture.
+    /// If None, the structure uses legacy hardcoded layout.
+    #[serde(default)]
+    pub blueprint: Option<Blueprint>,
+}
+
+/// Data-driven building layout blueprint. Specifies relative positions
+/// for walls, floors, furniture, and doors from the building center (0,0).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct Blueprint {
+    /// Wall positions relative to center (0,0).
+    pub walls: Vec<BlueprintTile>,
+    /// Floor positions relative to center.
+    #[serde(default)]
+    pub floors: Vec<BlueprintTile>,
+    /// Furniture placements relative to center.
+    #[serde(default)]
+    pub furniture: Vec<BlueprintFurniture>,
+    /// Door positions relative to center (gaps in wall ring).
+    #[serde(default)]
+    pub doors: Vec<(i32, i32)>,
+}
+
+/// A single tile entry in a blueprint (wall or floor).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlueprintTile {
+    /// Relative position from building center.
+    pub offset: (i32, i32),
+    /// Material tag — resolved at runtime based on available resources.
+    #[serde(default = "default_material_tag")]
+    pub material_tag: String,
+}
+
+/// A furniture placement entry in a blueprint.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct BlueprintFurniture {
+    /// Relative position from building center.
+    pub offset: (i32, i32),
+    /// Furniture definition id (must match a FurnitureDef.id).
+    pub furniture_id: String,
+}
+
+fn default_material_tag() -> String {
+    "building_material".to_string()
 }
 
 fn default_build_ticks() -> u64 {
@@ -88,5 +132,55 @@ mod tests {
         assert_eq!(structure.required_components.len(), 3);
         assert_eq!(structure.build_ticks, 60);
         assert_eq!(structure.resource_costs.get("wood"), Some(&4.0));
+        // blueprint field should default to None when omitted
+        assert!(structure.blueprint.is_none());
+    }
+
+    #[test]
+    fn parses_structure_def_with_blueprint() {
+        let structure: StructureDef = ron::from_str(
+            r#"StructureDef(
+                id: "test_shelter",
+                display_name_key: "BUILDING_TYPE_SHELTER",
+                min_size: (5, 5),
+                required_components: [
+                    Wall(count: 8, tags: ["building_material"]),
+                ],
+                optional_components: [],
+                role_recognition: Auto,
+                build_ticks: 60,
+                resource_costs: {},
+                influence_when_complete: [],
+                blueprint: Some(Blueprint(
+                    walls: [
+                        BlueprintTile(offset: (-2, -2), material_tag: "building_material"),
+                        BlueprintTile(offset: (-1, -2), material_tag: "building_material"),
+                        BlueprintTile(offset: (0, -2), material_tag: "building_material"),
+                    ],
+                    floors: [
+                        BlueprintTile(offset: (0, 0), material_tag: "packed_earth"),
+                        BlueprintTile(offset: (1, 0), material_tag: "packed_earth"),
+                    ],
+                    furniture: [
+                        BlueprintFurniture(offset: (0, 0), furniture_id: "fire_pit"),
+                    ],
+                    doors: [(0, 2)],
+                )),
+            )"#,
+        )
+        .expect("expected structure with blueprint to parse");
+
+        assert_eq!(structure.id, "test_shelter");
+        assert!(structure.blueprint.is_some());
+
+        let bp = structure.blueprint.as_ref().unwrap();
+        assert_eq!(bp.walls.len(), 3);
+        assert_eq!(bp.floors.len(), 2);
+        assert_eq!(bp.furniture.len(), 1);
+        assert_eq!(bp.doors.len(), 1);
+        assert_eq!(bp.doors[0], (0, 2));
+        assert_eq!(bp.furniture[0].furniture_id, "fire_pit");
+        assert_eq!(bp.furniture[0].offset, (0, 0));
+        assert_eq!(bp.floors[0].material_tag, "packed_earth");
     }
 }

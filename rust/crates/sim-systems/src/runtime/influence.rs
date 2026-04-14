@@ -511,6 +511,61 @@ fn refresh_structural_context(resources: &mut SimResources) {
         }
     }
 
+    // P2-B3/B4: Settlements with shelter_center but no completed Building entity
+    // still need interior floors stamped. This covers:
+    // - PlaceWall shelters (no Building entity)
+    // - Blueprint shelters where generate_plans_from_blueprint ran once but
+    //   refresh_structural_context clears and re-stamps each cycle
+    // - Headless tests where data_registry is None (no blueprint, no floor)
+    {
+        let settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        for sid in settlement_ids {
+            let Some(settlement) = resources.settlements.get(&sid) else {
+                continue;
+            };
+            let Some((cx, cy)) = settlement.shelter_center else {
+                continue;
+            };
+            // Check that at least some walls exist at perimeter positions
+            let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
+            let mut has_walls = false;
+            'wall_check: for oy in -r..=r {
+                for ox in -r..=r {
+                    let is_perimeter = ox.abs() == r || oy.abs() == r;
+                    if !is_perimeter {
+                        continue;
+                    }
+                    let tx = cx + ox;
+                    let ty = cy + oy;
+                    if resources.tile_grid.in_bounds(tx, ty)
+                        && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some()
+                    {
+                        has_walls = true;
+                        break 'wall_check;
+                    }
+                }
+            }
+            if !has_walls {
+                continue;
+            }
+            // Stamp interior floors only where no floor exists yet.
+            // The is_none() guard preserves any pre-existing floor material
+            // (e.g. from stamp_shelter_structure or blueprint paths).
+            let interior_radius = r - 1;
+            for oy in -interior_radius..=interior_radius {
+                for ox in -interior_radius..=interior_radius {
+                    let tx = cx + ox;
+                    let ty = cy + oy;
+                    if resources.tile_grid.in_bounds(tx, ty)
+                        && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_none()
+                    {
+                        resources.tile_grid.set_floor(tx as u32, ty as u32, "packed_earth");
+                    }
+                }
+            }
+        }
+    }
+
     // P2-B3.5: PlaceWall-based shelters don't have Building entities, so
     // stamp_shelter_structure never runs for them. Detect wall-enclosed
     // areas and stamp floors + seal door gaps so room detection works.
@@ -533,7 +588,7 @@ fn stamp_shelter_structure(
         return;
     }
     let wall_material = resolve_shelter_wall_material(resources, settlement_id);
-    let floor_material = wall_material.clone();
+    let floor_material = "packed_earth".to_string();
     let roof_material = resolve_shelter_roof_material(resources);
     let wall_hp = wall_hp_from_material(resources.data_registry.as_deref(), wall_material.as_str());
 

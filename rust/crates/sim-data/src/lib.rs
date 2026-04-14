@@ -26,9 +26,10 @@ pub use attachment_config::{load_attachment_config, AttachmentConfig};
 pub use coping::{load_coping_definitions, CopingDef, CopingDefinitions};
 pub use defs::{
     ActionCategory, ActionCondition, ActionDef, ActionEffect, AgentConstants, AxisShift,
-    BiasMatrixRow, CauseTrigger, DerivedRuleOverride, FurnitureDef, GlobalConstants,
-    InfluenceChannelRule, InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory,
-    MaterialDef, MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
+    BiasMatrixRow, Blueprint, BlueprintFurniture, BlueprintTile, CauseTrigger,
+    DerivedRuleOverride, FurnitureDef, GlobalConstants, InfluenceChannelRule,
+    InfluenceClampPolicyDef, InfluenceEmission, MaterialCategory, MaterialDef,
+    MaterialProperties, RecipeDef, RecipeOutput, RecipeRequires, RoleRecognition,
     RuleResourceModifier, RuleResourceSpawn, RuleSpecialZone, ShiftCondition, StructureDef,
     StructureRequirement, TagRequirement, TemperamentRules, TemperamentShiftRule, WorldRuleset,
     ZoneResourceBoost,
