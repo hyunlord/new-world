@@ -813,6 +813,117 @@ Answer every question in the checklist."
 }
 
 # ============================================================
+# STEP 2.5a-int: VLM INTERACTIVE (Godot + Python controller)
+# ============================================================
+run_vlm_interactive() {
+    log "=== Step 2.5a-int: VLM INTERACTIVE ==="
+
+    local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
+    mkdir -p "$evidence_dir"
+
+    # Check if prompt has interactive scenarios
+    local scenarios
+    scenarios=$(sed -n '/^## Interactive Scenarios/,/^## [^I]/p' "$PROMPT_FILE" 2>/dev/null | head -n -1)
+    if [[ -z "$scenarios" ]]; then
+        log "No interactive scenarios defined — skipping"
+        return 0
+    fi
+
+    echo "$scenarios" > "$evidence_dir/interactive_scenarios.md"
+
+    # Resolve Godot binary (same logic as run_visual_verify)
+    local godot_bin="${GODOT:-}"
+    if [[ -z "$godot_bin" ]]; then
+        for candidate in \
+            "/Applications/Godot.app/Contents/MacOS/Godot" \
+            "$HOME/Downloads/Godot.app/Contents/MacOS/Godot" \
+            "$HOME/Applications/Godot.app/Contents/MacOS/Godot"; do
+            if [[ -x "$candidate" ]]; then
+                godot_bin="$candidate"
+                break
+            fi
+        done
+    fi
+    if [[ -z "$godot_bin" ]] && command -v godot >/dev/null 2>&1; then
+        godot_bin="$(command -v godot)"
+    fi
+
+    if [[ -z "$godot_bin" ]] || [[ ! -x "$godot_bin" ]]; then
+        log "WARNING: Godot not found — skipping VLM interactive"
+        return 0
+    fi
+
+    # Start Godot with interactive mode
+    log "Starting Godot in interactive mode..."
+    "$godot_bin" --path "$PROJECT_ROOT" \
+        --script scripts/test/harness_visual_verify.gd \
+        -- --feature "$FEATURE" --ticks 2000 --interactive \
+        2>&1 | tee "$evidence_dir/godot_interactive_output.txt" &
+    local godot_pid=$!
+
+    # Wait for TCP server to start (poll port 9223)
+    local retries=0
+    while [[ $retries -lt 20 ]]; do
+        if python3 -c "
+import socket, sys
+s = socket.socket()
+s.settimeout(0.5)
+try:
+    s.connect(('127.0.0.1', 9223))
+    s.close()
+    sys.exit(0)
+except:
+    sys.exit(1)
+" 2>/dev/null; then
+            break
+        fi
+        sleep 0.5
+        retries=$((retries + 1))
+    done
+
+    if [[ $retries -ge 20 ]]; then
+        log "WARNING: Godot interactive server did not start — skipping"
+        kill "$godot_pid" 2>/dev/null
+        wait "$godot_pid" 2>/dev/null
+        return 0
+    fi
+
+    log "Godot interactive server ready — running controller..."
+
+    # Run interactive controller
+    run_with_timeout 120 python3 "$SCRIPT_DIR/interactive_controller.py" \
+        --evidence-dir "$evidence_dir" \
+        --scenarios "$evidence_dir/interactive_scenarios.md" \
+        2>&1 | tee "$evidence_dir/interactive_log.txt" || {
+            log "WARNING: Interactive controller exited with error"
+        }
+
+    # Cleanup Godot (quit command should have stopped it, but ensure)
+    kill "$godot_pid" 2>/dev/null
+    wait "$godot_pid" 2>/dev/null
+
+    if [[ -f "$evidence_dir/interactive_results.txt" ]]; then
+        log "VLM Interactive results: $evidence_dir/interactive_results.txt"
+    else
+        log "WARNING: No interactive results produced"
+    fi
+}
+
+summarize_interactive() {
+    local results_file="$1"
+    if [[ ! -f "$results_file" ]]; then
+        echo "SKIPPED (no scenarios)"
+        return
+    fi
+    local pass_count fail_count
+    pass_count=$(grep -c "RESULT: PASS" "$results_file" 2>/dev/null || echo "0")
+    fail_count=$(grep -c "RESULT: FAIL" "$results_file" 2>/dev/null || echo "0")
+    local scenarios
+    scenarios=$(grep -c "^SCENARIO:" "$results_file" 2>/dev/null || echo "0")
+    echo "${scenarios} scenarios: ${pass_count} PASS, ${fail_count} FAIL"
+}
+
+# ============================================================
 # HELPER: Detect if sim-bridge was modified by Generator
 # ============================================================
 changed_sim_bridge() {
@@ -1299,6 +1410,9 @@ main() {
         run_visual_verify
         report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
 
+        run_vlm_interactive
+        report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
+
         run_vlm_analysis
         report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
 
@@ -1401,6 +1515,9 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             run_visual_verify
             report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
+
+            run_vlm_interactive
+            report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
 
             run_vlm_analysis
             report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
