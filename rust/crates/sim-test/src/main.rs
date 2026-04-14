@@ -11163,6 +11163,150 @@ mod tests {
             cx, cy, floor_count
         );
     }
+
+    // ── Birth/Death Counter Harness ────────────────────────────────────
+
+    /// Assertion 1 — Type D (regression guard): births occur after 4380 ticks.
+    /// The bug was stats_total_births always 0; this is the core regression gate.
+    #[test]
+    fn harness_population_births_occur() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!("[harness] births_occur: stats_total_births={}", total_births);
+        // Type D: regression guard — births must be non-zero
+        assert!(
+            total_births > 0,
+            "stats_total_births={} — regression: counter still stuck at 0 after 4380 ticks",
+            total_births
+        );
+    }
+
+    /// Assertion 2 — Type C (calibrated lower bound): births aren't trivially low.
+    /// With seed 42, 20 agents, 4380 ticks (~1 year), expect meaningful reproduction.
+    /// Plan threshold: ≥5 (observed ~39 with seed 42).
+    #[test]
+    fn harness_population_births_not_trivially_low() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!(
+            "[harness] births_not_trivially_low: stats_total_births={}",
+            total_births
+        );
+        // Type C: calibrated lower bound — at least 5 births in a year with 20 agents
+        assert!(
+            total_births >= 5,
+            "stats_total_births={} < 5 — births trivially low for 20 agents over 4380 ticks",
+            total_births
+        );
+    }
+
+    /// Assertion 3 — Type A (invariant): deaths counter is valid (non-negative, meaningful check).
+    /// For u64 this is always >= 0, but we verify the counter is reachable and not corrupted.
+    #[test]
+    fn harness_population_deaths_counter_valid() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_deaths = resources.stats_total_deaths;
+        eprintln!(
+            "[harness] deaths_counter_valid: stats_total_deaths={}",
+            total_deaths
+        );
+        // Type A: deaths counter should be less than initial + births (can't kill more than exist)
+        let total_births = resources.stats_total_births;
+        assert!(
+            total_deaths <= 20 + total_births,
+            "stats_total_deaths={} exceeds initial_pop(20) + births({}) — counter corruption",
+            total_deaths,
+            total_births
+        );
+    }
+
+    /// Assertion 4 — Type A (accounting identity): initial + births - deaths == alive count.
+    /// This is the strongest assertion — the core anti-circular proof replacing event-store
+    /// comparison (EventStore is a ring buffer that evicts old events, making count unreliable).
+    #[test]
+    fn harness_population_accounting_identity() {
+        let mut engine = make_stage1_engine(42, 20);
+        let initial_pop: u64 = 20;
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        let total_deaths = resources.stats_total_deaths;
+
+        let world = engine.world();
+        let alive_count = world
+            .query::<&Age>()
+            .iter()
+            .filter(|(_, age)| age.alive)
+            .count() as u64;
+
+        let expected = initial_pop + total_births - total_deaths;
+        eprintln!(
+            "[harness] accounting_identity: initial={} births={} deaths={} expected={} alive={}",
+            initial_pop, total_births, total_deaths, expected, alive_count
+        );
+        // Type A: population accounting must balance exactly
+        assert!(
+            expected == alive_count,
+            "Population accounting mismatch: initial({}) + births({}) - deaths({}) = {} != alive({})",
+            initial_pop,
+            total_births,
+            total_deaths,
+            expected,
+            alive_count
+        );
+    }
+
+    /// Assertion 5 — Type C (calibrated upper bound): births ≤ 500.
+    /// Catches runaway increment bugs. Plan threshold: ≤500 (observed ~39 with seed 42).
+    #[test]
+    fn harness_population_births_upper_bound() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let resources = engine.resources();
+        let total_births = resources.stats_total_births;
+        eprintln!(
+            "[harness] births_upper_bound: stats_total_births={}",
+            total_births
+        );
+        // Type C: calibrated upper bound — 20 agents can't produce 500 births in 1 year
+        assert!(
+            total_births <= 500,
+            "stats_total_births={} > 500 — runaway increment bug",
+            total_births
+        );
+    }
+
+    /// Assertion 6 — Type A (initialization sanity): counters start at zero before any ticks.
+    #[test]
+    fn harness_population_counters_start_at_zero() {
+        let engine = make_stage1_engine(42, 20);
+        let resources = engine.resources();
+        let births = resources.stats_total_births;
+        let deaths = resources.stats_total_deaths;
+        eprintln!(
+            "[harness] counters_start_at_zero: births={} deaths={}",
+            births, deaths
+        );
+        // Type A: counters must be zero before simulation runs
+        assert!(
+            births == 0,
+            "stats_total_births={} — should be 0 before any ticks",
+            births
+        );
+        assert!(
+            deaths == 0,
+            "stats_total_deaths={} — should be 0 before any ticks",
+            deaths
+        );
+    }
+
 }
 
 fn pathfind_bench_inputs() -> (
@@ -11429,6 +11573,7 @@ fn run_pathfind_backend_smoke(args: &[String]) {
             cpu_dispatches + gpu_dispatches
         );
     }
+
 }
 
 fn run_stress_math_bench(args: &[String]) {
