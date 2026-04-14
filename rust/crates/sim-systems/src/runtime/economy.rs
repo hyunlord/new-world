@@ -652,14 +652,21 @@ fn cleanup_stale_plans(world: &World, resources: &mut SimResources, tick: u64) {
         }
     }
 
-    // Pre-compute settlements with incomplete shelter buildings so we can
-    // protect their plans from stale cleanup. Blueprint-generated plans
-    // (especially furniture like lean_to) may not be claimed by builders
-    // yet but must persist until the shelter is finalized.
+    // Pre-compute settlements that have ANY shelter building (complete or
+    // incomplete).  Wall plans only need protection while the shelter is
+    // under construction, but furniture plans (lean_to, fire_pit) must
+    // persist until a builder actually places them — which can happen well
+    // after the shelter walls are finalized.
     let shelter_in_progress: HashSet<SettlementId> = resources
         .buildings
         .values()
         .filter(|b| b.building_type == BUILDING_TYPE_SHELTER && !b.is_complete)
+        .map(|b| b.settlement_id)
+        .collect();
+    let shelter_any: HashSet<SettlementId> = resources
+        .buildings
+        .values()
+        .filter(|b| b.building_type == BUILDING_TYPE_SHELTER)
         .map(|b| b.settlement_id)
         .collect();
 
@@ -676,7 +683,11 @@ fn cleanup_stale_plans(world: &World, resources: &mut SimResources, tick: u64) {
         if plan.claimed_by.is_some() {
             return true;
         }
-        if shelter_in_progress.contains(&plan.settlement_id) {
+        // Furniture plans are protected as long as the settlement has a
+        // shelter building — even after wall completion.  This prevents
+        // lean_to / fire_pit plans from being garbage-collected before a
+        // builder can claim them.
+        if shelter_any.contains(&plan.settlement_id) {
             return true;
         }
         tick.saturating_sub(plan.created_tick) <= stale_threshold

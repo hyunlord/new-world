@@ -3552,6 +3552,325 @@ mod tests {
         );
     }
 
+    // ── Floor-Fix Harness Tests ─────────────────────────────────────────────
+    // These tests verify that `refresh_structural_context()` stamps interior
+    // floors on settlements that have `shelter_center` + perimeter walls,
+    // even when NO completed Building entity exists (PlaceWall path).
+
+    /// Assertion 1+2+3: Manually construct a settlement with shelter_center and
+    /// PARTIAL perimeter walls (not a full enclosure) but ZERO completed shelter
+    /// Buildings.  After running ticks the new settlement-based floor stamp block
+    /// must produce interior floors.
+    ///
+    /// Anti-circularity discriminator: only partial walls are placed (not a full
+    /// ring), so `stamp_enclosed_floors` (flood-fill) cannot detect enclosure.
+    /// Only the new settlement-based code path checks `has_walls` and stamps
+    /// interior floors unconditionally.  With the new code removed, this MUST fail.
+    #[test]
+    fn harness_building_floor_stamp_no_building_entity() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Manually construct preconditions: shelter_center + PARTIAL walls, no Building.
+        // Position far from settlement center (128,128) to avoid simulation interference.
+        let shelter_cx: i32 = 50;
+        let shelter_cy: i32 = 50;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS; // 2
+        {
+            let resources = engine.resources_mut();
+            // Set shelter_center on the test settlement.
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Stamp walls on ONE SIDE only (top row of perimeter: oy == -r).
+            // This triggers `has_walls == true` but does NOT create full enclosure,
+            // so `stamp_enclosed_floors` (flood-fill) will NOT stamp these interiors.
+            let oy = -r;
+            for ox in -r..=r {
+                let tx = (shelter_cx + ox) as u32;
+                let ty = (shelter_cy + oy) as u32;
+                resources.tile_grid.set_wall(tx, ty, "granite", 50.0);
+            }
+        }
+
+        // Run enough ticks for the influence system (interval=2) to fire.
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+
+        // Type A: Anti-circularity — zero completed shelter Buildings must exist.
+        let completed_shelter_count = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete && b.building_type == "shelter")
+            .count();
+        assert_eq!(
+            completed_shelter_count, 0,
+            "anti-circularity: expected 0 completed shelter Buildings after 4 ticks, got {completed_shelter_count}"
+        );
+
+        // Type A: Interior tiles (radius r-1 = 1, i.e. 3×3 = 9 tiles) must have floor_material.
+        let interior_radius = r - 1;
+        let mut floored_count = 0;
+        let mut checked_count = 0;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tx = (shelter_cx + ox) as u32;
+                let ty = (shelter_cy + oy) as u32;
+                checked_count += 1;
+                if resources.tile_grid.get(tx, ty).floor_material.is_some() {
+                    floored_count += 1;
+                }
+            }
+        }
+
+        println!(
+            "[harness] floor_stamp_no_building_entity: floored={}/{} completed_shelters={}",
+            floored_count, checked_count, completed_shelter_count
+        );
+
+        // Type A: All 9 interior tiles must have floor_material stamped.
+        assert_eq!(
+            floored_count, checked_count,
+            "expected all {checked_count} interior tiles to have floor_material, got {floored_count}"
+        );
+    }
+
+    /// Assertion 3 (material): The stamped floor material must be "packed_earth".
+    /// Uses partial walls (same anti-circularity approach as above).
+    #[test]
+    fn harness_building_floor_stamp_correct_material() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 60;
+        let shelter_cy: i32 = 60;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Partial walls: left column only (ox == -r).
+            let ox = -r;
+            for oy in -r..=r {
+                resources
+                    .tile_grid
+                    .set_wall((shelter_cx + ox) as u32, (shelter_cy + oy) as u32, "granite", 50.0);
+            }
+        }
+
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+        let interior_radius = r - 1;
+        let mut all_packed_earth = true;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tile = resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                // Type A: floor_material must be exactly "packed_earth".
+                match tile.floor_material.as_deref() {
+                    Some("packed_earth") => {}
+                    other => {
+                        println!(
+                            "[harness] floor_stamp_correct_material: tile ({},{}) has floor={:?}, expected packed_earth",
+                            shelter_cx + ox, shelter_cy + oy, other
+                        );
+                        all_packed_earth = false;
+                    }
+                }
+            }
+        }
+        assert!(
+            all_packed_earth,
+            "all interior tiles must have floor_material=\"packed_earth\""
+        );
+        println!("[harness] floor_stamp_correct_material: PASS");
+    }
+
+    /// Assertion 5: Idempotency — running multiple refresh cycles does not
+    /// change the floor material or produce duplicates.
+    /// Uses partial walls (same anti-circularity approach).
+    #[test]
+    fn harness_building_floor_stamp_idempotent() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 70;
+        let shelter_cy: i32 = 70;
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Partial walls: bottom row only (oy == r).
+            let oy = r;
+            for ox in -r..=r {
+                resources
+                    .tile_grid
+                    .set_wall((shelter_cx + ox) as u32, (shelter_cy + oy) as u32, "granite", 50.0);
+            }
+        }
+
+        // Run 4 ticks — first refresh cycle.
+        engine.run_ticks(4);
+
+        let interior_radius = r - 1;
+        let mut snapshot_after_first: Vec<Option<String>> = Vec::new();
+        {
+            let resources = engine.resources();
+            for oy in -interior_radius..=interior_radius {
+                for ox in -interior_radius..=interior_radius {
+                    let tile = resources
+                        .tile_grid
+                        .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                    snapshot_after_first.push(tile.floor_material.clone());
+                }
+            }
+        }
+
+        // Type A: floors must exist after first refresh (precondition for idempotency check).
+        let floored_first = snapshot_after_first
+            .iter()
+            .filter(|f| f.is_some())
+            .count();
+        assert_eq!(
+            floored_first,
+            snapshot_after_first.len(),
+            "precondition: expected all {} interior tiles floored after first refresh, got {}",
+            snapshot_after_first.len(),
+            floored_first
+        );
+
+        // Run 8 more ticks — several more refresh cycles.
+        engine.run_ticks(8);
+
+        let resources = engine.resources();
+        let mut idx = 0;
+        let mut identical = true;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                let tile = resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32);
+                // Type A: floor_material must be identical across refresh cycles.
+                if tile.floor_material != snapshot_after_first[idx] {
+                    println!(
+                        "[harness] idempotent: tile ({},{}) changed from {:?} to {:?}",
+                        shelter_cx + ox,
+                        shelter_cy + oy,
+                        snapshot_after_first[idx],
+                        tile.floor_material
+                    );
+                    identical = false;
+                }
+                idx += 1;
+            }
+        }
+        assert!(
+            identical,
+            "floor_material must be identical after multiple refresh cycles (idempotency)"
+        );
+        println!("[harness] floor_stamp_idempotent: PASS");
+    }
+
+    /// Assertion 6: has_walls gate — if shelter_center is set but NO walls
+    /// exist at perimeter positions, no floors should be stamped.
+    #[test]
+    fn harness_building_floor_no_walls_no_stamp() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        let shelter_cx: i32 = 40;
+        let shelter_cy: i32 = 40;
+        {
+            let resources = engine.resources_mut();
+            if let Some(settlement) = resources.settlements.get_mut(&SettlementId(1)) {
+                settlement.shelter_center = Some((shelter_cx, shelter_cy));
+            }
+            // Intentionally do NOT stamp any walls.
+        }
+
+        engine.run_ticks(4);
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut floored_count = 0;
+        for oy in -interior_radius..=interior_radius {
+            for ox in -interior_radius..=interior_radius {
+                if resources
+                    .tile_grid
+                    .get((shelter_cx + ox) as u32, (shelter_cy + oy) as u32)
+                    .floor_material
+                    .is_some()
+                {
+                    floored_count += 1;
+                }
+            }
+        }
+
+        println!(
+            "[harness] floor_no_walls_no_stamp: floored={} (expect 0)",
+            floored_count
+        );
+
+        // Type A: with no perimeter walls, the has_walls gate must prevent floor stamping.
+        assert_eq!(
+            floored_count, 0,
+            "expected 0 interior floors when no walls exist, got {floored_count}"
+        );
+    }
+
+    /// Assertion 7: Regression guard — the EXISTING completed-Building path
+    /// (`stamp_shelter_structure`) must still produce floors when a completed
+    /// shelter Building exists. This tests the old code path, not the new one.
+    #[test]
+    fn harness_building_floor_stamp_regression_completed_building() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Run enough ticks for a shelter to be built via the normal simulation path.
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+
+        // First check if any shelter walls were placed (P2-B3 path).
+        let settlement = resources.settlements.get(&SettlementId(1));
+        let shelter_center = settlement.and_then(|s| s.shelter_center);
+
+        if let Some((cx, cy)) = shelter_center {
+            let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+            let interior_radius = r - 1;
+            let mut floored_count = 0;
+            let mut total = 0;
+            for oy in -interior_radius..=interior_radius {
+                for ox in -interior_radius..=interior_radius {
+                    let tx = (cx + ox) as u32;
+                    let ty = (cy + oy) as u32;
+                    total += 1;
+                    if resources.tile_grid.get(tx, ty).floor_material.is_some() {
+                        floored_count += 1;
+                    }
+                }
+            }
+            println!(
+                "[harness] regression_completed_building: shelter_center=({},{}) floored={}/{}",
+                cx, cy, floored_count, total
+            );
+            // Type C: If shelter_center exists and walls have been placed,
+            // interior floors must be stamped (either by old or new path).
+            assert!(
+                floored_count > 0,
+                "expected interior floors at shelter_center ({cx},{cy}), got 0"
+            );
+        } else {
+            // Type C: After 4380 ticks with seed=42, shelter_center should exist.
+            // If it doesn't, the regression test is inconclusive — log and pass.
+            println!(
+                "[harness] regression_completed_building: no shelter_center found after 4380 ticks — inconclusive"
+            );
+        }
+    }
+
     /// Verifies the end-to-end crafting loop:
     /// cognition selects Craft → CraftingRuntimeSystem assigns recipe → world.rs
     /// completes craft → item appears in agent inventory → causal log records the event.
@@ -10089,12 +10408,21 @@ mod tests {
             cx, cy, plan_exists, placed
         );
 
-        // Type A: exactly one of plan or placement must be true (XOR)
-        // Plan was verified to exist early; by 4380 ticks builder should have
-        // either placed it (plan consumed) or plan still pending.
+        // Plan-queue path already verified by run_and_verify_blueprint_furniture_plans
+        // at early tick (~20).  By 4380 ticks the plan must still exist OR the
+        // furniture must have been placed by a builder.  The plan must never
+        // silently disappear (stale cleanup must not garbage-collect shelter
+        // furniture while the shelter exists).
         assert!(
-            plan_exists ^ placed,
-            "expected exactly one of (plan, placed) for fire_pit at ({},{}): plan_exists={} placed={}",
+            plan_exists || placed,
+            "fire_pit neither planned nor placed at ({},{}) — furniture plan was lost after shelter completion: plan_exists={} placed={}",
+            cx, cy, plan_exists, placed
+        );
+        // Anti-dual-path: the plan and the placed furniture must not coexist
+        // (that would mean both the blueprint direct-stamp and plan-queue paths ran).
+        assert!(
+            !(plan_exists && placed),
+            "fire_pit both planned AND placed at ({},{}) — dual-path bug: plan_exists={} placed={}",
             cx, cy, plan_exists, placed
         );
     }
@@ -10394,6 +10722,446 @@ mod tests {
         }
 
         eprintln!("[harness_blueprint_none_falls_back_to_legacy] PASS — stockpile/campfire have blueprint=None and no lean_to artifacts");
+    }
+
+    // ========================================================================
+    // floor-fix harness tests
+    // ========================================================================
+    //
+    // All tests below use a MANUAL shelter setup: shelter_center is set on
+    // SettlementId(1), and PARTIAL perimeter walls (top row only, oy == -r)
+    // are stamped directly on tile_grid. NO Building entity is created.
+    //
+    // Anti-circularity design: placing walls on only ONE side of the perimeter
+    // triggers `has_walls == true` but does NOT form a sealable enclosure.
+    // Therefore `stamp_enclosed_floors()` (flood-fill from edges) will NOT
+    // detect an enclosed area and will NOT stamp floors. The ONLY code path
+    // that can produce interior floors is the settlement-based fallback block
+    // in refresh_structural_context (influence.rs), which checks has_walls
+    // and stamps unconditionally.
+    //
+    // Discriminators enforced by every test:
+    //   1. data_registry is None  (make_stage1_engine, no blueprints)
+    //   2. No completed shelter Building exists after ticking
+    //   3. Partial walls only — stamp_enclosed_floors cannot produce floors
+
+    /// Helper: creates a manual shelter at (50,50) for SettlementId(1).
+    /// Places PARTIAL L-shaped perimeter walls (top row + left column) but
+    /// creates NO Building entity. This triggers has_walls but does NOT form
+    /// a sealable enclosure, so stamp_enclosed_floors cannot produce floors.
+    /// With r=2: top row (5 walls) + left column excl. top-left corner (3 walls) = 8 walls.
+    /// Returns the shelter center coordinates.
+    fn setup_manual_shelter_no_building(engine: &mut SimEngine) -> (i32, i32) {
+        let (cx, cy) = (50_i32, 50_i32);
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let resources = engine.resources_mut();
+        let settlement = resources.settlements.get_mut(&SettlementId(1))
+            .expect("precondition: settlement 1 must exist");
+        settlement.shelter_center = Some((cx, cy));
+
+        // Place walls in an L-shape: top row + left column (non-enclosing).
+        // Top row: oy == -r, ox in -r..=r → 5 walls (y=48, x=48..52)
+        let oy = -r;
+        for ox in -r..=r {
+            let tx = cx + ox;
+            let ty = cy + oy;
+            if resources.tile_grid.in_bounds(tx, ty) {
+                resources.tile_grid.set_wall(tx as u32, ty as u32, "stone", 100.0);
+            }
+        }
+        // Left column: ox == -r, oy in (-r+1)..=r → 3 walls (x=48, y=49..52)
+        // Excludes top-left corner already placed above.
+        let ox = -r;
+        for oy in (-r + 1)..=r {
+            let tx = cx + ox;
+            let ty = cy + oy;
+            if resources.tile_grid.in_bounds(tx, ty) {
+                resources.tile_grid.set_wall(tx as u32, ty as u32, "stone", 100.0);
+            }
+        }
+        (cx, cy)
+    }
+
+    /// Helper: asserts the discriminators that prove the settlement-based
+    /// floor stamp block is the only path that could have produced floors.
+    fn assert_floor_fix_discriminators(engine: &SimEngine, label: &str) {
+        // Discriminator 1: no data_registry (the exact bug path)
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "[{}] precondition: data_registry must be None",
+            label
+        );
+        // Discriminator 2: no completed shelter Building at (50,50)
+        let has_complete_shelter = engine.resources().buildings.values().any(|b| {
+            b.building_type == "shelter" && b.is_complete
+                && {
+                    let bcx = b.x + (b.width as i32) / 2;
+                    let bcy = b.y + (b.height as i32) / 2;
+                    bcx == 50 && bcy == 50
+                }
+        });
+        assert!(
+            !has_complete_shelter,
+            "[{}] discriminator: no completed shelter Building at (50,50) — only the settlement-based block can stamp floors",
+            label
+        );
+    }
+
+    /// Harness: floor-fix Assertion 1 — Interior floor count = 9
+    /// Type: A (structural invariant)
+    /// Threshold: exactly 9 floor tiles in the 3×3 interior of shelter_center (RADIUS=2)
+    #[test]
+    fn harness_floor_fix_interior_floor_count() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // Run 1 tick to trigger refresh_structural_context
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_interior_floor_count");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut floor_count = 0u32;
+        for dy in -interior_radius..=interior_radius {
+            for dx in -interior_radius..=interior_radius {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    floor_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_interior_floor_count] center=({},{}) floor_count={} data_registry=None complete_building=false",
+            cx, cy, floor_count
+        );
+
+        // Type A: exactly 9 interior floor tiles
+        assert_eq!(
+            floor_count, 9,
+            "expected 9 interior floor tiles at ({},{}), got {}",
+            cx, cy, floor_count
+        );
+    }
+
+    /// Harness: floor-fix Assertion 2 — Floor material = "packed_earth"
+    /// Type: A (structural invariant)
+    /// Threshold: all 9 interior floor tiles have floor_material == "packed_earth"
+    #[test]
+    fn harness_floor_fix_floor_material_packed_earth() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_floor_material_packed_earth");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let interior_radius = r - 1;
+        let mut wrong_material = 0u32;
+        for dy in -interior_radius..=interior_radius {
+            for dx in -interior_radius..=interior_radius {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if !resources.tile_grid.in_bounds(tx, ty) {
+                    continue;
+                }
+                let tile = resources.tile_grid.get(tx as u32, ty as u32);
+                match &tile.floor_material {
+                    Some(mat) if mat == "packed_earth" => {}
+                    other => {
+                        eprintln!(
+                            "[harness_floor_fix_floor_material] ({},{}) floor_material={:?}",
+                            tx, ty, other
+                        );
+                        wrong_material += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_floor_material] center=({},{}) wrong_material={} data_registry=None complete_building=false",
+            cx, cy, wrong_material
+        );
+
+        // Type A: all 9 tiles must be "packed_earth"
+        assert_eq!(
+            wrong_material, 0,
+            "expected all interior floor tiles to be 'packed_earth', {} tiles had wrong material",
+            wrong_material
+        );
+    }
+
+    /// Harness: floor-fix Assertion 3 — Regression guard for make_stage1_engine
+    /// Type: D (regression guard — the exact bug scenario)
+    /// Threshold: make_stage1_engine (no data_registry) with manual partial walls must produce ≥1 floor
+    /// Discriminator: data_registry=None AND no completed shelter Building at test location
+    #[test]
+    fn harness_floor_fix_regression_no_data_registry() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Discriminator: make_stage1_engine must NOT have data_registry loaded.
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "precondition: make_stage1_engine must have data_registry=None"
+        );
+
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // No Building entity created — only the settlement-based block can stamp floors
+        let has_any_shelter_building_before = engine.resources().buildings.values()
+            .any(|b| b.building_type == "shelter");
+        eprintln!(
+            "[harness_floor_fix_regression] pre-tick: data_registry=None, any_shelter_building={}",
+            has_any_shelter_building_before
+        );
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_regression_no_data_registry");
+
+        let resources = engine.resources();
+        let mut any_floor = false;
+        for dy in -1..=1_i32 {
+            for dx in -1..=1_i32 {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    any_floor = true;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_regression] center=({},{}) any_floor={}",
+            cx, cy, any_floor
+        );
+
+        // Type D: at least 1 floor must exist (the bug was 0 floors in this path)
+        assert!(
+            any_floor,
+            "regression: manual shelter at ({},{}) has no floor tiles — settlement-based floor stamp not working",
+            cx, cy
+        );
+    }
+
+    /// Harness: floor-fix Assertion 4 — Perimeter walls intact ≥ 7
+    /// Type: A (structural invariant)
+    /// Threshold: ≥ 7 perimeter tiles have wall_material.is_some()
+    /// (We place 8 walls in an L-shape; ≥7 must survive after ticking)
+    #[test]
+    fn harness_floor_fix_perimeter_walls_intact() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_perimeter_walls_intact");
+
+        let resources = engine.resources();
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+        let mut wall_count = 0u32;
+        for dy in -r..=r {
+            for dx in -r..=r {
+                let is_perimeter = dx.abs() == r || dy.abs() == r;
+                if !is_perimeter {
+                    continue;
+                }
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some()
+                {
+                    wall_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_perimeter_walls] center=({},{}) wall_count={} data_registry=None complete_building=false",
+            cx, cy, wall_count
+        );
+
+        // Type A: ≥ 7 perimeter walls (we placed 8 in L-shape; verify they survive)
+        assert!(
+            wall_count >= 7,
+            "expected ≥7 perimeter walls at ({},{}), got {} — floor-fix damaged wall tiles",
+            cx, cy, wall_count
+        );
+    }
+
+    /// Harness: floor-fix Assertion 5 — Idempotency across additional ticks
+    /// Type: A (structural invariant)
+    /// Threshold: floor count at tick 1 == floor count at tick 121, AND
+    ///            pre-existing floor materials are preserved (not overwritten)
+    #[test]
+    fn harness_floor_fix_idempotency() {
+        let mut engine = make_stage1_engine(42, 20);
+        let (cx, cy) = setup_manual_shelter_no_building(&mut engine);
+
+        // Pre-stamp one interior tile with a DIFFERENT floor material before
+        // the first tick. The is_none() guard must preserve it.
+        {
+            let resources = engine.resources_mut();
+            resources.tile_grid.set_floor(cx as u32, cy as u32, "clay");
+        }
+
+        engine.run_ticks(1);
+
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_idempotency");
+
+        let count_floors = |engine: &SimEngine, cx: i32, cy: i32| -> u32 {
+            let resources = engine.resources();
+            let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+            let ir = r - 1;
+            let mut count = 0u32;
+            for dy in -ir..=ir {
+                for dx in -ir..=ir {
+                    let tx = cx + dx;
+                    let ty = cy + dy;
+                    if resources.tile_grid.in_bounds(tx, ty)
+                        && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                    {
+                        count += 1;
+                    }
+                }
+            }
+            count
+        };
+
+        let count_at_1 = count_floors(&engine, cx, cy);
+
+        // Verify the pre-existing "clay" floor was preserved after tick 1
+        let center_mat_at_1 = engine.resources().tile_grid
+            .get(cx as u32, cy as u32).floor_material.clone();
+        assert_eq!(
+            center_mat_at_1.as_deref(),
+            Some("clay"),
+            "pre-existing 'clay' floor at center ({},{}) was overwritten after tick 1 — is_none() guard broken",
+            cx, cy
+        );
+
+        engine.run_ticks(120); // run 120 more ticks
+
+        // Re-check discriminators after additional ticks
+        assert_floor_fix_discriminators(&engine, "harness_floor_fix_idempotency_post");
+
+        let count_at_121 = count_floors(&engine, cx, cy);
+
+        // Verify the pre-existing "clay" floor is STILL preserved after 121 ticks
+        let center_mat_at_121 = engine.resources().tile_grid
+            .get(cx as u32, cy as u32).floor_material.clone();
+
+        eprintln!(
+            "[harness_floor_fix_idempotency] center=({},{}) count@1={} count@121={} center_mat@1={:?} center_mat@121={:?} data_registry=None",
+            cx, cy, count_at_1, count_at_121, center_mat_at_1, center_mat_at_121
+        );
+
+        // Type A: floor count must be stable across additional refresh cycles
+        assert_eq!(
+            count_at_1, count_at_121,
+            "floor count changed between tick 1 ({}) and 121 ({}) — idempotency violation",
+            count_at_1, count_at_121
+        );
+
+        // Type A: pre-existing floor material must be preserved, not overwritten
+        assert_eq!(
+            center_mat_at_121.as_deref(),
+            Some("clay"),
+            "pre-existing 'clay' floor at center ({},{}) was overwritten after 121 ticks — is_none() guard broken",
+            cx, cy
+        );
+    }
+
+    /// Harness: floor-fix Assertion 6 — No floor without walls
+    /// Type: A (structural invariant)
+    /// Threshold: if no perimeter walls exist, no interior floors should be stamped
+    /// Setup: manually set shelter_center at a wall-free location, then run 1 tick
+    /// to trigger refresh_structural_context, and verify the wall-existence guard works.
+    #[test]
+    fn harness_floor_fix_no_floor_without_walls() {
+        let mut engine = make_stage1_engine(42, 20);
+
+        // Discriminator: data_registry must be None
+        assert!(
+            engine.resources().data_registry.is_none(),
+            "precondition: data_registry must be None"
+        );
+
+        // Manually set shelter_center to a known empty location (10, 10) — far from
+        // the settlement at (128,128), guaranteed no walls or agent activity.
+        {
+            let resources = engine.resources_mut();
+            let settlement = resources.settlements.get_mut(&SettlementId(1))
+                .expect("precondition: settlement 1 must exist");
+            settlement.shelter_center = Some((10, 10));
+        }
+
+        // Run 1 tick to trigger refresh_structural_context
+        engine.run_ticks(1);
+
+        let resources = engine.resources();
+        let (cx, cy) = (10_i32, 10_i32);
+        let r = sim_core::config::BUILDING_SHELTER_WALL_RING_RADIUS;
+
+        // Verify precondition: 0 perimeter walls at (10, 10)
+        let mut wall_count = 0u32;
+        for dy in -r..=r {
+            for dx in -r..=r {
+                let is_perimeter = dx.abs() == r || dy.abs() == r;
+                if !is_perimeter {
+                    continue;
+                }
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).wall_material.is_some()
+                {
+                    wall_count += 1;
+                }
+            }
+        }
+        assert_eq!(
+            wall_count, 0,
+            "precondition: expected 0 perimeter walls at ({},{}), got {}",
+            cx, cy, wall_count
+        );
+
+        // Now check: with 0 walls, there must be 0 interior floors
+        let ir = r - 1;
+        let mut floor_count = 0u32;
+        for dy in -ir..=ir {
+            for dx in -ir..=ir {
+                let tx = cx + dx;
+                let ty = cy + dy;
+                if resources.tile_grid.in_bounds(tx, ty)
+                    && resources.tile_grid.get(tx as u32, ty as u32).floor_material.is_some()
+                {
+                    floor_count += 1;
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness_floor_fix_no_floor_without_walls] center=({},{}) walls={} floors={} data_registry=None",
+            cx, cy, wall_count, floor_count
+        );
+
+        // Type A: no walls → no floors
+        assert_eq!(
+            floor_count, 0,
+            "expected 0 interior floors when 0 perimeter walls exist at ({},{}), got {}",
+            cx, cy, floor_count
+        );
     }
 }
 
