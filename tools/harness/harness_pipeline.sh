@@ -1564,6 +1564,12 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || echo "")
                     if [[ -n "$report_path" ]]; then
                         log "Pipeline report: $report_path"
+                        # Score threshold warning
+                        local score
+                        score=$(grep -oE '\*\*([0-9]+)\*\*' "$report_path" 2>/dev/null | head -1 | tr -d '*' || echo "0")
+                        if [[ -n "$score" && "$score" -lt 95 ]] 2>/dev/null; then
+                            log "WARNING: Score ${score}/100 below 95 threshold. Review recommended."
+                        fi
                     fi
 
                     # Suggest commit message with evidence metadata

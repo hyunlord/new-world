@@ -166,17 +166,17 @@ fi
 
 # ── Score Calculation ────────────────────────────────────────────────────
 
-# 1. Mechanical Gate (15)
+# 1. Mechanical Gate (10)
 SCORE_GATE=0
 GATE_DETAIL=""
 if [[ "$GATE_TEST_STATUS" == "PASS" ]]; then
-    SCORE_GATE=$((SCORE_GATE + 10))
+    SCORE_GATE=$((SCORE_GATE + 6))
     GATE_DETAIL="test ${GATE_TEST_COUNT} passed"
 else
     GATE_DETAIL="test FAIL"
 fi
 if [[ "$CLIPPY_STATUS" == "clean" ]]; then
-    SCORE_GATE=$((SCORE_GATE + 3))
+    SCORE_GATE=$((SCORE_GATE + 2))
     GATE_DETAIL+=", clippy clean"
 else
     GATE_DETAIL+=", clippy $CLIPPY_STATUS"
@@ -188,45 +188,45 @@ else
     GATE_DETAIL+=", FFI $FFI_STATUS"
 fi
 
-# 2. Plan Quality (10)
+# 2. Plan Quality (5)
 SCORE_PLAN=0
 PLAN_DETAIL=""
 if [[ "$MODE" == "--quick" || "$MODE" == "--light" ]]; then
-    SCORE_PLAN=10
+    SCORE_PLAN=5
     PLAN_DETAIL="auto (${MODE} mode)"
 else
     if [[ $PLAN_ROUNDS -gt 0 ]]; then
-        SCORE_PLAN=$((SCORE_PLAN + 5))
+        SCORE_PLAN=$((SCORE_PLAN + 2))
         PLAN_DETAIL="$PLAN_ROUNDS debate round(s)"
     else
         PLAN_DETAIL="no debate"
     fi
     if echo "$QC_VERDICTS" | grep -qi "APPROVED\|PLAN_APPROVED\|PLANAPPROVED"; then
-        SCORE_PLAN=$((SCORE_PLAN + 5))
+        SCORE_PLAN=$((SCORE_PLAN + 3))
         PLAN_DETAIL+=", QC APPROVED"
     else
         PLAN_DETAIL+=", QC ${QC_VERDICTS:-none}"
     fi
 fi
 
-# 3. Code Quality (20)
+# 3. Code Quality (15)
 SCORE_CODE=0
 CODE_DETAIL=""
 case "$FINAL_VERDICT" in
     APPROVED|APPROVE)
         if [[ $CODE_ATTEMPTS -eq 1 ]]; then
-            SCORE_CODE=20; CODE_DETAIL="APPROVE on attempt 1"
+            SCORE_CODE=15; CODE_DETAIL="APPROVE on attempt 1"
         elif [[ $CODE_ATTEMPTS -eq 2 ]]; then
-            SCORE_CODE=15; CODE_DETAIL="APPROVE on attempt 2"
+            SCORE_CODE=11; CODE_DETAIL="APPROVE on attempt 2"
         else
-            SCORE_CODE=10; CODE_DETAIL="APPROVE on attempt $CODE_ATTEMPTS"
+            SCORE_CODE=8; CODE_DETAIL="APPROVE on attempt $CODE_ATTEMPTS"
         fi
         ;;
     RE-CODE|RECODE)
-        SCORE_CODE=8; CODE_DETAIL="RE-CODE (manual gate)"
+        SCORE_CODE=5; CODE_DETAIL="RE-CODE (manual gate)"
         ;;
     RE-PLAN|REPLAN)
-        SCORE_CODE=5; CODE_DETAIL="RE-PLAN after $CODE_ATTEMPTS attempts"
+        SCORE_CODE=3; CODE_DETAIL="RE-PLAN after $CODE_ATTEMPTS attempts"
         ;;
     *)
         SCORE_CODE=0; CODE_DETAIL="$FINAL_VERDICT"
@@ -241,37 +241,50 @@ if [[ $test_cap -gt 10 ]]; then test_cap=10; fi
 SCORE_TESTS=$((test_cap * 2))
 TEST_DETAIL="$NEW_HARNESS_TESTS new harness tests"
 
-# 5. Visual Verify (15)
+# 5. Visual Verify (20)
 SCORE_VISUAL=0
 VISUAL_DETAIL=""
+# Screenshots: min(count * 2, 8)
 ss_score=$((SCREENSHOTS * 2))
-if [[ $ss_score -gt 10 ]]; then ss_score=10; fi
+if [[ $ss_score -gt 8 ]]; then ss_score=8; fi
 SCORE_VISUAL=$ss_score
+# VLM verdict: VISUAL_OK=7, VISUAL_WARNING=4, VISUAL_FAIL=0
 case "$VISUAL_VERDICT" in
-    VISUAL_OK) SCORE_VISUAL=$((SCORE_VISUAL + 5)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM OK" ;;
-    VISUAL_WARNING) SCORE_VISUAL=$((SCORE_VISUAL + 3)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM WARNING" ;;
+    VISUAL_OK) SCORE_VISUAL=$((SCORE_VISUAL + 7)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM OK" ;;
+    VISUAL_WARNING) SCORE_VISUAL=$((SCORE_VISUAL + 4)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM WARNING" ;;
     VISUAL_FAIL) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM FAIL" ;;
-    SKIPPED) SCORE_VISUAL=$((SCORE_VISUAL + 2)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM skipped" ;;
-    *) SCORE_VISUAL=$((SCORE_VISUAL + 2)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM $VISUAL_VERDICT" ;;
+    SKIPPED) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM skipped" ;;
+    *) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM $VISUAL_VERDICT" ;;
 esac
-if [[ $SCORE_VISUAL -gt 15 ]]; then SCORE_VISUAL=15; fi
+# Interactive scenarios: PASS=5, else 0
+INTERACTIVE_PASS=false
+if [[ -f "$EVIDENCE_DIR/interactive_results.txt" ]]; then
+    if grep -qi "PASS\|SUCCESS\|ALL.*PASS" "$EVIDENCE_DIR/interactive_results.txt" 2>/dev/null; then
+        SCORE_VISUAL=$((SCORE_VISUAL + 5))
+        VISUAL_DETAIL+=", interactive PASS"
+        INTERACTIVE_PASS=true
+    else
+        VISUAL_DETAIL+=", interactive FAIL"
+    fi
+fi
+if [[ $SCORE_VISUAL -gt 20 ]]; then SCORE_VISUAL=20; fi
 
-# 6. Regression (10)
+# 6. Regression (15)
 SCORE_REGRESSION=0
 REGRESSION_DETAIL=""
 case "$REGRESSION_STATUS" in
-    CLEAN) SCORE_REGRESSION=10; REGRESSION_DETAIL="CLEAN" ;;
+    CLEAN) SCORE_REGRESSION=15; REGRESSION_DETAIL="CLEAN" ;;
     NOT_RUN) SCORE_REGRESSION=5; REGRESSION_DETAIL="not run" ;;
     *) SCORE_REGRESSION=0; REGRESSION_DETAIL="$REGRESSION_STATUS" ;;
 esac
 
-# 7. Evaluator (10)
+# 7. Evaluator (15)
 SCORE_EVALUATOR=0
 EVALUATOR_DETAIL=""
 case "$FINAL_VERDICT" in
-    APPROVED|APPROVE) SCORE_EVALUATOR=10; EVALUATOR_DETAIL="APPROVE" ;;
-    RE-CODE|RECODE) SCORE_EVALUATOR=5; EVALUATOR_DETAIL="RE-CODE (manual)" ;;
-    RE-PLAN|REPLAN) SCORE_EVALUATOR=2; EVALUATOR_DETAIL="RE-PLAN" ;;
+    APPROVED|APPROVE) SCORE_EVALUATOR=15; EVALUATOR_DETAIL="APPROVE" ;;
+    RE-CODE|RECODE) SCORE_EVALUATOR=7; EVALUATOR_DETAIL="RE-CODE (manual)" ;;
+    RE-PLAN|REPLAN) SCORE_EVALUATOR=3; EVALUATOR_DETAIL="RE-PLAN" ;;
     *) SCORE_EVALUATOR=0; EVALUATOR_DETAIL="$FINAL_VERDICT" ;;
 esac
 
@@ -279,9 +292,9 @@ esac
 SCORE_TOTAL=$((SCORE_GATE + SCORE_PLAN + SCORE_CODE + SCORE_TESTS + SCORE_VISUAL + SCORE_REGRESSION + SCORE_EVALUATOR))
 
 # Grade
-if [[ $SCORE_TOTAL -ge 90 ]]; then GRADE="A — Ship it!"
-elif [[ $SCORE_TOTAL -ge 70 ]]; then GRADE="B — Acceptable"
-elif [[ $SCORE_TOTAL -ge 50 ]]; then GRADE="C — Needs work"
+if [[ $SCORE_TOTAL -ge 95 ]]; then GRADE="A — Ship it!"
+elif [[ $SCORE_TOTAL -ge 85 ]]; then GRADE="B — Acceptable"
+elif [[ $SCORE_TOTAL -ge 70 ]]; then GRADE="C — Needs work"
 else GRADE="F — Reject"
 fi
 
@@ -387,13 +400,13 @@ cat > "$REPORT" << REPORT_EOF
 
 | Category | Score | Max | Detail |
 |----------|:-----:|:---:|--------|
-| Mechanical Gate | $SCORE_GATE | 15 | $GATE_DETAIL |
-| Plan Quality | $SCORE_PLAN | 10 | $PLAN_DETAIL |
-| Code Quality | $SCORE_CODE | 20 | $CODE_DETAIL |
+| Mechanical Gate | $SCORE_GATE | 10 | $GATE_DETAIL |
+| Plan Quality | $SCORE_PLAN | 5 | $PLAN_DETAIL |
+| Code Quality | $SCORE_CODE | 15 | $CODE_DETAIL |
 | Test Coverage | $SCORE_TESTS | 20 | $TEST_DETAIL |
-| Visual Verify | $SCORE_VISUAL | 15 | $VISUAL_DETAIL |
-| Regression | $SCORE_REGRESSION | 10 | $REGRESSION_DETAIL |
-| Evaluator | $SCORE_EVALUATOR | 10 | $EVALUATOR_DETAIL |
+| Visual Verify | $SCORE_VISUAL | 20 | $VISUAL_DETAIL |
+| Regression | $SCORE_REGRESSION | 15 | $REGRESSION_DETAIL |
+| Evaluator | $SCORE_EVALUATOR | 15 | $EVALUATOR_DETAIL |
 | **TOTAL** | **$SCORE_TOTAL** | **100** | **$GRADE** |
 
 ---
