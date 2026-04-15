@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use hecs::World;
 use sim_core::components::{Identity, Personality, Position, Social, Stress};
@@ -221,14 +221,22 @@ fn sift_first_occurrence(
         SimEventType::Death,
         SimEventType::MentalBreakStart,
     ];
+    // Pre-compute which event types have occurred before the window — O(n) once
+    let mut seen_before_window: HashSet<SimEventType> = HashSet::new();
+    for event in store.iter() {
+        if event.tick >= window_start {
+            break;
+        }
+        if candidates.contains(&event.event_type) {
+            seen_before_window.insert(event.event_type.clone());
+        }
+    }
     for event in store.since_tick(window_start) {
         if !candidates.contains(&event.event_type) {
             continue;
         }
-        let has_prior = store
-            .iter()
-            .any(|prior| prior.tick < event.tick && prior.event_type == event.event_type);
-        if has_prior {
+        // O(1) lookup instead of O(total_events) scan
+        if seen_before_window.contains(&event.event_type) {
             continue;
         }
         let cause = if event.cause.is_empty() {
@@ -436,13 +444,17 @@ fn sift_deadline_approaching(
     None
 }
 
+/// Cap entity scan to avoid O(n × r²) explosion at high agent counts.
+const TRIANGLE_SCAN_CAP: usize = 50;
+
 fn sift_relationship_triangle(
     contexts: &HashMap<u32, EntityStoryContext>,
     current_tick: u64,
 ) -> Option<SimNotification> {
     let mut actors: Vec<u32> = contexts.keys().copied().collect();
     actors.sort_unstable();
-    for actor_a in &actors {
+    // Only scan first TRIANGLE_SCAN_CAP entities to bound worst-case cost
+    for actor_a in actors.iter().take(TRIANGLE_SCAN_CAP) {
         let Some(context_a) = contexts.get(actor_a) else {
             continue;
         };

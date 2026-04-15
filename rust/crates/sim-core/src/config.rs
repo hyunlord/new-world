@@ -345,7 +345,7 @@ pub const STRESS_SPEED_MULTIPLIERS: [f64; 5] = [1.0, 1.0, 0.9, 0.7, 0.5];
 /// Maximum number of persisted narrative events kept in memory.
 pub const EVENT_STORE_CAPACITY: usize = 10_000;
 /// Story-sifter cadence in ticks.
-pub const STORY_SIFTER_TICK_INTERVAL: u64 = 10;
+pub const STORY_SIFTER_TICK_INTERVAL: u64 = 20;
 /// Priority used by the runtime story sifter.
 pub const STORY_SIFTER_PRIORITY: u32 = 91;
 /// Short lookback window used for local narrative pattern checks.

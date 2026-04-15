@@ -4,7 +4,7 @@ use sim_core::config;
 use sim_core::enums::ActionType;
 use sim_core::ids::SettlementId;
 use sim_engine::{GameEvent, SimResources, SimSystem};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 /// Stamps building-anchored territory with terrain blocking and accumulates
 /// activity-based territory from agent productive actions.
@@ -126,6 +126,14 @@ impl SimSystem for TerritoryRuntimeSystem {
         }
 
         // Step 4: Bands without buildings get weak leader-position emission (terrain-aware).
+        // Pre-build entity_id → position lookup to avoid O(bands × entities) scanning.
+        let position_lookup: HashMap<u64, (f64, f64)> = {
+            let mut lookup = HashMap::new();
+            for (entity, pos) in world.query::<&Position>().iter() {
+                lookup.insert(entity.id() as u64, (pos.x, pos.y));
+            }
+            lookup
+        };
         for band in resources.band_store.all() {
             if band.members.is_empty() {
                 continue;
@@ -133,18 +141,15 @@ impl SimSystem for TerritoryRuntimeSystem {
             let leader_id = band.leader.unwrap_or(band.members[0]);
             let band_faction_id = (band.id.0 as u16).wrapping_add(1000);
 
-            for (entity, pos) in world.query::<&Position>().iter() {
-                if entity.id() as u64 == leader_id.0 {
-                    grid.stamp_gaussian_terrain(
-                        band_faction_id,
-                        pos.x.round().max(0.0) as u32,
-                        pos.y.round().max(0.0) as u32,
-                        config::TERRITORY_LEADER_INTENSITY,
-                        config::TERRITORY_LEADER_RADIUS,
-                        |tx, ty| passable_cache[ty as usize * map_w + tx as usize],
-                    );
-                    break;
-                }
+            if let Some(&(px, py)) = position_lookup.get(&leader_id.0) {
+                grid.stamp_gaussian_terrain(
+                    band_faction_id,
+                    px.round().max(0.0) as u32,
+                    py.round().max(0.0) as u32,
+                    config::TERRITORY_LEADER_INTENSITY,
+                    config::TERRITORY_LEADER_RADIUS,
+                    |tx, ty| passable_cache[ty as usize * map_w + tx as usize],
+                );
             }
         }
 

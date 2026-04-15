@@ -20,7 +20,7 @@ pub struct SimEvent {
 }
 
 /// Typed simulation event categories persisted in the narrative event store.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum SimEventType {
     /// A need dropped below the critical threshold.
     NeedCritical,

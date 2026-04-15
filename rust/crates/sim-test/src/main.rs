@@ -13407,6 +13407,47 @@ mod tests {
         );
     }
 
+    #[test]
+    fn harness_perf_system_profile() {
+        // Test multiple agent counts to see scaling behavior
+        for &agent_count in &[20, 100, 200] {
+            println!("\n========== PROFILE: {} agents ==========", agent_count);
+            let mut engine = make_stage1_engine(42, agent_count);
+            engine.debug_mode = true;
+
+            // Warm up (100 ticks) — let systems stabilize
+            for _ in 0..100 {
+                engine.tick();
+            }
+
+            // Reset cumulative stats after warmup
+            engine.perf_tracker.cumulative_stats.clear();
+            engine.perf_tracker.tick_history.clear();
+
+            // Profile (1000 ticks for scaling comparison)
+            for _ in 0..1000 {
+                engine.tick();
+            }
+
+            // Print report
+            println!("{}", engine.perf_tracker.report());
+
+            let avg = engine.perf_tracker.avg_tick_ms();
+            println!("\nAvg tick: {:.2}ms ({:.1} TPS)", avg, 1000.0 / avg);
+            assert!(avg > 0.0, "avg tick should be positive");
+        }
+
+        // Final assertion on system count using last engine
+        let engine = {
+            let mut e = make_stage1_engine(42, 20);
+            e.debug_mode = true;
+            for _ in 0..10 { e.tick(); }
+            e
+        };
+        let system_count = engine.perf_tracker.cumulative_stats.len();
+        assert!(system_count >= 10,
+            "should profile at least 10 systems, got {}", system_count);
+    }
 
 }
 

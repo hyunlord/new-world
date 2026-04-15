@@ -78,7 +78,7 @@ pub use llm_worker::{
     generate_fallback_content, LlmPromptVariant, LlmRequest, LlmRequestMeta, LlmResponse,
 };
 pub use notification::{NotificationTier, SimNotification};
-pub use perf_tracker::PerfTracker;
+pub use perf_tracker::{PerfTracker, SystemStats};
 pub use snapshot::EngineSnapshot;
 pub use system_trait::SimSystem;
 
