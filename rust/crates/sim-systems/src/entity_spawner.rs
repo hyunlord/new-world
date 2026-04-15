@@ -573,7 +573,14 @@ fn generate_speech_style(personality: &Personality) -> (String, String, String) 
     (tone.to_string(), verbosity.to_string(), humor.to_string())
 }
 
-fn temperament_rule_set_from_data_rules(rules: &TemperamentRules) -> TemperamentRuleSet {
+/// Converts a `sim-data` [`TemperamentRules`] into the runtime
+/// [`TemperamentRuleSet`] used by `sim-core` shift logic.
+///
+/// Public so that `sim-test` harness and other crates can exercise the
+/// same conversion path that production spawning uses.
+pub fn temperament_rule_set_from_data_rules(rules: &TemperamentRules) -> TemperamentRuleSet {
+    use sim_core::temperament::{axis_index, ShiftEffectView};
+
     TemperamentRuleSet {
         prs_weights: rules
             .prs_weights
@@ -598,12 +605,53 @@ fn temperament_rule_set_from_data_rules(rules: &TemperamentRules) -> Temperament
                 let trigger_event = match &rule.trigger {
                     sim_data::CauseTrigger::Event(event_key) => event_key.clone(),
                 };
+                let effects = rule
+                    .effects
+                    .iter()
+                    .filter_map(|e| {
+                        axis_index(&e.axis).map(|axis_idx| ShiftEffectView {
+                            axis_idx,
+                            delta: e.delta,
+                        })
+                    })
+                    .collect();
+                let conditions = rule
+                    .conditions
+                    .iter()
+                    .filter_map(|c| match c {
+                        sim_data::ShiftCondition::Temperament { axis, value } => {
+                            let axis_idx = axis_index(axis)?;
+                            parse_condition_value(axis_idx, value)
+                        }
+                    })
+                    .collect();
                 TemperamentShiftRuleView {
                     trigger_event,
+                    effects,
+                    conditions,
                     causal_log: rule.causal_log.clone(),
                 }
             })
             .collect(),
+    }
+}
+
+/// Parses a condition value string like `">0.5"` or `"<0.3"` into a
+/// [`ShiftConditionView`].
+fn parse_condition_value(
+    axis_idx: usize,
+    value: &str,
+) -> Option<sim_core::temperament::ShiftConditionView> {
+    use sim_core::temperament::ShiftConditionView;
+
+    if let Some(rest) = value.strip_prefix('>') {
+        let threshold: f64 = rest.parse().ok()?;
+        Some(ShiftConditionView::AxisAbove { axis_idx, threshold })
+    } else if let Some(rest) = value.strip_prefix('<') {
+        let threshold: f64 = rest.parse().ok()?;
+        Some(ShiftConditionView::AxisBelow { axis_idx, threshold })
+    } else {
+        None
     }
 }
 
@@ -1364,9 +1412,25 @@ mod tests {
             resources.data_registry.as_ref().map(std::sync::Arc::as_ref),
         );
 
-        assert!((generated.latent.ns - 0.036).abs() < 1e-9);
-        assert!((generated.latent.ha - 0.023).abs() < 1e-9);
-        assert!((generated.latent.rd - 0.036).abs() < 1e-9);
-        assert!((generated.latent.p - 0.037).abs() < 1e-9);
+        assert!(
+            (generated.latent.ns - 0.294).abs() < 1e-9,
+            "NS: expected 0.294, got {:.6}",
+            generated.latent.ns
+        );
+        assert!(
+            (generated.latent.ha - 0.148).abs() < 1e-9,
+            "HA: expected 0.148, got {:.6}",
+            generated.latent.ha
+        );
+        assert!(
+            (generated.latent.rd - 0.343).abs() < 1e-9,
+            "RD: expected 0.343, got {:.6}",
+            generated.latent.rd
+        );
+        assert!(
+            (generated.latent.p - 0.457).abs() < 1e-9,
+            "P: expected 0.457, got {:.6}",
+            generated.latent.p
+        );
     }
 }

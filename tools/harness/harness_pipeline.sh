@@ -823,7 +823,7 @@ run_vlm_interactive() {
 
     # Check if prompt has interactive scenarios
     local scenarios
-    scenarios=$(sed -n '/^## Interactive Scenarios/,/^## [^I]/p' "$PROMPT_FILE" 2>/dev/null | head -n -1)
+    scenarios=$(sed -n '/^## Interactive Scenarios/,/^## [^I]/p' "$PROMPT_FILE" 2>/dev/null | sed '$d')
     if [[ -z "$scenarios" ]]; then
         log "No interactive scenarios defined — skipping"
         return 0

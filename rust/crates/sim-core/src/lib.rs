@@ -49,7 +49,7 @@ pub use room::{assign_room_ids, detect_rooms, Room, RoomId, RoomRole};
 pub use settlement::{Settlement, STONE_AGE_TECH_IDS};
 pub use temperament::{
     Temperament, TemperamentAxes, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
-    TemperamentShiftRuleView,
+    TemperamentShiftRuleView, ShiftConditionView, ShiftEffectView, axis_index,
 };
 pub use tile_grid::{StructuralTile, TileGrid};
 pub use wall_mask::WallBlockingMask;

@@ -8,6 +8,7 @@ use sim_core::components::{
     Intelligence, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
     SteeringParams, Stress, Temperament, Traits, Values,
 };
+use sim_core::TemperamentRuleSet;
 use sim_core::config;
 use sim_core::scales::{NativePercent, NativeStress};
 use sim_core::{
@@ -2138,6 +2139,10 @@ pub struct TemperamentShiftRuntimeSystem {
     /// Entities currently in starving state (hunger < 0.15).
     /// Cleared when the entity recovers (hunger > 0.50), at which point a shift fires.
     starving: HashSet<hecs::Entity>,
+    /// Cached data-driven rules converted from the registry on first run.
+    cached_rules: Option<TemperamentRuleSet>,
+    /// Whether we already attempted to load rules (avoids re-checking each tick).
+    rules_loaded: bool,
 }
 
 impl TemperamentShiftRuntimeSystem {
@@ -2147,6 +2152,8 @@ impl TemperamentShiftRuntimeSystem {
             priority,
             tick_interval: tick_interval.max(1),
             starving: HashSet::new(),
+            cached_rules: None,
+            rules_loaded: false,
         }
     }
 }
@@ -2164,7 +2171,29 @@ impl SimSystem for TemperamentShiftRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        // Lazily load data-driven rules from the registry on first run.
+        if !self.rules_loaded {
+            self.rules_loaded = true;
+            if let Some(registry) = &resources.data_registry {
+                if let Some(temp_rules) = registry.temperament_rules_ref() {
+                    self.cached_rules = Some(
+                        crate::entity_spawner::temperament_rule_set_from_data_rules(temp_rules),
+                    );
+                }
+            }
+        }
+        let rules = match &self.cached_rules {
+            Some(r) => r.clone(),
+            None => {
+                log::warn!(
+                    "[TemperamentShift] No data-driven rules loaded from registry — \
+                     shifts will use empty ruleset (no shifts possible)"
+                );
+                TemperamentRuleSet::default()
+            }
+        };
+
         // Pass 1: collect hunger values (avoids holding borrow during mutation)
         let hunger_snapshot: Vec<(hecs::Entity, f64)> = world
             .query::<&Needs>()
@@ -2188,12 +2217,71 @@ impl SimSystem for TemperamentShiftRuntimeSystem {
         // Remove despawned entities from the tracking set to prevent memory leak
         self.starving.retain(|e| world.contains(*e));
 
-        // Pass 2: apply temperament shifts
+        // Pass 2: apply starvation-recovery temperament shifts
         // Starvation survival → elevated Harm Avoidance, reduced Persistence
         for entity in to_shift {
             if let Ok(mut temperament) = world.get::<&mut Temperament>(entity) {
-                temperament.apply_shift(0.0, 0.05, 0.0, -0.05);
+                temperament.check_shift_rules("starvation_recovery", &rules);
             }
         }
+
+        // Pass 3: scan event_store for temperament-relevant events since last run
+        let since_tick = tick.saturating_sub(self.tick_interval);
+        let mut event_shifts: Vec<(u32, &'static str)> = Vec::new();
+        for event in resources.event_store.since_tick(since_tick) {
+            if let Some(key) = sim_event_to_shift_key(event) {
+                event_shifts.push((event.actor, key));
+            }
+        }
+
+        // Apply event-driven shifts to matching entities
+        if !event_shifts.is_empty() {
+            let entity_ids: Vec<(hecs::Entity, u32)> = world
+                .query::<&Temperament>()
+                .iter()
+                .map(|(e, _)| (e, e.id()))
+                .collect();
+
+            for (actor_id, event_key) in &event_shifts {
+                for &(entity, eid) in &entity_ids {
+                    if eid == *actor_id {
+                        if let Ok(mut temperament) = world.get::<&mut Temperament>(entity) {
+                            temperament.check_shift_rules(event_key, &rules);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Maps a SimEvent to a temperament shift event_key, if applicable.
+///
+/// Checks tags first for direct matches, then falls back to SimEventType-based mapping.
+/// Returns `None` if the event has no temperament shift relevance.
+pub fn sim_event_to_shift_key(event: &SimEvent) -> Option<&'static str> {
+    // Priority 1: explicit tags from emitting systems
+    for tag in &event.tags {
+        match tag.as_str() {
+            "family_death" => return Some("family_death"),
+            "combat_victory" => return Some("combat_victory"),
+            "combat_defeat" => return Some("combat_defeat"),
+            "social_rejection" => return Some("social_rejection"),
+            "first_child_born" => return Some("first_child_born"),
+            "prolonged_isolation" => return Some("prolonged_isolation"),
+            "successful_hunt" => return Some("successful_hunt"),
+            "betrayal" => return Some("betrayal"),
+            "starvation_recovery" => return Some("starvation_recovery"),
+            _ => {}
+        }
+    }
+
+    // Priority 2: SimEventType-based fallback
+    match &event.event_type {
+        SimEventType::Birth => Some("first_child_born"),
+        SimEventType::SocialConflict => Some("combat_defeat"),
+        SimEventType::TaskCompleted if event.cause == "hunt" => Some("successful_hunt"),
+        _ => None,
     }
 }

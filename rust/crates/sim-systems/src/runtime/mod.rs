@@ -70,6 +70,12 @@ pub use psychology::{
     TraitViolationRuntimeSystem, TraumaScarRuntimeSystem,
 };
 
+// ---- cognition (public helpers) ----
+pub use cognition::temperament_action_bias;
+
+// ---- psychology (public helpers) ----
+pub use psychology::sim_event_to_shift_key;
+
 // ---- record ----
 pub use record::{
     ChronicleRuntimeSystem, StatSyncRuntimeSystem, StatThresholdRuntimeSystem,

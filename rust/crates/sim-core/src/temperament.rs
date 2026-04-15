@@ -58,11 +58,43 @@ pub struct TemperamentBiasRow {
     pub values: BTreeMap<String, f64>,
 }
 
+/// A single axis delta within a shift rule effect list.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ShiftEffectView {
+    /// Axis index: 0=ns, 1=ha, 2=rd, 3=p.
+    pub axis_idx: usize,
+    /// Delta added to the expressed axis.
+    pub delta: f64,
+}
+
+/// Condition gate for a data-driven temperament shift rule.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ShiftConditionView {
+    /// Expressed axis value must be strictly above `threshold`.
+    AxisAbove {
+        /// Axis index: 0=ns, 1=ha, 2=rd, 3=p.
+        axis_idx: usize,
+        /// Threshold value.
+        threshold: f64,
+    },
+    /// Expressed axis value must be strictly below `threshold`.
+    AxisBelow {
+        /// Axis index: 0=ns, 1=ha, 2=rd, 3=p.
+        axis_idx: usize,
+        /// Threshold value.
+        threshold: f64,
+    },
+}
+
 /// Shared event-driven shift rule view for runtime temperament integration.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TemperamentShiftRuleView {
     /// Trigger event key that activates the rule.
     pub trigger_event: String,
+    /// Axis deltas applied when the rule fires.
+    pub effects: Vec<ShiftEffectView>,
+    /// Conditions that must be met before the shift is applied.
+    pub conditions: Vec<ShiftConditionView>,
     /// Causal log annotation key.
     pub causal_log: String,
 }
@@ -78,6 +110,15 @@ pub struct TemperamentRuleSet {
     pub shift_rules: Vec<TemperamentShiftRuleView>,
 }
 
+/// Maximum number of dramatic shift events per agent lifetime (Cloninger 1993).
+/// CLAUDE.md: "0–3 times per lifetime".
+pub const TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME: u8 = 3;
+
+/// Minimum meaningful expressed-vs-latent delta per axis.
+/// Shifts that would produce sub-minimum deltas after clamping are reverted
+/// on that axis to prevent noise-level deviations.
+pub const TEMPERAMENT_MIN_SHIFT_DELTA: f64 = 0.05;
+
 /// Shared ECS temperament component derived from genes/personality inputs.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Temperament {
@@ -89,6 +130,8 @@ pub struct Temperament {
     pub expressed: TemperamentAxes,
     /// Whether a latent/expressed divergence is currently unlocked.
     pub awakened: bool,
+    /// Number of dramatic shift events applied in this agent's lifetime (capped at 3).
+    pub shift_count: u8,
 }
 
 impl Temperament {
@@ -137,6 +180,7 @@ impl Temperament {
             latent,
             expressed: latent,
             awakened: false,
+            shift_count: 0,
         }
     }
 
@@ -153,33 +197,123 @@ impl Temperament {
             latent,
             expressed: latent,
             awakened: false,
+            shift_count: 0,
         }
     }
 
-    /// Placeholder for event-driven shift-rule processing.
-    pub fn check_shift_rules(&mut self, event_key: &str, rules: &TemperamentRuleSet) {
-        if rules
+    /// Applies a temperament shift for a recognized event key.
+    ///
+    /// First checks `rules.shift_rules` for a data-driven rule matching the
+    /// event key. If found, evaluates conditions and applies serialised
+    /// [`ShiftEffectView`] deltas. When no data-driven rule matches, falls
+    /// back to a hardcoded mapping (backward compatibility for empty rulesets).
+    ///
+    /// Each event maps to (ns_delta, ha_delta, rd_delta, p_delta) based on
+    /// Cloninger (1993): dramatic life events shift TCI axes by 0.05–0.15,
+    /// occurring 0–3 times per lifetime.
+    ///
+    /// Returns `true` if a shift was applied, `false` if the event_key is
+    /// unrecognized, a condition gate blocks it, or the lifetime cap has been
+    /// reached.
+    pub fn check_shift_rules(&mut self, event_key: &str, rules: &TemperamentRuleSet) -> bool {
+        // Enforce 0–3 shifts per lifetime (CLAUDE.md architectural rule)
+        if self.shift_count >= TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME {
+            return false;
+        }
+
+        // --- Data-driven path: look up event_key in rules.shift_rules ---
+        if let Some(rule) = rules
             .shift_rules
             .iter()
-            .any(|rule| rule.trigger_event == event_key)
+            .find(|r| r.trigger_event == event_key)
         {
+            // Evaluate all conditions — if any fails, reject the shift
+            if !self.evaluate_conditions(&rule.conditions) {
+                return false;
+            }
+            // Accumulate per-axis deltas from the rule's effects
+            let (mut ns, mut ha, mut rd, mut p) = (0.0_f64, 0.0_f64, 0.0_f64, 0.0_f64);
+            for effect in &rule.effects {
+                match effect.axis_idx {
+                    0 => ns += effect.delta,
+                    1 => ha += effect.delta,
+                    2 => rd += effect.delta,
+                    3 => p += effect.delta,
+                    _ => {}
+                }
+            }
+            self.apply_shift(ns, ha, rd, p);
+            self.shift_count = self.shift_count.saturating_add(1);
             log::debug!(
-                "[Temperament] shift_rules check stub for event '{}' ({} rule(s) loaded)",
+                "[Temperament] data-driven shift {}/{} applied for '{}': ns={:+.2}, ha={:+.2}, rd={:+.2}, p={:+.2}",
+                self.shift_count,
+                TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME,
                 event_key,
-                rules.shift_rules.len()
+                ns, ha, rd, p
             );
+            return true;
+        }
+
+        // No data-driven rule matched — event_key is unrecognized or rules
+        // are empty (no registry loaded).  Return false rather than falling
+        // back to hardcoded values so a missing/broken RON rule path is
+        // surfaced immediately in tests.
+        false
+    }
+
+    /// Evaluates all shift conditions against current expressed axes.
+    /// Returns `true` only if every condition is satisfied.
+    fn evaluate_conditions(&self, conditions: &[ShiftConditionView]) -> bool {
+        for cond in conditions {
+            match cond {
+                ShiftConditionView::AxisAbove { axis_idx, threshold } => {
+                    if self.expressed_axis(*axis_idx) <= *threshold {
+                        return false;
+                    }
+                }
+                ShiftConditionView::AxisBelow { axis_idx, threshold } => {
+                    if self.expressed_axis(*axis_idx) >= *threshold {
+                        return false;
+                    }
+                }
+            }
+        }
+        true
+    }
+
+    /// Returns the expressed value for a given axis index (0=ns, 1=ha, 2=rd, 3=p).
+    fn expressed_axis(&self, idx: usize) -> f64 {
+        match idx {
+            0 => self.expressed.ns,
+            1 => self.expressed.ha,
+            2 => self.expressed.rd,
+            3 => self.expressed.p,
+            _ => config::TEMPERAMENT_DEFAULT_AXIS_VALUE,
         }
     }
 
     /// Applies one axis delta and keeps the component within valid bounds.
+    ///
+    /// After clamping to [0.0, 1.0], any axis whose absolute delta from latent
+    /// is nonzero but below [`TEMPERAMENT_MIN_SHIFT_DELTA`] is snapped back to
+    /// the latent value. This prevents clamping near boundaries from creating
+    /// noise-level deviations.
     pub fn apply_shift(&mut self, ns: f64, ha: f64, rd: f64, p: f64) {
-        self.expressed = TemperamentAxes {
+        let clamped = TemperamentAxes {
             ns: self.expressed.ns + ns,
             ha: self.expressed.ha + ha,
             rd: self.expressed.rd + rd,
             p: self.expressed.p + p,
         }
         .clamped();
+
+        // Snap back axes where clamping created a sub-minimum delta from latent
+        self.expressed = TemperamentAxes {
+            ns: snap_if_sub_minimum(clamped.ns, self.latent.ns),
+            ha: snap_if_sub_minimum(clamped.ha, self.latent.ha),
+            rd: snap_if_sub_minimum(clamped.rd, self.latent.rd),
+            p: snap_if_sub_minimum(clamped.p, self.latent.p),
+        };
         self.awakened = self.expressed != self.latent;
     }
 
@@ -205,11 +339,29 @@ impl Default for Temperament {
             latent: TemperamentAxes::default(),
             expressed: TemperamentAxes::default(),
             awakened: false,
+            shift_count: 0,
         }
     }
 }
 
-fn axis_index(axis: &str) -> Option<usize> {
+/// Returns `expressed` unchanged unless it differs from `latent` by a nonzero
+/// amount smaller than [`TEMPERAMENT_MIN_SHIFT_DELTA`], in which case `latent`
+/// is returned (snap back).
+///
+/// Uses a small epsilon (1e-9) to prevent floating-point imprecision from
+/// snapping back deltas that are exactly at the minimum threshold boundary.
+#[inline]
+fn snap_if_sub_minimum(expressed: f64, latent: f64) -> f64 {
+    let delta = (expressed - latent).abs();
+    if delta > 1e-12 && delta < TEMPERAMENT_MIN_SHIFT_DELTA - 1e-9 {
+        latent
+    } else {
+        expressed
+    }
+}
+
+/// Returns the axis index for a TCI axis name: ns=0, ha=1, rd=2, p=3.
+pub fn axis_index(axis: &str) -> Option<usize> {
     match axis {
         "ns" => Some(0),
         "ha" => Some(1),
