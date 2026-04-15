@@ -1,37 +1,128 @@
 [
     TemperamentRules(
+        // PRS weights: 6-entry HEXACO axis weights [H, E, X, A, C, O].
+        // Dominant axes mirror legacy formula: NS∝O+X, HA∝E, RD∝X+A, P∝C.
+        // Small positive floor (0.02) on non-dominant axes prevents zero-contribution
+        // while keeping the dominant axes steering the distribution.
         prs_weights: [
-            DerivedRuleOverride(axis: "ns", weights: [0.10, 0.04, -0.02, 0.06]),
-            DerivedRuleOverride(axis: "ha", weights: [0.08, 0.02, 0.05, -0.01]),
-            DerivedRuleOverride(axis: "rd", weights: [0.03, 0.07, 0.01, 0.04]),
-            DerivedRuleOverride(axis: "p", weights: [0.09, 0.05, 0.02, 0.03]),
+            DerivedRuleOverride(axis: "ns", weights: [0.02, 0.02, 0.30, 0.02, 0.02, 0.30]),
+            DerivedRuleOverride(axis: "ha", weights: [0.02, 0.55, 0.02, 0.02, 0.02, 0.02]),
+            DerivedRuleOverride(axis: "rd", weights: [0.02, 0.02, 0.45, 0.45, 0.02, 0.02]),
+            DerivedRuleOverride(axis: "p",  weights: [0.02, 0.02, 0.02, 0.02, 0.85, 0.02]),
         ],
+        // Facet-level biases add fine-grained variation on top of PRS axis weights.
+        // Values scaled so PRS+facet mean ≈ 0.5 for each axis with typical personality.
         bias_matrix: [
             BiasMatrixRow(
                 axis: "ns",
                 values: {
-                    "X_SOCIAL_BOLDNESS": 0.20,
-                    "O_INQUISITIVENESS": 0.25,
+                    "X_SOCIAL_BOLDNESS": 0.12,
+                    "O_INQUISITIVENESS": 0.15,
                 },
             ),
             BiasMatrixRow(
                 axis: "ha",
                 values: {
-                    "E_ANXIETY": 0.30,
-                    "C_PRUDENCE": 0.15,
+                    "E_ANXIETY": 0.18,
+                    "C_PRUDENCE": 0.10,
                 },
             ),
         ],
         shift_rules: [
             TemperamentShiftRule(
                 trigger: Event("family_death"),
-                conditions: [Temperament(axis: "ha", value: ">0.5")],
+                conditions: [],
                 effects: [
-                    AxisShift(axis: "ha", delta: 0.3),
-                    AxisShift(axis: "ns", delta: -0.2),
+                    AxisShift(axis: "ha", delta: 0.10),
+                    AxisShift(axis: "rd", delta: 0.05),
+                    AxisShift(axis: "p", delta: -0.05),
                 ],
                 cascade: true,
                 causal_log: "family_death_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("combat_victory"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ns", delta: 0.05),
+                    AxisShift(axis: "ha", delta: -0.05),
+                    AxisShift(axis: "p", delta: 0.05),
+                ],
+                cascade: false,
+                causal_log: "combat_victory_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("combat_defeat"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ns", delta: -0.05),
+                    AxisShift(axis: "ha", delta: 0.10),
+                    AxisShift(axis: "p", delta: -0.05),
+                ],
+                cascade: false,
+                causal_log: "combat_defeat_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("starvation_recovery"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ha", delta: 0.05),
+                    AxisShift(axis: "p", delta: -0.05),
+                ],
+                cascade: false,
+                causal_log: "starvation_recovery_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("social_rejection"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ha", delta: 0.05),
+                    AxisShift(axis: "rd", delta: -0.10),
+                ],
+                cascade: false,
+                causal_log: "social_rejection_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("first_child_born"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "rd", delta: 0.10),
+                    AxisShift(axis: "p", delta: 0.05),
+                ],
+                cascade: false,
+                causal_log: "first_child_born_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("prolonged_isolation"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ns", delta: 0.05),
+                    AxisShift(axis: "ha", delta: 0.05),
+                    AxisShift(axis: "rd", delta: -0.10),
+                ],
+                cascade: false,
+                causal_log: "prolonged_isolation_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("successful_hunt"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ns", delta: 0.05),
+                    AxisShift(axis: "ha", delta: -0.05),
+                    AxisShift(axis: "p", delta: 0.05),
+                ],
+                cascade: false,
+                causal_log: "successful_hunt_temperament_shift",
+            ),
+            TemperamentShiftRule(
+                trigger: Event("betrayal"),
+                conditions: [],
+                effects: [
+                    AxisShift(axis: "ha", delta: 0.10),
+                    AxisShift(axis: "rd", delta: -0.15),
+                ],
+                cascade: false,
+                causal_log: "betrayal_temperament_shift",
             ),
         ],
     ),

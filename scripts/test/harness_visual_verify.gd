@@ -28,6 +28,8 @@ const PHASE_SCREENSHOT_WAIT: int = 3
 const PHASE_FINAL: int = 4
 const PHASE_CLOSEUP: int = 5
 const PHASE_CLOSEUP_WAIT: int = 6
+const PHASE_INTERACTIVE: int = 7
+const CMD_PORT: int = 9223
 
 var _feature: String = "unknown"
 var _total_ticks: int = 4380
@@ -49,6 +51,10 @@ var _closeup_labels: Array = ["closeup_Z1", "closeup_Z2"]
 var _closeup_idx: int = 0
 var _saved_cam_pos: Vector2 = Vector2.ZERO
 var _saved_cam_zoom: Vector2 = Vector2.ONE
+var _interactive_mode: bool = false
+var _tcp_server: TCPServer = null
+var _tcp_peer: StreamPeerTCP = null
+var _cmd_buffer: String = ""
 
 
 func _init() -> void:
@@ -64,6 +70,8 @@ func _init() -> void:
 				i += 1
 				if i < args.size():
 					_total_ticks = int(args[i])
+			"--interactive":
+				_interactive_mode = true
 		i += 1
 
 	# Resolve evidence directory (absolute path from project root)
@@ -113,14 +121,19 @@ func _process(delta: float) -> bool:
 					return true
 				# Pause so main.gd _process() won't advance ticks via update()
 				_sim_engine.is_paused = true
-				_phase = PHASE_RUNNING
-				_next_screenshot_idx = 0
-				# Capture initial state screenshot
-				if _should_screenshot(0):
-					_pending_screenshot_label = "tick0000"
-					_phase = PHASE_SCREENSHOT_WAIT
-					_wait_frames = 2
-				print("[visual-verify] Setup complete, starting tick loop (paused main _process)...")
+				if _interactive_mode:
+					_start_cmd_server()
+					_phase = PHASE_INTERACTIVE
+					print("[visual-verify] Interactive mode — command server on port %d" % CMD_PORT)
+				else:
+					_phase = PHASE_RUNNING
+					_next_screenshot_idx = 0
+					# Capture initial state screenshot
+					if _should_screenshot(0):
+						_pending_screenshot_label = "tick0000"
+						_phase = PHASE_SCREENSHOT_WAIT
+						_wait_frames = 2
+					print("[visual-verify] Setup complete, starting tick loop (paused main _process)...")
 
 		PHASE_RUNNING:
 			if _ticks_done >= _total_ticks:
@@ -206,6 +219,9 @@ func _process(delta: float) -> bool:
 					_closeup_labels[_closeup_idx], _closeup_zooms[_closeup_idx]])
 				_closeup_idx += 1
 				_phase = PHASE_CLOSEUP
+
+		PHASE_INTERACTIVE:
+			_process_commands()
 
 		PHASE_FINAL:
 			_write_entity_summary()
@@ -588,6 +604,146 @@ func _find_building_center() -> Vector2:
 				return center
 
 	return Vector2.ZERO
+
+
+## Start TCP command server for interactive mode.
+func _start_cmd_server() -> void:
+	_tcp_server = TCPServer.new()
+	var err := _tcp_server.listen(CMD_PORT)
+	if err != OK:
+		push_error("[visual-verify] Failed to listen on port %d: %s" % [CMD_PORT, error_string(err)])
+		_interactive_mode = false
+		_phase = PHASE_FINAL
+		return
+	# Disable camera controller so our zoom/position changes persist
+	var cam: Camera2D = root.get_viewport().get_camera_2d()
+	if cam:
+		cam.set_process(false)
+		cam.set_physics_process(false)
+
+
+## Process incoming TCP commands in interactive mode.
+func _process_commands() -> void:
+	if _tcp_server == null:
+		return
+
+	# Accept new connection
+	if _tcp_peer == null and _tcp_server.is_connection_available():
+		_tcp_peer = _tcp_server.take_connection()
+		_cmd_buffer = ""
+		print("[visual-verify] Client connected")
+
+	if _tcp_peer == null:
+		return
+
+	_tcp_peer.poll()
+	var status := _tcp_peer.get_status()
+	if status == StreamPeerTCP.STATUS_NONE or status == StreamPeerTCP.STATUS_ERROR:
+		print("[visual-verify] Client disconnected")
+		_tcp_peer = null
+		return
+
+	var avail := _tcp_peer.get_available_bytes()
+	if avail > 0:
+		var result := _tcp_peer.get_data(avail)
+		if result[0] == OK:
+			var bytes: PackedByteArray = result[1]
+			_cmd_buffer += bytes.get_string_from_utf8()
+
+	# Process complete lines (newline-delimited JSON)
+	while "\n" in _cmd_buffer:
+		var idx := _cmd_buffer.find("\n")
+		var line := _cmd_buffer.substr(0, idx).strip_edges()
+		_cmd_buffer = _cmd_buffer.substr(idx + 1)
+		if line.is_empty():
+			continue
+		var response: String = _handle_interactive_command(line)
+		var resp_bytes := (response + "\n").to_utf8_buffer()
+		_tcp_peer.put_data(resp_bytes)
+
+
+## Handle a single interactive command (JSON string → JSON response).
+func _handle_interactive_command(cmd_json: String) -> String:
+	var parsed: Variant = JSON.parse_string(cmd_json)
+	if parsed == null or not (parsed is Dictionary):
+		return JSON.stringify({"error": "invalid JSON"})
+
+	var cmd: Dictionary = parsed
+	var action: String = str(cmd.get("action", ""))
+
+	match action:
+		"screenshot":
+			var label: String = str(cmd.get("label", "interactive"))
+			_capture_screenshot(label)
+			var path: String = _evidence_dir.path_join("screenshot_%s.png" % label)
+			return JSON.stringify({"ok": true, "path": path})
+
+		"click":
+			var x: float = float(cmd.get("x", 0))
+			var y: float = float(cmd.get("y", 0))
+			_simulate_click(x, y)
+			return JSON.stringify({"ok": true, "action": "click", "x": x, "y": y})
+
+		"zoom":
+			var level: float = float(cmd.get("level", 1.0))
+			var cam: Camera2D = root.get_viewport().get_camera_2d()
+			if cam:
+				cam.zoom = Vector2(level, level)
+			return JSON.stringify({"ok": true, "action": "zoom", "level": level})
+
+		"wait_frames":
+			var count: int = int(cmd.get("count", 5))
+			if _sim_engine and _sim_engine.has_method("advance_ticks"):
+				_sim_engine.advance_ticks(count)
+				_ticks_done += count
+			return JSON.stringify({"ok": true, "frames": count})
+
+		"wait_ticks":
+			var count: int = int(cmd.get("count", 100))
+			if _sim_engine and _sim_engine.has_method("advance_ticks"):
+				_sim_engine.advance_ticks(count)
+				_ticks_done += count
+			return JSON.stringify({"ok": true, "ticks": count})
+
+		"get_state":
+			var state: Dictionary = {}
+			state["tick"] = _ticks_done
+			var vp_size: Vector2i = root.get_viewport().size
+			state["viewport_size"] = [vp_size.x, vp_size.y]
+			var cam: Camera2D = root.get_viewport().get_camera_2d()
+			if cam:
+				state["camera_pos"] = [cam.global_position.x, cam.global_position.y]
+				state["camera_zoom"] = cam.zoom.x
+			return JSON.stringify(state)
+
+		"quit":
+			if _tcp_server:
+				_tcp_server.stop()
+			_phase = PHASE_FINAL
+			return JSON.stringify({"ok": true})
+
+		_:
+			return JSON.stringify({"error": "unknown action: " + action})
+
+
+## Simulate a mouse click at the given viewport coordinates.
+func _simulate_click(x: float, y: float) -> void:
+	var viewport: Viewport = root.get_viewport()
+	var pos := Vector2(x, y)
+
+	var down := InputEventMouseButton.new()
+	down.position = pos
+	down.global_position = pos
+	down.button_index = MOUSE_BUTTON_LEFT
+	down.pressed = true
+	viewport.push_input(down)
+
+	var up := InputEventMouseButton.new()
+	up.position = pos
+	up.global_position = pos
+	up.button_index = MOUSE_BUTTON_LEFT
+	up.pressed = false
+	viewport.push_input(up)
 
 
 ## Write a text file to the evidence directory.

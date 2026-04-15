@@ -482,29 +482,60 @@ const BEHAVIOR_WANDER_OFFSETS: [(i32, i32); 8] = [
     (1, 1),
 ];
 
-/// Returns a score modifier (f32) for `action` based on TCI expressed temperament axes.
+/// Returns a score modifier (f64) for `action` based on TCI expressed temperament axes.
 ///
-/// Bias is centered at 0.5 (neutral): axis > 0.5 → positive nudge, < 0.5 → negative nudge.
-/// Max per-action effect is ±0.15 which nudges but does not dominate needs-based scores.
+/// Each action has a 4-tuple (ns_affinity, ha_affinity, rd_affinity, p_affinity) in [-1, +1].
+/// Positive affinity = high axis promotes the action, negative = high axis inhibits it.
+/// Formula: bias = 0.25 * Σ (2*axis - 1) * affinity * 0.20, result ≈ ±0.10.
 /// Academic basis: Cloninger et al. (1993) — TCI axis → neurotransmitter → behavioral tendency.
+/// R_personality(T, a) = Σᵢ wᵢ × (2Tᵢ - 1) × Aᵢₐ
 #[inline]
-fn temperament_action_bias(axes: &TemperamentAxes, action: ActionType) -> f32 {
-    let bias: f64 = match action {
+pub fn temperament_action_bias(axes: &TemperamentAxes, action: ActionType) -> f64 {
+    // (ns_affinity, ha_affinity, rd_affinity, p_affinity)
+    let affinity: (f64, f64, f64, f64) = match action {
         // NS (dopamine) → exploratory approach, novelty, rapid switching
-        ActionType::Explore => 0.30 * (axes.ns - 0.5),
-        ActionType::Forage => 0.15 * (axes.ns - 0.5),
+        ActionType::Explore => (0.9, -0.3, 0.0, 0.1),
+        ActionType::Hunt => (0.6, -0.4, 0.0, 0.2),
+        ActionType::Fish => (0.3, -0.1, 0.0, 0.3),
+        ActionType::Wander => (0.5, -0.2, 0.0, -0.2),
+        ActionType::Migrate => (0.7, -0.5, -0.3, 0.1),
+        ActionType::Forage => (0.3, 0.0, 0.0, 0.1),
         // HA (serotonin) → passive avoidance, anticipatory caution
-        ActionType::Flee => 0.30 * (axes.ha - 0.5),
-        ActionType::Rest => 0.15 * (axes.ha - 0.5),
-        // RD (noradrenaline) → social reward seeking
-        ActionType::Socialize => 0.30 * (axes.rd - 0.5),
+        ActionType::Flee => (-0.3, 0.9, 0.0, -0.2),
+        ActionType::Rest => (-0.1, 0.4, 0.0, -0.1),
+        ActionType::Sleep => (0.0, 0.3, 0.0, 0.0),
+        ActionType::SeekShelter => (-0.2, 0.7, 0.0, 0.0),
+        ActionType::SitByFire => (-0.1, 0.4, 0.2, 0.0),
+        // RD (noradrenaline) → social reward seeking, attachment
+        ActionType::Socialize => (0.1, -0.1, 0.8, 0.0),
+        ActionType::Teach => (0.0, 0.0, 0.6, 0.3),
+        ActionType::Learn => (0.3, 0.0, 0.4, 0.2),
+        ActionType::VisitPartner => (0.1, -0.1, 0.7, 0.0),
+        ActionType::Pray => (0.0, 0.2, 0.5, 0.2),
         // P (corticostriatal) → perseverance, industriousness
-        ActionType::Build => 0.20 * (axes.p - 0.5),
-        ActionType::Craft => 0.15 * (axes.p - 0.5),
-        ActionType::GatherStone => 0.10 * (axes.p - 0.5),
-        _ => 0.0,
+        ActionType::Build => (0.0, 0.0, 0.0, 0.7),
+        ActionType::Craft => (0.1, 0.0, 0.0, 0.6),
+        ActionType::GatherWood => (0.0, 0.0, 0.0, 0.4),
+        ActionType::GatherStone => (0.0, 0.0, 0.0, 0.5),
+        ActionType::GatherHerbs => (0.2, 0.0, 0.0, 0.3),
+        ActionType::PlaceWall => (0.0, 0.0, 0.0, 0.6),
+        ActionType::PlaceFurniture => (0.0, 0.0, 0.0, 0.5),
+        // Neutral / mixed
+        ActionType::Eat => (0.0, 0.0, 0.0, 0.0),
+        ActionType::Drink => (0.0, 0.0, 0.0, 0.0),
+        ActionType::Idle => (0.0, 0.0, 0.0, 0.0),
+        ActionType::MentalBreak => (0.0, 0.0, 0.0, -0.5),
+        ActionType::Fight => (0.5, -0.6, -0.2, 0.3),
+        ActionType::DeliverToStockpile => (0.0, 0.0, 0.0, 0.2),
+        ActionType::TakeFromStockpile => (0.0, 0.0, 0.0, 0.0),
     };
-    bias as f32
+
+    let (a_ns, a_ha, a_rd, a_p) = affinity;
+    0.25 * ((2.0 * axes.ns - 1.0) * a_ns
+            + (2.0 * axes.ha - 1.0) * a_ha
+            + (2.0 * axes.rd - 1.0) * a_rd
+            + (2.0 * axes.p - 1.0) * a_p)
+        * 0.20
 }
 
 #[inline]
@@ -948,9 +979,9 @@ fn behavior_select_action(
         let axes = &temperament.expressed;
         for action in scores.keys().copied().collect::<Vec<_>>() {
             let bias = temperament_action_bias(axes, action);
-            if bias != 0.0 {
+            if bias.abs() > 1e-12 {
                 if let Some(score) = scores.get_mut(&action) {
-                    *score = (*score + bias).max(0.0);
+                    *score = ((*score as f64 + bias).max(0.0)) as f32;
                 }
             }
         }
