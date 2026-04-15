@@ -86,10 +86,15 @@ init_progress() {
     cat > "$PROGRESS_FILE" << EOF
 # Pipeline Progress: $FEATURE
 > Mode: $MODE | Started: $(date +"%Y-%m-%d %H:%M:%S")
+start_time: $(date +%s)
 
 | Time | Step | Status | What was done |
 |------|------|--------|---------------|
 EOF
+}
+
+finalize_progress() {
+    echo "end_time: $(date +%s)" >> "$PROGRESS_FILE"
 }
 
 report_step() {
@@ -1430,6 +1435,9 @@ main() {
         echo "$FEATURE" >> "$REVIEW_DIR/verdict"
         date +%s >> "$REVIEW_DIR/verdict"
 
+        finalize_progress
+        bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
+
         local commit_msg
         commit_msg="feat($FEATURE): implementation [harness: light mode, visual:$(grep -o "VISUAL_[A-Z]*" "$EVIDENCE_DIR/visual_analysis.txt" 2>/dev/null | tail -1 | sed 's/VISUAL_//' || echo "SKIP")]"
         echo "$commit_msg" > "$REVIEW_DIR/commit_message.txt"
@@ -1545,17 +1553,18 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             case $verdict_code in
                 0)  # APPROVE
-                    # Layer 4: Generate pipeline report (immutable audit trail)
-                    local report_path
-                    report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" 2>/dev/null || echo "")
-                    if [[ -n "$report_path" ]]; then
-                        log "Pipeline report: $report_path"
-                    fi
-
                     # Mark as approved for pre-commit hook (Layer 1 + Layer 3 read this)
                     echo "APPROVED" > "$REVIEW_DIR/verdict"
                     echo "$FEATURE" >> "$REVIEW_DIR/verdict"
                     date +%s >> "$REVIEW_DIR/verdict"
+
+                    # Layer 4: Generate pipeline report (immutable audit trail)
+                    finalize_progress
+                    local report_path
+                    report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || echo "")
+                    if [[ -n "$report_path" ]]; then
+                        log "Pipeline report: $report_path"
+                    fi
 
                     # Suggest commit message with evidence metadata
                     local commit_msg
@@ -1580,6 +1589,8 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     break  # Break inner loop → re-plan
                     ;;
                 3)  # FAIL
+                    finalize_progress
+                    bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
                     die "Evaluator verdict: FAIL. Manual intervention required.
 Feature: $FEATURE
 Review: $REVIEW_DIR/review_latest.md
@@ -1589,6 +1600,8 @@ Plan: $PLAN_DIR/plan_final.md"
         done
     done
 
+    finalize_progress
+    bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
     die "Max plan attempts ($MAX_PLAN_ATTEMPTS) exhausted. Manual intervention required.
 Feature: $FEATURE
 Last review: $REVIEW_DIR/review_latest.md"
