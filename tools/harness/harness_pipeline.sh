@@ -1438,6 +1438,13 @@ main() {
         finalize_progress
         bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
 
+        echo ""
+        echo "============================================"
+        echo "  PIPELINE REPORT — $FEATURE"
+        echo "============================================"
+        cat "$HARNESS_DIR/reports/$FEATURE/pipeline_report.md" 2>/dev/null || true
+        echo "============================================"
+
         local commit_msg
         commit_msg="feat($FEATURE): implementation [harness: light mode, visual:$(grep -o "VISUAL_[A-Z]*" "$EVIDENCE_DIR/visual_analysis.txt" 2>/dev/null | tail -1 | sed 's/VISUAL_//' || echo "SKIP")]"
         echo "$commit_msg" > "$REVIEW_DIR/commit_message.txt"
@@ -1572,6 +1579,13 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                         fi
                     fi
 
+                    echo ""
+                    echo "============================================"
+                    echo "  PIPELINE REPORT — $FEATURE"
+                    echo "============================================"
+                    cat "$HARNESS_DIR/reports/$FEATURE/pipeline_report.md" 2>/dev/null || true
+                    echo "============================================"
+
                     # Suggest commit message with evidence metadata
                     local commit_msg
                     commit_msg=$(format_commit_message "$FEATURE" "$PLAN_ATTEMPT" "$CODE_ATTEMPT")
@@ -1597,6 +1611,12 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                 3)  # FAIL
                     finalize_progress
                     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
+                    echo ""
+                    echo "============================================"
+                    echo "  PIPELINE REPORT — $FEATURE"
+                    echo "============================================"
+                    cat "$HARNESS_DIR/reports/$FEATURE/pipeline_report.md" 2>/dev/null || true
+                    echo "============================================"
                     die "Evaluator verdict: FAIL. Manual intervention required.
 Feature: $FEATURE
 Review: $REVIEW_DIR/review_latest.md
@@ -1608,6 +1628,12 @@ Plan: $PLAN_DIR/plan_final.md"
 
     finalize_progress
     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
+    echo ""
+    echo "============================================"
+    echo "  PIPELINE REPORT — $FEATURE"
+    echo "============================================"
+    cat "$HARNESS_DIR/reports/$FEATURE/pipeline_report.md" 2>/dev/null || true
+    echo "============================================"
     die "Max plan attempts ($MAX_PLAN_ATTEMPTS) exhausted. Manual intervention required.
 Feature: $FEATURE
 Last review: $REVIEW_DIR/review_latest.md"

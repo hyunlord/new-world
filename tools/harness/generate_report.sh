@@ -144,24 +144,53 @@ if [[ -f "$PROGRESS_FILE" ]]; then
     local_end=$(grep "end_time:" "$PROGRESS_FILE" 2>/dev/null | tail -1 | awk '{print $2}')
     if [[ -n "$local_start" && -n "$local_end" && "$local_end" -gt "$local_start" ]] 2>/dev/null; then
         duration_sec=$((local_end - local_start))
-        duration_min=$((duration_sec / 60))
-        duration_rem=$((duration_sec % 60))
-        DURATION="${duration_min}m ${duration_rem}s"
     else
-        # Fallback: parse first and last timestamps from progress table
+        # Fallback: parse first and last HH:MM:SS timestamps from progress table
         first_ts=$(grep "^|" "$PROGRESS_FILE" | grep -v "Time\|---" | head -1 | awk -F'|' '{print $2}' | tr -d ' ')
         last_ts=$(grep "^|" "$PROGRESS_FILE" | grep -v "Time\|---" | tail -1 | awk -F'|' '{print $2}' | tr -d ' ')
         if [[ -n "$first_ts" && -n "$last_ts" ]]; then
-            DURATION="$first_ts → $last_ts"
+            # Convert HH:MM:SS to seconds
+            IFS=: read -r h1 m1 s1 <<< "$first_ts"
+            IFS=: read -r h2 m2 s2 <<< "$last_ts"
+            start_secs=$(( 10#$h1 * 3600 + 10#$m1 * 60 + 10#$s1 ))
+            end_secs=$(( 10#$h2 * 3600 + 10#$m2 * 60 + 10#$s2 ))
+            # Handle day wraparound (e.g. 23:50 → 00:10)
+            if [[ $end_secs -lt $start_secs ]]; then
+                end_secs=$((end_secs + 86400))
+            fi
+            duration_sec=$((end_secs - start_secs))
+        fi
+    fi
+    # Format duration_sec → "Xh Ym Zs"
+    if [[ -n "${duration_sec:-}" && "$duration_sec" -gt 0 ]] 2>/dev/null; then
+        dur_h=$((duration_sec / 3600))
+        dur_m=$(( (duration_sec % 3600) / 60 ))
+        dur_s=$((duration_sec % 60))
+        if [[ $dur_h -gt 0 ]]; then
+            DURATION="${dur_h}h ${dur_m}m ${dur_s}s"
+        elif [[ $dur_m -gt 0 ]]; then
+            DURATION="${dur_m}m ${dur_s}s"
+        else
+            DURATION="${dur_s}s"
         fi
     fi
 fi
 
-# Changed files (from latest gen_result)
-LATEST_GEN=$(ls "$RESULT_DIR"/gen_result_attempt*.md 2>/dev/null | tail -1 || true)
+# Changed files — prefer git diff --numstat, fallback to gen_result extraction
 CHANGES_TABLE=""
-if [[ -n "$LATEST_GEN" && -f "$LATEST_GEN" ]]; then
-    CHANGES_TABLE=$(awk '/^## Files Changed|^## Changed Files/{found=1;next} /^## [^F]/{if(found)exit} found && /^- /' "$LATEST_GEN" 2>/dev/null || true)
+if git -C "$PROJECT_ROOT" rev-parse HEAD~1 &>/dev/null; then
+    # Parse git diff --numstat: "added\tdeleted\tfile"
+    while IFS=$'\t' read -r added deleted file; do
+        [[ -z "$file" ]] && continue
+        CHANGES_TABLE+="- \`$file\` (+${added}/-${deleted})"$'\n'
+    done < <(git -C "$PROJECT_ROOT" diff --numstat HEAD~1 -- 2>/dev/null)
+fi
+# Fallback if git diff produced nothing
+if [[ -z "$CHANGES_TABLE" ]]; then
+    LATEST_GEN=$(ls "$RESULT_DIR"/gen_result_attempt*.md 2>/dev/null | tail -1 || true)
+    if [[ -n "$LATEST_GEN" && -f "$LATEST_GEN" ]]; then
+        CHANGES_TABLE=$(awk '/^## Files Changed|^## Changed Files/{found=1;next} /^## [^F]/{if(found)exit} found && /^- /' "$LATEST_GEN" 2>/dev/null || true)
+    fi
 fi
 
 # ── Score Calculation ────────────────────────────────────────────────────
@@ -452,8 +481,14 @@ $CHANGES_TABLE
 | New harness tests | $NEW_HARNESS_TESTS |
 | Avg tick (ms) | $AVG_TICK |
 | Est. TPS | $EST_TPS |
-| FPS | $FPS_VAL |
-
 REPORT_EOF
+
+# Append FPS line only if not headless (FPS > 1)
+if [[ "$FPS_VAL" != "1" && "$FPS_VAL" != "N/A" ]]; then
+    # Insert FPS row before the trailing blank line
+    sed -i '' '/^| Est\. TPS/a\
+| FPS | '"$FPS_VAL"' |
+' "$REPORT"
+fi
 
 echo "$REPORT"
