@@ -7,7 +7,7 @@ use sim_core::components::{
 use sim_core::config;
 use sim_core::enums::{ActionType, NeedType, RelationType, Sex, TechState, TerrainType};
 use sim_core::world::TileResource;
-use sim_core::{Building, BuildingId, EntityId, Settlement, SettlementId};
+use sim_core::{Building, BuildingId, EntityId, Settlement, SettlementId, Temperament};
 use sim_engine::RuntimeStatsSnapshot;
 use sim_systems::entity_spawner::{self, SpawnConfig};
 use std::collections::HashMap;
@@ -1065,6 +1065,17 @@ fn member_summary(
         personality.set("axes", axes);
     }
     out.set("personality", personality);
+
+    // TCI temperament axes for UI display — uses shared helper for consistency
+    // with runtime_get_entity_detail (same code path, same f64 precision).
+    if let Ok(temperament) = world.get::<&Temperament>(entity) {
+        let td = crate::temperament_detail::extract_temperament_detail(&temperament);
+        out.set("tci_ns", td.tci_ns);
+        out.set("tci_ha", td.tci_ha);
+        out.set("tci_rd", td.tci_rd);
+        out.set("tci_p", td.tci_p);
+        out.set("temperament_label_key", td.temperament_label_key);
+    }
 
     let mut emotions = VarDictionary::new();
     if let Ok(component) = world.get::<&Emotion>(entity) {

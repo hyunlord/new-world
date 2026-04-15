@@ -21,6 +21,7 @@ mod runtime_queries;
 mod runtime_registry;
 mod runtime_system;
 mod snapshot_buffer;
+pub mod temperament_detail;
 pub mod tile_info;
 mod ws2_codec;
 
@@ -2452,14 +2453,13 @@ impl WorldSimRuntime {
             dict.set("archetype_key", archetype_label_key_from_axes(pers.axes));
         }
         if let Ok(temperament) = world.get::<&Temperament>(entity) {
-            dict.set("tci_ns", temperament.expressed.ns as f32);
-            dict.set("tci_ha", temperament.expressed.ha as f32);
-            dict.set("tci_rd", temperament.expressed.rd as f32);
-            dict.set("tci_p", temperament.expressed.p as f32);
-            // "temperament_label_key" is the locale key — GDScript calls Locale.ltr(key)
-            dict.set("temperament_label_key", temperament.archetype_label_key());
-            // awakened flag: true only after apply_shift() has changed expressed from latent
-            dict.set("temperament_awakened", temperament.awakened);
+            let td = temperament_detail::extract_temperament_detail(&temperament);
+            dict.set("tci_ns", td.tci_ns);
+            dict.set("tci_ha", td.tci_ha);
+            dict.set("tci_rd", td.tci_rd);
+            dict.set("tci_p", td.tci_p);
+            dict.set("temperament_label_key", td.temperament_label_key);
+            dict.set("temperament_awakened", td.temperament_awakened);
         }
 
         // Personal inventory (ItemStore-backed)
