@@ -157,25 +157,11 @@ if [[ -f "$PROGRESS_FILE" ]]; then
     fi
 fi
 
-# Changed files (from latest gen_result or git diff)
+# Changed files (from latest gen_result)
 LATEST_GEN=$(ls "$RESULT_DIR"/gen_result_attempt*.md 2>/dev/null | tail -1 || true)
 CHANGES_TABLE=""
 if [[ -n "$LATEST_GEN" && -f "$LATEST_GEN" ]]; then
-    # Extract from generator result
-    in_files=false
-    while IFS= read -r line; do
-        if echo "$line" | grep -qi "## Files Changed\|## Changed Files\|## Changes"; then
-            in_files=true; continue
-        fi
-        if $in_files; then
-            if echo "$line" | grep -q "^##\|^$" && ! echo "$line" | grep -q "^- \|^|"; then
-                break
-            fi
-            if echo "$line" | grep -q "^- \|^|" && ! echo "$line" | grep -q "File.*Lines\|---"; then
-                CHANGES_TABLE+="$line"$'\n'
-            fi
-        fi
-    done < "$LATEST_GEN"
+    CHANGES_TABLE=$(awk '/^## Files Changed|^## Changed Files/{found=1;next} /^## [^F]/{if(found)exit} found && /^- /' "$LATEST_GEN" 2>/dev/null || true)
 fi
 
 # ── Score Calculation ────────────────────────────────────────────────────
@@ -436,6 +422,12 @@ $REG_DETAIL_TEXT
 Verdict: **$FINAL_VERDICT**
 $EVALUATOR_SUMMARY
 $ROOT_CAUSE
+---
+
+## Changes
+
+$CHANGES_TABLE
+
 ---
 
 ## Performance
