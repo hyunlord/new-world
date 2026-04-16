@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# post-commit hook — summarize each commit's verification status
+# Shows bypass method + pipeline score after every commit.
+set -uo pipefail
+
+COMMIT_SHORT=$(git log -1 --format=%h)
+COMMIT_MSG=$(git log -1 --format=%s)
+FILES_CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD 2>/dev/null)
+
+# Determine bypass method
+BYPASS_METHOD=""
+if [[ "${HARNESS_SKIP:-0}" == "1" ]]; then
+    BYPASS_METHOD="HARNESS_SKIP=1 (explicit bypass)"
+else
+    # Check if all files are harness-exempt
+    ONLY_EXEMPT=true
+    while IFS= read -r f; do
+        [[ -z "$f" ]] && continue
+        case "$f" in
+            tools/harness/*|.claude/*|CLAUDE.md|*.md|*.txt)
+                ;; # exempt
+            *)
+                ONLY_EXEMPT=false
+                break
+                ;;
+        esac
+    done <<< "$FILES_CHANGED"
+
+    if $ONLY_EXEMPT; then
+        BYPASS_METHOD="Exempt (harness/docs only)"
+    else
+        # Check if there's a recent APPROVED verdict
+        APPROVED=false
+        HARNESS_DIR=".harness"
+        if [[ -d "$HARNESS_DIR/reviews" ]]; then
+            while IFS= read -r -d '' vf; do
+                first=$(head -1 "$vf" 2>/dev/null || echo "")
+                if [[ "$first" == "APPROVED" ]]; then
+                    epoch=$(sed -n '3p' "$vf" 2>/dev/null || echo "0")
+                    if [[ "$epoch" =~ ^[0-9]+$ ]]; then
+                        now=$(date +%s)
+                        age=$((now - epoch))
+                        if [[ $age -lt 3600 ]]; then
+                            APPROVED=true
+                            break
+                        fi
+                    fi
+                fi
+            done < <(find "$HARNESS_DIR/reviews" -name "verdict" -print0 2>/dev/null)
+        fi
+
+        if $APPROVED; then
+            BYPASS_METHOD="Pipeline verified"
+        else
+            BYPASS_METHOD="NO APPROVAL — may have bypassed pipeline"
+        fi
+    fi
+fi
+
+# Find pipeline score from commit message feature tag
+FEATURE=$(echo "$COMMIT_MSG" | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -1)
+SCORE="N/A"
+GRADE="N/A"
+if [[ -n "$FEATURE" ]]; then
+    REPORT=".harness/reports/$FEATURE/pipeline_report.md"
+    if [[ -f "$REPORT" ]]; then
+        # Extract **NN** from TOTAL row
+        SCORE=$(grep 'TOTAL' "$REPORT" | grep -oE '\*\*[0-9]+\*\*' | head -1 | tr -d '*' || echo "N/A")
+        GRADE=$(grep 'Grade:' "$REPORT" | sed 's/.*\*\*\(.*\)\*\*.*/\1/' | head -1 || echo "N/A")
+    fi
+fi
+
+FILE_COUNT=$(echo "$FILES_CHANGED" | grep -c '.' 2>/dev/null || echo "0")
+FILE_COUNT=$(echo "$FILE_COUNT" | tr -d '[:space:]')
+
+echo ""
+echo "==========================================="
+echo "  COMMIT SUMMARY"
+echo "==========================================="
+echo "  Hash:    $COMMIT_SHORT"
+echo "  Message: $COMMIT_MSG"
+echo "  Files:   $FILE_COUNT changed"
+echo ""
+echo "  Verification:"
+echo "    Method: $BYPASS_METHOD"
+echo "    Score:  $SCORE/100"
+echo "    Grade:  $GRADE"
+echo ""
+if [[ "$BYPASS_METHOD" == NO\ APPROVAL* ]]; then
+    echo "  ⚠️  WARNING: No pipeline approval found for this commit"
+fi
+if [[ "$BYPASS_METHOD" == HARNESS_SKIP* ]]; then
+    echo "  ⚠️  Explicit bypass — verify this was intentional"
+fi
+echo "==========================================="
