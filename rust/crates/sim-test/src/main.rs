@@ -14164,6 +14164,323 @@ mod tests {
             "should profile at least 10 systems, got {}", system_count);
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // Harness: locale-key-fix — pure data validation (ticks: 0)
+    // 13 assertions across 4 verification dimensions
+    // ══════════════════════════════════════════════════════════════════════════
+
+    /// All 44 new keys synced from JSON to fluent sources.
+    const LOCALE_NEW_KEYS: [&str; 44] = [
+        "ACTION_CHOP_BRANCH", "ACTION_DRINK", "ACTION_FORAGE",
+        "ACTION_PREPARE_HIDE", "ACTION_REST",
+        "DEBUG_CHANGED", "DEBUG_DEFAULT", "DEBUG_ENTITY_ID",
+        "DEBUG_HUD_LINE1", "DEBUG_HUD_LINE2", "DEBUG_HUD_LINE3",
+        "DEBUG_MEMORY", "DEBUG_NO_DATA", "DEBUG_SEARCH",
+        "DEBUG_TAB_BALANCE", "DEBUG_TAB_EVENTS", "DEBUG_TAB_FFI",
+        "DEBUG_TAB_GUARD", "DEBUG_TAB_INSPECT", "DEBUG_TAB_PERF",
+        "DEBUG_TAB_SYSTEMS", "DEBUG_TAB_WORLD", "DEBUG_TICK_BUDGET",
+        "RECIPE_CORDAGE", "RECIPE_HIDE_SCRAPER", "RECIPE_STONE_AXE",
+        "RECIPE_STONE_KNIFE",
+        "ROOM_ROLE_CRAFTING", "ROOM_ROLE_HEARTH", "ROOM_ROLE_SHELTER",
+        "ROOM_ROLE_STORAGE", "ROOM_ROLE_UNKNOWN",
+        "STRUCT_LEAN_TO",
+        "UI_DOOR", "UI_FLOOR", "UI_FURNITURE", "UI_OVERLAY_AUTHORITY",
+        "UI_POSITION", "UI_ROOM", "UI_ROOM_ENCLOSED", "UI_ROOM_ROLE",
+        "UI_TILE_INFO", "UI_WALL", "UI_WALL_HP",
+    ];
+
+    /// Project root / localization directory.
+    fn localization_dir() -> std::path::PathBuf {
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent().unwrap() // crates/
+            .parent().unwrap() // rust/
+            .parent().unwrap() // project root
+            .join("localization")
+    }
+
+    /// Load compiled locale JSON and return the "strings" map.
+    fn load_compiled_strings(locale: &str) -> serde_json::Map<String, serde_json::Value> {
+        let path = localization_dir().join("compiled").join(format!("{locale}.json"));
+        let content = std::fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("Failed to read {}: {e}", path.display()));
+        let data: serde_json::Value = serde_json::from_str(&content)
+            .unwrap_or_else(|e| panic!("Failed to parse {}: {e}", path.display()));
+        data.get("strings")
+            .expect("missing 'strings' key in compiled JSON")
+            .as_object()
+            .expect("'strings' is not an object")
+            .clone()
+    }
+
+    /// Load key_registry.json as serde Value.
+    fn load_key_registry() -> serde_json::Value {
+        let path = localization_dir().join("key_registry.json");
+        let content = std::fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("Failed to read {}: {e}", path.display()));
+        serde_json::from_str(&content)
+            .unwrap_or_else(|e| panic!("Failed to parse {}: {e}", path.display()))
+    }
+
+    // ── Dimension 1: Completeness (Assertions 1-4) ──────────────────────────
+
+    #[test]
+    fn harness_locale_ko_completeness() {
+        let strings = load_compiled_strings("ko");
+        let missing: Vec<&str> = LOCALE_NEW_KEYS.iter()
+            .filter(|k| !strings.contains_key(**k))
+            .copied()
+            .collect();
+        // Type A: logical invariant — all synced keys must be in compiled output
+        assert!(
+            missing.is_empty(),
+            "ko.json missing {} of 44 new keys: {missing:?}",
+            missing.len()
+        );
+    }
+
+    #[test]
+    fn harness_locale_en_completeness() {
+        let strings = load_compiled_strings("en");
+        let missing: Vec<&str> = LOCALE_NEW_KEYS.iter()
+            .filter(|k| !strings.contains_key(**k))
+            .copied()
+            .collect();
+        // Type A: logical invariant — all synced keys must be in compiled output
+        assert!(
+            missing.is_empty(),
+            "en.json missing {} of 44 new keys: {missing:?}",
+            missing.len()
+        );
+    }
+
+    #[test]
+    fn harness_locale_ko_total_count() {
+        let strings = load_compiled_strings("ko");
+        // Type C: empirical threshold — exact key count after sync (was 4934, now 4978)
+        assert_eq!(
+            strings.len(), 4978,
+            "ko.json expected 4978 strings, got {}", strings.len()
+        );
+    }
+
+    #[test]
+    fn harness_locale_en_total_count() {
+        let strings = load_compiled_strings("en");
+        // Type C: empirical threshold — exact key count after sync (was 4934, now 4978)
+        assert_eq!(
+            strings.len(), 4978,
+            "en.json expected 4978 strings, got {}", strings.len()
+        );
+    }
+
+    // ── Dimension 2: Anti-circular / Correctness (Assertions 5-8) ────────────
+
+    #[test]
+    fn harness_locale_ko_anti_circular() {
+        let strings = load_compiled_strings("ko");
+        let circular: Vec<&str> = LOCALE_NEW_KEYS.iter()
+            .filter(|k| {
+                strings.get(**k)
+                    .and_then(|v| v.as_str())
+                    .map_or(false, |v| v == **k)
+            })
+            .copied()
+            .collect();
+        // Type A: logical invariant — translation must differ from key name
+        assert!(
+            circular.is_empty(),
+            "ko.json has circular translations (value == key): {circular:?}"
+        );
+    }
+
+    #[test]
+    fn harness_locale_en_anti_circular() {
+        let strings = load_compiled_strings("en");
+        let circular: Vec<&str> = LOCALE_NEW_KEYS.iter()
+            .filter(|k| {
+                strings.get(**k)
+                    .and_then(|v| v.as_str())
+                    .map_or(false, |v| v == **k)
+            })
+            .copied()
+            .collect();
+        // Type A: logical invariant — translation must differ from key name
+        assert!(
+            circular.is_empty(),
+            "en.json has circular translations (value == key): {circular:?}"
+        );
+    }
+
+    #[test]
+    fn harness_locale_ko_spot_check() {
+        let strings = load_compiled_strings("ko");
+        // Type A: exact value invariant — deterministic compilation
+        let checks: &[(&str, &str)] = &[
+            ("UI_OVERLAY_AUTHORITY", "권위"),
+            ("UI_DOOR", "문"),
+            ("RECIPE_STONE_AXE", "돌도끼"),
+        ];
+        for (key, expected) in checks {
+            let actual = strings.get(*key)
+                .and_then(|v| v.as_str())
+                .unwrap_or("MISSING");
+            assert_eq!(
+                actual, *expected,
+                "ko.json {key}: expected '{expected}', got '{actual}'"
+            );
+        }
+    }
+
+    #[test]
+    fn harness_locale_en_spot_check() {
+        let strings = load_compiled_strings("en");
+        // Type A: exact value invariant — deterministic compilation
+        let checks: &[(&str, &str)] = &[
+            ("UI_OVERLAY_AUTHORITY", "Authority"),
+            ("UI_DOOR", "Door"),
+            ("RECIPE_STONE_AXE", "Stone Axe"),
+        ];
+        for (key, expected) in checks {
+            let actual = strings.get(*key)
+                .and_then(|v| v.as_str())
+                .unwrap_or("MISSING");
+            assert_eq!(
+                actual, *expected,
+                "en.json {key}: expected '{expected}', got '{actual}'"
+            );
+        }
+    }
+
+    // ── Dimension 3: Registry Stability (Assertions 9-10) ───────────────────
+
+    #[test]
+    fn harness_locale_registry_append_only() {
+        let registry = load_key_registry();
+        let key_to_id = registry.get("key_to_id")
+            .expect("missing key_to_id")
+            .as_object()
+            .expect("key_to_id not an object");
+        // Type A: append-only invariant — existing IDs must never change
+        let anchor_checks: &[(&str, u64)] = &[
+            ("ACE_DOMESTIC_VIOLENCE", 0),
+            ("ACE_EMOTIONAL_ABUSE", 1),
+            ("ACE_EMOTIONAL_NEGLECT", 2),
+        ];
+        for (key, expected_id) in anchor_checks {
+            let actual = key_to_id.get(*key)
+                .and_then(|v| v.as_u64())
+                .unwrap_or(u64::MAX);
+            assert_eq!(
+                actual, *expected_id,
+                "key_registry {key}: expected id={expected_id}, got id={actual}"
+            );
+        }
+    }
+
+    #[test]
+    fn harness_locale_registry_new_ids() {
+        let registry = load_key_registry();
+        let key_to_id = registry.get("key_to_id")
+            .expect("missing key_to_id")
+            .as_object()
+            .expect("key_to_id not an object");
+        let mut violations = Vec::new();
+        for key in &LOCALE_NEW_KEYS {
+            match key_to_id.get(*key).and_then(|v| v.as_u64()) {
+                Some(id) if id < 4934 => {
+                    violations.push(format!("{key}={id}"));
+                }
+                None => {
+                    violations.push(format!("{key}=MISSING"));
+                }
+                _ => {} // id >= 4934, OK
+            }
+        }
+        // Type A: logical invariant — new keys appended after existing 4934 IDs
+        assert!(
+            violations.is_empty(),
+            "New keys with id < 4934 or missing from registry: {violations:?}"
+        );
+    }
+
+    // ── Dimension 4: Parity & Regression (Assertions 11-13) ─────────────────
+
+    #[test]
+    fn harness_locale_parity() {
+        let ko_strings = load_compiled_strings("ko");
+        let en_strings = load_compiled_strings("en");
+        let ko_keys: std::collections::HashSet<&String> = ko_strings.keys().collect();
+        let en_keys: std::collections::HashSet<&String> = en_strings.keys().collect();
+        let ko_only: Vec<&&String> = ko_keys.difference(&en_keys).collect();
+        let en_only: Vec<&&String> = en_keys.difference(&ko_keys).collect();
+        // Type A: logical invariant — both locales must have identical key sets
+        assert!(
+            ko_only.is_empty() && en_only.is_empty(),
+            "Key set mismatch — ko_only({})={ko_only:?}, en_only({})={en_only:?}",
+            ko_only.len(), en_only.len()
+        );
+    }
+
+    #[test]
+    fn harness_locale_check_no_p2() {
+        let project_root = localization_dir().parent().unwrap().to_path_buf();
+        let script = project_root.join("tools").join("harness").join("locale_check.sh");
+        let out_dir = std::env::temp_dir().join("harness_locale_check");
+        let _ = std::fs::create_dir_all(&out_dir);
+
+        let _output = std::process::Command::new("bash")
+            .arg(&script)
+            .arg(out_dir.to_str().unwrap())
+            .current_dir(&project_root)
+            .output()
+            .expect("Failed to run locale_check.sh");
+
+        // Read the P2 output file (keys in JSON but not in fluent)
+        let p2_path = out_dir.join("json_not_fluent.txt");
+        let p2_content = std::fs::read_to_string(&p2_path).unwrap_or_default();
+        let flagged: Vec<&str> = LOCALE_NEW_KEYS.iter()
+            .filter(|k| p2_content.lines().any(|line| line.trim() == **k))
+            .copied()
+            .collect();
+        // Type D: regression guard — the specific P2 bug (missing fluent keys) must not recur
+        assert!(
+            flagged.is_empty(),
+            "locale_check.sh flagged {} new keys as P2 (in JSON, missing from fluent): {flagged:?}\nP2 file content:\n{p2_content}",
+            flagged.len()
+        );
+    }
+
+    #[test]
+    fn harness_locale_fluent_definitions() {
+        let loc = localization_dir();
+        let ko_ftl = std::fs::read_to_string(loc.join("fluent/ko/messages.ftl"))
+            .expect("Failed to read fluent/ko/messages.ftl");
+        let en_ftl = std::fs::read_to_string(loc.join("fluent/en/messages.ftl"))
+            .expect("Failed to read fluent/en/messages.ftl");
+        let mut missing_ko = Vec::new();
+        let mut missing_en = Vec::new();
+        for key in &LOCALE_NEW_KEYS {
+            let pattern = format!("{key} =");
+            if !ko_ftl.contains(&pattern) {
+                missing_ko.push(*key);
+            }
+            if !en_ftl.contains(&pattern) {
+                missing_en.push(*key);
+            }
+        }
+        // Type A: logical invariant — fluent source must define all 44 synced keys
+        assert!(
+            missing_ko.is_empty(),
+            "fluent/ko/messages.ftl missing {} definitions: {missing_ko:?}",
+            missing_ko.len()
+        );
+        assert!(
+            missing_en.is_empty(),
+            "fluent/en/messages.ftl missing {} definitions: {missing_en:?}",
+            missing_en.len()
+        );
+    }
+
 }
 
 fn pathfind_bench_inputs() -> (
