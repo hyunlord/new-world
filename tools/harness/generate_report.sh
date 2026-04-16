@@ -64,8 +64,22 @@ if [[ -f "$PLAN_DIR/challenge_report.md" ]]; then
     CHALLENGER_ISSUES=$(grep -c "\[ISSUE\]\|^### Issue\|^- Issue" "$PLAN_DIR/challenge_report.md" 2>/dev/null || echo "0")
 fi
 
-# Final verdict
+# Final verdict — cross-check verdict file with actual latest review
 FINAL_VERDICT=$(head -1 "$REVIEW_DIR/verdict" 2>/dev/null || echo "UNKNOWN")
+LATEST_REVIEW_FILE=$(ls "$REVIEW_DIR"/review_attempt*.md 2>/dev/null | tail -1)
+if [[ -f "$LATEST_REVIEW_FILE" ]]; then
+    LATEST_REVIEW_VERDICT=$(sed 's/\*//g; s/_//g' "$LATEST_REVIEW_FILE" | grep -i "^verdict:" | head -1 | awk '{print $2}')
+    # If verdict file disagrees with actual latest review, trust the review
+    if [[ -n "$LATEST_REVIEW_VERDICT" ]]; then
+        case "$FINAL_VERDICT" in
+            APPROVED|APPROVE)
+                if [[ "$LATEST_REVIEW_VERDICT" != "APPROVE" && "$LATEST_REVIEW_VERDICT" != "APPROVED" ]]; then
+                    FINAL_VERDICT="$LATEST_REVIEW_VERDICT"
+                fi
+                ;;
+        esac
+    fi
+fi
 
 # Gate data — test count from gate_result (most complete), fallback to step0_test
 GATE_TEST_COUNT="0"
@@ -196,25 +210,30 @@ fi
 # ── Score Calculation ────────────────────────────────────────────────────
 
 # 1. Mechanical Gate (10)
+# Tests must pass for ANY gate points. clippy/FFI are bonus only if tests pass.
 SCORE_GATE=0
 GATE_DETAIL=""
 if [[ "$GATE_TEST_STATUS" == "PASS" ]]; then
-    SCORE_GATE=$((SCORE_GATE + 6))
+    SCORE_GATE=6
     GATE_DETAIL="test ${GATE_TEST_COUNT} passed"
+    if [[ "$CLIPPY_STATUS" == "clean" ]]; then
+        SCORE_GATE=$((SCORE_GATE + 2))
+        GATE_DETAIL+=", clippy clean"
+    else
+        GATE_DETAIL+=", clippy $CLIPPY_STATUS"
+    fi
+    if [[ "$FFI_STATUS" == "OK" ]]; then
+        SCORE_GATE=$((SCORE_GATE + 2))
+        GATE_DETAIL+=", FFI OK"
+    else
+        GATE_DETAIL+=", FFI $FFI_STATUS"
+    fi
 else
+    # Gate = 0 when tests fail — no partial credit
+    SCORE_GATE=0
     GATE_DETAIL="test FAIL"
-fi
-if [[ "$CLIPPY_STATUS" == "clean" ]]; then
-    SCORE_GATE=$((SCORE_GATE + 2))
-    GATE_DETAIL+=", clippy clean"
-else
-    GATE_DETAIL+=", clippy $CLIPPY_STATUS"
-fi
-if [[ "$FFI_STATUS" == "OK" ]]; then
-    SCORE_GATE=$((SCORE_GATE + 2))
-    GATE_DETAIL+=", FFI OK"
-else
-    GATE_DETAIL+=", FFI $FFI_STATUS"
+    [[ "$CLIPPY_STATUS" == "clean" ]] && GATE_DETAIL+=", clippy clean"
+    [[ "$FFI_STATUS" == "OK" ]] && GATE_DETAIL+=", FFI OK"
 fi
 
 # 2. Plan Quality (5)
@@ -239,6 +258,7 @@ else
 fi
 
 # 3. Code Quality (15)
+# Only APPROVE earns points. RE-CODE/RE-PLAN/FAIL = 0 (pipeline failed to resolve).
 SCORE_CODE=0
 CODE_DETAIL=""
 case "$FINAL_VERDICT" in
@@ -252,10 +272,10 @@ case "$FINAL_VERDICT" in
         fi
         ;;
     RE-CODE|RECODE)
-        SCORE_CODE=5; CODE_DETAIL="RE-CODE (manual gate)"
+        SCORE_CODE=0; CODE_DETAIL="RE-CODE after $CODE_ATTEMPTS attempt(s)"
         ;;
     RE-PLAN|REPLAN)
-        SCORE_CODE=3; CODE_DETAIL="RE-PLAN after $CODE_ATTEMPTS attempts"
+        SCORE_CODE=0; CODE_DETAIL="RE-PLAN after $CODE_ATTEMPTS attempt(s)"
         ;;
     *)
         SCORE_CODE=0; CODE_DETAIL="$FINAL_VERDICT"
@@ -308,12 +328,13 @@ case "$REGRESSION_STATUS" in
 esac
 
 # 7. Evaluator (15)
+# Only APPROVE earns points. Any non-APPROVE verdict = 0.
 SCORE_EVALUATOR=0
 EVALUATOR_DETAIL=""
 case "$FINAL_VERDICT" in
     APPROVED|APPROVE) SCORE_EVALUATOR=15; EVALUATOR_DETAIL="APPROVE" ;;
-    RE-CODE|RECODE) SCORE_EVALUATOR=7; EVALUATOR_DETAIL="RE-CODE (manual)" ;;
-    RE-PLAN|REPLAN) SCORE_EVALUATOR=3; EVALUATOR_DETAIL="RE-PLAN" ;;
+    RE-CODE|RECODE) SCORE_EVALUATOR=0; EVALUATOR_DETAIL="RE-CODE" ;;
+    RE-PLAN|REPLAN) SCORE_EVALUATOR=0; EVALUATOR_DETAIL="RE-PLAN" ;;
     *) SCORE_EVALUATOR=0; EVALUATOR_DETAIL="$FINAL_VERDICT" ;;
 esac
 

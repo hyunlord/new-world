@@ -1598,6 +1598,9 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     exit 0
                     ;;
                 1)  # RE-CODE
+                    echo "RE-CODE" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     if [[ $CODE_ATTEMPT -ge $MAX_CODE_ATTEMPTS ]]; then
                         log "Max code attempts ($MAX_CODE_ATTEMPTS) reached — escalating to RE-PLAN"
                         break  # Break inner loop → re-plan
@@ -1605,10 +1608,16 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     log "Retrying Generator with Evaluator feedback (attempt $((CODE_ATTEMPT+1)))"
                     ;;
                 2)  # RE-PLAN
+                    echo "RE-PLAN" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     log "Re-planning from Step 1a"
                     break  # Break inner loop → re-plan
                     ;;
                 3)  # FAIL
+                    echo "FAIL" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     finalize_progress
                     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
                     echo ""
@@ -1625,6 +1634,17 @@ Plan: $PLAN_DIR/plan_final.md"
             esac
         done
     done
+
+    # Write final verdict for report generator (last evaluator result)
+    local last_review_verdict="FATAL"
+    local last_review_file
+    last_review_file=$(ls "$REVIEW_DIR"/review_attempt*.md 2>/dev/null | tail -1)
+    if [[ -f "$last_review_file" ]]; then
+        last_review_verdict=$(sed 's/\*//g; s/_//g' "$last_review_file" | grep -i "^verdict:" | head -1 | awk '{print $2}' || echo "FATAL")
+    fi
+    echo "$last_review_verdict" > "$REVIEW_DIR/verdict"
+    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+    date +%s >> "$REVIEW_DIR/verdict"
 
     finalize_progress
     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
