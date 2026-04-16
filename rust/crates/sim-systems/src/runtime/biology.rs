@@ -256,6 +256,29 @@ impl SimSystem for PopulationRuntimeSystem {
             return;
         }
 
+        // fertility_mul: birth attempt count per tick.
+        // < 1.0 → probability of one attempt (e.g. 0.7 → 70% chance).
+        // == 1.0 → exactly one attempt (default, no change).
+        // > 1.0 → multiple attempts (e.g. 2.5 → 2 guaranteed + 50% extra).
+        // == 0.0 → prevents all births.
+        let fertility_mul = resources.fertility_mul.clamp(0.0, 10.0);
+        let birth_attempts = {
+            let whole = fertility_mul.floor() as u32;
+            let frac = fertility_mul - fertility_mul.floor();
+            let extra = if frac > 0.0
+                && resources.rng.gen_range(0.0..1.0) < frac
+            {
+                1u32
+            } else {
+                0
+            };
+            whole + extra
+        };
+        if birth_attempts == 0 {
+            return;
+        }
+
+        for _birth_attempt in 0..birth_attempts {
         let mut selected_settlement_id: Option<SettlementId> = None;
         let mut selected_x: i32 = 0;
         let mut selected_y: i32 = 0;
@@ -272,7 +295,7 @@ impl SimSystem for PopulationRuntimeSystem {
             }
         }
         let Some(settlement_id) = selected_settlement_id else {
-            return;
+            break;
         };
 
         if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
@@ -407,6 +430,7 @@ impl SimSystem for PopulationRuntimeSystem {
             value: 1.0,
         });
         resources.stats_total_births += 1;
+        } // for _birth_attempt
     }
 }
 
@@ -938,6 +962,12 @@ impl SimSystem for MortalityRuntimeSystem {
             }
 
             let age_years = (age_ticks as f32 / ticks_per_year as f32).max(0.0);
+            // lifespan_mul: scale effective age for Siler model hazard curve.
+            // lifespan_mul > 1.0 → agents age slower through hazard curve → live longer.
+            // lifespan_mul < 1.0 → age faster → die sooner.
+            // lifespan_mul == 0.1 (floor) → 10× faster aging through senescence curve.
+            let lifespan_mul = (resources.lifespan_mul as f32).max(0.1);
+            let effective_age_years = age_years / lifespan_mul;
             let nutrition = needs_opt
                 .map(|needs| needs.get(NeedType::Hunger) as f32)
                 .unwrap_or(0.5)
@@ -951,7 +981,7 @@ impl SimSystem for MortalityRuntimeSystem {
                 .map(|stress| (1.0 + stress.allostatic_load as f32 * 2.0).clamp(0.5, 4.0))
                 .unwrap_or(1.0);
             let hazards = body::mortality_hazards_and_prob(
-                age_years,
+                effective_age_years,
                 MORTALITY_A1,
                 MORTALITY_B1,
                 MORTALITY_A2,
@@ -971,7 +1001,10 @@ impl SimSystem for MortalityRuntimeSystem {
                 config::BODY_DR_MORTALITY_REDUCTION as f32,
                 is_infant,
             );
-            let q_check = hazards[5].clamp(0.0, 0.999);
+            // mortality_mul: scale death probability. mortality_mul=0.0 → immortal,
+            // mortality_mul=2.0 → double hazard. Clamp after multiplication to [0.0, 0.999].
+            let mortality_mul = (resources.mortality_mul as f32).max(0.0);
+            let q_check = (hazards[5] * mortality_mul).clamp(0.0, 0.999);
             let roll: f32 = resources.rng.gen_range(0.0..1.0);
             if q_check >= 0.999 || roll < q_check {
                 age.alive = false;

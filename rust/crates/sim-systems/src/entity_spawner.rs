@@ -704,7 +704,30 @@ pub fn spawn_agent(
     };
 
     // Body
-    let body = generate_body(sex, &mut resources.rng);
+    let mut body = generate_body(sex, &mut resources.rng);
+
+    // body_potential_mul: scale all 6 body potentials and realized values.
+    // Default 1.0 (no change). 0.0 zeroes all potentials (degenerate agents).
+    // Applied after generation so world-rules can override the normal range.
+    let bp_mul = resources.body_potential_mul;
+    if (bp_mul - 1.0).abs() > f64::EPSILON {
+        let scale_pot = |val: i32| -> i32 {
+            ((val as f64 * bp_mul).round() as i32).clamp(0, BODY_POTENTIAL_MAX)
+        };
+        body.str_potential = scale_pot(body.str_potential);
+        body.agi_potential = scale_pot(body.agi_potential);
+        body.end_potential = scale_pot(body.end_potential);
+        body.tou_potential = scale_pot(body.tou_potential);
+        body.rec_potential = scale_pot(body.rec_potential);
+        body.dr_potential = scale_pot(body.dr_potential);
+        // Realized starts at potential at birth (no training yet)
+        body.str_realized = body.str_potential;
+        body.agi_realized = body.agi_potential;
+        body.end_realized = body.end_potential;
+        body.tou_realized = body.tou_potential;
+        body.rec_realized = body.rec_potential;
+        body.dr_realized = body.dr_potential;
+    }
 
     // Intelligence
     let intelligence = generate_intelligence(&personality, &mut resources.rng);

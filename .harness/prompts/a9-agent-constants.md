@@ -1,170 +1,159 @@
-# A-9 Phase 4: Agent Constants Runtime Application
+# A-9: World Rules — Agent Constants를 런타임 시스템에 연결
 
-## Goal
+## Section 1: Implementation Intent
 
-Replace the abstract `RuleAgentModifier` struct with a concrete `AgentConstants` struct (same pattern as `GlobalConstants`). After this feature, rulesets can override mortality rate, skill XP gain, body stat potential, fertility, lifespan, and movement speed multipliers.
+### 문제
+`apply_world_rules()`가 agent_constants(mortality_mul, fertility_mul, skill_xp_mul, lifespan_mul, move_speed_mul, body_potential_mul)를 `SimResources`에 저장하지만, **어떤 RuntimeSystem에서도 이 값을 읽지 않음.**
 
-## Current State
+코드 주석: "stored only — consumer integration out of scope"
 
-- `world_rules.rs`: `WorldRuleset` has `agent_modifiers: Vec<RuleAgentModifier>` (abstract, unused)
-- `RuleAgentModifier` struct: `{ system: String, effect: String }` — no runtime consumer
-- `SimResources` (engine.rs): has `hunger_decay_rate`, `warmth_decay_rate`, `food_regen_mul`, etc. from GlobalConstants, but NO agent constant fields
-- `apply_world_rules()`: handles `global_constants`, ignores `agent_modifiers`
-- RON files: `base_rules.ron` has `agent_modifiers: []`, `eternal_winter.ron` has `agent_modifiers: []`
-- References to fix: `sim-data/src/lib.rs:31`, `sim-data/src/defs/mod.rs:21`, `sim-engine/src/engine.rs:1108`, `sim-test/src/main.rs:3045`
+즉 `eternal_winter.ron`에서 `mortality_mul: 1.3`을 설정해도 **실제로 사망률이 안 바뀜.**
+Global constants(hunger_decay_mul 등)는 이미 연결되어 작동하지만, agent constants는 끊겨있음.
 
-## Changes Required
+### 해결
+6개 agent_constants를 해당 RuntimeSystem에서 실제로 읽어서 적용:
 
-### 1. `rust/crates/sim-data/src/defs/world_rules.rs`
+| Constant | 소비 시스템 | 적용 방식 |
+|----------|-----------|----------|
+| mortality_mul | MortalityRuntimeSystem (biology.rs) | hazard × mortality_mul |
+| fertility_mul | PopulationRuntimeSystem (biology.rs) | birth chance × fertility_mul |
+| skill_xp_mul | IntelligenceRuntimeSystem (cognition.rs) | xp gain × skill_xp_mul |
+| lifespan_mul | MortalityRuntimeSystem (biology.rs) | age threshold × lifespan_mul |
+| move_speed_mul | steering.rs 또는 movement | speed × move_speed_mul |
+| body_potential_mul | PersonalityGeneratorRuntimeSystem | body potential × mul |
 
-Replace `RuleAgentModifier` struct with `AgentConstants`:
+### 참조
+프로젝트 지식: WorldSim_WorldRules_3자통합분석.md
+— "기존 시스템의 수정 레이어 (새 시스템 아니라 초기값 수정)"
+— "성능: 초기화 ~50ms, 틱 비용 0"
 
+---
+
+## Section 2: What to Build
+
+### Part A: mortality_mul 연결
+
+**File: `rust/crates/sim-systems/src/runtime/biology.rs`**
+
+MortalityRuntimeSystem에서 hazard 확률에 mortality_mul 적용:
+
+현재 코드 (line ~975):
 ```rust
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(deny_unknown_fields)]
-pub struct AgentConstants {
-    #[serde(default)]
-    pub mortality_mul: Option<f64>,
-    #[serde(default)]
-    pub skill_xp_mul: Option<f64>,
-    #[serde(default)]
-    pub body_potential_mul: Option<f64>,
-    #[serde(default)]
-    pub fertility_mul: Option<f64>,
-    #[serde(default)]
-    pub lifespan_mul: Option<f64>,
-    #[serde(default)]
-    pub move_speed_mul: Option<f64>,
-}
+let q_check = hazards[5].clamp(0.0, 0.999);
 ```
 
-Change `WorldRuleset` field:
-- REMOVE: `pub agent_modifiers: Vec<RuleAgentModifier>,`
-- ADD: `#[serde(default)] pub agent_constants: Option<AgentConstants>,`
-
-Update the unit test RON string (`parses_world_ruleset_from_ron`): replace `agent_modifiers: []` with `agent_constants: None`.
-
-### 2. `rust/crates/sim-data/src/defs/mod.rs`
-
-Replace `RuleAgentModifier` export with `AgentConstants`:
-- REMOVE: `RuleAgentModifier` from the use/re-export list
-- ADD: `AgentConstants`
-
-### 3. `rust/crates/sim-data/src/lib.rs`
-
-Replace `RuleAgentModifier` export with `AgentConstants` in re-exports (line ~31).
-
-### 4. `rust/crates/sim-engine/src/engine.rs`
-
-**Part A — SimResources fields** (add after existing GlobalConstants fields `season_mode`):
+수정:
 ```rust
-/// Mortality rate multiplier (default 1.0).
-pub mortality_mul: f64,
-/// Global skill XP gain multiplier (default 1.0).
-pub skill_xp_mul: f64,
-/// Body stat potential multiplier (default 1.0).
-pub body_potential_mul: f64,
-/// Fertility/birth rate multiplier (default 1.0).
-pub fertility_mul: f64,
-/// Lifespan multiplier for Siler model (default 1.0).
-pub lifespan_mul: f64,
-/// Movement speed multiplier (default 1.0).
-pub move_speed_mul: f64,
+let mortality_mul = resources.mortality_mul as f32;
+let q_check = (hazards[5] * mortality_mul).clamp(0.0, 0.999);
 ```
 
-**Part B — SimResources::new() initialization** (add after `season_mode: "default".to_string()`):
-```rust
-mortality_mul: 1.0,
-skill_xp_mul: 1.0,
-body_potential_mul: 1.0,
-fertility_mul: 1.0,
-lifespan_mul: 1.0,
-move_speed_mul: 1.0,
-```
+### Part B: fertility_mul 연결
 
-**Part C — apply_world_rules()** (add after the `global_constants` block):
-```rust
-if let Some(ref agent) = rules.agent_constants {
-    if let Some(mul) = agent.mortality_mul {
-        self.mortality_mul = mul.max(0.0);
-    }
-    if let Some(mul) = agent.skill_xp_mul {
-        self.skill_xp_mul = mul.max(0.0);
-    }
-    if let Some(mul) = agent.body_potential_mul {
-        self.body_potential_mul = mul.max(0.0);
-    }
-    if let Some(mul) = agent.fertility_mul {
-        self.fertility_mul = mul.clamp(0.0, 10.0);
-    }
-    if let Some(mul) = agent.lifespan_mul {
-        self.lifespan_mul = mul.max(0.1);
-    }
-    if let Some(mul) = agent.move_speed_mul {
-        self.move_speed_mul = mul.clamp(0.1, 5.0);
-    }
-    info!(
-        "[WorldRules] agent constants: mortality={:.2}, skill_xp={:.2}, lifespan={:.2}, fertility={:.2}",
-        self.mortality_mul, self.skill_xp_mul, self.lifespan_mul, self.fertility_mul
-    );
-}
-```
+**File: `rust/crates/sim-systems/src/runtime/biology.rs`**
 
-**Part D — fix broken references in engine.rs** (line ~1108):
-- Change `agent_modifiers: Vec::new()` → `agent_constants: None`
+PopulationRuntimeSystem에서 birth 확률에 fertility_mul 적용.
+`population_birth_block_code()` 또는 birth 로직에서:
 
-### 5. `rust/crates/sim-test/src/main.rs`
+현재: birth chance 계산
+수정: `birth_chance *= resources.fertility_mul`
 
-Line ~3045: change `agent_modifiers: vec![]` → `agent_constants: None`
+### Part C: skill_xp_mul 연결
 
-### 6. RON files
+**File: `rust/crates/sim-systems/src/runtime/cognition.rs`**
 
-**`rust/crates/sim-data/data/world_rules/base_rules.ron`**:
-- Change `agent_modifiers: [],` → `agent_constants: None,`
+IntelligenceRuntimeSystem에서 XP 획득에 skill_xp_mul 적용:
 
-**`rust/crates/sim-data/data/world_rules/scenarios/eternal_winter.ron`**:
-- Change `agent_modifiers: [],` to:
-```ron
-agent_constants: Some(AgentConstants(
-    mortality_mul: Some(1.3),
-    skill_xp_mul: Some(1.5),
-    body_potential_mul: None,
-    fertility_mul: Some(0.7),
-    lifespan_mul: Some(0.8),
-    move_speed_mul: None,
-)),
-```
+XP 획득 시: `xp_gain *= resources.skill_xp_mul as f32`
 
-## Harness Test
+### Part D: lifespan_mul 연결
 
-Add to `rust/crates/sim-test/src/main.rs`:
+**File: `rust/crates/sim-systems/src/runtime/biology.rs`**
 
-```rust
-#[test]
-fn harness_agent_constants_defaults() {
-    let engine = make_stage1_engine(42, 20);
-    let resources = engine.resources();
+Mortality에서 노화 관련 threshold에 lifespan_mul 적용.
+예: 최대 수명 = base_lifespan × lifespan_mul
 
-    assert!((resources.mortality_mul - 1.0).abs() < 1e-9, "mortality_mul default should be 1.0");
-    assert!((resources.skill_xp_mul - 1.0).abs() < 1e-9, "skill_xp_mul default should be 1.0");
-    assert!((resources.body_potential_mul - 1.0).abs() < 1e-9, "body_potential_mul default should be 1.0");
-    assert!((resources.fertility_mul - 1.0).abs() < 1e-9, "fertility_mul default should be 1.0");
-    assert!((resources.lifespan_mul - 1.0).abs() < 1e-9, "lifespan_mul default should be 1.0");
-    assert!((resources.move_speed_mul - 1.0).abs() < 1e-9, "move_speed_mul default should be 1.0");
-}
-```
+### Part E: move_speed_mul 연결
 
-## Gate
+**File: `rust/crates/sim-systems/src/runtime/steering.rs`**
 
+이동 속도에 move_speed_mul 적용:
+`speed *= resources.move_speed_mul`
+
+### Part F: body_potential_mul 연결
+
+**File: `rust/crates/sim-systems/src/runtime/biology.rs` 또는 `entity_spawner.rs`**
+
+에이전트 생성 시 body potential에 mul 적용.
+
+---
+
+## Section 3: How to Implement
+
+### 수정 순서
+1. 각 RuntimeSystem의 `run()` 함수에서 `resources.{constant_mul}`을 읽음
+2. 해당 계산에 곱셈 적용
+3. harness 테스트로 검증: `eternal_winter.ron` 로드 시 mortality가 실제로 증가하는지
+
+### 핵심 원칙
+- **틱 비용 0**: 매 틱마다 f64 곱셈 1회 추가일 뿐. 성능 영향 없음.
+- **기존 시스템 구조 변경 없음**: resources에서 값을 읽어 곱하기만.
+- **기본값 1.0**: mul이 1.0이면 기존 동작과 동일.
+
+---
+
+## Section 4: Dispatch Plan
+
+| # | Ticket | File | Language | Mode | Depends On |
+|---|--------|------|----------|:----:|:----------:|
+| T1 | mortality_mul + lifespan_mul | sim-systems/src/runtime/biology.rs | Rust | DISPATCH | — |
+| T2 | fertility_mul | sim-systems/src/runtime/biology.rs | Rust | DISPATCH | — |
+| T3 | skill_xp_mul | sim-systems/src/runtime/cognition.rs | Rust | DISPATCH | — |
+| T4 | move_speed_mul | sim-systems/src/runtime/steering.rs | Rust | DISPATCH | — |
+| T5 | body_potential_mul | sim-systems/src/entity_spawner.rs | Rust | DISPATCH | — |
+| T6 | harness tests | sim-test/src/main.rs | Rust | DIRECT | T1-T5 |
+
+**Dispatch ratio**: 5/6 = 83%
+
+---
+
+## Section 5: Localization Checklist
+
+No new localization keys.
+
+---
+
+## Section 6: Verification & Harness
+
+### Harness execution
 ```bash
-cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
+bash tools/harness/harness_pipeline.sh a9-agent-constants .harness/prompts/a9-agent-constants.md --full
 ```
 
-## Scope Limits
+### Core assertions
 
-- `move_speed_mul`: stored in SimResources only — actual steering integration is out of scope
-- `body_potential_mul`: stored only — entity spawner integration is out of scope  
-- `fertility_mul`: stored only — birth system integration is out of scope if the integration point is not obvious
-- `mortality_mul` and `skill_xp_mul`: stored only — actual system integration is out of scope for this ticket
+1. **mortality_mul works**: mortality_mul=2.0 loaded -> more deaths than same seed baseline
+2. **fertility_mul works**: fertility_mul=0.5 loaded -> fewer births
+3. **skill_xp_mul works**: skill_xp_mul=2.0 loaded -> higher skill levels
+4. **Default regression**: mortality_mul=1.0 (base_rules) -> identical behavior
+5. **Anti-circular**: resources.mortality_mul is actually read in biology.rs (grep check)
+6. **eternal_winter scenario**: eternal_winter.ron loaded -> mortality 1.3x + fertility 0.7x confirmed
 
-All 6 fields must default to 1.0 and be stored in SimResources. RON loading and apply_world_rules() application is required. System-level usage is out of scope.
+---
+
+## Section 7: In-game verification
+
+- eternal_winter scenario load shows `[WorldRules] agent constants applied` log
+- Winter scenario has higher mortality than base (faster population decline)
+- Base scenario behaves identically to before
+
+### Post-implementation report
+```
+## Implementation Report
+### Intent
+Connect World Rules agent_constants from "stored only" to actual runtime systems.
+### Changes
+6 agent_constants read by their respective systems. Tick cost 0.
+### Pipeline Results
+(table)
+```
