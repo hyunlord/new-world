@@ -442,10 +442,19 @@ HARNESS_SKIP=1 git commit -m "..."
 
 The pre-commit hook blocks commits containing code/asset files without an APPROVED verdict.
 
-**Exempt from pipeline** (commit normally):
+**Exempt from pipeline** (commit normally with `HARNESS_SKIP=1`):
 - Documentation only (.md, .txt)
-- Localization JSON (localization/*.json)
 - Harness infrastructure itself (tools/harness/*, .claude/skills/worldsim-harness/*)
+
+**Requires pipeline** (even though non-code):
+- Localization source files (localization/fluent/*, localization/ko/*, localization/en/*)
+- Localization compiled files (localization/compiled/*)
+- Localization registry (localization/key_registry.json)
+- All game data (.ron, .json in data/, sim-data/)
+- Any file that affects runtime behavior
+
+**Rule: harness exemption = `tools/harness/` and `.claude/` files ONLY.
+Everything under `localization/`, `rust/`, `scripts/`, `data/` requires pipeline.**
 
 See `tools/harness/README.md` for details.
 See `.claude/skills/worldsim-harness/SKILL.md` for mode selection guide.
