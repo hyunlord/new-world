@@ -128,6 +128,18 @@ if [[ -f "$EVIDENCE_DIR/performance.txt" ]]; then
     FPS_VAL=$(grep -i "frames_per_second\|FPS" "$EVIDENCE_DIR/performance.txt" | grep -oE '[0-9]+' | head -1 || echo "N/A")
 fi
 
+# Locale check
+LOCALE_SUMMARY="not run"
+if [[ -f "$RESULT_DIR/locale/report.txt" ]]; then
+    locale_p1=$(wc -l < "$RESULT_DIR/locale/code_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+    locale_p2=$(wc -l < "$RESULT_DIR/locale/json_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+    if [[ "$locale_p1" -eq 0 && "$locale_p2" -eq 0 ]] 2>/dev/null; then
+        LOCALE_SUMMARY="PASS (no critical issues)"
+    else
+        LOCALE_SUMMARY="WARN (code_missing=$locale_p1, json_missing=$locale_p2)"
+    fi
+fi
+
 # Regression guard
 REGRESSION_STATUS="NOT_RUN"
 if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
@@ -468,6 +480,9 @@ $GATE_TEST_STATUS: cargo test $GATE_TEST_COUNT passed, clippy $CLIPPY_STATUS, FF
 
 ### Step 1: Planning
 $PLAN_SUMMARY
+
+### Step 0b: Locale Check
+$LOCALE_SUMMARY
 
 ### Step 2: Implementation
 $GEN_SUMMARY

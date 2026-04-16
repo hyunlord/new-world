@@ -1396,6 +1396,18 @@ main() {
     run_mechanical_gate
     report_step "0 Mechanical Gate" "DONE" "cargo test + clippy + FFI check"
 
+    # Step 0b: Locale Check (0-token — warns on missing locale keys)
+    local locale_out="$RESULT_DIR/locale"
+    mkdir -p "$locale_out"
+    if bash "$SCRIPT_DIR/locale_check.sh" "$locale_out" > "$locale_out/report.txt" 2>&1; then
+        report_step "0b Locale Check" "DONE" "PASS (no critical issues)"
+    else
+        local p1=$(wc -l < "$locale_out/code_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+        local p2=$(wc -l < "$locale_out/json_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+        log "WARNING: Locale check found issues (code_not_fluent=$p1, json_not_fluent=$p2)"
+        report_step "0b Locale Check" "DONE" "WARN (code_missing=$p1, json_missing=$p2)"
+    fi
+
     # ============================================================
     # LIGHT MODE — Generator + Gate + Visual Verify only (2 LLM calls)
     # ============================================================
