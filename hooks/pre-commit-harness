@@ -57,6 +57,8 @@ fi
 # LIGHT, QUICK, FULL — need APPROVED verdict
 HARNESS_DIR=".harness"
 APPROVED=false
+APPROVED_FEATURE=""
+SCORE_THRESHOLD=95
 
 if [[ -d "$HARNESS_DIR/reviews" ]]; then
     while IFS= read -r -d '' verdict_file; do
@@ -69,6 +71,7 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                     file_age=$(( now_epoch - file_epoch ))
                     if [[ $file_age -lt 1800 ]]; then
                         APPROVED=true
+                        APPROVED_FEATURE=$(sed -n '2p' "$verdict_file" 2>/dev/null || echo "")
                         break
                     fi
                 fi
@@ -89,4 +92,28 @@ if [[ "$APPROVED" != "true" ]]; then
     echo ""
     echo "==========================================================="
     exit 1
+fi
+
+# Score gate: APPROVED verdict alone is not enough — pipeline score must meet threshold
+if [[ -n "$APPROVED_FEATURE" ]]; then
+    report_file="$HARNESS_DIR/reports/$APPROVED_FEATURE/pipeline_report.md"
+    if [[ -f "$report_file" ]]; then
+        # Extract TOTAL score: **49** from the markdown table
+        score=$(grep -oE '\*\*[0-9]+\*\*' "$report_file" | head -1 | tr -d '*' || echo "0")
+        if [[ -n "$score" && "$score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
+            echo ""
+            echo "==========================================================="
+            echo "  BLOCKED: Pipeline score ${score}/100 below ${SCORE_THRESHOLD} threshold"
+            echo "==========================================================="
+            echo ""
+            echo "  Feature: $APPROVED_FEATURE"
+            echo "  Review:  $report_file"
+            echo ""
+            echo "  Fix issues and re-run the harness pipeline, or"
+            echo "  bypass: HARNESS_SKIP=1 git commit -m \"...\""
+            echo ""
+            echo "==========================================================="
+            exit 1
+        fi
+    fi
 fi

@@ -1569,15 +1569,24 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     finalize_progress
                     local report_path
                     report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || echo "")
+                    local score="0"
+                    local pipeline_grade="PIPELINE_FAILED"
                     if [[ -n "$report_path" ]]; then
                         log "Pipeline report: $report_path"
-                        # Score threshold warning
-                        local score
                         score=$(grep -oE '\*\*([0-9]+)\*\*' "$report_path" 2>/dev/null | head -1 | tr -d '*' || echo "0")
-                        if [[ -n "$score" && "$score" -lt 95 ]] 2>/dev/null; then
-                            log "WARNING: Score ${score}/100 below 95 threshold. Review recommended."
+                        if [[ -n "$score" && "$score" -ge 95 ]] 2>/dev/null; then
+                            pipeline_grade="PIPELINE_PASSED"
+                        elif [[ -n "$score" && "$score" -ge 70 ]] 2>/dev/null; then
+                            pipeline_grade="PIPELINE_ACCEPTABLE"
+                            log "WARNING: Score ${score}/100 — ACCEPTABLE but below 95. Pre-commit hook will block."
+                        else
+                            pipeline_grade="PIPELINE_FAILED"
+                            log "WARNING: Score ${score}/100 — FAILED. Pre-commit hook will block."
                         fi
                     fi
+                    # Append score + grade to verdict file for hook consumption
+                    echo "$score" >> "$REVIEW_DIR/verdict"
+                    echo "$pipeline_grade" >> "$REVIEW_DIR/verdict"
 
                     echo ""
                     echo "============================================"

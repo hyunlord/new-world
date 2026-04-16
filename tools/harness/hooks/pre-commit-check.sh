@@ -48,8 +48,11 @@ if [[ "$NEEDS_APPROVAL" != "true" ]]; then
     exit 0
 fi
 
-# Check for valid verdict (within last hour)
+# Check for valid verdict (within last hour) + score threshold
 HARNESS_DIR=".harness"
+SCORE_THRESHOLD=95
+APPROVED_FEATURE=""
+
 if [[ -d "$HARNESS_DIR/reviews" ]]; then
     while IFS= read -r -d '' verdict_file; do
         first_line=$(head -1 "$verdict_file" 2>/dev/null || echo "")
@@ -59,6 +62,18 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                 now_epoch=$(date +%s)
                 age=$(( now_epoch - file_epoch ))
                 if [[ $age -lt 3600 ]]; then
+                    APPROVED_FEATURE=$(sed -n '2p' "$verdict_file" 2>/dev/null || echo "")
+                    # Score gate: check pipeline report score
+                    if [[ -n "$APPROVED_FEATURE" ]]; then
+                        report_file="$HARNESS_DIR/reports/$APPROVED_FEATURE/pipeline_report.md"
+                        if [[ -f "$report_file" ]]; then
+                            score=$(grep -oE '\*\*[0-9]+\*\*' "$report_file" | head -1 | tr -d '*' || echo "0")
+                            if [[ -n "$score" && "$score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
+                                echo "BLOCKED: Pipeline score ${score}/100 below ${SCORE_THRESHOLD} threshold (feature: $APPROVED_FEATURE)." >&2
+                                exit 2
+                            fi
+                        fi
+                    fi
                     exit 0
                 fi
             fi
