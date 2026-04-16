@@ -858,11 +858,12 @@ run_vlm_interactive() {
         return 0
     fi
 
-    # Start Godot with interactive mode
+    # Start Godot with interactive mode (200 ticks — just enough for agents to exist;
+    # full simulation already ran in run_visual_verify)
     log "Starting Godot in interactive mode..."
     "$godot_bin" --path "$PROJECT_ROOT" \
         --script scripts/test/harness_visual_verify.gd \
-        -- --feature "$FEATURE" --ticks 2000 --interactive \
+        -- --feature "$FEATURE" --ticks 200 --interactive \
         2>&1 | tee "$evidence_dir/godot_interactive_output.txt" &
     local godot_pid=$!
 
@@ -873,10 +874,8 @@ run_vlm_interactive() {
     while [[ $retries -lt 600 ]]; do
         if python3 -c "
 import socket, sys
-s = socket.socket()
-s.settimeout(0.5)
 try:
-    s.connect(('127.0.0.1', 9223))
+    s = socket.create_connection(('localhost', 9223), timeout=0.5)
     s.close()
     sys.exit(0)
 except:
