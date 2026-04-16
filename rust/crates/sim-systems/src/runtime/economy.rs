@@ -1583,6 +1583,13 @@ impl SimSystem for GatheringRuntimeSystem {
             return;
         }
 
+        // Collect XP awards during gathering. Applied in a separate ECS pass
+        // after the main query to preserve the original entity iteration order
+        // (adding &mut Skills to the query would change archetype iteration,
+        // which cascades through shared resource consumption and RNG state).
+        let mut xp_awards: Vec<(Entity, &'static str, f64)> = Vec::new();
+
+        {
         let mut query = world.query::<(&Behavior, &Position, Option<&Age>, Option<&Identity>)>();
         for (entity, (behavior, position, age_opt, identity_opt)) in &mut query {
             if let Some(age) = age_opt {
@@ -1621,6 +1628,22 @@ impl SimSystem for GatheringRuntimeSystem {
                 continue;
             }
 
+            // skill_xp_mul: world-rules multiplier for skill XP gain.
+            // Default 1.0 (no change). 0.0 disables all skill XP gain.
+            // Collected here, applied in a separate pass below.
+            {
+                let (skill_id, base_xp) = match behavior.current_action {
+                    ActionType::Forage => ("SKILL_FORAGING", config::SKILL_XP_FORAGING),
+                    ActionType::GatherHerbs => ("SKILL_FORAGING", config::SKILL_XP_HERB_GATHER),
+                    ActionType::GatherWood => ("SKILL_WOODCUTTING", config::SKILL_XP_WOODCUTTING),
+                    ActionType::GatherStone => ("SKILL_MINING", config::SKILL_XP_MINING),
+                    _ => ("", 0.0),
+                };
+                if !skill_id.is_empty() {
+                    xp_awards.push((entity, skill_id, base_xp * resources.skill_xp_mul));
+                }
+            }
+
             if let Some(settlement_id) = identity_opt.and_then(|identity| identity.settlement_id) {
                 if let Some(settlement) = resources.settlements.get_mut(&settlement_id) {
                     let gathered_f64 = harvested as f64;
@@ -1652,6 +1675,14 @@ impl SimSystem for GatheringRuntimeSystem {
                     resource: resource_name.to_string(),
                     amount: harvested as f64,
                 });
+        }
+        } // drop query, release world borrow
+
+        // Apply gathered skill XP in a separate pass.
+        for (entity, skill_id, xp) in xp_awards {
+            if let Ok(mut skills) = world.get::<&mut Skills>(entity) {
+                skills.add_xp(skill_id, xp);
+            }
         }
     }
 }
@@ -1783,8 +1814,13 @@ impl SimSystem for ConstructionRuntimeSystem {
                 (*building_id, f64::from(building.construction_progress))
             })
             .collect();
+        // Collect construction XP awards (applied in a separate pass
+        // to preserve the original query iteration order).
+        let mut construction_xp_awards: Vec<Entity> = Vec::new();
+
+        {
         let mut query = world.query::<(&Behavior, &Position, Option<&Age>, Option<&Skills>)>();
-        for (_, (behavior, position, age_opt, skills_opt)) in &mut query {
+        for (entity, (behavior, position, age_opt, skills_opt)) in &mut query {
             if behavior.current_action != ActionType::Build {
                 continue;
             }
@@ -1845,6 +1881,8 @@ impl SimSystem for ConstructionRuntimeSystem {
 
             building.construction_progress =
                 (building.construction_progress + progress_per_tick).min(1.0);
+            // Collect entity for construction XP award (applied after query).
+            construction_xp_awards.push(entity);
             if building.construction_progress < 1.0 || building.is_complete {
                 continue;
             }
@@ -1858,6 +1896,17 @@ impl SimSystem for ConstructionRuntimeSystem {
                     building_type: building.building_type.clone(),
                 });
         }
+        } // drop query, release world borrow
+
+        // Apply construction skill XP in a separate pass.
+        // skill_xp_mul: world-rules multiplier for skill XP gain.
+        let construction_xp = config::SKILL_XP_CONSTRUCTION * resources.skill_xp_mul;
+        for entity in construction_xp_awards {
+            if let Ok(mut skills) = world.get::<&mut Skills>(entity) {
+                skills.add_xp("SKILL_CONSTRUCTION", construction_xp);
+            }
+        }
+
         refresh_construction_diagnostics(resources, tick, &progress_before);
     }
 }

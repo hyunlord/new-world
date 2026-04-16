@@ -134,7 +134,7 @@ impl SimSystem for IntelligenceRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, _resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
         // Clean up baselines for despawned entities to prevent memory leak
         self.potential_baselines
             .retain(|&entity, _| world.contains(entity));
@@ -235,6 +235,11 @@ impl SimSystem for IntelligenceRuntimeSystem {
                 config::INTEL_ACTIVITY_BUFFER as f32,
                 config::INTEL_INACTIVITY_ACCEL as f32,
             );
+            // skill_xp_mul: world-rules multiplier scaling cognitive development
+            // from skill activity. Higher skill_xp_mul → faster learning →
+            // enhanced intelligence realization. Default 1.0 (no change).
+            let skill_xp_mod = resources.skill_xp_mul as f32;
+            let activity_mod = activity_mod * skill_xp_mod.clamp(0.01, 10.0);
             let ace_fluid_mult = body::cognition_ace_fluid_decline_mult(
                 intelligence.ace_penalty as f32,
                 config::INTEL_ACE_PENALTY_MINOR as f32,

@@ -194,9 +194,12 @@ impl SimSystem for InfluenceSteeringSystem {
 
                 let (force_x, force_y) =
                     clamp_magnitude(force_x, force_y, config::STEERING_MAX_FORCE);
+                // move_speed_mul: world-rules multiplier for agent movement speed.
+                // Clamped to [0.1, 5.0] at apply_world_rules; default 1.0.
                 let speed_px = params.base_speed
                     * params.mood_speed_multiplier
                     * params.stress_speed_multiplier
+                    * resources.move_speed_mul
                     * (1.0
                         + resources
                             .rng
