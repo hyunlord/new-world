@@ -867,8 +867,10 @@ run_vlm_interactive() {
     local godot_pid=$!
 
     # Wait for TCP server to start (poll port 9223)
+    # Godot runs --ticks N simulation BEFORE starting the TCP server,
+    # so we need to wait long enough (2000 ticks × ~80ms = ~160s + startup).
     local retries=0
-    while [[ $retries -lt 20 ]]; do
+    while [[ $retries -lt 600 ]]; do
         if python3 -c "
 import socket, sys
 s = socket.socket()
@@ -884,9 +886,12 @@ except:
         fi
         sleep 0.5
         retries=$((retries + 1))
+        if [[ $((retries % 60)) -eq 0 ]]; then
+            log "Waiting for interactive server... ${retries}s / 300s"
+        fi
     done
 
-    if [[ $retries -ge 20 ]]; then
+    if [[ $retries -ge 600 ]]; then
         log "WARNING: Godot interactive server did not start — skipping"
         kill "$godot_pid" 2>/dev/null
         wait "$godot_pid" 2>/dev/null
