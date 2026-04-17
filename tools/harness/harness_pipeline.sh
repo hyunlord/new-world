@@ -861,10 +861,11 @@ run_vlm_interactive() {
     # Start Godot with interactive mode (200 ticks — just enough for agents to exist;
     # full simulation already ran in run_visual_verify)
     log "Starting Godot in interactive mode..."
-    "$godot_bin" --path "$PROJECT_ROOT" \
+    # Subshell suppresses SIGPIPE/SIGTERM exit from breaking set -eo pipefail
+    ( "$godot_bin" --path "$PROJECT_ROOT" \
         --script scripts/test/harness_visual_verify.gd \
         -- --feature "$FEATURE" --ticks 200 --interactive \
-        2>&1 | tee "$evidence_dir/godot_interactive_output.txt" &
+        2>&1 | tee "$evidence_dir/godot_interactive_output.txt" || true ) &
     local godot_pid=$!
 
     # Wait for TCP server to start (poll port 9223)
