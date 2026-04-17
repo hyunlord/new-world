@@ -872,21 +872,17 @@ run_vlm_interactive() {
     # so we need to wait long enough (2000 ticks × ~80ms = ~160s + startup).
     local retries=0
     while [[ $retries -lt 600 ]]; do
-        if python3 -c "
-import socket, sys
-try:
-    s = socket.create_connection(('localhost', 9223), timeout=0.5)
-    s.close()
-    sys.exit(0)
-except:
-    sys.exit(1)
-" 2>/dev/null; then
+        if nc -z localhost 9223 2>/dev/null; then
+            log "Interactive server detected on port 9223 (retry $retries)"
             break
         fi
         sleep 0.5
         retries=$((retries + 1))
         if [[ $((retries % 60)) -eq 0 ]]; then
-            log "Waiting for interactive server... ${retries}s / 300s"
+            # Log port state for debugging
+            local port_state
+            port_state=$(lsof -i :9223 -sTCP:LISTEN 2>/dev/null | tail -1 || echo "none")
+            log "Waiting for interactive server... $((retries / 2))s elapsed (port: $port_state)"
         fi
     done
 
