@@ -6,14 +6,12 @@
 ## Session Startup (run FIRST before any work)
 
 ```bash
-# Auto-install harness pre-commit hook if missing
-GIT_DIR=$(git rev-parse --git-common-dir 2>/dev/null || git rev-parse --git-dir)
-if [[ ! -f "$GIT_DIR/hooks/pre-commit" ]] || ! grep -q "harness approval" "$GIT_DIR/hooks/pre-commit" 2>/dev/null; then
-    cp hooks/pre-commit-harness "$GIT_DIR/hooks/pre-commit"
-    chmod +x "$GIT_DIR/hooks/pre-commit"
-    echo "[startup] Harness pre-commit hook installed"
-fi
+# Auto-install harness hooks (pre-commit + post-commit) if missing
+bash tools/harness/install_hooks.sh 2>/dev/null || true
 ```
+
+**Post-commit hook**: Every commit outputs a verification summary (bypass method + pipeline score).
+Show this output to the user as-is — do not summarize or hide it.
 
 ---
 
@@ -442,10 +440,19 @@ HARNESS_SKIP=1 git commit -m "..."
 
 The pre-commit hook blocks commits containing code/asset files without an APPROVED verdict.
 
-**Exempt from pipeline** (commit normally):
+**Exempt from pipeline** (commit normally with `HARNESS_SKIP=1`):
 - Documentation only (.md, .txt)
-- Localization JSON (localization/*.json)
 - Harness infrastructure itself (tools/harness/*, .claude/skills/worldsim-harness/*)
+
+**Requires pipeline** (even though non-code):
+- Localization source files (localization/fluent/*, localization/ko/*, localization/en/*)
+- Localization compiled files (localization/compiled/*)
+- Localization registry (localization/key_registry.json)
+- All game data (.ron, .json in data/, sim-data/)
+- Any file that affects runtime behavior
+
+**Rule: harness exemption = `tools/harness/` and `.claude/` files ONLY.
+Everything under `localization/`, `rust/`, `scripts/`, `data/` requires pipeline.**
 
 See `tools/harness/README.md` for details.
 See `.claude/skills/worldsim-harness/SKILL.md` for mode selection guide.

@@ -858,35 +858,36 @@ run_vlm_interactive() {
         return 0
     fi
 
-    # Start Godot with interactive mode
+    # Start Godot with interactive mode (200 ticks — just enough for agents to exist;
+    # full simulation already ran in run_visual_verify)
     log "Starting Godot in interactive mode..."
-    "$godot_bin" --path "$PROJECT_ROOT" \
+    # Subshell suppresses SIGPIPE/SIGTERM exit from breaking set -eo pipefail
+    ( "$godot_bin" --path "$PROJECT_ROOT" \
         --script scripts/test/harness_visual_verify.gd \
-        -- --feature "$FEATURE" --ticks 2000 --interactive \
-        2>&1 | tee "$evidence_dir/godot_interactive_output.txt" &
+        -- --feature "$FEATURE" --ticks 200 --interactive \
+        2>&1 | tee "$evidence_dir/godot_interactive_output.txt" || true ) &
     local godot_pid=$!
 
     # Wait for TCP server to start (poll port 9223)
+    # Godot runs --ticks N simulation BEFORE starting the TCP server,
+    # so we need to wait long enough (2000 ticks × ~80ms = ~160s + startup).
     local retries=0
-    while [[ $retries -lt 20 ]]; do
-        if python3 -c "
-import socket, sys
-s = socket.socket()
-s.settimeout(0.5)
-try:
-    s.connect(('127.0.0.1', 9223))
-    s.close()
-    sys.exit(0)
-except:
-    sys.exit(1)
-" 2>/dev/null; then
+    while [[ $retries -lt 600 ]]; do
+        if nc -z localhost 9223 2>/dev/null; then
+            log "Interactive server detected on port 9223 (retry $retries)"
             break
         fi
         sleep 0.5
         retries=$((retries + 1))
+        if [[ $((retries % 60)) -eq 0 ]]; then
+            # Log port state for debugging
+            local port_state
+            port_state=$(lsof -i :9223 -sTCP:LISTEN 2>/dev/null | tail -1 || echo "none")
+            log "Waiting for interactive server... $((retries / 2))s elapsed (port: $port_state)"
+        fi
     done
 
-    if [[ $retries -ge 20 ]]; then
+    if [[ $retries -ge 600 ]]; then
         log "WARNING: Godot interactive server did not start — skipping"
         kill "$godot_pid" 2>/dev/null
         wait "$godot_pid" 2>/dev/null
@@ -903,9 +904,14 @@ except:
             log "WARNING: Interactive controller exited with error"
         }
 
-    # Cleanup Godot (quit command should have stopped it, but ensure)
+    # Cleanup Godot — disable errexit to prevent background signal from halting script
+    set +e
     kill "$godot_pid" 2>/dev/null
+    pkill -f "godot.*--interactive.*--feature.*$FEATURE" 2>/dev/null
+    pkill -f "godot.*--feature.*$FEATURE.*--interactive" 2>/dev/null
+    sleep 1
     wait "$godot_pid" 2>/dev/null
+    set -e
 
     if [[ -f "$evidence_dir/interactive_results.txt" ]]; then
         log "VLM Interactive results: $evidence_dir/interactive_results.txt"
@@ -1396,6 +1402,18 @@ main() {
     run_mechanical_gate
     report_step "0 Mechanical Gate" "DONE" "cargo test + clippy + FFI check"
 
+    # Step 0b: Locale Check (0-token — warns on missing locale keys)
+    local locale_out="$RESULT_DIR/locale"
+    mkdir -p "$locale_out"
+    if bash "$SCRIPT_DIR/locale_check.sh" "$locale_out" > "$locale_out/report.txt" 2>&1; then
+        report_step "0b Locale Check" "DONE" "PASS (no critical issues)"
+    else
+        local p1=$(wc -l < "$locale_out/code_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+        local p2=$(wc -l < "$locale_out/json_not_fluent.txt" 2>/dev/null | tr -d ' ' || echo 0)
+        log "WARNING: Locale check found issues (code_not_fluent=$p1, json_not_fluent=$p2)"
+        report_step "0b Locale Check" "DONE" "WARN (code_missing=$p1, json_missing=$p2)"
+    fi
+
     # ============================================================
     # LIGHT MODE — Generator + Gate + Visual Verify only (2 LLM calls)
     # ============================================================
@@ -1569,15 +1587,24 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     finalize_progress
                     local report_path
                     report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || echo "")
+                    local score="0"
+                    local pipeline_grade="PIPELINE_FAILED"
                     if [[ -n "$report_path" ]]; then
                         log "Pipeline report: $report_path"
-                        # Score threshold warning
-                        local score
                         score=$(grep -oE '\*\*([0-9]+)\*\*' "$report_path" 2>/dev/null | head -1 | tr -d '*' || echo "0")
-                        if [[ -n "$score" && "$score" -lt 95 ]] 2>/dev/null; then
-                            log "WARNING: Score ${score}/100 below 95 threshold. Review recommended."
+                        if [[ -n "$score" && "$score" -ge 95 ]] 2>/dev/null; then
+                            pipeline_grade="PIPELINE_PASSED"
+                        elif [[ -n "$score" && "$score" -ge 70 ]] 2>/dev/null; then
+                            pipeline_grade="PIPELINE_ACCEPTABLE"
+                            log "WARNING: Score ${score}/100 — ACCEPTABLE but below 95. Pre-commit hook will block."
+                        else
+                            pipeline_grade="PIPELINE_FAILED"
+                            log "WARNING: Score ${score}/100 — FAILED. Pre-commit hook will block."
                         fi
                     fi
+                    # Append score + grade to verdict file for hook consumption
+                    echo "$score" >> "$REVIEW_DIR/verdict"
+                    echo "$pipeline_grade" >> "$REVIEW_DIR/verdict"
 
                     echo ""
                     echo "============================================"
@@ -1598,6 +1625,9 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     exit 0
                     ;;
                 1)  # RE-CODE
+                    echo "RE-CODE" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     if [[ $CODE_ATTEMPT -ge $MAX_CODE_ATTEMPTS ]]; then
                         log "Max code attempts ($MAX_CODE_ATTEMPTS) reached — escalating to RE-PLAN"
                         break  # Break inner loop → re-plan
@@ -1605,10 +1635,16 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     log "Retrying Generator with Evaluator feedback (attempt $((CODE_ATTEMPT+1)))"
                     ;;
                 2)  # RE-PLAN
+                    echo "RE-PLAN" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     log "Re-planning from Step 1a"
                     break  # Break inner loop → re-plan
                     ;;
                 3)  # FAIL
+                    echo "FAIL" > "$REVIEW_DIR/verdict"
+                    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+                    date +%s >> "$REVIEW_DIR/verdict"
                     finalize_progress
                     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
                     echo ""
@@ -1625,6 +1661,17 @@ Plan: $PLAN_DIR/plan_final.md"
             esac
         done
     done
+
+    # Write final verdict for report generator (last evaluator result)
+    local last_review_verdict="FATAL"
+    local last_review_file
+    last_review_file=$(ls "$REVIEW_DIR"/review_attempt*.md 2>/dev/null | tail -1)
+    if [[ -f "$last_review_file" ]]; then
+        last_review_verdict=$(sed 's/\*//g; s/_//g' "$last_review_file" | grep -i "^verdict:" | head -1 | awk '{print $2}' || echo "FATAL")
+    fi
+    echo "$last_review_verdict" > "$REVIEW_DIR/verdict"
+    echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+    date +%s >> "$REVIEW_DIR/verdict"
 
     finalize_progress
     bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true

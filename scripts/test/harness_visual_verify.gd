@@ -681,6 +681,18 @@ func _handle_interactive_command(cmd_json: String) -> String:
 		"click":
 			var x: float = float(cmd.get("x", 0))
 			var y: float = float(cmd.get("y", 0))
+			# Force the entity_renderer's binary snapshot decoder to resync
+			# against the latest SimBridge frame buffer BEFORE the click.
+			# Without this, the click handler scans interpolated positions
+			# from a prev-snapshot that can be several ticks old after a
+			# long `advance_ticks` batch (seen in Scenario 1 after
+			# `wait 200 ticks`), so the click lands outside the 3-tile
+			# detection radius even though `get_agents` returned the live
+			# ECS position.
+			if _main_node != null:
+				var click_renderer: Node2D = _main_node.get("entity_renderer") as Node2D
+				if click_renderer != null and click_renderer.has_method("_update_binary_snapshots"):
+					click_renderer.call("_update_binary_snapshots")
 			_simulate_click(x, y)
 			return JSON.stringify({"ok": true, "action": "click", "x": x, "y": y})
 
@@ -715,6 +727,126 @@ func _handle_interactive_command(cmd_json: String) -> String:
 				state["camera_pos"] = [cam.global_position.x, cam.global_position.y]
 				state["camera_zoom"] = cam.zoom.x
 			return JSON.stringify(state)
+
+		"get_agents":
+			# Returns alive agents with world + screen pixel coords.
+			#
+			# CRITICAL: this handler mirrors the entity-click code path EXACTLY.
+			# The click handler (`entity_renderer.gd:_handle_click`) locates
+			# entities by:
+			#   1. `get_canvas_transform().affine_inverse() * screen_pos`
+			#   2. scanning `_snapshot_decoder.get_interpolated_position(index,
+			#      _render_alpha)` for the nearest agent within 3 tiles.
+			# If `get_agents` reports a DIFFERENT position than the decoder
+			# holds (because it queries live ECS while the decoder holds a
+			# 1-tick-old prev snapshot), the click lands outside the 3-tile
+			# radius — Scenario 1 missed child_22 this way after a 200-tick
+			# batch. To guarantee consistency we (a) force the decoder to
+			# resync, (b) read positions from the decoder at its own alpha,
+			# and (c) project to screen with the renderer's own transform.
+			var out: Array = []
+			var renderer: Node2D = null
+			if _main_node != null:
+				renderer = _main_node.get("entity_renderer") as Node2D
+			if renderer == null:
+				return JSON.stringify({"ok": false, "error": "no entity_renderer", "agents": out})
+			if renderer.has_method("_update_binary_snapshots"):
+				renderer.call("_update_binary_snapshots")
+			var decoder: Variant = renderer.get("_snapshot_decoder")
+			if decoder == null:
+				return JSON.stringify({"ok": false, "error": "no decoder", "agents": out})
+			var agent_count: int = int(decoder.get("agent_count"))
+			if agent_count <= 0 or not bool(decoder.call("has_data")):
+				return JSON.stringify({"ok": true, "agents": out})
+			var render_alpha: float = float(renderer.get("_render_alpha"))
+			var canvas_xform: Transform2D = renderer.get_canvas_transform()
+			const TILE: float = 16.0
+			const HALF_TILE: float = 8.0
+			for index in range(agent_count):
+				var tile_pos_v: Vector2 = decoder.call("get_interpolated_position", index, render_alpha)
+				if tile_pos_v == Vector2.ZERO:
+					continue
+				var eid: int = int(decoder.call("get_entity_id", index))
+				if eid < 0:
+					continue
+				var world_x: float = tile_pos_v.x * TILE + HALF_TILE
+				var world_y: float = tile_pos_v.y * TILE + HALF_TILE
+				var screen_pos: Vector2 = canvas_xform * Vector2(world_x, world_y)
+				out.append({
+					"id": eid,
+					"world_x": world_x,
+					"world_y": world_y,
+					"screen_x": screen_pos.x,
+					"screen_y": screen_pos.y,
+				})
+			return JSON.stringify({"ok": true, "agents": out})
+
+		"get_selected_entity":
+			# Returns HUD's currently selected entity id + TCI detail.
+			var sel_id: int = -1
+			var panel_visible: bool = false
+			if _main_node != null:
+				var hud_node: Node = _main_node.get("hud") as Node
+				if hud_node != null:
+					sel_id = int(hud_node.get("_selected_entity_id"))
+					var detail_panel: Control = hud_node.get("_entity_detail_panel") as Control
+					if detail_panel != null:
+						panel_visible = detail_panel.visible
+			var detail: Dictionary = {}
+			if sel_id >= 0 and _sim_engine and _sim_engine.has_method("get_entity_detail"):
+				var raw: Variant = _sim_engine.get_entity_detail(sel_id)
+				if raw is Dictionary:
+					detail = raw
+			return JSON.stringify({
+				"ok": true,
+				"entity_id": sel_id,
+				"panel_visible": panel_visible,
+				"name": str(detail.get("name", "")),
+				"tci_ns": float(detail.get("tci_ns", -1.0)),
+				"tci_ha": float(detail.get("tci_ha", -1.0)),
+				"tci_rd": float(detail.get("tci_rd", -1.0)),
+				"tci_p": float(detail.get("tci_p", -1.0)),
+				"temperament_label_key": str(detail.get("temperament_label_key", "")),
+			})
+
+		"click_tab":
+			# Clicks the entity detail panel's tab bar at the given index.
+			var tab_index: int = int(cmd.get("tab_index", 0))
+			var clicked: bool = false
+			if _main_node != null:
+				var hud_node: Node = _main_node.get("hud") as Node
+				if hud_node != null:
+					var detail_panel: Control = hud_node.get("_entity_detail_panel") as Control
+					if detail_panel != null:
+						var tab_bar: TabBar = detail_panel.get("_tab_bar") as TabBar
+						if tab_bar != null and tab_index >= 0 and tab_index < tab_bar.tab_count:
+							tab_bar.current_tab = tab_index
+							# tab_changed signal fires on assignment; if not, fire manually
+							if tab_bar.has_signal("tab_changed"):
+								tab_bar.emit_signal("tab_changed", tab_index)
+							clicked = true
+			return JSON.stringify({"ok": clicked, "tab_index": tab_index})
+
+		"get_panel_state":
+			var panel_visible: bool = false
+			var tab_index: int = -1
+			var tab_count: int = 0
+			if _main_node != null:
+				var hud_node: Node = _main_node.get("hud") as Node
+				if hud_node != null:
+					var detail_panel: Control = hud_node.get("_entity_detail_panel") as Control
+					if detail_panel != null:
+						panel_visible = detail_panel.visible
+						var tab_bar: TabBar = detail_panel.get("_tab_bar") as TabBar
+						if tab_bar != null:
+							tab_index = tab_bar.current_tab
+							tab_count = tab_bar.tab_count
+			return JSON.stringify({
+				"ok": true,
+				"panel_visible": panel_visible,
+				"tab_index": tab_index,
+				"tab_count": tab_count,
+			})
 
 		"quit":
 			if _tcp_server:
