@@ -904,12 +904,14 @@ run_vlm_interactive() {
             log "WARNING: Interactive controller exited with error"
         }
 
-    # Cleanup Godot — $godot_pid may be tee's PID (pipeline), so also pkill Godot
+    # Cleanup Godot — disable errexit to prevent background signal from halting script
+    set +e
     kill "$godot_pid" 2>/dev/null
     pkill -f "godot.*--interactive.*--feature.*$FEATURE" 2>/dev/null
     pkill -f "godot.*--feature.*$FEATURE.*--interactive" 2>/dev/null
     sleep 1
-    wait "$godot_pid" 2>/dev/null || true
+    wait "$godot_pid" 2>/dev/null
+    set -e
 
     if [[ -f "$evidence_dir/interactive_results.txt" ]]; then
         log "VLM Interactive results: $evidence_dir/interactive_results.txt"
