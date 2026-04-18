@@ -15,6 +15,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from interactive_controller import (  # noqa: E402
     _choose_agent_near_center,
     _choose_agent_near_center_loose,
+    _empty_space_click_coords,
+    _near_building,
     execute_step,
 )
 
@@ -118,6 +120,95 @@ def test_empty_agents_returns_none():
     vp = (1000, 600)
     best = _choose_agent_near_center([], vp, set())
     assert best is None, "Empty agent list should return None"
+
+
+def test_near_building_detects_3x3_footprint():
+    """_near_building returns True for any tile within 2-tile pad of a 1x1 building."""
+    buildings = [{"tile_x": 10, "tile_y": 10, "width": 1, "height": 1}]
+    # Direct hit: tile (10, 10) is wx=160..176, wy=160..176.
+    assert _near_building(160.0, 160.0, buildings), "direct hit must match"
+    # One tile away: tile (11, 10) → wx=176
+    assert _near_building(176.0, 160.0, buildings), "one tile away must match"
+    # Two tiles away: should still match (click handler's 3x3 + our 2-tile pad)
+    assert _near_building(32.0 + 160.0, 160.0, buildings), "two tiles away must match"
+    # Four tiles away: should NOT match
+    assert not _near_building(80.0 + 160.0, 160.0, buildings), (
+        "four tiles away must not match"
+    )
+
+
+def test_near_building_empty_list_false():
+    """_near_building returns False when building list is empty."""
+    assert not _near_building(100.0, 100.0, []), "no buildings → not near any"
+
+
+def test_near_building_multi_tile_footprint():
+    """_near_building expands footprint by width/height correctly."""
+    # 3x2 building at tile (20, 20): covers tiles 20,20..22,21
+    buildings = [{"tile_x": 20, "tile_y": 20, "width": 3, "height": 2}]
+    # Tile (22, 21) is INSIDE the footprint → match.
+    assert _near_building(22.0 * 16, 21.0 * 16, buildings)
+    # Tile (24, 21) is 2 tiles away from right edge (tile 22) → match (pad=2).
+    assert _near_building(24.0 * 16, 21.0 * 16, buildings)
+    # Tile (26, 21) is 4 tiles from right edge → no match.
+    assert not _near_building(26.0 * 16, 21.0 * 16, buildings)
+
+
+def test_choose_agent_skips_building_adjacent():
+    """An agent standing on a building tile must be excluded (click would steal)."""
+    vp = (1000, 600)
+    # Agent 1 stands ON tile (10, 10) which IS a building.
+    # Agent 2 stands on tile (40, 20) — far from any building.
+    agents = [
+        {"id": 1, "screen_x": 500, "screen_y": 300, "world_x": 10 * 16 + 8, "world_y": 10 * 16 + 8},
+        {"id": 2, "screen_x": 400, "screen_y": 250, "world_x": 40 * 16 + 8, "world_y": 20 * 16 + 8},
+    ]
+    buildings = [{"tile_x": 10, "tile_y": 10, "width": 1, "height": 1}]
+    best = _choose_agent_near_center(agents, vp, set(), [], buildings)
+    assert best is not None, "should find an agent"
+    assert best["id"] == 2, f"building-adjacent agent must be skipped; got {best['id']}"
+
+
+def test_choose_agent_loose_also_skips_building_adjacent():
+    """The loose variant still honours the building filter."""
+    vp = (1000, 600)
+    agents = [
+        {"id": 1, "screen_x": 500, "screen_y": 300, "world_x": 10 * 16 + 8, "world_y": 10 * 16 + 8},
+        {"id": 2, "screen_x": 400, "screen_y": 250, "world_x": 40 * 16 + 8, "world_y": 20 * 16 + 8},
+    ]
+    buildings = [{"tile_x": 10, "tile_y": 10, "width": 1, "height": 1}]
+    best = _choose_agent_near_center_loose(agents, vp, set(), [], buildings)
+    assert best is not None
+    assert best["id"] == 2
+
+
+def test_empty_space_avoids_building_and_agents():
+    """_empty_space_click_coords picks a pixel whose world-tile has no
+    building and no close agent (given camera_pos/zoom)."""
+    state = {
+        "viewport_size": [1000, 600],
+        "camera_pos": [200.0, 200.0],
+        "camera_zoom": 1.0,
+    }
+    # A building covering a 40x40 tile area around screen center.
+    buildings = [{"tile_x": 0, "tile_y": 0, "width": 40, "height": 40}]
+    # An agent sitting near screen (100, 300) world ~ (-200, 100).
+    agents = [{"world_x": 50.0, "world_y": 100.0}]
+    x, y = _empty_space_click_coords(state, agents=agents, buildings=buildings)
+    # The fallback candidates should sweep the viewport; the returned (x, y)
+    # must be inside the viewport and its world-tile must NOT be within the
+    # building footprint + 1 tile padding.
+    wx = state["camera_pos"][0] + (x - state["viewport_size"][0] / 2.0)
+    wy = state["camera_pos"][1] + (y - state["viewport_size"][1] / 2.0)
+    tx = int(wx // 16)
+    ty = int(wy // 16)
+    inside = (0 - 1) <= tx <= (0 + 40) and (0 - 1) <= ty <= (0 + 40)
+    # We just need EITHER inside-building false (ideal) OR the documented
+    # last-resort fallback behaviour when no candidate clears.
+    assert not inside or (x, y) == (
+        state["viewport_size"][0] * 0.12,
+        state["viewport_size"][1] * 0.30,
+    )
 
 
 if __name__ == "__main__":

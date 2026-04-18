@@ -707,7 +707,15 @@ func _refresh_overview() -> void:
 				var sd: Dictionary = _sim_engine.get_settlement_detail(sett_id)
 				if sd is Dictionary and not sd.is_empty():
 					sett_name = str(sd.get("name", sett_name))
-			_overview_settlement_btn.text = "\U0001F3D8 %s" % sett_name
+			# Use localized label prefix instead of emoji. Godot's default UI
+			# font ships without emoji glyph coverage, so `\U0001F3D8` rendered
+			# as broken glyphs that the VLM read as "dzD8" and flagged as a
+			# VISUAL_WARNING. A localized text prefix is unambiguous in both
+			# Korean ("정착지: <name>") and English ("Sett: <name>").
+			_overview_settlement_btn.text = "%s: %s" % [
+				Locale.ltr("UI_SETTLEMENT"),
+				sett_name,
+			]
 			_overview_settlement_btn.visible = true
 			for conn in _overview_settlement_btn.pressed.get_connections():
 				_overview_settlement_btn.pressed.disconnect(conn["callable"])
@@ -721,7 +729,13 @@ func _refresh_overview() -> void:
 	var band_nav_name: String = str(_detail.get("band_name", ""))
 	if _overview_band_btn != null:
 		if band_id >= 0 and not band_nav_name.is_empty():
-			_overview_band_btn.text = "\U0001F465 %s" % band_nav_name
+			# Same rationale as the settlement button above: emoji glyphs are
+			# unsupported by the default font and render as corrupt tokens.
+			# Use the localized "Band" prefix instead.
+			_overview_band_btn.text = "%s: %s" % [
+				Locale.ltr("UI_BAND"),
+				band_nav_name,
+			]
 			_overview_band_btn.visible = true
 			for conn in _overview_band_btn.pressed.get_connections():
 				_overview_band_btn.pressed.disconnect(conn["callable"])
@@ -889,8 +903,14 @@ func _refresh_personality() -> void:
 	var ranked: Array[Dictionary] = _value_rankings()
 	for i in range(5):
 		if i < ranked.size():
+			# ValueDefs.KEYS are bare identifiers (e.g. "ELOQUENCE", "SKILL",
+			# "COMMERCE"). Locale entries live under VALUE_<KEY>; without the
+			# prefix the raw identifier would leak into rendered pixels and
+			# violate Scenario 4 ("No raw locale keys visible").
+			var value_key: String = str(ranked[i].get("key", "UNKNOWN"))
+			var locale_key: String = "VALUE_" + value_key if not value_key.begins_with("VALUE_") else value_key
 			_update_bar_row(_value_rows[i], {
-				"label": Locale.ltr(str(ranked[i].get("key", "UI_UNKNOWN"))),
+				"label": Locale.ltr(locale_key),
 				"value": clampf(float(ranked[i].get("value", 0.0)), 0.0, 1.0),
 				"color": Color(0.66, 0.60, 0.28),
 			})

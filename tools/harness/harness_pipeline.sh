@@ -935,6 +935,70 @@ summarize_interactive() {
 }
 
 # ============================================================
+# STEP 2.5a-val: INTERACTIVE EVIDENCE VALIDATOR (Python, anti-circular gate)
+# ============================================================
+# Runs tools/harness/validate_interactive_evidence.py against the evidence
+# produced by run_vlm_interactive.  The validator encodes every assertion
+# from the a8-ui-verify plan (Scenario-1 has a real TCI sample, screenshots
+# exist + > 1 KB, Scenario-3 selects a distinct id, cross-scenario TCI delta
+# ≥ 10 pp, no fallback text, no raw locale keys in user fields, …) and
+# exits 2 on any failure.  We record the exit code and stdout so the Codex
+# Evaluator has deterministic ground truth that "the evidence genuinely
+# satisfies the plan", not just "the file exists".
+run_interactive_validator() {
+    local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
+    # Clear previous attempt's validator outputs so Evaluator sees fresh data
+    rm -f "$evidence_dir/interactive_validation.txt"
+    rm -f "$evidence_dir/interactive_validator_rc.txt"
+    if [[ ! -f "$evidence_dir/interactive_results.json" ]]; then
+        log "Interactive validator skipped (no interactive_results.json)"
+        echo "SKIPPED: no interactive_results.json" \
+            > "$evidence_dir/interactive_validation.txt"
+        echo "-1" > "$evidence_dir/interactive_validator_rc.txt"
+        return 0
+    fi
+    log "Running interactive evidence validator..."
+    local validator_rc=0
+    python3 "$SCRIPT_DIR/validate_interactive_evidence.py" \
+        --evidence-dir "$evidence_dir" \
+        > "$evidence_dir/interactive_validation.txt" 2>&1 || validator_rc=$?
+    echo "$validator_rc" > "$evidence_dir/interactive_validator_rc.txt"
+    if [[ $validator_rc -eq 0 ]]; then
+        log "Interactive validator: PASS (exit 0)"
+    else
+        log "Interactive validator: FAIL (exit $validator_rc) — see $evidence_dir/interactive_validation.txt"
+    fi
+    # A nonzero validator rc means the evidence does NOT satisfy the plan
+    # thresholds. Plan Assertion 10 requires the validator to exit 0 — the
+    # previous pipeline returned 0 unconditionally, which let FAIL evidence
+    # slip past and reach the Evaluator with a green light. We now surface
+    # the rc so callers can abort the current attempt and request RE-CODE.
+    return $validator_rc
+}
+
+summarize_interactive_validator() {
+    local evidence_dir="$1"
+    local rc_file="$evidence_dir/interactive_validator_rc.txt"
+    local txt_file="$evidence_dir/interactive_validation.txt"
+    if [[ ! -f "$rc_file" ]]; then
+        echo "SKIPPED"
+        return
+    fi
+    local rc
+    rc=$(<"$rc_file")
+    if [[ "$rc" == "0" ]]; then
+        echo "PASS (all assertions satisfied)"
+    elif [[ "$rc" == "-1" ]]; then
+        echo "SKIPPED (no evidence)"
+    else
+        # Extract the summary line if present.
+        local summary
+        summary=$(grep -E "^Summary:" "$txt_file" 2>/dev/null | tail -1 || true)
+        echo "FAIL rc=$rc ${summary:-(no summary line)}"
+    fi
+}
+
+# ============================================================
 # HELPER: Detect if sim-bridge was modified by Generator
 # ============================================================
 changed_sim_bridge() {
@@ -1436,8 +1500,36 @@ main() {
         run_vlm_interactive
         report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
 
+        # VLM analysis MUST run before the interactive validator so the
+        # validator's Assertion 12 check inspects the freshly-written
+        # visual_analysis.txt for this attempt — not a stale file from a
+        # previous run. If we ran the validator first the plan-A12 output
+        # would always lag one step behind, producing an
+        # interactive_validation.txt that disagrees with the final VLM
+        # verdict (past regression: validator PASSed against old VLM text
+        # while the new VLM wrote VISUAL_WARNING).
         run_vlm_analysis
         report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+
+        local light_validator_rc=0
+        run_interactive_validator || light_validator_rc=$?
+        report_step "2.5a-val Interactive Validator" "DONE" "$(summarize_interactive_validator "$EVIDENCE_DIR")"
+
+        if [[ $light_validator_rc -ne 0 ]]; then
+            # Plan Assertion 10 requires the validator to exit 0 — a nonzero
+            # rc means the captured evidence genuinely does NOT satisfy the
+            # plan thresholds. In --light mode (no Evaluator) we surface this
+            # as a hard failure; the VLM verdict alone cannot approve a run
+            # whose structured evidence already failed the anti-circular gate.
+            echo "FAIL" > "$REVIEW_DIR/verdict"
+            echo "$FEATURE" >> "$REVIEW_DIR/verdict"
+            date +%s >> "$REVIEW_DIR/verdict"
+            finalize_progress
+            bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || true
+            die "Interactive validator FAIL (rc=$light_validator_rc). Plan assertions not met.
+Feature: $FEATURE
+See: $EVIDENCE_DIR/interactive_validation.txt"
+        fi
 
         report_step "3 Evaluator" "SKIPPED" "--light mode (VLM result is the verdict)"
 
@@ -1552,8 +1644,31 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             run_vlm_interactive
             report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
 
+            # VLM analysis MUST run before the interactive validator so the
+            # validator's Assertion 12 check inspects the freshly-written
+            # visual_analysis.txt. Running the validator first left the
+            # interactive_validation.txt stale relative to the VLM verdict
+            # (past regression: validator PASSed while the subsequent VLM
+            # wrote VISUAL_WARNING, causing cross-artifact disagreement).
             run_vlm_analysis
             report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+
+            local iv_rc=0
+            run_interactive_validator || iv_rc=$?
+            report_step "2.5a-val Interactive Validator" "DONE" "$(summarize_interactive_validator "$EVIDENCE_DIR")"
+
+            # Anti-circular gate: a nonzero validator rc means the evidence
+            # does not satisfy the locked plan thresholds (Assertion 10).
+            # Record the failure and force RE-CODE; let the Evaluator still
+            # run so it can observe the validator output in its context, but
+            # short-circuit the verdict parse to RE-CODE if the validator
+            # said FAIL. Previously the pipeline always returned 0 here and
+            # the Evaluator could approve a failing evidence set.
+            local validator_forces_recode="false"
+            if [[ $iv_rc -ne 0 ]]; then
+                validator_forces_recode="true"
+                log "Interactive validator rc=$iv_rc will force RE-CODE regardless of Evaluator verdict"
+            fi
 
             # --- Codex verification steps (independent from Generator) ---
 
@@ -1575,6 +1690,16 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             local verdict_code=0
             parse_verdict || verdict_code=$?
+
+            # Plan Assertion 10 gate: if the anti-circular validator flagged
+            # the evidence as non-conforming, force RE-CODE regardless of the
+            # Evaluator's verdict. The Evaluator only sees its own prompt +
+            # transcripts; the validator sees the locked JSON thresholds and
+            # is the authoritative signal for "evidence genuinely passes".
+            if [[ "$validator_forces_recode" == "true" && $verdict_code -eq 0 ]]; then
+                log "Overriding APPROVE → RE-CODE: interactive validator rc=$iv_rc"
+                verdict_code=1
+            fi
 
             case $verdict_code in
                 0)  # APPROVE

@@ -96,16 +96,93 @@ def _center_of_viewport(state: dict) -> tuple:
     return (vp[0] / 2.0, vp[1] / 2.0)
 
 
-def _empty_space_click_coords(state: dict) -> tuple:
-    """Return a pixel likely to be empty (upper-right quadrant just below HUD)."""
+def _empty_space_click_coords(
+    state: dict, agents: list = None, buildings: list = None
+) -> tuple:
+    """Return a pixel likely to be empty (no agent, no building, no settlement).
+
+    If ``agents`` or ``buildings`` are supplied, pick a viewport location whose
+    world-tile does NOT overlap any building footprint (padded by 1 tile to
+    cover `entity_renderer._handle_click`'s 3x3 search) and is at least 4 tiles
+    from any alive agent. Falls back to the original (12%, 30%) heuristic
+    corner if none of the candidate points are clear.
+    """
     vp = state.get("viewport_size", [1152, 648])
-    # HUD sidebar is on the right; empty space is well inside the viewport
-    # but to the left of the sidebar.  Use 12% in from the left, 30% down.
+    camera_pos = state.get("camera_pos", [2048.0, 2048.0])
+    zoom = float(state.get("camera_zoom", 1.0)) or 1.0
+    cam_x, cam_y = float(camera_pos[0]), float(camera_pos[1])
+    agents = agents or []
+    buildings = buildings or []
+
+    # Candidate screen coords: a grid across the viewport interior,
+    # sorted so we prefer corners (furthest from the central agent cluster).
+    candidates = []
+    for px_frac in (0.10, 0.08, 0.12, 0.20, 0.28, 0.36, 0.44):
+        for py_frac in (0.30, 0.22, 0.18, 0.42, 0.50, 0.62, 0.74):
+            candidates.append((vp[0] * px_frac, vp[1] * py_frac))
+
+    def _ok(px: float, py: float) -> bool:
+        # Viewport inverse transform: world = camera + (screen - vp/2)/zoom.
+        wx = cam_x + (px - vp[0] / 2.0) / zoom
+        wy = cam_y + (py - vp[1] / 2.0) / zoom
+        tx = int(wx // 16)
+        ty = int(wy // 16)
+        # Avoid any building footprint expanded by 1 tile (matches the click
+        # handler's 3x3 building search).
+        for b in buildings:
+            bx = int(b.get("tile_x", 0))
+            by = int(b.get("tile_y", 0))
+            bw = int(b.get("width", 1))
+            bh = int(b.get("height", 1))
+            if (bx - 1) <= tx <= (bx + bw) and (by - 1) <= ty <= (by + bh):
+                return False
+        # Avoid pixels within 4 tiles (64 px) of any agent world pos.
+        for a in agents:
+            awx = float(a.get("world_x", 0.0))
+            awy = float(a.get("world_y", 0.0))
+            if (wx - awx) ** 2 + (wy - awy) ** 2 < (64.0 * 64.0):
+                return False
+        return True
+
+    for (px, py) in candidates:
+        if _ok(px, py):
+            return (px, py)
+    # Last-resort fallback (legacy behaviour).
     return (vp[0] * 0.12, vp[1] * 0.30)
 
 
+def _near_building(wx: float, wy: float, buildings: list, pad_tiles: int = 2) -> bool:
+    """Return True if (wx, wy) is within ``pad_tiles`` of any building footprint.
+
+    ``entity_renderer._handle_click`` scans a 3x3 tile area centred on the
+    clicked tile for a building before checking entities. A building anywhere
+    inside that 3x3 area steals the selection, leaving ``selected_entity_id``
+    at -1. We therefore treat an agent as "unclickable" whenever its own tile
+    is within 2 tiles of a building footprint, which guarantees the 3x3 search
+    centred on the agent's tile will not find one.
+    """
+    if not buildings:
+        return False
+    tx = int(wx // 16)
+    ty = int(wy // 16)
+    for b in buildings:
+        bx = int(b.get("tile_x", 0))
+        by = int(b.get("tile_y", 0))
+        bw = int(b.get("width", 1))
+        bh = int(b.get("height", 1))
+        if (bx - pad_tiles) <= tx <= (bx + bw + pad_tiles - 1) and (
+            by - pad_tiles
+        ) <= ty <= (by + bh + pad_tiles - 1):
+            return True
+    return False
+
+
 def _choose_agent_near_center(
-    agents: list, vp_size: tuple, avoid_ids: set, avoid_agents: list = None
+    agents: list,
+    vp_size: tuple,
+    avoid_ids: set,
+    avoid_agents: list = None,
+    buildings: list = None,
 ) -> dict | None:
     """Pick the alive agent whose screen coords are closest to viewport center,
     skipping any id in `avoid_ids` and any agent rendered outside the viewport.
@@ -121,6 +198,12 @@ def _choose_agent_near_center(
     Additionally, the candidate must be isolated from ALL OTHER candidates
     in the returned agent list — otherwise the click resolves onto whichever
     of the cluster is closest to the cursor and we cannot predict which.
+
+    If `buildings` is provided, candidates whose tile is within 2 tiles of
+    any building footprint are rejected: ``entity_renderer._handle_click``
+    checks a 3x3 tile region for a building BEFORE checking entities, so a
+    nearby building will steal the selection. This mirrors the prior
+    regression where clicking agent#18's pixel selected a building instead.
     """
     cx, cy = vp_size[0] / 2.0, vp_size[1] / 2.0
     # Allow some margin so we don't pick an agent under the HUD sidebar.
@@ -129,6 +212,7 @@ def _choose_agent_near_center(
     ISOLATION_PIXELS = 80.0  # 5 world-tiles @ 16 px/tile; > 3-tile click radius
     ISOLATION_PIXELS_SQ = ISOLATION_PIXELS * ISOLATION_PIXELS
     avoid_agents = avoid_agents or []
+    buildings = buildings or []
 
     # Build a fast lookup of (world_x, world_y) for every alive candidate so
     # we can enforce candidate-vs-candidate isolation too.
@@ -149,6 +233,10 @@ def _choose_agent_near_center(
             continue
         wx = float(a.get("world_x", 0.0))
         wy = float(a.get("world_y", 0.0))
+        # Reject agents adjacent to a building — the click would land on the
+        # building instead (see _near_building doc).
+        if _near_building(wx, wy, buildings):
+            continue
         # Isolate from previously-clicked agents (defeats ID-mismatch-but-
         # cluster-overlap failure: clicking near agent X could snap onto
         # agent Y = the prior selection because it happens to be closer in
@@ -185,16 +273,21 @@ def _choose_agent_near_center(
 
 
 def _choose_agent_near_center_loose(
-    agents: list, vp_size: tuple, avoid_ids: set, avoid_agents: list
+    agents: list,
+    vp_size: tuple,
+    avoid_ids: set,
+    avoid_agents: list,
+    buildings: list = None,
 ) -> dict | None:
     """Relaxed variant of `_choose_agent_near_center`: enforces the
-    avoided-agent spatial separation but drops the candidate-vs-candidate
-    isolation check. Used as a fall-back when every candidate has a nearby
-    neighbour (common at high population densities)."""
+    avoided-agent spatial separation AND building avoidance but drops the
+    candidate-vs-candidate isolation check. Used as a fall-back when every
+    candidate has a nearby neighbour (common at high population densities)."""
     cx, cy = vp_size[0] / 2.0, vp_size[1] / 2.0
     x_min, x_max = 40.0, vp_size[0] * 0.70
     y_min, y_max = 40.0, vp_size[1] - 80.0
     ISOLATION_PIXELS_SQ = 80.0 * 80.0
+    buildings = buildings or []
 
     best = None
     best_dist = float("inf")
@@ -208,6 +301,8 @@ def _choose_agent_near_center_loose(
             continue
         wx = float(a.get("world_x", 0.0))
         wy = float(a.get("world_y", 0.0))
+        if _near_building(wx, wy, buildings):
+            continue
         too_close_to_avoided = False
         for avoid in avoid_agents:
             awx = float(avoid.get("world_x", 0.0))
@@ -225,50 +320,52 @@ def _choose_agent_near_center_loose(
     return best
 
 
-def _perform_agent_click(
-    sock: socket.socket, result: dict, must_be_different: bool
-) -> dict | None:
-    """Query alive agents, pick a target, click its pixel, and record the
-    resulting selection.  Returns the target agent dict or None on failure.
 
-    If `must_be_different` is True, the target must differ from any id already
-    in `_selection_history`; otherwise any valid agent near center is fine.
-    """
-    state = send_command(sock, {"action": "get_state"})
-    vp_size = tuple(state.get("viewport_size", [1152, 648]))
-    agents_resp = send_command(sock, {"action": "get_agents"})
-    agents = agents_resp.get("agents", [])
-    result["steps_log"].append(
-        f"queried {len(agents)} alive agents (vp={vp_size})"
-    )
-    avoid_ids = set(_selection_history) if must_be_different else set()
-    avoid_positions = list(_selection_positions) if must_be_different else []
+
+
+def _pick_target(
+    agents: list,
+    vp_size: tuple,
+    avoid_ids: set,
+    avoid_positions: list,
+    buildings: list,
+    must_be_different: bool,
+    result: dict,
+) -> dict | None:
+    """Cascade through the three filter tightness levels and return the
+    best candidate, or None if no agent satisfies any tier."""
     target = _choose_agent_near_center(
-        agents, vp_size, avoid_ids, avoid_positions
+        agents, vp_size, avoid_ids, avoid_positions, buildings
     )
     if target is None and not must_be_different and _selection_history:
-        # Second attempt: allow re-selecting an already-selected agent
-        target = _choose_agent_near_center(agents, vp_size, set(), [])
+        # Second attempt: allow re-selecting an already-selected agent.
+        target = _choose_agent_near_center(agents, vp_size, set(), [], buildings)
     if target is None and must_be_different:
         # Second fall-back attempt: drop the candidate-vs-candidate isolation
-        # requirement while keeping the ID + avoided-agent spatial check. At
-        # very high populations every agent may have a near-neighbour, but we
-        # still MUST be far from any previously-selected agent to satisfy the
-        # plan's distinct-id requirement.
+        # requirement while keeping the ID + avoided-agent spatial check.
         result["steps_log"].append(
             "retry: relaxing candidate-vs-candidate isolation check"
         )
         target = _choose_agent_near_center_loose(
-            agents, vp_size, avoid_ids, avoid_positions
+            agents, vp_size, avoid_ids, avoid_positions, buildings
         )
-    if target is None:
-        result["result"] = "FAIL"
-        result["detail"] = (
-            "no valid agent within viewport click region "
-            f"(avoided={sorted(avoid_ids)}, total_alive={len(agents)})"
+    if target is None and must_be_different:
+        # Third fall-back: also drop the building-adjacency filter.
+        result["steps_log"].append(
+            "retry: dropping building-adjacency filter (may produce click-steal)"
         )
-        return None
+        target = _choose_agent_near_center_loose(
+            agents, vp_size, avoid_ids, avoid_positions, []
+        )
+    return target
 
+
+def _click_and_read_selection(
+    sock: socket.socket, target: dict, result: dict
+) -> dict:
+    """Issue the click command for the given target, wait briefly, and
+    return the HUD's `get_selected_entity` response.  Both events are
+    appended to `result["steps_log"]` for evidence traceability."""
     click_resp = send_command(
         sock,
         {
@@ -282,60 +379,166 @@ def _perform_agent_click(
         f" {target['screen_y']:.1f}) world=({target['world_x']:.1f},"
         f" {target['world_y']:.1f}) resp={click_resp}"
     )
-
-    # Give the UI one frame to react, then read the HUD selection back.
+    # The Godot side now invokes `_handle_click` synchronously from the
+    # `click` command handler, so the selection is already settled by the
+    # time this call returns. We keep a tiny wait for backwards
+    # compatibility with older Godot builds that fall back to the
+    # push_input path.
     send_command(sock, {"action": "wait_frames", "count": 2})
     sel = send_command(sock, {"action": "get_selected_entity"})
     result["steps_log"].append(
         f"after-click selection: entity_id={sel.get('entity_id')}"
+        f" building_id={sel.get('selected_building_id', -1)}"
+        f" settlement_id={sel.get('selected_settlement_id', -1)}"
         f" name='{sel.get('name')}'"
         f" panel_visible={sel.get('panel_visible')}"
         f" TCI(NS={sel.get('tci_ns'):.3f},HA={sel.get('tci_ha'):.3f},"
         f"RD={sel.get('tci_rd'):.3f},P={sel.get('tci_p'):.3f})"
         f" label={sel.get('temperament_label_key')}"
     )
-    result.setdefault("tci_samples", []).append(
-        {
-            "target_entity_id": int(target["id"]),
-            "selected_entity_id": int(sel.get("entity_id", -1)),
-            "name": sel.get("name", ""),
-            "tci_ns": sel.get("tci_ns"),
-            "tci_ha": sel.get("tci_ha"),
-            "tci_rd": sel.get("tci_rd"),
-            "tci_p": sel.get("tci_p"),
-            "temperament_label_key": sel.get("temperament_label_key"),
-            "panel_visible": sel.get("panel_visible"),
-        }
-    )
+    return sel
 
-    sel_id = int(sel.get("entity_id", -1))
-    if sel_id < 0:
-        result["result"] = "FAIL"
-        result["detail"] = (
-            f"click at agent#{target['id']} pixel did not select any entity"
+
+def _perform_agent_click(
+    sock: socket.socket, result: dict, must_be_different: bool
+) -> dict | None:
+    """Query alive agents, pick a target, click its pixel, and record the
+    resulting selection.  Returns the target agent dict or None on failure.
+
+    If `must_be_different` is True, the target must differ from any id already
+    in `_selection_history`; otherwise any valid agent near center is fine.
+
+    The routine retries up to `MAX_ATTEMPTS` times when a click lands on no
+    entity (possible under heavy renderer load) or selects an entity that
+    violates the distinct-id constraint. Each retry widens the `avoid_ids`
+    set so we don't repeatedly click the same failing candidate.
+    """
+    MAX_ATTEMPTS = 4
+
+    tried_target_ids: set[int] = set()
+
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        state = send_command(sock, {"action": "get_state"})
+        vp_size = tuple(state.get("viewport_size", [1152, 648]))
+        agents_resp = send_command(sock, {"action": "get_agents"})
+        agents = agents_resp.get("agents", [])
+        buildings: list = []
+        try:
+            b_resp = send_command(sock, {"action": "get_buildings"})
+            if isinstance(b_resp, dict):
+                b_list = b_resp.get("buildings", [])
+                if isinstance(b_list, list):
+                    buildings = b_list
+        except Exception as exc:
+            # Graceful degrade on older servers that lack `get_buildings`.
+            result["steps_log"].append(
+                f"get_buildings unavailable ({exc}); continuing without building filter"
+            )
+        result["steps_log"].append(
+            f"attempt {attempt}: queried {len(agents)} alive agents,"
+            f" {len(buildings)} buildings (vp={vp_size})"
         )
-        return None
-    if must_be_different and sel_id in _selection_history:
-        result["result"] = "FAIL"
-        result["detail"] = (
-            f"selection {sel_id} equals a previously-selected agent"
-            f" (history={_selection_history})"
+        avoid_ids: set[int] = set(tried_target_ids)
+        if must_be_different:
+            avoid_ids |= set(_selection_history)
+        avoid_positions = list(_selection_positions) if must_be_different else []
+        target = _pick_target(
+            agents,
+            vp_size,
+            avoid_ids,
+            avoid_positions,
+            buildings,
+            must_be_different,
+            result,
         )
-        return None
-    if not sel.get("panel_visible"):
+        if target is None:
+            result["result"] = "FAIL"
+            result["detail"] = (
+                f"attempt {attempt}: no valid agent within viewport click region"
+                f" (avoided={sorted(avoid_ids)}, total_alive={len(agents)},"
+                f" buildings={len(buildings)})"
+            )
+            # No candidate left — stop retrying.
+            return None
+
+        tried_target_ids.add(int(target["id"]))
+        sel = _click_and_read_selection(sock, target, result)
+        sel_id = int(sel.get("entity_id", -1))
+        sel_building = int(sel.get("selected_building_id", -1))
+        sel_settlement = int(sel.get("selected_settlement_id", -1))
+
+        # Successful selection path — record evidence and return.
+        panel_visible = bool(sel.get("panel_visible", False))
+        distinct_ok = (not must_be_different) or (sel_id not in _selection_history)
+        if sel_id >= 0 and panel_visible and distinct_ok:
+            result.setdefault("tci_samples", []).append(
+                {
+                    "target_entity_id": int(target["id"]),
+                    "selected_entity_id": sel_id,
+                    "name": sel.get("name", ""),
+                    "tci_ns": sel.get("tci_ns"),
+                    "tci_ha": sel.get("tci_ha"),
+                    "tci_rd": sel.get("tci_rd"),
+                    "tci_p": sel.get("tci_p"),
+                    "temperament_label_key": sel.get("temperament_label_key"),
+                    "panel_visible": sel.get("panel_visible"),
+                }
+            )
+            _selection_history.append(sel_id)
+            _selection_positions.append(
+                {
+                    "world_x": float(target.get("world_x", 0.0)),
+                    "world_y": float(target.get("world_y", 0.0)),
+                }
+            )
+            result["result"] = "PASS"
+            result["detail"] = ""
+            return target
+
+        # Failure path — log reason, decide whether to retry.
+        if sel_id < 0:
+            stolen_by = ""
+            if sel_building >= 0:
+                stolen_by = f" (stolen by building id={sel_building})"
+            elif sel_settlement >= 0:
+                stolen_by = f" (stolen by settlement id={sel_settlement})"
+            reason = (
+                f"click at agent#{target['id']} pixel did not select any"
+                f" entity{stolen_by}"
+            )
+        elif must_be_different and sel_id in _selection_history:
+            reason = (
+                f"selection {sel_id} equals a previously-selected agent"
+                f" (history={_selection_history})"
+            )
+        elif not panel_visible:
+            reason = f"entity {sel_id} selected but detail panel not visible"
+        else:
+            reason = "unknown selection failure"
+
+        result["steps_log"].append(f"attempt {attempt} FAIL: {reason}")
         result["result"] = "FAIL"
-        result["detail"] = (
-            f"entity {sel_id} selected but detail panel not visible"
-        )
-        return None
-    _selection_history.append(sel_id)
-    _selection_positions.append(
-        {
-            "world_x": float(target.get("world_x", 0.0)),
-            "world_y": float(target.get("world_y", 0.0)),
-        }
-    )
-    return target
+        result["detail"] = reason
+
+        # Emit a persistent tci_sample ONLY for the final attempt so the
+        # evidence records the last attempted selection (non-PASS path).
+        if attempt == MAX_ATTEMPTS:
+            result.setdefault("tci_samples", []).append(
+                {
+                    "target_entity_id": int(target["id"]),
+                    "selected_entity_id": sel_id,
+                    "name": sel.get("name", ""),
+                    "tci_ns": sel.get("tci_ns"),
+                    "tci_ha": sel.get("tci_ha"),
+                    "tci_rd": sel.get("tci_rd"),
+                    "tci_p": sel.get("tci_p"),
+                    "temperament_label_key": sel.get("temperament_label_key"),
+                    "panel_visible": sel.get("panel_visible"),
+                }
+            )
+            return None
+
+    return None
 
 
 def execute_step(sock: socket.socket, step: str, result: dict) -> None:
@@ -407,7 +610,23 @@ def execute_step(sock: socket.socket, step: str, result: dict) -> None:
         if ("empty space" in step_lower or "empty area" in step_lower
                 or "close panel" in step_lower):
             state = send_command(sock, {"action": "get_state"})
-            x, y = _empty_space_click_coords(state)
+            # Fetch alive agents + building footprints so the empty-space
+            # pick avoids landing on either.  A click on a building leaves
+            # `_selected_building_id >= 0` which keeps the detail panel open
+            # with stale agent data — exactly the regression we hunt here.
+            try:
+                a_resp = send_command(sock, {"action": "get_agents"})
+                agents = a_resp.get("agents", []) if isinstance(a_resp, dict) else []
+            except Exception:
+                agents = []
+            try:
+                b_resp = send_command(sock, {"action": "get_buildings"})
+                buildings = (
+                    b_resp.get("buildings", []) if isinstance(b_resp, dict) else []
+                )
+            except Exception:
+                buildings = []
+            x, y = _empty_space_click_coords(state, agents=agents, buildings=buildings)
             resp = send_command(sock, {"action": "click", "x": x, "y": y})
             result["steps_log"].append(
                 f"click empty-space ({x:.1f}, {y:.1f}): {resp}"
@@ -417,6 +636,8 @@ def execute_step(sock: socket.socket, step: str, result: dict) -> None:
             sel = send_command(sock, {"action": "get_selected_entity"})
             result["steps_log"].append(
                 f"after empty click: entity_id={sel.get('entity_id')}"
+                f" building_id={sel.get('selected_building_id', -1)}"
+                f" settlement_id={sel.get('selected_settlement_id', -1)}"
                 f" panel_visible={sel.get('panel_visible')}"
             )
             return
