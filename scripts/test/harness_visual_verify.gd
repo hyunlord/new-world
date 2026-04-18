@@ -689,11 +689,38 @@ func _handle_interactive_command(cmd_json: String) -> String:
 			# `wait 200 ticks`), so the click lands outside the 3-tile
 			# detection radius even though `get_agents` returned the live
 			# ECS position.
+			var sync_renderer: Node2D = null
 			if _main_node != null:
-				var click_renderer: Node2D = _main_node.get("entity_renderer") as Node2D
-				if click_renderer != null and click_renderer.has_method("_update_binary_snapshots"):
-					click_renderer.call("_update_binary_snapshots")
-			_simulate_click(x, y)
+				sync_renderer = _main_node.get("entity_renderer") as Node2D
+				if sync_renderer != null and sync_renderer.has_method("_update_binary_snapshots"):
+					sync_renderer.call("_update_binary_snapshots")
+			# Dispatch the click synchronously by invoking `_handle_click`
+			# directly on the renderer instead of relying on the viewport's
+			# input queue. Prior regression: Scenario 3 clicked agent#0 at
+			# the projected screen pixel, then `wait_frames: 2` ADVANCED
+			# TWO SIM TICKS before `get_selected_entity` ran — the target
+			# agent moved 2 ticks worth of distance, so when the queued
+			# input was finally processed the renderer's `_handle_click`
+			# saw NO agent within its 3-tile radius and returned
+			# `selected_entity_id = -1`. A synchronous invocation avoids
+			# the queue/tick race entirely: signals emit immediately, the
+			# HUD updates, and the subsequent `get_selected_entity` query
+			# reads the true post-click state.
+			#
+			# We deliberately SKIP `_simulate_click` here: pushing an input
+			# event on top of a direct _handle_click call produces a double
+			# dispatch whose second pass triggers `is_double = true` and
+			# opens the `open_entity_detail` popup — a modal side-effect
+			# that interferes with subsequent scenario steps.
+			if sync_renderer != null and sync_renderer.has_method("_handle_click"):
+				sync_renderer.call("_handle_click", Vector2(x, y))
+			else:
+				# Fallback: legacy viewport-input path when the renderer is
+				# unavailable (test-harness smoke tests without a running
+				# scene). In this path the test-controller tolerates the
+				# missing selection feedback because `get_selected_entity`
+				# is not expected to succeed either.
+				_simulate_click(x, y)
 			return JSON.stringify({"ok": true, "action": "click", "x": x, "y": y})
 
 		"zoom":
@@ -783,12 +810,19 @@ func _handle_interactive_command(cmd_json: String) -> String:
 
 		"get_selected_entity":
 			# Returns HUD's currently selected entity id + TCI detail.
+			# Also reports `selected_building_id` / `selected_settlement_id` so
+			# the controller can detect when a click was "stolen" into a
+			# building or settlement instead of the intended agent.
 			var sel_id: int = -1
+			var sel_building: int = -1
+			var sel_settlement: int = -1
 			var panel_visible: bool = false
 			if _main_node != null:
 				var hud_node: Node = _main_node.get("hud") as Node
 				if hud_node != null:
 					sel_id = int(hud_node.get("_selected_entity_id"))
+					sel_building = int(hud_node.get("_selected_building_id"))
+					sel_settlement = int(hud_node.get("_selected_settlement_id"))
 					var detail_panel: Control = hud_node.get("_entity_detail_panel") as Control
 					if detail_panel != null:
 						panel_visible = detail_panel.visible
@@ -800,6 +834,8 @@ func _handle_interactive_command(cmd_json: String) -> String:
 			return JSON.stringify({
 				"ok": true,
 				"entity_id": sel_id,
+				"selected_building_id": sel_building,
+				"selected_settlement_id": sel_settlement,
 				"panel_visible": panel_visible,
 				"name": str(detail.get("name", "")),
 				"tci_ns": float(detail.get("tci_ns", -1.0)),
@@ -807,6 +843,45 @@ func _handle_interactive_command(cmd_json: String) -> String:
 				"tci_rd": float(detail.get("tci_rd", -1.0)),
 				"tci_p": float(detail.get("tci_p", -1.0)),
 				"temperament_label_key": str(detail.get("temperament_label_key", "")),
+			})
+
+		"get_buildings":
+			# Returns all building footprints as [{tile_x, tile_y, width, height}]
+			# so the controller can avoid clicking agents standing on or beside
+			# a building (entity_renderer._handle_click checks a 3x3 tile area
+			# around the click for buildings FIRST, so a nearby building steals
+			# the selection and leaves `selected_entity_id = -1`).
+			#
+			# Also returns settlement centers so the controller can avoid the
+			# settlement-priority click zone that fires at zoom >= Z3.
+			var buildings_out: Array = []
+			var settlements_out: Array = []
+			if _sim_engine != null and _sim_engine.has_method("get_minimap_snapshot"):
+				var snap: Dictionary = _sim_engine.get_minimap_snapshot()
+				var b_list: Variant = snap.get("buildings", [])
+				if b_list is Array:
+					for b in b_list:
+						if b is Dictionary:
+							buildings_out.append({
+								"id": int(b.get("id", -1)),
+								"tile_x": int(b.get("tile_x", 0)),
+								"tile_y": int(b.get("tile_y", 0)),
+								"width": int(b.get("width", 1)),
+								"height": int(b.get("height", 1)),
+							})
+				var s_list: Variant = snap.get("settlements", [])
+				if s_list is Array:
+					for s in s_list:
+						if s is Dictionary:
+							settlements_out.append({
+								"id": int(s.get("id", -1)),
+								"center_x": int(s.get("center_x", 0)),
+								"center_y": int(s.get("center_y", 0)),
+							})
+			return JSON.stringify({
+				"ok": true,
+				"buildings": buildings_out,
+				"settlements": settlements_out,
 			})
 
 		"click_tab":
