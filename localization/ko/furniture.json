@@ -3,5 +3,7 @@
   "FURN_LEAN_TO": "임시 쉼터",
   "FURN_STORAGE_PIT": "저장 구덩이",
   "FURN_WORKBENCH": "작업대",
-  "FURN_DRYING_RACK": "건조대"
+  "FURN_DRYING_RACK": "건조대",
+  "FURN_TOTEM": "토템",
+  "FURN_HEARTH": "화덕"
 }

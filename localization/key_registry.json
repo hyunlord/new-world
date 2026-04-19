@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4977,
-  "key_count": 4978,
+  "active_key_count": 4983,
+  "key_count": 4983,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -325,7 +325,9 @@
     "BUILDING_STATE_STALLED": 4579,
     "BUILDING_STOCKPILE": 177,
     "BUILDING_STOCKPILE_DESC": 178,
+    "BUILDING_TYPE_CAIRN": 4978,
     "BUILDING_TYPE_CAMPFIRE": 179,
+    "BUILDING_TYPE_GATHERING_MARKER": 4979,
     "BUILDING_TYPE_SHELTER": 180,
     "BUILDING_TYPE_STOCKPILE": 181,
     "CAUSE_HUNGER_DECAY": 4869,
@@ -1184,8 +1186,10 @@
     "FAMILY_GENERATION_FMT": 4821,
     "FURN_DRYING_RACK": 4906,
     "FURN_FIRE_PIT": 4907,
+    "FURN_HEARTH": 4980,
     "FURN_LEAN_TO": 4908,
     "FURN_STORAGE_PIT": 4909,
+    "FURN_TOTEM": 4981,
     "FURN_WORKBENCH": 4910,
     "GAS_STAGE_ALARM": 984,
     "GAS_STAGE_EXHAUSTION": 985,
@@ -1672,6 +1676,7 @@
     "RESOURCE_WOOD": 1313,
     "ROOM_ROLE_CRAFTING": 4961,
     "ROOM_ROLE_HEARTH": 4962,
+    "ROOM_ROLE_RITUAL": 4982,
     "ROOM_ROLE_SHELTER": 4963,
     "ROOM_ROLE_STORAGE": 4964,
     "ROOM_ROLE_UNKNOWN": 4965,
@@ -9959,11 +9964,14 @@
     "UI_ROOM_ROLE",
     "UI_TILE_INFO",
     "UI_WALL",
-    "UI_WALL_HP"
+    "UI_WALL_HP",
+    "BUILDING_TYPE_CAIRN",
+    "BUILDING_TYPE_GATHERING_MARKER",
+    "FURN_HEARTH",
+    "FURN_TOTEM",
+    "ROOM_ROLE_RITUAL"
   ],
-  "removed_key_count": 1,
-  "removed_keys": [
-    "STATUS_"
-  ],
+  "removed_key_count": 0,
+  "removed_keys": [],
   "version": 1
 }

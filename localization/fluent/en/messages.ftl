@@ -4965,6 +4965,7 @@ RECIPE_STONE_AXE = Stone Axe
 RECIPE_STONE_KNIFE = Stone Knife
 ROOM_ROLE_CRAFTING = Crafting
 ROOM_ROLE_HEARTH = Hearth
+ROOM_ROLE_RITUAL = Ritual
 ROOM_ROLE_SHELTER = Shelter
 ROOM_ROLE_STORAGE = Storage
 ROOM_ROLE_UNKNOWN = Unknown
@@ -4980,3 +4981,11 @@ UI_ROOM_ROLE = Role
 UI_TILE_INFO = Tile Info
 UI_WALL = Wall
 UI_WALL_HP = Durability
+
+BUILDING_TYPE_CAIRN = Cairn
+BUILDING_TYPE_GATHERING_MARKER = Gathering Spot
+FURN_TOTEM = Totem
+FURN_HEARTH = Hearth
+
+# --- auto-synced from JSON (1 keys) ---
+STATUS_ = Idle

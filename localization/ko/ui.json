@@ -2318,5 +2318,6 @@
   "ROOM_ROLE_SHELTER": "거처",
   "ROOM_ROLE_HEARTH": "화로방",
   "ROOM_ROLE_STORAGE": "저장소",
-  "ROOM_ROLE_CRAFTING": "공방"
+  "ROOM_ROLE_CRAFTING": "공방",
+  "ROOM_ROLE_RITUAL": "제의"
 }
