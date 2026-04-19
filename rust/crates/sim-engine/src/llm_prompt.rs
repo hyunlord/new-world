@@ -33,8 +33,8 @@ pub struct LlmPromptContext {
     pub personality_axes: [f64; 6],
     /// Current Plutchik primary emotion values.
     pub emotions: [f64; 8],
-    /// Current 13-need values.
-    pub needs: [f64; 13],
+    /// Current 14-need values (indexed by NeedType; includes Comfort at 13).
+    pub needs: [f64; 14],
     /// Current personal values.
     pub values: [f64; 33],
     /// Current stress level.
@@ -173,7 +173,7 @@ struct HexacoDescriptorTable {
     O: AxisDescriptorSet,
 }
 
-const NEED_LABELS: [&str; 13] = [
+const NEED_LABELS: [&str; 14] = [
     "배고픔",
     "목마름",
     "잠",
@@ -187,6 +187,7 @@ const NEED_LABELS: [&str; 13] = [
     "제 삶을 이룸",
     "삶의 뜻",
     "제 몸 너머의 뜻",
+    "편안함",
 ];
 
 const VALUE_LABELS: [&str; 33] = [
@@ -625,7 +626,7 @@ fn context_from_components(
             .unwrap_or_else(|| "Idle".to_string()),
         personality_axes: personality.axes,
         emotions: emotion.primary,
-        needs: [0.5; 13],
+        needs: [0.5; 14],
         values: values.values,
         stress_level: 0.0,
         stress_state: 0,
@@ -819,7 +820,7 @@ fn values_to_korean_descriptors(values: &Values) -> Vec<String> {
         .collect()
 }
 
-fn needs_to_korean_context(needs: &[f64; 13]) -> String {
+fn needs_to_korean_context(needs: &[f64; 14]) -> String {
     let mut ranked: Vec<(usize, f64)> = needs.iter().copied().enumerate().collect();
     ranked.sort_by(|left, right| left.1.total_cmp(&right.1));
     let labels: Vec<&str> = ranked
@@ -974,7 +975,7 @@ mod tests {
             personality_axes: [0.82, 0.15, 0.73, 0.48, 0.66, 0.92],
             emotions: [0.1, 0.2, 0.82, 0.1, 0.0, 0.0, 0.15, 0.32],
             needs: [
-                0.8, 0.7, 0.2, 0.6, 0.7, 0.5, 0.4, 0.3, 0.6, 0.7, 0.5, 0.2, 0.4,
+                0.8, 0.7, 0.2, 0.6, 0.7, 0.5, 0.4, 0.3, 0.6, 0.7, 0.5, 0.2, 0.4, 0.5,
             ],
             values,
             stress_level: 0.3,

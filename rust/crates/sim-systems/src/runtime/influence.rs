@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use hecs::World;
 use sim_core::components::{InfluenceEmitter, Position};
@@ -97,9 +97,84 @@ fn collect_runtime_emitters(world: &World, resources: &SimResources) -> Vec<Emit
     let mut emitters = Vec::new();
     collect_map_emitters(resources, &mut emitters);
     collect_building_emitters(resources, &mut emitters);
+    collect_tile_grid_furniture_emitters(resources, &mut emitters);
     collect_component_emitters(world, &mut emitters);
     collect_settlement_authority_emitters(resources, &mut emitters);
     emitters
+}
+
+/// Collects influence emissions from furniture placed directly on the tile
+/// grid (e.g. a totem stamped by a fixture or a PlaceFurniture action).
+///
+/// This is the production path for furniture whose presence lives as a
+/// `Tile::furniture_id` entry rather than as a completed `Building`. Each
+/// entry queries the authoritative RON registry via
+/// `DataRegistry::furniture_influence_emissions` so RON is the single source
+/// of truth for channel/radius/intensity. Without the registry attached, no
+/// emissions are produced.
+///
+/// Tiles already covered by a completed building whose type maps to the same
+/// furniture id (e.g. campfire→fire_pit, stockpile→storage_pit) are skipped
+/// here — those are emitted by `collect_building_emitters` to preserve
+/// pre-feature emission counts. Only "orphan" tile-grid furniture (totem,
+/// hearth placed by PlaceFurniture actions, etc.) is stamped here.
+fn collect_tile_grid_furniture_emitters(
+    resources: &SimResources,
+    emitters: &mut Vec<EmitterRecord>,
+) {
+    let Some(registry) = resources.data_registry.as_deref() else {
+        return;
+    };
+    // Index tiles already covered by a completed building whose type maps
+    // to a furniture id via `furniture_registry_id`. Those are authoritative
+    // through `collect_building_emitters`; including them here would
+    // double-stamp and change baseline emission totals.
+    let building_furniture_tiles: std::collections::HashSet<(u32, u32, &'static str)> = resources
+        .buildings
+        .values()
+        .filter(|building| {
+            building.is_complete && resources.map.in_bounds(building.x, building.y)
+        })
+        .filter_map(|building| {
+            let furniture_id = furniture_registry_id(building.building_type.as_str())?;
+            Some((building.x as u32, building.y as u32, furniture_id))
+        })
+        .collect();
+
+    let (grid_w, grid_h) = resources.tile_grid.dimensions();
+    for y in 0..grid_h {
+        for x in 0..grid_w {
+            let tile = resources.tile_grid.get(x, y);
+            let Some(furniture_id) = tile.furniture_id.as_deref() else {
+                continue;
+            };
+            // Resolve to a &'static str key via furniture_registry_id ids to
+            // match the building_furniture_tiles set keys; fall back to a
+            // direct comparison on the tile's String below. The set lookup
+            // is cheap and exact.
+            let covered_by_building = building_furniture_tiles
+                .iter()
+                .any(|&(bx, by, fid)| bx == x && by == y && fid == furniture_id);
+            if covered_by_building {
+                continue;
+            }
+            let Some(registry_emissions) =
+                registry.furniture_influence_emissions(furniture_id)
+            else {
+                continue;
+            };
+            if registry_emissions.is_empty() {
+                continue;
+            }
+            append_registry_emissions(
+                emitters,
+                x,
+                y,
+                registry_emissions,
+                &[furniture_id, "tile_furniture", "registry_furniture"],
+            );
+        }
+    }
 }
 
 fn collect_map_emitters(resources: &SimResources, emitters: &mut Vec<EmitterRecord>) {
@@ -882,6 +957,32 @@ pub fn assign_room_roles_from_buildings(resources: &mut SimResources) {
         }
     }
 
+    // --- Furniture-based voting ---
+    // Each furniture placed in an assigned room contributes a vote derived
+    // from its RON `role_contribution` field (authoritative). If the registry
+    // is not attached or the furniture id is unknown, the vote is skipped —
+    // there is no silent string-fallback here because the RON definitions
+    // are the single source of truth for role contributions.
+    let (grid_w, grid_h) = resources.tile_grid.dimensions();
+    let registry = resources.data_registry.as_deref();
+    for y in 0..grid_h {
+        for x in 0..grid_w {
+            let tile = resources.tile_grid.get(x, y);
+            let Some(furniture_id) = tile.furniture_id.as_deref() else {
+                continue;
+            };
+            let Some(room_id) = tile.room_id else {
+                continue;
+            };
+            let Some(role_str) =
+                registry.and_then(|r| furniture_role_vote(r, furniture_id))
+            else {
+                continue;
+            };
+            role_votes.entry(room_id).or_default().push(role_str);
+        }
+    }
+
     for room in &mut resources.rooms {
         if !room.enclosed {
             room.role = RoomRole::Unknown;
@@ -894,8 +995,39 @@ pub fn assign_room_roles_from_buildings(resources: &mut SimResources) {
     }
 }
 
+/// Resolves a furniture's room-role vote via the data registry.
+///
+/// Reads the `role_contribution` field from the authoritative FurnitureDef
+/// keyed by `furniture_id`. Returns a `&'static str` for the known roles that
+/// participate in room voting (`hearth`, `ritual`, `storage`, `crafting`).
+/// Unknown or unsupported role strings yield `None`, so RON-level role typos
+/// never silently apply.
+fn furniture_role_vote(
+    registry: &DataRegistry,
+    furniture_id: &str,
+) -> Option<&'static str> {
+    let role = registry
+        .furniture
+        .get(furniture_id)?
+        .role_contribution
+        .as_deref()?;
+    match role {
+        "hearth" => Some("hearth"),
+        "ritual" => Some("ritual"),
+        "storage" => Some("storage"),
+        "crafting" => Some("crafting"),
+        _ => None,
+    }
+}
+
 fn majority_role(votes: &[&str]) -> RoomRole {
-    let mut counts: HashMap<&str, usize> = HashMap::new();
+    // Determinism: use BTreeMap instead of HashMap so iteration order is a
+    // stable alphabetical sort over role keys. This keeps tie resolution
+    // bit-identical across runs (save/replay and seed reproducibility).
+    // HashMap-based iteration could pick different winners on ties due to
+    // non-deterministic bucket ordering — a regression that would silently
+    // break harness determinism tests.
+    let mut counts: BTreeMap<&str, usize> = BTreeMap::new();
     for &vote in votes {
         *counts.entry(vote).or_default() += 1;
     }
@@ -904,6 +1036,7 @@ fn majority_role(votes: &[&str]) -> RoomRole {
         Some("shelter") => RoomRole::Shelter,
         Some("storage") => RoomRole::Storage,
         Some("crafting") => RoomRole::Crafting,
+        Some("ritual") => RoomRole::Ritual,
         _ => RoomRole::Shelter,
     }
 }
@@ -951,7 +1084,7 @@ pub fn apply_room_effects(world: &World, resources: &mut SimResources) {
                     entity: entity_id,
                     effect: EffectPrimitive::AddStat {
                         stat: EffectStat::Safety,
-                        amount: 0.02,
+                        amount: config::ROOM_EFFECT_SHELTER_SAFETY_AMOUNT,
                     },
                     source: EffectSource {
                         system: "room_effect".to_string(),
@@ -964,11 +1097,24 @@ pub fn apply_room_effects(world: &World, resources: &mut SimResources) {
                     entity: entity_id,
                     effect: EffectPrimitive::AddStat {
                         stat: EffectStat::Warmth,
-                        amount: 0.03,
+                        amount: config::ROOM_EFFECT_HEARTH_WARMTH_AMOUNT,
                     },
                     source: EffectSource {
                         system: "room_effect".to_string(),
                         kind: "hearth_warmth".to_string(),
+                    },
+                });
+            }
+            RoomRole::Ritual => {
+                entries.push(EffectEntry {
+                    entity: entity_id,
+                    effect: EffectPrimitive::AddStat {
+                        stat: EffectStat::Comfort,
+                        amount: config::ROOM_EFFECT_RITUAL_COMFORT_AMOUNT,
+                    },
+                    source: EffectSource {
+                        system: "room_effect".to_string(),
+                        kind: "ritual_comfort".to_string(),
                     },
                 });
             }
@@ -1422,5 +1568,76 @@ mod tests {
         resources.influence_grid.tick_update();
 
         assert!(resources.influence_grid.sample(5, 5, ChannelId::Warmth) > 0.0);
+    }
+
+    #[test]
+    fn ritual_room_role_assigned_when_totem_placed() {
+        let mut resources = resources();
+
+        // Attach the authoritative registry — furniture voting now reads
+        // role_contribution from RON rather than from hardcoded id matches.
+        let registry = sim_data::DataRegistry::load_from_directory(&registry_data_path())
+            .expect("registry must load for furniture voting");
+        resources.data_registry = Some(std::sync::Arc::new(registry));
+
+        // Build 5x5 enclosed room
+        for x in 0..5u32 {
+            for y in 0..5u32 {
+                if x == 0 || x == 4 || y == 0 || y == 4 {
+                    resources.tile_grid.set_wall(x, y, "stone", 10.0);
+                } else {
+                    resources.tile_grid.set_floor(x, y, "wood");
+                }
+            }
+        }
+
+        // Place totem at (2, 2)
+        resources.tile_grid.set_furniture(2, 2, "totem");
+
+        // Detect rooms and assign ids
+        let rooms = sim_core::room::detect_rooms(&resources.tile_grid);
+        resources.rooms = rooms;
+        sim_core::room::assign_room_ids(&mut resources.tile_grid, &resources.rooms);
+
+        // Run role assignment
+        assign_room_roles_from_buildings(&mut resources);
+
+        // Verify
+        assert_eq!(resources.rooms.len(), 1, "should detect exactly 1 room");
+        assert!(resources.rooms[0].enclosed, "room should be enclosed");
+        assert_eq!(resources.rooms[0].role, RoomRole::Ritual, "room with totem should have Ritual role");
+    }
+
+    #[test]
+    fn hearth_furniture_votes_hearth_role() {
+        let mut resources = resources();
+
+        // Attach the authoritative registry — hearth voting now reads
+        // role_contribution from RON.
+        let registry = sim_data::DataRegistry::load_from_directory(&registry_data_path())
+            .expect("registry must load for furniture voting");
+        resources.data_registry = Some(std::sync::Arc::new(registry));
+
+        // Build 5x5 enclosed room
+        for x in 0..5u32 {
+            for y in 0..5u32 {
+                if x == 0 || x == 4 || y == 0 || y == 4 {
+                    resources.tile_grid.set_wall(x, y, "stone", 10.0);
+                } else {
+                    resources.tile_grid.set_floor(x, y, "wood");
+                }
+            }
+        }
+
+        // Place hearth at (2, 2)
+        resources.tile_grid.set_furniture(2, 2, "hearth");
+
+        let rooms = sim_core::room::detect_rooms(&resources.tile_grid);
+        resources.rooms = rooms;
+        sim_core::room::assign_room_ids(&mut resources.tile_grid, &resources.rooms);
+
+        assign_room_roles_from_buildings(&mut resources);
+
+        assert_eq!(resources.rooms[0].role, RoomRole::Hearth);
     }
 }

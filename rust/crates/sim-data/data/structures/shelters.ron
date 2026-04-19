@@ -11,6 +11,7 @@
         ],
         optional_components: [
             Furniture(id: "storage_pit", count: 1),
+            Furniture(id: "hearth", count: 1),
         ],
         role_recognition: Auto,
         build_ticks: 60,

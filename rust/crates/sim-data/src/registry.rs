@@ -160,11 +160,27 @@ impl DataRegistry {
         derive_stats_from_properties(&material.properties)
     }
 
-    /// Returns a wall-blocking hint derived from a material's density.
+    /// Returns a wall-blocking hint for an influence channel propagating
+    /// through a wall of this material.
+    ///
+    /// Coefficients follow the Building System architecture note in
+    /// `CLAUDE.md` (§Architecture Decisions — Building System):
+    /// - Stone walls block ~90% of incoming influence.
+    /// - Wood walls block ~50%.
+    ///
+    /// Other categories fall back to a density-derived heuristic so future
+    /// material categories get a sensible default without code changes.
+    /// The returned value is always clamped to `[0.0, 1.0]`.
     pub fn material_wall_blocking_hint(&self, material_id: &str) -> Option<f64> {
-        self.materials
-            .get(material_id)
-            .map(|material| (material.properties.density * 0.15).clamp(0.0, 1.0))
+        use crate::MaterialCategory;
+        self.materials.get(material_id).map(|material| {
+            let coefficient = match material.category {
+                MaterialCategory::Stone | MaterialCategory::Metal | MaterialCategory::Mineral => 0.9,
+                MaterialCategory::Wood => 0.5,
+                _ => (material.properties.density * 0.15).clamp(0.0, 1.0),
+            };
+            coefficient.clamp(0.0, 1.0)
+        })
     }
 
     /// Returns influence emissions configured for the given furniture id.

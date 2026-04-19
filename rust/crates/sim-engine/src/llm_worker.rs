@@ -61,8 +61,8 @@ pub struct LlmRequest {
     pub personality_axes: [f64; 6],
     /// Plutchik primary emotions.
     pub emotions: [f64; 8],
-    /// 13-need values.
-    pub needs: [f64; 13],
+    /// 14-need values (indexed by NeedType; includes Comfort at 13).
+    pub needs: [f64; 14],
     /// Personal values that shape narration tone.
     pub values: [f64; 33],
     /// Current stress level.

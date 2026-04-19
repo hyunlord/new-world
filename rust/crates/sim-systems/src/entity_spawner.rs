@@ -441,10 +441,11 @@ fn generate_intelligence(personality: &Personality, rng: &mut impl Rng) -> Intel
 // ── Needs generation ──────────────────────────────────────────────────────────
 
 fn generate_needs(rng: &mut impl Rng) -> Needs {
-    // 13 needs in NeedType enum order:
+    // 14 needs in NeedType enum order (Comfort added by sprite-infra):
     // Hunger=0, Thirst=1, Sleep=2, Warmth=3, Safety=4,
     // Belonging=5, Intimacy=6, Recognition=7,
-    // Autonomy=8, Competence=9, SelfActualization=10, Meaning=11, Transcendence=12
+    // Autonomy=8, Competence=9, SelfActualization=10, Meaning=11,
+    // Transcendence=12, Comfort=13
     let values = [
         0.7 + rng.gen::<f64>() * 0.3,   // Hunger (0)
         0.70 + rng.gen::<f64>() * 0.15, // Thirst (1)
@@ -459,6 +460,7 @@ fn generate_needs(rng: &mut impl Rng) -> Needs {
         0.50,                           // SelfActualization (10)
         0.50,                           // Meaning (11)
         0.40,                           // Transcendence (12)
+        0.60,                           // Comfort (13) — placeholder baseline
     ];
     Needs {
         values,
@@ -1086,9 +1088,13 @@ mod tests {
             "sex must be Male or Female"
         );
 
-        // Check needs has 13 values
+        // Check needs count matches NEED_COUNT (authoritative constant).
         let needs = world.get::<&Needs>(entity).expect("Needs missing");
-        assert_eq!(needs.values.len(), 13, "needs must have 13 values");
+        assert_eq!(
+            needs.values.len(),
+            sim_core::components::needs::NEED_COUNT,
+            "needs must have NEED_COUNT values"
+        );
 
         // Check age is ~15 years
         let age = world.get::<&Age>(entity).expect("Age missing");

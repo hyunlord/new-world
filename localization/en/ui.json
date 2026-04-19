@@ -2318,5 +2318,6 @@
   "ROOM_ROLE_SHELTER": "Shelter",
   "ROOM_ROLE_HEARTH": "Hearth",
   "ROOM_ROLE_STORAGE": "Storage",
-  "ROOM_ROLE_CRAFTING": "Crafting"
+  "ROOM_ROLE_CRAFTING": "Crafting",
+  "ROOM_ROLE_RITUAL": "Ritual"
 }

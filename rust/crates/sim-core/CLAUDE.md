@@ -84,7 +84,7 @@ sim-core/src/
 | Emotion | emotion.rs | intensities: [f64; 8] | emotion_system |
 | Body | body.rs | attributes (str/agi/end/...), health | mortality, combat |
 | Intelligence | intelligence.rs | gardner: [f64; 8] | learning_system |
-| Needs | needs.rs | values: [f64; 13] | needs_system |
+| Needs | needs.rs | values: [f64; 14] (NEED_COUNT) | needs_system |
 | Stress | stress.rs | level, phase, allostatic_load | stress_system |
 | Coping | coping.rs | strategies, active_coping | coping_system |
 | Values | values.rs | values: [f64; 33] | value_system |

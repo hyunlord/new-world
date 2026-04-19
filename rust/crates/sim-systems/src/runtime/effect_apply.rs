@@ -33,7 +33,8 @@ impl EffectApplySystem {
             EffectStat::Hunger => Some(NeedType::Hunger),
             EffectStat::Warmth => Some(NeedType::Warmth),
             EffectStat::Safety => Some(NeedType::Safety),
-            EffectStat::Energy | EffectStat::Comfort => None,
+            EffectStat::Comfort => Some(NeedType::Comfort),
+            EffectStat::Energy => None,
         }
     }
 
@@ -98,9 +99,6 @@ impl EffectApplySystem {
                     );
                 }
             }
-            EffectStat::Comfort => {
-                debug!("[EffectApply] skipping Comfort effect because it is diagnostic-only");
-            }
             _ => {
                 if let (Some(need), Ok(mut needs)) =
                     (Self::stat_to_need(stat), world.get::<&mut Needs>(entity))
@@ -145,9 +143,6 @@ impl EffectApplySystem {
                         factor,
                     );
                 }
-            }
-            EffectStat::Comfort => {
-                debug!("[EffectApply] skipping Comfort effect because it is diagnostic-only");
             }
             _ => {
                 if let (Some(need), Ok(mut needs)) =

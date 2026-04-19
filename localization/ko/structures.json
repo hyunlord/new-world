@@ -1,3 +1,5 @@
 {
-  "STRUCT_LEAN_TO": "임시 쉼터 구조물"
+  "STRUCT_LEAN_TO": "임시 쉼터 구조물",
+  "BUILDING_TYPE_CAIRN": "돌무덤",
+  "BUILDING_TYPE_GATHERING_MARKER": "집결지"
 }

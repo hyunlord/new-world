@@ -1,3 +1,5 @@
 {
-  "STRUCT_LEAN_TO": "Lean-To Structure"
+  "STRUCT_LEAN_TO": "Lean-To Structure",
+  "BUILDING_TYPE_CAIRN": "Cairn",
+  "BUILDING_TYPE_GATHERING_MARKER": "Gathering Spot"
 }

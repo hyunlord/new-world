@@ -165,3 +165,52 @@ fn ron_registry_reports_validation_errors_for_unknown_recipe_tags() {
         )
     }));
 }
+
+#[test]
+fn registry_loads_new_structures_and_furniture() {
+    let data_dir = crate_data_dir();
+    let registry = DataRegistry::load_from_directory(&data_dir)
+        .expect("expected registry to load with new definitions");
+
+    // Structures: cairn, gathering_marker
+    assert!(registry.structures.get("cairn").is_some(), "cairn missing");
+    assert!(registry.structures.get("gathering_marker").is_some(), "gathering_marker missing");
+
+    // Furniture: totem, hearth
+    assert!(registry.furniture.get("totem").is_some(), "totem missing");
+    assert!(registry.furniture.get("hearth").is_some(), "hearth missing");
+
+    // display_name_key format
+    assert_eq!(
+        registry.structures.get("cairn").unwrap().display_name_key,
+        "BUILDING_TYPE_CAIRN"
+    );
+    assert_eq!(
+        registry.furniture.get("totem").unwrap().display_name_key,
+        "FURN_TOTEM"
+    );
+
+    // totem role_contribution = "ritual"
+    assert_eq!(
+        registry.furniture.get("totem").unwrap().role_contribution,
+        Some("ritual".to_string())
+    );
+
+    // hearth role_contribution = "hearth"
+    assert_eq!(
+        registry.furniture.get("hearth").unwrap().role_contribution,
+        Some("hearth".to_string())
+    );
+
+    // shelter optional_components includes hearth
+    let shelter = registry.structures.get("shelter").expect("shelter missing");
+    let has_hearth_optional = shelter.optional_components.iter().any(|req| {
+        matches!(req, sim_data::StructureRequirement::Furniture { id, .. } if id == "hearth")
+    });
+    assert!(has_hearth_optional, "hearth not in shelter optional_components");
+
+    // totem influence has spiritual channel
+    let totem = registry.furniture.get("totem").unwrap();
+    let has_spiritual = totem.influence_emissions.iter().any(|e| e.channel == "spiritual");
+    assert!(has_spiritual, "totem missing spiritual channel emission");
+}

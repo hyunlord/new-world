@@ -38,6 +38,7 @@ fn need_event_key(need_type: NeedType) -> &'static str {
         NeedType::SelfActualization => "self_actualization",
         NeedType::Meaning => "meaning",
         NeedType::Transcendence => "transcendence",
+        NeedType::Comfort => "comfort",
     }
 }
 

@@ -115,9 +115,12 @@ pub enum NeedType {
     SelfActualization = 10,
     Meaning = 11,
     Transcendence = 12,
+    /// Comfort scalar — ritual/sensory comfort (placeholder while Meaning
+    /// remains a higher-order need). Room-effect systems write here.
+    Comfort = 13,
 }
 
-pub const NEED_COUNT: usize = 13;
+pub const NEED_COUNT: usize = 14;
 
 // ═══════════════════════════════════════
 // Values (33 types)

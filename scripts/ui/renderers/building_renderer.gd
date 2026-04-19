@@ -212,10 +212,114 @@ static func _compute_zoom_tier(zoom_value: float) -> int:
 	return GameConfig.ZOOM_TIER_COUNT - 1
 
 
-func _load_building_texture(building_type: String) -> Texture2D:
+func _get_variant_count(variant_dir: String) -> int:
+	if not DirAccess.dir_exists_absolute(variant_dir):
+		return 0
+	var count: int = 0
+	for i in range(1, 100):
+		if not FileAccess.file_exists("%s/%d.png" % [variant_dir, i]):
+			break
+		count += 1
+	return count
+
+
+## Picks a zero-based variant index for a given entity.
+##
+## Contract (harness plan G1/G2):
+##   - Returns an integer in the range [0, variant_count - 1] when
+##     variant_count > 0.
+##   - Returns 0 when variant_count <= 0 (degenerate fallback — callers
+##     are responsible for checking variant_count before invoking any path
+##     resolver that assumes a valid index).
+##   - Deterministic for a given (entity_id, variant_count) pair.
+##   - Produces >= 3 distinct indices when fed 100 consecutive ids and
+##     variant_count = 5 (no constant-bypass regressions).
+##
+## The picker stays zero-based so callers can uniformly rely on 0-indexed
+## semantics; the +1 conversion to 1-based filenames (1.png, 2.png, ...)
+## happens exclusively inside `building_variant_path()` /
+## `furniture_variant_path()`.
+func _pick_variant_for_entity(entity_id: int, variant_count: int) -> int:
+	if variant_count <= 0:
+		return 0
+	# posmod keeps the result non-negative even for negative entity_ids.
+	return posmod(entity_id, variant_count)
+
+
+## Picks a zero-based variant index for a given tile position.
+## See `_pick_variant_for_entity` contract — same [0, variant_count-1] range.
+func _pick_variant_for_tile(tile_x: int, tile_y: int, variant_count: int) -> int:
+	if variant_count <= 0:
+		return 0
+	return posmod((tile_x * 31) + (tile_y * 17), variant_count)
+
+
+func _deterministic_seed_for_tile(tx: int, ty: int) -> int:
+	return (tx * 31) + (ty * 17)
+
+
+# Pure path resolvers — the sole authority on sprite path construction.
+# Also invoked by the sim-test harness (A14) via source-level contract.
+# Changing these signatures or strings REQUIRES a matching harness update.
+static func building_variant_dir(building_type: String) -> String:
+	if building_type.is_empty():
+		return ""
+	return "res://assets/sprites/buildings/" + building_type
+
+
+## Resolves a variant filename from a zero-based variant index.
+## Callers pass the picker's 0-based output (G1 contract); the +1 conversion
+## to the on-disk 1-based filename convention (1.png, 2.png, ...) happens
+## here — never on the caller side.
+static func building_variant_path(building_type: String, variant_idx: int) -> String:
+	if building_type.is_empty() or variant_idx < 0:
+		return ""
+	return "%s/%d.png" % [building_variant_dir(building_type), variant_idx + 1]
+
+
+static func building_legacy_path(building_type: String) -> String:
+	if building_type.is_empty():
+		return ""
+	return "res://assets/sprites/buildings/" + building_type + ".png"
+
+
+static func furniture_variant_dir(furniture_id: String) -> String:
+	if furniture_id.is_empty():
+		return ""
+	return "res://assets/sprites/furniture/" + furniture_id
+
+
+## Resolves a furniture variant filename from a zero-based variant index.
+## See `building_variant_path` — same 0-based-in / 1-based-filename rule.
+static func furniture_variant_path(furniture_id: String, variant_idx: int) -> String:
+	if furniture_id.is_empty() or variant_idx < 0:
+		return ""
+	return "%s/%d.png" % [furniture_variant_dir(furniture_id), variant_idx + 1]
+
+
+func _load_building_texture(building_type: String, entity_id: int = 0) -> Texture2D:
+	# Try variant folder first
+	var variant_dir: String = building_variant_dir(building_type)
+	if variant_dir.is_empty():
+		return null
+	var variant_count: int = _get_variant_count(ProjectSettings.globalize_path(variant_dir))
+	if variant_count > 0:
+		var variant_idx: int = _pick_variant_for_entity(entity_id, variant_count)
+		var cache_key: String = "%s/%d" % [building_type, variant_idx]
+		if _building_textures.has(cache_key):
+			return _building_textures[cache_key]
+		var variant_path: String = building_variant_path(building_type, variant_idx)
+		if FileAccess.file_exists(variant_path):
+			var tex: Texture2D = load(variant_path) as Texture2D
+			_building_textures[cache_key] = tex
+			return tex
+		_building_textures[cache_key] = null
+		return null
+
+	# Legacy flat file fallback
 	if _building_textures.has(building_type):
 		return _building_textures[building_type]
-	var path: String = "res://assets/sprites/buildings/" + building_type + ".png"
+	var path: String = building_legacy_path(building_type)
 	if not FileAccess.file_exists(path):
 		_building_textures[building_type] = null
 		return null
@@ -225,6 +329,26 @@ func _load_building_texture(building_type: String) -> Texture2D:
 		return null
 	_building_textures[building_type] = tex
 	return tex
+
+
+func _load_furniture_texture(furniture_id: String, seed_value: int = 0) -> Texture2D:
+	var variant_dir: String = furniture_variant_dir(furniture_id)
+	if variant_dir.is_empty():
+		return null
+	var variant_count: int = _get_variant_count(ProjectSettings.globalize_path(variant_dir))
+	if variant_count <= 0:
+		return null
+	var variant_idx: int = _pick_variant_for_entity(seed_value, variant_count)
+	var cache_key: String = "furniture/%s/%d" % [furniture_id, variant_idx]
+	if _building_textures.has(cache_key):
+		return _building_textures[cache_key]
+	var variant_path: String = furniture_variant_path(furniture_id, variant_idx)
+	if FileAccess.file_exists(variant_path):
+		var tex: Texture2D = load(variant_path) as Texture2D
+		_building_textures[cache_key] = tex
+		return tex
+	_building_textures[cache_key] = null
+	return null
 
 
 func _draw_building_sprite(building_type: String, cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
@@ -511,24 +635,31 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 		if fux < min_x or fux > max_x or fuy < min_y or fuy > max_y:
 			continue
 		var fid: String = furn_ids[i] if i < furn_ids.size() else ""
-		var icon: String = _tile_furniture_icon(fid)
-		if not icon.is_empty():
-			var pos_x: float = float(fux) * ts + ts * 0.5
-			var pos_y: float = float(fuy) * ts + ts * 0.6
-			draw_string(
-				furn_font,
-				Vector2(pos_x, pos_y),
-				icon, HORIZONTAL_ALIGNMENT_CENTER, -1,
-				int(ts * r_icon_scale), Color(1.0, 1.0, 1.0, 0.85)
-			)
-			if fid == "storage_pit":
+		var pos_x: float = float(fux) * ts + ts * 0.5
+		var pos_y: float = float(fuy) * ts + ts * 0.6
+		# Sprite attempt before emoji fallback
+		var furn_tex: Texture2D = _load_furniture_texture(fid, _deterministic_seed_for_tile(fux, fuy))
+		if furn_tex != null:
+			var draw_size: Vector2 = Vector2(ts, ts)
+			var draw_pos: Vector2 = Vector2(float(fux) * ts, float(fuy) * ts)
+			draw_texture_rect(furn_tex, Rect2(draw_pos, draw_size), false, Color(1.0, 1.0, 1.0, 0.85))
+		else:
+			var icon: String = _tile_furniture_icon(fid)
+			if not icon.is_empty():
 				draw_string(
 					furn_font,
-					Vector2(pos_x, pos_y + ts * 0.3),
-					Locale.ltr("BUILDING_TYPE_STOCKPILE"),
-					HORIZONTAL_ALIGNMENT_CENTER, -1, 8,
-					Color(0.95, 0.84, 0.58, 0.9)
+					Vector2(pos_x, pos_y),
+					icon, HORIZONTAL_ALIGNMENT_CENTER, -1,
+					int(ts * r_icon_scale), Color(1.0, 1.0, 1.0, 0.85)
 				)
+				if fid == "storage_pit":
+					draw_string(
+						furn_font,
+						Vector2(pos_x, pos_y + ts * 0.3),
+						Locale.ltr("BUILDING_TYPE_STOCKPILE"),
+						HORIZONTAL_ALIGNMENT_CENTER, -1, 8,
+						Color(0.95, 0.84, 0.58, 0.9)
+					)
 
 
 func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
@@ -575,6 +706,8 @@ func _tile_furniture_icon(furniture_id: String) -> String:
 		"storage_pit": return "📦"
 		"workbench": return "⚒"
 		"drying_rack": return "🪓"
+		"totem": return "🗿"
+		"hearth": return "🔥"
 		_: return ""
 
 
