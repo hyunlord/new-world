@@ -1,7 +1,7 @@
 use crate::enums::NeedType;
 use serde::{Deserialize, Serialize};
 
-pub const NEED_COUNT: usize = 13;
+pub const NEED_COUNT: usize = 14;
 
 /// 13 needs (Maslow + Alderfer ERG model)
 /// All values 0.0..=1.0 (1.0 = fully satisfied)

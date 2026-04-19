@@ -123,6 +123,15 @@ impl TileGrid {
         self.get_mut(x, y).furniture_id = Some(furniture_id.into());
     }
 
+    /// Removes any furniture from a tile. Returns the previous furniture id
+    /// so callers can distinguish "nothing to remove" from "successful
+    /// removal" when needed. This is the canonical furniture-removal API
+    /// used by demolition paths and test fixtures that need to demote a
+    /// room's role by destroying the furniture that was voting on it.
+    pub fn remove_furniture(&mut self, x: u32, y: u32) -> Option<String> {
+        self.get_mut(x, y).furniture_id.take()
+    }
+
     /// Returns the furniture id on a tile, if any.
     pub fn get_furniture(&self, x: u32, y: u32) -> Option<&str> {
         self.get(x, y).furniture_id.as_deref()

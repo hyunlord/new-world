@@ -782,7 +782,7 @@ mod tests {
             action_label: "Idle".to_string(),
             personality_axes: [0.5; 6],
             emotions: [0.0; 8],
-            needs: [0.5; 13],
+            needs: [0.5; 14],
             values: [0.0; 33],
             stress_level: 0.0,
             stress_state: 0,

@@ -2423,7 +2423,7 @@ impl WorldSimRuntime {
 
                 // Room data — set defaults first so GDScript can always read these keys
                 dict.set("room_id", -1_i64);
-                dict.set("room_role", "unknown");
+                dict.set("room_role", "ROOM_ROLE_UNKNOWN");
                 dict.set("room_enclosed", false);
                 let tile = resources.tile_grid.get(tile_x as u32, tile_y as u32);
                 if let Some(room_id) = tile.room_id {

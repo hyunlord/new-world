@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "tiles": [[1, 1], [2, 1], [3, 1]],
+    "enclosed": true,
+    "role": "Shelter"
+  },
+  {
+    "id": 2,
+    "tiles": [[4, 4]],
+    "enclosed": false,
+    "role": "Unknown"
+  },
+  {
+    "id": 3,
+    "tiles": [[5, 5]],
+    "enclosed": true,
+    "role": "Hearth"
+  },
+  {
+    "id": 4,
+    "tiles": [[6, 6]],
+    "enclosed": true,
+    "role": "Storage"
+  },
+  {
+    "id": 5,
+    "tiles": [[7, 7]],
+    "enclosed": true,
+    "role": "Crafting"
+  }
+]

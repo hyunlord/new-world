@@ -14,7 +14,7 @@ pub enum EffectStat {
     Warmth,
     /// Safety need scalar.
     Safety,
-    /// Comfort diagnostic scalar.
+    /// Comfort diagnostic scalar (apply-only; not mapped to any NeedType).
     Comfort,
     /// Energy/rest scalar.
     Energy,

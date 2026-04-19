@@ -7,15 +7,25 @@
 use sim_core::room::{Room, RoomRole};
 use sim_core::tile_grid::TileGrid;
 
-/// Locale-safe room role key for GDScript to resolve via `Locale.ltr()`.
-/// Returns a lowercase identifier that maps to `ROOM_ROLE_<UPPER>` locale keys.
+/// Locale key for a room's role, resolved by GDScript via `Locale.ltr()`.
+///
+/// Returns the fully-qualified catalog key (UPPER_SNAKE with `ROOM_ROLE_`
+/// prefix). The value is guaranteed to:
+///   - be non-empty,
+///   - start with the literal prefix `"ROOM_ROLE_"`,
+///   - not be a debug / fallback string (e.g. never `"unknown"` or `"?"`),
+///   - map 1:1 to an entry in `localization/{en,ko}/ui.json`.
+///
+/// Every [`RoomRole`] variant is covered exhaustively so new variants must
+/// add their own key rather than silently falling through to Unknown.
 pub fn room_role_locale_key(role: RoomRole) -> &'static str {
     match role {
-        RoomRole::Unknown => "unknown",
-        RoomRole::Shelter => "shelter",
-        RoomRole::Hearth => "hearth",
-        RoomRole::Storage => "storage",
-        RoomRole::Crafting => "crafting",
+        RoomRole::Unknown => "ROOM_ROLE_UNKNOWN",
+        RoomRole::Shelter => "ROOM_ROLE_SHELTER",
+        RoomRole::Hearth => "ROOM_ROLE_HEARTH",
+        RoomRole::Storage => "ROOM_ROLE_STORAGE",
+        RoomRole::Crafting => "ROOM_ROLE_CRAFTING",
+        RoomRole::Ritual => "ROOM_ROLE_RITUAL",
     }
 }
 

@@ -421,7 +421,13 @@ pub const INFLUENCE_SPIRITUAL_DEFAULT_RADIUS: f64 = 4.0;
 /// Spiritual channel maximum propagation radius in tiles.
 pub const INFLUENCE_SPIRITUAL_MAX_RADIUS: u32 = 8;
 /// Spiritual channel default wall attenuation sensitivity.
-pub const INFLUENCE_SPIRITUAL_WALL_BLOCK: f64 = 0.2;
+///
+/// Tuned up to 1.0 so dense walls block the Spiritual channel near-totally,
+/// matching the "stone 90%, wood 50%" architecture note in `CLAUDE.md`
+/// (§Building System). Lower values let spiritual influence bleed through
+/// enclosures and break the wall-shielding contract exercised by the
+/// sprite-infra harness.
+pub const INFLUENCE_SPIRITUAL_WALL_BLOCK: f64 = 1.0;
 /// Authority channel per-tick decay rate.
 pub const INFLUENCE_AUTHORITY_DECAY_RATE: f64 = 0.10;
 /// Authority channel default radius in tiles.
@@ -935,6 +941,14 @@ pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 2;
 /// Runtime wall blocking coefficient stamped by completed shelter walls.
 pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
+/// Per-tick Safety need increment for agents inside a Shelter-role enclosed room.
+pub const ROOM_EFFECT_SHELTER_SAFETY_AMOUNT: f64 = 0.02;
+/// Per-tick Warmth need increment for agents inside a Hearth-role enclosed room.
+pub const ROOM_EFFECT_HEARTH_WARMTH_AMOUNT: f64 = 0.03;
+/// Per-tick Comfort need increment for agents inside a Ritual-role enclosed
+/// room. Spec: feature "sprite-infra" Section 1 — +0.02 Comfort placeholder
+/// until a dedicated spiritual/ritual stat is introduced by a later feature.
+pub const ROOM_EFFECT_RITUAL_COMFORT_AMOUNT: f64 = 0.02;
 pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
 /// Stone consumed per individual wall placement under the P2-B3 component
 /// building flow. Total per-shelter ring (~15 walls at R=2) thus consumes

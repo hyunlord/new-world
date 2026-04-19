@@ -21,6 +21,8 @@ pub enum RoomRole {
     Storage,
     /// Crafting-oriented room.
     Crafting,
+    /// Ritual/spiritual room: assigned when a totem is the majority furniture.
+    Ritual,
 }
 
 /// Result of one room-detection pass.
