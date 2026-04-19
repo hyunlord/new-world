@@ -4742,9 +4742,11 @@ func _get_tile_selection_label() -> String:
 	if info.get("is_door", false):
 		parts.append(Locale.ltr("UI_DOOR"))
 	if info.has("room_id"):
-		var role_key: String = str(info.get("room_role", "unknown"))
-		var role_name: String = Locale.ltr("ROOM_ROLE_" + role_key.to_upper())
-		if role_name == "ROOM_ROLE_" + role_key.to_upper() or role_name.is_empty():
+		# Rust bridge returns the fully-qualified catalog key (e.g.
+		# "ROOM_ROLE_RITUAL"); pass it straight to Locale.ltr().
+		var role_key: String = str(info.get("room_role", "ROOM_ROLE_UNKNOWN"))
+		var role_name: String = Locale.ltr(role_key)
+		if role_name == role_key or role_name.is_empty():
 			role_name = role_key
 		parts.append(Locale.ltr("UI_ROOM") + " #" + str(info.get("room_id", 0)) + " (" + role_name + ")")
 	if parts.is_empty():
@@ -4780,9 +4782,11 @@ func _populate_tile_info_panel(tile_x: int, tile_y: int, info: Dictionary) -> vo
 	if info.get("is_door", false):
 		lines.append(Locale.ltr("UI_DOOR"))
 	if info.has("room_id"):
-		var role_key: String = str(info.get("room_role", "unknown"))
-		var role_name: String = Locale.ltr("ROOM_ROLE_" + role_key.to_upper())
-		if role_name == "ROOM_ROLE_" + role_key.to_upper() or role_name.is_empty():
+		# Rust bridge returns the fully-qualified catalog key (e.g.
+		# "ROOM_ROLE_RITUAL"); pass it straight to Locale.ltr().
+		var role_key: String = str(info.get("room_role", "ROOM_ROLE_UNKNOWN"))
+		var role_name: String = Locale.ltr(role_key)
+		if role_name == role_key or role_name.is_empty():
 			role_name = role_key
 		lines.append(Locale.ltr("UI_ROOM") + " #" + str(info.get("room_id", 0)))
 		lines.append(Locale.ltr("UI_ROOM_ROLE") + ": " + role_name)
