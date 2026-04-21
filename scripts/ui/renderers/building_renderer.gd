@@ -361,6 +361,47 @@ func _load_furniture_texture(furniture_id: String, seed_value: int = 0) -> Textu
 	return null
 
 
+## Loads a wall material sprite for the given tile position.
+## Variant selection is deterministic via _pick_variant_for_tile (prime-multiplier hash).
+## Cache key: "wall_mat/{material_id}/{variant_idx}".
+## Returns null if no sprite folder exists — caller falls back to solid fill.
+func _load_wall_material_texture(material_id: String, tile_x: int, tile_y: int) -> Texture2D:
+	if material_id.is_empty():
+		return null
+	var variant_dir_res: String = "res://assets/sprites/walls/" + material_id
+	var variant_count: int = _get_variant_count(ProjectSettings.globalize_path(variant_dir_res))
+	if variant_count <= 0:
+		return null
+	var variant_idx: int = _pick_variant_for_tile(tile_x, tile_y, variant_count)
+	var cache_key: String = "wall_mat/%s/%d" % [material_id, variant_idx]
+	if _building_textures.has(cache_key):
+		return _building_textures[cache_key]
+	var variant_path: String = "%s/%d.png" % [variant_dir_res, variant_idx + 1]
+	var tex: Texture2D = _load_texture_from_res_path(variant_path)
+	_building_textures[cache_key] = tex  # cache null too — avoids repeated filesystem scans
+	return tex
+
+
+## Loads a floor material sprite for the given tile position.
+## Mirror of _load_wall_material_texture for floors.
+## Returns null if no sprite folder exists — caller falls back to solid fill.
+func _load_floor_material_texture(material_id: String, tile_x: int, tile_y: int) -> Texture2D:
+	if material_id.is_empty():
+		return null
+	var variant_dir_res: String = "res://assets/sprites/floors/" + material_id
+	var variant_count: int = _get_variant_count(ProjectSettings.globalize_path(variant_dir_res))
+	if variant_count <= 0:
+		return null
+	var variant_idx: int = _pick_variant_for_tile(tile_x, tile_y, variant_count)
+	var cache_key: String = "floor_mat/%s/%d" % [material_id, variant_idx]
+	if _building_textures.has(cache_key):
+		return _building_textures[cache_key]
+	var variant_path: String = "%s/%d.png" % [variant_dir_res, variant_idx + 1]
+	var tex: Texture2D = _load_texture_from_res_path(variant_path)
+	_building_textures[cache_key] = tex
+	return tex
+
+
 ## Loads a Texture2D from a res:// path with a two-stage strategy:
 ##   1. ResourceLoader (fast path — works when a .import sidecar exists).
 ##   2. Image.load_from_file (fallback — works for raw PNGs without .import,
@@ -620,6 +661,8 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 	var r_bridge_px: float = float(data.get("render_wall_bridge_px", 2.0))
 
 	# Draw floors first (under walls)
+	# floor_material is tracked in Rust but not yet exported as a parallel PackedStringArray —
+	# all tiles default to "packed_earth" until a sim-bridge export is added (Feature 3.5).
 	var floor_xs: PackedInt32Array = data.get("floor_x", PackedInt32Array())
 	var floor_ys: PackedInt32Array = data.get("floor_y", PackedInt32Array())
 	for i in range(floor_xs.size()):
@@ -627,8 +670,12 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 		var fy: int = floor_ys[i]
 		if fx < min_x or fx > max_x or fy < min_y or fy > max_y:
 			continue
-		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.30, 0.25, 0.15, r_floor_alpha), true)
-		draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.35, 0.28, 0.14, 0.3), false, r_floor_border)
+		var floor_tex: Texture2D = _load_floor_material_texture("packed_earth", fx, fy)
+		if floor_tex != null:
+			draw_texture_rect(floor_tex, Rect2(float(fx) * ts, float(fy) * ts, ts, ts), false)
+		else:
+			draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.30, 0.25, 0.15, r_floor_alpha), true)
+			draw_rect(Rect2(float(fx) * ts, float(fy) * ts, ts, ts), Color(0.35, 0.28, 0.14, 0.3), false, r_floor_border)
 
 	# Draw walls — at Z3+ fill the full tile so adjacent walls merge visually
 	var wall_xs: PackedInt32Array = data.get("wall_x", PackedInt32Array())
@@ -646,7 +693,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 			continue
 		var mat: String = wall_mats[i] if i < wall_mats.size() else ""
 		var wall_color: Color = _wall_material_color(mat)
-		_draw_wall_tile(wx, wy, ts, wall_color, wall_set, wall_inset, r_autotile, r_bridge_px)
+		_draw_wall_tile(wx, wy, ts, wall_color, mat, wall_set, wall_inset, r_autotile, r_bridge_px)
 
 	# Draw doors (gap indicator)
 	var door_xs: PackedInt32Array = data.get("door_x", PackedInt32Array())
@@ -696,12 +743,16 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 					)
 
 
-func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
+func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, material_id: String, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
 	var px: float = float(wx) * ts
 	var py: float = float(wy) * ts
 
-	# Fill the wall tile (full tile area — inset=0 means seamless adjacent fill)
-	draw_rect(Rect2(px, py, ts, ts), color, true)
+	# Fill: sprite first, solid color fallback if sprite unavailable
+	var tex: Texture2D = _load_wall_material_texture(material_id, wx, wy)
+	if tex != null:
+		draw_texture_rect(tex, Rect2(px, py, ts, ts), false)
+	else:
+		draw_rect(Rect2(px, py, ts, ts), color, true)
 
 	# Draw outline only on edges where there is NO adjacent wall (perimeter edges)
 	var outline_color: Color = color.darkened(0.35)
