@@ -15731,6 +15731,633 @@ mod tests {
         // Type D: id preservation — ensures deserialisation populated fields.
         assert_eq!(rooms[0].id, RoomId(1));
     }
+
+    // ── sprite-assets-round1 — Assertion 12 (Type D) ────────────────────────
+    /// Regression guard: buildings still construct after the GDScript
+    /// `entity_id` plumbing change introduced in sprite-assets-round1.
+    /// The GDScript change is UI-only (entity_id passed to `_draw_building_sprite`
+    /// / `_load_building_texture`), but this guard ensures the Rust simulation
+    /// layer is unaffected and continues to produce complete buildings.
+    ///
+    /// seed=42, 20 agents, 4380 ticks (≈1 sim-year).
+    /// Type D: regression floor — threshold calibrated from observed value at seed=42.
+    #[test]
+    fn harness_sprite_assets_round1_building_construction_regression() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let resources = engine.resources();
+        // Type D: complete buildings count
+        let complete = resources
+            .buildings
+            .values()
+            .filter(|b| b.is_complete)
+            .count();
+        println!(
+            "[harness_sprite_assets_round1][A12] complete buildings after 1 year: {complete}"
+        );
+        // Type D: regression floor — observed 5 at seed=42 / 20 agents / 4380 ticks.
+        // Threshold = 3 (conservative floor, ~60% of observed) to guard against
+        // construction system regressions introduced by future changes.
+        assert!(
+            complete >= 3,
+            "A12 sprite-assets-round1: complete buildings expected ≥ 3, got {complete}. \
+             GDScript entity_id plumbing change may have introduced a Rust-side regression."
+        );
+    }
+
+    // ── sprite-assets-round1 — Asset file integrity + loader robustness ─────
+    /// Two-part guard for Round-1 sprite assets.
+    ///
+    /// **Part 1 (file integrity):** regression guard — all 144 PNG files must
+    /// exist, be non-trivial (≥ 100 bytes), and carry valid PNG magic bytes.
+    /// Starts GREEN because files are already present; fails if any variant is
+    /// removed or replaced with a corrupt file.
+    ///
+    /// **Part 2 (loader robustness):** RED → GREEN cycle tied to the GDScript
+    /// fix.  `building_renderer.gd` must contain the `Image.load_from_file` +
+    /// `ImageTexture.create_from_image` fallback so variant PNGs without
+    /// `.import` sidecar files (all 144 in this batch) can be loaded at runtime
+    /// in headless harness runs. Fails until the fix is applied.
+    #[test]
+    fn harness_sprite_assets_round1_variant_file_integrity() {
+        use std::io::Read as _;
+
+        // Navigate from CARGO_MANIFEST_DIR (rust/crates/sim-test) → project root
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../..");
+
+        // ── Part 1: File integrity — exact 144, no extras, correct dims ──────
+        // 9 directories × exactly 16 variants = 144 files total.
+        // Tuple layout: (category, id, expected_width, expected_height)
+        // Widths/heights are the IHDR values from the feature spec:
+        //   campfire/cairn/gathering_marker/totem/hearth/storage_pit → 32×32
+        //   stockpile                                                 → 64×64
+        //   workbench/drying_rack                                     → 64×32
+        let sprite_dirs: [(&str, &str, u32, u32); 9] = [
+            ("buildings", "campfire", 32, 32),
+            ("buildings", "cairn", 32, 32),
+            ("buildings", "gathering_marker", 32, 32),
+            ("buildings", "stockpile", 64, 64),
+            ("furniture", "totem", 32, 32),
+            ("furniture", "hearth", 32, 32),
+            ("furniture", "workbench", 64, 32),
+            ("furniture", "drying_rack", 64, 32),
+            ("furniture", "storage_pit", 32, 32),
+        ];
+
+        // PNG magic bytes: 89 50 4E 47 0D 0A 1A 0A
+        let png_magic: [u8; 8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+
+        let mut missing: Vec<String> = Vec::new();
+        let mut too_small: Vec<String> = Vec::new();
+        let mut bad_magic: Vec<String> = Vec::new();
+        let mut wrong_dims: Vec<String> = Vec::new();
+        let mut extras: Vec<String> = Vec::new();
+        let mut total_checked: usize = 0;
+
+        for (category, id, expected_w, expected_h) in &sprite_dirs {
+            // ── A1: all 16 variants must exist ───────────────────────────────
+            for variant_num in 1_u32..=16 {
+                let rel = format!("assets/sprites/{}/{}/{}.png", category, id, variant_num);
+                let full_path = project_root.join(&rel);
+                if !full_path.exists() {
+                    missing.push(rel);
+                    continue;
+                }
+                let meta = std::fs::metadata(&full_path).expect("metadata read failed");
+                if meta.len() < 100 {
+                    too_small.push(format!("{} ({}B)", rel, meta.len()));
+                    continue;
+                }
+                // Read 24 bytes: 8 PNG magic + 4 length + 4 "IHDR" + 4 width + 4 height
+                let mut header = [0u8; 24];
+                let bytes_read = std::fs::File::open(&full_path)
+                    .expect("file open failed")
+                    .read(&mut header)
+                    .unwrap_or(0);
+                // Verify PNG magic bytes
+                if bytes_read < 8 || header[..8] != png_magic {
+                    bad_magic.push(format!(
+                        "{} (header={:02X?})",
+                        rel,
+                        &header[..bytes_read.min(8)]
+                    ));
+                    total_checked += 1;
+                    continue;
+                }
+                // ── A4: verify IHDR dimensions match feature spec ─────────────
+                // PNG IHDR layout: bytes 16–19 = width, bytes 20–23 = height (big-endian).
+                // This is the actual image dimensions, NOT just a magic-byte check.
+                if bytes_read >= 24 {
+                    let w =
+                        u32::from_be_bytes([header[16], header[17], header[18], header[19]]);
+                    let h =
+                        u32::from_be_bytes([header[20], header[21], header[22], header[23]]);
+                    if w != *expected_w || h != *expected_h {
+                        wrong_dims.push(format!(
+                            "{} ({}×{}, expected {}×{})",
+                            rel, w, h, expected_w, expected_h
+                        ));
+                    }
+                }
+                total_checked += 1;
+            }
+
+            // ── A4: full set equality — scan directory for any unexpected file ──
+            // Plan assertion 4: missing_count == 0 AND extra_count == 0.
+            // Must catch 0.png, 17.png, 18.png, non-numeric names, etc. —
+            // not only the sentinel 17.png that the previous guard checked.
+            let sprite_dir_path =
+                project_root.join(format!("assets/sprites/{}/{}", category, id));
+            let valid_names: std::collections::HashSet<String> =
+                (1_u32..=16).map(|n| format!("{}.png", n)).collect();
+            if let Ok(read_dir) = std::fs::read_dir(&sprite_dir_path) {
+                for entry in read_dir.flatten() {
+                    let fname = entry.file_name().to_string_lossy().into_owned();
+                    // Only flag PNG files — ignore platform metadata like .DS_Store.
+                    if fname.ends_with(".png") && !valid_names.contains(&fname) {
+                        extras.push(format!(
+                            "assets/sprites/{}/{}/{}",
+                            category, id, fname
+                        ));
+                    }
+                }
+            }
+        }
+
+        println!(
+            "[harness_sprite_assets_round1][asset_integrity] \
+             checked={total_checked} missing={} too_small={} bad_magic={} wrong_dims={} extras={}",
+            missing.len(),
+            too_small.len(),
+            bad_magic.len(),
+            wrong_dims.len(),
+            extras.len(),
+        );
+
+        // ── A1: all 144 variant files must exist ─────────────────────────────
+        // Type A hard invariant.
+        assert!(
+            missing.is_empty(),
+            "sprite-assets-round1 A1: {}/{} PNG files missing: {:?}",
+            missing.len(),
+            9 * 16,
+            missing
+        );
+        // ── A1: exact count = 144 (no extra variants beyond 16 per dir) ──────
+        assert_eq!(
+            total_checked,
+            144,
+            "sprite-assets-round1 A1: expected exactly 144 variant PNGs, \
+             counted {total_checked}. Check for missing or corrupt files."
+        );
+        // ── A1-extra: no directory has a 17th variant ────────────────────────
+        assert!(
+            extras.is_empty(),
+            "sprite-assets-round1 A1: extra variants found beyond 16: {:?}. \
+             Each directory must contain exactly 16 files (1.png–16.png).",
+            extras
+        );
+        // ── A5: no trivially-small/empty files ───────────────────────────────
+        // Type A hard invariant.
+        assert!(
+            too_small.is_empty(),
+            "sprite-assets-round1 A5: {} files are < 100 bytes (non-trivial PNG required): {:?}",
+            too_small.len(),
+            too_small
+        );
+        // ── A3: valid PNG magic bytes on every file ───────────────────────────
+        // Type A hard invariant.
+        assert!(
+            bad_magic.is_empty(),
+            "sprite-assets-round1 A3: {} files have invalid PNG magic bytes: {:?}",
+            bad_magic.len(),
+            bad_magic
+        );
+        // ── A4: IHDR dimensions must match feature spec ───────────────────────
+        // Type A hard invariant — wrong dimensions means the wrong sprite was placed.
+        assert!(
+            wrong_dims.is_empty(),
+            "sprite-assets-round1 A4: {} files have wrong IHDR dimensions: {:?}",
+            wrong_dims.len(),
+            wrong_dims
+        );
+
+        // ── A2: placeholder files must NOT exist (deleted) ───────────────────
+        // Type A: campfire.png and stockpile.png were the old single-sprite
+        // placeholders. They must be absent so the variant loader is the only path.
+        for placeholder in &[
+            "assets/sprites/buildings/campfire.png",
+            "assets/sprites/buildings/stockpile.png",
+        ] {
+            let p = project_root.join(placeholder);
+            assert!(
+                !p.exists(),
+                "sprite-assets-round1 A2: placeholder file must be deleted: {}. \
+                 The variant loader relies on its absence to trigger the fallback path.",
+                placeholder
+            );
+        }
+
+        // ── Type D: storage_pit regression (variants 2/4/14/15 must exist) ───
+        for variant_num in [2_u32, 4, 14, 15] {
+            let p = project_root.join(format!(
+                "assets/sprites/furniture/storage_pit/{}.png",
+                variant_num
+            ));
+            assert!(
+                p.exists(),
+                "sprite-assets-round1 D-regression: storage_pit/{}.png must exist",
+                variant_num
+            );
+            let sz = std::fs::metadata(&p).expect("metadata read failed").len();
+            assert!(
+                sz >= 100,
+                "sprite-assets-round1 D-regression: storage_pit/{}.png too small \
+                 ({}B, expected ≥ 100B)",
+                variant_num,
+                sz
+            );
+        }
+
+        // ── Part 2: Loader source linkage — actual call chain verification ────
+        // Checks that the fallback is wired correctly throughout the call graph,
+        // not just that the method name appears somewhere in the file.
+        let renderer_src = std::fs::read_to_string(
+            project_root.join("scripts/ui/renderers/building_renderer.gd"),
+        )
+        .expect("sprite-assets-round1: could not read building_renderer.gd");
+
+        // Helper: extract the body of a GDScript function up to the next `func `.
+        let extract_func_body = |src: &str, func_name: &str| -> String {
+            let needle = format!("func {}(", func_name);
+            if let Some(start) = src.find(&needle) {
+                let tail = &src[start..];
+                // Find the next top-level `func ` or end-of-file.
+                let end = tail[1..]
+                    .find("\nfunc ")
+                    .map(|i| i + 1)
+                    .unwrap_or(tail.len());
+                tail[..end].to_owned()
+            } else {
+                String::new()
+            }
+        };
+
+        // ── Type D: _load_building_texture must CALL _load_texture_from_res_path
+        // Checks the actual call chain, not just string presence anywhere in file.
+        let building_loader_body =
+            extract_func_body(&renderer_src, "_load_building_texture");
+        assert!(
+            !building_loader_body.is_empty(),
+            "sprite-assets-round1: `_load_building_texture` function not found in \
+             building_renderer.gd"
+        );
+        assert!(
+            building_loader_body.contains("_load_texture_from_res_path"),
+            "sprite-assets-round1: `_load_building_texture` must call \
+             `_load_texture_from_res_path` (the two-stage fallback helper). \
+             Found function body but no call to the helper:\n{}",
+            &building_loader_body[..building_loader_body.len().min(300)]
+        );
+
+        // ── Type D: _load_furniture_texture must CALL _load_texture_from_res_path
+        let furniture_loader_body =
+            extract_func_body(&renderer_src, "_load_furniture_texture");
+        assert!(
+            !furniture_loader_body.is_empty(),
+            "sprite-assets-round1: `_load_furniture_texture` function not found in \
+             building_renderer.gd"
+        );
+        assert!(
+            furniture_loader_body.contains("_load_texture_from_res_path"),
+            "sprite-assets-round1: `_load_furniture_texture` must call \
+             `_load_texture_from_res_path` (the two-stage fallback helper). \
+             Found function body but no call to the helper:\n{}",
+            &furniture_loader_body[..furniture_loader_body.len().min(300)]
+        );
+
+        // ── Type D: fallback implementation must be present ───────────────────
+        assert!(
+            renderer_src.contains("Image.load_from_file"),
+            "sprite-assets-round1: `_load_texture_from_res_path` must contain \
+             `Image.load_from_file`. Without it all 144 variant PNGs fail to load \
+             in headless harness runs (no .import sidecar files present)."
+        );
+        assert!(
+            renderer_src.contains("ImageTexture.create_from_image"),
+            "sprite-assets-round1: `_load_texture_from_res_path` must contain \
+             `ImageTexture.create_from_image` to wrap the Image as a Texture2D."
+        );
+
+        // ── Type D: variant-count cache must be present ───────────────────────
+        // RED → GREEN tied to the performance fix: without caching,
+        // `_get_variant_count` scans the directory on every _draw() call
+        // (9 dirs × up to 17 FileAccess calls each = 153 fs calls per frame),
+        // causing FPS to drop to ~22. The cache must be declared and used.
+        assert!(
+            renderer_src.contains("_variant_count_cache"),
+            "sprite-assets-round1: building_renderer.gd must declare \
+             `_variant_count_cache` Dictionary. Without it, `_get_variant_count` \
+             scans the filesystem on every draw call, causing FPS < 55. \
+             Add `var _variant_count_cache: Dictionary = {{}}` and cache results \
+             in `_get_variant_count()` before the directory scan."
+        );
+
+        // ── Part 3: Fallback execution simulation ─────────────────────────────
+        // Rust reads a PNG file the same way `Image.load_from_file` would:
+        // raw bytes from disk, no .import sidecar. Verifies that the files are
+        // actually loadable via the fallback path (not just syntactically present).
+        // Uses campfire/1.png (smallest guaranteed file) as the canary.
+        let canary_path =
+            project_root.join("assets/sprites/buildings/campfire/1.png");
+        let canary_bytes = std::fs::read(&canary_path)
+            .expect("sprite-assets-round1 P3: campfire/1.png must be readable as raw bytes \
+                     (no .import required — simulating Image.load_from_file fallback path)");
+        // PNG magic at offset 0
+        assert_eq!(
+            &canary_bytes[..8],
+            &png_magic,
+            "sprite-assets-round1 P3: campfire/1.png has corrupt PNG magic bytes"
+        );
+        // IHDR chunk type at bytes 12–15
+        assert_eq!(
+            &canary_bytes[12..16],
+            b"IHDR",
+            "sprite-assets-round1 P3: campfire/1.png is missing IHDR chunk — \
+             file may be truncated or corrupt"
+        );
+        // Width = 32, height = 32 (from IHDR bytes 16–23)
+        let canary_w =
+            u32::from_be_bytes([canary_bytes[16], canary_bytes[17], canary_bytes[18], canary_bytes[19]]);
+        let canary_h =
+            u32::from_be_bytes([canary_bytes[20], canary_bytes[21], canary_bytes[22], canary_bytes[23]]);
+        assert_eq!(
+            (canary_w, canary_h),
+            (32, 32),
+            "sprite-assets-round1 P3: campfire/1.png IHDR reports {}×{}, expected 32×32",
+            canary_w,
+            canary_h
+        );
+        println!(
+            "[harness_sprite_assets_round1][P3] fallback-path canary: \
+             campfire/1.png readable, {}×{} IHDR verified ({} bytes)",
+            canary_w,
+            canary_h,
+            canary_bytes.len()
+        );
+    }
+
+    // ── sprite-assets-round1 plan assertions A5, A6, A7, A8, A9 ─────────────
+    //
+    // A5: shelter.png must be preserved (regression guard)
+    // A6: all 144 variant PNGs > 150 bytes (Type C, plan-locked threshold)
+    // A7: exactly 1 `func _draw_building_sprite(... entity_id: int, ...` definition
+    // A8: call site chain: _building_value(b,"id",...) + building_id passed to
+    //     _draw_building_sprite
+    // A9: _load_building_texture(building_type, entity_id) forwarding in
+    //     _draw_building_sprite body
+
+    /// A5: `assets/sprites/buildings/shelter.png` must be preserved.
+    ///
+    /// Regression guard — Feature 3 targets shelter. Round 1 asset work must
+    /// leave shelter.png untouched. Hard invariant: any deletion fails this test
+    /// immediately.
+    ///
+    /// Type A: hard invariant (file must exist, non-empty).
+    #[test]
+    fn harness_sprite_assets_round1_a5_shelter_preserved() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let shelter_path = project_root.join("assets/sprites/buildings/shelter.png");
+
+        // Type A hard invariant: shelter.png must exist.
+        assert!(
+            shelter_path.exists(),
+            "sprite-assets-round1 A5: assets/sprites/buildings/shelter.png must be preserved. \
+             Feature 3 owns this file — Round 1 work must not touch it."
+        );
+
+        let sz = std::fs::metadata(&shelter_path)
+            .expect("A5: shelter.png metadata read failed")
+            .len();
+        assert!(
+            sz > 0,
+            "sprite-assets-round1 A5: shelter.png exists but is 0 bytes."
+        );
+
+        println!(
+            "[harness_sprite_assets_round1][A5] shelter.png preserved: {} bytes ✓",
+            sz
+        );
+    }
+
+    /// A6: All 144 variant PNGs must be **> 150 bytes**.
+    ///
+    /// Type C threshold — grounded in the observed minimum of 208 bytes
+    /// (cairn/1.png, measured 2026-04-20). The 150 B floor provides a safety
+    /// margin that catches empty stubs while remaining below the real minimum.
+    ///
+    /// Threshold is LOCKED at 150 per plan — do not lower it.
+    #[test]
+    fn harness_sprite_assets_round1_a6_all_files_above_150_bytes() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+
+        let sprite_dirs: [(&str, &str); 9] = [
+            ("buildings", "campfire"),
+            ("buildings", "cairn"),
+            ("buildings", "gathering_marker"),
+            ("buildings", "stockpile"),
+            ("furniture", "totem"),
+            ("furniture", "hearth"),
+            ("furniture", "workbench"),
+            ("furniture", "drying_rack"),
+            ("furniture", "storage_pit"),
+        ];
+
+        let mut violations: Vec<String> = Vec::new();
+
+        for (category, id) in &sprite_dirs {
+            for variant_num in 1_u32..=16 {
+                let rel = format!("assets/sprites/{}/{}/{}.png", category, id, variant_num);
+                let full_path = project_root.join(&rel);
+                match std::fs::metadata(&full_path) {
+                    Ok(meta) => {
+                        // Type C: plan threshold is > 150 bytes (LOCKED)
+                        if meta.len() <= 150 {
+                            violations.push(format!("{} ({}B)", rel, meta.len()));
+                        }
+                    }
+                    Err(_) => {
+                        violations.push(format!("{} (missing)", rel));
+                    }
+                }
+            }
+        }
+
+        println!(
+            "[harness_sprite_assets_round1][A6] 144 files checked, violations (≤150B): {}",
+            violations.len()
+        );
+
+        // Type C: plan-locked threshold — do not modify
+        assert!(
+            violations.is_empty(),
+            "sprite-assets-round1 A6: {} of 144 files are ≤ 150 bytes (plan threshold). \
+             Observed minimum real sprite: 208B (cairn, 2026-04-20). \
+             Violations: {:?}",
+            violations.len(),
+            violations
+        );
+    }
+
+    /// A7: Exactly **1** definition of
+    /// `func _draw_building_sprite(... entity_id: int, ...` in building_renderer.gd.
+    ///
+    /// Exactly-1 closes the signature contract: duplicate definitions signal a
+    /// merge artifact; zero definitions mean the entity_id wiring was never added.
+    ///
+    /// Type A: hard invariant — count must equal 1.
+    #[test]
+    fn harness_sprite_assets_round1_a7_draw_building_sprite_signature() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let renderer_src = std::fs::read_to_string(
+            project_root.join("scripts/ui/renderers/building_renderer.gd"),
+        )
+        .expect("A7: could not read building_renderer.gd");
+
+        // Count lines that define the function with entity_id: int
+        let definition_count = renderer_src
+            .lines()
+            .filter(|line| {
+                line.contains("func _draw_building_sprite(") && line.contains("entity_id: int")
+            })
+            .count();
+
+        println!(
+            "[harness_sprite_assets_round1][A7] \
+             `func _draw_building_sprite(... entity_id: int, ...` definitions: {}",
+            definition_count
+        );
+
+        // Type A: exactly 1 definition
+        assert_eq!(
+            definition_count,
+            1,
+            "sprite-assets-round1 A7: expected exactly 1 definition of \
+             `func _draw_building_sprite(... entity_id: int, ...)` in building_renderer.gd, \
+             found {}. Zero = wiring missing; >1 = merge artifact.",
+            definition_count
+        );
+    }
+
+    /// A8: Call site chain — ECS id extraction + pass to `_draw_building_sprite`.
+    ///
+    /// Two sub-checks:
+    /// - A8a: `_building_value(b, "id",` appears (ECS entity id extracted)
+    /// - A8b: `building_id` passed as an argument to `_draw_building_sprite`
+    ///
+    /// Together these close the chain: **ECS data → call site → function parameter**.
+    ///
+    /// Type A: hard invariant — both patterns must be present.
+    #[test]
+    fn harness_sprite_assets_round1_a8_call_site_chain() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let renderer_src = std::fs::read_to_string(
+            project_root.join("scripts/ui/renderers/building_renderer.gd"),
+        )
+        .expect("A8: could not read building_renderer.gd");
+
+        // A8a: ECS id extraction — `_building_value(b, "id",` must be present
+        let has_id_extraction = renderer_src.contains(r#"_building_value(b, "id","#);
+        println!(
+            "[harness_sprite_assets_round1][A8a] \
+             _building_value(b, \"id\", present: {}",
+            has_id_extraction
+        );
+        // Type A: hard invariant
+        assert!(
+            has_id_extraction,
+            "sprite-assets-round1 A8a: `_building_value(b, \"id\",` not found in \
+             building_renderer.gd. The call site must extract the ECS entity id."
+        );
+
+        // A8b: `building_id` passed to `_draw_building_sprite` at the call site
+        // Must appear on a non-func, non-comment line containing both identifiers.
+        let has_building_id_passed = renderer_src.lines().any(|line| {
+            let trimmed = line.trim();
+            !trimmed.starts_with("func ")
+                && !trimmed.starts_with('#')
+                && trimmed.contains("_draw_building_sprite")
+                && trimmed.contains("building_id")
+        });
+        println!(
+            "[harness_sprite_assets_round1][A8b] \
+             building_id passed to _draw_building_sprite: {}",
+            has_building_id_passed
+        );
+        // Type A: hard invariant
+        assert!(
+            has_building_id_passed,
+            "sprite-assets-round1 A8b: `building_id` is not passed to \
+             `_draw_building_sprite` in building_renderer.gd. \
+             The call site chain (ECS id → function parameter) must be intact."
+        );
+    }
+
+    /// A9: `_load_building_texture(building_type, entity_id)` forwarding inside
+    /// the body of `_draw_building_sprite`.
+    ///
+    /// Closes the final link: **function parameter → loader argument**.
+    /// Without this, the entity_id is silently dropped and all buildings render
+    /// variant 0 (seed=0 fallback) regardless of which entity they represent.
+    ///
+    /// Type A: hard invariant — exact call must appear in function body.
+    #[test]
+    fn harness_sprite_assets_round1_a9_load_building_texture_forwarding() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let renderer_src = std::fs::read_to_string(
+            project_root.join("scripts/ui/renderers/building_renderer.gd"),
+        )
+        .expect("A9: could not read building_renderer.gd");
+
+        // Extract body of _draw_building_sprite (up to the next `\nfunc `).
+        let func_needle = "func _draw_building_sprite(";
+        let draw_sprite_body = if let Some(start) = renderer_src.find(func_needle) {
+            let tail = &renderer_src[start..];
+            let end = tail[1..]
+                .find("\nfunc ")
+                .map(|i| i + 1)
+                .unwrap_or(tail.len());
+            tail[..end].to_owned()
+        } else {
+            String::new()
+        };
+
+        // Type A: function body must be found
+        assert!(
+            !draw_sprite_body.is_empty(),
+            "sprite-assets-round1 A9: `func _draw_building_sprite(` not found in \
+             building_renderer.gd — the function has been removed or renamed."
+        );
+
+        // Type A: entity_id must be forwarded to _load_building_texture
+        let has_forwarding =
+            draw_sprite_body.contains("_load_building_texture(building_type, entity_id)");
+        println!(
+            "[harness_sprite_assets_round1][A9] \
+             _load_building_texture(building_type, entity_id) in _draw_building_sprite body: {}",
+            has_forwarding
+        );
+        // Type A: hard invariant — plan-locked assertion, do not relax
+        assert!(
+            has_forwarding,
+            "sprite-assets-round1 A9: `_load_building_texture(building_type, entity_id)` \
+             not found inside the body of `_draw_building_sprite` in building_renderer.gd. \
+             The entity_id parameter must be forwarded to the texture loader so each \
+             building entity gets a deterministically-chosen sprite variant."
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
