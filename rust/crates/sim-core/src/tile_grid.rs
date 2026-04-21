@@ -155,6 +155,24 @@ impl TileGrid {
         neighbors
     }
 
+    /// Returns true if a tile within Chebyshev distance `radius` of (`ax`, `ay`)
+    /// has the given furniture id. Used for proximity-based ritual scoring and
+    /// action completion (e.g. Pray near totem).
+    pub fn has_furniture_within_radius(&self, ax: i32, ay: i32, radius: i32, furniture_id: &str) -> bool {
+        for dy in -radius..=radius {
+            for dx in -radius..=radius {
+                let x = ax + dx;
+                let y = ay + dy;
+                if self.in_bounds(x, y)
+                    && self.get(x as u32, y as u32).furniture_id.as_deref() == Some(furniture_id)
+                {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
     fn index(&self, x: u32, y: u32) -> usize {
         (y * self.width + x) as usize
     }

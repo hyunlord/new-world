@@ -789,7 +789,21 @@ pub const ACTION_TIMER_DRINK: i32 = 3;
 pub const ACTION_TIMER_FLEE: i32 = 6;
 pub const ACTION_TIMER_SIT_BY_FIRE: i32 = 6;
 pub const ACTION_TIMER_SEEK_SHELTER: i32 = 4;
+/// Pray action duration in ticks. Shorter than SeekShelter — praying is
+/// standing still near a totem, no pathfinding required.
+pub const ACTION_TIMER_PRAY: i32 = 6;
 pub const ACTION_TIMER_DEFAULT: i32 = 4;
+
+/// Comfort need threshold below which agents consider praying when near a totem.
+pub const COMFORT_LOW: f64 = 0.35;
+/// Comfort need increment when Pray action completes near a totem.
+/// Weaker than physical need satisfaction (fire +0.15, shelter +0.12):
+/// spiritual relief is gentler than material relief.
+pub const PRAY_COMFORT_RESTORE: f64 = 0.08;
+/// Meaning need increment when Pray action completes near a totem.
+pub const PRAY_MEANING_BONUS: f64 = 0.02;
+/// Maximum Chebyshev distance (tiles) from agent to totem for Pray eligibility.
+pub const PRAY_TOTEM_SEARCH_RADIUS: i32 = 3;
 
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;
