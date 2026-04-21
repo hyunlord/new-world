@@ -1160,6 +1160,30 @@ impl SimSystem for MovementRuntimeSystem {
                             );
                         }
                     }
+                    ActionType::Pray => {
+                        if let Some(needs) = needs_opt.as_mut() {
+                            // Re-check totem presence at completion — totem may have
+                            // been removed during the action timer window.
+                            if resources.tile_grid.has_furniture_within_radius(
+                                position.tile_x(),
+                                position.tile_y(),
+                                config::PRAY_TOTEM_SEARCH_RADIUS,
+                                "totem",
+                            ) {
+                                needs.set(
+                                    NeedType::Comfort,
+                                    (needs.get(NeedType::Comfort) + config::PRAY_COMFORT_RESTORE)
+                                        .clamp(0.0, 1.0),
+                                );
+                                needs.set(
+                                    NeedType::Meaning,
+                                    (needs.get(NeedType::Meaning) + config::PRAY_MEANING_BONUS)
+                                        .clamp(0.0, 1.0),
+                                );
+                            }
+                            // No totem → Pray completes silently with no effect.
+                        }
+                    }
                     ActionType::Forage
                     | ActionType::Hunt
                     | ActionType::TakeFromStockpile

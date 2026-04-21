@@ -586,6 +586,7 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::Flee => config::ACTION_TIMER_FLEE,
         ActionType::SitByFire => config::ACTION_TIMER_SIT_BY_FIRE,
         ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
+        ActionType::Pray => config::ACTION_TIMER_PRAY,
         ActionType::PlaceWall => config::ACTION_TIMER_PLACE_WALL,
         ActionType::PlaceFurniture => config::ACTION_TIMER_PLACE_FURNITURE,
         _ => config::ACTION_TIMER_DEFAULT,
@@ -667,6 +668,7 @@ fn behavior_select_action(
     settlement_wood: f64,
     settlement_food: f64,
     settlement_population: usize,
+    has_nearby_totem: bool,
     rng: &mut impl Rng,
 ) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -853,6 +855,14 @@ fn behavior_select_action(
             behavior_urgency(1.0 - warmth) * 0.60 + behavior_urgency(1.0 - safety) * 0.40;
         behavior_score_add(&mut scores, ActionType::SeekShelter, shelter_score);
     }
+    // Pray scoring: Comfort deficit + totem within radius.
+    // TCI affinity (0.0, 0.2, 0.5, 0.2) — HA + RD + P biases naturally boost this
+    // via the TCI multiplier pass below. has_nearby_totem is pre-computed by caller.
+    if has_nearby_totem {
+        let comfort = needs.get(NeedType::Comfort) as f32;
+        let pray_score = behavior_urgency(1.0 - comfort) * 0.4 + 0.2;
+        behavior_score_add(&mut scores, ActionType::Pray, pray_score);
+    }
 
     match behavior.job.as_str() {
         "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 2.0),
@@ -996,7 +1006,7 @@ fn behavior_select_action(
         return (ActionType::Wander, false);
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 19] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 20] = [
         ActionType::Flee,
         ActionType::SeekShelter,
         ActionType::Drink,
@@ -1010,6 +1020,7 @@ fn behavior_select_action(
         ActionType::Build,
         ActionType::Craft,
         ActionType::Socialize,
+        ActionType::Pray,
         ActionType::Sleep,
         ActionType::Rest,
         ActionType::VisitPartner,
@@ -1601,6 +1612,13 @@ impl SimSystem for BehaviorRuntimeSystem {
                 })
                 .unwrap_or(false);
             let has_tool = crafting::inventory_has_tool(inventory_opt, resources);
+            let has_nearby_totem = needs.get(NeedType::Comfort) < config::COMFORT_LOW
+                && resources.tile_grid.has_furniture_within_radius(
+                    position.tile_x(),
+                    position.tile_y(),
+                    config::PRAY_TOTEM_SEARCH_RADIUS,
+                    "totem",
+                );
             let (settlement_stone, settlement_wood, settlement_food, settlement_population) =
                 identity_opt
                     .and_then(|id| id.settlement_id)
@@ -1632,6 +1650,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 settlement_wood,
                 settlement_food,
                 settlement_population,
+                has_nearby_totem,
                 &mut resources.rng,
             );
             // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
@@ -2010,6 +2029,7 @@ mod tests {
             0.0,
             100.0, // settlement_food (ample)
             10,    // settlement_population
+            false, // has_nearby_totem
             &mut rng,
         );
 
@@ -2044,6 +2064,7 @@ mod tests {
             0.0,
             100.0, // settlement_food (ample)
             10,    // settlement_population
+            false, // has_nearby_totem
             &mut rng,
         );
 
@@ -2081,6 +2102,7 @@ mod tests {
             0.0,
             100.0, // settlement_food (ample)
             10,    // settlement_population
+            false, // has_nearby_totem
             &mut rng,
         );
 
@@ -2115,6 +2137,7 @@ mod tests {
             0.0,
             100.0, // settlement_food (ample)
             10,    // settlement_population
+            false, // has_nearby_totem
             &mut rng,
         );
 

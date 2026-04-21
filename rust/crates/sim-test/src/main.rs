@@ -16352,6 +16352,264 @@ mod tests {
              building entity gets a deterministically-chosen sprite variant."
         );
     }
+
+    // ── ritual-system-v1 ────────────────────────────────────────────────────
+
+    /// Harness (Assertion 1 — Type C): agents near a totem accumulate at least
+    /// 0.34 more total Comfort than those without one, over 200 ticks.
+    ///
+    /// Comfort starts at 1.0 (Needs default, no decay), so agents are primed
+    /// to 0.1 (below COMFORT_LOW=0.35) before ticking.  Entity IDs are snapped
+    /// before run_ticks so newborn entities don't contaminate the measurement.
+    #[test]
+    fn harness_pray_action_restores_comfort() {
+        use sim_core::components::Needs;
+        use sim_core::NeedType;
+        use std::collections::HashSet;
+
+        let mut engine_a = make_stage1_engine(42, 5);
+        engine_a
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine_a.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.1);
+        }
+        let ids_a: HashSet<_> = engine_a
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_a.run_ticks(200);
+
+        let mut engine_b = make_stage1_engine(42, 5);
+        for (_, needs) in engine_b.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.1);
+        }
+        let ids_b: HashSet<_> = engine_b
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_b.run_ticks(200);
+
+        let comfort_with_totem: f64 = engine_a
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_a.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+        let comfort_without_totem: f64 = engine_b
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_b.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+
+        let delta = comfort_with_totem - comfort_without_totem;
+        println!(
+            "[harness_pray_action_restores_comfort] \
+             comfort_with_totem={comfort_with_totem:.4} \
+             comfort_without_totem={comfort_without_totem:.4} \
+             delta={delta:.4}"
+        );
+
+        // Type C threshold: delta >= 0.34 (plan assertion 1, 30% margin of observed 1.12)
+        assert!(
+            delta >= 0.34,
+            "ritual-system-v1 A1: Type C — totem-near agents should gain \
+             >= 0.34 total Comfort more than no-totem agents over 200 ticks. \
+             delta={delta:.4} (threshold=0.34)"
+        );
+
+        // Execution evidence (Assertion 6): comfort rose above initial 0.1*count,
+        // proving at least one Pray completion occurred.
+        let initial_sum = ids_a.len() as f64 * 0.1;
+        assert!(
+            comfort_with_totem > initial_sum + 0.07,
+            "ritual-system-v1 A6: execution evidence — Pray never completed \
+             (comfort stayed at primed baseline). \
+             comfort={comfort_with_totem:.4} initial_sum={initial_sum:.4}"
+        );
+    }
+
+    /// Harness (Assertion 2 — Type C): a nearby totem yields at least 0.12 more
+    /// total Comfort than a far totem (outside Chebyshev-3 radius), over 200 ticks.
+    #[test]
+    fn harness_pray_requires_nearby_totem() {
+        use sim_core::components::Needs;
+        use sim_core::NeedType;
+        use std::collections::HashSet;
+
+        let mut engine_near = make_stage1_engine(43, 5);
+        engine_near
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine_near.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.1);
+        }
+        let ids_near: HashSet<_> = engine_near
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_near.run_ticks(200);
+
+        let mut engine_far = make_stage1_engine(43, 5);
+        engine_far
+            .resources_mut()
+            .tile_grid
+            .set_furniture(10, 10, "totem");
+        for (_, needs) in engine_far.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.1);
+        }
+        let ids_far: HashSet<_> = engine_far
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_far.run_ticks(200);
+
+        let comfort_near: f64 = engine_near
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_near.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+        let comfort_far: f64 = engine_far
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_far.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+
+        let delta = comfort_near - comfort_far;
+        println!(
+            "[harness_pray_requires_nearby_totem] \
+             comfort_near={comfort_near:.4} comfort_far={comfort_far:.4} \
+             delta={delta:.4}"
+        );
+
+        // Type C threshold: delta >= 0.12 (plan assertion 2, 30% margin of observed 0.40)
+        assert!(
+            delta >= 0.12,
+            "ritual-system-v1 A2: Type C — near-totem agents should gain \
+             >= 0.12 total Comfort more than far-totem agents over 200 ticks. \
+             delta={delta:.4} (threshold=0.12)"
+        );
+    }
+
+    /// Harness (Assertion 4 — Type A): Pray also restores Meaning.
+    ///
+    /// Primes Meaning=0.10 so PRAY_MEANING_BONUS completions are detectable.
+    /// Asserts total meaning increase >= 0.05 across initial agents.
+    #[test]
+    fn harness_pray_restores_meaning() {
+        use sim_core::components::Needs;
+        use sim_core::NeedType;
+        use std::collections::HashSet;
+
+        let mut engine = make_stage1_engine(42, 5);
+        engine
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.1);
+            needs.set(NeedType::Meaning, 0.1);
+        }
+        let ids: HashSet<_> = engine
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine.run_ticks(200);
+
+        let meaning_after: f64 = engine
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids.contains(e))
+            .map(|(_, n)| n.get(NeedType::Meaning))
+            .sum();
+        let initial_sum = ids.len() as f64 * 0.1;
+        let delta = meaning_after - initial_sum;
+
+        println!(
+            "[harness_pray_restores_meaning] \
+             meaning_after={meaning_after:.4} initial={initial_sum:.4} \
+             delta={delta:.4}"
+        );
+
+        // Type A: Meaning must have increased (PRAY_MEANING_BONUS=0.02 per completion)
+        // delta >= 0.05 requires >= 3 Pray completions across 5 agents — achievable in 200 ticks
+        assert!(
+            delta >= 0.05,
+            "ritual-system-v1 A4: Type A — Pray must restore Meaning \
+             (PRAY_MEANING_BONUS=0.02). Total meaning delta={delta:.4} < 0.05. \
+             Meaning is not being written, or priming was wrong."
+        );
+    }
+
+    /// Harness (Assertion 5 — Type A): agents with Comfort above COMFORT_LOW=0.35
+    /// never select Pray — the short-circuit gate must be active.
+    #[test]
+    fn harness_pray_blocked_above_comfort_threshold() {
+        use sim_core::components::Needs;
+        use sim_core::NeedType;
+        use std::collections::HashSet;
+
+        // Comfort=0.90 is well above COMFORT_LOW=0.35; Pray must never score.
+        let mut engine = make_stage1_engine(42, 5);
+        engine
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.90);
+        }
+        let ids: HashSet<_> = engine
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine.run_ticks(200);
+
+        let comfort_after: f64 = engine
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+
+        // If Pray fired it would ADD comfort, making sum > 0.90 * count.
+        // No decay exists, so comfort can only increase via Pray.
+        // Any sum > initial_sum + 0.07 means Pray ran — that's a gate failure.
+        let initial_sum = ids.len() as f64 * 0.90;
+        println!(
+            "[harness_pray_blocked_above_comfort_threshold] \
+             comfort_after={comfort_after:.4} initial={initial_sum:.4}"
+        );
+
+        assert!(
+            comfort_after <= initial_sum + 0.07,
+            "ritual-system-v1 A5: Type A — Pray MUST NOT fire when \
+             Comfort >= COMFORT_LOW=0.35. COMFORT_LOW gate is broken. \
+             comfort_after={comfort_after:.4} initial={initial_sum:.4}"
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
