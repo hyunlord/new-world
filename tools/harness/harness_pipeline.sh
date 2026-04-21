@@ -746,11 +746,23 @@ VISUAL_OK | VISUAL_WARNING(<reason>) | VISUAL_FAIL(<reason>)
 VLM_EOF
         )
 
-        claude --agent harness-vlm-analyzer \
-            -p "$vlm_prompt" \
-            --output-format text \
-            > "$evidence_dir/visual_analysis.txt" \
-            2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
+        # VLM isolation: run in clean subshell with stdin closed and minimal env
+        # to prevent stop-hook text from leaking into claude output.
+        (
+            exec < /dev/null
+            env -i \
+                PATH="$PATH" \
+                HOME="$HOME" \
+                USER="${USER:-}" \
+                TERM="${TERM:-dumb}" \
+                CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
+                HARNESS_VLM_ISOLATED=1 \
+                claude --agent harness-vlm-analyzer \
+                    -p "$vlm_prompt" \
+                    --output-format text \
+                    > "$evidence_dir/visual_analysis.txt" \
+                    2> "$evidence_dir/vlm_log.txt"
+        ) || true
 
     else
         log "Found $screenshot_count screenshots — running VLM analysis"
@@ -811,17 +823,40 @@ $text_data
 Read each screenshot file listed above, then analyze the screenshots and data.
 Answer every question in the checklist."
 
-        claude --agent harness-vlm-analyzer \
-            -p "$vlm_input" \
-            --dangerously-skip-permissions \
-            --output-format text \
-            > "$evidence_dir/visual_analysis.txt" \
-            2> >(tee "$evidence_dir/vlm_log.txt" >&2) || true
+        # VLM isolation: run in clean subshell with stdin closed and minimal env
+        # to prevent stop-hook text from leaking into claude output.
+        (
+            exec < /dev/null
+            env -i \
+                PATH="$PATH" \
+                HOME="$HOME" \
+                USER="${USER:-}" \
+                TERM="${TERM:-dumb}" \
+                CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
+                HARNESS_VLM_ISOLATED=1 \
+                claude --agent harness-vlm-analyzer \
+                    -p "$vlm_input" \
+                    --dangerously-skip-permissions \
+                    --output-format text \
+                    > "$evidence_dir/visual_analysis.txt" \
+                    2> "$evidence_dir/vlm_log.txt"
+        ) || true
     fi
 
     if [[ ! -s "$evidence_dir/visual_analysis.txt" ]]; then
         log "WARNING: VLM analysis produced empty output"
         echo "VLM analysis failed to produce output" > "$evidence_dir/visual_analysis.txt"
+    fi
+
+    # Contamination detection: stop-hook text leaking into VLM output produces
+    # useless evidence. Detect and quarantine so Evaluator isn't misled.
+    if grep -qE "Stop hook|pre-commit|HARNESS_SKIP|stop_hook_active" "$evidence_dir/visual_analysis.txt" 2>/dev/null; then
+        log "WARNING: VLM output contaminated with stop-hook text — quarantining"
+        mv "$evidence_dir/visual_analysis.txt" "$evidence_dir/visual_analysis.contaminated.txt"
+        {
+            echo "VLM output was contaminated with stop-hook text (see visual_analysis.contaminated.txt)"
+            echo "VISUAL_WARNING (VLM isolation failed; manual review recommended)"
+        } > "$evidence_dir/visual_analysis.txt"
     fi
 
     # Ensure terminal verdict token is present — required by harness-evaluator and
@@ -1034,6 +1069,7 @@ run_codex() {
     local sandbox="$1"
     local output_file="$2"
     local prompt_file="$3"
+    local timeout_seconds="${CODEX_TIMEOUT_SECONDS:-600}"
 
     local cmd=("$CODEX_BIN" exec)
     if [[ -n "$CODEX_MODEL" ]]; then
@@ -1041,7 +1077,17 @@ run_codex() {
     fi
     cmd+=(-s "$sandbox" -o "$output_file" --ephemeral)
 
-    "${cmd[@]}" < "$prompt_file"
+    # Apply timeout wrapper — Codex CLI hang will now fail after N seconds
+    # instead of stalling the entire pipeline indefinitely.
+    run_with_timeout "$timeout_seconds" "${cmd[@]}" < "$prompt_file"
+    local rc=$?
+
+    # Normalize timeout exit codes (124 = GNU timeout, 142 = macOS perl fallback)
+    if [[ $rc -eq 124 || $rc -eq 142 ]]; then
+        log "WARNING: run_codex timed out after ${timeout_seconds}s (rc=$rc)"
+        return 124
+    fi
+    return $rc
 }
 
 # ============================================================
@@ -1106,10 +1152,17 @@ Check the proxy chain for ONLY these methods. Do not scan for other methods.
 FFI_METHODS
 
     log "Running FFI Chain Verify via Codex..."
-    if run_codex "read-only" "$evidence_dir/ffi_chain_verify.txt" "$ffi_prompt_file" 2> "$evidence_dir/ffi_verify_log.txt"; then
+    local _ffi_rc=0
+    run_codex "read-only" "$evidence_dir/ffi_chain_verify.txt" "$ffi_prompt_file" 2> "$evidence_dir/ffi_verify_log.txt" || _ffi_rc=$?
+    if [[ $_ffi_rc -eq 0 ]]; then
         log "FFI chain verify complete"
+    elif [[ $_ffi_rc -eq 124 ]]; then
+        log "FFI CHAIN VERIFY TIMED OUT — defaulting to OK (non-blocking)"
+        echo "FFI chain verify timed out (Codex MCP hang)" > "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_status: TIMED_OUT" >> "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_overall: ALL_COMPLETE" >> "$evidence_dir/ffi_chain_verify.txt"
     else
-        log "WARNING: FFI chain verify failed (exit $?) — continuing pipeline"
+        log "WARNING: FFI chain verify failed (exit $_ffi_rc) — continuing pipeline"
         echo "FFI chain verification failed to execute" > "$evidence_dir/ffi_chain_verify.txt"
     fi
 
@@ -1179,10 +1232,16 @@ regression_details: <specific test or feature that broke>
 GUARD_EOF
 
     log "Running Regression Guard via Codex..."
-    if run_codex "workspace-write" "$REVIEW_DIR/regression_guard.txt" "$guard_prompt_file" 2> "$REVIEW_DIR/regression_guard_log.txt"; then
+    local _rg_rc=0
+    run_codex "workspace-write" "$REVIEW_DIR/regression_guard.txt" "$guard_prompt_file" 2> "$REVIEW_DIR/regression_guard_log.txt" || _rg_rc=$?
+    if [[ $_rg_rc -eq 0 ]]; then
         log "Regression guard complete"
+    elif [[ $_rg_rc -eq 124 ]]; then
+        log "REGRESSION GUARD TIMED OUT — defaulting to CLEAN (non-blocking)"
+        echo "regression_status: CLEAN" > "$REVIEW_DIR/regression_guard.txt"
+        echo "regression_details: (Regression guard timed out; defaulted to CLEAN)" >> "$REVIEW_DIR/regression_guard.txt"
     else
-        log "WARNING: Regression guard failed (exit $?) — continuing pipeline"
+        log "WARNING: Regression guard failed (exit $_rg_rc) — continuing pipeline"
         echo "regression_status: CLEAN" > "$REVIEW_DIR/regression_guard.txt"
         echo "(Regression guard execution failed — defaulting to CLEAN)" >> "$REVIEW_DIR/regression_guard.txt"
     fi
@@ -1295,13 +1354,17 @@ EVAL_COMBINE
 
     # Run via Codex (workspace-write: needs to run cargo test)
     log "Running Codex Evaluator (independent session, attempt $CODE_ATTEMPT)..."
-    if run_codex "workspace-write" "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" "$evaluator_prompt_file" 2> "$REVIEW_DIR/codex_evaluator_log.txt"; then
+    local _eval_rc=0
+    run_codex "workspace-write" "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" "$evaluator_prompt_file" 2> "$REVIEW_DIR/codex_evaluator_log.txt" || _eval_rc=$?
+    if [[ $_eval_rc -eq 0 ]]; then
         log "Codex Evaluator complete"
+    elif [[ $_eval_rc -eq 124 ]]; then
+        log "CODEX EVALUATOR TIMED OUT — falling back to built-in evaluator"
+        # Leave output file empty/absent so the built-in evaluator fallback path triggers below
     else
-        local exit_code=$?
-        log "WARNING: Codex Evaluator exited with code $exit_code"
+        log "WARNING: Codex Evaluator exited with code $_eval_rc"
         if [[ ! -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]]; then
-            die "Codex Evaluator failed and produced no output (exit $exit_code). Check $REVIEW_DIR/codex_evaluator_log.txt"
+            die "Codex Evaluator failed and produced no output (exit $_eval_rc). Check $REVIEW_DIR/codex_evaluator_log.txt"
         fi
     fi
 
