@@ -16123,32 +16123,26 @@ mod tests {
     ///
     /// Regression guard — Feature 3 targets shelter. Round 1 asset work must
     /// leave shelter.png untouched. Hard invariant: any deletion fails this test
-    /// immediately.
+    /// Feature 3 removed `assets/sprites/buildings/shelter.png` — tile-grid rendering
+    /// now draws shelters from wall + floor + furniture sprites.  This assertion was
+    /// previously a *preservation* guard (Round 1 must not delete it); after Feature 3
+    /// it flips to a *deletion* guard (the placeholder must be gone).
     ///
-    /// Type A: hard invariant (file must exist, non-empty).
+    /// Type A: hard invariant (file must NOT exist).
     #[test]
     fn harness_sprite_assets_round1_a5_shelter_preserved() {
         let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
         let shelter_path = project_root.join("assets/sprites/buildings/shelter.png");
 
-        // Type A hard invariant: shelter.png must exist.
+        // Feature 3 deleted the placeholder — tile-grid rendering takes over.
         assert!(
-            shelter_path.exists(),
-            "sprite-assets-round1 A5: assets/sprites/buildings/shelter.png must be preserved. \
-             Feature 3 owns this file — Round 1 work must not touch it."
-        );
-
-        let sz = std::fs::metadata(&shelter_path)
-            .expect("A5: shelter.png metadata read failed")
-            .len();
-        assert!(
-            sz > 0,
-            "sprite-assets-round1 A5: shelter.png exists but is 0 bytes."
+            !shelter_path.exists(),
+            "sprite-assets-round1 A5 (post-Feature-3): assets/sprites/buildings/shelter.png \
+             should have been removed in Feature 3. Tile-grid rendering now handles shelters."
         );
 
         println!(
-            "[harness_sprite_assets_round1][A5] shelter.png preserved: {} bytes ✓",
-            sz
+            "[harness_sprite_assets_round1][A5] shelter.png correctly absent after Feature 3 ✓"
         );
     }
 
@@ -17008,4 +17002,548 @@ fn run_stress_math_bench(args: &[String]) {
     );
 }
 
+
+// ── Feature: sprite-wall-floor-tileset ──────────────────────────────────────
+// A13/A14: wall + floor material sprite directories exist with ≥3 variants each.
+// These assertions verify the Round-2 sprite delivery is in place before the
+// GDScript renderer attempts to load them at runtime.
+#[cfg(test)]
+mod harness_sprite_wall_floor_tileset {
+    /// A13: Each wall material sprite directory exists and contains ≥3 PNG variants.
+    ///
+    /// Type A: hard invariant — directory + minimum variant count.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_a13_wall_material_dirs() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let wall_materials = [
+            "granite", "basalt", "limestone", "sandstone", "oak", "birch", "pine",
+        ];
+        for mat in &wall_materials {
+            let dir = project_root.join(format!("assets/sprites/walls/{}", mat));
+            assert!(
+                dir.is_dir(),
+                "A13 FAIL: wall material dir missing: assets/sprites/walls/{}",
+                mat
+            );
+            let png_count = std::fs::read_dir(&dir)
+                .unwrap_or_else(|_| panic!("A13: cannot read dir for {}", mat))
+                .filter_map(|e| e.ok())
+                .filter(|e| {
+                    e.path()
+                        .extension()
+                        .and_then(|s| s.to_str())
+                        == Some("png")
+                })
+                .count();
+            assert!(
+                png_count >= 3,
+                "A13 FAIL: walls/{} has only {} PNG(s) — need ≥3 variants",
+                mat,
+                png_count
+            );
+        }
+        println!(
+            "[harness_sprite_wall_floor_tileset][A13] \
+             7 wall material dirs present, ≥3 variants each ✓"
+        );
+    }
+
+    /// A14: Each floor material sprite directory exists and contains ≥3 PNG variants.
+    ///
+    /// Type A: hard invariant — directory + minimum variant count.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_a14_floor_material_dirs() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let floor_materials = ["packed_earth", "stone_slab", "wood_plank"];
+        for mat in &floor_materials {
+            let dir = project_root.join(format!("assets/sprites/floors/{}", mat));
+            assert!(
+                dir.is_dir(),
+                "A14 FAIL: floor material dir missing: assets/sprites/floors/{}",
+                mat
+            );
+            let png_count = std::fs::read_dir(&dir)
+                .unwrap_or_else(|_| panic!("A14: cannot read dir for {}", mat))
+                .filter_map(|e| e.ok())
+                .filter(|e| {
+                    e.path()
+                        .extension()
+                        .and_then(|s| s.to_str())
+                        == Some("png")
+                })
+                .count();
+            assert!(
+                png_count >= 3,
+                "A14 FAIL: floors/{} has only {} PNG(s) — need ≥3 variants",
+                mat,
+                png_count
+            );
+        }
+        println!(
+            "[harness_sprite_wall_floor_tileset][A14] \
+             3 floor material dirs present, ≥3 variants each ✓"
+        );
+    }
+
+    // ── helpers ────────────────────────────────────────────────────────────────
+
+    /// Returns relative paths for all 30 sprite PNGs (21 wall + 9 floor).
+    fn tileset_all_30_rel_paths() -> Vec<String> {
+        let mut paths: Vec<String> = Vec::new();
+        for mat in ["granite", "basalt", "limestone", "sandstone", "oak", "birch", "pine"] {
+            for v in 1_u32..=3 {
+                paths.push(format!("assets/sprites/walls/{}/{}.png", mat, v));
+            }
+        }
+        for mat in ["packed_earth", "stone_slab", "wood_plank"] {
+            for v in 1_u32..=3 {
+                paths.push(format!("assets/sprites/floors/{}/{}.png", mat, v));
+            }
+        }
+        paths
+    }
+
+    // ── A1: shelter placeholder deleted ───────────────────────────────────────
+
+    /// A1 (plan): `assets/sprites/buildings/shelter.png` does NOT exist.
+    ///
+    /// Feature 3 deleted this placeholder; tile-grid rendering handles shelters.
+    /// Type A: hard invariant — file must be absent.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_shelter_placeholder_deleted() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let shelter_path = project_root.join("assets/sprites/buildings/shelter.png");
+
+        // Type A: shelter.png must NOT exist
+        assert!(
+            !shelter_path.exists(),
+            "A1 FAIL: assets/sprites/buildings/shelter.png still exists. \
+             Tile-grid rendering replaces it; delete the placeholder."
+        );
+
+        println!("[harness_sprite_wall_floor_tileset][A1] shelter.png absent ✓");
+    }
+
+    // ── A2: all 21 wall PNGs present by exact name ────────────────────────────
+
+    /// A2 (plan): Every `assets/sprites/walls/{mat}/{1,2,3}.png` exists.
+    ///
+    /// 7 materials × 3 variants = 21 files checked by exact path.
+    /// Type A: `missing_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_all_21_wall_pngs_present_by_exact_name() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let mut missing: Vec<String> = Vec::new();
+        for mat in ["granite", "basalt", "limestone", "sandstone", "oak", "birch", "pine"] {
+            for v in 1_u32..=3 {
+                let rel = format!("assets/sprites/walls/{}/{}.png", mat, v);
+                if !project_root.join(&rel).exists() {
+                    missing.push(rel);
+                }
+            }
+        }
+        // Type A: missing_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A2] missing wall PNGs: {}",
+            missing.len()
+        );
+        assert!(
+            missing.is_empty(),
+            "A2 FAIL: {}/21 wall PNGs missing. Missing: {:?}",
+            missing.len(),
+            missing
+        );
+    }
+
+    // ── A3: all 9 floor PNGs present by exact name ────────────────────────────
+
+    /// A3 (plan): Every `assets/sprites/floors/{mat}/{1,2,3}.png` exists.
+    ///
+    /// 3 materials × 3 variants = 9 files checked by exact path.
+    /// Type A: `missing_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_all_9_floor_pngs_present_by_exact_name() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let mut missing: Vec<String> = Vec::new();
+        for mat in ["packed_earth", "stone_slab", "wood_plank"] {
+            for v in 1_u32..=3 {
+                let rel = format!("assets/sprites/floors/{}/{}.png", mat, v);
+                if !project_root.join(&rel).exists() {
+                    missing.push(rel);
+                }
+            }
+        }
+        // Type A: missing_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A3] missing floor PNGs: {}",
+            missing.len()
+        );
+        assert!(
+            missing.is_empty(),
+            "A3 FAIL: {}/9 floor PNGs missing. Missing: {:?}",
+            missing.len(),
+            missing
+        );
+    }
+
+    // ── A4: all 30 PNGs have valid PNG signature ──────────────────────────────
+
+    /// A4 (plan): Every PNG starts with the 8-byte PNG magic number.
+    ///
+    /// Magic: `89 50 4E 47 0D 0A 1A 0A`.
+    /// Type A: `invalid_signature_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_all_30_pngs_have_valid_png_signature() {
+        const PNG_SIG: [u8; 8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let mut invalid: Vec<String> = Vec::new();
+        for rel in tileset_all_30_rel_paths() {
+            let path = project_root.join(&rel);
+            let data = std::fs::read(&path)
+                .unwrap_or_else(|e| panic!("A4: cannot read {}: {}", rel, e));
+            if data.len() < 8 || data[..8] != PNG_SIG {
+                invalid.push(rel);
+            }
+        }
+        // Type A: invalid_signature_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A4] invalid PNG signatures: {}",
+            invalid.len()
+        );
+        assert!(
+            invalid.is_empty(),
+            "A4 FAIL: {}/30 PNGs have invalid signature. Bad files: {:?}",
+            invalid.len(),
+            invalid
+        );
+    }
+
+    // ── A5: all 30 PNGs are 16×16 pixels ─────────────────────────────────────
+
+    /// A5 (plan): Every sprite PNG IHDR reports width == 16, height == 16.
+    ///
+    /// PNG layout: bytes 0-7 = signature, 8-15 = IHDR chunk length + type,
+    /// 16-19 = width (big-endian u32), 20-23 = height (big-endian u32).
+    /// Type A: `wrong_dimension_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_all_30_pngs_are_16x16_pixels() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let mut wrong: Vec<String> = Vec::new();
+        for rel in tileset_all_30_rel_paths() {
+            let path = project_root.join(&rel);
+            let data = std::fs::read(&path)
+                .unwrap_or_else(|e| panic!("A5: cannot read {}: {}", rel, e));
+            if data.len() < 24 {
+                wrong.push(format!("{} (file too short: {} bytes)", rel, data.len()));
+                continue;
+            }
+            let w = u32::from_be_bytes([data[16], data[17], data[18], data[19]]);
+            let h = u32::from_be_bytes([data[20], data[21], data[22], data[23]]);
+            if w != 16 || h != 16 {
+                wrong.push(format!("{} ({}×{})", rel, w, h));
+            }
+        }
+        // Type A: wrong_dimension_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A5] wrong-dimension PNGs: {}",
+            wrong.len()
+        );
+        assert!(
+            wrong.is_empty(),
+            "A5 FAIL: {}/30 PNGs are not 16×16. Offenders: {:?}",
+            wrong.len(),
+            wrong
+        );
+    }
+
+    // ── A6: all 30 PNGs are RGB (color type 2), no alpha ─────────────────────
+
+    /// A6 (plan): Every PNG IHDR color type byte == 2 (truecolor RGB, no alpha).
+    ///
+    /// PNG IHDR byte 25 = color type: 0=gray, 2=RGB, 3=indexed, 4=gray+α, 6=RGBA.
+    /// Type A: `wrong_colortype_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_all_30_pngs_are_rgb_no_alpha() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let mut wrong: Vec<String> = Vec::new();
+        for rel in tileset_all_30_rel_paths() {
+            let path = project_root.join(&rel);
+            let data = std::fs::read(&path)
+                .unwrap_or_else(|e| panic!("A6: cannot read {}: {}", rel, e));
+            if data.len() < 26 {
+                wrong.push(format!("{} (file too short)", rel));
+                continue;
+            }
+            // byte 25 = color_type in IHDR
+            let color_type = data[25];
+            if color_type != 2 {
+                wrong.push(format!("{} (color_type={})", rel, color_type));
+            }
+        }
+        // Type A: wrong_colortype_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A6] wrong-colortype PNGs: {}",
+            wrong.len()
+        );
+        assert!(
+            wrong.is_empty(),
+            "A6 FAIL: {}/30 PNGs are not RGB (color_type 2). Offenders: {:?}",
+            wrong.len(),
+            wrong
+        );
+    }
+
+    // ── A7: stone and wood wall textures are not byte-identical ───────────────
+
+    /// A7 (plan): A stone wall sprite and a wood wall sprite differ in content.
+    ///
+    /// Uses granite/1.png vs oak/1.png as representative samples.
+    /// Type A: `content_differs == true`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_stone_and_wood_wall_textures_are_not_identical() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let stone =
+            std::fs::read(project_root.join("assets/sprites/walls/granite/1.png"))
+                .expect("A7: cannot read granite/1.png");
+        let wood =
+            std::fs::read(project_root.join("assets/sprites/walls/oak/1.png"))
+                .expect("A7: cannot read oak/1.png");
+        // Type A: content_differs == true
+        let content_differs = stone != wood;
+        println!(
+            "[harness_sprite_wall_floor_tileset][A7] granite/1.png != oak/1.png: {}",
+            content_differs
+        );
+        assert!(
+            content_differs,
+            "A7 FAIL: granite/1.png and oak/1.png are byte-identical. \
+             Stone and wood textures must be visually distinct."
+        );
+    }
+
+    // ── A8: floor textures are not byte-identical across materials ─────────────
+
+    /// A8 (plan): The three floor material variant-1 files are pairwise distinct.
+    ///
+    /// packed_earth/1.png, stone_slab/1.png, wood_plank/1.png must all differ.
+    /// Type A: `content_differs == true`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_floor_textures_are_not_identical() {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let packed =
+            std::fs::read(project_root.join("assets/sprites/floors/packed_earth/1.png"))
+                .expect("A8: cannot read packed_earth/1.png");
+        let slab =
+            std::fs::read(project_root.join("assets/sprites/floors/stone_slab/1.png"))
+                .expect("A8: cannot read stone_slab/1.png");
+        let plank =
+            std::fs::read(project_root.join("assets/sprites/floors/wood_plank/1.png"))
+                .expect("A8: cannot read wood_plank/1.png");
+        // Type A: content_differs == true (all three pairs must differ)
+        let content_differs = (packed != slab) && (slab != plank) && (packed != plank);
+        println!(
+            "[harness_sprite_wall_floor_tileset][A8] all floor variants distinct: {}",
+            content_differs
+        );
+        assert!(
+            content_differs,
+            "A8 FAIL: floor textures not all distinct. \
+             packed_earth!=stone_slab: {} | stone_slab!=wood_plank: {} | packed_earth!=wood_plank: {}",
+            packed != slab,
+            slab != plank,
+            packed != plank,
+        );
+    }
+
+    // ── A9: wall variants not all identical within each material ───────────────
+
+    /// A9 (plan): Within each wall material, the 3 variants are not all byte-identical.
+    ///
+    /// Counts materials where variants 1, 2, and 3 are all the same file.
+    /// Type A: `same_variants_count == 0`.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_wall_variant_files_are_not_all_identical_within_material(
+    ) {
+        let project_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..");
+        let wall_materials =
+            ["granite", "basalt", "limestone", "sandstone", "oak", "birch", "pine"];
+        let mut same_variants_count: usize = 0;
+        for mat in &wall_materials {
+            let v1 = std::fs::read(
+                project_root.join(format!("assets/sprites/walls/{}/1.png", mat)),
+            )
+            .unwrap_or_else(|e| panic!("A9: cannot read {}/1.png: {}", mat, e));
+            let v2 = std::fs::read(
+                project_root.join(format!("assets/sprites/walls/{}/2.png", mat)),
+            )
+            .unwrap_or_else(|e| panic!("A9: cannot read {}/2.png: {}", mat, e));
+            let v3 = std::fs::read(
+                project_root.join(format!("assets/sprites/walls/{}/3.png", mat)),
+            )
+            .unwrap_or_else(|e| panic!("A9: cannot read {}/3.png: {}", mat, e));
+            if v1 == v2 && v2 == v3 {
+                same_variants_count += 1;
+                println!(
+                    "[harness_sprite_wall_floor_tileset][A9] SAME variants: walls/{}",
+                    mat
+                );
+            }
+        }
+        // Type A: same_variants_count == 0
+        println!(
+            "[harness_sprite_wall_floor_tileset][A9] materials with all-identical variants: {}",
+            same_variants_count
+        );
+        assert_eq!(
+            same_variants_count,
+            0,
+            "A9 FAIL: {} wall material(s) have all 3 variants identical. \
+             Each material must have at least 2 distinct variants.",
+            same_variants_count
+        );
+    }
+
+    /// A10: No 0.png files exist in wall or floor sprite dirs.
+    /// Sprites are 1-indexed (1.png, 2.png, 3.png).  If building_renderer.gd ever
+    /// uses a bare 0-based variant_idx instead of variant_idx+1, a 0.png request
+    /// would only succeed if a 0.png file existed — which it must not.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_no_zero_indexed_png_files() {
+        let repo = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap();
+        let wall_dirs = ["granite", "basalt", "limestone", "sandstone", "oak", "birch", "pine"];
+        let floor_dirs = ["packed_earth", "stone_slab", "wood_plank"];
+        let mut found_zero_pngs: Vec<String> = Vec::new();
+        for mat in wall_dirs.iter() {
+            let p = repo.join("assets/sprites/walls").join(mat).join("0.png");
+            if p.exists() {
+                found_zero_pngs.push(format!("walls/{}/0.png", mat));
+            }
+        }
+        for mat in floor_dirs.iter() {
+            let p = repo.join("assets/sprites/floors").join(mat).join("0.png");
+            if p.exists() {
+                found_zero_pngs.push(format!("floors/{}/0.png", mat));
+            }
+        }
+        println!(
+            "[harness_sprite_wall_floor_tileset][A10] zero-indexed PNGs present: {}",
+            found_zero_pngs.len()
+        );
+        assert!(
+            found_zero_pngs.is_empty(),
+            "A10 FAIL: Found 0.png files — sprites must be 1-indexed (1.png..N.png). \
+             building_renderer.gd must use variant_idx+1 not variant_idx. \
+             Offending files: {:?}",
+            found_zero_pngs
+        );
+    }
+
+    /// A11: building_renderer.gd uses the exact 1-based format string specifically inside
+    /// _load_wall_material_texture and _load_floor_material_texture — not just anywhere in
+    /// the file (pre-existing building/furniture variant code also uses variant_idx+1).
+    /// Also verifies wiring:
+    ///   _draw_wall_tile calls _load_wall_material_texture(material_id, wx, wy)
+    ///   _draw_tile_grid_walls calls _load_floor_material_texture(...)
+    /// Fails if the wall/floor texture code is reverted while furniture/building code remains.
+    #[test]
+    fn harness_sprite_wall_floor_tileset_gdscript_uses_one_based_variant_index() {
+        let repo = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap();
+        let renderer = repo.join("scripts/ui/renderers/building_renderer.gd");
+        let source = std::fs::read_to_string(&renderer)
+            .expect("A11: could not read building_renderer.gd");
+
+        // Helper: extract the body of a GDScript `func NAME(...)` up to the next top-level func.
+        // Returns everything from after the `func NAME(` marker to (not including) the next
+        // `\nfunc ` line — i.e., the signature tail + full function body.
+        let extract_func_body = |name: &str| -> Option<String> {
+            let marker = format!("func {}(", name);
+            let start = source.find(marker.as_str())?;
+            let rest = &source[start + marker.len()..];
+            let end = rest.find("\nfunc ").unwrap_or(rest.len());
+            Some(rest[..end].to_string())
+        };
+
+        // The exact on-disk path format both wall and floor loaders must produce.
+        // This string appears only inside the new wall/floor material loaders —
+        // building_variant_path / furniture_variant_path use `building_variant_dir(...)`,
+        // not `variant_dir_res`, so they cannot satisfy this check.
+        let fmt_1based = r#""%s/%d.png" % [variant_dir_res, variant_idx + 1]"#;
+
+        // --- Sub-assertion 1: _load_wall_material_texture ---
+        // Must contain the exact 1-based format string for wall sprite paths.
+        let wall_body = extract_func_body("_load_wall_material_texture")
+            .expect("A11 FAIL: _load_wall_material_texture not found in building_renderer.gd");
+        println!(
+            "[harness_sprite_wall_floor_tileset][A11] _load_wall_material_texture body \
+             contains exact format string: {}",
+            wall_body.contains(fmt_1based)
+        );
+        assert!(
+            wall_body.contains(fmt_1based),
+            "A11 FAIL: _load_wall_material_texture must contain \
+             \"%s/%d.png\" % [variant_dir_res, variant_idx + 1] \
+             (1-based filename). Off-by-one causes Godot to request 0.png which does not exist."
+        );
+
+        // --- Sub-assertion 2: _load_floor_material_texture ---
+        // Must contain the exact 1-based format string for floor sprite paths.
+        let floor_body = extract_func_body("_load_floor_material_texture")
+            .expect("A11 FAIL: _load_floor_material_texture not found in building_renderer.gd");
+        println!(
+            "[harness_sprite_wall_floor_tileset][A11] _load_floor_material_texture body \
+             contains exact format string: {}",
+            floor_body.contains(fmt_1based)
+        );
+        assert!(
+            floor_body.contains(fmt_1based),
+            "A11 FAIL: _load_floor_material_texture must contain \
+             \"%s/%d.png\" % [variant_dir_res, variant_idx + 1] \
+             (1-based filename). Off-by-one causes Godot to request 0.png which does not exist."
+        );
+
+        // --- Sub-assertion 3: _draw_wall_tile wiring ---
+        // Must call _load_wall_material_texture(material_id, wx, wy) specifically —
+        // not merely reference the function name in a comment.
+        let draw_wall_body = extract_func_body("_draw_wall_tile")
+            .expect("A11 FAIL: _draw_wall_tile not found in building_renderer.gd");
+        let wall_call = "_load_wall_material_texture(material_id, wx, wy)";
+        println!(
+            "[harness_sprite_wall_floor_tileset][A11] _draw_wall_tile calls \
+             _load_wall_material_texture(material_id, wx, wy): {}",
+            draw_wall_body.contains(wall_call)
+        );
+        assert!(
+            draw_wall_body.contains(wall_call),
+            "A11 FAIL: _draw_wall_tile must call _load_wall_material_texture(material_id, wx, wy). \
+             Wall sprite rendering is not wired or the call signature changed."
+        );
+
+        // --- Sub-assertion 4: _draw_tile_grid_walls wiring ---
+        // Must call _load_floor_material_texture(...) — floor sprite path must be wired.
+        let draw_grid_body = extract_func_body("_draw_tile_grid_walls")
+            .expect("A11 FAIL: _draw_tile_grid_walls not found in building_renderer.gd");
+        println!(
+            "[harness_sprite_wall_floor_tileset][A11] _draw_tile_grid_walls calls \
+             _load_floor_material_texture(...): {}",
+            draw_grid_body.contains("_load_floor_material_texture(")
+        );
+        assert!(
+            draw_grid_body.contains("_load_floor_material_texture("),
+            "A11 FAIL: _draw_tile_grid_walls must call _load_floor_material_texture(). \
+             Floor sprite rendering is not wired into the tile grid render path."
+        );
+    }
+}
 
