@@ -133,3 +133,45 @@ chmod +x "$HOOKS_DIR/pre-commit"
 ```
 
 Any commit touching `rust/crates/sim-*` will be blocked unless a recent APPROVED verdict exists.
+
+## Infrastructure & Timeouts
+
+### Codex invocation timeout
+
+All `run_codex` invocations are wrapped with `run_with_timeout` (default 600s = 10 min).
+Override via env: `CODEX_TIMEOUT_SECONDS=300 bash harness_pipeline.sh ...`
+
+Timed-out invocations use non-blocking fallbacks:
+- FFI chain verify timeout → `ffi_status: TIMED_OUT` + `ffi_overall: ALL_COMPLETE` (non-blocking)
+- Regression guard timeout → `regression_status: CLEAN` (non-blocking)
+- Evaluator timeout → built-in evaluator fallback
+
+### VLM isolation
+
+VLM analyzer (`claude --agent harness-vlm-analyzer`) runs in an isolated subshell:
+- `exec < /dev/null` — closes stdin, prevents stop-hook text injection
+- `env -i` with minimal `PATH`/`HOME`/`USER`/`TERM`/`CLAUDE_CONFIG_DIR`
+- Output post-scanned for `Stop hook` / `pre-commit` / `HARNESS_SKIP` markers
+
+Contaminated output is saved to `visual_analysis.contaminated.txt` and replaced with
+`VISUAL_WARNING (VLM isolation failed; manual review recommended)`.
+
+### HARNESS_SKIP budget tracking
+
+Each `HARNESS_SKIP=1` commit appends to `.harness/state/skip_history.log` (gitignored).
+Format: `<ISO-timestamp>|<feature>|<reason>`
+
+When the last 3 entries are all SKIP commits, the stop hook prints a warning:
+> Next feature MUST pass harness without SKIP to restore confidence.
+
+The warning is non-blocking — user discretion is preserved for emergencies.
+
+### Infrastructure self-test
+
+```bash
+bash tools/harness/test_pipeline_infra.sh
+```
+
+Verifies 8 infrastructure primitives without running a full pipeline:
+timeout function presence, run_codex timeout wiring, VLM isolation/contamination,
+FFI/regression guard fallbacks, stop-check.sh SKIP budget, live timeout enforcement.

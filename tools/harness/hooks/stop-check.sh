@@ -5,6 +5,30 @@
 set -uo pipefail
 
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
+    # Record SKIP event to track budget usage
+    PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
+    state_dir="$PROJECT_ROOT/.harness/state"
+    mkdir -p "$state_dir"
+    skip_log="$state_dir/skip_history.log"
+    feature_guess=$(find "$PROJECT_ROOT/.harness/evidence" -maxdepth 1 -type d 2>/dev/null \
+        | sort -t/ -k1 | tail -1 | xargs basename 2>/dev/null || echo "unknown")
+    printf '%s|%s|%s\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        "${feature_guess:-unknown}" \
+        "${HARNESS_SKIP_REASON:-user-skip}" \
+        >> "$skip_log"
+
+    # Warn if the last 3 commits all used SKIP
+    recent_count=$(tail -n 3 "$skip_log" 2>/dev/null | wc -l | tr -d ' ')
+    if [[ "$recent_count" -ge 3 ]]; then
+        printf '\n' >&2
+        printf '⚠️  HARNESS SKIP BUDGET WARNING ⚠️\n' >&2
+        printf 'Last 3 commits all used HARNESS_SKIP=1.\n' >&2
+        printf 'Recent skip history:\n' >&2
+        tail -n 3 "$skip_log" | sed 's/^/  /' >&2
+        printf '\nNext feature MUST pass harness without SKIP to restore confidence.\n' >&2
+        printf 'See tools/harness/HARNESS_INFRA_TODO.md for context.\n\n' >&2
+    fi
     exit 0
 fi
 
