@@ -320,9 +320,9 @@ func _load_building_texture(building_type: String, entity_id: int = 0) -> Textur
 			return _building_textures[cache_key]
 		var variant_path: String = building_variant_path(building_type, variant_idx)
 		if FileAccess.file_exists(variant_path):
-			var tex: Texture2D = _load_texture_from_res_path(variant_path)
-			_building_textures[cache_key] = tex
-			return tex
+			var variant_tex: Texture2D = _load_texture_from_res_path(variant_path)
+			_building_textures[cache_key] = variant_tex
+			return variant_tex
 		_building_textures[cache_key] = null
 		return null
 
@@ -743,7 +743,7 @@ func _draw_tile_grid_walls(tile_size: int, min_x: int, max_x: int, min_y: int, m
 					)
 
 
-func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, material_id: String, wall_set: Dictionary, inset: float, autotile: bool = true, bridge_px: float = 2.0) -> void:
+func _draw_wall_tile(wx: int, wy: int, ts: float, color: Color, material_id: String, wall_set: Dictionary, _inset: float, _autotile: bool = true, _bridge_px: float = 2.0) -> void:
 	var px: float = float(wx) * ts
 	var py: float = float(wy) * ts
 

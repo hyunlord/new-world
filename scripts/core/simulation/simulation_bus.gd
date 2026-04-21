@@ -171,6 +171,7 @@ signal tile_selected(tile_x: int, tile_y: int, tile_info: Dictionary)
 @warning_ignore("unused_signal")
 signal tile_deselected()
 
+@warning_ignore("unused_signal")
 signal settlement_panel_requested(settlement_id: int)
 @warning_ignore("unused_signal")
 signal settlement_panel_closed()
