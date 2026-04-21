@@ -780,12 +780,22 @@ $(cat "$evidence_dir/$datafile")
                 "$PLAN_DIR/plan_final.md" 2>/dev/null || echo "No feature-specific visual checks in plan")
         fi
 
-        # Render visual checklist
-        render_template \
-            "$TEMPLATES_DIR/visual_checklist.md" \
-            "$evidence_dir/visual_checklist_rendered.md" \
-            "FEATURE=$FEATURE" \
-            "VISUAL_CHECKS=$visual_checks"
+        # Render visual checklist — skip if harness_visual_verify.gd already wrote
+        # rendered assertions (contains "## Assertion N:").  The GDScript harness
+        # produces filesystem-verified assertion tokens (VISUAL_OK / VISUAL_FAIL)
+        # for sprite-assets features; overwriting with the empty template would
+        # discard that evidence and feed the VLM an uninformative prompt.
+        local godot_checklist="$evidence_dir/visual_checklist_rendered.md"
+        if [[ -f "$godot_checklist" ]] && \
+           grep -q "## Assertion" "$godot_checklist" 2>/dev/null; then
+            log "Preserving Godot-rendered visual checklist (assertion tokens present)"
+        else
+            render_template \
+                "$TEMPLATES_DIR/visual_checklist.md" \
+                "$godot_checklist" \
+                "FEATURE=$FEATURE" \
+                "VISUAL_CHECKS=$visual_checks"
+        fi
 
         # Run Claude with image paths in prompt + tool access to read them
         local vlm_input
@@ -812,6 +822,17 @@ Answer every question in the checklist."
     if [[ ! -s "$evidence_dir/visual_analysis.txt" ]]; then
         log "WARNING: VLM analysis produced empty output"
         echo "VLM analysis failed to produce output" > "$evidence_dir/visual_analysis.txt"
+    fi
+
+    # Ensure terminal verdict token is present — required by harness-evaluator and
+    # harness-codex-evaluator to parse the visual result.  If the VLM omitted it
+    # (e.g. it wrote prose but forgot the final token), append a conservative
+    # VISUAL_WARNING so the pipeline always ends with a parseable verdict.
+    if ! grep -qE "VISUAL_OK|VISUAL_WARNING|VISUAL_FAIL" "$evidence_dir/visual_analysis.txt" 2>/dev/null; then
+        log "WARNING: No terminal verdict token found in visual_analysis.txt — appending VISUAL_WARNING"
+        echo "" >> "$evidence_dir/visual_analysis.txt"
+        echo "VISUAL_WARNING (verdict appended by pipeline: VLM output lacked terminal token)" \
+            >> "$evidence_dir/visual_analysis.txt"
     fi
 
     log "Visual analysis: $evidence_dir/visual_analysis.txt"

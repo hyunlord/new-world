@@ -62,6 +62,20 @@ var probe_observation_mode: bool = false
 var _current_lod: int = 1
 var _binary_snapshot_available: bool = false
 var _render_alpha: float = 0.0
+## Dirty-flag guards: only call queue_redraw() when snapshot data actually
+## changed (new render_alpha or different agent count).  During FPS warmup
+## (sim paused) these are both constant, so redraws are suppressed and the
+## Godot idle loop can run at full GPU-limited FPS (≥ 55 threshold).
+var _last_draw_render_alpha: float = -99.0
+var _last_draw_agent_count: int = -1
+## Tick-refresh flag: set by _on_tick so _update_binary_snapshots() only pulls
+## heavy FFI data (get_frame_snapshots / get_prev_frame_snapshots) once per tick
+## instead of every frame.  Saves ~3 FFI round-trips per frame between ticks.
+var _pending_snapshot_refresh: bool = true
+## render_alpha at last _update_agent_sprites() call.  Skip the 64-agent ×
+## N Sprite2D property-set loop when alpha and snapshot data are both
+## unchanged (e.g., during FPS warmup with sim paused).
+var _last_sprite_render_alpha: float = -99.0
 var resource_overlay_visible: bool = false
 var _legacy_snapshot_cache: Array = []
 var _legacy_snapshot_cache_tick: int = -1
@@ -253,10 +267,16 @@ func _get_legacy_snapshots() -> Array:
 
 
 func _update_binary_snapshots() -> void:
+	# render_alpha is updated every frame (needed for smooth intra-tick interpolation).
+	_render_alpha = clampf(SimBridge.get_render_alpha(), 0.0, 1.0)
+	# Skip heavy FFI data transfers when no new tick has occurred.
+	# _pending_snapshot_refresh is raised by _on_tick(); cleared in _process()
+	# after _update_agent_sprites() consumes the new data.
+	if not _pending_snapshot_refresh:
+		return
 	var curr_bytes: PackedByteArray = SimBridge.get_frame_snapshots()
 	var prev_bytes: PackedByteArray = SimBridge.get_prev_frame_snapshots()
 	var count: int = SimBridge.get_agent_count()
-	_render_alpha = clampf(SimBridge.get_render_alpha(), 0.0, 1.0)
 	_snapshot_decoder.update(curr_bytes, prev_bytes, count)
 	_binary_snapshot_available = _snapshot_decoder.has_data()
 
@@ -278,6 +298,7 @@ func set_probe_observation_mode(probe_enabled: bool) -> void:
 func _on_tick(_tick: int) -> void:
 	_probe_runtime_detail_cache_tick = -1
 	_probe_runtime_detail_cache.clear()
+	_pending_snapshot_refresh = true
 	queue_redraw()
 
 
@@ -295,10 +316,31 @@ func _process(_delta: float) -> void:
 	# Always track cursor position for smooth tooltip following
 	_hover_screen_pos = get_viewport().get_mouse_position()
 	_update_hover()
-	_update_agent_sprites()
+	# Only update Sprite2D positions when render_alpha or tick data changed.
+	# During FPS warmup (sim paused) both are constant, so this skips the
+	# 64-agent × N Sprite2D property-set loop that is the primary FPS bottleneck.
+	var alpha_or_tick_changed: bool = (
+		_pending_snapshot_refresh
+		or _render_alpha != _last_sprite_render_alpha
+	)
+	if alpha_or_tick_changed:
+		_update_agent_sprites()
+		_last_sprite_render_alpha = _render_alpha
+		_pending_snapshot_refresh = false
 	# _update_agent_multimesh()  # disabled — re-enable when sprite atlas is ready
 	_update_band_territory(_delta)
-	if _binary_snapshot_available or _hover_entity_id >= 0:
+	# Only redraw when snapshot data has actually changed (new render_alpha or
+	# different agent count) or when a hover tooltip needs updating.
+	# During FPS warmup (sim paused) render_alpha and agent_count are constant,
+	# so this guard suppresses all redundant redraws, allowing ≥ 55 FPS.
+	var data_changed: bool = (
+		_binary_snapshot_available
+		and (_render_alpha != _last_draw_render_alpha
+			or _snapshot_decoder.agent_count != _last_draw_agent_count)
+	)
+	if data_changed or _hover_entity_id >= 0:
+		_last_draw_render_alpha = _render_alpha
+		_last_draw_agent_count = _snapshot_decoder.agent_count
 		queue_redraw()
 
 func _update_hover() -> void:

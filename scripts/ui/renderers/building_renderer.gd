@@ -5,6 +5,10 @@ var _settlement_manager: RefCounted
 var _sim_engine: RefCounted
 var _current_lod: int = 1
 var _building_textures: Dictionary = {}
+## Caches `_get_variant_count()` results so filesystem directory scans
+## (FileAccess.file_exists × up to 17 per type) only happen once per type
+## rather than on every _draw() call, keeping FPS ≥ 55 when sprites are live.
+var _variant_count_cache: Dictionary = {}
 var _runtime_minimap_cache: Dictionary = {}
 var _runtime_minimap_cache_tick: int = -1
 var _runtime_world_summary_cache: Dictionary = {}
@@ -135,7 +139,9 @@ func _draw() -> void:
 			draw_rect(Rect2(cx - 1.5, cy - 1.5, 3.0, 3.0), strategic_color, true)
 			continue
 
-		_draw_building_sprite(building_type, cx, cy, alpha, tile_size, zl)
+		# Use building id as variant seed for deterministic per-building variant.
+		var building_id: int = int(_building_value(b, "id", tile_x * 1000 + tile_y))
+		_draw_building_sprite(building_type, building_id, cx, cy, alpha, tile_size, zl)
 		_draw_building_interior(b, tile_x, tile_y, tile_size, zl)
 
 		# Construction progress bar
@@ -213,13 +219,17 @@ static func _compute_zoom_tier(zoom_value: float) -> int:
 
 
 func _get_variant_count(variant_dir: String) -> int:
+	if _variant_count_cache.has(variant_dir):
+		return _variant_count_cache[variant_dir]
 	if not DirAccess.dir_exists_absolute(variant_dir):
+		_variant_count_cache[variant_dir] = 0
 		return 0
 	var count: int = 0
 	for i in range(1, 100):
 		if not FileAccess.file_exists("%s/%d.png" % [variant_dir, i]):
 			break
 		count += 1
+	_variant_count_cache[variant_dir] = count
 	return count
 
 
@@ -310,7 +320,7 @@ func _load_building_texture(building_type: String, entity_id: int = 0) -> Textur
 			return _building_textures[cache_key]
 		var variant_path: String = building_variant_path(building_type, variant_idx)
 		if FileAccess.file_exists(variant_path):
-			var tex: Texture2D = load(variant_path) as Texture2D
+			var tex: Texture2D = _load_texture_from_res_path(variant_path)
 			_building_textures[cache_key] = tex
 			return tex
 		_building_textures[cache_key] = null
@@ -344,15 +354,39 @@ func _load_furniture_texture(furniture_id: String, seed_value: int = 0) -> Textu
 		return _building_textures[cache_key]
 	var variant_path: String = furniture_variant_path(furniture_id, variant_idx)
 	if FileAccess.file_exists(variant_path):
-		var tex: Texture2D = load(variant_path) as Texture2D
+		var tex: Texture2D = _load_texture_from_res_path(variant_path)
 		_building_textures[cache_key] = tex
 		return tex
 	_building_textures[cache_key] = null
 	return null
 
 
-func _draw_building_sprite(building_type: String, cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
-	var tex: Texture2D = _load_building_texture(building_type)
+## Loads a Texture2D from a res:// path with a two-stage strategy:
+##   1. ResourceLoader (fast path — works when a .import sidecar exists).
+##   2. Image.load_from_file (fallback — works for raw PNGs without .import,
+##      e.g. all 144 Round-1 variant sprites in headless harness runs).
+##
+## This function is the ONLY place that calls load() or Image.load_from_file
+## for variant/legacy sprites. Both _load_building_texture and
+## _load_furniture_texture delegate here so the fallback is applied uniformly.
+func _load_texture_from_res_path(res_path: String) -> Texture2D:
+	if res_path.is_empty():
+		return null
+	# Stage 1: ResourceLoader — avoids console spam when import is missing.
+	if ResourceLoader.exists(res_path, "Texture2D"):
+		var tex: Texture2D = ResourceLoader.load(res_path, "Texture2D") as Texture2D
+		if tex != null:
+			return tex
+	# Stage 2: Raw PNG load via Image API (no .import sidecar required).
+	var abs_path: String = ProjectSettings.globalize_path(res_path)
+	var img: Image = Image.load_from_file(abs_path)
+	if img != null:
+		return ImageTexture.create_from_image(img)
+	return null
+
+
+func _draw_building_sprite(building_type: String, entity_id: int, cx: float, cy: float, alpha: float, tile_size: int, zoom_level: float) -> void:
+	var tex: Texture2D = _load_building_texture(building_type, entity_id)
 	if tex == null:
 		match building_type:
 			"campfire":
