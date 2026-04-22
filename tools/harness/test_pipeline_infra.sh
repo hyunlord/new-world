@@ -88,6 +88,38 @@ else
     fail "neither 'timeout' nor 'perl' found — run_with_timeout may not enforce limits"
 fi
 
+# --- Test 9: harness-drafter calls use timeout wrapper ---
+if grep -q "DRAFTER_TIMEOUT_SECONDS" "$PIPELINE" && \
+   grep -q "run_with_timeout.*drafter_timeout\|run_with_timeout.*drafter_rev_timeout" "$PIPELINE"; then
+    pass "harness-drafter calls have timeout wrapper (DRAFTER_TIMEOUT_SECONDS)"
+else
+    fail "harness-drafter calls missing timeout wrapper"
+fi
+
+# --- Test 10: harness-generator call uses timeout wrapper ---
+if grep -q "GENERATOR_TIMEOUT_SECONDS" "$PIPELINE" && \
+   grep -q 'run_with_timeout.*gen_timeout' "$PIPELINE"; then
+    pass "harness-generator call has timeout wrapper (GENERATOR_TIMEOUT_SECONDS)"
+else
+    fail "harness-generator call missing timeout wrapper"
+fi
+
+# --- Test 11: harness-evaluator call uses timeout wrapper ---
+if grep -q "EVALUATOR_TIMEOUT_SECONDS" "$PIPELINE" && \
+   grep -q 'run_with_timeout.*eval_timeout' "$PIPELINE"; then
+    pass "harness-evaluator call has timeout wrapper (EVALUATOR_TIMEOUT_SECONDS)"
+else
+    fail "harness-evaluator call missing timeout wrapper"
+fi
+
+# --- Test 12: harness-vlm-analyzer calls use timeout wrapper ---
+if grep -q "VLM_TIMEOUT_SECONDS" "$PIPELINE" && \
+   grep -q 'run_with_timeout.*vlm_timeout' "$PIPELINE"; then
+    pass "harness-vlm-analyzer calls have timeout wrapper (VLM_TIMEOUT_SECONDS)"
+else
+    fail "harness-vlm-analyzer calls missing timeout wrapper"
+fi
+
 echo ""
 echo "============================="
 echo "Results: $PASS passed, $FAIL failed"

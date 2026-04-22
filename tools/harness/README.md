@@ -36,6 +36,37 @@ git commit -m "i18n: add Korean translations for new keys"
 | `CODEX_BIN` | `codex` | Path to codex CLI binary |
 | `CODEX_MODEL` | (codex default) | Model override (e.g., `o3`, `gpt-4.1`) |
 
+### Timeout Configuration
+
+All LLM calls have configurable timeouts to prevent pipeline hangs. Override with env vars:
+
+| Agent | Env Var | Default | Notes |
+|-------|---------|:-------:|-------|
+| Codex (Evaluator/Regression) | `CODEX_TIMEOUT_SECONDS` | 600s | |
+| harness-drafter (plan + revision) | `DRAFTER_TIMEOUT_SECONDS` | 600s | die on timeout |
+| harness-challenger | `CHALLENGER_TIMEOUT_SECONDS` | 600s | graceful fallback |
+| harness-quality-checker | `QC_TIMEOUT_SECONDS` | 600s | graceful → PLAN_APPROVED |
+| **harness-generator** | **`GENERATOR_TIMEOUT_SECONDS`** | **900s** | die on timeout — runs cargo test |
+| harness-vlm-analyzer | `VLM_TIMEOUT_SECONDS` | 600s | graceful → empty analysis |
+| harness-evaluator | `EVALUATOR_TIMEOUT_SECONDS` | 600s | die on timeout |
+
+Generator has the longest timeout (15 min) because it runs full `cargo test --workspace` + clippy.
+
+On timeout (exit 124/142):
+- **Die**: Drafter, Generator, Evaluator — their output is required to continue
+- **Graceful**: Challenger, QC, VLM — empty output triggers existing fallback paths
+
+### Codex Auth Refresh
+
+If the pipeline reports `refresh_token_reused` or Codex auth errors:
+
+```bash
+codex auth login
+```
+
+Then retry the pipeline. The pre-flight check (`tools/harness/hooks/pre-flight-check.sh`) probes
+Codex auth at pipeline start and warns (non-fatally) if auth appears expired.
+
 ## What Requires the Pipeline
 
 **Everything that changes game behavior or appearance:**
