@@ -17805,3 +17805,139 @@ mod harness_sprite_wall_floor_tileset {
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Round 3 integration — furniture sprite asset assertions
+//
+// A16: fire_pit directory has exactly 14 variants (1..14 continuous)
+// A17: lean_to  directory has exactly 14 variants (1..14 continuous)
+// A18: Round 2 v2 selective files still present (birch/packed_earth/wood_plank)
+//
+// These tests pin the asset layout committed in 1fddb83.  They catch accidental
+// deletions, renames, or re-numbering before a Visual Verify run.
+// ─────────────────────────────────────────────────────────────────────────────
+#[cfg(test)]
+mod harness_sprite_assets_round3 {
+    fn project_root() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..")
+    }
+
+    fn png_nums_in_dir(dir: &std::path::Path) -> Vec<i32> {
+        let mut nums: Vec<i32> = std::fs::read_dir(dir)
+            .unwrap_or_else(|e| panic!("cannot read dir {:?}: {}", dir, e))
+            .filter_map(|e| e.ok())
+            .filter(|e| {
+                e.path()
+                    .extension()
+                    .and_then(|s| s.to_str())
+                    == Some("png")
+            })
+            .filter_map(|e| {
+                e.path()
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .and_then(|s| s.parse::<i32>().ok())
+            })
+            .collect();
+        nums.sort_unstable();
+        nums
+    }
+
+    /// A16: fire_pit furniture directory contains exactly 14 PNG variants
+    /// numbered 1..=14 with no gaps.
+    ///
+    /// Type A: hard invariant — directory existence + exact count + continuity.
+    #[test]
+    fn harness_sprite_assets_round3_a16_fire_pit_variants() {
+        let dir = project_root().join("assets/sprites/furniture/fire_pit");
+        assert!(
+            dir.is_dir(),
+            "A16 FAIL: fire_pit directory missing: assets/sprites/furniture/fire_pit"
+        );
+
+        let nums = png_nums_in_dir(&dir);
+        assert_eq!(
+            nums.len(),
+            14,
+            "A16 FAIL: fire_pit should have 14 PNG variants, got {} — found: {:?}",
+            nums.len(),
+            nums
+        );
+        let expected: Vec<i32> = (1..=14).collect();
+        assert_eq!(
+            nums, expected,
+            "A16 FAIL: fire_pit variants not continuous 1..=14, got {:?}",
+            nums
+        );
+        println!(
+            "[harness_sprite_assets_round3][A16] \
+             fire_pit has 14 variants (1..=14 continuous) ✓"
+        );
+    }
+
+    /// A17: lean_to furniture directory contains exactly 14 PNG variants
+    /// numbered 1..=14 with no gaps.
+    ///
+    /// Type A: hard invariant — directory existence + exact count + continuity.
+    #[test]
+    fn harness_sprite_assets_round3_a17_lean_to_variants() {
+        let dir = project_root().join("assets/sprites/furniture/lean_to");
+        assert!(
+            dir.is_dir(),
+            "A17 FAIL: lean_to directory missing: assets/sprites/furniture/lean_to"
+        );
+
+        let nums = png_nums_in_dir(&dir);
+        assert_eq!(
+            nums.len(),
+            14,
+            "A17 FAIL: lean_to should have 14 PNG variants, got {} — found: {:?}",
+            nums.len(),
+            nums
+        );
+        let expected: Vec<i32> = (1..=14).collect();
+        assert_eq!(
+            nums, expected,
+            "A17 FAIL: lean_to variants not continuous 1..=14, got {:?}",
+            nums
+        );
+        println!(
+            "[harness_sprite_assets_round3][A17] \
+             lean_to has 14 variants (1..=14 continuous) ✓"
+        );
+    }
+
+    /// A18: Round 2 v2 selective files (birch walls, packed_earth floors,
+    /// wood_plank floors — 9 files total) are still present on disk.
+    ///
+    /// Type A: regression guard — these files were committed in 1fddb83 and
+    /// must not be accidentally removed or renamed.
+    #[test]
+    fn harness_sprite_assets_round3_a18_round2_v2_selective_files() {
+        let root = project_root().join("assets/sprites");
+        let v2_files = [
+            "walls/birch/1.png",
+            "walls/birch/2.png",
+            "walls/birch/3.png",
+            "floors/packed_earth/1.png",
+            "floors/packed_earth/2.png",
+            "floors/packed_earth/3.png",
+            "floors/wood_plank/1.png",
+            "floors/wood_plank/2.png",
+            "floors/wood_plank/3.png",
+        ];
+        for rel in &v2_files {
+            let path = root.join(rel);
+            assert!(
+                path.exists() && path.is_file(),
+                "A18 FAIL: Round 2 v2 selective file missing: assets/sprites/{}",
+                rel
+            );
+        }
+        println!(
+            "[harness_sprite_assets_round3][A18] \
+             Round 2 v2 selective files all present ({} files) ✓",
+            v2_files.len()
+        );
+    }
+}
+
