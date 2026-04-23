@@ -955,6 +955,15 @@ pub const BUILDING_SHELTER_DOOR_OFFSET_Y: i32 = 2;
 /// Runtime wall blocking coefficient stamped by completed shelter walls.
 pub const BUILDING_SHELTER_WALL_BLOCK: f64 = 0.9;
 pub const BUILDING_CAMPFIRE_RADIUS: i32 = 5;
+/// Shelter emission intensity multiplier per optional component present inside the footprint.
+/// Formula: final_intensity = base_intensity × (1.0 + SHELTER_OPTIONAL_BOOST × optional_count)
+///
+/// Currently supported optional components: hearth, storage_pit (2 max).
+/// With both present, shelter emission intensity = base × 1.6.
+pub const SHELTER_OPTIONAL_BOOST: f64 = 0.3;
+/// Furniture IDs that count as "optional components" for shelter quality boost.
+/// Must match entries in sim-data/data/structures/shelters.ron optional_components.
+pub const SHELTER_OPTIONAL_FURNITURE_IDS: &[&str] = &["hearth", "storage_pit"];
 /// Per-tick Safety need increment for agents inside a Shelter-role enclosed room.
 pub const ROOM_EFFECT_SHELTER_SAFETY_AMOUNT: f64 = 0.02;
 /// Per-tick Warmth need increment for agents inside a Hearth-role enclosed room.

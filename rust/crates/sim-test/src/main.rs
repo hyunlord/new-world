@@ -16610,6 +16610,365 @@ mod tests {
              comfort_after={comfort_after:.4} initial={initial_sum:.4}"
         );
     }
+
+    // ── Feature: shelter-quality-modifier ───────────────────────────────────
+    // A1: base shelter emits warmth without optional components (base path unchanged)
+    // A2: shelter + 1 optional (storage_pit) → ratio ∈ [1.25, 1.35] pre-normalization
+    // A3: shelter + 2 optionals (2× storage_pit) → ratio ∈ [1.55, 1.65] pre-normalization
+    // A4: non-whitelisted furniture inside footprint → ratio ∈ [0.98, 1.02] (no boost)
+    // A5: lean_to furniture tile emits warmth standalone (no building required)
+    // A6: lean_to warmth decays with distance (radius parameter is applied)
+
+    /// Harness A1: shelter without optional components still emits warmth.
+    ///
+    /// Verifies the base (no-boost) path in collect_building_emitters is unchanged.
+    /// Type C threshold: warmth > 0.26 at shelter origin after 10 ticks (observed ≈0.8800).
+    #[test]
+    fn harness_shelter_emission_no_boost_without_optional() {
+        use sim_core::{Building, BuildingId, ChannelId};
+
+        let registry = load_canonical_a9_registry();
+        let mut engine = make_stage1_engine_with_registry(42, 3, registry);
+        {
+            let res = engine.resources_mut();
+            // Complete shelter at (100, 100), 5×5 footprint — no optional furniture tiles
+            res.buildings.insert(
+                BuildingId(900),
+                Building {
+                    id: BuildingId(900),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 100,
+                    y: 100,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        engine.run_ticks(10);
+        let warmth = engine.resources().influence_grid.sample(100, 100, ChannelId::Warmth);
+        println!(
+            "[harness_shelter_emission_no_boost_without_optional] warmth={warmth:.4}"
+        );
+        // channel "shelter" maps to ChannelId::Warmth; base intensity=0.5, radius=4
+        assert!(
+            warmth > 0.26,
+            "shelter-quality-modifier A1: base shelter must emit warmth > 0.26. \
+             Got {warmth:.4}"
+        );
+    }
+
+    /// Harness A2: shelter with storage_pit inside footprint emits more warmth than bare shelter.
+    ///
+    /// Uses storage_pit (influence_emissions: []) as the optional component so only the
+    /// shelter boost affects the warmth field. Compares two engines:
+    ///   Engine A: bare shelter → emitter intensity=0.5
+    ///   Engine B: shelter + storage_pit tile → emitter intensity=0.5 × 1.3 = 0.65
+    /// Type C directional: warmth_boosted > warmth_base × 1.15 (50% margin on 30% boost).
+    ///
+    /// Uses run_ticks(2): tick 0 stamps the emitter (dirty→false), tick 1 decays only.
+    /// After 2 ticks neither engine reaches normalization (max ≤ 0.65 << 1.0), so the
+    /// raw intensity ratio 0.65/0.5 = 1.3 is visible in the sampled values.
+    /// More ticks cause both engines to normalise to the same peak (1.0 at origin),
+    /// erasing the intensity difference entirely.
+    #[test]
+    fn harness_shelter_emission_boosted_with_hearth() {
+        use sim_core::{Building, BuildingId, ChannelId};
+
+        // ── Engine A: bare shelter (no optional furniture) ──
+        let registry_a = load_canonical_a9_registry();
+        let mut engine_a = make_stage1_engine_with_registry(42, 3, registry_a);
+        {
+            let res = engine_a.resources_mut();
+            res.buildings.insert(
+                BuildingId(900),
+                Building {
+                    id: BuildingId(900),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        engine_a.run_ticks(2);
+        let warmth_base = engine_a.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        // ── Engine B: same shelter + storage_pit tile at (52, 52) inside footprint ──
+        // storage_pit has influence_emissions: [] so it only triggers the shelter boost,
+        // without adding a competing warmth source that would skew normalization.
+        let registry_b = load_canonical_a9_registry();
+        let mut engine_b = make_stage1_engine_with_registry(42, 3, registry_b);
+        {
+            let res = engine_b.resources_mut();
+            res.buildings.insert(
+                BuildingId(900),
+                Building {
+                    id: BuildingId(900),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+            // storage_pit at (52, 52) is inside footprint [50..55, 50..55]
+            // storage_pit emits nothing (influence_emissions: []) — only triggers boost count
+            res.tile_grid.set_furniture(52, 52, "storage_pit");
+        }
+        engine_b.run_ticks(2);
+        let warmth_boosted = engine_b.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        let ratio = warmth_boosted / warmth_base.max(1e-9);
+        println!(
+            "[harness_shelter_emission_boosted_with_hearth] \
+             warmth_base={warmth_base:.4} warmth_boosted={warmth_boosted:.4} ratio={ratio:.3}"
+        );
+        assert!(
+            ratio >= 1.25 && ratio <= 1.35,
+            "shelter-quality-modifier A2: shelter+1 optional ratio must be ∈ [1.25, 1.35]. \
+             warmth_base={warmth_base:.4} warmth_boosted={warmth_boosted:.4} ratio={ratio:.3} \
+             (SHELTER_OPTIONAL_BOOST=0.3 → ×1.3 exact)"
+        );
+    }
+
+    /// Harness A3: shelter with two optional components inside footprint emits 1.6× warmth.
+    ///
+    /// Engine A: bare shelter → intensity=0.5
+    /// Engine B: shelter + 2 storage_pits at (51,51) and (52,52) → multiplier=1.6 → intensity=0.8
+    /// Type A invariant: ratio ∈ [1.55, 1.65] (exact 1.6 with ±0.05 tolerance).
+    /// Uses run_ticks(2) pre-normalization window (same reasoning as A2).
+    #[test]
+    fn harness_shelter_boost_two_optionals() {
+        use sim_core::{Building, BuildingId, ChannelId};
+
+        let registry_a = load_canonical_a9_registry();
+        let mut engine_a = make_stage1_engine_with_registry(42, 3, registry_a);
+        {
+            let res = engine_a.resources_mut();
+            res.buildings.insert(
+                BuildingId(901),
+                Building {
+                    id: BuildingId(901),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        engine_a.run_ticks(2);
+        let warmth_base = engine_a.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        let registry_b = load_canonical_a9_registry();
+        let mut engine_b = make_stage1_engine_with_registry(42, 3, registry_b);
+        {
+            let res = engine_b.resources_mut();
+            res.buildings.insert(
+                BuildingId(901),
+                Building {
+                    id: BuildingId(901),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+            // 2 storage_pits inside [50..55, 50..55]; both emit nothing so only the boost count grows
+            res.tile_grid.set_furniture(51, 51, "storage_pit");
+            res.tile_grid.set_furniture(52, 52, "storage_pit");
+        }
+        engine_b.run_ticks(2);
+        let warmth_boosted = engine_b.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        let ratio = warmth_boosted / warmth_base.max(1e-9);
+        println!(
+            "[harness_shelter_boost_two_optionals] \
+             warmth_base={warmth_base:.4} warmth_boosted={warmth_boosted:.4} ratio={ratio:.3}"
+        );
+        assert!(
+            ratio >= 1.55 && ratio <= 1.65,
+            "shelter-quality-modifier A3: shelter+2 optionals ratio must be ∈ [1.55, 1.65]. \
+             warmth_base={warmth_base:.4} warmth_boosted={warmth_boosted:.4} ratio={ratio:.3} \
+             (SHELTER_OPTIONAL_BOOST=0.3, count=2 → ×1.6 exact)"
+        );
+    }
+
+    /// Harness A4: non-whitelisted furniture inside shelter footprint must NOT trigger boost.
+    ///
+    /// Engine A: bare shelter at [50..55, 50..55]
+    /// Engine B: same shelter + "totem" at (52,52) — not in SHELTER_OPTIONAL_FURNITURE_IDS.
+    /// Type A invariant: ratio ∈ [0.98, 1.02] (no warmth boost).
+    #[test]
+    fn harness_shelter_boost_non_whitelisted_no_effect() {
+        use sim_core::{Building, BuildingId, ChannelId};
+
+        let registry_a = load_canonical_a9_registry();
+        let mut engine_a = make_stage1_engine_with_registry(42, 3, registry_a);
+        {
+            let res = engine_a.resources_mut();
+            res.buildings.insert(
+                BuildingId(902),
+                Building {
+                    id: BuildingId(902),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        engine_a.run_ticks(2);
+        let warmth_base = engine_a.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        let registry_b = load_canonical_a9_registry();
+        let mut engine_b = make_stage1_engine_with_registry(42, 3, registry_b);
+        {
+            let res = engine_b.resources_mut();
+            res.buildings.insert(
+                BuildingId(902),
+                Building {
+                    id: BuildingId(902),
+                    building_type: "shelter".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 50,
+                    y: 50,
+                    width: 5,
+                    height: 5,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+            // "totem" is NOT in SHELTER_OPTIONAL_FURNITURE_IDS — must produce no boost
+            res.tile_grid.set_furniture(52, 52, "totem");
+        }
+        engine_b.run_ticks(2);
+        let warmth_with_totem = engine_b.resources().influence_grid.sample(50, 50, ChannelId::Warmth);
+
+        let ratio = warmth_with_totem / warmth_base.max(1e-9);
+        println!(
+            "[harness_shelter_boost_non_whitelisted_no_effect] \
+             warmth_base={warmth_base:.4} warmth_with_totem={warmth_with_totem:.4} ratio={ratio:.3}"
+        );
+        assert!(
+            ratio >= 0.98 && ratio <= 1.02,
+            "shelter-quality-modifier A4: non-whitelisted furniture must not boost shelter warmth. \
+             warmth_base={warmth_base:.4} warmth_with_totem={warmth_with_totem:.4} ratio={ratio:.3}"
+        );
+    }
+
+    /// Harness A5: standalone lean_to furniture tile emits warmth without a building.
+    ///
+    /// Verifies that lean_to's new RON emission (warmth radius=3.0 intensity=0.3)
+    /// is picked up by collect_tile_grid_furniture_emitters.
+    /// Type C threshold: warmth > 0.22 at lean_to tile after 10 ticks (observed ≈0.7430).
+    #[test]
+    fn harness_lean_to_emits_warmth_standalone() {
+        use sim_core::ChannelId;
+
+        let registry = load_canonical_a9_registry();
+        let mut engine = make_stage1_engine_with_registry(42, 3, registry);
+        {
+            let res = engine.resources_mut();
+            // Place lean_to at (60, 60) — no building covers this tile
+            res.tile_grid.set_furniture(60, 60, "lean_to");
+        }
+        engine.run_ticks(10);
+        let warmth = engine.resources().influence_grid.sample(60, 60, ChannelId::Warmth);
+        println!(
+            "[harness_lean_to_emits_warmth_standalone] warmth={warmth:.4} at lean_to tile (60,60)"
+        );
+        // lean_to RON: warmth radius=3.0 intensity=0.3
+        assert!(
+            warmth > 0.22,
+            "shelter-quality-modifier A5: standalone lean_to must emit warmth > 0.22. \
+             Got {warmth:.4} (RON: radius=3.0 intensity=0.3)"
+        );
+    }
+
+    /// Harness A6: lean_to warmth decays with distance (radius parameter is applied).
+    ///
+    /// Baseline-subtraction approach: two identical engines, one with lean_to at (60,60).
+    /// Compare the pure lean_to contributions at origin (60,60) vs far point (60,65) (dist=5).
+    ///
+    /// dist=5 ≥ radius=3.0 → zero lean_to contribution at (60,65) for correct impl → ratio→huge.
+    /// Even if effective radius is internally scaled to 6.0: falloff = 1-5/6 = 0.167 → ratio ≈ 6.0.
+    /// Flat implementation (radius ignored) → lean contributions equal → ratio ≈ 1.0.
+    /// Type A invariant: ratio > 3.0.
+    #[test]
+    fn harness_lean_to_warmth_gaussian_falloff() {
+        use sim_core::ChannelId;
+
+        // Engine A: baseline (no lean_to) — captures any background warmth at these positions
+        let registry_a = load_canonical_a9_registry();
+        let mut engine_a = make_stage1_engine_with_registry(42, 3, registry_a);
+        engine_a.run_ticks(2);
+        let bg_origin = engine_a.resources().influence_grid.sample(60, 60, ChannelId::Warmth);
+        let bg_far = engine_a.resources().influence_grid.sample(60, 65, ChannelId::Warmth);
+
+        // Engine B: lean_to at (60,60) — same setup, only difference is the furniture tile
+        let registry_b = load_canonical_a9_registry();
+        let mut engine_b = make_stage1_engine_with_registry(42, 3, registry_b);
+        {
+            let res = engine_b.resources_mut();
+            res.tile_grid.set_furniture(60, 60, "lean_to");
+        }
+        engine_b.run_ticks(2);
+        let total_origin = engine_b.resources().influence_grid.sample(60, 60, ChannelId::Warmth);
+        let total_far = engine_b.resources().influence_grid.sample(60, 65, ChannelId::Warmth);
+
+        // Pure lean_to contributions at each point
+        let lean_origin = (total_origin - bg_origin).max(0.0);
+        let lean_far = (total_far - bg_far).max(0.0);
+
+        let ratio = lean_origin / lean_far.max(1e-9);
+        println!(
+            "[harness_lean_to_warmth_gaussian_falloff] \
+             lean(60,60)={lean_origin:.4} lean(60,65)={lean_far:.4} ratio={ratio:.3} \
+             (bg_origin={bg_origin:.4} bg_far={bg_far:.4})"
+        );
+        assert!(
+            ratio > 3.0,
+            "shelter-quality-modifier A6: lean_to warmth must decay with distance. \
+             lean(60,60)={lean_origin:.4} lean(60,65)={lean_far:.4} ratio={ratio:.3} \
+             (radius=3.0, dist=5, ratio>>3.0 expected)"
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
@@ -17801,6 +18160,222 @@ mod harness_sprite_wall_floor_tileset {
             draw_grid_body.contains("_load_floor_material_texture("),
             "A11 FAIL: _draw_tile_grid_walls must call _load_floor_material_texture(). \
              Floor sprite rendering is not wired into the tile grid render path."
+        );
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Round 3 integration — furniture sprite asset assertions
+//
+// A16: fire_pit directory has exactly 14 variants (1..14 continuous)
+// A17: lean_to  directory has exactly 14 variants (1..14 continuous)
+// A18: Round 2 v2 selective files still present (birch/packed_earth/wood_plank)
+//
+// These tests pin the asset layout committed in 1fddb83.  They catch accidental
+// deletions, renames, or re-numbering before a Visual Verify run.
+// ─────────────────────────────────────────────────────────────────────────────
+#[cfg(test)]
+mod harness_sprite_assets_round3 {
+    fn project_root() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..")
+    }
+
+    fn png_nums_in_dir(dir: &std::path::Path) -> Vec<i32> {
+        let mut nums: Vec<i32> = std::fs::read_dir(dir)
+            .unwrap_or_else(|e| panic!("cannot read dir {:?}: {}", dir, e))
+            .filter_map(|e| e.ok())
+            .filter(|e| {
+                e.path()
+                    .extension()
+                    .and_then(|s| s.to_str())
+                    == Some("png")
+            })
+            .filter_map(|e| {
+                e.path()
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .and_then(|s| s.parse::<i32>().ok())
+            })
+            .collect();
+        nums.sort_unstable();
+        nums
+    }
+
+    /// A16: fire_pit furniture directory contains exactly 14 PNG variants
+    /// numbered 1..=14 with no gaps.
+    ///
+    /// Type A: hard invariant — directory existence + exact count + continuity.
+    #[test]
+    fn harness_sprite_assets_round3_a16_fire_pit_variants() {
+        let dir = project_root().join("assets/sprites/furniture/fire_pit");
+        assert!(
+            dir.is_dir(),
+            "A16 FAIL: fire_pit directory missing: assets/sprites/furniture/fire_pit"
+        );
+
+        let nums = png_nums_in_dir(&dir);
+        assert_eq!(
+            nums.len(),
+            14,
+            "A16 FAIL: fire_pit should have 14 PNG variants, got {} — found: {:?}",
+            nums.len(),
+            nums
+        );
+        let expected: Vec<i32> = (1..=14).collect();
+        assert_eq!(
+            nums, expected,
+            "A16 FAIL: fire_pit variants not continuous 1..=14, got {:?}",
+            nums
+        );
+        println!(
+            "[harness_sprite_assets_round3][A16] \
+             fire_pit has 14 variants (1..=14 continuous) ✓"
+        );
+    }
+
+    /// A17: lean_to furniture directory contains exactly 14 PNG variants
+    /// numbered 1..=14 with no gaps.
+    ///
+    /// Type A: hard invariant — directory existence + exact count + continuity.
+    #[test]
+    fn harness_sprite_assets_round3_a17_lean_to_variants() {
+        let dir = project_root().join("assets/sprites/furniture/lean_to");
+        assert!(
+            dir.is_dir(),
+            "A17 FAIL: lean_to directory missing: assets/sprites/furniture/lean_to"
+        );
+
+        let nums = png_nums_in_dir(&dir);
+        assert_eq!(
+            nums.len(),
+            14,
+            "A17 FAIL: lean_to should have 14 PNG variants, got {} — found: {:?}",
+            nums.len(),
+            nums
+        );
+        let expected: Vec<i32> = (1..=14).collect();
+        assert_eq!(
+            nums, expected,
+            "A17 FAIL: lean_to variants not continuous 1..=14, got {:?}",
+            nums
+        );
+        println!(
+            "[harness_sprite_assets_round3][A17] \
+             lean_to has 14 variants (1..=14 continuous) ✓"
+        );
+    }
+
+    /// A18: Round 2 v2 selective files (birch walls, packed_earth floors,
+    /// wood_plank floors — 9 files total) are still present on disk.
+    ///
+    /// Type A: regression guard — these files were committed in 1fddb83 and
+    /// must not be accidentally removed or renamed.
+    #[test]
+    fn harness_sprite_assets_round3_a18_round2_v2_selective_files() {
+        let root = project_root().join("assets/sprites");
+        let v2_files = [
+            "walls/birch/1.png",
+            "walls/birch/2.png",
+            "walls/birch/3.png",
+            "floors/packed_earth/1.png",
+            "floors/packed_earth/2.png",
+            "floors/packed_earth/3.png",
+            "floors/wood_plank/1.png",
+            "floors/wood_plank/2.png",
+            "floors/wood_plank/3.png",
+        ];
+        for rel in &v2_files {
+            let path = root.join(rel);
+            assert!(
+                path.exists() && path.is_file(),
+                "A18 FAIL: Round 2 v2 selective file missing: assets/sprites/{}",
+                rel
+            );
+        }
+        println!(
+            "[harness_sprite_assets_round3][A18] \
+             Round 2 v2 selective files all present ({} files) ✓",
+            v2_files.len()
+        );
+    }
+
+    /// A19: All 37 Round 3 + Round 2 v2 selective asset files are non-zero size.
+    ///
+    /// Type A: hard invariant — a 0-byte (or truncated < 256 bytes) file passes
+    /// existence checks in A16/A17/A18 but indicates a broken transfer or
+    /// accidental overwrite.  The 256-byte floor is conservative: any valid
+    /// 32×32 RGBA PNG with real pixel data will be larger.
+    ///
+    /// File count breakdown: fire_pit (14) + lean_to (14) + birch (3)
+    ///                       + packed_earth (3) + wood_plank (3) = 37.
+    #[test]
+    fn harness_sprite_assets_round3_a19_all_37_files_nonzero_size() {
+        let root = project_root().join("assets/sprites");
+
+        // Build the full list of 37 expected asset paths.
+        let mut paths: Vec<std::path::PathBuf> = Vec::with_capacity(37);
+
+        // fire_pit: 14 variants (Round 3)
+        for n in 1..=14_u32 {
+            paths.push(root.join(format!("furniture/fire_pit/{}.png", n)));
+        }
+        // lean_to: 14 variants (Round 3)
+        for n in 1..=14_u32 {
+            paths.push(root.join(format!("furniture/lean_to/{}.png", n)));
+        }
+        // Round 2 v2 selective — 9 files
+        for n in 1..=3_u32 {
+            paths.push(root.join(format!("walls/birch/{}.png", n)));
+        }
+        for n in 1..=3_u32 {
+            paths.push(root.join(format!("floors/packed_earth/{}.png", n)));
+        }
+        for n in 1..=3_u32 {
+            paths.push(root.join(format!("floors/wood_plank/{}.png", n)));
+        }
+
+        // usize: total path count
+        assert_eq!(
+            paths.len(),
+            37,
+            "A19 INTERNAL: expected 37 asset paths, got {}",
+            paths.len()
+        );
+
+        const MIN_BYTES: u64 = 256;
+        let mut failures: Vec<String> = Vec::new();
+
+        for path in &paths {
+            match std::fs::metadata(path) {
+                Ok(meta) => {
+                    // u64: file size in bytes
+                    let size = meta.len();
+                    if size < MIN_BYTES {
+                        failures.push(format!(
+                            "{:?}: {} bytes (< {} byte floor)",
+                            path, size, MIN_BYTES
+                        ));
+                    }
+                }
+                Err(e) => {
+                    failures.push(format!("{:?}: cannot stat — {}", path, e));
+                }
+            }
+        }
+
+        assert!(
+            failures.is_empty(),
+            "A19 FAIL: {}/{} file(s) below {}-byte floor or missing:\n{}",
+            failures.len(),
+            paths.len(),
+            MIN_BYTES,
+            failures.join("\n")
+        );
+
+        println!(
+            "[harness_sprite_assets_round3][A19] \
+             all 37 asset files ≥ {} bytes ✓",
+            MIN_BYTES
         );
     }
 }

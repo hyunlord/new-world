@@ -361,11 +361,18 @@ PLANNER_EOF
 
     # Run planner agent — capture stdout as plan
     log "Running Planner agent..."
-    claude --agent harness-drafter \
-           -p "$(cat "$PLAN_DIR/planner_input.md")" \
-           --output-format text \
-           > "$PLAN_DIR/plan_draft.md" \
-           2> >(tee "$PLAN_DIR/planner_log.txt" >&2)
+    local drafter_timeout="${DRAFTER_TIMEOUT_SECONDS:-600}"
+    local drafter_rc=0
+    run_with_timeout "$drafter_timeout" \
+        claude --agent harness-drafter \
+            -p "$(cat "$PLAN_DIR/planner_input.md")" \
+            --output-format text \
+            > "$PLAN_DIR/plan_draft.md" \
+            2> >(tee "$PLAN_DIR/planner_log.txt" >&2) \
+        || drafter_rc=$?
+    if [[ $drafter_rc -eq 124 || $drafter_rc -eq 142 ]]; then
+        die "Drafter (initial) timed out after ${drafter_timeout}s — aborting pipeline"
+    fi
 
     # Verify output exists and is non-empty
     [[ -s "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
@@ -392,11 +399,18 @@ run_challenger() {
         "PLAN_DRAFT=@$plan_to_challenge"
 
     log "Running Challenger (isolated session, round $round)..."
-    claude --agent harness-challenger \
-           -p "$(cat "$PLAN_DIR/challenger_input_round${round}.md")" \
-           --output-format text \
-           > "$PLAN_DIR/challenge_report.md" \
-           2> >(tee "$PLAN_DIR/challenger_log_round${round}.txt" >&2)
+    local challenger_timeout="${CHALLENGER_TIMEOUT_SECONDS:-600}"
+    local challenger_rc=0
+    run_with_timeout "$challenger_timeout" \
+        claude --agent harness-challenger \
+            -p "$(cat "$PLAN_DIR/challenger_input_round${round}.md")" \
+            --output-format text \
+            > "$PLAN_DIR/challenge_report.md" \
+            2> >(tee "$PLAN_DIR/challenger_log_round${round}.txt" >&2) \
+        || challenger_rc=$?
+    if [[ $challenger_rc -eq 124 || $challenger_rc -eq 142 ]]; then
+        log "WARNING: Challenger timed out after ${challenger_timeout}s — using empty challenge"
+    fi
 
     [[ -s "$PLAN_DIR/challenge_report.md" ]] || {
         log "WARNING: Challenger produced empty output"
@@ -438,11 +452,18 @@ Output the final revised plan directly, using the same format as the original pl
 REVISION_EOF
 
     log "Running Drafter revision..."
-    claude --agent harness-drafter \
-           -p "$(cat "$PLAN_DIR/revision_input.md")" \
-           --output-format text \
-           > "$PLAN_DIR/plan_revised.md" \
-           2> >(tee "$PLAN_DIR/revision_log.txt" >&2)
+    local drafter_rev_timeout="${DRAFTER_TIMEOUT_SECONDS:-600}"
+    local drafter_rev_rc=0
+    run_with_timeout "$drafter_rev_timeout" \
+        claude --agent harness-drafter \
+            -p "$(cat "$PLAN_DIR/revision_input.md")" \
+            --output-format text \
+            > "$PLAN_DIR/plan_revised.md" \
+            2> >(tee "$PLAN_DIR/revision_log.txt" >&2) \
+        || drafter_rev_rc=$?
+    if [[ $drafter_rev_rc -eq 124 || $drafter_rev_rc -eq 142 ]]; then
+        log "WARNING: Drafter revision timed out after ${drafter_rev_timeout}s — using draft"
+    fi
 
     [[ -s "$PLAN_DIR/plan_revised.md" ]] || {
         log "WARNING: Revision produced empty output — using draft"
@@ -467,11 +488,18 @@ run_quality_checker() {
         "PLAN_REVISED=@$PLAN_DIR/plan_revised.md"
 
     log "Running Quality Checker (isolated session, round $round)..."
-    claude --agent harness-quality-checker \
-           -p "$(cat "$PLAN_DIR/qc_input_round${round}.md")" \
-           --output-format text \
-           > "$PLAN_DIR/quality_review_round${round}.md" \
-           2> >(tee "$PLAN_DIR/qc_log_round${round}.txt" >&2)
+    local qc_timeout="${QC_TIMEOUT_SECONDS:-600}"
+    local qc_rc=0
+    run_with_timeout "$qc_timeout" \
+        claude --agent harness-quality-checker \
+            -p "$(cat "$PLAN_DIR/qc_input_round${round}.md")" \
+            --output-format text \
+            > "$PLAN_DIR/quality_review_round${round}.md" \
+            2> >(tee "$PLAN_DIR/qc_log_round${round}.txt" >&2) \
+        || qc_rc=$?
+    if [[ $qc_rc -eq 124 || $qc_rc -eq 142 ]]; then
+        log "WARNING: Quality Checker timed out after ${qc_timeout}s — treating as PLAN_APPROVED"
+    fi
 
     [[ -s "$PLAN_DIR/quality_review_round${round}.md" ]] || {
         log "WARNING: Quality Checker produced empty output — treating as PLAN_APPROVED"
@@ -556,12 +584,20 @@ $(cat "$REVIEW_DIR/review_latest.md")"
         "FEEDBACK=$feedback_section"
 
     # Generator needs tool access to write code — use --dangerously-skip-permissions
-    log "Running Generator (isolated session, attempt $attempt)..."
-    claude --agent harness-generator \
-           -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
-           --dangerously-skip-permissions \
-           --output-format text \
-           2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
+    local gen_timeout="${GENERATOR_TIMEOUT_SECONDS:-900}"
+    log "Running Generator (isolated session, attempt $attempt, timeout ${gen_timeout}s)..."
+    run_with_timeout "$gen_timeout" \
+        claude --agent harness-generator \
+            -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
+            --dangerously-skip-permissions \
+            --output-format text \
+            2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
+    local gen_rc=${PIPESTATUS[0]}
+    if [[ $gen_rc -eq 124 || $gen_rc -eq 142 ]]; then
+        log "ERROR: Generator timed out after ${gen_timeout}s"
+        echo "GENERATOR_TIMEOUT" >> "$RESULT_DIR/gen_result_attempt${attempt}.md"
+        die "Generator hung — aborting pipeline"
+    fi
 
     # Run gate
     log "Running gate command..."
@@ -748,21 +784,27 @@ VLM_EOF
 
         # VLM isolation: run in clean subshell with stdin closed and minimal env
         # to prevent stop-hook text from leaking into claude output.
+        local vlm_timeout="${VLM_TIMEOUT_SECONDS:-600}"
+        local vlm_rc=0
         (
             exec < /dev/null
-            env -i \
-                PATH="$PATH" \
-                HOME="$HOME" \
-                USER="${USER:-}" \
-                TERM="${TERM:-dumb}" \
-                CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
-                HARNESS_VLM_ISOLATED=1 \
-                claude --agent harness-vlm-analyzer \
-                    -p "$vlm_prompt" \
-                    --output-format text \
-                    > "$evidence_dir/visual_analysis.txt" \
-                    2> "$evidence_dir/vlm_log.txt"
-        ) || true
+            run_with_timeout "$vlm_timeout" \
+                env -i \
+                    PATH="$PATH" \
+                    HOME="$HOME" \
+                    USER="${USER:-}" \
+                    TERM="${TERM:-dumb}" \
+                    CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
+                    HARNESS_VLM_ISOLATED=1 \
+                    claude --agent harness-vlm-analyzer \
+                        -p "$vlm_prompt" \
+                        --output-format text \
+                        > "$evidence_dir/visual_analysis.txt" \
+                        2> "$evidence_dir/vlm_log.txt"
+        ) || vlm_rc=$?
+        if [[ $vlm_rc -eq 124 || $vlm_rc -eq 142 ]]; then
+            log "WARNING: VLM analysis timed out after ${vlm_timeout}s"
+        fi
 
     else
         log "Found $screenshot_count screenshots — running VLM analysis"
@@ -825,22 +867,28 @@ Answer every question in the checklist."
 
         # VLM isolation: run in clean subshell with stdin closed and minimal env
         # to prevent stop-hook text from leaking into claude output.
+        local vlm_timeout="${VLM_TIMEOUT_SECONDS:-600}"
+        local vlm_rc=0
         (
             exec < /dev/null
-            env -i \
-                PATH="$PATH" \
-                HOME="$HOME" \
-                USER="${USER:-}" \
-                TERM="${TERM:-dumb}" \
-                CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
-                HARNESS_VLM_ISOLATED=1 \
-                claude --agent harness-vlm-analyzer \
-                    -p "$vlm_input" \
-                    --dangerously-skip-permissions \
-                    --output-format text \
-                    > "$evidence_dir/visual_analysis.txt" \
-                    2> "$evidence_dir/vlm_log.txt"
-        ) || true
+            run_with_timeout "$vlm_timeout" \
+                env -i \
+                    PATH="$PATH" \
+                    HOME="$HOME" \
+                    USER="${USER:-}" \
+                    TERM="${TERM:-dumb}" \
+                    CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
+                    HARNESS_VLM_ISOLATED=1 \
+                    claude --agent harness-vlm-analyzer \
+                        -p "$vlm_input" \
+                        --dangerously-skip-permissions \
+                        --output-format text \
+                        > "$evidence_dir/visual_analysis.txt" \
+                        2> "$evidence_dir/vlm_log.txt"
+        ) || vlm_rc=$?
+        if [[ $vlm_rc -eq 124 || $vlm_rc -eq 142 ]]; then
+            log "WARNING: VLM analysis timed out after ${vlm_timeout}s"
+        fi
     fi
 
     if [[ ! -s "$evidence_dir/visual_analysis.txt" ]]; then
@@ -1442,11 +1490,19 @@ run_evaluator() {
 
     # Run in isolated session — cannot see Generator's reasoning
     log "Running Evaluator (isolated session)..."
-    claude --agent harness-evaluator \
-           -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
-           --output-format text \
-           > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
-           2> >(tee "$REVIEW_DIR/evaluator_log.txt" >&2)
+    local eval_timeout="${EVALUATOR_TIMEOUT_SECONDS:-600}"
+    local eval_rc=0
+    run_with_timeout "$eval_timeout" \
+        claude --agent harness-evaluator \
+            -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
+            --output-format text \
+            > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
+            2> >(tee "$REVIEW_DIR/evaluator_log.txt" >&2) \
+        || eval_rc=$?
+    if [[ $eval_rc -eq 124 || $eval_rc -eq 142 ]]; then
+        log "ERROR: Evaluator timed out after ${eval_timeout}s"
+        die "Evaluator hung — aborting pipeline"
+    fi
 
     [[ -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]] || die "Evaluator did not produce review"
 

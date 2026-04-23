@@ -51,7 +51,9 @@
             ),
         ],
         size: (2, 2),
-        influence_emissions: [],
+        influence_emissions: [
+            InfluenceEmission(channel: "warmth", radius: 3.0, intensity: 0.3),
+        ],
         role_contribution: Some("shelter"),
         stats: {
             "comfort": 0.4,
