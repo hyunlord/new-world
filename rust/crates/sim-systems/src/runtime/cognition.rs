@@ -517,6 +517,8 @@ pub fn temperament_action_bias(axes: &TemperamentAxes, action: ActionType) -> f6
         ActionType::Learn => (0.3, 0.0, 0.4, 0.2),
         ActionType::VisitPartner => (0.1, -0.1, 0.7, 0.0),
         ActionType::Pray => (0.0, 0.2, 0.5, 0.2),
+        // Mourn: HA/RD dominant (grief avoidance + social bonding with deceased)
+        ActionType::Mourn => (0.0, 0.4, 0.6, 0.1),
         // P (corticostriatal) → perseverance, industriousness
         ActionType::Build => (0.0, 0.0, 0.0, 0.7),
         ActionType::Craft => (0.1, 0.0, 0.0, 0.6),
@@ -587,6 +589,7 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::SitByFire => config::ACTION_TIMER_SIT_BY_FIRE,
         ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
         ActionType::Pray => config::ACTION_TIMER_PRAY,
+        ActionType::Mourn => config::ACTION_TIMER_MOURN,
         ActionType::PlaceWall => config::ACTION_TIMER_PLACE_WALL,
         ActionType::PlaceFurniture => config::ACTION_TIMER_PLACE_FURNITURE,
         _ => config::ACTION_TIMER_DEFAULT,
@@ -669,6 +672,7 @@ fn behavior_select_action(
     settlement_food: f64,
     settlement_population: usize,
     has_nearby_totem: bool,
+    has_nearby_cairn: bool,
     rng: &mut impl Rng,
 ) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -863,6 +867,16 @@ fn behavior_select_action(
         let pray_score = behavior_urgency(1.0 - comfort) * 0.4 + 0.2;
         behavior_score_add(&mut scores, ActionType::Pray, pray_score);
     }
+    // Mourn scoring: Sadness emotion + cairn within radius.
+    // TCI affinity (0.0, 0.4, 0.6, 0.1) — HA/RD dominant personalities mourn more.
+    // has_nearby_cairn is pre-computed by caller (Sadness > threshold + cairn search).
+    if has_nearby_cairn {
+        let sadness = emotion_opt
+            .map(|e| e.get(EmotionType::Sadness) as f32)
+            .unwrap_or(0.0);
+        let mourn_score = behavior_urgency(sadness) * 0.5 + 0.1;
+        behavior_score_add(&mut scores, ActionType::Mourn, mourn_score);
+    }
 
     match behavior.job.as_str() {
         "gatherer" => behavior_score_mul(&mut scores, ActionType::Forage, 2.0),
@@ -1006,7 +1020,7 @@ fn behavior_select_action(
         return (ActionType::Wander, false);
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 20] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 21] = [
         ActionType::Flee,
         ActionType::SeekShelter,
         ActionType::Drink,
@@ -1021,6 +1035,7 @@ fn behavior_select_action(
         ActionType::Craft,
         ActionType::Socialize,
         ActionType::Pray,
+        ActionType::Mourn,
         ActionType::Sleep,
         ActionType::Rest,
         ActionType::VisitPartner,
@@ -1619,6 +1634,24 @@ impl SimSystem for BehaviorRuntimeSystem {
                     config::PRAY_TOTEM_SEARCH_RADIUS,
                     "totem",
                 );
+            // Mourn pre-compute: Sadness > threshold + complete cairn within Chebyshev radius.
+            // Cairns are structures (not tile furniture), so we iterate resources.buildings.
+            let has_nearby_cairn = {
+                let sadness = emotion_opt
+                    .map(|e| e.get(EmotionType::Sadness))
+                    .unwrap_or(0.0);
+                sadness > config::MOURN_SADNESS_THRESHOLD
+                    && {
+                        let px = position.tile_x();
+                        let py = position.tile_y();
+                        let r = config::MOURN_CAIRN_SEARCH_RADIUS;
+                        resources.buildings.values().any(|b| {
+                            b.is_complete
+                                && b.building_type == "cairn"
+                                && (b.x - px).abs().max((b.y - py).abs()) <= r
+                        })
+                    }
+            };
             let (settlement_stone, settlement_wood, settlement_food, settlement_population) =
                 identity_opt
                     .and_then(|id| id.settlement_id)
@@ -1651,6 +1684,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 settlement_food,
                 settlement_population,
                 has_nearby_totem,
+                has_nearby_cairn,
                 &mut resources.rng,
             );
             // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
@@ -2030,6 +2064,7 @@ mod tests {
             100.0, // settlement_food (ample)
             10,    // settlement_population
             false, // has_nearby_totem
+            false, // has_nearby_cairn
             &mut rng,
         );
 
@@ -2065,6 +2100,7 @@ mod tests {
             100.0, // settlement_food (ample)
             10,    // settlement_population
             false, // has_nearby_totem
+            false, // has_nearby_cairn
             &mut rng,
         );
 
@@ -2103,6 +2139,7 @@ mod tests {
             100.0, // settlement_food (ample)
             10,    // settlement_population
             false, // has_nearby_totem
+            false, // has_nearby_cairn
             &mut rng,
         );
 
@@ -2138,6 +2175,7 @@ mod tests {
             100.0, // settlement_food (ample)
             10,    // settlement_population
             false, // has_nearby_totem
+            false, // has_nearby_cairn
             &mut rng,
         );
 

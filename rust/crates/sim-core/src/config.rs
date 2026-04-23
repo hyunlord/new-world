@@ -805,6 +805,19 @@ pub const PRAY_MEANING_BONUS: f64 = 0.02;
 /// Maximum Chebyshev distance (tiles) from agent to totem for Pray eligibility.
 pub const PRAY_TOTEM_SEARCH_RADIUS: i32 = 3;
 
+/// Mourn action duration in ticks. Slightly longer than Pray — mourning is deeper.
+pub const ACTION_TIMER_MOURN: i32 = 8;
+/// Sadness emotion intensity required for Mourn action to be scored.
+/// Below this threshold, agents don't seek out cairns for mourning.
+pub const MOURN_SADNESS_THRESHOLD: f64 = 0.35;
+/// Sadness emotion reduction when Mourn action completes near a cairn.
+pub const MOURN_SADNESS_RELIEF: f64 = 0.15;
+/// Meaning need increment when Mourn action completes near a cairn.
+/// Higher than Pray (0.02) — ritual mourning provides stronger meaning.
+pub const MOURN_MEANING_BONUS: f64 = 0.04;
+/// Chebyshev radius for cairn proximity detection during Mourn scoring.
+pub const MOURN_CAIRN_SEARCH_RADIUS: i32 = 3;
+
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;
 pub const HUNGER_EAT_THRESHOLD: f64 = 0.5;

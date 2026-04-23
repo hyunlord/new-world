@@ -407,6 +407,8 @@ pub enum ActionType {
     PlaceWall,
     /// P2-B3: place a single furniture item on a tile via a builder action.
     PlaceFurniture,
+    /// Ritual mourning at a cairn — processes Sadness emotion and yields Meaning.
+    Mourn,
 }
 
 // ═══════════════════════════════════════

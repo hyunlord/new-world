@@ -1079,8 +1079,9 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&Age>,
             Option<&mut Inventory>,
             Option<&Identity>,
+            Option<&mut Emotion>,
         )>();
-        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt)) in &mut query
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, mut emotion_opt)) in &mut query
         {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
@@ -1183,6 +1184,33 @@ impl SimSystem for MovementRuntimeSystem {
                             }
                             // No totem → Pray completes silently with no effect.
                         }
+                    }
+                    ActionType::Mourn => {
+                        // Re-check cairn presence at completion — may have been removed
+                        // during the action timer window (mirrors Pray safety pattern).
+                        let px = position.tile_x();
+                        let py = position.tile_y();
+                        let r = config::MOURN_CAIRN_SEARCH_RADIUS;
+                        let cairn_present = resources.buildings.values().any(|b| {
+                            b.is_complete
+                                && b.building_type == "cairn"
+                                && (b.x - px).abs().max((b.y - py).abs()) <= r
+                        });
+                        if cairn_present {
+                            // Reduce Sadness emotion (emotion layer).
+                            if let Some(emotion) = emotion_opt.as_mut() {
+                                emotion.add(EmotionType::Sadness, -config::MOURN_SADNESS_RELIEF);
+                            }
+                            // Increase Meaning need (needs layer).
+                            if let Some(needs) = needs_opt.as_mut() {
+                                needs.set(
+                                    NeedType::Meaning,
+                                    (needs.get(NeedType::Meaning) + config::MOURN_MEANING_BONUS)
+                                        .clamp(0.0, 1.0),
+                                );
+                            }
+                        }
+                        // No cairn → Mourn completes silently with no effect.
                     }
                     ActionType::Forage
                     | ActionType::Hunt

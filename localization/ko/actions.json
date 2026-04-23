@@ -3,5 +3,6 @@
   "ACTION_DRINK": "물 마시기",
   "ACTION_REST": "휴식",
   "ACTION_PREPARE_HIDE": "가죽 손질",
-  "ACTION_CHOP_BRANCH": "가지 자르기"
+  "ACTION_CHOP_BRANCH": "가지 자르기",
+  "ACTION_MOURN": "애도"
 }
