@@ -19,7 +19,8 @@ use sim_systems::runtime::{
     StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
     StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
-    TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
+    TemperamentShiftRuntimeSystem, TensionRuntimeSystem, TitleRuntimeSystem, TraitRuntimeSystem,
+    TraitViolationRuntimeSystem,
     TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
 
@@ -92,6 +93,7 @@ pub(crate) enum RuntimeSystemId {
     BandFormation = 62,
     BandBehavior = 63,
     Territory = 64,
+    TemperamentShift = 65,
 }
 
 impl RuntimeSystemId {
@@ -163,6 +165,7 @@ impl RuntimeSystemId {
             Self::BandFormation => "band_formation_system",
             Self::BandBehavior => "band_behavior_system",
             Self::Territory => "territory_system",
+            Self::TemperamentShift => "temperament_shift_system",
         }
     }
 
@@ -234,6 +237,7 @@ impl RuntimeSystemId {
             Self::BandBehavior,
             Self::EffectApply,
             Self::Territory,
+            Self::TemperamentShift,
         ]
     }
 }
@@ -255,7 +259,7 @@ pub(crate) const DEFAULT_DISABLED_RUNTIME_SYSTEMS: [RuntimeSystemId; 4] = [
 ];
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 62] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -547,6 +551,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 61] = [
         tick_interval: 10,
     },
     DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::TemperamentShift,
+        priority: 101,
+        tick_interval: 1,
+    },
+    DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::Chronicle,
         priority: 101,
         tick_interval: 1,
@@ -777,6 +786,9 @@ pub(crate) fn register_runtime_system(
         RuntimeSystemId::Trait => {
             engine.register(TraitRuntimeSystem::new(priority_u32, tick_interval_u64))
         }
+        RuntimeSystemId::TemperamentShift => engine.register(
+            TemperamentShiftRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
         RuntimeSystemId::LlmRequest => {
             // Disabled by default when no LLM runtime is attached.
         }
@@ -796,6 +808,16 @@ pub(crate) fn register_runtime_system(
             engine.register(EffectApplySystem::new(priority_u32, tick_interval_u64))
         }
     }
+}
+
+/// Returns the registry names of all systems in [`DEFAULT_RUNTIME_SYSTEMS`].
+/// Used by sim-test to verify production runtime registration without
+/// accessing the `pub(crate)` constant directly.
+pub fn default_runtime_system_registry_names() -> Vec<&'static str> {
+    DEFAULT_RUNTIME_SYSTEMS
+        .iter()
+        .map(|spec| spec.system_id.registry_name())
+        .collect()
 }
 
 #[cfg(test)]

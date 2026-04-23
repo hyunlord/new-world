@@ -71,6 +71,7 @@ use pathfinding_core::{
     dispatch_pathfind_grid_batch_vec2_bytes, dispatch_pathfind_grid_batch_xy_bytes,
     dispatch_pathfind_grid_bytes,
 };
+pub use runtime_system::default_runtime_system_registry_names;
 pub use pathfinding_core::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
