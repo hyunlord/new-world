@@ -276,13 +276,38 @@ fn collect_building_emitters(resources: &SimResources, emitters: &mut Vec<Emitte
             if let Some(registry_emissions) =
                 registry.structure_completion_influence(building.building_type.as_str())
             {
-                append_registry_emissions(
-                    emitters,
-                    building.x as u32,
-                    building.y as u32,
-                    registry_emissions,
-                    &[building.building_type.as_str(), "registry_structure"],
-                );
+                // Shelter quality boost: count optional components inside footprint.
+                let multiplier = if building.building_type == BUILDING_TYPE_SHELTER {
+                    let optional_count = count_shelter_optional_components(
+                        &resources.tile_grid,
+                        building.x,
+                        building.y,
+                        building.width,
+                        building.height,
+                    );
+                    1.0 + (config::SHELTER_OPTIONAL_BOOST * optional_count as f64)
+                } else {
+                    1.0
+                };
+
+                if multiplier > 1.001 {
+                    append_shelter_boosted_emissions(
+                        emitters,
+                        building.x as u32,
+                        building.y as u32,
+                        registry_emissions,
+                        &[building.building_type.as_str(), "registry_structure"],
+                        multiplier,
+                    );
+                } else {
+                    append_registry_emissions(
+                        emitters,
+                        building.x as u32,
+                        building.y as u32,
+                        registry_emissions,
+                        &[building.building_type.as_str(), "registry_structure"],
+                    );
+                }
                 emitted_any = !registry_emissions.is_empty() || emitted_any;
             }
             if let Some(furniture_id) = furniture_registry_id(building.building_type.as_str()) {
@@ -375,6 +400,68 @@ fn append_registry_emissions(
             channel,
             radius: emission.radius.max(0.0),
             base_intensity: emission.intensity.max(0.0),
+            falloff: default_falloff_for_channel(channel),
+            decay_rate: None,
+            tags,
+            dirty: true,
+        });
+    }
+}
+
+/// Count optional furniture components inside a shelter building's tile footprint.
+///
+/// Scans `tile_grid` within `[building_x .. building_x+w, building_y .. building_y+h]`
+/// and counts tiles whose `furniture_id` matches `config::SHELTER_OPTIONAL_FURNITURE_IDS`.
+fn count_shelter_optional_components(
+    tile_grid: &sim_core::TileGrid,
+    building_x: i32,
+    building_y: i32,
+    building_w: u32,
+    building_h: u32,
+) -> usize {
+    let (grid_w, grid_h) = tile_grid.dimensions();
+    let start_x = building_x.max(0) as u32;
+    let start_y = building_y.max(0) as u32;
+    let end_x = ((building_x + building_w as i32) as u32).min(grid_w);
+    let end_y = ((building_y + building_h as i32) as u32).min(grid_h);
+    let mut count = 0;
+    for y in start_y..end_y {
+        for x in start_x..end_x {
+            if let Some(fid) = tile_grid.get(x, y).furniture_id.as_deref() {
+                if config::SHELTER_OPTIONAL_FURNITURE_IDS.contains(&fid) {
+                    count += 1;
+                }
+            }
+        }
+    }
+    count
+}
+
+/// Like `append_registry_emissions` but multiplies each emission's intensity.
+///
+/// Used for shelter quality boost when optional components are present.
+/// A `shelter_quality_x{mult:.2}` tag is appended for observability.
+fn append_shelter_boosted_emissions(
+    emitters: &mut Vec<EmitterRecord>,
+    x: u32,
+    y: u32,
+    emissions: &[InfluenceEmission],
+    extra_tags: &[&str],
+    multiplier: f64,
+) {
+    for emission in emissions {
+        let Some(channel) = ChannelId::from_key(&emission.channel) else {
+            continue;
+        };
+        let mut tags: Vec<String> = extra_tags.iter().map(|tag| (*tag).to_string()).collect();
+        tags.push(channel.key().to_string());
+        tags.push(format!("shelter_quality_x{multiplier:.2}"));
+        emitters.push(EmitterRecord {
+            x,
+            y,
+            channel,
+            radius: emission.radius.max(0.0),
+            base_intensity: (emission.intensity * multiplier).max(0.0),
             falloff: default_falloff_for_channel(channel),
             decay_rate: None,
             tags,
