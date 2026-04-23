@@ -14019,6 +14019,287 @@ mod tests {
         );
     }
 
+    /// A-8 Registration — Type A: TemperamentShift must be in DEFAULT_RUNTIME_SYSTEMS.
+    /// Guards against the gap where the system exists in sim-systems but was never wired
+    /// into production runtime (sim-bridge). Checks via the public snapshot helper so
+    /// pub(crate) visibility of the array is not required from sim-test.
+    #[test]
+    fn harness_a8_temperament_shift_registered_in_production() {
+        let names = sim_bridge::default_runtime_system_registry_names();
+
+        let has_shift = names.contains(&"temperament_shift_system");
+
+        eprintln!(
+            "[harness] a8_registration: {} entries, temperament_shift_system present={}",
+            names.len(),
+            has_shift
+        );
+
+        assert!(
+            has_shift,
+            "A-8 FAIL: 'temperament_shift_system' not found in DEFAULT_RUNTIME_SYSTEMS \
+             ({} entries). Add TemperamentShift spec to sim-bridge/src/runtime_system.rs.",
+            names.len()
+        );
+
+        // Type A: compile-time array size invariant — catches "in enum but not DEFAULT array".
+        assert_eq!(
+            names.len(),
+            62,
+            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 62 entries, got {}. \
+             Update [DefaultRuntimeSystemSpec; N] in sim-bridge/src/runtime_system.rs.",
+            names.len()
+        );
+    }
+
+    /// A-8 Starvation recovery shift — Type A: Injecting a 'starvation_recovery' event
+    /// must increment shift_count by exactly 1.
+    /// Tests the Pass-3 event-store path in TemperamentShiftRuntimeSystem with the
+    /// RON rule that maps 'starvation_recovery' → HA +0.05, P −0.05.
+    #[test]
+    fn harness_a8_temperament_starvation_recovery_shift() {
+        use sim_engine::event_store::{SimEvent, SimEventType};
+        use sim_core::enums::NeedType;
+
+        let mut engine = make_temperament_engine(42, 20);
+        engine.run_ticks(10); // let all systems initialise
+
+        // Find an agent with shift_count == 0 so the shift is detectable.
+        let target = {
+            let world = engine.world();
+            world
+                .query::<(&Temperament, &Needs)>()
+                .iter()
+                .find(|(_, (t, _))| t.shift_count == 0)
+                .map(|(e, _)| e)
+                .expect("A-8: need ≥1 agent with shift_count=0 after 10 ticks")
+        };
+
+        let initial_shift_count = engine
+            .world()
+            .get::<&Temperament>(target)
+            .unwrap()
+            .shift_count;
+
+        // Precondition: set hunger high so the hunger-threshold path (Pass 2) cannot
+        // accidentally race with the event path we are testing.
+        {
+            let mut needs = engine.world_mut().get::<&mut Needs>(target).unwrap();
+            needs.values[NeedType::Hunger as usize] = 1.0;
+        }
+
+        // Inject a 'starvation_recovery' event into the event_store (Pass-3 path).
+        let current_tick = engine.current_tick();
+        engine.resources_mut().event_store.push(SimEvent {
+            tick: current_tick,
+            event_type: SimEventType::Custom("temperament_test".to_string()),
+            actor: target.id(),
+            target: None,
+            tags: vec!["starvation_recovery".to_string()],
+            cause: "harness_a8_starvation_recovery".to_string(),
+            value: 1.0,
+        });
+
+        engine.run_ticks(1); // TemperamentShiftRuntimeSystem processes the event
+
+        let (final_shift_count, expressed_ha, expressed_p, latent_ha, latent_p) = {
+            let world = engine.world();
+            let t = world.get::<&Temperament>(target).unwrap();
+            (
+                t.shift_count,
+                t.expressed.ha,
+                t.expressed.p,
+                t.latent.ha,
+                t.latent.p,
+            )
+        };
+
+        let axis_delta = (expressed_ha - latent_ha)
+            .abs()
+            .max((expressed_p - latent_p).abs());
+
+        eprintln!(
+            "[harness] a8_starvation_recovery: entity={:?} shift_count {}→{} \
+             expressed_ha={:.4} latent_ha={:.4} expressed_p={:.4} latent_p={:.4} axis_delta={:.4}",
+            target, initial_shift_count, final_shift_count,
+            expressed_ha, latent_ha, expressed_p, latent_p, axis_delta
+        );
+
+        // Type A: exactly one shift event must fire (plan threshold == 1).
+        assert_eq!(
+            final_shift_count,
+            initial_shift_count + 1,
+            "A-8 FAIL: starvation_recovery event did not increment shift_count. \
+             initial={}, final={}. Ensure TemperamentShiftRuntimeSystem is registered in \
+             production AND 'starvation_recovery' rule exists in default_weights.ron.",
+            initial_shift_count,
+            final_shift_count
+        );
+
+        // Type A: axis values must actually move (RON rule HA+0.05 P-0.05 → delta ≥ 0.049).
+        // Distinguishes a correct shift from a shift_count-only stub that leaves
+        // expressed == latent. Threshold is 0.049 to tolerate snap_if_sub_minimum boundary.
+        assert!(
+            axis_delta >= 0.049,
+            "A-8 FAIL: expressed axes did not move after starvation_recovery shift. \
+             max(|expressed.ha-latent.ha|, |expressed.p-latent.p|) = {:.6} (threshold 0.049). \
+             apply_shift must update expressed from latent using RON rule deltas.",
+            axis_delta
+        );
+    }
+
+    /// A-8 Awakened flag — Type A: Agent must have awakened=true after a temperament shift.
+    /// `awakened` is set inside apply_shift when expressed ≠ latent.
+    /// If shift_count rose but awakened is still false, the apply_shift path is broken.
+    #[test]
+    fn harness_a8_temperament_awakened_after_shift() {
+        use sim_engine::event_store::{SimEvent, SimEventType};
+        use sim_core::enums::NeedType;
+
+        let mut engine = make_temperament_engine(42, 20);
+        engine.run_ticks(10); // let all systems initialise
+
+        // Find an agent that starts un-awakened (expressed == latent).
+        let target = {
+            let world = engine.world();
+            world
+                .query::<(&Temperament, &Needs)>()
+                .iter()
+                .find(|(_, (t, _))| !t.awakened && t.shift_count == 0)
+                .map(|(e, _)| e)
+                .expect("A-8: need an un-awakened agent with shift_count=0 after 10 ticks")
+        };
+
+        // Precondition: pin hunger high to suppress the hunger-threshold path.
+        {
+            let mut needs = engine.world_mut().get::<&mut Needs>(target).unwrap();
+            needs.values[NeedType::Hunger as usize] = 1.0;
+        }
+
+        // Inject a 'starvation_recovery' event; the RON rule has no conditions so it
+        // always fires and calls apply_shift, which sets awakened = (expressed != latent).
+        let current_tick = engine.current_tick();
+        engine.resources_mut().event_store.push(SimEvent {
+            tick: current_tick,
+            event_type: SimEventType::Custom("temperament_test".to_string()),
+            actor: target.id(),
+            target: None,
+            tags: vec!["starvation_recovery".to_string()],
+            cause: "harness_a8_awakened_check".to_string(),
+            value: 1.0,
+        });
+
+        engine.run_ticks(1);
+
+        let (shift_count, awakened) = {
+            let world = engine.world();
+            let t = world.get::<&Temperament>(target).unwrap();
+            (t.shift_count, t.awakened)
+        };
+
+        eprintln!(
+            "[harness] a8_awakened: entity={:?} shift_count={} awakened={}",
+            target, shift_count, awakened
+        );
+
+        assert!(
+            shift_count > 0,
+            "A-8 FAIL (pre-condition): shift_count must be >0 before checking awakened. \
+             shift did not fire — shift_count={}.",
+            shift_count
+        );
+        assert!(
+            awakened,
+            "A-8 FAIL: agent must be awakened=true after temperament shift, \
+             but awakened=false (shift_count={}). \
+             apply_shift must set awakened = (expressed != latent).",
+            shift_count
+        );
+    }
+
+    /// A-8 Lifetime shift cap — Type A: Under 4380 ticks of production-load pressure,
+    /// no agent's shift_count must exceed TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME (3).
+    /// Catches a regression where repeated events or a broken cap guard allow
+    /// unlimited shifts in a real game session.
+    #[test]
+    fn harness_a8_lifetime_shift_cap_enforced_under_production_load() {
+        use sim_core::temperament::TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME;
+
+        let mut engine = make_temperament_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let world = engine.world();
+        // u32: maximum shift_count observed across all agents
+        let mut max_shift_count: u32 = 0;
+        // usize: count of agents that exceeded the cap
+        let mut violators: usize = 0;
+
+        for (_, t) in world.query::<&Temperament>().iter() {
+            let sc = t.shift_count as u32;
+            if sc > max_shift_count {
+                max_shift_count = sc;
+            }
+            if sc > TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME as u32 {
+                violators += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness] a8_lifetime_cap: max_shift_count={} cap={} violators={}",
+            max_shift_count, TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME, violators
+        );
+
+        // Type A: no agent may exceed the lifetime cap of 3 shifts under production load.
+        assert_eq!(
+            violators,
+            0,
+            "A-8 FAIL: {} agent(s) exceeded TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME ({}) \
+             after 4380 ticks. max_observed={}. \
+             check_shift_rules must reject shifts when shift_count >= cap.",
+            violators,
+            TEMPERAMENT_MAX_SHIFTS_PER_LIFETIME,
+            max_shift_count
+        );
+    }
+
+    /// A-8 Natural shifts over full year — Type C: After 4380 ticks,
+    /// at least 15 of the agents must have shift_count > 0.
+    /// A completely dead system (no shift events ever fire) produces 0 shifted
+    /// agents and fails this assertion. Threshold is deliberately conservative
+    /// (prior A8 harness observed 56/56 agents shifted at 4380 ticks).
+    #[test]
+    fn harness_a8_natural_shifts_occur_over_full_year() {
+        let mut engine = make_temperament_engine(42, 20);
+        engine.run_ticks(4380);
+
+        let world = engine.world();
+        // usize: total agents with Temperament component
+        let total = world.query::<&Temperament>().iter().count();
+        // usize: agents with at least one lifetime shift
+        let shifted = world
+            .query::<&Temperament>()
+            .iter()
+            .filter(|(_, t)| t.shift_count > 0)
+            .count();
+
+        eprintln!(
+            "[harness] a8_natural_shifts: {}/{} agents have shift_count > 0 after 4380 ticks",
+            shifted, total
+        );
+
+        // Type C: ≥15 agents must have experienced at least one shift.
+        // Prior A8 harness observed 56/56 agents shifted; 15 is extremely conservative —
+        // strong enough that a dead system (0 shifts) cannot pass.
+        assert!(
+            shifted >= 15,
+            "A-8 FAIL: only {}/{} agents have shift_count > 0 after 4380 ticks. \
+             Threshold ≥15. TemperamentShiftRuntimeSystem must be registered in \
+             DEFAULT_RUNTIME_SYSTEMS AND RON rules must load for natural shifts to fire.",
+            shifted,
+            total
+        );
+    }
+
     #[test]
     fn harness_perf_system_profile() {
         // Test multiple agent counts to see scaling behavior
