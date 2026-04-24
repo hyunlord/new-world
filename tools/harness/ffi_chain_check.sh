@@ -30,6 +30,11 @@ for method in $changed_methods; do
     if [[ -z "$method" ]]; then
         continue
     fi
+    # Only enforce proxy chain for #[func]-decorated methods — private helpers
+    # (e.g. conversion utilities called internally) do not need GDScript proxies.
+    if ! echo "$rust_methods" | grep -qx "$method"; then
+        continue
+    fi
     if ! grep -q "$method" "$SIM_BRIDGE_GD" 2>/dev/null; then
         echo "BROKEN: $method — newly added to lib.rs but MISSING from sim_bridge.gd"
         broken=1

@@ -1412,7 +1412,9 @@ EVAL_COMBINE
     else
         log "WARNING: Codex Evaluator exited with code $_eval_rc"
         if [[ ! -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]]; then
-            die "Codex Evaluator failed and produced no output (exit $_eval_rc). Check $REVIEW_DIR/codex_evaluator_log.txt"
+            log "WARNING: Codex Evaluator produced no output — falling back to Claude Code evaluator"
+            run_evaluator
+            return
         fi
     fi
 
