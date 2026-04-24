@@ -1,9 +1,9 @@
 use hecs::World;
 use log::{debug, warn};
-use sim_core::components::{EffectFlags, Needs, Position};
+use sim_core::components::{EffectFlags, Emotion, Needs, Position};
 use sim_core::{
     config, CausalEvent, CauseRef, EffectEntry, EffectFlag, EffectPrimitive, EffectSource,
-    EffectStat, EntityId, NeedType, ScheduledEffect,
+    EffectStat, EmotionType, EntityId, NeedType, ScheduledEffect,
 };
 use sim_engine::{GameEvent, SimResources, SimSystem};
 
@@ -35,6 +35,7 @@ impl EffectApplySystem {
             EffectStat::Safety => Some(NeedType::Safety),
             EffectStat::Comfort => Some(NeedType::Comfort),
             EffectStat::Energy => None,
+            EffectStat::Meaning => Some(NeedType::Meaning),
         }
     }
 
@@ -242,6 +243,32 @@ impl EffectApplySystem {
         );
     }
 
+    fn apply_adjust_emotion(
+        resources: &mut SimResources,
+        world: &mut World,
+        entry: &EffectEntry,
+        emotion: EmotionType,
+        amount: f64,
+        tick: u64,
+    ) {
+        let Some(entity) = Self::resolve_entity(world, entry.entity) else {
+            return;
+        };
+        let Ok(mut emo) = world.get::<&mut Emotion>(entity) else {
+            return;
+        };
+        let damped = Self::damped(amount);
+        emo.add(emotion, damped);
+        Self::push_causal_event(
+            resources,
+            entry.entity,
+            tick,
+            &entry.source,
+            format!("effect_adjust_{emotion:?}").to_lowercase(),
+            damped,
+        );
+    }
+
     fn apply_schedule(
         resources: &mut SimResources,
         entry: &EffectEntry,
@@ -303,6 +330,9 @@ impl SimSystem for EffectApplySystem {
                     effect,
                 } => {
                     Self::apply_schedule(resources, &entry, *delay_ticks, effect, tick);
+                }
+                EffectPrimitive::AdjustEmotion { emotion, amount } => {
+                    Self::apply_adjust_emotion(resources, world, &entry, *emotion, *amount, tick);
                 }
             }
         }

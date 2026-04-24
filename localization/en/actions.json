@@ -3,5 +3,6 @@
   "ACTION_DRINK": "Drink",
   "ACTION_REST": "Rest",
   "ACTION_PREPARE_HIDE": "Prepare Hide",
-  "ACTION_CHOP_BRANCH": "Chop Branch"
+  "ACTION_CHOP_BRANCH": "Chop Branch",
+  "ACTION_MOURN": "Mourn"
 }

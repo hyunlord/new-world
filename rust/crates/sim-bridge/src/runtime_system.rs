@@ -567,7 +567,10 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 62] = [
     },
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::EffectApply,
-        priority: 9999,
+        // Priority 16: runs after BuildingEffect (15) which enqueues action-completion effects,
+        // but before BehaviorRuntimeSystem (20) which selects the next action.
+        // This ensures BehaviorRuntime reads updated Sadness/Meaning, not stale pre-effect values.
+        priority: 16,
         tick_interval: 1,
     },
 ];

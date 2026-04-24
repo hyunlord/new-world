@@ -429,6 +429,7 @@ fn action_state_code(action: ActionType) -> u8 {
         ActionType::VisitPartner => 27,
         ActionType::PlaceWall => 28,
         ActionType::PlaceFurniture => 29,
+        ActionType::Mourn => 30,
     }
 }
 

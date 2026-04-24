@@ -11,10 +11,10 @@ use sim_core::components::{
 };
 use sim_core::config;
 use sim_core::{
-    ActionType, AttachmentType, BuildingId, CopingStrategyId, EmotionType, EntityId, GrowthStage,
-    HexacoAxis, HexacoFacet, IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner,
-    MentalBreakType, NeedType, RelationType, ResourceType, SettlementId, Sex, SocialClass,
-    TechState, ValueType,
+    ActionType, AttachmentType, BuildingId, CopingStrategyId, EffectEntry, EffectPrimitive,
+    EffectSource, EffectStat, EmotionType, EntityId, GrowthStage, HexacoAxis, HexacoFacet,
+    IntelligenceType, ItemDerivedStats, ItemInstance, ItemOwner, MentalBreakType, NeedType,
+    RelationType, ResourceType, SettlementId, Sex, SocialClass, TechState, ValueType,
 };
 use sim_engine::{SimEvent, SimEventType, SimResources, SimSystem};
 use std::cmp::Ordering;
@@ -1079,8 +1079,9 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&Age>,
             Option<&mut Inventory>,
             Option<&Identity>,
+            Option<&mut Emotion>,
         )>();
-        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt)) in &mut query
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, _emotion_opt)) in &mut query
         {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
@@ -1161,28 +1162,75 @@ impl SimSystem for MovementRuntimeSystem {
                         }
                     }
                     ActionType::Pray => {
-                        if let Some(needs) = needs_opt.as_mut() {
-                            // Re-check totem presence at completion — totem may have
-                            // been removed during the action timer window.
-                            if resources.tile_grid.has_furniture_within_radius(
-                                position.tile_x(),
-                                position.tile_y(),
-                                config::PRAY_TOTEM_SEARCH_RADIUS,
-                                "totem",
-                            ) {
-                                needs.set(
-                                    NeedType::Comfort,
-                                    (needs.get(NeedType::Comfort) + config::PRAY_COMFORT_RESTORE)
-                                        .clamp(0.0, 1.0),
-                                );
-                                needs.set(
-                                    NeedType::Meaning,
-                                    (needs.get(NeedType::Meaning) + config::PRAY_MEANING_BONUS)
-                                        .clamp(0.0, 1.0),
-                                );
-                            }
-                            // No totem → Pray completes silently with no effect.
+                        // Re-check totem presence at completion — totem may have
+                        // been removed during the action timer window.
+                        if resources.tile_grid.has_furniture_within_radius(
+                            position.tile_x(),
+                            position.tile_y(),
+                            config::PRAY_TOTEM_SEARCH_RADIUS,
+                            "totem",
+                        ) {
+                            let entity_id = EntityId(entity.id() as u64);
+                            let source = EffectSource {
+                                system: "world_action".to_string(),
+                                kind: "pray".to_string(),
+                            };
+                            resources.effect_queue.push(EffectEntry {
+                                entity: entity_id,
+                                effect: EffectPrimitive::AddStat {
+                                    stat: EffectStat::Comfort,
+                                    amount: config::PRAY_COMFORT_RESTORE,
+                                },
+                                source: source.clone(),
+                            });
+                            resources.effect_queue.push(EffectEntry {
+                                entity: entity_id,
+                                effect: EffectPrimitive::AddStat {
+                                    stat: EffectStat::Meaning,
+                                    amount: config::PRAY_MEANING_BONUS,
+                                },
+                                source,
+                            });
                         }
+                        // No totem → Pray completes silently with no effect.
+                    }
+                    ActionType::Mourn => {
+                        // Re-check cairn presence at completion — may have been removed
+                        // during the action timer window (mirrors Pray safety pattern).
+                        let px = position.tile_x();
+                        let py = position.tile_y();
+                        let r = config::MOURN_CAIRN_SEARCH_RADIUS;
+                        let cairn_present = resources.buildings.values().any(|b| {
+                            b.is_complete
+                                && b.building_type == "cairn"
+                                && (b.x - px).abs().max((b.y - py).abs()) <= r
+                        });
+                        if cairn_present {
+                            let entity_id = EntityId(entity.id() as u64);
+                            let source = EffectSource {
+                                system: "world_action".to_string(),
+                                kind: "mourn".to_string(),
+                            };
+                            // Reduce Sadness emotion (emotion layer) via EffectQueue.
+                            resources.effect_queue.push(EffectEntry {
+                                entity: entity_id,
+                                effect: EffectPrimitive::AdjustEmotion {
+                                    emotion: EmotionType::Sadness,
+                                    amount: -config::MOURN_SADNESS_RELIEF,
+                                },
+                                source: source.clone(),
+                            });
+                            // Increase Meaning need (needs layer) via EffectQueue.
+                            resources.effect_queue.push(EffectEntry {
+                                entity: entity_id,
+                                effect: EffectPrimitive::AddStat {
+                                    stat: EffectStat::Meaning,
+                                    amount: config::MOURN_MEANING_BONUS,
+                                },
+                                source,
+                            });
+                        }
+                        // No cairn → Mourn completes silently with no effect.
                     }
                     ActionType::Forage
                     | ActionType::Hunt
