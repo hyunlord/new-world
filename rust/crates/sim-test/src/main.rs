@@ -10758,6 +10758,7 @@ mod tests {
             RoomRole::Storage,
             RoomRole::Crafting,
             RoomRole::Ritual,
+            RoomRole::Memorial,
         ];
 
         let mut seen_keys = std::collections::HashSet::new();
@@ -18372,6 +18373,321 @@ mod tests {
             "a4 E9 (soft): At least 3 distinct cause kinds must appear after 2000 ticks. \
              Found {distinct_kinds}: {kinds:?}. \
              Causal logging may be concentrated in a single push site."
+        );
+    }
+
+    // ── A-6 Room BFS: Memorial role completion ───────────────────────────────
+
+    /// A6-A1 (Type A): RoomRole::Memorial variant is distinct from existing roles.
+    /// Ensures the enum was extended rather than aliased to an existing variant.
+    #[test]
+    fn harness_a6_memorial_role_exists() {
+        use sim_core::RoomRole;
+        let memorial = RoomRole::Memorial;
+        // Debug string must differ from every existing variant.
+        for other in [
+            RoomRole::Unknown,
+            RoomRole::Shelter,
+            RoomRole::Hearth,
+            RoomRole::Storage,
+            RoomRole::Crafting,
+            RoomRole::Ritual,
+        ] {
+            assert_ne!(
+                format!("{memorial:?}"),
+                format!("{other:?}"),
+                "a6 A1: RoomRole::Memorial must be distinct from {other:?}"
+            );
+        }
+        println!("harness_a6_memorial_role_exists PASS: {memorial:?}");
+    }
+
+    /// A6-A2 (Type A): An enclosed room containing a completed cairn building is
+    /// assigned RoomRole::Memorial by the building-vote pipeline.
+    #[test]
+    fn harness_a6_landmark_maps_to_memorial() {
+        use sim_core::{
+            assign_room_ids, detect_rooms, Building, BuildingId, RoomRole, SettlementId,
+        };
+        use sim_systems::runtime::assign_room_roles_from_buildings;
+
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        // Enclosed 5×5 room centered at (60, 60).
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+
+        // Detect rooms through the real pipeline.
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+        }
+
+        // Place a completed cairn at the room center.
+        {
+            let res = engine.resources_mut();
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        let cairn_room_id = engine
+            .resources()
+            .tile_grid
+            .get(60, 60)
+            .room_id
+            .expect("a6 A2: cairn tile must have room_id after assign_room_ids");
+        let cairn_room = engine
+            .resources()
+            .rooms
+            .iter()
+            .find(|r| r.id == cairn_room_id)
+            .expect("a6 A2: cairn room must exist in resources.rooms");
+
+        assert_eq!(
+            cairn_room.role,
+            RoomRole::Memorial,
+            "a6 A2: room containing completed cairn must have RoomRole::Memorial, got {:?}",
+            cairn_room.role
+        );
+        println!(
+            "harness_a6_landmark_maps_to_memorial PASS: cairn room {:?} role = {:?}",
+            cairn_room.id, cairn_room.role
+        );
+    }
+
+    /// A6-A3 (Type A): apply_room_effects enqueues exactly one Meaning AddStat
+    /// for an agent standing inside a Memorial-role enclosed room, and the
+    /// EffectApplySystem flush produces a positive Meaning delta on the agent.
+    #[test]
+    fn harness_a6_memorial_room_boosts_meaning() {
+        use sim_core::components::{Needs as NeedsComp, Position};
+        use sim_core::{
+            assign_room_ids, config, detect_rooms, Building, BuildingId, EffectPrimitive,
+            EffectStat, EntityId, NeedType, SettlementId,
+        };
+        use sim_engine::SimSystem;
+        use sim_systems::runtime::{
+            apply_room_effects, assign_room_roles_from_buildings, EffectApplySystem,
+        };
+
+        let config_game = GameConfig::default();
+        let calendar = GameCalendar::new(&config_game);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        // Enclosed 5×5 Memorial room at (60, 60) with a cairn at center.
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        // Spawn an agent at the cairn tile with Meaning < 1.0 so the clamp does
+        // not mask the delta. Default Needs start at 1.0 (fully satisfied).
+        let agent_eid = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut needs = NeedsComp::default();
+            needs.set(NeedType::Meaning, 0.3);
+            let e = world.spawn((Position::from_f64(60.0, 60.0), needs));
+            EntityId(e.id() as u64)
+        };
+
+        let initial_meaning = {
+            let world = engine.world();
+            world
+                .query::<&NeedsComp>()
+                .iter()
+                .find(|(e, _)| EntityId(e.id() as u64) == agent_eid)
+                .map(|(_, n)| n.get(NeedType::Meaning))
+                .expect("a6 A3: agent must have Needs")
+        };
+
+        // Enqueue room effects and flush them through EffectApplySystem.
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            apply_room_effects(world, res);
+        }
+
+        // B4-style primitive check: the queue must contain a Meaning AddStat
+        // entry with exactly ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT.
+        let memorial_primitive = engine
+            .resources()
+            .effect_queue
+            .pending()
+            .iter()
+            .find(|entry| {
+                entry.entity == agent_eid
+                    && matches!(
+                        entry.effect,
+                        EffectPrimitive::AddStat {
+                            stat: EffectStat::Meaning,
+                            ..
+                        }
+                    )
+            })
+            .map(|entry| entry.effect.clone())
+            .expect("a6 A3: Meaning AddStat entry must exist for cairn-room agent");
+        assert_eq!(
+            memorial_primitive,
+            EffectPrimitive::AddStat {
+                stat: EffectStat::Meaning,
+                amount: config::ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT,
+            },
+            "a6 A3: Memorial primitive must match ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT"
+        );
+
+        // Flush the queue — EffectApplySystem applies pending entries.
+        let mut effect_apply = EffectApplySystem::new(9999, 1);
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            effect_apply.run(world, res, 1);
+        }
+
+        let post_meaning = {
+            let world = engine.world();
+            world
+                .query::<&NeedsComp>()
+                .iter()
+                .find(|(e, _)| EntityId(e.id() as u64) == agent_eid)
+                .map(|(_, n)| n.get(NeedType::Meaning))
+                .expect("a6 A3: agent must still have Needs post-flush")
+        };
+        let delta = post_meaning - initial_meaning;
+        println!(
+            "harness_a6_memorial_room_boosts_meaning PASS: meaning {initial_meaning:.4} → {post_meaning:.4} (Δ={:+.4})",
+            delta
+        );
+        assert!(
+            delta > 0.0,
+            "a6 A3: Memorial room must produce positive Meaning delta, got Δ={delta:+.4}"
+        );
+    }
+
+    /// A6-A4 (Type A): Memorial room effect leaves a causal_log entry with
+    /// kind = "memorial_meaning" for each recipient agent.
+    #[test]
+    fn harness_a6_memorial_room_causal_log_entry() {
+        use sim_core::components::{Needs as NeedsComp, Position};
+        use sim_core::{
+            assign_room_ids, detect_rooms, Building, BuildingId, EntityId, NeedType, SettlementId,
+        };
+        use sim_engine::SimSystem;
+        use sim_systems::runtime::{
+            apply_room_effects, assign_room_roles_from_buildings, EffectApplySystem,
+        };
+
+        let config_game = GameConfig::default();
+        let calendar = GameCalendar::new(&config_game);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        let agent_eid = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut needs = NeedsComp::default();
+            needs.set(NeedType::Meaning, 0.3);
+            let e = world.spawn((Position::from_f64(60.0, 60.0), needs));
+            EntityId(e.id() as u64)
+        };
+
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            apply_room_effects(world, res);
+        }
+        let mut effect_apply = EffectApplySystem::new(9999, 1);
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            effect_apply.run(world, res, 1);
+        }
+
+        let recent = engine.resources().causal_log.recent(agent_eid, 32);
+        let kinds: Vec<&str> = recent.iter().map(|e| e.cause.kind.as_str()).collect();
+        let has_memorial = kinds.iter().any(|k| *k == "memorial_meaning");
+        println!(
+            "harness_a6_memorial_room_causal_log_entry PASS: recorded_kinds={kinds:?}"
+        );
+        assert!(
+            has_memorial,
+            "a6 A4: causal_log must record kind='memorial_meaning' for Memorial-room recipient. \
+             Got kinds={kinds:?}"
         );
     }
 }

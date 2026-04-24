@@ -985,6 +985,11 @@ pub const ROOM_EFFECT_HEARTH_WARMTH_AMOUNT: f64 = 0.03;
 /// room. Spec: feature "sprite-infra" Section 1 — +0.02 Comfort placeholder
 /// until a dedicated spiritual/ritual stat is introduced by a later feature.
 pub const ROOM_EFFECT_RITUAL_COMFORT_AMOUNT: f64 = 0.02;
+/// Per-tick Meaning need increment for agents inside a Memorial-role enclosed
+/// room (e.g. cairn landmarks). Very small — memorial rooms model passive
+/// long-term accumulation, distinct from the Mourn action which produces a
+/// burst Meaning gain (~0.04). Ratio ~400× smaller than Mourn burst.
+pub const ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT: f64 = 0.0001;
 pub const BUILDING_SHELTER_ENERGY_RESTORE: f64 = 0.01;
 /// Stone consumed per individual wall placement under the P2-B3 component
 /// building flow. Total per-shelter ring (~15 walls at R=2) thus consumes
