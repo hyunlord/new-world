@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::config;
 use crate::influence_channel::ChannelId;
 use crate::influence_grid::{EmitterRecord, FalloffType};
+use crate::EmotionType;
 use crate::EntityId;
 
 /// Shared stat targets addressable by effect primitives.
@@ -18,6 +19,8 @@ pub enum EffectStat {
     Comfort,
     /// Energy/rest scalar.
     Energy,
+    /// Meaning need scalar (L3 Growth — purpose/significance).
+    Meaning,
 }
 
 /// Shared boolean flags addressable by effect primitives.
@@ -121,6 +124,11 @@ pub enum EffectPrimitive {
     Schedule {
         delay_ticks: u64,
         effect: Box<EffectPrimitive>,
+    },
+    /// Adjusts an emotion intensity by a signed delta (Plutchik 8 emotions).
+    AdjustEmotion {
+        emotion: EmotionType,
+        amount: f64,
     },
 }
 

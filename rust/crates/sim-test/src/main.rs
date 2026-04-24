@@ -490,7 +490,7 @@ fn register_all_systems(engine: &mut SimEngine) {
         sim_core::config::TERRITORY_SYSTEM_PRIORITY,
         sim_core::config::TERRITORY_SYSTEM_INTERVAL,
     ));
-    engine.register(EffectApplySystem::new(9999, 1));
+    engine.register(EffectApplySystem::new(16, 1));
 }
 
 fn run_llm_smoke() {
@@ -17718,6 +17718,247 @@ mod tests {
             "memorial A5: Type A — with Sadness below MOURN_SADNESS_THRESHOLD=0.35, \
              Mourn must not fire (gate_delta < 0.05). \
              gate_delta={gate_delta:.4} — threshold gate is broken or removed."
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // A-3 Effect Primitive Consolidation — harness tests
+    // ═══════════════════════════════════════════════════════════════
+
+    /// A1 (Type A): EffectStat::Meaning and EffectPrimitive::AdjustEmotion compile
+    /// and have correct structure. Structural verification.
+    #[test]
+    fn harness_a3_effect_primitives_extended() {
+        use sim_core::{EffectPrimitive, EffectStat, EmotionType};
+
+        // EffectStat::Meaning must compile and be distinct from existing variants.
+        let meaning = EffectStat::Meaning;
+        assert_ne!(
+            meaning,
+            EffectStat::Comfort,
+            "a3 A1: Meaning must differ from Comfort"
+        );
+        assert_ne!(
+            meaning,
+            EffectStat::Energy,
+            "a3 A1: Meaning must differ from Energy"
+        );
+
+        // AdjustEmotion variant must compile with EmotionType.
+        let prim = EffectPrimitive::AdjustEmotion {
+            emotion: EmotionType::Sadness,
+            amount: -0.15,
+        };
+        match &prim {
+            EffectPrimitive::AdjustEmotion { emotion, amount } => {
+                assert_eq!(*emotion, EmotionType::Sadness, "a3 A1: emotion field");
+                assert!((*amount - (-0.15)).abs() < 1e-9, "a3 A1: amount field");
+            }
+            _ => panic!("a3 A1: AdjustEmotion variant mismatch"),
+        }
+
+        println!("[harness_a3_effect_primitives_extended] EffectStat::Meaning + AdjustEmotion ✓");
+    }
+
+    /// A2 (Type C): Pray action routes through EffectQueue. Causal log must contain
+    /// entries with kind="pray" after simulation with totem present.
+    /// Proof: EffectApplySystem is the sole writer of causal log entries — if
+    /// kind="pray" appears, the action handler enqueued via EffectQueue.
+    #[test]
+    fn harness_a3_pray_routes_through_effect_queue() {
+        use sim_core::components::Needs;
+        use sim_core::{EntityId, NeedType};
+
+        let mut engine = make_stage1_engine(42, 5);
+        // Place totem at (129,128) — within PRAY_TOTEM_SEARCH_RADIUS=3 of spawn (128,128).
+        engine
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        // Prime Comfort low so Pray is attractive to utility AI.
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.05);
+        }
+        let entity_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+
+        engine.run_ticks(200);
+
+        // Check causal log for any entity having kind="pray" entries.
+        let pray_count: usize = entity_ids
+            .iter()
+            .flat_map(|eid| engine.resources().causal_log.recent(*eid, 32))
+            .filter(|ev| ev.cause.kind == "pray")
+            .count();
+
+        println!(
+            "[harness_a3_pray_routes_through_effect_queue] \
+             pray causal entries={pray_count}"
+        );
+
+        assert!(
+            pray_count >= 1,
+            "a3 A2: Pray must route through EffectQueue — \
+             causal log should contain ≥1 entry with kind='pray'. \
+             Found {pray_count}. EffectApplySystem is the only causal-log writer, \
+             so 0 entries means Pray is not using EffectQueue."
+        );
+    }
+
+    /// A3 (Type C): Mourn action routes through EffectQueue. Causal log must contain
+    /// entries with kind="mourn" after simulation with cairn + high Sadness.
+    #[test]
+    fn harness_a3_mourn_routes_through_effect_queue() {
+        use sim_core::components::{Emotion, Needs, Position};
+        use sim_core::{Building, BuildingId, EmotionType, EntityId, NeedType, SettlementId};
+
+        let mut engine = make_stage1_engine(42, 5);
+        {
+            let res = engine.resources_mut();
+            res.buildings.insert(
+                BuildingId(901),
+                Building {
+                    id: BuildingId(901),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 129,
+                    y: 128,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        // Reposition all agents to (128,128) — the settlement center — so every
+        // agent is guaranteed to be within MOURN_CAIRN_SEARCH_RADIUS=3 of the
+        // cairn at (129,128). Agents spawn within radius 5 of center, so without
+        // this reset some agents would be 4–5 tiles away and never see the cairn.
+        for (_, position) in engine.world_mut().query_mut::<&mut Position>() {
+            position.x = 128.0;
+            position.y = 128.0;
+        }
+        // Prime Sadness high and saturate survival needs so Mourn wins over
+        // survival actions (mirrors Pray test's Comfort=0.05 priming).
+        // Run only 20 ticks: Mourn completes at tick ~9, and the 32-event
+        // causal-log ring buffer is not exhausted by subsequent events.
+        for (_, emotion) in engine.world_mut().query_mut::<&mut Emotion>() {
+            emotion.add(EmotionType::Sadness, 0.9);
+        }
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Hunger, 1.0);
+            needs.set(NeedType::Thirst, 1.0);
+            needs.set(NeedType::Warmth, 1.0);
+            needs.set(NeedType::Safety, 1.0);
+            needs.energy = 1.0;
+        }
+        let entity_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Emotion>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+
+        engine.run_ticks(20);
+
+        // Check causal log for any entity having kind="mourn" entries.
+        let mourn_count: usize = entity_ids
+            .iter()
+            .flat_map(|eid| engine.resources().causal_log.recent(*eid, 32))
+            .filter(|ev| ev.cause.kind == "mourn")
+            .count();
+
+        println!(
+            "[harness_a3_mourn_routes_through_effect_queue] \
+             mourn causal entries={mourn_count}"
+        );
+
+        assert!(
+            mourn_count >= 1,
+            "a3 A3: Mourn must route through EffectQueue — \
+             causal log should contain ≥1 entry with kind='mourn'. \
+             Found {mourn_count}. EffectApplySystem is the only causal-log writer, \
+             so 0 entries means Mourn is not using EffectQueue."
+        );
+    }
+
+    /// A4 (Type C): Pray behavioral equivalence — agents near a totem gain more
+    /// Comfort than agents without a totem over 200 ticks. Verifies the EffectQueue
+    /// migration preserves the original Pray effect magnitudes.
+    #[test]
+    fn harness_a3_pray_behavioral_equivalence() {
+        use sim_core::components::Needs;
+        use sim_core::NeedType;
+        use std::collections::HashSet;
+
+        // Engine A: totem present.
+        let mut engine_a = make_stage1_engine(42, 5);
+        engine_a
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine_a.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.05);
+        }
+        let ids_a: HashSet<_> = engine_a
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_a.run_ticks(200);
+
+        // Engine B: no totem.
+        let mut engine_b = make_stage1_engine(42, 5);
+        for (_, needs) in engine_b.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.05);
+        }
+        let ids_b: HashSet<_> = engine_b
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        engine_b.run_ticks(200);
+
+        let comfort_with_totem: f64 = engine_a
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_a.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+        let comfort_without_totem: f64 = engine_b
+            .world()
+            .query::<&Needs>()
+            .iter()
+            .filter(|(e, _)| ids_b.contains(e))
+            .map(|(_, n)| n.get(NeedType::Comfort))
+            .sum();
+
+        let comfort_delta = comfort_with_totem - comfort_without_totem;
+
+        println!(
+            "[harness_a3_pray_behavioral_equivalence] \
+             comfort_totem={comfort_with_totem:.4} \
+             comfort_no_totem={comfort_without_totem:.4} \
+             comfort_delta={comfort_delta:.4}"
+        );
+
+        // PRAY_COMFORT_RESTORE=0.08 × ≥1 completion across 5 agents = 0.40 potential.
+        // 0.05 is conservative (~12% of potential).
+        assert!(
+            comfort_delta >= 0.05,
+            "a3 A4: Agents near totem must gain ≥ 0.05 more total Comfort \
+             than no-totem agents over 200 ticks. \
+             comfort_delta={comfort_delta:.4} (threshold=0.05). \
+             Pray effect via EffectQueue is not producing Comfort."
         );
     }
 }
