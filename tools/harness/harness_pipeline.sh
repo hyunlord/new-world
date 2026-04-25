@@ -782,25 +782,23 @@ VISUAL_OK | VISUAL_WARNING(<reason>) | VISUAL_FAIL(<reason>)
 VLM_EOF
         )
 
-        # VLM isolation: run in clean subshell with stdin closed and minimal env
-        # to prevent stop-hook text from leaking into claude output.
+        # VLM isolation: closed stdin + marker var.
+        # Stdin redirection (`exec < /dev/null`) prevents stop-hook text leak.
+        # Full env is preserved so the spawned `claude` CLI can authenticate via
+        # macOS Keychain (or whichever auth path the parent uses) — `env -i`
+        # used to strip the launch-services context required for keychain access,
+        # producing "Not logged in" and a systematic VISUAL_WARNING -8 score hit.
         local vlm_timeout="${VLM_TIMEOUT_SECONDS:-600}"
         local vlm_rc=0
         (
             exec < /dev/null
+            HARNESS_VLM_ISOLATED=1 \
             run_with_timeout "$vlm_timeout" \
-                env -i \
-                    PATH="$PATH" \
-                    HOME="$HOME" \
-                    USER="${USER:-}" \
-                    TERM="${TERM:-dumb}" \
-                    CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
-                    HARNESS_VLM_ISOLATED=1 \
-                    claude --agent harness-vlm-analyzer \
-                        -p "$vlm_prompt" \
-                        --output-format text \
-                        > "$evidence_dir/visual_analysis.txt" \
-                        2> "$evidence_dir/vlm_log.txt"
+                claude --agent harness-vlm-analyzer \
+                    -p "$vlm_prompt" \
+                    --output-format text \
+                    > "$evidence_dir/visual_analysis.txt" \
+                    2> "$evidence_dir/vlm_log.txt"
         ) || vlm_rc=$?
         if [[ $vlm_rc -eq 124 || $vlm_rc -eq 142 ]]; then
             log "WARNING: VLM analysis timed out after ${vlm_timeout}s"
@@ -865,26 +863,20 @@ $text_data
 Read each screenshot file listed above, then analyze the screenshots and data.
 Answer every question in the checklist."
 
-        # VLM isolation: run in clean subshell with stdin closed and minimal env
-        # to prevent stop-hook text from leaking into claude output.
+        # VLM isolation: closed stdin + marker var (image mode).
+        # See text-mode call site above for rationale on dropping `env -i`.
         local vlm_timeout="${VLM_TIMEOUT_SECONDS:-600}"
         local vlm_rc=0
         (
             exec < /dev/null
+            HARNESS_VLM_ISOLATED=1 \
             run_with_timeout "$vlm_timeout" \
-                env -i \
-                    PATH="$PATH" \
-                    HOME="$HOME" \
-                    USER="${USER:-}" \
-                    TERM="${TERM:-dumb}" \
-                    CLAUDE_CONFIG_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}" \
-                    HARNESS_VLM_ISOLATED=1 \
-                    claude --agent harness-vlm-analyzer \
-                        -p "$vlm_input" \
-                        --dangerously-skip-permissions \
-                        --output-format text \
-                        > "$evidence_dir/visual_analysis.txt" \
-                        2> "$evidence_dir/vlm_log.txt"
+                claude --agent harness-vlm-analyzer \
+                    -p "$vlm_input" \
+                    --dangerously-skip-permissions \
+                    --output-format text \
+                    > "$evidence_dir/visual_analysis.txt" \
+                    2> "$evidence_dir/vlm_log.txt"
         ) || vlm_rc=$?
         if [[ $vlm_rc -eq 124 || $vlm_rc -eq 142 ]]; then
             log "WARNING: VLM analysis timed out after ${vlm_timeout}s"
