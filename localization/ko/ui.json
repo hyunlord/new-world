@@ -2319,5 +2319,17 @@
   "ROOM_ROLE_HEARTH": "화로방",
   "ROOM_ROLE_STORAGE": "저장소",
   "ROOM_ROLE_CRAFTING": "공방",
-  "ROOM_ROLE_RITUAL": "제의"
+  "ROOM_ROLE_RITUAL": "제의",
+  "ROOM_ROLE_MEMORIAL": "추모소",
+  "UI_CAUSAL_RECENT": "최근 인과",
+  "CAUSE_PRAY": "기도",
+  "CAUSE_MOURN": "애도",
+  "CAUSE_RITUAL_COMFORT": "의식 안락",
+  "CAUSE_HEARTH_WARMTH": "화로 온기",
+  "CAUSE_SHELTER_SAFETY": "거처 안전",
+  "CAUSE_FOOD_GRADIENT": "식량 탐색",
+  "CAUSE_BAND_LEADER_ELECTED": "밴드 지도자 선출",
+  "CAUSE_CONFLICT": "충돌",
+  "CAUSE_TOOL_BROKEN": "도구 파손",
+  "CAUSE_MEMORIAL_MEANING": "추모의 의미"
 }

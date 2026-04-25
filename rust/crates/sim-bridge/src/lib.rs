@@ -53,7 +53,7 @@ use sim_core::components::{
     PART_NAMES, PART_TO_GROUP, PART_VITAL,
 };
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
-use sim_core::{BandId, ChannelId, EntityId, EquipSlot, Settlement, SettlementId, Temperament};
+use sim_core::{BandId, CausalEvent, ChannelId, EntityId, EquipSlot, Settlement, SettlementId, Temperament};
 use sim_engine::{
     build_agent_multimesh_buffer, AgentSnapshot, ChronicleEntryDetailSnapshot,
     ChronicleEntryId, ChronicleEntryLite, ChronicleEvent, ChronicleFeedItemSnapshot,
@@ -348,6 +348,34 @@ fn chronicle_event_to_dict(event: &ChronicleEvent) -> VarDictionary {
     dict.set("steering_magnitude", event.magnitude.steering as f32);
     dict.set("significance", event.magnitude.significance as f32);
     dict
+}
+
+/// Converts causal events into a Godot Array of VarDictionaries for GDScript consumption.
+fn causal_events_to_vardict(events: Vec<&CausalEvent>) -> Array<VarDictionary> {
+    let mut arr: Array<VarDictionary> = Array::new();
+    for event in events {
+        let mut entry = VarDictionary::new();
+        entry.set("tick", event.tick as i64);
+        entry.set("system", event.cause.system.clone());
+        entry.set("kind", event.cause.kind.clone());
+        entry.set("effect_key", event.effect_key.clone());
+        entry.set("summary_key", event.summary_key.clone());
+        entry.set("magnitude", event.magnitude as f32);
+        entry.set(
+            "source_entity_id",
+            event.cause.entity.map(|e| e.0 as i64).unwrap_or(-1_i64),
+        );
+        entry.set(
+            "source_building_id",
+            event.cause.building.map(|b| b.0 as i64).unwrap_or(-1_i64),
+        );
+        entry.set(
+            "source_settlement_id",
+            event.cause.settlement.map(|s| s.0 as i64).unwrap_or(-1_i64),
+        );
+        arr.push(&entry);
+    }
+    arr
 }
 
 /// Temporary migration adapter for legacy Chronicle UI consumers.
@@ -2735,6 +2763,10 @@ impl WorldSimRuntime {
             chronicle_summary_arr.push(&chronicle_entry_lite_to_legacy_dict(entry));
         }
         dict.set("recent_chronicle_summaries", chronicle_summary_arr);
+
+        // Causal log — recent events for this entity (newest first, max 8)
+        let recent_causes = resources.causal_log.recent(entity_raw_id, 8);
+        dict.set("recent_causes", causal_events_to_vardict(recent_causes));
 
         dict
     }

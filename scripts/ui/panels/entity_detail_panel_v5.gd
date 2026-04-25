@@ -1818,8 +1818,10 @@ func _refresh_events() -> void:
 
 	var story_events_raw: Variant = _memory_tab.get("story_events", [])
 	var story_events: Array = story_events_raw if story_events_raw is Array else []
-	_events_empty_label.visible = story_events.is_empty()
-	if story_events.is_empty():
+	var recent_causes_raw: Variant = _detail.get("recent_causes", [])
+	var recent_causes: Array = recent_causes_raw if recent_causes_raw is Array else []
+	_events_empty_label.visible = story_events.is_empty() and recent_causes.is_empty()
+	if story_events.is_empty() and recent_causes.is_empty():
 		return
 
 	for entry_raw: Variant in story_events:
@@ -1832,6 +1834,36 @@ func _refresh_events() -> void:
 		event_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
 		event_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		_events_container.add_child(event_label)
+
+	if recent_causes.is_empty():
+		return
+	var causes_title := Label.new()
+	causes_title.text = Locale.ltr("UI_CAUSAL_RECENT")
+	causes_title.add_theme_font_size_override("font_size", 10)
+	causes_title.add_theme_color_override("font_color", COLOR_LABEL)
+	_events_container.add_child(causes_title)
+	var shown := 0
+	for cause_raw: Variant in recent_causes:
+		if shown >= 5:
+			break
+		if not (cause_raw is Dictionary):
+			continue
+		var cause: Dictionary = cause_raw
+		var kind: String = str(cause.get("kind", "unknown"))
+		var magnitude: float = _safe_scalar(cause.get("magnitude", 0.0), 0.0)
+		var label_key := "CAUSE_" + kind.to_upper()
+		var label_text: String = Locale.ltr(label_key)
+		if label_text == label_key:
+			label_text = kind
+		var mag_str := ""
+		if absf(magnitude) > 0.001:
+			mag_str = " (%+.2f)" % magnitude
+		var row_label := Label.new()
+		row_label.text = "\u00b7 " + label_text + mag_str
+		row_label.add_theme_font_size_override("font_size", 10)
+		row_label.add_theme_color_override("font_color", Color(0.55, 0.62, 0.70))
+		_events_container.add_child(row_label)
+		shown += 1
 
 
 func _story_event_display(entry: Dictionary) -> String:

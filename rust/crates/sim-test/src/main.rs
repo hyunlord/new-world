@@ -10758,6 +10758,7 @@ mod tests {
             RoomRole::Storage,
             RoomRole::Crafting,
             RoomRole::Ritual,
+            RoomRole::Memorial,
         ];
 
         let mut seen_keys = std::collections::HashSet::new();
@@ -17959,6 +17960,734 @@ mod tests {
              than no-totem agents over 200 ticks. \
              comfort_delta={comfort_delta:.4} (threshold=0.05). \
              Pray effect via EffectQueue is not producing Comfort."
+        );
+    }
+
+    /// A4 (Type A): Causal log accumulates entries over simulation.
+    #[test]
+    fn harness_a4_causal_log_populated_over_simulation() {
+        let mut engine = make_stage1_engine(42, 20);
+        let pre_entries = engine.resources().causal_log.total_entries();
+        for _ in 0..1000 {
+            engine.tick();
+        }
+        let post_entries = engine.resources().causal_log.total_entries();
+        let delta = post_entries.saturating_sub(pre_entries);
+        println!(
+            "harness_a4_causal_log_populated_over_simulation: \
+             pre={pre_entries} post={post_entries} delta={delta}"
+        );
+        assert!(
+            delta >= 10,
+            "a4 A1: Causal log must accumulate ≥10 entries over 1000 ticks. \
+             delta={delta}. Check that production push sites are active."
+        );
+    }
+
+    /// A4 (Type A): At least one entity has recent causal events after 2000 ticks.
+    #[test]
+    fn harness_a4_entity_has_recent_causes() {
+        use sim_core::components::Identity;
+        use sim_core::EntityId;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        let found = all_ids
+            .iter()
+            .any(|eid| !engine.resources().causal_log.recent(*eid, 8).is_empty());
+        assert!(
+            found,
+            "a4 A2: At least one entity must have recent causal events \
+             after 2000 ticks. CausalLog push sites may be inactive."
+        );
+        let sample_id = all_ids
+            .iter()
+            .find(|eid| !engine.resources().causal_log.recent(**eid, 8).is_empty())
+            .copied()
+            .unwrap();
+        let recent = engine.resources().causal_log.recent(sample_id, 8);
+        println!(
+            "harness_a4_entity_has_recent_causes: entity={} has {} recent events",
+            sample_id.0,
+            recent.len()
+        );
+    }
+
+    /// A4 (Type A): Pray completion is recorded in the causal log.
+    #[test]
+    fn harness_a4_pray_recorded_in_causal_log() {
+        use sim_core::components::{Identity, Needs};
+        use sim_core::{EntityId, NeedType};
+        let mut engine = make_stage1_engine(42, 20);
+        engine
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.05);
+        }
+        for _ in 0..200 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        let pray_count = all_ids
+            .iter()
+            .flat_map(|eid| engine.resources().causal_log.recent(*eid, 32))
+            .filter(|e| e.cause.kind == "pray")
+            .count();
+        println!(
+            "harness_a4_pray_recorded_in_causal_log: pray_count={pray_count}"
+        );
+        assert!(
+            pray_count >= 1,
+            "a4 A3: Pray must produce ≥1 causal_log entry with kind='pray' \
+             after 200 ticks with totem + low Comfort. \
+             Found {pray_count}. EffectApplySystem may not be pushing to causal_log."
+        );
+    }
+
+    // ── New plan assertions (locked thresholds) ────────────────────────────
+
+    /// A4-C1 (Type C): Causal log accumulates ≥100 entries over 1000 ticks.
+    /// Tightens the existing ≥10 threshold to ≥100 to ensure push sites are
+    /// meaningfully active, not just barely alive.
+    #[test]
+    fn harness_a4_accumulates_substantially() {
+        let mut engine = make_stage1_engine(42, 20);
+        let pre_entries = engine.resources().causal_log.total_entries();
+        for _ in 0..1000 {
+            engine.tick();
+        }
+        let post_entries = engine.resources().causal_log.total_entries();
+        // usize: number of new causal events added during 1000 simulation ticks
+        let delta = post_entries.saturating_sub(pre_entries);
+        println!(
+            "harness_a4_accumulates_substantially: \
+             pre={pre_entries} post={post_entries} delta={delta}"
+        );
+        assert!(
+            delta >= 100,
+            "a4 C1: Causal log must accumulate ≥100 entries over 1000 ticks. \
+             delta={delta}. Push sites may be insufficiently active."
+        );
+    }
+
+    /// A4-A2 (Type A): recent() returns events newest-first with zero ordering violations.
+    /// Validates the CausalLog invariant that window[0].tick >= window[1].tick for all
+    /// consecutive event pairs returned by recent().
+    #[test]
+    fn harness_a4_newest_first_ordering() {
+        use sim_core::components::Identity;
+        use sim_core::EntityId;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..1000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: count of consecutive event pairs where older event appears before newer
+        let mut violations: usize = 0;
+        for eid in &all_ids {
+            let events = engine.resources().causal_log.recent(*eid, 64);
+            for window in events.windows(2) {
+                // window[0] is "more recent" (newer), window[1] is "less recent" (older)
+                if window[0].tick < window[1].tick {
+                    violations += 1;
+                }
+            }
+        }
+        println!("harness_a4_newest_first_ordering: ordering_violations={violations}");
+        // usize: must be zero — any violation breaks the newest-first contract
+        assert!(
+            violations == 0,
+            "a4 A2: recent() must return events newest-first (newest at index 0). \
+             Found {violations} ordering violations. \
+             CausalLog.recent() iterator may be inverted."
+        );
+    }
+
+    /// A4-A3 (Type A): No entity holds more than CAUSAL_LOG_MAX_PER_ENTITY events.
+    /// Validates the ring buffer eviction path even when many push sites fire
+    /// simultaneously at simulation scale (12+ sites, 20 agents).
+    #[test]
+    fn harness_a4_ring_buffer_cap_enforced() {
+        use sim_core::components::Identity;
+        use sim_core::{config, EntityId};
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: maximum event count across all entities (requesting 64 > cap to get all)
+        let max_count = all_ids
+            .iter()
+            .map(|eid| engine.resources().causal_log.recent(*eid, 64).len())
+            .max()
+            .unwrap_or(0);
+        println!(
+            "harness_a4_ring_buffer_cap_enforced: \
+             max_per_entity={max_count} cap={}",
+            config::CAUSAL_LOG_MAX_PER_ENTITY
+        );
+        // usize: must be ≤ CAUSAL_LOG_MAX_PER_ENTITY — ring buffer must evict excess entries
+        assert!(
+            max_count <= config::CAUSAL_LOG_MAX_PER_ENTITY,
+            "a4 A3: No entity may hold more than CAUSAL_LOG_MAX_PER_ENTITY={} events. \
+             Found max={max_count}. Ring buffer eviction is broken.",
+            config::CAUSAL_LOG_MAX_PER_ENTITY
+        );
+    }
+
+    /// A4-A4 (Type A): Total causal log entries ≤ live_agent_count × CAUSAL_LOG_MAX_PER_ENTITY.
+    /// Validates the global capacity bound — total stored entries must not exceed
+    /// the theoretical maximum given the current population, ensuring no phantom entities
+    /// are leaking events into the log.
+    #[test]
+    fn harness_a4_total_entries_bounded() {
+        use sim_core::components::Identity;
+        use sim_core::config;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let agent_count = engine.world().query::<&Identity>().iter().count();
+        // usize: total causal events across all entities currently stored in the log
+        let total = engine.resources().causal_log.total_entries();
+        // usize: theoretical maximum = live agents × per-entity ring buffer cap
+        let cap = agent_count * config::CAUSAL_LOG_MAX_PER_ENTITY;
+        println!(
+            "harness_a4_total_entries_bounded: total={total} agent_count={agent_count} cap={cap}"
+        );
+        assert!(
+            total <= cap,
+            "a4 A4: Total causal log entries ({total}) exceed theoretical maximum \
+             ({agent_count} agents × {} events = {cap}). \
+             Ring buffer eviction failed or dead-entity events are leaking.",
+            config::CAUSAL_LOG_MAX_PER_ENTITY
+        );
+    }
+
+    /// A4-C5 (Type C): At least 15 of 20 agents have ≥1 causal event after 2000 ticks.
+    /// Ensures push sites fire for the majority of agents, not just a few.
+    #[test]
+    fn harness_a4_majority_of_agents_have_events() {
+        use sim_core::components::Identity;
+        use sim_core::EntityId;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: number of agents that have at least one causal event recorded
+        let agents_with_events: usize = all_ids
+            .iter()
+            .filter(|eid| !engine.resources().causal_log.recent(**eid, 1).is_empty())
+            .count();
+        let agent_count = all_ids.len();
+        println!(
+            "harness_a4_majority_of_agents_have_events: \
+             agents_with_events={agents_with_events}/{agent_count}"
+        );
+        // usize: must be ≥ 15 — majority coverage threshold
+        assert!(
+            agents_with_events >= 15,
+            "a4 C5: At least 15/20 agents must have ≥1 causal event after 2000 ticks. \
+             Found {agents_with_events}/{agent_count}. \
+             Push sites may not reach all agents."
+        );
+    }
+
+    /// A4-C6 (Type C): At least 8 of 20 agents have reached full ring buffer capacity.
+    /// Ensures the simulation runs long enough and pushes frequently enough that
+    /// saturation (eviction) occurs in at least 40% of the population.
+    #[test]
+    fn harness_a4_agents_saturate_ring_buffer() {
+        use sim_core::components::Identity;
+        use sim_core::{config, EntityId};
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: number of agents whose event count equals CAUSAL_LOG_MAX_PER_ENTITY
+        let saturated: usize = all_ids
+            .iter()
+            .filter(|eid| {
+                engine.resources().causal_log.recent(**eid, 64).len()
+                    >= config::CAUSAL_LOG_MAX_PER_ENTITY
+            })
+            .count();
+        let agent_count = all_ids.len();
+        println!(
+            "harness_a4_agents_saturate_ring_buffer: \
+             saturated={saturated}/{agent_count} cap={}",
+            config::CAUSAL_LOG_MAX_PER_ENTITY
+        );
+        // usize: must be ≥ 8 — saturation breadth threshold
+        assert!(
+            saturated >= 8,
+            "a4 C6: At least 8/20 agents must reach full ring buffer ({} events) \
+             after 2000 ticks. Found {saturated}/{agent_count}. \
+             Push sites may fire too infrequently.",
+            config::CAUSAL_LOG_MAX_PER_ENTITY
+        );
+    }
+
+    /// A4-A7 (Type A): Every causal event has non-empty kind and summary_key fields.
+    /// Empty fields cause silent locale lookup failures in GDScript (Locale.ltr("")).
+    #[test]
+    fn harness_a4_all_events_have_valid_fields() {
+        use sim_core::components::Identity;
+        use sim_core::EntityId;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..1000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: count of events where cause.kind or summary_key is empty string
+        let mut violations: usize = 0;
+        for eid in &all_ids {
+            for event in engine.resources().causal_log.recent(*eid, 64) {
+                if event.cause.kind.is_empty() || event.summary_key.is_empty() {
+                    violations += 1;
+                }
+            }
+        }
+        println!(
+            "harness_a4_all_events_have_valid_fields: field_violations={violations}"
+        );
+        // usize: must be 0 — every event must have populated kind and summary_key
+        assert!(
+            violations == 0,
+            "a4 A7: Every causal event must have non-empty kind and summary_key. \
+             Found {violations} invalid events. \
+             Empty fields cause silent locale lookup failures in GDScript."
+        );
+    }
+
+    /// A4-A8 (Type A): ≥1 causal event with kind='pray' is recorded after totem setup.
+    /// Validates the pray push site specifically (one of 12+ sites tested by the plan).
+    #[test]
+    fn harness_a4_pray_recorded_in_log() {
+        use sim_core::components::{Identity, Needs};
+        use sim_core::{EntityId, NeedType};
+        let mut engine = make_stage1_engine(42, 20);
+        engine
+            .resources_mut()
+            .tile_grid
+            .set_furniture(129, 128, "totem");
+        for (_, needs) in engine.world_mut().query_mut::<&mut Needs>() {
+            needs.set(NeedType::Comfort, 0.05);
+        }
+        for _ in 0..200 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: number of causal events with cause.kind == "pray" across all entities
+        let pray_count: usize = all_ids
+            .iter()
+            .flat_map(|eid| engine.resources().causal_log.recent(*eid, 32))
+            .filter(|e| e.cause.kind == "pray")
+            .count();
+        println!("harness_a4_pray_recorded_in_log: pray_count={pray_count}");
+        // usize: must be ≥ 1 — pray push site must fire at least once
+        assert!(
+            pray_count >= 1,
+            "a4 A8: Pray must produce ≥1 causal log entry with kind='pray' \
+             after 200 ticks with totem + low Comfort. Found {pray_count}."
+        );
+    }
+
+    /// A4-E9 (Type E, soft): ≥3 distinct cause kinds appear after 2000 ticks.
+    /// Validates that causal logging is distributed across multiple push sites,
+    /// not concentrated in a single subsystem.
+    #[test]
+    fn harness_a4_diverse_cause_kinds() {
+        use sim_core::components::Identity;
+        use sim_core::EntityId;
+        let mut engine = make_stage1_engine(42, 20);
+        for _ in 0..2000 {
+            engine.tick();
+        }
+        let all_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&Identity>()
+            .iter()
+            .map(|(e, _)| EntityId(e.id() as u64))
+            .collect();
+        // usize: count of distinct cause.kind strings seen across all entity logs
+        let mut kinds = std::collections::HashSet::new();
+        for eid in &all_ids {
+            for event in engine.resources().causal_log.recent(*eid, 64) {
+                kinds.insert(event.cause.kind.clone());
+            }
+        }
+        let distinct_kinds: usize = kinds.len();
+        println!(
+            "harness_a4_diverse_cause_kinds: distinct_kinds={distinct_kinds} kinds={kinds:?}"
+        );
+        // usize: must be ≥ 3 — causal logging must span multiple subsystems
+        assert!(
+            distinct_kinds >= 3,
+            "a4 E9 (soft): At least 3 distinct cause kinds must appear after 2000 ticks. \
+             Found {distinct_kinds}: {kinds:?}. \
+             Causal logging may be concentrated in a single push site."
+        );
+    }
+
+    // ── A-6 Room BFS: Memorial role completion ───────────────────────────────
+
+    /// A6-A1 (Type A): RoomRole::Memorial variant is distinct from existing roles.
+    /// Ensures the enum was extended rather than aliased to an existing variant.
+    #[test]
+    fn harness_a6_memorial_role_exists() {
+        use sim_core::RoomRole;
+        let memorial = RoomRole::Memorial;
+        // Debug string must differ from every existing variant.
+        for other in [
+            RoomRole::Unknown,
+            RoomRole::Shelter,
+            RoomRole::Hearth,
+            RoomRole::Storage,
+            RoomRole::Crafting,
+            RoomRole::Ritual,
+        ] {
+            assert_ne!(
+                format!("{memorial:?}"),
+                format!("{other:?}"),
+                "a6 A1: RoomRole::Memorial must be distinct from {other:?}"
+            );
+        }
+        println!("harness_a6_memorial_role_exists PASS: {memorial:?}");
+    }
+
+    /// A6-A2 (Type A): An enclosed room containing a completed cairn building is
+    /// assigned RoomRole::Memorial by the building-vote pipeline.
+    #[test]
+    fn harness_a6_landmark_maps_to_memorial() {
+        use sim_core::{
+            assign_room_ids, detect_rooms, Building, BuildingId, RoomRole, SettlementId,
+        };
+        use sim_systems::runtime::assign_room_roles_from_buildings;
+
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        // Enclosed 5×5 room centered at (60, 60).
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+
+        // Detect rooms through the real pipeline.
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+        }
+
+        // Place a completed cairn at the room center.
+        {
+            let res = engine.resources_mut();
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        let cairn_room_id = engine
+            .resources()
+            .tile_grid
+            .get(60, 60)
+            .room_id
+            .expect("a6 A2: cairn tile must have room_id after assign_room_ids");
+        let cairn_room = engine
+            .resources()
+            .rooms
+            .iter()
+            .find(|r| r.id == cairn_room_id)
+            .expect("a6 A2: cairn room must exist in resources.rooms");
+
+        assert_eq!(
+            cairn_room.role,
+            RoomRole::Memorial,
+            "a6 A2: room containing completed cairn must have RoomRole::Memorial, got {:?}",
+            cairn_room.role
+        );
+        println!(
+            "harness_a6_landmark_maps_to_memorial PASS: cairn room {:?} role = {:?}",
+            cairn_room.id, cairn_room.role
+        );
+    }
+
+    /// A6-A3 (Type A): apply_room_effects enqueues exactly one Meaning AddStat
+    /// for an agent standing inside a Memorial-role enclosed room, and the
+    /// EffectApplySystem flush produces a positive Meaning delta on the agent.
+    #[test]
+    fn harness_a6_memorial_room_boosts_meaning() {
+        use sim_core::components::{Needs as NeedsComp, Position};
+        use sim_core::{
+            assign_room_ids, config, detect_rooms, Building, BuildingId, EffectPrimitive,
+            EffectStat, EntityId, NeedType, SettlementId,
+        };
+        use sim_engine::SimSystem;
+        use sim_systems::runtime::{
+            apply_room_effects, assign_room_roles_from_buildings, EffectApplySystem,
+        };
+
+        let config_game = GameConfig::default();
+        let calendar = GameCalendar::new(&config_game);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        // Enclosed 5×5 Memorial room at (60, 60) with a cairn at center.
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        // Spawn an agent at the cairn tile with Meaning < 1.0 so the clamp does
+        // not mask the delta. Default Needs start at 1.0 (fully satisfied).
+        let agent_eid = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut needs = NeedsComp::default();
+            needs.set(NeedType::Meaning, 0.3);
+            let e = world.spawn((Position::from_f64(60.0, 60.0), needs));
+            EntityId(e.id() as u64)
+        };
+
+        let initial_meaning = {
+            let world = engine.world();
+            world
+                .query::<&NeedsComp>()
+                .iter()
+                .find(|(e, _)| EntityId(e.id() as u64) == agent_eid)
+                .map(|(_, n)| n.get(NeedType::Meaning))
+                .expect("a6 A3: agent must have Needs")
+        };
+
+        // Enqueue room effects and flush them through EffectApplySystem.
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            apply_room_effects(world, res);
+        }
+
+        // B4-style primitive check: the queue must contain a Meaning AddStat
+        // entry with exactly ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT.
+        let memorial_primitive = engine
+            .resources()
+            .effect_queue
+            .pending()
+            .iter()
+            .find(|entry| {
+                entry.entity == agent_eid
+                    && matches!(
+                        entry.effect,
+                        EffectPrimitive::AddStat {
+                            stat: EffectStat::Meaning,
+                            ..
+                        }
+                    )
+            })
+            .map(|entry| entry.effect.clone())
+            .expect("a6 A3: Meaning AddStat entry must exist for cairn-room agent");
+        assert_eq!(
+            memorial_primitive,
+            EffectPrimitive::AddStat {
+                stat: EffectStat::Meaning,
+                amount: config::ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT,
+            },
+            "a6 A3: Memorial primitive must match ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT"
+        );
+
+        // Flush the queue — EffectApplySystem applies pending entries.
+        let mut effect_apply = EffectApplySystem::new(9999, 1);
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            effect_apply.run(world, res, 1);
+        }
+
+        let post_meaning = {
+            let world = engine.world();
+            world
+                .query::<&NeedsComp>()
+                .iter()
+                .find(|(e, _)| EntityId(e.id() as u64) == agent_eid)
+                .map(|(_, n)| n.get(NeedType::Meaning))
+                .expect("a6 A3: agent must still have Needs post-flush")
+        };
+        let delta = post_meaning - initial_meaning;
+        println!(
+            "harness_a6_memorial_room_boosts_meaning PASS: meaning {initial_meaning:.4} → {post_meaning:.4} (Δ={:+.4})",
+            delta
+        );
+        assert!(
+            delta > 0.0,
+            "a6 A3: Memorial room must produce positive Meaning delta, got Δ={delta:+.4}"
+        );
+    }
+
+    /// A6-A4 (Type A): Memorial room effect leaves a causal_log entry with
+    /// kind = "memorial_meaning" for each recipient agent.
+    #[test]
+    fn harness_a6_memorial_room_causal_log_entry() {
+        use sim_core::components::{Needs as NeedsComp, Position};
+        use sim_core::{
+            assign_room_ids, detect_rooms, Building, BuildingId, EntityId, NeedType, SettlementId,
+        };
+        use sim_engine::SimSystem;
+        use sim_systems::runtime::{
+            apply_room_effects, assign_room_roles_from_buildings, EffectApplySystem,
+        };
+
+        let config_game = GameConfig::default();
+        let calendar = GameCalendar::new(&config_game);
+        let map = WorldMap::new(256, 256, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+
+        {
+            let res = engine.resources_mut();
+            stamp_square_walls(&mut res.tile_grid, 60, 60, 2, None);
+            stamp_square_floor(&mut res.tile_grid, 60, 60, 1);
+        }
+        let rooms_detected = detect_rooms(&engine.resources().tile_grid);
+        {
+            let res = engine.resources_mut();
+            assign_room_ids(&mut res.tile_grid, &rooms_detected);
+            res.rooms = rooms_detected;
+            res.buildings.insert(
+                BuildingId(1),
+                Building {
+                    id: BuildingId(1),
+                    building_type: "cairn".to_string(),
+                    settlement_id: SettlementId(1),
+                    x: 60,
+                    y: 60,
+                    width: 1,
+                    height: 1,
+                    construction_progress: 1.0,
+                    is_complete: true,
+                    construction_started_tick: 0,
+                    condition: 1.0,
+                },
+            );
+        }
+        assign_room_roles_from_buildings(engine.resources_mut());
+
+        let agent_eid = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut needs = NeedsComp::default();
+            needs.set(NeedType::Meaning, 0.3);
+            let e = world.spawn((Position::from_f64(60.0, 60.0), needs));
+            EntityId(e.id() as u64)
+        };
+
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            apply_room_effects(world, res);
+        }
+        let mut effect_apply = EffectApplySystem::new(9999, 1);
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            effect_apply.run(world, res, 1);
+        }
+
+        let recent = engine.resources().causal_log.recent(agent_eid, 32);
+        let kinds: Vec<&str> = recent.iter().map(|e| e.cause.kind.as_str()).collect();
+        let has_memorial = kinds.iter().any(|k| *k == "memorial_meaning");
+        println!(
+            "harness_a6_memorial_room_causal_log_entry PASS: recorded_kinds={kinds:?}"
+        );
+        assert!(
+            has_memorial,
+            "a6 A4: causal_log must record kind='memorial_meaning' for Memorial-room recipient. \
+             Got kinds={kinds:?}"
         );
     }
 }

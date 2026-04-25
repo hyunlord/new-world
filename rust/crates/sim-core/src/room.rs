@@ -23,6 +23,9 @@ pub enum RoomRole {
     Crafting,
     /// Ritual/spiritual room: assigned when a totem is the majority furniture.
     Ritual,
+    /// Memorial/landmark room (e.g. cairn): passive Meaning accumulation.
+    /// Complements the Mourn action (burst Meaning) with long-term ambient gain.
+    Memorial,
 }
 
 /// Result of one room-detection pass.

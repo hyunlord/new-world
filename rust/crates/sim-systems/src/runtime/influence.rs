@@ -1037,6 +1037,7 @@ pub fn assign_room_roles_from_buildings(resources: &mut SimResources) {
             BUILDING_TYPE_SHELTER => Some("shelter"),
             "stockpile" => Some("storage"),
             "workbench" => Some("crafting"),
+            "cairn" => Some("landmark"),
             _ => None,
         };
         if let Some(role_str) = role {
@@ -1124,6 +1125,7 @@ fn majority_role(votes: &[&str]) -> RoomRole {
         Some("storage") => RoomRole::Storage,
         Some("crafting") => RoomRole::Crafting,
         Some("ritual") => RoomRole::Ritual,
+        Some("landmark") | Some("memorial") => RoomRole::Memorial,
         _ => RoomRole::Shelter,
     }
 }
@@ -1202,6 +1204,19 @@ pub fn apply_room_effects(world: &World, resources: &mut SimResources) {
                     source: EffectSource {
                         system: "room_effect".to_string(),
                         kind: "ritual_comfort".to_string(),
+                    },
+                });
+            }
+            RoomRole::Memorial => {
+                entries.push(EffectEntry {
+                    entity: entity_id,
+                    effect: EffectPrimitive::AddStat {
+                        stat: EffectStat::Meaning,
+                        amount: config::ROOM_EFFECT_MEMORIAL_MEANING_AMOUNT,
+                    },
+                    source: EffectSource {
+                        system: "room_effect".to_string(),
+                        kind: "memorial_meaning".to_string(),
                     },
                 });
             }

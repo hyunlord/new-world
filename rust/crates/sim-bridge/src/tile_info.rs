@@ -26,6 +26,7 @@ pub fn room_role_locale_key(role: RoomRole) -> &'static str {
         RoomRole::Storage => "ROOM_ROLE_STORAGE",
         RoomRole::Crafting => "ROOM_ROLE_CRAFTING",
         RoomRole::Ritual => "ROOM_ROLE_RITUAL",
+        RoomRole::Memorial => "ROOM_ROLE_MEMORIAL",
     }
 }
 
