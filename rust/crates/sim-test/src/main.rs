@@ -19086,6 +19086,81 @@ mod tests {
             "harness_a7_recipe_count_baseline PASS: {count} recipes loaded"
         );
     }
+
+    #[test]
+    fn harness_a10_production_simulation_no_unbounded_edges() {
+        use sim_core::components::Social;
+        use sim_core::config::SOCIAL_EDGE_CAP;
+
+        let mut engine = make_stage1_engine(42, 30);
+        engine.run_ticks(2000);
+
+        let world = engine.world();
+        let mut max_edges = 0usize;
+        let mut violations = 0usize;
+        for (_, social) in world.query::<&Social>().iter() {
+            if social.edges.len() > max_edges {
+                max_edges = social.edges.len();
+            }
+            if social.edges.len() > SOCIAL_EDGE_CAP {
+                violations += 1;
+            }
+        }
+
+        assert_eq!(
+            violations, 0,
+            "[a10 A5] {} agent(s) exceeded SOCIAL_EDGE_CAP {} in 2000-tick sim",
+            violations, SOCIAL_EDGE_CAP
+        );
+
+        println!(
+            "harness_a10_production_simulation_no_unbounded_edges PASS: \
+             max edges = {} / SOCIAL_EDGE_CAP = {}",
+            max_edges, SOCIAL_EDGE_CAP
+        );
+    }
+
+    // ── A-10 Plan A8 (Type D): Regression — enforce_edge_cap familiarity/SOCIAL_EDGE_CAP=50 ──
+    //
+    // enforce_edge_cap is private to sim-systems::runtime::pairwise.
+    // We verify it through the production simulation: if the new add_edge_capped helper
+    // introduced any regression, agents would exceed SOCIAL_EDGE_CAP here.
+    #[test]
+    fn harness_existing_social_edge_cap_regression() {
+        use sim_core::components::Social;
+        use sim_core::config::SOCIAL_EDGE_CAP;
+
+        // bool: SOCIAL_EDGE_CAP = 50 (familiarity-based, pairwise.rs enforce_edge_cap)
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(500);
+
+        let world = engine.world();
+        let mut violations = 0usize;
+        let mut max_edges = 0usize;
+        for (_, social) in world.query::<&Social>().iter() {
+            let n = social.edges.len();
+            if n > max_edges {
+                max_edges = n;
+            }
+            if n > SOCIAL_EDGE_CAP {
+                violations += 1;
+            }
+        }
+
+        // bool: zero violations — familiarity cap still enforced in production
+        assert_eq!(
+            violations, 0,
+            "[A8 regression] {} agent(s) exceeded SOCIAL_EDGE_CAP={} after 500 ticks; \
+             enforce_edge_cap in pairwise.rs may have regressed",
+            violations, SOCIAL_EDGE_CAP
+        );
+
+        println!(
+            "harness_existing_social_edge_cap_regression PASS: \
+             0 violations, max_edges={}/{}",
+            max_edges, SOCIAL_EDGE_CAP
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
@@ -20493,6 +20568,597 @@ mod harness_sprite_assets_round3 {
             "[harness_sprite_assets_round3][A19] \
              all 37 asset files ≥ {} bytes ✓",
             MIN_BYTES
+        );
+    }
+}
+
+// ── A-10: coping BTreeMap + sparse rel cap (pure struct tests) ───────────────
+#[cfg(test)]
+mod harness_a10_coping_deterministic {
+    #[test]
+    fn harness_a10_coping_uses_btreemap() {
+        use sim_core::components::Coping;
+        use sim_core::enums::CopingStrategyId;
+        use std::collections::BTreeMap;
+
+        let mut coping = Coping::default();
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::PositiveReframing, 10);
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::Denial, 5);
+
+        // Type-level assertion: must be BTreeMap, not HashMap
+        let _: &BTreeMap<CopingStrategyId, u32> = &coping.strategy_cooldowns;
+        let _: &BTreeMap<CopingStrategyId, u32> = &coping.usage_counts;
+        let _: &BTreeMap<CopingStrategyId, f32> = &coping.proficiency;
+
+        // BTreeMap iterates in sorted key order (deterministic)
+        let keys: Vec<CopingStrategyId> = coping.strategy_cooldowns.keys().copied().collect();
+        let mut sorted = keys.clone();
+        sorted.sort();
+        assert_eq!(
+            keys, sorted,
+            "[a10 A1] BTreeMap iteration must be in sorted key order"
+        );
+
+        println!(
+            "harness_a10_coping_uses_btreemap PASS: {} entries, deterministic order confirmed",
+            keys.len()
+        );
+    }
+
+    #[test]
+    fn harness_a10_sparse_rel_cap_enforced() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::config::SPARSE_REL_CAP;
+        use sim_core::ids::EntityId;
+
+        let mut social = Social::default();
+        let total = SPARSE_REL_CAP + 50;
+        let mut accepted = 0usize;
+        for i in 0..total {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64));
+            edge.trust = (i as f64) / (total as f64);
+            if social.add_edge_capped(edge, SPARSE_REL_CAP) {
+                accepted += 1;
+            }
+        }
+
+        assert!(
+            social.edges.len() <= SPARSE_REL_CAP,
+            "[a10 A2] edges.len() {} must not exceed SPARSE_REL_CAP {}",
+            social.edges.len(),
+            SPARSE_REL_CAP
+        );
+
+        println!(
+            "harness_a10_sparse_rel_cap_enforced PASS: {}/{} accepted, final edges = {} / cap = {}",
+            accepted, total, social.edges.len(), SPARSE_REL_CAP
+        );
+    }
+
+    #[test]
+    fn harness_a10_sparse_rel_cap_evicts_weakest() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::ids::EntityId;
+
+        let mut social = Social::default();
+        let cap: usize = 5;
+
+        for i in 1..=5usize {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64));
+            edge.trust = (i as f64) * 0.1;
+            social.add_edge_capped(edge, cap);
+        }
+
+        let mut strong = RelationshipEdge::new(EntityId(99));
+        strong.trust = 0.8;
+        let added = social.add_edge_capped(strong, cap);
+
+        assert!(added, "[a10 A3] strong new edge (trust 0.8) must be accepted");
+        assert_eq!(social.edges.len(), cap, "[a10 A3] cap must be maintained");
+        assert!(
+            !social.edges.iter().any(|e| (e.trust - 0.1).abs() < 1e-9),
+            "[a10 A3] weakest edge (trust 0.1) must have been evicted"
+        );
+        assert!(
+            social.edges.iter().any(|e| (e.trust - 0.8).abs() < 1e-9),
+            "[a10 A3] new strong edge (trust 0.8) must be present"
+        );
+
+        println!("harness_a10_sparse_rel_cap_evicts_weakest PASS");
+    }
+
+    #[test]
+    fn harness_a10_weak_edge_rejected_when_full() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::ids::EntityId;
+
+        let mut social = Social::default();
+        let cap: usize = 3;
+
+        for i in 1..=3usize {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64));
+            edge.trust = 0.5 + (i as f64) * 0.1;
+            social.add_edge_capped(edge, cap);
+        }
+
+        let mut weak = RelationshipEdge::new(EntityId(99));
+        weak.trust = 0.1;
+        let added = social.add_edge_capped(weak, cap);
+
+        assert!(
+            !added,
+            "[a10 A4] weak edge must be rejected when all existing edges are stronger"
+        );
+        assert_eq!(
+            social.edges.len(),
+            cap,
+            "[a10 A4] cap must remain at {} after rejection",
+            cap
+        );
+
+        println!("harness_a10_weak_edge_rejected_when_full PASS");
+    }
+}
+
+// ── A-10 Plan: 7 locked pure-struct assertions per plan_final.md ─────────────
+// A1–A7. A8 (engine-dependent regression) lives in mod tests above.
+#[cfg(test)]
+mod harness_a10_plan_assertions {
+
+    // ── A1 (Type A): All 3 BTreeMap fields iterate in key order ───────────────
+    #[test]
+    fn harness_coping_all_three_btreemap_fields_sorted() {
+        use sim_core::components::Coping;
+        use sim_core::enums::CopingStrategyId;
+        use std::collections::BTreeMap;
+
+        let mut coping = Coping::default();
+
+        // Insert in non-alphabetical / non-enum-declaration order into all 3 fields
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::SubstanceUse, 3);
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::Acceptance, 1);
+        coping
+            .strategy_cooldowns
+            .insert(CopingStrategyId::Rumination, 5);
+
+        coping
+            .usage_counts
+            .insert(CopingStrategyId::Venting, 10);
+        coping
+            .usage_counts
+            .insert(CopingStrategyId::Denial, 7);
+        coping
+            .usage_counts
+            .insert(CopingStrategyId::Humor, 3);
+
+        coping
+            .proficiency
+            .insert(CopingStrategyId::ProblemSolving, 0.9);
+        coping
+            .proficiency
+            .insert(CopingStrategyId::Acceptance, 0.3);
+        coping
+            .proficiency
+            .insert(CopingStrategyId::StrategicPlanning, 0.7);
+
+        // Type-level assertion: all 3 fields must be BTreeMap
+        let _: &BTreeMap<CopingStrategyId, u32> = &coping.strategy_cooldowns;
+        let _: &BTreeMap<CopingStrategyId, u32> = &coping.usage_counts;
+        let _: &BTreeMap<CopingStrategyId, f32> = &coping.proficiency;
+
+        // All 3 fields must iterate in sorted key order
+        let cd_keys: Vec<CopingStrategyId> =
+            coping.strategy_cooldowns.keys().copied().collect();
+        let mut cd_sorted = cd_keys.clone();
+        cd_sorted.sort();
+        assert_eq!(
+            cd_keys, cd_sorted,
+            "[A1] strategy_cooldowns must iterate in sorted key order"
+        );
+
+        let uc_keys: Vec<CopingStrategyId> =
+            coping.usage_counts.keys().copied().collect();
+        let mut uc_sorted = uc_keys.clone();
+        uc_sorted.sort();
+        assert_eq!(
+            uc_keys, uc_sorted,
+            "[A1] usage_counts must iterate in sorted key order"
+        );
+
+        let pr_keys: Vec<CopingStrategyId> =
+            coping.proficiency.keys().copied().collect();
+        let mut pr_sorted = pr_keys.clone();
+        pr_sorted.sort();
+        assert_eq!(
+            pr_keys, pr_sorted,
+            "[A1] proficiency must iterate in sorted key order"
+        );
+
+        println!(
+            "harness_coping_all_three_btreemap_fields_sorted PASS: \
+             all 3 fields ({} + {} + {} entries) iterate in key order",
+            cd_keys.len(),
+            uc_keys.len(),
+            pr_keys.len()
+        );
+    }
+
+    // ── A2 (Type A): Ord derive produces valid total order over all 15 variants ──
+    #[test]
+    fn harness_coping_strategy_id_total_order_stable() {
+        use sim_core::enums::CopingStrategyId;
+
+        // Exhaustive list of all 15 variants (C01-C15), deliberately not sorted
+        let variants = [
+            CopingStrategyId::Denial,             // C05
+            CopingStrategyId::Venting,            // C09
+            CopingStrategyId::StrategicPlanning,  // C01
+            CopingStrategyId::SubstanceUse,       // C13
+            CopingStrategyId::Acceptance,         // C06
+            CopingStrategyId::ProblemSolving,     // C15
+            CopingStrategyId::Humor,              // C07
+            CopingStrategyId::Rumination,         // C14
+            CopingStrategyId::InstrumentalSupport, // C02
+            CopingStrategyId::EmotionalSupport,   // C03
+            CopingStrategyId::PositiveReframing,  // C04
+            CopingStrategyId::ReligiousCoping,    // C08
+            CopingStrategyId::ActiveDistraction,  // C10
+            CopingStrategyId::BehavioralDisengagement, // C11
+            CopingStrategyId::SelfBlame,          // C12
+        ];
+
+        // bool: exactly 15 variants covered
+        assert_eq!(variants.len(), 15, "must cover all 15 CopingStrategyId variants");
+
+        // Reflexivity: a <= a
+        for v in &variants {
+            assert!(*v <= *v, "[A2] reflexivity failed for {:?}", v);
+        }
+
+        // Totality: a <= b || b <= a
+        for a in &variants {
+            for b in &variants {
+                assert!(
+                    *a <= *b || *b <= *a,
+                    "[A2] totality failed: {:?} and {:?}",
+                    a,
+                    b
+                );
+            }
+        }
+
+        // Antisymmetry: a <= b && b <= a => a == b
+        for a in &variants {
+            for b in &variants {
+                if *a <= *b && *b <= *a {
+                    assert_eq!(a, b, "[A2] antisymmetry failed: {:?} and {:?}", a, b);
+                }
+            }
+        }
+
+        // Transitivity: a <= b && b <= c => a <= c
+        for a in &variants {
+            for b in &variants {
+                for c in &variants {
+                    if *a <= *b && *b <= *c {
+                        assert!(
+                            *a <= *c,
+                            "[A2] transitivity failed: {:?} {:?} {:?}",
+                            a,
+                            b,
+                            c
+                        );
+                    }
+                }
+            }
+        }
+
+        // Sort stability: sorting must be idempotent
+        let mut sorted = variants.to_vec();
+        sorted.sort();
+        let mut double_sorted = sorted.clone();
+        double_sorted.sort();
+        assert_eq!(sorted, double_sorted, "[A2] sort must be idempotent");
+
+        println!(
+            "harness_coping_strategy_id_total_order_stable PASS: \
+             {} variants, valid total order verified",
+            variants.len()
+        );
+    }
+
+    // ── A3 (Type A): Two instances, same insertions → identical key sequences ──
+    #[test]
+    fn harness_coping_deterministic_across_two_instances() {
+        use sim_core::components::Coping;
+        use sim_core::enums::CopingStrategyId;
+
+        let build = || {
+            let mut c = Coping::default();
+            // Insert in a deliberately scrambled order
+            c.strategy_cooldowns
+                .insert(CopingStrategyId::Venting, 5);
+            c.strategy_cooldowns
+                .insert(CopingStrategyId::StrategicPlanning, 10);
+            c.strategy_cooldowns
+                .insert(CopingStrategyId::Denial, 3);
+            c.strategy_cooldowns
+                .insert(CopingStrategyId::Humor, 8);
+            c.usage_counts
+                .insert(CopingStrategyId::Rumination, 12);
+            c.usage_counts
+                .insert(CopingStrategyId::Acceptance, 6);
+            c.proficiency
+                .insert(CopingStrategyId::ProblemSolving, 0.7);
+            c.proficiency
+                .insert(CopingStrategyId::InstrumentalSupport, 0.4);
+            c
+        };
+
+        let inst_a = build();
+        let inst_b = build();
+
+        // bool: key sequences must be identical across both instances
+        let cd_a: Vec<CopingStrategyId> =
+            inst_a.strategy_cooldowns.keys().copied().collect();
+        let cd_b: Vec<CopingStrategyId> =
+            inst_b.strategy_cooldowns.keys().copied().collect();
+        assert_eq!(
+            cd_a, cd_b,
+            "[A3] strategy_cooldowns key order must be identical across instances"
+        );
+
+        let uc_a: Vec<CopingStrategyId> =
+            inst_a.usage_counts.keys().copied().collect();
+        let uc_b: Vec<CopingStrategyId> =
+            inst_b.usage_counts.keys().copied().collect();
+        assert_eq!(
+            uc_a, uc_b,
+            "[A3] usage_counts key order must be identical across instances"
+        );
+
+        let pr_a: Vec<CopingStrategyId> =
+            inst_a.proficiency.keys().copied().collect();
+        let pr_b: Vec<CopingStrategyId> =
+            inst_b.proficiency.keys().copied().collect();
+        assert_eq!(
+            pr_a, pr_b,
+            "[A3] proficiency key order must be identical across instances"
+        );
+
+        println!(
+            "harness_coping_deterministic_across_two_instances PASS: \
+             two instances produce identical sequences ({}, {}, {} entries)",
+            cd_a.len(),
+            uc_a.len(),
+            pr_a.len()
+        );
+    }
+
+    // ── A4 (Type B): SPARSE_REL_CAP == 100 exactly (Dunbar layer 3, 1992) ────
+    #[test]
+    fn harness_sparse_rel_cap_constant_equals_100() {
+        use sim_core::config::SPARSE_REL_CAP;
+
+        // bool: exact value — not merely non-zero
+        assert_eq!(
+            SPARSE_REL_CAP,
+            100,
+            "[A4] SPARSE_REL_CAP must be exactly 100 (Dunbar layer 3, 1992), got {}",
+            SPARSE_REL_CAP
+        );
+
+        println!(
+            "harness_sparse_rel_cap_constant_equals_100 PASS: SPARSE_REL_CAP = {}",
+            SPARSE_REL_CAP
+        );
+    }
+
+    // ── A5 (Type A): Final count == SPARSE_REL_CAP (not merely ≤) ────────────
+    #[test]
+    fn harness_add_edge_capped_hard_cap_exactly_enforced() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::config::SPARSE_REL_CAP;
+        use sim_core::ids::EntityId;
+
+        let mut social = Social::default();
+        let total = SPARSE_REL_CAP + 50; // 150 insertions
+
+        // Strictly increasing trust (0/150, 1/150, … 149/150).
+        // Each arriving edge is stronger than every incumbent, so the cap triggers
+        // on every insertion after the first SPARSE_REL_CAP — guaranteeing final
+        // count is exactly SPARSE_REL_CAP, not merely ≤.
+        for i in 0..total {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64));
+            edge.trust = (i as f64) / (total as f64);
+            social.add_edge_capped(edge, SPARSE_REL_CAP);
+        }
+
+        // bool: final count == SPARSE_REL_CAP (exact equality, not merely ≤)
+        assert_eq!(
+            social.edges.len(),
+            SPARSE_REL_CAP,
+            "[A5] final count must be exactly SPARSE_REL_CAP={}, got {}",
+            SPARSE_REL_CAP,
+            social.edges.len()
+        );
+
+        println!(
+            "harness_add_edge_capped_hard_cap_exactly_enforced PASS: \
+             final count = {} == SPARSE_REL_CAP",
+            social.edges.len()
+        );
+    }
+
+    // ── A6 (Type A): 5 sub-conditions — eviction of weakest, survival of second-weakest ──
+    #[test]
+    fn harness_add_edge_capped_evicts_weakest_preserves_second_weakest() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::ids::EntityId;
+
+        let cap: usize = 5;
+        let mut social = Social::default();
+
+        // Fill with trust 0.1 (weakest), 0.2 (second-weakest), 0.3, 0.4, 0.5
+        for i in 1..=5usize {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64));
+            edge.trust = (i as f64) * 0.1; // 0.1, 0.2, 0.3, 0.4, 0.5
+            social.add_edge_capped(edge, cap);
+        }
+        assert_eq!(social.edges.len(), cap, "pre-condition: must be at cap before test");
+
+        // Add a strong edge (trust=0.8) — must evict only the weakest (0.1)
+        let mut strong = RelationshipEdge::new(EntityId(99));
+        strong.trust = 0.8;
+        let added = social.add_edge_capped(strong, cap);
+
+        // (a) bool: strong edge accepted
+        assert!(added, "[A6-a] strong edge (trust=0.8) must be accepted");
+
+        // (b) bool: len still == cap
+        assert_eq!(
+            social.edges.len(),
+            cap,
+            "[A6-b] cap must be maintained after eviction"
+        );
+
+        // (c) bool: weakest (0.1) was evicted
+        assert!(
+            !social.edges.iter().any(|e| (e.trust - 0.1).abs() < 1e-9),
+            "[A6-c] weakest edge (trust=0.1) must have been evicted"
+        );
+
+        // (d) bool: second-weakest (0.2) survived
+        assert!(
+            social.edges.iter().any(|e| (e.trust - 0.2).abs() < 1e-9),
+            "[A6-d] second-weakest edge (trust=0.2) must have survived"
+        );
+
+        // (e) bool: new strong edge (0.8) is present
+        assert!(
+            social.edges.iter().any(|e| (e.trust - 0.8).abs() < 1e-9),
+            "[A6-e] new strong edge (trust=0.8) must be present"
+        );
+
+        println!(
+            "harness_add_edge_capped_evicts_weakest_preserves_second_weakest PASS: \
+             all 5 sub-conditions met"
+        );
+    }
+
+    // ── A7 (Type A): 4 sub-conditions — weak edge rejected, no side effects ──
+    #[test]
+    fn harness_add_edge_capped_rejects_weak_no_side_effects() {
+        use sim_core::components::{RelationshipEdge, Social};
+        use sim_core::ids::EntityId;
+
+        let cap: usize = 4;
+        let mut social = Social::default();
+
+        // Fill with trust 0.5, 0.6, 0.7, 0.8 (all stronger than the incoming weak edge)
+        let original_trusts = [0.5_f64, 0.6, 0.7, 0.8];
+        for (i, &trust) in original_trusts.iter().enumerate() {
+            let mut edge = RelationshipEdge::new(EntityId(i as u64 + 1));
+            edge.trust = trust;
+            social.add_edge_capped(edge, cap);
+        }
+        assert_eq!(social.edges.len(), cap, "pre-condition: must be at cap before test");
+
+        // Try to add a weak edge (trust=0.1 < all existing edges)
+        let mut weak = RelationshipEdge::new(EntityId(99));
+        weak.trust = 0.1;
+        let added = social.add_edge_capped(weak, cap);
+
+        // (a) bool: return value is false
+        assert!(!added, "[A7-a] weak edge must be rejected");
+
+        // (b) bool: len unchanged
+        assert_eq!(
+            social.edges.len(),
+            cap,
+            "[A7-b] len must be unchanged after rejection, expected {}, got {}",
+            cap,
+            social.edges.len()
+        );
+
+        // (c) bool: weak edge not in collection
+        assert!(
+            !social.edges.iter().any(|e| (e.trust - 0.1).abs() < 1e-9),
+            "[A7-c] weak edge (trust=0.1) must not appear in the collection"
+        );
+
+        // (d) bool: all original edges still present — no silent corruption
+        for &trust in &original_trusts {
+            assert!(
+                social.edges.iter().any(|e| (e.trust - trust).abs() < 1e-9),
+                "[A7-d] original edge (trust={}) must still be present after rejection",
+                trust
+            );
+        }
+
+        println!(
+            "harness_add_edge_capped_rejects_weak_no_side_effects PASS: \
+             all 4 sub-conditions met"
+        );
+    }
+
+    // ── A8 (Type A): Coping::default() produces three empty BTreeMaps ─────────
+    // Plan assertion 4: default() must NOT pre-populate any strategy entries.
+    #[test]
+    fn harness_coping_default_produces_three_empty_btreemaps() {
+        use sim_core::components::Coping;
+
+        let coping = Coping::default();
+
+        // Type: bool — all three BTreeMap fields empty on construction
+        assert!(
+            coping.strategy_cooldowns.is_empty(),
+            "[A8] strategy_cooldowns must be empty on Coping::default()"
+        );
+        assert!(
+            coping.usage_counts.is_empty(),
+            "[A8] usage_counts must be empty on Coping::default()"
+        );
+        assert!(
+            coping.proficiency.is_empty(),
+            "[A8] proficiency must be empty on Coping::default()"
+        );
+
+        println!(
+            "harness_coping_default_produces_three_empty_btreemaps PASS: \
+             all 3 BTreeMaps are empty on Coping::default()"
+        );
+    }
+
+    // ── A9 (Type A): SPARSE_REL_CAP > SOCIAL_EDGE_CAP (independence invariant) ─
+    // Plan assertion 6: the two caps serve independent purposes and must not be
+    // swapped.  SPARSE_REL_CAP (trust-based, layer-3 Dunbar) must always be
+    // larger than SOCIAL_EDGE_CAP (familiarity-based, pairwise.rs).
+    #[test]
+    fn harness_sparse_rel_cap_greater_than_social_edge_cap() {
+        use sim_core::config::{SOCIAL_EDGE_CAP, SPARSE_REL_CAP};
+
+        // Type: bool — architectural ordering invariant
+        assert!(
+            SPARSE_REL_CAP > SOCIAL_EDGE_CAP,
+            "[A9] SPARSE_REL_CAP ({}) must be strictly greater than \
+             SOCIAL_EDGE_CAP ({}): architectural independence invariant",
+            SPARSE_REL_CAP,
+            SOCIAL_EDGE_CAP
+        );
+
+        println!(
+            "harness_sparse_rel_cap_greater_than_social_edge_cap PASS: \
+             SPARSE_REL_CAP ({}) > SOCIAL_EDGE_CAP ({})",
+            SPARSE_REL_CAP, SOCIAL_EDGE_CAP
         );
     }
 }

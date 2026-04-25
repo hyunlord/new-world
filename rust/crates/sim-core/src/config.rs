@@ -209,6 +209,9 @@ pub const INTERACTION_MAX_DISTANCE: f64 = 5.0;
 pub const INTERACTION_MAX_PER_TICK: u32 = 1;
 /// Cap on stored social edges per agent when pruning least familiar ties.
 pub const SOCIAL_EDGE_CAP: usize = 50;
+/// Architecture (v3.1) sparse relationship cap per agent (Dunbar layer 3, ~100 stable contacts).
+/// Used by Social::add_edge_capped to bound memory at 10K-agent scale.
+pub const SPARSE_REL_CAP: usize = 100;
 
 /// Talk trust delta.
 pub const INTERACTION_TALK_TRUST_DELTA: f64 = 0.03;
