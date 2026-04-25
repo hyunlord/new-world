@@ -2954,6 +2954,35 @@ func get_border_friction() -> Dictionary:
 	return {}
 
 
+## A-5 debug API: returns the Hot/Warm/Cold tier distribution across all
+## default runtime systems. Auto-derived from each spec's tick_interval.
+## Keys: "hot", "warm", "cold", "total" (all int).
+func runtime_tier_distribution() -> Dictionary:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return {}
+	if not runtime.has_method("runtime_tier_distribution"):
+		return {}
+	var result: Variant = runtime.call("runtime_tier_distribution")
+	if result is Dictionary:
+		return result
+	return {}
+
+
+## A-5 debug API: returns registry names of default systems whose tier matches
+## tier_str ("hot", "warm", or "cold"). Empty array for invalid tier names.
+func runtime_systems_by_tier(tier_str: String) -> Array:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return []
+	if not runtime.has_method("runtime_systems_by_tier"):
+		return []
+	var result: Variant = runtime.call("runtime_systems_by_tier", tier_str)
+	if result is Array:
+		return result
+	return []
+
+
 ## Returns flat PackedFloat32Array with 14 floats per alive agent for MultiMesh rendering.
 ## Layout per instance: Transform2D (6) + Color (4) + CustomData (4).
 ## count = buffer.size() / 14

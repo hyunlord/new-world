@@ -823,6 +823,57 @@ pub fn default_runtime_system_registry_names() -> Vec<&'static str> {
         .collect()
 }
 
+// ============================================================================
+// A-5: System Frequency Tiering — metadata-only Hot/Warm/Cold classification.
+// Auto-inferred from `tick_interval` via `TickTier::from_interval`.
+// Execution logic is unchanged; this layer is for debug/stats/future planning.
+// ============================================================================
+
+impl DefaultRuntimeSystemSpec {
+    /// Auto-derive the frequency tier for this spec from its tick interval.
+    pub(crate) fn tier(&self) -> sim_core::TickTier {
+        sim_core::TickTier::from_interval(self.tick_interval)
+    }
+}
+
+/// Returns the [`TickTier`] for the spec with the given registry name, if any.
+pub fn spec_tier(system_id: &str) -> Option<sim_core::TickTier> {
+    DEFAULT_RUNTIME_SYSTEMS
+        .iter()
+        .find(|s| s.system_id.registry_name() == system_id)
+        .map(|s| s.tier())
+}
+
+/// Returns `(hot_count, warm_count, cold_count)` across all default systems.
+pub fn tier_distribution() -> (usize, usize, usize) {
+    let mut hot = 0usize;
+    let mut warm = 0usize;
+    let mut cold = 0usize;
+    for spec in DEFAULT_RUNTIME_SYSTEMS.iter() {
+        match spec.tier() {
+            sim_core::TickTier::Hot => hot += 1,
+            sim_core::TickTier::Warm => warm += 1,
+            sim_core::TickTier::Cold => cold += 1,
+        }
+    }
+    (hot, warm, cold)
+}
+
+/// Returns the registry names of all default systems whose tier matches `tier`.
+pub fn systems_by_tier(tier: sim_core::TickTier) -> Vec<&'static str> {
+    DEFAULT_RUNTIME_SYSTEMS
+        .iter()
+        .filter(|s| s.tier() == tier)
+        .map(|s| s.system_id.registry_name())
+        .collect()
+}
+
+/// Returns the total number of default runtime systems registered.
+/// Used by sim-test as a regression guard against accidental list edits.
+pub fn default_runtime_systems_count() -> usize {
+    DEFAULT_RUNTIME_SYSTEMS.len()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

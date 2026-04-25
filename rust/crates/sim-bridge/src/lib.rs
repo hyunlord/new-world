@@ -72,6 +72,9 @@ use pathfinding_core::{
     dispatch_pathfind_grid_bytes,
 };
 pub use runtime_system::default_runtime_system_registry_names;
+pub use runtime_system::{
+    default_runtime_systems_count, spec_tier, systems_by_tier, tier_distribution,
+};
 pub use pathfinding_core::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
     pathfind_from_flat, pathfind_grid_batch_bytes, pathfind_grid_batch_dispatch_bytes,
@@ -3991,6 +3994,38 @@ impl WorldSimRuntime {
             dict.set(key, *friction as f32);
         }
         dict
+    }
+
+    /// A-5 debug API: returns the Hot/Warm/Cold tier distribution across all
+    /// default runtime systems. Auto-derived from each spec's tick_interval.
+    /// Keys: "hot", "warm", "cold", "total".
+    #[func]
+    fn runtime_tier_distribution(&self) -> VarDictionary {
+        let (hot, warm, cold) = crate::runtime_system::tier_distribution();
+        let mut dict = VarDictionary::new();
+        dict.set("hot", hot as i64);
+        dict.set("warm", warm as i64);
+        dict.set("cold", cold as i64);
+        dict.set("total", (hot + warm + cold) as i64);
+        dict
+    }
+
+    /// A-5 debug API: returns the registry names of all default runtime
+    /// systems whose tier matches `tier_str` ("hot", "warm", or "cold").
+    /// Returns an empty array if `tier_str` is not a valid tier name.
+    #[func]
+    fn runtime_systems_by_tier(&self, tier_str: GString) -> Array<GString> {
+        let tier = match tier_str.to_string().as_str() {
+            "hot" => sim_core::TickTier::Hot,
+            "warm" => sim_core::TickTier::Warm,
+            "cold" => sim_core::TickTier::Cold,
+            _ => return Array::new(),
+        };
+        let mut arr: Array<GString> = Array::new();
+        for id in crate::runtime_system::systems_by_tier(tier) {
+            arr.push(&GString::from(id));
+        }
+        arr
     }
 }
 
