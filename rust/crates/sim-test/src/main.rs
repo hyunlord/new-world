@@ -18791,6 +18791,301 @@ mod tests {
         );
         println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
     }
+
+    // ── A-7 Tag+Threshold Recipe: validator coverage on production data ──────
+
+    /// Load the production sim-data registry from `<workspace>/rust/crates/sim-data/data`.
+    fn a7_load_production_registry() -> sim_data::DataRegistry {
+        use std::path::PathBuf;
+        let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let workspace_root = manifest_dir
+            .parent()
+            .and_then(|p| p.parent())
+            .expect("sim-test crate sits inside <workspace>/crates/sim-test");
+        let data_dir = workspace_root.join("crates/sim-data/data");
+        sim_data::DataRegistry::load_from_directory(&data_dir).unwrap_or_else(|errs| {
+            panic!(
+                "[a7] production data must load without fatal errors at {:?}; got {:#?}",
+                data_dir, errs
+            )
+        })
+    }
+
+    /// A7-A1 (Type A): the production data directory loads with zero
+    /// validator errors and at least one recipe / material / structure.
+    #[test]
+    fn harness_a7_validator_accepts_production_data() {
+        use sim_data::validator::{validate_registry, Severity};
+        let registry = a7_load_production_registry();
+        let errors = validate_registry(&registry);
+        let fatal: Vec<_> = errors
+            .iter()
+            .filter(|e| e.severity == Severity::Error)
+            .collect();
+        assert!(
+            fatal.is_empty(),
+            "[a7 A1] production data must pass validation, got {} fatal:\n{:#?}",
+            fatal.len(),
+            fatal
+        );
+        assert!(!registry.recipes.is_empty(), "[a7 A1] expect ≥1 recipe");
+        assert!(
+            !registry.materials.is_empty(),
+            "[a7 A1] expect ≥1 material"
+        );
+        assert!(
+            !registry.structures.is_empty(),
+            "[a7 A1] expect ≥1 structure"
+        );
+        println!(
+            "harness_a7_validator_accepts_production_data PASS: \
+             recipes={} materials={} furniture={} structures={} actions={}",
+            registry.recipes.len(),
+            registry.materials.len(),
+            registry.furniture.len(),
+            registry.structures.len(),
+            registry.actions.len()
+        );
+    }
+
+    /// A7-A2 (Type A): a recipe with a tag that no material defines must be
+    /// rejected with `Severity::Error` from `validate_recipe_tags`.
+    #[test]
+    fn harness_a7_recipe_with_invalid_tag_rejected() {
+        use sim_data::defs::{RecipeDef, RecipeOutput, TagRequirement};
+        use sim_data::validator::{validate_registry, Severity};
+        use std::sync::Arc;
+        let mut registry = a7_load_production_registry();
+        registry.recipes.insert(
+            "phantom_recipe_a7".to_string(),
+            Arc::new(RecipeDef {
+                id: "phantom_recipe_a7".to_string(),
+                display_name_key: "RECIPE_PHANTOM_A7".to_string(),
+                inputs: vec![TagRequirement {
+                    tag: "nonexistent_tag_no_material_has_this".to_string(),
+                    min_hardness: None,
+                    min_density: None,
+                    max_rarity: None,
+                    amount: 1,
+                }],
+                requires: None,
+                output: RecipeOutput {
+                    template: "knife".to_string(),
+                    material_from_input: 0,
+                    count: None,
+                },
+                time_ticks: 60,
+                skill_tag: None,
+                min_skill_level: None,
+            }),
+        );
+        let errors = validate_registry(&registry);
+        let matched: Vec<_> = errors
+            .iter()
+            .filter(|e| {
+                e.severity == Severity::Error
+                    && e.def_id == "phantom_recipe_a7"
+                    && e.message.contains("does not match")
+            })
+            .collect();
+        assert!(
+            !matched.is_empty(),
+            "[a7 A2] non-existent tag must produce a Severity::Error; got {:#?}",
+            errors
+        );
+        println!(
+            "harness_a7_recipe_with_invalid_tag_rejected PASS: matched_errors={}",
+            matched.len()
+        );
+    }
+
+    /// A7-A3 (Type A): a recipe whose `min_hardness` exceeds every material's
+    /// hardness produces zero matches and is rejected.
+    #[test]
+    fn harness_a7_recipe_with_too_high_threshold_rejected() {
+        use sim_data::defs::{RecipeDef, RecipeOutput, TagRequirement};
+        use sim_data::validator::{validate_registry, Severity};
+        use std::sync::Arc;
+        let mut registry = a7_load_production_registry();
+        registry.recipes.insert(
+            "impossible_threshold_a7".to_string(),
+            Arc::new(RecipeDef {
+                id: "impossible_threshold_a7".to_string(),
+                display_name_key: "RECIPE_IMPOSSIBLE_A7".to_string(),
+                inputs: vec![TagRequirement {
+                    // Reuse a real tag so the failure is purely the threshold.
+                    tag: "stone".to_string(),
+                    min_hardness: Some(999.0),
+                    min_density: None,
+                    max_rarity: None,
+                    amount: 1,
+                }],
+                requires: None,
+                output: RecipeOutput {
+                    template: "knife".to_string(),
+                    material_from_input: 0,
+                    count: None,
+                },
+                time_ticks: 60,
+                skill_tag: None,
+                min_skill_level: None,
+            }),
+        );
+        let errors = validate_registry(&registry);
+        let matched: Vec<_> = errors
+            .iter()
+            .filter(|e| {
+                e.severity == Severity::Error && e.def_id == "impossible_threshold_a7"
+            })
+            .collect();
+        assert!(
+            !matched.is_empty(),
+            "[a7 A3] impossible threshold must yield Severity::Error; got {:#?}",
+            errors
+        );
+        println!(
+            "harness_a7_recipe_with_too_high_threshold_rejected PASS: matched_errors={}",
+            matched.len()
+        );
+    }
+
+    /// A7-A4 (Type A): an action whose `tool_tag` matches no material is
+    /// rejected by `validate_action_tool_tags`.
+    #[test]
+    fn harness_a7_action_with_invalid_tool_tag_rejected() {
+        use sim_data::defs::ActionDef;
+        use sim_data::validator::{validate_registry, Severity};
+        use sim_data::ActionCategory;
+        use std::sync::Arc;
+        let mut registry = a7_load_production_registry();
+        registry.actions.insert(
+            "phantom_action_a7".to_string(),
+            Arc::new(ActionDef {
+                id: "phantom_action_a7".to_string(),
+                display_name_key: "ACTION_PHANTOM_A7".to_string(),
+                category: ActionCategory::Craft,
+                preconditions: Vec::new(),
+                effects: Vec::new(),
+                base_duration_ticks: 10,
+                tool_tag: Some("nonexistent_tool_tag_no_material_has".to_string()),
+                skill_tag: None,
+                animation_key: None,
+            }),
+        );
+        let errors = validate_registry(&registry);
+        let matched: Vec<_> = errors
+            .iter()
+            .filter(|e| {
+                e.severity == Severity::Error
+                    && e.def_type == "ActionDef"
+                    && e.def_id == "phantom_action_a7"
+            })
+            .collect();
+        assert!(
+            !matched.is_empty(),
+            "[a7 A4] action with bogus tool_tag must produce Severity::Error; got {:#?}",
+            errors
+        );
+        println!(
+            "harness_a7_action_with_invalid_tool_tag_rejected PASS: matched_errors={}",
+            matched.len()
+        );
+    }
+
+    /// A7-A5 (Type A): a material with hardness outside [0.0, 10.0] is
+    /// rejected by `validate_material_ranges`.
+    #[test]
+    fn harness_a7_material_out_of_range_rejected() {
+        use sim_data::defs::{MaterialDef, MaterialProperties};
+        use sim_data::validator::{validate_registry, Severity};
+        use sim_data::MaterialCategory;
+        use std::collections::BTreeSet;
+        use std::sync::Arc;
+        let mut registry = a7_load_production_registry();
+        let mut tags = BTreeSet::new();
+        tags.insert("stone".to_string());
+        registry.materials.insert(
+            "out_of_range_material_a7".to_string(),
+            Arc::new(MaterialDef {
+                id: "out_of_range_material_a7".to_string(),
+                display_name_key: "MAT_OOR_A7".to_string(),
+                category: MaterialCategory::Stone,
+                tags,
+                properties: MaterialProperties {
+                    hardness: -5.0,
+                    density: 2.0,
+                    melting_point: None,
+                    rarity: 0.5,
+                    value: 1.0,
+                },
+            }),
+        );
+        let errors = validate_registry(&registry);
+        let matched: Vec<_> = errors
+            .iter()
+            .filter(|e| {
+                e.severity == Severity::Error
+                    && e.def_type == "MaterialDef"
+                    && e.def_id == "out_of_range_material_a7"
+            })
+            .collect();
+        assert!(
+            !matched.is_empty(),
+            "[a7 A5] out-of-range material must produce Severity::Error; got {:#?}",
+            errors
+        );
+        println!(
+            "harness_a7_material_out_of_range_rejected PASS: matched_errors={}",
+            matched.len()
+        );
+    }
+
+    /// A7-A6 (Type A): RecipeDef RON deserialization rejects unknown fields
+    /// (the `#[serde(deny_unknown_fields)]` guarantee).
+    #[test]
+    fn harness_a7_unknown_field_rejected() {
+        use sim_data::defs::RecipeDef;
+        let bad_ron = r#"RecipeDef(
+            id: "test_recipe",
+            display_name_key: "TEST",
+            inputs: [],
+            output: RecipeOutput(
+                template: "knife",
+                material_from_input: 0,
+                count: None,
+            ),
+            time_ticks: 60,
+            unknown_typo_field: 42,
+        )"#;
+        let result: Result<RecipeDef, _> = ron::from_str(bad_ron);
+        assert!(
+            result.is_err(),
+            "[a7 A6] RecipeDef with unknown field must fail to deserialize"
+        );
+        let err_msg = format!("{:?}", result.unwrap_err()).to_lowercase();
+        assert!(
+            err_msg.contains("unknown") || err_msg.contains("typo"),
+            "[a7 A6] error must mention the unknown field; got: {}",
+            err_msg
+        );
+        println!("harness_a7_unknown_field_rejected PASS: deny_unknown_fields enforced");
+    }
+
+    /// A7-A7 (Type A): regression guard — at least the original 4 production
+    /// recipes (stone_tools.ron + basic_crafting.ron) must remain loadable.
+    #[test]
+    fn harness_a7_recipe_count_baseline() {
+        let registry = a7_load_production_registry();
+        let count = registry.recipes.len();
+        assert!(
+            count >= 4,
+            "[a7 A7] recipe count regression: expected ≥4, got {}",
+            count
+        );
+        println!(
+            "harness_a7_recipe_count_baseline PASS: {count} recipes loaded"
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
