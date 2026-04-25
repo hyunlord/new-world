@@ -463,7 +463,8 @@ pub enum SimSpeed {
 // ═══════════════════════════════════════
 
 #[derive(
-    Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Display, EnumString, EnumIter,
+    Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize, Display,
+    EnumString, EnumIter,
 )]
 pub enum CopingStrategyId {
     StrategicPlanning,       // C01

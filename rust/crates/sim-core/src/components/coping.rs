@@ -1,7 +1,8 @@
-// TODO(v3.1): Convert remaining f32 fields and HashMap usage to deterministic equivalents.
+// TODO(v3.1): Convert remaining f32 fields to deterministic equivalents (f64).
+//             HashMap → BTreeMap conversion completed in a10-coping-deterministic feature.
 use crate::enums::CopingStrategyId;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 /// A delayed stress rebound entry (from C13 Substance Use — Cooper 1995).
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,11 +22,11 @@ pub struct Coping {
     /// Currently active coping strategy (if any)
     pub active_strategy: Option<CopingStrategyId>,
     /// Cooldown ticks remaining per strategy
-    pub strategy_cooldowns: HashMap<CopingStrategyId, u32>,
+    pub strategy_cooldowns: BTreeMap<CopingStrategyId, u32>,
     /// Times each strategy has been used
-    pub usage_counts: HashMap<CopingStrategyId, u32>,
+    pub usage_counts: BTreeMap<CopingStrategyId, u32>,
     /// Per-strategy proficiency (0.0..=1.0, increases with use)
-    pub proficiency: HashMap<CopingStrategyId, f32>,
+    pub proficiency: BTreeMap<CopingStrategyId, f32>,
     /// C05 Denial: accumulated hidden debt (Compas 2001)
     pub denial_accumulator: f32,
     /// C05 Denial: ticks until debt explosion (72-tick timer)
@@ -48,9 +49,9 @@ impl Default for Coping {
     fn default() -> Self {
         Self {
             active_strategy: None,
-            strategy_cooldowns: HashMap::new(),
-            usage_counts: HashMap::new(),
-            proficiency: HashMap::new(),
+            strategy_cooldowns: BTreeMap::new(),
+            usage_counts: BTreeMap::new(),
+            proficiency: BTreeMap::new(),
             denial_accumulator: 0.0,
             denial_timer: 0,
             dependency_score: 0.0,

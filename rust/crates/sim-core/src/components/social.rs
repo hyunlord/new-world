@@ -123,6 +123,34 @@ impl Social {
     pub fn revoke_title(&mut self, title_id: &str) {
         self.titles.retain(|title| title != title_id);
     }
+
+    /// Add a new edge enforcing `cap`. When at capacity, evicts the weakest existing
+    /// edge (lowest trust). If the new edge's trust is weaker than every existing edge,
+    /// the edge is rejected and `false` is returned.
+    pub fn add_edge_capped(&mut self, edge: RelationshipEdge, cap: usize) -> bool {
+        if self.edges.len() < cap {
+            self.edges.push(edge);
+            return true;
+        }
+        let weakest_idx = self
+            .edges
+            .iter()
+            .enumerate()
+            .min_by(|(_, a), (_, b)| {
+                a.trust
+                    .partial_cmp(&b.trust)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .map(|(i, _)| i);
+        if let Some(idx) = weakest_idx {
+            if self.edges[idx].trust >= edge.trust {
+                return false;
+            }
+            self.edges.swap_remove(idx);
+        }
+        self.edges.push(edge);
+        true
+    }
 }
 
 /// Hamilton's coefficient of relatedness between two agents.
