@@ -18690,6 +18690,107 @@ mod tests {
              Got kinds={kinds:?}"
         );
     }
+
+    // ── A-5 System Frequency Tiering: TickTier metadata + auto-inference ────
+
+    /// A5-A1 (Type A): TickTier::from_interval boundary correctness.
+    #[test]
+    fn harness_a5_tier_enum_classifies_correctly() {
+        use sim_core::TickTier;
+        assert_eq!(TickTier::from_interval(1), TickTier::Hot, "tick=1 → Hot");
+        assert_eq!(TickTier::from_interval(2), TickTier::Hot, "tick=2 → Hot (boundary)");
+        assert_eq!(TickTier::from_interval(3), TickTier::Warm, "tick=3 → Warm (boundary)");
+        assert_eq!(TickTier::from_interval(10), TickTier::Warm, "tick=10 → Warm");
+        assert_eq!(TickTier::from_interval(30), TickTier::Warm, "tick=30 → Warm (boundary)");
+        assert_eq!(TickTier::from_interval(31), TickTier::Cold, "tick=31 → Cold (boundary)");
+        assert_eq!(TickTier::from_interval(365), TickTier::Cold, "tick=365 → Cold");
+        println!("harness_a5_tier_enum_classifies_correctly PASS");
+    }
+
+    /// A5-A2 (Type A): every default runtime system gets a valid tier via spec_tier.
+    #[test]
+    fn harness_a5_all_systems_have_tier() {
+        use sim_bridge::{default_runtime_system_registry_names, spec_tier};
+        use sim_core::TickTier;
+        let names = default_runtime_system_registry_names();
+        // usize: count of systems whose spec_tier returned a valid tier.
+        let mut tiered = 0usize;
+        for name in &names {
+            let tier = spec_tier(name)
+                .unwrap_or_else(|| panic!("[a5 A2] spec_tier({name}) returned None"));
+            assert!(
+                matches!(tier, TickTier::Hot | TickTier::Warm | TickTier::Cold),
+                "[a5 A2] system {name} got invalid tier"
+            );
+            tiered += 1;
+        }
+        assert_eq!(
+            tiered, names.len(),
+            "[a5 A2] all {} systems must have a tier (got {})", names.len(), tiered
+        );
+        println!(
+            "harness_a5_all_systems_have_tier PASS: {} systems all tiered",
+            names.len()
+        );
+    }
+
+    /// A5-A3 (Type A): tier distribution is sane and matches total system count.
+    #[test]
+    fn harness_a5_distribution_sanity() {
+        use sim_bridge::{default_runtime_systems_count, tier_distribution};
+        let (hot, warm, cold) = tier_distribution();
+        let total = hot + warm + cold;
+        let expected_total = default_runtime_systems_count();
+        assert_eq!(
+            total, expected_total,
+            "[a5 A3] total ({total}) must equal DEFAULT_RUNTIME_SYSTEMS count ({expected_total})"
+        );
+        assert!(hot >= 1, "[a5 A3] at least 1 Hot system expected, got {hot}");
+        assert!(warm >= 1, "[a5 A3] at least 1 Warm system expected, got {warm}");
+        assert!(
+            hot <= total / 2,
+            "[a5 A3] Hot tier should be <50% of total (hot={hot}, total={total})"
+        );
+        println!(
+            "harness_a5_distribution_sanity PASS: Hot={hot} Warm={warm} Cold={cold} Total={total}"
+        );
+    }
+
+    /// A5-A4 (Type A): specific system tier mappings (regression guard for known tiers).
+    #[test]
+    fn harness_a5_specific_system_tiers() {
+        use sim_bridge::{spec_tier, systems_by_tier};
+        use sim_core::TickTier;
+        // temperament_shift uses tick_interval=1 → must classify as Hot.
+        let tier = spec_tier("temperament_shift_system")
+            .expect("[a5 A4] temperament_shift must exist in DEFAULT_RUNTIME_SYSTEMS");
+        assert_eq!(
+            tier, TickTier::Hot,
+            "[a5 A4] temperament_shift must be Hot, got {tier:?}"
+        );
+        // At least one Cold system must exist (population/migration/etc fire annually).
+        let cold_systems = systems_by_tier(TickTier::Cold);
+        assert!(
+            !cold_systems.is_empty(),
+            "[a5 A4] at least 1 Cold-tier system expected (annual systems)"
+        );
+        println!(
+            "harness_a5_specific_system_tiers PASS: temperament_shift=Hot, cold_count={}",
+            cold_systems.len()
+        );
+    }
+
+    /// A5-A5 (Type A): regression guard — DEFAULT_RUNTIME_SYSTEMS size unchanged by A-5.
+    #[test]
+    fn harness_a5_default_runtime_systems_size_unchanged() {
+        use sim_bridge::default_runtime_systems_count;
+        let count = default_runtime_systems_count();
+        assert_eq!(
+            count, 62,
+            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 62 entries (no A-5 list edits), got {count}"
+        );
+        println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
+    }
 }
 
 fn pathfind_bench_inputs() -> (

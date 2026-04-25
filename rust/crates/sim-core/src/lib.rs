@@ -14,6 +14,7 @@ pub mod item;
 pub mod item_store;
 pub mod room;
 pub mod temperament;
+pub mod tick_tier;
 pub mod tile_grid;
 pub mod wall_mask;
 
@@ -51,6 +52,7 @@ pub use temperament::{
     Temperament, TemperamentAxes, TemperamentBiasRow, TemperamentPrsWeightRow, TemperamentRuleSet,
     TemperamentShiftRuleView, ShiftConditionView, ShiftEffectView, axis_index,
 };
+pub use tick_tier::TickTier;
 pub use tile_grid::{StructuralTile, TileGrid};
 pub use wall_mask::WallBlockingMask;
 pub use world::{Tile, WorldMap};

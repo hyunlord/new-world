@@ -1407,12 +1407,15 @@ EVAL_COMBINE
     if [[ $_eval_rc -eq 0 ]]; then
         log "Codex Evaluator complete"
     elif [[ $_eval_rc -eq 124 ]]; then
-        log "CODEX EVALUATOR TIMED OUT — falling back to built-in evaluator"
-        # Leave output file empty/absent so the built-in evaluator fallback path triggers below
+        log "CODEX EVALUATOR TIMED OUT — falling back to Claude Code evaluator"
+        rm -f "$evaluator_prompt_file"
+        run_evaluator
+        return
     else
         log "WARNING: Codex Evaluator exited with code $_eval_rc"
         if [[ ! -s "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]]; then
             log "WARNING: Codex Evaluator produced no output — falling back to Claude Code evaluator"
+            rm -f "$evaluator_prompt_file"
             run_evaluator
             return
         fi
