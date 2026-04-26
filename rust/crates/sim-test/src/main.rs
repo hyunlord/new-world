@@ -7106,6 +7106,621 @@ mod tests {
     // Isolated agent_constants tests (A12-A14) + structural merge tests provide
     // reliable coverage without this instability.
 
+    // ───────────────────────────────────────────────────────────────────────────
+    // A-9 disaster_frequency_mul + 8-field completeness harness tests
+    // ───────────────────────────────────────────────────────────────────────────
+
+    // D1 — disaster_frequency_mul defaults to 1.0 when no RON override.
+    #[test]
+    fn harness_a9_disaster_frequency_mul_default_value() {
+        let resources = make_resources_with_canonical_world_rules();
+        // Canonical fixture does not set disaster_frequency_mul → must keep engine default 1.0.
+        assert!(
+            (resources.disaster_frequency_mul - 1.0).abs() < 1e-9,
+            "[a9 D1] disaster_frequency_mul must default to 1.0, got {}",
+            resources.disaster_frequency_mul
+        );
+        eprintln!(
+            "[harness] a9.D1 disaster_frequency_mul default={:.4}",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // D2 — disaster_frequency_mul transferred from RON to SimResources cache.
+    #[test]
+    fn harness_a9_disaster_frequency_mul_applied_from_ron() {
+        let temp = A9TempDir::new("disaster_freq_apply");
+        temp.write_world_rule(
+            "disaster.ron",
+            r#"[
+    WorldRuleset(
+        name: "DisasterTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(2.5),
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        assert!(
+            (resources.disaster_frequency_mul - 2.5).abs() < 1e-9,
+            "[a9 D2] disaster_frequency_mul=2.5 from RON, got {}",
+            resources.disaster_frequency_mul
+        );
+        eprintln!(
+            "[harness] a9.D2 disaster_frequency_mul from_ron={:.4}",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // D3 — three placeholder-only fields (season_mode, farming_enabled, temperature_bias)
+    //      are cached correctly when set via RON (no consumer system needed).
+    #[test]
+    fn harness_a9_unused_global_constants_cache_correctly() {
+        let temp = A9TempDir::new("unused_globals");
+        temp.write_world_rule(
+            "placeholders.ron",
+            r#"[
+    WorldRuleset(
+        name: "PlaceholderTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: Some("eternal_winter"),
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: Some(false),
+            temperature_bias: Some(-0.5),
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        assert_eq!(
+            resources.season_mode, "eternal_winter",
+            "[a9 D3] season_mode cached"
+        );
+        assert!(!resources.farming_enabled, "[a9 D3] farming_enabled cached");
+        assert!(
+            (resources.temperature_bias - (-0.5)).abs() < 1e-9,
+            "[a9 D3] temperature_bias cached, got {}",
+            resources.temperature_bias
+        );
+        eprintln!(
+            "[harness] a9.D3 unused_globals: season={} farming={} temp_bias={:.2}",
+            resources.season_mode, resources.farming_enabled, resources.temperature_bias
+        );
+    }
+
+    // D4 — GlobalConstants clamping: disaster_frequency_mul clamps to [0, 10],
+    //      temperature_bias clamps to [-1, 1].
+    #[test]
+    fn harness_a9_global_constants_clamping_works() {
+        let temp = A9TempDir::new("clamping");
+        temp.write_world_rule(
+            "extreme.ron",
+            r#"[
+    WorldRuleset(
+        name: "ClampTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: Some(-2.5),
+            disaster_frequency_mul: Some(999.0),
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        assert!(
+            (resources.disaster_frequency_mul - 10.0).abs() < 1e-9,
+            "[a9 D4] disaster_frequency_mul clamped to 10.0, got {}",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.temperature_bias - (-1.0)).abs() < 1e-9,
+            "[a9 D4] temperature_bias clamped to -1.0, got {}",
+            resources.temperature_bias
+        );
+        eprintln!(
+            "[harness] a9.D4 clamping: disaster_freq={:.2} temp_bias={:.2}",
+            resources.disaster_frequency_mul, resources.temperature_bias
+        );
+    }
+
+    // D5 — Regression guard: all 8 GlobalConstants fields are reachable as
+    //      SimResources cache fields. Adding a 9th without a cache field → compile error.
+    #[test]
+    fn harness_a9_all_eight_globals_cached() {
+        let resources = make_resources_with_canonical_world_rules();
+        let _ = resources.hunger_decay_rate;
+        let _ = resources.warmth_decay_rate;
+        let _ = resources.food_regen_mul;
+        let _ = resources.wood_regen_mul;
+        let _ = resources.season_mode.as_str();
+        let _ = resources.farming_enabled;
+        let _ = resources.temperature_bias;
+        let _ = resources.disaster_frequency_mul;
+        assert!(resources.food_regen_mul > 0.0, "[a9 D5] food_regen_mul positive");
+        assert!(
+            resources.disaster_frequency_mul >= 0.0,
+            "[a9 D5] disaster_frequency_mul non-negative"
+        );
+        assert!(
+            resources.temperature_bias >= -1.0 && resources.temperature_bias <= 1.0,
+            "[a9 D5] temperature_bias in [-1,1]"
+        );
+        eprintln!("[harness] a9.D5 all_eight_globals_cached OK");
+    }
+
+    // ── Plan Assertion 1 (co-witness form) ────────────────────────────────────
+    // disaster_frequency_mul defaults to 1.0 when RON sets it to None,
+    // AND a co-witness field (hunger_decay_rate) proves apply_world_rules ran.
+    // Without the co-witness, the test is vacuously satisfiable if the handler
+    // is missing (struct-default is already 1.0).
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_disaster_frequency_mul_default_with_apply_proof() {
+        // Canonical registry: EternalWinter sets hunger_decay_mul=Some(1.3)
+        // but leaves disaster_frequency_mul=None.
+        let resources = make_resources_with_canonical_world_rules();
+
+        // Co-witness: hunger_decay_rate must equal HUNGER_DECAY_RATE * 1.3,
+        // proving apply_world_rules ran and reached the GlobalConstants branch.
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 1.3;
+        eprintln!(
+            "[harness] a9.A1 apply_proof: disaster_freq={:.6} hunger_decay_rate={:.6} expected_hunger={:.6}",
+            resources.disaster_frequency_mul, resources.hunger_decay_rate, expected_hunger
+        );
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-9,
+            "[a9 A1] co-witness: hunger_decay_rate must be HUNGER_DECAY_RATE*1.3={:.6}, got {:.6} \
+             (proves apply_world_rules ran)",
+            expected_hunger, resources.hunger_decay_rate
+        );
+        // Primary assertion: disaster_frequency_mul must be engine default 1.0
+        // because EternalWinter sets it to None.
+        assert!(
+            (resources.disaster_frequency_mul - 1.0).abs() < 1e-9,
+            "[a9 A1] disaster_frequency_mul must be engine default 1.0 when RON=None, got {}",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // ── Plan Assertion 6 ──────────────────────────────────────────────────────
+    // disaster_frequency_mul lower clamp: Some(-5.0) → 0.0.
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_disaster_frequency_mul_lower_clamp() {
+        let temp = A9TempDir::new("lower_clamp");
+        temp.write_world_rule(
+            "lower.ron",
+            r#"[
+    WorldRuleset(
+        name: "LowerClampTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(-5.0),
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A6 lower_clamp: disaster_frequency_mul={:.4} (expected 0.0)",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 0.0).abs() < 1e-9,
+            "[a9 A6] clamp(-5.0, 0.0, 10.0)=0.0, got {}",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // ── Plan Assertion 7 ──────────────────────────────────────────────────────
+    // temperature_bias upper clamp: Some(2.5) → 1.0.
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_temperature_bias_upper_clamp() {
+        let temp = A9TempDir::new("temp_bias_upper");
+        temp.write_world_rule(
+            "temp_upper.ron",
+            r#"[
+    WorldRuleset(
+        name: "TempBiasUpperTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: Some(2.5),
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A7 temp_bias_upper: temperature_bias={:.4} (expected 1.0)",
+            resources.temperature_bias
+        );
+        assert!(
+            (resources.temperature_bias - 1.0).abs() < 1e-9,
+            "[a9 A7] clamp(2.5, -1.0, 1.0)=1.0, got {}",
+            resources.temperature_bias
+        );
+    }
+
+    // ── Plan Assertion 8 ──────────────────────────────────────────────────────
+    // Clamp boundary exactness: values AT the boundary clamp correctly.
+    //   disaster_frequency_mul: Some(0.0) → 0.0 (lower bound, exact)
+    //   temperature_bias: Some(10.0) → 1.0 (upper bound, clamps to 1.0)
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_clamp_boundary_exactness() {
+        let temp = A9TempDir::new("clamp_boundary");
+        temp.write_world_rule(
+            "boundary.ron",
+            r#"[
+    WorldRuleset(
+        name: "ClampBoundaryTest",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: Some(10.0),
+            disaster_frequency_mul: Some(0.0),
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A8 clamp_boundary: disaster_freq={:.4} temp_bias={:.4}",
+            resources.disaster_frequency_mul, resources.temperature_bias
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 0.0).abs() < 1e-9,
+            "[a9 A8] clamp(0.0, 0.0, 10.0)=0.0 (boundary), got {}",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.temperature_bias - 1.0).abs() < 1e-9,
+            "[a9 A8] clamp(10.0, -1.0, 1.0)=1.0 (boundary), got {}",
+            resources.temperature_bias
+        );
+    }
+
+    // ── Plan Assertion 9 ──────────────────────────────────────────────────────
+    // Merge semantics: base Some + overlay None → base value preserved.
+    // None in the overlay means "no override", NOT "reset to engine default".
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_merge_base_some_overlay_none_preserves_base() {
+        let temp = A9TempDir::new("merge_a9");
+        // Base (priority 50): sets disaster_frequency_mul=1.5, all others None.
+        temp.write_world_rule(
+            "base.ron",
+            r#"[
+    WorldRuleset(
+        name: "MergeBase",
+        priority: 50,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(1.5),
+        )),
+    ),
+]"#,
+        );
+        // Overlay (priority 100): disaster_frequency_mul=None — must NOT reset base value.
+        temp.write_world_rule(
+            "overlay.ron",
+            r#"[
+    WorldRuleset(
+        name: "MergeOverlay",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A9 merge_none_preserves: disaster_frequency_mul={:.4} (expected 1.5)",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 1.5).abs() < 1e-9,
+            "[a9 A9] overlay=None must preserve base=Some(1.5), got {} \
+             (if 1.0: broken merge reset to engine default)",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // ── Plan Assertion 10 ─────────────────────────────────────────────────────
+    // Merge semantics: base Some + overlay Some → overlay wins.
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_merge_base_some_overlay_some_overlay_wins() {
+        let temp = A9TempDir::new("merge_a10");
+        // Base (priority 50): disaster_frequency_mul=1.5.
+        temp.write_world_rule(
+            "base.ron",
+            r#"[
+    WorldRuleset(
+        name: "OverlayBase",
+        priority: 50,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(1.5),
+        )),
+    ),
+]"#,
+        );
+        // Overlay (priority 100): disaster_frequency_mul=Some(3.0) — must win.
+        temp.write_world_rule(
+            "overlay.ron",
+            r#"[
+    WorldRuleset(
+        name: "OverlayHigh",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(3.0),
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A10 overlay_wins: disaster_frequency_mul={:.4} (expected 3.0)",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 3.0).abs() < 1e-9,
+            "[a9 A10] overlay=Some(3.0) must override base=Some(1.5), got {} \
+             (if 1.5: broken merge returned base instead of overlay)",
+            resources.disaster_frequency_mul
+        );
+    }
+
+    // ── Plan Assertion 11 ─────────────────────────────────────────────────────
+    // All-None overlay is a complete no-op across multiple fields.
+    // Base sets disaster_frequency_mul=2.5, temperature_bias=-0.5, farming_enabled=false.
+    // Overlay has global_constants=Some(GlobalConstants { ALL NONE }).
+    // All three base values must survive unchanged.
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_all_none_overlay_no_op_multi_field() {
+        let temp = A9TempDir::new("all_none_a11");
+        // Base (priority 50): sets three non-default fields.
+        temp.write_world_rule(
+            "base.ron",
+            r#"[
+    WorldRuleset(
+        name: "AllNoneBase",
+        priority: 50,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: Some(false),
+            temperature_bias: Some(-0.5),
+            disaster_frequency_mul: Some(2.5),
+        )),
+    ),
+]"#,
+        );
+        // Overlay (priority 100): global_constants present but ALL fields are None.
+        temp.write_world_rule(
+            "overlay.ron",
+            r#"[
+    WorldRuleset(
+        name: "AllNoneOverlay",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: None,
+        )),
+    ),
+]"#,
+        );
+        let resources = make_resources_with_custom_base(&temp.path);
+        eprintln!(
+            "[harness] a9.A11 all_none_overlay: disaster_freq={:.4} temp_bias={:.4} farming={}",
+            resources.disaster_frequency_mul, resources.temperature_bias, resources.farming_enabled
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 2.5).abs() < 1e-9,
+            "[a9 A11] field 1: all-None overlay must not reset disaster_frequency_mul=2.5, got {}",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.temperature_bias - (-0.5)).abs() < 1e-9,
+            "[a9 A11] field 2: all-None overlay must not reset temperature_bias=-0.5, got {}",
+            resources.temperature_bias
+        );
+        assert!(
+            !resources.farming_enabled,
+            "[a9 A11] field 3: all-None overlay must not reset farming_enabled=false"
+        );
+    }
+
+    // ── Plan Assertion 12 ─────────────────────────────────────────────────────
+    // Cached disaster_frequency_mul is stable across 2000 ticks.
+    // GlobalConstants cache is set at engine init and must NOT be mutated by
+    // per-tick system processing.
+    // Type A: Mathematical invariant.
+    #[test]
+    fn harness_a9_cached_values_stable_across_ticks() {
+        let temp = A9TempDir::new("tick_stable_a12");
+        temp.write_world_rule(
+            "fixture.ron",
+            r#"[
+    WorldRuleset(
+        name: "TickStable",
+        priority: 100,
+        resource_modifiers: [],
+        special_zones: [],
+        special_resources: [],
+        agent_constants: None,
+        influence_channels: [],
+        global_constants: Some(GlobalConstants(
+            season_mode: None,
+            hunger_decay_mul: None,
+            warmth_decay_mul: None,
+            food_regen_mul: None,
+            wood_regen_mul: None,
+            farming_enabled: None,
+            temperature_bias: None,
+            disaster_frequency_mul: Some(2.5),
+        )),
+    ),
+]"#,
+        );
+        // Full RON load path: DataRegistry → make_stage1_engine_with_registry.
+        // Direct struct assignment (resources.disaster_frequency_mul = 2.5) is
+        // explicitly excluded — it would prove nothing about apply_world_rules.
+        let registry = sim_data::DataRegistry::load_from_directory(&temp.path)
+            .expect("[a9 A12] tick_stable registry must load");
+        let mut engine = make_stage1_engine_with_registry(42, 20, registry);
+        engine.run_ticks(2000);
+        let resources = engine.resources();
+        eprintln!(
+            "[harness] a9.A12 tick_stable: disaster_frequency_mul={:.6} after 2000 ticks (expected 2.5)",
+            resources.disaster_frequency_mul
+        );
+        assert!(
+            (resources.disaster_frequency_mul - 2.5).abs() < 1e-9,
+            "[a9 A12] disaster_frequency_mul must remain 2.5 after 2000 ticks, got {} \
+             (if 1.0: apply_world_rules is being called per-tick and re-applying engine default)",
+            resources.disaster_frequency_mul
+        );
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     // phase1-visual-polish harness tests
     //

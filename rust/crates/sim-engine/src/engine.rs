@@ -176,7 +176,11 @@ pub struct SimResources {
     /// Base temperature bias applied to all tiles (-1.0 = frigid, 0.0 = default, 1.0 = scorching).
     pub temperature_bias: f64,
     /// Active season mode string (default "default").
+    // TODO(A-9 phase 2): integrate with season-system-v1 (separate feature)
     pub season_mode: String,
+    /// Disaster frequency multiplier (0.0 = no disasters, 1.0 = default, 10.0 = max).
+    /// Cached only — disaster system not yet implemented (TODO: disaster-system-v1 separate feature).
+    pub disaster_frequency_mul: f64,
     /// Mortality rate multiplier (default 1.0, overridable by WorldRuleset agent_constants).
     pub mortality_mul: f64,
     /// Global skill XP gain multiplier (default 1.0, overridable by WorldRuleset agent_constants).
@@ -467,6 +471,7 @@ impl SimResources {
             farming_enabled: true,
             temperature_bias: 0.0,
             season_mode: "default".to_string(),
+            disaster_frequency_mul: 1.0,
             mortality_mul: 1.0,
             skill_xp_mul: 1.0,
             body_potential_mul: 1.0,
@@ -545,9 +550,12 @@ impl SimResources {
             if let Some(ref mode) = globals.season_mode {
                 self.season_mode = mode.clone();
             }
+            if let Some(mul) = globals.disaster_frequency_mul {
+                self.disaster_frequency_mul = mul.clamp(0.0, 10.0);
+            }
             info!(
-                "[WorldRules] global constants applied: hunger_decay={:.4}, warmth_decay={:.4}, food_regen={:.2}, season={}",
-                self.hunger_decay_rate, self.warmth_decay_rate, self.food_regen_mul, self.season_mode
+                "[WorldRules] global constants applied: hunger_decay={:.4}, warmth_decay={:.4}, food_regen={:.2}, season={}, disaster_freq={:.2}",
+                self.hunger_decay_rate, self.warmth_decay_rate, self.food_regen_mul, self.season_mode, self.disaster_frequency_mul
             );
         }
 
