@@ -52,6 +52,70 @@ Derived from [Andrej Karpathy's observations](https://x.com/karpathy/status/2015
 - Every action traces back to the original request.
 - When complete: list what changed and why, what wasn't changed, and any risks.
 
+### 5. Memory Axiom < Code Reality (added 2026-04-26)
+
+Memory and roadmap claims about feature state are HINTS, not truth. Before
+implementing any feature labeled "missing" or "미구현":
+
+1. **Mandatory grep sweep** — search for the feature's likely symbols:
+   ```bash
+   grep -rn "<FeatureName>\|<FeatureType>" rust/crates/ | head
+   find rust/crates/sim-core/src -name "<feature>*"
+   grep -rn "use <feature>" rust/crates/ | head
+   ```
+
+2. **Verify before claiming**: 10 of 11 features in 2026-04-23~26 sessions
+   were 85~100% already implemented. Memory said "missing"; reality showed
+   only 1-2 entries or harness coverage missing.
+
+3. **Production wiring check**: even if the type/struct exists, verify:
+   - Is it registered in `DEFAULT_RUNTIME_SYSTEMS` (sim-bridge)?
+   - Is it included in `BEHAVIOR_ACTION_ORDER` (cognition.rs)?
+   - Does world.rs have a completion handler?
+   - Is it exposed through SimBridge?
+
+The "real gap" is usually: handler missing, harness missing, 1 enum
+variant missing, 1 wiring entry missing — not the whole system.
+
+### 6. Push Verification Mandatory (added 2026-04-26)
+
+After every `git push`, verify origin reflection:
+
+```bash
+git push origin lead/main
+git ls-remote origin refs/heads/lead/main | head    # MUST match local HEAD
+git log --oneline origin/lead/main -3
+```
+
+Two push omissions occurred 2026-04-23 (a4-causal, hook-threshold).
+This is now a hard requirement, not optional.
+
+### 7. Hook Policy vs Code Quality (added 2026-04-26)
+
+Pre-commit hook score threshold = 90 (lowered from 95 on 2026-04-23).
+
+Reason: VLM analysis legitimately produces VISUAL_WARNING for stone-age
+sims (conservative analyst behavior). Score -8 is environmental cost,
+not code quality issue.
+
+Quality gates (UNCHANGED):
+- Evaluator verdict: must be APPROVE
+- Tests: cargo test --workspace must pass
+- Clippy: clean
+- Regression: CLEAN
+
+VLM WARNING alone never blocks merge. This is policy, not bug.
+
+### 8. Overzealous Defense Awareness (added 2026-04-26)
+
+When implementing isolation/security mechanisms, check what's actually
+needed vs what was assumed. The vlm-login-env-fix discovery: `env -i`
+isolation was preserving only 5 vars when 8-12 are needed for Claude
+CLI auth.
+
+Pattern: defense mechanisms tend to be too restrictive on first pass.
+Validate by running an actual end-to-end test, not just by code review.
+
 ---
 
 ## Project Vision
@@ -77,6 +141,26 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 - GitHub: https://github.com/hyunlord/new-world
 - Working branch: **lead/main** (always)
 - Never use other branches for lead work
+
+## Workspace Topology (Plan C+, established 2026-04-21)
+
+WorldSim 개발은 **2 머신 / 2 repo**로 분리:
+
+| Session | Machine | Repo | Workspace | Use |
+|---------|---------|------|-----------|-----|
+| Sprite session | DGX Spark (remote) | `worldsim-training` | `~/github/worldsim-training` | ComfyUI, Aseprite, asset generation |
+| Game session | Local (Mac) | `new-world` | `~/github/new-world-wt/lead` | Game code, simulation, harness |
+
+**규약**:
+- Asset 전달은 PNG 직접 attachment (not branch sharing)
+- 각 session은 자기 repo에만 push (cross-push 금지)
+- Game session에서 `git remote -v` 검증 후 작업 시작
+- 메모리의 repo 정보는 hint, 실제 작업 전 검증 필수
+
+**위반 사례 (예방)**:
+- 2026-04-21: 스프라이트 세션이 worldsim-training/main에 잘못 push → cherry-pick 복구
+- 2026-04-23: A-4 push 누락 (push 후 origin 미확인)
+- 2026-04-23: A-6 commit 후 hook threshold 차단 (정책 부재)
 
 ---
 
@@ -176,7 +260,12 @@ AddStat / MulStat / SetFlag / EmitStimulus / SpawnEvent / Schedule
 - World Rules: init ~50ms, tick 0
 - Total: ~4ms / 9ms = 44%, headroom 56%
 
-## Current Phase: Pre-requisite Architecture (A-1 through A-10)
+## Current Phase: Pre-requisite Architecture (A-1 through A-13)
+
+**Progress (as of 2026-04-26)**: 9/13 prereqs complete.
+- ✅ A-1, A-2, A-3, A-4, A-5, A-6, A-7, A-8, A-12, A-13
+- 🟡 A-10 (partial: serde + coping BTreeMap + sparse rel cap done; remaining: NetworkId, LodTier, broader HashMap conversion)
+- ❌ A-9 (World Rules slot system), A-11 (BodyHealth)
 
 ### A-1: Data-Driven RON (sim-data/) — MaterialDef/FurnitureDef/ActionDef/RecipeDef/StructureDef
 ### A-2: Influence Grid (sim-core/) — 8-12 channels, stamp/sample, wall blocking
@@ -186,10 +275,18 @@ AddStat / MulStat / SetFlag / EmitStimulus / SpawnEvent / Schedule
 ### A-6: Building tile grid (sim-core/) — tile[x][y], BFS room detection
 ### A-7: Tag+threshold recipe schema (sim-data/) — no ID refs
 ### A-8: Temperament pipeline (sim-core/) — TCI 4-axis, PRS 4x38 weights, bias functions
-### A-9: World Rules slot (sim-data/) — WorldRuleset RON schema, loader, composition, base_rules.ron
-### A-10: Misc — serde, BTreeMap, NetworkId, LodTier, Sparse relations (cap 100)
+### A-9: World Rules slot (sim-data/) — WorldRuleset RON schema, loader, composition, base_rules.ron ❌
+### A-10: Misc — serde, BTreeMap, NetworkId, LodTier, Sparse relations (cap 100) 🟡
+### A-11: BodyHealth system (sim-core/) — HP, injury, recovery ❌
+### A-12: Family/genealogy component (sim-core/) — parent/child links, lineage tracking ✅
+### A-13: Knowledge learning system (sim-core/) — dual-axis skill/knowledge, learning events ✅
 
-After A-1~A-10: Phase 1 (Survival + Material + Temperament, ~4 weeks)
+**Phase status**:
+- Phase 1 'agents alive': 60% (temperament active, body/health pending)
+- Phase 2 'shelter awareness → warmth/safety': ✅ COMPLETE (2026-04-26)
+- Phase 3 'genealogy + knowledge dual-axis': ACTIVE (a12 + a13 working)
+
+After A-1~A-13: Phase 1 (Survival + Material + Temperament, ~4 weeks)
 Then: Phase 2 (Social + Band + Building Structure, ~4 weeks)
 
 ---
@@ -340,20 +437,34 @@ Claude Code (lead/main)    → Direct implementation, testing, commit
 
 ### Pre-flight (every task)
 ```bash
+# 1. Workspace verification (added 2026-04-26 — Plan C+ regulation)
+git remote -v                    # MUST be hyunlord/new-world (not worldsim-training)
+git branch --show-current        # MUST be lead/main
+pwd                              # MUST be inside new-world (not worldsim-training)
+
+# 2. Sync
 git fetch origin
 git checkout lead/main
 git pull origin lead/main
+
+# 3. Memory axiom check (added 2026-04-26)
+# Before claiming any feature is "missing", run grep sweep first.
+# See "Behavioral Guidelines" rule 5.
 ```
 
 ### Post-work (every task)
 ```bash
-# Gate MUST pass before commit
+# 1. Gate MUST pass before commit
 cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings
 
-# Commit
+# 2. Commit
 git add -A
 git commit -m "[t-000] <description>"
+
+# 3. Push + verify (added 2026-04-26 — push omission protection)
 git push origin lead/main
+git ls-remote origin refs/heads/lead/main | head    # MUST match local HEAD
+git log --oneline origin/lead/main -3
 ```
 
 ### Rules
