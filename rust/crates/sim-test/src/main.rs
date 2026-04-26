@@ -19161,6 +19161,562 @@ mod tests {
             max_edges, SOCIAL_EDGE_CAP
         );
     }
+
+    // ── A-12: FamilyComponent Harness Coverage ──────────────────────────────────
+    // Production-level harness proving FamilyComponent lifecycle works in full sim.
+    // Production code changes: 0 (struct + spawner + social + bridge all unchanged).
+
+    #[test]
+    fn harness_a12_default_family_on_spawn() {
+        use sim_core::components::{FamilyComponent, KinshipType};
+
+        // Plan A1: seed=42, agent_count=20. All 20 spawned agents must have a
+        // FamilyComponent attached, and every component must satisfy the founder
+        // invariants: father=None, mother=None, spouse=None, clan_id=None,
+        // generation=0, kinship_type=Bilateral.
+        let engine = make_stage1_engine(42, 20);
+        let world = engine.world();
+        let mut count = 0_usize;
+        let mut violations: Vec<String> = Vec::new();
+        for (entity, family) in world.query::<&FamilyComponent>().iter() {
+            count += 1;
+            if family.generation != 0 {
+                violations.push(format!(
+                    "entity={:?} generation={} (expected 0)",
+                    entity, family.generation
+                ));
+            }
+            if family.father.is_some() {
+                violations.push(format!("entity={:?} father={:?} (expected None)", entity, family.father));
+            }
+            if family.mother.is_some() {
+                violations.push(format!("entity={:?} mother={:?} (expected None)", entity, family.mother));
+            }
+            if family.spouse.is_some() {
+                violations.push(format!("entity={:?} spouse={:?} (expected None)", entity, family.spouse));
+            }
+            if family.clan_id.is_some() {
+                violations.push(format!("entity={:?} clan_id={:?} (expected None)", entity, family.clan_id));
+            }
+            if family.kinship_type != KinshipType::Bilateral {
+                violations.push(format!(
+                    "entity={:?} kinship={:?} (expected Bilateral)",
+                    entity, family.kinship_type
+                ));
+            }
+        }
+
+        // Type A: definitional invariant — every spawned founder must satisfy all
+        // constraints. Any violation is an entity_spawner regression.
+        assert!(
+            violations.is_empty(),
+            "[a12 A1] founder invariant violations: {:?}",
+            violations
+        );
+        // Plan threshold: 20 of 20.
+        assert_eq!(
+            count, 20,
+            "[a12 A1] all 20 spawned agents must have FamilyComponent (got {})",
+            count
+        );
+        println!("harness_a12_default_family_on_spawn PASS: 20/20 founders verified");
+    }
+
+    #[test]
+    fn harness_a12_child_inherits_parents_and_increments_generation() {
+        use sim_core::components::{FamilyComponent, Identity, Social};
+        use sim_core::enums::Sex;
+        use sim_core::ids::EntityId;
+        use sim_systems::entity_spawner::{spawn_agent, SpawnConfig};
+
+        // Plan A2: TWO scenarios required by the plan.
+        // (a) G_f=0, G_m=0  -> child.generation == 1
+        // (b) G_f=2, G_m=5  -> child.generation == 6
+        // Both must satisfy: father link == father_id, mother link == mother_id,
+        // birth_tick == calendar.tick at spawn (must be > 0 for non-founder),
+        // spouse == None.
+        let scenarios: [(u16, u16, u16, u32); 2] = [
+            // (father_gen, mother_gen, expected_child_gen, calendar_tick_at_spawn)
+            (0, 0, 1, 100),
+            (2, 5, 6, 350),
+        ];
+
+        for (father_gen, mother_gen, expected_child_gen, spawn_tick) in scenarios {
+            let mut engine = make_stage1_engine(42, 0);
+            let (father_entity, mother_entity, child_entity) = {
+                let (world, resources) = engine.world_and_resources_mut();
+                let father = world.spawn((
+                    Identity { sex: Sex::Male, ..Identity::default() },
+                    FamilyComponent {
+                        generation: father_gen,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                let mother = world.spawn((
+                    Identity { sex: Sex::Female, ..Identity::default() },
+                    FamilyComponent {
+                        generation: mother_gen,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                resources.calendar.tick = u64::from(spawn_tick);
+                let cfg = SpawnConfig {
+                    settlement_id: None,
+                    position: (0, 0),
+                    initial_age_ticks: 0,
+                    sex: Some(Sex::Female),
+                    parent_a: Some(father),
+                    parent_b: Some(mother),
+                };
+                let child = spawn_agent(world, resources, &cfg);
+                (father, mother, child)
+            };
+
+            let world = engine.world();
+            let family = world
+                .get::<&FamilyComponent>(child_entity)
+                .expect("[a12 A2] child must have FamilyComponent");
+
+            // Sub-condition (c): generation = max(father_gen, mother_gen) + 1.
+            assert_eq!(
+                family.generation, expected_child_gen,
+                "[a12 A2] G_f={}, G_m={}: child.generation expected {}, got {}",
+                father_gen, mother_gen, expected_child_gen, family.generation
+            );
+            // Sub-condition (a): father link.
+            assert_eq!(
+                family.father,
+                Some(EntityId(father_entity.id() as u64)),
+                "[a12 A2] G_f={}, G_m={}: child.father must point to father entity",
+                father_gen, mother_gen
+            );
+            // Sub-condition (b): mother link.
+            assert_eq!(
+                family.mother,
+                Some(EntityId(mother_entity.id() as u64)),
+                "[a12 A2] G_f={}, G_m={}: child.mother must point to mother entity",
+                father_gen, mother_gen
+            );
+            // Sub-condition (d): birth_tick == calendar.tick at spawn (>0 for non-founder).
+            assert_eq!(
+                family.birth_tick, spawn_tick,
+                "[a12 A2] G_f={}, G_m={}: birth_tick must equal spawn tick {}",
+                father_gen, mother_gen, spawn_tick
+            );
+            assert!(
+                family.birth_tick > 0,
+                "[a12 A2] non-founder birth_tick must be > 0 (got {})",
+                family.birth_tick
+            );
+            // Sub-condition (e): spouse must initialize empty for newborn.
+            assert!(
+                family.spouse.is_none(),
+                "[a12 A2] newborn must have spouse=None (got {:?})",
+                family.spouse
+            );
+        }
+        println!(
+            "harness_a12_child_inherits_parents_and_increments_generation PASS: \
+             both scenarios (0,0)->1 and (2,5)->6 verified"
+        );
+    }
+
+    #[test]
+    fn harness_a12_kinship_type_resolves_bilateral_when_mixed() {
+        use sim_core::components::{FamilyComponent, Identity, KinshipType, Social};
+        use sim_core::enums::Sex;
+        use sim_systems::entity_spawner::{spawn_agent, SpawnConfig};
+
+        // Plan A3: BOTH orderings must yield Bilateral. Order-independence is
+        // implied by inheritance semantics — any deviation is a bug.
+        // Ordering 1: parent_a = Patrilineal (father), parent_b = Matrilineal (mother)
+        // Ordering 2: parent_a = Matrilineal (mother), parent_b = Patrilineal (father)
+        let orderings: [(KinshipType, KinshipType, &str); 2] = [
+            (KinshipType::Patrilineal, KinshipType::Matrilineal, "Pat/Mat"),
+            (KinshipType::Matrilineal, KinshipType::Patrilineal, "Mat/Pat"),
+        ];
+
+        for (a_kinship, b_kinship, label) in orderings {
+            let mut engine = make_stage1_engine(42, 0);
+            let child_entity = {
+                let (world, resources) = engine.world_and_resources_mut();
+                let parent_a = world.spawn((
+                    Identity { sex: Sex::Male, ..Identity::default() },
+                    FamilyComponent {
+                        kinship_type: a_kinship,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                let parent_b = world.spawn((
+                    Identity { sex: Sex::Female, ..Identity::default() },
+                    FamilyComponent {
+                        kinship_type: b_kinship,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                let cfg = SpawnConfig {
+                    settlement_id: None,
+                    position: (0, 0),
+                    initial_age_ticks: 0,
+                    sex: Some(Sex::Male),
+                    parent_a: Some(parent_a),
+                    parent_b: Some(parent_b),
+                };
+                spawn_agent(world, resources, &cfg)
+            };
+
+            let family = engine
+                .world()
+                .get::<&FamilyComponent>(child_entity)
+                .expect("[a12 A3] child must have FamilyComponent");
+            assert_eq!(
+                family.kinship_type,
+                KinshipType::Bilateral,
+                "[a12 A3] ordering={}: Patrilineal × Matrilineal must produce Bilateral, got {:?}",
+                label, family.kinship_type
+            );
+        }
+        println!(
+            "harness_a12_kinship_type_resolves_bilateral_when_mixed PASS: \
+             both orderings produce Bilateral"
+        );
+    }
+
+    #[test]
+    fn harness_a12_kinship_type_inherits_when_homogeneous() {
+        use sim_core::components::{FamilyComponent, Identity, KinshipType, Social};
+        use sim_core::enums::Sex;
+        use sim_systems::entity_spawner::{spawn_agent, SpawnConfig};
+
+        // Plan A4: All three KinshipType variants must inherit when both parents
+        // share the variant. Asserting only Bilateral would let a "always return
+        // Bilateral" bug pass — the test must distinguish inheritance from
+        // default-fallback by exercising every variant.
+        let variants = [
+            KinshipType::Bilateral,
+            KinshipType::Patrilineal,
+            KinshipType::Matrilineal,
+        ];
+
+        for variant in variants {
+            let mut engine = make_stage1_engine(42, 0);
+            let child_entity = {
+                let (world, resources) = engine.world_and_resources_mut();
+                let father = world.spawn((
+                    Identity { sex: Sex::Male, ..Identity::default() },
+                    FamilyComponent {
+                        kinship_type: variant,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                let mother = world.spawn((
+                    Identity { sex: Sex::Female, ..Identity::default() },
+                    FamilyComponent {
+                        kinship_type: variant,
+                        ..FamilyComponent::default()
+                    },
+                    Social::default(),
+                ));
+                let cfg = SpawnConfig {
+                    settlement_id: None,
+                    position: (0, 0),
+                    initial_age_ticks: 0,
+                    sex: Some(Sex::Male),
+                    parent_a: Some(father),
+                    parent_b: Some(mother),
+                };
+                spawn_agent(world, resources, &cfg)
+            };
+
+            let family = engine
+                .world()
+                .get::<&FamilyComponent>(child_entity)
+                .expect("[a12 A4] child must have FamilyComponent");
+            assert_eq!(
+                family.kinship_type, variant,
+                "[a12 A4] homogeneous parents kinship={:?} must produce child kinship={:?}, got {:?}",
+                variant, variant, family.kinship_type
+            );
+        }
+        println!(
+            "harness_a12_kinship_type_inherits_when_homogeneous PASS: \
+             Bilateral, Patrilineal, Matrilineal all inherit correctly"
+        );
+    }
+
+    #[test]
+    fn harness_a12_is_sibling_of_detects_shared_parent() {
+        use sim_core::components::FamilyComponent;
+        use sim_core::ids::EntityId;
+
+        // Plan A5: Four cases — (a) shared father only, (b) shared mother only,
+        // (c) both orphans (orphan guard), (d) different known parents.
+        // The orphan guard (case c) is critical: naive None == None equality
+        // would erroneously call two orphans siblings.
+
+        // Case (a): shared father only; mothers differ (or are None).
+        let shared_father = EntityId(100);
+        let case_a_left = FamilyComponent {
+            father: Some(shared_father),
+            mother: Some(EntityId(200)),
+            ..FamilyComponent::default()
+        };
+        let case_a_right = FamilyComponent {
+            father: Some(shared_father),
+            mother: Some(EntityId(201)),
+            ..FamilyComponent::default()
+        };
+        assert!(
+            case_a_left.is_sibling_of(&case_a_right),
+            "[a12 A5] case (a) shared-father half-siblings must be detected"
+        );
+
+        // Case (a-prime): shared father, both mothers None.
+        let case_a_prime_left = FamilyComponent {
+            father: Some(shared_father),
+            mother: None,
+            ..FamilyComponent::default()
+        };
+        let case_a_prime_right = FamilyComponent {
+            father: Some(shared_father),
+            mother: None,
+            ..FamilyComponent::default()
+        };
+        assert!(
+            case_a_prime_left.is_sibling_of(&case_a_prime_right),
+            "[a12 A5] case (a) shared-father (mothers None) must still be siblings"
+        );
+
+        // Case (b): shared mother only; fathers differ.
+        let shared_mother = EntityId(300);
+        let case_b_left = FamilyComponent {
+            father: Some(EntityId(101)),
+            mother: Some(shared_mother),
+            ..FamilyComponent::default()
+        };
+        let case_b_right = FamilyComponent {
+            father: Some(EntityId(102)),
+            mother: Some(shared_mother),
+            ..FamilyComponent::default()
+        };
+        assert!(
+            case_b_left.is_sibling_of(&case_b_right),
+            "[a12 A5] case (b) shared-mother half-siblings must be detected"
+        );
+
+        // Case (c): both fully orphan — orphan guard must reject.
+        let orphan_a = FamilyComponent::default();
+        let orphan_b = FamilyComponent::default();
+        assert!(
+            !orphan_a.is_sibling_of(&orphan_b),
+            "[a12 A5] case (c) orphan guard: both-None must NOT register as siblings"
+        );
+
+        // Case (d): completely different known parents.
+        let case_d_left = FamilyComponent {
+            father: Some(EntityId(500)),
+            mother: Some(EntityId(501)),
+            ..FamilyComponent::default()
+        };
+        let case_d_right = FamilyComponent {
+            father: Some(EntityId(600)),
+            mother: Some(EntityId(601)),
+            ..FamilyComponent::default()
+        };
+        assert!(
+            !case_d_left.is_sibling_of(&case_d_right),
+            "[a12 A5] case (d) different known parents must NOT be siblings"
+        );
+
+        println!(
+            "harness_a12_is_sibling_of_detects_shared_parent PASS: cases (a), (b), (c), (d) verified"
+        );
+    }
+
+    #[test]
+    fn harness_a12_is_parent_of_detects_correct_relation() {
+        use sim_core::components::FamilyComponent;
+        use sim_core::ids::EntityId;
+
+        // Plan A6: Four cases — (a) candidate matches father, (b) candidate
+        // matches mother, (c) candidate matches neither, (d) child has
+        // father=None and candidate is some valid id (must not match).
+        // Asserting only the positive cases would let a "return true always"
+        // bug pass — both negative cases must be exercised.
+
+        let father_id = EntityId(50);
+        let mother_id = EntityId(70);
+        let other_id = EntityId(51);
+
+        let parent = FamilyComponent::default();
+
+        // Case (a) and (b) and (c): both parents recorded.
+        let child_full = FamilyComponent {
+            father: Some(father_id),
+            mother: Some(mother_id),
+            ..FamilyComponent::default()
+        };
+        // Case (a)
+        assert!(
+            parent.is_parent_of(&child_full, father_id),
+            "[a12 A6] case (a): candidate==father must return true"
+        );
+        // Case (b)
+        assert!(
+            parent.is_parent_of(&child_full, mother_id),
+            "[a12 A6] case (b): candidate==mother must return true"
+        );
+        // Case (c)
+        assert!(
+            !parent.is_parent_of(&child_full, other_id),
+            "[a12 A6] case (c): candidate matching neither parent must return false"
+        );
+
+        // Case (d): child has father=None, candidate is some valid id.
+        // Naive `child.father == Some(my_id)` correctly returns false because
+        // None != Some(...), but we still must verify the orphan-side guard.
+        let child_no_father = FamilyComponent {
+            father: None,
+            mother: Some(mother_id),
+            ..FamilyComponent::default()
+        };
+        assert!(
+            !parent.is_parent_of(&child_no_father, EntityId(12345)),
+            "[a12 A6] case (d): child.father=None and unrelated candidate must return false"
+        );
+        // Cross-check: candidate matching the existing mother on the same orphan
+        // child still returns true (proves we did not over-correct case d).
+        assert!(
+            parent.is_parent_of(&child_no_father, mother_id),
+            "[a12 A6] case (d) cross-check: father=None must not block mother match"
+        );
+
+        println!(
+            "harness_a12_is_parent_of_detects_correct_relation PASS: cases (a), (b), (c), (d) verified"
+        );
+    }
+
+    #[test]
+    fn harness_a12_production_simulation_has_offspring() {
+        use sim_core::components::FamilyComponent;
+
+        // Plan A7: seed=42, agent_count=20, run 5000 ticks. Verify population
+        // counts (Type C bands) AND parent-link/generation invariants (Type A).
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(5000);
+
+        let world = engine.world();
+
+        // Pass 1: build EntityId(u64) -> generation map across all living agents
+        // with FamilyComponent. We need this to validate generation_consistency
+        // when a newborn's parent is still queryable.
+        let mut gen_by_entity_id: HashMap<u64, u16> = HashMap::new();
+        let mut total_agent_count: usize = 0;
+        let mut max_generation: u16 = 0;
+        for (entity, family) in world.query::<&FamilyComponent>().iter() {
+            total_agent_count += 1;
+            gen_by_entity_id.insert(entity.id() as u64, family.generation);
+            if family.generation > max_generation {
+                max_generation = family.generation;
+            }
+        }
+
+        // Pass 2: classify newborns and check Type A invariants per newborn.
+        // Plan defines newborn = birth_tick > 0 (founders all have birth_tick=0).
+        let mut newborn_count: usize = 0;
+        let mut parent_link_violations: Vec<String> = Vec::new();
+        let mut generation_consistency_violations: Vec<String> = Vec::new();
+        let mut consistency_checked: usize = 0;
+        for (entity, family) in world.query::<&FamilyComponent>().iter() {
+            if family.birth_tick == 0 {
+                continue;
+            }
+            newborn_count += 1;
+
+            // Type A invariant: a newborn must have BOTH parents recorded.
+            if family.father.is_none() || family.mother.is_none() {
+                parent_link_violations.push(format!(
+                    "entity={:?} birth_tick={} father={:?} mother={:?}",
+                    entity, family.birth_tick, family.father, family.mother
+                ));
+                continue;
+            }
+
+            // Type A invariant: if both parents are still queryable in the world,
+            // child.generation must equal max(parents.generation) + 1.
+            let father_id = family.father.expect("checked above").0;
+            let mother_id = family.mother.expect("checked above").0;
+            if let (Some(&father_gen), Some(&mother_gen)) = (
+                gen_by_entity_id.get(&father_id),
+                gen_by_entity_id.get(&mother_id),
+            ) {
+                let expected = father_gen.max(mother_gen).saturating_add(1);
+                consistency_checked += 1;
+                if family.generation != expected {
+                    generation_consistency_violations.push(format!(
+                        "entity={:?} child.gen={} expected={} (father.gen={}, mother.gen={})",
+                        entity, family.generation, expected, father_gen, mother_gen
+                    ));
+                }
+            }
+        }
+
+        // Diagnostic output (always printed before any assertion fires).
+        println!(
+            "[a12 A7] seed=42, ticks=5000: total_agent_count={}, newborn_count={}, \
+             max_generation={}, generation_consistency_checked={}",
+            total_agent_count, newborn_count, max_generation, consistency_checked
+        );
+
+        // Type C lower bound: ≥ 30 living agents (observed 61 at seed 42).
+        assert!(
+            total_agent_count >= 30,
+            "[a12 A7] total_agent_count must be >= 30 (got {})",
+            total_agent_count
+        );
+        // Type C upper bound: ≤ 200 (~3.3× observed; catches duplication regression).
+        assert!(
+            total_agent_count <= 200,
+            "[a12 A7] total_agent_count must be <= 200 (got {}) — possible spawner runaway",
+            total_agent_count
+        );
+        // Type C lower bound: ≥ 10 newborns (observed 31 at seed 42).
+        assert!(
+            newborn_count >= 10,
+            "[a12 A7] newborn_count must be >= 10 (got {}) — birth pipeline may be broken",
+            newborn_count
+        );
+        // Type C lower bound: ≥ 1 generation depth (observed 1 at seed 42).
+        assert!(
+            max_generation >= 1,
+            "[a12 A7] max_generation must be >= 1 (got {})",
+            max_generation
+        );
+        // Type A invariant: 100% of newborns have non-None father AND mother.
+        assert!(
+            parent_link_violations.is_empty(),
+            "[a12 A7] parent_link_validity must be 100% — violations: {:?}",
+            parent_link_violations
+        );
+        // Type A invariant: 100% of newborns with queryable parents satisfy
+        // child.gen == max(parents.gen) + 1.
+        assert!(
+            generation_consistency_violations.is_empty(),
+            "[a12 A7] generation_consistency must be 100% — violations: {:?}",
+            generation_consistency_violations
+        );
+
+        println!(
+            "harness_a12_production_simulation_has_offspring PASS: \
+             total={}, newborns={}, max_gen={}, gen_consistency_checked={}",
+            total_agent_count, newborn_count, max_generation, consistency_checked
+        );
+    }
 }
 
 fn pathfind_bench_inputs() -> (
