@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 65;
+const EXPECTED_SYSTEM_COUNT: usize = 66;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -94,6 +94,7 @@ use sim_systems::runtime::{
     TechPropagationRuntimeSystem,
     TechUtilizationRuntimeSystem,
     TemperamentShiftRuntimeSystem,
+    KnowledgeLearningRuntimeSystem,
     TensionRuntimeSystem,
     TitleRuntimeSystem,
     TraitRuntimeSystem,
@@ -481,6 +482,7 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(AceTrackerRuntimeSystem::new(99, 100));
     engine.register(TraitRuntimeSystem::new(100, 10));
     engine.register(TemperamentShiftRuntimeSystem::new(101, 1));
+    engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
     engine.register(ChronicleRuntimeSystem::new(102, 1));
     engine.register(InfluenceRuntimeSystem::new(
         sim_core::config::INFLUENCE_SYSTEM_PRIORITY,
@@ -14048,8 +14050,8 @@ mod tests {
         // Type A: compile-time array size invariant — catches "in enum but not DEFAULT array".
         assert_eq!(
             names.len(),
-            62,
-            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 62 entries, got {}. \
+            63,
+            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 63 entries, got {}. \
              Update [DefaultRuntimeSystemSpec; N] in sim-bridge/src/runtime_system.rs.",
             names.len()
         );
@@ -18786,8 +18788,8 @@ mod tests {
         use sim_bridge::default_runtime_systems_count;
         let count = default_runtime_systems_count();
         assert_eq!(
-            count, 62,
-            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 62 entries (no A-5 list edits), got {count}"
+            count, 63,
+            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 63 entries (no A-5 list edits), got {count}"
         );
         println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
     }
@@ -21715,6 +21717,630 @@ mod harness_a10_plan_assertions {
             "harness_sparse_rel_cap_greater_than_social_edge_cap PASS: \
              SPARSE_REL_CAP ({}) > SOCIAL_EDGE_CAP ({})",
             SPARSE_REL_CAP, SOCIAL_EDGE_CAP
+        );
+    }
+
+}
+
+// ── A-13: Knowledge Learning System ─────────────────────────────────────────
+#[cfg(test)]
+mod harness_a13_knowledge_learning {
+    use sim_core::components::Position;
+    use sim_systems::runtime::KnowledgeLearningRuntimeSystem;
+
+    // ── A13-1 (Type A): KnowledgeLearningSystem registered in DEFAULT_RUNTIME_SYSTEMS ──
+    #[test]
+    fn harness_a13_knowledge_learning_system_registered() {
+        let names = sim_bridge::default_runtime_system_registry_names();
+        let present = names.contains(&"knowledge_learning_system");
+        eprintln!(
+            "[harness] a13_registration: {} entries, knowledge_learning_system present={}",
+            names.len(), present
+        );
+        assert!(
+            present,
+            "[A13-1] 'knowledge_learning_system' not found in DEFAULT_RUNTIME_SYSTEMS \
+             ({} entries).",
+            names.len()
+        );
+        assert_eq!(
+            names.len(), 63,
+            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 63 entries after A-13, got {}.",
+            names.len()
+        );
+        println!(
+            "harness_a13_knowledge_learning_system_registered PASS: \
+             knowledge_learning_system found in {} entries",
+            names.len()
+        );
+    }
+
+    // ── A13-2 (Type A): Knowledge config constants have correct lower AND upper bounds ──
+    #[test]
+    fn harness_a13_config_constants_are_valid() {
+        use sim_core::config::{
+            ACTION_TIMER_LEARN, ACTION_TIMER_TEACH, KNOWLEDGE_LEARN_BASE_RATE,
+            KNOWLEDGE_LEARN_TEACHER_BOOST, KNOWLEDGE_MAX_KNOWN_CAP,
+            KNOWLEDGE_TEACH_PROFICIENCY_MIN, KNOWLEDGE_TEACH_PROXIMITY_RADIUS,
+        };
+
+        // Lower bounds
+        assert!(ACTION_TIMER_LEARN > 0, "[A13-2] ACTION_TIMER_LEARN must be positive");
+        assert!(ACTION_TIMER_TEACH > 0, "[A13-2] ACTION_TIMER_TEACH must be positive");
+        assert!(KNOWLEDGE_LEARN_BASE_RATE > 0.0, "[A13-2] KNOWLEDGE_LEARN_BASE_RATE must be positive");
+        assert!(KNOWLEDGE_LEARN_TEACHER_BOOST > 0.0, "[A13-2] KNOWLEDGE_LEARN_TEACHER_BOOST must be positive");
+        assert!(KNOWLEDGE_MAX_KNOWN_CAP > 0, "[A13-2] KNOWLEDGE_MAX_KNOWN_CAP must be positive");
+        assert!(
+            KNOWLEDGE_TEACH_PROFICIENCY_MIN > 0.0 && KNOWLEDGE_TEACH_PROFICIENCY_MIN < 1.0,
+            "[A13-2] KNOWLEDGE_TEACH_PROFICIENCY_MIN must be in (0.0, 1.0), got {}",
+            KNOWLEDGE_TEACH_PROFICIENCY_MIN
+        );
+        assert!(KNOWLEDGE_TEACH_PROXIMITY_RADIUS > 0, "[A13-2] KNOWLEDGE_TEACH_PROXIMITY_RADIUS must be positive");
+
+        // Upper bounds — prevent unrealistic tuning regressions
+        assert!(
+            KNOWLEDGE_LEARN_BASE_RATE < 0.01,
+            "[A13-2] KNOWLEDGE_LEARN_BASE_RATE must be < 0.01 (got {}); \
+             larger values collapse learning time unrealistically",
+            KNOWLEDGE_LEARN_BASE_RATE
+        );
+        assert!(
+            KNOWLEDGE_LEARN_TEACHER_BOOST < 2.0,
+            "[A13-2] KNOWLEDGE_LEARN_TEACHER_BOOST must be < 2.0 (got {})",
+            KNOWLEDGE_LEARN_TEACHER_BOOST
+        );
+        assert!(
+            ACTION_TIMER_LEARN <= 60,
+            "[A13-2] ACTION_TIMER_LEARN must be <= 60 (got {})",
+            ACTION_TIMER_LEARN
+        );
+        assert!(
+            ACTION_TIMER_TEACH <= 60,
+            "[A13-2] ACTION_TIMER_TEACH must be <= 60 (got {})",
+            ACTION_TIMER_TEACH
+        );
+        assert!(
+            KNOWLEDGE_MAX_KNOWN_CAP <= 100,
+            "[A13-2] KNOWLEDGE_MAX_KNOWN_CAP must be <= 100 (got {})",
+            KNOWLEDGE_MAX_KNOWN_CAP
+        );
+
+        println!(
+            "harness_a13_config_constants_are_valid PASS: \
+             base_rate={} teacher_boost={} max_cap={} proficiency_min={} proximity={}",
+            KNOWLEDGE_LEARN_BASE_RATE, KNOWLEDGE_LEARN_TEACHER_BOOST,
+            KNOWLEDGE_MAX_KNOWN_CAP, KNOWLEDGE_TEACH_PROFICIENCY_MIN,
+            KNOWLEDGE_TEACH_PROXIMITY_RADIUS
+        );
+    }
+
+    // ── A13-3 (Type A): Learning progress advances and stays within sane bounds ──────
+    #[test]
+    fn harness_a13_learning_progress_advances() {
+        use sim_core::components::{AgentKnowledge, LearningState, TransmissionSource};
+        use sim_core::config::GameConfig;
+        use sim_engine::SimResources;
+
+        let config = GameConfig::default();
+        let cal = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(8, 8, 1);
+        let resources = SimResources::new(cal, map, 1);
+        let mut engine = sim_engine::SimEngine::new(resources);
+        engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+
+        let mut knowledge = AgentKnowledge::default();
+        knowledge.learning = Some(LearningState {
+            knowledge_id: "TECH_FIRE".to_string(),
+            progress: 0.0,
+            source: TransmissionSource::Oral,
+            teacher_id: 0,
+        });
+        {
+            let (world, _) = engine.world_and_resources_mut();
+            world.spawn((knowledge, Position::default()));
+        }
+
+        engine.run_ticks(10);
+
+        let world = engine.world();
+        let mut q = world.query::<&AgentKnowledge>();
+        let agents: Vec<_> = q.iter().collect();
+        assert_eq!(agents.len(), 1, "[A13-3] expected 1 agent");
+        let progress = agents[0].1.learning.as_ref().unwrap().progress;
+        assert!(
+            progress > 0.0,
+            "[A13-3] learning progress must advance after 10 ticks, got {}",
+            progress
+        );
+        // Upper bound: one 10-tick run with defaults (g=0.5, openness=0.5)
+        // rate = 0.001 * 1.5 * 1.15 * 10 ≈ 0.01725 — must stay well below 0.05
+        assert!(
+            progress <= 0.05,
+            "[A13-3] learning progress after 10 ticks must be <= 0.05 (sane upper bound), got {}",
+            progress
+        );
+
+        println!("harness_a13_learning_progress_advances PASS: progress={:.6}", progress);
+    }
+
+    // ── A13-4 (Type A): Learning completes with proficiency=0.5 and source preserved ─
+    #[test]
+    fn harness_a13_learning_completes_to_known_entry() {
+        use sim_core::components::{AgentKnowledge, LearningState, TransmissionSource};
+        use sim_core::config::GameConfig;
+        use sim_engine::SimResources;
+
+        let config = GameConfig::default();
+        let cal = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(8, 8, 1);
+        let resources = SimResources::new(cal, map, 1);
+        let mut engine = sim_engine::SimEngine::new(resources);
+        engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+
+        let mut knowledge = AgentKnowledge::default();
+        knowledge.learning = Some(LearningState {
+            knowledge_id: "TECH_FIRE".to_string(),
+            progress: 0.999,
+            source: TransmissionSource::Oral,
+            teacher_id: 0,
+        });
+        {
+            let (world, _) = engine.world_and_resources_mut();
+            world.spawn((knowledge, Position::default()));
+        }
+
+        engine.run_ticks(10);
+
+        let world = engine.world();
+        let mut q = world.query::<&AgentKnowledge>();
+        let agents: Vec<_> = q.iter().collect();
+        assert_eq!(agents.len(), 1, "[A13-4] expected 1 agent");
+        let k = agents[0].1;
+        assert!(k.learning.is_none(), "[A13-4] learning field must be None after completion");
+        assert!(k.has_knowledge("TECH_FIRE"), "[A13-4] TECH_FIRE must appear in known[]");
+
+        let entry = k.known.iter().find(|e| e.knowledge_id == "TECH_FIRE")
+            .expect("[A13-4] TECH_FIRE entry must be present in known[]");
+        assert!(
+            (entry.proficiency - 0.5).abs() < 1e-9,
+            "[A13-4] graduated proficiency must be exactly 0.5, got {}",
+            entry.proficiency
+        );
+        assert_eq!(
+            entry.source, TransmissionSource::Oral,
+            "[A13-4] source must be preserved from LearningState (Oral), got {:?}",
+            entry.source
+        );
+
+        println!("harness_a13_learning_completes_to_known_entry PASS: proficiency=0.5, source=Oral");
+    }
+
+    // ── A13-5 (Type A): Teacher proximity boosts learning rate by >= 1.4x ───────────
+    #[test]
+    fn harness_a13_teacher_nearby_boosts_rate() {
+        use sim_core::components::{AgentKnowledge, KnowledgeEntry, LearningState, TransmissionSource};
+        use sim_core::config::GameConfig;
+        use sim_engine::SimResources;
+
+        let run_with_teacher = |teacher_pos: Option<(i32, i32)>| -> f64 {
+            let config = GameConfig::default();
+            let cal = sim_core::GameCalendar::new(&config);
+            let map = sim_core::WorldMap::new(8, 8, 1);
+            let resources = SimResources::new(cal, map, 1);
+            let mut engine = sim_engine::SimEngine::new(resources);
+            engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+            {
+                let (world, _) = engine.world_and_resources_mut();
+                let mut k = AgentKnowledge::default();
+                k.learning = Some(LearningState {
+                    knowledge_id: "TECH_FIRE".to_string(),
+                    progress: 0.0,
+                    source: TransmissionSource::Oral,
+                    teacher_id: 0,
+                });
+                let mut lp = Position::default();
+                lp.x = 4.0;
+                lp.y = 4.0;
+                world.spawn((k, lp));
+
+                if let Some((tx, ty)) = teacher_pos {
+                    let mut tk = AgentKnowledge::default();
+                    tk.known.push(KnowledgeEntry {
+                        knowledge_id: "TECH_FIRE".to_string(),
+                        proficiency: 0.9,
+                        source: TransmissionSource::Oral,
+                        acquired_tick: 0,
+                        last_used_tick: 0,
+                        teacher_id: 0,
+                    });
+                    tk.teaching_target = Some((0, "TECH_FIRE".to_string()));
+                    let mut tp = Position::default();
+                    tp.x = tx as f64;
+                    tp.y = ty as f64;
+                    world.spawn((tk, tp));
+                }
+            }
+            engine.run_ticks(10);
+            let world = engine.world();
+            let mut q = world.query::<&AgentKnowledge>();
+            q.iter()
+                .filter_map(|(_, k)| k.learning.as_ref().map(|s| s.progress))
+                .next()
+                .unwrap_or(0.0)
+        };
+
+        let solo_progress = run_with_teacher(None);
+        let boosted_progress = run_with_teacher(Some((5, 4)));
+        let ratio = boosted_progress / solo_progress;
+
+        eprintln!(
+            "[harness] a13_teacher_boost: solo={:.6} boosted={:.6} ratio={:.3}x",
+            solo_progress, boosted_progress, ratio
+        );
+
+        assert!(
+            boosted_progress > solo_progress,
+            "[A13-5] teacher-boosted progress ({:.6}) must exceed solo ({:.6})",
+            boosted_progress, solo_progress
+        );
+        assert!(
+            ratio >= 1.4,
+            "[A13-5] teacher boost ratio must be >= 1.4x (expected 1.5x = 1+TEACHER_BOOST), \
+             got {:.3}x (solo={:.6}, boosted={:.6})",
+            ratio, solo_progress, boosted_progress
+        );
+
+        println!(
+            "harness_a13_teacher_nearby_boosts_rate PASS: boosted={:.6} > solo={:.6} ratio={:.3}x",
+            boosted_progress, solo_progress, ratio
+        );
+    }
+
+    // ── A13-6 (Type B): AgentKnowledge present on all spawned agents (coverage >= 50%) ─
+    #[test]
+    fn harness_a13_all_agents_have_knowledge_component() {
+        use sim_core::components::AgentKnowledge;
+        use sim_core::config::GameConfig;
+        use sim_core::{GameCalendar, Settlement, SettlementId, WorldMap};
+        use sim_engine::{SimEngine, SimResources};
+        use sim_systems::entity_spawner;
+
+        let config = GameConfig::default();
+        let cal = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let resources = SimResources::new(cal, map, 42);
+        let mut engine = SimEngine::new(resources);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 32, 32, 0),
+        );
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
+        }
+
+        let world = engine.world();
+        let mut q = world.query::<&AgentKnowledge>();
+        let agents: Vec<_> = q.iter().collect();
+        assert!(!agents.is_empty(), "[A13-6] expected at least one agent with AgentKnowledge");
+
+        let with_knowledge = agents.iter().filter(|(_, k)| !k.known.is_empty()).count();
+        let coverage = with_knowledge as f64 / agents.len() as f64;
+
+        eprintln!(
+            "[harness] a13_knowledge_component: {}/{} with starter knowledge (coverage={:.2})",
+            with_knowledge, agents.len(), coverage
+        );
+        assert!(
+            coverage >= 0.5,
+            "[A13-6] at least 50% of agents must have starter knowledge, got {}/{} ({:.2})",
+            with_knowledge, agents.len(), coverage
+        );
+
+        println!(
+            "harness_a13_all_agents_have_knowledge_component PASS: {}/{} (coverage={:.2})",
+            with_knowledge, agents.len(), coverage
+        );
+    }
+
+    // ── A13-7 (Type A): Teacher outside proximity radius produces no boost ────────────
+    /// Chebyshev distance gate: teacher at exactly RADIUS tiles = boost;
+    /// teacher at RADIUS+1 tiles = same progress as solo.
+    #[test]
+    fn harness_a13_proximity_exclusion() {
+        use sim_core::components::{AgentKnowledge, KnowledgeEntry, LearningState, TransmissionSource};
+        use sim_core::config::{GameConfig, KNOWLEDGE_TEACH_PROXIMITY_RADIUS};
+        use sim_engine::SimResources;
+
+        let run_with_x_offset = |dx: Option<i32>| -> f64 {
+            let config = GameConfig::default();
+            let cal = sim_core::GameCalendar::new(&config);
+            let map = sim_core::WorldMap::new(16, 16, 1);
+            let resources = SimResources::new(cal, map, 1);
+            let mut engine = sim_engine::SimEngine::new(resources);
+            engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+            {
+                let (world, _) = engine.world_and_resources_mut();
+                let mut k = AgentKnowledge::default();
+                k.learning = Some(LearningState {
+                    knowledge_id: "TECH_FIRE".to_string(),
+                    progress: 0.0,
+                    source: TransmissionSource::Oral,
+                    teacher_id: 0,
+                });
+                let mut lp = Position::default();
+                lp.x = 4.0;
+                lp.y = 4.0;
+                world.spawn((k, lp));
+
+                if let Some(offset) = dx {
+                    let mut tk = AgentKnowledge::default();
+                    tk.known.push(KnowledgeEntry {
+                        knowledge_id: "TECH_FIRE".to_string(),
+                        proficiency: 0.9,
+                        source: TransmissionSource::Oral,
+                        acquired_tick: 0,
+                        last_used_tick: 0,
+                        teacher_id: 0,
+                    });
+                    tk.teaching_target = Some((0, "TECH_FIRE".to_string()));
+                    let mut tp = Position::default();
+                    tp.x = (4 + offset) as f64;
+                    tp.y = 4.0;
+                    world.spawn((tk, tp));
+                }
+            }
+            engine.run_ticks(10);
+            let world = engine.world();
+            let mut q = world.query::<&AgentKnowledge>();
+            q.iter()
+                .filter_map(|(_, k)| k.learning.as_ref().map(|s| s.progress))
+                .next()
+                .unwrap_or(0.0)
+        };
+
+        let solo = run_with_x_offset(None);
+        let at_boundary = run_with_x_offset(Some(KNOWLEDGE_TEACH_PROXIMITY_RADIUS));
+        let beyond = run_with_x_offset(Some(KNOWLEDGE_TEACH_PROXIMITY_RADIUS + 1));
+
+        eprintln!(
+            "[harness] a13_proximity: solo={:.6} at_boundary={:.6} beyond={:.6}",
+            solo, at_boundary, beyond
+        );
+        assert!(
+            at_boundary > solo,
+            "[A13-7] teacher at radius boundary ({}) must boost: {:.6} > {:.6}",
+            KNOWLEDGE_TEACH_PROXIMITY_RADIUS, at_boundary, solo
+        );
+        assert!(
+            (beyond - solo).abs() < 1e-10,
+            "[A13-7] teacher at radius+1 ({}) must NOT boost: beyond={:.6} vs solo={:.6} (delta={:.2e})",
+            KNOWLEDGE_TEACH_PROXIMITY_RADIUS + 1, beyond, solo, (beyond - solo).abs()
+        );
+
+        println!("harness_a13_proximity_exclusion PASS: boundary boosts, beyond does not");
+    }
+
+    // ── A13-8 (Type A): g_factor modulates learning rate (controlled input test) ──────
+    /// Formula: rate = base * (1+g) * (1+openness*0.3). Ratio high/low must be >= 1.8x.
+    #[test]
+    fn harness_a13_g_factor_modulation() {
+        use sim_core::components::{AgentKnowledge, Intelligence, LearningState, TransmissionSource};
+        use sim_core::config::GameConfig;
+        use sim_engine::SimResources;
+
+        let run_with_g = |g: f64| -> f64 {
+            let config = GameConfig::default();
+            let cal = sim_core::GameCalendar::new(&config);
+            let map = sim_core::WorldMap::new(8, 8, 1);
+            let resources = SimResources::new(cal, map, 1);
+            let mut engine = sim_engine::SimEngine::new(resources);
+            engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+            {
+                let (world, _) = engine.world_and_resources_mut();
+                let mut knowledge = AgentKnowledge::default();
+                knowledge.learning = Some(LearningState {
+                    knowledge_id: "TECH_FIRE".to_string(),
+                    progress: 0.0,
+                    source: TransmissionSource::Oral,
+                    teacher_id: 0,
+                });
+                let mut intel = Intelligence::default();
+                intel.g_factor = g;
+                world.spawn((knowledge, intel, Position::default()));
+            }
+            engine.run_ticks(10);
+            let world = engine.world();
+            let mut q = world.query::<&AgentKnowledge>();
+            q.iter()
+                .filter_map(|(_, k)| k.learning.as_ref().map(|s| s.progress))
+                .next()
+                .unwrap_or(0.0)
+        };
+
+        let low_g = run_with_g(0.0);
+        let high_g = run_with_g(1.0);
+        let ratio = high_g / low_g;
+
+        eprintln!(
+            "[harness] a13_g_factor: low_g(0.0)={:.6} high_g(1.0)={:.6} ratio={:.3}x",
+            low_g, high_g, ratio
+        );
+        assert!(
+            high_g > low_g,
+            "[A13-8] g_factor=1.0 must yield more progress than g_factor=0.0 \
+             (high={:.6}, low={:.6})",
+            high_g, low_g
+        );
+        // Expected ratio = (1+1.0)/(1+0.0) = 2.0 exactly; require >= 1.8 for float tolerance
+        assert!(
+            ratio >= 1.8,
+            "[A13-8] g_factor modulation ratio must be >= 1.8x (expected 2.0x), got {:.3}x",
+            ratio
+        );
+
+        println!("harness_a13_g_factor_modulation PASS: ratio={:.3}x", ratio);
+    }
+
+    // ── A13-9 (Type B): Agent selects ActionType::Learn via behavior AI ──────────────
+    /// Under cleared-field conditions (idle, knowledge slots available, no fail cooldown,
+    /// Needs fully satisfied) at least one of 10 agents must select Learn within 5 ticks.
+    #[test]
+    fn harness_a13_behavioral_learn_selection() {
+        use sim_core::components::{AgentKnowledge, Behavior};
+        use sim_core::config::GameConfig;
+        use sim_core::{ActionType, GameCalendar, Settlement, SettlementId, WorldMap};
+        use sim_engine::{SimEngine, SimResources};
+        use sim_systems::entity_spawner;
+        use sim_systems::runtime::BehaviorRuntimeSystem;
+
+        let config = GameConfig::default();
+        let cal = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let resources = SimResources::new(cal, map, 42);
+        let mut engine = SimEngine::new(resources);
+        // Only BehaviorRuntimeSystem registered — isolates action selection from Needs/Emotion
+        // urgency boosts that would compete with Learn's flat 0.30 score.
+        engine.register(BehaviorRuntimeSystem::new(20, 1));
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 32, 32, 0),
+        );
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, 10, SettlementId(1));
+        }
+
+        engine.run_ticks(5);
+
+        let world = engine.world();
+        let mut q = world.query::<(&Behavior, &AgentKnowledge)>();
+        let learn_selected = q.iter().any(|(_, (b, _))| b.current_action == ActionType::Learn);
+
+        assert!(
+            learn_selected,
+            "[A13-9] at least one of 10 adult agents must select ActionType::Learn within \
+             5 ticks under cleared-field conditions (seed=42)"
+        );
+
+        println!("harness_a13_behavioral_learn_selection PASS: Learn selected by at least one agent");
+    }
+
+    // ── A13-10 (Type A): Graduated knowledge persists after 100 post-graduation runs ──
+    #[test]
+    fn harness_a13_knowledge_persistence() {
+        use sim_core::components::{AgentKnowledge, LearningState, TransmissionSource};
+        use sim_core::config::GameConfig;
+        use sim_engine::SimResources;
+
+        let config = GameConfig::default();
+        let cal = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(8, 8, 1);
+        let resources = SimResources::new(cal, map, 1);
+        let mut engine = sim_engine::SimEngine::new(resources);
+        engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+
+        let mut knowledge = AgentKnowledge::default();
+        knowledge.learning = Some(LearningState {
+            knowledge_id: "TECH_FIRE".to_string(),
+            progress: 0.999,
+            source: TransmissionSource::Oral,
+            teacher_id: 0,
+        });
+        {
+            let (world, _) = engine.world_and_resources_mut();
+            world.spawn((knowledge, Position::default()));
+        }
+
+        engine.run_ticks(10);
+
+        {
+            let world = engine.world();
+            let mut q = world.query::<&AgentKnowledge>();
+            let agents: Vec<_> = q.iter().collect();
+            assert!(
+                agents[0].1.has_knowledge("TECH_FIRE"),
+                "[A13-10] TECH_FIRE must graduate before persistence check"
+            );
+            assert!(agents[0].1.learning.is_none(), "[A13-10] learning must clear on graduation");
+        }
+
+        // 100 additional system runs at interval=10 = 1000 more ticks
+        engine.run_ticks(1000);
+
+        let world = engine.world();
+        let mut q = world.query::<&AgentKnowledge>();
+        let agents: Vec<_> = q.iter().collect();
+        assert!(
+            agents[0].1.has_knowledge("TECH_FIRE"),
+            "[A13-10] TECH_FIRE must persist in known[] after 100 additional system runs"
+        );
+        assert!(
+            agents[0].1.learning.is_none(),
+            "[A13-10] learning field must remain None after graduation (no re-learn of same tech)"
+        );
+
+        println!("harness_a13_knowledge_persistence PASS: TECH_FIRE persists after 100 extra system runs");
+    }
+
+    // ── A13-11 (Type C): Adult agents have >= 8 universal starter knowledge entries ───
+    #[test]
+    fn harness_a13_adult_starter_knowledge_count() {
+        use sim_core::components::{Age, AgentKnowledge};
+        use sim_core::config::GameConfig;
+        use sim_core::enums::GrowthStage;
+        use sim_core::{GameCalendar, Settlement, SettlementId, WorldMap};
+        use sim_engine::{SimEngine, SimResources};
+        use sim_systems::entity_spawner;
+
+        let config = GameConfig::default();
+        let cal = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let resources = SimResources::new(cal, map, 42);
+        let mut engine = SimEngine::new(resources);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 32, 32, 0),
+        );
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, 20, SettlementId(1));
+        }
+
+        let world = engine.world();
+        let mut q = world.query::<(&Age, &AgentKnowledge)>();
+        let adults: Vec<_> = q
+            .iter()
+            .filter(|(_, (age, _))| {
+                age.stage == GrowthStage::Adult || age.stage == GrowthStage::Elder
+            })
+            .collect();
+
+        assert!(
+            !adults.is_empty(),
+            "[A13-11] must have at least one adult/elder agent in 20-agent population"
+        );
+
+        let mut violations = 0usize;
+        for (_, (age, k)) in &adults {
+            if k.known_count() < 8 {
+                violations += 1;
+                eprintln!(
+                    "[harness] a13_adult_starter: adult stage={:?} has only {} known entries (< 8)",
+                    age.stage, k.known_count()
+                );
+            }
+        }
+
+        assert_eq!(
+            violations, 0,
+            "[A13-11] {} of {} adult/elder agents have fewer than 8 starter knowledge entries",
+            violations, adults.len()
+        );
+
+        println!(
+            "harness_a13_adult_starter_knowledge_count PASS: {}/{} adults have >= 8 entries",
+            adults.len() - violations, adults.len()
         );
     }
 }

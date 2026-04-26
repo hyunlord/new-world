@@ -13,6 +13,7 @@ mod crafting;
 mod economy;
 mod effect_apply;
 mod influence;
+mod knowledge_learning;
 mod llm_request_system;
 mod llm_response_system;
 mod llm_timeout_system;
@@ -52,6 +53,9 @@ pub use influence::{apply_room_effects, assign_room_roles_from_buildings, Influe
 
 // ---- territory ----
 pub use territory::TerritoryRuntimeSystem;
+
+// ---- knowledge_learning ----
+pub use knowledge_learning::KnowledgeLearningRuntimeSystem;
 
 // ---- llm ----
 pub use llm_request_system::LlmRequestRuntimeSystem;
