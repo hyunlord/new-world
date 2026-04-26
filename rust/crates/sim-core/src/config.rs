@@ -808,8 +808,29 @@ pub const PRAY_MEANING_BONUS: f64 = 0.02;
 /// Maximum Chebyshev distance (tiles) from agent to totem for Pray eligibility.
 pub const PRAY_TOTEM_SEARCH_RADIUS: i32 = 3;
 
-/// Mourn action duration in ticks. Slightly longer than Pray — mourning is deeper.
-pub const ACTION_TIMER_MOURN: i32 = 8;
+/// Mourn action duration in ticks. Short to minimise missed-foraging overhead;
+/// the scoring gate (MOURN_SCORE_URGENCY_WEIGHT) ensures mourn only fires when well-fed.
+pub const ACTION_TIMER_MOURN: i32 = 2;
+/// Duration of the Learn action in ticks. Longer than social actions — learning takes effort.
+pub const ACTION_TIMER_LEARN: i32 = 20;
+/// Duration of the Teach action in ticks. Shorter than Learn — teaching is more active.
+pub const ACTION_TIMER_TEACH: i32 = 15;
+/// Base learning progress gained per tick while in Learning state.
+/// Multiplied by g_factor, openness, and teacher presence.
+pub const KNOWLEDGE_LEARN_BASE_RATE: f64 = 0.001;
+/// Chebyshev tile radius within which a teacher or student is considered "nearby".
+pub const KNOWLEDGE_TEACH_PROXIMITY_RADIUS: i32 = 3;
+/// Multiplier added to learn rate when a matching teacher is nearby.
+/// Total rate = base × (1 + g_factor) × (1 + openness × 0.3) × teacher_boost.
+pub const KNOWLEDGE_LEARN_TEACHER_BOOST: f64 = 0.5;
+/// Ticks to suppress Learn re-selection after a failed attempt (no teacher found).
+/// Prevents agents from looping on Learn when no teacher exists, allowing them to
+/// wander toward totem/cairn zones instead.
+pub const LEARN_FAIL_COOLDOWN_TICKS: u64 = 30;
+/// Maximum known-knowledge count before Learn scoring is suppressed.
+pub const KNOWLEDGE_MAX_KNOWN_CAP: usize = 24;
+/// Minimum proficiency for a knowledge entry to qualify for teaching.
+pub const KNOWLEDGE_TEACH_PROFICIENCY_MIN: f64 = 0.6;
 /// Sadness emotion intensity required for Mourn action to be scored.
 /// Below this threshold, agents don't seek out cairns for mourning.
 pub const MOURN_SADNESS_THRESHOLD: f64 = 0.35;
@@ -817,9 +838,33 @@ pub const MOURN_SADNESS_THRESHOLD: f64 = 0.35;
 pub const MOURN_SADNESS_RELIEF: f64 = 0.15;
 /// Meaning need increment when Mourn action completes near a cairn.
 /// Higher than Pray (0.02) — ritual mourning provides stronger meaning.
-pub const MOURN_MEANING_BONUS: f64 = 0.04;
+pub const MOURN_MEANING_BONUS: f64 = 0.10;
+/// Urgency weight for Mourn action scoring: mourn_score = urgency(sadness) * W + B.
+/// Set high enough to beat grief-triggered Rest (~0.44 at sadness=0.75) when a cairn is nearby.
+/// At sadness=0.75: urgency=0.5625 × 0.80 + 0.10 = 0.55 > Rest(0.44). Survival force-chains
+/// (force-Forage/Drink/Rest at critical thresholds) still override Mourn unconditionally.
+pub const MOURN_SCORE_URGENCY_WEIGHT: f64 = 0.80;
+/// Base score component for Mourn action (constant floor independent of sadness urgency).
+pub const MOURN_SCORE_BASE: f64 = 0.10;
 /// Chebyshev radius for cairn proximity detection during Mourn scoring.
-pub const MOURN_CAIRN_SEARCH_RADIUS: i32 = 3;
+/// 30 tiles: covers the full foraging radius so agents mourn on cooldown while roaming,
+/// not just at initial spawn adjacent to the cairn. Far cairns (≥100 tiles) stay unreachable.
+pub const MOURN_CAIRN_SEARCH_RADIUS: i32 = 30;
+/// Minimum ticks between consecutive Mourn completions for the same agent.
+/// Prevents the feedback loop: mourn overhead → stress → sadness → more mourn.
+pub const MOURN_COOLDOWN_TICKS: u64 = 30;
+/// Chebyshev radius for cairn proximity re-check at Mourn completion.
+/// Must be ≥ MOURN_CAIRN_SEARCH_RADIUS to avoid agents starting mourn outside completion range.
+pub const MOURN_CAIRN_COMPLETE_RADIUS: i32 = 32;
+/// How much to subtract from sadness_target in the homeostatic emotion system after Mourn.
+/// Applied as a linear ramp that decays to zero over MOURN_GRIEF_RELIEF_TICKS.
+/// This modifies the IIR target directly, bypassing the override problem of AdjustEmotion.
+pub const MOURN_GRIEF_SADNESS_MOD: f64 = 0.30;
+/// Ticks after Mourn completion over which the sadness_target relief fades linearly to zero.
+/// 360 ticks ≈ 30 game-days. Must exceed the harness 200-tick window so relief is still
+/// active at measurement time (emotion IIR converges within ~36 ticks, so relief must persist
+/// past the test window or the rebound to baseline erases the difference).
+pub const MOURN_GRIEF_RELIEF_TICKS: u64 = 360;
 
 pub const STARVATION_GRACE_TICKS: u64 = 25;
 pub const FOOD_HUNGER_RESTORE: f64 = 0.3;

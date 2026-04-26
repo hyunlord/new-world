@@ -44,6 +44,9 @@ pub struct Behavior {
     /// Multiplier applied when separating from non-band outsiders.
     #[serde(default = "default_one")]
     pub outsider_separation_mult: f64,
+    /// Tick when Mourn last completed near a cairn. Used to enforce MOURN_COOLDOWN_TICKS.
+    #[serde(default)]
+    pub mourn_last_tick: Option<u64>,
 }
 
 impl Default for Behavior {
@@ -66,6 +69,7 @@ impl Default for Behavior {
             band_center_x: None,
             band_center_y: None,
             outsider_separation_mult: 1.0,
+            mourn_last_tick: None,
         }
     }
 }

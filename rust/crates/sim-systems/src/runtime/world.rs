@@ -5,9 +5,9 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
-    Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits,
-    Values,
+    Age, AgentKnowledge, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity,
+    Intelligence, Inventory, KnowledgeEntry, LearningState, Memory, MemoryEntry, Needs,
+    Personality, Position, Skills, Social, Traits, TransmissionSource, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -1069,9 +1069,24 @@ impl SimSystem for MovementRuntimeSystem {
         self.priority
     }
 
-    fn run(&mut self, world: &mut World, resources: &mut SimResources, _tick: u64) {
+    fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
         let max_x = f64::from(resources.map.width.saturating_sub(1));
         let max_y = f64::from(resources.map.height.saturating_sub(1));
+        // Pre-pass: snapshot agent knowledge + positions for cross-entity Learn/Teach lookups.
+        // Cannot nest another query inside the main mutable loop below; this snapshot is released
+        // before the main query borrows begin.
+        let knowledge_snapshot: Vec<(u64, i32, i32, Vec<String>)> = world
+            .query::<(&AgentKnowledge, &Position)>()
+            .iter()
+            .map(|(e, (k, p))| {
+                (
+                    e.id() as u64,
+                    p.tile_x(),
+                    p.tile_y(),
+                    k.known.iter().map(|entry| entry.knowledge_id.clone()).collect(),
+                )
+            })
+            .collect();
         let mut query = world.query::<(
             &mut Position,
             &mut Behavior,
@@ -1080,8 +1095,9 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&mut Inventory>,
             Option<&Identity>,
             Option<&mut Emotion>,
+            Option<&mut AgentKnowledge>,
         )>();
-        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, _emotion_opt)) in &mut query
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, _emotion_opt, mut knowledge_opt)) in &mut query
         {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
@@ -1197,9 +1213,11 @@ impl SimSystem for MovementRuntimeSystem {
                     ActionType::Mourn => {
                         // Re-check cairn presence at completion — may have been removed
                         // during the action timer window (mirrors Pray safety pattern).
+                        // Uses MOURN_CAIRN_COMPLETE_RADIUS (> scoring radius) to tolerate
+                        // agent movement during the 8-tick mourn window.
                         let px = position.tile_x();
                         let py = position.tile_y();
-                        let r = config::MOURN_CAIRN_SEARCH_RADIUS;
+                        let r = config::MOURN_CAIRN_COMPLETE_RADIUS;
                         let cairn_present = resources.buildings.values().any(|b| {
                             b.is_complete
                                 && b.building_type == "cairn"
@@ -1229,8 +1247,59 @@ impl SimSystem for MovementRuntimeSystem {
                                 },
                                 source,
                             });
+                            // Record completion tick for cooldown (prevents feedback loop).
+                            behavior.mourn_last_tick = Some(tick);
                         }
                         // No cairn → Mourn completes silently with no effect.
+                    }
+                    ActionType::Learn => {
+                        if let Some(knowledge) = knowledge_opt.as_mut() {
+                            if knowledge.learning.is_none() {
+                                let entity_id = entity.id() as u64;
+                                let px = position.tile_x();
+                                let py = position.tile_y();
+                                if let Some((kid, source, teacher_id)) = pick_learn_target(
+                                    entity_id,
+                                    px,
+                                    py,
+                                    knowledge,
+                                    &knowledge_snapshot,
+                                ) {
+                                    knowledge.learning = Some(LearningState {
+                                        knowledge_id: kid,
+                                        progress: 0.0,
+                                        source,
+                                        teacher_id,
+                                    });
+                                } else {
+                                    // No teacher found — cancel and start cooldown so the agent
+                                    // wanders toward totem/cairn zones before retrying Learn.
+                                    behavior.action_timer = 1;
+                                    knowledge.learn_fail_tick = Some(tick);
+                                }
+                            }
+                        }
+                    }
+                    ActionType::Teach => {
+                        if let Some(knowledge) = knowledge_opt.as_mut() {
+                            if knowledge.teaching_target.is_none() {
+                                let entity_id = entity.id() as u64;
+                                let px = position.tile_x();
+                                let py = position.tile_y();
+                                if let Some((student_id, kid)) = pick_teach_target(
+                                    entity_id,
+                                    px,
+                                    py,
+                                    knowledge,
+                                    &knowledge_snapshot,
+                                ) {
+                                    knowledge.teaching_target = Some((student_id, kid));
+                                } else {
+                                    // No eligible student nearby — cancel immediately.
+                                    behavior.action_timer = 1;
+                                }
+                            }
+                        }
                     }
                     ActionType::Forage
                     | ActionType::Hunt
@@ -1265,7 +1334,7 @@ impl SimSystem for MovementRuntimeSystem {
                                 EntityId(entity.id() as u64),
                                 &mut inventory_opt,
                                 resources,
-                                _tick,
+                                tick,
                             );
                         }
                     }
@@ -1284,7 +1353,7 @@ impl SimSystem for MovementRuntimeSystem {
                                 recipe_id.as_str(),
                                 material_id.as_str(),
                                 resources,
-                                _tick,
+                                tick,
                             );
                             if let Some(inventory) = inventory_opt.as_mut() {
                                 for item_id in created_ids {
@@ -1419,7 +1488,7 @@ impl SimSystem for MovementRuntimeSystem {
                     });
                 if let Some(item_id) = tool_item_id {
                     let destroyed =
-                        crafting::use_tool(EntityId(entity.id() as u64), item_id, resources, _tick);
+                        crafting::use_tool(EntityId(entity.id() as u64), item_id, resources, tick);
                     if destroyed {
                         if let Some(inventory) = inventory_opt.as_mut() {
                             inventory.remove(item_id);
@@ -1427,7 +1496,7 @@ impl SimSystem for MovementRuntimeSystem {
                     }
                 }
                 resources.event_store.push(SimEvent {
-                    tick: _tick,
+                    tick,
                     event_type: SimEventType::TaskCompleted,
                     actor: entity.id(),
                     target: None,
@@ -1486,6 +1555,71 @@ impl SimSystem for MovementRuntimeSystem {
             position.movement_dir = movement_direction(position.vel_x, position.vel_y);
         }
     }
+}
+
+/// Selects a knowledge_id to learn from nearby agents' knowledge sets.
+///
+/// Returns `(knowledge_id, TransmissionSource, teacher_entity_id)` when a learnable
+/// knowledge is found nearby, or `None` when no candidate exists. Oral transmission
+/// is used when a teacher is identified; Observed when within radius but ambiguous.
+fn pick_learn_target(
+    entity_id: u64,
+    px: i32,
+    py: i32,
+    knowledge: &AgentKnowledge,
+    snapshot: &[(u64, i32, i32, Vec<String>)],
+) -> Option<(String, TransmissionSource, u64)> {
+    let r = sim_core::config::KNOWLEDGE_TEACH_PROXIMITY_RADIUS;
+    // Find a nearby agent who knows something this agent does not.
+    for &(other_id, ox, oy, ref other_ids) in snapshot {
+        if other_id == entity_id {
+            continue;
+        }
+        if (ox - px).abs() > r || (oy - py).abs() > r {
+            continue;
+        }
+        for kid in other_ids {
+            if !knowledge.has_knowledge(kid) {
+                return Some((kid.clone(), TransmissionSource::Oral, other_id));
+            }
+        }
+    }
+    None
+}
+
+/// Selects a (student_entity_id, knowledge_id) pair for teaching.
+///
+/// Finds a nearby agent who lacks knowledge this agent has at high proficiency.
+fn pick_teach_target(
+    entity_id: u64,
+    px: i32,
+    py: i32,
+    knowledge: &AgentKnowledge,
+    snapshot: &[(u64, i32, i32, Vec<String>)],
+) -> Option<(u64, String)> {
+    let r = sim_core::config::KNOWLEDGE_TEACH_PROXIMITY_RADIUS;
+    // Best knowledge this agent can teach (highest proficiency above minimum).
+    let best_teachable: Option<String> = knowledge
+        .known
+        .iter()
+        .filter(|e| e.proficiency >= sim_core::config::KNOWLEDGE_TEACH_PROFICIENCY_MIN)
+        .max_by(|a, b| a.proficiency.partial_cmp(&b.proficiency).unwrap_or(std::cmp::Ordering::Equal))
+        .map(|e| e.knowledge_id.clone());
+
+    let kid = best_teachable?;
+    // Find a nearby agent who lacks this knowledge.
+    for &(other_id, ox, oy, ref other_ids) in snapshot {
+        if other_id == entity_id {
+            continue;
+        }
+        if (ox - px).abs() > r || (oy - py).abs() > r {
+            continue;
+        }
+        if !other_ids.contains(&kid) {
+            return Some((other_id, kid));
+        }
+    }
+    None
 }
 
 #[inline]

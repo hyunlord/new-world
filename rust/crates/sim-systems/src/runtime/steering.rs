@@ -7,7 +7,7 @@ use sim_core::components::{
     SteeringParams, Stress, Temperament,
 };
 use sim_core::ids::BandId;
-use sim_core::{config, ActionType, CauseRef, CausalEvent, ChannelId, EntityId};
+use sim_core::{config, ActionType, ChannelId, EntityId};
 use sim_engine::{
     ChronicleEvent, ChronicleEventCause, ChronicleEventMagnitude, ChronicleEventType, SimResources,
     SimSystem,
@@ -212,22 +212,6 @@ impl SimSystem for InfluenceSteeringSystem {
                 let (dir_x, dir_y) = normalize(force_x, force_y);
                 velocities.push((entity, dir_x * speed_tiles, dir_y * speed_tiles));
                 if let Some(cause) = influence_cause {
-                    resources.causal_log.push(
-                        EntityId(entity.id() as u64),
-                        CausalEvent {
-                            tick,
-                            cause: CauseRef {
-                                system: "steering_system".to_string(),
-                                kind: cause.kind.to_string(),
-                                entity: Some(EntityId(entity.id() as u64)),
-                                building: None,
-                                settlement: None,
-                            },
-                            effect_key: "steering_velocity".to_string(),
-                            summary_key: cause.summary_key.to_string(),
-                            magnitude: cause.magnitude,
-                        },
-                    );
                     if let Some(event) = chronicle_event_for_decision(
                         tick,
                         EntityId(entity.id() as u64),
@@ -730,7 +714,7 @@ fn chronicle_event_for_decision(
         tile_y: position.tile_y(),
         summary_key: cause.summary_key.to_string(),
         summary_params: BTreeMap::new(),
-        effect_key: "steering_velocity".to_string(),
+        effect_key: cause.kind.to_string(),
     })
 }
 

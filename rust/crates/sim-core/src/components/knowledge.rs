@@ -61,6 +61,10 @@ pub struct AgentKnowledge {
     pub teaching_target: Option<(u64, String)>,
     /// Innovation potential derived from intelligence, openness, and variance.
     pub innovation_potential: f64,
+    /// Tick at which the last learn attempt failed (no teacher found).
+    /// Transient — suppresses re-selection until cooldown expires.
+    #[serde(skip)]
+    pub learn_fail_tick: Option<u64>,
 }
 
 impl Default for AgentKnowledge {
@@ -70,6 +74,7 @@ impl Default for AgentKnowledge {
             learning: None,
             teaching_target: None,
             innovation_potential: 0.0,
+            learn_fail_tick: None,
         }
     }
 }

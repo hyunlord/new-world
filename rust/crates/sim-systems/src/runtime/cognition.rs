@@ -4,9 +4,9 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity, Intelligence,
-    Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social, Stress, Traits,
-    Values,
+    Age, AgentKnowledge, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity,
+    Intelligence, Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
+    Stress, Traits, Values,
 };
 use sim_core::temperament::{Temperament, TemperamentAxes};
 use sim_core::config;
@@ -590,6 +590,8 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
         ActionType::Pray => config::ACTION_TIMER_PRAY,
         ActionType::Mourn => config::ACTION_TIMER_MOURN,
+        ActionType::Learn => config::ACTION_TIMER_LEARN,
+        ActionType::Teach => config::ACTION_TIMER_TEACH,
         ActionType::PlaceWall => config::ACTION_TIMER_PLACE_WALL,
         ActionType::PlaceFurniture => config::ACTION_TIMER_PLACE_FURNITURE,
         _ => config::ACTION_TIMER_DEFAULT,
@@ -673,6 +675,8 @@ fn behavior_select_action(
     settlement_population: usize,
     has_nearby_totem: bool,
     has_nearby_cairn: bool,
+    has_learn_opportunity: bool,
+    has_teach_opportunity: bool,
     rng: &mut impl Rng,
 ) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -874,8 +878,21 @@ fn behavior_select_action(
         let sadness = emotion_opt
             .map(|e| e.get(EmotionType::Sadness) as f32)
             .unwrap_or(0.0);
-        let mourn_score = behavior_urgency(sadness) * 0.5 + 0.1;
+        let mourn_score = behavior_urgency(sadness) * config::MOURN_SCORE_URGENCY_WEIGHT as f32
+            + config::MOURN_SCORE_BASE as f32;
         behavior_score_add(&mut scores, ActionType::Mourn, mourn_score);
+    }
+    // Learn scoring: agent wants to acquire new knowledge.
+    // TCI affinity (0.3, 0.0, 0.4, 0.2) — NS/RD personalities biased via TCI pass below.
+    // has_learn_opportunity is pre-computed: learning.is_none() && known_count < cap.
+    if has_learn_opportunity {
+        behavior_score_add(&mut scores, ActionType::Learn, 0.30);
+    }
+    // Teach scoring: agent with expert knowledge seeks to pass it on.
+    // TCI affinity (0.0, 0.0, 0.6, 0.3) — RD/P personalities biased via TCI pass below.
+    // has_teach_opportunity is pre-computed: max_proficiency > min && teaching_target.is_none().
+    if has_teach_opportunity {
+        behavior_score_add(&mut scores, ActionType::Teach, 0.20);
     }
 
     match behavior.job.as_str() {
@@ -1020,7 +1037,7 @@ fn behavior_select_action(
         return (ActionType::Wander, false);
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 21] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 23] = [
         ActionType::Flee,
         ActionType::SeekShelter,
         ActionType::Drink,
@@ -1036,6 +1053,8 @@ fn behavior_select_action(
         ActionType::Socialize,
         ActionType::Pray,
         ActionType::Mourn,
+        ActionType::Learn,
+        ActionType::Teach,
         ActionType::Sleep,
         ActionType::Rest,
         ActionType::VisitPartner,
@@ -1545,6 +1564,7 @@ impl SimSystem for BehaviorRuntimeSystem {
             Option<&Inventory>,
             &Position,
             &mut Behavior,
+            Option<&AgentKnowledge>,
         )>();
         for (
             entity,
@@ -1559,6 +1579,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 inventory_opt,
                 position,
                 behavior,
+                knowledge_opt,
             ),
         ) in &mut query
         {
@@ -1634,24 +1655,50 @@ impl SimSystem for BehaviorRuntimeSystem {
                     config::PRAY_TOTEM_SEARCH_RADIUS,
                     "totem",
                 );
-            // Mourn pre-compute: Sadness > threshold + complete cairn within Chebyshev radius.
+            // Mourn pre-compute: Sadness > threshold + cairn within radius + cooldown expired.
             // Cairns are structures (not tile furniture), so we iterate resources.buildings.
+            // Cooldown prevents the feedback loop: mourn overhead → stress → sadness → more mourn.
             let has_nearby_cairn = {
                 let sadness = emotion_opt
                     .map(|e| e.get(EmotionType::Sadness))
                     .unwrap_or(0.0);
+                let cooldown_clear = behavior
+                    .mourn_last_tick
+                    .is_none_or(|ft| tick >= ft + config::MOURN_COOLDOWN_TICKS);
+                let cairn_in_range = {
+                    let px = position.tile_x();
+                    let py = position.tile_y();
+                    let r = config::MOURN_CAIRN_SEARCH_RADIUS;
+                    resources.buildings.values().any(|b| {
+                        b.is_complete
+                            && b.building_type == "cairn"
+                            && (b.x - px).abs().max((b.y - py).abs()) <= r
+                    })
+                };
                 sadness > config::MOURN_SADNESS_THRESHOLD
-                    && {
-                        let px = position.tile_x();
-                        let py = position.tile_y();
-                        let r = config::MOURN_CAIRN_SEARCH_RADIUS;
-                        resources.buildings.values().any(|b| {
-                            b.is_complete
-                                && b.building_type == "cairn"
-                                && (b.x - px).abs().max((b.y - py).abs()) <= r
-                        })
-                    }
+                    && cooldown_clear
+                    && cairn_in_range
             };
+            // Learn pre-compute: not already learning, below knowledge cap, and cooldown expired.
+            // Cooldown prevents immediate re-selection after a failed pick_learn_target.
+            let has_learn_opportunity = knowledge_opt
+                .map(|k| {
+                    k.learning.is_none()
+                        && k.known_count() < config::KNOWLEDGE_MAX_KNOWN_CAP
+                        && k.learn_fail_tick.is_none_or(|ft| {
+                            tick >= ft + config::LEARN_FAIL_COOLDOWN_TICKS
+                        })
+                })
+                .unwrap_or(false);
+            // Teach pre-compute: has expert knowledge and no active teaching target.
+            let has_teach_opportunity = knowledge_opt
+                .map(|k| {
+                    k.teaching_target.is_none()
+                        && k.known
+                            .iter()
+                            .any(|e| e.proficiency >= config::KNOWLEDGE_TEACH_PROFICIENCY_MIN)
+                })
+                .unwrap_or(false);
             let (settlement_stone, settlement_wood, settlement_food, settlement_population) =
                 identity_opt
                     .and_then(|id| id.settlement_id)
@@ -1685,6 +1732,8 @@ impl SimSystem for BehaviorRuntimeSystem {
                 settlement_population,
                 has_nearby_totem,
                 has_nearby_cairn,
+                has_learn_opportunity,
+                has_teach_opportunity,
                 &mut resources.rng,
             );
             // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
@@ -2065,6 +2114,8 @@ mod tests {
             10,    // settlement_population
             false, // has_nearby_totem
             false, // has_nearby_cairn
+            false, // has_learn_opportunity
+            false, // has_teach_opportunity
             &mut rng,
         );
 
@@ -2101,6 +2152,8 @@ mod tests {
             10,    // settlement_population
             false, // has_nearby_totem
             false, // has_nearby_cairn
+            false, // has_learn_opportunity
+            false, // has_teach_opportunity
             &mut rng,
         );
 
@@ -2140,6 +2193,8 @@ mod tests {
             10,    // settlement_population
             false, // has_nearby_totem
             false, // has_nearby_cairn
+            false, // has_learn_opportunity
+            false, // has_teach_opportunity
             &mut rng,
         );
 
@@ -2176,6 +2231,8 @@ mod tests {
             10,    // settlement_population
             false, // has_nearby_totem
             false, // has_nearby_cairn
+            false, // has_learn_opportunity
+            false, // has_teach_opportunity
             &mut rng,
         );
 

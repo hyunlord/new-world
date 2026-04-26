@@ -910,8 +910,9 @@ impl SimSystem for EmotionRuntimeSystem {
             Option<&Needs>,
             Option<&Personality>,
             Option<&mut SteeringParams>,
+            Option<&Behavior>,
         )>();
-        for (entity, (emotion, stress_opt, needs_opt, personality_opt, steering_opt)) in &mut query
+        for (entity, (emotion, stress_opt, needs_opt, personality_opt, steering_opt, behavior_opt)) in &mut query
         {
             let previous_dominant = dominant_emotion_index(emotion);
             let previous_mood_bucket = mood_bucket_from_emotion(emotion);
@@ -954,8 +955,25 @@ impl SimSystem for EmotionRuntimeSystem {
                 (baseline_fear + stress_level * 0.50 + deficit_safety * 0.35).clamp(0.0, 1.0);
             let anger_target =
                 (baseline_anger + stress_level * 0.35 + deficit_hunger * 0.20).clamp(0.0, 1.0);
+            // Persistent grief relief: mourn_last_tick lowers sadness_target for
+            // MOURN_GRIEF_RELIEF_TICKS after a completed Mourn action near a cairn.
+            // This modifies the homeostatic IIR target directly, which is the only
+            // reliable way to reduce sadness — AdjustEmotion is overridden each run.
+            let mourn_relief = behavior_opt
+                .and_then(|b| b.mourn_last_tick)
+                .map(|last| {
+                    let elapsed = tick.saturating_sub(last);
+                    if elapsed < config::MOURN_GRIEF_RELIEF_TICKS {
+                        config::MOURN_GRIEF_SADNESS_MOD as f32
+                            * (1.0 - elapsed as f32 / config::MOURN_GRIEF_RELIEF_TICKS as f32)
+                    } else {
+                        0.0
+                    }
+                })
+                .unwrap_or(0.0);
             let sadness_target =
-                (baseline_sadness + stress_level * 0.30 + deficit_social * 0.30).clamp(0.0, 1.0);
+                (baseline_sadness + stress_level * 0.30 + deficit_social * 0.30 - mourn_relief)
+                    .clamp(0.0, 1.0);
             let disgust_target = (baseline_disgust
                 + stress_level * 0.18
                 + (deficit_thirst * 0.10 + deficit_warmth * 0.10))

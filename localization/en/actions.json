@@ -4,5 +4,7 @@
   "ACTION_REST": "Rest",
   "ACTION_PREPARE_HIDE": "Prepare Hide",
   "ACTION_CHOP_BRANCH": "Chop Branch",
-  "ACTION_MOURN": "Mourn"
+  "ACTION_MOURN": "Mourn",
+  "ACTION_LEARN": "Learn",
+  "ACTION_TEACH": "Teach"
 }
