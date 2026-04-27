@@ -130,6 +130,17 @@ pub enum EffectPrimitive {
         emotion: EmotionType,
         amount: f64,
     },
+    /// Apply an injury to a body part (A-11 BodyHealth integration).
+    DamagePart {
+        /// Target part index (0..84), or 255 for auto-select minor part.
+        part_idx: u8,
+        /// HP loss.
+        severity: u8,
+        /// PartFlags bits to set (raw u8 for cross-module simplicity).
+        flags_bits: u8,
+        /// Bleed rate per system tick.
+        bleed_rate: u8,
+    },
 }
 
 /// Identifies the origin of an effect for causal logging.

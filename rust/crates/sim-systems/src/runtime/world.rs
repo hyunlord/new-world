@@ -1336,6 +1336,37 @@ impl SimSystem for MovementRuntimeSystem {
                                 resources,
                                 tick,
                             );
+                            // Work injury: 1% chance of minor injury per forage completion.
+                            // Hash-based roll (not shared RNG) to avoid shifting the RNG
+                            // sequence for unrelated stochastic decisions in the same tick.
+                            let _inj_h = (entity.id() as u64)
+                                .wrapping_mul(6364136223846793005)
+                                .wrapping_add(tick.wrapping_mul(1442695040888963407));
+                            if (_inj_h & 0xFFFF) as f32 / 65536.0_f32
+                                < config::WORK_INJURY_FORAGE_CHANCE
+                            {
+                                let sev_range = u64::from(
+                                    config::WORK_INJURY_FORAGE_SEVERITY_MAX
+                                        - config::WORK_INJURY_FORAGE_SEVERITY_MIN
+                                        + 1,
+                                );
+                                let severity = config::WORK_INJURY_FORAGE_SEVERITY_MIN
+                                    + ((_inj_h >> 16) % sev_range) as u8;
+                                resources.effect_queue.push(EffectEntry {
+                                    entity: EntityId(entity.id() as u64),
+                                    effect: EffectPrimitive::DamagePart {
+                                        part_idx: 255,
+                                        severity,
+                                        flags_bits: 0x01, // PartFlags::BLEEDING
+                                        bleed_rate: config::WORK_INJURY_BLEED_RATE,
+                                    },
+                                    source: EffectSource {
+                                        system: "work_injury".to_string(),
+                                        kind: "forage_injury".to_string(),
+                                    },
+                                });
+                                resources.forage_injury_count += 1;
+                            }
                         }
                     }
                     ActionType::GatherWood => {
@@ -1345,6 +1376,7 @@ impl SimSystem for MovementRuntimeSystem {
                         behavior.carry = (behavior.carry + 1.0).min(config::MAX_CARRY as f32);
                     }
                     ActionType::Craft => {
+                        resources.craft_completion_count += 1;
                         let recipe_id = behavior.craft_recipe_id.take();
                         let material_id = behavior.craft_material_id.take();
                         if let (Some(recipe_id), Some(material_id)) = (recipe_id, material_id) {
@@ -1360,6 +1392,36 @@ impl SimSystem for MovementRuntimeSystem {
                                     inventory.add(item_id);
                                 }
                             }
+                        }
+                        // Work injury: 1.5% chance of minor injury per craft completion.
+                        // Hash-based roll (not shared RNG) — same rationale as forage injury.
+                        let _craft_inj_h = (entity.id() as u64)
+                            .wrapping_mul(2862933555777941757)
+                            .wrapping_add(tick.wrapping_mul(3037000499));
+                        if (_craft_inj_h & 0xFFFF) as f32 / 65536.0_f32
+                            < config::WORK_INJURY_CRAFT_CHANCE
+                        {
+                            let sev_range = u64::from(
+                                config::WORK_INJURY_CRAFT_SEVERITY_MAX
+                                    - config::WORK_INJURY_CRAFT_SEVERITY_MIN
+                                    + 1,
+                            );
+                            let severity = config::WORK_INJURY_CRAFT_SEVERITY_MIN
+                                + ((_craft_inj_h >> 16) % sev_range) as u8;
+                            resources.effect_queue.push(EffectEntry {
+                                entity: EntityId(entity.id() as u64),
+                                effect: EffectPrimitive::DamagePart {
+                                    part_idx: 255,
+                                    severity,
+                                    flags_bits: 0x01, // PartFlags::BLEEDING
+                                    bleed_rate: config::WORK_INJURY_BLEED_RATE,
+                                },
+                                source: EffectSource {
+                                    system: "work_injury".to_string(),
+                                    kind: "craft_injury".to_string(),
+                                },
+                            });
+                            resources.craft_injury_count += 1;
                         }
                     }
                     ActionType::PlaceWall => {

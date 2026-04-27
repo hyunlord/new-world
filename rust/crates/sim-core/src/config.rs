@@ -1730,6 +1730,22 @@ pub const INFECTION_HP_DRAIN: u8 = 1;
 /// Aggregate HP threshold below which an agent is considered fatally wounded.
 pub const HEALTH_AGGREGATE_DEATH_THRESHOLD: f64 = 0.05;
 
+// ── Work Injury [body-damage-api-v1] ─────────────────────────────────────────
+/// Probability of a minor injury per Forage action completion.
+pub const WORK_INJURY_FORAGE_CHANCE: f32 = 0.01;
+/// Probability of a minor injury per Craft action completion.
+pub const WORK_INJURY_CRAFT_CHANCE: f32 = 0.015;
+/// Minimum HP loss for a Forage injury.
+pub const WORK_INJURY_FORAGE_SEVERITY_MIN: u8 = 5;
+/// Maximum HP loss for a Forage injury.
+pub const WORK_INJURY_FORAGE_SEVERITY_MAX: u8 = 15;
+/// Minimum HP loss for a Craft injury.
+pub const WORK_INJURY_CRAFT_SEVERITY_MIN: u8 = 10;
+/// Maximum HP loss for a Craft injury.
+pub const WORK_INJURY_CRAFT_SEVERITY_MAX: u8 = 30;
+/// Bleed rate applied to work injuries.
+pub const WORK_INJURY_BLEED_RATE: u8 = 1;
+
 // ── Zoom Tier System (D1-A) ──────────────────────────────────────────────────
 /// Unified 5-tier zoom boundary array.
 /// Camera zoom >= ZOOM_TIER_BOUNDARIES[i] → tier i, else tier i+1.

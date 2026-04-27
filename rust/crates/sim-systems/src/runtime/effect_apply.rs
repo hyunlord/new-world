@@ -1,6 +1,6 @@
 use hecs::World;
 use log::{debug, warn};
-use sim_core::components::{EffectFlags, Emotion, Needs, Position};
+use sim_core::components::{BodyHealth, EffectFlags, Emotion, InjurySpec, Needs, PartFlags, Position};
 use sim_core::{
     config, CausalEvent, CauseRef, EffectEntry, EffectFlag, EffectPrimitive, EffectSource,
     EffectStat, EmotionType, EntityId, NeedType, ScheduledEffect,
@@ -289,6 +289,37 @@ impl EffectApplySystem {
             },
         });
     }
+
+    fn apply_damage_part(
+        resources: &mut SimResources,
+        world: &mut World,
+        entry: &EffectEntry,
+        part_idx: u8,
+        severity: u8,
+        flags_bits: u8,
+        bleed_rate: u8,
+        tick: u64,
+    ) {
+        let Some(entity) = Self::resolve_entity(world, entry.entity) else {
+            return;
+        };
+        if let Ok(mut health) = world.get::<&mut BodyHealth>(entity) {
+            let report = health.apply_injury(InjurySpec {
+                part_idx,
+                severity,
+                flags: PartFlags(flags_bits),
+                bleed_rate,
+            });
+            Self::push_causal_event(
+                resources,
+                entry.entity,
+                tick,
+                &entry.source,
+                format!("part_{}_hp_{}", report.part_idx, report.hp_after),
+                f64::from(severity),
+            );
+        }
+    }
 }
 
 impl SimSystem for EffectApplySystem {
@@ -333,6 +364,11 @@ impl SimSystem for EffectApplySystem {
                 }
                 EffectPrimitive::AdjustEmotion { emotion, amount } => {
                     Self::apply_adjust_emotion(resources, world, &entry, *emotion, *amount, tick);
+                }
+                EffectPrimitive::DamagePart { part_idx, severity, flags_bits, bleed_rate } => {
+                    Self::apply_damage_part(
+                        resources, world, &entry, *part_idx, *severity, *flags_bits, *bleed_rate, tick,
+                    );
                 }
             }
         }
