@@ -201,6 +201,12 @@ pub struct SimResources {
     pub next_plan_id: u64,
     /// Food economy diagnostic: total forage action completions.
     pub food_economy_forage_completions: u64,
+    /// Work injury diagnostic: total injuries triggered by forage completion.
+    pub forage_injury_count: u64,
+    /// Work injury diagnostic: total injuries triggered by craft completion.
+    pub craft_injury_count: u64,
+    /// Work injury diagnostic: total craft action completions.
+    pub craft_completion_count: u64,
     /// Food economy diagnostic: total food deposited by foraging (sum of yields).
     pub food_economy_produced: f64,
     /// Food economy diagnostic: total food withdrawn by childcare feeding.
@@ -482,6 +488,9 @@ impl SimResources {
             furniture_plans: Vec::new(),
             next_plan_id: 1,
             food_economy_forage_completions: 0,
+            forage_injury_count: 0,
+            craft_injury_count: 0,
+            craft_completion_count: 0,
             food_economy_produced: 0.0,
             food_economy_childcare_drain: 0.0,
             food_economy_birth_drain: 0.0,

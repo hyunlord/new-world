@@ -305,6 +305,70 @@ impl BodyHealth {
             .enumerate()
             .any(|(index, part)| PART_VITAL[index] && part.hp == 0)
     }
+
+    /// Apply an injury to a specific or random part.
+    /// Updates hp, flags, bleed_rate, and recalculates aggregates.
+    /// Promotes LOD from Aggregate → Standard when part-level state is set.
+    pub fn apply_injury(&mut self, spec: InjurySpec) -> InjuryReport {
+        let part_idx = if spec.part_idx == 255 {
+            match self.find_random_minor_part_index() {
+                Some(idx) => idx,
+                None => return InjuryReport { part_idx: 255, hp_after: 255, vital_destroyed: false },
+            }
+        } else {
+            spec.part_idx.min(84)
+        };
+
+        let part = &mut self.parts[part_idx as usize];
+        part.hp = part.hp.saturating_sub(spec.severity);
+        part.flags.0 |= spec.flags.0;
+        part.bleed_rate = part.bleed_rate.max(spec.bleed_rate);
+
+        let hp_after = part.hp;
+        let vital_destroyed = hp_after == 0 && PART_VITAL[part_idx as usize];
+
+        self.recalculate_aggregates();
+
+        if matches!(self.lod_tier, HealthLod::Aggregate) {
+            self.lod_tier = HealthLod::Standard;
+        }
+
+        InjuryReport { part_idx, hp_after, vital_destroyed }
+    }
+
+    /// Find the first non-vital, non-disabled part with hp > 0.
+    fn find_random_minor_part_index(&self) -> Option<u8> {
+        for (idx, part) in self.parts.iter().enumerate() {
+            if !PART_VITAL[idx] && !part.flags.has(PartFlags::DISABLED) && part.hp > 0 {
+                return Some(idx as u8);
+            }
+        }
+        None
+    }
+}
+
+/// Specification for applying an injury to a body part.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct InjurySpec {
+    /// Target part index (0..84), or 255 for "auto-select first minor part".
+    pub part_idx: u8,
+    /// HP loss (1..100).
+    pub severity: u8,
+    /// Flags to set on the part.
+    pub flags: PartFlags,
+    /// Bleed rate per system tick (0..10).
+    pub bleed_rate: u8,
+}
+
+/// Result of applying an injury.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InjuryReport {
+    /// Part actually injured (resolved from random if applicable).
+    pub part_idx: u8,
+    /// HP after injury.
+    pub hp_after: u8,
+    /// Was a vital part destroyed?
+    pub vital_destroyed: bool,
 }
 
 fn serialize_parts<S>(parts: &[PartState; 85], serializer: S) -> Result<S::Ok, S::Error>

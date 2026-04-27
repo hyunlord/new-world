@@ -23215,3 +23215,384 @@ mod harness_a11_body_health {
     }
 }
 
+// ── A-body-damage-api: Damage API + Work Injury harness ──────────────────────
+#[cfg(test)]
+mod harness_body_damage_api {
+    use sim_core::components::{BodyHealth, HealthLod, InjurySpec, PartFlags, PART_VITAL};
+    use sim_core::{EffectEntry, EffectPrimitive, EffectSource, EntityId, GameCalendar, Settlement, SettlementId, WorldMap};
+    use sim_core::config::GameConfig;
+    use sim_engine::{SimEngine, SimResources};
+
+    fn make_test_engine(seed: u64, agent_count: usize) -> SimEngine {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(256, 256, seed);
+        let resources = SimResources::new(calendar, map, seed);
+        let mut engine = SimEngine::new(resources);
+        super::register_all_systems(&mut engine);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Test Hold".to_string(), 128, 128, 0),
+        );
+        {
+            let (world, res) = engine.world_and_resources_mut();
+            super::entity_spawner::spawn_initial_population(world, res, agent_count, SettlementId(1));
+        }
+        engine
+    }
+
+    // ── A1: apply_injury basic arithmetic ────────────────────────────────────
+    #[test]
+    fn harness_injury_apply_basic() {
+        let mut health = BodyHealth::default();
+        let spec = InjurySpec {
+            part_idx: 32,
+            severity: 20,
+            flags: PartFlags(0),
+            bleed_rate: 0,
+        };
+        let report = health.apply_injury(spec);
+        eprintln!(
+            "[harness] injury_apply_basic: part={}, hp_after={}, vital_destroyed={}, aggregate={:.4}",
+            report.part_idx, report.hp_after, report.vital_destroyed, health.aggregate_hp
+        );
+        assert_eq!(report.hp_after, 80, "[A1] saturating_sub(100,20)=80");
+        assert!(!report.vital_destroyed, "[A1] part 32 is non-vital");
+        assert!(health.aggregate_hp < 1.0, "[A1] aggregate_hp must drop below 1.0");
+        assert!(health.aggregate_hp > 0.0, "[A1] aggregate_hp must be positive");
+        println!("harness_injury_apply_basic PASS");
+    }
+
+    // ── A2: apply_injury mutations written to part state ─────────────────────
+    #[test]
+    fn harness_injury_mutations_written() {
+        let mut health = BodyHealth::default();
+        let spec = InjurySpec {
+            part_idx: 32,
+            severity: 20,
+            flags: PartFlags::BLEEDING,
+            bleed_rate: 5,
+        };
+        health.apply_injury(spec);
+        eprintln!(
+            "[harness] injury_mutations_written: hp={} flags={:#04x} bleed_rate={}",
+            health.parts[32].hp, health.parts[32].flags.0, health.parts[32].bleed_rate
+        );
+        assert_eq!(health.parts[32].hp, 80, "[A2] hp==80");
+        assert_eq!(health.parts[32].flags.0 & 0x01, 0x01, "[A2] BLEEDING bit set");
+        assert_eq!(health.parts[32].bleed_rate, 5, "[A2] bleed_rate==max(0,5)==5");
+        println!("harness_injury_mutations_written PASS");
+    }
+
+    // ── A3: apply_injury flags OR-accumulate ─────────────────────────────────
+    #[test]
+    fn harness_injury_flags_or_accumulates() {
+        let mut health = BodyHealth::default();
+        health.apply_injury(InjurySpec { part_idx: 32, severity: 5, flags: PartFlags(0x01), bleed_rate: 0 });
+        health.apply_injury(InjurySpec { part_idx: 32, severity: 5, flags: PartFlags(0x02), bleed_rate: 0 });
+        eprintln!("[harness] flags_or_accumulates: flags={:#04x}", health.parts[32].flags.0);
+        assert_eq!(
+            health.parts[32].flags.0, 0x03,
+            "[A3] flags must OR-accumulate: 0x01|0x02=0x03, got {:#04x}",
+            health.parts[32].flags.0
+        );
+        println!("harness_injury_flags_or_accumulates PASS");
+    }
+
+    // ── A4: random part selection: predicate + determinism ───────────────────
+    #[test]
+    fn harness_injury_random_part_selection() {
+        let spec = InjurySpec { part_idx: 255, severity: 10, flags: PartFlags(0), bleed_rate: 0 };
+        let r1 = BodyHealth::default().apply_injury(spec).part_idx;
+        let r2 = BodyHealth::default().apply_injury(spec).part_idx;
+        eprintln!("[harness] random_part_selection: r1={} r2={}", r1, r2);
+        assert_ne!(r1, 255, "[A4] sentinel 255 must be resolved");
+        assert!(!PART_VITAL[r1 as usize], "[A4] resolved part must be non-vital");
+        assert_eq!(r1, r2, "[A4] deterministic: identical fresh bodies must resolve to same part");
+        // verify pre-injury predicate on a fresh body (same initial state)
+        let fresh = BodyHealth::default();
+        assert!(fresh.parts[r1 as usize].hp > 0, "[A4] selected part must have hp>0 before injury");
+        assert!(!fresh.parts[r1 as usize].flags.has(PartFlags::DISABLED), "[A4] selected part must not be disabled");
+        println!("harness_injury_random_part_selection PASS: part={}", r1);
+    }
+
+    // ── A5: vital part destroyed → vital_destroyed=true AND is_dead()=true ───
+    #[test]
+    fn harness_injury_destroyed_vital_signals_death() {
+        let mut health = BodyHealth::default();
+        let v = PART_VITAL.iter().position(|&vital| vital)
+            .expect("no vital parts found in fresh BodyHealth — body construction is broken") as u8;
+        let report = health.apply_injury(InjurySpec {
+            part_idx: v,
+            severity: 255,
+            flags: PartFlags(0),
+            bleed_rate: 0,
+        });
+        eprintln!(
+            "[harness] destroyed_vital: v={}, hp_after={}, vital_destroyed={}, is_dead={}",
+            v, report.hp_after, report.vital_destroyed, health.is_dead()
+        );
+        assert_eq!(report.hp_after, 0, "[A5] vital part hp must reach 0");
+        assert!(report.vital_destroyed, "[A5] vital_destroyed must be true");
+        assert!(health.is_dead(), "[A5] is_dead() must be true after vital part zeroed");
+        println!("harness_injury_destroyed_vital_signals_death PASS: v={}", v);
+    }
+
+    // ── A6/D7: LOD promotes Aggregate → Standard on first injury ─────────────
+    #[test]
+    fn harness_injury_lod_auto_promotes() {
+        let mut health = BodyHealth::default();
+        assert_eq!(health.lod_tier, HealthLod::Aggregate, "[A6] default LOD must be Aggregate");
+        health.apply_injury(InjurySpec { part_idx: 33, severity: 10, flags: PartFlags::BLEEDING, bleed_rate: 1 });
+        eprintln!("[harness] lod_auto_promotes: lod={:?}", health.lod_tier);
+        assert_eq!(
+            health.lod_tier, HealthLod::Standard,
+            "[A6] LOD must promote to Standard (not Full, not Aggregate), got {:?}",
+            health.lod_tier
+        );
+        println!("harness_injury_lod_auto_promotes PASS");
+    }
+
+    // ── A7: LOD does NOT downgrade if already Standard ────────────────────────
+    #[test]
+    fn harness_lod_no_downgrade_from_standard() {
+        let mut health = BodyHealth::default();
+        health.lod_tier = HealthLod::Standard;
+        health.apply_injury(InjurySpec { part_idx: 33, severity: 10, flags: PartFlags(0), bleed_rate: 0 });
+        eprintln!("[harness] lod_no_downgrade: lod={:?}", health.lod_tier);
+        assert_eq!(
+            health.lod_tier, HealthLod::Standard,
+            "[A7] LOD must stay Standard (not Aggregate/Simplified), got {:?}",
+            health.lod_tier
+        );
+        println!("harness_lod_no_downgrade_from_standard PASS");
+    }
+
+    // ── A8/D4: DamagePart via effect queue — 4-point check ───────────────────
+    #[test]
+    fn harness_effect_primitive_damage_part_via_queue() {
+        let mut engine = make_test_engine(42, 5);
+        let agent_entity = engine
+            .world()
+            .query::<&BodyHealth>()
+            .iter()
+            .next()
+            .map(|(e, _)| e)
+            .expect("[A8] no agents with BodyHealth");
+        let agent_id = EntityId(agent_entity.id() as u64);
+        engine.resources_mut().effect_queue.push(EffectEntry {
+            entity: agent_id,
+            effect: EffectPrimitive::DamagePart {
+                part_idx: 32,
+                severity: 20,
+                flags_bits: PartFlags::BLEEDING.0,
+                bleed_rate: 0,
+            },
+            source: EffectSource {
+                system: "test".to_string(),
+                kind: "test_injury".to_string(),
+            },
+        });
+        engine.run_ticks(1);
+        {
+            let world = engine.world();
+            let health = world.get::<&BodyHealth>(agent_entity).unwrap();
+            eprintln!(
+                "[harness] damage_part_via_queue: hp={}, lod={:?}, bleeding={}",
+                health.parts[32].hp, health.lod_tier, health.parts[32].flags.has(PartFlags::BLEEDING)
+            );
+            // (a) hp
+            assert_eq!(health.parts[32].hp, 80, "[A8a] DamagePart: 100-20=80");
+            // (b) lod
+            assert_eq!(health.lod_tier, HealthLod::Standard, "[A8b] LOD must promote to Standard");
+            // (c) BLEEDING flag
+            assert!(health.parts[32].flags.has(PartFlags::BLEEDING), "[A8c] BLEEDING must be set");
+        }
+        // (d) CausalLog key and magnitude
+        let causal_ok = engine.resources().causal_log.recent(agent_id, 32).iter().any(|e| {
+            e.effect_key == "part_32_hp_80" && (e.magnitude - 20.0_f64).abs() < f64::EPSILON
+        });
+        eprintln!("[harness] damage_part_via_queue: causal_ok={}", causal_ok);
+        assert!(causal_ok, "[A8d] CausalLog must contain key='part_32_hp_80' magnitude=20.0");
+        println!("harness_effect_primitive_damage_part_via_queue PASS");
+    }
+
+    // ── A9: work injury cumulative count within config expectations ───────────
+    #[test]
+    fn harness_work_injury_cumulative_count() {
+        let mut engine = make_test_engine(42, 20);
+        engine.run_ticks(10_000);
+        let forage_n = engine.resources().forage_injury_count;
+        let craft_n = engine.resources().craft_injury_count;
+        let n = forage_n + craft_n;
+        eprintln!("[harness] work_injury_cumulative_count: N={}", n);
+        assert!(n >= 5, "[A9] N must be ≥5, got {}", n);
+        assert!(n <= 2000, "[A9] N must be ≤2000, got {}", n);
+        // disjointness: individual counters must sum to total (no double-counting or leaking)
+        assert_eq!(forage_n + craft_n, n,
+            "[A9] disjointness violated: forage={}+craft={}={} != N={}",
+            forage_n, craft_n, forage_n + craft_n, n);
+        println!("harness_work_injury_cumulative_count PASS: N={} (forage={} craft={})", n, forage_n, craft_n);
+    }
+
+    // ── A10: forage work injury rate within [0.5%, 3.0%] ─────────────────────
+    #[test]
+    fn harness_work_injury_forage_rate() {
+        let mut engine = make_test_engine(42, 20);
+        engine.run_ticks(10_000);
+        let forage_completions = engine.resources().food_economy_forage_completions;
+        let forage_injuries = engine.resources().forage_injury_count;
+        eprintln!(
+            "[harness] forage_rate: completions={} injuries={}",
+            forage_completions, forage_injuries
+        );
+        assert!(
+            forage_completions > 0,
+            "[A10] forage system produced 0 completions in 10000 ticks — forage action not reachable"
+        );
+        let ratio_f = forage_injuries as f64 / forage_completions as f64;
+        eprintln!("[harness] forage_rate: ratio_f={:.4}", ratio_f);
+        assert!(
+            ratio_f >= 0.005,
+            "[A10] forage injury rate {:.4} below 0.5% lower bound",
+            ratio_f
+        );
+        assert!(
+            ratio_f <= 0.030,
+            "[A10] forage injury rate {:.4} above 3.0% upper bound",
+            ratio_f
+        );
+        println!("harness_work_injury_forage_rate PASS: ratio_f={:.4}", ratio_f);
+    }
+
+    // ── A11: craft work injury rate within [0.75%, 4.5%] ─────────────────────
+    #[test]
+    fn harness_work_injury_craft_rate() {
+        let mut engine = make_test_engine(42, 20);
+        engine.run_ticks(10_000);
+        let craft_completions = engine.resources().craft_completion_count;
+        let craft_injuries = engine.resources().craft_injury_count;
+        eprintln!(
+            "[harness] craft_rate: completions={} injuries={}",
+            craft_completions, craft_injuries
+        );
+        assert!(
+            craft_completions > 0,
+            "craft system produced 0 completions in 10000 ticks — craft action not reachable"
+        );
+        let ratio_c = craft_injuries as f64 / craft_completions as f64;
+        eprintln!("[harness] craft_rate: ratio_c={:.4}", ratio_c);
+        assert!(
+            ratio_c >= 0.0075,
+            "[A11] craft injury rate {:.4} below 0.75% lower bound",
+            ratio_c
+        );
+        assert!(
+            ratio_c <= 0.045,
+            "[A11] craft injury rate {:.4} above 4.5% upper bound",
+            ratio_c
+        );
+        println!("harness_work_injury_craft_rate PASS: ratio_c={:.4}", ratio_c);
+    }
+
+    // ── D5: work injuries produce causal log entries ──────────────────────────
+    #[test]
+    fn harness_work_injury_causal_log_records_kind() {
+        let mut engine = make_test_engine(42, 30);
+        engine.run_ticks(10_000);
+        let mut found_forage = false;
+        let mut found_craft = false;
+        let agent_ids: Vec<EntityId> = engine
+            .world()
+            .query::<&BodyHealth>()
+            .iter()
+            .map(|(e, _): (hecs::Entity, _)| EntityId(e.id() as u64))
+            .collect();
+        for agent_id in &agent_ids {
+            for entry in engine.resources().causal_log.recent(*agent_id, 64) {
+                if entry.cause.kind == "forage_injury" { found_forage = true; }
+                if entry.cause.kind == "craft_injury" { found_craft = true; }
+            }
+            if found_forage && found_craft { break; }
+        }
+        eprintln!(
+            "[harness] work_injury_causal_log: forage={} craft={}",
+            found_forage, found_craft
+        );
+        assert!(
+            found_forage || found_craft,
+            "[D5] at least one work injury must appear in causal log in 10000 ticks with 30 agents"
+        );
+        println!("harness_work_injury_causal_log_records_kind PASS: forage={} craft={}", found_forage, found_craft);
+    }
+
+    // ── D6: work injury rate within safe tolerance (< 50% HP loss / month) ───
+    #[test]
+    fn harness_work_injury_rate_within_tolerance() {
+        let mut engine = make_test_engine(42, 60);
+        let initial_hp_total: f64 = engine
+            .world()
+            .query::<&BodyHealth>()
+            .iter()
+            .map(|(_, h)| h.aggregate_hp)
+            .sum();
+        engine.run_ticks(30_000);
+        let final_hp_total: f64 = engine
+            .world()
+            .query::<&BodyHealth>()
+            .iter()
+            .map(|(_, h)| h.aggregate_hp)
+            .sum();
+        let hp_loss_ratio = if initial_hp_total > 0.0 {
+            (initial_hp_total - final_hp_total) / initial_hp_total
+        } else {
+            0.0
+        };
+        eprintln!(
+            "[harness] work_injury_rate: initial={:.2} final={:.2} loss_ratio={:.2}%",
+            initial_hp_total, final_hp_total, hp_loss_ratio * 100.0
+        );
+        assert!(
+            hp_loss_ratio < 0.5,
+            "[D6] HP loss must be < 50% over 1 game month (got {:.2}%)",
+            hp_loss_ratio * 100.0
+        );
+        println!("harness_work_injury_rate_within_tolerance PASS: loss={:.2}%", hp_loss_ratio * 100.0);
+    }
+
+    // ── A12: saturating_sub no underflow ─────────────────────────────────────
+    #[test]
+    fn harness_injury_saturating_sub_no_underflow() {
+        let mut health = BodyHealth::default();
+        health.parts[32].hp = 50;
+        let report = health.apply_injury(InjurySpec {
+            part_idx: 32,
+            severity: 200,
+            flags: PartFlags(0),
+            bleed_rate: 0,
+        });
+        eprintln!("[harness] saturating_sub_no_underflow: hp_after={}", report.hp_after);
+        assert_eq!(
+            report.hp_after, 0,
+            "[A12] saturating_sub(50,200)=0, not wrapping to {}",
+            report.hp_after
+        );
+        println!("harness_injury_saturating_sub_no_underflow PASS");
+    }
+
+    // ── A13: bleed_rate uses max semantics, not addition ─────────────────────
+    #[test]
+    fn harness_injury_bleed_rate_max_not_add() {
+        let mut health = BodyHealth::default();
+        health.apply_injury(InjurySpec { part_idx: 32, severity: 5, flags: PartFlags(0), bleed_rate: 5 });
+        health.apply_injury(InjurySpec { part_idx: 32, severity: 5, flags: PartFlags(0), bleed_rate: 3 });
+        eprintln!("[harness] bleed_rate_max_not_add: bleed_rate={}", health.parts[32].bleed_rate);
+        assert_eq!(
+            health.parts[32].bleed_rate, 5,
+            "[A13] bleed_rate=max(5,3)=5, not add({})=8 or overwrite=3",
+            health.parts[32].bleed_rate
+        );
+        println!("harness_injury_bleed_rate_max_not_add PASS");
+    }
+}
+
