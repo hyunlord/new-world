@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 66;
+const EXPECTED_SYSTEM_COUNT: usize = 67;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -94,6 +94,7 @@ use sim_systems::runtime::{
     TechPropagationRuntimeSystem,
     TechUtilizationRuntimeSystem,
     TemperamentShiftRuntimeSystem,
+    HealthRuntimeSystem,
     KnowledgeLearningRuntimeSystem,
     TensionRuntimeSystem,
     TitleRuntimeSystem,
@@ -483,6 +484,7 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(TraitRuntimeSystem::new(100, 10));
     engine.register(TemperamentShiftRuntimeSystem::new(101, 1));
     engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
+    engine.register(HealthRuntimeSystem::new(110, 30));
     engine.register(ChronicleRuntimeSystem::new(102, 1));
     engine.register(InfluenceRuntimeSystem::new(
         sim_core::config::INFLUENCE_SYSTEM_PRIORITY,
@@ -14665,8 +14667,8 @@ mod tests {
         // Type A: compile-time array size invariant — catches "in enum but not DEFAULT array".
         assert_eq!(
             names.len(),
-            63,
-            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 63 entries, got {}. \
+            64,
+            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries, got {}. \
              Update [DefaultRuntimeSystemSpec; N] in sim-bridge/src/runtime_system.rs.",
             names.len()
         );
@@ -19403,8 +19405,8 @@ mod tests {
         use sim_bridge::default_runtime_systems_count;
         let count = default_runtime_systems_count();
         assert_eq!(
-            count, 63,
-            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 63 entries (no A-5 list edits), got {count}"
+            count, 64,
+            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 64 entries (no A-5 list edits), got {count}"
         );
         println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
     }
@@ -22359,8 +22361,8 @@ mod harness_a13_knowledge_learning {
             names.len()
         );
         assert_eq!(
-            names.len(), 63,
-            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 63 entries after A-13, got {}.",
+            names.len(), 64,
+            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries after A-11, got {}.",
             names.len()
         );
         println!(
@@ -22956,6 +22958,259 @@ mod harness_a13_knowledge_learning {
         println!(
             "harness_a13_adult_starter_knowledge_count PASS: {}/{} adults have >= 8 entries",
             adults.len() - violations, adults.len()
+        );
+    }
+}
+
+// ── A-11: Body Health Runtime System ─────────────────────────────────────────
+#[cfg(test)]
+mod harness_a11_body_health {
+    use sim_core::components::{Age, BodyHealth, HealthLod, PartFlags};
+    use sim_core::config::GameConfig;
+    use sim_engine::{SimEngine, SimResources};
+    use sim_systems::runtime::HealthRuntimeSystem;
+
+    fn make_health_engine() -> SimEngine {
+        let config = GameConfig::default();
+        let cal = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(8, 8, 1);
+        let resources = SimResources::new(cal, map, 1);
+        let mut engine = SimEngine::new(resources);
+        // tick_interval=1 so every game tick fires the system — isolates health mechanics.
+        engine.register(HealthRuntimeSystem::new(110, 1));
+        engine
+    }
+
+    // ── A11-1 (Type A): health_runtime_system in DEFAULT_RUNTIME_SYSTEMS ────
+    #[test]
+    fn harness_a11_health_runtime_registered() {
+        let names = sim_bridge::default_runtime_system_registry_names();
+        let present = names.contains(&"health_runtime_system");
+        eprintln!(
+            "[harness] a11_registration: {} entries, health_runtime_system present={}",
+            names.len(), present
+        );
+        assert!(
+            present,
+            "[A11-1] 'health_runtime_system' not found in DEFAULT_RUNTIME_SYSTEMS ({} entries).",
+            names.len()
+        );
+        assert_eq!(
+            names.len(), 64,
+            "[A11-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries after A-11, got {}.",
+            names.len()
+        );
+        println!(
+            "harness_a11_health_runtime_registered PASS: health_runtime_system in {} entries",
+            names.len()
+        );
+    }
+
+    // ── A11-2 (Type A): default pristine BodyHealth unchanged after ticks ──
+    #[test]
+    fn harness_a11_default_health_pristine_after_ticks() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            world.spawn((BodyHealth::default(), Age::default()))
+        };
+        engine.run_ticks(50);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        let age = world.get::<&Age>(entity).unwrap();
+        assert!(
+            (h.aggregate_hp - 1.0).abs() < 1e-9,
+            "[A11-2] default aggregate_hp must remain 1.0 (got {})",
+            h.aggregate_hp
+        );
+        assert!(age.alive, "[A11-2] pristine agent must not die from health system");
+        println!("harness_a11_default_health_pristine_after_ticks PASS");
+    }
+
+    // ── A11-3 (Type A): bleeding drains hp per system tick on Full LOD ──────
+    // BLEED_HP_DRAIN=1, start hp=80, 5 ticks → hp = 80 - 5×1 = 75 (plan threshold).
+    // bleed_rate is a boolean gate (>0 enables drain); drain is always BLEED_HP_DRAIN/tick.
+    #[test]
+    fn harness_a11_bleeding_drains_hp() {
+        use sim_core::config;
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 80;
+            health.parts[33].flags.set(PartFlags::BLEEDING);
+            health.parts[33].bleed_rate = 5;
+            world.spawn((health, Age::default()))
+        };
+        // 5 ticks × BLEED_HP_DRAIN(1) = 5 drained → expected hp = 75.
+        engine.run_ticks(5);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        eprintln!(
+            "[harness] a11_bleeding_drains_hp: initial_hp=80, final_hp={}, bleed_hp_drain={}",
+            h.parts[33].hp,
+            config::BLEED_HP_DRAIN
+        );
+        // Type A: exact value — 5 ticks at 1 drain/tick from 80 = 75.
+        assert_eq!(
+            h.parts[33].hp, 75,
+            "[A11-3] BLEEDING must drain HP by exactly BLEED_HP_DRAIN/tick (expected=75, got={})",
+            h.parts[33].hp
+        );
+        println!(
+            "harness_a11_bleeding_drains_hp PASS: hp 80 -> {} (bleed_drain={})",
+            h.parts[33].hp,
+            config::BLEED_HP_DRAIN
+        );
+    }
+
+    // ── A11-4 (Type A): destroyed part self-clears BLEEDING flag ────────────
+    #[test]
+    fn harness_a11_destroyed_part_clears_bleeding() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 2;
+            health.parts[33].flags.set(PartFlags::BLEEDING);
+            health.parts[33].bleed_rate = 5;
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(10);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        assert_eq!(h.parts[33].hp, 0, "[A11-4] part must be destroyed (hp=0)");
+        assert!(
+            !h.parts[33].flags.has(PartFlags::BLEEDING),
+            "[A11-4] BLEEDING flag must self-clear when hp=0"
+        );
+        println!("harness_a11_destroyed_part_clears_bleeding PASS");
+    }
+
+    // ── A11-5 (Type A): infection severity accumulates each system tick ──────
+    #[test]
+    fn harness_a11_infection_progresses_over_time() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].flags.set(PartFlags::INFECTED);
+            health.parts[33].infection_sev = 5;
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(10);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        assert!(
+            h.parts[33].infection_sev > 5,
+            "[A11-5] infection_sev must increase (initial=5, final={})",
+            h.parts[33].infection_sev
+        );
+        println!(
+            "harness_a11_infection_progresses_over_time PASS: sev 5 -> {}",
+            h.parts[33].infection_sev
+        );
+    }
+
+    // ── A11-6 (Type A): Aggregate LOD skips per-part processing ─────────────
+    #[test]
+    fn harness_a11_lod_aggregate_skips_per_part() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            // Default is already Aggregate, but set explicitly for clarity.
+            health.lod_tier = HealthLod::Aggregate;
+            health.parts[33].hp = 80;
+            health.parts[33].flags.set(PartFlags::BLEEDING);
+            health.parts[33].bleed_rate = 10;
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(10);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        assert_eq!(
+            h.parts[33].hp, 80,
+            "[A11-6] Aggregate LOD must skip per-part processing (hp must stay at 80)"
+        );
+        println!("harness_a11_lod_aggregate_skips_per_part PASS: hp={}", h.parts[33].hp);
+    }
+
+    // ── A11-7 (Type A): vital part destruction triggers agent death ──────────
+    #[test]
+    fn harness_a11_vital_part_destruction_triggers_death() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            // Part index 1 = Brain (PART_VITAL[1] = true).
+            health.parts[1].hp = 2;
+            health.parts[1].flags.set(PartFlags::BLEEDING);
+            health.parts[1].bleed_rate = 5;
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(10);
+        let world = engine.world();
+        let age = world.get::<&Age>(entity).unwrap();
+        assert!(
+            !age.alive,
+            "[A11-7] destroying a vital part (Brain) must set age.alive = false"
+        );
+        println!("harness_a11_vital_part_destruction_triggers_death PASS: agent dead");
+    }
+
+    // ── A11-8 (Type A): infection HP drain when sev >= INFECTION_DAMAGE_THRESHOLD ─
+    // Covers process_parts infection branch (lines 47-48 of health.rs).
+    // Non-vital part 33, Full LOD, INFECTED, infection_sev starts AT threshold.
+    // After 1 system tick: sev → threshold+1 (still ≥ threshold) → hp drains by INFECTION_HP_DRAIN.
+    #[test]
+    fn harness_a11_infection_drains_hp_at_threshold() {
+        use sim_core::config;
+        let initial_hp: u8 = 100;
+        let initial_sev: u8 = config::INFECTION_DAMAGE_THRESHOLD; // 80
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            // Part 33 is non-vital (PART_VITAL[33] = false) — no death side-effect.
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = initial_hp;
+            health.parts[33].flags.set(PartFlags::INFECTED);
+            health.parts[33].infection_sev = initial_sev; // == INFECTION_DAMAGE_THRESHOLD
+            world.spawn((health, Age::default()))
+        };
+        // 1 system tick: sev saturating_add 1 → 81 ≥ 80 → hp -= INFECTION_HP_DRAIN(1).
+        engine.run_ticks(1);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        let final_hp = h.parts[33].hp;
+        let final_sev = h.parts[33].infection_sev;
+        // Type A: diagnostics — initial HP, final HP, initial severity, final severity, threshold.
+        eprintln!(
+            "[harness] a11_infection_drains_hp_at_threshold: \
+             initial_hp={}, final_hp={}, initial_sev={}, final_sev={}, threshold={}, drain={}",
+            initial_hp, final_hp, initial_sev, final_sev,
+            config::INFECTION_DAMAGE_THRESHOLD,
+            config::INFECTION_HP_DRAIN
+        );
+        // Type A: exact assertion — 1 tick with sev==threshold drains exactly INFECTION_HP_DRAIN.
+        assert_eq!(
+            final_hp,
+            initial_hp - config::INFECTION_HP_DRAIN,
+            "[A11-8] infection at threshold must drain exactly INFECTION_HP_DRAIN ({}) HP \
+             (initial_hp={}, final_hp={})",
+            config::INFECTION_HP_DRAIN, initial_hp, final_hp
+        );
+        println!(
+            "harness_a11_infection_drains_hp_at_threshold PASS: \
+             hp {} -> {}, sev {} -> {}, threshold={}, drain={}",
+            initial_hp, final_hp, initial_sev, final_sev,
+            config::INFECTION_DAMAGE_THRESHOLD,
+            config::INFECTION_HP_DRAIN
         );
     }
 }

@@ -19,7 +19,8 @@ use sim_systems::runtime::{
     StatThresholdRuntimeSystem, StatsRecorderRuntimeSystem,
     StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
-    KnowledgeLearningRuntimeSystem, TemperamentShiftRuntimeSystem, TensionRuntimeSystem,
+    HealthRuntimeSystem, KnowledgeLearningRuntimeSystem, TemperamentShiftRuntimeSystem,
+    TensionRuntimeSystem,
     TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
     TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
 };
@@ -95,6 +96,7 @@ pub(crate) enum RuntimeSystemId {
     Territory = 64,
     TemperamentShift = 65,
     KnowledgeLearning = 66,
+    HealthRuntime = 67,
 }
 
 impl RuntimeSystemId {
@@ -168,6 +170,7 @@ impl RuntimeSystemId {
             Self::Territory => "territory_system",
             Self::TemperamentShift => "temperament_shift_system",
             Self::KnowledgeLearning => "knowledge_learning_system",
+            Self::HealthRuntime => "health_runtime_system",
         }
     }
 
@@ -241,6 +244,7 @@ impl RuntimeSystemId {
             Self::Territory,
             Self::TemperamentShift,
             Self::KnowledgeLearning,
+            Self::HealthRuntime,
         ]
     }
 }
@@ -262,7 +266,7 @@ pub(crate) const DEFAULT_DISABLED_RUNTIME_SYSTEMS: [RuntimeSystemId; 4] = [
 ];
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 63] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 64] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -581,6 +585,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 63] = [
         priority: 105,
         tick_interval: 10,
     },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::HealthRuntime,
+        priority: 110,
+        tick_interval: 30,
+    },
 ];
 
 /// Registers one typed Rust runtime system into the scheduler.
@@ -803,6 +812,9 @@ pub(crate) fn register_runtime_system(
         RuntimeSystemId::KnowledgeLearning => engine.register(
             KnowledgeLearningRuntimeSystem::new(priority_u32, tick_interval_u64),
         ),
+        RuntimeSystemId::HealthRuntime => engine.register(
+            HealthRuntimeSystem::new(priority_u32, tick_interval_u64),
+        ),
         RuntimeSystemId::LlmRequest => {
             // Disabled by default when no LLM runtime is attached.
         }
@@ -917,7 +929,7 @@ mod tests {
         );
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,
-            RuntimeSystemId::KnowledgeLearning
+            RuntimeSystemId::HealthRuntime
         );
         for disabled_id in DEFAULT_DISABLED_RUNTIME_SYSTEMS {
             assert!(!ids.contains(&disabled_id));

@@ -1720,6 +1720,16 @@ pub const AGE_SIZE_MULTIPLIERS: [f32; 6] = [
     0.9,  // 5: elder
 ];
 
+// ── Body Health Runtime [A-11] ───────────────────────────────────────────────
+/// HP loss per system tick for a body part with BLEEDING flag active.
+pub const BLEED_HP_DRAIN: u8 = 1;
+/// Infection severity threshold above which HP degradation begins.
+pub const INFECTION_DAMAGE_THRESHOLD: u8 = 80;
+/// HP loss per system tick when infection_sev >= INFECTION_DAMAGE_THRESHOLD.
+pub const INFECTION_HP_DRAIN: u8 = 1;
+/// Aggregate HP threshold below which an agent is considered fatally wounded.
+pub const HEALTH_AGGREGATE_DEATH_THRESHOLD: f64 = 0.05;
+
 // ── Zoom Tier System (D1-A) ──────────────────────────────────────────────────
 /// Unified 5-tier zoom boundary array.
 /// Camera zoom >= ZOOM_TIER_BOUNDARIES[i] → tier i, else tier i+1.
