@@ -106,6 +106,20 @@ Quality gates (UNCHANGED):
 
 VLM WARNING alone never blocks merge. This is policy, not bug.
 
+### Critical clarification (added 2026-04-27)
+
+**HARNESS_SKIP=1 is FORBIDDEN, not "last resort":**
+
+Score < 90 means the hook is doing its job — not a problem to bypass.
+`HARNESS_SKIP=1 git commit --no-verify` = policy violation. Always.
+
+Correct response to score < 90: diagnose the gap, fix code, re-run pipeline.
+The only exception: doc-only commits (no `.rs`/`.gd`/`.ron` changes).
+
+Root incident: A-11 scored 88/100 (attempt 2 penalty + VLM WARNING).
+Both are mechanical/environmental — but bypassing the hook destroys the
+audit trail and sets a precedent for future abuse. Never bypass.
+
 ### 8. Overzealous Defense Awareness (added 2026-04-26)
 
 When implementing isolation/security mechanisms, check what's actually
@@ -115,6 +129,28 @@ CLI auth.
 
 Pattern: defense mechanisms tend to be too restrictive on first pass.
 Validate by running an actual end-to-end test, not just by code review.
+
+### 9. Score Decomposition Required (added 2026-04-27)
+
+Before committing any harness run, state the score breakdown explicitly:
+
+```
+Code Quality:   X/15  (attempt N — 15/11/8 for attempts 1/2/3+)
+Visual Verify:  X/20  (PASS / WARNING reason / FAIL reason)
+Tests:          X/20
+Regression:     X/15
+Evaluator:      X/15
+Gate:           X/10
+Total:          X/100 → APPROVE (≥90) / BLOCK (<90)
+```
+
+If total < 90: identify the specific gap, fix root cause, re-run.
+Never bypass. The score is the gate, not the enemy.
+
+Incident that prompted this rule: A-11 score 88 bypassed via
+`HARNESS_SKIP=1`. Had decomposition been stated, the 88 = 11+12+20+15+15+10
+breakdown would have shown it was mechanical (attempt 2 + VLM env),
+not a code defect — triggering a re-run at attempt 1 with score ≥92.
 
 ---
 
