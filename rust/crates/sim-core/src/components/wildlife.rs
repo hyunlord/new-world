@@ -8,6 +8,19 @@ pub enum WildlifeKind {
     Boar,
 }
 
+impl WildlifeKind {
+    /// Base Danger influence intensity emitted per tick.
+    /// Bear most threatening, Boar least.
+    /// Used by `WildlifeRuntimeSystem` to stamp Danger into the influence grid.
+    pub fn danger_intensity(self) -> f64 {
+        match self {
+            Self::Wolf => 0.7,
+            Self::Bear => 0.9,
+            Self::Boar => 0.5,
+        }
+    }
+}
+
 /// ECS component for non-human fauna.
 ///
 /// Spawned by `WildlifeRuntimeSystem` at tick 0 and persists for the

@@ -13,8 +13,9 @@
 
 use hecs::World;
 use rand::Rng;
-use sim_core::components::{Identity, Position, Wildlife, WildlifeKind};
+use sim_core::components::{Identity, InfluenceEmitter, Position, Wildlife, WildlifeKind};
 use sim_core::config;
+use sim_core::{ChannelId, FalloffType};
 use sim_engine::{SimResources, SimSystem};
 
 /// Runtime system: spawns wildlife at tick 1 then drives wander every 60 ticks.
@@ -98,6 +99,16 @@ impl SimSystem for WildlifeRuntimeSystem {
                         WildlifeKind::Boar => Wildlife::boar((x, y)),
                     };
 
+                    let danger_emitter = InfluenceEmitter {
+                        channel: ChannelId::Danger,
+                        radius: 0.0, // 0.0 → use channel default radius (5)
+                        base_intensity: kind.danger_intensity(),
+                        falloff: FalloffType::Exponential,
+                        decay_rate: None,
+                        tags: vec!["wildlife".to_string()],
+                        enabled: true,
+                    };
+
                     world.spawn((
                         Identity {
                             name: name.to_string(),
@@ -106,8 +117,26 @@ impl SimSystem for WildlifeRuntimeSystem {
                         },
                         Position::new(x, y),
                         wildlife,
+                        danger_emitter,
                     ));
                 }
+            }
+        }
+
+        // ── Danger emit liveness phase (every tick) ───────────────────────
+        // Alive wildlife emit Danger via their `InfluenceEmitter` component;
+        // dead wildlife (current_hp ≤ 0) must stop emitting. The emitter is
+        // collected by `InfluenceRuntimeSystem::collect_component_emitters`
+        // and stamped into the Danger channel during `tick_update`.
+        for (_, (wildlife, emitter)) in
+            world.query::<(&Wildlife, &mut InfluenceEmitter)>().iter()
+        {
+            if emitter.channel != ChannelId::Danger {
+                continue;
+            }
+            let alive = wildlife.current_hp > 0.0;
+            if emitter.enabled != alive {
+                emitter.enabled = alive;
             }
         }
 

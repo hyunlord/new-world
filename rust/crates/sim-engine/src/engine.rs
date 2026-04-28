@@ -225,6 +225,19 @@ pub struct SimResources {
     /// Food economy inverse invariant: times the boost was flagged as applied
     /// but food_per_capita was >= threshold. Should ALWAYS be 0 by code construction.
     pub food_economy_boost_outside_scarcity: u64,
+    /// [wildlife-threat-detection-and-flee-v1] Per-tick `WildlifePerceived`
+    /// observations: `(tick, agent_entity_bits)`. Appended by the wildlife
+    /// threat perception system whenever a human's nearest live wildlife is
+    /// within `WILDLIFE_PERCEPTION_RANGE`.
+    pub harness_wildlife_perceived: Vec<(u64, u64)>,
+    /// [wildlife-threat-detection-and-flee-v1] Per-tick `FleeStarted` events
+    /// `(tick, agent_entity_bits)`. Appended only when an agent transitions
+    /// from a non-Flee action into ActionType::Flee.
+    pub harness_flee_started: Vec<(u64, u64)>,
+    /// [wildlife-threat-detection-and-flee-v1] Per-tick Flee terminations at
+    /// safe distance: `(tick, agent_entity_bits, distance_to_nearest_live_wildlife)`.
+    /// Appended when an agent's Flee state ends with distance > safety threshold.
+    pub harness_flee_terminated_safe: Vec<(u64, u64, f64)>,
 }
 
 fn clamp_policy_from_def(value: &InfluenceClampPolicyDef) -> ChannelClampPolicy {
@@ -498,6 +511,9 @@ impl SimResources {
             food_economy_scarcity_boost_applications: 0,
             food_economy_scarcity_boost_counterfactual: 0,
             food_economy_boost_outside_scarcity: 0,
+            harness_wildlife_perceived: Vec::new(),
+            harness_flee_started: Vec::new(),
+            harness_flee_terminated_safe: Vec::new(),
         }
     }
 
