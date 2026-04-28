@@ -1730,6 +1730,16 @@ pub const INFECTION_HP_DRAIN: u8 = 1;
 /// Aggregate HP threshold below which an agent is considered fatally wounded.
 pub const HEALTH_AGGREGATE_DEATH_THRESHOLD: f64 = 0.05;
 
+// ── Wildlife spawn [wildlife-entity-and-spawn-v1] ────────────────────────────
+/// Minimum Chebyshev distance from any settlement center for wildlife to spawn.
+pub const WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT: i32 = 20;
+/// Number of wolf entities spawned at simulation start.
+pub const WILDLIFE_WOLF_COUNT: usize = 3;
+/// Number of bear entities spawned at simulation start.
+pub const WILDLIFE_BEAR_COUNT: usize = 2;
+/// Number of boar entities spawned at simulation start.
+pub const WILDLIFE_BOAR_COUNT: usize = 2;
+
 // ── Work Injury [body-damage-api-v1] ─────────────────────────────────────────
 /// Probability of a minor injury per Forage action completion.
 pub const WORK_INJURY_FORAGE_CHANCE: f32 = 0.01;
