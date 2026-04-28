@@ -106,6 +106,35 @@ Quality gates (UNCHANGED):
 
 VLM WARNING alone never blocks merge. This is policy, not bug.
 
+### Adjusted Score Formula (added 2026-04-28)
+
+The pre-commit hook uses **adjusted_score**, not raw score, for the gate:
+
+```
+adjusted_score = raw_score + vlm_env_cost
+
+vlm_env_cost:
+  +8  if visual_analysis.txt is absent (VLM SKIP — Godot couldn't launch)
+  +8  if visual_analysis.txt starts with VISUAL_WARNING
+  +0  otherwise (VLM PASS — no adjustment needed)
+```
+
+Hook compares `adjusted_score >= 90`, not `raw_score`.
+
+Examples:
+- Score 92 raw + VLM PASS  = 92 adjusted → PASS (no change)
+- Score 84 raw + VLM SKIP  = 92 adjusted → PASS (env cost applied)
+- Score 80 raw + VLM SKIP  = 88 adjusted → BLOCK (real signal remains)
+- Score 88 raw + VLM PASS  = 88 adjusted → BLOCK (real signal remains)
+- Score 83 raw + VLM SKIP  = 91 adjusted → PASS (Wildlife Phase A1 scenario)
+
+**Attempt penalties (-4 per attempt) are NOT adjusted** — they are real
+signals of code rework, not environmental costs.
+
+Implemented in both hook layers:
+- `tools/harness/hooks/pre-commit-check.sh` (Layer 1: Claude Code PreToolUse)
+- `hooks/pre-commit-harness` (Layer 2: git pre-commit)
+
 ### Critical clarification (added 2026-04-27)
 
 **HARNESS_SKIP=1 is FORBIDDEN, not "last resort":**

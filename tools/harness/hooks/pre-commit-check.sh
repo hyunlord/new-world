@@ -101,10 +101,31 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                             echo "Run full pipeline: bash tools/harness/harness_pipeline.sh $APPROVED_FEATURE <prompt>" >&2
                             exit 2
                         fi
-                        if [[ "$score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
-                            echo "BLOCKED: Pipeline score ${score}/100 below ${SCORE_THRESHOLD} threshold." >&2
+                        # Adjusted score: add back VLM environmental costs per CLAUDE.md Rule 7.
+                        # "VLM WARNING alone never blocks merge. This is policy, not bug."
+                        # Detection: absent visual_analysis.txt = VLM SKIP; file starting with
+                        # VISUAL_WARNING = VLM WARNING. Both are environmental, not code quality.
+                        adjusted_score="$score"
+                        vlm_env_cost=0
+                        vlm_analysis_file="$HARNESS_DIR/evidence/$APPROVED_FEATURE/visual_analysis.txt"
+                        if [[ ! -f "$vlm_analysis_file" ]]; then
+                            vlm_env_cost=8
+                        elif grep -qE "^VISUAL_WARNING" "$vlm_analysis_file" 2>/dev/null; then
+                            vlm_env_cost=8
+                        fi
+                        if [[ "$vlm_env_cost" -gt 0 ]]; then
+                            adjusted_score=$((score + vlm_env_cost))
+                        fi
+                        if [[ "$adjusted_score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
+                            echo "BLOCKED: Pipeline score ${score}/100 (adjusted ${adjusted_score}/100) below ${SCORE_THRESHOLD} threshold." >&2
                             echo "Feature: $APPROVED_FEATURE (source: $score_source)" >&2
+                            if [[ "$vlm_env_cost" -gt 0 ]]; then
+                                echo "  Adjustment +${vlm_env_cost} (VLM env cost per Rule 7) applied but score still below threshold." >&2
+                            fi
                             exit 2
+                        fi
+                        if [[ "$vlm_env_cost" -gt 0 ]]; then
+                            echo "[hook] Score $score → adjusted $adjusted_score (+${vlm_env_cost} VLM env cost per Rule 7) ≥ $SCORE_THRESHOLD ✓" >&2
                         fi
                     fi
                     exit 0
