@@ -23,6 +23,7 @@ pub mod steering;
 pub mod stress;
 pub mod traits;
 pub mod values;
+pub mod wildlife;
 
 pub use crate::effect::{InfluenceEmitter, InfluenceReceiver};
 pub use crate::room::RoomId;
@@ -58,3 +59,4 @@ pub use steering::SteeringParams;
 pub use stress::{Stress, StressTrace};
 pub use traits::Traits;
 pub use values::Values;
+pub use wildlife::{Wildlife, WildlifeKind};

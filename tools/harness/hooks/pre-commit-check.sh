@@ -17,6 +17,13 @@ except:
     print('')
 " 2>/dev/null || echo "")
 
+# HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9
+if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
+    echo "BLOCKED: HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9." >&2
+    echo "Diagnose the score gap and fix root cause. Do not bypass." >&2
+    exit 2
+fi
+
 # Only care about git commit and git push
 if ! echo "$CMD" | grep -qE '^\s*git\s+(commit|push)'; then
     exit 0
@@ -69,15 +76,56 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                 age=$(( now_epoch - file_epoch ))
                 if [[ $age -lt 3600 ]]; then
                     APPROVED_FEATURE=$(sed -n '2p' "$verdict_file" 2>/dev/null || echo "")
-                    # Score gate: check pipeline report score
+                    # Score gate: REQUIRED — no score evidence = BLOCK (no silent pass)
+                    score=""
+                    score_source=""
                     if [[ -n "$APPROVED_FEATURE" ]]; then
-                        report_file="$HARNESS_DIR/reports/$APPROVED_FEATURE/pipeline_report.md"
-                        if [[ -f "$report_file" ]]; then
-                            score=$(grep -oE '\*\*[0-9]+\*\*' "$report_file" | head -1 | tr -d '*' || echo "0")
-                            if [[ -n "$score" && "$score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
-                                echo "BLOCKED: Pipeline score ${score}/100 below ${SCORE_THRESHOLD} threshold (feature: $APPROVED_FEATURE)." >&2
-                                exit 2
+                        # 1st: verdict line 4 (pipeline writes score there)
+                        verdict_score=$(sed -n '4p' "$verdict_file" 2>/dev/null || echo "")
+                        if [[ "$verdict_score" =~ ^[0-9]+$ ]]; then
+                            score="$verdict_score"
+                            score_source="verdict:line4"
+                        fi
+                        # 2nd: legacy pipeline_report.md
+                        if [[ -z "$score" ]]; then
+                            report_file="$HARNESS_DIR/reports/$APPROVED_FEATURE/pipeline_report.md"
+                            if [[ -f "$report_file" ]]; then
+                                score=$(grep -oE '\*\*[0-9]+\*\*' "$report_file" | head -1 | tr -d '*' || echo "")
+                                [[ -n "$score" ]] && score_source="pipeline_report.md"
                             fi
+                        fi
+                        # No score found — BLOCK (no silent pass)
+                        if [[ -z "$score" ]]; then
+                            echo "BLOCKED: No score evidence for feature '$APPROVED_FEATURE'." >&2
+                            echo "Verdict has no score (line 4 empty) and pipeline_report.md missing." >&2
+                            echo "Run full pipeline: bash tools/harness/harness_pipeline.sh $APPROVED_FEATURE <prompt>" >&2
+                            exit 2
+                        fi
+                        # Adjusted score: add back VLM environmental costs per CLAUDE.md Rule 7.
+                        # "VLM WARNING alone never blocks merge. This is policy, not bug."
+                        # Detection: absent visual_analysis.txt = VLM SKIP; file starting with
+                        # VISUAL_WARNING = VLM WARNING. Both are environmental, not code quality.
+                        adjusted_score="$score"
+                        vlm_env_cost=0
+                        vlm_analysis_file="$HARNESS_DIR/evidence/$APPROVED_FEATURE/visual_analysis.txt"
+                        if [[ ! -f "$vlm_analysis_file" ]]; then
+                            vlm_env_cost=8
+                        elif grep -qE "^VISUAL_WARNING" "$vlm_analysis_file" 2>/dev/null; then
+                            vlm_env_cost=8
+                        fi
+                        if [[ "$vlm_env_cost" -gt 0 ]]; then
+                            adjusted_score=$((score + vlm_env_cost))
+                        fi
+                        if [[ "$adjusted_score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
+                            echo "BLOCKED: Pipeline score ${score}/100 (adjusted ${adjusted_score}/100) below ${SCORE_THRESHOLD} threshold." >&2
+                            echo "Feature: $APPROVED_FEATURE (source: $score_source)" >&2
+                            if [[ "$vlm_env_cost" -gt 0 ]]; then
+                                echo "  Adjustment +${vlm_env_cost} (VLM env cost per Rule 7) applied but score still below threshold." >&2
+                            fi
+                            exit 2
+                        fi
+                        if [[ "$vlm_env_cost" -gt 0 ]]; then
+                            echo "[hook] Score $score → adjusted $adjusted_score (+${vlm_env_cost} VLM env cost per Rule 7) ≥ $SCORE_THRESHOLD ✓" >&2
                         fi
                     fi
                     exit 0

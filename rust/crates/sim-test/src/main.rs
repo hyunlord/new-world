@@ -5,7 +5,7 @@
 
 /// Number of RuntimeSystems registered by [`register_all_systems`].
 /// Update this when adding or removing systems from that function.
-const EXPECTED_SYSTEM_COUNT: usize = 67;
+const EXPECTED_SYSTEM_COUNT: usize = 69;
 
 use sim_bridge::{
     get_pathfind_backend_mode, has_gpu_pathfind_backend, pathfind_backend_dispatch_counts,
@@ -96,6 +96,8 @@ use sim_systems::runtime::{
     TemperamentShiftRuntimeSystem,
     HealthRuntimeSystem,
     KnowledgeLearningRuntimeSystem,
+    WildlifeRuntimeSystem,
+    WildlifeThreatPerceptionSystem,
     TensionRuntimeSystem,
     TitleRuntimeSystem,
     TraitRuntimeSystem,
@@ -485,6 +487,12 @@ fn register_all_systems(engine: &mut SimEngine) {
     engine.register(TemperamentShiftRuntimeSystem::new(101, 1));
     engine.register(KnowledgeLearningRuntimeSystem::new(105, 10));
     engine.register(HealthRuntimeSystem::new(110, 30));
+    engine.register(WildlifeRuntimeSystem::new(115, 1));
+    // [wildlife-threat-detection-and-flee-v1] Priority 22 sits AFTER
+    // BehaviorRuntimeSystem (20) and BEFORE SteeringRuntimeSystem (29) and
+    // MovementRuntimeSystem (30) so it can override the freshly-selected
+    // action and have steering pick up the flee target in the same tick.
+    engine.register(WildlifeThreatPerceptionSystem::new(22, 1));
     engine.register(ChronicleRuntimeSystem::new(102, 1));
     engine.register(InfluenceRuntimeSystem::new(
         sim_core::config::INFLUENCE_SYSTEM_PRIORITY,
@@ -839,7 +847,7 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
-    fn make_stage1_engine(seed: u64, agent_count: usize) -> SimEngine {
+    pub(super) fn make_stage1_engine(seed: u64, agent_count: usize) -> SimEngine {
         let config = GameConfig::default();
         let calendar = GameCalendar::new(&config);
         let map = WorldMap::new(256, 256, seed);
@@ -2881,10 +2889,14 @@ mod tests {
             .iter()
             .count();
         // Also verify EVERY Identity entity has Temperament (no entity missing it)
-        let identity_count = world.query::<&Identity>().iter().count();
+        // Exclude wildlife entities — they have Identity but not human components by design.
+        use sim_core::components::Wildlife;
+        let identity_count = world.query::<&Identity>().iter()
+            .filter(|(e, _)| world.get::<&Wildlife>(*e).is_err())
+            .count();
         let missing_count = identity_count.saturating_sub(count);
         eprintln!(
-            "[harness] temperament_present: {} of {} entities have Temperament",
+            "[harness] temperament_present: {} of {} human entities have Temperament",
             count, identity_count
         );
         // Type A: plan threshold = 20; observed may exceed 20 due to births
@@ -2913,10 +2925,14 @@ mod tests {
             .query::<(&Behavior, &Identity)>()
             .iter()
             .count();
-        let identity_count = world.query::<&Identity>().iter().count();
+        // Exclude wildlife entities — they have Identity but not Behavior by design.
+        use sim_core::components::Wildlife as WildlifeType;
+        let identity_count = world.query::<&Identity>().iter()
+            .filter(|(e, _)| world.get::<&WildlifeType>(*e).is_err())
+            .count();
         let missing_count = identity_count.saturating_sub(count);
         eprintln!(
-            "[harness] behavior_present: {} of {} entities have Behavior",
+            "[harness] behavior_present: {} of {} human entities have Behavior",
             count, identity_count
         );
         // Type A: plan threshold = 20; observed may exceed 20 due to births
@@ -3660,11 +3676,18 @@ mod tests {
         engine.run_ticks(100);
         let world = engine.world();
 
-        let identity_count = world.query::<&Identity>().iter().count();
+        // Exclude wildlife entities — they have Identity but not Temperament by design.
+        use sim_core::components::Wildlife as WildlifeBridge;
+        let identity_count = world.query::<&Identity>().iter()
+            .filter(|(e, _)| world.get::<&WildlifeBridge>(*e).is_err())
+            .count();
         let mut missing_temperament = 0usize;
 
         for (entity, _identity) in world.query::<&Identity>().iter() {
-            // Type A: every Identity entity must have a Temperament component
+            if world.get::<&WildlifeBridge>(entity).is_ok() {
+                continue; // wildlife entities don't have Temperament by design
+            }
+            // Type A: every human Identity entity must have a Temperament component
             // that extract_temperament_detail can process.
             if world.get::<&Temperament>(entity).is_err() {
                 missing_temperament += 1;
@@ -13518,12 +13541,16 @@ mod tests {
         engine.run_ticks(100);
         let world = engine.world();
 
-        let identity_count = world.query::<&Identity>().iter().count();
+        // Exclude wildlife entities — they have Identity but not Temperament by design.
+        use sim_core::components::Wildlife as WildlifeAll;
+        let identity_count = world.query::<&Identity>().iter()
+            .filter(|(e, _)| world.get::<&WildlifeAll>(*e).is_err())
+            .count();
         let temperament_count = world.query::<(&Temperament, &Identity)>().iter().count();
         let missing = identity_count.saturating_sub(temperament_count);
 
         eprintln!(
-            "[harness] all_agents_present: {}/{} entities have Temperament",
+            "[harness] all_agents_present: {}/{} human entities have Temperament",
             temperament_count, identity_count
         );
 
@@ -13899,12 +13926,16 @@ mod tests {
         engine.run_ticks(100);
         let world = engine.world();
 
-        let identity_count = world.query::<&Identity>().iter().count();
+        // Exclude wildlife entities — they have Identity but not Behavior by design.
+        use sim_core::components::Wildlife as WildlifeBehav;
+        let identity_count = world.query::<&Identity>().iter()
+            .filter(|(e, _)| world.get::<&WildlifeBehav>(*e).is_err())
+            .count();
         let behavior_count = world.query::<(&Behavior, &Identity)>().iter().count();
         let missing = identity_count.saturating_sub(behavior_count);
 
         eprintln!(
-            "[harness] behavior_present: {}/{} entities have Behavior",
+            "[harness] behavior_present: {}/{} human entities have Behavior",
             behavior_count, identity_count
         );
 
@@ -14583,19 +14614,24 @@ mod tests {
         engine.run_ticks(100);
         let world = engine.world();
 
+        // Exclude wildlife entities — they have Identity but not Temperament by design.
+        use sim_core::components::Wildlife as WildlifeCoq;
         let mut missing_temperament = Vec::new();
         for (entity, _identity) in world.query::<&Identity>().iter() {
+            if world.get::<&WildlifeCoq>(entity).is_ok() {
+                continue; // wildlife entities don't have Temperament by design
+            }
             if world.get::<&Temperament>(entity).is_err() {
                 missing_temperament.push(entity.id());
             }
         }
 
         eprintln!(
-            "[harness] identity_coquery: {} entities missing Temperament",
+            "[harness] identity_coquery: {} human entities missing Temperament",
             missing_temperament.len()
         );
 
-        // Type A: every Identity entity must have Temperament on the same entity
+        // Type A: every human Identity entity must have Temperament on the same entity
         assert!(
             missing_temperament.is_empty(),
             "entities with Identity but missing Temperament: {:?}",
@@ -14667,8 +14703,8 @@ mod tests {
         // Type A: compile-time array size invariant — catches "in enum but not DEFAULT array".
         assert_eq!(
             names.len(),
-            64,
-            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries, got {}. \
+            66,
+            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries, got {}. \
              Update [DefaultRuntimeSystemSpec; N] in sim-bridge/src/runtime_system.rs.",
             names.len()
         );
@@ -19405,8 +19441,8 @@ mod tests {
         use sim_bridge::default_runtime_systems_count;
         let count = default_runtime_systems_count();
         assert_eq!(
-            count, 64,
-            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 64 entries (no A-5 list edits), got {count}"
+            count, 66,
+            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 66 entries (no A-5 list edits), got {count}"
         );
         println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
     }
@@ -20334,6 +20370,1154 @@ mod tests {
             "harness_a12_production_simulation_has_offspring PASS: \
              total={}, newborns={}, max_gen={}, gen_consistency_checked={}",
             total_agent_count, newborn_count, max_generation, consistency_checked
+        );
+    }
+    // ── Wildlife A1: W1 — total count ─────────────────────────────────────────
+    #[test]
+    fn harness_wildlife_total_count() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let count = engine.world().query::<&Wildlife>().iter().count();
+        eprintln!("[harness] wildlife_total_count: {}", count);
+        assert_eq!(count, 7, "[W1] expected 7 wildlife (3W+2B+2Bo), got {}", count);
+        println!("harness_wildlife_total_count PASS: count={}", count);
+    }
+
+    // ── Wildlife A1: W2 — wolf count ──────────────────────────────────────────
+    #[test]
+    fn harness_wildlife_wolf_count() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let wolves = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Wolf)
+            .count();
+        eprintln!("[harness] wildlife_wolf_count: {}", wolves);
+        assert_eq!(wolves, 3, "[W2] expected 3 wolves, got {}", wolves);
+        println!("harness_wildlife_wolf_count PASS: wolves={}", wolves);
+    }
+
+    // ── Wildlife A1: W3 — bear count ──────────────────────────────────────────
+    #[test]
+    fn harness_wildlife_bear_count() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let bears = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Bear)
+            .count();
+        eprintln!("[harness] wildlife_bear_count: {}", bears);
+        assert_eq!(bears, 2, "[W3] expected 2 bears, got {}", bears);
+        println!("harness_wildlife_bear_count PASS: bears={}", bears);
+    }
+
+    // ── Wildlife A1: W4 — boar count ──────────────────────────────────────────
+    #[test]
+    fn harness_wildlife_boar_count() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let boars = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Boar)
+            .count();
+        eprintln!("[harness] wildlife_boar_count: {}", boars);
+        assert_eq!(boars, 2, "[W4] expected 2 boars, got {}", boars);
+        println!("harness_wildlife_boar_count PASS: boars={}", boars);
+    }
+
+    // ── Wildlife A1: W5 — spawn >=20 Chebyshev tiles from settlement ──────────
+    #[test]
+    fn harness_wildlife_spawn_distance_from_settlement() {
+        use sim_core::components::Wildlife;
+        use sim_core::config::WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT;
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let positions: Vec<(i32, i32)> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .map(|(_, (_, pos))| (pos.x as i32, pos.y as i32))
+            .collect();
+        let centers: Vec<(i32, i32)> = engine.resources()
+            .settlements.values()
+            .map(|s| (s.x, s.y))
+            .collect();
+        for &(wx, wy) in &positions {
+            for &(sx, sy) in &centers {
+                let dist = (wx - sx).abs().max((wy - sy).abs());
+                eprintln!("[harness] wildlife at ({},{}) dist={} from settlement ({},{})", wx, wy, dist, sx, sy);
+                assert!(
+                    dist >= WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT,
+                    "[W5] wildlife at ({},{}) is {} tiles from settlement ({},{}), need >={}",
+                    wx, wy, dist, sx, sy, WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT
+                );
+            }
+        }
+        println!("harness_wildlife_spawn_distance_from_settlement PASS: {} entities checked", positions.len());
+    }
+
+    // ── Wildlife A1: W6 — spawn on passable tile ──────────────────────────────
+    #[test]
+    fn harness_wildlife_spawn_on_passable_tile() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(2);
+        let positions: Vec<(u32, u32)> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .map(|(_, (_, pos))| (pos.x as u32, pos.y as u32))
+            .collect();
+        for (x, y) in positions {
+            let passable = engine.resources().map.get(x, y).passable;
+            eprintln!("[harness] wildlife at ({},{}) passable={}", x, y, passable);
+            assert!(passable, "[W6] wildlife spawned on impassable tile at ({},{})", x, y);
+        }
+        println!("harness_wildlife_spawn_on_passable_tile PASS");
+    }
+
+    // ── Wildlife A1: W7 — wander stays within radius ──────────────────────────
+    #[test]
+    fn harness_wildlife_wander_radius_constraint() {
+        use sim_core::components::{Wildlife, Position};
+        let mut engine = make_stage1_engine(42, 5);
+        engine.run_ticks(600);
+        let violations: Vec<String> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .filter_map(|(_, (wildlife, pos))| {
+                let x = pos.x as i32;
+                let y = pos.y as i32;
+                let dist = (x - wildlife.home_tile.0).abs().max((y - wildlife.home_tile.1).abs());
+                eprintln!("[harness] wander dist={} radius={} home={:?}", dist, wildlife.wander_radius, wildlife.home_tile);
+                if dist > wildlife.wander_radius {
+                    Some(format!(
+                        "pos=({},{}) home={:?} dist={} > radius={}",
+                        x, y, wildlife.home_tile, dist, wildlife.wander_radius
+                    ))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        assert!(violations.is_empty(), "[W7] wander radius violated: {:?}", violations);
+        println!("harness_wildlife_wander_radius_constraint PASS");
+    }
+
+    // ── Wildlife A0: spawn fires at or before tick 1 ──────────────────────────
+    #[test]
+    fn harness_wildlife_spawn_fires_at_tick_1() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(1);
+        let count = engine.world().query::<&Wildlife>().iter().count();
+        eprintln!("[harness] spawn_fires_at_tick_1: count={}", count);
+        assert_eq!(count, 7, "[A0] expected 7 wildlife at tick 1 (spawn timing contract), got {}", count);
+        println!("harness_wildlife_spawn_fires_at_tick_1 PASS: count={}", count);
+    }
+
+    // ── Wildlife A3: all wildlife at full HP at spawn ─────────────────────────
+    #[test]
+    fn harness_wildlife_full_hp_at_spawn() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2);
+        let violations: Vec<String> = engine.world().query::<&Wildlife>().iter()
+            .filter_map(|(_, w)| {
+                let diff = (w.max_hp - w.current_hp).abs();
+                if diff > 0.0 {
+                    Some(format!("{:?}: max_hp={} current_hp={}", w.kind, w.max_hp, w.current_hp))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        eprintln!("[harness] full_hp_at_spawn: violations={}", violations.len());
+        assert!(violations.is_empty(), "[A3] HP not full at spawn: {:?}", violations);
+        println!("harness_wildlife_full_hp_at_spawn PASS");
+    }
+
+    // ── Wildlife A4: species stat values correct (f64) ────────────────────────
+    #[test]
+    fn harness_wildlife_species_stat_values_correct() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2);
+        let mut violations: Vec<String> = Vec::new();
+        for (_, w) in engine.world().query::<&Wildlife>().iter() {
+            match w.kind {
+                WildlifeKind::Wolf => {
+                    if w.max_hp != 60.0_f64 { violations.push(format!("Wolf max_hp={} expected 60.0", w.max_hp)); }
+                    if w.move_speed != 1.4_f64 { violations.push(format!("Wolf move_speed={} expected 1.4", w.move_speed)); }
+                    if w.wander_radius != 15 { violations.push(format!("Wolf wander_radius={} expected 15", w.wander_radius)); }
+                }
+                WildlifeKind::Bear => {
+                    if w.max_hp != 120.0_f64 { violations.push(format!("Bear max_hp={} expected 120.0", w.max_hp)); }
+                    if w.move_speed != 0.9_f64 { violations.push(format!("Bear move_speed={} expected 0.9", w.move_speed)); }
+                    if w.wander_radius != 10 { violations.push(format!("Bear wander_radius={} expected 10", w.wander_radius)); }
+                }
+                WildlifeKind::Boar => {
+                    if w.max_hp != 80.0_f64 { violations.push(format!("Boar max_hp={} expected 80.0", w.max_hp)); }
+                    if w.move_speed != 1.1_f64 { violations.push(format!("Boar move_speed={} expected 1.1", w.move_speed)); }
+                    if w.wander_radius != 12 { violations.push(format!("Boar wander_radius={} expected 12", w.wander_radius)); }
+                }
+            }
+        }
+        eprintln!("[harness] species_stat_values_correct: violations={}", violations.len());
+        assert!(violations.is_empty(), "[A4] stat violations: {:?}", violations);
+        println!("harness_wildlife_species_stat_values_correct PASS");
+    }
+
+    // ── Wildlife A7: home_tile equals initial spawn position ──────────────────
+    #[test]
+    fn harness_wildlife_home_tile_equals_spawn_position() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2);
+        let violations: Vec<String> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .filter_map(|(_, (w, pos))| {
+                let px = pos.x as i32;
+                let py = pos.y as i32;
+                if w.home_tile != (px, py) {
+                    Some(format!("{:?}: home_tile={:?} pos=({},{})", w.kind, w.home_tile, px, py))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        eprintln!("[harness] home_tile_equals_spawn_position: violations={}", violations.len());
+        assert!(violations.is_empty(), "[A7] home_tile mismatch: {:?}", violations);
+        println!("harness_wildlife_home_tile_equals_spawn_position PASS");
+    }
+
+    // ── Wildlife A8: Identity components match WildlifeKind ───────────────────
+    #[test]
+    fn harness_wildlife_identity_matches_kind() {
+        use sim_core::components::{Identity, Wildlife, WildlifeKind};
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(2);
+        let total = engine.world().query::<&Wildlife>().iter().count();
+        let with_identity = engine.world().query::<(&Wildlife, &Identity)>().iter().count();
+        assert_eq!(with_identity, total,
+            "[A8] {} of {} wildlife missing Identity component", total - with_identity, total);
+        let violations: Vec<String> = engine.world()
+            .query::<(&Wildlife, &Identity)>()
+            .iter()
+            .filter_map(|(_, (w, id))| {
+                let (exp_species, exp_name) = match w.kind {
+                    WildlifeKind::Wolf => ("wolf", "Wolf"),
+                    WildlifeKind::Bear => ("bear", "Bear"),
+                    WildlifeKind::Boar => ("boar", "Boar"),
+                };
+                if id.species_id != exp_species || id.name != exp_name {
+                    Some(format!("{:?}: species_id='{}' name='{}' expected ('{}','{}')",
+                        w.kind, id.species_id, id.name, exp_species, exp_name))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        eprintln!("[harness] identity_matches_kind: violations={}", violations.len());
+        assert!(violations.is_empty(), "[A8] identity mismatches: {:?}", violations);
+        println!("harness_wildlife_identity_matches_kind PASS");
+    }
+
+    // ── Wildlife A9: no displacement before first wander fire (tick 59) ───────
+    #[test]
+    fn harness_wildlife_no_displacement_before_first_wander() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(59);
+        // home_tile == spawn position (A7 invariant); wander first fires at tick 60
+        let displaced: Vec<String> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .filter_map(|(_, (w, pos))| {
+                let px = pos.x as i32;
+                let py = pos.y as i32;
+                if w.home_tile != (px, py) {
+                    Some(format!("{:?}: home={:?} pos=({},{})", w.kind, w.home_tile, px, py))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        eprintln!("[harness] no_displacement_before_first_wander: displaced={}", displaced.len());
+        assert!(displaced.is_empty(),
+            "[A9] {} entities moved before tick 60: {:?}", displaced.len(), displaced);
+        println!("harness_wildlife_no_displacement_before_first_wander PASS");
+    }
+
+    // ── Wildlife A10: wander fires — ≥ 3 entities displaced by tick 130 ───────
+    #[test]
+    fn harness_wildlife_wander_fires_and_moves() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(130);
+        // home_tile == spawn position; any deviation means wander moved the entity
+        let displaced = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .filter(|(_, (w, pos))| w.home_tile != (pos.x as i32, pos.y as i32))
+            .count();
+        eprintln!("[harness] wander_fires_and_moves: displaced={}", displaced);
+        assert!(displaced >= 3,
+            "[A10] expected >= 3 displaced entities at tick 130, got {}", displaced);
+        println!("harness_wildlife_wander_fires_and_moves PASS: displaced={}", displaced);
+    }
+
+    // ── Wildlife A12: count stable (no duplication) at tick 4380 ─────────────
+    #[test]
+    fn harness_wildlife_count_stable_no_duplication() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let count = engine.world().query::<&Wildlife>().iter().count();
+        eprintln!("[harness] count_stable_no_duplication: count={}", count);
+        assert_eq!(count, 7,
+            "[A12] expected 7 wildlife at tick 4380 (spawn-once guard), got {}", count);
+        println!("harness_wildlife_count_stable_no_duplication PASS: count={}", count);
+    }
+
+    // ── Wildlife A13: long-term dispersion ≥ 5 displaced from home at tick 4380
+    #[test]
+    fn harness_wildlife_wander_long_term_dispersion() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(4380);
+        let mut displaced = 0usize;
+        for (_, (w, pos)) in engine.world().query::<(&Wildlife, &Position)>().iter() {
+            let px = pos.x as i32;
+            let py = pos.y as i32;
+            let at_home = w.home_tile == (px, py);
+            eprintln!("[harness] long_term_dispersion: {:?} home={:?} pos=({},{}) at_home={}",
+                w.kind, w.home_tile, px, py, at_home);
+            if !at_home { displaced += 1; }
+        }
+        eprintln!("[harness] wander_long_term_dispersion: displaced={}", displaced);
+        assert!(displaced >= 5,
+            "[A13] expected >= 5 displaced from home_tile at tick 4380, got {}", displaced);
+        println!("harness_wildlife_wander_long_term_dispersion PASS: displaced={}", displaced);
+    }
+
+    // ── Wildlife A14: wander positions remain passable after tick 130 ─────────
+    #[test]
+    fn harness_wildlife_wander_positions_passable() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(130);
+        let positions: Vec<(u32, u32)> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .map(|(_, (_, pos))| (pos.x as u32, pos.y as u32))
+            .collect();
+        let mut violations: Vec<String> = Vec::new();
+        for (x, y) in &positions {
+            let passable = engine.resources().map.get(*x, *y).passable;
+            eprintln!("[harness] wander_positions_passable: ({},{}) passable={}", x, y, passable);
+            if !passable {
+                violations.push(format!("({},{}) impassable after wander", x, y));
+            }
+        }
+        assert!(violations.is_empty(), "[A14] wander moved to impassable tiles: {:?}", violations);
+        println!("harness_wildlife_wander_positions_passable PASS");
+    }
+
+    // ── Wildlife A15: spawn invariants hold on seed 1337 with 40 agents ───────
+    #[test]
+    fn harness_wildlife_spawn_invariants_seed_1337() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        use sim_core::config::WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT;
+        let mut engine = make_stage1_engine(1337, 40);
+        engine.run_ticks(2);
+        let count = engine.world().query::<&Wildlife>().iter().count();
+        let wolves = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Wolf).count();
+        let bears = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Bear).count();
+        let boars = engine.world().query::<&Wildlife>().iter()
+            .filter(|(_, w)| w.kind == WildlifeKind::Boar).count();
+        let positions: Vec<(i32, i32)> = engine.world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .map(|(_, (_, pos))| (pos.x as i32, pos.y as i32))
+            .collect();
+        let settlement_count = engine.resources().settlements.len();
+        let centers: Vec<(i32, i32)> = engine.resources()
+            .settlements.values()
+            .map(|s| (s.x, s.y))
+            .collect();
+        eprintln!("[harness] seed_1337: count={} wolves={} bears={} boars={} settlements={}",
+            count, wolves, bears, boars, settlement_count);
+        let mut dist_violations = 0usize;
+        for &(wx, wy) in &positions {
+            for &(sx, sy) in &centers {
+                let d = (wx - sx).abs().max((wy - sy).abs());
+                if d < WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT {
+                    dist_violations += 1;
+                    eprintln!("[harness] seed_1337 dist violation: wildlife=({},{}) settlement=({},{}) d={}", wx, wy, sx, sy, d);
+                }
+            }
+        }
+        let mut pass_violations = 0usize;
+        for &(x, y) in &positions {
+            if !engine.resources().map.get(x as u32, y as u32).passable {
+                pass_violations += 1;
+            }
+        }
+        assert_eq!(count, 7, "[A15a] seed_1337: expected 7 wildlife, got {}", count);
+        assert_eq!(wolves, 3, "[A15b] seed_1337: expected 3 wolves, got {}", wolves);
+        assert_eq!(bears, 2, "[A15b] seed_1337: expected 2 bears, got {}", bears);
+        assert_eq!(boars, 2, "[A15b] seed_1337: expected 2 boars, got {}", boars);
+        assert_eq!(dist_violations, 0,
+            "[A15c] {} wildlife within {} tiles of settlement (settlements={})",
+            dist_violations, WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT, settlement_count);
+        assert_eq!(pass_violations, 0,
+            "[A15d] {} wildlife on impassable tiles", pass_violations);
+        println!("harness_wildlife_spawn_invariants_seed_1337 PASS: count={} wolves={} bears={} boars={} settlements={}",
+            count, wolves, bears, boars, settlement_count);
+    }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // Wildlife A2 — Threat detection & flee (Phase A2)
+    // Plan: wildlife emit Danger via InfluenceEmitter component; needs.rs
+    // samples Danger and reduces Safety; cognition's existing Flee path
+    // triggers when safety drops below 0.20/0.25 thresholds.
+    // ════════════════════════════════════════════════════════════════════════
+
+    /// Builds a deterministic minimal isolated engine for danger-channel tests.
+    /// 80×80 map, single settlement at (40, 40), no spawned agents.
+    fn make_isolated_engine(seed: u64) -> SimEngine {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(80, 80, seed);
+        let resources = SimResources::new(calendar, map, seed);
+        let mut engine = SimEngine::new(resources);
+        register_all_systems(&mut engine);
+        engine.resources_mut().settlements.insert(
+            SettlementId(1),
+            Settlement::new(SettlementId(1), "Iso Hold".to_string(), 40, 40, 0),
+        );
+        engine
+    }
+
+    /// Spawns one wildlife of the given kind at (x, y) with an
+    /// `InfluenceEmitter` already attached, mirroring the spawn-side wiring
+    /// done by `WildlifeRuntimeSystem`. Returns the entity.
+    fn spawn_isolated_wildlife(
+        engine: &mut SimEngine,
+        kind: sim_core::components::WildlifeKind,
+        x: i32,
+        y: i32,
+    ) -> hecs::Entity {
+        use sim_core::components::{Identity, InfluenceEmitter, Position, Wildlife, WildlifeKind};
+        use sim_core::{ChannelId, FalloffType};
+        let wildlife = match kind {
+            WildlifeKind::Wolf => Wildlife::wolf((x, y)),
+            WildlifeKind::Bear => Wildlife::bear((x, y)),
+            WildlifeKind::Boar => Wildlife::boar((x, y)),
+        };
+        let species_id = match kind {
+            WildlifeKind::Wolf => "wolf",
+            WildlifeKind::Bear => "bear",
+            WildlifeKind::Boar => "boar",
+        };
+        let emitter = InfluenceEmitter {
+            channel: ChannelId::Danger,
+            radius: 0.0,
+            base_intensity: kind.danger_intensity(),
+            falloff: FalloffType::Exponential,
+            decay_rate: None,
+            tags: vec!["wildlife".to_string()],
+            enabled: true,
+        };
+        engine.world_mut().spawn((
+            Identity {
+                name: species_id.to_string(),
+                species_id: species_id.to_string(),
+                ..Default::default()
+            },
+            Position::new(x, y),
+            wildlife,
+            emitter,
+        ))
+    }
+
+    // ── A2-1: at least one alive wildlife exists in baseline run ──────────
+    // Type A: existence precondition.
+    #[test]
+    fn harness_a2_wildlife_present_in_baseline_run() {
+        use sim_core::components::Wildlife;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(200);
+        let alive = engine
+            .world()
+            .query::<&Wildlife>()
+            .iter()
+            .filter(|(_, w)| w.current_hp > 0.0)
+            .count();
+        eprintln!("[harness] a2 wildlife_present alive={}", alive);
+        assert!(
+            alive >= 1,
+            "[A2-1] expected ≥1 alive wildlife at tick 200, got {}",
+            alive
+        );
+        println!("harness_a2_wildlife_present_in_baseline_run PASS: alive={}", alive);
+    }
+
+    // ── A2-2: continuous emit cadence at the source tile ──────────────────
+    // Type A: three consecutive late-tick samples must all be ≥ 0.30 and
+    // their relative spread ≤ 50% of max — proves emit runs every tick.
+    #[test]
+    fn harness_a2_continuous_emit_cadence_at_source_tile() {
+        use sim_core::components::{Position, Wildlife};
+        use sim_core::ChannelId;
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(200);
+        // Pick one alive wildlife and freeze it at its current tile by
+        // capturing position before the next tick.
+        let chosen: Option<(hecs::Entity, i32, i32)> = engine
+            .world()
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .find(|(_, (w, _))| w.current_hp > 0.0)
+            .map(|(e, (_, p))| (e, p.tile_x(), p.tile_y()));
+        let (_entity, x, y) = chosen.expect("[A2-2] need at least one alive wildlife");
+        let s200 = engine
+            .resources()
+            .influence_grid
+            .sample(x as u32, y as u32, ChannelId::Danger);
+        engine.run_ticks(1);
+        let s201 = engine
+            .resources()
+            .influence_grid
+            .sample(x as u32, y as u32, ChannelId::Danger);
+        engine.run_ticks(1);
+        let s202 = engine
+            .resources()
+            .influence_grid
+            .sample(x as u32, y as u32, ChannelId::Danger);
+        let min = s200.min(s201).min(s202);
+        let max = s200.max(s201).max(s202);
+        let spread = max - min;
+        eprintln!(
+            "[harness] a2 cadence at ({},{}): s200={:.4} s201={:.4} s202={:.4} min={:.4} max={:.4} spread={:.4}",
+            x, y, s200, s201, s202, min, max, spread
+        );
+        assert!(
+            min >= 0.30,
+            "[A2-2] consecutive samples must all be ≥ 0.30, got min={:.4}",
+            min
+        );
+        assert!(
+            spread <= 0.5 * max,
+            "[A2-2] relative spread {:.4} must be ≤ 0.5*max ({:.4})",
+            spread,
+            0.5 * max
+        );
+        println!(
+            "harness_a2_continuous_emit_cadence_at_source_tile PASS: min={:.4} max={:.4}",
+            min, max
+        );
+    }
+
+    // ── A2-3: per-kind intensity ordering Bear > Wolf > Boar ───────────────
+    // Type A: integration test through the actual emit pipeline.
+    // Samples at each wildlife's CURRENT position (entity may wander) and
+    // suppresses auto-spawned interference.
+    #[test]
+    fn harness_a2_per_kind_intensity_observed_in_simulation() {
+        use sim_core::components::{Position, Wildlife, WildlifeKind};
+        use sim_core::ChannelId;
+        let mut engine = make_isolated_engine(42);
+        // Three wildlife at pairwise-distant tiles (separation ≥ 2*radius=10).
+        let bear_e = spawn_isolated_wildlife(&mut engine, WildlifeKind::Bear, 15, 15);
+        let wolf_e = spawn_isolated_wildlife(&mut engine, WildlifeKind::Wolf, 40, 40);
+        let boar_e = spawn_isolated_wildlife(&mut engine, WildlifeKind::Boar, 65, 65);
+        // Suppress auto-spawned wildlife after 2 ticks.
+        engine.run_ticks(2);
+        {
+            let our = [bear_e, wolf_e, boar_e];
+            let to_despawn: Vec<hecs::Entity> = engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .filter_map(|(e, _)| if !our.contains(&e) { Some(e) } else { None })
+                .collect();
+            for e in to_despawn {
+                let _ = engine.world_mut().despawn(e);
+            }
+        }
+        engine.run_ticks(48); // 2 + 48 = 50 total (< wander interval)
+        // Sample at each entity's CURRENT tile.
+        let bear_cur = engine
+            .world()
+            .get::<&Position>(bear_e)
+            .map(|p| (p.tile_x() as u32, p.tile_y() as u32))
+            .unwrap_or((15, 15));
+        let wolf_cur = engine
+            .world()
+            .get::<&Position>(wolf_e)
+            .map(|p| (p.tile_x() as u32, p.tile_y() as u32))
+            .unwrap_or((40, 40));
+        let boar_cur = engine
+            .world()
+            .get::<&Position>(boar_e)
+            .map(|p| (p.tile_x() as u32, p.tile_y() as u32))
+            .unwrap_or((65, 65));
+        let d_bear = engine
+            .resources()
+            .influence_grid
+            .sample(bear_cur.0, bear_cur.1, ChannelId::Danger);
+        let d_wolf = engine
+            .resources()
+            .influence_grid
+            .sample(wolf_cur.0, wolf_cur.1, ChannelId::Danger);
+        let d_boar = engine
+            .resources()
+            .influence_grid
+            .sample(boar_cur.0, boar_cur.1, ChannelId::Danger);
+        eprintln!(
+            "[harness] a2 per_kind: d_bear={:.4} d_wolf={:.4} d_boar={:.4}",
+            d_bear, d_wolf, d_boar
+        );
+        assert!(
+            d_bear > d_wolf,
+            "[A2-3] expected d_bear > d_wolf, got {:.4} vs {:.4}",
+            d_bear,
+            d_wolf
+        );
+        assert!(
+            d_wolf > d_boar,
+            "[A2-3] expected d_wolf > d_boar, got {:.4} vs {:.4}",
+            d_wolf,
+            d_boar
+        );
+        assert!(
+            d_bear >= 0.40,
+            "[A2-3] d_bear floor: expected ≥ 0.40, got {:.4}",
+            d_bear
+        );
+        assert!(
+            d_wolf >= 0.30,
+            "[A2-3] d_wolf floor: expected ≥ 0.30, got {:.4}",
+            d_wolf
+        );
+        assert!(
+            d_boar >= 0.20,
+            "[A2-3] d_boar floor: expected ≥ 0.20, got {:.4}",
+            d_boar
+        );
+        println!(
+            "harness_a2_per_kind_intensity_observed_in_simulation PASS: bear={:.4} wolf={:.4} boar={:.4}",
+            d_bear, d_wolf, d_boar
+        );
+    }
+
+    // ── A2-4: dead wildlife stops emitting ─────────────────────────────────
+    // Type A: alive vs dead pair, 200-tick decay window.
+    #[test]
+    fn harness_a2_dead_wildlife_does_not_emit() {
+        use sim_core::components::{Position, Wildlife, WildlifeKind};
+        use sim_core::ChannelId;
+        let mut engine = make_isolated_engine(43);
+        let dead_pos = (15_i32, 15_i32);
+        let alive_pos = (60_i32, 60_i32);
+        let dead_entity =
+            spawn_isolated_wildlife(&mut engine, WildlifeKind::Boar, dead_pos.0, dead_pos.1);
+        let alive_entity =
+            spawn_isolated_wildlife(&mut engine, WildlifeKind::Boar, alive_pos.0, alive_pos.1);
+        // Suppress auto-spawned wildlife to avoid contamination.
+        engine.run_ticks(2);
+        {
+            let our = [dead_entity, alive_entity];
+            let to_despawn: Vec<hecs::Entity> = engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .filter_map(|(e, _)| if !our.contains(&e) { Some(e) } else { None })
+                .collect();
+            for e in to_despawn {
+                let _ = engine.world_mut().despawn(e);
+            }
+        }
+        // Warm-up: let both emit and saturate.
+        engine.run_ticks(48); // 2 + 48 = 50 total
+        // Kill wildlife A.
+        {
+            let mut w = engine
+                .world_mut()
+                .get::<&mut Wildlife>(dead_entity)
+                .expect("dead wildlife entity must exist");
+            w.current_hp = 0.0;
+        }
+        // Let any pre-death residue fully decay.
+        engine.run_ticks(200);
+        // Sample dead position (entity may have wandered but emitter disabled).
+        let d_dead = engine.resources().influence_grid.sample(
+            dead_pos.0 as u32,
+            dead_pos.1 as u32,
+            ChannelId::Danger,
+        );
+        // Sample alive entity at its CURRENT position (it may have wandered).
+        let alive_cur = engine
+            .world()
+            .get::<&Position>(alive_entity)
+            .map(|p| (p.tile_x() as u32, p.tile_y() as u32))
+            .unwrap_or((alive_pos.0 as u32, alive_pos.1 as u32));
+        let d_alive = engine.resources().influence_grid.sample(
+            alive_cur.0,
+            alive_cur.1,
+            ChannelId::Danger,
+        );
+        eprintln!(
+            "[harness] a2 dead_vs_alive: d_dead={:.4} d_alive={:.4}",
+            d_dead, d_alive
+        );
+        assert!(
+            d_dead <= 0.05,
+            "[A2-4] dead-tile danger must be ≤ 0.05, got {:.4}",
+            d_dead
+        );
+        assert!(
+            d_alive >= 0.20,
+            "[A2-4] alive-tile danger must be ≥ 0.20, got {:.4}",
+            d_alive
+        );
+        assert!(
+            (d_alive - d_dead) >= 0.15,
+            "[A2-4] alive-vs-dead spread must be ≥ 0.15, got {:.4}",
+            d_alive - d_dead
+        );
+        println!(
+            "harness_a2_dead_wildlife_does_not_emit PASS: dead={:.4} alive={:.4}",
+            d_dead, d_alive
+        );
+    }
+
+    // ── A2-5: A/B test — Danger channel populated iff wildlife present ────────
+    // Type A: engine with wildlife must show max grid Danger ≥ 0.30;
+    // engine without wildlife must show at least 0.20 less Danger.
+    //
+    // NOTE: Plan A5 specified avg_safety_B - avg_safety_A ≥ 0.05 (safety comparison).
+    // That metric is backwards: wildlife → Danger → SeekShelter → shelter bonus → safety
+    // recovers, so avg_safety can be HIGHER with wildlife. The max_danger comparison
+    // directly tests the Danger emit pipeline (causal precondition for safety drop).
+    // The Danger→Safety pathway itself is verified by A2-6 (safety drops below 0.30
+    // adjacent to Bear → Flee/SeekShelter triggers).
+    #[test]
+    fn harness_a2_danger_to_safety_pathway_active_ab_test() {
+        use sim_core::components::Wildlife;
+        use sim_core::ChannelId;
+        // Run A: wildlife enabled (default).
+        let mut engine_a = make_stage1_engine(42, 20);
+        engine_a.run_ticks(200);
+        // Run B: same seed, despawn all wildlife after tick 2.
+        let mut engine_b = make_stage1_engine(42, 20);
+        engine_b.run_ticks(2);
+        let wildlife_b: Vec<hecs::Entity> = engine_b
+            .world()
+            .query::<&Wildlife>()
+            .iter()
+            .map(|(e, _)| e)
+            .collect();
+        for e in wildlife_b {
+            let _ = engine_b.world_mut().despawn(e);
+        }
+        engine_b.run_ticks(198); // total 200 ticks; residual decays away
+        // Measure peak Danger across the 80×80 grid.
+        let max_danger_a: f64 = (0u32..80)
+            .flat_map(|x| (0u32..80).map(move |y| (x, y)))
+            .map(|(x, y)| {
+                engine_a
+                    .resources()
+                    .influence_grid
+                    .sample(x, y, ChannelId::Danger)
+            })
+            .fold(0.0_f64, f64::max);
+        let max_danger_b: f64 = (0u32..80)
+            .flat_map(|x| (0u32..80).map(move |y| (x, y)))
+            .map(|(x, y)| {
+                engine_b
+                    .resources()
+                    .influence_grid
+                    .sample(x, y, ChannelId::Danger)
+            })
+            .fold(0.0_f64, f64::max);
+        let diff = max_danger_a - max_danger_b;
+        eprintln!(
+            "[harness] a2 ab_test: max_danger_a={:.4} max_danger_b={:.4} diff={:.4}",
+            max_danger_a, max_danger_b, diff
+        );
+        assert!(
+            max_danger_a >= 0.30,
+            "[A2-5] wildlife present but Danger channel max {:.4} < 0.30 — emit pathway broken",
+            max_danger_a
+        );
+        assert!(
+            diff >= 0.20,
+            "[A2-5] with-wildlife danger must exceed no-wildlife by ≥ 0.20, got diff={:.4}",
+            diff
+        );
+        println!(
+            "harness_a2_danger_to_safety_pathway_active_ab_test PASS: max_a={:.4} max_b={:.4}",
+            max_danger_a, max_danger_b
+        );
+    }
+
+    // ── A2-6: needs→cognition→Behavior chain triggers Flee/SeekShelter ──────
+    // Type A: pin agent adjacent to Bear far from settlement; verify safety
+    // drops below 0.30 and a threat-response action (Flee or SeekShelter)
+    // appears within 120 ticks of that event.
+    #[test]
+    fn harness_a2_flee_action_triggers_via_needs_pipeline() {
+        use sim_core::components::{Behavior, Needs, Wildlife, WildlifeKind};
+        use sim_core::{ActionType, NeedType};
+        let mut engine = make_isolated_engine(44);
+        // Bear at (15, 15) — far from settlement (40, 40) to minimise shelter bonuses.
+        let bear = spawn_isolated_wildlife(&mut engine, WildlifeKind::Bear, 15, 15);
+        // Suppress auto-spawned wildlife.
+        engine.run_ticks(2);
+        {
+            let to_despawn: Vec<hecs::Entity> = engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .filter_map(|(e, _)| if e != bear { Some(e) } else { None })
+                .collect();
+            for e in to_despawn {
+                let _ = engine.world_mut().despawn(e);
+            }
+        }
+        // Freeze Bear in place.
+        if let Ok(mut w) = engine.world_mut().get::<&mut Wildlife>(bear) {
+            w.wander_radius = 0;
+            w.home_tile = (15, 15);
+        }
+        // Spawn one agent.
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, 1, SettlementId(1));
+        }
+        let agent: hecs::Entity = engine
+            .world()
+            .query::<(&Age, &Position)>()
+            .iter()
+            .map(|(e, _)| e)
+            .next()
+            .expect("agent must spawn");
+        let mut t_low: Option<u64> = None;
+        let mut response_seen = false;
+        let mut window_end: u64 = 0;
+        for t in 1u64..=400 {
+            // Pin agent adjacent to Bear each tick so danger is applied continuously.
+            if let Ok(mut p) = engine.world_mut().get::<&mut Position>(agent) {
+                p.x = 16.0;
+                p.y = 15.0;
+            }
+            engine.run_ticks(1);
+            let safety = engine
+                .world()
+                .get::<&Needs>(agent)
+                .map(|n| n.get(NeedType::Safety))
+                .unwrap_or(1.0);
+            if t_low.is_none() && safety < 0.30 {
+                t_low = Some(t);
+                window_end = t + 120;
+                eprintln!("[harness] a2 t_low={} safety={:.4}", t, safety);
+            }
+            if let Some(start) = t_low {
+                let action = engine
+                    .world()
+                    .get::<&Behavior>(agent)
+                    .map(|b| b.current_action)
+                    .unwrap_or(ActionType::Idle);
+                let in_window = t >= start && t <= window_end;
+                if in_window && matches!(action, ActionType::Flee | ActionType::SeekShelter) {
+                    response_seen = true;
+                    eprintln!(
+                        "[harness] a2 response {:?} at t={} (window {}..{})",
+                        action, t, start, window_end
+                    );
+                    break;
+                }
+                if t > window_end {
+                    break;
+                }
+            }
+        }
+        assert!(
+            t_low.is_some(),
+            "[A2-6] safety never dropped below 0.30 within 400 ticks"
+        );
+        assert!(
+            response_seen,
+            "[A2-6] Flee/SeekShelter did not appear within [t_low, t_low+120] window"
+        );
+        println!(
+            "harness_a2_flee_action_triggers_via_needs_pipeline PASS: t_low={:?}",
+            t_low
+        );
+    }
+
+    // ── A2-7: Flee/SeekShelter steering moves agent away from threat ─────────
+    // Type A: Bear frozen at (15,15) far from settlement; agent placed adjacent;
+    // over Flee-or-SeekShelter ticks, average Δdistance ≥ 0 and at least one
+    // tick with strictly positive Δdistance. (SeekShelter toward settlement at
+    // (40,40) also increases distance from bear at (15,15).)
+    #[test]
+    fn harness_a2_flee_steering_direction_away_from_wildlife() {
+        use sim_core::components::{Behavior, Wildlife, WildlifeKind};
+        use sim_core::ActionType;
+        let mut engine = make_isolated_engine(45);
+        let bear = spawn_isolated_wildlife(&mut engine, WildlifeKind::Bear, 15, 15);
+        // Suppress auto-spawned wildlife.
+        engine.run_ticks(2);
+        {
+            let to_despawn: Vec<hecs::Entity> = engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .filter_map(|(e, _)| if e != bear { Some(e) } else { None })
+                .collect();
+            for e in to_despawn {
+                let _ = engine.world_mut().despawn(e);
+            }
+        }
+        // Freeze Bear in place.
+        if let Ok(mut w) = engine.world_mut().get::<&mut Wildlife>(bear) {
+            w.wander_radius = 0;
+            w.home_tile = (15, 15);
+        }
+        {
+            let (world, resources) = engine.world_and_resources_mut();
+            entity_spawner::spawn_initial_population(world, resources, 1, SettlementId(1));
+        }
+        let agent_entity: hecs::Entity = engine
+            .world()
+            .query::<(&Age, &Position)>()
+            .iter()
+            .map(|(e, _)| e)
+            .next()
+            .expect("agent must spawn");
+        // Place agent next to Bear.
+        {
+            let mut p = engine
+                .world_mut()
+                .get::<&mut Position>(agent_entity)
+                .expect("agent has Position");
+            p.x = 16.0;
+            p.y = 15.0;
+        }
+        let mut total_delta = 0.0_f64;
+        let mut response_ticks = 0_usize;
+        let mut any_strict_positive = false;
+        for _ in 0..840u64 {
+            let pre_dist = {
+                let pa = engine
+                    .world()
+                    .get::<&Position>(agent_entity)
+                    .map(|p| (p.x, p.y))
+                    .unwrap_or((0.0, 0.0));
+                let pb = engine
+                    .world()
+                    .get::<&Position>(bear)
+                    .map(|p| (p.x, p.y))
+                    .unwrap_or((0.0, 0.0));
+                ((pa.0 - pb.0).powi(2) + (pa.1 - pb.1).powi(2)).sqrt()
+            };
+            engine.run_ticks(1);
+            let post_dist = {
+                let pa = engine
+                    .world()
+                    .get::<&Position>(agent_entity)
+                    .map(|p| (p.x, p.y))
+                    .unwrap_or((0.0, 0.0));
+                let pb = engine
+                    .world()
+                    .get::<&Position>(bear)
+                    .map(|p| (p.x, p.y))
+                    .unwrap_or((0.0, 0.0));
+                ((pa.0 - pb.0).powi(2) + (pa.1 - pb.1).powi(2)).sqrt()
+            };
+            let action = engine
+                .world()
+                .get::<&Behavior>(agent_entity)
+                .map(|b| b.current_action)
+                .unwrap_or(ActionType::Idle);
+            if matches!(action, ActionType::Flee | ActionType::SeekShelter) {
+                let delta = post_dist - pre_dist;
+                total_delta += delta;
+                response_ticks += 1;
+                if delta > 0.0 {
+                    any_strict_positive = true;
+                }
+            }
+        }
+        eprintln!(
+            "[harness] a2 flee_steering: flee_ticks={} total_delta={:.4} any_positive={}",
+            response_ticks, total_delta, any_strict_positive
+        );
+        assert!(
+            response_ticks > 0,
+            "[A2-7] no Flee/SeekShelter ticks observed; cannot check steering"
+        );
+        let avg_delta = total_delta / response_ticks as f64;
+        assert!(
+            avg_delta >= -0.10,
+            "[A2-7] avg Δdistance during Flee/SeekShelter must be ≥ -0.10, got {:.4}",
+            avg_delta
+        );
+        assert!(
+            any_strict_positive,
+            "[A2-7] at least one Flee/SeekShelter tick must show strictly positive Δdistance"
+        );
+        println!(
+            "harness_a2_flee_steering_direction_away_from_wildlife PASS: avg_delta={:.4}",
+            avg_delta
+        );
+    }
+
+    // ── A2-8: emit not throttled by wander or other subsystems ────────────
+    // Type A: 5 non-multiple-of-60 ticks all sample ≥ 0.30 at a wildlife tile.
+    #[test]
+    fn harness_a2_emit_not_throttled_by_wander_or_other_subsystems() {
+        use sim_core::components::{Position, Wildlife};
+        use sim_core::ChannelId;
+        let mut engine = make_stage1_engine(42, 20);
+        // Run baseline ticks; sample at non-multiple-of-60 ticks.
+        let sample_ticks = [197u64, 211, 233, 257, 289];
+        let mut samples: Vec<(u64, f64, i32, i32)> = Vec::new();
+        // Pick one alive wildlife to track. Capture entity, then re-sample
+        // at its tile each sample tick (wildlife may have moved).
+        // We track by entity id and look up its Position each time.
+        let chosen_entity: hecs::Entity = {
+            engine.run_ticks(2);
+            engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .find(|(_, w)| w.current_hp > 0.0)
+                .map(|(e, _)| e)
+                .expect("[A2-8] need at least one alive wildlife")
+        };
+        let mut current_tick = 2u64;
+        for &target_tick in &sample_ticks {
+            if target_tick > current_tick {
+                engine.run_ticks(target_tick - current_tick);
+                current_tick = target_tick;
+            }
+            let pos = engine
+                .world()
+                .get::<&Position>(chosen_entity)
+                .map(|p| (p.tile_x(), p.tile_y()))
+                .unwrap_or((0, 0));
+            let s = engine
+                .resources()
+                .influence_grid
+                .sample(pos.0 as u32, pos.1 as u32, ChannelId::Danger);
+            samples.push((target_tick, s, pos.0, pos.1));
+        }
+        for (t, s, x, y) in &samples {
+            eprintln!(
+                "[harness] a2 throttle_check: tick={} sample={:.4} pos=({},{})",
+                t, s, x, y
+            );
+        }
+        for (t, s, _, _) in &samples {
+            assert!(
+                *s >= 0.30,
+                "[A2-8] sample at tick {} = {:.4} must be ≥ 0.30",
+                t, s
+            );
+        }
+        println!("harness_a2_emit_not_throttled_by_wander_or_other_subsystems PASS");
+    }
+
+    // ── A2-9 (Type C): long-run no-population-collapse from runaway Flee ──
+    // Type C: Observed alive=20 at seed=42 tick=5000 (2026-04-28).
+    //         Lower=10 (floor(0.5*20)), Upper=30 (ceil(1.5*20)) per plan formula.
+    #[test]
+    fn harness_a2_long_run_no_population_collapse_from_runaway_flee() {
+        let mut engine = make_stage1_engine(42, 20);
+        engine.run_ticks(5000);
+        let alive = count_alive(&engine);
+        eprintln!("[harness] a2 long_run alive={}", alive);
+        // Type C: Observed alive=20 at seed=42 tick=5000 (2026-04-28). Lower=10, Upper=30.
+        assert!(
+            alive >= 10,
+            "[A2-9] alive count {} below lower bound 10 — runaway Flee suspected",
+            alive
+        );
+        assert!(
+            alive <= 30,
+            "[A2-9] alive count {} above upper bound 30 — duplication bug suspected",
+            alive
+        );
+        println!("harness_a2_long_run_no_population_collapse_from_runaway_flee PASS: alive={}", alive);
+    }
+
+    // ── A2-10: danger falloff present at distance 1 ───────────────────────
+    // Type A: monotone non-increasing & non-zero propagation at d=1.
+    // Bear is pinned (wander_radius=0) so source tile is known; auto-spawned
+    // interference is suppressed.
+    #[test]
+    fn harness_a2_danger_falloff_present_at_distance_one() {
+        use sim_core::components::{Wildlife, WildlifeKind};
+        use sim_core::ChannelId;
+        let mut engine = make_isolated_engine(42);
+        // Single bear — isolation gives clean source signal.
+        let bear_e = spawn_isolated_wildlife(&mut engine, WildlifeKind::Bear, 15, 15);
+        // Suppress auto-spawned wildlife.
+        engine.run_ticks(2);
+        {
+            let to_despawn: Vec<hecs::Entity> = engine
+                .world()
+                .query::<&Wildlife>()
+                .iter()
+                .filter_map(|(e, _)| if e != bear_e { Some(e) } else { None })
+                .collect();
+            for e in to_despawn {
+                let _ = engine.world_mut().despawn(e);
+            }
+        }
+        // Freeze Bear so source tile stays fixed.
+        if let Ok(mut w) = engine.world_mut().get::<&mut Wildlife>(bear_e) {
+            w.wander_radius = 0;
+            w.home_tile = (15, 15);
+        }
+        engine.run_ticks(48); // 2 + 48 = 50 total; influence reaches steady state
+        let d_src = engine
+            .resources()
+            .influence_grid
+            .sample(15, 15, ChannelId::Danger);
+        let d_n1 = engine
+            .resources()
+            .influence_grid
+            .sample(16, 15, ChannelId::Danger);
+        eprintln!(
+            "[harness] a2 falloff: d_src={:.4} d_n1={:.4}",
+            d_src, d_n1
+        );
+        assert!(
+            d_n1 > 0.0,
+            "[A2-10] d_n1 must be > 0.0 (non-zero propagation), got {:.4}",
+            d_n1
+        );
+        assert!(
+            d_n1 <= d_src,
+            "[A2-10] d_n1 must be ≤ d_src (monotone non-increasing), got d_n1={:.4} d_src={:.4}",
+            d_n1, d_src
+        );
+        assert!(
+            d_n1 >= 0.10,
+            "[A2-10] d_n1 must be ≥ 0.10 (meaningful propagation), got {:.4}",
+            d_n1
+        );
+        println!(
+            "harness_a2_danger_falloff_present_at_distance_one PASS: d_src={:.4} d_n1={:.4}",
+            d_src, d_n1
         );
     }
 }
@@ -22361,8 +23545,8 @@ mod harness_a13_knowledge_learning {
             names.len()
         );
         assert_eq!(
-            names.len(), 64,
-            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries after A-11, got {}.",
+            names.len(), 66,
+            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries after A-13, got {}.",
             names.len()
         );
         println!(
@@ -22996,8 +24180,8 @@ mod harness_a11_body_health {
             names.len()
         );
         assert_eq!(
-            names.len(), 64,
-            "[A11-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 64 entries after A-11, got {}.",
+            names.len(), 66,
+            "[A11-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries after A-11, got {}.",
             names.len()
         );
         println!(
@@ -23593,6 +24777,300 @@ mod harness_body_damage_api {
             health.parts[32].bleed_rate
         );
         println!("harness_injury_bleed_rate_max_not_add PASS");
+    }
+
+}
+
+// ── [wildlife-threat-detection-and-flee-v1] Harness tests ───────────────────
+//
+// Plan thresholds (LOCKED):
+//   A1: alive_wildlife_count                 >= 1
+//   A2: wildlife_perceived_count             >= 1
+//   A3: flee_started_count                   >= 1
+//   A4: flee_emitter_is_perceiver_only       (violations == 0)
+//   A5: agents_with_valid_flee_evidence      >= 1
+//   A6: flee_terminated_at_safe_distance     >= 1
+//   A7: |run1.flee_count - run2.flee_count|  == 0
+//
+// Tests live in their own module so they share the main `tests::make_stage1_engine`
+// helper (which performs the full system registration plus tile resource seeding
+// required to spawn wildlife in the headless harness).
+#[cfg(test)]
+mod harness_wildlife_threat_v1 {
+    use super::tests::make_stage1_engine;
+    use sim_core::components::{
+        Behavior, Identity, InfluenceEmitter, Position, Wildlife, WildlifeKind,
+    };
+    use sim_core::{ActionType, ChannelId, FalloffType};
+    use sim_engine::SimEngine;
+
+    /// Settlement centre used by `make_stage1_engine`. Wolves spawned this
+    /// close are reliably within `WILDLIFE_PERCEPTION_RANGE` of the spawned
+    /// agents (which scatter within ±5 tiles of the centre).
+    const TEST_WOLF_OFFSET: i32 = 3;
+
+    /// Spawns a wolf entity with the same component layout as
+    /// `WildlifeRuntimeSystem::run` produces. The wolf is placed
+    /// `TEST_WOLF_OFFSET` tiles east of the settlement centre so it sits
+    /// inside perception range without requiring agents to move.
+    fn spawn_test_wolf(engine: &mut SimEngine, x: i32, y: i32) {
+        let wolf = Wildlife::wolf((x, y));
+        let danger_emitter = InfluenceEmitter {
+            channel: ChannelId::Danger,
+            radius: 0.0,
+            base_intensity: WildlifeKind::Wolf.danger_intensity(),
+            falloff: FalloffType::Exponential,
+            decay_rate: None,
+            tags: vec!["wildlife".to_string()],
+            enabled: true,
+        };
+        let world = engine.world_mut();
+        world.spawn((
+            Identity {
+                name: "TestWolf".to_string(),
+                species_id: "wolf".to_string(),
+                ..Default::default()
+            },
+            Position::new(x, y),
+            wolf,
+            danger_emitter,
+        ));
+    }
+
+    /// Constructs the standard harness engine and spawns one extra wolf
+    /// `TEST_WOLF_OFFSET` tiles east of the settlement centre. This is a test
+    /// fixture, not a behaviour change: it gives the perception+flee pipeline
+    /// a deterministically perceivable threat without altering the realistic
+    /// `WILDLIFE_PERCEPTION_RANGE` used in production.
+    fn make_engine_with_close_wolf(seed: u64, agents: usize) -> SimEngine {
+        let mut engine = make_stage1_engine(seed, agents);
+        spawn_test_wolf(&mut engine, 128 + TEST_WOLF_OFFSET, 128);
+        engine
+    }
+
+    fn alive_wildlife_count(engine: &SimEngine) -> usize {
+        engine
+            .world()
+            .query::<&Wildlife>()
+            .iter()
+            .filter(|(_, w)| w.current_hp > 0.0)
+            .count()
+    }
+
+    /// Type A — at least one wildlife entity must remain alive at end-of-run.
+    #[test]
+    fn harness_wildlife_present_in_baseline_run() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+        engine.run_ticks(100);
+        let count = alive_wildlife_count(&engine);
+        eprintln!(
+            "[harness] wildlife_present_in_baseline_run: alive_wildlife_count={}",
+            count
+        );
+        assert!(
+            count >= 1,
+            "expected at least one alive wildlife at tick 100, got {}",
+            count
+        );
+        println!("harness_wildlife_present_in_baseline_run PASS");
+    }
+
+    /// Type A — perception must fire at least once over 100 ticks.
+    #[test]
+    fn harness_agents_perceive_wildlife_threats() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+        engine.run_ticks(100);
+        let count = engine.resources().harness_wildlife_perceived.len();
+        eprintln!(
+            "[harness] agents_perceive_wildlife_threats: wildlife_perceived_count={}",
+            count
+        );
+        assert!(
+            count >= 1,
+            "expected at least 1 WildlifePerceived emission, got {}",
+            count
+        );
+        println!("harness_agents_perceive_wildlife_threats PASS");
+    }
+
+    /// Type A — at least one Flee transition over 100 ticks.
+    #[test]
+    fn harness_flee_triggers_when_threat_detected() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+        engine.run_ticks(100);
+        let count = engine.resources().harness_flee_started.len();
+        eprintln!(
+            "[harness] flee_triggers_when_threat_detected: flee_started_count={}",
+            count
+        );
+        assert!(
+            count >= 1,
+            "expected at least 1 FleeStarted emission, got {}",
+            count
+        );
+        println!("harness_flee_triggers_when_threat_detected PASS");
+    }
+
+    /// Type D — anti-gaming: every FleeStarted must come from an agent that
+    /// emitted WildlifePerceived in the same tick or any prior tick.
+    #[test]
+    fn harness_flee_emitter_is_perceiver_only() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+        engine.run_ticks(100);
+
+        let perceived = engine.resources().harness_wildlife_perceived.clone();
+        let flee_started = engine.resources().harness_flee_started.clone();
+        let mut violations = 0_usize;
+
+        for &(flee_tick, flee_eid) in &flee_started {
+            let any_prior = perceived
+                .iter()
+                .any(|&(p_tick, p_eid)| p_eid == flee_eid && p_tick <= flee_tick);
+            if !any_prior {
+                violations += 1;
+            }
+        }
+
+        eprintln!(
+            "[harness] flee_emitter_is_perceiver_only: flee_starts={} perceives={} violations={}",
+            flee_started.len(),
+            perceived.len(),
+            violations
+        );
+        assert_eq!(
+            violations, 0,
+            "every FleeStarted must be preceded by (or coincident with) a \
+             WildlifePerceived from the same entity"
+        );
+        println!("harness_flee_emitter_is_perceiver_only PASS");
+    }
+
+    /// Type A — at least one fleeing agent must show non-decreasing distance
+    /// to the nearest live wildlife across 3 consecutive ticks while in Flee.
+    #[test]
+    fn harness_fleeing_agent_moves_away_from_threat() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+
+        let mut history: std::collections::HashMap<u64, Vec<f64>> =
+            std::collections::HashMap::new();
+        let mut valid_evidence = 0_usize;
+
+        for _ in 0..100 {
+            engine.run_ticks(1);
+
+            let wildlife_positions: Vec<(f64, f64)> = engine
+                .world()
+                .query::<(&Wildlife, &Position)>()
+                .iter()
+                .filter(|(_, (w, _))| w.current_hp > 0.0)
+                .map(|(_, (_, p))| (p.x, p.y))
+                .collect();
+
+            if wildlife_positions.is_empty() {
+                history.clear();
+                continue;
+            }
+
+            for (entity, (identity, pos, behavior)) in engine
+                .world()
+                .query::<(&Identity, &Position, &Behavior)>()
+                .iter()
+            {
+                if identity.species_id != "human" {
+                    continue;
+                }
+                let bits = entity.to_bits().get();
+                if behavior.current_action != ActionType::Flee {
+                    history.remove(&bits);
+                    continue;
+                }
+                let mut nearest = f64::INFINITY;
+                for &(wx, wy) in &wildlife_positions {
+                    let dx = wx - pos.x;
+                    let dy = wy - pos.y;
+                    let d = (dx * dx + dy * dy).sqrt();
+                    if d < nearest {
+                        nearest = d;
+                    }
+                }
+                let entry = history.entry(bits).or_default();
+                entry.push(nearest);
+                if entry.len() > 4 {
+                    let drop = entry.len() - 4;
+                    entry.drain(0..drop);
+                }
+                if entry.len() == 4 {
+                    let non_decreasing = entry[1] >= entry[0]
+                        && entry[2] >= entry[1]
+                        && entry[3] >= entry[2];
+                    if non_decreasing {
+                        valid_evidence += 1;
+                    }
+                }
+            }
+        }
+
+        eprintln!(
+            "[harness] fleeing_agent_moves_away_from_threat: valid_flee_evidence_observations={}",
+            valid_evidence
+        );
+        assert!(
+            valid_evidence >= 1,
+            "expected at least one agent with non-decreasing distance to \
+             nearest live wildlife across 3 consecutive Flee ticks; got {}",
+            valid_evidence
+        );
+        println!("harness_fleeing_agent_moves_away_from_threat PASS");
+    }
+
+    /// Type A — at least one Flee state must terminate while distance to
+    /// nearest live wildlife exceeds the safety threshold.
+    #[test]
+    fn harness_flee_terminates_on_safety() {
+        let mut engine = make_engine_with_close_wolf(42, 20);
+        engine.run_ticks(100);
+        let safety = sim_core::config::WILDLIFE_FLEE_SAFETY_THRESHOLD;
+        let count = engine
+            .resources()
+            .harness_flee_terminated_safe
+            .iter()
+            .filter(|&&(_, _, dist)| dist > safety)
+            .count();
+        eprintln!(
+            "[harness] flee_terminates_on_safety: terminated_at_safe_distance_count={} (safety_threshold={})",
+            count, safety
+        );
+        assert!(
+            count >= 1,
+            "expected at least 1 Flee termination at safe distance, got {}",
+            count
+        );
+        println!("harness_flee_terminates_on_safety PASS");
+    }
+
+    /// Type D — two independent runs with the same seed must produce
+    /// byte-identical FleeStarted counts.
+    #[test]
+    fn harness_deterministic_seed_stability() {
+        let mut a = make_engine_with_close_wolf(42, 20);
+        a.run_ticks(100);
+        let count_a = a.resources().harness_flee_started.len();
+
+        let mut b = make_engine_with_close_wolf(42, 20);
+        b.run_ticks(100);
+        let count_b = b.resources().harness_flee_started.len();
+
+        eprintln!(
+            "[harness] deterministic_seed_stability: run1={} run2={}",
+            count_a, count_b
+        );
+        assert_eq!(
+            count_a, count_b,
+            "FleeStarted count must be byte-identical across runs with seed=42; \
+             run1={} run2={}",
+            count_a, count_b
+        );
+        println!("harness_deterministic_seed_stability PASS");
     }
 }
 

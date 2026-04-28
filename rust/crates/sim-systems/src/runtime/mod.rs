@@ -15,6 +15,8 @@ mod effect_apply;
 mod influence;
 mod health;
 mod knowledge_learning;
+mod wildlife;
+mod wildlife_threat;
 mod llm_request_system;
 mod llm_response_system;
 mod llm_timeout_system;
@@ -57,6 +59,8 @@ pub use territory::TerritoryRuntimeSystem;
 
 // ---- health ----
 pub use health::HealthRuntimeSystem;
+pub use wildlife::WildlifeRuntimeSystem;
+pub use wildlife_threat::WildlifeThreatPerceptionSystem;
 
 // ---- knowledge_learning ----
 pub use knowledge_learning::KnowledgeLearningRuntimeSystem;

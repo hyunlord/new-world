@@ -751,6 +751,14 @@ pub const SAFETY_LOW: f64 = 0.35;
 ///
 ///   GFS impact: threat_pressure = 1 − 0.40 = 0.60, still above the 0.45 GFS threshold.
 pub const SAFETY_FLOOR: f64 = 0.40;
+
+/// Multiplier applied to sampled Danger influence when reducing Safety per tick.
+/// Bear at distance 1 (Exponential falloff, radius 5): danger sample ~0.74,
+/// drop ~0.037/tick. Bear at distance 5: danger sample ~0.34, drop ~0.017/tick.
+/// Too high → permanent Flee population collapse; too low → no behavioral effect.
+/// Applied AFTER `SAFETY_FLOOR` clamp so danger can push safety below the floor
+/// (into Flee thresholds at 0.20/0.25), while natural decay alone stays floored.
+pub const DANGER_TO_SAFETY_FACTOR: f64 = 0.05;
 // ── ERG Frustration [Alderfer 1969] ──────────────────────────────────────────
 pub const ERG_FRUSTRATION_WINDOW: u64 = 300;
 pub const ERG_GROWTH_FRUSTRATION_THRESHOLD: f64 = 0.25;
@@ -1729,6 +1737,36 @@ pub const INFECTION_DAMAGE_THRESHOLD: u8 = 80;
 pub const INFECTION_HP_DRAIN: u8 = 1;
 /// Aggregate HP threshold below which an agent is considered fatally wounded.
 pub const HEALTH_AGGREGATE_DEATH_THRESHOLD: f64 = 0.05;
+
+// ── Wildlife spawn [wildlife-entity-and-spawn-v1] ────────────────────────────
+/// Minimum Chebyshev distance from any settlement center for wildlife to spawn.
+pub const WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT: i32 = 20;
+/// Number of wolf entities spawned at simulation start.
+pub const WILDLIFE_WOLF_COUNT: usize = 3;
+/// Number of bear entities spawned at simulation start.
+pub const WILDLIFE_BEAR_COUNT: usize = 2;
+/// Number of boar entities spawned at simulation start.
+pub const WILDLIFE_BOAR_COUNT: usize = 2;
+
+// ── Wildlife threat detection & flee [wildlife-threat-detection-and-flee-v1] ─
+/// Euclidean tile-distance at which an agent perceives a live wildlife threat.
+///
+/// Tuned conservatively (5 tiles) so agents do not panic from distant wolves
+/// during long simulation runs (4380-tick shelter / food-economy regressions).
+/// At this radius the flee response only fires for an immediate-adjacent
+/// threat; the wider Danger influence channel (radius 5 + exponential decay,
+/// emitted by `WildlifeRuntimeSystem`) handles the soft "stay safe" pressure
+/// for everything beyond.
+pub const WILDLIFE_PERCEPTION_RANGE: f64 = 5.0;
+/// Distance beyond which a fleeing agent is considered safe and exits Flee.
+/// Must be strictly greater than `WILDLIFE_PERCEPTION_RANGE` so an agent that
+/// fled out of perception range is also out of "danger" range — preventing the
+/// agent from immediately re-entering Flee on the same tick it would otherwise exit.
+pub const WILDLIFE_FLEE_SAFETY_THRESHOLD: f64 = 9.0;
+/// Action timer assigned when the wildlife perception system maintains a Flee
+/// action. Refreshed every perception tick while a threat is in range; movement
+/// completion is governed by the safety threshold, not the timer.
+pub const WILDLIFE_FLEE_REFRESH_TIMER: i32 = 60;
 
 // ── Work Injury [body-damage-api-v1] ─────────────────────────────────────────
 /// Probability of a minor injury per Forage action completion.

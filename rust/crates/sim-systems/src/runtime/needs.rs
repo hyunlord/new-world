@@ -172,6 +172,7 @@ impl SimSystem for NeedsRuntimeSystem {
             let mut tile_temp: f32 = config::WARMTH_TEMP_NEUTRAL as f32;
             let mut has_tile_temp = false;
             let mut warmth_influence = 0.0_f64;
+            let mut danger_influence = 0.0_f64;
             if let Some(position) = position_opt {
                 let x = position.tile_x();
                 let y = position.tile_y();
@@ -182,6 +183,10 @@ impl SimSystem for NeedsRuntimeSystem {
                     warmth_influence = resources
                         .influence_grid
                         .sample(x as u32, y as u32, ChannelId::Warmth)
+                        .max(0.0);
+                    danger_influence = resources
+                        .influence_grid
+                        .sample(x as u32, y as u32, ChannelId::Danger)
                         .max(0.0);
                 }
             }
@@ -256,10 +261,27 @@ impl SimSystem for NeedsRuntimeSystem {
                     + (warmth_influence * config::WARMTH_FIRE_RESTORE)
                         .clamp(0.0, config::WARMTH_FIRE_RESTORE),
             );
+            // Natural safety decay is bounded below by SAFETY_FLOOR so the
+            // baseline (no-danger) trajectory cannot drift agents into the
+            // permanent SeekShelter/Flee region. Danger influence, however,
+            // MUST be able to push safety below the floor — that is the
+            // whole point of the Danger→Safety→Flee pathway.
+            //
+            // Critical: only apply the floor when current safety is ABOVE it.
+            // If danger has already pushed safety below the floor, applying
+            // .max(SAFETY_FLOOR) each tick snaps it back up, preventing
+            // danger from accumulating toward Flee thresholds.
+            let safety_cur = needs.get(NeedType::Safety);
+            let safety_decayed = (safety_cur as f32 - decays[5]) as f64;
+            let safety_after_decay = if safety_cur > config::SAFETY_FLOOR {
+                safety_decayed.max(config::SAFETY_FLOOR)
+            } else {
+                safety_decayed // already below floor due to danger; no snap-back
+            };
+            let safety_danger_drop = danger_influence * config::DANGER_TO_SAFETY_FACTOR;
             needs.set(
                 NeedType::Safety,
-                ((needs.get(NeedType::Safety) as f32 - decays[5]) as f64)
-                    .max(config::SAFETY_FLOOR),
+                (safety_after_decay - safety_danger_drop).max(0.0),
             );
             needs.energy = energy as f64;
             needs.set(NeedType::Sleep, energy as f64);
