@@ -35,6 +35,14 @@ const MULTIMESH_FLOATS_PER_INSTANCE: int = 16
 const MULTIMESH_INITIAL_CAPACITY: int = 256
 var _agent_sprites: Array[Sprite2D] = []
 var _agent_bubbles: Array = []
+const WILDLIFE_SNAPSHOT_STRIDE: int = 24
+const WILDLIFE_TEXTURE_PATHS: Array[String] = [
+	"res://assets/sprites/wildlife/wolf.png",
+	"res://assets/sprites/wildlife/bear.png",
+	"res://assets/sprites/wildlife/boar.png",
+]
+var _wildlife_textures: Array[Texture2D] = []
+var _wildlife_sprites: Array[Sprite2D] = []
 var _band_territory_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
@@ -284,6 +292,7 @@ func _update_binary_snapshots() -> void:
 func _ready() -> void:
 	if _ensure_agent_visual_resources():
 		_ensure_agent_sprite_capacity(32)
+	_load_wildlife_textures()
 	SimulationBus.tick_completed.connect(_on_tick)
 	var on_sim_event := Callable(self, "_on_simulation_event")
 	if not SimulationBus.simulation_event.is_connected(on_sim_event):
@@ -325,6 +334,7 @@ func _process(_delta: float) -> void:
 	)
 	if alpha_or_tick_changed:
 		_update_agent_sprites()
+		_update_wildlife_sprites()
 		_last_sprite_render_alpha = _render_alpha
 		_pending_snapshot_refresh = false
 	# _update_agent_multimesh()  # disabled — re-enable when sprite atlas is ready
@@ -1833,3 +1843,61 @@ func _get_runtime_building_at(tile_x: int, tile_y: int) -> Variant:
 			if int(building.get("tile_x", -1)) == tile_x and int(building.get("tile_y", -1)) == tile_y:
 				return building
 	return null
+
+
+func _load_wildlife_textures() -> void:
+	_wildlife_textures.clear()
+	for path in WILDLIFE_TEXTURE_PATHS:
+		var tex: Texture2D = load(path) as Texture2D
+		if tex != null:
+			_wildlife_textures.append(tex)
+		else:
+			push_warning("[entity_renderer] Wildlife texture missing: " + path)
+
+
+func _decode_wildlife_snapshot(bytes: PackedByteArray, offset: int) -> Dictionary:
+	return {
+		"x": bytes.decode_float(offset + 4),
+		"y": bytes.decode_float(offset + 8),
+		"vel_x": bytes.decode_float(offset + 12),
+		"kind": bytes[offset + 20],
+		"hp_normalized": bytes[offset + 21],
+		"alive": bytes[offset + 22],
+	}
+
+
+func _update_wildlife_sprites() -> void:
+	if not SimBridge.has_method("get_wildlife_snapshots"):
+		return
+	var bytes: PackedByteArray = SimBridge.get_wildlife_snapshots()
+	var count: int = bytes.size() / WILDLIFE_SNAPSHOT_STRIDE
+
+	while _wildlife_sprites.size() < count:
+		var sprite: Sprite2D = Sprite2D.new()
+		sprite.scale = Vector2(0.75, 0.75)
+		sprite.z_index = 1
+		add_child(sprite)
+		_wildlife_sprites.append(sprite)
+
+	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
+	for i in range(count):
+		var data: Dictionary = _decode_wildlife_snapshot(bytes, i * WILDLIFE_SNAPSHOT_STRIDE)
+		var sprite: Sprite2D = _wildlife_sprites[i]
+		sprite.visible = bool(int(data.get("alive", 0)))
+		if not sprite.visible:
+			continue
+		var tile_pos := Vector2(float(data.get("x", 0.0)), float(data.get("y", 0.0)))
+		sprite.position = tile_pos * float(GameConfig.TILE_SIZE) + half_tile
+		var kind: int = int(data.get("kind", 0))
+		if kind >= 0 and kind < _wildlife_textures.size():
+			sprite.texture = _wildlife_textures[kind]
+		var vel_x: float = float(data.get("vel_x", 0.0))
+		if vel_x < -0.001:
+			sprite.flip_h = true
+		elif vel_x > 0.001:
+			sprite.flip_h = false
+		var hp_ratio: float = float(int(data.get("hp_normalized", 255))) / 255.0
+		sprite.modulate = Color(1.0, hp_ratio * 0.5 + 0.5, hp_ratio * 0.5 + 0.5, 1.0)
+
+	for i in range(count, _wildlife_sprites.size()):
+		_wildlife_sprites[i].visible = false
