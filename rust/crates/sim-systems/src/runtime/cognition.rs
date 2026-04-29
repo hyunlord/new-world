@@ -6,7 +6,7 @@ use rand::Rng;
 use sim_core::components::{
     Age, AgentKnowledge, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity,
     Intelligence, Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
-    Stress, Traits, Values,
+    Stress, Traits, Values, Wildlife,
 };
 use sim_core::temperament::{Temperament, TemperamentAxes};
 use sim_core::config;
@@ -677,6 +677,7 @@ fn behavior_select_action(
     has_nearby_cairn: bool,
     has_learn_opportunity: bool,
     has_teach_opportunity: bool,
+    nearest_wildlife_dist: f64,
     rng: &mut impl Rng,
 ) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -832,6 +833,21 @@ fn behavior_select_action(
                     ActionType::Flee,
                     behavior_urgency(1.0 - safety) * 2.00,
                 );
+            }
+            // Fight scoring: cornered (low energy) or aggressive (high NS) when wildlife is close.
+            if nearest_wildlife_dist <= 2.0 {
+                let cornered = safety < 0.25 && energy < config::FIGHT_MIN_ENERGY as f32;
+                let ns = temperament_opt
+                    .map(|t| t.expressed.ns as f32)
+                    .unwrap_or(0.5);
+                let aggressive = ns >= 0.60
+                    && safety < 0.30
+                    && energy >= config::FIGHT_MIN_ENERGY as f32;
+                if cornered {
+                    behavior_score_add(&mut scores, ActionType::Fight, 0.70);
+                } else if aggressive {
+                    behavior_score_add(&mut scores, ActionType::Fight, 0.50);
+                }
             }
             if has_settlement
                 && !has_tool
@@ -1553,6 +1569,15 @@ impl SimSystem for BehaviorRuntimeSystem {
     }
 
     fn run(&mut self, world: &mut World, resources: &mut SimResources, tick: u64) {
+        // Pre-compute alive wildlife positions for Fight scoring (A3).
+        // Collected into a Vec so the borrow on `world` is released before the agent query.
+        let wildlife_positions: Vec<(f64, f64)> = world
+            .query::<(&Wildlife, &Position)>()
+            .iter()
+            .filter(|(_, (w, _))| w.is_alive())
+            .map(|(_, (_, p))| (p.x, p.y))
+            .collect();
+
         let mut query = world.query::<(
             &Age,
             &Needs,
@@ -1712,6 +1737,14 @@ impl SimSystem for BehaviorRuntimeSystem {
                         )
                     })
                     .unwrap_or((0.0, 0.0, 0.0, 0));
+            let nearest_wildlife_dist = {
+                let px = position.x;
+                let py = position.y;
+                wildlife_positions
+                    .iter()
+                    .map(|(wx, wy)| ((wx - px).powi(2) + (wy - py).powi(2)).sqrt())
+                    .fold(f64::INFINITY, f64::min)
+            };
             let (next_action, counterfactual_effective) = behavior_select_action(
                 age.stage,
                 needs,
@@ -1734,6 +1767,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 has_nearby_cairn,
                 has_learn_opportunity,
                 has_teach_opportunity,
+                nearest_wildlife_dist,
                 &mut resources.rng,
             );
             // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
@@ -2116,6 +2150,7 @@ mod tests {
             false, // has_nearby_cairn
             false, // has_learn_opportunity
             false, // has_teach_opportunity
+            f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
             &mut rng,
         );
 
@@ -2154,6 +2189,7 @@ mod tests {
             false, // has_nearby_cairn
             false, // has_learn_opportunity
             false, // has_teach_opportunity
+            f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
             &mut rng,
         );
 
@@ -2195,6 +2231,7 @@ mod tests {
             false, // has_nearby_cairn
             false, // has_learn_opportunity
             false, // has_teach_opportunity
+            f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
             &mut rng,
         );
 
@@ -2233,6 +2270,7 @@ mod tests {
             false, // has_nearby_cairn
             false, // has_learn_opportunity
             false, // has_teach_opportunity
+            f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
             &mut rng,
         );
 

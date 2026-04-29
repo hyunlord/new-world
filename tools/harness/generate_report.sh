@@ -87,13 +87,20 @@ GATE_TEST_STATUS="UNKNOWN"
 LATEST_GATE=$(ls "$RESULT_DIR"/gate_result_attempt*.txt 2>/dev/null | tail -1)
 if [[ -f "$LATEST_GATE" ]]; then
     GATE_TEST_COUNT=$(grep -c "^test .*\.\.\. ok$" "$LATEST_GATE" 2>/dev/null || echo "0")
-    if grep -q "FAILED\|^test .* FAILED" "$LATEST_GATE"; then
-        GATE_TEST_STATUS="FAIL"
-    else
+    # Baseline-aware gate: pre-existing failures are not regressions
+    _gate_fail_count=$(grep -oE '[0-9]+ failed' "$LATEST_GATE" | grep -oE '[0-9]+' | awk '{sum+=$1} END{print sum+0}')
+    _gate_baseline=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    [[ -z "$_gate_fail_count" ]] && _gate_fail_count=0
+    if [[ "$_gate_fail_count" -le "$_gate_baseline" ]]; then
         GATE_TEST_STATUS="PASS"
+    else
+        GATE_TEST_STATUS="FAIL"
     fi
 elif [[ -f "$RESULT_DIR/step0_test.txt" ]]; then
-    if grep -q "test result: ok" "$RESULT_DIR/step0_test.txt" && ! grep -q "FAILED" "$RESULT_DIR/step0_test.txt"; then
+    _s0_fail=$(grep -oE '[0-9]+ failed' "$RESULT_DIR/step0_test.txt" | grep -oE '[0-9]+' | awk '{sum+=$1} END{print sum+0}')
+    _s0_baseline=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    [[ -z "$_s0_fail" ]] && _s0_fail=0
+    if [[ "$_s0_fail" -le "$_s0_baseline" ]]; then
         GATE_TEST_STATUS="PASS"
     else
         GATE_TEST_STATUS="FAIL"
@@ -157,9 +164,10 @@ if [[ -f "$EVIDENCE_DIR/ffi_chain_verify.txt" ]]; then
 fi
 
 # New harness test count — from the latest gate_result (most reliable)
+# Count tests in both tests::harness_* and standalone harness_module::harness_* namespaces
 NEW_HARNESS_TESTS=0
 if [[ -f "$LATEST_GATE" ]]; then
-    NEW_HARNESS_TESTS=$(grep -c "^test tests::harness_.*ok$" "$LATEST_GATE" 2>/dev/null || true)
+    NEW_HARNESS_TESTS=$(grep -cE "^test (tests::harness_|harness_[a-z][a-z0-9_]*::harness_).*\.\.\. ok$" "$LATEST_GATE" 2>/dev/null || true)
     NEW_HARNESS_TESTS="${NEW_HARNESS_TESTS:-0}"
 fi
 

@@ -141,6 +141,8 @@ pub enum EffectPrimitive {
         /// Bleed rate per system tick.
         bleed_rate: u8,
     },
+    /// Reduce a wildlife entity's current HP (Phase A3 combat).
+    DamageWildlife { entity_id: EntityId, damage: u8 },
 }
 
 /// Identifies the origin of an effect for causal logging.

@@ -14703,8 +14703,8 @@ mod tests {
         // Type A: compile-time array size invariant — catches "in enum but not DEFAULT array".
         assert_eq!(
             names.len(),
-            66,
-            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries, got {}. \
+            67,
+            "A-8 FAIL: DEFAULT_RUNTIME_SYSTEMS should have exactly 67 entries, got {}. \
              Update [DefaultRuntimeSystemSpec; N] in sim-bridge/src/runtime_system.rs.",
             names.len()
         );
@@ -19441,8 +19441,8 @@ mod tests {
         use sim_bridge::default_runtime_systems_count;
         let count = default_runtime_systems_count();
         assert_eq!(
-            count, 66,
-            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 66 entries (no A-5 list edits), got {count}"
+            count, 67,
+            "[a5 A5] DEFAULT_RUNTIME_SYSTEMS must remain 67 entries (no A-5 list edits), got {count}"
         );
         println!("harness_a5_default_runtime_systems_size_unchanged PASS: {count} entries");
     }
@@ -23545,8 +23545,8 @@ mod harness_a13_knowledge_learning {
             names.len()
         );
         assert_eq!(
-            names.len(), 66,
-            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries after A-13, got {}.",
+            names.len(), 67,
+            "[A13-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 67 entries after A-13, got {}.",
             names.len()
         );
         println!(
@@ -24180,8 +24180,8 @@ mod harness_a11_body_health {
             names.len()
         );
         assert_eq!(
-            names.len(), 66,
-            "[A11-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 66 entries after A-11, got {}.",
+            names.len(), 67,
+            "[A11-1] DEFAULT_RUNTIME_SYSTEMS should have exactly 67 entries after A-11, got {}.",
             names.len()
         );
         println!(
@@ -25071,6 +25071,246 @@ mod harness_wildlife_threat_v1 {
             count_a, count_b
         );
         println!("harness_deterministic_seed_stability PASS");
+    }
+}
+
+#[cfg(test)]
+mod harness_a3_wildlife_combat {
+    use super::tests::make_stage1_engine;
+    use sim_core::components::{Age, BodyHealth, Identity, Position, Wildlife};
+    use sim_core::config::GameConfig;
+    use sim_core::{EntityId, GameCalendar, WorldMap};
+    use sim_engine::{SimEngine, SimResources};
+    use sim_systems::runtime::{EffectApplySystem, WildlifeAttackSystem};
+
+    /// Minimal engine: only WildlifeAttackSystem + EffectApplySystem.
+    /// No movement or flee — entities stay at spawn positions.
+    fn make_combat_engine() -> SimEngine {
+        let config = GameConfig::default();
+        let calendar = GameCalendar::new(&config);
+        let map = WorldMap::new(64, 64, 42);
+        let resources = SimResources::new(calendar, map, 42);
+        let mut engine = SimEngine::new(resources);
+        engine.register(WildlifeAttackSystem::new(23, 1));
+        engine.register(EffectApplySystem::new(50, 1));
+        engine
+    }
+
+    fn spawn_wolf(engine: &mut SimEngine, x: i32, y: i32) -> hecs::Entity {
+        engine.world_mut().spawn((
+            Identity { name: "Wolf".to_string(), species_id: "wolf".to_string(), ..Default::default() },
+            Position::new(x, y),
+            Wildlife::wolf((x, y)),
+        ))
+    }
+
+    fn spawn_human(engine: &mut SimEngine, x: i32, y: i32) -> (hecs::Entity, EntityId) {
+        let entity = engine.world_mut().spawn((
+            Identity { name: "Human".to_string(), species_id: "human".to_string(), ..Default::default() },
+            Position::new(x, y),
+            BodyHealth::default(),
+            Age::default(),
+        ));
+        (entity, EntityId(entity.id() as u64))
+    }
+
+    /// A3-1 (Type B): wolf and bear attack_damage() are positive; bear > wolf.
+    #[test]
+    fn harness_a3_attack_damage_hierarchy() {
+        use sim_core::components::WildlifeKind;
+        let wolf_dmg = WildlifeKind::Wolf.attack_damage();
+        let bear_dmg = WildlifeKind::Bear.attack_damage();
+        eprintln!("[harness] a3_attack_damage_hierarchy: wolf={} bear={}", wolf_dmg, bear_dmg);
+        assert!(wolf_dmg > 0, "wolf attack_damage must be > 0, got {}", wolf_dmg);
+        assert!(
+            bear_dmg > wolf_dmg,
+            "bear attack_damage {} must exceed wolf {}",
+            bear_dmg, wolf_dmg
+        );
+        println!("harness_a3_attack_damage_hierarchy PASS");
+    }
+
+    /// A3-2 (Type B): wolf+human co-located at (32,32), run 50 ticks → aggregate_hp < 1.0.
+    #[test]
+    fn harness_a3_wolf_damages_agent_over_50_ticks() {
+        let mut engine = make_combat_engine();
+        spawn_wolf(&mut engine, 32, 32);
+        let (human_entity, _) = spawn_human(&mut engine, 32, 32);
+        engine.run_ticks(50);
+        let hp = engine.world().get::<&BodyHealth>(human_entity).expect("BodyHealth").aggregate_hp;
+        eprintln!("[harness] a3_wolf_damages_agent: aggregate_hp={}", hp);
+        assert!(hp < 1.0, "expected aggregate_hp < 1.0 after wolf attacks; got {}", hp);
+        println!("harness_a3_wolf_damages_agent_over_50_ticks PASS");
+    }
+
+    /// A3-3 (Type A): run_ticks(31) → last_attack_tick == 30; run_ticks(1) → unchanged.
+    #[test]
+    fn harness_a3_cooldown_first_attack_at_tick_30() {
+        let mut engine = make_combat_engine();
+        let wolf_entity = spawn_wolf(&mut engine, 32, 32);
+        spawn_human(&mut engine, 32, 32);
+        engine.run_ticks(31);
+        let lat = engine.world().get::<&Wildlife>(wolf_entity).expect("Wildlife").last_attack_tick;
+        eprintln!("[harness] a3_cooldown: last_attack_tick after 31 ticks = {}", lat);
+        assert_eq!(lat, 30, "first attack must set last_attack_tick=30; got {}", lat);
+        engine.run_ticks(1);
+        let lat2 = engine.world().get::<&Wildlife>(wolf_entity).expect("Wildlife").last_attack_tick;
+        eprintln!("[harness] a3_cooldown: last_attack_tick after tick 31 = {}", lat2);
+        assert_eq!(lat2, 30, "cooldown must block attack at tick 31; last_attack_tick unchanged");
+        println!("harness_a3_cooldown_first_attack_at_tick_30 PASS");
+    }
+
+    /// A3-4 (Type A): ActionType::Fight discriminant == 13; WildlifeAttackSystem name correct.
+    #[test]
+    fn harness_a3_fight_discriminant_and_system_name() {
+        use sim_core::ActionType;
+        use sim_engine::SimSystem;
+        assert_eq!(
+            ActionType::Fight as u8, 13,
+            "ActionType::Fight must have discriminant 13"
+        );
+        let sys = WildlifeAttackSystem::new(23, 1);
+        assert_eq!(sys.name(), "wildlife_attack_system");
+        eprintln!("[harness] a3_fight_discriminant: Fight={} name={}", ActionType::Fight as u8, sys.name());
+        println!("harness_a3_fight_discriminant_and_system_name PASS");
+    }
+
+    /// A3-5 (Type B): agent safety=0.10, energy=0.25, wolf at same tile → Force-Flee fires.
+    #[test]
+    fn harness_a3_force_flee_overrides_fight_at_critical_safety() {
+        use sim_core::components::{Behavior, Needs};
+        use sim_core::{ActionType, NeedType};
+        let mut engine = make_stage1_engine(42, 1);
+        // Spawn wolf at settlement center (128, 128) to co-locate with agent
+        engine.world_mut().spawn((
+            Identity { name: "Wolf".to_string(), species_id: "wolf".to_string(), ..Default::default() },
+            Position::new(128, 128),
+            Wildlife::wolf((128, 128)),
+        ));
+        // Force agent to idle + critical safety, enough energy to flee
+        {
+            let world = engine.world_mut();
+            for (_, (behavior, needs)) in world.query_mut::<(&mut Behavior, &mut Needs)>() {
+                needs.set(NeedType::Safety, 0.10);
+                needs.energy = 0.25;
+                behavior.action_timer = 0;
+                behavior.current_action = ActionType::Idle;
+            }
+        }
+        engine.run_ticks(1);
+        let fled = engine.world().query::<&Behavior>().iter()
+            .any(|(_, b)| b.current_action == ActionType::Flee);
+        eprintln!("[harness] a3_force_flee: fled={}", fled);
+        assert!(fled, "agent with safety=0.10, energy=0.25 must choose Flee via Force-Flee");
+        println!("harness_a3_force_flee_overrides_fight_at_critical_safety PASS");
+    }
+
+    /// A3-6 (Type A): push DamageWildlife → EffectApplySystem reduces bear current_hp.
+    #[test]
+    fn harness_a3_damage_wildlife_effect_reduces_hp() {
+        use sim_core::{EffectEntry, EffectPrimitive, EffectSource};
+        let mut engine = make_combat_engine();
+        let bear_entity = engine.world_mut().spawn((
+            Identity { name: "Bear".to_string(), species_id: "bear".to_string(), ..Default::default() },
+            Position::new(10, 10),
+            Wildlife::bear((10, 10)),
+        ));
+        let bear_id = EntityId(bear_entity.id() as u64);
+        let max_hp = engine.world().get::<&Wildlife>(bear_entity).unwrap().max_hp;
+        engine.resources_mut().effect_queue.push(EffectEntry {
+            entity: bear_id,
+            effect: EffectPrimitive::DamageWildlife { entity_id: bear_id, damage: 20 },
+            source: EffectSource { system: "test".to_string(), kind: "test_hit".to_string() },
+        });
+        engine.run_ticks(1);
+        let hp = engine.world().get::<&Wildlife>(bear_entity).unwrap().current_hp;
+        eprintln!("[harness] a3_damage_wildlife: max_hp={} current_hp={}", max_hp, hp);
+        assert!(hp < max_hp, "DamageWildlife must reduce bear HP from {}; got {}", max_hp, hp);
+        println!("harness_a3_damage_wildlife_effect_reduces_hp PASS");
+    }
+
+    /// A3-7 (Type A): is_alive() returns true at full HP; false at 0 HP.
+    #[test]
+    fn harness_a3_is_alive_boundary() {
+        let full = Wildlife::wolf((0, 0));
+        assert!(full.is_alive(), "wolf at full HP must be alive");
+        let mut dead = Wildlife::wolf((0, 0));
+        dead.current_hp = 0.0;
+        assert!(!dead.is_alive(), "wolf at 0 HP must not be alive");
+        eprintln!("[harness] a3_is_alive: full={} dead={}", full.is_alive(), dead.is_alive());
+        println!("harness_a3_is_alive_boundary PASS");
+    }
+
+    /// A3-8 (Type C): causal_log records ≥1 "_attack" entry after 50 ticks.
+    #[test]
+    fn harness_a3_causal_log_records_attack_events() {
+        let mut engine = make_combat_engine();
+        spawn_wolf(&mut engine, 32, 32);
+        let (_, human_id) = spawn_human(&mut engine, 32, 32);
+        engine.run_ticks(50);
+        let events = engine.resources().causal_log.recent(human_id, 32);
+        let has_attack = events.iter().any(|ev| ev.cause.kind.contains("_attack"));
+        let count = events.iter().filter(|ev| ev.cause.kind.contains("_attack")).count();
+        eprintln!("[harness] a3_causal_log: attack_events={} total={}", count, events.len());
+        assert!(
+            has_attack,
+            "causal_log must have ≥1 '_attack' entry after 50 ticks; found {} total events",
+            events.len()
+        );
+        println!("harness_a3_causal_log_records_attack_events PASS");
+    }
+
+    /// A3-9 (range filter): 3-scenario boundary test at d=1.0, d≈1.41, d=2.0.
+    /// WILDLIFE_ATTACK_RANGE=1.5; d=2.0 must produce zero attacks.
+    #[test]
+    fn harness_a3_range_filter_enforced() {
+        // Scenario A: in-range, d=1.0
+        {
+            let mut engine = make_combat_engine();
+            spawn_wolf(&mut engine, 32, 32);
+            let (_, human_id) = spawn_human(&mut engine, 33, 32);
+            engine.run_ticks(60);
+            let count = engine.resources().causal_log.recent(human_id, 32)
+                .iter().filter(|ev| ev.cause.kind.contains("_attack")).count();
+            eprintln!("[harness] a3_range_filter: A (d=1.0) attack_count={}", count);
+            assert!(count >= 1, "scenario A (d=1.0): expected ≥1 attack; got {}", count);
+        }
+        // Scenario B: just-in-range, d≈1.414
+        {
+            let mut engine = make_combat_engine();
+            spawn_wolf(&mut engine, 32, 32);
+            let (_, human_id) = spawn_human(&mut engine, 33, 33);
+            engine.run_ticks(60);
+            let count = engine.resources().causal_log.recent(human_id, 32)
+                .iter().filter(|ev| ev.cause.kind.contains("_attack")).count();
+            eprintln!("[harness] a3_range_filter: B (d≈1.414) attack_count={}", count);
+            assert!(count >= 1, "scenario B (d≈1.414 < 1.5): expected ≥1 attack; got {}", count);
+        }
+        // Scenario C: just-out-of-range, d=2.0
+        {
+            let mut engine = make_combat_engine();
+            spawn_wolf(&mut engine, 32, 32);
+            let (_, human_id) = spawn_human(&mut engine, 32, 34);
+            engine.run_ticks(60);
+            let count = engine.resources().causal_log.recent(human_id, 32)
+                .iter().filter(|ev| ev.cause.kind.contains("_attack")).count();
+            eprintln!("[harness] a3_range_filter: C (d=2.0 > 1.5) attack_count={}", count);
+            assert_eq!(count, 0, "scenario C (d=2.0 > 1.5): expected 0 attacks; got {}", count);
+        }
+        println!("harness_a3_range_filter_enforced PASS");
+    }
+
+    /// A3-10 (zero-wildlife no-op): WildlifeAttackSystem must not panic or produce entries.
+    #[test]
+    fn harness_a3_zero_wildlife_noop() {
+        let mut engine = make_combat_engine();
+        let (_, human_id) = spawn_human(&mut engine, 32, 32);
+        engine.run_ticks(60);
+        let events = engine.resources().causal_log.recent(human_id, 32);
+        let attack_count = events.iter().filter(|ev| ev.cause.kind.contains("_attack")).count();
+        eprintln!("[harness] a3_zero_wildlife_noop: attack_count={}", attack_count);
+        assert_eq!(attack_count, 0, "zero wildlife must produce 0 _attack entries; got {}", attack_count);
+        println!("harness_a3_zero_wildlife_noop PASS");
     }
 }
 

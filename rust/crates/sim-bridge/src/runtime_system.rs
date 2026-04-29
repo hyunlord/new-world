@@ -20,7 +20,7 @@ use sim_systems::runtime::{
     StratificationMonitorRuntimeSystem, StressRuntimeSystem, TechDiscoveryRuntimeSystem,
     TechMaintenanceRuntimeSystem, TechPropagationRuntimeSystem, TechUtilizationRuntimeSystem,
     HealthRuntimeSystem, KnowledgeLearningRuntimeSystem, TemperamentShiftRuntimeSystem,
-    WildlifeRuntimeSystem, WildlifeThreatPerceptionSystem,
+    WildlifeAttackSystem, WildlifeRuntimeSystem, WildlifeThreatPerceptionSystem,
     TensionRuntimeSystem,
     TitleRuntimeSystem, TraitRuntimeSystem, TraitViolationRuntimeSystem,
     TraumaScarRuntimeSystem, UpperNeedsRuntimeSystem, ValueRuntimeSystem,
@@ -100,6 +100,7 @@ pub(crate) enum RuntimeSystemId {
     HealthRuntime = 67,
     WildlifeRuntime = 68,
     WildlifeThreatPerception = 69,
+    WildlifeAttack = 70,
 }
 
 impl RuntimeSystemId {
@@ -176,6 +177,7 @@ impl RuntimeSystemId {
             Self::HealthRuntime => "health_runtime_system",
             Self::WildlifeRuntime => "wildlife_runtime_system",
             Self::WildlifeThreatPerception => "wildlife_threat_perception_system",
+            Self::WildlifeAttack => "wildlife_attack_system",
         }
     }
 
@@ -252,6 +254,7 @@ impl RuntimeSystemId {
             Self::HealthRuntime,
             Self::WildlifeRuntime,
             Self::WildlifeThreatPerception,
+            Self::WildlifeAttack,
         ]
     }
 }
@@ -273,7 +276,7 @@ pub(crate) const DEFAULT_DISABLED_RUNTIME_SYSTEMS: [RuntimeSystemId; 4] = [
 ];
 
 /// Authoritative default runtime manifest in deterministic scheduler order.
-pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 66] = [
+pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 67] = [
     DefaultRuntimeSystemSpec {
         system_id: RuntimeSystemId::StatSync,
         priority: 1,
@@ -607,6 +610,11 @@ pub(crate) const DEFAULT_RUNTIME_SYSTEMS: [DefaultRuntimeSystemSpec; 66] = [
         priority: 22,
         tick_interval: 1,
     },
+    DefaultRuntimeSystemSpec {
+        system_id: RuntimeSystemId::WildlifeAttack,
+        priority: 23,
+        tick_interval: 1,
+    },
 ];
 
 /// Registers one typed Rust runtime system into the scheduler.
@@ -838,6 +846,9 @@ pub(crate) fn register_runtime_system(
         RuntimeSystemId::WildlifeThreatPerception => engine.register(
             WildlifeThreatPerceptionSystem::new(priority_u32, tick_interval_u64),
         ),
+        RuntimeSystemId::WildlifeAttack => engine.register(
+            WildlifeAttackSystem::new(priority_u32, tick_interval_u64),
+        ),
         RuntimeSystemId::LlmRequest => {
             // Disabled by default when no LLM runtime is attached.
         }
@@ -952,7 +963,7 @@ mod tests {
         );
         assert_eq!(
             DEFAULT_RUNTIME_SYSTEMS[DEFAULT_RUNTIME_SYSTEMS.len() - 1].system_id,
-            RuntimeSystemId::WildlifeThreatPerception
+            RuntimeSystemId::WildlifeAttack
         );
         for disabled_id in DEFAULT_DISABLED_RUNTIME_SYSTEMS {
             assert!(!ids.contains(&disabled_id));

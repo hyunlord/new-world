@@ -1768,6 +1768,14 @@ pub const WILDLIFE_FLEE_SAFETY_THRESHOLD: f64 = 9.0;
 /// completion is governed by the safety threshold, not the timer.
 pub const WILDLIFE_FLEE_REFRESH_TIMER: i32 = 60;
 
+// ── Wildlife combat [wildlife-combat-and-damage-cycle-v1] ──────────────────
+/// Number of ticks that must elapse between consecutive attacks by the same wildlife entity.
+pub const WILDLIFE_ATTACK_COOLDOWN: u32 = 30;
+/// Euclidean tile-distance within which wildlife attacks an agent.
+pub const WILDLIFE_ATTACK_RANGE: f64 = 1.5;
+/// Minimum energy for an agent to choose Fight over other responses.
+pub const FIGHT_MIN_ENERGY: f64 = 0.30;
+
 // ── Work Injury [body-damage-api-v1] ─────────────────────────────────────────
 /// Probability of a minor injury per Forage action completion.
 pub const WORK_INJURY_FORAGE_CHANCE: f32 = 0.01;
