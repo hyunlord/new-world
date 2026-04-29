@@ -4998,3 +4998,20 @@ FURN_HEARTH = 화덕
 
 # --- auto-synced from JSON (1 keys) ---
 STATUS_ = 대기
+
+# --- auto-synced from JSON (15 keys) ---
+ACTION_LEARN = 학습
+ACTION_MOURN = 애도
+ACTION_TREAT = 치료
+CAUSE_BAND_LEADER_ELECTED = 밴드 지도자 선출
+CAUSE_CONFLICT = 충돌
+CAUSE_FOOD_GRADIENT = 식량 탐색
+CAUSE_HEARTH_WARMTH = 화로 온기
+CAUSE_MEMORIAL_MEANING = 추모의 의미
+CAUSE_MOURN = 애도
+CAUSE_PRAY = 기도
+CAUSE_RITUAL_COMFORT = 의식 안락
+CAUSE_SHELTER_SAFETY = 거처 안전
+CAUSE_TOOL_BROKEN = 도구 파손
+ROOM_ROLE_MEMORIAL = 추모소
+UI_CAUSAL_RECENT = 최근 인과

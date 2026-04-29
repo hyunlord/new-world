@@ -1738,6 +1738,24 @@ pub const INFECTION_HP_DRAIN: u8 = 1;
 /// Aggregate HP threshold below which an agent is considered fatally wounded.
 pub const HEALTH_AGGREGATE_DEATH_THRESHOLD: f64 = 0.05;
 
+// ── Healing system [healing-system-v1] ───────────────────────────────────────
+/// HP recovered per HealthRuntimeSystem tick when a part has no BLEEDING or INFECTED flag.
+pub const NATURAL_HEAL_RATE: u8 = 1;
+/// Action timer for the Treat action (ticks before completion).
+pub const ACTION_TIMER_TREAT: i32 = 10;
+/// Base HP healed by a single completed Treat action (no skill bonus).
+pub const TREAT_BASE_HEAL_AMOUNT: u8 = 30;
+/// Additional HP healed per SKILL_HEALING level (max level 10 → +30 bonus).
+pub const TREAT_SKILL_HEAL_PER_LEVEL: u8 = 3;
+/// HP bonus when the treater has "knowledge_first_aid".
+pub const TREAT_KNOWLEDGE_BONUS: u8 = 20;
+/// Max world-unit distance within which Treat can be applied to another agent.
+pub const TREAT_RANGE: f64 = 1.5;
+/// XP awarded to SKILL_HEALING on successful Treat completion.
+pub const TREAT_XP_GAIN: f64 = 0.5;
+/// Part HP below which an agent is considered injured for Treat targeting.
+pub const TREAT_TARGET_PART_HP_THRESHOLD: u8 = 80;
+
 // ── Wildlife spawn [wildlife-entity-and-spawn-v1] ────────────────────────────
 /// Minimum Chebyshev distance from any settlement center for wildlife to spawn.
 pub const WILDLIFE_SPAWN_MIN_DIST_FROM_SETTLEMENT: i32 = 20;

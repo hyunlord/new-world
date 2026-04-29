@@ -364,6 +364,12 @@ agent_count: 20
 $feedback_arg
 PLANNER_EOF
 
+    # Resume guard: reuse existing plan_draft.md if already populated
+    if [[ -s "$PLAN_DIR/plan_draft.md" ]]; then
+        log "Reusing existing plan_draft.md (resume mode)"
+        return
+    fi
+
     # Run planner agent — capture stdout as plan
     log "Running Planner agent..."
     local drafter_timeout="${DRAFTER_TIMEOUT_SECONDS:-600}"

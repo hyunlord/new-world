@@ -409,6 +409,8 @@ pub enum ActionType {
     PlaceFurniture,
     /// Ritual mourning at a cairn — processes Sadness emotion and yields Meaning.
     Mourn,
+    /// Care for a nearby injured agent — reduces bleeding and heals HP; awards SKILL_HEALING XP.
+    Treat,
 }
 
 // ═══════════════════════════════════════

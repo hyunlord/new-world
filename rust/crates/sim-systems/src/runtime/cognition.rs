@@ -4,9 +4,9 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, AgentKnowledge, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity,
-    Intelligence, Inventory, Memory, MemoryEntry, Needs, Personality, Position, Skills, Social,
-    Stress, Traits, Values, Wildlife,
+    Age, AgentKnowledge, Behavior, Body as BodyComponent, BodyHealth, Coping, Economic, Emotion,
+    Identity, Intelligence, Inventory, Memory, MemoryEntry, Needs, PartFlags, Personality,
+    Position, Skills, Social, Stress, Traits, Values, Wildlife,
 };
 use sim_core::temperament::{Temperament, TemperamentAxes};
 use sim_core::config;
@@ -533,6 +533,7 @@ pub fn temperament_action_bias(axes: &TemperamentAxes, action: ActionType) -> f6
         ActionType::Idle => (0.0, 0.0, 0.0, 0.0),
         ActionType::MentalBreak => (0.0, 0.0, 0.0, -0.5),
         ActionType::Fight => (0.5, -0.6, -0.2, 0.3),
+        ActionType::Treat => (0.0, 0.4, 0.6, 0.2),
         ActionType::DeliverToStockpile => (0.0, 0.0, 0.0, 0.2),
         ActionType::TakeFromStockpile => (0.0, 0.0, 0.0, 0.0),
     };
@@ -590,6 +591,7 @@ fn behavior_base_timer(action: ActionType) -> i32 {
         ActionType::SeekShelter => config::ACTION_TIMER_SEEK_SHELTER,
         ActionType::Pray => config::ACTION_TIMER_PRAY,
         ActionType::Mourn => config::ACTION_TIMER_MOURN,
+        ActionType::Treat => config::ACTION_TIMER_TREAT,
         ActionType::Learn => config::ACTION_TIMER_LEARN,
         ActionType::Teach => config::ACTION_TIMER_TEACH,
         ActionType::PlaceWall => config::ACTION_TIMER_PLACE_WALL,
@@ -678,6 +680,7 @@ fn behavior_select_action(
     has_learn_opportunity: bool,
     has_teach_opportunity: bool,
     nearest_wildlife_dist: f64,
+    has_nearby_injured: bool,
     rng: &mut impl Rng,
 ) -> (ActionType, bool) {
     let hunger = needs.get(NeedType::Hunger) as f32;
@@ -898,6 +901,14 @@ fn behavior_select_action(
             + config::MOURN_SCORE_BASE as f32;
         behavior_score_add(&mut scores, ActionType::Mourn, mourn_score);
     }
+    // Treat scoring: nearby injured agent triggers care behavior (healing-system-v1).
+    // TCI affinity (0.0, 0.4, 0.6, 0.2) — HA/RD biased personalities tend to care for others.
+    // Energy guard: exhausted agents cannot effectively treat others.
+    if has_nearby_injured && energy >= 0.30 {
+        let rd = temperament_opt.map(|t| t.expressed.rd as f32).unwrap_or(0.5);
+        let care_score = 0.30 + (rd - 0.40).max(0.0) * 0.50;
+        behavior_score_add(&mut scores, ActionType::Treat, care_score);
+    }
     // Learn scoring: agent wants to acquire new knowledge.
     // TCI affinity (0.3, 0.0, 0.4, 0.2) — NS/RD personalities biased via TCI pass below.
     // has_learn_opportunity is pre-computed: learning.is_none() && known_count < cap.
@@ -1053,7 +1064,7 @@ fn behavior_select_action(
         return (ActionType::Wander, false);
     }
 
-    const BEHAVIOR_ACTION_ORDER: [ActionType; 23] = [
+    const BEHAVIOR_ACTION_ORDER: [ActionType; 24] = [
         ActionType::Flee,
         ActionType::SeekShelter,
         ActionType::Drink,
@@ -1069,6 +1080,7 @@ fn behavior_select_action(
         ActionType::Socialize,
         ActionType::Pray,
         ActionType::Mourn,
+        ActionType::Treat,
         ActionType::Learn,
         ActionType::Teach,
         ActionType::Sleep,
@@ -1578,6 +1590,20 @@ impl SimSystem for BehaviorRuntimeSystem {
             .map(|(_, (_, p))| (p.x, p.y))
             .collect();
 
+        // Pre-compute injured agent positions for Treat scoring (healing-system-v1).
+        // Agents with aggregate_hp < 0.95 or any bleeding part are considered injured.
+        // Collected into a Vec so the borrow on `world` is released before the agent query.
+        let injured_positions: Vec<(f64, f64)> = world
+            .query::<(&Position, &BodyHealth, &Age)>()
+            .iter()
+            .filter(|(_, (_, health, age))| {
+                age.alive
+                    && (health.aggregate_hp < 0.95
+                        || health.parts.iter().any(|p| p.flags.has(PartFlags::BLEEDING)))
+            })
+            .map(|(_, (pos, _, _))| (pos.x, pos.y))
+            .collect();
+
         let mut query = world.query::<(
             &Age,
             &Needs,
@@ -1745,6 +1771,15 @@ impl SimSystem for BehaviorRuntimeSystem {
                     .map(|(wx, wy)| ((wx - px).powi(2) + (wy - py).powi(2)).sqrt())
                     .fold(f64::INFINITY, f64::min)
             };
+            let has_nearby_injured = {
+                let px = position.x;
+                let py = position.y;
+                injured_positions.iter().any(|(ix, iy)| {
+                    let dx = ix - px;
+                    let dy = iy - py;
+                    (dx * dx + dy * dy).sqrt() <= config::TREAT_RANGE
+                })
+            };
             let (next_action, counterfactual_effective) = behavior_select_action(
                 age.stage,
                 needs,
@@ -1768,6 +1803,7 @@ impl SimSystem for BehaviorRuntimeSystem {
                 has_learn_opportunity,
                 has_teach_opportunity,
                 nearest_wildlife_dist,
+                has_nearby_injured,
                 &mut resources.rng,
             );
             // Track scarcity-boost-driven Forage selections (excludes hunger force/soft-force).
@@ -2151,6 +2187,7 @@ mod tests {
             false, // has_learn_opportunity
             false, // has_teach_opportunity
             f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
+            false,         // has_nearby_injured
             &mut rng,
         );
 
@@ -2190,6 +2227,7 @@ mod tests {
             false, // has_learn_opportunity
             false, // has_teach_opportunity
             f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
+            false,         // has_nearby_injured
             &mut rng,
         );
 
@@ -2232,6 +2270,7 @@ mod tests {
             false, // has_learn_opportunity
             false, // has_teach_opportunity
             f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
+            false,         // has_nearby_injured
             &mut rng,
         );
 
@@ -2271,6 +2310,7 @@ mod tests {
             false, // has_learn_opportunity
             false, // has_teach_opportunity
             f64::INFINITY, // nearest_wildlife_dist (no wildlife in unit tests)
+            false,         // has_nearby_injured
             &mut rng,
         );
 
