@@ -5,6 +5,7 @@
   "ACTION_PREPARE_HIDE": "가죽 손질",
   "ACTION_CHOP_BRANCH": "가지 자르기",
   "ACTION_MOURN": "애도",
+  "ACTION_TREAT": "치료",
   "ACTION_LEARN": "학습",
   "ACTION_TEACH": "교육"
 }

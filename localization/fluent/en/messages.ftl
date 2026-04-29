@@ -4989,3 +4989,20 @@ FURN_HEARTH = Hearth
 
 # --- auto-synced from JSON (1 keys) ---
 STATUS_ = Idle
+
+# --- auto-synced from JSON (15 keys) ---
+ACTION_LEARN = Learn
+ACTION_MOURN = Mourn
+ACTION_TREAT = Treat
+CAUSE_BAND_LEADER_ELECTED = Band leader elected
+CAUSE_CONFLICT = Conflict
+CAUSE_FOOD_GRADIENT = Food search
+CAUSE_HEARTH_WARMTH = Hearth warmth
+CAUSE_MEMORIAL_MEANING = Memorial meaning
+CAUSE_MOURN = Mourning
+CAUSE_PRAY = Prayer
+CAUSE_RITUAL_COMFORT = Ritual comfort
+CAUSE_SHELTER_SAFETY = Shelter safety
+CAUSE_TOOL_BROKEN = Tool broken
+ROOM_ROLE_MEMORIAL = Memorial
+UI_CAUSAL_RECENT = Recent Causes

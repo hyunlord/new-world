@@ -40,6 +40,12 @@ impl HealthRuntimeSystem {
                     if PART_VITAL[idx] {
                         vital_dead = true;
                     }
+                } else {
+                    // Natural clotting: bleed_rate falls each tick; BLEEDING clears at 0.
+                    part.bleed_rate = part.bleed_rate.saturating_sub(1);
+                    if part.bleed_rate == 0 {
+                        part.flags.clear(PartFlags::BLEEDING);
+                    }
                 }
             }
             if part.flags.has(PartFlags::INFECTED) {
@@ -50,6 +56,14 @@ impl HealthRuntimeSystem {
                         vital_dead = true;
                     }
                 }
+            }
+            // Natural healing: slow HP recovery when part has no active wound flags.
+            if !part.flags.has(PartFlags::BLEEDING)
+                && !part.flags.has(PartFlags::INFECTED)
+                && part.hp < 100
+                && part.hp > 0
+            {
+                part.hp = part.hp.saturating_add(config::NATURAL_HEAL_RATE).min(100);
             }
         }
         health.recalculate_aggregates();

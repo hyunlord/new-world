@@ -5,9 +5,9 @@
 use hecs::{Entity, World};
 use rand::Rng;
 use sim_core::components::{
-    Age, AgentKnowledge, Behavior, Body as BodyComponent, Coping, Economic, Emotion, Identity,
-    Intelligence, Inventory, KnowledgeEntry, LearningState, Memory, MemoryEntry, Needs,
-    Personality, Position, Skills, Social, Traits, TransmissionSource, Values,
+    Age, AgentKnowledge, Behavior, Body as BodyComponent, BodyHealth, Coping, Economic, Emotion,
+    Identity, Intelligence, Inventory, KnowledgeEntry, LearningState, Memory, MemoryEntry, Needs,
+    PartFlags, Personality, Position, Skills, Social, Traits, TransmissionSource, Values,
 };
 use sim_core::config;
 use sim_core::{
@@ -1087,6 +1087,8 @@ impl SimSystem for MovementRuntimeSystem {
                 )
             })
             .collect();
+        // Treat completions deferred to Phase 2 — healing target requires a separate world borrow.
+        let mut treat_completions: Vec<(hecs::Entity, f64, f64, u8)> = Vec::new();
         let mut query = world.query::<(
             &mut Position,
             &mut Behavior,
@@ -1096,8 +1098,9 @@ impl SimSystem for MovementRuntimeSystem {
             Option<&Identity>,
             Option<&mut Emotion>,
             Option<&mut AgentKnowledge>,
+            Option<&mut Skills>,
         )>();
-        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, _emotion_opt, mut knowledge_opt)) in &mut query
+        for (entity, (position, behavior, mut needs_opt, age_opt, mut inventory_opt, identity_opt, _emotion_opt, mut knowledge_opt, mut skills_opt)) in &mut query
         {
             if age_opt.map(|age| !age.alive).unwrap_or(false) {
                 position.vel_x = 0.0;
@@ -1251,6 +1254,29 @@ impl SimSystem for MovementRuntimeSystem {
                             behavior.mourn_last_tick = Some(tick);
                         }
                         // No cairn → Mourn completes silently with no effect.
+                    }
+                    ActionType::Treat => {
+                        // Compute heal amount from treater's skills and knowledge.
+                        let healing_level = skills_opt
+                            .as_ref()
+                            .map(|s| s.get_level("SKILL_HEALING"))
+                            .unwrap_or(0);
+                        let has_first_aid = knowledge_opt
+                            .as_ref()
+                            .map(|k| k.has_knowledge("knowledge_first_aid"))
+                            .unwrap_or(false);
+                        let mut heal: u16 = config::TREAT_BASE_HEAL_AMOUNT as u16;
+                        heal += healing_level * config::TREAT_SKILL_HEAL_PER_LEVEL as u16;
+                        if has_first_aid {
+                            heal += config::TREAT_KNOWLEDGE_BONUS as u16;
+                        }
+                        let heal = heal.min(80) as u8;
+                        // Award XP to treater immediately (skills are in query).
+                        if let Some(skills) = skills_opt.as_mut() {
+                            skills.add_xp("SKILL_HEALING", config::TREAT_XP_GAIN);
+                        }
+                        // Defer target healing to Phase 2 after query borrow is released.
+                        treat_completions.push((entity, position.x, position.y, heal));
                     }
                     ActionType::Learn => {
                         if let Some(knowledge) = knowledge_opt.as_mut() {
@@ -1615,6 +1641,72 @@ impl SimSystem for MovementRuntimeSystem {
             position.x = next_x;
             position.y = next_y;
             position.movement_dir = movement_direction(position.vel_x, position.vel_y);
+        }
+        // Phase 2: apply Treat healing. Query borrow released; world.get() is now safe.
+        drop(query);
+        for (treater, tx, ty, heal) in treat_completions {
+            // Find nearest injured agent within TREAT_RANGE.
+            let target_opt: Option<hecs::Entity> = {
+                let mut nearest: Option<(hecs::Entity, f64)> = None;
+                for (e, (pos, health, age)) in
+                    world.query::<(&Position, &BodyHealth, &Age)>().iter()
+                {
+                    if e == treater || !age.alive {
+                        continue;
+                    }
+                    let is_injured = health.aggregate_hp < 0.95
+                        || health.parts.iter().any(|p| {
+                            p.hp < config::TREAT_TARGET_PART_HP_THRESHOLD
+                                || p.flags.has(PartFlags::BLEEDING)
+                        });
+                    if !is_injured {
+                        continue;
+                    }
+                    let dx = pos.x - tx;
+                    let dy = pos.y - ty;
+                    let dist = (dx * dx + dy * dy).sqrt();
+                    if dist <= config::TREAT_RANGE {
+                        match nearest {
+                            Some((_, prev_dist)) if dist >= prev_dist => {}
+                            _ => nearest = Some((e, dist)),
+                        }
+                    }
+                }
+                nearest.map(|(e, _)| e)
+            };
+            if let Some(target) = target_opt {
+                if let Ok(mut health) = world.get::<&mut BodyHealth>(target) {
+                    // Heal the most damaged living part.
+                    if let Some(idx) = health
+                        .parts
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, p)| p.hp > 0)
+                        .min_by_key(|(_, p)| p.hp)
+                        .map(|(i, _)| i)
+                    {
+                        let part = &mut health.parts[idx];
+                        part.hp = part.hp.saturating_add(heal).min(100);
+                        // Treat also accelerates clotting on the healed part.
+                        if part.bleed_rate > 0 {
+                            part.bleed_rate = part.bleed_rate.saturating_sub(2);
+                            if part.bleed_rate == 0 {
+                                part.flags.clear(PartFlags::BLEEDING);
+                            }
+                        }
+                    }
+                    health.recalculate_aggregates();
+                }
+                resources.event_store.push(SimEvent {
+                    tick,
+                    event_type: SimEventType::TaskCompleted,
+                    actor: treater.id(),
+                    target: Some(target.id()),
+                    tags: vec!["healing".to_string(), "treat".to_string()],
+                    cause: "treat_action".to_string(),
+                    value: f64::from(heal),
+                });
+            }
         }
     }
 }

@@ -24212,8 +24212,10 @@ mod harness_a11_body_health {
     }
 
     // ── A11-3 (Type A): bleeding drains hp per system tick on Full LOD ──────
-    // BLEED_HP_DRAIN=1, start hp=80, 5 ticks → hp = 80 - 5×1 = 75 (plan threshold).
-    // bleed_rate is a boolean gate (>0 enables drain); drain is always BLEED_HP_DRAIN/tick.
+    // bleed_rate=5, start hp=80, 5 ticks:
+    //   Ticks 1-4: drain 1 HP each, clot bleed_rate by 1 → hp=76, bleed_rate=1 after tick 4.
+    //   Tick 5: drain 1 HP (hp=75), clot bleed_rate→0, BLEEDING clears, natural heal fires
+    //           (+NATURAL_HEAL_RATE=1) → final hp=76.
     #[test]
     fn harness_a11_bleeding_drains_hp() {
         use sim_core::config;
@@ -24227,7 +24229,6 @@ mod harness_a11_body_health {
             health.parts[33].bleed_rate = 5;
             world.spawn((health, Age::default()))
         };
-        // 5 ticks × BLEED_HP_DRAIN(1) = 5 drained → expected hp = 75.
         engine.run_ticks(5);
         let world = engine.world();
         let h = world.get::<&BodyHealth>(entity).unwrap();
@@ -24236,16 +24237,18 @@ mod harness_a11_body_health {
             h.parts[33].hp,
             config::BLEED_HP_DRAIN
         );
-        // Type A: exact value — 5 ticks at 1 drain/tick from 80 = 75.
+        // Tick 5 clears BLEEDING (bleed_rate reaches 0) then natural heal fires in same tick.
+        // Net: 5 drains − 1 natural heal on tick 5 → hp = 80 − 5 + 1 = 76.
         assert_eq!(
-            h.parts[33].hp, 75,
-            "[A11-3] BLEEDING must drain HP by exactly BLEED_HP_DRAIN/tick (expected=75, got={})",
+            h.parts[33].hp, 76,
+            "[A11-3] 5 drains + natural heal on clot-clear tick: expected hp=76, got={}",
             h.parts[33].hp
         );
         println!(
-            "harness_a11_bleeding_drains_hp PASS: hp 80 -> {} (bleed_drain={})",
+            "harness_a11_bleeding_drains_hp PASS: hp 80 -> {} (drain={} heal={})",
             h.parts[33].hp,
-            config::BLEED_HP_DRAIN
+            config::BLEED_HP_DRAIN,
+            config::NATURAL_HEAL_RATE,
         );
     }
 
@@ -25311,6 +25314,391 @@ mod harness_a3_wildlife_combat {
         eprintln!("[harness] a3_zero_wildlife_noop: attack_count={}", attack_count);
         assert_eq!(attack_count, 0, "zero wildlife must produce 0 _attack entries; got {}", attack_count);
         println!("harness_a3_zero_wildlife_noop PASS");
+    }
+}
+
+// ── B1: Healing System ────────────────────────────────────────────────────────
+#[cfg(test)]
+mod harness_b1_healing_system {
+    use sim_core::components::{
+        Age, AgentKnowledge, Behavior, BodyHealth, HealthLod, KnowledgeEntry, PartFlags,
+        Position, SkillEntry, Skills, TransmissionSource,
+    };
+    use sim_core::config::{self, GameConfig};
+    use sim_core::{ActionType, GameCalendar, WorldMap};
+    use sim_engine::{SimEngine, SimResources};
+    use sim_systems::runtime::{HealthRuntimeSystem, MovementRuntimeSystem};
+
+    /// Minimal engine: only HealthRuntimeSystem at interval=1 (fires every tick).
+    fn make_health_engine() -> SimEngine {
+        let cfg = GameConfig::default();
+        let cal = GameCalendar::new(&cfg);
+        let map = WorldMap::new(8, 8, 1);
+        let resources = SimResources::new(cal, map, 1);
+        let mut engine = SimEngine::new(resources);
+        engine.register(HealthRuntimeSystem::new(110, 1));
+        engine
+    }
+
+    /// Engine: MovementRuntimeSystem (handles Treat completion) + HealthRuntimeSystem.
+    fn make_treat_engine() -> SimEngine {
+        let cfg = GameConfig::default();
+        let cal = GameCalendar::new(&cfg);
+        let map = WorldMap::new(64, 64, 42);
+        let resources = SimResources::new(cal, map, 42);
+        let mut engine = SimEngine::new(resources);
+        engine.register(MovementRuntimeSystem::new(30, 1));
+        engine.register(HealthRuntimeSystem::new(110, 1));
+        engine
+    }
+
+    /// B1-1 (Type A): bleed_rate decrements each HealthRuntimeSystem tick (natural clotting).
+    #[test]
+    fn harness_b1_natural_clot_reduces_bleed_rate() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 90;
+            health.parts[33].bleed_rate = 5;
+            health.parts[33].flags.set(PartFlags::BLEEDING);
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(3);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        // 3 system ticks: drain hp 90→87; clot bleed_rate 5→2 (one decrement per non-fatal drain).
+        eprintln!(
+            "[harness] b1_clot_reduces_bleed_rate: bleed_rate={}",
+            h.parts[33].bleed_rate
+        );
+        // Type A exact-value assertion: plan threshold = bleed_rate == 2 (5 − 1 per tick × 3 ticks)
+        assert_eq!(
+            h.parts[33].bleed_rate,
+            2,
+            "[B1-1] bleed_rate must be exactly 2 after 3 ticks (5 − 1×3 = 2), got={}",
+            h.parts[33].bleed_rate
+        );
+        println!(
+            "harness_b1_natural_clot_reduces_bleed_rate PASS: bleed_rate == 2",
+        );
+    }
+
+    /// B1-2 (Type A): BLEEDING flag clears when bleed_rate reaches 0.
+    #[test]
+    fn harness_b1_natural_clot_clears_bleeding_flag() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 90;
+            health.parts[33].bleed_rate = 2;
+            health.parts[33].flags.set(PartFlags::BLEEDING);
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(2);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        // 2 ticks: drain hp 90→88; clot bleed_rate 2→0, BLEEDING cleared.
+        eprintln!(
+            "[harness] b1_clot_clears_flag: bleed_rate={} bleeding={}",
+            h.parts[33].bleed_rate,
+            h.parts[33].flags.has(PartFlags::BLEEDING)
+        );
+        assert_eq!(
+            h.parts[33].bleed_rate, 0,
+            "[B1-2] bleed_rate must reach 0 after 2 ticks (got {})",
+            h.parts[33].bleed_rate
+        );
+        assert!(
+            !h.parts[33].flags.has(PartFlags::BLEEDING),
+            "[B1-2] BLEEDING flag must clear when bleed_rate=0"
+        );
+        println!("harness_b1_natural_clot_clears_bleeding_flag PASS");
+    }
+
+    /// B1-3 (Type B): natural healing restores HP on a part with no wound flags.
+    #[test]
+    fn harness_b1_natural_heal_restores_hp() {
+        let mut engine = make_health_engine();
+        let entity = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 70; // no BLEEDING, no INFECTED
+            world.spawn((health, Age::default()))
+        };
+        engine.run_ticks(10);
+        let world = engine.world();
+        let h = world.get::<&BodyHealth>(entity).unwrap();
+        // 10 ticks × NATURAL_HEAL_RATE(1) = hp 70→80.
+        eprintln!(
+            "[harness] b1_natural_heal: hp={} NATURAL_HEAL_RATE={}",
+            h.parts[33].hp,
+            config::NATURAL_HEAL_RATE
+        );
+        assert!(
+            h.parts[33].hp > 70,
+            "[B1-3] natural healing must restore HP above initial 70 (got {})",
+            h.parts[33].hp
+        );
+        println!(
+            "harness_b1_natural_heal_restores_hp PASS: hp {} > 70",
+            h.parts[33].hp
+        );
+    }
+
+    /// B1-4 (Type A): Skills.add_xp accumulates XP; get_level returns 0 before level-up.
+    #[test]
+    fn harness_b1_skills_api_xp_accumulates() {
+        let mut skills = Skills::default();
+        assert_eq!(
+            skills.get_level("SKILL_HEALING"), 0,
+            "[B1-4] get_level on empty Skills must return 0"
+        );
+        skills.add_xp("SKILL_HEALING", 0.5);
+        skills.add_xp("SKILL_HEALING", 0.5);
+        skills.add_xp("SKILL_HEALING", 0.5);
+        let xp = skills.entries.get("SKILL_HEALING").map(|e| e.xp).unwrap_or(0.0);
+        eprintln!(
+            "[harness] b1_skills_api: xp={} level={}",
+            xp,
+            skills.get_level("SKILL_HEALING")
+        );
+        assert!(
+            (xp - 1.5).abs() < 1e-9,
+            "[B1-4] add_xp must accumulate (expected 1.5, got {})",
+            xp
+        );
+        assert_eq!(
+            skills.get_level("NONEXISTENT"), 0,
+            "[B1-4] get_level for unknown skill must return 0"
+        );
+        println!("harness_b1_skills_api_xp_accumulates PASS: xp={}", xp);
+    }
+
+    /// B1-5 (Type A): AgentKnowledge.has_knowledge correctly reports presence/absence.
+    #[test]
+    fn harness_b1_knowledge_api_has_knowledge() {
+        let mut knowledge = AgentKnowledge::default();
+        assert!(
+            !knowledge.has_knowledge("knowledge_first_aid"),
+            "[B1-5] empty AgentKnowledge must not have 'knowledge_first_aid'"
+        );
+        knowledge.learn(KnowledgeEntry {
+            knowledge_id: "knowledge_first_aid".to_string(),
+            proficiency: 1.0,
+            source: TransmissionSource::Oral,
+            acquired_tick: 1,
+            last_used_tick: 1,
+            teacher_id: 0,
+        });
+        assert!(
+            knowledge.has_knowledge("knowledge_first_aid"),
+            "[B1-5] must find 'knowledge_first_aid' after learn()"
+        );
+        // Duplicate learn must not add a second entry.
+        knowledge.learn(KnowledgeEntry {
+            knowledge_id: "knowledge_first_aid".to_string(),
+            proficiency: 1.0,
+            source: TransmissionSource::Oral,
+            acquired_tick: 2,
+            last_used_tick: 2,
+            teacher_id: 0,
+        });
+        assert_eq!(
+            knowledge.known_count(), 1,
+            "[B1-5] duplicate learn must not create a second entry (count={})",
+            knowledge.known_count()
+        );
+        println!("harness_b1_knowledge_api_has_knowledge PASS");
+    }
+
+    /// B1-6 (Type B): completed Treat action raises target HP above initial value.
+    #[test]
+    fn harness_b1_treat_heals_injured_target() {
+        let mut engine = make_treat_engine();
+        let injured = {
+            let (world, _) = engine.world_and_resources_mut();
+            // Injured agent: Full LOD, part[33] hp=50 (below TREAT_TARGET_PART_HP_THRESHOLD=80).
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 50;
+            let injured = world.spawn((Position::new(32, 33), health, Age::default()));
+            // Treater: Treat action with timer=0 fires immediately this tick.
+            let mut behavior = Behavior::default();
+            behavior.current_action = ActionType::Treat;
+            behavior.action_timer = 0;
+            world.spawn((
+                Position::new(32, 32), // distance=1.0 < TREAT_RANGE(1.5)
+                behavior,
+                Age::default(),
+                Skills::default(),
+                AgentKnowledge::default(),
+            ));
+            injured
+        };
+        engine.run_ticks(1);
+        let world = engine.world();
+        let hp = world.get::<&BodyHealth>(injured).unwrap().parts[33].hp;
+        eprintln!("[harness] b1_treat_heals: part[33].hp={}", hp);
+        assert!(
+            hp > 50,
+            "[B1-6] Treat must raise target HP above 50 (got {})",
+            hp
+        );
+        println!("harness_b1_treat_heals_injured_target PASS: hp {}", hp);
+    }
+
+    /// B1-7 (Type A): Treat awards SKILL_HEALING XP to the treater.
+    #[test]
+    fn harness_b1_treat_awards_xp_to_treater() {
+        let mut engine = make_treat_engine();
+        let treater = {
+            let (world, _) = engine.world_and_resources_mut();
+            let mut health = BodyHealth::default();
+            health.lod_tier = HealthLod::Full;
+            health.parts[33].hp = 50;
+            world.spawn((Position::new(32, 33), health, Age::default()));
+            let mut behavior = Behavior::default();
+            behavior.current_action = ActionType::Treat;
+            behavior.action_timer = 0;
+            world.spawn((
+                Position::new(32, 32),
+                behavior,
+                Age::default(),
+                Skills::default(),
+                AgentKnowledge::default(),
+            ))
+        };
+        engine.run_ticks(1);
+        let world = engine.world();
+        let xp = world
+            .get::<&Skills>(treater)
+            .unwrap()
+            .entries
+            .get("SKILL_HEALING")
+            .map(|e| e.xp)
+            .unwrap_or(0.0);
+        eprintln!("[harness] b1_treat_xp: SKILL_HEALING xp={}", xp);
+        assert!(
+            xp > 0.0,
+            "[B1-7] Treat must award SKILL_HEALING XP (expected >0.0, got {})",
+            xp
+        );
+        println!("harness_b1_treat_awards_xp_to_treater PASS: xp={}", xp);
+    }
+
+    /// B1-8 (Type B): expert treater (SKILL_HEALING level=10) heals more HP than novice (level=0).
+    #[test]
+    fn harness_b1_treat_skilled_heals_more() {
+        let mut engine = make_treat_engine();
+        let (injured_base, injured_expert) = {
+            let (world, _) = engine.world_and_resources_mut();
+
+            // Injured pair A — healed by novice treater (level=0).
+            let mut h_base = BodyHealth::default();
+            h_base.lod_tier = HealthLod::Full;
+            h_base.parts[33].hp = 20;
+            let injured_base = world.spawn((Position::new(10, 10), h_base, Age::default()));
+            let mut b_base = Behavior::default();
+            b_base.current_action = ActionType::Treat;
+            b_base.action_timer = 0;
+            world.spawn((
+                Position::new(10, 11), // dist=1.0 from injured_base
+                b_base,
+                Age::default(),
+                Skills::default(),
+                AgentKnowledge::default(),
+            ));
+
+            // Injured pair B — healed by expert treater (level=10).
+            let mut h_expert = BodyHealth::default();
+            h_expert.lod_tier = HealthLod::Full;
+            h_expert.parts[33].hp = 20;
+            let injured_expert = world.spawn((Position::new(50, 50), h_expert, Age::default()));
+            let mut b_expert = Behavior::default();
+            b_expert.current_action = ActionType::Treat;
+            b_expert.action_timer = 0;
+            let mut skills_expert = Skills::default();
+            skills_expert.entries.insert(
+                "SKILL_HEALING".to_string(),
+                SkillEntry { level: 10, xp: 0.0 },
+            );
+            world.spawn((
+                Position::new(50, 51), // dist=1.0 from injured_expert
+                b_expert,
+                Age::default(),
+                skills_expert,
+                AgentKnowledge::default(),
+            ));
+
+            (injured_base, injured_expert)
+        };
+        engine.run_ticks(1);
+        let world = engine.world();
+        let hp_base = world.get::<&BodyHealth>(injured_base).unwrap().parts[33].hp;
+        let hp_expert = world.get::<&BodyHealth>(injured_expert).unwrap().parts[33].hp;
+        eprintln!(
+            "[harness] b1_treat_skilled: hp_base={} hp_expert={}",
+            hp_base, hp_expert
+        );
+        // base: 20 + TREAT_BASE(30) = 50.  expert: 20 + TREAT_BASE(30) + 10×TREAT_SKILL(3) = 80.
+        assert!(
+            hp_expert > hp_base,
+            "[B1-8] expert (level=10) must heal more than novice (level=0): expert={} vs base={}",
+            hp_expert, hp_base
+        );
+        println!(
+            "harness_b1_treat_skilled_heals_more PASS: expert={} > base={}",
+            hp_expert, hp_base
+        );
+    }
+
+    /// B1-9 (Type D): population survives clottable wounds — alive fraction ≥ 50%.
+    /// Agents start with BLEEDING (bleed_rate=1) on a vital part at hp=3.
+    /// Natural clotting stops the bleed before destruction; agents survive.
+    #[test]
+    fn harness_b1_population_survives_clottable_wounds() {
+        let mut engine = make_health_engine();
+        let count = 20usize;
+        let entities: Vec<hecs::Entity> = {
+            let (world, _) = engine.world_and_resources_mut();
+            (0..count)
+                .map(|_| {
+                    // Part[1] = Brain (PART_VITAL[1]=true). hp=3, bleed_rate=1:
+                    // Tick 1: drain 3→2, clot 1→0 (BLEEDING cleared), natural heal 2→3.
+                    // Tick 2+: no wound flags → natural heal continues. Agent survives.
+                    let mut health = BodyHealth::default();
+                    health.lod_tier = HealthLod::Full;
+                    health.parts[1].hp = 3;
+                    health.parts[1].bleed_rate = 1;
+                    health.parts[1].flags.set(PartFlags::BLEEDING);
+                    world.spawn((health, Age::default()))
+                })
+                .collect()
+        };
+        engine.run_ticks(5);
+        let world = engine.world();
+        let alive = entities
+            .iter()
+            .filter(|&&e| world.get::<&Age>(e).map(|a| a.alive).unwrap_or(false))
+            .count();
+        eprintln!(
+            "[harness] b1_population_survives: alive={}/{}",
+            alive, count
+        );
+        assert!(
+            alive * 2 >= count,
+            "[B1-9] ≥50% of wounded agents must survive with natural clotting (alive={}/{})",
+            alive, count
+        );
+        println!(
+            "harness_b1_population_survives_clottable_wounds PASS: {}/{} alive",
+            alive, count
+        );
     }
 }
 
