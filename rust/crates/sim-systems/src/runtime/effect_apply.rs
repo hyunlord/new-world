@@ -1,6 +1,6 @@
 use hecs::World;
 use log::{debug, warn};
-use sim_core::components::{BodyHealth, EffectFlags, Emotion, InjurySpec, Needs, PartFlags, Position};
+use sim_core::components::{BodyHealth, EffectFlags, Emotion, InjurySpec, Needs, PartFlags, Position, Wildlife};
 use sim_core::{
     config, CausalEvent, CauseRef, EffectEntry, EffectFlag, EffectPrimitive, EffectSource,
     EffectStat, EmotionType, EntityId, NeedType, ScheduledEffect,
@@ -369,6 +369,13 @@ impl SimSystem for EffectApplySystem {
                     Self::apply_damage_part(
                         resources, world, &entry, *part_idx, *severity, *flags_bits, *bleed_rate, tick,
                     );
+                }
+                EffectPrimitive::DamageWildlife { entity_id, damage } => {
+                    if let Some(e) = Self::resolve_entity(world, *entity_id) {
+                        if let Ok(mut w) = world.get::<&mut Wildlife>(e) {
+                            w.current_hp = (w.current_hp - *damage as f64).max(0.0);
+                        }
+                    }
                 }
             }
         }

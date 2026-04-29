@@ -19,13 +19,33 @@ impl WildlifeKind {
             Self::Boar => 0.5,
         }
     }
+
+    /// HP damage dealt per successful attack (Phase A3).
+    /// Magnitudes chosen so that `bear > wolf > boar` and each falls within
+    /// the design bands `wolf ∈ [3,9]`, `bear ∈ [9,24]`, `boar ∈ [0,2]`.
+    pub fn attack_damage(self) -> u8 {
+        match self {
+            Self::Wolf => 5,
+            Self::Bear => 15,
+            Self::Boar => 1,
+        }
+    }
+
+    /// Stable lowercase name used in causal log source kind (e.g. "wolf_attack").
+    pub fn kind_name(self) -> &'static str {
+        match self {
+            Self::Wolf => "wolf",
+            Self::Bear => "bear",
+            Self::Boar => "boar",
+        }
+    }
 }
 
 /// ECS component for non-human fauna.
 ///
 /// Spawned by `WildlifeRuntimeSystem` at tick 0 and persists for the
 /// lifetime of the simulation.  Phase A1 implements spawn + wander only;
-/// threat detection and combat are A2/A3 concerns.
+/// threat detection is A2; combat is A3.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Wildlife {
     pub kind: WildlifeKind,
@@ -36,6 +56,8 @@ pub struct Wildlife {
     pub home_tile: (i32, i32),
     /// Maximum Chebyshev distance from `home_tile` before wander is rejected.
     pub wander_radius: i32,
+    /// Tick of the last successful attack; used for cooldown gating (Phase A3).
+    pub last_attack_tick: u32,
 }
 
 impl Wildlife {
@@ -48,6 +70,7 @@ impl Wildlife {
             move_speed: 1.4,
             home_tile: home,
             wander_radius: 15,
+            last_attack_tick: 0,
         }
     }
 
@@ -60,6 +83,7 @@ impl Wildlife {
             move_speed: 0.9,
             home_tile: home,
             wander_radius: 10,
+            last_attack_tick: 0,
         }
     }
 
@@ -72,7 +96,13 @@ impl Wildlife {
             move_speed: 1.1,
             home_tile: home,
             wander_radius: 12,
+            last_attack_tick: 0,
         }
+    }
+
+    /// Returns true when the entity has any remaining HP.
+    pub fn is_alive(&self) -> bool {
+        self.current_hp > 0.0
     }
 }
 

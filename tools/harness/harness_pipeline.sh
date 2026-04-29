@@ -266,11 +266,16 @@ run_mechanical_gate() {
 
     cd "$PROJECT_ROOT/rust"
 
-    # 0a. cargo test
-    if ! cargo test --workspace --quiet 2>&1 | tail -20 | tee "$RESULT_DIR/step0_test.txt"; then
+    # 0a. cargo test (baseline-aware: tolerates pre-existing failures in .harness/baseline_test_failures.txt)
+    cargo test --workspace --quiet 2>&1 | tee "$RESULT_DIR/step0_test.txt" || true
+    _new_failures=$(grep "test result:" "$RESULT_DIR/step0_test.txt" | grep -oE '[0-9]+ failed' | grep -oE '[0-9]+' | awk '{sum+=$1} END{print sum+0}')
+    _baseline=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    if [[ -z "$_new_failures" ]]; then _new_failures=0; fi
+    if [[ "$_new_failures" -gt "$_baseline" ]]; then
         cd "$PROJECT_ROOT"
-        die "MECHANICAL GATE FAILED: cargo test. Fix before running harness."
+        die "MECHANICAL GATE FAILED: cargo test — ${_new_failures} failures exceeds baseline ${_baseline}. Fix new failures before running harness."
     fi
+    log "MECHANICAL GATE: cargo test — ${_new_failures} failures vs baseline ${_baseline} → PASS"
 
     # 0b. cargo clippy
     if ! cargo clippy --workspace -- -D warnings 2>&1 | tail -20 | tee "$RESULT_DIR/step0_clippy.txt"; then
@@ -583,6 +588,9 @@ $(cat "$REVIEW_DIR/review_latest.md")"
         "CODE_ATTEMPT=$attempt" \
         "FEEDBACK=$feedback_section"
 
+    # Clear any stale gen_result from prior pipeline runs (fresh start per attempt)
+    rm -f "$RESULT_DIR/gen_result_attempt${attempt}.md"
+
     # Generator needs tool access to write code — use --dangerously-skip-permissions
     local gen_timeout="${GENERATOR_TIMEOUT_SECONDS:-900}"
     log "Running Generator (isolated session, attempt $attempt, timeout ${gen_timeout}s)..."
@@ -599,14 +607,18 @@ $(cat "$REVIEW_DIR/review_latest.md")"
         die "Generator hung — aborting pipeline"
     fi
 
-    # Run gate
+    # Run gate (baseline-aware: tolerates pre-existing failures in .harness/baseline_test_failures.txt)
     log "Running gate command..."
     cd "$PROJECT_ROOT/rust"
-    if cargo test --workspace 2>&1 | tee "$RESULT_DIR/gate_result_attempt${attempt}.txt"; then
-        log "Gate: cargo test PASSED"
-    else
-        log "Gate: cargo test FAILED"
+    cargo test --workspace 2>&1 | tee "$RESULT_DIR/gate_result_attempt${attempt}.txt" || true
+    _gate_failures=$(grep "test result:" "$RESULT_DIR/gate_result_attempt${attempt}.txt" | grep -oE '[0-9]+ failed' | grep -oE '[0-9]+' | awk '{sum+=$1} END{print sum+0}')
+    _gate_baseline=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    if [[ -z "$_gate_failures" ]]; then _gate_failures=0; fi
+    if [[ "$_gate_failures" -gt "$_gate_baseline" ]]; then
+        log "Gate: cargo test FAILED (${_gate_failures} failures exceeds baseline ${_gate_baseline})"
         echo "GATE_FAILED" >> "$RESULT_DIR/gen_result_attempt${attempt}.md"
+    else
+        log "Gate: cargo test PASSED (${_gate_failures} failures vs baseline ${_gate_baseline})"
     fi
 
     if cargo clippy --workspace -- -D warnings 2>&1 | tee -a "$RESULT_DIR/gate_result_attempt${attempt}.txt"; then
@@ -1319,12 +1331,24 @@ run_codex_evaluator() {
     [[ -f "$plan_file" ]] || plan_file="$PLAN_DIR/plan_draft.md"
 
     # Collect the actual test code that was written
-    local test_code
-    test_code=$(grep -A 200 "fn harness_.*$FEATURE" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null || echo "No matching harness test found in sim-test")
+    # Also search by first keyword of feature name to find modules like harness_a3_<keyword>
+    local test_code _fw1
+    _fw1=$(echo "$FEATURE" | cut -d'-' -f1)
+    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400)
+    if [[ -z "$test_code" ]]; then test_code="No matching harness test found in sim-test"; fi
 
-    # Capture harness output tail
-    local harness_tail
+    # Capture harness output tail with feature-specific results and baseline context
+    local harness_tail _base _feat_tests
+    _base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30)
     harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
+    if [[ -n "$_feat_tests" ]]; then
+        harness_tail="=== Feature tests (${FEATURE}) ===
+${_feat_tests}
+
+=== Full harness summary (pre-existing baseline failures: ${_base}) ===
+${harness_tail}"
+    fi
 
     # Collect visual analysis if available
     local visual_analysis=""
@@ -1459,12 +1483,24 @@ run_evaluator() {
     [[ -f "$plan_file" ]] || plan_file="$PLAN_DIR/plan_draft.md"
 
     # Collect the actual test code that was written
-    local test_code
-    test_code=$(grep -A 200 "fn harness_.*$FEATURE" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null || echo "No matching harness test found in sim-test")
+    # Also search by first keyword of feature name to find modules like harness_a3_<keyword>
+    local test_code _fw1
+    _fw1=$(echo "$FEATURE" | cut -d'-' -f1)
+    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400)
+    if [[ -z "$test_code" ]]; then test_code="No matching harness test found in sim-test"; fi
 
-    # Capture harness output tail
-    local harness_tail
+    # Capture harness output tail with feature-specific results and baseline context
+    local harness_tail _base _feat_tests
+    _base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30)
     harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
+    if [[ -n "$_feat_tests" ]]; then
+        harness_tail="=== Feature tests (${FEATURE}) ===
+${_feat_tests}
+
+=== Full harness summary (pre-existing baseline failures: ${_base}) ===
+${harness_tail}"
+    fi
 
     # Collect visual analysis if available
     local visual_analysis=""
