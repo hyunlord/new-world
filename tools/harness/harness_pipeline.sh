@@ -1251,14 +1251,20 @@ run_regression_guard() {
 
     local guard_prompt_file
     guard_prompt_file=$(mktemp)
-    cat > "$guard_prompt_file" << 'GUARD_EOF'
+    local _guard_base
+    _guard_base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
+    cat > "$guard_prompt_file" << GUARD_EOF
 You are a regression guard for WorldSim. Your ONLY job is to verify nothing broke.
+
+IMPORTANT BASELINE: This project has ${_guard_base} known pre-existing test failures tracked in
+.harness/baseline_test_failures.txt. These failures existed BEFORE this feature was added.
+Only failures ABOVE this baseline count as regressions. If total_failed <= ${_guard_base}, report CLEAN.
 
 Run these checks IN ORDER. Do NOT skip any.
 
 1. Run the full gate:
    cd rust && cargo test --workspace 2>&1
-   Report: total passed, total failed, any new failures.
+   Report: total passed, total failed, any new failures (failures above baseline of ${_guard_base}).
 
 2. Run all harness tests:
    cd rust && cargo test -p sim-test harness_ -- --nocapture 2>&1
