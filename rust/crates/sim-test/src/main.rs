@@ -15092,20 +15092,20 @@ mod tests {
     #[test]
     fn harness_locale_ko_total_count() {
         let strings = load_compiled_strings("ko");
-        // Type C: empirical threshold — exact key count after sync (was 4982, now 4983 after sprite-infra adds ROOM_ROLE_RITUAL for the new enum variant)
+        // Type C: empirical threshold — exact key count after sync (was 4983, now 5001 after D1 nav+wildlife keys added to Fluent)
         assert_eq!(
-            strings.len(), 4983,
-            "ko.json expected 4983 strings, got {}", strings.len()
+            strings.len(), 5001,
+            "ko.json expected 5001 strings, got {}", strings.len()
         );
     }
 
     #[test]
     fn harness_locale_en_total_count() {
         let strings = load_compiled_strings("en");
-        // Type C: empirical threshold — exact key count after sync (was 4982, now 4983 after sprite-infra adds ROOM_ROLE_RITUAL for the new enum variant)
+        // Type C: empirical threshold — exact key count after sync (was 4983, now 5001 after D1 nav+wildlife keys added to Fluent)
         assert_eq!(
-            strings.len(), 4983,
-            "en.json expected 4983 strings, got {}", strings.len()
+            strings.len(), 5001,
+            "en.json expected 5001 strings, got {}", strings.len()
         );
     }
 

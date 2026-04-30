@@ -1,6 +1,6 @@
 {
-  "active_key_count": 4998,
-  "key_count": 4998,
+  "active_key_count": 5001,
+  "key_count": 5001,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4388,6 +4388,8 @@
     "UI_NAMELESS": 4065,
     "UI_NAME_DUPLICATE_SUFFIX": 4066,
     "UI_NATURAL_INCREASE": 3680,
+    "UI_NAV_BACK": 4998,
+    "UI_NAV_FORWARD": 4999,
     "UI_NEEDS": 3681,
     "UI_NEEDS_BASIC": 3682,
     "UI_NEEDS_HIGHER": 3683,
@@ -4914,6 +4916,7 @@
     "UI_WALL_HP": 4977,
     "UI_WAR_VETERAN": 3959,
     "UI_WEAK_TIES": 3960,
+    "UI_WILDLIFE_DETAIL_HEADER": 5000,
     "UI_WOOD": 3961,
     "UI_WOOD_LEGEND": 3962,
     "UI_WORK": 4708,
@@ -9999,7 +10002,10 @@
     "CAUSE_SHELTER_SAFETY",
     "CAUSE_TOOL_BROKEN",
     "ROOM_ROLE_MEMORIAL",
-    "UI_CAUSAL_RECENT"
+    "UI_CAUSAL_RECENT",
+    "UI_NAV_BACK",
+    "UI_NAV_FORWARD",
+    "UI_WILDLIFE_DETAIL_HEADER"
   ],
   "removed_key_count": 0,
   "removed_keys": [],

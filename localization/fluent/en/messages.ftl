@@ -5006,3 +5006,6 @@ CAUSE_SHELTER_SAFETY = Shelter safety
 CAUSE_TOOL_BROKEN = Tool broken
 ROOM_ROLE_MEMORIAL = Memorial
 UI_CAUSAL_RECENT = Recent Causes
+UI_NAV_BACK = <- Back
+UI_NAV_FORWARD = Forward ->
+UI_WILDLIFE_DETAIL_HEADER = Wildlife

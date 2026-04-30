@@ -43,6 +43,7 @@ const WILDLIFE_TEXTURE_PATHS: Array[String] = [
 ]
 var _wildlife_textures: Array[Texture2D] = []
 var _wildlife_sprites: Array[Sprite2D] = []
+var _wildlife_entity_ids: Array[int] = []
 var _band_territory_timer: float = 0.0
 const BAND_TERRITORY_SHADER_PATH: String = "res://shaders/band_territory.gdshader"
 const BAND_TERRITORY_INTERVAL: float = 0.5
@@ -1626,7 +1627,27 @@ func _get_dominant_resource(entity: RefCounted) -> String:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var wildlife_id: int = _find_clicked_wildlife(event.global_position)
+		if wildlife_id >= 0:
+			SimulationBus.entity_selected.emit(wildlife_id)
+			SimulationBus.ui_notification.emit("open_entity_detail", "command")
+			SimulationBus.entity_navigation_requested.emit(wildlife_id)
+			get_viewport().set_input_as_handled()
+			return
 		_handle_click(event.global_position)
+
+
+func _find_clicked_wildlife(screen_pos: Vector2) -> int:
+	var canvas_transform := get_canvas_transform()
+	for i in range(_wildlife_sprites.size()):
+		var sprite: Sprite2D = _wildlife_sprites[i]
+		if not sprite.visible:
+			continue
+		var sprite_screen: Vector2 = canvas_transform * sprite.global_position
+		if screen_pos.distance_to(sprite_screen) < 24.0:
+			if i < _wildlife_entity_ids.size():
+				return _wildlife_entity_ids[i]
+	return -1
 
 
 func _handle_click(screen_pos: Vector2) -> void:
@@ -1857,6 +1878,7 @@ func _load_wildlife_textures() -> void:
 
 func _decode_wildlife_snapshot(bytes: PackedByteArray, offset: int) -> Dictionary:
 	return {
+		"entity_id": bytes.decode_u32(offset + 0),
 		"x": bytes.decode_float(offset + 4),
 		"y": bytes.decode_float(offset + 8),
 		"vel_x": bytes.decode_float(offset + 12),
@@ -1879,9 +1901,13 @@ func _update_wildlife_sprites() -> void:
 		add_child(sprite)
 		_wildlife_sprites.append(sprite)
 
+	while _wildlife_entity_ids.size() < count:
+		_wildlife_entity_ids.append(-1)
+
 	var half_tile: Vector2 = Vector2(GameConfig.TILE_SIZE * 0.5, GameConfig.TILE_SIZE * 0.5)
 	for i in range(count):
 		var data: Dictionary = _decode_wildlife_snapshot(bytes, i * WILDLIFE_SNAPSHOT_STRIDE)
+		_wildlife_entity_ids[i] = int(data.get("entity_id", -1))
 		var sprite: Sprite2D = _wildlife_sprites[i]
 		sprite.visible = bool(int(data.get("alive", 0)))
 		if not sprite.visible:
