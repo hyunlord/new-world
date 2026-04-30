@@ -1346,13 +1346,13 @@ run_codex_evaluator() {
     # Also search by first keyword of feature name to find modules like harness_a3_<keyword>
     local test_code _fw1
     _fw1=$(echo "$FEATURE" | cut -d'-' -f1)
-    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400)
+    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400 || true)
     if [[ -z "$test_code" ]]; then test_code="No matching harness test found in sim-test"; fi
 
     # Capture harness output tail with feature-specific results and baseline context
     local harness_tail _base _feat_tests
     _base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
-    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30)
+    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30 || true)
     harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
     if [[ -n "$_feat_tests" ]]; then
         harness_tail="=== Feature tests (${FEATURE}) ===
@@ -1498,13 +1498,13 @@ run_evaluator() {
     # Also search by first keyword of feature name to find modules like harness_a3_<keyword>
     local test_code _fw1
     _fw1=$(echo "$FEATURE" | cut -d'-' -f1)
-    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400)
+    test_code=$(grep -A 200 "fn harness_.*$FEATURE\|mod harness_.*$_fw1" "$PROJECT_ROOT/rust/crates/sim-test/src/main.rs" 2>/dev/null | head -400 || true)
     if [[ -z "$test_code" ]]; then test_code="No matching harness test found in sim-test"; fi
 
     # Capture harness output tail with feature-specific results and baseline context
     local harness_tail _base _feat_tests
     _base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
-    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30)
+    _feat_tests=$(grep -i "$_fw1" "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null | head -30 || true)
     harness_tail=$(tail -40 "$RESULT_DIR/harness_result_attempt${CODE_ATTEMPT}.txt" 2>/dev/null || echo "No harness results")
     if [[ -n "$_feat_tests" ]]; then
         harness_tail="=== Feature tests (${FEATURE}) ===
@@ -1820,39 +1820,59 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
         while [[ $CODE_ATTEMPT -lt $MAX_CODE_ATTEMPTS ]]; do
             CODE_ATTEMPT=$((CODE_ATTEMPT + 1))
 
-            run_generator $CODE_ATTEMPT
-            report_step "2 Generator A$CODE_ATTEMPT" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+            # HARNESS_SKIP_GENERATOR=1: reuse existing gen_result (for eval-only re-runs)
+            if [[ "${HARNESS_SKIP_GENERATOR:-0}" == "1" && -f "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md" ]]; then
+                log "HARNESS_SKIP_GENERATOR: reusing existing gen_result_attempt${CODE_ATTEMPT}.md"
+                report_step "2 Generator A$CODE_ATTEMPT" "DONE" "(reused) $(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+            else
+                run_generator $CODE_ATTEMPT
+                report_step "2 Generator A$CODE_ATTEMPT" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+            fi
 
-            run_visual_verify
-            report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
+            # HARNESS_SKIP_VISUAL=1: reuse existing visual evidence (for eval-only re-runs)
+            if [[ "${HARNESS_SKIP_VISUAL:-0}" == "1" && -f "$EVIDENCE_DIR/screenshot_tickFINAL.png" ]]; then
+                log "HARNESS_SKIP_VISUAL: reusing existing visual evidence"
+                report_step "2.5a Visual Verify" "DONE" "(reused) $(summarize_visual "$EVIDENCE_DIR")"
+            else
+                run_visual_verify
+                report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
+            fi
 
-            run_vlm_interactive
-            report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
-
-            # VLM analysis MUST run before the interactive validator so the
-            # validator's Assertion 12 check inspects the freshly-written
-            # visual_analysis.txt. Running the validator first left the
-            # interactive_validation.txt stale relative to the VLM verdict
-            # (past regression: validator PASSed while the subsequent VLM
-            # wrote VISUAL_WARNING, causing cross-artifact disagreement).
-            run_vlm_analysis
-            report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
-
-            local iv_rc=0
-            run_interactive_validator || iv_rc=$?
-            report_step "2.5a-val Interactive Validator" "DONE" "$(summarize_interactive_validator "$EVIDENCE_DIR")"
-
-            # Anti-circular gate: a nonzero validator rc means the evidence
-            # does not satisfy the locked plan thresholds (Assertion 10).
-            # Record the failure and force RE-CODE; let the Evaluator still
-            # run so it can observe the validator output in its context, but
-            # short-circuit the verdict parse to RE-CODE if the validator
-            # said FAIL. Previously the pipeline always returned 0 here and
-            # the Evaluator could approve a failing evidence set.
+            # HARNESS_SKIP_VISUAL: also skip VLM steps when reusing existing evidence
             local validator_forces_recode="false"
-            if [[ $iv_rc -ne 0 ]]; then
-                validator_forces_recode="true"
-                log "Interactive validator rc=$iv_rc will force RE-CODE regardless of Evaluator verdict"
+            local iv_rc=0
+            if [[ "${HARNESS_SKIP_VISUAL:-0}" == "1" && -f "$EVIDENCE_DIR/visual_analysis.txt" ]]; then
+                log "HARNESS_SKIP_VISUAL: reusing existing VLM results"
+                report_step "2.5a-int VLM Interactive" "DONE" "(reused — HARNESS_SKIP_VISUAL)"
+                report_step "2.5b VLM Analysis" "DONE" "(reused) $(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+                report_step "2.5a-val Interactive Validator" "DONE" "(reused — HARNESS_SKIP_VISUAL)"
+            else
+                run_vlm_interactive
+                report_step "2.5a-int VLM Interactive" "DONE" "$(summarize_interactive "$EVIDENCE_DIR/interactive_results.txt")"
+
+                # VLM analysis MUST run before the interactive validator so the
+                # validator's Assertion 12 check inspects the freshly-written
+                # visual_analysis.txt. Running the validator first left the
+                # interactive_validation.txt stale relative to the VLM verdict
+                # (past regression: validator PASSed while the subsequent VLM
+                # wrote VISUAL_WARNING, causing cross-artifact disagreement).
+                run_vlm_analysis
+                report_step "2.5b VLM Analysis" "DONE" "$(summarize_vlm "$EVIDENCE_DIR/visual_analysis.txt")"
+
+                run_interactive_validator || iv_rc=$?
+                report_step "2.5a-val Interactive Validator" "DONE" "$(summarize_interactive_validator "$EVIDENCE_DIR")"
+
+                # Anti-circular gate: a nonzero validator rc means the evidence
+                # does not satisfy the locked plan thresholds (Assertion 10).
+                # Record the failure and force RE-CODE; let the Evaluator still
+                # run so it can observe the validator output in its context, but
+                # short-circuit the verdict parse to RE-CODE if the validator
+                # said FAIL. Previously the pipeline always returned 0 here and
+                # the Evaluator could approve a failing evidence set.
+                if [[ $iv_rc -ne 0 ]]; then
+                    validator_forces_recode="true"
+                    log "Interactive validator rc=$iv_rc will force RE-CODE regardless of Evaluator verdict"
+                fi
             fi
 
             # --- Codex verification steps (independent from Generator) ---
@@ -1866,8 +1886,14 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             fi
 
             # Step 2.7: Regression Guard — always runs
-            run_regression_guard
-            report_step "2.7 Regression Guard (Codex)" "DONE" "$(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+            # HARNESS_SKIP_REGRESSION_GUARD=1: reuse existing result (for eval-only re-runs)
+            if [[ "${HARNESS_SKIP_REGRESSION_GUARD:-0}" == "1" && -f "$REVIEW_DIR/regression_guard.txt" ]]; then
+                log "HARNESS_SKIP_REGRESSION_GUARD: reusing existing regression_guard.txt"
+                report_step "2.7 Regression Guard (Codex)" "DONE" "(reused) $(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+            else
+                run_regression_guard
+                report_step "2.7 Regression Guard (Codex)" "DONE" "$(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+            fi
 
             # Step 3: Codex Evaluator — replaces Claude Code evaluator for bias isolation
             run_codex_evaluator
