@@ -102,6 +102,9 @@ var _weather_label: Label
 var _alert_badge: Label
 var _band_badge: Label
 var _settlement_badge: Label
+var _back_button: Button
+var _forward_button: Button
+var _nav_manager: Node
 var _overlay_legend: Label
 var _overlay_legend_panel: PanelContainer
 var _overlay_probe_label: PanelContainer
@@ -389,6 +392,21 @@ func _build_minimap_and_stats() -> void:
 	_chronicle_panel = ChroniclePanelClass.new()
 	_chronicle_panel.init(_sim_engine, _entity_manager)
 	_build_right_sidebar()
+
+	# Entity navigation manager
+	# Use load() to avoid parse-time class reference in headless mode
+	_nav_manager = load("res://scripts/ui/entity_navigation_manager.gd").new()
+	_nav_manager.name = "EntityNavigationManager"
+	_nav_manager.setup(_entity_manager)
+	add_child(_nav_manager)
+	_nav_manager.history.history_changed.connect(func():
+		if _back_button != null:
+			_back_button.disabled = not _nav_manager.history.can_go_back()
+		if _forward_button != null:
+			_forward_button.disabled = not _nav_manager.history.can_go_forward()
+	)
+	if _camera != null and _camera.has_method("setup_navigation"):
+		_camera.call("setup_navigation", _nav_manager)
 
 	# List panel
 	_list_panel = ListPanelClass.new()
@@ -2157,6 +2175,23 @@ func _build_top_bar() -> void:
 	hbox.add_child(_alert_badge)
 	hbox.add_child(_band_badge)
 	hbox.add_child(_settlement_badge)
+
+	_back_button = Button.new()
+	_back_button.text = Locale.ltr("UI_NAV_BACK")
+	_back_button.disabled = true
+	_back_button.focus_mode = Control.FOCUS_NONE
+	_back_button.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
+	_back_button.pressed.connect(func(): if _nav_manager != null: _nav_manager.go_back())
+
+	_forward_button = Button.new()
+	_forward_button.text = Locale.ltr("UI_NAV_FORWARD")
+	_forward_button.disabled = true
+	_forward_button.focus_mode = Control.FOCUS_NONE
+	_forward_button.add_theme_font_size_override("font_size", GameConfig.get_font_size("hud"))
+	_forward_button.pressed.connect(func(): if _nav_manager != null: _nav_manager.go_forward())
+
+	hbox.add_child(_back_button)
+	hbox.add_child(_forward_button)
 	hbox.add_child(_fps_label)
 
 	panel.add_child(hbox)

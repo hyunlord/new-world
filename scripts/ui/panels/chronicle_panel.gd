@@ -400,6 +400,7 @@ func _navigate_to_entity(entity_id: int) -> void:
 	var entity: RefCounted = _entity_manager.get_entity(entity_id)
 	if entity != null and entity.is_alive:
 		SimulationBus.entity_selected.emit(entity_id)
+		SimulationBus.entity_navigation_requested.emit(entity_id)
 		# Request opening entity detail through UI notification
 		SimulationBus.ui_notification.emit("open_entity_detail", "command")
 	else:

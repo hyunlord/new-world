@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4998,
+    "active_key_count": 5001,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4998,
+    "key_count": 5001,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -4426,6 +4426,8 @@
     "UI_NAMELESS": "이름 없음",
     "UI_NAME_DUPLICATE_SUFFIX": "II",
     "UI_NATURAL_INCREASE": "자연 증가",
+    "UI_NAV_BACK": "<- 뒤로",
+    "UI_NAV_FORWARD": "앞으로 ->",
     "UI_NEEDS": "필요",
     "UI_NEEDS_BASIC": "생리적 욕구",
     "UI_NEEDS_HIGHER": "심리적 욕구",
@@ -4952,6 +4954,7 @@
     "UI_WALL_HP": "내구도",
     "UI_WAR_VETERAN": "⚔ 전쟁 참전 용사",
     "UI_WEAK_TIES": "약한 유대",
+    "UI_WILDLIFE_DETAIL_HEADER": "야생동물",
     "UI_WOOD": "목재",
     "UI_WOOD_LEGEND": "  목재 (W)",
     "UI_WORK": "작업",

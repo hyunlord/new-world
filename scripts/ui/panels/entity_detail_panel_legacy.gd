@@ -1981,6 +1981,7 @@ func _navigate_to_entity(entity_id: int) -> void:
 		set_entity_id(entity_id)
 		_showing_deceased = false
 		SimulationBus.entity_selected.emit(entity_id)
+		SimulationBus.entity_navigation_requested.emit(entity_id)
 		return
 	# Check DeceasedRegistry
 	var registry: Node = Engine.get_main_loop().root.get_node_or_null("DeceasedRegistry")

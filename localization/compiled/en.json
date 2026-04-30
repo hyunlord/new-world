@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 4998,
+    "active_key_count": 5001,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 4998,
+    "key_count": 5001,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4426,6 +4426,8 @@
     "UI_NAMELESS": "Nameless",
     "UI_NAME_DUPLICATE_SUFFIX": "II",
     "UI_NATURAL_INCREASE": "Natural increase",
+    "UI_NAV_BACK": "<- Back",
+    "UI_NAV_FORWARD": "Forward ->",
     "UI_NEEDS": "Needs",
     "UI_NEEDS_BASIC": "Physiological Needs",
     "UI_NEEDS_HIGHER": "Psychological Needs",
@@ -4952,6 +4954,7 @@
     "UI_WALL_HP": "Durability",
     "UI_WAR_VETERAN": "⚔ War Veteran",
     "UI_WEAK_TIES": "Weak Ties",
+    "UI_WILDLIFE_DETAIL_HEADER": "Wildlife",
     "UI_WOOD": "Wood",
     "UI_WOOD_LEGEND": "  Wood (W)",
     "UI_WORK": "Work",

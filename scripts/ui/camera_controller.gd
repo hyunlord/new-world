@@ -211,6 +211,15 @@ func focus_entity(entity_id: int, reason: String = "manual_focus") -> void:
 	_transition_to(CameraState.IDLE_CLOSE)
 
 
+func setup_navigation(nav_manager: Node) -> void:
+	if nav_manager and not nav_manager.entity_focus_requested.is_connected(_on_entity_focus_requested):
+		nav_manager.entity_focus_requested.connect(_on_entity_focus_requested)
+
+
+func _on_entity_focus_requested(entity_id: int, target_position: Vector2) -> void:
+	handle_notification_clicked(entity_id, target_position)
+
+
 func handle_notification_clicked(entity_id: int, target_position: Vector2) -> void:
 	if entity_id >= 0:
 		_last_interest_target_id = interest_target_id
