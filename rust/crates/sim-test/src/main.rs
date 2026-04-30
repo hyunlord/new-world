@@ -25702,3 +25702,459 @@ mod harness_b1_healing_system {
     }
 }
 
+#[cfg(test)]
+mod harness_a4_wildlife_sprite_viz {
+    //! Plan-attempt-3 harness: 17 assertions (A4-1 … A4-17).
+    //! All thresholds are LOCKED from plan_final.md.
+    use super::tests::make_stage1_engine;
+    use hecs::World;
+    use sim_core::components::{Position, Wildlife, WildlifeKind};
+    use sim_engine::{build_wildlife_snapshots, WildlifeSnapshot};
+
+    // ── helpers ──────────────────────────────────────────────────────────────────
+
+    /// Fresh world with exactly K=3 wildlife entities (one of each kind).
+    /// Ground truth is known a priori: 3 × 24 = 72 bytes.
+    fn make_k3_world() -> World {
+        let mut world = World::new();
+        world.spawn((Wildlife::wolf((128, 128)), Position::new(64, 64)));
+        world.spawn((Wildlife::bear((128, 128)), Position::new(80, 80)));
+        world.spawn((Wildlife::boar((128, 128)), Position::new(96, 96)));
+        world
+    }
+
+    /// Serialize every snapshot in `world` into a flat byte buffer.
+    fn build_buffer(world: &World) -> Vec<u8> {
+        let mut buf = Vec::new();
+        for snap in build_wildlife_snapshots(world) {
+            snap.write_bytes(&mut buf);
+        }
+        buf
+    }
+
+    // ── A4-1: compile-time size contract ─────────────────────────────────────────
+
+    #[test]
+    fn harness_a4_snapshot_size() {
+        // usize: size_of::<WildlifeSnapshot>() must equal 24
+        assert_eq!(
+            std::mem::size_of::<WildlifeSnapshot>(),
+            24,
+            "[A4-1] WildlifeSnapshot must be exactly 24 bytes for stride contract"
+        );
+        println!("harness_a4_snapshot_size PASS: 24 bytes");
+    }
+
+    // ── A4-2: buffer byte count (non-circular, K=3 ground truth) ─────────────────
+
+    #[test]
+    fn harness_a4_buffer_byte_count_k3() {
+        // K=3 is controlled by this test, not derived from any ECS query.
+        let world = make_k3_world();
+        let buf = build_buffer(&world);
+        // usize: total buffer length for 3 injected entities; 3 × 24 = 72
+        assert_eq!(
+            buf.len(),
+            72,
+            "[A4-2] 3 entities × 24 bytes/entity = 72; got {}",
+            buf.len()
+        );
+        println!("harness_a4_buffer_byte_count_k3 PASS: {} bytes", buf.len());
+    }
+
+    // ── A4-3: kind byte wire protocol (hardcoded expected values) ─────────────────
+
+    #[test]
+    fn harness_a4_kind_byte_wire_encoding() {
+        // Single-entity worlds — expected values are HARDCODED integer literals.
+        // No production symbol (WildlifeKind::*) appears in the expected side.
+        for (kind, expected_byte) in [
+            (WildlifeKind::Wolf, 0u8),
+            (WildlifeKind::Bear, 1u8),
+            (WildlifeKind::Boar, 2u8),
+        ] {
+            let mut world = World::new();
+            let w = match kind {
+                WildlifeKind::Wolf => Wildlife::wolf((128, 128)),
+                WildlifeKind::Bear => Wildlife::bear((128, 128)),
+                WildlifeKind::Boar => Wildlife::boar((128, 128)),
+            };
+            world.spawn((w, Position::new(128, 128)));
+            let buf = build_buffer(&world);
+            assert_eq!(buf.len(), 24, "[A4-3] single entity buffer must be 24 bytes");
+            // u8: kind byte at serialized offset 20 must equal hardcoded literal
+            assert_eq!(
+                buf[20],
+                expected_byte,
+                "[A4-3] kind byte for {:?} must be {} (hardcoded literal), got {}",
+                kind,
+                expected_byte,
+                buf[20]
+            );
+        }
+        println!("harness_a4_kind_byte_wire_encoding PASS: Wolf=0, Bear=1, Boar=2");
+    }
+
+    // ── A4-4: HP normalization — full HP ──────────────────────────────────────────
+
+    #[test]
+    fn harness_a4_hp_normalization_full() {
+        let mut world = World::new();
+        world.spawn((Wildlife::wolf((128, 128)), Position::new(128, 128)));
+        let snaps = build_wildlife_snapshots(&world);
+        // u8: hp_normalized must be 255 for a full-HP entity
+        assert_eq!(
+            snaps[0].hp_normalized,
+            255,
+            "[A4-4] full-HP wolf must normalize to 255, got {}",
+            snaps[0].hp_normalized
+        );
+        println!("harness_a4_hp_normalization_full PASS: {}", snaps[0].hp_normalized);
+    }
+
+    // ── A4-5: HP normalization — half HP ──────────────────────────────────────────
+
+    #[test]
+    fn harness_a4_hp_normalization_half() {
+        let mut world = World::new();
+        let mut w = Wildlife::wolf((128, 128));
+        w.current_hp = w.max_hp / 2.0;
+        world.spawn((w, Position::new(128, 128)));
+        let snaps = build_wildlife_snapshots(&world);
+        // u8: hp_normalized must be in [125, 130] for a half-HP entity (≈127)
+        assert!(
+            snaps[0].hp_normalized >= 125 && snaps[0].hp_normalized <= 130,
+            "[A4-5] half-HP wolf must normalize to ~127, got {}",
+            snaps[0].hp_normalized
+        );
+        println!("harness_a4_hp_normalization_half PASS: {}", snaps[0].hp_normalized);
+    }
+
+    // ── A4-6: Zero-velocity bytes — NaN bypass fix (two sub-checks) ──────────────
+
+    #[test]
+    fn harness_a4_zero_velocity_not_nan() {
+        // For a stationary entity (vel_x = 0.0):
+        //   sub-check 1: buf[12] (first byte of vel_x LE encoding) == 0
+        //   sub-check 2: vel_x decoded as LE f32 must not be NaN
+        let mut world = World::new();
+        let mut pos = Position::new(128, 128);
+        pos.vel_x = 0.0;
+        world.spawn((Wildlife::wolf((128, 128)), pos));
+        let buf = build_buffer(&world);
+        // u8: first byte of vel_x field (offset 12) must be 0 for 0.0f32
+        assert_eq!(
+            buf[12],
+            0,
+            "[A4-6] vel_x byte[12] must be 0 for stationary entity"
+        );
+        let vel_x = f32::from_le_bytes(buf[12..16].try_into().expect("vel_x bytes"));
+        // bool: vel_x decoded as LE f32 must not be NaN
+        assert!(
+            !vel_x.is_nan(),
+            "[A4-6] vel_x must not be NaN for stationary entity"
+        );
+        println!("harness_a4_zero_velocity_not_nan PASS: vel_x={}", vel_x);
+    }
+
+    // ── A4-7: Alive byte for a living entity ──────────────────────────────────────
+
+    #[test]
+    fn harness_a4_alive_byte_live_entity() {
+        let mut world = World::new();
+        world.spawn((Wildlife::wolf((128, 128)), Position::new(128, 128)));
+        let buf = build_buffer(&world);
+        // u8: alive byte at serialized offset 22 must be 1 for a living entity
+        assert_eq!(
+            buf[22],
+            1,
+            "[A4-7] alive entity alive byte must be 1, got {}",
+            buf[22]
+        );
+        println!("harness_a4_alive_byte_live_entity PASS: alive_byte={}", buf[22]);
+    }
+
+    // ── A4-8: write_bytes produces exactly 24 bytes ────────────────────────────────
+
+    #[test]
+    fn harness_a4_write_bytes_produces_24() {
+        let snap = WildlifeSnapshot {
+            entity_id: 42,
+            x: 10.0,
+            y: 20.0,
+            vel_x: 0.5,
+            vel_y: -0.5,
+            kind: 0,
+            hp_normalized: 255,
+            alive: 1,
+            _reserved: 0,
+        };
+        let mut buf = Vec::new();
+        snap.write_bytes(&mut buf);
+        // usize: write_bytes output length must be exactly 24
+        assert_eq!(
+            buf.len(),
+            24,
+            "[A4-8] write_bytes must produce 24 bytes, got {}",
+            buf.len()
+        );
+        println!("harness_a4_write_bytes_produces_24 PASS: {} bytes", buf.len());
+    }
+
+    // ── A4-9: Dead entity INCLUDED in buffer (policy lock) ────────────────────────
+
+    #[test]
+    fn harness_a4_dead_entity_in_buffer() {
+        // Policy: build_wildlife_snapshots must NOT filter dead entities.
+        // Dead entity (current_hp=0) → buffer len=24 (included) + alive byte=0.
+        let mut world = World::new();
+        let mut w = Wildlife::wolf((128, 128));
+        w.current_hp = 0.0;
+        world.spawn((w, Position::new(128, 128)));
+        let buf = build_buffer(&world);
+        // usize: dead entity must be present → buffer must be 24 bytes (not 0)
+        assert_eq!(
+            buf.len(),
+            24,
+            "[A4-9] dead entity must be INCLUDED in buffer (len=24), got {}",
+            buf.len()
+        );
+        // u8: alive byte at offset 22 must be 0 for dead entity
+        assert_eq!(
+            buf[22],
+            0,
+            "[A4-9] dead entity alive byte must be 0, got {}",
+            buf[22]
+        );
+        println!("harness_a4_dead_entity_in_buffer PASS: alive_byte={}", buf[22]);
+    }
+
+    // ── A4-10: Position decoded from buffer bytes ──────────────────────────────────
+
+    #[test]
+    fn harness_a4_position_bytes_in_buffer() {
+        // Parses bytes 4–7 (x) and bytes 8–11 (y) from the serialized buffer
+        // and verifies they equal the snapshot struct fields.
+        let mut world = World::new();
+        world.spawn((Wildlife::wolf((128, 128)), Position::new(64, 48)));
+        let snaps = build_wildlife_snapshots(&world);
+        let buf = build_buffer(&world);
+        // f32: x decoded from bytes 4-7 must match snapshot.x
+        let x_decoded = f32::from_le_bytes(buf[4..8].try_into().expect("[A4-10] x bytes"));
+        // f32: y decoded from bytes 8-11 must match snapshot.y
+        let y_decoded = f32::from_le_bytes(buf[8..12].try_into().expect("[A4-10] y bytes"));
+        assert_eq!(
+            x_decoded,
+            snaps[0].x,
+            "[A4-10] x decoded from bytes[4..8] must equal snapshot.x"
+        );
+        assert_eq!(
+            y_decoded,
+            snaps[0].y,
+            "[A4-10] y decoded from bytes[8..12] must equal snapshot.y"
+        );
+        println!(
+            "harness_a4_position_bytes_in_buffer PASS: x={} y={}",
+            x_decoded, y_decoded
+        );
+    }
+
+    // ── A4-11: All positions within world bounds [0, 256) ─────────────────────────
+
+    #[test]
+    fn harness_a4_position_bounds() {
+        let mut engine = make_stage1_engine(42, 10);
+        engine.run_ticks(5);
+        let buf = build_buffer(engine.world());
+        for (i, chunk) in buf.chunks(24).enumerate() {
+            // f32: x position decoded from bytes 4-7 within each 24-byte block
+            let x = f32::from_le_bytes(chunk[4..8].try_into().expect("[A4-11] x bytes"));
+            // f32: y position decoded from bytes 8-11 within each 24-byte block
+            let y = f32::from_le_bytes(chunk[8..12].try_into().expect("[A4-11] y bytes"));
+            assert!(
+                x >= 0.0 && x < 256.0,
+                "[A4-11] entity[{}] x={} is outside [0, 256)",
+                i,
+                x
+            );
+            assert!(
+                y >= 0.0 && y < 256.0,
+                "[A4-11] entity[{}] y={} is outside [0, 256)",
+                i,
+                y
+            );
+        }
+        println!(
+            "harness_a4_position_bounds PASS: {} entities all in bounds",
+            buf.len() / 24
+        );
+    }
+
+    // ── A4-12: Reserved byte (byte[23]) must be 0 ─────────────────────────────────
+
+    #[test]
+    fn harness_a4_reserved_byte_zero() {
+        let world = make_k3_world();
+        let buf = build_buffer(&world);
+        for (i, chunk) in buf.chunks(24).enumerate() {
+            // u8: reserved byte at offset 23 within each 24-byte block must be 0
+            assert_eq!(
+                chunk[23],
+                0,
+                "[A4-12] entity[{}] reserved byte[23] must be 0, got {}",
+                i,
+                chunk[23]
+            );
+        }
+        println!(
+            "harness_a4_reserved_byte_zero PASS: all {} entities byte[23]=0",
+            buf.len() / 24
+        );
+    }
+
+    // ── A4-13: Mixed-species kind set {0,1,2} in single buffer ────────────────────
+
+    #[test]
+    fn harness_a4_mixed_species_kind_set() {
+        // 3-entity world (Wolf + Bear + Boar) → kind bytes across all records
+        // must form the complete set {0, 1, 2}.
+        let world = make_k3_world();
+        let buf = build_buffer(&world);
+        let kind_set: std::collections::HashSet<u8> = buf.chunks(24).map(|c| c[20]).collect();
+        let expected: std::collections::HashSet<u8> = [0u8, 1u8, 2u8].iter().cloned().collect();
+        // HashSet<u8>: kind bytes across 3-entity buffer must equal {0, 1, 2}
+        assert_eq!(
+            kind_set,
+            expected,
+            "[A4-13] kind byte set in 3-entity buffer must be {{0, 1, 2}}, got {:?}",
+            kind_set
+        );
+        println!("harness_a4_mixed_species_kind_set PASS: {:?}", kind_set);
+    }
+
+    // ── A4-14: Velocity bit-exact round-trip ──────────────────────────────────────
+
+    #[test]
+    fn harness_a4_velocity_bitexact() {
+        // Inject entity with vel_x = -2.5 (exact f32 representation, no rounding).
+        // plan_final.md references "bytes 16-19" but vel_x occupies bytes 12-15 per
+        // write_bytes layout (entity_id:4 + x:4 + y:4 + vel_x:4 = offset 12).
+        // Implemented as bytes 12-15; discrepancy noted in result summary.
+        let mut world = World::new();
+        let mut pos = Position::new(128, 128);
+        pos.vel_x = -2.5_f64;
+        world.spawn((Wildlife::wolf((128, 128)), pos));
+        let buf = build_buffer(&world);
+        // f32: vel_x decoded from bytes 12-15 must be bit-exact -2.5
+        let vel_x = f32::from_le_bytes(buf[12..16].try_into().expect("[A4-14] vel_x bytes"));
+        assert_eq!(
+            vel_x,
+            -2.5_f32,
+            "[A4-14] vel_x=-2.5 must decode bit-exact from bytes 12-15, got {}",
+            vel_x
+        );
+        println!("harness_a4_velocity_bitexact PASS: vel_x={}", vel_x);
+    }
+
+    // ── A4-15: Buffer changes between ticks (Type E) ──────────────────────────────
+
+    #[test]
+    fn harness_a4_buffer_changes_between_ticks() {
+        // Type E: plan_final.md says "tick 100 vs tick 101" but
+        // WildlifeRuntimeSystem wanders every 60 ticks (multiples of 60).
+        // Tick 100 and 101 are both between wander ticks 60 and 120, so no
+        // position change occurs — 0 differing bytes is correct behaviour for
+        // that specific window.  Investigation result: straddle tick 59→60
+        // (first wander boundary) where positions are guaranteed to change.
+        // Threshold "≥ 1 differing byte" is UNCHANGED from plan.
+        let mut engine = make_stage1_engine(42, 10);
+        // engine.tick() runs systems with `current_tick` BEFORE incrementing.
+        // run_ticks(60) → systems see ticks 0-59; current_tick ends at 60.
+        // run_ticks(1)  → systems see tick 60; wander fires (60 % 60 == 0, tick != 0).
+        engine.run_ticks(60); // ticks 0-59: spawn fires at tick=1, no wander yet
+        let buf_pre_wander = build_buffer(engine.world());
+        engine.run_ticks(1); // tick 60: wander fires, positions change
+        let buf_post_wander = build_buffer(engine.world());
+        let diff_count = if buf_pre_wander.len() == buf_post_wander.len() {
+            buf_pre_wander
+                .iter()
+                .zip(buf_post_wander.iter())
+                .filter(|(a, b)| a != b)
+                .count()
+        } else {
+            // Different lengths count as a change
+            1
+        };
+        println!("[A4-15] tick 59 vs 60 (wander boundary) differing bytes: {}", diff_count);
+        // usize: at least 1 byte must differ across the wander boundary
+        assert!(
+            diff_count >= 1,
+            "[A4-15] buffer must change across wander boundary tick 59→60 (Type E); {} differing bytes",
+            diff_count
+        );
+        println!("harness_a4_buffer_changes_between_ticks PASS: {} bytes changed", diff_count);
+    }
+
+    // ── A4-16: PNG magic number (not just existence) ───────────────────────────────
+
+    #[test]
+    fn harness_a4_png_magic_number() {
+        use std::io::Read;
+        let base = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(|p| p.parent())
+            .and_then(|p| p.parent())
+            .expect("[A4-16] could not resolve project root from CARGO_MANIFEST_DIR");
+        // PNG magic: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
+        let magic: [u8; 8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+        for name in &["wolf", "bear", "boar"] {
+            let path = base.join(format!("assets/sprites/wildlife/{}.png", name));
+            let mut file = std::fs::File::open(&path)
+                .unwrap_or_else(|e| panic!("[A4-16] cannot open {}: {}", path.display(), e));
+            let mut header = [0u8; 8];
+            file.read_exact(&mut header)
+                .unwrap_or_else(|e| panic!("[A4-16] cannot read header {}: {}", path.display(), e));
+            // [u8; 8]: first 8 bytes must equal PNG magic signature
+            assert_eq!(
+                header,
+                magic,
+                "[A4-16] {}.png has invalid magic bytes: {:?}",
+                name,
+                header
+            );
+        }
+        println!("harness_a4_png_magic_number PASS: all 3 PNGs have valid magic bytes");
+    }
+
+    // ── A4-17: K≥3 liveness — one alive entity of each kind ──────────────────────
+
+    #[test]
+    fn harness_a4_liveness_k3() {
+        let mut engine = make_stage1_engine(42, 10);
+        engine.run_ticks(5);
+        let snaps = build_wildlife_snapshots(engine.world());
+        let alive: Vec<_> = snaps.iter().filter(|s| s.alive == 1).collect();
+        // bool: at least one alive Wolf (kind byte == 0) present
+        let has_wolf = alive.iter().any(|s| s.kind == 0);
+        // bool: at least one alive Bear (kind byte == 1) present
+        let has_bear = alive.iter().any(|s| s.kind == 1);
+        // bool: at least one alive Boar (kind byte == 2) present
+        let has_boar = alive.iter().any(|s| s.kind == 2);
+        // usize: total alive wildlife count must be >= 3
+        assert!(
+            alive.len() >= 3,
+            "[A4-17] need >= 3 alive wildlife, got {}",
+            alive.len()
+        );
+        assert!(has_wolf, "[A4-17] expected alive Wolf (kind=0)");
+        assert!(has_bear, "[A4-17] expected alive Bear (kind=1)");
+        assert!(has_boar, "[A4-17] expected alive Boar (kind=2)");
+        println!(
+            "harness_a4_liveness_k3 PASS: {} alive (wolf={} bear={} boar={})",
+            alive.len(),
+            alive.iter().filter(|s| s.kind == 0).count(),
+            alive.iter().filter(|s| s.kind == 1).count(),
+            alive.iter().filter(|s| s.kind == 2).count(),
+        );
+    }
+}

@@ -55,7 +55,7 @@ use sim_core::components::{
 use sim_core::enums::{ActionType, GrowthStage, NeedType, Sex};
 use sim_core::{BandId, CausalEvent, ChannelId, EntityId, EquipSlot, Settlement, SettlementId, Temperament};
 use sim_engine::{
-    build_agent_multimesh_buffer, AgentSnapshot, ChronicleEntryDetailSnapshot,
+    build_agent_multimesh_buffer, build_wildlife_snapshots, AgentSnapshot, ChronicleEntryDetailSnapshot,
     ChronicleEntryId, ChronicleEntryLite, ChronicleEvent, ChronicleFeedItemSnapshot,
     ChronicleFeedResponse, ChronicleHistorySliceResponse, ChronicleRecallSliceResponse,
     ChronicleSnapshotRevision, ChronicleThreadListResponse, EngineSnapshot, GameEvent,
@@ -2061,6 +2061,20 @@ impl WorldSimRuntime {
     #[func]
     fn get_frame_snapshots(&self) -> PackedByteArray {
         encode_snapshot_bytes(self.snapshot_buffer.curr())
+    }
+
+    /// Returns all wildlife positions and state as a packed byte array (24 bytes per entity).
+    #[func]
+    fn get_wildlife_snapshots(&self) -> PackedByteArray {
+        let Some(state) = self.state.as_ref() else {
+            return PackedByteArray::new();
+        };
+        let snapshots = build_wildlife_snapshots(state.engine.world());
+        let mut bytes: Vec<u8> = Vec::with_capacity(snapshots.len() * 24);
+        for s in &snapshots {
+            s.write_bytes(&mut bytes);
+        }
+        PackedByteArray::from(bytes)
     }
 
     #[func]

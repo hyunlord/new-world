@@ -1,5 +1,5 @@
 use hecs::World;
-use sim_core::components::{Age, Behavior, Body, Emotion, Identity, Needs, Position, Stress};
+use sim_core::components::{Age, Behavior, Body, Emotion, Identity, Needs, Position, Stress, Wildlife, WildlifeKind};
 use sim_core::config;
 use sim_core::enums::{ActionType, EmotionType, GrowthStage, MentalBreakType, Sex, StressState};
 
@@ -432,6 +432,86 @@ fn action_state_code(action: ActionType) -> u8 {
         ActionType::Mourn => 30,
         ActionType::Treat => 31,
     }
+}
+
+/// Per-wildlife render snapshot encoded as a fixed 24-byte record.
+///
+/// The Godot bridge serializes this as a `PackedByteArray` so the renderer can
+/// decode wildlife positions and visual state without per-field dictionary boxing.
+/// Layout is naturally aligned (u32 + 4×f32 + 4×u8 = 24 bytes), so `packed` is not needed.
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct WildlifeSnapshot {
+    /// Stable 32-bit raw entity id (`hecs::Entity::id()`).
+    pub entity_id: u32,
+    /// Continuous X position in tile-space.
+    pub x: f32,
+    /// Continuous Y position in tile-space.
+    pub y: f32,
+    /// X velocity in tile-space per tick.
+    pub vel_x: f32,
+    /// Y velocity in tile-space per tick.
+    pub vel_y: f32,
+    /// Wildlife kind: 0=Wolf, 1=Bear, 2=Boar.
+    pub kind: u8,
+    /// Current HP normalized to 0–255 (current_hp / max_hp × 255).
+    pub hp_normalized: u8,
+    /// Alive flag: 1=alive, 0=dead.
+    pub alive: u8,
+    /// Reserved.
+    pub _reserved: u8,
+}
+
+const _: () = assert!(std::mem::size_of::<WildlifeSnapshot>() == 24);
+
+impl WildlifeSnapshot {
+    /// Appends this snapshot to a byte buffer using little-endian field layout.
+    pub fn write_bytes(&self, out: &mut Vec<u8>) {
+        let entity_id = self.entity_id;
+        let x = self.x;
+        let y = self.y;
+        let vel_x = self.vel_x;
+        let vel_y = self.vel_y;
+        out.extend_from_slice(&entity_id.to_le_bytes());
+        out.extend_from_slice(&x.to_le_bytes());
+        out.extend_from_slice(&y.to_le_bytes());
+        out.extend_from_slice(&vel_x.to_le_bytes());
+        out.extend_from_slice(&vel_y.to_le_bytes());
+        out.push(self.kind);
+        out.push(self.hp_normalized);
+        out.push(self.alive);
+        out.push(self._reserved);
+    }
+}
+
+/// Builds render snapshots for all wildlife entities in the world.
+pub fn build_wildlife_snapshots(world: &World) -> Vec<WildlifeSnapshot> {
+    let mut snapshots = Vec::new();
+    for (entity, (wildlife, position)) in world.query::<(&Wildlife, &Position)>().iter() {
+        let kind_code = match wildlife.kind {
+            WildlifeKind::Wolf => 0,
+            WildlifeKind::Bear => 1,
+            WildlifeKind::Boar => 2,
+        };
+        let hp_ratio = if wildlife.max_hp > 0.0 {
+            (wildlife.current_hp / wildlife.max_hp).clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
+        let hp_normalized = (hp_ratio * 255.0).round() as u8;
+        snapshots.push(WildlifeSnapshot {
+            entity_id: entity.id(),
+            x: position.x as f32,
+            y: position.y as f32,
+            vel_x: position.vel_x as f32,
+            vel_y: position.vel_y as f32,
+            kind: kind_code,
+            hp_normalized,
+            alive: u8::from(wildlife.is_alive()),
+            _reserved: 0,
+        });
+    }
+    snapshots
 }
 
 #[cfg(test)]

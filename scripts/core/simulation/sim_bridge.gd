@@ -148,6 +148,19 @@ func get_prev_frame_snapshots() -> PackedByteArray:
 	return PackedByteArray()
 
 
+## Returns packed wildlife snapshots (24 bytes per entity).
+func get_wildlife_snapshots() -> PackedByteArray:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return PackedByteArray()
+	if not runtime.has_method("get_wildlife_snapshots"):
+		return PackedByteArray()
+	var result: Variant = runtime.call("get_wildlife_snapshots")
+	if result is PackedByteArray:
+		return result
+	return PackedByteArray()
+
+
 ## Returns interpolation alpha in the range 0.0..1.0.
 func get_render_alpha() -> float:
 	var runtime: Object = _get_native_runtime()

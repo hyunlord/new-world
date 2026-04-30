@@ -444,6 +444,16 @@ func get_influence_texture(channel: String) -> PackedByteArray:
 	return PackedByteArray()
 
 
+func get_wildlife_snapshots() -> PackedByteArray:
+	var sim_bridge: Object = _get_sim_bridge()
+	if sim_bridge == null or not sim_bridge.has_method("get_wildlife_snapshots"):
+		return PackedByteArray()
+	var raw: Variant = sim_bridge.call("get_wildlife_snapshots")
+	if raw is PackedByteArray:
+		return raw
+	return PackedByteArray()
+
+
 func get_territory_texture() -> Dictionary:
 	var sim_bridge: Object = _get_sim_bridge()
 	if sim_bridge == null or not sim_bridge.has_method("runtime_get_territory_texture"):
