@@ -26158,3 +26158,386 @@ mod harness_a4_wildlife_sprite_viz {
         );
     }
 }
+
+#[cfg(test)]
+mod harness_blueprint_v1 {
+    use super::*;
+
+    fn load_registry() -> sim_data::DataRegistry {
+        let data_dir = super::authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("DataRegistry must load cleanly")
+    }
+
+    #[test]
+    fn harness_blueprint_shelter_has_blueprint() {
+        let registry = load_registry();
+        let shelter = registry.structure_def("shelter").expect("shelter in registry");
+        assert!(
+            shelter.blueprint.is_some(),
+            "[B4-1] 'shelter' StructureDef must have an inline blueprint"
+        );
+        println!("harness_blueprint_shelter_has_blueprint PASS");
+    }
+
+    #[test]
+    fn harness_blueprint_shelter_wall_count() {
+        let registry = load_registry();
+        let shelter = registry.structure_def("shelter").expect("shelter");
+        let bp = shelter.blueprint.as_ref().expect("blueprint");
+        assert_eq!(
+            bp.walls.len(),
+            15,
+            "[B4-2] shelter blueprint expects 15 walls (5×5 ring − 1 door gap), got {}",
+            bp.walls.len()
+        );
+        println!("harness_blueprint_shelter_wall_count PASS: walls={}", bp.walls.len());
+    }
+
+    #[test]
+    fn harness_blueprint_shelter_door_not_in_walls() {
+        let registry = load_registry();
+        let shelter = registry.structure_def("shelter").expect("shelter");
+        let bp = shelter.blueprint.as_ref().expect("blueprint");
+        for door in &bp.doors {
+            let in_walls = bp.walls.iter().any(|w| w.offset == *door);
+            assert!(
+                !in_walls,
+                "[B4-3] door offset {:?} must not appear in walls list",
+                door
+            );
+        }
+        println!("harness_blueprint_shelter_door_not_in_walls PASS: doors={:?}", bp.doors);
+    }
+
+    #[test]
+    fn harness_blueprint_small_shelter_in_registry() {
+        let registry = load_registry();
+        let s = registry.structure_def("small_shelter").expect("small_shelter in registry");
+        let bp = s.blueprint.as_ref().expect("small_shelter must have a blueprint");
+        assert_eq!(
+            bp.walls.len(),
+            7,
+            "[B4-4] small_shelter: 7 walls (3×3 ring − 1 door), got {}",
+            bp.walls.len()
+        );
+        assert_eq!(bp.doors.len(), 1, "[B4-4] small_shelter: exactly 1 door");
+        assert!(!bp.furniture.is_empty(), "[B4-4] small_shelter: at least 1 furniture");
+        println!(
+            "harness_blueprint_small_shelter_in_registry PASS: walls={} furniture={}",
+            bp.walls.len(),
+            bp.furniture.len()
+        );
+    }
+
+    #[test]
+    fn harness_blueprint_hearth_house_in_registry() {
+        let registry = load_registry();
+        let s = registry.structure_def("hearth_house").expect("hearth_house in registry");
+        let bp = s.blueprint.as_ref().expect("hearth_house must have a blueprint");
+        assert!(
+            bp.walls.len() >= 7,
+            "[B4-5] hearth_house: at least 7 walls, got {}",
+            bp.walls.len()
+        );
+        assert_eq!(bp.doors.len(), 1, "[B4-5] hearth_house: exactly 1 door");
+        assert!(!bp.furniture.is_empty(), "[B4-5] hearth_house: at least 1 furniture");
+        println!(
+            "harness_blueprint_hearth_house_in_registry PASS: walls={} furniture={}",
+            bp.walls.len(),
+            bp.furniture.len()
+        );
+    }
+
+    #[test]
+    fn harness_blueprint_storage_hut_in_registry() {
+        let registry = load_registry();
+        let s = registry.structure_def("storage_hut").expect("storage_hut in registry");
+        let bp = s.blueprint.as_ref().expect("storage_hut must have a blueprint");
+        assert_eq!(
+            bp.walls.len(),
+            7,
+            "[B4-6] storage_hut: 7 walls (3×3 ring − 1 door), got {}",
+            bp.walls.len()
+        );
+        assert_eq!(bp.doors.len(), 1, "[B4-6] storage_hut: exactly 1 door");
+        println!("harness_blueprint_storage_hut_in_registry PASS: walls={}", bp.walls.len());
+    }
+
+    #[test]
+    fn harness_blueprint_all_new_doors_not_in_walls() {
+        let registry = load_registry();
+        for id in &["small_shelter", "hearth_house", "storage_hut"] {
+            let s = registry.structure_def(id).expect(id);
+            let bp = s.blueprint.as_ref().expect("blueprint present");
+            for door in &bp.doors {
+                let in_walls = bp.walls.iter().any(|w| w.offset == *door);
+                assert!(
+                    !in_walls,
+                    "[B4-7] {}: door {:?} must not appear in walls list",
+                    id,
+                    door
+                );
+            }
+        }
+        println!("harness_blueprint_all_new_doors_not_in_walls PASS");
+    }
+
+    #[test]
+    fn harness_blueprint_legacy_no_blueprint() {
+        let registry = load_registry();
+        for id in &["stockpile", "campfire"] {
+            let s = registry.structure_def(id).expect(id);
+            assert!(
+                s.blueprint.is_none(),
+                "[B4-8] '{}' must use legacy path (blueprint must be None)",
+                id
+            );
+        }
+        println!("harness_blueprint_legacy_no_blueprint PASS: stockpile and campfire have no blueprint");
+    }
+
+    // ── Plan assertions A1–A12 (all Type A — exact, deterministic, seed-independent) ─────────────
+
+    #[test]
+    fn harness_blueprint_hearth_house_wall_count_exact() {
+        // Type A: 5×5 ring − 1 door = 15 walls (exact). Previous test used ≥7 — too loose.
+        let registry = load_registry();
+        let s = registry.structure_def("hearth_house").expect("hearth_house in registry");
+        let bp = s.blueprint.as_ref().expect("hearth_house must have a blueprint");
+        assert_eq!(
+            bp.walls.len(),
+            15,
+            "[B4-A1] hearth_house: exactly 15 walls (5×5 ring − 1 door gap), got {}",
+            bp.walls.len()
+        );
+        println!("harness_blueprint_hearth_house_wall_count_exact PASS: walls={}", bp.walls.len());
+    }
+
+    #[test]
+    fn harness_blueprint_small_shelter_floor_count() {
+        // Type A: 3×3 structure → 1 interior floor tile at center (exact).
+        let registry = load_registry();
+        let s = registry.structure_def("small_shelter").expect("small_shelter in registry");
+        let bp = s.blueprint.as_ref().expect("small_shelter must have a blueprint");
+        assert_eq!(
+            bp.floors.len(),
+            1,
+            "[B4-A2] small_shelter: exactly 1 floor tile, got {}",
+            bp.floors.len()
+        );
+        println!("harness_blueprint_small_shelter_floor_count PASS: floors={}", bp.floors.len());
+    }
+
+    #[test]
+    fn harness_blueprint_hearth_house_floor_count() {
+        // Type A: 5×5 structure → 3×3 = 9 interior floor tiles (exact).
+        let registry = load_registry();
+        let s = registry.structure_def("hearth_house").expect("hearth_house in registry");
+        let bp = s.blueprint.as_ref().expect("hearth_house must have a blueprint");
+        assert_eq!(
+            bp.floors.len(),
+            9,
+            "[B4-A3] hearth_house: exactly 9 floor tiles (3×3 interior), got {}",
+            bp.floors.len()
+        );
+        println!("harness_blueprint_hearth_house_floor_count PASS: floors={}", bp.floors.len());
+    }
+
+    #[test]
+    fn harness_blueprint_storage_hut_floor_count() {
+        // Type A: 3×3 structure → 1 interior floor tile at center (exact).
+        let registry = load_registry();
+        let s = registry.structure_def("storage_hut").expect("storage_hut in registry");
+        let bp = s.blueprint.as_ref().expect("storage_hut must have a blueprint");
+        assert_eq!(
+            bp.floors.len(),
+            1,
+            "[B4-A4] storage_hut: exactly 1 floor tile, got {}",
+            bp.floors.len()
+        );
+        println!("harness_blueprint_storage_hut_floor_count PASS: floors={}", bp.floors.len());
+    }
+
+    #[test]
+    fn harness_blueprint_all_floors_packed_earth() {
+        // Type A: every floor tile in all 3 new structures must carry material_tag "packed_earth".
+        let registry = load_registry();
+        for id in &["small_shelter", "hearth_house", "storage_hut"] {
+            let s = registry.structure_def(id).expect(id);
+            let bp = s.blueprint.as_ref().expect("blueprint present");
+            for (i, tile) in bp.floors.iter().enumerate() {
+                assert_eq!(
+                    tile.material_tag,
+                    "packed_earth",
+                    "[B4-A5] {}: floor tile[{}] material_tag must be 'packed_earth', got '{}'",
+                    id,
+                    i,
+                    tile.material_tag
+                );
+            }
+        }
+        println!("harness_blueprint_all_floors_packed_earth PASS");
+    }
+
+    #[test]
+    fn harness_blueprint_small_shelter_furniture_identity() {
+        // Type A: small_shelter has exactly 1 furniture with id "fire_pit".
+        let registry = load_registry();
+        let s = registry.structure_def("small_shelter").expect("small_shelter in registry");
+        let bp = s.blueprint.as_ref().expect("small_shelter must have a blueprint");
+        assert_eq!(
+            bp.furniture.len(),
+            1,
+            "[B4-A6] small_shelter: exactly 1 furniture entry, got {}",
+            bp.furniture.len()
+        );
+        assert_eq!(
+            bp.furniture[0].furniture_id,
+            "fire_pit",
+            "[B4-A6] small_shelter: furniture[0] must be 'fire_pit', got '{}'",
+            bp.furniture[0].furniture_id
+        );
+        println!(
+            "harness_blueprint_small_shelter_furniture_identity PASS: furniture={}",
+            bp.furniture[0].furniture_id
+        );
+    }
+
+    #[test]
+    fn harness_blueprint_hearth_house_furniture_identity() {
+        // Type A: hearth_house has exactly 2 furniture entries: "fire_pit" and "lean_to".
+        let registry = load_registry();
+        let s = registry.structure_def("hearth_house").expect("hearth_house in registry");
+        let bp = s.blueprint.as_ref().expect("hearth_house must have a blueprint");
+        assert_eq!(
+            bp.furniture.len(),
+            2,
+            "[B4-A7] hearth_house: exactly 2 furniture entries, got {}",
+            bp.furniture.len()
+        );
+        let ids: Vec<&str> = bp.furniture.iter().map(|f| f.furniture_id.as_str()).collect();
+        assert!(
+            ids.contains(&"fire_pit"),
+            "[B4-A7] hearth_house: must contain 'fire_pit', found {:?}",
+            ids
+        );
+        assert!(
+            ids.contains(&"lean_to"),
+            "[B4-A7] hearth_house: must contain 'lean_to', found {:?}",
+            ids
+        );
+        println!("harness_blueprint_hearth_house_furniture_identity PASS: {:?}", ids);
+    }
+
+    #[test]
+    fn harness_blueprint_storage_hut_furniture_identity() {
+        // Type A: storage_hut has exactly 1 furniture with id "storage_pit".
+        let registry = load_registry();
+        let s = registry.structure_def("storage_hut").expect("storage_hut in registry");
+        let bp = s.blueprint.as_ref().expect("storage_hut must have a blueprint");
+        assert_eq!(
+            bp.furniture.len(),
+            1,
+            "[B4-A8] storage_hut: exactly 1 furniture entry, got {}",
+            bp.furniture.len()
+        );
+        assert_eq!(
+            bp.furniture[0].furniture_id,
+            "storage_pit",
+            "[B4-A8] storage_hut: furniture[0] must be 'storage_pit', got '{}'",
+            bp.furniture[0].furniture_id
+        );
+        println!(
+            "harness_blueprint_storage_hut_furniture_identity PASS: furniture={}",
+            bp.furniture[0].furniture_id
+        );
+    }
+
+    #[test]
+    fn harness_blueprint_storage_hut_role_manual() {
+        // Type A: role_recognition must be Manual(role:"storage") — not Auto.
+        // A silent Auto fallback would pass 7 of 8 previous tests but break storage routing.
+        let registry = load_registry();
+        let s = registry.structure_def("storage_hut").expect("storage_hut in registry");
+        assert_eq!(
+            s.role_recognition,
+            sim_data::RoleRecognition::Manual { role: "storage".to_string() },
+            "[B4-A9] storage_hut: role_recognition must be Manual {{ role: 'storage' }}, got {:?}",
+            s.role_recognition
+        );
+        println!("harness_blueprint_storage_hut_role_manual PASS");
+    }
+
+    #[test]
+    fn harness_blueprint_door_positions_exact() {
+        // Type A: door offsets are geometry invariants from the blueprint spec.
+        let registry = load_registry();
+        let expected = [
+            ("small_shelter", (0i32, -1i32)),
+            ("hearth_house",  (0i32, -2i32)),
+            ("storage_hut",   (0i32, -1i32)),
+        ];
+        for (id, expected_door) in &expected {
+            let s = registry.structure_def(id).expect(id);
+            let bp = s.blueprint.as_ref().expect("blueprint present");
+            assert_eq!(bp.doors.len(), 1, "[B4-A10] {}: exactly 1 door", id);
+            assert_eq!(
+                bp.doors[0],
+                *expected_door,
+                "[B4-A10] {}: door position must be {:?}, got {:?}",
+                id,
+                expected_door,
+                bp.doors[0]
+            );
+        }
+        println!("harness_blueprint_door_positions_exact PASS");
+    }
+
+    #[test]
+    fn harness_blueprint_hearth_house_dual_influence() {
+        // Type A: exactly 2 influence emissions — "shelter" channel and "social" channel.
+        let registry = load_registry();
+        let s = registry.structure_def("hearth_house").expect("hearth_house in registry");
+        assert_eq!(
+            s.influence_when_complete.len(),
+            2,
+            "[B4-A11] hearth_house: exactly 2 influence emissions, got {}",
+            s.influence_when_complete.len()
+        );
+        let channels: Vec<&str> = s
+            .influence_when_complete
+            .iter()
+            .map(|e| e.channel.as_str())
+            .collect();
+        assert!(
+            channels.contains(&"shelter"),
+            "[B4-A11] hearth_house: must have 'shelter' influence channel, found {:?}",
+            channels
+        );
+        assert!(
+            channels.contains(&"social"),
+            "[B4-A11] hearth_house: must have 'social' influence channel, found {:?}",
+            channels
+        );
+        println!(
+            "harness_blueprint_hearth_house_dual_influence PASS: channels={:?}",
+            channels
+        );
+    }
+
+    #[test]
+    fn harness_blueprint_storage_hut_zero_influence() {
+        // Type A: storage huts produce no influence — zero emissions is the hard invariant.
+        let registry = load_registry();
+        let s = registry.structure_def("storage_hut").expect("storage_hut in registry");
+        assert_eq!(
+            s.influence_when_complete.len(),
+            0,
+            "[B4-A12] storage_hut: zero influence emissions, got {}",
+            s.influence_when_complete.len()
+        );
+        println!("harness_blueprint_storage_hut_zero_influence PASS");
+    }
+}
