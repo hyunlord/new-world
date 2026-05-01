@@ -6421,17 +6421,23 @@ mod tests {
         );
 
         assert_eq!(
-            raw_count, 2,
-            "world_rules_raw must contain exactly 2 rulesets (BaseRules + EternalWinter)"
+            raw_count, 5,
+            "world_rules_raw must contain exactly 5 rulesets (BaseRules + 4 scenarios)"
         );
 
-        let expected: std::collections::HashSet<String> = ["BaseRules", "EternalWinter"]
-            .iter()
-            .map(|s| s.to_string())
-            .collect();
+        let expected: std::collections::HashSet<String> = [
+            "BaseRules",
+            "EternalWinter",
+            "PerpetualSummer",
+            "BarrenWorld",
+            "Abundance",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
         assert_eq!(
             names, expected,
-            "raw ruleset names must equal {{BaseRules, EternalWinter}}"
+            "raw ruleset names must equal {{BaseRules, EternalWinter, PerpetualSummer, BarrenWorld, Abundance}}"
         );
     }
 
@@ -26539,5 +26545,933 @@ mod harness_blueprint_v1 {
             s.influence_when_complete.len()
         );
         println!("harness_blueprint_storage_hut_zero_influence PASS");
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// A-9 v2: World Rules — Scenarios and Runtime (plan_final.md, 11 assertions)
+// ─────────────────────────────────────────────────────────────────────────────
+#[cfg(test)]
+mod harness_a9_world_rules_v1 {
+    use super::authoritative_ron_data_dir;
+    use std::sync::Arc;
+
+    // ── helpers ──────────────────────────────────────────────────────────────
+
+    fn make_resources_for_scenario(
+        scenario_name: &str,
+    ) -> (sim_engine::SimResources, sim_data::DataRegistry) {
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == scenario_name)
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let resources = sim_engine::SimResources::new(calendar, map, 42);
+        (resources, registry)
+    }
+
+    // ── Assertion 1: scenario_registry_completeness ──────────────────────────
+
+    #[test]
+    fn harness_a9_scenario_registry_completeness() {
+        // Type A: All 5 scenario RON files must load with exact names.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        let required: &[&str] = &[
+            "BaseRules",
+            "EternalWinter",
+            "PerpetualSummer",
+            "BarrenWorld",
+            "Abundance",
+        ];
+        let found: std::collections::HashSet<&str> =
+            registry.world_rules_raw.iter().map(|r| r.name.as_str()).collect();
+
+        // Type: usize (count of present required scenarios)
+        for name in required {
+            assert!(
+                found.contains(name),
+                "scenario '{}' not found in world_rules_raw. Found: {:?}",
+                name,
+                found
+            );
+        }
+        // Exact set equality: no extra unexpected names
+        assert_eq!(
+            found.len(),
+            5,
+            "Expected exactly 5 world rulesets, found {}: {:?}",
+            found.len(),
+            found
+        );
+        eprintln!(
+            "[harness] a9_scenario_registry_completeness: PASS count={} names={:?}",
+            found.len(),
+            found
+        );
+    }
+
+    // ── Assertion 2: perpetual_summer_pre_and_post_apply ─────────────────────
+
+    #[test]
+    fn harness_a9_perpetual_summer_pre_and_post_apply() {
+        // Type A: Phase A verifies parsed RON struct; Phase B verifies apply_world_rules output.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        // ── Phase A: parsed struct BEFORE apply_world_rules ──────────────────
+        let ps = registry
+            .world_rules_raw
+            .iter()
+            .find(|r| r.name == "PerpetualSummer")
+            .expect("PerpetualSummer must be in world_rules_raw");
+
+        let globals = ps
+            .global_constants
+            .as_ref()
+            .expect("PerpetualSummer global_constants must be Some (non-None)");
+
+        // Type: f64 — (a1) warmth_decay_mul
+        let a1 = globals
+            .warmth_decay_mul
+            .expect("PerpetualSummer warmth_decay_mul must be Some");
+        assert!(
+            (a1 - 0.3).abs() < 1e-10,
+            "Phase A (a1): PerpetualSummer warmth_decay_mul expected 0.3, got {a1}"
+        );
+
+        // Type: f64 — (a2) food_regen_mul
+        let a2 = globals
+            .food_regen_mul
+            .expect("PerpetualSummer food_regen_mul must be Some");
+        assert!(
+            (a2 - 1.5).abs() < 1e-10,
+            "Phase A (a2): PerpetualSummer food_regen_mul expected 1.5, got {a2}"
+        );
+
+        // Type: String — (a3) season_mode
+        let a3 = globals
+            .season_mode
+            .as_ref()
+            .expect("PerpetualSummer season_mode must be Some");
+        assert_eq!(
+            a3.as_str(),
+            "eternal_summer",
+            "Phase A (a3): PerpetualSummer season_mode expected 'eternal_summer', got '{a3}'"
+        );
+
+        // ── Phase B: SimResources AFTER apply_world_rules ────────────────────
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "PerpetualSummer")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        // Type: f64 — (b1) warmth_decay_rate two-sided + direction guard
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 0.3;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-6,
+            "Phase B (b1): warmth_decay_rate expected {} (WARMTH_DECAY_RATE*0.3), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+        assert!(
+            resources.warmth_decay_rate < sim_core::config::WARMTH_DECAY_RATE,
+            "Phase B (b1 direction): warmth_decay_rate {} must be < WARMTH_DECAY_RATE {}",
+            resources.warmth_decay_rate,
+            sim_core::config::WARMTH_DECAY_RATE
+        );
+
+        // Type: f64 — (b2) food_regen_mul
+        assert!(
+            (resources.food_regen_mul - 1.5).abs() < 1e-6,
+            "Phase B (b2): food_regen_mul expected 1.5, got {}",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — (b3) temperature_bias
+        assert!(
+            (resources.temperature_bias - 0.6).abs() < 1e-6,
+            "Phase B (b3): temperature_bias expected 0.6, got {}",
+            resources.temperature_bias
+        );
+
+        // Type: String — (b4) season_mode
+        assert_eq!(
+            resources.season_mode, "eternal_summer",
+            "Phase B (b4): season_mode expected 'eternal_summer', got '{}'",
+            resources.season_mode
+        );
+
+        eprintln!(
+            "[harness] a9_perpetual_summer_pre_and_post_apply: PASS \
+             warmth={:.6} food={:.2} temp_bias={:.2} season={}",
+            resources.warmth_decay_rate,
+            resources.food_regen_mul,
+            resources.temperature_bias,
+            resources.season_mode
+        );
+    }
+
+    // ── Assertion 3: barren_world_pre_and_post_apply ─────────────────────────
+
+    #[test]
+    fn harness_a9_barren_world_pre_and_post_apply() {
+        // Type A: Phase A verifies parsed RON struct (including explicit season_mode "default");
+        //         Phase B verifies apply_world_rules output.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        // ── Phase A ──────────────────────────────────────────────────────────
+        let bw = registry
+            .world_rules_raw
+            .iter()
+            .find(|r| r.name == "BarrenWorld")
+            .expect("BarrenWorld must be in world_rules_raw");
+
+        let globals = bw
+            .global_constants
+            .as_ref()
+            .expect("BarrenWorld global_constants must be Some (non-None)");
+
+        // Type: f64 — (a1) food_regen_mul
+        let a1 = globals
+            .food_regen_mul
+            .expect("BarrenWorld food_regen_mul must be Some");
+        assert!(
+            (a1 - 0.4).abs() < 1e-10,
+            "Phase A (a1): BarrenWorld food_regen_mul expected 0.4, got {a1}"
+        );
+
+        // Type: String — (a2) season_mode must be EXPLICITLY PRESENT == "default"
+        // (falsifiability: if omitted from RON, this expect panics — that's correct RED behavior)
+        let a2 = globals.season_mode.as_ref().expect(
+            "Phase A (a2): BarrenWorld season_mode must be explicitly present in RON (non-None). \
+             Omitting season_mode makes assertion unfalsifiable — see plan rationale.",
+        );
+        assert_eq!(
+            a2.as_str(),
+            "default",
+            "Phase A (a2): BarrenWorld season_mode must be explicitly 'default', got '{a2}'"
+        );
+
+        // Type: f64 — (a3) mortality_mul from agent_constants
+        let a3 = bw
+            .agent_constants
+            .as_ref()
+            .and_then(|ac| ac.mortality_mul)
+            .expect("BarrenWorld agent_constants.mortality_mul must be Some");
+        assert!(
+            (a3 - 1.4).abs() < 1e-10,
+            "Phase A (a3): BarrenWorld mortality_mul expected 1.4, got {a3}"
+        );
+
+        // ── Phase B ──────────────────────────────────────────────────────────
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "BarrenWorld")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        // Type: f64 — (b1) food_regen_mul + direction guard
+        assert!(
+            (resources.food_regen_mul - 0.4).abs() < 1e-6,
+            "Phase B (b1): food_regen_mul expected 0.4, got {}",
+            resources.food_regen_mul
+        );
+        assert!(
+            resources.food_regen_mul < 1.0,
+            "Phase B (b1 direction): food_regen_mul {} must be < 1.0 (scarce)",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — (b2) mortality_mul + direction guard
+        assert!(
+            (resources.mortality_mul - 1.4).abs() < 1e-6,
+            "Phase B (b2): mortality_mul expected 1.4, got {}",
+            resources.mortality_mul
+        );
+        assert!(
+            resources.mortality_mul > 1.0,
+            "Phase B (b2 direction): mortality_mul {} must be > 1.0 (punishing)",
+            resources.mortality_mul
+        );
+
+        // Type: f64 — (b3) hunger_decay_rate using live constant
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 1.4;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-6,
+            "Phase B (b3): hunger_decay_rate expected {} (HUNGER_DECAY_RATE*1.4), got {}",
+            expected_hunger,
+            resources.hunger_decay_rate
+        );
+
+        // Type: String — (b4) season_mode
+        assert_eq!(
+            resources.season_mode, "default",
+            "Phase B (b4): season_mode expected 'default', got '{}'",
+            resources.season_mode
+        );
+
+        // Type: f64 — (b5) disaster_frequency_mul
+        assert!(
+            (resources.disaster_frequency_mul - 1.5).abs() < 1e-6,
+            "Phase B (b5): disaster_frequency_mul expected 1.5, got {}",
+            resources.disaster_frequency_mul
+        );
+
+        // Type: f64 — (b6) fertility_mul
+        assert!(
+            (resources.fertility_mul - 0.6).abs() < 1e-6,
+            "Phase B (b6): fertility_mul expected 0.6, got {}",
+            resources.fertility_mul
+        );
+
+        eprintln!(
+            "[harness] a9_barren_world_pre_and_post_apply: PASS \
+             food={:.2} mortality={:.2} hunger={:.5} season={} disaster={:.2} fertility={:.2}",
+            resources.food_regen_mul,
+            resources.mortality_mul,
+            resources.hunger_decay_rate,
+            resources.season_mode,
+            resources.disaster_frequency_mul,
+            resources.fertility_mul
+        );
+    }
+
+    // ── Assertion 4: abundance_pre_and_post_apply ────────────────────────────
+
+    #[test]
+    fn harness_a9_abundance_pre_and_post_apply() {
+        // Type A: Phase A verifies parsed RON struct; Phase B verifies apply_world_rules output.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        // ── Phase A ──────────────────────────────────────────────────────────
+        let ab = registry
+            .world_rules_raw
+            .iter()
+            .find(|r| r.name == "Abundance")
+            .expect("Abundance must be in world_rules_raw");
+
+        let globals = ab
+            .global_constants
+            .as_ref()
+            .expect("Abundance global_constants must be Some (non-None)");
+
+        // Type: f64 — (a1) food_regen_mul
+        let a1 = globals
+            .food_regen_mul
+            .expect("Abundance food_regen_mul must be Some");
+        assert!(
+            (a1 - 2.0).abs() < 1e-10,
+            "Phase A (a1): Abundance food_regen_mul expected 2.0, got {a1}"
+        );
+
+        // Type: f64 — (a2) warmth_decay_mul
+        let a2 = globals
+            .warmth_decay_mul
+            .expect("Abundance warmth_decay_mul must be Some");
+        assert!(
+            (a2 - 0.7).abs() < 1e-10,
+            "Phase A (a2): Abundance warmth_decay_mul expected 0.7, got {a2}"
+        );
+
+        // ── Phase B ──────────────────────────────────────────────────────────
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "Abundance")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        // Type: f64 — (b1) food_regen_mul + direction guard + upper-bound anti-double-apply
+        assert!(
+            (resources.food_regen_mul - 2.0).abs() < 1e-6,
+            "Phase B (b1): food_regen_mul expected 2.0, got {}",
+            resources.food_regen_mul
+        );
+        assert!(
+            resources.food_regen_mul > 1.0,
+            "Phase B (b1 direction): food_regen_mul {} must be > 1.0 (abundant)",
+            resources.food_regen_mul
+        );
+        assert!(
+            resources.food_regen_mul < 2.5,
+            "Phase B (b1 anti-double-apply): food_regen_mul {} must be < 2.5 \
+             (double-apply 2.0*2.0=4.0 would exceed this)",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — (b2) mortality_mul + direction guard
+        assert!(
+            (resources.mortality_mul - 0.7).abs() < 1e-6,
+            "Phase B (b2): mortality_mul expected 0.7, got {}",
+            resources.mortality_mul
+        );
+        assert!(
+            resources.mortality_mul < 1.0,
+            "Phase B (b2 direction): mortality_mul {} must be < 1.0 (benign)",
+            resources.mortality_mul
+        );
+
+        // Type: f64 — (b3) hunger_decay_rate using live constant
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 0.7;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-6,
+            "Phase B (b3): hunger_decay_rate expected {} (HUNGER_DECAY_RATE*0.7), got {}",
+            expected_hunger,
+            resources.hunger_decay_rate
+        );
+
+        // Type: f64 — (b4) fertility_mul
+        assert!(
+            (resources.fertility_mul - 1.2).abs() < 1e-6,
+            "Phase B (b4): fertility_mul expected 1.2, got {}",
+            resources.fertility_mul
+        );
+
+        // Type: f64 — (b5) skill_xp_mul
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-6,
+            "Phase B (b5): skill_xp_mul expected 1.5, got {}",
+            resources.skill_xp_mul
+        );
+
+        // Type: f64 — (b6) warmth_decay_rate using live constant
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 0.7;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-6,
+            "Phase B (b6): warmth_decay_rate expected {} (WARMTH_DECAY_RATE*0.7), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        eprintln!(
+            "[harness] a9_abundance_pre_and_post_apply: PASS \
+             food={:.2} mortality={:.2} skill_xp={:.2} warmth={:.6} hunger={:.5} fertility={:.2}",
+            resources.food_regen_mul,
+            resources.mortality_mul,
+            resources.skill_xp_mul,
+            resources.warmth_decay_rate,
+            resources.hunger_decay_rate,
+            resources.fertility_mul
+        );
+    }
+
+    // ── Assertion 5: season_for_tick_fixed_modes_and_fallthrough ─────────────
+
+    #[test]
+    fn harness_a9_season_for_tick_fixed_modes_and_fallthrough() {
+        // Type A: named overrides always return fixed season; unknown mode falls through
+        //         to tick-based arithmetic (same as "default").
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+
+        // "eternal_winter" at 6 tick values spanning the first season boundary
+        resources.season_mode = "eternal_winter".to_string();
+        for &tick in &[0u64, 1, 1091, 1092, 10_000, 50_000] {
+            // Type: &'static str
+            let season = resources.season_for_tick(tick);
+            assert_eq!(
+                season, "winter",
+                "eternal_winter at tick={tick}: expected 'winter', got '{season}'"
+            );
+        }
+
+        // "eternal_summer" at same 6 tick values
+        resources.season_mode = "eternal_summer".to_string();
+        for &tick in &[0u64, 1, 1091, 1092, 10_000, 50_000] {
+            // Type: &'static str
+            let season = resources.season_for_tick(tick);
+            assert_eq!(
+                season, "summer",
+                "eternal_summer at tick={tick}: expected 'summer', got '{season}'"
+            );
+        }
+
+        // "unrecognized_mode" fallthrough: must use tick-based arithmetic, NOT return
+        // a hardcoded constant — verifying `_` arm behaves identically to "default".
+        resources.season_mode = "unrecognized_mode".to_string();
+        let fallthrough_cases: &[(u64, &str)] =
+            &[(0, "spring"), (1092, "summer"), (2184, "autumn"), (3276, "winter")];
+        for &(tick, expected) in fallthrough_cases {
+            // Type: &'static str
+            let season = resources.season_for_tick(tick);
+            assert_eq!(
+                season, expected,
+                "unrecognized_mode fallthrough at tick={tick}: expected '{expected}', got '{season}'"
+            );
+        }
+
+        eprintln!("[harness] a9_season_for_tick_fixed_modes_and_fallthrough: PASS 16 checks");
+    }
+
+    // ── Assertion 6: season_for_tick_default_cycle_boundary_conditions ───────
+
+    #[test]
+    fn harness_a9_season_for_tick_default_cycle_boundary_conditions() {
+        // Type A: "default" mode — off-by-one boundary pairs + wrap at full year.
+        // TICKS_PER_SEASON = 12 * 91 = 1092.
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.season_mode = "default".to_string();
+
+        let cases: &[(u64, &str)] = &[
+            (0, "spring"),    // quarter 0 start
+            (1091, "spring"), // quarter 0 last tick (off-by-one guard)
+            (1092, "summer"), // quarter 1 first tick (boundary crossing)
+            (2183, "summer"), // quarter 1 last tick
+            (2184, "autumn"), // quarter 2 first tick
+            (3275, "autumn"), // quarter 2 last tick
+            (3276, "winter"), // quarter 3 first tick
+            (4367, "winter"), // quarter 3 last tick
+            (4368, "spring"), // wrap: 4368 / 1092 = 4, 4 % 4 = 0
+        ];
+
+        for &(tick, expected) in cases {
+            // Type: &'static str
+            let season = resources.season_for_tick(tick);
+            assert_eq!(
+                season, expected,
+                "default mode at tick={tick}: expected '{expected}', got '{season}'"
+            );
+        }
+
+        // 4-distinct-seasons check
+        let distinct: std::collections::HashSet<&str> = [0u64, 1092, 2184, 3276]
+            .iter()
+            .map(|&t| resources.season_for_tick(t))
+            .collect();
+        // Type: usize
+        assert_eq!(
+            distinct.len(),
+            4,
+            "default mode must produce 4 distinct seasons at quarter-start ticks, got {:?}",
+            distinct
+        );
+
+        eprintln!(
+            "[harness] a9_season_for_tick_default_cycle_boundary_conditions: \
+             PASS 9 boundary pairs + 4 distinct seasons"
+        );
+    }
+
+    // ── Assertion 7: season_for_tick_large_tick_no_panic_and_correct_cycle ───
+
+    #[test]
+    fn harness_a9_season_for_tick_large_tick_no_panic_and_correct_cycle() {
+        // Type A: u64::MAX must not panic; specific large ticks verified with
+        //         independently calculated expected values.
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.season_mode = "default".to_string();
+
+        // u64::MAX: must not panic, must return a valid season
+        // Type: &'static str
+        let max_season = resources.season_for_tick(u64::MAX);
+        assert!(
+            ["spring", "summer", "autumn", "winter"].contains(&max_season),
+            "season_for_tick(u64::MAX) must return a valid season, got '{max_season}'"
+        );
+
+        // tick=1_000_000: 1_000_000 / 1092 = 915 (floor), 915 % 4 = 3 → "winter"
+        // Verify: 915 * 1092 = 999180; 999180 + 1092 = 1_000_272 > 1_000_000 confirms floor=915
+        // Type: &'static str
+        let s1m = resources.season_for_tick(1_000_000);
+        assert_eq!(
+            s1m, "winter",
+            "season_for_tick(1_000_000) expected 'winter' (915 % 4 = 3), got '{s1m}'"
+        );
+
+        // tick=4_368_000: 4_368_000 / 1092 = 4000 exactly (4000*1092=4_368_000), 4000 % 4 = 0
+        // Type: &'static str
+        let s4m = resources.season_for_tick(4_368_000);
+        assert_eq!(
+            s4m, "spring",
+            "season_for_tick(4_368_000) expected 'spring' (4000 % 4 = 0), got '{s4m}'"
+        );
+
+        eprintln!(
+            "[harness] a9_season_for_tick_large_tick_no_panic_and_correct_cycle: PASS \
+             u64::MAX={max_season} 1_000_000={s1m} 4_368_000={s4m}"
+        );
+    }
+
+    // ── Assertion 8: perpetual_summer_full_chain_integration ─────────────────
+
+    #[test]
+    fn harness_a9_perpetual_summer_full_chain_integration() {
+        // Type A: RON → loader → WorldRuleset → apply_world_rules → SimResources →
+        //         season_for_tick chain. season_for_tick is called AFTER apply_world_rules
+        //         writes season_mode — verifying it reads from SimResources, not a local cache.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "PerpetualSummer")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        // (a) season_mode
+        // Type: String
+        assert_eq!(
+            resources.season_mode, "eternal_summer",
+            "(a) season_mode expected 'eternal_summer', got '{}'",
+            resources.season_mode
+        );
+
+        // (b) season_for_tick(0) — reads from SimResources.season_mode post-apply
+        // Type: &'static str
+        let sb = resources.season_for_tick(0);
+        assert_eq!(sb, "summer", "(b) season_for_tick(0) expected 'summer', got '{sb}'");
+
+        // (c) season_for_tick(1092) — past first season boundary, override persists
+        // Type: &'static str
+        let sc = resources.season_for_tick(1092);
+        assert_eq!(sc, "summer", "(c) season_for_tick(1092) expected 'summer', got '{sc}'");
+
+        // (d) season_for_tick(5000) — arbitrary mid-run tick
+        // Type: &'static str
+        let sd = resources.season_for_tick(5000);
+        assert_eq!(sd, "summer", "(d) season_for_tick(5000) expected 'summer', got '{sd}'");
+
+        // (e1) warmth_decay_rate tight bound — confirms global_constants path ran
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 0.3;
+        // Type: f64
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-6,
+            "(e1) warmth_decay_rate expected {} (WARMTH_DECAY_RATE*0.3), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        // (e2) food_regen_mul tight bound — second independent field confirms full apply ran
+        // Type: f64
+        assert!(
+            (resources.food_regen_mul - 1.5).abs() < 1e-6,
+            "(e2) food_regen_mul expected 1.5, got {}",
+            resources.food_regen_mul
+        );
+
+        eprintln!(
+            "[harness] a9_perpetual_summer_full_chain_integration: PASS \
+             season={} warmth={:.6} food={:.2}",
+            resources.season_mode, resources.warmth_decay_rate, resources.food_regen_mul
+        );
+    }
+
+    // ── Assertion 9: eternal_winter_full_chain_integration ───────────────────
+
+    #[test]
+    fn harness_a9_eternal_winter_full_chain_integration() {
+        // Type A: Closes the largest gap from original plan — EternalWinter had no chain test.
+        // Phase A verifies parsed struct (warmth_decay_mul > 1.0 is a physics domain constraint).
+        // Phase B uses V from Phase A so the test auto-tracks if the RON value changes.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+
+        // ── Phase A: parsed struct ────────────────────────────────────────────
+        let ew = registry
+            .world_rules_raw
+            .iter()
+            .find(|r| r.name == "EternalWinter")
+            .expect("EternalWinter must be in world_rules_raw");
+
+        let globals = ew
+            .global_constants
+            .as_ref()
+            .expect("EternalWinter global_constants must be Some (non-None)");
+
+        // Type: String — (a1) season_mode explicitly present and == "eternal_winter"
+        let a1 = globals.season_mode.as_ref().expect(
+            "Phase A (a1): EternalWinter season_mode must be explicitly present (non-None)",
+        );
+        assert_eq!(
+            a1.as_str(),
+            "eternal_winter",
+            "Phase A (a1): EternalWinter season_mode expected 'eternal_winter', got '{a1}'"
+        );
+
+        // Type: f64 — (a2) warmth_decay_mul explicitly present AND > 1.0 (physics invariant)
+        let v = globals.warmth_decay_mul.expect(
+            "Phase A (a2): EternalWinter warmth_decay_mul must be explicitly present (non-None)",
+        );
+        assert!(
+            v > 1.0,
+            "Phase A (a2): EternalWinter warmth_decay_mul must be > 1.0 \
+             (eternal winter accelerates decay), got {v}"
+        );
+
+        // ── Phase B: apply and verify chain ──────────────────────────────────
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "EternalWinter")
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources.apply_world_rules();
+
+        // Type: String — (b1) season_mode
+        assert_eq!(
+            resources.season_mode, "eternal_winter",
+            "(b1) season_mode expected 'eternal_winter', got '{}'",
+            resources.season_mode
+        );
+
+        // Type: &'static str — (b2) season_for_tick(0)
+        let b2 = resources.season_for_tick(0);
+        assert_eq!(b2, "winter", "(b2) season_for_tick(0) expected 'winter', got '{b2}'");
+
+        // Type: &'static str — (b3) season_for_tick(1092) — past first boundary, override persists
+        let b3 = resources.season_for_tick(1092);
+        assert_eq!(b3, "winter", "(b3) season_for_tick(1092) expected 'winter', got '{b3}'");
+
+        // Type: f64 — (b4) warmth_decay_rate uses V from Phase A (auto-tracks RON changes)
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * v;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-6,
+            "(b4) warmth_decay_rate expected {} (WARMTH_DECAY_RATE*{v}), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+        assert!(
+            resources.warmth_decay_rate > sim_core::config::WARMTH_DECAY_RATE,
+            "(b4 direction): warmth_decay_rate {} must be > WARMTH_DECAY_RATE {} (accelerated)",
+            resources.warmth_decay_rate,
+            sim_core::config::WARMTH_DECAY_RATE
+        );
+
+        eprintln!(
+            "[harness] a9_eternal_winter_full_chain_integration: PASS \
+             season={} warmth={:.6} V={v}",
+            resources.season_mode, resources.warmth_decay_rate
+        );
+    }
+
+    // ── Assertion 10: scenario_stacking_last_writer_wins ─────────────────────
+
+    #[test]
+    fn harness_a9_scenario_stacking_last_writer_wins() {
+        // Type A: apply_world_rules is a replacement/override operation, not accumulate.
+        // apply BarrenWorld → verify pre-conditions → apply PerpetualSummer → verify post.
+        // (post5) composition guard: food_regen_mul must NOT be 0.4*1.5=0.6.
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+
+        // ── Step 1: Apply BarrenWorld to fresh SimResources ──────────────────
+        let mut reg1 = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("registry1 must load");
+        let f1: Vec<sim_data::WorldRuleset> = reg1
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "BarrenWorld")
+            .cloned()
+            .collect();
+        reg1.world_rules_raw = f1.clone();
+        reg1.world_rules = sim_data::merge_world_rules(&f1);
+
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(reg1));
+        resources.apply_world_rules();
+
+        // Pre-conditions (fail-fast if BarrenWorld did not apply)
+        // Type: String — (pre1)
+        assert_eq!(
+            resources.season_mode, "default",
+            "(pre1) after BarrenWorld: season_mode expected 'default', got '{}'",
+            resources.season_mode
+        );
+        // Type: f64 — (pre2)
+        assert!(
+            (resources.food_regen_mul - 0.4).abs() < 1e-6,
+            "(pre2) after BarrenWorld: food_regen_mul expected 0.4, got {}",
+            resources.food_regen_mul
+        );
+
+        // ── Step 2: Apply PerpetualSummer on SAME SimResources ───────────────
+        let mut reg2 = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("registry2 must load");
+        let f2: Vec<sim_data::WorldRuleset> = reg2
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == "PerpetualSummer")
+            .cloned()
+            .collect();
+        reg2.world_rules_raw = f2.clone();
+        reg2.world_rules = sim_data::merge_world_rules(&f2);
+        resources.data_registry = Some(Arc::new(reg2));
+        resources.apply_world_rules();
+
+        // Post-conditions (last-writer-wins semantics)
+        // Type: String — (post1) PerpetualSummer's "eternal_summer" replaces BarrenWorld's "default"
+        assert_eq!(
+            resources.season_mode, "eternal_summer",
+            "(post1) after PerpetualSummer: season_mode expected 'eternal_summer', got '{}'",
+            resources.season_mode
+        );
+
+        // Type: f64 — (post2) PerpetualSummer's 1.5 replaces BarrenWorld's 0.4
+        assert!(
+            (resources.food_regen_mul - 1.5).abs() < 1e-6,
+            "(post2) after PerpetualSummer: food_regen_mul expected 1.5, got {}",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — (post3) warmth_decay_rate from PerpetualSummer
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 0.3;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-6,
+            "(post3) warmth_decay_rate expected {} (WARMTH_DECAY_RATE*0.3), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        // Type: &'static str — (post4) season_for_tick reflects new season_mode
+        let post4 = resources.season_for_tick(0);
+        assert_eq!(
+            post4, "summer",
+            "(post4) season_for_tick(0) expected 'summer' after PerpetualSummer, got '{post4}'"
+        );
+
+        // Type: f64 — (post5) composition guard: must NOT be 0.4 * 1.5 = 0.6
+        assert!(
+            (resources.food_regen_mul - (0.4_f64 * 1.5)).abs() > 1e-6,
+            "(post5) food_regen_mul must NOT be 0.6 (multiplicative composition bug), got {}",
+            resources.food_regen_mul
+        );
+
+        eprintln!(
+            "[harness] a9_scenario_stacking_last_writer_wins: PASS \
+             season={} food={:.2} warmth={:.6}",
+            resources.season_mode, resources.food_regen_mul, resources.warmth_decay_rate
+        );
+    }
+
+    // ── Assertion 11: invalid_season_mode_graceful_handling ──────────────────
+
+    #[test]
+    fn harness_a9_invalid_season_mode_graceful_handling() {
+        // Type A: season_for_tick must not panic on invalid/unexpected season_mode values.
+        // (b) "ETERNAL_WINTER" (wrong case) must NOT match "eternal_winter" named arm.
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+
+        // (a) empty string: must fall through to tick-based, no panic
+        resources.season_mode = String::new();
+        // Type: &'static str
+        let a = resources.season_for_tick(0);
+        assert!(
+            ["spring", "summer", "autumn", "winter"].contains(&a),
+            "(a) empty season_mode: season_for_tick(0) must return a valid season, got '{a}'"
+        );
+
+        // (b) "ETERNAL_WINTER" (uppercase): must NOT match named arm case-insensitively.
+        // tick=0 with tick-based fallthrough gives "spring" (idx 0), so must NOT be "winter".
+        resources.season_mode = "ETERNAL_WINTER".to_string();
+        // Type: &'static str
+        let b = resources.season_for_tick(0);
+        assert!(
+            ["spring", "summer", "autumn", "winter"].contains(&b),
+            "(b) 'ETERNAL_WINTER': season_for_tick(0) must return a valid season, got '{b}'"
+        );
+        assert_ne!(
+            b, "winter",
+            "(b) 'ETERNAL_WINTER' must NOT match 'eternal_winter' (case-sensitive): \
+             tick=0 fallthrough gives 'spring', not 'winter', got '{b}'"
+        );
+
+        eprintln!(
+            "[harness] a9_invalid_season_mode_graceful_handling: PASS \
+             empty='{a}' ETERNAL_WINTER='{b}'"
+        );
+    }
+
+    // ── unused helper warning suppression ────────────────────────────────────
+    #[allow(dead_code)]
+    fn _suppress_unused_helper_warning() {
+        let _ = make_resources_for_scenario("BaseRules");
     }
 }

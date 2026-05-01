@@ -3277,6 +3277,28 @@ impl WorldSimRuntime {
         bridge_world_summary(state)
     }
 
+    /// Returns the season string for the given tick, respecting the active `season_mode`.
+    #[func]
+    fn runtime_get_active_season(&self, tick: i64) -> GString {
+        let Some(state) = self.state.as_ref() else {
+            return "spring".into();
+        };
+        state
+            .engine
+            .resources()
+            .season_for_tick(tick.max(0) as u64)
+            .into()
+    }
+
+    /// Returns the active `season_mode` string (e.g. `"default"`, `"eternal_winter"`).
+    #[func]
+    fn runtime_get_season_mode(&self) -> GString {
+        let Some(state) = self.state.as_ref() else {
+            return "default".into();
+        };
+        state.engine.resources().season_mode.as_str().into()
+    }
+
     #[func]
     fn runtime_get_band_list(&self) -> Array<VarDictionary> {
         let Some(state) = self.state.as_ref() else {

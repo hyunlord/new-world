@@ -581,6 +581,32 @@ func runtime_get_band_detail(band_id: int) -> Dictionary:
 	return {}
 
 
+## Returns the season string for the given tick ("spring", "summer", "autumn", "winter").
+func runtime_get_active_season(tick: int) -> String:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return "spring"
+	if not runtime.has_method("runtime_get_active_season"):
+		return "spring"
+	var result: Variant = runtime.call("runtime_get_active_season", tick)
+	if result is String:
+		return result
+	return "spring"
+
+
+## Returns the active season_mode string ("default", "eternal_winter", "eternal_summer", etc.).
+func runtime_get_season_mode() -> String:
+	var runtime: Object = _get_native_runtime()
+	if runtime == null:
+		return "default"
+	if not runtime.has_method("runtime_get_season_mode"):
+		return "default"
+	var result: Variant = runtime.call("runtime_get_season_mode")
+	if result is String:
+		return result
+	return "default"
+
+
 ## Returns a world summary snapshot from Rust runtime.
 func runtime_get_world_summary() -> Dictionary:
 	var runtime: Object = _get_native_runtime()
