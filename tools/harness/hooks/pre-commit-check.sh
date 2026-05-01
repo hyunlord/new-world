@@ -42,7 +42,9 @@ CODE_FILES=""
 while IFS= read -r file; do
     [[ -z "$file" ]] && continue
     case "$file" in
-        *.md|*.txt|localization/*.json|tools/harness/*|.claude/*|hooks/*|.gitignore|.editorconfig|.gitattributes)
+        *.md|*.txt|localization/*.json|localization/*/*.json|localization/*/*/*.json|\
+localization/*/*.ftl|localization/*/*/*.ftl|\
+tools/harness/*|.claude/*|hooks/*|.gitignore|.editorconfig|.gitattributes)
             ;;
         *)
             NEEDS_APPROVAL=true

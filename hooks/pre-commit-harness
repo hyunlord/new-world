@@ -40,8 +40,10 @@ rust/crates/sim-bridge/*.rs|rust/crates/sim-bridge/**/*.rs)
         *.png|*.svg|*.wav|*.tscn|*.tres|*.ron)
             [[ "$TIER" == "none" ]] && TIER="light"
             ;;
-        # Tier: NONE — docs, config, tools, harness infra
-        *.md|*.txt|localization/*.json|tools/*|tools/*/*|.claude/*|.claude/*/*|\
+        # Tier: NONE — docs, config, tools, harness infra, localization data
+        *.md|*.txt|localization/*.json|localization/*/*.json|localization/*/*/*.json|\
+localization/*/*.ftl|localization/*/*/*.ftl|\
+tools/*|tools/*/*|.claude/*|.claude/*/*|\
 hooks/*|.gitignore|.editorconfig|.gitattributes|*.toml|*.cfg|*.py)
             ;;
         # Unknown — default to quick
