@@ -39,7 +39,7 @@
             wood_regen_mul: Some(0.5),
             farming_enabled: Some(false),
             temperature_bias: Some(-0.7),
-            disaster_frequency_mul: None,
+            disaster_frequency_mul: Some(1.0),
         )),
     ),
 ]

@@ -2337,5 +2337,17 @@
 	"CAUSE_BAND_LEADER_ELECTED": "Band leader elected",
 	"CAUSE_CONFLICT": "Conflict",
 	"CAUSE_TOOL_BROKEN": "Tool broken",
-	"CAUSE_MEMORIAL_MEANING": "Memorial meaning"
+	"CAUSE_MEMORIAL_MEANING": "Memorial meaning",
+	"SCENARIO_SELECTOR_TITLE": "Choose World Scenario",
+	"SCENARIO_START_GAME": "Start Game",
+	"SCENARIO_DEFAULT_NAME": "Base World",
+	"SCENARIO_DEFAULT_DESC": "Standard world with balanced resources and seasons.",
+	"SCENARIO_ETERNAL_WINTER_NAME": "Eternal Winter",
+	"SCENARIO_ETERNAL_WINTER_DESC": "Permanent cold and scarce food. Only the hardy survive.",
+	"SCENARIO_PERPETUAL_SUMMER_NAME": "Perpetual Summer",
+	"SCENARIO_PERPETUAL_SUMMER_DESC": "Endless warmth and abundant growth. Population flourishes.",
+	"SCENARIO_BARREN_WORLD_NAME": "Barren World",
+	"SCENARIO_BARREN_WORLD_DESC": "Scarce resources and high mortality. A harsh challenge.",
+	"SCENARIO_ABUNDANCE_NAME": "Abundance",
+	"SCENARIO_ABUNDANCE_DESC": "Rich resources and low mortality. A prosperous beginning."
 }

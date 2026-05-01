@@ -110,6 +110,7 @@ var _overlay_legend_panel: PanelContainer
 var _overlay_probe_label: PanelContainer
 var _overlay_probe_text: Label
 var _bottom_bar_sel_label: Label
+var _scenario_label: Label
 var _resource_popup: PanelContainer
 var _band_popup: PanelContainer
 var _pause_overlay: Control = null
@@ -2129,6 +2130,8 @@ func _build_top_bar() -> void:
 	_time_label = _make_label("Y1 M1 D1 00:00", "hud")
 	_pop_label = _make_label(Locale.trf1("UI_POP_FMT", "n", 0), "hud")
 	_era_label = _make_label("", "hud", Color(1.0, 0.85, 0.4))
+	_scenario_label = _make_label("", "hud_secondary", Color(0.55, 0.85, 1.0))
+	_scenario_label.visible = false
 	_food_label = _make_label(Locale.trf1("UI_RES_FOOD_FMT", "n", 0), "hud", Color(0.4, 0.8, 0.2))
 	_wood_label = _make_label(Locale.trf1("UI_RES_WOOD_FMT", "n", 0), "hud", Color(0.6, 0.4, 0.2))
 	_stone_label = _make_label(Locale.trf1("UI_RES_STONE_FMT", "n", 0), "hud", Color(0.7, 0.7, 0.7))
@@ -2164,6 +2167,7 @@ func _build_top_bar() -> void:
 	hbox.add_child(_time_label)
 	hbox.add_child(_pop_label)
 	hbox.add_child(_era_label)
+	hbox.add_child(_scenario_label)
 	hbox.add_child(resource_container)
 	hbox.add_child(_building_label)
 	_zoom_context_label = Label.new()
@@ -2680,6 +2684,17 @@ func _process(delta: float) -> void:
 		_time_label.text = GameCalendar.format_full_datetime(tick)
 		if _weather_label != null:
 			_weather_label.text = _get_season_text(tick)
+		if _scenario_label != null and SimBridge.runtime_is_initialized():
+			var mode: String = SimBridge.runtime_get_season_mode()
+			match mode:
+				"eternal_winter":
+					_scenario_label.text = Locale.ltr("SCENARIO_ETERNAL_WINTER_NAME")
+					_scenario_label.visible = true
+				"eternal_summer":
+					_scenario_label.text = Locale.ltr("SCENARIO_PERPETUAL_SUMMER_NAME")
+					_scenario_label.visible = true
+				_:
+					_scenario_label.visible = false
 		var summary: Dictionary = _get_world_summary()
 		if not summary.is_empty():
 			var pop: int = int(summary.get("total_population", 0))
