@@ -178,6 +178,9 @@ pub struct SimResources {
     /// Active season mode string (default "default").
     // TODO(A-9 phase 2): integrate with season-system-v1 (separate feature)
     pub season_mode: String,
+    /// Name of the explicitly activated scenario ruleset, if any.
+    /// Set by `activate_scenario_by_name`; `None` for the default base-rules-only run.
+    pub active_scenario_name: Option<String>,
     /// Disaster frequency multiplier (0.0 = no disasters, 1.0 = default, 10.0 = max).
     /// Cached only — disaster system not yet implemented (TODO: disaster-system-v1 separate feature).
     pub disaster_frequency_mul: f64,
@@ -490,6 +493,7 @@ impl SimResources {
             farming_enabled: true,
             temperature_bias: 0.0,
             season_mode: "default".to_string(),
+            active_scenario_name: None,
             disaster_frequency_mul: 1.0,
             mortality_mul: 1.0,
             skill_xp_mul: 1.0,
@@ -625,6 +629,84 @@ impl SimResources {
             rules.name,
             rules.resource_modifiers.len()
         );
+    }
+
+    /// Activates a named scenario from the loaded registry, applying its global and agent
+    /// constants directly to this resources instance.
+    ///
+    /// Idempotent — safe to call multiple times. Returns `Err` if the registry is absent
+    /// or the ruleset name is not found.
+    pub fn activate_scenario_by_name(&mut self, name: &str) -> Result<(), String> {
+        let Some(registry) = self.data_registry.as_ref() else {
+            return Err(format!(
+                "[WorldRules] no registry loaded; cannot activate '{}'",
+                name
+            ));
+        };
+        let Some(ruleset) = registry.world_rules_raw.iter().find(|r| r.name == name) else {
+            return Err(format!(
+                "[WorldRules] scenario '{}' not found in registry",
+                name
+            ));
+        };
+        let ruleset = ruleset.clone();
+
+        if let Some(globals) = &ruleset.global_constants {
+            if let Some(ref mode) = globals.season_mode {
+                self.season_mode = mode.clone();
+            }
+            if let Some(mul) = globals.hunger_decay_mul {
+                self.hunger_decay_rate = sim_core::config::HUNGER_DECAY_RATE * mul;
+            }
+            if let Some(mul) = globals.warmth_decay_mul {
+                self.warmth_decay_rate = sim_core::config::WARMTH_DECAY_RATE * mul;
+            }
+            if let Some(mul) = globals.food_regen_mul {
+                self.food_regen_mul = mul;
+            }
+            if let Some(mul) = globals.wood_regen_mul {
+                self.wood_regen_mul = mul;
+            }
+            if let Some(enabled) = globals.farming_enabled {
+                self.farming_enabled = enabled;
+            }
+            if let Some(bias) = globals.temperature_bias {
+                self.temperature_bias = bias.clamp(-1.0, 1.0);
+            }
+            if let Some(mul) = globals.disaster_frequency_mul {
+                self.disaster_frequency_mul = mul.clamp(0.0, 10.0);
+            }
+        }
+
+        if let Some(agent) = &ruleset.agent_constants {
+            if let Some(mul) = agent.mortality_mul {
+                self.mortality_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.skill_xp_mul {
+                self.skill_xp_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.body_potential_mul {
+                self.body_potential_mul = mul.max(0.0);
+            }
+            if let Some(mul) = agent.fertility_mul {
+                self.fertility_mul = mul.clamp(0.0, 10.0);
+            }
+            if let Some(mul) = agent.lifespan_mul {
+                self.lifespan_mul = mul.max(0.1);
+            }
+            if let Some(mul) = agent.move_speed_mul {
+                self.move_speed_mul = mul.clamp(0.1, 5.0);
+            }
+        }
+
+        self.active_scenario_name = Some(name.to_string());
+        info!("[WorldRules] activated scenario: {}", name);
+        Ok(())
+    }
+
+    /// Returns the name of the currently active scenario, or `None` for the default run.
+    pub fn get_active_scenario_name(&self) -> Option<&str> {
+        self.active_scenario_name.as_deref()
     }
 
     /// Returns the season string for the given simulation tick, respecting the active

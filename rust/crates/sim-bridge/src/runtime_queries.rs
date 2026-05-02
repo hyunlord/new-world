@@ -43,6 +43,15 @@ pub(crate) struct RuntimeBootstrapPayload {
     pub(crate) founding_settlement: RuntimeBootstrapSettlement,
     #[serde(default)]
     pub(crate) agents: Vec<RuntimeBootstrapAgent>,
+    /// Scenario ruleset name to activate at bootstrap time.
+    /// Maps GDScript scenario_id → Rust WorldRuleset name:
+    ///   "default"          → no scenario (base rules only)
+    ///   "eternal_winter"   → "EternalWinter"
+    ///   "perpetual_summer" → "PerpetualSummer"
+    ///   "barren_world"     → "BarrenWorld"
+    ///   "abundance"        → "Abundance"
+    #[serde(default)]
+    pub(crate) scenario_id: String,
 }
 
 /// Startup bootstrap modes exposed from the Godot setup flow.
@@ -246,6 +255,20 @@ fn bootstrap_world_core(
         resources.chronicle_log.clear();
         resources.chronicle_timeline.clear();
         sync_world_tiles(resources, &payload.world);
+    }
+
+    // Activate the requested scenario ruleset (non-default only).
+    let scenario_ruleset_name = match payload.scenario_id.as_str() {
+        "eternal_winter" => Some("EternalWinter"),
+        "perpetual_summer" => Some("PerpetualSummer"),
+        "barren_world" => Some("BarrenWorld"),
+        "abundance" => Some("Abundance"),
+        _ => None,
+    };
+    if let Some(name) = scenario_ruleset_name {
+        if let Err(e) = state.engine.resources_mut().activate_scenario_by_name(name) {
+            log::warn!("[bootstrap] activate_scenario '{}' failed: {}", name, e);
+        }
     }
 
     // Validate settlement location has stone access; shift spawn point if needed.
@@ -1453,6 +1476,7 @@ mod tests {
                     sex: Some(RuntimeBootstrapSex::Female),
                 },
             ],
+            scenario_id: String::new(),
         }
     }
 

@@ -111,6 +111,7 @@ var _overlay_probe_label: PanelContainer
 var _overlay_probe_text: Label
 var _bottom_bar_sel_label: Label
 var _scenario_label: Label
+var _active_scenario_id: String = "default"
 var _resource_popup: PanelContainer
 var _band_popup: PanelContainer
 var _pause_overlay: Control = null
@@ -2694,7 +2695,17 @@ func _process(delta: float) -> void:
 					_scenario_label.text = Locale.ltr("SCENARIO_PERPETUAL_SUMMER_NAME")
 					_scenario_label.visible = true
 				_:
-					_scenario_label.visible = false
+					# 계절 모드 오버라이드 없는 시나리오(barren_world, abundance)는
+					# bootstrap 시점에 set_active_scenario()로 설정된 _active_scenario_id 사용
+					match _active_scenario_id:
+						"barren_world":
+							_scenario_label.text = Locale.ltr("SCENARIO_BARREN_WORLD_NAME")
+							_scenario_label.visible = true
+						"abundance":
+							_scenario_label.text = Locale.ltr("SCENARIO_ABUNDANCE_NAME")
+							_scenario_label.visible = true
+						_:
+							_scenario_label.visible = false
 		var summary: Dictionary = _get_world_summary()
 		if not summary.is_empty():
 			var pop: int = int(summary.get("total_population", 0))
@@ -4043,6 +4054,29 @@ func toggle_debug_panel() -> void:
 		_debug_panel.init(_entity_manager, _settlement_manager)
 		add_child(_debug_panel)
 	_debug_panel.toggle()
+
+
+## 활성 시나리오를 설정하고 HUD 라벨을 즉시 갱신한다.
+## main.gd가 bootstrap_world 직후 호출. default는 라벨 숨김.
+func set_active_scenario(scenario_id: String) -> void:
+	_active_scenario_id = scenario_id
+	if _scenario_label == null:
+		return
+	match scenario_id:
+		"eternal_winter":
+			_scenario_label.text = Locale.ltr("SCENARIO_ETERNAL_WINTER_NAME")
+			_scenario_label.visible = true
+		"perpetual_summer":
+			_scenario_label.text = Locale.ltr("SCENARIO_PERPETUAL_SUMMER_NAME")
+			_scenario_label.visible = true
+		"barren_world":
+			_scenario_label.text = Locale.ltr("SCENARIO_BARREN_WORLD_NAME")
+			_scenario_label.visible = true
+		"abundance":
+			_scenario_label.text = Locale.ltr("SCENARIO_ABUNDANCE_NAME")
+			_scenario_label.visible = true
+		_:
+			_scenario_label.visible = false
 
 
 ## Displays a startup toast notification showing the selected startup mode and initial population.

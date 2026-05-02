@@ -37,7 +37,7 @@ func _build_ui() -> void:
 	var panel := PanelContainer.new()
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.08, 0.08, 0.12, 0.96)
-	style.border_width_all = 1
+	style.set_border_width_all(1)
 	style.border_color = Color(0.35, 0.35, 0.45, 0.8)
 	style.corner_radius_top_left = 6
 	style.corner_radius_top_right = 6
