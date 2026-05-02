@@ -16,6 +16,10 @@ const TechTreeManagerScript = preload("res://scripts/core/tech/tech_tree_manager
 const WorldSetupScript = preload("res://scenes/setup/world_setup.gd")
 const OverlayRendererClass = preload("res://scripts/ui/renderers/overlay_renderer.gd")
 const DayNightCycleClass = preload("res://scripts/ui/renderers/day_night.gd")
+const ScenarioSelectorClass = preload("res://scripts/ui/scenario_selector.gd")
+
+var _selected_scenario_id: String = "default"
+var _scenario_selector: CanvasLayer = null
 
 var sim_engine: RefCounted
 var world_data: RefCounted
@@ -129,7 +133,32 @@ const SKIP_SETUP: bool = true
 
 
 ## WorldSetup 씬 생성 및 world_data/resource_map 주입
+## 헤드리스(harness/GdUnit) 환경: ScenarioSelector 건너뛰고 default로 직행
 func _enter_setup_mode() -> void:
+	if DisplayServer.get_name() == "headless":
+		_selected_scenario_id = "default"
+		_continue_setup_after_scenario()
+		return
+	_show_scenario_selector()
+
+
+func _show_scenario_selector() -> void:
+	hud.visible = false
+	_scenario_selector = ScenarioSelectorClass.new()
+	_scenario_selector.scenario_confirmed.connect(_on_scenario_confirmed)
+	add_child(_scenario_selector)
+
+
+func _on_scenario_confirmed(scenario_id: String) -> void:
+	_selected_scenario_id = scenario_id
+	if _scenario_selector != null:
+		_scenario_selector.queue_free()
+		_scenario_selector = null
+	_continue_setup_after_scenario()
+
+
+## 시나리오 선택 완료 후 원래 world setup 흐름으로 진입
+func _continue_setup_after_scenario() -> void:
 	if SKIP_SETUP:
 		@warning_ignore("integer_division")
 		var preset_gen = preload("res://scripts/core/world/preset_map_generator.gd").new()
@@ -219,6 +248,7 @@ func _on_setup_confirmed(spawn_data: Array, startup_mode: String) -> void:
 	var bootstrap_result: Dictionary = sim_engine.bootstrap_world(
 		_build_runtime_bootstrap_payload(center, bootstrap_agents, resolved_startup_mode)
 	)
+	hud.set_active_scenario(_selected_scenario_id)
 
 	ChronicleSystem.init(entity_manager)
 	if camera.has_method("set_sim_engine"):
@@ -482,6 +512,7 @@ func _build_runtime_bootstrap_payload(center: Vector2i, agents: Array, startup_m
 			"stockpile_stone": float(stockpile.get("stone", 0.0)),
 		},
 		"agents": agents,
+		"scenario_id": _selected_scenario_id,
 	}
 
 

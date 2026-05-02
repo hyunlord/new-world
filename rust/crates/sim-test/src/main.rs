@@ -27475,3 +27475,493 @@ mod harness_a9_world_rules_v1 {
         let _ = make_resources_for_scenario("BaseRules");
     }
 }
+
+// ── A-9b: activate_scenario_by_name ─────────────────────────────────────────
+#[cfg(test)]
+mod harness_a9b_scenario_activation {
+    use super::authoritative_ron_data_dir;
+    use std::sync::Arc;
+
+    fn make_resources_with_scenario(
+        scenario_name: &str,
+    ) -> sim_engine::SimResources {
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == scenario_name)
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources
+    }
+
+    #[test]
+    fn harness_a9b_activate_eternal_winter_sets_season_mode() {
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-1] EternalWinter activation must succeed");
+
+        // Type: String
+        assert_eq!(
+            resources.season_mode, "eternal_winter",
+            "[A9B-1] season_mode must be 'eternal_winter' after activation"
+        );
+        assert_eq!(
+            resources.get_active_scenario_name(),
+            Some("EternalWinter"),
+            "[A9B-1] active_scenario_name must be Some('EternalWinter')"
+        );
+        eprintln!("[harness] a9b_activate_eternal_winter_sets_season_mode: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_default_has_no_active_scenario() {
+        let mut resources = make_resources_with_scenario("BaseRules");
+        // No explicit activation — should be None
+        // Type: Option<&str>
+        assert_eq!(
+            resources.get_active_scenario_name(),
+            None,
+            "[A9B-2] default run must have no active scenario name"
+        );
+        // Applying world rules (base only) must not set active_scenario_name
+        resources.apply_world_rules();
+        assert_eq!(
+            resources.get_active_scenario_name(),
+            None,
+            "[A9B-2] apply_world_rules must not set active_scenario_name"
+        );
+        eprintln!("[harness] a9b_default_has_no_active_scenario: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_unknown_scenario_returns_error() {
+        let mut resources = make_resources_with_scenario("BaseRules");
+        let result = resources.activate_scenario_by_name("NonExistentScenario");
+        // Type: Result<(), String>
+        assert!(
+            result.is_err(),
+            "[A9B-3] unknown scenario name must return Err"
+        );
+        eprintln!("[harness] a9b_unknown_scenario_returns_error: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_eternal_winter_season_for_tick_always_winter() {
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-4] activation");
+
+        // Type: &'static str — must be "winter" at any tick
+        let at_0 = resources.season_for_tick(0);
+        let at_mid = resources.season_for_tick(5_000);
+        let at_far = resources.season_for_tick(999_999);
+        assert_eq!(at_0, "winter", "[A9B-4] tick=0 must be winter");
+        assert_eq!(at_mid, "winter", "[A9B-4] tick=5000 must be winter");
+        assert_eq!(at_far, "winter", "[A9B-4] tick=999999 must be winter");
+        eprintln!("[harness] a9b_eternal_winter_season_for_tick_always_winter: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_perpetual_summer_season_for_tick_always_summer() {
+        let mut resources = make_resources_with_scenario("PerpetualSummer");
+        resources
+            .activate_scenario_by_name("PerpetualSummer")
+            .expect("[A9B-5] activation");
+
+        // perpetual_summer.ron uses season_mode "eternal_summer" → always "summer"
+        // Type: &'static str
+        let at_0 = resources.season_for_tick(0);
+        let at_mid = resources.season_for_tick(5_000);
+        let at_far = resources.season_for_tick(999_999);
+        assert_eq!(at_0, "summer", "[A9B-5] tick=0 must be summer");
+        assert_eq!(at_mid, "summer", "[A9B-5] tick=5000 must be summer");
+        assert_eq!(at_far, "summer", "[A9B-5] tick=999999 must be summer");
+        eprintln!("[harness] a9b_perpetual_summer_season_for_tick_always_summer: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_idempotent_double_activation() {
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-6] first activation");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-6] second activation (idempotent)");
+
+        // Type: Option<&str>
+        assert_eq!(
+            resources.get_active_scenario_name(),
+            Some("EternalWinter"),
+            "[A9B-6] idempotent: active name must remain 'EternalWinter'"
+        );
+        assert_eq!(
+            resources.season_mode, "eternal_winter",
+            "[A9B-6] idempotent: season_mode must remain 'eternal_winter'"
+        );
+        eprintln!("[harness] a9b_idempotent_double_activation: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_eternal_winter_global_constants_applied() {
+        // Assertion 7: all GlobalConstants fields from EternalWinter.ron are applied to SimResources.
+        // EternalWinter sets: hunger_decay_mul=1.3, warmth_decay_mul=2.0, food_regen_mul=0.2,
+        // wood_regen_mul=0.5, farming_enabled=false, temperature_bias=-0.7.
+        // Decay rates are config-base * mul; food/wood_regen_mul are direct RON values.
+        // Type: f64, f64, f64, f64, bool, f64
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-7] EternalWinter activation must succeed");
+
+        // Type: f64 — hunger_decay_mul=1.3 → HUNGER_DECAY_RATE * 1.3
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 1.3;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-12,
+            "[A9B-7] hunger_decay_rate expected {} (HUNGER_DECAY_RATE * 1.3), got {}",
+            expected_hunger,
+            resources.hunger_decay_rate
+        );
+
+        // Type: f64 — warmth_decay_mul=2.0 → WARMTH_DECAY_RATE * 2.0
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 2.0;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-12,
+            "[A9B-7] warmth_decay_rate expected {} (WARMTH_DECAY_RATE * 2.0), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        // Type: f64 — food_regen_mul is direct RON value (0.2), not multiplied against a base
+        assert!(
+            (resources.food_regen_mul - 0.2).abs() < 1e-12,
+            "[A9B-7] food_regen_mul expected 0.2, got {}",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — wood_regen_mul: direct RON value 0.5
+        assert!(
+            (resources.wood_regen_mul - 0.5).abs() < 1e-12,
+            "[A9B-7] wood_regen_mul expected 0.5, got {}",
+            resources.wood_regen_mul
+        );
+
+        // Type: bool — farming_enabled: false in EternalWinter
+        assert!(
+            !resources.farming_enabled,
+            "[A9B-7] farming_enabled expected false (EternalWinter)"
+        );
+
+        // Type: f64 — temperature_bias: -0.7 (clamped to [-1.0, 1.0], so -0.7 passes through)
+        assert!(
+            (resources.temperature_bias - (-0.7)).abs() < 1e-12,
+            "[A9B-7] temperature_bias expected -0.7, got {}",
+            resources.temperature_bias
+        );
+
+        eprintln!("[harness] a9b_eternal_winter_global_constants_applied: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_eternal_winter_agent_constants_applied() {
+        // Assertion 8: all AgentConstants fields from EternalWinter.ron are applied;
+        // None fields (body_potential_mul, move_speed_mul) preserve SimResources::new defaults (1.0).
+        // EternalWinter: mortality_mul=1.3, skill_xp_mul=1.5, fertility_mul=0.7, lifespan_mul=0.8,
+        // body_potential_mul=None, move_speed_mul=None.
+        // Type: f64 (set values), f64 (None-preserved defaults = 1.0)
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-8] EternalWinter activation must succeed");
+
+        // Type: f64 — mortality_mul: 1.3
+        assert!(
+            (resources.mortality_mul - 1.3).abs() < 1e-12,
+            "[A9B-8] mortality_mul expected 1.3, got {}",
+            resources.mortality_mul
+        );
+
+        // Type: f64 — skill_xp_mul: 1.5
+        assert!(
+            (resources.skill_xp_mul - 1.5).abs() < 1e-12,
+            "[A9B-8] skill_xp_mul expected 1.5, got {}",
+            resources.skill_xp_mul
+        );
+
+        // Type: f64 — fertility_mul: 0.7
+        assert!(
+            (resources.fertility_mul - 0.7).abs() < 1e-12,
+            "[A9B-8] fertility_mul expected 0.7, got {}",
+            resources.fertility_mul
+        );
+
+        // Type: f64 — lifespan_mul: 0.8
+        assert!(
+            (resources.lifespan_mul - 0.8).abs() < 1e-12,
+            "[A9B-8] lifespan_mul expected 0.8, got {}",
+            resources.lifespan_mul
+        );
+
+        // Type: f64 — body_potential_mul: None in RON → must preserve default 1.0
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-12,
+            "[A9B-8] body_potential_mul expected 1.0 (None-preserved default), got {}",
+            resources.body_potential_mul
+        );
+
+        // Type: f64 — move_speed_mul: None in RON → must preserve default 1.0
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-12,
+            "[A9B-8] move_speed_mul expected 1.0 (None-preserved default), got {}",
+            resources.move_speed_mul
+        );
+
+        eprintln!("[harness] a9b_eternal_winter_agent_constants_applied: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_idempotent_no_decay_accumulation() {
+        // Assertion 9: double-activating the same scenario must not accumulate decay rates.
+        // A buggy impl that does `self.hunger_decay_rate *= mul` each call would produce
+        // HUNGER_DECAY_RATE * 1.3 * 1.3 instead of HUNGER_DECAY_RATE * 1.3.
+        // The correct impl re-computes from the config base each call:
+        //   self.hunger_decay_rate = HUNGER_DECAY_RATE * mul
+        // Type: f64 — exact value after two activations
+        let mut resources = make_resources_with_scenario("EternalWinter");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-9] first activation");
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-9] second activation (idempotent)");
+
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 1.3;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-12,
+            "[A9B-9] hunger_decay_rate after 2x activation must be HUNGER_DECAY_RATE * 1.3 = {}, got {}",
+            expected_hunger,
+            resources.hunger_decay_rate
+        );
+
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 2.0;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-12,
+            "[A9B-9] warmth_decay_rate after 2x activation must be WARMTH_DECAY_RATE * 2.0 = {}, got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        eprintln!("[harness] a9b_idempotent_no_decay_accumulation: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_barren_world_disaster_frequency() {
+        // Assertion 10: BarrenWorld disaster_frequency_mul = 1.5, which is distinct from the
+        // SimResources::new default (1.0). EternalWinter sets it to 1.0 — same as default and
+        // therefore an undetectable value. BarrenWorld provides a discriminative test.
+        // Type: f64
+        let mut resources = make_resources_with_scenario("BarrenWorld");
+        resources
+            .activate_scenario_by_name("BarrenWorld")
+            .expect("[A9B-10] BarrenWorld activation must succeed");
+
+        // Type: f64 — disaster_frequency_mul: 1.5 (clamped to [0.0, 10.0])
+        assert!(
+            (resources.disaster_frequency_mul - 1.5).abs() < 1e-12,
+            "[A9B-10] disaster_frequency_mul expected 1.5, got {}",
+            resources.disaster_frequency_mul
+        );
+
+        eprintln!("[harness] a9b_barren_world_disaster_frequency: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_perpetual_summer_decay_rates() {
+        // Assertion 11: PerpetualSummer sets warmth_decay_rate = WARMTH_DECAY_RATE * 0.3 and
+        // hunger_decay_rate = HUNGER_DECAY_RATE * 0.9. These are numeric fields set independently
+        // of season_mode — an impl that only sets season_mode (passing A9B-5 season_for_tick check)
+        // but skips GlobalConstants wiring fails here.
+        // Type: f64 — config-constant expression thresholds
+        let mut resources = make_resources_with_scenario("PerpetualSummer");
+        resources
+            .activate_scenario_by_name("PerpetualSummer")
+            .expect("[A9B-11] PerpetualSummer activation must succeed");
+
+        // Type: f64 — hunger_decay_mul=0.9 → HUNGER_DECAY_RATE * 0.9
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 0.9;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-12,
+            "[A9B-11] hunger_decay_rate expected {} (HUNGER_DECAY_RATE * 0.9), got {}",
+            expected_hunger,
+            resources.hunger_decay_rate
+        );
+
+        // Type: f64 — warmth_decay_mul=0.3 → WARMTH_DECAY_RATE * 0.3
+        let expected_warmth = sim_core::config::WARMTH_DECAY_RATE * 0.3;
+        assert!(
+            (resources.warmth_decay_rate - expected_warmth).abs() < 1e-12,
+            "[A9B-11] warmth_decay_rate expected {} (WARMTH_DECAY_RATE * 0.3), got {}",
+            expected_warmth,
+            resources.warmth_decay_rate
+        );
+
+        eprintln!("[harness] a9b_perpetual_summer_decay_rates: PASS");
+    }
+
+    #[test]
+    fn harness_a9b_perpetual_summer_food_regen_and_none_preservation() {
+        // Assertion 12: PerpetualSummer food_regen_mul = 1.5 (direct RON assignment);
+        // None fields (body_potential_mul, move_speed_mul, disaster_frequency_mul) must preserve
+        // their SimResources::new defaults: 1.0, 1.0, 1.0 respectively.
+        // Verified against engine.rs SimResources::new initialization block (lines 498–503).
+        // Type: f64 (direct RON value), f64 (None-preserved defaults = 1.0)
+        let mut resources = make_resources_with_scenario("PerpetualSummer");
+        resources
+            .activate_scenario_by_name("PerpetualSummer")
+            .expect("[A9B-12] PerpetualSummer activation must succeed");
+
+        // Type: f64 — food_regen_mul: Some(1.5) in RON (direct assignment, not mul * base)
+        assert!(
+            (resources.food_regen_mul - 1.5).abs() < 1e-12,
+            "[A9B-12] food_regen_mul expected 1.5, got {}",
+            resources.food_regen_mul
+        );
+
+        // Type: f64 — body_potential_mul: None in RON → preserve default 1.0
+        assert!(
+            (resources.body_potential_mul - 1.0).abs() < 1e-12,
+            "[A9B-12] body_potential_mul expected 1.0 (None-preserved), got {}",
+            resources.body_potential_mul
+        );
+
+        // Type: f64 — move_speed_mul: None in RON → preserve default 1.0
+        assert!(
+            (resources.move_speed_mul - 1.0).abs() < 1e-12,
+            "[A9B-12] move_speed_mul expected 1.0 (None-preserved), got {}",
+            resources.move_speed_mul
+        );
+
+        // Type: f64 — disaster_frequency_mul: None in RON → preserve default 1.0
+        assert!(
+            (resources.disaster_frequency_mul - 1.0).abs() < 1e-12,
+            "[A9B-12] disaster_frequency_mul expected 1.0 (None-preserved), got {}",
+            resources.disaster_frequency_mul
+        );
+
+        eprintln!("[harness] a9b_perpetual_summer_food_regen_and_none_preservation: PASS");
+    }
+
+    /// Helper: load a registry that contains BaseRules + two named scenarios,
+    /// so `activate_scenario_by_name()` can be called with either name on the
+    /// same `SimResources` instance.
+    fn make_resources_with_two_scenarios(
+        scenario_a: &str,
+        scenario_b: &str,
+    ) -> sim_engine::SimResources {
+        let data_dir = authoritative_ron_data_dir()
+            .expect("authoritative RON data dir must resolve");
+        let mut registry = sim_data::DataRegistry::load_from_directory(&data_dir)
+            .expect("RON registry must load cleanly");
+        let filtered: Vec<sim_data::WorldRuleset> = registry
+            .world_rules_raw
+            .iter()
+            .filter(|r| r.name == "BaseRules" || r.name == scenario_a || r.name == scenario_b)
+            .cloned()
+            .collect();
+        registry.world_rules_raw = filtered.clone();
+        registry.world_rules = sim_data::merge_world_rules(&filtered);
+        let config = sim_core::config::GameConfig::default();
+        let calendar = sim_core::GameCalendar::new(&config);
+        let map = sim_core::WorldMap::new(64, 64, 42);
+        let mut resources = sim_engine::SimResources::new(calendar, map, 42);
+        resources.data_registry = Some(Arc::new(registry));
+        resources
+    }
+
+    #[test]
+    fn harness_a9b_cross_scenario_switch_eternal_winter_to_perpetual_summer() {
+        // Assertion 13: switching from EternalWinter to PerpetualSummer on the same
+        // SimResources instance must fully overwrite all EternalWinter state with no residue.
+        //
+        // Residue classes tested:
+        //   - String field:  season_mode (was "eternal_winter" → must become "eternal_summer")
+        //   - Option<String>: active_scenario_name (must become Some("PerpetualSummer"))
+        //   - Numeric GlobalConstants: hunger_decay_rate (must re-compute from HUNGER_DECAY_RATE*0.9)
+        //   - Boolean GlobalConstants: farming_enabled (was false → must become true)
+        //   - Numeric AgentConstants: mortality_mul (was 1.3 → must become 0.85)
+        //
+        // PerpetualSummer.ron verified: mortality_mul=Some(0.85), farming_enabled=Some(true),
+        // hunger_decay_mul=Some(0.9), season_mode=Some("eternal_summer").
+        //
+        // All Assertions 1–12 use fresh SimResources — none can detect cross-scenario residue.
+        let mut resources =
+            make_resources_with_two_scenarios("EternalWinter", "PerpetualSummer");
+
+        // First activation: EternalWinter
+        resources
+            .activate_scenario_by_name("EternalWinter")
+            .expect("[A9B-13] EternalWinter activation must succeed");
+
+        // Second activation: PerpetualSummer must fully overwrite all EternalWinter fields
+        resources
+            .activate_scenario_by_name("PerpetualSummer")
+            .expect("[A9B-13] PerpetualSummer activation must succeed");
+
+        // Type: String — must be "eternal_summer" NOT "eternal_winter"
+        assert_eq!(
+            resources.season_mode, "eternal_summer",
+            "[A9B-13] season_mode must be 'eternal_summer' after switch (NOT 'eternal_winter')"
+        );
+
+        // Type: Option<&str> — must reflect the second (PerpetualSummer) activation
+        assert_eq!(
+            resources.get_active_scenario_name(),
+            Some("PerpetualSummer"),
+            "[A9B-13] active_scenario_name must be Some('PerpetualSummer') after cross-scenario switch"
+        );
+
+        // Type: f64 — hunger_decay_mul=0.9 for PerpetualSummer → HUNGER_DECAY_RATE * 0.9
+        // EternalWinter residue would leave HUNGER_DECAY_RATE * 1.3
+        let expected_hunger = sim_core::config::HUNGER_DECAY_RATE * 0.9;
+        assert!(
+            (resources.hunger_decay_rate - expected_hunger).abs() < 1e-12,
+            "[A9B-13] hunger_decay_rate expected {} (HUNGER_DECAY_RATE * 0.9), got {} \
+             (EternalWinter residue would be {})",
+            expected_hunger,
+            resources.hunger_decay_rate,
+            sim_core::config::HUNGER_DECAY_RATE * 1.3,
+        );
+
+        // Type: bool — farming_enabled=true for PerpetualSummer; EternalWinter residue = false
+        assert!(
+            resources.farming_enabled,
+            "[A9B-13] farming_enabled must be true (PerpetualSummer); \
+             EternalWinter residue would leave it false"
+        );
+
+        // Type: f64 — mortality_mul=0.85 for PerpetualSummer; EternalWinter residue = 1.3
+        assert!(
+            (resources.mortality_mul - 0.85).abs() < 1e-12,
+            "[A9B-13] mortality_mul expected 0.85 (PerpetualSummer), got {} \
+             (EternalWinter residue = 1.3)",
+            resources.mortality_mul
+        );
+
+        eprintln!(
+            "[harness] a9b_cross_scenario_switch_eternal_winter_to_perpetual_summer: PASS"
+        );
+    }
+}
