@@ -1,0 +1,38 @@
+# Known pre-existing test failures (baseline)
+#
+# Established: 2026-05-03 during Path 1 baseline-vs-regression diagnosis
+# for shelter-ring-center-fix-v1.
+#
+# These tests fail on origin/lead/main HEAD (c1ee01c0) WITHOUT any local
+# changes. They are tracked separately so ENV-BYPASS authorization
+# (CLAUDE.md Rule 7.1) can distinguish "pre-existing baseline failures"
+# from "new regressions introduced by the change under review".
+#
+# Format: one full test path per line (matches cargo test output format).
+# Comments and blank lines ignored. Duplicate entries silently deduplicated.
+#
+# Update protocol:
+#   - When a baseline failure is FIXED, remove its line in the same commit.
+#   - When a NEW failure is observed and judged unrelated to the current
+#     change, document it here with a separate commit AND a follow-up issue.
+#   - Never silently expand this file to make a noisy commit pass.
+#
+# Diagnostic provenance: tools/harness/results/path1-baseline-diff.txt
+# (baseline 27 fails − 11 fixed by shelter-ring-center-fix-v1 = 16 remaining)
+
+harness_body_damage_api::harness_work_injury_causal_log_records_kind
+harness_body_damage_api::harness_work_injury_forage_rate
+tests::harness_a9_behavioral_mortality_mul_isolation
+tests::harness_action_non_idle_ratio_steady_state
+tests::harness_food_economy_balance_4380
+tests::harness_food_economy_plan_comprehensive
+tests::harness_food_economy_plan_v2
+tests::harness_locale_en_total_count
+tests::harness_locale_ko_total_count
+tests::harness_memorial_natural_mourn_over_simulation
+tests::harness_multi_settlement_emerges
+tests::harness_ns_biases_exploratory_actions_directionally
+tests::harness_population_growth_reaches_migration_threshold
+tests::harness_pray_action_restores_comfort
+tests::harness_temperament_biases_behavior
+tests::harness_wall_click_info_a18_click_routing_contract

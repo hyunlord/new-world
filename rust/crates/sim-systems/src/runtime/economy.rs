@@ -297,72 +297,79 @@ fn finalize_shelter_if_complete(
     resources: &mut SimResources,
     settlement_id: SettlementId,
 ) {
-    let Some(settlement) = resources.settlements.get(&settlement_id) else {
-        return;
-    };
-    let Some((cx, cy)) = settlement.shelter_center else {
-        return;
-    };
-
-    // Count actually placed walls at perimeter positions.
     let r = config::BUILDING_SHELTER_WALL_RING_RADIUS;
     let required = (8 * r - 1).max(1);
     // Tolerate up to 2 missing walls (overlap with pre-existing buildings,
     // pending plans that haven't been claimed yet, etc.).
     let completion_threshold = required - 2;
-    let mut wall_count = 0_i32;
-    for offset_y in -r..=r {
-        for offset_x in -r..=r {
-            let is_perimeter = offset_x.abs() == r || offset_y.abs() == r;
-            if !is_perimeter {
-                continue;
-            }
-            if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
-                && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
-            {
-                continue;
-            }
-            let tile_x = cx + offset_x;
-            let tile_y = cy + offset_y;
-            if !resources.tile_grid.in_bounds(tile_x, tile_y) {
-                continue;
-            }
-            if resources
-                .tile_grid
-                .get(tile_x as u32, tile_y as u32)
-                .wall_material
-                .is_some()
-            {
-                wall_count += 1;
-            }
-        }
-    }
-    if wall_count < completion_threshold {
-        return;
-    }
 
-    // Find the first incomplete shelter Building for this settlement.
-    let shelter_building_id = resources
+    // Collect incomplete shelter building IDs for this settlement.
+    // Ring center is derived per-building as (building.x + r, building.y + r) —
+    // this is always correct because find_build_site returns the top-left corner
+    // and cx = site_x + r at plan-generation time. Using per-building position
+    // avoids reading settlement.shelter_center, which always points to the MOST
+    // RECENTLY started shelter and would give the wrong ring when an older shelter
+    // is being finalized in a multi-shelter settlement.
+    let incomplete_ids: Vec<BuildingId> = resources
         .buildings
         .iter()
-        .find(|(_, b)| {
+        .filter(|(_, b)| {
             b.settlement_id == settlement_id
                 && b.building_type == BUILDING_TYPE_SHELTER
                 && !b.is_complete
         })
-        .map(|(id, _)| *id);
+        .map(|(id, _)| *id)
+        .collect();
 
-    if let Some(building_id) = shelter_building_id {
-        if let Some(building) = resources.buildings.get_mut(&building_id) {
-            building.construction_progress = 1.0;
-            building.is_complete = true;
+    for building_id in incomplete_ids {
+        let (cx, cy) = {
+            let Some(building) = resources.buildings.get(&building_id) else {
+                continue;
+            };
+            (building.x + r, building.y + r)
+        };
+
+        let mut wall_count = 0_i32;
+        for offset_y in -r..=r {
+            for offset_x in -r..=r {
+                let is_perimeter = offset_x.abs() == r || offset_y.abs() == r;
+                if !is_perimeter {
+                    continue;
+                }
+                if offset_x == config::BUILDING_SHELTER_DOOR_OFFSET_X
+                    && offset_y == config::BUILDING_SHELTER_DOOR_OFFSET_Y
+                {
+                    continue;
+                }
+                let tile_x = cx + offset_x;
+                let tile_y = cy + offset_y;
+                if !resources.tile_grid.in_bounds(tile_x, tile_y) {
+                    continue;
+                }
+                if resources
+                    .tile_grid
+                    .get(tile_x as u32, tile_y as u32)
+                    .wall_material
+                    .is_some()
+                {
+                    wall_count += 1;
+                }
+            }
         }
-        resources
-            .event_bus
-            .emit(sim_engine::GameEvent::BuildingConstructed {
-                building_id,
-                building_type: BUILDING_TYPE_SHELTER.to_string(),
-            });
+
+        if wall_count >= completion_threshold {
+            if let Some(building) = resources.buildings.get_mut(&building_id) {
+                building.construction_progress = 1.0;
+                building.is_complete = true;
+            }
+            resources
+                .event_bus
+                .emit(sim_engine::GameEvent::BuildingConstructed {
+                    building_id,
+                    building_type: BUILDING_TYPE_SHELTER.to_string(),
+                });
+            break; // Complete at most one shelter per call; re-evaluate next tick.
+        }
     }
 }
 

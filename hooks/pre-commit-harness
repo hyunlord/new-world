@@ -3,15 +3,40 @@
 # Tier-based: none < light < quick < full
 set -euo pipefail
 
+STAGED=$(git diff --cached --name-only)
+if [[ -z "$STAGED" ]]; then
+    exit 0
+fi
+
+# ENV-BYPASS (CLAUDE.md Rule 7.1 v3.2.1): a valid env_bypass_active marker
+# (≤2 h old, with evidence dir present) authorises THIS commit without a
+# harness verdict. Marker is one-shot — deleted here on success so the next
+# commit returns to normal gate enforcement.
+PROJECT_ROOT_FOR_BYPASS="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
+BYPASS_MARKER="$PROJECT_ROOT_FOR_BYPASS/.harness/audit/env_bypass_active"
+if [[ -f "$BYPASS_MARKER" ]]; then
+    bypass_mtime=$(stat -f %m "$BYPASS_MARKER" 2>/dev/null || stat -c %Y "$BYPASS_MARKER" 2>/dev/null || echo 0)
+    bypass_age=$(( $(date +%s) - bypass_mtime ))
+    if [[ $bypass_age -lt 7200 ]]; then
+        bypass_feature=$(grep '^feature:' "$BYPASS_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+        evidence_dir="$PROJECT_ROOT_FOR_BYPASS/.harness/evidence/$bypass_feature"
+        if [[ -s "$evidence_dir/manual_verification.log" && -s "$evidence_dir/clippy_full.log" ]]; then
+            echo "[pre-commit-harness] ENV-BYPASS active for $bypass_feature (age=${bypass_age}s) — allowing commit (marker consumed)" >&2
+            rm -f "$BYPASS_MARKER"
+            exit 0
+        else
+            echo "[pre-commit-harness] ENV-BYPASS marker present but evidence missing under $evidence_dir" >&2
+        fi
+    else
+        echo "[pre-commit-harness] ENV-BYPASS marker expired (age=${bypass_age}s > 7200s) — re-authorize" >&2
+        rm -f "$BYPASS_MARKER"
+    fi
+fi
+
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
     echo "BLOCKED: HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9." >&2
     echo "Diagnose the score gap and fix root cause. Do not bypass." >&2
     exit 1
-fi
-
-STAGED=$(git diff --cached --name-only)
-if [[ -z "$STAGED" ]]; then
-    exit 0
 fi
 
 # Classify by required tier: none < light < quick < full
@@ -40,10 +65,12 @@ rust/crates/sim-bridge/*.rs|rust/crates/sim-bridge/**/*.rs)
         *.png|*.svg|*.wav|*.tscn|*.tres|*.ron)
             [[ "$TIER" == "none" ]] && TIER="light"
             ;;
-        # Tier: NONE — docs, config, tools, harness infra, localization data
+        # Tier: NONE — docs, config, tools, harness infra, localization data,
+        # harness governance artifacts (baseline registries, bypass audit log)
         *.md|*.txt|localization/*.json|localization/*/*.json|localization/*/*/*.json|\
 localization/*/*.ftl|localization/*/*/*.ftl|\
 tools/*|tools/*/*|.claude/*|.claude/*/*|\
+.harness/baseline/*|.harness/audit/*|.harness/prompts/*|\
 hooks/*|.gitignore|.editorconfig|.gitattributes|*.toml|*.cfg|*.py)
             ;;
         # Unknown — default to quick

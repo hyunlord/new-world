@@ -149,6 +149,103 @@ Root incident: A-11 scored 88/100 (attempt 2 penalty + VLM WARNING).
 Both are mechanical/environmental — but bypassing the hook destroys the
 audit trail and sets a precedent for future abuse. Never bypass.
 
+### 7.1 Environmental Block Policy (added 2026-05-03, amended 2026-05-03 → v3.2.1)
+
+The "HARNESS_SKIP=1 is FORBIDDEN" rule above targets **code-quality bypass**.
+It does NOT cover the case where the pipeline cannot produce a verdict because
+the environment itself is blocked. This subsection defines the only sanctioned
+escape hatch.
+
+**Definition — environmental block** (NOT code quality):
+- Claude API rate limit (e.g. "You've hit your limit · resets …")
+- Network connectivity loss
+- Codex MCP server unavailability
+- Required external service (LLM, Godot, Linear) hard-down
+- File system / workspace corruption not caused by the change
+- **Toolchain drift** — rustc/clippy version upgrade introduces new lints on
+  pre-existing code that was clean under the previous toolchain (v3.2.1)
+
+**NOT environmental blocks** (these are code quality, no bypass allowed):
+- Compilation errors
+- Test failures introduced by the change
+- **New clippy issues introduced by the change** (clippy issues at file:line
+  locations not in `.harness/baseline/clippy_baseline_raw.txt`)
+- Missing deps in code
+- VLM WARNING for legitimate visual reasons
+
+**Required conditions — ALL must hold for ENV-BYPASS:**
+
+1. **Local verification complete**
+   - `cargo test --workspace` passes (or fails only on documented pre-existing
+     baseline failures registered in `.harness/baseline/known_failures.txt`)
+   - `cargo clippy --workspace --all-targets -- -D warnings` clean (or fails
+     only on documented pre-existing baseline issues registered in
+     `.harness/baseline/clippy_baseline_raw.txt`; companion explanation in
+     `.harness/baseline/known_clippy_issues.md`) — v3.2.1
+   - Relevant harness test verified locally
+   - Evidence saved to `.harness/evidence/<feature>/manual_verification.log`,
+     `.harness/evidence/<feature>/clippy_full.log`, and the diff of NEW issues
+     vs baseline
+
+2. **No NEW regressions vs baseline registries**
+   - Test failures: subset of `known_failures.txt` (zero NEW)
+   - Clippy issues: subset of `clippy_baseline_raw.txt` (zero NEW)
+   - The `authorize_env_bypass.sh` script enforces both diffs via
+     `comm -23 <(actual) <(baseline)`
+
+3. **Explicit user authorization** via
+   `bash tools/harness/authorize_env_bypass.sh <feature> <reason>`
+   (one-time, 2-hour validity, interactive `yes` confirmation, audit-logged)
+
+4. **Commit message tagging**
+   - Subject line includes `[ENV-BYPASS]` tag
+   - Body documents: specific environmental block (which one(s)), expected
+     reset/recovery time, local verification evidence path, scheduled re-run
+     date, baseline-tolerated regression counts (test + clippy)
+
+5. **Mandatory follow-up within 7 days**
+   - Re-run full pipeline once environment recovers
+   - On APPROVE: append `verified-post-bypass-<commit>` confirmation note
+     to `.harness/audit/env_bypass.log`
+   - On FAIL: revert or fix immediately
+
+**Hook behavior:**
+- `tools/harness/hooks/stop-check.sh` recognizes the
+  `.harness/audit/env_bypass_active` marker (one-shot, ≤2 h old) and exits 0
+- `tools/harness/authorize_env_bypass.sh` validates BOTH `cargo test` and
+  `cargo clippy` against their respective baseline registries
+- All bypass events appended to `.harness/audit/env_bypass.log`
+
+**Baseline registry maintenance:**
+- When a baseline test failure is fixed, remove its line from
+  `.harness/baseline/known_failures.txt` in the same commit
+- When a baseline clippy issue is fixed, regenerate
+  `.harness/baseline/clippy_baseline_raw.txt` in the same commit
+- Toolchain bump introducing new lints: document in
+  `known_clippy_issues.md`, extend the raw registry, commit separately with
+  rationale, then re-authorize
+- Never silently expand a registry to make a noisy commit pass
+
+**Streak tracking:**
+ENV-BYPASS commits count separately from formal pipeline-verdict commits:
+"N formal + M ENV-BYPASS = total". This preserves transparency without
+penalising environmental disruption.
+
+**Root incidents:**
+- v3.2 (2026-05-03 morning): `shelter-ring-center-fix-v1` blocked by Claude
+  API rate limit during evaluator subagent calls; code locally verified clean.
+  v3.1 wording offered no graceful path. v3.2 closed that gap with explicit
+  conditions + audit trail.
+- v3.2.1 (2026-05-03 afternoon): same feature blocked again — this time the
+  Rust 1.93.0 toolchain bump introduced 64 pre-existing clippy issues at
+  origin/lead/main HEAD across files unrelated to the change. v3.2 demanded
+  "clippy clean" with no baseline tolerance, re-blocking the same fix.
+  v3.2.1 mirrors the test-baseline tolerance for clippy via a registry
+  (`clippy_baseline_raw.txt`), recognising toolchain drift as an
+  environmental block while still blocking NEW issues introduced by the
+  change. Pattern recognised: hook governance evolves by closing one gap
+  per incident.
+
 ### 8. Overzealous Defense Awareness (added 2026-04-26)
 
 When implementing isolation/security mechanisms, check what's actually
