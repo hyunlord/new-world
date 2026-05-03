@@ -4,6 +4,40 @@
 # Exit 0 = allow stop, Exit 2 = force continue
 set -uo pipefail
 
+# ENV-BYPASS (CLAUDE.md Rule 7.1 v3.2.1): one-shot authorized bypass for env blocks.
+# Requires .harness/audit/env_bypass_active marker (≤2 h old) AND
+# manual_verification.log + clippy_full.log under .harness/evidence/<feature>/.
+# clippy_full.log is the per-crate log produced by authorize_env_bypass.sh and is
+# diff-checked against .harness/baseline/clippy_baseline_raw.txt fingerprints.
+PROJECT_ROOT_FOR_BYPASS="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"
+BYPASS_MARKER="$PROJECT_ROOT_FOR_BYPASS/.harness/audit/env_bypass_active"
+if [[ -f "$BYPASS_MARKER" ]]; then
+    bypass_mtime=$(stat -f %m "$BYPASS_MARKER" 2>/dev/null || stat -c %Y "$BYPASS_MARKER" 2>/dev/null || echo 0)
+    bypass_age=$(( $(date +%s) - bypass_mtime ))
+    if [[ $bypass_age -ge 7200 ]]; then
+        printf '[stop-check] ENV-BYPASS expired (>2h, age=%ss). Re-authorize to continue.\n' "$bypass_age" >&2
+        rm -f "$BYPASS_MARKER"
+        exit 2
+    fi
+    bypass_feature=$(grep '^feature:' "$BYPASS_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+    if [[ -z "$bypass_feature" ]]; then
+        printf '[stop-check] ENV-BYPASS marker malformed (missing feature:). Aborting.\n' >&2
+        exit 2
+    fi
+    evidence_dir="$PROJECT_ROOT_FOR_BYPASS/.harness/evidence/$bypass_feature"
+    if [[ ! -s "$evidence_dir/manual_verification.log" ]]; then
+        printf '[stop-check] ENV-BYPASS missing %s/manual_verification.log\n' "$evidence_dir" >&2
+        exit 2
+    fi
+    if [[ ! -s "$evidence_dir/clippy_full.log" ]]; then
+        printf '[stop-check] ENV-BYPASS missing %s/clippy_full.log\n' "$evidence_dir" >&2
+        exit 2
+    fi
+    printf '[stop-check] ENV-BYPASS active for %s (age=%ss). Allowing stop.\n' "$bypass_feature" "$bypass_age" >&2
+    rm -f "$BYPASS_MARKER"  # one-shot
+    exit 0
+fi
+
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
     # Record SKIP event to track budget usage
     PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo ".")"

@@ -65,13 +65,21 @@ reports/
 # Migration commit logs
 migration_commit_logs/
 
-# Harness pipeline runtime artifacts
+# Harness pipeline runtime artifacts (per-run, never committed)
 .harness/plans/
 .harness/results/
 .harness/reviews/
 .harness/evidence/
 .harness/progress/
-.harness/
+.harness/reports/
+.harness/state/
+.harness/diagnosis/
+.harness/runs/
+.harness/sessions/
+.harness/research/
+# NOTE: .harness/baseline/, .harness/audit/, and .harness/prompts/ are
+# intentionally tracked (Rule 7.1 v3.2.1 governance — baselines, bypass
+# log, and prompt history must be shared).
 
 # env
 .env
