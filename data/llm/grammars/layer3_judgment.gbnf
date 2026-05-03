@@ -1,8 +1,0 @@
-root       ::= "{" ws "\"action_id\"" ws ":" ws action-id ws "," ws "\"confidence\"" ws ":" ws confidence ws "," ws "\"reasoning_hint\"" ws ":" ws string ws "}"
-action-id  ::= [0-9] | [1-9] [0-9]
-confidence ::= "0" ("." [0-9] [0-9]?)? | "1" (".0" "0"?)?
-string     ::= "\"" chars "\""
-chars      ::= "" | char chars
-char       ::= [^"\\] | "\\" escaped
-escaped    ::= ["\\nrt/]
-ws         ::= [ \t\n]*

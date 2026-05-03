@@ -1,4 +1,0 @@
-root      ::= line (newline line)*
-line      ::= text-char+
-newline   ::= "\n"
-text-char ::= [^\n\[\]\{\}\"`:]
