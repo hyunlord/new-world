@@ -698,6 +698,20 @@ fn behavior_select_action(
         && warmth >= config::WARMTH_LOW as f32
         && safety >= config::SAFETY_LOW as f32;
 
+    // Force-PlaceFurniture: fires ONLY after all wall plans are placed (wall_plans empty
+    // → find_nearest_unclaimed_wall_plan returns None → has_wall_plan_target=false).
+    // At that point, builder needs are often depleted from wall placement work, so
+    // builder_furniture_ok (which requires thirst/hunger minimums) would fail.
+    // Using energy >= FORCE_REST threshold only: enough to physically start a fire.
+    if matches!(age_stage, GrowthStage::Adult)
+        && behavior.job == "builder"
+        && has_furniture_plan_target
+        && !has_wall_plan_target
+        && energy >= config::BEHAVIOR_FORCE_REST_ENERGY_MAX as f32
+    {
+        return (ActionType::PlaceFurniture, false);
+    }
+
     // Force-Flee: only when agent has enough energy to act on the danger.
     // A critically exhausted agent cannot flee effectively — prioritise Rest so they
     // can recover energy and then escape. Without this guard, agents with safety<0.20
@@ -757,13 +771,22 @@ fn behavior_select_action(
         && warmth >= config::WARMTH_LOW as f32
         && safety >= config::SAFETY_LOW as f32
         && energy >= config::BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN as f32;
+    // P2-B3: PlaceFurniture (fire_pit) is the warmth source itself.
+    // Omit warmth from the guard so a cold builder can place the fire_pit
+    // and break the circular dependency (cold → can't build → stays cold).
+    let builder_furniture_ok = matches!(age_stage, GrowthStage::Adult)
+        && behavior.job == "builder"
+        && hunger >= config::BEHAVIOR_BUILDER_FORCE_BUILD_HUNGER_MIN as f32
+        && thirst >= config::THIRST_LOW as f32
+        && safety >= config::SAFETY_LOW as f32
+        && energy >= config::BEHAVIOR_BUILDER_FORCE_BUILD_ENERGY_MIN as f32;
 
     // P2-B3: builders prefer wall placement plans, then furniture plans,
     // then fall back to the legacy Build action if a Building exists.
     if builder_survival_ok && has_wall_plan_target {
         return (ActionType::PlaceWall, false);
     }
-    if builder_survival_ok && has_furniture_plan_target {
+    if builder_furniture_ok && has_furniture_plan_target {
         return (ActionType::PlaceFurniture, false);
     }
     if builder_survival_ok && has_build_target {
@@ -2022,7 +2045,7 @@ mod tests {
         ));
 
         let mut system =
-            BehaviorRuntimeSystem::new(20, sim_core::config::BEHAVIOR_TICK_INTERVAL as u64);
+            BehaviorRuntimeSystem::new(20, sim_core::config::BEHAVIOR_TICK_INTERVAL);
         system.run(&mut world, &mut resources, 50);
 
         let behavior = world

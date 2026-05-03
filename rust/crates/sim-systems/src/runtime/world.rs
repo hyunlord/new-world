@@ -1112,6 +1112,42 @@ impl SimSystem for MovementRuntimeSystem {
                 behavior.action_timer -= 1;
             }
 
+            // P2-B3: PlaceWall / PlaceFurniture early-arrival completion.
+            // The builder oscillates around the target due to crowd separation
+            // forces, so it is often close_enough at action start but has
+            // drifted away by the time the 32-tick timer expires.
+            // Forcing timer = 0 as soon as the builder is close enough lets
+            // the existing completion handler fire immediately on that tick.
+            if behavior.action_timer > 0 {
+                match behavior.current_action {
+                    ActionType::PlaceWall => {
+                        if let Some((tx, ty)) = behavior
+                            .action_target_x
+                            .zip(behavior.action_target_y)
+                        {
+                            let dx = (position.x - f64::from(tx)).abs();
+                            let dy = (position.y - f64::from(ty)).abs();
+                            if dx <= 3.5 && dy <= 3.5 {
+                                behavior.action_timer = 0;
+                            }
+                        }
+                    }
+                    ActionType::PlaceFurniture => {
+                        if let Some((tx, ty)) = behavior
+                            .action_target_x
+                            .zip(behavior.action_target_y)
+                        {
+                            let dx = (position.x - f64::from(tx)).abs();
+                            let dy = (position.y - f64::from(ty)).abs();
+                            if dx <= 2.5 && dy <= 2.5 {
+                                behavior.action_timer = 0;
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
+
             if behavior.action_timer <= 0 && behavior.current_action != ActionType::Idle {
                 let completed_action = behavior.current_action;
                 match completed_action {
@@ -1527,6 +1563,13 @@ impl SimSystem for MovementRuntimeSystem {
                                             }
                                         }
                                     }
+                                }
+                            } else if let Some(idx) = plan_idx {
+                                // close_enough failed: release claim immediately so the builder
+                                // can retry on the next tick rather than waiting 200 ticks for
+                                // cleanup_stale_plans to release it.
+                                if resources.wall_plans[idx].claimed_by == Some(entity_id) {
+                                    resources.wall_plans[idx].claimed_by = None;
                                 }
                             }
                         }
