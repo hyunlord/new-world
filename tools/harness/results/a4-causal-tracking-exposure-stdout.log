@@ -1,0 +1,2456 @@
+[harness 12:58:39] ==========================================
+[harness 12:58:39] Harness Pipeline v4 — a4-causal-tracking-exposure
+[harness 12:58:39] Mode: --quick
+[harness 12:58:39] Prompt: .harness/prompts/a4-causal-tracking-exposure.md
+[harness 12:58:39] ==========================================
+[harness 12:58:39] === Step 0: MECHANICAL GATE (0-token) ===
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+ii
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.22s
+BROKEN: causal_events_to_vardict — newly added to lib.rs but MISSING from sim_bridge.gd
+WARN: causal_events_to_vardict — not in simulation_engine.gd (may be OK if not needed by UI)
+FFI CHAIN: BROKEN — fix proxy chain before proceeding
+[harness 13:03:09] WARNING: FFI chain issues detected (non-blocking at Step 0)
+[harness 13:03:09] MECHANICAL GATE: PASS
+[harness progress] 0 Mechanical Gate: DONE — cargo test + clippy + FFI check
+[harness 13:03:09] WARNING: Locale check found issues (code_not_fluent=2, json_not_fluent=11)
+[harness progress] 0b Locale Check: DONE — WARN (code_missing=2, json_missing=11)
+[harness 13:03:09] === Step 1a: PLANNER (plan attempt 1) ===
+[harness 13:03:09] Running Planner agent...
+[harness 13:09:04] Plan draft created: /Users/rexxa/github/new-world-wt/lead/.harness/plans/a4-causal-tracking-exposure/plan_draft.md
+[harness progress] 1a Drafter: DONE — Plan: 0
+0 assertions — none listed
+[harness 13:09:04] Quick mode — skipping debate
+[harness progress] 1b Challenger: SKIPPED — --quick mode (no debate needed)
+[harness progress] 1c Revision: SKIPPED — --quick mode
+[harness progress] 1d QC: SKIPPED — --quick mode
+[harness 13:09:04] === Step 2: GENERATOR (code attempt 1) ===
+[harness 13:09:04] Running Generator (isolated session, attempt 1, timeout 900s)...
+Clean stop hook again — no issues. The session is fully complete for **a4-causal-tracking-exposure**. ✅
+[harness 13:22:36] Running gate command...
+warning: unused variable: `b`
+    --> crates/sim-systems/src/runtime/band.rs:2228:13
+     |
+2228 |         let b = spawn_agent(
+     |             ^ help: if this is intentional, prefix it with an underscore: `_b`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `sim-systems` (lib test) generated 1 warning (run `cargo fix --lib -p sim-systems --tests` to apply 1 suggestion)
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.15s
+     Running unittests src/lib.rs (target/debug/deps/sim_bridge-c55b38bfb779f9af)
+
+running 77 tests
+test debug_api::tests::priority_to_section_economy_overrides_psychology ... ok
+test debug_api::tests::priority_to_section_environment_fills_gaps ... ok
+test debug_api::tests::priority_to_section_guardrails ... ok
+test debug_api::tests::priority_to_section_named_sections_beat_environment ... ok
+test debug_api::tests::priority_to_section_survival ... ok
+test runtime_queries::tests::biome_mapping_round_trips_known_ids ... ok
+test runtime_queries::tests::runtime_band_id_raw_maps_optional_band_ids ... ok
+test runtime_queries::tests::construction_stall_reason_identifies_priority_gap ... ok
+test runtime_system::tests::band_runtime_order_keeps_formation_before_steering ... ok
+test runtime_system::tests::default_runtime_manifest_is_unique_and_deterministic ... ok
+test locale_bindings::tests::active_locale_message_uses_last_loaded_source ... ok
+test runtime_queries::tests::bootstrap_payload_defaults_to_sandbox_mode ... ok
+test snapshot_buffer::tests::first_swap_initializes_prev_and_curr ... ok
+test snapshot_buffer::tests::second_swap_rotates_curr_into_prev ... ok
+test snapshot_buffer::tests::stage1_snapshot_buffer_double_swap ... ok
+test temperament_detail::tests::extract_label_choleric ... ok
+test temperament_detail::tests::extract_label_melancholic ... ok
+test temperament_detail::tests::extract_label_phlegmatic ... ok
+test temperament_detail::tests::extract_label_sanguine ... ok
+test runtime_system::tests::runtime_system_ids_have_unique_registry_names ... ok
+test temperament_detail::tests::extract_preserves_f64_precision ... ok
+test tests::action_target_resource_key_maps_foraging_actions ... ok
+test tests::archetype_label_key_prefers_largest_hexaco_deviation ... ok
+test runtime_registry::tests::legacy_runtime_bootstrap_only_requires_personality_and_names ... ok
+test tests::backend_dispatch_counters_track_resolved_modes ... ok
+test tests::backend_dispatch_single_matches_cpu_path ... ok
+test tests::backend_dispatch_batch_modes_match_cpu_path ... ok
+test tests::chronicle_entry_lite_legacy_summary_keeps_layered_fields ... ok
+test tests::chronicle_snapshot_revision_from_arg_accepts_only_non_negative_values ... ok
+test tests::bridge_entity_list_surfaces_hunger_and_missing_needs_fallback ... ok
+test tests::click_narrative_request_sequences_personality_then_event_then_inner ... ok
+test tests::click_pending_is_not_preempted_before_timeout ... ok
+test tests::build_thought_text_bolds_first_sentence_and_mentions_need ... ok
+test tests::fluent_format_replaces_named_params ... ok
+test tests::game_event_type_id_maps_new_v2_event_variants ... ok
+test tests::fluent_format_supports_plural_rules ... ok
+test tests::narrative_cache_any_text_detects_populated_fields ... ok
+test tests::narrative_cache_complete_and_fresh_requires_all_sections ... ok
+test tests::narrative_display_data_includes_labels_and_visibility_flags ... ok
+test tests::parses_pathfinding_backend_modes ... ok
+test tests::pathfind_grid_accepts_byte_walkable_flags ... ok
+test tests::pathfind_grid_batch_processes_multiple_queries ... ok
+test tests::pathfind_grid_batch_rejects_mismatched_input_lengths ... ok
+test tests::pathfind_grid_batch_returns_empty_for_out_of_bounds_start ... ok
+test tests::pathfind_grid_batch_returns_singletons_for_stationary_queries ... ok
+test tests::pathfind_grid_batch_vec2_matches_tuple_results ... ok
+test tests::pathfind_grid_batch_xy_matches_tuple_results ... ok
+test tests::pathfind_grid_batch_xy_rejects_invalid_dimensions ... ok
+test tests::pathfind_grid_batch_xy_rejects_odd_length_inputs ... ok
+test tests::pathfind_grid_rejects_invalid_dimensions ... ok
+test tests::pathfind_grid_returns_singleton_for_stationary_query ... ok
+test tests::pathfind_grid_returns_empty_when_start_is_out_of_bounds ... ok
+test tests::public_backend_mode_helpers_roundtrip_and_validate ... ok
+test tests::public_dispatch_counter_helpers_track_dispatch_paths ... ok
+test tests::resolves_pathfinding_backend_with_runtime_gate ... ok
+test tests::returns_path_on_valid_input ... ok
+test tests::stage1_all_12_archetypes_reachable ... ok
+test tests::stage1_archetype_high_extraversion ... ok
+test tests::stage1_archetype_low_honesty ... ok
+test tests::stage1_archetype_neutral_returns_something ... ok
+test tests::story_event_significance_filters_idle_and_routine_action_changes ... ok
+test narrative_display::tests::narrative_display_builder_uses_cached_text_and_loading_shimmer ... ok
+test tests::validates_move_cost_length ... ok
+test locale_bindings::tests::active_locale_message_falls_back_to_plain_uppercase_keys ... ok
+test tests::validates_walkable_length ... ok
+test tests::ws2_decode_rejects_invalid_magic ... ok
+test narrative_display::tests::narrative_display_builder_marks_disabled_overlay_when_llm_is_off ... ok
+test tests::format_story_event_locale_localizes_task_completed_params ... ok
+test tests::format_story_event_locale_uses_active_locale_for_need_labels ... ok
+test tests::ws2_roundtrip_preserves_snapshot_scalars ... ok
+test runtime_queries::tests::raw_entity_id_lookup_maps_to_runtime_bits ... ok
+test runtime_queries::tests::collect_construction_assignments_counts_targeted_builder ... ok
+test runtime_registry::tests::disabled_runtime_systems_are_ignored_on_upsert ... ok
+test runtime_queries::tests::probe_bootstrap_applies_survival_profiles_to_initial_agents ... ok
+test runtime_queries::tests::bootstrap_world_core_populates_runtime_state ... ok
+test runtime_registry::tests::default_runtime_manifest_registers_rust_backed_entries ... ok
+test runtime_queries::tests::probe_bootstrap_drives_visible_survival_actions_and_recovery ... ok
+
+test result: ok. 77 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_core-b7555b99e849a9c1)
+
+running 132 tests
+test band::tests::band_remove_member_drops_entity ... ok
+test band::tests::band_store_allocates_monotonic_ids ... ok
+test band::tests::band_tracks_members_without_duplicates ... ok
+test building::tests::building_new_enforces_min_dimensions ... ok
+test building::tests::occupies_tile_multi ... ok
+test band::tests::band_store_insert_find_and_remove ... ok
+test building::tests::occupies_tile_single ... ok
+test building::tests::overlaps_adjacent_does_not_overlap ... ok
+test building::tests::overlaps_partial ... ok
+test building::tests::overlaps_same_position ... ok
+test calendar::tests::test_1000_tick_calendar ... ok
+test calendar::tests::test_advance_one_day ... ok
+test calendar::tests::test_ticks_to_years ... ok
+test calendar::tests::test_year_rollover ... ok
+test causal_log::tests::causal_log_clear_entity_removes_entries ... ok
+test causal_log::tests::causal_log_uses_ring_buffer_capacity ... ok
+test children_index::tests::add_and_retrieve ... ok
+test children_index::tests::child_count ... ok
+test children_index::tests::empty_returns_empty_slice ... ok
+test children_index::tests::remove_child ... ok
+test components::body_health::tests::damage_sets_group_flag ... ok
+test components::body_health::tests::default_is_healthy ... ok
+test components::body_health::tests::non_vital_zero_not_dead ... ok
+test components::body_health::tests::vital_part_zero_is_dead ... ok
+test components::body_health::tests::vital_parts_are_correct ... ok
+test components::family::tests::default_is_orphan ... ok
+test components::family::tests::none_parents_not_siblings ... ok
+test components::family::tests::parent_of_check ... ok
+test components::family::tests::siblings_share_father ... ok
+test components::family::tests::siblings_share_mother ... ok
+test components::inventory::tests::inventory_add_remove ... ok
+test components::knowledge::tests::default_is_empty ... ok
+test components::knowledge::tests::forget_removes ... ok
+test components::knowledge::tests::learn_and_has ... ok
+test components::knowledge::tests::learn_duplicate_noop ... ok
+test components::knowledge::tests::proficiency_returns_correct ... ok
+test components::llm::tests::llm_capable_defaults_match_config ... ok
+test components::llm::tests::llm_pending_defaults_match_config ... ok
+test components::llm::tests::llm_result_can_store_judgment_and_narrative ... ok
+test components::llm::tests::narrative_cache_defaults_match_config ... ok
+test components::position::tests::new_position_uses_continuous_storage_with_zero_velocity ... ok
+test components::position::tests::stage1_position_clamped_to_world_bounds ... ok
+test components::position::tests::stage1_position_is_f64_with_velocity ... ok
+test components::position::tests::tile_helpers_round_continuous_coordinates ... ok
+test components::social::tests::kinship_grandparent ... ok
+test components::social::tests::kinship_parent_child ... ok
+test components::social::tests::kinship_sibling ... ok
+test components::social::tests::kinship_unrelated ... ok
+test components::steering::tests::default_steering_params_match_ticket_baseline ... ok
+test components::steering::tests::stage1_steering_params_has_all_fields ... ok
+test config::tests::body_heritability_all_valid ... ok
+test components::values::tests::serde_roundtrip_keeps_transparent_array_shape ... ok
+test config::tests::intel_corr_matrix_diagonal_ones ... ok
+test config::tests::memory_decay_rate_returns_correct_rate ... ok
+test config::tests::memory_intensity_trauma_class ... ok
+test config::tests::stage1_mood_speed_multipliers_correct ... ok
+test config::tests::stage1_stress_speed_multipliers_correct ... ok
+test config::tests::ticks_per_year_consistent ... ok
+test effect::tests::effect_queue_double_buffer_isolation ... ok
+test effect::tests::effect_queue_flush_swaps_pending_to_active ... ok
+test effect::tests::effect_queue_scheduled_promotes_on_tick ... ok
+test effect::tests::effect_queue_scheduled_retains_future ... ok
+test effect::tests::influence_emitter_converts_into_grid_record ... ok
+test effect::tests::influence_receiver_default_listens_to_all_channels ... ok
+test enums::tests::test_growth_stage_from_ticks ... ok
+test enums::tests::test_mental_break_count ... ok
+test enums::tests::test_need_count ... ok
+test enums::tests::test_serde_roundtrip ... ok
+test enums::tests::test_value_count ... ok
+test influence_channel::tests::influence_channel_aliases_cover_legacy_keys ... ok
+test influence_channel::tests::influence_channel_defaults_cover_all_channels ... ok
+test influence_channel::tests::influence_channel_indices_are_stable ... ok
+test influence_grid::tests::influence_grid_gradient_points_toward_emitter ... ok
+test influence_grid::tests::influence_grid_staggered_update_advances_one_channel ... ok
+test influence_grid::tests::influence_grid_starts_empty ... ok
+test influence_grid::tests::influence_grid_weighted_sum_combines_channels_without_allocation ... ok
+test item::tests::item_derived_stats_from_material_stats_preserves_values ... ok
+test item::tests::item_instance_equipped_items_are_not_stackable ... ok
+test item::tests::item_instance_stacking_rules ... ok
+test item::tests::item_is_broken_at_zero_durability ... ok
+test influence_grid::tests::influence_grid_wall_blocking_reduces_values ... ok
+test item_store::tests::item_id_is_monotonic ... ok
+test item_store::tests::item_store_empty_helpers_reflect_state ... ok
+test influence_grid::tests::influence_grid_tick_decay_reduces_value_on_second_update ... ok
+test item_store::tests::item_store_ground_index_tracks_tiles ... ok
+test item_store::tests::item_store_insert_and_get ... ok
+test item_store::tests::item_store_remove_cleans_indices ... ok
+test item_store::tests::item_store_transfer_owner_updates_indices ... ok
+test room::tests::room_assignment_writes_room_ids_back_to_grid ... ok
+test room::tests::room_detection_finds_enclosed_floor_region ... ok
+test scales::tests::from_trait_percent ... ok
+test scales::tests::from_trait_stress ... ok
+test scales::tests::percent_boundary_one ... ok
+test scales::tests::percent_boundary_zero ... ok
+test scales::tests::percent_clamping_over ... ok
+test scales::tests::percent_clamping_under ... ok
+test scales::tests::percent_roundtrip ... ok
+test scales::tests::stress_boundary_one ... ok
+test scales::tests::stress_boundary_zero ... ok
+test scales::tests::stress_clamping_over ... ok
+test scales::tests::stress_clamping_under ... ok
+test scales::tests::stress_roundtrip_midpoint ... ok
+test temperament::tests::temperament_from_personality_maps_hexaco_axes ... ok
+test temperament::tests::temperament_from_rules_applies_bias_matrix ... ok
+test temperament::tests::temperament_from_rules_clamps_to_unit ... ok
+test temperament::tests::temperament_from_rules_fallback_path_stays_distinct_from_legacy ... ok
+test temperament::tests::temperament_from_rules_uses_prs_weights ... ok
+test temperament::tests::temperament_shift_clamps_and_sets_awakened ... ok
+test territory_grid::tests::decay_reduces_values ... ok
+test territory_grid::tests::decay_zeros_below_threshold ... ok
+test territory_grid::tests::export_dominant_picks_strongest ... ok
+test territory_grid::tests::new_grid_is_empty ... ok
+test territory_grid::tests::stamp_gaussian_creates_faction ... ok
+test territory_grid::tests::stamp_gaussian_terrain_all_blocked_is_noop ... ok
+test territory_grid::tests::stamp_gaussian_terrain_skips_impassable ... ok
+test territory_grid::tests::stamp_tile_adds_value ... ok
+test territory_grid::tests::stamp_tile_clamps_at_one ... ok
+test territory_grid::tests::stamp_tile_out_of_bounds_is_noop ... ok
+test tile_grid::tests::tile_grid_clear_resets_structure_layers ... ok
+test tile_grid::tests::tile_grid_neighbors_respect_bounds ... ok
+test tile_grid::tests::tile_grid_tracks_material_layers_and_room_ids ... ok
+test wall_mask::tests::wall_mask_clamps_values_and_bounds ... ok
+test wall_mask::tests::wall_mask_clear_resets_previous_blockers ... ok
+test wall_mask::tests::wall_mask_density_conversion_matches_influence_expectations ... ok
+test world::tests::test_find_settlement_location_preferred_valid ... ok
+test world::tests::test_has_stone_access_hill_terrain ... ok
+test world::tests::test_has_stone_access_tile_resource ... ok
+test world::tests::test_tile_access ... ok
+test world::tests::test_walkable_tiles_near ... ok
+test world::tests::test_find_settlement_location_shifts_when_no_local_stone ... ok
+test world::tests::test_world_map_creation ... ok
+test influence_grid::tests::influence_grid_tick_stamps_and_samples_center_value ... ok
+
+test result: ok. 132 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_data-388585cf718cf0fc)
+
+running 44 tests
+test defs::tests::exports_are_available ... ok
+test defs::world_rules::tests::parses_rule_special_zone_defaults ... ok
+test defs::furniture::tests::parses_furniture_def_from_ron ... ok
+test defs::world_rules::tests::parses_rule_special_zone_with_all_fields ... ok
+test defs::structure::tests::parses_structure_def_with_blueprint ... ok
+test defs::recipe::tests::parses_recipe_def_from_ron ... ok
+test defs::structure::tests::parses_structure_def_from_ron ... ok
+test defs::material::tests::parses_material_def_from_ron ... ok
+test defs::world_rules::tests::parses_world_ruleset_from_ron ... ok
+test defs::temperament::tests::parses_temperament_rules_from_ron ... ok
+test defs::action::tests::parses_action_def_from_ron ... ok
+test name_generator::tests::fallback_produces_nonempty_names_without_data ... ok
+test name_generator::tests::register_and_unregister_work ... ok
+test personality_distribution::tests::correlation_matrix_is_6x6 ... ok
+test personality_distribution::tests::facet_spread_is_correct ... ok
+test personality_distribution::tests::heritability_comment_excluded ... ok
+test personality_distribution::tests::heritability_h_is_correct ... ok
+test personality_distribution::tests::maturation_has_six_axes ... ok
+test personality_distribution::tests::ou_parameters_correct ... ok
+test registry::tests::derive_item_stats_uses_material_properties ... ok
+test personality_distribution::tests::sd_is_correct ... ok
+test name_culture::tests::load_three_cultures ... ok
+test name_culture::tests::proto_nature_has_name_pools ... ok
+test name_culture::tests::tribal_totemic_has_patronymic ... ok
+test name_culture::tests::proto_syllabic_has_syllable_pools ... ok
+test loader::tests::load_ron_file_reports_parse_errors ... ok
+test name_generator::tests::different_settlements_can_have_same_name ... ok
+test tag_index::tests::query_with_threshold_filters_materials ... ok
+test loader::tests::load_ron_directory_reads_sorted_files ... ok
+test name_generator::tests::syllabic_culture_generates_nonempty_names ... ok
+test values_seed::tests::all_33_value_types_have_heritability ... ok
+test name_generator::tests::generates_20_unique_names ... ok
+test values_seed::tests::all_24_facet_names_resolve_to_valid_indices ... ok
+test values_seed::tests::all_33_value_types_have_seed_entries ... ok
+test name_generator::tests::names_start_with_uppercase ... ok
+test values_seed::tests::facet_index_all_24_canonical_names ... ok
+test values_seed::tests::heritability_values_in_expected_range ... ok
+test registry::tests::load_from_directory_reads_optional_singletons ... ok
+test registry::tests::foundation_helpers_expose_loaded_schema_hooks ... ok
+test tests::load_ron_registry_from_crate_data ... ok
+test validator::tests::validator_reports_missing_recipe_tag_matches ... ok
+test validator::tests::validator_accepts_basic_registry ... ok
+test tests::data_bundle_trait_lookup_returns_loaded_trait ... ok
+test tests::load_all_from_project_data ... ok
+
+test result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/ron_registry_test.rs (target/debug/deps/ron_registry_test-4e8cba59a9af3426)
+
+running 5 tests
+test ron_registry_reports_validation_errors_for_unknown_recipe_tags ... ok
+test ron_registry_loads_authoritative_crate_fixture ... ok
+test ron_registry_loads_sample_data_and_derives_stats ... ok
+test ron_registry_resolves_tag_threshold_queries ... ok
+test registry_loads_new_structures_and_furniture ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_engine-302582cb006f63df)
+
+running 116 tests
+test chronicle::tests::chronicle_entry_lite_validation_rejects_empty_dossier_stub_locale_key ... ok
+test chronicle::tests::chronicle_archive_captures_evicted_recall_entries ... ok
+test chronicle::tests::chronicle_archive_captures_evicted_background_entries ... ok
+test chronicle::tests::chronicle_entry_lite_validation_rejects_invalid_ranges ... ok
+test chronicle::tests::chronicle_lifecycle_records_initial_routing_transition ... ok
+test chronicle::tests::chronicle_archive_entries_have_archived_status ... ok
+test chronicle::tests::chronicle_archive_bounded_by_max ... ok
+test chronicle::tests::chronicle_significance_meta_captures_repeat_penalty ... ok
+test chronicle::tests::chronicle_history_slice_returns_archived_entries ... ok
+test chronicle::tests::chronicle_lifecycle_records_displacement ... ok
+test chronicle::tests::chronicle_history_slice_paginates_by_cursor ... ok
+test chronicle::tests::chronicle_integrity_detects_no_issues_on_healthy_timeline ... ok
+test chronicle::tests::chronicle_log_keeps_recent_world_and_personal_entries_bounded ... ok
+test chronicle::tests::chronicle_log_prunes_old_low_significance_events ... ok
+test chronicle::tests::chronicle_significance_meta_decomposes_score ... ok
+test chronicle::tests::chronicle_subject_ref_preserves_frozen_state ... ok
+test chronicle::tests::chronicle_subject_ref_state_defaults_to_unknown ... ok
+test chronicle::tests::chronicle_telemetry_counts_routing_outcomes ... ok
+test chronicle::tests::chronicle_thread_attaches_entries_with_same_key ... ok
+test chronicle::tests::chronicle_thread_feed_item_propagates_thread_id ... ok
+test chronicle::tests::chronicle_thread_reactivates_on_new_entry ... ok
+test chronicle::tests::chronicle_thread_evicts_lowest_tension_resolved ... ok
+test chronicle::tests::chronicle_thread_resolves_after_window ... ok
+test chronicle::tests::chronicle_thread_separates_different_entities ... ok
+test chronicle::tests::chronicle_thread_separates_different_event_families ... ok
+test chronicle::tests::chronicle_thread_story_threads_snapshot_returns_by_tension ... ok
+test chronicle::tests::chronicle_thread_tension_decays_with_age ... ok
+test chronicle::tests::chronicle_timeline_entry_detail_snapshot_returns_matching_entry ... ok
+test chronicle::tests::chronicle_timeline_feed_snapshot_returns_newest_visible_entries ... ok
+test chronicle::tests::chronicle_timeline_keeps_recent_entries_bounded ... ok
+test chronicle::tests::chronicle_timeline_queries_recent_entries_by_entity ... ok
+test chronicle::tests::chronicle_timeline_recall_slice_reports_recalled_entries ... ok
+test chronicle::tests::chronicle_timeline_rejects_unavailable_snapshot_revisions ... ok
+test chronicle::tests::chronicle_timeline_routes_notable_to_background_and_major_to_recall_when_full ... ok
+test chronicle::tests::chronicle_timeline_snapshot_revision_advances_on_mutation ... ok
+test engine::tests::spawn_zones_empty_list_is_noop ... ok
+test engine::tests::spawn_zones_adds_resource_to_tiles ... ok
+test engine::tests::spawn_zones_overrides_terrain ... ok
+test command::tests::emit_command_queues_event ... ok
+test engine::tests::systems_registered_in_priority_order ... ok
+test command::tests::flush_empty_queue_is_noop ... ok
+test engine::tests::engine_tick_updates_influence_grid_buffers ... ok
+test engine::tests::system_runs_every_tick ... ok
+test engine::tests::restore_from_snapshot_sets_timeline_fields ... ok
+test engine::tests::sim_resources_initialize_influence_grid_from_map_dimensions ... ok
+test engine::tests::snapshot_reflects_state ... ok
+test event_bus::tests::flush_delivers_events_in_order ... ok
+test command::tests::despawn_command_removes_entity ... ok
+test engine::tests::tick_advances_counter ... ok
+test engine::tests::rebuild_frame_snapshots_reflects_live_world ... ok
+test event_store::tests::by_type_and_actor_filters_respect_tick_cutoff ... ok
+test engine::tests::llm_status_is_json_even_when_runtime_is_unavailable ... ok
+test event_bus::tests::flush_empty_is_noop ... ok
+test command::tests::despawn_nonexistent_is_safe ... ok
+test event_store::tests::stage1_event_store_query_by_actor ... ok
+test event_store::tests::event_store_capacity_evicts_oldest ... ok
+test event_store::tests::stage1_event_store_query_by_type ... ok
+test event_store::tests::stage1_event_store_capacity_eviction ... ok
+test events::tests::event_is_cloneable ... ok
+test events::tests::event_name_is_stable ... ok
+test events::tests::llm_event_name_is_stable ... ok
+test events::tests::speed_changed_name_is_stable ... ok
+test engine::tests::run_ticks_adds_to_current ... ok
+test engine::tests::world_rules_absent_rules_keep_defaults ... ok
+test explain_log::tests::clear_entity_removes_entries ... ok
+test engine::tests::run_until_stops_at_target ... ok
+test explain_log::tests::empty_entity_returns_empty_vec ... ok
+test explain_log::tests::get_recent_respects_count_limit ... ok
+test explain_log::tests::ring_buffer_retains_last_20 ... ok
+test explain_log::tests::total_entries_counts_correctly ... ok
+test frame_snapshot::tests::agent_snapshot_is_36_bytes ... ok
+test frame_snapshot::tests::build_agent_snapshots_filters_dead_and_sorts ... ok
+test frame_snapshot::tests::stage1_agent_snapshot_field_offsets_match_decoder_contract ... ok
+test frame_snapshot::tests::stage1_agent_snapshot_is_36_bytes ... ok
+test frame_snapshot::tests::stage1_atlas_var_bit_encoding_roundtrips ... ok
+test frame_snapshot::tests::stage1_compute_mood_color_stays_in_range ... ok
+test frame_snapshot::tests::stage1_snapshot_serialization_roundtrip ... ok
+test frame_snapshot::tests::write_bytes_produces_fixed_stride ... ok
+test llm_prompt::tests::default_prompt_dir_points_into_project_data_tree ... ok
+test llm_prompt::tests::emotion_context_fear_is_korean ... ok
+test llm_prompt::tests::speech_register_detects_matching_suffix ... ok
+test llm_server::tests::external_attachment_counts_as_running_until_stopped ... ok
+test llm_server::tests::default_config_uses_project_relative_paths ... ok
+test llm_server::tests::llm_quality_zero_disables_runtime_config ... ok
+test llm_server::tests::debug_log_drains_in_fifo_order ... ok
+test llm_prompt::tests::hexaco_descriptor_high_uses_loaded_text ... ok
+test llm_server::tests::quality_from_config_reflects_enabled_and_context ... ok
+test llm_server::tests::status_json_reports_not_running_by_default ... ok
+test llm_validator::tests::meta_utterance_is_rejected ... ok
+test llm_validator::tests::prompt_echo_is_rejected ... ok
+test llm_validator::tests::register_detection_accepts_matching_haera_text ... ok
+test llm_validator::tests::default_forbidden_list_loads_project_data ... ok
+test llm_worker::tests::extract_json_candidate_finds_braced_block ... ok
+test llm_server::tests::quality_persistence_round_trips ... ok
+test llm_worker::tests::fallback_content_matches_request_type ... ok
+test llm_validator::tests::forbidden_word_replacement_uses_korean_substitute ... ok
+test llm_worker::tests::garbage_detector_flags_repeated_text ... ok
+test llm_worker::tests::judgment_parser_accepts_embedded_json ... ok
+test notification::tests::notification_tier_values_are_stable ... ok
+test notification::tests::stage1_notification_tier_mapping_is_stable ... ok
+test perf_tracker::tests::begin_tick_clears_section_times ... ok
+test perf_tracker::tests::end_system_without_begin_is_noop ... ok
+test perf_tracker::tests::new_tracker_is_empty ... ok
+test perf_tracker::tests::tick_history_bounded_at_300 ... ok
+test snapshot::tests::date_string_format ... ok
+test perf_tracker::tests::system_timing_records_elapsed ... ok
+test snapshot::tests::display_format_contains_key_fields ... ok
+test snapshot::tests::round_trips_serde ... ok
+test snapshot::tests::tick_of_year_wraps ... ok
+test system_trait::tests::should_run_correct_interval ... ok
+test tests::llm_validator_exports_project_word_table ... ok
+test llm_prompt::tests::notification_prompt_humanizes_internal_event_causes ... ok
+test llm_prompt::tests::prompt_templates_render_real_use_cases ... ok
+test engine::tests::world_rules_apply_channel_overrides_to_grid ... ok
+test engine::tests::world_rules_partial_override_preserves_defaults ... ok
+test llm_server::tests::priority_submit_can_displace_queued_background_request ... ok
+
+test result: ok. 116 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_systems-ae4b1c3a441abeb4)
+
+running 452 tests
+test body::tests::ace_adult_modifiers_adjusted_applies_floor_and_protective_factor ... ok
+test body::tests::ace_backfill_score_accounts_for_attachment_and_scars ... ok
+test body::tests::ace_partial_score_next_clamps_to_unit_interval ... ok
+test body::tests::ace_score_total_from_partials_clamps_to_ten ... ok
+test body::tests::ace_threat_deprivation_totals_routes_by_type_code ... ok
+test body::tests::action_energy_cost_decreases_with_endurance ... ok
+test body::tests::age_body_speed_and_strength_follow_scaling ... ok
+test body::tests::anxious_attachment_stress_delta_applies_below_threshold ... ok
+test body::tests::anxious_attachment_stress_delta_is_zero_at_or_above_threshold ... ok
+test body::tests::attachment_coping_quality_step_returns_adjusted_triplet ... ok
+test body::tests::attachment_protective_factor_is_clamped ... ok
+test body::tests::attachment_raw_parenting_quality_decreases_with_burden ... ok
+test body::tests::attachment_type_code_follows_threshold_ordering ... ok
+test body::tests::base_decay_step_matches_manual_formula ... ok
+test body::tests::building_add_capped_limits_to_cap ... ok
+test body::tests::building_campfire_social_boost_selects_by_time ... ok
+test body::tests::child_deprivation_damage_step_accumulates_linearly ... ok
+test body::tests::child_parent_stress_transfer_applies_social_buffer ... ok
+test body::tests::child_parent_stress_transfer_respects_attachment_profile ... ok
+test body::tests::child_parent_transfer_apply_step_respects_threshold ... ok
+test body::tests::child_shrp_step_applies_multiplier_and_flag ... ok
+test body::tests::child_shrp_step_blocks_below_threshold ... ok
+test body::tests::child_simultaneous_ace_step_empty_input_returns_zero ... ok
+test body::tests::child_simultaneous_ace_step_matches_expected_shape ... ok
+test body::tests::child_social_buffered_intensity_reduces_when_caregiver_present ... ok
+test body::tests::child_stage_code_from_age_ticks_uses_cutoffs ... ok
+test body::tests::child_stress_apply_step_matches_tolerable_shape ... ok
+test body::tests::child_stress_apply_step_toxic_produces_damage_delta ... ok
+test body::tests::child_stress_type_code_uses_expected_thresholds ... ok
+test body::tests::childcare_hunger_after_applies_restore_and_clamp ... ok
+test body::tests::childcare_take_food_clamps_to_remaining_and_zero_bounds ... ok
+test body::tests::batch_training_gains_skip_negative_trainability ... ok
+test body::tests::batch_training_gains_match_single_calls ... ok
+test body::tests::chronicle_cutoff_tick_calculates_age_window ... ok
+test body::tests::chronicle_keep_personal_event_keeps_high_importance_or_valid_world_tick ... ok
+test body::tests::chronicle_keep_world_event_applies_importance_bands ... ok
+test body::tests::chronicle_should_prune_respects_interval ... ok
+test body::tests::cognition_ace_fluid_decline_mult_applies_threshold_gate ... ok
+test body::tests::cognition_activity_modifier_switches_by_active_skill_count ... ok
+test body::tests::contagion_aoe_total_susceptibility_drops_with_larger_crowd ... ok
+test body::tests::contagion_network_delta_is_clamped_to_band ... ok
+test body::tests::batch_curve_order_matches_single_curve_calls ... ok
+test body::tests::batch_trainability_order_matches_single_calls ... ok
+test body::tests::contagion_spiral_increment_respects_conditions ... ok
+test body::tests::contagion_stress_delta_applies_threshold_and_cap ... ok
+test body::tests::coping_learn_probability_rises_with_stress_and_recovery ... ok
+test body::tests::critical_severity_returns_zero_above_threshold ... ok
+test body::tests::critical_severity_step_matches_individual_calculations ... ok
+test body::tests::coping_softmax_index_selects_valid_index ... ok
+test body::tests::curves_remain_in_valid_range ... ok
+test body::tests::dr_gets_early_maternal_bonus ... ok
+test body::tests::economic_tendencies_step_applies_gender_and_wealth_adjustments ... ok
+test body::tests::economic_tendencies_step_returns_bounded_values ... ok
+test body::tests::emotion_adjusted_half_life_and_baseline_follow_formula ... ok
+test body::tests::emotion_break_threshold_and_probability_are_bounded ... ok
+test body::tests::emotion_break_type_code_prioritizes_outrage_then_dominant_emotion ... ok
+test body::tests::emotion_event_impulse_from_appraisal_matches_expected_shape ... ok
+test body::tests::emotion_habituation_and_contagion_factors_are_sensible ... ok
+test body::tests::emotion_event_impulse_batch_emits_expected_flat_length ... ok
+test body::tests::erg_frustration_step_increments_and_starts_regression ... ok
+test body::tests::erg_frustration_step_recovers_ticks_when_not_frustrated ... ok
+test body::tests::family_newborn_health_penalizes_preterm_birth ... ok
+test body::tests::intelligence_effective_value_applies_fluid_decline_modifiers ... ok
+test body::tests::intelligence_effective_value_uses_base_when_not_declining ... ok
+test body::tests::intelligence_g_value_applies_openness_shift_and_noise ... ok
+test body::tests::intelligence_g_value_uses_parental_blend_when_available ... ok
+test body::tests::intergen_child_epigenetic_step_returns_load_and_t ... ok
+test body::tests::intergen_hpa_sensitivity_scales_with_load ... ok
+test body::tests::intergen_meaney_repair_load_applies_threshold_and_floor ... ok
+test body::tests::intergen_scar_index_is_normalized ... ok
+test body::tests::job_assignment_best_job_code_picks_largest_deficit ... ok
+test body::tests::job_assignment_rebalance_codes_respects_threshold ... ok
+test body::tests::job_satisfaction_score_batch_matches_single_calls ... ok
+test body::tests::job_satisfaction_score_defaults_midpoint_without_weights ... ok
+test body::tests::job_satisfaction_score_matches_weighted_formula_shape ... ok
+test body::tests::leader_age_respect_is_clamped ... ok
+test body::tests::leader_score_applies_reputation_bonus ... ok
+test body::tests::memory_decay_batch_uses_pairwise_min_length ... ok
+test body::tests::memory_decay_intensity_matches_exponential_formula ... ok
+test body::tests::memory_summary_intensity_scales_max_value ... ok
+test body::tests::mental_break_chance_respects_threshold_and_modifiers ... ok
+test body::tests::mental_break_threshold_applies_reserve_and_scar_reductions ... ok
+test body::tests::migration_food_scarce_checks_threshold ... ok
+test body::tests::migration_should_attempt_when_any_pressure_or_roll_hits ... ok
+test body::tests::morale_behavior_weight_multiplier_follows_band_rules ... ok
+test body::tests::morale_migration_probability_increases_when_morale_drops ... ok
+test body::tests::mortality_hazards_and_prob_applies_care_protection_and_dr_reduction ... ok
+test body::tests::mortality_hazards_and_prob_monthly_check_is_lower_than_annual ... ok
+test body::tests::movement_should_skip_tick_matches_mod_logic ... ok
+test body::tests::network_social_capital_norm_scales_by_weights_and_divisor ... ok
+test body::tests::occupation_best_skill_index_returns_first_max ... ok
+test body::tests::occupation_should_switch_uses_hysteresis_margin ... ok
+test body::tests::parenting_bandura_base_rate_applies_maladaptive_multiplier ... ok
+test body::tests::parenting_hpa_adjusted_stress_gain_tracks_epigenetic_load ... ok
+test body::tests::personality_child_axis_z_applies_culture_shift ... ok
+test body::tests::personality_child_axis_z_applies_inheritance_and_sex_shift ... ok
+test body::tests::personality_linear_target_clamps_by_age_window ... ok
+test body::tests::personality_linear_target_interpolates_linearly ... ok
+test body::tests::population_birth_block_code_follows_gate_order ... ok
+test body::tests::population_housing_cap_uses_free_cap_without_shelters ... ok
+test body::tests::psychology_break_type_code_roundtrips_known_types ... ok
+test body::tests::realized_values_match_manual_formula ... ok
+test body::tests::reputation_decay_value_uses_sign_specific_decay ... ok
+test body::tests::reputation_event_delta_applies_negativity_bias ... ok
+test body::tests::resource_regen_next_applies_cap_and_guards ... ok
+test body::tests::rest_energy_recovery_increases_with_recovery_stat ... ok
+test body::tests::revolution_risk_score_is_component_average ... ok
+test body::tests::social_attachment_affinity_multiplier_clamps_to_bounds ... ok
+test body::tests::social_proposal_accept_prob_is_bounded ... ok
+test body::tests::stat_sync_derived_scores_handles_short_input ... ok
+test body::tests::stat_sync_derived_scores_returns_expected_shape ... ok
+test body::tests::stat_threshold_is_active_handles_above_and_hysteresis ... ok
+test body::tests::stat_threshold_is_active_handles_below_and_hysteresis ... ok
+test body::tests::stats_resource_deltas_per_100_returns_zero_when_tick_diff_invalid ... ok
+test body::tests::stats_resource_deltas_per_100_scales_by_tick_diff ... ok
+test body::tests::stratification_gini_detects_inequality ... ok
+test body::tests::stratification_status_score_matches_weighted_formula ... ok
+test body::tests::stratification_wealth_score_increases_with_resources ... ok
+test body::tests::strength_curve_has_growth_then_decline_shape ... ok
+test body::tests::stress_injection_apply_step_clears_trace_flag_when_under_threshold ... ok
+test body::tests::stress_injection_apply_step_sets_trace_flag_when_over_threshold ... ok
+test body::tests::stress_rebound_apply_step_updates_stress_and_hidden ... ok
+test body::tests::stress_shaken_countdown_step_reports_clear_at_zero ... ok
+test body::tests::stress_support_score_prefers_stronger_primary_tie ... ok
+test body::tests::stress_support_score_returns_default_when_empty ... ok
+test body::tests::tech_cultural_memory_decay_respects_state_and_floor ... ok
+test body::tests::tech_discovery_prob_converts_annual_to_per_check ... ok
+test body::tests::tech_modifier_stack_clamp_applies_caps ... ok
+test body::tests::tech_propagation_carrier_bonus_scales_by_skill ... ok
+test body::tests::tech_propagation_culture_modifier_applies_weights_and_clamp ... ok
+test body::tests::tech_propagation_final_prob_multiplies_and_clamps ... ok
+test body::tests::tension_next_value_applies_decay_and_clamp ... ok
+test body::tests::tension_scarcity_pressure_activates_when_any_side_deficit ... ok
+test body::tests::thirst_decay_accelerates_above_neutral_temp ... ok
+test body::tests::title_is_elder_uses_min_age_threshold ... ok
+test body::tests::title_skill_tier_prioritizes_master_over_expert ... ok
+test body::tests::trainability_modifier_declines_with_age_for_strength ... ok
+test body::tests::trainability_modifier_defaults_to_one_for_unknown_axis ... ok
+test body::tests::training_gain_clamps_to_twice_max_gain ... ok
+test body::tests::training_gain_is_zero_at_zero_xp ... ok
+test body::tests::training_gain_scales_with_trainability ... ok
+test body::tests::trait_violation_context_modifier_applies_expected_multipliers ... ok
+test body::tests::trait_violation_facet_scale_increases_above_threshold ... ok
+test body::tests::trait_violation_intrusive_chance_requires_ptsd_and_decays_over_time ... ok
+test body::tests::trauma_scar_acquire_chance_scales_and_clamps ... ok
+test body::tests::trauma_scar_sensitivity_factor_applies_diminishing_stack_bonus ... ok
+test body::tests::unknown_axis_returns_default_midpoint ... ok
+test body::tests::upper_needs_best_skill_normalized_uses_max_level ... ok
+test body::tests::upper_needs_job_alignment_matches_builder_weights ... ok
+test body::tests::upper_needs_step_applies_decay_gain_and_clamp ... ok
+test body::tests::value_plasticity_decreases_by_age_stage ... ok
+test body::tests::warmth_decay_uses_expected_temperature_bands ... ok
+test entity_spawner::tests::zodiac_from_tick_returns_valid_sign ... ok
+test math_utils::tests::test_cholesky_multiply_basic ... ok
+test math_utils::tests::test_cholesky_hexaco ... ok
+test math_utils::tests::test_cholesky_identity ... ok
+test pathfinding::tests::builds_grid_from_flat_bytes_with_clamped_costs ... ok
+test pathfinding::tests::builds_grid_from_owned_flat_vectors_with_clamped_costs ... ok
+test pathfinding::tests::returns_empty_when_start_is_out_of_bounds ... ok
+test pathfinding::tests::returns_empty_for_blocked_target ... ok
+test pathfinding::tests::finds_basic_straight_path ... ok
+test pathfinding::tests::returns_singleton_when_from_equals_to ... ok
+test pathfinding::tests::reuses_workspace_without_state_leak ... ok
+test pathfinding::tests::routes_around_wall_gap ... ok
+test pathfinding::tests::wraps_workspace_generation_counter_without_state_leak ... ok
+test runtime::band::tests::band_names_are_deterministic_and_unique ... ok
+test entity_spawner::tests::traits_and_faith_components_present ... ok
+test entity_spawner::tests::spawn_agent_with_parents_updates_family_and_children_index ... ok
+test entity_spawner::tests::adult_spawn_starts_with_starter_knowledge ... ok
+test entity_spawner::tests::spawn_multiple_agents_increments_count ... ok
+test entity_spawner::tests::growth_stage_infant_for_newborn ... ok
+test entity_spawner::tests::spawn_single_agent_adds_one_entity ... ok
+test entity_spawner::tests::spawn_with_explicit_sex ... ok
+test entity_spawner::tests::child_spawn_starts_without_knowledge_entries ... ok
+test entity_spawner::tests::spawn_agent_includes_default_family_component ... ok
+test entity_spawner::tests::body_health_is_one_at_spawn ... ok
+test runtime::band::tests::determine_split_cause_prefers_value_clash_when_values_are_low ... ok
+test runtime::band::tests::gfs_distant_same_settlement_stays_below_threshold ... ok
+test runtime::band::tests::gfs_distant_strangers_below_threshold ... ok
+test runtime::band::tests::gfs_grandparent_uses_noncandidate_intermediary_for_kinship ... ok
+test runtime::band::tests::gfs_kinship_boosts_score ... ok
+test runtime::band::tests::gfs_same_settlement_high_trust_exceeds_threshold ... ok
+test runtime::band::tests::dissolving_small_band_preserves_other_band_memberships ... ok
+test runtime::band::tests::dead_members_do_not_keep_band_alive ... ok
+test runtime::band::tests::band_dissolved_when_below_three_members ... ok
+test runtime::band::tests::band_formation_creates_provisional_for_three_plus ... ok
+test runtime::band::tests::leader_elected_by_extraversion_and_trust ... ok
+test runtime::band::tests::band_promotion_after_2400_ticks_with_five_members ... ok
+test runtime::band::tests::fission_creates_two_valid_sub_bands ... ok
+test runtime::band::tests::fission_triggers_when_trust_below_threshold ... ok
+test runtime::band::tests::no_fission_when_trust_healthy ... ok
+test runtime::band_behavior::tests::band_behavior_clears_center_for_loners ... ok
+test runtime::band::tests::loner_joins_nearby_band_when_gfs_sufficient ... ok
+test runtime::cognition::tests::behavior_base_timer_keeps_rest_long_enough_for_recovery ... ok
+test runtime::band::tests::oversized_provisional_band_splits_before_promotion ... ok
+test runtime::band_behavior::tests::band_behavior_ignores_provisional_bands ... ok
+test runtime::band::tests::fission_triggers_when_over_max_size ... ok
+test runtime::band_behavior::tests::band_behavior_sets_center_for_members ... ok
+test runtime::cognition::tests::behavior_select_action_forces_flee_when_safety_critical ... ok
+test runtime::cognition::tests::behavior_select_action_scores_eat_when_hungry_with_food_item ... ok
+test runtime::cognition::tests::behavior_select_action_scores_hunt_when_very_hungry ... ok
+test runtime::cognition::tests::behavior_runtime_system_prioritizes_rest_for_critical_energy_probe_case ... ok
+test runtime::cognition::tests::behavior_runtime_system_falls_back_when_food_influence_is_absent ... ok
+test runtime::cognition::tests::behavior_select_action_scores_sleep_when_exhausted_and_safe ... ok
+test runtime::cognition::tests::behavior_runtime_system_targets_strongest_local_food_influence_for_forage ... ok
+test runtime::cognition::tests::behavior_runtime_system_targets_nearest_incomplete_building_for_builder ... ok
+test runtime::crafting::tests::tool_speed_reduces_action_timer ... ok
+test runtime::economy::tests::construction_runtime_system_records_recent_progress_delta ... ok
+test runtime::economy::tests::job_assignment_runtime_system_places_campfire_site_and_promotes_builder ... ok
+test runtime::economy::tests::legacy_fallback_when_registry_missing ... ok
+test runtime::economy::tests::world_rules_absent_modifier_keeps_regen_default ... ok
+test runtime::economy::tests::world_rules_resource_modifier_scales_regen ... ok
+test runtime::effect_apply::tests::effect_apply_add_stat_modifies_need ... ok
+test runtime::effect_apply::tests::effect_apply_clamps_to_bounds ... ok
+test runtime::effect_apply::tests::effect_apply_mul_stat_multiplies_need ... ok
+test runtime::effect_apply::tests::effect_apply_writes_causal_log ... ok
+test runtime::crafting::tests::tool_lookup_finds_best_by_damage ... ok
+test runtime::crafting::tests::tool_break_writes_causal_log ... ok
+test runtime::crafting::tests::tool_destruction_removes_from_store ... ok
+test runtime::crafting::tests::craft_complete_creates_item_in_store ... ok
+test runtime::crafting::tests::craft_writes_causal_log ... ok
+test runtime::crafting::tests::craft_complete_item_has_correct_material_stats ... ok
+test runtime::crafting::tests::craft_system_selects_recipe_for_available_materials ... ok
+test runtime::crafting::tests::tool_use_decreases_durability ... ok
+test runtime::crafting::tests::craft_system_clears_action_when_recipe_unavailable ... ok
+test runtime::crafting::tests::craft_deducts_settlement_stockpile ... ok
+test entity_spawner::tests::generate_temperament_uses_registry_rules_when_present ... ok
+test runtime::influence::tests::influence_runtime_system_builds_shelter_rooms_and_walls ... ok
+test runtime::influence::tests::influence_runtime_system_builds_food_and_danger_emitters ... ok
+test runtime::influence::tests::influence_runtime_system_campfire_danger_attenuates_with_distance ... ok
+test runtime::influence::tests::influence_runtime_system_fallback_campfire_emits_social_and_danger ... ok
+test runtime::influence::tests::influence_runtime_system_refreshes_food_emitters_without_stale_leaks ... ok
+test runtime::influence::tests::influence_runtime_system_campfire_social_attenuates_with_distance ... ok
+test runtime::influence::tests::influence_runtime_system_food_signal_is_stronger_near_source_than_far ... ok
+test runtime::llm_request_system::tests::available_runtime_uses_queue_submission_strategy ... ok
+test runtime::llm_response_system::tests::response_system_applies_result_and_updates_personality_cache ... ok
+test runtime::llm_timeout_system::tests::timeout_system_replaces_pending_with_fallback_result ... ok
+test runtime::llm_request_system::tests::auto_request_plan_requires_a_recent_event ... ok
+test runtime::influence::tests::influence_runtime_system_walls_reduce_campfire_danger_signal ... ok
+test runtime::llm_request_system::tests::request_system_allows_initial_request_before_cooldown_has_elapsed ... ok
+test runtime::economy::tests::construction_cost_reads_from_registry ... ok
+test runtime::pairwise::tests::enforce_edge_cap_breaks_familiarity_ties_by_target_id ... ok
+test runtime::pairwise::tests::interaction_type_share_when_other_is_hungry_and_i_have_carry ... ok
+test runtime::llm_request_system::tests::request_system_generates_immediate_fallback_when_llm_is_unavailable ... ok
+test runtime::needs::tests::needs_runtime_system_records_survival_diagnostic_deltas ... ok
+test runtime::economy::tests::construction_build_ticks_reads_from_registry ... ok
+test runtime::pairwise::tests::pairwise_skips_distant_agents ... ok
+test runtime::pairwise::tests::pairwise_talk_increases_trust ... ok
+test runtime::pairwise::tests::pairwise_creates_edge_for_nearby_agents ... ok
+test runtime::pairwise::tests::pairwise_cooperate_when_same_action ... ok
+test runtime::record::tests::band_lifecycle_cluster_uses_raw_summary_key_and_params ... ok
+test runtime::pairwise::tests::pairwise_enforces_edge_cap ... ok
+test runtime::record::tests::anti_starvation_promotes_background_summary_to_visible_queue ... ok
+test runtime::record::tests::danger_cluster_generates_escape_summary ... ok
+test runtime::steering::tests::band_cohesion_force_steers_toward_band_center ... ok
+test runtime::influence::tests::hearth_furniture_votes_hearth_role ... ok
+test runtime::steering::tests::chronicle_event_for_decision_filters_low_significance_force ... ok
+test runtime::record::tests::repeat_penalty_downgrades_repeated_cluster_to_background_significance ... ok
+test runtime::steering::tests::cohesion_force_pulls_toward_neighbor_center ... ok
+test runtime::record::tests::low_significance_cluster_is_rejected ... ok
+test runtime::record::tests::summarization_appends_recent_timeline_entries ... ok
+test runtime::record::tests::social_group_cluster_requires_multiple_entities ... ok
+test runtime::steering::tests::cold_agent_prefers_room_warmth_more_than_comfortable_agent ... ok
+test runtime::steering::tests::danger_overrides_food_when_fear_is_high ... ok
+test runtime::steering::tests::danger_outweighs_social_gathering_when_fear_is_high ... ok
+test runtime::steering::tests::influence_force_has_no_false_food_attraction_without_signal ... ok
+test runtime::steering::tests::influence_force_has_no_false_danger_avoidance_without_signal ... ok
+test runtime::steering::tests::danger_override_blocks_direct_target_blend_in_runtime ... ok
+test runtime::steering::tests::influence_force_ignores_social_gradient_when_belonging_is_satisfied ... ok
+test runtime::steering::tests::hungry_agent_moves_closer_to_food_than_sated_agent ... ok
+test runtime::steering::tests::influence_force_moves_lonely_agents_toward_social_gradient ... ok
+test runtime::steering::tests::influence_force_avoids_danger_when_safety_is_low ... ok
+test runtime::steering::tests::influence_force_moves_hungry_agents_toward_food_gradient ... ok
+test runtime::steering::tests::influence_force_reports_shelter_cause_when_room_bias_applies ... ok
+test runtime::steering::tests::outsider_separation_multiplier_does_not_apply_to_same_band_members ... ok
+test runtime::steering::tests::influence_force_scales_with_fear_pressure ... ok
+test runtime::steering::tests::separation_force_pushes_away_from_close_neighbors ... ok
+test runtime::steering::tests::stage1_arrive_force_slows_near_target ... ok
+test runtime::steering::tests::stage1_seek_force_points_toward_target ... ok
+test runtime::steering::tests::influence_force_scales_with_hunger_pressure ... ok
+test runtime::steering::tests::stage1_separation_force_repels_neighbors ... ok
+test runtime::steering::tests::stage1_wander_force_produces_nonzero_vector ... ok
+test runtime::steering::tests::room_shelter_force_is_zero_when_warmth_need_is_satisfied ... ok
+test runtime::steering::tests::room_shelter_force_prefers_neighboring_room_tile_when_cold ... ok
+test runtime::steering_derive::tests::stage1_derive_steering_extreme_conscientiousness ... ok
+test runtime::steering::tests::lonely_agents_cluster_toward_shared_social_anchor ... ok
+test runtime::steering_derive::tests::stage1_derive_steering_extreme_emotionality ... ok
+test runtime::steering_derive::tests::derive_steering_params_maps_axes_into_expected_ranges ... ok
+test runtime::steering::tests::steering_runtime_system_appends_food_chronicle_event ... ok
+test runtime::steering_derive::tests::stage1_derive_steering_neutral_personality ... ok
+test runtime::steering_derive::tests::stage1_derive_steering_extreme_extraversion ... ok
+test runtime::steering::tests::steering_runtime_system_clamps_velocity_under_combined_influences ... ok
+test runtime::steering::tests::steering_runtime_system_records_danger_as_dominant_chronicle_cause ... ok
+test runtime::story_sifter::tests::cooldown_blocks_duplicate_kind_for_same_actor ... ok
+test runtime::steering::tests::steering_runtime_system_writes_velocity ... ok
+test runtime::story_sifter::tests::first_occurrence_pattern_emits_milestone ... ok
+test runtime::story_sifter::tests::rarity_importance_decreases_with_frequency ... ok
+test runtime::story_sifter::tests::stage1_importance_scoring_rare_events_higher ... ok
+test runtime::story_sifter::tests::stage1_notification_cooldown_allows_different_actor ... ok
+test runtime::story_sifter::tests::runtime_system_promotes_mental_break_events ... ok
+test runtime::territory::tests::terrain_blocking_skips_impassable_tiles ... ok
+test runtime::territory::tests::territory_decays_without_buildings ... ok
+test runtime::tests::attachment_runtime_system_determines_type_for_infant ... ok
+test runtime::tests::age_runtime_system_updates_stage_identity_and_elder_builder_job ... ok
+test runtime::tests::ace_tracker_runtime_system_backfills_adult_ace_score ... ok
+test runtime::tests::behavior_runtime_system_assigns_forage_and_emits_event_for_hungry_adult ... ok
+test runtime::territory::tests::territory_system_stamps_building ... ok
+test runtime::tests::building_effect_runtime_system_applies_campfire_social_with_influence_runtime ... ok
+test runtime::tests::behavior_runtime_system_skips_migrate_and_active_timer_entities ... ok
+test runtime::tests::building_effect_runtime_system_applies_shelter_energy_and_safety ... ok
+test runtime::tests::childcare_runtime_system_feeds_hungry_child_and_decrements_stockpile ... ok
+test runtime::tests::child_stress_processor_runtime_system_updates_child_stress_fields ... ok
+test runtime::tests::childcare_runtime_system_prioritizes_more_hungry_child_when_food_limited ... ok
+test runtime::tests::child_stress_processor_runtime_system_skips_non_child_stages ... ok
+test runtime::tests::construction_runtime_system_progresses_and_completes_building ... ok
+test runtime::tests::campfire_warmth_vertical_slice_uses_shelter_walls_for_inside_open_and_blocked_agents ... ok
+test runtime::tests::chronicle_runtime_system_prunes_old_low_importance_events ... ok
+test runtime::tests::construction_runtime_system_skips_non_adult_stage ... ok
+test runtime::tests::contagion_runtime_system_propagates_emotion_and_stress ... ok
+test runtime::tests::coping_runtime_system_clears_strategy_at_low_stress ... ok
+test runtime::tests::coping_runtime_system_decrements_strategy_cooldowns ... ok
+test runtime::tests::coping_runtime_system_denial_timer_explodes_debt ... ok
+test runtime::tests::coping_runtime_system_rebound_queue_fires_after_delay ... ok
+test runtime::tests::coping_runtime_system_selects_strategy_and_updates_usage ... ok
+test runtime::tests::economic_tendency_runtime_system_skips_child_stage ... ok
+test runtime::tests::emotion_runtime_system_updates_primary_and_baseline_values ... ok
+test runtime::tests::coping_runtime_system_substance_withdrawal_injects_stress ... ok
+test runtime::tests::economic_tendency_runtime_system_updates_tendencies_and_applies_male_risk_bias ... ok
+test runtime::tests::family_runtime_system_pairs_single_adults_in_same_settlement ... ok
+test runtime::tests::gathering_runtime_system_skips_infant_stage ... ok
+test runtime::tests::gathering_runtime_system_harvests_tile_and_updates_stockpile ... ok
+test runtime::tests::intelligence_runtime_system_applies_nutrition_penalty_in_critical_window ... ok
+test runtime::tests::intelligence_runtime_system_applies_ace_penalty_and_fluid_decline ... ok
+test runtime::tests::family_runtime_system_skips_non_adult_entities ... ok
+test runtime::tests::intergenerational_runtime_system_applies_parent_meaney_repair ... ok
+test runtime::tests::intergenerational_runtime_system_applies_child_transmission ... ok
+test runtime::tests::intelligence_system_cleans_dead_entity_baselines ... ok
+test runtime::tests::job_assignment_runtime_system_assigns_jobs_with_age_rules ... ok
+test runtime::tests::job_satisfaction_runtime_system_updates_behavior_scores ... ok
+test runtime::tests::leader_runtime_system_decrements_countdown_without_re_election ... ok
+test runtime::tests::leader_runtime_system_elects_best_candidate_and_sets_countdown ... ok
+test runtime::tests::early_construction_loop_places_assigns_and_completes_a_campfire ... ok
+test runtime::tests::job_assignment_runtime_system_rebalances_one_idle_surplus_job ... ok
+test runtime::tests::memory_runtime_system_decays_evicts_and_promotes_entries ... ok
+test runtime::tests::memory_runtime_system_compresses_old_entries_into_summary ... ok
+test runtime::tests::mental_break_runtime_system_clears_active_break_after_countdown ... ok
+test runtime::tests::mental_break_runtime_system_triggers_break_and_sets_runtime_fields ... ok
+test runtime::tests::leader_runtime_system_replaces_invalid_leader ... ok
+test runtime::tests::movement_runtime_system_completes_action_and_applies_drink_restore ... ok
+test runtime::tests::morale_runtime_system_updates_behavior_and_upper_needs ... ok
+test runtime::tests::movement_runtime_system_eat_consumes_food_item_from_inventory ... ok
+test runtime::tests::movement_runtime_system_moves_toward_target_on_passable_tile ... ok
+test runtime::tests::mortality_runtime_system_marks_high_risk_entity_dead ... ok
+test runtime::tests::network_runtime_system_recomputes_social_capital_from_edges ... ok
+test runtime::tests::movement_runtime_system_forage_can_grant_berries_to_inventory ... ok
+test runtime::tests::needs_runtime_system_applies_decay_and_action_energy_cost ... ok
+test runtime::tests::parenting_runtime_system_assigns_child_coping_strategy ... ok
+test runtime::tests::occupation_runtime_system_assigns_and_switches_by_skill_margin ... ok
+test runtime::tests::personality_maturation_runtime_system_drifts_facets ... ok
+test runtime::tests::settlement_culture_runtime_system_drifts_member_toward_culture ... ok
+test runtime::tests::parenting_runtime_system_updates_parent_regulation_state ... ok
+test runtime::tests::resource_regen_system_applies_regen_and_caps_at_max ... ok
+test runtime::tests::personality_generator_runtime_system_initializes_newborn ... ok
+test runtime::tests::reputation_runtime_system_updates_reputation_state_and_tags ... ok
+test runtime::tests::stat_sync_runtime_system_populates_derived_cache ... ok
+test runtime::tests::population_runtime_system_spawns_infant_and_consumes_food ... ok
+test runtime::tests::social_event_runtime_system_updates_edges_and_social_capital ... ok
+test runtime::tests::stat_sync_runtime_system_skips_dead_entities ... ok
+test runtime::tests::stat_threshold_runtime_system_hysteresis_clears_effect_after_recovery ... ok
+test runtime::tests::stat_threshold_runtime_system_applies_hunger_effect_action ... ok
+test runtime::tests::stats_recorder_runtime_system_caps_history_window ... ok
+test runtime::tests::stratification_monitor_runtime_system_updates_settlement_and_class_state ... ok
+test runtime::tests::stress_runtime_system_updates_gas_stage_and_reserve ... ok
+test runtime::tests::stats_recorder_runtime_system_records_snapshot_fields ... ok
+test runtime::tests::stress_runtime_system_manages_stress_traces ... ok
+test runtime::tests::stress_runtime_system_updates_stress_state_and_components ... ok
+test runtime::tests::stress_runtime_system_uses_personality_scaling ... ok
+test runtime::tests::tech_discovery_runtime_system_discovers_unknown_tech_with_force_pop ... ok
+test runtime::tests::tech_discovery_runtime_system_skips_when_population_too_low ... ok
+test runtime::influence::tests::influence_runtime_system_registry_campfire_uses_registry_social_emission ... ok
+test runtime::tests::tech_maintenance_runtime_system_rediscovery_emits_event ... ok
+test runtime::tests::tech_propagation_runtime_system_skips_without_known_source ... ok
+test runtime::tests::tech_propagation_runtime_system_imports_unknown_tech_from_stable_source ... ok
+test runtime::tests::tech_utilization_runtime_system_updates_era_by_known_tech_count ... ok
+test runtime::tests::tech_maintenance_runtime_system_transitions_states_by_population ... ok
+test runtime::tests::tension_runtime_system_updates_pair_tension_from_scarcity_and_decay ... ok
+test runtime::tests::title_runtime_system_revokes_titles_and_marks_former_chief ... ok
+test runtime::influence::tests::influence_runtime_system_wall_hp_derived_from_material_properties ... ok
+test runtime::tests::trait_runtime_system_activates_trait_from_personality ... ok
+test runtime::tests::trait_violation_runtime_system_increases_stress_on_violation ... ok
+test runtime::world::tests::stage1_calculate_direction_8way ... ok
+test runtime::tests::trait_violation_runtime_system_ptsd_path_amplifies_repeat_delta ... ok
+test runtime::tests::trauma_scar_runtime_system_applies_baseline_drift_from_scars ... ok
+test stat_curve::tests::need_decay_clamps_bounds ... ok
+test stat_curve::tests::log_xp_required_basics ... ok
+test runtime::tests::value_runtime_system_updates_value_axes_with_context ... ok
+test runtime::tests::title_runtime_system_grants_elder_master_and_chief_titles ... ok
+test stat_curve::tests::step_linear_applies_last_matching_rule ... ok
+test runtime::tests::upper_needs_runtime_system_updates_upper_need_buckets ... ok
+test stat_curve::tests::stress_allostatic_step_increases_under_high_stress ... ok
+test stat_curve::tests::stress_allostatic_step_recovers_under_low_stress ... ok
+test stat_curve::tests::stress_appraisal_scale_is_clamped ... ok
+test stat_curve::tests::stress_appraisal_scale_rises_with_worse_context ... ok
+test stat_curve::tests::stress_context_scale_applies_and_clamps_multipliers ... ok
+test stat_curve::tests::stress_continuous_inputs_increase_with_deficit ... ok
+test stat_curve::tests::stress_continuous_inputs_zero_when_needs_are_high ... ok
+test runtime::influence::tests::ritual_room_role_assigned_when_totem_placed ... ok
+test stat_curve::tests::stress_delta_step_redirects_and_caps_hidden_when_denial_active ... ok
+test stat_curve::tests::stress_delta_step_zeroes_small_delta_by_epsilon ... ok
+test stat_curve::tests::stress_emotion_contribution_adds_va_when_negative_high_arousal ... ok
+test stat_curve::tests::stress_emotion_contribution_is_zero_at_neutral_inputs ... ok
+test stat_curve::tests::stress_emotion_inject_step_scales_and_clamps_layers ... ok
+test stat_curve::tests::stress_emotion_recovery_delta_step_matches_component_steps ... ok
+test stat_curve::tests::stress_event_inject_step_code_matches_string_variant ... ok
+test runtime::tests::trauma_scar_runtime_system_clamps_baseline_with_repeated_updates ... ok
+test stat_curve::tests::stress_event_inject_step_matches_scale_plus_emotion_step ... ok
+test runtime::influence::tests::influence_runtime_system_structure_completion_influence_stamps_grid ... ok
+test stat_curve::tests::stress_event_scale_step_code_matches_string_variant ... ok
+test stat_curve::tests::stress_event_scale_step_matches_composed_steps ... ok
+test runtime::influence::tests::influence_runtime_system_uses_registry_and_component_emitters ... ok
+test stat_curve::tests::stress_event_scaled_applies_all_multipliers ... ok
+test stat_curve::tests::stress_event_scaled_uses_loss_aversion_multiplier ... ok
+test stat_curve::tests::stress_personality_scale_applies_axis_and_trait_multipliers ... ok
+test stat_curve::tests::stress_personality_scale_clamps_output_range ... ok
+test stat_curve::tests::stress_post_update_resilience_step_matches_component_steps ... ok
+test stat_curve::tests::stress_post_update_step_matches_component_steps ... ok
+test stat_curve::tests::stress_primary_step_matches_appraisal_plus_continuous ... ok
+test stat_curve::tests::stress_rebound_queue_step_applies_decay_and_clamps_decay_rate ... ok
+test stat_curve::tests::stress_rebound_queue_step_consumes_and_keeps_entries ... ok
+test stat_curve::tests::stress_recovery_value_higher_when_sleeping_and_safe ... ok
+test stat_curve::tests::stress_recovery_value_reduced_on_low_reserve ... ok
+test stat_curve::tests::stress_relationship_scale_code_matches_string_variant ... ok
+test stat_curve::tests::stress_relationship_scale_matches_bond_formula ... ok
+test stat_curve::tests::stress_reserve_step_enters_alarm_and_resistance ... ok
+test stat_curve::tests::stress_reserve_step_enters_exhaustion_on_low_reserve ... ok
+test stat_curve::tests::stress_resilience_value_drops_with_fatigue ... ok
+test stat_curve::tests::stress_resilience_value_is_clamped ... ok
+test stat_curve::tests::stress_state_snapshot_blunt_multiplier_drops_with_allostatic_load ... ok
+test stat_curve::tests::stress_state_snapshot_buckets_thresholds ... ok
+test stat_curve::tests::stress_tick_step_matches_composed_steps ... ok
+test stat_curve::tests::stress_trace_batch_step_marks_active_and_sums_total ... ok
+test stat_curve::tests::stress_trace_batch_step_uses_min_len ... ok
+test stat_curve::tests::stress_trace_emotion_recovery_delta_step_matches_component_steps ... ok
+test stat_curve::tests::stress_work_efficiency_applies_penalty_and_clamp ... ok
+test stat_curve::tests::stress_work_efficiency_matches_piecewise_curve ... ok
+test stat_curve::tests::threshold_power_zero_above_threshold ... ok
+test stat_curve::tests::xp_to_level_increases_with_xp ... ok
+test values_init::tests::all_values_in_range ... ok
+test values_init::tests::most_values_nonzero_with_default_personality ... ok
+test values_init::tests::high_h_fairness_produces_positive_fairness_in_majority_of_trials ... ok
+test values_init::tests::parental_values_in_range ... ok
+test runtime::tests::migration_runtime_system_founds_new_settlement_and_moves_members ... ok
+
+test result: ok. 452 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/main.rs (target/debug/deps/sim_test-2830acfb6f2505d0)
+
+running 302 tests
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a18_round2_v2_selective_files ... ok
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a19_all_37_files_nonzero_size ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_21_wall_pngs_present_by_exact_name ... ok
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a16_fire_pit_variants ... ok
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a17_lean_to_variants ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_9_floor_pngs_present_by_exact_name ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_a14_floor_material_dirs ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_shelter_placeholder_deleted ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_no_zero_indexed_png_files ... ok
+test tests::harness_a3_effect_primitives_extended ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_a13_wall_material_dirs ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_gdscript_uses_one_based_variant_index ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_stone_and_wood_wall_textures_are_not_identical ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_floor_textures_are_not_identical ... ok
+test tests::harness_a8_temperament_shift_registered_in_production ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_wall_variant_files_are_not_all_identical_within_material ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_are_16x16_pixels ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_have_valid_png_signature ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_are_rgb_no_alpha ... ok
+test tests::harness_a9_base_only_regression_guard ... ok
+test tests::harness_a9_agent_constant_none_subfield_keeps_default ... ok
+test tests::harness_a9_behavioral_body_potential_mul_at_spawn ... ok
+test tests::harness_a9_influence_channels_preserved ... ok
+test tests::harness_a9_merge_empty_slice_returns_none ... ok
+test tests::harness_a9_merged_agent_constants_in_sim_resources ... ok
+test tests::harness_a9_merged_global_constants_in_sim_resources ... ok
+test tests::harness_a9_merged_name_is_highest_priority ... ok
+test tests::harness_a9_priority_sort_alphabetical_disagreement ... ok
+test tests::harness_a9_recursive_discovery_loads_scenarios_subdir ... ok
+test tests::harness_a9_resource_modifiers_dedup_overlay_wins ... ok
+test tests::harness_a9_special_zones_pure_append ... ok
+test tests::harness_a9_synthetic_overlay_none_preserves_base_some ... ok
+test tests::harness_a8_temperament_awakened_after_shift ... ok
+test tests::harness_a9_three_ruleset_priority_tiebreaker ... ok
+test tests::harness_action_enum_discriminants_contiguous ... ok
+test tests::harness_a8_temperament_starvation_recovery_shift ... ok
+test tests::harness_a3_mourn_routes_through_effect_queue ... ok
+test tests::harness_agent_constants_all_none_noop ... ok
+test tests::harness_agent_constants_all_six_simultaneous ... ok
+test tests::harness_agent_constants_default_identity_regression ... ok
+test tests::harness_agent_constants_defaults ... ok
+test tests::harness_agent_constants_exact_lower_boundary ... ok
+test tests::harness_agent_constants_extreme_100_ticks ... ok
+test tests::harness_agent_constants_inner_all_none_second_call ... ok
+test tests::harness_agent_constants_lower_bound_clamp ... ok
+test tests::harness_a3_pray_routes_through_effect_queue ... ok
+test tests::harness_agent_constants_ron_deserialization ... ok
+test tests::harness_agent_constants_ron_eternal_winter ... ok
+test tests::harness_agent_constants_second_none_does_not_reset ... ok
+test tests::harness_agent_constants_single_field_transfer ... ok
+test tests::harness_a4_pray_recorded_in_causal_log ... ok
+test tests::harness_agent_constants_transfer ... ok
+test tests::harness_agent_constants_unbounded_fields ... ok
+test tests::harness_agent_constants_upper_bound_clamp ... ok
+test tests::harness_agent_constants_zero_value_boundary ... ok
+test tests::harness_agent_constants_persist_across_ticks ... ok
+test tests::harness_archetype_label_is_valid_string ... ok
+test tests::harness_a3_pray_behavioral_equivalence ... ok
+test tests::harness_awakened_false_at_spawn ... ok
+test tests::harness_archetype_label_maps_correctly_to_ns_ha_quadrant ... ok
+test tests::harness_a4_causal_log_populated_over_simulation ... ok
+test tests::harness_a4_entity_has_recent_causes ... ok
+test tests::harness_agent_snapshot_stride_and_band_populated ... ok
+test tests::harness_behavior_component_present_on_all_agents ... ok
+test tests::harness_a8_natural_shifts_occur_over_full_year ... ok
+test tests::harness_a8_lifetime_shift_cap_enforced_under_production_load ... ok
+test tests::harness_a9_behavioral_fertility_mul_zero_gate ... ok
+test tests::harness_agent_constants_stability_regression ... ok
+test tests::harness_action_snapshot_byte_range ... ok
+test tests::harness_action_non_idle_ratio_steady_state ... ok
+test tests::harness_action_diversity_over_year ... ok
+test tests::harness_band_count_reasonable ... ok
+test tests::harness_blueprint_no_duplicate_fire_pit ... ok
+test tests::harness_blueprint_no_duplicate_wall_plans ... ok
+test tests::harness_blueprint_door_marked ... ok
+test tests::harness_blueprint_ron_parses_with_blueprint_field ... ok
+test tests::harness_blueprint_fire_pit_at_correct_position ... ok
+test tests::harness_blueprint_door_no_wall ... ok
+test tests::harness_blueprint_floors_stamped ... ok
+test tests::harness_awakened_implies_expressed_differs_from_latent ... ok
+test tests::harness_bridge_tci_at_least_two_distinct_labels ... ok
+test tests::harness_bridge_tci_axes_within_unit_interval ... ok
+test tests::harness_bridge_tci_keys_present_on_all_agents ... ok
+test tests::harness_bridge_tci_label_consistent_with_axes ... ok
+test tests::harness_bridge_tci_matches_ecs_values ... ok
+test tests::harness_building_floor_no_walls_no_stamp ... ok
+test tests::harness_building_floor_stamp_correct_material ... ok
+test tests::harness_building_floor_stamp_idempotent ... ok
+test tests::harness_building_floor_stamp_no_building_entity ... ok
+test tests::harness_bridge_tci_meaningful_variance ... ok
+test tests::harness_bridge_tci_valid_locale_key ... ok
+test tests::harness_a9_behavioral_mortality_mul_isolation ... ok
+test tests::harness_building_visuals_localization_stockpile ... ok
+test tests::harness_a9_cognition_skill_xp_mul_regression ... ok
+test tests::harness_blueprint_lean_to_at_correct_position ... ok
+test tests::harness_blueprint_none_falls_back_to_legacy ... ok
+test tests::harness_blueprint_regression_campfire ... ok
+test tests::harness_calendar_hour_formula_consistency ... ok
+test tests::harness_blueprint_regression_shelter_complete ... ok
+test tests::harness_calendar_ticks_per_day_matches_gdscript ... ok
+test tests::harness_blueprint_regression_stockpile ... ok
+test tests::harness_blueprint_wall_geometry_perimeter_only ... ok
+test tests::harness_band_settlement_coherence ... ok
+test tests::harness_expressed_equals_latent_at_spawn ... ok
+test tests::harness_floor_fix_floor_material_packed_earth ... ok
+test tests::harness_floor_fix_idempotency ... ok
+test tests::harness_floor_fix_interior_floor_count ... ok
+test tests::harness_floor_fix_no_floor_without_walls ... ok
+test tests::harness_floor_fix_perimeter_walls_intact ... ok
+test tests::harness_floor_fix_regression_no_data_registry ... ok
+test tests::harness_band_size_within_dunbar_l2 ... ok
+test tests::harness_blueprint_wall_positions_accounted ... ok
+test tests::harness_building_visuals_adjacent_wall_pairs ... ok
+test tests::harness_building_visuals_floor_tiles_stamped ... ok
+test tests::harness_building_floor_stamp_regression_completed_building ... ok
+test tests::harness_building_visuals_storage_pit_present ... ok
+test tests::harness_building_visuals_wall_count_bounded ... ok
+test tests::harness_lean_to_warmth_gaussian_falloff ... ok
+test tests::harness_lean_to_emits_warmth_standalone ... ok
+test tests::harness_locale_en_anti_circular ... ok
+test tests::harness_locale_en_completeness ... ok
+test tests::harness_locale_en_spot_check ... ok
+test tests::harness_locale_en_total_count ... ok
+test tests::harness_locale_fluent_definitions ... ok
+test tests::harness_locale_ko_anti_circular ... ok
+test tests::harness_locale_ko_completeness ... ok
+test tests::harness_locale_ko_spot_check ... ok
+test tests::harness_locale_ko_total_count ... ok
+test tests::harness_locale_parity ... ok
+test tests::harness_locale_registry_append_only ... ok
+test tests::harness_locale_registry_new_ids ... ok
+test tests::harness_memorial_mourn_action_registered ... ok
+test tests::harness_locale_check_no_p2 ... ok
+test tests::harness_building_visuals_wall_material_valid ... ok
+test tests::harness_memorial_mourn_no_effect_without_cairn ... ok
+test tests::harness_memorial_mourn_reduces_sadness ... ok
+test tests::harness_buildings_no_overlap ... ok
+test tests::harness_memorial_mourn_threshold_gate ... ok
+test tests::harness_calendar_tick_monotonic ... ok
+test tests::harness_multimesh_buffer_valid ... ok
+test tests::harness_ha_biases_avoidance_actions_directionally ... ok
+test tests::harness_job_distribution_includes_miner ... ok
+test tests::harness_food_economy_balance_4380 ... ok
+test tests::harness_ns_biases_exploratory_actions_directionally ... ok
+test tests::harness_food_economy_plan_comprehensive ... ok
+test tests::harness_food_economy_plan_v2 ... ok
+test tests::harness_population_counters_start_at_zero ... ok
+test tests::harness_memorial_natural_mourn_over_simulation ... ok
+test tests::harness_expressed_axes_finite_after_shifts ... ok
+test tests::harness_p2b3_builder_assigns_and_places_wall ... ok
+test tests::harness_pray_blocked_above_comfort_threshold ... ok
+test tests::harness_pray_action_restores_comfort ... ok
+test tests::harness_pray_restores_meaning ... ok
+test tests::harness_pray_requires_nearby_totem ... ok
+test tests::harness_renderer_hunger_distribution_soft ... ignored, B3-regress: seed=42 tick~4380 yields max_below=1 < threshold 2; hunger decay tuning needed post-B3 perf refactor; tracked separately from A-9 (special-zones gate)
+test tests::harness_population_accounting_identity ... ok
+test tests::harness_perf_system_profile ... ok
+test tests::harness_resource_food_tiles_above_threshold ... ok
+test tests::harness_crafting_produces_tool ... ok
+test tests::harness_resource_stone_tiles_above_threshold ... ok
+test tests::harness_resource_wood_tiles_above_threshold ... ok
+test tests::harness_room_effect_pipeline_fixture ... ok
+test tests::harness_room_smoke_pre_construction ... ok
+test tests::harness_population_births_not_trivially_low ... ok
+test tests::harness_shelter_boost_non_whitelisted_no_effect ... ok
+test tests::harness_shelter_boost_two_optionals ... ok
+test tests::harness_population_births_occur ... ok
+test tests::harness_latent_axes_immutable_across_simulation ... ok
+test tests::harness_shelter_emission_boosted_with_hearth ... ok
+test tests::harness_shelter_emission_no_boost_without_optional ... ok
+test tests::harness_renderer_agent_count_stable_2000_ticks ... ok
+test tests::harness_special_zones_moisture_mod_exact ... ok
+test tests::harness_special_zones_no_double_stack ... ok
+test tests::harness_special_zones_placement_deterministic ... ok
+test tests::harness_special_zones_resource_boost_values_exact ... ok
+test tests::harness_special_zones_snow_tiles_passable ... ok
+test tests::harness_special_zones_spawn_on_map ... ok
+test tests::harness_special_zones_temperature_mod_exact ... ok
+test tests::harness_special_zones_terrain_override_is_snow ... ok
+test tests::harness_special_zones_tile_count_in_bounds ... ok
+test tests::harness_sprite_assets_round1_a5_shelter_preserved ... ok
+test tests::harness_sprite_assets_round1_a6_all_files_above_150_bytes ... ok
+test tests::harness_sprite_assets_round1_a7_draw_building_sprite_signature ... ok
+test tests::harness_sprite_assets_round1_a8_call_site_chain ... ok
+test tests::harness_sprite_assets_round1_a9_load_building_texture_forwarding ... ok
+test tests::harness_renderer_no_empty_identity_name ... ok
+test tests::harness_sprite_assets_round1_variant_file_integrity ... ok
+test tests::harness_population_births_upper_bound ... ok
+test tests::harness_component_building_wall_placement ... ok
+test tests::harness_population_deaths_counter_valid ... ok
+test tests::harness_sprite_infra_c5_empty_enclosed_is_not_ritual ... ok
+test tests::harness_sprite_infra_c6_non_enclosed_totem_is_unknown ... ok
+test tests::harness_sprite_infra_c7_totem_removal_demotes_ritual ... ok
+test tests::harness_sprite_infra_d1_one_comfort_effect_per_cycle ... ok
+test tests::harness_sprite_infra_d2_comfort_amount_is_0_02 ... ok
+test tests::harness_sprite_infra_d3_end_to_end_comfort_delta_0_02 ... ok
+test tests::harness_sprite_infra_d4_non_enclosed_room_zero_comfort ... ok
+test tests::harness_sprite_infra_d5_empty_enclosed_room_zero_comfort ... ok
+test tests::harness_sprite_infra_d6_comfort_sign_is_positive ... ok
+test tests::harness_sprite_infra_f2_totem_wall_shielding ... ok
+test tests::harness_sprite_infra_furniture_role_contribution ... ok
+test tests::harness_sprite_infra_furniture_vote_majority_and_determinism ... ok
+test tests::harness_sprite_infra_h1_legacy_save_deserialises_cleanly ... ok
+test tests::harness_sprite_infra_hearth_room_is_hearth_not_ritual ... ok
+test tests::harness_sprite_infra_locale_keys_en_parity ... ok
+test tests::harness_sprite_infra_locale_keys_ko_parity ... ok
+test tests::harness_sprite_infra_ritual_comfort_accumulation_10_ticks ... ok
+test tests::harness_sprite_infra_ritual_vs_hearth_comfort_differential ... ok
+test tests::harness_sprite_infra_room_role_ritual_locale_bridge ... ok
+test tests::harness_sprite_infra_shelter_optional_hearth ... ok
+test tests::harness_sprite_infra_sprite_path_resolver_non_empty ... ok
+test tests::harness_sprite_infra_structure_manual_roles ... ok
+test tests::harness_sprite_infra_totem_room_is_ritual ... ok
+test tests::harness_sprite_infra_totem_uses_spiritual_channel_no_new_variants ... ok
+test tests::harness_renderer_positions_within_bounds ... ok
+test tests::harness_resource_stone_accessible_from_flatland ... ok
+test tests::harness_tci_axis_spread_adequate_across_agents ... ok
+test tests::harness_tci_expressed_axes_finite_and_within_unit_interval ... ok
+test tests::harness_temperament_all_agents_present ... ok
+test tests::harness_temperament_archetype_label_valid ... ok
+test tests::harness_temperament_archetype_quadrant_correctness ... ok
+test tests::harness_temperament_awakened_false_at_spawn ... ok
+test tests::harness_room_structure_verification ... ok
+test tests::harness_shelter_built_after_one_year ... ok
+test tests::harness_temperament_axis_diversity ... ok
+test tests::harness_temperament_behavior_present_on_all_agents ... ok
+test tests::harness_temperament_bias_coverage_breadth ... ok
+test tests::harness_shelter_creates_enclosed_room ... ok
+test tests::harness_temperament_component_present_on_all_agents ... ok
+test tests::harness_temperament_determinism ... ok
+test tests::harness_temperament_event_store_shift_path ... ok
+test tests::harness_temperament_expressed_equals_latent_at_spawn ... ok
+test tests::harness_sprite_infra_baseline_complete_buildings_regression ... ok
+test tests::harness_sprite_assets_round1_building_construction_regression ... ok
+test tests::harness_temperament_ha_flee_seekshelter_sign ... ok
+test tests::harness_temperament_ha_hunt_suppression ... ok
+test tests::harness_temperament_hexaco_ns_correlation ... ok
+test tests::harness_temperament_hexaco_tci_directional_split ... ok
+test tests::harness_sprite_infra_baseline_no_ritual_rooms_after_one_year ... ok
+test tests::harness_temperament_identity_coquery ... ok
+test tests::harness_temperament_metabolic_neutrality ... ok
+test tests::harness_temperament_moderate_ns_bins ... ok
+test tests::harness_sprite_infra_baseline_shelter_regression ... ok
+test tests::harness_temperament_ns_explore_sign ... ok
+test tests::harness_temperament_p_build_gatherstone_sign ... ok
+test tests::harness_temperament_rd_socialize_teach_sign ... ok
+test tests::harness_temperament_shift_axis_clamping ... ok
+test tests::harness_temperament_shift_directional_signs ... ok
+test tests::harness_temperament_shift_event_key_acceptance ... ok
+test tests::harness_stone_accessible_from_flatland ... ok
+test tests::harness_stone_collected_after_one_year ... ok
+test tests::harness_temperament_shift_lifetime_cap ... ok
+test tests::harness_temperament_shift_magnitude_bounds ... ok
+test tests::harness_temperament_sim_event_to_shift_key_coverage ... ok
+test tests::harness_temperament_axes_finite_unit_interval ... ok
+test tests::harness_temperament_biases_behavior ... ok
+test tests::harness_temperament_ha_directional_behavior ... ok
+test tests::harness_temperament_ns_directional_behavior ... ok
+test tests::harness_wall_autotile_gdscript_discriminator ... ok
+test tests::harness_wall_autotile_material_colors ... ok
+test tests::harness_wall_click_info_a11_oob_rejection ... ok
+test tests::harness_migration_clears_band has been running for over 60 seconds
+test tests::harness_multi_settlement_emerges has been running for over 60 seconds
+test tests::harness_territory_grid_has_data ... ok
+test tests::harness_shift_rules_execute_at_least_once_over_two_years ... ok
+test tests::harness_territory_not_on_water ... ok
+test tests::harness_temperament_shift_fires_integration ... ok
+test tests::harness_wall_click_info_a16_room_role_locale_key ... ok
+test tests::harness_migration_clears_band ... ok
+test tests::harness_wall_click_info_a18_click_routing_contract ... ok
+test tests::harness_wall_click_info_a19_ffi_dictionary_key_contract ... ok
+test tests::harness_wall_click_info_a20_hud_wiring_contract ... ok
+test tests::harness_population_growth_reaches_migration_threshold has been running for over 60 seconds
+test tests::harness_temperament_awakened_implies_divergence ... ok
+test tests::harness_wall_click_info_a12_empty_tile_defaults ... ok
+test tests::harness_wall_click_info_door_flag_propagated ... ok
+test tests::harness_wall_click_info_a13_room_enclosed_completeness ... ok
+test tests::harness_temperament_expressed_finite_after_shifts ... ok
+test tests::harness_wall_click_info_a14_structural_coupling ... ok
+test tests::harness_temperament_latent_immutable ... ok
+test tests::harness_population_growth_reaches_migration_threshold ... ok
+test tests::harness_temperament_shift_fires_gte3 ... ok
+test tests::harness_wall_click_info_a15_room_coupling ... ok
+test tests::harness_wall_click_info_a17_locale_key_coverage ... ok
+test tests::harness_world_rules_global_constants ... ok
+test tests::stage1_agents_move_after_100_ticks ... ok
+test tests::harness_wall_click_info_a7_display_completeness ... ok
+test tests::stage1_frame_snapshot_builds_correctly ... ok
+test tests::stage1_personality_affects_speed ... ok
+test tests::stage1_event_store_receives_events_after_simulation ... ok
+test tests::stage1_simulation_tick_under_budget ... ok
+test tests::stage1_spawned_entities_include_identity_components ... ok
+test tests::stage1_simulation_100_ticks_no_panic ... ok
+test tests::harness_wall_click_info_building_tile_overlap ... ok
+test tests::harness_territory_hardness_scales_with_settlement ... ok
+test tests::harness_wall_click_info_door_no_wall_material ... ok
+test tests::harness_wall_click_info_floor_material_valid ... ok
+test tests::harness_wall_click_info_furniture_id_valid ... ok
+test tests::harness_wall_click_info_room_id_referential_integrity ... ok
+test tests::harness_wall_click_info_room_tile_has_floor ... ok
+test tests::harness_wall_click_info_tile_data_diversity_lower ... ok
+test tests::harness_wall_click_info_tile_data_diversity_upper ... ok
+test tests::harness_wall_click_info_wall_hp_and_material_valid ... ok
+test tests::harness_territory_dispute_detected has been running for over 60 seconds
+test tests::harness_multi_settlement_emerges ... ok
+test tests::harness_territory_dispute_detected ... ok
+
+test result: ok. 301 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 224.31s
+
+   Doc-tests sim_bridge
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_data
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_engine
+
+running 2 tests
+test crates/sim-engine/src/command.rs - command::CommandQueue (line 44) ... ignored
+test crates/sim-engine/src/lib.rs - events (line 18) ... ignored
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_systems
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[harness 13:26:25] Gate: cargo test PASSED
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.19s
+[harness 13:26:25] Gate: clippy PASSED
+[harness 13:26:25] Running harness tests...
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.10s
+     Running unittests src/main.rs (target/debug/deps/sim_test-2830acfb6f2505d0)
+
+running 295 tests
+[harness_sprite_assets_round3][A18] Round 2 v2 selective files all present (9 files) ✓
+[harness_sprite_assets_round3][A16] fire_pit has 14 variants (1..=14 continuous) ✓
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a18_round2_v2_selective_files ... ok
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a16_fire_pit_variants ... ok
+[harness_sprite_wall_floor_tileset][A2] missing wall PNGs: 0
+[harness_sprite_wall_floor_tileset][A3] missing floor PNGs: 0
+[harness_sprite_wall_floor_tileset][A1] shelter.png absent ✓
+[harness_sprite_assets_round3][A17] lean_to has 14 variants (1..=14 continuous) ✓
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_21_wall_pngs_present_by_exact_name ... ok
+[harness_sprite_assets_round3][A19] all 37 asset files ≥ 256 bytes ✓
+[harness_sprite_wall_floor_tileset][A10] zero-indexed PNGs present: 0
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_9_floor_pngs_present_by_exact_name ... ok
+[harness_sprite_wall_floor_tileset][A14] 3 floor material dirs present, ≥3 variants each ✓
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_shelter_placeholder_deleted ... ok
+[harness_a3_effect_primitives_extended] EffectStat::Meaning + AdjustEmotion ✓
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a17_lean_to_variants ... ok
+test harness_sprite_assets_round3::harness_sprite_assets_round3_a19_all_37_files_nonzero_size ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_no_zero_indexed_png_files ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_a14_floor_material_dirs ... ok
+test tests::harness_a3_effect_primitives_extended ... ok
+[harness_sprite_wall_floor_tileset][A13] 7 wall material dirs present, ≥3 variants each ✓
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_a13_wall_material_dirs ... ok
+[harness_sprite_wall_floor_tileset][A11] _load_wall_material_texture body contains exact format string: true
+[harness_sprite_wall_floor_tileset][A11] _load_floor_material_texture body contains exact format string: true
+[harness_sprite_wall_floor_tileset][A11] _draw_wall_tile calls _load_wall_material_texture(material_id, wx, wy): true
+[harness_sprite_wall_floor_tileset][A11] _draw_tile_grid_walls calls _load_floor_material_texture(...): true
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_gdscript_uses_one_based_variant_index ... ok
+[harness_sprite_wall_floor_tileset][A7] granite/1.png != oak/1.png: true
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_stone_and_wood_wall_textures_are_not_identical ... ok
+[harness_sprite_wall_floor_tileset][A8] all floor variants distinct: true
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_floor_textures_are_not_identical ... ok
+[harness] a8_registration: 62 entries, temperament_shift_system present=true
+test tests::harness_a8_temperament_shift_registered_in_production ... ok
+[harness_sprite_wall_floor_tileset][A9] materials with all-identical variants: 0
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_wall_variant_files_are_not_all_identical_within_material ... ok
+[harness_sprite_wall_floor_tileset][A4] invalid PNG signatures: 0
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_have_valid_png_signature ... ok
+[harness_sprite_wall_floor_tileset][A5] wrong-dimension PNGs: 0
+[harness_sprite_wall_floor_tileset][A6] wrong-colortype PNGs: 0
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_are_16x16_pixels ... ok
+test harness_sprite_wall_floor_tileset::harness_sprite_wall_floor_tileset_all_30_pngs_are_rgb_no_alpha ... ok
+[harness] a9.12 base_only_regression OK
+test tests::harness_a9_base_only_regression_guard ... ok
+[harness] a9.6 none_subfield: body_potential=1 move_speed=1
+test tests::harness_a9_agent_constant_none_subfield_keeps_default ... ok
+[harness] a9 A14 body_potential_mul: base_sum=123492 boosted_sum=209552
+test tests::harness_a9_behavioral_body_potential_mul_at_spawn ... ok
+[harness] a9.8 influence_channels: count=3 names={"food", "warmth", "danger"}
+test tests::harness_a9_influence_channels_preserved ... ok
+[harness] a9.11 empty_slice → None OK
+test tests::harness_a9_merge_empty_slice_returns_none ... ok
+[harness] a9.5 agent_consts: mortality=1.3 skill_xp=1.5 fertility=0.7 lifespan=0.8
+test tests::harness_a9_merged_agent_constants_in_sim_resources ... ok
+[harness] a9.4 globals: hunger=0.002600 warmth=0.003200 food_regen=0.2 wood_regen=0.5 farming=false temp_bias=-0.7 season=eternal_winter
+test tests::harness_a9_merged_global_constants_in_sim_resources ... ok
+[harness_a3_mourn_routes_through_effect_queue] mourn causal entries=4
+[harness] a9.3 merged_name: EternalWinter
+test tests::harness_a3_mourn_routes_through_effect_queue ... ok
+test tests::harness_a9_merged_name_is_highest_priority ... ok
+[harness] a9.2 priority_sort: priorities=[0, 25, 50] names=["LowPri", "MidPri", "HighPri"]
+test tests::harness_a9_priority_sort_alphabetical_disagreement ... ok
+[harness] a8_awakened: entity=0v1 shift_count=1 awakened=true
+test tests::harness_a8_temperament_awakened_after_shift ... ok
+[harness] a8_starvation_recovery: entity=0v1 shift_count 0→1 expressed_ha=0.2262 latent_ha=0.1762 expressed_p=0.1891 latent_p=0.2391 axis_delta=0.0500
+[harness] a9.1 recursive_discovery: raw_count=2 names={"BaseRules", "EternalWinter"}
+test tests::harness_a8_temperament_starvation_recovery_shift ... ok
+test tests::harness_a9_recursive_discovery_loads_scenarios_subdir ... ok
+[harness] a9.7 overlay_none: all 9 preserved/overlaid checks OK
+test tests::harness_a9_synthetic_overlay_none_preserves_base_some ... ok
+[harness] a9.9 surface_foraging: entries=1 total_modifiers=1
+[harness] a9.13 three_ruleset_priority OK
+test tests::harness_a9_resource_modifiers_dedup_overlay_wins ... ok
+test tests::harness_a9_three_ruleset_priority_tiebreaker ... ok
+[harness] a9.10 special_zones_count=1
+test tests::harness_action_enum_discriminants_contiguous ... ok
+test tests::harness_a9_special_zones_pure_append ... ok
+[harness] agent_constants_all_none_noop: PASS (all fields == 1.0)
+test tests::harness_agent_constants_all_none_noop ... ok
+[harness] plan_a4_all_six_simultaneous: mortality=1.30 xp=1.50 body=0.90 fertility=0.70 lifespan=0.80 speed=1.20
+test tests::harness_agent_constants_all_six_simultaneous ... ok
+[harness] agent_constants_default_identity: mortality=1/1 fertility=1/1 lifespan=1/1 xp=1/1 body=1/1 speed=1/1
+test tests::harness_agent_constants_default_identity_regression ... ok
+[harness] agent_constants_defaults: mortality=1.00 xp=1.00 body=1.00 fertility=1.00 lifespan=1.00 speed=1.00
+test tests::harness_agent_constants_defaults ... ok
+[harness] agent_constants_exact_lower_boundary: mortality=0.0000 xp=0.0000 body=0.0000 fertility=0.0000 lifespan=0.1000 speed=0.1000
+test tests::harness_agent_constants_exact_lower_boundary ... ok
+[harness] plan_a9_extreme_100_ticks: tick=100 (no panic)
+test tests::harness_agent_constants_extreme_100_ticks ... ok
+[harness] plan_a12_inner_all_none_second_call: mortality=1.40 xp=1.60 body=0.90 fertility=0.60 lifespan=0.85 speed=1.10
+test tests::harness_agent_constants_inner_all_none_second_call ... ok
+[harness] agent_constants_lower_bound_clamp: mortality=0.000 xp=0.000 body=0.000 fertility=0.000 lifespan=0.100 speed=0.100
+test tests::harness_agent_constants_lower_bound_clamp ... ok
+[harness_a3_pray_routes_through_effect_queue] pray causal entries=5
+test tests::harness_a3_pray_routes_through_effect_queue ... ok
+[harness] agent_constants_ron_deserialization: mortality=1.30 xp=1.50 body=1.00 fertility=0.70 lifespan=0.80 speed=1.00
+test tests::harness_agent_constants_ron_deserialization ... ok
+[harness] plan_a8_ron_eternal_winter: mortality=1.30 fertility=0.70 xp=1.50 lifespan=0.80 body=1.00 speed=1.00
+test tests::harness_agent_constants_ron_eternal_winter ... ok
+[harness] agent_constants_second_none_does_not_reset: mortality=1.40 xp=1.60 body=0.90 fertility=0.60 lifespan=0.85 speed=1.10
+test tests::harness_agent_constants_second_none_does_not_reset ... ok
+[harness] plan_a2_single_field_transfer: mortality=1.40 xp=1.00 body=1.00 fertility=1.00 lifespan=1.00 speed=1.00
+test tests::harness_agent_constants_single_field_transfer ... ok
+harness_a4_pray_recorded_in_causal_log: pray_count=4
+test tests::harness_a4_pray_recorded_in_causal_log ... ok
+[harness] agent_constants_transfer: mortality=1.30 xp=1.50 body=1.00 fertility=0.70 lifespan=0.80 speed=1.00
+test tests::harness_agent_constants_transfer ... ok
+[harness] agent_constants_unbounded_fields: mortality=100.00 xp=100.00 body=50.00 lifespan=100.00
+test tests::harness_agent_constants_unbounded_fields ... ok
+[harness] agent_constants_upper_bound_clamp: PASS (both sub-tests)
+test tests::harness_agent_constants_upper_bound_clamp ... ok
+[harness] plan_a5_zero_value_boundary: PASS (both sub-tests)
+test tests::harness_agent_constants_zero_value_boundary ... ok
+[harness] agent_constants_persist_across_ticks: mortality=1.30 xp=1.50 body=0.80 fertility=0.70 lifespan=0.90 speed=1.20
+test tests::harness_agent_constants_persist_across_ticks ... ok
+test tests::harness_archetype_label_is_valid_string ... ok
+[harness_a3_pray_behavioral_equivalence] comfort_totem=1.2900 comfort_no_totem=0.2500 comfort_delta=1.0400
+test tests::harness_a3_pray_behavioral_equivalence ... ok
+test tests::harness_awakened_false_at_spawn ... ok
+[harness] quadrant_counts: sanguine=1 phlegmatic=2 melancholic=0 choleric=1
+test tests::harness_archetype_label_maps_correctly_to_ns_ha_quadrant ... ok
+harness_a4_causal_log_populated_over_simulation: pre=0 post=1184 delta=1184
+test tests::harness_a4_causal_log_populated_over_simulation ... ok
+harness_a4_entity_has_recent_causes: entity=0 has 8 recent events
+test tests::harness_a4_entity_has_recent_causes ... ok
+[harness] band_populated: alive=43, banded=43, unbanded=0
+[harness] snapshot_stride_and_band: 43 total agents, 43 with band, 19 with recognized job
+test tests::harness_agent_snapshot_stride_and_band_populated ... ok
+[harness] behavior_present: 25 of 25 entities have Behavior
+test tests::harness_behavior_component_present_on_all_agents ... ok
+[harness] a9 A13 fertility_zero_gate: births=0
+test tests::harness_a9_behavioral_fertility_mul_zero_gate ... ok
+[harness] a8_natural_shifts: 29/29 agents have shift_count > 0 after 4380 ticks
+test tests::harness_a8_natural_shifts_occur_over_full_year ... ok
+[verify_furniture_plans] tick=30 center=(132,130) fire_pit_plan=true lean_to_plan=true
+[harness] a8_lifetime_cap: max_shift_count=3 cap=3 violators=0
+test tests::harness_a8_lifetime_shift_cap_enforced_under_production_load ... ok
+[harness] agent_constants_stability: alive=31 deaths=8
+test tests::harness_agent_constants_stability_regression ... ok
+[harness phase1-visual] non_idle_ratio: 1.0000 (43/43) at seed=42 tick 4380
+test tests::harness_action_non_idle_ratio_steady_state ... ok
+[verify_furniture_plans] tick=30 center=(132,130) fire_pit_plan=true lean_to_plan=true
+[verify_furniture_plans] tick=30 center=(132,130) fire_pit_plan=true lean_to_plan=true
+[harness phase1-visual] diversity: 17 distinct non-Idle actions at seed=42 over 4380 ticks: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 14, 19, 20, 21, 25, 28, 29]
+test tests::harness_action_diversity_over_year ... ok
+test tests::harness_action_snapshot_byte_range ... ok
+[harness] bands: 4
+test tests::harness_band_count_reasonable ... ok
+[harness_blueprint_no_duplicate_fire_pit] center=(132,130) fire_pit_count=1
+test tests::harness_blueprint_no_duplicate_fire_pit ... ok
+[harness_blueprint_door_marked] door at (132,132) is_door=true
+test tests::harness_blueprint_door_marked ... ok
+[harness_blueprint_no_duplicate_wall_plans] center=(132,130) unique_positions=1 duplicates=0
+test tests::harness_blueprint_no_duplicate_wall_plans ... ok
+[harness_blueprint_ron_parses] walls=15 floors=9 furniture=2 doors=1
+test tests::harness_blueprint_ron_parses_with_blueprint_field ... ok
+test tests::harness_awakened_implies_expressed_differs_from_latent ... ok
+[harness_blueprint_door_no_wall] door at (132,132) wall_material=None
+test tests::harness_blueprint_door_no_wall ... ok
+[harness] bridge_tci_distinct_labels: 3 distinct labels: {"TEMPERAMENT_PHLEGMATIC", "TEMPERAMENT_CHOLERIC", "TEMPERAMENT_SANGUINE"}
+test tests::harness_bridge_tci_at_least_two_distinct_labels ... ok
+[harness_blueprint_floors_stamped] settlement=SettlementId(1) center=(132,130) floor_count=9
+test tests::harness_blueprint_floors_stamped ... ok
+[harness_blueprint_fire_pit] center=(132,130) plan_exists=false placed=true
+test tests::harness_blueprint_fire_pit_at_correct_position ... ok
+test tests::harness_bridge_tci_axes_within_unit_interval ... ok
+[harness] bridge_tci_keys_present: 23 identities, 0 missing temperament, 23 helper_ok
+test tests::harness_bridge_tci_keys_present_on_all_agents ... ok
+test tests::harness_bridge_tci_label_consistent_with_axes ... ok
+test tests::harness_bridge_tci_matches_ecs_values ... ok
+[harness] floor_no_walls_no_stamp: floored=0 (expect 0)
+test tests::harness_building_floor_no_walls_no_stamp ... ok
+[harness] floor_stamp_correct_material: PASS
+test tests::harness_building_floor_stamp_correct_material ... ok
+[harness] bridge_tci_variance: ns_sd=0.1705 ha_sd=0.2210 rd_sd=0.1292 p_sd=0.2818 axes_above_0.05=4
+test tests::harness_bridge_tci_meaningful_variance ... ok
+[harness] floor_stamp_no_building_entity: floored=9/9 completed_shelters=0
+test tests::harness_building_floor_stamp_no_building_entity ... ok
+[harness] floor_stamp_idempotent: PASS
+test tests::harness_building_floor_stamp_idempotent ... ok
+test tests::harness_bridge_tci_valid_locale_key ... ok
+[harness] a9 cognition_regression: base_intel=64.4473 boosted_intel=44.7114 diff=-19.7359
+test tests::harness_a9_cognition_skill_xp_mul_regression ... ok
+[harness_building_visuals_localization_stockpile] en value = "Stockpile"
+[harness_building_visuals_localization_stockpile] ko value = "보관소"
+[harness_building_visuals_localization_stockpile] PASS — key found in both en + ko
+test tests::harness_building_visuals_localization_stockpile ... ok
+[harness_blueprint_lean_to] target=(131,129) plan_exists=true placed=false
+[harness] a9 A12 mortality_isolation: base_deaths=8 boosted_deaths=11 base_alive=31 boosted_alive=31
+test tests::harness_blueprint_lean_to_at_correct_position ... ok
+test tests::harness_a9_behavioral_mortality_mul_isolation ... ok
+[harness_blueprint_none_falls_back_to_legacy] PASS — stockpile/campfire have blueprint=None and no lean_to artifacts
+test tests::harness_blueprint_none_falls_back_to_legacy ... ok
+[harness_blueprint_regression_campfire] complete_campfires=1
+test tests::harness_blueprint_regression_campfire ... ok
+test tests::harness_calendar_hour_formula_consistency ... ok
+[harness_blueprint_regression_shelter] complete_shelters=1
+test tests::harness_blueprint_regression_shelter_complete ... ok
+test tests::harness_calendar_ticks_per_day_matches_gdscript ... ok
+[harness_blueprint_regression_stockpile] complete_stockpiles=1
+test tests::harness_blueprint_regression_stockpile ... ok
+[harness_blueprint_wall_geometry] center=(132,130) interior_walls=0
+test tests::harness_blueprint_wall_geometry_perimeter_only ... ok
+test tests::harness_band_settlement_coherence ... ok
+test tests::harness_expressed_equals_latent_at_spawn ... ok
+[harness_floor_fix_floor_material] center=(50,50) wrong_material=0 data_registry=None complete_building=false
+test tests::harness_floor_fix_floor_material_packed_earth ... ok
+[harness_floor_fix_idempotency] center=(50,50) count@1=9 count@121=9 center_mat@1=Some("clay") center_mat@121=Some("clay") data_registry=None
+test tests::harness_floor_fix_idempotency ... ok
+[harness_floor_fix_interior_floor_count] center=(50,50) floor_count=9 data_registry=None complete_building=false
+test tests::harness_floor_fix_interior_floor_count ... ok
+[harness_floor_fix_no_floor_without_walls] center=(10,10) walls=0 floors=0 data_registry=None
+test tests::harness_floor_fix_no_floor_without_walls ... ok
+[harness_floor_fix_perimeter_walls] center=(50,50) wall_count=9 data_registry=None complete_building=false
+test tests::harness_floor_fix_perimeter_walls_intact ... ok
+[harness_floor_fix_regression] pre-tick: data_registry=None, any_shelter_building=false
+[harness_floor_fix_regression] center=(50,50) any_floor=true
+test tests::harness_floor_fix_regression_no_data_registry ... ok
+test tests::harness_band_size_within_dunbar_l2 ... ok
+[harness_blueprint_wall_positions] center=(132,130) accounted=15/15
+test tests::harness_blueprint_wall_positions_accounted ... ok
+[harness] regression_completed_building: shelter_center=(135,131) floored=9/9
+test tests::harness_building_floor_stamp_regression_completed_building ... ok
+[harness] ha_directional ISOLATED: high_bias=0.031500 low_bias=-0.031500
+[harness_building_visuals_floor_tiles_stamped] floor_count=32 floor_alpha=0.55 border_width=0.5
+test tests::harness_building_visuals_floor_tiles_stamped ... ok
+[harness_building_visuals_adjacent_wall_pairs] adjacent_pairs=42 autotile=true bridge_px=2
+test tests::harness_building_visuals_adjacent_wall_pairs ... ok
+[harness_building_visuals_wall_material_valid] wall_count=45 empty_material_count=0
+test tests::harness_building_visuals_wall_material_valid ... ok
+[harness_building_visuals_storage_pit_present] storage_pit_count=2 icon_scale=0.7
+test tests::harness_building_visuals_storage_pit_present ... ok
+[harness_lean_to_emits_warmth_standalone] warmth=0.7430 at lean_to tile (60,60)
+test tests::harness_lean_to_emits_warmth_standalone ... ok
+[harness_lean_to_warmth_gaussian_falloff] lean(60,60)=0.2323 lean(60,65)=0.0387 ratio=6.000 (bg_origin=0.0000 bg_far=0.0000)
+test tests::harness_lean_to_warmth_gaussian_falloff ... ok
+test tests::harness_locale_en_anti_circular ... ok
+test tests::harness_locale_en_completeness ... ok
+test tests::harness_locale_en_spot_check ... ok
+test tests::harness_locale_en_total_count ... ok
+test tests::harness_locale_fluent_definitions ... ok
+test tests::harness_locale_ko_anti_circular ... ok
+test tests::harness_locale_ko_completeness ... ok
+test tests::harness_locale_ko_spot_check ... ok
+test tests::harness_locale_ko_total_count ... ok
+test tests::harness_locale_parity ... ok
+test tests::harness_locale_registry_append_only ... ok
+test tests::harness_locale_registry_new_ids ... ok
+[harness_memorial_mourn_action_registered] ActionType::Mourn=30 Pray=18 EmotionType::Sadness=4 ✓
+test tests::harness_memorial_mourn_action_registered ... ok
+test tests::harness_locale_check_no_p2 ... ok
+[harness_building_visuals_wall_count_bounded] wall_count=45
+test tests::harness_building_visuals_wall_count_bounded ... ok
+[harness_memorial_mourn_no_effect_without_cairn] sadness_near=0.4260 sadness_far=0.5606 delta(far-near)=0.1346
+test tests::harness_memorial_mourn_no_effect_without_cairn ... ok
+[harness_memorial_mourn_reduces_sadness] sadness_with_cairn=0.4260 sadness_without_cairn=0.5606 sadness_delta=0.1346 meaning_delta=-0.3462 (informational)
+test tests::harness_memorial_mourn_reduces_sadness ... ok
+test tests::harness_calendar_tick_monotonic ... ok
+[harness_memorial_mourn_threshold_gate] sadness_near=0.5136 sadness_ctrl=0.5169 gate_delta=0.0033
+test tests::harness_memorial_mourn_threshold_gate ... ok
+[harness] buildings_no_overlap: total=7 complete=6 checked=21 pairs
+test tests::harness_buildings_no_overlap ... ok
+[harness] ns_directional ISOLATED: high_bias=0.042000 low_bias=-0.042000
+[harness] multimesh_buffer: 31 agents, 496 floats, all valid
+test tests::harness_multimesh_buffer_valid ... ok
+[harness] ha_directional: high_ha_total=10 high_flee=0 low_ha_total=2 low_flee=0
+[harness] ha_directional SOFT WARNING: No Flee actions observed in either HA group. Flee is a low-frequency emergency action; absence in 2000 ticks is plausible without danger events. Treat as Type E observation.
+[harness] ha_directional: high_rate=0.000 low_rate=0.000
+test tests::harness_ha_biases_avoidance_actions_directionally ... ok
+
+========== PROFILE: 20 agents ==========
+[harness] jobs: gatherer=11 lumberjack=4 builder=2 miner=2
+test tests::harness_job_distribution_includes_miner ... ok
+[harness] === Food Economy Balance (4380 ticks) ===
+[harness] Food history (tick, food, pop):
+[harness]   tick=  200: food=  77.3, pop=31
+[harness]   tick=  400: food= 103.5, pop=31
+[harness]   tick=  600: food=  97.5, pop=32
+[harness]   tick=  800: food=  85.1, pop=37
+[harness]   tick= 1000: food=  86.8, pop=37
+[harness]   tick= 1200: food= 116.9, pop=37
+[harness]   tick= 1400: food= 152.2, pop=37
+[harness]   tick= 1600: food= 142.1, pop=37
+[harness]   tick= 1800: food= 143.5, pop=37
+[harness]   tick= 2000: food= 146.7, pop=37
+[harness]   tick= 2200: food= 139.8, pop=37
+[harness]   tick= 2400: food= 144.9, pop=37
+[harness]   tick= 2600: food= 139.7, pop=37
+[harness]   tick= 2800: food= 133.5, pop=37
+[harness]   tick= 3000: food= 127.2, pop=37
+[harness]   tick= 3200: food= 131.6, pop=37
+[harness]   tick= 3400: food= 128.7, pop=37
+[harness]   tick= 3600: food= 149.2, pop=37
+[harness]   tick= 3800: food= 137.0, pop=43
+[harness]   tick= 4000: food= 129.5, pop=43
+[harness]   tick= 4200: food= 124.4, pop=43
+[harness] Final: food=143.5, pop=43
+[harness] Stats: min_food=77.3, max_food=152.2, max_zero_streak=0
+[harness]   Settlement SettlementId(3): members=8, food=37.4
+[harness]   Settlement SettlementId(2): members=10, food=24.6
+[harness]   Settlement SettlementId(1): members=30, food=52.0
+[harness]   Settlement SettlementId(4): members=6, food=29.5
+test tests::harness_food_economy_balance_4380 ... ok
+[harness] ns_directional: high_samples=400 high_explore=45 low_samples=1300 low_explore=18
+[harness] ns_directional: high_rate=0.113 low_rate=0.014 (threshold: high >= low - 0.10)
+test tests::harness_ns_biases_exploratory_actions_directionally ... ok
+System                                    Total(ms)    Avg(µs)    Max(µs)      Calls
+------------------------------------------------------------------------------------
+influence_system                              240.5      481.0       8451        500
+story_sifter_system                           230.5     4609.3      16904         50
+territory_system                              189.8      949.1      10790        200
+resource_regen_system                         142.1      142.1       5862       1000
+job_assignment_system                         115.2      115.2       5501       1000
+steering_system                                67.3       67.3      13851       1000
+llm_request_system                             20.1       20.1       5862       1000
+behavior_system                                18.7       18.7       2321       1000
+needs_system                                   15.1       15.1       2318       1000
+temperament_shift                              14.9       14.9        847       1000
+band_formation_system                          14.3      841.9       4899         17
+contagion_system                                9.3       27.9       1318        333
+reputation_system                               8.0        8.0       1217       1000
+leader_system                                   7.0        7.0       2648       1000
+network_system                                  6.7        6.7       1572       1000
+upper_needs_system                              6.2        6.2        592       1000
+stratification_monitor                          5.0        5.0        372       1000
+job_satisfaction_system                         4.2        4.2       3000       1000
+title_system                                    4.2        4.2        595       1000
+movement_system                                 3.6        3.6        718       1000
+chronicle_system                                3.3        3.3       1141       1000
+trait_violation_system                          2.6        2.6        231       1000
+social_event_system                             1.8       53.3        776         33
+occupation_system                               1.7        1.7         63       1000
+memory_system                                   1.5        1.5         66       1000
+population_system                               1.4        1.4        894       1000
+construction_system                             1.4        1.4        175       1000
+gathering_system                                1.1        1.1         28       1000
+economic_tendency_system                        1.1        1.1          9       1000
+effect_apply_system                             1.0        1.0         94       1000
+emotion_system                                  0.8       10.0        425         83
+stat_sync_system                                0.7        6.5         40        100
+child_stress_processor                          0.6        1.2        119        500
+childcare_system                                0.5        1.0         83        500
+band_behavior_system                            0.4        4.4         12        100
+building_effect_system                          0.4        0.4          6       1000
+stress_system                                   0.3       15.8         94         20
+morale_system                                   0.3        1.5         18        200
+mental_break_system                             0.2        0.2         38       1000
+settlement_culture_system                       0.2       15.3         19         10
+mortality_system                                0.1        0.1         16       1000
+stat_threshold_system                           0.1        0.6          3        200
+tech_discovery_system                           0.1        0.1         45       1000
+intelligence_system                             0.1        5.0         11         20
+coping_system                                   0.1        3.0          7         33
+intergenerational_system                        0.0       12.0         18          4
+trauma_scar_system                              0.0        0.3          9        100
+tech_utilization_system                         0.0        0.0         12       1000
+parenting_system                                0.0        6.8         10          4
+attachment_system                               0.0        1.9          2         10
+migration_system                                0.0        0.0          1       1000
+age_system                                      0.0        0.7          1         20
+tech_maintenance_system                         0.0        0.0          4       1000
+personality_generator_system                    0.0        1.0          1         10
+value_system                                    0.0        2.0          2          5
+family_system                                   0.0        3.3          4          3
+stats_recorder                                  0.0        1.8          4          5
+ace_tracker_system                              0.0        0.8          1         10
+llm_timeout_system                              0.0        0.1          1        100
+llm_response_system                             0.0        0.0          5       1000
+tech_propagation_system                         0.0        0.0          1       1000
+tension_system                                  0.0        0.0          0       1000
+crafting_system                                 0.0        0.0          0        100
+trait_system                                    0.0        0.0          0        100
+personality_maturation_system                   0.0        0.0          0         10
+------------------------------------------------------------------------------------
+TOTAL: 1144.6ms across 65 systems
+
+Tick stats (last 300 ticks):
+  Avg: 1.57ms  Min: 0.27ms  Max: 31.38ms  TPS: 636.9
+
+Avg tick: 1.57ms (636.7 TPS)
+
+========== PROFILE: 100 agents ==========
+[harness] === Food Economy Plan Comprehensive (4380 ticks) ===
+[harness] Food history (100-tick samples, tick/food/pop):
+[harness]   tick=  100: food=   79.20, pop=31
+[harness]   tick=  200: food=   77.30, pop=31
+[harness]   tick=  300: food=   79.30, pop=31
+[harness]   tick=  400: food=  103.50, pop=31
+[harness]   tick=  500: food=  103.00, pop=31
+[harness]   tick=  600: food=   97.50, pop=32
+[harness]   tick=  700: food=   88.80, pop=37
+[harness]   tick=  800: food=   85.10, pop=37
+[harness]   tick=  900: food=   89.80, pop=37
+[harness]   tick= 1000: food=   86.80, pop=37
+[harness]   tick= 1100: food=  112.90, pop=37
+[harness]   tick= 1200: food=  116.90, pop=37
+[harness]   tick= 1300: food=  109.30, pop=37
+[harness]   tick= 1400: food=  152.20, pop=37
+[harness]   tick= 1500: food=  140.90, pop=37
+[harness]   tick= 1600: food=  142.10, pop=37
+[harness]   tick= 1700: food=  149.60, pop=37
+[harness]   tick= 1800: food=  143.50, pop=37
+[harness]   tick= 1900: food=  149.20, pop=37
+[harness]   tick= 2000: food=  146.70, pop=37
+[harness]   tick= 2100: food=  147.10, pop=37
+[harness]   tick= 2200: food=  139.80, pop=37
+[harness]   tick= 2300: food=  142.00, pop=37
+[harness]   tick= 2400: food=  144.90, pop=37
+[harness]   tick= 2500: food=  132.10, pop=37
+[harness]   tick= 2600: food=  139.70, pop=37
+[harness]   tick= 2700: food=  129.70, pop=37
+[harness]   tick= 2800: food=  133.50, pop=37
+[harness]   tick= 2900: food=  136.90, pop=37
+[harness]   tick= 3000: food=  127.20, pop=37
+[harness]   tick= 3100: food=  129.80, pop=37
+[harness]   tick= 3200: food=  131.60, pop=37
+[harness]   tick= 3300: food=  127.70, pop=37
+[harness]   tick= 3400: food=  128.70, pop=37
+[harness]   tick= 3500: food=  136.60, pop=37
+[harness]   tick= 3600: food=  149.20, pop=37
+[harness]   tick= 3700: food=  132.80, pop=43
+[harness]   tick= 3800: food=  137.00, pop=43
+[harness]   tick= 3900: food=  132.20, pop=43
+[harness]   tick= 4000: food=  129.50, pop=43
+[harness]   tick= 4100: food=  131.50, pop=43
+[harness]   tick= 4200: food=  124.40, pop=43
+[harness]   tick= 4300: food=  141.70, pop=48
+[harness] Final: food=143.50, pop=43
+[harness] max_food_ever=152.20, max_zero_streak=0
+[harness] --- Food Flow Diagnostics ---
+[harness] Forage completions (direct counter): 176
+[harness] Food produced (forage deposits): 832.90
+[harness] Food drained — childcare: 587.40, births: 102.00, crafting: 0.00, total: 689.40
+[harness] Production/consumption ratio: 1.208
+[harness] Scarcity windows: 5, Non-scarcity windows: 38
+[harness] Mean foragers — scarcity=6.60, non-scarcity=0.45
+[harness] Collapse windows (food < 1.0): []
+[harness] Scarcity boost applications (boost-driven Forage, excl. hunger force): 69
+test tests::harness_food_economy_plan_comprehensive ... ok
+[harness] === Food Economy Plan v2 (4380 ticks) ===
+[harness] Food history (100-tick windows, tick/food/pop):
+[harness]   tick=  600: food=   97.50, pop=32
+[harness]   tick=  700: food=   88.80, pop=37
+[harness]   tick=  800: food=   85.10, pop=37
+[harness]   tick=  900: food=   89.80, pop=37
+[harness]   tick= 1000: food=   86.80, pop=37
+[harness]   tick= 1100: food=  112.90, pop=37
+[harness]   tick= 1200: food=  116.90, pop=37
+[harness]   tick= 1300: food=  109.30, pop=37
+[harness]   tick= 1400: food=  152.20, pop=37
+[harness]   tick= 1500: food=  140.90, pop=37
+[harness]   tick= 1600: food=  142.10, pop=37
+[harness]   tick= 1700: food=  149.60, pop=37
+[harness]   tick= 1800: food=  143.50, pop=37
+[harness]   tick= 1900: food=  149.20, pop=37
+[harness]   tick= 2000: food=  146.70, pop=37
+[harness]   tick= 2100: food=  147.10, pop=37
+[harness]   tick= 2200: food=  139.80, pop=37
+[harness]   tick= 2300: food=  142.00, pop=37
+[harness]   tick= 2400: food=  144.90, pop=37
+[harness]   tick= 2500: food=  132.10, pop=37
+[harness]   tick= 2600: food=  139.70, pop=37
+[harness]   tick= 2700: food=  129.70, pop=37
+[harness]   tick= 2800: food=  133.50, pop=37
+[harness]   tick= 2900: food=  136.90, pop=37
+[harness]   tick= 3000: food=  127.20, pop=37
+[harness]   tick= 3100: food=  129.80, pop=37
+[harness]   tick= 3200: food=  131.60, pop=37
+[harness]   tick= 3300: food=  127.70, pop=37
+[harness]   tick= 3400: food=  128.70, pop=37
+[harness]   tick= 3500: food=  136.60, pop=37
+[harness]   tick= 3600: food=  149.20, pop=37
+[harness]   tick= 3700: food=  132.80, pop=43
+[harness]   tick= 3800: food=  137.00, pop=43
+[harness]   tick= 3900: food=  132.20, pop=43
+[harness]   tick= 4000: food=  129.50, pop=43
+[harness]   tick= 4100: food=  131.50, pop=43
+[harness]   tick= 4200: food=  124.40, pop=43
+[harness]   tick= 4300: food=  141.70, pop=48
+[harness] Final: food=143.50, pop=43
+[harness] max_zero_streak=0
+[harness] Window classification: scarcity=5, non-scarcity=33, total=38
+[harness] Mean foragers — scarcity=1.80, non-scarcity=0.30
+[harness] Boost applications=69, counterfactual=69, boost_outside_scarcity=0
+test tests::harness_food_economy_plan_v2 ... ok
+[harness] counters_start_at_zero: births=0 deaths=0
+test tests::harness_population_counters_start_at_zero ... ok
+System                                    Total(ms)    Avg(µs)    Max(µs)      Calls
+------------------------------------------------------------------------------------
+story_sifter_system                          1663.3    33266.9     113619         50
+territory_system                              630.5     3152.6      33125        200
+influence_system                              228.6      457.2      13378        500
+steering_system                               162.5      162.5       2550       1000
+resource_regen_system                         152.1      152.1       4962       1000
+job_assignment_system                         137.2      137.2       8117       1000
+band_formation_system                          68.5     4030.2       8679         17
+behavior_system                                53.9       53.9       3517       1000
+llm_request_system                             42.1       42.1       1009       1000
+needs_system                                   39.4       39.4       1430       1000
+contagion_system                               34.4      103.3       2234        333
+social_event_system                            28.8      873.6      20406         33
+temperament_shift                              28.4       28.4       1302       1000
+network_system                                 19.2       19.2        348       1000
+title_system                                   18.7       18.7       3408       1000
+upper_needs_system                             18.2       18.2        247       1000
+reputation_system                              17.5       17.5        756       1000
+movement_system                                12.7       12.7       2414       1000
+stratification_monitor                         11.9       11.9        692       1000
+leader_system                                   9.9        9.9        141       1000
+trait_violation_system                          8.4        8.4       2808       1000
+occupation_system                               7.5        7.5        295       1000
+effect_apply_system                             5.4        5.4        790       1000
+job_satisfaction_system                         5.2        5.2        971       1000
+chronicle_system                                4.9        4.9       2640       1000
+memory_system                                   4.3        4.3        156       1000
+gathering_system                                3.8        3.8        105       1000
+economic_tendency_system                        3.7        3.7         79       1000
+construction_system                             2.8        2.8       1080       1000
+morale_system                                   1.4        7.2        877        200
+stat_sync_system                                1.3       12.9        110        100
+child_stress_processor                          1.3        2.5        186        500
+building_effect_system                          1.2        1.2         16       1000
+band_behavior_system                            1.0        9.5        218        100
+emotion_system                                  0.9       11.0         79         83
+childcare_system                                0.8        1.7         14        500
+stress_system                                   0.8       41.0         89         20
+mental_break_system                             0.4        0.4         18       1000
+stat_threshold_system                           0.3        1.8         27        200
+trait_system                                    0.3        3.0        297        100
+intelligence_system                             0.3       14.4         48         20
+mortality_system                                0.3        0.3         24       1000
+population_system                               0.2        0.2         94       1000
+tech_utilization_system                         0.2        0.2        155       1000
+settlement_culture_system                       0.2       15.6         18         10
+coping_system                                   0.1        4.3         11         33
+trauma_scar_system                              0.1        0.5          2        100
+attachment_system                               0.0        4.4          5         10
+intergenerational_system                        0.0        8.5         15          4
+family_system                                   0.0       10.0         16          3
+migration_system                                0.0        0.0          1       1000
+age_system                                      0.0        1.3          3         20
+tech_discovery_system                           0.0        0.0         25       1000
+tech_maintenance_system                         0.0        0.0          1       1000
+stats_recorder                                  0.0        3.8          7          5
+personality_generator_system                    0.0        1.8          3         10
+value_system                                    0.0        3.4          4          5
+ace_tracker_system                              0.0        1.5          2         10
+llm_timeout_system                              0.0        0.1          1        100
+llm_response_system                             0.0        0.0          8       1000
+parenting_system                                0.0        2.5          4          4
+tension_system                                  0.0        0.0          4       1000
+crafting_system                                 0.0        0.0          3        100
+personality_maturation_system                   0.0        0.0          0         10
+tech_propagation_system                         0.0        0.0          0       1000
+------------------------------------------------------------------------------------
+TOTAL: 3435.2ms across 65 systems
+
+Tick stats (last 300 ticks):
+  Avg: 3.17ms  Min: 0.43ms  Max: 56.44ms  TPS: 315.9
+
+Avg tick: 3.17ms (315.8 TPS)
+
+========== PROFILE: 200 agents ==========
+[harness_memorial_natural_mourn_over_simulation] meaning_with=6.8605 meaning_without=6.6278 meaning_delta=0.2328
+test tests::harness_memorial_natural_mourn_over_simulation ... ok
+test tests::harness_expressed_axes_finite_after_shifts ... ok
+[harness_p2b3] PASS t_first=Some(19) peak_plans=15 start_walls=0 end_walls=45 delta=45 distinct_pw_ticks=1350 a8_counts=[11, 11, 11, 11, 11] a9_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2] best_streak=4380 best_pw_in_streak=2
+test tests::harness_p2b3_builder_assigns_and_places_wall ... ok
+[harness_pray_blocked_above_comfort_threshold] comfort_after=4.5000 initial=4.5000
+test tests::harness_pray_blocked_above_comfort_threshold ... ok
+[harness_pray_action_restores_comfort] comfort_with_totem=1.6200 comfort_without_totem=0.5000 delta=1.1200
+test tests::harness_pray_action_restores_comfort ... ok
+[harness_pray_requires_nearby_totem] comfort_near=0.9000 comfort_far=0.5000 delta=0.4000
+test tests::harness_pray_requires_nearby_totem ... ok
+[harness_pray_restores_meaning] meaning_after=1.3373 initial=0.5000 delta=0.8373
+test tests::harness_pray_restores_meaning ... ok
+test tests::harness_renderer_hunger_distribution_soft ... ignored, B3-regress: seed=42 tick~4380 yields max_below=1 < threshold 2; hunger decay tuning needed post-B3 perf refactor; tracked separately from A-9 (special-zones gate)
+[harness] accounting_identity: initial=20 births=31 deaths=8 expected=43 alive=43
+test tests::harness_population_accounting_identity ... ok
+[harness] crafting: craft_events=0 agents_with_tools=15 item_store_total=33
+test tests::harness_crafting_produces_tool ... ok
+[harness phase1-visual] food_tiles_above_4: 1240 at seed=42 t=0
+test tests::harness_resource_food_tiles_above_threshold ... ok
+[harness] births_not_trivially_low: stats_total_births=31
+test tests::harness_population_births_not_trivially_low ... ok
+[harness phase1-visual] stone_tiles_above_3: 1241 at seed=42 t=0
+test tests::harness_resource_stone_tiles_above_threshold ... ok
+[harness phase1-visual] wood_tiles_above_5: 1240 at seed=42 t=0
+test tests::harness_resource_wood_tiles_above_threshold ... ok
+[harness_room][B1] fixture produced 5 rooms
+[harness_room][B7/B8] safety 0.5 → 0.52 (Δ=+0.0200), warmth 0.5 → 0.53 (Δ=+0.0300)
+test tests::harness_room_effect_pipeline_fixture ... ok
+[harness_room][C1] tick=1 rooms=0 safety_warmth_pending=0
+test tests::harness_room_smoke_pre_construction ... ok
+System                                    Total(ms)    Avg(µs)    Max(µs)      Calls
+------------------------------------------------------------------------------------
+story_sifter_system                          4974.1    99481.9     398270         50
+territory_system                             1308.2     6540.8      52930        200
+steering_system                               353.0      353.0       8439       1000
+band_formation_system                         334.1    19653.5      29721         17
+influence_system                              237.0      473.9      10936        500
+resource_regen_system                         156.1      156.1       4268       1000
+job_assignment_system                         134.8      134.8       2751       1000
+behavior_system                               100.8      100.8      12431       1000
+contagion_system                               97.1      291.6       2986        333
+network_system                                 85.1       85.1       2841       1000
+llm_request_system                             81.4       81.4       4376       1000
+needs_system                                   74.0       74.0       2427       1000
+social_event_system                            39.3     1190.7       3627         33
+upper_needs_system                             37.9       37.9       2266       1000
+temperament_shift                              35.2       35.2        970       1000
+reputation_system                              32.3       32.3       2008       1000
+leader_system                                  29.4       29.4       9662       1000
+title_system                                   25.4       25.4       1445       1000
+movement_system                                22.8       22.8       3021       1000
+stratification_monitor                         22.6       22.6       1063       1000
+economic_tendency_system                       14.6       14.6       7078       1000
+occupation_system                              14.5       14.5        736       1000
+trait_violation_system                         10.8       10.8        620       1000
+gathering_system                                8.2        8.2       1366       1000
+job_satisfaction_system                         7.8        7.8        205       1000
+effect_apply_system                             7.6        7.6        321       1000
+memory_system                                   7.2        7.2        154       1000
+construction_system                             3.9        3.9       1071       1000
+childcare_system                                2.6        5.2       1226        500
+stress_system                                   2.5      123.2        379         20
+chronicle_system                                2.4        2.4        603       1000
+building_effect_system                          2.3        2.3         58       1000
+child_stress_processor                          2.0        4.0         95        500
+emotion_system                                  1.8       21.5        198         83
+stat_sync_system                                1.7       17.4         59        100
+band_behavior_system                            1.2       12.1         34        100
+morale_system                                   1.2        6.0         69        200
+mortality_system                                0.9        0.9        161       1000
+mental_break_system                             0.9        0.9         27       1000
+stat_threshold_system                           0.5        2.7         24        200
+intelligence_system                             0.5       22.8        116         20
+migration_system                                0.4        0.4        206       1000
+tech_maintenance_system                         0.3        0.3        307       1000
+settlement_culture_system                       0.3       26.0         34         10
+coping_system                                   0.3        7.8         33         33
+population_system                               0.2        0.2         22       1000
+trauma_scar_system                              0.1        1.2          4        100
+llm_response_system                             0.1        0.1         97       1000
+attachment_system                               0.1        6.8          8         10
+intergenerational_system                        0.0       11.0         11          4
+value_system                                    0.0        6.0          7          5
+age_system                                      0.0        1.4          4         20
+family_system                                   0.0        8.7         11          3
+stats_recorder                                  0.0        5.0          5          5
+personality_generator_system                    0.0        2.4          3         10
+ace_tracker_system                              0.0        1.9          2         10
+parenting_system                                0.0        3.0          3          4
+llm_timeout_system                              0.0        0.1          1        100
+tech_utilization_system                         0.0        0.0          1       1000
+tech_propagation_system                         0.0        0.0          1       1000
+tension_system                                  0.0        0.0          1       1000
+crafting_system                                 0.0        0.0          0        100
+personality_maturation_system                   0.0        0.0          0         10
+tech_discovery_system                           0.0        0.0          0       1000
+trait_system                                    0.0        0.0          0        100
+------------------------------------------------------------------------------------
+TOTAL: 8277.5ms across 65 systems
+
+Tick stats (last 300 ticks):
+  Avg: 6.71ms  Min: 0.66ms  Max: 123.69ms  TPS: 149.0
+
+Avg tick: 6.71ms (149.0 TPS)
+test tests::harness_perf_system_profile ... ok
+[harness_shelter_boost_non_whitelisted_no_effect] warmth_base=0.3872 warmth_with_totem=0.3872 ratio=1.000
+test tests::harness_shelter_boost_non_whitelisted_no_effect ... ok
+[harness_shelter_boost_two_optionals] warmth_base=0.3872 warmth_boosted=0.6195 ratio=1.600
+test tests::harness_shelter_boost_two_optionals ... ok
+[harness] births_occur: stats_total_births=31
+test tests::harness_population_births_occur ... ok
+[harness] renderer_agent_count_stable: alive=43
+test tests::harness_renderer_agent_count_stable_2000_ticks ... ok
+[harness_shelter_emission_boosted_with_hearth] warmth_base=0.3872 warmth_boosted=0.5034 ratio=1.300
+test tests::harness_shelter_emission_boosted_with_hearth ... ok
+[harness_shelter_emission_no_boost_without_optional] warmth=0.8800
+test tests::harness_shelter_emission_no_boost_without_optional ... ok
+[harness] identity name: "Spark"
+[harness] identity name: "Pine"
+[harness] identity name: "Aspen"
+[harness] identity name: "Dew"
+[harness] identity name: "Sky"
+[harness] identity name: "Nix"
+[harness] identity name: "North"
+[harness] identity name: "Gale"
+[harness] identity name: "Willow"
+[harness] identity name: "Raven"
+[harness] identity name: "Crag"
+[harness] identity name: "Snow"
+[harness] identity name: "Leaf"
+[harness] identity name: "Hawk"
+[harness] identity name: "Glen"
+[harness] identity name: "Lark"
+[harness] identity name: "Ginger"
+[harness] identity name: "Ember"
+[harness] identity name: "Sage"
+[harness] identity name: "Wren"
+[harness] identity name: "child_20"
+[harness] identity name: "child_21"
+[harness] identity name: "child_22"
+[harness] identity name: "child_23"
+[harness] identity name: "child_24"
+[harness] identity name: "child_25"
+[harness] identity name: "child_26"
+[harness] identity name: "child_27"
+[harness] identity name: "child_28"
+[harness] identity name: "child_29"
+[harness] identity name: "child_30"
+[harness] identity name: "child_31"
+[harness] identity name: "child_32"
+[harness] identity name: "child_33"
+[harness] identity name: "child_34"
+[harness] identity name: "child_35"
+[harness] identity name: "child_36"
+[harness] identity name: "child_37"
+[harness] identity name: "child_38"
+[harness] identity name: "child_39"
+[harness] identity name: "child_40"
+[harness] identity name: "child_41"
+[harness] identity name: "child_42"
+[harness] renderer_no_empty_identity_name: total=43, empty=0
+test tests::harness_renderer_no_empty_identity_name ... ok
+test tests::harness_special_zones_moisture_mod_exact ... ok
+test tests::harness_special_zones_no_double_stack ... ok
+[harness] special_zones_deterministic: 116 tiles in each run
+test tests::harness_special_zones_placement_deterministic ... ok
+test tests::harness_special_zones_resource_boost_values_exact ... ok
+test tests::harness_special_zones_snow_tiles_passable ... ok
+[harness] special_zones_spawn_on_map: map=64×64, zone_food_tiles=0
+test tests::harness_special_zones_spawn_on_map ... ok
+test tests::harness_special_zones_temperature_mod_exact ... ok
+test tests::harness_special_zones_terrain_override_is_snow ... ok
+[harness] special_zones_tile_count: 116
+test tests::harness_special_zones_tile_count_in_bounds ... ok
+[harness_sprite_assets_round1][A5] shelter.png correctly absent after Feature 3 ✓
+test tests::harness_sprite_assets_round1_a5_shelter_preserved ... ok
+[harness_sprite_assets_round1][A6] 144 files checked, violations (≤150B): 0
+test tests::harness_sprite_assets_round1_a6_all_files_above_150_bytes ... ok
+[harness_sprite_assets_round1][A7] `func _draw_building_sprite(... entity_id: int, ...` definitions: 1
+test tests::harness_sprite_assets_round1_a7_draw_building_sprite_signature ... ok
+[harness_sprite_assets_round1][A8a] _building_value(b, "id", present: true
+[harness_sprite_assets_round1][A8b] building_id passed to _draw_building_sprite: true
+test tests::harness_sprite_assets_round1_a8_call_site_chain ... ok
+[harness_sprite_assets_round1][A9] _load_building_texture(building_type, entity_id) in _draw_building_sprite body: true
+test tests::harness_sprite_assets_round1_a9_load_building_texture_forwarding ... ok
+[harness] births_upper_bound: stats_total_births=31
+test tests::harness_population_births_upper_bound ... ok
+[harness_sprite_assets_round1][asset_integrity] checked=144 missing=0 too_small=0 bad_magic=0 wrong_dims=0 extras=0
+[harness_sprite_assets_round1][P3] fallback-path canary: campfire/1.png readable, 32×32 IHDR verified (1306 bytes)
+test tests::harness_sprite_assets_round1_variant_file_integrity ... ok
+test tests::harness_latent_axes_immutable_across_simulation ... ok
+[harness_component_building] walls=15 (stone=0 wood=15) max_cheb=2 builder_samples=[2, 3, 3, 3] wall_plans=40 furniture_plans=3
+test tests::harness_component_building_wall_placement ... ok
+[harness] deaths_counter_valid: stats_total_deaths=8
+test tests::harness_population_deaths_counter_valid ... ok
+test tests::harness_sprite_infra_c5_empty_enclosed_is_not_ritual ... ok
+test tests::harness_sprite_infra_c6_non_enclosed_totem_is_unknown ... ok
+test tests::harness_sprite_infra_c7_totem_removal_demotes_ritual ... ok
+test tests::harness_sprite_infra_d1_one_comfort_effect_per_cycle ... ok
+test tests::harness_sprite_infra_d2_comfort_amount_is_0_02 ... ok
+test tests::harness_sprite_infra_d3_end_to_end_comfort_delta_0_02 ... ok
+test tests::harness_sprite_infra_d4_non_enclosed_room_zero_comfort ... ok
+test tests::harness_sprite_infra_d5_empty_enclosed_room_zero_comfort ... ok
+test tests::harness_sprite_infra_d6_comfort_sign_is_positive ... ok
+test tests::harness_sprite_infra_f2_totem_wall_shielding ... ok
+test tests::harness_sprite_infra_furniture_role_contribution ... ok
+test tests::harness_sprite_infra_furniture_vote_majority_and_determinism ... ok
+test tests::harness_sprite_infra_h1_legacy_save_deserialises_cleanly ... ok
+test tests::harness_sprite_infra_hearth_room_is_hearth_not_ritual ... ok
+test tests::harness_sprite_infra_locale_keys_en_parity ... ok
+test tests::harness_sprite_infra_locale_keys_ko_parity ... ok
+test tests::harness_sprite_infra_ritual_comfort_accumulation_10_ticks ... ok
+test tests::harness_sprite_infra_ritual_vs_hearth_comfort_differential ... ok
+test tests::harness_sprite_infra_room_role_ritual_locale_bridge ... ok
+test tests::harness_sprite_infra_shelter_optional_hearth ... ok
+test tests::harness_sprite_infra_sprite_path_resolver_non_empty ... ok
+test tests::harness_sprite_infra_structure_manual_roles ... ok
+test tests::harness_sprite_infra_totem_room_is_ritual ... ok
+test tests::harness_sprite_infra_totem_uses_spiritual_channel_no_new_variants ... ok
+[harness] renderer_positions_within_bounds: total=43, out_of_bounds=0
+test tests::harness_renderer_positions_within_bounds ... ok
+[harness] distant-only stone after 1 year: 4148.0
+test tests::harness_resource_stone_accessible_from_flatland ... ok
+[harness] axis_spread: high_ns=4 low_ns=6 high_ha=3 low_ha=10
+test tests::harness_tci_axis_spread_adequate_across_agents ... ok
+[harness] Year 1: alive=43, settlements=2
+test tests::harness_tci_expressed_axes_finite_and_within_unit_interval ... ok
+[harness] all_agents_present: 25/25 entities have Temperament
+test tests::harness_temperament_all_agents_present ... ok
+[harness] archetype_label_valid: violations=0
+test tests::harness_temperament_archetype_label_valid ... ok
+[harness] archetype_quadrant: pops=[sanguine=1,phlegmatic=2,melancholic=0,choleric=1] mismatches=0
+test tests::harness_temperament_archetype_quadrant_correctness ... ok
+[harness] awakened_false_at_spawn: 0 agents awakened at tick 10
+test tests::harness_temperament_awakened_false_at_spawn ... ok
+[harness] buildings: total=7 complete=6 shelter_walls=45
+test tests::harness_shelter_built_after_one_year ... ok
+[harness_room][A] complete_shelters=3 complete_campfires=1 rooms=6 enclosed=4
+[harness_room][A10] enclosed rooms baseline: 4
+[harness_room][A11] skipped — zero Hearth rooms at seed 42
+test tests::harness_room_structure_verification ... ok
+[harness] axis_diversity: ns mean=0.4607 std_dev=0.1580
+[harness] axis_diversity: ha mean=0.3901 std_dev=0.2199
+[harness] axis_diversity: rd mean=0.4781 std_dev=0.0944
+[harness] axis_diversity: p mean=0.4805 std_dev=0.2639
+test tests::harness_temperament_axis_diversity ... ok
+[harness] behavior_present: 25/25 entities have Behavior
+test tests::harness_temperament_behavior_present_on_all_agents ... ok
+[harness] bias_coverage_breadth: 26/30 non-zero with axes ns=0.9 ha=0.1 rd=0.8 p=0.8
+test tests::harness_temperament_bias_coverage_breadth ... ok
+[harness] biases_behavior ISOLATED: high_bias=0.042000 low_bias=-0.042000
+[harness] complete shelters: 3, enclosed rooms: 4, total rooms: 6
+test tests::harness_shelter_creates_enclosed_room ... ok
+[harness] temperament_present: 25 of 25 entities have Temperament
+test tests::harness_temperament_component_present_on_all_agents ... ok
+[harness] determinism: run1=25 agents, run2=25 agents
+test tests::harness_temperament_determinism ... ok
+[harness] event_store_shift_path: entity=0 before_shift_count=0 after_shift_count=1
+[harness] event_store_shift_path: before=(0.204192,0.176178,0.462979,0.239148) after=(0.254192,0.126178,0.462979,0.289148)
+test tests::harness_temperament_event_store_shift_path ... ok
+[harness] expressed_equals_latent_at_spawn: violations=0
+test tests::harness_temperament_expressed_equals_latent_at_spawn ... ok
+[harness_sprite_assets_round1][A12] complete buildings after 1 year: 6
+test tests::harness_sprite_assets_round1_building_construction_regression ... ok
+[harness_sprite_infra][A13] complete buildings: 6
+test tests::harness_sprite_infra_baseline_complete_buildings_regression ... ok
+[harness] ha_flee_seekshelter_sign: Flee=0.036000 SeekShelter=0.028000
+test tests::harness_temperament_ha_flee_seekshelter_sign ... ok
+[harness] ha_hunt_suppression: Hunt bias=-0.016000
+test tests::harness_temperament_ha_hunt_suppression ... ok
+[harness] hexaco_ns_correlation: bottom_OE_half ns_mean=0.3309 top_OE_half ns_mean=0.5904
+test tests::harness_temperament_hexaco_ns_correlation ... ok
+[harness] hexaco_tci_directional: bottom_half_ns=0.3309 top_half_ns=0.5904
+test tests::harness_temperament_hexaco_tci_directional_split ... ok
+[harness_sprite_infra][A12] Shelter rooms: 4
+test tests::harness_sprite_infra_baseline_shelter_regression ... ok
+[harness_sprite_infra][A11] Ritual rooms: 0
+test tests::harness_sprite_infra_baseline_no_ritual_rooms_after_one_year ... ok
+[harness] metabolic_neutrality: axes=(0.9,0.1,0.8,0.2) Eat=0.000000 Drink=0.000000
+[harness] metabolic_neutrality: axes=(0.1,0.9,0.2,0.8) Eat=0.000000 Drink=0.000000
+[harness] metabolic_neutrality: axes=(0.5,0.5,0.5,0.5) Eat=0.000000 Drink=0.000000
+[harness] metabolic_neutrality: axes=(1.0,0.0,1.0,0.0) Eat=0.000000 Drink=0.000000
+test tests::harness_temperament_metabolic_neutrality ... ok
+[harness] moderate_ns_bins: upper[0.55-0.70]=3 lower[0.30-0.45]=7
+test tests::harness_temperament_moderate_ns_bins ... ok
+[harness] identity_coquery: 0 entities missing Temperament
+test tests::harness_temperament_identity_coquery ... ok
+[harness] ns_explore_sign: bias=0.036000
+test tests::harness_temperament_ns_explore_sign ... ok
+[harness] p_build_gatherstone_sign: Build=0.028000 GatherStone=0.020000
+test tests::harness_temperament_p_build_gatherstone_sign ... ok
+[harness] rd_socialize_teach_sign: Socialize=0.032000 Teach=0.024000
+test tests::harness_temperament_rd_socialize_teach_sign ... ok
+[harness] axis_clamping upper: ns=1.0000 ha=0.4500 rd=0.5000 p=0.5500
+[harness] axis_clamping lower: ns=0.5500 ha=0.0000 rd=0.5000 p=0.5500
+test tests::harness_temperament_shift_axis_clamping ... ok
+[harness] shift_directional_signs: 23 checks, 0 failures
+test tests::harness_temperament_shift_directional_signs ... ok
+[harness] event_key_acceptance: 'family_death' → accepted=true
+[harness] event_key_acceptance: 'combat_victory' → accepted=true
+[harness] event_key_acceptance: 'combat_defeat' → accepted=true
+[harness] event_key_acceptance: 'starvation_recovery' → accepted=true
+[harness] event_key_acceptance: 'social_rejection' → accepted=true
+[harness] event_key_acceptance: 'first_child_born' → accepted=true
+[harness] event_key_acceptance: 'prolonged_isolation' → accepted=true
+[harness] event_key_acceptance: 'successful_hunt' → accepted=true
+[harness] event_key_acceptance: 'betrayal' → accepted=true
+[harness] event_key_acceptance: 'unknown_nonsense_event' → accepted=false
+test tests::harness_temperament_shift_event_key_acceptance ... ok
+test tests::harness_migration_clears_band has been running for over 60 seconds
+test tests::harness_multi_settlement_emerges has been running for over 60 seconds
+[harness] flatland stone after 1 year: 2556.0
+test tests::harness_stone_accessible_from_flatland ... ok
+[harness] stockpile: stone=1850.2 wood=6754.0
+test tests::harness_stone_collected_after_one_year ... ok
+[harness] shift_lifetime_cap: shift_count=3 max=3
+test tests::harness_temperament_shift_lifetime_cap ... ok
+[harness] shift_magnitude: family_death:ha delta=0.1000
+[harness] shift_magnitude: family_death:rd delta=0.0500
+[harness] shift_magnitude: family_death:p delta=0.0500
+[harness] shift_magnitude: combat_victory:ns delta=0.0500
+[harness] shift_magnitude: combat_victory:ha delta=0.0500
+[harness] shift_magnitude: combat_victory:p delta=0.0500
+[harness] shift_magnitude: combat_defeat:ns delta=0.0500
+[harness] shift_magnitude: combat_defeat:ha delta=0.1000
+[harness] shift_magnitude: combat_defeat:p delta=0.0500
+[harness] shift_magnitude: starvation_recovery:ha delta=0.0500
+[harness] shift_magnitude: starvation_recovery:p delta=0.0500
+[harness] shift_magnitude: social_rejection:ha delta=0.0500
+[harness] shift_magnitude: social_rejection:rd delta=0.1000
+[harness] shift_magnitude: first_child_born:rd delta=0.1000
+[harness] shift_magnitude: first_child_born:p delta=0.0500
+[harness] shift_magnitude: prolonged_isolation:ns delta=0.0500
+[harness] shift_magnitude: prolonged_isolation:ha delta=0.0500
+[harness] shift_magnitude: prolonged_isolation:rd delta=0.1000
+[harness] shift_magnitude: successful_hunt:ns delta=0.0500
+[harness] shift_magnitude: successful_hunt:ha delta=0.0500
+[harness] shift_magnitude: successful_hunt:p delta=0.0500
+[harness] shift_magnitude: betrayal:ha delta=0.1000
+[harness] shift_magnitude: betrayal:rd delta=0.1500
+test tests::harness_temperament_shift_magnitude_bounds ... ok
+[harness] sim_event_to_shift_key tag='family_death' → Some("family_death")
+[harness] sim_event_to_shift_key tag='combat_victory' → Some("combat_victory")
+[harness] sim_event_to_shift_key tag='combat_defeat' → Some("combat_defeat")
+[harness] sim_event_to_shift_key tag='social_rejection' → Some("social_rejection")
+[harness] sim_event_to_shift_key tag='first_child_born' → Some("first_child_born")
+[harness] sim_event_to_shift_key tag='prolonged_isolation' → Some("prolonged_isolation")
+[harness] sim_event_to_shift_key tag='successful_hunt' → Some("successful_hunt")
+[harness] sim_event_to_shift_key tag='betrayal' → Some("betrayal")
+[harness] sim_event_to_shift_key tag='starvation_recovery' → Some("starvation_recovery")
+[harness] sim_event_to_shift_key tag_precedence → Some("combat_victory")
+[harness] sim_event_to_shift_key Birth fallback → Some("first_child_born")
+[harness] sim_event_to_shift_key SocialConflict fallback → Some("combat_defeat")
+[harness] sim_event_to_shift_key TaskCompleted(hunt) fallback → Some("successful_hunt")
+[harness] sim_event_to_shift_key TaskCompleted(build) → None
+[harness] sim_event_to_shift_key unmapped → None
+test tests::harness_temperament_sim_event_to_shift_key_coverage ... ok
+[harness] axes_finite_unit_interval: violations=0
+test tests::harness_temperament_axes_finite_unit_interval ... ok
+[harness] temperament_biases_behavior: high_ns(≥0.70) samples=100 explore=0 | low_ns(≤0.30) samples=900 explore=18
+[harness] temperament_biases_behavior: high_rate=0.000 low_rate=0.020
+test tests::harness_temperament_biases_behavior ... ok
+[harness] ha_directional: high_ha=10 flee=0, low_ha=2 flee=0
+[harness] ha_directional: No Flee actions observed — Flee is a low-frequency emergency action; absence in 2000 ticks is plausible without danger events. Treat as Type E observation.
+test tests::harness_temperament_ha_directional_behavior ... ok
+[harness] ns_directional: high_ns=4 explore=0, low_ns=13 explore=1
+[harness] ns_directional: high_rate=0.0000 low_rate=0.0769
+test tests::harness_temperament_ns_directional_behavior ... ok
+[harness_wall_autotile_gdscript_discriminator] PASS — wall_inset=0.0, 4-dir adjacency checks, draw_line=4, draw_rect=1 (fill only), darkened(0.35), no old bridge-rect pattern
+test tests::harness_wall_autotile_gdscript_discriminator ... ok
+[harness_wall_autotile_material_colors] distinct_color_returns=4
+[harness_wall_autotile_material_colors] PASS — 4 distinct colors, stone=true, wood=true, default=true
+test tests::harness_wall_autotile_material_colors ... ok
+[harness_wall_click_info_A11] false_positives=0
+test tests::harness_wall_click_info_a11_oob_rejection ... ok
+[harness] Year 2: alive=61, settlements=6
+[harness] territory factions: 89
+[harness] territory max_value: 1.0000
+test tests::harness_territory_grid_has_data ... ok
+[harness] awakened_count after 8760 ticks: 30 (threshold: ≥ 1)
+test tests::harness_shift_rules_execute_at_least_once_over_two_years ... ok
+test tests::harness_population_growth_reaches_migration_threshold has been running for over 60 seconds
+test tests::harness_territory_not_on_water ... ok
+[harness] shift_fires_integration: 29/29 agents with shift_count > 0 after 4380 ticks, total_shifts=79, event_store_shifts=97
+test tests::harness_temperament_shift_fires_integration ... ok
+[harness_wall_click_info_A16] PASS — all 6 RoomRole variants produce valid unique ROOM_ROLE_* keys: {"ROOM_ROLE_HEARTH", "ROOM_ROLE_RITUAL", "ROOM_ROLE_STORAGE", "ROOM_ROLE_CRAFTING", "ROOM_ROLE_SHELTER", "ROOM_ROLE_UNKNOWN"}
+test tests::harness_wall_click_info_a16_room_role_locale_key ... ok
+[harness] bandless agents: 106/106 (100.0%)
+[harness] WARNING: all 106 agents bandless at tick 13140. BandFormation may need force-action retuning.
+test tests::harness_migration_clears_band ... ok
+[harness_wall_click_info_A18] signal positions: building_selected@63382 entity_selected@64861 tile_selected@65623
+[harness_wall_click_info_A18] tile_selected has else-guard: true
+[harness_wall_click_info_A18] PASS — click routing order: building@63382 < entity@64861 < tile@65623 (else-guarded)
+test tests::harness_wall_click_info_a18_click_routing_contract ... ok
+[harness_wall_click_info_A19] checked 14 required dictionary keys in get_tile_info
+[harness_wall_click_info_A19] PASS — all 14 keys present in get_tile_info
+test tests::harness_wall_click_info_a19_ffi_dictionary_key_contract ... ok
+[harness_wall_click_info_A20] PASS — hud.gd tile_selected wiring verified: connect + handler + populate + deselect
+test tests::harness_wall_click_info_a20_hud_wiring_contract ... ok
+[harness] awakened_implies_divergence: awakened=30 violations=0
+test tests::harness_temperament_awakened_implies_divergence ... ok
+[harness_wall_click_info_A12] (0,0) has_structural_data=false has_wall=false has_floor=false has_furniture=false is_door=false room_id=None
+test tests::harness_wall_click_info_a12_empty_tile_defaults ... ok
+[harness_wall_click_info_door_flag] PASS — door is_door=true has_structural=true, wall is_door=false has_wall=true
+test tests::harness_wall_click_info_door_flag_propagated ... ok
+[harness] expressed_finite_after_shifts: violations=0
+test tests::harness_temperament_expressed_finite_after_shifts ... ok
+[harness_wall_click_info_A13] rooms_checked=6 enclosed_true=4 enclosed_false=2 violations=0
+test tests::harness_wall_click_info_a13_room_enclosed_completeness ... ok
+[harness] latent_immutable: checked=20 violations=0
+test tests::harness_temperament_latent_immutable ... ok
+[harness_wall_click_info_A14] floor at (114,95) mat=Some("packed_earth")
+[harness_wall_click_info_A14] furniture at (114,95) id=Some("storage_pit")
+[harness_wall_click_info_A14] wall at (131,123) mat=Some("oak") hp=10
+[harness_wall_click_info_A14] PASS — wall=true floor=true furniture=true
+test tests::harness_wall_click_info_a14_structural_coupling ... ok
+[harness] shift_fires_gte3: 30/30 agents shifted after 8760 ticks
+test tests::harness_temperament_shift_fires_gte3 ... ok
+[harness_wall_click_info_A15] room at (114,95) id=Some(1) role=Some("ROOM_ROLE_UNKNOWN") enclosed=Some(false) tiles=Some(1)
+test tests::harness_wall_click_info_a15_room_coupling ... ok
+[harness] Year 3: alive=61, settlements=8
+[harness] Growth: Y1=43 Y2=61 Y3=61 peak=61
+test tests::harness_population_growth_reaches_migration_threshold ... ok
+[harness_wall_click_info_A17] unique materials={"oak", "packed_earth"} unique furniture={"fire_pit", "storage_pit"}
+[harness_wall_click_info_A17] missing_material_keys=[]
+[harness_wall_click_info_A17] missing_furniture_keys=[]
+[harness_wall_click_info_A17] dead_MATERIAL_keys=false dead_FURNITURE_keys=false
+[harness_wall_click_info_A17] PASS — all locale keys present, no dead keys
+test tests::harness_wall_click_info_a17_locale_key_coverage ... ok
+[harness] world_rules_global_constants: hunger_decay=0.0020 warmth_decay=0.0016 food_regen=1.00 wood_regen=1.00 farming=true season=default
+test tests::harness_world_rules_global_constants ... ok
+[harness_wall_click_info_A7] checked=88 violations=0
+test tests::harness_wall_click_info_a7_display_completeness ... ok
+[harness_wall_click_info_A8] completed_buildings=6 with_tile_data=6 violations=0
+test tests::harness_wall_click_info_building_tile_overlap ... ok
+[harness_wall_click_info_A6] door_with_wall_material violations=0
+test tests::harness_wall_click_info_door_no_wall_material ... ok
+[harness] Settlement faction 7: hardness = 0.151
+[harness] Settlement faction 5: hardness = 0.215
+[harness] Settlement faction 6: hardness = 0.138
+[harness] Settlement faction 3: hardness = 0.215
+[harness] Settlement faction 4: hardness = 0.260
+[harness] Settlement faction 2: hardness = 0.503
+[harness] total pop: 83, completed buildings: 11
+[harness] harness_territory_hardness_scales_with_settlement: PASS
+test tests::harness_territory_hardness_scales_with_settlement ... ok
+[harness_wall_click_info_A2] floor_material violations=0
+test tests::harness_wall_click_info_floor_material_valid ... ok
+[harness_wall_click_info_A3] furniture_id violations=0
+test tests::harness_wall_click_info_furniture_id_valid ... ok
+test tests::harness_territory_dispute_detected has been running for over 60 seconds
+[harness_wall_click_info_A4] orphaned_room_ids=0
+test tests::harness_wall_click_info_room_id_referential_integrity ... ok
+[harness_wall_click_info_C9] wall_tiles=45 floor_tiles=32 furniture_tiles=6 room_tiles=31
+test tests::harness_wall_click_info_tile_data_diversity_lower ... ok
+[harness_wall_click_info_A5] room_tile_without_floor violations=0
+test tests::harness_wall_click_info_room_tile_has_floor ... ok
+[harness_wall_click_info_A1] wall_hp_and_material violations=0
+test tests::harness_wall_click_info_wall_hp_and_material_valid ... ok
+[harness_wall_click_info_C10] wall_tiles=45 floor_tiles=32 furniture_tiles=6 room_tiles=31
+test tests::harness_wall_click_info_tile_data_diversity_upper ... ok
+[harness] 5-year result: alive=61, settlements=8
+[harness]   Settlement SettlementId(2): members=23, food=41.6, stone=2.9
+[harness]   Settlement SettlementId(1): members=33, food=0.0, stone=2523.5
+[harness]   Settlement SettlementId(3): members=53, food=52.0, stone=2.8
+[harness]   Settlement SettlementId(7): members=6, food=11.3, stone=3.0
+[harness]   Settlement SettlementId(8): members=8, food=9.8, stone=3.0
+[harness]   Settlement SettlementId(5): members=4, food=11.5, stone=3.0
+[harness]   Settlement SettlementId(4): members=23, food=38.5, stone=7675.0
+[harness]   Settlement SettlementId(6): members=8, food=11.3, stone=3.0
+test tests::harness_multi_settlement_emerges ... ok
+[harness] settlements: 8
+[harness]   Settlement SettlementId(2) at (115, 96), pop=20
+[harness]   Settlement SettlementId(6) at (105, 111), pop=4
+[harness]   Settlement SettlementId(3) at (145, 112), pop=27
+[harness]   Settlement SettlementId(1) at (128, 128), pop=64
+[harness]   Settlement SettlementId(4) at (110, 141), pop=29
+[harness]   Settlement SettlementId(7) at (143, 143), pop=6
+[harness]   Settlement SettlementId(8) at (156, 162), pop=8
+[harness]   Settlement SettlementId(5) at (98, 161), pop=4
+[harness] territory disputes found: 3
+[harness]   factions 2 vs 4: overlap=4 tiles, intensity=0.67, epicenter=(127,150)
+[harness]   factions 5 vs 9: overlap=1 tiles, intensity=0.52, epicenter=(152,152)
+[harness]   factions 2 vs 3: overlap=5 tiles, intensity=0.91, epicenter=(126,118)
+[harness] total border friction: 21.94
+[harness] border friction pairs: 6
+[harness] settlement-only disputes: 3
+[harness] harness_territory_dispute_detected: PASS
+test tests::harness_territory_dispute_detected ... ok
+
+test result: ok. 294 passed; 0 failed; 1 ignored; 0 measured; 7 filtered out; finished in 253.48s
+
+[harness 13:30:39] Harness: all tests PASSED
+[harness 13:30:39] Running PostCode FFI chain check...
+FFI CHAIN: OK
+[harness 13:30:39] Generator result: /Users/rexxa/github/new-world-wt/lead/.harness/results/a4-causal-tracking-exposure/gen_result_attempt1.md
+[harness progress] 2 Generator A1: DONE — Files: unknown. 
+[harness 13:30:39] === Step 2.5a: VISUAL VERIFY ===
+[harness 13:30:39] Running Godot visual verification (ticks=4380)...
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+[visual-verify] Feature: a4-causal-tracking-exposure, Ticks: 4380, Headless: false
+[TechTreeManager] Loaded 169 tech definitions
+[visual-verify] Main scene loaded, waiting for setup...
+[Main] Spawned entities at 1 spawn point(s).
+
+======================================
+  WorldSim Phase 2-A1
+  Seed: 42
+  World: 256x256  |  Entities: 20
+  Systems: 62 registered
+======================================
+
+  Controls:
+    WASD / Arrows  = Pan camera
+    Mouse Wheel    = Zoom in/out
+    Trackpad Pinch = Zoom in/out
+    Two-finger Pan = Scroll camera
+    Middle Mouse   = Drag pan
+    Left Click     = Select entity/building
+    Space          = Pause / Resume
+    . (period)     = Speed up
+    , (comma)      = Speed down
+    Tab            = Toggle resource overlay
+    B              = Cycle minimap size
+    M              = Toggle ambient sound
+    G              = Statistics detail
+    E              = Entity/Building detail
+    C              = Chronicle
+    P              = Entity/Building list
+    H              = Help overlay (pauses)
+    N              = Toggle day/night
+    Cmd+S          = Quick Save
+    Cmd+L          = Quick Load
+    Cmd+=/-/0      = UI Scale (1.0)
+    Double-click   = Open detail popup
+
+[visual-verify] Setup complete, starting tick loop (paused main _process)...
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_tick0000.png
+[visual-verify] Tick 500 / 4380
+[visual-verify] Tick 1000 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_tick1095.png
+[visual-verify] Tick 1515 / 4380
+[visual-verify] Tick 2015 / 4380
+[visual-verify] FFI chain verified: 11 checks
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_tick2190.png
+[visual-verify] Tick 2510 / 4380
+[visual-verify] Tick 3010 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_tick3285.png
+[visual-verify] Tick 3505 / 4380
+[visual-verify] Tick 4005 / 4380
+[visual-verify] Tick 4380 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_tickFINAL.png
+[visual-verify] Building center from tile_grid: (1992.9, 2011.5) — 87 wall tiles
+[visual-verify] Camera set: pos=(1992.9, 2011.5) zoom=5.0
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_closeup_Z1.png
+[visual-verify] Close-up captured: closeup_Z1 (zoom=5.0)
+[visual-verify] Building center from tile_grid: (1992.9, 2011.5) — 87 wall tiles
+[visual-verify] Camera set: pos=(1992.9, 2011.5) zoom=3.0
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/screenshot_closeup_Z2.png
+[visual-verify] Close-up captured: closeup_Z2 (zoom=3.0)
+[visual-verify] FPS warmup 30/120 — current FPS: 28
+[visual-verify] FPS warmup 60/120 — current FPS: 35
+[visual-verify] FPS warmup 90/120 — current FPS: 34
+[visual-verify] FPS warmup 120/120 — current FPS: 35
+[visual-verify] FPS warmup complete — sampled FPS: 35
+[visual-verify] Evidence captured to: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure
+WARNING: 1 RID of type "CanvasItem" was leaked.
+     at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2690)
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2641)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:810)
+[harness 13:36:40] Visual evidence captured to: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure
+total 4584
+drwxr-xr-x@ 17 rexxa  staff     544 Apr 24 13:36 .
+drwxr-xr-x  48 rexxa  staff    1536 Apr 24 12:58 ..
+-rw-r--r--@  1 rexxa  staff      67 Apr 24 13:36 console_log.txt
+-rw-r--r--@  1 rexxa  staff  130275 Apr 24 13:36 entity_summary.txt
+-rw-r--r--@  1 rexxa  staff     455 Apr 24 13:33 ffi_verify.txt
+-rw-r--r--@  1 rexxa  staff    3991 Apr 24 13:36 godot_output.txt
+-rw-r--r--@  1 rexxa  staff     590 Apr 24 13:36 manifest.txt
+-rw-r--r--@  1 rexxa  staff     248 Apr 24 13:36 performance.txt
+-rw-r--r--@  1 rexxa  staff  158189 Apr 24 13:36 screenshot_closeup_Z1.png
+-rw-r--r--@  1 rexxa  staff  251253 Apr 24 13:36 screenshot_closeup_Z2.png
+-rw-r--r--@  1 rexxa  staff  302758 Apr 24 13:30 screenshot_tick0000.png
+-rw-r--r--@  1 rexxa  staff  329402 Apr 24 13:32 screenshot_tick1095.png
+-rw-r--r--@  1 rexxa  staff  360166 Apr 24 13:33 screenshot_tick2190.png
+-rw-r--r--@  1 rexxa  staff  362015 Apr 24 13:35 screenshot_tick3285.png
+-rw-r--r--@  1 rexxa  staff  349525 Apr 24 13:36 screenshot_tickFINAL.png
+-rw-r--r--@  1 rexxa  staff    1060 Apr 24 13:36 visual_analysis.txt
+-rw-r--r--@  1 rexxa  staff    1168 Apr 24 13:36 visual_checklist_rendered.md
+[harness progress] 2.5a Visual Verify: DONE — 7 screenshots. Agents: Total agents: 61. Avg tick: 76.526 ms
+[harness 13:36:40] === Step 2.5a-int: VLM INTERACTIVE ===
+[harness 13:36:40] No interactive scenarios defined — skipping
+[harness progress] 2.5a-int VLM Interactive: DONE — SKIPPED (no scenarios)
+[harness 13:36:41] === Step 2.5b: VLM ANALYSIS ===
+[harness 13:36:41] Found 7 screenshots — running VLM analysis
+[harness 13:36:41] Preserving Godot-rendered visual checklist (assertion tokens present)
+[harness 13:36:42] WARNING: No terminal verdict token found in visual_analysis.txt — appending VISUAL_WARNING
+[harness 13:36:42] Visual analysis: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/a4-causal-tracking-exposure/visual_analysis.txt
+[harness progress] 2.5b VLM Analysis: DONE — VISUAL_WARNING. Not logged in · Please run /login
+[harness 13:36:42] Interactive validator skipped (no interactive_results.json)
+[harness progress] 2.5a-val Interactive Validator: DONE — SKIPPED (no evidence)
+[harness 13:36:42] === Step 2.5c: FFI CHAIN VERIFY (Codex) ===
+[harness 13:36:42] Running FFI Chain Verify via Codex...
+[harness 13:37:02] WARNING: FFI chain verify failed (exit 1) — continuing pipeline
+[harness 13:37:02] FFI chains: all complete (or no new methods)
+[harness progress] 2.5c FFI Verify (Codex): DONE — UNKNOWN. 0
+0 broken chain(s)
+[harness 13:37:02] === Step 2.7: REGRESSION GUARD (Codex) ===
+[harness 13:37:02] Running Regression Guard via Codex...
+[harness 13:37:22] WARNING: Regression guard failed (exit 1) — continuing pipeline
+[harness 13:37:22] Regression guard: CLEAN
+[harness progress] 2.7 Regression Guard (Codex): DONE — CLEAN
+[harness 13:37:22] === Step 3: CODEX EVALUATOR ===
+[harness 13:37:22] Running Codex Evaluator (independent session, attempt 1)...
+[harness 13:37:40] WARNING: Codex Evaluator exited with code 1
+[harness 13:37:40] FATAL: Codex Evaluator failed and produced no output (exit 1). Check /Users/rexxa/github/new-world-wt/lead/.harness/reviews/a4-causal-tracking-exposure/codex_evaluator_log.txt

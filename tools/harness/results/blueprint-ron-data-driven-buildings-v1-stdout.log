@@ -1,0 +1,576 @@
+[harness 18:17:28] ==========================================
+[harness 18:17:28] Harness Pipeline v4 — blueprint-ron-data-driven-buildings-v1
+[harness 18:17:28] Mode: --quick
+[harness 18:17:28] Prompt: tools/harness/prompts/blueprint-ron-data-driven-buildings-v1.md
+[harness 18:17:28] ==========================================
+[harness 18:17:28] === Step 0: MECHANICAL GATE (0-token) ===
+warning: unused variable: `b`
+    --> crates/sim-systems/src/runtime/band.rs:2228:13
+     |
+2228 |         let b = spawn_agent(
+     |             ^ help: if this is intentional, prefix it with an underscore: `_b`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `super::*`
+     --> crates/sim-test/src/main.rs:26164:9
+      |
+26164 |     use super::*;
+      |         ^^^^^^^^
+      |
+      = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+
+running 77 tests
+.............................................................................
+test result: ok. 77 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+
+running 138 tests
+....................................................................................... 87/138
+...................................................
+test result: ok. 138 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 44 tests
+............................................
+test result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 5 tests
+.....
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 116 tests
+....................................................................................... 87/116
+.............................
+test result: ok. 116 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+
+running 467 tests
+....................................................................................... 87/467
+....................................................................................... 174/467
+....................................................................................... 261/467
+....................................................................................... 348/467
+....................................................................................... 435/467
+................................
+test result: ok. 467 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 487 tests
+....................................................................................... 87/487
+....................................................................................... 174/487
+.......................................... 216/487
+harness_body_damage_api::harness_work_injury_forage_rate --- FAILED
+.......... 227/487
+harness_body_damage_api::harness_work_injury_causal_log_records_kind --- FAILED
+..... 233/487
+tests::harness_action_non_idle_ratio_steady_state --- FAILED
+...test harness_body_damage_api::harness_work_injury_rate_within_tolerance has been running for over 60 seconds
+... 240/487
+tests::harness_a9_behavioral_mortality_mul_isolation --- FAILED
+......................... 266/487
+tests::harness_blueprint_regression_shelter_complete --- FAILED
+............ 279/487
+tests::harness_building_visuals_adjacent_wall_pairs --- FAILED
+...................... 302/487
+tests::harness_building_visuals_wall_material_valid --- FAILED
+..... 308/487
+tests::harness_food_economy_plan_comprehensive --- FAILED
+tests::harness_food_economy_balance_4380 --- FAILED
+tests::harness_ns_biases_exploratory_actions_directionally --- FAILED
+tests::harness_food_economy_plan_v2 --- FAILED
+tests::harness_memorial_natural_mourn_over_simulation --- FAILED
+. 314/487
+tests::harness_p2b3_builder_assigns_and_places_wall --- FAILED
+tests::harness_component_building_wall_placement --- FAILED
+.. 318/487
+tests::harness_pray_action_restores_comfort --- FAILED
+..i............................................................test tests::harness_migration_clears_band has been running for over 60 seconds
+test tests::harness_multi_settlement_emerges has been running for over 60 seconds
+.. 384/487
+tests::harness_shelter_built_after_one_year --- FAILED
+..... 390/487
+tests::harness_sprite_assets_round1_building_construction_regression --- FAILED
+.... 395/487
+tests::harness_sprite_infra_baseline_shelter_regression --- FAILED
+tests::harness_sprite_infra_baseline_complete_buildings_regression --- FAILED
+.......................... 423/487
+tests::harness_temperament_biases_behavior --- FAILED
+test tests::harness_population_growth_reaches_migration_threshold has been running for over 60 seconds
+.......... 434/487
+tests::harness_wall_click_info_a18_click_routing_contract --- FAILED
+.. 437/487
+tests::harness_population_growth_reaches_migration_threshold --- FAILED
+.. 440/487
+tests::harness_wall_click_info_a13_room_enclosed_completeness --- FAILED
+.........test tests::harness_territory_dispute_detected has been running for over 60 seconds
+..test tests::harness_territory_hardness_scales_with_settlement has been running for over 60 seconds
+.......... 462/487
+tests::harness_multi_settlement_emerges --- FAILED
+.................. 481/487
+tests::harness_wall_click_info_tile_data_diversity_lower --- FAILED
+.....
+failures:
+
+---- harness_body_damage_api::harness_work_injury_forage_rate stdout ----
+[harness] forage_rate: completions=36 injuries=0
+[harness] forage_rate: ratio_f=0.0000
+
+thread 'harness_body_damage_api::harness_work_injury_forage_rate' (4439666) panicked at crates/sim-test/src/main.rs:24642:9:
+[A10] forage injury rate 0.0000 below 0.5% lower bound
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- harness_body_damage_api::harness_work_injury_causal_log_records_kind stdout ----
+[harness] work_injury_causal_log: forage=false craft=false
+
+thread 'harness_body_damage_api::harness_work_injury_causal_log_records_kind' (4439663) panicked at crates/sim-test/src/main.rs:24709:9:
+[D5] at least one work injury must appear in causal log in 10000 ticks with 30 agents
+
+---- tests::harness_action_non_idle_ratio_steady_state stdout ----
+[harness phase1-visual] non_idle_ratio: 0.1500 (3/20) at seed=42 tick 4380
+
+thread 'tests::harness_action_non_idle_ratio_steady_state' (4441978) panicked at crates/sim-test/src/main.rs:7953:9:
+non-Idle ratio 0.150 below 0.30 at tick 4380 (3 non-idle / 20 total)
+
+---- tests::harness_a9_behavioral_mortality_mul_isolation stdout ----
+[harness] a9 A12 mortality_isolation: base_deaths=11 boosted_deaths=11 base_alive=20 boosted_alive=20
+
+thread 'tests::harness_a9_behavioral_mortality_mul_isolation' (4440629) panicked at crates/sim-test/src/main.rs:6015:9:
+mortality_mul=100.0 + lifespan_mul=0.1 must produce more deaths: boosted=11 <= base=11
+
+---- tests::harness_blueprint_regression_shelter_complete stdout ----
+[harness_blueprint_regression_shelter] complete_shelters=0
+
+thread 'tests::harness_blueprint_regression_shelter_complete' (4443219) panicked at crates/sim-test/src/main.rs:12280:9:
+expected ≥1 complete shelter after 4380 ticks, got 0
+
+---- tests::harness_building_visuals_adjacent_wall_pairs stdout ----
+[harness_building_visuals_adjacent_wall_pairs] adjacent_pairs=0 autotile=true bridge_px=2
+
+thread 'tests::harness_building_visuals_adjacent_wall_pairs' (4443518) panicked at crates/sim-test/src/main.rs:10219:9:
+Expected ≥4 adjacent wall tile pairs, observed 0
+
+---- tests::harness_building_visuals_wall_material_valid stdout ----
+[harness_building_visuals_wall_material_valid] wall_count=2 empty_material_count=0
+
+thread 'tests::harness_building_visuals_wall_material_valid' (4443838) panicked at crates/sim-test/src/main.rs:10148:9:
+Expected ≥8 wall tiles after 4380 ticks, observed 2
+
+---- tests::harness_food_economy_plan_comprehensive stdout ----
+[harness] === Food Economy Plan Comprehensive (4380 ticks) ===
+[harness] Food history (100-tick samples, tick/food/pop):
+[harness]   tick=  100: food=   65.60, pop=37
+[harness]   tick=  200: food=   71.70, pop=37
+[harness]   tick=  300: food=   70.90, pop=37
+[harness]   tick=  400: food=   68.90, pop=37
+[harness]   tick=  500: food=   60.90, pop=37
+[harness]   tick=  600: food=   66.40, pop=37
+[harness]   tick=  700: food=   53.80, pop=37
+[harness]   tick=  800: food=   38.50, pop=37
+[harness]   tick=  900: food=   26.90, pop=37
+[harness]   tick= 1000: food=   13.50, pop=37
+[harness]   tick= 1100: food=   12.00, pop=37
+[harness]   tick= 1200: food=   10.50, pop=37
+[harness]   tick= 1300: food=    8.50, pop=37
+[harness]   tick= 1400: food=    6.50, pop=37
+[harness]   tick= 1500: food=    5.00, pop=37
+[harness]   tick= 1600: food=    3.00, pop=37
+[harness]   tick= 1700: food=    1.00, pop=37
+[harness]   tick= 1800: food=    0.00, pop=37
+[harness]   tick= 1900: food=    0.00, pop=37
+[harness]   tick= 2000: food=    0.00, pop=37
+[harness]   tick= 2100: food=    0.00, pop=37
+[harness]   tick= 2200: food=    0.00, pop=37
+[harness]   tick= 2300: food=    0.00, pop=37
+[harness]   tick= 2400: food=    0.00, pop=37
+[harness]   tick= 2500: food=    0.00, pop=37
+[harness]   tick= 2600: food=    0.00, pop=37
+[harness]   tick= 2700: food=    0.00, pop=37
+[harness]   tick= 2800: food=    0.00, pop=37
+[harness]   tick= 2900: food=    0.00, pop=37
+[harness]   tick= 3000: food=    0.00, pop=37
+[harness]   tick= 3100: food=    0.00, pop=37
+[harness]   tick= 3200: food=    0.00, pop=37
+[harness]   tick= 3300: food=    0.00, pop=37
+[harness]   tick= 3400: food=    0.00, pop=37
+[harness]   tick= 3500: food=    0.00, pop=37
+[harness]   tick= 3600: food=    0.00, pop=37
+[harness]   tick= 3700: food=    0.00, pop=37
+[harness]   tick= 3800: food=    0.00, pop=37
+[harness]   tick= 3900: food=    0.00, pop=37
+[harness]   tick= 4000: food=    0.00, pop=37
+[harness]   tick= 4100: food=    0.00, pop=37
+[harness]   tick= 4200: food=    0.00, pop=37
+[harness]   tick= 4300: food=    0.00, pop=37
+[harness] Final: food=0.00, pop=20
+[harness] max_food_ever=71.70, max_zero_streak=2600
+[harness] --- Food Flow Diagnostics ---
+[harness] Forage completions (direct counter): 28
+[harness] Food produced (forage deposits): 192.40
+[harness] Food drained — childcare: 141.40, births: 51.00, crafting: 0.00, total: 192.40
+[harness] Production/consumption ratio: 1.000
+[harness] Scarcity windows: 38, Non-scarcity windows: 2
+[harness] Mean foragers — scarcity=0.00, non-scarcity=0.00
+[harness] Collapse windows (food < 1.0): [1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300]
+[harness] Scarcity boost applications (boost-driven Forage, excl. hunger force): 29
+
+thread 'tests::harness_food_economy_plan_comprehensive' (4444284) panicked at crates/sim-test/src/main.rs:1815:9:
+A1: stockpile_food should be > 5.0 at tick 4380, got 0.00
+
+---- tests::harness_food_economy_balance_4380 stdout ----
+[harness] === Food Economy Balance (4380 ticks) ===
+[harness] Food history (tick, food, pop):
+[harness]   tick=  200: food=  71.7, pop=37
+[harness]   tick=  400: food=  68.9, pop=37
+[harness]   tick=  600: food=  66.4, pop=37
+[harness]   tick=  800: food=  38.5, pop=37
+[harness]   tick= 1000: food=  13.5, pop=37
+[harness]   tick= 1200: food=  10.5, pop=37
+[harness]   tick= 1400: food=   6.5, pop=37
+[harness]   tick= 1600: food=   3.0, pop=37
+[harness]   tick= 1800: food=   0.0, pop=37
+[harness]   tick= 2000: food=   0.0, pop=37
+[harness]   tick= 2200: food=   0.0, pop=37
+[harness]   tick= 2400: food=   0.0, pop=37
+[harness]   tick= 2600: food=   0.0, pop=37
+[harness]   tick= 2800: food=   0.0, pop=37
+[harness]   tick= 3000: food=   0.0, pop=37
+[harness]   tick= 3200: food=   0.0, pop=37
+[harness]   tick= 3400: food=   0.0, pop=37
+[harness]   tick= 3600: food=   0.0, pop=37
+[harness]   tick= 3800: food=   0.0, pop=37
+[harness]   tick= 4000: food=   0.0, pop=37
+[harness]   tick= 4200: food=   0.0, pop=37
+[harness] Final: food=0.0, pop=20
+[harness] Stats: min_food=0.0, max_food=71.7, max_zero_streak=2600
+[harness]   Settlement SettlementId(2): members=8, food=0.0
+[harness]   Settlement SettlementId(1): members=29, food=0.0
+
+thread 'tests::harness_food_economy_balance_4380' (4444282) panicked at crates/sim-test/src/main.rs:1549:9:
+stockpile_food should be > 2.0 at tick 4380, got 0.0
+
+---- tests::harness_ns_biases_exploratory_actions_directionally stdout ----
+[harness] ns_directional ISOLATED: high_bias=0.042000 low_bias=-0.042000
+[harness] ns_directional: high_samples=200 high_explore=0 low_samples=1200 low_explore=0
+
+thread 'tests::harness_ns_biases_exploratory_actions_directionally' (4445262) panicked at crates/sim-test/src/main.rs:3169:9:
+No exploratory actions observed in either NS group (high_explore=0 low_explore=0) — temperament NS bias is producing zero signal. Explore action must receive a non-zero base score; check behavior_select_action.
+
+---- tests::harness_food_economy_plan_v2 stdout ----
+[harness] === Food Economy Plan v2 (4380 ticks) ===
+[harness] Food history (100-tick windows, tick/food/pop):
+[harness]   tick=  600: food=   66.40, pop=37
+[harness]   tick=  700: food=   53.80, pop=37
+[harness]   tick=  800: food=   38.50, pop=37
+[harness]   tick=  900: food=   26.90, pop=37
+[harness]   tick= 1000: food=   13.50, pop=37
+[harness]   tick= 1100: food=   12.00, pop=37
+[harness]   tick= 1200: food=   10.50, pop=37
+[harness]   tick= 1300: food=    8.50, pop=37
+[harness]   tick= 1400: food=    6.50, pop=37
+[harness]   tick= 1500: food=    5.00, pop=37
+[harness]   tick= 1600: food=    3.00, pop=37
+[harness]   tick= 1700: food=    1.00, pop=37
+[harness]   tick= 1800: food=    0.00, pop=37
+[harness]   tick= 1900: food=    0.00, pop=37
+[harness]   tick= 2000: food=    0.00, pop=37
+[harness]   tick= 2100: food=    0.00, pop=37
+[harness]   tick= 2200: food=    0.00, pop=37
+[harness]   tick= 2300: food=    0.00, pop=37
+[harness]   tick= 2400: food=    0.00, pop=37
+[harness]   tick= 2500: food=    0.00, pop=37
+[harness]   tick= 2600: food=    0.00, pop=37
+[harness]   tick= 2700: food=    0.00, pop=37
+[harness]   tick= 2800: food=    0.00, pop=37
+[harness]   tick= 2900: food=    0.00, pop=37
+[harness]   tick= 3000: food=    0.00, pop=37
+[harness]   tick= 3100: food=    0.00, pop=37
+[harness]   tick= 3200: food=    0.00, pop=37
+[harness]   tick= 3300: food=    0.00, pop=37
+[harness]   tick= 3400: food=    0.00, pop=37
+[harness]   tick= 3500: food=    0.00, pop=37
+[harness]   tick= 3600: food=    0.00, pop=37
+[harness]   tick= 3700: food=    0.00, pop=37
+[harness]   tick= 3800: food=    0.00, pop=37
+[harness]   tick= 3900: food=    0.00, pop=37
+[harness]   tick= 4000: food=    0.00, pop=37
+[harness]   tick= 4100: food=    0.00, pop=37
+[harness]   tick= 4200: food=    0.00, pop=37
+[harness]   tick= 4300: food=    0.00, pop=37
+[harness] Final: food=0.00, pop=20
+[harness] max_zero_streak=2600
+[harness] Window classification: scarcity=38, non-scarcity=0, total=38
+[harness] Mean foragers — scarcity=0.00, non-scarcity=0.00
+[harness] Boost applications=29, counterfactual=29, boost_outside_scarcity=0
+
+thread 'tests::harness_food_economy_plan_v2' (4444359) panicked at crates/sim-test/src/main.rs:2096:9:
+A2: food=0 for 2600 consecutive ticks (max allowed 200) after tick 500
+
+---- tests::harness_memorial_natural_mourn_over_simulation stdout ----
+[harness_memorial_natural_mourn_over_simulation] meaning_with=0.1885 meaning_without=0.3361 meaning_delta=-0.1476
+
+thread 'tests::harness_memorial_natural_mourn_over_simulation' (4445195) panicked at crates/sim-test/src/main.rs:18279:9:
+memorial A4: Type E — natural Mourn must occur ≥ 1 time over 2000 ticks with cairns present (meaning_delta > 0.01). meaning_delta=-0.1476. Mourn pipeline is broken (emotion fluctuation not triggering has_nearby_cairn).
+
+---- tests::harness_p2b3_builder_assigns_and_places_wall stdout ----
+
+thread 'tests::harness_p2b3_builder_assigns_and_places_wall' (4445284) panicked at crates/sim-test/src/main.rs:9832:9:
+[A4] tile_grid walls at tick 4380 == 2, expected ≥ 8 (geometric ring minimum: 3×3 exterior enclosing 1×1 interior)
+
+---- tests::harness_component_building_wall_placement stdout ----
+[harness_component_building] walls=2 (stone=2 wood=0) max_cheb=2 builder_samples=[2, 2, 2, 2] wall_plans=13 furniture_plans=1
+
+thread 'tests::harness_component_building_wall_placement' (4444017) panicked at crates/sim-test/src/main.rs:9346:9:
+[A1] wall count 2 < lower bound 15 (8R-1 with R=2)
+
+---- tests::harness_pray_action_restores_comfort stdout ----
+[harness_pray_action_restores_comfort] comfort_with_totem=0.8200 comfort_without_totem=0.5000 delta=0.3200
+
+thread 'tests::harness_pray_action_restores_comfort' (4446614) panicked at crates/sim-test/src/main.rs:17361:9:
+ritual-system-v1 A1: Type C — totem-near agents should gain >= 0.34 total Comfort more than no-totem agents over 200 ticks. delta=0.3200 (threshold=0.34)
+
+---- tests::harness_shelter_built_after_one_year stdout ----
+[harness] buildings: total=3 complete=2 shelter_walls=2
+
+thread 'tests::harness_shelter_built_after_one_year' (4446954) panicked at crates/sim-test/src/main.rs:2196:9:
+expected at least 15 shelter wall tiles after 4380 ticks, got 2
+
+---- tests::harness_sprite_assets_round1_building_construction_regression stdout ----
+[harness_sprite_assets_round1][A12] complete buildings after 1 year: 2
+
+thread 'tests::harness_sprite_assets_round1_building_construction_regression' (4447108) panicked at crates/sim-test/src/main.rs:16701:9:
+A12 sprite-assets-round1: complete buildings expected ≥ 3, got 2. GDScript entity_id plumbing change may have introduced a Rust-side regression.
+
+---- tests::harness_sprite_infra_baseline_shelter_regression stdout ----
+[harness_sprite_infra][A12] Shelter rooms: 0
+
+thread 'tests::harness_sprite_infra_baseline_shelter_regression' (4447192) panicked at crates/sim-test/src/main.rs:15887:9:
+A12: baseline 1-year sim produced 0 Shelter rooms, expected ≥ 1
+
+---- tests::harness_sprite_infra_baseline_complete_buildings_regression stdout ----
+[harness_sprite_infra][A13] complete buildings: 2
+
+thread 'tests::harness_sprite_infra_baseline_complete_buildings_regression' (4447157) panicked at crates/sim-test/src/main.rs:15909:9:
+A13: baseline 1-year complete buildings expected ≥ 3, got 2
+
+---- tests::harness_temperament_biases_behavior stdout ----
+[harness] biases_behavior ISOLATED: high_bias=0.042000 low_bias=-0.042000
+[harness] temperament_biases_behavior: high_ns(≥0.70) samples=0 explore=0 | low_ns(≤0.30) samples=1100 explore=0
+
+thread 'tests::harness_temperament_biases_behavior' (4448155) panicked at crates/sim-test/src/main.rs:3509:9:
+NS distribution too narrow for ≥0.70/≤0.30 thresholds (high_samples=0 low_samples=1100). Check PRS weight spread.
+
+---- tests::harness_wall_click_info_a18_click_routing_contract stdout ----
+[harness_wall_click_info_A18] signal positions: building_selected@64562 entity_selected@60823 tile_selected@66803
+
+thread 'tests::harness_wall_click_info_a18_click_routing_contract' (4449806) panicked at crates/sim-test/src/main.rs:11466:9:
+Click routing contract violation: building_selected.emit (pos=64562) must appear before entity_selected.emit (pos=60823) — building clicks must take highest precedence
+
+---- tests::harness_population_growth_reaches_migration_threshold stdout ----
+[harness] Year 1: alive=20, settlements=1
+[harness] Year 2: alive=20, settlements=1
+[harness] Year 3: alive=20, settlements=1
+[harness] Growth: Y1=20 Y2=20 Y3=20 peak=20
+
+thread 'tests::harness_population_growth_reaches_migration_threshold' (4446538) panicked at crates/sim-test/src/main.rs:1410:9:
+Population should grow beyond initial 20 in 3 years, got 20
+
+---- tests::harness_wall_click_info_a13_room_enclosed_completeness stdout ----
+[harness_wall_click_info_A13] rooms_checked=2 enclosed_true=0 enclosed_false=2 violations=0
+
+thread 'tests::harness_wall_click_info_a13_room_enclosed_completeness' (4449233) panicked at crates/sim-test/src/main.rs:10875:9:
+Expected at least one enclosed=true room, found none in 2 rooms
+
+---- tests::harness_multi_settlement_emerges stdout ----
+[harness] 5-year result: alive=1, settlements=1
+[harness]   Settlement SettlementId(1): members=11, food=0.0, stone=395.2
+
+thread 'tests::harness_multi_settlement_emerges' (4445249) panicked at crates/sim-test/src/main.rs:1443:9:
+Expected ≥2 settlements after 5 years, got 1. Population was 1.
+
+---- tests::harness_wall_click_info_tile_data_diversity_lower stdout ----
+[harness_wall_click_info_C9] wall_tiles=2 floor_tiles=10 furniture_tiles=2 room_tiles=10
+
+thread 'tests::harness_wall_click_info_tile_data_diversity_lower' (4450811) panicked at crates/sim-test/src/main.rs:10995:9:
+Expected ≥8 wall tiles, observed 2
+
+
+failures:
+    harness_body_damage_api::harness_work_injury_causal_log_records_kind
+    harness_body_damage_api::harness_work_injury_forage_rate
+    tests::harness_a9_behavioral_mortality_mul_isolation
+    tests::harness_action_non_idle_ratio_steady_state
+    tests::harness_blueprint_regression_shelter_complete
+    tests::harness_building_visuals_adjacent_wall_pairs
+    tests::harness_building_visuals_wall_material_valid
+    tests::harness_component_building_wall_placement
+    tests::harness_food_economy_balance_4380
+    tests::harness_food_economy_plan_comprehensive
+    tests::harness_food_economy_plan_v2
+    tests::harness_memorial_natural_mourn_over_simulation
+    tests::harness_multi_settlement_emerges
+    tests::harness_ns_biases_exploratory_actions_directionally
+    tests::harness_p2b3_builder_assigns_and_places_wall
+    tests::harness_population_growth_reaches_migration_threshold
+    tests::harness_pray_action_restores_comfort
+    tests::harness_shelter_built_after_one_year
+    tests::harness_sprite_assets_round1_building_construction_regression
+    tests::harness_sprite_infra_baseline_complete_buildings_regression
+    tests::harness_sprite_infra_baseline_shelter_regression
+    tests::harness_temperament_biases_behavior
+    tests::harness_wall_click_info_a13_room_enclosed_completeness
+    tests::harness_wall_click_info_a18_click_routing_contract
+    tests::harness_wall_click_info_tile_data_diversity_lower
+
+test result: FAILED. 461 passed; 25 failed; 1 ignored; 0 measured; 0 filtered out; finished in 315.08s
+
+error: test failed, to rerun pass `-p sim-test --bin sim-test`
+[harness 18:22:44] MECHANICAL GATE: cargo test — 25 failures vs baseline 26 → PASS
+    Finished `dev` profile [optimized + debuginfo] target(s) in 0.41s
+FFI CHAIN: OK
+[harness 18:22:44] MECHANICAL GATE: PASS
+[harness progress] 0 Mechanical Gate: DONE — cargo test + clippy + FFI check
+[harness 18:22:45] WARNING: Locale check found issues (code_not_fluent=1, json_not_fluent=0)
+[harness progress] 0b Locale Check: DONE — WARN (code_missing=1, json_missing=0)
+[harness 18:22:45] === Step 1a: PLANNER (plan attempt 1) ===
+[harness 18:22:45] Reusing existing plan_draft.md (resume mode)
+[harness progress] 1a Drafter: DONE — Plan: 0
+0 assertions — none listed
+[harness 18:22:45] Quick mode — skipping debate
+[harness progress] 1b Challenger: SKIPPED — --quick mode (no debate needed)
+[harness progress] 1c Revision: SKIPPED — --quick mode
+[harness progress] 1d QC: SKIPPED — --quick mode
+[harness 18:22:45] HARNESS_SKIP_GENERATOR: reusing existing gen_result_attempt1.md
+[harness progress] 2 Generator A1: DONE — (reused) Files: `rust/crates/sim-data/data/structures/shelters.ron` — 3 new StructureDefs added,`rust/crates/sim-test/src/main.rs` — mod harness_blueprint_v1 with 20 tests,`localization/en/ui.json` — 3 new keys,`localization/ko/ui.json` — 3 new keys,`localization/fluent/en/messages.ftl` — 3 new keys,. 
+[harness 18:22:45] === Step 2.5a: VISUAL VERIFY ===
+[harness 18:22:45] Running Godot visual verification (ticks=4380)...
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward Mobile - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+[visual-verify] Feature: blueprint-ron-data-driven-buildings-v1, Ticks: 4380, Headless: false
+[TechTreeManager] Loaded 169 tech definitions
+[visual-verify] Main scene loaded, waiting for setup...
+[Main] Spawned entities at 1 spawn point(s).
+
+======================================
+  WorldSim Phase 2-A1
+  Seed: 42
+  World: 256x256  |  Entities: 20
+  Systems: 67 registered
+======================================
+
+  Controls:
+    WASD / Arrows  = Pan camera
+    Mouse Wheel    = Zoom in/out
+    Trackpad Pinch = Zoom in/out
+    Two-finger Pan = Scroll camera
+    Middle Mouse   = Drag pan
+    Left Click     = Select entity/building
+    Space          = Pause / Resume
+    . (period)     = Speed up
+    , (comma)      = Speed down
+    Tab            = Toggle resource overlay
+    B              = Cycle minimap size
+    M              = Toggle ambient sound
+    G              = Statistics detail
+    E              = Entity/Building detail
+    C              = Chronicle
+    P              = Entity/Building list
+    H              = Help overlay (pauses)
+    N              = Toggle day/night
+    Cmd+S          = Quick Save
+    Cmd+L          = Quick Load
+    Cmd+=/-/0      = UI Scale (1.0)
+    Double-click   = Open detail popup
+
+[visual-verify] Setup complete, starting tick loop (paused main _process)...
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_tick0000.png
+[visual-verify] Tick 500 / 4380
+[visual-verify] Tick 1000 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_tick1095.png
+[visual-verify] Tick 1515 / 4380
+[visual-verify] Tick 2015 / 4380
+[visual-verify] FFI chain verified: 11 checks
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_tick2190.png
+[visual-verify] Tick 2510 / 4380
+[visual-verify] Tick 3010 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_tick3285.png
+[visual-verify] Tick 3505 / 4380
+[visual-verify] Tick 4005 / 4380
+[visual-verify] Tick 4380 / 4380
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_tickFINAL.png
+[visual-verify] Building center from tile_grid: (2009.0, 2198.7) — 49 wall tiles
+[visual-verify] Camera set: pos=(2009.0, 2198.7) zoom=5.0
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_closeup_Z1.png
+[visual-verify] Close-up captured: closeup_Z1 (zoom=5.0)
+[visual-verify] Building center from tile_grid: (2009.0, 2198.7) — 49 wall tiles
+[visual-verify] Camera set: pos=(2009.0, 2198.7) zoom=3.0
+[visual-verify] Screenshot: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/screenshot_closeup_Z2.png
+[visual-verify] Close-up captured: closeup_Z2 (zoom=3.0)
+[visual-verify] FPS warmup 30/120 — current FPS: 23
+[visual-verify] FPS warmup 60/120 — current FPS: 34
+[visual-verify] FPS warmup 90/120 — current FPS: 35
+[visual-verify] FPS warmup 120/120 — current FPS: 36
+[visual-verify] FPS warmup complete — sampled FPS: 36
+[visual-verify] Evidence captured to: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1
+WARNING: 1 RID of type "CanvasItem" was leaked.
+     at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2690)
+WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+     at: cleanup (core/object/object.cpp:2641)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:810)
+[harness 18:28:46] Visual evidence captured to: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1
+total 6200
+drwxr-xr-x@ 17 rexxa  staff     544 May  1 18:28 .
+drwxr-xr-x  67 rexxa  staff    2144 May  1 01:04 ..
+-rw-r--r--@  1 rexxa  staff      67 May  1 18:28 console_log.txt
+-rw-r--r--@  1 rexxa  staff  123389 May  1 18:28 entity_summary.txt
+-rw-r--r--@  1 rexxa  staff     456 May  1 18:25 ffi_verify.txt
+-rw-r--r--@  1 rexxa  staff    4090 May  1 18:28 godot_output.txt
+-rw-r--r--@  1 rexxa  staff     601 May  1 18:28 manifest.txt
+-rw-r--r--@  1 rexxa  staff     248 May  1 18:28 performance.txt
+-rw-r--r--@  1 rexxa  staff  770977 May  1 18:28 screenshot_closeup_Z1.png
+-rw-r--r--@  1 rexxa  staff  472508 May  1 18:28 screenshot_closeup_Z2.png
+-rw-r--r--@  1 rexxa  staff  305724 May  1 18:22 screenshot_tick0000.png
+-rw-r--r--@  1 rexxa  staff  349257 May  1 18:24 screenshot_tick1095.png
+-rw-r--r--@  1 rexxa  staff  356912 May  1 18:25 screenshot_tick2190.png
+-rw-r--r--@  1 rexxa  staff  344974 May  1 18:27 screenshot_tick3285.png
+-rw-r--r--@  1 rexxa  staff  336656 May  1 18:28 screenshot_tickFINAL.png
+-rw-r--r--@  1 rexxa  staff    1060 May  1 18:28 visual_analysis.txt
+-rw-r--r--@  1 rexxa  staff    1168 May  1 18:28 visual_checklist_rendered.md
+[harness progress] 2.5a Visual Verify: DONE — 7 screenshots. Agents: Total agents: 54. Avg tick: 75.770 ms
+[harness 18:28:46] === Step 2.5a-int: VLM INTERACTIVE ===
+[harness 18:28:46] No interactive scenarios defined — skipping
+[harness progress] 2.5a-int VLM Interactive: DONE — SKIPPED (no scenarios)
+[harness 18:28:46] === Step 2.5b: VLM ANALYSIS ===
+[harness 18:28:46] Found 7 screenshots — running VLM analysis
+[harness 18:28:46] Preserving Godot-rendered visual checklist (assertion tokens present)
+[harness 18:30:22] WARNING: VLM output contaminated with stop-hook text — quarantining
+[harness 18:30:22] Visual analysis: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/blueprint-ron-data-driven-buildings-v1/visual_analysis.txt
+[harness progress] 2.5b VLM Analysis: DONE — VISUAL_WARNING. VLM output was contaminated with stop-hook text (see visual_
+[harness 18:30:22] Interactive validator skipped (no interactive_results.json)
+[harness progress] 2.5a-val Interactive Validator: DONE — SKIPPED (no evidence)
+[harness progress] 2.5c FFI Verify (Codex): SKIPPED — sim-bridge not modified
+[harness 18:30:22] === Step 2.7: REGRESSION GUARD (Codex) ===
+[harness 18:30:22] Running Regression Guard via Codex...
+[harness 18:40:22] WARNING: run_codex timed out after 600s (rc=142)
+[harness 18:40:22] REGRESSION GUARD TIMED OUT — defaulting to CLEAN (non-blocking)
+[harness 18:40:22] Regression guard: CLEAN
+[harness progress] 2.7 Regression Guard (Codex): DONE — CLEAN: (Regression guard timed out; defaulted to CLEAN)
+[harness 18:40:22] === Step 3: CODEX EVALUATOR ===
+[harness 18:40:22] Running Codex Evaluator (independent session, attempt 1)...
+[harness 18:50:22] WARNING: run_codex timed out after 600s (rc=142)
+[harness 18:50:22] CODEX EVALUATOR TIMED OUT — falling back to Claude Code evaluator
+[harness 18:50:22] === Step 3: EVALUATOR ===
+[harness 18:50:23] Running Evaluator (isolated session)...
+[harness 18:54:49] Review: /Users/rexxa/github/new-world-wt/lead/.harness/reviews/blueprint-ron-data-driven-buildings-v1/review_attempt1.md
+[harness progress] 3 Evaluator (Codex): DONE — UNKNOWN. 
+[harness 18:54:49] WARNING: Could not parse verdict from review. Raw last 5 lines:
+[harness 18:54:49]   The stop hook completed cleanly — no issues to address.
+[harness 18:54:49] Treating as RE-CODE (safe default — will retry)
+[harness 18:54:49] Retrying Generator with Evaluator feedback (attempt 2)
+[harness 18:54:49] === Step 2: GENERATOR (code attempt 2) ===
+[harness 18:54:49] Running Generator (isolated session, attempt 2, timeout 900s)...
