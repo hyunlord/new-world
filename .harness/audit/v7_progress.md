@@ -13,10 +13,12 @@
 - [x] 새 Godot project
 - [x] 빈 main scene
 
-### Week 1~2 (예정): Material System Deep
-- [ ] W1.1: Material schema 설계
+### Week 1~2 (진행중): Material System Deep
+- [~] W1.1: Material schema 설계
+  - [x] T1 (2026-05-04, `77764531`): Cargo deps + sim-core lib.rs `pub mod material` + `MATERIAL_SCHEMA_VERSION=1` (STRUCTURAL-COMMIT, see `.harness/audit/structural_commits.log`)
+  - [ ] T2: types + derivation + registry + loader (~945 LOC, full pipeline pending)
 - [ ] W1.2: Material RON 100+
-- [ ] W1.3: Auto-derivation
+- [ ] W1.3: Auto-derivation (folded into W1.1 T2)
 - [ ] W1.4: Material inspector UI
 - [ ] W1.5: Cause-effect harness 5+
 - [ ] W1.6: 사용자 visual 검증
