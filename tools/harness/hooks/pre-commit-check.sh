@@ -79,13 +79,33 @@ fi
 
 # Check for valid verdict (within last hour) + score threshold
 HARNESS_DIR=".harness"
-# Score threshold: 90 (was 95, lowered 2026-04-24).
-# Rationale: VLM login environment issues cause a systematic -8 Visual
-# WARNING in every pipeline regardless of code quality. APPROVE verdict +
-# CLEAN regression guard + passing tests + clippy clean remain required;
-# this change only tolerates the environmental Visual WARNING cost.
-# Planned: restore to 95 once vlm-login-env-fix lands.
-SCORE_THRESHOLD=90
+
+# v3.3 §5.4: Tier-aware score model (Cold-Tier-Bonus = "Visual 차원 자체 제외")
+#   Hot tier (cold-tier 4 Signal 미충족):
+#     max 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
+#     threshold 72 (90% of max)
+#     VLM SKIP +8 environmental cost retained (Rule 7)
+#   Cold tier (4 Signal 충족 — sim-core/sim-data/sim-test/sim-bench schema work):
+#     max 60 (Visual 차원 자체 제외)
+#     threshold 54 (90% of max)
+#     VLM SKIP +0 (cold tier는 environmental 부재 자체 — 보정 불필요)
+# Score-scale migration: until N7 (score_model.sh) lands, legacy verdicts may
+# write 0-100 scores. Tier determination here is forward-compatible; N7 will
+# reconcile verdict scale.
+TIER="hot"
+if [[ -x "tools/harness/cold_tier_classifier.sh" ]]; then
+    if echo "$STAGED" | bash tools/harness/cold_tier_classifier.sh - >/dev/null 2>&1; then
+        TIER="cold"
+    fi
+fi
+
+if [[ "$TIER" == "cold" ]]; then
+    SCORE_THRESHOLD=54
+    APPLY_VLM_COST=0
+else
+    SCORE_THRESHOLD=72
+    APPLY_VLM_COST=1
+fi
 APPROVED_FEATURE=""
 
 if [[ -d "$HARNESS_DIR/reviews" ]]; then
@@ -125,21 +145,23 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                         fi
                         # Adjusted score: add back VLM environmental costs per CLAUDE.md Rule 7.
                         # "VLM WARNING alone never blocks merge. This is policy, not bug."
-                        # Detection: absent visual_analysis.txt = VLM SKIP; file starting with
-                        # VISUAL_WARNING = VLM WARNING. Both are environmental, not code quality.
+                        # v3.3 §5.4: Cold tier excludes visual dimension entirely → no VLM cost.
+                        # Hot tier retains v3.2.1 behaviour (VLM SKIP/WARNING = +8).
                         adjusted_score="$score"
                         vlm_env_cost=0
-                        vlm_analysis_file="$HARNESS_DIR/evidence/$APPROVED_FEATURE/visual_analysis.txt"
-                        if [[ ! -f "$vlm_analysis_file" ]]; then
-                            vlm_env_cost=8
-                        elif grep -qE "^VISUAL_WARNING" "$vlm_analysis_file" 2>/dev/null; then
-                            vlm_env_cost=8
+                        if [[ "$APPLY_VLM_COST" == "1" ]]; then
+                            vlm_analysis_file="$HARNESS_DIR/evidence/$APPROVED_FEATURE/visual_analysis.txt"
+                            if [[ ! -f "$vlm_analysis_file" ]]; then
+                                vlm_env_cost=8
+                            elif grep -qE "^VISUAL_WARNING" "$vlm_analysis_file" 2>/dev/null; then
+                                vlm_env_cost=8
+                            fi
                         fi
                         if [[ "$vlm_env_cost" -gt 0 ]]; then
                             adjusted_score=$((score + vlm_env_cost))
                         fi
                         if [[ "$adjusted_score" -lt "$SCORE_THRESHOLD" ]] 2>/dev/null; then
-                            echo "BLOCKED: Pipeline score ${score}/100 (adjusted ${adjusted_score}/100) below ${SCORE_THRESHOLD} threshold." >&2
+                            echo "BLOCKED: Pipeline score ${score} (adjusted ${adjusted_score}) below ${TIER}-tier threshold ${SCORE_THRESHOLD}." >&2
                             echo "Feature: $APPROVED_FEATURE (source: $score_source)" >&2
                             if [[ "$vlm_env_cost" -gt 0 ]]; then
                                 echo "  Adjustment +${vlm_env_cost} (VLM env cost per Rule 7) applied but score still below threshold." >&2
@@ -147,7 +169,9 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                             exit 2
                         fi
                         if [[ "$vlm_env_cost" -gt 0 ]]; then
-                            echo "[hook] Score $score → adjusted $adjusted_score (+${vlm_env_cost} VLM env cost per Rule 7) ≥ $SCORE_THRESHOLD ✓" >&2
+                            echo "[hook] ${TIER}-tier: score $score → adjusted $adjusted_score (+${vlm_env_cost} VLM env cost) ≥ $SCORE_THRESHOLD ✓" >&2
+                        else
+                            echo "[hook] ${TIER}-tier: score $score ≥ $SCORE_THRESHOLD ✓" >&2
                         fi
                     fi
                     exit 0
