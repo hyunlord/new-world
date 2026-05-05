@@ -28,6 +28,22 @@
 - Original v3.3 v1.0 §5.4 + §5.5 superseded by `.harness/prompts/governance_v3_3_1_amendment.md` §3.1 + §3.4
 - Audit chain: amendment file (`.harness/prompts/governance_v3_3_1_amendment.md`, commit `a5f90f4d`) 보존, 이 inline patch는 단일 ground truth 강제용
 
+## v3.3.2 Re-Patch Reflected (2026-05-05)
+
+이 ticket은 v3.3.2 정정 inline reflect한 갱신본 (Step V.3):
+- §5.2 L706: hot threshold 90 → 72
+- §5.2 L709: Alt D 채택 doubly-stale → Hot/Cold tier 명시 (raw 80 + 72 / raw 100 + 75)
+- §5.2 L714: parenthetical 수학 오류 → 72/80 raw scale 명시
+- §5.3 L744: T2 산출 hot threshold 90 → 72
+- §5.4 L764: §3.1 verbatim 90/100 → 72/100
+- §5.4 L781: judgment logic threshold 90 → 72
+- §7 L862: V7 검증 90/100 → 72/100
+- §9 L907: G7 결론 90/100 → 72/100
+- §5.2 Alt C subsection: historical proposal 보존 + supersede 메모 추가
+- v3.3.2 amendment file: `.harness/prompts/governance_v3_3_2_amendment.md` (commit f078c155)
+- v3.3.1 amendment 정정: 2064f0e1 (Step V.2)
+- Audit chain: v3.3 ticket → v3.3.1 amendment → v3.3.2 amendment → v3.3.1 self-correction → 이 inline re-patch
+
 ### Claude Code draft 활용 정책
 
 `.harness/prompts/_drafts/governance_v3_3.md`에 보존된 1166줄 draft를 **구조 reference**로 활용. 단:
@@ -701,17 +717,21 @@ v3.3 적용 후:
 - Cold tier: threshold 70 (= 90 - 20 cold tier credit)
 - 동등 효과, 정신은 더 명확
 
+**Note (v3.3.2)**: Alt C 원안의 hot threshold 90은 v3.3.1 §3.2 Z 보강 분석 결과 72로 supersede (raw 80 < threshold 90 = 수학적 불가능). 이 section은 historical proposal 보존. 정합 결론은 §5.4 (v3.3.1 §3.1 verbatim, v3.3.2 §2.1 정정 반영).
+
 **Alternative D**: Hot/Cold 구분 없이 max raw score를 cold-tier에 맞게 조정
 - Cold tier: max raw 100 (Visual auto credit +20, v3.3.1 §3.1)
-- Hot tier: max raw 80, threshold 90 (v3.2.1 호환, v3.3.1 §3.1)
+- Hot tier: max raw 80, threshold 72 (raw 80 × 90%, v3.3.2 §2.1 정정)
 - Cold tier: threshold 75 (v3.3.1 §3.1)
 
-**채택**: **Alternative D (Max score 80 + Threshold 72 for cold tier)**.
+**채택 (v3.3.1 update, v3.3.2 confirmation)**:
+**Cold tier: Max raw 100 (Visual auto credit +20) + Threshold 75 (100×75%)**
+**Hot tier: Max raw 80 + Threshold 72 (80×90%)**
 
 **근거**:
 - Visual Verify 차원 자체 제외가 가장 명확
 - 사용자 axiom #1: 의미 없는 차원 (visual surface 0)에 점수 부여 자체 부적합
-- Threshold 72는 "max의 90%" 일관 (hot tier도 90/100 = 90%)
+- Threshold 72는 "max의 90%" 일관 (hot tier 72/80 = 90% in raw scale, v3.3.2 §2.1)
 - T2 retroactive: 78/80 (mechanical 10 + plan 5 + CQ 13 + reg 15 + eval 15 = 58? — CQ 산출 정확성 검증 필요)
 
 ### 5.3 Code Quality 산출 정확성 — 추가 분석
@@ -741,7 +761,7 @@ Cold-tier-bonus 적용 (v3.3.1 §3.1 REVISED):
 - Max 정의 (v3.3.1 §3.1):
   Hot tier max raw: Mechanical 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15 = 80
   Cold tier max raw: 위 with Visual auto credit +20 = 100 (scale 0-100 유지)
-  Hot threshold: 90/100 (v3.2.1 호환)
+  Hot threshold: 72/100 (raw 80 × 90%, v3.3.2 §2.1)
   Cold threshold: 75/100 (cold 보수적 -15)
 
 → T2 final (v3.3.1): 75/100 ≥ 75 → PASS (boundary)!
@@ -761,7 +781,7 @@ Hot tier (cold-tier 4 Signal 미충족):
 - Max raw: 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
 - Hook scale 변환: raw / 80 × 100 = adjusted score (0-100 scale)
   또는 raw 80 → 100 매핑 식 명시 (아래 §3.3)
-- Threshold: 90/100 (기존 v3.2.1 동일)
+- Threshold: 72/100 (raw 80 × 90%, v3.3.2 §2.1 정정)
 - VLM SKIP +8 보정 유지 (environmental failure)
 
 Cold tier (4 Signal 충족):
@@ -778,7 +798,7 @@ Cold tier (4 Signal 충족):
     vlm_env_cost = 0
   else:  # hot tier
     visual_score = (산출된 score, VLM SKIP 시 0)
-    threshold = 90
+    threshold = 72  # v3.3.2 §2.1 정정 (raw 80 × 90%)
     vlm_env_cost = 8 if VLM SKIP else 0
   
   raw = mech + plan + cq + visual_score + reg + eval
@@ -859,7 +879,7 @@ VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
 | V4 | score_attempt_penalty T2 attempts | `bash tools/harness/score_attempt_penalty.sh .harness/runs/material_schema/` | `PENALTY=-5`, `EFFECTIVE_ATTEMPTS=1` |
 | V5 | ffi_vacuous_check T2 변경 | `bash tools/harness/ffi_vacuous_check.sh "$(git diff --name-only 91d4e7c0~1..91d4e7c0)"` | exit 0, "CONFIRMED" |
 | V6 | T2 retroactive score | `(pipeline simulate 91d4e7c0)` | `Cold tier raw 75/100 ≥ 75 PASS (v3.3.1 §3.4)` |
-| V7 | Hot tier 정상 동작 | `(pipeline against hypothetical hot tier change)` | Hot tier max 80 raw, threshold 90/100 정상 산출 (v3.3.1 §3.1) |
+| V7 | Hot tier 정상 동작 | `(pipeline against hypothetical hot tier change)` | Hot tier max 80 raw, threshold 72/100 정상 산출 (v3.3.2 §2.1) |
 | V8 | self-test all paths | `bash tools/harness/test_v3_3.sh` | All 8 V tests pass |
 
 V8 (self-test) 통과 의무. 통과 안 하면 v3.3 commit 차단.
@@ -904,7 +924,7 @@ v3.3 commit + push 전 모든 10 항목 충족 의무:
 □ G6: cold-tier-classifier T6~T11 시뮬레이션 (현재 미작성이지만 변경 set 가정)
        → 모두 cold tier 확정 + PASS 예상
 □ G7: hot tier 정상 동작 (hypothetical sim-systems 변경 시뮬레이션)
-       → Hot tier max 80 raw, threshold 90/100 정상 산출;
+       → Hot tier max 80 raw, threshold 72/100 정상 산출 (v3.3.2 §2.1);
          Cold tier max 100 raw (Visual auto credit +20), threshold 75/100 (v3.3.1 §3.1)
 □ G8: 사용자 명시 approve: "v3.3 design은 정교해, implementation OK"
 □ G9: .harness/audit/governance_v3_3.log entry 작성
