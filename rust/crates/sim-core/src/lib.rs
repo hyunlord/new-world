@@ -21,6 +21,20 @@ pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
 pub mod material;
 
+pub use material::{
+    MaterialId,
+    MaterialCategory,
+    MaterialDef,
+    MaterialProperties,
+    MaterialRegistry,
+    AutoDerivedStats,
+    DerivedStatKind,
+    MaterialError,
+    Explanation,
+    PropertyKind,
+    TerrainType,
+};
+
 #[cfg(test)]
 mod tests {
     use super::*;
