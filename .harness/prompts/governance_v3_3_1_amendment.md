@@ -32,6 +32,21 @@
 
 ---
 
+## v3.3.2 Correction Reflected (2026-05-05)
+
+이 amendment는 v3.3.2 정정 반영:
+- §3.1 line 193 (정책 텍스트): "Threshold 90/100" → "Threshold 72/100"
+- §3.1 line 210 (판정 logic): "threshold = 90" → "threshold = 72"
+- §4.1 line 316 (N5.1 spec): SCORE_THRESHOLD=90 → 72
+- §4.3 line 363 (N7 spec): threshold = 90 → 72
+- 종합 line 465 (요약): "threshold 90/100" → "threshold 72/100"
+- §2.3 Alt C section: historical proposal 보존 + supersede 메모 추가 (D2 보강)
+- §3.2 Z 보강 model이 ground truth (변경 없음)
+- v3.3.2 amendment file: .harness/prompts/governance_v3_3_2_amendment.md (commit f078c155)
+- Audit chain: v3.3 ticket → v3.3.1 amendment → v3.3.2 amendment
+
+---
+
 ## 📑 Section 1: 갭의 본질
 
 ### 1.1 발견된 갭 (Claude Code 보고)
@@ -175,6 +190,8 @@ Cold tier max 100:
 - 보수적 threshold = cold tier 검증 부족 인정
 - 만약 cold tier work이 75 미만 PASS 하려면 추가 dimension 향상 (CQ 15/15 등) — 자연스러운 압력
 
+**Note (v3.3.2)**: Alt C 원안의 hot threshold 90은 §3.2 Z 보강 분석 결과 72로 supersede (raw 80 < threshold 90 = 수학적 불가능). 이 section은 historical proposal 보존. 정합 결론은 §3.2.
+
 ---
 
 ## 📑 Section 3: 채택 정책 — Alternative C
@@ -190,7 +207,7 @@ Hot tier (cold-tier 4 Signal 미충족):
 - Max raw: 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
 - Hook scale 변환: raw / 80 × 100 = adjusted score (0-100 scale)
   또는 raw 80 → 100 매핑 식 명시 (아래 §3.3)
-- Threshold: 90/100 (기존 v3.2.1 동일)
+- Threshold: 72/100 (raw 80 × 90%, v3.2.1 SCORE_THRESHOLD=90 hardcoded는 v3.3 implementation에서 tier별 변수로 대체. v3.3.2 §2.1 정정.)
 - VLM SKIP +8 보정 유지 (environmental failure)
 
 Cold tier (4 Signal 충족):
@@ -207,7 +224,7 @@ Cold tier (4 Signal 충족):
     vlm_env_cost = 0
   else:  # hot tier
     visual_score = (산출된 score, VLM SKIP 시 0)
-    threshold = 90
+    threshold = 72  # v3.3.2 §2.1 정정 (90 → 72, raw 80 × 90%)
     vlm_env_cost = 8 if VLM SKIP else 0
   
   raw = mech + plan + cq + visual_score + reg + eval
@@ -313,7 +330,7 @@ N5.1 (재수정):
     visual_auto_credit=20  # cold tier에서 Visual 차원 자동 부여
     vlm_env_cost=0
   else:
-    SCORE_THRESHOLD=90  # 기존 v3.2.1 동일
+    SCORE_THRESHOLD=72  # v3.3.2 §2.5 정정 (raw 80 × 90%)
     visual_auto_credit=0
     vlm_env_cost=(8 if VLM SKIP else 0)
 
@@ -360,7 +377,7 @@ N7 score_model.sh:
     vlm_cost = 0
   else:
     visual_score = input_visual  # 산출된 값
-    threshold = 90
+    threshold = 72  # v3.3.2 §2.5 정정 (raw 80 × 90%)
     vlm_cost = 8 if vlm_skip else 0
   
   raw = mech + plan + cq + visual_score + reg + eval
@@ -462,7 +479,7 @@ A1~A5 모두 충족 후:
 ### 주요 결정
 
 1. **Score scale**: 0-100 유지 (v3.2.1 호환)
-2. **Hot tier**: max 80 raw, threshold 90/100, VLM SKIP +8
+2. **Hot tier**: max 80 raw, threshold 72/100 (v3.3.2 §2.1), VLM SKIP +8
 3. **Cold tier**: max 100 raw (Visual auto credit +20), threshold 75/100, VLM +0
 4. **T2 retroactive**: 75/100 ≥ 75 PASS (boundary)
 5. **N5 처리**: bac9ba53 + N5.1 재수정 commit 추가
