@@ -1,0 +1,1 @@
+2026-05-05T05:57:15Z | material-schema | T2-T5: cold-tier sim-core schema work, score 56/90 (raw 48 + VLM SKIP +8), 3 policy gaps (cold-tier-bonus 미정의 / attempt-penalty discrimination / §6 FFI false positive), code clean, lock violations 0, Evaluator APPROVE | authorized by user (kwan hyeon) | 91d4e7c0 | follow-up: governance v3.3 at Phase 1 W1.5 completion
