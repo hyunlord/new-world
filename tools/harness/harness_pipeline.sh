@@ -1928,8 +1928,20 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
                     # Layer 4: Generate pipeline report (immutable audit trail)
                     finalize_progress
+
+                    # v3.3 §6.3 D7-A: per-attempt penalty 누적 → env-var TOTAL_PENALTY
+                    # generate_report.sh 가 SCORE_CODE = SCORE_CODE_BASE + TOTAL_PENALTY 로 합산
+                    local penalty_output total_penalty
+                    penalty_output=$(bash "$PROJECT_ROOT/tools/harness/score_attempt_penalty.sh" \
+                        "$REVIEW_DIR/attempts" 2>/dev/null || echo "PENALTY=0")
+                    total_penalty=$(echo "$penalty_output" | grep -oE "^PENALTY=-?[0-9]+" | head -1 | cut -d= -f2)
+                    total_penalty="${total_penalty:-0}"
+                    log "Attempt penalty total: $total_penalty (from $penalty_output)"
+
                     local report_path
+                    export TOTAL_PENALTY="$total_penalty"
                     report_path=$(bash "$PROJECT_ROOT/tools/harness/generate_report.sh" "$FEATURE" --mode "$MODE" 2>/dev/null || echo "")
+                    unset TOTAL_PENALTY
                     local score="0"
                     local pipeline_grade="PIPELINE_FAILED"
                     if [[ -n "$report_path" ]]; then
@@ -1967,10 +1979,25 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
                     log "=========================================="
                     exit 0
                     ;;
-                1)  # RE-CODE
+                1)  # RE-CODE — v3.3 §6.2 classification + audit snapshot
                     echo "RE-CODE" > "$REVIEW_DIR/verdict"
                     echo "$FEATURE" >> "$REVIEW_DIR/verdict"
                     date +%s >> "$REVIEW_DIR/verdict"
+
+                    # Snapshot review for cross-attempt audit (verdict 단일 → overwrite 회피)
+                    # D11-A: review_attempt${N}.md (rich evaluator output) → attempts/attempt-N/verdict.md
+                    # D12-A: snapshot only inside RE-CODE branch (per-attempt 누적)
+                    local snapshot_dir="$REVIEW_DIR/attempts/attempt-$CODE_ATTEMPT"
+                    mkdir -p "$snapshot_dir"
+                    if [[ -f "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" ]]; then
+                        cp "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" "$snapshot_dir/verdict.md"
+                    fi
+                    local recode_class
+                    recode_class=$(bash "$PROJECT_ROOT/tools/harness/classify_recode.sh" \
+                        "$snapshot_dir/verdict.md" "$CODE_ATTEMPT" 2>/dev/null || echo "OTHER")
+                    echo "$recode_class" > "$snapshot_dir/classification"
+                    log "Attempt $CODE_ATTEMPT RE-CODE classification: $recode_class"
+
                     if [[ $CODE_ATTEMPT -ge $MAX_CODE_ATTEMPTS ]]; then
                         log "Max code attempts ($MAX_CODE_ATTEMPTS) reached — escalating to RE-PLAN"
                         break  # Break inner loop → re-plan
