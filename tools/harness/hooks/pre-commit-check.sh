@@ -58,8 +58,7 @@ if [[ -f "$STRUCT_MARKER" ]] && echo "$CMD" | grep -qE '^\s*git\s+commit'; then
         struct_feature=$(grep '^feature:' "$STRUCT_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
         if [[ "$struct_test" == "PASS" && "$struct_clippy" == "CLEAN" && "$struct_cold" == "CONFIRMED" ]]; then
             if echo "$CMD" | grep -q '\[STRUCTURAL\]'; then
-                echo "[pre-commit] STRUCTURAL-COMMIT active for $struct_feature (age=${struct_age}s) — allowing commit (marker consumed)" >&2
-                rm -f "$STRUCT_MARKER"
+                echo "[pre-commit] STRUCTURAL-COMMIT active for $struct_feature (age=${struct_age}s) — allowing commit (Layer 2 consumes marker)" >&2
                 exit 0
             else
                 echo "BLOCKED: STRUCTURAL-COMMIT marker active but commit subject missing [STRUCTURAL] tag." >&2
