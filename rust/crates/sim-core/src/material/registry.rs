@@ -4,6 +4,7 @@
 
 use ahash::AHashMap;
 
+use crate::material::category::MaterialCategory;
 use crate::material::definition::MaterialDef;
 use crate::material::derivation::{derive_all, AutoDerivedStats, DerivedStatKind};
 use crate::material::error::MaterialError;
@@ -16,6 +17,7 @@ use crate::material::id::MaterialId;
 pub struct MaterialRegistry {
     defs: AHashMap<MaterialId, MaterialDef>,
     by_mod: AHashMap<String, Vec<MaterialId>>,
+    by_category: AHashMap<MaterialCategory, Vec<MaterialId>>,
     derive_cache: AHashMap<MaterialId, AutoDerivedStats>,
     explain_cache: AHashMap<DerivedStatKind, Explanation>,
 
@@ -42,9 +44,11 @@ impl MaterialRegistry {
             return Err(MaterialError::DuplicateId(def.id));
         }
         let id = def.id;
+        let category = def.category;
         if let Some(m) = mod_id {
             self.by_mod.entry(m.to_string()).or_default().push(id);
         }
+        self.by_category.entry(category).or_default().push(id);
         self.defs.insert(id, def);
         Ok(())
     }
@@ -91,19 +95,75 @@ impl MaterialRegistry {
     }
 
     /// Remove every def whose `mod_id` matches. Returns the number removed.
-    /// Also flushes `derive_cache` entries for the removed ids.
+    /// Also flushes `derive_cache` and `by_category` entries for the removed ids.
     pub fn unload_mod(&mut self, mod_id: &str) -> usize {
         let Some(ids) = self.by_mod.remove(mod_id) else {
             return 0;
         };
         let mut removed = 0;
         for id in &ids {
-            if self.defs.remove(id).is_some() {
+            if let Some(def) = self.defs.remove(id) {
                 removed += 1;
+                if let Some(cat_ids) = self.by_category.get_mut(&def.category) {
+                    cat_ids.retain(|x| x != id);
+                    if cat_ids.is_empty() {
+                        self.by_category.remove(&def.category);
+                    }
+                }
             }
             self.derive_cache.remove(id);
         }
         removed
+    }
+
+    /// Iterator over every material in `category`. Returns an empty iterator
+    /// when no materials are registered in that category.
+    pub fn iter_category(
+        &self,
+        category: MaterialCategory,
+    ) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.by_category
+            .get(&category)
+            .into_iter()
+            .flat_map(move |ids| ids.iter().filter_map(move |id| self.defs.get(id)))
+    }
+
+    /// Convenience accessor: every `Stone` material.
+    pub fn stones(&self) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Stone)
+    }
+
+    /// Convenience accessor: every `Wood` material.
+    pub fn woods(&self) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Wood)
+    }
+
+    /// Convenience accessor: every `Animal` material.
+    pub fn animals(&self) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Animal)
+    }
+
+    /// Convenience accessor: every `Mineral` material.
+    pub fn minerals(&self) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Mineral)
+    }
+
+    /// Convenience accessor: every `Plant` material.
+    pub fn plants(&self) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Plant)
+    }
+
+    /// Convenience accessor: every material in `Mod(mod_id)`.
+    pub fn mod_materials(&self, mod_id: u8) -> impl Iterator<Item = &MaterialDef> + '_ {
+        self.iter_category(MaterialCategory::Mod(mod_id))
+    }
+
+    /// Per-category counts. Empty buckets are absent from the result.
+    pub fn category_counts(&self) -> AHashMap<MaterialCategory, usize> {
+        self.by_category
+            .iter()
+            .map(|(cat, ids)| (*cat, ids.len()))
+            .collect()
     }
 
     /// Iterator over every registered id.
@@ -141,6 +201,18 @@ mod tests {
             id: MaterialId::from_str_hash(name),
             name: name.to_string(),
             category: MaterialCategory::Mineral,
+            properties: valid_props(),
+            tier: 1,
+            natural_in: vec![],
+            mod_source: None,
+        }
+    }
+
+    fn def_for_category(name: &str, category: MaterialCategory) -> MaterialDef {
+        MaterialDef {
+            id: MaterialId::from_str_hash(name),
+            name: name.to_string(),
+            category,
             properties: valid_props(),
             tier: 1,
             natural_in: vec![],
@@ -316,5 +388,88 @@ mod tests {
         for k in DerivedStatKind::all_variants() {
             assert!(r.explain_cache.contains_key(k));
         }
+    }
+
+    // -------- T6.6.3 by_category index tests --------
+
+    #[test]
+    fn by_category_insert_sync() {
+        let mut r = MaterialRegistry::new();
+        r.register(def_for_category("granite", MaterialCategory::Stone), None)
+            .unwrap();
+        let stones: Vec<&MaterialDef> = r.stones().collect();
+        assert_eq!(stones.len(), 1);
+        assert_eq!(stones[0].name, "granite");
+    }
+
+    #[test]
+    fn by_category_unload_sync() {
+        let mut r = MaterialRegistry::new();
+        let mut g = def_for_category("granite", MaterialCategory::Stone);
+        g.mod_source = Some("test_mod".to_string());
+        r.register(g, Some("test_mod")).unwrap();
+
+        assert_eq!(r.stones().count(), 1);
+        let removed = r.unload_mod("test_mod");
+        assert_eq!(removed, 1);
+        assert_eq!(r.stones().count(), 0);
+        assert!(!r.by_category.contains_key(&MaterialCategory::Stone));
+    }
+
+    #[test]
+    fn iter_category_empty() {
+        let r = MaterialRegistry::new();
+        assert_eq!(r.iter_category(MaterialCategory::Stone).count(), 0);
+        assert_eq!(r.stones().count(), 0);
+        assert_eq!(r.mod_materials(42).count(), 0);
+    }
+
+    #[test]
+    fn iter_category_multiple_same_category() {
+        let mut r = MaterialRegistry::new();
+        r.register(def_for_category("granite", MaterialCategory::Stone), None)
+            .unwrap();
+        r.register(def_for_category("marble", MaterialCategory::Stone), None)
+            .unwrap();
+        r.register(def_for_category("oak", MaterialCategory::Wood), None)
+            .unwrap();
+
+        assert_eq!(r.stones().count(), 2);
+        assert_eq!(r.woods().count(), 1);
+        assert_eq!(r.animals().count(), 0);
+        assert_eq!(r.minerals().count(), 0);
+        assert_eq!(r.plants().count(), 0);
+    }
+
+    #[test]
+    fn mod_category_isolated_from_base() {
+        let mut r = MaterialRegistry::new();
+        r.register(def_for_category("granite", MaterialCategory::Stone), None)
+            .unwrap();
+        r.register(
+            def_for_category("custom_stone", MaterialCategory::Mod(42)),
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(r.stones().count(), 1);
+        assert_eq!(r.mod_materials(42).count(), 1);
+        assert_eq!(r.mod_materials(0).count(), 0);
+    }
+
+    #[test]
+    fn category_counts_aggregates_correctly() {
+        let mut r = MaterialRegistry::new();
+        r.register(def_for_category("granite", MaterialCategory::Stone), None)
+            .unwrap();
+        r.register(def_for_category("marble", MaterialCategory::Stone), None)
+            .unwrap();
+        r.register(def_for_category("oak", MaterialCategory::Wood), None)
+            .unwrap();
+
+        let counts = r.category_counts();
+        assert_eq!(counts.get(&MaterialCategory::Stone), Some(&2));
+        assert_eq!(counts.get(&MaterialCategory::Wood), Some(&1));
+        assert_eq!(counts.get(&MaterialCategory::Animal), None);
     }
 }
