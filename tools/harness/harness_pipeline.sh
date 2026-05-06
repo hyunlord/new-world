@@ -1877,12 +1877,19 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             # --- Codex verification steps (independent from Generator) ---
 
-            # Step 2.5c: FFI Chain Verify — only when sim-bridge changed
-            if changed_sim_bridge; then
+            # Step 2.5c: FFI Chain Verify — v3.3 §6.1 vacuous integration (D10c)
+            # Note: L649 PostCode FFI check uses changed_sim_bridge() (lib.rs precise scope).
+            # Here (Step 2.5c) uses ffi_vacuous_check.sh (whole sim-bridge crate scope,
+            # incl. Cargo.toml deps — broader FFI surface).
+            FFI_DIFF=$(git diff --name-only HEAD 2>/dev/null || true)
+            if echo "$FFI_DIFF" | bash "$PROJECT_ROOT/tools/harness/ffi_vacuous_check.sh" - >/dev/null 2>&1; then
+                # ffi_vacuous_check exit 0 = vacuous (no sim-bridge crate change) → full credit
+                report_step "2.5c FFI Verify (Codex)" "VACUOUS" \
+                    "sim-bridge unchanged → full FFI credit (v3.3 §6.1)"
+            else
+                # ffi_vacuous_check exit 1 = sim-bridge crate changed → run normal FFI Verify
                 run_ffi_verify
                 report_step "2.5c FFI Verify (Codex)" "DONE" "$(summarize_ffi_verify "$HARNESS_DIR/evidence/$FEATURE/ffi_chain_verify.txt")"
-            else
-                report_step "2.5c FFI Verify (Codex)" "SKIPPED" "sim-bridge not modified"
             fi
 
             # Step 2.7: Regression Guard — always runs
