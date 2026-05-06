@@ -80,18 +80,17 @@ fi
 # Check for valid verdict (within last hour) + score threshold
 HARNESS_DIR=".harness"
 
-# v3.3 §5.4: Tier-aware score model (Cold-Tier-Bonus = "Visual 차원 자체 제외")
+# v3.3.3 §2.4: Tier-aware threshold (Hook = pure consumer, D4α 채택)
 #   Hot tier (cold-tier 4 Signal 미충족):
-#     max 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
-#     threshold 72 (90% of max)
+#     max 100 (Mech 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 + Reg 15 + Eval 15)
+#     threshold 90 (raw 100 × 90%, v3.3.3 §2.2)
 #     VLM SKIP +8 environmental cost retained (Rule 7)
 #   Cold tier (4 Signal 충족 — sim-core/sim-data/sim-test/sim-bench schema work):
-#     max 60 (Visual 차원 자체 제외)
-#     threshold 54 (90% of max)
-#     VLM SKIP +0 (cold tier는 environmental 부재 자체 — 보정 불필요)
-# Score-scale migration: until N7 (score_model.sh) lands, legacy verdicts may
-# write 0-100 scores. Tier determination here is forward-compatible; N7 will
-# reconcile verdict scale.
+#     max 100 (Visual 20 auto credit by generate_report.sh, Tests 20 포함)
+#     threshold 75 (raw 100 × 75%, v3.3.3 §2.2)
+#     VLM SKIP +0 (cold tier auto credit이 보정 대체)
+# Hook은 verdict line 4 또는 pipeline_report.md에서 score를 pure consumer로 추출.
+# Visual auto credit은 generate_report.sh 책임 (V.4.5에서 처리, hook에서 산출 X).
 TIER="hot"
 if [[ -x "tools/harness/cold_tier_classifier.sh" ]]; then
     if echo "$STAGED" | bash tools/harness/cold_tier_classifier.sh - >/dev/null 2>&1; then
@@ -100,10 +99,10 @@ if [[ -x "tools/harness/cold_tier_classifier.sh" ]]; then
 fi
 
 if [[ "$TIER" == "cold" ]]; then
-    SCORE_THRESHOLD=54
+    SCORE_THRESHOLD=75   # v3.3.3 §2.4 정정 (54 → 75, raw 100 × 75%)
     APPLY_VLM_COST=0
 else
-    SCORE_THRESHOLD=72
+    SCORE_THRESHOLD=90   # v3.3.3 §2.4 정정 (72 → 90, raw 100 × 90%, dimension 100 일관)
     APPLY_VLM_COST=1
 fi
 APPROVED_FEATURE=""
