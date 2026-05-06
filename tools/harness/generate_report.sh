@@ -311,32 +311,53 @@ SCORE_TESTS=$((test_cap * 2))
 TEST_DETAIL="$NEW_HARNESS_TESTS new harness tests"
 
 # 5. Visual Verify (20)
+# v3.3.3 §2.4 D4α: Cold tier auto credit (Visual 20 full when 4 signals confirmed)
+# Hook은 pure consumer — Visual auto credit은 producer(이 파일) 책임.
 SCORE_VISUAL=0
 VISUAL_DETAIL=""
-# Screenshots: min(count * 2, 8)
-ss_score=$((SCREENSHOTS * 2))
-if [[ $ss_score -gt 8 ]]; then ss_score=8; fi
-SCORE_VISUAL=$ss_score
-# VLM verdict: VISUAL_OK=7, VISUAL_WARNING=4, VISUAL_FAIL=0
-case "$VISUAL_VERDICT" in
-    VISUAL_OK) SCORE_VISUAL=$((SCORE_VISUAL + 7)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM OK" ;;
-    VISUAL_WARNING) SCORE_VISUAL=$((SCORE_VISUAL + 4)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM WARNING" ;;
-    VISUAL_FAIL) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM FAIL" ;;
-    SKIPPED) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM skipped" ;;
-    *) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM $VISUAL_VERDICT" ;;
-esac
-# Interactive scenarios: PASS=5, else 0
 INTERACTIVE_PASS=false
-if [[ -f "$EVIDENCE_DIR/interactive_results.txt" ]]; then
-    if grep -qi "PASS\|SUCCESS\|ALL.*PASS" "$EVIDENCE_DIR/interactive_results.txt" 2>/dev/null; then
-        SCORE_VISUAL=$((SCORE_VISUAL + 5))
-        VISUAL_DETAIL+=", interactive PASS"
-        INTERACTIVE_PASS=true
-    else
-        VISUAL_DETAIL+=", interactive FAIL"
+
+# Determine tier from changed files (staged → fallback HEAD~1..HEAD)
+DIFF_FILES=$(git -C "$PROJECT_ROOT" diff --cached --name-only 2>/dev/null || true)
+if [[ -z "$DIFF_FILES" ]]; then
+    DIFF_FILES=$(git -C "$PROJECT_ROOT" diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+fi
+COLD_TIER=0
+if [[ -x "$PROJECT_ROOT/tools/harness/cold_tier_classifier.sh" && -n "$DIFF_FILES" ]]; then
+    if echo "$DIFF_FILES" | bash "$PROJECT_ROOT/tools/harness/cold_tier_classifier.sh" - >/dev/null 2>&1; then
+        COLD_TIER=1
     fi
 fi
-if [[ $SCORE_VISUAL -gt 20 ]]; then SCORE_VISUAL=20; fi
+
+if [[ "$COLD_TIER" == "1" ]]; then
+    # Cold tier: Visual dimension excluded → auto credit 20 (v3.3.3 §2.4 D4α)
+    SCORE_VISUAL=20
+    VISUAL_DETAIL="cold tier auto credit (v3.3.3 §2.4 D4α, 4 signals confirmed)"
+else
+    # Hot tier: Screenshots × 2 capped 8 + VLM verdict + interactive +5
+    ss_score=$((SCREENSHOTS * 2))
+    if [[ $ss_score -gt 8 ]]; then ss_score=8; fi
+    SCORE_VISUAL=$ss_score
+    # VLM verdict: VISUAL_OK=7, VISUAL_WARNING=4, VISUAL_FAIL=0
+    case "$VISUAL_VERDICT" in
+        VISUAL_OK) SCORE_VISUAL=$((SCORE_VISUAL + 7)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM OK" ;;
+        VISUAL_WARNING) SCORE_VISUAL=$((SCORE_VISUAL + 4)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM WARNING" ;;
+        VISUAL_FAIL) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM FAIL" ;;
+        SKIPPED) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM skipped" ;;
+        *) SCORE_VISUAL=$((SCORE_VISUAL + 0)); VISUAL_DETAIL="$SCREENSHOTS screenshots, VLM $VISUAL_VERDICT" ;;
+    esac
+    # Interactive scenarios: PASS=5, else 0
+    if [[ -f "$EVIDENCE_DIR/interactive_results.txt" ]]; then
+        if grep -qi "PASS\|SUCCESS\|ALL.*PASS" "$EVIDENCE_DIR/interactive_results.txt" 2>/dev/null; then
+            SCORE_VISUAL=$((SCORE_VISUAL + 5))
+            VISUAL_DETAIL+=", interactive PASS"
+            INTERACTIVE_PASS=true
+        else
+            VISUAL_DETAIL+=", interactive FAIL"
+        fi
+    fi
+    if [[ $SCORE_VISUAL -gt 20 ]]; then SCORE_VISUAL=20; fi
+fi
 
 # 6. Regression (15)
 SCORE_REGRESSION=0
