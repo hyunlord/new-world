@@ -49,6 +49,49 @@
 
 **Next action**: N6 (Step W) — `harness_pipeline.sh` FFI vacuous + RE-CODE 분류 + per-attempt penalty integration.
 
+### N6 cascade — LAND COMPLETE ✓ (2026-05-06)
+
+**N6 cascade (3 commits)**:
+- N6.1 `4680378d` — FFI vacuous integration (Step 2.5c, D10c helper 호출처별 분리)
+- N6.2 `2f90ffed` — RE-CODE classification + penalty producer (D7-A env-var, D11-A snapshot, D12-A timing)
+- N6.3 `13c5814c` — SCORE_CODE penalty consumer (SCORE_CODE_BASE + TOTAL_PENALTY + 0 floor)
+
+**Architecture 책임 분담 완성**:
+- `cold_tier_classifier.sh` — 4 Signal 검증 (A/B/C/D)
+- `ffi_vacuous_check.sh` — sim-bridge crate 전체 vacuous (Step 2.5c, broader scope)
+- `changed_sim_bridge()` helper (legacy) — lib.rs 단일 정밀 (PostCode L649)
+- `classify_recode.sh` — RE-CODE verdict 5-카테고리 분류
+- `score_attempt_penalty.sh` — per-attempt cap -5 누적 (producer)
+- `harness_pipeline.sh` — orchestration + snapshot + env-var export
+- `generate_report.sh` — dimension 산출 + cold tier auto credit + SCORE_CODE penalty 적용 (consumer)
+- Hook (`pre-commit-check.sh`) — pure consumer + threshold 비교
+
+**T2 retroactive validate (`91d4e7c0`) updated**:
+- cold_tier_classifier exit 0 (A=1 B=1 C=1 D=1) ✓
+- FFI vacuous CONFIRMED ✓ (Mech 10/10)
+- 1 LOCK_VIOLATION attempt → CQ 6/15 (base 11 - penalty 5)
+- Score: GATE 10 + PLAN 5 + CODE 6 + TESTS 20 + VISUAL 20 + REG 15 + EVAL 15 = **91/100**
+- Hook threshold 75 (cold) → PASS (safety margin +16)
+
+**Score evolution audit chain**:
+- 91d4e7c0 initial: raw 48/100, adjusted 56/90 BLOCK (3 policy gaps)
+- V.4.6 sim (dimension only): 95/100 PASS
+- W3 후 정확한 sim (penalty 반영): **91/100 PASS**
+
+**v3.3.x 진화 audit chain 완료** (~13 commits): v3.3 통합 명령 → v3.3.1 → v3.3.2 → v3.3.3 V.4 cascade (7 commits) → N6 cascade (3 commits) + W5 audit.
+
+**v3.3.4 amendment 후보** (post-N6 audit, 사용자 결정):
+1. per-attempt cap 의미 명확화 (각 attempt 단독 -5 누적, 글로벌 cap 아님)
+2. attempts/ subdirectory 구조 명세 (W3.1 directory mismatch 해결)
+3. SCORE_CODE attempt-aware base 공식 명세 (15/11/8)
+
+**Next action (D9 사용자 결정)**:
+- D9α: N7 (Step X) — `score_model.sh` 정합 검토 (~1h)
+- D9β: T6 (Material RON 100) 시작 — Phase 1 본 작업 (~3-5h, 권장)
+- D9γ: N8~N12 — self-test V5-V8 + audit (~2-3h)
+
+W1.2~W1.6 (T6~T11) 진행 가능 — UNBLOCKED.
+
 ### 사용자 confirm 기록
 *(시스템 완성마다 사용자 명시 confirm 기록)*
 
