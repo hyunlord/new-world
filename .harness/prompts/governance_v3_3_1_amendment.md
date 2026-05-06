@@ -47,6 +47,23 @@
 
 ---
 
+## v3.3.3 Reflected (2026-05-05)
+
+이 amendment는 v3.3.3 정정 반영 (V.4.2 commit per dispatch instruction):
+- §3.1 dimension list: Tests 20 dimension 추가 (max raw 80 → 100)
+- §3.1 Hot threshold: 72 → 90 (raw 100 × 90% v3.2.1 자연 호환)
+- §3.2 Z 보강 model: max raw 80 → 100, Hot 72 → 90
+- §3.3 표시와 산출 분리: scale 변환 불필요 (raw 100 그대로)
+- §3.4 T2 retroactive: 75/100 boundary → 95/100 안전 PASS (Tests 20 인지)
+- §4.1 N5.1 spec D4α 단순화: visual_auto_credit hook 제거, generate_report.sh 책임
+- §4.3 N7 spec: threshold 72 → 90
+- §종합: dimension list + Hot threshold 갱신
+- §2.3 supersede memo: Alt C 원안 90 회복 정합성 명시
+- v3.3.3 amendment file: .harness/prompts/governance_v3_3_3_amendment.md (commit 871f131b)
+- Audit chain: v3.3 ticket → v3.3.1 → v3.3.2 → v3.3.3 → 이 self-correction
+
+---
+
 ## 📑 Section 1: 갭의 본질
 
 ### 1.1 발견된 갭 (Claude Code 보고)
@@ -190,7 +207,7 @@ Cold tier max 100:
 - 보수적 threshold = cold tier 검증 부족 인정
 - 만약 cold tier work이 75 미만 PASS 하려면 추가 dimension 향상 (CQ 15/15 등) — 자연스러운 압력
 
-**Note (v3.3.2)**: Alt C 원안의 hot threshold 90은 §3.2 Z 보강 분석 결과 72로 supersede (raw 80 < threshold 90 = 수학적 불가능). 이 section은 historical proposal 보존. 정합 결론은 §3.2.
+**Note (v3.3.2 → v3.3.3)**: Alt C 원안의 hot threshold 90은 v3.3.2 §3.2 Z 보강에서 72로 supersede (raw 80 가정 base). v3.3.3 §1.2에서 Tests 20 dimension 인지 → max raw 100 정합 → Hot threshold 90 회복 (Alt C 원안 정합성 복원). 이 section은 historical proposal 보존. 정합 결론은 §3.1 + §3.2 (v3.3.3 reflected).
 
 ---
 
@@ -204,15 +221,14 @@ Cold tier max 100:
 Score Scale: 0-100 (v3.2.1 호환 유지)
 
 Hot tier (cold-tier 4 Signal 미충족):
-- Max raw: 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
-- Hook scale 변환: raw / 80 × 100 = adjusted score (0-100 scale)
-  또는 raw 80 → 100 매핑 식 명시 (아래 §3.3)
-- Threshold: 72/100 (raw 80 × 90%, v3.2.1 SCORE_THRESHOLD=90 hardcoded는 v3.3 implementation에서 tier별 변수로 대체. v3.3.2 §2.1 정정.)
+- Max raw: 100 (Mech 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 + Reg 15 + Eval 15)
+- Hook은 pure consumer (raw 산출 X — verdict line 4 / pipeline_report.md 추출)
+- Threshold: 90/100 (raw 100 × 90%, v3.2.1 SCORE_THRESHOLD=90 자연 호환. v3.3.3 §2.3 정정.)
 - VLM SKIP +8 보정 유지 (environmental failure)
 
 Cold tier (4 Signal 충족):
-- Max raw: 100 (Visual 20 자동 부여 = +20 auto credit)
-- Visual Verify: 0/20 → +20 (cold tier auto credit)
+- Max raw: 100 (Mech 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 auto credit + Reg 15 + Eval 15)
+- Visual Verify: 0/20 → +20 (cold tier auto credit, generate_report.sh 책임)
   → 즉 Visual 차원 자체 점수 부여, 차감 없음
 - Threshold: 75/100 (cold 보수적 -15)
 - VLM SKIP +0 (cold tier auto credit이 보정 대체)
@@ -224,7 +240,7 @@ Cold tier (4 Signal 충족):
     vlm_env_cost = 0
   else:  # hot tier
     visual_score = (산출된 score, VLM SKIP 시 0)
-    threshold = 72  # v3.3.2 §2.1 정정 (90 → 72, raw 80 × 90%)
+    threshold = 90  # v3.3.3 §2.3 정정 (raw 100 × 90%, Tests 20 dimension 추가)
     vlm_env_cost = 8 if VLM SKIP else 0
   
   raw = mech + plan + cq + visual_score + reg + eval
@@ -251,45 +267,42 @@ v3.2.1 hook은 100 scale 가정. v3.3 §5.4 정의는 raw 80. 변환:
 - Threshold 90 → raw 90 (실제 dimension 합계 80을 초과하므로 raw 80도 BLOCK)
 - **이건 명백히 잘못됨** → v3.2.1 자체 모순
 
-**최종 채택 (Z 보강)**: 
-- Hot tier max는 raw 합계 80 (실제 dimension)
-- Cold tier max는 raw 합계 100 (Visual 자동 부여)
+**최종 채택 (Z 보강 + v3.3.3 §2.3 정정)**: 
+- Hot tier max는 raw 합계 100 (Tests 20 dimension 추가, v3.3.3 §1.2 인지)
+- Cold tier max는 raw 합계 100 (Tests 20 + Visual 20 auto credit)
 - Hook의 SCORE_THRESHOLD는 tier별 변수 분기:
-  - Hot: 72 (raw 80 × 90%)
+  - Hot: 90 (raw 100 × 90%, v3.2.1 자연 호환)
   - Cold: 75 (raw 100 × 75%)
 - `score/100` 표기는 그대로 유지 (UI 표시), 실제 비교는 tier별 threshold
 
-### 3.3 표시와 산출 분리
+### 3.3 표시와 산출 분리 (v3.3.3 §2.3 정정 — scale 변환 불필요)
 
 ```
 Hook 표시 (UI):
-  "Score 75/100 (cold tier)" 또는 "Score 72/80 (hot tier)"
-  사용자에게는 100 scale 표기 (직관적)
+  "Score 90/100 (hot tier)" 또는 "Score 75/100 (cold tier)"
+  raw 100 scale로 통합 (Tests 20 dimension 추가, 변환 불필요)
 
-내부 산출:
-  raw = sum(dimensions)
-  Hot tier raw max: 80
-  Cold tier raw max: 100 (Visual auto credit +20)
+내부 산출 (generate_report.sh 책임):
+  raw = sum(dimensions) — Mech 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 + Reg 15 + Eval 15
+  Hot tier raw max: 100
+  Cold tier raw max: 100 (Visual 20 auto credit, Tests 20 동일)
   
   Threshold 비교:
-  Hot: raw >= 72 (90% of 80)
+  Hot: raw >= 90 (90% of 100)
   Cold: raw >= 75 (75% of 100)
 
-scale 변환 표시 (선택):
-  Hot 표시 score = raw × 1.25 (80 → 100 변환)
-  Cold 표시 score = raw (이미 100 scale)
-  
-  또는 단순:
-  Hot 표시 score = raw / 80 × 100
-  Cold 표시 score = raw
+scale 변환 불필요:
+  v3.3.3 §1.2에서 Tests 20 dimension 인지 → max raw 100으로 정합
+  Hot 표시 score = raw (변환 X, 100 scale 그대로)
+  Cold 표시 score = raw (변환 X, 100 scale 그대로)
 
-→ N5 hook은 raw + threshold 변수 분기만 처리. 표시는 N7 score_model.sh 담당.
+→ N5 hook은 verdict consumer (line 4 / pipeline_report.md regex). raw 산출 + 표시는 generate_report.sh 단독 책임 (D4α).
 ```
 
 ### 3.4 v3.3 §5.5 T2 Retroactive REVISED
 
 ```
-T2 retroactive validate (91d4e7c0) — Alt C:
+T2 retroactive validate (91d4e7c0) — Alt C (v3.3.3 §1.2 Tests 20 dimension 인지 정정):
 
 Cold tier 4 Signal 검증:
 ✓ A: 모든 변경 sim-core/material/ + lib.rs (sim-core crate)
@@ -298,19 +311,24 @@ Cold tier 4 Signal 검증:
 ✓ D: register_runtime_system 호출 0, RuntimeSystem impl 0
 → Cold tier 확정
 
-Score 산출 (raw):
+Score 산출 (raw, v3.3.3 §1.2 Tests 20 dimension 추가):
 Mechanical:  10/10  (FFI vacuous +2 회복)
 Plan:         5/5
 Code Quality: 10/15 (LOCK_VIOLATION -5 from A2, A1 TEST_RIGOR -0)
-Visual:      20/20 (cold tier auto credit)
+Tests:       20/20  (v3.3.3 §1.2 dimension 추가, cold tier 정상 산출)
+Visual:      20/20  (cold tier auto credit, generate_report.sh 책임)
 Regression:  15/15
 Evaluator:   15/15
 ─────────────────────
-Raw:         75/100
+Raw:         95/100
 Threshold:   75/100
-Result:      PASS ✓ (75 ≥ 75, boundary)
+Result:      PASS ✓ (95 ≥ 75, 안전 마진 +20)
 
 VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
+
+★ v3.3.3 §1.2 Tests dimension 추가로 boundary case (75) → 안전 PASS (95) 회복.
+v3.3.1 작성 시점에는 Tests 20 dimension 미인지 상태에서 산출 (75/100),
+v3.3.3에서 정정 (D5a 채택, V.2 D1b 패턴 일관성).
 ```
 
 ---
@@ -322,20 +340,19 @@ VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
 Claude Code N5 commit bac9ba53는 **Alternative A 가정** (threshold 72/54). v3.3.1 채택 후 재수정 의무:
 
 ```
-N5.1 (재수정):
+N5.1 (재수정 — v3.3.3 §2.4 D4α 단순화):
 - pre-commit-check.sh tier branching logic 유지
-- SCORE_THRESHOLD 변수 분기:
+- SCORE_THRESHOLD 변수 분기 (D4α — visual_auto_credit hook 제거):
   if cold_tier:
     SCORE_THRESHOLD=75
-    visual_auto_credit=20  # cold tier에서 Visual 차원 자동 부여
     vlm_env_cost=0
   else:
-    SCORE_THRESHOLD=72  # v3.3.2 §2.5 정정 (raw 80 × 90%)
-    visual_auto_credit=0
+    SCORE_THRESHOLD=90  # v3.3.3 §2.4 정정 (raw 100 × 90%, Tests 20 dimension 추가)
     vlm_env_cost=(8 if VLM SKIP else 0)
 
-- raw 산출 시 visual_auto_credit 더해서 합산
-- adjusted = raw + vlm_env_cost
+- Hook은 verdict consumer (raw 산출 X — verdict line 4 / pipeline_report.md 추출)
+- Cold tier auto credit은 generate_report.sh 책임 (이중 가산 위험 회피, v3.3.3 §1.3)
+- adjusted = score + vlm_env_cost  # score는 verdict에서 추출
 - compare adjusted >= SCORE_THRESHOLD
 
 bash -n PASS 의무
@@ -370,21 +387,21 @@ N7 score_model.sh:
   - adjusted score (after VLM env cost or cold tier auto credit)
   - threshold (tier별)
   - PASS/FAIL verdict
-- Logic:
+- Logic (v3.3.3 §2.3 정정 — Tests 20 dimension 추가):
   if tier == "cold":
-    visual_score = 20  # auto credit
+    visual_score = 20  # auto credit (generate_report.sh L314-339 분기 책임)
     threshold = 75
     vlm_cost = 0
   else:
     visual_score = input_visual  # 산출된 값
-    threshold = 72  # v3.3.2 §2.5 정정 (raw 80 × 90%)
+    threshold = 90  # v3.3.3 §2.4 정정 (raw 100 × 90%, Tests 20 dimension 추가)
     vlm_cost = 8 if vlm_skip else 0
   
-  raw = mech + plan + cq + visual_score + reg + eval
+  raw = mech + plan + cq + tests + visual_score + reg + eval  # Tests 20 추가
   adjusted = raw + vlm_cost
   
   output:
-    raw_total: $raw/100  (or /80 for hot if dimension 합계 80)
+    raw_total: $raw/100  # Hot/Cold 동일 (max raw 100)
     adjusted_total: $adjusted/100
     threshold: $threshold/100
     verdict: PASS if adjusted >= threshold else FAIL
@@ -479,9 +496,9 @@ A1~A5 모두 충족 후:
 ### 주요 결정
 
 1. **Score scale**: 0-100 유지 (v3.2.1 호환)
-2. **Hot tier**: max 80 raw, threshold 72/100 (v3.3.2 §2.1), VLM SKIP +8
-3. **Cold tier**: max 100 raw (Visual auto credit +20), threshold 75/100, VLM +0
-4. **T2 retroactive**: 75/100 ≥ 75 PASS (boundary)
+2. **Hot tier**: max 100 raw (Tests 20 dimension 추가), threshold 90/100 (v3.3.3 §2.3), VLM SKIP +8
+3. **Cold tier**: max 100 raw (Tests 20 + Visual 20 auto credit), threshold 75/100, VLM +0
+4. **T2 retroactive**: 95/100 ≥ 75 PASS (안전 마진 +20, v3.3.3 §1.2 Tests 20 인지)
 5. **N5 처리**: bac9ba53 + N5.1 재수정 commit 추가
 
 ### v3.3 통합 명령 변경 사항
