@@ -15,9 +15,10 @@
 
 ### Week 1~2 (진행중): Material System Deep
 - [~] W1.1: Material schema 설계
-  - [x] T1 (2026-05-04, `77764531`): Cargo deps + sim-core lib.rs `pub mod material` + `MATERIAL_SCHEMA_VERSION=1` (STRUCTURAL-COMMIT, see `.harness/audit/structural_commits.log`)
+  - [x] T1 (2026-05-04, `77764531`): Cargo deps + sim-core lib.rs `pub mod material` + `MATERIAL_SCHEMA_VERSION=1` (STRUCTURAL-COMMIT pre-V.4, see `.harness/audit/structural_commits.log`)
   - [x] T2-T5 (2026-05-05, `91d4e7c0`): material module 11 files / 2101 LOC — id/category/terrain/error/properties/definition/derivation/explanation/registry/loader/mod (POLICY-GAP-V3.3 authorized, see `.harness/audit/policy_gap.log`; lock violations 0, Evaluator APPROVE, raw 48/100, adjusted 56/90 — block by 3 policy gaps not code defects)
-- [⏯] W1.2: Material RON 100+ (T6~T8) — **UNBLOCKED** (v3.3.3 land complete)
+  - [x] T6.6 (2026-05-06, `78f437cb`): Material Loader by_category dispatcher (8 accessors) + sample granite.ron + 3 integration tests (71 tests pass + clippy clean, STRUCTURAL-COMMIT v3.3.4 lane)
+- [⏯] W1.2: Material RON 100+ (T6.1~T6.5) — **UNBLOCKED** (v3.3.4 land complete, STRUCTURAL lane 정식 처리 가능)
 - [⏯] W1.3: Auto-derivation (folded into W1.1 T2 — already complete in `91d4e7c0`)
 - [⏯] W1.4: Material inspector UI — UNBLOCKED (v3.3.3 lands)
 - [⏯] W1.5: Cause-effect harness 5+ (T9~T10) — UNBLOCKED (v3.3.3 lands)

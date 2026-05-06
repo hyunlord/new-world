@@ -1,2 +1,4 @@
 2026-05-03T16:16:17Z | v7-reset | Step B+C structural commits | --no-verify authorized by user | archive/pre-v7-reset 71d5fa6e | Step B commit ae0a01f6
 2026-05-04T11:21:04Z | material-phase1-scaffold | T1: Cargo deps + sim-core lib.rs material module — no feature logic, V7 init 742dd1c5 precedent | authorized by user | 77764531
+2026-05-06T11:30:55Z|t6-6-material-loader|kwan hyeon (D-β3 채택)|T6.6 Material loader by_category dispatcher + sample granite.ron + integration tests; 71 tests pass + clippy clean; cold tier confirmed (sim-core data/test scope)
+2026-05-06T11:34:04Z|t6-6-material-loader|kwan hyeon (D-β3 채택)|T6.6 Material loader by_category dispatcher + sample granite.ron + integration tests; 71 tests pass + clippy clean; cold tier confirmed (re-auth post Layer-2 hook fix 53b877d7)
