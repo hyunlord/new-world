@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "rhyolite",
+            name: "Rhyolite",
+            category: stone,
+            properties: (
+                density: 2500.0,
+                hardness: 6.0,
+                shear_yield: 100000.0,
+                impact_yield: 160000.0,
+                fracture_toughness: 1200.0,
+                melting_point: 1200.0,
+                flammability: 0.0,
+                thermal_conductivity: 2.0,
+                cultural_value: 0.4,
+                rarity: 0.45,
+                distribution: [mountain],
+                work_difficulty: 0.55,
+                aesthetic_value: 0.45,
+                workability: 0.4,
+                preservation: 0.95,
+            ),
+            tier: 0,
+            natural_in: [mountain],
+        ),
+    ],
+)

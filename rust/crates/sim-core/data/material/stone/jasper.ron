@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "jasper",
+            name: "Jasper",
+            category: stone,
+            properties: (
+                density: 2650.0,
+                hardness: 7.0,
+                shear_yield: 90000.0,
+                impact_yield: 150000.0,
+                fracture_toughness: 1200.0,
+                melting_point: 1700.0,
+                flammability: 0.0,
+                thermal_conductivity: 2.0,
+                cultural_value: 0.7,
+                rarity: 0.6,
+                distribution: [hill, mountain],
+                work_difficulty: 0.6,
+                aesthetic_value: 0.85,
+                workability: 0.4,
+                preservation: 0.95,
+            ),
+            tier: 1,
+            natural_in: [hill, mountain],
+        ),
+    ],
+)

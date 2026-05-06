@@ -83,8 +83,96 @@ fn registry_with_loaded_granite() {
 }
 
 #[test]
-fn loads_stone_directory_with_one_file() {
+fn test_load_stone_directory() {
     let defs = load_directory(&stone_dir_path()).expect("stone/ must load");
-    assert_eq!(defs.len(), 1, "stone/ currently holds only granite.ron");
-    assert_eq!(defs[0].name, "Granite");
+    assert_eq!(
+        defs.len(),
+        30,
+        "Stone 30 files 모두 로드 (granite + 29 new in T6.1)"
+    );
+}
+
+#[test]
+fn test_registry_with_30_stones() {
+    let defs = load_directory(&stone_dir_path()).expect("stone/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register stone");
+    }
+
+    assert_eq!(registry.count(), 30, "registry holds 30 stones");
+
+    let stones: Vec<_> = registry.stones().collect();
+    assert_eq!(stones.len(), 30, "by_category Stone dispatcher returns 30");
+
+    assert_eq!(registry.woods().count(), 0);
+    assert_eq!(registry.animals().count(), 0);
+    assert_eq!(registry.minerals().count(), 0);
+    assert_eq!(registry.plants().count(), 0);
+}
+
+#[test]
+fn test_stone_property_ranges_valid() {
+    let defs = load_directory(&stone_dir_path()).expect("stone/ must load");
+
+    for def in &defs {
+        let p = &def.properties;
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density {} out of range",
+            def.name,
+            p.density
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness {} out of range",
+            def.name,
+            p.hardness
+        );
+        assert!(
+            p.shear_yield >= 1_000.0 && p.shear_yield <= 600_000.0,
+            "{} shear_yield {} out of range",
+            def.name,
+            p.shear_yield
+        );
+        assert!(
+            p.fracture_toughness >= 1_000.0 && p.fracture_toughness <= 800_000.0,
+            "{} fracture_toughness {} out of range",
+            def.name,
+            p.fracture_toughness
+        );
+        assert!(
+            p.flammability >= 0.0 && p.flammability <= 1.0,
+            "{} flammability {} out of range",
+            def.name,
+            p.flammability
+        );
+    }
+}
+
+#[test]
+fn test_load_specific_stones_by_name() {
+    let defs = load_directory(&stone_dir_path()).expect("stone/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register");
+    }
+
+    let basalt = registry.stones().find(|m| m.name == "Basalt");
+    assert!(basalt.is_some(), "basalt 찾기");
+
+    let obsidian = registry.stones().find(|m| m.name == "Obsidian");
+    assert!(obsidian.is_some(), "obsidian 찾기");
+
+    let granite = registry.stones().find(|m| m.name == "Granite");
+    assert!(granite.is_some(), "granite (T6.6 land) 찾기");
+
+    let anthracite = registry.stones().find(|m| m.name == "Anthracite");
+    assert!(anthracite.is_some(), "anthracite 찾기");
+    assert!(
+        anthracite.unwrap().properties.flammability > 0.9,
+        "anthracite is combustible (석탄)"
+    );
 }

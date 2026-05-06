@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "basalt",
+            name: "Basalt",
+            category: stone,
+            properties: (
+                density: 3000.0,
+                hardness: 6.0,
+                shear_yield: 130000.0,
+                impact_yield: 200000.0,
+                fracture_toughness: 1500.0,
+                melting_point: 1200.0,
+                flammability: 0.0,
+                thermal_conductivity: 1.7,
+                cultural_value: 0.4,
+                rarity: 0.3,
+                distribution: [mountain],
+                work_difficulty: 0.65,
+                aesthetic_value: 0.4,
+                workability: 0.35,
+                preservation: 0.95,
+            ),
+            tier: 0,
+            natural_in: [mountain],
+        ),
+    ],
+)
