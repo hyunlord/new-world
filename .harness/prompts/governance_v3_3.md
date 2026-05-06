@@ -44,6 +44,20 @@
 - v3.3.1 amendment 정정: 2064f0e1 (Step V.2)
 - Audit chain: v3.3 ticket → v3.3.1 amendment → v3.3.2 amendment → v3.3.1 self-correction → 이 inline re-patch
 
+## v3.3.3 Re-Patch Reflected (2026-05-06)
+
+이 ticket은 v3.3.3 정정 inline reflect한 추가 갱신본 (Step V.4.3):
+
+- §5.2 Alt D 채택안: Hot tier max 80→100, threshold 72→90 (Tests 20 dimension 누락 발견)
+- §5.3 T2 산출: scale 변환 제거, raw 100 그대로, Hot threshold 90, T2 95/100
+- §5.4 정책: dimension list에 Tests 20 추가, scale 변환 불필요 명시
+- §5.5 T2 retroactive: 75/100 → 95/100 (Tests 20 포함, safety margin +20)
+- §6/§7/§9/§10 verification 항목: 95/100 + threshold 90 일괄 반영
+- §종합: 최종 결론 갱신
+- v3.3.3 amendment file: `.harness/prompts/governance_v3_3_3_amendment.md` (commit 871f131b)
+- v3.3.1 self-correction: fcd06f96 (V.4.2)
+- Audit chain: v3.3 ticket → v3.3.1 amendment → v3.3.2 amendment → v3.3.1 self-correction → v3.3.2 inline re-patch → v3.3.3 amendment register → v3.3.1 self-correction (v3.3.3 cascade) → 이 inline re-patch
+
 ### Claude Code draft 활용 정책
 
 `.harness/prompts/_drafts/governance_v3_3.md`에 보존된 1166줄 draft를 **구조 reference**로 활용. 단:
@@ -719,19 +733,21 @@ v3.3 적용 후:
 
 **Note (v3.3.2)**: Alt C 원안의 hot threshold 90은 v3.3.1 §3.2 Z 보강 분석 결과 72로 supersede (raw 80 < threshold 90 = 수학적 불가능). 이 section은 historical proposal 보존. 정합 결론은 §5.4 (v3.3.1 §3.1 verbatim, v3.3.2 §2.1 정정 반영).
 
+**Note (v3.3.3)**: v3.3.2 §2.1의 raw 80 / threshold 72 결론은 v3.3.3 §1.2 dimension 누락 발견 (Tests 20 미반영)으로 supersede. dimension 추가 후 max 100 회복 → Alt C 원안 threshold 90 회복 (max 100 ↔ threshold 90 정합). 정합 결론은 §5.4 (v3.3.3 §2.2 verbatim).
+
 **Alternative D**: Hot/Cold 구분 없이 max raw score를 cold-tier에 맞게 조정
 - Cold tier: max raw 100 (Visual auto credit +20, v3.3.1 §3.1)
-- Hot tier: max raw 80, threshold 72 (raw 80 × 90%, v3.3.2 §2.1 정정)
+- Hot tier: max 100 (Tests 20 포함), threshold 90 (raw 100 × 90%, v3.3.3 §2.2 정정)
 - Cold tier: threshold 75 (v3.3.1 §3.1)
 
-**채택 (v3.3.1 update, v3.3.2 confirmation)**:
+**채택 (v3.3.1 update, v3.3.2 → v3.3.3 supersede)**:
 **Cold tier: Max raw 100 (Visual auto credit +20) + Threshold 75 (100×75%)**
-**Hot tier: Max raw 80 + Threshold 72 (80×90%)**
+**Hot tier: Max 100 (Tests 20 포함) + Threshold 90 (100×90%)**
 
 **근거**:
 - Visual Verify 차원 자체 제외가 가장 명확
 - 사용자 axiom #1: 의미 없는 차원 (visual surface 0)에 점수 부여 자체 부적합
-- Threshold 72는 "max의 90%" 일관 (hot tier 72/80 = 90% in raw scale, v3.3.2 §2.1)
+- Threshold 90은 "max의 90%" 일관 (hot tier 90/100 = 90%, v3.3.3 §2.2)
 - T2 retroactive: 78/80 (mechanical 10 + plan 5 + CQ 13 + reg 15 + eval 15 = 58? — CQ 산출 정확성 검증 필요)
 
 ### 5.3 Code Quality 산출 정확성 — 추가 분석
@@ -745,71 +761,72 @@ v3.3 적용 후:
 
 **채택**: **A (단순 baseline - sum)**, T2: 15 - 5 = 10.
 
-**T2 retroactive 최종 산출 (v3.3.1 §3.4 REVISED)**:
+**T2 retroactive 최종 산출 (v3.3.3 §1.2 cascade)**:
 ```
 Mechanical:  10/10  (+2 FFI vacuous 회복)
 Plan:         5/5
 Code Quality: 10/15 (-5 LOCK_VIOLATION attempt)
+Tests:       20/20 (v3.3.3 §1.2 dimension 추가)
 Visual:      20/20 (cold tier auto credit, v3.3.1 §3.1)
 Regression:  15/15
 Evaluator:   15/15
 ─────────────────────
-Raw:         75/100 (cold tier max, scale 0-100 유지)
+Raw:         95/100 (cold tier max 100 = Visual 20 auto credit + Tests 20 포함, v3.3.3 §1.2)
 
 Cold-tier-bonus 적용 (v3.3.1 §3.1 REVISED):
 - Visual Verify 차원: cold tier auto credit +20 (차감 없음, 차원 자체 점수 부여)
-- Max 정의 (v3.3.1 §3.1):
-  Hot tier max raw: Mechanical 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15 = 80
-  Cold tier max raw: 위 with Visual auto credit +20 = 100 (scale 0-100 유지)
-  Hot threshold: 72/100 (raw 80 × 90%, v3.3.2 §2.1)
-  Cold threshold: 75/100 (cold 보수적 -15)
+- Max 정의 (v3.3.3 §2.2):
+  Hot tier max: Mechanical 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 + Reg 15 + Eval 15 = 100
+  Cold tier max: 위 with Visual auto credit +20 (Visual 차원 자체 부여) = 100
+  Hot threshold: 90/100 (raw 100 × 90%, v3.3.3 §2.2)
+  Cold threshold: 75/100 (cold 보수적 -15, raw 100 × 75%)
 
-→ T2 final (v3.3.1): 75/100 ≥ 75 → PASS (boundary)!
+→ T2 final (v3.3.3): 95/100 ≥ 75 → PASS (safety margin +20)
 ```
 
-### 5.4 채택 정책 — Cold Tier Score Model (v3.3.1 REVISED)
+### 5.4 채택 정책 — Cold Tier Score Model (v3.3.3 cascade)
 
-> **Source**: v3.3.1 amendment §3.1 verbatim (`.harness/prompts/governance_v3_3_1_amendment.md`, commit a5f90f4d)
-> **Supersedes**: v3.3 v1.0 §5.4 (Alt D, max 60/threshold 54) — score scale 갭으로 무효
+> **Source**: v3.3.3 amendment §2.2 verbatim (`.harness/prompts/governance_v3_3_3_amendment.md`, commit 871f131b)
+> **Supersedes**: v3.3 v1.0 §5.4 (Alt D, max 60/threshold 54) — score scale 갭으로 무효; v3.3.2 §2.1 (max 80/threshold 72) — Tests 20 dimension 누락으로 무효
 
 ```
-정책 v3.3.1 §5.4: Score Model Tier-Aware (REVISED)
+정책 v3.3.3 §5.4: Score Model Tier-Aware (cascade)
 
-Score Scale: 0-100 (v3.2.1 호환 유지)
+Score Scale: 0-100 (v3.2.1 호환 유지, raw 100 그대로)
 
 Hot tier (cold-tier 4 Signal 미충족):
-- Max raw: 80 (Mech 10 + Plan 5 + CQ 15 + Visual 20 + Reg 15 + Eval 15)
-- Hook scale 변환: raw / 80 × 100 = adjusted score (0-100 scale)
-  또는 raw 80 → 100 매핑 식 명시 (아래 §3.3)
-- Threshold: 72/100 (raw 80 × 90%, v3.3.2 §2.1 정정)
+- Max: 100 (Mech 10 + Plan 5 + CQ 15 + Tests 20 + Visual 20 + Reg 15 + Eval 15)
+- Hook scale 변환 불필요 (max 100 raw 그대로, v3.3.3 §1.4)
+  → Hook은 verdict line 4 또는 pipeline_report.md에서 score를 pure consumer로 추출
+- Threshold: 90/100 (raw 100 × 90%, v3.3.3 §2.2)
 - VLM SKIP +8 보정 유지 (environmental failure)
 
 Cold tier (4 Signal 충족):
-- Max raw: 100 (Visual 20 자동 부여 = +20 auto credit)
-- Visual Verify: 0/20 → +20 (cold tier auto credit)
+- Max: 100 (Visual 20 자동 부여 = +20 auto credit, Tests 20 포함, v3.3.3 §1.2)
+- Visual Verify: 0/20 → +20 (cold tier auto credit, generate_report.sh 책임)
   → 즉 Visual 차원 자체 점수 부여, 차감 없음
-- Threshold: 75/100 (cold 보수적 -15)
+- Threshold: 75/100 (cold 보수적 -15, raw 100 × 75%, v3.3.3 §2.2)
 - VLM SKIP +0 (cold tier auto credit이 보정 대체)
 
-판정 logic:
+판정 logic (hook pure consumer, v3.3.3 §1.4):
   if cold_tier_classifier exit 0:
-    visual_score = 20 (auto credit)
     threshold = 75
     vlm_env_cost = 0
   else:  # hot tier
-    visual_score = (산출된 score, VLM SKIP 시 0)
-    threshold = 72  # v3.3.2 §2.1 정정 (raw 80 × 90%)
+    threshold = 90  # v3.3.3 §2.2 (raw 100 × 90%, hook pure consumer)
     vlm_env_cost = 8 if VLM SKIP else 0
-  
-  raw = mech + plan + cq + visual_score + reg + eval
-  adjusted = raw + vlm_env_cost
+
+  # score는 generate_report.sh가 산출하여 verdict/report에 기록
+  # hook은 산출하지 않고 추출만 (pure consumer)
+  score = extract_from_verdict_or_report()
+  adjusted = score + vlm_env_cost
   PASS if adjusted >= threshold
 ```
 
-### 5.5 T2 Retroactive Final Score (v3.3.1 REVISED)
+### 5.5 T2 Retroactive Final Score (v3.3.3 cascade)
 
-> **Source**: v3.3.1 amendment §3.4 verbatim (`.harness/prompts/governance_v3_3_1_amendment.md`, commit a5f90f4d)
-> **Supersedes**: v3.3 v1.0 §5.5 (55/60 PASS) — score scale 갭으로 무효
+> **Source**: v3.3.3 amendment §1.2 cascade (`.harness/prompts/governance_v3_3_3_amendment.md`, commit 871f131b)
+> **Supersedes**: v3.3 v1.0 §5.5 (55/60 PASS) — score scale 갭으로 무효; v3.3.1 §3.4 (75/100 boundary) — Tests 20 dimension 누락으로 무효
 
 ```
 T2 retroactive validate (91d4e7c0) — Alt C:
@@ -825,13 +842,14 @@ Score 산출 (raw):
 Mechanical:  10/10  (FFI vacuous +2 회복)
 Plan:         5/5
 Code Quality: 10/15 (LOCK_VIOLATION -5 from A2, A1 TEST_RIGOR -0)
+Tests:       20/20 (v3.3.3 §1.2 dimension 추가)
 Visual:      20/20 (cold tier auto credit)
 Regression:  15/15
 Evaluator:   15/15
 ─────────────────────
-Raw:         75/100
+Raw:         95/100 (Tests 20 포함, v3.3.3 §1.2)
 Threshold:   75/100
-Result:      PASS ✓ (75 ≥ 75, boundary)
+Result:      PASS ✓ (95 ≥ 75, safety margin +20, v3.3.3 §1.2 cascade)
 
 VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
 ```
@@ -863,7 +881,7 @@ VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
 - N5 후 cold-tier-classifier가 T2 변경 set에 대해 cold tier 확정 출력 확인
 - N7 후 score model이 Hot/Cold 모두 정상 산출 확인
 - N8 후 self-test가 v3.3 정책 자체 검증 통과 확인
-- N9 후 T2 retroactive score = 75/100 PASS 확인 (v3.3.1 §3.4 boundary)
+- N9 후 T2 retroactive score = 95/100 PASS 확인 (v3.3.3 §1.2 cascade, safety margin +20)
 
 ---
 
@@ -878,8 +896,8 @@ VLM cost: 0 (cold tier 자동 부여, 보정 불필요)
 | V3 | classify_recode A1 verdict | `bash tools/harness/classify_recode.sh .harness/runs/material_schema/attempt-1/verdict 1` | "TEST_RIGOR" |
 | V4 | score_attempt_penalty T2 attempts | `bash tools/harness/score_attempt_penalty.sh .harness/runs/material_schema/` | `PENALTY=-5`, `EFFECTIVE_ATTEMPTS=1` |
 | V5 | ffi_vacuous_check T2 변경 | `bash tools/harness/ffi_vacuous_check.sh "$(git diff --name-only 91d4e7c0~1..91d4e7c0)"` | exit 0, "CONFIRMED" |
-| V6 | T2 retroactive score | `(pipeline simulate 91d4e7c0)` | `Cold tier raw 75/100 ≥ 75 PASS (v3.3.1 §3.4)` |
-| V7 | Hot tier 정상 동작 | `(pipeline against hypothetical hot tier change)` | Hot tier max 80 raw, threshold 72/100 정상 산출 (v3.3.2 §2.1) |
+| V6 | T2 retroactive score | `(pipeline simulate 91d4e7c0)` | `Cold tier raw 95/100 ≥ 75 PASS (v3.3.3 §1.2 cascade, safety margin +20)` |
+| V7 | Hot tier 정상 동작 | `(pipeline against hypothetical hot tier change)` | Hot tier max 100 (Tests 20 포함), threshold 90/100 정상 산출 (v3.3.3 §2.2) |
 | V8 | self-test all paths | `bash tools/harness/test_v3_3.sh` | All 8 V tests pass |
 
 V8 (self-test) 통과 의무. 통과 안 하면 v3.3 commit 차단.
@@ -920,12 +938,12 @@ v3.3 commit + push 전 모든 10 항목 충족 의무:
 □ G2: V1~V8 모든 검증 통과
 □ G3: cargo test --workspace 회귀 0건
 □ G4: cargo clippy --workspace --all-targets -- -D warnings clean
-□ G5: T2 retroactive validate 91d4e7c0 score 75/100 ≥ 75 PASS 확인 (v3.3.1 §3.4 boundary)
+□ G5: T2 retroactive validate 91d4e7c0 score 95/100 ≥ 75 PASS 확인 (v3.3.3 §1.2 cascade, safety margin +20)
 □ G6: cold-tier-classifier T6~T11 시뮬레이션 (현재 미작성이지만 변경 set 가정)
        → 모두 cold tier 확정 + PASS 예상
 □ G7: hot tier 정상 동작 (hypothetical sim-systems 변경 시뮬레이션)
-       → Hot tier max 80 raw, threshold 72/100 정상 산출 (v3.3.2 §2.1);
-         Cold tier max 100 raw (Visual auto credit +20), threshold 75/100 (v3.3.1 §3.1)
+       → Hot tier max 100 (Tests 20 포함), threshold 90/100 정상 산출 (v3.3.3 §2.2);
+         Cold tier max 100 (Visual 20 auto credit + Tests 20, v3.3.3 §1.2), threshold 75/100 (v3.3.3 §2.2)
 □ G8: 사용자 명시 approve: "v3.3 design은 정교해, implementation OK"
 □ G9: .harness/audit/governance_v3_3.log entry 작성
        형식: 2026-05-XXTHH:MM:SSZ | v3.3 land | Cold-tier-bonus + Attempt 
@@ -935,7 +953,7 @@ v3.3 commit + push 전 모든 10 항목 충족 의무:
        feat(governance-v3-3)[V7][POLICY-LAND]: cold-tier scoring + attempt
        discrimination + FFI vacuous credit
        
-       Phase 1 T2 (91d4e7c0) score 75/100 retroactive PASS (v3.3.1 §3.4 boundary).
+       Phase 1 T2 (91d4e7c0) score 95/100 retroactive PASS (v3.3.3 §1.2 cascade, safety margin +20).
        Resolves 3 policy gaps identified in commit 91d4e7c0.
        
        (이하 변경 사항 + retroactive validate 결과 + reference)
@@ -950,7 +968,7 @@ v3.3 commit + push 전 모든 10 항목 충족 의무:
 | Q# | 질문 | 권장 답 | 결정 의무 |
 |---|-----|------|--------|
 | Q6 | Cold-tier max score = 100 (Visual auto credit +20) OK? (v3.3.1 §3.1) | A: OK (REVISED) | 사용자 명시 |
-| Q7 | Cold-tier threshold = 75/100 OK? (v3.3.1 §3.1) | A: OK (REVISED) | 사용자 명시 |
+| Q7 | Cold-tier threshold = 75/100 OK? (v3.3.3 §2.2) | A: OK (Tests 20 dimension cascade) | 사용자 명시 |
 | Q8 | LOCK_VIOLATION + OUT_OF_SCOPE penalty -5 per attempt OK? | A: OK | 사용자 명시 |
 | Q9 | TEST_RIGOR + STYLE penalty 0 OK? (정상 refinement) | A: OK | 사용자 명시 |
 | Q10 | FFI vacuous = full credit (sim-bridge 변경 0 시) OK? | A: OK | 사용자 명시 |
@@ -961,7 +979,7 @@ v3.3 land 후:
 1. T2 retroactive validate 91d4e7c0 PASS 확인 (자동)
 2. T6 (RON 100 files) harness pipeline 실행
    - Expected: Cold tier 확정 (C signal — *.ron data only)
-   - Expected: Score ≥ 75/100 PASS (v3.3.1 §3.1)
+   - Expected: Score ≥ 75/100 PASS, T2 retroactive 95/100 with safety margin +20 (v3.3.3 §1.2 cascade)
 3. T7~T11 동일 패턴 (T9 harness tests, T10 bench 모두 cold tier 예상)
 4. T11 (locale) exempt path 정상 통과
 5. Phase 1 5 commits 모두 완료 → Phase 1 W1.5 완료
@@ -983,7 +1001,7 @@ v3.3 land 후:
 | Verification 명세 | ✅ V1~V8 |
 | NOT in scope | ✅ 16 items |
 | Acceptance gate | ✅ 10 items |
-| Retroactive validate | ✅ T2 91d4e7c0 score 75/100 PASS 시뮬 (v3.3.1 §3.4 boundary) |
+| Retroactive validate | ✅ T2 91d4e7c0 score 95/100 PASS 시뮬 (v3.3.3 §1.2 cascade, safety margin +20) |
 
 ### Claude Code draft 활용 결과
 
