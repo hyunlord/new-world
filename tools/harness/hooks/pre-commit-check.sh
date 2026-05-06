@@ -41,6 +41,39 @@ if [[ -f "$BYPASS_MARKER" ]] && echo "$CMD" | grep -qE '^\s*git\s+commit'; then
     fi
 fi
 
+# STRUCTURAL-COMMIT (v3.3.4): a valid structural_commit_active marker
+# (≤2 h old, with cargo_test=PASS + clippy=CLEAN + cold_tier=CONFIRMED)
+# authorises the next git commit for direct-implementation work in cold-tier
+# crates (sim-core/sim-data/sim-test/sim-bench schema work) without requiring
+# a harness verdict. Marker is one-shot — consumed (rm -f) after validation.
+# The commit subject MUST include the [STRUCTURAL] tag.
+STRUCT_MARKER="$PROJECT_ROOT_FOR_BYPASS/.harness/audit/structural_commit_active"
+if [[ -f "$STRUCT_MARKER" ]] && echo "$CMD" | grep -qE '^\s*git\s+commit'; then
+    struct_mtime=$(stat -f %m "$STRUCT_MARKER" 2>/dev/null || stat -c %Y "$STRUCT_MARKER" 2>/dev/null || echo 0)
+    struct_age=$(( $(date +%s) - struct_mtime ))
+    if [[ $struct_age -lt 7200 ]]; then
+        struct_test=$(grep '^cargo_test_result:' "$STRUCT_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+        struct_clippy=$(grep '^clippy_result:' "$STRUCT_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+        struct_cold=$(grep '^cold_tier:' "$STRUCT_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+        struct_feature=$(grep '^feature:' "$STRUCT_MARKER" 2>/dev/null | head -1 | awk '{print $2}')
+        if [[ "$struct_test" == "PASS" && "$struct_clippy" == "CLEAN" && "$struct_cold" == "CONFIRMED" ]]; then
+            if echo "$CMD" | grep -q '\[STRUCTURAL\]'; then
+                echo "[pre-commit] STRUCTURAL-COMMIT active for $struct_feature (age=${struct_age}s) — allowing commit (marker consumed)" >&2
+                rm -f "$STRUCT_MARKER"
+                exit 0
+            else
+                echo "BLOCKED: STRUCTURAL-COMMIT marker active but commit subject missing [STRUCTURAL] tag." >&2
+                echo "Add [STRUCTURAL] tag to commit subject (per v3.3.4)." >&2
+                exit 2
+            fi
+        else
+            echo "BLOCKED: STRUCTURAL-COMMIT marker malformed (test=$struct_test clippy=$struct_clippy cold=$struct_cold)." >&2
+            echo "All 3 fields must be PASS/CLEAN/CONFIRMED. Re-run authorize_structural_commit.sh." >&2
+            exit 2
+        fi
+    fi
+fi
+
 # HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
     echo "BLOCKED: HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9." >&2
