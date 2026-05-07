@@ -48,6 +48,13 @@ fn mineral_dir_path() -> PathBuf {
         .join("mineral")
 }
 
+fn plant_dir_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("data")
+        .join("material")
+        .join("plant")
+}
+
 #[test]
 fn loads_granite_from_ron() {
     let defs = load_ron(&granite_ron_path()).expect("granite.ron must load");
@@ -502,5 +509,116 @@ fn test_load_specific_minerals_by_name() {
     assert!(
         soil.unwrap().properties.rarity <= 0.1,
         "soil 가장 흔함 (rarity 0.05)"
+    );
+}
+
+#[test]
+fn test_load_plant_directory() {
+    let defs = load_directory(&plant_dir_path()).expect("plant/ must load");
+    assert_eq!(defs.len(), 15, "Plant 15 files 모두 로드 (T6.5)");
+}
+
+#[test]
+fn test_registry_with_15_plants() {
+    let defs = load_directory(&plant_dir_path()).expect("plant/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register plant");
+    }
+
+    assert_eq!(registry.count(), 15, "registry holds 15 plants");
+
+    let plants: Vec<_> = registry.plants().collect();
+    assert_eq!(plants.len(), 15, "by_category Plant dispatcher returns 15");
+
+    assert_eq!(registry.stones().count(), 0);
+    assert_eq!(registry.woods().count(), 0);
+    assert_eq!(registry.animals().count(), 0);
+    assert_eq!(registry.minerals().count(), 0);
+}
+
+#[test]
+fn test_plant_property_ranges_valid() {
+    let defs = load_directory(&plant_dir_path()).expect("plant/ must load");
+
+    for def in &defs {
+        let p = &def.properties;
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density {} out of range",
+            def.name,
+            p.density
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness {} out of range",
+            def.name,
+            p.hardness
+        );
+        // 모든 plant 가연 (flammability >= 0.6)
+        assert!(
+            p.flammability >= 0.6,
+            "{} flammability {} 의외 (plant는 모두 가연)",
+            def.name,
+            p.flammability
+        );
+        // 모든 plant 단열 (thermal_conductivity <= 0.6, root_food 0.55가 최대)
+        assert!(
+            p.thermal_conductivity <= 0.6,
+            "{} thermal_conductivity {} 의외 (plant는 단열)",
+            def.name,
+            p.thermal_conductivity
+        );
+    }
+}
+
+#[test]
+fn test_load_specific_plants_by_name() {
+    let defs = load_directory(&plant_dir_path()).expect("plant/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register");
+    }
+
+    // ★ straw Q7 boundary clamp 명시 검증 (audit trail, 1e-6)
+    let straw = registry.plants().find(|m| m.name == "Straw");
+    assert!(straw.is_some(), "straw 찾기");
+    assert!(
+        (straw.unwrap().properties.density - 100.0).abs() < 1e-6,
+        "straw density Q7 boundary clamp 정확 100.0 (Q7)"
+    );
+
+    // papyrus 가장 cultural_value 높음 (이집트 기록)
+    let papyrus = registry.plants().find(|m| m.name == "Papyrus");
+    assert!(papyrus.is_some(), "papyrus 찾기");
+    assert!(
+        papyrus.unwrap().properties.cultural_value >= 0.8,
+        "papyrus cultural_value 높음 (기록 매체)"
+    );
+
+    // hemp shear_yield 가장 강함 (밧줄)
+    let hemp = registry.plants().find(|m| m.name == "Hemp");
+    assert!(hemp.is_some(), "hemp 찾기");
+    assert!(
+        hemp.unwrap().properties.shear_yield >= 7000.0,
+        "hemp 밧줄 강도"
+    );
+
+    // resin 가장 가연 (송진)
+    let resin = registry.plants().find(|m| m.name == "Resin");
+    assert!(resin.is_some(), "resin 찾기");
+    assert!(
+        resin.unwrap().properties.flammability >= 0.9,
+        "resin 매우 가연 (송진)"
+    );
+
+    // berries preservation 가장 낮음 (부패)
+    let berries = registry.plants().find(|m| m.name == "Berries");
+    assert!(berries.is_some(), "berries 찾기");
+    assert!(
+        berries.unwrap().properties.preservation <= 0.3,
+        "berries preservation 낮음 (부패)"
     );
 }

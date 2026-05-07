@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "wool_grade_plant",
+            name: "Wool Grade Plant",
+            category: plant,
+            properties: (
+                density: 1320.0,
+                hardness: 1.0,
+                shear_yield: 3500.0,
+                impact_yield: 7000.0,
+                fracture_toughness: 1300.0,
+                melting_point: 240.0,
+                flammability: 0.8,
+                thermal_conductivity: 0.05,
+                cultural_value: 0.5,
+                rarity: 0.5,
+                distribution: [forest],
+                work_difficulty: 0.3,
+                aesthetic_value: 0.45,
+                workability: 0.8,
+                preservation: 0.5,
+            ),
+            tier: 0,
+            natural_in: [forest],
+        ),
+    ],
+)

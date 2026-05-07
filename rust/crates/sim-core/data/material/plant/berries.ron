@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "berries",
+            name: "Berries",
+            category: plant,
+            properties: (
+                density: 1000.0,
+                hardness: 1.0,
+                shear_yield: 1500.0,
+                impact_yield: 3000.0,
+                fracture_toughness: 1000.0,
+                melting_point: 100.0,
+                flammability: 0.7,
+                thermal_conductivity: 0.5,
+                cultural_value: 0.55,
+                rarity: 0.3,
+                distribution: [forest, hill],
+                work_difficulty: 0.1,
+                aesthetic_value: 0.6,
+                workability: 0.95,
+                preservation: 0.25,
+            ),
+            tier: 0,
+            natural_in: [forest, hill],
+        ),
+    ],
+)

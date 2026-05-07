@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "sap",
+            name: "Sap",
+            category: plant,
+            properties: (
+                density: 1050.0,
+                hardness: 1.0,
+                shear_yield: 1200.0,
+                impact_yield: 2500.0,
+                fracture_toughness: 1000.0,
+                melting_point: 110.0,
+                flammability: 0.6,
+                thermal_conductivity: 0.5,
+                cultural_value: 0.55,
+                rarity: 0.3,
+                distribution: [forest],
+                work_difficulty: 0.25,
+                aesthetic_value: 0.5,
+                workability: 0.85,
+                preservation: 0.4,
+            ),
+            tier: 0,
+            natural_in: [forest],
+        ),
+    ],
+)

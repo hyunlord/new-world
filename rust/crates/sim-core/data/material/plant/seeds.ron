@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "seeds",
+            name: "Seeds",
+            category: plant,
+            properties: (
+                density: 1200.0,
+                hardness: 2.5,
+                shear_yield: 8000.0,
+                impact_yield: 15000.0,
+                fracture_toughness: 1500.0,
+                melting_point: 250.0,
+                flammability: 0.7,
+                thermal_conductivity: 0.15,
+                cultural_value: 0.7,
+                rarity: 0.3,
+                distribution: [plain, forest],
+                work_difficulty: 0.2,
+                aesthetic_value: 0.4,
+                workability: 0.85,
+                preservation: 0.85,
+            ),
+            tier: 0,
+            natural_in: [plain, forest],
+        ),
+    ],
+)

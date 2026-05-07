@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "herbs",
+            name: "Herbs",
+            category: plant,
+            properties: (
+                density: 350.0,
+                hardness: 1.0,
+                shear_yield: 1500.0,
+                impact_yield: 3000.0,
+                fracture_toughness: 1000.0,
+                melting_point: 200.0,
+                flammability: 0.8,
+                thermal_conductivity: 0.07,
+                cultural_value: 0.7,
+                rarity: 0.4,
+                distribution: [forest, mountain, hill],
+                work_difficulty: 0.3,
+                aesthetic_value: 0.55,
+                workability: 0.75,
+                preservation: 0.7,
+            ),
+            tier: 0,
+            natural_in: [forest, mountain, hill],
+        ),
+    ],
+)

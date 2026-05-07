@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "flax",
+            name: "Flax",
+            category: plant,
+            properties: (
+                density: 1450.0,
+                hardness: 1.2,
+                shear_yield: 7000.0,
+                impact_yield: 13000.0,
+                fracture_toughness: 2000.0,
+                melting_point: 270.0,
+                flammability: 0.85,
+                thermal_conductivity: 0.04,
+                cultural_value: 0.6,
+                rarity: 0.4,
+                distribution: [plain, river],
+                work_difficulty: 0.4,
+                aesthetic_value: 0.6,
+                workability: 0.7,
+                preservation: 0.6,
+            ),
+            tier: 0,
+            natural_in: [plain, river],
+        ),
+    ],
+)
