@@ -11,3 +11,10 @@ glam = { workspace = true }
 ron = { workspace = true }
 ahash = { workspace = true }
 thiserror = { workspace = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+
+[[bench]]
+name = "material_benchmarks"
+harness = false
