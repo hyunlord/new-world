@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "tin_ore",
+            name: "Tin Ore",
+            category: mineral,
+            properties: (
+                density: 6900.0,
+                hardness: 6.5,
+                shear_yield: 40000.0,
+                impact_yield: 80000.0,
+                fracture_toughness: 2500.0,
+                melting_point: 1630.0,
+                flammability: 0.0,
+                thermal_conductivity: 67.0,
+                cultural_value: 0.75,
+                rarity: 0.7,
+                distribution: [mountain, river],
+                work_difficulty: 0.6,
+                aesthetic_value: 0.5,
+                workability: 0.4,
+                preservation: 0.85,
+            ),
+            tier: 1,
+            natural_in: [mountain, river],
+        ),
+    ],
+)

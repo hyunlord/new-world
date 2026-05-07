@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "silver_ore",
+            name: "Silver Ore",
+            category: mineral,
+            properties: (
+                density: 4500.0,
+                hardness: 4.0,
+                shear_yield: 45000.0,
+                impact_yield: 90000.0,
+                fracture_toughness: 2800.0,
+                melting_point: 962.0,
+                flammability: 0.0,
+                thermal_conductivity: 400.0,
+                cultural_value: 0.85,
+                rarity: 0.7,
+                distribution: [mountain, cave],
+                work_difficulty: 0.55,
+                aesthetic_value: 0.85,
+                workability: 0.5,
+                preservation: 0.85,
+            ),
+            tier: 1,
+            natural_in: [mountain, cave],
+        ),
+    ],
+)

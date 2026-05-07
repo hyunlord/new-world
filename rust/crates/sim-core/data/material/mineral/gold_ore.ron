@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "gold_ore",
+            name: "Gold Ore",
+            category: mineral,
+            properties: (
+                density: 4000.0,
+                hardness: 6.0,
+                shear_yield: 50000.0,
+                impact_yield: 100000.0,
+                fracture_toughness: 3000.0,
+                melting_point: 1064.0,
+                flammability: 0.0,
+                thermal_conductivity: 318.0,
+                cultural_value: 0.95,
+                rarity: 0.85,
+                distribution: [mountain, river],
+                work_difficulty: 0.65,
+                aesthetic_value: 0.95,
+                workability: 0.5,
+                preservation: 0.95,
+            ),
+            tier: 1,
+            natural_in: [mountain, river],
+        ),
+    ],
+)

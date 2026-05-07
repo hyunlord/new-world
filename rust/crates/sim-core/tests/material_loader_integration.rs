@@ -41,6 +41,13 @@ fn animal_dir_path() -> PathBuf {
         .join("animal")
 }
 
+fn mineral_dir_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("data")
+        .join("material")
+        .join("mineral")
+}
+
 #[test]
 fn loads_granite_from_ron() {
     let defs = load_ron(&granite_ron_path()).expect("granite.ron must load");
@@ -391,5 +398,109 @@ fn test_load_specific_animals_by_name() {
     assert!(
         bone.unwrap().properties.melting_point > 1500.0,
         "bone calcium hydroxyapatite high melting"
+    );
+}
+
+#[test]
+fn test_load_mineral_directory() {
+    let defs = load_directory(&mineral_dir_path()).expect("mineral/ must load");
+    assert_eq!(defs.len(), 15, "Mineral 15 files 모두 로드 (T6.4)");
+}
+
+#[test]
+fn test_registry_with_15_minerals() {
+    let defs = load_directory(&mineral_dir_path()).expect("mineral/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register mineral");
+    }
+
+    assert_eq!(registry.count(), 15, "registry holds 15 minerals");
+
+    let minerals: Vec<_> = registry.minerals().collect();
+    assert_eq!(minerals.len(), 15, "by_category Mineral dispatcher returns 15");
+
+    assert_eq!(registry.stones().count(), 0);
+    assert_eq!(registry.woods().count(), 0);
+    assert_eq!(registry.animals().count(), 0);
+    assert_eq!(registry.plants().count(), 0);
+}
+
+#[test]
+fn test_mineral_property_ranges_valid() {
+    let defs = load_directory(&mineral_dir_path()).expect("mineral/ must load");
+
+    for def in &defs {
+        let p = &def.properties;
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density {} out of range",
+            def.name,
+            p.density
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness {} out of range",
+            def.name,
+            p.hardness
+        );
+        // ★ thermal_conductivity boundary 검증 (silver_ore Q6 핵심)
+        assert!(
+            p.thermal_conductivity >= 0.04 && p.thermal_conductivity <= 400.0,
+            "{} thermal_conductivity {} out of range (Q6 boundary)",
+            def.name,
+            p.thermal_conductivity
+        );
+    }
+}
+
+#[test]
+fn test_load_specific_minerals_by_name() {
+    let defs = load_directory(&mineral_dir_path()).expect("mineral/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register");
+    }
+
+    // clay (Stone Age 핵심, workability 가장 높음)
+    let clay = registry.minerals().find(|m| m.name == "Clay");
+    assert!(clay.is_some(), "clay 찾기");
+    assert!(
+        clay.unwrap().properties.workability >= 0.9,
+        "clay 가장 workable (0.95)"
+    );
+
+    // ★ silver_ore Q6 boundary clamp 명시 검증 (audit trail, 1e-6)
+    let silver_ore = registry.minerals().find(|m| m.name == "Silver Ore");
+    assert!(silver_ore.is_some(), "silver_ore 찾기");
+    assert!(
+        (silver_ore.unwrap().properties.thermal_conductivity - 400.0).abs() < 1e-6,
+        "silver_ore thermal_conductivity Q6 boundary clamp 정확 400.0 (Q6)"
+    );
+
+    // gold_ore 가장 cultural_value (Tier 1, 화폐)
+    let gold_ore = registry.minerals().find(|m| m.name == "Gold Ore");
+    assert!(gold_ore.is_some(), "gold_ore 찾기");
+    assert!(
+        gold_ore.unwrap().properties.cultural_value >= 0.9,
+        "gold_ore cultural_value 매우 높음 (0.95)"
+    );
+
+    // sulfur 가장 flammability (mineral 중, 화약)
+    let sulfur = registry.minerals().find(|m| m.name == "Sulfur");
+    assert!(sulfur.is_some(), "sulfur 찾기");
+    assert!(
+        sulfur.unwrap().properties.flammability >= 0.9,
+        "sulfur 매우 가연 (0.95, 화약)"
+    );
+
+    // soil 가장 흔함 (rarity 0.05)
+    let soil = registry.minerals().find(|m| m.name == "Soil");
+    assert!(soil.is_some(), "soil 찾기");
+    assert!(
+        soil.unwrap().properties.rarity <= 0.1,
+        "soil 가장 흔함 (rarity 0.05)"
     );
 }
