@@ -34,6 +34,13 @@ fn wood_dir_path() -> PathBuf {
         .join("wood")
 }
 
+fn animal_dir_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("data")
+        .join("material")
+        .join("animal")
+}
+
 #[test]
 fn loads_granite_from_ron() {
     let defs = load_ron(&granite_ron_path()).expect("granite.ron must load");
@@ -282,5 +289,107 @@ fn test_load_specific_woods_by_name() {
     assert!(
         ebony.unwrap().properties.density >= 1_000.0,
         "ebony density 가장 높음"
+    );
+}
+
+#[test]
+fn test_load_animal_directory() {
+    let defs = load_directory(&animal_dir_path()).expect("animal/ must load");
+    assert_eq!(defs.len(), 20, "Animal 20 files 모두 로드 (T6.3)");
+}
+
+#[test]
+fn test_registry_with_20_animals() {
+    let defs = load_directory(&animal_dir_path()).expect("animal/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register animal");
+    }
+
+    assert_eq!(registry.count(), 20, "registry holds 20 animals");
+
+    let animals: Vec<_> = registry.animals().collect();
+    assert_eq!(animals.len(), 20, "by_category Animal dispatcher returns 20");
+
+    assert_eq!(registry.stones().count(), 0);
+    assert_eq!(registry.woods().count(), 0);
+    assert_eq!(registry.minerals().count(), 0);
+    assert_eq!(registry.plants().count(), 0);
+}
+
+#[test]
+fn test_animal_property_ranges_valid() {
+    let defs = load_directory(&animal_dir_path()).expect("animal/ must load");
+
+    for def in &defs {
+        let p = &def.properties;
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density {} out of range",
+            def.name,
+            p.density
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness {} out of range",
+            def.name,
+            p.hardness
+        );
+        assert!(
+            p.thermal_conductivity >= 0.04,
+            "{} thermal_conductivity {} below boundary",
+            def.name,
+            p.thermal_conductivity
+        );
+    }
+}
+
+#[test]
+fn test_load_specific_animals_by_name() {
+    let defs = load_directory(&animal_dir_path()).expect("animal/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register");
+    }
+
+    let leather_cow = registry.animals().find(|m| m.name == "Leather Cow");
+    assert!(leather_cow.is_some(), "leather_cow (Leather Cow) 찾기");
+
+    // ivory 가장 cultural_value 높음 (Tier 1)
+    let ivory = registry.animals().find(|m| m.name == "Ivory");
+    assert!(ivory.is_some(), "ivory 찾기");
+    assert!(
+        ivory.unwrap().properties.cultural_value >= 0.9,
+        "ivory cultural_value 매우 높음"
+    );
+
+    // ★ feather Q5 boundary clamp 명시 검증 (audit trail)
+    let feather = registry.animals().find(|m| m.name == "Feather");
+    assert!(feather.is_some(), "feather 찾기");
+    assert!(
+        (feather.unwrap().properties.density - 100.0).abs() < 1e-6,
+        "feather density boundary clamp 100.0 정확 (Q5-1)"
+    );
+    assert!(
+        (feather.unwrap().properties.thermal_conductivity - 0.04).abs() < 1e-6,
+        "feather thermal_conductivity boundary clamp 0.04 정확 (Q5-2)"
+    );
+
+    // shell calcium carbonate, 비가연
+    let shell = registry.animals().find(|m| m.name == "Shell");
+    assert!(shell.is_some(), "shell 찾기");
+    assert!(
+        shell.unwrap().properties.flammability < 0.1,
+        "shell calcium carbonate 비가연"
+    );
+
+    // bone calcium hydroxyapatite, melting 1670
+    let bone = registry.animals().find(|m| m.name == "Bone");
+    assert!(bone.is_some(), "bone 찾기");
+    assert!(
+        bone.unwrap().properties.melting_point > 1500.0,
+        "bone calcium hydroxyapatite high melting"
     );
 }

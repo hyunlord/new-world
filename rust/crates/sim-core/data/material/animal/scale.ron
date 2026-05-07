@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "scale",
+            name: "Scale",
+            category: animal,
+            properties: (
+                density: 1500.0,
+                hardness: 2.5,
+                shear_yield: 55000.0,
+                impact_yield: 110000.0,
+                fracture_toughness: 6000.0,
+                melting_point: 1670.0,
+                flammability: 0.2,
+                thermal_conductivity: 0.4,
+                cultural_value: 0.45,
+                rarity: 0.4,
+                distribution: [river, coast, swamp],
+                work_difficulty: 0.5,
+                aesthetic_value: 0.55,
+                workability: 0.45,
+                preservation: 0.85,
+            ),
+            tier: 0,
+            natural_in: [river, coast, swamp],
+        ),
+    ],
+)

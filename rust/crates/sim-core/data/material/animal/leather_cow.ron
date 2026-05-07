@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "leather_cow",
+            name: "Leather Cow",
+            category: animal,
+            properties: (
+                density: 860.0,
+                hardness: 2.0,
+                shear_yield: 30000.0,
+                impact_yield: 60000.0,
+                fracture_toughness: 18000.0,
+                melting_point: 200.0,
+                flammability: 0.7,
+                thermal_conductivity: 0.14,
+                cultural_value: 0.55,
+                rarity: 0.3,
+                distribution: [plain, forest],
+                work_difficulty: 0.4,
+                aesthetic_value: 0.5,
+                workability: 0.7,
+                preservation: 0.5,
+            ),
+            tier: 0,
+            natural_in: [plain, forest],
+        ),
+    ],
+)

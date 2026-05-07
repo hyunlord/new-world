@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "claw",
+            name: "Claw",
+            category: animal,
+            properties: (
+                density: 1300.0,
+                hardness: 2.5,
+                shear_yield: 50000.0,
+                impact_yield: 90000.0,
+                fracture_toughness: 8000.0,
+                melting_point: 200.0,
+                flammability: 0.5,
+                thermal_conductivity: 0.15,
+                cultural_value: 0.65,
+                rarity: 0.5,
+                distribution: [forest, mountain],
+                work_difficulty: 0.5,
+                aesthetic_value: 0.6,
+                workability: 0.45,
+                preservation: 0.8,
+            ),
+            tier: 0,
+            natural_in: [forest, mountain],
+        ),
+    ],
+)

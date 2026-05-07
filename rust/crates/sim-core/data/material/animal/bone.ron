@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "bone",
+            name: "Bone",
+            category: animal,
+            properties: (
+                density: 1900.0,
+                hardness: 3.5,
+                shear_yield: 50000.0,
+                impact_yield: 110000.0,
+                fracture_toughness: 5000.0,
+                melting_point: 1670.0,
+                flammability: 0.3,
+                thermal_conductivity: 0.5,
+                cultural_value: 0.6,
+                rarity: 0.3,
+                distribution: [forest, plain, mountain],
+                work_difficulty: 0.55,
+                aesthetic_value: 0.55,
+                workability: 0.5,
+                preservation: 0.85,
+            ),
+            tier: 0,
+            natural_in: [forest, plain, mountain],
+        ),
+    ],
+)

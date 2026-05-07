@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "hide_thin",
+            name: "Hide Thin",
+            category: animal,
+            properties: (
+                density: 750.0,
+                hardness: 1.5,
+                shear_yield: 22000.0,
+                impact_yield: 45000.0,
+                fracture_toughness: 14000.0,
+                melting_point: 200.0,
+                flammability: 0.7,
+                thermal_conductivity: 0.13,
+                cultural_value: 0.45,
+                rarity: 0.35,
+                distribution: [forest, plain],
+                work_difficulty: 0.3,
+                aesthetic_value: 0.5,
+                workability: 0.8,
+                preservation: 0.5,
+            ),
+            tier: 0,
+            natural_in: [forest, plain],
+        ),
+    ],
+)

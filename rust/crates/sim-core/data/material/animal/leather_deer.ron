@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "leather_deer",
+            name: "Leather Deer",
+            category: animal,
+            properties: (
+                density: 800.0,
+                hardness: 1.8,
+                shear_yield: 25000.0,
+                impact_yield: 50000.0,
+                fracture_toughness: 15000.0,
+                melting_point: 200.0,
+                flammability: 0.7,
+                thermal_conductivity: 0.13,
+                cultural_value: 0.6,
+                rarity: 0.45,
+                distribution: [forest, mountain],
+                work_difficulty: 0.35,
+                aesthetic_value: 0.6,
+                workability: 0.75,
+                preservation: 0.5,
+            ),
+            tier: 0,
+            natural_in: [forest, mountain],
+        ),
+    ],
+)

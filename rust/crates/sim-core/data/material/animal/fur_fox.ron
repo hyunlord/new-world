@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "fur_fox",
+            name: "Fur Fox",
+            category: animal,
+            properties: (
+                density: 280.0,
+                hardness: 1.0,
+                shear_yield: 9000.0,
+                impact_yield: 17000.0,
+                fracture_toughness: 5500.0,
+                melting_point: 180.0,
+                flammability: 0.85,
+                thermal_conductivity: 0.07,
+                cultural_value: 0.7,
+                rarity: 0.5,
+                distribution: [forest, mountain, tundra],
+                work_difficulty: 0.3,
+                aesthetic_value: 0.85,
+                workability: 0.75,
+                preservation: 0.5,
+            ),
+            tier: 0,
+            natural_in: [forest, mountain, tundra],
+        ),
+    ],
+)

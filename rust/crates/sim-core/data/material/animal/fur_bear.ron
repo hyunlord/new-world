@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "fur_bear",
+            name: "Fur Bear",
+            category: animal,
+            properties: (
+                density: 350.0,
+                hardness: 1.0,
+                shear_yield: 12000.0,
+                impact_yield: 22000.0,
+                fracture_toughness: 7000.0,
+                melting_point: 180.0,
+                flammability: 0.85,
+                thermal_conductivity: 0.05,
+                cultural_value: 0.85,
+                rarity: 0.7,
+                distribution: [forest, mountain, tundra],
+                work_difficulty: 0.4,
+                aesthetic_value: 0.8,
+                workability: 0.65,
+                preservation: 0.55,
+            ),
+            tier: 1,
+            natural_in: [forest, mountain, tundra],
+        ),
+    ],
+)
