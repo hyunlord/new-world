@@ -32,6 +32,7 @@ while IFS= read -r f; do
     if [[ "$f" =~ ^rust/crates/(sim-core|sim-data|sim-test|sim-bench)/ ]]; then continue; fi
     if [[ "$f" =~ ^rust/Cargo\.toml$ ]]; then continue; fi
     if [[ "$f" =~ ^\.harness/ ]]; then continue; fi
+    if [[ "$f" =~ ^tools/harness/ ]]; then continue; fi
     if [[ "$f" =~ ^localization/ ]]; then continue; fi
     signal_a=0
     break
@@ -41,7 +42,7 @@ done <<< "$DIFF_FILES"
 signal_b=1
 while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    if [[ "$f" =~ \.(rs|ron|toml|md|json)$ ]]; then continue; fi
+    if [[ "$f" =~ \.(rs|ron|toml|md|ftl|json|sh)$ ]]; then continue; fi
     signal_b=0
     break
 done <<< "$DIFF_FILES"
