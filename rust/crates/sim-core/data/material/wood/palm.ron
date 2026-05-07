@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "palm",
+            name: "Palm",
+            category: wood,
+            properties: (
+                density: 600.0,
+                hardness: 3.0,
+                shear_yield: 50000.0,
+                impact_yield: 90000.0,
+                fracture_toughness: 35000.0,
+                melting_point: 320.0,
+                flammability: 0.75,
+                thermal_conductivity: 0.15,
+                cultural_value: 0.5,
+                rarity: 0.45,
+                distribution: [coast, desert],
+                work_difficulty: 0.4,
+                aesthetic_value: 0.5,
+                workability: 0.55,
+                preservation: 0.6,
+            ),
+            tier: 0,
+            natural_in: [coast, desert],
+        ),
+    ],
+)

@@ -27,6 +27,13 @@ fn stone_dir_path() -> PathBuf {
         .join("stone")
 }
 
+fn wood_dir_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("data")
+        .join("material")
+        .join("wood")
+}
+
 #[test]
 fn loads_granite_from_ron() {
     let defs = load_ron(&granite_ron_path()).expect("granite.ron must load");
@@ -174,5 +181,106 @@ fn test_load_specific_stones_by_name() {
     assert!(
         anthracite.unwrap().properties.flammability > 0.9,
         "anthracite is combustible (석탄)"
+    );
+}
+
+#[test]
+fn test_load_wood_directory() {
+    let defs = load_directory(&wood_dir_path()).expect("wood/ must load");
+    assert_eq!(defs.len(), 25, "Wood 25 files 모두 로드 (T6.2)");
+}
+
+#[test]
+fn test_registry_with_25_woods() {
+    let defs = load_directory(&wood_dir_path()).expect("wood/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register wood");
+    }
+
+    assert_eq!(registry.count(), 25, "registry holds 25 woods");
+
+    let woods: Vec<_> = registry.woods().collect();
+    assert_eq!(woods.len(), 25, "by_category Wood dispatcher returns 25");
+
+    assert_eq!(registry.stones().count(), 0);
+    assert_eq!(registry.animals().count(), 0);
+    assert_eq!(registry.minerals().count(), 0);
+    assert_eq!(registry.plants().count(), 0);
+}
+
+#[test]
+fn test_wood_property_ranges_valid() {
+    let defs = load_directory(&wood_dir_path()).expect("wood/ must load");
+
+    for def in &defs {
+        let p = &def.properties;
+        assert!(
+            p.density >= 100.0 && p.density <= 25_000.0,
+            "{} density {} out of range",
+            def.name,
+            p.density
+        );
+        assert!(
+            p.hardness >= 1.0 && p.hardness <= 10.0,
+            "{} hardness {} out of range",
+            def.name,
+            p.hardness
+        );
+        assert!(
+            p.flammability >= 0.5,
+            "{} flammability {} 의외 (wood는 모두 가연)",
+            def.name,
+            p.flammability
+        );
+        assert!(
+            p.thermal_conductivity < 0.3,
+            "{} thermal_conductivity {} 의외 (wood는 단열)",
+            def.name,
+            p.thermal_conductivity
+        );
+    }
+}
+
+#[test]
+fn test_load_specific_woods_by_name() {
+    let defs = load_directory(&wood_dir_path()).expect("wood/ must load");
+
+    let mut registry = MaterialRegistry::new();
+    for def in defs {
+        registry.register(def, None).expect("register");
+    }
+
+    // T6.2.T1.1 발견: oak.ron must mirror derivation::test_support::oak()
+    let oak = registry.woods().find(|m| m.name == "Oak");
+    assert!(oak.is_some(), "oak 찾기");
+    let oak_props = &oak.unwrap().properties;
+    assert!(
+        (oak_props.density - 750.0).abs() < 1e-6,
+        "oak fixture density"
+    );
+    assert!(
+        (oak_props.fracture_toughness - 4000.0).abs() < 1e-6,
+        "oak fixture fracture_toughness (SSoT 일관)"
+    );
+
+    let pine = registry.woods().find(|m| m.name == "Pine");
+    assert!(pine.is_some(), "pine 찾기");
+
+    // bamboo 특이 case (grass 아닌 wood, 매우 높은 fracture_toughness)
+    let bamboo = registry.woods().find(|m| m.name == "Bamboo");
+    assert!(bamboo.is_some(), "bamboo (특이 case) 찾기");
+    assert!(
+        bamboo.unwrap().properties.fracture_toughness >= 35_000.0,
+        "bamboo toughness 매우 높음"
+    );
+
+    // ebony 가장 dense
+    let ebony = registry.woods().find(|m| m.name == "Ebony");
+    assert!(ebony.is_some(), "ebony 찾기");
+    assert!(
+        ebony.unwrap().properties.density >= 1_000.0,
+        "ebony density 가장 높음"
     );
 }

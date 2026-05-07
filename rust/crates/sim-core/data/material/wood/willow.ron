@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "willow",
+            name: "Willow",
+            category: wood,
+            properties: (
+                density: 420.0,
+                hardness: 1.5,
+                shear_yield: 25000.0,
+                impact_yield: 35000.0,
+                fracture_toughness: 15000.0,
+                melting_point: 320.0,
+                flammability: 0.85,
+                thermal_conductivity: 0.12,
+                cultural_value: 0.4,
+                rarity: 0.3,
+                distribution: [river, swamp],
+                work_difficulty: 0.25,
+                aesthetic_value: 0.4,
+                workability: 0.8,
+                preservation: 0.4,
+            ),
+            tier: 0,
+            natural_in: [river, swamp],
+        ),
+    ],
+)

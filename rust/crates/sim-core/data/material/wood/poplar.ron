@@ -1,0 +1,29 @@
+(
+    schema_version: 1,
+    materials: [
+        (
+            id: "poplar",
+            name: "Poplar",
+            category: wood,
+            properties: (
+                density: 380.0,
+                hardness: 2.0,
+                shear_yield: 25000.0,
+                impact_yield: 40000.0,
+                fracture_toughness: 18000.0,
+                melting_point: 320.0,
+                flammability: 0.8,
+                thermal_conductivity: 0.12,
+                cultural_value: 0.4,
+                rarity: 0.3,
+                distribution: [forest, plain, river],
+                work_difficulty: 0.25,
+                aesthetic_value: 0.4,
+                workability: 0.7,
+                preservation: 0.45,
+            ),
+            tier: 0,
+            natural_in: [forest, plain, river],
+        ),
+    ],
+)
