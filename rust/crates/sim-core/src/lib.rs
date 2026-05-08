@@ -20,6 +20,9 @@ pub const V7_VERSION: &str = "0.7.0-init";
 pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
 pub mod material;
+pub mod tile;
+
+pub use tile::TileGrid;
 
 pub use material::{
     MaterialId,

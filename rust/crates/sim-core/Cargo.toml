@@ -11,6 +11,7 @@ glam = { workspace = true }
 ron = { workspace = true }
 ahash = { workspace = true }
 thiserror = { workspace = true }
+arrayvec = "0.7"
 
 [dev-dependencies]
 criterion = { workspace = true }
