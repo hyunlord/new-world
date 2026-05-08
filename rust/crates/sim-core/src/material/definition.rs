@@ -2,6 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::influence::channel::InfluenceChannel;
 use crate::material::category::MaterialCategory;
 use crate::material::id::MaterialId;
 use crate::material::properties::MaterialProperties;
@@ -29,6 +30,41 @@ pub struct MaterialDef {
     /// Mod identifier; `None` means base game.
     #[serde(default)]
     pub mod_source: Option<String>,
+}
+
+impl MaterialDef {
+    /// Wall-blocking coefficient of this material on the given channel.
+    ///
+    /// Returns a value in `[0.0, 1.0]` where `0.0` = no blocking and
+    /// `1.0` = total block. Used to seed
+    /// [`crate::influence::MaterialBlockingCache`].
+    ///
+    /// Per-channel rules (Phase 0 Section 2.3.2):
+    /// - `Warmth` — `1 - thermal_conductivity / 400` (insulators block more).
+    /// - `Light`  — binary `1.0` (any solid wall blocks light entirely).
+    /// - `Noise`  — `density / 25_000` (denser walls dampen sound; v0.1.1
+    ///   ISSUE 2 makes this independent of the linear decay step).
+    /// - `FoodAroma` — fixed `0.5` (most walls partially absorb aroma).
+    /// - `Danger` / `Social` / `Spiritual` — `0.0` (these spread regardless
+    ///   of walls; v0.1.1 ISSUE 3 covers the Danger spec).
+    /// - `Beauty` — `1.0` (sight-line dependent; opaque walls fully block).
+    pub fn influence_blocking(&self, channel: InfluenceChannel) -> f32 {
+        match channel {
+            InfluenceChannel::Warmth => {
+                let k = self.properties.thermal_conductivity / 400.0;
+                (1.0 - k).clamp(0.0, 1.0) as f32
+            }
+            InfluenceChannel::Light => 1.0,
+            InfluenceChannel::Noise => {
+                (self.properties.density / 25_000.0).clamp(0.0, 1.0) as f32
+            }
+            InfluenceChannel::FoodAroma => 0.5,
+            InfluenceChannel::Danger
+            | InfluenceChannel::Social
+            | InfluenceChannel::Spiritual => 0.0,
+            InfluenceChannel::Beauty => 1.0,
+        }
+    }
 }
 
 #[cfg(test)]

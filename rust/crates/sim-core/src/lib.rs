@@ -26,7 +26,7 @@ pub mod influence;
 pub use tile::TileGrid;
 pub use influence::{
     AggKind, BlockingDerive, ChannelDef, DecayKind, DirtyRegion, InfluenceChannel,
-    InfluenceGrid, UpdateTier,
+    InfluenceGrid, MaterialBlockingCache, UpdateTier,
 };
 
 pub use material::{

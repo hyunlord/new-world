@@ -10,6 +10,8 @@
 //!   `BlockingDerive`, `ChannelDef`.
 //! - [`grid`] — `InfluenceGrid` (8-channel double-buffered SoA) +
 //!   `DirtyRegion`.
+//! - [`blocking`] — `MaterialBlockingCache` (Material × Channel → block
+//!   coefficient lookup table).
 //!
 //! v0.1.1 ISSUE fixes wired in this module:
 //! - 1: Warmth source = STATIC heat sources only
@@ -17,10 +19,13 @@
 //! - 3: Danger linear `alpha = 5` with sight-radius cap (15)
 //! - 5: no global `source_templates` HashMap on `InfluenceGrid`
 //! - 6: per-channel aggregation policy (`AggKind`)
+//! - 7: blocking cache passed by reference (no global static)
 
+pub mod blocking;
 pub mod channel;
 pub mod grid;
 
+pub use blocking::MaterialBlockingCache;
 pub use channel::{
     AggKind, BlockingDerive, ChannelDef, DecayKind, InfluenceChannel, UpdateTier,
 };
