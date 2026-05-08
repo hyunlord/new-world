@@ -1,0 +1,10 @@
+[package]
+name = "sim-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+hecs = { workspace = true }
+serde = { workspace = true }
+sim-core = { path = "../sim-core" }
