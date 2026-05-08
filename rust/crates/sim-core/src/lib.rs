@@ -21,8 +21,12 @@ pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
 pub mod material;
 pub mod tile;
+pub mod influence;
 
 pub use tile::TileGrid;
+pub use influence::{
+    AggKind, BlockingDerive, ChannelDef, DecayKind, InfluenceChannel, UpdateTier,
+};
 
 pub use material::{
     MaterialId,
