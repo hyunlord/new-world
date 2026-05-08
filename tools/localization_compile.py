@@ -551,6 +551,9 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
     fallback_strings: Dict[str, str] = {}
     if "en" in compiled_by_locale:
         fallback_strings = dict(compiled_by_locale["en"]["strings"])
+    # preserve_key_ids retains removed keys in registry for ID stability;
+    # they must not trigger missing-fill regression in the strict gate.
+    removed_keys_set: set[str] = set(registry_keys) - set(canonical_keys)
     max_locale_missing_filled = 0
 
     for locale in supported_locales:
@@ -565,6 +568,8 @@ def run(project_root: Path, strict_duplicates: bool, report_json: str = "") -> i
         locale_sources: Dict[str, str] = dict(compiled["sources"])
         missing_filled_count = 0
         for key in registry_keys:
+            if key in removed_keys_set:
+                continue
             if key in locale_strings:
                 continue
             missing_filled_count += 1
