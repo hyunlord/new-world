@@ -1,5 +1,5 @@
 #!/bin/bash
-# cold_tier_classifier.sh — V7 Hook Governance v3.3.6 §2.4
+# cold_tier_classifier.sh — V7 Hook Governance v3.3.8 §2.4
 # 4 Signals 검증: cold tier 자동 식별
 #
 # Usage: cold_tier_classifier.sh <diff-files-newline-list>
@@ -10,6 +10,15 @@
 #   1  hot/mixed/warm (≥1 signal missing)
 #
 # Reference: .harness/prompts/governance_v3_3.md §2.1.4 + §2.4
+#
+# v3.3.8 (2026-05-09):
+#   - Signal A: sim-bridge added to whitelist (T7.7.A scaffold lane).
+#     Rationale: sim-bridge crate scaffold (Cargo.toml + empty lib.rs +
+#     workspace registration) is structural infrastructure with zero
+#     behavior. Signal D's `impl RuntimeSystem for X` regex remains the
+#     authoritative gate for FFI methods that ship behavior in T7.7.B
+#     and beyond — those will fall through to hot-tier classification
+#     because FFI shims do not register RuntimeSystem implementations.
 #
 # v3.3.6 (2026-05-09):
 #   - Signal A: sim-systems added to whitelist (empty scaffold lane).
@@ -45,7 +54,7 @@ fi
 signal_a=1
 while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    if [[ "$f" =~ ^rust/crates/(sim-core|sim-data|sim-test|sim-bench|sim-engine|sim-systems)/ ]]; then continue; fi
+    if [[ "$f" =~ ^rust/crates/(sim-core|sim-data|sim-test|sim-bench|sim-engine|sim-systems|sim-bridge)/ ]]; then continue; fi
     if [[ "$f" =~ ^rust/Cargo\.toml$ ]]; then continue; fi
     if [[ "$f" =~ ^\.harness/ ]]; then continue; fi
     if [[ "$f" =~ ^tools/ ]]; then continue; fi
