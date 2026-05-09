@@ -117,7 +117,19 @@ if [[ -f "$RESULT_DIR/step0_clippy.txt" ]]; then
 fi
 
 FFI_STATUS="UNKNOWN"
-if [[ -f "$RESULT_DIR/step0_ffi.txt" ]]; then
+# v3.3.7 §3: FFI Vacuous check first (sim-bridge changes 0 → full credit).
+# Rationale: V7 reset removed sim-bridge crate; pre-T7.7 commits cannot produce
+# step0_ffi.txt. ffi_vacuous_check.sh confirms diff has 0 sim-bridge files.
+if [[ -x "$PROJECT_ROOT/tools/harness/ffi_vacuous_check.sh" ]]; then
+    _ffi_diff=$(git -C "$PROJECT_ROOT" diff --cached --name-only 2>/dev/null || true)
+    if [[ -z "$_ffi_diff" ]]; then
+        _ffi_diff=$(git -C "$PROJECT_ROOT" diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+    fi
+    if [[ -n "$_ffi_diff" ]] && echo "$_ffi_diff" | bash "$PROJECT_ROOT/tools/harness/ffi_vacuous_check.sh" - >/dev/null 2>&1; then
+        FFI_STATUS="OK"
+    fi
+fi
+if [[ "$FFI_STATUS" == "UNKNOWN" && -f "$RESULT_DIR/step0_ffi.txt" ]]; then
     if grep -qi "OK\|PASS\|COMPLETE" "$RESULT_DIR/step0_ffi.txt"; then
         FFI_STATUS="OK"
     else
@@ -167,7 +179,11 @@ fi
 # Count tests in both tests::harness_* and standalone harness_module::harness_* namespaces
 NEW_HARNESS_TESTS=0
 if [[ -f "$LATEST_GATE" ]]; then
-    NEW_HARNESS_TESTS=$(grep -cE "^test (tests::harness_|harness_[a-z][a-z0-9_]*::harness_).*\.\.\. ok$" "$LATEST_GATE" 2>/dev/null || true)
+    # v3.3.7 §1: Add plain `harness_` branch (Cargo integration test format).
+    # Integration tests in `tests/<file>.rs` print as `test harness_<name> ... ok`
+    # without `::` namespace prefix. Earlier branches still match unit-test
+    # nesting (`tests::harness_*`) and submodule-style integration files.
+    NEW_HARNESS_TESTS=$(grep -cE "^test (tests::harness_|harness_[a-z][a-z0-9_]*::harness_|harness_).*\.\.\. ok$" "$LATEST_GATE" 2>/dev/null || true)
     NEW_HARNESS_TESTS="${NEW_HARNESS_TESTS:-0}"
 fi
 
@@ -347,6 +363,15 @@ if [[ "$COLD_TIER" == "1" ]]; then
     # Cold tier: Visual dimension excluded → auto credit 20 (v3.3.3 §2.4 D4α)
     SCORE_VISUAL=20
     VISUAL_DETAIL="cold tier auto credit (v3.3.3 §2.4 D4α, 4 signals confirmed)"
+elif [[ -n "$DIFF_FILES" ]] && ! echo "$DIFF_FILES" | grep -qE '\.(gd|gdshader|tscn|tres)$|^scripts/|^scenes/'; then
+    # v3.3.7 §2: No-godot-scope auto credit (Visual 20).
+    # Rationale: Visual Verify dimension targets Godot rendering. When the diff
+    # has zero Godot files (no .gd/.gdshader/.tscn/.tres + no scripts/scenes
+    # paths) the visual surface is vacuous — nothing to screenshot. This
+    # supplements cold-tier credit for hot-tier sim-systems registration changes
+    # (Signal D = `impl RuntimeSystem for X`) that nonetheless produce no UI.
+    SCORE_VISUAL=20
+    VISUAL_DETAIL="no-godot-scope auto credit (v3.3.7 §2, no .gd/.gdshader/.tscn/.tres + no scripts/scenes path)"
 else
     # Hot tier: Screenshots × 2 capped 8 + VLM verdict + interactive +5
     ss_score=$((SCREENSHOTS * 2))
