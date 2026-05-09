@@ -1,0 +1,15 @@
+[package]
+name = "sim-bridge"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hecs = { workspace = true }
+serde = { workspace = true }
+sim-core = { path = "../sim-core" }
+sim-engine = { path = "../sim-engine" }
+sim-systems = { path = "../sim-systems" }

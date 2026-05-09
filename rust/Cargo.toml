@@ -5,6 +5,7 @@ members = [
     "crates/sim-engine",
     "crates/sim-systems",
     "crates/sim-test",
+    "crates/sim-bridge",
 ]
 exclude = []
 
