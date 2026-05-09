@@ -1,5 +1,5 @@
 #!/bin/bash
-# cold_tier_classifier.sh — V7 Hook Governance v3.3.5 §2.4
+# cold_tier_classifier.sh — V7 Hook Governance v3.3.6 §2.4
 # 4 Signals 검증: cold tier 자동 식별
 #
 # Usage: cold_tier_classifier.sh <diff-files-newline-list>
@@ -10,6 +10,13 @@
 #   1  hot/mixed/warm (≥1 signal missing)
 #
 # Reference: .harness/prompts/governance_v3_3.md §2.1.4 + §2.4
+#
+# v3.3.6 (2026-05-09):
+#   - Signal A: sim-systems added to whitelist (empty scaffold lane).
+#     Rationale: Signal D regex precision in v3.3.5 already guarantees hot-tier
+#     auto-classification when actual `impl RuntimeSystem for X` lands in T7.6.
+#     sim-bridge intentionally NOT whitelisted (FFI integration tier, T7.7 decision).
+#   - Signal B: '.log' extension added to allowlist (pipeline log artifacts).
 #
 # v3.3.5 (2026-05-09):
 #   - Signal A: sim-engine added to whitelist (V7 reset multi-crate scaffold).
@@ -38,7 +45,7 @@ fi
 signal_a=1
 while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    if [[ "$f" =~ ^rust/crates/(sim-core|sim-data|sim-test|sim-bench|sim-engine)/ ]]; then continue; fi
+    if [[ "$f" =~ ^rust/crates/(sim-core|sim-data|sim-test|sim-bench|sim-engine|sim-systems)/ ]]; then continue; fi
     if [[ "$f" =~ ^rust/Cargo\.toml$ ]]; then continue; fi
     if [[ "$f" =~ ^\.harness/ ]]; then continue; fi
     if [[ "$f" =~ ^tools/ ]]; then continue; fi
@@ -51,7 +58,7 @@ done <<< "$DIFF_FILES"
 signal_b=1
 while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    if [[ "$f" =~ \.(rs|ron|toml|md|ftl|json|sh|py)$ ]]; then continue; fi
+    if [[ "$f" =~ \.(rs|ron|toml|md|ftl|json|sh|py|log)$ ]]; then continue; fi
     signal_b=0
     break
 done <<< "$DIFF_FILES"
