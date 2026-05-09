@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/sim-core",
     "crates/sim-engine",
+    "crates/sim-systems",
 ]
 exclude = []
 
