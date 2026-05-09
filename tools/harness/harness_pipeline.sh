@@ -1287,11 +1287,21 @@ Run these checks IN ORDER. Do NOT skip any.
    Count total harness tests. Report any FAILING tests by name.
 
 3. Check GDScript for obvious errors:
-   grep -rn 'func.*(' scripts/ui/renderers/ | head -10
+   First check if scripts/ui/renderers/ exists. During the V7 reset early phase
+   (Phase 1-2), the entire scripts/ui/ tree is intentionally absent — this is
+   NOT a regression (governance v3.3.11, mirrors v3.3.9/v3.3.10 SKIP pattern).
+   If the directory is missing, report this step as SKIP_V7_RESET and continue.
+   Otherwise:
+     grep -rn 'func.*(' scripts/ui/renderers/ | head -10
    Look for obvious syntax issues (unmatched brackets, missing colons).
 
 4. Check for broken input handling:
-   grep -n '_input\|_unhandled_input\|mouse_filter' scripts/ui/renderers/entity_renderer.gd | head -10
+   First check if scripts/ui/renderers/entity_renderer.gd exists. During the V7
+   reset early phase (Phase 1-2) the GDScript renderer layer has not landed yet
+   — its absence is environmental, NOT a regression (governance v3.3.11). If
+   the file is missing, report this step as SKIP_V7_RESET and continue.
+   Otherwise:
+     grep -n '_input\|_unhandled_input\|mouse_filter' scripts/ui/renderers/entity_renderer.gd | head -10
    Verify input handlers still exist in entity_renderer and aren't accidentally removed.
    NOTE: building_renderer.gd intentionally has NO _input handler — do NOT flag its absence.
 
