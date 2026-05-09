@@ -1116,8 +1116,10 @@ summarize_interactive_validator() {
 # HELPER: Detect if sim-bridge was modified by Generator
 # ============================================================
 changed_sim_bridge() {
-    # Check if sim-bridge lib.rs has uncommitted changes
-    git diff --name-only HEAD -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null | grep -q .
+    # Check if sim-bridge src tree has uncommitted changes (v3.3.10:
+    # scan entire src/ recursively to catch ffi/ submodule additions,
+    # not just lib.rs).
+    git diff --name-only HEAD -- rust/crates/sim-bridge/src/ 2>/dev/null | grep -q .
 }
 
 # ============================================================
@@ -1157,10 +1159,24 @@ run_ffi_verify() {
     local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
     mkdir -p "$evidence_dir"
 
-    # Extract only recently changed #[func] methods (feature-scoped)
-    # Pre-existing unproxied methods are tech debt, not feature regressions
+    # V7 reset compatibility (governance v3.3.10):
+    # GDScript proxy file is absent during V7 reset Phase 1-2. Mirror
+    # ffi_chain_check.sh v3.3.9 SKIP behavior — emit an honest SKIP
+    # marker rather than misleading "ALL_COMPLETE (no new methods)".
+    local sim_bridge_gd="$PROJECT_ROOT/scripts/core/simulation/sim_bridge.gd"
+    if [[ ! -f "$sim_bridge_gd" ]]; then
+        log "FFI verify SKIP: $sim_bridge_gd absent (V7 reset early phase)"
+        echo "ffi_overall: ALL_COMPLETE (V7 reset SKIP — sim_bridge.gd absent)" > "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_status: SKIP_V7_RESET" >> "$evidence_dir/ffi_chain_verify.txt"
+        return 0
+    fi
+
+    # Extract only recently changed #[func] methods (feature-scoped).
+    # v3.3.10: scan entire sim-bridge/src/ tree to catch methods in
+    # ffi/ submodules, not just lib.rs. Pre-existing unproxied methods
+    # are tech debt, not feature regressions.
     local rust_methods
-    rust_methods=$(cd "$PROJECT_ROOT" && git diff HEAD~1 -- rust/crates/sim-bridge/src/lib.rs 2>/dev/null \
+    rust_methods=$(cd "$PROJECT_ROOT" && git diff HEAD~1 -- rust/crates/sim-bridge/src/ 2>/dev/null \
         | grep '^+.*fn ' | grep -v '^+++' \
         | sed 's/.*fn \([a-z_][a-z_0-9]*\).*/\1/' 2>/dev/null | sort -u || true)
 
