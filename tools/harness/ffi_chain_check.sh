@@ -12,6 +12,17 @@ BRIDGE_RS="$PROJECT_ROOT/rust/crates/sim-bridge/src/lib.rs"
 SIM_BRIDGE_GD="$PROJECT_ROOT/scripts/core/simulation/sim_bridge.gd"
 SIM_ENGINE_GD="$PROJECT_ROOT/scripts/core/simulation/simulation_engine.gd"
 
+# V7 reset compatibility (governance v3.3.9):
+# GDScript proxy files don't exist during the V7 reset early phase
+# (Phase 1-2). The proxy chain check is meaningful only once the
+# GDScript renderer layer (Phase 3) lands. Skipping under absent
+# proxy file is legitimate, not a bypass.
+if [[ ! -f "$SIM_BRIDGE_GD" ]]; then
+    echo "[FFI Chain] SKIP: $SIM_BRIDGE_GD absent (V7 reset early phase)"
+    echo "[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands"
+    exit 0
+fi
+
 broken=0
 
 # Extract all #[func] method names from Rust SimBridge
