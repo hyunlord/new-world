@@ -1312,6 +1312,25 @@ Run these checks IN ORDER. Do NOT skip any.
    Pre-existing WARN entries for unproxied methods are technical debt, NOT regressions.
    If ffi_overall says ALL_COMPLETE, the FFI check is CLEAN.
 
+DECISION RULE (governance v3.3.12 — binding):
+A step that returns SKIP_V7_RESET is NOT a regression. It is environmental
+absence sanctioned by V7 reset governance, identical in intent to
+v3.3.9 (ffi_chain_check.sh) and v3.3.10 (run_ffi_verify SKIP).
+
+Use this truth table for the final verdict:
+  - Steps 1, 2, 5 all CLEAN AND Steps 3, 4 are CLEAN or SKIP_V7_RESET
+      → regression_status: CLEAN
+  - ANY step in {1, 2, 5} reports a NEW failure above baseline
+      → regression_status: REGRESSION_DETECTED
+  - Steps 3 or 4 report ACTUAL syntax errors / removed handlers
+    (file present but broken) → regression_status: REGRESSION_DETECTED
+  - Steps 3 or 4 report MISSING file/directory only → SKIP_V7_RESET
+    contribution, NOT a regression on its own.
+
+A T7.7.B-style change (Rust-only sim-bridge work, no GDScript) cannot
+introduce a renderer regression by definition; flagging absent GDScript
+files as regression is a category error.
+
 OUTPUT FORMAT (must be machine-parseable):
 After your analysis, output EXACTLY one of these lines at the end:
 regression_status: CLEAN
