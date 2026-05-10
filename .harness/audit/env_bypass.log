@@ -1,2 +1,3 @@
 2026-05-03T09:12:07Z|shelter-ring-center-fix-v1|rexxa|Claude API rate limit blocks evaluator subagent calls (resets 2026-05-05 10:00 KST)
 2026-05-03T10:58:24Z|shelter-ring-center-fix-v1|rexxa|Claude API rate limit blocks evaluator subagent calls (resets 2026-05-05 10:00 KST)
+2026-05-10T04:26:44Z|t7-7-b-sim-bridge-ffi|rexxa|Claude API instability (4 events): rate limit 6am reset + Drafter Revision hang 38min + QC hang 34min + Codex Regression Guard hang 31min + Generator stream idle timeout (PID 1349, 10:24:11). Local verification: 229 workspace tests pass (0 NEW above baseline), 0 clippy issues, 21 T7.7.B FFI harness assertions pass. v3.3.12 truth table never empirically verified due to API failure preceding Regression Guard step.

@@ -1,23 +1,35 @@
 //! `BuildingStampSystem` — priority 90, every tick.
 //!
-//! Phase 0 Section 2.5.1 base. Phase 2 land (T7.6) is a *no-op shell*:
-//! Building components do not exist yet (they land in Phase 11). The shell
-//! exists so the priority slot (90 < 100 < 110) is locked from day 1 and
-//! cannot be reassigned later.
+//! Phase 0 Section 2.5.1 base. T7.7.B land (R1 event_queue):
+//! drains `resources.building_event_queue` and calls
+//! `InfluenceGrid::mark_dirty` for each stamped channel
+//! (Warmth/Spiritual/Beauty/Light) using a Chebyshev box clamped to
+//! grid bounds.
 //!
-//! Isolation invariant: this system must **not** clear or modify the
-//! influence pending buffers. Any value written into pending before this
-//! system runs must still be present when it exits. This invariant is
-//! tested by `harness_building_stamp_isolation` in the integration suite.
+//! Isolation invariant: this system writes to `dirty_regions` only — it
+//! does **not** touch the influence `pending` buffers. Any value written
+//! into `pending` before this system runs must still be present when it
+//! exits. This invariant is tested by both `harness_building_stamp_isolation`
+//! (T7.6) and `harness_ffi_isolation_invariant_survives_empty_queue_tick`
+//! (T7.7.B).
 
 use hecs::World;
+use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_engine::{RuntimeSystem, SimResources};
 
-/// Phase 2 building → influence stamper (no-op shell).
+/// Channels stamped by every building placement (T7.7.B, locked per spec).
+const STAMPED_CHANNELS: &[InfluenceChannel] = &[
+    InfluenceChannel::Warmth,
+    InfluenceChannel::Spiritual,
+    InfluenceChannel::Beauty,
+    InfluenceChannel::Light,
+];
+
+/// Phase 2 building → influence stamper (T7.7.B drains FFI queue).
 pub struct BuildingStampSystem;
 
 impl BuildingStampSystem {
-    /// Construct a new shell.
+    /// Construct a new stamper.
     pub fn new() -> Self {
         Self
     }
@@ -42,9 +54,37 @@ impl RuntimeSystem for BuildingStampSystem {
         1
     }
 
-    fn tick(&mut self, _world: &mut World, _resources: &mut SimResources) {
-        // No buildings in Phase 2 — shell only.
-        // MUST NOT touch pending buffers (isolation invariant).
+    fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
+        let w = resources.influence_grid.width;
+        let h = resources.influence_grid.height;
+
+        // Zero-dimension guard: drain queue without any grid access.
+        if w == 0 || h == 0 {
+            resources.building_event_queue.clear();
+            return;
+        }
+
+        // Drain all queued events in FIFO order.
+        while let Some(ev) = resources.building_event_queue.pop_front() {
+            let (cx, cy) = ev.position;
+
+            // OOB guard: consume the event but emit no dirty region.
+            if cx >= w || cy >= h {
+                continue;
+            }
+
+            let r = ev.radius;
+            let x1 = cx.saturating_sub(r);
+            let y1 = cy.saturating_sub(r);
+            let x2 = cx.saturating_add(r).min(w - 1);
+            let y2 = cy.saturating_add(r).min(h - 1);
+
+            for ch in STAMPED_CHANNELS {
+                resources
+                    .influence_grid
+                    .mark_dirty(*ch, DirtyRegion::new(x1, y1, x2, y2));
+            }
+        }
     }
 }
 
@@ -52,7 +92,11 @@ impl RuntimeSystem for BuildingStampSystem {
 mod tests {
     use super::*;
     use sim_core::material::MaterialRegistry;
-    use sim_engine::SimEngine;
+    use sim_engine::{BuildingPlacedEvent, SimEngine};
+
+    fn engine() -> SimEngine {
+        SimEngine::new(32, 32, MaterialRegistry::new())
+    }
 
     #[test]
     fn metadata() {
@@ -60,6 +104,79 @@ mod tests {
         assert_eq!(s.name(), "BuildingStampSystem");
         assert_eq!(s.priority(), 90);
         assert_eq!(s.tick_interval(), 1);
+    }
+
+    #[test]
+    fn empty_queue_is_no_op() {
+        let mut e = engine();
+        let mut s = BuildingStampSystem::new();
+        s.tick(&mut e.world, &mut e.resources);
+        for ch in InfluenceChannel::all() {
+            assert!(e.resources.influence_grid.dirty_regions[*ch as usize].is_empty());
+        }
+    }
+
+    #[test]
+    fn single_event_marks_4_channels_dirty() {
+        let mut e = engine();
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (10, 10),
+                radius: 2,
+            });
+        let mut s = BuildingStampSystem::new();
+        s.tick(&mut e.world, &mut e.resources);
+        for ch in STAMPED_CHANNELS {
+            let regs = &e.resources.influence_grid.dirty_regions[*ch as usize];
+            assert_eq!(regs.len(), 1, "{ch:?} should have 1 dirty region");
+        }
+        // Non-stamped channels untouched.
+        assert!(e.resources.influence_grid.dirty_regions
+            [InfluenceChannel::Danger as usize]
+            .is_empty());
+        // Queue drained.
+        assert!(e.resources.building_event_queue.is_empty());
+    }
+
+    #[test]
+    fn out_of_bounds_event_is_skipped() {
+        let mut e = engine();
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (999, 999),
+                radius: 1,
+            });
+        let mut s = BuildingStampSystem::new();
+        s.tick(&mut e.world, &mut e.resources);
+        for ch in STAMPED_CHANNELS {
+            assert!(
+                e.resources.influence_grid.dirty_regions[*ch as usize].is_empty(),
+                "{ch:?} must have no dirty regions for OOB event"
+            );
+        }
+        // Queue still drained.
+        assert!(e.resources.building_event_queue.is_empty());
+    }
+
+    #[test]
+    fn radius_clamps_to_grid() {
+        let mut e = engine(); // 32×32
+        e.resources
+            .building_event_queue
+            .push_back(BuildingPlacedEvent {
+                position: (1, 1),
+                radius: 100, // huge — must clamp to (0,0)..(31,31)
+            });
+        let mut s = BuildingStampSystem::new();
+        s.tick(&mut e.world, &mut e.resources);
+        let regs =
+            &e.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+        assert_eq!(regs.len(), 1);
+        let r = &regs[0];
+        assert!(r.max_x <= 31, "max_x {} must be ≤ 31", r.max_x);
+        assert!(r.max_y <= 31, "max_y {} must be ≤ 31", r.max_y);
     }
 
     #[test]

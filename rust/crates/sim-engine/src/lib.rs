@@ -31,6 +31,22 @@ use hecs::World;
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
+use std::collections::VecDeque;
+
+/// FFI-originated event: a building was placed at `position` with influence
+/// `radius` (Chebyshev distance, in tiles). Drained by
+/// `sim_systems::runtime::influence::BuildingStampSystem` each tick which
+/// translates each event into `InfluenceGrid::mark_dirty` calls on the
+/// Warmth/Spiritual/Beauty/Light channels.
+///
+/// Phase 0 v0.1.3 §5 — R1 event_queue path (T7.7.B land).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BuildingPlacedEvent {
+    /// Tile coordinates of the building origin (top-left corner).
+    pub position: (u32, u32),
+    /// Influence radius in tiles (Chebyshev distance, inclusive).
+    pub radius: u32,
+}
 
 /// Uniform interface implemented by every simulation system.
 ///
@@ -79,6 +95,11 @@ pub struct SimResources {
 
     /// Current tick — refreshed by [`SimEngine::tick`] before systems run.
     pub current_tick: u64,
+
+    /// FFI-originated building placement events, drained each tick by
+    /// `BuildingStampSystem`. Pushed by `sim_bridge::WorldSimNode::on_building_placed`
+    /// (which delegates to `sim_bridge::ffi::enqueue_building_placed`).
+    pub building_event_queue: VecDeque<BuildingPlacedEvent>,
 }
 
 /// Owns the world, the resources, and the priority-sorted system list.
@@ -107,6 +128,7 @@ impl SimEngine {
                 material_registry: registry,
                 material_blocking_cache: blocking_cache,
                 current_tick: 0,
+                building_event_queue: VecDeque::new(),
             },
             systems: Vec::new(),
             current_tick: 0,

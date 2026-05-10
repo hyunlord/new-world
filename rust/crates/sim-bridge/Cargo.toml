@@ -10,6 +10,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 hecs = { workspace = true }
 serde = { workspace = true }
+godot = { workspace = true }
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
 sim-systems = { path = "../sim-systems" }
