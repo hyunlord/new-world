@@ -338,21 +338,23 @@ else
     fi
 fi
 
-# 3. Code Quality (15) — v3.3 §6.3 N6 base + classification penalty
+# 3. Code Quality (15) — v3.3.14 §6.3 N6 base + classification penalty (Layer 1 removed)
 # Only APPROVE earns base points. RE-CODE/RE-PLAN/FAIL = 0 (pipeline failed to resolve).
-# v3.3 §6.3 D7-A: TOTAL_PENALTY env-var (set by harness_pipeline.sh APPROVE branch)
-# accumulates per-attempt classification penalties from score_attempt_penalty.sh.
+# v3.3.14 §6.3 1-β: Layer 1 attempt-count base reduction REMOVED.
+#   Previously: attempt 1=15, attempt 2=11, attempt 3+=8 (dumb counter, double-punished
+#   legitimate refinement attempts like TEST_RIGOR/STYLE which already incur 0 penalty
+#   under Layer 2 classification).
+#   Now: All APPROVE attempts get SCORE_CODE_BASE=15. The principled Layer 2 penalty
+#   (score_attempt_penalty.sh) preserves the quality signal:
+#     - TEST_RIGOR/STYLE refinement = 0 penalty (Code stays 15)
+#     - OUT_OF_SCOPE/LOCK_VIOLATION = -5 penalty (Code becomes 10)
+#     - OTHER = -2 penalty (Code becomes 13)
 SCORE_CODE_BASE=0
 CODE_DETAIL=""
 case "$FINAL_VERDICT" in
     APPROVED|APPROVE)
-        if [[ $CODE_ATTEMPTS -eq 1 ]]; then
-            SCORE_CODE_BASE=15; CODE_DETAIL="APPROVE on attempt 1"
-        elif [[ $CODE_ATTEMPTS -eq 2 ]]; then
-            SCORE_CODE_BASE=11; CODE_DETAIL="APPROVE on attempt 2"
-        else
-            SCORE_CODE_BASE=8; CODE_DETAIL="APPROVE on attempt $CODE_ATTEMPTS"
-        fi
+        SCORE_CODE_BASE=15
+        CODE_DETAIL="APPROVE on attempt $CODE_ATTEMPTS"
         ;;
     RE-CODE|RECODE)
         SCORE_CODE_BASE=0; CODE_DETAIL="RE-CODE after $CODE_ATTEMPTS attempt(s)"
