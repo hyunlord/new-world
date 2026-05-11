@@ -205,6 +205,11 @@ if [[ -d "$HARNESS_DIR/reviews" ]]; then
                             echo "[hook] ${TIER}-tier: score $score ≥ $SCORE_THRESHOLD ✓" >&2
                         fi
                     fi
+                    # v3.3.15 §4-γ: Pre-Integrator working-tree scope validator (warn-only).
+                    # Surfaces staged files not declared in the prompt; does not block.
+                    if [[ -x "tools/harness/validate_scope.sh" ]]; then
+                        bash tools/harness/validate_scope.sh "$APPROVED_FEATURE" || true
+                    fi
                     exit 0
                 fi
             fi
