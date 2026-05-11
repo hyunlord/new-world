@@ -1,7 +1,7 @@
-//! NEXT-C Stage 1 — Phase 2 determinism harness (R1 pivot, 12 tests).
+//! NEXT-C Stage 1 — Phase 2 determinism harness (R1 pivot, 13 tests).
 //!
 //! Engine-level current surface (A-group, 5 tests) + sim-core primitive-level
-//! direct paths (B-group, 7 tests). Verifies byte-identical behaviour across
+//! direct paths (B-group, 8 tests). Verifies byte-identical behaviour across
 //! N=5 fresh instances given identical inputs.
 //!
 //! Why R1: end-to-end propagation is NOT wired in Phase 2. BuildingStampSystem
@@ -57,6 +57,17 @@ fn harness_det_a1_queue_fifo_drain_order() {
         BuildingPlacedEvent { position: (25, 25), radius: 1 },
     ];
 
+    // Type A invariant — exact Warmth dirty-region tuple list (plan threshold, locked).
+    // Formula: (cx±r) clamped to [0, W-1]. W=32, H=32.
+    //   (5,5,r=1) → (4,4,6,6)   (10,10,r=2) → (8,8,12,12)
+    //   (20,15,r=3) → (17,12,23,18)  (25,25,r=1) → (24,24,26,26)
+    const EXPECTED: &[RegionTuple] = &[
+        (4, 4, 6, 6),
+        (8, 8, 12, 12),
+        (17, 12, 23, 18),
+        (24, 24, 26, 26),
+    ];
+
     let mut runs: Vec<Vec<(u32, u32, u32, u32)>> = Vec::with_capacity(N);
     for _ in 0..N {
         let mut e = make_engine();
@@ -71,7 +82,11 @@ fn harness_det_a1_queue_fifo_drain_order() {
         runs.push(regs.iter().map(region_tuple).collect());
     }
 
-    assert_eq!(runs[0].len(), 4, "expected 4 dirty regions, got {}", runs[0].len());
+    // Type A: exact tuple list matches plan threshold.
+    assert_eq!(
+        runs[0], EXPECTED,
+        "Warmth FIFO order must match exact plan threshold"
+    );
     for i in 1..N {
         assert_eq!(
             runs[0], runs[i],
@@ -117,8 +132,21 @@ fn harness_det_a2_dirty_regions_content_byte_identical() {
         runs.push(per_channel);
     }
 
+    // Intra-run invariant: BSS stamps all 4 STAMPED_CHANNELS identically,
+    // so each channel's dirty-region list must equal every other channel's
+    // list within the same run instance.
     for ch_idx in 0..CHANNELS.len() {
         assert_eq!(runs[0][ch_idx].len(), 3);
+        assert_eq!(
+            runs[0][0], runs[0][ch_idx],
+            "channel {:?} dirty-region content differs from Warmth within run 0 \
+             (BSS must stamp all 4 channels identically)",
+            CHANNELS[ch_idx]
+        );
+    }
+
+    // Cross-run invariant: every instance produces byte-identical results.
+    for ch_idx in 0..CHANNELS.len() {
         for i in 1..N {
             assert_eq!(
                 runs[0][ch_idx], runs[i][ch_idx],
@@ -159,8 +187,20 @@ fn harness_det_a3_bss_clamp_oob_deterministic() {
         runs.push((queue_len, regs));
     }
 
+    // Type A invariant — exact Warmth dirty-region tuple list (plan threshold, locked).
+    // Formula: (cx±r) saturating-clamped to [0, W-1]. W=32, H=32.
+    //   (5,5,r=3) → (2,2,8,8)       (999,999,r=1) → OOB skipped
+    //   (1,1,r=100) → (0,0,31,31)   (50,5,r=1) → OOB skipped
+    //   (31,31,r=0) → (31,31,31,31)
+    const EXPECTED: &[RegionTuple] = &[(2, 2, 8, 8), (0, 0, 31, 31), (31, 31, 31, 31)];
+
     assert_eq!(runs[0].0, 0, "queue must be fully drained");
     assert_eq!(runs[0].1.len(), 3, "expected 3 valid stamps (2 OOB skipped)");
+    // Type A: exact tuple list matches plan threshold.
+    assert_eq!(
+        runs[0].1, EXPECTED,
+        "valid dirty-region list must match exact plan threshold"
+    );
     for r in runs[0].1.iter() {
         assert!(r.2 < W && r.3 < H, "region {r:?} exceeds grid bounds");
     }
@@ -260,7 +300,7 @@ fn harness_det_a5_viz_digest_tick_boundary_6() {
     }
 }
 
-// ─── B-group: primitive-level sim-core direct paths (7 tests) ────────────────
+// ─── B-group: primitive-level sim-core direct paths (8 tests) ────────────────
 
 /// P1 — propagate_bfs byte-identical across N=5 instances given identical
 /// inputs. Pins the FIFO BFS + visited bitmap determinism guarantee.
@@ -471,24 +511,16 @@ fn harness_det_b7_ec3_multi_source_additive_vs_max() {
         light_runs.push(lbuf);
     }
 
-    // Warmth midpoint (11,10) receives contributions from both BFS passes
-    // → must exceed any value reachable from a single source on that tile.
+    // Warmth midpoint (11,10) receives contributions from both BFS passes.
+    // Type A invariant (plan threshold, locked):
+    //   Each source decays: decay_fn(100, 1.0) = 100.0 - 25.0 = 75.0 → 75u8.
+    //   apply_agg(Warmth=Additive, 0, 75) = 75  (first BFS).
+    //   apply_agg(Warmth=Additive, 75, 75) = 75.saturating_add(75) = 150  (second BFS).
+    //   warmth_mid == 150 exactly.
     let warmth_mid = warmth_runs[0][(10 * W + 11) as usize];
-    let mut single_buf = vec![0u8; grid.len()];
-    propagate_bfs(
-        &grid,
-        &cache,
-        &mut single_buf,
-        (10, 10),
-        100,
-        |i, _| i - 25.0,
-        InfluenceChannel::Warmth,
-        10,
-    );
-    let warmth_single = single_buf[(10 * W + 11) as usize];
-    assert!(
-        warmth_mid > warmth_single,
-        "Additive Warmth must exceed single-source value (mid={warmth_mid}, single={warmth_single})"
+    assert_eq!(
+        warmth_mid, 150,
+        "Additive Warmth midpoint must equal 150 (75+75, plan threshold)"
     );
 
     // Light midpoint must equal max(single-source values), not their sum.
