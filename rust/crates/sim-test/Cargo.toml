@@ -12,3 +12,10 @@ sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }
 sim-systems = { path = "../sim-systems" }
 sim-bridge = { path = "../sim-bridge" }
+
+[dev-dependencies]
+criterion = { workspace = true }
+
+[[bench]]
+name = "phase2_benchmarks"
+harness = false
