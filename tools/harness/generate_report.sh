@@ -29,12 +29,19 @@ PLAN_ROUNDS=$(ls "$PLAN_DIR"/quality_review_round*.md 2>/dev/null | wc -l | tr -
 CODE_ATTEMPTS=$(ls "$RESULT_DIR"/gen_result_attempt*.md 2>/dev/null | wc -l | tr -d ' ')
 SCREENSHOTS=$(find "$EVIDENCE_DIR" -name "screenshot_*.png" 2>/dev/null | wc -l | tr -d ' ')
 
-# Extract QC verdicts
+# Extract QC verdicts — v3.3.13 β-1: multi-pass extraction mirroring parse_plan_verdict()
 QC_VERDICTS=""
 for qr in "$PLAN_DIR"/quality_review_round*.md; do
     [[ -f "$qr" ]] || continue
-    v=$(sed 's/\*//g; s/_//g' "$qr" | grep -i "^verdict:" | head -1 | awk '{print $2}')
-    QC_VERDICTS+="$(basename "$qr"): $v, "
+    cleaned=$(sed 's/\*//g; s/_//g; s/`//g' "$qr")
+    v=$(echo "$cleaned" | grep -i "^verdict:" | head -1 | awk '{print toupper($2)}' | sed 's/PLAN//' || echo "")
+    if [[ -z "$v" ]]; then
+        v=$(echo "$cleaned" | grep -ioE "(PLAN_APPROVED|PLAN_REVISE|PLAN_FAIL|PLANAPPROVED|PLANREVISE|PLANFAIL|APPROVED|REVISE|FAIL)" | tail -1 | sed 's/PLAN_//; s/PLAN//' | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
+    if [[ -z "$v" ]]; then
+        v=$(tail -20 "$qr" | sed 's/\*//g; s/_//g' | grep -ioE "\b(APPROVED|REVISE|FAIL)\b" | tail -1 | tr '[:lower:]' '[:upper:]' || echo "")
+    fi
+    QC_VERDICTS+="$(basename "$qr"): ${v:-none}, "
 done
 
 # Extract evaluator verdicts per attempt
@@ -289,7 +296,45 @@ else
         SCORE_PLAN=$((SCORE_PLAN + 3))
         PLAN_DETAIL+=", QC APPROVED"
     else
-        PLAN_DETAIL+=", QC ${QC_VERDICTS:-none}"
+        # v3.3.13 β-3: Downstream evidence credit when QC verdict unparseable
+        # Awards +3 (full credit) iff BOTH Challenger AND Drafter Revision artifacts
+        # have INTEGRITY (substantive content) AND show clean signal.
+        # Degraded artifacts (stop-hook meta-messages, <30 line revisions) → no credit.
+        downstream_credit=false
+        cr="$PLAN_DIR/challenge_report.md"
+        prev="$PLAN_DIR/plan_revised.md"
+        draft="$PLAN_DIR/plan_draft.md"
+        if [[ -f "$cr" && -f "$prev" && -f "$draft" ]]; then
+            # Integrity 1: Challenger report has substantive content
+            #   (>= 20 lines AND contains assertion/issue/vector markers)
+            cr_lines=$(wc -l < "$cr" 2>/dev/null | tr -d ' ')
+            cr_substantive=false
+            if [[ "$cr_lines" -ge 20 ]] && grep -qiE "assertion|issue|vector|\[OK\]|\[ISSUE\]" "$cr" 2>/dev/null; then
+                cr_substantive=true
+            fi
+            # Integrity 2: plan_revised has >= 50% of plan_draft line count AND differs
+            draft_lines=$(wc -l < "$draft" 2>/dev/null | tr -d ' ')
+            prev_lines=$(wc -l < "$prev" 2>/dev/null | tr -d ' ')
+            prev_substantive=false
+            if [[ "$draft_lines" -gt 0 && "$prev_lines" -gt 0 ]]; then
+                ratio_threshold=$(( draft_lines / 2 ))
+                if [[ "$prev_lines" -ge "$ratio_threshold" ]] && ! cmp -s "$draft" "$prev"; then
+                    prev_substantive=true
+                fi
+            fi
+            # Signal: Challenger clean (no actionable issues in substantive report)
+            if $cr_substantive && $prev_substantive; then
+                if ! grep -qiE "^- \[ISSUE\]|^- \[GAMING\]|gaming vector.*[1-9]" "$cr" 2>/dev/null; then
+                    downstream_credit=true
+                fi
+            fi
+        fi
+        if $downstream_credit; then
+            SCORE_PLAN=$((SCORE_PLAN + 3))
+            PLAN_DETAIL+=", QC unparseable + downstream evidence clean (Challenger substantive+clean, Drafter Revision substantive) → full credit (v3.3.13 β-3)"
+        else
+            PLAN_DETAIL+=", QC ${QC_VERDICTS:-none}"
+        fi
     fi
 fi
 
