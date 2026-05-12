@@ -1,3 +1,14 @@
-[gd_scene format=3 uid="uid://v7init"]
+[gd_scene load_steps=2 format=3 uid="uid://v7init"]
+
+[ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 
 [node name="Main" type="Node2D"]
+
+[node name="WorldSim" type="WorldSimNode" parent="."]
+
+[node name="WorldRenderer" type="Node2D" parent="."]
+script = ExtResource("1_renderer")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, 540)
+zoom = Vector2(1, 1)

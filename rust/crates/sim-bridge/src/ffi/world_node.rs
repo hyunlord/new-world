@@ -48,6 +48,15 @@ impl INode for WorldSimNode {
         register_phase2_systems(&mut engine);
         Self { engine, base }
     }
+
+    /// Per-frame Godot hook — drives the simulation forward by one tick.
+    ///
+    /// T7.9.A scaffold: no fixed-tick accumulator yet (deferred to T7.9.B).
+    /// Variable cadence is acceptable for scaffold validation; deterministic
+    /// pacing comes with the accumulator pattern in the next stage.
+    fn process(&mut self, _delta: f64) {
+        self.engine.tick();
+    }
 }
 
 #[godot_api]
