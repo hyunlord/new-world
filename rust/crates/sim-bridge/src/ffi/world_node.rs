@@ -38,24 +38,46 @@ const DEFAULT_H: u32 = 64;
 #[class(base=Node)]
 pub struct WorldSimNode {
     engine: SimEngine,
+    accumulator: f64,
     base: Base<Node>,
 }
+
+/// Fixed simulation timestep — 30 TPS per Phase 0 design #9 (Gaffer accumulator).
+const FIXED_DT: f64 = 1.0 / 30.0;
+/// Spiral-of-death cap: skip catch-up after this many fixed ticks per frame.
+const MAX_ITERS_PER_FRAME: u32 = 5;
 
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
         register_phase2_systems(&mut engine);
-        Self { engine, base }
+        Self {
+            engine,
+            accumulator: 0.0,
+            base,
+        }
     }
 
-    /// Per-frame Godot hook — drives the simulation forward by one tick.
+    /// Per-frame Godot hook — drives the simulation at a fixed 30 TPS using
+    /// the Gaffer accumulator pattern (Phase 0 design #9). Render runs at
+    /// Godot's native frame rate; simulation pacing is deterministic.
     ///
-    /// T7.9.A scaffold: no fixed-tick accumulator yet (deferred to T7.9.B).
-    /// Variable cadence is acceptable for scaffold validation; deterministic
-    /// pacing comes with the accumulator pattern in the next stage.
-    fn process(&mut self, _delta: f64) {
-        self.engine.tick();
+    /// Spiral-of-death guard: if `delta` produces more than
+    /// [`MAX_ITERS_PER_FRAME`] fixed ticks, the remaining accumulator is
+    /// clamped to one frame so the simulation does not endlessly chase wall
+    /// time on a slow frame.
+    fn process(&mut self, delta: f64) {
+        self.accumulator += delta;
+        let mut iters: u32 = 0;
+        while self.accumulator >= FIXED_DT && iters < MAX_ITERS_PER_FRAME {
+            self.engine.tick();
+            self.accumulator -= FIXED_DT;
+            iters += 1;
+        }
+        if self.accumulator > FIXED_DT * MAX_ITERS_PER_FRAME as f64 {
+            self.accumulator = FIXED_DT;
+        }
     }
 }
 

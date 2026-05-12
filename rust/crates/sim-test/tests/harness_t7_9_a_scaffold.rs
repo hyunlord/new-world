@@ -139,13 +139,17 @@ fn harness_scaffold_resources_current_tick_propagated_by_tick() {
 
 // ── A4: world_node_source_process_identity (NON-CIRCULAR) ────────────────────
 
-/// Type S (source identity): world_node.rs must contain INode::process with the
-/// sole body `self.engine.tick();`.
+/// Type S (source identity): world_node.rs must contain INode::process driving
+/// `self.engine.tick();` via the T7.9.B Gaffer accumulator pattern.
 ///
 /// NON-CIRCULAR: A1–A3 only test SimEngine mechanics; they would pass even if
 /// `process()` was never added to WorldSimNode. This assertion reads the actual
-/// source file at compile time via `include_str!` and verifies the T7.9.A contract
-/// is present. Removing `process()` or changing its body fails this assertion.
+/// source file at compile time via `include_str!` and verifies the current
+/// contract is present. Removing `process()` or unwiring `engine.tick()` fails.
+///
+/// Contract advanced T7.9.A → T7.9.B: signature now `(&mut self, delta: f64)`
+/// (delta consumed) and body uses the fixed-tick accumulator pattern instead of
+/// a single unconditional tick. The `self.engine.tick();` call site is preserved.
 ///
 /// `include_str!` resolution: path is relative to this test file's location
 /// (rust/crates/sim-test/tests/), so ../../sim-bridge/src/ffi/world_node.rs
@@ -157,26 +161,25 @@ fn harness_scaffold_world_node_source_process_identity() {
     // include_str! embeds at compile time — compilation fails if the file is absent.
     let src = include_str!("../../sim-bridge/src/ffi/world_node.rs");
 
-    // Type S: INode::process signature must be present
+    // Type S: INode::process signature must be present (T7.9.B uses delta)
     assert!(
-        src.contains("fn process(&mut self, _delta: f64)"),
+        src.contains("fn process(&mut self, delta: f64)"),
         "world_node.rs must contain INode::process with signature \
-         `fn process(&mut self, _delta: f64)`. \
-         T7.9.A contract: WorldSimNode drives one engine.tick() per Godot frame. \
+         `fn process(&mut self, delta: f64)` (T7.9.B Gaffer accumulator). \
          Snippet not found in sim-bridge/src/ffi/world_node.rs"
     );
 
-    // Type S: process() sole body must be self.engine.tick() — no accumulator in T7.9.A
+    // Type S: engine.tick() must still be the simulation advance call
     assert!(
         src.contains("self.engine.tick();"),
-        "world_node.rs must contain `self.engine.tick();` as the process() body. \
-         T7.9.A contract: variable-cadence ticking, no fixed-tick accumulator. \
+        "world_node.rs must contain `self.engine.tick();` inside process(). \
+         The fixed-tick accumulator drives this call at 30 TPS. \
          Snippet not found in sim-bridge/src/ffi/world_node.rs"
     );
 
     println!("A4 PASS: world_node.rs process() identity verified");
     println!(
-        "  found: fn process(&mut self, _delta: f64) with self.engine.tick();"
+        "  found: fn process(&mut self, delta: f64) driving self.engine.tick();"
     );
 }
 
@@ -314,21 +317,21 @@ fn harness_scaffold_world_renderer_gd_source_identity() {
          (T7.9.A composite-split: renderer owns 2D space, WorldSimNode is plain Node)"
     );
 
-    // Type S: _ready must print the T7.9.A scaffold sentinel (Section 7 verification)
+    // Type S: _ready must print the active sentinel (T7.9.B render mechanism)
     assert!(
-        src.contains("WorldRenderer ready (T7.9.A scaffold)"),
+        src.contains("WorldRenderer ready (T7.9.B render mechanism)"),
         "scripts/ui/world_renderer.gd _ready() must print \
-         \"WorldRenderer ready (T7.9.A scaffold)\" \
-         (required in-game verification signal per T7.9.A Section 7)"
+         \"WorldRenderer ready (T7.9.B render mechanism)\" \
+         (required in-game verification signal per T7.9.B Section 7)"
     );
 
-    // Type S: _process stub must exist — T7.9.B will wire SimBridge overlay rendering here
+    // Type S: _process must exist — wires SimBridge overlay → Sprite2D texture
     assert!(
         src.contains("func _process("),
-        "scripts/ui/world_renderer.gd must contain func _process() stub \
-         (T7.9.B will add SimBridge.get_influence_overlay() call here)"
+        "scripts/ui/world_renderer.gd must contain func _process() \
+         (T7.9.B pulls SimBridge.get_influence_overlay() and updates the texture here)"
     );
 
-    println!("A7 PASS: scripts/ui/world_renderer.gd scaffold identity verified");
-    println!("  found: extends Node2D, T7.9.A sentinel print, _process stub");
+    println!("A7 PASS: scripts/ui/world_renderer.gd identity verified");
+    println!("  found: extends Node2D, T7.9.B sentinel print, _process body");
 }
