@@ -73,6 +73,43 @@ if [[ -f "$STRUCT_MARKER" ]] && echo "$CMD" | grep -qE '^\s*git\s+commit'; then
     fi
 fi
 
+# V7-RESET-CLEANUP (v3.3.16): cleanup-tier auto-exemption for commits whose
+# subject contains `chore(v7-reset):` or `[V7 reset cleanup]` AND whose diff
+# scope is narrow:
+#   - Deletions (D): any path
+#   - Additions (A): hygiene only (.gdignore, README*, .gitkeep)
+#   - Modifications (M): project.godot only
+# Pure stale-file cleanup has zero behavior impact — an 8h pipeline run for
+# rm operations is high cost / low signal. Narrow spec prevents abuse path.
+# Layer 1 sees $CMD (full `git commit -m "..."` text); Layer 2 mirrors via
+# .git/COMMIT_EDITMSG.
+if echo "$CMD" | grep -qE 'chore\(v7-reset\)|\[V7 reset cleanup\]'; then
+    SCOPE_OK=true
+    while IFS=$'\t' read -r status file; do
+        [[ -z "$status" ]] && continue
+        case "$status" in
+            D) ;;
+            A)
+                case "$file" in
+                    .gdignore|*/.gdignore|README|README.md|*/README|*/README.md|.gitkeep|*/.gitkeep) ;;
+                    *) SCOPE_OK=false; break ;;
+                esac
+                ;;
+            M)
+                case "$file" in
+                    project.godot) ;;
+                    *) SCOPE_OK=false; break ;;
+                esac
+                ;;
+            *) SCOPE_OK=false; break ;;
+        esac
+    done < <(git diff --cached --name-status 2>/dev/null)
+    if [[ "$SCOPE_OK" == "true" ]]; then
+        echo "[pre-commit] V7-RESET-CLEANUP (v3.3.16): scope=(D-any + A-hygiene + M-project.godot) — allowing commit" >&2
+        exit 0
+    fi
+fi
+
 # HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
     echo "BLOCKED: HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9." >&2

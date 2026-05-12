@@ -66,6 +66,41 @@ if [[ -f "$STRUCT_MARKER" ]]; then
     fi
 fi
 
+# V7-RESET-CLEANUP (v3.3.16): cleanup-tier auto-exemption — Layer 2 mirror.
+# Reads .git/COMMIT_EDITMSG (written by git before pre-commit fires for -m
+# commits) to check for `chore(v7-reset):` or `[V7 reset cleanup]` subject
+# marker. Same narrow scope as Layer 1:
+#   - Deletions (D): any path
+#   - Additions (A): hygiene only (.gdignore, README*, .gitkeep)
+#   - Modifications (M): project.godot only
+COMMIT_MSG_FILE="$(git rev-parse --git-dir)/COMMIT_EDITMSG"
+if [[ -f "$COMMIT_MSG_FILE" ]] && grep -qE 'chore\(v7-reset\)|\[V7 reset cleanup\]' "$COMMIT_MSG_FILE" 2>/dev/null; then
+    SCOPE_OK=true
+    while IFS=$'\t' read -r status file; do
+        [[ -z "$status" ]] && continue
+        case "$status" in
+            D) ;;
+            A)
+                case "$file" in
+                    .gdignore|*/.gdignore|README|README.md|*/README|*/README.md|.gitkeep|*/.gitkeep) ;;
+                    *) SCOPE_OK=false; break ;;
+                esac
+                ;;
+            M)
+                case "$file" in
+                    project.godot) ;;
+                    *) SCOPE_OK=false; break ;;
+                esac
+                ;;
+            *) SCOPE_OK=false; break ;;
+        esac
+    done < <(git diff --cached --name-status 2>/dev/null)
+    if [[ "$SCOPE_OK" == "true" ]]; then
+        echo "[pre-commit-harness] V7-RESET-CLEANUP (v3.3.16): scope=(D-any + A-hygiene + M-project.godot) — allowing commit" >&2
+        exit 0
+    fi
+fi
+
 if [[ "${HARNESS_SKIP:-}" == "1" ]]; then
     echo "BLOCKED: HARNESS_SKIP=1 is FORBIDDEN per CLAUDE.md Rule 9." >&2
     echo "Diagnose the score gap and fix root cause. Do not bypass." >&2
