@@ -168,28 +168,36 @@ fn harness_t7_10_a_persistence_across_ticks() {
 /// Type A: sample(SX, SY, ch) == 0 for Spiritual/Beauty/Light (A7) and
 ///         Noise/FoodAroma/Danger/Social (A8) after 1 tick with event.
 ///
-/// T7.10.A wires ONLY the Warmth channel. Spiritual/Beauty/Light have BSS
-/// dirty_regions populated but IUS must NOT propagate them. Noise/FoodAroma/
-/// Danger/Social are not stamped at all. All 7 channels must remain zero.
+/// T7.10.A wires the Warmth channel; T7.10.B then wired Light. Spiritual/Beauty
+/// have BSS dirty_regions populated but IUS must NOT propagate them yet (T7.10.C..F).
+/// Noise/FoodAroma/Danger/Social are not stamped at all. These 6 channels must
+/// remain zero. Light is verified separately (it now propagates to 200 at source).
 #[test]
 fn harness_t7_10_a_other_channels_remain_zero() {
     let mut e = fresh_engine();
     place_warmth_source(&mut e);
     e.tick();
+
+    // T7.10.B regression guard: Light now propagates at source center.
+    let light = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Light);
+    assert_eq!(
+        light, 200,
+        "T7.10.B: Light at source must be 200 (shadowcast propagation); got {light}"
+    );
+
     for ch in [
-        // A7: stamped channels (BSS marks dirty, but IUS dispatch-shell for these)
+        // Stamped channels still dispatch-shell (BSS marks dirty, IUS does NOT propagate yet)
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
-        InfluenceChannel::Light,
-        // A8: unstamped channels (BSS never marks dirty)
+        // Unstamped channels (BSS never marks dirty)
         InfluenceChannel::Noise,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Danger,
         InfluenceChannel::Social,
     ] {
-        // Type A: threshold == 0 for all non-Warmth channels
+        // Type A: threshold == 0 for all non-Warmth, non-Light channels
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.A (only Warmth wired); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.B (only Warmth+Light wired); got {v}");
     }
 }
 

@@ -11,17 +11,18 @@
 //!   - AIS (priority 110): reads current buffer, writes to InfluenceSample
 //!   - Viz (priority 1000): fires every 6 ticks, captures digest
 //!
-//! T7.10.A SEMANTICS UPDATE:
-//!   - dirty_regions[Warmth] are DRAINED each tick by IUS (std::mem::take).
-//!     Tests asserting dirty_regions[Warmth].len() > 0 after a full tick now assert == 0.
-//!   - current[Warmth] is NON-ZERO near stamped buildings (BFS propagation active).
-//!     Tests asserting current[Warmth] == 0 now assert actual BFS values.
-//!   - dirty_regions[Spiritual/Beauty/Light] still accumulate (T7.10.B..F not wired).
-//!   - current[Spiritual/Beauty/Light/Noise/FoodAroma/Danger/Social] stay zero
-//!     (dispatch-shell, T7.10.B..F not wired).
+//! T7.10.A/B SEMANTICS UPDATE:
+//!   - dirty_regions[Warmth] are DRAINED each tick by IUS (std::mem::take, T7.10.A).
+//!   - dirty_regions[Light]  are DRAINED each tick by IUS (std::mem::take, T7.10.B).
+//!     Tests asserting dirty_regions[Warmth/Light].len() > 0 after a full tick now assert == 0.
+//!   - current[Warmth] is NON-ZERO near stamped buildings (BFS propagation active, T7.10.A).
+//!   - current[Light]  is NON-ZERO near stamped buildings (shadowcast propagation, T7.10.B).
+//!   - dirty_regions[Spiritual/Beauty] still accumulate (T7.10.C..F not wired).
+//!   - current[Spiritual/Beauty/Noise/FoodAroma/Danger/Social] stay zero
+//!     (dispatch-shell, T7.10.C..F not wired).
 //!
-//! T7.10.A SCOPE NOTE: These updates reflect the first-channel escape. When T7.10.B..F
-//! wire additional channels, assertions about those channels will similarly update.
+//! T7.10.B SCOPE NOTE: Light is the second channel to escape. When T7.10.C..F
+//! wire the remaining channels, assertions about those channels will similarly update.
 //!
 //! Run: `cargo test -p sim-test harness_substantial_ -- --nocapture`
 
@@ -317,12 +318,16 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
         "dirty_regions[Warmth].len() must be 0 after tick (T7.10.A IUS drains via std::mem::take)"
     );
 
-    // Type A: non-Warmth stamped channels still accumulate (T7.10.B..F not wired) → 1 each.
-    for ch in [
-        InfluenceChannel::Spiritual,
-        InfluenceChannel::Beauty,
-        InfluenceChannel::Light,
-    ] {
+    // Type A: T7.10.B — Light dirty_regions also drained by IUS → 0.
+    let light_len =
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Light as usize].len();
+    assert_eq!(
+        light_len, 0,
+        "dirty_regions[Light].len() must be 0 after tick (T7.10.B IUS drains via std::mem::take)"
+    );
+
+    // Type A: remaining stamped channels still accumulate (T7.10.C..F not wired) → 1 each.
+    for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let len = engine.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
             len,
@@ -789,13 +794,18 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
          regions via std::mem::take); got {}", warmth_regs.len()
     );
 
-    // Type A: non-Warmth stamped channels still accumulate (T7.10.B..F not wired) → 4 each.
-    // Coordinate clamping is verified through these channels (same BSS code path as Warmth).
-    for ch in [
-        InfluenceChannel::Spiritual,
-        InfluenceChannel::Beauty,
-        InfluenceChannel::Light,
-    ] {
+    // Type A: Light dirty_regions drained by T7.10.B IUS → 0 (all 4 consumed for shadowcast).
+    let light_regs =
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Light as usize];
+    assert_eq!(
+        light_regs.len(), 0,
+        "Light must have 0 dirty regions after tick (T7.10.B IUS drains all 4 corner \
+         regions via std::mem::take); got {}", light_regs.len()
+    );
+
+    // Type A: remaining stamped channels still accumulate (T7.10.C..F not wired) → 4 each.
+    // Coordinate clamping is verified through these channels (same BSS code path as Warmth/Light).
+    for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let regs = &engine.resources.influence_grid.dirty_regions[ch as usize];
         assert_eq!(
             regs.len(),
@@ -819,5 +829,8 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
     for (cx, cy) in [(1u32, 1u32), (61, 1), (1, 61), (61, 61)] {
         let v = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Warmth);
         assert_eq!(v, 200, "corner BFS center ({cx},{cy}) must be 200 after clamped propagation; got {v}");
+        // T7.10.B regression guard: Light shadowcast must also run at each corner.
+        let l = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Light);
+        assert_eq!(l, 200, "corner Light shadowcast center ({cx},{cy}) must be 200; got {l}");
     }
 }

@@ -10,16 +10,34 @@
 //! `pending[Warmth]` so the swap is a no-op for Warmth (Cold-tier
 //! event-driven semantics, per Phase 0 Section 2.6).
 //!
-//! Other 7 channels remain dispatch-shell (clear pending + swap) and
-//! will be wired in T7.10.B..F.
+//! T7.10.B land: Light channel wired via recursive symmetric shadowcasting
+//! (`propagate_shadowcast`, Adam Milazzo / Björn Bergström variant). BSS
+//! already marks `dirty_regions[Light]` (STAMPED_CHANNELS includes Light),
+//! so IUS drains those regions and runs the shadowcast pass into
+//! `pending[Light]` before the swap. Light is Warm-tier in Phase 0
+//! Section 2.6 (staggered scheduling is a future optimization); for
+//! T7.10.B we propagate every tick and use the same persistence pattern
+//! as Warmth to avoid flicker on event-less ticks. Aggregation is Max
+//! (`InfluenceChannel::Light.aggregation()`); applied inside
+//! `propagate_shadowcast`.
 //!
-//! Decay: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
-//! Max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
-//! Initial intensity: 200 (matches existing propagate.rs test conventions).
-//! Aggregation: Additive (InfluenceChannel::Warmth.aggregation()).
+//! Other 6 channels remain dispatch-shell (clear pending + swap) and
+//! will be wired in T7.10.C..F.
+//!
+//! Warmth: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
+//! Warmth max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
+//! Warmth initial intensity: 200.
+//! Warmth aggregation: Additive.
+//!
+//! Light: shadowcast falloff `intensity / (1 + 0.1 * d)`
+//! (propagate.rs:249, Phase 0 Section 2.5.3 "gentle falloff").
+//! Light max radius: 15 (longer reach than Warmth, FOV-style).
+//! Light initial intensity: 200 (matches propagate.rs test conventions).
+//! Light aggregation: Max.
+//! Wall blocking: binary opaque via `TileGrid::is_wall`.
 
 use hecs::World;
-use sim_core::influence::{propagate_bfs, InfluenceChannel};
+use sim_core::influence::{propagate_bfs, propagate_shadowcast, InfluenceChannel};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// `exp(-0.15)` — warmth exponential decay per BFS step.
@@ -33,6 +51,20 @@ const WARMTH_INITIAL_INTENSITY: u8 = 200;
 
 /// Warmth propagation radius in tiles (Phase 0 Section 2.3.1).
 const WARMTH_MAX_RADIUS: u32 = 12;
+
+/// Initial intensity at the Light source tile.
+///
+/// Matches propagate.rs shadowcast test conventions and provides
+/// Warmth parity (same headroom for `Max` aggregation visualization).
+const LIGHT_INITIAL_INTENSITY: u8 = 200;
+
+/// Light shadowcast radius in tiles.
+///
+/// 15 = longer reach than Warmth's 12, consistent with Light being
+/// Warm-tier (visual / FOV-style) vs Warmth being Cold-tier
+/// (thermal source). `propagate_shadowcast` uses Euclidean
+/// `dx*dx + dy*dy <= radius*radius` cutoff (propagate.rs:247).
+const LIGHT_MAX_RADIUS: u32 = 15;
 
 /// Phase 2 influence update dispatcher — T7.10.A: Warmth channel wired.
 pub struct InfluenceUpdateSystem;
@@ -65,7 +97,9 @@ impl RuntimeSystem for InfluenceUpdateSystem {
 
     fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
         let warmth_idx = InfluenceChannel::Warmth as usize;
+        let light_idx = InfluenceChannel::Light as usize;
 
+        // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
         // std::mem::take replaces with an empty Vec — this IS the drain (Cold-tier
         // event-driven semantics require consuming the regions, not just reading them).
@@ -80,13 +114,11 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             for region in &warmth_dirty {
                 // Use dirty region center as the BFS source. For a single-building event
                 // the center equals the building's tile position (BSS stamps a Chebyshev
-                // box centered on event.position). Multi-source accuracy lands in T7.10.B.
+                // box centered on event.position).
                 let cx = (region.min_x + region.max_x) / 2;
                 let cy = (region.min_y + region.max_y) / 2;
 
                 // Borrow disjoint SimResources fields for the propagate_bfs call.
-                // Rust 2021 NLL handles disjoint field borrows: tile_grid and
-                // material_blocking_cache are separate fields from influence_grid.
                 let tile_grid = &resources.tile_grid;
                 let blocking_cache = &resources.material_blocking_cache;
                 let pending =
@@ -108,19 +140,53 @@ impl RuntimeSystem for InfluenceUpdateSystem {
             // disc must persist. Copy current[Warmth] into pending[Warmth] so the
             // swap below is a no-op for Warmth. Without this, every event-less tick
             // would zero current[Warmth] causing the rendered disc to flicker.
-            //
-            // Safe approach (no unsafe needed): clone the read side, then write the
-            // clone into the write side. The clone is small (64*64 = 4096 bytes).
             let warmth_snapshot =
                 resources.influence_grid.current[warmth_idx].clone();
             resources.influence_grid.pending[warmth_idx]
                 .copy_from_slice(&warmth_snapshot);
         }
 
-        // Other 7 channels: dispatch-shell baseline (clear pending → swap → zero).
-        // They will be wired individually in T7.10.B..F.
+        // ── Light branch (T7.10.B) ───────────────────────────────────────────
+        // Drain Light dirty regions left by BSS (Light is in STAMPED_CHANNELS).
+        let light_dirty =
+            std::mem::take(&mut resources.influence_grid.dirty_regions[light_idx]);
+
+        if !light_dirty.is_empty() {
+            // Fresh shadowcast pass: clear pending[Light] so multiple sources
+            // accumulate (Max aggregation) onto a clean slate.
+            resources.influence_grid.clear_pending(InfluenceChannel::Light);
+
+            for region in &light_dirty {
+                let cx = (region.min_x + region.max_x) / 2;
+                let cy = (region.min_y + region.max_y) / 2;
+
+                let tile_grid = &resources.tile_grid;
+                let pending =
+                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Light);
+
+                propagate_shadowcast(
+                    tile_grid,
+                    pending,
+                    (cx, cy),
+                    LIGHT_INITIAL_INTENSITY,
+                    LIGHT_MAX_RADIUS,
+                );
+            }
+        } else {
+            // Warm-tier persistence (T7.10.B): mirror Cold-tier semantics so the
+            // Light field survives event-less ticks. Phase 0 Warm-tier "staggered
+            // 1 channel per tick" scheduling is deferred to a later optimization;
+            // for T7.10.B we copy current[Light] → pending[Light] to avoid flicker.
+            let light_snapshot =
+                resources.influence_grid.current[light_idx].clone();
+            resources.influence_grid.pending[light_idx]
+                .copy_from_slice(&light_snapshot);
+        }
+
+        // Other 6 channels: dispatch-shell baseline (clear pending → swap → zero).
+        // They will be wired individually in T7.10.C..F.
         for ch in InfluenceChannel::all() {
-            if *ch != InfluenceChannel::Warmth {
+            if *ch != InfluenceChannel::Warmth && *ch != InfluenceChannel::Light {
                 resources.influence_grid.clear_pending(*ch);
             }
         }
