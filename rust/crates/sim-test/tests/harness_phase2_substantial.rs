@@ -6,17 +6,22 @@
 //!
 //! Key architecture facts tested here (NOT T7.7.B BSS-only ticks):
 //!   - BSS (priority  90): drains queue, marks dirty_regions, does NOT touch pending
-//!   - IUS (priority 100): calls clear_all_pending() + swap(), does NOT call clear_dirty()
+//!   - IUS (priority 100): T7.10.A — drains dirty_regions[Warmth] via std::mem::take,
+//!     runs BFS into pending[Warmth], clears other channels' pending, swaps.
 //!   - AIS (priority 110): reads current buffer, writes to InfluenceSample
 //!   - Viz (priority 1000): fires every 6 ticks, captures digest
 //!
-//! dirty_regions ACCUMULATE across full engine ticks because IUS never calls
-//! clear_dirty(). This is the defining invariant of Phase 2 (Phase 3 will consume
-//! dirty_regions via BFS propagation).
+//! T7.10.A SEMANTICS UPDATE:
+//!   - dirty_regions[Warmth] are DRAINED each tick by IUS (std::mem::take).
+//!     Tests asserting dirty_regions[Warmth].len() > 0 after a full tick now assert == 0.
+//!   - current[Warmth] is NON-ZERO near stamped buildings (BFS propagation active).
+//!     Tests asserting current[Warmth] == 0 now assert actual BFS values.
+//!   - dirty_regions[Spiritual/Beauty/Light] still accumulate (T7.10.B..F not wired).
+//!   - current[Spiritual/Beauty/Light/Noise/FoodAroma/Danger/Social] stay zero
+//!     (dispatch-shell, T7.10.B..F not wired).
 //!
-//! PHASE 2 SCOPE NOTE: any assertion about current[] being zero is a Phase 2
-//! architectural invariant only. When Phase 3 BFS propagation writes to pending
-//! before IUS swaps, those assertions will legitimately fail.
+//! T7.10.A SCOPE NOTE: These updates reflect the first-channel escape. When T7.10.B..F
+//! wire additional channels, assertions about those channels will similarly update.
 //!
 //! Run: `cargo test -p sim-test harness_substantial_ -- --nocapture`
 
@@ -66,14 +71,23 @@ fn harness_substantial_causal_chain_queue_drains_and_warmth_dirty_marked() {
         "building_event_queue must be empty after 1 tick (BSS drains via while-let-pop_front)"
     );
 
-    // Type A: (b) threshold == 1 — BSS marked Warmth dirty; IUS does NOT call clear_dirty()
+    // Type A: (b) T7.10.A — IUS drains dirty_regions[Warmth] via std::mem::take each tick.
+    // BSS marked the region, IUS consumed it for BFS propagation → len == 0 after tick.
     let warmth_dirty =
         engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     assert_eq!(
         warmth_dirty,
-        1,
-        "dirty_regions[Warmth].len() must be 1 after 1 tick with 1 in-bounds event; \
-         IUS does not call clear_dirty()"
+        0,
+        "dirty_regions[Warmth].len() must be 0 after tick (T7.10.A IUS drains via std::mem::take)"
+    );
+
+    // Type A: verify BFS actually ran — source center must equal WARMTH_INITIAL_INTENSITY.
+    // If IUS consumed the dirty region but skipped BFS, this assertion catches the hollow path.
+    let warmth_at_source =
+        engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Warmth);
+    assert_eq!(
+        warmth_at_source, 200,
+        "sample(20,20,Warmth) must be 200 after BFS propagation from center (20,20); got {warmth_at_source}"
     );
 }
 
@@ -110,8 +124,13 @@ fn harness_substantial_phase2_shell_pending_all_zero_after_full_pipeline_tick() 
     });
     engine.tick();
 
-    // Type A: threshold == true — IUS called clear_all_pending() before swap()
-    // If IUS skipped clear, the 255s would survive into current (caught below).
+    // Type A: pending[Warmth] must be all-zero after the tick.
+    // T7.10.A flow: IUS drains dirty_regions[Warmth] → clear_pending(Warmth) (zeros the
+    // 255-seeded pending) → BFS writes values → swap() → pending gets old current (was 0).
+    // A swap-only IUS (no clear) moves the 255-seeded pending into current, leaving
+    // pending[Warmth] = old current = 0 still passes here BUT is caught below.
+    // A clear-only IUS (no swap) leaves pending = 0 still passes BUT current stays at
+    // the initial 0 — indistinguishable; caught by the source-center check below.
     let pending_all_zero =
         engine.resources.influence_grid.pending[InfluenceChannel::Warmth as usize]
             .iter()
@@ -119,29 +138,22 @@ fn harness_substantial_phase2_shell_pending_all_zero_after_full_pipeline_tick() 
     assert!(
         pending_all_zero,
         "pending[Warmth] must be all-zero after full pipeline tick \
-         (IUS must call clear_all_pending() before swap())"
+         (IUS clears pending before BFS, then swap moves old current=0 into pending)"
     );
 
-    // Type A: ALSO assert current_buf(Warmth) is all-zero.
-    // Discrimination proof: a swap-only IUS (swap() without clear_all_pending())
-    // moves the 255-seeded pending INTO current after the swap, leaving
-    // current[Warmth] == 255 everywhere — this assertion catches that case.
-    //
-    //   Correct IUS: clear_all_pending() [pending → 0], swap() [current ← 0] → current == 0 ✓
-    //   Swap-only:   no clear, swap() [current ← 255]                          → current == 255 ✗
-    //   No-op IUS:   neither clears nor swaps                                  → current == 0 (start value, passes)
-    //     (no-op is caught by A3's non-zero current pre-seed)
-    let current_all_zero = engine
-        .resources
-        .influence_grid
-        .current_buf(InfluenceChannel::Warmth)
-        .iter()
-        .all(|&b| b == 0);
-    assert!(
-        current_all_zero,
-        "current[Warmth] must also be all-zero after full pipeline tick \
-         (a swap-only IUS would move the 255-seeded pending into current, \
-         revealing the missing clear_all_pending())"
+    // Type A: T7.10.A — current[Warmth] at source center must equal 200 (BFS propagated).
+    // Discrimination proof:
+    //   Correct IUS (T7.10.A): clear_pending → BFS → swap → current == BFS values ✓
+    //   Swap-only (no clear): pending=255 swapped to current → current==255 at (20,20) ✗
+    //   Clear-only (no swap): pending cleared (0), no swap → current unchanged (was 0,
+    //     not the pre-seeded pending) → sample==0 ✗ (caught: 0 ≠ 200)
+    //   No-op IUS: no change → current==0 → sample==0 ✗
+    let warmth_at_source =
+        engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Warmth);
+    assert_eq!(
+        warmth_at_source, 200,
+        "current[Warmth] at source center must be 200 after BFS propagation (T7.10.A); \
+         got {warmth_at_source} — a swap-only IUS yields 255, no-op yields 0"
     );
 }
 
@@ -184,17 +196,25 @@ fn harness_substantial_phase2_shell_current_warmth_zero_inside_stamp_radius() {
     });
     engine.tick();
 
-    // Type A: threshold == 0 (Phase 2 shell: pending cleared → swapped to current)
-    // current[Warmth] was pre-seeded with 128; IUS must overwrite it with 0 via clear+swap.
+    // Type A: T7.10.A — sample(20,20,Warmth) must be 200 (BFS source center).
+    // T7.10.A flow: IUS clear_pending(Warmth) → BFS from (20,20) → swap.
+    // The 128 pre-seed lives in current; after swap it moves to pending. The new current
+    // receives BFS values (pending after clear+BFS). sample reads new current → 200.
+    //
+    // Three-way discrimination (IUS failure modes):
+    //   No-op IUS:     no clear, no swap → current stays 128 → val == 128 ✗ (was the Phase 2 catch)
+    //   Clear-only:    pending cleared, no swap → current stays 128 → val == 128 ✗
+    //   Swap-only:     swap without clear → current gets pre-seeded 128 pending → val == 128 ✗
+    //   Correct T7.10.A: clear + BFS + swap → current gets BFS values → val == 200 ✓
     let val = engine
         .resources
         .influence_grid
         .sample(20, 20, InfluenceChannel::Warmth);
     assert_eq!(
         val,
-        0,
-        "sample(20,20,Warmth) must be 0 in Phase 2 shell even when current was \
-         pre-seeded with 128 (IUS clears pending then swaps; no-op IUS returns 128)"
+        200,
+        "sample(20,20,Warmth) must be 200 after T7.10.A BFS propagation (clear+BFS+swap); \
+         no-op/clear-only/swap-only IUS all leave 128 from the pre-seed"
     );
 }
 
@@ -246,20 +266,25 @@ fn harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais() {
 
     engine.tick();
 
-    // Type A: threshold == 0
-    // AIS ran and wrote current[Warmth][tile]==0 into each agent's warmth,
-    // overwriting sentinel 99. An unregistered or stub AIS leaves warmth at 99.
-    let non_zero_count = engine
+    // Type A: T7.10.A — no agent must retain sentinel warmth == 99.
+    // AIS reads current[Warmth][tile] and writes that value into InfluenceSample.warmth.
+    // Under T7.10.A, current[Warmth] has BFS values: agents within 12 tiles of (20,20)
+    // get non-zero warmth; agents beyond max_radius get 0. Either way, the sentinel 99
+    // is overwritten. An unregistered or stub AIS leaves warmth at 99 for all agents.
+    //
+    // We assert sentinel == 0 (not "all zero") because T7.10.A makes non-zero warmth
+    // physically correct for agents near the stamped building.
+    let sentinel_count = engine
         .world
         .query::<&InfluenceSample>()
         .iter()
-        .filter(|(_, s)| s.warmth != 0)
+        .filter(|(_, s)| s.warmth == 99)
         .count();
     assert_eq!(
-        non_zero_count,
+        sentinel_count,
         0,
-        "count of agents with warmth != 0 must be 0 after tick; \
-         AIS must overwrite sentinel 99 with current buffer value 0 (Phase 2 shell)"
+        "no agent must retain sentinel warmth=99 after tick; \
+         AIS must overwrite with current[Warmth][tile] (0 or BFS value)"
     );
 }
 
@@ -284,9 +309,16 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
     });
     engine.tick();
 
-    // Type A: stamped channels — threshold == 1 each
+    // Type A: Warmth dirty_regions — T7.10.A drains them → 0.
+    let warmth_len =
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
+    assert_eq!(
+        warmth_len, 0,
+        "dirty_regions[Warmth].len() must be 0 after tick (T7.10.A IUS drains via std::mem::take)"
+    );
+
+    // Type A: non-Warmth stamped channels still accumulate (T7.10.B..F not wired) → 1 each.
     for ch in [
-        InfluenceChannel::Warmth,
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         InfluenceChannel::Light,
@@ -295,7 +327,8 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
         assert_eq!(
             len,
             1,
-            "stamped channel {ch:?} dirty_regions.len() must be 1 after 1 event, got {len}"
+            "stamped channel {ch:?} dirty_regions.len() must be 1 after 1 event \
+             (IUS not yet wired for this channel), got {len}"
         );
     }
 
@@ -342,14 +375,16 @@ fn harness_substantial_dirty_regions_3_events_1_tick_count_3() {
     }
     engine.tick();
 
-    // Type A: threshold == 3
+    // Type A: T7.10.A — IUS drains all Warmth dirty regions via std::mem::take → 0.
+    // BSS still drains all 3 events (while-loop), but IUS consumes all 3 dirty regions
+    // for BFS in the same tick.
     let warmth_dirty =
         engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     assert_eq!(
         warmth_dirty,
-        3,
-        "dirty_regions[Warmth].len() must be 3 after 1 tick with 3 queued events; \
-         BSS while-loop drains all + IUS does not call clear_dirty() (got {warmth_dirty})"
+        0,
+        "dirty_regions[Warmth].len() must be 0 after tick (T7.10.A IUS drains all \
+         via std::mem::take, regardless of event count); got {warmth_dirty}"
     );
 }
 
@@ -386,14 +421,15 @@ fn harness_substantial_two_events_same_tick_yields_two_dirty_regions_per_stamped
         "building_event_queue must be empty after 2-event tick (BSS while-loop drains all)"
     );
 
-    // Type A: (b) threshold == 2 — one dirty region per event; IUS does not clear
+    // Type A: (b) T7.10.A — IUS drains dirty_regions[Warmth] → 0.
+    // BSS still processes both events (while-loop), IUS consumes both dirty regions for BFS.
     let warmth_len =
         engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     assert_eq!(
         warmth_len,
-        2,
-        "Warmth dirty_regions.len() must be 2 after 1 tick with 2 queued events \
-         (BSS while-loop drains all; if-let or single pop would yield 1)"
+        0,
+        "Warmth dirty_regions.len() must be 0 after tick (T7.10.A IUS drains via \
+         std::mem::take; BSS while-loop processes all, IUS BFS-runs all)"
     );
 }
 
@@ -417,16 +453,29 @@ fn harness_substantial_dirty_region_bounds_preserved_through_full_pipeline_tick(
     });
     engine.tick();
 
+    // T7.10.A: dirty_regions[Warmth] are drained by IUS → empty after tick.
     let regs =
         &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
-    assert_eq!(regs.len(), 1, "expected exactly 1 dirty region for Warmth");
-    let r = &regs[0];
+    assert!(
+        regs.is_empty(),
+        "dirty_regions[Warmth] must be empty after tick (T7.10.A IUS drains via std::mem::take)"
+    );
 
-    // Type A: exact spatial bounds {17,17,23,23} — Chebyshev box at (20,20)±3 in 64×64
-    assert_eq!(r.min_x, 17, "min_x must be 17 (20-3=17), got {}", r.min_x);
-    assert_eq!(r.max_x, 23, "max_x must be 23 (20+3=23), got {}", r.max_x);
-    assert_eq!(r.min_y, 17, "min_y must be 17 (20-3=17), got {}", r.min_y);
-    assert_eq!(r.max_y, 23, "max_y must be 23 (20+3=23), got {}", r.max_y);
+    // Type A: BFS was centered at (20,20) (Chebyshev box {17,17,23,23} → cx=20, cy=20).
+    // Verify the arithmetic propagated correctly: source center must equal 200.
+    // Also verify 1-step neighbor ∈ [170,174] and beyond-radius tile == 0 — these prove
+    // the Chebyshev-box center computation was correct and BFS radius was respected.
+    let center = engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Warmth);
+    assert_eq!(center, 200, "BFS center (20,20) must be 200; got {center}");
+
+    let one_step = engine.resources.influence_grid.sample(21, 20, InfluenceChannel::Warmth);
+    assert!(
+        (170..=174).contains(&one_step),
+        "BFS 1-step neighbor (21,20) must be ≈172 (exp(-0.15)*200); got {one_step}"
+    );
+
+    let beyond_radius = engine.resources.influence_grid.sample(33, 20, InfluenceChannel::Warmth);
+    assert_eq!(beyond_radius, 0, "tile at distance 13 from (20,20) must be 0; got {beyond_radius}");
 }
 
 // ── Plan Assertion 9: OOB guard in full pipeline (mixed 5 events) ─────────────
@@ -465,15 +514,29 @@ fn harness_substantial_oob_guard_mixed_5events_3inbounds_dirty3() {
     // Type A: no panic — test reaching this assertion proves the continue path ran safely
     engine.tick();
 
-    // Type A: threshold == 3
-    // OOB events skipped via `continue`; in-bounds events produced dirty regions.
+    // Type A: T7.10.A — dirty_regions[Warmth] drained by IUS → 0.
+    // OOB events are still skipped by BSS (continue path); in-bounds events produced
+    // dirty regions that IUS consumed for BFS propagation.
     let warmth_dirty =
         engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     assert_eq!(
         warmth_dirty,
-        3,
-        "dirty_regions[Warmth].len() must be 3 (3 in-bounds stamped, 2 OOB skipped), got {warmth_dirty}"
+        0,
+        "dirty_regions[Warmth].len() must be 0 after tick (IUS drains all 3 in-bounds \
+         dirty regions via std::mem::take); got {warmth_dirty}"
     );
+
+    // Type A: verify BFS ran for each in-bounds source (OOB events produce no BFS output).
+    // Each source center must equal WARMTH_INITIAL_INTENSITY (200).
+    // Sources at (10,10), (30,30), (50,50) are ≥ 20 tiles apart — no overlap at radius 12.
+    for (cx, cy) in [(10u32, 10u32), (30, 30), (50, 50)] {
+        let v = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Warmth);
+        assert_eq!(
+            v, 200,
+            "in-bounds source ({cx},{cy}) must have Warmth=200 after BFS; \
+             OOB guard did not skip this in-bounds event; got {v}"
+        );
+    }
 }
 
 // ── Plan Assertion 10: empty-queue stability (no spurious dirty marks) ─────────
@@ -653,13 +716,16 @@ fn harness_substantial_burst_100_events_single_tick_drain() {
         "queue must be empty after 100-event tick (BSS while-loop drains all), got {queue_len}"
     );
 
-    // Type A: (b) threshold == 100 — one dirty region per event per stamped channel
+    // Type A: T7.10.A — IUS drains all Warmth dirty regions → 0.
+    // BSS still drains all 100 events via while-loop (verified by queue_len==0 above),
+    // and IUS consumes all 100 dirty regions for BFS in the same tick.
     let warmth_dirty =
         engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
     assert_eq!(
         warmth_dirty,
-        100,
-        "Warmth dirty_regions must have 100 entries after 100-event burst, got {warmth_dirty}"
+        0,
+        "Warmth dirty_regions must be 0 after 100-event burst tick \
+         (T7.10.A IUS drains via std::mem::take); got {warmth_dirty}"
     );
 }
 
@@ -714,9 +780,18 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
     }
     engine.tick();
 
-    // Type A: no dirty region coordinate may exceed grid bounds
+    // Type A: Warmth dirty_regions drained by T7.10.A IUS → 0 (all 4 consumed for BFS).
+    let warmth_regs =
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+    assert_eq!(
+        warmth_regs.len(), 0,
+        "Warmth must have 0 dirty regions after tick (T7.10.A IUS drains all 4 corner \
+         regions via std::mem::take); got {}", warmth_regs.len()
+    );
+
+    // Type A: non-Warmth stamped channels still accumulate (T7.10.B..F not wired) → 4 each.
+    // Coordinate clamping is verified through these channels (same BSS code path as Warmth).
     for ch in [
-        InfluenceChannel::Warmth,
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         InfluenceChannel::Light,
@@ -725,30 +800,24 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
         assert_eq!(
             regs.len(),
             4,
-            "{ch:?} must have 4 dirty regions (one per corner event), got {}",
+            "{ch:?} must have 4 dirty regions (one per corner event, not yet drained), got {}",
             regs.len()
         );
         for r in regs {
-            assert!(
-                r.min_x < W,
-                "{ch:?} dirty region min_x={} must be < {W}",
-                r.min_x
-            );
-            assert!(
-                r.max_x < W,
-                "{ch:?} dirty region max_x={} must be < {W} (clamped to w-1)",
-                r.max_x
-            );
-            assert!(
-                r.min_y < H,
-                "{ch:?} dirty region min_y={} must be < {H}",
-                r.min_y
-            );
-            assert!(
-                r.max_y < H,
-                "{ch:?} dirty region max_y={} must be < {H} (clamped to h-1)",
-                r.max_y
-            );
+            assert!(r.min_x < W, "{ch:?} dirty region min_x={} must be < {W}", r.min_x);
+            assert!(r.max_x < W, "{ch:?} dirty region max_x={} must be < {W} (clamped to w-1)", r.max_x);
+            assert!(r.min_y < H, "{ch:?} dirty region min_y={} must be < {H}", r.min_y);
+            assert!(r.max_y < H, "{ch:?} dirty region max_y={} must be < {H} (clamped to h-1)", r.max_y);
         }
+    }
+
+    // Type A: verify BFS ran at all 4 corner centers (proves Warmth clamping worked correctly).
+    // Chebyshev box for corner (0,0) r=3 → {0,0,3,3} → center (1,1) [integer division].
+    // Chebyshev box for corner (63,0) r=3 → {60,0,63,3} → center (61,1).
+    // Chebyshev box for corner (0,63) r=3 → {0,60,3,63} → center (1,61).
+    // Chebyshev box for corner (63,63) r=3 → {60,60,63,63} → center (61,61).
+    for (cx, cy) in [(1u32, 1u32), (61, 1), (1, 61), (61, 61)] {
+        let v = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Warmth);
+        assert_eq!(v, 200, "corner BFS center ({cx},{cy}) must be 200 after clamped propagation; got {v}");
     }
 }

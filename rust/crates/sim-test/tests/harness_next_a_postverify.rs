@@ -137,11 +137,15 @@ fn harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline() {
 
 // ── Assertion 4: ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ────
 
-/// Type C: dirty_regions[Warmth].len() == 3 after 3 FFI enqueues + 1 full tick.
-/// IUS Phase 2 shell does NOT call clear_dirty() → dirty_regions accumulate.
-/// Baseline: T7.7.B A14(b) + T7.8 assertion 6 both observed 3 for the direct
-/// push_back path. This assertion extends that observation to the FFI path.
-/// Re-calibrate when Phase 3 BFS is wired and IUS legitimately calls clear_dirty().
+/// Type C: dirty_regions[Spiritual].len() == 3 after 3 FFI enqueues + 1 full tick.
+///
+/// T7.10.A relaxation: switched from Warmth to Spiritual.
+/// T7.10.A wires Warmth: IUS drains dirty_regions[Warmth] via std::mem::take each tick,
+/// so dirty_regions[Warmth].len() == 0 after any full tick. Spiritual remains on the
+/// Phase 2 dispatch shell (IUS never drains it) → dirty_regions[Spiritual] accumulates.
+/// Baseline: T7.7.B A14(b) + T7.8 assertion 6 both observed 3 for BSS stamping all
+/// stamped channels. This assertion extends that observation to the FFI path.
+/// Re-calibrate for Spiritual when T7.10.B wires the Spiritual channel.
 #[test]
 fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() {
     let mut engine = fresh_phase2_engine();
@@ -149,15 +153,15 @@ fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() 
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
-    // Type C: threshold == 3
+    // Type C: threshold == 3 (Spiritual accumulates; Warmth was drained by T7.10.A IUS)
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
     assert_eq!(
         len,
         3,
-        "dirty_regions[Warmth].len() must be 3 after 3 FFI events + 1 full tick. \
-         IUS Phase 2 shell does not call clear_dirty(); \
-         re-calibrate when Phase 3 BFS wired. Got {len}"
+        "dirty_regions[Spiritual].len() must be 3 after 3 FFI events + 1 full tick. \
+         Spiritual remains on Phase 2 dispatch shell (IUS does not drain it). \
+         T7.10.A drains Warmth instead — re-calibrate for Spiritual when T7.10.B wired. Got {len}"
     );
 }
 
@@ -185,8 +189,10 @@ fn harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates()
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
 
+    // T7.10.A: IUS now drains dirty_regions[Warmth] via std::mem::take.
+    // Spiritual remains in dispatch shell, preserves original dispatch-shell coverage.
     let regs =
-        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize];
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize];
     assert_eq!(
         regs.len(),
         3,
@@ -328,13 +334,14 @@ fn harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2() {
     enqueue_building_placed(&mut engine.resources, 15, 15, 1);
     enqueue_building_placed(&mut engine.resources, 64, 0, 1); // OOB: rejected at enqueue
     engine.tick();
+    // T7.10.A: IUS now drains dirty_regions[Warmth]; switch to Spiritual (dispatch shell intact).
     // Type C: threshold == 2
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
     assert_eq!(
         len,
         2,
-        "dirty_regions[Warmth].len() must be 2 (2 in-bounds accepted, 1 OOB rejected at enqueue). \
+        "dirty_regions[Spiritual].len() must be 2 (2 in-bounds accepted, 1 OOB rejected at enqueue). \
          Got {len}"
     );
 }
@@ -369,11 +376,14 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         "pre-condition for idle run: queue must be empty after tick 1"
     );
 
-    // (c) seeding step — write 255 to all pending[Warmth] bytes between tick 1 and tick 2
+    // T7.10.A: Warmth pending now reflects Cold-tier persistence (copy current → pending),
+    // not a hard clear. Switch to Spiritual (dispatch shell intact, pending cleared every tick)
+    // to preserve the anti-stub-IUS coverage this assertion provides.
+    // (c) seeding step — write 255 to all pending[Spiritual] bytes between tick 1 and tick 2
     engine
         .resources
         .influence_grid
-        .pending_buf_mut(InfluenceChannel::Warmth)
+        .pending_buf_mut(InfluenceChannel::Spiritual)
         .iter_mut()
         .for_each(|byte| *byte = 255);
 
@@ -382,20 +392,20 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         engine.tick();
     }
 
-    // Type A: threshold == true (every byte in pending[Warmth] == 0)
-    // IUS calls clear_all_pending() unconditionally every tick (Phase 2 invariant).
+    // Type A: threshold == true (every byte in pending[Spiritual] == 0)
+    // IUS clears pending for non-Warmth stamped channels every tick (dispatch shell).
     // A stub IUS skipping clear_all_pending() would leave 255 in pending.
     let pending_all_zero = engine
         .resources
         .influence_grid
-        .pending[InfluenceChannel::Warmth as usize]
+        .pending[InfluenceChannel::Spiritual as usize]
         .iter()
         .all(|&byte| byte == 0);
     assert!(
         pending_all_zero,
-        "pending[Warmth] must be all-zero after 5 idle ticks. \
+        "pending[Spiritual] must be all-zero after 5 idle ticks. \
          Seeded with 255 (via pending_buf_mut) before idle run to prevent vacuous pass. \
-         A stub IUS skipping clear_all_pending() would leave 255 in pending."
+         A stub IUS skipping clear_all_pending() for non-Warmth would leave 255 in pending."
     );
 }
 
@@ -421,14 +431,16 @@ fn harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_t
         engine.tick();
     }
 
+    // T7.10.A: IUS now drains dirty_regions[Warmth] during BFS propagation.
+    // Switch to Spiritual (still dispatch shell, IUS does not clear its dirty regions).
     // Type C: threshold == 3 (unchanged from Assertion 4's post-tick-1 count)
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Warmth as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
     assert_eq!(
         len,
         3,
-        "dirty_regions[Warmth].len() must remain 3 after 5 idle ticks \
-         (BSS no-op on empty queue; IUS Phase 2 shell does not call clear_dirty()). \
+        "dirty_regions[Spiritual].len() must remain 3 after 5 idle ticks \
+         (BSS no-op on empty queue; IUS Phase 2 dispatch shell does not call clear_dirty() for non-Warmth). \
          Erroneous idle clear_dirty() would drop to 0. Got {len}"
     );
 }

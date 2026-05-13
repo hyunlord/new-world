@@ -65,22 +65,28 @@ fn harness_building_stamp_priority() {
 
 /// Type A: write pending=200, swap (→current=200), tick InfluenceUpdateSystem → sample==0
 /// Hollow stub failure mode: empty tick leaves current==200, assertion fails.
-/// ticks: 1 (manual) | components_read: InfluenceGrid current[Warmth]
+/// ticks: 1 (manual) | components_read: InfluenceGrid current[Spiritual]
+///
+/// T7.10.A relaxation: switched from Warmth to Spiritual.
+/// Warmth now has Cold-tier persistence semantics (current→pending copy on idle tick) so
+/// sample(Warmth)==200 AFTER a tick is CORRECT T7.10.A behavior, not a hollow-stub signal.
+/// Spiritual remains on the Phase 2 dispatch shell: IUS calls clear_pending(Spiritual)
+/// then swap() → current[Spiritual] receives the cleared buffer → sample==0. ✓
 #[test]
 fn harness_influence_update_clear_before_swap() {
-    // metric: sample(10,10,Warmth) after write→swap→tick
+    // metric: sample(10,10,Spiritual) after write→swap→tick
     // threshold: == 0  (system clears pending THEN swaps, so current gets the cleared buffer)
     let mut e = make_engine(32, 32);
-    // Write into pending
-    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Warmth);
+    // Write into pending[Spiritual]
+    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Spiritual);
     buf[10 * 32 + 10] = 200;
     // Swap: pending(200) → current, old current(0) → pending
     e.resources.influence_grid.swap();
-    // Tick InfluenceUpdateSystem: clear_all_pending (pending→0), swap (current←0)
+    // Tick InfluenceUpdateSystem: clear_pending(Spiritual)→0, swap (current[Spiritual]←0)
     let mut s = InfluenceUpdateSystem::new();
     s.tick(&mut e.world, &mut e.resources);
     assert_eq!(
-        e.resources.influence_grid.sample(10, 10, InfluenceChannel::Warmth),
+        e.resources.influence_grid.sample(10, 10, InfluenceChannel::Spiritual),
         0u8
     );
 }
