@@ -31,8 +31,19 @@
 //! as Warmth/Light to avoid flicker. Aggregation is Max
 //! (`InfluenceChannel::Noise.aggregation()`); applied inside `propagate_linear`.
 //!
-//! Other 5 channels remain dispatch-shell (clear pending + swap) and
-//! will be wired in T7.10.D..F.
+//! T7.10.D land: Danger channel wired via linear decay BFS with sight-radius
+//! cap (`propagate_danger`, Phase 0 v0.1.1 ISSUE 3 fix: linear alpha=5 +
+//! max_radius=15 cap, no wall blocking — Danger pierces walls per the
+//! "panic spreads through walls" design intent). BSS now marks
+//! `dirty_regions[Danger]` (Danger added to STAMPED_CHANNELS), so IUS drains
+//! and propagates Danger linearly each tick. Danger is Hot-tier (channel.rs
+//! Tier::Hot), but for V7 Phase 2 (no agents yet) the building placement is
+//! the only Danger source — we propagate every tick using the same persistence
+//! pattern as Warmth/Light/Noise to avoid flicker. Aggregation is Max
+//! (`InfluenceChannel::Danger.aggregation()`); applied inside `propagate_linear`.
+//!
+//! Other 4 channels remain dispatch-shell (clear pending + swap) and
+//! will be wired in T7.10.E..F.
 //!
 //! Warmth: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
 //! Warmth max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
@@ -54,10 +65,19 @@
 //! exit). `propagate_noise` passes `u32::MAX` so decay self-terminates.
 //! Noise aggregation: Max.
 //! Wall blocking: density-derived via `MaterialBlockingCache` (4-neighbor BFS).
+//!
+//! Danger: linear decay `intensity - alpha` per BFS step, alpha=5 with hard
+//! sight-radius cap=15 tiles (propagate.rs `propagate_danger` wrapper; locked
+//! Phase 0 v0.1.1 ISSUE 3 fix preventing global panic spread).
+//! Danger initial intensity: 200 (parity with Warmth/Light/Noise for Max-aggregation visualisation).
+//! Danger max radius: 15 (hard cap — `propagate_danger` passes max_radius=15).
+//! Danger aggregation: Max.
+//! Wall blocking: NONE — Danger pierces walls (`propagate_danger` passes
+//! `blocking_cache=None`).
 
 use hecs::World;
 use sim_core::influence::{
-    propagate_bfs, propagate_noise, propagate_shadowcast, InfluenceChannel,
+    propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast, InfluenceChannel,
 };
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -95,6 +115,16 @@ const LIGHT_MAX_RADIUS: u32 = 15;
 /// ~13 tiles before the intensity<5 cutoff terminates BFS.
 const NOISE_INITIAL_INTENSITY: u8 = 200;
 
+/// Initial intensity at the Danger source tile.
+///
+/// 200 matches Warmth/Light/Noise for `Max`-aggregation visualisation
+/// parity. `propagate_danger` decays linearly by alpha=5 per step
+/// (200 - 5*d), with a hard max_radius=15 cap (Phase 0 ISSUE 3 fix
+/// preventing global panic spread). At d=15 the intensity is
+/// 200 - 5*15 = 125 — the cap stops propagation before the intensity<5
+/// natural cutoff would fire (which would be at d=40).
+const DANGER_INITIAL_INTENSITY: u8 = 200;
+
 /// Phase 2 influence update dispatcher — T7.10.A: Warmth channel wired.
 pub struct InfluenceUpdateSystem;
 
@@ -128,6 +158,7 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         let warmth_idx = InfluenceChannel::Warmth as usize;
         let light_idx = InfluenceChannel::Light as usize;
         let noise_idx = InfluenceChannel::Noise as usize;
+        let danger_idx = InfluenceChannel::Danger as usize;
 
         // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
@@ -253,12 +284,54 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 .copy_from_slice(&noise_snapshot);
         }
 
-        // Other 5 channels: dispatch-shell baseline (clear pending → swap → zero).
-        // They will be wired individually in T7.10.D..F.
+        // ── Danger branch (T7.10.D) ──────────────────────────────────────────
+        // Drain Danger dirty regions left by BSS (Danger is in STAMPED_CHANNELS).
+        let danger_dirty =
+            std::mem::take(&mut resources.influence_grid.dirty_regions[danger_idx]);
+
+        if !danger_dirty.is_empty() {
+            // Fresh linear-decay pass (alpha=5, cap=15, no walls): clear pending[Danger]
+            // so multiple sources accumulate (Max aggregation) onto a clean slate.
+            resources.influence_grid.clear_pending(InfluenceChannel::Danger);
+
+            for region in &danger_dirty {
+                let cx = (region.min_x + region.max_x) / 2;
+                let cy = (region.min_y + region.max_y) / 2;
+
+                let tile_grid = &resources.tile_grid;
+                let pending =
+                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Danger);
+
+                // propagate_danger locks Phase 0 v0.1.1 ISSUE 3 fix:
+                //   alpha=5, max_radius=15, blocking_cache=None (pierces walls).
+                propagate_danger(
+                    tile_grid,
+                    pending,
+                    (cx, cy),
+                    DANGER_INITIAL_INTENSITY,
+                );
+            }
+        } else {
+            // Hot-tier persistence (T7.10.D, V7 Phase 2 no-agents): mirror Noise
+            // semantics so the Danger field survives event-less ticks. Without
+            // agents generating transient threat events every tick, the building
+            // stamp is the only Danger source — persistence keeps the disc stable
+            // for the visualisation toggle. When agents arrive (Phase 3+) this
+            // branch can be replaced with an empty pending (no persistence,
+            // true Hot-tier).
+            let danger_snapshot =
+                resources.influence_grid.current[danger_idx].clone();
+            resources.influence_grid.pending[danger_idx]
+                .copy_from_slice(&danger_snapshot);
+        }
+
+        // Other 4 channels: dispatch-shell baseline (clear pending → swap → zero).
+        // They will be wired individually in T7.10.E..F.
         for ch in InfluenceChannel::all() {
             if *ch != InfluenceChannel::Warmth
                 && *ch != InfluenceChannel::Light
                 && *ch != InfluenceChannel::Noise
+                && *ch != InfluenceChannel::Danger
             {
                 resources.influence_grid.clear_pending(*ch);
             }

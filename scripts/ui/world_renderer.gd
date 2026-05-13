@@ -7,6 +7,9 @@ extends Node2D
 # T7.10.C: cycle extended to include Noise (linear-decay) — SPACE cycles
 # Warmth → Light → Noise → Warmth so all three backend wirings can be
 # confirmed visually in one F6 session.
+# T7.10.D: cycle extended to include Danger (linear-decay alpha=5, cap=15) —
+# SPACE cycles Warmth → Light → Noise → Danger → Warmth so all four backend
+# wirings can be confirmed visually in one F6 session.
 #
 # Bootstrap: places one building at (32, 32) radius 8 so the BuildingStamp
 # system has something to drive. Initial channel = Warmth.
@@ -17,6 +20,7 @@ const GRID_H := 64
 const CHANNEL_WARMTH := 0
 const CHANNEL_LIGHT := 1
 const CHANNEL_NOISE := 2
+const CHANNEL_DANGER := 4
 const BOOTSTRAP_X := 32
 const BOOTSTRAP_Y := 32
 const BOOTSTRAP_RADIUS := 8
@@ -45,7 +49,7 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_SPACE:
-			# T7.10.C: 3-state cycle Warmth → Light → Noise → Warmth.
+			# T7.10.D: 4-state cycle Warmth → Light → Noise → Danger → Warmth.
 			var channel_name: String
 			if current_channel == CHANNEL_WARMTH:
 				current_channel = CHANNEL_LIGHT
@@ -53,6 +57,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif current_channel == CHANNEL_LIGHT:
 				current_channel = CHANNEL_NOISE
 				channel_name = "Noise"
+			elif current_channel == CHANNEL_NOISE:
+				current_channel = CHANNEL_DANGER
+				channel_name = "Danger"
 			else:
 				current_channel = CHANNEL_WARMTH
 				channel_name = "Warmth"

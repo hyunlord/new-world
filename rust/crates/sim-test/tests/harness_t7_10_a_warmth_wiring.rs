@@ -192,18 +192,24 @@ fn harness_t7_10_a_other_channels_remain_zero() {
         "T7.10.C: Noise at source must be 200 (linear-decay propagation); got {noise}"
     );
 
+    // T7.10.D regression guard: Danger now propagates at source center.
+    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    assert_eq!(
+        danger, 200,
+        "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
+    );
+
     for ch in [
         // Stamped channels still dispatch-shell (BSS marks dirty, IUS does NOT propagate yet)
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         // Unstamped channels (BSS never marks dirty)
         InfluenceChannel::FoodAroma,
-        InfluenceChannel::Danger,
         InfluenceChannel::Social,
     ] {
-        // Type A: threshold == 0 for all non-Warmth, non-Light, non-Noise channels
+        // Type A: threshold == 0 for all non-Warmth, non-Light, non-Noise, non-Danger channels
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.C (only Warmth+Light+Noise wired); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.D (only Warmth+Light+Noise+Danger wired); got {v}");
     }
 }
 

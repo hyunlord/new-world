@@ -233,16 +233,22 @@ fn harness_t7_10_b_other_channels_behavior() {
         "T7.10.C: Noise at source must be 200 (linear-decay propagation); got {noise}"
     );
 
+    // T7.10.D regression guard: Danger must propagate to 200 at source.
+    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    assert_eq!(
+        danger, 200,
+        "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
+    );
+
     // Dispatch-shell stamped channels (BSS marks dirty, IUS does NOT propagate yet).
     for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.C (T7.10.D..F wires it); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.D (T7.10.E..F wires it); got {v}");
     }
 
     // Unstamped channels (BSS never marks dirty).
     for ch in [
         InfluenceChannel::FoodAroma,
-        InfluenceChannel::Danger,
         InfluenceChannel::Social,
     ] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);

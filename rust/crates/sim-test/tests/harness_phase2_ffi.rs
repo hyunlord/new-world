@@ -228,11 +228,11 @@ fn harness_ffi_stamp_marks_exactly_light_dirty() {
 
 /// Type A: dirty_regions[Noise].len() == 1 after raw push_back {pos:(20,20),r:3} + 1 BSS-only tick.
 ///
-/// C11 — STAMPED_CHANNELS membership invariant. T7.10.C adds Noise as the 5th
-/// stamped channel. A single BuildingPlacedEvent must produce exactly 1 dirty
-/// region for each of the 5 stamped channels: Warmth/Spiritual/Beauty/Light (A7–A10,
-/// existing) AND Noise (this test). Non-stamped channels (Danger/FoodAroma/Social)
-/// must produce 0.
+/// C11 — STAMPED_CHANNELS membership invariant. T7.10.C added Noise as the 5th
+/// stamped channel; T7.10.D adds Danger as the 6th. A single BuildingPlacedEvent
+/// must produce exactly 1 dirty region for each of the 6 stamped channels:
+/// Warmth/Spiritual/Beauty/Light (A7–A10) + Noise + Danger. Non-stamped
+/// channels (FoodAroma/Social) must produce 0.
 ///
 /// A Generator who added Noise to STAMPED_CHANNELS alongside Warmth/Spiritual/
 /// Beauty/Light but accidentally placed it after an early `return` or skipped
@@ -253,13 +253,15 @@ fn harness_ffi_stamp_marks_exactly_noise_dirty() {
         e.resources.influence_grid.dirty_regions[InfluenceChannel::Noise as usize].len();
     assert_eq!(len, 1, "Noise dirty_regions.len() must be 1 (T7.10.C adds Noise to STAMPED_CHANNELS); got {len}");
 
-    // Confirm all 5 stamped channels have exactly 1 dirty region (combined membership guard).
+    // Confirm all 6 stamped channels have exactly 1 dirty region (combined membership guard,
+    // T7.10.D extends to include Danger).
     for ch in [
         InfluenceChannel::Warmth,
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         InfluenceChannel::Light,
         InfluenceChannel::Noise,
+        InfluenceChannel::Danger,
     ] {
         let clen = e.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
@@ -270,7 +272,6 @@ fn harness_ffi_stamp_marks_exactly_noise_dirty() {
 
     // Non-stamped channels remain clean (mirrors A11 discriminator).
     for ch in [
-        InfluenceChannel::Danger,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
@@ -284,8 +285,9 @@ fn harness_ffi_stamp_marks_exactly_noise_dirty() {
 
 // ─── A11: non_stamped_channels_produce_zero_dirty_regions ────────────────────
 
-/// Type A: dirty_regions[{Danger,FoodAroma,Social}].len() == 0 after same setup
-/// STAMPED_CHANNELS = {Warmth, Spiritual, Beauty, Light, Noise} (5 channels, T7.10.C extended Noise)
+/// Type A: dirty_regions[{FoodAroma,Social}].len() == 0 after same setup
+/// STAMPED_CHANNELS = {Warmth, Spiritual, Beauty, Light, Noise, Danger}
+/// (6 channels post-T7.10.D; T7.10.C added Noise, T7.10.D added Danger)
 /// ticks: 1 (BuildingStampSystem only) | components_read: SimResources.influence_grid
 #[test]
 fn harness_ffi_non_stamped_channels_produce_zero_dirty_regions() {
@@ -296,12 +298,11 @@ fn harness_ffi_non_stamped_channels_produce_zero_dirty_regions() {
     });
     bss_tick(&mut e);
     for ch in [
-        InfluenceChannel::Danger,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
         let len = e.resources.influence_grid.dirty_regions[ch as usize].len();
-        // Type A: threshold == 0 for all three non-stamped channels
+        // Type A: threshold == 0 for both non-stamped channels
         assert_eq!(
             len, 0,
             "non-stamped channel {ch:?} dirty_regions.len() must be 0, got {len}"
@@ -477,8 +478,8 @@ fn harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bou
 
 /// Type A: OOB event followed by valid event →
 ///   (a) queue.len() == 0 after 1 BSS-only tick
-///   (b) dirty_regions[{Warmth,Spiritual,Beauty,Light,Noise}].len() == 1 each
-///   (c) dirty_regions[{Danger,FoodAroma,Social}].len() == 0 each
+///   (b) dirty_regions[{Warmth,Spiritual,Beauty,Light,Noise,Danger}].len() == 1 each
+///   (c) dirty_regions[{FoodAroma,Social}].len() == 0 each
 ///
 /// Proves the OOB guard uses `continue` — not `return` or `break`:
 ///   - `return`  would exit tick() entirely, leaving queue non-empty.
@@ -507,13 +508,15 @@ fn harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break() {
         0,
         "queue must be empty: OOB event discarded via `continue`, valid event processed"
     );
-    // Type A: (b) 5 stamped channels have exactly 1 dirty region (from the valid event)
+    // Type A: (b) 6 stamped channels have exactly 1 dirty region (from the valid event;
+    // T7.10.D extends to include Danger).
     for ch in [
         InfluenceChannel::Warmth,
         InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         InfluenceChannel::Light,
         InfluenceChannel::Noise,
+        InfluenceChannel::Danger,
     ] {
         let len = e.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
@@ -522,9 +525,8 @@ fn harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break() {
             "{ch:?} must have exactly 1 dirty region (valid event processed after OOB via `continue`), got {len}"
         );
     }
-    // Type A: (c) 3 non-stamped channels remain clean
+    // Type A: (c) 2 non-stamped channels remain clean
     for ch in [
-        InfluenceChannel::Danger,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
@@ -654,6 +656,7 @@ fn harness_ffi_radius_zero_produces_single_pixel_dirty_region() {
         InfluenceChannel::Beauty,
         InfluenceChannel::Light,
         InfluenceChannel::Noise,
+        InfluenceChannel::Danger,
     ] {
         let regs = &e.resources.influence_grid.dirty_regions[ch as usize];
         let len = regs.len();
@@ -689,7 +692,6 @@ fn harness_ffi_radius_zero_produces_single_pixel_dirty_region() {
 
     // Non-stamped channels must remain untouched.
     for ch in [
-        InfluenceChannel::Danger,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {

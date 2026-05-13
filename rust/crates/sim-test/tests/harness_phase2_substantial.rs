@@ -291,8 +291,8 @@ fn harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais() {
 
 // ── Plan Assertion 5: all_4_stamped_channels_dirty_1_non_stamped_0 ────────────
 
-/// Type A: dirty_regions[Warmth/Spiritual/Beauty/Light].len() == 1 each,
-///         dirty_regions[Danger/Noise/FoodAroma/Social].len() == 0 each
+/// Type A: dirty_regions[Warmth/Spiritual/Beauty/Light/Noise/Danger].len() == 0
+///         (drained by IUS) and dirty_regions[FoodAroma/Social].len() == 0
 /// after 1 full engine.tick() with 1 building event at (20,20) r=3.
 ///
 /// Verifies STAMPED_CHANNELS = {Warmth, Spiritual, Beauty, Light} is wired
@@ -345,6 +345,23 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
          not hollow drain); got {noise_at_source} — C14(b) discriminator"
     );
 
+    // Type A: T7.10.D — Danger dirty_regions also drained by IUS → 0.
+    let danger_len =
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Danger as usize].len();
+    assert_eq!(
+        danger_len, 0,
+        "dirty_regions[Danger].len() must be 0 after tick (T7.10.D IUS drains via std::mem::take)"
+    );
+
+    // Type A: T7.10.D propagation hollow-drain discriminator.
+    let danger_at_source =
+        engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Danger);
+    assert_eq!(
+        danger_at_source, 200,
+        "sample(20,20,Danger) must be 200 after full pipeline tick (propagate_danger ran, \
+         not hollow drain); got {danger_at_source}"
+    );
+
     // Type A: remaining stamped channels still accumulate (T7.10.D..F not wired) → 1 each.
     for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let len = engine.resources.influence_grid.dirty_regions[ch as usize].len();
@@ -358,7 +375,6 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
 
     // Type A: non-stamped channels — threshold == 0 each
     for ch in [
-        InfluenceChannel::Danger,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {

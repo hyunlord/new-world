@@ -24,12 +24,17 @@ use sim_engine::{RuntimeSystem, SimResources};
 /// stamped region. A building placement counts as a transient acoustic event
 /// for V7 Phase 2 (no agents yet), matching the on_building_placed → Warmth+Light
 /// stamping convention.
+/// T7.10.D extension: Danger added so IUS can run `propagate_danger` from the
+/// stamped region. For V7 Phase 2 (no agents yet) the building placement is the
+/// only Danger source — Phase 0 ISSUE 3 fix locks linear alpha=5 with a
+/// sight-radius cap of 15 tiles (no wall blocking).
 const STAMPED_CHANNELS: &[InfluenceChannel] = &[
     InfluenceChannel::Warmth,
     InfluenceChannel::Spiritual,
     InfluenceChannel::Beauty,
     InfluenceChannel::Light,
     InfluenceChannel::Noise,
+    InfluenceChannel::Danger,
 ];
 
 /// Phase 2 building → influence stamper (T7.7.B drains FFI queue).
@@ -124,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn single_event_marks_5_channels_dirty() {
+    fn single_event_marks_stamped_channels_dirty() {
         let mut e = engine();
         e.resources
             .building_event_queue
@@ -138,10 +143,13 @@ mod tests {
             let regs = &e.resources.influence_grid.dirty_regions[*ch as usize];
             assert_eq!(regs.len(), 1, "{ch:?} should have 1 dirty region");
         }
-        // Non-stamped channels untouched.
-        assert!(e.resources.influence_grid.dirty_regions
-            [InfluenceChannel::Danger as usize]
-            .is_empty());
+        // Non-stamped channels untouched (FoodAroma, Social).
+        for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
+            assert!(
+                e.resources.influence_grid.dirty_regions[ch as usize].is_empty(),
+                "{ch:?} must remain empty (not in STAMPED_CHANNELS)"
+            );
+        }
         // Queue drained.
         assert!(e.resources.building_event_queue.is_empty());
     }

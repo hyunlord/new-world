@@ -255,29 +255,35 @@ fn harness_t7_10_c_dirty_regions_drained() {
     );
 }
 
-// ── Plan C10: other-channels behavior (Spiritual/Beauty stay 0, FoodAroma/Danger/Social stay 0)
+// ── Plan C10: other-channels behavior (Spiritual/Beauty stay 0, FoodAroma/Social stay 0)
 
-/// Type A: dispatch-shell stamped channels Spiritual/Beauty sample to 0;
-/// unstamped channels FoodAroma/Danger/Social sample to 0.
+/// Type A: T7.10.D regression — Danger sample == 200 at source;
+/// dispatch-shell stamped channels Spiritual/Beauty sample to 0;
+/// unstamped channels FoodAroma/Social sample to 0.
 ///
-/// T7.10.C wires Warmth+Light+Noise. The remaining stamped channels
-/// (Spiritual, Beauty) have BSS dirty_regions but IUS does not yet
-/// propagate them. Unstamped channels (FoodAroma, Danger, Social) stay
-/// completely cold.
+/// T7.10.C wired Warmth+Light+Noise. T7.10.D additionally wires Danger.
+/// The remaining stamped channels (Spiritual, Beauty) have BSS dirty_regions
+/// but IUS does not yet propagate them. Unstamped channels (FoodAroma, Social)
+/// stay completely cold.
 #[test]
 fn harness_t7_10_c_other_channels_remain_zero() {
     let mut e = fresh_engine();
     place_noise_source(&mut e);
     e.tick();
+    // T7.10.D regression guard: Danger now propagates at source center.
+    let danger = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Danger);
+    assert_eq!(
+        danger, 200,
+        "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
+    );
     // Dispatch-shell stamped channels (BSS marks dirty, IUS does NOT propagate yet).
     for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.C (T7.10.D..F wires it); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.D (T7.10.E..F wires it); got {v}");
     }
     // Unstamped channels (BSS never marks dirty).
     for ch in [
         InfluenceChannel::FoodAroma,
-        InfluenceChannel::Danger,
         InfluenceChannel::Social,
     ] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);
