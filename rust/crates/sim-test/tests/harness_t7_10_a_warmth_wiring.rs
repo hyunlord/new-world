@@ -199,17 +199,23 @@ fn harness_t7_10_a_other_channels_remain_zero() {
         "T7.10.D: Danger at source must be 200 (linear-decay+cap propagation); got {danger}"
     );
 
+    // T7.10.E regression guard: Spiritual now propagates at source center.
+    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    assert_eq!(
+        spiritual, 200,
+        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
+    );
+
     for ch in [
         // Stamped channels still dispatch-shell (BSS marks dirty, IUS does NOT propagate yet)
-        InfluenceChannel::Spiritual,
         InfluenceChannel::Beauty,
         // Unstamped channels (BSS never marks dirty)
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
-        // Type A: threshold == 0 for all non-Warmth, non-Light, non-Noise, non-Danger channels
+        // Type A: threshold == 0 for all non-wired channels
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.D (only Warmth+Light+Noise+Danger wired); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.E (only Warmth+Light+Noise+Danger+Spiritual wired); got {v}");
     }
 }
 

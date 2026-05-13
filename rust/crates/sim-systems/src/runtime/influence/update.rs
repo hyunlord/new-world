@@ -42,8 +42,19 @@
 //! pattern as Warmth/Light/Noise to avoid flicker. Aggregation is Max
 //! (`InfluenceChannel::Danger.aggregation()`); applied inside `propagate_linear`.
 //!
-//! Other 4 channels remain dispatch-shell (clear pending + swap) and
-//! will be wired in T7.10.E..F.
+//! T7.10.E land: Spiritual channel wired via BFS exponential decay
+//! (`propagate_bfs` with k=0.10 — gentler than Warmth's k=0.15 because
+//! ritual influence carries further than thermal heat). BSS already
+//! marks `dirty_regions[Spiritual]` (Spiritual was in STAMPED_CHANNELS since
+//! T7.10.A; only IUS wiring was missing). IUS drains and propagates Spiritual
+//! each tick. Spiritual is Cold-tier (channel.rs Tier::Cold, parity with
+//! Warmth/Beauty), so for V7 Phase 2 we use the same persistence pattern as
+//! Warmth/Light/Noise/Danger to avoid flicker on event-less ticks. Aggregation
+//! is Max (`InfluenceChannel::Spiritual.aggregation()`); applied inside
+//! `propagate_bfs`.
+//!
+//! Other 3 channels remain dispatch-shell (clear pending + swap) and
+//! will be wired in T7.10.F.
 //!
 //! Warmth: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
 //! Warmth max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
@@ -74,6 +85,16 @@
 //! Danger aggregation: Max.
 //! Wall blocking: NONE — Danger pierces walls (`propagate_danger` passes
 //! `blocking_cache=None`).
+//!
+//! Spiritual: BFS exponential `intensity * exp(-k)` per step, k = 0.10
+//! (gentler than Warmth's 0.15 — ritual influence carries further than
+//! thermal heat).
+//! Spiritual initial intensity: 200 (parity with Warmth/Light/Noise/Danger).
+//! Spiritual max radius: 15 (longer reach than Warmth's 12, consistent with
+//! a transcendent-source archetype).
+//! Spiritual aggregation: Max.
+//! Wall blocking: density-derived via `MaterialBlockingCache` (4-neighbor BFS,
+//! same path as Warmth/Noise).
 
 use hecs::World;
 use sim_core::influence::{
@@ -125,6 +146,22 @@ const NOISE_INITIAL_INTENSITY: u8 = 200;
 /// natural cutoff would fire (which would be at d=40).
 const DANGER_INITIAL_INTENSITY: u8 = 200;
 
+/// `exp(-0.10)` — spiritual exponential decay per BFS step.
+///
+/// Pre-computed: Rust does not const-eval `f32::exp` in stable.
+/// k = 0.10 (gentler than Warmth's 0.15 — ritual influence carries further
+/// than thermal heat).
+const SPIRITUAL_DECAY_PER_STEP: f32 = 0.904_837;
+
+/// Initial intensity at the Spiritual source tile.
+const SPIRITUAL_INITIAL_INTENSITY: u8 = 200;
+
+/// Spiritual propagation radius in tiles.
+///
+/// 15 = longer reach than Warmth's 12, consistent with a transcendent-source
+/// archetype (parity with Light's 15-tile FOV reach).
+const SPIRITUAL_MAX_RADIUS: u32 = 15;
+
 /// Phase 2 influence update dispatcher — T7.10.A: Warmth channel wired.
 pub struct InfluenceUpdateSystem;
 
@@ -159,6 +196,7 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         let light_idx = InfluenceChannel::Light as usize;
         let noise_idx = InfluenceChannel::Noise as usize;
         let danger_idx = InfluenceChannel::Danger as usize;
+        let spiritual_idx = InfluenceChannel::Spiritual as usize;
 
         // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
@@ -325,13 +363,56 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 .copy_from_slice(&danger_snapshot);
         }
 
-        // Other 4 channels: dispatch-shell baseline (clear pending → swap → zero).
-        // They will be wired individually in T7.10.E..F.
+        // ── Spiritual branch (T7.10.E) ───────────────────────────────────────
+        // Drain Spiritual dirty regions left by BSS (Spiritual was in
+        // STAMPED_CHANNELS since T7.10.A; only IUS propagation was missing).
+        let spiritual_dirty =
+            std::mem::take(&mut resources.influence_grid.dirty_regions[spiritual_idx]);
+
+        if !spiritual_dirty.is_empty() {
+            // Fresh BFS exponential pass: clear pending[Spiritual] so multiple
+            // sources accumulate (Max aggregation) onto a clean slate.
+            resources.influence_grid.clear_pending(InfluenceChannel::Spiritual);
+
+            for region in &spiritual_dirty {
+                let cx = (region.min_x + region.max_x) / 2;
+                let cy = (region.min_y + region.max_y) / 2;
+
+                let tile_grid = &resources.tile_grid;
+                let blocking_cache = &resources.material_blocking_cache;
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Spiritual);
+
+                propagate_bfs(
+                    tile_grid,
+                    blocking_cache,
+                    pending,
+                    (cx, cy),
+                    SPIRITUAL_INITIAL_INTENSITY,
+                    |i, _| i * SPIRITUAL_DECAY_PER_STEP,
+                    InfluenceChannel::Spiritual,
+                    SPIRITUAL_MAX_RADIUS,
+                );
+            }
+        } else {
+            // Cold-tier persistence (T7.10.E, parity with Warmth): copy
+            // current[Spiritual] → pending[Spiritual] so the swap is a no-op
+            // for Spiritual on event-less ticks.
+            let spiritual_snapshot =
+                resources.influence_grid.current[spiritual_idx].clone();
+            resources.influence_grid.pending[spiritual_idx]
+                .copy_from_slice(&spiritual_snapshot);
+        }
+
+        // Other 3 channels: dispatch-shell baseline (clear pending → swap → zero).
+        // They will be wired individually in T7.10.F.
         for ch in InfluenceChannel::all() {
             if *ch != InfluenceChannel::Warmth
                 && *ch != InfluenceChannel::Light
                 && *ch != InfluenceChannel::Noise
                 && *ch != InfluenceChannel::Danger
+                && *ch != InfluenceChannel::Spiritual
             {
                 resources.influence_grid.clear_pending(*ch);
             }

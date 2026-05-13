@@ -137,15 +137,13 @@ fn harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline() {
 
 // ── Assertion 4: ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ────
 
-/// Type C: dirty_regions[Spiritual].len() == 3 after 3 FFI enqueues + 1 full tick.
+/// Type C: dirty_regions[Beauty].len() == 3 after 3 FFI enqueues + 1 full tick.
 ///
-/// T7.10.A relaxation: switched from Warmth to Spiritual.
-/// T7.10.A wires Warmth: IUS drains dirty_regions[Warmth] via std::mem::take each tick,
-/// so dirty_regions[Warmth].len() == 0 after any full tick. Spiritual remains on the
-/// Phase 2 dispatch shell (IUS never drains it) → dirty_regions[Spiritual] accumulates.
-/// Baseline: T7.7.B A14(b) + T7.8 assertion 6 both observed 3 for BSS stamping all
-/// stamped channels. This assertion extends that observation to the FFI path.
-/// Re-calibrate for Spiritual when T7.10.B wires the Spiritual channel.
+/// T7.10.E relaxation: switched from Spiritual to Beauty.
+/// T7.10.A..E wires Warmth/Light/Noise/Danger/Spiritual: IUS drains all 5 via
+/// std::mem::take each tick, so their dirty_regions.len() == 0 after any full
+/// tick. Beauty remains on the Phase 2 dispatch shell (IUS never drains it) →
+/// dirty_regions[Beauty] accumulates. Re-calibrate for Beauty when T7.10.F wires it.
 #[test]
 fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() {
     let mut engine = fresh_phase2_engine();
@@ -153,15 +151,15 @@ fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() 
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
-    // Type C: threshold == 3 (Spiritual accumulates; Warmth was drained by T7.10.A IUS)
+    // Type C: threshold == 3 (Beauty accumulates; Warmth/Light/Noise/Danger/Spiritual drained)
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     assert_eq!(
         len,
         3,
-        "dirty_regions[Spiritual].len() must be 3 after 3 FFI events + 1 full tick. \
-         Spiritual remains on Phase 2 dispatch shell (IUS does not drain it). \
-         T7.10.A drains Warmth instead — re-calibrate for Spiritual when T7.10.B wired. Got {len}"
+        "dirty_regions[Beauty].len() must be 3 after 3 FFI events + 1 full tick. \
+         Beauty remains on Phase 2 dispatch shell (IUS does not drain it). \
+         T7.10.A..E drain other stamped channels — re-calibrate for Beauty when T7.10.F wired. Got {len}"
     );
 }
 
@@ -189,10 +187,10 @@ fn harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates()
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
 
-    // T7.10.A: IUS now drains dirty_regions[Warmth] via std::mem::take.
-    // Spiritual remains in dispatch shell, preserves original dispatch-shell coverage.
+    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual via std::mem::take.
+    // Beauty remains in dispatch shell, preserves original dispatch-shell coverage.
     let regs =
-        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize];
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize];
     assert_eq!(
         regs.len(),
         3,
@@ -244,15 +242,18 @@ fn harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates()
     );
 }
 
-// ── Assertion 6: ffi_dirty_regions_non_warmth_channel_spot_check_spiritual ──
+// ── Assertion 6: ffi_dirty_regions_non_warmth_channel_spot_check_beauty ─────
 
-/// Type C: dirty_regions[Spiritual].len() == 3 after FFI path + 1 tick.
-/// Spiritual is the representative non-Warmth stamped channel.
-/// A FFI bug that only marks Warmth and drops Spiritual/Beauty/Light would
-/// leave dirty_regions[Spiritual].len()==0 while Assertion 4's Warmth=3 still passes.
-/// Re-calibrate when Phase 3 BFS is wired.
+/// Type C: dirty_regions[Beauty].len() == 3 after FFI path + 1 tick.
+/// Beauty is the representative non-Warmth stamped channel that remains on the
+/// dispatch shell post-T7.10.E. A FFI bug that only marks Warmth and drops
+/// Beauty/Spiritual/Light/Noise/Danger would leave dirty_regions[Beauty].len()==0
+/// while Assertion 4's Warmth=3 still passes.
+/// T7.10.E rotation: switched from Spiritual to Beauty (Spiritual now propagates
+/// via BFS exp k=0.10 and is drained by IUS each tick).
+/// Re-calibrate when T7.10.F Beauty wiring lands.
 #[test]
-fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_spiritual() {
+fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty() {
     let mut engine = fresh_phase2_engine();
     enqueue_building_placed(&mut engine.resources, 10, 10, 1);
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
@@ -260,12 +261,12 @@ fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_spiritual(
     engine.tick();
     // Type C: threshold == 3
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     assert_eq!(
         len,
         3,
-        "dirty_regions[Spiritual].len() must be 3 after FFI path + 1 tick \
-         (all 4 stamped channels must be marked; FFI channel mis-mapping would yield 0 here). \
+        "dirty_regions[Beauty].len() must be 3 after FFI path + 1 tick \
+         (all 6 stamped channels must be marked; FFI channel mis-mapping would yield 0 here). \
          Got {len}"
     );
 }
@@ -334,14 +335,14 @@ fn harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2() {
     enqueue_building_placed(&mut engine.resources, 15, 15, 1);
     enqueue_building_placed(&mut engine.resources, 64, 0, 1); // OOB: rejected at enqueue
     engine.tick();
-    // T7.10.A: IUS now drains dirty_regions[Warmth]; switch to Spiritual (dispatch shell intact).
+    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual; switch to Beauty (dispatch shell intact).
     // Type C: threshold == 2
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     assert_eq!(
         len,
         2,
-        "dirty_regions[Spiritual].len() must be 2 (2 in-bounds accepted, 1 OOB rejected at enqueue). \
+        "dirty_regions[Beauty].len() must be 2 (2 in-bounds accepted, 1 OOB rejected at enqueue). \
          Got {len}"
     );
 }
@@ -376,14 +377,14 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         "pre-condition for idle run: queue must be empty after tick 1"
     );
 
-    // T7.10.A: Warmth pending now reflects Cold-tier persistence (copy current → pending),
-    // not a hard clear. Switch to Spiritual (dispatch shell intact, pending cleared every tick)
-    // to preserve the anti-stub-IUS coverage this assertion provides.
-    // (c) seeding step — write 255 to all pending[Spiritual] bytes between tick 1 and tick 2
+    // T7.10.A..E: Warmth/Light/Noise/Danger/Spiritual pending now reflect persistence
+    // (copy current → pending), not a hard clear. Switch to Beauty (dispatch shell
+    // intact, pending cleared every tick) to preserve the anti-stub-IUS coverage.
+    // (c) seeding step — write 255 to all pending[Beauty] bytes between tick 1 and tick 2
     engine
         .resources
         .influence_grid
-        .pending_buf_mut(InfluenceChannel::Spiritual)
+        .pending_buf_mut(InfluenceChannel::Beauty)
         .iter_mut()
         .for_each(|byte| *byte = 255);
 
@@ -392,20 +393,20 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         engine.tick();
     }
 
-    // Type A: threshold == true (every byte in pending[Spiritual] == 0)
-    // IUS clears pending for non-Warmth stamped channels every tick (dispatch shell).
+    // Type A: threshold == true (every byte in pending[Beauty] == 0)
+    // IUS clears pending for dispatch-shell channels every tick.
     // A stub IUS skipping clear_all_pending() would leave 255 in pending.
     let pending_all_zero = engine
         .resources
         .influence_grid
-        .pending[InfluenceChannel::Spiritual as usize]
+        .pending[InfluenceChannel::Beauty as usize]
         .iter()
         .all(|&byte| byte == 0);
     assert!(
         pending_all_zero,
-        "pending[Spiritual] must be all-zero after 5 idle ticks. \
+        "pending[Beauty] must be all-zero after 5 idle ticks. \
          Seeded with 255 (via pending_buf_mut) before idle run to prevent vacuous pass. \
-         A stub IUS skipping clear_all_pending() for non-Warmth would leave 255 in pending."
+         A stub IUS skipping clear_all_pending() for dispatch-shell channels would leave 255 in pending."
     );
 }
 
@@ -431,16 +432,16 @@ fn harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_t
         engine.tick();
     }
 
-    // T7.10.A: IUS now drains dirty_regions[Warmth] during BFS propagation.
-    // Switch to Spiritual (still dispatch shell, IUS does not clear its dirty regions).
+    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual during propagation.
+    // Switch to Beauty (still dispatch shell, IUS does not clear its dirty regions).
     // Type C: threshold == 3 (unchanged from Assertion 4's post-tick-1 count)
     let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
     assert_eq!(
         len,
         3,
-        "dirty_regions[Spiritual].len() must remain 3 after 5 idle ticks \
-         (BSS no-op on empty queue; IUS Phase 2 dispatch shell does not call clear_dirty() for non-Warmth). \
+        "dirty_regions[Beauty].len() must remain 3 after 5 idle ticks \
+         (BSS no-op on empty queue; IUS Phase 2 dispatch shell does not call clear_dirty() for Beauty). \
          Erroneous idle clear_dirty() would drop to 0. Got {len}"
     );
 }

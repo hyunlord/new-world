@@ -17,8 +17,8 @@
 //!     Tests asserting dirty_regions[Warmth/Light].len() > 0 after a full tick now assert == 0.
 //!   - current[Warmth] is NON-ZERO near stamped buildings (BFS propagation active, T7.10.A).
 //!   - current[Light]  is NON-ZERO near stamped buildings (shadowcast propagation, T7.10.B).
-//!   - dirty_regions[Spiritual/Beauty] still accumulate (T7.10.C..F not wired).
-//!   - current[Spiritual/Beauty/Noise/FoodAroma/Danger/Social] stay zero
+//!   - dirty_regions[Beauty] still accumulate (T7.10.F not wired).
+//!   - current[Beauty/FoodAroma/Social] stay zero
 //!     (dispatch-shell, T7.10.C..F not wired).
 //!
 //! T7.10.B SCOPE NOTE: Light is the second channel to escape. When T7.10.C..F
@@ -291,11 +291,13 @@ fn harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais() {
 
 // ── Plan Assertion 5: all_4_stamped_channels_dirty_1_non_stamped_0 ────────────
 
-/// Type A: dirty_regions[Warmth/Spiritual/Beauty/Light/Noise/Danger].len() == 0
-///         (drained by IUS) and dirty_regions[FoodAroma/Social].len() == 0
+/// Type A: dirty_regions[Warmth/Light/Noise/Danger/Spiritual].len() == 0
+///         (drained by IUS), dirty_regions[Beauty].len() == 1 (T7.10.F not wired),
+///         and dirty_regions[FoodAroma/Social].len() == 0
 /// after 1 full engine.tick() with 1 building event at (20,20) r=3.
 ///
-/// Verifies STAMPED_CHANNELS = {Warmth, Spiritual, Beauty, Light} is wired
+/// Verifies STAMPED_CHANNELS includes all 6 channels (Warmth, Light, Noise,
+/// Danger, Spiritual, Beauty) is wired
 /// correctly in the full pipeline (vs. BSS-only ticks in T7.7.B A7–A11).
 /// IUS does not affect dirty_regions, so counts survive the full tick.
 ///
@@ -362,8 +364,27 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
          not hollow drain); got {danger_at_source}"
     );
 
-    // Type A: remaining stamped channels still accumulate (T7.10.D..F not wired) → 1 each.
-    for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
+    // Type A: T7.10.E — Spiritual dirty_regions also drained by IUS → 0.
+    let spiritual_len =
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize].len();
+    assert_eq!(
+        spiritual_len, 0,
+        "dirty_regions[Spiritual].len() must be 0 after tick (T7.10.E IUS drains via std::mem::take)"
+    );
+
+    // Type A: T7.10.E propagation hollow-drain discriminator.
+    let spiritual_at_source =
+        engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Spiritual);
+    assert_eq!(
+        spiritual_at_source, 200,
+        "sample(20,20,Spiritual) must be 200 after full pipeline tick (propagate_bfs ran, \
+         not hollow drain); got {spiritual_at_source}"
+    );
+
+    // Type A: remaining stamped channel still accumulates (T7.10.F not wired) → 1.
+    // Single dispatch-shell channel post-T7.10.E — use direct access (clippy: no single-element loop).
+    {
+        let ch = InfluenceChannel::Beauty;
         let len = engine.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
             len,
@@ -846,9 +867,20 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
          regions via std::mem::take); got {}", noise_regs.len()
     );
 
-    // Type A: remaining stamped channels still accumulate (T7.10.D..F not wired) → 4 each.
-    // Coordinate clamping is verified through these channels (same BSS code path as Warmth/Light).
-    for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
+    // Type A: Spiritual dirty_regions drained by T7.10.E IUS → 0 (all 4 consumed for BFS exp).
+    let spiritual_regs =
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Spiritual as usize];
+    assert_eq!(
+        spiritual_regs.len(), 0,
+        "Spiritual must have 0 dirty regions after tick (T7.10.E IUS drains all 4 corner \
+         regions via std::mem::take); got {}", spiritual_regs.len()
+    );
+
+    // Type A: remaining stamped channel still accumulates (T7.10.F not wired) → 4.
+    // Coordinate clamping is verified through this channel (same BSS code path as Warmth/Light).
+    // Single dispatch-shell channel post-T7.10.E — use direct access (clippy: no single-element loop).
+    {
+        let ch = InfluenceChannel::Beauty;
         let regs = &engine.resources.influence_grid.dirty_regions[ch as usize];
         assert_eq!(
             regs.len(),
@@ -878,5 +910,8 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
         // T7.10.C regression guard: Noise linear-decay must also run at each corner.
         let n = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Noise);
         assert_eq!(n, 200, "corner Noise linear-decay center ({cx},{cy}) must be 200; got {n}");
+        // T7.10.E regression guard: Spiritual BFS exp k=0.10 must also run at each corner.
+        let s = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Spiritual);
+        assert_eq!(s, 200, "corner Spiritual BFS center ({cx},{cy}) must be 200; got {s}");
     }
 }

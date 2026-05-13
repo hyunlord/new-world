@@ -1,0 +1,1180 @@
+[harness 20:56:48] ==========================================
+[harness 20:56:48] Harness Pipeline v4 — t7-10-e-spiritual-bfs-wiring
+[harness 20:56:48] Mode: --quick
+[harness 20:56:48] Prompt: .harness/prompts/t7-10-e-spiritual-bfs-wiring.md
+[harness 20:56:48] ==========================================
+[harness 20:56:48] === Step 0: MECHANICAL GATE (0-token) ===
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 114 tests
+....................................................................................... 87/114
+...........................
+test result: ok. 114 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+........
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 22 tests
+......................
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+
+running 6 tests
+......
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+.....
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 20 tests
+....................
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 15 tests
+...............
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 13 tests
+.............
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 18 tests
+..................
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 13 tests
+.............
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 22 tests
+......................
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 15 tests
+...............
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+
+running 9 tests
+.........
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+......
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+......
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+..........
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+..........
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 10 tests
+..........
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 11 tests
+...........
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 7 tests
+.......
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+....
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[harness 20:56:49] MECHANICAL GATE: cargo test — 0 failures vs baseline 27 → PASS
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+[FFI Chain] SKIP: /Users/rexxa/github/new-world-wt/lead/scripts/core/simulation/sim_bridge.gd absent (V7 reset early phase)
+[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands
+[harness 20:56:49] MECHANICAL GATE: PASS
+[harness progress] 0 Mechanical Gate: DONE — cargo test + clippy + FFI check
+[harness progress] 0b Locale Check: DONE — PASS (no critical issues)
+[harness 20:56:49] === Step 1a: PLANNER (plan attempt 1) ===
+[harness 20:56:49] Reusing existing plan_draft.md (resume mode)
+[harness progress] 1a Drafter: DONE — Plan: 0
+0 assertions — none listed
+[harness 20:56:49] Quick mode — skipping debate
+[harness progress] 1b Challenger: SKIPPED — --quick mode (no debate needed)
+[harness progress] 1c Revision: SKIPPED — --quick mode
+[harness progress] 1d QC: SKIPPED — --quick mode
+[harness 20:56:49] === Step 2: GENERATOR (code attempt 1) ===
+[harness 20:56:50] Running Generator (isolated session, attempt 1, timeout 900s)...
+Stop-check passed silently — no objections from the harness gate. The T7.10.E implementation is complete and verified.
+[harness 20:58:51] Running gate command...
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running unittests src/lib.rs (target/debug/deps/sim_bridge-3673ff4659e43624)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_core-a18d7e148fa266bb)
+
+running 114 tests
+test influence::channel::tests::test_repr_u8_indexing ... ok
+test influence::channel::tests::test_channel_count_8 ... ok
+test influence::channel::tests::test_update_tier_classification ... ok
+test influence::channel::tests::test_aggregation_social_additive ... ok
+test influence::channel::tests::test_aggregation_warmth_additive ... ok
+test influence::channel::tests::test_aggregation_others_max ... ok
+test influence::blocking::tests::test_empty_cache_returns_zero ... ok
+test influence::grid::tests::test_dirty_region_normalises_corners ... ok
+test influence::grid::tests::test_swap_idempotent_two_swaps ... ok
+test influence::grid::tests::test_sample_after_swap ... ok
+test influence::grid::tests::test_len_and_empty ... ok
+test influence::blocking::tests::test_light_blocking_is_one_for_solid ... ok
+test influence::blocking::tests::test_build_from_registry_populates_all_pairs ... ok
+test influence::blocking::tests::test_get_missing_material_returns_zero ... ok
+test influence::grid::tests::test_dirty_region_tracking ... ok
+test influence::grid::tests::test_grid_new_initializes_zero ... ok
+test influence::grid::tests::test_idx_matches_tile_grid_layout ... ok
+test influence::grid::tests::test_clear_pending ... ok
+test influence::blocking::tests::test_danger_and_social_pass_through ... ok
+test influence::propagate::tests::test_bfs_aggregation_additive_warmth ... ok
+test influence::propagate::tests::test_bfs_aggregation_max_others ... ok
+test influence::propagate::tests::test_bfs_blocked_by_wall_full ... ok
+test influence::propagate::tests::test_bfs_open_field_reaches_radius ... ok
+test influence::propagate::tests::test_bfs_source_self_blocking_exempt ... ok
+test influence::channel::tests::test_agg_kind_serde_roundtrip ... ok
+test influence::channel::tests::test_update_tier_serde_roundtrip ... ok
+test influence::propagate::tests::test_shadowcast_open_field_lit ... ok
+test influence::propagate::tests::test_lod_tier_is_active ... ok
+test influence::propagate::tests::test_propagate_noise_linear_decay ... ok
+test influence::propagate::tests::test_shadowcast_symmetric_open ... ok
+test influence::propagate::tests::test_shadowcast_wall_blocks_line ... ok
+test influence::propagate::tests::test_stamp_social_diamond_radius_5 ... ok
+test influence::propagate::tests::test_stamp_social_lod_skip_far_and_dormant ... ok
+test material::category::tests::mod_carries_u8 ... ok
+test material::category::tests::six_variants_match_exhaustively ... ok
+test material::definition::tests::seven_named_fields_destructure_in_locked_order ... ok
+test material::derivation::tests::all_variants_has_23_entries ... ok
+test influence::propagate::tests::test_propagate_danger_capped_at_15 ... ok
+test material::derivation::tests::derive_all_produces_finite_values_for_three_fixtures ... ok
+test material::derivation::tests::derive_iron_equivalent_matches_locked_baselines_within_tolerance ... ok
+test material::derivation::tests::derive_outputs_are_pairwise_distinct_for_six_representative_stats ... ok
+test material::derivation::tests::iron_baselines_have_locked_values ... ok
+test material::derivation::tests::snake_case_matches_struct_field_for_each_variant ... ok
+test material::category::tests::mod_255_ron_roundtrip ... ok
+test material::category::tests::mod_0_ron_roundtrip ... ok
+test material::error::tests::implements_std_error_send_sync_static ... ok
+test influence::channel::tests::test_channel_def_ron_parse ... ok
+test material::definition::tests::natural_in_default_empty_vec ... ok
+test material::error::tests::io_variant_constructs_from_std_io_error ... ok
+test material::error::tests::six_variants_cover_match ... ok
+test material::explanation::tests::explain_locks_specific_input_lists ... ok
+test material::explanation::tests::explain_returns_well_formed_for_every_variant ... ok
+test material::explanation::tests::property_kind_has_15_variants ... ok
+test material::explanation::tests::explain_sources_substantive_distinct_with_keywords ... ok
+test material::explanation::tests::property_kind_snake_case_order_matches_spec ... ok
+test material::id::tests::display_format_is_hex_padded ... ok
+test material::id::tests::distinct_inputs_distinct_ids_for_known_set ... ok
+test material::id::tests::djb2_deterministic_across_calls ... ok
+test material::id::tests::djb2_seed_for_empty_string ... ok
+test material::loader::tests::load_directory_nonexistent_returns_io_error ... ok
+test material::loader::tests::schema_version_constants_match ... ok
+test material::properties::tests::boundary_aesthetic_value ... ok
+test material::properties::tests::boundary_cultural_value ... ok
+test material::properties::tests::boundary_density ... ok
+test material::properties::tests::boundary_flammability ... ok
+test material::properties::tests::boundary_fracture_toughness ... ok
+test material::properties::tests::boundary_hardness ... ok
+test material::properties::tests::boundary_impact_yield ... ok
+test material::properties::tests::boundary_melting_point ... ok
+test material::properties::tests::boundary_preservation ... ok
+test material::properties::tests::boundary_rarity ... ok
+test material::properties::tests::boundary_shear_yield ... ok
+test material::properties::tests::boundary_thermal_conductivity ... ok
+test material::properties::tests::boundary_work_difficulty ... ok
+test material::properties::tests::boundary_workability ... ok
+test material::properties::tests::density_nan_rejected ... ok
+test material::properties::tests::distribution_empty_passes_validate ... ok
+test material::properties::tests::distribution_with_duplicates_passes_validate ... ok
+test material::properties::tests::fifteen_named_fields_destructure_with_exact_types ... ok
+test material::properties::tests::hardness_infinity_rejected ... ok
+test material::properties::tests::shear_yield_neg_infinity_rejected ... ok
+test material::properties::tests::valid_fixture_passes_validate ... ok
+test material::registry::tests::by_category_insert_sync ... ok
+test material::registry::tests::by_category_unload_sync ... ok
+test material::registry::tests::category_counts_aggregates_correctly ... ok
+test material::registry::tests::derive_cache_hit_via_call_counter ... ok
+test material::registry::tests::derive_cache_hit_via_sentinel ... ok
+test material::loader::tests::load_directory_empty_dir_returns_empty_vec ... ok
+test material::registry::tests::duplicate_id_rejected_no_overwrite ... ok
+test material::registry::tests::iter_category_empty ... ok
+test material::registry::tests::bulk_register_100_with_collision_precheck ... ok
+test material::registry::tests::iter_category_multiple_same_category ... ok
+test material::registry::tests::mod_category_isolated_from_base ... ok
+test material::registry::tests::register_and_get_roundtrip ... ok
+test material::registry::tests::unload_unknown_mod_returns_zero ... ok
+test material::registry::tests::unload_mod_scoped_with_cache_flush ... ok
+test material::loader::tests::schema_mismatch_rejected ... ok
+test material::terrain::tests::ten_variants_match_exhaustively ... ok
+test material::loader::tests::property_out_of_range_rejected_by_loader ... ok
+test material::registry::tests::warm_cache_populates_both_caches ... ok
+test tests::material_schema_version_is_one ... ok
+test tests::v7_version_present ... ok
+test tile::grid::tests::test_idx_correct ... ok
+test material::loader::tests::valid_ron_roundtrip ... ok
+test tile::grid::tests::test_is_outdoor_default_true ... ok
+test tile::grid::tests::test_is_wall_after_set ... ok
+test tile::grid::tests::test_is_wall_default_false ... ok
+test tile::grid::tests::test_len_and_is_empty ... ok
+test tile::grid::tests::test_neighbors_4_corner ... ok
+test tile::grid::tests::test_neighbors_4_edge ... ok
+test tile::grid::tests::test_neighbors_4_interior ... ok
+test tile::grid::tests::test_neighbors_8_corner ... ok
+test tile::grid::tests::test_neighbors_8_interior ... ok
+test tile::grid::tests::test_terrain_default_plain ... ok
+
+test result: ok. 114 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/material_harness.rs (target/debug/deps/material_harness-ef78fc4f6db9f21c)
+
+running 8 tests
+test harness_material_load_all_105 ... ok
+test harness_material_fixture_consistency ... ok
+test harness_material_tier_distribution ... ok
+test harness_material_validate_no_failure ... ok
+test harness_material_boundary_clamp_audit ... ok
+test harness_material_no_duplicate_id ... ok
+test harness_material_categories_balance ... ok
+test harness_material_terrain_distribution_valid ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/material_loader_integration.rs (target/debug/deps/material_loader_integration-2574e2d1436a8065)
+
+running 22 tests
+test loads_granite_from_ron ... ok
+test registry_with_loaded_granite ... ok
+test test_load_specific_plants_by_name ... ok
+test test_load_plant_directory ... ok
+test test_load_specific_minerals_by_name ... ok
+test test_plant_property_ranges_valid ... ok
+test test_registry_with_15_minerals ... ok
+test test_animal_property_ranges_valid ... ok
+test test_load_animal_directory ... ok
+test test_mineral_property_ranges_valid ... ok
+test test_load_mineral_directory ... ok
+test test_load_specific_animals_by_name ... ok
+test test_load_wood_directory ... ok
+test test_load_specific_stones_by_name ... ok
+test test_load_stone_directory ... ok
+test test_registry_with_15_plants ... ok
+test test_load_specific_woods_by_name ... ok
+test test_registry_with_20_animals ... ok
+test test_registry_with_25_woods ... ok
+test test_wood_property_ranges_valid ... ok
+test test_registry_with_30_stones ... ok
+test test_stone_property_ranges_valid ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_engine-340b5040b4bdbc71)
+
+running 6 tests
+test tests::test_register_and_run_single_system ... ok
+test tests::test_engine_tick_no_systems ... ok
+test tests::test_engine_new ... ok
+test tests::test_resources_access_initial_zero ... ok
+test tests::test_tick_interval_skip ... ok
+test tests::test_priority_sort_lower_first ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration.rs (target/debug/deps/integration-66cf4806af6e60cd)
+
+running 5 tests
+test test_tick_loop_no_panic ... ok
+test test_zero_systems_baseline ... ok
+test test_resources_initial_state ... ok
+test test_multiple_systems_priority_order ... ok
+test test_resources_modification_via_tick ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_systems-033b302db1c269fc)
+
+running 20 tests
+test runtime::influence::agent_sample::tests::metadata ... ok
+test runtime::influence::building_stamp::tests::metadata ... ok
+test runtime::influence::update::tests::metadata ... ok
+test runtime::influence::agent_sample::tests::samples_warmth_after_manual_write_and_swap ... ok
+test runtime::influence::building_stamp::tests::out_of_bounds_event_is_skipped ... ok
+test runtime::influence::building_stamp::tests::radius_clamps_to_grid ... ok
+test runtime::influence::building_stamp::tests::single_event_marks_stamped_channels_dirty ... ok
+test runtime::influence::agent_sample::tests::many_agents_read_own_tile ... ok
+test runtime::influence::building_stamp::tests::shell_does_not_mutate_tile_grid ... ok
+test runtime::influence::agent_sample::tests::out_of_bounds_position_is_skipped ... ok
+test runtime::influence::building_stamp::tests::tick_does_not_panic ... ok
+test runtime::influence::building_stamp::tests::empty_queue_is_no_op ... ok
+test runtime::influence::agent_sample::tests::samples_zero_when_grid_empty ... ok
+test runtime::influence::visualization::tests::digest_captures_warmth_total_and_danger_peak ... ok
+test runtime::influence::update::tests::pending_write_cleared_before_swap ... ok
+test runtime::influence::visualization::tests::metadata ... ok
+test runtime::influence::update::tests::baseline_remains_zero_after_ticks ... ok
+test runtime::influence::update::tests::tick_does_not_panic_on_empty_world ... ok
+test runtime::influence::visualization::tests::digest_zero_on_fresh_engine ... ok
+test runtime::influence::visualization::tests::interval_6_fires_at_correct_ticks ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration.rs (target/debug/deps/integration-ec0d7db5d81daf08)
+
+running 15 tests
+test harness_building_stamp_tick_interval ... ok
+test harness_building_stamp_priority ... ok
+test harness_influence_update_tick_interval ... ok
+test harness_influence_update_name ... ok
+test harness_influence_update_priority ... ok
+test harness_viz_tick_interval ... ok
+test harness_viz_priority ... ok
+test harness_influence_update_clear_before_swap ... ok
+test harness_building_stamp_isolation ... ok
+test harness_viz_warmth_total_danger_peak ... ok
+test harness_agent_sample_oob_ignored ... ok
+test harness_agent_sample_reads_current ... ok
+test harness_register_phase2_count ... ok
+test harness_register_phase2_order ... ok
+test harness_phase2_baseline_zero ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/sim_test-9914a893625340ed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_next_a_postverify.rs (target/debug/deps/harness_next_a_postverify-c0c5a2d32b4cdbc8)
+
+running 13 tests
+test harness_ffi_bridge_pre_tick_queue_len_equals_3_after_3_ffi_enqueue_calls ... ok
+test harness_ffi_bridge_baseline_queue_empty_on_fresh_engine ... ok
+test harness_ffi_bridge_oob_ffi_returns_false ... ok
+test harness_ffi_bridge_pre_tick_dirty_regions_zero_after_enqueue_before_tick ... ok
+test harness_ffi_bridge_baseline_dirty_regions_warmth_zero_on_fresh_engine ... ok
+test harness_ffi_bridge_pre_tick_queue_len_equals_2_after_2_inbounds_1_oob ... ok
+test harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2 ... ok
+test harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty ... ok
+test harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline ... ok
+test harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_ticks ... ok
+test harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ... ok
+test harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates ... ok
+test harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_ticks ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2.rs (target/debug/deps/harness_phase2-5b70400f195ca5bc)
+
+running 18 tests
+test harness_building_stamp_priority ... ok
+test harness_building_stamp_tick_interval ... ok
+test harness_influence_update_priority ... ok
+test harness_influence_update_name ... ok
+test harness_influence_update_tick_interval ... ok
+test harness_viz_priority ... ok
+test harness_viz_tick_interval ... ok
+test harness_building_stamp_isolation ... ok
+test harness_viz_fire_count_20_ticks ... ok
+test harness_influence_update_clear_before_swap ... ok
+test harness_viz_warmth_total_danger_peak ... ok
+test harness_agent_sample_oob_ignored ... ok
+test harness_viz_tick_field ... ok
+test harness_agent_sample_reads_current ... ok
+test harness_agent_sample_per_agent_tile ... ok
+test harness_register_phase2_order ... ok
+test harness_register_phase2_count ... ok
+test harness_phase2_baseline_zero ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_determinism.rs (target/debug/deps/harness_phase2_determinism-062fefbb64f585e3)
+
+running 13 tests
+test harness_det_b4_stamp_social_aggregate_lod_filter ... ok
+test harness_det_b5_blocking_cache_lookup_byte_identical ... ok
+test harness_det_b2_propagate_shadowcast_byte_identical ... ok
+test harness_det_b1_propagate_bfs_byte_identical ... ok
+test harness_det_b6_ec2_source_self_blocking_exempt ... ok
+test harness_det_a2_dirty_regions_content_byte_identical ... ok
+test harness_det_a3_bss_clamp_oob_deterministic ... ok
+test harness_det_a1_queue_fifo_drain_order ... ok
+test harness_det_b3_propagate_noise_byte_identical ... ok
+test harness_det_b7_ec3_multi_source_additive_vs_max ... ok
+test harness_det_b8_propagate_danger_byte_identical ... ok
+test harness_det_a4_ius_clear_swap_idempotent_30_ticks ... ok
+test harness_det_a5_viz_digest_tick_boundary_6 ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_ffi.rs (target/debug/deps/harness_phase2_ffi-a4d5e37507f5e7f0)
+
+running 22 tests
+test harness_ffi_isolation_invariant_survives_empty_queue_tick ... ok
+test harness_ffi_non_stamped_channels_produce_zero_dirty_regions ... ok
+test harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break ... ok
+test harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bounds ... ok
+test harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained ... ok
+test harness_ffi_on_building_placed_inbounds_enqueues_and_returns_true ... ok
+test harness_ffi_on_building_placed_oob_does_not_enqueue_and_returns_false ... ok
+test harness_ffi_dirty_regions_all_channels_empty_at_construction ... ok
+test harness_ffi_dirty_region_coordinate_bounds_match_input ... ok
+test harness_ffi_radius_zero_produces_single_pixel_dirty_region ... ok
+test harness_ffi_stamp_marks_exactly_beauty_dirty ... ok
+test harness_ffi_all_8_channels_overlay_buffer_length_correct ... ok
+test harness_ffi_no_dirty_regions_accumulate_on_empty_queue_tick ... ok
+test harness_ffi_all_8_channels_overlay_buffer_zeros_on_fresh_engine ... ok
+test harness_ffi_queue_field_init_empty ... ok
+test harness_ffi_stamp_marks_exactly_light_dirty ... ok
+test harness_ffi_stamp_marks_exactly_noise_dirty ... ok
+test harness_ffi_stamp_marks_exactly_spiritual_dirty ... ok
+test harness_ffi_stamp_marks_exactly_warmth_dirty ... ok
+test harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions ... ok
+test harness_ffi_three_events_all_drained_in_single_tick ... ok
+test harness_ffi_tile_detail_all_8_channels_zero_on_fresh_engine ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_substantial.rs (target/debug/deps/harness_phase2_substantial-109f343ecfaad441)
+
+running 15 tests
+test harness_substantial_empty_queue_1tick_all_channels_zero_dirty ... ok
+test harness_substantial_register_phase2_twice_no_panic ... ok
+test harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipeline ... ok
+test harness_substantial_dirty_region_bounds_preserved_through_full_pipeline_tick ... ok
+test harness_substantial_idle_4380_no_systems_all_channels_zero ... ok
+test harness_substantial_phase2_shell_current_warmth_zero_inside_stamp_radius ... ok
+test harness_substantial_phase2_shell_pending_all_zero_after_full_pipeline_tick ... ok
+test harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais ... ok
+test harness_substantial_four_corner_stamps_clamp_no_oob_dirty ... ok
+test harness_substantial_causal_chain_queue_drains_and_warmth_dirty_marked ... ok
+test harness_substantial_1k_agents_ais_warmth_all_zero_phase2_baseline ... ok
+test harness_substantial_two_events_same_tick_yields_two_dirty_regions_per_stamped_channel ... ok
+test harness_substantial_dirty_regions_3_events_1_tick_count_3 ... ok
+test harness_substantial_oob_guard_mixed_5events_3inbounds_dirty3 ... ok
+test harness_substantial_burst_100_events_single_tick_drain ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_t7_10_a_warmth_wiring.rs (target/debug/deps/harness_t7_10_a_warmth_wiring-1f12a4e3225add3e)
+
+running 9 tests
+test harness_t7_10_a_no_event_no_warmth ... ok
+test harness_t7_10_a_dirty_regions_drained ... ok
+test harness_t7_10_a_radial_decay_one_step ... ok
+test harness_t7_10_a_other_channels_remain_zero ... ok
+test harness_t7_10_a_boundary_at_max_radius ... ok
+test harness_t7_10_a_gradient_monotone ... ok
+test harness_t7_10_a_max_radius_cutoff ... ok
+test harness_t7_10_a_source_center_lit ... ok
+test harness_t7_10_a_persistence_across_ticks ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_light_viz_toggle.rs (target/debug/deps/harness_t7_10_b1_light_viz_toggle-240951e4ae6a7e73)
+
+running 6 tests
+test harness_t7_10_b1_gdscript_toggle_handler_present ... ok
+test harness_t7_10_b1_light_channel_non_trivial_concurrent ... ok
+test harness_t7_10_b1_warmth_channel_non_trivial_concurrent ... ok
+test harness_t7_10_b1_light_source_tile_is_maximum ... ok
+test harness_t7_10_b1_light_zero_beyond_radius ... ok
+test harness_t7_10_b1_light_disc_extends_beyond_warmth ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_space_toggle.rs (target/debug/deps/harness_t7_10_b1_space_toggle-f046885e739965e2)
+
+running 6 tests
+test harness_t7_10_b1_initial_channel_is_warmth ... ok
+test harness_t7_10_b1_space_keycode_binding_present ... ok
+test harness_t7_10_b1_input_event_guards_present ... ok
+test harness_t7_10_b1_channel_switched_print_present ... ok
+test harness_t7_10_b1_three_state_cycle_assignment_present ... ok
+test harness_t7_10_b1_unhandled_input_handler_present ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b_light_shadowcast_wiring.rs (target/debug/deps/harness_t7_10_b_light_shadowcast_wiring-ef6fa25424bf4964)
+
+running 10 tests
+test harness_t7_10_b_no_event_no_light ... ok
+test harness_t7_10_b_dirty_regions_drained ... ok
+test harness_t7_10_b_source_center_lit ... ok
+test harness_t7_10_b_boundary_at_max_radius ... ok
+test harness_t7_10_b_other_channels_behavior ... ok
+test harness_t7_10_b_falloff_diagonal_euclidean_discriminator ... ok
+test harness_t7_10_b_gradient_monotone ... ok
+test harness_t7_10_b_max_radius_cutoff ... ok
+test harness_t7_10_b_falloff_one_step ... ok
+test harness_t7_10_b_persistence_across_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_c_noise_linear_wiring.rs (target/debug/deps/harness_t7_10_c_noise_linear_wiring-8285073baae1eb08)
+
+running 10 tests
+test harness_t7_10_c_no_event_no_noise ... ok
+test harness_t7_10_c_natural_radius_boundary ... ok
+test harness_t7_10_c_warmth_and_light_regression_guard ... ok
+test harness_t7_10_c_linear_one_step_alpha_discriminator ... ok
+test harness_t7_10_c_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_c_source_center_lit ... ok
+test harness_t7_10_c_gradient_monotone ... ok
+test harness_t7_10_c_dirty_regions_drained ... ok
+test harness_t7_10_c_other_channels_remain_zero ... ok
+test harness_t7_10_c_persistence_ten_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_d_danger_linear_wiring.rs (target/debug/deps/harness_t7_10_d_danger_linear_wiring-a2b62764b924da3e)
+
+running 10 tests
+test harness_t7_10_d_no_event_no_danger ... ok
+test harness_t7_10_d_source_center_lit ... ok
+test harness_t7_10_d_gradient_monotone ... ok
+test harness_t7_10_d_warmth_light_noise_regression_guard ... ok
+test harness_t7_10_d_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_d_sight_radius_cap_boundary ... ok
+test harness_t7_10_d_other_channels_remain_zero ... ok
+test harness_t7_10_d_linear_one_step_alpha_discriminator ... ok
+test harness_t7_10_d_dirty_regions_drained ... ok
+test harness_t7_10_d_persistence_ten_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_e_spiritual_bfs_wiring.rs (target/debug/deps/harness_t7_10_e_spiritual_bfs_wiring-d12aaa85ee022d82)
+
+running 11 tests
+test harness_t7_10_e_no_event_no_spiritual ... ok
+test harness_t7_10_e_source_center_lit ... ok
+test harness_t7_10_e_max_radius_cutoff ... ok
+test harness_t7_10_e_exp_decay_one_step_discriminator ... ok
+test harness_t7_10_e_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_e_prior_channels_regression_guard ... ok
+test harness_t7_10_e_other_channels_remain_zero ... ok
+test harness_t7_10_e_dirty_regions_drained ... ok
+test harness_t7_10_e_boundary_at_max_radius ... ok
+test harness_t7_10_e_persistence_ten_ticks ... ok
+test harness_t7_10_e_gradient_monotone ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_a_scaffold.rs (target/debug/deps/harness_t7_9_a_scaffold-acf23fa60df2aa13)
+
+running 7 tests
+test harness_scaffold_gdextension_source_identity ... ok
+test harness_scaffold_main_tscn_source_identity ... ok
+test harness_scaffold_world_renderer_gd_source_identity ... ok
+test harness_scaffold_world_node_source_process_identity ... ok
+test harness_scaffold_tick_count_zero_on_fresh_engine ... ok
+test harness_scaffold_resources_current_tick_propagated_by_tick ... ok
+test harness_scaffold_process_equivalent_drives_current_tick_to_n ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_b_render_mechanism.rs (target/debug/deps/harness_t7_9_b_render_mechanism-2eb60779345142e4)
+
+running 4 tests
+test harness_t7_9_b_world_node_pacing_consts_present ... ok
+test harness_t7_9_b_world_node_accumulator_loop_present ... ok
+test harness_t7_9_b_world_renderer_render_path_present ... ok
+test harness_t7_9_b_bridge_identity_contract_preserved ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_bridge
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_engine
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_systems
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests sim_test
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[harness 20:58:52] Gate: cargo test PASSED (0 failures vs baseline 27)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+[harness 20:58:53] Gate: clippy PASSED
+[harness 20:58:53] Running harness tests...
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (target/debug/deps/sim_test-9914a893625340ed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_next_a_postverify.rs (target/debug/deps/harness_next_a_postverify-c0c5a2d32b4cdbc8)
+
+running 13 tests
+test harness_ffi_bridge_baseline_queue_empty_on_fresh_engine ... ok
+test harness_ffi_bridge_baseline_dirty_regions_warmth_zero_on_fresh_engine ... ok
+test harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2 ... ok
+test harness_ffi_bridge_oob_ffi_returns_false ... ok
+test harness_ffi_bridge_pre_tick_dirty_regions_zero_after_enqueue_before_tick ... ok
+test harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_ticks ... ok
+test harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates ... ok
+test harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_ticks ... ok
+test harness_ffi_bridge_pre_tick_queue_len_equals_2_after_2_inbounds_1_oob ... ok
+test harness_ffi_bridge_pre_tick_queue_len_equals_3_after_3_ffi_enqueue_calls ... ok
+test harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline ... ok
+test harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ... ok
+test harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2.rs (target/debug/deps/harness_phase2-5b70400f195ca5bc)
+
+running 18 tests
+test harness_agent_sample_reads_current ... ok
+test harness_influence_update_name ... ok
+test harness_agent_sample_per_agent_tile ... ok
+test harness_building_stamp_tick_interval ... ok
+test harness_building_stamp_priority ... ok
+test harness_influence_update_tick_interval ... ok
+test harness_influence_update_clear_before_swap ... ok
+test harness_influence_update_priority ... ok
+test harness_building_stamp_isolation ... ok
+test harness_agent_sample_oob_ignored ... ok
+test harness_viz_fire_count_20_ticks ... ok
+test harness_viz_priority ... ok
+test harness_viz_tick_interval ... ok
+test harness_register_phase2_count ... ok
+test harness_register_phase2_order ... ok
+test harness_viz_tick_field ... ok
+test harness_viz_warmth_total_danger_peak ... ok
+test harness_phase2_baseline_zero ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_determinism.rs (target/debug/deps/harness_phase2_determinism-062fefbb64f585e3)
+
+running 13 tests
+test harness_det_b5_blocking_cache_lookup_byte_identical ... ok
+test harness_det_b4_stamp_social_aggregate_lod_filter ... ok
+test harness_det_b1_propagate_bfs_byte_identical ... ok
+test harness_det_a3_bss_clamp_oob_deterministic ... ok
+test harness_det_b2_propagate_shadowcast_byte_identical ... ok
+test harness_det_a2_dirty_regions_content_byte_identical ... ok
+test harness_det_a1_queue_fifo_drain_order ... ok
+test harness_det_b6_ec2_source_self_blocking_exempt ... ok
+test harness_det_a4_ius_clear_swap_idempotent_30_ticks ... ok
+test harness_det_a5_viz_digest_tick_boundary_6 ... ok
+test harness_det_b7_ec3_multi_source_additive_vs_max ... ok
+test harness_det_b3_propagate_noise_byte_identical ... ok
+test harness_det_b8_propagate_danger_byte_identical ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_ffi.rs (target/debug/deps/harness_phase2_ffi-a4d5e37507f5e7f0)
+
+running 22 tests
+test harness_ffi_dirty_region_coordinate_bounds_match_input ... ok
+test harness_ffi_all_8_channels_overlay_buffer_length_correct ... ok
+test harness_ffi_isolation_invariant_survives_empty_queue_tick ... ok
+test harness_ffi_all_8_channels_overlay_buffer_zeros_on_fresh_engine ... ok
+test harness_ffi_dirty_regions_all_channels_empty_at_construction ... ok
+test harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bounds ... ok
+test harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break ... ok
+test harness_ffi_no_dirty_regions_accumulate_on_empty_queue_tick ... ok
+test harness_ffi_on_building_placed_inbounds_enqueues_and_returns_true ... ok
+test harness_ffi_non_stamped_channels_produce_zero_dirty_regions ... ok
+test harness_ffi_on_building_placed_oob_does_not_enqueue_and_returns_false ... ok
+test harness_ffi_queue_field_init_empty ... ok
+test harness_ffi_stamp_marks_exactly_beauty_dirty ... ok
+test harness_ffi_stamp_marks_exactly_light_dirty ... ok
+test harness_ffi_radius_zero_produces_single_pixel_dirty_region ... ok
+test harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained ... ok
+test harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions ... ok
+test harness_ffi_stamp_marks_exactly_noise_dirty ... ok
+test harness_ffi_three_events_all_drained_in_single_tick ... ok
+test harness_ffi_tile_detail_all_8_channels_zero_on_fresh_engine ... ok
+test harness_ffi_stamp_marks_exactly_spiritual_dirty ... ok
+test harness_ffi_stamp_marks_exactly_warmth_dirty ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_phase2_substantial.rs (target/debug/deps/harness_phase2_substantial-109f343ecfaad441)
+
+running 15 tests
+test harness_substantial_empty_queue_1tick_all_channels_zero_dirty ... ok
+test harness_substantial_register_phase2_twice_no_panic ... ok
+test harness_substantial_idle_4380_no_systems_all_channels_zero ... ok
+test harness_substantial_dirty_region_bounds_preserved_through_full_pipeline_tick ... ok
+test harness_substantial_causal_chain_queue_drains_and_warmth_dirty_marked ... ok
+test harness_substantial_phase2_shell_current_warmth_zero_inside_stamp_radius ... ok
+test harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipeline ... ok
+test harness_substantial_1k_agents_ais_warmth_all_zero_phase2_baseline ... ok
+test harness_substantial_four_corner_stamps_clamp_no_oob_dirty ... ok
+test harness_substantial_agent_warmth_sentinel_overwritten_to_zero_by_ais ... ok
+test harness_substantial_phase2_shell_pending_all_zero_after_full_pipeline_tick ... ok
+test harness_substantial_dirty_regions_3_events_1_tick_count_3 ... ok
+test harness_substantial_two_events_same_tick_yields_two_dirty_regions_per_stamped_channel ... ok
+test harness_substantial_oob_guard_mixed_5events_3inbounds_dirty3 ... ok
+test harness_substantial_burst_100_events_single_tick_drain ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/harness_t7_10_a_warmth_wiring.rs (target/debug/deps/harness_t7_10_a_warmth_wiring-1f12a4e3225add3e)
+
+running 9 tests
+test harness_t7_10_a_no_event_no_warmth ... ok
+test harness_t7_10_a_gradient_monotone ... ok
+test harness_t7_10_a_max_radius_cutoff ... ok
+test harness_t7_10_a_boundary_at_max_radius ... ok
+test harness_t7_10_a_dirty_regions_drained ... ok
+test harness_t7_10_a_radial_decay_one_step ... ok
+test harness_t7_10_a_other_channels_remain_zero ... ok
+test harness_t7_10_a_source_center_lit ... ok
+test harness_t7_10_a_persistence_across_ticks ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_light_viz_toggle.rs (target/debug/deps/harness_t7_10_b1_light_viz_toggle-240951e4ae6a7e73)
+
+running 6 tests
+[B1-6] PASS: all 7 SPACE-toggle tokens present in world_renderer.gd
+test harness_t7_10_b1_gdscript_toggle_handler_present ... ok
+[B1-2] Light non-zero tiles: 709 (threshold >= 450)
+[B1-4] source=200, max=200, ratio=1.0000 (threshold >= 0.99)
+[B1-1] Warmth non-zero tiles: 313 (threshold >= 300)
+test harness_t7_10_b1_light_channel_non_trivial_concurrent ... ok
+test harness_t7_10_b1_light_source_tile_is_maximum ... ok
+test harness_t7_10_b1_warmth_channel_non_trivial_concurrent ... ok
+[B1-5] max Light beyond d=16: 0 (threshold == 0)
+test harness_t7_10_b1_light_zero_beyond_radius ... ok
+[B1-3] Annular zone (Light > Warmth + margin) tiles: 708 (threshold >= 150), margin=2.00
+test harness_t7_10_b1_light_disc_extends_beyond_warmth ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b1_space_toggle.rs (target/debug/deps/harness_t7_10_b1_space_toggle-f046885e739965e2)
+
+running 6 tests
+test harness_t7_10_b1_initial_channel_is_warmth ... ok
+test harness_t7_10_b1_channel_switched_print_present ... ok
+test harness_t7_10_b1_input_event_guards_present ... ok
+test harness_t7_10_b1_space_keycode_binding_present ... ok
+test harness_t7_10_b1_unhandled_input_handler_present ... ok
+test harness_t7_10_b1_three_state_cycle_assignment_present ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_b_light_shadowcast_wiring.rs (target/debug/deps/harness_t7_10_b_light_shadowcast_wiring-ef6fa25424bf4964)
+
+running 10 tests
+test harness_t7_10_b_no_event_no_light ... ok
+test harness_t7_10_b_falloff_diagonal_euclidean_discriminator ... ok
+test harness_t7_10_b_dirty_regions_drained ... ok
+test harness_t7_10_b_falloff_one_step ... ok
+test harness_t7_10_b_boundary_at_max_radius ... ok
+test harness_t7_10_b_max_radius_cutoff ... ok
+test harness_t7_10_b_other_channels_behavior ... ok
+test harness_t7_10_b_gradient_monotone ... ok
+test harness_t7_10_b_source_center_lit ... ok
+test harness_t7_10_b_persistence_across_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_c_noise_linear_wiring.rs (target/debug/deps/harness_t7_10_c_noise_linear_wiring-8285073baae1eb08)
+
+running 10 tests
+test harness_t7_10_c_no_event_no_noise ... ok
+test harness_t7_10_c_dirty_regions_drained ... ok
+test harness_t7_10_c_gradient_monotone ... ok
+test harness_t7_10_c_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_c_natural_radius_boundary ... ok
+test harness_t7_10_c_other_channels_remain_zero ... ok
+test harness_t7_10_c_linear_one_step_alpha_discriminator ... ok
+test harness_t7_10_c_source_center_lit ... ok
+test harness_t7_10_c_warmth_and_light_regression_guard ... ok
+test harness_t7_10_c_persistence_ten_ticks ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_d_danger_linear_wiring.rs (target/debug/deps/harness_t7_10_d_danger_linear_wiring-a2b62764b924da3e)
+
+running 10 tests
+test harness_t7_10_d_no_event_no_danger ... ok
+test harness_t7_10_d_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_d_sight_radius_cap_boundary ... ok
+test harness_t7_10_d_gradient_monotone ... ok
+test harness_t7_10_d_other_channels_remain_zero ... ok
+test harness_t7_10_d_dirty_regions_drained ... ok
+test harness_t7_10_d_warmth_light_noise_regression_guard ... ok
+test harness_t7_10_d_persistence_ten_ticks ... ok
+test harness_t7_10_d_source_center_lit ... ok
+test harness_t7_10_d_linear_one_step_alpha_discriminator ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_10_e_spiritual_bfs_wiring.rs (target/debug/deps/harness_t7_10_e_spiritual_bfs_wiring-d12aaa85ee022d82)
+
+running 11 tests
+test harness_t7_10_e_no_event_no_spiritual ... ok
+test harness_t7_10_e_exp_decay_one_step_discriminator ... ok
+test harness_t7_10_e_bfs_distance_manhattan_discriminator ... ok
+test harness_t7_10_e_boundary_at_max_radius ... ok
+test harness_t7_10_e_dirty_regions_drained ... ok
+test harness_t7_10_e_other_channels_remain_zero ... ok
+test harness_t7_10_e_gradient_monotone ... ok
+test harness_t7_10_e_max_radius_cutoff ... ok
+test harness_t7_10_e_source_center_lit ... ok
+test harness_t7_10_e_persistence_ten_ticks ... ok
+test harness_t7_10_e_prior_channels_regression_guard ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_a_scaffold.rs (target/debug/deps/harness_t7_9_a_scaffold-acf23fa60df2aa13)
+
+running 7 tests
+A6 PASS: sim_bridge.gdextension identity verified
+  found: gdext_rust_init, 4.1 compat, reloadable, all 3 platform libs
+A5 PASS: scenes/main.tscn scaffold identity verified
+  found: uid=v7init, format=3, WorldSimNode, Camera2D, world_renderer.gd
+test harness_scaffold_gdextension_source_identity ... ok
+A7 PASS: scripts/ui/world_renderer.gd identity verified
+  found: extends Node2D, T7.9.B sentinel print, _process body
+A4 PASS: world_node.rs process() identity verified
+  found: fn process(&mut self, delta: f64) driving self.engine.tick();
+test harness_scaffold_main_tscn_source_identity ... ok
+test harness_scaffold_world_renderer_gd_source_identity ... ok
+test harness_scaffold_world_node_source_process_identity ... ok
+test harness_scaffold_tick_count_zero_on_fresh_engine ... ok
+frame 0: current_tick() = 1
+frame 1: current_tick() = 2
+frame 2: current_tick() = 3
+frame 3: current_tick() = 4
+frame 4: current_tick() = 5
+frame 5: current_tick() = 6
+test harness_scaffold_resources_current_tick_propagated_by_tick ... ok
+frame 6: current_tick() = 7
+frame 7: current_tick() = 8
+frame 8: current_tick() = 9
+frame 9: current_tick() = 10
+test harness_scaffold_process_equivalent_drives_current_tick_to_n ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/harness_t7_9_b_render_mechanism.rs (target/debug/deps/harness_t7_9_b_render_mechanism-2eb60779345142e4)
+
+running 4 tests
+B1 PASS: FIXED_DT = 1/30, MAX_ITERS_PER_FRAME = 5
+B2 PASS: accumulator field, init, += delta, bounded while loop
+B3 PASS: bootstrap, L8 image, Sprite2D, overlay pull, texture.update
+test harness_t7_9_b_world_node_pacing_consts_present ... ok
+B4 PASS: 3 #[func] methods + enqueue_building_placed forwarding intact
+test harness_t7_9_b_world_renderer_render_path_present ... ok
+test harness_t7_9_b_world_node_accumulator_loop_present ... ok
+test harness_t7_9_b_bridge_identity_contract_preserved ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[harness 20:58:53] Harness: all tests PASSED
+[harness 20:58:53] Generator result: /Users/rexxa/github/new-world-wt/lead/.harness/results/t7-10-e-spiritual-bfs-wiring/gen_result_attempt1.md
+[harness progress] 2 Generator A1: DONE — Files: unknown. 
+[harness 20:58:53] === Step 2.5a: VISUAL VERIFY ===
+[harness 20:58:53] Running Godot visual verification (ticks=4380)...
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M4 Max (Apple9)
+
+[harness] V7 harness boot: feature=t7-10-e-spiritual-bfs-wiring ticks=4380
+WorldRenderer ready (T7.9.B render mechanism)
+[harness] main scene instantiated
+[harness] WorldSim node located
+[harness] screenshot saved: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/t7-10-e-spiritual-bfs-wiring/screenshot_tick0000.png
+[harness] screenshot saved: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/t7-10-e-spiritual-bfs-wiring/screenshot_tickFINAL.png
+[harness] harness done (exit=0, elapsed=37598ms)
+[harness 20:59:32] Visual evidence captured to: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/t7-10-e-spiritual-bfs-wiring
+total 184
+drwxr-xr-x@   9 rexxa  staff    288 May 13 20:59 .
+drwxr-xr-x  117 rexxa  staff   3744 May 13 20:38 ..
+-rw-r--r--@   1 rexxa  staff    366 May 13 20:59 console_log.txt
+-rw-r--r--@   1 rexxa  staff    584 May 13 20:59 entity_summary.txt
+-rw-r--r--@   1 rexxa  staff    129 May 13 20:59 manifest.txt
+-rw-r--r--@   1 rexxa  staff    125 May 13 20:59 performance.txt
+-rw-r--r--@   1 rexxa  staff  34532 May 13 20:58 screenshot_tick0000.png
+-rw-r--r--@   1 rexxa  staff  34532 May 13 20:59 screenshot_tickFINAL.png
+-rw-r--r--@   1 rexxa  staff    995 May 13 20:59 visual_checklist_rendered.md
+[harness progress] 2.5a Visual Verify: DONE — 2 screenshots. fps: 116
+[harness 20:59:32] === Step 2.5a-int: VLM INTERACTIVE ===
+[harness 20:59:32] No interactive scenarios defined — skipping
+[harness progress] 2.5a-int VLM Interactive: DONE — SKIPPED (no scenarios)
+[harness 20:59:32] === Step 2.5b: VLM ANALYSIS ===
+[harness 20:59:32] Found 2 screenshots — running VLM analysis
+[harness 20:59:32] Preserving Godot-rendered visual checklist (assertion tokens present)
+[harness 21:00:08] Visual analysis: /Users/rexxa/github/new-world-wt/lead/.harness/evidence/t7-10-e-spiritual-bfs-wiring/visual_analysis.txt
+[harness progress] 2.5b VLM Analysis: DONE — VISUAL_OK. 1. Agents visible: NO — V7 Phase 2 has no agent systems yet 
+[harness 21:00:08] Interactive validator skipped (no interactive_results.json)
+[harness progress] 2.5a-val Interactive Validator: DONE — SKIPPED (no evidence)
+[harness progress] 2.5c FFI Verify (Codex): VACUOUS — sim-bridge unchanged → full FFI credit (v3.3 §6.1)
+[harness 21:00:08] === Step 2.7: REGRESSION GUARD (Codex) ===
+[harness 21:00:08] Running Regression Guard via Codex...
+Step 1: CLEAN. `cargo test --workspace`: 344 passed, 0 failed. New failures above baseline 27: 0.
+
+Step 2: CLEAN. Harness tests: 154 total, 0 failed.
+
+Step 3: SKIP_V7_RESET. `scripts/ui/renderers/` is absent.
+
+Step 4: SKIP_V7_RESET. `scripts/ui/renderers/entity_renderer.gd` is absent.
+
+Step 5: CLEAN. Current T7 FFI evidence reports `ffi_overall: ALL_COMPLETE` with V7 reset skip; older `HAS_BROKEN` evidence is pre-existing technical debt, not newly added broken FFI.
+
+regression_status: CLEAN
+[harness 21:01:38] Regression guard complete
+[harness 21:01:38] Regression guard: CLEAN
+[harness progress] 2.7 Regression Guard (Codex): DONE — CLEAN
+[harness 21:01:38] === Step 3: CODEX EVALUATOR ===
+[harness 21:01:38] Running Codex Evaluator (independent session, attempt 1)...
+## Evaluation: t7-10-e-spiritual-bfs-wiring
+
+### Execution Results (Codex-verified)
+- cargo test --workspace: PASS (344 passed, 0 failed)
+- cargo test -p sim-test harness_: PASS (154 passed, 0 failed)
+- Anti-circular check: PASS — reverting the Spiritual IUS branch would leave `current[Spiritual]` at 0, failing E1/E2/E3/E5/E7.
+- FFI chain check: N/A — no new SimBridge methods; current feature FFI artifact says V7 proxy layer absent/skip.
+
+### Threshold Review
+- Assertion 1 (source_center_lit): OK — `== 200`, observed 200.
+- Assertion 2 (exp_decay_one_step): OK — `[179,183]`, observed 180.
+- Assertion 3 (bfs_distance_manhattan): OK — `[161,165]`, observed 162; harness uses diagonal d=2, which is the stronger Euclidean discriminator.
+- Assertion 4 (gradient_monotone): OK — strict `>` for d=0..14.
+- Assertion 5 (boundary_at_max_radius): OK — `[40,50]`, observed 40.
+- Assertion 6 (max_radius_cutoff): OK — `== 0`, observed 0.
+- Assertion 7 (persistence_ten_ticks): OK — `== 200`, observed 200.
+- Assertion 8 (no_event_no_spiritual): OK — all three samples `== 0`.
+- Assertion 9 (prior_channels_regression_guard): OK — Warmth/Light/Noise/Danger all observed 200.
+- Assertion 10 (dirty_regions_drained): OK — `len == 0`, observed 0.
+- Assertion 11 (other_channels_remain_zero): OK — Beauty/FoodAroma/Social all observed 0.
+
+### Test Validity
+- The harness exercises the full event chain: queued `BuildingPlacedEvent` -> Phase 2 systems -> Spiritual dirty-region drain -> BFS propagation -> swapped current buffer.
+- It is not circular: hollow drain or dispatch-shell-only behavior would pass E10 but fail the Spiritual value assertions.
+
+### Implementation Issues
+- No blocking issues found. Advisory: `rust/crates/sim-core/src/influence/channel.rs:69` still documents Spiritual as `k = 0.08` while the locked T7.10.E path uses `k = 0.10`.
+
+### Gate Status (from YOUR execution)
+- cargo test: PASS (344 passed, 0 failed)
+- clippy: PASS
+- harness regressions: NONE — regression guard reports CLEAN.
+
+### Visual Status
+- visual_verdict: VISUAL_OK
+- Headless visual evidence shows initial Warmth only; Spiritual toggle is covered by source-code/harness checks because SPACE synthesis was not part of the visual run.
+
+### Design Quality
+- Score: ACCEPTABLE
+- Simulation logic remains in Rust; GDScript only toggles rendered channel IDs. No production `.unwrap()` found in the changed path.
+
+### Completeness
+- Part 1 locked Spiritual model: IMPLEMENTED — k=0.10, intensity 200, max_radius 15.
+- Part 2 IUS Spiritual branch: IMPLEMENTED — drain, clear pending, BFS propagate, persistence, skip from shell clear.
+- Part 3 new harness: IMPLEMENTED — 11 assertions present and passing.
+- Part 4 legacy harness updates: IMPLEMENTED — A/B/C/D and Phase 2 guards now account for Spiritual.
+- Part 5 visual toggle: IMPLEMENTED — 5-state cycle includes Spiritual.
+- Part 6 verification evidence: IMPLEMENTED — tests, clippy, regression guard clean.
+
+### Functionality
+- Score: FUNCTIONAL
+- Independent probe observed `source=200`, `d1=180`, `diag=162`, `d15=40`, `d16=0`, and persisted source `200` after 10 idle ticks.
+
+### Overall Assessment
+The feature meets the locked Spiritual BFS wiring spec, and the harness discriminates the new code path from the old dispatch shell. Remaining concern is a non-blocking stale doc comment in `channel.rs`.
+
+verdict: APPROVE
+
+### Issues (machine-parsed — Generator sees ONLY this section on retry)
+None.
+
+### If RE-CODE — Fix These:
+N/A
+
+### If RE-PLAN — Why:
+N/A
+[harness 21:06:59] Codex Evaluator complete
+[harness 21:06:59] Review: /Users/rexxa/github/new-world-wt/lead/.harness/reviews/t7-10-e-spiritual-bfs-wiring/review_attempt1.md
+[harness progress] 3 Evaluator (Codex): DONE — APPROVE. 
+[harness 21:06:59] APPROVED by Evaluator
+[harness 21:06:59] Attempt penalty total: 0 (from PENALTY=0
+EFFECTIVE_ATTEMPTS=0)
+[harness 21:06:59] Pipeline report: /Users/rexxa/github/new-world-wt/lead/.harness/reports/t7-10-e-spiritual-bfs-wiring/pipeline_report.md
+[harness 21:06:59] WARNING: Score 91/100 — ACCEPTABLE but below 95. Pre-commit hook will block.
+
+============================================
+  PIPELINE REPORT — t7-10-e-spiritual-bfs-wiring
+============================================
+# Pipeline Report: t7-10-e-spiritual-bfs-wiring
+
+> Generated: 2026-05-13T12:06:59Z
+> Pipeline: harness v4
+> Mode: --quick
+> Duration: 10m 11s
+> Grade: **B — Acceptable** (91/100)
+
+---
+
+## Score Breakdown
+
+| Category | Score | Max | Detail |
+|----------|:-----:|:---:|--------|
+| Mechanical Gate | 10 | 10 | test 344 passed, clippy clean, FFI OK |
+| Plan Quality | 5 | 5 | auto (--quick mode) |
+| Code Quality | 15 | 15 | APPROVE on attempt 1 |
+| Test Coverage | 20 | 20 | 177 new harness tests |
+| Visual Verify | 11 | 20 | 2 screenshots, VLM OK |
+| Regression | 15 | 15 | CLEAN |
+| Evaluator | 15 | 15 | APPROVE |
+| **TOTAL** | **91** | **100** | **B — Acceptable** |
+
+---
+
+## Process Summary
+
+### Step 0: Mechanical Gate
+PASS: cargo test 344 passed, clippy clean, FFI OK
+
+### Step 1: Planning
+Skipped (--quick mode). 0 assertions planned.
+
+### Step 0b: Locale Check
+PASS (no critical issues)
+
+### Step 2: Implementation
+1 attempt(s).
+
+### Step 2.5: Visual Verification
+2 screenshots captured. VLM: VISUAL_OK.
+
+### Step 2.5c: FFI Chain
+not run
+
+### Step 2.7: Regression Guard
+CLEAN. Gate: ? passed. Harness: ?/?.
+
+### Step 3: Evaluator
+Verdict: **APPROVED**
+The feature meets the locked Spiritual BFS wiring spec, and the harness discriminates the new code path from the old dispatch shell. Remaining concern is a non-blocking stale doc comment in `channel.rs`.  verdict: APPROVE 
+
+---
+
+## Changes
+
+- `.harness/prompts/t7-10-d-danger-linear-wiring.md` (+371/-0)
+- `rust/crates/sim-systems/src/runtime/influence/building_stamp.rs` (+13/-5)
+- `rust/crates/sim-systems/src/runtime/influence/update.rs` (+159/-5)
+- `rust/crates/sim-systems/tests/integration.rs` (+11/-11)
+- `rust/crates/sim-test/tests/harness_next_a_postverify.rs` (+45/-44)
+- `rust/crates/sim-test/tests/harness_phase2.rs` (+11/-10)
+- `rust/crates/sim-test/tests/harness_phase2_ffi.rs` (+19/-17)
+- `rust/crates/sim-test/tests/harness_phase2_substantial.rs` (+62/-11)
+- `rust/crates/sim-test/tests/harness_t7_10_a_warmth_wiring.rs` (+16/-4)
+- `rust/crates/sim-test/tests/harness_t7_10_b_light_shadowcast_wiring.rs` (+20/-6)
+- `rust/crates/sim-test/tests/harness_t7_10_c_noise_linear_wiring.rs` (+26/-13)
+- `rust/crates/sim-test/tests/harness_t7_10_d_danger_linear_wiring.rs` (+309/-0)
+- `scripts/ui/world_renderer.gd` (+15/-1)
+
+
+---
+
+## Performance
+
+| Metric | Value |
+|--------|-------|
+| Pipeline duration | 10m 11s |
+| Workspace tests | 344 passed |
+| New harness tests | 177 |
+| Avg tick (ms) | N/A |
+| Est. TPS | N/A |
+| FPS | 116 |
+============================================
+[harness 21:06:59] ==========================================
+[harness 21:06:59] Pipeline COMPLETE — t7-10-e-spiritual-bfs-wiring approved
+[harness 21:06:59] Plan attempts: 1, Code attempts: 1
+[harness 21:06:59] Suggested commit: feat(t7-10-e-spiritual-bfs-wiring): implementation [harness: plan x1(QC:r0) code x1 eval:APPROVE(codex) visual:OK ffi:SKIP regr:CLEAN]
+[harness 21:06:59] ==========================================

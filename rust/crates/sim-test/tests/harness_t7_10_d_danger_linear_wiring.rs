@@ -274,24 +274,33 @@ fn harness_t7_10_d_dirty_regions_drained() {
     );
 }
 
-// ── Plan D10: other-channels behavior (Spiritual/Beauty stay 0, FoodAroma/Social stay 0)
+// ── Plan D10: other-channels behavior (Beauty stays 0, FoodAroma/Social stay 0)
 
-/// Type A: dispatch-shell stamped channels Spiritual/Beauty sample to 0;
+/// Type A: T7.10.E regression — Spiritual sample == 200 at source;
+/// dispatch-shell stamped channel Beauty samples to 0;
 /// unstamped channels FoodAroma/Social sample to 0.
 ///
-/// T7.10.D wires Warmth+Light+Noise+Danger. The remaining stamped channels
-/// (Spiritual, Beauty) have BSS dirty_regions but IUS does not yet propagate
-/// them. Unstamped channels (FoodAroma, Social) stay completely cold.
+/// T7.10.D wired Warmth+Light+Noise+Danger. T7.10.E additionally wires
+/// Spiritual via BFS exp k=0.10. The remaining stamped channel (Beauty) has
+/// BSS dirty_regions but IUS does not yet propagate it. Unstamped channels
+/// (FoodAroma, Social) stay completely cold.
 #[test]
 fn harness_t7_10_d_other_channels_remain_zero() {
     let mut e = fresh_engine();
     place_danger_source(&mut e);
     e.tick();
-    // Dispatch-shell stamped channels (BSS marks dirty, IUS does NOT propagate yet).
-    for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
-        let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.D (T7.10.E..F wires it); got {v}");
-    }
+    // T7.10.E regression guard: Spiritual now propagates at source center.
+    let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
+    assert_eq!(
+        spiritual, 200,
+        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
+    );
+    // Dispatch-shell stamped channel (BSS marks dirty, IUS does NOT propagate yet).
+    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    assert_eq!(
+        beauty, 0,
+        "Beauty must remain zero at T7.10.E (T7.10.F wires it); got {beauty}"
+    );
     // Unstamped channels (BSS never marks dirty).
     for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {
         let v = e.resources.influence_grid.sample(SX, SY, ch);
