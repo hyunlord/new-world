@@ -1,21 +1,24 @@
 extends Node2D
 
 # WorldRenderer — Node2D child of Main scene.
-# T7.9.B render mechanism: pulls Warmth influence overlay from WorldSim
+# T7.9.B render mechanism: pulls an influence channel overlay from WorldSim
 # and uploads it to a Sprite2D texture every frame.
+# T7.10.B1: SPACE toggles between Warmth (T7.10.A) and Light (T7.10.B) channels
+# so both backend wirings can be confirmed visually in one F6 session.
 #
 # Bootstrap: places one building at (32, 32) radius 8 so the BuildingStamp
-# system has something to drive. Visual will remain mostly black until the
-# Phase 2 propagation wiring (T7.10) lands.
+# system has something to drive. Initial channel = Warmth.
 
 const TILE_SIZE := 16
 const GRID_W := 64
 const GRID_H := 64
 const CHANNEL_WARMTH := 0
+const CHANNEL_LIGHT := 1
 const BOOTSTRAP_X := 32
 const BOOTSTRAP_Y := 32
 const BOOTSTRAP_RADIUS := 8
 
+var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
 var texture: ImageTexture
@@ -36,10 +39,17 @@ func _ready() -> void:
 	sprite.position = Vector2(960, 540)
 	add_child(sprite)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_SPACE:
+			current_channel = CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH else CHANNEL_WARMTH
+			var channel_name := "Light" if current_channel == CHANNEL_LIGHT else "Warmth"
+			print("Channel switched: ", channel_name)
+
 func _process(_delta: float) -> void:
 	if world_sim == null:
 		return
-	var data: PackedByteArray = world_sim.get_influence_overlay(CHANNEL_WARMTH)
+	var data: PackedByteArray = world_sim.get_influence_overlay(current_channel)
 	if data.size() != GRID_W * GRID_H:
 		return
 	image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)

@@ -3,12 +3,13 @@
 ## Fresh-write scoped to the V7 FFI surface (3 methods locked at T7.7.B:
 ## `get_influence_overlay`, `get_tile_detail`, `on_building_placed`).
 ##
-## Phase 2 (current land) is a *dispatch shell only*:
-##   - BuildingStampSystem  writes `dirty_regions` only (NOT pending buffers)
-##   - InfluenceUpdateSystem clears all pending + swaps (NO source iteration)
-## → `current_buf(Warmth)` stays zero. The Warmth overlay is uniformly black.
-## This is the documented Phase 2 invariant (sim-systems/runtime/influence/
-## update.rs:9, building_stamp.rs:9, baseline_remains_zero_after_ticks test).
+## Post-T7.10.A/B (current land): Warmth (BFS) and Light (recursive shadowcast)
+## are wired. After bootstrap `on_building_placed(32, 32, 8)`, `current_buf(Warmth)`
+## and `current_buf(Light)` both contain non-zero discs centred at (32, 32).
+## T7.10.B1 adds a SPACE-key toggle in `world_renderer.gd` so the visible channel
+## flips between Warmth and Light. Initial channel = Warmth, so the first
+## screenshot shows the Warmth disc; the Light disc is asserted via source-token
+## checks (see `harness_t7_10_b1_space_toggle.rs`).
 ##
 ## Usage:
 ##   godot --path . --script scripts/test/harness_visual_verify.gd -- \
@@ -255,9 +256,10 @@ ticks_advanced: %d
 world_sim_found: %s
 get_influence_overlay(Warmth).size: %d (expected 4096 = 64x64)
 get_tile_detail(32, 32).in_bounds: %s (expected true)
-phase_2_invariant: BSS marks dirty_regions only; IUS clear+swap only
-expected_current_buf: all zeros (Phase 2 = dispatch shell, no source iteration)
-expected_visual: 1024x1024 uniformly black (Warmth = 0 everywhere)
+t7_10_state: Warmth BFS + Light shadowcast wired (channels 0 and 1)
+expected_current_buf: Warmth and Light non-zero discs centred at (32, 32)
+expected_visual: Warmth disc visible (initial channel); SPACE toggle reveals Light
+t7_10_b1_toggle: SPACE-key channel switch in scripts/ui/world_renderer.gd
 agents_active: 0 (V7 Phase 2 -- no agent systems yet)
 """ % [_feature, _frames_done, str(ok_ffi), overlay_size, str(detail_in_bounds)]
 	_write_file("entity_summary.txt", body)
@@ -336,13 +338,16 @@ func _write_visual_checklist() -> void:
 ## Assertion 4: get_influence_overlay returns 4096 bytes (64x64 L8)
 %s
 
-## Phase 2 visual expectation
-The 1024x1024 sprite is uniformly black. This matches the Phase 2 dispatch-
-shell invariant: BuildingStampSystem writes dirty_regions only (not pending
-buffers); InfluenceUpdateSystem clears + swaps with no source iteration.
-A warmth disc near (32, 32) is NOT expected at this milestone -- it lands
-with T7.10 propagation wiring. Render mechanism milestone = pixels uploaded,
-not pixels lit.
+## Post-T7.10.A/B visual expectation
+The 1024x1024 sprite shows the Warmth disc centred at (32, 32) on the first
+screenshot (initial channel = CHANNEL_WARMTH). After the T7.10.B1 SPACE-key
+toggle in `scripts/ui/world_renderer.gd`, the visible channel flips to Light;
+both buffers are non-zero by virtue of T7.10.A (BFS) and T7.10.B (shadowcast)
+propagation. The headless harness cannot synthesise the SPACE key press, so
+Light state is asserted via source-token checks in
+`harness_t7_10_b1_space_toggle.rs`. The toggle path itself
+(`_unhandled_input`, `KEY_SPACE`, `not event.echo`, two-state assignment, and
+the `Channel switched:` print) is anti-circular-guarded by source assertions.
 
 %s
 """ % [_feature, a1, a2, a3, a4, verdict]

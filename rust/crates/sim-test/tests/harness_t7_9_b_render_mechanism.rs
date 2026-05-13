@@ -123,10 +123,24 @@ fn harness_t7_9_b_world_renderer_render_path_present() {
         src.contains("Sprite2D.new()"),
         "world_renderer.gd must instantiate `Sprite2D.new()` as the texture host"
     );
+    // T7.10.B1: _process now pulls a mutable `current_channel` so SPACE can
+    // toggle between Warmth (T7.10.A) and Light (T7.10.B). Initial state
+    // `current_channel: int = CHANNEL_WARMTH` preserves T7.9.B/T7.10.A baseline
+    // (Warmth disc on first frame), and the CHANNEL_LIGHT constant must exist.
     assert!(
-        src.contains("get_influence_overlay(CHANNEL_WARMTH)"),
+        src.contains("get_influence_overlay(current_channel)"),
         "world_renderer.gd _process must call \
-         `world_sim.get_influence_overlay(CHANNEL_WARMTH)`"
+         `world_sim.get_influence_overlay(current_channel)` (T7.10.B1 toggle)"
+    );
+    assert!(
+        src.contains("current_channel: int = CHANNEL_WARMTH"),
+        "world_renderer.gd must initialise `current_channel: int = CHANNEL_WARMTH` \
+         so the first visible frame matches the T7.10.A Warmth baseline"
+    );
+    assert!(
+        src.contains("CHANNEL_LIGHT := 1"),
+        "world_renderer.gd must declare `CHANNEL_LIGHT := 1` for the toggle target \
+         (Light = InfluenceChannel index 1)"
     );
     assert!(
         src.contains("texture.update(image)"),
