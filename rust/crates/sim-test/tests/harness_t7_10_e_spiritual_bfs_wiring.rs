@@ -286,24 +286,20 @@ fn harness_t7_10_e_dirty_regions_drained() {
     );
 }
 
-// ── Plan E11: other-channels behavior (Beauty stays 0, FoodAroma/Social stay 0)
+// ── Plan E11: other-channels behavior (Beauty propagates post-T7.10.F, FoodAroma/Social stay 0)
 
-/// Type A: dispatch-shell stamped channel Beauty samples to 0; unstamped
+/// Type A: Beauty propagates at source (T7.10.F regression guard); unstamped
 /// channels FoodAroma/Social sample to 0.
-///
-/// T7.10.E wires Warmth+Light+Noise+Danger+Spiritual. The remaining stamped
-/// channel (Beauty) has BSS dirty_regions but IUS does not yet propagate it
-/// (T7.10.F will). Unstamped channels (FoodAroma, Social) stay completely cold.
 #[test]
 fn harness_t7_10_e_other_channels_remain_zero() {
     let mut e = fresh_engine();
     place_spiritual_source(&mut e);
     e.tick();
-    // Dispatch-shell stamped channel (BSS marks dirty, IUS does NOT propagate yet).
+    // T7.10.F regression guard: Beauty now propagates at source center.
     let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
-        beauty, 0,
-        "Beauty must remain zero at T7.10.E (T7.10.F wires it); got {beauty}"
+        beauty, 200,
+        "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
     );
     // Unstamped channels (BSS never marks dirty).
     for ch in [InfluenceChannel::FoodAroma, InfluenceChannel::Social] {

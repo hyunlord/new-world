@@ -13,6 +13,11 @@ extends Node2D
 # T7.10.E: cycle extended to include Spiritual (BFS exponential k=0.10) —
 # SPACE cycles Warmth → Light → Noise → Danger → Spiritual → Warmth so all
 # five backend wirings can be confirmed visually in one F6 session.
+# T7.10.F: cycle extended to include Beauty (BFS exponential k=0.12) —
+# SPACE cycles Warmth → Light → Noise → Danger → Spiritual → Beauty → Warmth
+# so all six stamped-channel backend wirings can be confirmed visually in
+# one F6 session. T7.10.F completes the Phase 2 stamped-channel
+# dispatch-shell escape (6/6 stamped channels wired).
 #
 # Bootstrap: places one building at (32, 32) radius 8 so the BuildingStamp
 # system has something to drive. Initial channel = Warmth.
@@ -25,6 +30,7 @@ const CHANNEL_LIGHT := 1
 const CHANNEL_NOISE := 2
 const CHANNEL_DANGER := 4
 const CHANNEL_SPIRITUAL := 6
+const CHANNEL_BEAUTY := 7
 const BOOTSTRAP_X := 32
 const BOOTSTRAP_Y := 32
 const BOOTSTRAP_RADIUS := 8
@@ -53,7 +59,7 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_SPACE:
-			# T7.10.E: 5-state cycle Warmth → Light → Noise → Danger → Spiritual → Warmth.
+			# T7.10.F: 6-state cycle Warmth → Light → Noise → Danger → Spiritual → Beauty → Warmth.
 			var channel_name: String
 			if current_channel == CHANNEL_WARMTH:
 				current_channel = CHANNEL_LIGHT
@@ -67,6 +73,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif current_channel == CHANNEL_DANGER:
 				current_channel = CHANNEL_SPIRITUAL
 				channel_name = "Spiritual"
+			elif current_channel == CHANNEL_SPIRITUAL:
+				current_channel = CHANNEL_BEAUTY
+				channel_name = "Beauty"
 			else:
 				current_channel = CHANNEL_WARMTH
 				channel_name = "Warmth"

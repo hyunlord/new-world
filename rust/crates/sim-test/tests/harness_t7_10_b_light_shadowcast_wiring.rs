@@ -247,14 +247,14 @@ fn harness_t7_10_b_other_channels_behavior() {
         "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
     );
 
-    // Dispatch-shell stamped channel (BSS marks dirty, IUS does NOT propagate yet).
+    // T7.10.F regression guard: Beauty now propagates at source center.
     let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
     assert_eq!(
-        beauty, 0,
-        "Beauty must remain zero at T7.10.E (T7.10.F wires it); got {beauty}"
+        beauty, 200,
+        "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
     );
 
-    // Unstamped channels (BSS never marks dirty).
+    // Unstamped channels (BSS never marks dirty) — only 2 remain post-T7.10.F.
     for ch in [
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,

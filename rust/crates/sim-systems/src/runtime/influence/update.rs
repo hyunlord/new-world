@@ -53,8 +53,18 @@
 //! is Max (`InfluenceChannel::Spiritual.aggregation()`); applied inside
 //! `propagate_bfs`.
 //!
-//! Other 3 channels remain dispatch-shell (clear pending + swap) and
-//! will be wired in T7.10.F.
+//! T7.10.F land: Beauty channel wired via BFS exponential decay
+//! (`propagate_bfs` with k=0.12 — locked at channel.rs:74 Phase 0 spec).
+//! BSS already marks `dirty_regions[Beauty]` (Beauty was in STAMPED_CHANNELS
+//! since T7.10.A; only IUS wiring was missing). IUS drains and propagates
+//! Beauty each tick. Beauty is Cold-tier (channel.rs Tier::Cold, parity with
+//! Warmth/Spiritual). With T7.10.F all 6 stamped channels (Warmth, Light,
+//! Noise, Danger, Spiritual, Beauty) are wired — the Phase 2 stamped-channel
+//! dispatch-shell escape is complete. Only the 2 unstamped channels
+//! (FoodAroma, Social) remain on the dispatch shell.
+//!
+//! FoodAroma + Social are unstamped (no BSS dirty marking) and remain in
+//! the dispatch-shell baseline (clear pending → swap → zero).
 //!
 //! Warmth: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
 //! Warmth max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
@@ -95,6 +105,15 @@
 //! Spiritual aggregation: Max.
 //! Wall blocking: density-derived via `MaterialBlockingCache` (4-neighbor BFS,
 //! same path as Warmth/Noise).
+//!
+//! Beauty: BFS exponential `intensity * exp(-k)` per step, k = 0.12
+//! (channel.rs:74 Phase 0 spec — between Warmth's 0.15 and Spiritual's 0.10,
+//! aesthetic appreciation reaches moderate distance).
+//! Beauty initial intensity: 200 (parity with all other channels).
+//! Beauty max radius: 15 (Spiritual parity, Cold-tier reach archetype).
+//! Beauty aggregation: Max.
+//! Wall blocking: density-derived via `MaterialBlockingCache` (4-neighbor BFS,
+//! same path as Warmth/Noise/Spiritual).
 
 use hecs::World;
 use sim_core::influence::{
@@ -162,6 +181,21 @@ const SPIRITUAL_INITIAL_INTENSITY: u8 = 200;
 /// archetype (parity with Light's 15-tile FOV reach).
 const SPIRITUAL_MAX_RADIUS: u32 = 15;
 
+/// `exp(-0.12)` — beauty exponential decay per BFS step.
+///
+/// Pre-computed: Rust does not const-eval `f32::exp` in stable.
+/// k = 0.12 (channel.rs:74 Phase 0 spec — between Warmth's 0.15 and
+/// Spiritual's 0.10).
+const BEAUTY_DECAY_PER_STEP: f32 = 0.886_920;
+
+/// Initial intensity at the Beauty source tile.
+const BEAUTY_INITIAL_INTENSITY: u8 = 200;
+
+/// Beauty propagation radius in tiles.
+///
+/// 15 = Spiritual parity (Cold-tier reach archetype, longer than Warmth's 12).
+const BEAUTY_MAX_RADIUS: u32 = 15;
+
 /// Phase 2 influence update dispatcher — T7.10.A: Warmth channel wired.
 pub struct InfluenceUpdateSystem;
 
@@ -197,6 +231,7 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         let noise_idx = InfluenceChannel::Noise as usize;
         let danger_idx = InfluenceChannel::Danger as usize;
         let spiritual_idx = InfluenceChannel::Spiritual as usize;
+        let beauty_idx = InfluenceChannel::Beauty as usize;
 
         // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
@@ -405,14 +440,59 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 .copy_from_slice(&spiritual_snapshot);
         }
 
-        // Other 3 channels: dispatch-shell baseline (clear pending → swap → zero).
-        // They will be wired individually in T7.10.F.
+        // ── Beauty branch (T7.10.F) ──────────────────────────────────────────
+        // Drain Beauty dirty regions left by BSS (Beauty was in STAMPED_CHANNELS
+        // since T7.10.A; only IUS propagation was missing).
+        let beauty_dirty =
+            std::mem::take(&mut resources.influence_grid.dirty_regions[beauty_idx]);
+
+        if !beauty_dirty.is_empty() {
+            // Fresh BFS exponential pass: clear pending[Beauty] so multiple
+            // sources accumulate (Max aggregation) onto a clean slate.
+            resources.influence_grid.clear_pending(InfluenceChannel::Beauty);
+
+            for region in &beauty_dirty {
+                let cx = (region.min_x + region.max_x) / 2;
+                let cy = (region.min_y + region.max_y) / 2;
+
+                let tile_grid = &resources.tile_grid;
+                let blocking_cache = &resources.material_blocking_cache;
+                let pending = resources
+                    .influence_grid
+                    .pending_buf_mut(InfluenceChannel::Beauty);
+
+                propagate_bfs(
+                    tile_grid,
+                    blocking_cache,
+                    pending,
+                    (cx, cy),
+                    BEAUTY_INITIAL_INTENSITY,
+                    |i, _| i * BEAUTY_DECAY_PER_STEP,
+                    InfluenceChannel::Beauty,
+                    BEAUTY_MAX_RADIUS,
+                );
+            }
+        } else {
+            // Cold-tier persistence (T7.10.F, parity with Warmth/Spiritual): copy
+            // current[Beauty] → pending[Beauty] so the swap is a no-op for Beauty
+            // on event-less ticks.
+            let beauty_snapshot =
+                resources.influence_grid.current[beauty_idx].clone();
+            resources.influence_grid.pending[beauty_idx]
+                .copy_from_slice(&beauty_snapshot);
+        }
+
+        // Remaining 2 unstamped channels (FoodAroma, Social): dispatch-shell
+        // baseline (clear pending → swap → zero). With T7.10.F all 6 stamped
+        // channels are wired; these unstamped channels stay cold until later
+        // V7 phases wire agent-driven sources.
         for ch in InfluenceChannel::all() {
             if *ch != InfluenceChannel::Warmth
                 && *ch != InfluenceChannel::Light
                 && *ch != InfluenceChannel::Noise
                 && *ch != InfluenceChannel::Danger
                 && *ch != InfluenceChannel::Spiritual
+                && *ch != InfluenceChannel::Beauty
             {
                 resources.influence_grid.clear_pending(*ch);
             }

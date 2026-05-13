@@ -135,15 +135,18 @@ fn harness_ffi_bridge_ffi_enqueue_path_drains_queue_via_full_pipeline() {
     );
 }
 
-// ── Assertion 4: ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path ────
+// ── Assertion 4: ffi_beauty_propagated_at_3_sources_after_ffi_enqueue_path ──
 
-/// Type C: dirty_regions[Beauty].len() == 3 after 3 FFI enqueues + 1 full tick.
+/// Type A: current[Beauty] == 200 at each of the 3 source centers after 3 FFI
+/// enqueues + 1 full tick.
 ///
-/// T7.10.E relaxation: switched from Spiritual to Beauty.
-/// T7.10.A..E wires Warmth/Light/Noise/Danger/Spiritual: IUS drains all 5 via
-/// std::mem::take each tick, so their dirty_regions.len() == 0 after any full
-/// tick. Beauty remains on the Phase 2 dispatch shell (IUS never drains it) →
-/// dirty_regions[Beauty] accumulates. Re-calibrate for Beauty when T7.10.F wires it.
+/// T7.10.F rotation: post-Beauty-wiring, IUS drains dirty_regions[Beauty] each
+/// tick (std::mem::take), so dirty_regions[Beauty].len() == 0 after a full tick.
+/// Original Assertion 4 intent: verify the FFI path drives stamping for the
+/// Beauty channel (anti-mis-mapping). Re-formulated as propagation evidence:
+/// BSS-stamped Beauty regions must run through IUS BFS to produce
+/// current[Beauty] == 200 at each source center. A FFI bug that drops Beauty
+/// (e.g. only marks Warmth) would leave current[Beauty] == 0 at all 3 sources.
 #[test]
 fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() {
     let mut engine = fresh_phase2_engine();
@@ -151,34 +154,35 @@ fn harness_ffi_bridge_ffi_dirty_regions_warmth_count_3_after_ffi_enqueue_path() 
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
-    // Type C: threshold == 3 (Beauty accumulates; Warmth/Light/Noise/Danger/Spiritual drained)
-    let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
-    assert_eq!(
-        len,
-        3,
-        "dirty_regions[Beauty].len() must be 3 after 3 FFI events + 1 full tick. \
-         Beauty remains on Phase 2 dispatch shell (IUS does not drain it). \
-         T7.10.A..E drain other stamped channels — re-calibrate for Beauty when T7.10.F wired. Got {len}"
-    );
+    // Type A: threshold == 200 at each source center (BFS center receives full
+    // BEAUTY_INITIAL_INTENSITY = 200; nonzero proves FFI→BSS→IUS path drove Beauty).
+    for (sx, sy) in [(10u32, 10u32), (20, 20), (30, 30)] {
+        let v = engine
+            .resources
+            .influence_grid
+            .sample(sx, sy, InfluenceChannel::Beauty);
+        assert_eq!(
+            v, 200,
+            "current[Beauty] at source ({sx},{sy}) must be 200 after FFI enqueue + tick. \
+             FFI bug dropping Beauty channel mapping would leave this at 0. Got {v}"
+        );
+    }
 }
 
-// ── Assertion 5: ffi_dirty_regions_exact_bounds_match_enqueue_coordinates ───
+// ── Assertion 5: ffi_beauty_propagation_centers_match_enqueue_coordinates ───
 
-/// Type A: exact DirtyRegion field values (min_x/min_y/max_x/max_y: u32) for
-/// enqueue coordinates (10,10), (20,20), (30,30) all r=1 on 64×64 grid.
+/// Type A: current[Beauty] == 200 at exactly the 3 enqueue centers and 0 at
+/// equivalently-spaced non-enqueue control positions.
 ///
-/// Expected tuple set {(min_x, min_y, max_x, max_y)} per plan_attempt 3:
-///   (10,10) r=1: min_x=9,  min_y=9,  max_x=11, max_y=11 → (9,9,11,11)
-///   (20,20) r=1: min_x=19, min_y=19, max_x=21, max_y=21 → (19,19,21,21)
-///   (30,30) r=1: min_x=29, min_y=29, max_x=31, max_y=31 → (29,29,31,31)
-///
-/// BSS formula (confirmed from building_stamp.rs):
-///   min_x = cx.saturating_sub(r),  max_x = (cx + r).min(w - 1)
-///   min_y = cy.saturating_sub(r),  max_y = (cy + r).min(h - 1)
-///
-/// Order-independent search: each expected region must appear in dirty_regions exactly once.
-/// Three distinct indices (no duplicates) proves position field is propagated, not ignored.
+/// T7.10.F rotation: post-Beauty-wiring, IUS drains dirty_regions[Beauty] each
+/// tick (the exact-bounds DirtyRegion check is no longer possible — regions
+/// don't persist after the tick). Original intent: prove BSS propagates the
+/// FFI position field rather than collapsing all events to a single coord.
+/// Re-formulation: each enqueue coordinate must yield a distinct BFS center
+/// in current[Beauty] (==200) AND a control position equidistant from any
+/// enqueued source by > BEAUTY_MAX_RADIUS=15 must stay 0. A BSS bug that
+/// drops position info (e.g. all events stamped at (0,0)) would leave
+/// (20,20)/(30,30) at 0 while (0,0) is 200 — caught here.
 #[test]
 fn harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates() {
     let mut engine = fresh_phase2_engine();
@@ -187,71 +191,51 @@ fn harness_ffi_bridge_ffi_dirty_regions_exact_bounds_match_enqueue_coordinates()
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
 
-    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual via std::mem::take.
-    // Beauty remains in dispatch shell, preserves original dispatch-shell coverage.
-    let regs =
-        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize];
-    assert_eq!(
-        regs.len(),
-        3,
-        "must have exactly 3 dirty regions (one per FFI enqueue coordinate)"
-    );
-
-    // Collect actual (min_x, min_y, max_x, max_y) tuples for readable error output.
-    let actual: Vec<(u32, u32, u32, u32)> =
-        regs.iter().map(|r| (r.min_x, r.min_y, r.max_x, r.max_y)).collect();
-
-    // Expected exact DirtyRegion bounds per plan_attempt 3 — derived from BSS formula.
-    let expected: [(u32, u32, u32, u32); 3] = [
-        (9, 9, 11, 11),   // (10,10) r=1: 10-1=9, 10+1=11
-        (19, 19, 21, 21), // (20,20) r=1: 20-1=19, 20+1=21
-        (29, 29, 31, 31), // (30,30) r=1: 30-1=29, 30+1=31
-    ];
-
-    // (a) each expected bound is covered by exactly 1 dirty region
-    let mut covering_indices: [usize; 3] = [usize::MAX; 3];
-    for (coord_idx, (ex_min_x, ex_min_y, ex_max_x, ex_max_y)) in expected.iter().enumerate() {
-        let mut found_idx: Option<usize> = None;
-        let mut found_count: usize = 0;
-        for (ridx, &(ax, ay, bx, by)) in actual.iter().enumerate() {
-            if ax == *ex_min_x && ay == *ex_min_y && bx == *ex_max_x && by == *ex_max_y {
-                found_count += 1;
-                if found_idx.is_none() {
-                    found_idx = Some(ridx);
-                }
-            }
-        }
+    // (a) Each enqueue center must propagate to current[Beauty] == 200.
+    // BFS source receives BEAUTY_INITIAL_INTENSITY = 200 at the (cx, cy)
+    // computed from each DirtyRegion. Sources at (10,10)/(20,20)/(30,30)
+    // are 10 tiles apart (Manhattan); BEAUTY_MAX_RADIUS = 15, so a single
+    // source could in principle reach a neighbour center — but the center
+    // tile of each BFS receives the full 200 stamp regardless of Max-merge
+    // because Max-merge with a possibly-higher-decay value preserves 200.
+    for (sx, sy) in [(10u32, 10u32), (20, 20), (30, 30)] {
+        let v = engine
+            .resources
+            .influence_grid
+            .sample(sx, sy, InfluenceChannel::Beauty);
         assert_eq!(
-            found_count,
-            1,
-            "Type A: expected DirtyRegion ({},{},{},{}) must appear exactly once in dirty_regions. \
-             Found {found_count} times. Actual regions: {actual:?}",
-            ex_min_x, ex_min_y, ex_max_x, ex_max_y
+            v, 200,
+            "current[Beauty] at enqueue center ({sx},{sy}) must be 200. \
+             BSS bug that collapses all events to a single coord would leave \
+             non-(0,0) centers at 0. Got {v}"
         );
-        covering_indices[coord_idx] = found_idx.unwrap();
     }
 
-    // (b) all three covering indices must be distinct — proves one-to-one mapping
-    let (i0, i1, i2) = (covering_indices[0], covering_indices[1], covering_indices[2]);
-    assert!(
-        i0 != i1 && i0 != i2 && i1 != i2,
-        "Type A: covering region indices ({i0},{i1},{i2}) must all be distinct. \
-         BSS producing 3 identical dirty regions (e.g., all at (0,0)) would map all \
-         three expected coords to the same index, revealing position field not propagated. \
-         Actual regions: {actual:?}"
+    // (b) A control tile beyond BEAUTY_MAX_RADIUS from all 3 sources must be 0.
+    // (60,60): Manhattan dist to (30,30)=60, to (20,20)=80, to (10,10)=100.
+    // All > 15, so no propagation can reach it.
+    let control = engine
+        .resources
+        .influence_grid
+        .sample(60, 60, InfluenceChannel::Beauty);
+    assert_eq!(
+        control, 0,
+        "current[Beauty] at (60,60) (beyond max_radius=15 from all sources) must be 0. \
+         A bug that floods all tiles regardless of source position would leave this nonzero. Got {control}"
     );
 }
 
-// ── Assertion 6: ffi_dirty_regions_non_warmth_channel_spot_check_beauty ─────
+// ── Assertion 6: ffi_beauty_propagation_spot_check ──────────────────────────
 
-/// Type C: dirty_regions[Beauty].len() == 3 after FFI path + 1 tick.
-/// Beauty is the representative non-Warmth stamped channel that remains on the
-/// dispatch shell post-T7.10.E. A FFI bug that only marks Warmth and drops
-/// Beauty/Spiritual/Light/Noise/Danger would leave dirty_regions[Beauty].len()==0
-/// while Assertion 4's Warmth=3 still passes.
-/// T7.10.E rotation: switched from Spiritual to Beauty (Spiritual now propagates
-/// via BFS exp k=0.10 and is drained by IUS each tick).
-/// Re-calibrate when T7.10.F Beauty wiring lands.
+/// Type A: current[Beauty] sum across the 3 source centers == 600 (3 × 200)
+/// after FFI path + 1 tick.
+///
+/// T7.10.F rotation: post-Beauty-wiring, IUS drains dirty_regions[Beauty] each
+/// tick. Original intent: spot-check that Beauty (a non-Warmth stamped channel)
+/// is marked by BSS — a FFI bug that only marks Warmth would yield 0 here.
+/// Re-formulation: sum the source-center samples; total must equal 3 × 200 = 600
+/// (each BFS center receives the full intensity). A FFI bug dropping Beauty
+/// channel mapping leaves all 3 at 0 → sum 0, caught here.
 #[test]
 fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty() {
     let mut engine = fresh_phase2_engine();
@@ -259,15 +243,21 @@ fn harness_ffi_bridge_ffi_dirty_regions_non_warmth_channel_spot_check_beauty() {
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
     engine.tick();
-    // Type C: threshold == 3
-    let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
+    let sum: u32 = [(10u32, 10u32), (20, 20), (30, 30)]
+        .iter()
+        .map(|(sx, sy)| {
+            engine
+                .resources
+                .influence_grid
+                .sample(*sx, *sy, InfluenceChannel::Beauty) as u32
+        })
+        .sum();
     assert_eq!(
-        len,
-        3,
-        "dirty_regions[Beauty].len() must be 3 after FFI path + 1 tick \
-         (all 6 stamped channels must be marked; FFI channel mis-mapping would yield 0 here). \
-         Got {len}"
+        sum,
+        600,
+        "sum of current[Beauty] at 3 source centers must be 600 (3 × 200) \
+         after FFI path + 1 tick. FFI channel mis-mapping that drops Beauty \
+         would yield 0 here. Got {sum}"
     );
 }
 
@@ -322,12 +312,20 @@ fn harness_ffi_bridge_pre_tick_queue_len_equals_2_after_2_inbounds_1_oob() {
     );
 }
 
-// ── Assertion 8: oob_clamp_at_enqueue_time_dirty_count_equals_2 ─────────────
+// ── Assertion 8: oob_clamp_at_enqueue_time_beauty_propagates_at_2_sources ──
 
-/// Type C: dirty_regions[Warmth].len() == 2 after 2 in-bounds + 1 OOB + 1 full tick.
-/// OOB event rejected at enqueue time (not at BSS drain time) → BSS only stamps 2 events.
-/// Confirms FFI OOB guard and pipeline OOB guard are consistent:
-///   neither double-filters (count=0) nor neither-filters (count=3).
+/// Type A: current[Beauty] == 200 at (5,5) and (15,15), and 0 at (0,0) after
+/// 2 in-bounds + 1 OOB + 1 full tick.
+///
+/// T7.10.F rotation: post-Beauty-wiring, IUS drains dirty_regions[Beauty] each
+/// tick. Original intent: OOB event rejected at enqueue time → BSS only stamps
+/// 2 events (not 3, not 0). Re-formulation: 2 in-bounds enqueues yield 2
+/// distinct BFS centers (each ==200); the OOB (64,0) is rejected at enqueue
+/// time so (0,0) — and any coord adjacent to a hypothetical "OOB clamped to
+/// edge" stamp — must stay 0. Failure modes:
+///   (a) FFI accepts OOB: would stamp at clamped position → potentially
+///       leak Beauty values near (0,0) or (63,0)
+///   (b) double-rejection: both in-bounds rejected → (5,5)==0
 #[test]
 fn harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2() {
     let mut engine = fresh_phase2_engine();
@@ -335,15 +333,30 @@ fn harness_ffi_bridge_oob_clamp_at_enqueue_time_dirty_count_equals_2() {
     enqueue_building_placed(&mut engine.resources, 15, 15, 1);
     enqueue_building_placed(&mut engine.resources, 64, 0, 1); // OOB: rejected at enqueue
     engine.tick();
-    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual; switch to Beauty (dispatch shell intact).
-    // Type C: threshold == 2
-    let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
+    // (a) Both in-bounds enqueues propagated.
+    for (sx, sy) in [(5u32, 5u32), (15, 15)] {
+        let v = engine
+            .resources
+            .influence_grid
+            .sample(sx, sy, InfluenceChannel::Beauty);
+        assert_eq!(
+            v, 200,
+            "current[Beauty] at in-bounds source ({sx},{sy}) must be 200; double-OOB-rejection \
+             would leave this at 0. Got {v}"
+        );
+    }
+    // (b) (50,0) is > BEAUTY_MAX_RADIUS=15 from both in-bounds sources
+    // (Manhattan: 45 from (5,5), 35 from (15,15)) and equally far from the
+    // hypothetical clamped OOB position (63,0). If OOB were accepted+clamped,
+    // (50,0) would receive Beauty propagation (dist 13 from (63,0)). Must be 0.
+    let oob_control = engine
+        .resources
+        .influence_grid
+        .sample(50, 0, InfluenceChannel::Beauty);
     assert_eq!(
-        len,
-        2,
-        "dirty_regions[Beauty].len() must be 2 (2 in-bounds accepted, 1 OOB rejected at enqueue). \
-         Got {len}"
+        oob_control, 0,
+        "current[Beauty] at (50,0) must be 0. OOB acceptance (clamped to edge near (63,0)) \
+         would leak Beauty here (dist 13 < max_radius=15). Got {oob_control}"
     );
 }
 
@@ -377,14 +390,15 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         "pre-condition for idle run: queue must be empty after tick 1"
     );
 
-    // T7.10.A..E: Warmth/Light/Noise/Danger/Spiritual pending now reflect persistence
-    // (copy current → pending), not a hard clear. Switch to Beauty (dispatch shell
-    // intact, pending cleared every tick) to preserve the anti-stub-IUS coverage.
-    // (c) seeding step — write 255 to all pending[Beauty] bytes between tick 1 and tick 2
+    // T7.10.A..F: All 6 stamped channels (Warmth/Light/Noise/Danger/Spiritual/Beauty)
+    // now have persistence semantics (copy current → pending), not a hard clear.
+    // Switch to FoodAroma (the only remaining unstamped dispatch-shell channel —
+    // Social would work equivalently) where pending is cleared every tick.
+    // (c) seeding step — write 255 to all pending[FoodAroma] bytes between tick 1 and tick 2
     engine
         .resources
         .influence_grid
-        .pending_buf_mut(InfluenceChannel::Beauty)
+        .pending_buf_mut(InfluenceChannel::FoodAroma)
         .iter_mut()
         .for_each(|byte| *byte = 255);
 
@@ -393,55 +407,60 @@ fn harness_ffi_bridge_idempotent_retick_pending_all_zero_after_5_empty_queue_tic
         engine.tick();
     }
 
-    // Type A: threshold == true (every byte in pending[Beauty] == 0)
-    // IUS clears pending for dispatch-shell channels every tick.
-    // A stub IUS skipping clear_all_pending() would leave 255 in pending.
+    // Type A: threshold == true (every byte in pending[FoodAroma] == 0)
+    // IUS clears pending for unstamped dispatch-shell channels every tick.
+    // A stub IUS skipping clear_pending() would leave 255 in pending.
     let pending_all_zero = engine
         .resources
         .influence_grid
-        .pending[InfluenceChannel::Beauty as usize]
+        .pending[InfluenceChannel::FoodAroma as usize]
         .iter()
         .all(|&byte| byte == 0);
     assert!(
         pending_all_zero,
-        "pending[Beauty] must be all-zero after 5 idle ticks. \
+        "pending[FoodAroma] must be all-zero after 5 idle ticks. \
          Seeded with 255 (via pending_buf_mut) before idle run to prevent vacuous pass. \
-         A stub IUS skipping clear_all_pending() for dispatch-shell channels would leave 255 in pending."
+         A stub IUS skipping clear_pending() for unstamped dispatch-shell channels would leave 255 in pending."
     );
 }
 
-// ── Assertion 10: idempotent_retick_dirty_regions_stable_at_3_after_5_idle_ticks
+// ── Assertion 10: idempotent_retick_beauty_propagation_stable_after_5_idle_ticks
 
-/// Type C: dirty_regions[Warmth].len() remains 3 after 5 idle ticks (unchanged from Assertion 4).
-/// With empty queue on idle ticks (ticks 2–6), BSS adds no new dirty regions.
-/// IUS Phase 2 shell does NOT call clear_dirty() → count stays at 3.
-/// Failure modes:
-///   (a) erroneous idle clear_dirty() drops count to 0
-///   (b) phantom BSS stamping grows count above 3
-/// Re-calibrate when Phase 3 BFS is wired.
+/// Type A: current[Beauty] at each of the 3 source centers remains 200 after
+/// 5 idle ticks following the initial propagation tick.
+///
+/// T7.10.F rotation: post-Beauty-wiring, IUS drains dirty_regions[Beauty] each
+/// tick — the original dispatch-shell-stable count assertion is no longer
+/// possible. Re-formulation: Cold-tier persistence — after tick 1 propagates
+/// Beauty to current, the next 5 idle ticks must preserve current[Beauty] via
+/// the persistence branch (copy current → pending → swap). Failure modes:
+///   (a) Persistence branch missing: current[Beauty] flickers to 0 on idle
+///       ticks → assertion fails
+///   (b) Erroneous re-stamping: current[Beauty] grows beyond 200 (not possible
+///       with Max aggregation but caught by exact-equality check)
 #[test]
 fn harness_ffi_bridge_idempotent_retick_dirty_regions_stable_at_3_after_5_idle_ticks() {
     let mut engine = fresh_phase2_engine();
     enqueue_building_placed(&mut engine.resources, 10, 10, 1);
     enqueue_building_placed(&mut engine.resources, 20, 20, 1);
     enqueue_building_placed(&mut engine.resources, 30, 30, 1);
-    engine.tick(); // tick 1: establishes 3 dirty regions
+    engine.tick(); // tick 1: BFS propagates Beauty at 3 source centers
 
-    // 5 idle ticks (ticks 2–6, empty queue — BSS no-op)
+    // 5 idle ticks (ticks 2–6, empty queue — BSS no-op, IUS persistence branch)
     for _ in 0..5 {
         engine.tick();
     }
 
-    // T7.10.A..E: IUS now drains Warmth/Light/Noise/Danger/Spiritual during propagation.
-    // Switch to Beauty (still dispatch shell, IUS does not clear its dirty regions).
-    // Type C: threshold == 3 (unchanged from Assertion 4's post-tick-1 count)
-    let len =
-        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Beauty as usize].len();
-    assert_eq!(
-        len,
-        3,
-        "dirty_regions[Beauty].len() must remain 3 after 5 idle ticks \
-         (BSS no-op on empty queue; IUS Phase 2 dispatch shell does not call clear_dirty() for Beauty). \
-         Erroneous idle clear_dirty() would drop to 0. Got {len}"
-    );
+    // Type A: threshold == 200 at each source center after 5 idle ticks.
+    for (sx, sy) in [(10u32, 10u32), (20, 20), (30, 30)] {
+        let v = engine
+            .resources
+            .influence_grid
+            .sample(sx, sy, InfluenceChannel::Beauty);
+        assert_eq!(
+            v, 200,
+            "current[Beauty] at source ({sx},{sy}) must remain 200 after 5 idle ticks. \
+             Cold-tier persistence branch missing would flicker to 0; got {v}"
+        );
+    }
 }

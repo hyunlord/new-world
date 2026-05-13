@@ -206,16 +206,21 @@ fn harness_t7_10_a_other_channels_remain_zero() {
         "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
     );
 
+    // T7.10.F regression guard: Beauty now propagates at source center.
+    let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);
+    assert_eq!(
+        beauty, 200,
+        "T7.10.F: Beauty at source must be 200 (BFS exp k=0.12 propagation); got {beauty}"
+    );
+
     for ch in [
-        // Stamped channels still dispatch-shell (BSS marks dirty, IUS does NOT propagate yet)
-        InfluenceChannel::Beauty,
-        // Unstamped channels (BSS never marks dirty)
+        // Unstamped channels (BSS never marks dirty) — only 2 remain post-T7.10.F.
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
-        // Type A: threshold == 0 for all non-wired channels
+        // Type A: threshold == 0 for the 2 unstamped channels
         let v = e.resources.influence_grid.sample(SX, SY, ch);
-        assert_eq!(v, 0, "{ch:?} must remain zero at T7.10.E (only Warmth+Light+Noise+Danger+Spiritual wired); got {v}");
+        assert_eq!(v, 0, "{ch:?} must remain zero post-T7.10.F (all 6 stamped channels wired; only FoodAroma/Social unstamped); got {v}");
     }
 }
 

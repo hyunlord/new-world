@@ -67,26 +67,26 @@ fn harness_building_stamp_priority() {
 /// Hollow stub failure mode: empty tick leaves current==200, assertion fails.
 /// ticks: 1 (manual) | components_read: InfluenceGrid current[Beauty]
 ///
-/// T7.10.E relaxation: switched from Spiritual to Beauty.
-/// Spiritual now has Cold-tier persistence semantics (current→pending copy on idle tick) so
-/// sample(Spiritual)==200 AFTER a tick is CORRECT T7.10.E behavior, not a hollow-stub signal.
-/// Beauty remains the sole remaining Phase 2 dispatch-shell channel: IUS calls
-/// clear_pending(Beauty) then swap() → current[Beauty] receives the cleared buffer → sample==0. ✓
+/// T7.10.F relaxation: switched from Beauty to FoodAroma.
+/// Beauty now has Cold-tier persistence semantics (current→pending copy on idle tick) so
+/// sample(Beauty)==200 AFTER a tick is CORRECT T7.10.F behavior, not a hollow-stub signal.
+/// FoodAroma remains an unstamped Phase 2 dispatch-shell channel: IUS calls
+/// clear_pending(FoodAroma) then swap() → current[FoodAroma] receives the cleared buffer → sample==0. ✓
 #[test]
 fn harness_influence_update_clear_before_swap() {
-    // metric: sample(10,10,Beauty) after write→swap→tick
+    // metric: sample(10,10,FoodAroma) after write→swap→tick
     // threshold: == 0  (system clears pending THEN swaps, so current gets the cleared buffer)
     let mut e = make_engine(32, 32);
-    // Write into pending[Beauty]
-    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::Beauty);
+    // Write into pending[FoodAroma]
+    let buf = e.resources.influence_grid.pending_buf_mut(InfluenceChannel::FoodAroma);
     buf[10 * 32 + 10] = 200;
     // Swap: pending(200) → current, old current(0) → pending
     e.resources.influence_grid.swap();
-    // Tick InfluenceUpdateSystem: clear_pending(Beauty)→0, swap (current[Beauty]←0)
+    // Tick InfluenceUpdateSystem: clear_pending(FoodAroma)→0, swap (current[FoodAroma]←0)
     let mut s = InfluenceUpdateSystem::new();
     s.tick(&mut e.world, &mut e.resources);
     assert_eq!(
-        e.resources.influence_grid.sample(10, 10, InfluenceChannel::Beauty),
+        e.resources.influence_grid.sample(10, 10, InfluenceChannel::FoodAroma),
         0u8
     );
 }
