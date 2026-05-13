@@ -21,8 +21,18 @@
 //! (`InfluenceChannel::Light.aggregation()`); applied inside
 //! `propagate_shadowcast`.
 //!
-//! Other 6 channels remain dispatch-shell (clear pending + swap) and
-//! will be wired in T7.10.C..F.
+//! T7.10.C land: Noise channel wired via linear decay BFS (`propagate_noise`,
+//! Songs of Syx 2-tile ISSUE 2 v0.1.1 fix: linear alpha=15 + density-derived
+//! wall blocking as orthogonal mechanisms). BSS now marks `dirty_regions[Noise]`
+//! (Noise added to STAMPED_CHANNELS), so IUS drains and propagates Noise
+//! linearly each tick. Noise is Hot-tier (channel.rs Tier::Hot, with Danger),
+//! but for V7 Phase 2 (no agents yet) the building placement is the only
+//! Noise source — we propagate every tick using the same persistence pattern
+//! as Warmth/Light to avoid flicker. Aggregation is Max
+//! (`InfluenceChannel::Noise.aggregation()`); applied inside `propagate_linear`.
+//!
+//! Other 5 channels remain dispatch-shell (clear pending + swap) and
+//! will be wired in T7.10.D..F.
 //!
 //! Warmth: exponential k = 0.15 (Phase 0 Section 2.3.1, channel.rs:32).
 //! Warmth max radius: 12 (Phase 0 Section 2.3.1 + ChannelDef fixture).
@@ -35,9 +45,20 @@
 //! Light initial intensity: 200 (matches propagate.rs test conventions).
 //! Light aggregation: Max.
 //! Wall blocking: binary opaque via `TileGrid::is_wall`.
+//!
+//! Noise: linear decay `intensity - alpha` per BFS step, alpha=15
+//! (propagate.rs `propagate_noise` wrapper; locked Songs of Syx 2-tile
+//! ISSUE 2 v0.1.1 fix).
+//! Noise initial intensity: 200 (parity with Warmth/Light for Max-aggregation visualisation).
+//! Noise max radius: natural via alpha cutoff (200 / 15 ≈ 13 steps + intensity<5
+//! exit). `propagate_noise` passes `u32::MAX` so decay self-terminates.
+//! Noise aggregation: Max.
+//! Wall blocking: density-derived via `MaterialBlockingCache` (4-neighbor BFS).
 
 use hecs::World;
-use sim_core::influence::{propagate_bfs, propagate_shadowcast, InfluenceChannel};
+use sim_core::influence::{
+    propagate_bfs, propagate_noise, propagate_shadowcast, InfluenceChannel,
+};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// `exp(-0.15)` — warmth exponential decay per BFS step.
@@ -65,6 +86,14 @@ const LIGHT_INITIAL_INTENSITY: u8 = 200;
 /// (thermal source). `propagate_shadowcast` uses Euclidean
 /// `dx*dx + dy*dy <= radius*radius` cutoff (propagate.rs:247).
 const LIGHT_MAX_RADIUS: u32 = 15;
+
+/// Initial intensity at the Noise source tile.
+///
+/// 200 matches Warmth/Light to give the same headroom for `Max`
+/// aggregation visualisation. `propagate_noise` decays linearly by
+/// alpha=15 per step (200 - 15*d), so the natural radius is
+/// ~13 tiles before the intensity<5 cutoff terminates BFS.
+const NOISE_INITIAL_INTENSITY: u8 = 200;
 
 /// Phase 2 influence update dispatcher — T7.10.A: Warmth channel wired.
 pub struct InfluenceUpdateSystem;
@@ -98,6 +127,7 @@ impl RuntimeSystem for InfluenceUpdateSystem {
     fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
         let warmth_idx = InfluenceChannel::Warmth as usize;
         let light_idx = InfluenceChannel::Light as usize;
+        let noise_idx = InfluenceChannel::Noise as usize;
 
         // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
@@ -183,10 +213,53 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 .copy_from_slice(&light_snapshot);
         }
 
-        // Other 6 channels: dispatch-shell baseline (clear pending → swap → zero).
-        // They will be wired individually in T7.10.C..F.
+        // ── Noise branch (T7.10.C) ───────────────────────────────────────────
+        // Drain Noise dirty regions left by BSS (Noise is in STAMPED_CHANNELS).
+        let noise_dirty =
+            std::mem::take(&mut resources.influence_grid.dirty_regions[noise_idx]);
+
+        if !noise_dirty.is_empty() {
+            // Fresh linear-decay pass: clear pending[Noise] so multiple sources
+            // accumulate (Max aggregation) onto a clean slate.
+            resources.influence_grid.clear_pending(InfluenceChannel::Noise);
+
+            for region in &noise_dirty {
+                let cx = (region.min_x + region.max_x) / 2;
+                let cy = (region.min_y + region.max_y) / 2;
+
+                let tile_grid = &resources.tile_grid;
+                let blocking_cache = &resources.material_blocking_cache;
+                let pending =
+                    resources.influence_grid.pending_buf_mut(InfluenceChannel::Noise);
+
+                propagate_noise(
+                    tile_grid,
+                    blocking_cache,
+                    pending,
+                    (cx, cy),
+                    NOISE_INITIAL_INTENSITY,
+                );
+            }
+        } else {
+            // Hot-tier persistence (T7.10.C, V7 Phase 2 no-agents): mirror Warm-tier
+            // semantics so the Noise field survives event-less ticks. Without agents
+            // generating transient acoustic events every tick, the building stamp is
+            // the only Noise source — persistence keeps the disc stable for the
+            // visualisation toggle. When agents arrive (Phase 3+) this branch can
+            // be replaced with an empty pending (no persistence, true Hot-tier).
+            let noise_snapshot =
+                resources.influence_grid.current[noise_idx].clone();
+            resources.influence_grid.pending[noise_idx]
+                .copy_from_slice(&noise_snapshot);
+        }
+
+        // Other 5 channels: dispatch-shell baseline (clear pending → swap → zero).
+        // They will be wired individually in T7.10.D..F.
         for ch in InfluenceChannel::all() {
-            if *ch != InfluenceChannel::Warmth && *ch != InfluenceChannel::Light {
+            if *ch != InfluenceChannel::Warmth
+                && *ch != InfluenceChannel::Light
+                && *ch != InfluenceChannel::Noise
+            {
                 resources.influence_grid.clear_pending(*ch);
             }
         }

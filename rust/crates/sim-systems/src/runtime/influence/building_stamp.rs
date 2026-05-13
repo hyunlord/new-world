@@ -17,12 +17,19 @@ use hecs::World;
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_engine::{RuntimeSystem, SimResources};
 
-/// Channels stamped by every building placement (T7.7.B, locked per spec).
+/// Channels stamped by every building placement.
+///
+/// T7.7.B baseline: Warmth/Spiritual/Beauty/Light.
+/// T7.10.C extension: Noise added so IUS can run `propagate_noise` from the
+/// stamped region. A building placement counts as a transient acoustic event
+/// for V7 Phase 2 (no agents yet), matching the on_building_placed → Warmth+Light
+/// stamping convention.
 const STAMPED_CHANNELS: &[InfluenceChannel] = &[
     InfluenceChannel::Warmth,
     InfluenceChannel::Spiritual,
     InfluenceChannel::Beauty,
     InfluenceChannel::Light,
+    InfluenceChannel::Noise,
 ];
 
 /// Phase 2 building → influence stamper (T7.7.B drains FFI queue).
@@ -117,7 +124,7 @@ mod tests {
     }
 
     #[test]
-    fn single_event_marks_4_channels_dirty() {
+    fn single_event_marks_5_channels_dirty() {
         let mut e = engine();
         e.resources
             .building_event_queue

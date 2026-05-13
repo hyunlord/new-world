@@ -88,29 +88,45 @@ fn harness_t7_10_b1_space_keycode_binding_present() {
     );
 }
 
-// ── B1.S4: two-state toggle assignment ───────────────────────────────────────
+// ── B1.S4: three-state cycle assignment (T7.10.C extension) ──────────────────
 
-/// Type S: the toggle assigns `current_channel` to `CHANNEL_LIGHT` iff it was
-/// `CHANNEL_WARMTH`, otherwise back to `CHANNEL_WARMTH`.
+/// Type S: SPACE cycles Warmth → Light → Noise → Warmth via an explicit
+/// if/elif/else chain over the three CHANNEL_* constants.
 ///
-/// The exact ternary `CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH else
-/// CHANNEL_WARMTH` is what makes the toggle a strict two-state cycle. A
-/// regression to `current_channel += 1` or `current_channel = CHANNEL_LIGHT`
-/// (one-way) would still leave SPACE bound, but the visible behaviour would
-/// silently break.
+/// T7.10.B1 originally used a two-state ternary
+/// (`CHANNEL_LIGHT if … else CHANNEL_WARMTH`). T7.10.C added Noise to the
+/// stamped + propagated channels, and N4-a extended the SPACE toggle to a
+/// 3-state cycle so all three backend wirings (Warmth BFS, Light shadowcast,
+/// Noise linear-decay) are reachable from a single F6 session. The cycle is
+/// strict: each press advances exactly one step, no skips.
 ///
 /// ticks: 0 (source-only check)
 #[test]
-fn harness_t7_10_b1_two_state_toggle_assignment_present() {
+fn harness_t7_10_b1_three_state_cycle_assignment_present() {
     let src = include_str!("../../../../scripts/ui/world_renderer.gd");
 
+    // Warmth → Light transition (first branch).
     assert!(
-        src.contains(
-            "current_channel = CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH else CHANNEL_WARMTH"
-        ),
-        "world_renderer.gd must use the exact two-state toggle \
-         `current_channel = CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH else CHANNEL_WARMTH` \
-         (T7.10.B1 toggle invariant — strict Warmth↔Light cycle)"
+        src.contains("if current_channel == CHANNEL_WARMTH:")
+            && src.contains("current_channel = CHANNEL_LIGHT"),
+        "world_renderer.gd must contain the Warmth→Light branch \
+         (`if current_channel == CHANNEL_WARMTH:` followed by \
+         `current_channel = CHANNEL_LIGHT`)"
+    );
+    // Light → Noise transition (elif branch).
+    assert!(
+        src.contains("elif current_channel == CHANNEL_LIGHT:")
+            && src.contains("current_channel = CHANNEL_NOISE"),
+        "world_renderer.gd must contain the Light→Noise branch \
+         (`elif current_channel == CHANNEL_LIGHT:` followed by \
+         `current_channel = CHANNEL_NOISE`) — T7.10.C cycle extension"
+    );
+    // Noise → Warmth wrap (else branch).
+    assert!(
+        src.contains("else:") && src.contains("current_channel = CHANNEL_WARMTH"),
+        "world_renderer.gd must contain the Noise→Warmth wrap \
+         (`else:` followed by `current_channel = CHANNEL_WARMTH`) — \
+         closes the 3-state cycle"
     );
 }
 
@@ -133,11 +149,22 @@ fn harness_t7_10_b1_channel_switched_print_present() {
         "world_renderer.gd must call `print(\"Channel switched: \", channel_name)` \
          (T7.10.B1 console feedback — the only visible toggle signal in F6 sessions)"
     );
+    // T7.10.C extends the cycle to 3 channels; each branch assigns
+    // channel_name directly to one of the three string literals.
     assert!(
-        src.contains("\"Light\" if current_channel == CHANNEL_LIGHT else \"Warmth\""),
-        "world_renderer.gd must derive the printed name with \
-         `\"Light\" if current_channel == CHANNEL_LIGHT else \"Warmth\"` \
-         (both channel names must surface, not just one)"
+        src.contains("channel_name = \"Warmth\""),
+        "world_renderer.gd must assign `channel_name = \"Warmth\"` in the wrap branch \
+         (T7.10.C 3-state cycle — Warmth name must surface)"
+    );
+    assert!(
+        src.contains("channel_name = \"Light\""),
+        "world_renderer.gd must assign `channel_name = \"Light\"` in the Warmth→Light branch \
+         (T7.10.C 3-state cycle — Light name must surface)"
+    );
+    assert!(
+        src.contains("channel_name = \"Noise\""),
+        "world_renderer.gd must assign `channel_name = \"Noise\"` in the Light→Noise branch \
+         (T7.10.C 3-state cycle — Noise name must surface)"
     );
 }
 

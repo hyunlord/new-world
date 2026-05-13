@@ -326,7 +326,26 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
         "dirty_regions[Light].len() must be 0 after tick (T7.10.B IUS drains via std::mem::take)"
     );
 
-    // Type A: remaining stamped channels still accumulate (T7.10.C..F not wired) → 1 each.
+    // Type A: T7.10.C — Noise dirty_regions also drained by IUS → 0. (C14-a)
+    let noise_len =
+        engine.resources.influence_grid.dirty_regions[InfluenceChannel::Noise as usize].len();
+    assert_eq!(
+        noise_len, 0,
+        "dirty_regions[Noise].len() must be 0 after tick (T7.10.C IUS drains via std::mem::take)"
+    );
+
+    // Type A: C14(b) — verify Noise propagation actually ran (not a hollow drain).
+    // A hollow IUS drain would clear dirty_regions[Noise] (passes C14-a above) without
+    // calling propagate_noise, leaving sample(20,20,Noise) == 0. This catches that path.
+    let noise_at_source =
+        engine.resources.influence_grid.sample(20, 20, InfluenceChannel::Noise);
+    assert_eq!(
+        noise_at_source, 200,
+        "sample(20,20,Noise) must be 200 after full pipeline tick (propagate_noise ran, \
+         not hollow drain); got {noise_at_source} — C14(b) discriminator"
+    );
+
+    // Type A: remaining stamped channels still accumulate (T7.10.D..F not wired) → 1 each.
     for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let len = engine.resources.influence_grid.dirty_regions[ch as usize].len();
         assert_eq!(
@@ -340,7 +359,6 @@ fn harness_substantial_all_4_stamped_channels_dirty_1_non_stamped_0_full_pipelin
     // Type A: non-stamped channels — threshold == 0 each
     for ch in [
         InfluenceChannel::Danger,
-        InfluenceChannel::Noise,
         InfluenceChannel::FoodAroma,
         InfluenceChannel::Social,
     ] {
@@ -803,7 +821,16 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
          regions via std::mem::take); got {}", light_regs.len()
     );
 
-    // Type A: remaining stamped channels still accumulate (T7.10.C..F not wired) → 4 each.
+    // Type A: Noise dirty_regions drained by T7.10.C IUS → 0 (all 4 consumed for linear-decay).
+    let noise_regs =
+        &engine.resources.influence_grid.dirty_regions[InfluenceChannel::Noise as usize];
+    assert_eq!(
+        noise_regs.len(), 0,
+        "Noise must have 0 dirty regions after tick (T7.10.C IUS drains all 4 corner \
+         regions via std::mem::take); got {}", noise_regs.len()
+    );
+
+    // Type A: remaining stamped channels still accumulate (T7.10.D..F not wired) → 4 each.
     // Coordinate clamping is verified through these channels (same BSS code path as Warmth/Light).
     for ch in [InfluenceChannel::Spiritual, InfluenceChannel::Beauty] {
         let regs = &engine.resources.influence_grid.dirty_regions[ch as usize];
@@ -832,5 +859,8 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
         // T7.10.B regression guard: Light shadowcast must also run at each corner.
         let l = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Light);
         assert_eq!(l, 200, "corner Light shadowcast center ({cx},{cy}) must be 200; got {l}");
+        // T7.10.C regression guard: Noise linear-decay must also run at each corner.
+        let n = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Noise);
+        assert_eq!(n, 200, "corner Noise linear-decay center ({cx},{cy}) must be 200; got {n}");
     }
 }

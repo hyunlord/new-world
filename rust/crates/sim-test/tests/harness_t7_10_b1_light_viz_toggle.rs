@@ -197,13 +197,14 @@ fn harness_t7_10_b1_light_source_tile_is_maximum() {
 /// still wired — would not be caught by any of the 5 Rust runtime checks
 /// because those only verify channel data in SimResources, not GDScript state.
 ///
-/// Tokens checked:
+/// Tokens checked (T7.10.C: 3-state cycle):
 ///   - `_unhandled_input`                              handler function exists
 ///   - `InputEventKey`                                 event type discrimination
 ///   - `event.pressed`                                 physical press (not release)
 ///   - `not event.echo`                                echo guard (no rapid-fire)
 ///   - `KEY_SPACE`                                     specific key binding
-///   - `CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH` two-state assignment
+///   - `if current_channel == CHANNEL_WARMTH:`         Warmth→Light branch
+///   - `current_channel = CHANNEL_NOISE`               Light→Noise branch
 ///   - `Channel switched:`                             console confirmation path
 ///
 /// ticks: 0 (source-only check, no engine run)
@@ -240,10 +241,23 @@ fn harness_t7_10_b1_gdscript_toggle_handler_present() {
          (hard-coded SPACE binding — no InputMap action entry required)"
     );
     assert!(
-        src.contains("CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH"),
-        "world_renderer.gd must contain the exact two-state assignment \
-         `current_channel = CHANNEL_LIGHT if current_channel == CHANNEL_WARMTH else CHANNEL_WARMTH`; \
-         this exact expression prevents wraparound to channels 2..7 (unpopulated)"
+        src.contains("if current_channel == CHANNEL_WARMTH:")
+            && src.contains("current_channel = CHANNEL_LIGHT"),
+        "world_renderer.gd must contain Warmth→Light branch \
+         (`if current_channel == CHANNEL_WARMTH:` then `current_channel = CHANNEL_LIGHT`); \
+         T7.10.C 3-state cycle"
+    );
+    assert!(
+        src.contains("elif current_channel == CHANNEL_LIGHT:")
+            && src.contains("current_channel = CHANNEL_NOISE"),
+        "world_renderer.gd must contain Light→Noise branch \
+         (`elif current_channel == CHANNEL_LIGHT:` then `current_channel = CHANNEL_NOISE`); \
+         T7.10.C 3-state cycle extension"
+    );
+    assert!(
+        src.contains("current_channel = CHANNEL_WARMTH"),
+        "world_renderer.gd must contain Noise→Warmth wrap branch \
+         (`current_channel = CHANNEL_WARMTH` in the else clause); closes 3-state cycle"
     );
     assert!(
         src.contains("Channel switched:"),
