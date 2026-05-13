@@ -904,7 +904,7 @@ fn harness_substantial_four_corner_stamps_clamp_no_oob_dirty() {
         // T7.10.C regression guard: Noise linear-decay must also run at each corner.
         let n = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Noise);
         assert_eq!(n, 200, "corner Noise linear-decay center ({cx},{cy}) must be 200; got {n}");
-        // T7.10.E regression guard: Spiritual BFS exp k=0.10 must also run at each corner.
+        // T7.10.E regression guard: Spiritual BFS exp k=0.08 must also run at each corner.
         let s = engine.resources.influence_grid.sample(cx, cy, InfluenceChannel::Spiritual);
         assert_eq!(s, 200, "corner Spiritual BFS center ({cx},{cy}) must be 200; got {s}");
         // T7.10.F regression guard: Beauty BFS exp k=0.12 must also run at each corner.

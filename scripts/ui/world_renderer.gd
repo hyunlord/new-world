@@ -10,7 +10,7 @@ extends Node2D
 # T7.10.D: cycle extended to include Danger (linear-decay alpha=5, cap=15) —
 # SPACE cycles Warmth → Light → Noise → Danger → Warmth so all four backend
 # wirings can be confirmed visually in one F6 session.
-# T7.10.E: cycle extended to include Spiritual (BFS exponential k=0.10) —
+# T7.10.E: cycle extended to include Spiritual (BFS exponential k=0.08) —
 # SPACE cycles Warmth → Light → Noise → Danger → Spiritual → Warmth so all
 # five backend wirings can be confirmed visually in one F6 session.
 # T7.10.F: cycle extended to include Beauty (BFS exponential k=0.12) —

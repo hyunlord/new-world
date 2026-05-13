@@ -43,7 +43,8 @@
 //! (`InfluenceChannel::Danger.aggregation()`); applied inside `propagate_linear`.
 //!
 //! T7.10.E land: Spiritual channel wired via BFS exponential decay
-//! (`propagate_bfs` with k=0.10 — gentler than Warmth's k=0.15 because
+//! (`propagate_bfs` with k=0.08 — channel.rs:69 Phase 0 spec; gentler than
+//! Warmth's k=0.15 because
 //! ritual influence carries further than thermal heat). BSS already
 //! marks `dirty_regions[Spiritual]` (Spiritual was in STAMPED_CHANNELS since
 //! T7.10.A; only IUS wiring was missing). IUS drains and propagates Spiritual
@@ -96,8 +97,9 @@
 //! Wall blocking: NONE — Danger pierces walls (`propagate_danger` passes
 //! `blocking_cache=None`).
 //!
-//! Spiritual: BFS exponential `intensity * exp(-k)` per step, k = 0.10
-//! (gentler than Warmth's 0.15 — ritual influence carries further than
+//! Spiritual: BFS exponential `intensity * exp(-k)` per step, k = 0.08
+//! (channel.rs:69 Phase 0 spec — gentler than Warmth's 0.15, ritual influence
+//! carries further than
 //! thermal heat).
 //! Spiritual initial intensity: 200 (parity with Warmth/Light/Noise/Danger).
 //! Spiritual max radius: 15 (longer reach than Warmth's 12, consistent with
@@ -107,7 +109,7 @@
 //! same path as Warmth/Noise).
 //!
 //! Beauty: BFS exponential `intensity * exp(-k)` per step, k = 0.12
-//! (channel.rs:74 Phase 0 spec — between Warmth's 0.15 and Spiritual's 0.10,
+//! (channel.rs:74 Phase 0 spec — between Warmth's 0.15 and Spiritual's 0.08,
 //! aesthetic appreciation reaches moderate distance).
 //! Beauty initial intensity: 200 (parity with all other channels).
 //! Beauty max radius: 15 (Spiritual parity, Cold-tier reach archetype).
@@ -165,12 +167,12 @@ const NOISE_INITIAL_INTENSITY: u8 = 200;
 /// natural cutoff would fire (which would be at d=40).
 const DANGER_INITIAL_INTENSITY: u8 = 200;
 
-/// `exp(-0.10)` — spiritual exponential decay per BFS step.
+/// `exp(-0.08)` — spiritual exponential decay per BFS step.
 ///
 /// Pre-computed: Rust does not const-eval `f32::exp` in stable.
-/// k = 0.10 (gentler than Warmth's 0.15 — ritual influence carries further
-/// than thermal heat).
-const SPIRITUAL_DECAY_PER_STEP: f32 = 0.904_837;
+/// k = 0.08 (channel.rs:69 Phase 0 spec — gentler than Warmth's 0.15, ritual
+/// influence carries further than thermal heat).
+const SPIRITUAL_DECAY_PER_STEP: f32 = 0.923_116;
 
 /// Initial intensity at the Spiritual source tile.
 const SPIRITUAL_INITIAL_INTENSITY: u8 = 200;
@@ -185,7 +187,7 @@ const SPIRITUAL_MAX_RADIUS: u32 = 15;
 ///
 /// Pre-computed: Rust does not const-eval `f32::exp` in stable.
 /// k = 0.12 (channel.rs:74 Phase 0 spec — between Warmth's 0.15 and
-/// Spiritual's 0.10).
+/// Spiritual's 0.08).
 const BEAUTY_DECAY_PER_STEP: f32 = 0.886_920;
 
 /// Initial intensity at the Beauty source tile.

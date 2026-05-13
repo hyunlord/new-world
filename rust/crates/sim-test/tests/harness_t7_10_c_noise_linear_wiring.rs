@@ -280,7 +280,7 @@ fn harness_t7_10_c_other_channels_remain_zero() {
     let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
-        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
+        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.08 propagation); got {spiritual}"
     );
     // T7.10.F regression guard: Beauty now propagates at source center.
     let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);

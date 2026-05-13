@@ -281,7 +281,7 @@ fn harness_t7_10_d_dirty_regions_drained() {
 /// unstamped channels FoodAroma/Social sample to 0.
 ///
 /// T7.10.D wired Warmth+Light+Noise+Danger. T7.10.E additionally wires
-/// Spiritual via BFS exp k=0.10. The remaining stamped channel (Beauty) has
+/// Spiritual via BFS exp k=0.08. The remaining stamped channel (Beauty) has
 /// BSS dirty_regions but IUS does not yet propagate it. Unstamped channels
 /// (FoodAroma, Social) stay completely cold.
 #[test]
@@ -293,7 +293,7 @@ fn harness_t7_10_d_other_channels_remain_zero() {
     let spiritual = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Spiritual);
     assert_eq!(
         spiritual, 200,
-        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.10 propagation); got {spiritual}"
+        "T7.10.E: Spiritual at source must be 200 (BFS exp k=0.08 propagation); got {spiritual}"
     );
     // T7.10.F regression guard: Beauty now propagates at source center.
     let beauty = e.resources.influence_grid.sample(SX, SY, InfluenceChannel::Beauty);

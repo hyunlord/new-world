@@ -3,11 +3,11 @@
 //! T7.10.F is the SIXTH and FINAL stamped channel to escape the dispatch shell.
 //! After T7.10.A (Warmth BFS k=0.15), T7.10.B (Light shadowcast), T7.10.C
 //! (Noise linear-decay), T7.10.D (Danger linear-decay+cap), and T7.10.E
-//! (Spiritual BFS k=0.10), the Beauty channel completes the 6/6 stamped-channel
+//! (Spiritual BFS k=0.08), the Beauty channel completes the 6/6 stamped-channel
 //! wiring milestone. A BuildingPlacedEvent at (32, 32) with radius 12 must
 //! produce a Beauty field in `current[Beauty]` centered at (32, 32) after one
 //! tick, computed by BFS with exponential decay k=0.12 (Phase 0 channel.rs:74
-//! lock — between Warmth's 0.15 and Spiritual's 0.10) and max_radius=15
+//! lock — between Warmth's 0.15 and Spiritual's 0.08) and max_radius=15
 //! (Spiritual parity, Cold-tier reach archetype).
 //!
 //! Setup note: 64×64 engine with empty MaterialRegistry (open field, no wall
@@ -66,8 +66,8 @@ fn harness_t7_10_f_source_center_lit() {
 ///
 /// Discriminates against:
 ///   - Warmth k=0.15 → floor(200*0.8607)=172 — OUTSIDE [175,180]
-///   - Spiritual k=0.10 → floor(200*0.9048)=180 — boundary; F3 confirms via
-///     Manhattan d=2 chain ≈157 (vs Spiritual 163).
+///   - Spiritual k=0.08 → floor(200*0.9231)=184 — OUTSIDE [175,180]; F3
+///     confirms via Manhattan d=2 chain ≈157 (vs Spiritual 170).
 #[test]
 fn harness_t7_10_f_exp_decay_one_step_discriminator() {
     let mut e = fresh_engine();
@@ -79,7 +79,7 @@ fn harness_t7_10_f_exp_decay_one_step_discriminator() {
         (175..=180).contains(&v),
         "1-step cardinal neighbor must decay to ~177 (200*exp(-0.12)); got {v}. \
          Value ~172 = Warmth k=0.15 (wrong decay constant). \
-         Value ~180 with d=2 chain ≈163 = Spiritual k=0.10 mis-wiring. \
+         Value ~184 with d=2 chain ≈170 = Spiritual k=0.08 mis-wiring. \
          Below 175 or above 180 = wrong primitive or no decay applied."
     );
 }
@@ -96,7 +96,7 @@ fn harness_t7_10_f_exp_decay_one_step_discriminator() {
 /// Discriminates against:
 ///   - Euclidean (Light shadowcast) at d=sqrt(2): 200/(1+0.1*1.414) ≈ 175 —
 ///     OUTSIDE [155,160]. Proves BFS frontier.
-///   - Spiritual k=0.10 two-step chain ≈ 163 — OUTSIDE [155,160]. Proves
+///   - Spiritual k=0.08 two-step chain ≈ 170 — OUTSIDE [155,160]. Proves
 ///     Beauty's k=0.12 constant.
 #[test]
 fn harness_t7_10_f_bfs_distance_manhattan_discriminator() {
@@ -109,7 +109,7 @@ fn harness_t7_10_f_bfs_distance_manhattan_discriminator() {
         (155..=160).contains(&v),
         "diagonal (SX+1,SY+1) must be in [155,160] (BFS d=2 chain ≈157); got {v}. \
          Value ~175 = Euclidean (wrong distance metric). \
-         Value ~163 = Spiritual k=0.10 (wrong decay constant). \
+         Value ~170 = Spiritual k=0.08 (wrong decay constant). \
          Outside [155,160] = wrong decay or BFS broken."
     );
 }
@@ -152,7 +152,7 @@ fn harness_t7_10_f_gradient_monotone() {
 /// ±5 margin for accumulated rounding.
 ///
 /// Value == 0 means BFS stopped before max_radius (wrong max_radius constant).
-/// Value > 38 means wrong decay constant (Spiritual's k=0.10 would give ≈45 —
+/// Value > 38 means wrong decay constant (Spiritual's k=0.08 would give ≈60 —
 /// OUTSIDE [28,38]).
 #[test]
 fn harness_t7_10_f_boundary_at_max_radius() {
@@ -165,7 +165,7 @@ fn harness_t7_10_f_boundary_at_max_radius() {
         (28..=38).contains(&v),
         "tile at max_radius=15 must be in [28,38] (chain end ≈33); got {v}; \
          value==0 means propagation stopped before max_radius=15. \
-         Value ~45 = Spiritual k=0.10 (wrong decay constant). \
+         Value ~60 = Spiritual k=0.08 (wrong decay constant). \
          Value ~21 = Warmth k=0.15 (wrong decay constant)."
     );
 }
