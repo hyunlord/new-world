@@ -16,6 +16,7 @@ const PANEL_MARGIN := 16.0
 
 var _title_label: Label
 var _placeholder_label: Label
+var _history_container: VBoxContainer
 
 func _ready() -> void:
 	visible = false
@@ -43,6 +44,72 @@ func _build_layout() -> void:
 	_placeholder_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_placeholder_label.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
 	add_child(_placeholder_label)
+
+	_history_container = VBoxContainer.new()
+	_history_container.position = Vector2(PANEL_MARGIN + 12.0, PANEL_MARGIN + 88.0)
+	_history_container.size = Vector2(PANEL_WIDTH - 24.0, PANEL_HEIGHT - 104.0)
+	_history_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_history_container)
+
+func display_history(history: Array, tile_x: int, tile_y: int) -> void:
+	if _history_container == null:
+		return
+	for child in _history_container.get_children():
+		child.queue_free()
+	var header := Label.new()
+	var tmpl := _ltr("UI_CAUSAL_TILE_HEADER")
+	header.text = tmpl.replace("{x}", str(tile_x)).replace("{y}", str(tile_y))
+	header.add_theme_color_override("font_color", Color(1.0, 0.92, 0.5, 1.0))
+	_history_container.add_child(header)
+	if history.is_empty():
+		var empty := Label.new()
+		empty.text = _ltr("UI_CAUSAL_NO_HISTORY")
+		empty.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
+		_history_container.add_child(empty)
+		return
+	for ev in history:
+		if not (ev is Dictionary):
+			continue
+		var lbl := Label.new()
+		lbl.text = _format_event(ev as Dictionary)
+		lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 1.0))
+		_history_container.add_child(lbl)
+
+func _format_event(ev: Dictionary) -> String:
+	var kind: String = ev.get("kind", "?")
+	var tick: int = int(ev.get("tick", 0))
+	var kind_label: String = "?"
+	var extra: String = ""
+	match kind:
+		"building_placed":
+			kind_label = _ltr("UI_CAUSAL_EVENT_BUILDING_PLACED")
+			var radius: int = int(ev.get("radius", 0))
+			extra = " radius=" + str(radius)
+		"stamp_dirty":
+			kind_label = _ltr("UI_CAUSAL_EVENT_STAMP_DIRTY")
+			extra = " " + _channel_name(int(ev.get("channel", -1)))
+		"influence_changed":
+			kind_label = _ltr("UI_CAUSAL_EVENT_INFLUENCE_CHANGED")
+			var ch: int = int(ev.get("channel", -1))
+			var old_v: float = float(ev.get("old_value", 0.0))
+			var new_v: float = float(ev.get("new_value", 0.0))
+			extra = " " + _channel_name(ch) + " " + ("%.2f" % old_v) + " → " + ("%.2f" % new_v)
+	return "[" + str(tick) + "] " + kind_label + extra
+
+func _channel_name(idx: int) -> String:
+	var keys := [
+		"UI_CAUSAL_CHANNEL_WARMTH",
+		"UI_CAUSAL_CHANNEL_LIGHT",
+		"UI_CAUSAL_CHANNEL_NOISE",
+		"UI_CAUSAL_CHANNEL_FOOD_AROMA",
+		"UI_CAUSAL_CHANNEL_DANGER",
+		"UI_CAUSAL_CHANNEL_SOCIAL",
+		"UI_CAUSAL_CHANNEL_SPIRITUAL",
+		"UI_CAUSAL_CHANNEL_BEAUTY",
+	]
+	if idx >= 0 and idx < keys.size():
+		return _ltr(keys[idx])
+	return "?"
 
 func _ltr(key: String) -> String:
 	var locale := get_node_or_null("/root/Locale")

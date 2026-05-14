@@ -34,6 +34,8 @@ const CHANNEL_BEAUTY := 7
 const BOOTSTRAP_X := 32
 const BOOTSTRAP_Y := 32
 const BOOTSTRAP_RADIUS := 8
+const SPRITE_ORIGIN_X := 448
+const SPRITE_ORIGIN_Y := 28
 
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
@@ -80,6 +82,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				current_channel = CHANNEL_WARMTH
 				channel_name = "Warmth"
 			print("Channel switched: ", channel_name)
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_handle_tile_click(event.position)
 
 func _process(_delta: float) -> void:
 	if world_sim == null:
@@ -89,3 +93,19 @@ func _process(_delta: float) -> void:
 		return
 	image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)
 	texture.update(image)
+
+func _handle_tile_click(pos: Vector2) -> void:
+	var tile_x := int(floor((pos.x - SPRITE_ORIGIN_X) / float(TILE_SIZE)))
+	var tile_y := int(floor((pos.y - SPRITE_ORIGIN_Y) / float(TILE_SIZE)))
+	if tile_x < 0 or tile_x >= GRID_W or tile_y < 0 or tile_y >= GRID_H:
+		return
+	_fetch_causal_history(tile_x, tile_y)
+
+func _fetch_causal_history(tx: int, ty: int) -> void:
+	if world_sim == null:
+		return
+	var history: Array = world_sim.get_tile_causal_history(tx, ty)
+	var panel := get_node_or_null("/root/Main/UI/CausalPanel")
+	if panel != null and panel.has_method("display_history"):
+		panel.call("display_history", history, tx, ty)
+		panel.visible = true

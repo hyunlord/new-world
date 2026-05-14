@@ -1,0 +1,6 @@
+# γ-2-β assertion log
+PASS	panel_visible_after_click	visible=true
+PASS	history_container_child_count_ge_2	child_count=9 (threshold >=2)
+PASS	header_text_exact_match	got='Tile (32, 32)' (expected 'Tile (32, 32)')
+PASS	oob_click_no_mutation	before=9 after=9 (delta must == 0)
+PASS	screenshot_chain_written	screenshot_chain.png written

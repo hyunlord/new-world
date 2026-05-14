@@ -1,0 +1,10 @@
+γ-2-β runtime harness boot
+main scene instantiated
+scene nodes resolved; advancing engine ticks for history
+warmup done; performing valid click at (960, 540)
+PASS panel_visible_after_click — visible=true
+PASS history_container_child_count_ge_2 — child_count=9 (threshold >=2)
+PASS header_text_exact_match — got='Tile (32, 32)' (expected 'Tile (32, 32)')
+PASS oob_click_no_mutation — before=9 after=9 (delta must == 0)
+fallback screenshot written (headless): /Users/rexxa/github/new-world-wt/lead/tools/harness/results/p3-gamma-2-beta-tile-click-chain/screenshot_chain.png
+PASS screenshot_chain_written — screenshot_chain.png written
