@@ -28,11 +28,12 @@
 #![warn(missing_docs)]
 
 use hecs::World;
-use sim_core::causal::CausalLogStorage;
+use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
 use std::collections::VecDeque;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 /// FFI-originated event: a building was placed at `position` with influence
 /// `radius` (Chebyshev distance, in tiles). Drained by
@@ -108,6 +109,25 @@ pub struct SimResources {
     /// channel. Consumed by the "왜?" UI (Week 6) to attribute
     /// influence-grid state to the events that produced it.
     pub causal_log: CausalLogStorage,
+
+    /// Monotonic source of [`EventId`]s for the causal log
+    /// (V7 Phase 3-β / P3β-1). Allocated once per recorded event via
+    /// [`SimResources::issue_event_id`]. `Relaxed` ordering is sufficient
+    /// — uniqueness is the only invariant, and per-tick ordering is
+    /// preserved by the priority-sorted system schedule.
+    pub next_event_id: AtomicU64,
+}
+
+impl SimResources {
+    /// Allocate the next monotonic [`EventId`] (V7 Phase 3-β / P3β-1).
+    ///
+    /// The counter outlives ring-buffer eviction: even after the
+    /// originating event is dropped, descendants retain the id reference,
+    /// and chain lookups simply terminate gracefully on miss (see
+    /// [`CausalLogStorage::trace_parents`]).
+    pub fn issue_event_id(&self) -> EventId {
+        self.next_event_id.fetch_add(1, Ordering::Relaxed)
+    }
 }
 
 /// Owns the world, the resources, and the priority-sorted system list.
@@ -138,6 +158,7 @@ impl SimEngine {
                 current_tick: 0,
                 building_event_queue: VecDeque::new(),
                 causal_log: CausalLogStorage::new(),
+                next_event_id: AtomicU64::new(0),
             },
             systems: Vec::new(),
             current_tick: 0,

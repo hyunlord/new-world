@@ -13,8 +13,9 @@
 
 use std::collections::HashMap;
 
-use super::event::CausalEvent;
+use super::event::{CausalEvent, EventId};
 use super::ring_buffer::TileCausalLog;
+use crate::influence::InfluenceChannel;
 
 /// Sparse storage for per-tile causal logs.
 ///
@@ -71,15 +72,69 @@ impl CausalLogStorage {
     pub fn clear(&mut self) {
         self.logs.clear();
     }
+
+    /// Find the most recent `StampDirty` event id on `tile_idx` that matches
+    /// `channel`, scanning the ring from newest to oldest.
+    ///
+    /// V7 Phase 3-β (P3β-3 / P3β-4): used by IUS to attach each
+    /// `InfluenceChanged` record to the same-channel `StampDirty` that
+    /// produced its dirty region. Returns `None` when the tile has no log
+    /// or the matching stamp has already been evicted — the chain
+    /// terminates gracefully in that case (the "왜?" UI reports
+    /// "cause evicted").
+    pub fn find_recent_stamp_dirty(
+        &self,
+        tile_idx: u32,
+        channel: InfluenceChannel,
+    ) -> Option<EventId> {
+        let log = self.logs.get(&tile_idx)?;
+        log.as_slice().iter().rev().find_map(|ev| match ev {
+            CausalEvent::StampDirty {
+                id,
+                channel: ch,
+                ..
+            } if *ch == channel => Some(*id),
+            _ => None,
+        })
+    }
+
+    /// Walk the parent chain backwards from `event_id` on `tile_idx`,
+    /// returning references in `[child, parent, grand-parent, …]` order.
+    ///
+    /// V7 Phase 3-β (P3β-4): the "왜?" UI consumes this to render the
+    /// `InfluenceChanged → StampDirty → BuildingPlaced` lineage. The walk
+    /// terminates when:
+    /// 1. the current event has `parent == None` (root), or
+    /// 2. the parent id is not present in the same tile's ring (evicted).
+    ///
+    /// The returned chain may be shorter than three entries when eviction
+    /// happens — that is the expected graceful-termination behaviour.
+    pub fn trace_parents(&self, tile_idx: u32, event_id: EventId) -> Vec<&CausalEvent> {
+        let mut chain = Vec::new();
+        let Some(log) = self.logs.get(&tile_idx) else {
+            return chain;
+        };
+        let mut cursor: Option<EventId> = Some(event_id);
+        while let Some(id) = cursor {
+            let Some(ev) = log.as_slice().iter().find(|e| e.id() == id) else {
+                break;
+            };
+            chain.push(ev);
+            cursor = ev.parent();
+        }
+        chain
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::influence::InfluenceChannel;
+    use crate::influence::{DirtyRegion, InfluenceChannel};
 
     fn placed(tick: u64) -> CausalEvent {
         CausalEvent::BuildingPlaced {
+            id: 0,
+            parent: None,
             position: (0, 0),
             radius: 1,
             tick,
@@ -88,7 +143,46 @@ mod tests {
 
     fn influence(tick: u64) -> CausalEvent {
         CausalEvent::InfluenceChanged {
+            id: 0,
+            parent: None,
             channel: InfluenceChannel::Warmth,
+            position: (0, 0),
+            old: 0.0,
+            new: 200.0,
+            tick,
+        }
+    }
+
+    fn placed_id(id: EventId, tick: u64) -> CausalEvent {
+        CausalEvent::BuildingPlaced {
+            id,
+            parent: None,
+            position: (0, 0),
+            radius: 1,
+            tick,
+        }
+    }
+
+    fn stamp_id(id: EventId, parent: EventId, channel: InfluenceChannel, tick: u64) -> CausalEvent {
+        CausalEvent::StampDirty {
+            id,
+            parent: Some(parent),
+            channel,
+            region: DirtyRegion::new(0, 0, 1, 1),
+            tick,
+        }
+    }
+
+    fn influence_id(
+        id: EventId,
+        parent: EventId,
+        channel: InfluenceChannel,
+        tick: u64,
+    ) -> CausalEvent {
+        CausalEvent::InfluenceChanged {
+            id,
+            parent: Some(parent),
+            channel,
             position: (0, 0),
             old: 0.0,
             new: 200.0,
@@ -156,5 +250,66 @@ mod tests {
         s.clear();
         assert!(s.is_empty());
         assert!(s.get(1).is_none());
+    }
+
+    #[test]
+    fn find_recent_stamp_dirty_returns_newest_match() {
+        let mut s = CausalLogStorage::new();
+        s.push(5, placed_id(0, 0));
+        s.push(5, stamp_id(1, 0, InfluenceChannel::Warmth, 0));
+        s.push(5, stamp_id(2, 0, InfluenceChannel::Noise, 0));
+        s.push(5, stamp_id(3, 0, InfluenceChannel::Warmth, 1));
+        // Newest Warmth stamp is id=3.
+        assert_eq!(
+            s.find_recent_stamp_dirty(5, InfluenceChannel::Warmth),
+            Some(3)
+        );
+        // Noise stamp still discoverable.
+        assert_eq!(
+            s.find_recent_stamp_dirty(5, InfluenceChannel::Noise),
+            Some(2)
+        );
+        // Channel never stamped → None.
+        assert_eq!(
+            s.find_recent_stamp_dirty(5, InfluenceChannel::Light),
+            None
+        );
+        // Tile without log → None.
+        assert_eq!(
+            s.find_recent_stamp_dirty(999, InfluenceChannel::Warmth),
+            None
+        );
+    }
+
+    #[test]
+    fn trace_parents_walks_chain() {
+        let mut s = CausalLogStorage::new();
+        // Chain: BuildingPlaced(0) ← StampDirty(1) ← InfluenceChanged(2).
+        s.push(7, placed_id(0, 0));
+        s.push(7, stamp_id(1, 0, InfluenceChannel::Warmth, 0));
+        s.push(7, influence_id(2, 1, InfluenceChannel::Warmth, 0));
+        let chain = s.trace_parents(7, 2);
+        assert_eq!(chain.len(), 3);
+        assert_eq!(chain[0].id(), 2);
+        assert_eq!(chain[1].id(), 1);
+        assert_eq!(chain[2].id(), 0);
+        // Root has no parent.
+        assert_eq!(chain[2].parent(), None);
+    }
+
+    #[test]
+    fn trace_parents_terminates_on_evicted_parent() {
+        let mut s = CausalLogStorage::new();
+        // Influence references parent stamp id=99 which was never inserted.
+        s.push(3, influence_id(5, 99, InfluenceChannel::Warmth, 0));
+        let chain = s.trace_parents(3, 5);
+        assert_eq!(chain.len(), 1);
+        assert_eq!(chain[0].id(), 5);
+    }
+
+    #[test]
+    fn trace_parents_missing_tile_returns_empty() {
+        let s = CausalLogStorage::new();
+        assert!(s.trace_parents(42, 0).is_empty());
     }
 }

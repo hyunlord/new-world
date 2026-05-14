@@ -80,6 +80,8 @@ mod tests {
 
     fn placed(tick: u64) -> CausalEvent {
         CausalEvent::BuildingPlaced {
+            id: 0,
+            parent: None,
             position: (0, 0),
             radius: 1,
             tick,
@@ -88,6 +90,8 @@ mod tests {
 
     fn stamp(tick: u64) -> CausalEvent {
         CausalEvent::StampDirty {
+            id: 0,
+            parent: None,
             channel: InfluenceChannel::Warmth,
             region: DirtyRegion::new(0, 0, 1, 1),
             tick,

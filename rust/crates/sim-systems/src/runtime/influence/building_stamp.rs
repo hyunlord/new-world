@@ -96,11 +96,16 @@ impl RuntimeSystem for BuildingStampSystem {
 
             // Phase 3-α: record the BuildingPlaced event onto the centre
             // tile so the "왜?" UI can trace any downstream stamp/influence
-            // back to this FFI arrival.
+            // back to this FFI arrival. Phase 3-β (P3β-3): allocate the
+            // building's monotonic event id first so each per-channel
+            // StampDirty below can link back to it via `parent`.
             let centre_idx = resources.influence_grid.idx(cx, cy) as u32;
+            let building_id = resources.issue_event_id();
             resources.causal_log.push(
                 centre_idx,
                 CausalEvent::BuildingPlaced {
+                    id: building_id,
+                    parent: None,
                     position: ev.position,
                     radius: r,
                     tick,
@@ -115,9 +120,16 @@ impl RuntimeSystem for BuildingStampSystem {
                 // tile, once per stamped channel. Region is captured by
                 // value so the "왜?" UI can reproduce the BFS box even
                 // after IUS drains the dirty list.
+                // Phase 3-β (P3β-3): each StampDirty's `parent` points at
+                // the BuildingPlaced id issued above, so the chain
+                // BuildingPlaced → StampDirty → InfluenceChanged stays
+                // walkable by `CausalLogStorage::trace_parents`.
+                let stamp_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx,
                     CausalEvent::StampDirty {
+                        id: stamp_id,
+                        parent: Some(building_id),
                         channel: *ch,
                         region,
                         tick,

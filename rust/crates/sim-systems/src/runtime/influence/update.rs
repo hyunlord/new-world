@@ -277,12 +277,24 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                 );
 
                 // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-β (P3β-3): link this record back to the matching
+                // same-channel StampDirty on the same centre tile so the
+                // "왜?" UI can walk InfluenceChanged → StampDirty →
+                // BuildingPlaced. If the stamp was already evicted (FIFO
+                // ring depth 8) the parent stays `None` and the chain
+                // terminates gracefully.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[warmth_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[warmth_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Warmth);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Warmth,
                         position: (cx, cy),
                         old,
@@ -328,13 +340,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     LIGHT_MAX_RADIUS,
                 );
 
-                // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-α + Phase 3-β: chain to matching same-channel
+                // StampDirty on the same centre tile.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[light_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[light_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Light);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Light,
                         position: (cx, cy),
                         old,
@@ -381,13 +400,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     NOISE_INITIAL_INTENSITY,
                 );
 
-                // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-α + Phase 3-β: chain to matching same-channel
+                // StampDirty on the same centre tile.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[noise_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[noise_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Noise);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Noise,
                         position: (cx, cy),
                         old,
@@ -436,13 +462,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     DANGER_INITIAL_INTENSITY,
                 );
 
-                // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-α + Phase 3-β: chain to matching same-channel
+                // StampDirty on the same centre tile.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[danger_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[danger_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Danger);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Danger,
                         position: (cx, cy),
                         old,
@@ -497,13 +530,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     SPIRITUAL_MAX_RADIUS,
                 );
 
-                // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-α + Phase 3-β: chain to matching same-channel
+                // StampDirty on the same centre tile.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[spiritual_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[spiritual_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Spiritual);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Spiritual,
                         position: (cx, cy),
                         old,
@@ -554,13 +594,20 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     BEAUTY_MAX_RADIUS,
                 );
 
-                // Phase 3-α: record InfluenceChanged at the region centre.
+                // Phase 3-α + Phase 3-β: chain to matching same-channel
+                // StampDirty on the same centre tile.
                 let centre_idx = resources.influence_grid.idx(cx, cy);
                 let old = resources.influence_grid.current[beauty_idx][centre_idx] as f32;
                 let new = resources.influence_grid.pending[beauty_idx][centre_idx] as f32;
+                let parent = resources
+                    .causal_log
+                    .find_recent_stamp_dirty(centre_idx as u32, InfluenceChannel::Beauty);
+                let influence_id = resources.issue_event_id();
                 resources.causal_log.push(
                     centre_idx as u32,
                     CausalEvent::InfluenceChanged {
+                        id: influence_id,
+                        parent,
                         channel: InfluenceChannel::Beauty,
                         position: (cx, cy),
                         old,
