@@ -14,6 +14,7 @@
 //! (T7.7.B).
 
 use hecs::World;
+use sim_core::causal::CausalEvent;
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -76,6 +77,8 @@ impl RuntimeSystem for BuildingStampSystem {
             return;
         }
 
+        let tick = resources.current_tick;
+
         // Drain all queued events in FIFO order.
         while let Some(ev) = resources.building_event_queue.pop_front() {
             let (cx, cy) = ev.position;
@@ -91,10 +94,35 @@ impl RuntimeSystem for BuildingStampSystem {
             let x2 = cx.saturating_add(r).min(w - 1);
             let y2 = cy.saturating_add(r).min(h - 1);
 
+            // Phase 3-α: record the BuildingPlaced event onto the centre
+            // tile so the "왜?" UI can trace any downstream stamp/influence
+            // back to this FFI arrival.
+            let centre_idx = resources.influence_grid.idx(cx, cy) as u32;
+            resources.causal_log.push(
+                centre_idx,
+                CausalEvent::BuildingPlaced {
+                    position: ev.position,
+                    radius: r,
+                    tick,
+                },
+            );
+
             for ch in STAMPED_CHANNELS {
-                resources
-                    .influence_grid
-                    .mark_dirty(*ch, DirtyRegion::new(x1, y1, x2, y2));
+                let region = DirtyRegion::new(x1, y1, x2, y2);
+                resources.influence_grid.mark_dirty(*ch, region.clone());
+
+                // Phase 3-α: record the BSS dirty-mark on the same centre
+                // tile, once per stamped channel. Region is captured by
+                // value so the "왜?" UI can reproduce the BFS box even
+                // after IUS drains the dirty list.
+                resources.causal_log.push(
+                    centre_idx,
+                    CausalEvent::StampDirty {
+                        channel: *ch,
+                        region,
+                        tick,
+                    },
+                );
             }
         }
     }

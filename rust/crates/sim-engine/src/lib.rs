@@ -28,6 +28,7 @@
 #![warn(missing_docs)]
 
 use hecs::World;
+use sim_core::causal::CausalLogStorage;
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
@@ -100,6 +101,13 @@ pub struct SimResources {
     /// `BuildingStampSystem`. Pushed by `sim_bridge::WorldSimNode::on_building_placed`
     /// (which delegates to `sim_bridge::ffi::enqueue_building_placed`).
     pub building_event_queue: VecDeque<BuildingPlacedEvent>,
+
+    /// Sparse per-tile causal event log (V7 Phase 3-α). BSS pushes
+    /// `BuildingPlaced` + `StampDirty` records; IUS pushes
+    /// `InfluenceChanged` records once per drained dirty region per
+    /// channel. Consumed by the "왜?" UI (Week 6) to attribute
+    /// influence-grid state to the events that produced it.
+    pub causal_log: CausalLogStorage,
 }
 
 /// Owns the world, the resources, and the priority-sorted system list.
@@ -129,6 +137,7 @@ impl SimEngine {
                 material_blocking_cache: blocking_cache,
                 current_tick: 0,
                 building_event_queue: VecDeque::new(),
+                causal_log: CausalLogStorage::new(),
             },
             systems: Vec::new(),
             current_tick: 0,

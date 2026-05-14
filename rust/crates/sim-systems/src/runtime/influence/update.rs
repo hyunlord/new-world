@@ -118,6 +118,7 @@
 //! same path as Warmth/Noise/Spiritual).
 
 use hecs::World;
+use sim_core::causal::CausalEvent;
 use sim_core::influence::{
     propagate_bfs, propagate_danger, propagate_noise, propagate_shadowcast, InfluenceChannel,
 };
@@ -235,6 +236,10 @@ impl RuntimeSystem for InfluenceUpdateSystem {
         let spiritual_idx = InfluenceChannel::Spiritual as usize;
         let beauty_idx = InfluenceChannel::Beauty as usize;
 
+        // Phase 3-α: capture current tick once for every InfluenceChanged
+        // record emitted by the six channel branches below.
+        let tick = resources.current_tick;
+
         // ── Warmth branch (T7.10.A) ──────────────────────────────────────────
         // Drain Warmth dirty regions left by BuildingStampSystem (priority 90).
         // std::mem::take replaces with an empty Vec — this IS the drain (Cold-tier
@@ -269,6 +274,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     |i, _| i * WARMTH_DECAY_PER_STEP,
                     InfluenceChannel::Warmth,
                     WARMTH_MAX_RADIUS,
+                );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[warmth_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[warmth_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Warmth,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
                 );
             }
         } else {
@@ -307,6 +327,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     LIGHT_INITIAL_INTENSITY,
                     LIGHT_MAX_RADIUS,
                 );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[light_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[light_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Light,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
+                );
             }
         } else {
             // Warm-tier persistence (T7.10.B): mirror Cold-tier semantics so the
@@ -344,6 +379,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     pending,
                     (cx, cy),
                     NOISE_INITIAL_INTENSITY,
+                );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[noise_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[noise_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Noise,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
                 );
             }
         } else {
@@ -384,6 +434,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     pending,
                     (cx, cy),
                     DANGER_INITIAL_INTENSITY,
+                );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[danger_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[danger_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Danger,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
                 );
             }
         } else {
@@ -431,6 +496,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     InfluenceChannel::Spiritual,
                     SPIRITUAL_MAX_RADIUS,
                 );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[spiritual_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[spiritual_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Spiritual,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
+                );
             }
         } else {
             // Cold-tier persistence (T7.10.E, parity with Warmth): copy
@@ -472,6 +552,21 @@ impl RuntimeSystem for InfluenceUpdateSystem {
                     |i, _| i * BEAUTY_DECAY_PER_STEP,
                     InfluenceChannel::Beauty,
                     BEAUTY_MAX_RADIUS,
+                );
+
+                // Phase 3-α: record InfluenceChanged at the region centre.
+                let centre_idx = resources.influence_grid.idx(cx, cy);
+                let old = resources.influence_grid.current[beauty_idx][centre_idx] as f32;
+                let new = resources.influence_grid.pending[beauty_idx][centre_idx] as f32;
+                resources.causal_log.push(
+                    centre_idx as u32,
+                    CausalEvent::InfluenceChanged {
+                        channel: InfluenceChannel::Beauty,
+                        position: (cx, cy),
+                        old,
+                        new,
+                        tick,
+                    },
                 );
             }
         } else {

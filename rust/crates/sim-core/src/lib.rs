@@ -22,6 +22,7 @@ pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 pub mod material;
 pub mod tile;
 pub mod influence;
+pub mod causal;
 
 pub use tile::TileGrid;
 pub use influence::{
@@ -29,6 +30,7 @@ pub use influence::{
     InfluenceGrid, LodTier, MaterialBlockingCache, UpdateTier, propagate_bfs,
     propagate_danger, propagate_noise, propagate_shadowcast, stamp_social_aggregate,
 };
+pub use causal::{CausalEvent, CausalLogStorage, TileCausalLog, TILE_CAUSAL_RING_SIZE};
 
 pub use material::{
     MaterialId,
