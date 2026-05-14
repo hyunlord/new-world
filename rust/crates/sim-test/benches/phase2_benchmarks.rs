@@ -23,10 +23,11 @@
 
 use criterion::{black_box, criterion_group, criterion_main, BatchSize, Criterion};
 
+use sim_core::components::Position;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, SimEngine};
 use sim_systems::register_phase2_systems;
-use sim_systems::runtime::influence::agent_sample::{InfluenceSample, Position};
+use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 use sim_systems::runtime::influence::BuildingStampSystem;
 
 const W: u32 = 64;

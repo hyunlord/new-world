@@ -6,27 +6,18 @@
 //! Read-after-update contract: priority 110 > 100 (InfluenceUpdateSystem),
 //! so every read sees the freshly-swapped current buffer.
 //!
-//! # Local Position placeholder (Phase 2 only)
+//! # Position component
 //!
-//! `sim-core` does not have a canonical `Position` component until Phase 4
-//! (Agent Core). This module defines a local placeholder [`Position`] so
-//! harness tests can spawn entities and exercise the read path. When the
-//! canonical `Position` lands, this placeholder is removed and the ECS
-//! query is rewired in a single line.
+//! V7 Phase 4-α landed the canonical [`sim_core::components::Position`]
+//! and this module's placeholder was removed (`agent_sample.rs:9-15`
+//! landmark — single-line rewire). The re-export below preserves the
+//! `agent_sample::Position` symbol for downstream tests during the
+//! migration window.
 
 use hecs::World;
+pub use sim_core::components::Position;
 use sim_core::influence::InfluenceChannel;
 use sim_engine::{RuntimeSystem, SimResources};
-
-/// Local Phase 2 placeholder for the future `sim_core::Position` component
-/// (lands in Phase 4 Agent Core).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Position {
-    /// Tile X coordinate.
-    pub x: u32,
-    /// Tile Y coordinate.
-    pub y: u32,
-}
 
 /// Most recent influence sample observed by an agent (debug component).
 #[derive(Debug, Clone, Copy, Default)]

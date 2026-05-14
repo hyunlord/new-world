@@ -27,8 +27,9 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
-use hecs::World;
+use hecs::{Entity, World};
 use sim_core::causal::{CausalLogStorage, EventId};
+use sim_core::components::{Agent, Position};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
@@ -197,6 +198,16 @@ impl SimEngine {
     /// Number of completed ticks since construction.
     pub fn current_tick(&self) -> u64 {
         self.current_tick
+    }
+
+    /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a).
+    ///
+    /// Convenience wrapper over `self.world.spawn((Position, Agent))` so
+    /// callers do not need to import the components or remember the
+    /// canonical tuple. Returns the freshly-allocated `Entity` so the
+    /// caller can hold a stable handle for later queries.
+    pub fn spawn_agent(&mut self, x: u32, y: u32) -> Entity {
+        self.world.spawn((Position::new(x, y), Agent))
     }
 }
 

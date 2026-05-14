@@ -11,7 +11,8 @@ use sim_systems::runtime::influence::{
     AgentInfluenceSampleSystem, BuildingStampSystem, InfluenceUpdateSystem,
     InfluenceVisualizationSystem,
 };
-use sim_systems::runtime::influence::agent_sample::{InfluenceSample, Position};
+use sim_core::components::Position;
+use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 
 fn make_engine(w: u32, h: u32) -> SimEngine {
     SimEngine::new(w, h, MaterialRegistry::new())

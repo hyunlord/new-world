@@ -19,11 +19,13 @@ pub const V7_VERSION: &str = "0.7.0-init";
 /// by the loader so older builds never silently load incompatible mod data.
 pub const MATERIAL_SCHEMA_VERSION: u32 = 1;
 
+pub mod causal;
+pub mod components;
+pub mod influence;
 pub mod material;
 pub mod tile;
-pub mod influence;
-pub mod causal;
 
+pub use components::{Agent, Position};
 pub use tile::TileGrid;
 pub use influence::{
     AggKind, BlockingDerive, ChannelDef, DecayKind, DirtyRegion, InfluenceChannel,

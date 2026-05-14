@@ -27,11 +27,12 @@
 //!
 //! Run: `cargo test -p sim-test harness_substantial_ -- --nocapture`
 
+use sim_core::components::Position;
 use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, SimEngine};
 use sim_systems::register_phase2_systems;
-use sim_systems::runtime::influence::agent_sample::{InfluenceSample, Position};
+use sim_systems::runtime::influence::agent_sample::InfluenceSample;
 
 const W: u32 = 64;
 const H: u32 = 64;
