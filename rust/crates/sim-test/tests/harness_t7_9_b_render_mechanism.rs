@@ -174,9 +174,10 @@ fn harness_t7_9_b_bridge_identity_contract_preserved() {
         })
         .count();
     assert_eq!(
-        func_hits, 3,
-        "world_node.rs must expose exactly 3 #[func] attribute lines \
-         (get_influence_overlay, get_tile_detail, on_building_placed). \
+        func_hits, 5,
+        "world_node.rs must expose exactly 5 #[func] attribute lines \
+         (T7.7.B: get_influence_overlay, get_tile_detail, on_building_placed; \
+         γ-1: get_tile_causal_history, get_event_chain). \
          Found {func_hits}"
     );
 
@@ -191,6 +192,14 @@ fn harness_t7_9_b_bridge_identity_contract_preserved() {
     assert!(
         src.contains("fn on_building_placed(&mut self, x: i32, y: i32, radius: i32) -> bool"),
         "on_building_placed signature must be byte-identical"
+    );
+    assert!(
+        src.contains("fn get_tile_causal_history(&self, x: i32, y: i32) -> VarArray"),
+        "γ-1 get_tile_causal_history signature must be byte-identical"
+    );
+    assert!(
+        src.contains("fn get_event_chain(&self, x: i32, y: i32, event_id: i64) -> VarArray"),
+        "γ-1 get_event_chain signature must be byte-identical"
     );
 
     // Bridge Identity Contract: on_building_placed body is solely the forwarding call.
