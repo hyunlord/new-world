@@ -7,6 +7,10 @@
 //! - [`runtime::influence::AgentInfluenceSampleSystem`] priority 110, every tick
 //! - [`runtime::influence::InfluenceVisualizationSystem`] priority 1000, every 6 ticks
 //!
+//! Phase 4-β land: 1 agent system via [`register_agent_systems`].
+//!
+//! - [`runtime::agent::AgentMovementSystem`]            priority 120, every tick
+//!
 //! Phase 0 v0.1.3 patch Section 4.3 base.
 //!
 //! Dependencies:
@@ -39,5 +43,18 @@ pub fn register_phase2_systems(engine: &mut SimEngine) {
     ));
     engine.register_system(Box::new(
         runtime::influence::InfluenceVisualizationSystem::new(),
+    ));
+}
+
+/// Register the Phase 4-β agent stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 120 : [`runtime::agent::AgentMovementSystem`]
+///
+/// Runs after `AgentInfluenceSampleSystem` (priority 110) so movement
+/// operates on the post-sample tile.
+pub fn register_agent_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(
+        runtime::agent::AgentMovementSystem::new(),
     ));
 }
