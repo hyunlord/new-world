@@ -2328,6 +2328,8 @@
 	"ROOM_ROLE_RITUAL": "제의",
 	"ROOM_ROLE_MEMORIAL": "추모소",
 	"UI_CAUSAL_RECENT": "최근 인과",
+	"UI_CAUSAL_PANEL_TITLE": "왜? — 인과 기록",
+	"UI_CAUSAL_PANEL_PLACEHOLDER": "타일을 클릭하면 현재 상태에 이르기까지의 사건 사슬이 표시됩니다. (γ-2-β)",
 	"CAUSE_PRAY": "기도",
 	"CAUSE_MOURN": "애도",
 	"CAUSE_RITUAL_COMFORT": "의식 안락",

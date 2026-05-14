@@ -2328,6 +2328,8 @@
 	"ROOM_ROLE_RITUAL": "Ritual",
 	"ROOM_ROLE_MEMORIAL": "Memorial",
 	"UI_CAUSAL_RECENT": "Recent Causes",
+	"UI_CAUSAL_PANEL_TITLE": "Why? — Causal History",
+	"UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state. (γ-2-β)",
 	"CAUSE_PRAY": "Prayer",
 	"CAUSE_MOURN": "Mourning",
 	"CAUSE_RITUAL_COMFORT": "Ritual comfort",

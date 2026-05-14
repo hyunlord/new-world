@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5101,
+    "active_key_count": 5103,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5106,
+    "key_count": 5108,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -4171,6 +4171,8 @@
     "UI_CAPABILITIES": "Capabilities",
     "UI_CAST_BAR_FOLLOW": "Following: {name}",
     "UI_CAST_BAR_TOOLTIP": "{name} — {mood_text}",
+    "UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state. (γ-2-β)",
+    "UI_CAUSAL_PANEL_TITLE": "Why? — Causal History",
     "UI_CAUSAL_RECENT": "Recent Causes",
     "UI_CAUSE_OF_DEATH": "Cause of Death",
     "UI_CHANNEL_APPRENTICE": "Apprentice",

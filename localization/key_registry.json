@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5101,
-  "key_count": 5106,
+  "active_key_count": 5103,
+  "key_count": 5108,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -4138,6 +4138,8 @@
     "UI_CAPABILITIES": 3482,
     "UI_CAST_BAR_FOLLOW": 4322,
     "UI_CAST_BAR_TOOLTIP": 4323,
+    "UI_CAUSAL_PANEL_PLACEHOLDER": 5106,
+    "UI_CAUSAL_PANEL_TITLE": 5107,
     "UI_CAUSAL_RECENT": 4995,
     "UI_CAUSE_OF_DEATH": 3483,
     "UI_CHANNEL_APPRENTICE": 4671,
@@ -10215,7 +10217,9 @@
     "MAT_TIN_ORE",
     "MAT_TUFF",
     "MAT_WALNUT",
-    "MAT_WOOL_GRADE_PLANT"
+    "MAT_WOOL_GRADE_PLANT",
+    "UI_CAUSAL_PANEL_PLACEHOLDER",
+    "UI_CAUSAL_PANEL_TITLE"
   ],
   "removed_key_count": 5,
   "removed_keys": [

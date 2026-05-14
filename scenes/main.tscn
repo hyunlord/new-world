@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://v7init"]
+[gd_scene load_steps=3 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
+[ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
 
 [node name="Main" type="Node2D"]
 
@@ -12,3 +13,8 @@ script = ExtResource("1_renderer")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(960, 540)
 zoom = Vector2(1, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CausalPanel" type="Control" parent="UI"]
+script = ExtResource("2_causal")

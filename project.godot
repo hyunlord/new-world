@@ -21,6 +21,10 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[autoload]
+
+Locale="*res://scripts/core/locale.gd"
+
 [display]
 
 window/size/viewport_width=1920
