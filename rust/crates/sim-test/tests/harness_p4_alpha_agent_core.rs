@@ -59,7 +59,7 @@ fn harness_p4_alpha_components_mod_exports() {
     type _AT = sim_core::Agent;
     // Run-time witness so the test reports a clear pass.
     let _ = Position::new(0, 0);
-    let _ = Agent;
+    let _ = Agent { id: 0 };
 }
 
 // ─── Assertion 2: Position {x: u32, y: u32} field layout ────────────────────
@@ -86,16 +86,23 @@ fn harness_p4_alpha_position_new_stores_fields() {
     assert_eq!(p.y, 9);
 }
 
-// ─── Assertion 4: Agent zero-sized marker ──────────────────────────────────
+// ─── Assertion 4: Agent identity struct layout (P5α migration) ──────────────
 
-/// Type A — Agent marker zero-sized + Copy/Default contract.
+/// Type A — Agent layout contract.
+///
+/// Phase 4-α landed `Agent` as a ZST marker. V7 Phase 5-α (P5α-1) upgraded
+/// it to `Agent { id: AgentId }`. The contract is now:
+///   - `size_of::<Agent>() == size_of::<AgentId>()` (no padding)
+///   - Copy semantics retained
+///   - `Default` derive was dropped (a zero-id default would collide with
+///     the first id minted by `SimResources::issue_agent_id`)
 #[test]
-#[allow(clippy::default_constructed_unit_structs)]
 fn harness_p4_alpha_agent_marker_zero_sized() {
-    assert_eq!(std::mem::size_of::<Agent>(), 0);
-    // Copy + Default contract holds.
-    let _a: Agent = Agent;
-    let _b: Agent = Agent::default();
+    use sim_core::components::AgentId;
+    assert_eq!(std::mem::size_of::<Agent>(), std::mem::size_of::<AgentId>());
+    let a: Agent = Agent { id: 0 };
+    let b: Agent = a; // Copy
+    assert_eq!(a.id, b.id);
 }
 
 // ─── Assertion 5: SimEngine::spawn_agent API ───────────────────────────────

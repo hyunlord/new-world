@@ -12,6 +12,7 @@
 //! 100  InfluenceUpdateSystem
 //! 110  AgentInfluenceSampleSystem  ← agents read current-side influence
 //! 120  AgentMovementSystem         ← agents move AFTER reading influence
+//! 130  HungerDecaySystem           ← LANDED in V7 Phase 5-α
 //! 1000 InfluenceVisualizationSystem
 //! ```
 //!

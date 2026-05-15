@@ -104,7 +104,7 @@ fn harness_p4_beta_one_tick_brownian_step() {
     let mut e = fresh_engine();
     let id = e
         .world
-        .spawn((Position::new(10, 10), Agent, MovementRng::new(42)));
+        .spawn((Position::new(10, 10), Agent { id: 0 }, MovementRng::new(42)));
     let mut sys = AgentMovementSystem::new();
     sys.tick(&mut e.world, &mut e.resources);
     let p = *e.world.get::<&Position>(id).unwrap();
@@ -128,7 +128,7 @@ fn harness_p4_beta_determinism_full_trajectory() {
         let mut e = fresh_engine();
         let id = e
             .world
-            .spawn((Position::new(16, 16), Agent, MovementRng::new(seed)));
+            .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(seed)));
         let mut sys = AgentMovementSystem::new();
         let mut out = Vec::with_capacity(16);
         for _ in 0..16 {
@@ -151,10 +151,10 @@ fn harness_p4_beta_distinct_seeds_diverge() {
     let mut e = fresh_engine();
     let a = e
         .world
-        .spawn((Position::new(16, 16), Agent, MovementRng::new(1)));
+        .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(1)));
     let b = e
         .world
-        .spawn((Position::new(16, 16), Agent, MovementRng::new(2)));
+        .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(2)));
     let mut sys = AgentMovementSystem::new();
     let mut diverged = false;
     for _ in 0..32 {
@@ -184,7 +184,7 @@ fn harness_p4_beta_multi_agent_independence() {
     let mut solo_engine = fresh_engine();
     let solo = solo_engine
         .world
-        .spawn((Position::new(16, 16), Agent, MovementRng::new(7)));
+        .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(7)));
     let mut solo_sys = AgentMovementSystem::new();
     let mut solo_traj = Vec::with_capacity(16);
     for _ in 0..16 {
@@ -198,10 +198,10 @@ fn harness_p4_beta_multi_agent_independence() {
     let mut multi_engine = fresh_engine();
     let a = multi_engine
         .world
-        .spawn((Position::new(16, 16), Agent, MovementRng::new(7)));
+        .spawn((Position::new(16, 16), Agent { id: 0 }, MovementRng::new(7)));
     let _b = multi_engine
         .world
-        .spawn((Position::new(5, 5), Agent, MovementRng::new(13)));
+        .spawn((Position::new(5, 5), Agent { id: 0 }, MovementRng::new(13)));
     let mut multi_sys = AgentMovementSystem::new();
     let mut multi_traj = Vec::with_capacity(16);
     for _ in 0..16 {
@@ -236,10 +236,10 @@ fn harness_p4_beta_boundary_clamp() {
     let mut e = fresh_engine();
     let nw = e
         .world
-        .spawn((Position::new(0, 0), Agent, MovementRng::new(7)));
+        .spawn((Position::new(0, 0), Agent { id: 0 }, MovementRng::new(7)));
     let se = e.world.spawn((
         Position::new(W - 1, H - 1),
-        Agent,
+        Agent { id: 1 },
         MovementRng::new(13),
     ));
     let mut sys = AgentMovementSystem::new();
@@ -266,7 +266,7 @@ fn harness_p4_beta_register_and_progress() {
     let initial = Position::new(8, 8);
     let id = e
         .world
-        .spawn((initial, Agent, MovementRng::new(0x1000)));
+        .spawn((initial, Agent { id: 0 }, MovementRng::new(0x1000)));
 
     register_agent_systems(&mut e);
 
@@ -316,7 +316,7 @@ fn harness_p4_beta_influence_sampler_still_reads_canonical_position() {
 
     let id = e.world.spawn((
         Position::new(12, 12),
-        Agent,
+        Agent { id: 0 },
         InfluenceSample::default(),
         MovementRng::new(99),
     ));

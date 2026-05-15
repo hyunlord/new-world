@@ -2,6 +2,7 @@
 //!
 //! Phase 2 (T7.6 land): 4 influence RuntimeSystems.
 //! Phase 4-β land: `agent::AgentMovementSystem` (priority 120, every tick).
+//! Phase 5-α land: `needs::HungerDecaySystem` (priority 130, every tick).
 //!
 //! Future phases:
 //! - Phase 11 (Building Deep): `pub mod building;`
@@ -9,3 +10,4 @@
 
 pub mod agent;
 pub mod influence;
+pub mod needs;

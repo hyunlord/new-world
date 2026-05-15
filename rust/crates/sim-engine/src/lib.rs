@@ -29,7 +29,7 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::{CausalLogStorage, EventId};
-use sim_core::components::{Agent, Position};
+use sim_core::components::{Agent, AgentId, Position};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
@@ -117,6 +117,13 @@ pub struct SimResources {
     /// — uniqueness is the only invariant, and per-tick ordering is
     /// preserved by the priority-sorted system schedule.
     pub next_event_id: AtomicU64,
+
+    /// Monotonic source of [`AgentId`]s for the canonical `Agent`
+    /// component (V7 Phase 5-α / P5α-2). Allocated by
+    /// [`SimResources::issue_agent_id`] (mirrors `next_event_id`).
+    /// `Relaxed` ordering — agents are spawned single-threaded by the
+    /// priority-sorted scheduler and only uniqueness matters.
+    pub next_agent_id: AtomicU64,
 }
 
 impl SimResources {
@@ -128,6 +135,15 @@ impl SimResources {
     /// [`CausalLogStorage::trace_parents`]).
     pub fn issue_event_id(&self) -> EventId {
         self.next_event_id.fetch_add(1, Ordering::Relaxed)
+    }
+
+    /// Allocate the next monotonic [`AgentId`] (V7 Phase 5-α / P5α-2).
+    ///
+    /// Mirrors [`SimResources::issue_event_id`]. Called internally by
+    /// [`SimEngine::spawn_agent`] — callers should normally use that
+    /// rather than minting ids by hand.
+    pub fn issue_agent_id(&self) -> AgentId {
+        self.next_agent_id.fetch_add(1, Ordering::Relaxed)
     }
 }
 
@@ -160,6 +176,7 @@ impl SimEngine {
                 building_event_queue: VecDeque::new(),
                 causal_log: CausalLogStorage::new(),
                 next_event_id: AtomicU64::new(0),
+                next_agent_id: AtomicU64::new(0),
             },
             systems: Vec::new(),
             current_tick: 0,
@@ -200,14 +217,18 @@ impl SimEngine {
         self.current_tick
     }
 
-    /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a).
+    /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a;
+    /// Phase 5-α: now mints an [`AgentId`] internally).
     ///
-    /// Convenience wrapper over `self.world.spawn((Position, Agent))` so
-    /// callers do not need to import the components or remember the
-    /// canonical tuple. Returns the freshly-allocated `Entity` so the
-    /// caller can hold a stable handle for later queries.
+    /// Convenience wrapper over `self.world.spawn((Position, Agent { id }))`.
+    /// The id is allocated monotonically via
+    /// [`SimResources::issue_agent_id`]; callers should never construct
+    /// `Agent { id }` themselves outside of harness migration code.
+    /// Returns the freshly-allocated `Entity` so the caller can hold a
+    /// stable handle for later queries.
     pub fn spawn_agent(&mut self, x: u32, y: u32) -> Entity {
-        self.world.spawn((Position::new(x, y), Agent))
+        let id = self.resources.issue_agent_id();
+        self.world.spawn((Position::new(x, y), Agent { id }))
     }
 }
 

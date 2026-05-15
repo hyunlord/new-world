@@ -11,6 +11,10 @@
 //!
 //! - [`runtime::agent::AgentMovementSystem`]            priority 120, every tick
 //!
+//! Phase 5-α land: 1 needs system via [`register_needs_systems`].
+//!
+//! - [`runtime::needs::HungerDecaySystem`]              priority 130, every tick
+//!
 //! Phase 0 v0.1.3 patch Section 4.3 base.
 //!
 //! Dependencies:
@@ -56,5 +60,19 @@ pub fn register_phase2_systems(engine: &mut SimEngine) {
 pub fn register_agent_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(
         runtime::agent::AgentMovementSystem::new(),
+    ));
+}
+
+/// Register the Phase 5-α needs stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 130 : [`runtime::needs::HungerDecaySystem`]
+///
+/// Runs after `AgentMovementSystem` (priority 120) so movement reads the
+/// pre-decay state, and before `InfluenceVisualizationSystem` (1000) so
+/// the visualisation observes the post-decay value.
+pub fn register_needs_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(
+        runtime::needs::HungerDecaySystem::new(),
     ));
 }
