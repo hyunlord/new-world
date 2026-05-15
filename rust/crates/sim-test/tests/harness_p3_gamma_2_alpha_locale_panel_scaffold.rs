@@ -294,10 +294,26 @@ fn harness_p3_gamma_2_alpha_causal_panel_gd_uses_locale_keys() {
 fn harness_p3_gamma_2_alpha_main_tscn_mounts_causal_panel() {
     let src = include_str!("../../../../scenes/main.tscn");
 
+    // γ-2-α requires `load_steps>=3` (header + ext_resources for renderer
+    // + causal panel). Later phases may add additional ext_resources
+    // (e.g., V7 Phase 4-γ adds the AgentRenderer script → load_steps=4),
+    // so this assertion checks the panel's contribution is still present
+    // rather than freezing the exact count.
+    let header_line = src
+        .lines()
+        .find(|l| l.starts_with("[gd_scene"))
+        .expect("main.tscn must start with a [gd_scene ...] header");
+    let load_steps = header_line
+        .split_whitespace()
+        .find_map(|tok| tok.strip_prefix("load_steps="))
+        .and_then(|v| v.parse::<u32>().ok())
+        .expect("header must declare `load_steps=N`");
     assert!(
-        src.contains("load_steps=3"),
-        "main.tscn must declare `load_steps=3` after γ-2-α adds the panel ext_resource \
-         (locked fact P3γ2α-U2)"
+        load_steps >= 3,
+        "main.tscn must declare `load_steps>=3` after γ-2-α adds the panel ext_resource \
+         (locked fact P3γ2α-U2, relaxed from `=3` for forward-additive scene mutation): \
+         got load_steps={}",
+        load_steps
     );
     assert!(
         src.contains("res://scripts/ui/panels/causal_panel.gd")

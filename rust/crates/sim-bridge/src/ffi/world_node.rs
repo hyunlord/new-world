@@ -36,24 +36,43 @@
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId};
+use sim_core::components::{Agent, Position};
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources};
-use sim_systems::register_phase2_systems;
+use sim_systems::runtime::agent::MovementRng;
+use sim_systems::{register_agent_systems, register_phase2_systems};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_H: u32 = 64;
 
+/// P4-γ bootstrap: number of agents spawned in `init` per axis on an
+/// 8×8 grid (64 total). Tuned so VLM clearly sees a population while the
+/// 1K@60FPS gate (planning §2.3) has substantial headroom.
+const BOOTSTRAP_AGENT_AXIS: u32 = 8;
+/// P4-γ bootstrap: stride in tiles between adjacent agents on the
+/// `BOOTSTRAP_AGENT_AXIS × BOOTSTRAP_AGENT_AXIS` lattice.
+const BOOTSTRAP_AGENT_STRIDE: u32 = 8;
+/// P4-γ bootstrap: tile offset of the lattice origin so agents are
+/// inset from the grid edge (so Brownian motion does not immediately
+/// clamp against the boundary).
+const BOOTSTRAP_AGENT_OFFSET: u32 = 4;
+/// P4-γ bootstrap: base offset for per-agent `MovementRng` seeds —
+/// keeps seeds far from 0 (splitmix64 escapes 0 on its first call,
+/// but a non-zero base produces a more visibly varied first frame).
+const BOOTSTRAP_RNG_BASE: u64 = 0xA5A5_A5A5_0000_0001;
+
 /// Godot `Node` subclass wrapping a [`SimEngine`] instance.
 ///
-/// Exposes 5 FFI methods to GDScript/Godot:
+/// Exposes 6 FFI methods to GDScript/Godot:
 /// - [`WorldSimNode::get_influence_overlay`]
 /// - [`WorldSimNode::get_tile_detail`]
 /// - [`WorldSimNode::on_building_placed`]
 /// - [`WorldSimNode::get_tile_causal_history`] (γ-1)
 /// - [`WorldSimNode::get_event_chain`] (γ-1)
+/// - [`WorldSimNode::get_agent_snapshot`] (P4-γ)
 #[derive(GodotClass)]
 #[class(base=Node)]
 pub struct WorldSimNode {
@@ -72,6 +91,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
         register_phase2_systems(&mut engine);
+        register_agent_systems(&mut engine);
+        bootstrap_spawn_agents(&mut engine);
         Self {
             engine,
             accumulator: 0.0,
@@ -192,6 +213,25 @@ impl WorldSimNode {
     fn get_event_chain(&self, x: i32, y: i32, event_id: i64) -> VarArray {
         let views = try_collect_event_chain(&self.engine.resources, x, y, event_id);
         event_views_to_variant_array(&views)
+    }
+
+    /// P4-γ FFI — return the current `(Agent, Position)` snapshot as a
+    /// dictionary of three parallel `PackedArray`s with always-equal
+    /// lengths. Keys:
+    ///   - `ids`: `PackedInt64Array` — `Entity::to_bits().get() as i64`
+    ///     per row. Stable within a single session; not stable across
+    ///     world resets.
+    ///   - `xs`:  `PackedInt32Array` — tile-x per row, as `i32`.
+    ///   - `ys`:  `PackedInt32Array` — tile-y per row, as `i32`.
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_agent_snapshot`] (Bridge Identity Contract — γ extension).
+    /// Sim-test verifies the schema by calling the pure-Rust collector
+    /// directly (Godot runtime not required).
+    #[func]
+    fn get_agent_snapshot(&self) -> VarDictionary {
+        let rows = collect_agent_snapshot(&self.engine.world);
+        agent_rows_to_dict(&rows)
     }
 }
 
@@ -506,4 +546,119 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
         arr.push(&Variant::from(event_view_to_dict(view)));
     }
     arr
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// P4-γ: Agent snapshot FFI surface — pure-Rust collector + helpers
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the agent snapshot returned by [`collect_agent_snapshot`].
+///
+/// Stable serialisation contract for the V7 Phase 4-γ FFI: the hecs
+/// entity index, plus the agent's current tile position. Three parallel
+/// fields → three parallel `PackedArray`s on the Godot side.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AgentSnapshotRow {
+    /// `hecs::Entity::to_bits().get()` — stable id within a single
+    /// `SimEngine` session (not stable across resets or save/load).
+    pub entity_bits: u64,
+    /// Tile-x coordinate (post-tick if called after `engine.tick()`).
+    pub x: u32,
+    /// Tile-y coordinate (post-tick if called after `engine.tick()`).
+    pub y: u32,
+}
+
+/// P4-γ pure-Rust collector: iterate the world for `(Agent, Position)`
+/// and return one row per matching entity in hecs query order.
+///
+/// Order across two consecutive calls on an unchanged world is stable
+/// because hecs archetype iteration order is deterministic. Entities
+/// possessing `Position` but *not* `Agent` are excluded by the query
+/// filter (the `(&Agent, &Position)` tuple requires both).
+///
+/// Mirrors `WorldSimNode::get_agent_snapshot` minus the Godot
+/// `PackedArray` marshalling — sim-test exercises this directly without
+/// a Godot runtime.
+pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
+    let mut rows = Vec::new();
+    for (entity, (_, pos)) in world.query::<(&Agent, &Position)>().iter() {
+        rows.push(AgentSnapshotRow {
+            entity_bits: entity.to_bits().get(),
+            x: pos.x,
+            y: pos.y,
+        });
+    }
+    rows
+}
+
+/// Pure-Rust split of `[AgentSnapshotRow]` into three parallel `Vec`s
+/// matching the Godot-side `PackedArray` types (`i64`, `i32`, `i32`).
+///
+/// Lengths are equal by construction. Exposed so sim-test can validate
+/// the FFI marshalling invariant without a Godot runtime — `agent_rows_to_dict`
+/// is a thin `Vec → PackedArray` adapter over this function.
+pub fn agent_rows_split(rows: &[AgentSnapshotRow]) -> (Vec<i64>, Vec<i32>, Vec<i32>) {
+    let n = rows.len();
+    let mut ids = Vec::with_capacity(n);
+    let mut xs = Vec::with_capacity(n);
+    let mut ys = Vec::with_capacity(n);
+    for row in rows {
+        ids.push(row.entity_bits as i64);
+        xs.push(row.x as i32);
+        ys.push(row.y as i32);
+    }
+    (ids, xs, ys)
+}
+
+/// Marshal a [`AgentSnapshotRow`] slice into the FFI dictionary shape
+/// documented on [`WorldSimNode::get_agent_snapshot`]. Three keys, three
+/// `PackedArray`s, lengths always equal to `rows.len()`.
+fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
+    let (ids_vec, xs_vec, ys_vec) = agent_rows_split(rows);
+    let mut ids = PackedInt64Array::new();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    ids.resize(ids_vec.len());
+    xs.resize(xs_vec.len());
+    ys.resize(ys_vec.len());
+    for (i, v) in ids_vec.iter().enumerate() {
+        ids[i] = *v;
+    }
+    for (i, v) in xs_vec.iter().enumerate() {
+        xs[i] = *v;
+    }
+    for (i, v) in ys_vec.iter().enumerate() {
+        ys[i] = *v;
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("ids", ids);
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict
+}
+
+/// P4-γ bootstrap: spawn `BOOTSTRAP_AGENT_AXIS²` agents on a deterministic
+/// lattice with per-agent `MovementRng` seeded by lattice index.
+///
+/// Lattice: `(OFFSET + i·STRIDE, OFFSET + j·STRIDE)` for `i, j ∈
+/// 0..AXIS`. Seed: `BOOTSTRAP_RNG_BASE + lattice_index`. Determinism is
+/// session-level (not byte-stable across `init` calls because hecs
+/// entity ids depend on allocation order, but trajectory determinism is
+/// guaranteed by the explicit seed).
+///
+/// Kept inside this module so the `init` path stays straight-line and
+/// the visual-bootstrap policy lives next to its use site.
+fn bootstrap_spawn_agents(engine: &mut SimEngine) {
+    for j in 0..BOOTSTRAP_AGENT_AXIS {
+        for i in 0..BOOTSTRAP_AGENT_AXIS {
+            let x = BOOTSTRAP_AGENT_OFFSET + i * BOOTSTRAP_AGENT_STRIDE;
+            let y = BOOTSTRAP_AGENT_OFFSET + j * BOOTSTRAP_AGENT_STRIDE;
+            let entity = engine.spawn_agent(x, y);
+            let seed = BOOTSTRAP_RNG_BASE.wrapping_add((j * BOOTSTRAP_AGENT_AXIS + i) as u64);
+            engine
+                .world
+                .insert_one(entity, MovementRng::new(seed))
+                .expect("bootstrap agent entity must still exist");
+        }
+    }
 }

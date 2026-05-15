@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://v7init"]
+[gd_scene load_steps=4 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
+[ext_resource type="Script" path="res://scripts/ui/agent_renderer.gd" id="3_agents"]
 
 [node name="Main" type="Node2D"]
 
@@ -9,6 +10,9 @@
 
 [node name="WorldRenderer" type="Node2D" parent="."]
 script = ExtResource("1_renderer")
+
+[node name="AgentRenderer" type="Node2D" parent="."]
+script = ExtResource("3_agents")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(960, 540)

@@ -173,12 +173,17 @@ fn harness_t7_9_b_bridge_identity_contract_preserved() {
             trimmed.starts_with("#[func]") && !line.contains("//")
         })
         .count();
-    assert_eq!(
-        func_hits, 5,
-        "world_node.rs must expose exactly 5 #[func] attribute lines \
-         (T7.7.B: get_influence_overlay, get_tile_detail, on_building_placed; \
-         γ-1: get_tile_causal_history, get_event_chain). \
-         Found {func_hits}"
+    // T7.7.B baseline: 3 `#[func]` (overlay/tile_detail/on_building_placed).
+    // γ-1 added 2 (get_tile_causal_history/get_event_chain). V7 Phase 4-γ
+    // adds get_agent_snapshot. The regression invariant is that the
+    // T7.7.B/γ-1 surface is preserved (verified by the per-signature
+    // asserts below); forward-additive `#[func]` extensions are allowed.
+    assert!(
+        func_hits >= 5,
+        "world_node.rs must expose at least the 5 #[func] attribute lines \
+         from T7.7.B + γ-1 (overlay/tile_detail/on_building_placed + \
+         get_tile_causal_history/get_event_chain). Forward-additive \
+         extensions are allowed. Found {func_hits}"
     );
 
     assert!(

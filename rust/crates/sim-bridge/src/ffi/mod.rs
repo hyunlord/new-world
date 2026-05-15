@@ -21,4 +21,5 @@ pub use world_node::{
     collect_event_chain, collect_tile_causal_history, tile_idx_from_coords,
     try_collect_event_chain, try_collect_tile_causal_history, CausalEventView,
 };
+pub use world_node::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
 pub use world_node::WorldSimNode;
