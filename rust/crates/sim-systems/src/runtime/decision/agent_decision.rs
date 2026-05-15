@@ -54,7 +54,7 @@
 
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason};
-use sim_core::components::{Agent, AgentState, Hunger, Position, TargetKind, Thirst};
+use sim_core::components::{Agent, AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Hunger value strictly above which an Idle agent transitions to
@@ -85,6 +85,18 @@ pub const HUNGER_CONSUME_AMOUNT: f32 = 30.0;
 /// step completes. Mirrors `HUNGER_CONSUME_AMOUNT` (in `f64` to match
 /// the new β [`Thirst`] component).
 pub const THIRST_CONSUME_AMOUNT: f64 = 30.0;
+
+/// Fatigue value strictly above which an Idle agent transitions to
+/// `Seeking { Sleep }` (only if neither Hunger nor Thirst has already
+/// triggered).
+///
+/// `f64` to match the new γ [`Sleep`] component (V7 Phase 5-γ / P5γ-8).
+pub const FATIGUE_THRESHOLD: f64 = 50.0;
+
+/// Amount subtracted from `Sleep.fatigue` when a `Consuming { Sleep }`
+/// step completes. Mirrors `HUNGER_CONSUME_AMOUNT` / `THIRST_CONSUME_AMOUNT`
+/// (in `f64` to match the new γ [`Sleep`] component, V7 Phase 5-γ / P5γ-8).
+pub const FATIGUE_CONSUME_AMOUNT: f64 = 30.0;
 
 /// Phase 5-β decision system. Stateless — all per-agent state lives
 /// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
@@ -128,12 +140,13 @@ impl RuntimeSystem for AgentDecisionSystem {
             &mut AgentState,
             Option<&mut Hunger>,
             Option<&mut Thirst>,
+            Option<&mut Sleep>,
         )>();
-        for (_entity, (pos, agent, state, hunger_opt, thirst_opt)) in query.iter() {
+        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt)) in query.iter() {
             let tile_idx = pos.y * width + pos.x;
             match *state {
                 AgentState::Idle => {
-                    // Hunger wins ties — deterministic FSM ordering.
+                    // Deterministic FSM ordering: Hunger > Thirst > Fatigue.
                     let breached = if hunger_opt
                         .as_ref()
                         .is_some_and(|h| h.value > HUNGER_THRESHOLD)
@@ -144,6 +157,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                         .is_some_and(|t| t.value > THIRST_THRESHOLD)
                     {
                         Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
+                    } else if sleep_opt
+                        .as_ref()
+                        .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD)
+                    {
+                        Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
                     } else {
                         None
                     };
@@ -184,6 +202,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .is_some_and(|v| v > 0),
                         TargetKind::Water => resources
                             .water_tiles
+                            .get(&key)
+                            .copied()
+                            .is_some_and(|v| v > 0),
+                        TargetKind::Sleep => resources
+                            .sleep_tiles
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
@@ -229,6 +252,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                             if let Some(t) = thirst_opt {
                                 t.value = (t.value - THIRST_CONSUME_AMOUNT).max(0.0);
+                            }
+                            *state = AgentState::Idle;
+                        }
+                        TargetKind::Sleep => {
+                            if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
+                                *counter = counter.saturating_sub(1);
+                                if *counter == 0 {
+                                    resources.sleep_tiles.remove(&key);
+                                }
+                            }
+                            if let Some(s) = sleep_opt {
+                                s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
                             }
                             *state = AgentState::Idle;
                         }

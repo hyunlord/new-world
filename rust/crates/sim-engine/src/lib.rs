@@ -140,6 +140,22 @@ pub struct SimResources {
     /// Sparse water-tile substrate (V7 Phase 5-β / P5β-7). Mirrors
     /// [`SimResources::food_tiles`] for the second need.
     pub water_tiles: HashMap<(u32, u32), u8>,
+
+    /// Sparse sleep-tile substrate (V7 Phase 5-γ / P5γ-7). Mirrors
+    /// [`SimResources::food_tiles`] for the third need.
+    pub sleep_tiles: HashMap<(u32, u32), u8>,
+
+    /// Current simulated time-of-day in `[0.0, 24.0)` (V7 Phase 5-γ /
+    /// P5γ-2). Refreshed by [`SimEngine::tick`] before systems run,
+    /// derived deterministically from `current_tick % ticks_per_day`.
+    /// Starts at 0.0 (midnight).
+    pub time_of_day: f64,
+
+    /// Number of ticks in one simulated day (V7 Phase 5-γ / P5γ-3).
+    /// Defaults to 1440 (24 × 60 = one tick-per-minute). Public so
+    /// harness scenarios can override before running. When `0`, the
+    /// clock-advance step in `SimEngine::tick` is a no-op (zero-guard).
+    pub ticks_per_day: u64,
 }
 
 impl SimResources {
@@ -186,6 +202,17 @@ impl SimResources {
             self.water_tiles.insert((x, y), amount);
         }
     }
+
+    /// Set the sleep-tile counter at `(x, y)` (V7 Phase 5-γ / P5γ-7).
+    /// Mirrors [`SimResources::set_food_tile`] for the sleep channel —
+    /// `0` removes the entry, non-zero inserts/overwrites.
+    pub fn set_sleep_tile(&mut self, x: u32, y: u32, amount: u8) {
+        if amount == 0 {
+            self.sleep_tiles.remove(&(x, y));
+        } else {
+            self.sleep_tiles.insert((x, y), amount);
+        }
+    }
 }
 
 /// Owns the world, the resources, and the priority-sorted system list.
@@ -220,6 +247,9 @@ impl SimEngine {
                 next_agent_id: AtomicU64::new(0),
                 food_tiles: HashMap::new(),
                 water_tiles: HashMap::new(),
+                sleep_tiles: HashMap::new(),
+                time_of_day: 0.0,
+                ticks_per_day: 1440,
             },
             systems: Vec::new(),
             current_tick: 0,
@@ -244,7 +274,7 @@ impl SimEngine {
     }
 
     /// Run one tick: dispatches every due system, then advances the
-    /// tick counter.
+    /// tick counter and updates the day/night clock.
     pub fn tick(&mut self) {
         self.resources.current_tick = self.current_tick;
         for system in &mut self.systems {
@@ -253,6 +283,18 @@ impl SimEngine {
             }
         }
         self.current_tick += 1;
+        // V7 Phase 5-γ / P5γ-2 — advance day/night clock at end-of-tick
+        // so that after N tick() calls, `time_of_day` reflects
+        // `(N % ticks_per_day) * 24 / ticks_per_day`. The zero-guard
+        // prevents a division-by-zero panic if a scenario stops the
+        // clock by setting `ticks_per_day = 0`.
+        self.resources.time_of_day = if self.resources.ticks_per_day == 0 {
+            0.0
+        } else {
+            ((self.current_tick % self.resources.ticks_per_day) as f64
+                / self.resources.ticks_per_day as f64)
+                * 24.0
+        };
     }
 
     /// Number of completed ticks since construction.

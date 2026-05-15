@@ -985,16 +985,20 @@ fn harness_p5_beta_consume_amount_constants_locked_to_thirty() {
 // compile, immediately surfacing the scope creep.
 #[test]
 fn harness_p5_beta_target_kind_has_exactly_two_variants() {
-    // Exhaustive match — no wildcard. If a Generator silently adds a
-    // third `TargetKind` variant (e.g. `TargetKind::Sleep` ahead of γ),
-    // the match becomes non-exhaustive and the test fails to compile.
+    // Exhaustive match — no wildcard. β-era tripwire was designed to
+    // fail compilation when γ adds `TargetKind::Sleep`. γ has now
+    // landed, so the discriminator covers all three variants — but
+    // the exhaustive match (no wildcard) still guards against further
+    // unannounced variant additions in δ+.
     fn discriminator(k: TargetKind) -> &'static str {
         match k {
             TargetKind::Food => "food",
             TargetKind::Water => "water",
+            TargetKind::Sleep => "sleep",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");
     assert_eq!(discriminator(TargetKind::Water), "water");
-    println!("[β-19] TargetKind has exactly 2 variants (Food, Water) ✓");
+    assert_eq!(discriminator(TargetKind::Sleep), "sleep");
+    println!("[β-19/γ] TargetKind has exactly 3 variants (Food, Water, Sleep) ✓");
 }

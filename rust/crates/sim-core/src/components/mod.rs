@@ -11,17 +11,23 @@
 //! FSM ([`AgentState`] + [`TargetKind`]) that consumes both needs and
 //! emits the first agent-originated `CausalEvent::AgentDecision`.
 //!
+//! Phase 5-γ adds the third need ([`Sleep`]) alongside the day/night
+//! clock substrate (see `sim_engine::SimResources::time_of_day` /
+//! `ticks_per_day` and `sim_systems::runtime::needs::SleepDecaySystem`).
+//!
 //! See `.harness/plans/phase4.md` §2 and `.harness/plans/phase5.md`
-//! §2.1 / §2.β for the full sub-stage decomposition.
+//! §2.1 / §2.β / §2.γ for the full sub-stage decomposition.
 
 pub mod agent;
 pub mod agent_state;
 pub mod hunger;
 pub mod position;
+pub mod sleep;
 pub mod thirst;
 
 pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
 pub use hunger::Hunger;
 pub use position::Position;
+pub use sleep::Sleep;
 pub use thirst::Thirst;

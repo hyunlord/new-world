@@ -15,6 +15,7 @@
 //!
 //! - [`runtime::needs::HungerDecaySystem`]              priority 130, every tick
 //! - [`runtime::needs::ThirstDecaySystem`]              priority 131, every tick (Phase 5-β)
+//! - [`runtime::needs::SleepDecaySystem`]               priority 132, every tick (Phase 5-γ)
 //!
 //! Phase 5-β land: 1 decision system via [`register_decision_systems`].
 //!
@@ -68,14 +69,15 @@ pub fn register_agent_systems(engine: &mut SimEngine) {
     ));
 }
 
-/// Register the Phase 5-α/β needs stack on `engine`.
+/// Register the Phase 5-α/β/γ needs stack on `engine`.
 ///
 /// Registers (in priority order after sorting):
 /// - 130 : [`runtime::needs::HungerDecaySystem`]
 /// - 131 : [`runtime::needs::ThirstDecaySystem`] (Phase 5-β)
+/// - 132 : [`runtime::needs::SleepDecaySystem`] (Phase 5-γ)
 ///
-/// Both run after `AgentDecisionSystem` (priority 125) so the decision
-/// system reads pre-decay need values, and before
+/// All three run after `AgentDecisionSystem` (priority 125) so the
+/// decision system reads pre-decay need values, and before
 /// `InfluenceVisualizationSystem` (1000) so the visualisation observes
 /// the post-decay values.
 pub fn register_needs_systems(engine: &mut SimEngine) {
@@ -84,6 +86,9 @@ pub fn register_needs_systems(engine: &mut SimEngine) {
     ));
     engine.register_system(Box::new(
         runtime::needs::ThirstDecaySystem::new(),
+    ));
+    engine.register_system(Box::new(
+        runtime::needs::SleepDecaySystem::new(),
     ));
 }
 

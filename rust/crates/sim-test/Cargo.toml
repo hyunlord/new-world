@@ -7,6 +7,7 @@ description = "WorldSim test harness — long-running simulation tests + integra
 
 [dependencies]
 hecs = { workspace = true }
+ron = { workspace = true }
 serde = { workspace = true }
 sim-core = { path = "../sim-core" }
 sim-engine = { path = "../sim-engine" }

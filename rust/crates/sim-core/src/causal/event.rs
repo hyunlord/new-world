@@ -30,13 +30,17 @@ use crate::influence::{DirtyRegion, InfluenceChannel};
 /// P5β-3). Encoded into [`CausalEvent::AgentDecision`] so the "왜?" UI
 /// can surface "왜 이 agent가 이 길을 갔나?" in a stable, machine-
 /// readable form. Phase 5-β scope is intentionally narrow: only need-
-/// driven breaches. Mood/morale/social reasons land in γ/δ.
+/// driven breaches. Phase 5-γ adds the Fatigue branch.
+/// Mood/morale/social reasons land in δ.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DecisionReason {
     /// Hunger crossed `HUNGER_THRESHOLD` upward this tick.
     HungerThresholdBreach,
     /// Thirst crossed `THIRST_THRESHOLD` upward this tick.
     ThirstThresholdBreach,
+    /// Sleep fatigue crossed `FATIGUE_THRESHOLD` upward this tick
+    /// (V7 Phase 5-γ / P5γ-6).
+    FatigueThresholdBreach,
 }
 
 impl DecisionReason {
@@ -47,6 +51,7 @@ impl DecisionReason {
         match self {
             DecisionReason::HungerThresholdBreach => "hunger_threshold_breach",
             DecisionReason::ThirstThresholdBreach => "thirst_threshold_breach",
+            DecisionReason::FatigueThresholdBreach => "fatigue_threshold_breach",
         }
     }
 }
@@ -378,6 +383,10 @@ mod tests {
         assert_eq!(
             DecisionReason::ThirstThresholdBreach.as_str(),
             "thirst_threshold_breach"
+        );
+        assert_eq!(
+            DecisionReason::FatigueThresholdBreach.as_str(),
+            "fatigue_threshold_breach"
         );
 
         // Root agent decision (no influence antecedent).
