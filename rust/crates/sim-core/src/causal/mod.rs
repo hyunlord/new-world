@@ -23,6 +23,6 @@ pub mod event;
 pub mod ring_buffer;
 pub mod storage;
 
-pub use event::{CausalEvent, EventId};
+pub use event::{CausalEvent, DecisionReason, EventId};
 pub use ring_buffer::{TileCausalLog, TILE_CAUSAL_RING_SIZE};
 pub use storage::CausalLogStorage;

@@ -7,13 +7,21 @@
 //! Phase 5-α extends the surface with [`AgentId`] (re-exported here) and
 //! the [`Hunger`] need component — the first daily-routine driver.
 //!
-//! See `.harness/plans/phase4.md` §2 and `.harness/plans/phase5.md` §2.1
-//! for the full sub-stage decomposition.
+//! Phase 5-β adds the second need ([`Thirst`]) and the agent-decision
+//! FSM ([`AgentState`] + [`TargetKind`]) that consumes both needs and
+//! emits the first agent-originated `CausalEvent::AgentDecision`.
+//!
+//! See `.harness/plans/phase4.md` §2 and `.harness/plans/phase5.md`
+//! §2.1 / §2.β for the full sub-stage decomposition.
 
 pub mod agent;
+pub mod agent_state;
 pub mod hunger;
 pub mod position;
+pub mod thirst;
 
 pub use agent::{Agent, AgentId};
+pub use agent_state::{AgentState, TargetKind};
 pub use hunger::Hunger;
 pub use position::Position;
+pub use thirst::Thirst;

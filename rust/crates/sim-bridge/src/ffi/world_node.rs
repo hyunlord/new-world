@@ -304,24 +304,28 @@ fn channel_key(ch: InfluenceChannel) -> &'static str {
 /// directly to verify the schema without depending on Godot runtime.
 ///
 /// Discriminator: [`CausalEventView::kind`] is one of `"building_placed"`,
-/// `"stamp_dirty"`, `"influence_changed"`. Variant-specific fields are
-/// `Some` only for the matching kind.
+/// `"stamp_dirty"`, `"influence_changed"`, `"agent_decision"`. Variant-
+/// specific fields are `Some` only for the matching kind.
 ///
 /// Field mapping:
 /// - `id`, `tick` — always populated (every event).
 /// - `parent` — `Some(id)` for chain children, `None` for roots
-///   (`BuildingPlaced`) or after parent eviction. Serialised as `-1` for
-///   `None` in the dictionary form.
+///   (`BuildingPlaced`, agent-originated root decisions) or after parent
+///   eviction. Serialised as `-1` for `None` in the dictionary form.
 /// - `channel` — `Some` for `StampDirty` / `InfluenceChanged` only.
 /// - `position` — origin `(x, y)` for `BuildingPlaced`; sample centre for
-///   `InfluenceChanged`; `None` for `StampDirty` (the region covers it).
+///   `InfluenceChanged`; decision tile for `AgentDecision`; `None` for
+///   `StampDirty` (the region covers it).
 /// - `radius` — `Some` only for `BuildingPlaced`.
 /// - `region` — `Some(min_x, min_y, max_x, max_y)` only for `StampDirty`.
 /// - `old_value` / `new_value` — `Some` only for `InfluenceChanged`.
+/// - `agent_id` — `Some` only for `AgentDecision` (the deciding agent).
+/// - `reason` — `Some` only for `AgentDecision` (e.g.
+///   `"hunger_threshold_breach"`).
 #[derive(Debug, Clone, PartialEq)]
 pub struct CausalEventView {
     /// String discriminator: `"building_placed"` | `"stamp_dirty"` |
-    /// `"influence_changed"`.
+    /// `"influence_changed"` | `"agent_decision"`.
     pub kind: &'static str,
     /// Monotonic event id (V7 Phase 3-β).
     pub id: EventId,
@@ -330,7 +334,7 @@ pub struct CausalEventView {
     /// Simulation tick the event was recorded at.
     pub tick: u64,
     /// Channel index (matches [`InfluenceChannel`] ordering), or `None`
-    /// for `BuildingPlaced`.
+    /// for `BuildingPlaced` / `AgentDecision`.
     pub channel: Option<u8>,
     /// Origin / sample tile, or `None` for `StampDirty`.
     pub position: Option<(u32, u32)>,
@@ -342,6 +346,11 @@ pub struct CausalEventView {
     pub old_value: Option<f32>,
     /// Post-propagation intensity at `position` (InfluenceChanged only).
     pub new_value: Option<f32>,
+    /// Deciding agent id (AgentDecision only — Phase 5-β).
+    pub agent_id: Option<u64>,
+    /// Reason discriminator string (AgentDecision only — Phase 5-β).
+    /// One of `"hunger_threshold_breach"`, `"thirst_threshold_breach"`.
+    pub reason: Option<&'static str>,
 }
 
 impl CausalEventView {
@@ -365,6 +374,8 @@ impl CausalEventView {
                 region: None,
                 old_value: None,
                 new_value: None,
+                agent_id: None,
+                reason: None,
             },
             CausalEvent::StampDirty {
                 id,
@@ -383,6 +394,8 @@ impl CausalEventView {
                 region: Some(dirty_region_bounds(region)),
                 old_value: None,
                 new_value: None,
+                agent_id: None,
+                reason: None,
             },
             CausalEvent::InfluenceChanged {
                 id,
@@ -403,6 +416,29 @@ impl CausalEventView {
                 region: None,
                 old_value: Some(*old),
                 new_value: Some(*new),
+                agent_id: None,
+                reason: None,
+            },
+            CausalEvent::AgentDecision {
+                id,
+                parent,
+                agent,
+                position,
+                reason,
+                tick,
+            } => Self {
+                kind: "agent_decision",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: Some(*position),
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: Some(*agent),
+                reason: Some(reason.as_str()),
             },
         }
     }
@@ -534,6 +570,12 @@ fn event_view_to_dict(view: &CausalEventView) -> VarDictionary {
     }
     if let Some(new) = view.new_value {
         dict.set("new", new);
+    }
+    if let Some(agent_id) = view.agent_id {
+        dict.set("agent_id", agent_id as i64);
+    }
+    if let Some(reason) = view.reason {
+        dict.set("reason", reason);
     }
     dict
 }

@@ -33,7 +33,7 @@ use sim_core::components::{Agent, AgentId, Position};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// FFI-originated event: a building was placed at `position` with influence
@@ -124,6 +124,22 @@ pub struct SimResources {
     /// `Relaxed` ordering — agents are spawned single-threaded by the
     /// priority-sorted scheduler and only uniqueness matters.
     pub next_agent_id: AtomicU64,
+
+    /// Sparse food-tile substrate (V7 Phase 5-β / P5β-7).
+    ///
+    /// Maps `(x, y)` tile coordinate → remaining food units (`u8`,
+    /// 0..=255). Absent keys are interpreted as zero. The Phase 5-β
+    /// AgentDecisionSystem reads this map to locate a Consume target
+    /// and decrements the counter when an agent consumes from the
+    /// tile. Saturating at `u8::MAX` is intentional — Phase 5-β does
+    /// not need a richer food economy (calorie content, freshness, etc.)
+    /// and the sparse map keeps the substrate ripple-free across
+    /// TileGrid, FFI, and save format.
+    pub food_tiles: HashMap<(u32, u32), u8>,
+
+    /// Sparse water-tile substrate (V7 Phase 5-β / P5β-7). Mirrors
+    /// [`SimResources::food_tiles`] for the second need.
+    pub water_tiles: HashMap<(u32, u32), u8>,
 }
 
 impl SimResources {
@@ -144,6 +160,31 @@ impl SimResources {
     /// rather than minting ids by hand.
     pub fn issue_agent_id(&self) -> AgentId {
         self.next_agent_id.fetch_add(1, Ordering::Relaxed)
+    }
+
+    /// Set the food-tile counter at `(x, y)` (V7 Phase 5-β / P5β-7).
+    ///
+    /// `amount == 0` removes the entry entirely (sparse-map invariant —
+    /// the AgentDecisionSystem treats absent keys as zero, so leaving a
+    /// `0` entry would still be observable). Non-zero values
+    /// insert/overwrite. Callers in the harness use this to populate the
+    /// substrate before triggering `Consuming { Food }` transitions.
+    pub fn set_food_tile(&mut self, x: u32, y: u32, amount: u8) {
+        if amount == 0 {
+            self.food_tiles.remove(&(x, y));
+        } else {
+            self.food_tiles.insert((x, y), amount);
+        }
+    }
+
+    /// Set the water-tile counter at `(x, y)` (V7 Phase 5-β / P5β-7).
+    /// Mirrors [`SimResources::set_food_tile`] for the water channel.
+    pub fn set_water_tile(&mut self, x: u32, y: u32, amount: u8) {
+        if amount == 0 {
+            self.water_tiles.remove(&(x, y));
+        } else {
+            self.water_tiles.insert((x, y), amount);
+        }
     }
 }
 
@@ -177,6 +218,8 @@ impl SimEngine {
                 causal_log: CausalLogStorage::new(),
                 next_event_id: AtomicU64::new(0),
                 next_agent_id: AtomicU64::new(0),
+                food_tiles: HashMap::new(),
+                water_tiles: HashMap::new(),
             },
             systems: Vec::new(),
             current_tick: 0,

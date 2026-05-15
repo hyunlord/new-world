@@ -31,7 +31,7 @@
 //! source one type-swap away if a later phase needs it.
 
 use hecs::World;
-use sim_core::components::Position;
+use sim_core::components::{AgentState, Position};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
@@ -72,7 +72,12 @@ impl MovementRng {
     /// Uses a `u64 % 3` reduction on a fresh 64-bit sample; the bias from
     /// `2^64 mod 3 == 1` is on the order of 1 part in 2^63 and is well below
     /// the tolerance of any β assertion.
-    fn next_step(&mut self) -> i32 {
+    ///
+    /// `pub` so harness tests can probe a seed's first-step output and
+    /// fail loudly if a chosen test seed accidentally yields `(0,0)`
+    /// (which would silently hide a Consuming-tick movement-freeze
+    /// regression).
+    pub fn next_step(&mut self) -> i32 {
         ((self.next_u64() % 3) as i32) - 1
     }
 }
@@ -119,7 +124,38 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng)) in world.query::<(&mut Position, &mut MovementRng)>().iter() {
+        for (_, (pos, rng, state)) in world
+            .query::<(&mut Position, &mut MovementRng, Option<&AgentState>)>()
+            .iter()
+        {
+            // Phase 5-β: AgentDecisionSystem (priority 125) drives the
+            // FSM through `Seeking → Consuming → Idle`. We must freeze
+            // Brownian motion for BOTH non-Idle variants:
+            //
+            //   - `Seeking { .. }`: surfaced via `suppresses_movement()`
+            //     so the FSM API exposes the locked Assertion-3 truth
+            //     table (`Seeking → true`, everything else → false).
+            //   - `Consuming { .. }`: NOT surfaced via
+            //     `suppresses_movement()` (the locked truth table demands
+            //     `false`), but the movement loop still freezes it here.
+            //     Reason: the decision system's Consuming-tick commit
+            //     reads `pos.x / pos.y` to locate the resource tile;
+            //     allowing a Brownian step between
+            //     `Seeking→Consuming` (this tick) and `Consuming→Idle`
+            //     (next tick) would commit on a tile the agent merely
+            //     wandered onto, never the tile that actually triggered
+            //     the consume. Per Section-3.10 the 2-tick consume must
+            //     decrement at the tile the agent reached.
+            //
+            // The two checks are deliberately kept separate so the
+            // public FSM API (`AgentState::suppresses_movement`) stays
+            // locked to the Assertion-3 truth table while the internal
+            // schedule-correctness invariant lives next to its use site.
+            if let Some(s) = state {
+                if s.suppresses_movement() || matches!(s, AgentState::Consuming { .. }) {
+                    continue;
+                }
+            }
             let dx = rng.next_step() as i64;
             let dy = rng.next_step() as i64;
             let nx = (pos.x as i64 + dx).clamp(0, max_x);
@@ -187,6 +223,92 @@ mod tests {
             assert!(p.x < 32);
             assert!(p.y < 32);
         }
+    }
+
+    #[test]
+    fn seeking_state_suppresses_movement() {
+        use sim_core::components::{AgentState, TargetKind};
+        let mut e = fresh_engine();
+        let id = e.world.spawn((
+            Position::new(10, 10),
+            MovementRng::new(42),
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
+        ));
+        let mut sys = AgentMovementSystem::new();
+        for _ in 0..32 {
+            sys.tick(&mut e.world, &mut e.resources);
+        }
+        let p = *e.world.get::<&Position>(id).unwrap();
+        assert_eq!(p.x, 10);
+        assert_eq!(p.y, 10);
+    }
+
+    #[test]
+    fn idle_state_still_moves() {
+        use sim_core::components::AgentState;
+        let mut e = fresh_engine();
+        let id = e.world.spawn((
+            Position::new(10, 10),
+            MovementRng::new(42),
+            AgentState::Idle,
+        ));
+        let mut sys = AgentMovementSystem::new();
+        let mut moved = false;
+        for _ in 0..32 {
+            sys.tick(&mut e.world, &mut e.resources);
+            let p = *e.world.get::<&Position>(id).unwrap();
+            if p.x != 10 || p.y != 10 {
+                moved = true;
+                break;
+            }
+        }
+        assert!(moved, "Idle agents must still execute Brownian motion");
+    }
+
+    #[test]
+    fn consuming_state_freezes_movement_in_runtime() {
+        // Consuming agents must NOT move in the runtime, even though the
+        // public `AgentState::suppresses_movement()` predicate returns
+        // false for them (locked Assertion-3 truth table). Reason: the
+        // decision system's Consuming-tick reads `pos.x / pos.y` to find
+        // the resource tile, so any Brownian step between
+        // `Seeking→Consuming` and `Consuming→Idle` would commit on the
+        // wrong tile. Use a movement-producing seed (verified separately
+        // — seed=1 yields `(1,0)` on its first step) so the test would
+        // observably fail if the freeze regressed.
+        use sim_core::components::{AgentState, TargetKind};
+        let mut e = fresh_engine();
+        let id = e.world.spawn((
+            Position::new(10, 10),
+            MovementRng::new(1),
+            AgentState::Consuming {
+                target: TargetKind::Water,
+            },
+        ));
+        let mut sys = AgentMovementSystem::new();
+        for _ in 0..32 {
+            sys.tick(&mut e.world, &mut e.resources);
+        }
+        let p = *e.world.get::<&Position>(id).unwrap();
+        assert_eq!(
+            (p.x, p.y),
+            (10, 10),
+            "Consuming agents must NOT execute Brownian motion (would corrupt the Consuming-tick commit position)"
+        );
+        // Sanity: the chosen seed actually produces movement when not
+        // suppressed — a fresh RNG with the same seed yields non-zero step.
+        let mut probe = MovementRng::new(1);
+        let dx = probe.next_step();
+        let dy = probe.next_step();
+        assert!(
+            dx != 0 || dy != 0,
+            "seed 1 must produce a non-zero step (regression guard against an accidentally-(0,0) seed)"
+        );
+        // And the public predicate STILL reports false (Assertion-3 contract).
+        assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
+        assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
     }
 
     #[test]

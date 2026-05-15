@@ -243,7 +243,8 @@ fn harness_p3_alpha_building_placed_fields_round_trip() {
         let recorded_tick = match ev {
             CausalEvent::BuildingPlaced { tick, .. }
             | CausalEvent::StampDirty { tick, .. }
-            | CausalEvent::InfluenceChanged { tick, .. } => *tick,
+            | CausalEvent::InfluenceChanged { tick, .. }
+            | CausalEvent::AgentDecision { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 0,
@@ -342,7 +343,8 @@ fn harness_p3_alpha_tick_stamp_matches_current_tick() {
         let recorded_tick = match ev {
             CausalEvent::BuildingPlaced { tick, .. }
             | CausalEvent::StampDirty { tick, .. }
-            | CausalEvent::InfluenceChanged { tick, .. } => *tick,
+            | CausalEvent::InfluenceChanged { tick, .. }
+            | CausalEvent::AgentDecision { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 5,
@@ -454,7 +456,8 @@ fn harness_p3_alpha_per_tile_fifo_eviction_across_ticks() {
         let recorded_tick = match ev {
             CausalEvent::BuildingPlaced { tick, .. }
             | CausalEvent::StampDirty { tick, .. }
-            | CausalEvent::InfluenceChanged { tick, .. } => *tick,
+            | CausalEvent::InfluenceChanged { tick, .. }
+            | CausalEvent::AgentDecision { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 4,

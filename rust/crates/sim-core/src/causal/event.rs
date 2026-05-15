@@ -23,7 +23,33 @@
 //! so [`CausalEvent`] inherits the same constraint. Callers move/clone
 //! events explicitly rather than rely on a bit-copy.
 
+use crate::components::AgentId;
 use crate::influence::{DirtyRegion, InfluenceChannel};
+
+/// Reason an agent transitioned from `Idle` to `Seeking` (V7 Phase 5-β /
+/// P5β-3). Encoded into [`CausalEvent::AgentDecision`] so the "왜?" UI
+/// can surface "왜 이 agent가 이 길을 갔나?" in a stable, machine-
+/// readable form. Phase 5-β scope is intentionally narrow: only need-
+/// driven breaches. Mood/morale/social reasons land in γ/δ.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum DecisionReason {
+    /// Hunger crossed `HUNGER_THRESHOLD` upward this tick.
+    HungerThresholdBreach,
+    /// Thirst crossed `THIRST_THRESHOLD` upward this tick.
+    ThirstThresholdBreach,
+}
+
+impl DecisionReason {
+    /// Stable string discriminator used by FFI views (CausalEventView).
+    /// Kept short + snake_case to match the existing `"building_placed"`
+    /// style.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            DecisionReason::HungerThresholdBreach => "hunger_threshold_breach",
+            DecisionReason::ThirstThresholdBreach => "thirst_threshold_breach",
+        }
+    }
+}
 
 /// Unique identifier for a [`CausalEvent`] within a single simulation run.
 ///
@@ -122,6 +148,39 @@ pub enum CausalEvent {
         /// Simulation tick at which IUS recorded the change.
         tick: u64,
     },
+
+    /// First agent-originated event (V7 Phase 5-β / P5β-3).
+    ///
+    /// Emitted by `AgentDecisionSystem` (priority 125) the moment an
+    /// agent's [`Hunger`]/[`Thirst`] crosses its threshold and the
+    /// agent transitions `Idle → Seeking { target }`. The variant is
+    /// recorded on the agent's current tile so the "왜?" UI can surface
+    /// "이 agent가 왜 이 방향으로 움직였나?" right where the agent stood
+    /// when the decision was taken.
+    ///
+    /// Chain semantics: `AgentDecision { parent: Some(<recent same-tile
+    /// InfluenceChanged>) }` when an influence event on the agent's tile
+    /// preceded the breach (allowing the chain `BuildingPlaced →
+    /// StampDirty → InfluenceChanged → AgentDecision` to close); `None`
+    /// when no such causal antecedent exists.
+    ///
+    /// [`Hunger`]: crate::components::Hunger
+    /// [`Thirst`]: crate::components::Thirst
+    AgentDecision {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — most recent same-tile `InfluenceChanged`,
+        /// or `None` for need-only breaches with no influence trigger.
+        parent: Option<EventId>,
+        /// The deciding agent's `AgentId` (P5α-2 surface).
+        agent: AgentId,
+        /// Agent tile at decision time.
+        position: (u32, u32),
+        /// Why the FSM transitioned out of `Idle`.
+        reason: DecisionReason,
+        /// Simulation tick at which the decision was made.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -130,17 +189,19 @@ impl CausalEvent {
         match self {
             CausalEvent::BuildingPlaced { id, .. }
             | CausalEvent::StampDirty { id, .. }
-            | CausalEvent::InfluenceChanged { id, .. } => *id,
+            | CausalEvent::InfluenceChanged { id, .. }
+            | CausalEvent::AgentDecision { id, .. } => *id,
         }
     }
 
     /// Returns the stored parent reference unchanged.
     ///
-    /// `None` denotes a chain root (only `BuildingPlaced` is a root in
-    /// P3-β); `Some(id)` is the parent id captured at push time. The
-    /// stored field is immutable once written — eviction of the parent
-    /// event from the ring buffer does NOT rewrite this field. Only the
-    /// backward lookup performed by
+    /// `None` denotes a chain root (only `BuildingPlaced` is an
+    /// uncondi­tional root; `AgentDecision` is a root when no influence
+    /// antecedent exists); `Some(id)` is the parent id captured at push
+    /// time. The stored field is immutable once written — eviction of
+    /// the parent event from the ring buffer does NOT rewrite this
+    /// field. Only the backward lookup performed by
     /// [`CausalLogStorage::trace_parents`](super::storage::CausalLogStorage::trace_parents)
     /// observes eviction (by terminating gracefully when the referenced
     /// id is no longer present on the tile).
@@ -148,7 +209,8 @@ impl CausalEvent {
         match self {
             CausalEvent::BuildingPlaced { parent, .. }
             | CausalEvent::StampDirty { parent, .. }
-            | CausalEvent::InfluenceChanged { parent, .. } => *parent,
+            | CausalEvent::InfluenceChanged { parent, .. }
+            | CausalEvent::AgentDecision { parent, .. } => *parent,
         }
     }
 
@@ -157,15 +219,17 @@ impl CausalEvent {
         match self {
             CausalEvent::BuildingPlaced { tick, .. }
             | CausalEvent::StampDirty { tick, .. }
-            | CausalEvent::InfluenceChanged { tick, .. } => *tick,
+            | CausalEvent::InfluenceChanged { tick, .. }
+            | CausalEvent::AgentDecision { tick, .. } => *tick,
         }
     }
 
     /// Influence channel for stamp / influence variants. `None` for
-    /// `BuildingPlaced` (channel-agnostic root event).
+    /// `BuildingPlaced` (channel-agnostic root event) and
+    /// `AgentDecision` (need-driven, not channel-driven).
     pub fn channel(&self) -> Option<InfluenceChannel> {
         match self {
-            CausalEvent::BuildingPlaced { .. } => None,
+            CausalEvent::BuildingPlaced { .. } | CausalEvent::AgentDecision { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }
@@ -289,5 +353,42 @@ mod tests {
         assert_eq!(influence.id(), 12);
         assert_eq!(influence.parent(), Some(11));
         assert_eq!(influence.channel(), Some(InfluenceChannel::Noise));
+    }
+
+    #[test]
+    fn agent_decision_accessors_and_reasons() {
+        let ev = CausalEvent::AgentDecision {
+            id: 100,
+            parent: Some(12),
+            agent: 7,
+            position: (4, 9),
+            reason: DecisionReason::HungerThresholdBreach,
+            tick: 42,
+        };
+        assert_eq!(ev.id(), 100);
+        assert_eq!(ev.parent(), Some(12));
+        assert_eq!(ev.tick(), 42);
+        assert_eq!(ev.channel(), None);
+
+        // Reason discriminator round-trip.
+        assert_eq!(
+            DecisionReason::HungerThresholdBreach.as_str(),
+            "hunger_threshold_breach"
+        );
+        assert_eq!(
+            DecisionReason::ThirstThresholdBreach.as_str(),
+            "thirst_threshold_breach"
+        );
+
+        // Root agent decision (no influence antecedent).
+        let root = CausalEvent::AgentDecision {
+            id: 101,
+            parent: None,
+            agent: 8,
+            position: (0, 0),
+            reason: DecisionReason::ThirstThresholdBreach,
+            tick: 43,
+        };
+        assert_eq!(root.parent(), None);
     }
 }

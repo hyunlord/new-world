@@ -14,6 +14,11 @@
 //! Phase 5-α land: 1 needs system via [`register_needs_systems`].
 //!
 //! - [`runtime::needs::HungerDecaySystem`]              priority 130, every tick
+//! - [`runtime::needs::ThirstDecaySystem`]              priority 131, every tick (Phase 5-β)
+//!
+//! Phase 5-β land: 1 decision system via [`register_decision_systems`].
+//!
+//! - [`runtime::decision::AgentDecisionSystem`]         priority 125, every tick
 //!
 //! Phase 0 v0.1.3 patch Section 4.3 base.
 //!
@@ -63,16 +68,35 @@ pub fn register_agent_systems(engine: &mut SimEngine) {
     ));
 }
 
-/// Register the Phase 5-α needs stack on `engine`.
+/// Register the Phase 5-α/β needs stack on `engine`.
 ///
 /// Registers (in priority order after sorting):
 /// - 130 : [`runtime::needs::HungerDecaySystem`]
+/// - 131 : [`runtime::needs::ThirstDecaySystem`] (Phase 5-β)
 ///
-/// Runs after `AgentMovementSystem` (priority 120) so movement reads the
-/// pre-decay state, and before `InfluenceVisualizationSystem` (1000) so
-/// the visualisation observes the post-decay value.
+/// Both run after `AgentDecisionSystem` (priority 125) so the decision
+/// system reads pre-decay need values, and before
+/// `InfluenceVisualizationSystem` (1000) so the visualisation observes
+/// the post-decay values.
 pub fn register_needs_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(
         runtime::needs::HungerDecaySystem::new(),
+    ));
+    engine.register_system(Box::new(
+        runtime::needs::ThirstDecaySystem::new(),
+    ));
+}
+
+/// Register the Phase 5-β decision stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 125 : [`runtime::decision::AgentDecisionSystem`]
+///
+/// Slots between `AgentMovementSystem` (priority 120) and
+/// `HungerDecaySystem` (priority 130) so it observes the post-move
+/// position and the pre-decay need values for the current tick.
+pub fn register_decision_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(
+        runtime::decision::AgentDecisionSystem::new(),
     ));
 }

@@ -73,7 +73,12 @@ fi
 
 # Final verdict — cross-check verdict file with actual latest review
 FINAL_VERDICT=$(head -1 "$REVIEW_DIR/verdict" 2>/dev/null || echo "UNKNOWN")
-LATEST_REVIEW_FILE=$(ls "$REVIEW_DIR"/review_attempt*.md 2>/dev/null | tail -1)
+# Prefer review_latest.md symlink (authoritative), fall back to mtime-sorted last file
+if [[ -L "$REVIEW_DIR/review_latest.md" || -f "$REVIEW_DIR/review_latest.md" ]]; then
+    LATEST_REVIEW_FILE="$REVIEW_DIR/review_latest.md"
+else
+    LATEST_REVIEW_FILE=$(ls -t "$REVIEW_DIR"/review_attempt*.md 2>/dev/null | head -1)
+fi
 if [[ -f "$LATEST_REVIEW_FILE" ]]; then
     LATEST_REVIEW_VERDICT=$(sed 's/\*//g; s/_//g' "$LATEST_REVIEW_FILE" | grep -i "^verdict:" | head -1 | awk '{print $2}')
     # If verdict file disagrees with actual latest review, trust the review
