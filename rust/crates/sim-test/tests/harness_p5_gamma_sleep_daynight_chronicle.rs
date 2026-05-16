@@ -807,6 +807,11 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
             DecisionReason::HungerThresholdBreach => seen_hunger_log = true,
             DecisionReason::ThirstThresholdBreach => seen_thirst_log = true,
             DecisionReason::FatigueThresholdBreach => seen_fatigue_log = true,
+            // V7 Phase 6-β: ConstructionReason is the 4th cascade step.
+            // This chronicle scenario seeds no construction sites, so
+            // the variant is not expected to appear — but the exhaustive
+            // match must still cover it.
+            DecisionReason::ConstructionReason => {}
         }
     }
     assert!(

@@ -52,9 +52,14 @@
 //! ever been recorded on the agent's tile the decision becomes a chain
 //! root (`parent: None`).
 
+use std::collections::HashMap;
+
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason};
-use sim_core::components::{Agent, AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
+use sim_core::components::{
+    Agent, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position, Sleep, TargetKind,
+    Thirst,
+};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Hunger value strictly above which an Idle agent transitions to
@@ -131,6 +136,33 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         let tick = resources.current_tick;
 
+        // V7 Phase 6-β / P6β-7 — co-location map snapshot. Pre-built
+        // here (BEFORE the agent query) so the agent loop can look up
+        // `(pos.x, pos.y) → (Entity, BuildingBlueprint)` without
+        // re-entering the world during a borrowed query. ConstructionSystem
+        // at priority 133 owns Consuming-state exit; this map is only
+        // consumed by the Idle branch's 4th cascade and the Seeking
+        // branch's has_resource check.
+        //
+        // Attempt-3 fix: filter out sites with `is_complete()` so the Idle
+        // cascade and the Seeking transition never treat a fully-built
+        // (or `required_progress == 0`) site as an active construction
+        // target. Otherwise an agent could enter `Seeking{ConstructionSite}`
+        // (or even `Consuming{ConstructionSite}`) on a site that
+        // `ConstructionSystem` never advances — the agent would get
+        // stuck in Consuming with no progress and no completion edge.
+        let construction_sites: HashMap<(u32, u32), (hecs::Entity, BuildingBlueprint)> = {
+            let mut sites = HashMap::new();
+            let mut q = world.query::<&ConstructionSite>();
+            for (e, site) in q.iter() {
+                if site.is_complete() {
+                    continue;
+                }
+                sites.insert((site.position.x, site.position.y), (e, site.blueprint));
+            }
+            sites
+        };
+
         // Per-agent FSM evaluation. We pull `Hunger` / `Thirst` as
         // optional so non-need-carrying agents are still observed and
         // simply stay `Idle`.
@@ -146,7 +178,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             let tile_idx = pos.y * width + pos.x;
             match *state {
                 AgentState::Idle => {
-                    // Deterministic FSM ordering: Hunger > Thirst > Fatigue.
+                    // Deterministic FSM ordering (V7 Phase 6-β / P6β-6):
+                    // Hunger > Thirst > Fatigue > Construction. Construction
+                    // is the lowest-priority drive — needs always win.
                     let breached = if hunger_opt
                         .as_ref()
                         .is_some_and(|h| h.value > HUNGER_THRESHOLD)
@@ -162,6 +196,14 @@ impl RuntimeSystem for AgentDecisionSystem {
                         .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD)
                     {
                         Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
+                    } else if construction_sites.contains_key(&(pos.x, pos.y)) {
+                        // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
+                        // ONLY when no Need has breached AND a
+                        // co-located active ConstructionSite exists.
+                        Some((
+                            TargetKind::ConstructionSite,
+                            DecisionReason::ConstructionReason,
+                        ))
                     } else {
                         None
                     };
@@ -210,17 +252,50 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
-                        // V7 Phase 6-α: ConstructionSite is a reachable
-                        // TargetKind variant but α adds no decision logic
-                        // that routes agents into Seeking{ConstructionSite}
-                        // — runtime resolution lands in Phase 6-β. If an
-                        // agent reaches this branch (e.g., via a future
-                        // test or β prototype), treat it as "no resource
-                        // present" so the agent stays in Seeking without
-                        // consuming anything from a non-existent tile map.
-                        TargetKind::ConstructionSite => false,
+                        // V7 Phase 6-β / P6β-8: ConstructionSite has a
+                        // resource at this tile iff an active site exists
+                        // co-located with the agent. Snapshot taken at
+                        // the top of `tick` via `construction_sites`.
+                        TargetKind::ConstructionSite => {
+                            construction_sites.contains_key(&key)
+                        }
                     };
                     if has_resource {
+                        // V7 Phase 6-β / P6β-8: emit ConstructionStarted on
+                        // the Seeking{ConstructionSite} → Consuming{ConstructionSite}
+                        // transition. Parent = most recent same-tile
+                        // AgentDecision for THIS agent with reason
+                        // ConstructionReason (the originating decision —
+                        // not a HungerThresholdBreach decision, not a
+                        // different agent's decision).
+                        if matches!(target, TargetKind::ConstructionSite) {
+                            if let Some((_site_entity, blueprint)) =
+                                construction_sites.get(&key).copied()
+                            {
+                                let parent = resources.causal_log.get(tile_idx).and_then(|log| {
+                                    log.as_slice().iter().rev().find_map(|ev| match ev {
+                                        CausalEvent::AgentDecision {
+                                            id,
+                                            agent: a,
+                                            reason: DecisionReason::ConstructionReason,
+                                            ..
+                                        } if *a == agent.id => Some(*id),
+                                        _ => None,
+                                    })
+                                });
+                                let id = resources.issue_event_id();
+                                resources.causal_log.push(
+                                    tile_idx,
+                                    CausalEvent::ConstructionStarted {
+                                        id,
+                                        parent,
+                                        blueprint,
+                                        position: (pos.x, pos.y),
+                                        tick,
+                                    },
+                                );
+                            }
+                        }
                         *state = AgentState::Consuming { target };
                     }
                 }

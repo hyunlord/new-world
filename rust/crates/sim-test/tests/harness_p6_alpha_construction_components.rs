@@ -367,20 +367,24 @@ fn harness_p6_alpha_a20_agent_state_three_variants_only() {
     }
 }
 
-// ─── A21: CausalEvent has no construction-related variant added in α ──
+// ─── A21: CausalEvent variant set acknowledged ───────────────────────
 #[test]
 fn harness_p6_alpha_a21_causal_event_no_construction_variant() {
-    // Type: exhaustive match over the Phase 5 variant set must compile
-    // without missing-arm error. Adding a `Construction*` variant in α
-    // would require new arms here, failing compilation — surfacing the
-    // scope violation. The Phase 5 variant list is: BuildingPlaced,
-    // StampDirty, InfluenceChanged, AgentDecision.
+    // Phase 6-α scope-creep tripwire — when α landed, the classify()
+    // exhaustive match enforced "no Construction* variant yet" by
+    // listing only the four pre-existing variants. Phase 6-β has now
+    // (correctly) added ConstructionStarted + ConstructionCompleted;
+    // this test is reconciled with the post-β surface but the exhaustive
+    // match (no wildcard) still guards against any FURTHER undocumented
+    // variant additions in δ+.
     fn classify(ev: &CausalEvent) -> &'static str {
         match ev {
             CausalEvent::BuildingPlaced { .. } => "building_placed",
             CausalEvent::StampDirty { .. } => "stamp_dirty",
             CausalEvent::InfluenceChanged { .. } => "influence_changed",
             CausalEvent::AgentDecision { .. } => "agent_decision",
+            CausalEvent::ConstructionStarted { .. } => "construction_started",
+            CausalEvent::ConstructionCompleted { .. } => "construction_completed",
         }
     }
     // Touch classify so it's not dead code under any toolchain.

@@ -31,7 +31,8 @@ use crate::influence::{DirtyRegion, InfluenceChannel};
 /// can surface "왜 이 agent가 이 길을 갔나?" in a stable, machine-
 /// readable form. Phase 5-β scope is intentionally narrow: only need-
 /// driven breaches. Phase 5-γ adds the Fatigue branch.
-/// Mood/morale/social reasons land in δ.
+/// Phase 6-β adds the Construction branch — the 4th cascade step, lowest
+/// priority among the four drives. Mood/morale/social reasons land in δ.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum DecisionReason {
     /// Hunger crossed `HUNGER_THRESHOLD` upward this tick.
@@ -41,6 +42,11 @@ pub enum DecisionReason {
     /// Sleep fatigue crossed `FATIGUE_THRESHOLD` upward this tick
     /// (V7 Phase 5-γ / P5γ-6).
     FatigueThresholdBreach,
+    /// Agent transitioned from Idle to Seeking{ConstructionSite} after
+    /// detecting a co-located active ConstructionSite while no Need was
+    /// breached. V7 Phase 6-β / P6β-5. Construction is the lowest-priority
+    /// drive — Hunger/Thirst/Fatigue always win.
+    ConstructionReason,
 }
 
 impl DecisionReason {
@@ -52,6 +58,7 @@ impl DecisionReason {
             DecisionReason::HungerThresholdBreach => "hunger_threshold_breach",
             DecisionReason::ThirstThresholdBreach => "thirst_threshold_breach",
             DecisionReason::FatigueThresholdBreach => "fatigue_threshold_breach",
+            DecisionReason::ConstructionReason => "construction_reason",
         }
     }
 }
@@ -186,6 +193,53 @@ pub enum CausalEvent {
         /// Simulation tick at which the decision was made.
         tick: u64,
     },
+
+    /// Agent transitioned from `Seeking { ConstructionSite }` to
+    /// `Consuming { ConstructionSite }` (V7 Phase 6-β / P6β-3). Emitted by
+    /// `AgentDecisionSystem` the moment an agent reaches an active
+    /// construction site. `parent` links to the originating
+    /// `AgentDecision { reason: ConstructionReason, agent: <this agent> }`
+    /// on the same tile.
+    ///
+    /// `position` follows the `(u32, u32)` tuple precedent shared with
+    /// `BuildingPlaced` and `AgentDecision`. `blueprint` snapshots the
+    /// site's blueprint at start time (the site entity may be despawned
+    /// before this record is consumed).
+    ConstructionStarted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the originating `AgentDecision { ConstructionReason }`.
+        parent: Option<EventId>,
+        /// Immutable design spec of the building being constructed.
+        blueprint: crate::components::BuildingBlueprint,
+        /// Construction tile (matches `ConstructionSite.position`).
+        position: (u32, u32),
+        /// Simulation tick at which the transition occurred.
+        tick: u64,
+    },
+
+    /// Construction progress reached `required_progress` on this tick
+    /// (V7 Phase 6-β / P6β-4). Emitted by `ConstructionSystem` BEFORE the
+    /// closing `BuildingPlaced` so the parent chain
+    /// `BuildingPlaced → ConstructionCompleted → ConstructionStarted →
+    /// AgentDecision { ConstructionReason }` walks correctly.
+    ///
+    /// The site entity is despawned in the same tick — `position` is the
+    /// durable identifier (the recycled hecs handle would be misleading
+    /// after despawn), and the embedded `blueprint` mirrors
+    /// `ConstructionStarted` exactly.
+    ConstructionCompleted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the originating `ConstructionStarted`.
+        parent: Option<EventId>,
+        /// Immutable design spec of the completed building.
+        blueprint: crate::components::BuildingBlueprint,
+        /// Construction tile (matches `ConstructionSite.position`).
+        position: (u32, u32),
+        /// Simulation tick at which completion fired.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -195,7 +249,9 @@ impl CausalEvent {
             CausalEvent::BuildingPlaced { id, .. }
             | CausalEvent::StampDirty { id, .. }
             | CausalEvent::InfluenceChanged { id, .. }
-            | CausalEvent::AgentDecision { id, .. } => *id,
+            | CausalEvent::AgentDecision { id, .. }
+            | CausalEvent::ConstructionStarted { id, .. }
+            | CausalEvent::ConstructionCompleted { id, .. } => *id,
         }
     }
 
@@ -215,7 +271,9 @@ impl CausalEvent {
             CausalEvent::BuildingPlaced { parent, .. }
             | CausalEvent::StampDirty { parent, .. }
             | CausalEvent::InfluenceChanged { parent, .. }
-            | CausalEvent::AgentDecision { parent, .. } => *parent,
+            | CausalEvent::AgentDecision { parent, .. }
+            | CausalEvent::ConstructionStarted { parent, .. }
+            | CausalEvent::ConstructionCompleted { parent, .. } => *parent,
         }
     }
 
@@ -225,16 +283,23 @@ impl CausalEvent {
             CausalEvent::BuildingPlaced { tick, .. }
             | CausalEvent::StampDirty { tick, .. }
             | CausalEvent::InfluenceChanged { tick, .. }
-            | CausalEvent::AgentDecision { tick, .. } => *tick,
+            | CausalEvent::AgentDecision { tick, .. }
+            | CausalEvent::ConstructionStarted { tick, .. }
+            | CausalEvent::ConstructionCompleted { tick, .. } => *tick,
         }
     }
 
     /// Influence channel for stamp / influence variants. `None` for
-    /// `BuildingPlaced` (channel-agnostic root event) and
-    /// `AgentDecision` (need-driven, not channel-driven).
+    /// `BuildingPlaced` (channel-agnostic root event), `AgentDecision`
+    /// (need-driven, not channel-driven), and the Phase 6-β
+    /// `ConstructionStarted` / `ConstructionCompleted` variants (parallel
+    /// to `BuildingPlaced`).
     pub fn channel(&self) -> Option<InfluenceChannel> {
         match self {
-            CausalEvent::BuildingPlaced { .. } | CausalEvent::AgentDecision { .. } => None,
+            CausalEvent::BuildingPlaced { .. }
+            | CausalEvent::AgentDecision { .. }
+            | CausalEvent::ConstructionStarted { .. }
+            | CausalEvent::ConstructionCompleted { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }
@@ -358,6 +423,72 @@ mod tests {
         assert_eq!(influence.id(), 12);
         assert_eq!(influence.parent(), Some(11));
         assert_eq!(influence.channel(), Some(InfluenceChannel::Noise));
+    }
+
+    #[test]
+    fn construction_started_records_fields() {
+        use crate::components::BuildingBlueprint;
+        let bp = BuildingBlueprint::new(7, 2, 2, 5);
+        let ev = CausalEvent::ConstructionStarted {
+            id: 200,
+            parent: Some(50),
+            blueprint: bp,
+            position: (3, 4),
+            tick: 17,
+        };
+        match ev {
+            CausalEvent::ConstructionStarted {
+                id,
+                parent,
+                blueprint,
+                position,
+                tick,
+            } => {
+                assert_eq!(id, 200);
+                assert_eq!(parent, Some(50));
+                assert_eq!(blueprint, bp);
+                assert_eq!(position, (3, 4));
+                assert_eq!(tick, 17);
+            }
+            _ => panic!("expected ConstructionStarted"),
+        }
+    }
+
+    #[test]
+    fn construction_completed_records_fields() {
+        use crate::components::BuildingBlueprint;
+        let bp = BuildingBlueprint::new(8, 3, 3, 7);
+        let ev = CausalEvent::ConstructionCompleted {
+            id: 201,
+            parent: Some(200),
+            blueprint: bp,
+            position: (9, 11),
+            tick: 23,
+        };
+        match ev {
+            CausalEvent::ConstructionCompleted {
+                id,
+                parent,
+                blueprint,
+                position,
+                tick,
+            } => {
+                assert_eq!(id, 201);
+                assert_eq!(parent, Some(200));
+                assert_eq!(blueprint, bp);
+                assert_eq!(position, (9, 11));
+                assert_eq!(tick, 23);
+            }
+            _ => panic!("expected ConstructionCompleted"),
+        }
+    }
+
+    #[test]
+    fn decision_reason_construction_as_str() {
+        assert_eq!(
+            DecisionReason::ConstructionReason.as_str(),
+            "construction_reason"
+        );
     }
 
     #[test]

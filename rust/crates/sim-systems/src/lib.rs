@@ -105,3 +105,19 @@ pub fn register_decision_systems(engine: &mut SimEngine) {
         runtime::decision::AgentDecisionSystem::new(),
     ));
 }
+
+/// Register the Phase 6-β construction stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 133 : [`runtime::construction::ConstructionSystem`]
+///
+/// Slots strictly after `SleepDecaySystem` (priority 132) and strictly
+/// before `InfluenceVisualizationSystem` (priority 1000). Owns agent
+/// `Consuming { ConstructionSite }` exit semantics + completion-edge
+/// CausalEvent emission. See `runtime::construction::ConstructionSystem`
+/// for full responsibilities.
+pub fn register_construction_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(
+        runtime::construction::ConstructionSystem::new(),
+    ));
+}
