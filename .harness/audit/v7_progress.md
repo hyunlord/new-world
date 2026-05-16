@@ -98,3 +98,123 @@ W1.2~W1.6 (T6~T11) 진행 가능 — UNBLOCKED.
 
 ## V7 Hard Gates 적용 현황
 *(매 시스템마다 5 gates 검증 결과)*
+
+---
+
+# V7 Foundation Week 1-12 Closure (2026-05-17)
+
+## Phase 2 — Week 3-4: Tile Grid + Influence System ✓
+
+T7-series substantial chain (T7.5 ~ T7.10) — sim-systems/runtime/influence land + 6 channels
+wiring (Warmth/Light/Noise/Danger/Spiritual/Beauty):
+
+- T7.5-T7.8: sim-systems substrate + sim-bridge FFI + substantial harness + Godot scaffold
+- T7.9: harness visual restore + render mechanism (Gaffer fixed-tick accumulator)
+- T7.10-A `c22c7bb2`: Warmth channel wiring
+- T7.10-B `64fb905d`: Light shadowcast wiring (second-channel Phase 2 escape)
+- T7.10-B1 `f51aa989`: SPACE-key Warmth↔Light viz toggle
+- T7.10-C `4c286a9a`: Noise channel linear-decay wiring
+- T7.10-D `87a9c569`: Danger channel linear-decay wiring
+- T7.10-E `df11b632`: Spiritual channel BFS wiring
+- T7.10-E-fix `26bad02b`: IUS k=0.10→k=0.08 spec align
+- T7.10-F `5bb2f919`: Beauty channel BFS wiring
+
+## Phase 3 — Week 5-6: Cause-Effect Tracking + 왜? UI ✓
+
+Tile-level 8-event sparse causal log + parent chain + FFI + GDScript CausalPanel:
+
+- 3-α `bb925bd1`: tile-level 8-event sparse causal log (TILE_CAUSAL_RING_SIZE=8)
+- 3-β `fa6652a6`: EventId (u64 monotonic) + parent chain
+- 3-γ-1 `af4a9c7e`: FFI causal surface (get_tile_causal_history + get_event_chain)
+- 3-γ-2-α `4fb87057`: Locale autoload + CausalPanel scaffold
+- 3-γ-2-β `d8545fa6`: Tile click → causal chain rendering
+
+## Phase 4 — Week 7-8: Agent Core ✓
+
+Canonical components + Brownian movement + MultiMeshInstance2D sprite rendering:
+
+- 4-α `5a34e4aa`: Canonical Agent + Position components (canonical land)
+- 4-β `a592dc0c`: AgentMovementSystem priority 120 (Brownian, deterministic)
+- 4-γ `b09b2468`: MultiMeshInstance2D sprite rendering + palette_swap.gdshader
+
+## Phase 5 — Week 9-10: First Daily Routine ✓
+
+Three Need components + day/night cycle + agent-originated FSM/decision/causal chain:
+
+- 5-α `0cd52ffc`: AgentId + Hunger + HungerDecaySystem (priority 130)
+- 5-β `9d6d3f74`: AgentState FSM (Idle/Seeking/Consuming) + AgentDecisionSystem (125)
+  + Thirst + ThirstDecaySystem (131) + food/water tile substrate
+  + CausalEvent::AgentDecision + DecisionReason (Hunger/Thirst ThresholdBreach)
+- 5-γ `a765a374`: Sleep + SleepDecaySystem (132) + day/night clock (ticks_per_day=1440)
+  + TargetKind::Sleep (Path b symmetry) + FatigueThresholdBreach
+  + sleep_tiles substrate + full-day chronicle harness (13 assertions)
+
+## Phase 6 — Week 11-12: Building System Deep ✓
+
+Agent-driven construction loop + 4-link causal chain + end-to-end chronicle:
+
+- 6-α `ba4e02b2`: BuildingBlueprint + ConstructionSite + TargetKind::ConstructionSite
+  (4th variant, Phase 5-γ Sleep symmetry precedent) — 95/100 A
+- 6-β `21b09e26`: ConstructionSystem (priority 133) + CausalEvent::ConstructionStarted/
+  ConstructionCompleted + DecisionReason::ConstructionReason + AgentDecisionSystem takeover
+  of Phase 6-α inert placeholders — 90/100 B (adjusted 98 with VLM env cost)
+- 6-γ `66435f06`: Construction chronicle harness (15 assertions, build-a-shelter cycle,
+  full causal chain: AgentDecision{ConstructionReason} → ConstructionStarted →
+  ConstructionCompleted → BuildingPlaced) — 90/100 B
+
+## Audit Closures
+
+### Issue 12 — generate_report.sh review_latest resolution (`00274b57`)
+
+**Symptom**: `ls .harness/reviews/<feature>/review_attempt*.md | tail -1` used alphabetical
+sort, picking `review_attempt9.md` over `review_attempt10.md` (string sort, not numeric).
+**Fix**: switched to `review_latest.md` symlink (already maintained by pipeline) with
+mtime-sorted fallback when the symlink is missing. Score computation now reads the most
+recent review attempt deterministically regardless of attempt count.
+
+### Issue 13 — verdict file staleness mechanism (`00274b57`)
+
+**Symptom**: pre-commit hook could read a stale `verdict` file from a prior pipeline run
+when the current run failed to update it (e.g., script death between attempts). Score
+extraction inherited the old verdict's score line.
+**Fix**: hook now checks `verdict` mtime — if epoch >1800s old vs HEAD commit time, refuses
+to credit the score line and forces re-run. Closes the staleness window without policy
+bypass. Both fixes consolidated into `00274b57 fix(harness): correct scoring bugs`.
+
+## V7 Foundation Closure Declaration
+
+V7 roadmap (`rust/crates/sim-core/src/lib.rs:5-11`) Foundation Week 1-12 — **complete**.
+
+**Recovery span**: 2026-05-03 (V7 reset) → 2026-05-17 (closure) = ~14 days.
+
+**Pipeline stability**: 26 consecutive APPROVED harness verdicts (no FAIL streak break).
+
+**Causal traceability coverage** (axiom #1):
+- BuildingPlaced (Phase 2 BSS) → StampDirty (BSS) → InfluenceChanged (IUS)
+- AgentDecision{Hunger/Thirst/Fatigue/Construction ThresholdBreach}
+- ConstructionStarted → ConstructionCompleted → BuildingPlaced (agent-driven loop)
+- Every event carries `id: EventId` + `parent: Option<EventId>` for chain walking
+
+**Visual + behavioral milestones** (axiom #3):
+- Phase 4-γ: MultiMeshInstance2D agent rendering + shader palette swap (visual)
+- Phase 5-γ: Full-day routine chronicle (behavioral — Hunger/Thirst/Fatigue full cycle)
+- Phase 6-γ: Build-a-shelter chronicle (behavioral — construction full cycle)
+
+**Architecture base extension** (V7 Foundation final state):
+- sim-core: material/, tile/, influence/, causal/, components/
+- sim-systems/runtime: influence/, agent/, decision/, needs/, construction/
+- sim-bridge: 6 FFI methods (get_influence_overlay, get_tile_detail, get_tile_causal_history,
+  get_event_chain, get_agent_snapshot, on_building_placed)
+- sim-engine: SimResources (tile_grid + causal_log + food/water/sleep_tiles + ticks_per_day)
+- chronicle infrastructure: 2 closure-milestone chronicles (p5-γ, p6-γ)
+
+**Governance evolution**: v3.3.1 → v3.3.17, 14+ patches (Issue 10/11/12/13 closures,
+ENV-BYPASS v3.2.1 baseline registry, score formula refinements).
+
+**ENV-BYPASS closures**: 3 chains landed under controlled conditions with audit trail.
+
+**Next decision base** (사용자 mandate required):
+- CLAUDE.md V7 reset 정합 update (separate dispatch, aspirational/legacy carry-over)
+- Phase 6-δ optional (UI integration: ConstructionSite visual + CausalPanel ConstructionReason)
+- Phase 7+ (Combat / Social / Memory / Settlement — V7 외부 phase, mandate 필수)
+- V7 Master Direction Section 8+ design (Foundation 완료 후 별도 design work)
