@@ -987,18 +987,27 @@ fn harness_p5_beta_consume_amount_constants_locked_to_thirty() {
 fn harness_p5_beta_target_kind_has_exactly_two_variants() {
     // Exhaustive match — no wildcard. β-era tripwire was designed to
     // fail compilation when γ adds `TargetKind::Sleep`. γ has now
-    // landed, so the discriminator covers all three variants — but
-    // the exhaustive match (no wildcard) still guards against further
+    // landed, and Phase 6-α has added `TargetKind::ConstructionSite`
+    // (Path b symmetry precedent — see `.harness/plans/phase6.md`
+    // §2.1). The discriminator covers all four variants — but the
+    // exhaustive match (no wildcard) still guards against further
     // unannounced variant additions in δ+.
     fn discriminator(k: TargetKind) -> &'static str {
         match k {
             TargetKind::Food => "food",
             TargetKind::Water => "water",
             TargetKind::Sleep => "sleep",
+            TargetKind::ConstructionSite => "construction_site",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");
     assert_eq!(discriminator(TargetKind::Water), "water");
     assert_eq!(discriminator(TargetKind::Sleep), "sleep");
-    println!("[β-19/γ] TargetKind has exactly 3 variants (Food, Water, Sleep) ✓");
+    assert_eq!(
+        discriminator(TargetKind::ConstructionSite),
+        "construction_site"
+    );
+    println!(
+        "[β-19/γ/P6α] TargetKind has exactly 4 variants (Food, Water, Sleep, ConstructionSite) ✓"
+    );
 }

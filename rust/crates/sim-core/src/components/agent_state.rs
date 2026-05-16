@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 /// Resource an agent is actively pursuing or consuming during the
 /// [`AgentState::Seeking`] / [`AgentState::Consuming`] phases.
 ///
-/// Phase 5-γ scope: three variants. Adding a target requires updating
+/// Phase 6-α scope: four variants. Adding a target requires updating
 /// both the AgentDecisionSystem FSM and any UI that surfaces agent state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TargetKind {
@@ -32,6 +32,11 @@ pub enum TargetKind {
     /// Sleep tile (decremented from `SimResources::sleep_tiles`).
     /// V7 Phase 5-γ / P5γ-5 — Path b symmetry (Plan §2.3 line 286-289).
     Sleep,
+    /// Construction site tile — progress is advanced by
+    /// `ConstructionSite::advance` once Phase 6-β lands the runtime
+    /// system. V7 Phase 6-α / P6α-6 — Phase 5-γ Path (b) symmetry
+    /// precedent (new TargetKind variant, NOT a new AgentState variant).
+    ConstructionSite,
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is
@@ -106,9 +111,13 @@ mod tests {
         assert!(AgentState::Seeking { target: TargetKind::Food }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::Water }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::Sleep }.suppresses_movement());
+        assert!(AgentState::Seeking { target: TargetKind::ConstructionSite }
+            .suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
+        assert!(!AgentState::Consuming { target: TargetKind::ConstructionSite }
+            .suppresses_movement());
     }
 
     #[test]
@@ -118,9 +127,11 @@ mod tests {
             AgentState::Seeking { target: TargetKind::Food },
             AgentState::Seeking { target: TargetKind::Water },
             AgentState::Seeking { target: TargetKind::Sleep },
+            AgentState::Seeking { target: TargetKind::ConstructionSite },
             AgentState::Consuming { target: TargetKind::Food },
             AgentState::Consuming { target: TargetKind::Water },
             AgentState::Consuming { target: TargetKind::Sleep },
+            AgentState::Consuming { target: TargetKind::ConstructionSite },
         ];
         for state in cases {
             let encoded = ron::to_string(&state).unwrap();
@@ -131,7 +142,12 @@ mod tests {
 
     #[test]
     fn target_kind_serde_round_trip() {
-        for kind in [TargetKind::Food, TargetKind::Water, TargetKind::Sleep] {
+        for kind in [
+            TargetKind::Food,
+            TargetKind::Water,
+            TargetKind::Sleep,
+            TargetKind::ConstructionSite,
+        ] {
             let encoded = ron::to_string(&kind).unwrap();
             let decoded: TargetKind = ron::from_str(&encoded).unwrap();
             assert_eq!(kind, decoded);

@@ -849,6 +849,9 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                             first_fatigue_tick = Some(i);
                         }
                     }
+                    // V7 Phase 6-α: ConstructionSite is unreachable in
+                    // the γ chronicle (no decision logic routes to it).
+                    TargetKind::ConstructionSite => {}
                 }
             }
         }
@@ -886,6 +889,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     TargetKind::Food => count_hunger += 1,
                     TargetKind::Water => count_thirst += 1,
                     TargetKind::Sleep => count_fatigue += 1,
+                    // V7 Phase 6-α: ConstructionSite unreachable in γ chronicle.
+                    TargetKind::ConstructionSite => {}
                 }
             }
         }
@@ -934,6 +939,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                         TargetKind::Food => consumed_food = true,
                         TargetKind::Water => consumed_water = true,
                         TargetKind::Sleep => consumed_sleep = true,
+                        // V7 Phase 6-α: ConstructionSite unreachable in γ chronicle.
+                        TargetKind::ConstructionSite => {}
                     }
                 }
             }

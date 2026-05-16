@@ -15,11 +15,18 @@
 //! clock substrate (see `sim_engine::SimResources::time_of_day` /
 //! `ticks_per_day` and `sim_systems::runtime::needs::SleepDecaySystem`).
 //!
-//! See `.harness/plans/phase4.md` §2 and `.harness/plans/phase5.md`
-//! §2.1 / §2.β / §2.γ for the full sub-stage decomposition.
+//! Phase 6-α adds the construction data substrate ([`BlueprintId`],
+//! [`BuildingBlueprint`], [`ConstructionSite`]) and extends
+//! [`TargetKind`] with a 4th variant `ConstructionSite` — Phase 5-γ
+//! Path (b) symmetry precedent. `AgentState` is intentionally unchanged.
+//!
+//! See `.harness/plans/phase4.md` §2, `.harness/plans/phase5.md`
+//! §2.1 / §2.β / §2.γ, and `.harness/plans/phase6.md` §2.1 for the
+//! full sub-stage decomposition.
 
 pub mod agent;
 pub mod agent_state;
+pub mod construction;
 pub mod hunger;
 pub mod position;
 pub mod sleep;
@@ -27,6 +34,7 @@ pub mod thirst;
 
 pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
+pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
 pub use position::Position;
 pub use sleep::Sleep;

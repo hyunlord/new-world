@@ -210,6 +210,15 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
+                        // V7 Phase 6-α: ConstructionSite is a reachable
+                        // TargetKind variant but α adds no decision logic
+                        // that routes agents into Seeking{ConstructionSite}
+                        // — runtime resolution lands in Phase 6-β. If an
+                        // agent reaches this branch (e.g., via a future
+                        // test or β prototype), treat it as "no resource
+                        // present" so the agent stays in Seeking without
+                        // consuming anything from a non-existent tile map.
+                        TargetKind::ConstructionSite => false,
                     };
                     if has_resource {
                         *state = AgentState::Consuming { target };
@@ -266,6 +275,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
                             }
                             *state = AgentState::Idle;
+                        }
+                        // V7 Phase 6-α: ConstructionSite consume is β scope.
+                        // The ConstructionSystem (β) is the sole owner of
+                        // construction progress and completion behavior;
+                        // α MUST NOT advance progress, mutate needs/resources,
+                        // or transition the FSM state here. The match arm
+                        // exists only to satisfy exhaustiveness — kept
+                        // strictly inert and state-preserving so Phase 6-β
+                        // remains the only place these semantics land.
+                        TargetKind::ConstructionSite => {
+                            // Intentional no-op: preserve state, do not touch
+                            // tile maps, do not mutate needs, do not advance
+                            // any construction progress. β scope.
                         }
                     }
                 }
