@@ -293,7 +293,7 @@ All mechanics grounded in academic research (psychology, sociology, demographics
 | **Simulation Core** | Rust (hecs ECS, rayon, serde) | All tick logic, state, AI, systems |
 | **Bridge** | Rust GDExtension (gdext crate) | FFI boundary: snapshot out, commands in |
 | **Renderer/UI** | Godot 4.6 GDScript | Panels, renderers, HUD, camera, input |
-| **Data** | RON + validation (legacy JSON migration during A-1) | Materials, recipes, structures, actions, content defs |
+| **Data** | RON + validation | Materials, recipes, structures, actions, content defs |
 | **Localization** | Custom Autoload `Locale` (GDScript) | UI text only — NOT Godot tr() |
 | **Events** | Rust EventBus | All state changes recorded as events |
 | **AI** | Rust Utility AI → GOAP → ONNX → LLM | Phased evolution, all in Rust |
@@ -422,34 +422,12 @@ AddStat / MulStat / SetFlag / EmitStimulus / SpawnEvent / Schedule
 - World Rules: init ~50ms, tick 0
 - Total: ~4ms / 9ms = 44%, headroom 56%
 
-## Current Phase: Pre-requisite Architecture (A-1 through A-13)
+## Current Phase: V7 Foundation Complete
 
-**Progress (as of 2026-04-26)**: 9/13 prereqs complete.
-- ✅ A-1, A-2, A-3, A-4, A-5, A-6, A-7, A-8, A-12, A-13
-- 🟡 A-10 (partial: serde + coping BTreeMap + sparse rel cap done; remaining: NetworkId, LodTier, broader HashMap conversion)
-- ❌ A-9 (World Rules slot system), A-11 (BodyHealth)
-
-### A-1: Data-Driven RON (sim-data/) — MaterialDef/FurnitureDef/ActionDef/RecipeDef/StructureDef
-### A-2: Influence Grid (sim-core/) — 8-12 channels, stamp/sample, wall blocking
-### A-3: Effect Primitive (sim-core/) — 6 types, double-buffer, damping, sigmoid
-### A-4: Causal tracking (sim-core/) — ring buffer 32 events, world log
-### A-5: System frequency tiering — Hot/Warm/Cold tags
-### A-6: Building tile grid (sim-core/) — tile[x][y], BFS room detection
-### A-7: Tag+threshold recipe schema (sim-data/) — no ID refs
-### A-8: Temperament pipeline (sim-core/) — TCI 4-axis, PRS 4x38 weights, bias functions
-### A-9: World Rules slot (sim-data/) — WorldRuleset RON schema, loader, composition, base_rules.ron ❌
-### A-10: Misc — serde, BTreeMap, NetworkId, LodTier, Sparse relations (cap 100) 🟡
-### A-11: BodyHealth system (sim-core/) — HP, injury, recovery ❌
-### A-12: Family/genealogy component (sim-core/) — parent/child links, lineage tracking ✅
-### A-13: Knowledge learning system (sim-core/) — dual-axis skill/knowledge, learning events ✅
-
-**Phase status**:
-- Phase 1 'agents alive': 60% (temperament active, body/health pending)
-- Phase 2 'shelter awareness → warmth/safety': ✅ COMPLETE (2026-04-26)
-- Phase 3 'genealogy + knowledge dual-axis': ACTIVE (a12 + a13 working)
-
-After A-1~A-13: Phase 1 (Survival + Material + Temperament, ~4 weeks)
-Then: Phase 2 (Social + Band + Building Structure, ~4 weeks)
+V7 (Foundation Week 1-12) closed 2026-05-17 (commit `a0666b6c`).
+See `.harness/audit/v7_progress.md` for phase-by-phase completion log + commit chain.
+Next direction (Section 8+) pending user mandate. Pre-V7 A-1~A-13 prereq tracking
+retired; behavioural and architectural references below remain authoritative.
 
 ---
 
@@ -506,7 +484,7 @@ scripts/
     panels/                    — EntityDetailPanel, BuildingDetailPanel, etc.
     renderers/                 — WorldRenderer, EntityRenderer, BuildingRenderer
     hud.gd, camera_controller.gd
-data/                          ← legacy JSON content during A-1 migration
+data/                          ← legacy pre-V7 content (retained for asset salvage only; runtime data lives in sim-data/)
   species/, traits/, stressors/, emotions/, buildings/, skills/, tech/
 localization/
   en/, ko/, compiled/
@@ -795,7 +773,7 @@ Before any work touching these areas, read the corresponding SKILL.md:
 - **Agent inspector**: `entity_detail_panel_v4.gd` (1015 lines) — BBCode RichTextLabel based
   - Known crash: `float()` on non-numeric Variant from Rust FFI → use `_safe_float()` helper
   - Known issue: [table=3] BBCode alignment imperfect for CJK labels
-  - **Planned: Phase 1 redesign → Godot UI nodes (ProgressBar + Container) to replace BBCode**
+  - **Status**: pre-V7 UI; V7 reset deferred the inspector redesign — current Godot scope is the Phase 4-γ MultiMeshInstance2D agent renderer + Phase 3-γ CausalPanel scaffold. Legacy inspector rebuild is out of V7 Foundation scope.
 - **Settlement/Building detail**: moved from center popup to sidebar, `_draw()` based
 - **Sidebar**: 6 tabs (상세정보/연대기/세력/통계/역사/외교) + band/civ/settlement/building panels
 - **Bottom bar**: Z1-Z5 zoom | overlays (food/danger/warmth/social/knowledge/resource) | 7 layers | Oracle | TPS/FPS
