@@ -218,3 +218,123 @@ ENV-BYPASS v3.2.1 baseline registry, score formula refinements).
 - Phase 6-δ optional (UI integration: ConstructionSite visual + CausalPanel ConstructionReason)
 - Phase 7+ (Combat / Social / Memory / Settlement — V7 외부 phase, mandate 필수)
 - V7 Master Direction Section 8+ design (Foundation 완료 후 별도 design work)
+
+---
+
+# V7 Phase 7 (Multi-agent Social System) — Partial closure (α + β only) (2026-05-17)
+
+## Phase 7-α — Social/Relationship substrate ✓
+
+- Commit `35fbd501`, score 90/100 B Ship-it (APPROVE attempt 3 of r4, 4-dispatch
+  recovery: r1 API 500, r2 silent-death, r3 RE-CODE × 3, r4 skip-gen APPROVE).
+- Landed: `Social { loneliness, growth_rate }` (Sleep mirror) +
+  `RelationshipKey` canonicalised + `RelationshipState` + `TargetKind::Agent(AgentId)`
+  as the **first payload-carrying `TargetKind` variant** (Phase 5-γ Sleep +
+  Phase 6-α ConstructionSite symmetry precedent extended).
+- Phase 7-α `agent_decision.rs` inert placeholders preserved for the β takeover.
+
+## Phase 7-β — SocialInteractionSystem + SocialDecaySystem + agent-driven social loop ✓ (Re-plan post)
+
+- Commit `de336f83`, score 92/100 B Ship-it (APPROVE attempt 2 of r6,
+  6-dispatch recovery: r1-r5 RE-CODE escalation chain → user Re-plan decision
+  Option A (add `SocialDecaySystem` priority 135) → r6 fresh skip-gen APPROVE).
+- Landed runtime:
+  - `SocialInteractionSystem` priority **134**, tick_interval 1 — mutual
+    handshake + multi-tick progress + completion + asymmetric-partner
+    fallback + **sorted canonical RelationshipKey** pair ordering
+    (determinism lock).
+  - `SocialDecaySystem` priority **135** (re-plan addition) — Sleep/Hunger/
+    Thirst decay precedent symmetry final.
+- Landed causal substrate:
+  - `CausalEvent::SocialInteractionStarted` + `::SocialInteractionCompleted`
+    variants (canonical `(smaller, larger)` agents pair).
+  - `DecisionReason::SocialReason` (5th variant).
+- Landed FSM extension:
+  - `AgentDecisionSystem` Idle 5th cascade (lowest-AgentId tie-break).
+  - Seeking-branch mutual-handshake takeover (smaller-AgentId emits the
+    single `SocialInteractionStarted`).
+  - Consuming-branch `Agent(_)` no-op preserved (System-134 owns exit).
+- Landed schema:
+  - `SimResources::relationships: HashMap<RelationshipKey, RelationshipState>`
+  - `SimResources::interaction_progress: HashMap<RelationshipKey, u32>`
+- Landed constants in `agent_decision.rs`:
+  - `SOCIAL_THRESHOLD = 50.0`, `SOCIAL_CONSUME_AMOUNT = 30.0`,
+    `REQUIRED_INTERACTION_PROGRESS = 3`, `FAMILIARITY_BUMP = 0.1`
+- Re-plan path note: "incorporate plan-lock spec" 정통 — the original §β plan
+  locked 22 assertions; Generator under-implementation delivered 17 across 4
+  dispatches. The "scope expansion" framing in the recovery chain was
+  re-classified at the Option A decision point as plan-lock enforcement, not
+  Codex over-reach. SocialDecaySystem addition closed the canonical-emergence
+  gap that A18-A22 (4380-tick emergent run, 3-seed sweep, same-seed
+  determinism, hot-tier schedule, despawn fallback) require.
+
+## Phase 7 architecture base (post β)
+
+Five needs systems all parallel:
+
+```
+130 HungerDecaySystem
+131 ThirstDecaySystem
+132 SleepDecaySystem
+133 ConstructionSystem
+134 SocialInteractionSystem
+135 SocialDecaySystem
+```
+
+Causal chain land:
+
+```
+AgentDecision{SocialReason} → SocialInteractionStarted → SocialInteractionCompleted
+```
+
+## Phase 7-γ — Two-agent chronicle harness — DEFERRED (2026-05-17)
+
+- 6 dispatches stalled at hook BLOCK 88/100 (Codex APPROVED on attempt 3
+  final of each cycle, but hook gate requires ≥ 90).
+- Score breakdown (final r6 attempt 3):
+  - Mechanical Gate **8**/10 (FFI FAIL — stale unrelated evidence per Codex
+    disclosure: "older HAS_BROKEN artifacts exist, but relevant/current V7
+    reset evidence reports ALL_COMPLETE/SKIP")
+  - Code Quality **5**/15 (attempt-3 -10 penalty cap)
+  - Test Coverage 20/20, Visual 20/20, Regression 15/15, Evaluator 15/15
+- Working tree preserved via `git stash`
+  (`p7-gamma-wip-deferred-88-of-100-hook-block-6-dispatches`). Fresh attempt
+  is still possible.
+- Decision: **Option B (Defer)** — Pipeline integrity 정통 보호 + 4th
+  ENV-BYPASS chain precedent risk explicitly avoided. The recurring
+  attempt-3 penalty + stale-FFI signal is environmental in character but
+  the 3-ENV-BYPASS rolling history (already closed at V7 Foundation) makes
+  a 4th bypass undesirable for governance hygiene.
+
+## Infrastructure signal disclosure (V7 reset cumulative)
+
+- **Phase 7-β**: 6 dispatch attempts (5 stalled then 1 APPROVED post-Re-plan).
+- **Phase 7-γ**: 6 dispatch attempts (all stalled at hook BLOCK 88/100).
+- Cumulative since V7 reset (2026-05-03): ~28+ dispatch attempts across
+  Phase 5/6/7 chains.
+- Recurring failure patterns observed (across both Phases 7-β and 7-γ):
+  - Generator silent death (API 500 / Claude rate limit at boundary windows)
+  - Codex Evaluator timeout (600s) requiring Claude fallback
+  - Attempt-3 -10 penalty cap on substantial harness scope
+  - Stale FFI evidence inheriting -2 from unrelated prior dispatches
+- **Honest read**: this is an infrastructure-level signal, not a code-defect
+  signal. The mechanism evaluation belongs to a separate governance dispatch.
+  3 ENV-BYPASS chains already closed at V7 Foundation closure; a 4th here
+  would weaken the rule-7.1 governance integrity precedent.
+
+## V7 milestone progression (post-defer)
+
+- ✅ Foundation Week 1-12 (complete)
+- ✅ Week 13-14 Phase 7-α + β (Multi-agent Social System operational)
+- ⏸ Phase 7-γ chronicle harness (deferred, stash preserved)
+
+## Next decision base (사용자 mandate required)
+
+| Option | Scope |
+|--------|-------|
+| **A. Phase 7-γ fresh attempt** | `git stash pop` + integrate the 4 actionable issues from r5/r6 (A5 window, A15 Type C→D, diagnostic counter, prompt-file removal) + fresh skip-gen dispatch |
+| **B. Section 9+ design / Phase 8 anchor** | Combat / Memory / Multi-building Settlement / Advanced AI (Section 8+ design §3 candidates) |
+| **C. Phase 7-δ optional** | UI integration: `CausalPanel` social rendering + `AgentRenderer` socializing indicator + locale keys |
+| **D. Phase 4-δ optional** | BodyHealth — V7 reset 후 명시적 path 부재, scope 정의 의무 |
+| **E. Infrastructure governance work** | Pipeline mechanism evaluation against the 28+ dispatch signal (separate audit-only dispatch, no feature work) |
+| **F. V7 partial closure declaration** | Mark V7 (Foundation + Phase 7-α/β) as substantial final, defer Phase 7-γ + δ + further phases to a fresh design cycle |
