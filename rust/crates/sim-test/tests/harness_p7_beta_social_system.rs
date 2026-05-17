@@ -1105,9 +1105,24 @@ fn harness_p7_beta_a9_completion_after_required_progress_ticks() {
         .familiarity;
     assert_eq!(fam, FAMILIARITY_BUMP, "familiarity == FAMILIARITY_BUMP");
 
+    // Updated per V7 Phase 7-γ plan §γ A4/A5 (locked Type A):
+    // The `interaction_progress` entry is intentionally left at the terminal
+    // `REQUIRED_INTERACTION_PROGRESS` value on the completion tick so a
+    // post-`engine.tick()` (or post-direct-`sys.tick()`) observation can
+    // witness `progress == REQUIRED_INTERACTION_PROGRESS`. The entry is
+    // reaped on the next SIS tick by the step (g) stale-cleanup pass — the
+    // pair is no longer in mutual `Consuming` at that point so the key
+    // falls out of the live `mutual_pairs` snapshot.
+    assert_eq!(
+        engine.resources.interaction_progress.get(&key).copied(),
+        Some(REQUIRED_INTERACTION_PROGRESS),
+        "interaction_progress must hold REQUIRED on completion tick (deferred cleanup)"
+    );
+    // One additional SIS tick reaps the now-stale entry.
+    sys.tick(&mut engine.world, &mut engine.resources);
     assert!(
         !engine.resources.interaction_progress.contains_key(&key),
-        "interaction_progress entry must be removed on completion"
+        "interaction_progress entry must be removed on the next SIS tick after completion"
     );
 
     // Exactly one Completed event with the locked fields.
@@ -1563,7 +1578,8 @@ fn harness_p7_beta_a13b_loneliness_saturating_subtract_at_zero() {
         "B loneliness must saturate at 0.0 (10.0 - 30.0 via .max(0.0)), got {lone_b}"
     );
 
-    // The completion path must have run (state reset + progress removed).
+    // The completion path must have run (state reset + progress observable
+    // at terminal value on completion tick, reaped on the next SIS tick).
     assert_eq!(
         *engine.world.get::<&AgentState>(ent_a).unwrap(),
         AgentState::Idle,
@@ -1574,9 +1590,18 @@ fn harness_p7_beta_a13b_loneliness_saturating_subtract_at_zero() {
         AgentState::Idle,
         "B must reset to Idle on completion"
     );
+    // Updated per V7 Phase 7-γ plan §γ A4/A5 (locked Type A): deferred
+    // cleanup. Entry stays at REQUIRED on completion tick; the next SIS
+    // tick reaps it via the step (g) stale pass.
+    assert_eq!(
+        engine.resources.interaction_progress.get(&key).copied(),
+        Some(REQUIRED_INTERACTION_PROGRESS),
+        "progress entry must hold REQUIRED on completion tick (deferred cleanup)"
+    );
+    sys.tick(&mut engine.world, &mut engine.resources);
     assert!(
         !engine.resources.interaction_progress.contains_key(&key),
-        "progress entry must be removed on completion"
+        "progress entry must be removed on the next SIS tick after completion"
     );
 }
 

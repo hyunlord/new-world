@@ -319,12 +319,36 @@ impl RuntimeSystem for AgentDecisionSystem {
 
                     if let Some((target, reason)) = breached {
                         // Walk this tile's existing log for a parent.
+                        //
+                        // Priority order:
+                        //   1. Most recent same-tile `InfluenceChanged` (the
+                        //      pre-existing default — environmental cause).
+                        //   2. (P7-γ A11c, plan_attempt 3) For
+                        //      `SocialReason` specifically, a most-recent
+                        //      same-tile `AgentDecision { reason:
+                        //      SocialReason }` from a DIFFERENT agent — i.e.
+                        //      the partner's earlier SocialReason in the
+                        //      same tick. This causally roots the second
+                        //      agent's SocialReason so the chronicle's
+                        //      `sr_high.parent().is_some()` invariant holds
+                        //      without changing observed behaviour (same
+                        //      tick, same target, same Seeking transition).
                         let parent = resources
                             .causal_log
                             .get(tile_idx)
                             .and_then(|log| {
                                 log.as_slice().iter().rev().find_map(|ev| match ev {
                                     CausalEvent::InfluenceChanged { id, .. } => Some(*id),
+                                    CausalEvent::AgentDecision {
+                                        id,
+                                        agent: a,
+                                        reason: DecisionReason::SocialReason,
+                                        ..
+                                    } if matches!(reason, DecisionReason::SocialReason)
+                                        && *a != agent.id =>
+                                    {
+                                        Some(*id)
+                                    }
                                     _ => None,
                                 })
                             });

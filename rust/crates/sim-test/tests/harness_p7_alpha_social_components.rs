@@ -504,6 +504,13 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
 }
 
 // ─── A25: AgentState::suppresses_movement contract for Agent target ───
+//
+// Updated per V7 Phase 7-γ plan §γ A15 (locked Type A): Consuming{Agent(_)}
+// now suppresses movement at the API level (in addition to Seeking{Agent(_)}).
+// The Brownian-motion freeze for Consuming{Food|Water|Sleep|ConstructionSite}
+// continues to live inside AgentMovementSystem rather than being surfaced
+// through `suppresses_movement()` — see `agent_state.rs::suppresses_movement`
+// docs for the full truth table.
 #[test]
 fn harness_p7_alpha_a25_agent_state_suppresses_movement_contract() {
     assert!(
@@ -513,10 +520,11 @@ fn harness_p7_alpha_a25_agent_state_suppresses_movement_contract() {
         .suppresses_movement()
     );
     assert!(
-        !AgentState::Consuming {
+        AgentState::Consuming {
             target: TargetKind::Agent(42)
         }
-        .suppresses_movement()
+        .suppresses_movement(),
+        "P7-γ A15: Consuming{{Agent(_)}} must suppress movement at API level"
     );
 }
 

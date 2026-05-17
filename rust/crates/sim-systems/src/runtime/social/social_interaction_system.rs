@@ -25,9 +25,15 @@
 //! 3. On `progress >= REQUIRED_INTERACTION_PROGRESS`: emit
 //!    [`CausalEvent::SocialInteractionCompleted`], bump
 //!    [`RelationshipState::familiarity`] by `FAMILIARITY_BUMP` (saturating
-//!    at 1.0), reset both agents to `Idle`, saturating-subtract
-//!    `SOCIAL_CONSUME_AMOUNT` from both agents' `Social.loneliness`, and
-//!    remove the `interaction_progress` entry.
+//!    at 1.0), reset both agents to `Idle`, and saturating-subtract
+//!    `SOCIAL_CONSUME_AMOUNT` from both agents' `Social.loneliness`.
+//!    The `interaction_progress` entry is INTENTIONALLY LEFT at value
+//!    `REQUIRED_INTERACTION_PROGRESS` on the completion tick (so a
+//!    post-`engine.tick()` observation can witness the terminal progress
+//!    value), and reaped by the step (g) stale-cleanup pass on the NEXT
+//!    SIS tick — at which point both agents are no longer in mutual
+//!    `Consuming` (they were reset to `Idle` above), so the key no longer
+//!    appears in the live `mutual_pairs` snapshot and gets pruned.
 //! 4. If NOT mutual (partner gone, on different tile, or pointing
 //!    elsewhere): reset the agent to `Idle` WITHOUT panic, WITHOUT
 //!    emitting a completion event, and remove any stale
@@ -306,7 +312,17 @@ impl RuntimeSystem for SocialInteractionSystem {
                 }
             }
 
-            resources.interaction_progress.remove(key);
+            // NOTE: do NOT remove the `interaction_progress` entry here.
+            // The plan §γ A4/A5 contract requires that the terminal value
+            // `REQUIRED_INTERACTION_PROGRESS` be observable AFTER the
+            // completion tick's `engine.tick()` returns. Step (g) below
+            // will NOT prune this key on the completion tick because the
+            // pair is still present in `mutual_pairs` (the pre-completion
+            // snapshot drives step (g)). On the FOLLOWING SIS tick, the
+            // agents are Idle, the live snapshot of mutual `Consuming`
+            // pairs no longer contains this key, and step (g) reaps the
+            // entry — fulfilling plan §γ A12 ("None or Some(0) by the
+            // next post-completion observation").
         }
 
         // (g) Stale-progress cleanup. Any interaction_progress entry whose

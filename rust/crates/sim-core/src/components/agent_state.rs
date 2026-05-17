@@ -87,10 +87,24 @@ impl AgentState {
     }
 
     /// True when the agent should NOT take its Brownian step this tick.
-    /// Mirrored exactly by the suppression check in
-    /// `AgentMovementSystem::tick`.
+    ///
+    /// Truth table (per V7 Phase 7-γ plan §γ A15):
+    ///   - `Idle`                                       → false
+    ///   - `Seeking { _ }`                              → true  (all variants)
+    ///   - `Consuming { target: TargetKind::Agent(_) }` → true  (P7-γ A15)
+    ///   - `Consuming { target: Food|Water|Sleep|ConstructionSite }` → false
+    ///
+    /// The `Consuming{Agent(_)}` case suppresses Brownian motion at the API
+    /// level because the social interaction loop requires both participants
+    /// to remain on the shared tile for the entire `REQUIRED_INTERACTION_
+    /// PROGRESS` window. For all other `Consuming { _ }` variants, the
+    /// movement system applies an additional internal freeze (`AgentMovement
+    /// System::tick` has its own `Consuming { .. }` short-circuit), so the
+    /// observable behaviour is the same — but only the `Agent(_)` variant
+    /// surfaces it via the public `suppresses_movement()` predicate.
     pub fn suppresses_movement(&self) -> bool {
         matches!(self, AgentState::Seeking { .. })
+            || matches!(self, AgentState::Consuming { target: TargetKind::Agent(_) })
     }
 }
 
@@ -117,20 +131,28 @@ mod tests {
     }
 
     #[test]
-    fn only_seeking_suppresses_movement() {
+    fn suppresses_movement_truth_table() {
+        // Idle never suppresses.
         assert!(!AgentState::Idle.suppresses_movement());
+        // Seeking always suppresses (any target).
         assert!(AgentState::Seeking { target: TargetKind::Food }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::Water }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::Sleep }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::ConstructionSite }
             .suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::Agent(7) }.suppresses_movement());
+        // Consuming{Agent(_)} suppresses (P7-γ A15) — agents in a social
+        // interaction must stay on the shared tile through the full
+        // REQUIRED_INTERACTION_PROGRESS window.
+        assert!(AgentState::Consuming { target: TargetKind::Agent(7) }.suppresses_movement());
+        // Consuming{Food|Water|Sleep|ConstructionSite} does NOT surface
+        // suppression at the API level (the movement system applies its
+        // own Consuming-tick freeze for these variants).
         assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::ConstructionSite }
             .suppresses_movement());
-        assert!(!AgentState::Consuming { target: TargetKind::Agent(7) }.suppresses_movement());
     }
 
     #[test]
