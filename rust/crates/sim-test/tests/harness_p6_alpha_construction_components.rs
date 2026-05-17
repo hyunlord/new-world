@@ -276,17 +276,21 @@ fn harness_p6_alpha_a14_required_zero_trivially_complete() {
     assert_eq!(site.progress, 0, "progress must stay at 0");
 }
 
-// ─── A15: TargetKind has exactly four variants ─────────────────────────
+// ─── A15: TargetKind has exactly five variants ─────────────────────────
+// V7 Phase 7-α spec-mandated edit: bumped from 4 → 5 variants with the
+// addition of `TargetKind::Agent(AgentId)`. The plan explicitly permits
+// this single edit on this test and forbids any other change.
 #[test]
 fn harness_p6_alpha_a15_target_kind_four_variants() {
     // Type: exhaustive match + inequality identity
     // Compile-time guarantee: this match must remain exhaustive without
-    // wildcard. A 5th or 3rd variant would break the build.
+    // wildcard. A 6th or 4th variant would break the build.
     let kinds = [
         TargetKind::Food,
         TargetKind::Water,
         TargetKind::Sleep,
         TargetKind::ConstructionSite,
+        TargetKind::Agent(0),
     ];
     for k in kinds {
         match k {
@@ -294,11 +298,13 @@ fn harness_p6_alpha_a15_target_kind_four_variants() {
             TargetKind::Water => {}
             TargetKind::Sleep => {}
             TargetKind::ConstructionSite => {}
+            TargetKind::Agent(_) => {}
         }
     }
     assert_ne!(TargetKind::ConstructionSite, TargetKind::Sleep);
     assert_ne!(TargetKind::ConstructionSite, TargetKind::Food);
     assert_ne!(TargetKind::ConstructionSite, TargetKind::Water);
+    assert_ne!(TargetKind::ConstructionSite, TargetKind::Agent(0));
 }
 
 // ─── A16: Seeking{ConstructionSite}.suppresses_movement() == true ──────

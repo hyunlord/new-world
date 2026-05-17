@@ -20,16 +20,25 @@
 //! [`TargetKind`] with a 4th variant `ConstructionSite` — Phase 5-γ
 //! Path (b) symmetry precedent. `AgentState` is intentionally unchanged.
 //!
+//! Phase 7-α adds the multi-agent social-system data substrate
+//! ([`Social`], [`RelationshipKey`], [`RelationshipState`]) and extends
+//! [`TargetKind`] with a 5th variant `Agent(AgentId)` — the first
+//! payload-carrying target variant. `AgentState` is intentionally
+//! unchanged; the Phase 7-β `SocialInteractionSystem` (priority 134)
+//! owns runtime resolution.
+//!
 //! See `.harness/plans/phase4.md` §2, `.harness/plans/phase5.md`
-//! §2.1 / §2.β / §2.γ, and `.harness/plans/phase6.md` §2.1 for the
-//! full sub-stage decomposition.
+//! §2.1 / §2.β / §2.γ, `.harness/plans/phase6.md` §2.1, and
+//! `.harness/plans/phase7.md §3` for the full sub-stage decomposition.
 
 pub mod agent;
 pub mod agent_state;
 pub mod construction;
 pub mod hunger;
 pub mod position;
+pub mod relationship;
 pub mod sleep;
+pub mod social;
 pub mod thirst;
 
 pub use agent::{Agent, AgentId};
@@ -37,5 +46,7 @@ pub use agent_state::{AgentState, TargetKind};
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
 pub use position::Position;
+pub use relationship::{RelationshipKey, RelationshipState};
 pub use sleep::Sleep;
+pub use social::Social;
 pub use thirst::Thirst;

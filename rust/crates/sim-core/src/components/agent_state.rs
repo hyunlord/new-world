@@ -18,10 +18,12 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::components::agent::AgentId;
+
 /// Resource an agent is actively pursuing or consuming during the
 /// [`AgentState::Seeking`] / [`AgentState::Consuming`] phases.
 ///
-/// Phase 6-α scope: four variants. Adding a target requires updating
+/// Phase 7-α scope: five variants. Adding a target requires updating
 /// both the AgentDecisionSystem FSM and any UI that surfaces agent state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TargetKind {
@@ -37,6 +39,15 @@ pub enum TargetKind {
     /// system. V7 Phase 6-α / P6α-6 — Phase 5-γ Path (b) symmetry
     /// precedent (new TargetKind variant, NOT a new AgentState variant).
     ConstructionSite,
+    /// V7 Phase 7-α / P7α-8 — Co-located partner agent for the
+    /// Multi-agent Social System (Phase 5-γ Sleep / Phase 6-α
+    /// ConstructionSite payload symmetry extended to AgentId). First
+    /// payload-carrying `TargetKind` variant. The embedded `AgentId`
+    /// identifies the partner; canonicalisation across a pair is
+    /// handled by `RelationshipKey::new`, not by this variant. Runtime
+    /// resolution lands in Phase 7-β; α arms in `AgentDecisionSystem`
+    /// are intentionally inert.
+    Agent(AgentId),
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is
@@ -113,11 +124,13 @@ mod tests {
         assert!(AgentState::Seeking { target: TargetKind::Sleep }.suppresses_movement());
         assert!(AgentState::Seeking { target: TargetKind::ConstructionSite }
             .suppresses_movement());
+        assert!(AgentState::Seeking { target: TargetKind::Agent(7) }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Food }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Water }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::ConstructionSite }
             .suppresses_movement());
+        assert!(!AgentState::Consuming { target: TargetKind::Agent(7) }.suppresses_movement());
     }
 
     #[test]
@@ -128,10 +141,12 @@ mod tests {
             AgentState::Seeking { target: TargetKind::Water },
             AgentState::Seeking { target: TargetKind::Sleep },
             AgentState::Seeking { target: TargetKind::ConstructionSite },
+            AgentState::Seeking { target: TargetKind::Agent(7) },
             AgentState::Consuming { target: TargetKind::Food },
             AgentState::Consuming { target: TargetKind::Water },
             AgentState::Consuming { target: TargetKind::Sleep },
             AgentState::Consuming { target: TargetKind::ConstructionSite },
+            AgentState::Consuming { target: TargetKind::Agent(7) },
         ];
         for state in cases {
             let encoded = ron::to_string(&state).unwrap();
@@ -147,6 +162,7 @@ mod tests {
             TargetKind::Water,
             TargetKind::Sleep,
             TargetKind::ConstructionSite,
+            TargetKind::Agent(7),
         ] {
             let encoded = ron::to_string(&kind).unwrap();
             let decoded: TargetKind = ron::from_str(&encoded).unwrap();

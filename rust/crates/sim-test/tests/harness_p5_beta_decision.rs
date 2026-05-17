@@ -998,6 +998,7 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
             TargetKind::Water => "water",
             TargetKind::Sleep => "sleep",
             TargetKind::ConstructionSite => "construction_site",
+            TargetKind::Agent(_) => "agent",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");

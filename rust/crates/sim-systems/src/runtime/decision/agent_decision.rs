@@ -259,6 +259,20 @@ impl RuntimeSystem for AgentDecisionSystem {
                         TargetKind::ConstructionSite => {
                             construction_sites.contains_key(&key)
                         }
+                        // V7 Phase 7-α / P7α-12: TargetKind::Agent(_) is
+                        // the 5th TargetKind variant but α adds no
+                        // decision logic that routes agents into
+                        // Seeking{Agent(_)} — runtime resolution lands
+                        // in Phase 7-β (`SocialInteractionSystem`,
+                        // priority 134). If an agent reaches this branch
+                        // (e.g., via a future test or β prototype),
+                        // treat it as "no partner present" so the agent
+                        // stays in Seeking without resolving against a
+                        // non-existent runtime path. Named arm (not a
+                        // wildcard) so a future 6th variant fails to
+                        // compile here. Mirrors the Phase 6-α
+                        // ConstructionSite inert pattern.
+                        TargetKind::Agent(_) => false,
                     };
                     if has_resource {
                         // V7 Phase 6-β / P6β-8: emit ConstructionStarted on
@@ -363,6 +377,21 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // Intentional no-op: preserve state, do not touch
                             // tile maps, do not mutate needs, do not advance
                             // any construction progress. β scope.
+                        }
+                        // V7 Phase 7-α / P7α-12: Agent(_) consume is β scope.
+                        // The SocialInteractionSystem (β, priority 134) is
+                        // the sole owner of social-interaction progress,
+                        // mutual-handshake validation, and FSM exit; α MUST
+                        // NOT advance familiarity, mutate Social /
+                        // RelationshipState, or transition the FSM state
+                        // here. Named arm (not a wildcard) so a future 6th
+                        // variant fails to compile here. Mirrors the Phase
+                        // 6-α ConstructionSite inert pattern at lines
+                        // ~362-366 above.
+                        TargetKind::Agent(_) => {
+                            // Intentional no-op: preserve state, do not touch
+                            // relationships, do not bump familiarity, do not
+                            // advance interaction_progress. β scope.
                         }
                     }
                 }
