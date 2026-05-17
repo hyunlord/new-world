@@ -27,6 +27,14 @@
 //! unchanged; the Phase 7-β `SocialInteractionSystem` (priority 134)
 //! owns runtime resolution.
 //!
+//! Phase 8-α adds the per-agent episodic memory substrate
+//! ([`Memory`], [`MemoryEntry`], [`MEMORY_CAP`], [`SALIENCE_FLOOR`]).
+//! The runtime `MemorySystem` (priority 136), `CausalEvent::MemoryRecalled`,
+//! `DecisionReason::MemoryReason`, and the `AgentDecisionSystem` 6th-cascade
+//! bias mechanism are all Phase 8-β scope. `TargetKind` and `AgentState`
+//! are intentionally unchanged — Memory is a decision-bias source, not a
+//! target type.
+//!
 //! See `.harness/plans/phase4.md` §2, `.harness/plans/phase5.md`
 //! §2.1 / §2.β / §2.γ, `.harness/plans/phase6.md` §2.1, and
 //! `.harness/plans/phase7.md §3` for the full sub-stage decomposition.
@@ -35,6 +43,7 @@ pub mod agent;
 pub mod agent_state;
 pub mod construction;
 pub mod hunger;
+pub mod memory;
 pub mod position;
 pub mod relationship;
 pub mod sleep;
@@ -45,6 +54,7 @@ pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
+pub use memory::{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
 pub use position::Position;
 pub use relationship::{RelationshipKey, RelationshipState};
 pub use sleep::Sleep;

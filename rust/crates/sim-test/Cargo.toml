@@ -16,6 +16,7 @@ sim-bridge = { path = "../sim-bridge" }
 
 [dev-dependencies]
 criterion = { workspace = true }
+serde_json = "1.0"
 
 [[bench]]
 name = "phase2_benchmarks"
