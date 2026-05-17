@@ -338,3 +338,188 @@ AgentDecision{SocialReason} → SocialInteractionStarted → SocialInteractionCo
 | **D. Phase 4-δ optional** | BodyHealth — V7 reset 후 명시적 path 부재, scope 정의 의무 |
 | **E. Infrastructure governance work** | Pipeline mechanism evaluation against the 28+ dispatch signal (separate audit-only dispatch, no feature work) |
 | **F. V7 partial closure declaration** | Mark V7 (Foundation + Phase 7-α/β) as substantial final, defer Phase 7-γ + δ + further phases to a fresh design cycle |
+
+---
+
+# Infrastructure Governance Audit (Phase 7 recurring pattern, 2026-05-17)
+
+User selected Option E + F combined: audit the Phase 7 dispatch infrastructure
+signal honestly, then mark V7 (Foundation + Phase 7-α/β) as substantial final.
+
+## Phase 7 cumulative dispatch inventory
+
+| Sub-stage | Dispatches | Outcome |
+|-----------|-----------|---------|
+| α (Social/Relationship substrate) | 4 (r1-r4) | r1 API 500 → r2 silent-death → r3 RE-CODE×3 + rate limit → r4 skip-gen APPROVED 90/100 |
+| β (SocialInteractionSystem + agent loop) | 6 (r1-r6) | r1-r5 RE-CODE escalation chain → user Re-plan (Option A: SocialDecaySystem) → r6 fresh skip-gen APPROVED 92/100 |
+| γ (chronicle harness) | 6 (r1-r6) | All 6 stalled at hook BLOCK 88/100 — Codex APPROVED but attempt-3 penalty cap + FFI FAIL stale evidence pushed adjusted_score below 90 |
+
+**Cumulative Phase 7 dispatches: 16 across 3 sub-stages.**
+
+## Pattern classification (honest)
+
+| Pattern | Source | Recovery |
+|---------|--------|----------|
+| **A — API 500 mid-Generator** | External Anthropic API | retry + skip-gen |
+| **B — Claude rate limit silent death** | External Anthropic API | skip-gen after reset |
+| **C — Generator silent death (partial output)** | Sub-agent / Claude Code session boundary | manual fix exhaustive arms + skip-gen |
+| **D — Attempt-3 penalty cap (-10)** | Pipeline scoring mechanism (intentional) | real signal — accumulated rework cost |
+| **E — FFI FAIL stale unrelated evidence (-2)** | Pipeline mechanism gap | currently no fix path — disclosure only |
+| **F — "Scope expansion" demands** | Plan-lock enforcement (NOT scope creep) | incorporate plan-lock spec (per Re-plan precedent) |
+
+## Mechanism boundary disclosure
+
+- **Patterns A/B/C**: external infrastructure. Outside Claude Code/Pipeline
+  control. Recovery via skip-gen + synthetic gen_result is the documented
+  precedent (Phase 6-β r1/r2, Phase 7-α r1-r3, Phase 7-β r1-r2).
+- **Pattern D**: intentional governance signal. Attempt-3 cap of -10 is
+  designed to reflect cumulative rework cost. Not a bug; a real penalty for
+  substantial-scope dispatches needing 3 generator runs.
+- **Pattern E**: pipeline mechanism gap. Codex r6 disclosure verbatim:
+  > "older HAS_BROKEN artifacts exist, but relevant/current V7 reset evidence
+  > reports ALL_COMPLETE/SKIP and no newly added BROKEN method regression was
+  > identified."
+
+  The hook's Mech Gate scoring counts `FFI FAIL` even when the FAIL is on
+  unrelated historical evidence the regression guard explicitly clears. This
+  is the **Issue 14 candidate** — analogous to Issue 12 (alphabetical sort
+  bug) and Issue 13 (verdict staleness): a pipeline-mechanism fix path
+  exists, deferred to a separate governance dispatch.
+- **Pattern F**: not a problem. The "scope expansion" framing during
+  Phase 7-β recovery was re-classified at the Option A decision point as
+  Generator under-implementation against an already-locked 22-assertion
+  plan — Codex was correctly enforcing the lock, not over-reaching. Same
+  re-classification applies to Phase 7-γ Codex demands (the 13-assertion
+  plan + 4 actionable r5/r6 issues were plan-locked, not Codex over-reach).
+
+## Issue 14 candidate (Pattern E fix, deferred)
+
+Mechanism gap: `tools/harness/cold_tier_classifier.sh` or the equivalent
+FFI evidence reader counts historical `HAS_BROKEN` files even when those
+files predate the current V7 reset and are explicitly cleared by the
+regression guard.
+
+**Fix path (proposal, not implemented):** the FFI check should either
+(a) restrict scope to evidence files post-V7-reset commit timestamp, or
+(b) exclude evidence directories whose feature names don't appear in the
+regression guard CLEAN list, or (c) require the regression guard to emit a
+positive `current_ffi: ALL_COMPLETE` token that the Mech Gate trusts over
+the file-existence check.
+
+**Disposition**: deferred to a future audit-only governance dispatch. Not
+priority right now. Pattern E adds -2 to Mech Gate, which is recoverable
+only via plan-quality + code-quality wins; the recurring -2 contributed
+materially to Phase 7-γ stalling at 88/100.
+
+## Honest evaluation of Phase 7-γ stall
+
+The Phase 7-γ work is **Codex-APPROVED on attempt 3 of every cycle** (r1-r6).
+The 88/100 block isn't a code-defect signal — it's the structural
+combination of Pattern D (-10 attempt-3 cap) + Pattern E (-2 FFI FAIL).
+The arithmetic ceiling under these conditions is 88 unless one of:
+1. Attempt-1 APPROVE (no penalty cap) — improbable given iterative Codex
+   refinement on a substantial harness.
+2. Issue 14 fix lands first — separate governance dispatch.
+3. ENV-BYPASS authorized — declined per 4th-chain risk avoidance.
+
+This is why Option B (Defer) was the correct decision — not because the
+code is wrong, but because pursuit of "above 90" without fixing the
+underlying mechanism gap would either grind further dispatches (wasting
+external API quota on patterns A/B/C exposure) or land a 4th ENV-BYPASS
+chain that weakens the rule-7.1 governance precedent.
+
+---
+
+# V7 (Foundation + Phase 7 partial) — Final Declaration (2026-05-17)
+
+## V7 milestone progression — final
+
+- ✅ Foundation Week 1-12 complete (commit `a0666b6c`)
+- ✅ Week 13-14 Phase 7-α + β (Multi-agent Social System operational —
+  35fbd501 + de336f83)
+- ⏸ Phase 7-γ chronicle harness deferred (a00a1b77 declaration,
+  stash preserved for fresh-attempt recovery)
+
+## V7 architecture base — final substantial
+
+Six runtime systems in the post-decision priority slate (the **5 needs
+systems all parallel** intended end-state):
+
+```
+ 90  BuildingStampSystem            (Phase 2)
+100  InfluenceUpdateSystem          (Phase 2)
+110  AgentInfluenceSampleSystem     (Phase 2)
+120  AgentMovementSystem            (Phase 4-β)
+125  AgentDecisionSystem            (Phase 5-β / 6-β / 7-β cascade)
+130  HungerDecaySystem              (Phase 5-α)
+131  ThirstDecaySystem              (Phase 5-β)
+132  SleepDecaySystem               (Phase 5-γ)
+133  ConstructionSystem             (Phase 6-β)
+134  SocialInteractionSystem        (Phase 7-β)
+135  SocialDecaySystem              (Phase 7-β re-plan)
+1000 InfluenceVisualizationSystem   (Phase 2 debug)
+```
+
+## Causal chain coverage — final
+
+Five `AgentDecision` reasons each anchor a causal emission chain:
+
+```
+Hunger threshold breach    → AgentDecision{Hunger}      → (consume, no event chain — Phase 5-β scope)
+Thirst threshold breach    → AgentDecision{Thirst}      → (consume)
+Fatigue threshold breach   → AgentDecision{Fatigue}     → (consume)
+Construction proximity     → AgentDecision{Construction} → ConstructionStarted → ConstructionCompleted → BuildingPlaced
+Mutual social co-location  → AgentDecision{Social}     → SocialInteractionStarted → SocialInteractionCompleted
+```
+
+Plus the original Phase 2/3 chain:
+```
+BuildingPlaced (FFI) → StampDirty → InfluenceChanged   (per channel)
+```
+
+Every event carries `id: EventId` + `parent: Option<EventId>` for the
+"왜?" UI chain walk (axiom #1 traceability).
+
+## V7 final stats
+
+| Metric | Value |
+|--------|-------|
+| Recovery span | 2026-05-03 → 2026-05-17 (~14 days V7 reset → V7 closure, +~2 days Phase 7 closure) |
+| Pipeline streak | 28 consecutive APPROVED + 1 hook BLOCK at 88 (Phase 7-γ defer) |
+| Governance patches | 15+ (v3.3.1 → v3.3.17, Issue 10-13 closures) |
+| ENV-BYPASS chains closed | 3 (4th explicitly avoided per Option B) |
+| Feat commits since V7 reset | 28+ |
+| Phase 7 cumulative dispatches | 16 (α 4 + β 6 + γ 6) |
+
+## Axioms — substantial final
+
+- **Axiom #1 (causal traceability)**: every agent decision and every
+  state-changing event emits a chain entry. UI walk-back is complete from
+  any leaf event to its root.
+- **Axiom #3 (visual + behavioral milestone full reach)**: Phase 4-γ
+  delivered the visual milestone (MultiMeshInstance2D rendering); Phase
+  5-γ delivered the behavioral milestone (full daily routine chronicle);
+  Phase 6-γ delivered the construction loop chronicle; Phase 7-α/β
+  delivered the runtime social loop. Phase 7-γ chronicle is the documented
+  gap — operational system without the dedicated chronicle test.
+
+## Governance closure chain — final
+
+| Stage | Commit | Scope |
+|-------|--------|-------|
+| 1 | `a0666b6c` | V7 Foundation Week 1-12 complete |
+| 2 | `2e51c167` | CLAUDE.md V7 reset 정합 update |
+| 3 | `0ed3ec16` | Section 8+ design — Phase 7 anchor |
+| 4 | `a00a1b77` | Phase 7-γ defer + partial closure disclosure |
+| 5 | *(this commit)* | Infrastructure governance audit + V7 Final declaration |
+
+## Next decision base (사용자 mandate required)
+
+| Option | Scope |
+|--------|-------|
+| **Issue 14 (Pattern E) fix dispatch** | Pipeline mechanism gap fix for stale FFI evidence (precedent: Issue 12/13 `00274b57`). Audit-only governance work. |
+| **Phase 7-γ fresh attempt** | `git stash pop` + integrate r5/r6 actionables + fresh skip-gen. Requires Issue 14 fix first or ENV-BYPASS to clear 88-ceiling. |
+| **Section 9+ design (Phase 8 anchor)** | Combat / Memory / Multi-building Settlement / Advanced AI per Section 8+ design §3 candidates. User mandate required. |
+| **Phase 7-δ optional** | UI integration. Locked scope in plan §γ. |
+| **Phase 4-δ optional** | BodyHealth. V7 reset 후 명시적 path 부재 — scope 정의 의무. |
+| **V7 종결 절대 final** | Current declaration sufficient. No further commits planned without new user mandate. |
