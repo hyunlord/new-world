@@ -9,8 +9,10 @@
 
 pub mod hunger_decay;
 pub mod sleep_decay;
+pub mod social_decay;
 pub mod thirst_decay;
 
 pub use hunger_decay::HungerDecaySystem;
 pub use sleep_decay::SleepDecaySystem;
+pub use social_decay::SocialDecaySystem;
 pub use thirst_decay::ThirstDecaySystem;

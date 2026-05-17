@@ -36,12 +36,14 @@
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId};
-use sim_core::components::{Agent, Position};
+use sim_core::components::{
+    Agent, AgentState, Hunger, Position, Sleep, Social, Thirst,
+};
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources};
+use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::{register_agent_systems, register_phase2_systems};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -90,8 +92,12 @@ const MAX_ITERS_PER_FRAME: u32 = 5;
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
-        register_phase2_systems(&mut engine);
-        register_agent_systems(&mut engine);
+        // V7 Phase 7-β / P7β-15 — production runtime registration. Uses the
+        // canonical helper so the live FFI engine includes every default
+        // simulation system: BSS, IUS, AIS, AgentMovement, AgentDecision,
+        // HungerDecay, ThirstDecay, SleepDecay, Construction,
+        // SocialInteraction, SocialDecay, InfluenceVisualization.
+        register_default_runtime_systems(&mut engine);
         bootstrap_spawn_agents(&mut engine);
         Self {
             engine,
@@ -480,6 +486,47 @@ impl CausalEventView {
                 agent_id: None,
                 reason: None,
             },
+            CausalEvent::SocialInteractionStarted {
+                id,
+                parent,
+                agents: _,
+                position,
+                tick,
+            } => Self {
+                kind: "social_interaction_started",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: Some(*position),
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: None,
+                reason: None,
+            },
+            CausalEvent::SocialInteractionCompleted {
+                id,
+                parent,
+                agents: _,
+                position,
+                familiarity_after: _,
+                tick,
+            } => Self {
+                kind: "social_interaction_completed",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: Some(*position),
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: None,
+                reason: None,
+            },
         }
     }
 }
@@ -737,9 +784,26 @@ fn bootstrap_spawn_agents(engine: &mut SimEngine) {
             let y = BOOTSTRAP_AGENT_OFFSET + j * BOOTSTRAP_AGENT_STRIDE;
             let entity = engine.spawn_agent(x, y);
             let seed = BOOTSTRAP_RNG_BASE.wrapping_add((j * BOOTSTRAP_AGENT_AXIS + i) as u64);
+            // V7 Phase 7-β / P7β-15 — bootstrap agents must carry every
+            // component the production cascade reads. Without `AgentState`,
+            // `Hunger`, `Thirst`, `Sleep`, `Social`, the agents would never
+            // participate in the FSM (and the needs/social systems would
+            // silently no-op on them). Default growth rates: Hunger 0.02,
+            // Thirst 0.03, Sleep 0.01, Social 0.04 — produces emergent
+            // cascade firing within an in-game day.
             engine
                 .world
-                .insert_one(entity, MovementRng::new(seed))
+                .insert(
+                    entity,
+                    (
+                        MovementRng::new(seed),
+                        AgentState::Idle,
+                        Hunger::new(0.0, 0.02),
+                        Thirst::new(0.0, 0.03),
+                        Sleep::new(0.0, 0.01),
+                        Social::new(0.0, 0.04),
+                    ),
+                )
                 .expect("bootstrap agent entity must still exist");
         }
     }

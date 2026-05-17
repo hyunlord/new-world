@@ -29,7 +29,7 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::{CausalLogStorage, EventId};
-use sim_core::components::{Agent, AgentId, Position};
+use sim_core::components::{Agent, AgentId, Position, RelationshipKey, RelationshipState};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
@@ -145,6 +145,17 @@ pub struct SimResources {
     /// [`SimResources::food_tiles`] for the third need.
     pub sleep_tiles: HashMap<(u32, u32), u8>,
 
+    /// Sparse per-pair relationship state (V7 Phase 7-β / P7β-13).
+    /// Bumped by `SocialInteractionSystem` on `SocialInteractionCompleted`.
+    /// Starts empty; never seeded by engine construction.
+    pub relationships: HashMap<RelationshipKey, RelationshipState>,
+
+    /// Sparse per-pair multi-tick interaction progress counter
+    /// (V7 Phase 7-β / P7β-13). Incremented once per mutual
+    /// `Consuming{Agent(other)}` pair per tick by `SocialInteractionSystem`;
+    /// removed on completion or asymmetric-partner fallback. Starts empty.
+    pub interaction_progress: HashMap<RelationshipKey, u32>,
+
     /// Current simulated time-of-day in `[0.0, 24.0)` (V7 Phase 5-γ /
     /// P5γ-2). Refreshed by [`SimEngine::tick`] before systems run,
     /// derived deterministically from `current_tick % ticks_per_day`.
@@ -159,6 +170,35 @@ pub struct SimResources {
 }
 
 impl SimResources {
+    /// Direct constructor for [`SimResources`] (V7 Phase 7-β / P7β-13).
+    ///
+    /// `SimEngine::new` delegates to this so the per-pair social HashMaps
+    /// (`relationships`, `interaction_progress`) and every other sparse
+    /// substrate field have a single canonical "starts empty" initialiser.
+    /// Tests can also call this directly to verify P7β-13's empty-default
+    /// invariant without spinning up a full engine.
+    pub fn new(width: u32, height: u32, registry: MaterialRegistry) -> Self {
+        let blocking_cache = MaterialBlockingCache::build(&registry);
+        Self {
+            tile_grid: TileGrid::new(width, height),
+            influence_grid: InfluenceGrid::new(width, height),
+            material_registry: registry,
+            material_blocking_cache: blocking_cache,
+            current_tick: 0,
+            building_event_queue: VecDeque::new(),
+            causal_log: CausalLogStorage::new(),
+            next_event_id: AtomicU64::new(0),
+            next_agent_id: AtomicU64::new(0),
+            food_tiles: HashMap::new(),
+            water_tiles: HashMap::new(),
+            sleep_tiles: HashMap::new(),
+            relationships: HashMap::new(),
+            interaction_progress: HashMap::new(),
+            time_of_day: 0.0,
+            ticks_per_day: 1440,
+        }
+    }
+
     /// Allocate the next monotonic [`EventId`] (V7 Phase 3-β / P3β-1).
     ///
     /// The counter outlives ring-buffer eviction: even after the
@@ -232,25 +272,9 @@ impl SimEngine {
     /// is derived from `registry` automatically; influence + tile grids
     /// start empty.
     pub fn new(width: u32, height: u32, registry: MaterialRegistry) -> Self {
-        let blocking_cache = MaterialBlockingCache::build(&registry);
         Self {
             world: World::new(),
-            resources: SimResources {
-                tile_grid: TileGrid::new(width, height),
-                influence_grid: InfluenceGrid::new(width, height),
-                material_registry: registry,
-                material_blocking_cache: blocking_cache,
-                current_tick: 0,
-                building_event_queue: VecDeque::new(),
-                causal_log: CausalLogStorage::new(),
-                next_event_id: AtomicU64::new(0),
-                next_agent_id: AtomicU64::new(0),
-                food_tiles: HashMap::new(),
-                water_tiles: HashMap::new(),
-                sleep_tiles: HashMap::new(),
-                time_of_day: 0.0,
-                ticks_per_day: 1440,
-            },
+            resources: SimResources::new(width, height, registry),
             systems: Vec::new(),
             current_tick: 0,
         }

@@ -55,10 +55,10 @@
 use std::collections::HashMap;
 
 use hecs::World;
-use sim_core::causal::{CausalEvent, DecisionReason};
+use sim_core::causal::{CausalEvent, DecisionReason, EventId};
 use sim_core::components::{
-    Agent, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position, Sleep, TargetKind,
-    Thirst,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position, Sleep,
+    Social, TargetKind, Thirst,
 };
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -102,6 +102,26 @@ pub const FATIGUE_THRESHOLD: f64 = 50.0;
 /// step completes. Mirrors `HUNGER_CONSUME_AMOUNT` / `THIRST_CONSUME_AMOUNT`
 /// (in `f64` to match the new γ [`Sleep`] component, V7 Phase 5-γ / P5γ-8).
 pub const FATIGUE_CONSUME_AMOUNT: f64 = 30.0;
+
+/// Loneliness value strictly above which an Idle agent transitions to
+/// `Seeking { Agent(other) }` (only if no higher-priority drive has
+/// already triggered). V7 Phase 7-β / P7β-14.
+///
+/// `f64` to match the [`Social`] component.
+pub const SOCIAL_THRESHOLD: f64 = 50.0;
+
+/// Amount subtracted from `Social.loneliness` when a multi-tick social
+/// interaction completes. Mirrors `HUNGER_CONSUME_AMOUNT` style.
+/// V7 Phase 7-β / P7β-14.
+pub const SOCIAL_CONSUME_AMOUNT: f64 = 30.0;
+
+/// Number of ticks of mutual `Consuming { Agent(other) }` required before
+/// a `SocialInteractionCompleted` is emitted. V7 Phase 7-β / P7β-14.
+pub const REQUIRED_INTERACTION_PROGRESS: u32 = 3;
+
+/// Amount added to `RelationshipState::familiarity` (saturating at 1.0)
+/// on each completed interaction. V7 Phase 7-β / P7β-14.
+pub const FAMILIARITY_BUMP: f64 = 0.1;
 
 /// Phase 5-β decision system. Stateless — all per-agent state lives
 /// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
@@ -163,9 +183,73 @@ impl RuntimeSystem for AgentDecisionSystem {
             sites
         };
 
+        // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
+        // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
+        // AND it has no higher-priority drive breached (Needs +
+        // Construction). Computed BEFORE the agent mutation loop so the
+        // social cascade does not pick partners that the cascade itself
+        // routes elsewhere (e.g. partner has Hunger > threshold). This
+        // closes A6a/A6b/A6c — without it, agent B could pick agent A as
+        // a social partner even though A's cascade resolves to Hunger.
+        let social_eligible_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
+            let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
+            let mut q = world.query::<(
+                &Agent,
+                &Position,
+                &AgentState,
+                Option<&Hunger>,
+                Option<&Thirst>,
+                Option<&Sleep>,
+                Option<&Social>,
+            )>();
+            for (_, (a, pos, state, h, t, s, social_opt)) in q.iter() {
+                if !matches!(*state, AgentState::Idle) {
+                    continue;
+                }
+                let lone_breach = social_opt.is_some_and(|x| x.loneliness > SOCIAL_THRESHOLD);
+                let hunger_breach = h.is_some_and(|x| x.value > HUNGER_THRESHOLD);
+                let thirst_breach = t.is_some_and(|x| x.value > THIRST_THRESHOLD);
+                let fatigue_breach = s.is_some_and(|x| x.fatigue > FATIGUE_THRESHOLD);
+                let construction_breach = construction_sites.contains_key(&(pos.x, pos.y));
+                if lone_breach
+                    && !hunger_breach
+                    && !thirst_breach
+                    && !fatigue_breach
+                    && !construction_breach
+                {
+                    map.entry((pos.x, pos.y)).or_default().push(a.id);
+                }
+            }
+            map
+        };
+
+        // V7 Phase 7-β / P7β-7 — Seeking{Agent(_)} snapshot. Records the
+        // START-OF-TICK partner pointer for every agent currently in
+        // `Seeking { Agent(partner_id) }`. The Seeking branch consults
+        // this snapshot (NOT the live world state) so a mutual pair can
+        // BOTH transition to Consuming this tick — without the snapshot,
+        // the first agent processed transitions to Consuming and the
+        // second observes a non-Seeking partner, breaking the handshake.
+        let seeking_partners_by_pos: HashMap<(u32, u32), Vec<(AgentId, AgentId)>> = {
+            let mut map: HashMap<(u32, u32), Vec<(AgentId, AgentId)>> = HashMap::new();
+            let mut q = world.query::<(&Agent, &Position, &AgentState)>();
+            for (_, (a, pos, state)) in q.iter() {
+                if let AgentState::Seeking {
+                    target: TargetKind::Agent(partner_id),
+                } = *state
+                {
+                    map.entry((pos.x, pos.y))
+                        .or_default()
+                        .push((a.id, partner_id));
+                }
+            }
+            map
+        };
+
         // Per-agent FSM evaluation. We pull `Hunger` / `Thirst` as
         // optional so non-need-carrying agents are still observed and
-        // simply stay `Idle`.
+        // simply stay `Idle`. V7 Phase 7-β adds `Option<&Social>` for the
+        // 5th cascade arm.
         let mut query = world.query::<(
             &Position,
             &Agent,
@@ -173,14 +257,18 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Hunger>,
             Option<&mut Thirst>,
             Option<&mut Sleep>,
+            Option<&Social>,
         )>();
-        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt)) in query.iter() {
+        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt)) in
+            query.iter()
+        {
             let tile_idx = pos.y * width + pos.x;
             match *state {
                 AgentState::Idle => {
-                    // Deterministic FSM ordering (V7 Phase 6-β / P6β-6):
-                    // Hunger > Thirst > Fatigue > Construction. Construction
-                    // is the lowest-priority drive — needs always win.
+                    // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
+                    // Hunger > Thirst > Fatigue > Construction > Social.
+                    // Social is the lowest-priority drive — Needs and
+                    // Construction always win.
                     let breached = if hunger_opt
                         .as_ref()
                         .is_some_and(|h| h.value > HUNGER_THRESHOLD)
@@ -204,6 +292,27 @@ impl RuntimeSystem for AgentDecisionSystem {
                             TargetKind::ConstructionSite,
                             DecisionReason::ConstructionReason,
                         ))
+                    } else if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                        // V7 Phase 7-β / P7β-6 — 5th cascade step. Pick the
+                        // lowest-AgentId co-located social-eligible peer
+                        // (deterministic tie-break). Eligibility (computed
+                        // up-top in `social_eligible_by_pos`) excludes any
+                        // peer whose cascade routes elsewhere.
+                        social_eligible_by_pos
+                            .get(&(pos.x, pos.y))
+                            .and_then(|peers| {
+                                peers
+                                    .iter()
+                                    .filter(|id| **id != agent.id)
+                                    .min()
+                                    .copied()
+                            })
+                            .map(|other_id| {
+                                (
+                                    TargetKind::Agent(other_id),
+                                    DecisionReason::SocialReason,
+                                )
+                            })
                     } else {
                         None
                     };
@@ -259,20 +368,19 @@ impl RuntimeSystem for AgentDecisionSystem {
                         TargetKind::ConstructionSite => {
                             construction_sites.contains_key(&key)
                         }
-                        // V7 Phase 7-α / P7α-12: TargetKind::Agent(_) is
-                        // the 5th TargetKind variant but α adds no
-                        // decision logic that routes agents into
-                        // Seeking{Agent(_)} — runtime resolution lands
-                        // in Phase 7-β (`SocialInteractionSystem`,
-                        // priority 134). If an agent reaches this branch
-                        // (e.g., via a future test or β prototype),
-                        // treat it as "no partner present" so the agent
-                        // stays in Seeking without resolving against a
-                        // non-existent runtime path. Named arm (not a
-                        // wildcard) so a future 6th variant fails to
-                        // compile here. Mirrors the Phase 6-α
-                        // ConstructionSite inert pattern.
-                        TargetKind::Agent(_) => false,
+                        // V7 Phase 7-β / P7β-7 — mutual handshake check.
+                        // Uses the start-of-tick `seeking_partners_by_pos`
+                        // snapshot so both agents in a mutual pair pass
+                        // the check this tick (live state mutation would
+                        // break the second-processed agent's check).
+                        TargetKind::Agent(partner_id) => seeking_partners_by_pos
+                            .get(&(pos.x, pos.y))
+                            .map(|peers| {
+                                peers.iter().any(|(peer_id, peer_target)| {
+                                    *peer_id == partner_id && *peer_target == agent.id
+                                })
+                            })
+                            .unwrap_or(false),
                     };
                     if has_resource {
                         // V7 Phase 6-β / P6β-8: emit ConstructionStarted on
@@ -304,6 +412,41 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         id,
                                         parent,
                                         blueprint,
+                                        position: (pos.x, pos.y),
+                                        tick,
+                                    },
+                                );
+                            }
+                        }
+                        // V7 Phase 7-β / P7β-7/P7β-8 — emit
+                        // SocialInteractionStarted exactly once per mutual
+                        // handshake: only the smaller-AgentId agent emits.
+                        // The partner observes the handshake silently
+                        // (transitions to Consuming via its own
+                        // snapshot-check path).
+                        if let TargetKind::Agent(partner_id) = target {
+                            if agent.id < partner_id {
+                                let parent: Option<EventId> = resources
+                                    .causal_log
+                                    .get(tile_idx)
+                                    .and_then(|log| {
+                                        log.as_slice().iter().rev().find_map(|ev| match ev {
+                                            CausalEvent::AgentDecision {
+                                                id,
+                                                agent: a,
+                                                reason: DecisionReason::SocialReason,
+                                                ..
+                                            } if *a == agent.id => Some(*id),
+                                            _ => None,
+                                        })
+                                    });
+                                let id = resources.issue_event_id();
+                                resources.causal_log.push(
+                                    tile_idx,
+                                    CausalEvent::SocialInteractionStarted {
+                                        id,
+                                        parent,
+                                        agents: (agent.id, partner_id),
                                         position: (pos.x, pos.y),
                                         tick,
                                     },

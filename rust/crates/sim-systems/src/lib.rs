@@ -75,11 +75,15 @@ pub fn register_agent_systems(engine: &mut SimEngine) {
 /// - 130 : [`runtime::needs::HungerDecaySystem`]
 /// - 131 : [`runtime::needs::ThirstDecaySystem`] (Phase 5-β)
 /// - 132 : [`runtime::needs::SleepDecaySystem`] (Phase 5-γ)
+/// - 135 : [`runtime::needs::SocialDecaySystem`] (Phase 7-β re-plan)
 ///
-/// All three run after `AgentDecisionSystem` (priority 125) so the
+/// All four run after `AgentDecisionSystem` (priority 125) so the
 /// decision system reads pre-decay need values, and before
 /// `InfluenceVisualizationSystem` (1000) so the visualisation observes
-/// the post-decay values.
+/// the post-decay values. `SocialDecaySystem` sits at 135 (after
+/// `SocialInteractionSystem` at 134) so the social handshake/completion
+/// fires on pre-decay `loneliness`, and the loneliness advance applies
+/// afterward — mirroring the Hunger/Thirst/Sleep pre-decision pattern.
 pub fn register_needs_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(
         runtime::needs::HungerDecaySystem::new(),
@@ -89,6 +93,9 @@ pub fn register_needs_systems(engine: &mut SimEngine) {
     ));
     engine.register_system(Box::new(
         runtime::needs::SleepDecaySystem::new(),
+    ));
+    engine.register_system(Box::new(
+        runtime::needs::SocialDecaySystem::new(),
     ));
 }
 
@@ -120,4 +127,53 @@ pub fn register_construction_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(
         runtime::construction::ConstructionSystem::new(),
     ));
+}
+
+/// Register the Phase 7-β social interaction stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 134 : [`runtime::social::SocialInteractionSystem`]
+///
+/// Slots strictly after `ConstructionSystem` (priority 133) and strictly
+/// before `InfluenceVisualizationSystem` (priority 1000). Owns agent
+/// `Consuming { Agent(_) }` exit semantics + completion-edge
+/// `SocialInteractionCompleted` emission. `AgentDecisionSystem`
+/// (priority 125) owns the Idle→Seeking and Seeking→Consuming
+/// transitions plus `SocialInteractionStarted` emission.
+pub fn register_social_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(
+        runtime::social::SocialInteractionSystem::new(),
+    ));
+}
+
+/// V7 Phase 7-β / P7β-15 — canonical production system registration.
+///
+/// Single source of truth for "what systems run in a production engine":
+/// callable from both `sim-bridge::ffi::world_node::WorldSimNode::init`
+/// (the live Godot path) and harness tests that need a production-
+/// equivalent system list without a Godot runtime.
+///
+/// Registration order (post-sort by priority):
+/// - 90   BuildingStampSystem
+/// - 100  InfluenceUpdateSystem
+/// - 110  AgentInfluenceSampleSystem
+/// - 120  AgentMovementSystem
+/// - 125  AgentDecisionSystem
+/// - 130  HungerDecaySystem
+/// - 131  ThirstDecaySystem
+/// - 132  SleepDecaySystem
+/// - 133  ConstructionSystem
+/// - 134  SocialInteractionSystem
+/// - 135  SocialDecaySystem (Phase 7-β re-plan)
+/// - 1000 InfluenceVisualizationSystem
+///
+/// Harness A1b inspects this registry to verify
+/// `SocialInteractionSystem` appears exactly once.
+pub fn register_default_runtime_systems(engine: &mut SimEngine) {
+    register_phase2_systems(engine);
+    register_agent_systems(engine);
+    register_decision_systems(engine);
+    register_needs_systems(engine);
+    register_construction_systems(engine);
+    register_social_systems(engine);
 }

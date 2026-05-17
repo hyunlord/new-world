@@ -47,6 +47,11 @@ pub enum DecisionReason {
     /// breached. V7 Phase 6-β / P6β-5. Construction is the lowest-priority
     /// drive — Hunger/Thirst/Fatigue always win.
     ConstructionReason,
+    /// Agent transitioned from Idle to Seeking{Agent(other)} after
+    /// detecting a co-located partner whose loneliness also breached
+    /// `SOCIAL_THRESHOLD`. V7 Phase 7-β / P7β-5. Social is the lowest-
+    /// priority drive — Needs and Construction always win.
+    SocialReason,
 }
 
 impl DecisionReason {
@@ -59,6 +64,7 @@ impl DecisionReason {
             DecisionReason::ThirstThresholdBreach => "thirst_threshold_breach",
             DecisionReason::FatigueThresholdBreach => "fatigue_threshold_breach",
             DecisionReason::ConstructionReason => "construction_reason",
+            DecisionReason::SocialReason => "social_reason",
         }
     }
 }
@@ -240,6 +246,48 @@ pub enum CausalEvent {
         /// Simulation tick at which completion fired.
         tick: u64,
     },
+
+    /// Mutual social handshake closed: both agents transitioned from
+    /// Seeking{Agent(other)} to Consuming{Agent(other)} on the same tile.
+    /// Emitted ONCE per handshake by `AgentDecisionSystem` (deduplicated by
+    /// emitting only from the smaller-AgentId agent's transition).
+    /// `parent` links to the same-tile `AgentDecision{SocialReason,
+    /// agent: emitter}`. V7 Phase 7-β / P7β-3.
+    SocialInteractionStarted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the smaller-AgentId agent's `AgentDecision{
+        /// SocialReason}`.
+        parent: Option<EventId>,
+        /// Canonical pair `(smaller AgentId, larger AgentId)`.
+        agents: (AgentId, AgentId),
+        /// Shared tile coordinate at handshake time.
+        position: (u32, u32),
+        /// Simulation tick at which the handshake closed.
+        tick: u64,
+    },
+
+    /// Mutual social interaction reached `REQUIRED_INTERACTION_PROGRESS`.
+    /// Emitted by `SocialInteractionSystem` before the agent state
+    /// transitions back to Idle. `familiarity_after` snapshots the
+    /// post-bump `RelationshipState::familiarity` value (saturating at
+    /// 1.0). `parent` links to the originating `SocialInteractionStarted`.
+    /// V7 Phase 7-β / P7β-4.
+    SocialInteractionCompleted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the originating `SocialInteractionStarted`.
+        parent: Option<EventId>,
+        /// Canonical pair `(smaller AgentId, larger AgentId)`.
+        agents: (AgentId, AgentId),
+        /// Shared tile coordinate at completion.
+        position: (u32, u32),
+        /// Familiarity scalar after `FAMILIARITY_BUMP` applied (clamped
+        /// to `[0.0, 1.0]`).
+        familiarity_after: f64,
+        /// Simulation tick at which completion fired.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -251,7 +299,9 @@ impl CausalEvent {
             | CausalEvent::InfluenceChanged { id, .. }
             | CausalEvent::AgentDecision { id, .. }
             | CausalEvent::ConstructionStarted { id, .. }
-            | CausalEvent::ConstructionCompleted { id, .. } => *id,
+            | CausalEvent::ConstructionCompleted { id, .. }
+            | CausalEvent::SocialInteractionStarted { id, .. }
+            | CausalEvent::SocialInteractionCompleted { id, .. } => *id,
         }
     }
 
@@ -273,7 +323,9 @@ impl CausalEvent {
             | CausalEvent::InfluenceChanged { parent, .. }
             | CausalEvent::AgentDecision { parent, .. }
             | CausalEvent::ConstructionStarted { parent, .. }
-            | CausalEvent::ConstructionCompleted { parent, .. } => *parent,
+            | CausalEvent::ConstructionCompleted { parent, .. }
+            | CausalEvent::SocialInteractionStarted { parent, .. }
+            | CausalEvent::SocialInteractionCompleted { parent, .. } => *parent,
         }
     }
 
@@ -285,7 +337,9 @@ impl CausalEvent {
             | CausalEvent::InfluenceChanged { tick, .. }
             | CausalEvent::AgentDecision { tick, .. }
             | CausalEvent::ConstructionStarted { tick, .. }
-            | CausalEvent::ConstructionCompleted { tick, .. } => *tick,
+            | CausalEvent::ConstructionCompleted { tick, .. }
+            | CausalEvent::SocialInteractionStarted { tick, .. }
+            | CausalEvent::SocialInteractionCompleted { tick, .. } => *tick,
         }
     }
 
@@ -299,7 +353,9 @@ impl CausalEvent {
             CausalEvent::BuildingPlaced { .. }
             | CausalEvent::AgentDecision { .. }
             | CausalEvent::ConstructionStarted { .. }
-            | CausalEvent::ConstructionCompleted { .. } => None,
+            | CausalEvent::ConstructionCompleted { .. }
+            | CausalEvent::SocialInteractionStarted { .. }
+            | CausalEvent::SocialInteractionCompleted { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }
@@ -489,6 +545,83 @@ mod tests {
             DecisionReason::ConstructionReason.as_str(),
             "construction_reason"
         );
+    }
+
+    #[test]
+    fn decision_reason_social_as_str() {
+        // V7 Phase 7-β / P7β-5 — `SocialReason` discriminator locked at
+        // `"social_reason"` (snake_case, matches the existing style).
+        assert_eq!(DecisionReason::SocialReason.as_str(), "social_reason");
+    }
+
+    #[test]
+    fn social_interaction_started_records_fields() {
+        // V7 Phase 7-β / P7β-3 — locked field shapes:
+        //   id: EventId, parent: Option<EventId>, agents: (AgentId, AgentId),
+        //   position: (u32, u32), tick: u64.
+        let ev = CausalEvent::SocialInteractionStarted {
+            id: 300,
+            parent: Some(42),
+            agents: (3u64, 5u64),
+            position: (7u32, 9u32),
+            tick: 11,
+        };
+        match ev.clone() {
+            CausalEvent::SocialInteractionStarted {
+                id,
+                parent,
+                agents,
+                position,
+                tick,
+            } => {
+                assert_eq!(id, 300);
+                assert_eq!(parent, Some(42));
+                assert_eq!(agents, (3u64, 5u64));
+                assert_eq!(position, (7u32, 9u32));
+                assert_eq!(tick, 11);
+            }
+            _ => panic!("expected SocialInteractionStarted"),
+        }
+        // Accessors round-trip and channel() is None (channel-agnostic).
+        assert_eq!(ev.id(), 300);
+        assert_eq!(ev.parent(), Some(42));
+        assert_eq!(ev.tick(), 11);
+        assert_eq!(ev.channel(), None);
+    }
+
+    #[test]
+    fn social_interaction_completed_records_fields() {
+        // V7 Phase 7-β / P7β-4 — locked field shapes add `familiarity_after: f64`.
+        let ev = CausalEvent::SocialInteractionCompleted {
+            id: 301,
+            parent: Some(300),
+            agents: (3u64, 5u64),
+            position: (7u32, 9u32),
+            familiarity_after: 0.37,
+            tick: 14,
+        };
+        match ev.clone() {
+            CausalEvent::SocialInteractionCompleted {
+                id,
+                parent,
+                agents,
+                position,
+                familiarity_after,
+                tick,
+            } => {
+                assert_eq!(id, 301);
+                assert_eq!(parent, Some(300));
+                assert_eq!(agents, (3u64, 5u64));
+                assert_eq!(position, (7u32, 9u32));
+                assert_eq!(familiarity_after, 0.37);
+                assert_eq!(tick, 14);
+            }
+            _ => panic!("expected SocialInteractionCompleted"),
+        }
+        assert_eq!(ev.id(), 301);
+        assert_eq!(ev.parent(), Some(300));
+        assert_eq!(ev.tick(), 14);
+        assert_eq!(ev.channel(), None);
     }
 
     #[test]

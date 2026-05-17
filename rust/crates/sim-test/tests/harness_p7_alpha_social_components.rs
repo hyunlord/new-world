@@ -827,18 +827,16 @@ fn harness_p7_alpha_a34_sim_resources_schema_unchanged() {
         "sim-engine/src/lib.rs must declare `pub struct SimResources`"
     );
 
-    // (b) Forbidden β field names — checked as field-declaration syntax
-    // (`name:`) so the test is robust against unrelated mentions in
-    // comments or docstrings that use bare words.
+    // (b) Phase 7-β has landed — the formerly-forbidden α absence audit is
+    // inverted into a presence assertion now that the SimResources schema
+    // additions are live (commit lands with the SocialInteractionSystem).
     assert!(
-        !SOURCE.contains("relationships:"),
-        "Phase 7-α: `relationships:` field must NOT exist in sim-engine/src/lib.rs \
-         (Phase 7-β scope per locked fact P7α-13)"
+        SOURCE.contains("relationships:"),
+        "Phase 7-β: `relationships:` field must exist in sim-engine/src/lib.rs"
     );
     assert!(
-        !SOURCE.contains("interaction_progress:"),
-        "Phase 7-α: `interaction_progress:` field must NOT exist in sim-engine/src/lib.rs \
-         (Phase 7-β scope per locked fact P7α-13)"
+        SOURCE.contains("interaction_progress:"),
+        "Phase 7-β: `interaction_progress:` field must exist in sim-engine/src/lib.rs"
     );
 
     // (c) Behavioural: SimEngine::new still constructs SimResources cleanly.
@@ -858,19 +856,19 @@ fn harness_p7_alpha_a35_no_phase7_beta_constants() {
     const AGENT_DECISION: &str =
         include_str!("../../sim-systems/src/runtime/decision/agent_decision.rs");
 
-    // (a) Forbidden β constants — must NOT exist anywhere in
-    // `agent_decision.rs` (the locked future home per plan §3 §β).
-    let forbidden = [
+    // (a) Phase 7-β has landed — the four β constants are now expected to
+    // exist in `agent_decision.rs` (locked fact P7β-14). Inverted from the
+    // α absence audit.
+    let required = [
         "SOCIAL_THRESHOLD",
         "SOCIAL_CONSUME_AMOUNT",
         "REQUIRED_INTERACTION_PROGRESS",
         "FAMILIARITY_BUMP",
     ];
-    for name in forbidden {
+    for name in required {
         assert!(
-            !AGENT_DECISION.contains(name),
-            "Phase 7-β constant `{name}` must NOT exist in agent_decision.rs under α scope \
-             (locked fact P7α-14)"
+            AGENT_DECISION.contains(name),
+            "Phase 7-β constant `{name}` must exist in agent_decision.rs"
         );
     }
 
@@ -906,13 +904,15 @@ fn harness_p7_alpha_a36_agent_decision_named_arms_audit() {
     const SOURCE: &str =
         include_str!("../../sim-systems/src/runtime/decision/agent_decision.rs");
 
-    // (a) At least 2 explicit `TargetKind::Agent(_) =>` named arms must
-    // exist (Seeking-branch + Consuming-branch).
-    let named_count = SOURCE.matches("TargetKind::Agent(_)").count();
+    // (a) Phase 7-β: the Seeking-branch arm is now `TargetKind::Agent(partner_id) =>`
+    // (named binding), and the Consuming-branch inert placeholder
+    // `TargetKind::Agent(_) =>` is preserved. Count any explicit
+    // `TargetKind::Agent(` arm shape — must have ≥2 across the file.
+    let named_count = SOURCE.matches("TargetKind::Agent(").count();
     assert!(
         named_count >= 2,
-        "agent_decision.rs must contain ≥2 named `TargetKind::Agent(_)` arms \
-         (Seeking + Consuming inert arms); found {named_count}"
+        "agent_decision.rs must contain ≥2 explicit `TargetKind::Agent(...)` arms \
+         (Seeking partner-binding + Consuming inert); found {named_count}"
     );
 
     // (b) No wildcard fall-through arm inside any `match target { ... }`
