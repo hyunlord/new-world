@@ -322,11 +322,14 @@ AgentDecision{SocialReason} → SocialInteractionStarted → SocialInteractionCo
   3 ENV-BYPASS chains already closed at V7 Foundation closure; a 4th here
   would weaken the rule-7.1 governance integrity precedent.
 
-## V7 milestone progression (post-defer)
+## V7 milestone progression (post-Phase-7-γ-closure, 2026-05-17)
 
 - ✅ Foundation Week 1-12 (complete)
 - ✅ Week 13-14 Phase 7-α + β (Multi-agent Social System operational)
-- ⏸ Phase 7-γ chronicle harness (deferred, stash preserved)
+- ✅ Phase 7-γ chronicle harness — landed at commit `f1c12f9d` after
+  Issue 14 fix (Pattern E -2 recovered, score 90/100 at cold-tier
+  threshold 75 — see "Phase 7-γ closure (post-Issue-14-fix)" section
+  below)
 
 ## Next decision base (사용자 mandate required)
 
@@ -540,8 +543,12 @@ chain that weakens the rule-7.1 governance precedent.
 - ✅ Foundation Week 1-12 complete (commit `a0666b6c`)
 - ✅ Week 13-14 Phase 7-α + β (Multi-agent Social System operational —
   35fbd501 + de336f83)
-- ⏸ Phase 7-γ chronicle harness deferred (a00a1b77 declaration,
-  stash preserved for fresh-attempt recovery)
+- ✅ Phase 7-γ chronicle harness — landed at commit `f1c12f9d`
+  (2026-05-17). 459 new harness tests, 13 plan assertions + 4 r5/r6
+  actionable incorporations, fresh attempt cleared the
+  Issue-14-corrected ceiling at score 90/100 (cold-tier threshold 75).
+  Prior defer (a00a1b77 declaration) preserved in the historical
+  record above.
 
 ## V7 architecture base — final substantial
 
@@ -603,10 +610,11 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
   delivered the visual milestone (MultiMeshInstance2D rendering); Phase
   5-γ delivered the behavioral milestone (full daily routine chronicle);
   Phase 6-γ delivered the construction loop chronicle; Phase 7-α/β
-  delivered the runtime social loop. Phase 7-γ chronicle is the documented
-  gap — operational system without the dedicated chronicle test.
+  delivered the runtime social loop; Phase 7-γ (`f1c12f9d`) delivered
+  the multi-agent chronicle — the documented gap noted in the original
+  V7 Final Declaration is now closed.
 
-## Governance closure chain — final
+## Governance closure chain — final (extended 2026-05-17 post-Phase-7-γ-closure)
 
 | Stage | Commit | Scope |
 |-------|--------|-------|
@@ -614,14 +622,51 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
 | 2 | `2e51c167` | CLAUDE.md V7 reset 정합 update |
 | 3 | `0ed3ec16` | Section 8+ design — Phase 7 anchor |
 | 4 | `a00a1b77` | Phase 7-γ defer + partial closure disclosure |
-| 5 | *(this commit)* | Infrastructure governance audit + V7 Final declaration |
+| 5 | `d4c050e2` | Infrastructure governance audit + V7 partial-closure final declaration |
+| 6 | `ebbf6ddc` | Issue 14 fix — Pattern E closure (FFI SKIP token) |
+| 7 | `f1c12f9d` | Phase 7-γ chronicle harness implementation (V7 Phase 7 complete) |
+| 8 | *(this commit)* | Phase 7-γ closure declaration + v7_progress.md status reflection |
+
+## Phase 7-γ closure (post-Issue-14-fix, 2026-05-17)
+
+### Outcome
+- Score: **90/100** (B — Acceptable), cold-tier threshold 75, margin +15
+- Mech Gate 10/10 (Issue 14 fix `ebbf6ddc` recovered Pattern E -2)
+- Code Quality 5/15 (Pattern D -10 attempt-3 cap retained — accumulated
+  rework signal is real, governance design unchanged)
+- All other dimensions: 5/5 + 20/20 + 20/20 + 15/15 + 15/15 = 75/80
+- Duration 20m 48s, 459 new harness tests, 0 regressions
+- Codex Evaluator: APPROVE
+- Commit: `f1c12f9d`
+
+### Files
+- `rust/crates/sim-test/tests/harness_p7_gamma_social_chronicle.rs` — NEW (971 lines, A0-A16 plan-locked assertions)
+- `rust/crates/sim-core/src/components/agent_state.rs` — `suppresses_movement()` for Consuming{Agent(_)} (P7-γ A15)
+- `rust/crates/sim-systems/src/runtime/social/social_interaction_system.rs` — deferred `interaction_progress` cleanup (P7-γ A4/A5)
+- `rust/crates/sim-systems/src/runtime/decision/agent_decision.rs` — same-tile partner SocialReason parent linkage (P7-γ A11c, attempt-3 fix)
+- `rust/crates/sim-test/tests/harness_p7_alpha_social_components.rs` — A25 flip
+- `rust/crates/sim-test/tests/harness_p7_beta_social_system.rs` — A9/A13b deferred-cleanup pattern
+- `.harness/prompts/p7-gamma-social-chronicle.md` — NEW (244 lines, plan-lock spec)
+
+### Two-stage chain validation
+- Stage 1 (`ebbf6ddc`): Issue 14 source-token fix in `ffi_chain_check.sh`
+  + audit doc Issue 14 closure entry. Empirically verified the new
+  `FFI CHAIN: OK (SKIP — V7 reset, no proxy chain to verify)` line
+  surfaces in the pipeline log and `generate_report.sh:145` regex
+  resolves to `FFI_STATUS=OK`.
+- Stage 2 (`f1c12f9d`): fresh Phase 7-γ pipeline dispatch on top of
+  Stage 1. Mech Gate 10/10 (vs 8/10 in the 6 deferred dispatches) —
+  +2 confirmed. Final score 90/100, above cold-tier threshold 75.
+  Pre-Stage-1 the same work blocked at 88/100 across 6 dispatches;
+  Stage 1 + Stage 2 chain cleared the structural ceiling exactly as
+  predicted.
 
 ## Next decision base (사용자 mandate required)
 
 | Option | Scope |
 |--------|-------|
-| ~~**Issue 14 (Pattern E) fix dispatch**~~ | **CLOSED 2026-05-17** — see "Issue 14 closure" section. Source-token fix in `tools/harness/ffi_chain_check.sh` (Issue 12/13 precedent symmetry). Pattern E -2 recovered. |
-| **Phase 7-γ fresh attempt** | `git stash pop` + integrate r5/r6 actionables + fresh skip-gen. Ceiling now 90 (Issue 14 closure recovered Pattern E -2). |
+| ~~**Issue 14 (Pattern E) fix dispatch**~~ | **CLOSED 2026-05-17** (`ebbf6ddc`). |
+| ~~**Phase 7-γ fresh attempt**~~ | **CLOSED 2026-05-17** (`f1c12f9d`). V7 Phase 7 complete. |
 | **Section 9+ design (Phase 8 anchor)** | Combat / Memory / Multi-building Settlement / Advanced AI per Section 8+ design §3 candidates. User mandate required. |
 | **Phase 7-δ optional** | UI integration. Locked scope in plan §γ. |
 | **Phase 4-δ optional** | BodyHealth. V7 reset 후 명시적 path 부재 — scope 정의 의무. |
