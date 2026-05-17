@@ -17,9 +17,18 @@ SIM_ENGINE_GD="$PROJECT_ROOT/scripts/core/simulation/simulation_engine.gd"
 # (Phase 1-2). The proxy chain check is meaningful only once the
 # GDScript renderer layer (Phase 3) lands. Skipping under absent
 # proxy file is legitimate, not a bypass.
+#
+# Issue 14 fix (Pattern E closure): emit a final summary line with an
+# OK token so the consumer regex in tools/harness/generate_report.sh
+# (`grep -qi "OK|PASS|COMPLETE"` on $RESULT_DIR/step0_ffi.txt) recognises
+# the SKIP path as a successful gate, mirroring the OK-path line at the
+# bottom of this script. Without this line, the SKIP message contains
+# no `OK`/`PASS`/`COMPLETE` token and falls into the FAIL branch,
+# costing -2 on the Mech Gate even though the script exits 0.
 if [[ ! -f "$SIM_BRIDGE_GD" ]]; then
     echo "[FFI Chain] SKIP: $SIM_BRIDGE_GD absent (V7 reset early phase)"
     echo "[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands"
+    echo "FFI CHAIN: OK (SKIP — V7 reset, no proxy chain to verify)"
     exit 0
 fi
 

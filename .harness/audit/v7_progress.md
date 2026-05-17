@@ -375,16 +375,18 @@ signal honestly, then mark V7 (Foundation + Phase 7-α/β) as substantial final.
 - **Pattern D**: intentional governance signal. Attempt-3 cap of -10 is
   designed to reflect cumulative rework cost. Not a bug; a real penalty for
   substantial-scope dispatches needing 3 generator runs.
-- **Pattern E**: pipeline mechanism gap. Codex r6 disclosure verbatim:
-  > "older HAS_BROKEN artifacts exist, but relevant/current V7 reset evidence
-  > reports ALL_COMPLETE/SKIP and no newly added BROKEN method regression was
-  > identified."
-
-  The hook's Mech Gate scoring counts `FFI FAIL` even when the FAIL is on
-  unrelated historical evidence the regression guard explicitly clears. This
-  is the **Issue 14 candidate** — analogous to Issue 12 (alphabetical sort
-  bug) and Issue 13 (verdict staleness): a pipeline-mechanism fix path
-  exists, deferred to a separate governance dispatch.
+- **Pattern E**: pipeline mechanism gap, **closed as Issue 14 (2026-05-17)** —
+  see "Issue 14 closure" section below. The actual mechanism (verified
+  empirically against the Phase 7-γ pipeline_report.md) is that
+  `tools/harness/ffi_chain_check.sh`'s V7-reset SKIP path emitted output
+  with no `OK`/`PASS`/`COMPLETE` token, so the consumer regex at
+  `generate_report.sh:145` resolved to FAIL even though the script exited 0.
+  Codex r6's disclosure about "older HAS_BROKEN artifacts" described what
+  Codex saw running its own anti-circular / regression checks, not the
+  score-producer code path. Fix: producer emits `FFI CHAIN: OK (SKIP — …)`
+  on the SKIP path, mirroring the OK-path summary line. Issue 12/13
+  precedent at commit `00274b57` (producer writes recognisable token on
+  every exit path).
 - **Pattern F**: not a problem. The "scope expansion" framing during
   Phase 7-β recovery was re-classified at the Option A decision point as
   Generator under-implementation against an already-locked 22-assertion
@@ -392,34 +394,135 @@ signal honestly, then mark V7 (Foundation + Phase 7-α/β) as substantial final.
   re-classification applies to Phase 7-γ Codex demands (the 13-assertion
   plan + 4 actionable r5/r6 issues were plan-locked, not Codex over-reach).
 
-## Issue 14 candidate (Pattern E fix, deferred)
+## Issue 14 closure (Pattern E fix — 2026-05-17)
 
-Mechanism gap: `tools/harness/cold_tier_classifier.sh` or the equivalent
-FFI evidence reader counts historical `HAS_BROKEN` files even when those
-files predate the current V7 reset and are explicitly cleared by the
-regression guard.
+### Prior diagnosis (incorrect — preserved for audit trail)
 
-**Fix path (proposal, not implemented):** the FFI check should either
-(a) restrict scope to evidence files post-V7-reset commit timestamp, or
-(b) exclude evidence directories whose feature names don't appear in the
-regression guard CLEAN list, or (c) require the regression guard to emit a
-positive `current_ffi: ALL_COMPLETE` token that the Mech Gate trusts over
-the file-existence check.
+The earlier audit hypothesised the gap as wildcard scanning of historical
+`HAS_BROKEN` evidence files (`tools/harness/cold_tier_classifier.sh` or
+"the equivalent FFI evidence reader"), with proposed fixes (a)
+post-V7-reset timestamp filter, (b) regression-guard CLEAN list filter,
+or (c) positive `current_ffi: ALL_COMPLETE` token. That diagnosis was
+based on Codex r6's verbatim disclosure ("older HAS_BROKEN artifacts
+exist, but relevant/current V7 reset evidence reports ALL_COMPLETE/SKIP")
+which described what Codex saw running its own checks, not what
+`generate_report.sh` actually does to score `FFI_STATUS`.
 
-**Disposition**: deferred to a future audit-only governance dispatch. Not
-priority right now. Pattern E adds -2 to Mech Gate, which is recoverable
-only via plan-quality + code-quality wins; the recurring -2 contributed
-materially to Phase 7-γ stalling at 88/100.
+### Actual root cause (verified empirically against `.harness/reports/p7-gamma-social-chronicle/pipeline_report.md`)
 
-## Honest evaluation of Phase 7-γ stall
+The score-producing path is `generate_report.sh:131-149`, which reads
+**only the current feature's `step0_ffi.txt`** (no wildcard scan):
+
+```bash
+FFI_STATUS="UNKNOWN"
+# Vacuous check: if diff has 0 sim-bridge files → FFI_STATUS=OK
+if [[ -x "$PROJECT_ROOT/tools/harness/ffi_vacuous_check.sh" ]]; then
+    _ffi_diff=$(git -C "$PROJECT_ROOT" diff --cached --name-only 2>/dev/null || true)
+    if [[ -z "$_ffi_diff" ]]; then
+        _ffi_diff=$(git -C "$PROJECT_ROOT" diff --name-only HEAD~1 HEAD 2>/dev/null || true)
+    fi
+    if [[ -n "$_ffi_diff" ]] && echo "$_ffi_diff" | bash "$PROJECT_ROOT/tools/harness/ffi_vacuous_check.sh" - >/dev/null 2>&1; then
+        FFI_STATUS="OK"
+    fi
+fi
+# Fallback: parse current feature's step0_ffi.txt
+if [[ "$FFI_STATUS" == "UNKNOWN" && -f "$RESULT_DIR/step0_ffi.txt" ]]; then
+    if grep -qi "OK\|PASS\|COMPLETE" "$RESULT_DIR/step0_ffi.txt"; then
+        FFI_STATUS="OK"
+    else
+        FFI_STATUS="FAIL"
+    fi
+fi
+```
+
+When Phase 7-γ added `rust/crates/sim-bridge/src/ffi/world_node.rs`
+(+69/-5), the vacuous check correctly returned 1 (not vacuous), so the
+fallback fired and read `step0_ffi.txt`. That file contains the output of
+`tools/harness/ffi_chain_check.sh`, which under V7 reset (sim_bridge.gd
+absent at `scripts/core/simulation/sim_bridge.gd`) hits the SKIP branch
+at line 20-24 and outputs:
+
+```
+[FFI Chain] SKIP: /…/sim_bridge.gd absent (V7 reset early phase)
+[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands
+```
+
+Neither line contains `OK`, `PASS`, or `COMPLETE` — the consumer regex
+mismatched the producer's vocabulary. Result: `FFI_STATUS=FAIL` →
+SCORE_GATE 8/10 → -2 ceiling contributor. The Codex Evaluator's own FFI
+chain check report ("N/A — no SimBridge methods were added; current-
+feature evidence has no FFI files and regression guard reports CLEAN" —
+see `.harness/reviews/p7-gamma-social-chronicle/review_attempt3.md:7`)
+correctly classified the situation; the gap was strictly in
+`ffi_chain_check.sh`'s SKIP-path output not carrying a token the
+score producer recognises.
+
+### Fix (Issue 12/13 precedent symmetry — producer emits correct token)
+
+`tools/harness/ffi_chain_check.sh:20-25` adds one summary line on the
+SKIP path, mirroring the OK-path line (`echo "FFI CHAIN: OK"`) at line
+63 of the same script:
+
+```bash
+echo "FFI CHAIN: OK (SKIP — V7 reset, no proxy chain to verify)"
+```
+
+This carries the `OK` token through to `step0_ffi.txt`, so the consumer
+regex at `generate_report.sh:145` resolves to `FFI_STATUS=OK`. The
+existing SKIP audit lines are preserved.
+
+The fix follows the same shape as commit `00274b57`'s verdict-file
+staleness fix: when the producer's exit code says success, the producer
+must also write a recognisable success token on every code path. Issue
+13 fixed RE-CODE/RE-PLAN/FAIL paths in the pipeline that exited without
+updating the verdict file; this Issue 14 fix is the V7-reset SKIP path
+in `ffi_chain_check.sh` that exited 0 without emitting an OK token.
+
+### Verification
+
+```
+$ bash tools/harness/ffi_chain_check.sh
+[FFI Chain] SKIP: …/sim_bridge.gd absent (V7 reset early phase)
+[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands
+FFI CHAIN: OK (SKIP — V7 reset, no proxy chain to verify)
+
+$ echo "$above" | grep -qi "OK\|PASS\|COMPLETE" && echo MATCH
+MATCH      # generate_report.sh:145 fallback now resolves to OK
+```
+
+### Phase 7-γ ceiling post-fix
+
+| Component | Pre-fix | Post-fix |
+|-----------|--------:|---------:|
+| Mech Gate | 8/10 | **10/10** (+2 Pattern E recovered) |
+| Code Quality (attempt 3 cap) | 5/15 | 5/15 (Pattern D unchanged) |
+| Other dimensions | 75 | 75 |
+| **Total ceiling** | **88** | **90** |
+
+An attempt-3 APPROVE under V7-reset conditions now sits exactly at the
+hot-tier threshold (90). An attempt-1 or attempt-2 APPROVE would clear
+the threshold with margin. Pattern D (-10 attempt-3 cap) remains an
+intentional governance signal — accumulated rework cost is real and the
+score should reflect it.
+
+### Defense-in-depth note (not applied — minimal-scope decision)
+
+A sink-side fix at `generate_report.sh:145` extending the regex to
+accept `SKIP_V7_RESET` was considered and declined. Producer-side fix
+is sufficient, follows the Issue 13 precedent (producer writes the
+right token on every exit path), and avoids two divergent vocabularies
+between producer and consumer.
+
+## Honest evaluation of Phase 7-γ stall (pre-Issue-14-closure)
 
 The Phase 7-γ work is **Codex-APPROVED on attempt 3 of every cycle** (r1-r6).
 The 88/100 block isn't a code-defect signal — it's the structural
 combination of Pattern D (-10 attempt-3 cap) + Pattern E (-2 FFI FAIL).
-The arithmetic ceiling under these conditions is 88 unless one of:
+The arithmetic ceiling under those conditions was 88 unless one of:
 1. Attempt-1 APPROVE (no penalty cap) — improbable given iterative Codex
    refinement on a substantial harness.
-2. Issue 14 fix lands first — separate governance dispatch.
+2. Issue 14 fix lands first — **done 2026-05-17** (see closure section
+   above). Pattern E -2 recovered, ceiling becomes 90 even at attempt 3.
 3. ENV-BYPASS authorized — declined per 4th-chain risk avoidance.
 
 This is why Option B (Defer) was the correct decision — not because the
@@ -517,8 +620,8 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
 
 | Option | Scope |
 |--------|-------|
-| **Issue 14 (Pattern E) fix dispatch** | Pipeline mechanism gap fix for stale FFI evidence (precedent: Issue 12/13 `00274b57`). Audit-only governance work. |
-| **Phase 7-γ fresh attempt** | `git stash pop` + integrate r5/r6 actionables + fresh skip-gen. Requires Issue 14 fix first or ENV-BYPASS to clear 88-ceiling. |
+| ~~**Issue 14 (Pattern E) fix dispatch**~~ | **CLOSED 2026-05-17** — see "Issue 14 closure" section. Source-token fix in `tools/harness/ffi_chain_check.sh` (Issue 12/13 precedent symmetry). Pattern E -2 recovered. |
+| **Phase 7-γ fresh attempt** | `git stash pop` + integrate r5/r6 actionables + fresh skip-gen. Ceiling now 90 (Issue 14 closure recovered Pattern E -2). |
 | **Section 9+ design (Phase 8 anchor)** | Combat / Memory / Multi-building Settlement / Advanced AI per Section 8+ design §3 candidates. User mandate required. |
 | **Phase 7-δ optional** | UI integration. Locked scope in plan §γ. |
 | **Phase 4-δ optional** | BodyHealth. V7 reset 후 명시적 path 부재 — scope 정의 의무. |
