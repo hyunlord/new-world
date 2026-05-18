@@ -459,7 +459,33 @@ $qc_feedback
 ## Your Task
 Revise the plan to address the Challenger's valid points.
 If a challenge is invalid, explain why and keep the original.
-Output the final revised plan directly, using the same format as the original plan.
+
+## CRITICAL OUTPUT CONTRACT (Issue 15 — Pattern G fix)
+Your output MUST be the COMPLETE revised plan body — NOT a summary of changes.
+
+DO output:
+- The entire YAML header (\`---\` block).
+- EVERY assertion with all 6 fields (metric/threshold/type/rationale/ticks/components_read),
+  including assertions you did not change. Carry them over verbatim from the original.
+- Edge Cases, Visual Verification Hints, and NOT in Scope sections in full.
+
+DO NOT output:
+- A change-summary, change-log, or "what I changed" preamble.
+- Phrases like "The full revised plan has been delivered above" or "Key changes from the original".
+- Bullet lists describing changes instead of the assertion bodies themselves.
+
+The Quality Checker reads ONLY this file. If your output is a summary instead of a plan,
+the Quality Checker will reject it as PLAN_FAIL and the pipeline halts.
+
+Self-verify before stopping:
+1. \`wc -l\` your output: it MUST be ≥ \$(wc -l < "$PLAN_DIR/plan_draft.md") lines
+   (i.e. at least as long as the original draft).
+2. Count assertion bodies: search for "^- metric:" — count MUST be ≥ the original
+   assertion count.
+3. If your output is shorter than the draft or has fewer assertion bodies, you have
+   produced a summary instead of a plan. Re-emit the full plan body.
+
+The first character of your output MUST be \`-\` (start of YAML header) — NOT prose.
 REVISION_EOF
 
     log "Running Drafter revision..."
@@ -480,6 +506,37 @@ REVISION_EOF
         log "WARNING: Revision produced empty output — using draft"
         cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_revised.md"
     }
+
+    # Issue 15 (Pattern G) producer-side structural validator.
+    # Drafter agent under conversational pressure has been observed to emit a
+    # change-summary instead of the full revised plan body (e.g. Phase 8-β
+    # 3rd dispatch: 17-line meta-narrative led to QC PLAN_FAIL after 3 rounds
+    # of debate). Catch the structural defect at producer time and fall back
+    # to the draft, mirroring the empty-output fallback above.
+    local draft_lines revised_lines draft_assertions revised_assertions
+    draft_lines=$(wc -l < "$PLAN_DIR/plan_draft.md" 2>/dev/null | tr -d ' ' || echo 0)
+    revised_lines=$(wc -l < "$PLAN_DIR/plan_revised.md" 2>/dev/null | tr -d ' ' || echo 0)
+    draft_assertions=$(grep -c "^- metric:" "$PLAN_DIR/plan_draft.md" 2>/dev/null || echo 0)
+    revised_assertions=$(grep -c "^- metric:" "$PLAN_DIR/plan_revised.md" 2>/dev/null || echo 0)
+
+    local plan_revision_structural_fail=0
+    # Threshold: revised must be ≥ 50% of draft length AND have at least
+    # 80% of original assertion bodies. Stricter than "non-empty" but lenient
+    # enough that a legitimate consolidation (e.g. merging two assertions
+    # into one) doesn't trigger the fallback.
+    if [[ "$revised_lines" -lt $((draft_lines / 2)) ]]; then
+        plan_revision_structural_fail=1
+        log "WARNING: plan_revised.md is suspiciously short (${revised_lines} lines vs draft ${draft_lines}) — likely a change-summary, not a plan body"
+    fi
+    if [[ "$draft_assertions" -gt 0 && "$revised_assertions" -lt $((draft_assertions * 8 / 10)) ]]; then
+        plan_revision_structural_fail=1
+        log "WARNING: plan_revised.md has ${revised_assertions} assertion bodies vs draft ${draft_assertions} — likely a change-summary, not a plan body"
+    fi
+    if [[ "$plan_revision_structural_fail" -eq 1 ]]; then
+        log "WARNING: Revision failed Issue 15 structural validator — falling back to draft (Pattern G mitigation)"
+        cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_revised.md"
+    fi
+
     log "Revised plan: $PLAN_DIR/plan_revised.md"
 }
 

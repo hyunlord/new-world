@@ -661,6 +661,89 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
   Stage 1 + Stage 2 chain cleared the structural ceiling exactly as
   predicted.
 
+## Issue 15 closure (Pattern G — Drafter agent revision degradation, 2026-05-18)
+
+### Root cause (verified empirically against `.harness/plans/p8-beta-memory-system/plan_revised.md`, Phase 8-β 3rd dispatch)
+
+`tools/harness/harness_pipeline.sh:462` invokes the Drafter for the
+revision phase with the soft instruction "Output the final revised plan
+directly, using the same format as the original plan." Under
+conversational pressure (Challenger round 2 with 0 findings + QC round
+1 demanding more rigor on round 2), the Drafter agent reverts to a
+chat-mode meta-narrative: a 17-line change-summary describing what
+*would* change, prefaced with "The full revised plan has been delivered
+above with all 37 assertion bodies…" — except no plan body exists in
+the output. QC has no plan to validate and emits PLAN_FAIL after the
+2-round debate cap, halting the pipeline.
+
+Phase 8-β 3rd dispatch evidence:
+- `plan_draft.md`: 217 lines, original assertion bodies present
+- `plan_revised.md`: **17 lines**, all narrative, zero `^- metric:` lines
+- QC verdict: PLAN_REVISE on round 2, escalated to PLAN_FAIL by the
+  round cap, FATAL halt at 16:18:06
+
+This is **Pattern G**: pipeline-mechanism gap in the Drafter revision
+contract. The agent definition at `.claude/agents/harness-drafter.md`
+defines the output format (YAML header + Assertion blocks with 6
+fields), but the *revision* invocation never re-asserts this contract —
+it only asks for changes addressing Challenger feedback.
+
+### Fix (Issue 14 precedent — producer emits recognisable structure on every path)
+
+Two-part fix at producer side:
+
+1. **Prompt hardening** (`harness_pipeline.sh:449-490`): The
+   `revision_input.md` now contains an explicit "CRITICAL OUTPUT
+   CONTRACT (Issue 15 — Pattern G fix)" section listing what MUST and
+   MUST NOT appear in the output, citing the failure mode by name, and
+   instructing the Drafter to self-verify line count + assertion-body
+   count before stopping. First-character must be `-` (YAML header
+   start), not prose.
+
+2. **Producer-side structural validator** (`harness_pipeline.sh:484+`):
+   After the Drafter writes `plan_revised.md`, the pipeline measures
+   line count and `^- metric:` count and compares against the draft.
+   If the revised plan is shorter than 50% of the draft or has fewer
+   than 80% of the original assertion bodies, the pipeline logs a
+   Pattern G mitigation warning and falls back to the original draft —
+   mirroring the existing empty-output fallback.
+
+The thresholds (50% length, 80% assertion bodies) are calibrated to
+accept legitimate consolidations (e.g. merging two assertions into one)
+while catching the chat-mode-summary failure pattern empirically
+observed at the Phase 8-β 3rd dispatch.
+
+### Verification
+
+Stage 1 unit verification (this commit):
+- `bash -n tools/harness/harness_pipeline.sh` → syntax OK.
+- 17-line meta-narrative would fail both `50% length` and
+  `80% assertion bodies` thresholds (17 < 217/2 = 108; 0 < 37 * 0.8 = 29).
+
+Stage 2 integration verification (next dispatch, post Issue 15 land):
+- Phase 8-β fresh pipeline relaunch. Drafter revision either emits the
+  full plan (prompt hardening succeeded) OR the validator catches the
+  shortfall and falls back to draft (validator succeeded). Either way
+  QC has a real plan body to evaluate; PLAN_FAIL re-occurrence on the
+  3rd dispatch's failure mode is no longer possible.
+
+### Phase 8-β path post-fix
+
+The 3 stalled Phase 8-β dispatches all reached attempt 1 Generator output
+fine — the block was strictly in the planning-debate phase. Stage 2
+relaunch should reach the Codex Evaluator step on the existing
+Generator attempt 2 working tree (822 tests passing, clippy clean,
+Generator addressed all 8 prior Codex RE-CODE issues) and produce the
+authoritative review_attempt*.md verdict that has been missing.
+
+### Defense-in-depth note (declined — minimal-scope decision)
+
+A third fix at QC validator side (explicit `wc -l` + `grep -c "^- metric:"`
+counts in `quality_checker_prompt.md` enforcement) was considered. It is
+redundant once the producer-side validator catches the structural defect
+before the QC even sees the file. Mirrors the Issue 14 decision to fix
+at the producer rather than extending the consumer regex.
+
 ## Next decision base (사용자 mandate required)
 
 | Option | Scope |
