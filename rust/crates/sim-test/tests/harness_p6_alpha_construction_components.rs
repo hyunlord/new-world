@@ -393,6 +393,7 @@ fn harness_p6_alpha_a21_causal_event_no_construction_variant() {
             CausalEvent::ConstructionCompleted { .. } => "construction_completed",
             CausalEvent::SocialInteractionStarted { .. } => "social_interaction_started",
             CausalEvent::SocialInteractionCompleted { .. } => "social_interaction_completed",
+            CausalEvent::MemoryRecalled { .. } => "memory_recalled",
         }
     }
     // Touch classify so it's not dead code under any toolchain.

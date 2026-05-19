@@ -265,6 +265,7 @@ fn harness_p7_beta_a3_decision_reason_variant_count() {
             DecisionReason::FatigueThresholdBreach => 2,
             DecisionReason::ConstructionReason => 3,
             DecisionReason::SocialReason => 4,
+            DecisionReason::MemoryReason => 5,
         }
     }
     assert_eq!(discriminant(DecisionReason::HungerThresholdBreach), 0);
@@ -272,6 +273,7 @@ fn harness_p7_beta_a3_decision_reason_variant_count() {
     assert_eq!(discriminant(DecisionReason::FatigueThresholdBreach), 2);
     assert_eq!(discriminant(DecisionReason::ConstructionReason), 3);
     assert_eq!(discriminant(DecisionReason::SocialReason), 4);
+    assert_eq!(discriminant(DecisionReason::MemoryReason), 5);
 }
 
 // ─── A4: causal_event_new_variant_field_shapes ─────────────────────────
@@ -1774,6 +1776,10 @@ fn harness_p7_beta_a14_two_run_regression_bounded() {
                             // SocialReason is the feature itself; excluded
                             // from the regression comparison.
                             DecisionReason::SocialReason => continue,
+                            // P8-β: MemoryReason is the cascade-bias 6th
+                            // emission; excluded from earlier-phase
+                            // regression comparison.
+                            DecisionReason::MemoryReason => continue,
                         };
                         counts[bucket] += 1;
                     }

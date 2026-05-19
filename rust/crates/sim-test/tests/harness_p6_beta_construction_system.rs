@@ -103,6 +103,7 @@ fn harness_p6_beta_a2_decision_reason_enumeration_and_discriminator() {
         DecisionReason::FatigueThresholdBreach,
         DecisionReason::ConstructionReason,
         DecisionReason::SocialReason,
+        DecisionReason::MemoryReason,
     ];
     for r in reasons {
         match r {
@@ -111,6 +112,7 @@ fn harness_p6_beta_a2_decision_reason_enumeration_and_discriminator() {
             DecisionReason::FatigueThresholdBreach => {}
             DecisionReason::ConstructionReason => {}
             DecisionReason::SocialReason => {}
+            DecisionReason::MemoryReason => {}
         }
     }
     assert_eq!(
@@ -167,6 +169,7 @@ fn harness_p6_beta_a3_causal_event_enumeration_accessors_and_channel() {
             CausalEvent::ConstructionCompleted { .. } => "construction_completed",
             CausalEvent::SocialInteractionStarted { .. } => "social_interaction_started",
             CausalEvent::SocialInteractionCompleted { .. } => "social_interaction_completed",
+            CausalEvent::MemoryRecalled { .. } => "memory_recalled",
         }
     }
     assert_eq!(classify(&started), "construction_started");
@@ -698,6 +701,7 @@ fn harness_p6_beta_a9_full_4_link_causal_chain_walk() {
             CausalEvent::ConstructionCompleted { .. } => "construction_completed",
             CausalEvent::SocialInteractionStarted { .. } => "social_interaction_started",
             CausalEvent::SocialInteractionCompleted { .. } => "social_interaction_completed",
+            CausalEvent::MemoryRecalled { .. } => "memory_recalled",
         })
         .collect();
 

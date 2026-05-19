@@ -146,6 +146,20 @@ pub fn register_social_systems(engine: &mut SimEngine) {
     ));
 }
 
+/// Register the Phase 8-β memory stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 136 : [`runtime::memory::MemorySystem`]
+///
+/// Slots strictly after `SocialDecaySystem` (priority 135) so the encoding
+/// pass observes every same-tick actor event emitted by upstream
+/// production systems (Hunger/Thirst/Sleep/Construction/Social) and the
+/// `AgentDecisionSystem`. The decay pass applies uniformly to all `Memory`
+/// components, no eviction at the per-tick boundary.
+pub fn register_memory_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::memory::MemorySystem::new()));
+}
+
 /// V7 Phase 7-β / P7β-15 — canonical production system registration.
 ///
 /// Single source of truth for "what systems run in a production engine":
@@ -176,4 +190,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_needs_systems(engine);
     register_construction_systems(engine);
     register_social_systems(engine);
+    register_memory_systems(engine);
 }

@@ -812,7 +812,9 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
             // construction sites and no co-located social partners, so
             // neither variant is expected to appear — but the exhaustive
             // match must still cover both.
-            DecisionReason::ConstructionReason | DecisionReason::SocialReason => {}
+            DecisionReason::ConstructionReason
+            | DecisionReason::SocialReason
+            | DecisionReason::MemoryReason => {}
         }
     }
     assert!(

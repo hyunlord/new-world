@@ -37,7 +37,7 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId};
 use sim_core::components::{
-    Agent, AgentState, Hunger, Position, Sleep, Social, Thirst,
+    Agent, AgentState, Hunger, Memory, Position, Sleep, Social, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -527,6 +527,30 @@ impl CausalEventView {
                 agent_id: None,
                 reason: None,
             },
+            // V7 Phase 8-β / P8β-MOD-1 — minimum-viable view of the cascade-
+            // bias recall event. Full FFI shape (recalled_event field,
+            // triggered_by discriminator) lands with Phase 8-δ.
+            CausalEvent::MemoryRecalled {
+                id,
+                parent,
+                agent,
+                recalled_event: _,
+                triggered_by: _,
+                tick,
+            } => Self {
+                kind: "memory_recalled",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: None,
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: Some(*agent),
+                reason: None,
+            },
         }
     }
 }
@@ -802,6 +826,7 @@ fn bootstrap_spawn_agents(engine: &mut SimEngine) {
                         Thirst::new(0.0, 0.03),
                         Sleep::new(0.0, 0.01),
                         Social::new(0.0, 0.04),
+                        Memory::new(),
                     ),
                 )
                 .expect("bootstrap agent entity must still exist");

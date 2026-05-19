@@ -52,6 +52,11 @@ pub enum DecisionReason {
     /// `SOCIAL_THRESHOLD`. V7 Phase 7-β / P7β-5. Social is the lowest-
     /// priority drive — Needs and Construction always win.
     SocialReason,
+    /// Agent's `AgentDecisionSystem` cascade was flipped by a positive
+    /// or negative memory weight delta on a non-natural-winner arm.
+    /// Parent points to the `MemoryRecalled` event that surfaced the
+    /// load-bearing memory. V7 Phase 8-β / P8β-5.
+    MemoryReason,
 }
 
 impl DecisionReason {
@@ -65,8 +70,30 @@ impl DecisionReason {
             DecisionReason::FatigueThresholdBreach => "fatigue_threshold_breach",
             DecisionReason::ConstructionReason => "construction_reason",
             DecisionReason::SocialReason => "social_reason",
+            DecisionReason::MemoryReason => "memory_reason",
         }
     }
+}
+
+/// Trigger taxonomy for [`CausalEvent::MemoryRecalled`]. V7 Phase 8-β /
+/// P8β-MOD-1.
+///
+/// Phase 8-β wires only `CascadeBias`; `SimilaritySearch` and `Periodic`
+/// are declared (and round-trip through serde) but never emitted by
+/// production systems in this phase. Mirrors the `TargetKind`
+/// extensibility pattern from Phase 7-α.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
+pub enum MemoryRecallTrigger {
+    /// Phase 8-β scope: `AgentDecisionSystem` cascade scoring summoned
+    /// this memory into the weight calculation and the weight shift
+    /// flipped the natural-cascade winner.
+    CascadeBias,
+    /// Reserved — Phase 9+ similarity search (e.g. "recall any prior
+    /// `SocialInteractionCompleted` with this partner").
+    SimilaritySearch,
+    /// Reserved — Phase 9+ periodic background recall (sleep-time
+    /// consolidation, mood-driven rumination, etc.).
+    Periodic,
 }
 
 /// Unique identifier for a [`CausalEvent`] within a single simulation run.
@@ -288,6 +315,31 @@ pub enum CausalEvent {
         /// Simulation tick at which completion fired.
         tick: u64,
     },
+
+    /// V7 Phase 8-β / P8Plan-6. Emitted by `AgentDecisionSystem` when a
+    /// cascade-bias memory weight delta flips the cascade's natural
+    /// winner. The `recalled_event` field references the top-contributor
+    /// memory entry's `event_id`; `parent` carries the recalled event's
+    /// own parent so the lineage walk continues through the recall.
+    MemoryRecalled {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — typically the recalled event's parent, or
+        /// `None` when the recalled event has no parent or has been
+        /// evicted from the ring buffer.
+        parent: Option<EventId>,
+        /// The agent whose cascade was flipped.
+        agent: AgentId,
+        /// `event_id` of the top-contributor [`MemoryEntry`] driving the
+        /// flip.
+        ///
+        /// [`MemoryEntry`]: crate::components::MemoryEntry
+        recalled_event: EventId,
+        /// Why the recall fired. Phase 8-β only emits `CascadeBias`.
+        triggered_by: MemoryRecallTrigger,
+        /// Simulation tick at which the recall was emitted.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -301,7 +353,8 @@ impl CausalEvent {
             | CausalEvent::ConstructionStarted { id, .. }
             | CausalEvent::ConstructionCompleted { id, .. }
             | CausalEvent::SocialInteractionStarted { id, .. }
-            | CausalEvent::SocialInteractionCompleted { id, .. } => *id,
+            | CausalEvent::SocialInteractionCompleted { id, .. }
+            | CausalEvent::MemoryRecalled { id, .. } => *id,
         }
     }
 
@@ -325,7 +378,8 @@ impl CausalEvent {
             | CausalEvent::ConstructionStarted { parent, .. }
             | CausalEvent::ConstructionCompleted { parent, .. }
             | CausalEvent::SocialInteractionStarted { parent, .. }
-            | CausalEvent::SocialInteractionCompleted { parent, .. } => *parent,
+            | CausalEvent::SocialInteractionCompleted { parent, .. }
+            | CausalEvent::MemoryRecalled { parent, .. } => *parent,
         }
     }
 
@@ -339,7 +393,8 @@ impl CausalEvent {
             | CausalEvent::ConstructionStarted { tick, .. }
             | CausalEvent::ConstructionCompleted { tick, .. }
             | CausalEvent::SocialInteractionStarted { tick, .. }
-            | CausalEvent::SocialInteractionCompleted { tick, .. } => *tick,
+            | CausalEvent::SocialInteractionCompleted { tick, .. }
+            | CausalEvent::MemoryRecalled { tick, .. } => *tick,
         }
     }
 
@@ -355,7 +410,8 @@ impl CausalEvent {
             | CausalEvent::ConstructionStarted { .. }
             | CausalEvent::ConstructionCompleted { .. }
             | CausalEvent::SocialInteractionStarted { .. }
-            | CausalEvent::SocialInteractionCompleted { .. } => None,
+            | CausalEvent::SocialInteractionCompleted { .. }
+            | CausalEvent::MemoryRecalled { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

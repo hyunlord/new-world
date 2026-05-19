@@ -14,5 +14,6 @@ pub mod agent;
 pub mod construction;
 pub mod decision;
 pub mod influence;
+pub mod memory;
 pub mod needs;
 pub mod social;

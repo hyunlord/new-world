@@ -248,7 +248,8 @@ fn harness_p3_alpha_building_placed_fields_round_trip() {
             | CausalEvent::ConstructionStarted { tick, .. }
             | CausalEvent::ConstructionCompleted { tick, .. }
             | CausalEvent::SocialInteractionStarted { tick, .. }
-            | CausalEvent::SocialInteractionCompleted { tick, .. } => *tick,
+            | CausalEvent::SocialInteractionCompleted { tick, .. }
+            | CausalEvent::MemoryRecalled { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 0,
@@ -352,7 +353,8 @@ fn harness_p3_alpha_tick_stamp_matches_current_tick() {
             | CausalEvent::ConstructionStarted { tick, .. }
             | CausalEvent::ConstructionCompleted { tick, .. }
             | CausalEvent::SocialInteractionStarted { tick, .. }
-            | CausalEvent::SocialInteractionCompleted { tick, .. } => *tick,
+            | CausalEvent::SocialInteractionCompleted { tick, .. }
+            | CausalEvent::MemoryRecalled { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 5,
@@ -469,7 +471,8 @@ fn harness_p3_alpha_per_tile_fifo_eviction_across_ticks() {
             | CausalEvent::ConstructionStarted { tick, .. }
             | CausalEvent::ConstructionCompleted { tick, .. }
             | CausalEvent::SocialInteractionStarted { tick, .. }
-            | CausalEvent::SocialInteractionCompleted { tick, .. } => *tick,
+            | CausalEvent::SocialInteractionCompleted { tick, .. }
+            | CausalEvent::MemoryRecalled { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 4,

@@ -55,12 +55,134 @@
 use std::collections::HashMap;
 
 use hecs::World;
-use sim_core::causal::{CausalEvent, DecisionReason, EventId};
+use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Position, Sleep,
-    Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, Position,
+    Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
 use sim_engine::{RuntimeSystem, SimResources};
+
+use crate::runtime::memory::MAX_RECENCY_TICKS;
+
+/// Cascade arm identifier — the 5 natural drives whose eligibility is
+/// computed independently. Memory is a bias SOURCE, not an arm.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+enum CascadeArm {
+    Hunger,
+    Thirst,
+    Fatigue,
+    Construction,
+    Social,
+}
+
+/// Linear recency factor: 1.0 at `elapsed == 0`, 0.0 at
+/// `elapsed >= MAX_RECENCY_TICKS`.
+fn recency_factor(encoded_tick: u64, current_tick: u64) -> f64 {
+    let elapsed = current_tick.saturating_sub(encoded_tick);
+    if elapsed >= MAX_RECENCY_TICKS {
+        0.0
+    } else {
+        1.0 - (elapsed as f64 / MAX_RECENCY_TICKS as f64)
+    }
+}
+
+/// Classify a memory entry's `event_id` against a cascade arm by looking
+/// up the referenced [`CausalEvent`] in `causal_log`. Returns `false` on
+/// lookup miss (Phase 3-β graceful eviction).
+fn event_id_matches_arm(
+    event_id: EventId,
+    arm: CascadeArm,
+    causal_log: &CausalLogStorage,
+) -> bool {
+    let Some(event) = causal_log.lookup(event_id) else {
+        return false;
+    };
+    matches!(
+        (arm, event),
+        (CascadeArm::Hunger, CausalEvent::AgentDecision { reason: DecisionReason::HungerThresholdBreach, .. })
+        | (CascadeArm::Thirst, CausalEvent::AgentDecision { reason: DecisionReason::ThirstThresholdBreach, .. })
+        | (CascadeArm::Fatigue, CausalEvent::AgentDecision { reason: DecisionReason::FatigueThresholdBreach, .. })
+        | (CascadeArm::Construction, CausalEvent::AgentDecision { reason: DecisionReason::ConstructionReason, .. })
+        | (CascadeArm::Construction, CausalEvent::ConstructionStarted { .. })
+        | (CascadeArm::Construction, CausalEvent::ConstructionCompleted { .. })
+        | (CascadeArm::Social, CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. })
+        | (CascadeArm::Social, CausalEvent::SocialInteractionStarted { .. })
+        | (CascadeArm::Social, CausalEvent::SocialInteractionCompleted { .. })
+    )
+}
+
+/// Compute the cascade-bias weight delta for `arm` from a snapshot of
+/// `memory`. Linear product form per plan §2 P8β-MOD-2 step 4:
+/// `sum(valence * salience * recency_factor)` over entries that
+/// (a) match the arm, AND (b) have salience strictly above
+/// `SALIENCE_FLOOR` (eligibility gate from plan A16).
+fn memory_weight_delta(
+    memory: &Memory,
+    arm: CascadeArm,
+    current_tick: u64,
+    causal_log: &CausalLogStorage,
+) -> f64 {
+    memory
+        .entries
+        .iter()
+        .filter(|entry| entry.salience > SALIENCE_FLOOR)
+        .filter(|entry| event_id_matches_arm(entry.event_id, arm, causal_log))
+        .map(|entry| {
+            let recency = recency_factor(entry.encoded_tick, current_tick);
+            entry.valence * entry.salience * recency
+        })
+        .sum()
+}
+
+/// Find the highest-magnitude contributing entry for `arm` — used as the
+/// `recalled_event` field on `MemoryRecalled` emissions.
+fn top_contributor_entry(
+    memory: &Memory,
+    arm: CascadeArm,
+    current_tick: u64,
+    causal_log: &CausalLogStorage,
+) -> Option<EventId> {
+    memory
+        .entries
+        .iter()
+        .filter(|entry| entry.salience > SALIENCE_FLOOR)
+        .filter(|entry| event_id_matches_arm(entry.event_id, arm, causal_log))
+        .max_by(|a, b| {
+            let wa = (a.valence * a.salience * recency_factor(a.encoded_tick, current_tick)).abs();
+            let wb = (b.valence * b.salience * recency_factor(b.encoded_tick, current_tick)).abs();
+            wa.partial_cmp(&wb).unwrap_or(std::cmp::Ordering::Equal)
+        })
+        .map(|e| e.event_id)
+}
+
+/// Per-arm natural eligibility score (binary 0.0/1.0 baseline). Memory
+/// weight deltas are added on top. The arm with the highest adjusted
+/// score wins; ties resolved by the original (Hunger > Thirst > Fatigue >
+/// Construction > Social) priority order.
+fn arm_priority_index(arm: CascadeArm) -> u8 {
+    match arm {
+        CascadeArm::Hunger => 0,
+        CascadeArm::Thirst => 1,
+        CascadeArm::Fatigue => 2,
+        CascadeArm::Construction => 3,
+        CascadeArm::Social => 4,
+    }
+}
+
+/// V7 Phase 8-β cascade-bias flip threshold (P8β-MOD-2 step 5 refinement).
+///
+/// A non-natural-winner arm only flips the cascade when its
+/// `memory_weight_delta` STRICTLY exceeds this threshold — i.e. the
+/// memory-adjusted score must surpass the natural arm's binary
+/// eligibility score (1.0). Below the threshold, the natural winner is
+/// preserved and no `MemoryRecalled` event is emitted (plan §A20: bias
+/// observed but non-load-bearing).
+///
+/// Locked at 1.0 (equal to the natural arm's binary eligibility).
+/// Only a delta strictly GREATER than 1.0 can override the natural
+/// winner, preventing weak positive bias from causing spurious flips.
+pub const BIAS_FLIP_THRESHOLD: f64 = 1.0;
+
 
 /// Hunger value strictly above which an Idle agent transitions to
 /// `Seeking { Food }`. Phase 5-β scope: a flat constant. Per-agent
@@ -246,10 +368,49 @@ impl RuntimeSystem for AgentDecisionSystem {
             map
         };
 
+        // V7 Phase 8-β — Bias-path social-peer map. Lists co-located peers
+        // whose loneliness breaches `SOCIAL_THRESHOLD`, regardless of
+        // their other drives. The cascade-bias flip path needs this
+        // wider eligibility so a Memory-driven Social win can target a
+        // peer even when that peer's natural cascade routes to Hunger
+        // or Construction. The strict-eligibility map
+        // (`social_eligible_by_pos`) above is preserved for the natural
+        // cascade.
+        let social_partner_breached_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
+            let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>)>();
+            for (_, (a, pos, state, social_opt)) in q.iter() {
+                if !matches!(*state, AgentState::Idle) {
+                    continue;
+                }
+                if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                    map.entry((pos.x, pos.y)).or_default().push(a.id);
+                }
+            }
+            map
+        };
+
+        // V7 Phase 8-β — all-idle-peer map for the bias-only Social eligibility
+        // path (plan §A16 arm-symmetry fix). Captures ANY idle agent at the
+        // same tile regardless of loneliness, unlike
+        // `social_partner_breached_by_pos` which gates on
+        // `loneliness > SOCIAL_THRESHOLD`.
+        let all_idle_peers_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
+            let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
+            let mut q = world.query::<(&Agent, &Position, &AgentState)>();
+            for (_, (a, pos, state)) in q.iter() {
+                if matches!(*state, AgentState::Idle) {
+                    map.entry((pos.x, pos.y)).or_default().push(a.id);
+                }
+            }
+            map
+        };
+
         // Per-agent FSM evaluation. We pull `Hunger` / `Thirst` as
         // optional so non-need-carrying agents are still observed and
         // simply stay `Idle`. V7 Phase 7-β adds `Option<&Social>` for the
-        // 5th cascade arm.
+        // 5th cascade arm. V7 Phase 8-β adds `Option<&Memory>` for the
+        // cascade-bias source.
         let mut query = world.query::<(
             &Position,
             &Agent,
@@ -258,8 +419,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Thirst>,
             Option<&mut Sleep>,
             Option<&Social>,
+            Option<&Memory>,
         )>();
-        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt)) in
+        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt)) in
             query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
@@ -317,54 +479,251 @@ impl RuntimeSystem for AgentDecisionSystem {
                         None
                     };
 
-                    if let Some((target, reason)) = breached {
-                        // Walk this tile's existing log for a parent.
-                        //
-                        // Priority order:
-                        //   1. Most recent same-tile `InfluenceChanged` (the
-                        //      pre-existing default — environmental cause).
-                        //   2. (P7-γ A11c, plan_attempt 3) For
-                        //      `SocialReason` specifically, a most-recent
-                        //      same-tile `AgentDecision { reason:
-                        //      SocialReason }` from a DIFFERENT agent — i.e.
-                        //      the partner's earlier SocialReason in the
-                        //      same tick. This causally roots the second
-                        //      agent's SocialReason so the chronicle's
-                        //      `sr_high.parent().is_some()` invariant holds
-                        //      without changing observed behaviour (same
-                        //      tick, same target, same Seeking transition).
-                        let parent = resources
-                            .causal_log
-                            .get(tile_idx)
-                            .and_then(|log| {
-                                log.as_slice().iter().rev().find_map(|ev| match ev {
-                                    CausalEvent::InfluenceChanged { id, .. } => Some(*id),
-                                    CausalEvent::AgentDecision {
-                                        id,
-                                        agent: a,
-                                        reason: DecisionReason::SocialReason,
-                                        ..
-                                    } if matches!(reason, DecisionReason::SocialReason)
-                                        && *a != agent.id =>
-                                    {
-                                        Some(*id)
-                                    }
-                                    _ => None,
+                    if let Some((natural_target, natural_reason)) = breached {
+                        // V7 Phase 8-β cascade-bias check (P8β-MOD-2). Only
+                        // performed when the agent has a Memory component
+                        // AND at least one non-natural-winner arm is also
+                        // eligible (otherwise there is no candidate to
+                        // flip to).
+                        let natural_arm = match natural_reason {
+                            DecisionReason::HungerThresholdBreach => CascadeArm::Hunger,
+                            DecisionReason::ThirstThresholdBreach => CascadeArm::Thirst,
+                            DecisionReason::FatigueThresholdBreach => CascadeArm::Fatigue,
+                            DecisionReason::ConstructionReason => CascadeArm::Construction,
+                            DecisionReason::SocialReason => CascadeArm::Social,
+                            DecisionReason::MemoryReason => CascadeArm::Construction,
+                        };
+
+                        // Build the (arm, target) eligibility set for the
+                        // bias path. Eligibility uses RELAXED Social rules
+                        // (peer's own breach state ignored) so the bias
+                        // can shift to Social over Construction.
+                        let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
+                        if hunger_opt.as_ref().is_some_and(|h| h.value > HUNGER_THRESHOLD) {
+                            eligible.push((CascadeArm::Hunger, TargetKind::Food));
+                        }
+                        if thirst_opt.as_ref().is_some_and(|t| t.value > THIRST_THRESHOLD) {
+                            eligible.push((CascadeArm::Thirst, TargetKind::Water));
+                        }
+                        if sleep_opt.as_ref().is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD) {
+                            eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
+                        }
+                        if construction_sites.contains_key(&(pos.x, pos.y)) {
+                            eligible.push((
+                                CascadeArm::Construction,
+                                TargetKind::ConstructionSite,
+                            ));
+                        }
+                        if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                            if let Some(peer_id) = social_partner_breached_by_pos
+                                .get(&(pos.x, pos.y))
+                                .and_then(|peers| {
+                                    peers.iter().filter(|id| **id != agent.id).min().copied()
                                 })
-                            });
-                        let id = resources.issue_event_id();
-                        resources.causal_log.push(
-                            tile_idx,
-                            CausalEvent::AgentDecision {
-                                id,
-                                parent,
-                                agent: agent.id,
-                                position: (pos.x, pos.y),
-                                reason,
+                            {
+                                eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
+                            }
+                        }
+                        // Bias-only Construction eligibility: add Construction
+                        // arm even when no active ECS ConstructionSite exists
+                        // at the agent's tile, if the agent has Memory entries
+                        // whose event_id matches the Construction arm. Mirrors
+                        // the social_partner_breached_by_pos extension for the
+                        // Social arm (plan §A17: Social natural winner →
+                        // Construction flip via memory bias).
+                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
+                            && memory_opt.is_some_and(|m| {
+                                m.entries.iter().any(|e| {
+                                    e.salience > SALIENCE_FLOOR
+                                        && event_id_matches_arm(
+                                            e.event_id,
+                                            CascadeArm::Construction,
+                                            &resources.causal_log,
+                                        )
+                                })
+                            })
+                        {
+                            eligible.push((
+                                CascadeArm::Construction,
+                                TargetKind::ConstructionSite,
+                            ));
+                        }
+                        // Bias-only Social eligibility (plan §A16 arm-symmetry
+                        // fix): add Social arm when Memory has Social-arm
+                        // entries with salience > SALIENCE_FLOOR even when the
+                        // focal agent's loneliness does not breach
+                        // SOCIAL_THRESHOLD. Symmetric to bias-only Construction.
+                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
+                            && memory_opt.is_some_and(|m| {
+                                m.entries.iter().any(|e| {
+                                    e.salience > SALIENCE_FLOOR
+                                        && event_id_matches_arm(
+                                            e.event_id,
+                                            CascadeArm::Social,
+                                            &resources.causal_log,
+                                        )
+                                })
+                            })
+                        {
+                            if let Some(peer_id) = all_idle_peers_by_pos
+                                .get(&(pos.x, pos.y))
+                                .and_then(|peers| {
+                                    peers.iter().filter(|id| **id != agent.id).min().copied()
+                                })
+                            {
+                                eligible.push((CascadeArm::Social, TargetKind::Agent(peer_id)));
+                            }
+                        }
+
+                        // V7 Phase 8-β threshold-based flip decision
+                        // (P8β-MOD-2 step 5 refinement). A non-natural arm
+                        // flips the cascade ONLY when its adjusted score
+                        // (memory_weight_delta) strictly exceeds the
+                        // natural arm's adjusted score
+                        // (BIAS_FLIP_THRESHOLD + natural arm's own delta).
+                        // BIAS_FLIP_THRESHOLD (= 1.0) is the natural arm's
+                        // intrinsic binary eligibility; the natural arm's
+                        // memory delta raises the bar further, so an
+                        // overwhelmingly strong natural winner is preserved
+                        // (plan §A19/P8β-MOD-2).
+                        //
+                        // Among eligible non-natural arms whose deltas pass
+                        // the natural margin, the highest delta wins; ties
+                        // resolved by the natural cascade priority order.
+                        let mut flip_target_arm: Option<(CascadeArm, TargetKind, f64)> =
+                            None;
+                        if let Some(memory) = memory_opt.filter(|_| eligible.len() >= 2) {
+                            let natural_delta = memory_weight_delta(
+                                memory,
+                                natural_arm,
                                 tick,
-                            },
-                        );
-                        *state = AgentState::Seeking { target };
+                                &resources.causal_log,
+                            );
+                            let natural_margin = BIAS_FLIP_THRESHOLD + natural_delta;
+                            for (arm, tk) in &eligible {
+                                if *arm == natural_arm {
+                                    continue;
+                                }
+                                let delta = memory_weight_delta(
+                                    memory,
+                                    *arm,
+                                    tick,
+                                    &resources.causal_log,
+                                );
+                                if delta <= natural_margin {
+                                    continue;
+                                }
+                                match flip_target_arm {
+                                    None => flip_target_arm = Some((*arm, *tk, delta)),
+                                    Some((b_arm, _, b_delta)) => {
+                                        if delta > b_delta
+                                            || (delta == b_delta
+                                                && arm_priority_index(*arm)
+                                                    < arm_priority_index(b_arm))
+                                        {
+                                            flip_target_arm = Some((*arm, *tk, delta));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if let Some((bias_arm, bias_target, _)) = flip_target_arm {
+                            // Cascade FLIP path — emit MemoryRecalled, then
+                            // AgentDecision{MemoryReason} linked to it.
+                            //
+                            // `flip_target_arm` is only ever Some when the
+                            // bias-scoring branch above ran, which required
+                            // `memory_opt` to be Some. Use a safe match
+                            // rather than `.unwrap()` (project rule: no
+                            // unwrap() in production code).
+                            let Some(memory) = memory_opt else {
+                                // Unreachable in practice — defensive skip.
+                                continue;
+                            };
+                            // Issue-5 fix: require a real load-bearing
+                            // recalled_event. If no top contributor is
+                            // resolvable (e.g. all matching entries were
+                            // evicted between scoring and emission), skip
+                            // the flip entirely — DO NOT emit a
+                            // `MemoryRecalled` carrying a fabricated
+                            // `recalled_event = 0`.
+                            let Some(recalled_event) = top_contributor_entry(
+                                memory,
+                                bias_arm,
+                                tick,
+                                &resources.causal_log,
+                            ) else {
+                                continue;
+                            };
+                            let recall_parent = resources
+                                .causal_log
+                                .lookup(recalled_event)
+                                .and_then(|e| e.parent());
+                            let recall_id = resources.issue_event_id();
+                            resources.causal_log.push(
+                                tile_idx,
+                                CausalEvent::MemoryRecalled {
+                                    id: recall_id,
+                                    parent: recall_parent,
+                                    agent: agent.id,
+                                    recalled_event,
+                                    triggered_by: MemoryRecallTrigger::CascadeBias,
+                                    tick,
+                                },
+                            );
+                            let decision_id = resources.issue_event_id();
+                            resources.causal_log.push(
+                                tile_idx,
+                                CausalEvent::AgentDecision {
+                                    id: decision_id,
+                                    parent: Some(recall_id),
+                                    agent: agent.id,
+                                    position: (pos.x, pos.y),
+                                    reason: DecisionReason::MemoryReason,
+                                    tick,
+                                },
+                            );
+                            *state = AgentState::Seeking { target: bias_target };
+                        } else {
+                            // Natural-cascade path — original behaviour.
+                            let parent = resources
+                                .causal_log
+                                .get(tile_idx)
+                                .and_then(|log| {
+                                    log.as_slice().iter().rev().find_map(|ev| match ev {
+                                        CausalEvent::InfluenceChanged { id, .. } => Some(*id),
+                                        CausalEvent::AgentDecision {
+                                            id,
+                                            agent: a,
+                                            reason: DecisionReason::SocialReason,
+                                            ..
+                                        } if matches!(
+                                            natural_reason,
+                                            DecisionReason::SocialReason
+                                        ) && *a != agent.id =>
+                                        {
+                                            Some(*id)
+                                        }
+                                        _ => None,
+                                    })
+                                });
+                            let id = resources.issue_event_id();
+                            resources.causal_log.push(
+                                tile_idx,
+                                CausalEvent::AgentDecision {
+                                    id,
+                                    parent,
+                                    agent: agent.id,
+                                    position: (pos.x, pos.y),
+                                    reason: natural_reason,
+                                    tick,
+                                },
+                            );
+                            *state = AgentState::Seeking {
+                                target: natural_target,
+                            };
+                        }
                     }
                 }
                 AgentState::Seeking { target } => {

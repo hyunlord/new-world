@@ -73,6 +73,24 @@ impl CausalLogStorage {
         self.logs.clear();
     }
 
+    /// Look up an event by its [`EventId`] across all per-tile ring buffers.
+    ///
+    /// V7 Phase 8-β substrate (P8β-NEW-2 + P8β-MOD-2). Used by
+    /// `MemorySystem::classify_event` for Construction parent walks and
+    /// by `AgentDecisionSystem::event_id_matches_arm` for memory-bias
+    /// weight scoring.
+    ///
+    /// Complexity: O(N_tiles × RING_SIZE) where RING_SIZE = 8 — bounded
+    /// and small in practice. Returns `None` if the event has been
+    /// evicted (Phase 3-β graceful eviction precedent) or was never
+    /// recorded.
+    pub fn lookup(&self, event_id: EventId) -> Option<&CausalEvent> {
+        self.logs
+            .values()
+            .flat_map(|log| log.iter())
+            .find(|e| e.id() == event_id)
+    }
+
     /// Find the most recent `StampDirty` event id on `tile_idx` that matches
     /// `channel`, scanning the ring from newest to oldest.
     ///
