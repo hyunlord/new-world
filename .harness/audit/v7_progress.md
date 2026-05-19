@@ -549,30 +549,41 @@ chain that weakens the rule-7.1 governance precedent.
   Issue-14-corrected ceiling at score 90/100 (cold-tier threshold 75).
   Prior defer (a00a1b77 declaration) preserved in the historical
   record above.
+- ✅ Week 15-16 Phase 8-α (Memory + MemoryEntry substrate — `0f1d4814`,
+  2026-05-18). Score 100/100 A Ship-it — first perfect dispatch since
+  Pipeline introduction. APPROVE attempt 1, QC:r1. 479 new harness
+  tests (A1-A20), 787 workspace total pass.
+- ✅ Week 15-16 Phase 8-β (MemorySystem + cascade-bias — `8768904a`,
+  2026-05-19). Score ~92-93/100 B adjusted (raw ~84-85 + vlm_env_cost
+  +8). APPROVE at review_attempt6 (5 RE-CODE recovery). 821 workspace
+  tests, 28 harness assertions (A1-A27). Issue 15 fix `ddd5348c`
+  (Pattern G closure) enabled 4th dispatch success.
 
 ## V7 architecture base — final substantial
 
-Six runtime systems in the post-decision priority slate (the **5 needs
-systems all parallel** intended end-state):
+Eight runtime systems in the post-decision priority slate (Phase 8-β
+extended — **MemorySystem** priority 136 added):
 
 ```
  90  BuildingStampSystem            (Phase 2)
 100  InfluenceUpdateSystem          (Phase 2)
 110  AgentInfluenceSampleSystem     (Phase 2)
 120  AgentMovementSystem            (Phase 4-β)
-125  AgentDecisionSystem            (Phase 5-β / 6-β / 7-β cascade)
+125  AgentDecisionSystem            (Phase 5-β / 6-β / 7-β / 8-β cascade)
 130  HungerDecaySystem              (Phase 5-α)
 131  ThirstDecaySystem              (Phase 5-β)
 132  SleepDecaySystem               (Phase 5-γ)
 133  ConstructionSystem             (Phase 6-β)
 134  SocialInteractionSystem        (Phase 7-β)
 135  SocialDecaySystem              (Phase 7-β re-plan)
+136  MemorySystem                   (Phase 8-β)
 1000 InfluenceVisualizationSystem   (Phase 2 debug)
 ```
 
 ## Causal chain coverage — final
 
-Five `AgentDecision` reasons each anchor a causal emission chain:
+Six `AgentDecision` reasons each anchor a causal emission chain
+(Phase 8-β extended — **MemoryReason** added):
 
 ```
 Hunger threshold breach    → AgentDecision{Hunger}      → (consume, no event chain — Phase 5-β scope)
@@ -580,6 +591,7 @@ Thirst threshold breach    → AgentDecision{Thirst}      → (consume)
 Fatigue threshold breach   → AgentDecision{Fatigue}     → (consume)
 Construction proximity     → AgentDecision{Construction} → ConstructionStarted → ConstructionCompleted → BuildingPlaced
 Mutual social co-location  → AgentDecision{Social}     → SocialInteractionStarted → SocialInteractionCompleted
+Memory cascade-flip        → MemoryRecalled{CascadeBias} → AgentDecision{MemoryReason} → (arm flipped from natural winner)
 ```
 
 Plus the original Phase 2/3 chain:
@@ -595,24 +607,29 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
 | Metric | Value |
 |--------|-------|
 | Recovery span | 2026-05-03 → 2026-05-17 (~14 days V7 reset → V7 closure, +~2 days Phase 7 closure) |
-| Pipeline streak | 28 consecutive APPROVED + 1 hook BLOCK at 88 (Phase 7-γ defer) |
-| Governance patches | 15+ (v3.3.1 → v3.3.17, Issue 10-13 closures) |
-| ENV-BYPASS chains closed | 3 (4th explicitly avoided per Option B) |
-| Feat commits since V7 reset | 28+ |
+| Pipeline streak | 30 consecutive APPROVED + 1 hook BLOCK at 88 (Phase 7-γ 6-dispatch defer) |
+| Governance patches | 16+ (v3.3.1 → v3.3.17, Issues 10-15 closures) |
+| ENV-BYPASS chains closed | 3 (4th + 5th explicitly avoided per Option D) |
+| Feat commits since V7 reset | 30+ |
 | Phase 7 cumulative dispatches | 16 (α 4 + β 6 + γ 6) |
+| Phase 8 cumulative dispatches | 5 (α 1 + β 4: 3 stalled pre-Issue-15 + 1 APPROVED post-fix) |
 
 ## Axioms — substantial final
 
 - **Axiom #1 (causal traceability)**: every agent decision and every
   state-changing event emits a chain entry. UI walk-back is complete from
-  any leaf event to its root.
+  any leaf event to its root. Phase 8-β extended: `MemoryRecalled →
+  AgentDecision{MemoryReason}` chain adds memory-driven decision
+  traceability; `recalled_event` id walks back to the original encoded
+  event through the causal log lookup helper.
 - **Axiom #3 (visual + behavioral milestone full reach)**: Phase 4-γ
   delivered the visual milestone (MultiMeshInstance2D rendering); Phase
   5-γ delivered the behavioral milestone (full daily routine chronicle);
   Phase 6-γ delivered the construction loop chronicle; Phase 7-α/β
   delivered the runtime social loop; Phase 7-γ (`f1c12f9d`) delivered
-  the multi-agent chronicle — the documented gap noted in the original
-  V7 Final Declaration is now closed.
+  the multi-agent chronicle; Phase 8-α/β delivered the per-agent episodic
+  memory substrate and cascade-bias system — Phase 8-γ chronicle (mandate
+  active) will close the memory behavioral milestone.
 
 ## Governance closure chain — final (extended 2026-05-17 post-Phase-7-γ-closure)
 
@@ -625,7 +642,12 @@ Every event carries `id: EventId` + `parent: Option<EventId>` for the
 | 5 | `d4c050e2` | Infrastructure governance audit + V7 partial-closure final declaration |
 | 6 | `ebbf6ddc` | Issue 14 fix — Pattern E closure (FFI SKIP token) |
 | 7 | `f1c12f9d` | Phase 7-γ chronicle harness implementation (V7 Phase 7 complete) |
-| 8 | *(this commit)* | Phase 7-γ closure declaration + v7_progress.md status reflection |
+| 8  | `c924770d` | Phase 7-γ closure declaration + v7_progress.md status reflection |
+| 9  | `67c9a49d` | Section 9+ design — Phase 8 anchor (Memory System) |
+| 10 | `0f1d4814` | Phase 8-α implementation (Memory + MemoryEntry substrate, 100/100) |
+| 11 | `ddd5348c` | Issue 15 fix — Pattern G closure (Drafter revision hardening) |
+| 12 | `8768904a` | Phase 8-β implementation (MemorySystem + cascade-bias, ~93 adjusted) |
+| 13 | *(this commit)* | Phase 8-α + β closure declaration + governance chain update |
 
 ## Phase 7-γ closure (post-Issue-14-fix, 2026-05-17)
 
@@ -727,14 +749,16 @@ Stage 2 integration verification (next dispatch, post Issue 15 land):
   QC has a real plan body to evaluate; PLAN_FAIL re-occurrence on the
   3rd dispatch's failure mode is no longer possible.
 
-### Phase 8-β path post-fix
+### Phase 8-β path post-fix (confirmed 2026-05-19)
 
 The 3 stalled Phase 8-β dispatches all reached attempt 1 Generator output
 fine — the block was strictly in the planning-debate phase. Stage 2
-relaunch should reach the Codex Evaluator step on the existing
-Generator attempt 2 working tree (822 tests passing, clippy clean,
-Generator addressed all 8 prior Codex RE-CODE issues) and produce the
-authoritative review_attempt*.md verdict that has been missing.
+relaunch (4th dispatch) cleared Pattern G without re-occurrence. The
+Drafter produced a full revised plan (plan_attempt 4, QC:r2 approved),
+Generator ran 6 code iterations, Codex Evaluator APPROVE at
+review_attempt6. Commit `8768904a`. Issue 15 Stage 2 integration
+verification complete — both producer-side structural validator and
+prompt hardening performed as designed.
 
 ### Defense-in-depth note (declined — minimal-scope decision)
 
@@ -744,13 +768,82 @@ redundant once the producer-side validator catches the structural defect
 before the QC even sees the file. Mirrors the Issue 14 decision to fix
 at the producer rather than extending the consumer regex.
 
-## Next decision base (사용자 mandate required)
+## Next decision base (updated 2026-05-19 post-Phase-8-β-closure)
 
 | Option | Scope |
 |--------|-------|
 | ~~**Issue 14 (Pattern E) fix dispatch**~~ | **CLOSED 2026-05-17** (`ebbf6ddc`). |
+| ~~**Issue 15 (Pattern G) fix dispatch**~~ | **CLOSED 2026-05-18** (`ddd5348c`). Stage 2 verified `8768904a`. |
 | ~~**Phase 7-γ fresh attempt**~~ | **CLOSED 2026-05-17** (`f1c12f9d`). V7 Phase 7 complete. |
-| **Section 9+ design (Phase 8 anchor)** | Combat / Memory / Multi-building Settlement / Advanced AI per Section 8+ design §3 candidates. User mandate required. |
+| ~~**Phase 8-α (Memory substrate)**~~ | **CLOSED 2026-05-18** (`0f1d4814`). Score 100/100. |
+| ~~**Phase 8-β (MemorySystem + cascade-bias)**~~ | **CLOSED 2026-05-19** (`8768904a`). Score ~93 adjusted. |
+| **Phase 8-γ chronicle harness** | **ACTIVE MANDATE** — end-to-end memory-bias chronicle (encode → decay → recall → cascade-flip). ≥13 assertions, --full lane. Planning §γ spec locked in `.harness/plans/phase8.md`. |
+| **Phase 8-δ optional** | UI integration (CausalPanel + AgentRenderer memory recall). User-mandate-gated. |
 | **Phase 7-δ optional** | UI integration. Locked scope in plan §γ. |
 | **Phase 4-δ optional** | BodyHealth. V7 reset 후 명시적 path 부재 — scope 정의 의무. |
-| **V7 종결 절대 final** | Current declaration sufficient. No further commits planned without new user mandate. |
+| **Issue 16 (pipeline_report.md absent mechanism)** | Pipeline mechanism gap — no report file generated for p8-beta. Governance fix path available. |
+
+---
+
+## Phase 8-α — Memory + MemoryEntry components substrate ✓
+
+- Commit `0f1d4814`, score **100/100 A Ship-it** (APPROVE attempt 1 of r1 —
+  first perfect dispatch since Pipeline introduction). QC:r1 (plan approved
+  first round). Visual OK, FFI SKIP (V7 reset), regression CLEAN.
+- Landed: `Memory { entries: [MemoryEntry; MEMORY_CAP] }` component +
+  `MemoryEntry { event_id: EventId, encoded_tick: u64, valence: f64,
+  salience: f64, reinforcement_count: u32 }` + constants `MEMORY_CAP=32`,
+  `SALIENCE_FLOOR=0.05`. All fields `f64`/`u64`/`u32`; serde-derived.
+  No runtime system, no causal event variants, no `AgentDecisionSystem`
+  change — Phase 6-α / 7-α data-only substrate precedent.
+- Substrate symmetry 정통 substantial: `MEMORY_CAP=32` mirrors Phase 3-β
+  `TILE_CAUSAL_RING_SIZE=8` × 4-agent per-tile multiplier.
+- Duration: 28m 17s. Harness: 479 new tests (A1-A20 plan-locked),
+  787 workspace total pass.
+- Phase 8-α `agent_decision.rs` preserved unmodified for the β takeover.
+
+## Phase 8-β — MemorySystem + cascade-bias + CausalEvent + DecisionReason ✓ (Option D 2-stage recovery)
+
+- Commit `8768904a`, score **~92-93/100 B adjusted** (raw ~84-85 +
+  vlm_env_cost +8 per CLAUDE.md §7 Adjusted Score Formula).
+- Codex Evaluator: APPROVE at review_attempt6 — 5 RE-CODE rounds
+  (review_attempt1-5 RE-CODE, review_attempt6 APPROVE).
+- Pattern D penalty: -7 code quality (attempt 6 = 3+ tier).
+- VLM: WARN(env) — VLM isolation contamination (stop-hook text in output),
+  not a genuine visual failure. adjusted_score +8 recovers the raw cost.
+- Tests: 821 workspace pass, 28 harness assertions (A1-A27). Clippy CLEAN.
+- Landed runtime:
+  - `MemorySystem` priority **136**, tick_interval 1 — per-tick two-phase:
+    decay first (uniform `DECAY_RATE=0.001`), then encoding pass walking
+    this-tick causal events → `MemoryEntry` insert on actor agents.
+    Anti-recursion locks `MemoryReason` / `MemoryRecalled` from re-encoding.
+- Landed causal substrate:
+  - `CausalEvent::MemoryRecalled` (9th variant) + `MemoryRecallTrigger`
+    enum (`CascadeBias` wired + `SimilaritySearch`/`Periodic` reserved).
+  - `DecisionReason::MemoryReason` (6th variant).
+- Landed FSM extension:
+  - `AgentDecisionSystem` Idle 6th cascade weighted-scoring bias.
+  - `natural_margin = BIAS_FLIP_THRESHOLD + natural_delta` — natural
+    winner's own memory weight strengthens the flip threshold.
+  - Cascade-flip emits `MemoryRecalled{CascadeBias}` + paired
+    `AgentDecision{MemoryReason, parent: MemoryRecalled.id}`.
+- Landed helpers: `CausalLogStorage::lookup(event_id)` global-id resolver.
+- Recovery sequence (Option D 2-stage chain):
+  - Stage 1 (`ddd5348c`, 2026-05-18): Issue 15 fix — Pattern G closure.
+    Drafter revision contract hardened. Producer-side structural validator
+    added. 3 prior Phase 8-β dispatches all blocked in planning-debate phase.
+  - Stage 2 (`8768904a`, 2026-05-19): 4th dispatch. Pattern G 재발 부재
+    confirmed. Plan_attempt 4 with QC:r2 approved cleanly.
+  - 5th ENV-BYPASS chain 회피 정직 정통 (V7 Final Declaration §3 보호).
+  - 사용자 axiom #1 정합성 정통 path (정직 + 정합 fix + governance integrity).
+
+### Known governance gaps (정직 disclosure)
+
+- `pipeline_report.md` absent for p8-beta (`.harness/reports/` has no p8-beta
+  entry). Exact numeric score confirmed only as estimate ~92-93 adjusted from
+  formula components; authoritative file-based score unavailable.
+- Pattern G residual risk: producer-side validator uses 50%/80% thresholds —
+  mitigated, not eliminated. Edge case: legitimate plan consolidation near
+  the threshold boundary could mask a future degradation variant.
+- Issue 16 candidate: `pipeline_report.md` absent mechanism — separate
+  governance dispatch available if user mandates.
