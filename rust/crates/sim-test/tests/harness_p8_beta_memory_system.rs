@@ -1191,19 +1191,29 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
         .any(|e| matches!(e, CausalEvent::MemoryRecalled { .. }));
     assert!(!n_recalled, "engine_N must NOT flip (overwhelming Construction natural margin prevents Social bias flip)");
 
-    // 10-tick placebo trajectory: REINFORCEMENT_BOOST not wired → pure-decay identical
-    for i in 0..10usize {
-        engine_p.tick();
-        engine_n.tick();
-        let sal_p = engine_p.world.get::<&Memory>(ent_p).unwrap()
-            .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
-        let sal_n = engine_n.world.get::<&Memory>(ent_n).unwrap()
-            .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
-        assert_eq!(
-            sal_p.to_bits(), sal_n.to_bits(),
-            "A19 sub-b tick {i}: S_P={sal_p} != S_N={sal_n} (REINFORCEMENT_BOOST must not be wired)"
-        );
-    }
+    // Phase 8-γ update: REINFORCEMENT_BOOST is now wired. After the setup tick
+    // where engine_p's seed_id was recalled, that entry was reinforced (not
+    // decayed in the same tick) → sal_p = (1.0 + 0.1).min(1.0) = 1.0.
+    // engine_n's seed_id was pure-decayed → sal_n = 1.0 - 0.001 = 0.999.
+    let sal_p = engine_p.world.get::<&Memory>(ent_p).unwrap()
+        .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
+    let sal_n = engine_n.world.get::<&Memory>(ent_n).unwrap()
+        .entries.iter().find(|e| e.event_id == seed_id).map(|e| e.salience).unwrap_or(0.0);
+    let expected_p = (seed_sal + REINFORCEMENT_BOOST).min(1.0);
+    let expected_n = seed_sal - DECAY_RATE;
+    assert!(
+        (sal_p - expected_p).abs() < 1e-9,
+        "A19 sub-b (γ): engine_P seed salience={sal_p} should be {expected_p} \
+         (recalled: no decay this tick, then reinforced)"
+    );
+    assert!(
+        (sal_n - expected_n).abs() < 1e-9,
+        "A19 sub-b (γ): engine_N seed salience={sal_n} should be {expected_n} (pure decay)"
+    );
+    assert!(
+        sal_p > sal_n,
+        "A19 sub-b (γ): reinforcement wired: sal_p={sal_p} must exceed sal_n={sal_n}"
+    );
 }
 
 // ══════════════════════════════════════════════════════════════════════════

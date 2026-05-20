@@ -1,14 +1,24 @@
-//! V7 Phase 8-β — MemorySystem (priority 136).
+//! V7 Phase 8-γ — MemorySystem (priority 136).
 //!
-//! Two-phase tick:
-//! 1. **Encoding pass** — scan every per-tile causal log for events whose
+//! Four-phase tick:
+//! 0. **Recalled set** — collect `(AgentId, EventId)` pairs from
+//!    `CausalEvent::MemoryRecalled` events whose `tick == current_tick`.
+//!    These were emitted by `AgentDecisionSystem` (priority 125) earlier
+//!    in the same tick and represent entries that just triggered a cascade
+//!    flip.
+//! 1. **Selective decay pass** — apply linear decay to every entry whose
+//!    `(AgentId, EventId)` pair is NOT in the recalled set. Recalled entries
+//!    are held back from decay so that Phase 3 reinforcement applies to the
+//!    pre-decay salience, satisfying the locked A9 formula
+//!    `(sal_before + REINFORCEMENT_BOOST).min(1.0)` with 1e-9 tolerance.
+//! 2. **Encoding pass** — scan every per-tile causal log for events whose
 //!    `tick == resources.current_tick`. For each event with an `AgentId`
 //!    actor (or two, for social events), resolve the actor's entity via
 //!    a single up-front `AgentId → Entity` map, then insert a new
 //!    [`MemoryEntry`] per the locked mapping table (see crate docs of
 //!    [`MemorySystem`]).
-//! 2. **Decay pass** — apply `Memory::decay_one_tick(DECAY_RATE)` to every
-//!    [`Memory`] component.
+//! 3. **Reinforcement pass** — for every entry in the recalled set, call
+//!    `Memory::reinforce(idx, REINFORCEMENT_BOOST)`.
 //!
 //! Anti-recursion: `AgentDecision { MemoryReason }` events and
 //! `MemoryRecalled` events are NOT encoded (planning §β P8β-NEW-2).
@@ -23,7 +33,7 @@
 use std::collections::HashMap;
 
 use hecs::{Entity, World};
-use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason};
+use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId};
 use sim_core::components::{Agent, AgentId, Memory, MemoryEntry};
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -70,26 +80,46 @@ impl RuntimeSystem for MemorySystem {
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let current_tick = resources.current_tick;
 
-        // Phase 1: Decay pass FIRST — uniform linear decay across all
-        // Memory components. Per spec §2 P8β-NEW-2 + edge-case lock:
-        // decay runs BEFORE encoding within the same tick, so a newly
-        // encoded entry on tick T carries its unmodified mapping-table
-        // salience.
-        for (_, memory) in world.query_mut::<&mut Memory>() {
-            memory.decay_one_tick(DECAY_RATE);
+        // Phase 0: Collect (AgentId, EventId) pairs for MemoryRecalled
+        // events emitted in this tick by AgentDecisionSystem (priority 125).
+        // These entries are exempted from decay below so the reinforcement
+        // formula `(sal_before + REINFORCEMENT_BOOST).min(1.0)` is exact.
+        let mut recalled: Vec<(AgentId, EventId)> = Vec::new();
+        for (_tile_idx, log) in resources.causal_log.iter() {
+            for event in log.iter() {
+                if event.tick() != current_tick {
+                    continue;
+                }
+                if let CausalEvent::MemoryRecalled { agent, recalled_event, .. } = event {
+                    recalled.push((*agent, *recalled_event));
+                }
+            }
         }
 
-        // Phase 2: Encoding pass. Build an AgentId → Entity map once up
-        // front so the encoding pass can target the right `Memory`
-        // component without re-entering the world for each event.
+        // Build AgentId → Entity map once — shared by phases 1, 2, 3.
         let mut id_to_entity: HashMap<AgentId, Entity> = HashMap::new();
         for (entity, agent) in world.query::<&Agent>().iter() {
             id_to_entity.insert(agent.id, entity);
         }
 
-        // Collect (entity, MemoryEntry) tuples to insert. We materialise
-        // this list first so the borrow on causal_log is released before
-        // we start mutating Memory components.
+        // Phase 1: Selective decay — skip recalled entries. Per spec
+        // §γ: decay runs BEFORE encoding within the same tick, so a newly
+        // encoded entry on tick T carries its unmodified mapping-table
+        // salience.
+        for (_, (agent, memory)) in world.query_mut::<(&Agent, &mut Memory)>() {
+            for entry in &mut memory.entries {
+                let is_recalled = recalled
+                    .iter()
+                    .any(|(aid, eid)| *aid == agent.id && *eid == entry.event_id);
+                if !is_recalled {
+                    entry.salience = (entry.salience - DECAY_RATE).max(0.0);
+                }
+            }
+        }
+
+        // Phase 2: Encoding pass. Collect (entity, MemoryEntry) tuples
+        // first so the borrow on causal_log is released before mutating
+        // Memory components.
         let mut to_insert: Vec<(Entity, MemoryEntry)> = Vec::new();
         for (_tile_idx, log) in resources.causal_log.iter() {
             for event in log.iter() {
@@ -112,14 +142,23 @@ impl RuntimeSystem for MemorySystem {
         }
 
         // Apply collected entries. Agents without a `Memory` component
-        // are silently skipped (defensive — closes A10 anti-panic
-        // invariant). Idempotency guard: if the event_id is already
-        // present (e.g. re-processed after a tick boundary edge case),
-        // skip rather than double-insert (plan §β A14 lock).
+        // are silently skipped. Idempotency guard: skip if event_id
+        // already present (plan §β A14 lock).
         for (entity, entry) in to_insert {
             if let Ok(mut mem) = world.get::<&mut Memory>(entity) {
                 if mem.find_by_event_id(entry.event_id).is_none() {
                     mem.insert(entry);
+                }
+            }
+        }
+
+        // Phase 3: Reinforce recalled entries.
+        for (agent_id, recalled_event_id) in &recalled {
+            if let Some(entity) = id_to_entity.get(agent_id).copied() {
+                if let Ok(mut mem) = world.get::<&mut Memory>(entity) {
+                    if let Some(idx) = mem.find_by_event_id(*recalled_event_id) {
+                        mem.reinforce(idx, REINFORCEMENT_BOOST);
+                    }
                 }
             }
         }
