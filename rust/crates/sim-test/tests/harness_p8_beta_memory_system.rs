@@ -1307,6 +1307,11 @@ fn harness_p8_beta_a21_full_year_only_cascade_bias_trigger_and_upper_bound() {
                             MemoryRecallTrigger::CascadeBias => cascade_bias_count += 1,
                             MemoryRecallTrigger::SimilaritySearch
                             | MemoryRecallTrigger::Periodic => reserved_count += 1,
+                            // Phase 9-β CombatContext is not expected in
+                            // the P8-β regression scenario (no combat
+                            // memory seeded); counted as reserved so any
+                            // accidental emission surfaces as a failure.
+                            MemoryRecallTrigger::CombatContext { .. } => reserved_count += 1,
                         }
                     }
                 }

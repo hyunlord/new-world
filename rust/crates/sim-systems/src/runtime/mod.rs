@@ -11,6 +11,7 @@
 //! - Phase 17~20 (Wildlife/Disasters): 추가
 
 pub mod agent;
+pub mod combat;
 pub mod construction;
 pub mod decision;
 pub mod influence;

@@ -814,7 +814,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
             // match must still cover both.
             DecisionReason::ConstructionReason
             | DecisionReason::SocialReason
-            | DecisionReason::MemoryReason => {}
+            | DecisionReason::MemoryReason
+            | DecisionReason::CombatReason => {}
         }
     }
     assert!(

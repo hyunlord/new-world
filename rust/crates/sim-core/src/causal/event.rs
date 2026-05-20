@@ -57,6 +57,11 @@ pub enum DecisionReason {
     /// Parent points to the `MemoryRecalled` event that surfaced the
     /// load-bearing memory. V7 Phase 8-β / P8β-5.
     MemoryReason,
+    /// Agent's combat cascade arm activated by a negative memory weight
+    /// delta that strictly exceeded `BIAS_FLIP_THRESHOLD` in the negative
+    /// direction. A co-located idle peer is the combat target.
+    /// V7 Phase 9-β / P9β-5.
+    CombatReason,
 }
 
 impl DecisionReason {
@@ -71,6 +76,7 @@ impl DecisionReason {
             DecisionReason::ConstructionReason => "construction_reason",
             DecisionReason::SocialReason => "social_reason",
             DecisionReason::MemoryReason => "memory_reason",
+            DecisionReason::CombatReason => "combat_reason",
         }
     }
 }
@@ -94,6 +100,13 @@ pub enum MemoryRecallTrigger {
     /// Reserved — Phase 9+ periodic background recall (sleep-time
     /// consolidation, mood-driven rumination, etc.).
     Periodic,
+    /// Phase 9-β scope: `AgentDecisionSystem` combat cascade arm fired
+    /// this memory recall. `agent_id` is the enemy agent targeted by
+    /// the combat transition.
+    CombatContext {
+        /// The enemy agent targeted by the combat cascade.
+        agent_id: AgentId,
+    },
 }
 
 /// Unique identifier for a [`CausalEvent`] within a single simulation run.
@@ -340,6 +353,50 @@ pub enum CausalEvent {
         /// Simulation tick at which the recall was emitted.
         tick: u64,
     },
+
+    /// Agent transitioned to `Consuming { Agent(defender) }` via the
+    /// combat cascade arm. Emitted ONCE per pair by `AgentDecisionSystem`
+    /// from the smaller-`AgentId` agent's evaluation (deduplication,
+    /// mirrors `SocialInteractionStarted` pattern).
+    /// `parent` links to the emitting agent's `AgentDecision{CombatReason}`.
+    /// V7 Phase 9-β / P9β-1.
+    CombatStarted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the attacker's `AgentDecision{CombatReason}`.
+        parent: Option<EventId>,
+        /// Agent initiating combat (the one whose cascade triggered).
+        attacker: AgentId,
+        /// Agent being attacked.
+        defender: AgentId,
+        /// Shared tile coordinate at combat start.
+        position: (u32, u32),
+        /// Simulation tick at which combat started.
+        tick: u64,
+    },
+
+    /// `CombatSystem` applied `DAMAGE_PER_COMBAT_TICK` to the defender.
+    /// `parent` links to the originating `CombatStarted`. `hp_after`
+    /// snapshots the defender's HP after damage (saturates at 0.0).
+    /// NOTE: field is `hp_after: f64`, NOT `defender_died: bool` — P9β-3.
+    /// V7 Phase 9-β / P9β-1.
+    CombatCompleted {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the originating `CombatStarted`.
+        parent: Option<EventId>,
+        /// Agent that initiated combat.
+        attacker: AgentId,
+        /// Agent that received damage.
+        defender: AgentId,
+        /// Shared tile coordinate at completion.
+        position: (u32, u32),
+        /// Defender HP after `apply_damage(DAMAGE_PER_COMBAT_TICK)`
+        /// (saturated at 0.0). P9β-3: this is NOT `defender_died: bool`.
+        hp_after: f64,
+        /// Simulation tick at which damage was applied.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -354,7 +411,9 @@ impl CausalEvent {
             | CausalEvent::ConstructionCompleted { id, .. }
             | CausalEvent::SocialInteractionStarted { id, .. }
             | CausalEvent::SocialInteractionCompleted { id, .. }
-            | CausalEvent::MemoryRecalled { id, .. } => *id,
+            | CausalEvent::MemoryRecalled { id, .. }
+            | CausalEvent::CombatStarted { id, .. }
+            | CausalEvent::CombatCompleted { id, .. } => *id,
         }
     }
 
@@ -379,7 +438,9 @@ impl CausalEvent {
             | CausalEvent::ConstructionCompleted { parent, .. }
             | CausalEvent::SocialInteractionStarted { parent, .. }
             | CausalEvent::SocialInteractionCompleted { parent, .. }
-            | CausalEvent::MemoryRecalled { parent, .. } => *parent,
+            | CausalEvent::MemoryRecalled { parent, .. }
+            | CausalEvent::CombatStarted { parent, .. }
+            | CausalEvent::CombatCompleted { parent, .. } => *parent,
         }
     }
 
@@ -394,7 +455,9 @@ impl CausalEvent {
             | CausalEvent::ConstructionCompleted { tick, .. }
             | CausalEvent::SocialInteractionStarted { tick, .. }
             | CausalEvent::SocialInteractionCompleted { tick, .. }
-            | CausalEvent::MemoryRecalled { tick, .. } => *tick,
+            | CausalEvent::MemoryRecalled { tick, .. }
+            | CausalEvent::CombatStarted { tick, .. }
+            | CausalEvent::CombatCompleted { tick, .. } => *tick,
         }
     }
 
@@ -411,7 +474,9 @@ impl CausalEvent {
             | CausalEvent::ConstructionCompleted { .. }
             | CausalEvent::SocialInteractionStarted { .. }
             | CausalEvent::SocialInteractionCompleted { .. }
-            | CausalEvent::MemoryRecalled { .. } => None,
+            | CausalEvent::MemoryRecalled { .. }
+            | CausalEvent::CombatStarted { .. }
+            | CausalEvent::CombatCompleted { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

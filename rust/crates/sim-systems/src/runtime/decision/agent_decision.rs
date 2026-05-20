@@ -73,6 +73,10 @@ enum CascadeArm {
     Fatigue,
     Construction,
     Social,
+    /// Memory-driven negative combat trigger. A non-natural cascade arm
+    /// activated by `memory_weight_delta` strictly below
+    /// `-BIAS_FLIP_THRESHOLD`. Phase 9-β / P9β-5.
+    Combat,
 }
 
 /// Linear recency factor: 1.0 at `elapsed == 0`, 0.0 at
@@ -108,6 +112,9 @@ fn event_id_matches_arm(
         | (CascadeArm::Social, CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. })
         | (CascadeArm::Social, CausalEvent::SocialInteractionStarted { .. })
         | (CascadeArm::Social, CausalEvent::SocialInteractionCompleted { .. })
+        | (CascadeArm::Combat, CausalEvent::CombatStarted { .. })
+        | (CascadeArm::Combat, CausalEvent::CombatCompleted { .. })
+        | (CascadeArm::Combat, CausalEvent::AgentDecision { reason: DecisionReason::CombatReason, .. })
     )
 }
 
@@ -166,6 +173,7 @@ fn arm_priority_index(arm: CascadeArm) -> u8 {
         CascadeArm::Fatigue => 2,
         CascadeArm::Construction => 3,
         CascadeArm::Social => 4,
+        CascadeArm::Combat => 5,
     }
 }
 
@@ -476,10 +484,123 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 )
                             })
                     } else {
-                        None
+                        // 7th cascade arm: combat. Fires when no higher-
+                        // priority drive is active AND the agent's
+                        // memory_weight_delta for the Combat arm is
+                        // strictly below -BIAS_FLIP_THRESHOLD.
+                        // Requires a co-located idle peer (lowest-AgentId).
+                        // Phase 9-β / P9β-2 / P9β-5.
+                        if let Some(memory) = memory_opt {
+                            let combat_delta = memory_weight_delta(
+                                memory,
+                                CascadeArm::Combat,
+                                tick,
+                                &resources.causal_log,
+                            );
+                            if combat_delta < -BIAS_FLIP_THRESHOLD {
+                                all_idle_peers_by_pos
+                                    .get(&(pos.x, pos.y))
+                                    .and_then(|peers| {
+                                        peers
+                                            .iter()
+                                            .filter(|id| **id != agent.id)
+                                            .min()
+                                            .copied()
+                                    })
+                                    .map(|enemy_id| {
+                                        (
+                                            TargetKind::Agent(enemy_id),
+                                            DecisionReason::CombatReason,
+                                        )
+                                    })
+                            } else {
+                                None
+                            }
+                        } else {
+                            None
+                        }
                     };
 
                     if let Some((natural_target, natural_reason)) = breached {
+                        // Phase 9-β / P9β-1 — combat arm early-exit handler.
+                        // Combat bypasses the memory-bias flip machinery
+                        // (it IS a memory-driven trigger) and transitions
+                        // directly to Consuming{Agent}, emitting its own
+                        // MemoryRecalled + AgentDecision{CombatReason}
+                        // + (smaller-id only) CombatStarted causal chain.
+                        if natural_reason == DecisionReason::CombatReason {
+                            if let TargetKind::Agent(enemy_id) = natural_target {
+                                let Some(memory) = memory_opt else {
+                                    continue; // defensive — combat arm required memory
+                                };
+                                let Some(recalled_event) = top_contributor_entry(
+                                    memory,
+                                    CascadeArm::Combat,
+                                    tick,
+                                    &resources.causal_log,
+                                ) else {
+                                    continue; // top contributor evicted between scoring and emission
+                                };
+                                let recall_parent = resources
+                                    .causal_log
+                                    .lookup(recalled_event)
+                                    .and_then(|e| e.parent());
+                                let recall_id = resources.issue_event_id();
+                                resources.causal_log.push(
+                                    tile_idx,
+                                    CausalEvent::MemoryRecalled {
+                                        id: recall_id,
+                                        parent: recall_parent,
+                                        agent: agent.id,
+                                        recalled_event,
+                                        triggered_by: MemoryRecallTrigger::CombatContext {
+                                            agent_id: enemy_id,
+                                        },
+                                        tick,
+                                    },
+                                );
+                                let decision_id = resources.issue_event_id();
+                                resources.causal_log.push(
+                                    tile_idx,
+                                    CausalEvent::AgentDecision {
+                                        id: decision_id,
+                                        parent: Some(recall_id),
+                                        agent: agent.id,
+                                        position: (pos.x, pos.y),
+                                        reason: DecisionReason::CombatReason,
+                                        tick,
+                                    },
+                                );
+                                // Emit CombatStarted once per pair — only
+                                // from the smaller AgentId.
+                                if agent.id < enemy_id {
+                                    let started_id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::CombatStarted {
+                                            id: started_id,
+                                            parent: Some(decision_id),
+                                            attacker: agent.id,
+                                            defender: enemy_id,
+                                            position: (pos.x, pos.y),
+                                            tick,
+                                        },
+                                    );
+                                }
+                                // Direct Idle → Consuming{Agent} transition
+                                // (no Seeking step). Insert canonical pair.
+                                *state = AgentState::Consuming {
+                                    target: TargetKind::Agent(enemy_id),
+                                };
+                                let canonical = if agent.id < enemy_id {
+                                    (agent.id, enemy_id)
+                                } else {
+                                    (enemy_id, agent.id)
+                                };
+                                resources.combat_pairs.insert(canonical);
+                            }
+                            continue;
+                        }
                         // V7 Phase 8-β cascade-bias check (P8β-MOD-2). Only
                         // performed when the agent has a Memory component
                         // AND at least one non-natural-winner arm is also
@@ -492,6 +613,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                             DecisionReason::ConstructionReason => CascadeArm::Construction,
                             DecisionReason::SocialReason => CascadeArm::Social,
                             DecisionReason::MemoryReason => CascadeArm::Construction,
+                            // Unreachable in practice — CombatReason hits
+                            // `continue` above. Added for exhaustiveness.
+                            DecisionReason::CombatReason => CascadeArm::Combat,
                         };
 
                         // Build the (arm, target) eligibility set for the

@@ -33,7 +33,7 @@ use sim_core::components::{Agent, AgentId, Position, RelationshipKey, Relationsh
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// FFI-originated event: a building was placed at `position` with influence
@@ -156,6 +156,20 @@ pub struct SimResources {
     /// removed on completion or asymmetric-partner fallback. Starts empty.
     pub interaction_progress: HashMap<RelationshipKey, u32>,
 
+    /// Active combat pairs for the current tick. Keys are canonical
+    /// `(smaller AgentId, larger AgentId)` tuples inserted by
+    /// `AgentDecisionSystem` when the combat cascade arm fires.
+    /// `CombatSystem` (priority 137) consumes and removes completed pairs.
+    /// Phase 9-β / P9β-1.
+    pub combat_pairs: HashSet<(AgentId, AgentId)>,
+
+    /// Per-pair combat progress counter. Keyed by the same canonical
+    /// `(smaller, larger)` tuple as `combat_pairs`. `CombatSystem`
+    /// increments each pair's counter until it reaches
+    /// `REQUIRED_COMBAT_PROGRESS`, at which point `CombatCompleted` fires.
+    /// Phase 9-β / P9β-1.
+    pub combat_progress: HashMap<(AgentId, AgentId), u32>,
+
     /// Current simulated time-of-day in `[0.0, 24.0)` (V7 Phase 5-γ /
     /// P5γ-2). Refreshed by [`SimEngine::tick`] before systems run,
     /// derived deterministically from `current_tick % ticks_per_day`.
@@ -194,6 +208,8 @@ impl SimResources {
             sleep_tiles: HashMap::new(),
             relationships: HashMap::new(),
             interaction_progress: HashMap::new(),
+            combat_pairs: HashSet::new(),
+            combat_progress: HashMap::new(),
             time_of_day: 0.0,
             ticks_per_day: 1440,
         }

@@ -160,6 +160,19 @@ pub fn register_memory_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::memory::MemorySystem::new()));
 }
 
+/// Register the Phase 9-β combat stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 137 : [`runtime::combat::CombatSystem`]
+///
+/// Slots strictly after `MemorySystem` (priority 136). Owns agent
+/// `Consuming { Agent(_) }` exit semantics for combat pairs tracked in
+/// `SimResources::combat_pairs`. `AgentDecisionSystem` (priority 125)
+/// owns the Idle → Consuming transition and `CombatStarted` emission.
+pub fn register_combat_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::combat::CombatSystem::new()));
+}
+
 /// V7 Phase 7-β / P7β-15 — canonical production system registration.
 ///
 /// Single source of truth for "what systems run in a production engine":
@@ -179,6 +192,8 @@ pub fn register_memory_systems(engine: &mut SimEngine) {
 /// - 133  ConstructionSystem
 /// - 134  SocialInteractionSystem
 /// - 135  SocialDecaySystem (Phase 7-β re-plan)
+/// - 136  MemorySystem (Phase 8-β)
+/// - 137  CombatSystem (Phase 9-β)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -191,4 +206,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_construction_systems(engine);
     register_social_systems(engine);
     register_memory_systems(engine);
+    register_combat_systems(engine);
 }

@@ -184,6 +184,7 @@ fn classify_event(
             DecisionReason::ConstructionReason => Some((0.5, 0.1, vec![*agent])),
             DecisionReason::SocialReason => Some((0.5, 0.2, vec![*agent])),
             DecisionReason::MemoryReason => None, // anti-recursion
+            DecisionReason::CombatReason => None, // Phase 9-β anti-recursion
         },
         CausalEvent::ConstructionStarted { parent, .. } => {
             // Parent walk: the originating AgentDecision{ConstructionReason}
@@ -220,6 +221,15 @@ fn classify_event(
         }
         CausalEvent::SocialInteractionCompleted { agents, .. } => {
             Some((0.8, 0.7, vec![agents.0, agents.1]))
+        }
+        // Phase 9-β encoding: CombatStarted → attacker only (defender
+        // did not initiate); CombatCompleted → both parties (mirrors
+        // SocialInteraction pattern, negative valence — hostile memory).
+        CausalEvent::CombatStarted { attacker, .. } => {
+            Some((0.8, -0.6, vec![*attacker]))
+        }
+        CausalEvent::CombatCompleted { attacker, defender, .. } => {
+            Some((0.9, -0.8, vec![*attacker, *defender]))
         }
         CausalEvent::BuildingPlaced { .. }
         | CausalEvent::StampDirty { .. }

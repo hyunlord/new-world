@@ -113,6 +113,7 @@ fn harness_p6_beta_a2_decision_reason_enumeration_and_discriminator() {
             DecisionReason::ConstructionReason => {}
             DecisionReason::SocialReason => {}
             DecisionReason::MemoryReason => {}
+            DecisionReason::CombatReason => {}
         }
     }
     assert_eq!(
@@ -170,6 +171,8 @@ fn harness_p6_beta_a3_causal_event_enumeration_accessors_and_channel() {
             CausalEvent::SocialInteractionStarted { .. } => "social_interaction_started",
             CausalEvent::SocialInteractionCompleted { .. } => "social_interaction_completed",
             CausalEvent::MemoryRecalled { .. } => "memory_recalled",
+            CausalEvent::CombatStarted { .. } => "combat_started",
+            CausalEvent::CombatCompleted { .. } => "combat_completed",
         }
     }
     assert_eq!(classify(&started), "construction_started");
@@ -702,6 +705,8 @@ fn harness_p6_beta_a9_full_4_link_causal_chain_walk() {
             CausalEvent::SocialInteractionStarted { .. } => "social_interaction_started",
             CausalEvent::SocialInteractionCompleted { .. } => "social_interaction_completed",
             CausalEvent::MemoryRecalled { .. } => "memory_recalled",
+            CausalEvent::CombatStarted { .. } => "combat_started",
+            CausalEvent::CombatCompleted { .. } => "combat_completed",
         })
         .collect();
 
