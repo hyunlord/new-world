@@ -37,7 +37,7 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId};
 use sim_core::components::{
-    Agent, AgentState, Hunger, Memory, Position, Sleep, Social, Thirst,
+    Agent, AgentState, Hunger, Memory, Position, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -238,6 +238,19 @@ impl WorldSimNode {
     fn get_agent_snapshot(&self) -> VarDictionary {
         let rows = collect_agent_snapshot(&self.engine.world);
         agent_rows_to_dict(&rows)
+    }
+
+    /// P7-δ FFI — return every known relationship pair (familiarity > 0
+    /// OR hostility > 0) as a flat `Array<Dictionary>`. Each dict has
+    /// keys `id_a: i64`, `id_b: i64`, `familiarity: f64`, `hostility: f64`,
+    /// with `id_a < id_b` (canonical key ordering).
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_relationship_snapshot`] (Bridge Identity Contract).
+    #[func]
+    fn get_relationship_snapshot(&self) -> VarArray {
+        let rows = collect_relationship_snapshot(&self.engine.resources);
+        relationship_rows_to_variant_array(&rows)
     }
 }
 
@@ -752,9 +765,15 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
 
 /// Single row of the agent snapshot returned by [`collect_agent_snapshot`].
 ///
-/// Stable serialisation contract for the V7 Phase 4-γ FFI: the hecs
-/// entity index, plus the agent's current tile position. Three parallel
-/// fields → three parallel `PackedArray`s on the Godot side.
+/// V7 Phase 7-δ extends the row with `state_tag: u8` so the AgentRenderer
+/// can tint socializing agents distinctly from Idle / Seeking / non-social
+/// Consuming agents.
+///
+/// Tag table (locked, §2-A-1):
+///   - `0` = `AgentState::Idle`
+///   - `1` = `AgentState::Seeking { .. }` (any `TargetKind`)
+///   - `2` = `AgentState::Consuming { target: TargetKind::Agent(_) }`
+///   - `3` = `AgentState::Consuming { .. }` (any non-`Agent` `TargetKind`)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct AgentSnapshotRow {
     /// `hecs::Entity::to_bits().get()` — stable id within a single
@@ -764,61 +783,83 @@ pub struct AgentSnapshotRow {
     pub x: u32,
     /// Tile-y coordinate (post-tick if called after `engine.tick()`).
     pub y: u32,
+    /// Phase 7-δ: state tag for renderer tint keying. See type doc for the
+    /// locked mapping.
+    pub state_tag: u8,
 }
 
-/// P4-γ pure-Rust collector: iterate the world for `(Agent, Position)`
-/// and return one row per matching entity in hecs query order.
+/// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
+/// `(Agent, Position, AgentState)` and return one row per matching entity
+/// in hecs query order.
 ///
 /// Order across two consecutive calls on an unchanged world is stable
 /// because hecs archetype iteration order is deterministic. Entities
 /// possessing `Position` but *not* `Agent` are excluded by the query
-/// filter (the `(&Agent, &Position)` tuple requires both).
+/// filter (the `(&Agent, &Position, &AgentState)` tuple requires all
+/// three). The `state_tag` value is computed from the same `AgentState`
+/// reference returned by the query — no caching layer is introduced.
 ///
 /// Mirrors `WorldSimNode::get_agent_snapshot` minus the Godot
 /// `PackedArray` marshalling — sim-test exercises this directly without
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (_, pos)) in world.query::<(&Agent, &Position)>().iter() {
+    for (entity, (_, pos, maybe_state)) in world
+        .query::<(&Agent, &Position, Option<&AgentState>)>()
+        .iter()
+    {
+        let state_tag: u8 = match maybe_state {
+            None | Some(AgentState::Idle) => 0,
+            Some(AgentState::Seeking { .. }) => 1,
+            Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
+            Some(AgentState::Consuming { .. }) => 3,
+        };
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
             y: pos.y,
+            state_tag,
         });
     }
     rows
 }
 
-/// Pure-Rust split of `[AgentSnapshotRow]` into three parallel `Vec`s
-/// matching the Godot-side `PackedArray` types (`i64`, `i32`, `i32`).
+/// Pure-Rust split of `[AgentSnapshotRow]` into four parallel `Vec`s
+/// matching the Godot-side `PackedArray` types (`i64`, `i32`, `i32`, `u8`).
 ///
 /// Lengths are equal by construction. Exposed so sim-test can validate
 /// the FFI marshalling invariant without a Godot runtime — `agent_rows_to_dict`
 /// is a thin `Vec → PackedArray` adapter over this function.
-pub fn agent_rows_split(rows: &[AgentSnapshotRow]) -> (Vec<i64>, Vec<i32>, Vec<i32>) {
+pub fn agent_rows_split(
+    rows: &[AgentSnapshotRow],
+) -> (Vec<i64>, Vec<i32>, Vec<i32>, Vec<u8>) {
     let n = rows.len();
     let mut ids = Vec::with_capacity(n);
     let mut xs = Vec::with_capacity(n);
     let mut ys = Vec::with_capacity(n);
+    let mut states = Vec::with_capacity(n);
     for row in rows {
         ids.push(row.entity_bits as i64);
         xs.push(row.x as i32);
         ys.push(row.y as i32);
+        states.push(row.state_tag);
     }
-    (ids, xs, ys)
+    (ids, xs, ys, states)
 }
 
 /// Marshal a [`AgentSnapshotRow`] slice into the FFI dictionary shape
-/// documented on [`WorldSimNode::get_agent_snapshot`]. Three keys, three
+/// documented on [`WorldSimNode::get_agent_snapshot`]. Four keys, four
 /// `PackedArray`s, lengths always equal to `rows.len()`.
 fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
-    let (ids_vec, xs_vec, ys_vec) = agent_rows_split(rows);
+    let (ids_vec, xs_vec, ys_vec, states_vec) = agent_rows_split(rows);
     let mut ids = PackedInt64Array::new();
     let mut xs = PackedInt32Array::new();
     let mut ys = PackedInt32Array::new();
+    let mut states = PackedByteArray::new();
     ids.resize(ids_vec.len());
     xs.resize(xs_vec.len());
     ys.resize(ys_vec.len());
+    states.resize(states_vec.len());
     for (i, v) in ids_vec.iter().enumerate() {
         ids[i] = *v;
     }
@@ -828,11 +869,82 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, v) in ys_vec.iter().enumerate() {
         ys[i] = *v;
     }
+    for (i, v) in states_vec.iter().enumerate() {
+        states[i] = *v;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
     dict.set("ys", ys);
+    dict.set("states", states);
     dict
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// P7-δ: Relationship snapshot FFI surface — pure-Rust collector + helpers
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the relationship snapshot returned by
+/// [`collect_relationship_snapshot`]. Phase 7-δ surfaces this to the
+/// RelationshipState debug overlay.
+///
+/// `id_a < id_b` is guaranteed for every row by the canonical ordering
+/// invariant of [`sim_core::components::RelationshipKey::new`].
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct RelationshipSnapshotRow {
+    /// Smaller `AgentId` in the canonical pair key, as `i64` to match the
+    /// Godot Variant integer width.
+    pub id_a: i64,
+    /// Larger `AgentId` in the canonical pair key.
+    pub id_b: i64,
+    /// Pair familiarity scalar in `[0.0, 1.0]`.
+    pub familiarity: f64,
+    /// Pair hostility scalar in `[0.0, 1.0]`.
+    pub hostility: f64,
+}
+
+/// P7-δ pure-Rust collector: enumerate every entry in
+/// `resources.relationships` whose `familiarity > 0.0` **or** `hostility > 0.0`.
+///
+/// The strict `> 0.0` filter — not `!= 0.0` — excludes default-initialized
+/// pairs (familiarity = 0.0, hostility = 0.0) AND negative-value pairs
+/// (which `RelationshipState::bump` does not produce in practice but the
+/// underlying `f64` type permits).
+///
+/// Reads only `&SimResources`, so the snapshot cannot mutate sim state.
+pub fn collect_relationship_snapshot(
+    resources: &SimResources,
+) -> Vec<RelationshipSnapshotRow> {
+    resources
+        .relationships
+        .iter()
+        .filter(|(_, v)| v.familiarity > 0.0 || v.hostility > 0.0)
+        .map(|(k, v)| RelationshipSnapshotRow {
+            id_a: k.smaller() as i64,
+            id_b: k.larger() as i64,
+            familiarity: v.familiarity,
+            hostility: v.hostility,
+        })
+        .collect()
+}
+
+/// Pack a relationship snapshot row into a Godot `Dictionary`.
+fn relationship_row_to_dict(row: &RelationshipSnapshotRow) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("id_a", row.id_a);
+    dict.set("id_b", row.id_b);
+    dict.set("familiarity", row.familiarity);
+    dict.set("hostility", row.hostility);
+    dict
+}
+
+/// Pack a slice of [`RelationshipSnapshotRow`] into a Godot `VarArray`.
+fn relationship_rows_to_variant_array(rows: &[RelationshipSnapshotRow]) -> VarArray {
+    let mut arr = VarArray::new();
+    for row in rows {
+        arr.push(&Variant::from(relationship_row_to_dict(row)));
+    }
+    arr
 }
 
 /// P4-γ bootstrap: spawn `BOOTSTRAP_AGENT_AXIS²` agents on a deterministic

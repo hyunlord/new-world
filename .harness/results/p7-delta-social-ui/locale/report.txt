@@ -1,0 +1,13 @@
+[locale-check] Scanning code and locale files...
+
+=== LOCALE KEY COUNTS ===
+Code (Locale.ltr):    1
+Fluent ko/en:         4727 / 4727
+JSON ko/en:           3874 / 3874
+Registry:             5121
+Compiled:             5116
+
+=== ISSUES ===
+=== SUMMARY ===
+✅ No critical locale issues found
+LOCALE_CHECK_PASS

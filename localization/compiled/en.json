@@ -5155,6 +5155,13 @@
     "ZODIAC_SAGITTARIUS": "Sagittarius",
     "ZODIAC_SCORPIO": "Scorpio",
     "ZODIAC_TAURUS": "Taurus",
-    "ZODIAC_VIRGO": "Virgo"
+    "ZODIAC_VIRGO": "Virgo",
+    "UI_CAUSAL_REASON_SOCIAL": "Social need",
+    "UI_CAUSAL_EVENT_AGENT_DECISION": "Agent decision",
+    "UI_CAUSAL_EVENT_SOCIAL_INTERACTION_STARTED": "Interaction started",
+    "UI_CAUSAL_EVENT_SOCIAL_INTERACTION_COMPLETED": "Interaction completed",
+    "UI_AGENT_STATE_SOCIALIZING": "Socializing",
+    "UI_RELATIONSHIP_PANEL_TITLE": "Relationships",
+    "UI_RELATIONSHIP_PAIR_ROW": "[REL]"
   }
 }

@@ -223,13 +223,14 @@ fn harness_p4_gamma_a10_three_parallel_arrays_length_and_values() {
             e.spawn_agent(i % W, i % H);
         }
         let rows = collect_agent_snapshot(&e.world);
-        let (ids, xs, ys) = agent_rows_split(&rows);
+        let (ids, xs, ys, states) = agent_rows_split(&rows);
 
-        // Length invariant on all three arrays.
+        // Length invariant on all four arrays.
         assert_eq!(rows.len(), n as usize, "row count must equal n = {}", n);
         assert_eq!(ids.len(), n as usize, "ids length must equal n = {}", n);
         assert_eq!(xs.len(), n as usize, "xs length must equal n = {}", n);
         assert_eq!(ys.len(), n as usize, "ys length must equal n = {}", n);
+        assert_eq!(states.len(), n as usize, "states length must equal n = {}", n);
 
         // Per-index value identity: ids/xs/ys must mirror row fields.
         for (i, row) in rows.iter().enumerate() {

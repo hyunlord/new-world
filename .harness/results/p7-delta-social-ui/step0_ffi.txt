@@ -1,0 +1,3 @@
+[FFI Chain] SKIP: /Users/rexxa/github/new-world-wt/lead/scripts/core/simulation/sim_bridge.gd absent (V7 reset early phase)
+[FFI Chain] Will auto-activate when GDScript proxy layer (Phase 3) lands
+FFI CHAIN: OK (SKIP — V7 reset, no proxy chain to verify)
