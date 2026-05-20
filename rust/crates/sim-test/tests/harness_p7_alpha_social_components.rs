@@ -436,13 +436,15 @@ fn harness_p7_alpha_a21_bump_sanitises_pathological() {
     }
 }
 
-// ─── A22: RelationshipState field set — only {familiarity} ────────────
+// ─── A22: RelationshipState field set — {familiarity, hostility} ──────
 #[test]
 fn harness_p7_alpha_a22_relationship_state_field_set_audit() {
     let s = RelationshipState::new();
-    // Destructuring forces field set to be exactly {familiarity}.
-    let RelationshipState { familiarity } = s;
+    // Destructuring forces field set; Phase 9-α legitimately adds
+    // `hostility` per .harness/plans/phase9.md §3 P9α-2.
+    let RelationshipState { familiarity, hostility } = s;
     assert_eq!(familiarity.to_bits(), 0.0_f64.to_bits());
+    assert_eq!(hostility.to_bits(), 0.0_f64.to_bits());
 }
 
 // ─── A23: RelationshipKey + RelationshipState serde RON round-trip ────

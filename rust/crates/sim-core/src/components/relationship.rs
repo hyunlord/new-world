@@ -18,6 +18,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::components::agent::AgentId;
 
+/// Hostility bump applied per `CombatCompleted` event (Phase 9-β).
+/// Mirrors `FAMILIARITY_BUMP = 0.1` from Phase 7-β in
+/// `social_interaction_system.rs`.
+pub const HOSTILITY_BUMP: f64 = 0.1;
+
 /// Canonicalised key for a per-pair relationship lookup.
 ///
 /// [`RelationshipKey::new`] always orders the smaller [`AgentId`] first.
@@ -60,6 +65,10 @@ impl RelationshipKey {
 pub struct RelationshipState {
     /// Pair familiarity scalar. Always within `[0.0, SATURATION]`.
     pub familiarity: f64,
+    /// Pair hostility scalar. Always within `[0.0, SATURATION]`. Phase 9-α
+    /// adds this axis; Phase 9-β `CombatSystem` advances it by
+    /// `HOSTILITY_BUMP` per completed `CombatCompleted` event.
+    pub hostility: f64,
 }
 
 impl RelationshipState {
@@ -68,10 +77,14 @@ impl RelationshipState {
     /// normalised `[0, 1]` scalar.
     pub const SATURATION: f64 = 1.0;
 
-    /// Construct a fresh state with `familiarity = 0.0`. Two agents
-    /// who have never interacted are strangers.
+    /// Construct a fresh state with `familiarity = 0.0` and
+    /// `hostility = 0.0`. Two agents who have never interacted are
+    /// strangers — neither friendly nor hostile.
     pub fn new() -> Self {
-        Self { familiarity: 0.0 }
+        Self {
+            familiarity: 0.0,
+            hostility: 0.0,
+        }
     }
 
     /// Saturating add: `familiarity = clamp(familiarity + amount,
@@ -83,6 +96,17 @@ impl RelationshipState {
             return;
         }
         self.familiarity = (self.familiarity + amount).clamp(0.0, Self::SATURATION);
+    }
+
+    /// Saturating add to hostility:
+    /// `hostility = clamp(hostility + amount, 0.0, SATURATION)`.
+    /// `NaN` `amount` is a no-op (mirrors [`Self::bump`] semantics).
+    /// Mirrors [`Self::bump`] for the hostile axis added in Phase 9-α.
+    pub fn bump_hostility(&mut self, amount: f64) {
+        if amount.is_nan() {
+            return;
+        }
+        self.hostility = (self.hostility + amount).clamp(0.0, Self::SATURATION);
     }
 }
 
@@ -187,8 +211,31 @@ mod tests {
     fn state_serde_round_trip() {
         let mut s = RelationshipState::new();
         s.bump(1.0 / 3.0);
+        s.bump_hostility(1.0 / 7.0);
         let encoded = ron::to_string(&s).unwrap();
         let decoded: RelationshipState = ron::from_str(&encoded).unwrap();
         assert_eq!(decoded.familiarity.to_bits(), s.familiarity.to_bits());
+        assert_eq!(decoded.hostility.to_bits(), s.hostility.to_bits());
+    }
+
+    #[test]
+    fn bump_hostility_accumulates_and_saturates() {
+        let mut s = RelationshipState::new();
+        s.bump_hostility(0.5);
+        s.bump_hostility(0.5);
+        assert_eq!(s.hostility, RelationshipState::SATURATION);
+    }
+
+    #[test]
+    fn bump_hostility_nan_no_op() {
+        let mut s = RelationshipState::new();
+        s.bump_hostility(0.3);
+        s.bump_hostility(f64::NAN);
+        assert_eq!(s.hostility, 0.3);
+    }
+
+    #[test]
+    fn hostility_bump_constant_value() {
+        assert_eq!(HOSTILITY_BUMP, 0.1);
     }
 }
