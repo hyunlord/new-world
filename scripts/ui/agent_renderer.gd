@@ -27,9 +27,40 @@ const PALETTE_HAIR_COLS := 8
 const PALETTE_BODY_COLS := 4
 const PALETTE_SKIN_COLS := 8
 
+# V7 Phase 8-δ — memory recall visual indicator.
+# When a `memory_recalled` causal event fires for an agent, mark it
+# briefly so the renderer can apply a transient visual cue (~0.5–1.0s
+# wall-time, scale boost so the cue is visible without a shader edit
+# and without extending the AgentSnapshotRow `state_tag` byte —
+# preserving the Phase 7-δ A22 contract `state_tag ∈ {0,1,2,3}`).
+const RECALL_CUE_FRAMES := 36         # ~0.6s at 60 FPS — within plan's [0.5, 1.0]
+const RECALL_CUE_SCALE_BOOST := 1.25  # 25% scale pulse, clearly visible
+const RECALL_CUE_TINT := Color(0.45, 0.65, 1.0, 1.0)  # blue cue (for future shader use)
+
 var world_sim: WorldSimNode
 var multi_mesh_inst: MultiMeshInstance2D
 var multi_mesh: MultiMesh
+
+# V7 Phase 8-δ (code-attempt 3) — domain note: this dictionary is keyed
+# by `AgentId` (the `Agent.id` field surfaced as `agent_ids` in the
+# snapshot dict), NOT by `entity_bits`. `CausalEvent::MemoryRecalled.agent`
+# is an `AgentId` and the FFI dict serialises it as `"agent_id"`, so the
+# producer (`_ingest_memory_recalls` → `mark_agent_recalling(agent_id)`)
+# and the consumer (`_process` → `_recalling_agents.has(agent_ids[i])`)
+# both use the AgentId domain. Mixing this with `ids[i]` (entity bits)
+# would silently break the cue, which is the regression code-attempt 2
+# shipped.
+var _recalling_agents: Dictionary = {}
+
+# V7 Phase 8-δ — id-based dedupe set for `memory_recalled` causal events
+# observed via `WorldSimNode.get_tile_causal_history()`. A given event
+# `id` must fire `mark_agent_recalling()` exactly once even though the
+# tile's causal ring keeps returning it across frames. Bounded prune at
+# `_SEEN_RECALL_MAX` to cap GDScript memory; oldest entries are dropped
+# wholesale because causal-event ids are monotonically increasing within
+# a session so re-observing an evicted id is unlikely.
+const _SEEN_RECALL_MAX := 512
+var _seen_recall_event_ids: Dictionary = {}
 
 func _ready() -> void:
 	print("AgentRenderer ready (V7 Phase 4-γ — MultiMeshInstance2D)")
@@ -66,12 +97,21 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if world_sim == null or multi_mesh == null:
 		return
+	# V7 Phase 8-δ — decrement / clear expired recall-cue timers BEFORE
+	# building this frame's transforms so an entry that just dropped to 0
+	# does not render with the boosted scale on its final frame.
+	_clear_expired_recalling()
 	var snap: Dictionary = world_sim.get_agent_snapshot()
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	# V7 Phase 8-δ (code-attempt 3) — parallel array of `Agent.id` per row.
+	# Used as the lookup key for `_recalling_agents` so the renderer's check
+	# domain matches the producer's mark domain (both AgentId, not
+	# entity_bits). See header comment on `_recalling_agents`.
+	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var n: int = ids.size()
-	if xs.size() != n or ys.size() != n:
+	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
 		return
 	if multi_mesh.instance_count != n:
@@ -81,9 +121,104 @@ func _process(_delta: float) -> void:
 		var tile_y: int = ys[i]
 		var px: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE + TILE_SIZE / 2)
 		var py: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE + TILE_SIZE / 2)
-		var xform := Transform2D(0.0, Vector2(SPRITE_SCALE, SPRITE_SCALE), 0.0, Vector2(px, py))
+		# V7 Phase 8-δ — boost the per-instance scale by RECALL_CUE_SCALE_BOOST
+		# while the agent is in the recall window. Visible without a shader
+		# change. NOT tied to `state_tag` so Phase 7-δ A22 stays intact.
+		# Lookup keyed by `agent_ids[i]` (AgentId) so it matches the FFI
+		# `event.agent_id` value used by `_ingest_memory_recalls`.
+		var scale_mul: float = SPRITE_SCALE
+		if _recalling_agents.has(agent_ids[i]):
+			scale_mul = SPRITE_SCALE * RECALL_CUE_SCALE_BOOST
+		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
 		multi_mesh.set_instance_transform_2d(i, xform)
 		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i]))
+	# V7 Phase 8-δ — after rendering this frame, ingest fresh
+	# `memory_recalled` events from the causal log so the next frame can
+	# pulse the cue. We poll each unique tile occupied by an agent because
+	# WorldSimNode does not (yet) emit a Godot signal for causal events;
+	# the tile causal history is the canonical source. Dedupe by event id
+	# so a single recall fires `mark_agent_recalling()` exactly once.
+	_ingest_memory_recalls(ids, xs, ys, n)
+
+# V7 Phase 8-δ — public API: an external dispatcher (currently
+# `_ingest_memory_recalls` reading `memory_recalled` causal events, or
+# any future signal-based dispatcher) calls this once when a recall
+# fires for a given agent. The timer is overwritten if it was already
+# active, so back-to-back recalls extend the cue rather than ending it
+# early.
+#
+# Domain: `agent_id` is the `AgentId` (the `Agent.id` field, surfaced as
+# `agent_ids` in the snapshot dict and as `agent_id` in the FFI causal
+# event dict). NOT `entity_bits`. Mixing the two domains was the
+# regression code-attempt 2 shipped.
+func mark_agent_recalling(agent_id: int) -> void:
+	_recalling_agents[agent_id] = RECALL_CUE_FRAMES
+
+# V7 Phase 8-δ — read-only accessor used by tests and the SimulationBus
+# relay to confirm a cue is active. Returns 0 when the agent has no
+# active recall cue. Domain: `agent_id` is `AgentId`, see
+# `mark_agent_recalling`.
+func recall_cue_remaining(agent_id: int) -> int:
+	return int(_recalling_agents.get(agent_id, 0))
+
+# V7 Phase 8-δ — poll the tile causal log for each unique agent tile
+# this frame. Any `memory_recalled` event whose id we have not yet seen
+# is dispatched via `mark_agent_recalling()` for the event's `agent_id`.
+# The dedupe set is bounded so a long session does not grow GDScript
+# memory without limit.
+func _ingest_memory_recalls(ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
+	if world_sim == null:
+		return
+	if not world_sim.has_method("get_tile_causal_history"):
+		return
+	# Collect unique tile coordinates so we never query the same tile twice
+	# per frame. With 10K agents and few colocated tiles this stays small.
+	var visited_tiles: Dictionary = {}
+	for i in n:
+		var key: int = (int(xs[i]) << 20) | int(ys[i])
+		if visited_tiles.has(key):
+			continue
+		visited_tiles[key] = true
+		var history: Array = world_sim.get_tile_causal_history(int(xs[i]), int(ys[i]))
+		for ev in history:
+			if not (ev is Dictionary):
+				continue
+			var dev: Dictionary = ev
+			if String(dev.get("kind", "")) != "memory_recalled":
+				continue
+			var event_id: int = int(dev.get("id", -1))
+			if event_id < 0:
+				continue
+			if _seen_recall_event_ids.has(event_id):
+				continue
+			# First sighting of this recall — register the dedupe key and
+			# fire the cue for the recalling agent.
+			_seen_recall_event_ids[event_id] = true
+			var agent_id: int = int(dev.get("agent_id", -1))
+			if agent_id >= 0:
+				# `agent_id` is `Entity::to_bits().get()` — the same key
+				# used by `_recalling_agents` / `mark_agent_recalling()`.
+				mark_agent_recalling(agent_id)
+	# Bounded prune: when the dedupe set grows past _SEEN_RECALL_MAX we
+	# clear it wholesale. Causal-event ids are monotonically increasing in
+	# a session so any reused id post-clear is statistically unlikely.
+	if _seen_recall_event_ids.size() > _SEEN_RECALL_MAX:
+		_seen_recall_event_ids.clear()
+
+func _clear_expired_recalling() -> void:
+	# Decrement every active recall-cue timer; entries that hit zero are
+	# erased so the boost scale stops being applied on the next frame.
+	if _recalling_agents.is_empty():
+		return
+	var expired: Array = []
+	for eid in _recalling_agents:
+		var remaining: int = int(_recalling_agents[eid]) - 1
+		if remaining <= 0:
+			expired.append(eid)
+		else:
+			_recalling_agents[eid] = remaining
+	for eid in expired:
+		_recalling_agents.erase(eid)
 
 func _palette_for_id(eid: int) -> Color:
 	# Hash splat — three independent multipliers give visually distinct

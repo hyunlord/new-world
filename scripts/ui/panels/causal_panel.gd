@@ -94,6 +94,46 @@ func _format_event(ev: Dictionary) -> String:
 			var old_v: float = float(ev.get("old_value", 0.0))
 			var new_v: float = float(ev.get("new_value", 0.0))
 			extra = " " + _channel_name(ch) + " " + ("%.2f" % old_v) + " → " + ("%.2f" % new_v)
+		"agent_decision":
+			# V7 Phase 8-δ — surface MemoryReason decisions distinctly so
+			# the user can see which decisions were memory-flipped vs.
+			# natural-cascade outcomes.
+			var reason: String = ev.get("reason", "")
+			if reason == "memory_reason":
+				kind_label = _ltr("UI_CAUSAL_REASON_MEMORY")
+			else:
+				kind_label = _ltr("UI_CAUSAL_EVENT_AGENT_DECISION")
+				if reason != "":
+					extra = " (" + reason + ")"
+		"memory_recalled":
+			# V7 Phase 8-δ — pick the CASCADE-labelled variant when the
+			# trigger is `cascade_bias` (Phase 8-β scope); otherwise fall
+			# back to the generic recall label. The Phase 9-δ
+			# `combat_context` trigger is intentionally NOT given a
+			# distinct rendering here (out-of-scope per the plan).
+			var triggered_by: String = ev.get("triggered_by", "")
+			if triggered_by == "cascade_bias":
+				kind_label = _ltr("UI_CAUSAL_EVENT_MEMORY_RECALLED_CASCADE")
+			else:
+				kind_label = _ltr("UI_CAUSAL_EVENT_MEMORY_RECALLED")
+			# Append a localized trigger-type label when known.
+			match triggered_by:
+				"cascade_bias":
+					extra = " [" + _ltr("UI_MEMORY_RECALL_TRIGGER_CASCADE") + "]"
+				"similarity_search":
+					extra = " [" + _ltr("UI_MEMORY_RECALL_TRIGGER_SIMILARITY") + "]"
+				"periodic":
+					extra = " [" + _ltr("UI_MEMORY_RECALL_TRIGGER_PERIODIC") + "]"
+			# V7 Phase 8-δ — surface `recalled_event` (the prior event id
+			# brought back by the cascade) when the FFI included it. Lets
+			# the user trace which event drove the recall. The id is
+			# rendered as a bare `#NNNN` literal — no surrounding English
+			# word — to satisfy the Phase 8-δ Locale.ltr contract (plan
+			# Assertion 11: zero hardcoded English in the memory branch).
+			if ev.has("recalled_event"):
+				var rid: int = int(ev.get("recalled_event", -1))
+				if rid >= 0:
+					extra += " #" + str(rid)
 	return "[" + str(tick) + "] " + kind_label + extra
 
 func _channel_name(idx: int) -> String:

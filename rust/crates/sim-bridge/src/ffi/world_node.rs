@@ -35,7 +35,7 @@
 
 use godot::classes::INode;
 use godot::prelude::*;
-use sim_core::causal::{CausalEvent, EventId};
+use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentState, Hunger, Memory, Position, Sleep, Social, TargetKind, Thirst,
 };
@@ -370,6 +370,19 @@ pub struct CausalEventView {
     /// Reason discriminator string (AgentDecision only — Phase 5-β).
     /// One of `"hunger_threshold_breach"`, `"thirst_threshold_breach"`.
     pub reason: Option<&'static str>,
+    /// Memory recall trigger discriminator (MemoryRecalled only — V7
+    /// Phase 8-δ). One of `"cascade_bias"`, `"similarity_search"`,
+    /// `"periodic"`, `"combat_context"`. Surfaced so the GDScript
+    /// CausalPanel can select the correct `UI_MEMORY_RECALL_TRIGGER_*`
+    /// locale key.
+    pub triggered_by: Option<&'static str>,
+    /// `event_id` of the recalled [`MemoryEntry`] that drove the cascade
+    /// flip (MemoryRecalled only — V7 Phase 8-δ). Preserved through the
+    /// FFI so the GDScript CausalPanel can show the recalled event id
+    /// (and a future phase can deep-link into the parent chain).
+    ///
+    /// [`MemoryEntry`]: sim_core::components::MemoryEntry
+    pub recalled_event: Option<EventId>,
 }
 
 impl CausalEventView {
@@ -395,6 +408,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::StampDirty {
                 id,
@@ -415,6 +430,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::InfluenceChanged {
                 id,
@@ -437,6 +454,8 @@ impl CausalEventView {
                 new_value: Some(*new),
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::AgentDecision {
                 id,
@@ -458,6 +477,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: Some(*agent),
                 reason: Some(reason.as_str()),
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::ConstructionStarted {
                 id,
@@ -478,6 +499,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::ConstructionCompleted {
                 id,
@@ -498,6 +521,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::SocialInteractionStarted {
                 id,
@@ -518,6 +543,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::SocialInteractionCompleted {
                 id,
@@ -539,16 +566,20 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
-            // V7 Phase 8-β / P8β-MOD-1 — minimum-viable view of the cascade-
-            // bias recall event. Full FFI shape (recalled_event field,
-            // triggered_by discriminator) lands with Phase 8-δ.
+            // V7 Phase 8-δ — full FFI shape: surfaces `triggered_by` (the
+            // discriminator the GDScript CausalPanel uses to pick the
+            // correct `UI_MEMORY_RECALL_TRIGGER_*` locale key). Phase 8-β
+            // wires only `CascadeBias`; the other variants serialise to
+            // their snake_case discriminator should later phases emit them.
             CausalEvent::MemoryRecalled {
                 id,
                 parent,
                 agent,
-                recalled_event: _,
-                triggered_by: _,
+                recalled_event,
+                triggered_by,
                 tick,
             } => Self {
                 kind: "memory_recalled",
@@ -563,6 +594,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: Some(*agent),
                 reason: None,
+                triggered_by: Some(memory_recall_trigger_str(triggered_by)),
+                recalled_event: Some(*recalled_event),
             },
             // V7 Phase 9-β minimum-viable views. Full FFI shape (defender id,
             // hp_after field) lands with later phases that surface combat UI.
@@ -586,6 +619,8 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: Some(*attacker),
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
             CausalEvent::CombatCompleted {
                 id,
@@ -608,6 +643,8 @@ impl CausalEventView {
                 new_value: Some(*hp_after as f32),
                 agent_id: Some(*attacker),
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
             },
         }
     }
@@ -615,6 +652,123 @@ impl CausalEventView {
 
 fn dirty_region_bounds(region: &DirtyRegion) -> (u32, u32, u32, u32) {
     (region.min_x, region.min_y, region.max_x, region.max_y)
+}
+
+/// V7 Phase 8-δ — stable snake_case discriminator for a
+/// [`MemoryRecallTrigger`] as it crosses the FFI boundary. Lives on the
+/// sim-bridge side (not on `MemoryRecallTrigger` itself) because the wire
+/// format is the FFI's contract with GDScript — the simulation core
+/// proper has no interest in this string mapping.
+///
+/// The GDScript CausalPanel selects its `UI_MEMORY_RECALL_TRIGGER_*` locale
+/// key by `==`-matching on this discriminator, so the literals are part of
+/// the Phase 8-δ locked contract.
+pub(crate) fn memory_recall_trigger_str(trigger: &MemoryRecallTrigger) -> &'static str {
+    match trigger {
+        MemoryRecallTrigger::CascadeBias => "cascade_bias",
+        MemoryRecallTrigger::SimilaritySearch => "similarity_search",
+        MemoryRecallTrigger::Periodic => "periodic",
+        MemoryRecallTrigger::CombatContext { .. } => "combat_context",
+    }
+}
+
+/// V7 Phase 8-δ — pure-Rust mirror of the value types the FFI
+/// [`event_view_to_dict`] embeds in the returned `Dictionary`. Exists so
+/// sim-test (no Godot runtime) can assert the serialised dict shape
+/// independently of `VarDictionary` / `Variant`.
+///
+/// The variant set mirrors exactly what [`event_view_to_dict`] writes:
+/// strings (the discriminator + agent reason / triggered_by), integers
+/// (ids, ticks, agent ids, radii, channels), floats (influence pre/post),
+/// and packed coordinate tuples. Adding a new field to
+/// [`CausalEventView`] must update BOTH this enum and the dict marshaller
+/// in lock-step.
+#[derive(Debug, Clone, PartialEq)]
+pub enum FfiFieldValue {
+    /// String discriminator (e.g. `kind = "memory_recalled"`, `reason =
+    /// "memory_reason"`, `triggered_by = "cascade_bias"`).
+    Str(&'static str),
+    /// Signed 64-bit integer (matches Godot Variant's native int width).
+    I64(i64),
+    /// Signed 32-bit integer (used for tile coordinates, radii, channel
+    /// indices encoded as i32).
+    I32(i32),
+    /// 32-bit float (used for `old`/`new` influence intensities).
+    F32(f32),
+    /// `(x, y)` packed coordinate (`Vector2i` in the VarDictionary).
+    Pos2i(i32, i32),
+    /// `(min_x, min_y, max_x, max_y)` packed region (`Vector4i` in the
+    /// VarDictionary).
+    Region4i(i32, i32, i32, i32),
+}
+
+/// V7 Phase 8-δ — produce the canonical key/value map that
+/// [`event_view_to_dict`] then marshals into a Godot `VarDictionary`.
+///
+/// This is the *source of truth* for the FFI dict schema: anything written
+/// to the VarDictionary is also written here (and vice-versa). Sim-test
+/// asserts against this map directly so the FFI-dict contract is checked
+/// without a Godot runtime. The ordering is insertion-order from a
+/// `BTreeMap` to keep test diffs deterministic; the GDScript side does not
+/// depend on key order.
+///
+/// Key set:
+///   - Always present: `kind`, `id`, `parent` (i64; `-1` denotes `None`),
+///     `tick`.
+///   - Variant-specific: `channel`, `position`, `radius`, `region`, `old`,
+///     `new`, `agent_id`, `reason`, `triggered_by`, `recalled_event` —
+///     present only when the matching `CausalEventView` field is `Some`.
+pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTreeMap<&'static str, FfiFieldValue> {
+    let mut dict = std::collections::BTreeMap::new();
+    dict.insert("kind", FfiFieldValue::Str(view.kind));
+    dict.insert("id", FfiFieldValue::I64(view.id as i64));
+    dict.insert(
+        "parent",
+        FfiFieldValue::I64(view.parent.map(|p| p as i64).unwrap_or(-1)),
+    );
+    dict.insert("tick", FfiFieldValue::I64(view.tick as i64));
+    if let Some(ch) = view.channel {
+        dict.insert("channel", FfiFieldValue::I32(ch as i32));
+    }
+    if let Some((px, py)) = view.position {
+        dict.insert("position", FfiFieldValue::Pos2i(px as i32, py as i32));
+    }
+    if let Some(r) = view.radius {
+        dict.insert("radius", FfiFieldValue::I32(r as i32));
+    }
+    if let Some((min_x, min_y, max_x, max_y)) = view.region {
+        dict.insert(
+            "region",
+            FfiFieldValue::Region4i(
+                min_x as i32,
+                min_y as i32,
+                max_x as i32,
+                max_y as i32,
+            ),
+        );
+    }
+    if let Some(old) = view.old_value {
+        dict.insert("old", FfiFieldValue::F32(old));
+    }
+    if let Some(new) = view.new_value {
+        dict.insert("new", FfiFieldValue::F32(new));
+    }
+    if let Some(agent_id) = view.agent_id {
+        dict.insert("agent_id", FfiFieldValue::I64(agent_id as i64));
+    }
+    if let Some(reason) = view.reason {
+        dict.insert("reason", FfiFieldValue::Str(reason));
+    }
+    if let Some(triggered_by) = view.triggered_by {
+        dict.insert("triggered_by", FfiFieldValue::Str(triggered_by));
+    }
+    if let Some(recalled_event) = view.recalled_event {
+        dict.insert(
+            "recalled_event",
+            FfiFieldValue::I64(recalled_event as i64),
+        );
+    }
+    dict
 }
 
 /// γ-1 pure-Rust collector: enumerate every event on `tile_idx` in
@@ -713,38 +867,28 @@ pub fn tile_idx_from_coords(width: u32, height: u32, x: i32, y: i32) -> Option<u
 /// optional fields are encoded as `-1` (`parent`) or omitted entirely
 /// (variant-specific keys appear only for their owning variant). See
 /// [`CausalEventView`] for the full schema.
+///
+/// V7 Phase 8-δ (plan_attempt 3 §A7) — schema single-source-of-truth:
+/// this function delegates to [`event_view_to_owned_dict`] and only
+/// performs the `FfiFieldValue` → `Variant` conversion. Any new key
+/// added to the GDScript-facing dict MUST be added to
+/// [`event_view_to_owned_dict`] (the schema generator); this function
+/// will pick it up automatically. This guarantees the symmetric
+/// difference between the two helpers' key sets is the empty set.
 fn event_view_to_dict(view: &CausalEventView) -> VarDictionary {
+    let owned = event_view_to_owned_dict(view);
     let mut dict = VarDictionary::new();
-    dict.set("kind", view.kind);
-    dict.set("id", view.id as i64);
-    dict.set("parent", view.parent.map(|p| p as i64).unwrap_or(-1));
-    dict.set("tick", view.tick as i64);
-    if let Some(ch) = view.channel {
-        dict.set("channel", ch as i32);
-    }
-    if let Some((px, py)) = view.position {
-        dict.set("position", Vector2i::new(px as i32, py as i32));
-    }
-    if let Some(r) = view.radius {
-        dict.set("radius", r as i32);
-    }
-    if let Some((min_x, min_y, max_x, max_y)) = view.region {
-        dict.set(
-            "region",
-            Vector4i::new(min_x as i32, min_y as i32, max_x as i32, max_y as i32),
-        );
-    }
-    if let Some(old) = view.old_value {
-        dict.set("old", old);
-    }
-    if let Some(new) = view.new_value {
-        dict.set("new", new);
-    }
-    if let Some(agent_id) = view.agent_id {
-        dict.set("agent_id", agent_id as i64);
-    }
-    if let Some(reason) = view.reason {
-        dict.set("reason", reason);
+    for (key, value) in owned {
+        match value {
+            FfiFieldValue::Str(s) => dict.set(key, s),
+            FfiFieldValue::I64(n) => dict.set(key, n),
+            FfiFieldValue::I32(n) => dict.set(key, n),
+            FfiFieldValue::F32(f) => dict.set(key, f),
+            FfiFieldValue::Pos2i(x, y) => dict.set(key, Vector2i::new(x, y)),
+            FfiFieldValue::Region4i(min_x, min_y, max_x, max_y) => {
+                dict.set(key, Vector4i::new(min_x, min_y, max_x, max_y));
+            }
+        }
     }
     dict
 }
@@ -786,6 +930,15 @@ pub struct AgentSnapshotRow {
     /// Phase 7-δ: state tag for renderer tint keying. See type doc for the
     /// locked mapping.
     pub state_tag: u8,
+    /// V7 Phase 8-δ (code-attempt 3) — the `Agent.id` value carried by the
+    /// row's entity. This is the *AgentId* domain (monotonically minted
+    /// `u64`), NOT the `hecs::Entity::to_bits` domain. Surfaced because
+    /// `CausalEvent::MemoryRecalled.agent` is an `AgentId` and the
+    /// renderer needs to map FFI causal events to the corresponding
+    /// rendered row. Preserves `entity_bits` for the Phase 4-γ A5
+    /// contract so existing callers (palette swap, click handling) are
+    /// untouched.
+    pub agent_id: u64,
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -804,7 +957,7 @@ pub struct AgentSnapshotRow {
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (_, pos, maybe_state)) in world
+    for (entity, (agent, pos, maybe_state)) in world
         .query::<(&Agent, &Position, Option<&AgentState>)>()
         .iter()
     {
@@ -819,6 +972,11 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             x: pos.x,
             y: pos.y,
             state_tag,
+            // V7 Phase 8-δ (code-attempt 3) — surface the `Agent.id` so the
+            // renderer can map `CausalEvent::MemoryRecalled.agent` (AgentId)
+            // to the correct rendered row without conflating it with
+            // `entity_bits`.
+            agent_id: agent.id,
         });
     }
     rows
@@ -856,10 +1014,17 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     let mut xs = PackedInt32Array::new();
     let mut ys = PackedInt32Array::new();
     let mut states = PackedByteArray::new();
+    // V7 Phase 8-δ (code-attempt 3) — parallel `agent_ids` array carrying
+    // `Agent.id` per row, used by the renderer to match
+    // `CausalEvent::MemoryRecalled.agent` (AgentId) against the rendered
+    // row. `ids` remains keyed by `entity_bits` for the Phase 4-γ A5
+    // contract (palette swap, click handling).
+    let mut agent_ids = PackedInt64Array::new();
     ids.resize(ids_vec.len());
     xs.resize(xs_vec.len());
     ys.resize(ys_vec.len());
     states.resize(states_vec.len());
+    agent_ids.resize(rows.len());
     for (i, v) in ids_vec.iter().enumerate() {
         ids[i] = *v;
     }
@@ -872,11 +1037,15 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, v) in states_vec.iter().enumerate() {
         states[i] = *v;
     }
+    for (i, row) in rows.iter().enumerate() {
+        agent_ids[i] = row.agent_id as i64;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
     dict.set("ys", ys);
     dict.set("states", states);
+    dict.set("agent_ids", agent_ids);
     dict
 }
 

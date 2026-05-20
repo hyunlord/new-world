@@ -5162,6 +5162,13 @@
     "UI_CAUSAL_EVENT_SOCIAL_INTERACTION_COMPLETED": "Interaction completed",
     "UI_AGENT_STATE_SOCIALIZING": "Socializing",
     "UI_RELATIONSHIP_PANEL_TITLE": "Relationships",
-    "UI_RELATIONSHIP_PAIR_ROW": "[REL]"
+    "UI_RELATIONSHIP_PAIR_ROW": "[REL]",
+    "UI_CAUSAL_REASON_MEMORY": "Memory recall",
+    "UI_CAUSAL_EVENT_MEMORY_RECALLED": "Memory recalled",
+    "UI_CAUSAL_EVENT_MEMORY_RECALLED_CASCADE": "Memory recalled (cascade)",
+    "UI_AGENT_STATE_RECALLING": "Recalling",
+    "UI_MEMORY_RECALL_TRIGGER_CASCADE": "Cascade bias",
+    "UI_MEMORY_RECALL_TRIGGER_SIMILARITY": "Similarity search",
+    "UI_MEMORY_RECALL_TRIGGER_PERIODIC": "Periodic"
   }
 }
