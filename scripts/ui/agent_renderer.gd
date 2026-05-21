@@ -45,6 +45,21 @@ const COMBAT_CUE_FRAMES := 36             # ~0.6s at 60 FPS
 const COMBAT_CUE_SCALE_BOOST := 1.3      # 30% scale pulse
 const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)  # red cue (future shader)
 
+# V7 Phase 11-α — position interpolation (Gaffer accumulator) + state_tag tint.
+const SIM_TICK_DURATION: float = 1.0 / 30.0  # nominal 30 TPS
+# 4-entry tint palette matching the 4 locked state_tag values (0-3):
+#   0=Idle, 1=Seeking, 2=Consuming(Agent)=socializing, 3=Consuming(other)
+const STATE_TINTS: Array = [
+	Color(1.0, 1.0, 1.0, 1.0),   # 0: Idle — white
+	Color(1.0, 0.9, 0.2, 1.0),   # 1: Seeking — yellow
+	Color(0.9, 0.5, 0.8, 1.0),   # 2: Consuming(Agent)/Socializing — pink
+	Color(0.4, 0.9, 0.4, 1.0),   # 3: Consuming(other)/Eating/Building/Sleeping — green
+]
+var _lerp_accumulator: float = 0.0
+var _snapshot_checksum: int = -1
+var _prev_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
+var _curr_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
+
 var world_sim: WorldSimNode
 var multi_mesh_inst: MultiMeshInstance2D
 var multi_mesh: MultiMesh
@@ -87,7 +102,7 @@ func _ready() -> void:
 
 	multi_mesh = MultiMesh.new()
 	multi_mesh.transform_format = MultiMesh.TRANSFORM_2D
-	multi_mesh.use_colors = false
+	multi_mesh.use_colors = true
 	multi_mesh.use_custom_data = true
 	multi_mesh.mesh = quad
 	multi_mesh.instance_count = 0
@@ -107,9 +122,11 @@ func _ready() -> void:
 	multi_mesh_inst.material = mat
 	add_child(multi_mesh_inst)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if world_sim == null or multi_mesh == null:
 		return
+	# V7 Phase 11-α — advance Gaffer accumulator every frame.
+	_lerp_accumulator += delta
 	# V7 Phase 8-δ — decrement / clear expired recall-cue timers BEFORE
 	# building this frame's transforms so an entry that just dropped to 0
 	# does not render with the boosted scale on its final frame.
@@ -119,6 +136,8 @@ func _process(_delta: float) -> void:
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	# V7 Phase 11-α — state_tag per agent (0-3), used for color tint.
+	var states: PackedByteArray = snap.get("states", PackedByteArray())
 	# V7 Phase 8-δ (code-attempt 3) — parallel array of `Agent.id` per row.
 	# Used as the lookup key for `_recalling_agents` so the renderer's check
 	# domain matches the producer's mark domain (both AgentId, not
@@ -128,13 +147,34 @@ func _process(_delta: float) -> void:
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
 		return
+	# V7 Phase 11-α — detect snapshot tick boundary by checksum.
+	# If positions changed, promote curr→prev, rebuild curr, reset accumulator.
+	# Identity (`agent_ids`) participates in the hash so a snapshot whose row
+	# order changes — or whose agent set changes — flips the checksum even
+	# when raw position bytes are unchanged. See A19 in the harness.
+	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
+	if new_checksum != _snapshot_checksum:
+		_snapshot_checksum = new_checksum
+		_prev_positions = _curr_positions.duplicate()
+		_curr_positions.clear()
+		for i in n:
+			var tile_x: int = xs[i]
+			var tile_y: int = ys[i]
+			var cpx: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE + TILE_SIZE / 2)
+			var cpy: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE + TILE_SIZE / 2)
+			_curr_positions[int(agent_ids[i])] = Vector2(cpx, cpy)
+		_lerp_accumulator = 0.0
+	var lerp_t: float = clampf(_lerp_accumulator / SIM_TICK_DURATION, 0.0, 1.0)
 	if multi_mesh.instance_count != n:
 		multi_mesh.instance_count = n
 	for i in n:
-		var tile_x: int = xs[i]
-		var tile_y: int = ys[i]
-		var px: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE + TILE_SIZE / 2)
-		var py: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE + TILE_SIZE / 2)
+		var agent_id: int = int(agent_ids[i])
+		var curr_pos: Vector2 = _curr_positions.get(agent_id, Vector2.ZERO)
+		# V7 Phase 11-α — interpolate between prev and curr pixel position.
+		var prev_pos: Vector2 = _prev_positions.get(agent_id, curr_pos)
+		var ipos: Vector2 = prev_pos.lerp(curr_pos, lerp_t)
+		var px: float = ipos.x
+		var py: float = ipos.y
 		# V7 Phase 8-δ — boost the per-instance scale by RECALL_CUE_SCALE_BOOST
 		# while the agent is in the recall window. Visible without a shader
 		# change. NOT tied to `state_tag` so Phase 7-δ A22 stays intact.
@@ -149,6 +189,9 @@ func _process(_delta: float) -> void:
 		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
 		multi_mesh.set_instance_transform_2d(i, xform)
 		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i]))
+		# V7 Phase 11-α — apply state_tag color tint via instance color.
+		var tag: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
+		multi_mesh.set_instance_color(i, STATE_TINTS[tag])
 	# V7 Phase 8-δ — after rendering this frame, ingest fresh
 	# `memory_recalled` events from the causal log so the next frame can
 	# pulse the cue. We poll each unique tile occupied by an agent because
@@ -304,6 +347,31 @@ func _clear_expired_combating() -> void:
 			_combating_agents[eid] = remaining
 	for eid in expired:
 		_combating_agents.erase(eid)
+
+func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> int:
+	# V7 Phase 11-α (code-attempt 3) — identity-aware tick-boundary checksum.
+	#
+	# Iterates EVERY row (no `mini(n, 32)` truncation) so a position change
+	# on agent #33+ still flips the hash and triggers the interpolation
+	# tick boundary. Folds `agent_ids[i]` (identity) and `i` (row index)
+	# along with `xs[i]` / `ys[i]` (position) into a multiplicative
+	# accumulator so the hash is sensitive to:
+	#   • per-agent position changes (movement)
+	#   • row-order changes (would cancel under pure XOR)
+	#   • agent identity changes (entity set churn)
+	#
+	# `h * 1000003` (a 32-bit prime) advances the accumulator non-
+	# commutatively, defeating the order-insensitive XOR pattern that the
+	# previous version inherited. Knuth's φ-derived multiplier
+	# `2654435761` plus three other large primes spread per-row bits across
+	# the 64-bit accumulator before folding into `h`.
+	if n == 0:
+		return 0
+	var h: int = n * 2654435761
+	for i in n:
+		var aid: int = int(agent_ids[i])
+		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
+	return h
 
 func _palette_for_id(eid: int) -> Color:
 	# Hash splat — three independent multipliers give visually distinct

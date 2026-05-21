@@ -30,6 +30,12 @@ void vertex() {
 }
 
 void fragment() {
+	// V7 Phase 11-α — capture instance color (state_tag tint) before
+	// overwriting COLOR with the palette-swapped result. When
+	// MultiMesh.use_colors is true, COLOR on entry carries the per-instance
+	// color written by set_instance_color(); we save it here and multiply
+	// at the end so the tint composites correctly over the palette output.
+	vec4 modulate = COLOR;
 	vec4 tex = texture(TEXTURE, UV);
 	if (tex.a <= 0.01) {
 		COLOR = tex;
@@ -54,6 +60,6 @@ void fragment() {
 		}
 
 		vec4 palette_color = texture(palette_lut, palette_uv(row_index, column_index));
-		COLOR = vec4(palette_color.rgb, tex.a);
+		COLOR = vec4(palette_color.rgb * modulate.rgb, tex.a);
 	}
 }
