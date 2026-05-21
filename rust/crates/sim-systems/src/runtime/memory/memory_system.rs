@@ -185,6 +185,7 @@ fn classify_event(
             DecisionReason::SocialReason => Some((0.5, 0.2, vec![*agent])),
             DecisionReason::MemoryReason => None, // anti-recursion
             DecisionReason::CombatReason => None, // Phase 9-β anti-recursion
+            DecisionReason::SettlementReason => None, // Phase 10-β anti-recursion
         },
         CausalEvent::ConstructionStarted { parent, .. } => {
             // Parent walk: the originating AgentDecision{ConstructionReason}
@@ -235,7 +236,9 @@ fn classify_event(
         | CausalEvent::StampDirty { .. }
         | CausalEvent::InfluenceChanged { .. }
         | CausalEvent::MemoryRecalled { .. }
-        | CausalEvent::AgentBorn { .. } => None,
+        | CausalEvent::AgentBorn { .. }
+        | CausalEvent::SettlementFormed { .. }
+        | CausalEvent::SettlementDissolved { .. } => None,
     }
 }
 

@@ -23,6 +23,7 @@
 //! so [`CausalEvent`] inherits the same constraint. Callers move/clone
 //! events explicitly rather than rely on a bit-copy.
 
+use crate::components::settlement::SettlementId;
 use crate::components::AgentId;
 use crate::influence::{DirtyRegion, InfluenceChannel};
 
@@ -62,6 +63,10 @@ pub enum DecisionReason {
     /// direction. A co-located idle peer is the combat target.
     /// V7 Phase 9-β / P9β-5.
     CombatReason,
+    /// Agent's cascade arm activated by proximity to an under-populated
+    /// settlement. The agent is pulled toward joining the settlement.
+    /// V7 Phase 10-β / P10β-8.
+    SettlementReason,
 }
 
 impl DecisionReason {
@@ -77,6 +82,7 @@ impl DecisionReason {
             DecisionReason::SocialReason => "social_reason",
             DecisionReason::MemoryReason => "memory_reason",
             DecisionReason::CombatReason => "combat_reason",
+            DecisionReason::SettlementReason => "settlement_reason",
         }
     }
 }
@@ -422,6 +428,44 @@ pub enum CausalEvent {
         /// Simulation tick at which the agent was born.
         tick: u64,
     },
+
+    /// Automatic cluster detection formed a new settlement (V7 Phase 10-β /
+    /// P10Plan-2). Emitted by `SettlementSystem` (priority 138) when the
+    /// agent + building density within `SETTLEMENT_PROXIMITY_RADIUS`
+    /// crosses both formation thresholds.
+    ///
+    /// Chain root: `parent == None` (auto-formation is causally a root).
+    SettlementFormed {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — always `None` for auto-formation root.
+        parent: Option<EventId>,
+        /// The newly formed settlement's stable id.
+        settlement_id: SettlementId,
+        /// All agents within `SETTLEMENT_PROXIMITY_RADIUS` of the formation
+        /// tile at the formation tick.
+        founding_members: Vec<AgentId>,
+        /// Simulation tick at which formation was detected.
+        tick: u64,
+    },
+
+    /// Settlement dissolved — population fell to zero and no buildings
+    /// remain (V7 Phase 10-β / P10Plan-3). Emitted by `SettlementSystem`
+    /// when both `population_stats.current == 0` AND
+    /// `member_buildings.is_empty()` hold for the same tick.
+    SettlementDissolved {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — the originating `SettlementFormed` event id,
+        /// or `None` if the chain root has been evicted from the ring.
+        parent: Option<EventId>,
+        /// The dissolved settlement's stable id.
+        settlement_id: SettlementId,
+        /// Population at dissolution time (always 0 by precondition).
+        final_population: u32,
+        /// Simulation tick at which dissolution was detected.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -439,7 +483,9 @@ impl CausalEvent {
             | CausalEvent::MemoryRecalled { id, .. }
             | CausalEvent::CombatStarted { id, .. }
             | CausalEvent::CombatCompleted { id, .. }
-            | CausalEvent::AgentBorn { id, .. } => *id,
+            | CausalEvent::AgentBorn { id, .. }
+            | CausalEvent::SettlementFormed { id, .. }
+            | CausalEvent::SettlementDissolved { id, .. } => *id,
         }
     }
 
@@ -467,7 +513,9 @@ impl CausalEvent {
             | CausalEvent::MemoryRecalled { parent, .. }
             | CausalEvent::CombatStarted { parent, .. }
             | CausalEvent::CombatCompleted { parent, .. }
-            | CausalEvent::AgentBorn { parent, .. } => *parent,
+            | CausalEvent::AgentBorn { parent, .. }
+            | CausalEvent::SettlementFormed { parent, .. }
+            | CausalEvent::SettlementDissolved { parent, .. } => *parent,
         }
     }
 
@@ -485,7 +533,9 @@ impl CausalEvent {
             | CausalEvent::MemoryRecalled { tick, .. }
             | CausalEvent::CombatStarted { tick, .. }
             | CausalEvent::CombatCompleted { tick, .. }
-            | CausalEvent::AgentBorn { tick, .. } => *tick,
+            | CausalEvent::AgentBorn { tick, .. }
+            | CausalEvent::SettlementFormed { tick, .. }
+            | CausalEvent::SettlementDissolved { tick, .. } => *tick,
         }
     }
 
@@ -505,7 +555,9 @@ impl CausalEvent {
             | CausalEvent::MemoryRecalled { .. }
             | CausalEvent::CombatStarted { .. }
             | CausalEvent::CombatCompleted { .. }
-            | CausalEvent::AgentBorn { .. } => None,
+            | CausalEvent::AgentBorn { .. }
+            | CausalEvent::SettlementFormed { .. }
+            | CausalEvent::SettlementDissolved { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

@@ -228,6 +228,11 @@ impl RuntimeSystem for ConstructionSystem {
             // ConstructionCompleted we just emitted. radius = 0 —
             // agent-construction does not stamp influence in Phase 6-β.
             let placed_id = resources.issue_event_id();
+            // V7 Phase 10-β — register the completed building's position
+            // for `SettlementSystem` proximity scans. Mirrors the
+            // registration in `BuildingStampSystem` for FFI-originated
+            // placements.
+            resources.building_registry.insert(placed_id, position);
             resources.causal_log.push(
                 tile_idx,
                 CausalEvent::BuildingPlaced {

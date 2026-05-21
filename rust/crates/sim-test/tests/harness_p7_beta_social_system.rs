@@ -267,6 +267,7 @@ fn harness_p7_beta_a3_decision_reason_variant_count() {
             DecisionReason::SocialReason => 4,
             DecisionReason::MemoryReason => 5,
             DecisionReason::CombatReason => 6,
+            DecisionReason::SettlementReason => 7,
         }
     }
     assert_eq!(discriminant(DecisionReason::HungerThresholdBreach), 0);
@@ -1784,6 +1785,9 @@ fn harness_p7_beta_a14_two_run_regression_bounded() {
                             // P9-β: CombatReason is the combat cascade
                             // 7th emission; excluded from regression.
                             DecisionReason::CombatReason => continue,
+                            // P10-β: SettlementReason is the migration
+                            // pull 8th emission; excluded from regression.
+                            DecisionReason::SettlementReason => continue,
                         };
                         counts[bucket] += 1;
                     }

@@ -17,4 +17,5 @@ pub mod decision;
 pub mod influence;
 pub mod memory;
 pub mod needs;
+pub mod settlement;
 pub mod social;

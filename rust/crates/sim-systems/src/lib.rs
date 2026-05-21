@@ -173,6 +173,19 @@ pub fn register_combat_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::combat::CombatSystem::new()));
 }
 
+/// Register the Phase 10-β settlement stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 138 : [`runtime::settlement::SettlementSystem`]
+///
+/// Slots strictly after `CombatSystem` (priority 137) so deaths from
+/// the current tick are reflected in proximity-driven membership before
+/// the formation/dissolution check runs. Owns settlement formation,
+/// membership sync, community history, birth trigger, and dissolution.
+pub fn register_settlement_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::settlement::SettlementSystem::new()));
+}
+
 /// V7 Phase 7-β / P7β-15 — canonical production system registration.
 ///
 /// Single source of truth for "what systems run in a production engine":
@@ -194,6 +207,7 @@ pub fn register_combat_systems(engine: &mut SimEngine) {
 /// - 135  SocialDecaySystem (Phase 7-β re-plan)
 /// - 136  MemorySystem (Phase 8-β)
 /// - 137  CombatSystem (Phase 9-β)
+/// - 138  SettlementSystem (Phase 10-β)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -207,4 +221,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_social_systems(engine);
     register_memory_systems(engine);
     register_combat_systems(engine);
+    register_settlement_systems(engine);
 }

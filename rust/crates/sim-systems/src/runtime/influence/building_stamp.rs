@@ -101,6 +101,14 @@ impl RuntimeSystem for BuildingStampSystem {
             // StampDirty below can link back to it via `parent`.
             let centre_idx = resources.influence_grid.idx(cx, cy) as u32;
             let building_id = resources.issue_event_id();
+            // V7 Phase 10-β — register the building position for
+            // `SettlementSystem` proximity scans. The causal log alone
+            // cannot serve this purpose: same-tile `StampDirty` /
+            // `InfluenceChanged` events evict `BuildingPlaced` from the
+            // per-tile ring buffer within a single tick.
+            resources
+                .building_registry
+                .insert(building_id, ev.position);
             resources.causal_log.push(
                 centre_idx,
                 CausalEvent::BuildingPlaced {

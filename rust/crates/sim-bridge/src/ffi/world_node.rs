@@ -698,6 +698,57 @@ impl CausalEventView {
                 defender_id: None,
                 hp_after: None,
             },
+            // V7 Phase 10-β — settlement formation event. No per-agent
+            // attribution (founding_members is a list, not a singleton);
+            // GDScript panels can resolve the membership via the
+            // settlement snapshot in Phase 10-γ.
+            CausalEvent::SettlementFormed {
+                id,
+                parent,
+                tick,
+                ..
+            } => Self {
+                kind: "settlement_formed",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: None,
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: None,
+                reason: None,
+                triggered_by: None,
+                recalled_event: None,
+                defender_id: None,
+                hp_after: None,
+            },
+            // V7 Phase 10-β — settlement dissolution event.
+            CausalEvent::SettlementDissolved {
+                id,
+                parent,
+                tick,
+                ..
+            } => Self {
+                kind: "settlement_dissolved",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: None,
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: None,
+                reason: None,
+                triggered_by: None,
+                recalled_event: None,
+                defender_id: None,
+                hp_after: None,
+            },
         }
     }
 }

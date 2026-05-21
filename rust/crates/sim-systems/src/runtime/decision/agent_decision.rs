@@ -77,6 +77,13 @@ enum CascadeArm {
     /// activated by `memory_weight_delta` strictly below
     /// `-BIAS_FLIP_THRESHOLD`. Phase 9-β / P9β-5.
     Combat,
+    /// Settlement migration pull. A non-natural cascade arm activated when
+    /// the agent is not a member of any settlement AND at least one
+    /// settlement with available capacity (`current < SETTLEMENT_MAX_POP`)
+    /// exists in the world. The lowest-priority arm — only fires after
+    /// every higher-priority arm (Hunger/Thirst/Fatigue/Construction/
+    /// Social/Combat) has been ruled out. V7 Phase 10-β / P10β-8.
+    Settlement,
 }
 
 /// Linear recency factor: 1.0 at `elapsed == 0`, 0.0 at
@@ -174,6 +181,7 @@ fn arm_priority_index(arm: CascadeArm) -> u8 {
         CascadeArm::Construction => 3,
         CascadeArm::Social => 4,
         CascadeArm::Combat => 5,
+        CascadeArm::Settlement => 6,
     }
 }
 
@@ -616,6 +624,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // Unreachable in practice — CombatReason hits
                             // `continue` above. Added for exhaustiveness.
                             DecisionReason::CombatReason => CascadeArm::Combat,
+                            // Unreachable in practice — SettlementReason fires
+                            // from the standalone 8th-cascade fallback (see
+                            // post-`if let Some((natural_target ...))` branch)
+                            // which never enters the bias path. Added for
+                            // exhaustiveness.
+                            DecisionReason::SettlementReason => CascadeArm::Settlement,
                         };
 
                         // Build the (arm, target) eligibility set for the
@@ -847,6 +861,66 @@ impl RuntimeSystem for AgentDecisionSystem {
                             *state = AgentState::Seeking {
                                 target: natural_target,
                             };
+                        }
+                    } else {
+                        // V7 Phase 10-β / P10β-8 — 8th cascade arm:
+                        // settlement migration pull. Fires when no
+                        // higher-priority drive (Hunger/Thirst/Fatigue/
+                        // Construction/Social/Combat) triggered AND the
+                        // agent is NOT a member of any settlement AND at
+                        // least one settlement has open capacity
+                        // (`current < SETTLEMENT_MAX_POP`).
+                        //
+                        // Target: first known member of the lowest-id
+                        // capacity-bearing settlement, used as a
+                        // `TargetKind::Agent(_)` proxy (no Position target
+                        // exists). The migration pull biases Brownian
+                        // motion via the Seeking-suppression rule but
+                        // requires the agent to physically reach the
+                        // partner tile before any join effect — which is a
+                        // Phase 10-γ concern, not 10-β scope.
+                        let is_member = resources
+                            .settlements
+                            .values()
+                            .any(|s| s.member_agents.contains(&agent.id));
+                        if !is_member {
+                            // Find lowest-id settlement with capacity that has
+                            // at least one member to use as a proxy target.
+                            let mut candidate_ids: Vec<sim_core::components::SettlementId> =
+                                resources
+                                    .settlements
+                                    .iter()
+                                    .filter(|(_, s)| {
+                                        s.population_stats.current
+                                            < sim_core::components::SETTLEMENT_MAX_POP
+                                            && !s.member_agents.is_empty()
+                                    })
+                                    .map(|(id, _)| *id)
+                                    .collect();
+                            candidate_ids.sort();
+                            if let Some(settlement_id) = candidate_ids.first().copied() {
+                                let target_agent_opt = resources
+                                    .settlements
+                                    .get(&settlement_id)
+                                    .and_then(|s| s.member_agents.iter().min().copied());
+                                if let Some(target_agent) = target_agent_opt {
+                                    let id = resources.issue_event_id();
+                                    resources.causal_log.push(
+                                        tile_idx,
+                                        CausalEvent::AgentDecision {
+                                            id,
+                                            parent: None,
+                                            agent: agent.id,
+                                            position: (pos.x, pos.y),
+                                            reason: DecisionReason::SettlementReason,
+                                            tick,
+                                        },
+                                    );
+                                    *state = AgentState::Seeking {
+                                        target: TargetKind::Agent(target_agent),
+                                    };
+                                }
+                            }
                         }
                     }
                 }

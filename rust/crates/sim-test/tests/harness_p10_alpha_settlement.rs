@@ -350,7 +350,9 @@ fn harness_p10_alpha_a15_settlement_serde_roundtrip() {
     );
 }
 
-// ─── A16: SimResources.settlements empty + next_settlement_id == 0 ──────
+// ─── A16: SimResources.settlements empty + next_settlement_id == 1 ──────
+// Phase 10-β plan A2 reserved `settlement_id == 0` as the uninitialized
+// sentinel — the counter starts at 1 so the first issued id is `1`.
 #[test]
 fn harness_p10_alpha_a16_sim_resources_settlements_empty_at_init() {
     let res = SimResources::new(20, 20, MaterialRegistry::new());
@@ -359,24 +361,26 @@ fn harness_p10_alpha_a16_sim_resources_settlements_empty_at_init() {
         "SimResources::new must create an empty `settlements` HashMap"
     );
     assert_eq!(
-        res.next_settlement_id, 0,
-        "next_settlement_id must start at 0"
+        res.next_settlement_id, 1,
+        "next_settlement_id must start at 1 (0 reserved as sentinel — Phase 10-β plan A2)"
     );
 }
 
-// ─── A17: issue_settlement_id() returns [0, 1, 2, 3, 4] ─────────────────
+// ─── A17: issue_settlement_id() returns [1, 2, 3, 4, 5] ─────────────────
+// Phase 10-β plan A2: `settlement_id == 0` is the uninitialized sentinel,
+// so issue_settlement_id() must never return 0.
 #[test]
 fn harness_p10_alpha_a17_issue_settlement_id_monotonically_increases() {
     let mut res = SimResources::new(20, 20, MaterialRegistry::new());
     let ids: Vec<SettlementId> = (0..5).map(|_| res.issue_settlement_id()).collect();
     assert_eq!(
         ids,
-        vec![0u32, 1, 2, 3, 4],
-        "5 consecutive issue_settlement_id() calls must yield [0,1,2,3,4]"
+        vec![1u32, 2, 3, 4, 5],
+        "5 consecutive issue_settlement_id() calls must yield [1,2,3,4,5] (0 reserved)"
     );
     assert_eq!(
-        res.next_settlement_id, 5,
-        "next_settlement_id must advance to 5 after 5 issues"
+        res.next_settlement_id, 6,
+        "next_settlement_id must advance to 6 after 5 issues"
     );
 }
 
@@ -504,7 +508,8 @@ fn harness_p10_alpha_a21_phase9_phase8_regression_guard() {
         "Phase 10-α adds no SettlementSystem; settlements HashMap must remain empty"
     );
     assert_eq!(
-        engine.resources.next_settlement_id, 0,
-        "no settlement id issued during Phase 10-α regression run"
+        engine.resources.next_settlement_id, 1,
+        "no settlement id issued during Phase 10-α regression run \
+         (Phase 10-β plan A2: counter starts at 1, 0 reserved as sentinel)"
     );
 }

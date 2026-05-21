@@ -30,7 +30,8 @@
 use hecs::{Entity, World};
 use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::components::{
-    Agent, AgentId, Position, RelationshipKey, RelationshipState, Settlement, SettlementId,
+    Agent, AgentId, BuildingId, Position, RelationshipKey, RelationshipState, Settlement,
+    SettlementId,
 };
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
@@ -200,6 +201,20 @@ pub struct SimResources {
     /// SimResources`, so a plain `u32` counter suffices. Allocated via
     /// [`SimResources::issue_settlement_id`].
     pub next_settlement_id: SettlementId,
+
+    /// Sparse registry of placed building positions, keyed by their
+    /// `BuildingId` (which is the `EventId` of the originating
+    /// `BuildingPlaced` causal event). Populated by `BuildingStampSystem`
+    /// on every drained FFI event AND by `ConstructionSystem` on every
+    /// completion edge. Consumed by `SettlementSystem` (priority 138) for
+    /// formation/membership scans.
+    ///
+    /// The causal log alone cannot serve this purpose — its per-tile ring
+    /// buffer is capped at 8 events and same-tile `StampDirty` +
+    /// `InfluenceChanged` events evict `BuildingPlaced` records within a
+    /// single tick. The registry is the authoritative
+    /// "where are the buildings?" lookup. V7 Phase 10-β.
+    pub building_registry: HashMap<BuildingId, (u32, u32)>,
 }
 
 impl SimResources {
@@ -232,7 +247,12 @@ impl SimResources {
             time_of_day: 0.0,
             ticks_per_day: 1440,
             settlements: HashMap::new(),
-            next_settlement_id: 0,
+            // Phase 10-β plan A2: `settlement_id == 0` is the uninitialized
+            // sentinel — `SettlementFormed.settlement_id == 0` must never
+            // be observed in the causal log. Start the counter at 1 so the
+            // first issued id is `1` and `0` remains reserved.
+            next_settlement_id: 1,
+            building_registry: HashMap::new(),
         }
     }
 

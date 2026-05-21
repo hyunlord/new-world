@@ -397,6 +397,8 @@ fn harness_p6_alpha_a21_causal_event_no_construction_variant() {
             CausalEvent::CombatStarted { .. } => "combat_started",
             CausalEvent::CombatCompleted { .. } => "combat_completed",
             CausalEvent::AgentBorn { .. } => "agent_born",
+            CausalEvent::SettlementFormed { .. } => "settlement_formed",
+            CausalEvent::SettlementDissolved { .. } => "settlement_dissolved",
         }
     }
     // Touch classify so it's not dead code under any toolchain.

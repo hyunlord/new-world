@@ -815,7 +815,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
             DecisionReason::ConstructionReason
             | DecisionReason::SocialReason
             | DecisionReason::MemoryReason
-            | DecisionReason::CombatReason => {}
+            | DecisionReason::CombatReason
+            | DecisionReason::SettlementReason => {}
         }
     }
     assert!(
