@@ -29,7 +29,9 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::{CausalLogStorage, EventId};
-use sim_core::components::{Agent, AgentId, Position, RelationshipKey, RelationshipState};
+use sim_core::components::{
+    Agent, AgentId, Position, RelationshipKey, RelationshipState, Settlement, SettlementId,
+};
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
@@ -181,6 +183,23 @@ pub struct SimResources {
     /// harness scenarios can override before running. When `0`, the
     /// clock-advance step in `SimEngine::tick` is a no-op (zero-guard).
     pub ticks_per_day: u64,
+
+    /// Sparse settlement registry (V7 Phase 10-α / P10Plan-1).
+    ///
+    /// Maps each [`SettlementId`] to its [`Settlement`] aggregate.
+    /// Populated and maintained by `SettlementSystem` (priority 138,
+    /// Phase 10-β scope). Starts empty — no settlements exist at world
+    /// construction time. Follows the established SimResources HashMap
+    /// sparse-collection pattern (`relationships`, `combat_pairs`, etc.).
+    pub settlements: HashMap<SettlementId, Settlement>,
+
+    /// Monotonic source of [`SettlementId`]s (V7 Phase 10-α / P10Plan-1).
+    ///
+    /// Unlike `next_event_id` / `next_agent_id` (AtomicU64), settlement
+    /// ids are minted single-threaded by `SettlementSystem` under `&mut
+    /// SimResources`, so a plain `u32` counter suffices. Allocated via
+    /// [`SimResources::issue_settlement_id`].
+    pub next_settlement_id: SettlementId,
 }
 
 impl SimResources {
@@ -212,6 +231,8 @@ impl SimResources {
             combat_progress: HashMap::new(),
             time_of_day: 0.0,
             ticks_per_day: 1440,
+            settlements: HashMap::new(),
+            next_settlement_id: 0,
         }
     }
 
@@ -232,6 +253,18 @@ impl SimResources {
     /// rather than minting ids by hand.
     pub fn issue_agent_id(&self) -> AgentId {
         self.next_agent_id.fetch_add(1, Ordering::Relaxed)
+    }
+
+    /// Allocate the next monotonic [`SettlementId`] (V7 Phase 10-α / P10Plan-1).
+    ///
+    /// Uses a plain `u32` counter (unlike `next_event_id` / `next_agent_id`
+    /// which are `AtomicU64`) because `SettlementSystem` runs single-threaded
+    /// under `&mut SimResources`. Called by `SettlementSystem` (Phase 10-β)
+    /// when a new cluster meets the formation threshold.
+    pub fn issue_settlement_id(&mut self) -> SettlementId {
+        let id = self.next_settlement_id;
+        self.next_settlement_id = self.next_settlement_id.wrapping_add(1);
+        id
     }
 
     /// Set the food-tile counter at `(x, y)` (V7 Phase 5-β / P5β-7).

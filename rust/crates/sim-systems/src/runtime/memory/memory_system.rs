@@ -234,7 +234,8 @@ fn classify_event(
         CausalEvent::BuildingPlaced { .. }
         | CausalEvent::StampDirty { .. }
         | CausalEvent::InfluenceChanged { .. }
-        | CausalEvent::MemoryRecalled { .. } => None,
+        | CausalEvent::MemoryRecalled { .. }
+        | CausalEvent::AgentBorn { .. } => None,
     }
 }
 

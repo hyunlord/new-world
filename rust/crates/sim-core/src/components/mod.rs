@@ -47,6 +47,7 @@ pub mod hunger;
 pub mod memory;
 pub mod position;
 pub mod relationship;
+pub mod settlement;
 pub mod sleep;
 pub mod social;
 pub mod thirst;
@@ -59,6 +60,11 @@ pub use hunger::Hunger;
 pub use memory::{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
 pub use position::Position;
 pub use relationship::{RelationshipKey, RelationshipState, HOSTILITY_BUMP};
+pub use settlement::{
+    BuildingId, PopulationStats, Settlement, SettlementId, SETTLEMENT_DISSOLUTION_THRESHOLD,
+    SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_FORMATION_BUILDING_THRESHOLD,
+    SETTLEMENT_HISTORY_CAP, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
+};
 pub use sleep::Sleep;
 pub use social::Social;
 pub use thirst::Thirst;

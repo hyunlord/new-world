@@ -397,6 +397,31 @@ pub enum CausalEvent {
         /// Simulation tick at which damage was applied.
         tick: u64,
     },
+
+    /// Agent was born into the simulation (V7 Phase 10-α / P10Plan-5).
+    ///
+    /// Emitted by `SettlementSystem` (Phase 10-β) when population growth
+    /// conditions are met. Replaces the absent `AgentSpawned` event —
+    /// only `spawn_agent()` engine method existed prior to Phase 10.
+    ///
+    /// `parent` links to the `SettlementFormed` event of the birth settlement
+    /// when available; `None` for the initial world population seeding.
+    ///
+    /// Chain note: `AgentBorn` is a causal root for the agent's lifetime —
+    /// subsequent `AgentDecision`, `SocialInteractionStarted`, and
+    /// `CombatStarted` events chain from this birth event via the agent's
+    /// decision cascade.
+    AgentBorn {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — `SettlementFormed` id when the birth occurs
+        /// inside an established settlement; `None` for world-seed spawns.
+        parent: Option<EventId>,
+        /// The newly spawned agent's `AgentId`.
+        agent: AgentId,
+        /// Simulation tick at which the agent was born.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -413,7 +438,8 @@ impl CausalEvent {
             | CausalEvent::SocialInteractionCompleted { id, .. }
             | CausalEvent::MemoryRecalled { id, .. }
             | CausalEvent::CombatStarted { id, .. }
-            | CausalEvent::CombatCompleted { id, .. } => *id,
+            | CausalEvent::CombatCompleted { id, .. }
+            | CausalEvent::AgentBorn { id, .. } => *id,
         }
     }
 
@@ -440,7 +466,8 @@ impl CausalEvent {
             | CausalEvent::SocialInteractionCompleted { parent, .. }
             | CausalEvent::MemoryRecalled { parent, .. }
             | CausalEvent::CombatStarted { parent, .. }
-            | CausalEvent::CombatCompleted { parent, .. } => *parent,
+            | CausalEvent::CombatCompleted { parent, .. }
+            | CausalEvent::AgentBorn { parent, .. } => *parent,
         }
     }
 
@@ -457,7 +484,8 @@ impl CausalEvent {
             | CausalEvent::SocialInteractionCompleted { tick, .. }
             | CausalEvent::MemoryRecalled { tick, .. }
             | CausalEvent::CombatStarted { tick, .. }
-            | CausalEvent::CombatCompleted { tick, .. } => *tick,
+            | CausalEvent::CombatCompleted { tick, .. }
+            | CausalEvent::AgentBorn { tick, .. } => *tick,
         }
     }
 
@@ -476,7 +504,8 @@ impl CausalEvent {
             | CausalEvent::SocialInteractionCompleted { .. }
             | CausalEvent::MemoryRecalled { .. }
             | CausalEvent::CombatStarted { .. }
-            | CausalEvent::CombatCompleted { .. } => None,
+            | CausalEvent::CombatCompleted { .. }
+            | CausalEvent::AgentBorn { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

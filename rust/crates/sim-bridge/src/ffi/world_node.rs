@@ -680,6 +680,24 @@ impl CausalEventView {
                 defender_id: Some(*defender),
                 hp_after: Some(*hp_after),
             },
+            CausalEvent::AgentBorn { id, parent, agent, tick } => Self {
+                kind: "agent_born",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: None,
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: Some(*agent),
+                reason: None,
+                triggered_by: None,
+                recalled_event: None,
+                defender_id: None,
+                hp_after: None,
+            },
         }
     }
 }

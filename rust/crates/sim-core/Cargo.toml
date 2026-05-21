@@ -15,6 +15,7 @@ arrayvec = "0.7"
 
 [dev-dependencies]
 criterion = { workspace = true }
+serde_json = "1"
 
 [[bench]]
 name = "material_benchmarks"

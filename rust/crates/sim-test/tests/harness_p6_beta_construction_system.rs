@@ -173,6 +173,7 @@ fn harness_p6_beta_a3_causal_event_enumeration_accessors_and_channel() {
             CausalEvent::MemoryRecalled { .. } => "memory_recalled",
             CausalEvent::CombatStarted { .. } => "combat_started",
             CausalEvent::CombatCompleted { .. } => "combat_completed",
+            CausalEvent::AgentBorn { .. } => "agent_born",
         }
     }
     assert_eq!(classify(&started), "construction_started");
@@ -707,6 +708,7 @@ fn harness_p6_beta_a9_full_4_link_causal_chain_walk() {
             CausalEvent::MemoryRecalled { .. } => "memory_recalled",
             CausalEvent::CombatStarted { .. } => "combat_started",
             CausalEvent::CombatCompleted { .. } => "combat_completed",
+            CausalEvent::AgentBorn { .. } => "agent_born",
         })
         .collect();
 
