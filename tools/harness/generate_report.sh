@@ -223,6 +223,8 @@ if [[ -f "$PROGRESS_FILE" ]]; then
             duration_sec=$((end_secs - start_secs))
         fi
     fi
+    # Strip non-numeric chars (guards against embedded newline in arithmetic result)
+    duration_sec="${duration_sec//[^0-9]/}"
     # Format duration_sec → "Xh Ym Zs"
     if [[ -n "${duration_sec:-}" && "$duration_sec" -gt 0 ]] 2>/dev/null; then
         dur_h=$((duration_sec / 3600))
