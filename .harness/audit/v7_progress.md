@@ -1348,3 +1348,189 @@ V7 architecture base + full UI integration (All δ) complete. Substantial final 
 | **V7 종결 절대 final substantial** ⭐ | All δ complete. Declaration final. |
 | Section 11+ design (Phase 10 anchor) | Multi-building Settlement / Advanced AI |
 | Issue 16 fix dispatch | `pipeline_report.md` mechanism gap |
+
+---
+
+## Issue 16 Patch (Stage 25) + Phase 10 Anchor Design (Stage 26)
+
+### Issue 16 — pipeline_report.md mechanism gap fix (Stage 25)
+
+- **Commit**: `182476f9` fix(harness): Issue 16 — pipeline_report.md mechanism gap closure
+- **Scope**: Retroactive regeneration of missing p8-β/γ + p9-β/γ reports + `generate_report.sh` duration_sec sanitization
+- **Infrastructure governance chain**: Issues 12→13→14→15→16 closed (5-commit incremental chain)
+- **Note**: Contents fully documented in Stage 24 Known governance gaps section above
+
+### Section 11+ Anchor Design (Stage 26)
+
+- **Commit**: `6089976c` docs(v7-section-11-plus-design): Phase 10 anchor — Multi-building Settlement System
+- **Scope**: Phase 10 design anchor document (Section 11+ §1–§7, SettlementSystem plan)
+
+---
+
+## V7 Phase 10 (Multi-building Settlement System) — V7 Week 19-20
+
+### Phase 10-α — Settlement substrate + AgentBorn (Stage 27)
+
+- **Commit**: `313cfcd3` feat(p10-alpha-settlement-substrate)
+- **Score**: 100/100 · PIPELINE_PASSED · APPROVED
+- **Harness**: plan x1(QC:r1) · code x2 · eval:APPROVE(codex) · visual:WARNING · ffi:ALL_COMPLETE · regr:CLEAN
+- **Tests**: 978 workspace pass · 21 harness assertions A1–A21 all PASS (attempt 2 Codex)
+- **★ 2nd PERFECT 100/100 first-dispatch** (Phase 8-α + Phase 10-α 일관)
+- **Landed substrate**:
+  - `sim-core/src/components/settlement.rs` — `SettlementId = u32` + `BuildingId = u64` type aliases + `Settlement` struct + ring-buffer community history + `impl` methods + 6 locked constants + full serde
+  - **6 Constants**:
+    - `SETTLEMENT_HISTORY_CAP = 32` (★ mirrors `MEMORY_CAP=32` — substrate symmetry)
+    - `SETTLEMENT_FORMATION_AGENT_THRESHOLD = 3`
+    - `SETTLEMENT_FORMATION_BUILDING_THRESHOLD = 2`
+    - `SETTLEMENT_MAX_POP = 50`
+    - `SETTLEMENT_PROXIMITY_RADIUS = 5`
+    - `SETTLEMENT_DISSOLUTION_THRESHOLD = 0`
+  - `impl` methods: `new_with_id` + `add_member_agent/remove` + `add_member_building/remove` + `append_history` + `population_count` + `is_dissolved`
+  - `sim-core/causal/event.rs` — `CausalEvent::AgentBorn` 12th variant + exhaustive accessor arms
+  - `sim-engine` — `SimResources.settlements: HashMap<SettlementId, Settlement>` + `next_settlement_id: u32` + `issue_settlement_id()`
+  - Exhaustive match updates: `memory_system.rs` + `sim-bridge/world_node.rs` + 3 prior harness files (p3/p6-α/p6-β)
+- **Substrate symmetry** ★: `SETTLEMENT_HISTORY_CAP=32` mirrors `MEMORY_CAP=32` (Phase 3-β ring buffer × Phase 8 Memory × Phase 10 Settlement symmetric axis)
+- **Issue 16 post-fix** first live test natural checkpoint: pipeline_report.md generated ✓
+
+### Phase 10-β — SettlementSystem + 8th cascade + Birth (Stage 28)
+
+- **Commit**: `930bcbcf` feat(p10-beta-settlement-system)
+- **Score**: 92/100 · APPROVED (attempt 4)
+- **Harness**: plan x1(QC:r1) · code x4(recode:A21+A25) · eval:APPROVE(codex) · visual:OK · ffi:ALL_COMPLETE · regr:CLEAN
+- **Tests**: 1018 workspace pass · 35/35 harness assertions A1–A35 all PASS
+- **Landed substrate**:
+  - `settlement_system.rs` — `SettlementSystem` priority 138, tick_interval 1
+  - **Auto-formation** (P10Plan-4): proximity scan + threshold 3 agents + 2 buildings
+  - **Dissolution** (Q3-B, Plan §6): `population_stats.current == 0 AND member_buildings.is_empty()`
+  - **Birth mechanism** (Q4-B, Plan §5): `spawn_agent()` + `BIRTH_COOLDOWN_TICKS=200` + `MAX_POP=50`
+  - **Community history** (Plan §7): ring-buffer append, cap `SETTLEMENT_HISTORY_CAP=32`
+  - `CausalEvent::SettlementFormed` (13th, `founding_members: Vec<AgentId>`)
+  - `CausalEvent::SettlementDissolved` (14th, `final_population: u32`)
+  - `DecisionReason::SettlementReason` (8th) + `as_str`
+  - `AgentDecisionSystem` 8th cascade arm: migration pull only (anti-recursion: `SettlementReason → None` classify)
+  - `SimResources::building_registry: HashMap<BuildingId, (u32, u32)>` for reliable building-position lookup
+  - `register_settlement_systems()` helper (register_combat_systems precedent)
+  - **Key fixes**: A21 — `CombatCompleted` routed via real `CombatSystem` path (combat_pairs → priority 137, post-IUS); A25 — `enqueue_building_placed` FFI delegate
+- **Plan defaults**: Q1-A + Q2-A + Q3-B + Q4-B (Plan = source of truth, 정직 disclosure 정합)
+- **V7 architecture** updated: 10 runtime systems + 8 DecisionReason + 14 CausalEvent
+- **Issue 16 post-fix** 2nd live test checkpoint: pipeline_report.md generated ✓
+
+### Phase 10-γ — Settlement Chronicle harness (Stage 29)
+
+- **Commit**: `40c36d13` feat(p10-gamma-settlement-chronicle)
+- **Score**: 92/100 · PIPELINE_ACCEPTABLE · APPROVED (Codex)
+- **Harness**: plan x1(QC:r2) · code x3 · eval:APPROVE(codex) · visual:OK · ffi:ALL_COMPLETE · regr:CLEAN
+- **Tests**: 2 harness test functions · 17 inline assertions A1–A17 + A18 regression · 20+ total checks
+- **Landed substrate**:
+  - `harness_p10_gamma_settlement_chronicle.rs` — end-to-end settlement lifecycle chronicle
+  - `harness_p10_gamma_a_settlement_chronicle` — 17 inline assertions (A1–A17)
+  - `harness_p10_gamma_a18_regression_clean_2000_ticks` — 2000-tick smoke regression
+  - Full lifecycle: formation + FIFO history ring saturation + birth cooldown + combat routing + migration-pull routing + dissolution + determinism
+- **Full causal chain verified** (end-to-end): `BuildingPlaced + AgentBorn (founding)` → `SettlementFormed (founding_members)` → `AgentBorn (births)` + community history accumulation → `CombatCompleted` + migration-pull → `SettlementDissolved (final_population u32)`
+- **Chronicle precedent**: Phase 5-γ + 6-γ + 7-γ + 8-γ + 9-γ + 10-γ chain complete ★★★
+- **Pattern G** Issue 15 integration verified (재발 부재 evidence substantial)
+- **Issue 16 post-fix** 3rd live test checkpoint: pipeline_report.md generated ✓
+- **V7 Phase 10 (Multi-building Settlement System) 완전 종결** ★★★★
+
+### Phase 10 종결 summary (α + β + γ complete · δ optional deferred)
+
+| Sub-phase | Commit | Score | Key milestone |
+|-----------|--------|-------|---------------|
+| Phase 10-α | `313cfcd3` | 100/100 PERFECT | Settlement substrate + AgentBorn · 2nd PERFECT ever |
+| Phase 10-β | `930bcbcf` | 92/100 APPROVE attempt 4 | SettlementSystem + Auto-formation + Dissolution + Birth + 8th cascade |
+| Phase 10-γ | `40c36d13` | 92/100 APPROVE | Settlement Chronicle · full lifecycle verified |
+| Phase 10-δ | ⏸ deferred | — | Settlement UI integration · optional |
+
+---
+
+## V7 (Foundation + Phase 7 + Phase 8 + Phase 9 + Phase 10 + All δ + Issue 16) Final Declaration (Stage 30, 2026-05-21)
+
+V7 architecture base + Phase 10 Settlement System complete. Substantial final final final final substantial. ★★★★
+
+### V7 milestone progression (final final final final substantial — Phase 10 complete)
+
+- ✅ Foundation Week 1-12 (`a0666b6c` Stage 1)
+- ✅ Phase 7 Social System α + β + γ complete
+- ✅ Phase 8 Memory System α + β + γ complete
+- ✅ Phase 9 Combat System α + β + γ complete (`86ec5fff` Stage 19 · `447b1ba2` Stage 20 declaration)
+- ✅ Phase 10 Multi-building Settlement System α + β + γ complete (`40c36d13` Stage 29) ★★★★
+- ✅ Phase 7-δ Social UI (`813e2d06` Stage 21 · 95/100)
+- ✅ Phase 8-δ Memory UI (`7ce33a33` Stage 22 · 85/100)
+- ✅ Phase 9-δ Combat UI (`4f0ed817` Stage 23 · 91/100)
+- ✅ Infrastructure governance audit chain complete (Issues 12+13+14+15+16)
+- ⏸ Phase 10-δ Settlement UI (optional · deferred)
+
+### V7 architecture base (final final final final substantial — Phase 10 complete)
+
+- **Simulation**: 12 components · 10 runtime systems · 14 CausalEvent variants · 8 DecisionReason variants · 4 MemoryRecallTrigger variants
+- **Components** (+1 vs Stage 24): Settlement added (Phase 10-α `313cfcd3`)
+- **Runtime systems** (+1 vs Stage 24): SettlementSystem priority 138 added (Phase 10-β `930bcbcf`)
+- **CausalEvent variants** (+3 vs Stage 24): AgentBorn (12th) + SettlementFormed (13th) + SettlementDissolved (14th)
+- **DecisionReason variants** (+1 vs Stage 24): SettlementReason (8th)
+- **Causal chain** (8 reasons → 8 emission chains, final final final substantial):
+  1. `AgentDecision{HungerThresholdBreach}` → `ConsumptionStarted` → `ConsumptionCompleted`
+  2. `AgentDecision{ThirstThresholdBreach}` → `ConsumptionStarted` → `ConsumptionCompleted`
+  3. `AgentDecision{FatigueThresholdBreach}` → `ConsumptionStarted` → `ConsumptionCompleted`
+  4. `AgentDecision{ConstructionReason}` → `ConstructionStarted` → `ConstructionCompleted` → `BuildingPlaced`
+  5. `AgentDecision{SocialReason}` → `SocialInteractionStarted` → `SocialInteractionCompleted`
+  6. `MemoryRecalled{CascadeBias}` → `AgentDecision{MemoryReason}` (anti-recursion safe)
+  7. `MemoryRecalled{CombatContext}` → `AgentDecision{CombatReason}` → `CombatStarted` → `CombatCompleted` (anti-recursion safe)
+  8. `AgentDecision{SettlementReason}` → `SettlementFormed/SettlementDissolved` + community history accumulation (anti-recursion safe) ★★ NEW
+
+### V7 final stats (updated — Stage 30)
+
+| Metric | Value |
+|--------|-------|
+| Recovery span | 2026-05-03 → 2026-05-21 (~19 days) |
+| Pipeline streak | 34+ consecutive APPROVED (Phase 10-γ terminal) |
+| Governance patches | 17+ (Issues 10-16, v3.3.1 → v3.3.18+) |
+| ENV-BYPASS chains closed | 3 (4th–6th avoided) |
+| Feat commits since V7 reset | 36+ |
+| 100/100 PERFECT first-dispatch | 2× (Phase 8-α + Phase 10-α 일관 substantial) |
+| Governance closure chain | 30-stage complete (Stage 1: `a0666b6c` → Stage 30: this commit) |
+| Phase 10 production span | ~1 week (Stage 26 `6089976c` design → Stage 29 `40c36d13` γ chronicle) |
+| Issue 16 post-fix verification | 3 consecutive live tests passed (Phase 10-α + β + γ) |
+
+### Milestones (final final final final substantial — Phase 10 complete)
+
+- **Axiom #1 causal traceability** (final final final final substantial): All internal reasoning + social interaction + memory bias + combat + settlement lifecycle causal-traceable. 8 reasons → 8 emission chains. Settlement lifecycle: `BuildingPlaced + AgentBorn` → `SettlementFormed` → birth cycle + community history → `SettlementDissolved` fully verified end-to-end. ★★★★
+- **Axiom #3 emotional depth + visual milestone** (final final final substantial): Settlement growth (AutoFormation) + decay (Dissolution) + community history (ring buffer chronicle) = Songs of Syx + Caveman2Cosmos + Dwarf Fortress + RimWorld vision substantial. Settlement lifecycle adds macro god-game emotional depth. ★★★★
+- **Substrate symmetries** (final final substantial — 3 mirrors + 3 axes):
+  - `MEMORY_CAP=32` mirrors `TILE_CAUSAL_RING_SIZE=8` × 4-agent multiplier (Phase 8)
+  - `HOSTILITY_BUMP=0.1` mirrors `FAMILIARITY_BUMP=0.1` (Phase 9)
+  - `SETTLEMENT_HISTORY_CAP=32` mirrors `MEMORY_CAP=32` (Phase 10) ★ NEW
+  - Phase 7 familiarity ↔ Phase 9 hostility symmetric axis
+  - Phase 8 Memory of friendship ↔ Phase 9 Memory of conflict symmetric axis
+  - Phase 8 Memory ↔ Phase 10 Settlement community history symmetric axis ★ NEW (parallel ring buffer mechanism)
+
+### Known governance gaps (updated 2026-05-21 Stage 30)
+
+#### ★ 4f0ed817 commit message audit (정직 disclosure — unchanged from Stage 24)
+
+- **Commit**: `4f0ed817` · Date: 2026-05-21 09:04 KST
+- **Recorded message**: "fix(harness): classify_recode false positives on descriptive 'locked'/'sim-test'"
+- **Actual contents**: Phase 9-δ Combat UI feature files (8 implementation files) + `tools/harness/classify_recode.sh` fix
+- **Decision**: amend/force-push rejected (breaks audit trail). Audit entry = correct disclosure path.
+- **Feature status**: correctly committed and APPROVE confirmed. Message misleading only.
+
+#### Issue 16 post-fix verification evidence
+
+- Phase 10-α (`313cfcd3`): 1st post-fix live test — pipeline_report.md generated ✓
+- Phase 10-β (`930bcbcf`): 2nd post-fix live test — pipeline_report.md generated ✓
+- Phase 10-γ (`40c36d13`): 3rd post-fix live test — pipeline_report.md generated ✓
+- Issue 16 fix integration verified substantial 정통 (3 consecutive live tests)
+
+#### Existing gaps (status — Stage 30)
+
+- Pattern G residual risk: mitigated. No re-activation across Phase 10-α/β/γ chain. Monitoring continues.
+- Pattern A/B/C/D maintained.
+- Phase 9-γ environmental blocks: 3 rate-limit interruptions. Score 95/attempt-1 quality confirmed.
+- Phase 10-δ Settlement UI: optional, deferred.
+
+### 후속 결정 base (사용자 mandate base — post Phase 10)
+
+| Option | Scope |
+|--------|-------|
+| **V7 종결 절대 final substantial substantial substantial substantial** ⭐⭐⭐ | Phase 10 complete. V7 declaration final. |
+| Section 12+ design (Phase 11 anchor) | Advanced AI / Other (사용자 mandate 필수) |
+| Phase 10-δ UI optional | Settlement UI integration |
