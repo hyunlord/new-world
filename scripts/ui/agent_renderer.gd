@@ -37,6 +37,14 @@ const RECALL_CUE_FRAMES := 36         # ~0.6s at 60 FPS — within plan's [0.5, 
 const RECALL_CUE_SCALE_BOOST := 1.25  # 25% scale pulse, clearly visible
 const RECALL_CUE_TINT := Color(0.45, 0.65, 1.0, 1.0)  # blue cue (for future shader use)
 
+# V7 Phase 9-δ — combat cue visual indicator.
+# When a `combat_started` causal event fires for an agent (attacker side),
+# mark it briefly with a red-tinted scale pulse (~0.6s) to surface combat
+# activity without extending the AgentSnapshotRow `state_tag` byte.
+const COMBAT_CUE_FRAMES := 36             # ~0.6s at 60 FPS
+const COMBAT_CUE_SCALE_BOOST := 1.3      # 30% scale pulse
+const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)  # red cue (future shader)
+
 var world_sim: WorldSimNode
 var multi_mesh_inst: MultiMeshInstance2D
 var multi_mesh: MultiMesh
@@ -61,6 +69,11 @@ var _recalling_agents: Dictionary = {}
 # a session so re-observing an evicted id is unlikely.
 const _SEEN_RECALL_MAX := 512
 var _seen_recall_event_ids: Dictionary = {}
+
+# V7 Phase 9-δ — combat cue state (mirrors _recalling_agents pattern).
+var _combating_agents: Dictionary = {}       # agent_id → frames remaining
+const _SEEN_COMBAT_MAX := 512
+var _seen_combat_event_ids: Dictionary = {}  # dedupe set
 
 func _ready() -> void:
 	print("AgentRenderer ready (V7 Phase 4-γ — MultiMeshInstance2D)")
@@ -101,6 +114,7 @@ func _process(_delta: float) -> void:
 	# building this frame's transforms so an entry that just dropped to 0
 	# does not render with the boosted scale on its final frame.
 	_clear_expired_recalling()
+	_clear_expired_combating()
 	var snap: Dictionary = world_sim.get_agent_snapshot()
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -126,9 +140,12 @@ func _process(_delta: float) -> void:
 		# change. NOT tied to `state_tag` so Phase 7-δ A22 stays intact.
 		# Lookup keyed by `agent_ids[i]` (AgentId) so it matches the FFI
 		# `event.agent_id` value used by `_ingest_memory_recalls`.
-		var scale_mul: float = SPRITE_SCALE
+		var boost: float = 1.0
 		if _recalling_agents.has(agent_ids[i]):
-			scale_mul = SPRITE_SCALE * RECALL_CUE_SCALE_BOOST
+			boost = max(boost, RECALL_CUE_SCALE_BOOST)
+		if _combating_agents.has(agent_ids[i]):
+			boost = max(boost, COMBAT_CUE_SCALE_BOOST)
+		var scale_mul: float = SPRITE_SCALE * boost
 		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
 		multi_mesh.set_instance_transform_2d(i, xform)
 		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i]))
@@ -139,6 +156,9 @@ func _process(_delta: float) -> void:
 	# the tile causal history is the canonical source. Dedupe by event id
 	# so a single recall fires `mark_agent_recalling()` exactly once.
 	_ingest_memory_recalls(ids, xs, ys, n)
+	# V7 Phase 9-δ — ingest combat events after memory recalls so both cues
+	# are updated in the same frame pass.
+	_ingest_combat_events(ids, agent_ids, xs, ys, n)
 
 # V7 Phase 8-δ — public API: an external dispatcher (currently
 # `_ingest_memory_recalls` reading `memory_recalled` causal events, or
@@ -219,6 +239,71 @@ func _clear_expired_recalling() -> void:
 			_recalling_agents[eid] = remaining
 	for eid in expired:
 		_recalling_agents.erase(eid)
+
+# V7 Phase 9-δ — public API: mark attacker agent as in-combat for one cue
+# window. Domain: `agent_id` is `AgentId` (same as `_recalling_agents`).
+#
+# Naming: `mark_agent_in_combat` is the primary public API the plan
+# requires (mirrors `mark_agent_recalling`). `mark_agent_combating` is
+# kept as a compatibility alias for any earlier callsites that may still
+# reference the older spelling.
+func mark_agent_in_combat(agent_id: int) -> void:
+	_combating_agents[agent_id] = COMBAT_CUE_FRAMES
+
+# V7 Phase 9-δ — backwards-compatible alias for `mark_agent_in_combat`.
+# Forwards to the primary API so any older caller continues to work.
+func mark_agent_combating(agent_id: int) -> void:
+	mark_agent_in_combat(agent_id)
+
+# V7 Phase 9-δ — read-only accessor; returns 0 when no active combat cue.
+func combat_cue_remaining(agent_id: int) -> int:
+	return int(_combating_agents.get(agent_id, 0))
+
+# V7 Phase 9-δ — poll the tile causal log for `combat_started` events and
+# dispatch `mark_agent_combating()` for the attacker (`agent_id` field).
+# Mirrors `_ingest_memory_recalls` exactly.
+func _ingest_combat_events(ids: PackedInt64Array, agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
+	if world_sim == null:
+		return
+	if not world_sim.has_method("get_tile_causal_history"):
+		return
+	var visited_tiles: Dictionary = {}
+	for i in n:
+		var key: int = (int(xs[i]) << 20) | int(ys[i])
+		if visited_tiles.has(key):
+			continue
+		visited_tiles[key] = true
+		var history: Array = world_sim.get_tile_causal_history(int(xs[i]), int(ys[i]))
+		for ev in history:
+			if not (ev is Dictionary):
+				continue
+			var dev: Dictionary = ev
+			if String(dev.get("kind", "")) != "combat_started":
+				continue
+			var event_id: int = int(dev.get("id", -1))
+			if event_id < 0:
+				continue
+			if _seen_combat_event_ids.has(event_id):
+				continue
+			_seen_combat_event_ids[event_id] = true
+			var agent_id: int = int(dev.get("agent_id", -1))
+			if agent_id >= 0:
+				mark_agent_in_combat(agent_id)
+	if _seen_combat_event_ids.size() > _SEEN_COMBAT_MAX:
+		_seen_combat_event_ids.clear()
+
+func _clear_expired_combating() -> void:
+	if _combating_agents.is_empty():
+		return
+	var expired: Array = []
+	for eid in _combating_agents:
+		var remaining: int = int(_combating_agents[eid]) - 1
+		if remaining <= 0:
+			expired.append(eid)
+		else:
+			_combating_agents[eid] = remaining
+	for eid in expired:
+		_combating_agents.erase(eid)
 
 func _palette_for_id(eid: int) -> Color:
 	# Hash splat — three independent multipliers give visually distinct

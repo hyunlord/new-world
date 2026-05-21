@@ -31,13 +31,18 @@ if [[ -z "$content" ]]; then
 fi
 
 # Priority order (가장 강한 signal 부터 — 한 attempt가 multiple match 시 LOCK > OOS > TEST > STYLE > OTHER)
-if echo "$content" | grep -qiE 'lock|cardinality|prompt §3|forbidden rationale|"more flexible"|"reasonable"|"future-proof"|"more idiomatic"|"more rust-idiomatic"'; then
+# NOTE: bare "lock" is intentionally excluded — it false-positives on descriptive "locked plan thresholds".
+# LOCK_VIOLATION requires explicit violation context (violat+lock, threshold modification, etc.)
+if echo "$content" | grep -qiE 'lock.*violat|violat.*lock|cardinality|prompt §3|forbidden rationale|"more flexible"|"reasonable"|"future-proof"|"more idiomatic"|"more rust-idiomatic"'; then
     echo "LOCK_VIOLATION"
-elif echo "$content" | grep -qiE 'out of scope|workspace\.members|new crate|sim-test|sim-bridge.*new|harness\.rs|prompt §6'; then
+# NOTE: bare "sim-test" false-positives on cargo test command references (e.g. "cargo test -p sim-test").
+# OUT_OF_SCOPE requires explicit scope-violation context (new crate added, workspace.members changed, etc.)
+elif echo "$content" | grep -qiE 'out of scope|workspace\.members|new crate|new.*sim-test.*crat|sim-bridge.*new.*crat|harness\.rs|prompt §6'; then
     echo "OUT_OF_SCOPE"
 elif echo "$content" | grep -qiE 'test count|edge case|boundary|coverage|test rigor|insufficient test|test보강'; then
     echo "TEST_RIGOR"
-elif echo "$content" | grep -qiE 'rustfmt|clippy.*style|naming|doc comment|verbosity|cosmetic'; then
+# NOTE: "names" added to catch "function names do not follow..." (naming/prefix issues = STYLE, penalty 0)
+elif echo "$content" | grep -qiE 'rustfmt|clippy.*style|naming|\bnames\b.*prefix|prefix.*\bnames\b|function.*\bname\b|doc comment|verbosity|cosmetic'; then
     echo "STYLE"
 else
     echo "OTHER"

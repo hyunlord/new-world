@@ -37,7 +37,7 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentState, Hunger, Memory, Position, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, Hunger, Memory, Position, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -383,6 +383,17 @@ pub struct CausalEventView {
     ///
     /// [`MemoryEntry`]: sim_core::components::MemoryEntry
     pub recalled_event: Option<EventId>,
+    /// Defender [`AgentId`] for combat events (CombatStarted /
+    /// CombatCompleted only — V7 Phase 9-δ). Surfaced so the GDScript
+    /// CausalPanel and AgentRenderer can reference the defender side of
+    /// a combat encounter. Serialised as `"defender_id"` in the FFI dict.
+    pub defender_id: Option<AgentId>,
+    /// Defender HP after damage (CombatCompleted only — V7 Phase 9-δ).
+    /// Saturated at `0.0` when the defender is dead. Serialised as
+    /// `"new_value"` in the FFI dict (mirrors the `"new"`/`"new_value"`
+    /// convention for post-mutation snapshots) so the panel can render the
+    /// post-damage value (`UI_COMBAT_HP_AFTER`).
+    pub hp_after: Option<f64>,
 }
 
 impl CausalEventView {
@@ -410,6 +421,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::StampDirty {
                 id,
@@ -432,6 +445,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::InfluenceChanged {
                 id,
@@ -456,6 +471,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::AgentDecision {
                 id,
@@ -479,6 +496,8 @@ impl CausalEventView {
                 reason: Some(reason.as_str()),
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::ConstructionStarted {
                 id,
@@ -501,6 +520,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::ConstructionCompleted {
                 id,
@@ -523,6 +544,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::SocialInteractionStarted {
                 id,
@@ -545,6 +568,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             CausalEvent::SocialInteractionCompleted {
                 id,
@@ -568,6 +593,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: None,
+                hp_after: None,
             },
             // V7 Phase 8-δ — full FFI shape: surfaces `triggered_by` (the
             // discriminator the GDScript CausalPanel uses to pick the
@@ -596,14 +623,17 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: Some(memory_recall_trigger_str(triggered_by)),
                 recalled_event: Some(*recalled_event),
+                defender_id: None,
+                hp_after: None,
             },
-            // V7 Phase 9-β minimum-viable views. Full FFI shape (defender id,
-            // hp_after field) lands with later phases that surface combat UI.
+            // V7 Phase 9-δ — full FFI shape: surfaces `defender_id` so the
+            // GDScript CausalPanel and AgentRenderer can reference the
+            // defender side of a combat encounter.
             CausalEvent::CombatStarted {
                 id,
                 parent,
                 attacker,
-                defender: _,
+                defender,
                 position,
                 tick,
             } => Self {
@@ -621,12 +651,14 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: Some(*defender),
+                hp_after: None,
             },
             CausalEvent::CombatCompleted {
                 id,
                 parent,
                 attacker,
-                defender: _,
+                defender,
                 position,
                 hp_after,
                 tick,
@@ -645,6 +677,8 @@ impl CausalEventView {
                 reason: None,
                 triggered_by: None,
                 recalled_event: None,
+                defender_id: Some(*defender),
+                hp_after: Some(*hp_after),
             },
         }
     }
@@ -695,6 +729,9 @@ pub enum FfiFieldValue {
     I32(i32),
     /// 32-bit float (used for `old`/`new` influence intensities).
     F32(f32),
+    /// 64-bit float (V7 Phase 9-δ — used for `hp_after`, which is `f64` in
+    /// the simulation core and round-trips with full precision).
+    F64(f64),
     /// `(x, y)` packed coordinate (`Vector2i` in the VarDictionary).
     Pos2i(i32, i32),
     /// `(min_x, min_y, max_x, max_y)` packed region (`Vector4i` in the
@@ -751,7 +788,7 @@ pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTr
         dict.insert("old", FfiFieldValue::F32(old));
     }
     if let Some(new) = view.new_value {
-        dict.insert("new", FfiFieldValue::F32(new));
+        dict.insert("new_value", FfiFieldValue::F32(new));
     }
     if let Some(agent_id) = view.agent_id {
         dict.insert("agent_id", FfiFieldValue::I64(agent_id as i64));
@@ -767,6 +804,15 @@ pub fn event_view_to_owned_dict(view: &CausalEventView) -> std::collections::BTr
             "recalled_event",
             FfiFieldValue::I64(recalled_event as i64),
         );
+    }
+    if let Some(defender_id) = view.defender_id {
+        dict.insert("defender_id", FfiFieldValue::I64(defender_id as i64));
+    }
+    if let Some(hp_after) = view.hp_after {
+        // V7 Phase 9-δ — serialised under `"new_value"` to mirror the
+        // post-mutation snapshot convention shared with `InfluenceChanged`
+        // and match the GDScript CausalPanel reader for combat_completed.
+        dict.insert("new_value", FfiFieldValue::F64(hp_after));
     }
     dict
 }
@@ -884,6 +930,7 @@ fn event_view_to_dict(view: &CausalEventView) -> VarDictionary {
             FfiFieldValue::I64(n) => dict.set(key, n),
             FfiFieldValue::I32(n) => dict.set(key, n),
             FfiFieldValue::F32(f) => dict.set(key, f),
+            FfiFieldValue::F64(f) => dict.set(key, f),
             FfiFieldValue::Pos2i(x, y) => dict.set(key, Vector2i::new(x, y)),
             FfiFieldValue::Region4i(min_x, min_y, max_x, max_y) => {
                 dict.set(key, Vector4i::new(min_x, min_y, max_x, max_y));
