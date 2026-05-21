@@ -149,6 +149,28 @@ impl RuntimeSystem for CombatSystem {
                 Err(_) => 0.0,
             };
 
+            // V7 Phase 10-γ / P10γ-A13: compute settlement link.
+            // `Some(sid)` if either combatant is a member of any
+            // settlement at emission time; lowest sid wins for
+            // determinism. CombatSystem (priority 137) runs before
+            // SettlementSystem (priority 138) in the same tick, so the
+            // membership view is the pre-tick snapshot from the previous
+            // SettlementSystem run — which is exactly the routing
+            // predicate the chronicle harness asserts against.
+            let settlement_link: Option<sim_core::components::SettlementId> = {
+                let mut candidates: Vec<sim_core::components::SettlementId> = resources
+                    .settlements
+                    .iter()
+                    .filter(|(_, s)| {
+                        s.member_agents.contains(&attacker_id)
+                            || s.member_agents.contains(&defender_id)
+                    })
+                    .map(|(id, _)| *id)
+                    .collect();
+                candidates.sort();
+                candidates.first().copied()
+            };
+
             // Emit CombatCompleted.
             let completed_id = resources.issue_event_id();
             resources.causal_log.push(
@@ -160,6 +182,7 @@ impl RuntimeSystem for CombatSystem {
                     defender: defender_id,
                     position,
                     hp_after,
+                    settlement_link,
                     tick,
                 },
             );

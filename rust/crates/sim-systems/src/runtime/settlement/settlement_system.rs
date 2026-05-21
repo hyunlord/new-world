@@ -61,7 +61,7 @@
 use std::collections::{HashMap, HashSet};
 
 use hecs::World;
-use sim_core::causal::event::{CausalEvent, DecisionReason, EventId};
+use sim_core::causal::event::{CausalEvent, DecisionReason, DissolutionCause, EventId};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingId, Hunger, Memory, Position, Settlement, SettlementId,
     Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
@@ -126,6 +126,16 @@ pub struct SettlementSystem {
     /// `!member_buildings.is_empty()` held. Used at dissolution to
     /// populate `SettlementDissolved.final_population` (plan A4).
     last_known_population: HashMap<SettlementId, u32>,
+    /// Last observed member id per settlement (lowest-id member at the
+    /// snapshot moment). Captured at the same snapshot point as
+    /// `last_known_population` and used to populate
+    /// `SettlementDissolved.last_member_id` (V7 Phase 10-γ / P10γ-A17).
+    last_known_member_id: HashMap<SettlementId, AgentId>,
+    /// Last observed building id per settlement (lowest-id building at
+    /// the snapshot moment). Captured at the same snapshot point as
+    /// `last_known_population` and used to populate
+    /// `SettlementDissolved.last_building_id` (V7 Phase 10-γ / P10γ-A17).
+    last_known_building_id: HashMap<SettlementId, BuildingId>,
     /// Monotonic side-effect counter incremented every tick the system
     /// runs (plan A28). Observable via [`Self::tick_run_count`].
     tick_run_count: u64,
@@ -133,6 +143,12 @@ pub struct SettlementSystem {
     /// during the current tick. Prevents double-append within a single
     /// tick (plan A21 1:1 correspondence).
     routed_this_tick: HashSet<(SettlementId, EventId)>,
+    /// Settlements minted by `run_formation_scan` during the current tick
+    /// (V7 Phase 10-γ / P10γ-A6). Stored as `(settlement_id, formed_id)`
+    /// pairs so the formation event can be seeded into community_history
+    /// AFTER `ingest_community_history` runs, making the SettlementFormed
+    /// entry the most-recent entry at formation tick.
+    newly_formed_this_tick: Vec<(SettlementId, EventId)>,
 }
 
 impl SettlementSystem {
@@ -157,6 +173,12 @@ impl SettlementSystem {
             {
                 self.last_known_population
                     .insert(*sid, settlement.population_stats.current);
+                if let Some(min_member) = settlement.member_agents.iter().min().copied() {
+                    self.last_known_member_id.insert(*sid, min_member);
+                }
+                if let Some(min_building) = settlement.member_buildings.iter().min().copied() {
+                    self.last_known_building_id.insert(*sid, min_building);
+                }
             }
         }
     }
@@ -296,6 +318,15 @@ impl SettlementSystem {
                 },
             );
 
+            // V7 Phase 10-γ: track newly-formed settlements so the
+            // formation event can be seeded into community_history AFTER
+            // step 6 (ingest_community_history) routes the founding-tick
+            // building events. This makes the SettlementFormed entry the
+            // most recent entry at formation tick (plan A6 "most recent
+            // or only"), while still allowing the founding-tick
+            // BuildingPlaced events to route into history (plan A21).
+            self.newly_formed_this_tick.push((new_id, formed_id));
+
             self.formation_tiles.insert(new_id, candidate);
             self.formation_event_ids.insert(new_id, formed_id);
             self.birth_last_tick.insert(new_id, tick);
@@ -304,6 +335,12 @@ impl SettlementSystem {
             {
                 self.last_known_population
                     .insert(new_id, settlement.population_stats.current);
+                if let Some(m) = settlement.member_agents.iter().min().copied() {
+                    self.last_known_member_id.insert(new_id, m);
+                }
+                if let Some(b) = settlement.member_buildings.iter().min().copied() {
+                    self.last_known_building_id.insert(new_id, b);
+                }
             }
             existing_anchors.push(candidate);
             resources.settlements.insert(new_id, settlement);
@@ -344,7 +381,13 @@ impl SettlementSystem {
         //     post-sync `member_agents` snapshot.
         // (c) AgentDecision{SettlementReason} where the target_agent is a
         //     member of some settlement — extracted from the same scan.
-        let mut combat_events: Vec<(EventId, AgentId, AgentId)> = Vec::new();
+        // V7 Phase 10-γ / P10γ-A13: combat routing is gated by the
+        // explicit `settlement_link` tag on `CombatCompleted`, NOT by a
+        // pure membership check. Events whose `settlement_link == None`
+        // are NOT routed — even if a combatant happens to be a member
+        // at scan time. This makes the routing predicate auditable on
+        // the event itself.
+        let mut combat_events: Vec<(EventId, SettlementId)> = Vec::new();
         let mut settlement_decisions: Vec<(EventId, AgentId)> = Vec::new();
         for (_tile_idx, log) in resources.causal_log.iter() {
             for ev in log.iter() {
@@ -354,11 +397,10 @@ impl SettlementSystem {
                 match ev {
                     CausalEvent::CombatCompleted {
                         id,
-                        attacker,
-                        defender,
+                        settlement_link: Some(sid),
                         ..
                     } => {
-                        combat_events.push((*id, *attacker, *defender));
+                        combat_events.push((*id, *sid));
                     }
                     CausalEvent::AgentDecision {
                         id,
@@ -379,23 +421,12 @@ impl SettlementSystem {
                 }
             }
         }
-        for (event_id, attacker, defender) in combat_events {
-            // Find the first settlement that contains either party.
-            let mut sids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
-            sids.sort();
-            for sid in sids {
-                let is_member = resources
-                    .settlements
-                    .get(&sid)
-                    .map(|s| {
-                        s.member_agents.contains(&attacker)
-                            || s.member_agents.contains(&defender)
-                    })
-                    .unwrap_or(false);
-                if is_member {
-                    self.append_unique(resources, sid, event_id);
-                    break;
-                }
+        for (event_id, sid) in combat_events {
+            // Route ONLY to the settlement carried in the explicit link.
+            // If that settlement still exists, append. Untagged events
+            // (settlement_link == None) were filtered out above.
+            if resources.settlements.contains_key(&sid) {
+                self.append_unique(resources, sid, event_id);
             }
         }
         for (event_id, emitting_agent) in settlement_decisions {
@@ -515,6 +546,20 @@ impl SettlementSystem {
         }
 
         for (sid, spawn_pos) in births {
+            // Two-parent chain (V7 Phase 10-γ / P10γ-A10): take the two
+            // lowest-id distinct members of the birth settlement as the
+            // canonical parents. With ≥3 founders at formation and no
+            // intervening despawns, both ids exist and are distinct.
+            let parent_ids: Vec<AgentId> = match resources.settlements.get(&sid) {
+                Some(s) => {
+                    let mut members: Vec<AgentId> =
+                        s.member_agents.iter().copied().collect();
+                    members.sort();
+                    members.into_iter().take(2).collect()
+                }
+                None => Vec::new(),
+            };
+
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -541,6 +586,7 @@ impl SettlementSystem {
                     id: event_id,
                     parent,
                     agent: new_agent_id,
+                    parent_ids,
                     tick,
                 },
             );
@@ -600,6 +646,8 @@ impl SettlementSystem {
                         .map(|s| s.population_stats.current)
                         .unwrap_or(0)
                 });
+            let last_member_id = self.last_known_member_id.get(&sid).copied();
+            let last_building_id = self.last_known_building_id.get(&sid).copied();
             resources.causal_log.push(
                 tile_idx,
                 CausalEvent::SettlementDissolved {
@@ -607,6 +655,9 @@ impl SettlementSystem {
                     parent,
                     settlement_id: sid,
                     final_population,
+                    cause: DissolutionCause::EmptyMembersAndBuildings,
+                    last_member_id,
+                    last_building_id,
                     tick,
                 },
             );
@@ -619,6 +670,8 @@ impl SettlementSystem {
             self.formation_event_ids.remove(&sid);
             self.birth_last_tick.remove(&sid);
             self.last_known_population.remove(&sid);
+            self.last_known_member_id.remove(&sid);
+            self.last_known_building_id.remove(&sid);
         }
     }
 }
@@ -639,6 +692,7 @@ impl RuntimeSystem for SettlementSystem {
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         self.tick_run_count = self.tick_run_count.saturating_add(1);
         self.routed_this_tick.clear();
+        self.newly_formed_this_tick.clear();
 
         let width = resources.tile_grid.width;
         let height = resources.tile_grid.height;
@@ -657,6 +711,19 @@ impl RuntimeSystem for SettlementSystem {
         // upstream systems land before birth events for the same tick.
         // run_births appends AgentBorn directly to history.
         self.ingest_community_history(resources, &new_buildings, tick);
+        // V7 Phase 10-γ: seed SettlementFormed events into community_history
+        // AFTER step 6. This makes the SettlementFormed entry the MOST
+        // RECENT entry at formation tick (plan A6), while the founding-tick
+        // BuildingPlaced events that step 6 already routed remain in the
+        // history at the start of the buffer.
+        for (sid, formed_id) in self.newly_formed_this_tick.clone() {
+            if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                if !settlement.community_history.contains(&formed_id) {
+                    settlement.append_history(formed_id);
+                }
+            }
+            self.routed_this_tick.insert((sid, formed_id));
+        }
         self.run_births(world, resources, &agent_positions, width, tick);
         self.run_dissolutions(resources, width, tick);
     }

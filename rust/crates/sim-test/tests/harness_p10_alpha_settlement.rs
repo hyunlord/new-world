@@ -392,6 +392,7 @@ fn harness_p10_alpha_a18_causal_event_agent_born_variant_and_accessors() {
         id: 99,
         parent: Some(10),
         agent: 1 as AgentId,
+        parent_ids: Vec::new(),
         tick: 42,
     };
 
@@ -412,6 +413,7 @@ fn harness_p10_alpha_a19_agent_born_clone_and_partial_eq() {
         id: 99,
         parent: Some(10),
         agent: 1 as AgentId,
+        parent_ids: Vec::new(),
         tick: 42,
     };
 

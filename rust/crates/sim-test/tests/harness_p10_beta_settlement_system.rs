@@ -1599,6 +1599,9 @@ fn harness_p10_beta_edge_settlement_dissolved_variant_schema() {
         parent: Some(99),
         settlement_id: 7,
         final_population: 0u32,
+        cause: sim_core::causal::event::DissolutionCause::EmptyMembersAndBuildings,
+        last_member_id: None,
+        last_building_id: None,
         tick: 50,
     };
     if let CausalEvent::SettlementDissolved {

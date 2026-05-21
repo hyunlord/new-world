@@ -197,6 +197,7 @@ fn harness_p9_delta_combat_completed_ffi_kind_string() {
         defender: 23,
         position: (4, 5),
         hp_after: 42.0,
+        settlement_link: None,
         tick: 50,
     };
     let view = CausalEventView::from_event(&ev);

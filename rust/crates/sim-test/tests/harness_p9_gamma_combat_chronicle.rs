@@ -235,6 +235,7 @@ fn build_engine(
                 defender: def_id,
                 position: (SHARED_X, SHARED_Y),
                 hp_after: 90.0,
+                settlement_link: None,
                 tick: 0,
             },
         );
@@ -262,6 +263,7 @@ fn build_engine(
                     defender: att_id,
                     position: (SHARED_X, SHARED_Y),
                     hp_after: 90.0,
+                    settlement_link: None,
                     tick: 0,
                 },
             );
@@ -586,6 +588,7 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
                 defender: probe_id.saturating_add(999),
                 position: (0, 0),
                 hp_after: 90.0,
+                settlement_link: None,
                 tick: cur,
             },
         );

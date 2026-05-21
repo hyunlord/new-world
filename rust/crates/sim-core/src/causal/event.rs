@@ -23,9 +23,32 @@
 //! so [`CausalEvent`] inherits the same constraint. Callers move/clone
 //! events explicitly rather than rely on a bit-copy.
 
-use crate::components::settlement::SettlementId;
+use crate::components::settlement::{BuildingId, SettlementId};
 use crate::components::AgentId;
 use crate::influence::{DirtyRegion, InfluenceChannel};
+
+/// Typed cause for [`CausalEvent::SettlementDissolved`] (V7 Phase 10-γ /
+/// P10γ-A17).
+///
+/// Production currently models exactly one dissolution path
+/// (population==0 AND member_buildings.is_empty()); the enum is closed
+/// at this single variant. Adding new dissolution paths later (e.g.
+/// player demolition, schism) introduces new variants here.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
+pub enum DissolutionCause {
+    /// Both `population_stats.current == 0` AND `member_buildings.is_empty()`
+    /// for the same tick — the canonical natural-attrition cause.
+    EmptyMembersAndBuildings,
+}
+
+impl DissolutionCause {
+    /// Stable string discriminator used by FFI views.
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            DissolutionCause::EmptyMembersAndBuildings => "empty_members_and_buildings",
+        }
+    }
+}
 
 /// Reason an agent transitioned from `Idle` to `Seeking` (V7 Phase 5-β /
 /// P5β-3). Encoded into [`CausalEvent::AgentDecision`] so the "왜?" UI
@@ -400,6 +423,18 @@ pub enum CausalEvent {
         /// Defender HP after `apply_damage(DAMAGE_PER_COMBAT_TICK)`
         /// (saturated at 0.0). P9β-3: this is NOT `defender_died: bool`.
         hp_after: f64,
+        /// Settlement link tag (V7 Phase 10-γ / P10γ-A13). `Some(sid)`
+        /// when either `attacker` or `defender` is a member of settlement
+        /// `sid` at emission time; `None` otherwise. Populated by
+        /// [`CombatSystem`] (priority 137) before [`SettlementSystem`]
+        /// (priority 138) runs in the same tick. Used by
+        /// [`SettlementSystem`] step 6 to gate community_history routing:
+        /// only events whose `settlement_link == Some(sid)` are routed to
+        /// `sid`'s history. Member-involved combat WITHOUT this tag (e.g.
+        /// hand-constructed test events) is NOT routed, distinguishing
+        /// the explicit-link routing predicate from a pure membership
+        /// check.
+        settlement_link: Option<SettlementId>,
         /// Simulation tick at which damage was applied.
         tick: u64,
     },
@@ -425,6 +460,11 @@ pub enum CausalEvent {
         parent: Option<EventId>,
         /// The newly spawned agent's `AgentId`.
         agent: AgentId,
+        /// Two parent agents that produced this birth (V7 Phase 10-γ /
+        /// P10γ-A10). Populated by `SettlementSystem.run_births` with the
+        /// two lowest-id distinct members of the birth settlement. Empty
+        /// for world-seed spawns (`parent == None`).
+        parent_ids: Vec<AgentId>,
         /// Simulation tick at which the agent was born.
         tick: u64,
     },
@@ -463,6 +503,20 @@ pub enum CausalEvent {
         settlement_id: SettlementId,
         /// Population at dissolution time (always 0 by precondition).
         final_population: u32,
+        /// Typed dissolution cause (V7 Phase 10-γ / P10γ-A17). At present
+        /// the only canonical cause is
+        /// [`DissolutionCause::EmptyMembersAndBuildings`].
+        cause: DissolutionCause,
+        /// `AgentId` of the LAST member observed inside the settlement
+        /// prior to dissolution (the lowest-id member captured by the
+        /// pre-clearing snapshot). `None` if the settlement never held a
+        /// member after formation.
+        last_member_id: Option<AgentId>,
+        /// `BuildingId` of the LAST building observed inside the settlement
+        /// prior to dissolution (the lowest-id building captured by the
+        /// pre-clearing snapshot). `None` if the settlement never held a
+        /// building after formation.
+        last_building_id: Option<BuildingId>,
         /// Simulation tick at which dissolution was detected.
         tick: u64,
     },

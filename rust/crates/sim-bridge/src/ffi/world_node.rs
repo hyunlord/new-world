@@ -662,6 +662,7 @@ impl CausalEventView {
                 position,
                 hp_after,
                 tick,
+                ..
             } => Self {
                 kind: "combat_completed",
                 id: *id,
@@ -680,7 +681,7 @@ impl CausalEventView {
                 defender_id: Some(*defender),
                 hp_after: Some(*hp_after),
             },
-            CausalEvent::AgentBorn { id, parent, agent, tick } => Self {
+            CausalEvent::AgentBorn { id, parent, agent, tick, .. } => Self {
                 kind: "agent_born",
                 id: *id,
                 parent: *parent,

@@ -355,10 +355,12 @@ fn harness_p9_beta_a8_combat_completed_schema_exhaustive() {
         defender: 2u64,
         position: (3, 4),
         hp_after: 90.0_f64,
+        settlement_link: None,
         tick: 8,
     };
     match ev {
         // EXHAUSTIVE — no `..`. Includes hp_after: f64; excludes defender_died.
+        // V7 Phase 10-γ / P10γ-A13: schema extended with settlement_link.
         CausalEvent::CombatCompleted {
             id,
             parent,
@@ -366,6 +368,7 @@ fn harness_p9_beta_a8_combat_completed_schema_exhaustive() {
             defender,
             position,
             hp_after,
+            settlement_link,
             tick,
         } => {
             assert_eq!(id, 20);
@@ -376,6 +379,7 @@ fn harness_p9_beta_a8_combat_completed_schema_exhaustive() {
             // Type witness — must be f64.
             let _: f64 = hp_after;
             assert_eq!(hp_after, 90.0);
+            assert_eq!(settlement_link, None);
             assert_eq!(tick, 8);
         }
         _ => panic!("expected CombatCompleted"),
