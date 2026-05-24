@@ -207,8 +207,8 @@ func _update_construction_sites() -> void:
 	for i in n:
 		var entity_id: int = ids[i]
 		seen[entity_id] = true
-		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2)
-		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2)
+		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var req: int = max(int(required[i]), 1)
 		var ratio: float = clampf(float(progresses[i]) / float(req), 0.0, 1.0)
 		var alpha: float = CONSTRUCTION_ALPHA_MIN + (CONSTRUCTION_ALPHA_MAX - CONSTRUCTION_ALPHA_MIN) * ratio
@@ -247,8 +247,8 @@ func _update_settlement_furniture() -> void:
 	for i in n:
 		var entity_id: int = ids[i]
 		seen[entity_id] = true
-		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2)
-		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2)
+		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var furniture_sprite: Sprite2D = _furniture_sprites.get(entity_id, null) as Sprite2D
 		if furniture_sprite == null:
 			furniture_sprite = Sprite2D.new()

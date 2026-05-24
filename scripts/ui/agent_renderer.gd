@@ -168,8 +168,8 @@ func _process(delta: float) -> void:
 		for i in n:
 			var tile_x: int = xs[i]
 			var tile_y: int = ys[i]
-			var cpx: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE + TILE_SIZE / 2)
-			var cpy: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE + TILE_SIZE / 2)
+			var cpx: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE) + float(TILE_SIZE) / 2.0
+			var cpy: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE) + float(TILE_SIZE) / 2.0
 			_curr_positions[int(agent_ids[i])] = Vector2(cpx, cpy)
 		_lerp_accumulator = 0.0
 	var lerp_t: float = clampf(_lerp_accumulator / SIM_TICK_DURATION, 0.0, 1.0)
@@ -237,7 +237,7 @@ func recall_cue_remaining(agent_id: int) -> int:
 # is dispatched via `mark_agent_recalling()` for the event's `agent_id`.
 # The dedupe set is bounded so a long session does not grow GDScript
 # memory without limit.
-func _ingest_memory_recalls(ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
+func _ingest_memory_recalls(_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
 	if world_sim == null:
 		return
 	if not world_sim.has_method("get_tile_causal_history"):
@@ -313,7 +313,7 @@ func combat_cue_remaining(agent_id: int) -> int:
 # V7 Phase 9-δ — poll the tile causal log for `combat_started` events and
 # dispatch `mark_agent_combating()` for the attacker (`agent_id` field).
 # Mirrors `_ingest_memory_recalls` exactly.
-func _ingest_combat_events(ids: PackedInt64Array, agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
+func _ingest_combat_events(_ids: PackedInt64Array, _agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
 	if world_sim == null:
 		return
 	if not world_sim.has_method("get_tile_causal_history"):
