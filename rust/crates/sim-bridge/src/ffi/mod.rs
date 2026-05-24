@@ -23,5 +23,6 @@ pub use world_node::{
 };
 pub use world_node::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
 pub use world_node::{collect_construction_snapshot, ConstructionSnapshotRow};
+pub use world_node::{collect_settlement_snapshot, SettlementSnapshotRow};
 pub use world_node::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use world_node::WorldSimNode;

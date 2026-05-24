@@ -61,6 +61,14 @@ const Z_CONSTRUCTION := 5
 const CONSTRUCTION_ALPHA_MIN := 0.3
 const CONSTRUCTION_ALPHA_MAX := 1.0
 
+# V7 Phase 12-γ — Settlement furniture placeholder constants.
+# A 32×32 hearth sprite is placed at the substrate-derived centroid of
+# every Settlement that has at least one resolvable member agent. The
+# sprite sits at z=4 — above the terrain TileMapLayer (z=0) and below
+# the ConstructionSite layer (z=5) and the influence overlay (z=10).
+const FURNITURE_SPRITE_PATH := "res://assets/sprites/furniture/hearth/1.png"
+const Z_FURNITURE := 4
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
@@ -71,6 +79,12 @@ var image: Image
 # site. Keyed dictionary so the per-frame reaper can free Sprite2D nodes
 # corresponding to despawned (completed or otherwise removed) sites.
 var _construction_sprites: Dictionary = {}
+
+# V7 Phase 12-γ — entity_bits (int) → Sprite2D for the corresponding
+# Settlement's furniture placeholder. Same keyed-Dictionary pattern as
+# the construction layer; the per-frame reaper frees sprites whose
+# Settlement entity no longer appears in the snapshot (dissolved).
+var _furniture_sprites: Dictionary = {}
 
 func _ready() -> void:
 	print("WorldRenderer ready (T7.9.B render mechanism)")
@@ -168,6 +182,8 @@ func _process(_delta: float) -> void:
 	texture.update(image)
 	# V7 Phase 12-β.2 (A3) — ingest construction-site snapshot.
 	_update_construction_sites()
+	# V7 Phase 12-γ — ingest settlement snapshot for furniture placeholders.
+	_update_settlement_furniture()
 
 # V7 Phase 12-β.2 (A3) — pull the per-frame construction snapshot from
 # SimBridge and reconcile against `_construction_sprites`:
@@ -212,6 +228,42 @@ func _update_construction_sites() -> void:
 			if stale != null:
 				stale.queue_free()
 			_construction_sprites.erase(entity_id)
+
+# V7 Phase 12-γ — pull the per-frame settlement snapshot from SimBridge
+# and reconcile against `_furniture_sprites`:
+#   - create a hearth Sprite2D for any newly-seen Settlement entity_bits
+#   - update its position to the FFI-supplied centroid
+#   - reap (queue_free + erase) any keys not present this frame
+# The centroid is already integer (floor of mean of member positions)
+# from the Rust collector; here we only translate tile coords → pixels.
+func _update_settlement_furniture() -> void:
+	var snap: Dictionary = world_sim.get_settlement_snapshot()
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("centroid_xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("centroid_ys", PackedInt32Array())
+	var n: int = ids.size()
+	var seen: Dictionary = {}
+	var tex: Texture2D = load(FURNITURE_SPRITE_PATH) as Texture2D
+	for i in n:
+		var entity_id: int = ids[i]
+		seen[entity_id] = true
+		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2)
+		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2)
+		var furniture_sprite: Sprite2D = _furniture_sprites.get(entity_id, null) as Sprite2D
+		if furniture_sprite == null:
+			furniture_sprite = Sprite2D.new()
+			furniture_sprite.texture = tex
+			furniture_sprite.z_index = Z_FURNITURE
+			add_child(furniture_sprite)
+			_furniture_sprites[entity_id] = furniture_sprite
+		furniture_sprite.position = Vector2(px, py)
+	# Reap entries no longer present in the snapshot (dissolved settlements).
+	for entity_id in _furniture_sprites.keys():
+		if not seen.has(entity_id):
+			var stale: Sprite2D = _furniture_sprites[entity_id]
+			if stale != null:
+				stale.queue_free()
+			_furniture_sprites.erase(entity_id)
 
 func _handle_tile_click(pos: Vector2) -> void:
 	var tile_x := int(floor((pos.x - SPRITE_ORIGIN_X) / float(TILE_SIZE)))

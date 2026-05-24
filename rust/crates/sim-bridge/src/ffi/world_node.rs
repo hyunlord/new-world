@@ -37,8 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, Sleep, Social,
-    TargetKind, Thirst,
+    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, Settlement, Sleep,
+    Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -254,6 +254,20 @@ impl WorldSimNode {
     fn get_construction_snapshot(&self) -> VarDictionary {
         let rows = collect_construction_snapshot(&self.engine.world);
         construction_rows_to_dict(&rows)
+    }
+
+    /// V7 Phase 12-γ FFI — settlement snapshot with substrate-derived
+    /// centroid for furniture placement. Returns a `VarDictionary` with
+    /// five `PackedArray` keys (`ids`, `settlement_ids`, `centroid_xs`,
+    /// `centroid_ys`, `member_counts`) of equal length. Empty arrays
+    /// when no rendered `Settlement` entities exist in the ECS world.
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_settlement_snapshot`] (Bridge Identity Contract).
+    #[func]
+    fn get_settlement_snapshot(&self) -> VarDictionary {
+        let rows = collect_settlement_snapshot(&self.engine.world);
+        settlement_rows_to_dict(&rows)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1274,6 +1288,121 @@ fn construction_rows_to_dict(rows: &[ConstructionSnapshotRow]) -> VarDictionary 
     dict.set("ys", ys);
     dict.set("progresses", progresses);
     dict.set("required_progresses", required_progresses);
+    dict
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// V7 Phase 12-γ: Settlement snapshot FFI surface
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the settlement snapshot returned by
+/// [`collect_settlement_snapshot`].
+///
+/// V7 Phase 12-γ — surfaces `Settlement` entities to the GDScript renderer
+/// with a substrate-derived centroid (mean position of member agents). The
+/// substrate has no `Settlement.position` field; this is a derived UI
+/// affordance that does NOT add or modify any sim-core data.
+///
+/// `member_count` is the count of *resolvable* member agents (those whose
+/// `AgentId` matches a live `(Agent, Position)` pair in the ECS world).
+/// Settlements with zero resolvable members are dropped by the collector
+/// rather than emitted with a divide-by-zero centroid.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SettlementSnapshotRow {
+    /// `hecs::Entity::to_bits().get()` of the Settlement entity.
+    pub entity_bits: u64,
+    /// `Settlement::settlement_id`.
+    pub settlement_id: u32,
+    /// Floor of the mean tile-x of resolvable member agents.
+    pub centroid_x: i32,
+    /// Floor of the mean tile-y of resolvable member agents.
+    pub centroid_y: i32,
+    /// Count of resolvable member agents.
+    pub member_count: u32,
+}
+
+/// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
+/// joining each Settlement to its member agents' Positions.
+///
+/// Iterates every `Settlement` entity in the ECS world, then for each
+/// settlement averages the `Position` of every member agent that is
+/// resolvable via the `(Agent, Position)` join. Settlements whose
+/// `member_agents` set is empty OR whose members are all stale (not
+/// present as `(Agent, Position)` in the world) are skipped — emitting
+/// them would require dividing by zero.
+pub fn collect_settlement_snapshot(world: &hecs::World) -> Vec<SettlementSnapshotRow> {
+    // First pass: build an `Agent.id` → `(x, y)` lookup. Settlement
+    // members are referenced by AgentId, not hecs::Entity, so this
+    // intermediate index is required.
+    let mut agent_positions: std::collections::HashMap<u64, (u32, u32)> =
+        std::collections::HashMap::new();
+    for (_, (agent, pos)) in world.query::<(&Agent, &Position)>().iter() {
+        agent_positions.insert(agent.id, (pos.x, pos.y));
+    }
+
+    let mut rows = Vec::new();
+    for (entity, settlement) in world.query::<&Settlement>().iter() {
+        let mut sum_x: u64 = 0;
+        let mut sum_y: u64 = 0;
+        let mut count: u32 = 0;
+        for member_id in settlement.member_agents.iter() {
+            if let Some(&(x, y)) = agent_positions.get(member_id) {
+                sum_x += x as u64;
+                sum_y += y as u64;
+                count += 1;
+            }
+        }
+        if count == 0 {
+            continue;
+        }
+        let centroid_x = (sum_x / count as u64) as i32;
+        let centroid_y = (sum_y / count as u64) as i32;
+        rows.push(SettlementSnapshotRow {
+            entity_bits: entity.to_bits().get(),
+            settlement_id: settlement.settlement_id,
+            centroid_x,
+            centroid_y,
+            member_count: count,
+        });
+    }
+    rows
+}
+
+/// Marshal a [`SettlementSnapshotRow`] slice into the FFI dictionary
+/// shape consumed by `WorldRenderer._update_settlement_furniture`.
+/// Five parallel `PackedArray`s, lengths always equal to `rows.len()`.
+///
+/// Keys:
+/// - `ids`: `PackedInt64Array` — `entity_bits` per row.
+/// - `settlement_ids`: `PackedInt32Array` — `settlement_id` per row.
+/// - `centroid_xs`: `PackedInt32Array` — tile-x centroid.
+/// - `centroid_ys`: `PackedInt32Array` — tile-y centroid.
+/// - `member_counts`: `PackedInt32Array` — resolvable member count.
+fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
+    let n = rows.len();
+    let mut ids = PackedInt64Array::new();
+    let mut settlement_ids = PackedInt32Array::new();
+    let mut centroid_xs = PackedInt32Array::new();
+    let mut centroid_ys = PackedInt32Array::new();
+    let mut member_counts = PackedInt32Array::new();
+    ids.resize(n);
+    settlement_ids.resize(n);
+    centroid_xs.resize(n);
+    centroid_ys.resize(n);
+    member_counts.resize(n);
+    for (i, row) in rows.iter().enumerate() {
+        ids[i] = row.entity_bits as i64;
+        settlement_ids[i] = row.settlement_id as i32;
+        centroid_xs[i] = row.centroid_x;
+        centroid_ys[i] = row.centroid_y;
+        member_counts[i] = row.member_count as i32;
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("ids", ids);
+    dict.set("settlement_ids", settlement_ids);
+    dict.set("centroid_xs", centroid_xs);
+    dict.set("centroid_ys", centroid_ys);
+    dict.set("member_counts", member_counts);
     dict
 }
 
