@@ -49,11 +49,19 @@ const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)  # red cue (future shader)
 const SIM_TICK_DURATION: float = 1.0 / 30.0  # nominal 30 TPS
 # 4-entry tint palette matching the 4 locked state_tag values (0-3):
 #   0=Idle, 1=Seeking, 2=Consuming(Agent)=socializing, 3=Consuming(other)
+# D1 fix (Phase 11-α visible delta): pre-fix Idle was Color(1,1,1,1) (pure
+# white). MultiMesh.use_colors=true on a white tint multiplies the palette
+# output by (1,1,1,1), which equals the pre-Phase-11-α appearance (use_colors
+# was false, defaulting COLOR to white). With ~all agents in Idle on the
+# first observable frames after main.tscn boots, the user sees zero delta.
+# Cool-blue Idle tint visibly distinguishes idle agents from pre-Phase-11-α
+# and from the three active states. Saturation on 1/2/3 boosted so the
+# tint survives the 0.25 sprite scale (16×18 px on screen).
 const STATE_TINTS: Array = [
-	Color(1.0, 1.0, 1.0, 1.0),   # 0: Idle — white
-	Color(1.0, 0.9, 0.2, 1.0),   # 1: Seeking — yellow
-	Color(0.9, 0.5, 0.8, 1.0),   # 2: Consuming(Agent)/Socializing — pink
-	Color(0.4, 0.9, 0.4, 1.0),   # 3: Consuming(other)/Eating/Building/Sleeping — green
+	Color(0.55, 0.70, 0.95, 1.0),  # 0: Idle — cool blue (D1: was pure white)
+	Color(1.0, 0.85, 0.15, 1.0),   # 1: Seeking — saturated yellow
+	Color(1.0, 0.40, 0.75, 1.0),   # 2: Consuming(Agent)/Socializing — saturated pink
+	Color(0.30, 0.95, 0.35, 1.0),  # 3: Consuming(other)/Eating/Building/Sleeping — saturated green
 ]
 var _lerp_accumulator: float = 0.0
 var _snapshot_checksum: int = -1
