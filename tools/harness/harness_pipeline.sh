@@ -803,6 +803,35 @@ SKIP_EOF
 
     log "Visual evidence captured to: $evidence_dir"
     ls -la "$evidence_dir/" 2>/dev/null || true
+
+    # ── Per-feature runtime harness (optional) ────────────────────────────
+    # If the feature ships its own SceneTree harness at
+    # `scripts/test/<feature_with_underscores>/harness_*.gd`, run it after the
+    # generic visual_verify so it can emit feature-specific artefacts
+    # (e.g. interactive_results.txt, assertion_log.txt) without clobbering
+    # the screenshots/manifests that visual_verify produced. Non-fatal on
+    # failure — the generic stage's artefacts remain the source of truth
+    # and the per-feature harness only adds optional evidence.
+    local feature_underscore
+    feature_underscore="${FEATURE//-/_}"
+    local feature_harness_dir="$PROJECT_ROOT/scripts/test/$feature_underscore"
+    if [[ -d "$feature_harness_dir" ]]; then
+        local feature_harness_script
+        feature_harness_script=$(find "$feature_harness_dir" -maxdepth 1 -name "harness_*.gd" -type f 2>/dev/null | head -1)
+        if [[ -n "$feature_harness_script" ]]; then
+            log "Running per-feature runtime harness: $feature_harness_script"
+            local rel_script="${feature_harness_script#$PROJECT_ROOT/}"
+            run_with_timeout 300 "$godot_bin" \
+                --path "$PROJECT_ROOT" \
+                --headless \
+                --script "$rel_script" \
+                2>&1 | tee -a "$evidence_dir/feature_harness_output.txt" || {
+                    local fh_exit=$?
+                    log "WARNING: per-feature harness exited with code $fh_exit (non-fatal)"
+                }
+            log "Per-feature harness evidence updated in: $evidence_dir"
+        fi
+    fi
 }
 
 # ============================================================

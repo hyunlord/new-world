@@ -37,6 +37,20 @@ const BOOTSTRAP_RADIUS := 8
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
 
+# V7 Phase 12-β — TileMapLayer floor terrain + bootstrap building sprite +
+# influence-overlay z/alpha layering. Section 1 scope: visible-delta
+# replacement of the pre-β solid-black overlay backdrop with a tiled floor
+# under one bootstrap building, with the influence overlay preserved on top
+# at reduced alpha. Walls + multi-building rendering deferred to β.2.
+const TERRAIN_TILESET_PATH := "res://assets/tilesets/world_terrain.tres"
+const BUILDING_SPRITE_PATH := "res://assets/sprites/buildings/cairn/1.png"
+const TERRAIN_SEED := 19349663  # deterministic seed for reproducible terrain
+const OVERLAY_ALPHA := 0.65
+const Z_TERRAIN := 0
+const Z_BUILDING := 5
+const Z_OVERLAY := 10
+const TERRAIN_SOURCE_COUNT := 9  # 3 materials × 3 variants
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
@@ -57,6 +71,50 @@ func _ready() -> void:
 	sprite.scale = Vector2(TILE_SIZE, TILE_SIZE)
 	sprite.position = Vector2(960, 540)
 	add_child(sprite)
+	# V7 Phase 12-β — overlay layer above terrain + building, semi-transparent
+	# so the new terrain layer shows through. Existing `sprite` is the
+	# influence overlay; we only touch z_index + modulate alpha here.
+	sprite.z_index = Z_OVERLAY
+	sprite.modulate = Color(1.0, 1.0, 1.0, OVERLAY_ALPHA)
+
+	# V7 Phase 12-β — TileMapLayer floor terrain.
+	# Loads the new world_terrain TileSet (9 atlas sources = 3 materials ×
+	# 3 variants) and populates every cell of the 64×64 grid with a
+	# deterministically-chosen source. Seeded RNG keeps the visual stable
+	# across launches so VLM verification + human review are reproducible.
+	var terrain_set: TileSet = load(TERRAIN_TILESET_PATH) as TileSet
+	if terrain_set != null:
+		var terrain_layer := TileMapLayer.new()
+		terrain_layer.tile_set = terrain_set
+		terrain_layer.z_index = Z_TERRAIN
+		terrain_layer.position = Vector2(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y)
+		add_child(terrain_layer)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = TERRAIN_SEED
+		for tx in GRID_W:
+			for ty in GRID_H:
+				var source_id: int = rng.randi_range(0, TERRAIN_SOURCE_COUNT - 1)
+				terrain_layer.set_cell(Vector2i(tx, ty), source_id, Vector2i(0, 0), 0)
+	else:
+		push_error("WorldRenderer: failed to load terrain TileSet at %s" % TERRAIN_TILESET_PATH)
+
+	# V7 Phase 12-β — bootstrap building sprite at BOOTSTRAP_X/BOOTSTRAP_Y.
+	# One building only; multi-building rendering requires a new
+	# `collect_building_snapshot` SimBridge FFI and is deferred to Phase
+	# 12-β.2. Position uses the same SPRITE_ORIGIN + TILE_SIZE basis as
+	# the influence overlay so terrain + building + overlay align.
+	var building_tex: Texture2D = load(BUILDING_SPRITE_PATH) as Texture2D
+	if building_tex != null:
+		var building_sprite := Sprite2D.new()
+		building_sprite.texture = building_tex
+		building_sprite.position = Vector2(
+			SPRITE_ORIGIN_X + BOOTSTRAP_X * TILE_SIZE + TILE_SIZE / 2.0,
+			SPRITE_ORIGIN_Y + BOOTSTRAP_Y * TILE_SIZE + TILE_SIZE / 2.0,
+		)
+		building_sprite.z_index = Z_BUILDING
+		add_child(building_sprite)
+	else:
+		push_error("WorldRenderer: failed to load building sprite at %s" % BUILDING_SPRITE_PATH)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

@@ -1,0 +1,68 @@
+[gd_resource type="TileSet" load_steps=19 format=3 uid="uid://bp12bworldterrain"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/packed_earth/1.png" id="1_pe1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/packed_earth/2.png" id="2_pe2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/packed_earth/3.png" id="3_pe3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/stone_slab/1.png" id="4_ss1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/stone_slab/2.png" id="5_ss2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/stone_slab/3.png" id="6_ss3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/wood_plank/1.png" id="7_wp1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/wood_plank/2.png" id="8_wp2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/floors/wood_plank/3.png" id="9_wp3"]
+
+[sub_resource type="TileSetAtlasSource" id="atlas_pe1"]
+texture = ExtResource("1_pe1")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_pe2"]
+texture = ExtResource("2_pe2")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_pe3"]
+texture = ExtResource("3_pe3")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_ss1"]
+texture = ExtResource("4_ss1")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_ss2"]
+texture = ExtResource("5_ss2")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_ss3"]
+texture = ExtResource("6_ss3")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_wp1"]
+texture = ExtResource("7_wp1")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_wp2"]
+texture = ExtResource("8_wp2")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="atlas_wp3"]
+texture = ExtResource("9_wp3")
+texture_region_size = Vector2i(16, 16)
+0:0/0 = 0
+
+[resource]
+tile_size = Vector2i(16, 16)
+sources/0 = SubResource("atlas_pe1")
+sources/1 = SubResource("atlas_pe2")
+sources/2 = SubResource("atlas_pe3")
+sources/3 = SubResource("atlas_ss1")
+sources/4 = SubResource("atlas_ss2")
+sources/5 = SubResource("atlas_ss3")
+sources/6 = SubResource("atlas_wp1")
+sources/7 = SubResource("atlas_wp2")
+sources/8 = SubResource("atlas_wp3")

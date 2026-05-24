@@ -657,9 +657,15 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
         }
     }
 
+    // Phase 12-α scope locks. Phase 12-β intentionally modifies
+    // `scripts/ui/world_renderer.gd` (TileMapLayer terrain + bootstrap
+    // building sprite per phase12.md §β plan), so `world_renderer.gd`
+    // is NOT a permanent lock — it was an over-restrictive guard in
+    // the original α dispatch. Released here when β lands. The shader,
+    // causal_panel, and localization locks remain because no planned
+    // Phase 12 sub-stage modifies them.
     let forbidden_exact = [
         "shaders/palette_swap.gdshader",
-        "scripts/ui/world_renderer.gd",
         "scripts/ui/panels/causal_panel.gd",
     ];
     let forbidden_prefixes = ["localization/"];
@@ -673,10 +679,10 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
     }
     assert!(
         violations.is_empty(),
-        "A18: shader/world_renderer/causal_panel/locale must NOT be modified \
-         by Phase 12-α. Violations: {violations:?}"
+        "A18: shader/causal_panel/locale must NOT be modified \
+         beyond Phase 12-α scope. Violations: {violations:?}"
     );
-    println!("[P12-α A18] shader + world_renderer + causal_panel + locale unchanged ✓");
+    println!("[P12-α A18] shader + causal_panel + locale unchanged ✓");
 }
 
 // Note on Assertions 19 + 20: those are "run another test suite / full
