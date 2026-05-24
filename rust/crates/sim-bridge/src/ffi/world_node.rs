@@ -37,7 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, Hunger, Memory, Position, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, Sleep, Social,
+    TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -238,6 +239,21 @@ impl WorldSimNode {
     fn get_agent_snapshot(&self) -> VarDictionary {
         let rows = collect_agent_snapshot(&self.engine.world);
         agent_rows_to_dict(&rows)
+    }
+
+    /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the
+    /// GDScript renderer. Returns a `VarDictionary` with five
+    /// `PackedArray` keys (`ids`, `xs`, `ys`, `progresses`,
+    /// `required_progresses`) of equal length. Empty arrays when no
+    /// `ConstructionSite` entities exist.
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_construction_snapshot`] (Bridge Identity Contract).
+    /// Sim-test exercises the pure-Rust collector directly.
+    #[func]
+    fn get_construction_snapshot(&self) -> VarDictionary {
+        let rows = collect_construction_snapshot(&self.engine.world);
+        construction_rows_to_dict(&rows)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1163,6 +1179,101 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("ys", ys);
     dict.set("states", states);
     dict.set("agent_ids", agent_ids);
+    dict
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// V7 Phase 12-β.2 (A3): Construction snapshot FFI surface
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the construction snapshot returned by
+/// [`collect_construction_snapshot`].
+///
+/// V7 Phase 12-β.2 (A3) — surfaces `ConstructionSite` entities to the
+/// GDScript renderer so the user can see agent construction activity.
+/// Only the `progress` ratio is exposed; the `BlueprintId` and
+/// `footprint` fields of the underlying `BuildingBlueprint` are
+/// intentionally NOT in the row because the substrate has no
+/// `BuildingType` taxonomy — multi-type rendering is a separate
+/// (deferred) phase that first adds that substrate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ConstructionSnapshotRow {
+    /// `hecs::Entity::to_bits().get()` of the construction-site entity.
+    pub entity_bits: u64,
+    /// Tile-x coordinate of the site's footprint top-left.
+    pub x: u32,
+    /// Tile-y coordinate of the site's footprint top-left.
+    pub y: u32,
+    /// Current construction progress in `ConstructionSystem` ticks.
+    pub progress: u32,
+    /// Total ticks required for completion (from `BuildingBlueprint`).
+    pub required_progress: u32,
+}
+
+/// Pure-Rust collector for [`ConstructionSnapshotRow`] — mirrors
+/// [`collect_agent_snapshot`] but queries `(&ConstructionSite, &Position)`
+/// instead of `(&Agent, &Position, Option<&AgentState>)`.
+///
+/// Position is taken from the entity's `Position` component (the
+/// canonical sim-core source) rather than `ConstructionSite::position`
+/// so the rendered tile matches whatever the simulation considers
+/// authoritative for that entity. The two should agree in practice.
+pub fn collect_construction_snapshot(world: &hecs::World) -> Vec<ConstructionSnapshotRow> {
+    let mut rows = Vec::new();
+    for (entity, (site, pos)) in world
+        .query::<(&ConstructionSite, &Position)>()
+        .iter()
+    {
+        rows.push(ConstructionSnapshotRow {
+            entity_bits: entity.to_bits().get(),
+            x: pos.x,
+            y: pos.y,
+            progress: site.progress,
+            required_progress: site.blueprint.required_progress,
+        });
+    }
+    rows
+}
+
+/// Marshal a [`ConstructionSnapshotRow`] slice into the FFI dictionary
+/// shape consumed by `WorldRenderer._process()`. Five parallel
+/// `PackedArray`s, lengths always equal to `rows.len()`.
+///
+/// Keys:
+/// - `ids`:  `PackedInt64Array` — `entity_bits` per row (signed cast
+///   matches the agent snapshot precedent).
+/// - `xs`:  `PackedInt32Array` — tile-x per row, as `i32`.
+/// - `ys`:  `PackedInt32Array` — tile-y per row, as `i32`.
+/// - `progresses`: `PackedInt32Array` — current progress per row, as `i32`.
+/// - `required_progresses`: `PackedInt32Array` — required progress per
+///   row, as `i32`. The renderer must still defend against div-by-zero
+///   via `max(req, 1)` because the substrate permits `required_progress == 0`
+///   blueprints.
+fn construction_rows_to_dict(rows: &[ConstructionSnapshotRow]) -> VarDictionary {
+    let n = rows.len();
+    let mut ids = PackedInt64Array::new();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    let mut progresses = PackedInt32Array::new();
+    let mut required_progresses = PackedInt32Array::new();
+    ids.resize(n);
+    xs.resize(n);
+    ys.resize(n);
+    progresses.resize(n);
+    required_progresses.resize(n);
+    for (i, row) in rows.iter().enumerate() {
+        ids[i] = row.entity_bits as i64;
+        xs[i] = row.x as i32;
+        ys[i] = row.y as i32;
+        progresses[i] = row.progress as i32;
+        required_progresses[i] = row.required_progress as i32;
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("ids", ids);
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict.set("progresses", progresses);
+    dict.set("required_progresses", required_progresses);
     dict
 }
 

@@ -51,11 +51,26 @@ const Z_BUILDING := 5
 const Z_OVERLAY := 10
 const TERRAIN_SOURCE_COUNT := 9  # 3 materials × 3 variants
 
+# V7 Phase 12-β.2 (A3) — construction-site rendering constants.
+# Sites are drawn with a cairn placeholder sprite at z=5 (above terrain,
+# below the influence overlay at z=10). Alpha is remapped from the raw
+# `progress / required_progress` ratio into [0.3, 1.0] so freshly-started
+# sites are still visible while completed sites become fully opaque.
+const CONSTRUCTION_SPRITE_PATH := "res://assets/sprites/buildings/cairn/1.png"
+const Z_CONSTRUCTION := 5
+const CONSTRUCTION_ALPHA_MIN := 0.3
+const CONSTRUCTION_ALPHA_MAX := 1.0
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
 var texture: ImageTexture
 var image: Image
+
+# V7 Phase 12-β.2 (A3) — entity_bits (int) → Sprite2D for that construction
+# site. Keyed dictionary so the per-frame reaper can free Sprite2D nodes
+# corresponding to despawned (completed or otherwise removed) sites.
+var _construction_sprites: Dictionary = {}
 
 func _ready() -> void:
 	print("WorldRenderer ready (T7.9.B render mechanism)")
@@ -151,6 +166,52 @@ func _process(_delta: float) -> void:
 		return
 	image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)
 	texture.update(image)
+	# V7 Phase 12-β.2 (A3) — ingest construction-site snapshot.
+	_update_construction_sites()
+
+# V7 Phase 12-β.2 (A3) — pull the per-frame construction snapshot from
+# SimBridge and reconcile against `_construction_sprites`:
+#   - create a Sprite2D for any newly-seen entity_bits
+#   - update position + modulate alpha for every visible entity
+#   - reap (queue_free + erase) any keys not present this frame
+# Alpha is `CONSTRUCTION_ALPHA_MIN + (MAX - MIN) * ratio`, where ratio is
+# `clampf(progress / max(required_progress, 1), 0.0, 1.0)`. The
+# `max(required_progress, 1)` guards against substrate sites with
+# `required_progress == 0`.
+func _update_construction_sites() -> void:
+	var snap: Dictionary = world_sim.get_construction_snapshot()
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var progresses: PackedInt32Array = snap.get("progresses", PackedInt32Array())
+	var required: PackedInt32Array = snap.get("required_progresses", PackedInt32Array())
+	var n: int = ids.size()
+	var seen: Dictionary = {}
+	var tex: Texture2D = load(CONSTRUCTION_SPRITE_PATH) as Texture2D
+	for i in n:
+		var entity_id: int = ids[i]
+		seen[entity_id] = true
+		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2)
+		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2)
+		var req: int = max(int(required[i]), 1)
+		var ratio: float = clampf(float(progresses[i]) / float(req), 0.0, 1.0)
+		var alpha: float = CONSTRUCTION_ALPHA_MIN + (CONSTRUCTION_ALPHA_MAX - CONSTRUCTION_ALPHA_MIN) * ratio
+		var construction_sprite: Sprite2D = _construction_sprites.get(entity_id, null) as Sprite2D
+		if construction_sprite == null:
+			construction_sprite = Sprite2D.new()
+			construction_sprite.texture = tex
+			construction_sprite.z_index = Z_CONSTRUCTION
+			add_child(construction_sprite)
+			_construction_sprites[entity_id] = construction_sprite
+		construction_sprite.position = Vector2(px, py)
+		construction_sprite.modulate = Color(1.0, 1.0, 1.0, alpha)
+	# Reap entries no longer present in the snapshot (despawned sites).
+	for entity_id in _construction_sprites.keys():
+		if not seen.has(entity_id):
+			var stale: Sprite2D = _construction_sprites[entity_id]
+			if stale != null:
+				stale.queue_free()
+			_construction_sprites.erase(entity_id)
 
 func _handle_tile_click(pos: Vector2) -> void:
 	var tile_x := int(floor((pos.x - SPRITE_ORIGIN_X) / float(TILE_SIZE)))

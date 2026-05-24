@@ -604,11 +604,15 @@ fn harness_p12_alpha_a17_no_rust_crate_source_modified() {
         }
     }
 
+    // V7 Phase 12-β.2 (A3) expansion: sim-bridge FFI is now a legitimate
+    // surface for renderer-feeding snapshots (e.g. construction-site
+    // rendering). Mirrors the β.1 precedent that opened world_renderer.gd
+    // (A18). β.2's own A14 regression guard locks the Phase 12-α visible
+    // invariants (Camera2D zoom + camera_controller.gd attachment).
     let forbidden_prefixes = [
         "rust/crates/sim-core/src/",
         "rust/crates/sim-systems/src/",
         "rust/crates/sim-engine/src/",
-        "rust/crates/sim-bridge/src/",
         "rust/crates/sim-data/src/",
     ];
     let violations: Vec<&String> = modified
@@ -617,7 +621,8 @@ fn harness_p12_alpha_a17_no_rust_crate_source_modified() {
         .collect();
     assert!(
         violations.is_empty(),
-        "A17: Phase 12-α must NOT modify Rust crate production sources. \
+        "A17: Phase 12-α must NOT modify Rust simulation crate sources \
+         (sim-core/sim-systems/sim-engine/sim-data). \
          Violations: {violations:?}"
     );
     println!("[P12-α A17] no Rust crate source modified ✓");

@@ -873,11 +873,15 @@ fn harness_p12_beta_a24_no_rust_crate_modifications_in_scope_paths() {
         }
     }
 
+    // V7 Phase 12-β.2 (A3) expansion: sim-bridge FFI is now a legitimate
+    // surface for renderer-feeding snapshots (e.g. construction-site
+    // rendering). Mirrors the β.1 precedent. β.2's own A14 regression
+    // guard locks the Phase 12-β.1 visible invariants (TERRAIN_TILESET_PATH,
+    // BUILDING_SPRITE_PATH, OVERLAY_ALPHA = 0.65).
     let forbidden_prefixes = [
         "rust/crates/sim-core/",
         "rust/crates/sim-systems/",
         "rust/crates/sim-engine/",
-        "rust/crates/sim-bridge/",
         "rust/crates/sim-data/",
     ];
     let violations: Vec<&String> = modified
@@ -886,8 +890,8 @@ fn harness_p12_beta_a24_no_rust_crate_modifications_in_scope_paths() {
         .collect();
     assert!(
         violations.is_empty(),
-        "A24: Phase 12-β must NOT modify Rust production crates \
-         (sim-core/sim-systems/sim-engine/sim-bridge/sim-data). \
+        "A24: Phase 12-β must NOT modify Rust simulation crates \
+         (sim-core/sim-systems/sim-engine/sim-data). \
          Violations: {violations:?}"
     );
     println!("[P12-β A24] no Rust production crate modified ✓");

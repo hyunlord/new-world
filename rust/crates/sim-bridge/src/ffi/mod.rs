@@ -22,5 +22,6 @@ pub use world_node::{
     try_collect_event_chain, try_collect_tile_causal_history, CausalEventView,
 };
 pub use world_node::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
+pub use world_node::{collect_construction_snapshot, ConstructionSnapshotRow};
 pub use world_node::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use world_node::WorldSimNode;
