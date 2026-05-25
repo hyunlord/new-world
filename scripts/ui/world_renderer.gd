@@ -34,6 +34,13 @@ const CHANNEL_BEAUTY := 7
 const BOOTSTRAP_X := 32
 const BOOTSTRAP_Y := 32
 const BOOTSTRAP_RADIUS := 8
+# V7 Phase 13-ε — extra bootstrap building positions so the first capture
+# frame reads as a clustered settlement region instead of a single isolated
+# building. Two additional buildings flanking the existing centre stamp at
+# (32, 32). Same radius as the centre stamp so influence overlay coverage
+# is symmetric around the row.
+const BOOTSTRAP_X_LEFT := 24
+const BOOTSTRAP_X_RIGHT := 40
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
 
@@ -109,6 +116,9 @@ func _ready() -> void:
 		push_error("WorldSim node not found at ../WorldSim")
 		return
 	world_sim.on_building_placed(BOOTSTRAP_X, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
+	# V7 Phase 13-ε — additional bootstrap buildings flanking the centre at ±8.
+	world_sim.on_building_placed(BOOTSTRAP_X_LEFT, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
+	world_sim.on_building_placed(BOOTSTRAP_X_RIGHT, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
 	image = Image.create(GRID_W, GRID_H, false, Image.FORMAT_L8)
 	texture = ImageTexture.create_from_image(image)
 	sprite = Sprite2D.new()
@@ -158,6 +168,18 @@ func _ready() -> void:
 		)
 		building_sprite.z_index = Z_BUILDING
 		add_child(building_sprite)
+		# V7 Phase 13-ε — flanking bootstrap building sprites at the left and
+		# right positions. Reuse `building_tex` already loaded above; if it
+		# failed to load, the parent guard handles it.
+		for extra_x in [BOOTSTRAP_X_LEFT, BOOTSTRAP_X_RIGHT]:
+			var extra_sprite := Sprite2D.new()
+			extra_sprite.texture = building_tex
+			extra_sprite.position = Vector2(
+				float(SPRITE_ORIGIN_X + extra_x * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+				float(SPRITE_ORIGIN_Y + BOOTSTRAP_Y * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+			)
+			extra_sprite.z_index = Z_BUILDING
+			add_child(extra_sprite)
 	else:
 		push_error("WorldRenderer: failed to load building sprite at %s" % BUILDING_SPRITE_PATH)
 
