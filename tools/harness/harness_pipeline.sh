@@ -735,6 +735,53 @@ RESULT_EOF
 }
 
 # ============================================================
+# STEP 2.4: GDSCRIPT STRICT CHECK (Godot --check-only + FFI binding)
+# ============================================================
+# Catches three error classes that Codex code review cannot:
+#   - GDScript parse errors
+#   - GDScript warnings (INTEGER_DIVISION, UNUSED_PARAMETER, ...)
+#   - FFI binding mismatches (GDScript call without matching Rust #[func])
+#
+# Runs only when staged changes touch .gd files or the FFI surface. On
+# parse/warning failure exits 2, on FFI mismatch exits 3 — both block
+# the pipeline like a RE-CODE Evaluator verdict would.
+run_gdscript_strict_check() {
+    local script="$SCRIPT_DIR/gdscript_strict_check.sh"
+    if [[ ! -x "$script" ]]; then
+        log "STEP 2.4: gdscript_strict_check.sh not found — skipping"
+        return 0
+    fi
+    log "=== Step 2.4: GDSCRIPT STRICT CHECK ==="
+    # Identify .gd files touched by the working tree (staged + untracked).
+    local changed_gd
+    changed_gd=$(cd "$PROJECT_ROOT" && git status --porcelain 2>/dev/null \
+        | awk '$2 ~ /\.gd$/ {print $2}' | tr '\n' ' ')
+    local changed_ffi
+    changed_ffi=$(cd "$PROJECT_ROOT" && git status --porcelain 2>/dev/null \
+        | grep -c "rust/crates/sim-bridge/src/ffi" || true)
+    if [[ -z "$changed_gd" && "$changed_ffi" == "0" ]]; then
+        log "STEP 2.4: no .gd or sim-bridge/ffi changes — skipping"
+        return 0
+    fi
+    log "STEP 2.4: scope — changed .gd=[${changed_gd}], ffi_changes=${changed_ffi}"
+    local rc=0
+    if [[ -n "$changed_gd" ]]; then
+        bash "$script" $changed_gd > "$RESULT_DIR/gdscript_strict_check.log" 2>&1 || rc=$?
+    else
+        # FFI changed but no .gd — run FFI check across all scripts.
+        bash "$script" > "$RESULT_DIR/gdscript_strict_check.log" 2>&1 || rc=$?
+    fi
+    tail -20 "$RESULT_DIR/gdscript_strict_check.log"
+    if [[ $rc -ne 0 ]]; then
+        log "STEP 2.4 FAILED (exit=$rc) — see $RESULT_DIR/gdscript_strict_check.log"
+        echo "GDSCRIPT_STRICT_FAIL exit=$rc" >> "$RESULT_DIR/gen_result_latest.md"
+        return 1
+    fi
+    log "STEP 2.4: GDScript strict check PASS ✓"
+    return 0
+}
+
+# ============================================================
 # STEP 2.5a: VISUAL VERIFY (Godot — local execution)
 # ============================================================
 run_visual_verify() {
@@ -1810,6 +1857,14 @@ main() {
         run_generator $CODE_ATTEMPT
         report_step "2 Generator A1" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
 
+        # Strict GDScript check (parse + warnings + FFI binding). Runs only
+        # when staged files include .gd or sim-bridge/ffi changes.
+        if run_gdscript_strict_check; then
+            report_step "2.4 GDScript Strict Check" "DONE" "PASS"
+        else
+            report_step "2.4 GDScript Strict Check" "DONE" "FAIL (see gdscript_strict_check.log; evaluator will see it)"
+        fi
+
         run_visual_verify
         report_step "2.5a Visual Verify" "DONE" "$(summarize_visual "$EVIDENCE_DIR")"
 
@@ -1958,6 +2013,14 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             else
                 run_generator $CODE_ATTEMPT
                 report_step "2 Generator A$CODE_ATTEMPT" "DONE" "$(summarize_generator "$RESULT_DIR/gen_result_attempt${CODE_ATTEMPT}.md")"
+            fi
+
+            # Strict GDScript check (parse + warnings + FFI binding). Reports
+            # only — Evaluator decides whether to RE-CODE on a fail.
+            if run_gdscript_strict_check; then
+                report_step "2.4 GDScript Strict Check" "DONE" "PASS"
+            else
+                report_step "2.4 GDScript Strict Check" "DONE" "FAIL (see gdscript_strict_check.log; evaluator will see it)"
             fi
 
             # HARNESS_SKIP_VISUAL=1: reuse existing visual evidence (for eval-only re-runs)

@@ -714,6 +714,48 @@ The only acceptable use of `--no-verify` is for documentation-only commits or em
 
 ---
 
+### Pipeline GDScript Strict Check (added 2026-05-25 after D Phase A)
+
+Step 2.4 — `tools/harness/gdscript_strict_check.sh` — runs between Generator
+and Visual Verify. Catches three classes of error the Codex code review misses:
+
+| Error class | Detection mechanism | Exit |
+|---|---|---|
+| GDScript **parse error** | `godot --headless --check-only --script` + grep stderr for `Parse Error` / `SCRIPT ERROR` (Godot quirk: exit code stays 0 on parse failure) | 2 |
+| GDScript **warning** (INTEGER_DIVISION, UNUSED_PARAMETER, ...) | Temporarily injects `treat_warnings_as_errors=true` + per-warning `=2` levels into `project.godot`, then runs `--check-only`; warnings appear as parse errors in stderr; restores `project.godot` on exit via trap | 2 |
+| **FFI binding mismatch** (GDScript calls `world_sim.X()` but no `#[func] fn X` in sim-bridge) | grep both sides + diff | 3 |
+
+Trigger: only when staged changes include `.gd` files or
+`rust/crates/sim-bridge/src/ffi/` files. Otherwise skipped.
+
+Why this exists: D Phase A (commit `0238aef2`) cleared 8 errors the user
+found running Godot windowed after Phase 12-γ — all 8 had passed the
+prior pipeline (32+ APPROVED) because static file inspection + Codex
+code review do not exercise GDScript parsing or runtime FFI binding.
+This check closes that gap at the source level. Runtime FFI is still
+out of scope (would require launching the engine with the actual
+dylib) — the build-time dylib staleness pattern that caused the
+FATAL crash is documented in CLAUDE.md but not automatically detected.
+
+### VLM Visual Verification — Known Limitation
+
+The standard `harness_visual_verify.gd` captures a single 1920×1080
+viewport screenshot. Agent sprites render at `SPRITE_SCALE = 0.25 ×
+64×72 = 16×18 px` even at the default Phase 12-α `Camera2D.zoom =
+(2,2)` (= 32×36 px). Hue / shape changes at that resolution are
+sub-perceptual for the VLM whole-scene grader. Therefore:
+
+- VLM `VISUAL_OK` / `VISUAL_PASS` only confirms the overall scene
+  composition (terrain, overlay, no crashes). It does NOT confirm
+  any single-sprite-level change is visible.
+- Per-sprite visual changes (e.g. STATE_TINTS palette, ConstructionSite
+  alpha, Settlement furniture marker) must be verified by a windowed
+  Godot run.
+- VLM `VISUAL_WARNING` at sprite scale is therefore treated as
+  environmental (Rule 7 +8 adjustment) rather than a code defect.
+
+---
+
 ### Codex MCP Dispatch
 
 See `.claude/skills/worldsim-code/SKILL.md` for Codex MCP dispatch protocol.
