@@ -19,7 +19,12 @@ extends Camera2D
 
 const ZOOM_MIN: Vector2 = Vector2(0.5, 0.5)
 const ZOOM_MAX: Vector2 = Vector2(4.0, 4.0)
-const ZOOM_DEFAULT: Vector2 = Vector2(2.0, 2.0)
+# V7 Phase 13-α — default zoom raised from 2.0× to 3.0× so 16×18 px agent
+# sprites (Phase 4-γ SPRITE_SCALE = 0.25 invariant preserved) render at
+# 48–54 px, above the human-perceptual threshold for distinguishing agents
+# and buildings. Mouse-wheel controls (Phase 12-α) still let the user zoom
+# out to overview.
+const ZOOM_DEFAULT: Vector2 = Vector2(3.0, 3.0)
 const ZOOM_FACTOR: float = 1.25
 const TWEEN_DURATION: float = 0.15
 
@@ -28,7 +33,9 @@ var _target_zoom: Vector2 = ZOOM_DEFAULT
 
 
 func _ready() -> void:
-	print("CameraController ready (V7 Phase 12-α — default zoom 2.0×)")
+	# V7 Phase 13-α — print derives the default from ZOOM_DEFAULT so the
+	# log never drifts from the constant (formerly hardcoded "2.0×").
+	print("CameraController ready (default zoom %.1f×)" % ZOOM_DEFAULT.x)
 	zoom = ZOOM_DEFAULT
 	_target_zoom = ZOOM_DEFAULT
 

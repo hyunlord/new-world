@@ -202,11 +202,16 @@ fn harness_p12_alpha_a4_zoom_max_constant() {
     println!("[P12-α A4] ZOOM_MAX = Vector2(4.0, 4.0) ✓");
 }
 
-// ─── Assertion 5: zoom_default_constant_is_two_x ──────────────────────────
+// ─── Assertion 5: zoom_default_constant_is_three_x ────────────────────────
 #[test]
 fn harness_p12_alpha_a5_zoom_default_constant() {
-    // Type: A (physical invariant). The 2.0× default zoom IS the primary
-    // feature goal — making D1 STATE_TINTS visible at 32×36 px.
+    // Type: A (physical invariant). Original Phase 12-α dispatch locked
+    // ZOOM_DEFAULT to 2.0×. Phase 13-α (Path B) intentionally raises this
+    // to 3.0× so 16×18 px agent sprites render at 48–54 px (above the
+    // perceptual threshold) while preserving the Phase 4-γ SPRITE_SCALE
+    // = 0.25 invariant. The new locked value is enforced here AND in
+    // harness_p13_alpha_camera_and_buildings.rs A1. Same precedent as
+    // P12-α A18 releasing the world_renderer.gd lock when β.1 modified it.
     let src = read_camera_controller_src();
     let stripped = strip_gd_comments(&src);
     let idx = stripped
@@ -217,17 +222,17 @@ fn harness_p12_alpha_a5_zoom_default_constant() {
     let line = &rhs[..line_end];
 
     let accepted = [
-        "Vector2(2.0, 2.0)",
-        "Vector2(2.0,2.0)",
-        "Vector2(2.0 , 2.0)",
+        "Vector2(3.0, 3.0)",
+        "Vector2(3.0,3.0)",
+        "Vector2(3.0 , 3.0)",
     ];
     let matched = accepted.iter().any(|c| line.contains(c));
     assert!(
         matched,
-        "A5: ZOOM_DEFAULT must be declared with `Vector2(2.0, 2.0)` \
-         (whitespace tolerant). Line: `{line}`"
+        "A5: ZOOM_DEFAULT must be declared with `Vector2(3.0, 3.0)` \
+         (whitespace tolerant; raised from 2.0× by Phase 13-α). Line: `{line}`"
     );
-    println!("[P12-α A5] ZOOM_DEFAULT = Vector2(2.0, 2.0) ✓");
+    println!("[P12-α A5] ZOOM_DEFAULT = Vector2(3.0, 3.0) ✓ (Phase 13-α supersession)");
 }
 
 // ─── Assertion 6: zoom_factor_geometric_step ──────────────────────────────

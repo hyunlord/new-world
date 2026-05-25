@@ -43,7 +43,10 @@ const SPRITE_ORIGIN_Y := 28
 # under one bootstrap building, with the influence overlay preserved on top
 # at reduced alpha. Walls + multi-building rendering deferred to β.2.
 const TERRAIN_TILESET_PATH := "res://assets/tilesets/world_terrain.tres"
-const BUILDING_SPRITE_PATH := "res://assets/sprites/buildings/cairn/1.png"
+# V7 Phase 13-α — bootstrap building uses campfire sprite to visually
+# distinguish it from ConstructionSite (cairn) and Settlement centroid
+# (hearth). Three distinct 32×32 sprites for three distinct semantic layers.
+const BUILDING_SPRITE_PATH := "res://assets/sprites/buildings/campfire/1.png"
 const TERRAIN_SEED := 19349663  # deterministic seed for reproducible terrain
 const OVERLAY_ALPHA := 0.65
 const Z_TERRAIN := 0
