@@ -45,6 +45,20 @@ const COMBAT_CUE_FRAMES := 36             # ~0.6s at 60 FPS
 const COMBAT_CUE_SCALE_BOOST := 1.3      # 30% scale pulse
 const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)  # red cue (future shader)
 
+# V7 Phase 13-γ — per-state interaction scale cue. Maps state_tag
+# (0-3) to a per-agent scale multiplier so active agents read as
+# busier than idle ones at zoom 3.0× (Phase 13-α). Composes with
+# RECALL_CUE_SCALE_BOOST (Phase 8-δ) and COMBAT_CUE_SCALE_BOOST
+# (Phase 9-δ) via max() — event-driven cues still win when fired.
+#   0 = Idle              → 1.00 (baseline)
+#   1 = Seeking           → 1.15 (subtle "moving with intent")
+#   2 = Consuming(Agent)  → 1.15 (socialising)
+#   3 = Consuming(other)  → 1.15 (eating/sleeping/building)
+# Idle stays at exact SPRITE_SCALE (Phase 4-γ tile-fit invariant
+# preserved). The active boost is modest — 1.15× × 0.25 ×
+# camera_zoom 3.0 = ~55-62 px instead of ~48-54 px.
+const STATE_SCALE_BOOST: Array = [1.0, 1.15, 1.15, 1.15]
+
 # V7 Phase 11-α — position interpolation (Gaffer accumulator) + state_tag tint.
 const SIM_TICK_DURATION: float = 1.0 / 30.0  # nominal 30 TPS
 # 4-entry tint palette matching the 4 locked state_tag values (0-3):
@@ -189,6 +203,13 @@ func _process(delta: float) -> void:
 		# Lookup keyed by `agent_ids[i]` (AgentId) so it matches the FFI
 		# `event.agent_id` value used by `_ingest_memory_recalls`.
 		var boost: float = 1.0
+		# V7 Phase 13-γ — non-Idle state boost (composes via max with
+		# event-driven recall/combat cues). FFI state_tag domain is
+		# {0,1,2,3}; clampi guards against malformed snapshots, and the
+		# `if i < states.size() else 0` fallback defaults uninitialised
+		# rows to Idle baseline (1.0) — never to an active state.
+		var state_tag_for_boost: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
+		boost = max(boost, float(STATE_SCALE_BOOST[state_tag_for_boost]))
 		if _recalling_agents.has(agent_ids[i]):
 			boost = max(boost, RECALL_CUE_SCALE_BOOST)
 		if _combating_agents.has(agent_ids[i]):
