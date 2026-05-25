@@ -72,6 +72,19 @@ const CONSTRUCTION_ALPHA_MAX := 1.0
 const FURNITURE_SPRITE_PATH := "res://assets/sprites/furniture/hearth/1.png"
 const Z_FURNITURE := 4
 
+# V7 Phase 13-β — resource-node placeholder layer.
+#
+# Decorative-only resource sprites placed deterministically from
+# RESOURCE_SEED so the world reads as a populated simulation map.
+# No sim-core ResourceNode component exists; agents do NOT interact
+# with these sprites. Substrate-driven gathering is Section 15+.
+# Sprite chosen: furniture/storage_pit/1.png (32×32) — visually
+# distinct from buildings (no roof, looks like a hole/pile).
+const RESOURCE_SPRITE_PATH := "res://assets/sprites/furniture/storage_pit/1.png"
+const Z_RESOURCE := 3
+const RESOURCE_COUNT := 20
+const RESOURCE_SEED := 88675123
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
@@ -147,6 +160,30 @@ func _ready() -> void:
 		add_child(building_sprite)
 	else:
 		push_error("WorldRenderer: failed to load building sprite at %s" % BUILDING_SPRITE_PATH)
+
+	# V7 Phase 13-β — scatter resource placeholder sprites.
+	# Decorative-only layer placed deterministically from RESOURCE_SEED.
+	# Agents do NOT interact with these sprites; substrate-driven gathering
+	# is Section 15+. Z_RESOURCE=3 puts them above terrain (z=0) and below
+	# the furniture (z=4) and construction (z=5) layers so buildings remain
+	# visually dominant.
+	var resource_tex: Texture2D = load(RESOURCE_SPRITE_PATH) as Texture2D
+	if resource_tex != null:
+		var rng_res := RandomNumberGenerator.new()
+		rng_res.seed = RESOURCE_SEED
+		for _i in RESOURCE_COUNT:
+			var rtx: int = rng_res.randi_range(0, GRID_W - 1)
+			var rty: int = rng_res.randi_range(0, GRID_H - 1)
+			var res_sprite := Sprite2D.new()
+			res_sprite.texture = resource_tex
+			res_sprite.position = Vector2(
+				float(SPRITE_ORIGIN_X + rtx * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+				float(SPRITE_ORIGIN_Y + rty * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+			)
+			res_sprite.z_index = Z_RESOURCE
+			add_child(res_sprite)
+	else:
+		push_warning("WorldRenderer: failed to load resource sprite at %s" % RESOURCE_SPRITE_PATH)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
