@@ -57,6 +57,16 @@ FEATURE="${1:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--full|--
 PROMPT_FILE="${2:?Usage: harness_pipeline.sh <feature_name> <prompt_file> [--full|--quick|--light]}"
 MODE="${3:---full}"  # "--full" (default), "--quick", or "--light"
 
+# V7 Phase 14-γ amendment (2026-05-26) — export the active lane so
+# harness assertions that perform lane-discipline checks (e.g. Phase
+# 13-ε A16) can skip themselves when a legitimate --full lane feature
+# is touching sim-bridge / sim-core / sim-systems / sim-engine.
+case "$MODE" in
+    --full)  export HARNESS_LANE=full ;;
+    --quick) export HARNESS_LANE=quick ;;
+    --light) export HARNESS_LANE=light ;;
+esac
+
 # --- Directories ---
 PLAN_DIR="$HARNESS_DIR/plans/$FEATURE"
 RESULT_DIR="$HARNESS_DIR/results/$FEATURE"

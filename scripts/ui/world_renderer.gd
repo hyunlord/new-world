@@ -145,6 +145,16 @@ const VILLAGE_FIXTURE_POSITIONS: Array = [
 ]
 const Z_VILLAGE_FIXTURE := 5  # same plane as ConstructionSite layer
 
+# V7 Phase 14-γ — click inspector probe radius.
+#
+# Mouse position (passed through unchanged from _unhandled_input) is
+# converted to world-coord agent centres via SPRITE_ORIGIN + TILE_SIZE.
+# An agent is considered "clicked" if its tile centre lies within
+# CLICK_RADIUS_WORLD_PX of the mouse. Bound symbolically to TILE_SIZE
+# (= 16, Phase 4-γ locked) so the radius stays coupled to the legibility
+# floor at zoom 3.0× and never drifts if TILE_SIZE is ever retuned.
+const CLICK_RADIUS_WORLD_PX := float(TILE_SIZE)
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
@@ -418,11 +428,75 @@ func _update_settlement_furniture() -> void:
 			_furniture_sprites.erase(entity_id)
 
 func _handle_tile_click(pos: Vector2) -> void:
+	# V7 Phase 14-γ — agent probe takes priority over the tile dispatch.
+	# When an agent is within CLICK_RADIUS_WORLD_PX of the click, the
+	# inspector panel is shown and the tile causal-history dispatch is
+	# skipped (mutually exclusive — see Assertion 22).
+	if _try_agent_click(pos):
+		return
+	# Phase 12-β.2 tile causal-history fallback — preserved bounds check
+	# and dispatch when no agent is within radius.
 	var tile_x := int(floor((pos.x - SPRITE_ORIGIN_X) / float(TILE_SIZE)))
 	var tile_y := int(floor((pos.y - SPRITE_ORIGIN_Y) / float(TILE_SIZE)))
 	if tile_x < 0 or tile_x >= GRID_W or tile_y < 0 or tile_y >= GRID_H:
 		return
 	_fetch_causal_history(tile_x, tile_y)
+
+
+# V7 Phase 14-γ — agent click probe.
+#
+# Iterates the most recent agent snapshot (parallel arrays of
+# entity_bits / xs / ys) and finds the agent whose tile centre is closest
+# to the mouse world coords, within CLICK_RADIUS_WORLD_PX. On a hit,
+# queries `get_agent_detail` for the 8-field row and forwards it to the
+# AgentInspectorPanel via `display_agent`.
+#
+# Returns true iff an agent was found AND the inspector accepted the
+# call (i.e. `found == true` in the detail dict). On a miss, the caller
+# falls through to the tile causal-history dispatch.
+#
+# Ties are resolved by lower snapshot iteration index because the
+# comparison is strict less-than: the first candidate to set `best_idx`
+# at a given distance wins (Assertion 21).
+func _try_agent_click(world_pos: Vector2) -> bool:
+	if world_sim == null:
+		return false
+	var snap: Dictionary = world_sim.get_agent_snapshot()
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var n: int = ids.size()
+	if n == 0:
+		return false
+	# V7 Phase 14-γ — split cutoff (inclusive) from closer-wins (strict).
+	# A click exactly at CLICK_RADIUS_WORLD_PX (d2 == max_dist2) is
+	# INCLUDED via the `>` skip; inside the loop, strict `<` preserves
+	# closer-wins behaviour, and ties (d2 == best_dist2) leave best_idx
+	# unchanged so the first (lowest-index) match wins.
+	var best_idx: int = -1
+	var best_dist2: float = 0.0
+	var max_dist2: float = CLICK_RADIUS_WORLD_PX * CLICK_RADIUS_WORLD_PX
+	for i in n:
+		var cpx: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var cpy: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var dx: float = cpx - world_pos.x
+		var dy: float = cpy - world_pos.y
+		var d2: float = dx * dx + dy * dy
+		if d2 > max_dist2:
+			continue
+		if best_idx < 0 or d2 < best_dist2:
+			best_dist2 = d2
+			best_idx = i
+	if best_idx < 0:
+		return false
+	var detail: Dictionary = world_sim.get_agent_detail(int(ids[best_idx]))
+	if not bool(detail.get("found", false)):
+		return false
+	var panel := get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+	if panel != null and panel.has_method("display_agent"):
+		panel.call("display_agent", detail)
+		return true
+	return false
 
 func _fetch_causal_history(tx: int, ty: int) -> void:
 	if world_sim == null:

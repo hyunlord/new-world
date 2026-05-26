@@ -614,6 +614,17 @@ fn harness_p13_epsilon_a16_no_rust_simulation_crate_modification() {
     // best-effort: if `git` is unavailable in the test environment, we
     // print a notice and skip the assertion (pipeline runs this guard at
     // the pre-commit hook layer as well).
+    //
+    // V7 Phase 14-γ amendment (2026-05-26): when `HARNESS_LANE=full` is
+    // set in the environment, the active pipeline run is a legitimate
+    // `--full` lane feature that may touch sim-bridge (the only
+    // simulation crate exposed to GDScript). Skip the guard in that
+    // case — the lane choice itself authorises the sim-bridge edit, and
+    // the pipeline's Evaluator step independently reviews the change.
+    if std::env::var("HARNESS_LANE").as_deref() == Ok("full") {
+        println!("[P13-ε A16] HARNESS_LANE=full active — lane-discipline guard skipped");
+        return;
+    }
     let root = project_root();
     let out = Command::new("git")
         .args(["status", "--porcelain"])

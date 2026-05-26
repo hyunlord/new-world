@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://v7init"]
+[gd_scene load_steps=7 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
 [ext_resource type="Script" path="res://scripts/ui/agent_renderer.gd" id="3_agents"]
 [ext_resource type="Script" path="res://scripts/ui/camera_controller.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/ui/panels/hud_topbar.gd" id="5_hud"]
+[ext_resource type="Script" path="res://scripts/ui/panels/agent_inspector_panel.gd" id="6_inspector"]
 
 [node name="Main" type="Node2D"]
 
@@ -28,3 +29,6 @@ script = ExtResource("2_causal")
 
 [node name="HudTopbar" type="Control" parent="UI"]
 script = ExtResource("5_hud")
+
+[node name="AgentInspectorPanel" type="Control" parent="UI"]
+script = ExtResource("6_inspector")
