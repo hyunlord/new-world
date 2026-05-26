@@ -27,6 +27,37 @@ const PALETTE_HAIR_COLS := 8
 const PALETTE_BODY_COLS := 4
 const PALETTE_SKIN_COLS := 8
 
+# V7 Phase 14-α — per-role HUE bucket count.
+#
+# Honest disclosure: V7 backend has no Role/Profession component
+# (verified 2026-05-26 against rust/crates/sim-core/src/components/).
+# This bucket count is purely visual diversity for the RimWorld-like
+# overhaul goal — deterministic on Agent.id so agents stay in the
+# same bucket within a session. Real role system deferred to
+# Section 16+.
+#
+# Set to 4 to match PALETTE_BODY_COLS (the body palette has 4
+# columns); choosing a larger N would collapse multiple buckets to
+# the same body colour and dilute the variety.
+const ROLE_BUCKET_COUNT := 4
+
+# V7 Phase 14-α — head-icon mount point.
+#
+# The actual activity icon (food / shelter / hammer / speech glyph)
+# is swapped in a later substage (Phase 14-β/γ scope). This
+# substage publishes the offset + size so future code can attach
+# a second MultiMeshInstance2D or per-agent Sprite2D at the right
+# position without re-deriving the geometry.
+#
+# Offset: 12 px above tile center in world coords. At SPRITE_SCALE
+# = 0.25 the sprite extent is 16×18 px (64×72 source × 0.25). The
+# sprite is centred on the tile, so its top edge is 9 px above
+# centre. A 12 px offset places the icon mount 3 px above the
+# sprite top — small gap, still legible at zoom 3.0× (36 px screen
+# offset).
+const ICON_OFFSET_PX := Vector2(0, -12)
+const ICON_SIZE_PX := Vector2(16, 16)
+
 # V7 Phase 8-δ — memory recall visual indicator.
 # When a `memory_recalled` causal event fires for an agent, mark it
 # briefly so the renderer can apply a transient visual cue (~0.5–1.0s
@@ -217,7 +248,7 @@ func _process(delta: float) -> void:
 		var scale_mul: float = SPRITE_SCALE * boost
 		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
 		multi_mesh.set_instance_transform_2d(i, xform)
-		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i]))
+		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i], int(agent_ids[i])))
 		# V7 Phase 11-α — apply state_tag color tint via instance color.
 		var tag: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
 		multi_mesh.set_instance_color(i, STATE_TINTS[tag])
@@ -402,12 +433,27 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
 	return h
 
-func _palette_for_id(eid: int) -> Color:
-	# Hash splat — three independent multipliers give visually distinct
-	# columns across the 8/4/8 palette layout. Stable per agent within a
-	# session because `eid` is `Entity::to_bits().get()`.
+# V7 Phase 14-α — deterministic role bucket from agent_id.
+#
+# Returns an integer in [0, ROLE_BUCKET_COUNT). Used by
+# `_palette_for_id` to key the body palette column off the
+# AgentId (semantic identity) instead of entity_bits (storage
+# identity). Hair and skin channels remain entity-bits driven so
+# individual identity stays visually distinguishable within a
+# bucket.
+func _role_bucket(agent_id: int) -> int:
+	return absi(agent_id * 2654435761) % ROLE_BUCKET_COUNT
+
+# V7 Phase 4-γ + 14-α — palette indices for a single agent.
+#
+# Hair (8 cols) and skin (8 cols) hash from `eid` (entity_bits)
+# so each agent has individual identity within a role bucket.
+# Body (4 cols) hashes from `agent_id` via `_role_bucket()` so
+# agents sharing a role bucket share body colour — the visual
+# group cue for the RimWorld-like overhaul.
+func _palette_for_id(eid: int, agent_id: int) -> Color:
 	var h: int = absi(eid * 2654435761) % PALETTE_HAIR_COLS
-	var b: int = absi(eid * 40503) % PALETTE_BODY_COLS
+	var b: int = _role_bucket(agent_id) % PALETTE_BODY_COLS
 	var s: int = absi(eid * 2246822519) % PALETTE_SKIN_COLS
 	return Color(
 		float(h) / float(PALETTE_HAIR_COLS - 1),
@@ -415,3 +461,13 @@ func _palette_for_id(eid: int) -> Color:
 		float(s) / float(PALETTE_SKIN_COLS - 1),
 		0.0
 	)
+
+# V7 Phase 14-α — head-icon mount point helper.
+#
+# Public API: given an agent's rendered world position (tile centre
+# + interpolation in `_process`), return the icon mount point in
+# the same coordinate frame. Future substages attach the activity
+# icon at this position via a second MultiMeshInstance2D or
+# per-agent Sprite2D.
+func head_icon_position(world_pos: Vector2) -> Vector2:
+	return world_pos + ICON_OFFSET_PX
