@@ -92,6 +92,59 @@ const Z_RESOURCE := 3
 const RESOURCE_COUNT := 20
 const RESOURCE_SEED := 88675123
 
+# V7 Phase 14-β — 5 resource types (Wood / Stone / Berry / Water /
+# Food). Each type reuses an existing sprite from the 207-asset
+# inventory (P14Plan-3). RESOURCE_COUNT (20) is preserved;
+# distribution becomes 4 per type via `i % 5` cycle using the
+# preserved RESOURCE_SEED.
+#
+# Honest disclosure: V7 backend has no ResourceNode component
+# (verified 2026-05-26 against rust/crates/sim-core/src/components/).
+# Agents do NOT interact with these sprites. Real ResourceNode
+# system is deferred to Section 16+.
+#
+# Index 0 = Berry deliberately reuses RESOURCE_SPRITE_PATH so the
+# Phase 13-β `storage_pit/1.png` literal stays referenced and the
+# `harness_p13_beta_a1` assertion remains green.
+const RESOURCE_TYPE_PATHS: Array = [
+	RESOURCE_SPRITE_PATH,                                         # 0: Berry (legacy alias)
+	"res://assets/sprites/furniture/workbench/1.png",             # 1: Wood
+	"res://assets/sprites/walls/limestone/1.png",                 # 2: Stone
+	"res://assets/sprites/floors/stone_slab/1.png",               # 3: Water (modulate-tinted)
+	"res://assets/sprites/furniture/hearth/2.png",                # 4: Food
+]
+# Water (type index 3) has no native sprite in the inventory;
+# blue modulate on a floor tile is the closest visual approximation
+# without DGX Spark generation.
+const RESOURCE_WATER_TINT := Color(0.45, 0.65, 1.0, 1.0)
+
+# V7 Phase 14-β — 4 village fixture sprites placed around the
+# 3-campfire bootstrap row (Phase 13-ε) so the centre region
+# reads as "a settled village" instead of "three isolated
+# campfires". Positions form a diamond around (32, 32):
+#   (28, 28) Workshop    (36, 28) Drying area
+#   (28, 36) Shelter     (36, 36) Storage
+#
+# Honest disclosure: V7 backend has no BuildingType / Profession
+# ECS substrate (verified 2026-05-26). These fixtures are
+# decorative-only — agents do NOT interact with them.
+# `_update_construction_sites` / `_update_settlement_furniture`
+# remain the substrate-driven render paths. Real BuildingType
+# system is deferred to Section 16+.
+const VILLAGE_FIXTURE_PATHS: Array = [
+	"res://assets/sprites/furniture/workbench/2.png",     # 0: Workshop
+	"res://assets/sprites/furniture/drying_rack/1.png",   # 1: Drying area
+	"res://assets/sprites/furniture/lean_to/1.png",       # 2: Shelter
+	"res://assets/sprites/furniture/storage_pit/2.png",   # 3: Storage
+]
+const VILLAGE_FIXTURE_POSITIONS: Array = [
+	Vector2i(28, 28),  # 0: Workshop  (top-left of diamond)
+	Vector2i(36, 28),  # 1: Drying    (top-right)
+	Vector2i(28, 36),  # 2: Shelter   (bottom-left)
+	Vector2i(36, 36),  # 3: Storage   (bottom-right)
+]
+const Z_VILLAGE_FIXTURE := 5  # same plane as ConstructionSite layer
+
 var current_channel: int = CHANNEL_WARMTH
 var world_sim: WorldSimNode
 var sprite: Sprite2D
@@ -189,23 +242,60 @@ func _ready() -> void:
 	# is Section 15+. Z_RESOURCE=3 puts them above terrain (z=0) and below
 	# the furniture (z=4) and construction (z=5) layers so buildings remain
 	# visually dominant.
-	var resource_tex: Texture2D = load(RESOURCE_SPRITE_PATH) as Texture2D
-	if resource_tex != null:
-		var rng_res := RandomNumberGenerator.new()
-		rng_res.seed = RESOURCE_SEED
-		for _i in RESOURCE_COUNT:
-			var rtx: int = rng_res.randi_range(0, GRID_W - 1)
-			var rty: int = rng_res.randi_range(0, GRID_H - 1)
-			var res_sprite := Sprite2D.new()
-			res_sprite.texture = resource_tex
-			res_sprite.position = Vector2(
-				float(SPRITE_ORIGIN_X + rtx * TILE_SIZE) + float(TILE_SIZE) / 2.0,
-				float(SPRITE_ORIGIN_Y + rty * TILE_SIZE) + float(TILE_SIZE) / 2.0,
-			)
-			res_sprite.z_index = Z_RESOURCE
-			add_child(res_sprite)
-	else:
-		push_warning("WorldRenderer: failed to load resource sprite at %s" % RESOURCE_SPRITE_PATH)
+	#
+	# V7 Phase 14-β — pre-load all 5 resource type textures so the loop
+	# doesn't hit the resource loader RESOURCE_COUNT times. Failure to
+	# load any one type emits a warning and leaves the corresponding
+	# entry null; the loop's null-guard then skips that index.
+	var resource_textures: Array = []
+	for path in RESOURCE_TYPE_PATHS:
+		var tex: Texture2D = load(path) as Texture2D
+		resource_textures.append(tex)
+		if tex == null:
+			push_warning("WorldRenderer: failed to load resource sprite at %s" % path)
+	var rng_res := RandomNumberGenerator.new()
+	rng_res.seed = RESOURCE_SEED
+	for i in RESOURCE_COUNT:
+		var rtx: int = rng_res.randi_range(0, GRID_W - 1)
+		var rty: int = rng_res.randi_range(0, GRID_H - 1)
+		var type_idx: int = i % RESOURCE_TYPE_PATHS.size()
+		var rtex: Texture2D = resource_textures[type_idx] as Texture2D
+		if rtex == null:
+			continue
+		var res_sprite := Sprite2D.new()
+		res_sprite.texture = rtex
+		res_sprite.position = Vector2(
+			float(SPRITE_ORIGIN_X + rtx * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+			float(SPRITE_ORIGIN_Y + rty * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+		)
+		res_sprite.z_index = Z_RESOURCE
+		# V7 Phase 14-β — Water type uses a blue modulate tint because
+		# no native water sprite exists in the inventory. All other
+		# types render with default modulate (white).
+		if type_idx == 3:
+			res_sprite.modulate = RESOURCE_WATER_TINT
+		add_child(res_sprite)
+
+	# V7 Phase 14-β — place 4 village fixture sprites at the
+	# pre-determined diamond positions around the bootstrap row.
+	# Each fixture has its own texture; they share Z_VILLAGE_FIXTURE
+	# = Z_CONSTRUCTION = 5 so they sit in the same plane as
+	# substrate-driven construction sites.
+	for fi in VILLAGE_FIXTURE_PATHS.size():
+		var fpath: String = VILLAGE_FIXTURE_PATHS[fi]
+		var ftex: Texture2D = load(fpath) as Texture2D
+		if ftex == null:
+			push_warning("WorldRenderer: failed to load village fixture at %s" % fpath)
+			continue
+		var fpos: Vector2i = VILLAGE_FIXTURE_POSITIONS[fi]
+		var fixture_sprite := Sprite2D.new()
+		fixture_sprite.texture = ftex
+		fixture_sprite.position = Vector2(
+			float(SPRITE_ORIGIN_X + fpos.x * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+			float(SPRITE_ORIGIN_Y + fpos.y * TILE_SIZE) + float(TILE_SIZE) / 2.0,
+		)
+		fixture_sprite.z_index = Z_VILLAGE_FIXTURE
+		add_child(fixture_sprite)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
