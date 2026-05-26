@@ -234,20 +234,47 @@ with open(sys.argv[3], 'w') as f:
 }
 
 # --- Timeout wrapper (GNU timeout or macOS perl fallback) ---
+#
+# E Phase A (2026-05-27): perl fallback had two real bugs that allowed
+# subagent hangs to evade the alarm:
+#   (1) `alarm` was set BEFORE the fork, so if SIGALRM fired before the
+#       fork completed, `$pid` was undef and `kill "TERM", undef` was
+#       silently dropped — the child kept running forever.
+#   (2) The handler only sent SIGTERM. A subagent that ignored SIGTERM
+#       (e.g. a Codex CLI child stuck in a blocking I/O syscall on
+#       macOS) would not die.
+# Fix order: fork first → install handler with proper $pid scope →
+# alarm. Handler now follows SIGTERM with a SIGKILL after a 5s grace
+# period. Phase 14-β Codex 68-min hang was a direct casualty of bug (1).
 run_with_timeout() {
     local seconds=$1
     shift
     if command -v timeout >/dev/null 2>&1; then
         timeout "$seconds" "$@"
     else
-        # macOS fallback: perl alarm with proper process management
+        # macOS fallback: perl alarm with corrected lifecycle.
         perl -e '
             use POSIX ":sys_wait_h";
-            alarm $ARGV[0];
-            $SIG{ALRM} = sub { kill "TERM", $pid; exit 142; };
-            $pid = fork();
-            if ($pid == 0) { exec @ARGV[1..$#ARGV]; die "exec failed: $!"; }
+            my $deadline = shift @ARGV;
+            my $pid = fork();
+            if (not defined $pid) { die "fork failed: $!"; }
+            if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+            $SIG{ALRM} = sub {
+                kill "TERM", $pid;
+                # SIGKILL grace period: 5s after SIGTERM, force-kill any
+                # subagent that ignored the polite signal. macOS Codex
+                # CLI children in this state otherwise run indefinitely.
+                for (1..5) {
+                    last if waitpid($pid, WNOHANG) > 0;
+                    sleep 1;
+                }
+                kill "KILL", $pid;
+                waitpid($pid, 0);
+                exit 142;
+            };
+            alarm $deadline;
             waitpid($pid, 0);
+            alarm 0;
             exit ($? >> 8);
         ' "$seconds" "$@"
     fi
@@ -397,7 +424,70 @@ PLANNER_EOF
 
     # Verify output exists and is non-empty
     [[ -s "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
+    # E Phase A (2026-05-27) — Drafter quality validation.
+    # Detects two Drafter regression modes empirically observed in
+    # Phase 14-γ runs 2 & 3:
+    #   (a) Claude API rate-limit error returned as stdout text ("You've
+    #       hit your limit · resets …") — Drafter exits 0 with a stub
+    #       file containing only the error.
+    #   (b) Drafter writes a 1-line meta-comment ("Plan submission
+    #       complete — the test plan above is …") instead of the
+    #       actual plan. Empirically observed in Phase 14-γ run 3 and
+    #       the 2026-05-11 NEXT-A incident.
+    # Threshold rationale: valid plans observed range 269–411 lines;
+    # ≥30 lines + ≥3 `### Assertion ` markers is a conservative gate
+    # that catches both regressions without false-positiving on the
+    # shortest-real-plan precedent.
+    validate_plan_draft "$PLAN_DIR/plan_draft.md" "Drafter (initial)"
     log "Plan draft created: $PLAN_DIR/plan_draft.md"
+}
+
+# ============================================================
+# HELPER: validate_plan_draft (E Phase A — Drafter regression guard)
+# ============================================================
+# Inspects a plan_draft.md / plan_revised.md file emitted by the
+# Drafter or its revision step. Fast-fails with a clear message when
+# the output is either a Claude API rate-limit stub or a 1-line
+# meta-comment instead of an actual plan. False-positive resistant:
+# shortest valid plan in the audit corpus is 269 lines, so the 30-line
+# threshold has ~9× safety margin.
+#
+# Args:
+#   $1 = path to plan file
+#   $2 = caller label (for die message)
+validate_plan_draft() {
+    local plan_file="$1"
+    local caller="$2"
+    if [[ ! -s "$plan_file" ]]; then
+        die "$caller: plan file missing or empty: $plan_file"
+    fi
+    # Rate-limit detection — Claude API responds with this string when
+    # the per-window quota is exhausted. The Drafter captures it as
+    # stdout, so the plan file contains only the error.
+    if grep -qE "(You've hit your limit|rate.?limit|resets.* (am|pm))" "$plan_file"; then
+        die "$caller: Claude API rate-limit error detected in plan output. \
+Plan file ($plan_file) contains rate-limit message instead of a plan. \
+Wait for the reset window indicated in the message, then re-run the pipeline. \
+This is an environmental block per CLAUDE.md Rule 7.1 — ENV-BYPASS may be authorized."
+    fi
+    local lines
+    lines=$(wc -l < "$plan_file" | tr -d ' ')
+    if [[ $lines -lt 30 ]]; then
+        die "$caller: plan file too short ($lines lines, threshold ≥30). \
+Valid plans in the audit corpus range 269–411 lines; <30 indicates a \
+Drafter regression (meta-comment instead of plan content). Inspect \
+$plan_file directly. The Drafter subagent may need to be re-invoked \
+or the prompt clarified."
+    fi
+    local assertion_count
+    assertion_count=$(grep -c "^### Assertion " "$plan_file" || true)
+    if [[ $assertion_count -lt 3 ]]; then
+        die "$caller: plan contains only $assertion_count \`### Assertion \` \
+markers (threshold ≥3). Real plans have 10+ assertions. This is a \
+Drafter regression — the subagent produced a stub instead of an \
+itemised plan. Inspect $plan_file and re-invoke."
+    fi
+    log "Drafter validation: $lines lines, $assertion_count assertions — PASS"
 }
 
 # ============================================================
@@ -516,6 +606,20 @@ REVISION_EOF
         log "WARNING: Revision produced empty output — using draft"
         cp "$PLAN_DIR/plan_draft.md" "$PLAN_DIR/plan_revised.md"
     }
+
+    # E Phase A (2026-05-27) — explicit rate-limit detection on the
+    # revision output. The Issue 15 length/assertion fallback above
+    # would silently treat a rate-limit stub as "suspiciously short"
+    # and use the draft — but if BOTH draft and revision hit the same
+    # rate-limit window, the fallback masks the environmental block as
+    # a structural defect. Detect the rate-limit signature explicitly
+    # so the pipeline emits a clear ENV-BYPASS-eligible failure
+    # instead of degraded silent recovery.
+    if grep -qE "(You've hit your limit|rate.?limit|resets.* (am|pm))" "$PLAN_DIR/plan_revised.md"; then
+        die "Drafter revision: Claude API rate-limit error detected in plan_revised.md. \
+This is an environmental block per CLAUDE.md Rule 7.1. Wait for the reset \
+window, then re-run the pipeline (or authorize ENV-BYPASS)."
+    fi
 
     # Issue 15 (Pattern G) producer-side structural validator.
     # Drafter agent under conversational pressure has been observed to emit a
@@ -799,6 +903,63 @@ run_visual_verify() {
 
     local evidence_dir="$HARNESS_DIR/evidence/$FEATURE"
     mkdir -p "$evidence_dir"
+
+    # E Phase A (2026-05-27) — stale dylib guard.
+    #
+    # `cargo test --workspace` rebuilds sim-bridge for the test target,
+    # but Godot at runtime loads `rust/target/{debug,release}/libsim_bridge.dylib`
+    # (the cdylib output, NOT the test artefact). If the Generator
+    # modified sim-bridge .rs files AFTER the mechanical-gate cargo
+    # test ran, the cdylib is stale and Godot loads the previous
+    # FFI surface. Symptoms: NEW #[func] methods crash GDScript callers
+    # with "method not found"; renamed methods silently call the old
+    # body.
+    #
+    # Empirically observed in D Phase A — the entire failure chain was
+    # invisible to file-inspection harness assertions because the
+    # static check sees the NEW Rust source, but Godot at runtime
+    # binds to the STALE dylib. This guard runs `cargo build -p
+    # sim-bridge` if any sim-bridge .rs file is newer than the dylib,
+    # adding ~5-10 sec to the pipeline only when actually needed.
+    if changed_sim_bridge; then
+        local dylib_path="$PROJECT_ROOT/rust/target/debug/libsim_bridge.dylib"
+        # macOS .dylib for darwin; .so for linux. Pick whichever the
+        # current OS produced.
+        if [[ ! -f "$dylib_path" ]]; then
+            dylib_path="$PROJECT_ROOT/rust/target/debug/libsim_bridge.so"
+        fi
+        local should_rebuild=0
+        if [[ ! -f "$dylib_path" ]]; then
+            should_rebuild=1
+            log "Stale-dylib guard: cdylib missing at debug/ — forcing rebuild"
+        else
+            local dylib_mtime
+            if dylib_mtime=$(stat -f %m "$dylib_path" 2>/dev/null); then
+                :  # macOS stat
+            else
+                dylib_mtime=$(stat -c %Y "$dylib_path" 2>/dev/null || echo 0)
+            fi
+            # Compare against the newest sim-bridge .rs file
+            local newest_src_mtime
+            newest_src_mtime=$(find "$PROJECT_ROOT/rust/crates/sim-bridge/src" -name '*.rs' -type f -exec stat -f %m {} \; 2>/dev/null | sort -n | tail -1)
+            if [[ -z "$newest_src_mtime" ]]; then
+                newest_src_mtime=$(find "$PROJECT_ROOT/rust/crates/sim-bridge/src" -name '*.rs' -type f -exec stat -c %Y {} \; 2>/dev/null | sort -n | tail -1)
+            fi
+            if [[ -n "$newest_src_mtime" && "$newest_src_mtime" -gt "$dylib_mtime" ]]; then
+                should_rebuild=1
+                log "Stale-dylib guard: newest sim-bridge .rs ($newest_src_mtime) > cdylib mtime ($dylib_mtime) — rebuild required"
+            fi
+        fi
+        if [[ "$should_rebuild" -eq 1 ]]; then
+            log "Rebuilding sim-bridge cdylib (cargo build -p sim-bridge)..."
+            ( cd "$PROJECT_ROOT/rust" && cargo build -p sim-bridge 2>&1 | tail -10 ) || {
+                die "Stale-dylib rebuild failed. Godot would load a stale FFI; aborting before visual verify."
+            }
+            log "sim-bridge cdylib rebuilt — Godot will see current FFI surface"
+        else
+            log "Stale-dylib guard: cdylib is up-to-date — no rebuild needed"
+        fi
+    fi
 
     # Resolve Godot binary
     local godot_bin="${GODOT:-}"
@@ -1832,6 +1993,16 @@ main() {
     log "Mode: $MODE"
     log "Prompt: $PROMPT_FILE"
     log "=========================================="
+
+    # E Phase A (2026-05-27) — surface pending ENV-BYPASS follow-ups.
+    # Per CLAUDE.md Rule 7.1, every ENV-BYPASS commit obligates a
+    # formal re-run within 7 days. Display any pending obligations
+    # (advisory — does NOT block the pipeline) so the operator is
+    # aware before starting more work on top of unresolved bypasses.
+    if [[ -x "$SCRIPT_DIR/env_bypass_followup_check.sh" ]]; then
+        bash "$SCRIPT_DIR/env_bypass_followup_check.sh" --quiet 2>&1 \
+            | sed -e 's/^/[harness] /' || true
+    fi
 
     init_progress
 

@@ -734,8 +734,53 @@ prior pipeline (32+ APPROVED) because static file inspection + Codex
 code review do not exercise GDScript parsing or runtime FFI binding.
 This check closes that gap at the source level. Runtime FFI is still
 out of scope (would require launching the engine with the actual
-dylib) — the build-time dylib staleness pattern that caused the
-FATAL crash is documented in CLAUDE.md but not automatically detected.
+dylib) — the build-time dylib staleness pattern is now caught by the
+E Phase A stale-dylib guard documented below.
+
+### Pipeline Infrastructure Hardening (added 2026-05-27 — E Phase A)
+
+After Phase 14-γ ENV-BYPASS (`e0cbc616`) — 3 consecutive pipeline
+failures from environmental + subagent regression — six accumulated
+infrastructure problems were addressed in a single hardening pass:
+
+| # | Symptom | Root cause | Fix | Status |
+|---|---------|-----------|-----|--------|
+| 1 | Generator 900s timeout (Phase 14-γ run 1) | Default ceiling too low for large `--full` lane features | `GENERATOR_TIMEOUT_SECONDS` env var documented; 1800s recommended for FFI extensions | Documented |
+| 2 | Claude API rate-limit hangs subagent (Phase 14-γ run 2) | No detection — subagent emits the error as stdout | `validate_plan_draft` + revision check grep stdout for "You've hit your limit" / "rate.?limit"; pipeline fast-fails with ENV-BYPASS guidance | **Detection + fast-fail** |
+| 3 | Drafter regression: 1-line meta-comment plan (Phase 14-γ run 3, 2026-05-11 NEXT-A, others) | `[[ -s plan_draft.md ]]` accepts any non-empty file | `validate_plan_draft`: line count ≥30 AND `### Assertion ` markers ≥3 | **Detection** |
+| 4 | Codex 68-min hang (Phase 14-β regression guard) | perl alarm bug — `$pid` undef if SIGALRM fires before fork; SIGTERM-only handler can be ignored | `run_with_timeout`: fork first → install handler with proper `$pid` scope → alarm; SIGKILL fallback after 5s SIGTERM grace | **Fixed** |
+| 5 | Stale dylib (D Phase A) | `cargo test` doesn't rebuild cdylib that Godot loads at runtime | `run_visual_verify` checks newest `sim-bridge/src/**/*.rs` mtime vs `libsim_bridge.dylib` mtime; rebuilds when stale | **Detection + auto-rebuild** |
+| 6 | ENV-BYPASS 7-day follow-up never tracked | Audit log existed but no scanning tool | `tools/harness/env_bypass_followup_check.sh` scans `.harness/audit/env_bypass.log` for entries without `verified-post-bypass-<commit>` closure, computes age vs deadline; called at pipeline startup (advisory, `--quiet` mode) | **Reminder system** |
+
+Limits (deliberately not "fixed"):
+
+- **Problem 2 (rate-limit)** cannot be retried automatically — that
+  would just consume more quota. The detection emits a clear
+  ENV-BYPASS-eligible message; the operator decides whether to wait
+  or bypass.
+- **Problem 1 (Generator timeout)** is not auto-extended. Large
+  implementations might need 1800s, but a default 1800s would mask
+  legitimate hangs. Operators override via env var only when needed.
+- The follow-up checker is **advisory** at pipeline startup — it
+  does not block. Hard enforcement would block all work whenever a
+  prior bypass is unresolved, even when the new feature is unrelated.
+
+### Pipeline Stale-Dylib Guard (E Phase A — 2026-05-27)
+
+Step 2.5a (run_visual_verify) prelude: if `changed_sim_bridge()` (any
+uncommitted `rust/crates/sim-bridge/src/**/*.rs` change), compare the
+newest `.rs` file's mtime against `rust/target/debug/libsim_bridge.dylib`.
+If the source is newer, run `cargo build -p sim-bridge` before
+launching Godot. Adds 5-10 seconds when triggered, zero when not.
+
+Why this matters: Godot's GDExtension loads the cdylib at process
+start. The mechanical-gate `cargo test --workspace` builds the test
+artefact (`target/debug/deps/libsim_bridge-<hash>.dylib`) but not
+necessarily the cdylib output `target/debug/libsim_bridge.dylib`. If
+the Generator then modifies sim-bridge .rs files, the cdylib stays at
+its pre-Generator state and Godot binds to the old FFI surface.
+Symptoms: NEW `#[func]` methods crash GDScript callers with "method
+not found"; renamed methods silently call the old body.
 
 ### VLM Visual Verification — Known Limitation
 
