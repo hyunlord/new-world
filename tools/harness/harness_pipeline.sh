@@ -349,9 +349,58 @@ PREVIOUS REVIEW FEEDBACK (plan was rejected — address these issues):
 $(cat "$REVIEW_DIR/review_latest.md")"
     fi
 
+    # F Phase A (2026-05-27) — extract scope manifest from prompt.
+    # The prompt's "## Section 2: What to Build" block lists the
+    # authorized files (Modified / New). The Drafter has repeatedly
+    # invented scope beyond this manifest (Phase 14-γ rerun: 26-assertion
+    # plan with EntityDetailPanel + settlement_detail_panel +
+    # building_detail_panel + en/ko locale keys, none of which the
+    # prompt's Conservative 8-field scope authorized).
+    #
+    # Strategy: prepend an UNMISTAKABLE locked-scope banner to
+    # planner_input.md so the Drafter sees it BEFORE the feature
+    # body. Empirically the Drafter degrades when the locked scope is
+    # buried in a long prompt — front-loading it improves adherence.
+    local scope_manifest=""
+    if grep -q "^## Section 2: What to Build" "$PROMPT_FILE"; then
+        # Extract the section block (from header to next ## or EOF)
+        scope_manifest=$(awk '/^## Section 2: What to Build/{flag=1; print; next} /^## /{flag=0} flag' "$PROMPT_FILE")
+    fi
+
     # Build planner input
     cat > "$PLAN_DIR/planner_input.md" << PLANNER_EOF
 # Harness Test Plan Request
+
+## ⚠️  LOCKED SCOPE — DO NOT EXPAND  ⚠️
+
+The feature prompt's **Section 2: What to Build** below enumerates
+the AUTHORIZED scope: every file path that this plan may touch,
+every FFI symbol that may be added, every assertion count target.
+
+**Hard rules** (violations cause the plan to be rejected by the
+pipeline's semantic validator AFTER you submit it — wasted work):
+
+1. Do **NOT** invent new GDScript files outside the "New files"
+   list in Section 2.
+2. Do **NOT** rename FFI functions enumerated in Section 2.
+3. Do **NOT** add localization keys unless Section 4 explicitly
+   authorizes them.
+4. Do **NOT** propose assertions whose subject is a file NOT in
+   Section 2's "Modified files" or "New files" list. Cross-phase
+   regression guards (subject = files in "Not changed") are
+   permitted and encouraged.
+5. The prompt's "Honest disclosure" or "Conservative scope" notes
+   are **user-locked decisions**, not negotiable defaults. If the
+   prompt says "Conservative N fields", do not expand to N+M.
+
+If you believe the Section 2 manifest is incomplete for what the
+feature actually requires, **say so in your plan's Edge Cases
+section** ("scope gap: prompt Section 2 omits X, plan cannot
+satisfy spec without it") and stop there. Do NOT silently add it.
+
+----- Section 2 verbatim (READ FIRST) -----
+${scope_manifest:-(no Section 2 found in prompt — proceed with full prompt body as authoritative)}
+-----
 
 ## Feature
 $(cat "$PROMPT_FILE")
@@ -439,7 +488,100 @@ PLANNER_EOF
     # that catches both regressions without false-positiving on the
     # shortest-real-plan precedent.
     validate_plan_draft "$PLAN_DIR/plan_draft.md" "Drafter (initial)"
+    # F Phase A (2026-05-27) — semantic scope validation.
+    # The structural check above (line count + assertion markers)
+    # passes any plan that LOOKS like a plan, including 26-assertion
+    # bloated plans that exceed the prompt's locked scope. The
+    # semantic check below catches the egregious patterns observed
+    # in the Phase 14-γ rerun: NEW .gd panel files invented beyond
+    # the prompt's "New files" list.
+    validate_plan_scope_semantic "$PLAN_DIR/plan_draft.md" "$PROMPT_FILE" "Drafter (initial)"
     log "Plan draft created: $PLAN_DIR/plan_draft.md"
+}
+
+# ============================================================
+# HELPER: validate_plan_scope_semantic (F Phase A — scope-explosion guard)
+# ============================================================
+# Parses the prompt's "## Section 2: What to Build" block for the
+# authorized file list (Modified files + New files) and scans the
+# plan_draft.md for NEW file mentions that fall outside that set.
+#
+# Catches the Phase 14-γ rerun scope explosion (Drafter invented
+# EntityDetailPanel + settlement_detail_panel + building_detail_panel
+# none of which the Conservative-scope prompt authorized).
+#
+# Conservative thresholds to avoid false positives:
+#   - Only flags brand-new `.gd` and `.rs` files mentioned in the plan
+#     that are NOT in the prompt's authorized list.
+#   - Allows up to 1 unauthorized file (might be a legitimate helper
+#     the prompt forgot to enumerate). 2+ unauthorized files = plan
+#     rejection.
+#   - Standard test directories (`rust/crates/sim-test/tests/`) and
+#     prompt directories (`.harness/prompts/`) are always permitted.
+#
+# Args:
+#   $1 = plan file path
+#   $2 = prompt file path
+#   $3 = caller label
+validate_plan_scope_semantic() {
+    local plan_file="$1"
+    local prompt_file="$2"
+    local caller="$3"
+    [[ -s "$plan_file" ]] || { log "scope-semantic: plan empty, skip"; return; }
+    [[ -s "$prompt_file" ]] || { log "scope-semantic: prompt empty, skip"; return; }
+    # If the prompt has no Section 2, we can't validate scope — be permissive.
+    if ! grep -q "^## Section 2: What to Build" "$prompt_file"; then
+        log "scope-semantic: prompt has no Section 2 — skip (permissive)"
+        return
+    fi
+    # Extract authorized file paths from the prompt's Section 2.
+    # Look for backtick-wrapped paths ending in .gd / .rs / .tscn /
+    # .gdshader inside the Section 2 block.
+    local authorized
+    authorized=$(awk '/^## Section 2: What to Build/{flag=1; next} /^## /{flag=0} flag' "$prompt_file" \
+        | grep -oE '`[^`]+\.(gd|rs|tscn|gdshader|gdextension)`' \
+        | tr -d '`' \
+        | sort -u)
+    # Extract file paths mentioned in plan_draft.md.
+    local plan_paths
+    plan_paths=$(grep -oE '`?\b(scripts|rust|scenes|shaders|localization|assets)/[A-Za-z0-9_/.-]+\.(gd|rs|tscn|gdshader|json)\b' "$plan_file" \
+        | tr -d '`' \
+        | sort -u)
+    # Determine unauthorized = plan_paths - authorized - whitelist.
+    # Whitelist categories: harness tests (sim-test/tests/), harness
+    # prompts (.harness/), and any path inside `rust/target/`.
+    local unauthorized=""
+    while IFS= read -r path; do
+        [[ -z "$path" ]] && continue
+        # Always-permitted paths
+        if [[ "$path" == rust/crates/sim-test/tests/* ]]; then continue; fi
+        if [[ "$path" == .harness/* ]]; then continue; fi
+        if [[ "$path" == rust/target/* ]]; then continue; fi
+        # Path enumerated in prompt authorized list
+        if echo "$authorized" | grep -Fxq "$path" 2>/dev/null; then continue; fi
+        unauthorized="$unauthorized"$'\n'"$path"
+    done <<< "$plan_paths"
+    # Strip leading newline + count
+    unauthorized=$(echo "$unauthorized" | sed '/^$/d')
+    local unauthorized_count
+    # `grep -c . || true` keeps the count and exits 0; without the
+    # `|| true` and without the second `|| echo 0`, the count line
+    # collapses cleanly to a single integer.
+    unauthorized_count=$(echo "$unauthorized" | grep -c . 2>/dev/null || true)
+    unauthorized_count=${unauthorized_count:-0}
+    if [[ "$unauthorized_count" -ge 2 ]]; then
+        die "$caller: SCOPE EXPLOSION — plan mentions $unauthorized_count file paths NOT in the prompt's Section 2 authorized list:
+$unauthorized
+
+The plan must stay within the prompt's locked scope. If a missing file
+is genuinely required, the plan's Edge Cases section should declare
+a 'scope gap' rather than silently expanding scope. Re-author the
+plan or expand the prompt's Section 2 first."
+    elif [[ "$unauthorized_count" -eq 1 ]]; then
+        log "scope-semantic WARNING: plan mentions 1 unauthorized path:$unauthorized — within tolerance (≤1) but please verify."
+    else
+        log "scope-semantic: PASS — all mentioned paths in prompt's authorized list (or whitelist)."
+    fi
 }
 
 # ============================================================

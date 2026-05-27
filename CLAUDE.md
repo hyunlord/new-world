@@ -765,6 +765,67 @@ Limits (deliberately not "fixed"):
   does not block. Hard enforcement would block all work whenever a
   prior bypass is unresolved, even when the new feature is unrelated.
 
+### Pipeline Drafter Scope-Explosion Guard (F Phase A — 2026-05-27)
+
+After E Phase A landed (`0e69fa37`), the very next pipeline run
+(Phase 14-γ Rule 7.1 follow-up) exposed a new failure mode that
+neither D Phase B nor E Phase A could catch: **the Drafter on its
+FIRST attempt produced a 26-assertion plan that invented an
+`EntityDetailPanel` + `settlement_detail_panel.gd` +
+`building_detail_panel.gd` triad none of which the prompt's
+locked Conservative-8-field scope authorized.** The Generator
+faithfully implemented the bloated plan, and only the Evaluator's
+RE-CODE verdict surfaced the violation — costing one full attempt
+cycle (~22 min) per occurrence.
+
+E Phase A's `validate_plan_draft` was a STRUCTURAL guard (line
+count + assertion markers). A scope-bloated plan is structurally
+valid (more lines, more markers) so the guard passed it through.
+
+F Phase A adds two layers:
+
+**1. Pre-Drafter banner (Method 2 — prompt sentinel)**
+
+`run_planner` now extracts the prompt's `## Section 2: What to
+Build` block and prepends it to `planner_input.md` under an
+`⚠️ LOCKED SCOPE — DO NOT EXPAND ⚠️` heading with 5 hard rules:
+do not invent new GDScript files outside the New-files list;
+do not rename FFI functions; do not add locale keys unless
+Section 4 authorises them; do not propose assertions whose
+subject is unlisted; user "Conservative" notes are locked, not
+default. Empirically the Drafter degrades when scope is buried
+in long prompts — front-loading restores adherence.
+
+**2. Post-Drafter semantic validation (Method 1 — plan parser)**
+
+`validate_plan_scope_semantic` (called immediately after
+`validate_plan_draft` in `run_planner`) extracts the prompt's
+authorised file list from Section 2 (backtick-wrapped paths
+ending in `.gd`/`.rs`/`.tscn`/`.gdshader`/`.gdextension`), scans
+the plan_draft.md for file path mentions, and dies when ≥2 paths
+fall outside the authorised list + whitelist
+(`rust/crates/sim-test/tests/`, `.harness/`, `rust/target/`).
+1 unauthorised path = WARNING (lenient, prompt may have missed a
+helper); 2+ = scope-explosion FAIL.
+
+Threshold rationale: the Phase 14-γ rerun bloat introduced 3
+unauthorised panels at once — easily detected. False-positive
+defence: the 1-path tolerance plus the standard-test/prompt
+whitelist allows most legitimate small additions through.
+
+**Limits (deliberately not "fixed")**
+
+- The Drafter can still degrade in non-file dimensions
+  (overcounting assertion bodies, inventing FFI symbol names
+  inside an authorized file). The pipeline's downstream
+  Evaluator catches these — F Phase A only targets the
+  egregious "new files" pattern that wasted Phase 14-γ runs.
+- If a prompt has no `## Section 2: What to Build` block, the
+  semantic check skips itself (permissive — no false positives
+  for prompts authored under the old convention).
+- Method 2 (sentinel) reduces but does not eliminate Drafter
+  scope drift. Method 1 (parser) is the hard backstop.
+
 ### Pipeline Stale-Dylib Guard (E Phase A — 2026-05-27)
 
 Step 2.5a (run_visual_verify) prelude: if `changed_sim_bridge()` (any
