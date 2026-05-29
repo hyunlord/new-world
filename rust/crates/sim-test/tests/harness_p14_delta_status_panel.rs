@@ -482,11 +482,14 @@ fn harness_p14_delta_a10_main_tscn_registers_hud_status_panel() {
     println!("[P14-δ A10] HudStatusPanel registered under UI ✓");
 }
 
-// ─── A11: load_steps = 8 ──────────────────────────────────────────────────
+// ─── A11: load_steps ≥ 8 ──────────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a11_main_tscn_load_steps_updated_from_7_to_8() {
-    // Type A — `load_steps=8` in the [gd_scene ...] header, tolerating
-    // optional whitespace around `=`.
+    // Type A — `load_steps>=8` in the [gd_scene ...] header. Originally
+    // locked at 8 by Phase 14-δ; Phase 14-ε (2026-05-29) adds the
+    // ActivityTrailRenderer ExtResource, raising the baseline to 9. The
+    // assertion is preserved as a lower-bound guard so future additive
+    // substages (ζ, η, …) do not require updating this δ-era test.
     let src = read_main_tscn_src();
     let mut found_n: Option<i64> = None;
     for line in src.lines() {
@@ -516,8 +519,11 @@ fn harness_p14_delta_a11_main_tscn_load_steps_updated_from_7_to_8() {
         break;
     }
     let n = found_n.expect("A11.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 8, "A11.2: load_steps must equal 8; got {n}");
-    println!("[P14-δ A11] load_steps = 8 ✓");
+    assert!(
+        n >= 8,
+        "A11.2: load_steps must be >= 8 (Phase 14-δ baseline); got {n}"
+    );
+    println!("[P14-δ A11] load_steps = {n} (>= 8) ✓");
 }
 
 // ─── A12: hud_topbar.gd A4/A5/A6 invariants preserved ────────────────────
