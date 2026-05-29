@@ -235,10 +235,11 @@ fn harness_p13_alpha_a3_camera_controller_zoom_max_unchanged() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_MAX", "A3");
     let compact = no_ws(&rhs);
     assert_eq!(
-        compact, "Vector2(4.0,4.0)",
-        "A3: ZOOM_MAX RHS must equal Vector2(4.0,4.0) (whitespace-stripped); got `{rhs}`"
+        compact, "Vector2(8.0,8.0)",
+        "A3: ZOOM_MAX RHS must equal Vector2(8.0,8.0) (whitespace-stripped; \
+         raised from 4.0 in G Phase A); got `{rhs}`"
     );
-    println!("[P13-α A3] ZOOM_MAX = Vector2(4.0, 4.0) preserved ✓");
+    println!("[P13-α A3] ZOOM_MAX = Vector2(8.0, 8.0) (G Phase A) ✓");
 }
 
 // ─── Assertion 4: bootstrap_building_path_campfire ────────────────────────

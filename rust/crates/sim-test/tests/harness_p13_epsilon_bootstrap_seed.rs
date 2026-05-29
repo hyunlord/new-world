@@ -458,8 +458,8 @@ fn harness_p13_epsilon_a10_phase12_alpha_zoom_invariants_preserved() {
     );
     assert_eq!(
         no_ws(&zoom_max),
-        "Vector2(4.0,4.0)",
-        "A10.5: ZOOM_MAX must equal Vector2(4.0, 4.0); got `{zoom_max}`"
+        "Vector2(8.0,8.0)",
+        "A10.5: ZOOM_MAX must equal Vector2(8.0, 8.0) (raised from 4.0 in G Phase A); got `{zoom_max}`"
     );
     // Sanity-check default presence (value tested by A11).
     assert!(

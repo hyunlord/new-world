@@ -1127,8 +1127,8 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     let zmax = unique_decl_rhs(&cam_stripped, "ZOOM_MAX", "A28.ZMAX");
     assert_eq!(
         no_ws(&zmax),
-        "Vector2(4.0,4.0)",
-        "A28: ZOOM_MAX must be Vector2(4.0, 4.0); got `{zmax}`"
+        "Vector2(8.0,8.0)",
+        "A28: ZOOM_MAX must be Vector2(8.0, 8.0) (raised from 4.0 in G Phase A); got `{zmax}`"
     );
 
     println!("[P14-γ A28] Phase 12-α–13-ε visual invariants preserved ✓");

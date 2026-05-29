@@ -501,8 +501,8 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
     );
     assert_eq!(
         no_ws(&zoom_max),
-        "Vector2(4.0,4.0)",
-        "A15.5: ZOOM_MAX must equal Vector2(4.0, 4.0); got `{zoom_max}`"
+        "Vector2(8.0,8.0)",
+        "A15.5: ZOOM_MAX must equal Vector2(8.0, 8.0) (raised from 4.0 in G Phase A); got `{zoom_max}`"
     );
     let default_compact = no_ws(&zoom_default);
     let accepted = [

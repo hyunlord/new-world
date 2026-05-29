@@ -23,6 +23,15 @@ const SPRITE_H := 72
 # Sprite is scaled so the 64-px-wide character fits inside one 16-px
 # world tile while keeping its 8:9 aspect ratio. 16/64 = 0.25.
 const SPRITE_SCALE := 0.25
+
+# V7 G Phase A — agent_base.png is a 4-col × 3-row = 12-frame sprite
+# sheet (16×24 per frame). Prior to G Phase A the renderer assigned a
+# QuadMesh whose UVs span the WHOLE sheet (0→1), so every agent drew all
+# 12 frames squished into one quad and read as a "clump" rather than a
+# single figure. _ready now renders frame AGENT_FRAME_INDEX only.
+const SHEET_COLS := 4
+const SHEET_ROWS := 3
+const AGENT_FRAME_INDEX := 0   # 0 = top-left cell (front-facing idle)
 const PALETTE_HAIR_COLS := 8
 const PALETTE_BODY_COLS := 4
 const PALETTE_SKIN_COLS := 8
@@ -150,14 +159,42 @@ func _ready() -> void:
 		push_error("WorldSim node not found at ../WorldSim")
 		return
 
+	# V7 G Phase A — render a SINGLE frame (AGENT_FRAME_INDEX) of the 4×3
+	# agent_base sheet instead of the whole sheet. Reuse the QuadMesh's own
+	# generated vertices + UVs (so the UV orientation that already renders
+	# agents upright is preserved — zero flip risk) and remap every UV into
+	# the chosen frame's sub-rectangle. The palette_swap shader is untouched:
+	# it still samples `texture(TEXTURE, UV)` and reads tex.g for the
+	# hair/body/skin row from the single sampled frame. SPRITE_SCALE
+	# (Phase 4-γ 0.25) and the 64×72 quad size are unchanged.
 	var quad := QuadMesh.new()
 	quad.size = Vector2(SPRITE_W, SPRITE_H)
+	var quad_arrays: Array = quad.get_mesh_arrays()
+	var src_uvs: PackedVector2Array = quad_arrays[Mesh.ARRAY_TEX_UV]
+	# floori(float/float) computes the integer row WITHOUT triggering the
+	# GDScript INTEGER_DIVISION warning. The harness GDScript strict check
+	# (D Phase A) treats warnings as errors, so a bare int `/` int here
+	# (e.g. `AGENT_FRAME_INDEX / SHEET_COLS`) FAILS the gdcheck. `%` (modulo)
+	# does not warn, so frame_col is fine as-is.
+	var frame_col: int = AGENT_FRAME_INDEX % SHEET_COLS
+	var frame_row: int = floori(float(AGENT_FRAME_INDEX) / float(SHEET_COLS))
+	var uv_offset := Vector2(
+		float(frame_col) / float(SHEET_COLS),
+		float(frame_row) / float(SHEET_ROWS),
+	)
+	var uv_scale := Vector2(1.0 / float(SHEET_COLS), 1.0 / float(SHEET_ROWS))
+	var frame_uvs := PackedVector2Array()
+	for uv in src_uvs:
+		frame_uvs.append(uv_offset + uv * uv_scale)
+	quad_arrays[Mesh.ARRAY_TEX_UV] = frame_uvs
+	var frame_mesh := ArrayMesh.new()
+	frame_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, quad_arrays)
 
 	multi_mesh = MultiMesh.new()
 	multi_mesh.transform_format = MultiMesh.TRANSFORM_2D
 	multi_mesh.use_colors = true
 	multi_mesh.use_custom_data = true
-	multi_mesh.mesh = quad
+	multi_mesh.mesh = frame_mesh
 	multi_mesh.instance_count = 0
 
 	var agent_tex: Texture2D = load("res://assets/sprites/agent_base.png") as Texture2D

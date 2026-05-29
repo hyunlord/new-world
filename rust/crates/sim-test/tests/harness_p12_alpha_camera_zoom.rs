@@ -189,17 +189,17 @@ fn harness_p12_alpha_a4_zoom_max_constant() {
     let line = &rhs[..line_end];
 
     let accepted = [
-        "Vector2(4.0, 4.0)",
-        "Vector2(4.0,4.0)",
-        "Vector2(4.0 , 4.0)",
+        "Vector2(8.0, 8.0)",
+        "Vector2(8.0,8.0)",
+        "Vector2(8.0 , 8.0)",
     ];
     let matched = accepted.iter().any(|c| line.contains(c));
     assert!(
         matched,
-        "A4: ZOOM_MAX must be declared with `Vector2(4.0, 4.0)` (whitespace \
-         tolerant). Line: `{line}`"
+        "A4: ZOOM_MAX must be declared with `Vector2(8.0, 8.0)` (whitespace \
+         tolerant, raised from 4.0 in G Phase A). Line: `{line}`"
     );
-    println!("[P12-α A4] ZOOM_MAX = Vector2(4.0, 4.0) ✓");
+    println!("[P12-α A4] ZOOM_MAX = Vector2(8.0, 8.0) (G Phase A) ✓");
 }
 
 // ─── Assertion 5: zoom_default_constant_is_three_x ────────────────────────

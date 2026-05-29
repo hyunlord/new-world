@@ -18,7 +18,12 @@ extends Camera2D
 # only modifies Camera2D.zoom, never agent sprite scale.
 
 const ZOOM_MIN: Vector2 = Vector2(0.5, 0.5)
-const ZOOM_MAX: Vector2 = Vector2(4.0, 4.0)
+# V7 G Phase A — zoom-in ceiling raised 4.0 → 8.0. Phase 13-α set
+# ZOOM_DEFAULT to 3.0, which sat only ~1.7 wheel-notches (×1.25) below the
+# old 4.0 ceiling, so zoom-IN felt broken ("줌이 안 당겨짐"). 8.0 gives
+# ~4.4 notches of zoom-in headroom from the 3.0 default. ZOOM_MIN and
+# ZOOM_DEFAULT are unchanged.
+const ZOOM_MAX: Vector2 = Vector2(8.0, 8.0)
 # V7 Phase 13-α — default zoom raised from 2.0× to 3.0× so 16×18 px agent
 # sprites (Phase 4-γ SPRITE_SCALE = 0.25 invariant preserved) render at
 # 48–54 px, above the human-perceptual threshold for distinguishing agents

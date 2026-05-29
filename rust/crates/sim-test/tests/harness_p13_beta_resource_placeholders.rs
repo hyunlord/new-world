@@ -392,10 +392,10 @@ fn harness_p13_beta_a10_phase12_alpha_zoom_bounds_preserved() {
     );
     assert_eq!(
         no_ws(&zoom_max),
-        "Vector2(4.0,4.0)",
-        "A10.4: ZOOM_MAX must equal Vector2(4.0, 4.0); got `{zoom_max}`"
+        "Vector2(8.0,8.0)",
+        "A10.4: ZOOM_MAX must equal Vector2(8.0, 8.0) (raised from 4.0 in G Phase A); got `{zoom_max}`"
     );
-    println!("[P13-β A10] ZOOM_MIN(0.5,0.5) + ZOOM_MAX(4.0,4.0) preserved ✓");
+    println!("[P13-β A10] ZOOM_MIN(0.5,0.5) + ZOOM_MAX(8.0,8.0) (G Phase A) ✓");
 }
 
 // ─── Assertion 11: phase13_alpha_zoom_default_3x_preserved ────────────────
