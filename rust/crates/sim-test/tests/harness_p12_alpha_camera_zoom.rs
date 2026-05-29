@@ -671,13 +671,13 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
     // `scripts/ui/world_renderer.gd` (TileMapLayer terrain + bootstrap
     // building sprite per phase12.md §β plan), so `world_renderer.gd`
     // is NOT a permanent lock — it was an over-restrictive guard in
-    // the original α dispatch. Released here when β lands. The shader,
-    // causal_panel, and localization locks remain because no planned
-    // Phase 12 sub-stage modifies them.
-    let forbidden_exact = [
-        "shaders/palette_swap.gdshader",
-        "scripts/ui/panels/causal_panel.gd",
-    ];
+    // the original α dispatch. Released when β landed.
+    //
+    // V7 H Phase A — `shaders/palette_swap.gdshader` lock RELEASED. H Phase A
+    // intentionally fixes the palette green-bug (vertex-stage tint capture),
+    // same precedent as the world_renderer.gd release above. The causal_panel
+    // and localization locks remain because no planned stage modifies them.
+    let forbidden_exact = ["scripts/ui/panels/causal_panel.gd"];
     let forbidden_prefixes = ["localization/"];
     let mut violations: Vec<&String> = Vec::new();
     for f in modified.iter() {
@@ -689,10 +689,10 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
     }
     assert!(
         violations.is_empty(),
-        "A18: shader/causal_panel/locale must NOT be modified \
-         beyond Phase 12-α scope. Violations: {violations:?}"
+        "A18: causal_panel/locale must NOT be modified beyond scope \
+         (palette_swap.gdshader lock released in H Phase A). Violations: {violations:?}"
     );
-    println!("[P12-α A18] shader + causal_panel + locale unchanged ✓");
+    println!("[P12-α A18] causal_panel + locale unchanged (shader lock released) ✓");
 }
 
 // Note on Assertions 19 + 20: those are "run another test suite / full

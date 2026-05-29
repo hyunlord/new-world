@@ -1,11 +1,14 @@
 shader_type canvas_item;
 
 // V7 Phase 4-γ — per-instance palette indices via INSTANCE_CUSTOM.
-//
-// The previous three `uniform float *_index` declarations have been
-// replaced by per-instance custom data so MultiMeshInstance2D can drive
-// hundreds/thousands of agents with distinct palettes in a single
-// draw call.
+// V7 H Phase A — FIX: the per-instance tint is captured at the VERTEX stage
+// (v_tint). In Godot 4.6 canvas_item, COLOR at FRAGMENT entry is already
+// multiplied by the sampled TEXTURE (the green-keyed agent sprite), so the
+// previous fragment-stage capture of COLOR into a local picked up
+// texture-green and the final multiply re-applied it → every agent rendered
+// green. Capturing COLOR in vertex() (before texture sampling) yields the
+// true per-instance state tint. (Confirmed by render-debug: vertex-tint →
+// brown with a white tint, state-tinted otherwise.)
 //
 // Channel layout of INSTANCE_CUSTOM (normalised 0.0..=1.0):
 //   .r — hair column index ∈ [0, 8) (palette row 0, 8 columns)
@@ -19,6 +22,7 @@ shader_type canvas_item;
 uniform sampler2D palette_lut : filter_nearest, repeat_disable;
 
 varying flat vec3 v_palette;
+varying vec4 v_tint;
 
 vec2 palette_uv(float row_index, float column_index) {
 	return vec2((column_index + 0.5) / 8.0, (row_index + 0.5) / 3.0);
@@ -27,15 +31,13 @@ vec2 palette_uv(float row_index, float column_index) {
 void vertex() {
 	// Forward the per-instance custom-data .rgb to the fragment stage.
 	v_palette = INSTANCE_CUSTOM.rgb;
+	// V7 H Phase A — capture the per-instance state tint BEFORE the texture
+	// multiply. set_instance_color() writes COLOR per instance; at the vertex
+	// stage COLOR is the pure tint (not yet multiplied by the sampled sprite).
+	v_tint = COLOR;
 }
 
 void fragment() {
-	// V7 Phase 11-α — capture instance color (state_tag tint) before
-	// overwriting COLOR with the palette-swapped result. When
-	// MultiMesh.use_colors is true, COLOR on entry carries the per-instance
-	// color written by set_instance_color(); we save it here and multiply
-	// at the end so the tint composites correctly over the palette output.
-	vec4 modulate = COLOR;
 	vec4 tex = texture(TEXTURE, UV);
 	if (tex.a <= 0.01) {
 		COLOR = tex;
@@ -60,6 +62,6 @@ void fragment() {
 		}
 
 		vec4 palette_color = texture(palette_lut, palette_uv(row_index, column_index));
-		COLOR = vec4(palette_color.rgb * modulate.rgb, tex.a);
+		COLOR = vec4(palette_color.rgb * v_tint.rgb, tex.a);
 	}
 }

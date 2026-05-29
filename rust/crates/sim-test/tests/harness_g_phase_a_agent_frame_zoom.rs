@@ -408,16 +408,22 @@ fn harness_g_a10_zoom_min_and_default_preserved() {
 // Group C — Cross-phase regression-guard reference files
 // ════════════════════════════════════════════════════════════════════════════
 
-// ─── Assertion 11: palette_shader_untouched ───────────────────────────────
+// ─── Assertion 11: palette_shader_color_path ──────────────────────────────
 #[test]
-fn harness_g_a11_palette_shader_untouched() {
-    // Type D — Phase 12-α A18 git-diff lock + color out-of-scope. The form fix
-    // must leave the shader byte-path intact. (Shader-body strings; no strip.)
+fn harness_g_a11_palette_shader_color_path() {
+    // Type D — shader color-logic path tracker. V7 H Phase A fixed the
+    // green-bug by moving the per-instance tint capture from fragment() to
+    // vertex() (`v_tint = COLOR`) and multiplying `palette_color.rgb *
+    // v_tint.rgb`. The old `vec4 modulate = COLOR` / `* modulate.rgb` literals
+    // now survive only inside the explanatory header comment, so this presence
+    // check tracks the NEW code literals. (No negative guard on the old
+    // literals here: this assertion reads the shader WITHOUT comment-stripping,
+    // and the header comment legitimately references them.)
     let src = read_palette_shader_src();
     let needles = [
         "texture(TEXTURE, UV)",
-        "vec4 modulate = COLOR",
-        "palette_color.rgb * modulate.rgb",
+        "v_tint = COLOR",
+        "palette_color.rgb * v_tint.rgb",
     ];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {
@@ -427,9 +433,9 @@ fn harness_g_a11_palette_shader_untouched() {
     }
     assert!(
         missing.is_empty(),
-        "a11: palette_swap.gdshader must keep its color-logic byte-path intact; missing={missing:?}"
+        "a11: palette_swap.gdshader must keep its (H Phase A) color-logic path; missing={missing:?}"
     );
-    println!("[G a11] palette_swap.gdshader color logic untouched ✓");
+    println!("[G a11] palette_swap.gdshader color path tracks v_tint fix ✓");
 }
 
 // ─── Assertion 12: zoom_lod_controller_thresholds_intact ──────────────────

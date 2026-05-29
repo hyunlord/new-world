@@ -36,8 +36,9 @@
 //!         and interpolates with a lerp_t (Gaffer accumulator)
 //!   A15 — agent_renderer.gd calls multi_mesh.set_instance_color(i,
 //!         STATE_TINTS[...]) with a 4-entry STATE_TINTS palette
-//!   A16 — palette_swap.gdshader captures `vec4 modulate = COLOR`
-//!   A17 — palette_swap.gdshader multiplies palette_color.rgb * modulate.rgb
+//!   A16 — palette_swap.gdshader declares `varying vec4 v_tint` and captures
+//!         `v_tint = COLOR` in vertex() (V7 H Phase A green-bug fix)
+//!   A17 — palette_swap.gdshader multiplies palette_color.rgb * v_tint.rgb
 //!         in the visible-alpha branch (tex.a > 0.01)
 //!   A18 — _snapshot_checksum_from MUST iterate every row (no `mini(n, 32)`
 //!         truncation), so tick-boundary detection covers every agent
@@ -565,46 +566,61 @@ fn harness_p11_alpha_agent_renderer_applies_state_tints() {
     );
 }
 
-// ── A16 — palette_swap.gdshader captures `vec4 modulate = COLOR` ────────────
+// ── A16 — palette_swap.gdshader captures the tint at the VERTEX stage ───────
 #[test]
 fn harness_p11_alpha_shader_captures_instance_color() {
-    // Type: Type C invariant. Without `vec4 modulate = COLOR` at the top
-    // of fragment(), the per-instance tint written by set_instance_color()
-    // is overwritten before it can be applied — the visual feature dies
-    // silently in the shader.
+    // Type: Type D regression/contract sync. V7 H Phase A moved the per-instance
+    // tint capture from fragment() to vertex(). In Godot 4.6 canvas_item, COLOR at fragment
+    // entry is already multiplied by the sampled TEXTURE (the green-keyed
+    // sprite), so the old `vec4 modulate = COLOR;` fragment capture picked up
+    // texture-green → every agent rendered green. The fix declares
+    // `varying vec4 v_tint` and assigns `v_tint = COLOR` in vertex() (before
+    // texture sampling), recovering the true per-instance state tint.
     let src = read_palette_shader_src();
     let stripped = strip_glsl_line_comments(&src);
 
-    // Locate the fragment() body and verify the capture happens inside it.
-    let frag_start = stripped
-        .find("void fragment()")
-        .expect("A16: palette_swap.gdshader must define void fragment()");
-    let frag_body = &stripped[frag_start..];
     assert!(
-        frag_body.contains("vec4 modulate = COLOR"),
-        "A16: palette_swap.gdshader fragment() must capture `vec4 modulate = COLOR` \
-         before the palette swap overwrites COLOR"
+        stripped.contains("varying vec4 v_tint"),
+        "A16.1: palette_swap.gdshader must declare `varying vec4 v_tint` \
+         (vertex→fragment tint carrier)"
     );
-    println!("[P11-α A16] palette_swap.gdshader captures vec4 modulate = COLOR ✓");
+
+    // Verify the capture happens inside the vertex() body (not fragment()).
+    let vert_start = stripped
+        .find("void vertex()")
+        .expect("A16.2: palette_swap.gdshader must define void vertex()");
+    let vert_tail = &stripped[vert_start..];
+    let vert_end = vert_tail[1..]
+        .find("\nvoid ")
+        .map(|i| i + 1)
+        .unwrap_or(vert_tail.len());
+    let vert_body = &vert_tail[..vert_end];
+    assert!(
+        vert_body.contains("v_tint = COLOR"),
+        "A16.3: vertex() must capture `v_tint = COLOR` (pre-texture tint). \
+         vertex():\n{vert_body}"
+    );
+    println!("[P11-α A16] palette_swap.gdshader captures v_tint = COLOR in vertex() ✓");
 }
 
-// ── A17 — shader multiplies palette_color.rgb * modulate.rgb (visible α) ────
+// ── A17 — shader multiplies palette_color.rgb * v_tint.rgb (visible α) ──────
 #[test]
 fn harness_p11_alpha_shader_modulates_palette_output() {
-    // Type: Type C invariant. The tint must multiply the palette output
-    // in the visible-alpha branch (tex.a > 0.01); the transparent branch
-    // is irrelevant because it never contributes to a rendered pixel. We
-    // verify both the multiplication string and that it lives after the
-    // alpha guard so transparent fragments are not also tinted.
+    // Type: Type D regression/contract sync. V7 H Phase A: the per-instance tint is now the
+    // vertex-captured `v_tint` (see A16). It must still multiply the palette
+    // output in the visible-alpha branch (tex.a > 0.01); the transparent
+    // branch never contributes a rendered pixel. We verify both the
+    // multiplication string and that it lives after the alpha guard so
+    // transparent fragments are not also tinted.
     let src = read_palette_shader_src();
     let stripped = strip_glsl_line_comments(&src);
 
     // Must contain the multiplication itself (any whitespace variation).
-    let multiplies = stripped.contains("palette_color.rgb * modulate.rgb")
-        || stripped.contains("modulate.rgb * palette_color.rgb");
+    let multiplies = stripped.contains("palette_color.rgb * v_tint.rgb")
+        || stripped.contains("v_tint.rgb * palette_color.rgb");
     assert!(
         multiplies,
-        "A17.1: palette_swap.gdshader must multiply `palette_color.rgb * modulate.rgb` \
+        "A17.1: palette_swap.gdshader must multiply `palette_color.rgb * v_tint.rgb` \
          so the per-instance state tint composites over the palette output"
     );
 
@@ -615,17 +631,17 @@ fn harness_p11_alpha_shader_modulates_palette_output() {
         .find("tex.a <= 0.01")
         .expect("A17.2: shader must contain the `tex.a <= 0.01` alpha guard");
     let multiply_pos = stripped
-        .find("palette_color.rgb * modulate.rgb")
-        .or_else(|| stripped.find("modulate.rgb * palette_color.rgb"))
+        .find("palette_color.rgb * v_tint.rgb")
+        .or_else(|| stripped.find("v_tint.rgb * palette_color.rgb"))
         .expect("A17.3: multiply expression must be findable for ordering check");
     assert!(
         multiply_pos > alpha_guard_pos,
-        "A17.4: the palette_color.rgb * modulate.rgb multiply must appear \
+        "A17.4: the palette_color.rgb * v_tint.rgb multiply must appear \
          after the `tex.a <= 0.01` alpha guard so transparent fragments \
          are not tinted (multiply_pos={multiply_pos}, alpha_guard_pos={alpha_guard_pos})"
     );
     println!(
-        "[P11-α A17] palette_swap.gdshader multiplies palette_color.rgb * modulate.rgb in visible-α path ✓"
+        "[P11-α A17] palette_swap.gdshader multiplies palette_color.rgb * v_tint.rgb in visible-α path ✓"
     );
 }
 
