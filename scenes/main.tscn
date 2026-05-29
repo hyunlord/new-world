@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://v7init"]
+[gd_scene load_steps=11 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://scripts/ui/panels/agent_inspector_panel.gd" id="6_inspector"]
 [ext_resource type="Script" path="res://scripts/ui/panels/hud_status_panel.gd" id="7_status"]
 [ext_resource type="Script" path="res://scripts/ui/activity_trail_renderer.gd" id="8_trails"]
+[ext_resource type="Script" path="res://scripts/ui/settlement_overview_renderer.gd" id="9_overview"]
+[ext_resource type="Script" path="res://scripts/ui/zoom_lod_controller.gd" id="10_zoomlod"]
 
 [node name="Main" type="Node2D"]
 
@@ -21,6 +23,12 @@ script = ExtResource("3_agents")
 
 [node name="ActivityTrailRenderer" type="Node2D" parent="."]
 script = ExtResource("8_trails")
+
+[node name="SettlementOverviewRenderer" type="Node2D" parent="."]
+script = ExtResource("9_overview")
+
+[node name="ZoomLodController" type="Node" parent="."]
+script = ExtResource("10_zoomlod")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(960, 540)

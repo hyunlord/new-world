@@ -467,10 +467,14 @@ fn harness_p14_epsilon_a11_main_tscn_registers_activity_trail_renderer_node() {
     println!("[P14-ε A11] ActivityTrailRenderer node registered in main.tscn ✓");
 }
 
-// ─── A12: main.tscn load_steps == 9 ──────────────────────────────────────
+// ─── A12: main.tscn load_steps == 11 ─────────────────────────────────────
 #[test]
-fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_9() {
-    // Type A — `[gd_scene ... load_steps=9 ...]`, whitespace around `=` tolerated.
+fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_11() {
+    // Type A — `[gd_scene ... load_steps=11 ...]`, whitespace around `=` tolerated.
+    // Phase 14-ε registered ActivityTrailRenderer at load_steps=9; Phase 14-ζ
+    // added SettlementOverviewRenderer + ZoomLodController (9 → 11). The scene
+    // is shared, so this prior-phase invariant tracks the current ext_resource
+    // count. ε's ActivityTrailRenderer registration itself is unchanged (A11).
     let src = read_main_tscn_src();
     let mut found_n: Option<i64> = None;
     for line in src.lines() {
@@ -498,8 +502,8 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_9() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 9, "A12.2: load_steps must equal 9; got {n}");
-    println!("[P14-ε A12] load_steps = 9 ✓");
+    assert_eq!(n, 11, "A12.2: load_steps must equal 11 (Phase 14-ζ 9 → 11); got {n}");
+    println!("[P14-ε A12] load_steps = 11 (post Phase 14-ζ) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
