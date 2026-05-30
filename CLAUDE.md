@@ -826,6 +826,52 @@ whitelist allows most legitimate small additions through.
 - Method 2 (sentinel) reduces but does not eliminate Drafter
   scope drift. Method 1 (parser) is the hard backstop.
 
+### Pipeline Drafter Stop-Hook Fix + Auto-Retry (I Phase A — 2026-05-30)
+
+E Phase A's `validate_plan_draft` correctly *detects* the Drafter
+"short/stub plan" regression (≥30 lines + ≥3 `### Assertion `
+markers) but it FATALs with no recovery. Across G / H / B-1 the
+Drafter regressed on **re-runs** (first runs were fine), and
+inspecting the corrupted `plan_draft.md` revealed the real cause:
+
+> "The test plan is complete and the **stop-check hook passed**…
+> To summarize what I delivered as the Drafter: 7 assertions…"
+
+The Drafter understood the task but emitted a **summary instead of
+the plan**. Root cause: the harness-drafter subagent (run via
+`claude --agent harness-drafter`) inherits `.claude/settings.json`,
+including the **Stop hook** (`hooks/stop-check.sh`). On a re-run the
+shared working tree holds uncommitted code from the prior run's
+Generator, so when the Drafter stops, the Stop hook sees "code
+modified + no verdict" and **force-continues it (exit 2)** — the
+Drafter keeps talking and produces a wrap-up summary, overwriting
+the captured plan. First runs work (clean tree → exit 0).
+
+Fix (two layers):
+
+1. **Stop-hook no-op for subagents (primary, root cause).**
+   `harness_pipeline.sh` exports `HARNESS_SUBAGENT=1` at the top;
+   `hooks/stop-check.sh` exits 0 immediately when it is set. The
+   pipeline's subagents are pipeline workers, not the main
+   interactive session, so the "did you run the pipeline?" stop-gate
+   must not apply to them. The pipeline owns its own gating.
+
+2. **Drafter auto-retry (safety net).** `run_planner` wraps the
+   Drafter call in a loop (`DRAFTER_MAX_ATTEMPTS`, default 3) using a
+   non-fatal `_plan_draft_structural_ok` check; it re-invokes the
+   Drafter on a short/stub plan, and the resume guard discards a
+   regressed `plan_draft.md` instead of reusing it. Timeout +
+   rate-limit are NOT retried (environmental). Recovers from any
+   genuinely stochastic short-plan regression that survives layer 1.
+
+Limits (deliberately not "fixed"):
+
+- Layer 2 does not retry on rate-limit (would waste quota) or
+  timeout — both surface as the canonical FATAL.
+- The Stop-hook no-op relies on the subagent inheriting the
+  pipeline's exported env; if a future invocation path strips the
+  environment, layer 2 still bounds the damage to 3 attempts.
+
 ### Pipeline Stale-Dylib Guard (E Phase A — 2026-05-27)
 
 Step 2.5a (run_visual_verify) prelude: if `changed_sim_bridge()` (any

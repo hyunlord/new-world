@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# I Phase (2026-05-30) — mark every subagent this pipeline spawns (Drafter,
+# Generator, Evaluator via `claude --agent ...`) so the project Stop hook
+# (tools/harness/hooks/stop-check.sh) no-ops inside them. Those subagents are
+# the pipeline itself, NOT the main interactive session; without this the Stop
+# hook's "code modified but no verdict → force-continue (exit 2)" gate fires
+# when the shared working tree has uncommitted code from a prior run, forcing
+# the Drafter to keep talking and emit a summary instead of its plan (root
+# cause of the G/H/B-1 Drafter re-run regressions). Exported so all child
+# processes (and their hooks) inherit it.
+export HARNESS_SUBAGENT=1
+
 # ============================================================
 # WorldSim Harness Pipeline v3.2 — Codex 3-Role Integration (All Code Changes)
 # ============================================================
@@ -450,29 +461,60 @@ agent_count: 20
 $feedback_arg
 PLANNER_EOF
 
-    # Resume guard: reuse existing plan_draft.md if already populated
+    # Resume guard: reuse existing plan_draft.md only if it is a VALID plan.
+    # I Phase (2026-05-30) — a prior FATAL run leaves a short/stub
+    # plan_draft.md; blindly reusing it re-FATALs. Discard a regressed draft
+    # so the auto-retry loop below re-drafts it fresh.
     if [[ -s "$PLAN_DIR/plan_draft.md" ]]; then
-        log "Reusing existing plan_draft.md (resume mode)"
-        return
+        if _plan_draft_structural_ok "$PLAN_DIR/plan_draft.md"; then
+            log "Reusing existing valid plan_draft.md (resume mode)"
+            return
+        fi
+        log "Existing plan_draft.md is a Drafter regression (short/stub) — discarding, re-drafting"
+        : > "$PLAN_DIR/plan_draft.md"
     fi
 
-    # Run planner agent — capture stdout as plan
-    log "Running Planner agent..."
+    # Run planner agent — with auto-retry on stochastic Drafter regression.
+    # I Phase (2026-05-30) — safety net beneath the Stop-hook fix above. The
+    # primary cause of short/stub plans was the Stop hook force-continuing the
+    # Drafter subagent (fixed via HARNESS_SUBAGENT); this loop additionally
+    # recovers from any genuinely stochastic short-plan regression by
+    # re-invoking the Drafter. Timeout + rate-limit are NOT retried
+    # (environmental). DRAFTER_MAX_ATTEMPTS (default 3) bounds the retries.
     local drafter_timeout="${DRAFTER_TIMEOUT_SECONDS:-600}"
-    local drafter_rc=0
-    run_with_timeout "$drafter_timeout" \
-        claude --agent harness-drafter \
-            -p "$(cat "$PLAN_DIR/planner_input.md")" \
-            --output-format text \
-            > "$PLAN_DIR/plan_draft.md" \
-            2> >(tee "$PLAN_DIR/planner_log.txt" >&2) \
-        || drafter_rc=$?
-    if [[ $drafter_rc -eq 124 || $drafter_rc -eq 142 ]]; then
-        die "Drafter (initial) timed out after ${drafter_timeout}s — aborting pipeline"
-    fi
-
-    # Verify output exists and is non-empty
-    [[ -s "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
+    local max_drafter_attempts="${DRAFTER_MAX_ATTEMPTS:-3}"
+    local drafter_attempt=1
+    while true; do
+        log "Running Planner agent (attempt $drafter_attempt/$max_drafter_attempts)..."
+        local drafter_rc=0
+        : > "$PLAN_DIR/plan_draft.md"
+        run_with_timeout "$drafter_timeout" \
+            claude --agent harness-drafter \
+                -p "$(cat "$PLAN_DIR/planner_input.md")" \
+                --output-format text \
+                > "$PLAN_DIR/plan_draft.md" \
+                2> >(tee "$PLAN_DIR/planner_log.txt" >&2) \
+            || drafter_rc=$?
+        if [[ $drafter_rc -eq 124 || $drafter_rc -eq 142 ]]; then
+            die "Drafter (attempt $drafter_attempt) timed out after ${drafter_timeout}s — aborting pipeline"
+        fi
+        [[ -s "$PLAN_DIR/plan_draft.md" ]] || die "Planner did not produce plan_draft.md"
+        # Rate-limit is environmental — surface it via validate_plan_draft
+        # (which die-s with the Rule 7.1 guidance); do NOT retry (wastes quota).
+        if grep -qE "(You've hit your limit|rate.?limit|resets.* (am|pm))" "$PLAN_DIR/plan_draft.md"; then
+            validate_plan_draft "$PLAN_DIR/plan_draft.md" "Drafter (rate-limit, no retry)"
+        fi
+        # Stochastic short-plan/stub regression — retry up to the cap.
+        if _plan_draft_structural_ok "$PLAN_DIR/plan_draft.md"; then
+            break
+        fi
+        if [[ $drafter_attempt -ge $max_drafter_attempts ]]; then
+            # Exhausted — emit the canonical fatal diagnostic and abort.
+            validate_plan_draft "$PLAN_DIR/plan_draft.md" "Drafter (after $max_drafter_attempts attempts)"
+        fi
+        log "Drafter regression on attempt $drafter_attempt (short/stub plan, <30 lines or <3 assertions) — re-invoking Drafter..."
+        drafter_attempt=$((drafter_attempt + 1))
+    done
     # E Phase A (2026-05-27) — Drafter quality validation.
     # Detects two Drafter regression modes empirically observed in
     # Phase 14-γ runs 2 & 3:
@@ -597,6 +639,21 @@ plan or expand the prompt's Section 2 first."
 # Args:
 #   $1 = path to plan file
 #   $2 = caller label (for die message)
+# I Phase (2026-05-30) — non-fatal Drafter-regression structural check.
+# Returns 0 when the plan has >=30 lines AND >=3 `### Assertion ` markers
+# (mirrors validate_plan_draft's thresholds) WITHOUT die-ing. Used by the
+# run_planner auto-retry loop + resume guard to decide whether to re-draft a
+# short/stub plan. Rate-limit is intentionally NOT checked here (it is
+# environmental and must not be retried — handled inline in the loop).
+_plan_draft_structural_ok() {
+    local plan_file="$1"
+    [[ -s "$plan_file" ]] || return 1
+    local lines markers
+    lines=$(wc -l < "$plan_file" | tr -d ' ')
+    markers=$(grep -c "^### Assertion " "$plan_file" || true)
+    [[ $lines -ge 30 && $markers -ge 3 ]]
+}
+
 validate_plan_draft() {
     local plan_file="$1"
     local caller="$2"

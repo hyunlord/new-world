@@ -4,6 +4,18 @@
 # Exit 0 = allow stop, Exit 2 = force continue
 set -uo pipefail
 
+# I Phase (2026-05-30) — no-op inside harness subagents (Drafter / Generator /
+# Evaluator spawned by harness_pipeline.sh, which exports HARNESS_SUBAGENT=1).
+# These are pipeline workers, not the main interactive session. The
+# "code modified but no verdict → force-continue" gate below must NOT apply to
+# them: a Drafter that stops while the shared working tree has uncommitted code
+# from a prior run was being force-continued (exit 2) and emitted a summary
+# instead of its plan, corrupting plan_draft.md — the root cause of the
+# G/H/B-1 Drafter re-run regressions. The pipeline owns its own gating.
+if [[ "${HARNESS_SUBAGENT:-}" == "1" ]]; then
+    exit 0
+fi
+
 # ENV-BYPASS (CLAUDE.md Rule 7.1 v3.2.1): one-shot authorized bypass for env blocks.
 # Requires .harness/audit/env_bypass_active marker (≤2 h old) AND
 # manual_verification.log + clippy_full.log under .harness/evidence/<feature>/.
