@@ -60,7 +60,7 @@ use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, Position,
     Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
-use sim_engine::{RuntimeSystem, SimResources};
+use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
 
@@ -1054,10 +1054,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                     // entry; `entry().or_insert(0)` is forbidden.
                     match target {
                         TargetKind::Food => {
+                            // V7 Section 16-α0 — source guard: a tile at the
+                            // RESOURCE_SOURCE_INFINITE sentinel never depletes.
+                            // Finite tiles keep decrement-and-remove (Assertions
+                            // 16/17). Need-decrement + Idle stay UNCONDITIONAL.
                             if let Some(counter) = resources.food_tiles.get_mut(&key) {
-                                *counter = counter.saturating_sub(1);
-                                if *counter == 0 {
-                                    resources.food_tiles.remove(&key);
+                                if *counter != RESOURCE_SOURCE_INFINITE {
+                                    *counter = counter.saturating_sub(1);
+                                    if *counter == 0 {
+                                        resources.food_tiles.remove(&key);
+                                    }
                                 }
                             }
                             if let Some(h) = hunger_opt {
@@ -1066,10 +1072,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             *state = AgentState::Idle;
                         }
                         TargetKind::Water => {
+                            // V7 Section 16-α0 — source guard (mirror of Food).
                             if let Some(counter) = resources.water_tiles.get_mut(&key) {
-                                *counter = counter.saturating_sub(1);
-                                if *counter == 0 {
-                                    resources.water_tiles.remove(&key);
+                                if *counter != RESOURCE_SOURCE_INFINITE {
+                                    *counter = counter.saturating_sub(1);
+                                    if *counter == 0 {
+                                        resources.water_tiles.remove(&key);
+                                    }
                                 }
                             }
                             if let Some(t) = thirst_opt {
@@ -1078,10 +1087,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             *state = AgentState::Idle;
                         }
                         TargetKind::Sleep => {
+                            // V7 Section 16-α0 — source guard (mirror of Food).
                             if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
-                                *counter = counter.saturating_sub(1);
-                                if *counter == 0 {
-                                    resources.sleep_tiles.remove(&key);
+                                if *counter != RESOURCE_SOURCE_INFINITE {
+                                    *counter = counter.saturating_sub(1);
+                                    if *counter == 0 {
+                                        resources.sleep_tiles.remove(&key);
+                                    }
                                 }
                             }
                             if let Some(s) = sleep_opt {

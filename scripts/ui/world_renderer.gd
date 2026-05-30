@@ -92,6 +92,20 @@ const Z_RESOURCE := 3
 const RESOURCE_COUNT := 20
 const RESOURCE_SEED := 88675123
 
+# V7 Section 16-α0 — backend-truth resource SOURCE markers (Method 1: the
+# backend tile maps are the source of truth, the screen reflects them).
+# Distinct from the decorative RESOURCE_SEED scatter above (additive layer).
+# Source positions are fixed for the run, so the markers are drawn once
+# (idempotent guard `_resource_sources_drawn`). No user-facing text → no
+# locale keys. Kind encoding matches the FFI: 0=Food, 1=Water, 2=Sleep.
+const Z_RESOURCE_SOURCE := 4
+const SOURCE_KIND_COLORS: Array = [
+	Color(0.30, 0.85, 0.30, 1.0),  # 0 Food  — green
+	Color(0.30, 0.65, 1.00, 1.0),  # 1 Water — blue
+	Color(0.90, 0.75, 0.30, 1.0),  # 2 Sleep — amber
+]
+var _resource_sources_drawn: bool = false
+
 # V7 Phase 14-β — 5 resource types (Wood / Stone / Berry / Water /
 # Food). Each type reuses an existing sprite from the 207-asset
 # inventory (P14Plan-3). RESOURCE_COUNT (20) is preserved;
@@ -346,6 +360,8 @@ func _process(_delta: float) -> void:
 	_update_construction_sites()
 	# V7 Phase 12-γ — ingest settlement snapshot for furniture placeholders.
 	_update_settlement_furniture()
+	# V7 Section 16-α0 — draw backend-truth resource source markers once.
+	_render_resource_sources()
 
 # V7 Phase 12-β.2 (A3) — pull the per-frame construction snapshot from
 # SimBridge and reconcile against `_construction_sprites`:
@@ -390,6 +406,40 @@ func _update_construction_sites() -> void:
 			if stale != null:
 				stale.queue_free()
 			_construction_sprites.erase(entity_id)
+
+# V7 Section 16-α0 — draw backend-truth resource SOURCE markers from the
+# SimBridge resource snapshot (Method 1: backend is the source of truth).
+# Source positions are fixed for the run, so this draws once and then
+# guards on `_resource_sources_drawn`. Each marker reuses an existing
+# loaded texture (RESOURCE_SPRITE_PATH) modulated per kind; the decorative
+# RESOURCE_SEED scatter layer (drawn in `_ready`) is left untouched.
+func _render_resource_sources() -> void:
+	if world_sim == null or _resource_sources_drawn:
+		return
+	var snap: Dictionary = world_sim.get_resource_snapshot()
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var kinds: PackedInt32Array = snap.get("kinds", PackedInt32Array())
+	var n: int = min(xs.size(), min(ys.size(), kinds.size()))
+	if n == 0:
+		return
+	var tex: Texture2D = load(RESOURCE_SPRITE_PATH) as Texture2D
+	if tex == null:
+		push_warning("WorldRenderer: failed to load resource source marker at %s" % RESOURCE_SPRITE_PATH)
+		return
+	for i in n:
+		var k: int = kinds[i]
+		if k < 0 or k >= SOURCE_KIND_COLORS.size():
+			continue
+		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
+		var marker := Sprite2D.new()
+		marker.texture = tex
+		marker.modulate = SOURCE_KIND_COLORS[k]
+		marker.z_index = Z_RESOURCE_SOURCE
+		marker.position = Vector2(px, py)
+		add_child(marker)
+	_resource_sources_drawn = true
 
 # V7 Phase 12-γ — pull the per-frame settlement snapshot from SimBridge
 # and reconcile against `_furniture_sprites`:

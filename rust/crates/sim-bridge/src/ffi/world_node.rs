@@ -42,7 +42,7 @@ use sim_core::components::{
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
-use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources};
+use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
 
@@ -66,6 +66,15 @@ const BOOTSTRAP_AGENT_OFFSET: u32 = 4;
 /// keeps seeds far from 0 (splitmix64 escapes 0 on its first call,
 /// but a non-zero base produces a more visibly varied first frame).
 const BOOTSTRAP_RNG_BASE: u64 = 0xA5A5_A5A5_0000_0001;
+
+/// V7 Section 16-α0 — deterministic non-depleting resource source tiles.
+/// Fixed lattices (NOT RNG): each tile lies inside the 64×64 map and within
+/// a few steps (Chebyshev ≤ 4) of the `BOOTSTRAP_AGENT_*` agent lattice
+/// (`{4,12,20,28,36,44,52,60}²`), so a Seeking agent has a reachable goal
+/// once α/β land movement. Each is seeded at [`RESOURCE_SOURCE_INFINITE`].
+const SOURCE_FOOD: [(u32, u32); 4] = [(8, 8), (56, 8), (8, 56), (56, 56)];
+const SOURCE_WATER: [(u32, u32); 4] = [(32, 4), (4, 32), (60, 32), (32, 60)];
+const SOURCE_SLEEP: [(u32, u32); 4] = [(20, 20), (44, 20), (20, 44), (44, 44)];
 
 /// Godot `Node` subclass wrapping a [`SimEngine`] instance.
 ///
@@ -276,6 +285,21 @@ impl WorldSimNode {
     fn get_construction_snapshot(&self) -> VarDictionary {
         let rows = collect_construction_snapshot(&self.engine.world);
         construction_rows_to_dict(&rows)
+    }
+
+    /// V7 Section 16-α0 FFI — resource-substrate snapshot for the renderer.
+    /// Returns a `VarDictionary` with three equal-length `PackedInt32Array`
+    /// keys (`xs`, `ys`, `kinds`), sorted by `(kind, x, y)`. Empty arrays
+    /// when no source tiles exist. Reads `engine.resources`.
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_resource_snapshot`] + [`resource_rows_to_dict`]
+    /// (Bridge Identity Contract). Sim-test exercises the pure-Rust
+    /// collector + [`resource_rows_split`] directly.
+    #[func]
+    fn get_resource_snapshot(&self) -> VarDictionary {
+        let rows = collect_resource_snapshot(&self.engine.resources);
+        resource_rows_to_dict(&rows)
     }
 
     /// V7 Phase 12-γ FFI — settlement snapshot with substrate-derived
@@ -1512,6 +1536,89 @@ fn construction_rows_to_dict(rows: &[ConstructionSnapshotRow]) -> VarDictionary 
 }
 
 // ────────────────────────────────────────────────────────────────────────
+// V7 Section 16-α0: Resource-substrate snapshot FFI surface
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the resource-substrate snapshot returned by
+/// [`collect_resource_snapshot`]. `kind` encoding: `0 = Food`, `1 = Water`,
+/// `2 = Sleep` (matches the `TargetKind` discriminant order).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ResourceSnapshotRow {
+    /// Tile-x coordinate of the source tile.
+    pub x: u32,
+    /// Tile-y coordinate of the source tile.
+    pub y: u32,
+    /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`.
+    pub kind: u8,
+}
+
+/// Pure-Rust collector over the three sparse tile maps on [`SimResources`].
+///
+/// **Sorted by `(kind, x, y)`** — `HashMap` iteration order is unspecified,
+/// so the explicit sort is what makes the snapshot deterministic for the
+/// renderer markers and the determinism harness assertion. Sim-test
+/// exercises this collector directly (no Godot runtime required).
+pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapshotRow> {
+    let mut rows: Vec<ResourceSnapshotRow> = Vec::with_capacity(
+        resources.food_tiles.len() + resources.water_tiles.len() + resources.sleep_tiles.len(),
+    );
+    for &(x, y) in resources.food_tiles.keys() {
+        rows.push(ResourceSnapshotRow { x, y, kind: 0 });
+    }
+    for &(x, y) in resources.water_tiles.keys() {
+        rows.push(ResourceSnapshotRow { x, y, kind: 1 });
+    }
+    for &(x, y) in resources.sleep_tiles.keys() {
+        rows.push(ResourceSnapshotRow { x, y, kind: 2 });
+    }
+    rows.sort_by_key(|r| (r.kind, r.x, r.y));
+    rows
+}
+
+/// Pure-Rust marshalling split — the SINGLE source of the `(xs, ys, kinds)`
+/// integer arrays. Extracted so the harness can verify the exact integers
+/// the FFI emits WITHOUT a Godot runtime (`VarDictionary` /
+/// `PackedInt32Array` require Godot). [`resource_rows_to_dict`] MUST build
+/// its `PackedInt32Array`s from this — no duplicate marshalling logic.
+pub fn resource_rows_split(rows: &[ResourceSnapshotRow]) -> (Vec<i32>, Vec<i32>, Vec<i32>) {
+    let mut xs = Vec::with_capacity(rows.len());
+    let mut ys = Vec::with_capacity(rows.len());
+    let mut kinds = Vec::with_capacity(rows.len());
+    for r in rows {
+        xs.push(r.x as i32);
+        ys.push(r.y as i32);
+        kinds.push(r.kind as i32);
+    }
+    (xs, ys, kinds)
+}
+
+/// Marshal a [`ResourceSnapshotRow`] slice into the FFI dictionary shape
+/// consumed by `WorldRenderer._render_resource_sources()`. Three parallel
+/// `PackedInt32Array`s (`xs`, `ys`, `kinds`), lengths always equal to
+/// `rows.len()`. Built solely from [`resource_rows_split`] (the single
+/// marshalling path the harness tests).
+fn resource_rows_to_dict(rows: &[ResourceSnapshotRow]) -> VarDictionary {
+    let (xv, yv, kv) = resource_rows_split(rows);
+    let n = rows.len();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    let mut kinds = PackedInt32Array::new();
+    xs.resize(n);
+    ys.resize(n);
+    kinds.resize(n);
+    for i in 0..n {
+        xs[i] = xv[i];
+        ys[i] = yv[i];
+        kinds[i] = kv[i];
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict.set("kinds", kinds);
+    dict
+}
+
+// ────────────────────────────────────────────────────────────────────────
 // V7 Phase 12-γ: Settlement snapshot FFI surface
 // ────────────────────────────────────────────────────────────────────────
 
@@ -1704,7 +1811,13 @@ fn relationship_rows_to_variant_array(rows: &[RelationshipSnapshotRow]) -> VarAr
 ///
 /// Kept inside this module so the `init` path stays straight-line and
 /// the visual-bootstrap policy lives next to its use site.
-fn bootstrap_spawn_agents(engine: &mut SimEngine) {
+///
+/// V7 Section 16-α0 — also populates the deterministic non-depleting
+/// resource source substrate (`food/water/sleep_tiles` at
+/// [`RESOURCE_SOURCE_INFINITE`]). Made `pub` so the headless harness can
+/// exercise the production source-population path without a Godot runtime
+/// (`WorldSimNode` construction requires the engine).
+pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
     for j in 0..BOOTSTRAP_AGENT_AXIS {
         for i in 0..BOOTSTRAP_AGENT_AXIS {
             let x = BOOTSTRAP_AGENT_OFFSET + i * BOOTSTRAP_AGENT_STRIDE;
@@ -1734,5 +1847,18 @@ fn bootstrap_spawn_agents(engine: &mut SimEngine) {
                 )
                 .expect("bootstrap agent entity must still exist");
         }
+    }
+
+    // V7 Section 16-α0 — seed the non-depleting resource source substrate.
+    // Appended after the agent lattice so the existing spawn is unperturbed
+    // (Assertion 13: 64 agents, all Idle). Each source is the sentinel value.
+    for &(x, y) in SOURCE_FOOD.iter() {
+        engine.resources.set_food_tile(x, y, RESOURCE_SOURCE_INFINITE);
+    }
+    for &(x, y) in SOURCE_WATER.iter() {
+        engine.resources.set_water_tile(x, y, RESOURCE_SOURCE_INFINITE);
+    }
+    for &(x, y) in SOURCE_SLEEP.iter() {
+        engine.resources.set_sleep_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
 }

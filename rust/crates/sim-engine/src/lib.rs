@@ -80,6 +80,17 @@ pub trait RuntimeSystem {
     fn tick(&mut self, world: &mut World, resources: &mut SimResources);
 }
 
+/// Sentinel quantity marking a tile as a non-depleting **source**
+/// (V7 Section 16-α0). A tile in [`SimResources::food_tiles`] /
+/// `water_tiles` / `sleep_tiles` whose counter equals this value is never
+/// decremented or removed by the `Consuming` cascade — it persists for
+/// the lifetime of the run, guaranteeing agents always have a reachable
+/// goal. Finite tiles (any other non-zero value) keep their existing
+/// decrement-and-remove behavior. Reuses the existing `u8::MAX` saturation
+/// point of the sparse tile maps, so it adds zero new data structures and
+/// stays ripple-free across FFI and save format.
+pub const RESOURCE_SOURCE_INFINITE: u8 = u8::MAX;
+
 /// Shared world state owned by the engine.
 ///
 /// `hecs` enforces single-writer semantics on the [`World`]; this struct
