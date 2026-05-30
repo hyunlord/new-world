@@ -1,9 +1,20 @@
-//! V7 Phase 4-β — `AgentMovementSystem` (priority 120, every tick).
+//! V7 Phase 4-β / Section 16-β — `AgentMovementSystem` (priority 120, every tick).
 //!
-//! Brownian-step motion for canonical agents. Each tick every agent receives
-//! a `(dx, dy)` step in `{-1, 0, +1}^2` derived from its own [`MovementRng`]
-//! state. Determinism comes from per-agent seeded `splitmix64` — replaying
-//! the simulation with the same seeds reproduces every trajectory byte-for-byte.
+//! Per-tick motion with three state-keyed branches:
+//!   - `Idle` (or no `AgentState`): Brownian `(dx, dy)` step in `{-1, 0, +1}^2`
+//!     derived from the agent's own [`MovementRng`] state. Determinism comes
+//!     from per-agent seeded `splitmix64` — replaying with the same seeds
+//!     reproduces every Brownian trajectory byte-for-byte.
+//!   - `Seeking { .. }` **with** a [`SeekTarget`] (Section 16-β): a one-tile
+//!     **directed** signum step toward `SeekTarget.tile` (pure coordinate
+//!     math — RNG-free, inherently deterministic). Without a `SeekTarget` the
+//!     agent freezes (ConstructionSite/Agent seeks are co-located).
+//!   - `Consuming { .. }`: freeze (the 2-tick consume commit reads the tile).
+//!
+//! `AgentState::suppresses_movement()` (in `agent_state.rs`) stays locked for
+//! the 5 external truth-table harnesses; it now means "suppresses *Brownian*
+//! motion" — a directed step is not Brownian, so `Seeking → true` is still
+//! consistent with β doing a directed walk.
 //!
 //! # Priority ordering
 //!
@@ -31,7 +42,7 @@
 //! source one type-swap away if a later phase needs it.
 
 use hecs::World;
-use sim_core::components::{AgentState, Position};
+use sim_core::components::{AgentState, Position, SeekTarget};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
@@ -124,38 +135,58 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state)) in world
-            .query::<(&mut Position, &mut MovementRng, Option<&AgentState>)>()
+        for (_, (pos, rng, state, seek)) in world
+            .query::<(
+                &mut Position,
+                &mut MovementRng,
+                Option<&AgentState>,
+                Option<&SeekTarget>,
+            )>()
             .iter()
         {
-            // Phase 5-β: AgentDecisionSystem (priority 125) drives the
-            // FSM through `Seeking → Consuming → Idle`. We must freeze
-            // Brownian motion for BOTH non-Idle variants:
+            // V7 Section 16-β: three movement branches keyed directly on the
+            // FSM state (NOT via `suppresses_movement()` — that predicate
+            // stays locked in `agent_state.rs` for the 5 external truth-table
+            // harnesses; the movement loop decides its own behavior):
             //
-            //   - `Seeking { .. }`: surfaced via `suppresses_movement()`
-            //     so the FSM API exposes the locked Assertion-3 truth
-            //     table (`Seeking → true`, everything else → false).
-            //   - `Consuming { .. }`: NOT surfaced via
-            //     `suppresses_movement()` (the locked truth table demands
-            //     `false`), but the movement loop still freezes it here.
-            //     Reason: the decision system's Consuming-tick commit
-            //     reads `pos.x / pos.y` to locate the resource tile;
-            //     allowing a Brownian step between
-            //     `Seeking→Consuming` (this tick) and `Consuming→Idle`
-            //     (next tick) would commit on a tile the agent merely
-            //     wandered onto, never the tile that actually triggered
-            //     the consume. Per Section-3.10 the 2-tick consume must
-            //     decrement at the tile the agent reached.
+            //   1. `Consuming { .. }` → FREEZE. The decision system's 2-tick
+            //      consume commit reads `pos.x / pos.y` to locate the resource
+            //      tile; a step between `Seeking→Consuming` (this tick) and
+            //      `Consuming→Idle` (next tick) would commit on a tile the
+            //      agent merely wandered onto. Per Section-3.10 the consume
+            //      must decrement at the tile the agent actually reached.
             //
-            // The two checks are deliberately kept separate so the
-            // public FSM API (`AgentState::suppresses_movement`) stays
-            // locked to the Assertion-3 truth table while the internal
-            // schedule-correctness invariant lives next to its use site.
+            //   2. `Seeking { .. }` → DIRECTED STEP toward `SeekTarget.tile`
+            //      when one is attached (α attaches it for Food/Water/Sleep),
+            //      else FREEZE (defensive: ConstructionSite/Agent seeks carry
+            //      no SeekTarget and stay co-located). A directed step is one
+            //      signum tile per axis — pure coordinate math, RNG-free, so
+            //      it is inherently deterministic and never advances the
+            //      Brownian stream. `suppresses_movement()` still reports
+            //      `true` for `Seeking` and that remains correct: it now means
+            //      "suppresses *Brownian* motion" — a directed step is not
+            //      Brownian.
+            //
+            //   3. `Idle` (or no `AgentState`) → BROWNIAN `{-1,0,+1}^2` step,
+            //      consuming the per-agent RNG stream (unchanged).
             if let Some(s) = state {
-                if s.suppresses_movement() || matches!(s, AgentState::Consuming { .. }) {
+                if matches!(s, AgentState::Consuming { .. }) {
+                    continue;
+                }
+                if matches!(s, AgentState::Seeking { .. }) {
+                    if let Some(target) = seek {
+                        // Directed signum step (no RNG — determinism preserved).
+                        let dx = (target.tile.0 as i64 - pos.x as i64).signum();
+                        let dy = (target.tile.1 as i64 - pos.y as i64).signum();
+                        pos.x = (pos.x as i64 + dx).clamp(0, max_x) as u32;
+                        pos.y = (pos.y as i64 + dy).clamp(0, max_y) as u32;
+                    }
+                    // No Brownian for Seeking either way (target → directed
+                    // above; no target → freeze).
                     continue;
                 }
             }
+            // Idle / no AgentState: Brownian motion (unchanged).
             let dx = rng.next_step() as i64;
             let dy = rng.next_step() as i64;
             let nx = (pos.x as i64 + dx).clamp(0, max_x);
@@ -226,7 +257,11 @@ mod tests {
     }
 
     #[test]
-    fn seeking_state_suppresses_movement() {
+    fn seeking_without_target_freezes() {
+        // Section 16-β: a Seeking agent WITHOUT a SeekTarget freezes (no
+        // Brownian — suppressed; no directed step — no goal). α attaches a
+        // SeekTarget for Food/Water/Sleep; ConstructionSite/Agent seeks get
+        // none and must stay co-located.
         use sim_core::components::{AgentState, TargetKind};
         let mut e = fresh_engine();
         let id = e.world.spawn((
@@ -243,6 +278,33 @@ mod tests {
         let p = *e.world.get::<&Position>(id).unwrap();
         assert_eq!(p.x, 10);
         assert_eq!(p.y, 10);
+    }
+
+    #[test]
+    fn seeking_with_target_moves_toward() {
+        // Section 16-β: a Seeking agent WITH a SeekTarget takes one signum
+        // step per tick toward the goal, then holds once arrived (signum 0).
+        use sim_core::components::{AgentState, SeekTarget, TargetKind};
+        let mut e = fresh_engine();
+        let id = e.world.spawn((
+            Position::new(10, 10),
+            MovementRng::new(42),
+            AgentState::Seeking {
+                target: TargetKind::Food,
+            },
+            SeekTarget::new((15, 10)),
+        ));
+        let mut sys = AgentMovementSystem::new();
+        // One tick: dx=signum(15-10)=+1, dy=signum(10-10)=0 → (11,10).
+        sys.tick(&mut e.world, &mut e.resources);
+        let p = *e.world.get::<&Position>(id).unwrap();
+        assert_eq!((p.x, p.y), (11, 10), "one signum step toward goal, y unchanged");
+        // Four more ticks reach (15,10); further ticks hold (signum 0).
+        for _ in 0..8 {
+            sys.tick(&mut e.world, &mut e.resources);
+        }
+        let p = *e.world.get::<&Position>(id).unwrap();
+        assert_eq!((p.x, p.y), (15, 10), "reaches target then holds station");
     }
 
     #[test]
