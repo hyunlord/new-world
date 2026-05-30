@@ -58,7 +58,7 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, Position,
-    Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
+    SeekTarget, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
@@ -260,6 +260,28 @@ pub const REQUIRED_INTERACTION_PROGRESS: u32 = 3;
 /// Amount added to `RelationshipState::familiarity` (saturating at 1.0)
 /// on each completed interaction. V7 Phase 7-β / P7β-14.
 pub const FAMILIARITY_BUMP: f64 = 0.1;
+
+/// Nearest resource tile to `pos` by Manhattan distance, with a
+/// deterministic `(x, y)` tie-break (V7 Section 16-α).
+///
+/// `HashMap` iteration order is unspecified, so the `(distance, x, y)`
+/// key is what makes the result deterministic across runs and across two
+/// independently-built maps. Returns `None` **only** when `tiles` is
+/// empty — this is the sole documented `None` case, relied upon by the
+/// post-decision pass to skip the attach op for an empty resource map.
+pub fn nearest_resource_tile(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+) -> Option<(u32, u32)> {
+    tiles
+        .keys()
+        .min_by_key(|(tx, ty)| {
+            let dx = (*tx as i64 - pos.x as i64).abs();
+            let dy = (*ty as i64 - pos.y as i64).abs();
+            (dx + dy, *tx, *ty)
+        })
+        .copied()
+}
 
 /// Phase 5-β decision system. Stateless — all per-agent state lives
 /// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
@@ -1132,6 +1154,55 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                 }
             }
+        }
+        drop(query); // release the &mut World borrow before the SeekTarget pass
+
+        // V7 Section 16-α — SeekTarget post-decision pass. Assign the nearest
+        // matching resource tile to any agent now Seeking{Food/Water/Sleep}
+        // that lacks a SeekTarget; clear SeekTarget from any agent no longer
+        // seeking a resource. Deferred structural changes (collect-then-apply)
+        // because insert/remove during a query borrow is a compile error.
+        // Runs after the decision loop in the SAME tick, so a target is set
+        // the moment Seeking is entered. ConstructionSite/Agent seeks are
+        // co-located (not resource tiles) → never get a SeekTarget.
+        let mut seek_set: Vec<(hecs::Entity, (u32, u32))> = Vec::new();
+        let mut seek_clear: Vec<hecs::Entity> = Vec::new();
+        for (e, (pos, state, seek_opt)) in world
+            .query::<(&Position, &AgentState, Option<&SeekTarget>)>()
+            .iter()
+        {
+            let tiles = match state {
+                AgentState::Seeking { target: TargetKind::Food } => Some(&resources.food_tiles),
+                AgentState::Seeking { target: TargetKind::Water } => Some(&resources.water_tiles),
+                AgentState::Seeking { target: TargetKind::Sleep } => Some(&resources.sleep_tiles),
+                // Idle / Consuming / Seeking{ConstructionSite|Agent} → no
+                // resource target.
+                _ => None,
+            };
+            match tiles {
+                // Newly seeking a resource and no goal yet → compute one.
+                Some(t) if seek_opt.is_none() => {
+                    if let Some(tile) = nearest_resource_tile(pos, t) {
+                        seek_set.push((e, tile));
+                    }
+                    // None ⇒ empty resource map → skip the attach (no panic).
+                }
+                // Already has a SeekTarget — keep it (stability: do NOT
+                // re-target each tick while still seeking the same resource).
+                Some(_) => {}
+                // No longer seeking a resource → drop any stale goal.
+                None => {
+                    if seek_opt.is_some() {
+                        seek_clear.push(e);
+                    }
+                }
+            }
+        }
+        for (e, tile) in seek_set {
+            let _ = world.insert_one(e, SeekTarget { tile });
+        }
+        for e in seek_clear {
+            let _ = world.remove_one::<SeekTarget>(e);
         }
     }
 }
