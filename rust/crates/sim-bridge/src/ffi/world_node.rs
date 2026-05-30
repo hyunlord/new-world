@@ -67,6 +67,27 @@ const BOOTSTRAP_AGENT_OFFSET: u32 = 4;
 /// but a non-zero base produces a more visibly varied first frame).
 const BOOTSTRAP_RNG_BASE: u64 = 0xA5A5_A5A5_0000_0001;
 
+/// V7 Section 16-δ — inclusive upper bound on each agent's staggered initial
+/// need value. Initial values land in `0..=BOOTSTRAP_NEED_STAGGER_MAX` (span
+/// `MAX + 1 = 46`). The cap is strictly `< 50` (the breach threshold) so every
+/// agent is still `Idle` immediately after bootstrap — this is the
+/// `s16_alpha0:A13` preservation guarantee.
+const BOOTSTRAP_NEED_STAGGER_MAX: u64 = 45;
+/// V7 Section 16-δ — XOR salt that derives a per-agent need-RNG seed from the
+/// agent's movement seed. Distinct from the movement seed so the agent's own
+/// `MovementRng::new(seed)` stream is unperturbed (the need values draw from a
+/// SEPARATE `MovementRng` instance seeded with `seed ^ SALT`).
+const BOOTSTRAP_NEED_STAGGER_SALT: u64 = 0x5EED_5A66_E0DE_0001;
+/// V7 Section 16-δ — accelerated Hunger growth rate (was 0.02). Ordering:
+/// Thirst > Hunger > Sleep.
+const BOOTSTRAP_HUNGER_RATE: f32 = 0.05;
+/// V7 Section 16-δ — accelerated Thirst growth rate (was 0.03). Fastest need,
+/// so an agent starting Thirst≈45 breaches at `(50-45)/0.08 ≈ 63` ticks.
+const BOOTSTRAP_THIRST_RATE: f64 = 0.08;
+/// V7 Section 16-δ — accelerated Sleep growth rate (was 0.01). Slowest of the
+/// three staggered resource needs.
+const BOOTSTRAP_SLEEP_RATE: f64 = 0.03;
+
 /// V7 Section 16-α0 — deterministic non-depleting resource source tiles.
 /// Fixed lattices (NOT RNG): each tile lies inside the 64×64 map and within
 /// a few steps (Chebyshev ≤ 4) of the `BOOTSTRAP_AGENT_*` agent lattice
@@ -1855,13 +1876,28 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
             let y = BOOTSTRAP_AGENT_OFFSET + j * BOOTSTRAP_AGENT_STRIDE;
             let entity = engine.spawn_agent(x, y);
             let seed = BOOTSTRAP_RNG_BASE.wrapping_add((j * BOOTSTRAP_AGENT_AXIS + i) as u64);
-            // V7 Phase 7-β / P7β-15 — bootstrap agents must carry every
-            // component the production cascade reads. Without `AgentState`,
-            // `Hunger`, `Thirst`, `Sleep`, `Social`, the agents would never
-            // participate in the FSM (and the needs/social systems would
-            // silently no-op on them). Default growth rates: Hunger 0.02,
-            // Thirst 0.03, Sleep 0.01, Social 0.04 — produces emergent
-            // cascade firing within an in-game day.
+            // V7 Section 16-δ — per-agent STAGGERED initial need values +
+            // accelerated growth rates. Pre-δ every agent started at 0.0 with
+            // slow rates (Hunger 0.02 / Thirst 0.03 / Sleep 0.01), so all 64
+            // breached on the SAME tick (synchronized burst, measured peak 64
+            // simultaneous Seeking{Water} at tick 1667). Staggering breaks the
+            // burst into a continuous trickle; the rate bump shortens the first
+            // trip to ~tens of seconds.
+            //
+            // Initial values are derived from a SALTED seed via the existing
+            // splitmix64 (`MovementRng`), drawn from a SEPARATE RNG instance so
+            // the agent's own movement stream (`MovementRng::new(seed)` below)
+            // is byte-identical to pre-δ. The cap is `0..=45` (< 50 breach
+            // threshold) so every agent is still Idle right after bootstrap —
+            // this preserves `s16_alpha0:A13` ("64 agents all Idle").
+            // Rates: Thirst 0.08 > Hunger 0.05 > Sleep 0.03; Social stays
+            // unstaggered at 0.04 (Seeking{Agent} has no SeekTarget so it does
+            // not drive resource movement).
+            let mut need_rng = MovementRng::new(seed ^ BOOTSTRAP_NEED_STAGGER_SALT);
+            let span = BOOTSTRAP_NEED_STAGGER_MAX + 1; // 0..=MAX → span MAX+1
+            let h0 = (need_rng.next_u64() % span) as f32;
+            let t0 = (need_rng.next_u64() % span) as f64;
+            let sl0 = (need_rng.next_u64() % span) as f64;
             engine
                 .world
                 .insert(
@@ -1869,9 +1905,9 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
                     (
                         MovementRng::new(seed),
                         AgentState::Idle,
-                        Hunger::new(0.0, 0.02),
-                        Thirst::new(0.0, 0.03),
-                        Sleep::new(0.0, 0.01),
+                        Hunger::new(h0, BOOTSTRAP_HUNGER_RATE),
+                        Thirst::new(t0, BOOTSTRAP_THIRST_RATE),
+                        Sleep::new(sl0, BOOTSTRAP_SLEEP_RATE),
                         Social::new(0.0, 0.04),
                         Memory::new(),
                     ),
