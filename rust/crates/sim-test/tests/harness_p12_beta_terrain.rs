@@ -838,63 +838,21 @@ fn harness_p12_beta_a23_phase12_alpha_camera_zoom_invariant_preserved() {
     println!("[P12-β A23] Camera2D zoom=Vector2(2,2) + camera_controller.gd attached ✓");
 }
 
-// ─── Assertion 24: no_rust_crate_modifications_in_scope_paths ────────────
+// ─── Assertion 24: no_rust_crate_modifications_in_scope_paths (RETIRED) ──
 #[test]
 fn harness_p12_beta_a24_no_rust_crate_modifications_in_scope_paths() {
-    // Type: A — zero modifications to sim-core/sim-systems/sim-engine/
-    // sim-bridge/sim-data; additions to sim-test/tests/ allowed.
-    let root = project_root();
-
-    // Enumerate files modified vs origin/lead/main + uncommitted.
-    let mut modified: Vec<String> = Vec::new();
-    if let Ok(o) = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["diff", "--name-only", "origin/lead/main...HEAD"])
-        .output()
-    {
-        for line in String::from_utf8_lossy(&o.stdout).lines() {
-            if !line.trim().is_empty() {
-                modified.push(line.trim().to_string());
-            }
-        }
-    }
-    if let Ok(o) = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["status", "--porcelain"])
-        .output()
-    {
-        for line in String::from_utf8_lossy(&o.stdout).lines() {
-            let path = line.get(3..).unwrap_or("").trim();
-            if !path.is_empty() {
-                modified.push(path.to_string());
-            }
-        }
-    }
-
-    // V7 Phase 12-β.2 (A3) expansion: sim-bridge FFI is now a legitimate
-    // surface for renderer-feeding snapshots (e.g. construction-site
-    // rendering). Mirrors the β.1 precedent. β.2's own A14 regression
-    // guard locks the Phase 12-β.1 visible invariants (TERRAIN_TILESET_PATH,
-    // BUILDING_SPRITE_PATH, OVERLAY_ALPHA = 0.65).
-    let forbidden_prefixes = [
-        "rust/crates/sim-core/",
-        "rust/crates/sim-systems/",
-        "rust/crates/sim-engine/",
-        "rust/crates/sim-data/",
-    ];
-    let violations: Vec<&String> = modified
-        .iter()
-        .filter(|f| forbidden_prefixes.iter().any(|p| f.starts_with(p)))
-        .collect();
-    assert!(
-        violations.is_empty(),
-        "A24: Phase 12-β must NOT modify Rust simulation crates \
-         (sim-core/sim-systems/sim-engine/sim-data). \
-         Violations: {violations:?}"
-    );
-    println!("[P12-β A24] no Rust production crate modified ✓");
+    // RETIRED (S16 prep — Stage 61). This guard mis-encoded P12-β's
+    // GDScript-only-phase scope promise as a PERMANENT global git-diff check
+    // (forbidden_prefixes over sim-core/sim-systems/sim-engine/sim-data),
+    // so it FAILed on ANY uncommitted Rust change — blocking ALL future Rust
+    // backend work (Section 16+). P12-β's actual Rust-untouched state was
+    // verified at its merge commit and persists in git history; re-asserting
+    // it against every future working tree is a design error. Forward
+    // per-feature scope-creep protection is now provided by the pipeline's
+    // F-Phase-A scope-semantic guard + the Codex Evaluator. Retiring restores
+    // a no-op pass without losing real coverage.
+    // See .harness/prompts/prep-retire-stale-rust-guards.md.
+    println!("[P12-β A24] RETIRED — stale global Rust-block guard; forward protection via F-Phase-A + Evaluator");
 }
 
 // ─── Assertion 25: gdscript_parses_cleanly_in_godot_headless ─────────────

@@ -17,7 +17,6 @@
 
 use std::fs;
 use std::path::PathBuf;
-use std::process::Command;
 
 // ── helpers ───────────────────────────────────────────────────────────────
 
@@ -604,71 +603,20 @@ fn harness_p13_epsilon_a15_phase13_delta_hud_topbar_present() {
     );
 }
 
-// ─── Assertion 16: no_rust_simulation_crate_modification ─────────────────
+// ─── Assertion 16: no_rust_simulation_crate_modification (RETIRED) ───────
 #[test]
 fn harness_p13_epsilon_a16_no_rust_simulation_crate_modification() {
-    // Type: A — lane-discipline guard. `--quick` lane forbids edits to
-    // sim-core / sim-bridge / sim-systems / sim-engine. We check the local
-    // working-tree state via `git status --porcelain` and assert no
-    // tracked-or-untracked paths under these crates appear. The check is
-    // best-effort: if `git` is unavailable in the test environment, we
-    // print a notice and skip the assertion (pipeline runs this guard at
-    // the pre-commit hook layer as well).
-    //
-    // V7 Phase 14-γ amendment (2026-05-26): when `HARNESS_LANE=full` is
-    // set in the environment, the active pipeline run is a legitimate
-    // `--full` lane feature that may touch sim-bridge (the only
-    // simulation crate exposed to GDScript). Skip the guard in that
-    // case — the lane choice itself authorises the sim-bridge edit, and
-    // the pipeline's Evaluator step independently reviews the change.
-    if std::env::var("HARNESS_LANE").as_deref() == Ok("full") {
-        println!("[P13-ε A16] HARNESS_LANE=full active — lane-discipline guard skipped");
-        return;
-    }
-    let root = project_root();
-    let out = Command::new("git")
-        .args(["status", "--porcelain"])
-        .current_dir(&root)
-        .output();
-    let Ok(out) = out else {
-        println!("[P13-ε A16] git unavailable in test env — skipped (pipeline still enforces)");
-        return;
-    };
-    if !out.status.success() {
-        println!("[P13-ε A16] git status failed (status={:?}) — skipped", out.status.code());
-        return;
-    }
-    let stdout = String::from_utf8_lossy(&out.stdout);
-    let forbidden_prefixes = [
-        "rust/crates/sim-core/",
-        "rust/crates/sim-bridge/",
-        "rust/crates/sim-systems/",
-        "rust/crates/sim-engine/",
-    ];
-    let mut offenders: Vec<String> = Vec::new();
-    for line in stdout.lines() {
-        // Porcelain v1 format: `XY <path>` (path begins at byte 3).
-        if line.len() < 4 {
-            continue;
-        }
-        let path = line[3..].trim();
-        // Handle rename: `R  old -> new` form.
-        let candidate = if let Some(arrow) = path.find(" -> ") {
-            &path[arrow + 4..]
-        } else {
-            path
-        };
-        for prefix in forbidden_prefixes.iter() {
-            if candidate.starts_with(prefix) {
-                offenders.push(line.to_string());
-            }
-        }
-    }
-    assert!(
-        offenders.is_empty(),
-        "A16: --quick lane forbids modifications under sim-core/sim-bridge/sim-systems/sim-engine; \
-         offending git status entries:\n  {}",
-        offenders.join("\n  ")
-    );
-    println!("[P13-ε A16] no rust simulation crate modifications in working tree ✓");
+    // RETIRED (S16 prep — Stage 61). This guard mis-encoded P13-ε's
+    // GDScript-only-phase scope promise as a PERMANENT global git-status check
+    // (forbidden_prefixes over sim-core/sim-bridge/sim-systems/sim-engine),
+    // so it FAILed on ANY uncommitted Rust change — blocking ALL future Rust
+    // backend work (Section 16+). P13-ε's actual Rust-untouched state was
+    // verified at its merge commit and persists in git history; re-asserting
+    // it against every future working tree is a design error. Forward
+    // per-feature scope-creep protection is now provided by the pipeline's
+    // F-Phase-A scope-semantic guard + the Codex Evaluator. Retiring restores
+    // a no-op pass without losing real coverage. The now-orphaned
+    // `use std::process::Command;` import was removed in the same change.
+    // See .harness/prompts/prep-retire-stale-rust-guards.md.
+    println!("[P13-ε A16] RETIRED — stale global Rust-block guard; forward protection via F-Phase-A + Evaluator");
 }

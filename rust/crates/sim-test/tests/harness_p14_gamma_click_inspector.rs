@@ -989,6 +989,7 @@ fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
         "get_tile_detail",
         "get_relationship_snapshot",
         "get_agent_detail", // new γ FFI
+        "get_resource_snapshot", // V7 Section 16-α0 renderer FFI (substrate markers)
     ]
     .iter()
     .map(|s| s.to_string())

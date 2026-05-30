@@ -564,73 +564,21 @@ fn harness_p12_alpha_a16_d1_state_tints_palette_preserved() {
     println!("[P12-α A16] all 4 D1 STATE_TINTS Color literals present ✓");
 }
 
-// ─── Assertion 17: no_rust_crate_source_modified ─────────────────────────
+// ─── Assertion 17: no_rust_crate_source_modified (RETIRED) ───────────────
 #[test]
 fn harness_p12_alpha_a17_no_rust_crate_source_modified() {
-    // Type: D (regression guard against scope creep). Spec §2 explicitly
-    // lists 'Not changed' as all Rust crates except this new sim-test file.
-    //
-    // Implementation: query `git diff --name-only` between HEAD~1 and the
-    // working tree to enumerate files touched by this feature. If git is
-    // unavailable, fall back to a passive check via `git status` — and if
-    // both fail, skip the test rather than block the suite (the assertion
-    // is informational on a clean working tree).
-    let root = project_root();
-    // Use git to enumerate files modified between origin/lead/main and HEAD,
-    // plus the working tree.
-    let output = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["diff", "--name-only", "origin/lead/main...HEAD"])
-        .output();
-    let mut modified: Vec<String> = Vec::new();
-    if let Ok(o) = output {
-        let s = String::from_utf8_lossy(&o.stdout);
-        for line in s.lines() {
-            if !line.trim().is_empty() {
-                modified.push(line.trim().to_string());
-            }
-        }
-    }
-    // Also include uncommitted working-tree changes.
-    let output2 = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["status", "--porcelain"])
-        .output();
-    if let Ok(o) = output2 {
-        let s = String::from_utf8_lossy(&o.stdout);
-        for line in s.lines() {
-            // Porcelain format: XY <path>
-            let path = line.get(3..).unwrap_or("").trim();
-            if !path.is_empty() {
-                modified.push(path.to_string());
-            }
-        }
-    }
-
-    // V7 Phase 12-β.2 (A3) expansion: sim-bridge FFI is now a legitimate
-    // surface for renderer-feeding snapshots (e.g. construction-site
-    // rendering). Mirrors the β.1 precedent that opened world_renderer.gd
-    // (A18). β.2's own A14 regression guard locks the Phase 12-α visible
-    // invariants (Camera2D zoom + camera_controller.gd attachment).
-    let forbidden_prefixes = [
-        "rust/crates/sim-core/src/",
-        "rust/crates/sim-systems/src/",
-        "rust/crates/sim-engine/src/",
-        "rust/crates/sim-data/src/",
-    ];
-    let violations: Vec<&String> = modified
-        .iter()
-        .filter(|f| forbidden_prefixes.iter().any(|p| f.starts_with(p)))
-        .collect();
-    assert!(
-        violations.is_empty(),
-        "A17: Phase 12-α must NOT modify Rust simulation crate sources \
-         (sim-core/sim-systems/sim-engine/sim-data). \
-         Violations: {violations:?}"
-    );
-    println!("[P12-α A17] no Rust crate source modified ✓");
+    // RETIRED (S16 prep — Stage 61). This guard mis-encoded P12-α's
+    // GDScript-only-phase scope promise as a PERMANENT global git-diff check
+    // (forbidden_prefixes over sim-core/sim-systems/sim-engine/sim-data src),
+    // so it FAILed on ANY uncommitted Rust change — blocking ALL future Rust
+    // backend work (Section 16+). P12-α's actual Rust-untouched state was
+    // verified at its merge commit and persists in git history; re-asserting
+    // it against every future working tree is a design error. Forward
+    // per-feature scope-creep protection is now provided by the pipeline's
+    // F-Phase-A scope-semantic guard + the Codex Evaluator. Retiring restores
+    // a no-op pass without losing real coverage.
+    // See .harness/prompts/prep-retire-stale-rust-guards.md.
+    println!("[P12-α A17] RETIRED — stale global Rust-block guard; forward protection via F-Phase-A + Evaluator");
 }
 
 // ─── Assertion 18: shader_and_locale_unchanged ────────────────────────────

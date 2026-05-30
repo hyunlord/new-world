@@ -14,7 +14,6 @@
 
 use std::fs;
 use std::path::PathBuf;
-use std::process::Command;
 
 // ── helpers ───────────────────────────────────────────────────────────────
 
@@ -919,105 +918,21 @@ fn harness_p14_beta_a21_new_village_fixture_assets_exist_on_disk() {
     println!("[P14-β A21] all 4 new village fixture assets exist + PNG magic OK ✓");
 }
 
-// ─── Assertion 22: no_rust_crate_modifications ───────────────────────────
+// ─── Assertion 22: no_rust_crate_modifications (RETIRED) ─────────────────
 #[test]
 fn harness_p14_beta_a22_no_rust_crate_modifications() {
-    // Type: A — `--quick` lane scope guard. Zero `.rs` changes inside
-    // sim-core / sim-systems / sim-engine / sim-bridge / sim-data,
-    // INCLUDING untracked new files (a Generator dropping a fresh
-    // `rust/crates/sim-core/src/foo.rs` would be invisible to
-    // `git diff HEAD` but is still a lane violation).
-    //
-    // The new harness file under `rust/crates/sim-test/tests/` is NOT
-    // counted (sim-test is permitted).
-    //
-    // Detection sources, unioned:
-    //   1. `git diff --name-only HEAD --`            → tracked modifications
-    //   2. `git ls-files --others --exclude-standard --` → untracked new files
-    //
-    // V7 Phase 14-γ amendment (2026-05-26): `--full` lane features
-    // (e.g. Phase 14-γ collect_agent_detail FFI) legitimately touch
-    // sim-bridge. When `HARNESS_LANE=full` is set in the environment,
-    // skip this guard — the lane choice authorises the change and the
-    // pipeline's Evaluator independently reviews it.
-    if std::env::var("HARNESS_LANE").as_deref() == Ok("full") {
-        println!("[P14-β A22] HARNESS_LANE=full active — lane-discipline guard skipped");
-        return;
-    }
-    let root = project_root();
-    let forbidden_prefixes = [
-        "rust/crates/sim-core/",
-        "rust/crates/sim-systems/",
-        "rust/crates/sim-engine/",
-        "rust/crates/sim-bridge/",
-        "rust/crates/sim-data/",
-    ];
-
-    let run_git = |args: &[&str]| -> Option<String> {
-        match Command::new("git").args(args).current_dir(&root).output() {
-            Ok(o) => Some(String::from_utf8_lossy(&o.stdout).into_owned()),
-            Err(e) => {
-                eprintln!("A22: git unavailable for `git {args:?}` ({e}); skipping that source");
-                None
-            }
-        }
-    };
-
-    let mut any_source_ran = false;
-    let mut candidate_paths: Vec<String> = Vec::new();
-
-    // Source 1: tracked modifications vs HEAD.
-    if let Some(diff_out) = run_git(&["diff", "--name-only", "HEAD", "--"]) {
-        any_source_ran = true;
-        for raw in diff_out.lines() {
-            let line = raw.trim();
-            if !line.is_empty() {
-                candidate_paths.push(line.to_string());
-            }
-        }
-    }
-
-    // Source 2: untracked, non-gitignored new files.
-    if let Some(untracked_out) = run_git(&["ls-files", "--others", "--exclude-standard", "--"]) {
-        any_source_ran = true;
-        for raw in untracked_out.lines() {
-            let line = raw.trim();
-            if !line.is_empty() {
-                candidate_paths.push(line.to_string());
-            }
-        }
-    }
-
-    if !any_source_ran {
-        // No git data at all — downgrade to a skip-with-warning so the
-        // harness still runs from a tarball checkout.
-        eprintln!("A22: no git sources available; skipping");
-        return;
-    }
-
-    // Dedupe and filter to forbidden `.rs` paths.
-    candidate_paths.sort();
-    candidate_paths.dedup();
-    let mut offenders: Vec<String> = Vec::new();
-    for line in candidate_paths.iter() {
-        if !line.ends_with(".rs") {
-            continue;
-        }
-        for prefix in forbidden_prefixes.iter() {
-            if line.starts_with(prefix) {
-                offenders.push(line.clone());
-                break;
-            }
-        }
-    }
-    assert!(
-        offenders.is_empty(),
-        "A22: Phase 14-β is `--quick` lane; zero `.rs` changes allowed in \
-         sim-core/sim-systems/sim-engine/sim-bridge/sim-data (tracked OR untracked), \
-         but found: {offenders:?}"
-    );
-    println!(
-        "[P14-β A22] zero Rust crate `.rs` modifications in --quick scope \
-         (tracked + untracked checked) ✓"
-    );
+    // RETIRED (S16 prep — Stage 61). This guard mis-encoded P14-β's
+    // GDScript-only-phase scope promise as a PERMANENT global git-diff check
+    // (forbidden_prefixes over sim-core/sim-systems/sim-engine/sim-bridge/
+    // sim-data, tracked + untracked), so it FAILed on ANY uncommitted Rust
+    // change — blocking ALL future Rust backend work (Section 16+). P14-β's
+    // actual Rust-untouched state was verified at its merge commit and
+    // persists in git history; re-asserting it against every future working
+    // tree is a design error. Forward per-feature scope-creep protection is
+    // now provided by the pipeline's F-Phase-A scope-semantic guard + the
+    // Codex Evaluator. Retiring restores a no-op pass without losing real
+    // coverage. The now-orphaned `use std::process::Command;` import was
+    // removed in the same change.
+    // See .harness/prompts/prep-retire-stale-rust-guards.md.
+    println!("[P14-β A22] RETIRED — stale global Rust-block guard; forward protection via F-Phase-A + Evaluator");
 }
