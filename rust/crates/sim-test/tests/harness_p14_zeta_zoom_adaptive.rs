@@ -658,7 +658,7 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
         "a19.1: camera_controller.gd must keep ZOOM_MIN/MAX/DEFAULT; missing={missing:?}"
     );
     let compact = no_ws(&stripped);
-    let lits = ["Vector2(0.5,0.5)", "Vector2(8.0,8.0)", "Vector2(3.0,3.0)"];
+    let lits = ["Vector2(0.5,0.5)", "Vector2(8.0,8.0)", "Vector2(5.0,5.0)"];
     let mut missing_lits: Vec<&str> = Vec::new();
     for l in lits.iter() {
         if !compact.contains(l) {
@@ -667,7 +667,8 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
     }
     assert!(
         missing_lits.is_empty(),
-        "a19.2: camera_controller.gd must keep 0.5/4.0/3.0 zoom literals; missing={missing_lits:?}"
+        "a19.2: camera_controller.gd must keep 0.5/8.0/5.0 zoom literals \
+         (ZOOM_DEFAULT raised from 3.0 in B-1); missing={missing_lits:?}"
     );
     println!("[P14-ζ a19] camera_controller.gd Phase 12-α/13-α invariants intact ✓");
 }

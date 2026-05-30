@@ -1115,8 +1115,8 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     let zd = unique_decl_rhs(&cam_stripped, "ZOOM_DEFAULT", "A28.ZD");
     assert_eq!(
         no_ws(&zd),
-        "Vector2(3.0,3.0)",
-        "A28: ZOOM_DEFAULT must be Vector2(3.0, 3.0); got `{zd}`"
+        "Vector2(5.0,5.0)",
+        "A28: ZOOM_DEFAULT must be Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{zd}`"
     );
     let zmin = unique_decl_rhs(&cam_stripped, "ZOOM_MIN", "A28.ZMIN");
     assert_eq!(

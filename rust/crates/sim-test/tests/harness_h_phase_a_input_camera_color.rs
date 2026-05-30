@@ -428,9 +428,9 @@ fn harness_h_a8_tracking_coordinate_constants() {
 // ─── a9: zoom invariants unchanged ────────────────────────────────────────────
 #[test]
 fn harness_h_a9_zoom_invariants_unchanged() {
-    // Type D — regression guard. Section 2 forbids changing ZOOM_MIN/MAX/
-    // DEFAULT. These are the Phase 12-α (0.5) / G Phase A (8.0) / Phase 13-α
-    // (3.0) locked values. Exact match catches any drift while adding gestures.
+    // Type D — regression guard. Section 2 forbids changing ZOOM_MIN/MAX here.
+    // These are the Phase 12-α (0.5) / G Phase A (8.0) locked values; ZOOM_DEFAULT
+    // was raised 3.0 → 5.0 in B-1. Exact match catches any drift.
     let stripped = strip_gd_comments(&read_camera_controller_src());
     let min_rhs = unique_decl_rhs(&stripped, "ZOOM_MIN", "a9.1");
     let max_rhs = unique_decl_rhs(&stripped, "ZOOM_MAX", "a9.2");
@@ -447,10 +447,10 @@ fn harness_h_a9_zoom_invariants_unchanged() {
     );
     assert_eq!(
         no_ws(&def_rhs),
-        "Vector2(3.0,3.0)",
-        "a9.6: ZOOM_DEFAULT must equal Vector2(3.0,3.0); got `{def_rhs}`"
+        "Vector2(5.0,5.0)",
+        "a9.6: ZOOM_DEFAULT must equal Vector2(5.0,5.0) (raised from 3.0 in B-1); got `{def_rhs}`"
     );
-    println!("[H a9] ZOOM_MIN(0.5)/MAX(8.0)/DEFAULT(3.0) unchanged ✓");
+    println!("[H a9] ZOOM_MIN(0.5)/MAX(8.0)/DEFAULT(5.0) unchanged ✓");
 }
 
 // ─── a10: KEY_SPACE not repurposed in camera_controller ───────────────────────

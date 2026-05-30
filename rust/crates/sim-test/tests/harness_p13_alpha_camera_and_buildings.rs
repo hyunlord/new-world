@@ -165,7 +165,8 @@ fn unique_decl_rhs(stripped: &str, ident: &str, label: &str) -> String {
 }
 
 /// Compact a string by removing ASCII whitespace. Useful for tolerating
-/// inter-token whitespace in `Vector2(3.0, 3.0)` / `Vector2(3.0,3.0)` etc.
+/// inter-token whitespace in vector literals (with or without a space after
+/// each comma) so spacing differences do not affect the comparison.
 fn no_ws(s: &str) -> String {
     s.chars().filter(|c| !c.is_whitespace()).collect()
 }
@@ -193,24 +194,24 @@ fn extract_camera2d_block(tscn: &str) -> String {
 // ─── Assertion 1: camera_controller_zoom_default_3x ───────────────────────
 #[test]
 fn harness_p13_alpha_a1_camera_controller_zoom_default_3x() {
-    // Type: A — Phase 13-α stated WHAT: default zoom literal must be 3.0×.
+    // Type: A — B-1 raised the default zoom literal 3.0× → 5.0×.
     let stripped = strip_gd_comments(&read_camera_controller_src());
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A1");
-    // Whitespace-tolerant numeric match — accept `3` or `3.0` either side.
+    // Whitespace-tolerant numeric match — accept `5` or `5.0` either side.
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(3.0,3.0)",
-        "Vector2(3,3)",
-        "Vector2(3.0,3)",
-        "Vector2(3,3.0)",
+        "Vector2(5.0,5.0)",
+        "Vector2(5,5)",
+        "Vector2(5.0,5)",
+        "Vector2(5,5.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A1: ZOOM_DEFAULT RHS must equal exactly one of Vector2(3.0,3.0) | \
-         Vector2(3,3) | Vector2(3.0,3) | Vector2(3,3.0) (whitespace-stripped); \
-         got RHS=`{rhs}` compact=`{compact}`"
+        "A1: ZOOM_DEFAULT RHS must equal exactly one of Vector2(5.0,5.0) | \
+         Vector2(5,5) | Vector2(5.0,5) | Vector2(5,5.0) (whitespace-stripped; \
+         raised from 3.0 in B-1); got RHS=`{rhs}` compact=`{compact}`"
     );
-    println!("[P13-α A1] ZOOM_DEFAULT = Vector2(3.0, 3.0) ✓");
+    println!("[P13-α A1] ZOOM_DEFAULT = Vector2(5.0, 5.0) ✓");
 }
 
 // ─── Assertion 2: camera_controller_zoom_min_unchanged ────────────────────

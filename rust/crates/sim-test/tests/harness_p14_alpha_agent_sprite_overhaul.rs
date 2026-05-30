@@ -506,14 +506,14 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
     );
     let default_compact = no_ws(&zoom_default);
     let accepted = [
-        "Vector2(3.0,3.0)",
-        "Vector2(3,3)",
-        "Vector2(3.0,3)",
-        "Vector2(3,3.0)",
+        "Vector2(5.0,5.0)",
+        "Vector2(5,5)",
+        "Vector2(5.0,5)",
+        "Vector2(5,5.0)",
     ];
     assert!(
         accepted.contains(&default_compact.as_str()),
-        "A15.6: ZOOM_DEFAULT must equal Vector2(3.0, 3.0); got `{zoom_default}`"
+        "A15.6: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{zoom_default}`"
     );
     println!("[P14-α A15] camera ZOOM_MIN/MAX/DEFAULT invariants preserved ✓");
 }

@@ -18,18 +18,16 @@ extends Camera2D
 # only modifies Camera2D.zoom, never agent sprite scale.
 
 const ZOOM_MIN: Vector2 = Vector2(0.5, 0.5)
-# V7 G Phase A — zoom-in ceiling raised 4.0 → 8.0. Phase 13-α set
-# ZOOM_DEFAULT to 3.0, which sat only ~1.7 wheel-notches (×1.25) below the
-# old 4.0 ceiling, so zoom-IN felt broken ("줌이 안 당겨짐"). 8.0 gives
-# ~4.4 notches of zoom-in headroom from the 3.0 default. ZOOM_MIN and
-# ZOOM_DEFAULT are unchanged.
+# V7 G Phase A — zoom-in ceiling raised 4.0 → 8.0 so the default view keeps
+# ample zoom-in headroom. (B-1 later raised ZOOM_DEFAULT 3.0 → 5.0; from the
+# 5.0 default the ×1.25 wheel still reaches the 8.0 ceiling.) ZOOM_MIN unchanged.
 const ZOOM_MAX: Vector2 = Vector2(8.0, 8.0)
-# V7 Phase 13-α — default zoom raised from 2.0× to 3.0× so 16×18 px agent
-# sprites (Phase 4-γ SPRITE_SCALE = 0.25 invariant preserved) render at
-# 48–54 px, above the human-perceptual threshold for distinguishing agents
-# and buildings. Mouse-wheel controls (Phase 12-α) still let the user zoom
-# out to overview.
-const ZOOM_DEFAULT: Vector2 = Vector2(3.0, 3.0)
+# V7 B-1 — default zoom raised 3.0× → 5.0× so agents (16×24 frame ×
+# SPRITE_SCALE 0.25) render at 20×30 px instead of 12×18 px at the default
+# view (SPRITE_SCALE is a Phase 4-γ invariant locked in 14 harnesses, so we
+# scale the view, not the sprite). ZOOM_MIN (0.5) / ZOOM_MAX (8.0) unchanged,
+# so the trackpad/wheel still reach the overview and the 8.0× close-up.
+const ZOOM_DEFAULT: Vector2 = Vector2(5.0, 5.0)
 const ZOOM_FACTOR: float = 1.25
 const TWEEN_DURATION: float = 0.15
 

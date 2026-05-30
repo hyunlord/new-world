@@ -615,16 +615,16 @@ fn harness_p13_delta_a14_phase13_alpha_default_zoom_3x_unchanged() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A14");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(3.0,3.0)",
-        "Vector2(3,3)",
-        "Vector2(3.0,3)",
-        "Vector2(3,3.0)",
+        "Vector2(5.0,5.0)",
+        "Vector2(5,5)",
+        "Vector2(5.0,5)",
+        "Vector2(5,5.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A14: ZOOM_DEFAULT must equal Vector2(3.0, 3.0) (Phase 13-α invariant); got `{rhs}`"
+        "A14: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
     );
-    println!("[P13-δ A14] ZOOM_DEFAULT = Vector2(3.0, 3.0) preserved ✓");
+    println!("[P13-δ A14] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
 }
 
 // ─── Assertion 15: invariant_phase13_alpha_bootstrap_campfire_unchanged ───

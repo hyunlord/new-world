@@ -478,16 +478,16 @@ fn harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A11");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(3.0,3.0)",
-        "Vector2(3,3)",
-        "Vector2(3.0,3)",
-        "Vector2(3,3.0)",
+        "Vector2(5.0,5.0)",
+        "Vector2(5,5)",
+        "Vector2(5.0,5)",
+        "Vector2(5,5.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A11: ZOOM_DEFAULT must equal Vector2(3.0, 3.0); got `{rhs}`"
+        "A11: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
     );
-    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(3.0, 3.0) preserved ✓");
+    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
 }
 
 // ─── Assertion 12: phase13_alpha_centre_bootstrap_preserved ──────────────

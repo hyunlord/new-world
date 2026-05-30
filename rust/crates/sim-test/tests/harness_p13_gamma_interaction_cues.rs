@@ -533,21 +533,21 @@ fn harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved() {
 // ─── Assertion 13: phase13_alpha_zoom_default_3x_preserved ───────────────
 #[test]
 fn harness_p13_gamma_a13_phase13_alpha_zoom_default_3x_preserved() {
-    // Type: D — Phase 13-α invariant. γ's expected visible delta assumes 3.0×.
+    // Type: D — B-1 raised the default to 5.0×; γ's visible-delta guard tracks it.
     let stripped = strip_gd_comments(&read_camera_controller_src());
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A13");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(3.0,3.0)",
-        "Vector2(3,3)",
-        "Vector2(3.0,3)",
-        "Vector2(3,3.0)",
+        "Vector2(5.0,5.0)",
+        "Vector2(5,5)",
+        "Vector2(5.0,5)",
+        "Vector2(5,5.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A13: ZOOM_DEFAULT must equal Vector2(3.0, 3.0) (Phase 13-α invariant); got `{rhs}`"
+        "A13: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
     );
-    println!("[P13-γ A13] ZOOM_DEFAULT = Vector2(3.0, 3.0) preserved ✓");
+    println!("[P13-γ A13] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
 }
 
 // ─── Assertion 14: phase13_alpha_bootstrap_campfire_preserved ────────────
