@@ -82,6 +82,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		# used here (it belongs to the world_renderer overlay-channel cycle).
 		_toggle_pause()
 		get_viewport().set_input_as_handled()
+	elif event is InputEventKey and event.pressed and not event.echo \
+			and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
+		# V7 Section 16-γ — number keys drive the Rust WorldSimNode.set_sim_speed
+		# accumulator scale (0.25× / 0.5× / 1× / 2×) so the player can slow the
+		# sim and watch agents seek → walk → consume. Mirrors the KEY_P branch.
+		var spd: float = {KEY_1: 0.25, KEY_2: 0.5, KEY_3: 1.0, KEY_4: 2.0}[event.keycode]
+		if _world_sim != null:
+			_world_sim.call("set_sim_speed", spd)
+		print("[sim] speed = %.2fx" % spd)  # debug log — locale-exempt
+		get_viewport().set_input_as_handled()
 
 
 func _apply_zoom_delta(factor: float) -> void:

@@ -90,6 +90,13 @@ const SOURCE_SLEEP: [(u32, u32); 4] = [(20, 20), (44, 20), (20, 44), (44, 44)];
 pub struct WorldSimNode {
     engine: SimEngine,
     accumulator: f64,
+    /// V7 Section 16-γ — wall-time → accumulator scale (Option A speed
+    /// control). Multiplies the per-frame `delta` fed to the Gaffer
+    /// accumulator so 0.25× genuinely quarters the tick rate (true continuous
+    /// scaling, not process-gating stutter). Clamped to `0.0..=4.0` via
+    /// [`clamp_sim_speed`]. Determinism is unaffected — only how much
+    /// wall-time feeds the fixed-timestep loop changes, never `FIXED_DT`.
+    sim_speed: f64,
     base: Base<Node>,
 }
 
@@ -97,6 +104,14 @@ pub struct WorldSimNode {
 const FIXED_DT: f64 = 1.0 / 30.0;
 /// Spiral-of-death cap: skip catch-up after this many fixed ticks per frame.
 const MAX_ITERS_PER_FRAME: u32 = 5;
+
+/// V7 Section 16-γ — clamp a requested simulation-speed multiplier to the
+/// supported `[0.0, 4.0]` range. Pure (no Godot) so the harness can verify it
+/// directly without a Godot runtime. `0.0` freezes the accumulator (a second
+/// pause path overlapping KEY_P); `4.0` is the maximum fast-forward.
+pub fn clamp_sim_speed(speed: f64) -> f64 {
+    speed.clamp(0.0, 4.0)
+}
 
 #[godot_api]
 impl INode for WorldSimNode {
@@ -112,6 +127,7 @@ impl INode for WorldSimNode {
         Self {
             engine,
             accumulator: 0.0,
+            sim_speed: 1.0,
             base,
         }
     }
@@ -125,7 +141,11 @@ impl INode for WorldSimNode {
     /// clamped to one frame so the simulation does not endlessly chase wall
     /// time on a slow frame.
     fn process(&mut self, delta: f64) {
-        self.accumulator += delta;
+        // V7 Section 16-γ — scale wall-time by `sim_speed` before feeding the
+        // accumulator. Only the INPUT to the Gaffer loop is scaled; FIXED_DT
+        // and the MAX_ITERS_PER_FRAME guard below are unchanged, so per-tick
+        // determinism is preserved.
+        self.accumulator += delta * self.sim_speed;
         let mut iters: u32 = 0;
         while self.accumulator >= FIXED_DT && iters < MAX_ITERS_PER_FRAME {
             self.engine.tick();
@@ -140,6 +160,17 @@ impl INode for WorldSimNode {
 
 #[godot_api]
 impl WorldSimNode {
+    /// V7 Section 16-γ — set the simulation-speed multiplier driving the
+    /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
+    /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
+    /// `KEY_1`/`KEY_2`/`KEY_3`/`KEY_4` number keys by `camera_controller.gd`
+    /// (0.25× / 0.5× / 1× / 2×). Pure observability — changes only how often
+    /// `tick()` is called per wall-second, never the fixed timestep.
+    #[func]
+    fn set_sim_speed(&mut self, speed: f64) {
+        self.sim_speed = clamp_sim_speed(speed);
+    }
+
     /// Serialize the current buffer of influence `channel` to a packed byte
     /// array (row-major, `width × height` bytes). Returns an empty array if
     /// the channel index is out of range.

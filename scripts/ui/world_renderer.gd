@@ -99,11 +99,16 @@ const RESOURCE_SEED := 88675123
 # (idempotent guard `_resource_sources_drawn`). No user-facing text → no
 # locale keys. Kind encoding matches the FFI: 0=Food, 1=Water, 2=Sleep.
 const Z_RESOURCE_SOURCE := 4
+# V7 Section 16-γ — fully-saturated, alpha-1.0 marker hues so each kind reads
+# as a distinct bright diamond above the dim decorative scatter (Z_RESOURCE=3).
 const SOURCE_KIND_COLORS: Array = [
-	Color(0.30, 0.85, 0.30, 1.0),  # 0 Food  — green
-	Color(0.30, 0.65, 1.00, 1.0),  # 1 Water — blue
-	Color(0.90, 0.75, 0.30, 1.0),  # 2 Sleep — amber
+	Color(0.10, 1.00, 0.20, 1.0),  # 0 Food  — vivid green
+	Color(0.10, 0.50, 1.00, 1.0),  # 1 Water — vivid blue
+	Color(1.00, 0.70, 0.00, 1.0),  # 2 Sleep — vivid amber
 ]
+# V7 Section 16-γ — diamond half-extent as a fraction of TILE_SIZE. 0.9 makes
+# the marker span ~1.8× a tile — clearly bigger than a 0.25-scaled agent.
+const SOURCE_MARKER_SCALE := 0.9
 var _resource_sources_drawn: bool = false
 
 # V7 Phase 14-β — 5 resource types (Wood / Stone / Berry / Water /
@@ -407,12 +412,14 @@ func _update_construction_sites() -> void:
 				stale.queue_free()
 			_construction_sprites.erase(entity_id)
 
-# V7 Section 16-α0 — draw backend-truth resource SOURCE markers from the
+# V7 Section 16-α0 / γ — draw backend-truth resource SOURCE markers from the
 # SimBridge resource snapshot (Method 1: backend is the source of truth).
 # Source positions are fixed for the run, so this draws once and then
-# guards on `_resource_sources_drawn`. Each marker reuses an existing
-# loaded texture (RESOURCE_SPRITE_PATH) modulated per kind; the decorative
-# RESOURCE_SEED scatter layer (drawn in `_ready`) is left untouched.
+# guards on `_resource_sources_drawn`. γ makes each marker a bright solid
+# Polygon2D diamond (no texture → vivid regardless of any sprite darkness),
+# sized ~1.8× a tile and z-ordered above the decorative scatter so the player
+# can locate the tiles agents seek. The decorative RESOURCE_SEED scatter layer
+# (drawn in `_ready`) is left untouched.
 func _render_resource_sources() -> void:
 	if world_sim == null or _resource_sources_drawn:
 		return
@@ -423,19 +430,20 @@ func _render_resource_sources() -> void:
 	var n: int = min(xs.size(), min(ys.size(), kinds.size()))
 	if n == 0:
 		return
-	var tex: Texture2D = load(RESOURCE_SPRITE_PATH) as Texture2D
-	if tex == null:
-		push_warning("WorldRenderer: failed to load resource source marker at %s" % RESOURCE_SPRITE_PATH)
-		return
+	# Diamond around the tile centre, half-extent SOURCE_MARKER_SCALE × TILE_SIZE.
+	var s: float = float(TILE_SIZE) * SOURCE_MARKER_SCALE
+	var diamond := PackedVector2Array([
+		Vector2(-s, 0.0), Vector2(0.0, -s), Vector2(s, 0.0), Vector2(0.0, s),
+	])
 	for i in n:
 		var k: int = kinds[i]
 		if k < 0 or k >= SOURCE_KIND_COLORS.size():
 			continue
 		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
-		var marker := Sprite2D.new()
-		marker.texture = tex
-		marker.modulate = SOURCE_KIND_COLORS[k]
+		var marker := Polygon2D.new()
+		marker.polygon = diamond
+		marker.color = SOURCE_KIND_COLORS[k]
 		marker.z_index = Z_RESOURCE_SOURCE
 		marker.position = Vector2(px, py)
 		add_child(marker)
