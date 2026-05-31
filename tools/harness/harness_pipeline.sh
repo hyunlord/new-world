@@ -580,15 +580,23 @@ validate_plan_scope_semantic() {
     # Look for backtick-wrapped paths ending in .gd / .rs / .tscn /
     # .gdshader inside the Section 2 block.
     local authorized
+    # G Phase A (2026-05-31) — `grep -oE` exits 1 on no match; under
+    # `set -euo pipefail` an unguarded substitution would silently kill the
+    # whole pipeline (no `die`/FATAL log). Prompts whose Section 2 lists no
+    # backtick file paths, and plans that (correctly) mention no file paths,
+    # both hit this. Trailing `|| true` makes an empty match yield "" instead
+    # of aborting. Mirrors the already-guarded `grep -c . || true` at the
+    # unauthorized-count line below. Root incident: s16-zeta-social-freeze-fix
+    # died silently right after "Drafter validation PASS".
     authorized=$(awk '/^## Section 2: What to Build/{flag=1; next} /^## /{flag=0} flag' "$prompt_file" \
         | grep -oE '`[^`]+\.(gd|rs|tscn|gdshader|gdextension)`' \
         | tr -d '`' \
-        | sort -u)
+        | sort -u || true)
     # Extract file paths mentioned in plan_draft.md.
     local plan_paths
     plan_paths=$(grep -oE '`?\b(scripts|rust|scenes|shaders|localization|assets)/[A-Za-z0-9_/.-]+\.(gd|rs|tscn|gdshader|json)\b' "$plan_file" \
         | tr -d '`' \
-        | sort -u)
+        | sort -u || true)
     # Determine unauthorized = plan_paths - authorized - whitelist.
     # Whitelist categories: harness tests (sim-test/tests/), harness
     # prompts (.harness/), and any path inside `rust/target/`.
