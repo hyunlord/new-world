@@ -1126,9 +1126,15 @@ run_visual_verify() {
     # invisible to file-inspection harness assertions because the
     # static check sees the NEW Rust source, but Godot at runtime
     # binds to the STALE dylib. This guard runs `cargo build -p
-    # sim-bridge` if any sim-bridge .rs file is newer than the dylib,
+    # sim-bridge` if any linked-crate .rs file is newer than the dylib,
     # adding ~5-10 sec to the pipeline only when actually needed.
-    if changed_sim_bridge; then
+    #
+    # G Phase B (2026-05-31) — gate broadened from changed_sim_bridge to
+    # changed_dylib_inputs and the mtime scan widened to all four linked
+    # crates (sim-bridge/core/engine/systems). The cdylib links all of
+    # them, so a sim-systems-only change (Section 16-ζ) previously slipped
+    # past both the gate and the scan, leaving Godot on a pre-ζ binary.
+    if changed_dylib_inputs; then
         local dylib_path="$PROJECT_ROOT/rust/target/debug/libsim_bridge.dylib"
         # macOS .dylib for darwin; .so for linux. Pick whichever the
         # current OS produced.
@@ -1146,15 +1152,27 @@ run_visual_verify() {
             else
                 dylib_mtime=$(stat -c %Y "$dylib_path" 2>/dev/null || echo 0)
             fi
-            # Compare against the newest sim-bridge .rs file
+            # Compare against the newest .rs across EVERY crate the cdylib
+            # statically links — sim-bridge AND its sim-core / sim-engine /
+            # sim-systems dependencies. The original sim-bridge-only scan
+            # missed upstream edits: Section 16-ζ changed agent_decision.rs in
+            # sim-systems, so the cdylib was never rebuilt and windowed Godot
+            # loaded the pre-ζ FFI surface (the already-fixed Social freeze
+            # remained on screen). Keep `2>/dev/null` so a missing dir is inert.
+            local dylib_src_dirs=(
+                "$PROJECT_ROOT/rust/crates/sim-bridge/src"
+                "$PROJECT_ROOT/rust/crates/sim-core/src"
+                "$PROJECT_ROOT/rust/crates/sim-engine/src"
+                "$PROJECT_ROOT/rust/crates/sim-systems/src"
+            )
             local newest_src_mtime
-            newest_src_mtime=$(find "$PROJECT_ROOT/rust/crates/sim-bridge/src" -name '*.rs' -type f -exec stat -f %m {} \; 2>/dev/null | sort -n | tail -1)
+            newest_src_mtime=$(find "${dylib_src_dirs[@]}" -name '*.rs' -type f -exec stat -f %m {} \; 2>/dev/null | sort -n | tail -1)
             if [[ -z "$newest_src_mtime" ]]; then
-                newest_src_mtime=$(find "$PROJECT_ROOT/rust/crates/sim-bridge/src" -name '*.rs' -type f -exec stat -c %Y {} \; 2>/dev/null | sort -n | tail -1)
+                newest_src_mtime=$(find "${dylib_src_dirs[@]}" -name '*.rs' -type f -exec stat -c %Y {} \; 2>/dev/null | sort -n | tail -1)
             fi
             if [[ -n "$newest_src_mtime" && "$newest_src_mtime" -gt "$dylib_mtime" ]]; then
                 should_rebuild=1
-                log "Stale-dylib guard: newest sim-bridge .rs ($newest_src_mtime) > cdylib mtime ($dylib_mtime) — rebuild required"
+                log "Stale-dylib guard: newest linked-crate .rs ($newest_src_mtime) > cdylib mtime ($dylib_mtime) — rebuild required"
             fi
         fi
         if [[ "$should_rebuild" -eq 1 ]]; then
@@ -1631,6 +1649,28 @@ changed_sim_bridge() {
     # scan entire src/ recursively to catch ffi/ submodule additions,
     # not just lib.rs).
     git diff --name-only HEAD -- rust/crates/sim-bridge/src/ 2>/dev/null | grep -q .
+}
+
+# ============================================================
+# HELPER: Detect if ANY crate the Godot cdylib links was modified
+# ============================================================
+# G Phase B (2026-05-31) — the Godot cdylib (libsim_bridge) statically
+# links sim-bridge + sim-core + sim-engine + sim-systems, so a change in
+# ANY of them makes the compiled cdylib stale even when sim-bridge/src is
+# untouched. The narrow changed_sim_bridge() (sim-bridge/src only) still
+# gates the FFI-binding check (line ~1027, a sim-bridge-specific concern);
+# this broader predicate gates the stale-dylib REBUILD guard.
+#
+# Root incident: Section 16-ζ (`037799ca`) changed only sim-systems
+# (agent_decision.rs). changed_sim_bridge was false, the stale-dylib guard
+# was skipped, the cdylib was never rebuilt, and windowed Godot loaded the
+# pre-ζ FFI — the already-fixed Social freeze stayed on screen ("여전히 멈춤").
+changed_dylib_inputs() {
+    git diff --name-only HEAD -- \
+        rust/crates/sim-bridge/src/ \
+        rust/crates/sim-core/src/ \
+        rust/crates/sim-engine/src/ \
+        rust/crates/sim-systems/src/ 2>/dev/null | grep -q .
 }
 
 # ============================================================
