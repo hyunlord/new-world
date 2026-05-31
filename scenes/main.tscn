@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/ui/activity_trail_renderer.gd" id="8_trails"]
 [ext_resource type="Script" path="res://scripts/ui/settlement_overview_renderer.gd" id="9_overview"]
 [ext_resource type="Script" path="res://scripts/ui/zoom_lod_controller.gd" id="10_zoomlod"]
+[ext_resource type="Script" path="res://scripts/ui/seek_viz_renderer.gd" id="11_seekviz"]
 
 [node name="Main" type="Node2D"]
 
@@ -23,6 +24,9 @@ script = ExtResource("3_agents")
 
 [node name="ActivityTrailRenderer" type="Node2D" parent="."]
 script = ExtResource("8_trails")
+
+[node name="SeekVizRenderer" type="Node2D" parent="."]
+script = ExtResource("11_seekviz")
 
 [node name="SettlementOverviewRenderer" type="Node2D" parent="."]
 script = ExtResource("9_overview")

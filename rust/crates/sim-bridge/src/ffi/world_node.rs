@@ -37,8 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, Settlement, Sleep,
-    Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, SeekTarget, Settlement,
+    Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -1184,6 +1184,18 @@ pub struct AgentSnapshotRow {
     /// contract so existing callers (palette swap, click handling) are
     /// untouched.
     pub agent_id: u64,
+    /// V7 Section 16-ε: Seeking need kind — 0=none, 1=Food, 2=Water,
+    /// 3=Sleep. `Seeking{Agent}` / `Seeking{ConstructionSite}` → 0 (they
+    /// are not resource trips); `Idle` / `Consuming{..}` → 0. Carries the
+    /// head-dot / goal-line colour key for `seek_viz_renderer.gd`.
+    pub seek_kind: u8,
+    /// V7 Section 16-ε: `SeekTarget.tile.0` as `i32`, or `-1` when the
+    /// agent has no `SeekTarget` component. The renderer's goal-line guard
+    /// is `target_x >= 0`, so the absent sentinel must be negative.
+    pub target_x: i32,
+    /// V7 Section 16-ε: `SeekTarget.tile.1` as `i32`, or `-1` when the
+    /// agent has no `SeekTarget` component.
+    pub target_y: i32,
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1202,8 +1214,8 @@ pub struct AgentSnapshotRow {
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (agent, pos, maybe_state)) in world
-        .query::<(&Agent, &Position, Option<&AgentState>)>()
+    for (entity, (agent, pos, maybe_state, maybe_seek)) in world
+        .query::<(&Agent, &Position, Option<&AgentState>, Option<&SeekTarget>)>()
         .iter()
     {
         let state_tag: u8 = match maybe_state {
@@ -1211,6 +1223,21 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(AgentState::Seeking { .. }) => 1,
             Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
             Some(AgentState::Consuming { .. }) => 3,
+        };
+        // V7 Section 16-ε — Seeking need kind (resource trips only). State
+        // is the source of truth: Food/Water/Sleep seeks colour-key the
+        // head-dot + goal-line; ConstructionSite/Agent seeks and every
+        // non-Seeking state are 0.
+        let seek_kind: u8 = match maybe_state {
+            Some(AgentState::Seeking { target: TargetKind::Food }) => 1,
+            Some(AgentState::Seeking { target: TargetKind::Water }) => 2,
+            Some(AgentState::Seeking { target: TargetKind::Sleep }) => 3,
+            _ => 0,
+        };
+        // V7 Section 16-ε — goal tile, or the -1 no-SeekTarget sentinel.
+        let (target_x, target_y) = match maybe_seek {
+            Some(st) => (st.tile.0 as i32, st.tile.1 as i32),
+            None => (-1, -1),
         };
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
@@ -1222,6 +1249,9 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             // to the correct rendered row without conflating it with
             // `entity_bits`.
             agent_id: agent.id,
+            seek_kind,
+            target_x,
+            target_y,
         });
     }
     rows
@@ -1285,12 +1315,31 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, row) in rows.iter().enumerate() {
         agent_ids[i] = row.agent_id as i64;
     }
+    // V7 Section 16-ε — three additive parallel arrays carrying the head-dot
+    // / goal-line fields. Built directly from `rows` (NOT routed through
+    // `agent_rows_split`, whose 4-tuple signature is locked by
+    // `harness_p4_gamma_rendering`). Lengths equal `rows.len()` by
+    // construction, matching the existing `ids`/`xs`/`ys`/`states` contract.
+    let mut seek_kinds = PackedByteArray::new();
+    let mut target_xs = PackedInt32Array::new();
+    let mut target_ys = PackedInt32Array::new();
+    seek_kinds.resize(rows.len());
+    target_xs.resize(rows.len());
+    target_ys.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        seek_kinds[i] = row.seek_kind;
+        target_xs[i] = row.target_x;
+        target_ys[i] = row.target_y;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
     dict.set("ys", ys);
     dict.set("states", states);
     dict.set("agent_ids", agent_ids);
+    dict.set("seek_kinds", seek_kinds);
+    dict.set("target_xs", target_xs);
+    dict.set("target_ys", target_ys);
     dict
 }
 
