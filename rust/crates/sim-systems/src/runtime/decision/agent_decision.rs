@@ -52,7 +52,7 @@
 //! ever been recorded on the agent's tile the decision becomes a chain
 //! root (`parent: None`).
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use hecs::World;
 use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId, MemoryRecallTrigger};
@@ -449,6 +449,15 @@ impl RuntimeSystem for AgentDecisionSystem {
         // simply stay `Idle`. V7 Phase 7-β adds `Option<&Social>` for the
         // 5th cascade arm. V7 Phase 8-β adds `Option<&Memory>` for the
         // cascade-bias source.
+        // V7 Section 16-ζ — entities that enter Seeking{Agent} via the SOCIAL
+        // path (natural SocialReason or a memory bias-flip to an Agent target)
+        // are tagged here, the ONE place the decision reason is known. The
+        // Settlement-migration proxy (the `else` branch below) sets the same
+        // Seeking{Agent} state but is deliberately NOT tagged, so the post pass
+        // leaves settlement migrants frozen (P10-γ owns their pathing; p10
+        // birth tests lock that). Robust to fluctuating settlement membership
+        // and independent of loneliness magnitude.
+        let mut social_seek_entities: HashSet<hecs::Entity> = HashSet::new();
         let mut query = world.query::<(
             &Position,
             &Agent,
@@ -459,7 +468,7 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&Social>,
             Option<&Memory>,
         )>();
-        for (_entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt)) in
+        for (entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt)) in
             query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
@@ -884,6 +893,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 target: natural_target,
                             };
                         }
+                        // V7 Section 16-ζ — tag a SOCIAL Seeking{Agent}
+                        // transition. This `if let Some(breached)` arm is the
+                        // needs/construction/social/combat path; the `else`
+                        // below is settlement migration, deliberately left
+                        // untagged so its migrant stays frozen (P10-γ scope).
+                        // Only Agent targets are tagged; Food/Water/Sleep/
+                        // ConstructionSite states do not match the pattern.
+                        if let AgentState::Seeking { target: TargetKind::Agent(_) } = *state {
+                            social_seek_entities.insert(entity);
+                        }
                     } else {
                         // V7 Phase 10-β / P10β-8 — 8th cascade arm:
                         // settlement migration pull. Fires when no
@@ -1165,33 +1184,73 @@ impl RuntimeSystem for AgentDecisionSystem {
         // Runs after the decision loop in the SAME tick, so a target is set
         // the moment Seeking is entered. ConstructionSite/Agent seeks are
         // co-located (not resource tiles) → never get a SeekTarget.
+        // V7 Section 16-ζ — partner-position map (Agent.id → current tile) for
+        // the Social Seeking{Agent} branch below. Lookups only → deterministic.
+        let agent_pos: HashMap<AgentId, (u32, u32)> = world
+            .query::<(&Agent, &Position)>()
+            .iter()
+            .map(|(_, (a, p))| (a.id, (p.x, p.y)))
+            .collect();
+
         let mut seek_set: Vec<(hecs::Entity, (u32, u32))> = Vec::new();
         let mut seek_clear: Vec<hecs::Entity> = Vec::new();
-        for (e, (pos, state, seek_opt)) in world
-            .query::<(&Position, &AgentState, Option<&SeekTarget>)>()
+        for (e, (agent, pos, state, seek_opt)) in world
+            .query::<(&Agent, &Position, &AgentState, Option<&SeekTarget>)>()
             .iter()
         {
-            let tiles = match state {
-                AgentState::Seeking { target: TargetKind::Food } => Some(&resources.food_tiles),
-                AgentState::Seeking { target: TargetKind::Water } => Some(&resources.water_tiles),
-                AgentState::Seeking { target: TargetKind::Sleep } => Some(&resources.sleep_tiles),
-                // Idle / Consuming / Seeking{ConstructionSite|Agent} → no
-                // resource target.
-                _ => None,
-            };
-            match tiles {
-                // Newly seeking a resource and no goal yet → compute one.
-                Some(t) if seek_opt.is_none() => {
-                    if let Some(tile) = nearest_resource_tile(pos, t) {
-                        seek_set.push((e, tile));
+            match state {
+                // Resource seeks: set ONCE, keep stable (α behavior unchanged —
+                // resource tiles are fixed, so never re-target while seeking).
+                AgentState::Seeking { target: TargetKind::Food }
+                | AgentState::Seeking { target: TargetKind::Water }
+                | AgentState::Seeking { target: TargetKind::Sleep } => {
+                    if seek_opt.is_none() {
+                        let t = match state {
+                            AgentState::Seeking { target: TargetKind::Food } => &resources.food_tiles,
+                            AgentState::Seeking { target: TargetKind::Water } => &resources.water_tiles,
+                            _ => &resources.sleep_tiles,
+                        };
+                        if let Some(tile) = nearest_resource_tile(pos, t) {
+                            seek_set.push((e, tile));
+                        }
+                        // None ⇒ empty resource map → skip the attach (no panic).
                     }
-                    // None ⇒ empty resource map → skip the attach (no panic).
+                    // else keep existing (stability).
                 }
-                // Already has a SeekTarget — keep it (stability: do NOT
-                // re-target each tick while still seeking the same resource).
-                Some(_) => {}
-                // No longer seeking a resource → drop any stale goal.
-                None => {
+                // Section 16-ζ — SOCIAL Seeking{Agent} heads toward the partner's
+                // CURRENT tile, RE-RESOLVED every tick (the partner moves, unlike
+                // a fixed resource tile). A seek is SOCIAL iff it was tagged at
+                // its decision THIS tick (`social_seek_entities`) OR it already
+                // carries a SeekTarget from a prior tick — the persistent tag,
+                // since only social seeks ever receive one. The Settlement proxy
+                // is never tagged and never gets a SeekTarget, so it stays frozen
+                // (P10-γ owns its pathing; p10 birth tests lock that). Robust to
+                // fluctuating membership; independent of loneliness magnitude.
+                // Combat never lingers in Seeking{Agent} (direct Idle→Consuming).
+                // Defensive: never chase self / a missing partner.
+                AgentState::Seeking { target: TargetKind::Agent(pid) } => {
+                    let is_social = social_seek_entities.contains(&e) || seek_opt.is_some();
+                    let partner_tile = if is_social && *pid != agent.id {
+                        agent_pos.get(pid).copied()
+                    } else {
+                        None
+                    };
+                    match partner_tile {
+                        Some(tile) => {
+                            if seek_opt.map(|s| s.tile) != Some(tile) {
+                                seek_set.push((e, tile));
+                            }
+                        }
+                        None => {
+                            if seek_opt.is_some() {
+                                seek_clear.push(e);
+                            }
+                        }
+                    }
+                }
+                // ConstructionSite seek (co-located) / Idle / Consuming → no
+                // goal; drop any stale SeekTarget.
+                _ => {
                     if seek_opt.is_some() {
                         seek_clear.push(e);
                     }
