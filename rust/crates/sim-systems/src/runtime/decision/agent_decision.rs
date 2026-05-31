@@ -944,7 +944,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     .settlements
                                     .get(&settlement_id)
                                     .and_then(|s| s.member_agents.iter().min().copied());
-                                if let Some(target_agent) = target_agent_opt {
+                                // V7 Settlement-migration unfreeze (Stage 1):
+                                // P10-γ migration pathing is unimplemented, so a
+                                // Seeking{Agent(member)} transition here carries
+                                // NO SeekTarget and freezes the migrant forever
+                                // (movement.rs suppresses Brownian for every
+                                // Seeking state; no target → no directed step).
+                                // With the scene's 3 startup buildings a
+                                // settlement forms early, so the whole non-member
+                                // population froze (~tick 200; confirmed by
+                                // headless-Godot + cargo reproduction). Record the
+                                // migration INTENT (SettlementReason event —
+                                // preserves p10-β A16 + community-history routing)
+                                // but DO NOT transition the FSM; the non-member
+                                // stays Idle and keeps Brownian motion. P10-γ
+                                // restores the transition with a
+                                // SeekTarget(member tile) + arrival→join.
+                                if target_agent_opt.is_some() {
                                     let id = resources.issue_event_id();
                                     resources.causal_log.push(
                                         tile_idx,
@@ -957,9 +973,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             tick,
                                         },
                                     );
-                                    *state = AgentState::Seeking {
-                                        target: TargetKind::Agent(target_agent),
-                                    };
                                 }
                             }
                         }
