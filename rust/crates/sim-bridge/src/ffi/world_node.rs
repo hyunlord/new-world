@@ -38,7 +38,7 @@ use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, SeekTarget, Settlement,
-    Sleep, Social, TargetKind, Thirst,
+    SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -358,13 +358,19 @@ impl WorldSimNode {
     /// centroid for furniture placement. Returns a `VarDictionary` with
     /// five `PackedArray` keys (`ids`, `settlement_ids`, `centroid_xs`,
     /// `centroid_ys`, `member_counts`) of equal length. Empty arrays
-    /// when no rendered `Settlement` entities exist in the ECS world.
+    /// when `resources.settlements` holds no settlement with a resolvable
+    /// member.
     ///
     /// The `#[func]` body consists solely of forwarding to
-    /// [`collect_settlement_snapshot`] (Bridge Identity Contract).
+    /// [`collect_settlement_snapshot`] (Bridge Identity Contract). The
+    /// `self.engine.world` arg supplies the `(Agent, Position)` lookup; the
+    /// authoritative settlement store is `self.engine.resources.settlements`.
     #[func]
     fn get_settlement_snapshot(&self) -> VarDictionary {
-        let rows = collect_settlement_snapshot(&self.engine.world);
+        let rows = collect_settlement_snapshot(
+            &self.engine.world,
+            &self.engine.resources.settlements,
+        );
         settlement_rows_to_dict(&rows)
     }
 
@@ -1752,13 +1758,20 @@ pub struct SettlementSnapshotRow {
 /// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
 /// joining each Settlement to its member agents' Positions.
 ///
-/// Iterates every `Settlement` entity in the ECS world, then for each
-/// settlement averages the `Position` of every member agent that is
-/// resolvable via the `(Agent, Position)` join. Settlements whose
-/// `member_agents` set is empty OR whose members are all stale (not
-/// present as `(Agent, Position)` in the world) are skipped — emitting
-/// them would require dividing by zero.
-pub fn collect_settlement_snapshot(world: &hecs::World) -> Vec<SettlementSnapshotRow> {
+/// Iterates the authoritative `resources.settlements` store (a
+/// `HashMap<SettlementId, Settlement>` — settlements are NEVER spawned as
+/// ECS world entities), then for each settlement averages the `Position` of
+/// every member agent resolvable via the `world` `(Agent, Position)` join.
+/// Settlements whose `member_agents` set is empty OR whose members are all
+/// stale (not present as `(Agent, Position)` in the world) are skipped —
+/// emitting them would require dividing by zero. `entity_bits` carries
+/// `settlement_id` (no ECS entity exists; the field is only a stable unique
+/// key downstream). Rows are returned sorted by `settlement_id` for
+/// deterministic ordering across runs.
+pub fn collect_settlement_snapshot(
+    world: &hecs::World,
+    settlements: &std::collections::HashMap<SettlementId, Settlement>,
+) -> Vec<SettlementSnapshotRow> {
     // First pass: build an `Agent.id` → `(x, y)` lookup. Settlement
     // members are referenced by AgentId, not hecs::Entity, so this
     // intermediate index is required.
@@ -1769,7 +1782,7 @@ pub fn collect_settlement_snapshot(world: &hecs::World) -> Vec<SettlementSnapsho
     }
 
     let mut rows = Vec::new();
-    for (entity, settlement) in world.query::<&Settlement>().iter() {
+    for settlement in settlements.values() {
         let mut sum_x: u64 = 0;
         let mut sum_y: u64 = 0;
         let mut count: u32 = 0;
@@ -1786,13 +1799,17 @@ pub fn collect_settlement_snapshot(world: &hecs::World) -> Vec<SettlementSnapsho
         let centroid_x = (sum_x / count as u64) as i32;
         let centroid_y = (sum_y / count as u64) as i32;
         rows.push(SettlementSnapshotRow {
-            entity_bits: entity.to_bits().get(),
+            entity_bits: settlement.settlement_id as u64,
             settlement_id: settlement.settlement_id,
             centroid_x,
             centroid_y,
             member_count: count,
         });
     }
+    // HashMap iteration order is not stable run-to-run; sort by the unique
+    // settlement_id so the snapshot is deterministic (Day-1 invariant +
+    // stable furniture-sprite keying downstream).
+    rows.sort_by_key(|r| r.settlement_id);
     rows
 }
 

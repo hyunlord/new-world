@@ -14,12 +14,13 @@
 //!
 //! Plan locked thresholds: see plan_final.md for this feature.
 
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
 use hecs::World;
 use sim_bridge::ffi::{collect_settlement_snapshot, SettlementSnapshotRow};
-use sim_core::components::{Agent, Position, Settlement};
+use sim_core::components::{Agent, Position, Settlement, SettlementId};
 
 // ── helpers ───────────────────────────────────────────────────────────────
 
@@ -145,22 +146,24 @@ fn harness_p12_gamma_a2_snapshot_row_struct_has_five_required_fields() {
     println!("[P12-γ A2] all 5 SettlementSnapshotRow fields present ✓");
 }
 
-// ─── Assertion 3: collector_queries_settlement_and_agent_position ─────────
+// ─── Assertion 3: collector_iterates_settlement_store_and_agent_position ──
 #[test]
 fn harness_p12_gamma_a3_collector_queries_settlement_and_agent_position() {
-    // Type: A — collector source contains BOTH a `Settlement` component
-    // query AND an `(Agent, Position)` join query.
+    // Type: A — RE-POINTED (fix-settlements-zero-hud). The collector no longer
+    // queries the always-empty world `Settlement` table; it iterates the
+    // authoritative `resources.settlements` store. A3.1 now asserts that
+    // `settlements.values()` iteration; A3.2's `(Agent, Position)` join is
+    // unchanged.
     let src = read_file(WORLD_NODE_PATH);
     let stripped = strip_rs_comments(&src);
 
-    // Settlement query — accept either `query::<&Settlement>` or
-    // `query::<(&Settlement, ...)>` variants.
-    let settlement_query_present = stripped.contains("query::<&Settlement>")
-        || stripped.contains("query::<(&Settlement");
+    // Settlement store iteration — replaces the removed world query.
+    let settlement_iter_present = stripped.contains("settlements.values()");
     assert!(
-        settlement_query_present,
-        "A3.1: collector must contain a `Settlement` component query \
-         (e.g. `query::<&Settlement>` or `query::<(&Settlement, …)>`)"
+        settlement_iter_present,
+        "A3.1: collector must iterate the settlement store \
+         (`settlements.values()`) — the always-empty world `query::<&Settlement>` \
+         was the bug and is removed"
     );
 
     // (Agent, Position) join query — whitespace-tolerant.
@@ -281,9 +284,12 @@ fn harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership(
     for &aid in agent_ids.iter() {
         settlement.add_member_agent(aid);
     }
-    let settlement_entity = world.spawn((settlement,));
+    // Re-pointed: settlements live in `resources.settlements`
+    // (HashMap<SettlementId, Settlement>), NOT as ECS world entities.
+    let mut settlements: HashMap<SettlementId, Settlement> = HashMap::new();
+    settlements.insert(settlement.settlement_id, settlement);
 
-    let rows: Vec<SettlementSnapshotRow> = collect_settlement_snapshot(&world);
+    let rows: Vec<SettlementSnapshotRow> = collect_settlement_snapshot(&world, &settlements);
 
     assert_eq!(rows.len(), 1, "A6.1: expected 1 settlement row; got {}", rows.len());
     let row = rows[0];
@@ -312,8 +318,9 @@ fn harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership(
     );
     assert_eq!(
         row.entity_bits,
-        settlement_entity.to_bits().get(),
-        "A6.6: entity_bits must equal the spawned Settlement entity's bits"
+        7u64,
+        "A6.6: entity_bits must equal settlement_id (7) — no ECS entity exists for a \
+         HashMap-sourced settlement; the field remains a stable unique downstream key"
     );
     println!("[P12-γ A6] centroid + member_count + ids correct ✓");
 }
@@ -322,11 +329,13 @@ fn harness_p12_gamma_a6_collector_returns_correct_centroid_for_known_membership(
 #[test]
 fn harness_p12_gamma_a7_zero_member_settlement_produces_no_row() {
     // Type: A — Settlement with empty member_agents must be skipped.
-    let mut world = World::new();
+    // Re-pointed: settlement lives in the HashMap store; world is empty.
+    let world = World::new();
     let empty_settlement = Settlement::new_with_id(99, 0);
-    world.spawn((empty_settlement,));
+    let mut settlements: HashMap<SettlementId, Settlement> = HashMap::new();
+    settlements.insert(empty_settlement.settlement_id, empty_settlement);
 
-    let rows = collect_settlement_snapshot(&world);
+    let rows = collect_settlement_snapshot(&world, &settlements);
     assert_eq!(
         rows.len(),
         0,
@@ -348,9 +357,11 @@ fn harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled() {
     let mut settlement = Settlement::new_with_id(11, 0);
     settlement.add_member_agent(501); // resolvable
     settlement.add_member_agent(9999); // stale — no Agent with this id
-    world.spawn((settlement,));
+    // Re-pointed: settlement lives in the HashMap store; agents stay in world.
+    let mut settlements: HashMap<SettlementId, Settlement> = HashMap::new();
+    settlements.insert(settlement.settlement_id, settlement);
 
-    let rows = collect_settlement_snapshot(&world);
+    let rows = collect_settlement_snapshot(&world, &settlements);
     assert_eq!(rows.len(), 1, "A8.1: expected 1 row; got {}", rows.len());
     let row = rows[0];
     assert_eq!(
