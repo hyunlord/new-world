@@ -69,6 +69,8 @@ use sim_core::components::{
 };
 use sim_engine::{RuntimeSystem, SimResources};
 
+use crate::runtime::agent::MovementRng;
+
 /// `(BuildingId, (x, y))` pair — one entry per known building. Used by the
 /// formation scan + membership sync as a flat, copy-cheap view of
 /// `SimResources::building_registry`.
@@ -87,6 +89,17 @@ type BuildingSnapshot = (BuildingPosList, BuildingPosList);
 /// the harness window while still exercising the birth path multiple
 /// times in a 1000-tick smoke run.
 pub const BIRTH_COOLDOWN_TICKS: u64 = 200;
+
+// V7 Stage 1.5 — newborn need growth rates + movement seed. Mirror the
+// bootstrap rates (BOOTSTRAP_HUNGER_RATE etc. in sim-bridge world_node.rs);
+// duplicated as local consts because that crate depends on sim-systems and
+// cannot be imported here. Keep in sync with the bootstrap rates.
+const BIRTH_HUNGER_RATE: f32 = 0.05;
+const BIRTH_THIRST_RATE: f64 = 0.08;
+const BIRTH_SLEEP_RATE: f64 = 0.03;
+const BIRTH_SOCIAL_RATE: f64 = 0.04;
+/// Salt so a newborn's Brownian stream does not alias a bootstrap agent's.
+const BIRTH_RNG_SALT: u64 = 0xB117_0000_5EED_0001;
 
 /// Chebyshev distance between two tile coordinates.
 fn chebyshev(a: (u32, u32), b: (u32, u32)) -> u32 {
@@ -565,14 +578,25 @@ impl SettlementSystem {
                 Position::new(spawn_pos.0, spawn_pos.1),
                 Agent { id: new_agent_id },
             ));
+            // V7 Stage 1.5 — match bootstrap's component set so the newborn can
+            // move (MovementRng → AgentMovementSystem iterates it) and its needs
+            // rise so it joins the Seeking→Consuming loop. Seed derived
+            // deterministically from the unique new_agent_id (splitmix64
+            // multiply + birth salt) → reproducible, and distinct from
+            // bootstrap streams. Initial need values stay 0.0 (newborn not
+            // hungry at birth; births are time-staggered by the cooldown).
+            let birth_seed = new_agent_id
+                .wrapping_mul(0x9E37_79B9_7F4A_7C15)
+                .wrapping_add(BIRTH_RNG_SALT);
             let _ = world.insert(
                 entity,
                 (
+                    MovementRng::new(birth_seed),
                     AgentState::Idle,
-                    Hunger::new(0.0, 0.0),
-                    Thirst::new(0.0, 0.0),
-                    Sleep::new(0.0, 0.0),
-                    Social::new(0.0, 0.0),
+                    Hunger::new(0.0, BIRTH_HUNGER_RATE),
+                    Thirst::new(0.0, BIRTH_THIRST_RATE),
+                    Sleep::new(0.0, BIRTH_SLEEP_RATE),
+                    Social::new(0.0, BIRTH_SOCIAL_RATE),
                     Memory::new(),
                 ),
             );
