@@ -58,7 +58,7 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, Position,
-    SeekTarget, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
+    SeekTarget, SettlementMigrant, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
@@ -444,6 +444,22 @@ impl RuntimeSystem for AgentDecisionSystem {
             map
         };
 
+        // V7 Phase 10-γ — live agent-id → tile snapshot, built BEFORE the main
+        // query so the (borrowed) migration arm can (a) pick the nearest
+        // settlement member by Manhattan distance and (b) test whether a target
+        // member's ENTITY still exists. (b) is load-bearing: a despawned member
+        // can leave a stale `member_agents` roster entry behind; without the
+        // live-entity check the abort gate would read `target_alive == true`,
+        // keep the migrant in Seeking{Agent}, yet the post-pass
+        // `agent_pos.get(pid)` would return `None` and clear the SeekTarget —
+        // re-creating the exact target-less Seeking{Agent} freeze Stage 1 fixed.
+        // A missing key ⇒ vanished target ⇒ abort. Lookups only → deterministic.
+        let agent_positions: HashMap<AgentId, (u32, u32)> = world
+            .query::<(&Agent, &Position)>()
+            .iter()
+            .map(|(_, (a, p))| (a.id, (p.x, p.y)))
+            .collect();
+
         // Per-agent FSM evaluation. We pull `Hunger` / `Thirst` as
         // optional so non-need-carrying agents are still observed and
         // simply stay `Idle`. V7 Phase 7-β adds `Option<&Social>` for the
@@ -458,6 +474,20 @@ impl RuntimeSystem for AgentDecisionSystem {
         // birth tests lock that). Robust to fluctuating settlement membership
         // and independent of loneliness magnitude.
         let mut social_seek_entities: HashSet<hecs::Entity> = HashSet::new();
+        // V7 Phase 10-γ — settlement-migration FSM wiring.
+        // `settlement_migrant_tag`: entities that ENTERED Seeking{Agent} via the
+        //   migration `else` arm THIS tick (used by the post-pass to route them
+        //   to the member tile before the persistent marker is inserted).
+        // `migrant_clear`: marker-carrying migrants that exit migration this tick
+        //   (joined / target vanished / need-preempted) — marker removed post-pass.
+        // `preempt_clear_seek`: migrants preempted by a higher-priority need —
+        //   their stale Agent-target SeekTarget is removed BEFORE the post-pass so
+        //   the resource branch re-resolves a fresh goal (or leaves none).
+        // All three are used only for `.contains()` / per-entity insert/remove
+        // (order-independent → determinism preserved).
+        let mut settlement_migrant_tag: HashSet<hecs::Entity> = HashSet::new();
+        let mut migrant_clear: Vec<hecs::Entity> = Vec::new();
+        let mut preempt_clear_seek: Vec<hecs::Entity> = Vec::new();
         let mut query = world.query::<(
             &Position,
             &Agent,
@@ -467,9 +497,12 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Sleep>,
             Option<&Social>,
             Option<&Memory>,
+            Option<&SettlementMigrant>,
         )>();
-        for (entity, (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt)) in
-            query.iter()
+        for (
+            entity,
+            (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt, migrant_marker),
+        ) in query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
             match *state {
@@ -925,60 +958,143 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .values()
                             .any(|s| s.member_agents.contains(&agent.id));
                         if !is_member {
-                            // Find lowest-id settlement with capacity that has
-                            // at least one member to use as a proxy target.
-                            let mut candidate_ids: Vec<sim_core::components::SettlementId> =
-                                resources
-                                    .settlements
-                                    .iter()
-                                    .filter(|(_, s)| {
-                                        s.population_stats.current
-                                            < sim_core::components::SETTLEMENT_MAX_POP
-                                            && !s.member_agents.is_empty()
-                                    })
-                                    .map(|(id, _)| *id)
-                                    .collect();
-                            candidate_ids.sort();
-                            if let Some(settlement_id) = candidate_ids.first().copied() {
-                                let target_agent_opt = resources
-                                    .settlements
-                                    .get(&settlement_id)
-                                    .and_then(|s| s.member_agents.iter().min().copied());
-                                // V7 Settlement-migration unfreeze (Stage 1):
-                                // P10-γ migration pathing is unimplemented, so a
-                                // Seeking{Agent(member)} transition here carries
-                                // NO SeekTarget and freezes the migrant forever
-                                // (movement.rs suppresses Brownian for every
-                                // Seeking state; no target → no directed step).
-                                // With the scene's 3 startup buildings a
-                                // settlement forms early, so the whole non-member
-                                // population froze (~tick 200; confirmed by
-                                // headless-Godot + cargo reproduction). Record the
-                                // migration INTENT (SettlementReason event —
-                                // preserves p10-β A16 + community-history routing)
-                                // but DO NOT transition the FSM; the non-member
-                                // stays Idle and keeps Brownian motion. P10-γ
-                                // restores the transition with a
-                                // SeekTarget(member tile) + arrival→join.
-                                if target_agent_opt.is_some() {
-                                    let id = resources.issue_event_id();
-                                    resources.causal_log.push(
-                                        tile_idx,
-                                        CausalEvent::AgentDecision {
-                                            id,
-                                            parent: None,
-                                            agent: agent.id,
-                                            position: (pos.x, pos.y),
-                                            reason: DecisionReason::SettlementReason,
-                                            tick,
-                                        },
-                                    );
-                                }
+                            // V7 Phase 10-γ — nearest-member target selection.
+                            // Among all LIVE members of capacity-bearing,
+                            // non-empty settlements, pick the Manhattan-nearest
+                            // member to the migrant's current tile, tie-broken by
+                            // the member tile's (x, y) lexicographic order
+                            // (mirrors `nearest_resource_tile`) with the member
+                            // AgentId as a final deterministic disambiguator for
+                            // the same-tile case. Independent of settlement-id /
+                            // member-id iteration order — a nearer settlement
+                            // always wins (the prior lowest-id pick could route a
+                            // migrant clear across the map past a closer one).
+                            // Stale roster ids (no live position) are skipped, so
+                            // an empty / all-dead candidate set yields None and
+                            // the agent stays Idle (no garbage target, no panic).
+                            let target_agent_opt: Option<AgentId> = resources
+                                .settlements
+                                .values()
+                                .filter(|s| {
+                                    s.population_stats.current
+                                        < sim_core::components::SETTLEMENT_MAX_POP
+                                        && !s.member_agents.is_empty()
+                                })
+                                .flat_map(|s| s.member_agents.iter().copied())
+                                .filter_map(|mid| {
+                                    agent_positions.get(&mid).map(|tile| (mid, *tile))
+                                })
+                                .min_by_key(|(mid, (mx, my))| {
+                                    let dx = (*mx as i64 - pos.x as i64).abs();
+                                    let dy = (*my as i64 - pos.y as i64).abs();
+                                    (dx + dy, *mx, *my, *mid)
+                                })
+                                .map(|(mid, _)| mid);
+                            // Record the migration INTENT (SettlementReason event
+                            // — preserves p10-β A16 + community-history routing),
+                            // THEN restore the FSM transition Stage 1 removed: the
+                            // non-member enters Seeking{Agent(member)} and is
+                            // tagged so the post-decision pass attaches a
+                            // SeekTarget at the member's current tile (re-resolved
+                            // every tick, reusing the ζ pass). The unchanged β
+                            // movement.rs walks it toward the member; the existing
+                            // proximity-join refresh auto-admits it. A persistent
+                            // SettlementMigrant marker (inserted after the
+                            // post-pass) lets the Seeking{Agent} arm exit on join
+                            // / abort. Stage-1's targetless freeze is gone — the
+                            // migrant always carries a SeekTarget while seeking.
+                            if let Some(target_agent) = target_agent_opt {
+                                let id = resources.issue_event_id();
+                                resources.causal_log.push(
+                                    tile_idx,
+                                    CausalEvent::AgentDecision {
+                                        id,
+                                        parent: None,
+                                        agent: agent.id,
+                                        position: (pos.x, pos.y),
+                                        reason: DecisionReason::SettlementReason,
+                                        tick,
+                                    },
+                                );
+                                *state = AgentState::Seeking {
+                                    target: TargetKind::Agent(target_agent),
+                                };
+                                settlement_migrant_tag.insert(entity);
                             }
                         }
                     }
                 }
                 AgentState::Seeking { target } => {
+                    // V7 Phase 10-γ — settlement-migrant exit/preemption gate.
+                    // Runs BEFORE the mutual-handshake logic. The Seeking{Agent}
+                    // arm has NO automatic exit (a settlement member does not seek
+                    // the migrant back), so without this gate a migrant would be
+                    // stuck in Seeking forever even after the proximity join makes
+                    // it a member. Gated on the persistent SettlementMigrant marker
+                    // so ζ social seekers (no marker) are untouched.
+                    if let TargetKind::Agent(pid) = target {
+                        if migrant_marker.is_some() {
+                            let is_member = resources
+                                .settlements
+                                .values()
+                                .any(|s| s.member_agents.contains(&agent.id));
+                            // `target_alive`: the specific target member is still a
+                            // member of SOME settlement (settlement not dissolved /
+                            // member not removed from the roster) AND its entity is
+                            // still live in the world. The live-entity conjunct is
+                            // load-bearing: a despawned member can leave a stale
+                            // `member_agents` entry, and without the `live_agent_ids`
+                            // check the migrant would keep Seeking a target whose
+                            // tile the post-pass can no longer resolve → frozen.
+                            let target_alive = agent_positions.contains_key(&pid)
+                                && resources
+                                    .settlements
+                                    .values()
+                                    .any(|s| s.member_agents.contains(&pid));
+                            // Higher-priority needs preempt the lowest-priority
+                            // migration arm mid-path (Hunger > Thirst > Fatigue).
+                            let hunger_breach = hunger_opt
+                                .as_ref()
+                                .is_some_and(|h| h.value > HUNGER_THRESHOLD);
+                            let thirst_breach = thirst_opt
+                                .as_ref()
+                                .is_some_and(|t| t.value > THIRST_THRESHOLD);
+                            let fatigue_breach = sleep_opt
+                                .as_ref()
+                                .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD);
+
+                            if is_member || !target_alive {
+                                // Joined, or the target vanished → abort to Idle.
+                                // The post-pass clears the (now stale) SeekTarget;
+                                // the marker is removed in the deferred lifecycle
+                                // loop. No chase, no freeze.
+                                *state = AgentState::Idle;
+                                migrant_clear.push(entity);
+                                continue;
+                            } else if hunger_breach || thirst_breach || fatigue_breach {
+                                // Preempt: drop the migration, switch to the
+                                // higher-priority resource seek. Clear the marker
+                                // AND force-remove the stale Agent-target SeekTarget
+                                // (before the post-pass) so the resource branch
+                                // re-resolves a fresh goal next.
+                                let resource = if hunger_breach {
+                                    TargetKind::Food
+                                } else if thirst_breach {
+                                    TargetKind::Water
+                                } else {
+                                    TargetKind::Sleep
+                                };
+                                *state = AgentState::Seeking { target: resource };
+                                migrant_clear.push(entity);
+                                preempt_clear_seek.push(entity);
+                                continue;
+                            }
+                            // else: still migrating → fall through to the handshake
+                            // logic (a no-op for a non-reciprocated member target,
+                            // so the migrant stays Seeking and keeps walking via the
+                            // post-pass SeekTarget).
+                        }
+                    }
                     let key = (pos.x, pos.y);
                     let has_resource = match target {
                         TargetKind::Food => resources
@@ -1189,6 +1305,15 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         drop(query); // release the &mut World borrow before the SeekTarget pass
 
+        // V7 Phase 10-γ — preempted migrants: remove the stale Agent-target
+        // SeekTarget BEFORE the post-pass so the resource branch sees
+        // `seek_opt.is_none()` and re-resolves a fresh resource goal (the new
+        // state is Seeking{Food/Water/Sleep}). Done here, not in the post-pass,
+        // precisely so the resource set-once attach fires this same tick.
+        for e in &preempt_clear_seek {
+            let _ = world.remove_one::<SeekTarget>(*e);
+        }
+
         // V7 Section 16-α — SeekTarget post-decision pass. Assign the nearest
         // matching resource tile to any agent now Seeking{Food/Water/Sleep}
         // that lacks a SeekTarget; clear SeekTarget from any agent no longer
@@ -1207,8 +1332,14 @@ impl RuntimeSystem for AgentDecisionSystem {
 
         let mut seek_set: Vec<(hecs::Entity, (u32, u32))> = Vec::new();
         let mut seek_clear: Vec<hecs::Entity> = Vec::new();
-        for (e, (agent, pos, state, seek_opt)) in world
-            .query::<(&Agent, &Position, &AgentState, Option<&SeekTarget>)>()
+        for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
+            .query::<(
+                &Agent,
+                &Position,
+                &AgentState,
+                Option<&SeekTarget>,
+                Option<&SettlementMigrant>,
+            )>()
             .iter()
         {
             match state {
@@ -1242,8 +1373,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                 // Combat never lingers in Seeking{Agent} (direct Idle→Consuming).
                 // Defensive: never chase self / a missing partner.
                 AgentState::Seeking { target: TargetKind::Agent(pid) } => {
-                    let is_social = social_seek_entities.contains(&e) || seek_opt.is_some();
-                    let partner_tile = if is_social && *pid != agent.id {
+                    // V7 Phase 10-γ — explicit two-way classification. A migrant
+                    // (this-tick tag OR the persistent marker) and a social seeker
+                    // (this-tick social tag OR a pre-existing SeekTarget) both route
+                    // to the partner's CURRENT tile (re-resolved every tick), but
+                    // the migrant classification takes precedence — the marker is
+                    // the authoritative discriminator now that BOTH seek kinds carry
+                    // a SeekTarget. The Settlement proxy is no longer left frozen.
+                    let is_migrant =
+                        settlement_migrant_tag.contains(&e) || migrant_marker.is_some();
+                    let is_social =
+                        !is_migrant && (social_seek_entities.contains(&e) || seek_opt.is_some());
+                    let partner_tile = if (is_migrant || is_social) && *pid != agent.id {
                         agent_pos.get(pid).copied()
                     } else {
                         None
@@ -1275,6 +1416,19 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         for e in seek_clear {
             let _ = world.remove_one::<SeekTarget>(e);
+        }
+
+        // V7 Phase 10-γ — SettlementMigrant marker lifecycle (deferred, after
+        // the SeekTarget pass). Insert the marker for every entity that entered
+        // the migration arm this tick (idempotent — `settlement_migrant_tag`
+        // only ever holds this-tick transitions, so no per-tick churn); remove
+        // it for every migrant that joined / aborted / was need-preempted.
+        // Per-entity insert/remove is order-independent → determinism preserved.
+        for e in &settlement_migrant_tag {
+            let _ = world.insert_one(*e, SettlementMigrant);
+        }
+        for e in &migrant_clear {
+            let _ = world.remove_one::<SettlementMigrant>(*e);
         }
     }
 }

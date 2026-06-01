@@ -31,8 +31,8 @@ use hecs::Entity;
 use sim_bridge::ffi::world_node::{bootstrap_spawn_agents, enqueue_building_placed};
 use sim_core::causal::event::{CausalEvent, DecisionReason};
 use sim_core::components::{
-    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, Sleep, Social, TargetKind,
-    Thirst,
+    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, SettlementMigrant, Sleep,
+    Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
@@ -228,13 +228,18 @@ fn harness_mig_unfreeze_a1_settlement_forms() {
     println!("[mig-unfreeze A1] {n} settlement(s) formed from founders + startup buildings ✓");
 }
 
-// ─── Assertion 2: non-member outsider stays Idle, no SeekTarget ─────────────
+// ─── Assertion 2: non-member outsider walks toward the settlement (P10-γ) ───
 #[test]
-fn harness_mig_unfreeze_a2_outsider_stays_idle() {
-    // Type A — direct FSM invariant of the fix: the settlement-migration arm no
-    // longer performs `*state = Seeking{Agent}`, so an outsider that reaches the
-    // arm must remain Idle. Conjunct (2) NO SeekTarget rules out the
-    // out-of-scope "make migration work" alternative (which would attach one).
+fn harness_mig_unfreeze_a2_outsider_paths_not_frozen() {
+    // Type A — UPDATED for V7 Phase 10-γ. Stage 1 disabled the migration FSM
+    // transition (outsider stayed Idle, "migration movement disabled in Stage 1").
+    // P10-γ restores it WITH a SeekTarget, so an outsider that reaches the arm now
+    // transitions to Seeking{Agent(member)}, carries the SettlementMigrant marker,
+    // and has a SeekTarget — a directed goal, so it WALKS rather than freezing.
+    // The anti-freeze guarantee shifts from "stays Idle (Brownian)" to "Seeking
+    // WITH a target (directed walk)"; the long-run guards A5a/A5b/A5c confirm the
+    // no-freeze property holds at scale (A5a counts only TARGETLESS seeks → 0,
+    // since migrants now always carry a target).
     let mut e = fresh_engine();
     form_settlement(&mut e);
     assert!(
@@ -244,16 +249,23 @@ fn harness_mig_unfreeze_a2_outsider_stays_idle() {
 
     let outsider = seed_outsider(&mut e, 50, 50, SOCIAL_THRESHOLD - 1.0, 901);
     e.tick(); // decision tick
-    assert_eq!(
-        agent_state(&e, outsider),
-        AgentState::Idle,
-        "A2: non-member outsider must stay Idle (NOT Seeking{{Agent}}) after the fix"
+    assert!(
+        matches!(
+            agent_state(&e, outsider),
+            AgentState::Seeking { target: TargetKind::Agent(_) }
+        ),
+        "A2: P10-γ — non-member outsider transitions to Seeking{{Agent(member)}} (walks)"
     );
     assert!(
-        seek_tile(&e, outsider).is_none(),
-        "A2: outsider must carry NO SeekTarget (migration movement is disabled in Stage 1)"
+        e.world.get::<&SettlementMigrant>(outsider).is_ok(),
+        "A2: outsider must carry the SettlementMigrant marker"
     );
-    println!("[mig-unfreeze A2] non-member outsider stays Idle, no SeekTarget ✓");
+    assert!(
+        seek_tile(&e, outsider).is_some(),
+        "A2: outsider must carry a SeekTarget (the member tile) — a directed goal means \
+         it WALKS, not freezes (the Stage-1 targetless-Seeking freeze is gone)"
+    );
+    println!("[mig-unfreeze A2] P10-γ non-member outsider transitions to Seeking{{Agent}} + marker + SeekTarget (walks) ✓");
 }
 
 // ─── Assertion 3: SettlementReason intent event still emitted for outsider ──

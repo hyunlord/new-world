@@ -49,6 +49,7 @@ pub mod position;
 pub mod relationship;
 pub mod seek_target;
 pub mod settlement;
+pub mod settlement_migrant;
 pub mod sleep;
 pub mod social;
 pub mod thirst;
@@ -67,6 +68,7 @@ pub use settlement::{
     SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_FORMATION_BUILDING_THRESHOLD,
     SETTLEMENT_HISTORY_CAP, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
+pub use settlement_migrant::SettlementMigrant;
 pub use sleep::Sleep;
 pub use social::Social;
 pub use thirst::Thirst;

@@ -29,8 +29,8 @@ use hecs::Entity;
 use sim_bridge::ffi::world_node::bootstrap_spawn_agents;
 use sim_core::causal::event::{CausalEvent, DecisionReason};
 use sim_core::components::{
-    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, Sleep, Social, TargetKind,
-    Thirst,
+    Agent, AgentId, AgentState, Hunger, Memory, Position, SeekTarget, SettlementMigrant, Sleep,
+    Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
@@ -312,17 +312,21 @@ fn harness_s16_zeta_a3_partner_seektarget_reresolves() {
     println!("[S16-ζ A3] partner moved (10,5)→(10,8); seeker SeekTarget re-resolved ✓");
 }
 
-// ─── Assertion 4: settlement migrant (loneliness < thr) stays Idle, unfrozen ─
+// ─── Assertion 4: settlement migrant walks (P10-γ restored transition) ──────
 #[test]
-fn harness_s16_zeta_a4_settlement_migrant_no_target_regression_guard() {
-    // Type D — THE Stage-1 unfreeze regression guard. A non-member migrant that
-    // reaches the Settlement-migration arm (loneliness pinned strictly BELOW
-    // threshold, needs 0) must STAY Idle — the Stage-1 fix records the migration
-    // INTENT (SettlementReason event) but removes the Seeking{Agent} transition
-    // (P10-γ pathing unimplemented), so the migrant keeps Brownian motion and
-    // does NOT freeze. THREE conjuncts: (1) AgentState == Idle, (2) NO SeekTarget,
-    // (3) POSITIVE arm-entry proof (the migrant's own SettlementReason event) so
-    // "stays Idle" is not vacuously satisfied by the arm never firing.
+fn harness_s16_zeta_a4_settlement_migrant_paths_not_frozen() {
+    // Type D — UPDATED for V7 Phase 10-γ (settlement-migration pathing). Stage 1
+    // made this arm a NO-OP (migrant stayed Idle, "P10-γ pathing unimplemented");
+    // P10-γ RESTORES the transition with a SeekTarget so the migrant WALKS instead
+    // of freezing. A non-member migrant that reaches the Settlement-migration arm
+    // (loneliness pinned strictly BELOW threshold, needs 0) must now transition to
+    // Seeking{Agent(member)} WITH a persistent SettlementMigrant marker AND a
+    // SeekTarget at the member's tile — i.e. it has a directed goal and is NOT
+    // frozen (the targetless-Seeking{Agent} freeze that Stage 1 prevented by
+    // staying Idle is now prevented by attaching a goal). THREE conjuncts:
+    // (1) Seeking{Agent}, (2) SeekTarget present (anti-freeze: a goal to walk to),
+    // (3) POSITIVE arm-entry proof (the migrant's own SettlementReason event), so
+    // the transition is not vacuously satisfied by the arm never firing.
     let mut e = fresh_engine();
     let cx = 20u32;
     let cy = 20u32;
@@ -351,24 +355,29 @@ fn harness_s16_zeta_a4_settlement_migrant_no_target_regression_guard() {
         "A4 precondition: migrant loneliness must be below the social breach constant"
     );
 
-    e.tick(); // decision: SettlementReason intent fires, NO Seeking transition
-    assert_eq!(
-        agent_state(&e, migrant),
-        AgentState::Idle,
-        "A4: settlement migrant stays Idle — Stage-1 unfreeze removed the Seeking{{Agent}} \
-         transition (P10-γ pathing unimplemented), so the migrant keeps Brownian motion"
+    e.tick(); // decision: SettlementReason intent + Seeking{Agent} transition (P10-γ)
+    assert!(
+        matches!(
+            agent_state(&e, migrant),
+            AgentState::Seeking { target: TargetKind::Agent(_) }
+        ),
+        "A4: P10-γ — settlement migrant transitions to Seeking{{Agent(member)}} (walks)"
     );
     assert!(
-        seek_tile(&e, migrant).is_none(),
-        "A4: settlement migrant must have NO SeekTarget"
+        e.world.get::<&SettlementMigrant>(migrant).is_ok(),
+        "A4: migrant must carry the SettlementMigrant marker"
+    );
+    assert!(
+        seek_tile(&e, migrant).is_some(),
+        "A4: settlement migrant must have a SeekTarget (the member tile) — a directed \
+         goal means it WALKS, not freezes (the Stage-1 targetless-freeze is gone)"
     );
     assert!(
         count_settlement_reason(&e, migrant_id) >= 1,
         "A4: settlement-migration arm MUST have fired (migrant's own SettlementReason \
-         event present) — proves the migrant reached the arm and stayed Idle, not \
-         vacuously idle because the arm never executed"
+         event present) — proves the migrant reached the arm, not vacuously"
     );
-    println!("[S16-ζ A4] settlement migrant (loneliness<thr) stays Idle (unfrozen), no SeekTarget, arm entered ✓");
+    println!("[S16-ζ A4] P10-γ settlement migrant transitions to Seeking{{Agent}} + marker + SeekTarget (walks, not frozen) ✓");
 }
 
 // ─── Assertion 5: manually-placed untagged Seeking{Agent} → no target ──────
@@ -736,20 +745,19 @@ fn harness_s16_zeta_a13_partner_despawn_clearing() {
     println!("[S16-ζ A13] partner-despawn → stale SeekTarget cleared, no lookup panic ✓");
 }
 
-// ─── Assertion 14: lonely settlement migrant stays Idle, unfrozen ──────────
+// ─── Assertion 14: lonely isolated settlement migrant walks (P10-γ) ─────────
 #[test]
-fn harness_s16_zeta_a14_lonely_settlement_migrant_no_target() {
-    // Type D — the boundary the naive fix lived on: a migrant that is BOTH a
-    // Settlement migrant AND lonely (loneliness > thr) but ISOLATED at (50,50)
-    // with no co-located social peer, so the social arm finds no partner and
-    // the agent falls through to the settlement arm. Pre-fix this entered
-    // Seeking{Agent} via the settlement arm (no SeekTarget → frozen). The
-    // Stage-1 fix keeps it Idle (unfrozen). THREE conjuncts: (1) Idle,
-    // (2) NO SeekTarget, (3) the migrant's own SettlementReason event — which
-    // ALSO proves the social arm did NOT capture it (if the social arm had
-    // resolved a partner via memory/relations, no SettlementReason would fire
-    // for this id and the assertion would FAIL LOUDLY rather than test the
-    // wrong path).
+fn harness_s16_zeta_a14_lonely_settlement_migrant_paths() {
+    // Type D — UPDATED for V7 Phase 10-γ. The boundary the naive fix lived on: a
+    // migrant that is BOTH a Settlement migrant AND lonely (loneliness > thr) but
+    // ISOLATED at (50,50) with no co-located social peer, so the social arm finds
+    // no partner and the agent falls through to the settlement arm. Pre-Stage-1
+    // this entered Seeking{Agent} with NO SeekTarget → frozen. Stage 1 kept it
+    // Idle. P10-γ restores the transition WITH a SeekTarget → it WALKS. THREE
+    // conjuncts: (1) Seeking{Agent}, (2) SeekTarget present (anti-freeze goal),
+    // (3) the migrant's own SettlementReason event — which ALSO proves the social
+    // arm did NOT capture it (the social arm would not emit SettlementReason for
+    // this id; a missing event would FAIL LOUDLY rather than test the wrong path).
     let mut e = fresh_engine();
     let cx = 20u32;
     let cy = 20u32;
@@ -779,15 +787,21 @@ fn harness_s16_zeta_a14_lonely_settlement_migrant_no_target() {
     );
 
     e.tick(); // decision: settlement arm (no co-located social peer at (50,50))
-    assert_eq!(
-        agent_state(&e, migrant),
-        AgentState::Idle,
-        "A14: lonely isolated settlement migrant stays Idle (unfrozen) — Stage-1 fix \
-         removed the settlement-arm Seeking{{Agent}} transition"
+    assert!(
+        matches!(
+            agent_state(&e, migrant),
+            AgentState::Seeking { target: TargetKind::Agent(_) }
+        ),
+        "A14: P10-γ — lonely isolated migrant falls through to the settlement arm and \
+         transitions to Seeking{{Agent(member)}} (walks)"
     );
     assert!(
-        seek_tile(&e, migrant).is_none(),
-        "A14: lonely settlement migrant must have NO SeekTarget"
+        e.world.get::<&SettlementMigrant>(migrant).is_ok(),
+        "A14: lonely settlement migrant must carry the SettlementMigrant marker"
+    );
+    assert!(
+        seek_tile(&e, migrant).is_some(),
+        "A14: lonely settlement migrant must have a SeekTarget (the member tile) — walks, not frozen"
     );
     assert!(
         count_settlement_reason(&e, migrant_id) >= 1,
@@ -795,5 +809,5 @@ fn harness_s16_zeta_a14_lonely_settlement_migrant_no_target() {
          (its own SettlementReason event) — proves it fell through to the settlement \
          arm, NOT that the social arm captured it"
     );
-    println!("[S16-ζ A14] lonely isolated settlement migrant stays Idle (unfrozen), no SeekTarget, arm entered ✓");
+    println!("[S16-ζ A14] P10-γ lonely isolated migrant transitions to Seeking{{Agent}} + marker + SeekTarget (walks) ✓");
 }

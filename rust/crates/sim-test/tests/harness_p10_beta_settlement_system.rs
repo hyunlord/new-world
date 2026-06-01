@@ -1209,7 +1209,23 @@ fn harness_p10_beta_a21_community_history_ingests_qualifying_events() {
     // (priority 100) before SettlementSystem (138) scans. Instead, insert
     // into combat_pairs so CombatSystem pushes CombatCompleted post-IUS;
     // SettlementSystem then routes it without eviction risk.
-    // Use born_agent_id as attacker: no MovementRng → pinned, always member.
+    // Use born_agent_id as attacker. NOTE: V7 Stage 1.5 (5f4a6947) gave
+    // settlement births a MovementRng, so the born agent is no longer
+    // position-pinned and can drift out of settlement proximity over the
+    // ~200 cooldown ticks (under V7 Phase 10-γ migration its drift is even
+    // directed). This test's intent is "CombatCompleted involving a MEMBER
+    // routes to community history", so we re-assert the attacker's membership
+    // immediately before the combat tick. CombatSystem (priority 137) reads
+    // `member_agents` LIVE, before SettlementSystem (138) recomputes it from
+    // proximity, so this insert is the membership view the routing predicate
+    // sees — restoring the original pinned-member precondition without
+    // weakening the assertion.
+    e.resources
+        .settlements
+        .get_mut(&sid)
+        .unwrap()
+        .member_agents
+        .insert(born_agent_id);
     let dummy_defender_aid = {
         let eid = e.spawn_agent(cx, cy);
         e.world.get::<&Agent>(eid).unwrap().id
