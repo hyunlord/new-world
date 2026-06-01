@@ -25,6 +25,11 @@ extends Node2D
 const TILE_SIZE := 16
 const GRID_W := 64
 const GRID_H := 64
+# fix-overlay-darkness — OFF sentinel: the influence overlay defaults OFF so the
+# launch screen is clean terrain instead of a dim Warmth wash. -1 is chosen so
+# it never collides with a real InfluenceChannel index (0,1,2,4,6,7) and is
+# never passed to get_influence_overlay (the _process OFF branch short-circuits).
+const CHANNEL_OFF := -1
 const CHANNEL_WARMTH := 0
 const CHANNEL_LIGHT := 1
 const CHANNEL_NOISE := 2
@@ -174,7 +179,7 @@ const Z_VILLAGE_FIXTURE := 5  # same plane as ConstructionSite layer
 # floor at zoom 3.0× and never drifts if TILE_SIZE is ever retuned.
 const CLICK_RADIUS_WORLD_PX := float(TILE_SIZE)
 
-var current_channel: int = CHANNEL_WARMTH
+var current_channel: int = CHANNEL_OFF
 var world_sim: WorldSimNode
 var sprite: Sprite2D
 var texture: ImageTexture
@@ -213,6 +218,11 @@ func _ready() -> void:
 	# influence overlay; we only touch z_index + modulate alpha here.
 	sprite.z_index = Z_OVERLAY
 	sprite.modulate = Color(1.0, 1.0, 1.0, OVERLAY_ALPHA)
+	# fix-overlay-darkness — start hidden (default channel is OFF). The first
+	# visible frame must show no overlay; _process re-shows it only when SPACE
+	# advances the cycle off OFF. Without this the dark Warmth wash would flash
+	# on frame 0 before _process runs.
+	sprite.visible = false
 
 	# V7 Phase 12-β — TileMapLayer floor terrain.
 	# Loads the new world_terrain TileSet (9 atlas sources = 3 materials ×
@@ -329,9 +339,16 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_SPACE:
-			# T7.10.F: 6-state cycle Warmth → Light → Noise → Danger → Spiritual → Beauty → Warmth.
+			# fix-overlay-darkness: 7-state cycle including OFF —
+			# OFF → Warmth → Light → Noise → Danger → Spiritual → Beauty → OFF.
+			# OFF is both enterable (Beauty→OFF wrap) and exitable (OFF→Warmth
+			# entry) so the overlay can always be re-hidden; a one-way OFF would
+			# trap the user on a clean screen with no way back to analysis.
 			var channel_name: String
-			if current_channel == CHANNEL_WARMTH:
+			if current_channel == CHANNEL_OFF:
+				current_channel = CHANNEL_WARMTH
+				channel_name = "Warmth"
+			elif current_channel == CHANNEL_WARMTH:
 				current_channel = CHANNEL_LIGHT
 				channel_name = "Light"
 			elif current_channel == CHANNEL_LIGHT:
@@ -347,8 +364,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				current_channel = CHANNEL_BEAUTY
 				channel_name = "Beauty"
 			else:
-				current_channel = CHANNEL_WARMTH
-				channel_name = "Warmth"
+				current_channel = CHANNEL_OFF
+				channel_name = "Off"
 			print("Channel switched: ", channel_name)
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_handle_tile_click(event.position)
@@ -356,11 +373,20 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if world_sim == null:
 		return
-	var data: PackedByteArray = world_sim.get_influence_overlay(current_channel)
-	if data.size() != GRID_W * GRID_H:
-		return
-	image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)
-	texture.update(image)
+	# fix-overlay-darkness — gate the influence-overlay draw on the channel.
+	# OFF: hide the sprite and SKIP the FFI call entirely (CHANNEL_OFF = -1 is a
+	# sentinel, never a valid index for get_influence_overlay). Non-OFF: show the
+	# sprite and upload the overlay as before. The data-size mismatch early-return
+	# is scoped INSIDE this overlay block so it can never gate the substrate
+	# render calls below — those run every frame for every channel including OFF.
+	if current_channel == CHANNEL_OFF:
+		sprite.visible = false
+	else:
+		sprite.visible = true
+		var data: PackedByteArray = world_sim.get_influence_overlay(current_channel)
+		if data.size() == GRID_W * GRID_H:
+			image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)
+			texture.update(image)
 	# V7 Phase 12-β.2 (A3) — ingest construction-site snapshot.
 	_update_construction_sites()
 	# V7 Phase 12-γ — ingest settlement snapshot for furniture placeholders.

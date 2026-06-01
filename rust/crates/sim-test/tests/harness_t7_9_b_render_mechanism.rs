@@ -123,19 +123,22 @@ fn harness_t7_9_b_world_renderer_render_path_present() {
         src.contains("Sprite2D.new()"),
         "world_renderer.gd must instantiate `Sprite2D.new()` as the texture host"
     );
-    // T7.10.B1: _process now pulls a mutable `current_channel` so SPACE can
-    // toggle between Warmth (T7.10.A) and Light (T7.10.B). Initial state
-    // `current_channel: int = CHANNEL_WARMTH` preserves T7.9.B/T7.10.A baseline
-    // (Warmth disc on first frame), and the CHANNEL_LIGHT constant must exist.
+    // T7.10.B1: _process pulls a mutable `current_channel` so SPACE can cycle
+    // channels. fix-overlay-darkness re-point: the default flipped from Warmth
+    // to OFF (CHANNEL_OFF := -1) so the launch screen is clean terrain instead
+    // of a dim Warmth wash; the overlay is now opt-in via SPACE. The
+    // get_influence_overlay(current_channel) call is preserved (gated behind the
+    // non-OFF branch in _process), and the CHANNEL_LIGHT constant must exist.
     assert!(
         src.contains("get_influence_overlay(current_channel)"),
         "world_renderer.gd _process must call \
-         `world_sim.get_influence_overlay(current_channel)` (T7.10.B1 toggle)"
+         `world_sim.get_influence_overlay(current_channel)` (channel cycle)"
     );
     assert!(
-        src.contains("current_channel: int = CHANNEL_WARMTH"),
-        "world_renderer.gd must initialise `current_channel: int = CHANNEL_WARMTH` \
-         so the first visible frame matches the T7.10.A Warmth baseline"
+        src.contains("current_channel: int = CHANNEL_OFF"),
+        "world_renderer.gd must initialise `current_channel: int = CHANNEL_OFF` \
+         so the first visible frame is a clean screen (overlay opt-in via SPACE; \
+         fix-overlay-darkness re-point of the old CHANNEL_WARMTH default)"
     );
     assert!(
         src.contains("CHANNEL_LIGHT := 1"),
