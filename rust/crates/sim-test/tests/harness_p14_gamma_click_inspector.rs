@@ -1094,8 +1094,9 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     let furn = unique_decl_rhs(&wr_stripped, "FURNITURE_SPRITE_PATH", "A28.FURNITURE");
     assert_eq!(
         furn.trim(),
-        "\"res://assets/sprites/furniture/hearth/1.png\"",
-        "A28: FURNITURE_SPRITE_PATH must be furniture/hearth/1.png; got `{furn}`"
+        "\"res://assets/sprites/buildings/gathering_marker/1.png\"",
+        "A28: FURNITURE_SPRITE_PATH must be buildings/gathering_marker/1.png \
+         (re-pointed by fix-settlement-marker-fixed-position); got `{furn}`"
     );
     let bld = unique_decl_rhs(&wr_stripped, "BUILDING_SPRITE_PATH", "A28.BUILDING");
     assert_eq!(

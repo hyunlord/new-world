@@ -385,8 +385,12 @@ fn harness_p12_gamma_a8_settlement_with_missing_member_position_is_handled() {
 // ─── Assertion 9: world_renderer_declares_furniture_sprite_path_and_z ─────
 #[test]
 fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_constants() {
-    // Type: A — FURNITURE_SPRITE_PATH points under
-    // assets/sprites/furniture/hearth/; Z_FURNITURE ∈ {1, 2, 3, 4}.
+    // Type: A — RE-POINTED (fix-settlement-marker-fixed-position). The marker
+    // now uses the distinct `gathering_marker` asset so it is visually
+    // separate from the campfire `buildings/campfire` bootstrap sprite,
+    // breaking the "moving building" illusion. A9.1 (const exists) and A9.3–
+    // A9.5 (Z_FURNITURE ∈ {1,2,3,4}) are unchanged; only the A9.2 asset path
+    // moved from `furniture/hearth/` to `buildings/gathering_marker/`.
     let src = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&src);
 
@@ -399,8 +403,12 @@ fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_cons
             panic!("A9.1: world_renderer.gd must declare `const FURNITURE_SPRITE_PATH`")
         });
     assert!(
-        sprite_line.contains("assets/sprites/furniture/hearth/"),
-        "A9.2: FURNITURE_SPRITE_PATH must reference `assets/sprites/furniture/hearth/`; line=`{sprite_line}`"
+        sprite_line.contains("assets/sprites/buildings/gathering_marker/"),
+        "A9.2: FURNITURE_SPRITE_PATH must reference `assets/sprites/buildings/gathering_marker/`; line=`{sprite_line}`"
+    );
+    assert!(
+        !sprite_line.contains("assets/sprites/furniture/hearth/"),
+        "A9.2: FURNITURE_SPRITE_PATH must NOT reference the old `assets/sprites/furniture/hearth/`; line=`{sprite_line}`"
     );
 
     let z_line = stripped
@@ -549,4 +557,108 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
         "A12.11: Z_CONSTRUCTION must remain exactly 5 (Phase 12-β.2 A3); got {z_parsed}"
     );
     println!("[P12-γ A12] Phase 12-α + β.1 + β.2 A3 invariants preserved ✓");
+}
+
+// ─── Assertion 13: snapshot_row_declares_formation_fields ──────────────────
+#[test]
+fn harness_p12_gamma_a13_snapshot_row_declares_formation_fields() {
+    // Type: A — ADDITIVE (fix-settlement-marker-fixed-position). The
+    // `SettlementSnapshotRow` body must declare `formation_x` and
+    // `formation_y` ALONGSIDE the 5 existing fields (entity_bits,
+    // settlement_id, centroid_x, centroid_y, member_count → A2 stays green).
+    let src = read_file(WORLD_NODE_PATH);
+    let stripped = strip_rs_comments(&src);
+
+    let struct_pos = stripped
+        .find("pub struct SettlementSnapshotRow")
+        .expect("A13.1: `pub struct SettlementSnapshotRow` must be declared");
+    let end = stripped[struct_pos..]
+        .find('}')
+        .map(|i| struct_pos + i + 1)
+        .unwrap_or(stripped.len());
+    let body = &stripped[struct_pos..end];
+    for field in ["formation_x", "formation_y"] {
+        assert!(
+            body.contains(field),
+            "A13.2: SettlementSnapshotRow must declare field `{field}`; body=\n{body}"
+        );
+    }
+    // The 5 existing fields must remain (A2 preservation).
+    for field in [
+        "entity_bits",
+        "settlement_id",
+        "centroid_x",
+        "centroid_y",
+        "member_count",
+    ] {
+        assert!(
+            body.contains(field),
+            "A13.3: SettlementSnapshotRow must KEEP existing field `{field}`; body=\n{body}"
+        );
+    }
+    println!("[P12-γ A13] SettlementSnapshotRow declares formation_x/y (+ 5 kept) ✓");
+}
+
+// ─── Assertion 14: dict_marshaller_sets_formation_keys ─────────────────────
+#[test]
+fn harness_p12_gamma_a14_dict_marshaller_sets_formation_keys() {
+    // Type: A — ADDITIVE (fix-settlement-marker-fixed-position). The dict
+    // marshaller must export the formation arrays for GDScript, keeping the 5
+    // existing keys (A5 stays green).
+    let src = read_file(WORLD_NODE_PATH);
+    let stripped = strip_rs_comments(&src);
+
+    for needle in ["dict.set(\"formation_xs\"", "dict.set(\"formation_ys\""] {
+        assert!(
+            stripped.contains(needle),
+            "A14.1: must contain `{needle}` in sim-bridge source"
+        );
+    }
+    // The 5 existing keys must remain set (A5 preservation).
+    for needle in [
+        "dict.set(\"ids\"",
+        "dict.set(\"settlement_ids\"",
+        "dict.set(\"centroid_xs\"",
+        "dict.set(\"centroid_ys\"",
+        "dict.set(\"member_counts\"",
+    ] {
+        assert!(
+            stripped.contains(needle),
+            "A14.2: must KEEP existing dict key `{needle}`"
+        );
+    }
+    println!("[P12-γ A14] dict sets formation_xs/ys (+ 5 kept) ✓");
+}
+
+// ─── Assertion 15: world_renderer_reads_formation_arrays ───────────────────
+#[test]
+fn harness_p12_gamma_a15_world_renderer_reads_formation_arrays() {
+    // Type: A — ADDITIVE (fix-settlement-marker-fixed-position). Inside
+    // `_update_settlement_furniture` the marker-position read must source from
+    // the FIXED `formation_xs`/`formation_ys` keys. Presence tripwire only —
+    // runtime marker fixedness is a Visual Verify / behavioral concern (the
+    // original "no longer reads centroid_xs/ys" clause is intentionally NOT
+    // asserted; centroid keys may legitimately survive for other uses).
+    let src = read_file(WORLD_RENDERER_PATH);
+    let stripped = strip_gd_comments(&src);
+
+    let fn_pos = stripped
+        .find("func _update_settlement_furniture")
+        .expect("A15.1: `_update_settlement_furniture` must be declared");
+    // Scope to the function body: from its header to the next top-level
+    // `func ` declaration (GDScript top-level funcs start at column 0).
+    let after = &stripped[fn_pos + 1..];
+    let body_end = after
+        .find("\nfunc ")
+        .map(|i| fn_pos + 1 + i)
+        .unwrap_or(stripped.len());
+    let body = &stripped[fn_pos..body_end];
+
+    for key in ["formation_xs", "formation_ys"] {
+        assert!(
+            body.contains(key),
+            "A15.2: _update_settlement_furniture must reference `{key}`; body=\n{body}"
+        );
+    }
+    println!("[P12-γ A15] _update_settlement_furniture reads formation_xs/ys ✓");
 }

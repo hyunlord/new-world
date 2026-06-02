@@ -1753,6 +1753,12 @@ pub struct SettlementSnapshotRow {
     pub centroid_y: i32,
     /// Count of resolvable member agents.
     pub member_count: u32,
+    /// `Settlement::formation_tile.0` — the FIXED formation-anchor tile-x,
+    /// set once at formation. Unlike `centroid_x` (live mean of members), this
+    /// does not move, so the GDScript marker anchored to it sits still.
+    pub formation_x: i32,
+    /// `Settlement::formation_tile.1` — the FIXED formation-anchor tile-y.
+    pub formation_y: i32,
 }
 
 /// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
@@ -1804,6 +1810,8 @@ pub fn collect_settlement_snapshot(
             centroid_x,
             centroid_y,
             member_count: count,
+            formation_x: settlement.formation_tile.0 as i32,
+            formation_y: settlement.formation_tile.1 as i32,
         });
     }
     // HashMap iteration order is not stable run-to-run; sort by the unique
@@ -1830,17 +1838,23 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     let mut centroid_xs = PackedInt32Array::new();
     let mut centroid_ys = PackedInt32Array::new();
     let mut member_counts = PackedInt32Array::new();
+    let mut formation_xs = PackedInt32Array::new();
+    let mut formation_ys = PackedInt32Array::new();
     ids.resize(n);
     settlement_ids.resize(n);
     centroid_xs.resize(n);
     centroid_ys.resize(n);
     member_counts.resize(n);
+    formation_xs.resize(n);
+    formation_ys.resize(n);
     for (i, row) in rows.iter().enumerate() {
         ids[i] = row.entity_bits as i64;
         settlement_ids[i] = row.settlement_id as i32;
         centroid_xs[i] = row.centroid_x;
         centroid_ys[i] = row.centroid_y;
         member_counts[i] = row.member_count as i32;
+        formation_xs[i] = row.formation_x;
+        formation_ys[i] = row.formation_y;
     }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
@@ -1848,6 +1862,8 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     dict.set("centroid_xs", centroid_xs);
     dict.set("centroid_ys", centroid_ys);
     dict.set("member_counts", member_counts);
+    dict.set("formation_xs", formation_xs);
+    dict.set("formation_ys", formation_ys);
     dict
 }
 

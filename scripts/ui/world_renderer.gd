@@ -81,7 +81,7 @@ const CONSTRUCTION_ALPHA_MAX := 1.0
 # every Settlement that has at least one resolvable member agent. The
 # sprite sits at z=4 — above the terrain TileMapLayer (z=0) and below
 # the ConstructionSite layer (z=5) and the influence overlay (z=10).
-const FURNITURE_SPRITE_PATH := "res://assets/sprites/furniture/hearth/1.png"
+const FURNITURE_SPRITE_PATH := "res://assets/sprites/buildings/gathering_marker/1.png"
 const Z_FURNITURE := 4
 
 # V7 Phase 13-β — resource-node placeholder layer.
@@ -485,8 +485,11 @@ func _render_resource_sources() -> void:
 func _update_settlement_furniture() -> void:
 	var snap: Dictionary = world_sim.get_settlement_snapshot()
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
-	var xs: PackedInt32Array = snap.get("centroid_xs", PackedInt32Array())
-	var ys: PackedInt32Array = snap.get("centroid_ys", PackedInt32Array())
+	# Anchor the marker to the FIXED formation tile (set once at formation),
+	# NOT the live member centroid (which drifts as members wander). This is
+	# what stops the on-screen marker from jittering every tick.
+	var xs: PackedInt32Array = snap.get("formation_xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("formation_ys", PackedInt32Array())
 	var n: int = ids.size()
 	var seen: Dictionary = {}
 	var tex: Texture2D = load(FURNITURE_SPRITE_PATH) as Texture2D

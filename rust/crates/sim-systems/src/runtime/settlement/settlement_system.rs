@@ -303,6 +303,10 @@ impl SettlementSystem {
 
             let new_id = resources.issue_settlement_id();
             let mut settlement = Settlement::new_with_id(new_id, tick);
+            // Pin the fixed formation anchor — the same `candidate` tile stored
+            // in `self.formation_tiles` below. Fixed for the settlement's
+            // lifetime so the FFI marker does not drift with the live centroid.
+            settlement.formation_tile = candidate;
             let mut founding_members: Vec<AgentId> = Vec::new();
             for (aid, pos) in agent_positions {
                 if chebyshev(candidate, *pos) <= SETTLEMENT_PROXIMITY_RADIUS {

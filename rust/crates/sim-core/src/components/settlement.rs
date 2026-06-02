@@ -93,6 +93,14 @@ pub struct Settlement {
     /// Stable settlement identity (issued by `SimResources::issue_settlement_id`).
     pub settlement_id: SettlementId,
 
+    /// Tile where the settlement formed — fixed for its lifetime; the FFI
+    /// marker anchor. Defaults to `(0, 0)` (the `new_with_id` sentinel) and is
+    /// set to the formation candidate by `SettlementSystem::run_formation_scan`
+    /// the moment the settlement forms. Unlike the live member centroid (which
+    /// drifts as members wander), this anchor never moves, so the GDScript
+    /// settlement marker can sit still at the formation tile.
+    pub formation_tile: (u32, u32),
+
     /// Agents currently considered members of this settlement.
     /// Phase 10-β `SettlementSystem` maintains this via proximity scan.
     pub member_agents: HashSet<AgentId>,
@@ -121,6 +129,7 @@ impl Settlement {
     pub fn new_with_id(id: SettlementId, founded_at: u64) -> Self {
         Self {
             settlement_id: id,
+            formation_tile: (0, 0),
             member_agents: HashSet::new(),
             member_buildings: HashSet::new(),
             population_stats: PopulationStats::default(),

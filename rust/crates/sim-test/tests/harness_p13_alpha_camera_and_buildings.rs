@@ -299,17 +299,21 @@ fn harness_p13_alpha_a6_construction_sprite_path_unchanged() {
     println!("[P13-α A6] CONSTRUCTION_SPRITE_PATH RHS → \"…/cairn/1.png\" exactly ✓");
 }
 
-// ─── Assertion 7: furniture_sprite_path_unchanged ─────────────────────────
+// ─── Assertion 7: furniture_sprite_path_repointed ─────────────────────────
 #[test]
 fn harness_p13_alpha_a7_furniture_sprite_path_unchanged() {
-    // Type: A — Phase 12-γ Settlement-centroid invariant.
+    // Type: A — RE-POINTED (fix-settlement-marker-fixed-position). This was a
+    // duplicate of p12_gamma A9.2; both locked the old hearth literal. The
+    // settlement-marker fix re-points FURNITURE_SPRITE_PATH to the distinct
+    // `gathering_marker` asset so the marker is visually separate from the
+    // campfire building sprite. Kept as an exact-literal lock on the NEW value.
     let stripped = strip_gd_comments(&read_world_renderer_src());
     let rhs = unique_decl_rhs(&stripped, "FURNITURE_SPRITE_PATH", "A7");
     assert_eq!(
-        rhs, "\"res://assets/sprites/furniture/hearth/1.png\"",
-        "A7: FURNITURE_SPRITE_PATH RHS must be EXACTLY the hearth literal; got `{rhs}`"
+        rhs, "\"res://assets/sprites/buildings/gathering_marker/1.png\"",
+        "A7: FURNITURE_SPRITE_PATH RHS must be EXACTLY the gathering_marker literal; got `{rhs}`"
     );
-    println!("[P13-α A7] FURNITURE_SPRITE_PATH RHS → \"…/hearth/1.png\" exactly ✓");
+    println!("[P13-α A7] FURNITURE_SPRITE_PATH RHS → \"…/gathering_marker/1.png\" exactly ✓");
 }
 
 // ─── Assertion 8: campfire_sprite_file_exists_and_nonempty ────────────────

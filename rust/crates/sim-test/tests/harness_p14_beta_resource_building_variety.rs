@@ -841,13 +841,16 @@ fn harness_p14_beta_a17_phase_12_construction_constants_preserved() {
 // ─── Assertion 18: phase_12_gamma_furniture_constants_preserved ──────────
 #[test]
 fn harness_p14_beta_a18_phase_12_gamma_furniture_constants_preserved() {
-    // Type: D — Regression guard for Phase 12-γ. hearth/1.png and hearth/2.png
-    // are distinct variants — must remain so.
+    // Type: D — Regression guard for Phase 12-γ. RE-POINTED
+    // (fix-settlement-marker-fixed-position): the settlement marker now uses
+    // the distinct `gathering_marker` asset (was furniture/hearth/1.png) so it
+    // is visually separate from the campfire building sprite. Z_FURNITURE = 4
+    // is unaffected. Duplicate of p12_gamma A9.2 / p13_alpha A7.
     let stripped = strip_gd_comments(&read_world_renderer_src());
     let path = unique_decl_rhs(&stripped, "FURNITURE_SPRITE_PATH", "A18.1");
     assert_eq!(
-        path, "\"res://assets/sprites/furniture/hearth/1.png\"",
-        "A18.2: FURNITURE_SPRITE_PATH must equal exact `furniture/hearth/1.png`; got `{path}`"
+        path, "\"res://assets/sprites/buildings/gathering_marker/1.png\"",
+        "A18.2: FURNITURE_SPRITE_PATH must equal exact `buildings/gathering_marker/1.png`; got `{path}`"
     );
     let z = unique_decl_rhs(&stripped, "Z_FURNITURE", "A18.3");
     assert_eq!(z, "4", "A18.4: Z_FURNITURE must be 4; got `{z}`");
