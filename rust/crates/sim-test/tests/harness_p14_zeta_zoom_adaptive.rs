@@ -542,11 +542,15 @@ fn harness_zoom_a14_starts_hidden_and_guards_when_hidden() {
     println!("[P14-ζ a14] starts hidden + `not visible` guard in _process ✓");
 }
 
-// ─── Assertion 15: draw_circle radius scales by member_count ──────────────
+// ─── Assertion 15: draw_circle radius is the fixed region (re-pointed) ─────
 #[test]
-fn harness_zoom_a15_draw_circle_radius_scales_by_member_count() {
-    // Type A — _draw body contains `draw_circle`; file contains `member_counts`
-    // AND `BASE_RADIUS_PX`.
+fn harness_zoom_a15_radius_is_fixed_region() {
+    // Type A (re-pointed from `…_draw_circle_radius_scales_by_member_count`) —
+    // _draw body still contains `draw_circle`; the renderer now declares the
+    // fixed-region radius const `SETTLEMENT_REGION_RADIUS_TILES` (positive
+    // invariant) AND the member-scaling const `PER_MEMBER_RADIUS_PX` is gone
+    // (negative invariant — radius no longer inflates with population). Strictly
+    // more constraining than the old single-direction check.
     let stripped = strip_gd_comments(&read_overview_src());
     let (s, e) = find_func_body(&stripped, "_draw").expect("a15.1: _draw must exist");
     let body = &stripped[s..e];
@@ -555,14 +559,16 @@ fn harness_zoom_a15_draw_circle_radius_scales_by_member_count() {
         "a15.2: _draw body must contain `draw_circle`; body:\n{body}"
     );
     assert!(
-        stripped.contains("member_counts"),
-        "a15.3: settlement_overview_renderer.gd must reference `member_counts`"
+        stripped.contains("SETTLEMENT_REGION_RADIUS_TILES"),
+        "a15.3: settlement_overview_renderer.gd must declare `SETTLEMENT_REGION_RADIUS_TILES` \
+         (fixed actual-region radius)"
     );
     assert!(
-        stripped.contains("BASE_RADIUS_PX"),
-        "a15.4: settlement_overview_renderer.gd must reference `BASE_RADIUS_PX`"
+        !stripped.contains("PER_MEMBER_RADIUS_PX"),
+        "a15.4: settlement_overview_renderer.gd must NOT reference `PER_MEMBER_RADIUS_PX` \
+         (member-count radius scaling removed)"
     );
-    println!("[P14-ζ a15] draw_circle radius scales by member_count ✓");
+    println!("[P14-ζ a15] draw_circle radius is the fixed region (member-scaling removed) ✓");
 }
 
 // ─── Assertion 16 (strengthening): world_renderer coordinate basis ────────
@@ -793,4 +799,89 @@ fn harness_zoom_a24_phase13d_hud_topbar_intact() {
         "a24: hud_topbar.gd must keep all 6 invariant literals (Phase 13-δ A4/A5/A6); missing={missing:?}"
     );
     println!("[P14-ζ a24] hud_topbar.gd Phase 13-δ invariants intact ✓");
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// Group E — Region fix (A+B): overview circle re-anchored + fixed-region radius
+//   (fix-settlement-overview-region — plan assertions 1, 2, 3)
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── Plan Assertion 1: center re-anchored to fixed formation tile ─────────────
+#[test]
+fn harness_zoom_a25_process_reads_formation_not_centroid() {
+    // Type A — center = fixed formation_tile (same basis as the marker fix).
+    // `_process` body must READ `formation_xs` AND `formation_ys` as snapshot
+    // dict keys; the moving-mean keys `centroid_xs` / `centroid_ys` must be
+    // ABSENT anywhere in the stripped file (else the circle still tracks the
+    // moving centroid — the shake bug). These are dict `.get` keys (not FFI
+    // method names), so a13's FFI-scope lock is unaffected.
+    let stripped = strip_gd_comments(&read_overview_src());
+    let (s, e) = find_func_body(&stripped, "_process")
+        .expect("a25.1: settlement_overview_renderer.gd must have a `_process` func");
+    let body = &stripped[s..e];
+    assert!(
+        body.contains("formation_xs"),
+        "a25.2: _process body must read `formation_xs` (fixed formation tile); body:\n{body}"
+    );
+    assert!(
+        body.contains("formation_ys"),
+        "a25.3: _process body must read `formation_ys` (fixed formation tile); body:\n{body}"
+    );
+    assert!(
+        !stripped.contains("centroid_xs"),
+        "a25.4: stripped source must NOT read `centroid_xs` (moving-mean center = shake bug)"
+    );
+    assert!(
+        !stripped.contains("centroid_ys"),
+        "a25.5: stripped source must NOT read `centroid_ys` (moving-mean center = shake bug)"
+    );
+    println!("[P14-ζ a25] _process reads formation_xs/ys; centroid_xs/ys absent ✓");
+}
+
+// ─── Plan Assertion 2: fixed region-radius constant == 5, used as *TILE_SIZE ──
+#[test]
+fn harness_zoom_a26_region_radius_tiles_equals_five_and_used() {
+    // Type A — exactly one `SETTLEMENT_REGION_RADIUS_TILES` decl whose RHS parses
+    // to integer 5 (mirrors sim-core SETTLEMENT_PROXIMITY_RADIUS), AND the radius
+    // is computed as `SETTLEMENT_REGION_RADIUS_TILES * TILE_SIZE` (5×16 = 80px).
+    let stripped = strip_gd_comments(&read_overview_src());
+    let rhs = unique_decl_rhs(&stripped, "SETTLEMENT_REGION_RADIUS_TILES", "a26");
+    let n = parse_int_rhs(&rhs).unwrap_or_else(|| {
+        panic!("a26.1: SETTLEMENT_REGION_RADIUS_TILES RHS must parse as int; got `{rhs}`")
+    });
+    assert_eq!(n, 5, "a26.2: SETTLEMENT_REGION_RADIUS_TILES must equal 5; got {n}");
+    let compact = no_ws(&stripped);
+    assert!(
+        compact.contains("SETTLEMENT_REGION_RADIUS_TILES*TILE_SIZE"),
+        "a26.3: radius must be computed as `SETTLEMENT_REGION_RADIUS_TILES * TILE_SIZE` (=80px)"
+    );
+    println!("[P14-ζ a26] SETTLEMENT_REGION_RADIUS_TILES = 5, radius = *TILE_SIZE ✓");
+}
+
+// ─── Plan Assertion 3: member-count radius scaling fully removed ──────────────
+#[test]
+fn harness_zoom_a27_member_scaling_fully_removed() {
+    // Type A (negative invariant) — the three member-scaling consts and the
+    // member-count snapshot read must ALL be ABSENT from the stripped source.
+    // A passing positive check (a26) does not by itself prove the old scaling
+    // path was deleted — both could coexist.
+    let stripped = strip_gd_comments(&read_overview_src());
+    let forbidden = [
+        "BASE_RADIUS_PX",
+        "PER_MEMBER_RADIUS_PX",
+        "MAX_RADIUS_PX",
+        "member_counts",
+    ];
+    let mut found: Vec<&str> = Vec::new();
+    for n in forbidden.iter() {
+        if stripped.contains(n) {
+            found.push(n);
+        }
+    }
+    assert!(
+        found.is_empty(),
+        "a27: member-scaled radius must be fully removed (radius no longer population-inflated); \
+         found leftover tokens: {found:?}"
+    );
+    println!("[P14-ζ a27] member-scaling consts + member_counts read all absent ✓");
 }
