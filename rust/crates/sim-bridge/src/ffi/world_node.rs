@@ -37,8 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, ConstructionSite, Hunger, Memory, Position, SeekTarget, Settlement,
-    SettlementId, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Memory, Position, SeekTarget,
+    Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -879,6 +879,33 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: None,
                 reason: None,
+                triggered_by: None,
+                recalled_event: None,
+                defender_id: None,
+                hp_after: None,
+            },
+            // add-starvation-death — agent death event. `reason` carries the
+            // DeathReason discriminator ("starvation"/"dehydration"/"combat").
+            CausalEvent::AgentDied {
+                id,
+                parent,
+                agent,
+                position,
+                reason,
+                tick,
+            } => Self {
+                kind: "agent_died",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: Some(*position),
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: Some(*agent),
+                reason: Some(reason.as_str()),
                 triggered_by: None,
                 recalled_event: None,
                 defender_id: None,
@@ -1992,6 +2019,10 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
                         Sleep::new(sl0, BOOTSTRAP_SLEEP_RATE),
                         Social::new(0.0, 0.04),
                         Memory::new(),
+                        // add-starvation-death — every agent carries BodyHealth so
+                        // StarvationSystem can damage it and combat's
+                        // unwrap_or(true) never treats it as instantly-dead.
+                        BodyHealth::new(),
                     ),
                 )
                 .expect("bootstrap agent entity must still exist");

@@ -186,6 +186,20 @@ pub fn register_settlement_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::SettlementSystem::new()));
 }
 
+/// Register the `add-starvation-death` survival stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 139 : [`runtime::survival::StarvationSystem`]
+///
+/// Slots strictly after `SettlementSystem` (priority 138) so a death's
+/// `member_agents` removal is the last roster mutation that tick (the next
+/// tick's proximity sync recomputes membership from survivors). Owns
+/// needs-driven hp damage / recovery + death via the shared
+/// [`runtime::survival::despawn_agent`] helper.
+pub fn register_survival_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::survival::StarvationSystem::new()));
+}
+
 /// V7 Phase 7-β / P7β-15 — canonical production system registration.
 ///
 /// Single source of truth for "what systems run in a production engine":
@@ -208,6 +222,7 @@ pub fn register_settlement_systems(engine: &mut SimEngine) {
 /// - 136  MemorySystem (Phase 8-β)
 /// - 137  CombatSystem (Phase 9-β)
 /// - 138  SettlementSystem (Phase 10-β)
+/// - 139  StarvationSystem (add-starvation-death)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -222,4 +237,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_memory_systems(engine);
     register_combat_systems(engine);
     register_settlement_systems(engine);
+    register_survival_systems(engine);
 }

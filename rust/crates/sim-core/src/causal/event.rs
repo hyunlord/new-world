@@ -50,6 +50,38 @@ impl DissolutionCause {
     }
 }
 
+/// Typed cause of an agent's death, carried by [`CausalEvent::AgentDied`]
+/// (V7 feature `add-starvation-death`).
+///
+/// Two needs-driven causes plus the pre-existing combat path. When BOTH
+/// hunger and thirst are saturated at death, [`StarvationSystem`] assigns
+/// [`DeathReason::Dehydration`] — thirst is the faster killer and takes
+/// precedence.
+///
+/// [`StarvationSystem`]: ../../../sim_systems/runtime/survival/struct.StarvationSystem.html
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
+pub enum DeathReason {
+    /// Hunger reached `Hunger::SATURATION` and `BodyHealth.hp` decayed to 0.
+    Starvation,
+    /// Thirst reached `Thirst::SATURATION` and `BodyHealth.hp` decayed to 0.
+    /// Takes precedence over `Starvation` when both needs are saturated.
+    Dehydration,
+    /// Defender `BodyHealth.is_dead()` after a `CombatSystem` damage tick.
+    Combat,
+}
+
+impl DeathReason {
+    /// Stable string discriminator used by FFI views (snake_case, matching
+    /// the [`DecisionReason::as_str`] / [`DissolutionCause::as_str`] style).
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            DeathReason::Starvation => "starvation",
+            DeathReason::Dehydration => "dehydration",
+            DeathReason::Combat => "combat",
+        }
+    }
+}
+
 /// Reason an agent transitioned from `Idle` to `Seeking` (V7 Phase 5-β /
 /// P5β-3). Encoded into [`CausalEvent::AgentDecision`] so the "왜?" UI
 /// can surface "왜 이 agent가 이 길을 갔나?" in a stable, machine-
@@ -520,6 +552,28 @@ pub enum CausalEvent {
         /// Simulation tick at which dissolution was detected.
         tick: u64,
     },
+
+    /// An agent died (V7 feature `add-starvation-death`). Emitted by the
+    /// shared `survival::despawn_agent` helper — invoked by both
+    /// `StarvationSystem` (needs death) and `CombatSystem` (combat death) —
+    /// at the dead agent's tile so the chronicle can answer "왜 죽었나?".
+    ///
+    /// Mirrors the `AgentBorn` field shape. A causal leaf for the agent's
+    /// lifetime: `parent == None` (no upstream cause is currently linked).
+    AgentDied {
+        /// This event's unique id.
+        id: EventId,
+        /// Parent event id — always `None` (death is a recorded leaf).
+        parent: Option<EventId>,
+        /// The dead agent's `AgentId`.
+        agent: AgentId,
+        /// Tile at which the agent died (its last `Position`).
+        position: (u32, u32),
+        /// Typed cause of death.
+        reason: DeathReason,
+        /// Simulation tick at which the death occurred.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -539,7 +593,8 @@ impl CausalEvent {
             | CausalEvent::CombatCompleted { id, .. }
             | CausalEvent::AgentBorn { id, .. }
             | CausalEvent::SettlementFormed { id, .. }
-            | CausalEvent::SettlementDissolved { id, .. } => *id,
+            | CausalEvent::SettlementDissolved { id, .. }
+            | CausalEvent::AgentDied { id, .. } => *id,
         }
     }
 
@@ -569,7 +624,8 @@ impl CausalEvent {
             | CausalEvent::CombatCompleted { parent, .. }
             | CausalEvent::AgentBorn { parent, .. }
             | CausalEvent::SettlementFormed { parent, .. }
-            | CausalEvent::SettlementDissolved { parent, .. } => *parent,
+            | CausalEvent::SettlementDissolved { parent, .. }
+            | CausalEvent::AgentDied { parent, .. } => *parent,
         }
     }
 
@@ -589,7 +645,8 @@ impl CausalEvent {
             | CausalEvent::CombatCompleted { tick, .. }
             | CausalEvent::AgentBorn { tick, .. }
             | CausalEvent::SettlementFormed { tick, .. }
-            | CausalEvent::SettlementDissolved { tick, .. } => *tick,
+            | CausalEvent::SettlementDissolved { tick, .. }
+            | CausalEvent::AgentDied { tick, .. } => *tick,
         }
     }
 
@@ -611,7 +668,8 @@ impl CausalEvent {
             | CausalEvent::CombatCompleted { .. }
             | CausalEvent::AgentBorn { .. }
             | CausalEvent::SettlementFormed { .. }
-            | CausalEvent::SettlementDissolved { .. } => None,
+            | CausalEvent::SettlementDissolved { .. }
+            | CausalEvent::AgentDied { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }
@@ -878,6 +936,46 @@ mod tests {
         assert_eq!(ev.parent(), Some(300));
         assert_eq!(ev.tick(), 14);
         assert_eq!(ev.channel(), None);
+    }
+
+    #[test]
+    fn death_reason_as_str() {
+        assert_eq!(DeathReason::Starvation.as_str(), "starvation");
+        assert_eq!(DeathReason::Dehydration.as_str(), "dehydration");
+        assert_eq!(DeathReason::Combat.as_str(), "combat");
+    }
+
+    #[test]
+    fn agent_died_records_fields_and_round_trips() {
+        let ev = CausalEvent::AgentDied {
+            id: 500,
+            parent: None,
+            agent: 7,
+            position: (12, 34),
+            reason: DeathReason::Dehydration,
+            tick: 833,
+        };
+        match ev.clone() {
+            CausalEvent::AgentDied { id, parent, agent, position, reason, tick } => {
+                assert_eq!(id, 500);
+                assert_eq!(parent, None);
+                assert_eq!(agent, 7);
+                assert_eq!(position, (12, 34));
+                assert_eq!(reason, DeathReason::Dehydration);
+                assert_eq!(tick, 833);
+            }
+            _ => panic!("expected AgentDied"),
+        }
+        // Accessors round-trip; channel() is None (channel-agnostic).
+        assert_eq!(ev.id(), 500);
+        assert_eq!(ev.parent(), None);
+        assert_eq!(ev.tick(), 833);
+        assert_eq!(ev.channel(), None);
+
+        // DeathReason serde round-trip.
+        let s = ron::to_string(&DeathReason::Starvation).expect("serialize");
+        let r: DeathReason = ron::from_str(&s).expect("deserialize");
+        assert_eq!(r, DeathReason::Starvation);
     }
 
     #[test]

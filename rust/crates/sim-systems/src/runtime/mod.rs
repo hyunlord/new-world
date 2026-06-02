@@ -19,3 +19,4 @@ pub mod memory;
 pub mod needs;
 pub mod settlement;
 pub mod social;
+pub mod survival;

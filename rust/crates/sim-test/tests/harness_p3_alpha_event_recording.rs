@@ -254,7 +254,8 @@ fn harness_p3_alpha_building_placed_fields_round_trip() {
             | CausalEvent::CombatCompleted { tick, .. }
             | CausalEvent::AgentBorn { tick, .. }
             | CausalEvent::SettlementFormed { tick, .. }
-            | CausalEvent::SettlementDissolved { tick, .. } => *tick,
+            | CausalEvent::SettlementDissolved { tick, .. }
+            | CausalEvent::AgentDied { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 0,
@@ -364,7 +365,8 @@ fn harness_p3_alpha_tick_stamp_matches_current_tick() {
             | CausalEvent::CombatCompleted { tick, .. }
             | CausalEvent::AgentBorn { tick, .. }
             | CausalEvent::SettlementFormed { tick, .. }
-            | CausalEvent::SettlementDissolved { tick, .. } => *tick,
+            | CausalEvent::SettlementDissolved { tick, .. }
+            | CausalEvent::AgentDied { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 5,
@@ -487,7 +489,8 @@ fn harness_p3_alpha_per_tile_fifo_eviction_across_ticks() {
             | CausalEvent::CombatCompleted { tick, .. }
             | CausalEvent::AgentBorn { tick, .. }
             | CausalEvent::SettlementFormed { tick, .. }
-            | CausalEvent::SettlementDissolved { tick, .. } => *tick,
+            | CausalEvent::SettlementDissolved { tick, .. }
+            | CausalEvent::AgentDied { tick, .. } => *tick,
         };
         assert_eq!(
             recorded_tick, 4,

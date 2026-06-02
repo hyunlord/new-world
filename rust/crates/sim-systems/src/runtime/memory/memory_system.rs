@@ -238,7 +238,10 @@ fn classify_event(
         | CausalEvent::MemoryRecalled { .. }
         | CausalEvent::AgentBorn { .. }
         | CausalEvent::SettlementFormed { .. }
-        | CausalEvent::SettlementDissolved { .. } => None,
+        | CausalEvent::SettlementDissolved { .. }
+        // add-starvation-death: AgentDied is a causal leaf — the dead agent has
+        // no Memory to encode into, so it is a non-actor event here.
+        | CausalEvent::AgentDied { .. } => None,
     }
 }
 

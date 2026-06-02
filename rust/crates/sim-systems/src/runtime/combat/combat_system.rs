@@ -30,7 +30,7 @@
 use std::collections::HashMap;
 
 use hecs::World;
-use sim_core::causal::CausalEvent;
+use sim_core::causal::{CausalEvent, DeathReason};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, Memory, MemoryEntry, Position, RelationshipKey,
     HOSTILITY_BUMP,
@@ -38,6 +38,7 @@ use sim_core::components::{
 use sim_engine::{RuntimeSystem, SimResources};
 
 use crate::runtime::combat::{DAMAGE_PER_COMBAT_TICK, REQUIRED_COMBAT_PROGRESS};
+use crate::runtime::survival::despawn_agent;
 
 /// Phase 9-β combat resolution system.
 #[derive(Debug, Default)]
@@ -215,22 +216,24 @@ impl RuntimeSystem for CombatSystem {
                 .unwrap_or(true);
 
             if defender_dead {
-                let dead_id = defender_id;
-                let _ = world.despawn(defender_entity);
-
-                // Cleanup all resource maps referencing the dead agent.
-                resources
-                    .relationships
-                    .retain(|k, _| k.0 != dead_id && k.1 != dead_id);
-                resources
-                    .interaction_progress
-                    .retain(|k, _| k.0 != dead_id && k.1 != dead_id);
-                resources
-                    .combat_pairs
-                    .retain(|(a, d)| *a != dead_id && *d != dead_id);
-                resources
-                    .combat_progress
-                    .retain(|(a, d), _| *a != dead_id && *d != dead_id);
+                // Route through the shared death helper (add-starvation-death):
+                // despawn + 4-map purge + settlement-roster cleanup (fixes the
+                // pre-feature combat `member_agents` leak) + `AgentDied`
+                // chronicle. Read the defender's tile BEFORE despawn so the
+                // chronicle entry lands where the agent died.
+                let defender_pos = world
+                    .get::<&Position>(defender_entity)
+                    .map(|p| (p.x, p.y))
+                    .unwrap_or(position);
+                despawn_agent(
+                    world,
+                    resources,
+                    defender_entity,
+                    defender_id,
+                    defender_pos,
+                    DeathReason::Combat,
+                    tick,
+                );
 
                 // Reset attacker to Idle.
                 if let Ok(mut s) = world.get::<&mut AgentState>(attacker_entity) {
