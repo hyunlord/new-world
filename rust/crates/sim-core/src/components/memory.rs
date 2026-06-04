@@ -21,6 +21,55 @@ use serde::{Deserialize, Serialize};
 
 use crate::causal::event::EventId;
 
+/// Cascade-arm classification of a [`MemoryEntry`], recorded at ENCODE time.
+///
+/// # Determinism rationale (`add-resource-scarcity-regen` Fix D)
+///
+/// The cascade-bias machinery in `sim-systems` (`memory_weight_delta`)
+/// originally derived an entry's arm at READ time by looking its `event_id`
+/// up in the per-tile causal ring buffer (`event_id_matches_arm` →
+/// `causal_log.lookup`). That ring is an 8-slot FIFO: an entry whose source
+/// event had been evicted resolved to "no arm" and silently stopped
+/// contributing to the bias sum. Because `event_id` allocation order and ring
+/// eviction timing are not byte-stable across processes, the same logical
+/// memory could be load-bearing in one run and inert in another — flipping a
+/// cascade decision (`Idle` ↔ `Seeking`) from an otherwise identical agent
+/// state (the resource-scarcity determinism root cause).
+///
+/// Storing the arm on the entry at encode time makes `memory_weight_delta` a
+/// pure function of the entry's own fields `(arm, valence, salience,
+/// encoded_tick)` — independent of `event_id` values AND ring eviction. The
+/// `event_id` survives only as a non-load-bearing label (idempotency dedup +
+/// `MemoryRecalled.recalled_event` chronicle field).
+///
+/// The variant set mirrors the `sim-systems` `CascadeArm` natural drives plus
+/// a `None` sentinel for events that classify to no cascade arm (or for
+/// synthetic/test entries that are not cascade-relevant). `Settlement` is
+/// deliberately absent: settlement migration is a positional pull arm, never a
+/// memory-biased one, so no memory entry is ever tagged with it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MemoryArm {
+    /// `AgentDecision { HungerThresholdBreach }`.
+    Hunger,
+    /// `AgentDecision { ThirstThresholdBreach }`.
+    Thirst,
+    /// `AgentDecision { FatigueThresholdBreach }`.
+    Fatigue,
+    /// `AgentDecision { ConstructionReason }` / `ConstructionStarted` /
+    /// `ConstructionCompleted`.
+    Construction,
+    /// `AgentDecision { SocialReason }` / `SocialInteractionStarted` /
+    /// `SocialInteractionCompleted`.
+    Social,
+    /// `CombatStarted` / `CombatCompleted`.
+    Combat,
+    /// Classifies to no cascade arm — anti-recursion variants
+    /// (`MemoryReason` / `CombatReason` / `SettlementReason` / `MemoryRecalled`),
+    /// non-actor events, or synthetic entries with no cascade relevance.
+    /// Never matches a real arm query, so it contributes 0 to every bias sum.
+    None,
+}
+
 /// Per-agent maximum number of [`MemoryEntry`] records retained.
 ///
 /// Bounded by Phase 3-β substrate symmetry (`TILE_CAUSAL_RING_SIZE = 8`)
@@ -65,9 +114,17 @@ pub const SALIENCE_FLOOR: f64 = 0.05;
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct MemoryEntry {
     /// Originating [`CausalEvent`](crate::causal::event::CausalEvent)
-    /// identifier. May reference an evicted event — lookup sites must
-    /// handle the miss gracefully.
+    /// identifier. A non-load-bearing label since Fix D: used for
+    /// idempotency dedup ([`Memory::find_by_event_id`]) and the
+    /// `MemoryRecalled.recalled_event` chronicle field. May reference an
+    /// evicted event — lookup sites must handle the miss gracefully.
     pub event_id: EventId,
+    /// Cascade-arm classification, fixed at ENCODE time by `classify_event`
+    /// (or the direct combat-encode path). The cascade-bias sum
+    /// (`memory_weight_delta`) reads THIS — not a runtime `causal_log`
+    /// lookup — so the bias is a deterministic pure function of the entry's
+    /// own fields. See [`MemoryArm`] for the determinism rationale.
+    pub arm: MemoryArm,
     /// Simulation tick at which this memory was encoded. Used as the
     /// tie-break in lowest-salience eviction (oldest first).
     pub encoded_tick: u64,
@@ -89,9 +146,19 @@ impl MemoryEntry {
     /// Construct an entry. Inputs are clamped to their respective ranges
     /// (`valence ∈ [-1.0, 1.0]`, `salience ∈ [0.0, 1.0]`).
     /// `reinforcement_count` starts at `0`.
-    pub fn new(event_id: EventId, encoded_tick: u64, valence: f64, salience: f64) -> Self {
+    ///
+    /// `arm` is the cascade-arm classification fixed at encode time (Fix D).
+    /// Pass [`MemoryArm::None`] for synthetic / non-cascade-relevant entries.
+    pub fn new(
+        event_id: EventId,
+        encoded_tick: u64,
+        valence: f64,
+        salience: f64,
+        arm: MemoryArm,
+    ) -> Self {
         Self {
             event_id,
+            arm,
             encoded_tick,
             valence: valence.clamp(-1.0, 1.0),
             salience: salience.clamp(0.0, 1.0),
@@ -136,9 +203,20 @@ impl Memory {
             self.entries.push(entry);
             return;
         }
-        // Overflow: find lowest-salience (tie-break: oldest encoded_tick),
-        // replace in place. The `.expect()` is provably unreachable —
-        // `entries.len() == MEMORY_CAP >= 1` at this point.
+        // Overflow: find lowest-salience (tie-break: oldest encoded_tick, then
+        // smallest event_id), replace in place. The `.expect()` is provably
+        // unreachable — `entries.len() == MEMORY_CAP >= 1` at this point.
+        //
+        // The final `event_id` tie-break makes eviction a TOTAL order, so the
+        // victim is independent of Vec position (insertion order). This is
+        // defense-in-depth for the `add-resource-scarcity-regen` determinism
+        // fix: with same-tick social events sharing salience AND encoded_tick,
+        // the prior `(salience, encoded_tick)` comparator returned `Equal` and
+        // `min_by` fell back to the first-in-Vec-order entry — whose order was
+        // the per-process-random causal-log tile order. `event_id` is a
+        // monotonic, globally-unique `EventId`, so the comparator is now total
+        // and order-independent. (The `BTreeMap` causal-log fix already makes
+        // insertion order deterministic; this is the belt to that suspenders.)
         let evict_idx = self
             .entries
             .iter()
@@ -148,6 +226,7 @@ impl Memory {
                     .partial_cmp(&b.salience)
                     .unwrap_or(std::cmp::Ordering::Equal)
                     .then(a.encoded_tick.cmp(&b.encoded_tick))
+                    .then(a.event_id.cmp(&b.event_id))
             })
             .map(|(i, _)| i)
             .expect("entries is non-empty because len() == MEMORY_CAP");
@@ -198,23 +277,24 @@ mod tests {
     use super::*;
 
     fn entry(event_id: EventId, tick: u64, valence: f64, salience: f64) -> MemoryEntry {
-        MemoryEntry::new(event_id, tick, valence, salience)
+        MemoryEntry::new(event_id, tick, valence, salience, MemoryArm::None)
     }
 
     #[test]
     fn entry_construction_clamps_valence_and_salience() {
-        let e = MemoryEntry::new(1, 0, 2.0, 5.0);
+        let e = MemoryEntry::new(1, 0, 2.0, 5.0, MemoryArm::None);
         assert_eq!(e.valence, 1.0);
         assert_eq!(e.salience, 1.0);
 
-        let e = MemoryEntry::new(1, 0, -2.0, -1.0);
+        let e = MemoryEntry::new(1, 0, -2.0, -1.0, MemoryArm::None);
         assert_eq!(e.valence, -1.0);
         assert_eq!(e.salience, 0.0);
 
-        let e = MemoryEntry::new(1, 0, 0.5, 0.7);
+        let e = MemoryEntry::new(1, 0, 0.5, 0.7, MemoryArm::Social);
         assert_eq!(e.valence, 0.5);
         assert_eq!(e.salience, 0.7);
         assert_eq!(e.reinforcement_count, 0);
+        assert_eq!(e.arm, MemoryArm::Social, "arm is stored verbatim at construction");
     }
 
     #[test]
@@ -347,5 +427,35 @@ mod tests {
     fn default_constructs_empty_memory() {
         let m = Memory::default();
         assert_eq!(m.entries.len(), 0);
+    }
+
+    #[test]
+    fn arm_is_stored_and_survives_serde() {
+        // Fix D: the encode-time arm is a real, serialised field of the entry.
+        for arm in [
+            MemoryArm::Hunger,
+            MemoryArm::Thirst,
+            MemoryArm::Fatigue,
+            MemoryArm::Construction,
+            MemoryArm::Social,
+            MemoryArm::Combat,
+            MemoryArm::None,
+        ] {
+            let e = MemoryEntry::new(42, 7, -0.4, 0.9, arm);
+            assert_eq!(e.arm, arm);
+            let json = ron::to_string(&e).expect("serialize");
+            let r: MemoryEntry = ron::from_str(&json).expect("deserialize");
+            assert_eq!(e, r, "arm must round-trip through serde for {arm:?}");
+            assert_eq!(r.arm, arm);
+        }
+    }
+
+    #[test]
+    fn arm_participates_in_equality() {
+        // Two entries identical except for `arm` are NOT equal — the arm is a
+        // load-bearing discriminator, not cosmetic metadata.
+        let a = MemoryEntry::new(1, 0, 0.5, 0.5, MemoryArm::Social);
+        let b = MemoryEntry::new(1, 0, 0.5, 0.5, MemoryArm::Construction);
+        assert_ne!(a, b, "arm difference must break equality");
     }
 }

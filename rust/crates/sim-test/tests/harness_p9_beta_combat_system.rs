@@ -29,7 +29,7 @@ use std::collections::HashMap;
 
 use sim_core::causal::{CausalEvent, DecisionReason, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryEntry, MEMORY_CAP,
+    Agent, AgentId, AgentState, BodyHealth, Hunger, Memory, MemoryArm, MemoryEntry, MEMORY_CAP,
     RelationshipKey, RelationshipState, SALIENCE_FLOOR, Sleep, Social, TargetKind,
     Thirst, DEFAULT_MAX_HP, HOSTILITY_BUMP,
 };
@@ -97,8 +97,9 @@ fn setup_pair_with_combat_memory(
     // Pre-populate causal_log at the attacker's tile with two synthetic
     // AgentDecision{CombatReason} events the attacker can "remember" as
     // load-bearing. Using AgentDecision rather than CombatCompleted avoids
-    // inflating count_combat_completed / count_combat_started while still
-    // matching CascadeArm::Combat in event_id_matches_arm (line 117).
+    // inflating count_combat_completed / count_combat_started. Each seed
+    // entry is tagged MemoryArm::Combat (Fix D) so the cascade-bias sum
+    // recognises it from the stored arm, without a causal_log lookup.
     let tile_idx = attacker_y * W + attacker_x;
     let ev_id_a = e.resources.issue_event_id();
     let ev_id_b = e.resources.issue_event_id();
@@ -130,8 +131,8 @@ fn setup_pair_with_combat_memory(
     // salience. Combined delta = 2 * (-0.8 * 0.9 * 1.0) = -1.44 which is
     // strictly less than -BIAS_FLIP_THRESHOLD (-1.0).
     let attacker_mem_seed = vec![
-        MemoryEntry::new(ev_id_a, 0, -0.8, 0.9),
-        MemoryEntry::new(ev_id_b, 0, -0.8, 0.9),
+        MemoryEntry::new(ev_id_a, 0, -0.8, 0.9, MemoryArm::Combat),
+        MemoryEntry::new(ev_id_b, 0, -0.8, 0.9, MemoryArm::Combat),
     ];
     {
         let mut mem = e.world.get::<&mut Memory>(attacker_entity).unwrap();
@@ -789,8 +790,8 @@ fn harness_p9_beta_a18_pair_dedup_smaller_id_only_emitter() {
         );
         {
             let mut mem = e.world.get::<&mut Memory>(b_entity).unwrap();
-            mem.insert(MemoryEntry::new(ev_c, 0, -0.8, 0.9));
-            mem.insert(MemoryEntry::new(ev_d, 0, -0.8, 0.9));
+            mem.insert(MemoryEntry::new(ev_c, 0, -0.8, 0.9, MemoryArm::Combat));
+            mem.insert(MemoryEntry::new(ev_d, 0, -0.8, 0.9, MemoryArm::Combat));
         }
         e.tick();
         assert_eq!(
@@ -880,8 +881,8 @@ fn harness_p9_beta_a18_pair_dedup_smaller_id_only_emitter() {
         );
         {
             let mut mem = e.world.get::<&mut Memory>(b_entity).unwrap();
-            mem.insert(MemoryEntry::new(ev_e, 0, -0.8, 0.9));
-            mem.insert(MemoryEntry::new(ev_f, 0, -0.8, 0.9));
+            mem.insert(MemoryEntry::new(ev_e, 0, -0.8, 0.9, MemoryArm::Combat));
+            mem.insert(MemoryEntry::new(ev_f, 0, -0.8, 0.9, MemoryArm::Combat));
         }
 
         e.tick();
@@ -1008,7 +1009,7 @@ fn harness_p9_beta_a23_phase9_alpha_constants_regression() {
 #[test]
 fn harness_p9_beta_a24_phase8_alpha_memory_exports() {
     let _: Memory = Memory::new();
-    let _: MemoryEntry = MemoryEntry::new(1, 0, 0.0, 0.5);
+    let _: MemoryEntry = MemoryEntry::new(1, 0, 0.0, 0.5, MemoryArm::None);
     let _: usize = MEMORY_CAP;
     let _: f64 = SALIENCE_FLOOR;
 }

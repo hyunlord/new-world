@@ -17,6 +17,7 @@ pub mod decision;
 pub mod influence;
 pub mod memory;
 pub mod needs;
+pub mod resource_regen;
 pub mod settlement;
 pub mod social;
 pub mod survival;

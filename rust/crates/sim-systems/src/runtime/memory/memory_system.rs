@@ -34,7 +34,7 @@ use std::collections::HashMap;
 
 use hecs::{Entity, World};
 use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId};
-use sim_core::components::{Agent, AgentId, Memory, MemoryEntry};
+use sim_core::components::{Agent, AgentId, Memory, MemoryArm, MemoryEntry};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Per-tick salience decay rate. Locked at `0.001` by plan §2 P8β-NEW-2.
@@ -126,14 +126,14 @@ impl RuntimeSystem for MemorySystem {
                 if event.tick() != current_tick {
                     continue;
                 }
-                if let Some((salience, valence, agents)) =
+                if let Some((arm, salience, valence, agents)) =
                     classify_event(event, &resources.causal_log)
                 {
                     for agent_id in agents {
                         if let Some(entity) = id_to_entity.get(&agent_id).copied() {
                             to_insert.push((
                                 entity,
-                                MemoryEntry::new(event.id(), current_tick, valence, salience),
+                                MemoryEntry::new(event.id(), current_tick, valence, salience, arm),
                             ));
                         }
                     }
@@ -165,8 +165,17 @@ impl RuntimeSystem for MemorySystem {
     }
 }
 
-/// Classify a [`CausalEvent`] to its `(salience, valence, actor_agent_ids)`
-/// tuple per the planning §β mapping table.
+/// Classify a [`CausalEvent`] to its `(arm, salience, valence,
+/// actor_agent_ids)` tuple per the planning §β mapping table.
+///
+/// The leading [`MemoryArm`] is the cascade-arm classification stored on the
+/// resulting [`MemoryEntry`] at encode time (Fix D). It is the SOLE source of
+/// an entry's arm thereafter — the cascade-bias sum no longer re-derives it
+/// from a `causal_log` lookup, so memory bias is deterministic regardless of
+/// `event_id` values or ring-buffer eviction. The arm assigned here mirrors
+/// exactly the `(arm, event)` pairs the former `event_id_matches_arm`
+/// recognised, so cascade behaviour is preserved for any event still resident
+/// in the ring.
 ///
 /// Returns `None` for non-actor events (BuildingPlaced / StampDirty /
 /// InfluenceChanged), anti-recursion variants (AgentDecision{MemoryReason}
@@ -175,14 +184,14 @@ impl RuntimeSystem for MemorySystem {
 fn classify_event(
     event: &CausalEvent,
     causal_log: &CausalLogStorage,
-) -> Option<(f64, f64, Vec<AgentId>)> {
+) -> Option<(MemoryArm, f64, f64, Vec<AgentId>)> {
     match event {
         CausalEvent::AgentDecision { agent, reason, .. } => match reason {
-            DecisionReason::HungerThresholdBreach => Some((0.4, -0.3, vec![*agent])),
-            DecisionReason::ThirstThresholdBreach => Some((0.4, -0.3, vec![*agent])),
-            DecisionReason::FatigueThresholdBreach => Some((0.3, -0.2, vec![*agent])),
-            DecisionReason::ConstructionReason => Some((0.5, 0.1, vec![*agent])),
-            DecisionReason::SocialReason => Some((0.5, 0.2, vec![*agent])),
+            DecisionReason::HungerThresholdBreach => Some((MemoryArm::Hunger, 0.4, -0.3, vec![*agent])),
+            DecisionReason::ThirstThresholdBreach => Some((MemoryArm::Thirst, 0.4, -0.3, vec![*agent])),
+            DecisionReason::FatigueThresholdBreach => Some((MemoryArm::Fatigue, 0.3, -0.2, vec![*agent])),
+            DecisionReason::ConstructionReason => Some((MemoryArm::Construction, 0.5, 0.1, vec![*agent])),
+            DecisionReason::SocialReason => Some((MemoryArm::Social, 0.5, 0.2, vec![*agent])),
             DecisionReason::MemoryReason => None, // anti-recursion
             DecisionReason::CombatReason => None, // Phase 9-β anti-recursion
             DecisionReason::SettlementReason => None, // Phase 10-β anti-recursion
@@ -193,7 +202,7 @@ fn classify_event(
             let parent_id = (*parent)?;
             let parent_event = causal_log.lookup(parent_id)?;
             if let CausalEvent::AgentDecision { agent, .. } = parent_event {
-                Some((0.6, 0.3, vec![*agent]))
+                Some((MemoryArm::Construction, 0.6, 0.3, vec![*agent]))
             } else {
                 None
             }
@@ -209,7 +218,7 @@ fn classify_event(
                     let grandparent_id = (*gp)?;
                     let grandparent_event = causal_log.lookup(grandparent_id)?;
                     if let CausalEvent::AgentDecision { agent, .. } = grandparent_event {
-                        Some((0.8, 0.6, vec![*agent]))
+                        Some((MemoryArm::Construction, 0.8, 0.6, vec![*agent]))
                     } else {
                         None
                     }
@@ -218,19 +227,19 @@ fn classify_event(
             }
         }
         CausalEvent::SocialInteractionStarted { agents, .. } => {
-            Some((0.6, 0.4, vec![agents.0, agents.1]))
+            Some((MemoryArm::Social, 0.6, 0.4, vec![agents.0, agents.1]))
         }
         CausalEvent::SocialInteractionCompleted { agents, .. } => {
-            Some((0.8, 0.7, vec![agents.0, agents.1]))
+            Some((MemoryArm::Social, 0.8, 0.7, vec![agents.0, agents.1]))
         }
         // Phase 9-β encoding: CombatStarted → attacker only (defender
         // did not initiate); CombatCompleted → both parties (mirrors
         // SocialInteraction pattern, negative valence — hostile memory).
         CausalEvent::CombatStarted { attacker, .. } => {
-            Some((0.8, -0.6, vec![*attacker]))
+            Some((MemoryArm::Combat, 0.8, -0.6, vec![*attacker]))
         }
         CausalEvent::CombatCompleted { attacker, defender, .. } => {
-            Some((0.9, -0.8, vec![*attacker, *defender]))
+            Some((MemoryArm::Combat, 0.9, -0.8, vec![*attacker, *defender]))
         }
         CausalEvent::BuildingPlaced { .. }
         | CausalEvent::StampDirty { .. }
@@ -269,7 +278,7 @@ mod tests {
             reason: DecisionReason::HungerThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&hunger, &log), Some((0.4, -0.3, vec![7])));
+        assert_eq!(classify_event(&hunger, &log), Some((MemoryArm::Hunger, 0.4, -0.3, vec![7])));
 
         let thirst = CausalEvent::AgentDecision {
             id: 1,
@@ -279,7 +288,7 @@ mod tests {
             reason: DecisionReason::ThirstThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&thirst, &log), Some((0.4, -0.3, vec![7])));
+        assert_eq!(classify_event(&thirst, &log), Some((MemoryArm::Thirst, 0.4, -0.3, vec![7])));
 
         let fatigue = CausalEvent::AgentDecision {
             id: 1,
@@ -289,7 +298,7 @@ mod tests {
             reason: DecisionReason::FatigueThresholdBreach,
             tick: 0,
         };
-        assert_eq!(classify_event(&fatigue, &log), Some((0.3, -0.2, vec![7])));
+        assert_eq!(classify_event(&fatigue, &log), Some((MemoryArm::Fatigue, 0.3, -0.2, vec![7])));
 
         let con = CausalEvent::AgentDecision {
             id: 1,
@@ -299,7 +308,7 @@ mod tests {
             reason: DecisionReason::ConstructionReason,
             tick: 0,
         };
-        assert_eq!(classify_event(&con, &log), Some((0.5, 0.1, vec![7])));
+        assert_eq!(classify_event(&con, &log), Some((MemoryArm::Construction, 0.5, 0.1, vec![7])));
 
         let social = CausalEvent::AgentDecision {
             id: 1,
@@ -309,7 +318,7 @@ mod tests {
             reason: DecisionReason::SocialReason,
             tick: 0,
         };
-        assert_eq!(classify_event(&social, &log), Some((0.5, 0.2, vec![7])));
+        assert_eq!(classify_event(&social, &log), Some((MemoryArm::Social, 0.5, 0.2, vec![7])));
 
         // SocialInteractionStarted returns BOTH agents.
         let started = CausalEvent::SocialInteractionStarted {
@@ -319,7 +328,7 @@ mod tests {
             position: (0, 0),
             tick: 0,
         };
-        assert_eq!(classify_event(&started, &log), Some((0.6, 0.4, vec![3, 5])));
+        assert_eq!(classify_event(&started, &log), Some((MemoryArm::Social, 0.6, 0.4, vec![3, 5])));
 
         let completed = CausalEvent::SocialInteractionCompleted {
             id: 1,
@@ -331,7 +340,7 @@ mod tests {
         };
         assert_eq!(
             classify_event(&completed, &log),
-            Some((0.8, 0.7, vec![3, 5]))
+            Some((MemoryArm::Social, 0.8, 0.7, vec![3, 5]))
         );
     }
 
@@ -413,7 +422,7 @@ mod tests {
         };
         assert_eq!(
             classify_event(&started, &log),
-            Some((0.6, 0.3, vec![42]))
+            Some((MemoryArm::Construction, 0.6, 0.3, vec![42]))
         );
     }
 
@@ -446,7 +455,7 @@ mod tests {
         };
         assert_eq!(
             classify_event(&completed, &log),
-            Some((0.8, 0.6, vec![42]))
+            Some((MemoryArm::Construction, 0.8, 0.6, vec![42]))
         );
     }
 

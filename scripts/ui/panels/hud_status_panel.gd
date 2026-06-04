@@ -169,7 +169,9 @@ func _prune_old() -> void:
 
 
 func _refresh() -> void:
+	@warning_ignore("integer_division")
 	var day: int = _frame_tick / TICKS_PER_DAY
+	@warning_ignore("integer_division")
 	var year: int = day / DAYS_PER_YEAR
 	if _day_label != null:
 		_day_label.text = "Day %d" % day

@@ -36,6 +36,9 @@
 use sim_core::causal::event::EventId;
 // Phase 8-α top-level imports (A19 contract).
 use sim_core::components::{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
+// Fix D: separate import line so the A19 source-string audit of the canonical
+// `{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR}` use statement still matches.
+use sim_core::components::MemoryArm;
 // Phase 7-α regression imports (A20 contract).
 use sim_core::components::{RelationshipKey, Social};
 
@@ -43,19 +46,19 @@ use sim_core::components::{RelationshipKey, Social};
 #[test]
 fn harness_p8_alpha_a1_entry_clamps_valence() {
     // Type A: closed-interval clamp contract on valence.
-    let a = MemoryEntry::new(1, 0, 2.0, 0.5);
+    let a = MemoryEntry::new(1, 0, 2.0, 0.5, MemoryArm::None);
     assert_eq!(a.valence, 1.0, "valence above range must clamp to 1.0");
 
-    let b = MemoryEntry::new(1, 0, -2.0, 0.5);
+    let b = MemoryEntry::new(1, 0, -2.0, 0.5, MemoryArm::None);
     assert_eq!(b.valence, -1.0, "valence below range must clamp to -1.0");
 
-    let c = MemoryEntry::new(1, 0, 0.5, 0.5);
+    let c = MemoryEntry::new(1, 0, 0.5, 0.5, MemoryArm::None);
     assert_eq!(c.valence, 0.5, "in-range valence must be preserved exactly");
 
-    let d = MemoryEntry::new(1, 0, 1.0, 0.5);
+    let d = MemoryEntry::new(1, 0, 1.0, 0.5, MemoryArm::None);
     assert_eq!(d.valence, 1.0, "upper-boundary valence must be retained");
 
-    let e = MemoryEntry::new(1, 0, -1.0, 0.5);
+    let e = MemoryEntry::new(1, 0, -1.0, 0.5, MemoryArm::None);
     assert_eq!(e.valence, -1.0, "lower-boundary valence must be retained");
 }
 
@@ -63,19 +66,19 @@ fn harness_p8_alpha_a1_entry_clamps_valence() {
 #[test]
 fn harness_p8_alpha_a2_entry_clamps_salience() {
     // Type A: closed-interval clamp contract on salience.
-    let a = MemoryEntry::new(1, 0, 0.0, 5.0);
+    let a = MemoryEntry::new(1, 0, 0.0, 5.0, MemoryArm::None);
     assert_eq!(a.salience, 1.0);
 
-    let b = MemoryEntry::new(1, 0, 0.0, -1.0);
+    let b = MemoryEntry::new(1, 0, 0.0, -1.0, MemoryArm::None);
     assert_eq!(b.salience, 0.0);
 
-    let c = MemoryEntry::new(1, 0, 0.0, 0.7);
+    let c = MemoryEntry::new(1, 0, 0.0, 0.7, MemoryArm::None);
     assert_eq!(c.salience, 0.7);
 
-    let d = MemoryEntry::new(1, 0, 0.0, 1.0);
+    let d = MemoryEntry::new(1, 0, 0.0, 1.0, MemoryArm::None);
     assert_eq!(d.salience, 1.0);
 
-    let e = MemoryEntry::new(1, 0, 0.0, 0.0);
+    let e = MemoryEntry::new(1, 0, 0.0, 0.0, MemoryArm::None);
     assert_eq!(e.salience, 0.0);
 }
 
@@ -83,7 +86,7 @@ fn harness_p8_alpha_a2_entry_clamps_salience() {
 #[test]
 fn harness_p8_alpha_a3_entry_initial_reinforcement_count_zero() {
     // Type A: a fresh entry has never been recalled.
-    let e = MemoryEntry::new(42, 100, 0.5, 0.5);
+    let e = MemoryEntry::new(42, 100, 0.5, 0.5, MemoryArm::None);
     assert_eq!(e.reinforcement_count, 0);
 }
 
@@ -109,7 +112,7 @@ fn harness_p8_alpha_a5_insert_under_cap_preserves_fields() {
     for i in 0..5u64 {
         let valence = (i as f64) * 0.1;
         let salience = 0.3 + (i as f64) * 0.1;
-        m.insert(MemoryEntry::new(i + 10, i * 7, valence, salience));
+        m.insert(MemoryEntry::new(i + 10, i * 7, valence, salience, MemoryArm::None));
     }
     assert_eq!(m.entries.len(), 5);
 
@@ -133,11 +136,11 @@ fn harness_p8_alpha_a6_insert_at_cap_evicts_lowest_salience() {
     let mut m = Memory::new();
     for i in 0..MEMORY_CAP {
         let salience = if i == 7 { 0.1 } else { 0.5 };
-        m.insert(MemoryEntry::new(i as EventId, i as u64, 0.0, salience));
+        m.insert(MemoryEntry::new(i as EventId, i as u64, 0.0, salience, MemoryArm::None));
     }
 
     // Insert overflow entry.
-    m.insert(MemoryEntry::new(999, 10000, 0.3, 0.5));
+    m.insert(MemoryEntry::new(999, 10000, 0.3, 0.5, MemoryArm::None));
 
     assert_eq!(m.entries.len(), MEMORY_CAP);
 
@@ -173,12 +176,12 @@ fn harness_p8_alpha_a7_insert_eviction_tiebreak_oldest_tick() {
     let mut m = Memory::new();
     for (j, &encoded_tick) in pi.iter().enumerate() {
         let event_id = 100 + j as EventId;
-        m.insert(MemoryEntry::new(event_id, encoded_tick, 0.0, 0.5));
+        m.insert(MemoryEntry::new(event_id, encoded_tick, 0.0, 0.5, MemoryArm::None));
     }
     assert_eq!(m.entries.len(), MEMORY_CAP);
 
     // Insert tie-break overflow.
-    m.insert(MemoryEntry::new(999, 99999, 0.0, 0.5));
+    m.insert(MemoryEntry::new(999, 99999, 0.0, 0.5, MemoryArm::None));
 
     let ids: std::collections::HashSet<EventId> = m.entries.iter().map(|e| e.event_id).collect();
     assert!(ids.contains(&999), "new entry must be present");
@@ -210,15 +213,16 @@ fn harness_p8_alpha_a8_eviction_salience_primary_tick_secondary() {
             1000 + i as u64,
             0.0,
             0.9,
+            MemoryArm::None,
         ));
     }
     // Two low-salience candidates: 900 older, 901 newer.
-    m.insert(MemoryEntry::new(900, 50, 0.0, 0.2));
-    m.insert(MemoryEntry::new(901, 51, 0.0, 0.2));
+    m.insert(MemoryEntry::new(900, 50, 0.0, 0.2, MemoryArm::None));
+    m.insert(MemoryEntry::new(901, 51, 0.0, 0.2, MemoryArm::None));
     assert_eq!(m.entries.len(), MEMORY_CAP);
 
     // Overflow insert.
-    m.insert(MemoryEntry::new(999, 99999, 0.0, 0.5));
+    m.insert(MemoryEntry::new(999, 99999, 0.0, 0.5, MemoryArm::None));
 
     let ids: std::collections::HashSet<EventId> = m.entries.iter().map(|e| e.event_id).collect();
     assert!(ids.contains(&999), "new entry must be present");
@@ -240,8 +244,8 @@ fn harness_p8_alpha_a8_eviction_salience_primary_tick_secondary() {
 #[test]
 fn harness_p8_alpha_a9_decay_reduces_uniformly() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(1, 0, 0.0, 0.5));
-    m.insert(MemoryEntry::new(2, 0, 0.0, 0.3));
+    m.insert(MemoryEntry::new(1, 0, 0.0, 0.5, MemoryArm::None));
+    m.insert(MemoryEntry::new(2, 0, 0.0, 0.3, MemoryArm::None));
     m.decay_one_tick(0.1);
 
     let idx_a = m.find_by_event_id(1).expect("entry 1 must exist");
@@ -262,7 +266,7 @@ fn harness_p8_alpha_a9_decay_reduces_uniformly() {
 #[test]
 fn harness_p8_alpha_a10_decay_saturates_at_zero() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(1, 0, 0.0, 0.05));
+    m.insert(MemoryEntry::new(1, 0, 0.0, 0.05, MemoryArm::None));
     m.decay_one_tick(0.5);
     let idx = m.find_by_event_id(1).expect("entry 1 must exist");
     assert_eq!(m.entries[idx].salience, 0.0);
@@ -280,7 +284,7 @@ fn harness_p8_alpha_a11_decay_empty_is_noop() {
 #[test]
 fn harness_p8_alpha_a12_reinforce_saturates_and_increments() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(1, 0, 0.0, 0.95));
+    m.insert(MemoryEntry::new(1, 0, 0.0, 0.95, MemoryArm::None));
     let ok = m.reinforce(0, 0.2);
     assert!(ok);
     assert_eq!(m.entries[0].salience, 1.0);
@@ -291,7 +295,7 @@ fn harness_p8_alpha_a12_reinforce_saturates_and_increments() {
 #[test]
 fn harness_p8_alpha_a13_reinforce_zero_boost_increments_count() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(1, 0, 0.0, 0.42));
+    m.insert(MemoryEntry::new(1, 0, 0.0, 0.42, MemoryArm::None));
     for k in 1..=5u32 {
         let ok = m.reinforce(0, 0.0);
         assert!(ok);
@@ -312,7 +316,7 @@ fn harness_p8_alpha_a14_reinforce_invalid_index_no_side_effects() {
     // (a) empty Memory.
     assert!(!m.reinforce(0, 0.5));
     // (b) out-of-bounds with one entry present.
-    m.insert(MemoryEntry::new(1, 0, 0.0, 0.6));
+    m.insert(MemoryEntry::new(1, 0, 0.0, 0.6, MemoryArm::None));
     assert!(!m.reinforce(99, 0.5));
     assert_eq!(m.entries[0].salience, 0.6);
     assert_eq!(m.entries[0].reinforcement_count, 0);
@@ -322,9 +326,9 @@ fn harness_p8_alpha_a14_reinforce_invalid_index_no_side_effects() {
 #[test]
 fn harness_p8_alpha_a15_find_by_event_id_hit_and_miss() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(42, 0, 0.0, 0.5));
-    m.insert(MemoryEntry::new(7, 1, 0.0, 0.5));
-    m.insert(MemoryEntry::new(99, 2, 0.0, 0.5));
+    m.insert(MemoryEntry::new(42, 0, 0.0, 0.5, MemoryArm::None));
+    m.insert(MemoryEntry::new(7, 1, 0.0, 0.5, MemoryArm::None));
+    m.insert(MemoryEntry::new(99, 2, 0.0, 0.5, MemoryArm::None));
 
     let a = m.find_by_event_id(42).expect("event_id 42 present");
     let b = m.find_by_event_id(7).expect("event_id 7 present");
@@ -346,7 +350,7 @@ fn harness_p8_alpha_a15_find_by_event_id_hit_and_miss() {
 // ─── A16: MemoryEntry serde round-trip preserves all fields ─────────────
 #[test]
 fn harness_p8_alpha_a16_entry_serde_round_trip() {
-    let e = MemoryEntry::new(7, 100, -0.5, 0.7);
+    let e = MemoryEntry::new(7, 100, -0.5, 0.7, MemoryArm::None);
     let json = serde_json::to_string(&e).expect("serialize");
     let r: MemoryEntry = serde_json::from_str(&json).expect("deserialize");
     assert_eq!(e.event_id, r.event_id);
@@ -360,8 +364,8 @@ fn harness_p8_alpha_a16_entry_serde_round_trip() {
 #[test]
 fn harness_p8_alpha_a17_memory_serde_round_trip() {
     let mut m = Memory::new();
-    m.insert(MemoryEntry::new(1, 10, 0.2, 0.6));
-    m.insert(MemoryEntry::new(2, 20, -0.3, 0.8));
+    m.insert(MemoryEntry::new(1, 10, 0.2, 0.6, MemoryArm::None));
+    m.insert(MemoryEntry::new(2, 20, -0.3, 0.8, MemoryArm::None));
 
     let json = serde_json::to_string(&m).expect("serialize");
     let r: Memory = serde_json::from_str(&json).expect("deserialize");
@@ -413,7 +417,7 @@ fn harness_p8_alpha_a19_import_path_audit() {
     );
     // Runtime witness: a construction via the top-level path executes.
     let _m: Memory = Memory::new();
-    let _e: MemoryEntry = MemoryEntry::new(0, 0, 0.0, 0.0);
+    let _e: MemoryEntry = MemoryEntry::new(0, 0, 0.0, 0.0, MemoryArm::None);
 }
 
 // ─── A20: Phase 7-α exports remain visible (regression sentinel) ────────

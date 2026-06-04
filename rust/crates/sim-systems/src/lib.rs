@@ -200,6 +200,30 @@ pub fn register_survival_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::survival::StarvationSystem::new()));
 }
 
+/// Register the `add-resource-scarcity-regen` resource stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 126 : [`runtime::resource_regen::StaleSeekTargetSystem`] (interval 1)
+/// - 140 : [`runtime::resource_regen::ResourceRegenSystem`]
+///   (interval [`runtime::resource_regen::REGEN_INTERVAL`])
+///
+/// `ResourceRegenSystem` slots strictly after `StarvationSystem` (priority 139)
+/// and strictly before `InfluenceVisualizationSystem` (priority 1000).
+/// `StaleSeekTargetSystem` slots immediately after `AgentDecisionSystem`
+/// (priority 125) so it reconciles a scarcity-stale resource `SeekTarget`
+/// before the next tick's movement step.
+///
+/// Both are pure no-ops unless scarcity is active: `ResourceRegenSystem` is a
+/// no-op while the `*_source_max` ceiling registries are empty, and
+/// `StaleSeekTargetSystem` is a no-op while every resource seeker's target tile
+/// is present (infinite `u8::MAX` sources are never removed). Only the
+/// production `seed_finite_resource_scarcity` path makes sources finite, so the
+/// 12 shared harnesses stay byte-for-byte unchanged.
+pub fn register_resource_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::resource_regen::StaleSeekTargetSystem::new()));
+    engine.register_system(Box::new(runtime::resource_regen::ResourceRegenSystem::new()));
+}
+
 /// V7 Phase 7-β / P7β-15 — canonical production system registration.
 ///
 /// Single source of truth for "what systems run in a production engine":
@@ -222,7 +246,9 @@ pub fn register_survival_systems(engine: &mut SimEngine) {
 /// - 136  MemorySystem (Phase 8-β)
 /// - 137  CombatSystem (Phase 9-β)
 /// - 138  SettlementSystem (Phase 10-β)
+/// - 126  StaleSeekTargetSystem (add-resource-scarcity-regen, interval 1)
 /// - 139  StarvationSystem (add-starvation-death)
+/// - 140  ResourceRegenSystem (add-resource-scarcity-regen, interval 120)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -238,4 +264,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_combat_systems(engine);
     register_settlement_systems(engine);
     register_survival_systems(engine);
+    register_resource_systems(engine);
 }

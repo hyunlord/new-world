@@ -19,8 +19,8 @@
 
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryEntry,
-    Position, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryArm,
+    MemoryEntry, Position, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
@@ -177,7 +177,7 @@ fn seed_construction_natural_with_social_bias(
             .world
             .get::<&mut Memory>(e)
             .unwrap()
-            .insert(MemoryEntry::new(entry2_id, 0, 0.5, 1.0));
+            .insert(MemoryEntry::new(entry2_id, 0, 0.5, 1.0, MemoryArm::Social));
         engine.resources.causal_log.push(
             idx,
             CausalEvent::SocialInteractionStarted {
@@ -239,12 +239,12 @@ fn seed_social_natural_with_construction_bias(
         .world
         .get::<&mut Memory>(e)
         .unwrap()
-        .insert(MemoryEntry::new(c1, 0, 1.0, 1.0));
+        .insert(MemoryEntry::new(c1, 0, 1.0, 1.0, MemoryArm::Construction));
     engine
         .world
         .get::<&mut Memory>(e)
         .unwrap()
-        .insert(MemoryEntry::new(c2, 0, 0.5, 1.0));
+        .insert(MemoryEntry::new(c2, 0, 0.5, 1.0, MemoryArm::Construction));
     (e, id)
 }
 
@@ -566,7 +566,7 @@ fn harness_p8_beta_a11_anti_recursion_memory_reason_not_encoded() {
     // After the flip AgentDecisionSystem emits AgentDecision{MemoryReason}.
     let mut engine = fresh_engine();
     let tile = (72u32, 72u32);
-    let seed = MemoryEntry::new(1_110_001, 0, 1.0, 1.0);
+    let seed = MemoryEntry::new(1_110_001, 0, 1.0, 1.0, MemoryArm::Social);
     let (entity, agent_id) =
         seed_construction_natural_with_social_bias(&mut engine, tile, Some(seed));
 
@@ -613,7 +613,7 @@ fn harness_p8_beta_a11_anti_recursion_memory_reason_not_encoded() {
 fn harness_p8_beta_a12_anti_recursion_memory_recalled_not_encoded() {
     let mut engine = fresh_engine();
     let tile = (73u32, 73u32);
-    let seed = MemoryEntry::new(1_120_001, 0, 1.0, 1.0);
+    let seed = MemoryEntry::new(1_120_001, 0, 1.0, 1.0, MemoryArm::Social);
     let _ = seed_construction_natural_with_social_bias(&mut engine, tile, Some(seed));
 
     engine.tick();
@@ -768,7 +768,7 @@ fn harness_p8_beta_a15_decay_one_tick_uniform_delta_contiguous_window() {
     {
         let mut mem = engine.world.get::<&mut Memory>(entity).unwrap();
         for (i, (&sal, &eid)) in initial_saliences.iter().zip(event_ids.iter()).enumerate() {
-            mem.insert(MemoryEntry::new(eid, base_tick + i as u64, 0.0, sal));
+            mem.insert(MemoryEntry::new(eid, base_tick + i as u64, 0.0, sal, MemoryArm::None));
         }
     }
 
@@ -811,7 +811,7 @@ fn harness_p8_beta_a16_cascade_flip_social_bias_target() {
     let mut engine = fresh_engine();
     let tile = (52u32, 52u32);
     // seed_id starts the primary Social entry (top contributor after flip)
-    let seed = MemoryEntry::new(500_000_001, 0, 1.0, 1.0);
+    let seed = MemoryEntry::new(500_000_001, 0, 1.0, 1.0, MemoryArm::Social);
     let (entity, agent_id) =
         seed_construction_natural_with_social_bias(&mut engine, tile, Some(seed));
 
@@ -1003,7 +1003,7 @@ fn build_a18_scenario() -> (SimEngine, hecs::Entity, AgentId, EventId, EventId) 
         .world
         .get::<&mut Memory>(e)
         .unwrap()
-        .insert(MemoryEntry::new(x_event_id, 0, 0.05, 0.06));
+        .insert(MemoryEntry::new(x_event_id, 0, 0.05, 0.06, MemoryArm::Construction));
 
     // Y-set causal events and Memory entries (load-bearing Social bias).
     // Both y1 and y2 events are always pushed to the causal log; Memory entries
@@ -1027,7 +1027,7 @@ fn build_a18_scenario() -> (SimEngine, hecs::Entity, AgentId, EventId, EventId) 
             .world
             .get::<&mut Memory>(e)
             .unwrap()
-            .insert(MemoryEntry::new(eid, 0, sal, 1.0));
+            .insert(MemoryEntry::new(eid, 0, sal, 1.0, MemoryArm::Social));
     }
     (engine, e, agent_id, y1, y2)
 }
@@ -1121,9 +1121,9 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
         position: tile, tick: 0,
     });
     engine_p.world.get::<&mut Memory>(ent_p).unwrap()
-        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal));
+        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal, MemoryArm::Social));
     engine_p.world.get::<&mut Memory>(ent_p).unwrap()
-        .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0));
+        .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0, MemoryArm::Social));
 
     // Build engine_N — IDENTICAL setup to engine_P (ConstructionSite + peer,
     // same causal-log Social events, Social=0, identical 2 Social Memory entries).
@@ -1167,14 +1167,14 @@ fn harness_p8_beta_a19_reinforcement_boost_nontrivial_and_placebo_trajectory() {
     });
     // IDENTICAL Social entries to engine_P.
     engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal));
+        .insert(MemoryEntry::new(seed_id, 0, 1.0, seed_sal, MemoryArm::Social));
     engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0));
+        .insert(MemoryEntry::new(seed_id2, 0, 0.5, 1.0, MemoryArm::Social));
     // Construction entries (overwhelming natural margin).
     engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(con_id1, 0, 1.0, 1.0));
+        .insert(MemoryEntry::new(con_id1, 0, 1.0, 1.0, MemoryArm::Construction));
     engine_n.world.get::<&mut Memory>(ent_n).unwrap()
-        .insert(MemoryEntry::new(con_id2, 0, 1.0, 1.0));
+        .insert(MemoryEntry::new(con_id2, 0, 1.0, 1.0, MemoryArm::Construction));
 
     // Tick 1: engine_P flips (bias-only Social path), engine_N stays Idle
     engine_p.tick();
@@ -1255,7 +1255,7 @@ fn harness_p8_beta_a20_cascade_non_flip_zero_memory_recalled() {
         .world
         .get::<&mut Memory>(entity)
         .unwrap()
-        .insert(MemoryEntry::new(s_id, 0, 1.0, 1.0));
+        .insert(MemoryEntry::new(s_id, 0, 1.0, 1.0, MemoryArm::Social));
     // delta ≈ 0.9998 < 1.0 (single entry, recency < 1.0 after first tick) → no flip
 
     engine.tick();

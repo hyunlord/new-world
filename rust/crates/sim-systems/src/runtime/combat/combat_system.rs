@@ -32,8 +32,8 @@ use std::collections::HashMap;
 use hecs::World;
 use sim_core::causal::{CausalEvent, DeathReason};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Memory, MemoryEntry, Position, RelationshipKey,
-    HOSTILITY_BUMP,
+    Agent, AgentId, AgentState, BodyHealth, Memory, MemoryArm, MemoryEntry, Position,
+    RelationshipKey, HOSTILITY_BUMP,
 };
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -195,7 +195,13 @@ impl RuntimeSystem for CombatSystem {
             for enc_entity in [attacker_entity, defender_entity] {
                 if let Ok(mut mem) = world.get::<&mut Memory>(enc_entity) {
                     if mem.find_by_event_id(completed_id).is_none() {
-                        mem.insert(MemoryEntry::new(completed_id, tick, -0.8, 0.9));
+                        mem.insert(MemoryEntry::new(
+                            completed_id,
+                            tick,
+                            -0.8,
+                            0.9,
+                            MemoryArm::Combat,
+                        ));
                     }
                 }
             }

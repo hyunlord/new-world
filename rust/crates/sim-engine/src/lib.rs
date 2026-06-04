@@ -159,6 +159,24 @@ pub struct SimResources {
     /// [`SimResources::food_tiles`] for the third need.
     pub sleep_tiles: HashMap<(u32, u32), u8>,
 
+    /// Regen ceiling per registered FOOD source (`add-resource-scarcity-regen`).
+    ///
+    /// Maps `(x, y) → original finite capacity` for each food source the
+    /// production scene seeds via `seed_finite_resource_scarcity`. The
+    /// `ResourceRegenSystem` (priority 140) periodically refills
+    /// [`SimResources::food_tiles`] toward this ceiling. Empty by default — a
+    /// harness that does NOT seed finite scarcity leaves it empty, so regen is
+    /// a pure no-op there (the 12 shared harnesses are unperturbed).
+    pub food_source_max: HashMap<(u32, u32), u8>,
+
+    /// Regen ceiling per registered WATER source. Mirrors
+    /// [`SimResources::food_source_max`] for the water channel.
+    pub water_source_max: HashMap<(u32, u32), u8>,
+
+    /// Regen ceiling per registered SLEEP source. Mirrors
+    /// [`SimResources::food_source_max`] for the sleep channel.
+    pub sleep_source_max: HashMap<(u32, u32), u8>,
+
     /// Sparse per-pair relationship state (V7 Phase 7-β / P7β-13).
     /// Bumped by `SocialInteractionSystem` on `SocialInteractionCompleted`.
     /// Starts empty; never seeded by engine construction.
@@ -251,6 +269,9 @@ impl SimResources {
             food_tiles: HashMap::new(),
             water_tiles: HashMap::new(),
             sleep_tiles: HashMap::new(),
+            food_source_max: HashMap::new(),
+            water_source_max: HashMap::new(),
+            sleep_source_max: HashMap::new(),
             relationships: HashMap::new(),
             interaction_progress: HashMap::new(),
             combat_pairs: HashSet::new(),
@@ -331,6 +352,38 @@ impl SimResources {
             self.sleep_tiles.remove(&(x, y));
         } else {
             self.sleep_tiles.insert((x, y), amount);
+        }
+    }
+
+    /// Register (or clear) the FOOD regen ceiling at `(x, y)`
+    /// (`add-resource-scarcity-regen`). `max == 0` removes the entry (the
+    /// source is no longer regenerated); non-zero inserts/overwrites. Mirrors
+    /// [`SimResources::set_food_tile`]'s sparse-map invariant.
+    pub fn set_food_source_max(&mut self, x: u32, y: u32, max: u8) {
+        if max == 0 {
+            self.food_source_max.remove(&(x, y));
+        } else {
+            self.food_source_max.insert((x, y), max);
+        }
+    }
+
+    /// Register (or clear) the WATER regen ceiling at `(x, y)`. Mirrors
+    /// [`SimResources::set_food_source_max`] for the water channel.
+    pub fn set_water_source_max(&mut self, x: u32, y: u32, max: u8) {
+        if max == 0 {
+            self.water_source_max.remove(&(x, y));
+        } else {
+            self.water_source_max.insert((x, y), max);
+        }
+    }
+
+    /// Register (or clear) the SLEEP regen ceiling at `(x, y)`. Mirrors
+    /// [`SimResources::set_food_source_max`] for the sleep channel.
+    pub fn set_sleep_source_max(&mut self, x: u32, y: u32, max: u8) {
+        if max == 0 {
+            self.sleep_source_max.remove(&(x, y));
+        } else {
+            self.sleep_source_max.insert((x, y), max);
         }
     }
 }

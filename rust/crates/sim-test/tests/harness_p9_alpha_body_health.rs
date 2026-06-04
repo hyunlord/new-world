@@ -49,7 +49,7 @@
 
 use sim_core::components::{BodyHealth, DEFAULT_MAX_HP, HOSTILITY_BUMP};
 use sim_core::components::{RelationshipKey, RelationshipState, Social};
-use sim_core::components::{Memory, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
+use sim_core::components::{Memory, MemoryArm, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
 
 // ─── A1: DEFAULT_MAX_HP constant value ──────────────────────────────────
 #[test]
@@ -357,7 +357,7 @@ fn harness_p9_alpha_a30_components_reexports_hostility_bump() {
 fn harness_p9_alpha_a31_phase8_alpha_exports_intact() {
     // Type D: regression guard for Phase 8-α additions.
     let _ = Memory::new();
-    let _ = MemoryEntry::new(1, 0, 0.0, 0.5);
+    let _ = MemoryEntry::new(1, 0, 0.0, 0.5, MemoryArm::None);
     let _ = MEMORY_CAP;
     let _ = SALIENCE_FLOOR;
 }

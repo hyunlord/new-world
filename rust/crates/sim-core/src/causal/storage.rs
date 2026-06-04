@@ -1,8 +1,14 @@
 //! Sparse per-tile causal log storage.
 //!
 //! V7 Phase 3-α (P3α-3): event-bearing tiles are stored sparsely in a
-//! `HashMap<tile_idx, TileCausalLog>`. Tiles that never observe a causal
-//! event do NOT consume memory. The key matches [`InfluenceGrid::idx`]
+//! `BTreeMap<tile_idx, TileCausalLog>`. Tiles that never observe a causal
+//! event do NOT consume memory. A `BTreeMap` (not `HashMap`) is used so
+//! `iter()` / `values()` walk tiles in deterministic ascending `tile_idx`
+//! order: the per-process-random `HashMap` iteration order otherwise leaked
+//! into the `MemorySystem` encode pass (capped, lowest-salience eviction),
+//! making which memories survive the cap — and thus the memory-bias cascade
+//! decision — nondeterministic (`add-resource-scarcity-regen` determinism root
+//! cause). The key matches [`InfluenceGrid::idx`]
 //! (`y * width + x`) so the same lookup formula serves both surfaces.
 //!
 //! Worst-case memory budget (locked by P3α-3):
@@ -11,7 +17,7 @@
 //!   Stress upper bound (Phase 4 with agent decisions) ≈ 28K active tiles
 //!   → ~12.6 MB — well within the design ceiling.
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use super::event::{CausalEvent, EventId};
 use super::ring_buffer::TileCausalLog;
@@ -24,7 +30,7 @@ use crate::influence::InfluenceChannel;
 /// allocating an empty log.
 #[derive(Debug, Default, Clone)]
 pub struct CausalLogStorage {
-    logs: HashMap<u32, TileCausalLog>,
+    logs: BTreeMap<u32, TileCausalLog>,
 }
 
 impl CausalLogStorage {
@@ -62,7 +68,10 @@ impl CausalLogStorage {
         self.logs.is_empty()
     }
 
-    /// Iterate `(tile_idx, &TileCausalLog)` pairs in unspecified order.
+    /// Iterate `(tile_idx, &TileCausalLog)` pairs in ascending `tile_idx`
+    /// order (deterministic — `BTreeMap` ordered iteration). Consumers that
+    /// encode events order-sensitively (e.g. `MemorySystem`'s capped,
+    /// lowest-salience eviction) depend on this determinism.
     pub fn iter(&self) -> impl Iterator<Item = (&u32, &TileCausalLog)> {
         self.logs.iter()
     }
@@ -77,8 +86,11 @@ impl CausalLogStorage {
     ///
     /// V7 Phase 8-β substrate (P8β-NEW-2 + P8β-MOD-2). Used by
     /// `MemorySystem::classify_event` for Construction parent walks and
-    /// by `AgentDecisionSystem::event_id_matches_arm` for memory-bias
-    /// weight scoring.
+    /// for `MemoryRecalled.recalled_event` parent resolution in
+    /// `AgentDecisionSystem`. Memory-bias weight scoring no longer calls
+    /// this — the `add-resource-scarcity-regen` Fix D stores each entry's
+    /// cascade arm at encode time, so the bias sum reads the stored tag
+    /// instead of a ring-eviction-dependent lookup (determinism fix).
     ///
     /// Complexity: O(N_tiles × RING_SIZE) where RING_SIZE = 8 — bounded
     /// and small in practice. Returns `None` if the event has been

@@ -55,10 +55,10 @@
 use std::collections::{HashMap, HashSet};
 
 use hecs::World;
-use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId, MemoryRecallTrigger};
+use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, Position,
-    SeekTarget, SettlementMigrant, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryArm,
+    Position, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
@@ -97,50 +97,46 @@ fn recency_factor(encoded_tick: u64, current_tick: u64) -> f64 {
     }
 }
 
-/// Classify a memory entry's `event_id` against a cascade arm by looking
-/// up the referenced [`CausalEvent`] in `causal_log`. Returns `false` on
-/// lookup miss (Phase 3-β graceful eviction).
-fn event_id_matches_arm(
-    event_id: EventId,
-    arm: CascadeArm,
-    causal_log: &CausalLogStorage,
-) -> bool {
-    let Some(event) = causal_log.lookup(event_id) else {
-        return false;
-    };
-    matches!(
-        (arm, event),
-        (CascadeArm::Hunger, CausalEvent::AgentDecision { reason: DecisionReason::HungerThresholdBreach, .. })
-        | (CascadeArm::Thirst, CausalEvent::AgentDecision { reason: DecisionReason::ThirstThresholdBreach, .. })
-        | (CascadeArm::Fatigue, CausalEvent::AgentDecision { reason: DecisionReason::FatigueThresholdBreach, .. })
-        | (CascadeArm::Construction, CausalEvent::AgentDecision { reason: DecisionReason::ConstructionReason, .. })
-        | (CascadeArm::Construction, CausalEvent::ConstructionStarted { .. })
-        | (CascadeArm::Construction, CausalEvent::ConstructionCompleted { .. })
-        | (CascadeArm::Social, CausalEvent::AgentDecision { reason: DecisionReason::SocialReason, .. })
-        | (CascadeArm::Social, CausalEvent::SocialInteractionStarted { .. })
-        | (CascadeArm::Social, CausalEvent::SocialInteractionCompleted { .. })
-        | (CascadeArm::Combat, CausalEvent::CombatStarted { .. })
-        | (CascadeArm::Combat, CausalEvent::CombatCompleted { .. })
-        | (CascadeArm::Combat, CausalEvent::AgentDecision { reason: DecisionReason::CombatReason, .. })
-    )
+/// The [`MemoryArm`] a cascade arm draws its memory bias from, or `None` for
+/// arms that are never memory-biased (`Settlement` is a positional pull arm,
+/// so no memory entry is ever tagged with it).
+///
+/// Mirrors exactly the `(arm, event)` pairs the former `event_id_matches_arm`
+/// recognised, so a stored-arm comparison reproduces that lookup's result for
+/// any event still resident in the ring — while being a pure function of the
+/// entry (no `causal_log` lookup, no ring-eviction dependence). Fix D.
+fn cascade_arm_memory_tag(arm: CascadeArm) -> Option<MemoryArm> {
+    match arm {
+        CascadeArm::Hunger => Some(MemoryArm::Hunger),
+        CascadeArm::Thirst => Some(MemoryArm::Thirst),
+        CascadeArm::Fatigue => Some(MemoryArm::Fatigue),
+        CascadeArm::Construction => Some(MemoryArm::Construction),
+        CascadeArm::Social => Some(MemoryArm::Social),
+        CascadeArm::Combat => Some(MemoryArm::Combat),
+        CascadeArm::Settlement => None,
+    }
 }
 
 /// Compute the cascade-bias weight delta for `arm` from a snapshot of
 /// `memory`. Linear product form per plan §2 P8β-MOD-2 step 4:
 /// `sum(valence * salience * recency_factor)` over entries that
-/// (a) match the arm, AND (b) have salience strictly above
-/// `SALIENCE_FLOOR` (eligibility gate from plan A16).
-fn memory_weight_delta(
-    memory: &Memory,
-    arm: CascadeArm,
-    current_tick: u64,
-    causal_log: &CausalLogStorage,
-) -> f64 {
+/// (a) carry the arm's stored [`MemoryArm`] tag, AND (b) have salience
+/// strictly above `SALIENCE_FLOOR` (eligibility gate from plan A16).
+///
+/// Fix D: the arm match reads each entry's encode-time `arm` tag — NOT a
+/// runtime `causal_log` lookup — so the delta is a deterministic pure
+/// function of `(arm, valence, salience, encoded_tick)`, independent of
+/// `event_id` allocation order and ring-buffer eviction. A `Settlement`
+/// arm (no memory tag) yields `0.0`.
+fn memory_weight_delta(memory: &Memory, arm: CascadeArm, current_tick: u64) -> f64 {
+    let Some(tag) = cascade_arm_memory_tag(arm) else {
+        return 0.0;
+    };
     memory
         .entries
         .iter()
         .filter(|entry| entry.salience > SALIENCE_FLOOR)
-        .filter(|entry| event_id_matches_arm(entry.event_id, arm, causal_log))
+        .filter(|entry| entry.arm == tag)
         .map(|entry| {
             let recency = recency_factor(entry.encoded_tick, current_tick);
             entry.valence * entry.salience * recency
@@ -149,18 +145,15 @@ fn memory_weight_delta(
 }
 
 /// Find the highest-magnitude contributing entry for `arm` — used as the
-/// `recalled_event` field on `MemoryRecalled` emissions.
-fn top_contributor_entry(
-    memory: &Memory,
-    arm: CascadeArm,
-    current_tick: u64,
-    causal_log: &CausalLogStorage,
-) -> Option<EventId> {
+/// `recalled_event` field on `MemoryRecalled` emissions. Matches on the
+/// stored [`MemoryArm`] tag (Fix D); `None` for a non-memory arm.
+fn top_contributor_entry(memory: &Memory, arm: CascadeArm, current_tick: u64) -> Option<EventId> {
+    let tag = cascade_arm_memory_tag(arm)?;
     memory
         .entries
         .iter()
         .filter(|entry| entry.salience > SALIENCE_FLOOR)
-        .filter(|entry| event_id_matches_arm(entry.event_id, arm, causal_log))
+        .filter(|entry| entry.arm == tag)
         .max_by(|a, b| {
             let wa = (a.valence * a.salience * recency_factor(a.encoded_tick, current_tick)).abs();
             let wb = (b.valence * b.salience * recency_factor(b.encoded_tick, current_tick)).abs();
@@ -567,7 +560,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 memory,
                                 CascadeArm::Combat,
                                 tick,
-                                &resources.causal_log,
                             );
                             if combat_delta < -BIAS_FLIP_THRESHOLD {
                                 all_idle_peers_by_pos
@@ -609,9 +601,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     memory,
                                     CascadeArm::Combat,
                                     tick,
-                                    &resources.causal_log,
                                 ) else {
-                                    continue; // top contributor evicted between scoring and emission
+                                    continue; // no Combat-arm memory entry above the salience floor
                                 };
                                 let recall_parent = resources
                                     .causal_log
@@ -737,11 +728,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
                                     e.salience > SALIENCE_FLOOR
-                                        && event_id_matches_arm(
-                                            e.event_id,
-                                            CascadeArm::Construction,
-                                            &resources.causal_log,
-                                        )
+                                        && e.arm == MemoryArm::Construction
                                 })
                             })
                         {
@@ -758,12 +745,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         if !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
-                                    e.salience > SALIENCE_FLOOR
-                                        && event_id_matches_arm(
-                                            e.event_id,
-                                            CascadeArm::Social,
-                                            &resources.causal_log,
-                                        )
+                                    e.salience > SALIENCE_FLOOR && e.arm == MemoryArm::Social
                                 })
                             })
                         {
@@ -799,7 +781,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 memory,
                                 natural_arm,
                                 tick,
-                                &resources.causal_log,
                             );
                             let natural_margin = BIAS_FLIP_THRESHOLD + natural_delta;
                             for (arm, tk) in &eligible {
@@ -810,7 +791,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     memory,
                                     *arm,
                                     tick,
-                                    &resources.causal_log,
                                 );
                                 if delta <= natural_margin {
                                     continue;
@@ -854,7 +834,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 memory,
                                 bias_arm,
                                 tick,
-                                &resources.causal_log,
                             ) else {
                                 continue;
                             };

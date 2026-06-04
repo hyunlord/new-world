@@ -92,10 +92,44 @@ const BOOTSTRAP_SLEEP_RATE: f64 = 0.03;
 /// Fixed lattices (NOT RNG): each tile lies inside the 64×64 map and within
 /// a few steps (Chebyshev ≤ 4) of the `BOOTSTRAP_AGENT_*` agent lattice
 /// (`{4,12,20,28,36,44,52,60}²`), so a Seeking agent has a reachable goal
-/// once α/β land movement. Each is seeded at [`RESOURCE_SOURCE_INFINITE`].
-const SOURCE_FOOD: [(u32, u32); 4] = [(8, 8), (56, 8), (8, 56), (56, 56)];
-const SOURCE_WATER: [(u32, u32); 4] = [(32, 4), (4, 32), (60, 32), (32, 60)];
-const SOURCE_SLEEP: [(u32, u32); 4] = [(20, 20), (44, 20), (20, 44), (44, 44)];
+/// once α/β land movement. Each is seeded at [`RESOURCE_SOURCE_INFINITE`] by
+/// `bootstrap_spawn_agents`, then OVERWRITTEN to a finite capacity in the
+/// production `init` path by [`seed_finite_resource_scarcity`]
+/// (`add-resource-scarcity-regen`). `pub` so the scarcity harness can assert
+/// the seed covers exactly these coordinates.
+pub const SOURCE_FOOD: [(u32, u32); 4] = [(8, 8), (56, 8), (8, 56), (56, 56)];
+/// Water source coordinates — see [`SOURCE_FOOD`].
+pub const SOURCE_WATER: [(u32, u32); 4] = [(32, 4), (4, 32), (60, 32), (32, 60)];
+/// Sleep source coordinates — see [`SOURCE_FOOD`].
+pub const SOURCE_SLEEP: [(u32, u32); 4] = [(20, 20), (44, 20), (20, 44), (44, 44)];
+
+/// `add-resource-scarcity-regen` — finite initial FOOD capacity each source is
+/// seeded to in the production `init` path (balance lever). Strictly `!= 255`
+/// (the [`RESOURCE_SOURCE_INFINITE`] sentinel) so depletion actually fires;
+/// `45` consumes deplete a tile, and `ResourceRegenSystem` refills it at
+/// `FOOD_REGEN_AMOUNT / REGEN_INTERVAL` units/tick. Tuned to `45` (down from the
+/// initial `60` hypothesis): the seed-42 sweep shows abundant food (≥ 80) yields
+/// ZERO scarcity deaths while moderate food scarcity around `45` is the binding
+/// constraint that — with the spatial concentration on the nearest corner —
+/// drives the deterministic handful of deaths without collapsing the population.
+pub const INITIAL_FOOD: u8 = 45;
+/// Finite initial WATER capacity — see [`INITIAL_FOOD`]. Water is the hottest
+/// channel (highest demand AND thirst kills faster), so its capacity is set
+/// the LOWEST of the three deliberately — water is the binding constraint that,
+/// combined with spatial concentration on the nearest corner source, drives the
+/// deterministic handful of dehydration deaths without collapsing the
+/// population. Held at `12`: the seed-42 sweep shows the water buffer responds
+/// NON-MONOTONICALLY (lowering to `8` paradoxically dropped deaths 4→3 as the
+/// migration/re-route timing shifts), so scarcity DEPTH is driven by the regen
+/// rate (`REGEN_INTERVAL`) rather than the initial buffer.
+pub const INITIAL_WATER: u8 = 12;
+/// Finite initial SLEEP capacity — see [`INITIAL_FOOD`]. Held at `80`: at the
+/// chosen `REGEN_INTERVAL = 120` the production population (~132 live) consumes
+/// the corner sleep sources enough to deplete a contested sleep tile to
+/// key-removal, satisfying A13's per-kind (food AND water AND sleep) depletion
+/// requirement. Sleep depletion does NOT drive mortality (only hunger/thirst
+/// kill in `StarvationSystem`).
+pub const INITIAL_SLEEP: u8 = 80;
 
 /// Godot `Node` subclass wrapping a [`SimEngine`] instance.
 ///
@@ -137,16 +171,8 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
-        let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
-        // V7 Phase 7-β / P7β-15 — production runtime registration. Uses the
-        // canonical helper so the live FFI engine includes every default
-        // simulation system: BSS, IUS, AIS, AgentMovement, AgentDecision,
-        // HungerDecay, ThirstDecay, SleepDecay, Construction,
-        // SocialInteraction, SocialDecay, InfluenceVisualization.
-        register_default_runtime_systems(&mut engine);
-        bootstrap_spawn_agents(&mut engine);
         Self {
-            engine,
+            engine: init_production_engine(),
             accumulator: 0.0,
             sim_speed: 1.0,
             base,
@@ -2041,4 +2067,54 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
     for &(x, y) in SOURCE_SLEEP.iter() {
         engine.resources.set_sleep_tile(x, y, RESOURCE_SOURCE_INFINITE);
     }
+}
+
+/// `add-resource-scarcity-regen` — overwrite the just-bootstrapped INFINITE
+/// source tiles with a FINITE initial capacity AND register each source's
+/// regen ceiling, so the production substrate depletes + regenerates.
+///
+/// Called by [`init_production_engine`] IMMEDIATELY AFTER
+/// [`bootstrap_spawn_agents`] — it does NOT touch the bootstrap seeding loop
+/// (which keeps seeding [`RESOURCE_SOURCE_INFINITE`] so the 12 shared harnesses
+/// stay byte-for-byte unchanged). For each [`SOURCE_FOOD`]/[`SOURCE_WATER`]/
+/// [`SOURCE_SLEEP`] coordinate it sets the tile to `INITIAL_*` and registers
+/// `*_source_max = INITIAL_*`. `pub` so the scarcity harness can build a
+/// production-equivalent scene without a Godot runtime.
+pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
+    for &(x, y) in SOURCE_FOOD.iter() {
+        engine.resources.set_food_tile(x, y, INITIAL_FOOD);
+        engine.resources.set_food_source_max(x, y, INITIAL_FOOD);
+    }
+    for &(x, y) in SOURCE_WATER.iter() {
+        engine.resources.set_water_tile(x, y, INITIAL_WATER);
+        engine.resources.set_water_source_max(x, y, INITIAL_WATER);
+    }
+    for &(x, y) in SOURCE_SLEEP.iter() {
+        engine.resources.set_sleep_tile(x, y, INITIAL_SLEEP);
+        engine.resources.set_sleep_source_max(x, y, INITIAL_SLEEP);
+    }
+}
+
+/// Build the production [`SimEngine`] exactly as the live `WorldSimNode::init`
+/// path does — the SINGLE construction entry point the dylib uses to build the
+/// initial `SimResources` for the real game.
+///
+/// Order:
+/// 1. [`register_default_runtime_systems`] — every default simulation system
+///    (BSS, IUS, AIS, AgentMovement, AgentDecision, Hunger/Thirst/Sleep decay,
+///    Construction, Social, Memory, Combat, Settlement, Starvation,
+///    ResourceRegen, InfluenceVisualization).
+/// 2. [`bootstrap_spawn_agents`] — the 64-agent lattice + INFINITE source seeds.
+/// 3. [`seed_finite_resource_scarcity`] — overwrite sources to finite + register
+///    regen ceilings (`add-resource-scarcity-regen`).
+///
+/// `pub` so the scarcity harness can exercise the shipped construction path
+/// headlessly (A10 production-wiring invariant — proves the dylib seeds finite
+/// sources, not merely that the seed function exists).
+pub fn init_production_engine() -> SimEngine {
+    let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
+    register_default_runtime_systems(&mut engine);
+    bootstrap_spawn_agents(&mut engine);
+    seed_finite_resource_scarcity(&mut engine);
+    engine
 }

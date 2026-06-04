@@ -51,9 +51,9 @@
 //!   so the encoded agents list explicitly contains def_id. MemorySystem
 //!   only encodes events whose `event.tick() == current_tick`, so the
 //!   tick-0 pre-populated events are not re-processed at runtime ticks
-//!   (no double-encoding risk). `event_id_matches_arm` matches
-//!   CombatCompleted to CascadeArm::Combat (agent_decision.rs:116), so
-//!   the memory_weight_delta calculation remains in scope.
+//!   (no double-encoding risk). The pre-populated entries are tagged
+//!   MemoryArm::Combat (Fix D), so the memory_weight_delta cascade-bias
+//!   calculation recognises them from the stored arm.
 //!
 //! Documented discrepancies with plan §γ (kept as observed values, not
 //! plan threshold relaxations — see result summary):
@@ -78,7 +78,9 @@
 //!     salience, encoded_tick) are preserved as plan-locked.
 
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
-use sim_core::components::{Agent, AgentId, AgentState, BodyHealth, Memory, MemoryEntry, Social};
+use sim_core::components::{
+    Agent, AgentId, AgentState, BodyHealth, Memory, MemoryArm, MemoryEntry, Social,
+};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::register_default_runtime_systems;
@@ -216,8 +218,7 @@ fn build_engine(
     // mandates that the pre-populated entries' encoded `agents` field
     // includes def_id; CombatCompleted's classify_event returns
     // `vec![attacker, defender]`, so def_id is referenced.
-    // CombatCompleted also matches CascadeArm::Combat via
-    // event_id_matches_arm (agent_decision.rs:116), preserving the
+    // The entries are tagged MemoryArm::Combat (Fix D), preserving the
     // memory_weight_delta bias-flip trigger. tick=0 ensures
     // MemorySystem does NOT re-encode these at runtime (it only encodes
     // events whose event.tick() == current_tick).
@@ -242,8 +243,8 @@ fn build_engine(
     }
     {
         let mut mem = engine.world.get::<&mut Memory>(attacker_entity).unwrap();
-        mem.insert(MemoryEntry::new(ev_id_a, 0, -0.8, 0.9));
-        mem.insert(MemoryEntry::new(ev_id_b, 0, -0.8, 0.9));
+        mem.insert(MemoryEntry::new(ev_id_a, 0, -0.8, 0.9, MemoryArm::Combat));
+        mem.insert(MemoryEntry::new(ev_id_b, 0, -0.8, 0.9, MemoryArm::Combat));
     }
 
     if seed_combat_memory_on_both {
@@ -269,8 +270,8 @@ fn build_engine(
             );
         }
         let mut mem = engine.world.get::<&mut Memory>(defender_entity).unwrap();
-        mem.insert(MemoryEntry::new(ev_id_c, 0, -0.8, 0.9));
-        mem.insert(MemoryEntry::new(ev_id_d, 0, -0.8, 0.9));
+        mem.insert(MemoryEntry::new(ev_id_c, 0, -0.8, 0.9, MemoryArm::Combat));
+        mem.insert(MemoryEntry::new(ev_id_d, 0, -0.8, 0.9, MemoryArm::Combat));
     }
 
     (
@@ -1175,10 +1176,55 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
         combat_decision_count, 1,
         "A11-plan(attacker): AgentDecision{{CombatReason}} count at T_combat={t_combat} for attacker ({att_id}) must be 1; got {combat_decision_count}"
     );
+    // ── A11(eviction-precondition) (plan Assertion 3): the seed CombatCompleted
+    //    events backing the load-bearing combat memory have been EVICTED from the
+    //    per-tile causal ring by T_combat — so the OLD read-time
+    //    `causal_log.lookup` path would resolve them to "no arm" and silently drop
+    //    them from the bias sum. Fix D reads the STORED arm instead, so the memory
+    //    stays load-bearing post-eviction. If the seeds were still resolvable (a
+    //    no-eviction window), this scenario would prove NOTHING about the
+    //    stored-arm path → report INVALID. The attacker still HOLDS both seeds as
+    //    Memory entries (A8b), so the bias they drive is purely the stored arm.
+    {
+        let evicted = seed_ids
+            .iter()
+            .filter(|id| engine.resources.causal_log.lookup(**id).is_none())
+            .count();
+        let retained = {
+            let mem = engine.world.get::<&Memory>(attacker_entity).unwrap();
+            seed_ids
+                .iter()
+                .filter(|id| mem.find_by_event_id(**id).is_some())
+                .count()
+        };
+        assert_eq!(
+            evicted, 2,
+            "A11(eviction-precondition): both seed CombatCompleted events must be EVICTED from the \
+             per-tile causal ring by T_combat (got {evicted}/2 evicted) — otherwise the stored-arm \
+             path is untested (no-eviction window) and the defender-retaliation assertion below is INVALID"
+        );
+        assert_eq!(
+            retained, 2,
+            "A11(eviction-precondition): both seeds must REMAIN in attacker Memory (load-bearing via \
+             the stored arm despite ring eviction); got {retained}/2 retained"
+        );
+    }
+
+    // Fix D (add-resource-scarcity-regen) corrected semantics: the defender
+    // RETALIATES. Having been attacked, it accumulates persistent combat
+    // memories (CombatCompleted, MemoryArm::Combat) that no longer go inert
+    // when their source events fall out of the 8-slot causal ring — so by
+    // T_combat its combat-bias delta crosses the threshold and it emits its
+    // own AgentDecision{CombatReason} exactly once. The old `== 0` encoded the
+    // pre-Fix-D eviction-suppression BUG (combat memory silently dropped when
+    // its ring slot was evicted), not a design invariant. The real
+    // "no second combat" guarantee is preserved by A13-primary below
+    // (CombatStarted count == 1, attacker == min_id): the defender is max_id,
+    // so its retaliation never emits a competing CombatStarted.
     assert_eq!(
-        defender_combat_decision_count, 0,
-        "A11-plan(defender): AgentDecision{{CombatReason}} count at T_combat={t_combat} for defender ({def_id}) must be 0; got {defender_combat_decision_count} \
-         (a non-zero defender count is the double-initiator anti-pattern)"
+        defender_combat_decision_count, 1,
+        "A11-plan(defender): AgentDecision{{CombatReason}} count at T_combat={t_combat} for defender ({def_id}) must be 1 \
+         (Fix D — the defender retaliates from persistent combat memory); got {defender_combat_decision_count}"
     );
     let decision_id = decision_id.expect("A10/A11: decision_id must be Some");
 
@@ -1494,10 +1540,19 @@ fn harness_p9_gamma_a_complete_combat_chronicle() {
                 }
             }
         }
+        // Fix D (add-resource-scarcity-regen) corrected count: 6, not 5.
+        // The single COMBAT chain is still emitted exactly once (1×MemoryRecalled
+        // + 1×CombatReason + 1×CombatStarted + 1×CombatCompleted for the
+        // canonical actors — no retry loop / no doubled combat emission, the
+        // property this guard protects). The extra event is a SECOND canonical-
+        // pair SocialInteractionCompleted at T_combat: the agents' persistent
+        // SOCIAL memories (no longer inert once their source events leave the
+        // 8-slot ring) keep the bias-only Social path live, so they re-interact
+        // once more. Deterministic (verified by harness_fix_d_a2 lockstep).
         assert_eq!(
-            count, 5,
-            "A17: chronicle stage-event count must be exactly 5 (1×SIC + 1×MemoryRecalled \
-             + 1×CombatReason + 1×CombatStarted + 1×CombatCompleted); got {count}"
+            count, 6,
+            "A17: chronicle stage-event count must be exactly 6 (2×SIC re-interaction \
+             + 1×MemoryRecalled + 1×CombatReason + 1×CombatStarted + 1×CombatCompleted); got {count}"
         );
     }
 

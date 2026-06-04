@@ -11,8 +11,8 @@
 
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryEntry,
-    Position, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryArm,
+    MemoryEntry, Position, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::SimEngine;
@@ -204,7 +204,7 @@ fn harness_p8_gamma_a_complete_memory_chronicle() {
         .world
         .get::<&mut Memory>(ent_1)
         .unwrap()
-        .insert(MemoryEntry::new(seed_completed_id, t1, 0.9, 1.0));
+        .insert(MemoryEntry::new(seed_completed_id, t1, 0.9, 1.0, MemoryArm::Social));
 
     // ── A14: seed entry injected correctly (precondition guard) ───────────
     let seed_at_inject = engine
