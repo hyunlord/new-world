@@ -1222,7 +1222,11 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
 ///   - `1` = `AgentState::Seeking { .. }` (any `TargetKind`)
 ///   - `2` = `AgentState::Consuming { target: TargetKind::Agent(_) }`
 ///   - `3` = `AgentState::Consuming { .. }` (any non-`Agent` `TargetKind`)
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+// `Eq` intentionally NOT derived: viz-B added `f32` need fields (hunger/
+// thirst/sleep) which are not `Eq`. `PartialEq` (used by the harness
+// `assert_eq!` on `Vec<AgentSnapshotRow>`) is sufficient; no `HashSet`/
+// `BTreeSet<AgentSnapshotRow>` exists anywhere.
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct AgentSnapshotRow {
     /// `hecs::Entity::to_bits().get()` — stable id within a single
     /// `SimEngine` session (not stable across resets or save/load).
@@ -1255,6 +1259,17 @@ pub struct AgentSnapshotRow {
     /// V7 Section 16-ε: `SeekTarget.tile.1` as `i32`, or `-1` when the
     /// agent has no `SeekTarget` component.
     pub target_y: i32,
+    /// V7 viz-B: `Hunger.value` (already `f32`, `[0, 100]` where 100 =
+    /// SATURATION). The renderer's need-bar danger ratio is `value / 100`.
+    /// `0.0` for an agent with no `Hunger` component (defensive — every real
+    /// agent has one).
+    pub hunger: f32,
+    /// V7 viz-B: `Thirst.value` cast `f64 → f32` (`[0, 100]`). Thirst grows
+    /// fastest, so it is usually the dominant (killer) need.
+    pub thirst: f32,
+    /// V7 viz-B: `Sleep.fatigue` cast `f64 → f32` (`[0, 100]`). Note the
+    /// source field is `fatigue`, not `value`.
+    pub sleep: f32,
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1273,8 +1288,16 @@ pub struct AgentSnapshotRow {
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (agent, pos, maybe_state, maybe_seek)) in world
-        .query::<(&Agent, &Position, Option<&AgentState>, Option<&SeekTarget>)>()
+    for (entity, (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep)) in world
+        .query::<(
+            &Agent,
+            &Position,
+            Option<&AgentState>,
+            Option<&SeekTarget>,
+            Option<&Hunger>,
+            Option<&Thirst>,
+            Option<&Sleep>,
+        )>()
         .iter()
     {
         let state_tag: u8 = match maybe_state {
@@ -1298,6 +1321,12 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(st) => (st.tile.0 as i32, st.tile.1 as i32),
             None => (-1, -1),
         };
+        // V7 viz-B — need values for the head need-bar. Source fields differ:
+        // Hunger.value (f32), Thirst.value (f64), Sleep.fatigue (f64). Cast to
+        // f32; default 0.0 when a component is absent (no bar drawn).
+        let hunger = maybe_hunger.map(|h| h.value).unwrap_or(0.0);
+        let thirst = maybe_thirst.map(|t| t.value as f32).unwrap_or(0.0);
+        let sleep = maybe_sleep.map(|s| s.fatigue as f32).unwrap_or(0.0);
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -1311,6 +1340,9 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             seek_kind,
             target_x,
             target_y,
+            hunger,
+            thirst,
+            sleep,
         });
     }
     rows
@@ -1390,6 +1422,22 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
         target_xs[i] = row.target_x;
         target_ys[i] = row.target_y;
     }
+    // V7 viz-B — three additive parallel `f32` arrays carrying the per-agent
+    // need values (Hunger / Thirst / Sleep, `[0, 100]`) for the head need-bar.
+    // Built directly from `rows` (NOT via `agent_rows_split`, whose 4-tuple is
+    // locked by `harness_p4_gamma_rendering`), mirroring the Section 16-ε
+    // seek_kinds/target_xs/target_ys additive pattern. Lengths == `rows.len()`.
+    let mut hungers = PackedFloat32Array::new();
+    let mut thirsts = PackedFloat32Array::new();
+    let mut sleeps = PackedFloat32Array::new();
+    hungers.resize(rows.len());
+    thirsts.resize(rows.len());
+    sleeps.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        hungers[i] = row.hunger;
+        thirsts[i] = row.thirst;
+        sleeps[i] = row.sleep;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
@@ -1399,6 +1447,9 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("seek_kinds", seek_kinds);
     dict.set("target_xs", target_xs);
     dict.set("target_ys", target_ys);
+    dict.set("hungers", hungers);
+    dict.set("thirsts", thirsts);
+    dict.set("sleeps", sleeps);
     dict
 }
 

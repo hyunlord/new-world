@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://v7init"]
+[gd_scene load_steps=12 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://scripts/ui/settlement_overview_renderer.gd" id="9_overview"]
 [ext_resource type="Script" path="res://scripts/ui/zoom_lod_controller.gd" id="10_zoomlod"]
 [ext_resource type="Script" path="res://scripts/ui/seek_viz_renderer.gd" id="11_seekviz"]
+[ext_resource type="Script" path="res://scripts/ui/need_bar_renderer.gd" id="12_needbar"]
 
 [node name="Main" type="Node2D"]
 
@@ -27,6 +28,9 @@ script = ExtResource("8_trails")
 
 [node name="SeekVizRenderer" type="Node2D" parent="."]
 script = ExtResource("11_seekviz")
+
+[node name="NeedBarRenderer" type="Node2D" parent="."]
+script = ExtResource("12_needbar")
 
 [node name="SettlementOverviewRenderer" type="Node2D" parent="."]
 script = ExtResource("9_overview")
