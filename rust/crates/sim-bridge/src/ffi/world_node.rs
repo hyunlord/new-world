@@ -1710,6 +1710,19 @@ pub struct ResourceSnapshotRow {
     pub y: u32,
     /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`.
     pub kind: u8,
+    /// Current stored amount on the tile (the `*_tiles` counter), CLAMPED to
+    /// [`max`](Self::max). Drives the renderer's depletion/regen visual (marker
+    /// scale + alpha = amount/max). A finite source decreases as agents consume
+    /// and recovers via regen; a tile at `0` is removed from the map entirely
+    /// and so drops out of the snapshot (the marker disappears). Clamped to
+    /// `max` so the displayed ratio never exceeds `1.0` (regen overshoot or a
+    /// zero-cap source cannot make the marker read as more than full).
+    pub amount: u8,
+    /// Original source capacity (the `*_source_max` registry). The denominator
+    /// for the depletion ratio. Guaranteed `>= 1` (a tile with no registered
+    /// ceiling — e.g. an `RESOURCE_SOURCE_INFINITE` tile — reports `max ==
+    /// amount`, so its ratio is `1.0` and the marker stays full).
+    pub max: u8,
 }
 
 /// Pure-Rust collector over the three sparse tile maps on [`SimResources`].
@@ -1722,14 +1735,33 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
     let mut rows: Vec<ResourceSnapshotRow> = Vec::with_capacity(
         resources.food_tiles.len() + resources.water_tiles.len() + resources.sleep_tiles.len(),
     );
-    for &(x, y) in resources.food_tiles.keys() {
-        rows.push(ResourceSnapshotRow { x, y, kind: 0 });
+    // `amount` = the live tile counter (`*_tiles` value); `max` = the source
+    // capacity (`*_source_max`), defaulting to `amount` (ratio 1.0) for any
+    // tile with no registered ceiling (e.g. an infinite-sentinel source), and
+    // floored at 1 so the renderer's `amount / max` is never a divide-by-zero.
+    //
+    // `amount` is finally CLAMPED to `max` (`amount.min(max)`): a depletion
+    // display is bounded at "full", so the snapshot must never emit `amount >
+    // max` (ratio > 1.0) — which the renderer's scale/alpha lerp would overshoot
+    // beyond the full marker. Two pathological inputs need this clamp: regen
+    // overshoot (live counter momentarily exceeds the registered cap) and an
+    // explicitly-registered `max == 0` (floored to 1, so a raw amount would read
+    // as e.g. 5/1 = 5.0). The clamp is read-only on the SNAPSHOT — the backend
+    // tile counters are untouched (pure visualisation, no logic change).
+    for (&(x, y), &amount) in resources.food_tiles.iter() {
+        let max = resources.food_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let amount = amount.min(max);
+        rows.push(ResourceSnapshotRow { x, y, kind: 0, amount, max });
     }
-    for &(x, y) in resources.water_tiles.keys() {
-        rows.push(ResourceSnapshotRow { x, y, kind: 1 });
+    for (&(x, y), &amount) in resources.water_tiles.iter() {
+        let max = resources.water_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let amount = amount.min(max);
+        rows.push(ResourceSnapshotRow { x, y, kind: 1, amount, max });
     }
-    for &(x, y) in resources.sleep_tiles.keys() {
-        rows.push(ResourceSnapshotRow { x, y, kind: 2 });
+    for (&(x, y), &amount) in resources.sleep_tiles.iter() {
+        let max = resources.sleep_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
+        let amount = amount.min(max);
+        rows.push(ResourceSnapshotRow { x, y, kind: 2, amount, max });
     }
     rows.sort_by_key(|r| (r.kind, r.x, r.y));
     rows
@@ -1752,6 +1784,22 @@ pub fn resource_rows_split(rows: &[ResourceSnapshotRow]) -> (Vec<i32>, Vec<i32>,
     (xs, ys, kinds)
 }
 
+/// Companion to [`resource_rows_split`] for the depletion visual: the parallel
+/// `(amounts, maxes)` integer arrays, in the SAME row order. Kept separate from
+/// `resource_rows_split` so the locked `(xs, ys, kinds)` contract (and the
+/// harness assertions on it) is untouched while [`resource_rows_to_dict`] gains
+/// the `amounts` / `maxes` keys. `maxes[i] >= 1` (floored in
+/// [`collect_resource_snapshot`]).
+pub fn resource_rows_amounts(rows: &[ResourceSnapshotRow]) -> (Vec<i32>, Vec<i32>) {
+    let mut amounts = Vec::with_capacity(rows.len());
+    let mut maxes = Vec::with_capacity(rows.len());
+    for r in rows {
+        amounts.push(r.amount as i32);
+        maxes.push(r.max as i32);
+    }
+    (amounts, maxes)
+}
+
 /// Marshal a [`ResourceSnapshotRow`] slice into the FFI dictionary shape
 /// consumed by `WorldRenderer._render_resource_sources()`. Three parallel
 /// `PackedInt32Array`s (`xs`, `ys`, `kinds`), lengths always equal to
@@ -1759,22 +1807,31 @@ pub fn resource_rows_split(rows: &[ResourceSnapshotRow]) -> (Vec<i32>, Vec<i32>,
 /// marshalling path the harness tests).
 fn resource_rows_to_dict(rows: &[ResourceSnapshotRow]) -> VarDictionary {
     let (xv, yv, kv) = resource_rows_split(rows);
+    let (av, mv) = resource_rows_amounts(rows);
     let n = rows.len();
     let mut xs = PackedInt32Array::new();
     let mut ys = PackedInt32Array::new();
     let mut kinds = PackedInt32Array::new();
+    let mut amounts = PackedInt32Array::new();
+    let mut maxes = PackedInt32Array::new();
     xs.resize(n);
     ys.resize(n);
     kinds.resize(n);
+    amounts.resize(n);
+    maxes.resize(n);
     for i in 0..n {
         xs[i] = xv[i];
         ys[i] = yv[i];
         kinds[i] = kv[i];
+        amounts[i] = av[i];
+        maxes[i] = mv[i];
     }
     let mut dict = VarDictionary::new();
     dict.set("xs", xs);
     dict.set("ys", ys);
     dict.set("kinds", kinds);
+    dict.set("amounts", amounts);
+    dict.set("maxes", maxes);
     dict
 }
 

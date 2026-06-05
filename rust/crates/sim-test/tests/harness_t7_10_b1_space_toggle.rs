@@ -355,7 +355,7 @@ fn harness_t7_10_b1_process_gates_overlay_on_channel() {
 
 /// Type D (Assertion 7): the three substrate render calls
 /// (`_update_construction_sites`, `_update_settlement_furniture`,
-/// `_render_resource_sources`) stay reachable in `_process` for every channel
+/// `_update_resource_markers`) stay reachable in `_process` for every channel
 /// INCLUDING OFF — they are not collateral-damaged by the OFF skip or the
 /// overlay's data-size early-return.
 ///
@@ -385,10 +385,13 @@ fn harness_t7_10_b1_substrate_calls_survive_off_gate() {
         "world_renderer.gd `_process` must call `_update_settlement_furniture()` \
          every frame (substrate render, not the overlay)"
     );
-    assert!(
-        process.contains("_render_resource_sources()"),
-        "world_renderer.gd `_process` must call `_render_resource_sources()` \
-         every frame (substrate render, not the overlay)"
+    // viz-A — capture the resource-marker reconcile call's POSITION (not merely
+    // its presence): it must itself sit after the OFF discriminator so the
+    // depletion markers render every frame for every channel, including OFF.
+    let resource_idx = process.find("_update_resource_markers()").expect(
+        "world_renderer.gd `_process` must call `_update_resource_markers()` \
+         every frame (viz-A renamed _render_resource_sources → per-frame \
+         _update_resource_markers; substrate render, not the overlay)",
     );
     // The substrate calls must be OUTSIDE the channel gate: they appear after
     // the OFF discriminator and after the non-OFF FFI draw block.
@@ -397,9 +400,18 @@ fn harness_t7_10_b1_substrate_calls_survive_off_gate() {
         "the substrate render calls must come AFTER the overlay channel gate \
          (so they are not nested inside the OFF skip)"
     );
+    // The resource-marker reconcile ITSELF must come after the OFF discriminator
+    // (Assertion 7 / plan A12) — not just be present somewhere in _process.
+    assert!(
+        resource_idx > off_idx,
+        "`_update_resource_markers()` must appear AFTER the `current_channel == \
+         CHANNEL_OFF` discriminator (so resource markers are not nested inside \
+         the OFF skip and still render on the default OFF launch screen)"
+    );
     // The OFF path must fall through to the substrate calls — no `return`
-    // between the OFF gate and the first substrate call.
-    let gate_region = &process[off_idx..construction_idx];
+    // between the OFF gate and the resource-marker reconcile (the last of the
+    // three substrate calls, so this region covers all of them).
+    let gate_region = &process[off_idx..resource_idx];
     assert!(
         !gate_region.contains("return"),
         "the OFF branch must NOT `return` before the substrate render calls \

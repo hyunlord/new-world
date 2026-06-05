@@ -97,12 +97,14 @@ const Z_RESOURCE := 3
 const RESOURCE_COUNT := 20
 const RESOURCE_SEED := 88675123
 
-# V7 Section 16-α0 — backend-truth resource SOURCE markers (Method 1: the
-# backend tile maps are the source of truth, the screen reflects them).
+# V7 Section 16-α0 / viz-A — backend-truth resource SOURCE markers (Method 1:
+# the backend tile maps are the source of truth, the screen reflects them).
 # Distinct from the decorative RESOURCE_SEED scatter above (additive layer).
-# Source positions are fixed for the run, so the markers are drawn once
-# (idempotent guard `_resource_sources_drawn`). No user-facing text → no
-# locale keys. Kind encoding matches the FFI: 0=Food, 1=Water, 2=Sleep.
+# viz-A: markers are reconciled EVERY frame (not drawn once) so a source's
+# scale + alpha track its backend amount/max ratio — depletion shrinks/fades a
+# marker, regen recovers it, and a source consumed to 0 (removed from the
+# backend map → absent from the snapshot) has its marker reaped. No user-facing
+# text → no locale keys. Kind encoding matches the FFI: 0=Food, 1=Water, 2=Sleep.
 const Z_RESOURCE_SOURCE := 4
 # V7 Section 16-γ — fully-saturated, alpha-1.0 marker hues so each kind reads
 # as a distinct bright diamond above the dim decorative scatter (Z_RESOURCE=3).
@@ -114,7 +116,14 @@ const SOURCE_KIND_COLORS: Array = [
 # V7 Section 16-γ — diamond half-extent as a fraction of TILE_SIZE. 0.9 makes
 # the marker span ~1.8× a tile — clearly bigger than a 0.25-scaled agent.
 const SOURCE_MARKER_SCALE := 0.9
-var _resource_sources_drawn: bool = false
+# viz-A depletion-visual tuning: marker node `scale` and fill `alpha` both lerp
+# across the amount/max ratio so depletion is unmistakable. Floors keep an
+# almost-empty (but still present) source faintly visible; a 0-amount source is
+# removed from the snapshot entirely and its marker reaped.
+const SOURCE_RATIO_MIN_SCALE := 0.3
+const SOURCE_RATIO_MIN_ALPHA := 0.2
+# Per-frame reconcile dict, keyed by a packed (x,y,kind) int → Polygon2D.
+var _resource_markers: Dictionary = {}
 
 # V7 Phase 14-β — 5 resource types (Wood / Stone / Berry / Water /
 # Food). Each type reuses an existing sprite from the 207-asset
@@ -391,8 +400,9 @@ func _process(_delta: float) -> void:
 	_update_construction_sites()
 	# V7 Phase 12-γ — ingest settlement snapshot for furniture placeholders.
 	_update_settlement_furniture()
-	# V7 Section 16-α0 — draw backend-truth resource source markers once.
-	_render_resource_sources()
+	# V7 Section 16-α0 / viz-A — reconcile resource source markers each frame so
+	# their scale + alpha track the backend amount/max (depletion/regen visible).
+	_update_resource_markers()
 
 # V7 Phase 12-β.2 (A3) — pull the per-frame construction snapshot from
 # SimBridge and reconcile against `_construction_sprites`:
@@ -438,42 +448,66 @@ func _update_construction_sites() -> void:
 				stale.queue_free()
 			_construction_sprites.erase(entity_id)
 
-# V7 Section 16-α0 / γ — draw backend-truth resource SOURCE markers from the
-# SimBridge resource snapshot (Method 1: backend is the source of truth).
-# Source positions are fixed for the run, so this draws once and then
-# guards on `_resource_sources_drawn`. γ makes each marker a bright solid
-# Polygon2D diamond (no texture → vivid regardless of any sprite darkness),
-# sized ~1.8× a tile and z-ordered above the decorative scatter so the player
-# can locate the tiles agents seek. The decorative RESOURCE_SEED scatter layer
-# (drawn in `_ready`) is left untouched.
-func _render_resource_sources() -> void:
-	if world_sim == null or _resource_sources_drawn:
+# V7 Section 16-α0 / γ / viz-A — reconcile backend-truth resource SOURCE markers
+# from the SimBridge resource snapshot EVERY frame (Method 1: backend is the
+# source of truth). Each marker is a bright solid Polygon2D diamond (no texture
+# → vivid regardless of any sprite darkness), z-ordered above the decorative
+# scatter. viz-A: the marker's node `scale` and fill `alpha` both lerp across the
+# amount/max ratio, so a depleting source visibly shrinks + fades, a regenerating
+# one recovers, and a source consumed to 0 (removed from the backend map → absent
+# here) is reaped. Borrows the `_furniture_sprites` create/update/reap pattern.
+# The decorative RESOURCE_SEED scatter layer (drawn in `_ready`) is untouched.
+func _update_resource_markers() -> void:
+	if world_sim == null:
 		return
 	var snap: Dictionary = world_sim.get_resource_snapshot()
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 	var kinds: PackedInt32Array = snap.get("kinds", PackedInt32Array())
+	var amounts: PackedInt32Array = snap.get("amounts", PackedInt32Array())
+	var maxes: PackedInt32Array = snap.get("maxes", PackedInt32Array())
 	var n: int = min(xs.size(), min(ys.size(), kinds.size()))
-	if n == 0:
-		return
-	# Diamond around the tile centre, half-extent SOURCE_MARKER_SCALE × TILE_SIZE.
+	# Diamond at full extent (half-extent SOURCE_MARKER_SCALE × TILE_SIZE); the
+	# ratio is applied via the node's `scale`, not by rebuilding the polygon.
 	var s: float = float(TILE_SIZE) * SOURCE_MARKER_SCALE
 	var diamond := PackedVector2Array([
 		Vector2(-s, 0.0), Vector2(0.0, -s), Vector2(s, 0.0), Vector2(0.0, s),
 	])
+	var seen: Dictionary = {}
 	for i in n:
 		var k: int = kinds[i]
 		if k < 0 or k >= SOURCE_KIND_COLORS.size():
 			continue
+		# Packed (x,y,kind) key — grid is 64×64 so 8 bits per coord is ample.
+		var key: int = (int(xs[i]) << 16) | (int(ys[i]) << 8) | k
+		seen[key] = true
+		# amount/max ratio (max floored at 1 in the Rust collector).
+		var mx: int = maxes[i] if i < maxes.size() else 1
+		var amt: int = amounts[i] if i < amounts.size() else mx
+		var ratio: float = clampf(float(amt) / float(maxi(mx, 1)), 0.0, 1.0)
 		var px: float = float(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var py: float = float(SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
-		var marker := Polygon2D.new()
-		marker.polygon = diamond
-		marker.color = SOURCE_KIND_COLORS[k]
-		marker.z_index = Z_RESOURCE_SOURCE
+		var marker: Polygon2D = _resource_markers.get(key, null) as Polygon2D
+		if marker == null:
+			marker = Polygon2D.new()
+			marker.polygon = diamond
+			marker.z_index = Z_RESOURCE_SOURCE
+			add_child(marker)
+			_resource_markers[key] = marker
 		marker.position = Vector2(px, py)
-		add_child(marker)
-	_resource_sources_drawn = true
+		# Scale + alpha both track the ratio so depletion is unmistakable.
+		var sc: float = lerpf(SOURCE_RATIO_MIN_SCALE, 1.0, ratio)
+		marker.scale = Vector2(sc, sc)
+		var col: Color = SOURCE_KIND_COLORS[k]
+		col.a = lerpf(SOURCE_RATIO_MIN_ALPHA, 1.0, ratio)
+		marker.color = col
+	# Reap markers whose source vanished from the snapshot (depleted to 0).
+	for key in _resource_markers.keys():
+		if not seen.has(key):
+			var stale: Polygon2D = _resource_markers[key]
+			if stale != null:
+				stale.queue_free()
+			_resource_markers.erase(key)
 
 # V7 Phase 12-γ — pull the per-frame settlement snapshot from SimBridge
 # and reconcile against `_furniture_sprites`:

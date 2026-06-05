@@ -246,11 +246,13 @@ fn harness_s16_gamma_a3_accumulator_integrity_preserved() {
 #[test]
 fn harness_s16_gamma_a4_world_renderer_marker_is_polygon2d() {
     // Type A — spec-mandated (Section 2 row 1 / T1). Slice the
-    // _render_resource_sources body ONLY — RESOURCE_SPRITE_PATH/Sprite2D
-    // legitimately remain in the decorative scatter elsewhere in the file.
+    // _update_resource_markers body ONLY (viz-A renamed _render_resource_sources
+    // → _update_resource_markers for the per-frame depletion reconcile) —
+    // RESOURCE_SPRITE_PATH/Sprite2D legitimately remain in the decorative
+    // scatter elsewhere in the file.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let (s, e) = find_gd_func_body(&stripped, "_render_resource_sources")
-        .expect("a4.0: _render_resource_sources must exist");
+    let (s, e) = find_gd_func_body(&stripped, "_update_resource_markers")
+        .expect("a4.0: _update_resource_markers must exist");
     let body = &stripped[s..e];
     // (a) Polygon2D instantiated for the marker.
     assert!(
@@ -270,10 +272,10 @@ fn harness_s16_gamma_a4_world_renderer_marker_is_polygon2d() {
     // (d) the per-source Sprite2D path from α0 is REPLACED, not kept alongside.
     assert!(
         !body.contains("Sprite2D"),
-        "a4.4: _render_resource_sources must NOT construct a Sprite2D marker \
+        "a4.4: _update_resource_markers must NOT construct a Sprite2D marker \
          (the α0 tinted-Sprite2D path is replaced, not augmented). Body:\n{body}"
     );
-    println!("[S16-γ a4] marker = Polygon2D + SOURCE_KIND_COLORS + z_index, no Sprite2D ✓");
+    println!("[S16-γ a4] _update_resource_markers marker = Polygon2D + SOURCE_KIND_COLORS + z_index, no Sprite2D ✓");
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -339,15 +341,15 @@ fn harness_s16_gamma_a7_backend_truth_positions_preserved() {
     // Type D — α0 substrate regression guard. Marker positions must keep
     // reading the backend FFI snapshot, not be hardcoded client-side.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let (s, e) = find_gd_func_body(&stripped, "_render_resource_sources")
-        .expect("a7.0: _render_resource_sources must exist");
+    let (s, e) = find_gd_func_body(&stripped, "_update_resource_markers")
+        .expect("a7.0: _update_resource_markers must exist");
     let body = &stripped[s..e];
     assert!(
         body.contains("get_resource_snapshot"),
-        "a7.1: _render_resource_sources must keep calling get_resource_snapshot \
+        "a7.1: _update_resource_markers must keep calling get_resource_snapshot \
          (backend-truth positions). Body:\n{body}"
     );
-    println!("[S16-γ a7] _render_resource_sources reads get_resource_snapshot ✓");
+    println!("[S16-γ a7] _update_resource_markers reads get_resource_snapshot ✓");
 }
 
 // ════════════════════════════════════════════════════════════════════════════

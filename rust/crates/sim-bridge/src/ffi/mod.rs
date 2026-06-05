@@ -24,7 +24,9 @@ pub use world_node::{
 pub use world_node::{agent_rows_split, collect_agent_snapshot, AgentSnapshotRow};
 pub use world_node::{collect_agent_detail, AgentDetailRow, AGENT_DETAIL_DICT_KEYS};
 pub use world_node::{collect_construction_snapshot, ConstructionSnapshotRow};
-pub use world_node::{collect_resource_snapshot, resource_rows_split, ResourceSnapshotRow};
+pub use world_node::{
+    collect_resource_snapshot, resource_rows_amounts, resource_rows_split, ResourceSnapshotRow,
+};
 pub use world_node::{collect_settlement_snapshot, SettlementSnapshotRow};
 pub use world_node::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use world_node::clamp_sim_speed;
