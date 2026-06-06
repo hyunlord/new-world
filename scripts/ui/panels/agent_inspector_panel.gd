@@ -16,6 +16,11 @@ extends Control
 
 const PANEL_WIDTH := 280.0
 
+# Top edge sits below hud_status_panel.gd (top-right, 320×180 from
+# y=HUD_MARGIN(12) to y=HUD_MARGIN+PANEL_HEIGHT=192) so the two
+# right-anchored panels never overlap. 180 + 12*2 = 204 → 12 px gap.
+const INSPECTOR_TOP_OFFSET := 204.0
+
 # Mirrors Rust `Hunger::SATURATION = Thirst::SATURATION = Sleep::SATURATION
 # = 100.0`. ProgressBar.max_value is bound to this constant at runtime so
 # the visual scale never drifts from the simulation scale (Assertion 18).
@@ -57,7 +62,9 @@ func _ready() -> void:
 	anchor_bottom = 1.0
 	offset_left = -PANEL_WIDTH
 	offset_right = 0.0
-	offset_top = 0.0
+	# Start below hud_status_panel.gd (top-right, bottom edge at y=192) so the
+	# two right-anchored panels never overlap — INSPECTOR_TOP_OFFSET = 204.
+	offset_top = INSPECTOR_TOP_OFFSET
 	offset_bottom = 0.0
 	# Hidden until `display_agent(...)` is called with a found=true dict.
 	visible = false
