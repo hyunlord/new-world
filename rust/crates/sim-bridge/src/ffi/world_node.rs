@@ -380,6 +380,22 @@ impl WorldSimNode {
         resource_rows_to_dict(&rows)
     }
 
+    /// V7 viz-D FFI — recent-deaths snapshot for the death-marker overlay.
+    /// Returns a `VarDictionary` with four equal-length `PackedArray` keys
+    /// (`xs`, `ys`, `reasons`, `ticks`) plus the scalar `current_tick`. Empty
+    /// arrays (still with the `current_tick` scalar) when no recent deaths
+    /// exist. Reads `engine.resources`.
+    ///
+    /// The `#[func]` body consists solely of forwarding to
+    /// [`collect_recent_deaths`] + [`recent_death_rows_to_dict`] (Bridge
+    /// Identity Contract). Sim-test exercises the pure-Rust collector +
+    /// [`recent_death_rows_split`] directly.
+    #[func]
+    fn get_recent_deaths(&self) -> VarDictionary {
+        let rows = collect_recent_deaths(&self.engine.resources);
+        recent_death_rows_to_dict(&rows, self.engine.resources.current_tick as i64)
+    }
+
     /// V7 Phase 12-γ FFI — settlement snapshot with substrate-derived
     /// centroid for furniture placement. Returns a `VarDictionary` with
     /// five `PackedArray` keys (`ids`, `settlement_ids`, `centroid_xs`,
@@ -1883,6 +1899,99 @@ fn resource_rows_to_dict(rows: &[ResourceSnapshotRow]) -> VarDictionary {
     dict.set("kinds", kinds);
     dict.set("amounts", amounts);
     dict.set("maxes", maxes);
+    dict
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// V7 viz-D: Recent-deaths snapshot FFI surface
+// ────────────────────────────────────────────────────────────────────────
+
+/// Single row of the recent-deaths snapshot returned by
+/// [`collect_recent_deaths`]. Documented casts from the buffer entry:
+/// `x`/`y` `i32 → i32` (identity), `reason` `DeathReason → u8 → i32`,
+/// `tick` `u32 → i64` (widening).
+/// `reason_u8` encoding mirrors [`DeathReason::as_u8`]: `0 = Starvation`
+/// (brown), `1 = Dehydration` (blue), `2 = Combat` (red).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RecentDeathRow {
+    /// Death tile-x.
+    pub x: i32,
+    /// Death tile-y.
+    pub y: i32,
+    /// Reason discriminant (`0/1/2`) — see [`DeathReason::as_u8`].
+    pub reason_u8: i32,
+    /// Simulation tick at which the death occurred.
+    pub tick: i64,
+}
+
+/// Pure-Rust collector over [`SimResources::recent_deaths`], preserving buffer
+/// order (the renderer fades each marker by `current_tick - tick`, so order
+/// only matters for stable iteration). Sim-test exercises this directly.
+pub fn collect_recent_deaths(resources: &SimResources) -> Vec<RecentDeathRow> {
+    resources
+        .recent_deaths
+        .iter()
+        .map(|d| RecentDeathRow {
+            // `d.x`/`d.y` are already `i32` (buffer schema) → identity cast,
+            // written without `as i32` to satisfy `clippy::unnecessary_cast`.
+            x: d.x,
+            y: d.y,
+            reason_u8: d.reason.as_u8() as i32,
+            tick: d.tick as i64,
+        })
+        .collect()
+}
+
+/// Pure-Rust marshalling split — the SINGLE source of the
+/// `(xs, ys, reasons, ticks)` integer arrays, in buffer order. Extracted so the
+/// harness can verify the exact integers the FFI emits WITHOUT a Godot runtime
+/// (`VarDictionary` / `PackedInt32Array` require Godot).
+/// [`recent_death_rows_to_dict`] MUST build its arrays from this — no duplicate
+/// marshalling logic.
+pub fn recent_death_rows_split(rows: &[RecentDeathRow]) -> (Vec<i32>, Vec<i32>, Vec<i32>, Vec<i64>) {
+    let mut xs = Vec::with_capacity(rows.len());
+    let mut ys = Vec::with_capacity(rows.len());
+    let mut reasons = Vec::with_capacity(rows.len());
+    let mut ticks = Vec::with_capacity(rows.len());
+    for r in rows {
+        xs.push(r.x);
+        ys.push(r.y);
+        reasons.push(r.reason_u8);
+        ticks.push(r.tick);
+    }
+    (xs, ys, reasons, ticks)
+}
+
+/// Marshal a [`RecentDeathRow`] slice + the engine's `current_tick` into the FFI
+/// dictionary shape consumed by `death_viz_renderer.gd`. Four parallel arrays
+/// (`xs`, `ys` as `PackedInt32Array`; `reasons` as `PackedInt32Array`; `ticks`
+/// as `PackedInt64Array`) of equal length `rows.len()`, plus the scalar
+/// `current_tick` (`i64`) the renderer uses to compute each marker's fade age.
+/// Built solely from [`recent_death_rows_split`] (the single marshalling path
+/// the harness tests).
+fn recent_death_rows_to_dict(rows: &[RecentDeathRow], current_tick: i64) -> VarDictionary {
+    let (xv, yv, rv, tv) = recent_death_rows_split(rows);
+    let n = rows.len();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    let mut reasons = PackedInt32Array::new();
+    let mut ticks = PackedInt64Array::new();
+    xs.resize(n);
+    ys.resize(n);
+    reasons.resize(n);
+    ticks.resize(n);
+    for i in 0..n {
+        xs[i] = xv[i];
+        ys[i] = yv[i];
+        reasons[i] = rv[i];
+        ticks[i] = tv[i];
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict.set("reasons", reasons);
+    dict.set("ticks", ticks);
+    dict.set("current_tick", current_tick);
     dict
 }
 

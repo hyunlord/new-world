@@ -27,6 +27,7 @@ pub use world_node::{collect_construction_snapshot, ConstructionSnapshotRow};
 pub use world_node::{
     collect_resource_snapshot, resource_rows_amounts, resource_rows_split, ResourceSnapshotRow,
 };
+pub use world_node::{collect_recent_deaths, recent_death_rows_split, RecentDeathRow};
 pub use world_node::{collect_settlement_snapshot, SettlementSnapshotRow};
 pub use world_node::{collect_relationship_snapshot, RelationshipSnapshotRow};
 pub use world_node::clamp_sim_speed;

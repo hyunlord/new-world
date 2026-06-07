@@ -80,6 +80,20 @@ impl DeathReason {
             DeathReason::Combat => "combat",
         }
     }
+
+    /// Stable numeric discriminant consumed by the death-marker renderer
+    /// (V7 viz-D `show-death-visual`). Mirrors [`DeathReason::as_str`]; the
+    /// GDScript colour switch keys off these exact values:
+    /// `0 = Starvation` (brown), `1 = Dehydration` (blue), `2 = Combat` (red).
+    /// Any other value would mis-colour the marker, so the mapping is a locked
+    /// contract.
+    pub fn as_u8(&self) -> u8 {
+        match self {
+            DeathReason::Starvation => 0,
+            DeathReason::Dehydration => 1,
+            DeathReason::Combat => 2,
+        }
+    }
 }
 
 /// Reason an agent transitioned from `Idle` to `Seeking` (V7 Phase 5-β /

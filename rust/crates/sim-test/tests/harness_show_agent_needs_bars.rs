@@ -468,12 +468,13 @@ fn parse_gd_const_f32(src: &str, name: &str) -> Option<f32> {
 // ─── A6: scene wiring is additive (delta-based, offset-independent) ─────────
 #[test]
 fn harness_needs_a6_scene_wiring_additive() {
-    // Type D additive-preservation regression. Baseline measured at HEAD
-    // (commit 6dfa7f7c, 2026-06-05): load_steps = 11, ext_resource count = 11.
-    // viz-B adds exactly one ext_resource (need_bar_renderer.gd) → +1 on both.
-    // We assert the +1 DELTA (offset-independent), never an absolute identity.
-    const LOAD_STEPS_BEFORE: i64 = 11;
-    const EXT_COUNT_BEFORE: usize = 11;
+    // Type D additive-preservation regression. The +1 DELTA is the invariant
+    // (offset-independent), never an absolute identity. The baseline tracks the
+    // shared scene: viz-B's own land put it at load_steps/ext = 12; viz-D then
+    // added death_viz_renderer.gd, so this guard now describes the 12 → 13
+    // transition (baseline 12, +1 → 13). The +1-additive invariant is preserved.
+    const LOAD_STEPS_BEFORE: i64 = 12;
+    const EXT_COUNT_BEFORE: usize = 12;
 
     let scene = read_file(&["scenes", "main.tscn"]);
 

@@ -22,7 +22,7 @@
 use hecs::{Entity, World};
 use sim_core::causal::event::{CausalEvent, DeathReason};
 use sim_core::components::{Agent, AgentId, BodyHealth, Hunger, Position, Thirst};
-use sim_engine::{RuntimeSystem, SimResources};
+use sim_engine::{RecentDeath, RuntimeSystem, SimResources};
 
 /// HP removed per tick while `Hunger.value >= Hunger::SATURATION`.
 /// `100 / 0.08 = 1250` ticks of continuous hunger saturation to die (~42s @
@@ -103,6 +103,17 @@ pub fn despawn_agent(
             tick,
         },
     );
+
+    // V7 viz-D — ALSO push to the display-only recent-deaths buffer (additive;
+    // the causal_log push above is untouched). The dedicated buffer is reliable
+    // for "show every recent death" where the 8-slot per-tile causal ring would
+    // evict quickly. Pruned by `SimEngine::tick`.
+    resources.recent_deaths.push(RecentDeath {
+        x: position.0 as i32,
+        y: position.1 as i32,
+        reason,
+        tick: tick as u32,
+    });
 }
 
 /// Needs → frailty → death system (priority 139, interval 1).

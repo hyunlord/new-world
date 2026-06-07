@@ -597,15 +597,16 @@ fn harness_zoom_a16_centroid_uses_world_renderer_coordinate_basis() {
 // ─── Assertion 17: load_steps == 12 ───────────────────────────────────────
 #[test]
 fn harness_zoom_a17_main_tscn_load_steps_equals_12() {
-    // Type A — `[gd_scene ... load_steps=12 ...]`, ws around `=` tolerated.
-    // viz-B added the 12th ext_resource (need_bar_renderer.gd → NeedBarRenderer
-    // node); Godot requires load_steps to match the resource count, so the
-    // locked value advances 11 → 12 with the scene.
+    // Type A — `[gd_scene ... load_steps=13 ...]`, ws around `=` tolerated.
+    // viz-B added the 12th ext_resource (NeedBarRenderer); viz-D adds the 13th
+    // (death_viz_renderer.gd → DeathVizRenderer node). Godot requires load_steps
+    // to match the resource count, so the locked value advances 12 → 13 with the
+    // scene.
     let src = read_main_tscn_src();
     let n = tscn_load_steps(&src)
         .expect("a17.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 12, "a17.2: load_steps must equal 12; got {n}");
-    println!("[P14-ζ a17] load_steps = 12 ✓");
+    assert_eq!(n, 13, "a17.2: load_steps must equal 13; got {n}");
+    println!("[P14-ζ a17] load_steps = 13 ✓");
 }
 
 // ─── Assertion 18: registers both new nodes ───────────────────────────────

@@ -28,6 +28,7 @@
 #![warn(missing_docs)]
 
 use hecs::{Entity, World};
+use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::components::{
     Agent, AgentId, BuildingId, Position, RelationshipKey, RelationshipState, Settlement,
@@ -53,6 +54,40 @@ pub struct BuildingPlacedEvent {
     /// Influence radius in tiles (Chebyshev distance, inclusive).
     pub radius: u32,
 }
+
+/// A recently-recorded agent death (V7 viz-D `show-death-visual`).
+///
+/// Pushed by the shared `survival::despawn_agent` helper (the single death
+/// path that both `StarvationSystem` and `CombatSystem` route through) and
+/// pruned each tick once it ages past [`RECENT_DEATH_RETAIN_TICKS`]. The
+/// `death_viz_renderer.gd` overlay reads this buffer (via the `get_recent_deaths`
+/// FFI) and draws a fading, reason-coloured marker at the death tile.
+///
+/// Display-only: this buffer is never read by simulation logic, so it cannot
+/// affect determinism. `SimResources` is NOT serde-serialized, so the field
+/// carries no save/load or lockstep weight.
+#[derive(Debug, Clone, Copy)]
+pub struct RecentDeath {
+    /// Death tile-x (the dead agent's last `Position` tile). Stored as `i32`
+    /// per the viz-D buffer schema so the FFI `x as i32` cast is identity and
+    /// the harness compares natively (`i32 == i32`). The `position.0` value
+    /// pushed by `despawn_agent` is widened from the `u32` `Position` field.
+    pub x: i32,
+    /// Death tile-y (the dead agent's last `Position` tile). See [`Self::x`].
+    pub y: i32,
+    /// Typed cause of death (drives the marker colour).
+    pub reason: DeathReason,
+    /// Simulation tick at which the death occurred (drives the fade age).
+    /// `u32` per the viz-D buffer schema; the FFI widens it to `i64`.
+    pub tick: u32,
+}
+
+/// Ticks a [`RecentDeath`] is retained before [`SimEngine::tick`] prunes it.
+///
+/// Must be `>=` the renderer's `FADE_TICKS` (90) so the fade window always has
+/// data to draw; `120` gives margin (the marker is fully faded by 90, gone from
+/// the buffer by 120).
+pub const RECENT_DEATH_RETAIN_TICKS: u64 = 120;
 
 /// Uniform interface implemented by every simulation system.
 ///
@@ -244,6 +279,14 @@ pub struct SimResources {
     /// single tick. The registry is the authoritative
     /// "where are the buildings?" lookup. V7 Phase 10-β.
     pub building_registry: HashMap<BuildingId, (u32, u32)>,
+
+    /// Bounded, display-only buffer of recent agent deaths (V7 viz-D
+    /// `show-death-visual`). Pushed by the shared `survival::despawn_agent`
+    /// helper, pruned each tick by [`SimEngine::tick`] once entries age past
+    /// [`RECENT_DEATH_RETAIN_TICKS`]. Read by the `get_recent_deaths` FFI for
+    /// the death-marker overlay. Never read by simulation logic (determinism-
+    /// safe); not serde-serialized.
+    pub recent_deaths: Vec<RecentDeath>,
 }
 
 impl SimResources {
@@ -285,6 +328,7 @@ impl SimResources {
             // first issued id is `1` and `0` remains reserved.
             next_settlement_id: 1,
             building_registry: HashMap::new(),
+            recent_deaths: Vec::new(),
         }
     }
 
@@ -434,6 +478,14 @@ impl SimEngine {
     /// tick counter and updates the day/night clock.
     pub fn tick(&mut self) {
         self.resources.current_tick = self.current_tick;
+        // V7 viz-D — prune the display-only recent-deaths buffer once entries
+        // age past the retain window. `saturating_sub` guards the defensive
+        // `entry.tick > current_tick` case (age 0, kept). Order-independent →
+        // deterministic.
+        let tick = self.current_tick;
+        self.resources
+            .recent_deaths
+            .retain(|d| tick.saturating_sub(d.tick as u64) < RECENT_DEATH_RETAIN_TICKS);
         for system in &mut self.systems {
             if self.current_tick.is_multiple_of(system.tick_interval()) {
                 system.tick(&mut self.world, &mut self.resources);
