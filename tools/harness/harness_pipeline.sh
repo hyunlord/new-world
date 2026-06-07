@@ -976,7 +976,12 @@ $(cat "$REVIEW_DIR/review_latest.md")"
     rm -f "$RESULT_DIR/gen_result_attempt${attempt}.md"
 
     # Generator needs tool access to write code — use --dangerously-skip-permissions
-    local gen_timeout="${GENERATOR_TIMEOUT_SECONDS:-900}"
+    # Default raised 900→1800s: a large multi-crate feature's cold build + TDD
+    # cargo iterations can legitimately exceed 15min. The count-guard doctest
+    # cost (the prior dominant stall contributor) was removed separately
+    # (harness_p8_beta_a26 now uses --lib --bins --tests), so 1800s is margin
+    # for genuine cold builds, not a mask for the doctest pathology.
+    local gen_timeout="${GENERATOR_TIMEOUT_SECONDS:-1800}"
     log "Running Generator (isolated session, attempt $attempt, timeout ${gen_timeout}s)..."
     run_with_timeout "$gen_timeout" \
         claude --agent harness-generator \

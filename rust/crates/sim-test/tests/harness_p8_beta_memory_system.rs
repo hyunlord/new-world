@@ -1556,10 +1556,24 @@ fn harness_p8_beta_a25_behavioral_signature_triple_regression() {
 
 #[test]
 fn harness_p8_beta_a26_test_count_regression_guard() {
-    // `cargo test --workspace -- --list` enumerates all compiled test functions
-    // without executing them (no recursive test invocation). Each output line
-    // matching ": test" is one test function. Assert the total >= the SHA-anchored
-    // floor (BASELINE_TEST_COUNT + MIN_NEW_TESTS).
+    // `cargo test --workspace --lib --bins --tests -- --list` enumerates every
+    // compiled `#[test]` function (lib/bin/integration targets) without
+    // executing them. Each output line matching ": test" is one test function.
+    // Assert the total >= the floor (BASELINE_TEST_COUNT + MIN_NEW_TESTS).
+    //
+    // `--lib --bins --tests` DELIBERATELY EXCLUDES doctests. Doctests are
+    // enumerated by `rustdoc --test`, which RECOMPILES every doctest example
+    // even when the crates are already built — ~90s warm, and far worse when
+    // the outer `cargo test --workspace` (the Generator's self-gate, Step 0,
+    // the pipeline gate) has just rebuilt changed crates, because the nested
+    // invocation then re-runs rustdoc on the changed crates' doctests. That
+    // cost (×N TDD cargo invocations) is the dominant contributor to the
+    // Generator 900s-timeout "stall". Excluding doctests cuts this guard from
+    // ~91s to ~1s and removes the doctest-rebuild cost from every workspace
+    // test run. The floor (804) is for `#[test]` functions only and is cleared
+    // with large headroom (1630+), so dropping doctests from the count neither
+    // weakens the silent-removal guard nor needs a re-baseline. Doctest
+    // breakage is still caught by the gate executing them, just not COUNTED here.
     //
     // total_failed == 0 is enforced by the harness gate (`cargo test --workspace`
     // must be green before the evaluator approves, so if we reach this assertion
@@ -1573,10 +1587,10 @@ fn harness_p8_beta_a26_test_count_regression_guard() {
         .to_owned();
 
     let output = std::process::Command::new("cargo")
-        .args(["test", "--workspace", "--", "--list"])
+        .args(["test", "--workspace", "--lib", "--bins", "--tests", "--", "--list"])
         .current_dir(&workspace_dir)
         .output()
-        .expect("A26: failed to invoke `cargo test --workspace -- --list`");
+        .expect("A26: failed to invoke `cargo test --workspace --lib --bins --tests -- --list`");
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let total = stdout
