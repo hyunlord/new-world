@@ -13,9 +13,9 @@
 //! See `.harness/plans/phase10.md` §3.1 for the full sub-stage decomposition.
 
 use crate::causal::event::EventId;
-use crate::components::AgentId;
+use crate::components::{AgentId, ResourceKind};
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 
 /// Stable per-settlement identifier. Mirrors the [`AgentId`] type-alias
 /// convention but uses `u32` — settlement counts are orders of magnitude
@@ -122,6 +122,16 @@ pub struct Settlement {
     /// Tick at which this settlement was first formed (set on `SettlementFormed`
     /// emission in Phase 10-β).
     pub founded_at: u64,
+
+    /// Settlement reserve of carriable resources (Direction-2 slice 2-1).
+    ///
+    /// Aggregate-direct stockpile (Gate-0 Q3: no warehouse building in MVP) —
+    /// a count map keyed by [`ResourceKind`] for deterministic iteration.
+    /// UNCAPPED, unlike an agent [`Inventory`](crate::components::Inventory).
+    /// Defaults empty; populated by [`Settlement::store`] / drained by
+    /// [`Settlement::withdraw`] (used by slices 2-3/2-4). Zero counts are never
+    /// stored — `withdraw` drops a key the moment it reaches 0.
+    pub stockpile: BTreeMap<ResourceKind, u32>,
 }
 
 impl Settlement {
@@ -135,6 +145,38 @@ impl Settlement {
             population_stats: PopulationStats::default(),
             community_history: Vec::with_capacity(SETTLEMENT_HISTORY_CAP),
             founded_at,
+            stockpile: BTreeMap::new(),
+        }
+    }
+
+    /// Add `n` to the stockpile reserve for `kind` (uncapped, unlike an agent
+    /// [`Inventory`](crate::components::Inventory)). Uses `saturating_add` so a
+    /// pathological accumulation cannot wrap or panic at the `u32` ceiling.
+    /// A zero `n` is a no-op that does not create a key.
+    pub fn store(&mut self, kind: ResourceKind, n: u32) {
+        if n == 0 {
+            return;
+        }
+        let count = self.stockpile.entry(kind).or_insert(0);
+        *count = count.saturating_add(n);
+    }
+
+    /// Remove up to the held amount of `kind` from the stockpile. Returns the
+    /// amount actually removed (`min(n, held)`). When the entry reaches 0 the
+    /// key is dropped (same zero-entry hygiene as
+    /// [`Inventory::remove`](crate::components::Inventory::remove)). A zero `n`,
+    /// or an absent key, is a no-op returning 0 without dropping a positive key.
+    pub fn withdraw(&mut self, kind: ResourceKind, n: u32) -> u32 {
+        match self.stockpile.get_mut(&kind) {
+            Some(count) => {
+                let removed = n.min(*count);
+                *count -= removed;
+                if *count == 0 {
+                    self.stockpile.remove(&kind);
+                }
+                removed
+            }
+            None => 0,
         }
     }
 

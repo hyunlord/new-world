@@ -44,9 +44,11 @@ pub mod agent_state;
 pub mod body_health;
 pub mod construction;
 pub mod hunger;
+pub mod inventory;
 pub mod memory;
 pub mod position;
 pub mod relationship;
+pub mod resource_kind;
 pub mod seek_target;
 pub mod settlement;
 pub mod settlement_migrant;
@@ -59,9 +61,11 @@ pub use agent_state::{AgentState, TargetKind};
 pub use body_health::{BodyHealth, DEFAULT_MAX_HP};
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
+pub use inventory::{Inventory, INVENTORY_CAPACITY};
 pub use memory::{Memory, MemoryArm, MemoryEntry, MEMORY_CAP, SALIENCE_FLOOR};
 pub use position::Position;
 pub use relationship::{RelationshipKey, RelationshipState, HOSTILITY_BUMP};
+pub use resource_kind::ResourceKind;
 pub use seek_target::SeekTarget;
 pub use settlement::{
     BuildingId, PopulationStats, Settlement, SettlementId, SETTLEMENT_DISSOLUTION_THRESHOLD,
