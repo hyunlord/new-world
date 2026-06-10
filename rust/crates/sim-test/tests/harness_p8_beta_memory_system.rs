@@ -40,10 +40,10 @@ const H: u32 = 128;
 /// to capture actual values from the current build.
 const BASELINE_SIGNATURE: (u32, u32, u32) = (0, 430, 20);
 
-/// Workspace test count at SHA a0666b6c (V7 Foundation closure).
-const BASELINE_TEST_COUNT: u32 = 787;
-/// Minimum new tests added by this Phase 8-β dispatch.
-const MIN_NEW_TESTS: u32 = 17;
+/// Static `#[test]` floor (silent-removal tripwire). Current workspace count
+/// is ~1637; this floor tolerates minor refactor churn while catching the
+/// silent removal of dozens of tests. Retightened from the old loose 804.
+const STATIC_TEST_FLOOR: u32 = 1600;
 
 // ──────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -1556,54 +1556,81 @@ fn harness_p8_beta_a25_behavioral_signature_triple_regression() {
 
 #[test]
 fn harness_p8_beta_a26_test_count_regression_guard() {
-    // `cargo test --workspace --lib --bins --tests -- --list` enumerates every
-    // compiled `#[test]` function (lib/bin/integration targets) without
-    // executing them. Each output line matching ": test" is one test function.
-    // Assert the total >= the floor (BASELINE_TEST_COUNT + MIN_NEW_TESTS).
+    // Silent-removal tripwire by STATIC SOURCE COUNT — no subprocess.
     //
-    // `--lib --bins --tests` DELIBERATELY EXCLUDES doctests. Doctests are
-    // enumerated by `rustdoc --test`, which RECOMPILES every doctest example
-    // even when the crates are already built — ~90s warm, and far worse when
-    // the outer `cargo test --workspace` (the Generator's self-gate, Step 0,
-    // the pipeline gate) has just rebuilt changed crates, because the nested
-    // invocation then re-runs rustdoc on the changed crates' doctests. That
-    // cost (×N TDD cargo invocations) is the dominant contributor to the
-    // Generator 900s-timeout "stall". Excluding doctests cuts this guard from
-    // ~91s to ~1s and removes the doctest-rebuild cost from every workspace
-    // test run. The floor (804) is for `#[test]` functions only and is cleared
-    // with large headroom (1630+), so dropping doctests from the count neither
-    // weakens the silent-removal guard nor needs a re-baseline. Doctest
-    // breakage is still caught by the gate executing them, just not COUNTED here.
+    // A `#[test]` function removed from the workspace is, by definition, a
+    // `#[test]` attribute gone from a source file. So counting line-anchored
+    // `#[test]` attributes by walking the source tree is a MORE DIRECT measure
+    // of "did someone silently delete tests" than enumerating compiled test
+    // binaries, and it spawns NO child process — only `std::fs` reads (tens of
+    // ms even cold).
     //
-    // total_failed == 0 is enforced by the harness gate (`cargo test --workspace`
-    // must be green before the evaluator approves, so if we reach this assertion
-    // the workspace run was clean).
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    let workspace_dir = std::path::Path::new(manifest_dir)
-        .parent()  // sim-test -> crates
-        .unwrap()
-        .parent()  // crates -> rust (workspace Cargo.toml)
-        .unwrap()
-        .to_owned();
+    // This replaces the prior nested compiled-binary enumeration, which ran
+    // INSIDE every workspace test run (the Generator self-gate, Step 0, the
+    // pipeline gate) and — even with doctests excluded — paid a multi-minute
+    // cold cost while enumerating ~150 test binaries under build-lock
+    // contention. That nested pattern was the dominant contributor to the
+    // Generator timeout "stall"; the static walk eliminates it entirely.
+    //
+    // Tradeoff: source-attribute counting misses macro-GENERATED tests (none
+    // significant here) and counts by attribute rather than compiled symbol.
+    // For a removal tripwire that is the correct, faster signal. The floor is
+    // STATIC_TEST_FLOOR (1600), cleared with headroom by the current ~1637.
 
-    let output = std::process::Command::new("cargo")
-        .args(["test", "--workspace", "--lib", "--bins", "--tests", "--", "--list"])
-        .current_dir(&workspace_dir)
-        .output()
-        .expect("A26: failed to invoke `cargo test --workspace --lib --bins --tests -- --list`");
+    /// Recursively collect `*.rs` files under `dir`. A missing dir contributes
+    /// nothing (no panic) — some crates have no `src` or no `tests` directory.
+    fn collect_rs(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
+        let Ok(entries) = std::fs::read_dir(dir) else {
+            return;
+        };
+        for e in entries.flatten() {
+            let p = e.path();
+            if p.is_dir() {
+                collect_rs(&p, out);
+            } else if p.extension().is_some_and(|x| x == "rs") {
+                out.push(p);
+            }
+        }
+    }
 
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let total = stdout
-        .lines()
-        .filter(|l| l.ends_with(": test"))
-        .count() as u32;
+    // Workspace root: sim-test -> crates -> rust.
+    let rust_root = match std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .and_then(std::path::Path::parent)
+    {
+        Some(p) => p.to_owned(),
+        None => panic!("A26: could not resolve workspace root from CARGO_MANIFEST_DIR"),
+    };
 
-    let floor = BASELINE_TEST_COUNT + MIN_NEW_TESTS;
+    let crates_dir = rust_root.join("crates");
+    let mut files = Vec::new();
+    match std::fs::read_dir(&crates_dir) {
+        Ok(entries) => {
+            for e in entries.flatten() {
+                let crate_dir = e.path();
+                if crate_dir.is_dir() {
+                    collect_rs(&crate_dir.join("src"), &mut files);
+                    collect_rs(&crate_dir.join("tests"), &mut files);
+                }
+            }
+        }
+        Err(err) => panic!("A26: cannot read {}: {err}", crates_dir.display()),
+    }
+
+    let mut count: u32 = 0;
+    for f in &files {
+        if let Ok(text) = std::fs::read_to_string(f) {
+            count += text
+                .lines()
+                .filter(|l| l.trim_start().starts_with("#[test]"))
+                .count() as u32;
+        }
+    }
+
     assert!(
-        total >= floor,
-        "A26: workspace test count {total} < SHA-anchored floor {floor} \
-         (BASELINE_TEST_COUNT={BASELINE_TEST_COUNT} + MIN_NEW_TESTS={MIN_NEW_TESTS}); \
-         silent test removal detected"
+        count >= STATIC_TEST_FLOOR,
+        "A26: workspace #[test] count {count} < floor {STATIC_TEST_FLOOR}; \
+         silent test removal detected (static source walk over crates/*/{{src,tests}})"
     );
 }
 
