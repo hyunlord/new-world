@@ -1,0 +1,32 @@
+[23:04:23] MODE=redir CEIL=120 launching
+[23:04:34] WORK-DONE el=11s — deep snapshot. node-claude pid=1507
+##### DEEP SNAPSHOT at work-done el=11s #####
+--- full process tree from perl wrapper ---
+ 1499  1497 S      00:11 perl
+   1507  1499 S      00:11 claude
+--- node-claude pid=1507 descendants ---
+ 1507  1499 S      00:11 claude
+--- lsof node-claude: PIPES ---
+--- lsof node-claude: SOCKETS (network/IP/unix) ---
+claude  1507 rexxa    8u     unix 0xc5aee696baac1948       0t0                     ->0xe7876a2f9a69dcd1
+claude  1507 rexxa    9u     IPv4 0x5c430892d7332d8b       0t0                 TCP 192.168.0.10:50290->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   11u     IPv4 0xd75a477455780c07       0t0                 TCP 192.168.0.10:50276->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   12u     IPv4 0x540767ffa7159d1b       0t0                 TCP 192.168.0.10:50278->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   13u     IPv4  0x71bba1bd04d43ed       0t0                 TCP 192.168.0.10:50280->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   14u     IPv4 0x8d90b2bf45502e7c       0t0                 TCP 192.168.0.10:50282->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   15u     IPv4 0xd8e2174b461d9173       0t0                 TCP 192.168.0.10:50284->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   16u     IPv4 0x2d45ebf6537a932e       0t0                 TCP 192.168.0.10:50297->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   17u     IPv4 0xdaa21de8d033fce6       0t0                 TCP 192.168.0.10:50301->137.66.149.34.bc.googleusercontent.com:https (ESTABLISHED)
+claude  1507 rexxa   27u     IPv4 0x2ec157a980142320       0t0                 TCP 192.168.0.10:50286->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   29u     IPv4 0xf6035234eb12e6a8       0t0                 TCP 192.168.0.10:50299->160.79.104.10:https (ESTABLISHED)
+claude  1507 rexxa   41u     IPv4 0xe4dfa256f039c183       0t0                 TCP 192.168.0.10:50288->160.79.104.10:https (ESTABLISHED)
+--- lsof node-claude: fd 0/1/2 ---
+RC=0
+COMMAND  PID  USER   FD      TYPE             DEVICE  SIZE/OFF                NODE NAME
+claude  1507 rexxa    0r      CHR                3,2       0t0                 336 /dev/null
+claude  1507 rexxa    1w      REG               1,15        21            68481201 /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/deep_redir.log
+claude  1507 rexxa    2w      REG               1,15        21            68481201 /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/deep_redir.log
+--- sample node-claude 3s ---
+[23:04:35] PIPELINE RETURNED el=12s  rc-line: RC=0
+[23:04:35] last log: GENERATOR_PROBE_DONE
+[23:04:35] === redir done ===

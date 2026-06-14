@@ -1,0 +1,20 @@
+[23:02:44] MODE=tee CEIL=180 launching
+[23:03:13] WORK-DONE el=29s — deep snapshot. node-claude pid=98715
+##### DEEP SNAPSHOT at work-done el=29s #####
+--- full process tree from perl wrapper ---
+98707 98704 S      00:29 perl
+  98715 98707 S      00:29 claude
+--- node-claude pid=98715 descendants ---
+98715 98707 S      00:29 claude
+--- lsof node-claude: PIPES ---
+PIPESTATUS=0
+claude  98715 rexxa    1      PIPE 0xfe190daefd13e83c     16384                     ->0x215718c34b6a7e9f
+claude  98715 rexxa    2      PIPE 0xfe190daefd13e83c     16384                     ->0x215718c34b6a7e9f
+claude  98715 rexxa    4      PIPE 0xfe190daefd13e83c     16384                     ->0x215718c34b6a7e9f
+claude  98715 rexxa   10      PIPE 0xfe190daefd13e83c     16384                     ->0x215718c34b6a7e9f
+--- lsof node-claude: SOCKETS (network/IP/unix) ---
+--- lsof node-claude: fd 0/1/2 ---
+--- sample node-claude 3s ---
+[23:03:15] PIPELINE RETURNED el=31s  rc-line: PIPESTATUS=0
+[23:03:15] last log: GENERATOR_PROBE_DONE
+[23:03:15] === tee done ===

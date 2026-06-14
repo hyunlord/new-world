@@ -1,0 +1,16 @@
+=== PRE-F2 (single-pid kill) ===
+rc=142 (142=deadline fired)
+survivors after PRE-F2 deadline:
+49243 f2pre_49233_grandchild 40
+
+=== POST-F2 (process-group kill) ===
+rc=142 (142=deadline fired)
+survivors after POST-F2 deadline:
+NONE
+
+VERDICT: pre-F2 survivors=1 (expect >=1: grandchild leaks)  post-F2 survivors=0 (expect 0: group reaped)
+F2 PASS — group-kill reaps the grandchild the single-pid kill leaked
+
+NOTE: a grandchild that calls setsid() to start its OWN session escapes the
+group and would still survive (PHASE-1 M4 used setsid). Real claude descendants
+do not setsid, so F2 covers them. setsid-escape remains a known edge case.

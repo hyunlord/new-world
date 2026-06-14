@@ -1,0 +1,16 @@
+=== M3a: WITH '| tee' (current pipeline shape) ===
+Expect: worker exits in <1s, but tee blocks until grandchild dies (~30s).
+M3a elapsed=30s  rc=0  (if elapsed≈30 → tee waited for grandchild = H1 CONFIRMED)
+
+=== M3b: WITH '> file 2>&1' (no tee, redirect to file) ===
+Expect: same — a file redirect's write-end is ALSO inherited by grandchild,
+        so even '>' can block? Actually NO: '>' opens the file in the parent
+        shell; the grandchild inherits that fd but the SHELL does not wait on it.
+M3b elapsed=1s  rc=0  (if elapsed<2 → redirect does NOT block = tee is the amplifier)
+
+=== M4: perl wrapper kills only $pid, not the group (grandchild check) ===
+Launch worker under a SHORT 3s ceiling so ALRM fires; grandchild sleeps 30s.
+M4 elapsed=4s  rc=142  (rc=142 → perl SIGKILL fired at deadline)
+M4 surviving 'sleep 40' grandchildren after wrapper returned: 76354 sleep 40
+
+=== done ===

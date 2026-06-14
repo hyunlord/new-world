@@ -1,0 +1,96 @@
+[23:04:13] MODE=devnull CEIL=120 — launching pipeline in background
+[23:04:13] pipeline bg pgid=998
+===== el=0s logsize=0 stable=0 donemark=0 =====
+-- perl wrappers --
+1004 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:
+1. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt
+2. Use Bash to run: ls -la /tmp/exithang_probe_file.txt
+3. Use Bash to run: cargo --version
+4. Reply with exactly: GENERATOR_PROBE_DONE
+Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+ 1004  1000 S          00:00 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+ 1013  1004 R          00:00 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=1004 --
+ 1013  1004 R    claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    1004 rexxa    1   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+perl    1004 rexxa    2   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+-- any tee for this tag --
+1001 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_devnull.log
+[23:04:19] WORK-DONE detected at el=6s (logsize=0, donemark=0) — process still in pipeline? probing tree…
+===== el=6s logsize=0 stable=3 donemark=0 =====
+-- perl wrappers --
+1004 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:
+1. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt
+2. Use Bash to run: ls -la /tmp/exithang_probe_file.txt
+3. Use Bash to run: cargo --version
+4. Reply with exactly: GENERATOR_PROBE_DONE
+Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+ 1004  1000 S          00:06 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+ 1013  1004 S          00:06 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=1004 --
+ 1013  1004 S    claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+ 1047  1013 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/mcp-server.cjs
+ 1048  1013 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/team-mcp.cjs
+ 1085  1013 S    npm exec @modelcontextprotocol/server-github   
+ 1087  1013 S    npm exec @agentmemory/mcp   
+ 1090  1013 S    npm exec firecrawl-mcp   
+ 1142  1013 S    node /opt/homebrew/bin/codex mcp-server
+ 1271  1013 Ss   node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/run.cjs /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/post-tool-verifier.mjs
+ 1272  1013 Ss   node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/run.cjs /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/project-memory-posttool.mjs
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    1004 rexxa    1   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+perl    1004 rexxa    2   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+-- any tee for this tag --
+1001 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_devnull.log
+===== el=8s logsize=0 stable=4 donemark=0 =====
+-- perl wrappers --
+1004 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:
+1. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt
+2. Use Bash to run: ls -la /tmp/exithang_probe_file.txt
+3. Use Bash to run: cargo --version
+4. Reply with exactly: GENERATOR_PROBE_DONE
+Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+ 1004  1000 S          00:08 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     120 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+ 1013  1004 S          00:08 claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=1004 --
+ 1013  1004 S    claude --agent harness-generator -p You are doing a measurement probe. Do these steps with tools, then stop:\0121. Use Bash to run: echo hello > /tmp/exithang_probe_file.txt\0122. Use Bash to run: ls -la /tmp/exithang_probe_file.txt\0123. Use Bash to run: cargo --version\0124. Reply with exactly: GENERATOR_PROBE_DONE\012Do not start any background processes. Keep it short. --dangerously-skip-permissions --output-format text
+ 1047  1013 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/mcp-server.cjs
+ 1048  1013 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/team-mcp.cjs
+ 1085  1013 S    npm exec @modelcontextprotocol/server-github   
+ 1087  1013 S    npm exec @agentmemory/mcp   
+ 1090  1013 S    npm exec firecrawl-mcp   
+ 1142  1013 S    node /opt/homebrew/bin/codex mcp-server
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    1004 rexxa    1   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+perl    1004 rexxa    2   PIPE 0xa012ac7e15d6c636    16384                     ->0x494dac1c44704a68
+-- any tee for this tag --
+1001 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_devnull.log
+[23:04:23] PIPELINE RETURNED at el=10s
+[23:04:23] COMPLETION→EXIT GAP = 4s  (workdone el=6s, exit el=10s)
+[23:04:23] last log line: GENERATOR_PROBE_DONE
+[23:04:23] === devnull done ===

@@ -1,0 +1,37 @@
+[23:12:31] VOLUME probe CEIL=240 — launching (exact pipeline shape: run_with_timeout … | tee)
+[23:12:43] progress el=12s files=1/30 logsize=0
+[23:12:47] progress el=16s files=2/30 logsize=0
+[23:12:49] progress el=18s files=3/30 logsize=0
+[23:12:53] progress el=22s files=4/30 logsize=0
+[23:12:55] progress el=24s files=5/30 logsize=0
+[23:12:59] progress el=28s files=6/30 logsize=0
+[23:13:03] progress el=32s files=7/30 logsize=0
+[23:13:06] progress el=35s files=8/30 logsize=0
+[23:13:08] progress el=37s files=9/30 logsize=0
+[23:13:12] progress el=41s files=10/30 logsize=0
+[23:13:14] progress el=43s files=11/30 logsize=0
+[23:13:18] progress el=47s files=12/30 logsize=0
+[23:13:20] progress el=49s files=13/30 logsize=0
+[23:13:22] progress el=51s files=14/30 logsize=0
+[23:13:26] progress el=55s files=15/30 logsize=0
+[23:13:30] progress el=59s files=16/30 logsize=0
+[23:13:34] progress el=63s files=17/30 logsize=0
+[23:13:36] progress el=65s files=18/30 logsize=0
+[23:13:38] progress el=67s files=19/30 logsize=0
+[23:13:42] progress el=71s files=20/30 logsize=0
+[23:13:46] progress el=75s files=21/30 logsize=0
+[23:13:48] progress el=77s files=22/30 logsize=0
+[23:13:50] progress el=79s files=23/30 logsize=0
+[23:13:54] progress el=83s files=24/30 logsize=0
+[23:13:56] progress el=85s files=25/30 logsize=0
+[23:13:58] progress el=87s files=26/30 logsize=0
+[23:14:02] progress el=91s files=27/30 logsize=0
+[23:14:04] progress el=93s files=28/30 logsize=0
+[23:14:06] progress el=95s files=29/30 logsize=0
+[23:14:10] progress el=99s files=30/30 logsize=0
+[23:14:10] ALL 30 FILES WRITTEN (tool work done) el=99s — watching for process exit
+PIPESTATUS=0
+[23:14:12] PIPELINE RETURNED el=101s  rc: PIPESTATUS=0
+[23:14:12] TOOL-WORK-DONE→EXIT GAP = 1s
+[23:14:12] last log: GENERATOR_PROBE_DONE 
+[23:14:12] === volume probe done ===

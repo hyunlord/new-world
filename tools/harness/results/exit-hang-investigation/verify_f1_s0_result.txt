@@ -1,0 +1,14 @@
+=== CHECK A1: stub that exceeds 3s deadline → expect gen_rc=142, branch reachable ===
+  gen_rc=142  (expect 142)
+  TIMEOUT BRANCH REACHED ✓ (would write GENERATOR_TIMEOUT marker + die)
+=== CHECK A2: stub that prints + exits 0 → expect gen_rc=0, log non-empty ===
+  gen_rc=0 (expect 0); log='HELLO_FROM_STUB' bytes=16
+
+=== CHECK B: real light claude --agent harness-generator -p 'reply DONE' (F1 redirect + S0 watchdog) ===
+  gen_rc=0 (expect 0)
+  log bytes=5 last='DONE'
+  watchdog outcome: completed gen_rc=0 log_bytes=       5
+  lingering _exithang_watchdog procs: NONE ✓
+
+=== F1+S0 verdict ===
+  A1 timeout branch reachable, A2 fast path rc0+log, B real-claude rc0+nonempty-log+watchdog-torn-down+outcome → see above

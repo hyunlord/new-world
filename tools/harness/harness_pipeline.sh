@@ -257,21 +257,35 @@ with open(sys.argv[3], 'w') as f:
 # Fix order: fork first → install handler with proper $pid scope →
 # alarm. Handler now follows SIGTERM with a SIGKILL after a 5s grace
 # period. Phase 14-β Codex 68-min hang was a direct casualty of bug (1).
+#
+# PHASE 2a / F2 (2026-06-14): widen the DEADLINE kill from a single pid to
+# the child's whole process group. PHASE 1 (exit-hang investigation, M4)
+# proved the single-pid `kill "KILL", $pid` leaves detached grandchildren
+# alive — a survivor holding the stdout/stderr fd is exactly what kept the
+# Generator's `| tee` blocked past the deadline. The child now becomes its
+# own process-group leader via setpgrp(0,0), and the ALRM handler signals
+# the negated pid (-$pid = the group) so grandchildren are reaped too.
+# ONLY the deadline path changed; the normal-completion path (waitpid
+# returns → exit ($? >> 8)) is byte-for-byte identical, so all 11 callers
+# that finish within their timeout behave exactly as before.
+# NOTE: this targets the perl fallback (the macOS host has no GNU `timeout`).
+# If GNU `timeout` is ever installed, group-kill parity on that path (`timeout
+# -s TERM` already kills the group; verify) is a flagged follow-up, not done here.
 run_with_timeout() {
     local seconds=$1
     shift
     if command -v timeout >/dev/null 2>&1; then
         timeout "$seconds" "$@"
     else
-        # macOS fallback: perl alarm with corrected lifecycle.
+        # macOS fallback: perl alarm with corrected lifecycle + group kill (F2).
         perl -e '
             use POSIX ":sys_wait_h";
             my $deadline = shift @ARGV;
             my $pid = fork();
             if (not defined $pid) { die "fork failed: $!"; }
-            if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+            if ($pid == 0) { setpgrp(0,0); exec @ARGV; die "exec failed: $!"; }
             $SIG{ALRM} = sub {
-                kill "TERM", $pid;
+                kill "TERM", -$pid;   # negative pid = whole process group
                 # SIGKILL grace period: 5s after SIGTERM, force-kill any
                 # subagent that ignored the polite signal. macOS Codex
                 # CLI children in this state otherwise run indefinitely.
@@ -279,7 +293,7 @@ run_with_timeout() {
                     last if waitpid($pid, WNOHANG) > 0;
                     sleep 1;
                 }
-                kill "KILL", $pid;
+                kill "KILL", -$pid;   # group-kill survivors (reaps grandchildren)
                 waitpid($pid, 0);
                 exit 142;
             };
@@ -936,6 +950,81 @@ parse_plan_verdict() {
 }
 
 # ============================================================
+# S0 (PHASE 2a, 2026-06-14): step-0 live-capture watchdog for the Generator
+# exit-hang. PHASE 1 confirmed the AMPLIFIER (tee + single-pid kill) but left
+# the TRIGGER unconfirmed — H1-orphan (main exits, a grandchild holds the pipe)
+# vs H2 (main itself never exits, suspected final-response API/network stall).
+# run_generator backgrounds _exithang_watchdog around the claude call and tears
+# it down on every return path. On a suspected hang (process alive, no rust/
+# write for 90s, >120s elapsed) it snapshots ps/lsof/sample ONCE so the NEXT
+# real Generator run (2-2 Gather resume) becomes the decisive measurement:
+#   - main blocked on network read / API socket in lsof  ⇒ H2 (F3 needed in 2b)
+#   - main gone, node/Codex grandchild holds fd 1/2       ⇒ H1-orphan (F1 fixes it)
+#   - blocked on wait4 for a child                        ⇒ child-reaping cause
+# Best-effort only: `set +e` inside so pgrep/lsof/find returning nonzero never
+# kills the watchdog subshell. Writes only under its capture dir.
+# ============================================================
+
+# node-claude pid finder: pgrep -f 'claude --agent harness-generator' also
+# matches the perl wrapper (its argv contains the claude command), so prefer the
+# process whose comm is node/claude and exclude perl (PHASE 1 deep_probe lesson).
+_exithang_find_claude() {
+    set +e
+    local p c
+    for p in $(pgrep -f 'claude --agent harness-generator' 2>/dev/null); do
+        c=$(ps -o comm= -p "$p" 2>/dev/null)
+        case "$c" in
+            *perl*) ;;
+            *node*|*claude*) echo "$p"; return 0 ;;
+        esac
+    done
+}
+
+_exithang_watchdog() {
+    set +e   # best-effort polling; never let a nonzero probe kill the watchdog
+    local capture_dir="$1" log_file="$2" deadline="$3"
+    local started captured=0 seen=0 now cpid last_act ch
+    started=$(date +%s)
+    while :; do
+        sleep 10
+        now=$(date +%s)
+        cpid=$(_exithang_find_claude)
+        if [[ -n "$cpid" ]]; then
+            seen=1
+        else
+            if [[ $seen -eq 1 ]]; then
+                # process disappeared after we saw it = fast/normal completion
+                echo "fast_completion elapsed=$(( now - started ))s log_bytes=$(wc -c < "$log_file" 2>/dev/null || echo NA)" \
+                    > "$capture_dir/outcome.txt"
+                return 0
+            fi
+            continue   # claude not spawned yet — keep waiting
+        fi
+        # newest mtime under rust/ in the last 90s = active work
+        last_act=$(find "$PROJECT_ROOT/rust" -type f -newermt "@$(( now - 90 ))" 2>/dev/null | head -1)
+        # suspected hang: alive + no rust/ write for 90s + >120s elapsed, well before deadline
+        if [[ $captured -eq 0 && -z "$last_act" && $(( now - started )) -gt 120 ]]; then
+            captured=1
+            {
+                echo "=== SUSPECTED HANG CAPTURE $(date -u +%FT%TZ) elapsed=$(( now - started ))s node-claude-pid=$cpid ==="
+                echo "log_bytes=$(wc -c < "$log_file" 2>/dev/null || echo NA) deadline=${deadline}s"
+                echo "--- ps -ef ---"; ps -ef
+                echo "--- descendants of $cpid ---"; pgrep -P "$cpid"
+                echo "--- lsof node-claude $cpid (pipes/sockets reveal H1 vs H2) ---"; lsof -p "$cpid"
+            } > "$capture_dir/capture.txt" 2>&1
+            for ch in $(pgrep -P "$cpid" 2>/dev/null); do
+                { echo "--- lsof child $ch ---"; lsof -p "$ch"; } >> "$capture_dir/capture.txt" 2>&1
+            done
+            sample "$cpid" 5 -mayDie > "$capture_dir/sample_claude.txt" 2>&1 || true
+            for ch in $(pgrep -P "$cpid" 2>/dev/null); do
+                sample "$ch" 5 -mayDie > "$capture_dir/sample_child_${ch}.txt" 2>&1 || true
+            done
+            echo "CAPTURED — see $capture_dir" >&2
+        fi
+    done
+}
+
+# ============================================================
 # STEP 2: GENERATOR (separate Claude session — isolated context)
 # ============================================================
 run_generator() {
@@ -983,13 +1072,40 @@ $(cat "$REVIEW_DIR/review_latest.md")"
     # for genuine cold builds, not a mask for the doctest pathology.
     local gen_timeout="${GENERATOR_TIMEOUT_SECONDS:-1800}"
     log "Running Generator (isolated session, attempt $attempt, timeout ${gen_timeout}s)..."
+
+    # S0 (PHASE 2a): launch the live-capture watchdog around the Generator call.
+    local _wd_capture_dir="$PROJECT_ROOT/tools/harness/results/exit-hang-investigation/live_capture_$(date +%Y%m%d_%H%M%S)_attempt${attempt}"
+    mkdir -p "$_wd_capture_dir"
+    _exithang_watchdog "$_wd_capture_dir" "$RESULT_DIR/generator_log_attempt${attempt}.txt" "$gen_timeout" &
+    local _wd_pid=$!
+
+    # F1 (PHASE 2a): redirect to file instead of `2>&1 | tee` — PHASE 1 (M3)
+    # proved the pipe blocks until EOF on a held write-fd (the ~30-min stall),
+    # while a plain `> file` exits as soon as the main process does. Capture the
+    # DIRECT exit code via `|| gen_rc=$?`: under `set -euo pipefail` (active —
+    # run_generator is called plainly) the bare `cmd > file; rc=$?` form would
+    # let set -e abort the whole script on a 124/142 return BEFORE capturing the
+    # code, which is exactly why the original tee form never reached the marker
+    # write below (PHASE 1: cited hangs had no GENERATOR_TIMEOUT marker). The
+    # `|| gen_rc=$?` idiom keeps the timeout branch reachable.
+    local gen_rc=0
     run_with_timeout "$gen_timeout" \
         claude --agent harness-generator \
             -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
             --dangerously-skip-permissions \
             --output-format text \
-            2>&1 | tee "$RESULT_DIR/generator_log_attempt${attempt}.txt"
-    local gen_rc=${PIPESTATUS[0]}
+            > "$RESULT_DIR/generator_log_attempt${attempt}.txt" 2>&1 || gen_rc=$?
+
+    # S0 teardown — covers BOTH the success path and the timeout-`die` path below.
+    # `|| true` because kill/wait on an already-exited watchdog returns nonzero
+    # (would trip set -e). Write a fallback outcome if the watchdog was killed
+    # before it noticed completion (very fast runs < first poll).
+    kill "$_wd_pid" 2>/dev/null || true
+    wait "$_wd_pid" 2>/dev/null || true
+    [[ -f "$_wd_capture_dir/outcome.txt" ]] || \
+        echo "completed gen_rc=$gen_rc log_bytes=$(wc -c < "$RESULT_DIR/generator_log_attempt${attempt}.txt" 2>/dev/null || echo NA)" \
+            > "$_wd_capture_dir/outcome.txt"
+
     if [[ $gen_rc -eq 124 || $gen_rc -eq 142 ]]; then
         log "ERROR: Generator timed out after ${gen_timeout}s"
         echo "GENERATOR_TIMEOUT" >> "$RESULT_DIR/gen_result_attempt${attempt}.md"

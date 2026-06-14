@@ -1,0 +1,40 @@
+[22:59:09] MODE=light CEIL=120 — launching pipeline in background
+[22:59:09] pipeline bg pgid=93947
+===== el=0s logsize=0 stable=0 donemark=0
+0 =====
+-- perl wrappers --
+93953 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     120 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+-- claude (this probe's) procs --
+93953 93949 S          00:00 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     120 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+93960 93953 R          00:00 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+(no claude --agent harness-generator process alive)
+-- any tee for this tag --
+93950 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_light.log
+[22:59:13] WORK-DONE detected at el=4s (logsize=5, donemark=1) — process still in pipeline? probing tree…
+===== el=4s logsize=5 stable=0 donemark=1 =====
+-- perl wrappers --
+93953 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     120 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+-- claude (this probe's) procs --
+93953 93949 S          00:04 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     120 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+93960 93953 S          00:04 claude -p Reply with exactly the word DONE and nothing else. Do not use any tools. --output-format text
+(no claude --agent harness-generator process alive)
+-- any tee for this tag --
+93950 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_light.log
+[22:59:15] PIPELINE RETURNED at el=6s
+[22:59:15] COMPLETION→EXIT GAP = 1s  (workdone el=4s, exit el=5s)
+[22:59:15] last log line: DONE
+[22:59:15] === light done ===

@@ -1,0 +1,128 @@
+[23:00:48] MODE=tee CEIL=90 — launching pipeline in background
+[23:00:48] pipeline bg pgid=96630
+===== el=0s logsize=0 stable=0 donemark=0 =====
+-- perl wrappers --
+96636 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:
+1. Run this single Bash command EXACTLY (it starts a background process and returns immediately):
+   nohup sleep 45 & echo "started bg child pid $!"
+2. Confirm you saw the pid printed.
+3. Reply with exactly: GENERATOR_PROBE_DONE
+Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+96636 96632 S          00:00 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96647 96636 S          00:00 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=96636 --
+96647 96636 S    claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    96636 rexxa    1   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+perl    96636 rexxa    2   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+-- any tee for this tag --
+96633 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_tee.log
+[23:00:54] WORK-DONE detected at el=6s (logsize=0, donemark=0) — process still in pipeline? probing tree…
+===== el=6s logsize=0 stable=3 donemark=0 =====
+-- perl wrappers --
+96636 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:
+1. Run this single Bash command EXACTLY (it starts a background process and returns immediately):
+   nohup sleep 45 & echo "started bg child pid $!"
+2. Confirm you saw the pid printed.
+3. Reply with exactly: GENERATOR_PROBE_DONE
+Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+96636 96632 S          00:06 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96647 96636 S          00:06 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=96636 --
+96647 96636 S    claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96681 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/mcp-server.cjs
+96682 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/team-mcp.cjs
+96712 96647 S    npm exec @modelcontextprotocol/server-github   
+96713 96647 S    npm exec @agentmemory/mcp   
+96714 96647 S    npm exec firecrawl-mcp   
+96763 96647 S    node /opt/homebrew/bin/codex mcp-server
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    96636 rexxa    1   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+perl    96636 rexxa    2   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+-- any tee for this tag --
+96633 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_tee.log
+===== el=8s logsize=0 stable=4 donemark=0 =====
+-- perl wrappers --
+96636 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:
+1. Run this single Bash command EXACTLY (it starts a background process and returns immediately):
+   nohup sleep 45 & echo "started bg child pid $!"
+2. Confirm you saw the pid printed.
+3. Reply with exactly: GENERATOR_PROBE_DONE
+Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+96636 96632 S          00:08 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96647 96636 S          00:08 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=96636 --
+96647 96636 S    claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96681 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/mcp-server.cjs
+96682 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/team-mcp.cjs
+96712 96647 S    npm exec @modelcontextprotocol/server-github   
+96713 96647 S    npm exec @agentmemory/mcp   
+96714 96647 S    npm exec firecrawl-mcp   
+96763 96647 S    node /opt/homebrew/bin/codex mcp-server
+96961 96647 Ss   node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/run.cjs /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/post-tool-verifier.mjs
+96962 96647 Ss   node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/run.cjs /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/scripts/project-memory-posttool.mjs
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    96636 rexxa    1   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+perl    96636 rexxa    2   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+-- any tee for this tag --
+96633 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_tee.log
+===== el=10s logsize=0 stable=5 donemark=0 =====
+-- perl wrappers --
+96636 perl -e 
+        use POSIX ":sys_wait_h";
+        my $deadline = shift @ARGV; my $pid = fork();
+        if (not defined $pid) { die "fork failed: $!"; }
+        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }
+        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };
+        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);
+     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:
+1. Run this single Bash command EXACTLY (it starts a background process and returns immediately):
+   nohup sleep 45 & echo "started bg child pid $!"
+2. Confirm you saw the pid printed.
+3. Reply with exactly: GENERATOR_PROBE_DONE
+Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- claude (this probe's) procs --
+96636 96632 S          00:10 perl -e \012        use POSIX ":sys_wait_h";\012        my $deadline = shift @ARGV; my $pid = fork();\012        if (not defined $pid) { die "fork failed: $!"; }\012        if ($pid == 0) { exec @ARGV; die "exec failed: $!"; }\012        $SIG{ALRM} = sub { kill "TERM",$pid; for(1..5){last if waitpid($pid,WNOHANG)>0; sleep 1;} kill "KILL",$pid; waitpid($pid,0); exit 142; };\012        alarm $deadline; waitpid($pid,0); alarm 0; exit ($? >> 8);\012     90 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96647 96636 S          00:10 claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+-- descendants of claude pid=96636 --
+96647 96636 S    claude --agent harness-generator -p You are doing a measurement probe of process cleanup. Do exactly this with the Bash tool, then stop:\0121. Run this single Bash command EXACTLY (it starts a background process and returns immediately):\012   nohup sleep 45 & echo "started bg child pid $!"\0122. Confirm you saw the pid printed.\0123. Reply with exactly: GENERATOR_PROBE_DONE\012Do NOT redirect the background process output. Do NOT wait for the sleep. Run the command verbatim. --dangerously-skip-permissions --output-format text
+96681 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/mcp-server.cjs
+96682 96647 S    node /Users/rexxa/.claude/plugins/cache/omc/oh-my-claudecode/4.4.5/bridge/team-mcp.cjs
+96712 96647 S    npm exec @modelcontextprotocol/server-github   
+96713 96647 S    npm exec @agentmemory/mcp   
+96714 96647 S    npm exec firecrawl-mcp   
+96763 96647 S    node /opt/homebrew/bin/codex mcp-server
+-- lsof: who holds the pipe / claude fds (first 25) --
+perl    96636 rexxa    1   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+perl    96636 rexxa    2   PIPE 0x440d6008937ba524    16384                     ->0x7d47a37032920169
+-- any tee for this tag --
+96633 tee /Users/rexxa/github/new-world-wt/lead/tools/harness/results/exit-hang-investigation/live_tee.log
+[23:00:58] claude pid=96636 still alive 1781445658-1781445654=4s after work done → sampling syscalls
+[23:01:02] PIPELINE RETURNED at el=14s
+[23:01:02] COMPLETION→EXIT GAP = 6s  (workdone el=6s, exit el=12s)
+[23:01:02] last log line: GENERATOR_PROBE_DONE
+[23:01:02] === tee done ===
