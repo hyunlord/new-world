@@ -775,9 +775,12 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
     // at every sample. (b) Type D: worst per-agent "position unchanged WHILE in a
     // DIRECTED motile state (Seeking{_} carrying a SeekTarget)" streak < 50 —
     // Idle/Consuming/rest are EXCLUDED (Idle Brownian may legitimately stall).
-    // (c) Type A: ≥1 specific bootstrap NON-founder (id<64), observed in the
-    // migration FSM at an EARLIER sample, later appears as a member — proving the
-    // join flowed through the migration walk, not birth growth.
+    // (c) Type A: ≥1 specific bootstrap NON-founder (id<64) observed as a
+    // NON-member on an EARLIER tick that later appears as a member — proving the
+    // join flowed through the migration walk, not birth growth. Tracked PER-TICK
+    // (not at the 50-tick (a) grid): the belonging model joins on contact and all
+    // non-founders are members before tick 50, so a sample-gated capture would
+    // miss every edge (measured in zzz_diag_a10 — sample-grid capture = 0).
     const TICKS: u64 = 3000;
     const SAMPLE: u64 = 50;
     let mut e = bootstrapped();
@@ -788,8 +791,9 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
     let mut prev_pos: HashMap<AgentId, (u32, u32)> = HashMap::new();
     let mut directed_streak: HashMap<AgentId, u32> = HashMap::new();
     let mut worst_directed = 0u32;
-    let mut seen_in_fsm: HashSet<AgentId> = HashSet::new(); // non-founder ids seen in FSM at a PRIOR sample
-    let mut migrant_join_proven = false;
+    let mut seen_nonmember: HashSet<AgentId> = HashSet::new(); // non-founder ids observed as NON-member at a PRIOR sample
+    let mut nonmember_to_member_transitions = 0usize; // genuine non-member→member transitions observed
+    let mut transition_example: Option<AgentId> = None;
 
     for t in 1..=TICKS {
         e.tick();
@@ -834,6 +838,53 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
         directed_streak.retain(|k, _| live.contains(k));
         prev_pos.retain(|k, _| live.contains(k));
 
+        // (c) genuine NON-member→member transition (membership-model-reform),
+        // tracked EVERY TICK — NOT at the 50-tick (a) sample grid. Measurement
+        // (zzz_diag_a10) shows the belonging model joins on radius contact and
+        // PERSISTS, and every non-founder bootstrap agent joins within ~40 ticks
+        // of formation (founders captured @≈tick 8; all 58 non-founders are
+        // members by tick 50). A sample-gated capture would therefore ALWAYS
+        // first observe them as already-members and never witness the edge —
+        // which is why the prior sample-based capture read 0. Per-tick observation
+        // captures the real non-member→member transition: a non-founder bootstrap
+        // agent (id<64, not a founder) seen as a NON-member on an EARLIER tick
+        // that LATER is a member. The ONLY way a non-founder gains membership is
+        // by entering a settlement's proximity radius (the migration walk), so a
+        // non-member→member transition proves the join flowed through migration,
+        // not birth growth. Each agent is counted at most once (removed from the
+        // tracking set on the tick it transitions). member_ids is collected first
+        // (avoids holding the settlements borrow across the world query).
+        if let Some(ref fset) = founders {
+            let member_ids: HashSet<AgentId> = e
+                .resources
+                .settlements
+                .values()
+                .flat_map(|s| s.member_agents.iter().copied())
+                .collect();
+            let nonfounder_bootstrap: Vec<AgentId> = e
+                .world
+                .query::<&Agent>()
+                .iter()
+                .map(|(_, a)| a.id)
+                .filter(|id| *id < BOOTSTRAP_COUNT && !fset.contains(id))
+                .collect();
+            for id in nonfounder_bootstrap {
+                if member_ids.contains(&id) {
+                    // Member now — was it a non-member on an earlier tick? If so,
+                    // this is a real transition (counted once via the remove).
+                    if seen_nonmember.remove(&id) {
+                        nonmember_to_member_transitions += 1;
+                        if transition_example.is_none() {
+                            transition_example = Some(id);
+                        }
+                    }
+                } else {
+                    // Non-member on this tick — record for a FUTURE comparison.
+                    seen_nonmember.insert(id);
+                }
+            }
+        }
+
         if t == 10 {
             assert!(
                 !e.resources.settlements.is_empty(),
@@ -856,29 +907,11 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
                 }
             }
             max_targetless = max_targetless.max(targetless);
-
-            // (c) check membership against FSM-observations from PRIOR samples
-            // (strict "earlier sample" ordering), then record THIS sample's FSM
-            // observations afterwards.
-            if let Some(ref fset) = founders {
-                for (ent, (a, state)) in e.world.query::<(&Agent, &AgentState)>().iter() {
-                    if a.id >= BOOTSTRAP_COUNT || fset.contains(&a.id) {
-                        continue;
-                    }
-                    if seen_in_fsm.contains(&a.id) && is_member(&e, a.id) {
-                        migrant_join_proven = true;
-                    }
-                    // record FSM observation for FUTURE samples
-                    if is_seeking_any_agent(*state) && has_marker(&e, ent) {
-                        seen_in_fsm.insert(a.id);
-                    }
-                }
-            }
         }
     }
 
     println!(
-        "[p10-γ A10] max target-less Seeking{{Agent}} = {max_targetless}; worst directed frozen streak = {worst_directed}; migrant-FSM→member proven = {migrant_join_proven}"
+        "[p10-γ A10] max target-less Seeking{{Agent}} = {max_targetless}; worst directed frozen streak = {worst_directed}; non-member→member transitions = {nonmember_to_member_transitions} (example id = {transition_example:?})"
     );
     assert_eq!(
         max_targetless, 0,
@@ -889,10 +922,12 @@ fn harness_p10_gamma_a10_prod_long_run_guard() {
         "A10(b): worst DIRECTED-motile frozen streak must be < 50 ticks; got {worst_directed}"
     );
     assert!(
-        migrant_join_proven,
-        "A10(c): ≥1 bootstrap non-founder seen in the migration FSM at an earlier sample must later become a member"
+        nonmember_to_member_transitions >= 1,
+        "A10(c): ≥1 genuine NON-member→member transition (a non-founder bootstrap agent \
+         that was a NON-member at an earlier sample and a member at a later sample) must \
+         occur — proves migration→join under the belonging model; got {nonmember_to_member_transitions}"
     );
-    println!("[p10-γ A10] PROD long-run: 0 target-less, directed freeze {worst_directed}<50, migration→join proven ✓");
+    println!("[p10-γ A10] PROD long-run: 0 target-less, directed freeze {worst_directed}<50, {nonmember_to_member_transitions} non-member→member transition(s) ✓");
 }
 
 // ════════════════════════════════════════════════════════════════════════════

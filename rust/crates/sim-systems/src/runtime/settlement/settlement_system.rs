@@ -108,6 +108,13 @@ fn chebyshev(a: (u32, u32), b: (u32, u32)) -> u32 {
     dx.max(dy)
 }
 
+/// Manhattan distance between two tile coordinates. Used by the membership
+/// exclusivity pass to pick the single owning settlement for an agent that
+/// sits inside two overlapping proximity bubbles (belonging-model reform).
+fn manhattan(a: (u32, u32), b: (u32, u32)) -> u64 {
+    a.0.abs_diff(b.0) as u64 + a.1.abs_diff(b.1) as u64
+}
+
 /// Phase 10-β settlement runtime system.
 ///
 /// Holds per-settlement local state (formation tile + formation event id +
@@ -224,8 +231,23 @@ impl SettlementSystem {
             .collect()
     }
 
-    /// Step 4: refresh `member_agents` + `member_buildings` from proximity
-    /// to each settlement's formation tile.
+    /// Step 4: refresh `member_agents` + `member_buildings` for each settlement
+    /// under the BELONGING MODEL (membership-reform).
+    ///
+    /// Membership is no longer "currently standing in the proximity bubble".
+    /// Per settlement we:
+    ///   * DROP only DEAD members — `retain` ids still resolvable to a live
+    ///     `(Agent, Position)` (an id absent from `agent_positions` has
+    ///     despawned). A far-but-LIVE member is KEPT, so a forager taken away
+    ///     from the settlement (Direction-2 carry/store) no longer collapses
+    ///     the roster (the 2-2 Gather 75→0 bug).
+    ///   * ADD in-radius live agents, deterministically (sorted by `AgentId`)
+    ///     and respecting `SETTLEMENT_MAX_POP` so a join cannot push the roster
+    ///     past the cap. The sort makes the capped admission set
+    ///     iteration-order-independent.
+    ///
+    /// Leaving the radius is NOT a leave path — only death (here, via the
+    /// retain step) or migration (the exclusivity pass) removes a member.
     fn sync_membership(
         &self,
         resources: &mut SimResources,
@@ -234,20 +256,31 @@ impl SettlementSystem {
     ) {
         let live_building_ids: HashSet<BuildingId> =
             buildings.iter().map(|(id, _)| *id).collect();
+        let cap = SETTLEMENT_MAX_POP as usize;
         for (id, settlement) in resources.settlements.iter_mut() {
             let formation_tile = match self.formation_tiles.get(id).copied() {
                 Some(t) => t,
                 None => continue,
             };
 
-            // Refresh member_agents from proximity.
-            let mut new_members = HashSet::new();
-            for (agent_id, pos) in agent_positions {
-                if chebyshev(formation_tile, *pos) <= SETTLEMENT_PROXIMITY_RADIUS {
-                    new_members.insert(*agent_id);
+            // DROP only DEAD members (retain ids resolvable to a live Position).
+            settlement
+                .member_agents
+                .retain(|aid| agent_positions.contains_key(aid));
+
+            // ADD in-radius live agents — deterministic (sorted) + cap-respecting.
+            let mut in_radius: Vec<AgentId> = agent_positions
+                .iter()
+                .filter(|(_, pos)| chebyshev(formation_tile, **pos) <= SETTLEMENT_PROXIMITY_RADIUS)
+                .map(|(aid, _)| *aid)
+                .collect();
+            in_radius.sort_unstable();
+            for aid in in_radius {
+                if settlement.member_agents.len() >= cap {
+                    break;
                 }
+                settlement.member_agents.insert(aid);
             }
-            settlement.member_agents = new_members;
 
             // Prune stale member_buildings; admit nearby live ones.
             settlement
@@ -259,6 +292,81 @@ impl SettlementSystem {
                 }
             }
 
+            settlement.population_stats.current = settlement.member_agents.len() as u32;
+        }
+    }
+
+    /// Membership exclusivity (belonging-model reform): an agent belongs to AT
+    /// MOST ONE settlement. After the proximity sync + formation scan, an agent
+    /// listed in two or more rosters (because it sits inside overlapping
+    /// bubbles, or a founder was already a member elsewhere) is kept ONLY in the
+    /// settlement whose `formation_tile` is Manhattan-nearest to the agent's
+    /// current position, tie-broken by the LOWER `SettlementId` — never by
+    /// HashMap iteration order. It is removed from every other roster.
+    ///
+    /// An agent currently in NO settlement's radius keeps its single existing
+    /// membership (it is not reassigned just for wandering) — this pass only
+    /// resolves genuine double-membership. `population_stats.current` is
+    /// recomputed for every settlement AFTER the resolution so it always equals
+    /// the live `member_agents.len()`.
+    ///
+    /// Determinism: settlement ids and member ids are collected and SORTED
+    /// before use, and the keeper is chosen by `min_by_key((manhattan, id))`, so
+    /// the result is independent of `HashMap`/`HashSet` iteration order.
+    fn resolve_exclusivity(
+        &self,
+        resources: &mut SimResources,
+        agent_positions: &HashMap<AgentId, (u32, u32)>,
+    ) {
+        // Build agent → rosters map in sorted (settlement, member) order.
+        let mut settlement_ids: Vec<SettlementId> =
+            resources.settlements.keys().copied().collect();
+        settlement_ids.sort_unstable();
+        let mut memberships: HashMap<AgentId, Vec<SettlementId>> = HashMap::new();
+        for sid in &settlement_ids {
+            if let Some(settlement) = resources.settlements.get(sid) {
+                let mut members: Vec<AgentId> =
+                    settlement.member_agents.iter().copied().collect();
+                members.sort_unstable();
+                for aid in members {
+                    memberships.entry(aid).or_default().push(*sid);
+                }
+            }
+        }
+
+        // Resolve only genuine double-membership, in sorted agent order.
+        let mut multi: Vec<(AgentId, Vec<SettlementId>)> = memberships
+            .into_iter()
+            .filter(|(_, rosters)| rosters.len() > 1)
+            .collect();
+        multi.sort_unstable_by_key(|(aid, _)| *aid);
+
+        for (aid, rosters) in multi {
+            let pos = match agent_positions.get(&aid).copied() {
+                Some(p) => p,
+                None => continue, // dead agent already dropped by retain; defensive
+            };
+            let keeper = rosters.iter().copied().min_by_key(|sid| {
+                let ft = resources
+                    .settlements
+                    .get(sid)
+                    .map(|s| s.formation_tile)
+                    .unwrap_or((0, 0));
+                (manhattan(ft, pos), *sid)
+            });
+            if let Some(keep) = keeper {
+                for sid in rosters {
+                    if sid != keep {
+                        if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                            settlement.remove_member_agent(aid);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Recompute live-member counts AFTER exclusivity resolution.
+        for settlement in resources.settlements.values_mut() {
             settlement.population_stats.current = settlement.member_agents.len() as u32;
         }
     }
@@ -528,7 +636,6 @@ impl SettlementSystem {
         &mut self,
         world: &mut World,
         resources: &mut SimResources,
-        agent_positions: &HashMap<AgentId, (u32, u32)>,
         width: u32,
         tick: u64,
     ) {
@@ -551,11 +658,18 @@ impl SettlementSystem {
             if settlement.population_stats.current >= SETTLEMENT_MAX_POP {
                 continue;
             }
-            let anchor_agent = match settlement.member_agents.iter().min().copied() {
-                Some(a) => a,
-                None => continue,
-            };
-            let spawn_pos = match agent_positions.get(&anchor_agent).copied() {
+            // Belonging-model birth anchor (membership-model-reform): a member
+            // may now roam far outside SETTLEMENT_PROXIMITY_RADIUS, so the
+            // newborn must spawn at the FIXED formation_tile (the settlement's
+            // nursery) rather than at a member's now-possibly-distant position
+            // (which would scatter newborns across the map and break the
+            // "newborn spawns inside the radius" invariant). The live-member
+            // presence check stays — a settlement with no live members cannot
+            // give birth — but only the spawn SITE moves to the formation tile.
+            if settlement.member_agents.is_empty() {
+                continue;
+            }
+            let spawn_pos = match self.formation_tiles.get(&sid).copied() {
                 Some(p) => p,
                 None => continue,
             };
@@ -644,6 +758,13 @@ impl SettlementSystem {
     /// AND no-buildings. Emit `SettlementDissolved` and FULLY clear local
     /// state so the same area can be re-formed later with a fresh id
     /// (plan: id not reused; area can re-form).
+    ///
+    /// Belonging-model reform note: after the retain-live step in
+    /// [`Self::sync_membership`], `population_stats.current == 0` now means
+    /// "every member is DEAD", NOT "no member is currently nearby". A
+    /// settlement with a live but far-away member keeps `current > 0` and is
+    /// therefore NEVER dissolved here — it dissolves only once that last live
+    /// member despawns AND no buildings remain.
     fn run_dissolutions(
         &mut self,
         resources: &mut SimResources,
@@ -738,6 +859,12 @@ impl RuntimeSystem for SettlementSystem {
         let agent_positions = Self::snapshot_agents(world);
         self.sync_membership(resources, &agent_positions, &buildings);
         self.run_formation_scan(resources, &agent_positions, &buildings, width, tick);
+        // Belonging-model reform: enforce one-settlement-per-agent AFTER both the
+        // proximity sync and the formation scan, so a founder added by formation
+        // that was already a member elsewhere is moved (not duplicated). Also
+        // recomputes population_stats.current, so ingest/births/dissolution below
+        // read post-exclusivity live-member counts.
+        self.resolve_exclusivity(resources, &agent_positions);
         // Note: ingest_community_history is called BEFORE run_births so
         // the BuildingPlaced/CombatCompleted/SettlementReason events from
         // upstream systems land before birth events for the same tick.
@@ -756,7 +883,7 @@ impl RuntimeSystem for SettlementSystem {
             }
             self.routed_this_tick.insert((sid, formed_id));
         }
-        self.run_births(world, resources, &agent_positions, width, tick);
+        self.run_births(world, resources, width, tick);
         self.run_dissolutions(resources, width, tick);
     }
 }
