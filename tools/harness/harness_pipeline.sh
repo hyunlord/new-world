@@ -504,6 +504,7 @@ PLANNER_EOF
         : > "$PLAN_DIR/plan_draft.md"
         run_with_timeout "$drafter_timeout" \
             claude --agent harness-drafter \
+                --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
                 -p "$(cat "$PLAN_DIR/planner_input.md")" \
                 --output-format text \
                 > "$PLAN_DIR/plan_draft.md" \
@@ -735,6 +736,7 @@ run_challenger() {
     local challenger_rc=0
     run_with_timeout "$challenger_timeout" \
         claude --agent harness-challenger \
+            --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$PLAN_DIR/challenger_input_round${round}.md")" \
             --output-format text \
             > "$PLAN_DIR/challenge_report.md" \
@@ -814,6 +816,7 @@ REVISION_EOF
     local drafter_rev_rc=0
     run_with_timeout "$drafter_rev_timeout" \
         claude --agent harness-drafter \
+            --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$PLAN_DIR/revision_input.md")" \
             --output-format text \
             > "$PLAN_DIR/plan_revised.md" \
@@ -895,6 +898,7 @@ run_quality_checker() {
     local qc_rc=0
     run_with_timeout "$qc_timeout" \
         claude --agent harness-quality-checker \
+            --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$PLAN_DIR/qc_input_round${round}.md")" \
             --output-format text \
             > "$PLAN_DIR/quality_review_round${round}.md" \
@@ -1091,6 +1095,7 @@ $(cat "$REVIEW_DIR/review_latest.md")"
     local gen_rc=0
     run_with_timeout "$gen_timeout" \
         claude --agent harness-generator \
+            --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
             --dangerously-skip-permissions \
             --output-format text \
@@ -1463,6 +1468,7 @@ VLM_EOF
             HARNESS_VLM_ISOLATED=1 \
             run_with_timeout "$vlm_timeout" \
                 claude --agent harness-vlm-analyzer \
+                    --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
                     -p "$vlm_prompt" \
                     --output-format text \
                     > "$evidence_dir/visual_analysis.txt" \
@@ -1540,6 +1546,7 @@ Answer every question in the checklist."
             HARNESS_VLM_ISOLATED=1 \
             run_with_timeout "$vlm_timeout" \
                 claude --agent harness-vlm-analyzer \
+                    --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
                     -p "$vlm_input" \
                     --dangerously-skip-permissions \
                     --output-format text \
@@ -2256,6 +2263,7 @@ ${harness_tail}"
     local eval_rc=0
     run_with_timeout "$eval_timeout" \
         claude --agent harness-evaluator \
+            --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$REVIEW_DIR/evaluator_input.md")" \
             --output-format text \
             > "$REVIEW_DIR/review_attempt${CODE_ATTEMPT}.md" \
