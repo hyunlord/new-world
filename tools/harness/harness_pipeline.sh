@@ -987,12 +987,39 @@ _exithang_find_claude() {
 _exithang_watchdog() {
     set +e   # best-effort polling; never let a nonzero probe kill the watchdog
     local capture_dir="$1" log_file="$2" deadline="$3"
-    local started captured=0 seen=0 now cpid last_act ch
+    local started captured=0 seen=0 now cpid last_act ch pgid g
     started=$(date +%s)
     while :; do
         sleep 10
         now=$(date +%s)
         cpid=$(_exithang_find_claude)
+        # F3 (PHASE 2c): the stream-json terminal `result` event means the agent's
+        # turn is COMPLETE. The process is now idle holding only its undrained
+        # Anthropic API keep-alive sockets (main parked in kevent64) and will never
+        # exit on its own — so reap it now, letting run_with_timeout's perl waitpid
+        # return in seconds (exit-via-signal ⇒ $?>>8 == 0 ⇒ gen_rc=0, not 142) instead
+        # of waiting out the 1800s deadline. That deadline + F2 group-kill remain the
+        # backstop if the marker never appears (a genuine failure). `"type":"result"`
+        # is precise: it does not match `"type":"tool_result"`.
+        if grep -q '"type":"result"' "$log_file" 2>/dev/null; then
+            # Record the outcome BEFORE the kill: killing claude makes run_with_timeout
+            # return, which triggers run_generator's `kill "$_wd_pid"` against THIS
+            # subshell — so writing the marker first makes `fast_completion
+            # result_marker_seen` deterministic (else the kill could interrupt us
+            # mid-write and run_generator's fallback would label it generic `completed`).
+            echo "fast_completion result_marker_seen elapsed=$(( now - started ))s log_bytes=$(wc -c < "$log_file" 2>/dev/null || echo NA)" \
+                > "$capture_dir/outcome.txt"
+            if [[ -n "$cpid" ]]; then
+                # claude is its own process-group leader (F2 perl setpgrp before exec),
+                # so kill the group: SIGTERM, 5s grace, then SIGKILL any survivor.
+                pgid=$(ps -o pgid= -p "$cpid" 2>/dev/null | tr -d ' ')
+                [[ -n "$pgid" ]] || pgid="$cpid"
+                kill -TERM "-$pgid" 2>/dev/null
+                for g in 1 2 3 4 5; do kill -0 "$cpid" 2>/dev/null || break; sleep 1; done
+                kill -KILL "-$pgid" 2>/dev/null
+            fi
+            return 0
+        fi
         if [[ -n "$cpid" ]]; then
             seen=1
         else
@@ -1093,12 +1120,20 @@ $(cat "$REVIEW_DIR/review_latest.md")"
     # write below (PHASE 1: cited hangs had no GENERATOR_TIMEOUT marker). The
     # `|| gen_rc=$?` idiom keeps the timeout branch reachable.
     local gen_rc=0
+    # F3 (PHASE 2c): --output-format stream-json (NOT text). text flushes only on
+    # a clean process exit, but `claude --agent` does not exit after the agent's
+    # turn — it leaves its Anthropic API keep-alive pool open (idle libuv handles
+    # → main parked in kevent64 forever; PHASE 2c capture: 0 MCP children, 6
+    # ESTABLISHED API sockets), so text stayed 0 bytes until the 1800s SIGALRM.
+    # stream-json flushes per-event, so the watchdog can see the terminal
+    # `{"type":"result"}` event and reap the idle process in seconds. --verbose is
+    # required by the CLI for `-p --output-format stream-json`.
     run_with_timeout "$gen_timeout" \
         claude --agent harness-generator \
             --strict-mcp-config --mcp-config "$PROJECT_ROOT/tools/harness/empty-mcp.json" \
             -p "$(cat "$RESULT_DIR/generator_input_attempt${attempt}.md")" \
             --dangerously-skip-permissions \
-            --output-format text \
+            --output-format stream-json --verbose \
             > "$RESULT_DIR/generator_log_attempt${attempt}.txt" 2>&1 || gen_rc=$?
 
     # S0 teardown — covers BOTH the success path and the timeout-`die` path below.
