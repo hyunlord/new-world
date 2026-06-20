@@ -200,6 +200,21 @@ pub fn register_survival_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::survival::StarvationSystem::new()));
 }
 
+/// Register the Direction-2 slice 2-3a stockpile-deposit stack on `engine`.
+///
+/// Registers (in priority order after sorting):
+/// - 141 : [`runtime::settlement::StockpileDepositSystem`] (interval 10)
+///
+/// Slots strictly after `SettlementSystem` (priority 138) so the
+/// `member_agents` roster is current when depositing, and after
+/// `StarvationSystem` (139) / `ResourceRegenSystem` (140) so a death's roster
+/// mutation has already settled this tick. Passive Inventory→stockpile Food
+/// transfer for members within their settlement's proximity radius; touches no
+/// `AgentState`/`SeekTarget`/cascade state.
+pub fn register_stockpile_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::settlement::StockpileDepositSystem::new()));
+}
+
 /// Register the `add-resource-scarcity-regen` resource stack on `engine`.
 ///
 /// Registers (in priority order after sorting):
@@ -249,6 +264,7 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 126  StaleSeekTargetSystem (add-resource-scarcity-regen, interval 1)
 /// - 139  StarvationSystem (add-starvation-death)
 /// - 140  ResourceRegenSystem (add-resource-scarcity-regen, interval 120)
+/// - 141  StockpileDepositSystem (Direction-2 slice 2-3a, interval 10)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -265,4 +281,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_settlement_systems(engine);
     register_survival_systems(engine);
     register_resource_systems(engine);
+    register_stockpile_systems(engine);
 }
