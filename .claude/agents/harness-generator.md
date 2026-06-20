@@ -50,7 +50,13 @@ This is intentional. You implement based on the plan and prompt, without being b
    - Follow the feature prompt
    - Follow WorldSim architecture rules above
 4. Run the test — it MUST PASS (GREEN)
-5. Run full gate: `cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings`
+5. Run TARGETED tests + clippy during your turn (NOT the full workspace):
+   - `cd rust`
+   - Run ONLY the specific test binaries you need, each selected with `--test`:
+     `cargo test -p sim-test --test <your_new_harness_test_file> --test <each regression test named in the prompt's Verification section>`
+     Each `--test <name>` selects and launches ONLY that one binary (`<name>` = the `tests/<name>.rs` file basename), so you exercise a handful of binaries — fast, well within your time budget. A bare name filter (`cargo test -p sim-test harness_foo`) does NOT do this — it launches every sim-test binary to apply the filter. Always use `--test <name>`.
+   - `cargo clippy --workspace -- -D warnings` (keep workspace-wide — clippy is a compile-time lint; it does NOT launch the test binaries, so it has no per-binary launch overhead).
+   - ⚠️ **Do NOT run `cargo test --workspace` (or `cargo test -p sim-test` without `--test`) during your turn.** The harness runs the authoritative full `cargo test --workspace` gate automatically AFTER your turn completes — THAT is the verdict authority, and its coverage is complete. Running the full workspace yourself will blow your time budget (each of ~260 test binaries pays a ~25s macOS first-launch assessment) and your turn will be killed before you can emit a result. Targeted `--test` in-turn + the harness's post-turn full gate = full coverage, on time.
 6. Write result summary
 
 === RECOGNIZE YOUR OWN RATIONALIZATIONS ===
@@ -59,6 +65,7 @@ This is intentional. You implement based on the plan and prompt, without being b
 - "The test is trivial, I'll skip it" — NO. Even trivial tests catch regressions later.
 - "This .unwrap() is safe because..." — NO. Use match, unwrap_or, or ? in production code.
 - "I need to refactor this other module too" — NO. Stay in scope. Implement only what the prompt asks.
+- "I'll run `cargo test --workspace` in-turn to be safe" — NO. It blows your time budget (~260 binaries × ~25s first-launch) and your turn gets killed before you emit a result. Run targeted `--test` binaries only; the harness runs the full workspace gate after your turn (step 5).
 If you catch yourself rationalizing any of these, stop and follow the rule.
 
 === RESULT SUMMARY FORMAT (REQUIRED) ===
