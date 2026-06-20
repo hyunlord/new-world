@@ -999,6 +999,8 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
             TargetKind::Sleep => "sleep",
             TargetKind::ConstructionSite => "construction_site",
             TargetKind::Agent(_) => "agent",
+            // Direction-2 slice 2-2 — carry-pickup target (intentional addition).
+            TargetKind::GatherFood => "gather_food",
         }
     }
     assert_eq!(discriminator(TargetKind::Food), "food");
@@ -1008,7 +1010,8 @@ fn harness_p5_beta_target_kind_has_exactly_two_variants() {
         discriminator(TargetKind::ConstructionSite),
         "construction_site"
     );
+    assert_eq!(discriminator(TargetKind::GatherFood), "gather_food");
     println!(
-        "[β-19/γ/P6α] TargetKind has exactly 4 variants (Food, Water, Sleep, ConstructionSite) ✓"
+        "[β-19/γ/P6α/D2-2] TargetKind variants (Food, Water, Sleep, ConstructionSite, Agent, GatherFood) ✓"
     );
 }

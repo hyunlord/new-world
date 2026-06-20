@@ -57,21 +57,33 @@ use std::collections::{HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Memory, MemoryArm,
-    Position, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind, Thirst, SALIENCE_FLOOR,
+    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Inventory, Memory,
+    MemoryArm, Position, ResourceKind, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind,
+    Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
 
-/// Cascade arm identifier — the 5 natural drives whose eligibility is
-/// computed independently. Memory is a bias SOURCE, not an arm.
+/// Cascade arm identifier — the natural drives + non-natural arms whose
+/// eligibility is computed independently. Memory is a bias SOURCE, not an arm.
+///
+/// `pub` so the priority order + per-arm memory tag are inspectable by the
+/// harness (Direction-2 slice 2-2 added `Gather`, a positional arm that is
+/// never memory-biased and never enters the bias-flip machinery — it is
+/// selected directly in the Idle cascade, not via a `CascadeArm` value, so
+/// exposing the enum is what keeps its variant a live part of the API).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum CascadeArm {
+pub enum CascadeArm {
+    /// Eat-to-survive drive: `Hunger.value` above `HUNGER_THRESHOLD`. Priority 0.
     Hunger,
+    /// Drink-to-survive drive: `Thirst.value` above `THIRST_THRESHOLD`. Priority 1.
     Thirst,
+    /// Sleep drive: `Sleep.fatigue` above `FATIGUE_THRESHOLD`. Priority 2.
     Fatigue,
+    /// Co-located active construction-site work drive. Priority 3.
     Construction,
+    /// Social-interaction drive: `Social.loneliness` above `SOCIAL_THRESHOLD`. Priority 4.
     Social,
     /// Memory-driven negative combat trigger. A non-natural cascade arm
     /// activated by `memory_weight_delta` strictly below
@@ -84,6 +96,13 @@ enum CascadeArm {
     /// every higher-priority arm (Hunger/Thirst/Fatigue/Construction/
     /// Social/Combat) has been ruled out. V7 Phase 10-β / P10β-8.
     Settlement,
+    /// Opportunistic ground-food gathering. Direction-2 slice 2-2. A satisfied
+    /// agent with inventory room walks to the nearest ground food tile within
+    /// [`GATHER_SCAN_RADIUS`] and picks it up into its `Inventory` (carry, NOT
+    /// eat). Priority index 6 — below every survival/social/combat arm and
+    /// above `Settlement` (which moves to 7). Positional/opportunistic, so it
+    /// maps to no [`MemoryArm`] (never memory-biased).
+    Gather,
 }
 
 /// Linear recency factor: 1.0 at `elapsed == 0`, 0.0 at
@@ -105,7 +124,7 @@ fn recency_factor(encoded_tick: u64, current_tick: u64) -> f64 {
 /// recognised, so a stored-arm comparison reproduces that lookup's result for
 /// any event still resident in the ring — while being a pure function of the
 /// entry (no `causal_log` lookup, no ring-eviction dependence). Fix D.
-fn cascade_arm_memory_tag(arm: CascadeArm) -> Option<MemoryArm> {
+pub fn cascade_arm_memory_tag(arm: CascadeArm) -> Option<MemoryArm> {
     match arm {
         CascadeArm::Hunger => Some(MemoryArm::Hunger),
         CascadeArm::Thirst => Some(MemoryArm::Thirst),
@@ -114,6 +133,7 @@ fn cascade_arm_memory_tag(arm: CascadeArm) -> Option<MemoryArm> {
         CascadeArm::Social => Some(MemoryArm::Social),
         CascadeArm::Combat => Some(MemoryArm::Combat),
         CascadeArm::Settlement => None,
+        CascadeArm::Gather => None,
     }
 }
 
@@ -166,7 +186,7 @@ fn top_contributor_entry(memory: &Memory, arm: CascadeArm, current_tick: u64) ->
 /// weight deltas are added on top. The arm with the highest adjusted
 /// score wins; ties resolved by the original (Hunger > Thirst > Fatigue >
 /// Construction > Social) priority order.
-fn arm_priority_index(arm: CascadeArm) -> u8 {
+pub fn arm_priority_index(arm: CascadeArm) -> u8 {
     match arm {
         CascadeArm::Hunger => 0,
         CascadeArm::Thirst => 1,
@@ -174,7 +194,8 @@ fn arm_priority_index(arm: CascadeArm) -> u8 {
         CascadeArm::Construction => 3,
         CascadeArm::Social => 4,
         CascadeArm::Combat => 5,
-        CascadeArm::Settlement => 6,
+        CascadeArm::Gather => 6,
+        CascadeArm::Settlement => 7,
     }
 }
 
@@ -254,6 +275,19 @@ pub const REQUIRED_INTERACTION_PROGRESS: u32 = 3;
 /// on each completed interaction. V7 Phase 7-β / P7β-14.
 pub const FAMILIARITY_BUMP: f64 = 0.1;
 
+/// Chebyshev radius around an agent within which a ground-food tile is eligible
+/// for the `CascadeArm::Gather` arm (Direction-2 slice 2-2).
+///
+/// Bounds the gather scan to `O(tiles-in-radius)` on the decision hot-path
+/// (Gate 6) and keeps satisfied agents from trekking across the map for a
+/// low-value pickup. Default `8` — wide enough that the bootstrapped infinite
+/// source tiles are reachable from the agent cluster, narrow enough that travel
+/// to a target resolves well under the Assertion-13 frozen-streak bound (200).
+/// The nearest eligible tile is chosen by the deterministic
+/// [`nearest_resource_tile`] `(distance, x, y)` tie-break, then gated on this
+/// Chebyshev radius.
+pub const GATHER_SCAN_RADIUS: u32 = 8;
+
 /// Nearest resource tile to `pos` by Manhattan distance, with a
 /// deterministic `(x, y)` tie-break (V7 Section 16-α).
 ///
@@ -274,6 +308,43 @@ pub fn nearest_resource_tile(
             (dx + dy, *tx, *ty)
         })
         .copied()
+}
+
+/// Nearest *eligible* food tile for the `CascadeArm::Gather` arm: the
+/// Manhattan-nearest tile (deterministic `(dist, x, y)` tie-break) among ONLY
+/// those food tiles holding count `> 0` AND within `radius` Chebyshev of `pos`.
+///
+/// Filtering to the in-radius set BEFORE the nearest-tile reduction is
+/// load-bearing: a closer tile OUTSIDE the radius must never mask an eligible
+/// tile INSIDE it. `nearest_resource_tile(..).filter(in_radius)` is the WRONG
+/// shape — it picks the global nearest first and rejects the whole result if
+/// that single tile is out of range, so the Gather arm would never fire even
+/// though a reachable tile exists (the radius-confounder bug). Both the Gather
+/// arm trigger and the post-decision `SeekTarget` attach call THIS helper so the
+/// chosen target tile is identical (determinism + the agent walks to the tile
+/// the arm actually selected). Returns `None` when no eligible tile lies within
+/// range — the arm then does not fire and the cascade falls through to
+/// Settlement.
+pub fn nearest_food_tile_in_radius(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+) -> Option<(u32, u32)> {
+    tiles
+        .iter()
+        .filter(|((tx, ty), v)| {
+            **v > 0 && {
+                let dx = (*tx as i64 - pos.x as i64).abs();
+                let dy = (*ty as i64 - pos.y as i64).abs();
+                dx.max(dy) <= radius as i64
+            }
+        })
+        .map(|(k, _)| *k)
+        .min_by_key(|(tx, ty)| {
+            let dx = (*tx as i64 - pos.x as i64).abs();
+            let dy = (*ty as i64 - pos.y as i64).abs();
+            (dx + dy, *tx, *ty)
+        })
 }
 
 /// Phase 5-β decision system. Stateless — all per-agent state lives
@@ -490,11 +561,23 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Sleep>,
             Option<&Social>,
             Option<&Memory>,
+            Option<&mut Inventory>,
             Option<&SettlementMigrant>,
         )>();
         for (
             entity,
-            (pos, agent, state, hunger_opt, thirst_opt, sleep_opt, social_opt, memory_opt, migrant_marker),
+            (
+                pos,
+                agent,
+                state,
+                hunger_opt,
+                thirst_opt,
+                sleep_opt,
+                social_opt,
+                memory_opt,
+                mut inventory_opt,
+                migrant_marker,
+            ),
         ) in query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
@@ -915,6 +998,36 @@ impl RuntimeSystem for AgentDecisionSystem {
                         if let AgentState::Seeking { target: TargetKind::Agent(_) } = *state {
                             social_seek_entities.insert(entity);
                         }
+                    } else if let Some(_gather_tile) = {
+                        // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
+                        // when no higher-priority arm triggered, the agent has
+                        // inventory room, AND a ground food tile lies within
+                        // GATHER_SCAN_RADIUS (Chebyshev). The nearest ELIGIBLE
+                        // (in-radius, count > 0) tile is chosen by the
+                        // deterministic (dist, x, y) tie-break — `nearest_food_
+                        // tile_in_radius` filters to the radius set FIRST so a
+                        // closer out-of-radius tile cannot mask a reachable one.
+                        let has_room = inventory_opt
+                            .as_ref()
+                            .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
+                        if has_room {
+                            nearest_food_tile_in_radius(
+                                pos,
+                                &resources.food_tiles,
+                                GATHER_SCAN_RADIUS,
+                            )
+                        } else {
+                            None
+                        }
+                    } {
+                        // Pure positional/opportunistic arm: no memory bias and
+                        // no causal event (mirrors the deliberately-untagged
+                        // Settlement proxy). The post-decision pass attaches a
+                        // SeekTarget at the chosen tile (treated as a resource
+                        // seek), so the agent walks toward the food tile.
+                        *state = AgentState::Seeking {
+                            target: TargetKind::GatherFood,
+                        };
                     } else {
                         // V7 Phase 10-β / P10β-8 — 8th cascade arm:
                         // settlement migration pull. Fires when no
@@ -1081,6 +1194,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
+                        // Direction-2 slice 2-2 — Gather reaches its tile on the
+                        // same "food present at current tile" edge as eating.
+                        TargetKind::GatherFood => resources
+                            .food_tiles
+                            .get(&key)
+                            .copied()
+                            .is_some_and(|v| v > 0),
                         TargetKind::Water => resources
                             .water_tiles
                             .get(&key)
@@ -1220,6 +1340,42 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                             *state = AgentState::Idle;
                         }
+                        // Direction-2 slice 2-2 — Gather PICKUP (carry, NOT eat):
+                        // transfer ground Food into the agent's Inventory. Mirrors
+                        // the Food source-guard EXACTLY — an infinite (255) tile is
+                        // never decremented/removed; a finite tile decrements by the
+                        // amount actually added. Hunger is left UNCHANGED, and the
+                        // transition to Idle is UNCONDITIONAL (freeze-critical): a
+                        // gone tile / full inventory still resolves to Idle with no
+                        // re-seek loop.
+                        TargetKind::GatherFood => {
+                            let want = INVENTORY_CAPACITY.saturating_sub(
+                                inventory_opt.as_ref().map(|inv| inv.total()).unwrap_or(0),
+                            );
+                            if want > 0 {
+                                if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                    if *counter == RESOURCE_SOURCE_INFINITE {
+                                        // Infinite source: take freely, no decrement.
+                                        if let Some(inv) = inventory_opt.as_mut() {
+                                            inv.add(ResourceKind::Food, want);
+                                        }
+                                    } else {
+                                        let take = (*counter as u32).min(want);
+                                        if take > 0 {
+                                            if let Some(inv) = inventory_opt.as_mut() {
+                                                let overflow = inv.add(ResourceKind::Food, take);
+                                                let actually = take - overflow; // overflow == 0 (want <= room)
+                                                *counter = counter.saturating_sub(actually as u8);
+                                                if *counter == 0 {
+                                                    resources.food_tiles.remove(&key);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            *state = AgentState::Idle;
+                        }
                         TargetKind::Water => {
                             // V7 Section 16-α0 — source guard (mirror of Food).
                             if let Some(counter) = resources.water_tiles.get_mut(&key) {
@@ -1326,17 +1482,37 @@ impl RuntimeSystem for AgentDecisionSystem {
                 // resource tiles are fixed, so never re-target while seeking).
                 AgentState::Seeking { target: TargetKind::Food }
                 | AgentState::Seeking { target: TargetKind::Water }
-                | AgentState::Seeking { target: TargetKind::Sleep } => {
+                | AgentState::Seeking { target: TargetKind::Sleep }
+                | AgentState::Seeking { target: TargetKind::GatherFood } => {
                     if seek_opt.is_none() {
-                        let t = match state {
-                            AgentState::Seeking { target: TargetKind::Food } => &resources.food_tiles,
-                            AgentState::Seeking { target: TargetKind::Water } => &resources.water_tiles,
-                            _ => &resources.sleep_tiles,
+                        let chosen = match state {
+                            AgentState::Seeking { target: TargetKind::Water } => {
+                                nearest_resource_tile(pos, &resources.water_tiles)
+                            }
+                            AgentState::Seeking { target: TargetKind::Sleep } => {
+                                nearest_resource_tile(pos, &resources.sleep_tiles)
+                            }
+                            // GatherFood (carry) must target the SAME radius-
+                            // filtered eligible tile the Gather arm selected — NOT
+                            // the global unfiltered nearest, which could be an
+                            // out-of-radius tile (the radius-confounder bug). Reuse
+                            // the exact selector the arm used so the chosen tile is
+                            // identical.
+                            AgentState::Seeking { target: TargetKind::GatherFood } => {
+                                nearest_food_tile_in_radius(
+                                    pos,
+                                    &resources.food_tiles,
+                                    GATHER_SCAN_RADIUS,
+                                )
+                            }
+                            // Food (eat) uses the unfiltered nearest (eat path
+                            // unchanged from V7 Section 16-α).
+                            _ => nearest_resource_tile(pos, &resources.food_tiles),
                         };
-                        if let Some(tile) = nearest_resource_tile(pos, t) {
+                        if let Some(tile) = chosen {
                             seek_set.push((e, tile));
                         }
-                        // None ⇒ empty resource map → skip the attach (no panic).
+                        // None ⇒ no eligible tile → skip the attach (no panic).
                     }
                     // else keep existing (stability).
                 }

@@ -63,8 +63,8 @@ use std::collections::{HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::event::{CausalEvent, DecisionReason, DissolutionCause, EventId};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, BuildingId, Hunger, Memory, Position, Settlement,
-    SettlementId, Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
+    Agent, AgentId, AgentState, BodyHealth, BuildingId, Hunger, Inventory, Memory, Position,
+    Settlement, SettlementId, Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
     SETTLEMENT_FORMATION_BUILDING_THRESHOLD, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_engine::{RuntimeSystem, SimResources};
@@ -720,6 +720,9 @@ impl SettlementSystem {
                     // newborn is never treated as instantly-dead by combat and is
                     // subject to the same starvation/recovery rules as adults.
                     BodyHealth::new(),
+                    // Direction-2 slice 2-2 — newborns carry an empty Inventory so
+                    // the Gather cascade arm can fill it once they are satisfied.
+                    Inventory::default(),
                 ),
             );
 

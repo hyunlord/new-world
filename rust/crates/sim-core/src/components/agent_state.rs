@@ -48,6 +48,16 @@ pub enum TargetKind {
     /// resolution lands in Phase 7-β; α arms in `AgentDecisionSystem`
     /// are intentionally inert.
     Agent(AgentId),
+    /// Direction-2 slice 2-2 — pick up Ground food into [`Inventory`] (carry,
+    /// NOT eat). `Consuming { GatherFood }` is a PICKUP, not a consume: it adds
+    /// Food to the agent's `Inventory` and decrements the food tile (unless the
+    /// tile is an infinite source), but reduces NO need. Distinct from
+    /// [`TargetKind::Food`], which is eaten (reduces Hunger). Selected by the
+    /// lowest-but-one priority `CascadeArm::Gather` (index 6) for settled,
+    /// well-fed agents with inventory room.
+    ///
+    /// [`Inventory`]: crate::components::Inventory
+    GatherFood,
 }
 
 /// Per-agent FSM state. Lives alongside [`Hunger`]/[`Thirst`] and is
@@ -153,6 +163,11 @@ mod tests {
         assert!(!AgentState::Consuming { target: TargetKind::Sleep }.suppresses_movement());
         assert!(!AgentState::Consuming { target: TargetKind::ConstructionSite }
             .suppresses_movement());
+        // Direction-2 slice 2-2 — GatherFood mirrors the resource targets:
+        // Seeking suppresses (directed walk to the tile), Consuming does not
+        // (the decision system owns the single-tick pickup exit to Idle).
+        assert!(AgentState::Seeking { target: TargetKind::GatherFood }.suppresses_movement());
+        assert!(!AgentState::Consuming { target: TargetKind::GatherFood }.suppresses_movement());
     }
 
     #[test]
@@ -169,6 +184,8 @@ mod tests {
             AgentState::Consuming { target: TargetKind::Sleep },
             AgentState::Consuming { target: TargetKind::ConstructionSite },
             AgentState::Consuming { target: TargetKind::Agent(7) },
+            AgentState::Seeking { target: TargetKind::GatherFood },
+            AgentState::Consuming { target: TargetKind::GatherFood },
         ];
         for state in cases {
             let encoded = ron::to_string(&state).unwrap();
@@ -185,6 +202,7 @@ mod tests {
             TargetKind::Sleep,
             TargetKind::ConstructionSite,
             TargetKind::Agent(7),
+            TargetKind::GatherFood,
         ] {
             let encoded = ron::to_string(&kind).unwrap();
             let decoded: TargetKind = ron::from_str(&encoded).unwrap();

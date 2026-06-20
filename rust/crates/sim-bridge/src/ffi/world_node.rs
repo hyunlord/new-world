@@ -37,8 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Memory, Position, SeekTarget,
-    Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
+    Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Inventory, Memory, Position,
+    SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -1608,6 +1608,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::Sleep) => 3,
         Some(TargetKind::ConstructionSite) => 4,
         Some(TargetKind::Agent(_)) => 5,
+        // Direction-2 slice 2-2 — carry-pickup target (viz lands in slice 2-5).
+        Some(TargetKind::GatherFood) => 6,
     };
     AgentDetailRow {
         found: true,
@@ -2266,6 +2268,9 @@ pub fn bootstrap_spawn_agents(engine: &mut SimEngine) {
                         // StarvationSystem can damage it and combat's
                         // unwrap_or(true) never treats it as instantly-dead.
                         BodyHealth::new(),
+                        // Direction-2 slice 2-2 — every full-runtime agent carries an
+                        // empty Inventory so the Gather cascade arm can fill it.
+                        Inventory::default(),
                     ),
                 )
                 .expect("bootstrap agent entity must still exist");

@@ -861,8 +861,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     }
                     // V7 Phase 6-α / 7-α: ConstructionSite + Agent are
                     // unreachable in the γ chronicle (no decision logic
-                    // routes to either).
-                    TargetKind::ConstructionSite | TargetKind::Agent(_) => {}
+                    // routes to either). Slice 2-2 GatherFood likewise.
+                    TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood => {}
                 }
             }
         }
@@ -900,8 +900,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                     TargetKind::Food => count_hunger += 1,
                     TargetKind::Water => count_thirst += 1,
                     TargetKind::Sleep => count_fatigue += 1,
-                    // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle.
-                    TargetKind::ConstructionSite | TargetKind::Agent(_) => {}
+                    // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle. Slice 2-2 GatherFood likewise.
+                    TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood => {}
                 }
             }
         }
@@ -950,8 +950,8 @@ fn harness_p5_gamma_full_day_chronicle_visits_all_three_needs() {
                         TargetKind::Food => consumed_food = true,
                         TargetKind::Water => consumed_water = true,
                         TargetKind::Sleep => consumed_sleep = true,
-                        // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle.
-                        TargetKind::ConstructionSite | TargetKind::Agent(_) => {}
+                        // V7 Phase 6-α / 7-α: ConstructionSite + Agent unreachable in γ chronicle. Slice 2-2 GatherFood likewise.
+                        TargetKind::ConstructionSite | TargetKind::Agent(_) | TargetKind::GatherFood => {}
                     }
                 }
             }
