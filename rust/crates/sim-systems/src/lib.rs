@@ -215,6 +215,21 @@ pub fn register_stockpile_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::StockpileDepositSystem::new()));
 }
 
+/// Register the Direction-2 slice 2-4 stockpile-consume (famine-fallback) stack.
+///
+/// Registers (in priority order after sorting):
+/// - 142 : [`runtime::settlement::StockpileConsumeSystem`] (interval 5)
+///
+/// Slots strictly after `HungerDecaySystem` (130), `SettlementSystem` (138),
+/// `StarvationSystem` (139), and `StockpileDepositSystem` (141) so the reserve
+/// reflects this tick's deposits and saturation damage is computed from
+/// PRE-relief hunger. A critically-hungry member at home that is NOT already on
+/// the ground-eat path draws one meal of Food from its settlement `stockpile`
+/// to relieve `Hunger`. Touches no `AgentState`/`SeekTarget`/cascade state.
+pub fn register_stockpile_consume_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::settlement::StockpileConsumeSystem::new()));
+}
+
 /// Register the `add-resource-scarcity-regen` resource stack on `engine`.
 ///
 /// Registers (in priority order after sorting):
@@ -265,6 +280,7 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 139  StarvationSystem (add-starvation-death)
 /// - 140  ResourceRegenSystem (add-resource-scarcity-regen, interval 120)
 /// - 141  StockpileDepositSystem (Direction-2 slice 2-3a, interval 10)
+/// - 142  StockpileConsumeSystem (Direction-2 slice 2-4, interval 5)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -282,4 +298,5 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_survival_systems(engine);
     register_resource_systems(engine);
     register_stockpile_systems(engine);
+    register_stockpile_consume_systems(engine);
 }
