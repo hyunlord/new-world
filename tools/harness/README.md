@@ -42,7 +42,7 @@ All LLM calls have configurable timeouts to prevent pipeline hangs. Override wit
 
 | Agent | Env Var | Default | Notes |
 |-------|---------|:-------:|-------|
-| Codex (Evaluator/Regression) | `CODEX_TIMEOUT_SECONDS` | 600s | |
+| Codex (Evaluator + FFI verify) | `CODEX_TIMEOUT_SECONDS` | 600s | regression guard no longer uses Codex (now deterministic set-diff) |
 | harness-drafter (plan + revision) | `DRAFTER_TIMEOUT_SECONDS` | 600s | die on timeout |
 | harness-challenger | `CHALLENGER_TIMEOUT_SECONDS` | 600s | graceful fallback |
 | harness-quality-checker | `QC_TIMEOUT_SECONDS` | 600s | graceful → PLAN_APPROVED |
@@ -95,16 +95,24 @@ Codex auth at pipeline start and warns (non-fatally) if auth appears expired.
 | 2.5a | Visual Verify | Godot (local) | Running game | screenshots + logs |
 | 2.5b | VLM Analysis | Claude Code | screenshots + data | visual_analysis.txt |
 | **2.5c** | **FFI Verifier** | **Codex** | sim-bridge #[func] list | ffi_chain_verify.txt |
-| **2.7** | **Regression Guard** | **Codex** | full codebase | regression_guard.txt |
+| **2.7** | **Regression Guard** | **Script (set-diff)** | gate result + baseline | regression_guard.txt |
 | **3** | **Evaluator** | **Codex** | plan + result + test code + visual + FFI + regr | review.md + verdict |
 | 4 | Integrator | Script logic | review.md | commit or retry |
 
-### Why Codex for Steps 2.5c, 2.7, 3?
+### Why Codex for Steps 2.5c, 3? (and why NOT for 2.7)
 
 - **Bias isolation**: Generator (Claude Code) and Evaluator (Codex) are different model sessions — no shared reasoning context
-- **Execution capability**: Codex runs `cargo test` independently, verifying claims instead of trusting Generator output
 - **Anti-circular detection**: Codex can comment out new code and re-run tests to prove test validity (section 8a)
 - **FFI chain verification**: Automated detection of missing GDScript proxy methods (P2-B3 class bugs)
+
+**Step 2.7 (Regression Guard) is NO LONGER Codex** (Fix 2, 2026-06-21). It was a
+~10-min Codex wrapper asked to re-run the ~52-min `cargo test --workspace`, so it
+essentially always timed out and defaulted to CLEAN — a masked-pass. It is now a
+deterministic script (`regression_verdict.sh`) that set-differences the Generator
+gate result (`gate_result_attempt*.txt`, post-impl, per-test names) against the
+reconciled baseline (`.harness/baseline/known_failures.txt`). No re-run, no
+timeout: NEW failures not in the baseline ⇒ `REGRESSION_DETECTED`; none ⇒ `CLEAN`;
+gate result missing/unparseable ⇒ `REGRESSION_GUARD_INCOMPLETE` (Fix 1's blocking floor).
 
 ## Retry Logic
 
@@ -174,11 +182,16 @@ Override via env: `CODEX_TIMEOUT_SECONDS=300 bash harness_pipeline.sh ...`
 
 Timed-out invocations (integrity-corrected 2026-06-21 — a timed-out check verified
 nothing and must NEVER default to a passing status):
-- Regression guard timeout / exec-failure → `regression_status: REGRESSION_GUARD_INCOMPLETE`
-  (**BLOCKING** — generate_report.sh scores it 0, dropping the total below the 90 gate, exactly
-  like a real `REGRESSION_DETECTED`; never defaults to CLEAN). Root cause of timeouts: the guard
-  is a ~10-min Codex wrapper asked to run the ~52-min `cargo test --workspace`; the completion fix
-  (drop the Codex wrapper / reuse the Step-0 gate result / chunk) is tracked separately.
+- Regression guard → **DETERMINISTIC** (Fix 2, 2026-06-21): no longer a Codex wrapper, so it
+  cannot time out. `regression_verdict.sh` reads the latest Generator gate result
+  (`gate_result_attempt*.txt`) and set-differences its failing tests against the reconciled
+  baseline `.harness/baseline/known_failures.txt`. NEW failures not in the baseline ⇒
+  `REGRESSION_DETECTED`; none ⇒ `CLEAN`. If the gate result is missing / empty / has no
+  `test result:` line (gate did not complete / unparseable) ⇒ `regression_status:
+  REGRESSION_GUARD_INCOMPLETE` (**BLOCKING** — generate_report.sh scores it 0, dropping the total
+  below the 90 gate, exactly like a real `REGRESSION_DETECTED`; never defaults to CLEAN). This is
+  Fix 1's honest floor, retained. Closes the masked-pass root cause: the old ~10-min Codex wrapper
+  asked to run the ~52-min `cargo test --workspace`.
 - FFI chain verify timeout / exec-failure → `ffi_status: TIMED_OUT|EXEC_FAILED` +
   `ffi_overall: INCOMPLETE` (honest; FFI is advisory / not score-gated, so it surfaces the gap
   rather than falsely reporting ALL_COMPLETE)

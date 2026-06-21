@@ -36,7 +36,7 @@ export HARNESS_SUBAGENT=1
 #   Step 2.5a: VISUAL VERIFY (Godot local)        → screenshots + data    [non-blocking]
 #   Step 2.5b: VLM ANALYSIS  (Claude -p)          → visual_analysis.txt   [non-blocking]
 #   Step 2.5c: FFI VERIFY    (Codex)              → ffi_chain_verify.txt  [if sim-bridge changed]
-#   Step 2.7:  REGR. GUARD   (Codex)              → regression_guard.txt  [always]
+#   Step 2.7:  REGR. GUARD   (set-diff)           → regression_guard.txt  [always]
 #   Step 3:   EVALUATOR     (Codex)               → review.md + verdict   [independent from Generator]
 #   Step 4:   INTEGRATOR    (script logic)        → commit / retry / stop
 #
@@ -1980,122 +1980,61 @@ summarize_ffi_verify() {
 }
 
 # ============================================================
-# STEP 2.7: REGRESSION GUARD (Codex — runs every attempt)
+# STEP 2.7: REGRESSION GUARD (deterministic set-difference — runs every attempt)
 # ============================================================
+# Fix 2 (2026-06-21, harness-infra): the verdict is now a DETERMINISTIC read of
+# the Generator gate result — the post-impl full `cargo test --workspace` written
+# at $RESULT_DIR/gate_result_attempt*.txt, which carries per-test FAILED names —
+# set-differenced against the reconciled baseline .harness/baseline/known_failures.txt.
+# NO Codex re-run, NO ~10-min wrapper asked to run the ~52-min workspace test
+# (that essentially always timed out → defaulted CLEAN → masked-pass; Fix 1
+# closed the silent-CLEAN, Fix 2 removes the timeout source entirely).
+#
+# Verdict (delegated to regression_verdict.sh):
+#   failing tests NOT in the reconciled baseline  >=1 ⇒ REGRESSION_DETECTED (0/15, block)
+#                                                   0  ⇒ CLEAN (15/15)
+#   gate result missing / empty / no `test result:` line (did not complete /
+#   unparseable)                                      ⇒ REGRESSION_GUARD_INCOMPLETE
+#                                                        (0/15, block) — Fix 1's honest floor.
+#
+# The old Codex prompt's "V7-reset SKIP set" (governance v3.3.9-v3.3.12) was a
+# GDScript file/dir-ABSENCE rule for its renderer-grep steps — NOT a cargo-test
+# failure exclusion — so it does not apply to this set-difference (and is moot
+# while scripts/ui/ exists). FFI chain verify stays the separate advisory path
+# (run_ffi_verify / ffi_chain_check.sh), not score-affecting.
 run_regression_guard() {
-    log "=== Step 2.7: REGRESSION GUARD (Codex) ==="
+    log "=== Step 2.7: REGRESSION GUARD (deterministic set-difference) ==="
 
-    local guard_prompt_file
-    guard_prompt_file=$(mktemp)
-    local _guard_base
-    _guard_base=$(cat "$PROJECT_ROOT/.harness/baseline_test_failures.txt" 2>/dev/null | tr -d '[:space:]' || echo "0")
-    cat > "$guard_prompt_file" << GUARD_EOF
-You are a regression guard for WorldSim. Your ONLY job is to verify nothing broke.
+    mkdir -p "$REVIEW_DIR"
+    local guard_out="$REVIEW_DIR/regression_guard.txt"
 
-IMPORTANT BASELINE: This project has ${_guard_base} known pre-existing test failures tracked in
-.harness/baseline_test_failures.txt. These failures existed BEFORE this feature was added.
-Only failures ABOVE this baseline count as regressions. If total_failed <= ${_guard_base}, report CLEAN.
+    # Source = latest Generator gate result (post-impl, per-test names).
+    # IDENTICAL resolution to generate_report.sh's LATEST_GATE.
+    local latest_gate
+    latest_gate=$(ls "$RESULT_DIR"/gate_result_attempt*.txt 2>/dev/null | tail -1)
+    local known_failures="$PROJECT_ROOT/.harness/baseline/known_failures.txt"
 
-Run these checks IN ORDER. Do NOT skip any.
+    log "Gate result: ${latest_gate:-<none>}"
+    log "Baseline:     $known_failures"
 
-1. Run the full gate:
-   cd rust && cargo test --workspace 2>&1
-   Report: total passed, total failed, any new failures (failures above baseline of ${_guard_base}).
+    # Deterministic verdict — no Codex, no timeout. The helper enforces Fix 1's
+    # INCOMPLETE floor when the gate result is missing/empty/unparseable.
+    bash "$SCRIPT_DIR/regression_verdict.sh" "$latest_gate" "$known_failures" > "$guard_out"
 
-2. Run all harness tests:
-   cd rust && cargo test -p sim-test harness_ -- --nocapture 2>&1
-   Count total harness tests. Report any FAILING tests by name.
-
-3. Check GDScript for obvious errors:
-   First check if scripts/ui/renderers/ exists. During the V7 reset early phase
-   (Phase 1-2), the entire scripts/ui/ tree is intentionally absent — this is
-   NOT a regression (governance v3.3.11, mirrors v3.3.9/v3.3.10 SKIP pattern).
-   If the directory is missing, report this step as SKIP_V7_RESET and continue.
-   Otherwise:
-     grep -rn 'func.*(' scripts/ui/renderers/ | head -10
-   Look for obvious syntax issues (unmatched brackets, missing colons).
-
-4. Check for broken input handling:
-   First check if scripts/ui/renderers/entity_renderer.gd exists. During the V7
-   reset early phase (Phase 1-2) the GDScript renderer layer has not landed yet
-   — its absence is environmental, NOT a regression (governance v3.3.11). If
-   the file is missing, report this step as SKIP_V7_RESET and continue.
-   Otherwise:
-     grep -n '_input\|_unhandled_input\|mouse_filter' scripts/ui/renderers/entity_renderer.gd | head -10
-   Verify input handlers still exist in entity_renderer and aren't accidentally removed.
-   NOTE: building_renderer.gd intentionally has NO _input handler — do NOT flag its absence.
-
-5. Check FFI evidence if it exists:
-   cat .harness/evidence/*/ffi_chain_verify.txt 2>/dev/null
-   cat .harness/evidence/*/ffi_verify.txt 2>/dev/null
-   ONLY methods listed as BROKEN that were NEWLY ADDED for this feature = regression.
-   Pre-existing WARN entries for unproxied methods are technical debt, NOT regressions.
-   If ffi_overall says ALL_COMPLETE, the FFI check is CLEAN.
-
-DECISION RULE (governance v3.3.12 — binding):
-A step that returns SKIP_V7_RESET is NOT a regression. It is environmental
-absence sanctioned by V7 reset governance, identical in intent to
-v3.3.9 (ffi_chain_check.sh) and v3.3.10 (run_ffi_verify SKIP).
-
-Use this truth table for the final verdict:
-  - Steps 1, 2, 5 all CLEAN AND Steps 3, 4 are CLEAN or SKIP_V7_RESET
-      → regression_status: CLEAN
-  - ANY step in {1, 2, 5} reports a NEW failure above baseline
-      → regression_status: REGRESSION_DETECTED
-  - Steps 3 or 4 report ACTUAL syntax errors / removed handlers
-    (file present but broken) → regression_status: REGRESSION_DETECTED
-  - Steps 3 or 4 report MISSING file/directory only → SKIP_V7_RESET
-    contribution, NOT a regression on its own.
-
-A T7.7.B-style change (Rust-only sim-bridge work, no GDScript) cannot
-introduce a renderer regression by definition; flagging absent GDScript
-files as regression is a category error.
-
-OUTPUT FORMAT (must be machine-parseable):
-After your analysis, output EXACTLY one of these lines at the end:
-regression_status: CLEAN
-regression_status: REGRESSION_DETECTED
-
-If REGRESSION_DETECTED, also output:
-regression_details: <specific test or feature that broke>
-GUARD_EOF
-
-    log "Running Regression Guard via Codex..."
-    local _rg_rc=0
-    run_codex "workspace-write" "$REVIEW_DIR/regression_guard.txt" "$guard_prompt_file" 2> "$REVIEW_DIR/regression_guard_log.txt" || _rg_rc=$?
-    if [[ $_rg_rc -eq 0 ]]; then
-        log "Regression guard complete"
-    elif [[ $_rg_rc -eq 124 ]]; then
-        # INTEGRITY (2026-06-21): a timed-out guard did NOT verify anything, so it
-        # must NEVER read as CLEAN (that masked the 2-5a a17/a18 locale-lock
-        # failures). Emit a distinct BLOCKING status; generate_report.sh scores
-        # it 0 (→ total < 90 gate → commit blocked), exactly like a real
-        # regression. No timeout inflation, no defaulting-to-pass.
-        log "REGRESSION GUARD TIMED OUT — VERIFICATION INCOMPLETE (BLOCKING; NOT defaulting to CLEAN)"
-        echo "regression_status: REGRESSION_GUARD_INCOMPLETE" > "$REVIEW_DIR/regression_guard.txt"
-        echo "regression_details: Regression guard TIMED OUT (exit 124) — verification did NOT complete; treated as blocking, NOT clean." >> "$REVIEW_DIR/regression_guard.txt"
-    else
-        log "Regression guard FAILED to run (exit $_rg_rc) — VERIFICATION INCOMPLETE (BLOCKING; NOT defaulting to CLEAN)"
-        echo "regression_status: REGRESSION_GUARD_INCOMPLETE" > "$REVIEW_DIR/regression_guard.txt"
-        echo "regression_details: Regression guard execution FAILED (exit $_rg_rc) — verification did NOT complete; treated as blocking, NOT clean." >> "$REVIEW_DIR/regression_guard.txt"
-    fi
-
-    rm -f "$guard_prompt_file"
-
-    if grep -qE "REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
-        if grep -q "REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
-            log "REGRESSION GUARD INCOMPLETE — verification did NOT complete; BLOCKING (treated as NOT clean)"
-        else
-            log "REGRESSION DETECTED — Evaluator will incorporate this evidence"
-        fi
-        local details
-        details=$(grep "regression_details:" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null | head -1 || echo "")
-        if [[ -n "$details" ]]; then
-            log "  $details"
-        fi
-    else
-        log "Regression guard: CLEAN"
-    fi
+    local status details
+    status=$(grep -oE "CLEAN|REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE" "$guard_out" 2>/dev/null | tail -1 || echo "UNKNOWN")
+    details=$(grep "regression_details:" "$guard_out" 2>/dev/null | head -1 || echo "")
+    case "$status" in
+        CLEAN)
+            log "Regression guard: CLEAN" ;;
+        REGRESSION_DETECTED)
+            log "REGRESSION DETECTED — Evaluator will incorporate this evidence" ;;
+        REGRESSION_GUARD_INCOMPLETE)
+            log "REGRESSION GUARD INCOMPLETE — gate result missing/unparseable; BLOCKING (treated as NOT clean)" ;;
+        *)
+            log "Regression guard status: $status" ;;
+    esac
+    [[ -n "$details" ]] && log "  $details"
 }
 
 summarize_regression_guard() {
@@ -2697,10 +2636,10 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
             # HARNESS_SKIP_REGRESSION_GUARD=1: reuse existing result (for eval-only re-runs)
             if [[ "${HARNESS_SKIP_REGRESSION_GUARD:-0}" == "1" && -f "$REVIEW_DIR/regression_guard.txt" ]]; then
                 log "HARNESS_SKIP_REGRESSION_GUARD: reusing existing regression_guard.txt"
-                report_step "2.7 Regression Guard (Codex)" "DONE" "(reused) $(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+                report_step "2.7 Regression Guard (set-diff)" "DONE" "(reused) $(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
             else
                 run_regression_guard
-                report_step "2.7 Regression Guard (Codex)" "DONE" "$(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
+                report_step "2.7 Regression Guard (set-diff)" "DONE" "$(summarize_regression_guard "$REVIEW_DIR/regression_guard.txt")"
             fi
 
             # Step 3: Codex Evaluator — replaces Claude Code evaluator for bias isolation

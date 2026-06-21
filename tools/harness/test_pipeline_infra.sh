@@ -51,11 +51,20 @@ else
     fail "FFI verify missing timeout handling"
 fi
 
-# --- Test 6: Regression guard has timeout handling ---
-if grep -A 10 "Running Regression Guard" "$PIPELINE" | grep -q "TIMED_OUT\|124"; then
-    pass "Regression guard has timeout fallback"
+# --- Test 6: Regression guard is deterministic (set-diff) with INCOMPLETE floor ---
+# Fix 2 (2026-06-21): the guard no longer uses a Codex wrapper (which timed out on
+# the ~52-min workspace test and defaulted to a silent CLEAN — masked-pass). It now
+# calls regression_verdict.sh to set-difference the Generator gate result vs the
+# reconciled baseline. Integrity property: a missing/unparseable gate result MUST
+# yield REGRESSION_GUARD_INCOMPLETE (blocking), NEVER a silent CLEAN.
+VERDICT="$SCRIPT_DIR/regression_verdict.sh"
+_miss_verdict=""
+[[ -f "$VERDICT" ]] && _miss_verdict=$(bash "$VERDICT" "/no/such/gate_$$.txt" "/no/such/known_$$.txt" 2>/dev/null | grep -oE 'CLEAN|REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE' | tail -1)
+if grep -A 20 "^run_regression_guard()" "$PIPELINE" | grep -q "regression_verdict.sh" \
+   && [[ "$_miss_verdict" == "REGRESSION_GUARD_INCOMPLETE" ]]; then
+    pass "Regression guard deterministic (regression_verdict.sh) + INCOMPLETE floor on missing gate"
 else
-    fail "Regression guard missing timeout handling"
+    fail "Regression guard not wired to regression_verdict.sh or missing INCOMPLETE floor (got '$_miss_verdict')"
 fi
 
 # --- Test 7: stop-check.sh has SKIP budget warning ---

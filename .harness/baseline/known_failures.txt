@@ -1,44 +1,44 @@
-# Known pre-existing test failures (baseline)
+# Known pre-existing test failures (baseline) — SINGLE SOURCE OF TRUTH
 #
-# These tests fail on lead/main HEAD WITHOUT any local changes. They are
-# tracked separately so ENV-BYPASS authorization (CLAUDE.md Rule 7.1) can
-# distinguish "pre-existing baseline failures" from "new regressions
-# introduced by the change under review".
+# These tests fail on lead/main HEAD WITHOUT any local changes. Two consumers
+# rely on this file:
+#   1. ENV-BYPASS authorization (CLAUDE.md Rule 7.1, authorize_env_bypass.sh)
+#      distinguishes "pre-existing baseline failures" from "new regressions".
+#   2. The deterministic regression guard (tools/harness/regression_verdict.sh,
+#      pipeline Step 2.7) set-differences a feature's Generator gate result
+#      against this list — a failing test NOT listed here is a NEW regression
+#      and blocks the commit.
 #
-# Provenance (corrected 2026-06-21): the original 2026-05-03 header credited
-# this list to shelter-ring-center-fix-v1 (pre-V7 HEAD c1ee01c0, "27 − 11
-# fixed = 16 remaining"). That provenance is VOID — the shelter-ring change
-# (3b1799e0) was discarded by the V7-RESET clean-slate (ae0a01f6,
-# 2026-05-04) and 0 of its lines survive, so the "11 fixed" credit no longer
-# applies. The current 16 entries are post-V7 baseline failures unrelated to
-# shelter-ring (they merely also number 16). NOTE: whether all 16 still fail
-# at current HEAD has NOT been re-verified since the V7 reset — re-derive the
-# list from a clean `cargo test --workspace` before relying on the count
-# (flagged 2026-06-21; the retired pre-V7 tools/harness/results/
-# path1-baseline-diff.txt is no longer authoritative).
+# Provenance: DERIVED FROM A CLEAN `cargo test --workspace` ON lead/main HEAD
+# 16f2b93a (2026-06-21, with the 2-5a work stashed). The workspace run fail-fast
+# stopped after the `harness_resource_scarcity` binary failed; the 25 binaries
+# that sort after it (harness_s16_*/settlement*/show_*/starvation/stockpile/
+# harness_t7_*) were then run explicitly with `--no-fail-fast` to complete
+# coverage. Full result across all 92 test binaries: exactly ONE failing test
+# (below); every other test passes.
 #
-# Format: one full test path per line (matches cargo test output format).
-# Comments and blank lines ignored. Duplicate entries silently deduplicated.
+# This SUPERSEDES the void pre-V7 shelter-ring / c1ee01c0 "27 − 11 = 16" lineage
+# (discarded by the V7-RESET clean-slate ae0a01f6, 2026-05-04). The previous
+# 16-entry list referenced tests that NO LONGER EXIST after the V7 reset
+# (0 `tests::harness_*` occurrences; no `harness_body_damage_api` binary) — it
+# was never re-derived post-reset. This list is the actual current failure set,
+# re-verified, not inherited.
+#
+# baseline_test_failures.txt holds only the COUNT and MUST equal the number of
+# entries below (currently 1). Keep them in sync.
+#
+# Format: one full test path per line, exactly as cargo prints it
+#   (module-qualified for unit tests: `mod::fn`, `tests::fn`;
+#    bare top-level fn for integration-test binaries: `harness_x_y`).
+# The regression guard reads the first whitespace token per non-comment line;
+# trailing text on the line is a human-readable note. Comments (#) and blank
+# lines ignored. Duplicates silently deduplicated.
 #
 # Update protocol:
-#   - When a baseline failure is FIXED, remove its line in the same commit.
-#   - When a NEW failure is observed and judged unrelated to the current
-#     change, document it here with a separate commit AND a follow-up issue.
-#   - Never silently expand this file to make a noisy commit pass.
+#   - When a baseline failure is FIXED, remove its line in the same commit AND
+#     decrement baseline_test_failures.txt to match.
+#   - When a NEW failure is observed and judged unrelated to the current change,
+#     document it here (separate commit + follow-up issue) AND increment the
+#     count file. Never silently expand this file to make a noisy commit pass.
 
-harness_body_damage_api::harness_work_injury_causal_log_records_kind
-harness_body_damage_api::harness_work_injury_forage_rate
-tests::harness_a9_behavioral_mortality_mul_isolation
-tests::harness_action_non_idle_ratio_steady_state
-tests::harness_food_economy_balance_4380
-tests::harness_food_economy_plan_comprehensive
-tests::harness_food_economy_plan_v2
-tests::harness_locale_en_total_count
-tests::harness_locale_ko_total_count
-tests::harness_memorial_natural_mourn_over_simulation
-tests::harness_multi_settlement_emerges
-tests::harness_ns_biases_exploratory_actions_directionally
-tests::harness_population_growth_reaches_migration_threshold
-tests::harness_pray_action_restores_comfort
-tests::harness_temperament_biases_behavior
-tests::harness_wall_click_info_a18_click_routing_contract
+harness_scarcity_a15_determinism_of_scarcity_run   determinism divergence at tick 2251/5000 — REPRODUCIBLE (3/3 runs diverge at the identical tick with the identical dead-set; not flaky). Pre-existing: "Fix D" did not restore full-horizon cross-run determinism. BACKLOG — underlying sim non-determinism, out of scope for the baseline/guard reconciliation; whether/when to fix is a separate decision. Panic at crates/sim-test/tests/harness_resource_scarcity.rs:1227.

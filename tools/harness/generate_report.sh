@@ -539,14 +539,20 @@ else
     FFI_DETAIL="not run"
 fi
 
-# Regression detail — supports both structured (key: value) and prose formats
+# Regression detail — prefer the deterministic guard's regression_details: line
+# (Fix 2, set-difference); fall back to the legacy Codex structured/prose format.
 REG_DETAIL_TEXT=""
 if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
-    # Try structured format first (harness_passed: N)
-    reg_passed=$(grep -oE 'harness_passed: [0-9]+|Passed: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
-    reg_total=$(grep -oE 'harness_total_matched: [0-9]+|Total harness tests run: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
-    gate_passed=$(grep -oE 'gate_total_passed: [0-9]+|Total passed: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
-    REG_DETAIL_TEXT="$REGRESSION_STATUS. Gate: $gate_passed passed. Harness: $reg_passed/$reg_total."
+    reg_details=$(grep '^regression_details:' "$REVIEW_DIR/regression_guard.txt" | head -1 | sed 's/^regression_details:[[:space:]]*//' || true)
+    if [[ -n "$reg_details" ]]; then
+        REG_DETAIL_TEXT="$REGRESSION_STATUS — $reg_details"
+    else
+        # Legacy Codex-guard structured (key: value) / prose format
+        reg_passed=$(grep -oE 'harness_passed: [0-9]+|Passed: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
+        reg_total=$(grep -oE 'harness_total_matched: [0-9]+|Total harness tests run: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
+        gate_passed=$(grep -oE 'gate_total_passed: [0-9]+|Total passed: `[0-9]+`' "$REVIEW_DIR/regression_guard.txt" | grep -oE '[0-9]+' | head -1 || echo "?")
+        REG_DETAIL_TEXT="$REGRESSION_STATUS. Gate: $gate_passed passed. Harness: $reg_passed/$reg_total."
+    fi
 else
     REG_DETAIL_TEXT="Not run."
 fi
