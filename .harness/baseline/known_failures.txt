@@ -1,12 +1,21 @@
 # Known pre-existing test failures (baseline)
 #
-# Established: 2026-05-03 during Path 1 baseline-vs-regression diagnosis
-# for shelter-ring-center-fix-v1.
+# These tests fail on lead/main HEAD WITHOUT any local changes. They are
+# tracked separately so ENV-BYPASS authorization (CLAUDE.md Rule 7.1) can
+# distinguish "pre-existing baseline failures" from "new regressions
+# introduced by the change under review".
 #
-# These tests fail on origin/lead/main HEAD (c1ee01c0) WITHOUT any local
-# changes. They are tracked separately so ENV-BYPASS authorization
-# (CLAUDE.md Rule 7.1) can distinguish "pre-existing baseline failures"
-# from "new regressions introduced by the change under review".
+# Provenance (corrected 2026-06-21): the original 2026-05-03 header credited
+# this list to shelter-ring-center-fix-v1 (pre-V7 HEAD c1ee01c0, "27 − 11
+# fixed = 16 remaining"). That provenance is VOID — the shelter-ring change
+# (3b1799e0) was discarded by the V7-RESET clean-slate (ae0a01f6,
+# 2026-05-04) and 0 of its lines survive, so the "11 fixed" credit no longer
+# applies. The current 16 entries are post-V7 baseline failures unrelated to
+# shelter-ring (they merely also number 16). NOTE: whether all 16 still fail
+# at current HEAD has NOT been re-verified since the V7 reset — re-derive the
+# list from a clean `cargo test --workspace` before relying on the count
+# (flagged 2026-06-21; the retired pre-V7 tools/harness/results/
+# path1-baseline-diff.txt is no longer authoritative).
 #
 # Format: one full test path per line (matches cargo test output format).
 # Comments and blank lines ignored. Duplicate entries silently deduplicated.
@@ -16,9 +25,6 @@
 #   - When a NEW failure is observed and judged unrelated to the current
 #     change, document it here with a separate commit AND a follow-up issue.
 #   - Never silently expand this file to make a noisy commit pass.
-#
-# Diagnostic provenance: tools/harness/results/path1-baseline-diff.txt
-# (baseline 27 fails − 11 fixed by shelter-ring-center-fix-v1 = 16 remaining)
 
 harness_body_damage_api::harness_work_injury_causal_log_records_kind
 harness_body_damage_api::harness_work_injury_forage_rate

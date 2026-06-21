@@ -53,13 +53,20 @@ fi
 # Parse log entries. Each line is pipe-separated:
 #   ISO8601-timestamp|feature|actor|reason
 # Closure lines are:
-#   ISO8601-timestamp|feature|verified-post-bypass-<commit>|note
+#   ISO8601-timestamp|feature|verified-post-bypass-<commit>|note  (re-validated)
+#   ISO8601-timestamp|feature|voided-by-<commit>|note             (code discarded — verdict moot)
+#   ISO8601-timestamp|feature|superseded-by-<commit>|note         (replaced — verdict moot)
 #   ISO8601-timestamp|feature|LAND|<commit> — context
 #
 # A feature is "pending" if it has an ENV-BYPASS authorization entry
-# (where actor != verified-post-bypass-* and actor != LAND) without a
-# matching `verified-post-bypass-` entry for the SAME feature later
-# in the log.
+# (where actor is NOT a closure token: verified-post-bypass-* / voided-by-* /
+# superseded-by-* / LAND) without a matching closure entry (verified-post-bypass-* /
+# voided-by-* / superseded-by-*) for the SAME feature later in the log.
+#
+# voided-by / superseded-by are honest closures for a different category than
+# re-validation: a bypass becomes permanently moot when the code it covered is
+# discarded (e.g. by a clean-slate reset) or replaced, so no Evaluator verdict is
+# possible or meaningful. They clear the advisory exactly like verified-post-bypass.
 NOW_EPOCH=$(date +%s)
 DEADLINE_SECS=$((7 * 24 * 60 * 60))
 
@@ -70,8 +77,8 @@ declare -a AUTH_REASONS=()
 while IFS='|' read -r ts feature actor reason; do
     # Skip empty / malformed lines
     [[ -z "$ts" || -z "$feature" || -z "$actor" ]] && continue
-    # Skip closure entries
-    if [[ "$actor" == verified-post-bypass-* || "$actor" == "LAND" ]]; then
+    # Skip closure entries (verified-post-bypass / voided-by / superseded-by / LAND)
+    if [[ "$actor" == verified-post-bypass-* || "$actor" == voided-by-* || "$actor" == superseded-by-* || "$actor" == "LAND" ]]; then
         continue
     fi
     AUTH_FEATURES+=("$feature")
@@ -85,7 +92,7 @@ done < "$LOG"
 CLOSED_LIST=""
 while IFS='|' read -r ts feature actor reason; do
     [[ -z "$ts" || -z "$feature" || -z "$actor" ]] && continue
-    if [[ "$actor" == verified-post-bypass-* ]]; then
+    if [[ "$actor" == verified-post-bypass-* || "$actor" == voided-by-* || "$actor" == superseded-by-* ]]; then
         CLOSED_LIST="$CLOSED_LIST"$'\n'"$feature"
     fi
 done < "$LOG"
