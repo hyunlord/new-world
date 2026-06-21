@@ -593,7 +593,18 @@ validate_plan_scope_semantic() {
     fi
     # Extract authorized file paths from the prompt's Section 2.
     # Look for backtick-wrapped paths ending in .gd / .rs / .tscn /
-    # .gdshader inside the Section 2 block.
+    # .gdshader / .gdextension / .json inside the Section 2 block.
+    #
+    # locale-infra prep (2026-06-22) — `.json` ADDED to the authorized
+    # extraction alternation to mirror the plan-path detection alternation
+    # below (which has always included `json`). The prior asymmetry meant a
+    # plan that mentioned a `localization/**.json` path was FLAGGED, yet the
+    # same path listed in the prompt's Section 2 could never be recognised as
+    # AUTHORISED — making localization-data prompts structurally unable to
+    # pass the scope guard (root incident: locale-infra-prep run 1 FATAL'd on
+    # `localization/key_registry.json` despite it being enumerated in Section
+    # 2). This is a correctness fix, not a loosening: the guard still flags any
+    # `.json` path NOT enumerated in Section 2.
     local authorized
     # G Phase A (2026-05-31) — `grep -oE` exits 1 on no match; under
     # `set -euo pipefail` an unguarded substitution would silently kill the
@@ -604,7 +615,7 @@ validate_plan_scope_semantic() {
     # unauthorized-count line below. Root incident: s16-zeta-social-freeze-fix
     # died silently right after "Drafter validation PASS".
     authorized=$(awk '/^## Section 2: What to Build/{flag=1; next} /^## /{flag=0} flag' "$prompt_file" \
-        | grep -oE '`[^`]+\.(gd|rs|tscn|gdshader|gdextension)`' \
+        | grep -oE '`[^`]+\.(gd|rs|tscn|gdshader|gdextension|json)`' \
         | tr -d '`' \
         | sort -u || true)
     # Extract file paths mentioned in plan_draft.md.

@@ -276,17 +276,101 @@ fn harness_p3_gamma_2_beta_ko_translations_have_hangul() {
     println!("A16 PASS: all 13 KO values contain Hangul");
 }
 
-// ── A17: key_registry_active_count_5116 ──────────────────────────────────────
+// ── A17: key_registry_active_count_consistent ────────────────────────────────
 
-/// Type A: `active_key_count` == 5116 (5103 + 13). Locked fact P3γ2β-D6.
+/// Type A (consistency): `key_registry.json` `active_key_count` is INTERNALLY
+/// consistent AND agrees with the compiled outputs. Replaces the former frozen
+/// `== 5116` literal (locale-infra prep, 2026-06-22).
+///
+/// The frozen magic number (`active_key_count == 5116`, "Locked fact P3γ2β-D6")
+/// broke on every legitimate key addition — a per-slice lock-bump treadmill.
+/// A consistency invariant lets a correct `tools/localization_compile.py`
+/// recompile ride clean while still catching real drift. The exact bug fixed
+/// in this commit: compiled `meta.active_key_count` (and the registry's count)
+/// were frozen at 5116 while the compiled `strings` maps had already advanced to
+/// 5135 (19 shipped UI keys for Phases 3-γ/7-δ/8-δ/9-δ added to the fluent
+/// source but never re-synced) — invariants 4/5 below would have caught it.
+///
+/// Invariants (all hold after a correct recompile; any violation = real drift):
+///   1. registry.active_key_count + registry.removed_key_count == registry.key_count
+///   2. registry.key_count        == len(registry.key_to_id) == len(registry.keys)
+///   3. registry.removed_key_count == len(registry.removed_keys)
+///   4. registry.active_key_count == len(compiled/en strings) == len(compiled/ko strings)
+///   5. compiled/{en,ko}.meta.active_key_count == len(their own strings map)
 #[test]
-fn harness_p3_gamma_2_beta_key_registry_active_count_5116() {
-    let src = include_str!("../../../../localization/key_registry.json");
-    assert!(
-        src.contains("\"active_key_count\": 5116"),
-        "key_registry.json must have `active_key_count: 5116` (5103 + 13 per P3γ2β-D6)"
+fn harness_p3_gamma_2_beta_key_registry_active_count_consistent() {
+    let reg: serde_json::Value =
+        serde_json::from_str(include_str!("../../../../localization/key_registry.json"))
+            .expect("key_registry.json must be valid JSON");
+    let en: serde_json::Value =
+        serde_json::from_str(include_str!("../../../../localization/compiled/en.json"))
+            .expect("compiled/en.json must be valid JSON");
+    let ko: serde_json::Value =
+        serde_json::from_str(include_str!("../../../../localization/compiled/ko.json"))
+            .expect("compiled/ko.json must be valid JSON");
+
+    let field = |v: &serde_json::Value, k: &str| -> u64 {
+        v.get(k)
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or_else(|| panic!("key_registry.json missing numeric field `{k}`"))
+    };
+    let arr_len = |v: &serde_json::Value, k: &str| -> u64 {
+        v.get(k)
+            .and_then(serde_json::Value::as_array)
+            .unwrap_or_else(|| panic!("key_registry.json `{k}` must be an array"))
+            .len() as u64
+    };
+    let obj_len = |v: &serde_json::Value, k: &str, what: &str| -> u64 {
+        v.get(k)
+            .and_then(serde_json::Value::as_object)
+            .unwrap_or_else(|| panic!("{what} `{k}` must be an object"))
+            .len() as u64
+    };
+
+    let active = field(&reg, "active_key_count");
+    let total = field(&reg, "key_count");
+    let removed = field(&reg, "removed_key_count");
+
+    // Invariant 1: active + removed == total (registry field arithmetic; uses
+    // addition rather than subtraction to avoid u64 underflow on a corrupt file).
+    assert_eq!(
+        active + removed,
+        total,
+        "active_key_count ({active}) + removed_key_count ({removed}) must equal key_count ({total})"
     );
-    println!("A17 PASS: active_key_count == 5116");
+    // Invariant 2: key_count completeness vs the id map and the keys array.
+    assert_eq!(total, obj_len(&reg, "key_to_id", "key_registry.json"),
+        "key_count ({total}) must equal len(key_to_id)");
+    assert_eq!(total, arr_len(&reg, "keys"),
+        "key_count ({total}) must equal len(keys)");
+    // Invariant 3: removed_key_count completeness vs the removed_keys array.
+    assert_eq!(removed, arr_len(&reg, "removed_keys"),
+        "removed_key_count ({removed}) must equal len(removed_keys)");
+
+    // Invariants 4 + 5: registry agrees with the compiled outputs, and each
+    // compiled `meta.active_key_count` agrees with its OWN strings map. These
+    // are the assertions that catch the stale-registry/meta drift fixed here.
+    let en_strings = obj_len(&en, "strings", "compiled/en.json");
+    let ko_strings = obj_len(&ko, "strings", "compiled/ko.json");
+    let meta_active = |v: &serde_json::Value, name: &str| -> u64 {
+        v.get("meta")
+            .and_then(|m| m.get("active_key_count"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or_else(|| panic!("compiled/{name}.json missing meta.active_key_count"))
+    };
+    assert_eq!(active, en_strings,
+        "registry active_key_count ({active}) must equal compiled/en.json strings count ({en_strings})");
+    assert_eq!(active, ko_strings,
+        "registry active_key_count ({active}) must equal compiled/ko.json strings count ({ko_strings})");
+    assert_eq!(meta_active(&en, "en"), en_strings,
+        "compiled/en.json meta.active_key_count must equal its own strings count ({en_strings})");
+    assert_eq!(meta_active(&ko, "ko"), ko_strings,
+        "compiled/ko.json meta.active_key_count must equal its own strings count ({ko_strings})");
+
+    println!(
+        "A17 PASS: key_registry active_key_count consistent (active={active}, total={total}, \
+         removed={removed}; registry ↔ compiled en/ko in sync)"
+    );
 }
 
 // ── B18: world_renderer_space_branch_preserved ───────────────────────────────

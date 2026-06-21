@@ -623,10 +623,19 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
     //
     // V7 H Phase A — `shaders/palette_swap.gdshader` lock RELEASED. H Phase A
     // intentionally fixes the palette green-bug (vertex-stage tint capture),
-    // same precedent as the world_renderer.gd release above. The causal_panel
-    // and localization locks remain because no planned stage modifies them.
+    // same precedent as the world_renderer.gd release above.
+    //
+    // Locale-infra prep (2026-06-22) — `localization/` lock RELEASED. Same
+    // precedent as the world_renderer.gd / palette_swap.gdshader releases:
+    // localization is now actively developed by ongoing UI slices (Direction-2
+    // 2-5a stockpile-viz onward), so the original "no planned stage modifies
+    // them" rationale is false and a permanent git-freeze on `localization/`
+    // no longer applies. Drift detection moves to the registry↔compiled
+    // consistency check (P3γ2β `key_registry_active_count_consistent`) plus the
+    // `tools/localization_compile.py` recompile step — not a frozen git lock.
+    // The causal_panel lock remains because no planned stage modifies it.
     let forbidden_exact = ["scripts/ui/panels/causal_panel.gd"];
-    let forbidden_prefixes = ["localization/"];
+    let forbidden_prefixes: [&str; 0] = [];
     let mut violations: Vec<&String> = Vec::new();
     for f in modified.iter() {
         if forbidden_exact.iter().any(|p| f == p)
@@ -637,10 +646,10 @@ fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
     }
     assert!(
         violations.is_empty(),
-        "A18: causal_panel/locale must NOT be modified beyond scope \
-         (palette_swap.gdshader lock released in H Phase A). Violations: {violations:?}"
+        "A18: causal_panel must NOT be modified beyond scope \
+         (palette_swap.gdshader + localization/ locks released). Violations: {violations:?}"
     );
-    println!("[P12-α A18] causal_panel + locale unchanged (shader lock released) ✓");
+    println!("[P12-α A18] causal_panel unchanged (shader + localization locks released) ✓");
 }
 
 // Note on Assertions 19 + 20: those are "run another test suite / full
