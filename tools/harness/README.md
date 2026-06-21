@@ -172,10 +172,17 @@ Any commit touching `rust/crates/sim-*` will be blocked unless a recent APPROVED
 All `run_codex` invocations are wrapped with `run_with_timeout` (default 600s = 10 min).
 Override via env: `CODEX_TIMEOUT_SECONDS=300 bash harness_pipeline.sh ...`
 
-Timed-out invocations use non-blocking fallbacks:
-- FFI chain verify timeout → `ffi_status: TIMED_OUT` + `ffi_overall: ALL_COMPLETE` (non-blocking)
-- Regression guard timeout → `regression_status: CLEAN` (non-blocking)
-- Evaluator timeout → built-in evaluator fallback
+Timed-out invocations (integrity-corrected 2026-06-21 — a timed-out check verified
+nothing and must NEVER default to a passing status):
+- Regression guard timeout / exec-failure → `regression_status: REGRESSION_GUARD_INCOMPLETE`
+  (**BLOCKING** — generate_report.sh scores it 0, dropping the total below the 90 gate, exactly
+  like a real `REGRESSION_DETECTED`; never defaults to CLEAN). Root cause of timeouts: the guard
+  is a ~10-min Codex wrapper asked to run the ~52-min `cargo test --workspace`; the completion fix
+  (drop the Codex wrapper / reuse the Step-0 gate result / chunk) is tracked separately.
+- FFI chain verify timeout / exec-failure → `ffi_status: TIMED_OUT|EXEC_FAILED` +
+  `ffi_overall: INCOMPLETE` (honest; FFI is advisory / not score-gated, so it surfaces the gap
+  rather than falsely reporting ALL_COMPLETE)
+- Evaluator timeout → built-in evaluator fallback (Claude Code evaluator)
 
 ### VLM isolation
 

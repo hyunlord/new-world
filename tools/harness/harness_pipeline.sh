@@ -1945,13 +1945,19 @@ FFI_METHODS
     if [[ $_ffi_rc -eq 0 ]]; then
         log "FFI chain verify complete"
     elif [[ $_ffi_rc -eq 124 ]]; then
-        log "FFI CHAIN VERIFY TIMED OUT — defaulting to OK (non-blocking)"
+        # INTEGRITY (2026-06-21): a timed-out verify did NOT confirm the FFI
+        # chain, so it must NOT claim ALL_COMPLETE. Emit an honest INCOMPLETE
+        # (FFI is advisory / not score-gated, so this surfaces the gap without
+        # falsely passing). Same masked-pass class as the regression guard fix.
+        log "FFI CHAIN VERIFY TIMED OUT — VERIFICATION INCOMPLETE (NOT defaulting to ALL_COMPLETE)"
         echo "FFI chain verify timed out (Codex MCP hang)" > "$evidence_dir/ffi_chain_verify.txt"
         echo "ffi_status: TIMED_OUT" >> "$evidence_dir/ffi_chain_verify.txt"
-        echo "ffi_overall: ALL_COMPLETE" >> "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_overall: INCOMPLETE" >> "$evidence_dir/ffi_chain_verify.txt"
     else
-        log "WARNING: FFI chain verify failed (exit $_ffi_rc) — continuing pipeline"
-        echo "FFI chain verification failed to execute" > "$evidence_dir/ffi_chain_verify.txt"
+        log "FFI chain verify FAILED (exit $_ffi_rc) — VERIFICATION INCOMPLETE (NOT defaulting to ALL_COMPLETE)"
+        echo "FFI chain verification failed to execute (exit $_ffi_rc)" > "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_status: EXEC_FAILED" >> "$evidence_dir/ffi_chain_verify.txt"
+        echo "ffi_overall: INCOMPLETE" >> "$evidence_dir/ffi_chain_verify.txt"
     fi
 
     rm -f "$ffi_prompt_file"
@@ -2060,19 +2066,28 @@ GUARD_EOF
     if [[ $_rg_rc -eq 0 ]]; then
         log "Regression guard complete"
     elif [[ $_rg_rc -eq 124 ]]; then
-        log "REGRESSION GUARD TIMED OUT — defaulting to CLEAN (non-blocking)"
-        echo "regression_status: CLEAN" > "$REVIEW_DIR/regression_guard.txt"
-        echo "regression_details: (Regression guard timed out; defaulted to CLEAN)" >> "$REVIEW_DIR/regression_guard.txt"
+        # INTEGRITY (2026-06-21): a timed-out guard did NOT verify anything, so it
+        # must NEVER read as CLEAN (that masked the 2-5a a17/a18 locale-lock
+        # failures). Emit a distinct BLOCKING status; generate_report.sh scores
+        # it 0 (→ total < 90 gate → commit blocked), exactly like a real
+        # regression. No timeout inflation, no defaulting-to-pass.
+        log "REGRESSION GUARD TIMED OUT — VERIFICATION INCOMPLETE (BLOCKING; NOT defaulting to CLEAN)"
+        echo "regression_status: REGRESSION_GUARD_INCOMPLETE" > "$REVIEW_DIR/regression_guard.txt"
+        echo "regression_details: Regression guard TIMED OUT (exit 124) — verification did NOT complete; treated as blocking, NOT clean." >> "$REVIEW_DIR/regression_guard.txt"
     else
-        log "WARNING: Regression guard failed (exit $_rg_rc) — continuing pipeline"
-        echo "regression_status: CLEAN" > "$REVIEW_DIR/regression_guard.txt"
-        echo "(Regression guard execution failed — defaulting to CLEAN)" >> "$REVIEW_DIR/regression_guard.txt"
+        log "Regression guard FAILED to run (exit $_rg_rc) — VERIFICATION INCOMPLETE (BLOCKING; NOT defaulting to CLEAN)"
+        echo "regression_status: REGRESSION_GUARD_INCOMPLETE" > "$REVIEW_DIR/regression_guard.txt"
+        echo "regression_details: Regression guard execution FAILED (exit $_rg_rc) — verification did NOT complete; treated as blocking, NOT clean." >> "$REVIEW_DIR/regression_guard.txt"
     fi
 
     rm -f "$guard_prompt_file"
 
-    if grep -q "REGRESSION_DETECTED" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
-        log "REGRESSION DETECTED — Evaluator will incorporate this evidence"
+    if grep -qE "REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
+        if grep -q "REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null; then
+            log "REGRESSION GUARD INCOMPLETE — verification did NOT complete; BLOCKING (treated as NOT clean)"
+        else
+            log "REGRESSION DETECTED — Evaluator will incorporate this evidence"
+        fi
         local details
         details=$(grep "regression_details:" "$REVIEW_DIR/regression_guard.txt" 2>/dev/null | head -1 || echo "")
         if [[ -n "$details" ]]; then
@@ -2086,7 +2101,7 @@ GUARD_EOF
 summarize_regression_guard() {
     local guard_file="$1"
     local status
-    status=$(grep -o "CLEAN\|REGRESSION_DETECTED" "$guard_file" 2>/dev/null | tail -1 || echo "UNKNOWN")
+    status=$(grep -oE "CLEAN|REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE" "$guard_file" 2>/dev/null | tail -1 || echo "UNKNOWN")
     local details
     details=$(grep "regression_details:" "$guard_file" 2>/dev/null | head -1 | sed 's/regression_details: //' | cut -c1-50 || echo "")
     echo "${status}${details:+: $details}"
@@ -2386,7 +2401,7 @@ format_commit_message() {
     fi
     local regression="SKIP"
     if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
-        regression=$(grep -o "CLEAN\|REGRESSION_DETECTED" "$REVIEW_DIR/regression_guard.txt" | tail -1 || echo "SKIP")
+        regression=$(grep -oE "CLEAN|REGRESSION_DETECTED|REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt" | tail -1 || echo "SKIP")
     fi
     local ffi="SKIP"
     if [[ -f "$HARNESS_DIR/evidence/$feature/ffi_chain_verify.txt" ]]; then

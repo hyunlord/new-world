@@ -174,7 +174,12 @@ fi
 # Regression guard
 REGRESSION_STATUS="NOT_RUN"
 if [[ -f "$REVIEW_DIR/regression_guard.txt" ]]; then
-    if grep -qi "CLEAN\|NO_REGRESSION" "$REVIEW_DIR/regression_guard.txt"; then
+    # INTEGRITY (2026-06-21): check INCOMPLETE FIRST — a guard that timed out or
+    # failed to run verified nothing and must NEVER be read as CLEAN (that masked
+    # the 2-5a a17/a18 locale-lock failures). INCOMPLETE scores 0 below → blocking.
+    if grep -q "REGRESSION_GUARD_INCOMPLETE" "$REVIEW_DIR/regression_guard.txt"; then
+        REGRESSION_STATUS="REGRESSION_GUARD_INCOMPLETE"
+    elif grep -qi "CLEAN\|NO_REGRESSION" "$REVIEW_DIR/regression_guard.txt"; then
         REGRESSION_STATUS="CLEAN"
     else
         REGRESSION_STATUS="REGRESSION_DETECTED"
@@ -458,6 +463,7 @@ REGRESSION_DETAIL=""
 case "$REGRESSION_STATUS" in
     CLEAN) SCORE_REGRESSION=15; REGRESSION_DETAIL="CLEAN" ;;
     NOT_RUN) SCORE_REGRESSION=5; REGRESSION_DETAIL="not run" ;;
+    REGRESSION_GUARD_INCOMPLETE) SCORE_REGRESSION=0; REGRESSION_DETAIL="INCOMPLETE — guard did not complete (blocking, NOT clean)" ;;
     *) SCORE_REGRESSION=0; REGRESSION_DETAIL="$REGRESSION_STATUS" ;;
 esac
 
