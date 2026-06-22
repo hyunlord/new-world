@@ -33,6 +33,18 @@ const COLOR_WATER: Color = Color(0.2, 0.5, 1.0)
 const COLOR_SLEEP: Color = Color(0.95, 0.75, 0.2)
 const COLOR_GRAY: Color = Color(0.6, 0.6, 0.6)
 
+# V7 slice 2-5b — carry indicator (Food being hauled). Deliberately DISTINCT
+# from the seek head-dot (a circle ABOVE the agent, red/blue/amber by need) and
+# the need-bars: a small filled SQUARE BESIDE the agent in a grain/wheat tint, so
+# the two overlays never collide or read as the same thing. Drawn only for agents
+# whose Inventory Food > 0 (carried_foods[i] > 0).
+const CARRY_OFFSET: Vector2 = Vector2(9.0, -1.0)   # beside the sprite, not above
+const CARRY_HALF: float = 2.5                       # half-side of the 5px glyph
+const COLOR_CARRY: Color = Color(0.85, 0.72, 0.30)  # grain/wheat — not the red seek-Food dot
+const CARRY_FILL_ALPHA: float = 0.85                # >= 0.15 UI minimum
+const CARRY_STROKE_ALPHA: float = 1.0               # >= 0.40 UI minimum
+const CARRY_STROKE_W: float = 1.0
+
 var _world_sim: Node = null
 var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
@@ -40,6 +52,7 @@ var _states: PackedByteArray = PackedByteArray()
 var _seek_kinds: PackedByteArray = PackedByteArray()
 var _target_xs: PackedInt32Array = PackedInt32Array()
 var _target_ys: PackedInt32Array = PackedInt32Array()
+var _carried_foods: PackedInt32Array = PackedInt32Array()  # slice 2-5b (additive)
 
 
 func _ready() -> void:
@@ -70,6 +83,13 @@ func _process(_delta: float) -> void:
 	_seek_kinds = seek_kinds
 	_target_xs = target_xs
 	_target_ys = target_ys
+	# slice 2-5b — additive carry array; defensive so an older/short snapshot
+	# omitting it disables only the carry glyph, never the head-dots/goal-lines.
+	var carried_foods: Variant = snap_dict.get("carried_foods", null)
+	if carried_foods is PackedInt32Array:
+		_carried_foods = carried_foods
+	else:
+		_carried_foods = PackedInt32Array()
 	queue_redraw()
 
 
@@ -78,6 +98,9 @@ func _draw() -> void:
 	if _ys.size() != n or _states.size() != n or _seek_kinds.size() != n \
 			or _target_xs.size() != n or _target_ys.size() != n:
 		return
+	# slice 2-5b — carry glyph only when its parallel array matches (additive,
+	# never blocks the head-dot/goal-line overlays).
+	var has_carry: bool = _carried_foods.size() == n
 	for i in n:
 		var agent_px: Vector2 = _tile_to_px(_xs[i], _ys[i])
 		var tag: int = int(_states[i])
@@ -93,6 +116,17 @@ func _draw() -> void:
 		elif tag == 3:
 			draw_circle(head, HEAD_RADIUS, Color.WHITE)
 		# Idle (0) / Consuming-Agent (2) → no head-dot.
+		# slice 2-5b — carry indicator: a grain-tinted square BESIDE the agent
+		# (distinct anchor + shape from the head-dot circle ABOVE) whenever the
+		# agent is hauling Food. Reconciled every frame from the snapshot — it
+		# disappears the frame carried_food returns to 0 (deposit complete).
+		if has_carry and _carried_foods[i] > 0:
+			var carry_c: Vector2 = agent_px + CARRY_OFFSET
+			var carry_r: Rect2 = Rect2(
+				carry_c - Vector2(CARRY_HALF, CARRY_HALF),
+				Vector2(CARRY_HALF * 2.0, CARRY_HALF * 2.0))
+			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_FILL_ALPHA), true)
+			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_STROKE_ALPHA), false, CARRY_STROKE_W)
 
 
 func _tile_to_px(tx: int, ty: int) -> Vector2:

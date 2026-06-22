@@ -1286,6 +1286,13 @@ pub struct AgentSnapshotRow {
     /// V7 viz-B: `Sleep.fatigue` cast `f64 → f32` (`[0, 100]`). Note the
     /// source field is `fatigue`, not `value`.
     pub sleep: f32,
+    /// V7 Direction-2 slice 2-5b: the agent's `Inventory` Food count
+    /// (`ResourceKind::Food`), `0` when the agent has no `Inventory`. Carries
+    /// the carry-indicator presence flag for `seek_viz_renderer.gd` — an agent
+    /// hauling gathered Food (`carried_food > 0`) gets a visible glyph, making
+    /// the gather → CARRY → deposit → stockpile chain visible. Read-only of
+    /// `Inventory`; does not affect determinism.
+    pub carried_food: i32,
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1304,7 +1311,10 @@ pub struct AgentSnapshotRow {
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
-    for (entity, (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep)) in world
+    for (
+        entity,
+        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv),
+    ) in world
         .query::<(
             &Agent,
             &Position,
@@ -1313,6 +1323,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Hunger>,
             Option<&Thirst>,
             Option<&Sleep>,
+            Option<&Inventory>,
         )>()
         .iter()
     {
@@ -1343,6 +1354,11 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         let hunger = maybe_hunger.map(|h| h.value).unwrap_or(0.0);
         let thirst = maybe_thirst.map(|t| t.value as f32).unwrap_or(0.0);
         let sleep = maybe_sleep.map(|s| s.fatigue as f32).unwrap_or(0.0);
+        // V7 slice 2-5b — carried Food count for the carry indicator. 0 when
+        // the agent has no `Inventory`. Read-only; order-independent.
+        let carried_food = maybe_inv
+            .map(|inv| inv.get(ResourceKind::Food) as i32)
+            .unwrap_or(0);
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -1359,6 +1375,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             hunger,
             thirst,
             sleep,
+            carried_food,
         });
     }
     rows
@@ -1454,6 +1471,16 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
         thirsts[i] = row.thirst;
         sleeps[i] = row.sleep;
     }
+    // V7 slice 2-5b — one additive parallel `i32` array carrying the per-agent
+    // carried Food count for the carry indicator. Built directly from `rows`
+    // (NOT via `agent_rows_split`, whose 4-tuple is locked by
+    // `harness_p4_gamma_rendering`), mirroring the Section 16-ε / viz-B additive
+    // pattern. Length == `rows.len()` by construction.
+    let mut carried_foods = PackedInt32Array::new();
+    carried_foods.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        carried_foods[i] = row.carried_food;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
@@ -1466,6 +1493,7 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("hungers", hungers);
     dict.set("thirsts", thirsts);
     dict.set("sleeps", sleeps);
+    dict.set("carried_foods", carried_foods);
     dict
 }
 
