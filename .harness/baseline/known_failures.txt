@@ -9,23 +9,28 @@
 #      against this list — a failing test NOT listed here is a NEW regression
 #      and blocks the commit.
 #
-# Provenance: DERIVED FROM A CLEAN `cargo test --workspace` ON lead/main HEAD
-# 16f2b93a (2026-06-21, with the 2-5a work stashed). The workspace run fail-fast
-# stopped after the `harness_resource_scarcity` binary failed; the 25 binaries
-# that sort after it (harness_s16_*/settlement*/show_*/starvation/stockpile/
-# harness_t7_*) were then run explicitly with `--no-fail-fast` to complete
-# coverage. Full result across all 92 test binaries: exactly ONE failing test
-# (below); every other test passes.
-#
-# This SUPERSEDES the void pre-V7 shelter-ring / c1ee01c0 "27 − 11 = 16" lineage
-# (discarded by the V7-RESET clean-slate ae0a01f6, 2026-05-04). The previous
-# 16-entry list referenced tests that NO LONGER EXIST after the V7 reset
-# (0 `tests::harness_*` occurrences; no `harness_body_damage_api` binary) — it
-# was never re-derived post-reset. This list is the actual current failure set,
-# re-verified, not inherited.
+# CURRENT STATE: ZERO known baseline failures. The full `cargo test --workspace`
+# on lead/main HEAD passes with NO failures. Any failing test is therefore a NEW
+# regression and MUST block — the regression guard set-differences against an
+# empty list, so an empty `failing` set yields CLEAN and any failure is flagged.
 #
 # baseline_test_failures.txt holds only the COUNT and MUST equal the number of
-# entries below (currently 1). Keep them in sync.
+# entries below (currently 0). Keep them in sync.
+#
+# History:
+#   - The sole prior entry, `harness_scarcity_a15_determinism_of_scarcity_run`,
+#     was FIXED (commit chain fcbab050 → a15-fix). Root cause: AgentDecisionSystem
+#     iterated the `settlement_migrant_tag` HashSet to `world.insert_one(SettlementMigrant)`,
+#     applying a STRUCTURAL component insert in RandomState-seed order. That
+#     permuted the hecs SettlementMigrant-archetype dense order → seed-dependent
+#     query iteration order (first observable at tick 9) → a contended gather
+#     split diverged (inventory, tick 489) → an agent need value diverged (the
+#     a15 tick-2251 fingerprint divergence). Fixed by sorting the migrant
+#     entities by stable AgentId before the insert
+#     (agent_decision.rs ~L1582). a15 now passes the full 5000-tick per-tick
+#     lockstep across independently-seeded engines (verified 3/3 runs).
+#   - This file SUPERSEDES the void pre-V7 shelter-ring / c1ee01c0 "27 − 11 = 16"
+#     lineage (discarded by the V7-RESET clean-slate ae0a01f6, 2026-05-04).
 #
 # Format: one full test path per line, exactly as cargo prints it
 #   (module-qualified for unit tests: `mod::fn`, `tests::fn`;
@@ -41,4 +46,4 @@
 #     document it here (separate commit + follow-up issue) AND increment the
 #     count file. Never silently expand this file to make a noisy commit pass.
 
-harness_scarcity_a15_determinism_of_scarcity_run   determinism divergence at tick 2251/5000 — REPRODUCIBLE (3/3 runs diverge at the identical tick with the identical dead-set; not flaky). Pre-existing: "Fix D" did not restore full-horizon cross-run determinism. BACKLOG — underlying sim non-determinism, out of scope for the baseline/guard reconciliation; whether/when to fix is a separate decision. Panic at crates/sim-test/tests/harness_resource_scarcity.rs:1227.
+# (no entries — zero known baseline failures)

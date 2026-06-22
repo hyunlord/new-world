@@ -1578,9 +1578,28 @@ impl RuntimeSystem for AgentDecisionSystem {
         // the migration arm this tick (idempotent — `settlement_migrant_tag`
         // only ever holds this-tick transitions, so no per-tick churn); remove
         // it for every migrant that joined / aborted / was need-preempted.
-        // Per-entity insert/remove is order-independent → determinism preserved.
-        for e in &settlement_migrant_tag {
-            let _ = world.insert_one(*e, SettlementMigrant);
+        //
+        // a15-determinism fix (HashMap-order non-determinism): `settlement_migrant_tag`
+        // is a `HashSet`, so iterating it directly to `insert_one` applied the
+        // STRUCTURAL marker in `RandomState`-seed order. A component insert moves
+        // the entity into the `SettlementMigrant` archetype, whose dense-array
+        // order IS the insertion order — so a seed-dependent insertion order
+        // permuted hecs query iteration order from this tick on. Under scarcity
+        // that permutation flipped a contended gather split and ultimately a
+        // need value: a15 diverged at tick 2251 (needs), first observable in
+        // inventory at tick 489 and in raw query order at tick 9. The earlier
+        // "order-independent" claim was true for the per-entity VALUE but false
+        // for archetype LAYOUT. Sort by the stable `AgentId` before applying so
+        // the insertion order — and thus all downstream query iteration — is
+        // seed-independent. `migrant_clear` is a `Vec` built in query order, so
+        // it stays deterministic once query order is restored by this fix.
+        let mut migrant_tag_sorted: Vec<(AgentId, hecs::Entity)> = settlement_migrant_tag
+            .iter()
+            .filter_map(|&e| world.get::<&Agent>(e).ok().map(|a| (a.id, e)))
+            .collect();
+        migrant_tag_sorted.sort_by_key(|(id, _)| *id);
+        for (_, e) in migrant_tag_sorted {
+            let _ = world.insert_one(e, SettlementMigrant);
         }
         for e in &migrant_clear {
             let _ = world.remove_one::<SettlementMigrant>(*e);
