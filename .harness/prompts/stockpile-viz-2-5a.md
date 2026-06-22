@@ -1,0 +1,221 @@
+# Direction-2 slice 2-5a — settlement stockpile Food, visible in-game
+
+> Repo: hyunlord/new-world · Branch: lead/main · Expected HEAD: 990bf8c6
+> Tier: --quick (sim-bridge .rs + GDScript + locale; NO sim-core/sim-systems/sim-engine).
+> First VISUAL slice of the supply chain: surface stockpile Food (additive to the existing
+> settlement snapshot) → display it per-settlement on the map.
+
+## ⚠️ Scope is LOCKED — do not expand ⚠️
+
+- Additive ONLY. Do NOT rename or reorder any existing snapshot dict key.
+- Food ONLY (Water/Wood/Stone are not stocked and are out of scope).
+- NO sim-core / sim-systems / sim-engine change. NO new FFI `#[func]` method.
+- NO carry visuals (2-5b), NO Deposit/Consume EventBus events or feed (2-5c).
+- Do NOT touch the existing `RESOURCE_LABELS` array in `hud_status_panel.gd` or any
+  other unrelated hardcoded string.
+- NO ENV-BYPASS. settlement regression failure → STOP + report.
+
+## Section 1: Implementation Intent
+
+2-2 (gather `e49aaaab`), 2-3a (deposit `473dc432`) and 2-4 (consume `990bf8c6`) all shipped
+harness-verified but INVISIBLE — the player cannot see the stockpile. This slice surfaces the
+settlement Food reserve so the player SEES it fill (deposit) and drain (famine consume) live —
+the first in-game confirmation of the whole 2-2→2-3a→2-4 chain. Smallest visible slice: a single
+number (Food) per settlement, riding the EXISTING settlement-snapshot path. Purely additive — one
+new row field, one new parallel `PackedInt32Array` key — every current snapshot consumer keeps
+working unchanged.
+
+## Step-0 verified facts (already confirmed against HEAD 990bf8c6 — do NOT re-litigate)
+
+- `Settlement.stockpile: BTreeMap<ResourceKind, u32>`
+  (`rust/crates/sim-core/src/components/settlement.rs:134`). Value is **u32**.
+- `ResourceKind` enum (`Food < Water < Wood < Stone`) lives in
+  `sim_core::components` (`resource_kind.rs:28`); `ResourceKind::Food` is variant 0.
+- `ResourceKind` is **NOT** currently imported in `world_node.rs`. Add it to the existing
+  `use sim_core::components::{ … };` block at lines 39–42.
+- `SettlementSnapshotRow` (`world_node.rs:2017`) derives
+  `#[derive(Debug, Clone, Copy, PartialEq, Eq)]` — `i32 food_stock` is Eq-safe (i32 is `Eq`).
+  It currently has 7 fields: `entity_bits, settlement_id, centroid_x, centroid_y, member_count,
+  formation_x, formation_y`.
+- `collect_settlement_snapshot(world, settlements)` (`world_node.rs:2049`) iterates
+  `settlements.values()`, **skips any settlement with 0 resolvable members** (`count == 0`
+  → `continue`), then `rows.sort_by_key(|r| r.settlement_id)`.
+- `settlement_rows_to_dict` (`world_node.rs:2106`) currently builds **7** parallel arrays
+  (`ids, settlement_ids, centroid_xs, centroid_ys, member_counts, formation_xs, formation_ys`).
+  The doc-comment above it (lines 2096–2105) stale-says "Five parallel `PackedArray`s" / lists 5
+  keys — when you add the 8th array, fix that doc to reflect 8 arrays + the `food_stocks` key.
+- `get_settlement_snapshot` (`world_node.rs:411`) delegates to collector + dict — **no change**.
+- sim-bridge has ZERO `#[test]` and is gdext (cdylib+rlib); FFI dict path needs a Godot runtime
+  and is NOT headless-testable. The collector (`collect_settlement_snapshot`) is a pure `pub fn`
+  returning `Vec<SettlementSnapshotRow>` and IS testable from **sim-test** (which has
+  `sim-bridge = { path = "../sim-bridge" }`). The precedent is
+  `rust/crates/sim-test/tests/harness_settlement_marker_fixed.rs`, which imports
+  `use sim_bridge::ffi::{collect_settlement_snapshot, SettlementSnapshotRow};` and builds
+  settlements via the real bootstrap. Mirror it.
+- GDScript: the always-visible on-map settlement marker is created in
+  `scripts/ui/world_renderer.gd::_update_settlement_furniture()` (line 519) — a `Sprite2D` per
+  settlement keyed by `ids[i]` in `_furniture_sprites`, positioned at the formation tile
+  (`formation_xs/ys`). The settlement_overview_renderer.gd disc is overview-zoom-ONLY (hidden at
+  close zoom), so the label belongs in world_renderer, riding the existing create/update/reap loop.
+- Locale: `HUD_*` keys live in `localization/en/ui.json` and `localization/ko/ui.json` (flat,
+  tab-indented `{ "KEY": "value" }`). `HUD_STOCKPILE_FOOD` does NOT exist yet (verified). The
+  compile tool `python3 tools/localization_compile.py --project-root .` regenerates
+  `localization/compiled/{en,ko}.json`, `localization/key_registry.json`,
+  `localization/key_owners.json` (and possibly `manifest.json`) — do NOT hand-edit those; run the
+  tool.
+
+## Section 2: What to Build
+
+Authorized files (exhaustive — do NOT create or modify any file outside this list):
+
+- `rust/crates/sim-bridge/src/ffi/world_node.rs` — additive field + collector + dict + doc.
+- `rust/crates/sim-test/tests/harness_settlement_food_stock.rs` — NEW cargo covering harness.
+- `localization/en/ui.json` — add `HUD_STOCKPILE_FOOD`.
+- `localization/ko/ui.json` — add `HUD_STOCKPILE_FOOD`.
+- `localization/compiled/en.json` — regenerated by the compile tool.
+- `localization/compiled/ko.json` — regenerated by the compile tool.
+- `localization/key_registry.json` — regenerated by the compile tool.
+- `localization/key_owners.json` — regenerated by the compile tool.
+- `localization/manifest.json` — only if the compile tool rewrites it.
+- `scripts/ui/world_renderer.gd` — per-settlement Food label.
+- `scripts/test/stockpile_viz_2_5a/` (NEW dir) — OPTIONAL Godot-headless node-proof harness
+  `harness_food_label_a*.gd` (the pipeline auto-runs `scripts/test/<feature>/harness_*.gd`); add
+  only if it cleanly proves the Label node + text, otherwise omit (Visual/VLM covers the GDScript).
+
+### T1 — sim-bridge: extend the settlement snapshot (additive)
+`rust/crates/sim-bridge/src/ffi/world_node.rs`:
+- Add `ResourceKind` to the `use sim_core::components::{ … };` import block.
+- `SettlementSnapshotRow`: add `pub food_stock: i32,` with a doc line
+  ("Settlement `stockpile` Food count (`ResourceKind::Food`), 0 when none stocked.").
+- `collect_settlement_snapshot`: in the `rows.push(SettlementSnapshotRow { … })` block populate
+  ```rust
+  food_stock: settlement
+      .stockpile
+      .get(&ResourceKind::Food)
+      .copied()
+      .unwrap_or(0) as i32,
+  ```
+  Keep the `if count == 0 { continue; }` skip and the trailing `rows.sort_by_key(|r| r.settlement_id)`.
+- `settlement_rows_to_dict`: add a parallel `let mut food_stocks = PackedInt32Array::new();`,
+  `food_stocks.resize(n);`, set `food_stocks[i] = row.food_stock;` inside the per-row loop, and
+  `dict.set("food_stocks", food_stocks);` after the loop. Do NOT rename/reorder existing keys.
+  Update the function's doc-comment to say 8 arrays and list the `food_stocks` key.
+
+### T2 — locale
+- Add `"HUD_STOCKPILE_FOOD": "Food"` to `localization/en/ui.json` (near the other `HUD_`/`ALERT_HUD_`
+  entries; keep the file's tab indentation and valid JSON).
+- Add `"HUD_STOCKPILE_FOOD": "식량"` to `localization/ko/ui.json` at the matching spot.
+- Run `python3 tools/localization_compile.py --project-root .` and confirm it exits 0 and that
+  `HUD_STOCKPILE_FOOD` appears in `localization/compiled/en.json` and `compiled/ko.json`.
+
+### T3 — GDScript: per-settlement Food label (depends on T1, T2)
+`scripts/ui/world_renderer.gd::_update_settlement_furniture()`:
+- Read `var foods: PackedInt32Array = snap.get("food_stocks", PackedInt32Array())` alongside the
+  existing `ids`/`formation_xs`/`formation_ys` reads.
+- Add a parallel `var _furniture_labels: Dictionary = {}` (sibling of `_furniture_sprites`).
+- In the per-settlement loop, create/update a `Label` keyed by `entity_id`: on first sight
+  `Label.new()` + `add_child` (z_index above `Z_FURNITURE`), each frame set
+  `label.text = Locale.ltr("HUD_STOCKPILE_FOOD") + " " + str(food)` (where
+  `food = foods[i] if i < foods.size() else 0` — defensive against a short/missing array; if
+  `food_stocks` is absent, skip the label rather than erroring), and position it just above the
+  marker (reuse the `px, py` already computed for the sprite; a small fixed vertical offset above
+  the sprite is the on-map-marker convention — world-space markers position by world pixels, the
+  "no manual offsets" rule is for HUD panels, not map labels).
+- Reap the label in the same stale-key loop that reaps `_furniture_sprites` (queue_free + erase
+  from `_furniture_labels`).
+- The visible word MUST come from `Locale.ltr("HUD_STOCKPILE_FOOD")` — never a hardcoded string,
+  never Godot `tr()`. The number is GDScript-side `str(food)`.
+
+## Section 3: Data crossing the boundary
+
+Rust → GDScript only: one new `PackedInt32Array` (`food_stocks`) in the existing settlement
+snapshot dict, length always `== rows.len()` (parallel-array invariant). Nothing crosses back.
+
+## Section 4: Dispatch Plan
+
+| # | Ticket | File | Lang | Depends |
+|---|--------|------|:----:|:-------:|
+| T1 | Snapshot food_stock (field+collector+dict+doc) | sim-bridge world_node.rs | Rust (gdext) | — |
+| T2 | Locale HUD_STOCKPILE_FOOD en+ko + compile | localization/ | data | — |
+| T3 | Per-settlement Food label | scripts/ui/world_renderer.gd | GDScript | T1,T2 |
+
+## Section 5: Localization Checklist
+
+| Key | File | en | ko |
+|-----|------|----|----|
+| `HUD_STOCKPILE_FOOD` | `localization/{en,ko}/ui.json` | `Food` | `식량` |
+
+- Confirm the key did not already exist (verified absent at authoring). `ko/` must not be empty.
+- After adding, run the compile tool; confirm `Locale.ltr("HUD_STOCKPILE_FOOD")` resolves to the
+  value (not the literal key).
+
+## Section 6: Verification & Harness
+
+**Gate:** `cd rust && cargo test --workspace && cargo clippy --workspace -- -D warnings`
+
+**New covering harness** (cargo, in sim-test) — `harness_settlement_food_stock.rs`:
+- Import `use sim_bridge::ffi::{collect_settlement_snapshot, SettlementSnapshotRow};` (mirror
+  `harness_settlement_marker_fixed.rs`).
+- Build an engine where ≥1 settlement forms with ≥1 resolvable member (use the same bootstrap +
+  building-placement + `run_ticks` pattern as the marker harness, OR construct `resources.settlements`
+  + spawn a member `(Agent, Position)` directly — remember the collector SKIPS 0-member settlements).
+- Assertion A1 — **food_stock accurate**: inject `stockpile.insert(ResourceKind::Food, N)` into one
+  settlement; assert that settlement's row `food_stock == N`.
+- Assertion A2 — **zero when none stocked**: a settlement with no Food in `stockpile` yields
+  `food_stock == 0`.
+- Assertion A3 — **only Food counted**: insert Water/Wood/Stone too; `food_stock` reflects only Food.
+- Assertion A4 — **determinism / parallel-array invariant**: rows stay sorted by `settlement_id`;
+  (and if practical) every row carries a `food_stock` value (length parity with member_count etc.).
+- Name tests `harness_food_stock_*` so the suite picks them up.
+
+**Regression suite must stay green** (no sim logic changed):
+`harness_settlements_zero_regression`, `harness_membership_belonging`, gather (2-2), deposit
+(2-3a), consume (2-4), lockstep ×2. **settlement regression failure → STOP + report.**
+
+**Additional checks:**
+- Smoke: no existing snapshot dict key renamed/reordered; `food_stocks` length == `settlement_ids` length.
+- `grep -rn '"[A-Z].*"' <new rust files> | grep -v test` → 0 UI-string hits in production Rust.
+- `grep -rn '\.unwrap()' <new rust files> | grep -v test` → 0 in production Rust.
+- GDScript: the label routes through `Locale.ltr`, no hardcoded visible string, no `tr()`.
+
+## Section 7: 인게임 확인사항 + 구현 후 정리 보고 (한글)
+
+**인게임 확인사항:**
+- 각 정착지 마커 근처에 Food(식량) 비축 수치가 표시되는가.
+- 시간이 지나며 그 수치가 차오르는가(줍기→적재 — 2-3a).
+- 기근(지면 food 부족) 때 그 수치가 줄어드는가(비축 소비 — 2-4). → 보급 사슬 전체가 한 화면에서 보임.
+- 라벨이 언어 ko일 때 "식량", en일 때 "Food"로 뜨는가.
+- 기존 정착지 마커·다른 패널이 그대로 정상인가(키 추가가 기존 표시를 깨지 않음). 콘솔 에러·FPS 영향 없음.
+
+**구현 후 정리 보고 형식:**
+
+```
+## 구현 완료 보고 (slice 2-5a 비축 시각화)
+
+### 구현 의도
+세 슬라이스(줍기·적재·소비)가 harness로만 검증돼 안 보였음 → 정착지 Food 비축을 화면에 노출.
+
+### 구현 내용
+스냅샷에 food_stocks 추가(additive) + GDScript 정착지별 Food 라벨 + Locale 키. 생성/수정 파일.
+
+### 구현 방법
+SettlementSnapshotRow.food_stock(stockpile Food u32→i32) → settlement_rows_to_dict food_stocks
+PackedInt32Array(병렬, 기존 키 불변) → world_renderer가 마커 옆에 Locale.ltr 라벨로 표시. sim-core/systems 미변경.
+
+### 기능 설명
+정착지 Food 비축이 마커 옆에 보이고, 적재로 차고 기근 소비로 준다 — 공급 사슬을 눈으로 확인.
+
+### 변경된 파일 목록
+sim-bridge world_node.rs + localization(en/ko/compiled/registry/owners) + scripts/ui/world_renderer.gd
++ sim-test harness_settlement_food_stock.rs.
+
+### 확인된 제한사항
+Food만(Water·Wood·Stone 미표시) / carry viz 2-5b / Deposit·Consume 이벤트 2-5c 미포함.
+
+### Harness 결과
+harness_food_stock_*(collector food_stock 정확/0/Food만/결정론) + 회귀(settlements_zero/membership/
+gather/deposit/consume/lockstep) 통과. (GDScript 라벨은 Visual/인게임으로 확인.)
+
+### Governance chain
+990bf8c6 → 2-5a
+```

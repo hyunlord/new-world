@@ -38,7 +38,7 @@ use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Inventory, Memory, Position,
-    SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
+    ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
@@ -2031,6 +2031,10 @@ pub struct SettlementSnapshotRow {
     pub formation_x: i32,
     /// `Settlement::formation_tile.1` — the FIXED formation-anchor tile-y.
     pub formation_y: i32,
+    /// Settlement `stockpile` Food count (`ResourceKind::Food`), 0 when none
+    /// stocked. Additive Direction-2 slice 2-5a field — surfaces the reserve
+    /// the gather→deposit→consume chain (2-2/2-3a/2-4) fills and drains.
+    pub food_stock: i32,
 }
 
 /// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
@@ -2084,6 +2088,11 @@ pub fn collect_settlement_snapshot(
             member_count: count,
             formation_x: settlement.formation_tile.0 as i32,
             formation_y: settlement.formation_tile.1 as i32,
+            food_stock: settlement
+                .stockpile
+                .get(&ResourceKind::Food)
+                .copied()
+                .unwrap_or(0) as i32,
         });
     }
     // HashMap iteration order is not stable run-to-run; sort by the unique
@@ -2095,7 +2104,7 @@ pub fn collect_settlement_snapshot(
 
 /// Marshal a [`SettlementSnapshotRow`] slice into the FFI dictionary
 /// shape consumed by `WorldRenderer._update_settlement_furniture`.
-/// Five parallel `PackedArray`s, lengths always equal to `rows.len()`.
+/// Eight parallel `PackedArray`s, lengths always equal to `rows.len()`.
 ///
 /// Keys:
 /// - `ids`: `PackedInt64Array` — `entity_bits` per row.
@@ -2103,6 +2112,9 @@ pub fn collect_settlement_snapshot(
 /// - `centroid_xs`: `PackedInt32Array` — tile-x centroid.
 /// - `centroid_ys`: `PackedInt32Array` — tile-y centroid.
 /// - `member_counts`: `PackedInt32Array` — resolvable member count.
+/// - `formation_xs`: `PackedInt32Array` — fixed formation-anchor tile-x.
+/// - `formation_ys`: `PackedInt32Array` — fixed formation-anchor tile-y.
+/// - `food_stocks`: `PackedInt32Array` — `stockpile` Food count (slice 2-5a).
 fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     let n = rows.len();
     let mut ids = PackedInt64Array::new();
@@ -2112,6 +2124,7 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     let mut member_counts = PackedInt32Array::new();
     let mut formation_xs = PackedInt32Array::new();
     let mut formation_ys = PackedInt32Array::new();
+    let mut food_stocks = PackedInt32Array::new();
     ids.resize(n);
     settlement_ids.resize(n);
     centroid_xs.resize(n);
@@ -2119,6 +2132,7 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     member_counts.resize(n);
     formation_xs.resize(n);
     formation_ys.resize(n);
+    food_stocks.resize(n);
     for (i, row) in rows.iter().enumerate() {
         ids[i] = row.entity_bits as i64;
         settlement_ids[i] = row.settlement_id as i32;
@@ -2127,6 +2141,7 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
         member_counts[i] = row.member_count as i32;
         formation_xs[i] = row.formation_x;
         formation_ys[i] = row.formation_y;
+        food_stocks[i] = row.food_stock;
     }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
@@ -2136,6 +2151,7 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     dict.set("member_counts", member_counts);
     dict.set("formation_xs", formation_xs);
     dict.set("formation_ys", formation_ys);
+    dict.set("food_stocks", food_stocks);
     dict
 }
 

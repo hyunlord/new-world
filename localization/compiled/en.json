@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5135,
+    "active_key_count": 5136,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5140,
+    "key_count": 5141,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1267,6 +1267,7 @@
     "HEXACO_H_NAME": "Honesty-Humility",
     "HEXACO_O_NAME": "Openness",
     "HEXACO_X_NAME": "Extraversion",
+    "HUD_STOCKPILE_FOOD": "Food",
     "ITEM_TEMPLATE_AXE": "Axe",
     "ITEM_TEMPLATE_BERRIES": "Berries",
     "ITEM_TEMPLATE_COOKED_MEAT": "Cooked Meat",

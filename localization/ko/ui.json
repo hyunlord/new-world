@@ -370,6 +370,7 @@
 	"UI_RES_FOOD_FMT": "식:{n}",
 	"UI_RES_WOOD_FMT": "목:{n}",
 	"UI_RES_STONE_FMT": "석:{n}",
+	"HUD_STOCKPILE_FOOD": "식량",
 	"ALERT_HUD_LOW_FOOD": "식량 부족",
 	"ALERT_HUD_INJURED_FMT": "부상자 {n}명",
 	"ALERT_HUD_TECH_RISK_FMT": "기술 소실 위험 {n}건",

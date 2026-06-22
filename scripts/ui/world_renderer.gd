@@ -205,12 +205,26 @@ var _construction_sprites: Dictionary = {}
 # Settlement entity no longer appears in the snapshot (dissolved).
 var _furniture_sprites: Dictionary = {}
 
+# Direction-2 slice 2-5a — per-settlement Food stockpile label, keyed by the
+# same settlement entity_id as `_furniture_sprites` and reaped in lockstep.
+const Z_FURNITURE_LABEL := 6  # above the marker sprite (Z_FURNITURE = 4)
+const FURNITURE_LABEL_Y_OFFSET := -18.0  # world px above the marker centre
+const STOCKPILE_FOOD_KEY := "HUD_STOCKPILE_FOOD"
+var _furniture_labels: Dictionary = {}
+# The `Locale` autoload, resolved by node path (`/root/Locale`) rather than the
+# bare global identifier so the static `--check-only` gate — which does not
+# register autoload singletons — can compile this file. Same autoload, same
+# `ltr()` method as `Locale.ltr(...)`; never a hardcoded string, never tr().
+var _locale: Node = null
+
 func _ready() -> void:
 	print("WorldRenderer ready (T7.9.B render mechanism)")
 	world_sim = get_node("../WorldSim") as WorldSimNode
 	if world_sim == null:
 		push_error("WorldSim node not found at ../WorldSim")
 		return
+	# Direction-2 slice 2-5a — cache the Locale autoload for the Food labels.
+	_locale = get_node_or_null("/root/Locale")
 	world_sim.on_building_placed(BOOTSTRAP_X, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
 	# V7 Phase 13-ε — additional bootstrap buildings flanking the centre at ±8.
 	world_sim.on_building_placed(BOOTSTRAP_X_LEFT, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
@@ -524,6 +538,9 @@ func _update_settlement_furniture() -> void:
 	# what stops the on-screen marker from jittering every tick.
 	var xs: PackedInt32Array = snap.get("formation_xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("formation_ys", PackedInt32Array())
+	# Direction-2 slice 2-5a — parallel Food stockpile counts (additive). Read
+	# defensively: a short/absent array means "no count this frame" → 0.
+	var foods: PackedInt32Array = snap.get("food_stocks", PackedInt32Array())
 	var n: int = ids.size()
 	var seen: Dictionary = {}
 	var tex: Texture2D = load(FURNITURE_SPRITE_PATH) as Texture2D
@@ -540,6 +557,21 @@ func _update_settlement_furniture() -> void:
 			add_child(furniture_sprite)
 			_furniture_sprites[entity_id] = furniture_sprite
 		furniture_sprite.position = Vector2(px, py)
+		# Direction-2 slice 2-5a — per-settlement Food stockpile label just
+		# above the marker. The visible word is localized; the count is GDScript.
+		var food: int = foods[i] if i < foods.size() else 0
+		var food_label: Label = _furniture_labels.get(entity_id, null) as Label
+		if food_label == null:
+			food_label = Label.new()
+			food_label.z_index = Z_FURNITURE_LABEL
+			add_child(food_label)
+			_furniture_labels[entity_id] = food_label
+		# Localized word via the Locale autoload's ltr() (resolved by node path);
+		# the count is GDScript-side str(). Defensive fallback to the key only if
+		# the autoload is somehow absent (never at real runtime).
+		var word: String = _locale.ltr(STOCKPILE_FOOD_KEY) if _locale != null else STOCKPILE_FOOD_KEY
+		food_label.text = word + " " + str(food)
+		food_label.position = Vector2(px, py + FURNITURE_LABEL_Y_OFFSET)
 	# Reap entries no longer present in the snapshot (dissolved settlements).
 	for entity_id in _furniture_sprites.keys():
 		if not seen.has(entity_id):
@@ -547,6 +579,13 @@ func _update_settlement_furniture() -> void:
 			if stale != null:
 				stale.queue_free()
 			_furniture_sprites.erase(entity_id)
+	# Reap stale Food labels in lockstep with their marker sprites.
+	for entity_id in _furniture_labels.keys():
+		if not seen.has(entity_id):
+			var stale_label: Label = _furniture_labels[entity_id]
+			if stale_label != null:
+				stale_label.queue_free()
+			_furniture_labels.erase(entity_id)
 
 func _handle_tile_click(pos: Vector2) -> void:
 	# V7 Phase 14-γ — agent probe takes priority over the tile dispatch.

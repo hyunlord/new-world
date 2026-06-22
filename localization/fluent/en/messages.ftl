@@ -161,6 +161,7 @@ ALERT_FOOD_LOW = Food shortage
 ALERT_HUD_INJURED_FMT = {n} injured
 ALERT_HUD_LOW_FOOD = Low food
 ALERT_HUD_TECH_RISK_FMT = {n} tech at risk
+HUD_STOCKPILE_FOOD = Food
 ALERT_HUNGER = Hungry - food low
 ALERT_HUNGRY = Hungry
 ALERT_HUNGRY_DETAIL = Low food
