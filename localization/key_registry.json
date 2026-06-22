@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5136,
-  "key_count": 5141,
+  "active_key_count": 5138,
+  "key_count": 5143,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -1229,6 +1229,8 @@
     "HEXACO_H_NAME": 1003,
     "HEXACO_O_NAME": 1004,
     "HEXACO_X_NAME": 1005,
+    "HUD_FEED_STOCKPILE_CONSUME": 5141,
+    "HUD_FEED_STOCKPILE_DEPOSIT": 5142,
     "HUD_STOCKPILE_FOOD": 5140,
     "ITEM_TEMPLATE_AXE": 4239,
     "ITEM_TEMPLATE_BERRIES": 4240,
@@ -10285,7 +10287,9 @@
     "UI_MEMORY_RECALL_TRIGGER_SIMILARITY",
     "UI_RELATIONSHIP_PAIR_ROW",
     "UI_RELATIONSHIP_PANEL_TITLE",
-    "HUD_STOCKPILE_FOOD"
+    "HUD_STOCKPILE_FOOD",
+    "HUD_FEED_STOCKPILE_CONSUME",
+    "HUD_FEED_STOCKPILE_DEPOSIT"
   ],
   "removed_key_count": 5,
   "removed_keys": [

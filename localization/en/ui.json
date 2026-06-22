@@ -371,6 +371,8 @@
 	"UI_RES_WOOD_FMT": "W:{n}",
 	"UI_RES_STONE_FMT": "S:{n}",
 	"HUD_STOCKPILE_FOOD": "Food",
+	"HUD_FEED_STOCKPILE_DEPOSIT": "Settlement %d stored %d Food",
+	"HUD_FEED_STOCKPILE_CONSUME": "Settlement %d used %d Food (famine)",
 	"ALERT_HUD_LOW_FOOD": "Low food",
 	"ALERT_HUD_INJURED_FMT": "{n} injured",
 	"ALERT_HUD_TECH_RISK_FMT": "{n} tech at risk",
