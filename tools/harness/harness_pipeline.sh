@@ -87,6 +87,27 @@ PROGRESS_FILE="$HARNESS_DIR/progress/$FEATURE/progress.md"
 
 mkdir -p "$PLAN_DIR" "$RESULT_DIR" "$REVIEW_DIR" "$EVIDENCE_DIR"
 
+# --- Fresh-run hygiene: clear prior-run attempt residue ----------------------
+# Cross-run stale-residue contamination root cause (2026-06-24): the results dir
+# accumulates *_attempt<N>.* files across pipeline invocations for the same
+# feature. Two downstream consumers select by HIGHEST attempt number / file
+# COUNT rather than by current run, so a prior run's attempt-3 files poison a
+# fresh run:
+#   1. Regression Guard reads the highest-numbered gate_result_attempt*.txt
+#      → a stale prior-run failure surfaces as a false NEW regression.
+#   2. generate_report.sh counts gen_result_attempt*.md (CODE_ATTEMPTS=count)
+#      → a clean attempt-1 APPROVE is mis-scored as "attempt 3" with a bogus
+#        penalty (91 → 82), tripping the pre-commit gate.
+# Clearing per-attempt artifacts at run start makes every consumer read ONLY
+# this run's files. Plan/review/evidence dirs are likewise reset. Cumulative
+# audit (attempts/, audit logs, baselines) is intentionally NOT touched.
+rm -f "$RESULT_DIR"/gen_result_attempt*.md "$RESULT_DIR"/gate_result_attempt*.txt \
+      "$RESULT_DIR"/harness_result_attempt*.txt "$RESULT_DIR"/postcode_ffi_attempt*.txt \
+      "$RESULT_DIR"/generator_log_attempt*.txt "$RESULT_DIR"/generator_input_attempt*.md \
+      "$RESULT_DIR"/generator_result_attempt*.md "$RESULT_DIR"/gen_result_latest.md \
+      "$REVIEW_DIR"/review_attempt*.md "$REVIEW_DIR"/evaluator_input_attempt*.md \
+      "$REVIEW_DIR"/review_latest.md "$REVIEW_DIR"/verdict 2>/dev/null || true
+
 # --- Counters ---
 PLAN_ATTEMPT=0
 MAX_PLAN_ATTEMPTS=2
@@ -2326,8 +2347,11 @@ parse_verdict() {
         *)
             log "WARNING: Could not parse verdict from review. Raw last 5 lines:"
             tail -5 "$review_file" | while IFS= read -r line; do log "  $line"; done
-            log "Treating as RE-CODE (safe default — will retry)"
-            return 1
+            # Distinct code 4 = UNPARSEABLE (evaluator output-quality /
+            # environmental), NOT a code RE-CODE signal. The caller retries the
+            # Claude evaluator before falling back to RE-CODE (see main loop).
+            log "Verdict UNPARSEABLE — caller will retry evaluator before RE-CODE default"
+            return 4
             ;;
     esac
 }
@@ -2659,6 +2683,29 @@ Quality review: $PLAN_DIR/quality_review_latest.md"
 
             local verdict_code=0
             parse_verdict || verdict_code=$?
+
+            # Evaluator robustness (2026-06-24): an UNPARSEABLE verdict (code 4)
+            # is an evaluator output-quality / environmental failure (e.g. Codex
+            # 600s timeout → Claude fallback emits a verdict line the parser
+            # can't read), NOT a code-quality RE-CODE signal. Treating it as
+            # RE-CODE burns a code attempt and can cascade to a spurious
+            # RE-PLAN → FATAL even when the mechanical gate + regression guard
+            # are green (root incident: return-home-deposit-2-3b, 3× UNKNOWN →
+            # FATAL while code was APPROVE-clean). Retry the Claude evaluator a
+            # few times for a parseable verdict before the RE-CODE default;
+            # worst case (still unparseable) is identical to the old behaviour.
+            local _eval_parse_tries=0
+            while [[ $verdict_code -eq 4 && $_eval_parse_tries -lt ${EVAL_PARSE_RETRIES:-2} ]]; do
+                _eval_parse_tries=$((_eval_parse_tries + 1))
+                log "Evaluator verdict UNPARSEABLE — retrying Claude evaluator ($_eval_parse_tries/${EVAL_PARSE_RETRIES:-2})"
+                run_evaluator
+                verdict_code=0
+                parse_verdict || verdict_code=$?
+            done
+            if [[ $verdict_code -eq 4 ]]; then
+                log "Evaluator verdict still UNPARSEABLE after ${EVAL_PARSE_RETRIES:-2} retries — treating as RE-CODE (safe default)"
+                verdict_code=1
+            fi
 
             # Plan Assertion 10 gate: if the anti-circular validator flagged
             # the evidence as non-conforming, force RE-CODE regardless of the
