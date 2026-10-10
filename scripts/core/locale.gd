@@ -13,9 +13,14 @@ extends Node
 #   key_count()        returns the number of loaded keys.
 
 var _strings: Dictionary = {}
-var _current_lang: String = "en"
+var _current_lang: String = "ko"
 
 func _ready() -> void:
+	var file: FileAccess = FileAccess.open("res://localization/manifest.json", FileAccess.READ)
+	if file != null:
+		var parsed: Variant = JSON.parse_string(file.get_as_text())
+		if parsed is Dictionary:
+			_current_lang = str(parsed.get("default_locale", "ko"))
 	_load_lang(_current_lang)
 
 func _load_lang(lang: String) -> void:

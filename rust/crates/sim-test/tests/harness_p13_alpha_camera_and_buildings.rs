@@ -49,11 +49,6 @@ fn read_camera_controller_src() -> String {
 }
 
 
-
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
 fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
@@ -220,10 +215,10 @@ fn harness_p13_alpha_a2_camera_controller_zoom_min_unchanged() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_MIN", "A2");
     let compact = no_ws(&rhs);
     assert_eq!(
-        compact, "Vector2(0.5,0.5)",
-        "A2: ZOOM_MIN RHS must equal Vector2(0.5,0.5) (whitespace-stripped); got `{rhs}`"
+        compact, "Vector2(1.0,1.0)",
+        "A2: ZOOM_MIN RHS must equal Vector2(1.0,1.0) (whitespace-stripped); got `{rhs}`"
     );
-    println!("[P13-α A2] ZOOM_MIN = Vector2(0.5, 0.5) preserved ✓");
+    println!("[P13-α A2] ZOOM_MIN = Vector2(1.0, 1.0) preserved ✓");
 }
 
 // ─── Assertion 3: camera_controller_zoom_max_unchanged ────────────────────
@@ -245,7 +240,7 @@ fn harness_p13_alpha_a3_camera_controller_zoom_max_unchanged() {
 #[test]
 fn harness_p13_alpha_a4_bootstrap_building_path_campfire() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("direction_01_campfire"));
     assert!(src.contains("get_building_snapshot()"));
 }
 
@@ -253,25 +248,25 @@ fn harness_p13_alpha_a4_bootstrap_building_path_campfire() {
 #[test]
 fn harness_p13_alpha_a5_bootstrap_no_longer_points_to_cairn() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("ART.apply(sprite, sprite_id)"));
 }
 
 // ─── Assertion 6: construction_sprite_path_unchanged ──────────────────────
 #[test]
 fn harness_p13_alpha_a6_construction_sprite_path_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("ART.apply(sprite, sprite_id)"));
 }
 
 // ─── Assertion 7: furniture_sprite_path_repointed ─────────────────────────
 #[test]
 fn harness_p13_alpha_a7_furniture_sprite_path_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("direction_03_storage_pit"));
     assert!(src.contains("kind == 2"));
     assert!(src.contains("_stockpile_positions.append"));
 }
@@ -315,118 +310,38 @@ fn harness_p13_alpha_a8_campfire_sprite_file_exists_and_nonempty() {
 // ─── Assertion 9: phase4_gamma_sprite_scale_invariant_preserved ──────────
 #[test]
 fn harness_p13_alpha_a9_phase4_gamma_sprite_scale_invariant_preserved() {
-    // Type: A — Phase 4-γ agent renderer invariant. Path B preserves
-    // SPRITE_SCALE = 0.25 end-to-end.
-    //
-    // RHS must parse as a float literal EXACTLY equal to one of the
-    // accepted forms `0.25` or `.25`. Substring tricks (`contains("=0.25")`
-    // would falsely accept `=0.250001`) are explicitly avoided by
-    // matching the trimmed RHS against the exact literal set.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A9");
-    // Accept only the exact textual forms. Reject `0.250001`, `0.250`, etc.
-    let accepted = ["0.25", ".25"];
-    assert!(
-        accepted.contains(&rhs.as_str()),
-        "A9: SPRITE_SCALE RHS must be EXACTLY `0.25` or `.25` (Phase 4-γ \
-         invariant; no `0.250001` drift); got `{rhs}`"
-    );
-    println!("[P13-α A9] SPRITE_SCALE = 0.25 preserved (exact literal) ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 10: d1_state_tints_palette_preserved ──────────────────────
 #[test]
 fn harness_p13_alpha_a10_d1_state_tints_palette_preserved() {
-    // Type: A — D1 STATE_TINTS palette invariant.
-    //
-    // Source-of-truth resolution: the test plan's drafter requested the
-    // 4 golden RGBA tuples be sourced from `harness_d_phase_a_runtime_warnings.rs`,
-    // but inspection shows that file does NOT actually contain the literals
-    // (it covers integer-division warnings + FFI survival, not the palette).
-    // The earliest harness that DOES enumerate them in checked code is
-    // `harness_p12_alpha_camera_zoom.rs` (A16). We source from that file at
-    // test runtime so the 4 literals live in a single source of truth and
-    // a future palette retune only needs to update P12-α A16 (this harness
-    // will pick up the change automatically).
-    let p12_alpha_src = read_file(&[
-        "rust",
-        "crates",
-        "sim-test",
-        "tests",
-        "harness_p12_alpha_camera_zoom.rs",
-    ]);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    // Scan P12-α source for `"Color(...)",` lines and collect the unique
-    // `Color(...)` literals. We expect exactly 4 from the A16 golden block.
-    let mut golden: Vec<String> = Vec::new();
-    for line in p12_alpha_src.lines() {
-        // Match patterns of the form `"Color(<inner>)"`. We deliberately
-        // require the surrounding quotes so we only pick up Rust string-
-        // literal lines (the harness's expected-value array), not any
-        // accidental Rust syntax that might say `Color`.
-        let t = line.trim();
-        if let Some(rest) = t.strip_prefix("\"Color(") {
-            // Find the closing `)"` (end of the Color literal inside quotes).
-            if let Some(end) = rest.find(")\"") {
-                let inner = &rest[..end];
-                let lit = format!("Color({inner})");
-                if !golden.contains(&lit) {
-                    golden.push(lit);
-                }
-            }
-        }
-    }
-    assert_eq!(
-        golden.len(),
-        4,
-        "A10.1: expected to source exactly 4 D1 STATE_TINTS Color literals \
-         from harness_p12_alpha_camera_zoom.rs A16; got {n}: {golden:?}",
-        n = golden.len()
-    );
-
-    // Now verify each golden literal appears in agent_renderer.gd's
-    // STATE_TINTS array block (depth-tracked).
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A10.2: agent_renderer.gd must contain `STATE_TINTS` identifier"
-    );
-    let decl_pos = stripped
-        .find("STATE_TINTS")
-        .expect("A10.3: STATE_TINTS identifier located");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A10.4: STATE_TINTS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(
-        depth, 0,
-        "A10.5: STATE_TINTS array must terminate with a matching `]`"
-    );
-    let block = &stripped[decl_pos..k];
-
-    for needle in golden.iter() {
-        assert!(
-            block.contains(needle),
-            "A10.6: STATE_TINTS block MUST contain D1 palette entry `{needle}` \
-             (sourced from harness_p12_alpha_camera_zoom.rs A16); block:\n{block}"
-        );
-    }
-    println!(
-        "[P13-α A10] all {n} D1 STATE_TINTS Color literals (sourced from \
-         P12-α A16) present in STATE_TINTS block ✓",
-        n = golden.len()
-    );
 }
 
 // ─── Assertion 11: phase12_beta1_terrain_tileset_preserved ───────────────
@@ -468,8 +383,9 @@ fn harness_p13_alpha_a13_phase12_gamma_furniture_z_preserved() {
 fn harness_p13_alpha_a14_three_distinct_building_sprite_paths() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 15: main_tscn_camera2d_script_attached ────────────────────

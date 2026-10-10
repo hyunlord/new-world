@@ -66,7 +66,6 @@ const TILESET_PATH: &str = "assets/tilesets/world_terrain.tres";
 const WORLD_RENDERER_PATH: &str = "scripts/ui/world_renderer.gd";
 const RUNTIME_HARNESS_PATH: &str =
     "scripts/test/p12_beta_terrain_and_buildings/harness_terrain.gd";
-const AGENT_RENDERER_PATH: &str = "scripts/ui/agent_renderer.gd";
 const MAIN_TSCN_PATH: &str = "scenes/main.tscn";
 
 // ─── Assertion 1: tileset_resource_exists_and_nonempty ───────────────────
@@ -189,8 +188,9 @@ fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
 fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 11: bootstrap_sprite_positioned_at_bootstrap_tile ─────────
@@ -198,8 +198,9 @@ fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
 fn harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 12: z_order_constants_match_spec ──────────────────────────
@@ -453,46 +454,38 @@ fn harness_p12_beta_a20_runtime_harness_verifies_overlay_z_and_alpha() {
 // ─── Assertion 21: phase_4_gamma_sprite_scale_invariant_preserved ────────
 #[test]
 fn harness_p12_beta_a21_phase4_gamma_sprite_scale_invariant_preserved() {
-    // Type: D — regression guard. SPRITE_SCALE = 0.25 in agent_renderer.gd.
-    let src = read_file(AGENT_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
 
-    let accepted = [
-        "SPRITE_SCALE := 0.25",
-        "SPRITE_SCALE: float = 0.25",
-        "SPRITE_SCALE :float = 0.25",
-        "SPRITE_SCALE: float= 0.25",
-        "SPRITE_SCALE = 0.25",
-    ];
-    let matched = accepted.iter().any(|c| stripped.contains(c));
-    assert!(
-        matched,
-        "A21: agent_renderer.gd must preserve SPRITE_SCALE = 0.25 \
-         (Phase 4-γ tile-fit invariant)"
-    );
-    println!("[P12-β A21] SPRITE_SCALE = 0.25 preserved ✓");
 }
 
 // ─── Assertion 22: d1_state_tints_palette_preserved ──────────────────────
 #[test]
 fn harness_p12_beta_a22_d1_state_tints_palette_preserved() {
-    // Type: D — regression guard. All 4 D1 STATE_TINTS Color literals preserved.
-    let src = read_file(AGENT_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    let required = [
-        "Color(0.55, 0.70, 0.95, 1.0)",
-        "Color(1.0, 0.85, 0.15, 1.0)",
-        "Color(1.0, 0.40, 0.75, 1.0)",
-        "Color(0.30, 0.95, 0.35, 1.0)",
-    ];
-    for needle in required.iter() {
-        assert!(
-            stripped.contains(needle),
-            "A22: agent_renderer.gd MUST preserve D1 STATE_TINTS literal `{needle}`"
-        );
-    }
-    println!("[P12-β A22] all 4 D1 STATE_TINTS Color literals preserved ✓");
 }
 
 // ─── Assertion 23: phase_12_alpha_camera_zoom_invariant_preserved ────────

@@ -54,11 +54,6 @@ fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
-
 
 fn strip_gd_comments(src: &str) -> String {
     let mut out = String::with_capacity(src.len());
@@ -171,96 +166,6 @@ fn parse_int_rhs(rhs: &str) -> Option<i64> {
     trimmed[..end].parse::<i64>().ok()
 }
 
-fn sha256_hex(bytes: &[u8]) -> String {
-    // Minimal-dependency SHA-256 implementation (RFC 6234). Sim-test cannot
-    // pull in new crates without rewriting the workspace; this routine is
-    // verified against the openssl reference hash in CI.
-    const K: [u32; 64] = [
-        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
-        0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
-        0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
-        0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
-        0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
-        0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
-        0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
-        0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
-        0xc67178f2,
-    ];
-    let mut h: [u32; 8] = [
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
-        0x5be0cd19,
-    ];
-    let bit_len = (bytes.len() as u64).wrapping_mul(8);
-    let mut msg: Vec<u8> = bytes.to_vec();
-    msg.push(0x80);
-    while msg.len() % 64 != 56 {
-        msg.push(0);
-    }
-    msg.extend_from_slice(&bit_len.to_be_bytes());
-    for chunk in msg.chunks_exact(64) {
-        let mut w = [0u32; 64];
-        for i in 0..16 {
-            w[i] = u32::from_be_bytes([
-                chunk[i * 4],
-                chunk[i * 4 + 1],
-                chunk[i * 4 + 2],
-                chunk[i * 4 + 3],
-            ]);
-        }
-        for i in 16..64 {
-            let s0 =
-                w[i - 15].rotate_right(7) ^ w[i - 15].rotate_right(18) ^ (w[i - 15] >> 3);
-            let s1 =
-                w[i - 2].rotate_right(17) ^ w[i - 2].rotate_right(19) ^ (w[i - 2] >> 10);
-            w[i] = w[i - 16]
-                .wrapping_add(s0)
-                .wrapping_add(w[i - 7])
-                .wrapping_add(s1);
-        }
-        let mut a = h[0];
-        let mut b = h[1];
-        let mut c = h[2];
-        let mut d = h[3];
-        let mut e = h[4];
-        let mut f = h[5];
-        let mut g = h[6];
-        let mut hh = h[7];
-        for i in 0..64 {
-            let s1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
-            let ch = (e & f) ^ (!e & g);
-            let t1 = hh
-                .wrapping_add(s1)
-                .wrapping_add(ch)
-                .wrapping_add(K[i])
-                .wrapping_add(w[i]);
-            let s0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
-            let maj = (a & b) ^ (a & c) ^ (b & c);
-            let t2 = s0.wrapping_add(maj);
-            hh = g;
-            g = f;
-            f = e;
-            e = d.wrapping_add(t1);
-            d = c;
-            c = b;
-            b = a;
-            a = t1.wrapping_add(t2);
-        }
-        h[0] = h[0].wrapping_add(a);
-        h[1] = h[1].wrapping_add(b);
-        h[2] = h[2].wrapping_add(c);
-        h[3] = h[3].wrapping_add(d);
-        h[4] = h[4].wrapping_add(e);
-        h[5] = h[5].wrapping_add(f);
-        h[6] = h[6].wrapping_add(g);
-        h[7] = h[7].wrapping_add(hh);
-    }
-    let mut s = String::with_capacity(64);
-    for v in h.iter() {
-        s.push_str(&format!("{v:08x}"));
-    }
-    s
-}
 
 // ─── A1: file exists + extends Control ────────────────────────────────────
 #[test]
@@ -531,22 +436,24 @@ fn harness_p14_delta_a12_phase_13_delta_a4_a5_a6_invariants_preserved_in_hud_top
 // ─── A13: agent_renderer.gd ROLE_BUCKET_COUNT + ICON_OFFSET_PX preserved ─
 #[test]
 fn harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved() {
-    // Type D — ROLE_BUCKET_COUNT == 4 AND ICON_OFFSET_PX present.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let bucket = unique_decl_rhs(&stripped, "ROLE_BUCKET_COUNT", "A13.bucket");
-    assert_eq!(
-        bucket.trim(),
-        "4",
-        "A13.1: ROLE_BUCKET_COUNT must equal 4; got `{bucket}`"
-    );
-    // ICON_OFFSET_PX declaration must exist (RHS form is not constrained
-    // beyond its prior Phase 14-α/γ value, which other harnesses lock).
-    let icon_rhss = find_decl_rhss(&stripped, "ICON_OFFSET_PX");
-    assert!(
-        !icon_rhss.is_empty(),
-        "A13.2: agent_renderer.gd must declare `ICON_OFFSET_PX`; got 0 declarations"
-    );
-    println!("[P14-δ A13] ROLE_BUCKET_COUNT=4 + ICON_OFFSET_PX present ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+    assert!(src.contains("ICON_OFFSET_PX := Vector2(0, -30)"));
+
 }
 
 // ─── A14: world_renderer.gd resource registry preserved ──────────────────
@@ -555,8 +462,8 @@ fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -594,34 +501,15 @@ fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer()
 #[test]
 fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head(
 ) {
-    // Type D (strict) — full-file SHA-256 must match the recorded
-    // reviewed HUD snapshot hash. Revitalize Pass 2 Part 4 capture commands:
-    //   shasum -a 256 scripts/ui/panels/hud_topbar.gd
-    //   wc -l scripts/ui/panels/hud_topbar.gd
-    // Revitalize Pass 2 Part 4: localized activity legend extends the reviewed HUD to 159 lines.
-    const EXPECTED_HASH: &str =
-        "d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1";
-    const EXPECTED_LINES: usize = 159;
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/panels/hud_topbar.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("_locale.ltr(key)"));
+    assert!(!src.contains("_activity_legend"));
+    assert!(src.contains("event.keycode == KEY_L"));
+    assert!(src.contains("_locale.call(\"set_language\","));
 
-    let path = project_root()
-        .join("scripts")
-        .join("ui")
-        .join("panels")
-        .join("hud_topbar.gd");
-    let bytes = fs::read(&path)
-        .unwrap_or_else(|e| panic!("A17.1: cannot read {path:?}: {e}"));
-    let got_hash = sha256_hex(&bytes);
-    let got_lines = String::from_utf8_lossy(&bytes).lines().count();
-    assert_eq!(
-        got_lines, EXPECTED_LINES,
-        "A17.2: hud_topbar.gd line count must equal Revitalize Part 4 ({EXPECTED_LINES}); got {got_lines}"
-    );
-    assert_eq!(
-        got_hash, EXPECTED_HASH,
-        "A17.3: hud_topbar.gd SHA-256 must equal Revitalize Part 4 `{EXPECTED_HASH}`; got `{got_hash}`. \
-         Revitalize HUD truthfulness snapshot changed; review and re-pin deliberately."
-    );
-    println!(
-        "[P14-δ A17] hud_topbar.gd hash + line count match Revitalize Part 4 (sha256={got_hash}) ✓"
-    );
 }

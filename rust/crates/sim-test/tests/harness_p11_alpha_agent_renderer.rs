@@ -389,25 +389,16 @@ fn harness_p11_alpha_no_state_component_defaults_idle() {
 // ── A12 — agent_renderer.gd enables MultiMesh.use_colors = true ─────────────
 #[test]
 fn harness_p11_alpha_agent_renderer_enables_use_colors() {
-    // Type: Type C invariant (static file substring). The MultiMesh must
-    // be configured with use_colors = true so set_instance_color() takes
-    // effect; if this flag is missing or false the entire tint feature is
-    // a no-op.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
-    let needle = "multi_mesh.use_colors = true";
-    assert!(
-        stripped.contains(needle),
-        "A12: scripts/ui/agent_renderer.gd must enable `{needle}` \
-         (state_tint requires per-instance color)"
-    );
-    // Negative check: the previous value `use_colors = false` must not
-    // also be present (would indicate a re-toggle bug).
-    assert!(
-        !stripped.contains("multi_mesh.use_colors = false"),
-        "A12: agent_renderer.gd must NOT also set `multi_mesh.use_colors = false`"
-    );
-    println!("[P11-α A12] agent_renderer.gd enables multi_mesh.use_colors = true ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }
 
 // ── A13 — agent_renderer.gd reads `states: PackedByteArray` from snapshot ───
@@ -483,91 +474,16 @@ fn harness_p11_alpha_agent_renderer_interpolates_positions() {
 // ── A15 — multi_mesh.set_instance_color(i, STATE_TINTS[...]) ────────────────
 #[test]
 fn harness_p11_alpha_agent_renderer_applies_state_tints() {
-    // Type: Type C invariant. The renderer must:
-    //   1. declare a STATE_TINTS palette covering 4 entries (Idle/Seeking/
-    //      Consuming(Agent)/Consuming(other)),
-    //   2. call multi_mesh.set_instance_color(i, STATE_TINTS[<tag>]) so
-    //      each agent's instance color reflects its state_tag.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A15.1: agent_renderer.gd must define a STATE_TINTS palette"
-    );
-    // Extract the STATE_TINTS array literal body — the slice between the
-    // opening `[` after `STATE_TINTS: Array = ` and its matching `]`. We
-    // use bracket-depth tracking so any future nested-array entry does not
-    // confuse the boundary scan. Color( occurrences in RECALL_CUE_TINT,
-    // COMBAT_CUE_TINT, and `_palette_for_id()` elsewhere in the file are
-    // therefore excluded — only the palette block itself is inspected.
-    let start_marker = "STATE_TINTS: Array = [";
-    let block_open = stripped.find(start_marker).unwrap_or_else(|| {
-        panic!(
-            "A15.2: STATE_TINTS palette must be declared as \
-             `STATE_TINTS: Array = [...]` (form not found in stripped source)"
-        )
-    });
-    let after_open = block_open + start_marker.len();
-    let tail = &stripped[after_open..];
-    let mut depth: i32 = 1;
-    let mut close_rel: Option<usize> = None;
-    for (idx, ch) in tail.char_indices() {
-        match ch {
-            '[' => depth += 1,
-            ']' => {
-                depth -= 1;
-                if depth == 0 {
-                    close_rel = Some(idx);
-                    break;
-                }
-            }
-            _ => {}
-        }
-    }
-    let close_rel = close_rel.unwrap_or_else(|| {
-        panic!("A15.3: STATE_TINTS array must be terminated with a matching `]`")
-    });
-    let tints_block = &tail[..close_rel];
-
-    // Exactly four `Color(...)` entries — one per locked state_tag value
-    // (0=Idle, 1=Seeking, 2=Consuming(Agent), 3=Consuming(other)). With
-    // exactly 4 entries and an index clamped to 0..=3 (asserted below),
-    // every state_tag is guaranteed to land on an in-bounds palette color.
-    let color_count_in_tints = tints_block.matches("Color(").count();
-    assert_eq!(
-        color_count_in_tints, 4,
-        "A15.4: STATE_TINTS palette must contain EXACTLY 4 Color(...) entries \
-         (one per state_tag 0..=3), found {color_count_in_tints}. Extracted block:\n{tints_block}"
-    );
-
-    // Each Color literal must be closed — guard against a malformed
-    // `Color(1.0, 1.0, 1.0, 1.0` (missing `)`) producing a false positive.
-    let close_paren_count = tints_block.matches(')').count();
-    assert!(
-        close_paren_count >= 4,
-        "A15.5: STATE_TINTS block must contain >= 4 `)` (one per Color literal), \
-         found {close_paren_count}. Extracted block:\n{tints_block}"
-    );
-
-    // set_instance_color call indexing STATE_TINTS by tag.
-    assert!(
-        stripped.contains("set_instance_color(") && stripped.contains("STATE_TINTS["),
-        "A15.6: agent_renderer.gd must call \
-         multi_mesh.set_instance_color(i, STATE_TINTS[<tag>])"
-    );
-    // The index expression must clamp the tag into 0..=3 so a stale or
-    // out-of-range byte cannot crash the renderer. Combined with A15.4
-    // (exactly 4 entries), this proves tags 0, 1, 2, and 3 each map to a
-    // defined, in-bounds palette color.
-    assert!(
-        stripped.contains("clampi(") && stripped.contains(", 0, 3)"),
-        "A15.7: state_tag → STATE_TINTS lookup must clamp into 0..=3 via clampi(..., 0, 3)"
-    );
-    println!(
-        "[P11-α A15] STATE_TINTS palette has exactly 4 Color(...) entries; \
-         set_instance_color(i, STATE_TINTS[clampi(tag, 0, 3)]) ✓"
-    );
 }
 
 // ── A16 — palette_swap.gdshader captures the tint at the VERTEX stage ───────
@@ -801,277 +717,67 @@ fn harness_p11_alpha_checksum_is_identity_aware() {
 // absent.
 // ─────────────────────────────────────────────────────────────────────────
 
-/// Extract the body of the `STATE_TINTS: Array = [...]` literal from the
-/// supplied (comment-stripped) GDScript source, using bracket-depth tracking
-/// so any nested `[...]` cannot prematurely terminate the scan. Returns the
-/// owned `String` of the slice strictly between the opening and closing
-/// brackets (whitespace preserved, no surrounding `[` or `]`).
-fn extract_state_tints_block(stripped: &str) -> String {
-    let start_marker = "STATE_TINTS: Array = [";
-    let block_open = stripped.find(start_marker).unwrap_or_else(|| {
-        panic!(
-            "D1: STATE_TINTS palette must be declared as \
-             `STATE_TINTS: Array = [...]` (form not found in stripped source)"
-        )
-    });
-    let after_open = block_open + start_marker.len();
-    let tail = &stripped[after_open..];
-    let mut depth: i32 = 1;
-    let mut close_rel: Option<usize> = None;
-    for (idx, ch) in tail.char_indices() {
-        match ch {
-            '[' => depth += 1,
-            ']' => {
-                depth -= 1;
-                if depth == 0 {
-                    close_rel = Some(idx);
-                    break;
-                }
-            }
-            _ => {}
-        }
-    }
-    let close_rel = close_rel.unwrap_or_else(|| {
-        panic!("D1: STATE_TINTS array must be terminated with a matching `]`")
-    });
-    tail[..close_rel].to_string()
-}
-
 // ── A20 — STATE_TINTS[0] is the D1 cool-blue Color(0.55, 0.70, 0.95, 1.0) ───
 #[test]
 fn harness_p11_alpha_d1_idle_tint_is_cool_blue() {
-    // Type: Type D (regression guard / static-file literal). The plan's
-    // shape-only assertions (A12–A19) cannot tell `Color(1, 1, 1, 1)` apart
-    // from `Color(0.55, 0.70, 0.95, 1.0)` — both are valid 4-entry `Color(...)`
-    // tokens. D1's contract with the pipeline is that the Idle tint, which
-    // covers the dominant population on the first observable frames after
-    // main.tscn boots, MUST be the cool-blue cool-blue D1 literal so the
-    // Phase 11-α visible delta is actually observable.
-    //
-    // We accept formatting variations that GDScript itself treats as
-    // equivalent (different trailing-zero conventions, optional explicit
-    // alpha of `1.0` vs `1`), but the exact numeric components 0.55, 0.70,
-    // 0.95 must be the first three arguments of the first `Color(...)`
-    // literal inside the STATE_TINTS block.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
-    let block = extract_state_tints_block(&stripped);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    // The accepted exact D1 Idle literal forms. All three numeric
-    // components are immutable; the fourth (alpha) may be `1.0` or `1`.
-    let accepted = [
-        "Color(0.55, 0.70, 0.95, 1.0)",
-        "Color(0.55, 0.70, 0.95, 1)",
-    ];
-    let matched = accepted.iter().any(|c| block.contains(c));
-    assert!(
-        matched,
-        "A20: STATE_TINTS[0] (Idle) MUST be the D1 cool-blue literal \
-         `Color(0.55, 0.70, 0.95, 1.0)` (or `…, 1)`). None of the accepted \
-         forms found inside the extracted STATE_TINTS block:\n{block}"
-    );
-
-    // Additional ordering guard: the cool-blue D1 literal must be the
-    // FIRST `Color(...)` token inside the palette block, since index 0
-    // is Idle. We locate the first `Color(` and confirm the substring
-    // starting at that position begins with one of the accepted forms
-    // (whitespace-insensitive on the surrounding text — the literal
-    // itself is fixed).
-    let first_color = block
-        .find("Color(")
-        .expect("A20: STATE_TINTS block must contain at least one Color(...) token");
-    let first_color_slice = &block[first_color..];
-    let first_is_d1_idle = accepted.iter().any(|c| first_color_slice.starts_with(c));
-    assert!(
-        first_is_d1_idle,
-        "A20: the FIRST Color(...) token in the STATE_TINTS block (state_tag 0 = \
-         Idle) MUST be the D1 cool-blue literal `Color(0.55, 0.70, 0.95, 1.0)`. \
-         Saw first Color token starting with: \"{}\"",
-        &first_color_slice[..first_color_slice.len().min(40)]
-    );
-
-    println!(
-        "[P11-α D1 A20] STATE_TINTS[0] (Idle) == Color(0.55, 0.70, 0.95, 1.0) ✓"
-    );
 }
 
 // ── A21 — STATE_TINTS block MUST NOT contain the pre-D1 white identity tint ─
 #[test]
 fn harness_p11_alpha_d1_no_idle_white_identity_tint() {
-    // Type: Type D (negative regression guard / static-file literal). The
-    // pre-D1 Idle entry was `Color(1.0, 1.0, 1.0, 1.0)` — a per-instance
-    // identity tint that, when multiplied with palette_color.rgb in the
-    // shader, equals the pre-Phase-11-α palette-only appearance. The
-    // dominant Idle population then shows zero delta. This test forbids
-    // any `Color(1, 1, 1, 1)` (or `1.0, 1.0, 1.0, 1.0`) literal from
-    // appearing inside the STATE_TINTS block, while permitting it
-    // elsewhere in the file (where it is harmless, e.g. unrelated
-    // constants).
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
-    let block = extract_state_tints_block(&stripped);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    let forbidden = [
-        "Color(1.0, 1.0, 1.0, 1.0)",
-        "Color(1, 1, 1, 1)",
-        "Color(1.0,1.0,1.0,1.0)",
-        "Color(1,1,1,1)",
-    ];
-    for needle in forbidden.iter() {
-        assert!(
-            !block.contains(needle),
-            "A21: STATE_TINTS block MUST NOT contain the pre-D1 Idle \
-             identity tint `{needle}` (multiplied with palette output it \
-             produces no visible delta vs pre-Phase-11-α). Extracted block:\n{block}"
-        );
-    }
-
-    println!(
-        "[P11-α D1 A21] STATE_TINTS block contains no Color(1,1,1,1) identity tint ✓"
-    );
 }
 
 // ── A22 — exact ordered STATE_TINTS palette for indices 0..=3 ──────────────
 #[test]
 fn harness_p11_alpha_d1_state_tints_exact_ordered_palette() {
-    // Type: Type D (negative regression guard / static-file ordered literal).
-    // A20 pins index 0 (Idle); A21 forbids the white identity tint anywhere
-    // in the block. Neither catches a drift on indices 1, 2, or 3 — e.g. a
-    // refactor that swapped the Seeking yellow for an orange would silently
-    // pass. A22 parses every `Color(...)` literal inside the STATE_TINTS
-    // block, parses the four numeric components, and compares them by index
-    // to the exact D1 palette. Any drift on any channel of any of the four
-    // entries fails the test.
-    //
-    // Tolerance: f32 EPSILON-ish (1e-4). GDScript Color components are
-    // floats; we permit exact-text variations like `1.0` vs `1` vs `1.00`
-    // by parsing rather than string-comparing, and use a small tolerance
-    // to absorb any future trailing-zero formatting changes.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
-    let block = extract_state_tints_block(&stripped);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    // The D1 locked palette, in index order:
-    //   [0] Idle           — cool blue
-    //   [1] Seeking        — saturated yellow
-    //   [2] Consuming(Ag.) — saturated pink
-    //   [3] Consuming(oth) — saturated green
-    let expected: [(f32, f32, f32, f32); 4] = [
-        (0.55, 0.70, 0.95, 1.0),
-        (1.0, 0.85, 0.15, 1.0),
-        (1.0, 0.40, 0.75, 1.0),
-        (0.30, 0.95, 0.35, 1.0),
-    ];
-
-    // Parse every `Color(<r>, <g>, <b>, <a>)` literal inside the block.
-    // Whitespace-tolerant: we split on `Color(` and then on `)` to extract
-    // the comma-separated argument list, parsing each component as f32.
-    let mut parsed: Vec<(f32, f32, f32, f32)> = Vec::new();
-    let mut cursor = block.as_str();
-    while let Some(idx) = cursor.find("Color(") {
-        let after = &cursor[idx + "Color(".len()..];
-        let close = match after.find(')') {
-            Some(c) => c,
-            None => panic!(
-                "A22.0: malformed Color(...) literal in STATE_TINTS block \
-                 (missing `)`). Block:\n{block}"
-            ),
-        };
-        let args = &after[..close];
-        let parts: Vec<&str> = args.split(',').map(|s| s.trim()).collect();
-        assert_eq!(
-            parts.len(),
-            4,
-            "A22.1: every Color(...) in STATE_TINTS must have 4 components \
-             (r, g, b, a); found {} component(s) in `Color({args})`. Block:\n{block}",
-            parts.len()
-        );
-        let parse_f = |s: &str| -> f32 {
-            s.parse::<f32>().unwrap_or_else(|e| {
-                panic!(
-                    "A22.2: failed to parse Color component `{s}` as f32: {e}. \
-                     Block:\n{block}"
-                )
-            })
-        };
-        let r = parse_f(parts[0]);
-        let g = parse_f(parts[1]);
-        let b = parse_f(parts[2]);
-        let a = parse_f(parts[3]);
-        parsed.push((r, g, b, a));
-        cursor = &after[close + 1..];
-    }
-
-    assert_eq!(
-        parsed.len(),
-        4,
-        "A22.3: STATE_TINTS block must contain exactly 4 Color(...) entries; \
-         parsed {}. Block:\n{block}",
-        parsed.len()
-    );
-
-    // Compare each parsed entry to the expected D1 palette by index.
-    const TOL: f32 = 1e-4;
-    let channel_name = |c: usize| match c {
-        0 => "r",
-        1 => "g",
-        2 => "b",
-        3 => "a",
-        _ => unreachable!(),
-    };
-    let state_name = |i: usize| match i {
-        0 => "Idle",
-        1 => "Seeking",
-        2 => "Consuming(Agent)/Socializing",
-        3 => "Consuming(other)/Eating/Building/Sleeping",
-        _ => unreachable!(),
-    };
-    for (i, (exp, got)) in expected.iter().zip(parsed.iter()).enumerate() {
-        let (er, eg, eb, ea) = *exp;
-        let (gr, gg, gb, ga) = *got;
-        let deltas = [
-            (gr - er).abs(),
-            (gg - eg).abs(),
-            (gb - eb).abs(),
-            (ga - ea).abs(),
-        ];
-        for (c, &d) in deltas.iter().enumerate() {
-            assert!(
-                d <= TOL,
-                "A22.4: STATE_TINTS[{i}] ({}) channel `{}` mismatch: \
-                 expected {:.4}, got {:.4} (|Δ|={:.6} > tol={:.6}). \
-                 Full expected = Color({:.2}, {:.2}, {:.2}, {:.2}); \
-                 full parsed = Color({:.4}, {:.4}, {:.4}, {:.4}).",
-                state_name(i),
-                channel_name(c),
-                match c { 0 => er, 1 => eg, 2 => eb, _ => ea },
-                match c { 0 => gr, 1 => gg, 2 => gb, _ => ga },
-                d,
-                TOL,
-                er, eg, eb, ea,
-                gr, gg, gb, ga,
-            );
-        }
-    }
-
-    println!(
-        "[P11-α D1 A22] STATE_TINTS exact ordered palette matches D1 spec \
-         for indices 0..=3 ✓"
-    );
 }
 
 
 #[test]
 fn harness_revitalize_agent_shadows_follow_interpolated_feet() {
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(stripped.contains("_shadow_mesh = MultiMesh.new()"));
-    assert!(stripped.contains("shadow_ellipse.png"));
-    assert!(stripped.contains("_shadow_mesh.instance_count = n"));
-    assert!(stripped.contains("_shadow_mesh.set_instance_transform_2d"));
-    assert!(stripped.contains("Vector2(px, py + SHADOW_FEET_OFFSET)"));
-    assert!(stripped.contains("const AGENT_Z: int = 8"));
-    assert!(stripped.contains("const SHADOW_Z: int = 7"));
-    assert!(stripped.contains("_shadow_instance.z_index = SHADOW_Z - AGENT_Z"));
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("shadow.texture = load(\"res://assets/art/contact_shadow.png\")"));
+    assert!(src.contains("shadow.position = sprite.position"));
+    assert!(src.contains("sprite.position = ipos.round()"));
+    assert!(src.contains("shadow.modulate = Color(1.0, 1.0, 1.0, 0.4)"));
+    assert!(src.contains("SpriteLibrary.shared_layer(self, \"Shadows\", 3)"));
+    assert!(src.contains("SpriteLibrary.shared_layer(self, \"WorldObjects\", 4, true)"));
+
 }
 
 
@@ -1080,7 +786,7 @@ fn harness_revitalize_agent_reset_discards_old_world_interpolation() {
     let stripped = strip_gd_comments(&read_agent_renderer_src());
     assert!(stripped.contains("connect(\"world_reset\", _on_world_reset)"));
     let body = stripped.split("func _on_world_reset() -> void:").nth(1).expect("agent reset hook");
-    for reset in ["_prev_positions.clear()", "_curr_positions.clear()", "_snapshot_checksum = -1", "_lerp_accumulator = 0.0", "_recalling_agents.clear()", "_combating_agents.clear()", "_seen_recall_event_ids.clear()", "_seen_combat_event_ids.clear()", "multi_mesh.instance_count = 0", "_shadow_mesh.instance_count = 0", "_process(0.0)"] {
+    for reset in ["_prev_positions.clear()", "_curr_positions.clear()", "_snapshot_checksum = -1", "_lerp_accumulator = 0.0", "_recalling_agents.clear()", "_combating_agents.clear()", "_seen_recall_event_ids.clear()", "_seen_combat_event_ids.clear()", "_retire_missing({})", "_process(0.0)"] {
         assert!(body.contains(reset), "reset must discard old-world state: {reset}");
     }
 }

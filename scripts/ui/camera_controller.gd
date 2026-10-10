@@ -1,31 +1,13 @@
 extends Camera2D
 
-# V7 Phase 12-α — Camera2D zoom controller.
-#
-# Provides mouse-wheel zoom-in / zoom-out with smooth tween
-# interpolation between 0.5× (overview, whole 64×64 world fits) and
-# 4.0× (sprite-detail, 64×72 agent sprite renders at 64×72 px). Default
-# zoom 2.0× brings the D1 STATE_TINTS palette (Phase 11-α + 450f39cd)
-# into clearly observable resolution (16×18 px → 32×36 px on screen).
-#
-# Geometric zoom step (1.25× per wheel notch) gives ~4 notches to
-# traverse the full 0.5×–4.0× range, matching common 2D-camera UX.
-# Tween duration is short enough (0.15 s) that successive wheel
-# notches feel responsive but smooth enough that the change is not
-# a hard snap.
-#
-# Phase 4-γ SPRITE_SCALE invariant is preserved — this controller
-# only modifies Camera2D.zoom, never agent sprite scale.
-
-const ZOOM_MIN: Vector2 = Vector2(0.5, 0.5)
-# V7 G Phase A — zoom-in ceiling raised 4.0 → 8.0 so the default view keeps
-# ample zoom-in headroom. (B-1 later raised ZOOM_DEFAULT 3.0 → 5.0; from the
-# 5.0 default the ×1.25 wheel still reaches the 8.0 ceiling.) ZOOM_MIN unchanged.
+# Integer ladder preserves native texels throughout camera transitions.
+const ZOOM_STEPS: Array[float] = [1.0, 2.0, 3.0, 4.0, 6.0, 8.0]
+const ZOOM_MIN: Vector2 = Vector2(1.0, 1.0)
 const ZOOM_MAX: Vector2 = Vector2(8.0, 8.0)
-# Revitalize: the initial village view balances readable pawns and their camp.
 const ZOOM_DEFAULT: Vector2 = Vector2(4.0, 4.0)
-const ZOOM_FACTOR: float = 1.25
-const TWEEN_DURATION: float = 0.15
+const TWEEN_DURATION: float = 0.12
+const GESTURE_THRESHOLD: float = 0.25
+var _gesture_accumulator: float = 0.0
 
 # V7 H Phase A — camera agent-tracking coordinate basis. Mirrors
 # world_renderer / agent_renderer (SPRITE_ORIGIN + tile*TILE_SIZE) so the
@@ -64,19 +46,19 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_apply_zoom_delta(ZOOM_FACTOR)
+			_step_zoom(1)
 			get_viewport().set_input_as_handled()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_apply_zoom_delta(1.0 / ZOOM_FACTOR)
+			_step_zoom(-1)
 			get_viewport().set_input_as_handled()
 	elif event is InputEventPanGesture:
 		# V7 H Phase A — trackpad two-finger scroll → zoom (scroll up =
 		# delta.y < 0 = zoom in). Mouse-wheel path above is unchanged.
-		_apply_zoom_delta(1.0 - event.delta.y * PAN_ZOOM_SENSITIVITY)
+		_accumulate_zoom(-event.delta.y * PAN_ZOOM_SENSITIVITY)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMagnifyGesture:
 		# V7 H Phase A — trackpad pinch → zoom (factor > 1 = zoom in).
-		_apply_zoom_delta(event.factor)
+		_accumulate_zoom(event.factor - 1.0)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and not event.echo \
 			and event.keycode == KEY_P:
@@ -100,18 +82,35 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _apply_zoom_delta(factor: float) -> void:
-	var new_zoom: Vector2 = _target_zoom * factor
-	new_zoom.x = clamp(new_zoom.x, ZOOM_MIN.x, ZOOM_MAX.x)
-	new_zoom.y = clamp(new_zoom.y, ZOOM_MIN.y, ZOOM_MAX.y)
-	_target_zoom = new_zoom
+func _accumulate_zoom(amount: float) -> void:
+	_gesture_accumulator += amount
+	while absf(_gesture_accumulator) >= GESTURE_THRESHOLD:
+		var direction: int = 1 if _gesture_accumulator > 0.0 else -1
+		_step_zoom(direction)
+		_gesture_accumulator -= float(direction) * GESTURE_THRESHOLD
 
+
+func _nearest_step(value: float) -> float:
+	var nearest: float = ZOOM_STEPS[0]
+	for step: float in ZOOM_STEPS:
+		if absf(value - step) < absf(value - nearest):
+			nearest = step
+	return nearest
+
+
+func _set_quantized_zoom(value: float) -> void:
+	zoom = Vector2.ONE * _nearest_step(value)
+
+
+func _step_zoom(direction: int) -> void:
+	var index: int = ZOOM_STEPS.find(_nearest_step(_target_zoom.x))
+	index = clampi(index + direction, 0, ZOOM_STEPS.size() - 1)
+	_target_zoom = Vector2.ONE * ZOOM_STEPS[index]
 	if _zoom_tween != null and _zoom_tween.is_valid():
 		_zoom_tween.kill()
 	_zoom_tween = create_tween()
-	_zoom_tween.tween_property(self, "zoom", _target_zoom, TWEEN_DURATION) \
-		.set_trans(Tween.TRANS_QUAD) \
-		.set_ease(Tween.EASE_OUT)
+	_zoom_tween.tween_method(_set_quantized_zoom, zoom.x, _target_zoom.x, TWEEN_DURATION).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_zoom_tween.tween_callback(func() -> void: zoom = _target_zoom)
 
 
 func _toggle_pause() -> void:

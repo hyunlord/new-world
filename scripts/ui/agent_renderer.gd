@@ -1,269 +1,64 @@
 extends Node2D
 
-# V7 Phase 4-γ — AgentRenderer (MultiMeshInstance2D driver).
-#
-# Pulls a per-frame `(ids, xs, ys)` snapshot from `WorldSim` via the new
-# `get_agent_snapshot()` FFI and drives a single `MultiMeshInstance2D` to
-# draw every agent in one batched call.
-#
-# Per-instance palette variation is deterministic from `Entity::to_bits()`:
-# hash → (hair_col, body_col, skin_col) → normalised Vector4 written to
-# `MultiMesh.set_instance_custom_data` and consumed by the modified
-# `palette_swap.gdshader` via `INSTANCE_CUSTOM.rgb`.
-#
-# Coordinate frame: mirrors `world_renderer.gd` so both layers share the
-# same `(SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y)` + `TILE_SIZE` mapping. The
-# sprite is centred on the tile.
-
+const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
+const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
-const SPRITE_W := 64
-const SPRITE_H := 72
-# Sprite is scaled so the 64-px-wide character fits inside one 16-px
-# world tile while keeping its 8:9 aspect ratio. 16/64 = 0.25.
-const SPRITE_SCALE := 0.25
-
-# V7 G Phase A — agent_base.png is a 4-col × 3-row = 12-frame sprite
-# sheet (16×24 per frame). Prior to G Phase A the renderer assigned a
-# QuadMesh whose UVs span the WHOLE sheet (0→1), so every agent drew all
-# 12 frames squished into one quad and read as a "clump" rather than a
-# single figure. _ready now renders frame AGENT_FRAME_INDEX only.
-const SHEET_COLS := 4
-const SHEET_ROWS := 3
-const AGENT_FRAME_INDEX := 0   # 0 = top-left cell (front-facing idle)
-const PALETTE_HAIR_COLS := 8
-const PALETTE_BODY_COLS := 4
-const PALETTE_SKIN_COLS := 8
-
-# V7 Phase 14-α — per-role HUE bucket count.
-#
-# Honest disclosure: V7 backend has no Role/Profession component
-# (verified 2026-05-26 against rust/crates/sim-core/src/components/).
-# This bucket count is purely visual diversity for the RimWorld-like
-# overhaul goal — deterministic on Agent.id so agents stay in the
-# same bucket within a session. Real role system deferred to
-# Section 16+.
-#
-# Set to 4 to match PALETTE_BODY_COLS (the body palette has 4
-# columns); choosing a larger N would collapse multiple buckets to
-# the same body colour and dilute the variety.
-const ROLE_BUCKET_COUNT := 4
-
-# V7 Phase 14-α — head-icon mount point.
-#
-# The actual activity icon (food / shelter / hammer / speech glyph)
-# is swapped in a later substage (Phase 14-β/γ scope). This
-# substage publishes the offset + size so future code can attach
-# a second MultiMeshInstance2D or per-agent Sprite2D at the right
-# position without re-deriving the geometry.
-#
-# Offset: 12 px above tile center in world coords. At SPRITE_SCALE
-# = 0.25 the sprite extent is 16×18 px (64×72 source × 0.25). The
-# sprite is centred on the tile, so its top edge is 9 px above
-# centre. A 12 px offset places the icon mount 3 px above the
-# sprite top — small gap, still legible at zoom 3.0× (36 px screen
-# offset).
-const ICON_OFFSET_PX := Vector2(0, -12)
+const ICON_OFFSET_PX := Vector2(0, -30)
 const ICON_SIZE_PX := Vector2(16, 16)
-
-# V7 Phase 8-δ — memory recall visual indicator.
-# When a `memory_recalled` causal event fires for an agent, mark it
-# briefly so the renderer can apply a transient visual cue (~0.5–1.0s
-# wall-time, scale boost so the cue is visible without a shader edit
-# and without extending the AgentSnapshotRow `state_tag` byte —
-# preserving the Phase 7-δ A22 contract `state_tag ∈ {0,1,2,3}`).
-const RECALL_CUE_FRAMES := 36         # ~0.6s at 60 FPS — within plan's [0.5, 1.0]
-const RECALL_CUE_SCALE_BOOST := 1.25  # 25% scale pulse, clearly visible
-const RECALL_CUE_TINT := Color(0.45, 0.65, 1.0, 1.0)  # blue cue (for future shader use)
-
-# V7 Phase 9-δ — combat cue visual indicator.
-# When a `combat_started` causal event fires for an agent (attacker side),
-# mark it briefly with a red-tinted scale pulse (~0.6s) to surface combat
-# activity without extending the AgentSnapshotRow `state_tag` byte.
-const COMBAT_CUE_FRAMES := 36             # ~0.6s at 60 FPS
-const COMBAT_CUE_SCALE_BOOST := 1.3      # 30% scale pulse
-const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)  # red cue (future shader)
-
-# V7 Phase 13-γ — per-state interaction scale cue. Maps state_tag
-# (0-3) to a per-agent scale multiplier so active agents read as
-# busier than idle ones at zoom 3.0× (Phase 13-α). Composes with
-# RECALL_CUE_SCALE_BOOST (Phase 8-δ) and COMBAT_CUE_SCALE_BOOST
-# (Phase 9-δ) via max() — event-driven cues still win when fired.
-#   0 = Idle              → 1.00 (baseline)
-#   1 = Seeking           → 1.15 (subtle "moving with intent")
-#   2 = Consuming(Agent)  → 1.15 (socialising)
-#   3 = Consuming(other)  → 1.15 (eating/sleeping/building)
-# Idle stays at exact SPRITE_SCALE (Phase 4-γ tile-fit invariant
-# preserved). The active boost is modest — 1.15× × 0.25 ×
-# camera_zoom 3.0 = ~55-62 px instead of ~48-54 px.
-const STATE_SCALE_BOOST: Array = [1.0, 1.15, 1.15, 1.15]
-
-# V7 Phase 11-α — position interpolation (Gaffer accumulator) + state_tag tint.
-const SIM_TICK_DURATION: float = 1.0 / 30.0  # nominal 30 TPS
-const AGENT_Z: int = 8
-const SHADOW_Z: int = 7
-const SHADOW_SIZE: Vector2 = Vector2(12.0, 6.0)
-const SHADOW_FEET_OFFSET: float = 7.0
-# 4-entry tint palette matching the 4 locked state_tag values (0-3):
-#   0=Idle, 1=Seeking, 2=Consuming(Agent)=socializing, 3=Consuming(other)
-# D1 fix (Phase 11-α visible delta): pre-fix Idle was Color(1,1,1,1) (pure
-# white). MultiMesh.use_colors=true on a white tint multiplies the palette
-# output by (1,1,1,1), which equals the pre-Phase-11-α appearance (use_colors
-# was false, defaulting COLOR to white). With ~all agents in Idle on the
-# first observable frames after main.tscn boots, the user sees zero delta.
-# Cool-blue Idle tint visibly distinguishes idle agents from pre-Phase-11-α
-# and from the three active states. Saturation on 1/2/3 boosted so the
-# tint survives the 0.25 sprite scale (16×18 px on screen).
-const STATE_TINTS: Array = [
-	Color(0.55, 0.70, 0.95, 1.0),  # 0: Idle — cool blue (D1: was pure white)
-	Color(1.0, 0.85, 0.15, 1.0),   # 1: Seeking — saturated yellow
-	Color(1.0, 0.40, 0.75, 1.0),   # 2: Consuming(Agent)/Socializing — saturated pink
-	Color(0.30, 0.95, 0.35, 1.0),  # 3: Consuming(other)/Eating/Building/Sleeping — saturated green
-]
+const RECALL_CUE_FRAMES := 36
+const COMBAT_CUE_FRAMES := 36
+const RECALL_CUE_TINT := Color(0.45, 0.65, 1.0, 1.0)
+const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)
+const SIM_TICK_DURATION: float = 1.0 / 30.0
+const _SEEN_RECALL_MAX := 512
+const _SEEN_COMBAT_MAX := 512
+const LOOKS: Array[String] = ["direction_09_villager_gatherer", "direction_10_villager_builder", "direction_11_villager_elder"]
+var world_sim: WorldSimNode
+var _objects: Node2D
+var _shadow_layer: Node2D
+var _sprites: Dictionary = {}
+var _shadows: Dictionary = {}
+var _cues: Dictionary = {}
+var _sprite_pool: Array[Sprite2D] = []
+var _shadow_pool: Array[Sprite2D] = []
+var _capture_visible: bool = true
 var _lerp_accumulator: float = 0.0
 var _move_duration: float = SIM_TICK_DURATION
 var _snapshot_checksum: int = -1
-var _prev_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
-var _curr_positions: Dictionary = {}  # agent_id (int) → Vector2 pixel
-
-var world_sim: WorldSimNode
-var multi_mesh_inst: MultiMeshInstance2D
-var multi_mesh: MultiMesh
-var _shadow_mesh: MultiMesh
-var _shadow_instance: MultiMeshInstance2D
-
-# V7 Phase 8-δ (code-attempt 3) — domain note: this dictionary is keyed
-# by `AgentId` (the `Agent.id` field surfaced as `agent_ids` in the
-# snapshot dict), NOT by `entity_bits`. `CausalEvent::MemoryRecalled.agent`
-# is an `AgentId` and the FFI dict serialises it as `"agent_id"`, so the
-# producer (`_ingest_memory_recalls` → `mark_agent_recalling(agent_id)`)
-# and the consumer (`_process` → `_recalling_agents.has(agent_ids[i])`)
-# both use the AgentId domain. Mixing this with `ids[i]` (entity bits)
-# would silently break the cue, which is the regression code-attempt 2
-# shipped.
+var _prev_positions: Dictionary = {}
+var _curr_positions: Dictionary = {}
 var _recalling_agents: Dictionary = {}
-
-# V7 Phase 8-δ — id-based dedupe set for `memory_recalled` causal events
-# observed via `WorldSimNode.get_tile_causal_history()`. A given event
-# `id` must fire `mark_agent_recalling()` exactly once even though the
-# tile's causal ring keeps returning it across frames. Bounded prune at
-# `_SEEN_RECALL_MAX` to cap GDScript memory; oldest entries are dropped
-# wholesale because causal-event ids are monotonically increasing within
-# a session so re-observing an evicted id is unlikely.
-const _SEEN_RECALL_MAX := 512
+var _combating_agents: Dictionary = {}
 var _seen_recall_event_ids: Dictionary = {}
-
-# V7 Phase 9-δ — combat cue state (mirrors _recalling_agents pattern).
-var _combating_agents: Dictionary = {}       # agent_id → frames remaining
-const _SEEN_COMBAT_MAX := 512
-var _seen_combat_event_ids: Dictionary = {}  # dedupe set
+var _seen_combat_event_ids: Dictionary = {}
 
 func _ready() -> void:
-	print("AgentRenderer ready (V7 Phase 4-γ — MultiMeshInstance2D)")
-	z_index = AGENT_Z
-	world_sim = get_node("../WorldSim") as WorldSimNode
-	if world_sim == null:
-		push_error("WorldSim node not found at ../WorldSim")
-		return
-
-	# V7 G Phase A — render a SINGLE frame (AGENT_FRAME_INDEX) of the 4×3
-	# agent_base sheet instead of the whole sheet. Reuse the QuadMesh's own
-	# generated vertices + UVs (so the UV orientation that already renders
-	# agents upright is preserved — zero flip risk) and remap every UV into
-	# the chosen frame's sub-rectangle. The palette_swap shader is untouched:
-	# it still samples `texture(TEXTURE, UV)` and reads tex.g for the
-	# hair/body/skin row from the single sampled frame. SPRITE_SCALE
-	# (Phase 4-γ 0.25) and the 64×72 quad size are unchanged.
-	var quad := QuadMesh.new()
-	quad.size = Vector2(SPRITE_W, SPRITE_H)
-	var quad_arrays: Array = quad.get_mesh_arrays()
-	var src_uvs: PackedVector2Array = quad_arrays[Mesh.ARRAY_TEX_UV]
-	# floori(float/float) computes the integer row WITHOUT triggering the
-	# GDScript INTEGER_DIVISION warning. The harness GDScript strict check
-	# (D Phase A) treats warnings as errors, so a bare int `/` int here
-	# (e.g. `AGENT_FRAME_INDEX / SHEET_COLS`) FAILS the gdcheck. `%` (modulo)
-	# does not warn, so frame_col is fine as-is.
-	var frame_col: int = AGENT_FRAME_INDEX % SHEET_COLS
-	var frame_row: int = floori(float(AGENT_FRAME_INDEX) / float(SHEET_COLS))
-	var uv_offset := Vector2(
-		float(frame_col) / float(SHEET_COLS),
-		float(frame_row) / float(SHEET_ROWS),
-	)
-	var uv_scale := Vector2(1.0 / float(SHEET_COLS), 1.0 / float(SHEET_ROWS))
-	var frame_uvs := PackedVector2Array()
-	for uv in src_uvs:
-		frame_uvs.append(uv_offset + uv * uv_scale)
-	quad_arrays[Mesh.ARRAY_TEX_UV] = frame_uvs
-	var frame_mesh := ArrayMesh.new()
-	frame_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, quad_arrays)
-
-	multi_mesh = MultiMesh.new()
-	multi_mesh.transform_format = MultiMesh.TRANSFORM_2D
-	multi_mesh.use_colors = true
-	multi_mesh.use_custom_data = true
-	multi_mesh.mesh = frame_mesh
-	multi_mesh.instance_count = 0
-
-	var agent_tex: Texture2D = load("res://assets/sprites/agent_base.png") as Texture2D
-	var palette_tex: Texture2D = load("res://assets/sprites/palette_lut.png") as Texture2D
-	var shader: Shader = load("res://shaders/palette_swap.gdshader") as Shader
-
-	var mat := ShaderMaterial.new()
-	mat.shader = shader
-	if palette_tex != null:
-		mat.set_shader_parameter("palette_lut", palette_tex)
-
-	multi_mesh_inst = MultiMeshInstance2D.new()
-	multi_mesh_inst.multimesh = multi_mesh
-	multi_mesh_inst.texture = agent_tex
-	multi_mesh_inst.material = mat
-	add_child(multi_mesh_inst)
-	var shadow_quad: QuadMesh = QuadMesh.new()
-	shadow_quad.size = SHADOW_SIZE
-	_shadow_mesh = MultiMesh.new()
-	_shadow_mesh.transform_format = MultiMesh.TRANSFORM_2D
-	_shadow_mesh.mesh = shadow_quad
-	_shadow_mesh.instance_count = 0
-	_shadow_instance = MultiMeshInstance2D.new()
-	_shadow_instance.multimesh = _shadow_mesh
-	_shadow_instance.texture = load("res://assets/sprites/fx/shadow_ellipse.png") as Texture2D
-	_shadow_instance.z_index = SHADOW_Z - AGENT_Z
-	add_child(_shadow_instance)
-	world_sim.connect("world_reset", _on_world_reset)
+	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
+	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)
+	world_sim = get_node_or_null("../WorldSim") as WorldSimNode
+	if world_sim != null:
+		world_sim.connect("world_reset", _on_world_reset)
 
 func _process(delta: float) -> void:
-	if world_sim == null or multi_mesh == null:
+	if world_sim == null:
 		return
 	var world_info: Dictionary = world_sim.get_world_info()
 	_move_duration = float(maxi(1, int(world_info.get("move_interval_ticks", 1)))) * SIM_TICK_DURATION
-	# A movement opportunity spans move_interval_ticks / 30.0 seconds.
 	_lerp_accumulator += delta
-	# V7 Phase 8-δ — decrement / clear expired recall-cue timers BEFORE
-	# building this frame's transforms so an entry that just dropped to 0
-	# does not render with the boosted scale on its final frame.
 	_clear_expired_recalling()
 	_clear_expired_combating()
 	var snap: Dictionary = world_sim.get_agent_snapshot()
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-	# V7 Phase 11-α — state_tag per agent (0-3), used for color tint.
 	var states: PackedByteArray = snap.get("states", PackedByteArray())
-	# V7 Phase 8-δ (code-attempt 3) — parallel array of `Agent.id` per row.
-	# Used as the lookup key for `_recalling_agents` so the renderer's check
-	# domain matches the producer's mark domain (both AgentId, not
-	# entity_bits). See header comment on `_recalling_agents`.
-	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var n: int = ids.size()
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
 		return
-	# V7 Phase 11-α — detect snapshot tick boundary by checksum.
-	# If positions changed, promote curr→prev, rebuild curr, reset accumulator.
-	# Identity (`agent_ids`) participates in the hash so a snapshot whose row
-	# order changes — or whose agent set changes — flips the checksum even
-	# when raw position bytes are unchanged. See A19 in the harness.
 	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
 	if new_checksum != _snapshot_checksum:
 		_snapshot_checksum = new_checksum
@@ -274,96 +69,134 @@ func _process(delta: float) -> void:
 			_prev_positions[moving_id] = previous_origin.lerp(previous_target, previous_blend)
 		_curr_positions.clear()
 		for i in n:
-			var tile_x: int = xs[i]
-			var tile_y: int = ys[i]
-			var cpx: float = float(SPRITE_ORIGIN_X + tile_x * TILE_SIZE) + float(TILE_SIZE) / 2.0
-			var cpy: float = float(SPRITE_ORIGIN_Y + tile_y * TILE_SIZE) + float(TILE_SIZE) / 2.0
-			_curr_positions[int(agent_ids[i])] = Vector2(cpx, cpy)
+			var look: Dictionary = ArtHashScript.look(int(agent_ids[i]))
+			_curr_positions[int(agent_ids[i])] = Vector2(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + 8 + int(look["jx"]), SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + 14 + int(look["jy"]))
 		for old_id: int in _prev_positions.keys():
 			if not _curr_positions.has(old_id):
 				_prev_positions.erase(old_id)
 		_lerp_accumulator = 0.0
 	var lerp_t: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
-	if multi_mesh.instance_count != n:
-		multi_mesh.instance_count = n
-		_shadow_mesh.instance_count = n
+	var live: Dictionary = {}
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
+		live[agent_id] = true
 		var curr_pos: Vector2 = _curr_positions.get(agent_id, Vector2.ZERO)
-		# V7 Phase 11-α — interpolate between prev and curr pixel position.
 		var prev_pos: Vector2 = _prev_positions.get(agent_id, curr_pos)
 		var ipos: Vector2 = prev_pos.lerp(curr_pos, lerp_t)
-		var px: float = ipos.x
-		var py: float = ipos.y
-		# V7 Phase 8-δ — boost the per-instance scale by RECALL_CUE_SCALE_BOOST
-		# while the agent is in the recall window. Visible without a shader
-		# change. NOT tied to `state_tag` so Phase 7-δ A22 stays intact.
-		# Lookup keyed by `agent_ids[i]` (AgentId) so it matches the FFI
-		# `event.agent_id` value used by `_ingest_memory_recalls`.
-		var boost: float = 1.0
-		# V7 Phase 13-γ — non-Idle state boost (composes via max with
-		# event-driven recall/combat cues). FFI state_tag domain is
-		# {0,1,2,3}; clampi guards against malformed snapshots, and the
-		# `if i < states.size() else 0` fallback defaults uninitialised
-		# rows to Idle baseline (1.0) — never to an active state.
-		var state_tag_for_boost: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
-		boost = max(boost, float(STATE_SCALE_BOOST[state_tag_for_boost]))
-		if _recalling_agents.has(agent_ids[i]):
-			boost = max(boost, RECALL_CUE_SCALE_BOOST)
-		if _combating_agents.has(agent_ids[i]):
-			boost = max(boost, COMBAT_CUE_SCALE_BOOST)
-		var scale_mul: float = SPRITE_SCALE * boost
-		var xform := Transform2D(0.0, Vector2(scale_mul, scale_mul), 0.0, Vector2(px, py))
-		multi_mesh.set_instance_transform_2d(i, xform)
-		_shadow_mesh.set_instance_transform_2d(i, Transform2D(0.0, Vector2(px, py + SHADOW_FEET_OFFSET)))
-		multi_mesh.set_instance_custom_data(i, _palette_for_id(ids[i], int(agent_ids[i])))
-		# V7 Phase 11-α — apply state_tag color tint via instance color.
-		var tag: int = clampi(int(states[i]) if i < states.size() else 0, 0, 3)
-		multi_mesh.set_instance_color(i, STATE_TINTS[tag])
-	# V7 Phase 8-δ — after rendering this frame, ingest fresh
-	# `memory_recalled` events from the causal log so the next frame can
-	# pulse the cue. We poll each unique tile occupied by an agent because
-	# WorldSimNode does not (yet) emit a Godot signal for causal events;
-	# the tile causal history is the canonical source. Dedupe by event id
-	# so a single recall fires `mark_agent_recalling()` exactly once.
+		var sprite: Sprite2D = _ensure_agent(agent_id)
+		var look: Dictionary = ArtHashScript.look(agent_id)
+		var child: bool = snap.has("life_stages") and i < snap["life_stages"].size() and int(snap["life_stages"][i]) == 1
+		var sprite_id: String = "direction_12_villager_child" if child else LOOKS[posmod(ArtHashScript.mix(agent_id), LOOKS.size())]
+		if str(sprite.get_meta("sprite_id", "")) != sprite_id:
+			SpriteLibrary.apply(sprite, sprite_id)
+		sprite.position = ipos.round()
+		if not is_equal_approx(curr_pos.x, prev_pos.x):
+			sprite.flip_h = curr_pos.x < prev_pos.x
+		sprite.visible = _capture_visible
+		sprite.set_meta("entity_bits", int(ids[i]))
+		sprite.set_meta("body", "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b"))
+		sprite.set_meta("variant", {"skin": look["skin"], "hair": look["hair"], "clothing": look["clothing"]})
+		sprite.set_meta("tile_x", int(xs[i]))
+		sprite.set_meta("tile_y", int(ys[i]))
+		sprite.set_meta("activity", "walk" if i < states.size() and states[i] == 1 else "idle")
+		var shadow: Sprite2D = _shadows[agent_id]
+		shadow.position = sprite.position
+		shadow.visible = sprite.visible
+		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))
+	_retire_missing(live)
 	_ingest_memory_recalls(ids, xs, ys, n)
-	# V7 Phase 9-δ — ingest combat events after memory recalls so both cues
-	# are updated in the same frame pass.
 	_ingest_combat_events(ids, agent_ids, xs, ys, n)
 
-# V7 Phase 8-δ — public API: an external dispatcher (currently
-# `_ingest_memory_recalls` reading `memory_recalled` causal events, or
-# any future signal-based dispatcher) calls this once when a recall
-# fires for a given agent. The timer is overwritten if it was already
-# active, so back-to-back recalls extend the cue rather than ending it
-# early.
-#
-# Domain: `agent_id` is the `AgentId` (the `Agent.id` field, surfaced as
-# `agent_ids` in the snapshot dict and as `agent_id` in the FFI causal
-# event dict). NOT `entity_bits`. Mixing the two domains was the
-# regression code-attempt 2 shipped.
+func _ensure_agent(agent_id: int) -> Sprite2D:
+	if _sprites.has(agent_id):
+		return _sprites[agent_id] as Sprite2D
+	var sprite: Sprite2D = _sprite_pool.pop_back() if not _sprite_pool.is_empty() else Sprite2D.new()
+	if sprite.get_parent() == null:
+		_objects.add_child(sprite)
+	sprite.name = "Agent_%d" % agent_id
+	sprite.set_meta("art_kind", "agent")
+	sprite.set_meta("art_id", agent_id)
+	_sprites[agent_id] = sprite
+	var shadow: Sprite2D = _shadow_pool.pop_back() if not _shadow_pool.is_empty() else Sprite2D.new()
+	if shadow.get_parent() == null:
+		_shadow_layer.add_child(shadow)
+	shadow.texture = load("res://assets/art/contact_shadow.png") as Texture2D
+	shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	shadow.modulate = Color(1.0, 1.0, 1.0, 0.4)
+	shadow.set_meta("art_kind", "agent_shadow")
+	shadow.set_meta("agent_shadow", true)
+	shadow.set_meta("art_id", agent_id)
+	_shadows[agent_id] = shadow
+	return sprite
+
+func _update_cue(agent_id: int, feet: Vector2, recalling: bool, combating: bool) -> void:
+	if not recalling and not combating:
+		if _cues.has(agent_id):
+			(_cues[agent_id] as Line2D).visible = false
+		return
+	if not _cues.has(agent_id):
+		var cue: Line2D = Line2D.new()
+		cue.width = 1.0
+		cue.points = PackedVector2Array([Vector2(-5, -2), Vector2(5, -2), Vector2(5, 2), Vector2(-5, 2), Vector2(-5, -2)])
+		_shadow_layer.add_child(cue)
+		_cues[agent_id] = cue
+	var cue: Line2D = _cues[agent_id]
+	cue.position = feet
+	cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT
+	cue.visible = _capture_visible
+
+func _retire_missing(live: Dictionary) -> void:
+	for agent_id: int in _sprites.keys():
+		if live.has(agent_id):
+			continue
+		var sprite: Sprite2D = _sprites[agent_id]
+		sprite.visible = false
+		_sprite_pool.append(sprite)
+		_sprites.erase(agent_id)
+		var shadow: Sprite2D = _shadows[agent_id]
+		shadow.visible = false
+		_shadow_pool.append(shadow)
+		_shadows.erase(agent_id)
+		if _cues.has(agent_id):
+			(_cues[agent_id] as Line2D).queue_free()
+			_cues.erase(agent_id)
+
+func set_capture_visible(shown: bool) -> void:
+	_capture_visible = shown
+	_process(0.0)
+
+func refresh_snapshot() -> void:
+	_prev_positions.clear()
+	_curr_positions.clear()
+	_snapshot_checksum = -1
+	_process(0.0)
+
+func head_icon_position(world_pos: Vector2) -> Vector2:
+	return world_pos + ICON_OFFSET_PX
+
+func _on_world_reset() -> void:
+	_prev_positions.clear()
+	_curr_positions.clear()
+	_snapshot_checksum = -1
+	_lerp_accumulator = 0.0
+	_recalling_agents.clear()
+	_combating_agents.clear()
+	_seen_recall_event_ids.clear()
+	_seen_combat_event_ids.clear()
+	_retire_missing({})
+	_process(0.0)
+
 func mark_agent_recalling(agent_id: int) -> void:
 	_recalling_agents[agent_id] = RECALL_CUE_FRAMES
 
-# V7 Phase 8-δ — read-only accessor used by tests and the SimulationBus
-# relay to confirm a cue is active. Returns 0 when the agent has no
-# active recall cue. Domain: `agent_id` is `AgentId`, see
-# `mark_agent_recalling`.
 func recall_cue_remaining(agent_id: int) -> int:
 	return int(_recalling_agents.get(agent_id, 0))
 
-# V7 Phase 8-δ — poll the tile causal log for each unique agent tile
-# this frame. Any `memory_recalled` event whose id we have not yet seen
-# is dispatched via `mark_agent_recalling()` for the event's `agent_id`.
-# The dedupe set is bounded so a long session does not grow GDScript
-# memory without limit.
 func _ingest_memory_recalls(_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
 	if world_sim == null:
 		return
 	if not world_sim.has_method("get_tile_causal_history"):
 		return
-	# Collect unique tile coordinates so we never query the same tile twice
-	# per frame. With 10K agents and few colocated tiles this stays small.
 	var visited_tiles: Dictionary = {}
 	for i in n:
 		var key: int = (int(xs[i]) << 20) | int(ys[i])
@@ -382,23 +215,14 @@ func _ingest_memory_recalls(_ids: PackedInt64Array, xs: PackedInt32Array, ys: Pa
 				continue
 			if _seen_recall_event_ids.has(event_id):
 				continue
-			# First sighting of this recall — register the dedupe key and
-			# fire the cue for the recalling agent.
 			_seen_recall_event_ids[event_id] = true
 			var agent_id: int = int(dev.get("agent_id", -1))
 			if agent_id >= 0:
-				# `agent_id` is `Entity::to_bits().get()` — the same key
-				# used by `_recalling_agents` / `mark_agent_recalling()`.
 				mark_agent_recalling(agent_id)
-	# Bounded prune: when the dedupe set grows past _SEEN_RECALL_MAX we
-	# clear it wholesale. Causal-event ids are monotonically increasing in
-	# a session so any reused id post-clear is statistically unlikely.
 	if _seen_recall_event_ids.size() > _SEEN_RECALL_MAX:
 		_seen_recall_event_ids.clear()
 
 func _clear_expired_recalling() -> void:
-	# Decrement every active recall-cue timer; entries that hit zero are
-	# erased so the boost scale stops being applied on the next frame.
 	if _recalling_agents.is_empty():
 		return
 	var expired: Array = []
@@ -411,28 +235,15 @@ func _clear_expired_recalling() -> void:
 	for eid in expired:
 		_recalling_agents.erase(eid)
 
-# V7 Phase 9-δ — public API: mark attacker agent as in-combat for one cue
-# window. Domain: `agent_id` is `AgentId` (same as `_recalling_agents`).
-#
-# Naming: `mark_agent_in_combat` is the primary public API the plan
-# requires (mirrors `mark_agent_recalling`). `mark_agent_combating` is
-# kept as a compatibility alias for any earlier callsites that may still
-# reference the older spelling.
 func mark_agent_in_combat(agent_id: int) -> void:
 	_combating_agents[agent_id] = COMBAT_CUE_FRAMES
 
-# V7 Phase 9-δ — backwards-compatible alias for `mark_agent_in_combat`.
-# Forwards to the primary API so any older caller continues to work.
 func mark_agent_combating(agent_id: int) -> void:
 	mark_agent_in_combat(agent_id)
 
-# V7 Phase 9-δ — read-only accessor; returns 0 when no active combat cue.
 func combat_cue_remaining(agent_id: int) -> int:
 	return int(_combating_agents.get(agent_id, 0))
 
-# V7 Phase 9-δ — poll the tile causal log for `combat_started` events and
-# dispatch `mark_agent_combating()` for the attacker (`agent_id` field).
-# Mirrors `_ingest_memory_recalls` exactly.
 func _ingest_combat_events(_ids: PackedInt64Array, _agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
 	if world_sim == null:
 		return
@@ -477,22 +288,6 @@ func _clear_expired_combating() -> void:
 		_combating_agents.erase(eid)
 
 func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> int:
-	# V7 Phase 11-α (code-attempt 3) — identity-aware tick-boundary checksum.
-	#
-	# Iterates EVERY row (no `mini(n, 32)` truncation) so a position change
-	# on agent #33+ still flips the hash and triggers the interpolation
-	# tick boundary. Folds `agent_ids[i]` (identity) and `i` (row index)
-	# along with `xs[i]` / `ys[i]` (position) into a multiplicative
-	# accumulator so the hash is sensitive to:
-	#   • per-agent position changes (movement)
-	#   • row-order changes (would cancel under pure XOR)
-	#   • agent identity changes (entity set churn)
-	#
-	# `h * 1000003` (a 32-bit prime) advances the accumulator non-
-	# commutatively, defeating the order-insensitive XOR pattern that the
-	# previous version inherited. Knuth's φ-derived multiplier
-	# `2654435761` plus three other large primes spread per-row bits across
-	# the 64-bit accumulator before folding into `h`.
 	if n == 0:
 		return 0
 	var h: int = n * 2654435761
@@ -500,56 +295,3 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 		var aid: int = int(agent_ids[i])
 		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
 	return h
-
-# V7 Phase 14-α — deterministic role bucket from agent_id.
-#
-# Returns an integer in [0, ROLE_BUCKET_COUNT). Used by
-# `_palette_for_id` to key the body palette column off the
-# AgentId (semantic identity) instead of entity_bits (storage
-# identity). Hair and skin channels remain entity-bits driven so
-# individual identity stays visually distinguishable within a
-# bucket.
-func _role_bucket(agent_id: int) -> int:
-	return absi(agent_id * 2654435761) % ROLE_BUCKET_COUNT
-
-# V7 Phase 4-γ + 14-α — palette indices for a single agent.
-#
-# Hair (8 cols) and skin (8 cols) hash from `eid` (entity_bits)
-# so each agent has individual identity within a role bucket.
-# Body (4 cols) hashes from `agent_id` via `_role_bucket()` so
-# agents sharing a role bucket share body colour — the visual
-# group cue for the RimWorld-like overhaul.
-func _palette_for_id(eid: int, agent_id: int) -> Color:
-	var h: int = absi(eid * 2654435761) % PALETTE_HAIR_COLS
-	var b: int = _role_bucket(agent_id) % PALETTE_BODY_COLS
-	var s: int = absi(eid * 2246822519) % PALETTE_SKIN_COLS
-	return Color(
-		float(h) / float(PALETTE_HAIR_COLS - 1),
-		float(b) / float(PALETTE_BODY_COLS - 1),
-		float(s) / float(PALETTE_SKIN_COLS - 1),
-		0.0
-	)
-
-# V7 Phase 14-α — head-icon mount point helper.
-#
-# Public API: given an agent's rendered world position (tile centre
-# + interpolation in `_process`), return the icon mount point in
-# the same coordinate frame. Future substages attach the activity
-# icon at this position via a second MultiMeshInstance2D or
-# per-agent Sprite2D.
-func head_icon_position(world_pos: Vector2) -> Vector2:
-	return world_pos + ICON_OFFSET_PX
-
-
-func _on_world_reset() -> void:
-	_prev_positions.clear()
-	_curr_positions.clear()
-	_snapshot_checksum = -1
-	_lerp_accumulator = 0.0
-	_recalling_agents.clear()
-	_combating_agents.clear()
-	_seen_recall_event_ids.clear()
-	_seen_combat_event_ids.clear()
-	multi_mesh.instance_count = 0
-	_shadow_mesh.instance_count = 0
-	_process(0.0)

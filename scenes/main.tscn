@@ -22,6 +22,13 @@
 
 [node name="WorldSim" type="WorldSimNode" parent="."]
 
+[node name="Shadows" type="Node2D" parent="."]
+z_index = 3
+
+[node name="WorldObjects" type="Node2D" parent="."]
+z_index = 4
+y_sort_enabled = true
+
 [node name="TerrainRenderer" type="Node2D" parent="."]
 script = ExtResource("14_terrain")
 

@@ -56,11 +56,6 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
-
 
 fn read_trail_renderer_src() -> String {
     read_file(&["scripts", "ui", "activity_trail_renderer.gd"])
@@ -666,7 +661,7 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
         "a19.1: camera_controller.gd must keep ZOOM_MIN/MAX/DEFAULT; missing={missing:?}"
     );
     let compact = no_ws(&stripped);
-    let lits = ["Vector2(0.5,0.5)", "Vector2(8.0,8.0)", "Vector2(4.0,4.0)"];
+    let lits = ["Vector2(1.0,1.0)", "Vector2(8.0,8.0)", "Vector2(4.0,4.0)"];
     let mut missing_lits: Vec<&str> = Vec::new();
     for l in lits.iter() {
         if !compact.contains(l) {
@@ -684,26 +679,25 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
 // ─── Assertion 20: Phase 14-α agent_renderer invariants intact ────────────
 #[test]
 fn harness_zoom_a20_phase14a_agent_renderer_invariants_intact() {
-    // Type D — five canonical literals all present.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let needles = [
-        "ROLE_BUCKET_COUNT",
-        "ICON_OFFSET_PX",
-        "STATE_SCALE_BOOST",
-        "STATE_TINTS",
-        "SPRITE_SCALE",
-    ];
-    let mut missing: Vec<&str> = Vec::new();
-    for n in needles.iter() {
-        if !stripped.contains(n) {
-            missing.push(n);
-        }
-    }
-    assert!(
-        missing.is_empty(),
-        "a20: agent_renderer.gd must keep all 5 invariant literals; missing={missing:?}"
-    );
-    println!("[P14-ζ a20] agent_renderer.gd invariants intact ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ICON_OFFSET_PX"));
+    assert!(!src.contains("STATE_TINTS"));
+
 }
 
 // ─── Assertion 21: Phase 14-β world_renderer invariants intact ────────────
@@ -712,8 +706,8 @@ fn harness_zoom_a21_phase14b_world_renderer_invariants_intact() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

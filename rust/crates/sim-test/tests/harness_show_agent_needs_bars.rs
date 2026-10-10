@@ -62,7 +62,7 @@ const SATURATION: f32 = 100.0;
 /// Danger ratio at/above which the renderer draws a bar — mirrors
 /// `need_bar_renderer.gd::DANGER_THRESHOLD`. The at-risk need band is
 /// `max(h,t,s) >= 50.0` ⟺ `danger >= 0.5`.
-const DANGER_THRESHOLD: f32 = 0.5;
+const DANGER_THRESHOLD: f32 = 0.75;
 /// Number of agents the fixture spawns (plan: agent_count 20).
 const AGENTS: u32 = 20;
 
@@ -416,7 +416,8 @@ fn harness_needs_a5_renderer_and_bridge_contract() {
     assert!(r.contains("DANGER_THRESHOLD"), "A5(a): renderer declares DANGER_THRESHOLD");
     assert!(r.contains("Z_NEED_BAR") && r.contains("7"), "A5(a): renderer declares Z_NEED_BAR = 7");
     assert!(r.contains("draw_rect"), "A5(a): renderer draws via draw_rect (track + fill)");
-    assert!(r.contains(".lerp("), "A5(a): renderer lerps colour yellow→red");
+    assert!(r.contains("Vector2(2, 4)"));
+    assert!(r.contains("Vector2(2, 1)"));
     let has_max_ratio =
         (r.contains("max") && r.contains("/ SATURATION")) || r.contains("/ 100");
     assert!(has_max_ratio, "A5(a): renderer computes a max-of-three danger ratio");
@@ -427,7 +428,7 @@ fn harness_needs_a5_renderer_and_bridge_contract() {
         .expect("A5(b): need_bar_renderer.gd must declare a numeric DANGER_THRESHOLD");
     assert!(
         (gate - DANGER_THRESHOLD).abs() < f32::EPSILON,
-        "A5(b): DANGER_THRESHOLD must equal {DANGER_THRESHOLD}; got {gate}"
+        "A5(b): visual warning threshold must equal 0.75; got {gate}"
     );
 
     // (c) Bridge key+field mapping — the FFI source must insert under the EXACT

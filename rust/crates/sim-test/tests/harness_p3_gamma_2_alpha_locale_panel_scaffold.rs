@@ -63,8 +63,8 @@ fn harness_p3_gamma_2_alpha_locale_gd_loads_json_with_fallback() {
         "locale.gd must `extends Node` (autoload singleton lives in the scene tree)"
     );
     assert!(
-        src.contains("_current_lang: String = \"en\""),
-        "locale.gd must default `_current_lang` to \"en\" (locked fact P3γ2α-L2)"
+        src.contains("_current_lang = str(parsed.get(\"default_locale\", \"ko\"))"),
+        "locale.gd must load its default from the manifest with Korean fallback"
     );
     assert!(
         src.contains("res://localization/%s/"),

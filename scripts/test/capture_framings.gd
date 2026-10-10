@@ -1,5 +1,8 @@
 extends SceneTree
 
+const Metadata = preload("res://scripts/test/art/capture_metadata.gd")
+const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
+
 const ORIGIN: Vector2 = Vector2(448, 28)
 const TILE_SIZE: float = 16.0
 const BASELINE: Array[Array] = [[0, "F1"], [0, "F2"], [1440, "F1"], [1440, "F2"]]
@@ -18,6 +21,7 @@ var _camera: Camera2D = null
 var _manifest: Array[Dictionary] = []
 var _selected_seeking: bool = false
 var _clock_offset: int = 0
+var _failed: bool = false
 
 
 func _init() -> void:
@@ -34,8 +38,8 @@ func _init() -> void:
 			push_error("capture: unknown or missing argument: " + args[i])
 			quit(2)
 			return
-	if _out.is_empty() or _plan not in ["baseline", "final"]:
-		push_error("capture: requires --out DIRECTORY --plan baseline|final")
+	if _out.is_empty() or _plan not in ["baseline", "final", "art", "calibration"]:
+		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|calibration")
 		quit(2)
 		return
 	call_deferred("_run")
@@ -48,6 +52,10 @@ func _run() -> void:
 	var old_manifest: String = ProjectSettings.globalize_path(_out.path_join("manifest.json"))
 	if FileAccess.file_exists(old_manifest) and DirAccess.remove_absolute(old_manifest) != OK:
 		_fail("cannot invalidate previous capture manifest")
+		return
+	if _plan == "calibration":
+		await _capture_calibration()
+		_write_manifest()
 		return
 	var packed: PackedScene = load("res://scenes/main.tscn") as PackedScene
 	if packed == null:
@@ -76,16 +84,16 @@ func _run() -> void:
 	if int(info.get("ticks_per_day", 0)) != 1440:
 		_fail("clock plan requires 1440 ticks per day")
 		return
-	var plan: Array[Array] = BASELINE if _plan == "baseline" else FINAL
+	var plan: Array[Array] = BASELINE if _plan == "baseline" else (CapturePlans.ART if _plan == "art" else FINAL)
 	for shot: Array in plan:
 		var target: int = int(shot[0])
 		var framing: String = str(shot[1])
 		var stem: String = "%s_t%d_%s" % [_plan, target, framing]
-		if _plan == "final":
+		if _plan != "baseline":
 			var clock: PackedStringArray = str(shot[1]).split(":")
 			target = (int(shot[0]) - 1) * 1440 + int(clock[0]) * 60 + int(clock[1]) - _clock_offset
 			framing = str(shot[2])
-			stem = "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
+			stem = ("a_" if _plan == "art" else "") + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
@@ -106,11 +114,11 @@ func _run() -> void:
 			_fail("inspector capture requires a living agent and inspector")
 			return
 		_camera.position = ORIGIN + tile * TILE_SIZE + Vector2(8, 8)
-		_camera.zoom = Vector2.ONE if framing == "F1" else Vector2(4, 4)
+		_camera.zoom = Vector2.ONE if framing == "F1" else (Vector2(6, 6) if framing == "F2Z" else Vector2(4, 4))
 		_camera.reset_smoothing()
 		_camera.force_update_scroll()
 		# Reconcile infrequent object renderers after synchronous tooling ticks.
-		for node_name: String in ["TerrainRenderer", "BuildingRenderer"]:
+		for node_name: String in ["TerrainRenderer", "BuildingRenderer", "AgentRenderer"]:
 			var renderer: Node = _main.get_node_or_null(node_name)
 			if renderer != null and renderer.has_method("refresh_snapshot"):
 				renderer.call("refresh_snapshot")
@@ -138,6 +146,24 @@ func _run() -> void:
 			"time_of_day": now["time_of_day"], "width": image.get_width(), "height": image.get_height(),
 			"entities": stem + ".entities.json",
 		})
+		if _plan == "art" and stem == "a_d2_1200_F1":
+			await _capture_strip("a_strip", true)
+			_camera.zoom = Vector2.ONE
+			_camera.force_update_scroll()
+			await _measure_frame_times()
+		if _plan == "art" and stem == "a_d2_1930_F2":
+			await _capture_strip("a_evening", false)
+	if _plan == "art":
+		_main.queue_free()
+		await process_frame
+		await _capture_calibration()
+	_write_manifest()
+
+
+func _write_manifest() -> void:
+	if _failed:
+		quit(1)
+		return
 	var manifest: FileAccess = FileAccess.open(_out.path_join("manifest.json"), FileAccess.WRITE)
 	if manifest == null:
 		_fail("cannot write manifest")
@@ -203,6 +229,7 @@ func _open_inspector(inspector: Node) -> bool:
 
 
 func _fail(message: String) -> void:
+	_failed = true
 	push_error("capture: " + message)
 	quit(1)
 
@@ -219,84 +246,28 @@ func _advance_to(target: int) -> bool:
 
 
 func _set_agent_layers(shown: bool) -> void:
-	for node_name: String in ["AgentRenderer", "SeekVizRenderer", "NeedBarRenderer", "ActivityTrailRenderer", "DeathVizRenderer"]:
+	var agents: Node = _main.get_node_or_null("AgentRenderer")
+	if agents != null and agents.has_method("set_capture_visible"):
+		agents.call("set_capture_visible", shown)
+	Metadata.show_agents(_main, shown)
+	for node_name: String in ["SeekVizRenderer", "NeedBarRenderer", "ActivityTrailRenderer", "DeathVizRenderer"]:
 		var layer: CanvasItem = _main.get_node_or_null(node_name) as CanvasItem
 		if layer != null:
 			layer.visible = shown
-
-
-func _screen_rect(local: Rect2, transform: Transform2D, pixel_scale: Vector2) -> Rect2:
-	var transformed: Rect2 = transform * local
-	return Rect2(transformed.position * pixel_scale, transformed.size * pixel_scale)
-
-
-func _entity(kind: String, id: int, rect: Rect2, shown: bool, viewport: Vector2) -> Dictionary:
-	return {"kind": kind, "id": id, "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
-		"visible": shown and rect.intersects(Rect2(Vector2.ZERO, viewport))}
-
-
-func _node_bounds(node: Node, pixel_scale: Vector2) -> Rect2:
-	var bounds: Rect2 = Rect2()
-	if node is Sprite2D:
-		var sprite: Sprite2D = node as Sprite2D
-		return _screen_rect(sprite.get_rect(), sprite.get_global_transform_with_canvas(), pixel_scale)
-	if node is Control:
-		var control: Control = node as Control
-		if control.size.x > 0 and control.size.y > 0:
-			bounds = _screen_rect(Rect2(Vector2.ZERO, control.size), control.get_global_transform_with_canvas(), pixel_scale)
-	for child: Node in node.get_children():
-		if child is CanvasItem and not (child as CanvasItem).is_visible_in_tree():
-			continue
-		var child_rect: Rect2 = _node_bounds(child, pixel_scale)
-		if child_rect.has_area():
-			bounds = bounds.merge(child_rect) if bounds.has_area() else child_rect
-	return bounds
 
 
 func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var viewport: Vector2 = Vector2(image_size)
 	var pixel_scale: Vector2 = viewport / root.get_visible_rect().size
 	var rows: Array[Dictionary] = []
-	var agents: Node2D = _main.get_node("AgentRenderer") as Node2D
-	var mesh_node: MultiMeshInstance2D = agents.get("multi_mesh_inst") as MultiMeshInstance2D
-	var mesh: MultiMesh = agents.get("multi_mesh") as MultiMesh
-	var snap: Dictionary = _world.call("get_agent_snapshot")
-	var agent_ids: PackedInt64Array = snap["agent_ids"]
-	var entity_ids: PackedInt64Array = snap["ids"]
-	var mesh_bounds: AABB = mesh.mesh.get_aabb()
-	var local: Rect2 = Rect2(Vector2(mesh_bounds.position.x, mesh_bounds.position.y), Vector2(mesh_bounds.size.x, mesh_bounds.size.y))
-	for i: int in range(mesh.instance_count):
-		var transform: Transform2D = mesh_node.get_global_transform_with_canvas() * mesh.get_instance_transform_2d(i)
-		var row: Dictionary = _entity("agent", agent_ids[i], _screen_rect(local, transform, pixel_scale), mesh_node.is_visible_in_tree(), viewport)
-		row["entity_bits"] = entity_ids[i]
-		rows.append(row)
-	var buildings: Node = _main.get_node("BuildingRenderer")
-	var building_snap: Dictionary = _world.call("get_building_snapshot")
-	var building_ids: PackedInt64Array = building_snap["ids"]
-	var kinds: PackedByteArray = building_snap["kinds"]
-	var building_kinds: Dictionary = {}
-	for i: int in building_ids.size():
-		building_kinds[building_ids[i]] = int(kinds[i])
-	for pair: Array in [["building", "_buildings"], ["site", "_sites"], ["bush", "_bushes"], ["stockpile_label", "_labels"]]:
-		var nodes: Dictionary = buildings.get(str(pair[1]))
-		var ids: Array = nodes.keys()
-		ids.sort()
-		for id: int in ids:
-			var item: CanvasItem = nodes[id] as CanvasItem
-			var row: Dictionary = _entity(str(pair[0]), id, _node_bounds(item, pixel_scale), item.is_visible_in_tree(), viewport)
-			if str(pair[0]) == "building":
-				row["building_kind"] = int(building_kinds.get(id, -1))
-			rows.append(row)
-	for child: Node in _main.get_node("UI").get_children():
-		if child is Control and (child as Control).is_visible_in_tree():
-			var row: Dictionary = _entity("panel", child.get_instance_id(), _node_bounds(child, pixel_scale), true, viewport)
-			row["name"] = str(child.name)
-			rows.append(row)
+	rows = Metadata.entities(_main, viewport, pixel_scale)
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	var data: Dictionary = {
-		"schema_version": 1, "camera_position": [_camera.position.x, _camera.position.y],
+		"schema_version": 3, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
+		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
+		"agent_snapshot": _world.call("get_agent_snapshot"),
 		"selected_entity_bits": int(inspector.call("get_selected_entity_bits")), "selected_seeking": _selected_seeking,
 		"seek_segments": int(_main.get_node("SeekVizRenderer").call("get_drawn_segment_count")),
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
@@ -308,3 +279,114 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	file.store_string(JSON.stringify(data, "\t") + "\n")
 	file.close()
 	return true
+
+
+func _measure_frame_times() -> void:
+	_world.process_mode = Node.PROCESS_MODE_INHERIT
+	_world.call("set_sim_speed", 1.0)
+	var elapsed: Array[float] = []
+	await RenderingServer.frame_post_draw
+	var previous: int = Time.get_ticks_usec()
+	for frame: int in range(300):
+		await RenderingServer.frame_post_draw
+		var current: int = Time.get_ticks_usec()
+		elapsed.append(float(current - previous) / 1000.0)
+		previous = current
+	_world.call("set_sim_speed", 0.0)
+	_world.process_mode = Node.PROCESS_MODE_DISABLED
+	var ordered: Array[float] = elapsed.duplicate()
+	ordered.sort()
+	if not CapturePlans.write_json(_out.path_join("frame_times.json"), {
+		"frames": 300, "zoom": 1, "median_ms": (ordered[149] + ordered[150]) / 2.0,
+		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": false,
+	}):
+		_fail("cannot write frame timing evidence")
+
+
+func _capture_strip(prefix: String, follow: bool) -> void:
+	var followed: int = CapturePlans.moving_agent(_world) if follow else -1
+	var frames: Array[Dictionary] = []
+	var images: Array[Image] = []
+	var clip_start_usec: int = Time.get_ticks_usec()
+	var original_position: Vector2 = _camera.position
+	_camera.zoom = Vector2(6, 6) if follow else Vector2(4, 4)
+	_world.process_mode = Node.PROCESS_MODE_INHERIT
+	_world.call("set_sim_speed", 1.0)
+	for index: int in range(40):
+		var start_usec: int = Time.get_ticks_usec()
+		if followed >= 0:
+			var position: Vector2 = CapturePlans.agent_position(_main, followed)
+			if position != Vector2.INF:
+				_camera.position = position
+		_camera.force_update_scroll()
+		await RenderingServer.frame_post_draw
+		var now: Dictionary = _world.call("get_time_snapshot")
+		var stem: String = "%s_%02d" % [prefix, index]
+		var image: Image = root.get_texture().get_image()
+		if image == null:
+			_fail("cannot read animation framebuffer")
+			return
+		images.append(image)
+		if not _write_entities(stem, int(now["tick"]), image.get_size()):
+			return
+		var entry: Dictionary = {"file": stem + ".png", "entities": stem + ".entities.json",
+			"tick": int(now["tick"]), "framing": prefix, "zoom": _camera.zoom.x,
+			"width": image.get_width(), "height": image.get_height(),
+			"real_time_usec": start_usec, "followed_agent_id": followed}
+		frames.append(entry)
+		_manifest.append(entry)
+		var remaining: float = float(clip_start_usec + (index + 1) * 100000 - Time.get_ticks_usec()) / 1000000.0
+		if remaining > 0:
+			await create_timer(remaining).timeout
+	_world.call("set_sim_speed", 0.0)
+	_world.process_mode = Node.PROCESS_MODE_DISABLED
+	_camera.position = original_position
+	# Encode after freezing so PNG compression cannot change the sampling cadence.
+	for index: int in images.size():
+		if images[index].save_png(ProjectSettings.globalize_path(_out.path_join(str(frames[index]["file"])))) != OK:
+			_fail("cannot save animation frame")
+			return
+	images.clear()
+	if not CapturePlans.write_json(_out.path_join("strip.json" if follow else "evening.json"), {
+		"frames": frames, "followed_agent_id": followed, "moving_agent_found": followed >= 0 if follow else null,
+		"requested_interval_s": 0.1, "speed": 1.0,
+	}):
+		_fail("cannot write animation manifest")
+
+
+func _capture_calibration() -> void:
+	var path: String = "res://scenes/test/art_calibration.tscn"
+	if not ResourceLoader.exists(path):
+		_fail("missing required art calibration scene")
+		return
+	var packed: PackedScene = load(path) as PackedScene
+	var scene: Node = packed.instantiate()
+	root.add_child(scene)
+	current_scene = scene
+	var camera: Camera2D = scene.get_node_or_null("Camera2D") as Camera2D
+	if camera == null:
+		_fail("calibration scene requires Camera2D")
+		return
+	for zoom_level: int in [4, 6]:
+		camera.zoom = Vector2(zoom_level, zoom_level)
+		camera.force_update_scroll()
+		for frame: int in range(5):
+			await process_frame
+		await RenderingServer.frame_post_draw
+		var image: Image = root.get_texture().get_image()
+		var stem: String = "a_calib_z%d" % zoom_level
+		if image == null or image.save_png(ProjectSettings.globalize_path(_out.path_join(stem + ".png"))) != OK:
+			_fail("cannot save calibration framebuffer")
+			return
+		var viewport: Vector2 = Vector2(image.get_size())
+		var pixel_scale: Vector2 = viewport / root.get_visible_rect().size
+		if not CapturePlans.write_json(_out.path_join(stem + ".entities.json"), {
+			"schema_version": 3, "entities": Metadata.entities(scene, viewport, pixel_scale),
+			"zoom": [zoom_level, zoom_level], "viewport_size": [image.get_width(), image.get_height()],
+			"framebuffer_scale": pixel_scale.x,
+		}):
+			_fail("cannot write calibration metadata")
+			return
+		_manifest.append({"file": stem + ".png", "entities": stem + ".entities.json", "framing": "a_calib",
+			"zoom": zoom_level, "width": image.get_width(), "height": image.get_height()})
+	scene.queue_free()

@@ -28,7 +28,7 @@ const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
 const Z_NEED_BAR := 7            # above SeekVizRenderer (6) so bars are visible
 const SATURATION := 100.0        # need value at full saturation (ratio = v/100)
-const DANGER_THRESHOLD := 0.5    # below this, no bar (safe agent)
+const DANGER_THRESHOLD := 0.75    # below this, no bar (safe agent)
 const BAR_OFFSET_Y := -17.0      # sits above the seek_viz head-dot (-12)
 const BAR_WIDTH := 12.0          # max bar length (at danger 1.0)
 const BAR_HEIGHT := 2.5
@@ -88,15 +88,9 @@ func _draw() -> void:
 		if danger < DANGER_THRESHOLD:
 			continue
 		var agent_px: Vector2 = _tile_to_px(_xs[i], _ys[i])
-		var bar_origin: Vector2 = agent_px + Vector2(-BAR_WIDTH / 2.0, BAR_OFFSET_Y)
-		# Faint full-width track so the fill length is legible.
-		draw_rect(Rect2(bar_origin, Vector2(BAR_WIDTH, BAR_HEIGHT)),
-			Color(0.0, 0.0, 0.0, TRACK_ALPHA))
-		# Colour ramps yellow → red across the [threshold, 1.0] danger band.
-		var t: float = clampf((danger - DANGER_THRESHOLD) / (1.0 - DANGER_THRESHOLD), 0.0, 1.0)
-		var col: Color = COLOR_SAFE_BAR.lerp(COLOR_DEAD_BAR, t)
-		# Fill length encodes severity (full bar = about to die).
-		draw_rect(Rect2(bar_origin, Vector2(BAR_WIDTH * danger, BAR_HEIGHT)), col)
+		var origin: Vector2 = agent_px + Vector2(-1.0, -30.0)
+		draw_rect(Rect2(origin, Vector2(2, 4)), COLOR_DEAD_BAR)
+		draw_rect(Rect2(origin + Vector2(0, 5), Vector2(2, 1)), COLOR_DEAD_BAR)
 
 
 func _tile_to_px(tx: int, ty: int) -> Vector2:

@@ -348,8 +348,8 @@ fn harness_s16_epsilon_a9_renderer_and_scene_static_structure() {
         "A9.2: seek_viz_renderer.gd must contain at least one draw_line"
     );
     assert!(
-        renderer.contains("draw_circle"),
-        "A9.3: seek_viz_renderer.gd must contain at least one draw_circle"
+        !renderer.contains("draw_circle"),
+        "A9.3: debug head dots are removed; selected-only goal lines remain"
     );
     assert!(
         renderer_ws.contains("Color(0.9,0.2,0.2)"),

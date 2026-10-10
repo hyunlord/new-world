@@ -112,7 +112,6 @@ func _draw() -> void:
 		return
 	# slice 2-5b — carry glyph only when its parallel array matches (additive,
 	# never blocks the head-dot/goal-line overlays).
-	var has_carry: bool = _carried_foods.size() == n
 	var selected: int = int(_inspector.call("get_selected_entity_bits")) if _inspector != null else -1
 	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for i in n:
@@ -124,24 +123,6 @@ func _draw() -> void:
 			var target_px: Vector2 = _tile_to_px(_target_xs[i], _target_ys[i])
 			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH / maxf(zoom, 0.01))
 			_drawn_segment_count += 1
-		# A — head dot above the agent.
-		var head: Vector2 = agent_px + Vector2(0.0, HEAD_OFFSET_Y)
-		if tag == 1:
-			draw_circle(head, HEAD_RADIUS, _kind_color(kind, 1.0))
-		elif tag == 3:
-			draw_circle(head, HEAD_RADIUS, Color.WHITE)
-		# Idle (0) / Consuming-Agent (2) → no head-dot.
-		# slice 2-5b — carry indicator: a grain-tinted square BESIDE the agent
-		# (distinct anchor + shape from the head-dot circle ABOVE) whenever the
-		# agent is hauling Food. Reconciled every frame from the snapshot — it
-		# disappears the frame carried_food returns to 0 (deposit complete).
-		if has_carry and _carried_foods[i] > 0:
-			var carry_c: Vector2 = agent_px + CARRY_OFFSET
-			var carry_r: Rect2 = Rect2(
-				carry_c - Vector2(CARRY_HALF, CARRY_HALF),
-				Vector2(CARRY_HALF * 2.0, CARRY_HALF * 2.0))
-			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_FILL_ALPHA), true)
-			draw_rect(carry_r, Color(COLOR_CARRY.r, COLOR_CARRY.g, COLOR_CARRY.b, CARRY_STROKE_ALPHA), false, CARRY_STROKE_W)
 
 
 func _tile_to_px(tx: int, ty: int) -> Vector2:

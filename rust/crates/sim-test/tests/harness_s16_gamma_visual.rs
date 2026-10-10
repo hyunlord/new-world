@@ -66,7 +66,6 @@ fn read_world_node_src() -> String {
 }
 
 
-
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
@@ -198,8 +197,8 @@ fn harness_s16_gamma_a4_world_renderer_marker_is_polygon2d() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -241,8 +240,8 @@ fn harness_s16_gamma_a7_backend_truth_positions_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

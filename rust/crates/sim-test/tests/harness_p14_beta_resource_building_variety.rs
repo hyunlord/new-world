@@ -27,109 +27,6 @@ fn project_root() -> PathBuf {
         .expect("project root above sim-test crate")
 }
 
-fn read_file(rel: &[&str]) -> String {
-    let mut path = project_root();
-    for seg in rel {
-        path.push(seg);
-    }
-    fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
-}
-
-
-
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
-/// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
-/// literals (single or double quoted).
-fn strip_gd_comments(src: &str) -> String {
-    let mut out = String::with_capacity(src.len());
-    for line in src.lines() {
-        let mut in_str: Option<char> = None;
-        let mut keep_end = line.len();
-        for (i, c) in line.char_indices() {
-            match in_str {
-                Some(q) if c == q => in_str = None,
-                None if c == '"' || c == '\'' => in_str = Some(c),
-                None if c == '#' => {
-                    keep_end = i;
-                    break;
-                }
-                _ => {}
-            }
-        }
-        out.push_str(&line[..keep_end]);
-        out.push('\n');
-    }
-    out
-}
-
-/// Locate every `const`/`var` declaration of `ident` in the (stripped) source
-/// and return each line's RHS string, trimmed.
-fn find_decl_rhss(stripped: &str, ident: &str) -> Vec<String> {
-    let mut out = Vec::new();
-    for line in stripped.lines() {
-        let t = line.trim_start();
-        if !(t.starts_with("const ") || t.starts_with("var ")) {
-            continue;
-        }
-        let after_kw = t
-            .strip_prefix("const ")
-            .or_else(|| t.strip_prefix("var "))
-            .unwrap_or(t);
-        if !after_kw.starts_with(ident) {
-            continue;
-        }
-        let next = after_kw
-            .as_bytes()
-            .get(ident.len())
-            .copied()
-            .unwrap_or(b' ') as char;
-        if next.is_ascii_alphanumeric() || next == '_' {
-            continue;
-        }
-        let rhs = if let Some(p) = line.find(":=") {
-            line[p + 2..].trim().to_string()
-        } else {
-            let bytes = line.as_bytes();
-            let mut found: Option<usize> = None;
-            let mut i = 0usize;
-            while i < bytes.len() {
-                if bytes[i] == b'=' {
-                    let prev = if i == 0 { b' ' } else { bytes[i - 1] };
-                    let next_b = bytes.get(i + 1).copied().unwrap_or(b' ');
-                    if prev != b':' && prev != b'=' && next_b != b'=' {
-                        found = Some(i);
-                        break;
-                    }
-                }
-                i += 1;
-            }
-            match found {
-                Some(p) => line[p + 1..].trim().to_string(),
-                None => continue,
-            }
-        };
-        out.push(rhs);
-    }
-    out
-}
-
-fn unique_decl_rhs(stripped: &str, ident: &str, label: &str) -> String {
-    let rhss = find_decl_rhss(stripped, ident);
-    assert_eq!(
-        rhss.len(),
-        1,
-        "{label}: expected exactly 1 declaration of `{ident}`; got {n}: {rhss:?}",
-        n = rhss.len()
-    );
-    rhss.into_iter().next().unwrap()
-}
-
-fn no_ws(s: &str) -> String {
-    s.chars().filter(|c| !c.is_whitespace()).collect()
-}
 
 /// Verify a PNG file exists, is non-empty, and starts with the PNG magic.
 fn assert_png_at(path: &PathBuf, label: &str) {
@@ -151,8 +48,8 @@ fn harness_p14_beta_a1_resource_type_paths_array_declared() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -163,8 +60,8 @@ fn harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -175,8 +72,8 @@ fn harness_p14_beta_a3_resource_type_paths_index_0_references_legacy_constant() 
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -226,8 +123,8 @@ fn harness_p14_beta_a7_resource_type_paths_index_4_food_literal() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -249,8 +146,8 @@ fn harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_itera
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -284,8 +181,9 @@ fn harness_p14_beta_a11_village_fixture_paths_has_exactly_four_literals() {
 fn harness_p14_beta_a12_village_fixture_positions_match_diamond_layout() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 13: z_village_fixture_equals_five ─────────────────────────
@@ -305,8 +203,9 @@ fn harness_p14_beta_a13_z_village_fixture_equals_five() {
 fn harness_p14_beta_a14_village_fixture_placement_loop_present() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 15: phase_13_beta_resource_constants_preserved ────────────
@@ -315,8 +214,8 @@ fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -326,17 +225,18 @@ fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
 fn harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 17: phase_12_construction_constants_preserved ─────────────
 #[test]
 fn harness_p14_beta_a17_phase_12_construction_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("sprite.modulate.a = 0.35"));
+    assert!(src.contains("ART.apply(sprite, sprite_id)"));
 }
 
 // ─── Assertion 18: phase_12_gamma_furniture_constants_preserved ──────────
@@ -353,21 +253,24 @@ fn harness_p14_beta_a18_phase_12_gamma_furniture_constants_preserved() {
 // ─── Assertion 19: phase_14_alpha_agent_renderer_constants_preserved ─────
 #[test]
 fn harness_p14_beta_a19_phase_14_alpha_agent_renderer_constants_preserved() {
-    // Type: D — Phase 14-α scope-discipline guard. β must not touch
-    // agent_renderer.gd at all.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let bucket = unique_decl_rhs(&stripped, "ROLE_BUCKET_COUNT", "A19.1");
-    assert_eq!(
-        bucket, "4",
-        "A19.2: ROLE_BUCKET_COUNT must remain 4; got `{bucket}`"
-    );
-    let icon = unique_decl_rhs(&stripped, "ICON_OFFSET_PX", "A19.3");
-    assert_eq!(
-        no_ws(&icon),
-        "Vector2(0,-12)",
-        "A19.4: ICON_OFFSET_PX must remain Vector2(0, -12); got `{icon}`"
-    );
-    println!("[P14-β A19] Phase 14-α agent_renderer constants preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let hash = include_str!("../../../../scripts/ui/art_hash.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ArtHashScript.look(agent_id)"));
+    assert!(hash.contains("mix(agent_id)"));
+    assert!(hash.contains("\"skin\": posmod(h >> 9, 4)"));
+    assert!(hash.contains("\"hair\": posmod(h >> 11, 5)"));
+    assert!(hash.contains("\"clothing\": posmod(h >> 15, 6)"));
+    assert!(src.contains("ICON_OFFSET_PX := Vector2(0, -30)"));
+
 }
 
 // ─── Assertion 20: new_resource_sprite_assets_exist_on_disk ──────────────

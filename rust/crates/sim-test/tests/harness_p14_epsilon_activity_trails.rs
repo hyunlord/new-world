@@ -47,11 +47,6 @@ fn read_main_tscn_src() -> String {
     read_file(&["scenes", "main.tscn"])
 }
 
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
-
 
 fn read_hud_topbar_src() -> String {
     read_file(&["scripts", "ui", "panels", "hud_topbar.gd"])
@@ -508,26 +503,25 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
 #[test]
 fn harness_p14_epsilon_a13_regression_guard_agent_renderer_phase_invariants_intact() {
-    // Type D — five canonical literals all present.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let needles = [
-        "ROLE_BUCKET_COUNT",
-        "ICON_OFFSET_PX",
-        "STATE_SCALE_BOOST",
-        "STATE_TINTS",
-        "SPRITE_SCALE",
-    ];
-    let mut missing: Vec<&str> = Vec::new();
-    for n in needles.iter() {
-        if !stripped.contains(n) {
-            missing.push(n);
-        }
-    }
-    assert!(
-        missing.is_empty(),
-        "A13: agent_renderer.gd must keep all 5 invariant literals; missing={missing:?}"
-    );
-    println!("[P14-ε A13] agent_renderer.gd 5-literal regression guard intact ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+    assert!(src.contains("ICON_OFFSET_PX"));
+    assert!(!src.contains("STATE_TINTS"));
+
 }
 
 // ─── A14: world_renderer.gd Phase 14-β invariants intact ─────────────────
@@ -536,8 +530,8 @@ fn harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact(
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

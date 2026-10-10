@@ -4,25 +4,12 @@ extends Control
 
 const HUD_MARGIN: int = 12
 const HUD_SEPARATION: int = 16
-const SEEK_VIZ_STYLE: GDScript = preload("res://scripts/ui/seek_viz_renderer.gd")
-const LEGEND_FONT_SIZE: int = 14
-const LEGEND_KEYS: Array[String] = [
-	"INSPECTOR_TARGET_FOOD", "INSPECTOR_TARGET_WATER", "INSPECTOR_TARGET_SLEEP",
-	"HUD_ACTIVITY_OTHER", "HUD_ACTIVITY_BUSY",
-]
-const LEGEND_COLORS: Array[Color] = [
-	SEEK_VIZ_STYLE.COLOR_FOOD, SEEK_VIZ_STYLE.COLOR_WATER, SEEK_VIZ_STYLE.COLOR_SLEEP,
-	SEEK_VIZ_STYLE.COLOR_GRAY, Color.WHITE,
-]
-
 var _world_sim: Node = null
 var _shelters_label: Label
 var _agents_label: Label
 var _settlements_label: Label
 var _sites_label: Label
 var _locale: Node = null
-var _legend_title: Label
-var _legend_labels: Array[Label] = []
 
 
 func _ready() -> void:
@@ -52,7 +39,6 @@ func _ready() -> void:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hbox.add_child(lbl)
 
-	_add_activity_legend(column)
 
 	# Missing WorldSim is tolerated silently — counters stay at their
 	# default values. No push_error / push_warning here so the edge-case
@@ -61,37 +47,13 @@ func _ready() -> void:
 	_refresh()
 
 
-func _add_activity_legend(column: VBoxContainer) -> void:
-	var legend: HBoxContainer = HBoxContainer.new()
-	legend.name = "ActivityLegend"
-	legend.add_theme_constant_override("separation", 8)
-	legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	column.add_child(legend)
-	_legend_title = _legend_label()
-	legend.add_child(_legend_title)
-	for i: int in LEGEND_KEYS.size():
-		var entry: HBoxContainer = HBoxContainer.new()
-		entry.add_theme_constant_override("separation", 4)
-		entry.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		legend.add_child(entry)
-		var swatch: ColorRect = ColorRect.new()
-		swatch.custom_minimum_size = Vector2(8, 8)
-		swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		swatch.color = LEGEND_COLORS[i]
-		swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		entry.add_child(swatch)
-		var label: Label = _legend_label()
-		entry.add_child(label)
-		_legend_labels.append(label)
-
-
-func _legend_label() -> Label:
-	var label: Label = Label.new()
-	label.add_theme_font_size_override("font_size", LEGEND_FONT_SIZE)
-	label.add_theme_color_override("font_outline_color", Color("141414"))
-	label.add_theme_constant_override("outline_size", 2)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	return label
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L:
+		if _locale != null:
+			var current: String = str(_locale.get("_current_lang"))
+			_locale.call("set_language", "en" if current == "ko" else "ko")
+			_refresh()
+		get_viewport().set_input_as_handled()
 
 
 func _process(_delta: float) -> void:
@@ -101,10 +63,6 @@ func _process(_delta: float) -> void:
 
 
 func _refresh() -> void:
-	if _legend_title != null:
-		_legend_title.text = _loc("HUD_ACTIVITY_LEGEND")
-	for i: int in _legend_labels.size():
-		_legend_labels[i].text = _loc(LEGEND_KEYS[i])
 	var agent_n: int = 0
 	var settle_n: int = 0
 	var site_n: int = 0

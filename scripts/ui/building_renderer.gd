@@ -4,10 +4,13 @@ const TILE_SIZE: int = 16
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const RECONCILE_FRAMES: int = 30
 const STOCKPILE_FOOD_KEY: String = "HUD_STOCKPILE_FOOD"
-const BUILDING_PATHS: Array[String] = [
-	"res://assets/sprites/buildings/campfire/1.png",
-	"res://assets/sprites/furniture/lean_to/1.png",
-	"res://assets/sprites/buildings/stockpile/1.png",
+const ART = preload("res://scripts/ui/art_sprite_library.gd")
+const BUILDING_IDS: Array[String] = [
+	"direction_01_campfire", "direction_02_lean_to", "direction_03_storage_pit",
+]
+const BUSH_IDS: Array[String] = [
+	"direction_08_berry_bush_bare", "direction_07_berry_bush_one",
+	"direction_06_berry_bush_two", "direction_05_berry_bush_full",
 ]
 var _world_sim: WorldSimNode
 var _locale: Node
@@ -17,8 +20,10 @@ var _sites: Dictionary = {}
 var _bushes: Dictionary = {}
 var _labels: Dictionary = {}
 var _label_anchors: Dictionary = {}
-var _building_textures: Array[Texture2D] = []
-var _berry_textures: Array[Texture2D] = []
+var _objects: Node2D
+var _shadows: Node2D
+var _shadow_texture: Texture2D
+var _object_shadows: Dictionary = {}
 var _stockpile_positions: Array[Vector2i] = []
 var _frame: int = 0
 
@@ -28,10 +33,9 @@ func _ready() -> void:
 	_world_sim = get_node("../WorldSim") as WorldSimNode
 	_locale = get_node_or_null("/root/Locale")
 	_camera = get_node("../Camera2D") as Camera2D
-	for path: String in BUILDING_PATHS:
-		_building_textures.append(load(path) as Texture2D)
-	for stage: int in range(4):
-		_berry_textures.append(load("res://assets/sprites/resources/berry_bush_%d.png" % stage) as Texture2D)
+	_objects = ART.shared_layer(self, "WorldObjects", 4, true)
+	_shadows = ART.shared_layer(self, "Shadows", 3)
+	_shadow_texture = load("res://assets/art/contact_shadow.png") as Texture2D
 	_world_sim.connect("world_reset", refresh_snapshot)
 	refresh_snapshot()
 
@@ -50,13 +54,13 @@ func refresh_snapshot() -> void:
 	_update_labels()
 
 func _tile_center(x: int, y: int) -> Vector2:
-	return SPRITE_ORIGIN + Vector2(x, y) * TILE_SIZE + Vector2.ONE * (TILE_SIZE / 2.0)
+	return SPRITE_ORIGIN + Vector2(x, y) * TILE_SIZE + Vector2(8, 15)
 
 func _sprite_for(nodes: Dictionary, id: int) -> Sprite2D:
 	var sprite: Sprite2D = nodes.get(id) as Sprite2D
 	if sprite == null:
 		sprite = Sprite2D.new()
-		add_child(sprite)
+		_objects.add_child(sprite)
 		nodes[id] = sprite
 	return sprite
 
@@ -64,8 +68,33 @@ func _reap(nodes: Dictionary, seen: Dictionary) -> void:
 	for id: int in nodes.keys():
 		if not seen.has(id):
 			var stale: Node = nodes[id] as Node
+			var shadow_id: int = stale.get_instance_id()
+			if _object_shadows.has(shadow_id):
+				(_object_shadows[shadow_id] as Sprite2D).queue_free()
+				_object_shadows.erase(shadow_id)
 			stale.queue_free()
 			nodes.erase(id)
+
+func _configure(sprite: Sprite2D, sprite_id: String, kind: String, id: int, x: int, y: int) -> void:
+	if not ART.apply(sprite, sprite_id):
+		push_error("Missing building art: " + sprite_id)
+	sprite.position = _tile_center(x, y)
+	sprite.set_meta("art_kind", kind)
+	sprite.set_meta("art_id", id)
+	sprite.set_meta("tile_x", x)
+	sprite.set_meta("tile_y", y)
+	var shadow_id: int = sprite.get_instance_id()
+	var shadow: Sprite2D = _object_shadows.get(shadow_id) as Sprite2D
+	if shadow == null:
+		shadow = Sprite2D.new()
+		shadow.texture = _shadow_texture
+		shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		shadow.modulate.a = 0.4
+		shadow.set_meta("art_kind", "object_shadow")
+		shadow.set_meta("art_id", id)
+		_shadows.add_child(shadow)
+		_object_shadows[shadow_id] = shadow
+	shadow.position = sprite.position
 
 func _update_buildings() -> void:
 	var snapshot: Dictionary = _world_sim.get_building_snapshot()
@@ -78,8 +107,8 @@ func _update_buildings() -> void:
 	for i: int in range(ids.size()):
 		var kind: int = kinds[i]
 		var sprite: Sprite2D = _sprite_for(_buildings, ids[i])
-		sprite.texture = _building_textures[kind]
-		sprite.position = _tile_center(xs[i], ys[i])
+		_configure(sprite, BUILDING_IDS[kind], "building", ids[i], xs[i], ys[i])
+		sprite.set_meta("building_kind", kind)
 		seen[ids[i]] = true
 		if kind == 2:
 			_stockpile_positions.append(Vector2i(xs[i], ys[i]))
@@ -90,35 +119,11 @@ func _update_construction_sites() -> void:
 	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
-	var progresses: PackedInt32Array = snapshot.get("progresses", PackedInt32Array())
-	var required: PackedInt32Array = snapshot.get("required_progresses", PackedInt32Array())
 	var seen: Dictionary = {}
 	for i: int in range(ids.size()):
-		var site: Node2D = _sites.get(ids[i]) as Node2D
-		if site == null:
-			site = Node2D.new()
-			var sprite: Sprite2D = Sprite2D.new()
-			sprite.texture = _building_textures[1]
-			sprite.modulate.a = 0.35
-			site.add_child(sprite)
-			var track: ColorRect = ColorRect.new()
-			track.color = Color("3a3a3a")
-			track.position = Vector2(-7, 17)
-			track.size = Vector2(14, 2)
-			track.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			site.add_child(track)
-			var fill: ColorRect = ColorRect.new()
-			fill.name = "Progress"
-			fill.color = Color("e0c060")
-			fill.position = track.position
-			fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			site.add_child(fill)
-			add_child(site)
-			_sites[ids[i]] = site
-		site.position = _tile_center(xs[i], ys[i])
-		var progress: ColorRect = site.get_node("Progress") as ColorRect
-		var ratio: float = clampf(float(progresses[i]) / float(maxi(required[i], 1)), 0.0, 1.0)
-		progress.size = Vector2(14.0 * ratio, 2)
+		var site: Sprite2D = _sprite_for(_sites, ids[i])
+		_configure(site, "direction_04_shelter_frame", "site", ids[i], xs[i], ys[i])
+		site.set_meta("building_kind", 1)
 		seen[ids[i]] = true
 	_reap(_sites, seen)
 
@@ -136,9 +141,8 @@ func _update_bushes() -> void:
 		var id: int = (xs[i] << 32) | ys[i]
 		var stage: int = clampi(int(ceil(3.0 * float(amounts[i]) / float(maxi(maxes[i], 1)))), 0, 3)
 		var bush: Sprite2D = _sprite_for(_bushes, id)
-		bush.texture = _berry_textures[stage]
-		bush.position = _tile_center(xs[i], ys[i])
-		bush.z_index = -1
+		_configure(bush, BUSH_IDS[stage], "bush", id, xs[i], ys[i])
+		bush.set_meta("building_kind", -1)
 		seen[id] = true
 	_reap(_bushes, seen)
 
@@ -172,18 +176,23 @@ func _update_stockpiles() -> void:
 		if label == null:
 			label = Label.new()
 			label.z_index = 6
+			label.set_meta("art_kind", "stockpile_label")
+			label.set_meta("art_id", id)
+			label.add_theme_font_override("font", load("res://assets/fonts/galmuri/Galmuri11.ttf") as Font)
 			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			label.add_theme_font_size_override("font_size", 12)
 			label.add_theme_color_override("font_outline_color", Color("141414"))
 			label.add_theme_constant_override("outline_size", 3)
 			add_child(label)
 			_labels[id] = label
-		label.text = str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % int(totals[nearest])
+		label.text = (str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % int(totals[nearest])) if _locale != null else str(int(totals[nearest]))
 		_label_anchors[id] = _tile_center(nearest.x, nearest.y) + Vector2(0, -18)
 		seen[id] = true
 	_reap(_labels, seen)
 
 func _update_labels() -> void:
+	if _camera == null:
+		return
 	for id: int in _labels.keys():
 		var label: Label = _labels[id] as Label
 		label.scale = Vector2.ONE / _camera.zoom

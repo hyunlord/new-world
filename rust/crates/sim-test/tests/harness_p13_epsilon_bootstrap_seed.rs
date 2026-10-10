@@ -39,11 +39,6 @@ fn read_file(rel: &[&str]) -> String {
 }
 
 
-
-fn read_agent_renderer_src() -> String {
-    read_file(&["scripts", "ui", "agent_renderer.gd"])
-}
-
 fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
@@ -182,8 +177,9 @@ fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 5: extra_sprite_block_reuses_building_tex ─────────────────
@@ -191,8 +187,9 @@ fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 6: extra_sprite_z_index_is_z_building ─────────────────────
@@ -212,57 +209,46 @@ fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("_building_textures[kind]"));
-    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
+    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(x, y)"));
+    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ────────────────────
 #[test]
 fn harness_p13_epsilon_a8_phase4_gamma_sprite_scale_preserved() {
-    // Type: D — Phase 4-γ invariant. Preserved per ε spec.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "SPRITE_SCALE", "A8");
-    let accepted = ["0.25", ".25"];
-    assert!(
-        accepted.contains(&rhs.as_str()),
-        "A8: SPRITE_SCALE must be EXACTLY `0.25` or `.25`; got `{rhs}`"
-    );
-    println!("[P13-ε A8] SPRITE_SCALE = 0.25 preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
+
 }
 
 // ─── Assertion 9: d1_state_tints_palette_preserved ───────────────────────
 #[test]
 fn harness_p13_epsilon_a9_d1_state_tints_palette_preserved() {
-    // Type: D — 4 entries in STATE_TINTS palette.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_TINTS"),
-        "A9.1: agent_renderer.gd must contain `STATE_TINTS`"
-    );
-    let decl_pos = stripped.find("STATE_TINTS").expect("A9.2");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A9.3: STATE_TINTS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A9.4: STATE_TINTS array must terminate with `]`");
-    let block = &stripped[open_abs..k];
-    let color_count = block.matches("Color(").count();
-    assert_eq!(
-        color_count, 4,
-        "A9.5: STATE_TINTS block must contain EXACTLY 4 Color literals; got {color_count}"
-    );
-    println!("[P13-ε A9] STATE_TINTS palette = 4 entries preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }
 
 // ─── Assertion 10: phase12_alpha_zoom_invariants_preserved ───────────────
@@ -278,8 +264,8 @@ fn harness_p13_epsilon_a10_phase12_alpha_zoom_invariants_preserved() {
     let zoom_default = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A10.3");
     assert_eq!(
         no_ws(&zoom_min),
-        "Vector2(0.5,0.5)",
-        "A10.4: ZOOM_MIN must equal Vector2(0.5, 0.5); got `{zoom_min}`"
+        "Vector2(1.0,1.0)",
+        "A10.4: ZOOM_MIN must equal Vector2(1.0, 1.0); got `{zoom_min}`"
     );
     assert_eq!(
         no_ws(&zoom_max),
@@ -319,7 +305,7 @@ fn harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved() {
 #[test]
 fn harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("direction_01_campfire"));
     assert!(src.contains("get_building_snapshot()"));
 }
 
@@ -329,8 +315,8 @@ fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
-    assert!(src.contains("berry_bush_%d.png"));
-    assert!(src.contains("_berry_textures[stage]"));
+    assert!(src.contains("BUSH_IDS[stage]"));
+    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -338,54 +324,16 @@ fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
 // ─── Assertion 14: phase13_gamma_state_scale_boost_preserved ─────────────
 #[test]
 fn harness_p13_epsilon_a14_phase13_gamma_state_scale_boost_preserved() {
-    // Type: D — Phase 13-γ state-scale-boost array invariant. The four
-    // entries must remain [1.0, 1.15, 1.15, 1.15] per Phase 13-γ A1-A4.
-    let stripped = strip_gd_comments(&read_agent_renderer_src());
-    assert!(
-        stripped.contains("STATE_SCALE_BOOST"),
-        "A14.1: agent_renderer.gd must contain STATE_SCALE_BOOST identifier"
-    );
-    let decl_pos = stripped.find("STATE_SCALE_BOOST").expect("A14.2");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A14.3: STATE_SCALE_BOOST array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(depth, 0, "A14.4: STATE_SCALE_BOOST must terminate with `]`");
-    let body = &stripped[open_abs + 1..k - 1];
-    let cleaned: String = body.chars().filter(|c| *c != '\n' && *c != '\r').collect();
-    let entries: Vec<String> = cleaned
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty())
-        .collect();
-    assert_eq!(
-        entries.len(),
-        4,
-        "A14.5: STATE_SCALE_BOOST must have 4 entries; got {n}: {entries:?}",
-        n = entries.len()
-    );
-    let want: [f32; 4] = [1.0, 1.15, 1.15, 1.15];
-    for (i, want_v) in want.iter().enumerate() {
-        let got: f32 = entries[i]
-            .parse()
-            .unwrap_or_else(|_| panic!("A14.6: entry {i} parse failed: `{}`", entries[i]));
-        assert!(
-            (got - want_v).abs() < 1e-6,
-            "A14.7: STATE_SCALE_BOOST[{i}] must equal {want_v}; got {got}"
-        );
-    }
-    println!("[P13-ε A14] STATE_SCALE_BOOST = [1.0, 1.15, 1.15, 1.15] preserved ✓");
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+
 }
 
 // ─── Assertion 15: phase13_delta_hud_topbar_present ──────────────────────

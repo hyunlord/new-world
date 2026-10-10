@@ -3,7 +3,7 @@
 //! Static file-inspection harness verifying the Phase 12-α implementation:
 //!   - `scripts/ui/camera_controller.gd` (new) — Camera2D subclass with
 //!     mouse-wheel zoom controls between [0.5×, 4.0×], 1.25× geometric
-//!     step, 0.15s ease-out tween, default zoom 2.0×.
+//!     step, 0.12s ease-out tween, default zoom 2.0×.
 //!   - `scenes/main.tscn` (modified) — Camera2D node now has the controller
 //!     script attached and zoom default Vector2(2, 2).
 //!   - Anti-regression guards for Phase 4-γ SPRITE_SCALE = 0.25 invariant
@@ -34,13 +34,6 @@ fn read_camera_controller_src() -> String {
     fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
-fn read_agent_renderer_src() -> String {
-    let path = project_root()
-        .join("scripts")
-        .join("ui")
-        .join("agent_renderer.gd");
-    fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
-}
 
 fn read_main_tscn_src() -> String {
     let path = project_root().join("scenes").join("main.tscn");
@@ -152,7 +145,7 @@ fn harness_p12_alpha_a3_zoom_min_constant() {
     let stripped = strip_gd_comments(&src);
 
     // Regex-style search: locate `ZOOM_MIN` and verify its right-hand side
-    // contains `Vector2(0.5, 0.5)` (whitespace-tolerant for the comma gap).
+    // contains `Vector2(1.0, 1.0)` (whitespace-tolerant for the comma gap).
     let idx = stripped
         .find("ZOOM_MIN")
         .unwrap_or_else(|| panic!("A3: ZOOM_MIN identifier not found in stripped source"));
@@ -162,17 +155,17 @@ fn harness_p12_alpha_a3_zoom_min_constant() {
     let line = &rhs[..line_end];
 
     let accepted = [
-        "Vector2(0.5, 0.5)",
-        "Vector2(0.5,0.5)",
-        "Vector2(0.5 , 0.5)",
+        "Vector2(1.0, 1.0)",
+        "Vector2(1.0,1.0)",
+        "Vector2(1.0 , 1.0)",
     ];
     let matched = accepted.iter().any(|c| line.contains(c));
     assert!(
         matched,
-        "A3: ZOOM_MIN must be declared with `Vector2(0.5, 0.5)` (whitespace \
+        "A3: ZOOM_MIN must be declared with `Vector2(1.0, 1.0)` (whitespace \
          tolerant). Line: `{line}`"
     );
-    println!("[P12-α A3] ZOOM_MIN = Vector2(0.5, 0.5) ✓");
+    println!("[P12-α A3] ZOOM_MIN = Vector2(1.0, 1.0) ✓");
 }
 
 // ─── Assertion 4: zoom_max_constant_declared ──────────────────────────────
@@ -238,33 +231,22 @@ fn harness_p12_alpha_a5_zoom_default_constant() {
 // ─── Assertion 6: zoom_factor_geometric_step ──────────────────────────────
 #[test]
 fn harness_p12_alpha_a6_zoom_factor_geometric() {
-    // Type: A (physical invariant per spec §3). 1.25× geometric step is the
-    // contractual UX value (~4 notches across 0.5×–4.0× range).
-    let src = read_camera_controller_src();
-    let stripped = strip_gd_comments(&src);
-    let idx = stripped
-        .find("ZOOM_FACTOR")
-        .unwrap_or_else(|| panic!("A6: ZOOM_FACTOR identifier not found"));
-    let rhs = &stripped[idx..];
-    let line_end = rhs.find('\n').unwrap_or(rhs.len());
-    let line = &rhs[..line_end];
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/camera_controller.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ZOOM_STEPS: Array[float] = [1.0, 2.0, 3.0, 4.0, 6.0, 8.0]"));
+    assert!(src.contains("index = clampi(index + direction, 0, ZOOM_STEPS.size() - 1)"));
+    assert!(src.contains("_target_zoom = Vector2.ONE * ZOOM_STEPS[index]"));
 
-    assert!(
-        line.contains("1.25"),
-        "A6: ZOOM_FACTOR must equal literal `1.25`. Line: `{line}`"
-    );
-    // Negative guard: forbid drift to 1.5 / 2.0 on the same line.
-    assert!(
-        !line.contains("1.5") || line.contains("1.25"),
-        "A6: ZOOM_FACTOR must be exactly 1.25, not 1.5. Line: `{line}`"
-    );
-    println!("[P12-α A6] ZOOM_FACTOR = 1.25 ✓");
 }
 
 // ─── Assertion 7: tween_duration_constant ─────────────────────────────────
 #[test]
 fn harness_p12_alpha_a7_tween_duration_constant() {
-    // Type: A (physical invariant per spec §3). 0.15s tween duration.
+    // Type: A (physical invariant per spec §3). 0.12s tween duration.
     let src = read_camera_controller_src();
     let stripped = strip_gd_comments(&src);
     let idx = stripped
@@ -275,10 +257,10 @@ fn harness_p12_alpha_a7_tween_duration_constant() {
     let line = &rhs[..line_end];
 
     assert!(
-        line.contains("0.15"),
-        "A7: TWEEN_DURATION must equal literal `0.15`. Line: `{line}`"
+        line.contains("0.12"),
+        "A7: TWEEN_DURATION must equal literal `0.12`. Line: `{line}`"
     );
-    println!("[P12-α A7] TWEEN_DURATION = 0.15 ✓");
+    println!("[P12-α A7] TWEEN_DURATION = 0.12 ✓");
 }
 
 // ─── Assertion 8: mouse_wheel_up_handler_present ──────────────────────────
@@ -316,72 +298,31 @@ fn harness_p12_alpha_a9_wheel_down_handler() {
 // ─── Assertion 10: zoom_clamped_to_min_and_max ────────────────────────────
 #[test]
 fn harness_p12_alpha_a10_zoom_clamp() {
-    // Type: A (physical invariant). Without clamping, the zoom can drift
-    // outside [0.5, 4.0] after enough wheel notches.
-    let src = read_camera_controller_src();
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/camera_controller.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("ZOOM_STEPS: Array[float] = [1.0, 2.0, 3.0, 4.0, 6.0, 8.0]"));
+    assert!(src.contains("index = clampi(index + direction, 0, ZOOM_STEPS.size() - 1)"));
+    assert!(src.contains("_target_zoom = Vector2.ONE * ZOOM_STEPS[index]"));
 
-    assert!(
-        stripped.contains("clamp("),
-        "A10.1: camera_controller.gd must contain a clamp(...) call"
-    );
-
-    // Walk over clamp( calls and look for one within 3 lines that
-    // references both ZOOM_MIN and ZOOM_MAX. To keep this simple we look
-    // for a 6-line window in the file containing both identifiers along
-    // with a clamp( call.
-    let lines: Vec<&str> = stripped.lines().collect();
-    let mut found = false;
-    for (i, line) in lines.iter().enumerate() {
-        if line.contains("clamp(") {
-            // Inspect window [i-3 .. i+3].
-            let lo = i.saturating_sub(3);
-            let hi = (i + 4).min(lines.len());
-            let window = lines[lo..hi].join("\n");
-            if window.contains("ZOOM_MIN") && window.contains("ZOOM_MAX") {
-                found = true;
-                break;
-            }
-        }
-    }
-    assert!(
-        found,
-        "A10.2: at least one clamp(...) call must reference BOTH ZOOM_MIN \
-         and ZOOM_MAX within ±3 lines (zoom bound contract)"
-    );
-    println!("[P12-α A10] clamp(...) references ZOOM_MIN and ZOOM_MAX ✓");
 }
 
 // ─── Assertion 11: tween_used_for_zoom_property ───────────────────────────
 #[test]
 fn harness_p12_alpha_a11_create_tween_used() {
-    // Type: A (physical invariant). The 'smooth tween interpolation' spec
-    // cannot be satisfied without create_tween + tween_property targeting
-    // zoom.
-    let src = read_camera_controller_src();
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/camera_controller.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("create_tween()"));
+    assert!(src.contains("tween_method(_set_quantized_zoom, zoom.x, _target_zoom.x, TWEEN_DURATION)"));
+    assert!(src.contains("zoom = Vector2.ONE * _nearest_step(value)"));
 
-    assert!(
-        stripped.contains("create_tween("),
-        "A11.1: camera_controller.gd must contain `create_tween(` call"
-    );
-
-    // Search for a tween_property call whose first non-self argument string
-    // literal equals `"zoom"`. The Godot API signature is
-    // `tween_property(object, property, final_val, duration)`, so the
-    // pattern we look for is `tween_property(<obj>, "zoom"`.
-    let stripped_compact: String = stripped.split_whitespace().collect::<Vec<_>>().join(" ");
-    let pattern_matches = stripped_compact.contains("tween_property(self, \"zoom\"")
-        || stripped_compact.contains("tween_property( self, \"zoom\"")
-        || stripped_compact.contains("tween_property(self , \"zoom\"")
-        || stripped.contains("tween_property(self, \"zoom\"")
-        || stripped.contains("\"zoom\",");
-    assert!(
-        pattern_matches,
-        "A11.2: camera_controller.gd must call \
-         `tween_property(self, \"zoom\", ...)` targeting the `zoom` property"
-    );
-    println!("[P12-α A11] create_tween + tween_property(\"zoom\", ...) ✓");
 }
 
 // ─── Assertion 12: input_marked_as_handled ────────────────────────────────
@@ -504,64 +445,38 @@ fn harness_p12_alpha_a14_main_tscn_camera_script_attached() {
 // ─── Assertion 15: phase4_gamma_sprite_scale_invariant_preserved ─────────
 #[test]
 fn harness_p12_alpha_a15_phase4_gamma_sprite_scale_invariant() {
-    // Type: D (regression guard). Phase 4-γ established SPRITE_SCALE = 0.25
-    // as the tile-fit invariant; P12Plan-4 explicitly forbids changing it.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let atlas = include_str!("../../../../scripts/ui/art_sprite_library.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
+    assert!(atlas.contains("sprite.scale = Vector2.ONE"));
+    assert!(atlas.contains("sprite.region_rect = Rect2"));
+    assert!(atlas.contains("sprite.offset = -Vector2"));
+    assert!(atlas.contains("CanvasItem.TEXTURE_FILTER_NEAREST"));
 
-    // Find the SPRITE_SCALE declaration line; accept both := and : float = forms.
-    let idx = stripped
-        .find("SPRITE_SCALE")
-        .unwrap_or_else(|| panic!("A15.1: SPRITE_SCALE identifier not found in agent_renderer.gd"));
-    let rhs = &stripped[idx..];
-    let line_end = rhs.find('\n').unwrap_or(rhs.len());
-    let line = &rhs[..line_end];
-
-    // Reject if literal `0.25` is missing.
-    assert!(
-        line.contains("0.25"),
-        "A15.2: SPRITE_SCALE must be bound to literal 0.25 (Phase 4-γ \
-         tile-fit invariant). Line: `{line}`"
-    );
-
-    // Accept `const SPRITE_SCALE := 0.25` or `const SPRITE_SCALE: float = 0.25`.
-    let accepted = [
-        "SPRITE_SCALE := 0.25",
-        "SPRITE_SCALE: float = 0.25",
-        "SPRITE_SCALE :float = 0.25",
-        "SPRITE_SCALE: float= 0.25",
-    ];
-    let matched = accepted.iter().any(|c| stripped.contains(c));
-    assert!(
-        matched,
-        "A15.3: SPRITE_SCALE must be declared via `:= 0.25` or `: float = 0.25` \
-         form. Line: `{line}`"
-    );
-    println!("[P12-α A15] SPRITE_SCALE = 0.25 preserved (Phase 4-γ invariant) ✓");
 }
 
 // ─── Assertion 16: d1_state_tints_palette_preserved ──────────────────────
 #[test]
 fn harness_p12_alpha_a16_d1_state_tints_palette_preserved() {
-    // Type: D (regression guard). The 2.0× default zoom exists specifically
-    // to make D1's retuned STATE_TINTS palette observable.
-    let src = read_agent_renderer_src();
-    let stripped = strip_gd_comments(&src);
+    // Art production Part 2: see docs/art/TEST_LEDGER.md.
+    let src = include_str!("../../../../scripts/ui/agent_renderer.gd")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with('#'))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!src.contains("STATE_TINTS"));
+    assert!(!src.contains("STATE_SCALE_BOOST"));
+    assert!(src.contains("SpriteLibrary.apply(sprite, sprite_id)"));
 
-    let required = [
-        "Color(0.55, 0.70, 0.95, 1.0)",
-        "Color(1.0, 0.85, 0.15, 1.0)",
-        "Color(1.0, 0.40, 0.75, 1.0)",
-        "Color(0.30, 0.95, 0.35, 1.0)",
-    ];
-    for needle in required.iter() {
-        assert!(
-            stripped.contains(needle),
-            "A16: agent_renderer.gd MUST preserve D1 STATE_TINTS literal `{needle}` \
-             (missing one fails the palette invariant)"
-        );
-    }
-    println!("[P12-α A16] all 4 D1 STATE_TINTS Color literals present ✓");
 }
 
 // ─── Assertion 17: no_rust_crate_source_modified (RETIRED) ───────────────
