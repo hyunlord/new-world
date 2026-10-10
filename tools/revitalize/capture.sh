@@ -73,7 +73,7 @@ out="$EVIDENCE/shots/$PLAN"
 run_bounded "$GODOT_BIN" --path . --rendering-driver opengl3 --resolution 1920x1080 \
     --script res://scripts/test/capture_framings.gd -- --out "$out" --plan "$PLAN"
 if [[ "$PLAN" == final ]]; then
-    qa_args=("$out" "docs/revitalize/shots/final")
+    qa_args=("$out" "${CAPTURE_DOCS_DIR:-docs/revitalize/shots/final}")
     if [[ -n "${BASELINE_RAW:-}" ]]; then qa_args+=("$BASELINE_RAW"); fi
     python3 tools/revitalize/visual_qa.py "${qa_args[@]}"
 fi
