@@ -1,0 +1,1004 @@
+{
+  "version": 2,
+  "direction": "H",
+  "composition": "D1 environment, D3 actors",
+  "sprites": [
+    {
+      "name": "01_campfire",
+      "file": "01_campfire.png",
+      "class": "campfire",
+      "native_size": [
+        23,
+        26
+      ],
+      "class_max": [
+        24,
+        26
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          122,
+          121,
+          253,
+          273
+        ],
+        "detected_period_xy": [
+          5.85,
+          5.85
+        ],
+        "period_xy": [
+          5.85,
+          5.85
+        ],
+        "phase_xy": [
+          2.5,
+          5.75
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2193.5606881818203,
+          2050.6269824
+        ],
+        "native_size": [
+          23,
+          26
+        ],
+        "spill_removed": 8,
+        "fringe_repaired": 4
+      },
+      "canvas_size": [
+        25,
+        28
+      ],
+      "anchor": [
+        12,
+        27
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "02_lean_to",
+      "file": "02_lean_to.png",
+      "class": "building",
+      "native_size": [
+        32,
+        28
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          73,
+          121,
+          255,
+          285
+        ],
+        "detected_period_xy": [
+          5.75,
+          5.9
+        ],
+        "period_xy": [
+          5.825,
+          5.825
+        ],
+        "phase_xy": [
+          3.0,
+          0.25
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2181.5066274193523,
+          2523.473569629673
+        ],
+        "native_size": [
+          32,
+          28
+        ],
+        "spill_removed": 30,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        34,
+        30
+      ],
+      "anchor": [
+        17,
+        29
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "03_storage_pit",
+      "file": "03_storage_pit.png",
+      "class": "building",
+      "native_size": [
+        31,
+        21
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          56,
+          150,
+          238,
+          274
+        ],
+        "detected_period_xy": [
+          6.0,
+          5.9
+        ],
+        "period_xy": [
+          5.95,
+          5.95
+        ],
+        "phase_xy": [
+          2.75,
+          4.75
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2594.836759999798,
+          3850.025708000042
+        ],
+        "native_size": [
+          31,
+          21
+        ],
+        "spill_removed": 1,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        33,
+        23
+      ],
+      "anchor": [
+        16,
+        22
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "04_shelter_frame",
+      "file": "04_shelter_frame.png",
+      "class": "building",
+      "native_size": [
+        32,
+        27
+      ],
+      "class_max": [
+        34,
+        30
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          36,
+          126,
+          225,
+          285
+        ],
+        "detected_period_xy": [
+          5.9,
+          5.9
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "phase_xy": [
+          0.75,
+          5.75
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1916.393586774191,
+          2927.1171853846054
+        ],
+        "native_size": [
+          32,
+          27
+        ],
+        "spill_removed": 45,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        34,
+        29
+      ],
+      "anchor": [
+        17,
+        28
+      ],
+      "footprint_tiles": [
+        2,
+        2
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "05_berry_bush_full",
+      "file": "05_berry_bush_full.png",
+      "class": "small object",
+      "native_size": [
+        25,
+        22
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          112,
+          108,
+          257,
+          236
+        ],
+        "detected_period_xy": [
+          5.85,
+          5.85
+        ],
+        "period_xy": [
+          5.85,
+          5.85
+        ],
+        "phase_xy": [
+          0.75,
+          0.25
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1338.452329999984,
+          1402.245876190454
+        ],
+        "native_size": [
+          25,
+          22
+        ],
+        "spill_removed": 3,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        27,
+        24
+      ],
+      "anchor": [
+        13,
+        23
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "06_berry_bush_two",
+      "file": "06_berry_bush_two.png",
+      "class": "small object",
+      "native_size": [
+        23,
+        22
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "pass",
+      "regenerate_reasons": [],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          108,
+          234,
+          236
+        ],
+        "detected_period_xy": [
+          5.8,
+          6.0
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "phase_xy": [
+          4.0,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1253.6340017390935,
+          1201.3246857142435
+        ],
+        "native_size": [
+          23,
+          22
+        ],
+        "spill_removed": 3,
+        "fringe_repaired": 2
+      },
+      "canvas_size": [
+        25,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "07_berry_bush_one",
+      "file": "07_berry_bush_one.png",
+      "class": "small object",
+      "native_size": [
+        22,
+        22
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "pass",
+      "regenerate_reasons": [],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          78,
+          108,
+          209,
+          236
+        ],
+        "detected_period_xy": [
+          6.0,
+          6.0
+        ],
+        "period_xy": [
+          6.0,
+          6.0
+        ],
+        "phase_xy": [
+          4.0,
+          5.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1326.3139636362598,
+          1081.4141142856822
+        ],
+        "native_size": [
+          22,
+          22
+        ],
+        "spill_removed": 4,
+        "fringe_repaired": 1
+      },
+      "canvas_size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "08_berry_bush_bare",
+      "file": "08_berry_bush_bare.png",
+      "class": "small object",
+      "native_size": [
+        22,
+        22
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "bare_bush_contains_red"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          54,
+          108,
+          186,
+          235
+        ],
+        "detected_period_xy": [
+          5.85,
+          6.0
+        ],
+        "period_xy": [
+          5.925,
+          5.925
+        ],
+        "phase_xy": [
+          0.0,
+          5.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1158.211982272699,
+          1092.0281333332975
+        ],
+        "native_size": [
+          22,
+          22
+        ],
+        "spill_removed": 2,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "09_villager_gatherer",
+      "file": "09_villager_gatherer.png",
+      "class": "villager",
+      "native_size": [
+        15,
+        28
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          142,
+          50,
+          231,
+          213
+        ],
+        "detected_period_xy": [
+          6.0,
+          5.85
+        ],
+        "period_xy": [
+          5.925,
+          5.925
+        ],
+        "phase_xy": [
+          5.5,
+          4.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2872.419528571379,
+          1773.4719374073748
+        ],
+        "native_size": [
+          15,
+          28
+        ],
+        "spill_removed": 29,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "10_villager_builder",
+      "file": "10_villager_builder.png",
+      "class": "villager",
+      "native_size": [
+        20,
+        28
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          101,
+          50,
+          214,
+          214
+        ],
+        "detected_period_xy": [
+          5.75,
+          5.85
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          4.0,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2591.3506842105116,
+          1542.3222937036878
+        ],
+        "native_size": [
+          20,
+          28
+        ],
+        "spill_removed": 39,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        22,
+        30
+      ],
+      "anchor": [
+        11,
+        29
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "11_villager_elder",
+      "file": "11_villager_elder.png",
+      "class": "villager",
+      "native_size": [
+        19,
+        28
+      ],
+      "class_max": [
+        18,
+        28
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          80,
+          51,
+          190,
+          213
+        ],
+        "detected_period_xy": [
+          5.9,
+          5.85
+        ],
+        "period_xy": [
+          5.875,
+          5.875
+        ],
+        "phase_xy": [
+          3.75,
+          4.25
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2602.110978888899,
+          1750.7146144444118
+        ],
+        "native_size": [
+          19,
+          28
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        21,
+        30
+      ],
+      "anchor": [
+        10,
+        29
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "12_villager_child",
+      "file": "12_villager_child.png",
+      "class": "child",
+      "native_size": [
+        8,
+        21
+      ],
+      "class_max": [
+        14,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "anisotropic_grid_requires_source_review"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          85,
+          91,
+          155,
+          214
+        ],
+        "detected_period_xy": [
+          8.95,
+          5.85
+        ],
+        "period_xy": [
+          8.95,
+          5.85
+        ],
+        "phase_xy": [
+          0.75,
+          5.75
+        ],
+        "axis_periods_separate": true,
+        "edge_score_xy": [
+          2332.362792857142,
+          1147.597348000025
+        ],
+        "native_size": [
+          8,
+          21
+        ],
+        "spill_removed": 19,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        10,
+        23
+      ],
+      "anchor": [
+        5,
+        22
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    },
+    {
+      "name": "13_boulder",
+      "file": "13_boulder.png",
+      "class": "small object",
+      "native_size": [
+        39,
+        29
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          47,
+          78,
+          269,
+          244
+        ],
+        "detected_period_xy": [
+          5.65,
+          5.9
+        ],
+        "period_xy": [
+          5.775,
+          5.775
+        ],
+        "phase_xy": [
+          5.5,
+          3.0
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1308.227998205104,
+          2471.5268844443176
+        ],
+        "native_size": [
+          39,
+          29
+        ],
+        "spill_removed": 13,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        41,
+        31
+      ],
+      "anchor": [
+        20,
+        30
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D1"
+    },
+    {
+      "name": "14_young_tree",
+      "file": "14_young_tree.png",
+      "class": "tall",
+      "native_size": [
+        33,
+        44
+      ],
+      "class_max": [
+        24,
+        34
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          60,
+          13,
+          250,
+          268
+        ],
+        "detected_period_xy": [
+          5.7,
+          5.95
+        ],
+        "period_xy": [
+          5.825,
+          5.825
+        ],
+        "phase_xy": [
+          2.25,
+          1.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2012.5924278787897,
+          1941.4254569048487
+        ],
+        "native_size": [
+          33,
+          44
+        ],
+        "spill_removed": 19,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        35,
+        46
+      ],
+      "anchor": [
+        17,
+        45
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D1"
+    },
+    {
+      "name": "15_reed_tuft",
+      "file": "15_reed_tuft.png",
+      "class": "small object",
+      "native_size": [
+        35,
+        37
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "native_class_max",
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          51,
+          48,
+          262,
+          268
+        ],
+        "detected_period_xy": [
+          6.0,
+          5.95
+        ],
+        "period_xy": [
+          5.975,
+          5.975
+        ],
+        "phase_xy": [
+          1.25,
+          5.5
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          2584.548205714177,
+          1954.9131791666866
+        ],
+        "native_size": [
+          35,
+          37
+        ],
+        "spill_removed": 8,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        37,
+        39
+      ],
+      "anchor": [
+        18,
+        38
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D1"
+    },
+    {
+      "name": "16_berry_basket",
+      "file": "16_berry_basket.png",
+      "class": "small object",
+      "native_size": [
+        17,
+        18
+      ],
+      "class_max": [
+        24,
+        22
+      ],
+      "status": "regenerate",
+      "regenerate_reasons": [
+        "fidelity_delta_e_above_6"
+      ],
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          73,
+          62,
+          172,
+          166
+        ],
+        "detected_period_xy": [
+          5.9,
+          5.8
+        ],
+        "period_xy": [
+          5.85,
+          5.85
+        ],
+        "phase_xy": [
+          5.25,
+          4.75
+        ],
+        "axis_periods_separate": false,
+        "edge_score_xy": [
+          1917.5759981249905,
+          2917.800351176576
+        ],
+        "native_size": [
+          17,
+          18
+        ],
+        "spill_removed": 14,
+        "fringe_repaired": 0
+      },
+      "canvas_size": [
+        19,
+        20
+      ],
+      "anchor": [
+        9,
+        19
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_direction": "D3"
+    }
+  ],
+  "palette_count": 111,
+  "merge": "stable actual input color \u0394E76<3",
+  "ground_source": "D1 pass-1 scene subset of D1 master plus D1 environment sprite colors",
+  "actor_source": "opaque colors used by corrected D3 actor sprites"
+}

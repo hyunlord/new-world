@@ -29,3 +29,4 @@
 - Fidelity is conservative: all step-3 opaque texels participate, including texels removed by required spill cleanup (compared against transparent black). Both direction mean and individual sprite mean are reported. Intentional alpha changes are diagnostic, not a separate failure.
 - Skin is a native adult-derived HSV/ΔE palette proxy and may include clothing. Water has no sheet cell, so the highlight is the nearest real native color to cool #BEDCE6. Neither proves anatomical segmentation or a newly authored water sprite.
 - Part1: 23 unit tests pass, including byte-exact5.9 phase recovery and each semantic check. D1/D2/D3 palette sizes67/86/57; strict content failures retained. Format checks alone no longer imply production readiness.
+- H uses D1 scene ground colors plus D1 boulder/tree/reed colors, and actual D3 actor output colors. Stable ΔE<3 merging retains original input colors; 111 colors remain. Source regeneration flags are inherited. No new source art.
