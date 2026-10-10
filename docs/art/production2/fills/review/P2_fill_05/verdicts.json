@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "round": 1,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "candidates_sha256": "fb0e45b27bda0626af96b5fc97cb86061712fb920152bf145f2b519ef5d27c40",
+  "preview_sha256": "a1158eed6da25feced52be716cb6cc73e03078c895fca5e4c32979da4cdba344",
+  "source_parts": {
+    "docs/art/production2/fills/review/P2_fill_05/verdicts_reviewer.json": "97ba19a9deb9c23e8875812e359ecee13dba7bcb2cef037b51376f10775a6e8e"
+  },
+  "references": {
+    "adult_a": "V_a1_01@1",
+    "adult_b": "V_b1_01@2",
+    "child": "V_c1_01@1"
+  },
+  "previews": {
+    "P2_fill_05_01": "P2_fill_05_01@1",
+    "P2_fill_05_02": "P2_fill_05_02@1",
+    "P2_fill_05_03": "P2_fill_05_03@1",
+    "P2_fill_05_04": "P2_fill_05_04@1",
+    "P2_fill_05_05": "P2_fill_05_05@1",
+    "P2_fill_05_06": "P2_fill_05_06@1",
+    "P2_fill_05_07": "P2_fill_05_07@1",
+    "P2_fill_05_08": "P2_fill_05_08@1",
+    "P2_fill_05_09": "P2_fill_05_09@1",
+    "P2_fill_05_10": "P2_fill_05_10@1",
+    "P2_fill_05_11": "P2_fill_05_11@1",
+    "P2_fill_05_12": "P2_fill_05_12@1",
+    "P2_fill_05_13": "P2_fill_05_13@1",
+    "P2_fill_05_14": "P2_fill_05_14@1",
+    "P2_fill_05_15": "P2_fill_05_15@1",
+    "P2_fill_05_16": "P2_fill_05_16@1"
+  },
+  "candidate_fingerprints": {
+    "P2_fill_05_01": "6fe9056b8ced24b02bdeaff644d6f749a47863274bd90ee531b831f738c61a8d",
+    "P2_fill_05_02": "21b229ea695cdc0f97a78fb19459d5c0f1e4b6dac50b44513fec6fb03c9eafd5",
+    "P2_fill_05_03": "ff7bf306b707ea2fdd7aa2d873f9b548452a990a47d54b956cea6696788a384a",
+    "P2_fill_05_04": "c44d5729cc383a096032239ec7599e8b13dae0e3d8ff9751eba39f46ae94202f",
+    "P2_fill_05_05": "da7dcf028dae3ec2bc1f2a2809884e6100e7f0bd3344e380817ab07d7a840a12",
+    "P2_fill_05_06": "f8421b63913271e81d4cf56fc2bfdb7687299670a0159af7866fdb13a4b65ed3",
+    "P2_fill_05_07": "c46a988368f441c214f5568bb68094d8730090aa1075b181b952dae90b261576",
+    "P2_fill_05_08": "34cd88ac683621aaa8cec1469245334080b4eef679b66763168aea4e8b8adbbf",
+    "P2_fill_05_09": "eac2822cbdf45d6dfcbe08cd4068344e3b62b1274e52013429071e77f2eb6b63",
+    "P2_fill_05_10": "eb307b9bca708df0deb3d2073fd819dbb7ebd461e5d99aa35cfcfb4d3ab0fcfc",
+    "P2_fill_05_11": "a97a450bfab5e19a176c9a8e8b14e3d8236b26c022c0edf8e39138f415283846",
+    "P2_fill_05_12": "81aa52a42083859464f707ab7f87d3e9ff6c0ddef621c8e6df44e0481f5f450e",
+    "P2_fill_05_13": "5219690170c1d30355cba04770bdc7e16251fd19e21a785f0c558ccc22a5c909",
+    "P2_fill_05_14": "7d4edad82e94ad5bb6cd4a127ab2243f490a83dbe598854bfb9074eadc5cd20e",
+    "P2_fill_05_15": "48592d7c881bef9e33bc5ca60f35cd076803fe1f0469c2b62698de852a598f90",
+    "P2_fill_05_16": "22f02af514039a763fc30dda0978405ffd26359681f083da9109d9e779a435aa"
+  },
+  "rendered_fingerprints": {
+    "P2_fill_05_01": "05b8b43aeb341653ed3a295513a0aa0b64a8ac6db7c70cb843a8e97ed1b3ff19",
+    "P2_fill_05_02": "febf27c3148277a62df8c95162f047860135e5990fa67962c96e57c844197062",
+    "P2_fill_05_03": "147c748c3b0166e634a3d285ec50459929b163b40c5732b7b0ef77430a4bb701",
+    "P2_fill_05_04": "7f247b3bc0e417db041a37da2bc743a2a19b2c5588cee63df848867d561ebac9",
+    "P2_fill_05_05": "4e359ddb43446e1164f59b001dbdd1fe69b2df19394791ac3024a701a108cb85",
+    "P2_fill_05_06": "34193f7964ae55f05abaabf424420035d5540f9458bbbe89d825221ee7a91870",
+    "P2_fill_05_07": "f407756fe86a7712ca7cd01184d3d75a7c575e8c5c8b0d83ec94231ce2bf2c0f",
+    "P2_fill_05_08": "4d9574d50f796401c958b2f915ae3f76fabf34b7db88fb0d062fcfafb81777e6",
+    "P2_fill_05_09": "65584ad6438e13afeb25e7d2a54bc386465c083aee08457f86740b83b1f6bd23",
+    "P2_fill_05_10": "c7d0d7c0677e32a3227ef4dbb644660c70a3c13bc440c8bb59afe6893d10ad4f",
+    "P2_fill_05_11": "c7b64d6ee40a163ad47c9aec7621b73ed02dffd6baffd9712dadcac303fac3aa",
+    "P2_fill_05_12": "de67e617691aeaf789c6623304ba5d0ca073284ecad66a1ff1228e2e98655615",
+    "P2_fill_05_13": "9f2293e4a6bffd810499ec05c5713be3ba24be84fd233e6204d5e7b30483490c",
+    "P2_fill_05_14": "ff26a614b182bb83654893eb78eea7c1d457e12f6a7c8bc623201734ceb095e4",
+    "P2_fill_05_15": "7e8a4570933ded14db6a00e273c91460086c1b4c36a0e836b8534a98efbf7f94",
+    "P2_fill_05_16": "915bad251688c701cdd649fe43056dde55f8b6dcb4d021c664145626611f3247"
+  },
+  "review_images_sha256": {
+    "P2_fill_05.png": "2ea71738d6775e98266b83969dbadb924ee0a901a8b885cc85cbe91fd105279b",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previous_round_sha256": null,
+  "expected_slots": [
+    "P2_fill_05_01",
+    "P2_fill_05_02",
+    "P2_fill_05_03",
+    "P2_fill_05_04",
+    "P2_fill_05_05",
+    "P2_fill_05_06",
+    "P2_fill_05_07",
+    "P2_fill_05_08",
+    "P2_fill_05_09",
+    "P2_fill_05_10",
+    "P2_fill_05_11",
+    "P2_fill_05_12",
+    "P2_fill_05_13",
+    "P2_fill_05_14",
+    "P2_fill_05_15",
+    "P2_fill_05_16"
+  ],
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_05_01",
+      "candidate_id": "P2_fill_05_01@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing gathering pose, brown hair and cream outfit are consistent; detached berry pixels in the bush are mapped peach as skin, as are the brown boots.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_02",
+      "candidate_id": "P2_fill_05_02@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Back-facing gathering motion and identity are readable; isolated bush pixels and brown footwear are incorrectly classified as peach skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_03",
+      "candidate_id": "P2_fill_05_03@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing raised-tool build pose is coherent; the separate rock contains broad green clothing and peach skin classifications.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_04",
+      "candidate_id": "P2_fill_05_04@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing downward build stroke and rock are clear; stone and flying fragments are assigned green clothing or peach skin regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_05",
+      "candidate_id": "P2_fill_05_05@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "South-facing kneeling hands-to-mouth pose matches the reference identity, but isolated blue texels sit outside the left arm and beside the right hip in the fitted sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_06",
+      "candidate_id": "P2_fill_05_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing kneeling hands-to-mouth drinking pose is readable, with consistent brown hair, cream clothing, coherent limbs and plausible anatomical regions.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_07",
+      "candidate_id": "P2_fill_05_07@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "North-facing kneeling hands-to-mouth pose is coherent and identity is consistent; an isolated blue texel remains at the lower-left edge beside the knees.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_08",
+      "candidate_id": "P2_fill_05_08@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "North-facing kneeling drinking pose and reference identity are readable; blue stray pixels remain at the lower-left silhouette beside the knees.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_09",
+      "candidate_id": "P2_fill_05_09@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "East-facing food-to-mouth eating pose is clear; conspicuous blue pixels interrupt the brown crown of the hair in the fitted sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_10",
+      "candidate_id": "P2_fill_05_10@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "East-facing hand-to-mouth eating pose has consistent identity and coherent anatomy; the brown boot bands are mapped peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_11",
+      "candidate_id": "P2_fill_05_11@1",
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "North-facing eating pose and reference identity are readable; a conspicuous blue texel remains in the open gap between the legs.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_12",
+      "candidate_id": "P2_fill_05_12@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing eating pose has consistent brown hair and cream clothing; the horizontal brown boot bands are classified peach as skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_13",
+      "candidate_id": "P2_fill_05_13@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "Reclining east-oriented sleep pose remains readable and identity is consistent; much of the distinct bedding is classified as green clothing or peach skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_14",
+      "candidate_id": "P2_fill_05_14@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "South-facing resting head and bedding are clear; the broad separate bedding surface is mapped green as clothing with peach skin patches.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_15",
+      "candidate_id": "P2_fill_05_15@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing reclining sleep pose keeps the brown hair and cream outfit; the separate bedding is predominantly classified as clothing or skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_16",
+      "candidate_id": "P2_fill_05_16@1",
+      "verdict": "reject",
+      "reason": "region_map_wrong",
+      "observation": "North-facing seated pose and bent limbs are coherent with the reference identity; the brown extended boot is mapped peach as skin.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

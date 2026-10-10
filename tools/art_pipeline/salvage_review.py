@@ -16,7 +16,8 @@ from typing import Final
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from production_sheets import definitions
+from production_sheets import CellSpec, definitions
+from fill_catalog import load_catalog, review_definitions
 from regions import DISPLAY, classify
 
 ROOT: Final = Path(__file__).resolve().parents[2]
@@ -35,6 +36,7 @@ class ReviewCandidate:
     native: Path | None
     sprite: Path | None
     priority: tuple[int, int, float] = (0, 0, 0.0)
+    target_slot: str = ''
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +46,7 @@ class ReviewInput:
     selected: tuple[tuple[str, str], ...]
     references: tuple[tuple[str, str], ...]
     source_digest: str = ''
+    catalog: dict[str,list[CellSpec]] | None = None
 
 
 class ReviewError(ValueError):
@@ -51,7 +54,7 @@ class ReviewError(ValueError):
     code = 'invalid_review_input'
 
 
-def load_review(path: Path) -> ReviewInput:
+def load_review(path: Path, catalog_path: Path | None = None) -> ReviewInput:
     """Project candidate JSON onto the fields permitted on review sheets."""
     encoded = path.read_bytes()
     data = json.loads(encoded)
@@ -66,9 +69,12 @@ def load_review(path: Path) -> ReviewInput:
               for key in ('raw', 'unfitted', 'native', 'sprite')),
             (len(entry.get('guards', {}).get('errors', [])),
              len(entry.get('guards', {}).get('warnings', [])),
-             float(entry.get('metrics', {}).get('mean_delta_e', 999) or 0))))
+             float(entry.get('metrics', {}).get('mean_delta_e', 999) or 0)),
+            str(entry.get('target_slot',entry['slot_id']))))
+    catalog=load_catalog(catalog_path) if catalog_path else data.get('review_catalog')
     return ReviewInput(tuple(candidates), tuple(data['selected'].items()),
-                       tuple(data['references'].items()), hashlib.sha256(encoded).hexdigest())
+                       tuple(data['references'].items()), hashlib.sha256(encoded).hexdigest(),
+                       review_definitions(catalog) if catalog else None)
 
 
 def read_image(path: Path | None) -> Image.Image | None:
@@ -127,7 +133,7 @@ def _place(canvas: Image.Image, image: Image.Image | None, box: tuple[int, int, 
 def render_sheet(review: ReviewInput, sheet: str, output: Path,
                  grass: tuple[int, int, int]) -> Path:
     """Render every requested slot, with literal pixel scales and identity evidence."""
-    specs = definitions()[sheet]
+    specs = (review.catalog or definitions())[sheet]
     by_id = {candidate.identifier: candidate for candidate in review.candidates}
     refs = {body: by_id[identifier] for body, identifier in review.references if identifier in by_id}
     rows = []
@@ -159,7 +165,8 @@ def render_sheet(review: ReviewInput, sheet: str, output: Path,
     for index, (slot, name, candidate, images) in enumerate(rows):
         left, top = (index % 2) * card_width, 62 + (index // 2) * card_height
         draw.text((left + 14, top + 3), f'{slot} | {name}', font=_font(15), fill=TEXT)
-        draw.text((left + 14, top + 24), f'Candidate: {candidate.identifier if candidate else "none"}', font=_font(12), fill=TEXT)
+        target=f' | Target: {candidate.target_slot}' if candidate and candidate.target_slot and candidate.target_slot!=slot else ''
+        draw.text((left + 14, top + 24), f'Candidate: {candidate.identifier if candidate else "none"}{target}', font=_font(12), fill=TEXT)
         x = left + 14
         for panel, (width, label, image, scale) in enumerate(zip(widths, labels, images, scales)):
             draw.text((x, top + 44), label, font=_font(12), fill=TEXT)
@@ -177,7 +184,7 @@ def render_all(review: ReviewInput, output_dir: Path) -> tuple[Path, ...]:
     palette = json.loads((ROOT / 'tools/art_pipeline/production_palette.json').read_text())
     rgb = palette['rgb_ramps']['ground']['grass'][0]
     grass = (int(rgb[0]), int(rgb[1]), int(rgb[2]))
-    outputs = [render_sheet(review, sheet, output_dir / f'{sheet}.png', grass) for sheet in definitions()]
+    outputs = [render_sheet(review, sheet, output_dir / f'{sheet}.png', grass) for sheet in (review.catalog or definitions())]
     by_id = {candidate.identifier: candidate for candidate in review.candidates}
     for body, identifier in review.references:
         candidate = by_id.get(identifier)
@@ -188,7 +195,7 @@ def render_all(review: ReviewInput, output_dir: Path) -> tuple[Path, ...]:
         enlarge(reference, 8).save(path)
         outputs.append(path)
     preview = {f'{sheet}_{cell:02d}': candidate.identifier if candidate else None
-               for sheet, specs in definitions().items() for cell in range(1, len(specs) + 1)
+               for sheet, specs in (review.catalog or definitions()).items() for cell in range(1, len(specs) + 1)
                for candidate in (choose_candidate(review, f'{sheet}_{cell:02d}'),)}
     (output_dir / 'preview_selection.json').write_text(json.dumps({
         'rule': 'selected; otherwise converted with fewest errors, warnings, then DeltaE; otherwise raw',
@@ -203,8 +210,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--candidates', type=Path, required=True)
     parser.add_argument('--output', type=Path, default=ROOT / 'docs/art/production2/review')
+    parser.add_argument('--catalog', type=Path)
     args = parser.parse_args()
-    paths = render_all(load_review(args.candidates), args.output)
+    paths = render_all(load_review(args.candidates,args.catalog), args.output)
     print(f'Rendered {len(paths)} PNG files; {sum(path.stat().st_size for path in paths)} bytes')
 
 

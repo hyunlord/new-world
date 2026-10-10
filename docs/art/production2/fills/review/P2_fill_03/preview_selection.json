@@ -1,0 +1,28 @@
+{
+  "rule": "selected; otherwise converted with fewest errors, warnings, then DeltaE; otherwise raw",
+  "candidates_sha256": "996d9d7bfd6ee58c20f9f92b1380bc4dabdd2a30a2d56249273ce41cc147cb2a",
+  "images_sha256": {
+    "P2_fill_03.png": "1a2eceacc528360931b4395840183d9e2f0d0e53628943e0df6448a7cbf9b7d5",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previews": {
+    "P2_fill_03_01": "P2_fill_03_01@1",
+    "P2_fill_03_02": "P2_fill_03_02@1",
+    "P2_fill_03_03": "P2_fill_03_03@1",
+    "P2_fill_03_04": "P2_fill_03_04@1",
+    "P2_fill_03_05": "P2_fill_03_05@1",
+    "P2_fill_03_06": "P2_fill_03_06@1",
+    "P2_fill_03_07": "P2_fill_03_07@1",
+    "P2_fill_03_08": "P2_fill_03_08@1",
+    "P2_fill_03_09": "P2_fill_03_09@1",
+    "P2_fill_03_10": "P2_fill_03_10@1",
+    "P2_fill_03_11": "P2_fill_03_11@1",
+    "P2_fill_03_12": "P2_fill_03_12@1",
+    "P2_fill_03_13": "P2_fill_03_13@1",
+    "P2_fill_03_14": "P2_fill_03_14@1",
+    "P2_fill_03_15": "P2_fill_03_15@1",
+    "P2_fill_03_16": "P2_fill_03_16@1"
+  }
+}

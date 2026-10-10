@@ -3,6 +3,7 @@ extends RefCounted
 
 const ATLAS_PATH: String = "res://assets/art/atlas/world_atlas.json"
 static var _entries: Dictionary = {}
+static var _suppressed: Dictionary = {}
 static var _pages: Dictionary = {}
 static var _loaded: bool = false
 
@@ -16,16 +17,37 @@ static func _ensure_loaded() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ATLAS_PATH))
 	if parsed is Dictionary:
 		_entries = parsed.get("sprites", {})
+		_suppressed = parsed.get("suppressed", {})
+		for sprite_id: String in _suppressed:
+			_entries.erase(sprite_id)
 
 static func frame(sprite_id: String) -> Dictionary:
 	_ensure_loaded()
 	return _entries.get(sprite_id, {})
+
+## Includes intentionally suppressed slots so callers can avoid resurrecting reference art.
+static func metadata(sprite_id: String) -> Dictionary:
+	_ensure_loaded()
+	if _suppressed.has(sprite_id):
+		return _suppressed[sprite_id]
+	return _entries.get(sprite_id, {})
+
+static func is_suppressed(sprite_id: String) -> bool:
+	_ensure_loaded()
+	return _suppressed.has(sprite_id)
 
 static func entries() -> Dictionary:
 	_ensure_loaded()
 	return _entries.duplicate(true)
 
 static func apply(sprite: Sprite2D, sprite_id: String) -> bool:
+	if is_suppressed(sprite_id):
+		sprite.texture = null
+		sprite.material = null
+		sprite.set_meta("sprite_id", sprite_id)
+		sprite.set_meta("frame_size", Vector2i.ZERO)
+		sprite.set_meta("drawable", false)
+		return false
 	var entry: Dictionary = frame(sprite_id)
 	if entry.is_empty():
 		return false
@@ -43,6 +65,7 @@ static func apply(sprite: Sprite2D, sprite_id: String) -> bool:
 	sprite.scale = Vector2.ONE
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.set_meta("sprite_id", sprite_id)
+	sprite.set_meta("drawable", true)
 	sprite.set_meta("frame_id", sprite_id)
 	sprite.set_meta("frame_size", Vector2i(int(rect[2]), int(rect[3])))
 	sprite.set_meta("anchor", Vector2(float(anchor[0]), float(anchor[1])))

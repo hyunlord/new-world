@@ -1,0 +1,45 @@
+{
+  "round": 1,
+  "authoritative_sha256": "8e738bbb6aa0614a44e8bf07aa9f8e2fc7a34bf1eea7a5e7e84ef9003f714f6b",
+  "accepted": {},
+  "not_accepted": {
+    "P2_fill_06_08": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_07": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_09": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_10": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_13": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_14": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_15": [
+      "no_current_visual_approval"
+    ],
+    "P2_fill_06_16": [
+      "no_current_visual_approval"
+    ]
+  },
+  "cross_guards_before_exclusions": {
+    "errors": [],
+    "warnings": [],
+    "passed": true
+  },
+  "final_cross_guards": {
+    "errors": [],
+    "warnings": [],
+    "passed": true
+  },
+  "statistics": {
+    "accepted": 0,
+    "visually_ok": 0
+  }
+}

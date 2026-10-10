@@ -72,7 +72,10 @@ def validate_and_persist(parts: list[Path], candidates_path: Path, preview_path:
     if preview['candidates_sha256']!=sha(candidates_path):raise ValueError('Stale preview candidate hash')
     for name,digest in preview['images_sha256'].items():
         if sha(preview_path.parent/name)!=digest:raise ValueError(f'Stale review image: {name}')
-    expected=expected_slots if expected_slots is not None else {f'{sheet}_{i:02d}' for sheet in SHEETS for i in range(1,17)}
+    if expected_slots is not None:expected=expected_slots
+    elif candidates.get('review_catalog'):
+        expected={f"{sheet['id']}_{cell['cell']:02d}" for sheet in candidates['review_catalog']['sheets'] for cell in sheet['cells']}
+    else:expected={f'{sheet}_{i:02d}' for sheet in SHEETS for i in range(1,17)}
     if not expected.issubset(preview['previews']):raise ValueError('Preview missing expected slots')
     lookup={r['id']:r for r in candidates['candidates']}
     records: list[Verdict]=[];seen=set();seen_candidates=set()
@@ -161,7 +164,8 @@ def adjudicate(candidates_path: Path, authoritative_path: Path, previous_path: P
             for record in records:
                 accepted.pop(record['slot_id'],None)
                 rejected[record['slot_id']]=list(report.errors+report.warnings)
-    chosen=[lookup[identity] for identity in accepted.values()]
+    from fill_v4 import with_guard_context
+    chosen=with_guard_context(ledger,[lookup[identity] for identity in accepted.values()])
     bushes=sorted([r for r in chosen if r['sheet']=='N2' and r['cell']<=4],key=lambda r:r['cell'])
     adults=[r for r in chosen if r['body'].startswith('adult')]
     children=[r for r in chosen if r['body']=='child']
@@ -172,8 +176,9 @@ def adjudicate(candidates_path: Path, authoritative_path: Path, previous_path: P
     if any(error in cross.errors for error in ('basket_relative_size','missing_chosen_bush_reference')):blocked+=baskets
     if any(error in cross.errors for error in ('child_relative_height','missing_chosen_adult_reference')):blocked+=children
     for record in blocked:
-        accepted.pop(record['slot_id'],None);rejected[record['slot_id']]=list(cross.errors)
-    final=[lookup[identity] for identity in accepted.values()]
+        if record['slot_id'] in accepted:
+            accepted.pop(record['slot_id']);rejected[record['slot_id']]=list(cross.errors)
+    final=with_guard_context(ledger,[lookup[identity] for identity in accepted.values()])
     final_cross=guard_chosen(
         bushes=[guarded_candidate(r) for r in sorted(final,key=lambda r:r['cell']) if r['sheet']=='N2' and r['cell']<=4],
         adults=[guarded_candidate(r) for r in final if r['body'].startswith('adult')],

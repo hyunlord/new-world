@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P2_fill_04_01",
+    "candidate_id": "P2_fill_04_01@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing basket carry and reference identity are clear, but the basket wall is peach like skin in the map instead of a distinct other-object region.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_02",
+    "candidate_id": "P2_fill_04_02@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The east-facing carry step is coherent; the brown basket beneath the fruit is mapped peach, conflating the held object with the hands.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_03",
+    "candidate_id": "P2_fill_04_03@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing extended walking carry retains the reference hair and clothing; the basket body is assigned the peach skin region.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_04",
+    "candidate_id": "P2_fill_04_04@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing carry pose reads clearly, but the basket body is classified peach alongside the arms rather than as the held object.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_05",
+    "candidate_id": "P2_fill_04_05@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing walking carry has bent arms and a small visible load edge beyond the shoulder; the back of the long hair and hide outfit match the reference, with coherent principal map regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_06",
+    "candidate_id": "P2_fill_04_06@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "North-facing carry and reference identity read correctly, but a conspicuous isolated blue texel sits outside the left lower garment edge in the fitted sprite.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_07",
+    "candidate_id": "P2_fill_04_07@1",
+    "verdict": "reject",
+    "reason": "artefact",
+    "observation": "East-facing gathering reach is recognizable, but blue stray texels protrude along the face contour and behind the rear heel of the fitted character.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_08",
+    "candidate_id": "P2_fill_04_08@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing crouched reach toward the berry bush reads as gathering; anatomy and reference hair/clothing remain consistent, and the bush is separated as other in the map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_09",
+    "candidate_id": "P2_fill_04_09@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing overhead tool pose reads as building, but substantial rock highlights are green clothing labels and the raised tool head is also green in the map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_10",
+    "candidate_id": "P2_fill_04_10@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing downward tool action is recognizable; the rock has extensive green clothing classification in the region map instead of remaining an other-object region.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_11",
+    "candidate_id": "P2_fill_04_11@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "North-facing raised-tool build pose retains the reference identity, but the tool head above the hand is mapped green and blue, conflating the object with clothing and hair.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_12",
+    "candidate_id": "P2_fill_04_12@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "North-facing downward build pose is legible; broad portions of the rock are labeled green clothing in the region map.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_13",
+    "candidate_id": "P2_fill_04_13@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing kneeling pose brings a small blue vessel beside the head; the long-haired back silhouette and hide outfit remain consistent with the reference and the principal map regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_14",
+    "candidate_id": "P2_fill_04_14@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "North-facing kneeling figure raises both arms toward the mouth area; the occluded drinking gesture is plausible from behind, with coherent anatomy, identity and principal map regions.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_15",
+    "candidate_id": "P2_fill_04_15@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing open-hand conversational gesture reads as talking; profile hair, build and hide garment agree with the reference and remain readable after fitting.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_04_16",
+    "candidate_id": "P2_fill_04_16@1",
+    "verdict": "ok",
+    "reason": "",
+    "observation": "East-facing extended-hand conversational gesture is distinct and coherent; the reference hair/build and main skin, hair and clothing map regions remain recognizable.",
+    "unfitted_acceptable": null
+  }
+]

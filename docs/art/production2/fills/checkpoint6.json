@@ -1,0 +1,23 @@
+{
+  "attempted_cells": 96,
+  "newly_accepted_unique_targets": [
+    "P2V_a_N_drink_01",
+    "P2V_a_N_drink_02",
+    "P2V_b_E_eat_02",
+    "P2V_b_N_eat_02",
+    "P2V_b_N_sit_01",
+    "P2V_b_S_drink_02",
+    "V_a1_01",
+    "V_a3_03",
+    "V_a3_04",
+    "V_a3_11",
+    "V_a3_12",
+    "V_b1_09",
+    "V_b1_10",
+    "V_b1_11",
+    "V_b1_12"
+  ],
+  "newly_accepted_count": 15,
+  "acceptance_fraction": 0.15625,
+  "stop_generation": true
+}

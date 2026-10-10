@@ -9,12 +9,382 @@
     "res://assets/art/atlas/world_0.png": "res://assets/art/atlas/world_0_regions.png"
   },
   "sprites": {
+    "P2V_a_N_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1248,
+        1,
+        19,
+        30
+      ],
+      "body": "adult_a"
+    },
+    "P2V_a_N_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1269,
+        1,
+        19,
+        30
+      ],
+      "body": "adult_a"
+    },
+    "P2V_a_N_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1290,
+        1,
+        18,
+        25
+      ],
+      "body": "adult_a"
+    },
+    "P2V_a_N_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1310,
+        1,
+        17,
+        26
+      ],
+      "body": "adult_a"
+    },
+    "P2V_b_E_eat_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1329,
+        1,
+        15,
+        24
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_E_eat_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1346,
+        1,
+        15,
+        28
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_asleep_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1363,
+        1,
+        30,
+        18
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1395,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1415,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1435,
+        1,
+        18,
+        26
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1455,
+        1,
+        18,
+        26
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_eat_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1475,
+        1,
+        16,
+        25
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_eat_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1493,
+        1,
+        16,
+        29
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1511,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1531,
+        1,
+        18,
+        30
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_N_sit_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1551,
+        1,
+        20,
+        24
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_S_asleep_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1573,
+        1,
+        30,
+        15
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_S_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1605,
+        1,
+        16,
+        22
+      ],
+      "body": "adult_b"
+    },
+    "P2V_b_S_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1623,
+        1,
+        16,
+        26
+      ],
+      "body": "adult_b"
+    },
+    "P2V_c_E_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1641,
+        1,
+        12,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1655,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_carry_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1670,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_carry_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1685,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_carry_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1700,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_carry_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1715,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_drink_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1730,
+        1,
+        13,
+        19
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_drink_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1745,
+        1,
+        13,
+        19
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1760,
+        1,
+        12,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_E_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1774,
+        1,
+        13,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_build_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1789,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_build_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1805,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_carry_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1821,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_carry_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1837,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_carry_03": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1853,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_carry_04": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1869,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_gather_01": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1885,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
+    "P2V_c_S_gather_02": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1901,
+        1,
+        14,
+        23
+      ],
+      "body": "child"
+    },
     "V_a1_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        505,
-        41,
-        17,
+        1074,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -22,9 +392,9 @@
     "V_a1_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        524,
-        41,
-        17,
+        1094,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -32,9 +402,9 @@
     "V_a1_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        543,
-        41,
-        17,
+        1114,
+        44,
+        19,
         30
       ],
       "body": "adult_a"
@@ -42,9 +412,9 @@
     "V_a1_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        562,
-        41,
-        17,
+        1135,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -52,9 +422,9 @@
     "V_a1_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        581,
-        41,
-        17,
+        1151,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -62,19 +432,19 @@
     "V_a1_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        600,
-        41,
-        17,
-        30
+        1171,
+        44,
+        18,
+        29
       ],
       "body": "adult_a"
     },
     "V_a1_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        619,
-        41,
-        17,
+        1191,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -82,19 +452,19 @@
     "V_a1_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        638,
-        41,
-        17,
-        30
+        1211,
+        44,
+        18,
+        29
       ],
       "body": "adult_a"
     },
     "V_a1_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        657,
-        41,
-        17,
+        1231,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -102,19 +472,19 @@
     "V_a1_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        676,
-        41,
-        17,
-        30
+        1247,
+        44,
+        14,
+        29
       ],
       "body": "adult_a"
     },
     "V_a1_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        695,
-        41,
-        17,
+        1263,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -122,19 +492,19 @@
     "V_a1_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        714,
-        41,
-        17,
-        30
+        1279,
+        44,
+        14,
+        29
       ],
       "body": "adult_a"
     },
     "V_a1_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        733,
-        41,
-        17,
+        1295,
+        44,
+        19,
         30
       ],
       "body": "adult_a"
@@ -142,19 +512,19 @@
     "V_a1_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        752,
-        41,
-        17,
-        30
+        1316,
+        44,
+        19,
+        29
       ],
       "body": "adult_a"
     },
     "V_a1_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        771,
-        41,
-        17,
+        1337,
+        44,
+        19,
         30
       ],
       "body": "adult_a"
@@ -162,19 +532,19 @@
     "V_a1_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        790,
-        41,
-        17,
-        30
+        1358,
+        44,
+        19,
+        29
       ],
       "body": "adult_a"
     },
     "V_a2_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        809,
-        41,
-        17,
+        1379,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -182,9 +552,9 @@
     "V_a2_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        828,
-        41,
-        17,
+        1399,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -192,9 +562,9 @@
     "V_a2_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        847,
-        41,
-        17,
+        1419,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -202,9 +572,9 @@
     "V_a2_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        866,
-        41,
-        17,
+        1439,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -212,9 +582,9 @@
     "V_a2_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        885,
-        41,
-        17,
+        1459,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -222,9 +592,9 @@
     "V_a2_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        904,
-        41,
-        17,
+        1475,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -232,9 +602,9 @@
     "V_a2_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        923,
-        41,
-        17,
+        1491,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -242,9 +612,9 @@
     "V_a2_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        942,
-        41,
-        17,
+        1507,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -252,9 +622,9 @@
     "V_a2_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        961,
-        41,
-        17,
+        1523,
+        44,
+        13,
         30
       ],
       "body": "adult_a"
@@ -262,9 +632,9 @@
     "V_a2_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        980,
-        41,
-        17,
+        1538,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -272,29 +642,29 @@
     "V_a2_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        999,
-        41,
-        17,
-        30
+        1554,
+        44,
+        24,
+        29
       ],
       "body": "adult_a"
     },
     "V_a2_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1018,
-        41,
-        17,
-        30
+        1580,
+        44,
+        24,
+        29
       ],
       "body": "adult_a"
     },
     "V_a2_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1037,
-        41,
-        17,
+        1606,
+        44,
+        13,
         30
       ],
       "body": "adult_a"
@@ -302,9 +672,9 @@
     "V_a2_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1056,
-        41,
-        17,
+        1621,
+        44,
+        14,
         30
       ],
       "body": "adult_a"
@@ -312,9 +682,9 @@
     "V_a2_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1075,
-        41,
-        17,
+        1637,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -322,9 +692,9 @@
     "V_a2_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1094,
-        41,
-        17,
+        1657,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -332,9 +702,9 @@
     "V_a3_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1113,
-        41,
-        17,
+        1677,
+        44,
+        19,
         30
       ],
       "body": "adult_a"
@@ -342,9 +712,9 @@
     "V_a3_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1132,
-        41,
-        17,
+        1698,
+        44,
+        19,
         30
       ],
       "body": "adult_a"
@@ -352,69 +722,69 @@
     "V_a3_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1151,
-        41,
-        17,
-        28
+        1719,
+        44,
+        23,
+        30
       ],
       "body": "adult_a"
     },
     "V_a3_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1170,
-        41,
-        17,
-        28
+        1744,
+        44,
+        22,
+        30
       ],
       "body": "adult_a"
     },
     "V_a3_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1189,
-        41,
-        17,
-        28
+        1768,
+        44,
+        19,
+        31
       ],
       "body": "adult_a"
     },
     "V_a3_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1208,
-        41,
-        17,
-        28
+        1789,
+        44,
+        22,
+        35
       ],
       "body": "adult_a"
     },
     "V_a3_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1227,
-        41,
-        17,
-        22
+        1813,
+        44,
+        21,
+        28
       ],
       "body": "adult_a"
     },
     "V_a3_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1246,
-        41,
-        17,
-        22
+        1836,
+        44,
+        14,
+        20
       ],
       "body": "adult_a"
     },
     "V_a3_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1265,
-        41,
-        17,
+        1852,
+        44,
+        21,
         30
       ],
       "body": "adult_a"
@@ -422,9 +792,9 @@
     "V_a3_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1284,
-        41,
-        17,
+        1875,
+        44,
+        21,
         30
       ],
       "body": "adult_a"
@@ -432,19 +802,19 @@
     "V_a3_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1303,
-        41,
-        17,
-        30
+        1898,
+        44,
+        20,
+        31
       ],
       "body": "adult_a"
     },
     "V_a3_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1322,
-        41,
-        17,
+        1920,
+        44,
+        20,
         30
       ],
       "body": "adult_a"
@@ -452,19 +822,19 @@
     "V_a3_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1341,
-        41,
+        1942,
+        44,
         30,
-        16
+        14
       ],
       "body": "adult_a"
     },
     "V_a3_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1373,
-        41,
-        17,
+        1974,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -472,9 +842,9 @@
     "V_a3_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1392,
-        41,
-        17,
+        1994,
+        44,
+        18,
         30
       ],
       "body": "adult_a"
@@ -482,9 +852,9 @@
     "V_a3_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1411,
-        41,
-        17,
+        2014,
+        44,
+        24,
         30
       ],
       "body": "adult_a"
@@ -492,9 +862,9 @@
     "V_b1_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1430,
-        41,
-        17,
+        1,
+        81,
+        15,
         30
       ],
       "body": "adult_b"
@@ -502,18 +872,18 @@
     "V_b1_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1449,
-        41,
-        17,
-        30
+        18,
+        81,
+        18,
+        31
       ],
       "body": "adult_b"
     },
     "V_b1_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1468,
-        41,
+        38,
+        81,
         18,
         30
       ],
@@ -522,9 +892,9 @@
     "V_b1_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1488,
-        41,
-        17,
+        58,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -532,19 +902,19 @@
     "V_b1_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1507,
-        41,
+        74,
+        81,
         17,
-        30
+        31
       ],
       "body": "adult_b"
     },
     "V_b1_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1526,
-        41,
-        17,
+        93,
+        81,
+        15,
         30
       ],
       "body": "adult_b"
@@ -552,8 +922,8 @@
     "V_b1_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1545,
-        41,
+        110,
+        81,
         17,
         30
       ],
@@ -562,9 +932,9 @@
     "V_b1_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1564,
-        41,
-        17,
+        129,
+        81,
+        16,
         30
       ],
       "body": "adult_b"
@@ -572,48 +942,48 @@
     "V_b1_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1583,
-        41,
-        17,
-        30
+        147,
+        81,
+        18,
+        32
       ],
       "body": "adult_b"
     },
     "V_b1_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1602,
-        41,
-        17,
-        30
+        167,
+        81,
+        14,
+        31
       ],
       "body": "adult_b"
     },
     "V_b1_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1621,
-        41,
-        17,
-        30
+        183,
+        81,
+        18,
+        31
       ],
       "body": "adult_b"
     },
     "V_b1_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1640,
-        41,
-        17,
-        30
+        203,
+        81,
+        13,
+        31
       ],
       "body": "adult_b"
     },
     "V_b1_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1659,
-        41,
+        218,
+        81,
         18,
         30
       ],
@@ -622,9 +992,9 @@
     "V_b1_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1679,
-        41,
-        18,
+        238,
+        81,
+        16,
         30
       ],
       "body": "adult_b"
@@ -632,8 +1002,8 @@
     "V_b1_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1699,
-        41,
+        256,
+        81,
         18,
         30
       ],
@@ -642,9 +1012,9 @@
     "V_b1_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1719,
-        41,
-        15,
+        276,
+        81,
+        16,
         30
       ],
       "body": "adult_b"
@@ -652,9 +1022,9 @@
     "V_b2_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1736,
-        41,
-        17,
+        294,
+        81,
+        15,
         30
       ],
       "body": "adult_b"
@@ -662,39 +1032,39 @@
     "V_b2_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1755,
-        41,
-        17,
-        30
+        311,
+        81,
+        18,
+        31
       ],
       "body": "adult_b"
     },
     "V_b2_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1774,
-        41,
-        17,
-        30
+        331,
+        81,
+        18,
+        31
       ],
       "body": "adult_b"
     },
     "V_b2_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1793,
-        41,
-        17,
-        30
+        351,
+        81,
+        18,
+        31
       ],
       "body": "adult_b"
     },
     "V_b2_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1812,
-        41,
-        17,
+        371,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -702,9 +1072,9 @@
     "V_b2_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1831,
-        41,
-        17,
+        387,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -712,9 +1082,9 @@
     "V_b2_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1850,
-        41,
-        17,
+        403,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -722,9 +1092,9 @@
     "V_b2_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1869,
-        41,
-        17,
+        419,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -732,9 +1102,9 @@
     "V_b2_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1888,
-        41,
-        17,
+        435,
+        81,
+        13,
         30
       ],
       "body": "adult_b"
@@ -742,9 +1112,9 @@
     "V_b2_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1907,
-        41,
-        17,
+        450,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -752,29 +1122,29 @@
     "V_b2_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1926,
-        41,
-        17,
-        30
+        466,
+        81,
+        22,
+        29
       ],
       "body": "adult_b"
     },
     "V_b2_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1945,
-        41,
-        17,
-        30
+        490,
+        81,
+        19,
+        31
       ],
       "body": "adult_b"
     },
     "V_b2_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1964,
-        41,
-        17,
+        511,
+        81,
+        13,
         30
       ],
       "body": "adult_b"
@@ -782,9 +1152,9 @@
     "V_b2_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1983,
-        41,
-        17,
+        526,
+        81,
+        14,
         30
       ],
       "body": "adult_b"
@@ -792,9 +1162,9 @@
     "V_b2_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        2002,
-        41,
-        17,
+        542,
+        81,
+        24,
         30
       ],
       "body": "adult_b"
@@ -802,9 +1172,9 @@
     "V_b2_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        2021,
-        41,
-        17,
+        568,
+        81,
+        22,
         30
       ],
       "body": "adult_b"
@@ -812,99 +1182,99 @@
     "V_b3_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1,
-        73,
+        592,
+        81,
         18,
-        30
+        31
       ],
       "body": "adult_b"
     },
     "V_b3_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        21,
-        73,
+        612,
+        81,
         18,
-        30
+        31
       ],
       "body": "adult_b"
     },
     "V_b3_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        41,
-        73,
-        17,
-        28
+        632,
+        81,
+        20,
+        27
       ],
       "body": "adult_b"
     },
     "V_b3_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        60,
-        73,
-        17,
-        28
+        654,
+        81,
+        19,
+        27
       ],
       "body": "adult_b"
     },
     "V_b3_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        79,
-        73,
+        675,
+        81,
         17,
-        28
+        29
       ],
       "body": "adult_b"
     },
     "V_b3_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        98,
-        73,
+        694,
+        81,
         17,
-        28
+        29
       ],
       "body": "adult_b"
     },
     "V_b3_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        117,
-        73,
-        17,
-        22
+        713,
+        81,
+        18,
+        24
       ],
       "body": "adult_b"
     },
     "V_b3_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        136,
-        73,
-        17,
-        22
+        733,
+        81,
+        22,
+        26
       ],
       "body": "adult_b"
     },
     "V_b3_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        155,
-        73,
-        17,
-        30
+        757,
+        81,
+        22,
+        31
       ],
       "body": "adult_b"
     },
     "V_b3_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        174,
-        73,
-        17,
+        781,
+        81,
+        24,
         30
       ],
       "body": "adult_b"
@@ -912,59 +1282,59 @@
     "V_b3_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        193,
-        73,
-        17,
-        30
+        807,
+        81,
+        18,
+        29
       ],
       "body": "adult_b"
     },
     "V_b3_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        212,
-        73,
-        17,
-        30
+        827,
+        81,
+        20,
+        32
       ],
       "body": "adult_b"
     },
     "V_b3_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        231,
-        73,
+        849,
+        81,
         30,
-        16
+        14
       ],
       "body": "adult_b"
     },
     "V_b3_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        263,
-        73,
-        17,
-        30
+        881,
+        81,
+        18,
+        25
       ],
       "body": "adult_b"
     },
     "V_b3_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        282,
-        73,
+        901,
+        81,
         17,
-        30
+        25
       ],
       "body": "adult_b"
     },
     "V_b3_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        301,
-        73,
-        17,
+        920,
+        81,
+        15,
         30
       ],
       "body": "adult_b"
@@ -972,8 +1342,8 @@
     "V_c1_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        320,
-        73,
+        937,
+        81,
         14,
         23
       ],
@@ -982,8 +1352,8 @@
     "V_c1_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        336,
-        73,
+        953,
+        81,
         14,
         23
       ],
@@ -992,8 +1362,8 @@
     "V_c1_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        352,
-        73,
+        969,
+        81,
         14,
         23
       ],
@@ -1002,9 +1372,9 @@
     "V_c1_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        368,
-        73,
-        14,
+        985,
+        81,
+        13,
         23
       ],
       "body": "child"
@@ -1012,8 +1382,8 @@
     "V_c1_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        384,
-        73,
+        1000,
+        81,
         14,
         23
       ],
@@ -1022,18 +1392,18 @@
     "V_c1_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        400,
-        73,
+        1016,
+        81,
         14,
-        23
+        22
       ],
       "body": "child"
     },
     "V_c1_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        416,
-        73,
+        1032,
+        81,
         14,
         23
       ],
@@ -1042,19 +1412,19 @@
     "V_c1_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        432,
-        73,
+        1048,
+        81,
         14,
-        23
+        22
       ],
       "body": "child"
     },
     "V_c1_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        448,
-        73,
-        14,
+        1064,
+        81,
+        13,
         23
       ],
       "body": "child"
@@ -1062,19 +1432,19 @@
     "V_c1_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        464,
-        73,
-        14,
-        23
+        1079,
+        81,
+        13,
+        22
       ],
       "body": "child"
     },
     "V_c1_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        480,
-        73,
-        14,
+        1094,
+        81,
+        13,
         23
       ],
       "body": "child"
@@ -1082,18 +1452,18 @@
     "V_c1_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        496,
-        73,
-        14,
-        23
+        1109,
+        81,
+        13,
+        22
       ],
       "body": "child"
     },
     "V_c1_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        512,
-        73,
+        1124,
+        81,
         14,
         23
       ],
@@ -1102,18 +1472,18 @@
     "V_c1_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        528,
-        73,
+        1140,
+        81,
         14,
-        23
+        22
       ],
       "body": "child"
     },
     "V_c1_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        544,
-        73,
+        1156,
+        81,
         14,
         23
       ],
@@ -1122,38 +1492,38 @@
     "V_c1_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        560,
-        73,
+        1172,
+        81,
         14,
-        23
+        22
       ],
       "body": "child"
     },
     "V_c2_01": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        576,
-        73,
+        1188,
+        81,
         14,
-        17
+        20
       ],
       "body": "child"
     },
     "V_c2_02": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        592,
-        73,
-        14,
-        17
+        1204,
+        81,
+        16,
+        20
       ],
       "body": "child"
     },
     "V_c2_03": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        608,
-        73,
+        1222,
+        81,
         14,
         23
       ],
@@ -1162,19 +1532,19 @@
     "V_c2_04": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        624,
-        73,
+        1238,
+        81,
         14,
-        23
+        22
       ],
       "body": "child"
     },
     "V_c2_05": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        640,
-        73,
-        14,
+        1254,
+        81,
+        13,
         23
       ],
       "body": "child"
@@ -1182,19 +1552,19 @@
     "V_c2_06": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        656,
-        73,
-        14,
-        23
+        1269,
+        81,
+        13,
+        22
       ],
       "body": "child"
     },
     "V_c2_07": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        672,
-        73,
-        14,
+        1284,
+        81,
+        13,
         23
       ],
       "body": "child"
@@ -1202,19 +1572,19 @@
     "V_c2_08": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        688,
-        73,
-        14,
-        23
+        1299,
+        81,
+        13,
+        22
       ],
       "body": "child"
     },
     "V_c2_09": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        704,
-        73,
-        14,
+        1314,
+        81,
+        15,
         23
       ],
       "body": "child"
@@ -1222,9 +1592,9 @@
     "V_c2_10": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        720,
-        73,
-        14,
+        1331,
+        81,
+        15,
         23
       ],
       "body": "child"
@@ -1232,49 +1602,49 @@
     "V_c2_11": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        736,
-        73,
-        14,
-        23
+        1348,
+        81,
+        15,
+        22
       ],
       "body": "child"
     },
     "V_c2_12": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        752,
-        73,
-        14,
-        23
+        1365,
+        81,
+        17,
+        24
       ],
       "body": "child"
     },
     "V_c2_13": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        768,
-        73,
+        1384,
+        81,
         23,
-        14
+        13
       ],
       "body": "child"
     },
     "V_c2_14": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        793,
-        73,
-        14,
-        21
+        1409,
+        81,
+        15,
+        17
       ],
       "body": "child"
     },
     "V_c2_15": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        809,
-        73,
-        14,
+        1426,
+        81,
+        15,
         21
       ],
       "body": "child"
@@ -1282,18 +1652,18 @@
     "V_c2_16": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        825,
-        73,
-        14,
-        17
+        1443,
+        81,
+        13,
+        15
       ],
       "body": "child"
     },
     "direction_09_villager_gatherer": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1083,
-        73,
+        1700,
+        81,
         17,
         30
       ],
@@ -1302,8 +1672,8 @@
     "direction_10_villager_builder": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1102,
-        73,
+        1719,
+        81,
         22,
         30
       ],
@@ -1312,8 +1682,8 @@
     "direction_11_villager_elder": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1126,
-        73,
+        1743,
+        81,
         21,
         30
       ],
@@ -1322,8 +1692,8 @@
     "direction_12_villager_child": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1149,
-        73,
+        1766,
+        81,
         14,
         23
       ],

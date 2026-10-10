@@ -1,0 +1,28 @@
+{
+  "rule": "selected; otherwise converted with fewest errors, warnings, then DeltaE; otherwise raw",
+  "candidates_sha256": "fb0e45b27bda0626af96b5fc97cb86061712fb920152bf145f2b519ef5d27c40",
+  "images_sha256": {
+    "P2_fill_05.png": "73a8df311f4e321ef3dc897b95c4c893e20324438cef902a46480e23b293ded0",
+    "reference_adult_a_8x.png": "62cad035e290381ed5838ef4996b357edcab643bbd7c83f165dc1b5e8a4cfb7e",
+    "reference_adult_b_8x.png": "6b87fa5728bb468a765908d94dfcc1351d5121532f0788d5eb0309fb49bf868b",
+    "reference_child_8x.png": "c20f2276ac682c516c22703c0a13c1c9f43ef3df2f5435c3737e341da03f6ed5"
+  },
+  "previews": {
+    "P2_fill_05_01": "P2_fill_05_01@1",
+    "P2_fill_05_02": "P2_fill_05_02@1",
+    "P2_fill_05_03": "P2_fill_05_03@1",
+    "P2_fill_05_04": "P2_fill_05_04@1",
+    "P2_fill_05_05": "P2_fill_05_05@1",
+    "P2_fill_05_06": "P2_fill_05_06@1",
+    "P2_fill_05_07": "P2_fill_05_07@1",
+    "P2_fill_05_08": "P2_fill_05_08@1",
+    "P2_fill_05_09": "P2_fill_05_09@1",
+    "P2_fill_05_10": "P2_fill_05_10@1",
+    "P2_fill_05_11": "P2_fill_05_11@1",
+    "P2_fill_05_12": "P2_fill_05_12@1",
+    "P2_fill_05_13": "P2_fill_05_13@1",
+    "P2_fill_05_14": "P2_fill_05_14@1",
+    "P2_fill_05_15": "P2_fill_05_15@1",
+    "P2_fill_05_16": "P2_fill_05_16@1"
+  }
+}

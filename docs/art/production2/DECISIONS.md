@@ -29,3 +29,18 @@
 - Preserve both rounds of images, mappings and verdicts. A verdict applies only to the exact candidate and reviewed image hash; changed regions require another visual verdict even when the color candidate ID stays the same.
 
 - Scale decision: round 1 has 0 of 128 villager cells rejected for fitting damage with acceptable unfitted art (0%, below the strictly greater than 25% escape condition). Keep adult 28 and child 21; do not rescale the world. The two fitting-damage objections on objects do not trigger a villager-scale escape.
+
+## Part 3: installation boundaries
+
+- Retain both independent Part2 verdict rounds unchanged. During reference inspection, the leader observed a blue crown texel on adult_a reference V_a1_01@1 that those reviewers did not reject. Place that candidate on an installation hold and prioritize a replacement S idle in the first fill sheet. This is a recorded residual defect, not a third review round or retroactive alteration of evidence.
+- Functional U1 icons may retain a meaningful existing glyph as an explicitly nonaccepted fallback. Generic shared-blob pixels are never a functional fallback; if no meaningful glyph exists, record the icon unresolved.
+- Suppressed decoration will have atlas tombstones outside drawable sprites so renderer fallback paths can distinguish intentionally hidden content from a missing legacy ID.
+
+- Six fill calls produced 96 distinct requested target cells. Pause generation while review finishes. The checkpoint counts unique newly approved generated targets against all 96 attempts, excluding derived frames and already accepted baseline targets; the installation-held adult_a idle is a real gap.
+- Fill round 1 exposed anatomical metadata failures on otherwise readable sprites. Use the single correction/re-review loop allowed by §0.4 for image-digest mask annotations only. This changes review metadata, not the generated color candidate or its raw attempt; wrong poses and damaged artwork remain rejected rather than being repainted. Freeze a second review for all six sheets and retain both rounds. Existing Part2 masks must remain byte-identical.
+
+- Part3 checkpoint: six calls, 15/96 newly accepted generated targets (15.625%). Stop generation under §8.1; remaining12-call allowance is unused. Final reviews and guard failures remain visible. Final installation selection is separate from immutable Part2 final_selection.json; approved fill groups replace old partial groups wholesale.
+
+- Installer final guards recheck the assembled approved/derived v4 selection, rather than trusting historical ledger flags. Explicit §8.2 procedural or idle+icon fallbacks remain nonaccepted and may fail animation distinctness; those failures must be recorded, not promoted into acceptance or used to prevent every fallback from being installed. All drawable fallbacks still retain format, geometry, same-body, and basket restrictions. A13/A11 will expose the remaining activity limitations.
+
+- Part3 종료 / Part4 시작: 2026-10-10T14:32:27Z. Generation6calls/15newtargets; installation266drawables/27suppressed/0unresolved, atlas282including16D3references. 612/612PNGregistered, manifest auditPASS; Python126PASS and native-sizeGodotPASS. Fullgate remains Part8. Seven carrygroup idle-icon fallbacks retain leg_difference warnings; this is not animation acceptance.

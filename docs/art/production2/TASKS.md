@@ -5,8 +5,8 @@
 | 0 | Pinned Pass 3 baseline, CPU limits, full gate, 42-raw inventory | completed | 2026-10-10T13:29:26Z | 2026-10-10T13:37:22Z |
 | 1 | Converter v4 and required tests | completed | 2026-10-10T13:37:22Z | 2026-10-10T13:42:55Z |
 | 2 | All raw candidates, independent review, scale decision | completed | 2026-10-10T13:42:55Z | 2026-10-10T14:04:49Z |
-| 3 | Fill generation, honest fallbacks, installation | in_progress | 2026-10-10T14:04:49Z | |
-| 4 | Villager frames, fallback icons, elder variants | pending | | |
+| 3 | Fill generation, honest fallbacks, installation | completed | 2026-10-10T14:04:49Z | 2026-10-10T14:32:27Z |
+| 4 | Villager frames, fallback icons, elder variants | in_progress | 2026-10-10T14:32:27Z | |
 | 5 | Groves, clearings, canopy fade, season tint | pending | | |
 | 6 | Death count/news and localized season HUD | pending | | |
 | 7 | Windowed captures, A1–A14, blind review, compatibility | pending | | |

@@ -1,0 +1,130 @@
+[
+  {
+    "sprite_id": "P2_fill_06_01",
+    "candidate_id": "P2_fill_06_01@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The basket is now other and exposed chest is skin; bare ankle and foot pixels still map to magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_02",
+    "candidate_id": "P2_fill_06_02@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Basket classification is improved, but bare cheek and elbow pixels remain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_03",
+    "candidate_id": "P2_fill_06_03@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing carry remains coherent; exposed arm and rear-leg skin still include magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_04",
+    "candidate_id": "P2_fill_06_04@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Basket and upper torso regions are improved, but the bare rear leg and ankle retain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_05",
+    "candidate_id": "P2_fill_06_05@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "South-facing gathering reads correctly; the bare foot and arm edge still contain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_06",
+    "candidate_id": "P2_fill_06_06@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The exposed chest is corrected, but bare arm-edge and foot pixels remain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_07",
+    "candidate_id": "P2_fill_06_07@1:derived",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing reach and bush remain readable; bare shoulder and hand-edge pixels still map to magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_08",
+    "candidate_id": "P2_fill_06_08@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing gather pose is consistent; magenta other remains on bare shoulder and hand-edge pixels.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_09",
+    "candidate_id": "P2_fill_06_09@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Tool and rock are now other, but the raised bare forearm has magenta pixels and the diagonal garment boundary remains assigned to other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_10",
+    "candidate_id": "P2_fill_06_10@1:derived",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Tool and rock classification is improved; raised-forearm skin and the diagonal garment boundary still contain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_11",
+    "candidate_id": "P2_fill_06_11@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Tool and rock map correctly, but bare upper-arm and foot-edge pixels remain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_12",
+    "candidate_id": "P2_fill_06_12@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "East-facing strike is readable; bare shoulder and forearm-edge pixels still map to magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_13",
+    "candidate_id": "P2_fill_06_13@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The raised forearm is now skin, but cheek and bare knee-edge pixels remain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_14",
+    "candidate_id": "P2_fill_06_14@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "Drink pose and raised arm are readable; bare knee-edge and shoulder pixels remain magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_15",
+    "candidate_id": "P2_fill_06_15@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "The raised arm is improved, but the hand/cheek boundary and exposed leg edge still include magenta other.",
+    "unfitted_acceptable": null
+  },
+  {
+    "sprite_id": "P2_fill_06_16",
+    "candidate_id": "P2_fill_06_16@1",
+    "verdict": "reject",
+    "reason": "region_map_wrong",
+    "observation": "South-facing eating remains coherent; bare leg and foot pixels retain magenta other.",
+    "unfitted_acceptable": null
+  }
+]
