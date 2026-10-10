@@ -14,7 +14,7 @@ from make_blind_grid import cue_box, compose_grid
 
 
 def entity(kind: str = 'agent') -> Entity:
-    return Entity(kind,1,(0,0,64,64),True,'frame','frame',(8,8),'adult_a',(0,0,0),(0,0),
+    return Entity(kind,1,(0,0,64,64),True,'frame','frame',(8,8),'adult_a',(0,0),(0,0),
                   'idle','S','',-1,False,'',(0,0,0,0),'Panel')
 
 
@@ -101,7 +101,7 @@ class IngameQARegression(unittest.TestCase):
     def test_variety_rejects_identical_neighbors(self) -> None:
         actors = tuple(replace(entity(),ident=i,tile=(i,0)) for i in range(12))
         self.assertEqual(variety(capture(Path('unused'),actors)).status,'FAIL')
-        diverse = tuple(replace(actor,variant=(i%4,i%5,i%6)) for i,actor in enumerate(actors))
+        diverse = tuple(replace(actor,variant=(i%3,i%5)) for i,actor in enumerate(actors))
         self.assertEqual(variety(capture(Path('unused'),diverse)).status,'PASS')
 
 if __name__ == '__main__':

@@ -1,0 +1,1341 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_a3_13",
+      "candidate_id": "V_a3_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the body lies horizontally with head to the right and tucked limbs; tan skin, cream clothing and brown hair agree with the adjacent reference. No mask is intended for asleep.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_13",
+      "candidate_id": "V_a2_13",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_14",
+      "candidate_id": "V_a2_14",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_a_N_build_01",
+      "candidate_id": "P2V_a_N_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_a_N_build_02",
+      "candidate_id": "P2V_a_N_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_15",
+      "candidate_id": "V_a2_15",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_16",
+      "candidate_id": "V_a2_16",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure stands with hands near its torso; no building tool is visible. The 6x view likewise shows no held tool, so the required build action does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_05",
+      "candidate_id": "V_a2_05",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_06",
+      "candidate_id": "V_a2_06",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_07",
+      "candidate_id": "V_a2_07",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_08",
+      "candidate_id": "V_a2_08",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_01",
+      "candidate_id": "V_a3_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_02",
+      "candidate_id": "V_a3_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_01",
+      "candidate_id": "V_a2_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_02",
+      "candidate_id": "V_a2_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_03",
+      "candidate_id": "V_a2_03",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_04",
+      "candidate_id": "V_a2_04",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The 2x figure has no distinguishable carried load; the 6x view shows cream clothing and hands at the torso rather than a separate held object. Carry is not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_16",
+      "candidate_id": "V_a3_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing crossed legs and folded arms read at 2x; mask follows the long hair and the white preview preserves face, arms and cream cloth.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_14",
+      "candidate_id": "V_a3_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front crouch has bent knees and lowered hands at 2x; white hair surrounds the tan face without recolouring limbs or clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_15",
+      "candidate_id": "V_a3_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Second front crouch retains the compact bent-knee pose; hair overlay follows the head and shoulder hair, with tan face and arms preserved.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_03",
+      "candidate_id": "V_a3_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East profile brings the raised hand to the mouth at 2x; long hair turns white while the hand, face and cream wrap retain their colours.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_04",
+      "candidate_id": "V_a3_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East drinking profile keeps the bent arm and hand at the mouth at 2x; scalp and hanging hair are covered without whitening the arm.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_a_N_drink_01",
+      "candidate_id": "P2V_a_N_drink_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear three-quarter drinking pose shows the raised hand and blue vessel at the head at 2x; rear hair turns white while the visible profile and arm stay tan.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_a_N_drink_02",
+      "candidate_id": "P2V_a_N_drink_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear drinking pose raises the bent arm to the obscured mouth area at 2x; white preview covers the rear hair mass and preserves the shoulders and wrap.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_05",
+      "candidate_id": "V_a3_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front eating pose shows one hand at the mouth and a red-filled bowl in the other at 2x; white hair leaves face, hand and bowl unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_06",
+      "candidate_id": "V_a3_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front eating pose retains mouth-level hand and visible red bowl at 2x; long hair is masked while skin and cream clothing retain their colours.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_09",
+      "candidate_id": "V_a2_09",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The east-facing 2x and 6x figure stands upright with arms at its torso and no visible reaching or gathering interaction; it reads as idle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_10",
+      "candidate_id": "V_a2_10",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "The east-facing 2x and 6x figure stands upright with arms at its torso and no visible reaching or gathering interaction; it reads as idle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_11",
+      "candidate_id": "V_a2_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front gathering crouch is legible behind green foliage and red fruit at 2x; scalp and side hair turn white without recolouring the plant or face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_12",
+      "candidate_id": "V_a2_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Second gathering pose shows lowered hands over the fruiting plant; mask follows the hair surrounding the face and preserves green foliage and tan arms.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_04",
+      "candidate_id": "V_a1_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing idle is legible at 2x with tan skin and cream clothing matching the reference family. The overlay follows the visible scalp/back-of-head hair and the white preview leaves body and clothes unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_03",
+      "candidate_id": "V_a1_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North idle shows the back of the head and cream wrap; rear hair is fully white in preview, with arms and clothing unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_01",
+      "candidate_id": "V_a1_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South idle retains the tan skin, cream wrap and red hanging strip of the reference; white hair remains confined to the hair around the face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_02",
+      "candidate_id": "V_a1_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Second south idle preserves the reference build and clothing colours; hair overlay and white preview leave the central face and body tan.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_08",
+      "candidate_id": "V_a3_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East sitting profile has bent knees and forward forearms at 2x; long rear hair turns white while the face, arms and cream wrap remain distinct.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_07",
+      "candidate_id": "V_a3_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South sitting pose shows raised knees and arms resting forward; white preview follows the scalp and side hair without whitening the knees or hands.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_11",
+      "candidate_id": "V_a3_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East talk pose extends a bent gesturing arm at 2x; the white-haired profile retains tan face and hand and the reference cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_12",
+      "candidate_id": "V_a3_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Second east talk pose extends the hand farther forward; hair overlay follows the scalp and long back hair while exposed skin stays tan.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_09",
+      "candidate_id": "V_a3_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South talk pose has an outward raised hand and readable front face; hair turns white without affecting the gesturing hand or cream garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a3_10",
+      "candidate_id": "V_a3_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Second south talk pose retains the raised hand and front-facing stance; white preview preserves facial skin, arms and the red garment strip.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_09",
+      "candidate_id": "V_a1_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the east-facing body has a stepped leg/foot placement with tan skin and cream clothing consistent with the reference. The head overlay and white preview show no conspicuous body spill or interior hair patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_10",
+      "candidate_id": "V_a1_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the east-facing body has a stepped leg/foot placement with tan skin and cream clothing consistent with the reference. The head overlay and white preview show no conspicuous body spill or interior hair patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_11",
+      "candidate_id": "V_a1_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the east-facing body has a stepped leg/foot placement with tan skin and cream clothing consistent with the reference. The head overlay and white preview show no conspicuous body spill or interior hair patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_12",
+      "candidate_id": "V_a1_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the east-facing body has a stepped leg/foot placement with tan skin and cream clothing consistent with the reference. The head overlay and white preview show no conspicuous body spill or interior hair patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_13",
+      "candidate_id": "V_a1_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk frame shows the rear hair mass and a stepping leg; white preview covers the hair while preserving cream clothing and tan limbs.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_14",
+      "candidate_id": "V_a1_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk frame has crossed stepping feet and rear-facing head; mask follows the rear hair silhouette and leaves the shoulders and wrap unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_15",
+      "candidate_id": "V_a1_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk frame shifts the rear-facing torso and legs through the stride; white hair stays on the head and clothing remains cream.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_16",
+      "candidate_id": "V_a1_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk frame has a staggered leg stance and intact rear silhouette; hair is white throughout the interior while arms and feet remain tan.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_05",
+      "candidate_id": "V_a1_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South walk frame extends one foot with a readable front face at 2x; white preview retains tan face and limbs and cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_06",
+      "candidate_id": "V_a1_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South walk frame brings the legs closer through the stride; scalp and chin hair turn white while the face, hands and garment retain their colours.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_07",
+      "candidate_id": "V_a1_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South walk frame extends the opposite leg with consistent tan skin and cream wrap; mask follows the hair surrounding the face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a1_08",
+      "candidate_id": "V_a1_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South walk frame returns to a more upright stride pose; scalp and chin hair are white in preview and exposed facial skin and clothing remain unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_13",
+      "candidate_id": "V_b3_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Horizontal resting silhouettes read asleep at 2x; cream clothing and brown hair remain consistent with the adjacent idle reference. No hair-mask judgment is required for asleep frames.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_asleep_01",
+      "candidate_id": "P2V_b_N_asleep_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Horizontal resting silhouettes read asleep at 2x; cream clothing and brown hair remain consistent with the adjacent idle reference. No hair-mask judgment is required for asleep frames.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_asleep_01",
+      "candidate_id": "P2V_b_S_asleep_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Horizontal resting silhouettes read asleep at 2x; cream clothing and brown hair remain consistent with the adjacent idle reference. No hair-mask judgment is required for asleep frames.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_13",
+      "candidate_id": "V_b2_13",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "East build appears as a standing idle with arms down; no building tool is legible in either the 2x grass sprite or enlarged sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_14",
+      "candidate_id": "V_b2_14",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "East build appears as a standing idle with arms down; no building tool is legible in either the 2x grass sprite or enlarged sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_build_01",
+      "candidate_id": "P2V_b_N_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Rear standing figure has lowered arms and no visible building tool at 2x; the displayed pose reads idle rather than build.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_build_02",
+      "candidate_id": "P2V_b_N_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Rear standing figure has lowered arms and no visible building tool at 2x; the displayed pose reads idle rather than build.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_15",
+      "candidate_id": "V_b2_15",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The raised tool reads at 2x, but the mask leaves the lower side locks dark beside the shoulders in the white-hair preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_16",
+      "candidate_id": "V_b2_16",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The lowered tool is visible at 2x; dark long hair remains below the recoloured cap on both sides of the head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The carried red-topped load reads at 2x; the white preview retains a dark interior lock behind the cheek and beside the shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The load and east-facing profile are clear; the back edge of the long hair retains a substantial dark strip below the white crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east carry pose and load remain readable; a dark long-hair strip remains behind the recoloured front lock.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_08",
+      "candidate_id": "V_b2_08",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The bent stride and carried load read at 2x; the white-hair view leaves dark lower hair beside the neck and shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_01",
+      "candidate_id": "V_b3_01",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "North carry visibly repeats a face/near-front carrying silhouette with the load across the chest; it does not read as the rear-facing north idle beside it.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_02",
+      "candidate_id": "V_b3_02",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "North carry visibly repeats a face/near-front carrying silhouette with the load across the chest; it does not read as the rear-facing north idle beside it.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_01",
+      "candidate_id": "V_b2_01",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The requested south carry presents a right-facing profile, with the face and long front lock arranged like the east carry cells.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_02",
+      "candidate_id": "V_b2_02",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The south-labelled carry has a right-facing profile and side-on face rather than a front-facing south head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_03",
+      "candidate_id": "V_b2_03",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The south-labelled carry repeats the east-facing head/profile while holding the load to the left.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_04",
+      "candidate_id": "V_b2_04",
+      "verdict": "reject",
+      "reason": "wrong_view",
+      "observation": "The head and torso read as the same east-facing carry profile as the east frames, not the requested south view.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_16",
+      "candidate_id": "V_b3_16",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Crossed pose shows both arms hanging down beside the tunic at 2x and 6x; the diagonal clothing strap is not crossed arms.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_14",
+      "candidate_id": "V_b3_14",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crouched knees and front-facing head are legible; long dark hair remains down both sides below the blue scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_15",
+      "candidate_id": "V_b3_15",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The low crouch reads clearly, but white hair stops around the forehead while lower side locks remain dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_03",
+      "candidate_id": "V_b3_03",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Hands reach the mouth at 2x; the mask covers the crown but leaves a broad dark back lock extending toward the shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_04",
+      "candidate_id": "V_b3_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east-facing drink brings the hands to the mouth at 2x; the mask follows the crown and long rear lock, with skin and cream clothing preserved.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_drink_01",
+      "candidate_id": "P2V_b_N_drink_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "North drink shows lowered hands beside the body, with neither hand reaching the mouth; drinking does not read in the 2x sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_drink_02",
+      "candidate_id": "P2V_b_N_drink_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "North drink shows lowered hands beside the body, with neither hand reaching the mouth; drinking does not read in the 2x sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_01",
+      "candidate_id": "P2V_b_S_drink_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The cup and hands sit at the mouth, but the left crown and long left-side hair remain dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_S_drink_02",
+      "candidate_id": "P2V_b_S_drink_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing cup reaches the mouth; the blue mask omits dark crown and lower side-hair regions visible in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_01",
+      "candidate_id": "P2V_b_E_eat_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The right-facing eating hand is raised to the face; the rear lower hair remains dark beneath the recoloured crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_E_eat_02",
+      "candidate_id": "P2V_b_E_eat_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east eating pose is readable, but the white preview retains a dark lower back lock beside the neck.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_eat_01",
+      "candidate_id": "P2V_b_N_eat_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The back of the head faces the viewer and the eating arm rises at the side; the blue mask spans the visible rear hair and the white preview preserves skin and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_eat_02",
+      "candidate_id": "P2V_b_N_eat_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north-facing head and raised eating arm are consistent; the rear hair is recoloured without whitening the hand or cream tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_05",
+      "candidate_id": "V_b3_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south eating pose shows food at the mouth; lower long hair beside the face remains dark outside the scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_06",
+      "candidate_id": "V_b3_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The food and raised hand read at 2x; dark long locks remain beside the cheeks below the recoloured upper hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_09",
+      "candidate_id": "V_b2_09",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "East gather is a straight standing silhouette with lowered arms and no reaching, bending or gathered item; it reads as idle at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_10",
+      "candidate_id": "V_b2_10",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "East gather is a straight standing silhouette with lowered arms and no reaching, bending or gathered item; it reads as idle at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_gather_01",
+      "candidate_id": "P2V_b_N_gather_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "North gather remains upright with arms down and no visible gathering target or reach at 2x; the action is indistinguishable from rear idle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_gather_02",
+      "candidate_id": "P2V_b_N_gather_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "North gather remains upright with arms down and no visible gathering target or reach at 2x; the action is indistinguishable from rear idle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_11",
+      "candidate_id": "V_b2_11",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The figure gathers at a visible berry bush; the mask covers the top hair but leaves dark lower locks beside the face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_12",
+      "candidate_id": "V_b2_12",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Hands and berry bush make the gathering pose clear; dark side hair remains beneath the white crown on both sides.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_04",
+      "candidate_id": "V_b1_04",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The idle is a clear east profile; a broad dark back lock remains outside the blue mask and stays dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_03",
+      "candidate_id": "V_b1_03",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The north idle shows rear hair, but an interior vertical dark gap remains in the lower right portion of the white-hair mass.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_01",
+      "candidate_id": "V_b1_01",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front idle retains tan skin and cream clothes, but long dark hair beside the neck is excluded from the recoloured scalp.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_02",
+      "candidate_id": "V_b1_02",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south idle reads correctly; dark hair remains beside the cheeks and at the lower locks after the crown is whitened.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_08",
+      "candidate_id": "V_b3_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east seated pose has legs extended forward; the blue mask follows the long rear hair and white recolouring preserves the face and clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_b_N_sit_01",
+      "candidate_id": "P2V_b_N_sit_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The seated back view shows the rear head and forward bent legs; the visible hair is recoloured while the exposed arm and tunic retain their colours.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_07",
+      "candidate_id": "V_b3_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing seated knees read clearly; substantial dark side locks remain below the masked upper hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_11",
+      "candidate_id": "V_b3_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The east-facing talk gesture extends an open hand; the white preview follows the crown and rear lock without whitening the gesture or clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_12",
+      "candidate_id": "V_b3_12",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing hands form a talk gesture, but a dark interior hair section remains between the white crown and the long rear lock.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_09",
+      "candidate_id": "V_b3_09",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south-facing raised hand reads as talk; the long locks framing the lower face remain dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_10",
+      "candidate_id": "V_b3_10",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Both hands lift in a front-facing talk gesture; dark lower side locks remain outside the blue scalp mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_09",
+      "candidate_id": "V_b1_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking silhouettes show leg separation or passing stance at 2x, preserve the cream/tan colour families, and the white preview recolours the visible hair without a conspicuous interior dark patch or white clothing region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_10",
+      "candidate_id": "V_b1_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking silhouettes show leg separation or passing stance at 2x, preserve the cream/tan colour families, and the white preview recolours the visible hair without a conspicuous interior dark patch or white clothing region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_11",
+      "candidate_id": "V_b1_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking silhouettes show leg separation or passing stance at 2x, preserve the cream/tan colour families, and the white preview recolours the visible hair without a conspicuous interior dark patch or white clothing region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_12",
+      "candidate_id": "V_b1_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking silhouettes show leg separation or passing stance at 2x, preserve the cream/tan colour families, and the white preview recolours the visible hair without a conspicuous interior dark patch or white clothing region.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_13",
+      "candidate_id": "V_b1_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north walk shows rear hair and a stepping silhouette; the white-hair preview preserves tan arms and cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_14",
+      "candidate_id": "V_b1_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north walk presents the back of the head and alternating legs; the blue mask follows the rear hair and the white preview leaves the body colours intact.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_15",
+      "candidate_id": "V_b1_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The north stride and turned rear head remain legible at 2x; white recolouring follows the rear hair without colouring the arms or tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_16",
+      "candidate_id": "V_b1_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The rear-facing walk keeps the long hair and cream tunic consistent; the white preview recolours the rear hair while preserving skin.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_05",
+      "candidate_id": "V_b1_05",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south-facing stride is readable; the white crown leaves dark long side locks beside the face and collar.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_06",
+      "candidate_id": "V_b1_06",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front walk and alternating feet read at 2x; a substantial dark side lock remains below the masked crown.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_07",
+      "candidate_id": "V_b1_07",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The south walk retains the reference skin and tunic colours, but dark lower hair beside the neck remains outside the mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_08",
+      "candidate_id": "V_b1_08",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The front-facing walking pose is clear; the white preview leaves a dark interior lock on the right side of the head and neck.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_13",
+      "candidate_id": "V_c2_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Horizontal sleeping silhouette with tucked limbs, dark hair and recognizable cream garment at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_build_01",
+      "candidate_id": "P2V_c_E_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_build_02",
+      "candidate_id": "P2V_c_E_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_build_01",
+      "candidate_id": "P2V_c_S_build_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_build_02",
+      "candidate_id": "P2V_c_S_build_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x and 6x the child stands with hands beside or across the torso; no distinct building tool is visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_01",
+      "candidate_id": "P2V_c_E_carry_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_02",
+      "candidate_id": "P2V_c_E_carry_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_03",
+      "candidate_id": "P2V_c_E_carry_03",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_carry_04",
+      "candidate_id": "P2V_c_E_carry_04",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_01",
+      "candidate_id": "P2V_c_S_carry_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_02",
+      "candidate_id": "P2V_c_S_carry_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_03",
+      "candidate_id": "P2V_c_S_carry_03",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_carry_04",
+      "candidate_id": "P2V_c_S_carry_04",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x this reads as an empty-handed standing or stepping child; at 6x the pale torso is clothing with no distinct carried load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_drink_01",
+      "candidate_id": "P2V_c_E_drink_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Hands remain near chest or waist below the mouth at 2x and 6x; drinking does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_drink_02",
+      "candidate_id": "P2V_c_E_drink_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Hands remain near chest or waist below the mouth at 2x and 6x; drinking does not read.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_14",
+      "candidate_id": "V_c2_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated eating pose holds a pale bowl or food shape across the lap, with hands above it.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_15",
+      "candidate_id": "V_c2_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated pose holds pale food between both hands; dark hair and cream garment remain coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_gather_01",
+      "candidate_id": "P2V_c_E_gather_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_E_gather_02",
+      "candidate_id": "P2V_c_E_gather_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_gather_01",
+      "candidate_id": "P2V_c_S_gather_01",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2V_c_S_gather_02",
+      "candidate_id": "P2V_c_S_gather_02",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "Upright child has arms lowered beside torso; no reach, picking gesture or collected object makes gathering visible at 2x or 6x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_03",
+      "candidate_id": "V_c2_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front hop shows one lifted leg and one downward leg; face and cream garment remain readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_04",
+      "candidate_id": "V_c2_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front landing pose has separated feet and lowered arms; anatomy remains coherent at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_16",
+      "candidate_id": "V_c2_16",
+      "verdict": "reject",
+      "reason": "wrong_pose",
+      "observation": "At 2x a head over a short cream rectangular base is visible; no embracing arms make a hug readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_04",
+      "candidate_id": "V_c1_04",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East profile has a clear nose, rounded dark hair, cream garment and two feet matching reference build.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_03",
+      "candidate_id": "V_c1_03",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North idle shows the back of dark hair and pale garment with exposed shoulders; orientation is clear.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_01",
+      "candidate_id": "V_c1_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front idle has both eyes, lowered arms, separate feet and the reference dark hair and cream garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_02",
+      "candidate_id": "V_c1_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front idle shifts the torso while retaining rounded hair, cream garment and intact limbs.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_05",
+      "candidate_id": "V_c2_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run contact pose has slight leg separation and forward profile; compact body remains coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_06",
+      "candidate_id": "V_c2_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run passing pose has close feet beneath torso; head and cream garment remain intact.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_07",
+      "candidate_id": "V_c2_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run visibly extends one leg behind and one down; movement silhouette is visible at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_08",
+      "candidate_id": "V_c2_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East run recovery has close feet beneath forward profile, with intact arms and garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_02",
+      "candidate_id": "V_c2_02",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East seated child has bent knees, lowered torso and hands ahead; pale garment remains recognizable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_01",
+      "candidate_id": "V_c2_01",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front seated child has raised knees framing pale torso and hands; sitting reads at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_11",
+      "candidate_id": "V_c2_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East talk extends one hand outward at chest height; face, arm and cream garment stay distinct.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_12",
+      "candidate_id": "V_c2_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East talk bends an arm upward before the face; gesture and legs remain distinct at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_09",
+      "candidate_id": "V_c2_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front talk raises one hand beside the upper torso; face and cream garment remain legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c2_10",
+      "candidate_id": "V_c2_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front talk maintains an outward hand gesture with intact legs and dark hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_09",
+      "candidate_id": "V_c1_09",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk contact has close feet and clear profile; cream garment and dark hair match reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_10",
+      "candidate_id": "V_c1_10",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk offsets feet with one leg behind torso; anatomy remains readable.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_11",
+      "candidate_id": "V_c1_11",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk extends one foot forward and one down, producing a stepping silhouette.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_12",
+      "candidate_id": "V_c1_12",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walk passing frame brings feet together below intact cream-clad torso.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_13",
+      "candidate_id": "V_c1_13",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk has back-of-head dark hair and one leg stepping out below pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_14",
+      "candidate_id": "V_c1_14",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk passing frame has close feet, clear back view and readable pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_15",
+      "candidate_id": "V_c1_15",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk offsets feet below pale garment and keeps a solid rear hair silhouette.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_16",
+      "candidate_id": "V_c1_16",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North walk maintains back view with close feet and arms beside pale garment.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_05",
+      "candidate_id": "V_c1_05",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk extends one leg down and shifts arms; dark hair and cream clothes match reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_06",
+      "candidate_id": "V_c1_06",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk passing frame has separated feet beneath cream garment and readable face.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_07",
+      "candidate_id": "V_c1_07",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk moves one leg forward and the other back; stepping silhouette remains visible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c1_08",
+      "candidate_id": "V_c1_08",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front walk recovery returns feet under body; face, arms and cream garment remain coherent.",
+      "unfitted_acceptable": null
+    }
+  ],
+  "review_sources_sha256": {
+    "docs/art/production4/natural_audit/reviews/adult_a.json": "4440d5c8709bdb1a2337f6a3da16fc975d39990d37fa6498ee41b54abd4e5a81",
+    "docs/art/production4/natural_audit/reviews/adult_b.json": "5e4e9d93dfc881e5898f3b1b67301029764bdb17c1e3a9e77057a7edb5af9620",
+    "docs/art/production4/natural_audit/reviews/child.json": "bead4a087c26b9ff90945248617bfd9f9a7c2e7b77238ddefba6bff0d486623b",
+    "docs/art/production4/natural_audit/reviews/adult_a_round2.json": "d755295e79ffb15a146905b775dd2c6bce634dc8d541e1bf36119d8d38f0266e",
+    "docs/art/production4/natural_audit/reviews/adult_b_round2.json": "6444c20e53eacda57b3a34d3dd4d40d7e67c6597411347b44216d5a4683191d0",
+    "docs/art/production4/natural_audit/round2/index.json": "969da921b18ea886993b37c751c928894e0d163cbf6914fa177c2150116f1e5c",
+    "docs/art/production4/natural_audit/round2/adult_a_01.png": "e04879a7d60d17a19248f455c90392645389ecd72ace51f21745c5ba66bbf35b",
+    "docs/art/production4/natural_audit/round2/adult_a_02.png": "ee920d17eea5e99bae366cb1c14e0f1c9b776d8764b020a30efa80386ad96d35",
+    "docs/art/production4/natural_audit/round2/adult_a_03.png": "d7bf84c3de5bf4e2200a45afec1ec5ffe34c06049282207994a20f1d0267bb88",
+    "docs/art/production4/natural_audit/round2/adult_b_01.png": "96e0cde3483994e5454fead0058613123bf0596e5dd65c4899d1a35db2d4b828",
+    "docs/art/production4/natural_audit/round2/adult_b_02.png": "5cfc2383d8c20e61297774cd930b0cd66e0acd845e5adebd2fa8268f2cffba54",
+    "docs/art/production4/natural_audit/round2/adult_b_03.png": "7af46689c71a191dcd0d032a58f559babdacd0464fd38411c28f2bde72c81fdf",
+    "docs/art/production4/natural_audit/round2/adult_b_04.png": "5b6befd4e3044f7b1878584905faf99d0b4b135e4b2ac39b18da186a8c332198"
+  },
+  "board_index": "docs/art/production4/natural_audit/index.json",
+  "board_index_sha256": "1c968069ba26861ff86057944ef91da15877188d624ba6e65f793b3cf873bc01"
+}

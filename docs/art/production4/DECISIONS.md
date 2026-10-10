@@ -18,3 +18,8 @@
 - Pass5 discovery: GatherWood is target_kinds7, but seek_kinds remains0 for wood; seek overlay must feature-detect target_kinds separately. Hunger values are PackedFloat32Array.
 - Localization source compiler is tools/localization_compile.py; localization_compile_fluent.py runs in the reverse direction and must not overwrite edited FTL.
 - Part0 gate passed28/28 at 2026-10-10T19:17:58Z: Rust 1912 passed across123 suites, Python177, Godot21, Clippy/strict/bridge/smoke clean. No merge fallout.
+- Part1 bounded review finished at82/165 approved.44 adult_b targets lack fresh-ok fallback sources and remain explicit retained fallbacks under §0 best-state rule; not visual acceptance. Registry differentiates ok/retained_rejected_fallback/unreviewed_fallback; this is an honest unresolved5.6 boundary.
+- Part1 corrected evidence-layout overlap before judgments, with all reviewers reopening revised pages. Systematic debugging traced card height (grass could overlap6x feet); source sprite pixels unchanged.
+- Actual pre-P4 production drawable baseline is276 plus9 provisional references; brief269 omitted seven already-installed reprocess approvals. Preserve both comparisons; never erase these prior approvals by accidentally using the older selection ledger alone.
+- Visual workflow state/evidence stays under authorized docs/art/production4; do not create out-of-scope .omx artifacts.
+- Part1 first Godot activity test failed at old skin/clothing channel expectations (lines42/44). Updated only those assertions to the specified tone/hair/zero-blue contract; activity behavior assertions remain intact. Rerunning all21 art tests.

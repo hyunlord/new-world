@@ -2115,10 +2115,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "P2V_b_E_eat_02",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_E_eat_02": {
@@ -2148,10 +2148,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:P2_fill_05/10@1:v4:f=0.861033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_asleep_01": {
@@ -2214,10 +2214,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_build_02": {
@@ -2247,10 +2247,10 @@
       "frame": 1,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_drink_01": {
@@ -2280,10 +2280,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_drink_02": {
@@ -2313,10 +2313,10 @@
       "frame": 1,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_eat_01": {
@@ -2412,10 +2412,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_gather_02": {
@@ -2445,10 +2445,10 @@
       "frame": 1,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_03",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_N_sit_01": {
@@ -2544,10 +2544,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "P2V_b_S_drink_02",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_b_S_drink_02": {
@@ -2577,10 +2577,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:P2_fill_05/06@1:v4:f=0.861033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "P2V_c_E_build_01": {
@@ -6273,10 +6273,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b1/01@2:v4:f=0.888889",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_02": {
@@ -6306,10 +6306,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b1/02@2:v4:f=0.888889",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_03": {
@@ -6339,10 +6339,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b1/03@2:v4:f=1",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_04": {
@@ -6372,10 +6372,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b1/04@2:v4:f=0.848485",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_05": {
@@ -6405,10 +6405,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b1/05@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_06": {
@@ -6438,10 +6438,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b1/06@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_07": {
@@ -6471,10 +6471,10 @@
       "frame": 2,
       "drawable": true,
       "source": "generated:V_b1/07@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_08": {
@@ -6504,10 +6504,10 @@
       "frame": 3,
       "drawable": true,
       "source": "generated:V_b1/08@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b1_09": {
@@ -7065,10 +7065,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_04",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_10": {
@@ -7098,10 +7098,10 @@
       "frame": 1,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_04",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_11": {
@@ -7131,10 +7131,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b2/11@3:v4:f=0.933333",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_12": {
@@ -7164,10 +7164,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b2/12@3:v4:f=0.933333",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_13": {
@@ -7197,10 +7197,10 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_04",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_14": {
@@ -7230,10 +7230,10 @@
       "frame": 1,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_04",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_15": {
@@ -7263,10 +7263,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b2/15@2:v4:f=0.777778",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b2_16": {
@@ -7296,10 +7296,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b2/16@2:v4:f=0.777778",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_01": {
@@ -7329,10 +7329,10 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b3/01@2:v4:f=0.708861",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": true,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_02": {
@@ -7362,10 +7362,10 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b3/02@2:v4:f=0.708861",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": true,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_03": {
@@ -7373,20 +7373,20 @@
       "rect": [
         634,
         81,
-        20,
-        27
+        19,
+        23
       ],
       "anchor": [
-        10,
-        26
+        9,
+        22
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
         634,
         81,
-        20,
-        27
+        19,
+        23
       ],
       "source_path": "assets/art/production/V_b3/03.png",
       "body": "adult_b",
@@ -7394,17 +7394,17 @@
       "activity": "drink",
       "frame": 0,
       "drawable": true,
-      "source": "generated:V_b3/03@3:v4:f=0.788889",
-      "qa_status": "accepted",
-      "source_sprite": "",
+      "source": "procedural:procedural",
+      "qa_status": "procedural",
+      "source_sprite": "V_b3_04",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "procedural",
       "activity_icon": ""
     },
     "V_b3_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        656,
+        655,
         81,
         19,
         27
@@ -7416,7 +7416,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        656,
+        655,
         81,
         19,
         27
@@ -7437,7 +7437,7 @@
     "V_b3_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        677,
+        676,
         81,
         17,
         29
@@ -7449,7 +7449,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        677,
+        676,
         81,
         17,
         29
@@ -7461,16 +7461,16 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b3/05@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        696,
+        695,
         81,
         17,
         29
@@ -7482,7 +7482,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        696,
+        695,
         81,
         17,
         29
@@ -7494,16 +7494,16 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b3/06@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        715,
+        714,
         81,
         18,
         24
@@ -7515,7 +7515,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        715,
+        714,
         81,
         18,
         24
@@ -7527,16 +7527,16 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b3/07@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        735,
+        734,
         81,
         22,
         26
@@ -7548,7 +7548,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        735,
+        734,
         81,
         22,
         26
@@ -7569,7 +7569,7 @@
     "V_b3_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        759,
+        758,
         81,
         22,
         31
@@ -7581,7 +7581,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        759,
+        758,
         81,
         22,
         31
@@ -7593,16 +7593,16 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b3/09@1:v4:f=0.918033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        783,
+        782,
         81,
         24,
         30
@@ -7614,7 +7614,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        783,
+        782,
         81,
         24,
         30
@@ -7626,16 +7626,16 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b3/10@1:v4:f=0.918033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        809,
+        808,
         81,
         18,
         29
@@ -7647,7 +7647,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        809,
+        808,
         81,
         18,
         29
@@ -7668,22 +7668,22 @@
     "V_b3_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        829,
+        828,
         81,
-        20,
-        32
+        18,
+        29
       ],
       "anchor": [
-        10,
-        31
+        9,
+        28
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
-        829,
+        828,
         81,
-        20,
-        32
+        18,
+        29
       ],
       "source_path": "assets/art/production/V_b3/12.png",
       "body": "adult_b",
@@ -7691,17 +7691,17 @@
       "activity": "talk",
       "frame": 1,
       "drawable": true,
-      "source": "generated:V_b3/12@2:v4:f=0.746667",
-      "qa_status": "accepted",
-      "source_sprite": "",
+      "source": "procedural:procedural",
+      "qa_status": "procedural",
+      "source_sprite": "V_b3_11",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "procedural",
       "activity_icon": ""
     },
     "V_b3_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        851,
+        848,
         81,
         30,
         14
@@ -7713,7 +7713,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        851,
+        848,
         81,
         30,
         14
@@ -7734,7 +7734,7 @@
     "V_b3_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        883,
+        880,
         81,
         18,
         25
@@ -7746,7 +7746,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        883,
+        880,
         81,
         18,
         25
@@ -7758,16 +7758,16 @@
       "frame": 0,
       "drawable": true,
       "source": "generated:V_b3/14@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        903,
+        900,
         81,
         17,
         25
@@ -7779,7 +7779,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        903,
+        900,
         81,
         17,
         25
@@ -7791,16 +7791,16 @@
       "frame": 1,
       "drawable": true,
       "source": "generated:V_b3/15@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "source_sprite": "",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_b3_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        922,
+        919,
         81,
         15,
         30
@@ -7812,7 +7812,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        922,
+        919,
         81,
         15,
         30
@@ -7824,16 +7824,16 @@
       "frame": 0,
       "drawable": true,
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "source_sprite": "V_b1_01",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": ""
     },
     "V_c1_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        939,
+        936,
         81,
         14,
         23
@@ -7845,7 +7845,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        939,
+        936,
         81,
         14,
         23
@@ -7866,7 +7866,7 @@
     "V_c1_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        955,
+        952,
         81,
         14,
         23
@@ -7878,7 +7878,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        955,
+        952,
         81,
         14,
         23
@@ -7899,7 +7899,7 @@
     "V_c1_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        971,
+        968,
         81,
         14,
         23
@@ -7911,7 +7911,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        971,
+        968,
         81,
         14,
         23
@@ -7932,7 +7932,7 @@
     "V_c1_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        987,
+        984,
         81,
         13,
         23
@@ -7944,7 +7944,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        987,
+        984,
         81,
         13,
         23
@@ -7965,7 +7965,7 @@
     "V_c1_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1002,
+        999,
         81,
         14,
         23
@@ -7977,7 +7977,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1002,
+        999,
         81,
         14,
         23
@@ -7998,7 +7998,7 @@
     "V_c1_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1018,
+        1015,
         81,
         14,
         22
@@ -8010,7 +8010,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1018,
+        1015,
         81,
         14,
         22
@@ -8031,7 +8031,7 @@
     "V_c1_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1034,
+        1031,
         81,
         14,
         23
@@ -8043,7 +8043,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1034,
+        1031,
         81,
         14,
         23
@@ -8064,7 +8064,7 @@
     "V_c1_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1050,
+        1047,
         81,
         14,
         22
@@ -8076,7 +8076,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1050,
+        1047,
         81,
         14,
         22
@@ -8097,7 +8097,7 @@
     "V_c1_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1066,
+        1063,
         81,
         13,
         23
@@ -8109,7 +8109,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1066,
+        1063,
         81,
         13,
         23
@@ -8130,7 +8130,7 @@
     "V_c1_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1081,
+        1078,
         81,
         13,
         22
@@ -8142,7 +8142,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1081,
+        1078,
         81,
         13,
         22
@@ -8163,7 +8163,7 @@
     "V_c1_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1096,
+        1093,
         81,
         13,
         23
@@ -8175,7 +8175,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1096,
+        1093,
         81,
         13,
         23
@@ -8196,7 +8196,7 @@
     "V_c1_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1111,
+        1108,
         81,
         13,
         22
@@ -8208,7 +8208,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1111,
+        1108,
         81,
         13,
         22
@@ -8229,7 +8229,7 @@
     "V_c1_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1126,
+        1123,
         81,
         14,
         23
@@ -8241,7 +8241,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1126,
+        1123,
         81,
         14,
         23
@@ -8262,7 +8262,7 @@
     "V_c1_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1142,
+        1139,
         81,
         14,
         22
@@ -8274,7 +8274,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1142,
+        1139,
         81,
         14,
         22
@@ -8295,7 +8295,7 @@
     "V_c1_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1158,
+        1155,
         81,
         14,
         23
@@ -8307,7 +8307,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1158,
+        1155,
         81,
         14,
         23
@@ -8328,7 +8328,7 @@
     "V_c1_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1174,
+        1171,
         81,
         14,
         22
@@ -8340,7 +8340,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1174,
+        1171,
         81,
         14,
         22
@@ -8361,7 +8361,7 @@
     "V_c2_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1190,
+        1187,
         81,
         14,
         20
@@ -8373,7 +8373,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1190,
+        1187,
         81,
         14,
         20
@@ -8394,7 +8394,7 @@
     "V_c2_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1206,
+        1203,
         81,
         16,
         20
@@ -8406,7 +8406,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1206,
+        1203,
         81,
         16,
         20
@@ -8427,7 +8427,7 @@
     "V_c2_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1224,
+        1221,
         81,
         14,
         23
@@ -8439,7 +8439,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1224,
+        1221,
         81,
         14,
         23
@@ -8460,7 +8460,7 @@
     "V_c2_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1240,
+        1237,
         81,
         14,
         22
@@ -8472,7 +8472,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1240,
+        1237,
         81,
         14,
         22
@@ -8493,7 +8493,7 @@
     "V_c2_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1256,
+        1253,
         81,
         13,
         23
@@ -8505,7 +8505,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1256,
+        1253,
         81,
         13,
         23
@@ -8526,7 +8526,7 @@
     "V_c2_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1271,
+        1268,
         81,
         13,
         22
@@ -8538,7 +8538,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1271,
+        1268,
         81,
         13,
         22
@@ -8559,7 +8559,7 @@
     "V_c2_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1286,
+        1283,
         81,
         13,
         23
@@ -8571,7 +8571,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1286,
+        1283,
         81,
         13,
         23
@@ -8592,7 +8592,7 @@
     "V_c2_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1301,
+        1298,
         81,
         13,
         22
@@ -8604,7 +8604,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1301,
+        1298,
         81,
         13,
         22
@@ -8625,7 +8625,7 @@
     "V_c2_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1316,
+        1313,
         81,
         15,
         23
@@ -8637,7 +8637,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1316,
+        1313,
         81,
         15,
         23
@@ -8658,7 +8658,7 @@
     "V_c2_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1333,
+        1330,
         81,
         15,
         23
@@ -8670,7 +8670,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1333,
+        1330,
         81,
         15,
         23
@@ -8691,7 +8691,7 @@
     "V_c2_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1350,
+        1347,
         81,
         15,
         22
@@ -8703,7 +8703,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1350,
+        1347,
         81,
         15,
         22
@@ -8724,7 +8724,7 @@
     "V_c2_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1367,
+        1364,
         81,
         17,
         24
@@ -8736,7 +8736,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1367,
+        1364,
         81,
         17,
         24
@@ -8757,7 +8757,7 @@
     "V_c2_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1386,
+        1383,
         81,
         23,
         13
@@ -8769,7 +8769,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1386,
+        1383,
         81,
         23,
         13
@@ -8790,7 +8790,7 @@
     "V_c2_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1411,
+        1408,
         81,
         15,
         17
@@ -8802,7 +8802,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1411,
+        1408,
         81,
         15,
         17
@@ -8823,7 +8823,7 @@
     "V_c2_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1428,
+        1425,
         81,
         15,
         21
@@ -8835,7 +8835,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1428,
+        1425,
         81,
         15,
         21
@@ -8856,7 +8856,7 @@
     "V_c2_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1445,
+        1442,
         81,
         13,
         15
@@ -8868,7 +8868,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        1445,
+        1442,
         81,
         13,
         15
@@ -8889,7 +8889,7 @@
     "direction_01_campfire": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1460,
+        1457,
         81,
         25,
         28
@@ -8901,7 +8901,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1460,
+        1457,
         81,
         25,
         28
@@ -8922,7 +8922,7 @@
     "direction_02_lean_to": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1487,
+        1484,
         81,
         34,
         30
@@ -8934,7 +8934,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1487,
+        1484,
         81,
         34,
         30
@@ -8955,7 +8955,7 @@
     "direction_03_storage_pit": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1523,
+        1520,
         81,
         33,
         23
@@ -8967,7 +8967,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1523,
+        1520,
         81,
         33,
         23
@@ -8988,7 +8988,7 @@
     "direction_04_shelter_frame": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1558,
+        1555,
         81,
         34,
         29
@@ -9000,7 +9000,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1558,
+        1555,
         81,
         34,
         29
@@ -9021,7 +9021,7 @@
     "direction_05_berry_bush_full": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1594,
+        1591,
         81,
         27,
         24
@@ -9033,7 +9033,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1594,
+        1591,
         81,
         27,
         24
@@ -9054,7 +9054,7 @@
     "direction_06_berry_bush_two": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1623,
+        1620,
         81,
         25,
         24
@@ -9066,7 +9066,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1623,
+        1620,
         81,
         25,
         24
@@ -9087,7 +9087,7 @@
     "direction_07_berry_bush_one": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1650,
+        1647,
         81,
         24,
         24
@@ -9099,7 +9099,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1650,
+        1647,
         81,
         24,
         24
@@ -9120,7 +9120,7 @@
     "direction_08_berry_bush_bare": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1676,
+        1673,
         81,
         24,
         24
@@ -9132,7 +9132,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1676,
+        1673,
         81,
         24,
         24
@@ -9153,7 +9153,7 @@
     "direction_09_villager_gatherer": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1702,
+        1699,
         81,
         17,
         30
@@ -9165,7 +9165,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1702,
+        1699,
         81,
         17,
         30
@@ -9186,7 +9186,7 @@
     "direction_10_villager_builder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1721,
+        1718,
         81,
         22,
         30
@@ -9198,7 +9198,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1721,
+        1718,
         81,
         22,
         30
@@ -9219,7 +9219,7 @@
     "direction_11_villager_elder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1745,
+        1742,
         81,
         21,
         30
@@ -9231,7 +9231,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1745,
+        1742,
         81,
         21,
         30
@@ -9252,7 +9252,7 @@
     "direction_12_villager_child": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1768,
+        1765,
         81,
         14,
         23
@@ -9264,7 +9264,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1768,
+        1765,
         81,
         14,
         23
@@ -9285,7 +9285,7 @@
     "direction_13_boulder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1784,
+        1781,
         81,
         26,
         20
@@ -9297,7 +9297,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1784,
+        1781,
         81,
         26,
         20
@@ -9318,7 +9318,7 @@
     "direction_14_young_tree": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1812,
+        1809,
         81,
         26,
         30
@@ -9330,7 +9330,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1812,
+        1809,
         81,
         26,
         30
@@ -9351,7 +9351,7 @@
     "direction_15_reed_tuft": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1840,
+        1837,
         81,
         20,
         24
@@ -9363,7 +9363,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1840,
+        1837,
         81,
         20,
         24
@@ -9384,7 +9384,7 @@
     "direction_16_berry_basket": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1862,
+        1859,
         81,
         19,
         20
@@ -9396,7 +9396,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1862,
+        1859,
         81,
         19,
         20

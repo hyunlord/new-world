@@ -128,7 +128,7 @@ func _process(delta: float) -> void:
 		sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
 		sprite.set_meta("entity_bits", int(ids[i]))
 		sprite.set_meta("body", body)
-		sprite.set_meta("variant", {"skin": look["skin"], "hair": look["hair"], "clothing": look["clothing"]})
+		sprite.set_meta("variant", {"tone": look["tone"], "hair": look["hair"]})
 		sprite.set_meta("tile_x", int(xs[i]))
 		sprite.set_meta("tile_y", int(ys[i]))
 		sprite.set_meta("activity", activity)

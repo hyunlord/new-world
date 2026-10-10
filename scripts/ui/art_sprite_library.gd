@@ -101,5 +101,5 @@ static func apply_variant(sprite: Sprite2D, look: Dictionary) -> bool:
 		material.set_shader_parameter("ramp_texture", load("res://assets/art/villager_ramps.png"))
 		_variant_materials[page] = material
 	sprite.material = _variant_materials[page] as ShaderMaterial
-	sprite.self_modulate = Color(float(look.get("skin", 0)) / 15.0, float(look.get("hair", 0)) / 15.0, float(look.get("clothing", 0)) / 15.0, 1.0)
+	sprite.self_modulate = Color(float(look.get("tone", 1)) / 15.0, float(look.get("hair", 0)) / 15.0, 0.0, 1.0)
 	return true

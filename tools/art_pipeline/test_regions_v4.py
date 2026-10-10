@@ -85,13 +85,13 @@ class RegionV4Tests(unittest.TestCase):
             manifest.write_text(json.dumps({'pages':['res://world.png'], 'sprites':{
                 'V_a2_13':{'page':'res://world.png','rect':[3,4,*source.size],
                 'body':'adult_a','view':'E','activity':'build'}}}))
-            # Keep production palettes read-only while redirecting generated atlas artifacts.
-            original = regions.classify
-            def local_classify(image: Image.Image, body: str, **context: str) -> Image.Image:
-                return original(image, body,
-                    palette_path=Path(__file__).with_name('production_palette.json'),
-                    overrides_path=Path(__file__).with_name('region_overrides.json'), **context)
-            with patch.object(regions, 'ROOT', root), patch.object(regions, 'classify', local_classify):
+            palette = root/'tools/art_pipeline/hair_palette_p4.json'
+            palette.parent.mkdir(parents=True)
+            colors = np.asarray(source)
+            colors = np.unique(colors[colors[..., 3] > 0, :3], axis=0).tolist()
+            palette.write_text(json.dumps({'bodies': {'adult_a': {
+                'seen_rgb': colors, 'hair_rgb': colors}}}))
+            with patch.object(regions, 'ROOT', root):
                 result = regions.build_atlases(manifest)
                 self.assertFalse((root/'docs').exists())
                 diagnostic = root/'production2/regions.png'
@@ -99,7 +99,9 @@ class RegionV4Tests(unittest.TestCase):
                 self.assertTrue(diagnostic.is_file())
             self.assertEqual(result['sprites']['V_a2_13']['rect'], [3,4,*source.size])
             with Image.open(root/'world_regions.png') as indices:
-                self.assertEqual(indices.getpixel((3+13,4+3))[0], 5)
+                self.assertTrue(set(np.unique(np.asarray(indices)[..., 0])) <= {0, 3})
+                crop = indices.crop((3, 4, 3+source.width, 4+source.height))
+                np.testing.assert_array_equal(np.asarray(crop)[..., 3], np.asarray(source)[..., 3])
 
 
 if __name__ == '__main__':

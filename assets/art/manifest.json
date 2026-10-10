@@ -1472,7 +1472,7 @@
       "native_path": "assets/art/production/V_b1/03_native.png",
       "source": "generated:V_b1/03@2:v4:f=1",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_03@2",
       "body": "adult_b",
       "view": "N",
@@ -1480,7 +1480,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -1499,7 +1499,7 @@
     {
       "path": "assets/art/production/V_b1/03_native.png",
       "source": "generated:V_b1/03@2:v4:f=1",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         28
@@ -3804,7 +3804,7 @@
       "native_path": "assets/art/production/V_b1/01_native.png",
       "source": "generated:V_b1/01@2:v4:f=0.888889",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_01@2",
       "body": "adult_b",
       "view": "S",
@@ -3812,7 +3812,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -3831,7 +3831,7 @@
     {
       "path": "assets/art/production/V_b1/01_native.png",
       "source": "generated:V_b1/01@2:v4:f=0.888889",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         13,
         28
@@ -3848,7 +3848,7 @@
       "native_path": "assets/art/production/V_b1/02_native.png",
       "source": "generated:V_b1/02@2:v4:f=0.888889",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_02@2",
       "body": "adult_b",
       "view": "S",
@@ -3856,7 +3856,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -3875,7 +3875,7 @@
     {
       "path": "assets/art/production/V_b1/02_native.png",
       "source": "generated:V_b1/02@2:v4:f=0.888889",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         29
@@ -3892,7 +3892,7 @@
       "native_path": "assets/art/production/V_b1/04_native.png",
       "source": "generated:V_b1/04@2:v4:f=0.848485",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_04@2",
       "body": "adult_b",
       "view": "E",
@@ -3900,7 +3900,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -3919,7 +3919,7 @@
     {
       "path": "assets/art/production/V_b1/04_native.png",
       "source": "generated:V_b1/04@2:v4:f=0.848485",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         12,
         28
@@ -3936,7 +3936,7 @@
       "native_path": "assets/art/production/V_b1/05_native.png",
       "source": "generated:V_b1/05@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_05@2",
       "body": "adult_b",
       "view": "S",
@@ -3944,7 +3944,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -3963,7 +3963,7 @@
     {
       "path": "assets/art/production/V_b1/05_native.png",
       "source": "generated:V_b1/05@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         15,
         29
@@ -3980,7 +3980,7 @@
       "native_path": "assets/art/production/V_b1/06_native.png",
       "source": "generated:V_b1/06@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_06@2",
       "body": "adult_b",
       "view": "S",
@@ -3988,7 +3988,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4007,7 +4007,7 @@
     {
       "path": "assets/art/production/V_b1/06_native.png",
       "source": "generated:V_b1/06@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         13,
         28
@@ -4024,7 +4024,7 @@
       "native_path": "assets/art/production/V_b1/07_native.png",
       "source": "generated:V_b1/07@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_07@2",
       "body": "adult_b",
       "view": "S",
@@ -4032,7 +4032,7 @@
       "frame": 2,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4051,7 +4051,7 @@
     {
       "path": "assets/art/production/V_b1/07_native.png",
       "source": "generated:V_b1/07@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         15,
         28
@@ -4068,7 +4068,7 @@
       "native_path": "assets/art/production/V_b1/08_native.png",
       "source": "generated:V_b1/08@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b1_08@2",
       "body": "adult_b",
       "view": "S",
@@ -4076,7 +4076,7 @@
       "frame": 3,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4095,7 +4095,7 @@
     {
       "path": "assets/art/production/V_b1/08_native.png",
       "source": "generated:V_b1/08@2:v4:f=0.823529",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         14,
         28
@@ -4772,7 +4772,7 @@
       "native_path": "assets/art/production/V_b2/09_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_04",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "E",
@@ -4780,7 +4780,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4799,7 +4799,7 @@
     {
       "path": "assets/art/production/V_b2/09_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         11,
         28
@@ -4816,7 +4816,7 @@
       "native_path": "assets/art/production/V_b2/10_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_04",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "E",
@@ -4824,7 +4824,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4843,7 +4843,7 @@
     {
       "path": "assets/art/production/V_b2/10_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         12,
         28
@@ -4860,7 +4860,7 @@
       "native_path": "assets/art/production/V_b2/11_native.png",
       "source": "generated:V_b2/11@3:v4:f=0.933333",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b2_11@3",
       "body": "adult_b",
       "view": "S",
@@ -4868,7 +4868,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4887,7 +4887,7 @@
     {
       "path": "assets/art/production/V_b2/11_native.png",
       "source": "generated:V_b2/11@3:v4:f=0.933333",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         20,
         27
@@ -4904,7 +4904,7 @@
       "native_path": "assets/art/production/V_b2/12_native.png",
       "source": "generated:V_b2/12@3:v4:f=0.933333",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b2_12@3",
       "body": "adult_b",
       "view": "S",
@@ -4912,7 +4912,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4931,7 +4931,7 @@
     {
       "path": "assets/art/production/V_b2/12_native.png",
       "source": "generated:V_b2/12@3:v4:f=0.933333",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         17,
         29
@@ -4948,7 +4948,7 @@
       "native_path": "assets/art/production/V_b2/13_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_04",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "E",
@@ -4956,7 +4956,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -4975,7 +4975,7 @@
     {
       "path": "assets/art/production/V_b2/13_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         11,
         28
@@ -4992,7 +4992,7 @@
       "native_path": "assets/art/production/V_b2/14_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_04",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "E",
@@ -5000,7 +5000,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5019,7 +5019,7 @@
     {
       "path": "assets/art/production/V_b2/14_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         12,
         28
@@ -5036,7 +5036,7 @@
       "native_path": "assets/art/production/V_b2/15_native.png",
       "source": "generated:V_b2/15@2:v4:f=0.777778",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b2_15@2",
       "body": "adult_b",
       "view": "S",
@@ -5044,7 +5044,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5063,7 +5063,7 @@
     {
       "path": "assets/art/production/V_b2/15_native.png",
       "source": "generated:V_b2/15@2:v4:f=0.777778",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         22,
         28
@@ -5080,7 +5080,7 @@
       "native_path": "assets/art/production/V_b2/16_native.png",
       "source": "generated:V_b2/16@2:v4:f=0.777778",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b2_16@2",
       "body": "adult_b",
       "view": "S",
@@ -5088,7 +5088,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5107,7 +5107,7 @@
     {
       "path": "assets/art/production/V_b2/16_native.png",
       "source": "generated:V_b2/16@2:v4:f=0.777778",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         20,
         28
@@ -5124,7 +5124,7 @@
       "native_path": "assets/art/production/V_b3/01_native.png",
       "source": "generated:V_b3/01@2:v4:f=0.708861",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_01@2",
       "body": "adult_b",
       "view": "N",
@@ -5132,7 +5132,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": true,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5151,7 +5151,7 @@
     {
       "path": "assets/art/production/V_b3/01_native.png",
       "source": "generated:V_b3/01@2:v4:f=0.708861",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         29
@@ -5168,7 +5168,7 @@
       "native_path": "assets/art/production/V_b3/02_native.png",
       "source": "generated:V_b3/02@2:v4:f=0.708861",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_02@2",
       "body": "adult_b",
       "view": "N",
@@ -5176,7 +5176,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": true,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5195,7 +5195,7 @@
     {
       "path": "assets/art/production/V_b3/02_native.png",
       "source": "generated:V_b3/02@2:v4:f=0.708861",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         29
@@ -5210,39 +5210,39 @@
       "sprite_id": "V_b3_03",
       "path": "assets/art/production/V_b3/03.png",
       "native_path": "assets/art/production/V_b3/03_native.png",
-      "source": "generated:V_b3/03@3:v4:f=0.788889",
-      "source_sprite": "",
-      "qa_status": "accepted",
-      "candidate_id": "V_b3_03@3",
+      "source": "procedural:procedural",
+      "source_sprite": "V_b3_04",
+      "qa_status": "procedural",
+      "candidate_id": "",
       "body": "adult_b",
       "view": "E",
       "activity": "drink",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "procedural",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        18,
-        25
+        17,
+        21
       ],
       "canvas_size": [
-        20,
-        27
+        19,
+        23
       ],
       "anchor": [
-        10,
-        26
+        9,
+        22
       ]
     },
     {
       "path": "assets/art/production/V_b3/03_native.png",
-      "source": "generated:V_b3/03@3:v4:f=0.788889",
-      "qa_status": "accepted",
+      "source": "procedural:procedural",
+      "qa_status": "procedural",
       "native_size": [
-        18,
-        25
+        17,
+        21
       ],
       "role": "native_reference",
       "anchor": [
@@ -5300,7 +5300,7 @@
       "native_path": "assets/art/production/V_b3/05_native.png",
       "source": "generated:V_b3/05@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_05@1",
       "body": "adult_b",
       "view": "S",
@@ -5308,7 +5308,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5327,7 +5327,7 @@
     {
       "path": "assets/art/production/V_b3/05_native.png",
       "source": "generated:V_b3/05@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         15,
         27
@@ -5344,7 +5344,7 @@
       "native_path": "assets/art/production/V_b3/06_native.png",
       "source": "generated:V_b3/06@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_06@1",
       "body": "adult_b",
       "view": "S",
@@ -5352,7 +5352,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5371,7 +5371,7 @@
     {
       "path": "assets/art/production/V_b3/06_native.png",
       "source": "generated:V_b3/06@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         15,
         27
@@ -5388,7 +5388,7 @@
       "native_path": "assets/art/production/V_b3/07_native.png",
       "source": "generated:V_b3/07@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_07@1",
       "body": "adult_b",
       "view": "S",
@@ -5396,7 +5396,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5415,7 +5415,7 @@
     {
       "path": "assets/art/production/V_b3/07_native.png",
       "source": "generated:V_b3/07@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         22
@@ -5476,7 +5476,7 @@
       "native_path": "assets/art/production/V_b3/09_native.png",
       "source": "generated:V_b3/09@1:v4:f=0.918033",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_09@1",
       "body": "adult_b",
       "view": "S",
@@ -5484,7 +5484,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5503,7 +5503,7 @@
     {
       "path": "assets/art/production/V_b3/09_native.png",
       "source": "generated:V_b3/09@1:v4:f=0.918033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         20,
         29
@@ -5520,7 +5520,7 @@
       "native_path": "assets/art/production/V_b3/10_native.png",
       "source": "generated:V_b3/10@1:v4:f=0.918033",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_10@1",
       "body": "adult_b",
       "view": "S",
@@ -5528,7 +5528,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5547,7 +5547,7 @@
     {
       "path": "assets/art/production/V_b3/10_native.png",
       "source": "generated:V_b3/10@1:v4:f=0.918033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         22,
         28
@@ -5606,39 +5606,39 @@
       "sprite_id": "V_b3_12",
       "path": "assets/art/production/V_b3/12.png",
       "native_path": "assets/art/production/V_b3/12_native.png",
-      "source": "generated:V_b3/12@2:v4:f=0.746667",
-      "source_sprite": "",
-      "qa_status": "accepted",
-      "candidate_id": "V_b3_12@2",
+      "source": "procedural:procedural",
+      "source_sprite": "V_b3_11",
+      "qa_status": "procedural",
+      "candidate_id": "",
       "body": "adult_b",
       "view": "E",
       "activity": "talk",
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "procedural",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        18,
-        30
+        16,
+        27
       ],
       "canvas_size": [
-        20,
-        32
+        18,
+        29
       ],
       "anchor": [
-        10,
-        31
+        9,
+        28
       ]
     },
     {
       "path": "assets/art/production/V_b3/12_native.png",
-      "source": "generated:V_b3/12@2:v4:f=0.746667",
-      "qa_status": "accepted",
+      "source": "procedural:procedural",
+      "qa_status": "procedural",
       "native_size": [
-        18,
-        30
+        16,
+        27
       ],
       "role": "native_reference",
       "anchor": [
@@ -5696,7 +5696,7 @@
       "native_path": "assets/art/production/V_b3/14_native.png",
       "source": "generated:V_b3/14@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_14@1",
       "body": "adult_b",
       "view": "S",
@@ -5704,7 +5704,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5723,7 +5723,7 @@
     {
       "path": "assets/art/production/V_b3/14_native.png",
       "source": "generated:V_b3/14@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         16,
         23
@@ -5740,7 +5740,7 @@
       "native_path": "assets/art/production/V_b3/15_native.png",
       "source": "generated:V_b3/15@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "V_b3_15@1",
       "body": "adult_b",
       "view": "S",
@@ -5748,7 +5748,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5767,7 +5767,7 @@
     {
       "path": "assets/art/production/V_b3/15_native.png",
       "source": "generated:V_b3/15@1:v4:f=0.965517",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         15,
         23
@@ -5784,7 +5784,7 @@
       "native_path": "assets/art/production/V_b3/16_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_01",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "S",
@@ -5792,7 +5792,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -5811,7 +5811,7 @@
     {
       "path": "assets/art/production/V_b3/16_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         13,
         28
@@ -12528,7 +12528,7 @@
       "native_path": "assets/art/production/P2V_b_S_drink/02_native.png",
       "source": "generated:P2_fill_05/06@1:v4:f=0.861033",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "P2_fill_05_06@1",
       "body": "adult_b",
       "view": "S",
@@ -12536,7 +12536,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -12555,7 +12555,7 @@
     {
       "path": "assets/art/production/P2V_b_S_drink/02_native.png",
       "source": "generated:P2_fill_05/06@1:v4:f=0.861033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         14,
         24
@@ -12572,7 +12572,7 @@
       "native_path": "assets/art/production/P2V_b_E_eat/02_native.png",
       "source": "generated:P2_fill_05/10@1:v4:f=0.861033",
       "source_sprite": "",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "candidate_id": "P2_fill_05_10@1",
       "body": "adult_b",
       "view": "E",
@@ -12580,7 +12580,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -12599,7 +12599,7 @@
     {
       "path": "assets/art/production/P2V_b_E_eat/02_native.png",
       "source": "generated:P2_fill_05/10@1:v4:f=0.861033",
-      "qa_status": "accepted",
+      "qa_status": "fallback",
       "native_size": [
         13,
         26
@@ -12968,7 +12968,7 @@
       "native_path": "assets/art/production/P2V_b_N_gather/01_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -12976,7 +12976,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -12995,7 +12995,7 @@
     {
       "path": "assets/art/production/P2V_b_N_gather/01_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         28
@@ -13012,7 +13012,7 @@
       "native_path": "assets/art/production/P2V_b_N_gather/02_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -13020,7 +13020,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13039,7 +13039,7 @@
     {
       "path": "assets/art/production/P2V_b_N_gather/02_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         28
@@ -13056,7 +13056,7 @@
       "native_path": "assets/art/production/P2V_b_N_build/01_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -13064,7 +13064,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13083,7 +13083,7 @@
     {
       "path": "assets/art/production/P2V_b_N_build/01_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         28
@@ -13100,7 +13100,7 @@
       "native_path": "assets/art/production/P2V_b_N_build/02_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -13108,7 +13108,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13127,7 +13127,7 @@
     {
       "path": "assets/art/production/P2V_b_N_build/02_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         28
@@ -13144,7 +13144,7 @@
       "native_path": "assets/art/production/P2V_b_S_drink/01_native.png",
       "source": "procedural:procedural",
       "source_sprite": "P2V_b_S_drink_02",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "S",
@@ -13152,7 +13152,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13171,7 +13171,7 @@
     {
       "path": "assets/art/production/P2V_b_S_drink/01_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         14,
         20
@@ -13188,7 +13188,7 @@
       "native_path": "assets/art/production/P2V_b_N_drink/01_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -13196,7 +13196,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13215,7 +13215,7 @@
     {
       "path": "assets/art/production/P2V_b_N_drink/01_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         24
@@ -13232,7 +13232,7 @@
       "native_path": "assets/art/production/P2V_b_N_drink/02_native.png",
       "source": "procedural:procedural",
       "source_sprite": "V_b1_03",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "N",
@@ -13240,7 +13240,7 @@
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13259,7 +13259,7 @@
     {
       "path": "assets/art/production/P2V_b_N_drink/02_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         16,
         24
@@ -13276,7 +13276,7 @@
       "native_path": "assets/art/production/P2V_b_E_eat/01_native.png",
       "source": "procedural:procedural",
       "source_sprite": "P2V_b_E_eat_02",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
       "view": "E",
@@ -13284,7 +13284,7 @@
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "retained_installed",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -13303,7 +13303,7 @@
     {
       "path": "assets/art/production/P2V_b_E_eat/01_native.png",
       "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "qa_status": "fallback",
       "native_size": [
         13,
         22
@@ -14223,7 +14223,7 @@
       "reason": "no_review_approved_candidate"
     }
   },
-  "installation_selection_sha256": "e4e7331173638b7ebb7c3349d9b93f0afef900184eca1b746463381123776a23",
+  "installation_selection_sha256": "8d881394d0d2f621897604d68de6bb166244f78563bbf6276bf2e3e5d8e3ed77",
   "audits": {
     "manifest_v4": {
       "schema_version": 1,

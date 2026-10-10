@@ -96,12 +96,21 @@ def interface(capture: Capture) -> Check:
 
 def variety(capture: Capture) -> Check:
     actors = [entity for entity in capture.entities if entity.kind == 'agent' and entity.visible]
-    looks = [(entity.body,*entity.variant) for entity in actors]
+    looks = [(entity.body, entity.variant[1] if entity.body != "child" else -1, entity.variant[0]) for entity in actors]
     pairs = [(i,j) for i,a in enumerate(actors) for j,b in enumerate(actors) if i<j and max(abs(a.tile[0]-b.tile[0]),abs(a.tile[1]-b.tile[1]))<=1]
     same = sum(looks[i]==looks[j] for i,j in pairs)
     ratio = same/len(pairs) if pairs else 0
-    return result('A12', bool(actors) and len(set(looks))>=min(len(actors),12) and ratio<=.1,
-                  f'{len(set(looks))} tuples/{len(actors)} villagers; identical neighbors={same}/{len(pairs)} ({ratio:.3f})')
+    legacy = [entity.legacy_variant for entity in actors]
+    diagnostic = 'A12-old (diagnostic): unavailable; original skin/clothing metadata absent'
+    if actors and all(value is not None for value in legacy):
+        old_looks = [(actor.body, actor.legacy_variant) for actor in actors]
+        old_same = sum(old_looks[i] == old_looks[j] for i, j in pairs)
+        old_ratio = old_same / len(pairs) if pairs else 0
+        old_pass = len(set(old_looks)) >= min(len(actors), 12) and old_ratio <= .1
+        diagnostic = f'A12-old (diagnostic): {len(set(old_looks))} tuples; identical neighbors={old_same}/{len(pairs)} ({old_ratio:.3f}); pass={old_pass}'
+    valid = all(0 <= actor.variant[0] <= 2 and 0 <= actor.variant[1] <= 4 for actor in actors)
+    return result('A12', bool(actors) and valid and len(set(looks))>=min(len(actors),12) and ratio<=.1,
+                  f'{len(set(looks))} tuples/{len(actors)} villagers; identical neighbors={same}/{len(pairs)} ({ratio:.3f}); {diagnostic}')
 
 
 def degeneracy(captures: list[Capture]) -> Check:

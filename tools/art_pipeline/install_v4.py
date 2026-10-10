@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Final, Literal, TypedDict
 import numpy as np
 from PIL import Image
+from hair_registry_p4 import HairFrame, HairRegistry, ReviewedMapError
 from pixel_normalize import outline
 from procedural_animation import animate
 from production_sheets import SHEETS
@@ -359,6 +360,13 @@ def apply_plan(plan: InstallPlan, approved_selection_sha256: str) -> None:
     """Install a reviewed plan only while every bound source remains byte-identical."""
     if approved_selection_sha256 != plan.selection_sha256: raise InstallError('Selection approval digest mismatch')
     for path,sha in plan.evidence: verify_file(path,sha)
+    try:
+        hair = HairRegistry.load(plan.request.root)
+        for sprite in plan.sprites:
+            if sprite.body:
+                hair.resolve(HairFrame(sprite.body, sprite.activity, sprite.sprite))
+    except ReviewedMapError as error:
+        raise InstallError(str(error)) from error
     root=plan.request.root; path=root/'assets/art/manifest.json'; manifest=json.loads(path.read_text())
     by_path={row['path']:row for row in manifest['assets']}
     for sprite in plan.sprites:

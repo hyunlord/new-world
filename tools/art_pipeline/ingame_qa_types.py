@@ -22,7 +22,7 @@ class Entity:
     frame: str
     size: tuple[float, float]
     body: str
-    variant: tuple[int, int, int]
+    variant: tuple[int, int]
     tile: tuple[int, int]
     activity: str
     facing: str
@@ -37,6 +37,7 @@ class Entity:
     world_anchor: tuple[float,float] = (0.0,0.0)
     draw_order: tuple[int,int] = (0,0)
     cue_rect: tuple[float,float,float,float] | None = None
+    legacy_variant: tuple[int, int, int] | None = None
 
 @dataclass(frozen=True, slots=True)
 class Label:
@@ -79,12 +80,14 @@ def load_capture(path: Path) -> Capture:
         entities.append(Entity(str(row['kind']), int(row.get('id', 0)), tuple(row['rect']),
             bool(row.get('visible', False)), str(row.get('sprite_id', '')), str(row.get('frame_id', '')),
             tuple(row.get('frame_size', [0, 0])), str(row.get('body', '')),
-            tuple(int(variant.get(k, -1)) for k in ('skin', 'hair', 'clothing')),
+            (int(variant.get('tone', -1)), int(variant.get('hair', -1))),
             (int(row.get('tile_x', -999)), int(row.get('tile_y', -999))), str(row.get('activity', '')),
             str(row.get('facing', '')), str(row.get('calibration_kind', '')), int(row.get('building_kind', -1)),
             bool(row.get('flip_h', False)), str(row.get('texture_path', '')), tuple(int(x) for x in row.get('region', [0, 0, 0, 0])), str(row.get('name', '')), bool(row.get('shown', row.get('visible', False))),
             float(row.get('modulate_alpha',1))*float(row.get('self_modulate_alpha',1)),
-            tuple(row.get('world_anchor',[0,0])),(int(row.get('z_index',0)),int(row.get('sibling_index',0))),tuple(row['cue_rect']) if 'cue_rect' in row else None))
+            tuple(row.get('world_anchor',[0,0])),(int(row.get('z_index',0)),int(row.get('sibling_index',0))),tuple(row['cue_rect']) if 'cue_rect' in row else None,
+            (int(variant['skin']), int(variant['hair']), int(variant['clothing']))
+            if all(key in variant for key in ('skin', 'hair', 'clothing')) else None))
     snap = data.get('agent_snapshot', {})
     ids = snap.get('agent_ids', [])
     needs = tuple(int(agent) for i, agent in enumerate(ids)
@@ -123,10 +126,15 @@ def sprite_pixels(entity: Entity, repo: Path, variants: bool = False) -> Array |
             region = np.asarray(source.convert('RGBA').crop((x, y, x + w, y + h)))
         with Image.open(ramps) as source:
             palette = np.asarray(source.convert('RGB'))
-        for code, row in [(2, entity.variant[0]), (3, 4 + entity.variant[1]), (4, 9 + entity.variant[2])]:
-            mask = region[..., 0] == code
-            shades = np.clip(region[..., 1], 0, 2)
-            pixels[mask, :3] = palette[row, shades[mask]]
+        hair = region[..., 0] == 3
+        natural = ~hair & (luma(pixels[..., :3]) >= .10)
+        tone_code, hair_code = entity.variant
+        tone = .90 if tone_code < 1 else (1.0 if tone_code < 2 else 1.08)
+        pixels[natural, :3] = np.clip(
+            np.floor(pixels[natural, :3].astype(np.float64) * tone + .5), 0, 255
+        ).astype(np.uint8)
+        shades = np.clip(region[..., 1], 0, 2)
+        pixels[hair, :3] = palette[4 + min(hair_code, 4), shades[hair]]
     return pixels[:, ::-1].copy() if entity.flip else pixels
 
 

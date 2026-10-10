@@ -27,7 +27,7 @@ func _ready() -> void:
 	for index: int in range(12):
 		var actor: Sprite2D = _add(objects, looks[index % looks.size()], Vector2(-132 + index * 24, 67), "ramp_variant", 10 + index)
 		actor.set_meta("body", index % 2)
-		var variant: Dictionary = {"skin": index % 4, "hair": index % 5, "clothing": index % 6}
+		var variant: Dictionary = {"tone": index % 3, "hair": index % 5}
 		actor.set_meta("variant", variant)
 		SpriteLibrary.apply_variant(actor, variant)
 
@@ -86,7 +86,7 @@ func set_lineup(shown: bool) -> void:
 			actor.set_meta("body", body)
 			actor.set_meta("activity", activity)
 			actor.set_meta("facing", "S")
-			actor.set_meta("variant", {"skin": index % 4, "hair": index % 5, "clothing": index % 6})
+			actor.set_meta("variant", {"tone": index % 3, "hair": index % 5})
 			var icon: Sprite2D = Sprite2D.new()
 			actor.add_child(icon)
 			icon.set_meta("art_kind", "activity_icon")

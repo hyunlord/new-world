@@ -7,10 +7,9 @@ import re
 from typing import Any
 
 import numpy as np
-from PIL import Image
 
 from ingame_qa_pixels import Check, result
-from ingame_qa_types import Capture, Entity, box, load_capture, placed
+from ingame_qa_types import Capture, Entity, load_capture, placed
 
 SEASONS = (("봄", "Spring"), ("여름", "Summer"), ("가을", "Autumn"), ("겨울", "Winter"))
 DEATH_KEYS = ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age")
@@ -58,25 +57,10 @@ def _terrain(summer: Capture, winter: Capture, summer_data: dict[str, Any], wint
 
 
 def _region_mask(entity: Entity, capture: Capture, repo: Path) -> np.ndarray:
-    mask = np.zeros((1080, 1920), dtype=bool)
-    path = repo/entity.texture.removeprefix("res://")
-    path = path.with_name(path.stem+"_regions.png")
-    if not path.is_file() or min(entity.variant) < 0:
-        return mask
-    x, y, w, h = entity.region
-    with Image.open(path) as source:
-        region = np.array(source.convert("RGBA").crop((x, y, x+w, y+h)))
-    pixels = np.isin(region[..., 0], [2, 3, 4]) & (region[..., 3] > 0)
-    if entity.flip:
-        pixels = pixels[:, ::-1]
-    x0, y0, x1, y1 = box(entity, capture.scale)
-    if x1 <= x0 or y1 <= y0:
-        return mask
-    enlarged = np.array(Image.fromarray(pixels).resize((x1-x0, y1-y0), Image.Resampling.NEAREST))
-    left, top, right, bottom = max(0, x0), max(0, y0), min(1920, x1), min(1080, y1)
-    if right > left and bottom > top:
-        mask[top:bottom, left:right] = enlarged[top-y0:bottom-y0, left-x0:right-x0]
-    return mask
+    if min(entity.variant) < 0:
+        return np.zeros((1080, 1920), dtype=bool)
+    _, opaque = placed(entity, capture, repo)
+    return opaque
 
 
 def _order(entity: Entity) -> tuple[int, float, int]:
@@ -102,7 +86,7 @@ def _ramps(capture: Capture, repo: Path) -> dict[str, Any]:
         agreement = float((np.max(np.abs(image-expected.astype(np.int16)), axis=2)[mask] <= 1).mean()) if count else None
         rows.append({"id": entity.ident, "pixels": count, "agreement": agreement})
     measurable = [row for row in rows if row["pixels"] > 0]
-    return {"pass": bool(measurable) and all(row["agreement"] >= .99 for row in measurable), "formula": "region 2/3/4 framebuffer RGB agrees with placed(variants=True) within +/-1 on every channel; agreement >= .99 per measurable actor", "occlusion": "foreground object/cue rectangles and UI rectangles excluded, including translucent foreground", "actors": rows, "unmeasurable_ids": [row["id"] for row in rows if not row["pixels"]]}
+    return {"pass": bool(measurable) and all(row["agreement"] >= .99 for row in measurable), "formula": "all opaque natural-colour and hair texels: framebuffer RGB agrees with placed(variants=True) within +/-1 on every channel; agreement >= .99 per measurable actor", "occlusion": "foreground object/cue rectangles and UI rectangles excluded, including translucent foreground", "actors": rows, "unmeasurable_ids": [row["id"] for row in rows if not row["pixels"]]}
 
 
 def _ages(capture: Capture, data: dict[str, Any]) -> dict[str, Any]:

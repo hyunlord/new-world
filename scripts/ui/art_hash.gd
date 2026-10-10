@@ -15,6 +15,7 @@ static func look(agent_id: int) -> Dictionary:
 		"jy": posmod(h >> 4, 5) - 2,
 		"body": (h >> 8) & 1,
 		"skin": posmod(h >> 9, 4),
+		"tone": posmod(h >> 9, 3),
 		"hair": posmod(h >> 11, 5),
 		"clothing": posmod(h >> 15, 6),
 		"phase": float(posmod(h >> 20, 1000)) / 1000.0,

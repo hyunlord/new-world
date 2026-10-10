@@ -1,0 +1,119 @@
+{
+  "adult_a": [
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_a_01.png",
+      "sha256": "e04879a7d60d17a19248f455c90392645389ecd72ace51f21745c5ba66bbf35b",
+      "frames": [
+        "V_a3_16",
+        "V_a3_14",
+        "V_a3_15",
+        "V_a3_03",
+        "V_a3_04",
+        "P2V_a_N_drink_01",
+        "P2V_a_N_drink_02",
+        "V_a3_05",
+        "V_a3_06",
+        "V_a2_11",
+        "V_a2_12",
+        "V_a1_03"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_a_02.png",
+      "sha256": "ee920d17eea5e99bae366cb1c14e0f1c9b776d8764b020a30efa80386ad96d35",
+      "frames": [
+        "V_a1_01",
+        "V_a1_02",
+        "V_a3_08",
+        "V_a3_07",
+        "V_a3_11",
+        "V_a3_12",
+        "V_a3_09",
+        "V_a3_10",
+        "V_a1_13",
+        "V_a1_14",
+        "V_a1_15",
+        "V_a1_16"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_a_03.png",
+      "sha256": "d7bf84c3de5bf4e2200a45afec1ec5ffe34c06049282207994a20f1d0267bb88",
+      "frames": [
+        "V_a1_05",
+        "V_a1_06",
+        "V_a1_07",
+        "V_a1_08"
+      ]
+    }
+  ],
+  "adult_b": [
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_b_01.png",
+      "sha256": "96e0cde3483994e5454fead0058613123bf0596e5dd65c4899d1a35db2d4b828",
+      "frames": [
+        "V_b2_15",
+        "V_b2_16",
+        "V_b2_05",
+        "V_b2_06",
+        "V_b2_07",
+        "V_b2_08",
+        "V_b2_01",
+        "V_b2_02",
+        "V_b2_03",
+        "V_b2_04",
+        "V_b3_14",
+        "V_b3_15"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_b_02.png",
+      "sha256": "5cfc2383d8c20e61297774cd930b0cd66e0acd845e5adebd2fa8268f2cffba54",
+      "frames": [
+        "V_b3_03",
+        "V_b3_04",
+        "P2V_b_S_drink_01",
+        "P2V_b_S_drink_02",
+        "P2V_b_E_eat_01",
+        "P2V_b_E_eat_02",
+        "P2V_b_N_eat_01",
+        "P2V_b_N_eat_02",
+        "V_b3_05",
+        "V_b3_06",
+        "V_b2_11",
+        "V_b2_12"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_b_03.png",
+      "sha256": "7af46689c71a191dcd0d032a58f559babdacd0464fd38411c28f2bde72c81fdf",
+      "frames": [
+        "V_b1_04",
+        "V_b1_03",
+        "V_b1_01",
+        "V_b1_02",
+        "V_b3_08",
+        "P2V_b_N_sit_01",
+        "V_b3_07",
+        "V_b3_11",
+        "V_b3_12",
+        "V_b3_09",
+        "V_b3_10",
+        "V_b1_13"
+      ]
+    },
+    {
+      "path": "docs/art/production4/natural_audit/round2/adult_b_04.png",
+      "sha256": "5b6befd4e3044f7b1878584905faf99d0b4b135e4b2ac39b18da186a8c332198",
+      "frames": [
+        "V_b1_14",
+        "V_b1_15",
+        "V_b1_16",
+        "V_b1_05",
+        "V_b1_06",
+        "V_b1_07",
+        "V_b1_08"
+      ]
+    }
+  ]
+}

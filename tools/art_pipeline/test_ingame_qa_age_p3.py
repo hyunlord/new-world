@@ -15,7 +15,7 @@ from ingame_qa_types import Capture, Entity, Label
 
 
 def actor(ident: int = 7, hair: int = 3) -> Entity:
-    return Entity('agent', ident, (600, 300, 8, 8), True, 'a', 'a', (2, 2), 'adult_a', (0, hair, 0), (1, 1), 'idle', 'S', '', -1, False, 'res://atlas.png', (0, 0, 2, 2), '', world_anchor=(1, 1))
+    return Entity('agent', ident, (600, 300, 8, 8), True, 'a', 'a', (2, 2), 'adult_a', (1, hair), (1, 1), 'idle', 'S', '', -1, False, 'res://atlas.png', (0, 0, 2, 2), '', world_anchor=(1, 1))
 
 
 def capture(path: Path, entities: tuple[Entity, ...] = ()) -> Capture:
@@ -59,8 +59,8 @@ class AgeSeasonTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             (root/'assets/art').mkdir(parents=True)
-            Image.new('RGBA', (2,2), (20,20,20,255)).save(root/'atlas.png')
-            Image.new('RGBA', (2,2), (2,0,0,255)).save(root/'atlas_regions.png')
+            Image.new('RGBA', (2,2), (120,80,60,255)).save(root/'atlas.png')
+            Image.new('RGBA', (2,2), (0,0,0,255)).save(root/'atlas_regions.png')
             Image.new('RGB', (3,14), (120,80,60)).save(root/'assets/art/villager_ramps.png')
             pixels = np.zeros((1080,1920,3), dtype=np.uint8)
             pixels[300:308,600:608] = (120,80,60)
