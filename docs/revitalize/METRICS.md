@@ -658,3 +658,19 @@ Retained R3 30-day strict T11: PASS; below-half-baseline seeds []; zero-social s
 The unchanged three-day survival harness passes R3 (1 passed, 0 failed, 0 ignored), verified from `.harness/evidence/revitalize-pass2/logs/p3-round3-survival.log`; both R3 probe logs end in `DETERMINISM PASS`. No fourth tuning round. Night-rest stretch is skipped because not every required target passes.
 
 Part 3 readout boundary recorded 2026-10-10 08:16:04 UTC / 17:16:04 KST, elapsed 26 minutes 18 seconds from Pass 2 start 16:49:46 KST. The eight-hour deadline is 2026-10-11 00:49:46 KST; not reached.
+
+
+## Pass 2 Part 6 — final code verification
+
+Code commit: `0ec143c027a2570ac97f7b5f78356345f892f0cb`. Recorded at 2026-10-10T09:11:34+00:00 UTC / 2026-10-10T18:11:34+09:00 KST. p6-full PASS: debug/release each 1806 passed, zero failed/ignored across 114 groups; both Clippy commands, forbidden math (zero), bridge, import, strict (17 files), FFI (14 calls), smoke 900, and diff check all exited 0. Evidence: `.harness/evidence/revitalize-pass2/logs/p6-full/status.tsv`.
+
+Final twins: legacy 4/4 and game 64/64 PASS. `p6-probe-comparison.json`: legacy 484 old behavior rows = P5; game 7744 behavior rows plus 11 death rows = R3. Behavior distributions above are unchanged; 30-day results remain the prior 16-seed R3 cohort, not a fresh 30-day run.
+
+Timing ms/agent-tick: median / p10 / p90 / min / max.
+
+| Dataset | Distribution |
+|---|---|
+| p2-6_final_legacy | 0.009940629997 / 0.007255788611 / 0.011748330428 / 0.006829124056 / 0.011799077431 |
+| p2-6_final_game | 0.000809877367 / 0.000724790290 / 0.000863759264 / 0.000662099180 / 0.001204102904 |
+
+Game median / original P5 = 0.857378674; / instrumented P5 = 0.669440611. T9 passes. Observer time is excluded; host load still varies. T5 and T10 remain FAIL; mutation raw kill rate remains 593/597 (99.329983%). Remote WIP and green both verified at `0ec143c027a2570ac97f7b5f78356345f892f0cb` after the full gate. This is the code verification boundary before report publication; the leader separately verifies exact publication HEAD and fresh raw probes.
