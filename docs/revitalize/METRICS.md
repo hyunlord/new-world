@@ -1001,3 +1001,31 @@ Forage trips concentrate in the first two to four days (median total 81) while t
 | 120 | 42 (39–42) | 91 | 73 (69–78) | 4 | 11 | 31.0 | 251.5 |
 
 Starvation and dehydration remain zero in every seed. Rhythm (120 days): night in shelter median 1.0, evening near hearth median 0.807 (min 0.676), noon idle median 0.81 — worse than Part 2 because elders rest at the camp and foraging still stops once the store meets its target. Day-10 home distance median 5.35, max 10.95 (one seed).
+
+## Pass 4 Part 4 — seasons (v10 complete before tuning)
+
+`p4-4_v10_10day` (64 × 10) and `p4-4_v10_120day` (32 × 120, clock-sampled), both DETERMINISM PASS. v10 adds `SeasonRule {7, [750, 1250, 1000, 500]}` and utilization 0.81.
+
+Seasons (120-day run, medians over seed-days, closing-checkpoint attribution):
+
+| Season | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |
+|---|---:|---:|---:|---:|---:|---:|
+| spring | 108 | 106 | 96.96 | 156 | 0 | 0 |
+| summer | 180 | 137 | 96.96 | 266 | 39 | 20.5 |
+| autumn | 144 | 124 | 98.88 | 474 | 22 | 0 |
+| winter | 72 | 67 | 98.88 | 284.5 | 18 | 0 |
+
+W targets (`p4-4_targets/w_targets.md`; W11 against same-host v9 of the same duration: 10-day `p4-0_v9_repro` 0.000778, 120-day `p4-1_v9_120day` 0.000883):
+
+| Target | Result | Key observation |
+|---|---|---|
+| W1–W4 | PASS | zero starvation/dehydration in every seed; one settlement every day |
+| W5 | PASS | births by day 4 = 7 in every seed; day-10 alive 42; longest stagnation 1 day |
+| W6 | PASS | old-age deaths by day 30 min 5; births − deaths (30–120) min −3; alive from day 30 in [37, 42]; child share 0.095, elder share 0.262 |
+| W7 | PASS | autumn-closing stock median 586.5 vs required 150.5; max stock − 3 × max target ≤ −352 |
+| W8 | FAIL | noon idle median 0.809; forage trips/day median 0 in summer and autumn |
+| W9 | FAIL | night in shelter 1.0; evening near hearth median 0.571 but min 0.273 |
+| W10 | FAIL | day-10 home distance median 7.012 (> 7.0), max 11.02; T6a and social pass |
+| W11 | PASS | 10-day 0.00100 (limit 0.00117); 120-day 0.00121 (limit 0.00132) |
+
+The store fills through opportunistic gathering up to the 2 × target hoard cap, so the Forage arm is silent most days (trips only early in summer). Elders (share 0.26) and children are idle at noon by design, and haulers walking home are in the `Idle` state, so noon idle counts them. The probes ran while the gate's builds competed for CPU, so timings are pessimistic.

@@ -24,6 +24,11 @@ step() {
 totals() {
     grep -E '^test result' "$LOG/$1.log" | awk -v n="$1" '{p+=$4; f+=$6; i+=$8} END {print n, "passed", p, "failed", f, "ignored", i}' >> "$SUMMARY"
 }
+# A fresh checkout needs the GDExtension library and Godot's import cache
+# before the headless GDScript parse tests inside `cargo test` can resolve
+# WorldSimNode (environment preparation, repeated below as gate steps).
+step prepare_bridge bash -c 'cd rust && cargo build -p sim-bridge'
+step prepare_import bash tools/revitalize/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit
 step test_debug bash -c 'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=6'
 totals test_debug
 step test_release bash -c 'cd rust && cargo test --workspace --release --no-fail-fast -- --test-threads=6'

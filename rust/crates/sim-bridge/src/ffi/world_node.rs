@@ -2562,17 +2562,32 @@ pub struct TimeSnapshot {
     pub day_index: u64,
     /// Authoritative simulation hour in the range 0..24.
     pub time_of_day: f64,
+    /// Pass 4 season of `day_index`: 0 spring, 1 summer, 2 autumn, 3 winter (0 without seasons).
+    pub season: u32,
+    /// One-based day within the season (0 without seasons).
+    pub day_of_season: u32,
+    /// Days per season (0 without seasons).
+    pub days_per_season: u32,
 }
 
 /// Read the completed tick count and clock resources without mutation.
 pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     let ticks_per_day = engine.resources.ticks_per_day;
+    let day_index = engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
+        .checked_div(ticks_per_day).unwrap_or(0);
+    let days_per_season = engine.resources.rules.seasons.map_or(0, |rule| rule.days_per_season);
+    let (season, day_of_season) = match u64::from(days_per_season) {
+        0 => (0, 0),
+        per => (((day_index / per) % 4) as u32, (day_index % per) as u32 + 1),
+    };
     TimeSnapshot {
         tick: engine.current_tick(),
         ticks_per_day,
-        day_index: engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
-            .checked_div(ticks_per_day).unwrap_or(0),
+        day_index,
         time_of_day: engine.resources.time_of_day,
+        season,
+        day_of_season,
+        days_per_season,
     }
 }
 
@@ -2587,6 +2602,9 @@ fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
     dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
     dict.set("day_index", snapshot.day_index as i64);
     dict.set("time_of_day", snapshot.time_of_day);
+    dict.set("season", snapshot.season as i64);
+    dict.set("day_of_season", snapshot.day_of_season as i64);
+    dict.set("days_per_season", snapshot.days_per_season as i64);
     dict
 }
 
@@ -2633,6 +2651,20 @@ mod revitalize_tooling_tests {
         advance_engine_ticks(&mut engine, 1);
         let midnight = collect_time_snapshot(&engine);
         assert_eq!((midnight.tick, midnight.day_index, midnight.time_of_day), (960, 1, 0.0));
+    }
+
+    #[test]
+    fn time_snapshot_reports_seasons_from_the_display_day() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v10();
+        let first = collect_time_snapshot(&engine);
+        assert_eq!((first.season, first.day_of_season, first.days_per_season), (0, 1, 7));
+        // Display day 9 (zero-based) at 00:00 is the third day of summer.
+        advance_engine_ticks(&mut engine, (9 * 1440 - 480) as i64);
+        let summer = collect_time_snapshot(&engine);
+        assert_eq!((summer.day_index, summer.season, summer.day_of_season), (9, 1, 3));
+        engine.resources.rules = sim_core::rules::WorldRules::game_v9();
+        assert_eq!(collect_time_snapshot(&engine).days_per_season, 0);
     }
 
     #[test]

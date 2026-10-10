@@ -257,8 +257,9 @@ impl WorldRules {
             max_mean_hunger: 60.0,
             max_mean_thirst: 60.0,
             sustain: Some(SustainRule {
-                // 12 bushes x 12/day = 144; (42 + 1) x 2.4 = 103.2 > 101.52 >= 42 x 2.4.
-                utilization: 0.705,
+                // Seasons on: annual mean 12 x 12 x 875/1000 = 126/day;
+                // 0.81 x 126 = 102.06, so (42 + 1) x 2.4 = 103.2 is refused and 42 x 2.4 = 100.8 admitted.
+                utilization: 0.81,
                 reserve_days: 0.5,
                 forage_radius: 16,
             }),
@@ -283,6 +284,10 @@ impl WorldRules {
             founder_age_max_ticks: 57_600,
             founder_min_remaining_ticks: 4_320,
             elder_tether_radius: 4,
+        });
+        rules.seasons = Some(SeasonRule {
+            days_per_season: 7,
+            regen_permille: [750, 1250, 1000, 500],
         });
         rules
     }
@@ -405,13 +410,17 @@ mod tests {
         let BirthRule::Provisioned { sustain: Some(sustain), .. } = v10.society.birth else {
             panic!("v10 must keep provisioned sustain births");
         };
-        assert_eq!(sustain.utilization, 0.705);
-        // (m + 1) x 2.4 <= 0.705 x 144 = 101.52 admits m = 41 (98.4) and rejects m = 42 (103.2).
-        let usable = sustain.utilization * 144.0;
+        assert_eq!(sustain.utilization, 0.81);
+        let seasons = v10.seasons.expect("v10 seasons");
+        let mean: u32 = seasons.regen_permille.iter().map(|p| u32::from(*p)).sum();
+        assert_eq!(mean, 4 * 875);
+        // (m + 1) x 2.4 <= 0.81 x 126 = 102.06 admits m = 41 (100.8) and rejects m = 42 (103.2).
+        let usable = sustain.utilization * 144.0 * f64::from(mean) / 4000.0;
         assert!((42.0 * 2.4..43.0 * 2.4).contains(&usable));
         v10.society.birth = WorldRules::game_v9().society.birth;
         assert!(v10.agent.forage.is_some() && v10.society.stock_target.is_some());
         assert!(v10.society.aging.is_some());
+        v10.seasons = None;
         v10.agent.forage = None;
         v10.society.stock_target = None;
         v10.society.aging = None;

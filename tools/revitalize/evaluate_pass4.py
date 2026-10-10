@@ -167,7 +167,10 @@ def run_values(r: Round, key: str) -> list[float]:
     return [float(run[key]) for run in r.summary["runs"]]
 
 
-def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dict[str, bool]) -> dict:
+def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dict[str, bool],
+             long_baseline_ms: float | None = None) -> dict:
+    """W1-W11. W11 compares each round with the same-host game_v9 baseline of its
+    own duration when one is given (`long_baseline_ms`), else with `baseline_ms`."""
     result = {}
     result["W1"] = target({
         "twins_10": clause(short.summary["determinism_checked"] and len(short.seeds) == 64, len(short.seeds), "64 seeds, determinism checked"),
@@ -241,9 +244,9 @@ def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dic
         clauses[f"social_{r.duration}"] = clause(social["median"] >= .40 and social["min"] > 0, social, "median >= 0.40 and > 0 in every seed")
     result["W10"] = target(clauses)
     clauses = {}
-    for r in (short, long):
+    for r, base in ((short, baseline_ms), (long, long_baseline_ms or baseline_ms)):
         timing = quantiles(run_values(r, "ms_per_agent_tick"))
-        limit = 1.5 * baseline_ms if baseline_ms else None
+        limit = 1.5 * base if base else None
         clauses[f"day{r.duration}"] = clause(limit is not None and timing["median"] <= limit, {**timing, "limit": limit}, "median ms/agent-tick <= 1.5 x same-host Pass 3 game_v9")
     result["W11"] = target(clauses)
     return result
@@ -258,6 +261,7 @@ def main(argv: list[str] | None = None) -> int:
     baseline = parser.add_mutually_exclusive_group()
     baseline.add_argument("--baseline-summary", type=Path, help="same-host game_v9 summary.json")
     baseline.add_argument("--baseline-ms", type=float)
+    parser.add_argument("--baseline-summary-long", type=Path, help="same-host game_v9 summary of the long duration")
     for name in ("legacy-pin", "v8-repro", "v9-repro"):
         parser.add_argument(f"--{name}", choices=("PASS", "FAIL"), default="FAIL")
     args = parser.parse_args(argv)
@@ -268,14 +272,21 @@ def main(argv: list[str] | None = None) -> int:
             if source["scene"] != "game_v9":
                 raise EvidenceError("timing baseline must be a game_v9 summary")
             baseline_ms = float(source["timing"]["ms_per_agent_tick"]["median"])
+        long_baseline_ms = None
+        if args.baseline_summary_long:
+            source = json.loads(args.baseline_summary_long.read_text())
+            if source["scene"] != "game_v9":
+                raise EvidenceError("long timing baseline must be a game_v9 summary")
+            long_baseline_ms = float(source["timing"]["ms_per_agent_tick"]["median"])
         short, long = load_round(args.round10, 10), load_round(args.round120, args.long_days)
         receipts = {"legacy_pin": args.legacy_pin == "PASS", "v8_repro": args.v8_repro == "PASS", "v9_repro": args.v9_repro == "PASS"}
-        targets = evaluate(short, long, baseline_ms, receipts)
+        targets = evaluate(short, long, baseline_ms, receipts, long_baseline_ms)
     except (EvidenceError, OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
         print(f"INVALID EVIDENCE: {exc}", file=sys.stderr)
         return 2
     passed = all(t["passed"] for t in targets.values())
     report = {"schema_version": 1, "passed": passed, "targets": targets, "baseline_ms": baseline_ms,
+              "long_baseline_ms": long_baseline_ms,
               "inputs": {"round10": str(args.round10), "round120": str(args.round120)}}
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "w_targets.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")

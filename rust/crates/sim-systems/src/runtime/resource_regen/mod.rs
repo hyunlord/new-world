@@ -154,9 +154,23 @@ impl RuntimeSystem for ResourceRegenSystem {
 
     fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
         let food = snapshot(&resources.food_source_max);
-        // Display-only: counted in every scene, never read by simulation logic.
-        resources.tallies.regen_lost_at_cap +=
-            regen_channel(&food, &mut resources.food_tiles, FOOD_REGEN_AMOUNT);
+        // Pass 4 seasons: an exact integer accumulator turns the season's
+        // permille into whole units per pulse; a zero-unit pulse skips the food
+        // channel so no zero-valued tile is ever inserted.
+        let food_units = match (resources.rules.seasons, season_at(resources)) {
+            (Some(rule), Some((season, _))) => {
+                resources.food_regen_acc += u32::from(rule.regen_permille[season]);
+                let units = resources.food_regen_acc / 1000;
+                resources.food_regen_acc %= 1000;
+                u8::try_from(units).unwrap_or(u8::MAX)
+            }
+            _ => FOOD_REGEN_AMOUNT,
+        };
+        if food_units > 0 {
+            // Display-only: counted in every scene, never read by simulation logic.
+            resources.tallies.regen_lost_at_cap +=
+                regen_channel(&food, &mut resources.food_tiles, food_units);
+        }
         let water = snapshot(&resources.water_source_max);
         regen_channel(&water, &mut resources.water_tiles, WATER_REGEN_AMOUNT);
         let sleep = snapshot(&resources.sleep_source_max);

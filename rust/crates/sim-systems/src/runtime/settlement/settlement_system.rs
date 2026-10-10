@@ -717,7 +717,9 @@ impl SettlementSystem {
                     continue;
                 }
                 if let Some(sustain) = sustain {
-                    let supply = super::food_economy::supply_per_day(
+                    // Pass 4: with seasons the gate plans against the annual mean
+                    // (identical to the fixed supply without seasons).
+                    let supply = super::food_economy::annual_mean_supply(
                         resources, sid, sustain.forage_radius,
                     );
                     let adult_need = super::food_economy::adult_need_per_day(resources.ticks_per_day);

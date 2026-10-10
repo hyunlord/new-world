@@ -108,6 +108,14 @@ class EvaluatorTests(unittest.TestCase):
         self.assertFalse(result["W11"]["passed"])
         self.assertFalse(result["W1"]["passed"])
 
+    def test_long_round_timing_uses_its_own_baseline(self) -> None:
+        short, long = self.rounds()
+        # .0009 ms fails against 1.5 x .0005 but passes against 1.5 x .0007.
+        self.assertFalse(evaluate(short, long, .0005, self.receipts)["W11"]["passed"])
+        result = evaluate(short, long, .0007, self.receipts, .0007)
+        self.assertTrue(result["W11"]["clauses"]["day120"]["passed"])
+        self.assertFalse(evaluate(short, long, .0007, self.receipts, .0005)["W11"]["clauses"]["day120"]["passed"])
+
     def test_incomplete_day_checkpoints_are_invalid_evidence(self) -> None:
         def drop(seed, rows):
             rows[:] = [r for r in rows if not (r["sample_kind"] == "day" and r["tick"] == 5 * TPD)]

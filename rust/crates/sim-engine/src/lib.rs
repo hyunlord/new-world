@@ -178,6 +178,9 @@ pub struct SimResources {
     pub bed_of: BTreeMap<AgentId, (u32, u32)>,
     /// Display-only count of planning attempts with no qualifying tile.
     pub shelter_plan_skips: u64,
+    /// Seasonal food regrowth accumulator in thousandths of a unit; stays zero
+    /// without the season rule.
+    pub food_regen_acc: u32,
     /// Members whose last movement was a haul step home; display-only, used to
     /// count `Tallies::haul_deposits`. Empty without the forage rule.
     pub haulers: BTreeSet<AgentId>,
@@ -363,6 +366,7 @@ impl SimResources {
             building_owner: BTreeMap::new(),
             bed_of: BTreeMap::new(),
             shelter_plan_skips: 0,
+            food_regen_acc: 0,
             haulers: BTreeSet::new(),
             social_chase_since: BTreeMap::new(),
             social_retry_after: BTreeMap::new(),
