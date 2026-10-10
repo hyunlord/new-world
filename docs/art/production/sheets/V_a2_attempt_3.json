@@ -1,0 +1,977 @@
+{
+  "sheet": "V_a2",
+  "attempt": 3,
+  "raw": "/Users/rexxa/work/art-production-raw/V_a2/attempt_3.png",
+  "accepted": 0,
+  "rejected": 16,
+  "preserved": 0,
+  "cells": [
+    {
+      "sprite_id": "V_a2_01",
+      "name": "S_carry_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          35
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.943210420091368,
+        "fidelity_pass": true,
+        "common_opaque": 376,
+        "keyed_out": 56,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 18,
+        "fire_texels": 91,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          86,
+          207,
+          283
+        ],
+        "detected_period_xy": [
+          5.5600000000000005,
+          5.88
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          4.3,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.021463976067204835,
+          0.8346581640817877
+        ],
+        "native_size": [
+          19,
+          35
+        ],
+        "spill_removed": 56,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_02",
+      "name": "S_carry_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.978534714309438,
+        "fidelity_pass": true,
+        "common_opaque": 393,
+        "keyed_out": 54,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 16,
+        "fire_texels": 96,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          99,
+          85,
+          207,
+          280
+        ],
+        "detected_period_xy": [
+          5.52,
+          5.76
+        ],
+        "period_xy": [
+          5.72,
+          5.72
+        ],
+        "phase_xy": [
+          4.1000000000000005,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.22996558758638452,
+          0.04683061761470504
+        ],
+        "native_size": [
+          19,
+          34
+        ],
+        "spill_removed": 54,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_03",
+      "name": "S_carry_3",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          18,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.248883417451771,
+        "fidelity_pass": false,
+        "common_opaque": 357,
+        "keyed_out": 55,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 18,
+        "fire_texels": 83,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          86,
+          207,
+          283
+        ],
+        "detected_period_xy": [
+          5.640000000000001,
+          5.82
+        ],
+        "period_xy": [
+          5.88,
+          5.88
+        ],
+        "phase_xy": [
+          1.5,
+          3.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.272139722563043,
+          0.044817659212714
+        ],
+        "native_size": [
+          18,
+          34
+        ],
+        "spill_removed": 55,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_04",
+      "name": "S_carry_4",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.01164103864359,
+        "fidelity_pass": false,
+        "common_opaque": 372,
+        "keyed_out": 65,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 16,
+        "fire_texels": 87,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          101,
+          83,
+          208,
+          281
+        ],
+        "detected_period_xy": [
+          5.5600000000000005,
+          5.8
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          2.5,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.2902927943349571,
+          0.0
+        ],
+        "native_size": [
+          19,
+          34
+        ],
+        "spill_removed": 65,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_05",
+      "name": "E_carry_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          21,
+          35
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.994585656434076,
+        "fidelity_pass": true,
+        "common_opaque": 381,
+        "keyed_out": 74,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 14,
+        "fire_texels": 91,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          95,
+          82,
+          210,
+          275
+        ],
+        "detected_period_xy": [
+          5.54,
+          5.78
+        ],
+        "period_xy": [
+          5.54,
+          5.54
+        ],
+        "phase_xy": [
+          4.1000000000000005,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.777405166533253
+        ],
+        "native_size": [
+          21,
+          35
+        ],
+        "spill_removed": 74,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_06",
+      "name": "E_carry_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          18,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.755662436837098,
+        "fidelity_pass": true,
+        "common_opaque": 357,
+        "keyed_out": 59,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 15,
+        "fire_texels": 84,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          109,
+          83,
+          212,
+          277
+        ],
+        "detected_period_xy": [
+          5.54,
+          5.68
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          1.6,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.19122696934598357,
+          0.0
+        ],
+        "native_size": [
+          18,
+          34
+        ],
+        "spill_removed": 59,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_07",
+      "name": "E_carry_3",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.141753705925447,
+        "fidelity_pass": false,
+        "common_opaque": 354,
+        "keyed_out": 66,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 12,
+        "fire_texels": 89,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          105,
+          82,
+          210,
+          277
+        ],
+        "detected_period_xy": [
+          6.28,
+          5.7
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "phase_xy": [
+          0.30000000000000004,
+          0.8
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.5467986403853388,
+          0.0
+        ],
+        "native_size": [
+          19,
+          34
+        ],
+        "spill_removed": 66,
+        "fringe_repaired": 2
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_08",
+      "name": "E_carry_4",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.595940342950774,
+        "fidelity_pass": true,
+        "common_opaque": 351,
+        "keyed_out": 50,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 11,
+        "fire_texels": 79,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          109,
+          83,
+          211,
+          277
+        ],
+        "detected_period_xy": [
+          5.9399999999999995,
+          5.72
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          2.2,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.48687880238720704,
+          0.004620493006846315
+        ],
+        "native_size": [
+          19,
+          34
+        ],
+        "spill_removed": 50,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_09",
+      "name": "E_gather_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          34,
+          31
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.093118518082312,
+        "fidelity_pass": false,
+        "common_opaque": 552,
+        "keyed_out": 95,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 26,
+        "fire_texels": 87,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          69,
+          85,
+          264,
+          263
+        ],
+        "detected_period_xy": [
+          5.74,
+          5.48
+        ],
+        "period_xy": [
+          5.74,
+          5.74
+        ],
+        "phase_xy": [
+          0.30000000000000004,
+          4.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.3786843553031626
+        ],
+        "native_size": [
+          34,
+          31
+        ],
+        "spill_removed": 95,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_10",
+      "name": "E_gather_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          32,
+          30
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.021349361605089,
+        "fidelity_pass": false,
+        "common_opaque": 530,
+        "keyed_out": 87,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 25,
+        "fire_texels": 85,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          80,
+          93,
+          264,
+          262
+        ],
+        "detected_period_xy": [
+          5.72,
+          5.48
+        ],
+        "period_xy": [
+          5.76,
+          5.76
+        ],
+        "phase_xy": [
+          5.5,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09106843082401325,
+          0.4199041207051243
+        ],
+        "native_size": [
+          32,
+          30
+        ],
+        "spill_removed": 87,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_11",
+      "name": "S_gather_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          25,
+          31
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.6639869641821265,
+        "fidelity_pass": false,
+        "common_opaque": 473,
+        "keyed_out": 55,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 20,
+        "fire_texels": 69,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          80,
+          90,
+          226,
+          268
+        ],
+        "detected_period_xy": [
+          5.9,
+          5.76
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          5.5,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.02724223154581199,
+          0.11046930249091874
+        ],
+        "native_size": [
+          25,
+          31
+        ],
+        "spill_removed": 55,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_12",
+      "name": "S_gather_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          27,
+          34
+        ],
+        "size_pass": false,
+        "mean_delta_e": 8.515724171002164,
+        "fidelity_pass": false,
+        "common_opaque": 551,
+        "keyed_out": 60,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 34,
+        "fire_texels": 70,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          81,
+          84,
+          229,
+          268
+        ],
+        "detected_period_xy": [
+          5.48,
+          5.76
+        ],
+        "period_xy": [
+          5.52,
+          5.52
+        ],
+        "phase_xy": [
+          4.5,
+          2.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.02768267187234223,
+          0.825697149547688
+        ],
+        "native_size": [
+          27,
+          34
+        ],
+        "spill_removed": 60,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_13",
+      "name": "E_build_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          30,
+          37
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.95919544307232,
+        "fidelity_pass": true,
+        "common_opaque": 484,
+        "keyed_out": 88,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 75,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          64,
+          50,
+          237,
+          262
+        ],
+        "detected_period_xy": [
+          5.74,
+          5.54
+        ],
+        "period_xy": [
+          5.78,
+          5.78
+        ],
+        "phase_xy": [
+          5.1000000000000005,
+          3.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.02139054422061323,
+          0.7083649834819319
+        ],
+        "native_size": [
+          30,
+          37
+        ],
+        "spill_removed": 88,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_14",
+      "name": "E_build_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          35,
+          35
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.324740996925499,
+        "fidelity_pass": true,
+        "common_opaque": 601,
+        "keyed_out": 122,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 101,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          70,
+          82,
+          248,
+          262
+        ],
+        "detected_period_xy": [
+          5.0600000000000005,
+          5.52
+        ],
+        "period_xy": [
+          5.0600000000000005,
+          5.0600000000000005
+        ],
+        "phase_xy": [
+          0.8,
+          1.4000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.8640310719405072
+        ],
+        "native_size": [
+          35,
+          35
+        ],
+        "spill_removed": 122,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_15",
+      "name": "S_build_1",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          25,
+          39
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.9782336610310365,
+        "fidelity_pass": true,
+        "common_opaque": 509,
+        "keyed_out": 66,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 86,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          88,
+          50,
+          227,
+          270
+        ],
+        "detected_period_xy": [
+          5.6,
+          5.34
+        ],
+        "period_xy": [
+          5.66,
+          5.66
+        ],
+        "phase_xy": [
+          4.9,
+          4.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09195524874631544,
+          0.08137375355640922
+        ],
+        "native_size": [
+          25,
+          39
+        ],
+        "spill_removed": 66,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "V_a2_16",
+      "name": "S_build_2",
+      "attempt": 3,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "missing_accepted_view_idle"
+      ],
+      "metrics": {
+        "native_size": [
+          22,
+          35
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.89385786100751,
+        "fidelity_pass": true,
+        "common_opaque": 510,
+        "keyed_out": 50,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 93,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          102,
+          81,
+          224,
+          270
+        ],
+        "detected_period_xy": [
+          5.48,
+          5.36
+        ],
+        "period_xy": [
+          5.46,
+          5.46
+        ],
+        "phase_xy": [
+          1.7000000000000002,
+          3.8000000000000003
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.036346887968116956,
+          0.24226405066445192
+        ],
+        "native_size": [
+          22,
+          35
+        ],
+        "spill_removed": 50,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    }
+  ]
+}
