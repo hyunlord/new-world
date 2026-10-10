@@ -1240,3 +1240,61 @@ Seasons (round 1 120-day, medians over seed-days): store meals 98 / 96 / 100 / 1
 Diagnosis. (1) X3 stagnation (one seed 9 days, another 4): the store is eaten from at both meals; serving from hunger 25 wastes up to 5 of each unit's 30 points, so the village eats about 98–103 units a day from the store against v10's 96 in total, the autumn reserve peaks lower and a few seeds reach the end of winter with an empty store; the birth gate pays food from the store, so spring births stall for a week (seed 22: store 0 at every 08:00 check on days 27–35, members 42 → 33). (2) X5: autumn and winter trips are 0 because the store sits above its target there — summer's surplus and opportunistic gathering up to 2 × target fill it past the autumn target (which carries the same winter-prep term), and the winter reserve keeps it above the winter target. (3) X9 minimum: on far-water maps adults are still walking back from the river at 19:30 (seed 55 in the 10-day set: idle adults 10–12 tiles from the hearth).
 
 Screening before round 2 (a throwaway integration test, not committed: 8–32 seeds × 35–120 days per variant, measuring forage trips per season, evening share at 19:30, fire, deaths and a stagnation proxy — members ≤ 39 and no birth that day). Findings: `hoard_cap_factor` 1.5 restores winter trips (≈ 12/day) and helps the evening (≈ 0.57); `meal_hunger` 15 gives trips in every season (autumn ≈ 70, winter ≈ 40) but starves people over 63–120 days (7–21 starvation and 1–11 dehydration deaths per 16–32 seeds) — rejected; `meal_hunger` 30–35 removes the waste; `base_days` 2.5 with `meal_hunger` 30 and hoard 1.5 was the only family with the stagnation proxy ≤ 4 in all 32 seeds over 120 days (autumn and winter trips 0, evening ≈ 0.556 / min ≈ 0.30); forage end 17:00 or a firewood end 16:00 raises the evening median but brought back a 5–8-day stagnation seed; `camp_radius` 6/10 and a later dinner did not help.
+
+### Round 2 (`p5-5_round2_*`, code `6184ed67`) — kept
+
+Configuration: round 1 plus `meal_hunger` 30, `base_days` 2.5 and `hoard_cap_factor` 1.5 (stock target now set in `game_v11()`). Both runs DETERMINISM PASS.
+
+| Target | Clause | Verdict | Observed |
+|---|---|---|---|
+| X1 | legacy_pin | FAIL | false |
+| X1 | twins_10 | PASS | 64 |
+| X1 | twins_120 | PASS | 32 |
+| X1 | v10_repro | FAIL | false |
+| X1 | v8_repro | FAIL | false |
+| X1 | v9_repro | FAIL | false |
+| X10 | home_distance | PASS | 7.1 / 6.21 / 8.97 / 4.88 / 10.5 |
+| X10 | social_10 | PASS | 0.619 / 0.585 / 0.658 / 0.548 / 0.694 |
+| X10 | social_120 | PASS | 0.826 / 0.802 / 0.843 / 0.783 / 0.858 |
+| X10 | t6a_10 | PASS | 0.00124 / 0.000248 / 0.0024 / 0 / 0.00322 |
+| X10 | t6a_120 | PASS | 0.0085 / 0.00673 / 0.0122 / 0.00588 / 0.0148 |
+| X11 | day10 | PASS | 0 |
+| X11 | day120 | PASS | 0 |
+| X12 | day10 | PASS | 0.00108 / 0.00105 / 0.00112 / 0.00103 / 0.00115 |
+| X12 | day120 | PASS | 0.00128 / 0.00124 / 0.0015 / 0.00123 / 0.00154 |
+| X2 | deaths_dehydration_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_dehydration_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_starvation_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_starvation_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X3 | alive_band | PASS | 42 / 41 / 42 / 35 / 42 |
+| X3 | alive_day10 | PASS | 42 / 42 / 42 / 42 / 42 |
+| X3 | birth_by_day4 | PASS | 7 / 7 / 7 / 7 / 7 |
+| X3 | child_share | PASS | 0.107 / 0.0476 / 0.17 / 0 / 0.195 |
+| X3 | elder_share | PASS | 0.262 / 0.214 / 0.341 / 0.171 / 0.381 |
+| X3 | old_age_by_day30 | PASS | 9 / 6 / 12 / 5 / 13 |
+| X3 | one_settlement | PASS | 1 / 1 / 1 / 1 / 1 |
+| X3 | replacement | PASS | 0 / -1 / 0 / -3 / 1 |
+| X3 | stagnation | PASS | 0 / 0 / 0 / 0 / 4 |
+| X4 | every_seed | PASS | 0.985 / 0.969 / 0.991 / 0.912 / 0.995 |
+| X4 | store_share | PASS | 0.99 / 0.948 / 1 / 0.559 / 1 |
+| X4 | winter | PASS | 1 / 0.98 / 1 / 0.769 / 1 |
+| X5 | autumn | FAIL | 0 / 0 / 14.5 / 0 / 83 |
+| X5 | spring | PASS | 34 / 12 / 61 / 0 / 77 |
+| X5 | summer | PASS | 64 / 0 / 76.3 / 0 / 94 |
+| X5 | winter | FAIL | 0 / 0 / 28 / 0 / 57 |
+| X6 | autumn_wood | PASS | stock 336 / 313 / 341 / 305 / 348; required 218.4 |
+| X6 | lit_at_0200 | PASS | 1 / 1 / 1 / 1 / 1 |
+| X7 | winter_cold | PASS | 0 / 0 / 0 / 0 / 0 |
+| X8 | idle_1200 | PASS | 0.524 / 0.429 / 0.664 / 0.333 / 0.805 |
+| X8 | work_1200 | PASS | 0.475 / 0.305 / 0.631 / 0.167 / 0.72 |
+| X8 | work_1500 | PASS | 0.35 / 0.215 / 0.459 / 0.133 / 0.545 |
+| X9 | evening_near_hearth | FAIL | 0.556 / 0.354 / 0.783 / 0.303 / 0.815 |
+| X9 | night_in_shelter | PASS | 1 / 0.976 / 1 / 0.951 / 1 |
+
+Seasons (120-day medians over seed-days, spring / summer / autumn / winter): store meals 95 / 92 / 96 / 98 per day, ground meals 0 / 3 / 2 / 0 (the waste is gone: store meals now sit at or below v10's total); stock 193 / 326 / 504 / 282 (v10: 157 / 309.5 / 491.5 / 254); forage trips 34 / 64 / 0 / 0 per day; wood stock 30 / 287 / 313 / 159 against targets 39 / 292.5 / 312 / 58.5; burn 26 / 13 / 26 / 39; fire lit at every 02:00 sample from day 3 in every seed; cold member-hours 0; wood trips 14 / 21 / 23 / 0 per day (wood gathered 28 / 42 / 46 / 0). Work by hour (seed medians, all days ≥ 2 → spring–autumn): adult work 0.286 → 0.294 at 08:00, 0.090 → 0.109 at 10:00, 0.220 → 0.475 at 12:00, 0.307 → 0.350 at 15:00, 0.222 → 0.231 at 19:30; idle 0.310 → 0.291, 0.615 → 0.595, 0.738 → 0.524, 0.667 → 0.619, 0.726 → 0.702. Winter has no firewood or forage trips, which is why the all-days noon values are lower.
+
+No round 3. Twelve more variants around round 2 were screened (32 seeds × 120 days each; the screen reproduces round 2 exactly: evening 0.556 / min 0.303, stagnation max 4): forage end 17:00, forage haul 2 or 6, firewood 10:00–16:00, 09:00–16:00 or 12:00–17:00, forage start 07:00, dinner 17:00–19:00, `camp_radius` 10, `meal_hunger` 35 (with and without firewood end 16:00). None raised the evening minimum above 0.31 and most brought back a 5–10-day stagnation seed (forage haul 2 also caused 5 starvation deaths). A third formal round would have reproduced round 2, so round 2 is kept.
+
+Three strikes — kept evidence and hypotheses:
+- X5 (autumn and winter forage trips 0): purposeful trips run only while stock in hand is below the store target. Summer's surplus plus opportunistic gathering (up to 1.5 × target) carries the store past the autumn target (the same winter-prep term applies in summer and autumn), and the winter-prep reserve keeps the store above the winter target. The only lever that produced trips in every season (`meal_hunger` 15, which wastes half of each served unit) starved residents over 63–120 days. Making trips happen in those seasons needs a change to the target rule or the opportunistic arm, which this pass does not allow.
+- X9 evening minimum (0.303, median 0.556 passes): the low seeds are far-water maps where adults are still walking back from the river at 19:30 (11–19 % of idle adults are hauling or returning), and elders (≈ 25 % of idle adults by then) are tethered at radius 4 while "near the hearth" counts radius 3. Neither the elder tether nor water placement is a Pass 5 knob. v10 had the same weakness (Pass 4 W9 minimum 0.281).
