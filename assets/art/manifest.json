@@ -2218,38 +2218,38 @@
       "sprite_id": "V_a1_13",
       "path": "assets/art/production/V_a1/13.png",
       "native_path": "assets/art/production/V_a1/13_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_03",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a1/13@1:v4:f=0.788732",
+      "source_sprite": "V_a1_13@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_a1_13@1:p3",
       "body": "adult_a",
       "view": "N",
       "activity": "walk",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        17,
+        18,
         28
       ],
       "canvas_size": [
-        19,
+        20,
         30
       ],
       "anchor": [
-        9,
+        10,
         29
       ]
     },
     {
       "path": "assets/art/production/V_a1/13_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_a1/13@1:v4:f=0.788732",
+      "qa_status": "accepted",
       "native_size": [
-        17,
+        18,
         28
       ],
       "role": "native_reference",
@@ -2262,61 +2262,17 @@
       "sprite_id": "V_a1_14",
       "path": "assets/art/production/V_a1/14.png",
       "native_path": "assets/art/production/V_a1/14_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_03",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a1/14@1:v4:f=0.788732",
+      "source_sprite": "V_a1_14@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_a1_14@1:p3",
       "body": "adult_a",
       "view": "N",
       "activity": "walk",
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
-      "activity_icon": "",
-      "drawable": true,
-      "native_size": [
-        17,
-        27
-      ],
-      "canvas_size": [
-        19,
-        29
-      ],
-      "anchor": [
-        9,
-        28
-      ]
-    },
-    {
-      "path": "assets/art/production/V_a1/14_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
-      "native_size": [
-        17,
-        27
-      ],
-      "role": "native_reference",
-      "anchor": [
-        0,
-        0
-      ]
-    },
-    {
-      "sprite_id": "V_a1_15",
-      "path": "assets/art/production/V_a1/15.png",
-      "native_path": "assets/art/production/V_a1/15_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_03",
-      "qa_status": "procedural",
-      "candidate_id": "",
-      "body": "adult_a",
-      "view": "N",
-      "activity": "walk",
-      "frame": 2,
-      "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -2333,11 +2289,55 @@
       ]
     },
     {
-      "path": "assets/art/production/V_a1/15_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "path": "assets/art/production/V_a1/14_native.png",
+      "source": "generated:V_a1/14@1:v4:f=0.788732",
+      "qa_status": "accepted",
       "native_size": [
         17,
+        28
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_a1_15",
+      "path": "assets/art/production/V_a1/15.png",
+      "native_path": "assets/art/production/V_a1/15_native.png",
+      "source": "generated:V_a1/15@1:v4:f=0.788732",
+      "source_sprite": "V_a1_15@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_a1_15@1:p3",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "walk",
+      "frame": 2,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        18,
+        28
+      ],
+      "canvas_size": [
+        20,
+        30
+      ],
+      "anchor": [
+        10,
+        29
+      ]
+    },
+    {
+      "path": "assets/art/production/V_a1/15_native.png",
+      "source": "generated:V_a1/15@1:v4:f=0.788732",
+      "qa_status": "accepted",
+      "native_size": [
+        18,
         28
       ],
       "role": "native_reference",
@@ -2350,39 +2350,39 @@
       "sprite_id": "V_a1_16",
       "path": "assets/art/production/V_a1/16.png",
       "native_path": "assets/art/production/V_a1/16_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_03",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a1/16@1:v4:f=0.788732",
+      "source_sprite": "V_a1_16@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_a1_16@1:p3",
       "body": "adult_a",
       "view": "N",
       "activity": "walk",
       "frame": 3,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        17,
-        27
+        16,
+        29
       ],
       "canvas_size": [
-        19,
-        29
+        18,
+        31
       ],
       "anchor": [
         9,
-        28
+        30
       ]
     },
     {
       "path": "assets/art/production/V_a1/16_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_a1/16@1:v4:f=0.788732",
+      "qa_status": "accepted",
       "native_size": [
-        17,
-        27
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -3406,39 +3406,39 @@
       "sprite_id": "V_a3_08",
       "path": "assets/art/production/V_a3/08.png",
       "native_path": "assets/art/production/V_a3/08_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_04",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a3/08@3:v4:f=0.848485",
+      "source_sprite": "V_a3_08@3",
+      "qa_status": "accepted",
+      "candidate_id": "V_a3_08@3:p3",
       "body": "adult_a",
       "view": "E",
       "activity": "sit",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        18
+        21,
+        26
       ],
       "canvas_size": [
-        14,
-        20
+        23,
+        28
       ],
       "anchor": [
-        7,
-        19
+        11,
+        27
       ]
     },
     {
       "path": "assets/art/production/V_a3/08_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_a3/08@3:v4:f=0.848485",
+      "qa_status": "accepted",
       "native_size": [
-        12,
-        18
+        21,
+        26
       ],
       "role": "native_reference",
       "anchor": [
@@ -3670,39 +3670,39 @@
       "sprite_id": "V_a3_14",
       "path": "assets/art/production/V_a3/14.png",
       "native_path": "assets/art/production/V_a3/14_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a3/14@3:v4:f=0.848485",
+      "source_sprite": "V_a3_14@3",
+      "qa_status": "accepted",
+      "candidate_id": "V_a3_14@3:p3",
       "body": "adult_a",
       "view": "S",
       "activity": "crouch",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        16,
-        28
+        21,
+        26
       ],
       "canvas_size": [
-        18,
-        30
+        23,
+        28
       ],
       "anchor": [
-        9,
-        29
+        11,
+        27
       ]
     },
     {
       "path": "assets/art/production/V_a3/14_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_a3/14@3:v4:f=0.848485",
+      "qa_status": "accepted",
       "native_size": [
-        16,
-        28
+        21,
+        26
       ],
       "role": "native_reference",
       "anchor": [
@@ -3714,39 +3714,39 @@
       "sprite_id": "V_a3_15",
       "path": "assets/art/production/V_a3/15.png",
       "native_path": "assets/art/production/V_a3/15_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_a3/15@3:v4:f=0.848485",
+      "source_sprite": "V_a3_15@3",
+      "qa_status": "accepted",
+      "candidate_id": "V_a3_15@3:p3",
       "body": "adult_a",
       "view": "S",
       "activity": "crouch",
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        16,
-        28
+        20,
+        23
       ],
       "canvas_size": [
-        18,
-        30
+        22,
+        25
       ],
       "anchor": [
-        9,
-        29
+        11,
+        24
       ]
     },
     {
       "path": "assets/art/production/V_a3/15_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_a3/15@3:v4:f=0.848485",
+      "qa_status": "accepted",
       "native_size": [
-        16,
-        28
+        20,
+        23
       ],
       "role": "native_reference",
       "anchor": [
@@ -4418,8 +4418,8 @@
       "sprite_id": "V_b2_01",
       "path": "assets/art/production/V_b2/01.png",
       "native_path": "assets/art/production/V_b2/01_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_01",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_01",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4427,30 +4427,30 @@
       "activity": "carry",
       "frame": 0,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
-        13,
-        28
+        16,
+        29
       ],
       "canvas_size": [
-        15,
-        30
+        18,
+        31
       ],
       "anchor": [
-        7,
-        29
+        9,
+        30
       ]
     },
     {
       "path": "assets/art/production/V_b2/01_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
-        13,
-        28
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -4462,8 +4462,8 @@
       "sprite_id": "V_b2_02",
       "path": "assets/art/production/V_b2/02.png",
       "native_path": "assets/art/production/V_b2/02_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_02",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4471,9 +4471,9 @@
       "activity": "carry",
       "frame": 1,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
         16,
@@ -4490,7 +4490,7 @@
     },
     {
       "path": "assets/art/production/V_b2/02_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
         16,
@@ -4506,8 +4506,8 @@
       "sprite_id": "V_b2_03",
       "path": "assets/art/production/V_b2/03.png",
       "native_path": "assets/art/production/V_b2/03_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_02",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4515,9 +4515,9 @@
       "activity": "carry",
       "frame": 2,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
         16,
@@ -4534,7 +4534,7 @@
     },
     {
       "path": "assets/art/production/V_b2/03_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
         16,
@@ -4550,8 +4550,8 @@
       "sprite_id": "V_b2_04",
       "path": "assets/art/production/V_b2/04.png",
       "native_path": "assets/art/production/V_b2/04_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_02",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4559,9 +4559,9 @@
       "activity": "carry",
       "frame": 3,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
         16,
@@ -4578,7 +4578,7 @@
     },
     {
       "path": "assets/art/production/V_b2/04_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
         16,
@@ -4594,8 +4594,8 @@
       "sprite_id": "V_b2_05",
       "path": "assets/art/production/V_b2/05.png",
       "native_path": "assets/art/production/V_b2/05_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_04",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_01",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4603,30 +4603,30 @@
       "activity": "carry",
       "frame": 0,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "canvas_size": [
-        14,
-        30
+        18,
+        31
       ],
       "anchor": [
-        7,
-        29
+        9,
+        30
       ]
     },
     {
       "path": "assets/art/production/V_b2/05_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -4638,8 +4638,8 @@
       "sprite_id": "V_b2_06",
       "path": "assets/art/production/V_b2/06.png",
       "native_path": "assets/art/production/V_b2/06_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_04",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4647,30 +4647,30 @@
       "activity": "carry",
       "frame": 1,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "canvas_size": [
-        14,
-        30
+        18,
+        31
       ],
       "anchor": [
-        7,
-        29
+        9,
+        30
       ]
     },
     {
       "path": "assets/art/production/V_b2/06_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -4682,8 +4682,8 @@
       "sprite_id": "V_b2_07",
       "path": "assets/art/production/V_b2/07.png",
       "native_path": "assets/art/production/V_b2/07_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_04",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4691,30 +4691,30 @@
       "activity": "carry",
       "frame": 2,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "canvas_size": [
-        14,
-        30
+        18,
+        31
       ],
       "anchor": [
-        7,
-        29
+        9,
+        30
       ]
     },
     {
       "path": "assets/art/production/V_b2/07_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -4726,8 +4726,8 @@
       "sprite_id": "V_b2_08",
       "path": "assets/art/production/V_b2/08.png",
       "native_path": "assets/art/production/V_b2/08_native.png",
-      "source": "derived:idle_icon",
-      "source_sprite": "V_b1_04",
+      "source": "derived:borrowed_carry_view",
+      "source_sprite": "V_b3_02",
       "qa_status": "fallback",
       "candidate_id": "",
       "body": "adult_b",
@@ -4735,30 +4735,30 @@
       "activity": "carry",
       "frame": 3,
       "class": "adult",
-      "contains_basket": false,
-      "fallback_kind": "idle_icon",
-      "activity_icon": "U1_05",
+      "contains_basket": true,
+      "fallback_kind": "borrowed_carry_view",
+      "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "canvas_size": [
-        14,
-        30
+        18,
+        31
       ],
       "anchor": [
-        7,
-        29
+        9,
+        30
       ]
     },
     {
       "path": "assets/art/production/V_b2/08_native.png",
-      "source": "derived:idle_icon",
+      "source": "derived:borrowed_carry_view",
       "qa_status": "fallback",
       "native_size": [
-        12,
-        28
+        16,
+        29
       ],
       "role": "native_reference",
       "anchor": [
@@ -14223,7 +14223,7 @@
       "reason": "no_review_approved_candidate"
     }
   },
-  "installation_selection_sha256": "58e3a93565d0876ab53ac76e15e5973404376ac7764a5c0bdc2019fe7f2a4883",
+  "installation_selection_sha256": "e4e7331173638b7ebb7c3349d9b93f0afef900184eca1b746463381123776a23",
   "audits": {
     "manifest_v4": {
       "schema_version": 1,
@@ -14829,44 +14829,44 @@
           22
         ],
         "assets/art/production/N3/01.png": [
-          7,
-          6
+          9,
+          8
         ],
         "assets/art/production/N3/01_native.png": [
-          5,
-          4
+          7,
+          6
         ],
         "assets/art/production/N3/02.png": [
-          7,
-          6
+          10,
+          9
         ],
         "assets/art/production/N3/02_native.png": [
-          5,
-          4
+          8,
+          7
         ],
         "assets/art/production/N3/03.png": [
-          7,
-          6
+          10,
+          10
         ],
         "assets/art/production/N3/03_native.png": [
-          5,
-          4
+          8,
+          8
         ],
         "assets/art/production/N3/04.png": [
-          14,
-          13
+          9,
+          10
         ],
         "assets/art/production/N3/04_native.png": [
-          12,
-          11
+          7,
+          8
         ],
         "assets/art/production/N3/05.png": [
-          14,
-          14
+          10,
+          10
         ],
         "assets/art/production/N3/05_native.png": [
-          12,
-          12
+          8,
+          8
         ],
         "assets/art/production/N3/06.png": [
           7,
@@ -14894,67 +14894,67 @@
         ],
         "assets/art/production/N3/09.png": [
           9,
-          6
+          10
         ],
         "assets/art/production/N3/09_native.png": [
           7,
-          4
+          8
         ],
         "assets/art/production/N3/10.png": [
-          13,
-          14
+          10,
+          10
         ],
         "assets/art/production/N3/10_native.png": [
-          11,
-          12
+          8,
+          8
         ],
         "assets/art/production/N3/11.png": [
-          14,
-          11
+          10,
+          8
         ],
         "assets/art/production/N3/11_native.png": [
-          12,
-          9
+          8,
+          6
         ],
         "assets/art/production/N3/12.png": [
-          14,
-          12
+          10,
+          9
         ],
         "assets/art/production/N3/12_native.png": [
-          12,
-          10
+          8,
+          7
         ],
         "assets/art/production/N3/13.png": [
-          14,
-          13
+          9,
+          8
         ],
         "assets/art/production/N3/13_native.png": [
-          12,
-          11
+          7,
+          6
         ],
         "assets/art/production/N3/14.png": [
-          14,
-          13
+          8,
+          8
         ],
         "assets/art/production/N3/14_native.png": [
-          12,
-          11
+          6,
+          6
         ],
         "assets/art/production/N3/15.png": [
-          14,
-          14
+          8,
+          8
         ],
         "assets/art/production/N3/15_native.png": [
-          12,
-          12
+          6,
+          6
         ],
         "assets/art/production/N3/16.png": [
-          14,
-          12
+          9,
+          7
         ],
         "assets/art/production/N3/16_native.png": [
-          12,
-          10
+          7,
+          5
         ],
         "assets/art/production/P2V_a_N_build/01.png": [
           19,
@@ -15733,36 +15733,36 @@
           27
         ],
         "assets/art/production/V_a1/13.png": [
-          19,
+          20,
           30
         ],
         "assets/art/production/V_a1/13_native.png": [
-          17,
+          18,
           28
         ],
         "assets/art/production/V_a1/14.png": [
           19,
-          29
+          30
         ],
         "assets/art/production/V_a1/14_native.png": [
           17,
-          27
+          28
         ],
         "assets/art/production/V_a1/15.png": [
-          19,
+          20,
           30
         ],
         "assets/art/production/V_a1/15_native.png": [
-          17,
+          18,
           28
         ],
         "assets/art/production/V_a1/16.png": [
-          19,
-          29
+          18,
+          31
         ],
         "assets/art/production/V_a1/16_native.png": [
-          17,
-          27
+          16,
+          29
         ],
         "assets/art/production/V_a2/01.png": [
           18,
@@ -15949,12 +15949,12 @@
           26
         ],
         "assets/art/production/V_a3/08.png": [
-          14,
-          20
+          23,
+          28
         ],
         "assets/art/production/V_a3/08_native.png": [
-          12,
-          18
+          21,
+          26
         ],
         "assets/art/production/V_a3/09.png": [
           21,
@@ -15997,20 +15997,20 @@
           12
         ],
         "assets/art/production/V_a3/14.png": [
-          18,
-          30
+          23,
+          28
         ],
         "assets/art/production/V_a3/14_native.png": [
-          16,
-          28
+          21,
+          26
         ],
         "assets/art/production/V_a3/15.png": [
-          18,
-          30
+          22,
+          25
         ],
         "assets/art/production/V_a3/15_native.png": [
-          16,
-          28
+          20,
+          23
         ],
         "assets/art/production/V_a3/16.png": [
           24,
@@ -16149,12 +16149,12 @@
           28
         ],
         "assets/art/production/V_b2/01.png": [
-          15,
-          30
+          18,
+          31
         ],
         "assets/art/production/V_b2/01_native.png": [
-          13,
-          28
+          16,
+          29
         ],
         "assets/art/production/V_b2/02.png": [
           18,
@@ -16181,36 +16181,36 @@
           29
         ],
         "assets/art/production/V_b2/05.png": [
-          14,
-          30
+          18,
+          31
         ],
         "assets/art/production/V_b2/05_native.png": [
-          12,
-          28
+          16,
+          29
         ],
         "assets/art/production/V_b2/06.png": [
-          14,
-          30
+          18,
+          31
         ],
         "assets/art/production/V_b2/06_native.png": [
-          12,
-          28
+          16,
+          29
         ],
         "assets/art/production/V_b2/07.png": [
-          14,
-          30
+          18,
+          31
         ],
         "assets/art/production/V_b2/07_native.png": [
-          12,
-          28
+          16,
+          29
         ],
         "assets/art/production/V_b2/08.png": [
-          14,
-          30
+          18,
+          31
         ],
         "assets/art/production/V_b2/08_native.png": [
-          12,
-          28
+          16,
+          29
         ],
         "assets/art/production/V_b2/09.png": [
           13,

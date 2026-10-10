@@ -1,40 +1,48 @@
 extends SceneTree
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const Library = preload("res://scripts/ui/art_sprite_library.gd")
+var _failures: int = 0
+
+func _check(condition: bool, message: String = "activity invariant") -> void:
+	if not condition:
+		push_error(message)
+		_failures += 1
+
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	_test_frame_lookup()
+	_test_carry_other_views()
 	var shelter: Dictionary = {"shelter": true}
-	assert(Activity.resolve(3, 3, true, false, 0.0, shelter, 23.0) == "asleep")
-	assert(Activity.hidden("asleep", true, shelter))
-	assert(not Activity.hidden("asleep", false, shelter))
-	assert(not Activity.hidden("asleep", true, {}))
-	assert(Activity.resolve(3, 0, false, false, 0.0, shelter, 12.0) == "asleep")
-	assert(Activity.resolve(3, 0, false, false, 0.0, {"construction": true, "food": true}, 12.0) == "build")
-	assert(Activity.resolve(3, 0, false, false, 0.0, {"food": true, "water": true}, 12.0) == "gather")
-	assert(Activity.resolve(3, 0, false, false, 0.0, {"water": true}, 12.0) == "drink")
-	assert(Activity.resolve(3, 1, true, false, 0.0, shelter, 12.0) == "eat")
-	assert(Activity.resolve(3, 6, true, false, 0.0, {}, 12.0) == "gather")
-	assert(Activity.resolve(2, 0, false, true, 1.0, {}, 12.0) == "talk")
-	assert(Activity.resolve(1, 0, false, false, 1.0, {}, 12.0) == "carry")
-	assert(Activity.resolve(0, 0, false, true, 0.0, {}, 12.0) == "walk")
-	assert(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 18.0) == "idle")
-	assert(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 23.0) == "idle")
-	assert(Activity.facing(Vector2.ZERO, "N") == "N")
-	assert(Activity.facing(Vector2(-2, 1), "S") == "W")
-	assert(Activity.facing(Vector2(0, -2), "S") == "N")
-	assert(Activity.frame_index("walk", 0.125, 0.0, 4) == 1)
-	assert(Activity.frame_index("idle", 0.7, 0.0, 2) == 1)
-	assert(Activity.frame_index("build", 0.25, 0.0, 2) == 1)
+	_check(Activity.resolve(3, 3, true, false, 0.0, shelter, 23.0) == "asleep")
+	_check(Activity.hidden("asleep", true, shelter))
+	_check(not Activity.hidden("asleep", false, shelter))
+	_check(not Activity.hidden("asleep", true, {}))
+	_check(Activity.resolve(3, 0, false, false, 0.0, shelter, 12.0) == "asleep")
+	_check(Activity.resolve(3, 0, false, false, 0.0, {"construction": true, "food": true}, 12.0) == "build")
+	_check(Activity.resolve(3, 0, false, false, 0.0, {"food": true, "water": true}, 12.0) == "gather")
+	_check(Activity.resolve(3, 0, false, false, 0.0, {"water": true}, 12.0) == "drink")
+	_check(Activity.resolve(3, 1, true, false, 0.0, shelter, 12.0) == "eat")
+	_check(Activity.resolve(3, 6, true, false, 0.0, {}, 12.0) == "gather")
+	_check(Activity.resolve(2, 0, false, true, 1.0, {}, 12.0) == "talk")
+	_check(Activity.resolve(1, 0, false, false, 1.0, {}, 12.0) == "carry")
+	_check(Activity.resolve(0, 0, false, true, 0.0, {}, 12.0) == "walk")
+	_check(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 18.0) == "idle")
+	_check(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 23.0) == "idle")
+	_check(Activity.facing(Vector2.ZERO, "N") == "N")
+	_check(Activity.facing(Vector2(-2, 1), "S") == "W")
+	_check(Activity.facing(Vector2(0, -2), "S") == "N")
+	_check(Activity.frame_index("walk", 0.125, 0.0, 4) == 1)
+	_check(Activity.frame_index("idle", 0.7, 0.0, 2) == 1)
+	_check(Activity.frame_index("build", 0.25, 0.0, 2) == 1)
 	var sprite: Sprite2D = Sprite2D.new()
-	assert(Library.apply(sprite, "direction_09_villager_gatherer"))
-	assert(Library.apply_variant(sprite, {"skin": 3, "hair": 4, "clothing": 5}))
-	assert(roundi(sprite.self_modulate.r * 15.0) == 3)
-	assert(roundi(sprite.self_modulate.g * 15.0) == 4)
-	assert(roundi(sprite.self_modulate.b * 15.0) == 5)
-	assert(sprite.material is ShaderMaterial)
+	_check(Library.apply(sprite, "direction_09_villager_gatherer"))
+	_check(Library.apply_variant(sprite, {"skin": 3, "hair": 4, "clothing": 5}))
+	_check(roundi(sprite.self_modulate.r * 15.0) == 3)
+	_check(roundi(sprite.self_modulate.g * 15.0) == 4)
+	_check(roundi(sprite.self_modulate.b * 15.0) == 5)
+	_check(sprite.material is ShaderMaterial)
 	sprite.free()
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	var world: Node = main.get_node("WorldSim")
@@ -45,46 +53,49 @@ func _run() -> void:
 	var renderer: Node = main.get_node("AgentRenderer")
 	renderer.call("refresh_snapshot")
 	var context: Dictionary = renderer.call("_activity_context")
-	assert(context.has("food") and context.has("hearths") and context.has("terrain"))
-	assert((context["terrain"] as Dictionary).has("terrain"))
+	_check(context.has("food") and context.has("hearths") and context.has("terrain"))
+	_check((context["terrain"] as Dictionary).has("terrain"))
 	var snapshot: Dictionary = world.call("get_agent_snapshot")
 	var ids: PackedInt64Array = snapshot["ids"]
 	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
 	inspector.call("display_agent", world.call("get_agent_detail", ids[0]))
 	renderer.call("_update_selection_ring")
 	var ring: Line2D = main.get_node("Shadows/SelectionRing") as Line2D
-	assert(ring.visible)
-	assert(ring.width == 1.0)
-	assert(ring.get_parent().name == "Shadows")
+	_check(ring.visible)
+	_check(ring.width == 1.0)
+	_check(ring.get_parent().name == "Shadows")
 	var agent_ids: PackedInt64Array = snapshot["agent_ids"]
 	var selected_sprite: Sprite2D = renderer.call("get_agent_sprite", int(agent_ids[0])) as Sprite2D
-	assert(ring.position == selected_sprite.position)
+	_check(ring.position == selected_sprite.position)
 	var body: String = str(selected_sprite.get_meta("body"))
 	var icon_choice: Dictionary = renderer.call("frame_choice", body, "carry", "S", 0.0)
-	assert(icon_choice["fallback_kind"] == "idle_icon")
+	if _has_real_carry(Activity.build_frame_groups(Library.entries()),body):
+		_check(icon_choice.get("fallback_kind","") != "idle_icon")
+		_check(not Activity.show_activity_icon(icon_choice,4.0))
+	icon_choice = {"fallback_kind":"idle_icon","activity_icon":"U1_05"}
 	var icon: Sprite2D = Sprite2D.new()
 	selected_sprite.add_child(icon)
-	assert(not Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 1.0))
-	assert(not icon.visible)
-	assert(Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 2.0))
-	assert(icon.visible and icon.texture != null)
-	assert(icon.position == Vector2(0, selected_sprite.offset.y - 2.0))
-	assert(str(icon.get_meta("sprite_id")) == "U1_05")
-	assert(not Activity.apply_activity_icon(selected_sprite, icon, {}, 4.0))
-	assert(not icon.visible)
+	_check(not Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 1.0))
+	_check(not icon.visible)
+	_check(Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 2.0))
+	_check(icon.visible and icon.texture != null)
+	_check(icon.position == Vector2(0, selected_sprite.offset.y - 2.0))
+	_check(str(icon.get_meta("sprite_id")) == "U1_05")
+	_check(not Activity.apply_activity_icon(selected_sprite, icon, {}, 4.0))
+	_check(not icon.visible)
 	icon.queue_free()
 	renderer.set("_animation_time", 0.0)
 	renderer.call("_update_selection_ring")
-	assert(int(ring.get_meta("frame_id")) == 0)
+	_check(int(ring.get_meta("frame_id")) == 0)
 	renderer.set("_animation_time", 0.5)
 	renderer.call("_update_selection_ring")
-	assert(int(ring.get_meta("frame_id")) == 1)
+	_check(int(ring.get_meta("frame_id")) == 1)
 	inspector.call("close")
 	renderer.call("_update_selection_ring")
-	assert(not ring.visible)
+	_check(not ring.visible)
 	main.free()
-	print("ACTIVITY PASS: target compatibility, tile priorities, sleeping visibility, facing, rates, shader codes")
-	quit(0)
+	print("ACTIVITY ", "PASS" if _failures == 0 else "FAIL", ": failures=", _failures)
+	quit(0 if _failures == 0 else 1)
 
 func _test_frame_lookup() -> void:
 	var entries: Dictionary = {
@@ -96,18 +107,18 @@ func _test_frame_lookup() -> void:
 	}
 	var groups: Dictionary = Activity.build_frame_groups(entries)
 	var walk: Dictionary = Activity.choose_frame(groups, "adult_a", "walk", "S", 0.0, 0.0)
-	assert(walk["sprite_id"] == "a_idle")
-	assert(walk["fallback_kind"] == "idle_icon")
-	assert(not Activity.show_activity_icon(walk, 1.0))
-	assert(not Activity.show_activity_icon(walk, 1.99))
-	assert(Activity.show_activity_icon(walk, 2.0))
+	_check(walk["sprite_id"] == "a_idle")
+	_check(walk["fallback_kind"] == "idle_icon")
+	_check(not Activity.show_activity_icon(walk, 1.0))
+	_check(not Activity.show_activity_icon(walk, 1.99))
+	_check(Activity.show_activity_icon(walk, 2.0))
 	var carry: Dictionary = Activity.choose_frame(groups, "adult_a", "carry", "S", 0.0, 0.0)
-	assert(carry["sprite_id"] == "a_carry")
-	assert(not Activity.show_activity_icon(carry, 4.0))
+	_check(carry["sprite_id"] == "a_carry")
+	_check(not Activity.show_activity_icon(carry, 4.0))
 	var build: Dictionary = Activity.choose_frame(groups, "adult_a", "build", "S", 0.0, 0.0)
-	assert(build["sprite_id"] == "a_idle")
-	assert(Activity.choose_frame(groups, "child", "build", "S", 0.0, 0.0).is_empty())
-	assert(Activity.choose_frame(groups, "adult_a", "walk", "N", 0.0, 0.0).is_empty())
+	_check(build["sprite_id"] == "a_idle")
+	_check(Activity.choose_frame(groups, "child", "build", "S", 0.0, 0.0).is_empty())
+	_check(Activity.choose_frame(groups, "adult_a", "walk", "N", 0.0, 0.0).is_empty())
 	var actual: Dictionary = Activity.build_frame_groups(Library.entries())
 	for body: String in ["adult_a", "adult_b", "child"]:
 		for activity: String in ["idle", "walk", "carry", "build", "gather", "talk", "sit", "drink", "asleep"]:
@@ -115,7 +126,33 @@ func _test_frame_lookup() -> void:
 				var choice: Dictionary = Activity.choose_frame(actual, body, activity, view, 1.375, 0.0)
 				if choice.is_empty():
 					continue
-				assert(choice["body"] == body)
-				assert(not bool(choice.get("contains_basket", false)) or activity == "carry")
-				assert(not str(choice["sprite_id"]).begins_with("direction_"))
-				assert(Activity.show_activity_icon(choice, 4.0) == (str(choice.get("fallback_kind", "")) == "idle_icon" and not str(choice.get("activity_icon", "")).is_empty()))
+				_check(choice["body"] == body)
+				if activity == "carry" and _has_real_carry(actual,body):
+					_check(choice.get("fallback_kind","") != "idle_icon","live carry uses real frames in every facing")
+					_check(not Activity.show_activity_icon(choice,4.0))
+				_check(not bool(choice.get("contains_basket", false)) or activity == "carry")
+				_check(not str(choice["sprite_id"]).begins_with("direction_"))
+				_check(Activity.show_activity_icon(choice, 4.0) == (str(choice.get("fallback_kind", "")) == "idle_icon" and not str(choice.get("activity_icon", "")).is_empty()))
+
+func _has_real_carry(groups: Dictionary, body: String) -> bool:
+	for view: String in ["S","E","N","W"]:
+		for entry: Dictionary in groups.get(body+"/carry/"+view,[]):
+			if entry.get("qa_status","") == "accepted":
+				return true
+	return false
+
+func _test_carry_other_views() -> void:
+	for view: String in ["E","N","W"]:
+		var entries: Dictionary = {
+			"idle": {"body":"adult_a","activity":"idle","view":"S","qa_status":"accepted"},
+			"old_placeholder": {"body":"adult_a","activity":"carry","view":"S","qa_status":"fallback","fallback_kind":"idle_icon","activity_icon":"U1_05"},
+			"real_carry": {"body":"adult_a","activity":"carry","view":view,"qa_status":"accepted","contains_basket":true},
+		}
+		var groups: Dictionary = Activity.build_frame_groups(entries)
+		var choice: Dictionary = Activity.choose_frame(groups,"adult_a","carry","S",0.0,0.0)
+		_check(choice.get("sprite_id","") == "real_carry","carry borrows real same-body view before installed idle icon")
+		_check(not Activity.show_activity_icon(choice,4.0))
+		groups.erase("adult_a/carry/S")
+		choice = Activity.choose_frame(groups,"adult_a","carry","S",0.0,0.0)
+		_check(choice.get("sprite_id","") == "real_carry","missing carry group borrows any real view before idle")
+		_check(not Activity.show_activity_icon(choice,4.0))

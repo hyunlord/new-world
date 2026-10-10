@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "candidates_sha256": "698605350840ffb7790d96c7725cfd3b5ce72fc582026ab6aef47ccb0b29b40d",
+  "candidate_fingerprints": {
+    "P3_fill_03_01@1:p3": "72a81606238f81ff0eace5492a94edb5a2263fd69658a07313fda674ba56c8d7",
+    "P3_fill_03_02@1:p3": "04b64b239eac89416e83072a5c5a30e1503a7fb3c767defec407484480b85bfe",
+    "P3_fill_03_03@1:p3": "fa3e6f9106546d7098e19dd749c52943465ce3d540f3646cc0ef995750c78cb9",
+    "P3_fill_03_04@1:p3": "3db0787bdeb2e7778870db173752ab2ac0217409b25d8537b1ccad212b169392",
+    "P3_fill_03_05@1:p3": "49ddf1e4e22860ba73830ec123ea00dc688eee190b6202c3170f748760cc2900",
+    "P3_fill_03_06@1:p3": "4559e067d0c2842a85f5f005cfdfeef55e4abb517c606e545685536f5ff1e8c2",
+    "P3_fill_03_07@1:p3": "f80048f277b45aa0bfb599c929c83e5b33d58c89e0ce0b0bfec450a292d3182c",
+    "P3_fill_03_08@1:p3": "17f5c928d19ee8baf4691c1127ae1bacc062e653d8e9038b53ac43218cc7e881",
+    "P3_fill_03_09@1:p3": "0199f47146a4bf0aa971c3631c7bb609d7cf3c280674f9b34959d36a3cf55545",
+    "P3_fill_03_10@1:p3": "8a6fe80de18592134af0c4a4cb9ed6ddc9cd9afc19ed23583183a7649303d1ce",
+    "P3_fill_03_11@1:p3": "917ced005758a90a99d6eb16c1ccfa30e1edc9355b17b3fc521c35dc4ed11a13",
+    "P3_fill_03_12@1:p3": "5e7c2915f0d94c92e13fad418daf61b13b3e1861193af3ba79dd7e1acfb0faab",
+    "P3_fill_03_13@1:p3": "7a76c2342be2b773882dcbf60acc29fbcac31752ec7c29c2e8852ccabd0ad242",
+    "P3_fill_03_14@1:p3": "64b270eaa258ee927555734b0df4ff552f07931c4799f719e3765703bb21efcb",
+    "P3_fill_03_15@1:p3": "cbede3fed69391cdd0f7b42d6d7370374b97c4b65cfecf74b5094ed551437244",
+    "P3_fill_03_16@1:p3": "357e63f8b19cfadb399af475ba382b1aafd89fb4eaaa2e96054aa8957e150fbf"
+  },
+  "images_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_03/boards/child_01.png": "afdb26406ec81df68c411cbe4ab4b5efecb7125006a189893b208dff200968ff",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production3/fills/P3_fill_03/boards/child_02.png": "9a85855f740e52ba0fc690da5ae322d0446c30a8867a85e58e0f5fcf37f3f6cd"
+  }
+}

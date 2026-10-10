@@ -83,6 +83,50 @@ class InstallV4Tests(unittest.TestCase):
         self.assertEqual(result.qa_status,'fallback')
         self.assertEqual(result.source_sprite,'V_a1_04')
 
+    def test_carry_borrows_any_accepted_same_body_view_before_idle_icon(self) -> None:
+        image = Image.new('RGBA', (12, 28), (216, 126, 51, 255))
+        idle = install_v4.PlannedSprite('idle', 'adult_a', 'S', 'idle', 0,
+            'accepted', 'generated:idle', '', False, '', '', image, image)
+        for view in ('E', 'N', 'W'):
+            with self.subTest(view=view):
+                carry = replace(idle, slot_id='real_carry', view=view,
+                                activity='carry', contains_basket=True)
+                target = install_v4.Target('target', 'adult_a', 'S', 'carry', 0)
+                result = install_v4.fallback_for(target, (idle, carry), frozenset({'U1_05'}))
+                self.assertIsNotNone(result)
+                self.assertEqual(result.source_sprite, 'real_carry')
+                self.assertNotEqual(result.fallback_kind, 'idle_icon')
+                self.assertEqual(result.activity_icon, '')
+                self.assertTrue(result.contains_basket)
+                self.assertEqual(result.native.tobytes(), carry.native.tobytes())
+
+    def test_carry_mirror_preserves_frame_lineage_and_pixels(self) -> None:
+        image = Image.new('RGBA', (12, 28), (216, 126, 51, 255))
+        image.putpixel((0, 0), (99, 40, 10, 255))
+        source = install_v4.PlannedSprite('carry_1', 'adult_a', 'W', 'carry', 1,
+            'accepted', 'generated:carry', '', True, '', '', image, image)
+        other = replace(source, slot_id='carry_0', frame=0)
+        target = install_v4.Target('target', 'adult_a', 'E', 'carry', 1)
+        result = install_v4.fallback_for(target, (other, source), frozenset())
+        self.assertIsNotNone(result)
+        self.assertEqual(result.source_sprite, 'carry_1')
+        self.assertEqual(result.fallback_kind, 'mirror')
+        self.assertEqual(result.activity_icon, '')
+        self.assertEqual(result.native.tobytes(), image.transpose(Image.Transpose.FLIP_LEFT_RIGHT).tobytes())
+
+    def test_carry_still_uses_idle_icon_without_real_same_body_frame(self) -> None:
+        image = Image.new('RGBA', (12, 28), (216, 126, 51, 255))
+        idle = install_v4.PlannedSprite('idle', 'adult_a', 'S', 'idle', 0,
+            'accepted', 'generated:idle', '', False, '', '', image, image)
+        target = install_v4.Target('target', 'adult_a', 'S', 'carry', 0)
+        foreign = replace(idle, slot_id='foreign', body='child', activity='carry', contains_basket=True)
+        rejected = replace(foreign, slot_id='rejected', body='adult_a', qa_status='rejected')
+        result = install_v4.fallback_for(target, (idle, foreign, rejected), frozenset({'U1_05'}))
+        self.assertIsNotNone(result)
+        self.assertEqual(result.source_sprite, 'idle')
+        self.assertEqual(result.fallback_kind, 'idle_icon')
+        self.assertEqual(result.activity_icon, 'U1_05')
+
     def test_frozen_plan_dry_run_and_temporary_install(self) -> None:
         with TemporaryDirectory() as directory:
             root=Path(directory);request=reviewed_fixture(root)

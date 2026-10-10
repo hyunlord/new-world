@@ -1,0 +1,23 @@
+{
+  "reviewed_boards": [
+    "docs/art/production3/reprocess/boards/adult_b_01.png",
+    "docs/art/production3/reprocess/boards/adult_b_02.png",
+    "docs/art/production3/reprocess/boards/adult_b_03.png",
+    "docs/art/production3/reprocess/boards/adult_b_04.png",
+    "docs/art/production3/reprocess/boards/adult_b_05.png",
+    "docs/art/production3/reprocess/boards/adult_b_06.png",
+    "docs/art/production3/reprocess/boards/adult_b_07.png"
+  ],
+  "candidate_count": 78,
+  "coverage_exact": true,
+  "candidate_ledger_sha256": "7e83bcbbadbcfa246b44e83cc5ff2cea5b4833d388b57019196cce699fffa94d",
+  "candidate_fingerprints_verified": 78,
+  "candidate_image_hashes_verified": 234,
+  "board_hashes_verified": 7,
+  "counts": {
+    "ok": 0,
+    "reject": 78,
+    "unavailable": 0
+  },
+  "method": "Opened every adult_b board and reviewed 6x sprite, 6x region map, 2x icon-free action, and approved idle reference. Technical warnings were not used as verdicts. One primary reason per candidate; map contamination remains a blocker even where actions read."
+}

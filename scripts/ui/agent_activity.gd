@@ -90,13 +90,31 @@ static func build_frame_groups(entries: Dictionary) -> Dictionary:
 static func activity_icon(activity: String) -> String:
 	return str({"walk": "U1_01", "carry": "U1_05", "gather": "U1_06", "build": "U1_04", "eat": "U1_12", "drink": "U1_11", "sit": "U1_13", "asleep": "U1_13", "talk": "U1_01"}.get(activity, ""))
 
+static func _real_carry(entry: Dictionary, body: String) -> bool:
+	return (str(entry.get("body","")) == body
+		and str(entry.get("activity","")) == "carry"
+		and str(entry.get("qa_status","")) == "accepted"
+		and bool(entry.get("drawable",true))
+		and str(entry.get("fallback_kind","")) != "idle_icon"
+		and str(entry.get("activity_icon","")).is_empty())
+
 static func choose_frame(groups: Dictionary, body: String, activity: String, facing: String, seconds: float, phase: float) -> Dictionary:
 	var view: String = "E" if facing == "W" else facing
 	var keys: Array[String] = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/idle/" + view]
+	var real_carry: bool = false
+	if activity == "carry":
+		for carry_view: String in ["S","E","N","W"]:
+			for entry: Dictionary in groups.get(body+"/carry/"+carry_view,[]):
+				if _real_carry(entry,body):
+					real_carry = true
+		if real_carry:
+			keys = [body+"/carry/"+view,body+"/carry/S",body+"/carry/E",body+"/carry/N",body+"/carry/W"]
 	for key: String in keys:
 		var safe: Array[Dictionary] = []
 		for entry: Dictionary in groups.get(key, []):
 			if str(entry.get("body", "")) != body:
+				continue
+			if real_carry and not _real_carry(entry,body):
 				continue
 			var basket: bool = bool(entry.get("contains_basket", false)) or str(entry.get("source_sprite", "")) == "direction_09_villager_gatherer"
 			if basket and activity != "carry":

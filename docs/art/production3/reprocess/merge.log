@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/merge_p3_selection.py", line 252, in <module>
+    main()
+    ~~~~^^
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/merge_p3_selection.py", line 247, in main
+    merge(args.root, args.baseline, args.ledger, args.review,
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          Outputs(args.output, args.envelope, args.adjudication), args.holds, review_index=args.review_index)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/merge_p3_selection.py", line 124, in merge
+    reviews = validate_reviews(candidates, rows)
+  File "/Users/rexxa/work/new-world-art-prod/tools/art_pipeline/merge_p3_selection.py", line 40, in validate_reviews
+    raise MergeError(f'Review physical slot mismatch: {identity}')
+MergeError: Review physical slot mismatch: P2_fill_02_05@1:p3

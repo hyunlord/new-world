@@ -5,7 +5,7 @@
 | 0 | Preserve brief, merge pinned Pass4, full baseline gate | complete | 2026-10-10T15:45:13Z | 2026-10-10T15:56:22Z |
 | 1 | All-object clearings, clustered rocks, small sparse decals | complete | 2026-10-10T15:56:50Z | 2026-10-10T16:03:57Z |
 | 2 | Stable age hair, idle facing and camp poses | complete | 2026-10-10T16:04:40Z | 2026-10-10T16:10:34Z |
-| 3 | Color region maps, despeckle, re-review, bounded fills and install | pending | | |
+| 3 | Color region maps, despeckle, re-review, bounded fills and install | complete | 2026-10-10T16:11:42Z | 2026-10-10T16:35:33Z |
 | 4 | Real-data old-age/season consumers and localized inspector age | pending | | |
 | 5 | art, art_long and calibration windowed captures | pending | | |
 | 6 | A1–A16, independent blind labels, comparisons and GIFs | pending | | |

@@ -11,6 +11,8 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from palette_tools import rgb_to_lab
+from regions_v2 import classify as classify_v2, table_from_data
+from v4_contracts import STANDING
 
 ROOT = Path(__file__).resolve().parents[2]
 REGIONS = {'transparent': 0, 'outline': 1, 'skin': 2, 'hair': 3, 'clothing': 4, 'other': 5}
@@ -88,9 +90,37 @@ def classify(image: Image.Image, body: str = 'default', *, palette_path: Path | 
     return Image.fromarray(result)
 
 
-def build_atlases(manifest_path: Path, *, diagnostic_path: Path | None = None) -> dict[str, Any]:
+class ReviewedMapError(ValueError):
+    """Frozen reviewed anatomy failed provenance or pixel compatibility checks."""
+
+
+def build_atlases(manifest_path: Path, *, diagnostic_path: Path | None = None,
+                  tables_path: Path | None = None,
+                  reviewed_maps_path: Path | None = None) -> dict[str, Any]:
     """Consume world_atlas.json; preserve rects and write *_regions.png beside pages."""
     manifest = json.loads(manifest_path.read_text())
+    table_file = tables_path or ROOT / 'tools/art_pipeline/region_tables_v2.json'
+    tables = {}
+    use_v2 = tables_path is not None or table_file.exists()
+    if use_v2:
+        tables = {body: table_from_data(data) for body, data in
+                  json.loads(table_file.read_text())['tables'].items()}
+    registry_file = reviewed_maps_path or ROOT / 'tools/art_pipeline/reviewed_region_maps_p3.json'
+    reviewed = {}
+    if reviewed_maps_path is not None or registry_file.exists():
+        for record in json.loads(registry_file.read_text())['maps']:
+            map_path = ROOT / record['regions_path']
+            if hashlib.sha256(map_path.read_bytes()).hexdigest() != record['regions_sha256']:
+                raise ReviewedMapError(f'Reviewed map file hash mismatch: {map_path}')
+            with Image.open(map_path) as opened:
+                frozen = opened.convert('RGBA')
+            if list(frozen.size) != record['size']:
+                raise ReviewedMapError(f'Reviewed map size mismatch: {map_path}')
+            key = (record['body'], record['rgba_sha256'])
+            if key in reviewed and (reviewed[key][0].size != frozen.size or
+                                   reviewed[key][0].tobytes() != frozen.tobytes()):
+                raise ReviewedMapError(f'Conflicting reviewed maps: {key}')
+            reviewed[key] = (frozen, record)
     pages: dict[str, Image.Image] = {}
     previews: list[tuple[str,Image.Image,Image.Image]] = []
     output: dict[str, Any] = {'version':1,'encoding':{'r':'region integer 0..5','g':'shade integer 0..2','a':'binary source alpha'},'pages':{},'sprites':{}}
@@ -109,10 +139,32 @@ def build_atlases(manifest_path: Path, *, diagnostic_path: Path | None = None) -
         body = str(entry.get('body',next((value for value in ('adult_a','adult_b','child') if value in name),'default')))
         if name.startswith(('V_a','V_b','V_c')):
             body = {'a':'adult_a','b':'adult_b','c':'child'}[name[2]]
-        indices = classify(sprite,body,view=str(entry.get('view','')),activity=str(entry.get('activity','')))
+        classification_source = 'legacy'
+        if use_v2 and body in ('adult_a', 'adult_b', 'child'):
+            classification_source = 'regions_v2'
+            indices = classify_v2(sprite, tables[body], standing=entry.get('activity', '') in STANDING)
+        else:
+            indices = classify(sprite,body,view=str(entry.get('view','')),activity=str(entry.get('activity','')))
+        evidence = {}
+        if classification_source == 'regions_v2':
+            evidence['v2_rgba_sha256'] = hashlib.sha256(indices.tobytes()).hexdigest()
+        key = (body, hashlib.sha256(sprite.tobytes()).hexdigest())
+        if key in reviewed:
+            frozen, record = reviewed[key]
+            if frozen.size != sprite.size or not np.array_equal(
+                    np.asarray(frozen)[..., 3], np.asarray(sprite)[..., 3]):
+                raise ReviewedMapError(f'Reviewed map sprite size/alpha mismatch: {name}')
+            evidence['computed_region_difference_texels'] = int(np.any(
+                np.asarray(indices) != np.asarray(frozen), axis=-1).sum())
+            evidence['reviewed_regions_path'] = record['regions_path']
+            evidence['reviewed_regions_sha256'] = record['regions_sha256']
+            evidence['reviewed_source'] = record['source']
+            indices = frozen
+            classification_source = 'reviewed_map'
         pages[page].paste(indices,(rect[0],rect[1]))
         region_page = 'res://'+str(path.with_name(path.stem+'_regions.png').relative_to(ROOT))
-        output['sprites'][name] = {'page':region_page,'rect':rect,'body':body}
+        output['sprites'][name] = {'page':region_page,'rect':rect,'body':body,
+            'classification_source':classification_source, **evidence}
         if len(previews)<96:
             previews.append((name,sprite,indices))
     for page,indices in pages.items():
@@ -140,6 +192,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest',type=Path,default=ROOT/'assets/art/atlas/world_atlas.json')
     parser.add_argument('--diagnostic', type=Path, help='Optional contact PNG; old production documents are never implicit outputs')
+    parser.add_argument('--tables', type=Path, help='Frozen per-body colour tables (default: installed v2 tables when present)')
+    parser.add_argument('--reviewed-maps', type=Path, help='Exact-pixel frozen approved region maps')
     args = parser.parse_args()
-    result = build_atlases(args.manifest, diagnostic_path=args.diagnostic)
+    result = build_atlases(args.manifest, diagnostic_path=args.diagnostic, tables_path=args.tables,
+                          reviewed_maps_path=args.reviewed_maps)
     print(f"Regions: {len(result['sprites'])} frames, {len(result['pages'])} matching atlas pages")

@@ -116,33 +116,44 @@ def fallback_for(target: Target, sources: tuple[PlannedSprite, ...], icons: froz
     safe = sorted((s for s in sources if s.body == target.body and s.qa_status == 'accepted'
                    and (target.activity == 'carry' or not s.contains_basket)), key=lambda s:(s.frame != target.frame, abs(s.frame-target.frame), s.slot_id))
     opposite = {'E':'W','W':'E'}.get(target.view)
-    source = next((s for s in safe if s.activity == target.activity and s.view == opposite), None)
-    kind = 'mirror'
-    if source is not None:
-        native = source.native.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    carry_sources = [s for s in safe if s.activity == 'carry' and not s.activity_icon
+                     and s.fallback_kind != 'idle_icon'] if target.activity == 'carry' else []
+    if carry_sources:
+        source = next((s for s in carry_sources if s.view == target.view), None)
+        if source is None:
+            source = next((s for s in carry_sources if s.view == opposite), None)
+        if source is None:
+            source = next((s for s in carry_sources if s.view == 'S'), carry_sources[0])
+        kind = 'mirror' if source.view == opposite else 'borrowed_carry_view'
+        native = source.native.transpose(Image.Transpose.FLIP_LEFT_RIGHT) if kind == 'mirror' else source.native.copy()
     else:
-        same = [s for s in safe if s.view == target.view and s.activity in (target.activity,'idle')]
-        source = next((s for s in same if s.activity == target.activity), same[0] if same else None)
-        kind = 'procedural'
-        native = None
-        if source is not None and not (target.activity == 'carry' and source.activity != 'carry'):
-            try:
-                native = animate(source.native,target.activity,target.frame,target.view)
-            except ValueError:
-                native = None
-        if native is not None and limit is not None and (native.width > limit[0] or native.height > limit[1]+2):
+        source = next((s for s in safe if s.activity == target.activity and s.view == opposite), None)
+        kind = 'mirror'
+        if source is not None:
+            native = source.native.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+        else:
+            same = [s for s in safe if s.view == target.view and s.activity in (target.activity,'idle')]
+            source = next((s for s in same if s.activity == target.activity), same[0] if same else None)
+            kind = 'procedural'
             native = None
-        if native is None:
-            source = next((s for s in safe if s.activity == target.activity and s.view == 'S'), None)
-            kind = 'south_view'
-            if source is not None:
+            if source is not None and not (target.activity == 'carry' and source.activity != 'carry'):
+                try:
+                    native = animate(source.native,target.activity,target.frame,target.view)
+                except ValueError:
+                    native = None
+            if native is not None and limit is not None and (native.width > limit[0] or native.height > limit[1]+2):
+                native = None
+            if native is None:
+                source = next((s for s in safe if s.activity == target.activity and s.view == 'S'), None)
+                kind = 'south_view'
+                if source is not None:
+                    native = source.native.copy()
+            if native is None:
+                source = next((s for s in safe if s.activity == 'idle' and s.view == target.view and not s.contains_basket), None)
+                kind = 'idle_icon'
+                if source is None or ICON_IDS.get(target.activity,'') not in icons:
+                    return None
                 native = source.native.copy()
-        if native is None:
-            source = next((s for s in safe if s.activity == 'idle' and s.view == target.view and not s.contains_basket), None)
-            kind = 'idle_icon'
-            if source is None or ICON_IDS.get(target.activity,'') not in icons:
-                return None
-            native = source.native.copy()
     if source is None or native is None:
         return None
     bbox=native.getchannel('A').getbbox()

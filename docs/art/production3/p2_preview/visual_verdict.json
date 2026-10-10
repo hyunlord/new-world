@@ -3,7 +3,7 @@
   "reviewer": "parent",
   "status": "pass_for_part2",
   "observed_images": [
-    ".harness/evidence/art-production3/p2/shots/baseline/t1440_F2.1920.png",
+    ".harness/evidence/art-production3/p2/shots/baseline/baseline_t1440_F2.1920.png",
     ".harness/evidence/art-production3/p2/shots/final/d2_1200_F2.1920.png"
   ],
   "observations": [
