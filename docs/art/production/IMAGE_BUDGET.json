@@ -1,7 +1,7 @@
 {
   "limit": 60,
-  "calls_started": 12,
-  "calls_completed": 12,
+  "calls_started": 14,
+  "calls_completed": 14,
   "entries": [
     {
       "call": 1,
@@ -108,6 +108,24 @@
       "attempt": 1,
       "status": "normalized",
       "time": "2026-10-10T11:43:50.513326+00:00",
+      "accepted": 0,
+      "rejected": 16
+    },
+    {
+      "call": 13,
+      "sheet": "V_b3",
+      "attempt": 1,
+      "status": "normalized",
+      "time": "2026-10-10T11:44:59.748503+00:00",
+      "accepted": 0,
+      "rejected": 16
+    },
+    {
+      "call": 14,
+      "sheet": "V_c2",
+      "attempt": 1,
+      "status": "normalized",
+      "time": "2026-10-10T11:46:00.065779+00:00",
       "accepted": 0,
       "rejected": 16
     }
