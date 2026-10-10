@@ -330,18 +330,20 @@ impl WorldRules {
     pub const fn game_v12() -> Self {
         let mut rules = Self::game_v11();
         if let Some(mut firewood) = rules.society.firewood {
-            // Part 2: autumn alone prepares three nights of winter burn; winter
+            // Part 2: autumn alone prepares winter burn (Part 5 round 2: four
+            // nights, one night short of a winter's need with the regrowth); winter
             // keeps four days of its own burn; deadwood lies under snow (one
             // unit a spot) and six branches a day fall one spot at a time; the
             // night belongs to the evening it began.
-            firewood.winter_prep_days = Some(3.0);
+            firewood.winter_prep_days = Some(4.0);
             firewood.winter_prep_in_summer = false;
             firewood.winter_base_days = Some(4.0);
             firewood.winter_regen_units_per_day = Some(6);
             firewood.winter_deadwood_cap = Some(1);
             firewood.night_season_from_evening = true;
-            // Part 3: adults leave for wood at 07:00 when tonight's burn is not in hand.
-            firewood.urgent_start_minute = Some(420);
+            // Part 3: adults leave for wood early when tonight's burn is not in
+            // hand (Part 5 round 2: 09:00 instead of the 07:00 start value).
+            firewood.urgent_start_minute = Some(540);
             rules.society.firewood = Some(firewood);
         }
         // Part 4: elders join the evening camp.
