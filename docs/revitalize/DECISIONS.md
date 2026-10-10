@@ -243,3 +243,13 @@ All597 primary mutants rerun on clean committed68bb8fff:593 killed,4 survived,0i
 ### Part6 code verification complete
 
 Full gate p6-full at0ec143c027a2570ac97f7b5f78356345f892f0cb PASS: debug/release each1806passed,0failed,0ignored(114resultgroups); bothClippy,bridge,forbiddenmath0,Godotimport,strict17/FFI14,smoke900,diffcheck allPASS. Finallegacy4 andgame64 ten-day deterministictwinsPASS. Legacy484oldfieldrows reproducePass1P5 exactly;game7744rows and11deathrecords exactly reproduce retainedR3. Finalgame median0.0008098773672545105ms/agenttick;10daydehydration0,totalstarvation11. Read-only observers remain outside measured engine time. Currentcapturedproduction source identity matches005ca150 across scripts/shaders/scenes/localization and4Rustproductioncrate source trees. Green fast-forwarded fromc438026 to0ec143c0 only after fullgate andprobes, remotels-remote verified. The final report/probe-summary publication is documentation-only; rerun the fullgate and freshrawprobes on its exact committedHEAD before the finalgreenpromotion/PR. No additional tuning orvisualfix rounds.
+
+## Pass 3
+
+- Start: 2026-10-10T20:06:32+09:00; 10-hour boundary: 2026-10-11T06:06:32+09:00.
+- PASS3_BASE_SHA: `0941e1b76ee250a017295fe923f7c0841dafaaa7` (both remote branches verified).
+- Part 0: clean DGX WIP; release build and game v8 64x10 deterministic reproduction passed before any code change. Every summary simulation metric equals p2-6_final_game after excluding timing metadata. Frozen tick-1440 fingerprints recorded in probe/p3-0_v8_repro/frozen_fingerprints.json.
+- Execution plan: (1) additive v9 plumbing and schema3 instruments, (2) hearth-only formation and owned capacity, (3) sustainable supply and strict meals, (4) beds/night/evening/children plus additive FFI, (5) at most three 10/60-day tuning rounds, (6) Mac capture under shared window lock with no renderer edits, (7) exact-head full gate, final probes, Korean report and PR510 update. Each Part commits and pushes WIP; green only fast-forwards after full gate.
+- No writes to art-owned paths, .omo/.omx, protected harness directories, or owner checkouts. No image generation. Shared-file Rust-only assertion/struct adapters require explicit ledger rows.
+- Graft unavailable on DGX (command lookup empty); bounded named-file source lookup is used. No graph claims are used as source proof.
+- Parallel native agents have disjoint write ownership; leader coordinates shared APIs and serial build/probe slots. Baseline completed before implementation authorization.

@@ -674,3 +674,11 @@ Timing ms/agent-tick: median / p10 / p90 / min / max.
 | p2-6_final_game | 0.000809877367 / 0.000724790290 / 0.000863759264 / 0.000662099180 / 0.001204102904 |
 
 Game median / original P5 = 0.857378674; / instrumented P5 = 0.669440611. T9 passes. Observer time is excluded; host load still varies. T5 and T10 remain FAIL; mutation raw kill rate remains 593/597 (99.329983%). Remote WIP and green both verified at `0ec143c027a2570ac97f7b5f78356345f892f0cb` after the full gate. This is the code verification boundary before report publication; the leader separately verifies exact publication HEAD and fresh raw probes.
+
+## Pass 3
+
+### Part 0 — frozen v8 reproduction
+
+Base `0941e1b76ee250a017295fe923f7c0841dafaaa7`, DGX release, seeds0..64 x10days, workers8, independent twins: PASS. All simulation metrics in summary.json are identical to p2-6_final_game, excluding only timing/commit metadata. Tick1440 fingerprints seeds0..4: f718457fcd90aa27,23b14e7b27051671,e968d90d40d0568e,a8aa877059579761.
+
+Same-run v8 performance ms/agent-tick (median/p10/p90/min/max): 0.0007874892241498525 / 0.0006824113740941615 / 0.0008385900837547184 / 0.0006611407105494327 / 0.0008617722934239015. This is the U11 baseline; observer costs are outside the engine timer and host-load variation remains.
