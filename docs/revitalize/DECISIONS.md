@@ -138,3 +138,42 @@ the genuine survival failure and every pushed head must be green.
 Both final native suites run with --no-fail-fast:1781 passed,1 failed,0 ignored,113 result groups each. All expected1782 tests accounted for. Only required three-day survival fails seed1:dehydration11 versus0. Seeds2/3 inside that failed function were not reached. Both Clippy checks, strict17/14, smoke900, diff check pass; forbidden math0, changed-production unwrap calls0. Fresh68 twin runs and full legacy/selected-round sample comparison pass.
 
 No gh executable: draft PR skipped. Last green remote remains c438026. To preserve unpushed implementation without violating green-push policy, export local P3–P5 commits as a verified incremental git bundle plus complete evidence and report in an external handoff archive. Download only that delivery copy to macOS; all implementation remains on DGX. This is the explicit partial-delivery end state, not a claim that all goals were achieved.
+
+## Pass 2
+
+Start:2026-10-10 16:49:46 KST. Eight-hour boundary:2026-10-11 00:49:46 KST.
+Authoritative goal:/home/hyunlord/work/revitalize-pass2-goal.txt.
+PASS2_BASE_SHA=c70b0c67e7103f42b300ccc1ed892e8143803c89.
+Pass1 P3–P5 are now secured on origin/codex/revitalize-2026-10-wip at that SHA.
+Green branch remains c43802600db209b0b32b20fbaecb5f7f8ddf8cf5 until a full green gate.
+All commits immediately push WIP, including failures; green only fast-forwards.
+Persistent handoffs copied to /Users/rexxa/work/revitalize-handoff-2026-10-10/
+and /home/hyunlord/work/revitalize-handoff-2026-10-10/; SHA256 verified.
+
+Initial game_v8 values:move_interval_ticks8,idle_pause_chance0.4,
+idle_tether_radius8; Provisioned cooldown360,food_cost3,max_mean_hunger60,
+max_mean_thirst60; housing residents4,max_shelters12,plan_interval60,
+rings2..5,required_progress240,max_builders4. Worldgen bushes8/capacity4.
+
+Execution plan and gates:
+- Part0 complete: remote safety line and persistent copies.
+- Part1 in progress: every-tick death census, display-only social tally,
+  schema2 additive metrics; measure unmodified P5 behavior before any fixes.
+- Part2 queued: exact rule-gated social bounds and need fallthrough, clock
+  offset480, new staged regressions; unchanged survival and legacy pins.
+  Generic critical preemption only if post-fix16-seed census meets5% trigger.
+- Part3 queued:64-seed10day and16-seed30day twins; at most3 permitted tuning
+  rounds; retain best by ordered targets, stretch only if every target passes.
+- Part4 queued: Mac Aqua tierA detected; fresh dedicated captureclone only.
+  Clock-based final/baseline captures, entity sidecars, V1–V6, displayed418 UI
+  harness and direct image inspection. If tierfails15min, follow B/C/D.
+- Part5 queued: separate mutation worktree, exhaustive token mutants for
+  canonical ledger contracts, per-mutant restore, strengthen survivors and
+  explicit reasons for any survivor. Never replace source-text tests wholesale.
+- Part6 queued:final full gate/probes, report, WIP push, green fast-forward
+  only with gate evidence; draft PR via authenticated Mac gh then DGX.
+
+Independent agents prepare code in owned paths or ignored staged copies;
+leader integrates, runs heavyweight checks serially, commits and verifies
+remote heads. Max6 active children. No unavailable Graft graph is used as
+source evidence: DGX has no graft/rg, so bounded grep/source reads are used.
