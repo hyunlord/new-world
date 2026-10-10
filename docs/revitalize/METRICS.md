@@ -883,3 +883,79 @@ Producer `6db6db6a315841b0e40d52e7c66811f0009a13e2`; all four fresh cohorts exit
 Legacy4seeds exactly reproduce Pass1 and Pass2 (484rawrows;16056/35200scalar comparisons); v8game64x10 exactly reproduces Pass2 (7744rows/281568comparisons), with zero differences. Current producer legacy pin1/1PASS. [v8 comparison](probe/p3-7_final_v8/comparison.json); [legacy comparison](probe/p3-7_final_legacy/comparison-p1_legacy.json). Final v9 zero deaths in both cohorts; day60everyseed42residents, same-tickownedoverflow0, finalstockmedian116.5/min12.
 
 Final performance ms/agent-tick (median,p10,p90,min,max):10day (0.0007298523,0.0006297925,0.0011856014,0.0006074260,0.0017314190);60day (0.0008718874,0.0007079225,0.0012058925,0.0006674926,0.0013499535). U11 applies to medians, limit0.0011812338; some individual timing observations exceed it and are retained. This is simulation timing, not renderer FPS.
+
+## Pass 4 baseline
+
+Produced on the Mac (macOS aarch64) from a clean worktree at `e136ba8a` (Pass 3 simulation code, `a8611e07` plus tooling only).
+
+- `p4-0_v9_repro`: `--scene game_v9 --seeds 0..64 --days 10 --check-determinism --clock-samples 02:00,12:00,19:30` → DETERMINISM PASS; `tools/revitalize/compare_summaries.py` against `p3-7_final_10day`: 4,046 shared simulation values, 0 differences (timing excluded). The first run without `--clock-samples` matched every non-rhythm value too; Pass 3's 10-day run had used clock samples, so the stored label is the clock-sampled rerun.
+- `p4-0_v8_repro`: `--scene game --seeds 0..64 --days 10 --check-determinism` (the stored `p3-7_final_v8` used the same seeds and days) → DETERMINISM PASS; 4,081 shared values, 0 differences.
+- Pass 3 summaries were produced on the DGX (Linux aarch64); the Mac reproduces them bit for bit. No cross-platform determinism defect.
+- `p4-0_v9_60day_seeds7-9`: `--scene game_v9 --seeds 7..10 --days 60 --clock-samples 02:00,12:00,19:30` (half-open 7..10 adds seed 9 to the requested 7 and 8).
+
+Seed 7 and seed 8 trajectories (elapsed-day checkpoints; harvest and meals are per-day differences; stock is the stockpile; carried is food in members' inventories; food tiles is the food on the ground):
+
+| Day | s7 alive | s7 births | s7 stock | s7 harvest/d | s7 meals/d | s7 carried | s7 food tiles | s8 alive | s8 births | s8 stock | s8 harvest/d | s8 meals/d | s8 carried | s8 food tiles |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 25 | 1 | 33 | 93 | 46 | 4 | 36 | 24 | 0 | 1 | 56 | 48 | 7 | 28 |
+| 2 | 27 | 3 | 54 | 108 | 59 | 12 | 28 | 24 | 0 | 16 | 71 | 59 | 4 | 28 |
+| 3 | 29 | 5 | 86 | 111 | 60 | 11 | 27 | 24 | 0 | 0 | 35 | 45 | 10 | 28 |
+| 4 | 31 | 7 | 107 | 104 | 66 | 8 | 32 | 24 | 0 | 19 | 82 | 73 | 0 | 28 |
+| 5 | 33 | 9 | 130 | 112 | 66 | 11 | 28 | 24 | 0 | 4 | 34 | 49 | 0 | 28 |
+| 6 | 35 | 11 | 145 | 108 | 74 | 10 | 30 | 24 | 0 | 24 | 83 | 63 | 0 | 28 |
+| 7 | 37 | 13 | 157 | 107 | 77 | 8 | 31 | 24 | 0 | 0 | 35 | 57 | 2 | 28 |
+| 8 | 39 | 15 | 169 | 113 | 82 | 7 | 28 | 24 | 0 | 28 | 89 | 56 | 7 | 28 |
+| 9 | 41 | 17 | 168 | 109 | 86 | 11 | 28 | 24 | 0 | 6 | 34 | 63 | 0 | 28 |
+| 10 | 42 | 18 | 178 | 110 | 93 | 8 | 28 | 24 | 0 | 13 | 64 | 53 | 4 | 28 |
+| 11 | 42 | 18 | 188 | 107 | 94 | 11 | 27 | 24 | 0 | 5 | 45 | 54 | 3 | 28 |
+| 12 | 42 | 18 | 202 | 108 | 97 | 8 | 32 | 24 | 0 | 7 | 59 | 60 | 0 | 28 |
+| 13 | 42 | 18 | 222 | 118 | 95 | 11 | 26 | 24 | 0 | 3 | 48 | 52 | 0 | 28 |
+| 14 | 42 | 18 | 228 | 111 | 105 | 11 | 28 | 24 | 0 | 26 | 96 | 69 | 4 | 28 |
+| 15 | 42 | 18 | 240 | 109 | 98 | 10 | 28 | 24 | 0 | 12 | 35 | 53 | 0 | 28 |
+| 16 | 42 | 18 | 245 | 108 | 104 | 9 | 28 | 24 | 0 | 1 | 38 | 49 | 0 | 28 |
+| 17 | 42 | 18 | 253 | 109 | 99 | 11 | 28 | 24 | 0 | 10 | 81 | 68 | 4 | 28 |
+| 18 | 42 | 18 | 259 | 105 | 99 | 11 | 28 | 24 | 0 | 3 | 36 | 47 | 0 | 28 |
+| 19 | 42 | 18 | 262 | 100 | 104 | 4 | 35 | 24 | 0 | 0 | 67 | 63 | 7 | 28 |
+| 20 | 42 | 18 | 272 | 110 | 99 | 5 | 32 | 24 | 0 | 0 | 52 | 50 | 9 | 28 |
+| 21 | 42 | 18 | 275 | 111 | 102 | 11 | 28 | 24 | 0 | 0 | 56 | 58 | 7 | 28 |
+| 22 | 42 | 18 | 289 | 114 | 100 | 11 | 26 | 24 | 0 | 6 | 67 | 68 | 0 | 28 |
+| 23 | 42 | 18 | 299 | 109 | 99 | 11 | 28 | 24 | 0 | 10 | 61 | 57 | 0 | 28 |
+| 24 | 42 | 18 | 310 | 114 | 103 | 11 | 27 | 24 | 0 | 4 | 51 | 57 | 0 | 28 |
+| 25 | 42 | 18 | 323 | 107 | 99 | 6 | 32 | 24 | 0 | 0 | 57 | 57 | 4 | 28 |
+| 26 | 42 | 18 | 328 | 113 | 102 | 12 | 28 | 24 | 0 | 17 | 82 | 61 | 8 | 28 |
+| 27 | 42 | 18 | 335 | 108 | 102 | 11 | 28 | 24 | 0 | 0 | 35 | 58 | 2 | 28 |
+| 28 | 42 | 18 | 352 | 113 | 97 | 10 | 28 | 24 | 0 | 22 | 75 | 55 | 0 | 28 |
+| 29 | 42 | 18 | 354 | 108 | 105 | 11 | 28 | 24 | 0 | 0 | 35 | 57 | 0 | 28 |
+| 30 | 42 | 18 | 364 | 108 | 98 | 11 | 28 | 24 | 0 | 5 | 51 | 46 | 0 | 28 |
+| 31 | 42 | 18 | 377 | 116 | 103 | 11 | 25 | 24 | 0 | 15 | 82 | 72 | 0 | 28 |
+| 32 | 42 | 18 | 386 | 105 | 101 | 6 | 32 | 24 | 0 | 4 | 35 | 46 | 0 | 28 |
+| 33 | 42 | 18 | 396 | 112 | 101 | 7 | 28 | 25 | 1 | 19 | 100 | 67 | 8 | 28 |
+| 34 | 42 | 18 | 401 | 109 | 100 | 11 | 28 | 25 | 1 | 0 | 34 | 55 | 6 | 28 |
+| 35 | 42 | 18 | 415 | 113 | 99 | 11 | 28 | 25 | 1 | 13 | 74 | 63 | 4 | 28 |
+| 36 | 42 | 18 | 424 | 112 | 103 | 11 | 28 | 25 | 1 | 0 | 36 | 50 | 3 | 28 |
+| 37 | 42 | 18 | 433 | 110 | 100 | 12 | 28 | 25 | 1 | 14 | 81 | 70 | 0 | 28 |
+| 38 | 42 | 18 | 448 | 112 | 99 | 10 | 28 | 25 | 1 | 0 | 44 | 43 | 15 | 20 |
+| 39 | 42 | 18 | 456 | 113 | 104 | 11 | 27 | 25 | 1 | 18 | 91 | 80 | 8 | 28 |
+| 40 | 42 | 18 | 469 | 110 | 97 | 11 | 28 | 25 | 1 | 0 | 35 | 54 | 7 | 28 |
+| 41 | 42 | 18 | 477 | 112 | 103 | 12 | 28 | 25 | 1 | 1 | 64 | 63 | 7 | 28 |
+| 42 | 42 | 18 | 482 | 106 | 102 | 11 | 28 | 25 | 1 | 5 | 65 | 60 | 8 | 28 |
+| 43 | 42 | 18 | 495 | 112 | 99 | 11 | 28 | 25 | 1 | 5 | 39 | 47 | 0 | 28 |
+| 44 | 42 | 18 | 502 | 103 | 103 | 4 | 35 | 25 | 1 | 8 | 77 | 74 | 0 | 28 |
+| 45 | 42 | 18 | 515 | 117 | 98 | 10 | 28 | 25 | 1 | 0 | 53 | 57 | 4 | 28 |
+| 46 | 42 | 18 | 522 | 111 | 103 | 11 | 28 | 25 | 1 | 9 | 75 | 62 | 8 | 28 |
+| 47 | 42 | 18 | 534 | 112 | 101 | 10 | 28 | 25 | 1 | 11 | 51 | 57 | 0 | 28 |
+| 48 | 42 | 18 | 549 | 114 | 98 | 11 | 27 | 26 | 2 | 23 | 80 | 58 | 0 | 28 |
+| 49 | 42 | 18 | 560 | 113 | 102 | 11 | 28 | 28 | 4 | 33 | 96 | 66 | 0 | 28 |
+| 50 | 42 | 18 | 569 | 104 | 101 | 5 | 32 | 30 | 6 | 35 | 93 | 61 | 10 | 27 |
+| 51 | 42 | 18 | 574 | 114 | 102 | 12 | 28 | 32 | 8 | 48 | 90 | 67 | 0 | 27 |
+| 52 | 42 | 18 | 585 | 110 | 101 | 10 | 28 | 34 | 10 | 51 | 97 | 71 | 3 | 28 |
+| 53 | 42 | 18 | 601 | 113 | 96 | 11 | 28 | 36 | 12 | 55 | 90 | 69 | 0 | 28 |
+| 54 | 42 | 18 | 603 | 106 | 104 | 11 | 28 | 38 | 14 | 51 | 99 | 83 | 0 | 28 |
+| 55 | 42 | 18 | 613 | 110 | 100 | 11 | 28 | 40 | 16 | 37 | 96 | 82 | 8 | 28 |
+| 56 | 42 | 18 | 623 | 113 | 105 | 9 | 28 | 41 | 17 | 49 | 100 | 86 | 0 | 28 |
+| 57 | 42 | 18 | 630 | 107 | 99 | 10 | 28 | 42 | 18 | 44 | 100 | 95 | 0 | 28 |
+| 58 | 42 | 18 | 645 | 110 | 100 | 5 | 30 | 42 | 18 | 49 | 97 | 92 | 0 | 28 |
+| 59 | 42 | 18 | 653 | 113 | 102 | 8 | 28 | 42 | 18 | 42 | 99 | 103 | 3 | 28 |
+| 60 | 42 | 18 | 659 | 108 | 102 | 8 | 28 | 42 | 18 | 47 | 98 | 96 | 0 | 28 |
+
+Seed 8 stays at the 24 founders with zero births until day 45 while its bushes keep about 28 of 40 units on the ground; seed 7 reaches 42 by day 24 and its stock climbs to 659 by day 60. This reproduces section 3.2.

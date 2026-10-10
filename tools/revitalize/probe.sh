@@ -50,6 +50,6 @@ check_memory
 export WORLDSIM_GIT_SHA
 WORLDSIM_GIT_SHA=$(git rev-parse HEAD)
 mkdir -p "$out"
-rust/target/release/worldsim_probe "${probe_args[@]}" "${workers_override[@]}" --out "$out"
+rust/target/release/worldsim_probe "${probe_args[@]}" ${workers_override[@]+"${workers_override[@]}"} --out "$out"
 mkdir -p "docs/revitalize/probe/$label"
 cp "$out/summary.json" "$out/summary.md" "docs/revitalize/probe/$label/"
