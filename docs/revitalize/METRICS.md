@@ -1029,3 +1029,62 @@ W targets (`p4-4_targets/w_targets.md`; W11 against same-host v9 of the same dur
 | W11 | PASS | 10-day 0.00100 (limit 0.00117); 120-day 0.00121 (limit 0.00132) |
 
 The store fills through opportunistic gathering up to the 2 × target hoard cap, so the Forage arm is silent most days (trips only early in summer). Elders (share 0.26) and children are idle at noon by design, and haulers walking home are in the `Idle` state, so noon idle counts them. The probes ran while the gate's builds competed for CPU, so timings are pessimistic.
+
+## Pass 4 Part 5 — tuning
+
+Round 0 is the Part 4 configuration (`p4-4_*`): forage 06:00–18:00, haul 4, 1 forager per bush, base 1.5 days, hoard cap 2.0, elder 46 days; 12 bushes, capacity 4, utilization 0.81, reserve 0.5, seasons 7 days [750, 1250, 1000, 500], lifespan 58 ± 8 days.
+
+### Round 1 (`p4-5_round1_*`)
+
+Changes: forage window start 360 → 480 (08:00, so the 08:00 day checkpoint is not taken mid-forage), haul threshold 4 → 6, max foragers per bush 1 → 2, base days 1.5 → 2.0, hoard cap 2.0 → 1.5, elder age 46 → 50 days. Everything else as round 0.
+
+| Target | Round 0 | Round 1 |
+|---|---|---|
+| W5 stagnation (max run, days) | 1 | 6 (seed 22, spring after winter: stockpile 6–21) |
+| W6 elder share day 120 (median) | 0.262 | 0.238 |
+| W7 autumn-closing stock (median / required) | 586.5 / 150.5 | 572 / 150.5 |
+| W8 noon idle (median) | 0.809 | 0.821 |
+| W8 forage trips/day summer+autumn (median) | 0 | 0 (summer 101, autumn 0) |
+| W9 evening near hearth (median / min) | 0.571 / 0.273 | 0.530 / 0.257 |
+| W10 day-10 home distance (median / max) | 7.012 / 11.02 | 5.25 / 10.88 (seed 7) |
+| W11 10-day / 120-day ms per agent-tick | 0.00100 / 0.00121 | 0.00100 / 0.00130 |
+
+W1–W4 and W6–W7 pass in both rounds. Diagnosis from the raw summer samples (all 32 seeds): food on the ground is 47 units at 06:00 after the night, 32 at 08:00 and 0 from 10:00 to 20:00 — every unit of daytime regrowth is taken as soon as it appears, so after the 08:00–10:00 rush 34–35 of 42 residents are idle with nothing to forage while stock in hand is still below target (noon summer: in hand 310.5 vs target 368.6). Noon idleness is bounded by supply, not by labour. Autumn forage trips are zero because the summer surplus already lifts the store past the autumn target. The low-evening seeds (15, 28) are summer haulers still walking home from distant bushes at 19:30 after an 18:00 window end.
+
+### Round 2 (`p4-5_round2_*`)
+
+Changes from round 1: forage window end 1080 → 960 (16:00), base days 2.0 → 2.5. Hypothesis: summer haulers walking home after 18:00 lower the 19:30 hearth share, and a bigger store carries seed 22 through winter.
+
+| Target | Round 1 | Round 2 |
+|---|---|---|
+| W5 stagnation (max run) | 6 | 6 |
+| W6 births − deaths over days 30–120 (min) | −3 | −6 (FAIL); alive band min 34 |
+| W7 autumn-closing stock (median / min) | 572 / 248 | 634.5 / 229 |
+| W8 noon idle / forage trips summer+autumn | 0.821 / 0 | 0.833 / 0 (summer 80) |
+| W9 evening near hearth (median / min) | 0.530 / 0.257 | 0.564 / 0.257 |
+| W10 home distance day 10 (median / max) | 5.25 / 10.88 | 5.27 / 11.12 |
+| W11 10-day / 120-day | 0.00100 / 0.00130 | 0.00100 / 0.00120 |
+
+The evening hypothesis was wrong: in the lowest seeds (15, 28) at 19:30 the whole membership's mean home distance is 6.2–7.4 tiles with only 3–4 haulers, so the low share is not haulers. Best remaining hypothesis: with seasons, bushes are empty most of the day; every newly regrown unit makes every hungry resident (global `NeedAvailability`) walk toward it, so in seeds with distant bushes hungry residents are strung out across the map in the evening while the store, used only as the critical-hunger relief at home, stays full. No permitted knob changes where residents eat. Round 2 is worse than round 0 on W5 and W6, so round 3 returns to round 0 and changes one knob.
+
+### Round 3 (`p4-5_round3_*`) — last round
+
+Changes from round 0 only: forage window start 360 → 480 (all other knobs back to round 0: haul 4, 1 forager per bush, base 1.5, hoard cap 2.0, elder 46 days, end 1080).
+
+| Target | Round 0 | Round 1 | Round 2 | Round 3 |
+|---|---|---|---|---|
+| W1–W4 | PASS | PASS | PASS | PASS |
+| W5 stagnation max run (days) | 1 PASS | 6 FAIL | 6 FAIL | 8 FAIL (seed 22) |
+| W6 replacement min / alive band min | −3 / 37 PASS | −3 / 37 PASS | −6 / 34 FAIL | −3 / 35 PASS |
+| W6 child / elder share day 120 | 0.095 / 0.262 | 0.095 / 0.238 | 0.095 / 0.238 | 0.095 / 0.262 |
+| W7 autumn stock median vs required | 586.5 vs 150.5 PASS | 572 PASS | 634.5 PASS | 562 PASS |
+| W8 noon idle median | 0.809 FAIL | 0.821 FAIL | 0.833 FAIL | 0.813 FAIL |
+| W8 forage trips/day summer+autumn median | 0 FAIL | 0 FAIL | 0 FAIL | 0 FAIL |
+| W9 evening near hearth median / min | 0.571 / 0.273 FAIL | 0.530 / 0.257 FAIL | 0.564 / 0.257 FAIL | 0.571 / 0.281 FAIL |
+| W10 home distance day 10 median / max | 7.012 / 11.02 FAIL | 5.25 / 10.88 FAIL | 5.27 / 11.12 FAIL | 5.06 / 10.93 FAIL |
+| W10 T6a 10 / 120, social 10 / 120 | PASS | PASS | PASS | PASS |
+| W11 10-day / 120-day | PASS | PASS | PASS | PASS |
+
+Seed 22's stockpile in the spring after the first winter (days 28–36): round 0 `46, 38, 18, 31, 14, 23, 16, 8, 24`; round 3 `38, 23, 7, 0, 2, 1, 0, 5, 31`. The seed is marginal in every configuration; round 0 keeps births often enough to stay inside the 4-day limit.
+
+**Kept configuration: round 0 (the Part 4 `game_v10()`, commit `e72d7e28`).** In table priority order it is the only configuration that passes W1–W7; it fails W8, W9 and W10 (median 7.012 just over 7.0 and max 11.02), all three after three rounds (three-strikes rule).

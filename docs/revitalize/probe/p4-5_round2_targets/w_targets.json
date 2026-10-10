@@ -1,0 +1,422 @@
+{
+  "baseline_ms": 0.0007783369677115662,
+  "inputs": {
+    "round10": ".harness/evidence/revitalize/probe/p4-5_round2_10day",
+    "round120": ".harness/evidence/revitalize/probe/p4-5_round2_120day"
+  },
+  "long_baseline_ms": 0.0008826226456690548,
+  "passed": false,
+  "schema_version": 1,
+  "targets": {
+    "W1": {
+      "clauses": {
+        "legacy_pin": {
+          "observed": true,
+          "passed": true,
+          "requirement": "legacy_pin verified externally"
+        },
+        "twins_10": {
+          "observed": 64,
+          "passed": true,
+          "requirement": "64 seeds, determinism checked"
+        },
+        "twins_120": {
+          "observed": 32,
+          "passed": true,
+          "requirement": "32 seeds, determinism checked"
+        },
+        "v8_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v8_repro verified externally"
+        },
+        "v9_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v9_repro verified externally"
+        }
+      },
+      "passed": true
+    },
+    "W10": {
+      "clauses": {
+        "home_distance": {
+          "observed": {
+            "max": 11.119047619047619,
+            "median": 5.273809523809524,
+            "min": 2.380952380952381,
+            "n": 64,
+            "p10": 3.585714285714286,
+            "p90": 7.376190476190477
+          },
+          "passed": false,
+          "requirement": "day-10 median <= 7.0, every seed <= 10"
+        },
+        "social_10": {
+          "observed": {
+            "max": 0.7205052505699017,
+            "median": 0.6457640420045592,
+            "min": 0.5620538884113756,
+            "n": 64,
+            "p10": 0.6098882618931948,
+            "p90": 0.6738537966623439
+          },
+          "passed": true,
+          "requirement": "median >= 0.40 and > 0 in every seed"
+        },
+        "social_120": {
+          "observed": {
+            "max": 0.8596695965408148,
+            "median": 0.8288936905968275,
+            "min": 0.7937439300744578,
+            "n": 32,
+            "p10": 0.8018894771278392,
+            "p90": 0.8486407180723375
+          },
+          "passed": true,
+          "requirement": "median >= 0.40 and > 0 in every seed"
+        },
+        "t6a_10": {
+          "observed": {
+            "max": 0.002238249191743347,
+            "median": 0.0007429420505200594,
+            "min": 0.0,
+            "p10": 0.00024764735017335313,
+            "p90": 0.0014858841010401188
+          },
+          "passed": true,
+          "requirement": "cumulative actionable idle-breach share median <= 1%"
+        },
+        "t6a_120": {
+          "observed": {
+            "max": 0.010823021679759938,
+            "median": 0.00861180556522696,
+            "min": 0.006507848195168007,
+            "p10": 0.007164743224943397,
+            "p90": 0.009807860654549935
+          },
+          "passed": true,
+          "requirement": "cumulative actionable idle-breach share median <= 1%"
+        }
+      },
+      "passed": false
+    },
+    "W11": {
+      "clauses": {
+        "day10": {
+          "observed": {
+            "limit": 0.0011675054515673492,
+            "max": 0.0010815967234284625,
+            "median": 0.0009614779336962399,
+            "min": 0.0009105460675743542,
+            "n": 64,
+            "p10": 0.0009277931175803756,
+            "p90": 0.001007898896321484
+          },
+          "passed": true,
+          "requirement": "median ms/agent-tick <= 1.5 x same-host Pass 3 game_v9"
+        },
+        "day120": {
+          "observed": {
+            "limit": 0.0013239339685035822,
+            "max": 0.0014816488826367943,
+            "median": 0.0012053934275281016,
+            "min": 0.0011062691246008034,
+            "n": 32,
+            "p10": 0.0011169367528761605,
+            "p90": 0.0014221078226841532
+          },
+          "passed": true,
+          "requirement": "median ms/agent-tick <= 1.5 x same-host Pass 3 game_v9"
+        }
+      },
+      "passed": true
+    },
+    "W2": {
+      "clauses": {
+        "day_10": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 64,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "median 0, max <= 1"
+        },
+        "day_120": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "total median 0, max <= 2"
+        }
+      },
+      "passed": true
+    },
+    "W3": {
+      "clauses": {
+        "day_10": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 64,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "zero in every seed"
+        },
+        "day_120": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "total median 0, max <= 3"
+        }
+      },
+      "passed": true
+    },
+    "W4": {
+      "clauses": {
+        "every_day": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 1.0,
+            "n": 4480,
+            "p10": 1.0,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "one settlement at every day sample from day 1"
+        }
+      },
+      "passed": true
+    },
+    "W5": {
+      "clauses": {
+        "alive_day10": {
+          "observed": {
+            "max": 42.0,
+            "median": 42.0,
+            "min": 42.0,
+            "n": 64,
+            "p10": 42.0,
+            "p90": 42.0
+          },
+          "passed": true,
+          "requirement": "day-10 alive >= 30 in every seed"
+        },
+        "birth_by_day4": {
+          "observed": {
+            "max": 7.0,
+            "median": 7.0,
+            "min": 7.0,
+            "n": 64,
+            "p10": 7.0,
+            "p90": 7.0
+          },
+          "passed": true,
+          "requirement": "births >= 1 by the day-4 checkpoint in every seed (10-day round)"
+        },
+        "stagnation": {
+          "observed": {
+            "max": 6.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": false,
+          "requirement": "longest run of days 2..N with members <= sustainable-3 and no birth <= 4 in every seed"
+        }
+      },
+      "passed": false
+    },
+    "W6": {
+      "clauses": {
+        "alive_band": {
+          "observed": {
+            "max": 42.0,
+            "median": 42.0,
+            "min": 34.0,
+            "n": 2912,
+            "p10": 41.0,
+            "p90": 42.0
+          },
+          "passed": true,
+          "requirement": "every day sample from day 30 has alive in [32, 44]"
+        },
+        "child_share": {
+          "observed": {
+            "max": 0.1951219512195122,
+            "median": 0.09523809523809523,
+            "min": 0.023809523809523808,
+            "n": 32,
+            "p10": 0.047619047619047616,
+            "p90": 0.17032520325203254
+          },
+          "passed": true,
+          "requirement": "day-120 child share median in [0.03, 0.20]"
+        },
+        "elder_share": {
+          "observed": {
+            "max": 0.3333333333333333,
+            "median": 0.23809523809523808,
+            "min": 0.12195121951219512,
+            "n": 32,
+            "p10": 0.19047619047619047,
+            "p90": 0.31631823461091757
+          },
+          "passed": true,
+          "requirement": "day-120 elder share median in [0.08, 0.35]"
+        },
+        "old_age_by_day30": {
+          "observed": {
+            "max": 13.0,
+            "median": 9.0,
+            "min": 5.0,
+            "n": 32,
+            "p10": 6.0,
+            "p90": 12.0
+          },
+          "passed": true,
+          "requirement": ">= 1 old-age death by day 30 in every seed"
+        },
+        "replacement": {
+          "observed": {
+            "max": 1.0,
+            "median": 0.0,
+            "min": -6.0,
+            "n": 32,
+            "p10": -1.0,
+            "p90": 0.0
+          },
+          "passed": false,
+          "requirement": "births - deaths over days 30..120 >= -3 in every seed"
+        }
+      },
+      "passed": false
+    },
+    "W7": {
+      "clauses": {
+        "autumn_store": {
+          "observed": {
+            "paired_margin": {
+              "max": 534.7199915885925,
+              "median": 488.47199234962466,
+              "min": 78.47199234962463,
+              "n": 128,
+              "p10": 379.0455918169022,
+              "p90": 516.8327917027473
+            },
+            "required": {
+              "max": 161.2800084114075,
+              "median": 150.52800765037537,
+              "min": 118.27200536727906,
+              "n": 128,
+              "p10": 139.77600688934328,
+              "p90": 161.2800084114075
+            },
+            "stock": {
+              "max": 696.0,
+              "median": 634.5,
+              "min": 229.0,
+              "n": 128,
+              "p10": 537.1,
+              "p90": 671.6
+            }
+          },
+          "passed": true,
+          "requirement": "median autumn-closing stock >= median 0.8 x days_per_season x max(0, need - winter supply)"
+        },
+        "hoard_cap": {
+          "observed": {
+            "max": -652.8000428080559,
+            "median": -682.8000428080559,
+            "min": -981.8000428080559,
+            "n": 32,
+            "p10": -791.3000428080559,
+            "p90": -667.4000428080559
+          },
+          "passed": true,
+          "requirement": "max stock - 3 x max target <= 0 in every seed"
+        }
+      },
+      "passed": true
+    },
+    "W8": {
+      "clauses": {
+        "forage_trips": {
+          "observed": {
+            "max": 108.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 1856,
+            "p10": 0.0,
+            "p90": 90.0
+          },
+          "passed": false,
+          "requirement": "forage trips per day median >= 10 in summer and autumn (all days without seasons)"
+        },
+        "noon_idle": {
+          "observed": {
+            "max": 0.9285714285714286,
+            "median": 0.8333333333333334,
+            "min": 0.7142857142857143,
+            "n": 32,
+            "p10": 0.7752777777777778,
+            "p90": 0.8809523809523809
+          },
+          "passed": false,
+          "requirement": "noon idle share median <= 0.45 over spring-autumn days (all days without seasons)"
+        }
+      },
+      "passed": false
+    },
+    "W9": {
+      "clauses": {
+        "evening_near_hearth": {
+          "observed": {
+            "max": 0.8333333333333334,
+            "median": 0.5638586956521738,
+            "min": 0.2571428571428571,
+            "n": 32,
+            "p10": 0.35944055944055947,
+            "p90": 0.7985714285714286
+          },
+          "passed": false,
+          "requirement": "median >= 0.50 and every seed >= 0.30"
+        },
+        "night_in_shelter": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 0.9047619047619048,
+            "n": 32,
+            "p10": 0.9523809523809523,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "median >= 0.70"
+        }
+      },
+      "passed": false
+    }
+  }
+}
