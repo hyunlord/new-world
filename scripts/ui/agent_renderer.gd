@@ -15,11 +15,11 @@ const COMBAT_CUE_TINT := Color(1.0, 0.3, 0.3, 1.0)
 const SIM_TICK_DURATION: float = 1.0 / 30.0
 const _SEEN_RECALL_MAX := 512
 const _SEEN_COMBAT_MAX := 512
-const LOOKS: Array[String] = ["direction_09_villager_gatherer", "direction_10_villager_builder", "direction_11_villager_elder"]
 var world_sim: WorldSimNode
 var _objects: Node2D
 var _shadow_layer: Node2D
 var _sprites: Dictionary = {}
+var _activity_icons: Dictionary = {}
 var _shadows: Dictionary = {}
 var _cues: Dictionary = {}
 var _sprite_pool: Array[Sprite2D] = []
@@ -61,6 +61,8 @@ func _process(delta: float) -> void:
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 	var states: PackedByteArray = snap.get("states", PackedByteArray())
+	var life_stages: Variant = snap.get("life_stages", PackedByteArray())
+	var elders_present: bool = life_stages.has(2)
 	var n: int = ids.size()
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
@@ -94,7 +96,9 @@ func _process(delta: float) -> void:
 		var ipos: Vector2 = prev_pos.lerp(curr_pos, lerp_t)
 		var sprite: Sprite2D = _ensure_agent(agent_id)
 		var look: Dictionary = ArtHashScript.look(agent_id)
-		var child: bool = snap.has("life_stages") and i < snap["life_stages"].size() and int(snap["life_stages"][i]) == 1
+		var life_stage: int = int(life_stages[i]) if i < life_stages.size() else 0
+		look = Activity.elder_look(look, agent_id, life_stage, elders_present)
+		var child: bool = life_stage == 1
 		var previous_position: Vector2 = _render_positions.get(agent_id, ipos)
 		var movement: Vector2 = ipos - previous_position
 		_render_positions[agent_id] = ipos
@@ -108,15 +112,19 @@ func _process(delta: float) -> void:
 		if activity == "talk":
 			facing = Activity.facing(_talk_delta(i, xs, ys), facing)
 		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
-		var sprite_id: String = _animation_frame(body, activity, facing, float(look["phase"]), agent_id)
-		if str(sprite.get_meta("sprite_id", "")) != sprite_id:
+		var choice: Dictionary = frame_choice(body, activity, facing, float(look["phase"]))
+		var sprite_id: String = str(choice.get("sprite_id", ""))
+		if sprite_id.is_empty():
+			sprite.texture = null
+			sprite.set_meta("sprite_id", "")
+		elif str(sprite.get_meta("sprite_id", "")) != sprite_id:
 			SpriteLibrary.apply(sprite, sprite_id)
 		SpriteLibrary.apply_variant(sprite, look)
 		sprite.position = ipos.round()
 		sprite.flip_h = facing == "W"
 		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
 		sprite.set_meta("sheltered_sleep", sheltered_sleep)
-		sprite.visible = _capture_visible and not sheltered_sleep
+		sprite.visible = _capture_visible and not sheltered_sleep and not sprite_id.is_empty()
 		sprite.set_meta("entity_bits", int(ids[i]))
 		sprite.set_meta("body", body)
 		sprite.set_meta("variant", {"skin": look["skin"], "hair": look["hair"], "clothing": look["clothing"]})
@@ -124,6 +132,9 @@ func _process(delta: float) -> void:
 		sprite.set_meta("tile_y", int(ys[i]))
 		sprite.set_meta("activity", activity)
 		sprite.set_meta("facing", facing)
+		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
+		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
+		_update_activity_icon(agent_id, sprite, choice)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
@@ -180,6 +191,9 @@ func _retire_missing(live: Dictionary) -> void:
 		sprite.visible = false
 		_sprite_pool.append(sprite)
 		_sprites.erase(agent_id)
+		if _activity_icons.has(agent_id):
+			(_activity_icons[agent_id] as Sprite2D).queue_free()
+			_activity_icons.erase(agent_id)
 		_render_positions.erase(agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.visible = false
@@ -326,23 +340,30 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
 	return h
 
-func _animation_frame(body: String, activity: String, facing: String, phase: float, agent_id: int) -> String:
+func frame_choice(body: String, activity: String, facing: String, phase: float) -> Dictionary:
 	if _frame_groups.is_empty():
-		var entries: Dictionary = SpriteLibrary.entries()
-		var names: Array = entries.keys()
-		names.sort()
-		for id: String in names:
-			var entry: Dictionary = entries[id]
-			var key: String = str(entry.get("body", "")) + "/" + str(entry.get("activity", "")) + "/" + str(entry.get("view", ""))
-			if not _frame_groups.has(key):
-				_frame_groups[key] = []
-			_frame_groups[key].append(id)
-	var view: String = "E" if facing == "W" else facing
-	for key: String in [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/" + activity + "/E", body + "/idle/" + view, body + "/idle/S"]:
-		if _frame_groups.has(key):
-			var frames: Array = _frame_groups[key]
-			return str(frames[Activity.frame_index(activity, _animation_time, phase, frames.size())])
-	return "direction_12_villager_child" if body == "child" else LOOKS[posmod(ArtHashScript.mix(agent_id), LOOKS.size())]
+		_frame_groups = Activity.build_frame_groups(SpriteLibrary.entries())
+	return Activity.choose_frame(_frame_groups, body, activity, facing, _animation_time, phase)
+
+func _animation_frame(body: String, activity: String, facing: String, phase: float, _agent_id: int) -> String:
+	return str(frame_choice(body, activity, facing, phase).get("sprite_id", ""))
+
+func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary) -> void:
+	var camera: Camera2D = get_node_or_null("../Camera2D") as Camera2D
+	var zoom: float = camera.zoom.x if camera != null else 1.0
+	var show_icon: bool = Activity.show_activity_icon(choice, zoom) and sprite.visible
+	if not show_icon:
+		if _activity_icons.has(agent_id):
+			(_activity_icons[agent_id] as Sprite2D).visible = false
+		return
+	if not _activity_icons.has(agent_id):
+		var icon: Sprite2D = Sprite2D.new()
+		sprite.add_child(icon)
+		icon.set_meta("art_kind", "activity_icon")
+		icon.set_meta("art_id", agent_id)
+		_activity_icons[agent_id] = icon
+	var icon: Sprite2D = _activity_icons[agent_id]
+	Activity.apply_activity_icon(sprite, icon, choice, zoom)
 
 func _activity_context() -> Dictionary:
 	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "water": {}}

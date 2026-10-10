@@ -41,3 +41,71 @@ static func facing(delta: Vector2, previous: String) -> String:
 static func frame_index(activity: String, seconds: float, phase: float, count: int) -> int:
 	var fps: float = 8.0 if activity in ["walk", "carry", "run"] else (1.5 if activity == "idle" else 4.0)
 	return posmod(floori((seconds + phase) * fps), maxi(count, 1))
+
+static func elder_look(base: Dictionary, agent_id: int, life_stage: int, elders_present: bool) -> Dictionary:
+	var look: Dictionary = base.duplicate()
+	if life_stage == 2:
+		look["hair"] = 3 + posmod(ArtHash.mix(agent_id), 2)
+	elif elders_present and life_stage != 1:
+		look["hair"] = posmod(int(look["hair"]), 3)
+	return look
+
+static func build_frame_groups(entries: Dictionary) -> Dictionary:
+	var groups: Dictionary = {}
+	var names: Array = entries.keys()
+	names.sort()
+	for id: String in names:
+		var entry: Dictionary = entries[id]
+		if not bool(entry.get("drawable", true)) or str(entry.get("qa_status", "")) not in ["accepted", "derived", "procedural", "fallback"]:
+			continue
+		var body: String = str(entry.get("body", ""))
+		if body not in ["adult_a", "adult_b", "child"]:
+			continue
+		var key: String = body + "/" + str(entry.get("activity", "")) + "/" + str(entry.get("view", ""))
+		if not groups.has(key):
+			groups[key] = []
+		var frame: Dictionary = entry.duplicate()
+		frame["sprite_id"] = id
+		groups[key].append(frame)
+	for frames: Array in groups.values():
+		frames.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("frame", 0)) < int(b.get("frame", 0)))
+	return groups
+
+static func activity_icon(activity: String) -> String:
+	return str({"walk": "U1_01", "carry": "U1_05", "gather": "U1_06", "build": "U1_04", "eat": "U1_12", "drink": "U1_11", "sit": "U1_13", "asleep": "U1_13", "talk": "U1_01"}.get(activity, ""))
+
+static func choose_frame(groups: Dictionary, body: String, activity: String, facing: String, seconds: float, phase: float) -> Dictionary:
+	var view: String = "E" if facing == "W" else facing
+	var keys: Array[String] = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/idle/" + view]
+	for key: String in keys:
+		var safe: Array[Dictionary] = []
+		for entry: Dictionary in groups.get(key, []):
+			if str(entry.get("body", "")) != body:
+				continue
+			var basket: bool = bool(entry.get("contains_basket", false)) or str(entry.get("source_sprite", "")) == "direction_09_villager_gatherer"
+			if basket and activity != "carry":
+				continue
+			safe.append(entry)
+		if safe.is_empty():
+			continue
+		var chosen: Dictionary = safe[frame_index(activity, seconds, phase, safe.size())].duplicate()
+		var idle_fallback: bool = str(chosen.get("activity", "")) == "idle" and activity != "idle"
+		if idle_fallback:
+			chosen["fallback_kind"] = "idle_icon"
+			chosen["activity_icon"] = activity_icon(activity)
+		elif str(chosen.get("fallback_kind", "")) != "idle_icon":
+			chosen["activity_icon"] = ""
+		return chosen
+	return {}
+
+static func show_activity_icon(choice: Dictionary, zoom: float) -> bool:
+	return zoom >= 2.0 and str(choice.get("fallback_kind", "")) == "idle_icon" and not str(choice.get("activity_icon", "")).is_empty()
+
+static func apply_activity_icon(sprite: Sprite2D, icon: Sprite2D, choice: Dictionary, zoom: float) -> bool:
+	icon.visible = false
+	if not sprite.visible or not show_activity_icon(choice, zoom):
+		return false
+	icon.visible = ArtSpriteLibrary.apply(icon, str(choice["activity_icon"]))
+	icon.position = Vector2(0, sprite.offset.y - 2.0)
+	icon.set_meta("art_kind", "activity_icon")
+	return icon.visible

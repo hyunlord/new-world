@@ -5,6 +5,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	_test_frame_lookup()
 	var shelter: Dictionary = {"shelter": true}
 	assert(Activity.resolve(3, 3, true, false, 0.0, shelter, 23.0) == "asleep")
 	assert(Activity.hidden("asleep", true, shelter))
@@ -58,6 +59,20 @@ func _run() -> void:
 	var agent_ids: PackedInt64Array = snapshot["agent_ids"]
 	var selected_sprite: Sprite2D = renderer.call("get_agent_sprite", int(agent_ids[0])) as Sprite2D
 	assert(ring.position == selected_sprite.position)
+	var body: String = str(selected_sprite.get_meta("body"))
+	var icon_choice: Dictionary = renderer.call("frame_choice", body, "carry", "S", 0.0)
+	assert(icon_choice["fallback_kind"] == "idle_icon")
+	var icon: Sprite2D = Sprite2D.new()
+	selected_sprite.add_child(icon)
+	assert(not Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 1.0))
+	assert(not icon.visible)
+	assert(Activity.apply_activity_icon(selected_sprite, icon, icon_choice, 2.0))
+	assert(icon.visible and icon.texture != null)
+	assert(icon.position == Vector2(0, selected_sprite.offset.y - 2.0))
+	assert(str(icon.get_meta("sprite_id")) == "U1_05")
+	assert(not Activity.apply_activity_icon(selected_sprite, icon, {}, 4.0))
+	assert(not icon.visible)
+	icon.queue_free()
 	renderer.set("_animation_time", 0.0)
 	renderer.call("_update_selection_ring")
 	assert(int(ring.get_meta("frame_id")) == 0)
@@ -70,3 +85,37 @@ func _run() -> void:
 	main.free()
 	print("ACTIVITY PASS: target compatibility, tile priorities, sleeping visibility, facing, rates, shader codes")
 	quit(0)
+
+func _test_frame_lookup() -> void:
+	var entries: Dictionary = {
+		"a_idle": {"body": "adult_a", "activity": "idle", "view": "S", "frame": 0, "qa_status": "accepted", "contains_basket": false},
+		"a_walk_basket": {"body": "adult_a", "activity": "walk", "view": "S", "frame": 0, "qa_status": "fallback", "contains_basket": true},
+		"a_carry": {"body": "adult_a", "activity": "carry", "view": "S", "frame": 0, "qa_status": "accepted", "contains_basket": true},
+		"b_build": {"body": "adult_b", "activity": "build", "view": "S", "frame": 0, "qa_status": "accepted", "contains_basket": false},
+		"reference": {"body": "adult_a", "activity": "build", "view": "S", "frame": 0, "qa_status": "provisional", "contains_basket": false},
+	}
+	var groups: Dictionary = Activity.build_frame_groups(entries)
+	var walk: Dictionary = Activity.choose_frame(groups, "adult_a", "walk", "S", 0.0, 0.0)
+	assert(walk["sprite_id"] == "a_idle")
+	assert(walk["fallback_kind"] == "idle_icon")
+	assert(not Activity.show_activity_icon(walk, 1.0))
+	assert(not Activity.show_activity_icon(walk, 1.99))
+	assert(Activity.show_activity_icon(walk, 2.0))
+	var carry: Dictionary = Activity.choose_frame(groups, "adult_a", "carry", "S", 0.0, 0.0)
+	assert(carry["sprite_id"] == "a_carry")
+	assert(not Activity.show_activity_icon(carry, 4.0))
+	var build: Dictionary = Activity.choose_frame(groups, "adult_a", "build", "S", 0.0, 0.0)
+	assert(build["sprite_id"] == "a_idle")
+	assert(Activity.choose_frame(groups, "child", "build", "S", 0.0, 0.0).is_empty())
+	assert(Activity.choose_frame(groups, "adult_a", "walk", "N", 0.0, 0.0).is_empty())
+	var actual: Dictionary = Activity.build_frame_groups(Library.entries())
+	for body: String in ["adult_a", "adult_b", "child"]:
+		for activity: String in ["idle", "walk", "carry", "build", "gather", "talk", "sit", "drink", "asleep"]:
+			for view: String in ["S", "N", "E", "W"]:
+				var choice: Dictionary = Activity.choose_frame(actual, body, activity, view, 1.375, 0.0)
+				if choice.is_empty():
+					continue
+				assert(choice["body"] == body)
+				assert(not bool(choice.get("contains_basket", false)) or activity == "carry")
+				assert(not str(choice["sprite_id"]).begins_with("direction_"))
+				assert(Activity.show_activity_icon(choice, 4.0) == (str(choice.get("fallback_kind", "")) == "idle_icon" and not str(choice.get("activity_icon", "")).is_empty()))
