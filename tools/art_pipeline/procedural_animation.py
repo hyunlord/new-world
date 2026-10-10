@@ -53,10 +53,14 @@ def animate(idle: Image.Image, activity: str, frame: int, view: str = 'S',
                 start = int(result.height * .7)
                 leg = rgba[start:]
                 colors = leg[leg[..., 3] == 255]
-                rgba[start:] = 0
+                body = rgba[:start]
+                occupied = np.flatnonzero(np.any(body[..., 3] == 255, axis=1))
+                bottom = int(occupied[-1]) + 1 if len(occupied) else 0
+                joined = np.zeros((bottom + 2, rgba.shape[1], 4), dtype=np.uint8)
+                joined[:bottom] = body[:bottom]
                 if len(colors):
-                    rgba[-2:, 1:-1] = colors[len(colors) // 2]
-                result = Image.fromarray(rgba)
+                    joined[bottom:, 1:-1] = colors[len(colors) // 2]
+                result = Image.fromarray(joined)
             return result
         case 'asleep':
             body = image.transpose(Image.Transpose.ROTATE_270)

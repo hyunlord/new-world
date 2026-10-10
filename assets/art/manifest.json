@@ -3480,19 +3480,19 @@
       "sprite_id": "V_a3_07",
       "path": "assets/art/production/V_a3/07.png",
       "native_path": "assets/art/production/V_a3/07_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_09_villager_gatherer",
       "native_size": [
         15,
-        26
+        20
       ],
       "canvas_size": [
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -3507,14 +3507,14 @@
     },
     {
       "path": "assets/art/production/V_a3/07_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         15,
-        26
+        20
       ],
       "anchor": [
         7,
-        25
+        19
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -3523,19 +3523,19 @@
       "sprite_id": "V_a3_08",
       "path": "assets/art/production/V_a3/08.png",
       "native_path": "assets/art/production/V_a3/08_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_09_villager_gatherer",
       "native_size": [
         15,
-        26
+        20
       ],
       "canvas_size": [
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -3550,14 +3550,14 @@
     },
     {
       "path": "assets/art/production/V_a3/08_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         15,
-        26
+        20
       ],
       "anchor": [
         7,
-        25
+        19
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -3738,19 +3738,19 @@
       "sprite_id": "V_a3_13",
       "path": "assets/art/production/V_a3/13.png",
       "native_path": "assets/art/production/V_a3/13_native.png",
-      "source": "procedural:animation:asleep",
-      "source_sprite": "direction_09_villager_gatherer",
+      "source": "procedural:exact90_rotation_accepted_N_walk_with_fur",
+      "source_sprite": "V_b1_16",
       "native_size": [
-        11,
-        3
+        28,
+        14
       ],
       "canvas_size": [
-        13,
-        5
+        30,
+        16
       ],
       "anchor": [
-        6,
-        4
+        15,
+        15
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -3760,21 +3760,20 @@
       "frame": 0,
       "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
       "limitations": [
-        "No accepted same-view idle: D3 front-view fallback; directional identity unverified.",
-        "Requested pose exceeds class budget; retained unresized budget-fitting source pose.",
-        "No budget-fitting pose; abstract resting silhouette substituted."
+        "Uses accepted adult B N-view passing walk frame V_b1_16, not requested S idle; body and view substitution declared.",
+        "Adult A asleep uses adult B source body; identity fidelity remains limited."
       ]
     },
     {
       "path": "assets/art/production/V_a3/13_native.png",
-      "source": "procedural:animation:asleep",
+      "source": "procedural:exact90_rotation_accepted_N_walk_with_fur",
       "native_size": [
-        11,
-        3
+        28,
+        14
       ],
       "anchor": [
-        5,
-        2
+        14,
+        13
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -5481,19 +5480,19 @@
       "sprite_id": "V_b3_07",
       "path": "assets/art/production/V_b3/07.png",
       "native_path": "assets/art/production/V_b3/07_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_09_villager_gatherer",
       "native_size": [
         15,
-        26
+        20
       ],
       "canvas_size": [
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -5509,14 +5508,14 @@
     },
     {
       "path": "assets/art/production/V_b3/07_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         15,
-        26
+        20
       ],
       "anchor": [
         7,
-        25
+        19
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -5525,19 +5524,19 @@
       "sprite_id": "V_b3_08",
       "path": "assets/art/production/V_b3/08.png",
       "native_path": "assets/art/production/V_b3/08_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_09_villager_gatherer",
       "native_size": [
         15,
-        26
+        20
       ],
       "canvas_size": [
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -5553,14 +5552,14 @@
     },
     {
       "path": "assets/art/production/V_b3/08_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         15,
-        26
+        20
       ],
       "anchor": [
         7,
-        25
+        19
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -5745,19 +5744,19 @@
       "sprite_id": "V_b3_13",
       "path": "assets/art/production/V_b3/13.png",
       "native_path": "assets/art/production/V_b3/13_native.png",
-      "source": "procedural:animation:asleep",
-      "source_sprite": "direction_09_villager_gatherer",
+      "source": "procedural:exact90_rotation_accepted_N_walk_with_fur",
+      "source_sprite": "V_b1_16",
       "native_size": [
-        11,
-        3
+        28,
+        14
       ],
       "canvas_size": [
-        13,
-        5
+        30,
+        16
       ],
       "anchor": [
-        6,
-        4
+        15,
+        15
       ],
       "qa_status": "fallback",
       "class": "adult",
@@ -5767,22 +5766,19 @@
       "frame": 0,
       "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
       "limitations": [
-        "No accepted same-view idle: D3 front-view fallback; directional identity unverified.",
-        "Adult B distinct body unavailable; same D3 gatherer body reused.",
-        "Requested pose exceeds class budget; retained unresized budget-fitting source pose.",
-        "No budget-fitting pose; abstract resting silhouette substituted."
+        "Uses accepted adult B N-view passing walk frame V_b1_16, not requested S idle; body and view substitution declared."
       ]
     },
     {
       "path": "assets/art/production/V_b3/13_native.png",
-      "source": "procedural:animation:asleep",
+      "source": "procedural:exact90_rotation_accepted_N_walk_with_fur",
       "native_size": [
-        11,
-        3
+        28,
+        14
       ],
       "anchor": [
-        5,
-        2
+        14,
+        13
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -6611,19 +6607,19 @@
       "sprite_id": "V_c2_01",
       "path": "assets/art/production/V_c2/01.png",
       "native_path": "assets/art/production/V_c2/01_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_12_villager_child",
       "native_size": [
         12,
-        19
+        15
       ],
       "canvas_size": [
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "qa_status": "fallback",
       "class": "child",
@@ -6638,14 +6634,14 @@
     },
     {
       "path": "assets/art/production/V_c2/01_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         12,
-        19
+        15
       ],
       "anchor": [
         6,
-        18
+        14
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -6654,19 +6650,19 @@
       "sprite_id": "V_c2_02",
       "path": "assets/art/production/V_c2/02.png",
       "native_path": "assets/art/production/V_c2/02_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "source_sprite": "direction_12_villager_child",
       "native_size": [
         12,
-        19
+        15
       ],
       "canvas_size": [
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "qa_status": "fallback",
       "class": "child",
@@ -6681,14 +6677,14 @@
     },
     {
       "path": "assets/art/production/V_c2/02_native.png",
-      "source": "procedural:animation:sit",
+      "source": "procedural:animation:sit:joined_leg_rows",
       "native_size": [
         12,
-        19
+        15
       ],
       "anchor": [
         6,
-        18
+        14
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -7256,19 +7252,19 @@
       "sprite_id": "V_c2_16",
       "path": "assets/art/production/V_c2/16.png",
       "native_path": "assets/art/production/V_c2/16_native.png",
-      "source": "procedural:animation:hug",
+      "source": "procedural:animation:hug:joined_leg_rows",
       "source_sprite": "direction_12_villager_child",
       "native_size": [
         12,
-        19
+        15
       ],
       "canvas_size": [
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "qa_status": "fallback",
       "class": "child",
@@ -7283,14 +7279,14 @@
     },
     {
       "path": "assets/art/production/V_c2/16_native.png",
-      "source": "procedural:animation:hug",
+      "source": "procedural:animation:hug:joined_leg_rows",
       "native_size": [
         12,
-        19
+        15
       ],
       "anchor": [
         6,
-        18
+        14
       ],
       "qa_status": "fallback",
       "role": "native_reference"
@@ -12163,20 +12159,6 @@
       "role": "native_reference"
     },
     {
-      "path": "assets/art/atlas/world_0.png",
-      "source": "procedural:tools/art_pipeline/pack_atlas.py",
-      "native_size": [
-        2048,
-        2048
-      ],
-      "anchor": [
-        0,
-        0
-      ],
-      "qa_status": "accepted",
-      "role": "atlas"
-    },
-    {
       "path": "assets/art/terrain/water.png",
       "source": "procedural:tools/art_pipeline/terrain_tiles.py",
       "native_size": [
@@ -12267,6 +12249,20 @@
       ],
       "qa_status": "accepted",
       "role": "region_index_atlas"
+    },
+    {
+      "path": "assets/art/atlas/world_0.png",
+      "source": "procedural:tools/art_pipeline/pack_atlas.py",
+      "native_size": [
+        2048,
+        2048
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "qa_status": "accepted",
+      "role": "atlas"
     }
   ]
 }

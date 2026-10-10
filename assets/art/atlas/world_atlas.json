@@ -4331,11 +4331,11 @@
         1227,
         41,
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "class": "adult",
       "frames": [],
@@ -4343,7 +4343,7 @@
         1227,
         41,
         17,
-        28
+        22
       ],
       "source_path": "assets/art/production/V_a3/07.png",
       "body": "adult_a",
@@ -4357,11 +4357,11 @@
         1246,
         41,
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "class": "adult",
       "frames": [],
@@ -4369,7 +4369,7 @@
         1246,
         41,
         17,
-        28
+        22
       ],
       "source_path": "assets/art/production/V_a3/08.png",
       "body": "adult_a",
@@ -4486,20 +4486,20 @@
       "rect": [
         1341,
         41,
-        13,
-        5
+        30,
+        16
       ],
       "anchor": [
-        6,
-        4
+        15,
+        15
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
         1341,
         41,
-        13,
-        5
+        30,
+        16
       ],
       "source_path": "assets/art/production/V_a3/13.png",
       "body": "adult_a",
@@ -4510,7 +4510,7 @@
     "V_a3_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1356,
+        1373,
         41,
         17,
         30
@@ -4522,7 +4522,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1356,
+        1373,
         41,
         17,
         30
@@ -4536,7 +4536,7 @@
     "V_a3_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1375,
+        1392,
         41,
         17,
         30
@@ -4548,7 +4548,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1375,
+        1392,
         41,
         17,
         30
@@ -4562,7 +4562,7 @@
     "V_a3_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1394,
+        1411,
         41,
         17,
         30
@@ -4574,7 +4574,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1394,
+        1411,
         41,
         17,
         30
@@ -4588,7 +4588,7 @@
     "V_b1_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1413,
+        1430,
         41,
         17,
         30
@@ -4600,7 +4600,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1413,
+        1430,
         41,
         17,
         30
@@ -4614,7 +4614,7 @@
     "V_b1_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1432,
+        1449,
         41,
         17,
         30
@@ -4626,7 +4626,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1432,
+        1449,
         41,
         17,
         30
@@ -4640,7 +4640,7 @@
     "V_b1_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1451,
+        1468,
         41,
         18,
         30
@@ -4652,7 +4652,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1451,
+        1468,
         41,
         18,
         30
@@ -4666,7 +4666,7 @@
     "V_b1_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1471,
+        1488,
         41,
         17,
         30
@@ -4678,7 +4678,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1471,
+        1488,
         41,
         17,
         30
@@ -4692,7 +4692,7 @@
     "V_b1_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1490,
+        1507,
         41,
         17,
         30
@@ -4704,7 +4704,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1490,
+        1507,
         41,
         17,
         30
@@ -4718,7 +4718,7 @@
     "V_b1_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1509,
+        1526,
         41,
         17,
         30
@@ -4730,7 +4730,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1509,
+        1526,
         41,
         17,
         30
@@ -4744,7 +4744,7 @@
     "V_b1_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1528,
+        1545,
         41,
         17,
         30
@@ -4756,7 +4756,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1528,
+        1545,
         41,
         17,
         30
@@ -4770,7 +4770,7 @@
     "V_b1_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1547,
+        1564,
         41,
         17,
         30
@@ -4782,7 +4782,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1547,
+        1564,
         41,
         17,
         30
@@ -4796,7 +4796,7 @@
     "V_b1_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1566,
+        1583,
         41,
         17,
         30
@@ -4808,7 +4808,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1566,
+        1583,
         41,
         17,
         30
@@ -4822,7 +4822,7 @@
     "V_b1_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1585,
+        1602,
         41,
         17,
         30
@@ -4834,7 +4834,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1585,
+        1602,
         41,
         17,
         30
@@ -4848,7 +4848,7 @@
     "V_b1_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1604,
+        1621,
         41,
         17,
         30
@@ -4860,7 +4860,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1604,
+        1621,
         41,
         17,
         30
@@ -4874,7 +4874,7 @@
     "V_b1_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1623,
+        1640,
         41,
         17,
         30
@@ -4886,7 +4886,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1623,
+        1640,
         41,
         17,
         30
@@ -4900,7 +4900,7 @@
     "V_b1_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1642,
+        1659,
         41,
         18,
         30
@@ -4912,7 +4912,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1642,
+        1659,
         41,
         18,
         30
@@ -4926,7 +4926,7 @@
     "V_b1_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1662,
+        1679,
         41,
         18,
         30
@@ -4938,7 +4938,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1662,
+        1679,
         41,
         18,
         30
@@ -4952,7 +4952,7 @@
     "V_b1_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1682,
+        1699,
         41,
         18,
         30
@@ -4964,7 +4964,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1682,
+        1699,
         41,
         18,
         30
@@ -4978,7 +4978,7 @@
     "V_b1_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1702,
+        1719,
         41,
         15,
         30
@@ -4990,7 +4990,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1702,
+        1719,
         41,
         15,
         30
@@ -5004,7 +5004,7 @@
     "V_b2_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1719,
+        1736,
         41,
         17,
         30
@@ -5016,7 +5016,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1719,
+        1736,
         41,
         17,
         30
@@ -5030,7 +5030,7 @@
     "V_b2_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1738,
+        1755,
         41,
         17,
         30
@@ -5042,7 +5042,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1738,
+        1755,
         41,
         17,
         30
@@ -5056,7 +5056,7 @@
     "V_b2_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1757,
+        1774,
         41,
         17,
         30
@@ -5068,7 +5068,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1757,
+        1774,
         41,
         17,
         30
@@ -5082,7 +5082,7 @@
     "V_b2_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1776,
+        1793,
         41,
         17,
         30
@@ -5094,7 +5094,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1776,
+        1793,
         41,
         17,
         30
@@ -5108,7 +5108,7 @@
     "V_b2_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1795,
+        1812,
         41,
         17,
         30
@@ -5120,7 +5120,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1795,
+        1812,
         41,
         17,
         30
@@ -5134,7 +5134,7 @@
     "V_b2_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1814,
+        1831,
         41,
         17,
         30
@@ -5146,7 +5146,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1814,
+        1831,
         41,
         17,
         30
@@ -5160,7 +5160,7 @@
     "V_b2_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1833,
+        1850,
         41,
         17,
         30
@@ -5172,7 +5172,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1833,
+        1850,
         41,
         17,
         30
@@ -5186,7 +5186,7 @@
     "V_b2_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1852,
+        1869,
         41,
         17,
         30
@@ -5198,7 +5198,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1852,
+        1869,
         41,
         17,
         30
@@ -5212,7 +5212,7 @@
     "V_b2_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1871,
+        1888,
         41,
         17,
         30
@@ -5224,7 +5224,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1871,
+        1888,
         41,
         17,
         30
@@ -5238,7 +5238,7 @@
     "V_b2_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1890,
+        1907,
         41,
         17,
         30
@@ -5250,7 +5250,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1890,
+        1907,
         41,
         17,
         30
@@ -5264,7 +5264,7 @@
     "V_b2_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1909,
+        1926,
         41,
         17,
         30
@@ -5276,7 +5276,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1909,
+        1926,
         41,
         17,
         30
@@ -5290,7 +5290,7 @@
     "V_b2_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1928,
+        1945,
         41,
         17,
         30
@@ -5302,7 +5302,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1928,
+        1945,
         41,
         17,
         30
@@ -5316,7 +5316,7 @@
     "V_b2_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1947,
+        1964,
         41,
         17,
         30
@@ -5328,7 +5328,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1947,
+        1964,
         41,
         17,
         30
@@ -5342,7 +5342,7 @@
     "V_b2_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1966,
+        1983,
         41,
         17,
         30
@@ -5354,7 +5354,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1966,
+        1983,
         41,
         17,
         30
@@ -5368,7 +5368,7 @@
     "V_b2_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1985,
+        2002,
         41,
         17,
         30
@@ -5380,7 +5380,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        1985,
+        2002,
         41,
         17,
         30
@@ -5394,7 +5394,7 @@
     "V_b2_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        2004,
+        2021,
         41,
         17,
         30
@@ -5406,7 +5406,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        2004,
+        2021,
         41,
         17,
         30
@@ -5420,32 +5420,6 @@
     "V_b3_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        2023,
-        41,
-        18,
-        30
-      ],
-      "anchor": [
-        9,
-        29
-      ],
-      "class": "adult",
-      "frames": [],
-      "region_rect": [
-        2023,
-        41,
-        18,
-        30
-      ],
-      "source_path": "assets/art/production/V_b3/01.png",
-      "body": "adult_b",
-      "view": "N",
-      "activity": "carry",
-      "frame": 0
-    },
-    "V_b3_02": {
-      "page": "res://assets/art/atlas/world_0.png",
-      "rect": [
         1,
         73,
         18,
@@ -5459,6 +5433,32 @@
       "frames": [],
       "region_rect": [
         1,
+        73,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/01.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_b3_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        21,
+        73,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        21,
         73,
         18,
         30
@@ -5472,7 +5472,7 @@
     "V_b3_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        21,
+        41,
         73,
         17,
         28
@@ -5484,7 +5484,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        21,
+        41,
         73,
         17,
         28
@@ -5498,7 +5498,7 @@
     "V_b3_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        40,
+        60,
         73,
         17,
         28
@@ -5510,7 +5510,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        40,
+        60,
         73,
         17,
         28
@@ -5524,7 +5524,7 @@
     "V_b3_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        59,
+        79,
         73,
         17,
         28
@@ -5536,7 +5536,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        59,
+        79,
         73,
         17,
         28
@@ -5550,7 +5550,7 @@
     "V_b3_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        78,
+        98,
         73,
         17,
         28
@@ -5562,7 +5562,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        78,
+        98,
         73,
         17,
         28
@@ -5576,22 +5576,22 @@
     "V_b3_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        97,
+        117,
         73,
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
-        97,
+        117,
         73,
         17,
-        28
+        22
       ],
       "source_path": "assets/art/production/V_b3/07.png",
       "body": "adult_b",
@@ -5602,22 +5602,22 @@
     "V_b3_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        116,
+        136,
         73,
         17,
-        28
+        22
       ],
       "anchor": [
         8,
-        27
+        21
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
-        116,
+        136,
         73,
         17,
-        28
+        22
       ],
       "source_path": "assets/art/production/V_b3/08.png",
       "body": "adult_b",
@@ -5628,7 +5628,7 @@
     "V_b3_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        135,
+        155,
         73,
         17,
         30
@@ -5640,7 +5640,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        135,
+        155,
         73,
         17,
         30
@@ -5654,7 +5654,7 @@
     "V_b3_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        154,
+        174,
         73,
         17,
         30
@@ -5666,7 +5666,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        154,
+        174,
         73,
         17,
         30
@@ -5680,7 +5680,7 @@
     "V_b3_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        173,
+        193,
         73,
         17,
         30
@@ -5692,7 +5692,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        173,
+        193,
         73,
         17,
         30
@@ -5706,7 +5706,7 @@
     "V_b3_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        192,
+        212,
         73,
         17,
         30
@@ -5718,7 +5718,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        192,
+        212,
         73,
         17,
         30
@@ -5732,22 +5732,22 @@
     "V_b3_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        211,
+        231,
         73,
-        13,
-        5
+        30,
+        16
       ],
       "anchor": [
-        6,
-        4
+        15,
+        15
       ],
       "class": "adult",
       "frames": [],
       "region_rect": [
-        211,
+        231,
         73,
-        13,
-        5
+        30,
+        16
       ],
       "source_path": "assets/art/production/V_b3/13.png",
       "body": "adult_b",
@@ -5758,7 +5758,7 @@
     "V_b3_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        226,
+        263,
         73,
         17,
         30
@@ -5770,7 +5770,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        226,
+        263,
         73,
         17,
         30
@@ -5784,7 +5784,7 @@
     "V_b3_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        245,
+        282,
         73,
         17,
         30
@@ -5796,7 +5796,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        245,
+        282,
         73,
         17,
         30
@@ -5810,7 +5810,7 @@
     "V_b3_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        264,
+        301,
         73,
         17,
         30
@@ -5822,7 +5822,7 @@
       "class": "adult",
       "frames": [],
       "region_rect": [
-        264,
+        301,
         73,
         17,
         30
@@ -5836,7 +5836,7 @@
     "V_c1_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        283,
+        320,
         73,
         14,
         23
@@ -5848,7 +5848,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        283,
+        320,
         73,
         14,
         23
@@ -5862,7 +5862,7 @@
     "V_c1_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        299,
+        336,
         73,
         14,
         23
@@ -5874,7 +5874,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        299,
+        336,
         73,
         14,
         23
@@ -5888,7 +5888,7 @@
     "V_c1_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        315,
+        352,
         73,
         14,
         23
@@ -5900,7 +5900,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        315,
+        352,
         73,
         14,
         23
@@ -5914,7 +5914,7 @@
     "V_c1_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        331,
+        368,
         73,
         14,
         23
@@ -5926,7 +5926,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        331,
+        368,
         73,
         14,
         23
@@ -5940,7 +5940,7 @@
     "V_c1_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        347,
+        384,
         73,
         14,
         23
@@ -5952,7 +5952,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        347,
+        384,
         73,
         14,
         23
@@ -5966,7 +5966,7 @@
     "V_c1_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        363,
+        400,
         73,
         14,
         23
@@ -5978,7 +5978,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        363,
+        400,
         73,
         14,
         23
@@ -5992,7 +5992,7 @@
     "V_c1_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        379,
+        416,
         73,
         14,
         23
@@ -6004,7 +6004,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        379,
+        416,
         73,
         14,
         23
@@ -6018,7 +6018,7 @@
     "V_c1_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        395,
+        432,
         73,
         14,
         23
@@ -6030,7 +6030,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        395,
+        432,
         73,
         14,
         23
@@ -6044,7 +6044,7 @@
     "V_c1_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        411,
+        448,
         73,
         14,
         23
@@ -6056,7 +6056,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        411,
+        448,
         73,
         14,
         23
@@ -6070,7 +6070,7 @@
     "V_c1_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        427,
+        464,
         73,
         14,
         23
@@ -6082,7 +6082,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        427,
+        464,
         73,
         14,
         23
@@ -6096,7 +6096,7 @@
     "V_c1_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        443,
+        480,
         73,
         14,
         23
@@ -6108,7 +6108,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        443,
+        480,
         73,
         14,
         23
@@ -6122,7 +6122,7 @@
     "V_c1_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        459,
+        496,
         73,
         14,
         23
@@ -6134,7 +6134,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        459,
+        496,
         73,
         14,
         23
@@ -6148,7 +6148,7 @@
     "V_c1_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        475,
+        512,
         73,
         14,
         23
@@ -6160,7 +6160,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        475,
+        512,
         73,
         14,
         23
@@ -6174,7 +6174,7 @@
     "V_c1_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        491,
+        528,
         73,
         14,
         23
@@ -6186,7 +6186,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        491,
+        528,
         73,
         14,
         23
@@ -6200,7 +6200,7 @@
     "V_c1_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        507,
+        544,
         73,
         14,
         23
@@ -6212,7 +6212,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        507,
+        544,
         73,
         14,
         23
@@ -6226,7 +6226,7 @@
     "V_c1_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        523,
+        560,
         73,
         14,
         23
@@ -6238,7 +6238,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        523,
+        560,
         73,
         14,
         23
@@ -6252,22 +6252,22 @@
     "V_c2_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        539,
+        576,
         73,
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "class": "child",
       "frames": [],
       "region_rect": [
-        539,
+        576,
         73,
         14,
-        21
+        17
       ],
       "source_path": "assets/art/production/V_c2/01.png",
       "body": "child",
@@ -6278,22 +6278,22 @@
     "V_c2_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        555,
+        592,
         73,
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "class": "child",
       "frames": [],
       "region_rect": [
-        555,
+        592,
         73,
         14,
-        21
+        17
       ],
       "source_path": "assets/art/production/V_c2/02.png",
       "body": "child",
@@ -6304,7 +6304,7 @@
     "V_c2_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        571,
+        608,
         73,
         14,
         23
@@ -6316,7 +6316,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        571,
+        608,
         73,
         14,
         23
@@ -6330,7 +6330,7 @@
     "V_c2_04": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        587,
+        624,
         73,
         14,
         23
@@ -6342,7 +6342,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        587,
+        624,
         73,
         14,
         23
@@ -6356,7 +6356,7 @@
     "V_c2_05": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        603,
+        640,
         73,
         14,
         23
@@ -6368,7 +6368,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        603,
+        640,
         73,
         14,
         23
@@ -6382,7 +6382,7 @@
     "V_c2_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        619,
+        656,
         73,
         14,
         23
@@ -6394,7 +6394,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        619,
+        656,
         73,
         14,
         23
@@ -6408,7 +6408,7 @@
     "V_c2_07": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        635,
+        672,
         73,
         14,
         23
@@ -6420,7 +6420,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        635,
+        672,
         73,
         14,
         23
@@ -6434,7 +6434,7 @@
     "V_c2_08": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        651,
+        688,
         73,
         14,
         23
@@ -6446,7 +6446,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        651,
+        688,
         73,
         14,
         23
@@ -6460,7 +6460,7 @@
     "V_c2_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        667,
+        704,
         73,
         14,
         23
@@ -6472,7 +6472,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        667,
+        704,
         73,
         14,
         23
@@ -6486,7 +6486,7 @@
     "V_c2_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        683,
+        720,
         73,
         14,
         23
@@ -6498,7 +6498,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        683,
+        720,
         73,
         14,
         23
@@ -6512,7 +6512,7 @@
     "V_c2_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        699,
+        736,
         73,
         14,
         23
@@ -6524,7 +6524,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        699,
+        736,
         73,
         14,
         23
@@ -6538,7 +6538,7 @@
     "V_c2_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        715,
+        752,
         73,
         14,
         23
@@ -6550,7 +6550,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        715,
+        752,
         73,
         14,
         23
@@ -6564,7 +6564,7 @@
     "V_c2_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        731,
+        768,
         73,
         23,
         14
@@ -6576,7 +6576,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        731,
+        768,
         73,
         23,
         14
@@ -6590,7 +6590,7 @@
     "V_c2_14": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        756,
+        793,
         73,
         14,
         21
@@ -6602,7 +6602,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        756,
+        793,
         73,
         14,
         21
@@ -6616,7 +6616,7 @@
     "V_c2_15": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        772,
+        809,
         73,
         14,
         21
@@ -6628,7 +6628,7 @@
       "class": "child",
       "frames": [],
       "region_rect": [
-        772,
+        809,
         73,
         14,
         21
@@ -6642,22 +6642,22 @@
     "V_c2_16": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        788,
+        825,
         73,
         14,
-        21
+        17
       ],
       "anchor": [
         7,
-        20
+        16
       ],
       "class": "child",
       "frames": [],
       "region_rect": [
-        788,
+        825,
         73,
         14,
-        21
+        17
       ],
       "source_path": "assets/art/production/V_c2/16.png",
       "body": "child",
@@ -6668,7 +6668,7 @@
     "direction_01_campfire": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        804,
+        841,
         73,
         25,
         28
@@ -6680,7 +6680,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        804,
+        841,
         73,
         25,
         28
@@ -6694,7 +6694,7 @@
     "direction_02_lean_to": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        831,
+        868,
         73,
         34,
         30
@@ -6706,7 +6706,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        831,
+        868,
         73,
         34,
         30
@@ -6720,7 +6720,7 @@
     "direction_03_storage_pit": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        867,
+        904,
         73,
         33,
         23
@@ -6732,7 +6732,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        867,
+        904,
         73,
         33,
         23
@@ -6746,7 +6746,7 @@
     "direction_04_shelter_frame": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        902,
+        939,
         73,
         34,
         29
@@ -6758,7 +6758,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        902,
+        939,
         73,
         34,
         29
@@ -6772,7 +6772,7 @@
     "direction_05_berry_bush_full": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        938,
+        975,
         73,
         27,
         24
@@ -6784,7 +6784,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        938,
+        975,
         73,
         27,
         24
@@ -6798,7 +6798,7 @@
     "direction_06_berry_bush_two": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        967,
+        1004,
         73,
         25,
         24
@@ -6810,7 +6810,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        967,
+        1004,
         73,
         25,
         24
@@ -6824,7 +6824,7 @@
     "direction_07_berry_bush_one": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        994,
+        1031,
         73,
         24,
         24
@@ -6836,7 +6836,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        994,
+        1031,
         73,
         24,
         24
@@ -6850,7 +6850,7 @@
     "direction_08_berry_bush_bare": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1020,
+        1057,
         73,
         24,
         24
@@ -6862,7 +6862,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1020,
+        1057,
         73,
         24,
         24
@@ -6876,7 +6876,7 @@
     "direction_09_villager_gatherer": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1046,
+        1083,
         73,
         17,
         30
@@ -6888,7 +6888,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1046,
+        1083,
         73,
         17,
         30
@@ -6902,7 +6902,7 @@
     "direction_10_villager_builder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1065,
+        1102,
         73,
         22,
         30
@@ -6914,7 +6914,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1065,
+        1102,
         73,
         22,
         30
@@ -6928,7 +6928,7 @@
     "direction_11_villager_elder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1089,
+        1126,
         73,
         21,
         30
@@ -6940,7 +6940,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1089,
+        1126,
         73,
         21,
         30
@@ -6954,7 +6954,7 @@
     "direction_12_villager_child": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1112,
+        1149,
         73,
         14,
         23
@@ -6966,7 +6966,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1112,
+        1149,
         73,
         14,
         23
@@ -6980,7 +6980,7 @@
     "direction_13_boulder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1128,
+        1165,
         73,
         26,
         20
@@ -6992,7 +6992,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1128,
+        1165,
         73,
         26,
         20
@@ -7006,7 +7006,7 @@
     "direction_14_young_tree": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1156,
+        1193,
         73,
         26,
         30
@@ -7018,7 +7018,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1156,
+        1193,
         73,
         26,
         30
@@ -7032,7 +7032,7 @@
     "direction_15_reed_tuft": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1184,
+        1221,
         73,
         20,
         24
@@ -7044,7 +7044,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1184,
+        1221,
         73,
         20,
         24
@@ -7058,7 +7058,7 @@
     "direction_16_berry_basket": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1206,
+        1243,
         73,
         19,
         20
@@ -7070,7 +7070,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1206,
+        1243,
         73,
         19,
         20

@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 from v3_semantics import semantic_counts
 from pixel_masks import make_mask
+from procedural_animation import animate
 
 class FallbackStateTest(unittest.TestCase):
     def test_hearth_states_show_fire_only_when_lit(self):
@@ -45,5 +46,13 @@ class FallbackStateTest(unittest.TestCase):
         changed=lambda image:int(np.any(np.asarray(image)!=np.asarray(base),axis=2).sum())
         self.assertGreater(changed(half),0)
         self.assertGreater(changed(full),changed(half))
+
+    def test_sitting_leg_rows_join_body_without_gap(self):
+        idle=Image.new('RGBA',(15,28),(90,70,45,255))
+        sitting=animate(idle,'sit',0)
+        mask=np.asarray(sitting)[...,3]>0
+        occupied=np.flatnonzero(np.any(mask,axis=1))
+        self.assertTrue(np.all(np.any(mask,axis=1)[occupied[0]:occupied[-1]+1]))
+        self.assertLess(sitting.height,idle.height-2)
 
 if __name__=='__main__':unittest.main()
