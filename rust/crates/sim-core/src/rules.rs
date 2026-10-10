@@ -186,9 +186,16 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
-    /// Versioned game entry point; Part 1 intentionally matches frozen v8.
+    /// Versioned opt-in village policies; frozen v8 remains unchanged.
     pub const fn game_v9() -> Self {
-        Self::game_v8()
+        let mut rules = Self::game_v8();
+        rules.society.settlement_anchor = SettlementAnchor::Hearth;
+        if let Some(mut planning) = rules.society.shelter_planning {
+            planning.housing = HousingCount::Owned;
+            planning.planning_headroom = 2;
+            rules.society.shelter_planning = Some(planning);
+        }
+        rules
     }
 
     /// Initial Revitalize survival and growth tuning.

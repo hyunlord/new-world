@@ -389,7 +389,9 @@ impl SettlementSystem {
         let mut candidate_tiles: Vec<(u32, u32)> = agent_positions.values().copied().collect();
         candidate_tiles.sort();
         candidate_tiles.dedup();
-        if resources.rules.society.shelter_planning.is_some() {
+        if resources.rules.society.shelter_planning.is_some()
+            || resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::Hearth
+        {
             // Generated camps form around their real Hearth, so movement before
             // formation cannot anchor the village on its westernmost resident.
             // Default rules retain the exact legacy candidate sequence above.
@@ -399,8 +401,10 @@ impl SettlementSystem {
             }).collect();
             hearths.sort_by_key(|&(x, y)| (y, x));
             hearths.dedup();
-            candidate_tiles.retain(|position| !hearths.contains(position));
-            hearths.extend(candidate_tiles);
+            if resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::AnyCluster {
+                candidate_tiles.retain(|position| !hearths.contains(position));
+                hearths.extend(candidate_tiles);
+            }
             candidate_tiles = hearths;
         }
         for candidate in candidate_tiles {
@@ -481,6 +485,15 @@ impl SettlementSystem {
                 }
                 if let Some(b) = settlement.member_buildings.iter().min().copied() {
                     self.last_known_building_id.insert(new_id, b);
+                }
+            }
+            if resources.rules.society.shelter_planning.is_some_and(|rule|
+                rule.housing == sim_core::rules::HousingCount::Owned)
+            {
+                for tile in resources.building_kinds.keys() {
+                    if chebyshev(*tile, candidate) <= SETTLEMENT_PROXIMITY_RADIUS + 3 {
+                        resources.building_owner.entry(*tile).or_insert(new_id);
+                    }
                 }
             }
             existing_anchors.push(candidate);
@@ -683,14 +696,7 @@ impl SettlementSystem {
             } = resources.rules.society.birth {
                 let capacity = resources.rules.society.shelter_planning.map_or(
                     SETTLEMENT_MAX_POP,
-                    |rule| {
-                        let shelters = resources.building_kinds.iter().filter(|(tile, kind)| {
-                            **kind == BuildingKind::Shelter
-                                && chebyshev(**tile, settlement.formation_tile)
-                                    <= SETTLEMENT_PROXIMITY_RADIUS + 3
-                        }).count() as u32;
-                        shelters.saturating_mul(rule.residents_per_shelter)
-                    },
+                    |rule| super::housing_capacity(resources, sid, &rule),
                 );
                 if settlement.member_agents.len() as u32 >= capacity
                     || settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) < food_cost
@@ -876,6 +882,7 @@ impl SettlementSystem {
                 },
             );
             resources.settlements.remove(&sid);
+            resources.building_owner.retain(|_, owner| *owner != sid);
             // FULL local-state clear so the same area can re-form.
             // Without clearing `formation_tiles` the area would be
             // permanently suppressed from re-formation (every candidate
