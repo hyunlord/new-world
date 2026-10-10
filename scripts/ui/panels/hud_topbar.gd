@@ -176,7 +176,7 @@ func _season_label(clock: Dictionary) -> String:
 	var season: int = int(clock["season"])
 	var day: int = int(clock["day_of_season"])
 	var keys: Array[String] = ["HUD_SEASON_SPRING", "HUD_SEASON_SUMMER", "HUD_SEASON_AUTUMN", "HUD_SEASON_WINTER"]
-	if season < 0 or season >= keys.size() or day < 0 or day >= int(clock["days_per_season"]):
+	if season < 0 or season >= keys.size() or day < 1 or day > int(clock["days_per_season"]):
 		return ""
-	# Pass 4 compatibility assumption: season and day_of_season are zero-based.
-	return " · " + (_loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day + 1])
+	# Bridge contract: season is zero-based; day_of_season is one-based.
+	return " · " + (_loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day])

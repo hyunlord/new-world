@@ -8,5 +8,7 @@ static func resolve(snapshot: Dictionary) -> Color:
 	if season < 0 or season >= TINTS.size():
 		return Color.WHITE
 	var day: int = int(snapshot["day_of_season"])
-	var blend: float = clampf(float(snapshot.get("time_of_day",0.0))/6.0,0.0,1.0) if day == 0 else 1.0
+	if day < 1 or day > int(snapshot["days_per_season"]):
+		return Color.WHITE
+	var blend: float = clampf(float(snapshot.get("time_of_day",0.0))/6.0,0.0,1.0) if day == 1 else 1.0
 	return TINTS[posmod(season-1,4)].lerp(TINTS[season],blend)

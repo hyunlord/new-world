@@ -9,5 +9,5 @@
 | 4 | Villager frames, fallback icons, elder variants | completed | 2026-10-10T14:32:27Z | 2026-10-10T14:37:18Z |
 | 5 | Groves, clearings, canopy fade, season tint | completed | 2026-10-10T14:37:18Z | 2026-10-10T14:43:34Z |
 | 6 | Death count/news and localized season HUD | completed | 2026-10-10T14:43:34Z | 2026-10-10T14:49:27Z |
-| 7 | Windowed captures, A1–A14, blind review, compatibility | in_progress | 2026-10-10T14:49:27Z | |
-| 8 | Final exact-head gate, Korean report, green FF and draft PR | pending | | |
+| 7 | Windowed captures, A1–A14, blind review, compatibility | completed | 2026-10-10T14:49:27Z | 2026-10-10T14:55:18Z |
+| 8 | Final exact-head gate, Korean report, green FF and draft PR | in_progress | 2026-10-10T14:55:18Z | |

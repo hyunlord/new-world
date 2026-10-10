@@ -54,3 +54,9 @@
 - Preserve A1/A5/A11 failures; thresholds unchanged. A13 shape difference is not proof of recognizable activity, particularly idle+icon carry fallbacks.
 - Public sidecars use lossless gzip with JSON manifest paths; raw original JSON/framebuffers remain under `.harness/evidence/art-production2`. This reduces docs from 52.24 MB to below 40 MB without changing frozen review evidence.
 - Window capture began at Part 6 HEAD with capture-tool edits, committed as `5433649a` during the run; no rendering source changed. Calibration ran at that committed head.
+
+## Part 7: latest-green compatibility
+
+- Locally merged `7a8ae053059f3d3eed376a427eadec235259fecd` into art `4908036f` without conflicts (temporary merge `276d8572`); never pushed, branch deleted after10windowed captures and22headless checks passed.
+- Actual bridge documents one-based `day_of_season`. Corrected HUD/tint assumptions in art-owned code after failing regression tests, then passed tests/review and observed 봄2일째.
+- life_stages, season keys and deaths_old_age are present. No elder or old-age death occurred in day1–6captures; full season transition remains unit-tested rather than observed.
