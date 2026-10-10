@@ -1419,3 +1419,16 @@ Seasons (120-day medians over seed-days, spring / summer / autumn / winter): sto
 Work by hour (seed medians; all days ≥ 2 → spring–autumn): adult work share 0.344 → 0.359 at 08:00, 0.097 → 0.118 at 10:00, 0.285 → 0.500 at 12:00, 0.382 → 0.416 at 15:00, 0 at 18:00, 0.260 → 0.261 at 19:30; idle share 0.262 → 0.238, 0.595 → 0.571, 0.667 → 0.512, 0.595 → 0.571, 0.857 → 0.855, 0.690 → 0.667. v10 (`p5-1_v10_120day`, spring–autumn): adult work 0.083 at 12:00 and 0.242 at 15:00, idle 0.774 at 12:00. Pass 4's `noon_idle_share` (haulers counted idle, all days including winter): v10 0.829 → v11 0.738.
 
 v10 evaluated by the same script (`p5-7_v10_reference_targets`: 10-day from `p5-7_final_v10_10day`, 120-day from `p5-1_v10_120day`, which has all eight clocks and the same simulation values): X1–X4, X7, X10–X12 PASS; X5 spring, autumn and winter FAIL (0 / 19 / 0 / 0 trips per day); X6 FAIL (no fire); X8 FAIL (work 0.083 / 0.242, idle 0.774); X9 FAIL (0.554 / min 0.281).
+
+## Pass 6 baseline
+
+Part 0 (2026-10-11, Mac `hyunlordui-MacBookPro.local`, Darwin 27.0.0 arm64), base `682b4426` + goal commit. All runs release, `--workers 4`, from a frozen copy of the base probe binary built before any Pass 6 edit (the art run was running `cargo test` on the same Mac; Part 0 needs no timing).
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p6-0_v11_10day` | game_v11 0..64 × 10, `--check-determinism --clock-samples 02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30` | DETERMINISM PASS; equal to `p5-5_round3_10day` on all 5,546 shared values (0 differences) |
+| `p6-0_v11_120day` | game_v11 0..32 × 120, same flags | DETERMINISM PASS; equal to `p5-5_round3_120day` on all 49,773 shared values |
+| `p6-0_v10_10day` | game_v10 0..64 × 10, same flags | DETERMINISM PASS; 397 differences, all under `rhythm` / `runs[*].rhythm`, because `p5-7_final_v10_10day` ran without clock samples (the same note as Pass 5 Part 0); every other value identical |
+| `p6-0_v10_10day_noclock` | game_v10 0..64 × 10, `--check-determinism` (no clocks, as the reference) | DETERMINISM PASS; equal to `p5-7_final_v10_10day` on all 5,546 shared values |
+
+Fingerprints of `game_v11_scene(seed)` after 1,440 ticks, the constants of `harness_v11_fingerprints_unchanged` (`harness_revitalize_pass6_frozen.rs`): seed 0 `270000e767fea504` (forage trips 87, wood trips 33), seed 1 `f1d0871987035e90` (57, 32), seed 2 `f9c54edccd2f5d82` (85, 25), seed 3 `5a22e3cd53b90a43` (57, 28). The Pass 5 v10 constants stay in `harness_firewood_v10_unchanged` and its siblings.

@@ -573,3 +573,9 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-core/src/components/agent_state.rs` truth-table and serde tests | Add `GatherWood` Seeking/Consuming cases | strengthened |
 | 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | Adds a `game_v11` parse assertion | strengthened |
 | 2–7 | (none) | Parts 2–7 added only new tests (`harness_revitalize_pass5_{meals,firewood,preempt}.rs`, unit tests in `firewood.rs`, `fire.rs`, `cold.rs`, `rules.rs`, `worldgen/mod.rs`, `movement.rs`, `probe/pass5.rs`); no existing test was edited after Part 1 | — |
+
+## Pass 6
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 0 | (none) | Part 0 only adds `harness_revitalize_pass6_frozen.rs` (v11 fingerprints for seeds 0–3 and the field-by-field `game_v11()` literal) | — |

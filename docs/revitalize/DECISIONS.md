@@ -415,3 +415,9 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 - Three-strike stops: X5 autumn/winter (rounds 1–3 plus 18 screened variants) and the X9 minimum (rounds 1–3). Hypotheses in METRICS.md round 2.
 - Full gate on the final code head `c77ee27c`: green (debug 1,912 / release 1,912, both Clippy variants, forbidden math 0, bridge build, Godot import, strict check, smoke clean, 27 Python tests); log `verification/p5-7/gate_final.txt`. The green branch is fast-forwarded to the final docs head that follows it (docs only after `c77ee27c`).
 - `REPORT_PASS5.md` written in Korean (section 15 format). Part 7 end ≈ 03:25 KST. Elapsed working time ≈ 2 h 30 min (00:56 → 03:25); the 10-hour rule never triggered; no context compaction; nothing dropped from the drop order (cold nights and the preemption extension both shipped). Three-strike stops: X5 autumn/winter and the X9 minimum.
+
+## Pass 6
+
+- Run start 2026-10-11 05:03:39 KST on the Mac (`/Users/rexxa/work/new-world-pass4`, branch `codex/revitalize-2026-10-wip` at `682b4426`). Pre-flight: no git hooks; `.claude/settings.json` flagged `S` and holds `{}`. The local `.gitignore` edit and `.ignore` (graft tooling) stay uncommitted.
+- Part 0: the v10 10-day reference `p5-7_final_v10_10day` was produced without clock samples, so a clocked rerun differs only under `rhythm` (397 values). The strict comparison uses a rerun with the reference's own flags (`p6-0_v10_10day_noclock`, 0 differences); both are kept.
+- Part 0: "seeds 0..4" is read as the half-open range used everywhere in this project (seeds 0–3), as the Pass 5 `*_v10_unchanged` tests did.
