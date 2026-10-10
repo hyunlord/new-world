@@ -949,8 +949,8 @@ fn harness_p14_gamma_a22_world_renderer_tile_fallback_preserved() {
 
 #[test]
 fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
-    // Type D — only one new `world_sim.<name>(` may appear: get_agent_detail.
-    // All other call names must be subset of the existing Phase 14-β set.
+    // Type D — keep the explicit read-only FFI allowlist. Revitalize replaces
+    // renderer boot commands with building snapshots and one reset subscription.
     let src = read_world_renderer_src();
     let stripped = strip_gd_comments(&src);
     // Collect every `world_sim.<ident>(` call name.
@@ -979,7 +979,8 @@ fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
         }
     }
     let allowed: std::collections::BTreeSet<String> = [
-        "on_building_placed",
+        "get_building_snapshot",
+        "connect", // Godot built-in; restricted to the reset subscription below.
         "get_influence_overlay",
         "get_construction_snapshot",
         "get_settlement_snapshot",
@@ -994,10 +995,17 @@ fn harness_p14_gamma_a23_world_renderer_no_extra_ffi_added() {
     .iter()
     .map(|s| s.to_string())
     .collect();
+    if found.contains("connect") {
+        assert_eq!(
+            stripped.matches("world_sim.connect(").count(),
+            stripped.matches("world_sim.connect(\"world_reset\", refresh_snapshot)").count(),
+            "A23: only the world_reset snapshot-refresh subscription is allowed"
+        );
+    }
     let extras: Vec<_> = found.difference(&allowed).cloned().collect();
     assert!(
         extras.is_empty(),
-        "A23: world_renderer.gd introduces FFI calls outside the allowed Phase 14-γ set: \
+        "A23: world_renderer.gd introduces FFI calls outside the allowed renderer snapshot set: \
          {extras:?}; all calls = {found:?}"
     );
     assert!(

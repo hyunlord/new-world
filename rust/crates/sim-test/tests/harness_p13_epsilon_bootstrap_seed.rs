@@ -176,48 +176,14 @@ fn extract_on_building_placed_args(stripped: &str) -> Vec<String> {
     out
 }
 
-/// Parse a comma-separated arg list (depth-aware, so nested `Vector2(a, b)`
-/// is treated as one arg). Returns trimmed arg tokens.
-fn split_top_level_args(args: &str) -> Vec<String> {
-    let mut out: Vec<String> = Vec::new();
-    let mut depth: i32 = 0;
-    let mut current = String::new();
-    for c in args.chars() {
-        match c {
-            '(' | '[' | '{' => {
-                depth += 1;
-                current.push(c);
-            }
-            ')' | ']' | '}' => {
-                depth -= 1;
-                current.push(c);
-            }
-            ',' if depth == 0 => {
-                out.push(current.trim().to_string());
-                current.clear();
-            }
-            _ => current.push(c),
-        }
-    }
-    let last = current.trim().to_string();
-    if !last.is_empty() {
-        out.push(last);
-    }
-    out
-}
-
-/// Extract the body lines of a `for extra_x in [BOOTSTRAP_X_LEFT, BOOTSTRAP_X_RIGHT]:`
-/// loop in the stripped source. Returns the concatenated body (lines that
-/// are more deeply indented than the `for` line), or `None` if the loop is
-/// not present.
-fn extract_extra_x_loop_body(stripped: &str) -> Option<String> {
+/// Extract the real-building snapshot row loop for source-contract assertions.
+fn extract_building_rows_loop_body(stripped: &str) -> Option<String> {
     let lines: Vec<&str> = stripped.lines().collect();
     let mut for_idx: Option<usize> = None;
     for (idx, line) in lines.iter().enumerate() {
         let compact = no_ws(line);
         // Accept the canonical literal forms; tolerate either order of constants.
-        if compact.contains("forextra_xin[BOOTSTRAP_X_LEFT,BOOTSTRAP_X_RIGHT]:")
-            || compact.contains("forextra_xin[BOOTSTRAP_X_RIGHT,BOOTSTRAP_X_LEFT]:")
+        if compact.contains("fori:intinrange(ids.size()):")
         {
             for_idx = Some(idx);
             break;
@@ -274,120 +240,49 @@ fn harness_p13_epsilon_a2_bootstrap_x_right_constant_declared() {
 // ─── Assertion 3: three_on_building_placed_calls_total ───────────────────
 #[test]
 fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
-    // Type: A — exactly 3 call sites (centre + 2 flanks).
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let calls = extract_on_building_placed_args(&stripped);
-    assert_eq!(
-        calls.len(),
-        3,
-        "A3: stripped world_renderer.gd must contain EXACTLY 3 `on_building_placed(` \
-         call sites; got {n}: args={calls:?}",
-        n = calls.len()
+    assert!(
+        extract_on_building_placed_args(&stripped).is_empty(),
+        "Renderers must never create simulation buildings at boot"
     );
-    println!("[P13-ε A3] exactly 3 `on_building_placed(` call sites ✓");
 }
 
 // ─── Assertion 4: on_building_placed_arg_signatures ──────────────────────
 #[test]
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
-    // Type: A — the three call sites must use these exact arg tuples
-    // (any order): centre/left/right with shared BOOTSTRAP_Y + BOOTSTRAP_RADIUS.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let calls = extract_on_building_placed_args(&stripped);
-    assert_eq!(
-        calls.len(),
-        3,
-        "A4.0: precondition — must have 3 calls (covered by A3)"
-    );
-
-    let want: Vec<Vec<&str>> = vec![
-        vec!["BOOTSTRAP_X", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-        vec!["BOOTSTRAP_X_LEFT", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-        vec!["BOOTSTRAP_X_RIGHT", "BOOTSTRAP_Y", "BOOTSTRAP_RADIUS"],
-    ];
-    let mut matched = [false; 3];
-    let mut observed: Vec<Vec<String>> = Vec::new();
-    for args in calls.iter() {
-        let toks = split_top_level_args(args);
-        observed.push(toks.clone());
-        if toks.len() != 3 {
-            continue;
-        }
-        for (i, want_tuple) in want.iter().enumerate() {
-            if matched[i] {
-                continue;
-            }
-            if toks[0] == want_tuple[0]
-                && toks[1] == want_tuple[1]
-                && toks[2] == want_tuple[2]
-            {
-                matched[i] = true;
-                break;
-            }
-        }
+    assert!(stripped.contains("world_sim.get_building_snapshot()"));
+    for key in ["ids", "xs", "ys", "kinds"] {
+        assert!(stripped.contains(&format!("snap[\"{key}\"]")), "missing building snapshot key {key}");
     }
-    for (i, ok) in matched.iter().enumerate() {
-        assert!(
-            *ok,
-            "A4: expected on_building_placed tuple {tuple:?} not found among observed call args: {observed:?}",
-            tuple = want[i]
-        );
-    }
-    println!("[P13-ε A4] all three on_building_placed(...) arg tuples present (centre + left + right) ✓");
 }
 
 // ─── Assertion 5: extra_sprite_block_reuses_building_tex ─────────────────
 #[test]
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
-    // Type: A — must (a) loop exactly over BOOTSTRAP_X_LEFT and
-    // BOOTSTRAP_X_RIGHT, AND (b) assign `.texture = building_tex` inside.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect(
-        "A5.1: stripped source must contain a `for extra_x in [BOOTSTRAP_X_LEFT, \
-         BOOTSTRAP_X_RIGHT]:` loop (whitespace-tolerant)",
-    );
+    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
     let compact = no_ws(&body);
-    assert!(
-        compact.contains(".texture=building_tex"),
-        "A5.2: extra_x loop body must contain `.texture = building_tex` (reuse, no new \
-         load); body=\n{body}"
-    );
-    // Reinforce: no new `load(` for a building/campfire texture inside the loop.
-    assert!(
-        !compact.contains("load(\"res://assets/sprites/buildings/campfire/"),
-        "A5.3: extra_x loop body must NOT reload the campfire asset; reuse the \
-         existing `building_tex` variable. body=\n{body}"
-    );
-    println!("[P13-ε A5] for-loop iterates flanks AND reuses building_tex ✓");
+    assert!(compact.contains(".texture=_building_textures[kinds[i]]"));
+    assert!(!compact.contains("load("), "row loop must reuse cached textures");
 }
 
 // ─── Assertion 6: extra_sprite_z_index_is_z_building ─────────────────────
 #[test]
 fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
-    // Type: A — loop body must contain `.z_index = Z_BUILDING`.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect("A6.1: extra_x loop body must exist (covered by A5)");
-    let compact = no_ws(&body);
-    assert!(
-        compact.contains(".z_index=Z_BUILDING"),
-        "A6.2: extra_x loop body must contain `.z_index = Z_BUILDING` (Phase 12-β.1 \
-         canonical building layer constant); body=\n{body}"
-    );
-    println!("[P13-ε A6] extra_sprite.z_index = Z_BUILDING ✓");
+    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
+    assert!(no_ws(&body).contains(".z_index=Z_BUILDING"));
 }
 
 // ─── Assertion 7: extra_sprite_y_position_uses_bootstrap_y ───────────────
 #[test]
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
-    // Type: A — loop body's position expression must reference BOOTSTRAP_Y.
     let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_extra_x_loop_body(&stripped).expect("A7.1: extra_x loop body must exist (covered by A5)");
-    assert!(
-        body.contains("BOOTSTRAP_Y"),
-        "A7.2: extra_x loop body must reference `BOOTSTRAP_Y` in the Vector2 y \
-         component so all three buildings share the same horizontal row; body=\n{body}"
-    );
-    println!("[P13-ε A7] BOOTSTRAP_Y referenced in flank sprite Y position ✓");
+    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
+    let compact = no_ws(&body);
+    assert!(compact.contains("SPRITE_ORIGIN_X+xs[i]*TILE_SIZE"));
+    assert!(compact.contains("SPRITE_ORIGIN_Y+ys[i]*TILE_SIZE"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ────────────────────

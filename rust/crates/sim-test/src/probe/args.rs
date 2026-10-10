@@ -62,10 +62,7 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if parsed.scene == "game" {
-            return Err("game scene is not implemented until Part 2".into());
-        }
-        if parsed.scene != "legacy" {
+        if !matches!(parsed.scene.as_str(), "legacy" | "game") {
             return Err("scene must be legacy or game".into());
         }
         if parsed.seeds.is_empty() {
@@ -91,12 +88,13 @@ mod tests {
     fn validates_half_open_range_and_hard_worker_limit() {
         let args = parse(&["--seeds", "2..5", "--workers", "8"]).expect("valid");
         assert_eq!(args.seeds.collect::<Vec<_>>(), [2, 3, 4]);
+        assert!(parse(&["--scene", "game"]).is_ok());
         for args in [
             &["--workers", "9"][..],
             &["--workers", "0"],
             &["--seeds", "4..4"],
             &["--sample-every", "0"],
-            &["--scene", "game"],
+            &["--scene", "unknown"],
         ] {
             assert!(parse(args).is_err());
         }

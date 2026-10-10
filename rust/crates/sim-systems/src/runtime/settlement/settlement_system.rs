@@ -63,7 +63,7 @@ use std::collections::{HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::event::{CausalEvent, DecisionReason, DissolutionCause, EventId};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, BuildingId, Hunger, Inventory, Memory, Position,
+    Agent, AgentId, AgentState, BodyHealth, BuildingId, BuildingKind, Hunger, Inventory, Memory, Position,
     Settlement, SettlementId, Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
     SETTLEMENT_FORMATION_BUILDING_THRESHOLD, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
@@ -387,6 +387,20 @@ impl SettlementSystem {
         let mut candidate_tiles: Vec<(u32, u32)> = agent_positions.values().copied().collect();
         candidate_tiles.sort();
         candidate_tiles.dedup();
+        if resources.rules.society.shelter_planning.is_some() {
+            // Generated camps form around their real Hearth, so movement before
+            // formation cannot anchor the village on its westernmost resident.
+            // Default rules retain the exact legacy candidate sequence above.
+            let mut hearths: Vec<_> = buildings.iter().filter_map(|(_, position)| {
+                (resources.building_kinds.get(position) == Some(&BuildingKind::Hearth))
+                    .then_some(*position)
+            }).collect();
+            hearths.sort_by_key(|&(x, y)| (y, x));
+            hearths.dedup();
+            candidate_tiles.retain(|position| !hearths.contains(position));
+            hearths.extend(candidate_tiles);
+            candidate_tiles = hearths;
+        }
         for candidate in candidate_tiles {
             // Skip candidates inside an existing settlement's radius.
             if existing_anchors
@@ -898,6 +912,22 @@ mod tests {
     use super::*;
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;
+
+    #[test]
+    fn hearth_first_formation_is_opt_in() {
+        for generated in [false, true] {
+            let mut resources = SimResources::new(64, 64, sim_core::MaterialRegistry::new());
+            if generated { resources.rules = sim_core::rules::WorldRules::game_v8(); }
+            resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
+            let positions = HashMap::from([(0, (7, 7)), (1, (10, 10)), (2, (13, 13)), (3, (10, 9))]);
+            let buildings = vec![(0, (10, 10)), (1, (9, 9)), (2, (11, 9))];
+            let mut system = SettlementSystem::new();
+            system.run_formation_scan(&mut resources, &positions, &buildings, 64, 0);
+            let first = resources.settlements.get(&1).expect("formation threshold met");
+            assert_eq!(first.formation_tile, if generated { (10, 10) } else { (7, 7) });
+            if generated { assert_eq!(first.member_agents.len(), 4); }
+        }
+    }
 
     #[test]
     fn metadata() {

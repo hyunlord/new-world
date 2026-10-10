@@ -33,6 +33,7 @@
 use sim_engine::SimEngine;
 
 pub mod runtime;
+pub mod worldgen;
 
 /// Register the Phase 2 influence stack on `engine` in priority order.
 ///

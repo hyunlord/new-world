@@ -10,8 +10,28 @@ pub fn legacy_scene() -> SimEngine {
     engine
 }
 
+/// Seeded game fixture shared by instrumentation and integration tests.
+pub fn game_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world(&sim_systems::worldgen::WorldGenConfig::game_default(seed))
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn game_scene_preserves_seed_and_starts_with_twenty_four_agents() {
+        let engine = super::game_scene(7);
+        assert_eq!(engine.resources.world_seed, 7);
+        assert_eq!(engine.current_tick(), 0);
+        assert_eq!(
+            engine
+                .world
+                .query::<&sim_core::components::Agent>()
+                .iter()
+                .count(),
+            24
+        );
+    }
+
     #[test]
     fn legacy_boot_buildings_are_queued_without_advancing_time() {
         let engine = super::legacy_scene();

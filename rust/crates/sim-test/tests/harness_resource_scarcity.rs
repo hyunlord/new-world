@@ -1,7 +1,7 @@
 //! V7 feature `add-resource-scarcity-regen` (plan attempt 3, A1–A27) — finite
 //! resource scarcity + periodic regeneration harness.
 //!
-//! The production resource substrate is made FINITE (overwriting the
+//! The legacy V7 fixture resource substrate is made FINITE (overwriting the
 //! `RESOURCE_SOURCE_INFINITE` sentinel that `bootstrap_spawn_agents` seeds)
 //! and self-regenerating, so the already-shipped `StarvationSystem`
 //! (`c177804e`) actually fires: agents that lose the race to a depleted
@@ -10,7 +10,8 @@
 //! Information barrier: this harness is the SOLE owner of the scarcity-balance
 //! assertions. The 12 shared harnesses + `harness_starvation_death` must stay
 //! green UNMODIFIED (verified by the GATE, not by an assertion here) — proof
-//! that the blast radius is contained to the production `init` path.
+//! that the blast radius is contained to the legacy V7 fixture construction path.
+//! The live generated world now uses `worldgen::build_world`, not this fixture.
 //!
 //! Assertion ↔ threshold-type map (per FINAL plan attempt 3, A1–A27):
 //!   A1  finite seeding overwrites sentinel, all 3 kinds ............ Type A
@@ -28,7 +29,7 @@
 //!   A13 scarce-kind depletion — food AND water each (sleep non-scarce) . Type C
 //!   A14 depleted corner recovers via regen in integration (HARD) .. Type C
 //!   A15 scarcity run deterministic (incl. per-reason split) ....... Type A
-//!   A16 production init seeds finite for ALL 3 kinds + ceilings .... Type A
+//!   A16 legacy fixture seeds finite for ALL 3 kinds + ceilings .... Type A
 //!   A17 ResourceRegenSystem registered in default schedule ........ Type A
 //!   A18 regen respects interval cadence (> 1, withholds before) .... Type A
 //!   A19 SLEEP path depletes + regenerates (parity) ................ Type A
@@ -1255,13 +1256,13 @@ fn harness_scarcity_a15_determinism_of_scarcity_run() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// Assertion 16: production `init` seeds finite sources for ALL 3 kinds +
+// Assertion 16: legacy V7 fixture seeds finite sources for ALL 3 kinds +
 //               registers all 3 ceiling registries.
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_scarcity_a16_production_init_seeds_all_three_kinds_finite() {
-    // Type A — production-wiring invariant (CLAUDE.md rule 5). Build via the
-    // SHIPPED `init_production_engine` (same path `WorldSimNode::init` uses)
+    // Type A — legacy fixture-wiring invariant. Build via the frozen
+    // `init_production_engine`; the live node now uses `worldgen::build_world`.
     // WITHOUT the harness calling `seed_finite_resource_scarcity`. EACH of the
     // 3 kinds must have a FINITE source ∈ [1,254] AND its registry non-empty.
     let e = init_production_engine();
@@ -1270,9 +1271,9 @@ fn harness_scarcity_a16_production_init_seeds_all_three_kinds_finite() {
     let finite_food = has_finite(&e.resources.food_tiles);
     let finite_water = has_finite(&e.resources.water_tiles);
     let finite_sleep = has_finite(&e.resources.sleep_tiles);
-    assert!(finite_food, "A16: production init must seed a FINITE FOOD source (∈ [1,254])");
-    assert!(finite_water, "A16: production init must seed a FINITE WATER source (∈ [1,254])");
-    assert!(finite_sleep, "A16: production init must seed a FINITE SLEEP source (∈ [1,254])");
+    assert!(finite_food, "A16: legacy V7 fixture must seed a FINITE FOOD source (∈ [1,254])");
+    assert!(finite_water, "A16: legacy V7 fixture must seed a FINITE WATER source (∈ [1,254])");
+    assert!(finite_sleep, "A16: legacy V7 fixture must seed a FINITE SLEEP source (∈ [1,254])");
     assert!(!e.resources.food_source_max.is_empty(), "A16: food_source_max must be non-empty");
     assert!(!e.resources.water_source_max.is_empty(), "A16: water_source_max must be non-empty");
     assert!(!e.resources.sleep_source_max.is_empty(), "A16: sleep_source_max must be non-empty");

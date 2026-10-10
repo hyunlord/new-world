@@ -31,13 +31,14 @@ use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
 use sim_core::components::{
-    Agent, AgentId, BuildingId, Position, RelationshipKey, RelationshipState, Settlement,
+    Agent, AgentId, BuildingId, BuildingKind, Position, RelationshipKey, RelationshipState, Settlement,
     SettlementId,
 };
 use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
-use std::collections::{HashMap, HashSet, VecDeque};
+use sim_core::rules::WorldRules;
+use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// FFI-originated event: a building was placed at `position` with influence
@@ -147,6 +148,17 @@ pub const RESOURCE_SOURCE_INFINITE: u8 = u8::MAX;
 /// system a `&mut SimResources` and trusting priorities to serialise
 /// access.
 pub struct SimResources {
+    /// Construction-time policy; default preserves every legacy behavior.
+    pub rules: WorldRules,
+    /// Generation seed; legacy fixtures use zero.
+    pub world_seed: u64,
+    /// Building categories keyed by origin tile; absent categories mean Hearth.
+    pub building_kinds: BTreeMap<(u32, u32), BuildingKind>,
+    /// Settlement owner of each automatically planned construction site.
+    pub site_owner: BTreeMap<(u32, u32), SettlementId>,
+    /// Display-only count of planning attempts with no qualifying tile.
+    pub shelter_plan_skips: u64,
+
     /// Tile grid (T7.1 land — wall / floor / terrain SoA).
     pub tile_grid: TileGrid,
 
@@ -317,6 +329,11 @@ impl SimResources {
     pub fn new(width: u32, height: u32, registry: MaterialRegistry) -> Self {
         let blocking_cache = MaterialBlockingCache::build(&registry);
         Self {
+            rules: WorldRules::default(),
+            world_seed: 0,
+            building_kinds: BTreeMap::new(),
+            site_owner: BTreeMap::new(),
+            shelter_plan_skips: 0,
             tile_grid: TileGrid::new(width, height),
             influence_grid: InfluenceGrid::new(width, height),
             material_registry: registry,
@@ -550,6 +567,16 @@ mod tests {
     use sim_core::influence::InfluenceChannel;
     use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
+
+    #[test]
+    fn generated_world_resources_start_legacy_and_empty() {
+        let resources = SimResources::new(64, 64, MaterialRegistry::new());
+        assert_eq!(resources.rules, WorldRules::default());
+        assert_eq!(resources.world_seed, 0);
+        assert!(resources.building_kinds.is_empty());
+        assert!(resources.site_owner.is_empty());
+        assert_eq!(resources.shelter_plan_skips, 0);
+    }
 
     fn empty_registry() -> MaterialRegistry {
         MaterialRegistry::new()

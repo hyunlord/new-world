@@ -20,7 +20,7 @@ Authoritative specification: owner attachment, copied outside the clone to
 |---|---|---|---|
 | 0 | arm64 extension, baseline gates | complete | 1729 debug + release tests; clippy and Godot gates pass |
 | 1 | tallies, shared scenes, probe, captures, frozen legacy pin | complete (capture exception) | 1748 tests, both Clippy checks, strict14 and smoke900 PASS; four legacy repeats deterministic |
-| 2 | default-legacy rules, world generation, terrain/building FFI | pending | |
+| 2 | default-legacy rules, world generation, terrain/building FFI | complete | 1764 tests; both Clippy checks; strict14/smoke900; live Godot 48 checks |
 | 3 | gated survival/growth loop, 64-seed tuning | pending | |
 | 4 | deterministic art, truthful renderers/HUD, visual QA | pending | |
 | 5 | full verification, Korean report, pushed draft PR | pending | |
@@ -58,3 +58,43 @@ smoke900: PASS; capture/camera standalone check-only: PASS. Forbidden math
 scan and added-production unwrap scan: zero hits. Independent read-only
 review found no blockers. Four 10-day legacy repeats matched every sampled
 fingerprint. Raw evidence remains ignored; summaries are committed.
+# Sparse berry edge repair
+
+The exact recipe fails for seeds 247, 338, 345, 383, 426, 728, 759 and 773 in the deterministic 1,156-seed geometry audit (0..=1024, u64::MAX, 2^63, 2^63-1 and 128 high hashed seeds). Camp selection itself succeeded for every audited seed. The failures are fewer than 12 Forest/Plain berry candidates or fewer than three centres separated by six tiles.
+
+When and only when the original candidates fail, exchange a local Plain edge tile in camp radius 6..=16 with a distant Forest tile outside radius16. Rank both deterministically by hash salt9 then y,x; while centres are missing require each new edge to be at least six tiles from the current greedy centres. Never exchange building or water tiles. Re-run the original hash-salt8 cluster recipe after every swap. This preserves total Plain/Forest/Hill/Mountain/River counts exactly, elevation bytes, river geometry, camp, buildings, resident positions and resources. It changes the strict moisture-quantile classification only for deficient seeds, an explicit necessary relaxation to satisfy the requested exact bush count.
+
+All eight failing audited seeds recover with 1..7 swaps and retain exact global class counts. Original successful audited seeds perform zero swaps. Evidence: p2-extended-geometry-results.json and p2-repair-geometry-results.json. These are standalone Python algorithm reproductions, not compiled Rust evidence or a proof over all 2^64 seeds. Runtime harness includes all eight regression seeds and passed the Part 2 full gate.
+
+## Generated camp formation
+
+The required tick-2 all-24-members invariant conflicts with the legacy
+lexicographically-first resident anchor: movement precedes formation and a
+ring-three camp can span more than radius five from its westernmost resident.
+For worlds with shelter planning enabled, prepend real registered Hearth
+tiles (sorted y,x) to the formation candidates. Preserve all thresholds,
+private birth bookkeeping, causal events, and the exact default candidate
+path. This narrow Part 2 rule read is necessary before Part 3 behavior wiring;
+no settlement state is fabricated by worldgen or GDScript. A focused test
+checks both legacy and generated anchors; worldgen invariants verify 24
+members by tick two for normal and repaired regression seeds.
+
+`reset_world` emits its notification deferred: synchronous listeners would
+reenter snapshot getters while Rust still holds the mutable node borrow.
+Reset preserves simulation speed and rebuilds only this node's engine.
+Building snapshots contain registered buildings only; queued camp buildings
+appear after the first simulation tick, with no invented render-only ids.
+
+## Part 2 boundary
+
+Completed 2026-10-10 12:43:22 KST; began after Part 1 push at ~12:29.
+1764 debug tests passed, zero failed (Part1 +16); 111 result groups.
+Both Clippy invocations, forbidden math, production unwrap scan, strict14,
+and smoke900 pass. Actual Godot main-scene FFI/reset test passed 48 checks
+and three deferred reset callbacks, including reentrant snapshot reads.
+The 16-seed untuned 10-day probe is a diagnostic only: rules are defined but
+Part 3 behavior is not wired yet; median dehydration deaths272 and alive103.5
+are not survival acceptance. Renderer ledger records eight replaced static
+test functions and three wording-only provenance corrections; no behavioral
+predicate, frozen pin, or test retirement changed. Captures remain skipped
+under the documented environment exception.

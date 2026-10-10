@@ -45,6 +45,7 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
+use sim_systems::worldgen::{build_world, WorldGenConfig, DEFAULT_GAME_SEED};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -144,6 +145,8 @@ pub const INITIAL_SLEEP: u8 = 80;
 #[class(base=Node)]
 pub struct WorldSimNode {
     engine: SimEngine,
+    /// Seed retained for repeatable tooling resets.
+    world_seed: u64,
     accumulator: f64,
     /// V7 Section 16-γ — wall-time → accumulator scale (Option A speed
     /// control). Multiplies the per-frame `delta` fed to the Gaffer
@@ -172,7 +175,8 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            engine: init_production_engine(),
+            engine: build_world(&WorldGenConfig::game_default(DEFAULT_GAME_SEED)),
+            world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
             base,
@@ -207,6 +211,38 @@ impl INode for WorldSimNode {
 
 #[godot_api]
 impl WorldSimNode {
+    /// Emitted after a complete engine replacement so renderers refresh snapshots.
+    #[signal]
+    fn world_reset();
+
+    /// Rebuild the seeded world, preserving the caller's wall-clock speed setting.
+    #[func]
+    fn reset_world(&mut self, seed: i64) -> bool {
+        self.world_seed = seed as u64;
+        self.engine = build_world(&WorldGenConfig::game_default(self.world_seed));
+        self.accumulator = 0.0;
+        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        true
+    }
+
+    /// Read seed, dimensions, and simulation pacing from authoritative resources.
+    #[func]
+    fn get_world_info(&self) -> VarDictionary {
+        world_info_to_dict(collect_world_info(&self.engine.resources))
+    }
+
+    /// Read row-major terrain codes and elevation from the simulation grid.
+    #[func]
+    fn get_terrain_snapshot(&self) -> VarDictionary {
+        terrain_snapshot_to_dict(&collect_terrain_snapshot(&self.engine.resources))
+    }
+
+    /// Read real buildings ordered by their stable simulation building ids.
+    #[func]
+    fn get_building_snapshot(&self) -> VarDictionary {
+        building_rows_to_dict(&collect_building_snapshot(&self.engine.resources))
+    }
+
     /// Advance a bounded number of deterministic ticks for capture tooling.
     #[func]
     fn advance_ticks(&mut self, n: i64) -> i64 {
@@ -2379,22 +2415,11 @@ pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
     }
 }
 
-/// Build the production [`SimEngine`] exactly as the live `WorldSimNode::init`
-/// path does — the SINGLE construction entry point the dylib uses to build the
-/// initial `SimResources` for the real game.
+/// Build the legacy V7 lattice fixture used by harnesses.
 ///
-/// Order:
-/// 1. [`register_default_runtime_systems`] — every default simulation system
-///    (BSS, IUS, AIS, AgentMovement, AgentDecision, Hunger/Thirst/Sleep decay,
-///    Construction, Social, Memory, Combat, Settlement, Starvation,
-///    ResourceRegen, InfluenceVisualization).
-/// 2. [`bootstrap_spawn_agents`] — the 64-agent lattice + INFINITE source seeds.
-/// 3. [`seed_finite_resource_scarcity`] — overwrite sources to finite + register
-///    regen ceilings (`add-resource-scarcity-regen`).
-///
-/// `pub` so the scarcity harness can exercise the shipped construction path
-/// headlessly (A10 production-wiring invariant — proves the dylib seeds finite
-/// sources, not merely that the seed function exists).
+/// The live game uses `worldgen::build_world`. This frozen legacy constructor
+/// keeps the original registration, bootstrap and finite-scarcity order so
+/// historical behavioral tests and trajectory fingerprints remain comparable.
 pub fn init_production_engine() -> SimEngine {
     let mut engine = SimEngine::new(DEFAULT_W, DEFAULT_H, MaterialRegistry::new());
     register_default_runtime_systems(&mut engine);
@@ -2512,5 +2537,177 @@ mod revitalize_tooling_tests {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         assert_eq!(advance_engine_ticks(&mut engine, -8), 0);
         assert_eq!(advance_engine_ticks(&mut engine, 200_001), 200_000);
+    }
+}
+
+/// Seed and pacing metadata consumed by renderers and deterministic tooling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WorldInfoSnapshot {
+    /// Seed used by world generation.
+    pub seed: u64,
+    /// Map width in tiles.
+    pub width: u32,
+    /// Map height in tiles.
+    pub height: u32,
+    /// Simulation ticks per day.
+    pub ticks_per_day: u64,
+    /// Ticks between agent movement opportunities.
+    pub move_interval_ticks: u64,
+}
+
+/// Read immutable world metadata directly from the authoritative resources.
+pub fn collect_world_info(resources: &SimResources) -> WorldInfoSnapshot {
+    WorldInfoSnapshot {
+        seed: resources.world_seed,
+        width: resources.tile_grid.width,
+        height: resources.tile_grid.height,
+        ticks_per_day: resources.ticks_per_day,
+        move_interval_ticks: resources.rules.agent.move_interval_ticks,
+    }
+}
+
+fn world_info_to_dict(snapshot: WorldInfoSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("seed", snapshot.seed as i64);
+    dict.set("width", snapshot.width as i64);
+    dict.set("height", snapshot.height as i64);
+    dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
+    dict.set("move_interval_ticks", snapshot.move_interval_ticks as i64);
+    dict
+}
+
+/// Row-major terrain arrays independent of Godot packed-array allocation.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TerrainSnapshot {
+    /// Map width in tiles.
+    pub width: u32,
+    /// Map height in tiles.
+    pub height: u32,
+    /// Declaration-order terrain codes (Plain 0 through Cave 9).
+    pub terrain: Vec<u8>,
+    /// Elevation bytes, aligned with terrain.
+    pub elevation: Vec<u8>,
+}
+
+/// Copy simulation grid data in its canonical row-major order.
+pub fn collect_terrain_snapshot(resources: &SimResources) -> TerrainSnapshot {
+    TerrainSnapshot {
+        width: resources.tile_grid.width,
+        height: resources.tile_grid.height,
+        terrain: resources.tile_grid.terrain_type.iter().map(|terrain| *terrain as u8).collect(),
+        elevation: resources.tile_grid.elevation.clone(),
+    }
+}
+
+fn terrain_snapshot_to_dict(snapshot: &TerrainSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("width", snapshot.width as i64);
+    dict.set("height", snapshot.height as i64);
+    dict.set("terrain", PackedByteArray::from(snapshot.terrain.as_slice()));
+    dict.set("elevation", PackedByteArray::from(snapshot.elevation.as_slice()));
+    dict
+}
+
+/// One real registered building and its simulation-owned kind.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BuildingSnapshotRow {
+    /// Stable BuildingId from the building registry.
+    pub id: u64,
+    /// Building tile x coordinate.
+    pub x: u32,
+    /// Building tile y coordinate.
+    pub y: u32,
+    /// BuildingKind::code, defaulting to Hearth (0) for legacy buildings.
+    pub kind: u8,
+}
+
+/// Join registered buildings with their tile-keyed kinds and sort by id.
+pub fn collect_building_snapshot(resources: &SimResources) -> Vec<BuildingSnapshotRow> {
+    let mut rows: Vec<BuildingSnapshotRow> = resources.building_registry.iter()
+        .map(|(&id, &(x, y))| BuildingSnapshotRow {
+            id,
+            x,
+            y,
+            kind: resources.building_kinds.get(&(x, y))
+                .map_or(0, |kind| kind.code()),
+        })
+        .collect();
+    rows.sort_by_key(|row| row.id);
+    rows
+}
+
+fn building_rows_to_dict(rows: &[BuildingSnapshotRow]) -> VarDictionary {
+    let mut ids = PackedInt64Array::new();
+    let mut xs = PackedInt32Array::new();
+    let mut ys = PackedInt32Array::new();
+    let mut kinds = PackedByteArray::new();
+    ids.resize(rows.len());
+    xs.resize(rows.len());
+    ys.resize(rows.len());
+    kinds.resize(rows.len());
+    for (index, row) in rows.iter().enumerate() {
+        ids[index] = row.id as i64;
+        xs[index] = row.x as i32;
+        ys[index] = row.y as i32;
+        kinds[index] = row.kind;
+    }
+    let mut dict = VarDictionary::new();
+    dict.set("ids", ids);
+    dict.set("xs", xs);
+    dict.set("ys", ys);
+    dict.set("kinds", kinds);
+    dict
+}
+
+#[cfg(test)]
+mod revitalize_world_snapshot_tests {
+    use super::{collect_building_snapshot, collect_terrain_snapshot, collect_world_info, BuildingSnapshotRow};
+    use sim_core::components::BuildingKind;
+    use sim_core::material::{MaterialRegistry, TerrainType};
+    use sim_engine::SimResources;
+
+    #[test]
+    fn world_info_reads_world_seed_dimensions_and_rules() {
+        let mut resources = SimResources::new(3, 7, MaterialRegistry::new());
+        resources.world_seed = 41;
+        resources.ticks_per_day = 120;
+        resources.rules.agent.move_interval_ticks = 6;
+        let snapshot = collect_world_info(&resources);
+        assert_eq!(snapshot.seed, 41);
+        assert_eq!((snapshot.width, snapshot.height), (3, 7));
+        assert_eq!(snapshot.ticks_per_day, 120);
+        assert_eq!(snapshot.move_interval_ticks, 6);
+    }
+
+    #[test]
+    fn terrain_snapshot_preserves_all_codes_and_row_major_elevation() {
+        let mut resources = SimResources::new(5, 2, MaterialRegistry::new());
+        resources.tile_grid.terrain_type = vec![
+            TerrainType::Plain, TerrainType::Forest, TerrainType::Mountain,
+            TerrainType::Hill, TerrainType::River, TerrainType::Coast,
+            TerrainType::Desert, TerrainType::Tundra, TerrainType::Swamp, TerrainType::Cave,
+        ];
+        resources.tile_grid.elevation = vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+        let snapshot = collect_terrain_snapshot(&resources);
+        assert_eq!((snapshot.width, snapshot.height), (5, 2));
+        assert_eq!(snapshot.terrain, (0..10).collect::<Vec<u8>>());
+        assert_eq!(snapshot.elevation, vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+    }
+
+    #[test]
+    fn building_snapshot_sorts_ids_and_defaults_legacy_to_hearth() {
+        let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
+        resources.building_registry.insert(7, (1, 2));
+        resources.building_registry.insert(2, (3, 4));
+        resources.building_registry.insert(5, (5, 6));
+        resources.building_kinds.insert((3, 4), BuildingKind::Shelter);
+        resources.building_kinds.insert((5, 6), BuildingKind::Stockpile);
+        // An unregistered kind must not invent a real building.
+        resources.building_kinds.insert((0, 0), BuildingKind::Hearth);
+        assert_eq!(collect_building_snapshot(&resources), vec![
+            BuildingSnapshotRow { id: 2, x: 3, y: 4, kind: 1 },
+            BuildingSnapshotRow { id: 5, x: 5, y: 6, kind: 2 },
+            BuildingSnapshotRow { id: 7, x: 1, y: 2, kind: 0 },
+        ]);
     }
 }

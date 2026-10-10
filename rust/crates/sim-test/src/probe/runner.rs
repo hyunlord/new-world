@@ -1,5 +1,9 @@
 //! A bounded scoped pool; each worker owns independent engines and output files.
-use super::{args::ProbeArgs, metrics::sample, summary};
+use super::{
+    args::ProbeArgs,
+    metrics::{sample, shelter_count},
+    summary,
+};
 use serde_json::Value;
 use sim_core::components::Agent;
 use std::{
@@ -67,8 +71,13 @@ fn check_sample(first: &Value, second: &Value, seed: u64) -> Result<(), String> 
 
 fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let started = Instant::now();
-    let mut engine = crate::scenes::legacy_scene();
-    let mut twin = args.check_determinism.then(crate::scenes::legacy_scene);
+    let make_scene = || match args.scene.as_str() {
+        "game" => crate::scenes::game_scene(seed),
+        _ => crate::scenes::legacy_scene(),
+    };
+    let mut engine = make_scene();
+    let initial_shelters = shelter_count(&engine);
+    let mut twin = args.check_determinism.then(make_scene);
     let ticks_per_day = engine.resources.ticks_per_day;
     let total_ticks = args
         .days
@@ -86,9 +95,13 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             && tick.is_multiple_of(ticks_per_day)
             && [1, 3, 5, 10].contains(&(tick / ticks_per_day));
         if regular || checkpoint {
-            let mut row = sample(&engine, &args.scene, seed, 0);
+            let mut row = sample(&engine, &args.scene, seed, initial_shelters);
             if let Some(twin) = &twin {
-                check_sample(&row, &sample(twin, &args.scene, seed, 0), seed)?;
+                check_sample(
+                    &row,
+                    &sample(twin, &args.scene, seed, initial_shelters),
+                    seed,
+                )?;
             }
             if row
                 .as_object()

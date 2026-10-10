@@ -417,65 +417,13 @@ fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
 // ─── Assertion 11: bootstrap_sprite_positioned_at_bootstrap_tile ─────────
 #[test]
 fn harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile() {
-    // Type: A — position assignment references BOOTSTRAP_X, BOOTSTRAP_Y,
-    // SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y, AND TILE_SIZE.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
+    let stripped = strip_gd_comments(&read_file(WORLD_RENDERER_PATH));
+    let start = stripped.find("func _update_buildings()").expect("building snapshot renderer");
+    let body = &stripped[start..];
+    assert!(body.contains("world_sim.get_building_snapshot()"));
+    assert!(body.contains("SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2.0"));
+    assert!(body.contains("SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2.0"));
 
-    // Find lines containing `.position =` AND the bootstrap identifiers.
-    // The expression may span multiple lines (Vector2(...) call). We scan for
-    // the `.position =` line and concatenate up to the matching closing paren
-    // depth-zero.
-    let position_idx = stripped
-        .find(".position = ")
-        .or_else(|| stripped.find(".position =\n"))
-        .unwrap_or_else(|| panic!("A11.1: must contain a `.position =` assignment"));
-
-    // Conservatively, grab a 400-char window from .position = forward.
-    let window_end = (position_idx + 800).min(stripped.len());
-    // Find the next .position = after this one to limit the window, but for
-    // the first match the window is fine.
-    let window = &stripped[position_idx..window_end];
-
-    // Find the closing paren matching the first Vector2( within the window.
-    // We just scan the window for all five identifiers — the Godot Vector2
-    // expression is a single statement so consecutive identifiers in
-    // proximity is sufficient.
-    let required = [
-        "BOOTSTRAP_X",
-        "BOOTSTRAP_Y",
-        "SPRITE_ORIGIN_X",
-        "SPRITE_ORIGIN_Y",
-        "TILE_SIZE",
-    ];
-
-    // Try multiple `.position = ` occurrences if needed.
-    let mut found_all = false;
-    let mut search_from = 0usize;
-    while let Some(rel) = stripped[search_from..].find(".position = ") {
-        let abs = search_from + rel;
-        let end = (abs + 800).min(stripped.len());
-        let w = &stripped[abs..end];
-        // Stop at the next .position = if any.
-        let stop = w[12..]
-            .find(".position = ")
-            .map(|i| i + 12)
-            .unwrap_or(w.len());
-        let scoped = &w[..stop];
-        if required.iter().all(|r| scoped.contains(r)) {
-            found_all = true;
-            break;
-        }
-        search_from = abs + 12;
-    }
-    let _ = window; // explicit no-warn
-    assert!(
-        found_all,
-        "A11.2: a `.position = ` assignment must reference ALL of \
-         BOOTSTRAP_X, BOOTSTRAP_Y, SPRITE_ORIGIN_X, SPRITE_ORIGIN_Y, TILE_SIZE \
-         within a single expression"
-    );
-    println!("[P12-β A11] bootstrap sprite .position uses 5 grid constants ✓");
 }
 
 // ─── Assertion 12: z_order_constants_match_spec ──────────────────────────

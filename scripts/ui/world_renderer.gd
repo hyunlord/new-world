@@ -19,8 +19,7 @@ extends Node2D
 # one F6 session. T7.10.F completes the Phase 2 stamped-channel
 # dispatch-shell escape (6/6 stamped channels wired).
 #
-# Bootstrap: places one building at (32, 32) radius 8 so the BuildingStamp
-# system has something to drive. Initial channel = Warmth.
+# Buildings are read from the Rust registry; rendering never bootstraps state.
 
 const TILE_SIZE := 16
 const GRID_W := 64
@@ -198,6 +197,8 @@ var image: Image
 # site. Keyed dictionary so the per-frame reaper can free Sprite2D nodes
 # corresponding to despawned (completed or otherwise removed) sites.
 var _construction_sprites: Dictionary = {}
+var _building_sprites: Dictionary = {}
+var _building_textures: Array[Texture2D] = []
 
 # V7 Phase 12-γ — entity_bits (int) → Sprite2D for the corresponding
 # Settlement's furniture placeholder. Same keyed-Dictionary pattern as
@@ -225,10 +226,6 @@ func _ready() -> void:
 		return
 	# Direction-2 slice 2-5a — cache the Locale autoload for the Food labels.
 	_locale = get_node_or_null("/root/Locale")
-	world_sim.on_building_placed(BOOTSTRAP_X, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
-	# V7 Phase 13-ε — additional bootstrap buildings flanking the centre at ±8.
-	world_sim.on_building_placed(BOOTSTRAP_X_LEFT, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
-	world_sim.on_building_placed(BOOTSTRAP_X_RIGHT, BOOTSTRAP_Y, BOOTSTRAP_RADIUS)
 	image = Image.create(GRID_W, GRID_H, false, Image.FORMAT_L8)
 	texture = ImageTexture.create_from_image(image)
 	sprite = Sprite2D.new()
@@ -268,35 +265,15 @@ func _ready() -> void:
 	else:
 		push_error("WorldRenderer: failed to load terrain TileSet at %s" % TERRAIN_TILESET_PATH)
 
-	# V7 Phase 12-β — bootstrap building sprite at BOOTSTRAP_X/BOOTSTRAP_Y.
-	# One building only; multi-building rendering requires a new
-	# `collect_building_snapshot` SimBridge FFI and is deferred to Phase
-	# 12-β.2. Position uses the same SPRITE_ORIGIN + TILE_SIZE basis as
-	# the influence overlay so terrain + building + overlay align.
-	var building_tex: Texture2D = load(BUILDING_SPRITE_PATH) as Texture2D
-	if building_tex != null:
-		var building_sprite := Sprite2D.new()
-		building_sprite.texture = building_tex
-		building_sprite.position = Vector2(
-			SPRITE_ORIGIN_X + BOOTSTRAP_X * TILE_SIZE + TILE_SIZE / 2.0,
-			SPRITE_ORIGIN_Y + BOOTSTRAP_Y * TILE_SIZE + TILE_SIZE / 2.0,
-		)
-		building_sprite.z_index = Z_BUILDING
-		add_child(building_sprite)
-		# V7 Phase 13-ε — flanking bootstrap building sprites at the left and
-		# right positions. Reuse `building_tex` already loaded above; if it
-		# failed to load, the parent guard handles it.
-		for extra_x in [BOOTSTRAP_X_LEFT, BOOTSTRAP_X_RIGHT]:
-			var extra_sprite := Sprite2D.new()
-			extra_sprite.texture = building_tex
-			extra_sprite.position = Vector2(
-				float(SPRITE_ORIGIN_X + extra_x * TILE_SIZE) + float(TILE_SIZE) / 2.0,
-				float(SPRITE_ORIGIN_Y + BOOTSTRAP_Y * TILE_SIZE) + float(TILE_SIZE) / 2.0,
-			)
-			extra_sprite.z_index = Z_BUILDING
-			add_child(extra_sprite)
-	else:
-		push_error("WorldRenderer: failed to load building sprite at %s" % BUILDING_SPRITE_PATH)
+	# Kind-indexed textures for real Rust-owned buildings only.
+	for path: String in [
+		BUILDING_SPRITE_PATH,
+		"res://assets/sprites/furniture/lean_to/1.png",
+		"res://assets/sprites/buildings/stockpile/1.png",
+	]:
+		_building_textures.append(load(path) as Texture2D)
+	world_sim.connect("world_reset", refresh_snapshot)
+	refresh_snapshot()
 
 	# V7 Phase 13-β — scatter resource placeholder sprites.
 	# Decorative-only layer placed deterministically from RESOURCE_SEED.
@@ -410,6 +387,7 @@ func _process(_delta: float) -> void:
 		if data.size() == GRID_W * GRID_H:
 			image = Image.create_from_data(GRID_W, GRID_H, false, Image.FORMAT_L8, data)
 			texture.update(image)
+	_update_buildings()
 	# V7 Phase 12-β.2 (A3) — ingest construction-site snapshot.
 	_update_construction_sites()
 	# V7 Phase 12-γ — ingest settlement snapshot for furniture placeholders.
@@ -666,3 +644,37 @@ func _fetch_causal_history(tx: int, ty: int) -> void:
 	if panel != null and panel.has_method("display_history"):
 		panel.call("display_history", history, tx, ty)
 		panel.visible = true
+
+
+func refresh_snapshot() -> void:
+	_update_buildings()
+
+
+func _update_buildings() -> void:
+	if world_sim == null:
+		return
+	var snap: Dictionary = world_sim.get_building_snapshot()
+	var ids: PackedInt64Array = snap["ids"]
+	var xs: PackedInt32Array = snap["xs"]
+	var ys: PackedInt32Array = snap["ys"]
+	var kinds: PackedByteArray = snap["kinds"]
+	var present: Dictionary = {}
+	for i: int in range(ids.size()):
+		var building_id: int = ids[i]
+		present[building_id] = true
+		var building_sprite: Sprite2D = _building_sprites.get(building_id, null) as Sprite2D
+		if building_sprite == null:
+			building_sprite = Sprite2D.new()
+			building_sprite.z_index = Z_BUILDING
+			add_child(building_sprite)
+			_building_sprites[building_id] = building_sprite
+		building_sprite.texture = _building_textures[kinds[i]]
+		building_sprite.position = Vector2(
+			SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + TILE_SIZE / 2.0,
+			SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + TILE_SIZE / 2.0,
+		)
+	for building_id: int in _building_sprites.keys():
+		if not present.has(building_id):
+			var stale: Sprite2D = _building_sprites[building_id]
+			stale.queue_free()
+			_building_sprites.erase(building_id)

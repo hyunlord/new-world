@@ -22,3 +22,11 @@ new behavior. Detailed distributions: `probe/p1_legacy/summary.md` and JSON.
 ## Game tuning
 
 Pending Part 2 untuned reference and Part 3 bounded tuning rounds.
+
+## Part 2 untuned world (16 seeds)
+
+Before Part 3 behavior is connected, median day-10 alive=103.5, births=353,
+dehydration deaths=272, starvation deaths=0, shelters completed=0, sampled
+idle breach share=15.432967%, home distance=10.967236 tiles. This is a
+reference, not a target result: unrestricted legacy births and wandering
+are still active. Full distributions: `probe/p2_game_untuned/summary.*`.

@@ -2,11 +2,11 @@
 use super::fingerprint::{fingerprint, state_tag};
 use serde_json::{json, Value};
 use sim_core::components::{
-    Agent, AgentState, ConstructionSite, Hunger, Inventory, Position, ResourceKind, Sleep, Social,
-    Thirst,
+    Agent, AgentState, BuildingKind, ConstructionSite, Hunger, Inventory, Position, ResourceKind,
+    Sleep, Social, Thirst,
 };
 use sim_engine::{SimEngine, RESOURCE_SOURCE_INFINITE};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Linearly interpolate a sorted quantile, returning zero for no observations.
 pub(super) fn percentile(values: &[f64], fraction: f64) -> f64 {
@@ -27,6 +27,16 @@ fn mean(values: &[f64]) -> f64 {
     } else {
         values.iter().sum::<f64>() / values.len() as f64
     }
+}
+
+/// Count typed shelters, including boot placements not stamped until tick one.
+pub(super) fn shelter_count(engine: &SimEngine) -> usize {
+    engine
+        .resources
+        .building_kinds
+        .values()
+        .filter(|kind| **kind == BuildingKind::Shelter)
+        .count()
 }
 
 /// Collect the stable schema without changing simulation state.
@@ -79,8 +89,13 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             distances.push(f64::from(pos.x.abs_diff(x).max(pos.y.abs_diff(y))));
         }
     }
-    // Part 1 has no building kind taxonomy; this is intentionally zero until Part 2.
-    let shelters = 0usize;
+    let shelters = shelter_count(engine);
+    let stamped_tiles: BTreeSet<_> = r.building_registry.values().copied().collect();
+    let buildings = r.building_registry.len()
+        + r.building_kinds
+            .keys()
+            .filter(|tile| !stamped_tiles.contains(*tile))
+            .count();
     json!({
         "schema_version": 1, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
@@ -92,7 +107,7 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         "fatigue_mean": mean(&fatigue), "loneliness_mean": mean(&loneliness),
         "state_idle": idle, "state_seeking": seeking, "state_consuming": consuming,
         "idle_with_breach": breach, "settlements": settlements.len(), "settled_agents": distances.len(),
-        "home_distance_mean": mean(&distances), "buildings": r.building_registry.len(),
+        "home_distance_mean": mean(&distances), "buildings": buildings,
         "shelters": shelters, "construction_sites": engine.world.query::<&ConstructionSite>().iter().count(),
         "shelters_completed": shelters.saturating_sub(initial_shelters),
         "stockpile_food": settlements.iter().map(|s| u64::from(s.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))).sum::<u64>(),
@@ -107,6 +122,20 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn game_boot_shelters_are_initial_not_new_completions() {
+        let mut engine = crate::scenes::game_scene(1);
+        let initial = shelter_count(&engine);
+        assert_eq!(initial, 3);
+        for _ in 0..2 {
+            let row = sample(&engine, "game", 1, initial);
+            assert_eq!(row["buildings"], 5);
+            assert_eq!(row["shelters"], 3);
+            assert_eq!(row["shelters_completed"], 0);
+            engine.tick();
+        }
+    }
+
     #[test]
     fn quantiles_interpolate_and_empty_is_finite() {
         assert_eq!(percentile(&[], 0.9), 0.0);

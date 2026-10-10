@@ -42,6 +42,7 @@
 pub mod agent;
 pub mod agent_state;
 pub mod body_health;
+pub mod building_kind;
 pub mod construction;
 pub mod hunger;
 pub mod inventory;
@@ -59,6 +60,7 @@ pub mod thirst;
 pub use agent::{Agent, AgentId};
 pub use agent_state::{AgentState, TargetKind};
 pub use body_health::{BodyHealth, DEFAULT_MAX_HP};
+pub use building_kind::{BuildingKind, SHELTER_BLUEPRINT_ID, shelter_blueprint};
 pub use construction::{BlueprintId, BuildingBlueprint, ConstructionSite};
 pub use hunger::Hunger;
 pub use inventory::{Inventory, INVENTORY_CAPACITY};
