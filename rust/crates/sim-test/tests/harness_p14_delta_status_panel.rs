@@ -595,14 +595,13 @@ fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer()
 fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head(
 ) {
     // Type D (strict) — full-file SHA-256 must match the recorded
-    // pre-implementation hash. Captured from HEAD at planning time
-    // (2026-05-29) via:
+    // reviewed HUD snapshot hash. Revitalize Pass 2 Part 4 capture commands:
     //   shasum -a 256 scripts/ui/panels/hud_topbar.gd
     //   wc -l scripts/ui/panels/hud_topbar.gd
-    // Revitalize Part 4: 105 lines; localized snapshot counters replace the Tick label.
+    // Revitalize Pass 2 Part 4: localized activity legend extends the reviewed HUD to 159 lines.
     const EXPECTED_HASH: &str =
-        "905fcc65cc4e2003a8e166d234e6a9604a23511ff855cb50ed31f2484c68db71";
-    const EXPECTED_LINES: usize = 105;
+        "d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1";
+    const EXPECTED_LINES: usize = 159;
 
     let path = project_root()
         .join("scripts")

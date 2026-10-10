@@ -524,3 +524,12 @@ The final canonical count is 230, distinct from 226 historical mixed-granularity
 |---|---|---|---|---|---|
 | A0229 | rust/crates/sim-test/tests/harness_show_death_visual.rs | harness_death_a6_scene_wiring_additive | [exact baseline macro, line 439](TEST_ASSERTIONS.md#a0229) | [F113: current function line 423](TEST_ASSERTIONS.md#f113) | Goal 9.2, 9.3, 9.6: three new renderer resources bring ext_resource count to 16 and scene load_steps to 17; existing node and script-identity guards preserved |
 | A0230 | rust/crates/sim-test/tests/harness_show_death_visual.rs | harness_death_a6_scene_wiring_additive | [exact baseline macro, line 445](TEST_ASSERTIONS.md#a0230) | [F113: current function line 423](TEST_ASSERTIONS.md#f113) | Goal 9.2, 9.3, 9.6: three new renderer resources bring ext_resource count to 16 and scene load_steps to 17; existing node and script-identity guards preserved |
+
+## Pass 2 Part 5 — reviewed HUD legend snapshot repin
+
+The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780b legitimately changes the strict full-file snapshot. The mutation audit baseline exposed this missed repin; it was not counted as a mutation kill. Both equality assertions remain strict. The original Pass 1 canonical 230 occurrences/113 contracts above remain historical accounting, not a claim that their snapshot bytes are current.
+
+| File | Function | Assertion | Old input | New input | Goal reason |
+|---|---|---|---|---|---|
+| rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs | harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head | A17.2 line-count equality | EXPECTED_LINES = 105 | EXPECTED_LINES = 159 | Pass 2 Part 4 localized activity legend; Part 5 audit baseline repair |
+| rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs | harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head | A17.3 SHA-256 equality | 905fcc65cc4e2003a8e166d234e6a9604a23511ff855cb50ed31f2484c68db71 | d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1 | Same reviewed 159-line HUD bytes; no weakened predicate |
