@@ -71,6 +71,29 @@ pub const WATER_REGEN_AMOUNT: u8 = 1;
 /// Units restored to each registered SLEEP source per regen interval.
 pub const SLEEP_REGEN_AMOUNT: u8 = 1;
 
+/// Display day index `(current_tick + clock_offset_ticks) / ticks_per_day`.
+pub fn day_index(resources: &SimResources) -> u64 {
+    resources
+        .current_tick
+        .saturating_add(resources.rules.clock_offset_ticks)
+        .checked_div(resources.ticks_per_day)
+        .unwrap_or(0)
+}
+
+/// Current `(season, one-based day of season)`; `None` when seasons are off.
+///
+/// `season = (d / days_per_season) % 4` with 0 spring, 1 summer, 2 autumn,
+/// 3 winter; display day `d = 0` is the first day of spring.
+pub fn season_at(resources: &SimResources) -> Option<(usize, u32)> {
+    let rule = resources.rules.seasons?;
+    let per_season = u64::from(rule.days_per_season);
+    if per_season == 0 {
+        return None;
+    }
+    let d = day_index(resources);
+    Some((((d / per_season) % 4) as usize, (d % per_season) as u32 + 1))
+}
+
 /// Resource regeneration system (priority 140, interval [`REGEN_INTERVAL`]).
 #[derive(Debug, Default)]
 pub struct ResourceRegenSystem;
@@ -97,13 +120,23 @@ fn snapshot(map: &HashMap<(u32, u32), u8>) -> Vec<((u32, u32), u8)> {
 /// RECREATES a depleted tile from zero. Sentinel tiles are never touched
 /// (protects any infinite source). Saturating arithmetic + `min(max)`
 /// guarantee the value never exceeds the ceiling.
-fn regen_channel(sources: &[((u32, u32), u8)], tiles: &mut HashMap<(u32, u32), u8>, amount: u8) {
+///
+/// Returns the regrowth discarded by the ceiling: `cur + amount - max` units
+/// when the pulse overshoots, and the whole pulse when the source is already
+/// full. Sentinel tiles discard nothing (they never regenerate).
+fn regen_channel(sources: &[((u32, u32), u8)], tiles: &mut HashMap<(u32, u32), u8>, amount: u8) -> u64 {
+    let mut lost = 0u64;
     for &(key, max) in sources {
         let cur = tiles.get(&key).copied().unwrap_or(0);
-        if cur != RESOURCE_SOURCE_INFINITE && cur < max {
+        if cur == RESOURCE_SOURCE_INFINITE {
+            continue;
+        }
+        lost += (u64::from(cur) + u64::from(amount)).saturating_sub(u64::from(max.max(cur)));
+        if cur < max {
             tiles.insert(key, cur.saturating_add(amount).min(max));
         }
     }
+    lost
 }
 
 impl RuntimeSystem for ResourceRegenSystem {
@@ -121,7 +154,9 @@ impl RuntimeSystem for ResourceRegenSystem {
 
     fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
         let food = snapshot(&resources.food_source_max);
-        regen_channel(&food, &mut resources.food_tiles, FOOD_REGEN_AMOUNT);
+        // Display-only: counted in every scene, never read by simulation logic.
+        resources.tallies.regen_lost_at_cap +=
+            regen_channel(&food, &mut resources.food_tiles, FOOD_REGEN_AMOUNT);
         let water = snapshot(&resources.water_source_max);
         regen_channel(&water, &mut resources.water_tiles, WATER_REGEN_AMOUNT);
         let sleep = snapshot(&resources.sleep_source_max);

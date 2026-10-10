@@ -76,6 +76,14 @@ pub struct Tallies {
     pub meals_eaten: u64,
     /// Ground hunger relief events that found no food to consume.
     pub meals_without_food: u64,
+    /// Agents lost to old age under the aging rule (Pass 4).
+    pub deaths_old_age: u64,
+    /// Purposeful forage trips started by the Forage decision arm (Pass 4).
+    pub forage_trips: u64,
+    /// Stockpile deposits made by members who walked home to haul (Pass 4).
+    pub haul_deposits: u64,
+    /// Food regrowth units discarded because a source was at its ceiling.
+    pub regen_lost_at_cap: u64,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).

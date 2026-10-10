@@ -68,6 +68,8 @@ pub enum DeathReason {
     Dehydration,
     /// Defender `BodyHealth.is_dead()` after a `CombatSystem` damage tick.
     Combat,
+    /// Age reached the drawn `Life::lifespan_ticks` under the aging rule.
+    OldAge,
 }
 
 impl DeathReason {
@@ -78,13 +80,15 @@ impl DeathReason {
             DeathReason::Starvation => "starvation",
             DeathReason::Dehydration => "dehydration",
             DeathReason::Combat => "combat",
+            DeathReason::OldAge => "old_age",
         }
     }
 
     /// Stable numeric discriminant consumed by the death-marker renderer
     /// (V7 viz-D `show-death-visual`). Mirrors [`DeathReason::as_str`]; the
     /// GDScript colour switch keys off these exact values:
-    /// `0 = Starvation` (brown), `1 = Dehydration` (blue), `2 = Combat` (red).
+    /// `0 = Starvation` (brown), `1 = Dehydration` (blue), `2 = Combat` (red),
+    /// `3 = OldAge` (Pass 4; the renderer predates it and needs its own colour).
     /// Any other value would mis-colour the marker, so the mapping is a locked
     /// contract.
     pub fn as_u8(&self) -> u8 {
@@ -92,6 +96,7 @@ impl DeathReason {
             DeathReason::Starvation => 0,
             DeathReason::Dehydration => 1,
             DeathReason::Combat => 2,
+            DeathReason::OldAge => 3,
         }
     }
 }

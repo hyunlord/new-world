@@ -60,6 +60,10 @@ mod tests {
             food_harvested: 0,
             meals_eaten: 0,
             meals_without_food: 0,
+            deaths_old_age: 0,
+            forage_trips: 0,
+            haul_deposits: 0,
+            regen_lost_at_cap: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

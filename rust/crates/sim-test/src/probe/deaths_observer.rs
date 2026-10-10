@@ -1,7 +1,7 @@
 //! Probe-only observation between needs decay and the two lethal systems.
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Hunger, Position, ResourceKind, Thirst,
+    Agent, AgentId, AgentState, Child, Hunger, Life, Position, ResourceKind, Thirst,
 };
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use std::{
@@ -29,6 +29,8 @@ pub(super) struct AgentFrame {
     pub(super) child: bool,
     /// Whether the agent had a bed before despawn cleanup.
     pub(super) bed: bool,
+    /// Birth tick under the aging rule; absent without `Life`.
+    pub(super) born_tick: Option<i64>,
 }
 
 #[derive(Default, Debug)]
@@ -69,9 +71,10 @@ pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
                 Option<&Hunger>,
                 Option<&Thirst>,
                 Option<&Child>,
+                Option<&Life>,
             )>()
             .iter()
-            .map(|(_, (agent, pos, state, hunger, thirst, child))| {
+            .map(|(_, (agent, pos, state, hunger, thirst, child, life))| {
                 (
                     agent.id,
                     AgentFrame {
@@ -83,6 +86,7 @@ pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
                         settlement_food: stocks.get(&agent.id).copied(),
                         child: child.is_some(),
                         bed: resources.bed_of.contains_key(&agent.id),
+                        born_tick: life.map(|life| life.born_tick),
                     },
                 )
             })

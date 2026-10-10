@@ -42,7 +42,7 @@ impl ProbeArgs {
                 continue;
             }
             if flag == "--help" {
-                return Err("usage: worldsim_probe --scene legacy|game|game_v9 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
+                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
             }
             let value = args
                 .next()
@@ -66,14 +66,14 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9") {
-            return Err("scene must be legacy, game or game_v9".into());
+        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10") {
+            return Err("scene must be legacy, game, game_v9 or game_v10".into());
         }
         if parsed.seeds.is_empty() {
             return Err("seeds must be a nonempty half-open range".into());
         }
-        if !(1..=120).contains(&parsed.days) || parsed.sample_every == 0 {
-            return Err("days must be 1..=120 and sample-every must be positive".into());
+        if !(1..=150).contains(&parsed.days) || parsed.sample_every == 0 {
+            return Err("days must be 1..=150 and sample-every must be positive".into());
         }
         if !(1..=8).contains(&parsed.workers) {
             return Err("workers must be between 1 and 8".into());
@@ -132,7 +132,8 @@ mod tests {
         assert_eq!(super::clock_tick(2, 120, 1440, 480), Some(1080));
         assert_eq!(super::clock_tick(1, 720, 1440, 480), Some(240));
         assert!(parse(&["--days", "120", "--scene", "game_v9"]).is_ok());
-        assert!(parse(&["--days", "121"]).is_err());
+        assert!(parse(&["--days", "150", "--scene", "game_v10"]).is_ok());
+        assert!(parse(&["--days", "151"]).is_err());
     }
     #[test]
     fn validates_half_open_range_and_hard_worker_limit() {

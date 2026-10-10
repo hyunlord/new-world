@@ -1,9 +1,37 @@
 //! Every-tick death census. Observers preserve death-tick needs after decay.
 use super::deaths_observer::{self, AgentFrame, SharedObservations};
 use serde_json::{json, Value};
+use sim_core::causal::event::{CausalEvent, DeathReason};
 use sim_core::components::{AgentId, AgentState, Hunger, TargetKind, Thirst};
 use sim_engine::SimEngine;
 use std::{collections::BTreeMap, time::Duration};
+
+/// Actual reason recorded by `survival::despawn_agent` for `id` during the
+/// tick that just completed: the `AgentDied` chronicle at the death tile, else
+/// the display-only recent-deaths buffer entry at that tile and tick.
+fn recorded_reason(engine: &SimEngine, id: AgentId, position: (u32, u32)) -> Option<DeathReason> {
+    let r = &engine.resources;
+    let internal_tick = engine.current_tick().saturating_sub(1);
+    let tile = position.1 * r.tile_grid.width + position.0;
+    r.causal_log
+        .get(tile)
+        .and_then(|log| {
+            log.as_slice().iter().rev().find_map(|event| match event {
+                CausalEvent::AgentDied { agent, reason, .. } if *agent == id => Some(*reason),
+                _ => None,
+            })
+        })
+        .or_else(|| {
+            r.recent_deaths
+                .iter()
+                .rev()
+                .find(|d| {
+                    (d.x, d.y) == (position.0 as i32, position.1 as i32)
+                        && u64::from(d.tick) == internal_tick
+                })
+                .map(|d| d.reason)
+        })
+}
 
 fn state_name(state: AgentState) -> String {
     let (tag, target) = match state {
@@ -161,7 +189,7 @@ impl Census {
 pub(super) struct DeathTracker {
     history: BTreeMap<AgentId, History>,
     observations: SharedObservations,
-    baseline: [u64; 3],
+    baseline: [u64; 4],
     /// Run aggregates checked against production counters.
     pub(super) census: Census,
 }
@@ -223,7 +251,12 @@ impl DeathTracker {
                 return Err("death history missing".into());
             };
             history.observe(at_death, tick);
-            let cause = if at_death.thirst >= Thirst::SATURATION {
+            let reason = recorded_reason(engine, id, at_death.position);
+            // Old age comes from the recorded reason; the three Pass 3 causes keep
+            // their saturation inference so v8/v9 census rows stay comparable.
+            let cause = if reason == Some(DeathReason::OldAge) {
+                "old_age"
+            } else if at_death.thirst >= Thirst::SATURATION {
                 "dehydration"
             } else if at_death.hunger >= f64::from(Hunger::SATURATION) {
                 "starvation"
@@ -254,7 +287,11 @@ impl DeathTracker {
                 "settlement_food_stock_at_death":at_death.settlement_food,
                 "formation_distance_at_death":at_death.home.map(distance),
                 "life_stage_at_death":if at_death.child { "child" } else { "adult" },
-                "bed_assigned":at_death.bed});
+                "bed_assigned":at_death.bed,
+                "death_reason":reason.map(|reason| reason.as_str()),
+                "age_days_at_death":at_death.born_tick.map(|born| {
+                    (tick as i64 - born) as f64 / engine.resources.ticks_per_day.max(1) as f64
+                })});
             self.census.record(&row);
             records.push(row);
         }
@@ -270,7 +307,7 @@ impl DeathTracker {
         Ok((records, observed.elapsed))
     }
     fn cross_check(&self, engine: &SimEngine) -> Result<(), String> {
-        for ((cause, actual), baseline) in ["dehydration", "starvation", "other"]
+        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age"]
             .into_iter()
             .zip(tallies(engine))
             .zip(self.baseline)
@@ -284,9 +321,9 @@ impl DeathTracker {
         Ok(())
     }
 }
-fn tallies(engine: &SimEngine) -> [u64; 3] {
+fn tallies(engine: &SimEngine) -> [u64; 4] {
     let t = &engine.resources.tallies;
-    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat]
+    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age]
 }
 
 #[cfg(test)]
@@ -333,7 +370,10 @@ mod tests {
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0]["cause"], "dehydration");
         assert_eq!(rows[0]["thirst_at_death"], 100.0);
-        assert_eq!(rows[0].as_object().expect("object").len(), 23);
+        // Schema 4 adds death_reason and age_days_at_death to the 23 Pass 3 keys.
+        assert_eq!(rows[0].as_object().expect("object").len(), 23 + 2);
+        assert_eq!(rows[0]["death_reason"], "dehydration");
+        assert!(rows[0]["age_days_at_death"].is_null());
     }
     #[test]
     fn death_metadata_survives_membership_and_bed_cleanup() {
@@ -417,6 +457,59 @@ mod tests {
         assert_eq!(rows[0]["drank_since_breach"], true);
     }
 
+    /// Despawns every agent of old age at priority 146, like `AgingSystem`.
+    struct OldAgeReaper;
+    impl RuntimeSystem for OldAgeReaper {
+        fn name(&self) -> &str {
+            "OldAgeReaper"
+        }
+        fn priority(&self) -> u32 {
+            146
+        }
+        fn tick_interval(&self) -> u64 {
+            1
+        }
+        fn tick(&mut self, world: &mut hecs::World, resources: &mut SimResources) {
+            let victims: Vec<_> = world
+                .query::<(&sim_core::components::Agent, &Position)>()
+                .iter()
+                .map(|(entity, (agent, pos))| (entity, agent.id, (pos.x, pos.y)))
+                .collect();
+            for (entity, id, position) in victims {
+                let tick = resources.current_tick;
+                despawn_agent(world, resources, entity, id, position, DeathReason::OldAge, tick);
+            }
+        }
+    }
+
+    #[test]
+    fn old_age_reads_the_recorded_reason_and_age_and_matches_the_tally() {
+        let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
+        let entity = engine.spawn_agent(2, 5);
+        engine
+            .world
+            .insert(
+                entity,
+                (
+                    AgentState::Idle,
+                    Hunger::new(10.0, 0.0),
+                    Thirst::new(10.0, 0.0),
+                    sim_core::components::Life { born_tick: -2_880, lifespan_ticks: 2_880 },
+                ),
+            )
+            .expect("components");
+        engine.register_system(Box::new(OldAgeReaper));
+        let mut tracker = DeathTracker::install(&mut engine);
+        engine.tick();
+        let (rows, _) = tracker.after_tick(&engine, "test", 0, "test").expect("old-age tally");
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0]["cause"], "old_age");
+        assert_eq!(rows[0]["death_reason"], "old_age");
+        assert_eq!(rows[0]["age_days_at_death"], 2_881.0 / 1_440.0);
+        assert_eq!(engine.resources.tallies.deaths_old_age, 1);
+        assert_eq!(tracker.census.causes.get("old_age"), Some(&1));
+    }
+
     #[test]
     fn a_new_thirst_crossing_resets_history_without_double_counting() {
         let mut frame = AgentFrame {
@@ -430,6 +523,7 @@ mod tests {
             settlement_food: None,
             child: false,
             bed: false,
+            born_tick: None,
         };
         let mut history = History::new(&frame, 0);
         frame.state = AgentState::Consuming {

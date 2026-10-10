@@ -95,6 +95,7 @@ pub fn despawn_agent(
         DeathReason::Starvation => resources.tallies.deaths_starvation += 1,
         DeathReason::Dehydration => resources.tallies.deaths_dehydration += 1,
         DeathReason::Combat => resources.tallies.deaths_combat += 1,
+        DeathReason::OldAge => resources.tallies.deaths_old_age += 1,
     }
 
     // Chronicle the death at its tile.

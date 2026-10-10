@@ -10,6 +10,8 @@ pub struct WorldRules {
     pub society: SocietyRules,
     /// Display clock offset in simulation ticks; zero in legacy worlds.
     pub clock_offset_ticks: u64,
+    /// Seasonal food regrowth; absent keeps the fixed yearly rate.
+    pub seasons: Option<SeasonRule>,
 }
 /// Individual movement policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -32,6 +34,8 @@ pub struct AgentRules {
     pub night_rest: Option<NightRestRule>,
     /// Clock-based idle-adult gathering; absent preserves the normal tether.
     pub evening_gather: Option<EveningGatherRule>,
+    /// Purposeful daytime foraging and hauling. None = Pass 3 behaviour.
+    pub forage: Option<ForageRule>,
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -54,6 +58,10 @@ pub struct SocietyRules {
     pub relief_radius: Option<u32>,
     /// Newborn child stage; absent creates adult newborns.
     pub life_stage: Option<LifeStageRule>,
+    /// Store target that drives foraging. None = Pass 3 behaviour.
+    pub stock_target: Option<StockTargetRule>,
+    /// Aging and natural death. None = nobody ages (legacy, v8, v9).
+    pub aging: Option<AgingRule>,
 }
 /// Conditions for a settlement to produce a child.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -160,6 +168,56 @@ pub struct LifeStageRule {
     /// Maximum child idle distance from the settlement hearth.
     pub tether_radius: u32,
 }
+/// Purposeful daytime foraging toward bushes and hauling food home.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ForageRule {
+    /// Inclusive first minute of the forage window.
+    pub start_minute: u32,
+    /// Exclusive final minute of the forage window.
+    pub end_minute: u32,
+    /// Chebyshev bush radius around the settlement formation tile.
+    pub forage_radius: u32,
+    /// Carried food at which a forager walks home.
+    pub haul_threshold: u32,
+    /// Hard cap on foragers heading to one bush.
+    pub max_foragers_per_bush: u32,
+}
+/// Settlement store target that starts and stops foraging.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct StockTargetRule {
+    /// Days of current member need kept in store.
+    pub base_days: f64,
+    /// Add the expected winter shortfall in summer and autumn (seasons only).
+    pub winter_prep: bool,
+    /// Opportunistic gathering stops at this multiple of the target.
+    pub hoard_cap_factor: f64,
+}
+/// Deterministic lifespans, elder stage and natural death.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AgingRule {
+    /// Age at which an agent becomes an elder.
+    pub elder_age_ticks: u64,
+    /// Mean drawn lifespan.
+    pub lifespan_mean_ticks: u64,
+    /// Half-width of the drawn lifespan range.
+    pub lifespan_spread_ticks: u64,
+    /// Youngest founder age.
+    pub founder_age_min_ticks: u64,
+    /// Oldest founder age.
+    pub founder_age_max_ticks: u64,
+    /// Minimum life left to every founder at world creation.
+    pub founder_min_remaining_ticks: u64,
+    /// Idle elder distance from the settlement formation tile.
+    pub elder_tether_radius: u32,
+}
+/// Four seasons scaling food regrowth.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SeasonRule {
+    /// Display days per season; a year is four seasons.
+    pub days_per_season: u32,
+    /// Food regrowth per pulse in thousandths: spring, summer, autumn, winter.
+    pub regen_permille: [u16; 4],
+}
 impl Default for WorldRules {
     fn default() -> Self {
         Self {
@@ -173,6 +231,7 @@ impl Default for WorldRules {
                 strict_consume: false,
                 night_rest: None,
                 evening_gather: None,
+                forage: None,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -180,12 +239,33 @@ impl Default for WorldRules {
                 settlement_anchor: SettlementAnchor::AnyCluster,
                 relief_radius: None,
                 life_stage: None,
+                stock_target: None,
+                aging: None,
             },
             clock_offset_ticks: 0,
+            seasons: None,
         }
     }
 }
 impl WorldRules {
+    /// Pass 4 village policies: v9 retuned for twelve bushes. v9 stays frozen.
+    pub const fn game_v10() -> Self {
+        let mut rules = Self::game_v9();
+        rules.society.birth = BirthRule::Provisioned {
+            cooldown_ticks: 720,
+            food_cost: 10,
+            max_mean_hunger: 60.0,
+            max_mean_thirst: 60.0,
+            sustain: Some(SustainRule {
+                // 12 bushes x 12/day = 144; (42 + 1) x 2.4 = 103.2 > 101.52 >= 42 x 2.4.
+                utilization: 0.705,
+                reserve_days: 0.5,
+                forage_radius: 16,
+            }),
+        };
+        rules
+    }
+
     /// Versioned opt-in village policies; frozen v8 remains unchanged.
     pub const fn game_v9() -> Self {
         let mut rules = Self::game_v8();
@@ -238,6 +318,7 @@ impl WorldRules {
                 strict_consume: false,
                 night_rest: None,
                 evening_gather: None,
+                forage: None,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -261,8 +342,11 @@ impl WorldRules {
                 settlement_anchor: SettlementAnchor::AnyCluster,
                 relief_radius: None,
                 life_stage: None,
+                stock_target: None,
+                aging: None,
             },
             clock_offset_ticks: 480,
+            seasons: None,
         }
     }
 }
@@ -281,6 +365,10 @@ mod tests {
             );
             assert_eq!(rules.society.relief_radius, None);
             assert_eq!(rules.society.life_stage, None);
+            assert_eq!(rules.agent.forage, None);
+            assert_eq!(rules.society.stock_target, None);
+            assert_eq!(rules.society.aging, None);
+            assert_eq!(rules.seasons, None);
             if let Some(planning) = rules.society.shelter_planning {
                 assert_eq!(planning.housing, HousingCount::NearFormation);
                 assert_eq!(planning.planning_headroom, 0);
@@ -290,6 +378,20 @@ mod tests {
             }
         }
     }
+    #[test]
+    fn game_v10_differs_from_v9_only_in_sustain_utilization() {
+        let mut v10 = WorldRules::game_v10();
+        let BirthRule::Provisioned { sustain: Some(sustain), .. } = v10.society.birth else {
+            panic!("v10 must keep provisioned sustain births");
+        };
+        assert_eq!(sustain.utilization, 0.705);
+        // (m + 1) x 2.4 <= 0.705 x 144 = 101.52 admits m = 41 (98.4) and rejects m = 42 (103.2).
+        let usable = sustain.utilization * 144.0;
+        assert!((42.0 * 2.4..43.0 * 2.4).contains(&usable));
+        v10.society.birth = WorldRules::game_v9().society.birth;
+        assert_eq!(v10, WorldRules::game_v9());
+    }
+
     #[test]
     fn legacy_has_no_opt_in_behavior() {
         let r = WorldRules::default();
@@ -305,6 +407,7 @@ mod tests {
                 strict_consume: false,
                 night_rest: None,
                 evening_gather: None,
+                forage: None,
             }
         );
         assert_eq!(
@@ -315,6 +418,8 @@ mod tests {
                 settlement_anchor: SettlementAnchor::AnyCluster,
                 relief_radius: None,
                 life_stage: None,
+                stock_target: None,
+                aging: None,
             }
         );
         assert_eq!(r.clock_offset_ticks, 0);

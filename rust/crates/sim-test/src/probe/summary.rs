@@ -154,7 +154,8 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
         )
     })
     .collect();
-    let report = json!({"schema_version":3,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    markdown.push_str(&pass4_sections(args, runs));
+    let report = json!({"schema_version":4,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
@@ -162,6 +163,87 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     .map_err(|e| e.to_string())?;
     fs::write(args.out.join("summary.md"), markdown).map_err(|e| e.to_string())?;
     Ok(())
+}
+
+/// Per-day difference of a cumulative counter between successive elapsed-day checkpoints.
+fn daily(run: &RunResult, day: u64, key: &str) -> Option<f64> {
+    let now = run.checkpoints.get(&day)?[key].as_f64()?;
+    let before = run
+        .checkpoints
+        .get(&(day - 1))
+        .and_then(|row| row[key].as_f64())
+        .unwrap_or(0.0);
+    Some(now - before)
+}
+
+/// Pass 4 Seasons, Demography and Foraging sections.
+fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+    const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
+    let mut out = String::from("\n## Seasons\n\nEach elapsed day is attributed to the season of its closing checkpoint (display 08:00 with the 480-tick clock offset), so a season-boundary day is counted in the new season. Without seasons every day is spring. Supply is the current-season nominal union-catchment supply; harvest, regrowth lost at the cap and forage trips are per-day counter differences; stock is the checkpoint stockpile. Values are medians over every seed-day in the season.\n\n| Season | Seed-days | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
+    for (index, name) in SEASONS.iter().enumerate() {
+        let mut columns: [Vec<f64>; 6] = Default::default();
+        for run in runs {
+            for day in 1..=args.days {
+                let Some(row) = run.checkpoints.get(&day) else { continue };
+                if row["season"].as_u64() != Some(index as u64) {
+                    continue;
+                }
+                for (column, value) in columns.iter_mut().zip([
+                    row["food_supply_season_per_day"].as_f64(),
+                    daily(run, day, "food_harvested_total"),
+                    row["food_need_per_day"].as_f64(),
+                    row["stockpile_food"].as_f64(),
+                    daily(run, day, "regen_lost_at_cap_total"),
+                    daily(run, day, "forage_trips_total"),
+                ]) {
+                    column.push(value.unwrap_or(0.0));
+                }
+            }
+        }
+        if columns[0].is_empty() {
+            continue;
+        }
+        out.push_str(&format!("| {name} | {} |", columns[0].len()));
+        for column in &columns {
+            out.push_str(&format!(" {:.3} |", percentile(column, 0.5)));
+        }
+        out.push('\n');
+    }
+    out.push_str("\n## Demography\n\nMedians across seeds at each elapsed-day checkpoint. Births and deaths are cumulative; adults include elders; mean age covers residents with `Life` (zero without aging).\n\n| Day | Alive | Births | Starvation | Dehydration | Combat | Old age | Children | Adults | Elders | Mean age (days) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    let median_at = |day: u64, key: &str| {
+        percentile(
+            &runs
+                .iter()
+                .filter_map(|run| run.checkpoints.get(&day).and_then(|row| row[key].as_f64()))
+                .collect::<Vec<_>>(),
+            0.5,
+        )
+    };
+    for day in 1..=args.days {
+        out.push_str(&format!("| {day} |"));
+        for key in ["alive", "births", "deaths_starvation", "deaths_dehydration", "deaths_combat",
+            "deaths_old_age", "children", "adults", "elders", "mean_age_days"] {
+            out.push_str(&format!(" {:.3} |", median_at(day, key)));
+        }
+        out.push('\n');
+    }
+    out.push_str("\n## Foraging\n\nMedians across seeds. Trips, haul deposits and regrowth lost are per-day counter differences; target, stock in hand (stockpile plus food carried by members) and home distance are checkpoint values.\n\n| Day | Forage trips/day | Haul deposits/day | Stock target | Stock in hand | Stockpile | Regrowth lost/day | Home distance |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
+    for day in 1..=args.days {
+        let per_day = |key: &str| {
+            percentile(&runs.iter().filter_map(|run| daily(run, day, key)).collect::<Vec<_>>(), 0.5)
+        };
+        out.push_str(&format!(
+            "| {day} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            per_day("forage_trips_total"),
+            per_day("haul_deposits_total"),
+            median_at(day, "stock_target"),
+            median_at(day, "stock_in_hand"),
+            median_at(day, "stockpile_food"),
+            per_day("regen_lost_at_cap_total"),
+            median_at(day, "home_distance_mean"),
+        ));
+    }
+    out
 }
 
 fn rhythm(run: &RunResult) -> Value {

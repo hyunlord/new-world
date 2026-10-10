@@ -177,8 +177,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v9(DEFAULT_GAME_SEED),
-                WorldRules::game_v9(),
+                &WorldGenConfig::game_v10(DEFAULT_GAME_SEED),
+                WorldRules::game_v10(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -224,8 +224,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v9(self.world_seed),
-            WorldRules::game_v9(),
+            &WorldGenConfig::game_v10(self.world_seed),
+            WorldRules::game_v10(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -2495,7 +2495,7 @@ pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
 
 /// Build the legacy V7 lattice fixture used by harnesses.
 ///
-/// The live game uses `worldgen::build_world_with` with v9 rules. This frozen legacy constructor
+/// The live game uses `worldgen::build_world_with` with v10 rules. This frozen legacy constructor
 /// keeps the original registration, bootstrap and finite-scarcity order so
 /// historical behavioral tests and trajectory fingerprints remain comparable.
 pub fn init_production_engine() -> SimEngine {
@@ -2562,6 +2562,7 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("deaths_starvation", tallies.deaths_starvation as i64);
     dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
     dict.set("deaths_combat", tallies.deaths_combat as i64);
+    dict.set("deaths_old_age", tallies.deaths_old_age as i64);
     dict
 }
 
@@ -2623,6 +2624,10 @@ mod revitalize_tooling_tests {
             food_harvested: 0,
             meals_eaten: 0,
             meals_without_food: 0,
+            deaths_old_age: 0,
+            forage_trips: 0,
+            haul_deposits: 0,
+            regen_lost_at_cap: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

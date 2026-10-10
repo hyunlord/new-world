@@ -12,7 +12,7 @@ pub mod beds;
 pub mod maturation;
 pub mod movement;
 
-pub use movement::{AgentMovementSystem, MovementRng};
+pub use movement::{haul_due, AgentMovementSystem, MovementRng};
 
 pub use beds::BedAssignmentSystem;
 pub use maturation::MaturationSystem;

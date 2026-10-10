@@ -959,3 +959,12 @@ Seed 7 and seed 8 trajectories (elapsed-day checkpoints; harvest and meals are p
 | 60 | 42 | 18 | 659 | 108 | 102 | 8 | 28 | 42 | 18 | 47 | 98 | 96 | 0 | 28 |
 
 Seed 8 stays at the 24 founders with zero births until day 45 while its bushes keep about 28 of 40 units on the ground; seed 7 reaches 42 by day 24 and its stock climbs to 659 by day 60. This reproduces section 3.2.
+
+## Pass 4 Part 1 — v9 over 120 days (instrument baseline)
+
+`p4-1_v9_120day`: `--scene game_v9 --seeds 0..32 --days 120 --check-determinism --clock-samples 02:00,12:00,19:30`, schema 4, DETERMINISM PASS. Days 1–60 equal `p3-7_final_60day` on all 15,300 shared day values; the 4,500 extra values are the 15 new schema-4 keys.
+
+- Population: median 42 from day 10 to day 120, births 18, zero deaths of any cause, children 0 after day 44 — the frozen village of section 3.2.
+- Store: stockpile median 29.5 on day 1, 452.5 on day 118, 463.5 on day 120 (hoarding grows without bound).
+- Regrowth lost at the 4-unit cap: 32 units on day 1, about 13–15 per day later (median per seed-day 15 over all 120 days).
+- Harvest median 104 per day against a nominal supply of 120 and a need of 100.8.

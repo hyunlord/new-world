@@ -44,7 +44,10 @@
 use std::collections::BTreeMap;
 
 use hecs::World;
-use sim_core::components::{Agent, AgentId, AgentState, Child, Position, SeekTarget};
+use sim_core::components::{
+    Agent, AgentId, AgentState, Child, Position, SeekTarget, SETTLEMENT_PROXIMITY_RADIUS,
+};
+use sim_core::rules::ForageRule;
 use sim_engine::{RuntimeSystem, SimResources};
 use crate::runtime::decision::agent_decision::clock_in_window;
 
@@ -94,6 +97,14 @@ impl MovementRng {
     pub fn next_step(&mut self) -> i32 {
         ((self.next_u64() % 3) as i32) - 1
     }
+}
+
+/// Whether an Idle settlement member carrying `carried` food walks straight
+/// home under the forage rule: a full load (`>= haul_threshold`), or any food
+/// outside the forage window, while farther than the deposit radius.
+pub fn haul_due(rule: &ForageRule, carried: u32, in_forage_window: bool, home_distance: u32) -> bool {
+    home_distance > SETTLEMENT_PROXIMITY_RADIUS
+        && (carried >= rule.haul_threshold || (carried >= 1 && !in_forage_window))
 }
 
 /// Phase 4-β movement system.
