@@ -1686,6 +1686,118 @@
       ],
       "qa_status": "accepted",
       "role": "native_reference"
+    },
+    {
+      "sprite_id": "N2_11",
+      "path": "assets/art/production/N2/11.png",
+      "native_path": "assets/art/production/N2/11_native.png",
+      "source": "generated:N2/11",
+      "attempt": 2,
+      "native_size": [
+        29,
+        27
+      ],
+      "canvas_size": [
+        31,
+        29
+      ],
+      "anchor": [
+        15,
+        28
+      ],
+      "qa_status": "accepted",
+      "class": "N2",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "metrics": {
+        "native_size": [
+          29,
+          27
+        ],
+        "size_pass": true,
+        "mean_delta_e": 5.675465515491007,
+        "fidelity_pass": true,
+        "common_opaque": 378,
+        "keyed_out": 64,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/N2/11_native.png",
+      "source": "generated:N2/11",
+      "native_size": [
+        29,
+        27
+      ],
+      "anchor": [
+        14,
+        26
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
+    },
+    {
+      "sprite_id": "N2_12",
+      "path": "assets/art/production/N2/12.png",
+      "native_path": "assets/art/production/N2/12_native.png",
+      "source": "generated:N2/12",
+      "attempt": 2,
+      "native_size": [
+        18,
+        22
+      ],
+      "canvas_size": [
+        20,
+        24
+      ],
+      "anchor": [
+        10,
+        23
+      ],
+      "qa_status": "accepted",
+      "class": "N2",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "metrics": {
+        "native_size": [
+          18,
+          22
+        ],
+        "size_pass": true,
+        "mean_delta_e": 3.7344230547344486,
+        "fidelity_pass": true,
+        "common_opaque": 234,
+        "keyed_out": 36,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/N2/12_native.png",
+      "source": "generated:N2/12",
+      "native_size": [
+        18,
+        22
+      ],
+      "anchor": [
+        9,
+        21
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
     }
   ]
 }
