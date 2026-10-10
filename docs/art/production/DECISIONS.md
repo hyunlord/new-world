@@ -18,3 +18,7 @@ Under 200 villagers and 1,500 trees use pooled Sprite2D on one y-sorted layer. A
 ## Generation observations
 
 Calls1–4 requested1024×1024, but the built-in tool returned1254×1254. Raw files are preserved without resampling, and the converter measures their actual native grid. V_a1 andV_b1 accepted0/16 each; size and fidelity thresholds remain unchanged. After the first oversize sheet, prompts request less than half-cell figureheight and fewer flat colours; this is ordinary per-sheet size guidance, not the20-call checkpoint revision.
+
+## Part2 gate and first look
+
+Full gatepassed all13rows (cargo315s,Clippy1s,strict4s,bridge1s,smoke7s,Python2s,all6headlessarttests). Real finalplan10captures saved underp2, rawlosslessoutsidecommitteddocs. Firstlookandvisualverdictstored. The treepropertytest uses a directiontree through theproductionatlashelper; actualforestplacementverification remainsPart4/7. Reviewerrequested actualagentfeet andno-tint checks, added andpassed.

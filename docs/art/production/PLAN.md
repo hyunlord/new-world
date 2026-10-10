@@ -4,8 +4,8 @@
 |---|---|---|
 |0|Pinned clone/merge, wrappers, build and full baseline gate|completed|
 |1|v3 grid/fidelity/semantic checks, production palette, D3 provisional installation assets|completed|
-|2|Native Sprite2D y-sort installation, integer camera, Korean font, capture port, first real capture|in progress|
-|3|16 production sheets, <=60 calls, acceptance/fallbacks, region atlas|pending|
+|2|Native Sprite2D y-sort installation, integer camera, Korean font, capture port, first real capture|completed|
+|3|16 production sheets, <=60 calls, acceptance/fallbacks, region atlas|in progress|
 |4|Dual-grid terrain and deterministic nature|pending|
 |5|Activity animation, palette variants, structures/effects and warnings|pending|
 |6|Korean pixel interface and inspector|pending|

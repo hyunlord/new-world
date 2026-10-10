@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "encoding": {
+    "r": "region integer 0..5",
+    "g": "shade integer 0..2",
+    "a": "binary source alpha"
+  },
+  "pages": {
+    "res://assets/art/atlas/world_0.png": "res://assets/art/atlas/world_0_regions.png"
+  },
+  "sprites": {
+    "direction_09_villager_gatherer": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        1,
+        65,
+        17,
+        30
+      ],
+      "body": "default"
+    },
+    "direction_10_villager_builder": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        65,
+        65,
+        22,
+        30
+      ],
+      "body": "default"
+    },
+    "direction_11_villager_elder": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        129,
+        65,
+        21,
+        30
+      ],
+      "body": "default"
+    },
+    "direction_12_villager_child": {
+      "page": "res://assets/art/atlas/world_0_regions.png",
+      "rect": [
+        193,
+        65,
+        14,
+        23
+      ],
+      "body": "child"
+    }
+  }
+}

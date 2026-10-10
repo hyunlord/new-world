@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "description": "Palette roles are anatomical candidates. Normalized body zones disambiguate shared skin/hide colors without repainting source pixels. Rule-based masks are reviewed in regions.png.",
+  "bodies": {
+    "default": {
+      "clothing_y": [
+        0.48,
+        0.76
+      ],
+      "clothing_x": [
+        0.22,
+        0.78
+      ],
+      "hair_y_max": 0.37,
+      "colors": {
+        "#C9692A": "skin",
+        "#D87E33": "skin",
+        "#884119": "skin",
+        "#A86329": "skin",
+        "#572411": "skin",
+        "#9F7F53": "skin",
+        "#F6E6B0": "clothing",
+        "#D7BD77": "clothing"
+      }
+    },
+    "adult_a": {
+      "clothing_y": [
+        0.48,
+        0.76
+      ],
+      "clothing_x": [
+        0.22,
+        0.78
+      ],
+      "hair_y_max": 0.37,
+      "colors": {
+        "#C9692A": "skin",
+        "#D87E33": "skin",
+        "#884119": "skin",
+        "#A86329": "skin",
+        "#572411": "skin",
+        "#9F7F53": "skin",
+        "#F6E6B0": "clothing",
+        "#D7BD77": "clothing"
+      }
+    },
+    "adult_b": {
+      "clothing_y": [
+        0.42,
+        0.76
+      ],
+      "clothing_x": [
+        0.2,
+        0.8
+      ],
+      "hair_y_max": 0.37,
+      "colors": {
+        "#C9692A": "skin",
+        "#D87E33": "skin",
+        "#884119": "skin",
+        "#A86329": "skin",
+        "#572411": "skin",
+        "#9F7F53": "skin",
+        "#F6E6B0": "clothing",
+        "#D7BD77": "clothing"
+      }
+    },
+    "child": {
+      "clothing_y": [
+        0.48,
+        0.77
+      ],
+      "clothing_x": [
+        0.2,
+        0.8
+      ],
+      "hair_y_max": 0.4,
+      "colors": {
+        "#C9692A": "skin",
+        "#D87E33": "skin",
+        "#884119": "skin",
+        "#A86329": "skin",
+        "#572411": "skin",
+        "#9F7F53": "skin",
+        "#F6E6B0": "clothing",
+        "#D7BD77": "clothing"
+      }
+    }
+  },
+  "review": {
+    "round": 1,
+    "inspected": "docs/art/production/regions.png",
+    "finding": "Warm orange D3 skin colors had source role other. Explicit body color-role overrides recover exposed faces/arms/legs; cream hide is clothing. Basket remains other. Reinspect generated sheets before finalacceptance."
+  }
+}
