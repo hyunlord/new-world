@@ -3,6 +3,7 @@ extends Node2D
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
+const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
@@ -26,6 +27,10 @@ var _sprite_pool: Array[Sprite2D] = []
 var _shadow_pool: Array[Sprite2D] = []
 var _animation_time: float = 0.0
 var _render_positions: Dictionary = {}
+var _drawn_positions: Dictionary = {}
+var _stationary_seconds: Dictionary = {}
+var _camp_seats = CampSeatsScript.new()
+var _opaque_rects: Dictionary = {}
 var _idle_seconds: Dictionary = {}
 var _frame_groups: Dictionary = {}
 var _selection_ring: Line2D
@@ -88,6 +93,7 @@ func _process(delta: float) -> void:
 	var context: Dictionary = _activity_context()
 	var time: Dictionary = world_sim.get_time_snapshot()
 	var hour: float = float(time.get("time_of_day", 12.0))
+	var draw_agents: Array[Dictionary] = []
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
 		live[agent_id] = true
@@ -101,6 +107,8 @@ func _process(delta: float) -> void:
 		var child: bool = life_stage == 1
 		var previous_position: Vector2 = _render_positions.get(agent_id, ipos)
 		var movement: Vector2 = ipos - previous_position
+		var moving: bool = movement.length_squared() > 0.000001
+		_stationary_seconds[agent_id] = 0.0 if moving else float(_stationary_seconds.get(agent_id, 0.0)) + delta
 		_render_positions[agent_id] = ipos
 		var tile: Dictionary = _tile_context(Vector2i(xs[i], ys[i]), context)
 		var state: int = int(states[i]) if i < states.size() else 0
@@ -121,7 +129,6 @@ func _process(delta: float) -> void:
 		elif str(sprite.get_meta("sprite_id", "")) != sprite_id:
 			SpriteLibrary.apply(sprite, sprite_id)
 		SpriteLibrary.apply_variant(sprite, look)
-		sprite.position = ipos.round()
 		sprite.flip_h = facing == "W"
 		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
 		sprite.set_meta("sheltered_sleep", sheltered_sleep)
@@ -137,10 +144,15 @@ func _process(delta: float) -> void:
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 		_update_activity_icon(agent_id, sprite, choice)
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "meal": false})
+	_apply_drawn_positions(draw_agents, context, delta)
+	for row: Dictionary in draw_agents:
+		var agent_id: int = int(row["id"])
+		var sprite: Sprite2D = _sprites[agent_id]
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
-		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))
+		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))
 	_retire_missing(live)
 	_update_selection_ring()
 	_ingest_memory_recalls(ids, xs, ys, n)
@@ -197,6 +209,8 @@ func _retire_missing(live: Dictionary) -> void:
 			(_activity_icons[agent_id] as Sprite2D).queue_free()
 			_activity_icons.erase(agent_id)
 		_render_positions.erase(agent_id)
+		_drawn_positions.erase(agent_id)
+		_stationary_seconds.erase(agent_id)
 		_idle_seconds.erase(agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.visible = false
@@ -221,6 +235,10 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 
 func _on_world_reset() -> void:
 	_render_positions.clear()
+	_drawn_positions.clear()
+	_stationary_seconds.clear()
+	_camp_seats = CampSeatsScript.new()
+	_opaque_rects.clear()
 	_idle_seconds.clear()
 	_animation_time = 0.0
 	_prev_positions.clear()
@@ -370,13 +388,14 @@ func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary) 
 	Activity.apply_activity_icon(sprite, icon, choice, zoom)
 
 func _activity_context() -> Dictionary:
-	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "water": {}}
+	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "water": {}, "seat_blocked": {}}
 	var buildings: Dictionary = world_sim.get_building_snapshot()
 	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
 	var kinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
 	for i: int in range(mini(xs.size(), mini(ys.size(), kinds.size()))):
 		var tile: Vector2i = Vector2i(xs[i], ys[i])
+		context["seat_blocked"][tile] = true
 		if kinds[i] == 0:
 			context["hearths"].append(tile)
 		elif kinds[i] == 1:
@@ -387,6 +406,8 @@ func _activity_context() -> Dictionary:
 		var sy: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		var sk: PackedInt32Array = snap.get("kinds", PackedInt32Array())
 		for i: int in range(mini(sx.size(), sy.size())):
+			if source == "sites" or (i < sk.size() and sk[i] == 3):
+				context["seat_blocked"][Vector2i(sx[i], sy[i])] = true
 			if source == "sites" or (i < sk.size() and sk[i] == 0):
 				context[source][Vector2i(sx[i], sy[i])] = true
 	var terrain: Dictionary = world_sim.get_terrain_snapshot()
@@ -428,6 +449,68 @@ func _talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vect
 
 func get_agent_sprite(agent_id: int) -> Sprite2D:
 	return _sprites.get(agent_id) as Sprite2D
+
+func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delta: float) -> void:
+	var hearths: Array[Vector2i] = []
+	for hearth: Vector2i in context["hearths"]:
+		hearths.append(hearth)
+	var blocked: Dictionary = context["seat_blocked"]
+	var terrain: Dictionary = context["terrain"]
+	var width: int = int(terrain.get("width", 0))
+	var height: int = int(terrain.get("height", 0))
+	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
+	# Only seat-adjacent terrain matters; never scan the whole world per frame.
+	for hearth: Vector2i in hearths:
+		for y: int in range(hearth.y - 4, hearth.y + 5):
+			for x: int in range(hearth.x - 6, hearth.x + 7):
+				var index: int = y * width + x
+				if x < 0 or x >= width or y < 0 or y >= height or index >= cells.size() or cells[index] == 4:
+					blocked[Vector2i(x, y)] = true
+	var seats: Dictionary = _camp_seats.update(hearths, blocked, agents)
+	var spread: Dictionary = CampSeatsScript.spread_offsets(agents, seats)
+	for row: Dictionary in agents:
+		var agent_id: int = int(row["id"])
+		var target: Vector2 = seats.get(agent_id, Vector2(row["ipos"]) + Vector2(spread.get(agent_id, Vector2.ZERO)))
+		var drawn: Vector2 = _drawn_positions.get(agent_id, target)
+		drawn += (target - drawn) * (1.0 - exp(-delta / 0.08))
+		if drawn.distance_to(target) < 0.5:
+			drawn = target
+		_drawn_positions[agent_id] = drawn
+		var sprite: Sprite2D = _sprites[agent_id]
+		sprite.position = drawn.round()
+		sprite.set_meta("drawn_position", sprite.position)
+		sprite.set_meta("seated", seats.has(agent_id))
+
+func has_drawn_position(agent_id: int) -> bool:
+	return _drawn_positions.has(agent_id)
+
+func get_drawn_position(agent_id: int) -> Vector2:
+	return Vector2(_drawn_positions.get(agent_id, Vector2.ZERO)).round()
+
+func drawn_entity_at(world_position: Vector2) -> int:
+	var selected: int = -1
+	var largest_y: float = -INF
+	for agent_id: int in _sprites:
+		var sprite: Sprite2D = _sprites[agent_id]
+		if not sprite.visible or sprite.texture == null or not has_drawn_position(agent_id):
+			continue
+		var sprite_id: String = str(sprite.get_meta("sprite_id", ""))
+		if not _opaque_rects.has(sprite_id):
+			var pixels: Image = sprite.texture.get_image()
+			if sprite.region_enabled:
+				pixels = pixels.get_region(Rect2i(sprite.region_rect))
+			_opaque_rects[sprite_id] = Rect2(pixels.get_used_rect())
+		var opaque: Rect2 = _opaque_rects[sprite_id]
+		var frame_rect: Rect2 = sprite.get_rect()
+		if sprite.flip_h:
+			opaque.position.x = frame_rect.size.x - opaque.end.x
+		if sprite.flip_v:
+			opaque.position.y = frame_rect.size.y - opaque.end.y
+		opaque.position += frame_rect.position
+		if opaque.has_point(sprite.to_local(world_position)) and sprite.position.y >= largest_y:
+			largest_y = sprite.position.y
+			selected = int(sprite.get_meta("entity_bits", -1))
+	return selected
 
 func _update_selection_ring() -> void:
 	if _selection_ring == null:

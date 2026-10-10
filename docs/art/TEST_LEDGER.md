@@ -349,3 +349,10 @@ Orphan source-inspection helpers for the retired mesh/tint parsers and whole-fil
 | `rust/crates/sim-test/tests/harness_fix_inspector_overlap.rs` | `harness_inspector_no_overlap_invariant_cross_file` | `inspector_top >= status_bottom` | `disjoint(inspector_rect, topbar_rect)` | 1 | Topbar now occupies top edge; preserve non-overlap against it as well. |
 | `rust/crates/sim-test/tests/harness_fix_inspector_overlap.rs` | `harness_inspector_anchors_and_width_untouched_regression` | `width == 280.0` | `width == 360.0` | 1 | Production inspector has the approved wider portrait layout. |
 | `rust/crates/sim-test/tests/harness_fix_inspector_overlap.rs` | `harness_inspector_anchors_and_width_untouched_regression` | `bare anchor_right = 1.0` | `inspector right edge == topbar right edge` | 1 | Fixed production rectangles retain right alignment; read their actual source coordinates. |
+
+## Art Pass 4
+
+| File | Test | Old assertion | New assertion | Count | Reason |
+|---|---|---|---|---|---|
+| `rust/crates/sim-test/tests/harness_p11_alpha_agent_renderer.rs` | `harness_revitalize_agent_shadows_follow_interpolated_feet` | `sprite.position = ipos.round()` | `sprite.position = drawn.round()` and exact exponential smoothing | 2 | Section7 separates presentation from simulation interpolation; shadow still follows actual sprite position. |
+| `rust/crates/sim-test/tests/harness_p8_delta_memory_ui.rs` | `harness_p8_delta_memory_renderer_recall_lookup_uses_agent_id_domain` | `_recalling_agents.has(agent_ids[` | four-token AgentId chain through prepared draw rows | 4 | Two-pass seating keeps AgentId distinct from entity bits; preserve producer and snapshot checks. |

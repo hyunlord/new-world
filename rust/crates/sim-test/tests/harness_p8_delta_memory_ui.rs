@@ -1070,15 +1070,15 @@ fn harness_p8_delta_memory_renderer_recall_lookup_uses_agent_id_domain() {
         src.contains("\"agent_ids\""),
         "agent_renderer.gd must read `\"agent_ids\"` from the snapshot dict (the parallel array carrying Agent.id per row).",
     );
-    // (b) `_recalling_agents.has(agent_ids[` — the recall lookup must
-    // index into the agent_ids array, NOT into `ids` (entity bits). This
-    // pins the domain match end-to-end: the event marks by AgentId, the
-    // dict carries AgentId, the snapshot exposes AgentId, the renderer
-    // looks up by AgentId.
-    assert!(
-        src.contains("_recalling_agents.has(agent_ids["),
-        "agent_renderer.gd must check `_recalling_agents.has(agent_ids[i])` so the recall cue lookup uses the AgentId domain (matching `event.agent_id` from `CausalEvent::MemoryRecalled`). Found no such expression.",
-    );
+    // Art Pass 4 carries AgentId through prepared draw rows into the second pass.
+    for token in [
+        "var agent_id: int = int(agent_ids[i])",
+        "draw_agents.append({\"id\": agent_id",
+        "var agent_id: int = int(row[\"id\"])",
+        "_recalling_agents.has(agent_id)",
+    ] {
+        assert!(src.contains(token), "recall draw-row AgentId chain missing: {token}");
+    }
     // (c) `mark_agent_recalling(agent_id)` — the producer side must still
     // mark using the AgentId from the event dict (the field the FFI emits
     // for `CausalEvent::MemoryRecalled.agent`).

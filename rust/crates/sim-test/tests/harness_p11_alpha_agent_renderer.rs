@@ -773,7 +773,8 @@ fn harness_revitalize_agent_shadows_follow_interpolated_feet() {
         .join("\n");
     assert!(src.contains("shadow.texture = load(\"res://assets/art/contact_shadow.png\")"));
     assert!(src.contains("shadow.position = sprite.position"));
-    assert!(src.contains("sprite.position = ipos.round()"));
+    assert!(src.contains("sprite.position = drawn.round()"));
+    assert!(src.contains("drawn += (target - drawn) * (1.0 - exp(-delta / 0.08))"));
     assert!(src.contains("shadow.modulate = Color(1.0, 1.0, 1.0, 0.4)"));
     assert!(src.contains("SpriteLibrary.shared_layer(self, \"Shadows\", 3)"));
     assert!(src.contains("SpriteLibrary.shared_layer(self, \"WorldObjects\", 4, true)"));

@@ -49,6 +49,8 @@ var _drawn_segment_count: int = 0
 var _world_sim: Node = null
 var _inspector: Node = null
 var _camera: Camera2D = null
+var _agent_renderer: Node = null
+var _agent_ids: PackedInt64Array = PackedInt64Array()
 var _ids: PackedInt64Array = PackedInt64Array()
 var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
@@ -63,6 +65,7 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	_inspector = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
+	_agent_renderer = get_node_or_null("/root/Main/AgentRenderer")
 	z_index = Z_SEEK_VIZ
 
 
@@ -73,6 +76,8 @@ func _process(_delta: float) -> void:
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
+	var agent_ids: Variant = snap_dict.get("agent_ids", null)
+	_agent_ids = agent_ids if agent_ids is PackedInt64Array else PackedInt64Array()
 	var ids: Variant = snap_dict.get("ids", null)
 	if ids is PackedInt64Array:
 		_ids = ids
@@ -115,7 +120,7 @@ func _draw() -> void:
 	var selected: int = int(_inspector.call("get_selected_entity_bits")) if _inspector != null else -1
 	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for i in n:
-		var agent_px: Vector2 = _tile_to_px(_xs[i], _ys[i])
+		var agent_px: Vector2 = _agent_origin(i)
 		var tag: int = int(_states[i])
 		var kind: int = int(_seek_kinds[i])
 		# B — goal line for resource-Seeking agents that carry a target.
@@ -147,3 +152,11 @@ func get_drawn_segment_count() -> int:
 
 func get_drawn_head_dot_count() -> int:
 	return 0
+
+
+func _agent_origin(index: int) -> Vector2:
+	if _agent_renderer != null and index < _agent_ids.size():
+		var agent_id: int = _agent_ids[index]
+		if bool(_agent_renderer.call("has_drawn_position", agent_id)):
+			return _agent_renderer.call("get_drawn_position", agent_id) as Vector2
+	return _tile_to_px(_xs[index], _ys[index])

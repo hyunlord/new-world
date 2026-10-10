@@ -11,6 +11,10 @@ class CrossingDriver extends Node:
 		var current: Dictionary = renderer.get("_curr_positions")
 		previous[agent_id] = feet
 		current[agent_id] = feet
+		# Seed the draw integrator, not the sprite: AgentRenderer must still publish
+		# these feet before NatureRenderer reads them in this same scene frame.
+		var drawn: Dictionary = renderer.get("_drawn_positions")
+		drawn[agent_id] = feet
 
 class CrossingObserver extends Node:
 	signal checked(passed: bool)

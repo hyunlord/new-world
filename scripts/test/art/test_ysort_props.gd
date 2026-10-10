@@ -20,8 +20,9 @@ func _run() -> void:
 	await process_frame
 	world.call("advance_ticks", 1)
 	var renderer: Node = main.get_node("BuildingRenderer")
+	var agents: Node = main.get_node("AgentRenderer")
 	renderer.call("refresh_snapshot")
-	main.get_node("AgentRenderer").call("refresh_snapshot")
+	agents.call("refresh_snapshot")
 	await process_frame
 	var objects: Node2D = main.get_node("WorldObjects") as Node2D
 	var shadows: Node2D = main.get_node("Shadows") as Node2D
@@ -53,10 +54,17 @@ func _run() -> void:
 			_check(sprite.position == Vector2(448 + 16 * x + 8, 28 + 16 * y + 15), "building base matches tile bottom")
 			_check(sprite.modulate.a == 1.0, "objects and construction frames stay opaque")
 		if kind == "agent":
-			var look: Dictionary = ArtHash.look(int(sprite.get_meta("art_id")))
+			var agent_id: int = int(sprite.get_meta("art_id"))
+			var look: Dictionary = ArtHash.look(agent_id)
 			var x: int = int(sprite.get_meta("tile_x"))
 			var y: int = int(sprite.get_meta("tile_y"))
-			_check(sprite.position == Vector2(448 + 16 * x + 8 + int(look["jx"]), 28 + 16 * y + 14 + int(look["jy"])), "agent feet use snapshot tile and stable jitter")
+			var simulation_targets: Dictionary = agents.get("_curr_positions")
+			_check(simulation_targets[agent_id] == Vector2(448 + 16 * x + 8 + int(look["jx"]), 28 + 16 * y + 14 + int(look["jy"])), "simulation feet retain snapshot tile and stable jitter")
+			_check(sprite.position == agents.call("get_drawn_position", agent_id), "agent y-sort feet use the drawn position")
+			var agent_shadows: Dictionary = agents.get("_shadows")
+			var shadow: Sprite2D = agent_shadows[agent_id]
+			_check(shadow.position == sprite.position, "agent shadow follows drawn feet in the same frame")
+			_check(shadow.visible == sprite.visible, "agent shadow visibility follows its sprite")
 			_check(sprite.modulate == Color.WHITE, "actual agent output has no state tint")
 		if kind == "tree" and sprite.get_meta("calibration_fixture", false):
 			_check(sprite.position.y == 43.0, "tree y-sort baseline is its tile base")
