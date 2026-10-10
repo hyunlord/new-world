@@ -68,4 +68,12 @@ class NormalizeV4Test(unittest.TestCase):
         self.assertTrue(result.metrics['binary_alpha'])
         self.assertEqual(result.metrics['outlined_canvas'],list(result.sprite.size))
 
+    def test_escape_icon_canvas_can_use_scaled_target19(self) -> None:
+        native=np.full((10,12,3),[174,150,111],dtype=np.uint8)
+        source=enlarged(native,5.9,1.7)
+        measured=measure_cell_v4(source)
+        factor=min(1,*(19/size for size in measured['native_size']))
+        result=fit_cell_v4(source,PALETTE,factor,icon_canvas=True,icon_size=19,measurement=measured)
+        self.assertEqual(result.native.size,(19,19))
+
 if __name__=='__main__':unittest.main()

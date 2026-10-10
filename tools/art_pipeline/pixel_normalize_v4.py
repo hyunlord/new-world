@@ -90,9 +90,10 @@ def pool_crop(crop: NDArray[np.uint8], foreground: NDArray[np.bool_], palette: l
 
 
 def fit_cell_v4(image: Image.Image,palette: list[Color],factor: float,*,icon_canvas: bool=False,
-                measurement: RecoveryMetadata | None=None) -> FitResult:
+                measurement: RecoveryMetadata | None=None, icon_size: int=16) -> FitResult:
     """Use p/f and unchanged source phase; never upscale or interpolate texels."""
     if not palette:raise ValueError('Production palette must not be empty')
+    if icon_size<1:raise ValueError('Icon canvas size must be positive')
     if not np.isfinite(factor) or factor<=0:raise ValueError('Factor must be positive and finite')
     factor=min(1.,float(factor));metadata=measurement or measure_cell_v4(image)
     bbox=metadata['source_bbox'];crop=np.asarray(image.convert('RGBA').crop(tuple(bbox)))
@@ -108,9 +109,9 @@ def fit_cell_v4(image: Image.Image,palette: list[Color],factor: float,*,icon_can
     projected=quantize_native(clean,palette)
     changed=int(np.any(np.asarray(projected)[...,:3]!=np.asarray(clean)[...,:3],axis=2).sum())
     if icon_canvas:
-        if projected.width>16 or projected.height>16:raise ValueError('Icon factor did not fit native16canvas')
-        canvas=Image.new('RGBA',(16,16));reference=canvas.copy()
-        offset=((16-projected.width)//2,(16-projected.height)//2)
+        if projected.width>icon_size or projected.height>icon_size:raise ValueError('Icon factor did not fit native canvas')
+        canvas=Image.new('RGBA',(icon_size,icon_size));reference=canvas.copy()
+        offset=((icon_size-projected.width)//2,(icon_size-projected.height)//2)
         canvas.paste(projected,offset);reference.paste(median,offset)
         projected,median=canvas,reference
     before=np.asarray(median);after=np.asarray(projected)

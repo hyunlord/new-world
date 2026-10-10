@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,7 @@ DISPLAY = np.array(((35,35,35),(5,5,5),(238,166,112),(80,122,225),(71,204,113),(
 
 
 def classify(image: Image.Image, body: str = 'default', *, palette_path: Path | None = None,
-             overrides_path: Path | None = None) -> Image.Image:
+             overrides_path: Path | None = None, view: str = '', activity: str = '') -> Image.Image:
     """Encode region in R and luminance-rank shade in G, preserving binary alpha."""
     palette = json.loads((palette_path or ROOT/'tools/art_pipeline/production_palette.json').read_text())
     overrides = json.loads((overrides_path or ROOT/'tools/art_pipeline/region_overrides.json').read_text())
@@ -47,7 +48,33 @@ def classify(image: Image.Image, body: str = 'default', *, palette_path: Path | 
             regions[mask & (y<rules['hair_y_max'])] = 3
         if entry['hex'] in rules['colors']:
             regions[mask] = REGIONS[rules['colors'][entry['hex']]]
-    regions[alpha & (y<rules['hair_y_max']) & (luma<38)] = 3
+    if not (view or activity):
+        regions[alpha & (y<rules['hair_y_max']) & (luma<38)] = 3
+    else:
+        regions[alpha & (y<rules['hair_y_max']) & (luma<38)] = 3
+        context = overrides.get('context_rules', {})
+        for color in context.get('warm_skin_colors', []):
+            value = tuple(bytes.fromhex(color.removeprefix('#')))
+            regions[alpha & (y >= rules['hair_y_max']) & np.all(rgb == value, axis=-1)] = 2
+        # Recover warm shadow texels adjoining known exposed skin, not entire body boxes.
+        seeds = regions == 2
+        padded = np.pad(seeds, 1)
+        adjacent = np.zeros_like(seeds)
+        for dy, dx in ((0,1),(1,0),(1,2),(2,1)):
+            adjacent |= padded[dy:dy+image.height, dx:dx+image.width]
+        for color in context.get('skin_shadow_colors', []):
+            value = tuple(bytes.fromhex(color.removeprefix('#')))
+            regions[alpha & adjacent & (y >= rules['hair_y_max']) & np.all(rgb == value, axis=-1)] = 2
+        digest = hashlib.sha256(rgba.tobytes()).hexdigest()
+        for correction in overrides.get('reviewed_images', []):
+            if correction['rgba_sha256'] != digest or correction['size'] != list(image.size):
+                continue
+            if correction['body'] != body or correction['view'] != view or correction['activity'] != activity:
+                continue
+            for patch in correction['patches']:
+                for row, start, stop in patch['spans']:
+                    mask = alpha[row, start:stop]
+                    regions[row, start:stop][mask] = REGIONS[patch['region']]
     regions[alpha & np.all(rgb==outline,axis=-1)] = 1
     # Shade bins are ranked within each region, not ranked over unrelated objects.
     for region in (2,3,4):
@@ -61,7 +88,7 @@ def classify(image: Image.Image, body: str = 'default', *, palette_path: Path | 
     return Image.fromarray(result)
 
 
-def build_atlases(manifest_path: Path) -> dict[str, Any]:
+def build_atlases(manifest_path: Path, *, diagnostic_path: Path | None = None) -> dict[str, Any]:
     """Consume world_atlas.json; preserve rects and write *_regions.png beside pages."""
     manifest = json.loads(manifest_path.read_text())
     pages: dict[str, Image.Image] = {}
@@ -82,7 +109,7 @@ def build_atlases(manifest_path: Path) -> dict[str, Any]:
         body = str(entry.get('body',next((value for value in ('adult_a','adult_b','child') if value in name),'default')))
         if name.startswith(('V_a','V_b','V_c')):
             body = {'a':'adult_a','b':'adult_b','c':'child'}[name[2]]
-        indices = classify(sprite,body)
+        indices = classify(sprite,body,view=str(entry.get('view','')),activity=str(entry.get('activity','')))
         pages[page].paste(indices,(rect[0],rect[1]))
         region_page = 'res://'+str(path.with_name(path.stem+'_regions.png').relative_to(ROOT))
         output['sprites'][name] = {'page':region_page,'rect':rect,'body':body}
@@ -103,13 +130,16 @@ def build_atlases(manifest_path: Path) -> dict[str, Any]:
         contact.paste(sprite.resize((sprite.width*3,sprite.height*3),Image.Resampling.NEAREST),(x,y+18),sprite.resize((sprite.width*3,sprite.height*3),Image.Resampling.NEAREST))
         contact.paste(diagnostic.resize((sprite.width*3,sprite.height*3),Image.Resampling.NEAREST),(x+96,y+18))
         draw.text((x+2,y+2),name[-26:],fill='white')
-    contact.save(ROOT/'docs/art/production/regions.png')
+    if diagnostic_path is not None:
+        diagnostic_path.parent.mkdir(parents=True, exist_ok=True)
+        contact.save(diagnostic_path)
     return output
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest',type=Path,default=ROOT/'assets/art/atlas/world_atlas.json')
+    parser.add_argument('--diagnostic', type=Path, help='Optional contact PNG; old production documents are never implicit outputs')
     args = parser.parse_args()
-    result = build_atlases(args.manifest)
+    result = build_atlases(args.manifest, diagnostic_path=args.diagnostic)
     print(f"Regions: {len(result['sprites'])} frames, {len(result['pages'])} matching atlas pages")

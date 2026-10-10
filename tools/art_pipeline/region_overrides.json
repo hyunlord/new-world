@@ -91,5 +91,3177 @@
     "round": 1,
     "inspected": "docs/art/production/regions.png",
     "finding": "Warm orange D3 skin colors had source role other. Explicit body color-role overrides recover exposed faces/arms/legs; cream hide is clothing. Basket remains other. Reinspect generated sheets before finalacceptance."
+  },
+  "context_rules": {
+    "warm_skin_colors": [
+      "#C9692A",
+      "#D87E33",
+      "#884119",
+      "#A86329",
+      "#572411",
+      "#9F7F53",
+      "#8D5727",
+      "#81340B"
+    ],
+    "skin_shadow_colors": [
+      "#5F391D",
+      "#3A2719",
+      "#2D1A12"
+    ],
+    "rule": "With view/activity only: explicit warm colors below the hair cap remain skin; one cardinal-neighbor expansion recovers warm skin shadows below the hair cap. No iteration or large body-area paint."
+  },
+  "reviewed_images": [
+    {
+      "candidate_id": "V_b2_01@3",
+      "rgba_sha256": "f6eb9cc8d32d574e24abe8c2817feee2e768f1e35bb51e0a3ec39299f3f783bc",
+      "size": [
+        14,
+        28
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              4,
+              12,
+              11,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              12,
+              6,
+              9
+            ],
+            [
+              12,
+              10,
+              11
+            ],
+            [
+              13,
+              4,
+              6
+            ],
+            [
+              13,
+              7,
+              10
+            ],
+            [
+              14,
+              4,
+              5
+            ],
+            [
+              14,
+              9,
+              10
+            ],
+            [
+              15,
+              4,
+              11
+            ],
+            [
+              16,
+              5,
+              10
+            ],
+            [
+              17,
+              4,
+              6
+            ],
+            [
+              17,
+              7,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_02@3",
+      "rgba_sha256": "1ef135025e9565ef45e469df0a5d58a7bc9a872afaf1e1e8d74fa6ae74007de8",
+      "size": [
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              13,
+              12,
+              19
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              13,
+              6,
+              8
+            ],
+            [
+              13,
+              9,
+              11
+            ],
+            [
+              14,
+              5,
+              11
+            ],
+            [
+              15,
+              5,
+              6
+            ],
+            [
+              15,
+              8,
+              9
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              16,
+              5,
+              11
+            ],
+            [
+              17,
+              5,
+              12
+            ],
+            [
+              18,
+              5,
+              6
+            ],
+            [
+              18,
+              7,
+              10
+            ],
+            [
+              18,
+              11,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_04@3",
+      "rgba_sha256": "778b19cfdb68553342b8ce653b87d9adbd58ea15e0e01b8fbd901e6337527e09",
+      "size": [
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              13,
+              12,
+              20
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              13,
+              6,
+              8
+            ],
+            [
+              13,
+              9,
+              10
+            ],
+            [
+              14,
+              5,
+              8
+            ],
+            [
+              14,
+              9,
+              11
+            ],
+            [
+              15,
+              5,
+              6
+            ],
+            [
+              15,
+              8,
+              10
+            ],
+            [
+              16,
+              5,
+              11
+            ],
+            [
+              17,
+              5,
+              10
+            ],
+            [
+              18,
+              5,
+              6
+            ],
+            [
+              18,
+              7,
+              11
+            ],
+            [
+              19,
+              5,
+              6
+            ],
+            [
+              19,
+              10,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_05@3",
+      "rgba_sha256": "68df74f166b595b445a907ad64985e6f776f44f52afc374c7a6f7bf766b4d6ec",
+      "size": [
+        17,
+        29
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              10,
+              11,
+              17,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              11,
+              12
+            ],
+            [
+              11,
+              14,
+              15
+            ],
+            [
+              12,
+              10,
+              12
+            ],
+            [
+              12,
+              13,
+              14
+            ],
+            [
+              13,
+              11,
+              15
+            ],
+            [
+              14,
+              10,
+              11
+            ],
+            [
+              14,
+              12,
+              13
+            ],
+            [
+              14,
+              14,
+              15
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              15,
+              13,
+              15
+            ],
+            [
+              16,
+              10,
+              14
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_07@3",
+      "rgba_sha256": "b0dcfb6b55229b2944a059dc9a14bfde140ac391b4b23962e868782852b66072",
+      "size": [
+        18,
+        31
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              10,
+              12,
+              18,
+              19
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              12,
+              10,
+              11
+            ],
+            [
+              12,
+              12,
+              13
+            ],
+            [
+              12,
+              15,
+              16
+            ],
+            [
+              13,
+              11,
+              13
+            ],
+            [
+              13,
+              14,
+              16
+            ],
+            [
+              14,
+              11,
+              14
+            ],
+            [
+              14,
+              15,
+              16
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              15,
+              14,
+              17
+            ],
+            [
+              16,
+              11,
+              16
+            ],
+            [
+              17,
+              11,
+              15
+            ],
+            [
+              18,
+              14,
+              15
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_15@2",
+      "rgba_sha256": "11e232755f26352e3c3b403d4c9be43f989154247356042fb26bc65ed32579f0",
+      "size": [
+        24,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              2,
+              4,
+              7,
+              10
+            ],
+            [
+              9,
+              19,
+              25,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              4,
+              2,
+              4
+            ],
+            [
+              5,
+              2,
+              5
+            ],
+            [
+              6,
+              2,
+              5
+            ],
+            [
+              7,
+              2,
+              5
+            ],
+            [
+              8,
+              2,
+              4
+            ],
+            [
+              19,
+              9,
+              18
+            ],
+            [
+              20,
+              9,
+              19
+            ],
+            [
+              21,
+              9,
+              10
+            ],
+            [
+              21,
+              11,
+              19
+            ],
+            [
+              22,
+              9,
+              10
+            ],
+            [
+              22,
+              11,
+              15
+            ],
+            [
+              22,
+              16,
+              20
+            ],
+            [
+              23,
+              11,
+              12
+            ],
+            [
+              23,
+              13,
+              21
+            ],
+            [
+              24,
+              9,
+              22
+            ],
+            [
+              25,
+              9,
+              22
+            ],
+            [
+              26,
+              9,
+              22
+            ],
+            [
+              27,
+              9,
+              14
+            ],
+            [
+              27,
+              15,
+              21
+            ],
+            [
+              28,
+              17,
+              18
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_16@2",
+      "rgba_sha256": "a860df11c90ec46e95f72b0f7b6e1c540fd2f19277dc8b4c1fe1ecefaf881e67",
+      "size": [
+        22,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              8,
+              18,
+              16,
+              23
+            ],
+            [
+              6,
+              23,
+              21,
+              30
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              18,
+              8,
+              12
+            ],
+            [
+              19,
+              8,
+              11
+            ],
+            [
+              19,
+              12,
+              14
+            ],
+            [
+              20,
+              8,
+              9
+            ],
+            [
+              20,
+              10,
+              16
+            ],
+            [
+              21,
+              8,
+              9
+            ],
+            [
+              21,
+              10,
+              16
+            ],
+            [
+              22,
+              8,
+              9
+            ],
+            [
+              22,
+              10,
+              16
+            ],
+            [
+              23,
+              6,
+              8
+            ],
+            [
+              23,
+              11,
+              14
+            ],
+            [
+              23,
+              15,
+              17
+            ],
+            [
+              24,
+              7,
+              13
+            ],
+            [
+              24,
+              14,
+              19
+            ],
+            [
+              25,
+              6,
+              13
+            ],
+            [
+              25,
+              14,
+              18
+            ],
+            [
+              25,
+              19,
+              20
+            ],
+            [
+              26,
+              6,
+              18
+            ],
+            [
+              26,
+              19,
+              20
+            ],
+            [
+              27,
+              6,
+              13
+            ],
+            [
+              27,
+              14,
+              18
+            ],
+            [
+              28,
+              6,
+              7
+            ],
+            [
+              28,
+              18,
+              19
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b3_03@3",
+      "rgba_sha256": "80940aae1f1fb3f5dfb3a38dbb23713473ff2018f5077d7267b93ffa0d5cf4f2",
+      "size": [
+        20,
+        27
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              16,
+              8,
+              20,
+              12
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              8,
+              17,
+              18
+            ],
+            [
+              9,
+              16,
+              18
+            ],
+            [
+              10,
+              17,
+              18
+            ],
+            [
+              11,
+              16,
+              17
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b3_04@3",
+      "rgba_sha256": "c9fa8ed1bed6fd7cd8a679ed38f1197f367f5e15be5dc610dc70c717902e929e",
+      "size": [
+        19,
+        27
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              16,
+              8,
+              20,
+              12
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              9,
+              16,
+              17
+            ],
+            [
+              11,
+              16,
+              17
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b3_03@1",
+      "rgba_sha256": "481b2d0bf61078e1b706a820bf0e1d328f423be9a80ef7d3c040a89917fa7a48",
+      "size": [
+        19,
+        32
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              12,
+              7,
+              19,
+              12
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              7,
+              12,
+              16
+            ],
+            [
+              8,
+              15,
+              18
+            ],
+            [
+              9,
+              13,
+              14
+            ],
+            [
+              10,
+              12,
+              18
+            ],
+            [
+              11,
+              14,
+              17
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b3_04@1",
+      "rgba_sha256": "2a93c8c1dccf37ad72dcdeb23d02d095dcccd99f9cc2d4be8e4fe393e55123c3",
+      "size": [
+        20,
+        33
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              12,
+              7,
+              19,
+              12
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              7,
+              13,
+              17
+            ],
+            [
+              8,
+              12,
+              13
+            ],
+            [
+              8,
+              17,
+              18
+            ],
+            [
+              9,
+              12,
+              13
+            ],
+            [
+              9,
+              14,
+              15
+            ],
+            [
+              9,
+              17,
+              18
+            ],
+            [
+              10,
+              12,
+              17
+            ],
+            [
+              11,
+              12,
+              14
+            ],
+            [
+              11,
+              16,
+              17
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_01@2",
+      "rgba_sha256": "c14b2ab62bfa15c8d736a1e03d988a786ef6a30fe5db3ffc38390b6c80e52279",
+      "size": [
+        16,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              12,
+              12,
+              19
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              12,
+              5,
+              11
+            ],
+            [
+              13,
+              6,
+              10
+            ],
+            [
+              14,
+              5,
+              11
+            ],
+            [
+              15,
+              5,
+              12
+            ],
+            [
+              16,
+              6,
+              11
+            ],
+            [
+              17,
+              6,
+              8
+            ],
+            [
+              17,
+              9,
+              11
+            ],
+            [
+              18,
+              5,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_02@2",
+      "rgba_sha256": "d1b21c67b610f5d7ce4c65faed89ad72a48f8c2840d5ee6b385d26906cd3d5eb",
+      "size": [
+        15,
+        30
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              12,
+              12,
+              19
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              12,
+              6,
+              11
+            ],
+            [
+              13,
+              6,
+              11
+            ],
+            [
+              14,
+              5,
+              6
+            ],
+            [
+              14,
+              7,
+              9
+            ],
+            [
+              14,
+              10,
+              11
+            ],
+            [
+              15,
+              5,
+              10
+            ],
+            [
+              16,
+              5,
+              6
+            ],
+            [
+              16,
+              8,
+              10
+            ],
+            [
+              17,
+              7,
+              12
+            ],
+            [
+              18,
+              5,
+              6
+            ],
+            [
+              18,
+              10,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_03@2",
+      "rgba_sha256": "6c9d4f12621814895113c8b32c8a3ce45b9d016fed18b9877f3ba2c671034bcf",
+      "size": [
+        15,
+        31
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              13,
+              12,
+              20
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              13,
+              5,
+              9
+            ],
+            [
+              14,
+              5,
+              11
+            ],
+            [
+              15,
+              5,
+              8
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              16,
+              5,
+              11
+            ],
+            [
+              17,
+              5,
+              6
+            ],
+            [
+              17,
+              8,
+              10
+            ],
+            [
+              18,
+              5,
+              6
+            ],
+            [
+              18,
+              8,
+              10
+            ],
+            [
+              19,
+              7,
+              9
+            ],
+            [
+              19,
+              10,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_04@2",
+      "rgba_sha256": "f576607179e2042e4e625f218cb94d05bde89db3f69639edde11e865ea5d9521",
+      "size": [
+        16,
+        31
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              13,
+              12,
+              20
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              13,
+              5,
+              12
+            ],
+            [
+              14,
+              6,
+              11
+            ],
+            [
+              15,
+              5,
+              9
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              16,
+              6,
+              11
+            ],
+            [
+              17,
+              6,
+              9
+            ],
+            [
+              17,
+              10,
+              11
+            ],
+            [
+              18,
+              6,
+              12
+            ],
+            [
+              19,
+              5,
+              6
+            ],
+            [
+              19,
+              10,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_05@2",
+      "rgba_sha256": "704523646bb918ecbb179ad8a1bbab5c126fcfb7d20d888d2fba60943c311793",
+      "size": [
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              10,
+              11,
+              17,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              10,
+              11
+            ],
+            [
+              11,
+              12,
+              14
+            ],
+            [
+              12,
+              11,
+              15
+            ],
+            [
+              13,
+              10,
+              15
+            ],
+            [
+              14,
+              11,
+              14
+            ],
+            [
+              14,
+              15,
+              17
+            ],
+            [
+              15,
+              11,
+              15
+            ],
+            [
+              16,
+              11,
+              15
+            ],
+            [
+              17,
+              10,
+              12
+            ],
+            [
+              17,
+              13,
+              14
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_06@2",
+      "rgba_sha256": "72be4da638f26e98a697972a333bdd7b26a89806c4adc267f3d16ab7a1705a91",
+      "size": [
+        17,
+        30
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              10,
+              11,
+              17,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              13,
+              14
+            ],
+            [
+              12,
+              10,
+              15
+            ],
+            [
+              13,
+              10,
+              15
+            ],
+            [
+              14,
+              10,
+              16
+            ],
+            [
+              15,
+              11,
+              14
+            ],
+            [
+              16,
+              10,
+              14
+            ],
+            [
+              17,
+              10,
+              14
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_07@2",
+      "rgba_sha256": "32b516d3a3c915628e415c608996f91d9644567c95ec0f9bc7a5839df8b5bcee",
+      "size": [
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              11,
+              11,
+              18,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              12,
+              14
+            ],
+            [
+              12,
+              11,
+              15
+            ],
+            [
+              13,
+              11,
+              16
+            ],
+            [
+              14,
+              11,
+              16
+            ],
+            [
+              15,
+              12,
+              16
+            ],
+            [
+              16,
+              11,
+              15
+            ],
+            [
+              17,
+              11,
+              15
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_08@2",
+      "rgba_sha256": "c1d1f2a717fa5a85e6f1ad0aa8b5a271f5292aa09f703f15f41807c2538162f0",
+      "size": [
+        18,
+        30
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              11,
+              11,
+              18,
+              18
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              11,
+              14
+            ],
+            [
+              12,
+              11,
+              14
+            ],
+            [
+              13,
+              11,
+              17
+            ],
+            [
+              14,
+              11,
+              15
+            ],
+            [
+              14,
+              16,
+              17
+            ],
+            [
+              15,
+              11,
+              15
+            ],
+            [
+              15,
+              16,
+              17
+            ],
+            [
+              16,
+              11,
+              15
+            ],
+            [
+              17,
+              11,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_a2_13@3",
+      "rgba_sha256": "ff7c13daa4311878a3112a3ef39a98aacc69ac35074f322c358a086d59f9f09c",
+      "size": [
+        26,
+        31
+      ],
+      "body": "adult_a",
+      "view": "E",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              12,
+              1,
+              18,
+              6
+            ],
+            [
+              13,
+              18,
+              26,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              2,
+              12,
+              14
+            ],
+            [
+              3,
+              12,
+              17
+            ],
+            [
+              4,
+              12,
+              16
+            ],
+            [
+              5,
+              13,
+              16
+            ],
+            [
+              18,
+              15,
+              17
+            ],
+            [
+              19,
+              14,
+              21
+            ],
+            [
+              20,
+              14,
+              21
+            ],
+            [
+              21,
+              14,
+              21
+            ],
+            [
+              22,
+              14,
+              21
+            ],
+            [
+              23,
+              14,
+              21
+            ],
+            [
+              24,
+              13,
+              18
+            ],
+            [
+              24,
+              19,
+              23
+            ],
+            [
+              25,
+              13,
+              23
+            ],
+            [
+              26,
+              13,
+              24
+            ],
+            [
+              27,
+              13,
+              24
+            ],
+            [
+              28,
+              13,
+              19
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_a2_14@3",
+      "rgba_sha256": "b7b81f76675ba63d283ec5353aa2d5a1313e18d5aef9908b5d7e57f3b43b266d",
+      "size": [
+        30,
+        30
+      ],
+      "body": "adult_a",
+      "view": "E",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              18,
+              11,
+              24,
+              17
+            ],
+            [
+              17,
+              17,
+              32,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              18,
+              19
+            ],
+            [
+              12,
+              18,
+              20
+            ],
+            [
+              13,
+              18,
+              20
+            ],
+            [
+              14,
+              18,
+              21
+            ],
+            [
+              15,
+              18,
+              21
+            ],
+            [
+              16,
+              19,
+              20
+            ],
+            [
+              17,
+              21,
+              25
+            ],
+            [
+              17,
+              27,
+              29
+            ],
+            [
+              18,
+              18,
+              25
+            ],
+            [
+              18,
+              27,
+              29
+            ],
+            [
+              19,
+              18,
+              25
+            ],
+            [
+              20,
+              18,
+              25
+            ],
+            [
+              21,
+              17,
+              25
+            ],
+            [
+              22,
+              18,
+              27
+            ],
+            [
+              23,
+              17,
+              22
+            ],
+            [
+              23,
+              23,
+              28
+            ],
+            [
+              24,
+              17,
+              27
+            ],
+            [
+              25,
+              17,
+              29
+            ],
+            [
+              26,
+              17,
+              28
+            ],
+            [
+              27,
+              17,
+              21
+            ],
+            [
+              27,
+              22,
+              28
+            ],
+            [
+              28,
+              23,
+              24
+            ],
+            [
+              28,
+              27,
+              28
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_a2_15@3",
+      "rgba_sha256": "7975e2b16a9dbdf9b6fa002d0cfb3ee217af829b9c6f522cc16181608cc1bdc3",
+      "size": [
+        21,
+        32
+      ],
+      "body": "adult_a",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              1,
+              11,
+              6
+            ],
+            [
+              9,
+              20,
+              24,
+              32
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              1,
+              6,
+              7
+            ],
+            [
+              2,
+              6,
+              8
+            ],
+            [
+              3,
+              5,
+              9
+            ],
+            [
+              4,
+              5,
+              8
+            ],
+            [
+              5,
+              5,
+              7
+            ],
+            [
+              21,
+              9,
+              16
+            ],
+            [
+              22,
+              9,
+              16
+            ],
+            [
+              23,
+              9,
+              16
+            ],
+            [
+              24,
+              9,
+              16
+            ],
+            [
+              25,
+              9,
+              18
+            ],
+            [
+              26,
+              9,
+              14
+            ],
+            [
+              26,
+              15,
+              19
+            ],
+            [
+              27,
+              9,
+              19
+            ],
+            [
+              28,
+              9,
+              14
+            ],
+            [
+              28,
+              15,
+              19
+            ],
+            [
+              29,
+              9,
+              14
+            ],
+            [
+              30,
+              9,
+              10
+            ],
+            [
+              30,
+              13,
+              14
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_a2_16@3",
+      "rgba_sha256": "3f4180dbb45a4563dd8c8a4c6d3827f1969efd8389eb136107dd8bf0707620cc",
+      "size": [
+        20,
+        29
+      ],
+      "body": "adult_a",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              10,
+              13,
+              16,
+              18
+            ],
+            [
+              10,
+              18,
+              23,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              13,
+              10,
+              12
+            ],
+            [
+              14,
+              10,
+              11
+            ],
+            [
+              15,
+              10,
+              11
+            ],
+            [
+              15,
+              14,
+              15
+            ],
+            [
+              16,
+              10,
+              11
+            ],
+            [
+              16,
+              12,
+              14
+            ],
+            [
+              17,
+              11,
+              16
+            ],
+            [
+              18,
+              10,
+              15
+            ],
+            [
+              19,
+              10,
+              15
+            ],
+            [
+              20,
+              10,
+              15
+            ],
+            [
+              21,
+              10,
+              19
+            ],
+            [
+              22,
+              10,
+              19
+            ],
+            [
+              23,
+              10,
+              19
+            ],
+            [
+              24,
+              10,
+              19
+            ],
+            [
+              25,
+              10,
+              19
+            ],
+            [
+              27,
+              10,
+              12
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_13@3",
+      "rgba_sha256": "0c4fbafc7a1c7d1cae55c0266cff32fcde51d9fe6efe4b3334d6ae77f40c1d5d",
+      "size": [
+        26,
+        32
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              4,
+              1,
+              10,
+              6
+            ],
+            [
+              14,
+              19,
+              28,
+              32
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              1,
+              7,
+              8
+            ],
+            [
+              2,
+              4,
+              8
+            ],
+            [
+              3,
+              4,
+              8
+            ],
+            [
+              4,
+              4,
+              7
+            ],
+            [
+              5,
+              9,
+              10
+            ],
+            [
+              19,
+              18,
+              19
+            ],
+            [
+              20,
+              16,
+              21
+            ],
+            [
+              21,
+              15,
+              21
+            ],
+            [
+              22,
+              14,
+              21
+            ],
+            [
+              23,
+              14,
+              21
+            ],
+            [
+              23,
+              23,
+              24
+            ],
+            [
+              24,
+              14,
+              19
+            ],
+            [
+              24,
+              20,
+              24
+            ],
+            [
+              25,
+              15,
+              24
+            ],
+            [
+              26,
+              14,
+              24
+            ],
+            [
+              27,
+              14,
+              24
+            ],
+            [
+              28,
+              14,
+              24
+            ],
+            [
+              29,
+              14,
+              19
+            ],
+            [
+              29,
+              20,
+              23
+            ],
+            [
+              30,
+              20,
+              21
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_14@3",
+      "rgba_sha256": "631026ed080a2aadd7f77ff1db69708f0144d6c9e128eeefe5d884f3aaf5ca8d",
+      "size": [
+        30,
+        28
+      ],
+      "body": "adult_b",
+      "view": "E",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              17,
+              10,
+              23,
+              16
+            ],
+            [
+              17,
+              15,
+              32,
+              29
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              11,
+              18,
+              20
+            ],
+            [
+              12,
+              18,
+              20
+            ],
+            [
+              13,
+              17,
+              20
+            ],
+            [
+              14,
+              18,
+              20
+            ],
+            [
+              15,
+              17,
+              18
+            ],
+            [
+              15,
+              23,
+              24
+            ],
+            [
+              16,
+              18,
+              24
+            ],
+            [
+              17,
+              17,
+              24
+            ],
+            [
+              18,
+              17,
+              24
+            ],
+            [
+              19,
+              17,
+              22
+            ],
+            [
+              19,
+              23,
+              26
+            ],
+            [
+              19,
+              27,
+              28
+            ],
+            [
+              20,
+              18,
+              22
+            ],
+            [
+              20,
+              23,
+              27
+            ],
+            [
+              21,
+              18,
+              22
+            ],
+            [
+              21,
+              23,
+              27
+            ],
+            [
+              22,
+              17,
+              28
+            ],
+            [
+              23,
+              17,
+              28
+            ],
+            [
+              24,
+              17,
+              23
+            ],
+            [
+              24,
+              24,
+              28
+            ],
+            [
+              25,
+              17,
+              22
+            ],
+            [
+              25,
+              24,
+              29
+            ],
+            [
+              26,
+              27,
+              28
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_15@3",
+      "rgba_sha256": "a8c0e1da1a96274dd3003608d389fb1d5cb03ad36926b248dc9aa3f8faa5d2b5",
+      "size": [
+        23,
+        31
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              5,
+              1,
+              10,
+              5
+            ],
+            [
+              2,
+              20,
+              26,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              1,
+              5,
+              8
+            ],
+            [
+              2,
+              5,
+              8
+            ],
+            [
+              3,
+              5,
+              8
+            ],
+            [
+              4,
+              5,
+              7
+            ],
+            [
+              20,
+              8,
+              15
+            ],
+            [
+              21,
+              6,
+              7
+            ],
+            [
+              21,
+              8,
+              16
+            ],
+            [
+              21,
+              18,
+              19
+            ],
+            [
+              22,
+              5,
+              6
+            ],
+            [
+              22,
+              7,
+              20
+            ],
+            [
+              23,
+              2,
+              9
+            ],
+            [
+              23,
+              10,
+              20
+            ],
+            [
+              24,
+              3,
+              15
+            ],
+            [
+              24,
+              16,
+              20
+            ],
+            [
+              25,
+              3,
+              14
+            ],
+            [
+              25,
+              15,
+              22
+            ],
+            [
+              26,
+              3,
+              21
+            ],
+            [
+              27,
+              2,
+              21
+            ],
+            [
+              28,
+              2,
+              21
+            ],
+            [
+              29,
+              2,
+              4
+            ],
+            [
+              29,
+              7,
+              9
+            ],
+            [
+              29,
+              14,
+              15
+            ],
+            [
+              29,
+              17,
+              18
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_b2_16@3",
+      "rgba_sha256": "37ce643f42e6f0ebb581043ed67cbfdbcf1a4a148060f3fb718bf8b98812e623",
+      "size": [
+        24,
+        29
+      ],
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "patches": [
+        {
+          "region": "other",
+          "rule": "Inspected held basket/stone surfaces in pixel-coordinate bounds; preserve warm skin of overlapping hands and outline. Exact-image only.",
+          "inspected_bounds": [
+            [
+              1,
+              18,
+              28,
+              31
+            ]
+          ],
+          "excluded_skin_colors": [
+            "#884119",
+            "#A86329",
+            "#C9692A",
+            "#D87E33"
+          ],
+          "spans": [
+            [
+              18,
+              7,
+              10
+            ],
+            [
+              18,
+              12,
+              17
+            ],
+            [
+              19,
+              4,
+              5
+            ],
+            [
+              19,
+              8,
+              17
+            ],
+            [
+              19,
+              20,
+              21
+            ],
+            [
+              20,
+              5,
+              20
+            ],
+            [
+              21,
+              4,
+              10
+            ],
+            [
+              21,
+              11,
+              21
+            ],
+            [
+              22,
+              3,
+              21
+            ],
+            [
+              23,
+              3,
+              14
+            ],
+            [
+              23,
+              16,
+              21
+            ],
+            [
+              24,
+              4,
+              14
+            ],
+            [
+              24,
+              15,
+              22
+            ],
+            [
+              25,
+              1,
+              22
+            ],
+            [
+              26,
+              1,
+              23
+            ],
+            [
+              27,
+              2,
+              3
+            ],
+            [
+              27,
+              5,
+              7
+            ],
+            [
+              27,
+              14,
+              15
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c1_03@1",
+      "rgba_sha256": "a7ce1fcb04ede4a14dc5c5045f8a83a5d96ccd958cdeacbfa03a9831f2423f17",
+      "size": [
+        14,
+        23
+      ],
+      "body": "child",
+      "view": "N",
+      "activity": "idle",
+      "patches": [
+        {
+          "region": "hair",
+          "rule": "Reviewed continuous rear hair mass and its olive highlights, rows 0..9 above exposed neck. Exact-image only.",
+          "spans": [
+            [
+              2,
+              3,
+              4
+            ],
+            [
+              2,
+              5,
+              8
+            ],
+            [
+              3,
+              3,
+              10
+            ],
+            [
+              4,
+              2,
+              10
+            ],
+            [
+              5,
+              3,
+              10
+            ],
+            [
+              6,
+              2,
+              11
+            ],
+            [
+              7,
+              2,
+              11
+            ],
+            [
+              8,
+              2,
+              3
+            ],
+            [
+              8,
+              4,
+              12
+            ],
+            [
+              9,
+              3,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c1_03@3",
+      "rgba_sha256": "3c1ce8cf0b6c59b1c8ed5e017bf1ec1be95235f97cbba112ea5613e52730e079",
+      "size": [
+        14,
+        23
+      ],
+      "body": "child",
+      "view": "N",
+      "activity": "idle",
+      "patches": [
+        {
+          "region": "hair",
+          "rule": "Reviewed continuous rear hair mass and its olive highlights, rows 0..9 above exposed neck. Exact-image only.",
+          "spans": [
+            [
+              1,
+              5,
+              9
+            ],
+            [
+              2,
+              5,
+              10
+            ],
+            [
+              3,
+              3,
+              11
+            ],
+            [
+              4,
+              3,
+              11
+            ],
+            [
+              5,
+              2,
+              11
+            ],
+            [
+              5,
+              12,
+              13
+            ],
+            [
+              6,
+              3,
+              12
+            ],
+            [
+              7,
+              3,
+              12
+            ],
+            [
+              8,
+              4,
+              11
+            ],
+            [
+              9,
+              3,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c1_14@1",
+      "rgba_sha256": "6e6af858831b3ebc85e0e5f94dc97d4784335f6160412556f8f479d4718108df",
+      "size": [
+        13,
+        23
+      ],
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "patches": [
+        {
+          "region": "hair",
+          "rule": "Reviewed continuous rear hair mass and its olive highlights, rows 0..9 above exposed neck. Exact-image only.",
+          "spans": [
+            [
+              1,
+              7,
+              8
+            ],
+            [
+              2,
+              5,
+              10
+            ],
+            [
+              3,
+              2,
+              10
+            ],
+            [
+              4,
+              4,
+              10
+            ],
+            [
+              5,
+              3,
+              11
+            ],
+            [
+              6,
+              2,
+              11
+            ],
+            [
+              7,
+              4,
+              11
+            ],
+            [
+              8,
+              3,
+              10
+            ],
+            [
+              9,
+              5,
+              6
+            ],
+            [
+              9,
+              7,
+              8
+            ],
+            [
+              9,
+              9,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c1_15@1",
+      "rgba_sha256": "b071c2d17e2ac2fe54a9c0cdec72b3f1314ff8ac40f91120fcf3d266f17442a7",
+      "size": [
+        14,
+        24
+      ],
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "patches": [
+        {
+          "region": "hair",
+          "rule": "Reviewed continuous rear hair mass and its olive highlights, rows 0..9 above exposed neck. Exact-image only.",
+          "spans": [
+            [
+              1,
+              6,
+              9
+            ],
+            [
+              2,
+              6,
+              9
+            ],
+            [
+              3,
+              4,
+              11
+            ],
+            [
+              4,
+              4,
+              11
+            ],
+            [
+              5,
+              4,
+              11
+            ],
+            [
+              6,
+              3,
+              12
+            ],
+            [
+              7,
+              3,
+              11
+            ],
+            [
+              8,
+              3,
+              10
+            ],
+            [
+              9,
+              4,
+              9
+            ],
+            [
+              9,
+              10,
+              11
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c2_06@2",
+      "rgba_sha256": "76fc5c2f99faae2d7fa64c0604453b8dc5002e93cc36db489227544d3b7798ee",
+      "size": [
+        14,
+        24
+      ],
+      "body": "child",
+      "view": "E",
+      "activity": "run",
+      "patches": [
+        {
+          "region": "skin",
+          "rule": "Inspected exposed warm cheek shadows below the visible hairline; exact color-filtered coordinates, not the surrounding hair.",
+          "inspected_bounds": [
+            [
+              7,
+              6,
+              12,
+              10
+            ]
+          ],
+          "spans": [
+            [
+              6,
+              9,
+              11
+            ],
+            [
+              7,
+              7,
+              11
+            ],
+            [
+              8,
+              7,
+              11
+            ],
+            [
+              9,
+              7,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c2_15@2",
+      "rgba_sha256": "169e65bd294759cb53b97da406913e1b3ca06806ce474f4d6be611cafa8191fa",
+      "size": [
+        14,
+        20
+      ],
+      "body": "child",
+      "view": "S",
+      "activity": "eat",
+      "patches": [
+        {
+          "region": "skin",
+          "rule": "Inspected exposed warm cheek shadows below the visible hairline; exact color-filtered coordinates, not the surrounding hair.",
+          "inspected_bounds": [
+            [
+              4,
+              5,
+              11,
+              9
+            ]
+          ],
+          "spans": [
+            [
+              5,
+              6,
+              9
+            ],
+            [
+              6,
+              4,
+              5
+            ],
+            [
+              6,
+              6,
+              8
+            ],
+            [
+              6,
+              9,
+              10
+            ],
+            [
+              7,
+              4,
+              5
+            ],
+            [
+              7,
+              6,
+              8
+            ],
+            [
+              7,
+              9,
+              11
+            ],
+            [
+              8,
+              4,
+              6
+            ],
+            [
+              8,
+              8,
+              10
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "candidate_id": "V_c2_16@2",
+      "rgba_sha256": "d8058c94eaaaef13ad2b5e1a187ed978401eb5373facf72a4e849daada42779e",
+      "size": [
+        13,
+        24
+      ],
+      "body": "child",
+      "view": "S",
+      "activity": "hug",
+      "patches": [
+        {
+          "region": "skin",
+          "rule": "Inspected exposed warm cheek shadows below the visible hairline; exact color-filtered coordinates, not the surrounding hair.",
+          "inspected_bounds": [
+            [
+              3,
+              6,
+              10,
+              10
+            ]
+          ],
+          "spans": [
+            [
+              6,
+              4,
+              9
+            ],
+            [
+              7,
+              3,
+              5
+            ],
+            [
+              7,
+              6,
+              7
+            ],
+            [
+              7,
+              9,
+              10
+            ],
+            [
+              8,
+              4,
+              9
+            ],
+            [
+              9,
+              5,
+              8
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "review_v4": {
+    "round": 1,
+    "source": "Independent Production2 round1 region_map_wrong observations; pixel-coordinate source inspections. Round2 verdict remains required.",
+    "default_behavior": "No view/activity preserves the legacy D3 classifier. Context corrections never alter source RGBA."
   }
 }

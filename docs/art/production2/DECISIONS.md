@@ -19,3 +19,13 @@
 
 - Part 1 종료 / Part 2 시작: 2026-10-10T13:42:55Z. Python 전체 77/77 PASS; v3+v4 14/14, 별도 계약 14/14. physical origin 보존으로 동일 난수 fixture 일치율 66.964%→84.375%; 80% 기준 유지. `phi-p`를 보존하며 환산 sampling phase와 원점을 모두 기록한다.
 - v4에서는 spill repair로 생길 수 있는 비팔레트 색만 다시 팔레트에 투영하고 변경 texel 수를 기록한다. 처방된 계수 후에도 목표보다 큰 후보는 추가 축소·자르기로 숨기지 않고 geometry 거절한다.
+- Part 2 재검토: §7.2의 한 animation group=한 attempt 규칙을 유지한다. §7.3의 다음 후보 교체는 character의 경우 전체 group을 다음 attempt로 바꾸어 다시 검토하거나 같은 group의 승인된 프레임에서 파생한다. 서로 다른 attempt의 프레임을 몰래 섞지 않는다. S-walk 교체로 reference idle이 바뀌면 두 번째 검토 시 그 체형의 참조를 함께 갱신한다.
+
+## Part 2: frozen review and one correction round
+
+- All 16 round-1 review sheets and three body references were frozen with SHA256s before four fresh-context reviewers received only assigned images and the rubric. Reviewers wrote per-slot arrays before acceptance was computed. Two object candidate-ID transcription errors were corrected against the labelled cards; the unvalidated array is retained.
+- Suspected display-resampling discrepancies were resolved against original-resolution or explicitly nearest-neighbour crops. Actual blue source texels remain artefact rejections; no criterion was relaxed.
+- Region-map objections expose a classifier defect: the unconditional dark upper-body rule can overwrite skin overrides, and shared clothing colors can recolor held props. Apply one bounded classifier correction with view/activity context, then review all affected villagers again. Color sprites are not repainted. Remaining objections after the second review become Part 3 gaps.
+- Preserve both rounds of images, mappings and verdicts. A verdict applies only to the exact candidate and reviewed image hash; changed regions require another visual verdict even when the color candidate ID stays the same.
+
+- Scale decision: round 1 has 0 of 128 villager cells rejected for fitting damage with acceptable unfitted art (0%, below the strictly greater than 25% escape condition). Keep adult 28 and child 21; do not rescale the world. The two fitting-damage objections on objects do not trigger a villager-scale escape.
