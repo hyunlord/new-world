@@ -5,6 +5,7 @@ const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const ART = preload("res://scripts/ui/art_sprite_library.gd")
 const MANIFEST: String = "res://assets/art/terrain/terrain_manifest.json"
 const LAYERS: Array[String] = ["water", "grass", "forest_floor", "camp_earth", "hill", "rock"]
+const SEASON = preload("res://scripts/ui/art_season_tint.gd")
 const RIVER: int = 4
 var _world_sim: WorldSimNode
 var _layers: Dictionary = {}
@@ -51,6 +52,7 @@ func _ready() -> void:
 	refresh_snapshot()
 
 func _process(_delta: float) -> void:
+	_update_season()
 	_frame += 1
 	if _frame % 30 == 0:
 		_refresh_camp()
@@ -158,3 +160,9 @@ func _refresh_decals() -> void:
 			sprite.position = SPRITE_ORIGIN + Vector2(x*16+8+(h>>12)%5-2, y*16+8+(h>>16)%5-2)
 			sprite.set_meta("art_kind", "decal")
 			_decals.add_child(sprite)
+
+func _update_season() -> void:
+	var tint: Color = SEASON.resolve(_world_sim.get_time_snapshot())
+	for layer: TileMapLayer in _layers.values():
+		layer.modulate = tint
+	_decals.modulate = tint

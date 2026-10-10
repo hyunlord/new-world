@@ -7,7 +7,7 @@
 | 2 | All raw candidates, independent review, scale decision | completed | 2026-10-10T13:42:55Z | 2026-10-10T14:04:49Z |
 | 3 | Fill generation, honest fallbacks, installation | completed | 2026-10-10T14:04:49Z | 2026-10-10T14:32:27Z |
 | 4 | Villager frames, fallback icons, elder variants | completed | 2026-10-10T14:32:27Z | 2026-10-10T14:37:18Z |
-| 5 | Groves, clearings, canopy fade, season tint | in_progress | 2026-10-10T14:37:18Z | |
-| 6 | Death count/news and localized season HUD | pending | | |
+| 5 | Groves, clearings, canopy fade, season tint | completed | 2026-10-10T14:37:18Z | 2026-10-10T14:43:34Z |
+| 6 | Death count/news and localized season HUD | in_progress | 2026-10-10T14:43:34Z | |
 | 7 | Windowed captures, A1–A14, blind review, compatibility | pending | | |
 | 8 | Final exact-head gate, Korean report, green FF and draft PR | pending | | |

@@ -85,7 +85,7 @@ func _reap(nodes: Dictionary, seen: Dictionary) -> void:
 			nodes.erase(id)
 
 func _configure(sprite: Sprite2D, sprite_id: String, kind: String, id: int, x: int, y: int) -> void:
-	if not ART.apply(sprite, _available(sprite_id)):
+	if not ART.apply(sprite, _available(sprite_id)) and not ART.is_suppressed(sprite_id):
 		push_error("Missing building art: " + sprite_id)
 	sprite.position = _tile_center(x, y)
 	sprite.set_meta("art_kind", kind)
@@ -104,6 +104,7 @@ func _configure(sprite: Sprite2D, sprite_id: String, kind: String, id: int, x: i
 		_shadows.add_child(shadow)
 		_object_shadows[shadow_id] = shadow
 	shadow.position = sprite.position
+	shadow.visible = sprite.texture != null
 
 func _update_buildings() -> void:
 	var snapshot: Dictionary = _world_sim.get_building_snapshot()
@@ -230,6 +231,8 @@ static func cairn_alpha(age: int, day_ticks: int) -> float:
 	return clampf((1.0 - float(age) / float(maxi(day_ticks, 1))) * 4.0, 0.0, 1.0)
 
 func _available(sprite_id: String) -> String:
+	if ART.is_suppressed(sprite_id):
+		return sprite_id
 	if not ART.frame(sprite_id).is_empty():
 		return sprite_id
 	if sprite_id.begins_with("S1_"):

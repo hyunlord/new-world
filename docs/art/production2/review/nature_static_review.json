@@ -1,0 +1,10 @@
+{
+  "reviewer": "/root/prod_static",
+  "rounds": 2,
+  "initial_findings": [
+    "canopy_before_agent_interpolation_uses_previous_frame_positions"
+  ],
+  "final_findings": [],
+  "resolved": true,
+  "regression": "actual scene-order entry/exit fails beforefix and passes afterfix"
+}

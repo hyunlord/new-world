@@ -2,6 +2,9 @@ extends Node2D
 
 const ART = preload("res://scripts/ui/art_sprite_library.gd")
 const HASH = preload("res://scripts/ui/art_hash.gd")
+const LAYOUT = preload("res://scripts/ui/nature_layout.gd")
+const CANOPY = preload("res://scripts/ui/nature_canopy.gd")
+const SEASON = preload("res://scripts/ui/art_season_tint.gd")
 const ORIGIN: Vector2 = Vector2(448, 28)
 var _world_sim: WorldSimNode
 var _objects: Node2D
@@ -15,8 +18,10 @@ var _width: int = 0
 var _height: int = 0
 var _fingerprint: int = -1
 var _frame: int = 0
+var _clearings: Dictionary = {}
 
 func _ready() -> void:
+	process_priority = get_node("../AgentRenderer").process_priority + 1
 	_world_sim = get_node("../WorldSim") as WorldSimNode
 	_objects = ART.shared_layer(self, "WorldObjects", 4, true)
 	_shadows = ART.shared_layer(self, "Shadows", 3)
@@ -28,6 +33,7 @@ func _process(_delta: float) -> void:
 	_frame += 1
 	if _frame % 30 == 0:
 		_reconcile()
+	_update_canopies()
 
 func refresh_snapshot() -> void:
 	var terrain: Dictionary = _world_sim.get_terrain_snapshot()
@@ -55,6 +61,8 @@ func _tree_id(x: int, y: int, h: int) -> String:
 	return "N1_08" if species < 98 else "N1_16"
 
 func _place(key: String, art_id: String, fallback: String, kind: String, tile: Vector2i, jitter: Vector2i, seen: Dictionary) -> void:
+	if ART.is_suppressed(art_id):
+		return
 	var sprite: Sprite2D = _sprites.get(key) as Sprite2D
 	if sprite == null:
 		sprite = Sprite2D.new()
@@ -68,7 +76,7 @@ func _place(key: String, art_id: String, fallback: String, kind: String, tile: V
 		shadow.set_meta("art_id", key)
 		_shadows.add_child(shadow)
 		_contacts[key] = shadow
-	var chosen: String = fallback if ART.frame(art_id).is_empty() else art_id
+	var chosen: String = fallback if ART.frame(art_id).is_empty() and not ART.is_suppressed(fallback) else art_id
 	ART.apply(sprite, chosen)
 	sprite.position = ORIGIN + Vector2(tile*16+Vector2i(8,15)+jitter)
 	sprite.set_meta("art_kind", kind)
@@ -83,7 +91,8 @@ func _reconcile() -> void:
 	var buildings: Dictionary = _world_sim.get_building_snapshot()
 	var sites: Dictionary = _world_sim.get_construction_snapshot()
 	var food: Dictionary = _world_sim.get_resource_snapshot()
-	var fingerprint: int = hash([buildings, sites, food.get("xs"), food.get("ys"), food.get("kinds")])
+	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var fingerprint: int = hash([buildings, sites, food.get("xs"), food.get("ys"), food.get("kinds"), settlements.get("formation_xs"), settlements.get("formation_ys")])
 	if fingerprint == _fingerprint:
 		return
 	_fingerprint = fingerprint
@@ -93,13 +102,7 @@ func _reconcile() -> void:
 		var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
 		for i: int in range(xs.size()):
 			excluded[Vector2i(xs[i],ys[i])] = true
-	var food_tiles: Dictionary = {}
-	var food_xs: PackedInt32Array = food.get("xs", PackedInt32Array())
-	var food_ys: PackedInt32Array = food.get("ys", PackedInt32Array())
-	var food_kinds: PackedInt32Array = food.get("kinds", PackedInt32Array())
-	for i: int in range(food_xs.size()):
-		if food_kinds[i] == 0:
-			food_tiles[Vector2i(food_xs[i],food_ys[i])] = true
+	_clearings = LAYOUT.clearings(buildings, sites, food, settlements)
 	var seen: Dictionary = {}
 	for y: int in range(_height):
 		for x: int in range(_width):
@@ -110,11 +113,17 @@ func _reconcile() -> void:
 			var code: int = _code(x,y)
 			var jitter: Vector2i = Vector2i((h>>8)%7-3,(h>>12)%5-2)
 			var key: String = "%d,%d" % [x,y]
-			if code == 1 and not food_tiles.has(tile):
-				var count: int = 0 if h%100 < 12 else (1 if h%100 < 85 else 2)
-				for n: int in range(count):
-					var shift: Vector2i = jitter if n == 0 else Vector2i(5 if h%2 == 0 else -5,3 if (h>>1)%2 == 0 else -3)
-					_place(key+":tree%d" % n, _tree_id(x,y,h+n), "direction_14_young_tree", "tree",tile,shift,seen)
+			if not _clearings.has(tile):
+				if code == 1:
+					if LAYOUT.forest_tree(x,y):
+						_place(key+":tree", _tree_id(x,y,h), "direction_14_young_tree", "tree",tile,jitter,seen)
+					elif LAYOUT.roll(x,y,0x19AB) < 0.08:
+						_understory(key,tile,jitter,h,seen)
+				elif code == 0:
+					if LAYOUT.roll(x,y,0x3841) < 0.015:
+						_place(key+":tree",_tree_id(x,y,h),"direction_14_young_tree","tree",tile,jitter,seen)
+					elif LAYOUT.roll(x,y,0x9467) < 0.03:
+						_place(key+":shrub","N1_%02d" % (11+h%3),"direction_14_young_tree","shrub",tile,jitter,seen)
 			if (code == 3 and h%100 < 25) or code == 2:
 				var index: int = (10+h%2 if h%100 < 40 else 8+h%2) if code == 2 else 5+h%5
 				_place(key+":rock", "N2_%02d" % index, "direction_13_boulder", "rock",tile,jitter,seen)
@@ -129,3 +138,16 @@ func _reconcile() -> void:
 			(_contacts[key] as Sprite2D).queue_free()
 			_sprites.erase(key)
 			_contacts.erase(key)
+
+func _understory(key: String, tile: Vector2i, jitter: Vector2i, h: int, seen: Dictionary) -> void:
+	var indices: Array[int] = [9,10,11,12,13,14,15]
+	var index: int = indices[HASH.mix(h) % indices.size()]
+	var kind: String = "log" if index in [9,10,15] else ("tree" if index == 14 else "shrub")
+	_place(key+":understory","N1_%02d" % index,"direction_14_young_tree",kind,tile,jitter,seen)
+
+func _update_canopies() -> void:
+	var heads: Dictionary = CANOPY.buckets(_objects)
+	var tint: Color = SEASON.resolve(_world_sim.get_time_snapshot())
+	for sprite: Sprite2D in _sprites.values():
+		var opacity: float = CANOPY.alpha(sprite,heads) if str(sprite.get_meta("art_kind")) == "tree" else 1.0
+		sprite.modulate = Color(tint.r,tint.g,tint.b,opacity)

@@ -5,6 +5,7 @@ class SnapshotDouble extends Node:
 	var buildings: Dictionary = {}
 	var sites: Dictionary = {}
 	var resources: Dictionary = {}
+	var settlements: Dictionary = {}
 
 	func get_terrain_snapshot() -> Dictionary:
 		return terrain
@@ -14,6 +15,9 @@ class SnapshotDouble extends Node:
 
 	func get_construction_snapshot() -> Dictionary:
 		return sites
+
+	func get_settlement_snapshot() -> Dictionary:
+		return settlements
 
 	func get_resource_snapshot() -> Dictionary:
 		return resources
@@ -70,13 +74,14 @@ func _run() -> void:
 	var terrain: Dictionary = world.call("get_terrain_snapshot")
 	var width: int = int(terrain["width"])
 	var codes: PackedByteArray = terrain["terrain"]
-	var expected_trees: int = 0
-	for i: int in range(codes.size()):
-		var tile: Vector2i = Vector2i(i%width, floori(float(i)/width))
-		if codes[i] == 1 and not excluded.has(tile) and not food_tiles.has(tile):
-			var h: int = ((tile.x*73856093) ^ (tile.y*19349663)) & 0x7fffffff
-			expected_trees += 0 if h%100 < 12 else (1 if h%100 < 85 else 2)
-	_check(trees == expected_trees, "tree count follows every forest tile hash")
+	var forest_total: int = codes.count(1)
+	var forest_trees: int = 0
+	for sprite: Sprite2D in sprites.values():
+		var x: int = int(sprite.get_meta("tile_x"))
+		var y: int = int(sprite.get_meta("tile_y"))
+		if str(sprite.get_meta("art_kind")) == "tree" and codes[y*width+x] == 1:
+			forest_trees += 1
+	_check(float(forest_trees)/forest_total >= 0.25 and float(forest_trees)/forest_total <= 0.35,"forest tree density over all forest tiles")
 	nature.call("refresh_snapshot")
 	for key: String in sprites:
 		var sprite: Sprite2D = sprites[key] as Sprite2D
@@ -97,6 +102,7 @@ func _check_construction_clearance(original: Node, world: Node) -> void:
 	mock.buildings = world.call("get_building_snapshot")
 	mock.sites = world.call("get_construction_snapshot").duplicate(true)
 	mock.resources = world.call("get_resource_snapshot")
+	mock.settlements = world.call("get_settlement_snapshot")
 	var renderer: Node2D = Node2D.new()
 	renderer.set_script(script)
 	renderer.set("_world_sim", mock)
