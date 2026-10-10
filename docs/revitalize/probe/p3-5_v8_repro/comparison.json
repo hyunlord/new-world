@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "base": "docs/revitalize/probe/p2-6_final_game/summary.json",
+  "current": "docs/revitalize/probe/p3-5_v8_repro/summary.json",
+  "checked_scalar_values": 281568,
+  "raw_rows": 7744,
+  "ignored_keys": [
+    "git_sha",
+    "ms_per_agent_tick",
+    "schema_version",
+    "timing",
+    "wall_seconds"
+  ],
+  "differences": [],
+  "summary_sha256": {
+    "base": "ae04ff84a88fa77109c15674cf1f86109992f3b9d225941b7bfe670c6a1e7f9a",
+    "current": "fc37117754cd80b7da9b0143c1cd58ee27d77a633836b9eb0a6548cbc28fc426"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "base": "docs/revitalize/probe/p3-5_round2_10day/summary.json",
+  "current": "docs/revitalize/probe/p3-7_final_10day/summary.json",
+  "checked_scalar_values": 526285,
+  "raw_rows": 10240,
+  "ignored_keys": [
+    "git_sha",
+    "ms_per_agent_tick",
+    "schema_version",
+    "timing",
+    "wall_seconds"
+  ],
+  "differences": [],
+  "summary_sha256": {
+    "base": "ba6e4ad521bfe8d5dbfa1c1b066dbdb8fb07e29056439a7f3c3d17d933138d54",
+    "current": "a755ef2b62f1be212c43d6100c009b0260adf9f8e212bc2188efda250932f7f3"
+  }
+}

@@ -70,6 +70,12 @@ pub struct Tallies {
     pub deaths_combat: u64,
     /// Completed social interactions, counted once per pair rather than per agent.
     pub social_completed: u64,
+    /// Units removed from finite food tiles by eating or gathering.
+    pub food_harvested: u64,
+    /// Hunger relief events from ground meals or stockpile relief.
+    pub meals_eaten: u64,
+    /// Ground hunger relief events that found no food to consume.
+    pub meals_without_food: u64,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).
@@ -158,6 +164,10 @@ pub struct SimResources {
     pub building_kinds: BTreeMap<(u32, u32), BuildingKind>,
     /// Settlement owner of each automatically planned construction site.
     pub site_owner: BTreeMap<(u32, u32), SettlementId>,
+    /// Completed building ownership; populated only under owned housing rules.
+    pub building_owner: BTreeMap<(u32, u32), SettlementId>,
+    /// Assigned shelter tile per resident; populated only with night rest enabled.
+    pub bed_of: BTreeMap<AgentId, (u32, u32)>,
     /// Display-only count of planning attempts with no qualifying tile.
     pub shelter_plan_skips: u64,
     /// Tick each active non-migrant social chase began; empty in legacy worlds.
@@ -339,6 +349,8 @@ impl SimResources {
             world_seed: 0,
             building_kinds: BTreeMap::new(),
             site_owner: BTreeMap::new(),
+            building_owner: BTreeMap::new(),
+            bed_of: BTreeMap::new(),
             shelter_plan_skips: 0,
             social_chase_since: BTreeMap::new(),
             social_retry_after: BTreeMap::new(),

@@ -6,7 +6,9 @@ use sim_core::components::{
     SettlementMigrant, Sleep, Social, TargetKind, Thirst,
 };
 use sim_engine::{SimEngine, RESOURCE_SOURCE_INFINITE};
-use sim_systems::runtime::decision::agent_decision::{actionable_need, NeedAvailability};
+use sim_systems::runtime::decision::agent_decision::{
+    actionable_need_with_fatigue_threshold, fatigue_threshold_at, NeedAvailability,
+};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Linearly interpolate a sorted quantile, returning zero for no observations.
@@ -62,6 +64,7 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         }
     }
     let availability = NeedAvailability::from_resources(r);
+    let fatigue_threshold = fatigue_threshold_at(r);
     let physical_sources = [
         r.food_tiles.values().any(|q| *q > 0),
         r.water_tiles.values().any(|q| *q > 0),
@@ -101,7 +104,9 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
     let (mut idle, mut seeking, mut consuming, mut breach, mut carried) =
         (0u64, 0u64, 0u64, 0u64, 0u64);
     for (agent, pos, state, h, t, sl, so, inv) in rows {
-        let has_actionable_need = actionable_need(h, t, sl, availability).is_some();
+        let has_actionable_need =
+            actionable_need_with_fatigue_threshold(h, t, sl, availability, fatigue_threshold)
+                .is_some();
         let h = h.map_or(0.0, |v| f64::from(v.value));
         let t = t.map_or(0.0, |v| v.value);
         hunger.push(h);
@@ -146,8 +151,8 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             .keys()
             .filter(|tile| !stamped_tiles.contains(*tile))
             .count();
-    json!({
-        "schema_version": 2, "scene": scene, "seed": seed,
+    let mut row = json!({
+        "schema_version": 3, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "tick": engine.current_tick(), "day": engine.current_tick() as f64 / r.ticks_per_day as f64,
         "alive": alive, "births": r.tallies.births,
@@ -168,12 +173,53 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         "idle_breach_actionable": actionable, "idle_breach_unavailable": unavailable,
         "social_chasing": social_chasing, "social_completed": r.tallies.social_completed,
         "fingerprint": fingerprint(engine)
-    })
+    });
+    if let (Some(base), Some(extra)) = (
+        row.as_object_mut(),
+        super::long_run::metrics(engine).as_object(),
+    ) {
+        base.extend(
+            extra
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
+        );
+    }
+    row
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn idle_actionable_uses_night_threshold_and_preserves_v8() {
+        use sim_core::rules::{NightRestRule, WorldRules};
+        for (night_enabled, offset, expected) in [(false, 1260, 0), (true, 1260, 1), (true, 720, 0)]
+        {
+            let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
+            engine.resources.rules = WorldRules::game_v8();
+            engine.resources.rules.clock_offset_ticks = offset;
+            if night_enabled {
+                engine.resources.rules.agent.night_rest = Some(NightRestRule {
+                    start_minute: 1260,
+                    end_minute: 360,
+                    fatigue_threshold: 0.0,
+                    recovery_per_tick: 0.12,
+                    wake_preempt: 75.0,
+                });
+            }
+            let agent = engine.spawn_agent(1, 1);
+            engine
+                .world
+                .insert(agent, (AgentState::Idle, Sleep::new(10.0, 0.0)))
+                .expect("sleep");
+            engine.resources.sleep_tiles.insert((1, 1), 1);
+            let row = sample(&engine, "fixture", 0, 0);
+            assert_eq!(row["idle_breach_actionable"], expected);
+            assert_eq!(row["idle_with_breach"], 0);
+            assert_eq!(row["idle_breach_unavailable"], 0);
+        }
+    }
+
     #[test]
     fn idle_actionable_falls_through_unavailable_food_and_counts_sleep() {
         let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());

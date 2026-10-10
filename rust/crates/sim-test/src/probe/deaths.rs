@@ -250,7 +250,11 @@ impl DeathTracker {
                 "hunger_at_death":at_death.hunger,"thirst_at_death":at_death.thirst,
                 "food_available_at_death":frame.food_available,
                 "water_distance_at_death":frame.water.iter().copied().map(distance).min(),
-                "home_distance_at_death":at_death.home.map(distance)});
+                "home_distance_at_death":at_death.home.map(distance),
+                "settlement_food_stock_at_death":at_death.settlement_food,
+                "formation_distance_at_death":at_death.home.map(distance),
+                "life_stage_at_death":if at_death.child { "child" } else { "adult" },
+                "bed_assigned":at_death.bed});
             self.census.record(&row);
             records.push(row);
         }
@@ -329,8 +333,34 @@ mod tests {
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0]["cause"], "dehydration");
         assert_eq!(rows[0]["thirst_at_death"], 100.0);
-        assert_eq!(rows[0].as_object().expect("object").len(), 19);
+        assert_eq!(rows[0].as_object().expect("object").len(), 23);
     }
+    #[test]
+    fn death_metadata_survives_membership_and_bed_cleanup() {
+        use sim_core::components::{Agent, Child, ResourceKind, Settlement};
+        let (mut engine, entity) = fixture(99.0, 99.0);
+        let id = engine.world.get::<&Agent>(entity).expect("id").id;
+        engine
+            .world
+            .insert_one(entity, Child { born_tick: 0 })
+            .expect("child");
+        let mut settlement = Settlement::new_with_id(1, 0);
+        settlement.formation_tile = (1, 1);
+        settlement.add_member_agent(id);
+        settlement.store(ResourceKind::Food, 17);
+        engine.resources.settlements.insert(1, settlement);
+        engine.resources.bed_of.insert(id, (3, 3));
+        let mut tracker = DeathTracker::install(&mut engine);
+        engine.tick();
+        let (rows, _) = tracker
+            .after_tick(&engine, "test", 0, "test")
+            .expect("death");
+        assert_eq!(rows[0]["settlement_food_stock_at_death"], 17);
+        assert_eq!(rows[0]["formation_distance_at_death"], 2);
+        assert_eq!(rows[0]["life_stage_at_death"], "child");
+        assert_eq!(rows[0]["bed_assigned"], true);
+    }
+
     #[test]
     fn starvation_reads_first_saturation_on_death_tick() {
         let (mut engine, _) = fixture(99.0, 0.0);
@@ -397,6 +427,9 @@ mod tests {
             hunger: 0.0,
             thirst: 60.0,
             home: None,
+            settlement_food: None,
+            child: false,
+            bed: false,
         };
         let mut history = History::new(&frame, 0);
         frame.state = AgentState::Consuming {

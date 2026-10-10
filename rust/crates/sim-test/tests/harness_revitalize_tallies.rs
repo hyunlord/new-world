@@ -57,6 +57,9 @@ mod tests {
             deaths_dehydration: 1,
             deaths_combat: 0,
             social_completed: 0,
+            food_harvested: 0,
+            meals_eaten: 0,
+            meals_without_food: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

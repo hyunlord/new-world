@@ -52,12 +52,12 @@
 //! ever been recorded on the agent's tile the decision becomes a chain
 //! root (`parent: None`).
 
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, ConstructionSite, Hunger, Inventory, Memory,
+    Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Hunger, Inventory, Memory,
     MemoryArm, Position, ResourceKind, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind,
     Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
@@ -98,15 +98,54 @@ pub fn actionable_need(
     sleep: Option<&Sleep>,
     availability: NeedAvailability,
 ) -> Option<(TargetKind, DecisionReason)> {
+    actionable_need_with_fatigue_threshold(hunger, thirst, sleep, availability, FATIGUE_THRESHOLD)
+}
+
+/// Highest-priority actionable need using the caller's active fatigue threshold.
+pub fn actionable_need_with_fatigue_threshold(
+    hunger: Option<&Hunger>,
+    thirst: Option<&Thirst>,
+    sleep: Option<&Sleep>,
+    availability: NeedAvailability,
+    fatigue_threshold: f64,
+) -> Option<(TargetKind, DecisionReason)> {
     if availability.food && hunger.is_some_and(|need| need.value > HUNGER_THRESHOLD) {
         Some((TargetKind::Food, DecisionReason::HungerThresholdBreach))
     } else if availability.water && thirst.is_some_and(|need| need.value > THIRST_THRESHOLD) {
         Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
-    } else if availability.sleep && sleep.is_some_and(|need| need.fatigue > FATIGUE_THRESHOLD) {
+    } else if availability.sleep && sleep.is_some_and(|need| need.fatigue > fatigue_threshold) {
         Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
     } else {
         None
     }
+}
+
+/// Whether an integer minute lies in a half-open, possibly midnight-wrapping window.
+pub const fn minute_in_window(minute: u64, start: u32, end: u32) -> bool {
+    if start < end {
+        minute >= start as u64 && minute < end as u64
+    } else if start > end {
+        minute >= start as u64 || minute < end as u64
+    } else {
+        false
+    }
+}
+
+/// Whether the simulation clock currently lies within a specified minute window.
+pub fn clock_in_window(resources: &SimResources, start: u32, end: u32) -> bool {
+    resources.ticks_per_day != 0 && minute_in_window(
+        resources.current_tick.saturating_add(resources.rules.clock_offset_ticks)
+            % resources.ticks_per_day,
+        start,
+        end,
+    )
+}
+
+/// Active fatigue threshold shared by simulation decisions and probe accounting.
+pub fn fatigue_threshold_at(resources: &SimResources) -> f64 {
+    resources.rules.agent.night_rest
+        .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
+        .map_or(FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold)
 }
 
 /// Cascade arm identifier — the natural drives + non-natural arms whose
@@ -424,6 +463,11 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         let tick = resources.current_tick;
         let availability = NeedAvailability::from_resources(resources);
+        let fatigue_threshold = fatigue_threshold_at(resources);
+        let night_rest = resources.rules.agent.night_rest.filter(|rule|
+            clock_in_window(resources, rule.start_minute, rule.end_minute));
+        let children: BTreeSet<AgentId> = world.query::<(&Agent, &Child)>()
+            .iter().map(|(_, (agent, _))| agent.id).collect();
         let social_rule = resources.rules.agent.social_seek;
         if social_rule.is_some() {
             resources.social_retry_after.retain(|_, after| tick < *after);
@@ -466,9 +510,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>,
             )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social))| {
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
-                 h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                 !children.contains(&a.id) && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
                     && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
-                    && sleep.is_none_or(|v| v.fatigue <= FATIGUE_THRESHOLD)
+                    && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
                     && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
             }).collect();
             agents.sort_by_key(|(id, ..)| *id);
@@ -517,7 +561,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&Social>,
             )>();
             for (_, (a, pos, state, h, t, s, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle)
+                if children.contains(&a.id) || !matches!(*state, AgentState::Idle)
                     || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
                 {
                     continue;
@@ -525,7 +569,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 let lone_breach = social_opt.is_some_and(|x| x.loneliness > SOCIAL_THRESHOLD);
                 let hunger_breach = h.is_some_and(|x| x.value > HUNGER_THRESHOLD);
                 let thirst_breach = t.is_some_and(|x| x.value > THIRST_THRESHOLD);
-                let fatigue_breach = s.is_some_and(|x| x.fatigue > FATIGUE_THRESHOLD);
+                let fatigue_breach = s.is_some_and(|x| x.fatigue > fatigue_threshold);
                 let construction_breach = construction_sites.contains_key(&(pos.x, pos.y));
                 if lone_breach
                     && !hunger_breach
@@ -572,14 +616,15 @@ impl RuntimeSystem for AgentDecisionSystem {
         // cascade.
         let social_partner_breached_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>)>();
-            for (_, (a, pos, state, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle)
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>, Option<&Sleep>)>();
+            for (_, (a, pos, state, social_opt, sleep)) in q.iter() {
+                if children.contains(&a.id) || !matches!(*state, AgentState::Idle)
                     || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
                 {
                     continue;
                 }
-                if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD)
+                    && (night_rest.is_none() || sleep.is_none_or(|s| s.fatigue <= fatigue_threshold)) {
                     map.entry((pos.x, pos.y)).or_default().push(a.id);
                 }
             }
@@ -593,9 +638,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         // `loneliness > SOCIAL_THRESHOLD`.
         let all_idle_peers_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState)>();
-            for (_, (a, pos, state)) in q.iter() {
-                if matches!(*state, AgentState::Idle)
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Sleep>)>();
+            for (_, (a, pos, state, sleep)) in q.iter() {
+                if !children.contains(&a.id) && matches!(*state, AgentState::Idle)
+                    && (night_rest.is_none() || sleep.is_none_or(|s| s.fatigue <= fatigue_threshold))
                     && (social_rule.is_none() || !resources.social_retry_after.contains_key(&a.id))
                 {
                     map.entry((pos.x, pos.y)).or_default().push(a.id);
@@ -677,20 +723,21 @@ impl RuntimeSystem for AgentDecisionSystem {
         ) in query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
-            let social_ready = social_rule.is_none()
-                || !resources.social_retry_after.contains_key(&agent.id);
+            let adult = !children.contains(&agent.id);
+            let social_ready = adult && (social_rule.is_none()
+                || !resources.social_retry_after.contains_key(&agent.id));
             match *state {
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
                     // Hunger > Thirst > Fatigue > Construction > Social.
                     // Social is the lowest-priority drive — Needs and
                     // Construction always win.
-                    let need = actionable_need(
-                        hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability,
+                    let need = actionable_need_with_fatigue_threshold(
+                        hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold,
                     );
                     let breached = if let Some(need) = need {
                         Some(need)
-                    } else if if planning.is_some() {
+                    } else if adult && if planning.is_some() {
                         assigned_builders.contains_key(&agent.id)
                     } else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                         // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
@@ -728,7 +775,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // strictly below -BIAS_FLIP_THRESHOLD.
                         // Requires a co-located idle peer (lowest-AgentId).
                         // Phase 9-β / P9β-2 / P9β-5.
-                        if let Some(memory) = memory_opt {
+                        if let Some(memory) = memory_opt.filter(|_| adult) {
                             let combat_delta = memory_weight_delta(
                                 memory,
                                 CascadeArm::Combat,
@@ -865,16 +912,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // (peer's own breach state ignored) so the bias
                         // can shift to Social over Construction.
                         let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
-                        if actionable_need(hunger_opt.as_deref(), None, None, availability).is_some() {
+                        if actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), None, None, availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Hunger, TargetKind::Food));
                         }
-                        if actionable_need(None, thirst_opt.as_deref(), None, availability).is_some() {
+                        if actionable_need_with_fatigue_threshold(None, thirst_opt.as_deref(), None, availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Thirst, TargetKind::Water));
                         }
-                        if actionable_need(None, None, sleep_opt.as_deref(), availability).is_some() {
+                        if actionable_need_with_fatigue_threshold(None, None, sleep_opt.as_deref(), availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
                         }
-                        if if planning.is_some() { assigned_builders.contains_key(&agent.id) }
+                        if adult && if planning.is_some() { assigned_builders.contains_key(&agent.id) }
                             else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                             eligible.push((
                                 CascadeArm::Construction,
@@ -898,7 +945,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // the social_partner_breached_by_pos extension for the
                         // Social arm (plan §A17: Social natural winner →
                         // Construction flip via memory bias).
-                        if planning.is_none()
+                        if adult && planning.is_none()
                             && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
@@ -1105,7 +1152,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         let has_room = inventory_opt
                             .as_ref()
                             .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
-                        if has_room {
+                        if adult && has_room {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,
@@ -1214,9 +1261,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                 AgentState::Seeking { target } => {
                     if matches!(target, TargetKind::Food | TargetKind::Water) {
                         if let Some(limit) = resources.rules.agent.critical_preemption {
-                            if let Some((need, _)) = actionable_need(
+                            if let Some((need, _)) = actionable_need_with_fatigue_threshold(
                                 hunger_opt.as_deref(), thirst_opt.as_deref(),
-                                sleep_opt.as_deref(), availability,
+                                sleep_opt.as_deref(), availability, fatigue_threshold,
                             ) {
                                 let value = match need {
                                     TargetKind::Food => hunger_opt.as_ref().map(|h| f64::from(h.value)),
@@ -1262,7 +1309,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_retry_after.insert(agent.id, tick.saturating_add(rule.retry_cooldown_ticks));
                                 continue;
                             }
-                            if actionable_need(hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability).is_some() {
+                            if actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold).is_some() {
                                 *state = AgentState::Idle;
                                 resources.social_chase_since.remove(&agent.id);
                                 continue;
@@ -1302,7 +1349,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 .is_some_and(|t| t.value > THIRST_THRESHOLD);
                             let fatigue_breach = sleep_opt
                                 .as_ref()
-                                .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD);
+                                .is_some_and(|s| s.fatigue > fatigue_threshold);
 
                             if is_member || !target_alive {
                                 // Joined, or the target vanished → abort to Idle.
@@ -1362,11 +1409,10 @@ impl RuntimeSystem for AgentDecisionSystem {
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
-                        TargetKind::Sleep => resources
-                            .sleep_tiles
-                            .get(&key)
-                            .copied()
-                            .is_some_and(|v| v > 0),
+                        TargetKind::Sleep => resources.sleep_tiles.get(&key).copied()
+                            .is_some_and(|v| v > 0)
+                            && (resources.rules.agent.night_rest.is_none()
+                                || resources.bed_of.get(&agent.id).is_none_or(|bed| *bed == key)),
                         // V7 Phase 6-β / P6β-8: ConstructionSite has a
                         // resource at this tile iff an active site exists
                         // co-located with the agent. Snapshot taken at
@@ -1485,9 +1531,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // V7 Section 16-α0 — source guard: a tile at the
                             // RESOURCE_SOURCE_INFINITE sentinel never depletes.
                             // Finite tiles keep decrement-and-remove (Assertions
-                            // 16/17). Need-decrement + Idle stay UNCONDITIONAL.
+                            // 16/17). Legacy rules retain unconditional relief; strict rules require food.
+                            let food_present = resources.food_tiles.get(&key)
+                                .is_some_and(|counter| *counter > 0);
+                            if resources.rules.agent.strict_consume && !food_present {
+                                *state = AgentState::Idle;
+                                continue;
+                            }
                             if let Some(counter) = resources.food_tiles.get_mut(&key) {
                                 if *counter != RESOURCE_SOURCE_INFINITE {
+                                    resources.tallies.food_harvested += u64::from(*counter > 0);
                                     *counter = counter.saturating_sub(1);
                                     if *counter == 0 {
                                         resources.food_tiles.remove(&key);
@@ -1496,6 +1549,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                             if let Some(h) = hunger_opt {
                                 h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                                resources.tallies.meals_eaten += 1;
+                                resources.tallies.meals_without_food += u64::from(!food_present);
                             }
                             *state = AgentState::Idle;
                         }
@@ -1525,6 +1580,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 let overflow = inv.add(ResourceKind::Food, take);
                                                 let actually = take - overflow; // overflow == 0 (want <= room)
                                                 *counter = counter.saturating_sub(actually as u8);
+                                                resources.tallies.food_harvested += u64::from(actually);
                                                 if *counter == 0 {
                                                     resources.food_tiles.remove(&key);
                                                 }
@@ -1551,6 +1607,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                             *state = AgentState::Idle;
                         }
                         TargetKind::Sleep => {
+                            if let Some(rule) = night_rest {
+                                let urgent_hunger = availability.food && hunger_opt.as_ref()
+                                    .is_some_and(|need| f64::from(need.value) > rule.wake_preempt);
+                                let urgent_thirst = availability.water && thirst_opt.as_ref()
+                                    .is_some_and(|need| need.value > rule.wake_preempt);
+                                if urgent_hunger || urgent_thirst {
+                                    *state = AgentState::Idle;
+                                } else if let Some(sleep) = sleep_opt {
+                                    sleep.fatigue = (sleep.fatigue - rule.recovery_per_tick).max(0.0);
+                                }
+                                continue;
+                            }
                             // V7 Section 16-α0 — source guard (mirror of Food).
                             if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
                                 if *counter != RESOURCE_SOURCE_INFINITE {
@@ -1637,19 +1705,24 @@ impl RuntimeSystem for AgentDecisionSystem {
             .iter()
         {
             match state {
-                // Resource seeks: set ONCE, keep stable (α behavior unchanged —
-                // resource tiles are fixed, so never re-target while seeking).
+                // Resource targets stay stable; assigned beds follow bed reassignment.
                 AgentState::Seeking { target: TargetKind::Food }
                 | AgentState::Seeking { target: TargetKind::Water }
                 | AgentState::Seeking { target: TargetKind::Sleep }
                 | AgentState::Seeking { target: TargetKind::GatherFood } => {
-                    if seek_opt.is_none() {
+                    let bed_changed = resources.rules.agent.night_rest.is_some()
+                        && matches!(state, AgentState::Seeking { target: TargetKind::Sleep })
+                        && resources.bed_of.get(&agent.id).is_some_and(|bed|
+                            seek_opt.is_some_and(|seek| seek.tile != *bed));
+                    if seek_opt.is_none() || bed_changed {
                         let chosen = match state {
                             AgentState::Seeking { target: TargetKind::Water } => {
                                 nearest_resource_tile(pos, &resources.water_tiles)
                             }
                             AgentState::Seeking { target: TargetKind::Sleep } => {
-                                nearest_resource_tile(pos, &resources.sleep_tiles)
+                                resources.bed_of.get(&agent.id).copied()
+                                    .filter(|_| resources.rules.agent.night_rest.is_some())
+                                    .or_else(|| nearest_resource_tile(pos, &resources.sleep_tiles))
                             }
                             // GatherFood (carry) must target the SAME radius-
                             // filtered eligible tile the Gather arm selected — NOT
@@ -1780,6 +1853,55 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn food_tallies_distinguish_finite_empty_and_infinite_sources() {
+        for (source, harvested, leaked) in [
+            (Some(2), 1, 0),
+            (Some(0), 0, 1),
+            (None, 0, 1),
+            (Some(RESOURCE_SOURCE_INFINITE), 0, 0),
+        ] {
+            // Given a hungry agent committing a ground meal.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::Food },
+                Hunger::new(60.0, 0.0),
+            )).unwrap();
+            if let Some(amount) = source {
+                engine.resources.food_tiles.insert((2, 2), amount);
+            }
+            // When the unchanged consume action resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then counters distinguish actual harvest from legacy free meals.
+            assert_eq!(engine.resources.tallies.food_harvested, harvested);
+            assert_eq!(engine.resources.tallies.meals_eaten, 1);
+            assert_eq!(engine.resources.tallies.meals_without_food, leaked);
+            assert_eq!(engine.world.get::<&Hunger>(entity).unwrap().value, 30.0);
+        }
+    }
+
+    #[test]
+    fn gather_tallies_count_only_finite_units_removed() {
+        for source in [0, 2, RESOURCE_SOURCE_INFINITE] {
+            // Given a gatherer with room and a finite or infinite source.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::GatherFood },
+                Inventory::default(),
+            )).unwrap();
+            engine.resources.food_tiles.insert((2, 2), source);
+            // When gathering resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then only real finite decrements are harvested, never meals.
+            let expected = if source == RESOURCE_SOURCE_INFINITE { 0 } else { u64::from(source) };
+            assert_eq!(engine.resources.tallies.food_harvested, expected);
+            assert_eq!(engine.resources.tallies.meals_eaten, 0);
+            assert_eq!(engine.resources.tallies.meals_without_food, 0);
+        }
     }
 
     #[test]

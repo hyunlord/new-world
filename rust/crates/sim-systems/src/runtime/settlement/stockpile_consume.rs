@@ -123,7 +123,9 @@ impl RuntimeSystem for StockpileConsumeSystem {
                     Ok(p) => (p.x, p.y),
                     Err(_) => continue,
                 };
-                if chebyshev(pos, home) > SETTLEMENT_PROXIMITY_RADIUS {
+                if chebyshev(pos, home) > resources.rules.society.relief_radius
+                    .unwrap_or(SETTLEMENT_PROXIMITY_RADIUS)
+                {
                     continue;
                 }
 
@@ -158,6 +160,7 @@ impl RuntimeSystem for StockpileConsumeSystem {
                 if got > 0 {
                     if let Ok(mut h) = world.get::<&mut Hunger>(entity) {
                         h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                        resources.tallies.meals_eaten += 1;
                     }
                 }
             }

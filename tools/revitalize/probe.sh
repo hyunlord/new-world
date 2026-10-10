@@ -8,7 +8,7 @@ probe_args=()
 while (( $# )); do
     case "$1" in
         --help|-h)
-            echo 'usage: probe.sh [--label LABEL] --scene legacy|game --seeds a..b --days N --sample-every N --workers 1..8 [--out .harness/evidence/revitalize/probe/DIR] [--check-determinism]'
+            echo 'usage: probe.sh [--label LABEL] --scene legacy|game|game_v9 --seeds a..b --days N --sample-every N --workers 1..8 [--out .harness/evidence/revitalize/probe/DIR] [--check-determinism]'
             echo 'Default output and summary label: scene name. --out must remain under the raw ignored probe directory.'
             exit 0 ;;
         --label) label="${2:?missing label}"; shift 2 ;;
@@ -43,7 +43,7 @@ check_memory
 (cd rust && cargo build --release -p sim-test --bin worldsim_probe)
 check_memory
 export WORLDSIM_GIT_SHA
-WORLDSIM_GIT_SHA=$(git rev-parse --short HEAD)
+WORLDSIM_GIT_SHA=$(git rev-parse HEAD)
 mkdir -p "$out"
 rust/target/release/worldsim_probe "${probe_args[@]}" "${workers_override[@]}" --out "$out"
 mkdir -p "docs/revitalize/probe/$label"

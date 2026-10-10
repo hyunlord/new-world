@@ -27,3 +27,9 @@ pub use stockpile_deposit::StockpileDepositSystem;
 /// Settlement housing planner.
 pub mod shelter_planning;
 pub use shelter_planning::ShelterPlanningSystem;
+
+/// Shared completed-shelter capacity accounting.
+pub mod housing;
+pub use housing::{housing_capacity, shelter_count};
+/// Shared renewable supply and actual hunger requirements.
+pub mod food_economy;

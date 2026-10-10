@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "base": "docs/revitalize/probe/p1_legacy/summary.json",
+  "current": "docs/revitalize/probe/p3-5_legacy/summary.json",
+  "checked_scalar_values": 16056,
+  "raw_rows": 484,
+  "ignored_keys": [
+    "git_sha",
+    "ms_per_agent_tick",
+    "schema_version",
+    "timing",
+    "wall_seconds"
+  ],
+  "differences": [],
+  "summary_sha256": {
+    "base": "6b3442a890ccd0b275c422822dcee486c34686f452a3a82c5196e5b5f32d5e00",
+    "current": "382bcfaab5117b69dd3e7f62a3c0664ff439d4ffb9ada25fad3f42053b07f112"
+  }
+}

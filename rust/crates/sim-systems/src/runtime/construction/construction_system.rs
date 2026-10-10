@@ -202,11 +202,14 @@ impl RuntimeSystem for ConstructionSystem {
             completed.sort_by_key(|(_, (_, position))| *position);
         }
         for (site_entity, (blueprint, position)) in completed {
-            if resources.rules.society.shelter_planning.is_some()
-                && resources.site_owner.remove(&position).is_some()
-            {
-                resources.building_kinds.insert(position, BuildingKind::Shelter);
-                resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
+            if let Some(rule) = resources.rules.society.shelter_planning {
+                if let Some(sid) = resources.site_owner.remove(&position) {
+                    resources.building_kinds.insert(position, BuildingKind::Shelter);
+                    resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
+                    if rule.housing == sim_core::rules::HousingCount::Owned {
+                        resources.building_owner.insert(position, sid);
+                    }
+                }
             }
             let tile_idx = position.1 * width + position.0;
 

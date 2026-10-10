@@ -1,7 +1,8 @@
 //! A bounded scoped pool; each worker owns independent engines and output files.
 use super::{
-    args::ProbeArgs,
+    args::{clock_tick, ProbeArgs},
     deaths::{Census, DeathTracker},
+    long_run::{self, MaturationMonitor},
     metrics::{housing_capacity, sample, shelter_count},
     summary,
 };
@@ -39,6 +40,12 @@ pub(super) struct RunResult {
     pub(super) final_housing_capacity: Option<u64>,
     /// Maximum same-tick overflow, including initially underhoused worlds.
     pub(super) max_housing_overflow: u64,
+    /// U5 owned-capacity overflow, only while at least one settlement exists.
+    pub(super) max_owned_housing_overflow: u64,
+    /// Exact display-day/minute snapshots, independently of periodic sampling.
+    pub(super) clock_rows: BTreeMap<(u64, u32), Value>,
+    /// Every-tick child observation evidence.
+    pub(super) maturation: Value,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -88,6 +95,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let started = Instant::now();
     let make_scene = || match args.scene.as_str() {
         "game" => crate::scenes::game_scene(seed),
+        "game_v9" => crate::scenes::game_v9_scene(seed),
         _ => crate::scenes::legacy_scene(),
     };
     let mut engine = make_scene();
@@ -96,6 +104,26 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
     let ticks_per_day = engine.resources.ticks_per_day;
+    if ticks_per_day == 0 {
+        return Err("probe requires positive ticks_per_day".into());
+    }
+    let mut clock_schedule = BTreeMap::new();
+    for day in 1..=args.days {
+        for minute in &args.clock_samples {
+            if let Some(tick) = clock_tick(
+                day,
+                *minute,
+                ticks_per_day,
+                engine.resources.rules.clock_offset_ticks,
+            ) {
+                clock_schedule.insert(tick, (day, *minute));
+            }
+        }
+    }
+    let mut clock_rows = BTreeMap::new();
+    let mut maturation = MaturationMonitor::default();
+    maturation.observe(&engine)?;
+    let mut max_owned_housing_overflow = 0u64;
     let total_ticks = args
         .days
         .checked_mul(ticks_per_day)
@@ -121,7 +149,8 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     for tick in 0..=total_ticks {
         let regular = tick.is_multiple_of(args.sample_every);
         let checkpoint = tick > 0 && tick.is_multiple_of(ticks_per_day);
-        if regular || checkpoint {
+        let clock = clock_schedule.get(&tick).copied();
+        if regular || checkpoint || clock.is_some() {
             let mut row = sample(&engine, &args.scene, seed, initial_shelters);
             if let Some(twin) = &twin {
                 check_sample(
@@ -136,15 +165,37 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             {
                 return Err(format!("non-finite metric at seed={seed} tick={tick}"));
             }
+            if args.scene == "game_v9" {
+                if let Some(twin) = &twin {
+                    if row != sample(twin, &args.scene, seed, initial_shelters) {
+                        return Err(format!(
+                            "v9 observable determinism mismatch seed={seed} tick={tick}"
+                        ));
+                    }
+                }
+            }
+            for (emit, kind) in [
+                (regular, "periodic"),
+                (checkpoint, "day"),
+                (clock.is_some(), "clock"),
+            ] {
+                if emit {
+                    row["sample_kind"] = serde_json::json!(kind);
+                    serde_json::to_writer(&mut output, &row).map_err(|e| e.to_string())?;
+                    output.write_all(b"\n").map_err(|e| e.to_string())?;
+                }
+            }
+            if let Some(key) = clock {
+                clock_rows.insert(key, row.clone());
+            }
             if regular {
-                serde_json::to_writer(&mut output, &row).map_err(|e| e.to_string())?;
-                output.write_all(b"\n").map_err(|e| e.to_string())?;
                 agent_samples += row["alive"].as_u64().unwrap_or(0);
                 breaches += row["idle_with_breach"].as_u64().unwrap_or(0);
                 actionable += row["idle_breach_actionable"].as_u64().unwrap_or(0);
                 unavailable += row["idle_breach_unavailable"].as_u64().unwrap_or(0);
             }
             if checkpoint {
+                row["sample_kind"] = serde_json::json!("day");
                 row["idle_with_breach_share"] = serde_json::json!(if agent_samples == 0 {
                     0.0
                 } else {
@@ -178,7 +229,12 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             serde_json::to_writer(&mut death_output, &record).map_err(|e| e.to_string())?;
             death_output.write_all(b"\n").map_err(|e| e.to_string())?;
         }
+        maturation.observe(&engine)?;
         let alive = engine.world.query::<&Agent>().iter().count() as u64;
+        if !engine.resources.settlements.is_empty() {
+            max_owned_housing_overflow = max_owned_housing_overflow
+                .max(alive.saturating_sub(long_run::owned_capacity(&engine)));
+        }
         let capacity = housing_capacity(&engine);
         if alive > max_alive {
             max_alive = alive;
@@ -189,6 +245,16 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         }
         if let Some(twin) = &mut twin {
             twin.tick();
+            if args.scene == "game_v9"
+                && (long_run::trace(&engine) != long_run::trace(twin)
+                    || super::fingerprint::fingerprint(&engine)
+                        != super::fingerprint::fingerprint(twin))
+            {
+                return Err(format!(
+                    "v9 tick trace mismatch seed={seed} tick={}",
+                    engine.current_tick()
+                ));
+            }
         }
     }
     output.flush().map_err(|e| e.to_string())?;
@@ -212,6 +278,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         housing_at_max_alive,
         final_housing_capacity: housing_capacity(&engine),
         max_housing_overflow,
+        max_owned_housing_overflow,
+        clock_rows,
+        maturation: maturation.report(),
         wall_seconds: started.elapsed().as_secs_f64(),
         ms_per_agent_tick: if agent_ticks == 0 {
             0.0

@@ -1,0 +1,528 @@
+{
+	"camera_position": [
+		824.0,
+		324.0
+	],
+	"clock_offset_ticks": 480,
+	"entities": [
+		{
+			"entity_bits": 4294967309,
+			"id": 13,
+			"kind": "agent",
+			"rect": [
+				928.0,
+				184.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967316,
+			"id": 20,
+			"kind": "agent",
+			"rect": [
+				416.0,
+				376.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967307,
+			"id": 11,
+			"kind": "agent",
+			"rect": [
+				1184.0,
+				1400.0,
+				64.0,
+				72.0
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967299,
+			"id": 3,
+			"kind": "agent",
+			"rect": [
+				992.0,
+				184.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967311,
+			"id": 15,
+			"kind": "agent",
+			"rect": [
+				800.0,
+				952.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967301,
+			"id": 5,
+			"kind": "agent",
+			"rect": [
+				992.0,
+				632.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967317,
+			"id": 21,
+			"kind": "agent",
+			"rect": [
+				928.0,
+				56.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967310,
+			"id": 14,
+			"kind": "agent",
+			"rect": [
+				1184.0,
+				888.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967313,
+			"id": 17,
+			"kind": "agent",
+			"rect": [
+				736.0,
+				952.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967297,
+			"id": 1,
+			"kind": "agent",
+			"rect": [
+				1248.0,
+				1464.0,
+				64.0,
+				72.0
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967319,
+			"id": 23,
+			"kind": "agent",
+			"rect": [
+				1120.0,
+				1336.0,
+				64.0,
+				72.0
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967300,
+			"id": 4,
+			"kind": "agent",
+			"rect": [
+				1120.0,
+				1336.0,
+				64.0,
+				72.0
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967308,
+			"id": 12,
+			"kind": "agent",
+			"rect": [
+				1184.0,
+				1400.0,
+				64.0,
+				72.0
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967302,
+			"id": 6,
+			"kind": "agent",
+			"rect": [
+				608.0,
+				888.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967318,
+			"id": 22,
+			"kind": "agent",
+			"rect": [
+				800.0,
+				312.0,
+				64.0,
+				72.0
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967306,
+			"id": 10,
+			"kind": "agent",
+			"rect": [
+				1499.19995117188,
+				882.599975585938,
+				73.5999755859375,
+				82.7999877929688
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967314,
+			"id": 18,
+			"kind": "agent",
+			"rect": [
+				1499.19995117188,
+				882.599975585938,
+				73.5999755859375,
+				82.7999877929688
+			],
+			"visible": true
+		},
+		{
+			"entity_bits": 4294967312,
+			"id": 16,
+			"kind": "agent",
+			"rect": [
+				1307.19995117188,
+				1394.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967315,
+			"id": 19,
+			"kind": "agent",
+			"rect": [
+				1307.19995117188,
+				1394.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967304,
+			"id": 8,
+			"kind": "agent",
+			"rect": [
+				1499.19995117188,
+				1138.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967303,
+			"id": 7,
+			"kind": "agent",
+			"rect": [
+				1499.19995117188,
+				1330.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967305,
+			"id": 9,
+			"kind": "agent",
+			"rect": [
+				1243.19995117188,
+				-205.399993896484,
+				73.5999755859375,
+				82.7999954223633
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967296,
+			"id": 0,
+			"kind": "agent",
+			"rect": [
+				1115.19995117188,
+				1522.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"entity_bits": 4294967298,
+			"id": 2,
+			"kind": "agent",
+			"rect": [
+				1115.19995117188,
+				1330.59997558594,
+				73.5999755859375,
+				82.800048828125
+			],
+			"visible": false
+		},
+		{
+			"building_kind": 0,
+			"id": 0,
+			"kind": "building",
+			"rect": [
+				896.0,
+				476.0,
+				128.0,
+				128.0
+			],
+			"visible": true
+		},
+		{
+			"building_kind": 1,
+			"id": 7,
+			"kind": "building",
+			"rect": [
+				704.0,
+				412.0,
+				256.0,
+				128.0
+			],
+			"visible": true
+		},
+		{
+			"building_kind": 1,
+			"id": 14,
+			"kind": "building",
+			"rect": [
+				960.0,
+				412.0,
+				256.0,
+				128.0
+			],
+			"visible": true
+		},
+		{
+			"building_kind": 1,
+			"id": 21,
+			"kind": "building",
+			"rect": [
+				832.0,
+				604.0,
+				256.0,
+				128.0
+			],
+			"visible": true
+		},
+		{
+			"building_kind": 2,
+			"id": 28,
+			"kind": "building",
+			"rect": [
+				960.0,
+				540.0,
+				256.0,
+				256.0
+			],
+			"visible": true
+		},
+		{
+			"building_kind": 1,
+			"id": 75,
+			"kind": "building",
+			"rect": [
+				704.0,
+				348.0,
+				256.0,
+				128.0
+			],
+			"visible": true
+		},
+		{
+			"id": 124554051616,
+			"kind": "bush",
+			"rect": [
+				1312.0,
+				1404.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 124554051617,
+			"kind": "bush",
+			"rect": [
+				1312.0,
+				1468.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 124554051618,
+			"kind": "bush",
+			"rect": [
+				1312.0,
+				1532.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 137438953496,
+			"kind": "bush",
+			"rect": [
+				1504.0,
+				892.0,
+				64.0,
+				64.0
+			],
+			"visible": true
+		},
+		{
+			"id": 137438953497,
+			"kind": "bush",
+			"rect": [
+				1504.0,
+				956.0,
+				64.0,
+				64.0
+			],
+			"visible": true
+		},
+		{
+			"id": 141733920794,
+			"kind": "bush",
+			"rect": [
+				1568.0,
+				1020.0,
+				64.0,
+				64.0
+			],
+			"visible": true
+		},
+		{
+			"id": 146028888090,
+			"kind": "bush",
+			"rect": [
+				1632.0,
+				1020.0,
+				64.0,
+				64.0
+			],
+			"visible": true
+		},
+		{
+			"id": 158913789959,
+			"kind": "bush",
+			"rect": [
+				1824.0,
+				-196.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 163208757254,
+			"kind": "bush",
+			"rect": [
+				1888.0,
+				-260.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 167503724549,
+			"kind": "bush",
+			"rect": [
+				1952.0,
+				-324.0,
+				64.0,
+				64.0
+			],
+			"visible": false
+		},
+		{
+			"id": 107374182420,
+			"kind": "stockpile_label",
+			"rect": [
+				1068.5,
+				579.0,
+				39.0,
+				17.0
+			],
+			"visible": true
+		},
+		{
+			"id": 32346473947,
+			"kind": "panel",
+			"name": "HudTopbar",
+			"rect": [
+				0.0,
+				0.0,
+				455.0,
+				59.0
+			],
+			"visible": true
+		},
+		{
+			"id": 32413582815,
+			"kind": "panel",
+			"name": "HudStatusPanel",
+			"rect": [
+				1500.0,
+				0.0,
+				420.0,
+				180.0
+			],
+			"visible": true
+		}
+	],
+	"schema_version": 1,
+	"seek_segments": 0,
+	"selected_entity_bits": -1,
+	"selected_seeking": false,
+	"tick": 240,
+	"trail_segments": 0,
+	"viewport_size": [
+		1920,
+		1080
+	],
+	"zoom": [
+		4.0,
+		4.0
+	]
+}

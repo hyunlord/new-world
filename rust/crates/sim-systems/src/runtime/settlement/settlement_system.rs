@@ -389,7 +389,9 @@ impl SettlementSystem {
         let mut candidate_tiles: Vec<(u32, u32)> = agent_positions.values().copied().collect();
         candidate_tiles.sort();
         candidate_tiles.dedup();
-        if resources.rules.society.shelter_planning.is_some() {
+        if resources.rules.society.shelter_planning.is_some()
+            || resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::Hearth
+        {
             // Generated camps form around their real Hearth, so movement before
             // formation cannot anchor the village on its westernmost resident.
             // Default rules retain the exact legacy candidate sequence above.
@@ -399,8 +401,10 @@ impl SettlementSystem {
             }).collect();
             hearths.sort_by_key(|&(x, y)| (y, x));
             hearths.dedup();
-            candidate_tiles.retain(|position| !hearths.contains(position));
-            hearths.extend(candidate_tiles);
+            if resources.rules.society.settlement_anchor == sim_core::rules::SettlementAnchor::AnyCluster {
+                candidate_tiles.retain(|position| !hearths.contains(position));
+                hearths.extend(candidate_tiles);
+            }
             candidate_tiles = hearths;
         }
         for candidate in candidate_tiles {
@@ -481,6 +485,15 @@ impl SettlementSystem {
                 }
                 if let Some(b) = settlement.member_buildings.iter().min().copied() {
                     self.last_known_building_id.insert(new_id, b);
+                }
+            }
+            if resources.rules.society.shelter_planning.is_some_and(|rule|
+                rule.housing == sim_core::rules::HousingCount::Owned)
+            {
+                for tile in resources.building_kinds.keys() {
+                    if chebyshev(*tile, candidate) <= SETTLEMENT_PROXIMITY_RADIUS + 3 {
+                        resources.building_owner.entry(*tile).or_insert(new_id);
+                    }
                 }
             }
             existing_anchors.push(candidate);
@@ -679,18 +692,11 @@ impl SettlementSystem {
                 continue;
             }
             if let BirthRule::Provisioned {
-                food_cost, max_mean_hunger, max_mean_thirst, ..
+                food_cost, max_mean_hunger, max_mean_thirst, sustain, ..
             } = resources.rules.society.birth {
                 let capacity = resources.rules.society.shelter_planning.map_or(
                     SETTLEMENT_MAX_POP,
-                    |rule| {
-                        let shelters = resources.building_kinds.iter().filter(|(tile, kind)| {
-                            **kind == BuildingKind::Shelter
-                                && chebyshev(**tile, settlement.formation_tile)
-                                    <= SETTLEMENT_PROXIMITY_RADIUS + 3
-                        }).count() as u32;
-                        shelters.saturating_mul(rule.residents_per_shelter)
-                    },
+                    |rule| super::housing_capacity(resources, sid, &rule),
                 );
                 if settlement.member_agents.len() as u32 >= capacity
                     || settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) < food_cost
@@ -709,6 +715,21 @@ impl SettlementSystem {
                 let thirst = members.iter().map(|(_, _, t)| *t).sum::<f64>() / count;
                 if hunger > max_mean_hunger || thirst > max_mean_thirst {
                     continue;
+                }
+                if let Some(sustain) = sustain {
+                    let supply = super::food_economy::supply_per_day(
+                        resources, sid, sustain.forage_radius,
+                    );
+                    let adult_need = super::food_economy::adult_need_per_day(resources.ticks_per_day);
+                    let future_need = (settlement.member_agents.len() as f64 + 1.0) * adult_need;
+                    let reserve = sustain.reserve_days
+                        * super::food_economy::members_need_per_day(world, resources, sid);
+                    let stock = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
+                    if future_need > sustain.utilization * supply
+                        || f64::from(stock) < f64::from(food_cost) + reserve
+                    {
+                        continue;
+                    }
                 }
             }
             // Belonging-model birth anchor (membership-model-reform): a member
@@ -759,14 +780,17 @@ impl SettlementSystem {
             let birth_seed = new_agent_id
                 .wrapping_mul(0x9E37_79B9_7F4A_7C15)
                 .wrapping_add(BIRTH_RNG_SALT);
+            let (hunger_rate, thirst_rate, sleep_rate) = resources.rules.society.life_stage
+                .map_or((BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE),
+                    |rule| (rule.hunger_rate, rule.thirst_rate, rule.sleep_rate));
             let _ = world.insert(
                 entity,
                 (
                     MovementRng::new(birth_seed),
                     AgentState::Idle,
-                    Hunger::new(0.0, BIRTH_HUNGER_RATE),
-                    Thirst::new(0.0, BIRTH_THIRST_RATE),
-                    Sleep::new(0.0, BIRTH_SLEEP_RATE),
+                    Hunger::new(0.0, hunger_rate),
+                    Thirst::new(0.0, thirst_rate),
+                    Sleep::new(0.0, sleep_rate),
                     Social::new(0.0, BIRTH_SOCIAL_RATE),
                     Memory::new(),
                     // add-starvation-death — newborns carry BodyHealth too, so a
@@ -778,6 +802,10 @@ impl SettlementSystem {
                     Inventory::default(),
                 ),
             );
+
+            if resources.rules.society.life_stage.is_some() {
+                let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
+            }
 
             let parent = self.formation_event_ids.get(&sid).copied();
             let event_id = resources.issue_event_id();
@@ -876,6 +904,7 @@ impl SettlementSystem {
                 },
             );
             resources.settlements.remove(&sid);
+            resources.building_owner.retain(|_, owner| *owner != sid);
             // FULL local-state clear so the same area can re-form.
             // Without clearing `formation_tiles` the area would be
             // permanently suppressed from re-formation (every candidate
@@ -1008,4 +1037,38 @@ mod tests {
         }
         assert_eq!(sys.tick_run_count(), 5);
     }
+    #[test]
+    fn newborn_life_stage_rates_are_rule_gated() {
+        use sim_core::components::Child;
+        use sim_core::rules::WorldRules;
+        for children in [false, true] {
+            let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
+            engine.resources.rules = if children { WorldRules::game_v9() } else { WorldRules::game_v8() };
+            if let BirthRule::Provisioned { cooldown_ticks, .. } = &mut engine.resources.rules.society.birth {
+                *cooldown_ticks = 720;
+            }
+            for _ in 0..3 {
+                let entity = engine.spawn_agent(10, 10);
+                engine.world.insert(entity, (Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08))).expect("founder needs");
+            }
+            engine.resources.building_registry.insert(100, (10, 10));
+            engine.resources.building_registry.insert(101, (11, 10));
+            engine.resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
+            engine.resources.building_kinds.insert((11, 10), BuildingKind::Shelter);
+            for x in 10..20 { engine.resources.food_source_max.insert((x, 11), 4); }
+            let mut system = SettlementSystem::new();
+            system.tick(&mut engine.world, &mut engine.resources);
+            let sid = *engine.resources.settlements.keys().next().expect("formed");
+            engine.resources.settlements.get_mut(&sid).expect("settlement").store(ResourceKind::Food, 500);
+            engine.resources.current_tick = 720;
+            system.tick(&mut engine.world, &mut engine.resources);
+            assert_eq!(engine.resources.tallies.births, 1);
+            let mut query = engine.world.query::<(&Agent, &Hunger, &Thirst, &Sleep, Option<&Child>)>();
+            let (_, (_, hunger, thirst, sleep, child)) = query.iter().next().expect("newborn with sleep");
+            let expected = if children { (0.03, 0.048, 0.03) } else { (BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE) };
+            assert_eq!((hunger.growth_rate, thirst.growth_rate, sleep.growth_rate), expected);
+            assert_eq!(child.map(|child| child.born_tick), children.then_some(720));
+        }
+    }
+
 }

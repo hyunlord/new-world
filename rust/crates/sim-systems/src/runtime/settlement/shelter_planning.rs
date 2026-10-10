@@ -2,8 +2,7 @@
 
 use hecs::World;
 use sim_core::components::{
-    building_kind::shelter_blueprint, BuildingKind, ConstructionSite, Position,
-    SETTLEMENT_PROXIMITY_RADIUS,
+    building_kind::shelter_blueprint, ConstructionSite, Position,
 };
 use sim_core::material::TerrainType;
 use sim_engine::{RuntimeSystem, SimResources};
@@ -51,17 +50,10 @@ impl RuntimeSystem for ShelterPlanningSystem {
                 continue;
             };
             let center = settlement.formation_tile;
-            let shelters = resources
-                .building_kinds
-                .iter()
-                .filter(|(tile, kind)| {
-                    **kind == BuildingKind::Shelter
-                        && tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1))
-                            <= SETTLEMENT_PROXIMITY_RADIUS + 3
-                })
-                .count() as u32;
-            if (settlement.member_agents.len() as u32)
-                < shelters.saturating_mul(rule.residents_per_shelter)
+            let shelters = super::shelter_count(resources, id, &rule);
+            let capacity = super::housing_capacity(resources, id, &rule);
+            if (settlement.member_agents.len() as u32).saturating_add(rule.planning_headroom)
+                < capacity
                 || shelters >= rule.max_shelters
                 || resources.site_owner.values().any(|owner| *owner == id)
             {
