@@ -1309,8 +1309,8 @@ Three strikes — kept evidence and hypotheses:
 | `p5-7_final_v8` | game 0..64 × 10 | DETERMINISM PASS; all 4,831 shared values equal except `schema_version` |
 | `p5-7_final_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | DETERMINISM PASS; all 4,796 shared values equal except `schema_version` |
 | `p5-7_final_v9_120day` | game_v9 0..32 × 120, same clocks | DETERMINISM PASS; all 40,368 shared values equal except `schema_version` |
-| `p5-7_final_v10_10day` | game_v10 0..64 × 10 | DETERMINISM PASS; all 4,796 shared values equal except `schema_version`; same-host X12 baseline (median 0.000958 ms per agent-tick) |
-| `p5-7_final_v10_120day` | game_v10 0..32 × 120, same clocks | DETERMINISM PASS; all 40,855 shared values equal except `schema_version`; X12 baseline for 120 days |
+| `p5-7_final_v10_10day` | game_v10 0..64 × 10 | DETERMINISM PASS; all 4,796 shared values equal except `schema_version`; same-host X12 baseline (median 0.000986 ms per agent-tick) |
+| `p5-7_final_v10_120day` | game_v10 0..32 × 120, same clocks | DETERMINISM PASS; all 40,855 shared values equal except `schema_version`; X12 baseline for 120 days (median 0.001189 ms) |
 
 ### v11 after the review fixes, round 2 configuration (`p5-7_review_head_*`)
 
@@ -1363,3 +1363,59 @@ The first final v11 pair (64 × 10 and 32 × 120, eight clocks, DETERMINISM PASS
 | X9 | night_in_shelter | PASS | 1 / 0.976 / 1 / 0.952 / 1 |
 
 Screening `max_foragers_per_bush` 2 (the Pass 4 range is 1–2) on the throwaway screen (which reproduces this run exactly: stagnation max 5, evening 0.569 / 0.286) gave stagnation max 3 and evening 0.590 / min 0.333 with no deaths; adding forage haul 6 gave stagnation 2 but a worse evening, and `meal_hunger` 35 brought the 5-day seed back. Round 3 therefore takes `max_foragers_per_bush` 2.
+
+### Round 3 = final v11 (`p5-5_round3_*`, code `c77ee27c`) — kept
+
+Configuration: round 2 plus `max_foragers_per_bush` 2. Runs on the final code (review fixes included), back to back with nothing competing; both DETERMINISM PASS. Evaluated against the same-host v10 timing of `p5-7_final_v10_*` and with the reproduction receipts of the final probes (legacy, v8, v9, v10 identical to Pass 4).
+
+| Target | Clause | Verdict | Observed |
+|---|---|---|---|
+| X1 | legacy_pin | PASS | true |
+| X1 | twins_10 | PASS | 64 |
+| X1 | twins_120 | PASS | 32 |
+| X1 | v10_repro | PASS | true |
+| X1 | v8_repro | PASS | true |
+| X1 | v9_repro | PASS | true |
+| X10 | home_distance | PASS | 7.48 / 5.82 / 9.06 / 4.26 / 10.7 |
+| X10 | social_10 | PASS | 0.608 / 0.559 / 0.651 / 0.53 / 0.679 |
+| X10 | social_120 | PASS | 0.813 / 0.79 / 0.836 / 0.766 / 0.851 |
+| X10 | t6a_10 | PASS | 0.000991 / 0.000248 / 0.00273 / 0 / 0.00421 |
+| X10 | t6a_120 | PASS | 0.0084 / 0.00677 / 0.0115 / 0.00634 / 0.0139 |
+| X11 | day10 | PASS | 0 |
+| X11 | day120 | PASS | 0 |
+| X12 | day10 | PASS | 0.00109 / 0.00105 / 0.00111 / 0.00101 / 0.00114 |
+| X12 | day120 | PASS | 0.0013 / 0.00124 / 0.00187 / 0.00123 / 0.00204 |
+| X2 | deaths_dehydration_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_dehydration_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_starvation_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X2 | deaths_starvation_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| X3 | alive_band | PASS | 42 / 41 / 42 / 36 / 42 |
+| X3 | alive_day10 | PASS | 42 / 42 / 42 / 42 / 42 |
+| X3 | birth_by_day4 | PASS | 7 / 7 / 7 / 7 / 7 |
+| X3 | child_share | PASS | 0.107 / 0.0476 / 0.17 / 0 / 0.195 |
+| X3 | elder_share | PASS | 0.262 / 0.214 / 0.341 / 0.171 / 0.381 |
+| X3 | old_age_by_day30 | PASS | 9 / 6 / 12 / 5 / 13 |
+| X3 | one_settlement | PASS | 1 / 1 / 1 / 1 / 1 |
+| X3 | replacement | PASS | 0 / -1 / 0 / -3 / 1 |
+| X3 | stagnation | PASS | 0 / 0 / 0 / 0 / 3 |
+| X4 | every_seed | PASS | 0.986 / 0.968 / 0.992 / 0.937 / 0.995 |
+| X4 | store_share | PASS | 0.99 / 0.949 / 1 / 0.674 / 1 |
+| X4 | winter | PASS | 1 / 0.98 / 1 / 0.924 / 1 |
+| X5 | autumn | FAIL | 0 / 0 / 0 / 0 / 139 |
+| X5 | spring | PASS | 32.5 / 11 / 81.1 / 0 / 113 |
+| X5 | summer | PASS | 83 / 0 / 120 / 0 / 144 |
+| X5 | winter | FAIL | 0 / 0 / 21 / 0 / 85 |
+| X6 | autumn_wood | PASS | stock 335 / 308 / 341 / 301 / 347; required 218.4 |
+| X6 | lit_at_0200 | PASS | 1 / 1 / 1 / 1 / 1 |
+| X7 | winter_cold | PASS | 0 / 0 / 0 / 0 / 0 |
+| X8 | idle_1200 | PASS | 0.512 / 0.392 / 0.575 / 0.3 / 0.767 |
+| X8 | work_1200 | PASS | 0.5 / 0.36 / 0.665 / 0.125 / 0.75 |
+| X8 | work_1500 | PASS | 0.416 / 0.26 / 0.516 / 0.188 / 0.654 |
+| X9 | evening_near_hearth | FAIL | 0.59 / 0.385 / 0.764 / 0.333 / 0.8 |
+| X9 | night_in_shelter | PASS | 1 / 0.955 / 1 / 0.929 / 1 |
+
+Seasons (120-day medians over seed-days, spring / summer / autumn / winter): store meals 95 / 93 / 96 / 98 per day, ground meals 0 / 3 / 2 / 0, store share 1.000 / 0.969 / 0.980 / 1.000; stock 202 / 340 / 528 / 289.5 (v10 157 / 309.5 / 491.5 / 254); harvest 108 / 140 / 120 / 71; forage trips 32.5 / 83 / 0 / 0 per day; wood stock 28 / 287 / 311 / 158 against targets 39 / 292.5 / 312 / 58.5; burn 26 / 13 / 26 / 39 per day; fire lit at every 02:00 sample from day 3 in every seed; cold member-hours 0; wood trips 14 / 22 / 21 / 0 per day (gathered 28 / 44 / 42 / 0). Day-120 totals (median, min–max): store meals 11,285.5 (10,522–11,389), ground meals 158 (60–707), forage trips 3,455.5, wood trips 1,719 (1,611–1,793), wood gathered 3,218, gathering preempted 1 (0–15), cold member-hours 0. Demography (medians): day 10 alive 42, births 18; day 30 births 27, old-age deaths 9, elders 8.5; day 60 46.5 / 29; day 90 71 / 53; day 120 91 / 73, children 4.5, elders 11.
+
+Work by hour (seed medians; all days ≥ 2 → spring–autumn): adult work share 0.344 → 0.359 at 08:00, 0.097 → 0.118 at 10:00, 0.285 → 0.500 at 12:00, 0.382 → 0.416 at 15:00, 0 at 18:00, 0.260 → 0.261 at 19:30; idle share 0.262 → 0.238, 0.595 → 0.571, 0.667 → 0.512, 0.595 → 0.571, 0.857 → 0.855, 0.690 → 0.667. v10 (`p5-1_v10_120day`, spring–autumn): adult work 0.083 at 12:00 and 0.242 at 15:00, idle 0.774 at 12:00. Pass 4's `noon_idle_share` (haulers counted idle, all days including winter): v10 0.829 → v11 0.738.
+
+v10 evaluated by the same script (`p5-7_v10_reference_targets`: 10-day from `p5-7_final_v10_10day`, 120-day from `p5-1_v10_120day`, which has all eight clocks and the same simulation values): X1–X4, X7, X10–X12 PASS; X5 spring, autumn and winter FAIL (0 / 19 / 0 / 0 trips per day); X6 FAIL (no fire); X8 FAIL (work 0.083 / 0.242, idle 0.774); X9 FAIL (0.554 / min 0.281).
