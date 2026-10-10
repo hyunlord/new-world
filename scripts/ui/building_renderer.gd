@@ -33,6 +33,7 @@ var _elapsed: float = 0.0
 var _props: Dictionary = {}
 var _death_cache: Dictionary = {}
 var _last_tick: int = -1
+var _snapshot_tick: int = -1
 
 func _ready() -> void:
 	z_index = 5
@@ -49,14 +50,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_elapsed += delta
 	_frame += 1
+	var tick: int = int(_world_sim.get_time_snapshot().get("tick", -1))
+	# Resource stocks and amounts must match the same simulation tick as the actors.
+	if tick != _snapshot_tick or _frame % RECONCILE_FRAMES == 0 or _buildings.is_empty():
+		refresh_snapshot()
 	_animate_hearths()
 	_update_cairns()
-	# Tick zero has queued camp buildings; retry until Rust stamps the registry.
-	if _frame % RECONCILE_FRAMES == 0 or _buildings.is_empty():
-		refresh_snapshot()
 	_update_labels()
 
 func refresh_snapshot() -> void:
+	_snapshot_tick = int(_world_sim.get_time_snapshot().get("tick", -1))
 	_update_buildings()
 	_update_construction_sites()
 	_update_bushes()
@@ -329,7 +332,10 @@ func _update_camp_props() -> void:
 			var state: Dictionary = WOOD.settlement(_world_sim.get_settlement_snapshot(), tile)
 			var stage: int = WOOD.pile_stage(int(state["wood_stock"])) if state.has("wood_stock") else -1
 			if stage != 0:
-				_place_adjacent(id+1, WOOD.pile_frame(stage) if stage > 0 else "S1_14", tile, Vector2i(-1,0), occupied, seen)
+				if stage > 0:
+					_place_woodpile(id+1, WOOD.pile_frame(stage), tile, occupied, seen)
+				else:
+					_place_adjacent(id+1, "S1_14", tile, Vector2i(-1,0), occupied, seen)
 				if seen.has(id+1):
 					(_props[id+1] as Sprite2D).set_meta("woodpile_stage", stage)
 			sprite.set_meta("woodpile_stage", stage)
@@ -356,6 +362,18 @@ func _update_camp_props() -> void:
 		_prop(id,"S2_15",tile,Vector2(-18,4),seen,occupied)
 		_prop(id-1,"S2_16",tile,Vector2(18,4),seen,occupied)
 	_reap(_props,seen)
+
+func _place_woodpile(id: int, art_id: String, tile: Vector2i, occupied: Dictionary, seen: Dictionary) -> void:
+	var directions: Array[Vector2i] = [Vector2i(-1,0), Vector2i(-1,1), Vector2i(0,1), Vector2i(1,1), Vector2i(1,0), Vector2i(1,-1), Vector2i(0,-1), Vector2i(-1,-1)]
+	for radius: int in [1,2]:
+		for direction: Vector2i in directions:
+			var target: Vector2i = tile + direction * radius
+			if occupied.has(target):
+				continue
+			_prop(id, art_id, target, Vector2.ZERO, seen, occupied)
+			if seen.has(id):
+				occupied[target] = true
+				return
 
 func _place_adjacent(id: int, art_id: String, tile: Vector2i, delta: Vector2i, occupied: Dictionary, seen: Dictionary) -> void:
 	var target: Vector2i = tile+delta

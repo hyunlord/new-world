@@ -24,6 +24,7 @@ def camp_ground(directory: Path, repo: Path) -> Check:
         for index,(x,y) in enumerate(zip(snapshot[xkey],snapshot[ykey],strict=True)):
             if domain != 'resource' or snapshot['kinds'][index] == 0:
                 centers.add((int(x),int(y)))
+    deadwood = {(int(x), int(y)) for x,y,kind in zip(data["resource"]["xs"], data["resource"]["ys"], data["resource"]["kinds"], strict=True) if kind == 3}
     violations: list[str] = []
     rocks: list[tuple[int,int]] = []
     decals: list[tuple[int,int]] = []
@@ -39,6 +40,8 @@ def camp_ground(directory: Path, repo: Path) -> Check:
         if not (0 <= x < width and 0 <= y < int(terrain['height'])):
             violations.append(f'invalid tile {kind}:{x},{y}')
             continue
+        if any(max(abs(x-cx), abs(y-cy)) <= 1 for cx,cy in deadwood):
+            violations.append(f'deadwood radius 1: {kind}:{x},{y}')
         radius = 3 if kind == 'decal' else 4
         if any(max(abs(x-cx),abs(y-cy)) <= radius for cx,cy in centers):
             violations.append(f'clearing radius {radius}: {kind}:{x},{y}')

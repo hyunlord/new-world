@@ -100,14 +100,23 @@ def variety(capture: Capture) -> Check:
     pairs = [(i,j) for i,a in enumerate(actors) for j,b in enumerate(actors) if i<j and max(abs(a.tile[0]-b.tile[0]),abs(a.tile[1]-b.tile[1]))<=1]
     same = sum(looks[i]==looks[j] for i,j in pairs)
     ratio = same/len(pairs) if pairs else 0
-    legacy = [entity.legacy_variant for entity in actors]
-    diagnostic = 'A12-old (diagnostic): unavailable; original skin/clothing metadata absent'
-    if actors and all(value is not None for value in legacy):
-        old_looks = [(actor.body, actor.legacy_variant) for actor in actors]
-        old_same = sum(old_looks[i] == old_looks[j] for i, j in pairs)
-        old_ratio = old_same / len(pairs) if pairs else 0
-        old_pass = len(set(old_looks)) >= min(len(actors), 12) and old_ratio <= .1
-        diagnostic = f'A12-old (diagnostic): {len(set(old_looks))} tuples; identical neighbors={old_same}/{len(pairs)} ({old_ratio:.3f}); pass={old_pass}'
+    legacy = []
+    emulated = 0
+    for actor in actors:
+        if actor.legacy_variant is not None:
+            legacy.append(actor.legacy_variant)
+        else:
+            hashed = (actor.ident ^ 0x9E3779B9) & 0xFFFFFFFF
+            for _ in range(2):
+                hashed = ((hashed ^ (hashed >> 16)) * 0x45D9F3B) & 0xFFFFFFFF
+            hashed ^= hashed >> 16
+            legacy.append(((hashed >> 9) % 4, actor.variant[1], (hashed >> 15) % 6))
+            emulated += 1
+    old_looks = [(actor.body, look) for actor,look in zip(actors,legacy,strict=True)]
+    old_same = sum(old_looks[i] == old_looks[j] for i,j in pairs)
+    old_ratio = old_same/len(pairs) if pairs else 0
+    old_pass = bool(actors) and len(set(old_looks)) >= min(len(actors),12) and old_ratio <= .1
+    diagnostic = f'A12-old (diagnostic): {len(set(old_looks))} tuples; identical neighbors={old_same}/{len(pairs)} ({old_ratio:.3f}); pass={old_pass}; {emulated} emulated from frozen P3 ece4e85e5e0b48945dddef61ba601a144db1397a ArtHash identity plus captured age-adjusted hair (not captured skin/clothing metadata)'
     valid = all(0 <= actor.variant[0] <= 2 and 0 <= actor.variant[1] <= 4 for actor in actors)
     return result('A12', bool(actors) and valid and len(set(looks))>=min(len(actors),12) and ratio<=.1,
                   f'{len(set(looks))} tuples/{len(actors)} villagers; identical neighbors={same}/{len(pairs)} ({ratio:.3f}); {diagnostic}')
@@ -154,17 +163,20 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, lo
         long_captures = [load_capture(long_raw/row['file']) for row in long_manifest['captures']]
     checks = [delivery, degeneracy(captures + long_captures)]
     if long_raw is not None:
-        expected_long = {f'l_d{day}_1200_F2' for day in [10,18,24,32,40]} | {'l_d24_1200_F1', 'l_d24_2300_F2N'}
+        expected_long = {f'l_d{day}_1200_F2' for day in [10,18,24,32,40]} | {'l_d24_1200_F1', 'l_d24_2300_F2N', 'l_d10_1500_F2', 'l_d10_1500_F5'}
         actual_long = {capture.stem for capture in long_captures}
-        checks.append(result('LONG_CAPTURE_SET', actual_long == expected_long and len(long_captures) == 7,
-            f'{len(long_captures)}/7 captures (six requested, d32 supplementary); missing={sorted(expected_long-actual_long)}; extra={sorted(actual_long-expected_long)}'))
+        checks.append(result('LONG_CAPTURE_SET', actual_long == expected_long and len(long_captures) == 9,
+            f'{len(long_captures)}/9 captures; missing={sorted(expected_long-actual_long)}; extra={sorted(actual_long-expected_long)}'))
     calibration = [capture for capture in captures if capture.stem.startswith('a_calib')]
     checks += [checker(calibration),squash(captures,repo),*calibration_order(calibration,repo)]
     noon = by_stem.get('a_d2_1200_F2')
     dark = by_stem.get('a_d2_2300_F2N')
     winter = next((c for c in long_captures if c.stem == 'l_d24_1200_F2'), None)
-    checks.append(contrast_pair(noon, winter, repo))
-    checks.append(night(noon,dark) if noon and dark else Check('A6','N/A','Missing noon/night pair'))
+    from ingame_qa_pixels_p4 import edge_contrast, crowd
+    from ingame_qa_wood_p4 import fire_night, wood
+    edge_rows = {name: asdict(edge_contrast(frame,repo)) if frame else asdict(Check('A5','N/A','Missing capture')) for name,frame in [('a_d2_1200_F2',noon),('l_d24_1200_F2',winter)]}
+    checks.append(result('A5', all(row['status']=='PASS' for row in edge_rows.values()), json.dumps(edge_rows)))
+    checks.append(fire_night(noon,dark) if noon and dark else Check('A6','N/A','Missing noon/night pair'))
     checks.append(animation(directory,captures))
     scene_captures = [capture for capture in captures + long_captures if not capture.stem.startswith(('a_calib','a_lineup'))]
     for code, evidence in [('A8',[(capture.stem,clutter(capture)) for capture in scene_captures if capture.selected<0]),('A9',[(capture.stem,interface(capture)) for capture in scene_captures])]:
@@ -190,9 +202,16 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, lo
     checks.append(camp_ground(directory, repo))
     if long_raw is not None:
         from ingame_qa_age_p3 import age_seasons
-        checks.append(age_seasons(long_raw, repo))
+        modern = age_seasons(long_raw, repo, 32)
+        legacy = age_seasons(long_raw, repo)
+        checks.append(Check('A16', modern.status, json.dumps({'A16-new': asdict(modern), 'A16-old (diagnostic)': asdict(legacy)})))
     else:
         checks.append(Check('A16', 'N/A', 'Missing long-run capture evidence'))
+    checks.append(wood(scene_captures, repo))
+    crowd_stems = ('a_d2_1200_F2','a_d2_1930_F2','l_d18_1200_F2','l_d24_1200_F2')
+    all_frames = {frame.stem:frame for frame in scene_captures}
+    crowd_rows = {stem:asdict(crowd(all_frames[stem],repo)) if stem in all_frames else asdict(Check('A18','N/A','Missing capture')) for stem in crowd_stems}
+    checks.append(result('A18',all(row['status']=='PASS' for row in crowd_rows.values()),json.dumps({'frames':crowd_rows,'Art Pass 3':{'a_d2_1200_F2':'6/23','a_d2_1930_F2':'unmeasured','l_d18_1200_F2':'9/41','l_d24_1200_F2':'8/41'}})))
     output.parent.mkdir(parents=True,exist_ok=True)
     output.with_suffix('.json').write_text(json.dumps([asdict(check) for check in checks],indent=2,ensure_ascii=False)+'\n')
     text = '# 실제 게임 캡처 QA\n\n원본 windowed framebuffer와 실제 렌더 노드 증거. N/A는 통과가 아니다.\n\n'

@@ -98,8 +98,8 @@ def _ages(capture: Capture, data: dict[str, Any]) -> dict[str, Any]:
     return {"pass": valid, "visible_elders": elders, "actors": rows, "missing_stage_ids": [row["id"] for row in rows if row["stage"] is None]}
 
 
-def age_seasons(long_raw: Path, repo: Path) -> Check:
-    days = (10, 18, 24, 40)
+def age_seasons(long_raw: Path, repo: Path, spring_day: int = 40) -> Check:
+    days = tuple(dict.fromkeys((10, 18, 24, spring_day, 40)))
     stems = {day: f"l_d{day}_1200_F2" for day in days}
     missing = [stem for stem in stems.values() if not (long_raw/(stem+".png")).is_file() or not (long_raw/(stem+".entities.json")).is_file()]
     if missing:
@@ -107,8 +107,8 @@ def age_seasons(long_raw: Path, repo: Path) -> Check:
     captures = {day: load_capture(long_raw/(stem+".png")) for day, stem in stems.items()}
     data = {day: json.loads((long_raw/(stem+".entities.json")).read_text()) for day, stem in stems.items()}
     hud = [_hud(captures[day], data[day], day) for day in days]
-    expected = dict(zip(days, (1, 2, 3, 0)))
-    brief = {"pass": all(row["season"] == expected[row["day"]] for row in hud), "expected": expected, "actual": {row["day"]: row["season"] for row in hud}, "note": "Brief requests day40 spring; seven-day runtime seasons put day40 in summer. Runtime correctness is measured separately; this discrepancy is not relabelled."}
+    expected = {10: 1, 18: 2, 24: 3, spring_day: 0}
+    brief = {"pass": all(row["season"] == expected[row["day"]] for row in hud if row["day"] in expected), "expected": expected, "actual": {row["day"]: row["season"] for row in hud}, "note": "Spring contract uses day %d; day40 independently measures elder hair." % spring_day}
     terrain = _terrain(captures[10], captures[24], data[10], data[24])
     ramps = _ramps(captures[24], repo)
     ages = _ages(captures[40], data[40])

@@ -3,6 +3,21 @@ const Structures = preload("res://scripts/ui/building_renderer.gd")
 const Wood = preload("res://scripts/ui/wood_visuals.gd")
 class ResourceDouble extends Node:
 	var snapshot: Dictionary = {}
+	var tick: int = 1
+	var buildings: Dictionary = {}
+	var settlements: Dictionary = {}
+	func get_time_snapshot() -> Dictionary:
+		return {"tick": tick, "time_of_day": 12.0}
+	func get_building_snapshot() -> Dictionary:
+		return buildings
+	func get_construction_snapshot() -> Dictionary:
+		return {}
+	func get_settlement_snapshot() -> Dictionary:
+		return settlements
+	func get_recent_deaths() -> Dictionary:
+		return {"current_tick": tick}
+	func get_world_info() -> Dictionary:
+		return {"ticks_per_day": 1440}
 	func get_resource_snapshot() -> Dictionary:
 		return snapshot
 
@@ -116,6 +131,32 @@ func _test_deadwood_rows() -> void:
 	world.snapshot.erase("maxes")
 	renderer.call("_update_deadwood")
 	assert(sprites.is_empty())
+	world.buildings = {"ids": PackedInt64Array([0,28]), "xs": PackedInt32Array([23,25]), "ys": PackedInt32Array([18,20]), "kinds": PackedByteArray([0,2])}
+	world.settlements = {"settlement_ids": PackedInt32Array([1]), "formation_xs": PackedInt32Array([23]), "formation_ys": PackedInt32Array([18]), "wood_stocks": PackedInt32Array([30]), "food_stocks": PackedInt32Array([65]), "fire_lit": PackedByteArray([0])}
+	world.snapshot = {"xs": PackedInt32Array([37]), "ys": PackedInt32Array([9]), "kinds": PackedInt32Array([3]), "amounts": PackedInt32Array([30]), "maxes": PackedInt32Array([30])}
+	renderer.call("_process", 1.0/60.0)
+	var props: Dictionary = renderer.get("_props")
+	assert(props.has(1), "nonzero stock gets a pile even when the west footprint touches the hearth")
+	assert(int((props[1] as Sprite2D).get_meta("woodpile_stage")) == 1)
+	var labels: Dictionary = renderer.get("_labels")
+	assert(int((labels.values()[0] as Label).get_meta("wood_stock")) == 30)
+	assert(int((sprites.values()[0] as Sprite2D).get_meta("deadwood_stage")) == 3)
+	world.tick = 2
+	world.settlements["wood_stocks"] = PackedInt32Array([40])
+	world.snapshot["amounts"] = PackedInt32Array([0])
+	renderer.call("_process", 1.0/60.0)
+	assert(int(renderer.get("_frame")) == 2, "resource changes update before the old 30-frame reconciliation")
+	assert(int((labels.values()[0] as Label).get_meta("wood_stock")) == 40)
+	assert(int((props[1] as Sprite2D).get_meta("woodpile_stage")) == 2)
+	assert(int((sprites.values()[0] as Sprite2D).get_meta("deadwood_stage")) == 0)
+	var pile: Sprite2D = props[1]
+	var pile_tile := Vector2i(int(pile.get_meta("tile_x")), int(pile.get_meta("tile_y")))
+	var frame: Dictionary = preload("res://scripts/ui/art_sprite_library.gd").frame(str(pile.get_meta("sprite_id")))
+	assert(Structures.prop_footprint_allowed(pile_tile, Vector2.ZERO, int(frame["rect"][2]), int(frame["anchor"][0]), {Vector2i(23,18): true, Vector2i(25,20): true}))
+	world.tick = 3
+	world.settlements["wood_stocks"] = PackedInt32Array([0])
+	renderer.call("_process", 1.0/60.0)
+	assert(not props.has(1), "empty stock removes the pile on its simulation tick")
 	objects.free()
 	shadows.free()
 	renderer.free()

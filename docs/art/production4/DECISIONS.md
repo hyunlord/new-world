@@ -34,3 +34,7 @@
 - Part4 firstfullgate caught obsolete hearth source assertion and absent optionalwood context in existingidle-camp test. Preserved failures. Replaced assertion with six state/legacy checks, killed6/6mutants; fixed optionalcontext read, focusedtests pass. Fullgate rerun follows.
 - Part5 movement evidence records actualpositions across final at-most8synchronoussimulationticks beforefreeze, with snapshot endpoint provenance, instead of inferring movement from frozenrenderer orstate alone.
 - Part6 independentreview found falsepasses for arbitrary woodfallback, missingcarriercolumns and missingstockpilelabels; corrected with regressions. A18 uses fullscaledopaque masks and frontintersections in sharedunclippedcoordinates; viewportclipping itself nevercounts asoverlap.
+
+- Part6 round1 windowed audit exposed missingwoodpiles (west-only footprint blocked) and30-frame resource/label lag. One bounded runtimefix tries legal adjacent footprints and refreshes on changed simulationtick. Initialraws/manifests/audits are preserved; round2 uses separate externalroot.
+- A17 movement correction: historical <=8tick displacement included two now-idle state0 carriers. Currentmoving requires snapshotstate1 ANDobserveddisplacement; old90violations andcorrected88bothpreserved. This does not change rendererstate or relaxcarryfallbackchecks.
+- A18 remaining failures are outside mandatedradius4 or exhaust legal48px seats; maintain exactgeometry ratherthanexpandcontract. Evidence crowd_diagnosis.md. Natural A12 has11/17 tuples versusminimum12; retain exactspecifiedhash.
