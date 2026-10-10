@@ -7,3 +7,6 @@
 - All three directions retain 1-texel outside outlines. Top and side edges keep transparent margins; bottom outline may touch the baseline, resolving the foot-on-lower-edge requirement without clipping outlines.
 - PNG normalized sprites are exact palette members. JPEG target frames are concept references, not native-grid production assets; compression and generated pixel density are explicitly outside sprite palette validation.
 - User-approved Pillow, NumPy and Python standard library suffice; no extra runtime packages are added.
+
+- Baseline cargo test failed in harness_p12_beta_a25_gdscript_parses_cleanly_in_godot_headless: missing WorldSimNode type in scripts/ui/world_renderer.gd at lines 192 and 222 in this fresh clone. No game repair attempted because out of scope. Independent cargo clippy --workspace -- -D warnings passed.
+- Extracted palette sizes: D1 31/32, D2 48/48, D3 19/20. Lower counts follow required ΔE<3 merging.

@@ -142,3 +142,19 @@ Use an opaque flat magenta source background. Key RGB distance within 60 of `#FF
 For every output, report native dimensions, palette membership, binary alpha, border safety, and colour count. Show raw cells beside normalized sprites at 8× so lost features remain visible. A procedural ground strip shows villagers, bushes, shelter, and hearth at both 4× and 1×; ground marks must not touch tile borders. Measure villager luma against ground and report each result and the minimum. A value below 0.15 is a failed target, even when the image looks attractive.
 
 Readability measurements describe the supplied procedural noon ground only. They do not prove contrast over every generated ground patch, terrain type, night condition, or runtime camera position. The comparison report must also visually assess both zoom levels, cohesion, Stone Age fit, night mood, and the reliability of extending the pipeline by roughly 200 assets. Preserve failures and losses as decision evidence rather than hiding them behind an overall score.
+
+## Extracted master palette records
+
+Median-cut from the original noon PNG (before JPEG compression), merge weighted centroids while CIELAB ΔE76 < 3, sort by hue then L*. The resulting count can be lower than the requested maximum.
+
+### D1: 31 colours
+
+`#694B31`, `#463728`, `#86633F`, `#A2804B`, `#AE8C50`, `#D1B681`, `#B29453`, `#BEA366`, `#16140F`, `#29251A`, `#B29B5A`, `#534A2E`, `#6D643C`, `#9B8C48`, `#8B8041`, `#948B41`, `#9A934E`, `#7C7842`, `#79752F`, `#626134`, `#858A50`, `#484D2C`, `#313523`, `#657245`, `#515E3E`, `#34432D`, `#223123`, `#16221A`, `#395A69`, `#517488`, `#43687E`
+
+### D2: 48 colours
+
+`#151211`, `#241C18`, `#79482F`, `#3E2C21`, `#5D4732`, `#BC8550`, `#D4995F`, `#816140`, `#E0AB73`, `#99794A`, `#A5834B`, `#BF9853`, `#D8AB55`, `#514730`, `#887643`, `#DEBF66`, `#B19947`, `#EDDDA6`, `#BCA44A`, `#998A42`, `#BAA94F`, `#A69741`, `#65613A`, `#BDB566`, `#716E4F`, `#8B863C`, `#A8A34E`, `#737328`, `#8F9554`, `#575E25`, `#3C411E`, `#737E5D`, `#425027`, `#565F46`, `#3E413A`, `#29331D`, `#222620`, `#3F5047`, `#294135`, `#27352F`, `#5A786F`, `#12201D`, `#1A322E`, `#2B5054`, `#080D0E`, `#3D606D`, `#43728B`, `#2E5E89`
+
+### D3: 19 colours
+
+`#6A472D`, `#C19256`, `#7B6A3B`, `#BEB76A`, `#A8A043`, `#919440`, `#A1A53C`, `#90A034`, `#7D8F34`, `#91A84A`, `#313625`, `#516A29`, `#507C4E`, `#32654D`, `#154C43`, `#0C3431`, `#081011`, `#1B5C77`, `#1D5D8D`
