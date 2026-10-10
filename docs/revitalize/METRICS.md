@@ -1603,3 +1603,7 @@ Gate on the round 2 head `d919dd0f` (code `3cf26767` + docs): green — debug 1,
 | `p6-7_final_v11_repro_120day` | game_v11 0..32 × 120, same clocks | DETERMINISM PASS; all 49,773 equal `p5-5_round3_120day` except `schema_version` |
 
 The schema-6 keys are additions (300 / 3,600 summary paths). The legacy pin test `harness_population_legacy_scene_pinned` passes in every gate.
+
+### Correction after the independent review (Y8 cold share)
+
+Rows are written after a completed tick, so the 22:00 sample shows the 21:00 fire update (outside the cold window, nobody marked) and the 06:00 sample the 05:00 one. `evaluate_pass6.py` now books the cold window and the night to the system tick (`system_minute`, `system_night_season`); the X7/Pass 5 definition (row minute) understated the share. Re-evaluated with the same raw runs: round 1 winter cold 0.330 / max 0.375 (**FAIL**; the round 1 table above shows the old 0.228), round 2 **0.152 / max 0.196 (PASS)** (old 0.098 / 0.134). The v11 baseline is 0 either way (`p6-1_v11_targets` unchanged). Screens A–C were measured with the old definition; their cold values above are low by the same bias. `p6-5_round1_targets` and `p6-5_round2_targets` hold the corrected evaluations; nothing else in them changed.

@@ -79,3 +79,14 @@ fn harness_elder_tether_v11_unchanged() {
     assert_eq!(widest(&mut engine, &entities, tick_at(3, 1140), 120), aging.elder_tether_radius);
     assert_eq!(WorldRules::game_v10().society.aging.map(|rule| rule.elder_evening_tether), Some(false));
 }
+
+#[test]
+fn harness_elder_tether_returns_after_the_evening() {
+    // At 21:00 the evening window closes and the elder tether alone holds again.
+    let rules = WorldRules::game_v12();
+    let aging = rules.society.aging.expect("v12 aging");
+    let evening = rules.agent.evening_gather.expect("evening");
+    let (mut engine, entities) = elders(rules, 6, aging.elder_tether_radius.min(evening.tether_radius));
+    let after = tick_at(3, u64::from(evening.end_minute));
+    assert_eq!(widest(&mut engine, &entities, after, 300), aging.elder_tether_radius);
+}

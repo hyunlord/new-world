@@ -124,6 +124,16 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual((day_index(midnight), system_day(midnight)), (28, 27))
         self.assertEqual(system_day({"tick": 0, "minute_of_day": 480}), 0)
 
+    def test_cold_window_uses_the_system_tick(self) -> None:
+        from evaluate_pass6 import system_minute, system_night_season
+        # 22:00 shows the 21:00 update (outside the window); 00:00 and 06:00 are inside it.
+        ten = row(27 * TPD + 1320 - OFFSET, "periodic")
+        self.assertEqual(system_minute(ten), 1319)
+        six = row(28 * TPD + 360 - OFFSET, "periodic")
+        self.assertEqual(system_minute(six), 359)
+        self.assertEqual(system_night_season(six, 360), 3, "06:00 after the last winter evening is winter")
+        self.assertEqual(system_night_season(row(28 * TPD - OFFSET, "periodic"), 360), 3)
+
     def test_winters_table_counts_one_dark_night_per_winter(self) -> None:
         _, long = self.rounds()
         winters = winters_table(long, 360)

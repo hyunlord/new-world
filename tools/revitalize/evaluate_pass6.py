@@ -75,6 +75,20 @@ def night_season(row: dict, night_end: int) -> int:
     return season_of_day(max(day, 0), int(row["days_per_season"]))
 
 
+def system_minute(row: dict) -> int:
+    """Minute of day the simulation systems saw when the row was taken (`tick - 1`)."""
+    return (int(row["minute_of_day"]) - 1) % TPD
+
+
+def system_night_season(row: dict, night_end: int) -> int:
+    """`night_season` of the system tick: a cold-window row reflects the hourly fire
+    update of the tick before it, so its window and booking use that tick."""
+    day = system_day(row)
+    if system_minute(row) < night_end:
+        day -= 1
+    return season_of_day(max(day, 0), int(row["days_per_season"]))
+
+
 def night_of(row: dict) -> int:
     """Zero-based display day of the evening a 02:00 sample's night began."""
     return day_index(row) - 1
@@ -261,9 +275,12 @@ def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dic
 
     cold = []
     for seed in long.seeds:
+        # Rows are written after a completed tick: the 22:00 row shows the 21:00 fire
+        # update (outside the window, nobody cold), the 06:00 row the 05:00 one. Use
+        # the system tick for the window and the night booking (review round 1).
         rows = [row for row in seed.periodic if row["days_per_season"] > 0
-                and minute_in_window(int(row["minute_of_day"]), *cold_window)
-                and night_season(row, cold_window[1] if cold_window[0] > cold_window[1] else 0) == WINTER]
+                and minute_in_window(system_minute(row), *cold_window)
+                and system_night_season(row, cold_window[1] if cold_window[0] > cold_window[1] else 0) == WINTER]
         if rows:
             cold.append(ratio(sum(r["cold_members"] for r in rows), sum(r["settled_agents"] for r in rows)))
     cold_q = quantiles(cold)

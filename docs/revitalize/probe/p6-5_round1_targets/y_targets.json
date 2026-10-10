@@ -518,14 +518,14 @@
       "clauses": {
         "winter_cold": {
           "observed": {
-            "max": 0.2679140973846481,
-            "median": 0.22767458251516184,
-            "min": 0.19582801191996593,
+            "max": 0.3748936170212766,
+            "median": 0.3303533406324397,
+            "min": 0.2850148999574287,
             "n": 32,
-            "p10": 0.21519210187836116,
-            "p90": 0.2491482112436116
+            "p10": 0.31242833919481755,
+            "p90": 0.35632895636376516
           },
-          "passed": true,
+          "passed": false,
           "requirement": "winter cold members / members in the cold window: median <= 0.25, every seed <= 0.50"
         },
         "winter_food": {
@@ -542,7 +542,7 @@
           "requirement": "food store at each winter's last periodic sample, median >= 0.8 x v11's"
         }
       },
-      "passed": true
+      "passed": false
     },
     "Y9": {
       "clauses": {

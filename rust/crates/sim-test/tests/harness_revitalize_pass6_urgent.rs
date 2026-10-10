@@ -203,3 +203,38 @@ fn harness_urgent_v11_unchanged() {
     assert_eq!(fingerprint(&engine), "270000e767fea504");
     assert_eq!(engine.resources.tallies.urgent_wood_trips, 0);
 }
+
+#[test]
+fn harness_urgent_is_per_settlement() {
+    // Two settlements at the urgent start: only the one short of tonight's burn sends
+    // its members, and only it may put two gatherers on a spot (review round 1).
+    let rule = v12_rule();
+    let start = u64::from(rule.urgent_start_minute.expect("v12 urgent mode"));
+    let burn = tonight(WINTER_DAY, start);
+    let per_spot = rule.max_gatherers_per_spot as usize;
+    let (mut engine, short) = fixture(WorldRules::game_v12(), 2 * per_spot, &[(26, 20)], tick_at(WINTER_DAY, start), 0);
+    let mut stocked = Settlement::new_with_id(2, 0);
+    stocked.formation_tile = (40, 20);
+    stocked.store(ResourceKind::Wood, burn);
+    let mut others = Vec::new();
+    for index in 0..2 {
+        let entity = engine.spawn_agent(40, 20);
+        let id = engine.world.get::<&Agent>(entity).expect("agent").id;
+        engine
+            .world
+            .insert(entity, (AgentState::Idle, Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08), Sleep::new(0.0, 0.03),
+                Social::new(0.0, 0.04), Inventory::default(), MovementRng::new(index + 50)))
+            .expect("components");
+        stocked.add_member_agent(id);
+        others.push(entity);
+    }
+    engine.resources.settlements.insert(2, stocked);
+    engine.resources.wood_tiles.insert((44, 20), 6);
+    engine.resources.wood_source_max.insert((44, 20), 6);
+    assert!(is_urgent(&engine.world, &engine.resources, 1));
+    assert!(!is_urgent(&engine.world, &engine.resources, 2));
+    AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+    assert_eq!(wood_targets(&engine, &short), vec![Some((26, 20)); 2 * per_spot]);
+    assert_eq!(wood_targets(&engine, &others), vec![None, None], "the stocked village waits for its normal window");
+    assert_eq!(engine.resources.tallies.urgent_wood_trips, 2 * per_spot as u64);
+}

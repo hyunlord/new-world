@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 from evaluate_pass4 import EvidenceError, Seed, quantiles
-from evaluate_pass6 import day_index, load_round, winters_table
+from evaluate_pass6 import day_index, load_round, night_season, winters_table
 
 BURN_END = 420  # 07:00, the end of the burn window and of a night
 NIGHT = 120  # 02:00, the night sample of Y7
@@ -64,11 +64,15 @@ def story(seed: int, rows: list[dict], winter: dict, burn: float, dps: int, ever
     """Five sentences about one seed's first winter; `every` is all of the seed's
     periodic rows (the morning after the last winter night lies past the table)."""
     first = 3 * dps
-    start = rows[0]
+    # The narrative starts at the first winter day's 08:00 checkpoint (as the Winters table).
+    start = next((r for r in rows if day_index(r) == first and int(r["minute_of_day"]) == BREAKFAST_END), rows[0])
     # Dark nights as in Y7: the fire is out at 02:00; the night belongs to the evening before.
-    out_nights = sorted(day_index(r) - 1 for r in rows if int(r["minute_of_day"]) == NIGHT and not r["fire_lit"])
+    # Only nights booked to winter (review round 1): the 02:00 row of the first
+    # winter day closes an autumn night.
+    out_nights = sorted(day_index(r) - 1 for r in rows if int(r["minute_of_day"]) == NIGHT and not r["fire_lit"]
+                        and night_season(r, 720) == 3)
     sentences = [
-        f"Seed {seed} began its first winter (display day {first + 1}) with {start['wood_in_hand']:.0f} wood in hand, "
+        f"Seed {seed} began its first winter (display day {first + 1}, 08:00) with {start['wood_in_hand']:.0f} wood in hand, "
         f"about {float(start['wood_in_hand']) / burn:.1f} nights of winter burn at {burn:.0f} a night, and {start['stockpile_food']:.0f} food in store.",
     ]
     if out_nights:

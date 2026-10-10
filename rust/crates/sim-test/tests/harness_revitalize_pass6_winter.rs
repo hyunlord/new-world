@@ -319,3 +319,53 @@ fn harness_firewood_v11_unchanged() {
     // The season rule of v11 is unchanged.
     assert_eq!(v11.seasons, Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] }));
 }
+
+#[test]
+fn harness_first_winter_night_is_autumn() {
+    // 02:00 of the first winter day (display day 21) closes the last autumn
+    // evening's night: the autumn rate burns and nobody is cold (review round 1).
+    let rule = v12_rule();
+    let night = tick_at(WINTER, 120);
+    let (mut engine, _) = village(WorldRules::game_v12(), night, 10, 2);
+    FireSystem::new().tick(&mut engine.world, &mut engine.resources);
+    assert_eq!(wood_store(&engine), 10 - u32::from(rule.burn_per_hour[2]));
+    let (mut engine, _) = village(WorldRules::game_v12(), night, 0, 2);
+    FireSystem::new().tick(&mut engine.world, &mut engine.resources);
+    assert!(!engine.resources.fires[&1].lit);
+    assert_eq!(engine.world.query::<&Cold>().iter().count(), 0);
+    // 22:00 of that day is a winter night: out of wood, the members are cold.
+    engine.resources.current_tick = tick_at(WINTER, 1320);
+    FireSystem::new().tick(&mut engine.world, &mut engine.resources);
+    assert_eq!(engine.world.query::<&Cold>().iter().count(), 2);
+}
+
+#[test]
+fn harness_winter_regrowth_branches_without_one_field() {
+    // Spread regrowth without a cap fills spots up to their capacity, one at a time.
+    let mut rules = WorldRules::game_v12();
+    rules.society.firewood.as_mut().expect("firewood").winter_deadwood_cap = None;
+    let per_day = u64::from(v12_rule().winter_regen_units_per_day.expect("regen"));
+    let mut resources = resources_at(rules, 0);
+    resources.wood_source_max.insert((3, 3), 2);
+    resources.wood_source_max.insert((4, 3), 2);
+    let start = tick_at(WINTER, 480);
+    let pulses = 5 * 12 / per_day;
+    for step in 0..pulses {
+        pulse(&mut resources, start + step * REGEN_INTERVAL);
+    }
+    assert_eq!(resources.wood_tiles.values().map(|v| u64::from(*v)).sum::<u64>(), 4, "capacity 2 + 2");
+    assert_eq!(resources.tallies.winter_wood_lost, 1);
+    // A cap without spread regrowth: the Pass 5 regrowth continues, never above the cap.
+    let mut rules = WorldRules::game_v12();
+    rules.society.firewood.as_mut().expect("firewood").winter_regen_units_per_day = None;
+    let cap = v12_rule().winter_deadwood_cap.expect("cap");
+    let mut resources = resources_at(rules, 0);
+    resources.wood_source_max.insert((3, 3), 6);
+    resources.wood_tiles.insert((3, 3), 6);
+    resources.wood_source_max.insert((4, 3), 6);
+    for step in 0..24 {
+        pulse(&mut resources, start + step * REGEN_INTERVAL);
+    }
+    assert_eq!((resources.wood_tiles[&(3, 3)], resources.wood_tiles[&(4, 3)]), (cap, cap));
+    assert_eq!((resources.wood_winter_acc, resources.tallies.winter_wood_lost), (0, 0));
+}

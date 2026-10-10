@@ -4,7 +4,7 @@ Source: `.harness/evidence/revitalize/probe/p6-5_round2_120day` (game_v12, seeds
 
 ## Seed 1 — most winter nights out (5 over the run, 1 in the first winter)
 
-Seed 1 began its first winter (display day 22) with 221 wood in hand, about 5.7 nights of winter burn at 39 a night, and 612 food in store. The wood ran out on the night of display day 28: the fire died at 02:00 and 42 members were cold at 02:00; dark nights (fire out at 02:00) fell on display day 28. The next morning 14 adults were out for wood at once by noon in urgent mode (its window opens at 09:00). Over the winter adults made 94 wood trips (18 urgent) and brought in 45 units, a few branches a day. A cold night took 70 food from the store between dinner and breakfast against 62 on a lit winter night (+8); the store ended the winter at 233.
+Seed 1 began its first winter (display day 22, 08:00) with 207 wood in hand, about 5.3 nights of winter burn at 39 a night, and 563 food in store. The wood ran out on the night of display day 28: the fire died at 02:00 and 42 members were cold at 02:00; dark nights (fire out at 02:00) fell on display day 28. The next morning 14 adults were out for wood at once by noon in urgent mode (its window opens at 09:00). Over the winter adults made 94 wood trips (18 urgent) and brought in 45 units, a few branches a day. A cold night took 70 food from the store between dinner and breakfast against 62 on a lit winter night (+8); the store ended the winter at 233.
 
 | Display day | Time | Wood in hand | Fire lit | Cold members | Wood gatherers | Urgent | Food store |
 |---:|---|---:|---:|---:|---:|---:|---:|
@@ -99,7 +99,7 @@ Seed 1 began its first winter (display day 22) with 221 wood in hand, about 5.7 
 
 ## Seed 10 — fewest winter nights out (3 over the run, 1 in the first winter)
 
-Seed 10 began its first winter (display day 22) with 218 wood in hand, about 5.6 nights of winter burn at 39 a night, and 561 food in store. The wood ran out on the night of display day 28: the fire died at 00:00 and 42 members were cold at 02:00; dark nights (fire out at 02:00) fell on display day 28. The next morning 14 adults were out for wood at once by noon in urgent mode (its window opens at 09:00). Over the winter adults made 87 wood trips (13 urgent) and brought in 45 units, a few branches a day. A cold night took 77 food from the store between dinner and breakfast against 70 on a lit winter night (+6); the store ended the winter at 172.
+Seed 10 began its first winter (display day 22, 08:00) with 204 wood in hand, about 5.2 nights of winter burn at 39 a night, and 514 food in store. The wood ran out on the night of display day 28: the fire died at 00:00 and 42 members were cold at 02:00; dark nights (fire out at 02:00) fell on display day 28. The next morning 14 adults were out for wood at once by noon in urgent mode (its window opens at 09:00). Over the winter adults made 87 wood trips (13 urgent) and brought in 45 units, a few branches a day. A cold night took 77 food from the store between dinner and breakfast against 70 on a lit winter night (+6); the store ended the winter at 172.
 
 | Display day | Time | Wood in hand | Fire lit | Cold members | Wood gatherers | Urgent | Food store |
 |---:|---|---:|---:|---:|---:|---:|---:|
