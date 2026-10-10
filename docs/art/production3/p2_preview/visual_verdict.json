@@ -1,0 +1,26 @@
+{
+  "part": 2,
+  "reviewer": "parent",
+  "status": "pass_for_part2",
+  "observed_images": [
+    ".harness/evidence/art-production3/p2/shots/baseline/t1440_F2.1920.png",
+    ".harness/evidence/art-production3/p2/shots/final/d2_1200_F2.1920.png"
+  ],
+  "observations": [
+    "Non-elder villagers show brown hair",
+    "Noon camp includes visibly seated villagers and standing front-facing villagers"
+  ],
+  "limitations": [
+    "Carry basket icons remain pending Part3",
+    "Talk keeps existing nearest-adjacent partner direction; snapshot has no explicit partner field",
+    "Capture metadata pose coverage deferred to Part5"
+  ],
+  "tests": [
+    "test_elder_variant",
+    "test_agent_activity",
+    "test_idle_facing",
+    "test_idle_camp_pose",
+    "strict 26 scripts / 15 FFI",
+    "384 Rust tests across 22 surface suites"
+  ]
+}

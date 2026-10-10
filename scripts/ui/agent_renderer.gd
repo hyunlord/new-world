@@ -26,6 +26,7 @@ var _sprite_pool: Array[Sprite2D] = []
 var _shadow_pool: Array[Sprite2D] = []
 var _animation_time: float = 0.0
 var _render_positions: Dictionary = {}
+var _idle_seconds: Dictionary = {}
 var _frame_groups: Dictionary = {}
 var _selection_ring: Line2D
 var _capture_visible: bool = true
@@ -62,7 +63,6 @@ func _process(delta: float) -> void:
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 	var states: PackedByteArray = snap.get("states", PackedByteArray())
 	var life_stages: Variant = snap.get("life_stages", PackedByteArray())
-	var elders_present: bool = life_stages.has(2)
 	var n: int = ids.size()
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
@@ -97,7 +97,7 @@ func _process(delta: float) -> void:
 		var sprite: Sprite2D = _ensure_agent(agent_id)
 		var look: Dictionary = ArtHashScript.look(agent_id)
 		var life_stage: int = int(life_stages[i]) if i < life_stages.size() else 0
-		look = Activity.elder_look(look, agent_id, life_stage, elders_present)
+		look = Activity.elder_look(look, agent_id, life_stage)
 		var child: bool = life_stage == 1
 		var previous_position: Vector2 = _render_positions.get(agent_id, ipos)
 		var movement: Vector2 = ipos - previous_position
@@ -108,11 +108,12 @@ func _process(delta: float) -> void:
 		var target: int = int(snap["target_kinds"][i]) if has_targets and i < snap["target_kinds"].size() else 0
 		var carried: float = float(snap["carried_foods"][i]) if snap.has("carried_foods") and i < snap["carried_foods"].size() else 0.0
 		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour)
-		var facing: String = Activity.facing(movement, str(sprite.get_meta("facing", "S")))
-		if activity == "talk":
-			facing = Activity.facing(_talk_delta(i, xs, ys), facing)
+		_idle_seconds[agent_id] = Activity.idle_elapsed(activity, movement, float(_idle_seconds.get(agent_id, 0.0)), delta)
+		var partner_delta: Vector2 = _talk_delta(i, xs, ys) if activity == "talk" else Vector2.ZERO
+		var facing: String = Activity.render_facing(activity, movement, partner_delta, str(sprite.get_meta("facing", "S")), float(_idle_seconds[agent_id]))
+		var pose: String = Activity.camp_pose(activity, life_stage, agent_id, int(time.get("day_index", 0)), hour, bool(tile.get("near_camp", false)))
 		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
-		var choice: Dictionary = frame_choice(body, activity, facing, float(look["phase"]))
+		var choice: Dictionary = frame_choice(body, pose, facing, float(look["phase"]))
 		var sprite_id: String = str(choice.get("sprite_id", ""))
 		if sprite_id.is_empty():
 			sprite.texture = null
@@ -131,6 +132,7 @@ func _process(delta: float) -> void:
 		sprite.set_meta("tile_x", int(xs[i]))
 		sprite.set_meta("tile_y", int(ys[i]))
 		sprite.set_meta("activity", activity)
+		sprite.set_meta("pose", pose)
 		sprite.set_meta("facing", facing)
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
@@ -195,6 +197,7 @@ func _retire_missing(live: Dictionary) -> void:
 			(_activity_icons[agent_id] as Sprite2D).queue_free()
 			_activity_icons.erase(agent_id)
 		_render_positions.erase(agent_id)
+		_idle_seconds.erase(agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.visible = false
 		_shadow_pool.append(shadow)
@@ -218,6 +221,7 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 
 func _on_world_reset() -> void:
 	_render_positions.clear()
+	_idle_seconds.clear()
 	_animation_time = 0.0
 	_prev_positions.clear()
 	_curr_positions.clear()
@@ -394,6 +398,10 @@ func _tile_context(tile: Vector2i, context: Dictionary) -> Dictionary:
 	for hearth: Vector2i in context["hearths"]:
 		if maxi(absi(tile.x - hearth.x), absi(tile.y - hearth.y)) <= 3:
 			near = true
+	var near_camp: bool = near
+	for shelter: Vector2i in context["shelters"]:
+		if maxi(absi(tile.x - shelter.x), absi(tile.y - shelter.y)) <= 3:
+			near_camp = true
 	var terrain: Dictionary = context["terrain"]
 	var width: int = int(terrain.get("width", 0))
 	var height: int = int(terrain.get("height", 0))
@@ -404,7 +412,7 @@ func _tile_context(tile: Vector2i, context: Dictionary) -> Dictionary:
 		var index: int = t.y * width + t.x
 		if t.x >= 0 and t.x < width and t.y >= 0 and t.y < height and index < cells.size() and cells[index] == 4:
 			water = true
-	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "water": water, "near_hearth": near}
+	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "water": water, "near_hearth": near, "near_camp": near_camp}
 
 func _talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vector2:
 	var nearest: Vector2 = Vector2.ZERO

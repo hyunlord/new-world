@@ -1,7 +1,7 @@
 class_name AgentActivity
 extends RefCounted
 
-static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, hour: float) -> String:
+static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, _hour: float) -> String:
 	if state == 2:
 		return "talk"
 	if state == 3:
@@ -24,8 +24,6 @@ static func resolve(state: int, target_kind: int, has_targets: bool, moving: boo
 		return "eat"
 	if state == 1 or moving:
 		return "carry" if carried > 0.0 else "walk"
-	if hour >= 18.0 and hour < 23.0 and bool(tile.get("near_hearth", false)):
-		return "sit"
 	return "idle"
 
 static func hidden(activity: String, has_targets: bool, tile: Dictionary) -> bool:
@@ -38,15 +36,33 @@ static func facing(delta: Vector2, previous: String) -> String:
 		return "W" if delta.x < 0.0 else "E"
 	return "N" if delta.y < 0.0 else "S"
 
+static func idle_elapsed(activity: String, movement: Vector2, previous: float, delta: float) -> float:
+	return previous + maxf(delta, 0.0) if activity == "idle" and movement.length_squared() < 0.000001 else 0.0
+
+static func render_facing(activity: String, movement: Vector2, partner_delta: Vector2, previous: String, idle_seconds: float) -> String:
+	if movement.length_squared() >= 0.000001:
+		return facing(movement, previous)
+	if activity == "talk":
+		return facing(partner_delta, previous)
+	return "S" if activity == "idle" and idle_seconds >= 1.0 else previous
+
+static func camp_pose(activity: String, life_stage: int, agent_id: int, day: int, hour: float, near_camp: bool) -> String:
+	if activity != "idle" or not near_camp or hour < 6.0 or hour >= 23.0:
+		return activity
+	var animated: bool = posmod(ArtHash.mix(agent_id + day), 3) != 0
+	if life_stage == 1:
+		return "hop" if animated else "idle"
+	return "sit" if life_stage == 2 or animated else "idle"
+
 static func frame_index(activity: String, seconds: float, phase: float, count: int) -> int:
 	var fps: float = 8.0 if activity in ["walk", "carry", "run"] else (1.5 if activity == "idle" else 4.0)
 	return posmod(floori((seconds + phase) * fps), maxi(count, 1))
 
-static func elder_look(base: Dictionary, agent_id: int, life_stage: int, elders_present: bool) -> Dictionary:
+static func elder_look(base: Dictionary, agent_id: int, life_stage: int) -> Dictionary:
 	var look: Dictionary = base.duplicate()
 	if life_stage == 2:
 		look["hair"] = 3 + posmod(ArtHash.mix(agent_id), 2)
-	elif elders_present and life_stage != 1:
+	else:
 		look["hair"] = posmod(int(look["hair"]), 3)
 	return look
 

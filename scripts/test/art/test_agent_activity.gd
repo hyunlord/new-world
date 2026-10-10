@@ -20,7 +20,7 @@ func _run() -> void:
 	assert(Activity.resolve(2, 0, false, true, 1.0, {}, 12.0) == "talk")
 	assert(Activity.resolve(1, 0, false, false, 1.0, {}, 12.0) == "carry")
 	assert(Activity.resolve(0, 0, false, true, 0.0, {}, 12.0) == "walk")
-	assert(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 18.0) == "sit")
+	assert(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 18.0) == "idle")
 	assert(Activity.resolve(0, 0, false, false, 0.0, {"near_hearth": true}, 23.0) == "idle")
 	assert(Activity.facing(Vector2.ZERO, "N") == "N")
 	assert(Activity.facing(Vector2(-2, 1), "S") == "W")

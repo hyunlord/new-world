@@ -27,3 +27,8 @@ Brief SHA256: `22231c4fae1cb1ec6fa35c98dd46ed98659b7e681402fa2f7db23c34b15f927a`
 - Windowed baseline capture produced four frames. Parent opened t1440F1 andF2: camp is clear of rocks and ground decoration, map rocks form distinct outcrops, decals are small patch accents. White/grey young villagers and floating carry icons remain the explicitly pending Part2/3 problems.
 - Standalone ruff/basedpyright are unavailable on PATH; no tool dependencies installed. Python compilation/unit suite and existing strict gates used.
 - The one-off selection assembly initially referenced the candidate-ledger key `selected`; the installation schema uses `accepted`. Inspected actual schema, corrected assembly, then existing installer accepted all frozen evidence with zero unresolved targets. No assets were mutated by the failed assembly.
+
+## Part2
+- Hair mapping is exclusively life-stage based; non-elders remain0–2 regardless of population. Render-only idle timers turn stationary idle agents south after1s and reset on movement/retirement. Talk retains existing nearest-adjacent partner direction because snapshots expose no explicit partner field.
+- Camp pose uses deterministic id+day hashing, hours[6,23), Chebyshev3 hearth/shelter; semantic activity remains idle. Elders sit, selected adults sit, selected children hop. No simulation mutation.
+- Four targeted Godot tests, strict26scripts/15FFI and384Rust surface tests PASS. Windowed baseline4 and final10 captures complete; actual day2noonF2 inspected for brown hair, visible sitting and front-facing villagers. Carry icons remain Part3.
