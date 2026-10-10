@@ -5191,3 +5191,8 @@ HUD_ACTIVITY_LEGEND = Activity markers
 HUD_ACTIVITY_OTHER = Other target
 
 HUD_ACTIVITY_BUSY = Busy
+
+# Art production interface
+HUD_NEWS_TITLE = Village news
+INSPECTOR_CARRYING_FMT = Carrying %d food
+HUD_SPEED_FMT = Speed %s×

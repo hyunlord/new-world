@@ -204,7 +204,7 @@ fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
 // ─── A2: TICKS_PER_DAY == 100 ─────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a2_ticks_per_day_constant_present() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     assert!(stripped.contains("get_time_snapshot"));
     assert!(!stripped.contains("TICKS_PER_DAY"));
     assert!(stripped.contains("time_of_day"));
@@ -213,7 +213,7 @@ fn harness_p14_delta_a2_ticks_per_day_constant_present() {
 // ─── A3: DAYS_PER_YEAR == 30 ──────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a3_days_per_year_constant_present() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     assert!(stripped.contains("day_index"));
     assert!(stripped.contains("HUD_DAY_FMT"));
     assert!(stripped.contains("HUD_PHASE_DAY") && stripped.contains("HUD_PHASE_NIGHT"));
@@ -223,7 +223,7 @@ fn harness_p14_delta_a3_days_per_year_constant_present() {
 // ─── A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE == 20 ───────────────────
 #[test]
 fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     for source in ["get_settlement_snapshot", "food_stocks", "get_resource_snapshot", "amounts", "get_tallies"] {
         assert!(stripped.contains(source), "HUD data source missing: {source}");
     }
@@ -233,12 +233,12 @@ fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
 // ─── A5: RESOURCE_LABELS exact order ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a5_resource_labels_array_exact_order() {
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     for key in ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"] {
         assert!(stripped.contains(key), "Localized metric missing: {key}");
     }
     assert!(!stripped.contains("RESOURCE_LABELS"));
-    assert!(no_ws(&stripped).contains("_loc(keys[i])"));
+    assert!(no_ws(&stripped).contains("_loc(keys[index])"));
 }
 
 // ─── A6: top-right anchor + MOUSE_FILTER_IGNORE ───────────────────────────
@@ -248,8 +248,7 @@ fn harness_p14_delta_a6_anchored_top_right_with_mouse_filter_ignore() {
     // `mouse_filter = Control.MOUSE_FILTER_IGNORE`.
     let src = read_hud_status_panel_src();
     let needles = [
-        "anchor_left = 1.0",
-        "anchor_right = 1.0",
+        "ArtUI.panel(self, Rect2(12, 836, 620, 232))",
         "mouse_filter = Control.MOUSE_FILTER_IGNORE",
     ];
     let mut missing: Vec<&str> = Vec::new();
@@ -320,8 +319,8 @@ fn harness_p14_delta_a9_notification_feed_constants_present() {
         panic!("A9: NOTIF_FADE_FRAMES RHS must parse as int; got `{fade_rhs}`")
     });
     assert_eq!(
-        max_n, 5,
-        "A9: MAX_VISIBLE_NOTIFICATIONS must equal 5; got {max_n}"
+        max_n, 4,
+        "A9: MAX_VISIBLE_NOTIFICATIONS must equal 4; got {max_n}"
     );
     assert_eq!(
         fade_n, 480,
@@ -463,7 +462,7 @@ fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

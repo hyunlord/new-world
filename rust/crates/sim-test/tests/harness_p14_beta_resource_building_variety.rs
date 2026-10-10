@@ -49,7 +49,7 @@ fn harness_p14_beta_a1_resource_type_paths_array_declared() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -61,7 +61,7 @@ fn harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -73,7 +73,7 @@ fn harness_p14_beta_a3_resource_type_paths_index_0_references_legacy_constant() 
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -124,7 +124,7 @@ fn harness_p14_beta_a7_resource_type_paths_index_4_food_literal() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -135,7 +135,7 @@ fn harness_p14_beta_a8_resource_water_tint_constant_value() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -147,7 +147,7 @@ fn harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_itera
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -158,7 +158,7 @@ fn harness_p14_beta_a10_water_modulate_branch_present() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -181,9 +181,9 @@ fn harness_p14_beta_a11_village_fixture_paths_has_exactly_four_literals() {
 fn harness_p14_beta_a12_village_fixture_positions_match_diamond_layout() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 13: z_village_fixture_equals_five ─────────────────────────
@@ -203,9 +203,9 @@ fn harness_p14_beta_a13_z_village_fixture_equals_five() {
 fn harness_p14_beta_a14_village_fixture_placement_loop_present() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 15: phase_13_beta_resource_constants_preserved ────────────
@@ -215,7 +215,7 @@ fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -225,9 +225,9 @@ fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
 fn harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 17: phase_12_construction_constants_preserved ─────────────
@@ -236,7 +236,7 @@ fn harness_p14_beta_a17_phase_12_construction_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 18: phase_12_gamma_furniture_constants_preserved ──────────

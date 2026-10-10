@@ -412,12 +412,12 @@ fn harness_needs_a5_renderer_and_bridge_contract() {
     for key in ["hungers", "thirsts", "sleeps"] {
         assert!(r.contains(key), "A5(a): renderer must read the `{key}` snapshot array");
     }
-    assert!(r.contains("xs") && r.contains("ys"), "A5(a): renderer reads positions xs/ys");
+    assert!(r.contains("get_agent_sprite") && r.contains("sprite.to_global(Vector2(0.0, sprite.offset.y))"), "A5(a): renderer follows the rendered agent by identity at its native head anchor");
     assert!(r.contains("DANGER_THRESHOLD"), "A5(a): renderer declares DANGER_THRESHOLD");
     assert!(r.contains("Z_NEED_BAR") && r.contains("7"), "A5(a): renderer declares Z_NEED_BAR = 7");
-    assert!(r.contains("draw_rect"), "A5(a): renderer draws via draw_rect (track + fill)");
-    assert!(r.contains("Vector2(2, 4)"));
-    assert!(r.contains("Vector2(2, 1)"));
+    assert!(r.contains("draw_texture_rect_region"), "A5(a): renderer draws native warning atlas regions");
+    assert!(r.contains("U1_12"));
+    assert!(r.contains("U1_11") && r.contains("U1_13"));
     let has_max_ratio =
         (r.contains("max") && r.contains("/ SATURATION")) || r.contains("/ 100");
     assert!(has_max_ratio, "A5(a): renderer computes a max-of-three danger ratio");
@@ -479,7 +479,7 @@ fn harness_needs_a6_scene_wiring_additive() {
         .count();
 
     // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(ext_count_after, 18, "all eighteen renderer/UI script resources remain");
     assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
 
     // (c) Additive preservation — new wiring present, prior wiring intact.

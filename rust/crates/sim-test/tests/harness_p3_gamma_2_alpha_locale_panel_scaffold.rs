@@ -150,7 +150,7 @@ fn harness_p3_gamma_2_alpha_causal_panel_gd_scaffold_present() {
          (locked fact P3γ2α-U4: γ-2-α scaffold does not capture clicks)"
     );
     assert!(
-        src.contains("ColorRect.new()"),
+        src.contains("ArtUI.panel(self, Rect2(Vector2.ZERO, size))"),
         "causal_panel.gd must instantiate a `ColorRect` background dynamically \
          (locked fact P3γ2α-U1: no .tscn, layout built in code)"
     );
@@ -223,19 +223,19 @@ fn harness_p3_gamma_2_alpha_causal_panel_gd_geometry_locked() {
     let src = include_str!("../../../../scripts/ui/panels/causal_panel.gd");
 
     assert!(
-        src.contains("PANEL_WIDTH := 320.0") || src.contains("PANEL_WIDTH: float = 320.0"),
-        "causal_panel.gd must declare PANEL_WIDTH = 320.0 (γ-2-α locked geometry)"
+        src.contains("PANEL_WIDTH := 620.0") || src.contains("PANEL_WIDTH: float = 620.0"),
+        "causal_panel.gd must declare PANEL_WIDTH = 620.0 (γ-2-α locked geometry)"
     );
     assert!(
-        src.contains("PANEL_HEIGHT := 200.0") || src.contains("PANEL_HEIGHT: float = 200.0"),
-        "causal_panel.gd must declare PANEL_HEIGHT = 200.0 (γ-2-α locked geometry)"
+        src.contains("PANEL_HEIGHT := 480.0") || src.contains("PANEL_HEIGHT: float = 480.0"),
+        "causal_panel.gd must declare PANEL_HEIGHT = 480.0 (γ-2-α locked geometry)"
     );
     assert!(
         src.contains("PANEL_MARGIN := 16.0") || src.contains("PANEL_MARGIN: float = 16.0"),
         "causal_panel.gd must declare PANEL_MARGIN = 16.0 (γ-2-α locked geometry)"
     );
     assert!(
-        src.contains("Color(0.0, 0.0, 0.0, 0.78)"),
+        src.contains("ArtUI.panel(self, Rect2(Vector2.ZERO, size))"),
         "causal_panel.gd background must be RGBA(0, 0, 0, 0.78) \
          (plan §In-game verification)"
     );

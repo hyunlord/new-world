@@ -25,10 +25,11 @@ mod tests {
     #[test]
     fn harness_territory_terrain_renderer_uses_ffi() {
         let source = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+        assert!(source.contains("\"rock\": return code == 2"));
         assert!(source.contains("get_terrain_snapshot()"));
         assert!(!source.contains("RandomNumberGenerator"));
         assert!(
-            source.contains("2: 3, 3: 2"),
+            source.contains("\"hill\": return code == 2 or code == 3"),
             "Hill and Mountain atlas rows differ from Rust codes"
         );
     }
@@ -37,9 +38,9 @@ mod tests {
     fn harness_economy_hud_reads_sim_time_and_tallies() {
         let topbar = include_str!("../../../../scripts/ui/panels/hud_topbar.gd");
         let status = include_str!("../../../../scripts/ui/panels/hud_status_panel.gd");
-        assert!(status.contains(r#"_snapshot("get_time_snapshot")"#));
-        assert!(status.contains(r#"_snapshot("get_tallies")"#));
-        assert!(status.contains("_world_sim.call(method)"));
+        assert!(topbar.contains(r#"_snapshot("get_time_snapshot")"#));
+        assert!(topbar.contains(r#"_snapshot("get_tallies")"#));
+        assert!(topbar.contains("_world_sim.call(method)"));
         for source in [topbar, status] {
             for forbidden in ["TICKS_PER_DAY", "\"Berry", "\"Wood", "\"Tick %d"] {
                 assert!(!source.contains(forbidden), "HUD contains {forbidden}");

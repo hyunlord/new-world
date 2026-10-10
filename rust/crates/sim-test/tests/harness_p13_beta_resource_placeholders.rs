@@ -134,7 +134,7 @@ fn harness_p13_beta_a1_resource_sprite_path_constant_declared() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -184,7 +184,7 @@ fn harness_p13_beta_a5_resource_placement_uses_seeded_rng() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -327,7 +327,7 @@ fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -338,7 +338,7 @@ fn harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 15: phase12_gamma_furniture_z_4_preserved ──────────────────

@@ -315,7 +315,7 @@ fn harness_p12_beta2_a8_renderer_declares_construction_sprite_path_constant() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 9: alpha_remap_constants_have_exact_values ────────────────
@@ -408,14 +408,14 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 
     // OVERLAY_ALPHA literal value 0.65.
     let alpha_line = stripped

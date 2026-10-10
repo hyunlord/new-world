@@ -145,9 +145,9 @@ fn harness_p12_beta_a5_tileset_references_three_variants_per_material() {
 #[test]
 fn harness_p12_beta_a6_world_renderer_loads_terrain_tileset() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("terrain_v8.png"));
-    assert!(src.contains("range(5)"));
-    assert!(src.contains("range(4)"));
+    assert!(src.contains("res://assets/art/terrain/terrain_manifest.json"));
+    assert!(src.contains("for description: Dictionary in manifest[\"layers\"]"));
+    assert!(src.contains("for tile: Dictionary in description[\"tiles\"]"));
     assert!(src.contains("atlas.create_tile"));
     assert!(src.contains("tiles.add_source(atlas, 0)"));
 }
@@ -158,7 +158,7 @@ fn harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -167,9 +167,10 @@ fn harness_p12_beta_a7_world_renderer_instantiates_tilemaplayer_with_tileset() {
 #[test]
 fn harness_p12_beta_a8_world_renderer_populates_all_grid_cells() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("\"rock\": return code == 2"));
     assert!(src.contains("_terrain[y * _width + x]"));
-    assert!(src.contains("TERRAIN_ROWS.get(code, 0)"));
-    assert!(src.contains("2: 3, 3: 2"));
+    assert!(src.contains("_member(layer_name, x, y)"));
+    assert!(src.contains("\"hill\": return code == 2 or code == 3"));
 }
 
 // ─── Assertion 9: terrain_placement_is_deterministic ─────────────────────
@@ -179,7 +180,7 @@ fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
     assert!(src.contains("73856093"));
     assert!(src.contains("19349663"));
     assert!(src.contains("0x7fffffff"));
-    assert!(src.contains("% 4"));
+    assert!(src.contains("% count"));
     assert!(!src.contains("RandomNumberGenerator"));
 }
 
@@ -188,9 +189,9 @@ fn harness_p12_beta_a9_terrain_placement_is_deterministic() {
 fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 11: bootstrap_sprite_positioned_at_bootstrap_tile ─────────
@@ -198,9 +199,9 @@ fn harness_p12_beta_a10_bootstrap_building_sprite_loaded() {
 fn harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 12: z_order_constants_match_spec ──────────────────────────

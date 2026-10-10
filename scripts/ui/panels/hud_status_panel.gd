@@ -2,12 +2,14 @@ extends Control
 
 # Simulation clock, resources and cumulative events; no frame-derived world facts.
 
+const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+
 const HUD_MARGIN: int = 12
 const PANEL_WIDTH: float = 420.0
 const PANEL_HEIGHT: float = 180.0
 
 
-const MAX_VISIBLE_NOTIFICATIONS: int = 5
+const MAX_VISIBLE_NOTIFICATIONS: int = 4
 const NOTIF_FADE_FRAMES: int = 480
 
 # Slice 2-5c: minimum |food_stock delta| to surface a deposit/consume feed line.
@@ -40,44 +42,16 @@ func _ready() -> void:
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
 
-	anchor_left = 1.0
-	anchor_right = 1.0
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var margin: MarginContainer = MarginContainer.new()
-	margin.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	margin.custom_minimum_size = Vector2(PANEL_WIDTH, PANEL_HEIGHT)
-	margin.add_theme_constant_override("margin_right", HUD_MARGIN)
-	margin.add_theme_constant_override("margin_top", HUD_MARGIN)
-	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(margin)
+	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 836, 620, 232))
 	var vbox: VBoxContainer = VBoxContainer.new()
-	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	margin.add_child(vbox)
-
-	var time_hbox: HBoxContainer = HBoxContainer.new()
-	time_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	time_hbox.add_theme_constant_override("separation", HUD_MARGIN)
-	vbox.add_child(time_hbox)
-	_day_label = Label.new()
-	_day_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	time_hbox.add_child(_day_label)
-	_phase_label = Label.new()
-	_phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	time_hbox.add_child(_phase_label)
-
-	var res_hbox: HBoxContainer = HBoxContainer.new()
-	res_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	res_hbox.add_theme_constant_override("separation", 8)
-	vbox.add_child(res_hbox)
-	for _i: int in 4:
-		var lbl: Label = Label.new()
-		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_resource_labels.append(lbl)
-		res_hbox.add_child(lbl)
-
-	# Section 3: Notification feed
+	panel.add_child(vbox)
+	var heading: HBoxContainer = HBoxContainer.new()
+	vbox.add_child(heading)
+	_day_label = ArtUI.pair(heading, 16)
+	_day_label.theme_type_variation = &"Heading"
 	_notification_vbox = VBoxContainer.new()
-	_notification_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_notification_vbox.add_theme_constant_override("separation", 8)
 	vbox.add_child(_notification_vbox)
 
 	_refresh()
@@ -203,40 +177,7 @@ func _snapshot(method: String) -> Dictionary:
 
 
 func _refresh() -> void:
-	var clock: Dictionary = _snapshot("get_time_snapshot")
-	var day_index: int = int(clock.get("day_index", 0))
-	var time_of_day: float = float(clock.get("time_of_day", 0.0))
-	var total_minutes: int = clampi(int(time_of_day * 60.0), 0, 1439)
-	var hour: int = int(total_minutes / 60.0)
-	var minute: int = total_minutes % 60
-	_day_label.text = (_loc("HUD_DAY_FMT") % (day_index + 1)) + " %02d:%02d" % [hour, minute]
-	_phase_label.text = _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
-
-	var food: int = 0
-	var settlements: Dictionary = _snapshot("get_settlement_snapshot")
-	var stocks: Variant = settlements.get("food_stocks", null)
-	if stocks is PackedInt32Array:
-		var stock_values: PackedInt32Array = stocks
-		for amount: int in stock_values:
-			food += amount
-	var berries: int = 0
-	var resources: Dictionary = _snapshot("get_resource_snapshot")
-	var kinds: Variant = resources.get("kinds", null)
-	var amounts: Variant = resources.get("amounts", null)
-	if kinds is PackedInt32Array and amounts is PackedInt32Array:
-		var kind_values: PackedInt32Array = kinds
-		var amount_values: PackedInt32Array = amounts
-		for i: int in mini(kind_values.size(), amount_values.size()):
-			if kind_values[i] == 0 and amount_values[i] < 255:
-				berries += amount_values[i]
-	var tallies: Dictionary = _snapshot("get_tallies")
-	var births: int = int(tallies.get("births", 0))
-	var deaths: int = int(tallies.get("deaths_starvation", 0)) + int(tallies.get("deaths_dehydration", 0)) + int(tallies.get("deaths_combat", 0))
-	var keys: Array[String] = ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"]
-	var values: Array[int] = [food, berries, births, deaths]
-	for i: int in _resource_labels.size():
-		var label: Label = _resource_labels[i]
-		label.text = _loc(keys[i]) + " %d" % values[i]
+	_day_label.text = _loc("HUD_NEWS_TITLE")
 	if _notification_vbox != null:
 		for child: Node in _notification_vbox.get_children():
 			_notification_vbox.remove_child(child)
@@ -245,7 +186,22 @@ func _refresh() -> void:
 			var lbl: Label = Label.new()
 			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			lbl.text = _loc(String(entry.get("key", ""))) % (entry.get("args", []) as Array)
-			_notification_vbox.add_child(lbl)
+			lbl.clip_text = true
+			lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			lbl.tooltip_text = lbl.text
+			lbl.custom_minimum_size.x = 540
+			var row: HBoxContainer = HBoxContainer.new()
+			var key: String = str(entry.get("key", ""))
+			var icon_index: int = 16
+			if key == "HUD_FEED_AGENT_BORN":
+				icon_index = 7
+			elif key in ["HUD_FEED_SITE_STARTED", "HUD_FEED_SITE_COMPLETED"]:
+				icon_index = 4
+			elif key in ["HUD_FEED_STOCKPILE_DEPOSIT", "HUD_FEED_STOCKPILE_CONSUME"]:
+				icon_index = 5
+			row.add_child(ArtUI.icon(icon_index))
+			row.add_child(lbl)
+			_notification_vbox.add_child(row)
 
 
 func _on_world_reset() -> void:

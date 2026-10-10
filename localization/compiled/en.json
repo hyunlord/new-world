@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5163,
+    "active_key_count": 5166,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5168,
+    "key_count": 5171,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1279,11 +1279,14 @@
     "HUD_FEED_SITE_STARTED": "Construction %d started",
     "HUD_FEED_STOCKPILE_CONSUME": "Settlement %d used %d Food (famine)",
     "HUD_FEED_STOCKPILE_DEPOSIT": "Settlement %d stored %d Food",
+    "HUD_NEWS_TITLE": "Village news",
     "HUD_PHASE_DAY": "Daytime",
     "HUD_PHASE_NIGHT": "Night",
     "HUD_SETTLEMENTS": "Settlements",
+    "HUD_SPEED_FMT": "Speed %s×",
     "HUD_STOCKPILE_FOOD": "Food",
     "INSPECTOR_AGENT_FMT": "Villager %d",
+    "INSPECTOR_CARRYING_FMT": "Carrying %d food",
     "INSPECTOR_POS_FMT": "Position (%d, %d)",
     "INSPECTOR_STATE_FMT": "State: %s",
     "INSPECTOR_STATE_SEEKING": "On the way",

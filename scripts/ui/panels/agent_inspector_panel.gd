@@ -14,12 +14,14 @@ extends Control
 # Relationship / memory / combat history surfacing deferred to
 # Section 16+ when the supporting systems land.
 
-const PANEL_WIDTH := 280.0
+const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const Library = preload("res://scripts/ui/art_sprite_library.gd")
+const PANEL_WIDTH := 360.0
 
 # Top edge sits below hud_status_panel.gd (top-right, 320×180 from
 # y=HUD_MARGIN(12) to y=HUD_MARGIN+PANEL_HEIGHT=192) so the two
 # right-anchored panels never overlap. 180 + 12*2 = 204 → 12 px gap.
-const INSPECTOR_TOP_OFFSET := 204.0
+const INSPECTOR_TOP_OFFSET := 124.0
 
 # Mirrors Rust `Hunger::SATURATION = Thirst::SATURATION = Sleep::SATURATION
 # = 100.0`. ProgressBar.max_value is bound to this constant at runtime so
@@ -56,6 +58,8 @@ var _label_target: Label
 var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
+var _portrait: Sprite2D
+var _carried_label: Label
 
 
 func _ready() -> void:
@@ -63,50 +67,36 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", close)
-	# Right-anchored full-height panel — anchors lock the right edge of the
-	# viewport, `offset_left = -PANEL_WIDTH` carves out the fixed width.
-	anchor_left = 1.0
-	anchor_right = 1.0
-	anchor_top = 0.0
-	anchor_bottom = 1.0
-	offset_left = -PANEL_WIDTH
-	offset_right = 0.0
-	# Start below hud_status_panel.gd (top-right, bottom edge at y=192) so the
-	# two right-anchored panels never overlap — INSPECTOR_TOP_OFFSET = 204.
-	offset_top = INSPECTOR_TOP_OFFSET
-	offset_bottom = 0.0
-	# Hidden until `display_agent(...)` is called with a found=true dict.
 	visible = false
-
-	# Background fill so the panel reads as a discrete UI surface, not as a
-	# transparent overlay on the world.
-	var bg: ColorRect = ColorRect.new()
-	bg.color = Color(0.08, 0.08, 0.10, 0.92)
-	bg.anchor_right = 1.0
-	bg.anchor_bottom = 1.0
-	add_child(bg)
-
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	position = Vector2(1548, INSPECTOR_TOP_OFFSET)
+	size = Vector2(PANEL_WIDTH, 620)
+	var panel: PanelContainer = ArtUI.panel(self, Rect2(Vector2.ZERO, size))
 	_vbox = VBoxContainer.new()
-	_vbox.anchor_right = 1.0
-	_vbox.anchor_bottom = 1.0
-	_vbox.offset_left = 8.0
-	_vbox.offset_top = 8.0
-	_vbox.offset_right = -8.0
-	_vbox.offset_bottom = -8.0
-	add_child(_vbox)
-
+	_vbox.add_theme_constant_override("separation", 8)
+	panel.add_child(_vbox)
 	_label_id = _make_label("")
+	_label_id.theme_type_variation = &"Heading"
+	var portrait_box: Control = Control.new()
+	portrait_box.custom_minimum_size = Vector2(128, 128)
+	_vbox.add_child(portrait_box)
+	_portrait = Sprite2D.new()
+	_portrait.position = Vector2(164, 120)
+	portrait_box.add_child(_portrait)
 	_label_pos = _make_label("")
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
 	_thirst_bar = _make_bar(_loc("NEED_THIRST"))
 	_sleep_bar = _make_bar(_loc("NEED_SLEEP"))
+	_carried_label = _make_label("")
 
 
 func _make_label(text: String) -> Label:
 	var lbl: Label = Label.new()
 	lbl.text = text
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.custom_minimum_size.x = 332
 	_vbox.add_child(lbl)
 	return lbl
 
@@ -115,12 +105,23 @@ func _make_bar(bar_name: String) -> ProgressBar:
 	var hdr: Label = Label.new()
 	hdr.text = bar_name
 	_bar_headers.append(hdr)
-	_vbox.add_child(hdr)
+	var row: HBoxContainer = HBoxContainer.new()
+	row.add_child(ArtUI.icon([12, 11, 13][_bar_headers.size() - 1]))
+	row.add_child(hdr)
+	_vbox.add_child(row)
 	var bar: ProgressBar = ProgressBar.new()
 	bar.min_value = 0.0
 	# A18: runtime binding to NEED_SATURATION matches Rust SATURATION=100.0.
 	bar.max_value = NEED_SATURATION
 	bar.value = 0.0
+	bar.show_percentage = false
+	bar.custom_minimum_size.y = 12
+	var fill: StyleBoxFlat = StyleBoxFlat.new()
+	fill.bg_color = [Color8(184, 12, 7), Color8(47, 92, 133), Color8(190, 140, 102)][_bar_headers.size() - 1]
+	bar.add_theme_stylebox_override("fill", fill)
+	var background: StyleBoxFlat = StyleBoxFlat.new()
+	background.bg_color = Color8(41, 38, 33)
+	bar.add_theme_stylebox_override("background", background)
 	_vbox.add_child(bar)
 	return bar
 
@@ -154,6 +155,8 @@ func display_agent(detail: Dictionary) -> void:
 	_bar_headers[0].text = _loc("UI_HUNGER")
 	_bar_headers[1].text = _loc("NEED_THIRST")
 	_bar_headers[2].text = _loc("NEED_SLEEP")
+	_update_portrait(agent_id)
+	_carried_label.text = _loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id)
 	visible = true
 
 
@@ -206,3 +209,33 @@ func _process(_delta: float) -> void:
 			display_agent(data)
 		else:
 			close()
+
+
+func _update_portrait(agent_id: int) -> void:
+	var objects: Node = get_node_or_null("/root/Main/WorldObjects")
+	if objects == null:
+		return
+	for child: Node in objects.get_children():
+		if child is Sprite2D and str(child.get_meta("art_kind", "")) == "agent" and int(child.get_meta("art_id", -1)) == agent_id:
+			var sprite: Sprite2D = child as Sprite2D
+			Library.apply(_portrait, str(sprite.get_meta("frame_id", "")))
+			Library.apply_variant(_portrait, sprite.get_meta("variant", {}))
+			_portrait.flip_h = sprite.flip_h
+			_portrait.scale = Vector2(4, 4)
+			return
+
+
+func _carried_food(agent_id: int) -> int:
+	if _world_sim == null:
+		return 0
+	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	if not (snapshot is Dictionary):
+		return 0
+	var data: Dictionary = snapshot
+	var ids: Variant = data.get("agent_ids", null)
+	var carried: Variant = data.get("carried_foods", null)
+	if ids is PackedInt64Array and carried is PackedInt32Array:
+		for index: int in mini(ids.size(), carried.size()):
+			if ids[index] == agent_id:
+				return int(carried[index])
+	return 0

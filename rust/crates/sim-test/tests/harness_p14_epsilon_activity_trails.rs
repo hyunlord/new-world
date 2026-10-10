@@ -52,10 +52,6 @@ fn read_hud_topbar_src() -> String {
     read_file(&["scripts", "ui", "panels", "hud_topbar.gd"])
 }
 
-fn read_hud_status_panel_src() -> String {
-    read_file(&["scripts", "ui", "panels", "hud_status_panel.gd"])
-}
-
 fn strip_gd_comments(src: &str) -> String {
     let mut out = String::with_capacity(src.len());
     for line in src.lines() {
@@ -496,7 +492,7 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 17, "A12.2: load_steps must equal 17 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
+    assert_eq!(n, 19, "A12.2: load_steps must equal 19 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
     println!("[P14-ε A12] load_steps = 17 (post viz-D DeathVizRenderer) ✓");
 }
 
@@ -531,7 +527,7 @@ fn harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact(
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -567,7 +563,7 @@ fn harness_p14_epsilon_a15_regression_guard_hud_topbar_phase_13_delta_intact() {
 #[test]
 fn harness_p14_epsilon_a16_regression_guard_hud_status_panel_phase_14_delta_intact() {
     // Type D — three canonical literals all present.
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     let needles = ["get_time_snapshot", "get_resource_snapshot", "get_tallies"];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {

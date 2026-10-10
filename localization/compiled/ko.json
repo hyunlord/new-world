@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5163,
+    "active_key_count": 5166,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5168,
+    "key_count": 5171,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1279,11 +1279,14 @@
     "HUD_FEED_SITE_STARTED": "건설 %d 시작",
     "HUD_FEED_STOCKPILE_CONSUME": "정착지 %d 기근 식량 %d 소비",
     "HUD_FEED_STOCKPILE_DEPOSIT": "정착지 %d 식량 %d 적재",
+    "HUD_NEWS_TITLE": "마을 소식",
     "HUD_PHASE_DAY": "낮",
     "HUD_PHASE_NIGHT": "밤",
     "HUD_SETTLEMENTS": "정착지",
+    "HUD_SPEED_FMT": "속도 %s배",
     "HUD_STOCKPILE_FOOD": "식량",
     "INSPECTOR_AGENT_FMT": "주민 %d",
+    "INSPECTOR_CARRYING_FMT": "식량 %d개 운반 중",
     "INSPECTOR_POS_FMT": "위치 (%d, %d)",
     "INSPECTOR_STATE_FMT": "상태: %s",
     "INSPECTOR_STATE_SEEKING": "이동 중",

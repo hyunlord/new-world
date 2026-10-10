@@ -5193,3 +5193,8 @@ HUD_ACTIVITY_LEGEND = 활동 표시
 HUD_ACTIVITY_OTHER = 다른 목표
 
 HUD_ACTIVITY_BUSY = 활동 중
+
+# Art production interface
+HUD_NEWS_TITLE = 마을 소식
+INSPECTOR_CARRYING_FMT = 식량 %d개 운반 중
+HUD_SPEED_FMT = 속도 %s배

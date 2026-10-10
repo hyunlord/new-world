@@ -475,9 +475,9 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
 fn harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 17: phase13_beta_resource_constants_preserved ──────────────
@@ -487,7 +487,7 @@ fn harness_p14_alpha_a17_phase13_beta_resource_constants_preserved() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

@@ -446,14 +446,14 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 
     let alpha_line = stripped
         .lines()
@@ -476,7 +476,7 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("z_index = 5"));
     println!("[P12-γ A12] Phase 12-α + β.1 + β.2 A3 invariants preserved ✓");

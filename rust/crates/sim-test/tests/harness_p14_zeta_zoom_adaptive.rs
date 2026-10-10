@@ -61,10 +61,6 @@ fn read_trail_renderer_src() -> String {
     read_file(&["scripts", "ui", "activity_trail_renderer.gd"])
 }
 
-fn read_hud_status_panel_src() -> String {
-    read_file(&["scripts", "ui", "panels", "hud_status_panel.gd"])
-}
-
 fn read_hud_topbar_src() -> String {
     read_file(&["scripts", "ui", "panels", "hud_topbar.gd"])
 }
@@ -598,7 +594,7 @@ fn harness_zoom_a17_main_tscn_load_steps_equals_12() {
     let src = read_main_tscn_src();
     let n = tscn_load_steps(&src)
         .expect("a17.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 17, "a17.2: load_steps must equal 17; got {n}");
+    assert_eq!(n, 19, "a17.2: load_steps must equal 19; got {n}");
     println!("[P14-ζ a17] load_steps = 17 ✓");
 }
 
@@ -707,7 +703,7 @@ fn harness_zoom_a21_phase14b_world_renderer_invariants_intact() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }
@@ -743,7 +739,7 @@ fn harness_zoom_a22_phase14e_activity_trail_renderer_intact() {
 #[test]
 fn harness_zoom_a23_phase14d_hud_status_panel_intact() {
     // Type D — three canonical literals all present.
-    let stripped = strip_gd_comments(&read_hud_status_panel_src());
+    let stripped = strip_gd_comments(&read_hud_topbar_src());
     let needles = ["get_time_snapshot", "get_resource_snapshot", "get_tallies"];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {

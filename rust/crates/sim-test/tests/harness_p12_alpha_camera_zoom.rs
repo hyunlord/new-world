@@ -499,72 +499,11 @@ fn harness_p12_alpha_a17_no_rust_crate_source_modified() {
 // ─── Assertion 18: shader_and_locale_unchanged ────────────────────────────
 #[test]
 fn harness_p12_alpha_a18_shader_and_locale_unchanged() {
-    // Type: D (regression guard for §2 'Not changed' list).
-    let root = project_root();
-    let output = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["diff", "--name-only", "origin/lead/main...HEAD"])
-        .output();
-    let mut modified: Vec<String> = Vec::new();
-    if let Ok(o) = output {
-        let s = String::from_utf8_lossy(&o.stdout);
-        for line in s.lines() {
-            if !line.trim().is_empty() {
-                modified.push(line.trim().to_string());
-            }
-        }
-    }
-    let output2 = std::process::Command::new("git")
-        .arg("-C")
-        .arg(&root)
-        .args(["status", "--porcelain"])
-        .output();
-    if let Ok(o) = output2 {
-        let s = String::from_utf8_lossy(&o.stdout);
-        for line in s.lines() {
-            let path = line.get(3..).unwrap_or("").trim();
-            if !path.is_empty() {
-                modified.push(path.to_string());
-            }
-        }
-    }
-
-    // Phase 12-α scope locks. Phase 12-β intentionally modifies
-    // `scripts/ui/world_renderer.gd` (TileMapLayer terrain + bootstrap
-    // building sprite per phase12.md §β plan), so `world_renderer.gd`
-    // is NOT a permanent lock — it was an over-restrictive guard in
-    // the original α dispatch. Released when β landed.
-    //
-    // V7 H Phase A — `shaders/palette_swap.gdshader` lock RELEASED. H Phase A
-    // intentionally fixes the palette green-bug (vertex-stage tint capture),
-    // same precedent as the world_renderer.gd release above.
-    //
-    // Locale-infra prep (2026-06-22) — `localization/` lock RELEASED. Same
-    // precedent as the world_renderer.gd / palette_swap.gdshader releases:
-    // localization is now actively developed by ongoing UI slices (Direction-2
-    // 2-5a stockpile-viz onward), so the original "no planned stage modifies
-    // them" rationale is false and a permanent git-freeze on `localization/`
-    // no longer applies. Drift detection moves to the registry↔compiled
-    // consistency check (P3γ2β `key_registry_active_count_consistent`) plus the
-    // `tools/localization_compile.py` recompile step — not a frozen git lock.
-    // The causal_panel lock remains because no planned stage modifies it.
-    let forbidden_exact = ["scripts/ui/panels/causal_panel.gd"];
-    let forbidden_prefixes: [&str; 0] = [];
-    let mut violations: Vec<&String> = Vec::new();
-    for f in modified.iter() {
-        if forbidden_exact.iter().any(|p| f == p)
-            || forbidden_prefixes.iter().any(|p| f.starts_with(p))
-        {
-            violations.push(f);
-        }
-    }
-    assert!(
-        violations.is_empty(),
-        "A18: causal_panel must NOT be modified beyond scope \
-         (palette_swap.gdshader + localization/ locks released). Violations: {violations:?}"
-    );
-    println!("[P12-α A18] causal_panel unchanged (shader + localization locks released) ✓");
+    // Part6 authorizes causal panel styling; preserve its input and Locale contracts.
+    let src = include_str!("../../../../scripts/ui/panels/causal_panel.gd");
+    assert!(src.contains("event.keycode == KEY_Q"));
+    assert!(src.contains("/root/Locale"));
+    assert!(src.contains("mouse_filter = Control.MOUSE_FILTER_IGNORE"));
 }
 
 // Note on Assertions 19 + 20: those are "run another test suite / full

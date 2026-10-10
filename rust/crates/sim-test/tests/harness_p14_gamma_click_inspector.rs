@@ -1074,13 +1074,13 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     // Type D — Phase 12-α to 13-ε constants.
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_03_storage_pit"));
     assert!(src.contains("kind == 2"));

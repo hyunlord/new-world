@@ -430,7 +430,7 @@ fn harness_death_a6_scene_wiring_additive() {
         .count();
 
     // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
-    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(ext_count_after, 18, "all eighteen renderer/UI script resources remain");
     assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
     // Exact ext_resource PATH string (not a bare filename substring) — a typo'd
     // or loose path on a present node must FAIL. Capture the ext_resource id so we

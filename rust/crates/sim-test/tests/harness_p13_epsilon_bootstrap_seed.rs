@@ -177,9 +177,9 @@ fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 5: extra_sprite_block_reuses_building_tex ─────────────────
@@ -187,9 +187,9 @@ fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 6: extra_sprite_z_index_is_z_building ─────────────────────
@@ -209,9 +209,9 @@ fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ────────────────────
@@ -316,7 +316,7 @@ fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
     assert!(src.contains("get_resource_snapshot()"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
-    assert!(src.contains("_configure(bush, BUSH_IDS[stage],"));
+    assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
     assert!(!src.contains("SOURCE_KIND_COLORS"));
     assert!(!src.contains("Polygon2D"));
 }

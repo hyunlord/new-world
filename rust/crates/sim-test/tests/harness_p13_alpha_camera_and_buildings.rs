@@ -250,7 +250,7 @@ fn harness_p13_alpha_a5_bootstrap_no_longer_points_to_cairn() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 6: construction_sprite_path_unchanged ──────────────────────
@@ -259,7 +259,7 @@ fn harness_p13_alpha_a6_construction_sprite_path_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
     assert!(src.contains("get_construction_snapshot()"));
-    assert!(src.contains("ART.apply(sprite, sprite_id)"));
+    assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
 // ─── Assertion 7: furniture_sprite_path_repointed ─────────────────────────
@@ -350,7 +350,7 @@ fn harness_p13_alpha_a11_phase12_beta1_terrain_tileset_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
     assert!(src.contains("get_terrain_snapshot()"));
     assert!(src.contains("TileSetAtlasSource.new()"));
-    assert!(src.contains("_layer.set_cell"));
+    assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
 }
@@ -383,9 +383,9 @@ fn harness_p13_alpha_a13_phase12_gamma_furniture_z_preserved() {
 fn harness_p13_alpha_a14_three_distinct_building_sprite_paths() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("BUILDING_IDS[kind]"));
+    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
-    assert!(src.contains("_configure(sprite, BUILDING_IDS[kind], \"building\", ids[i], xs[i], ys[i])"));
+    assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }
 
 // ─── Assertion 15: main_tscn_camera2d_script_attached ────────────────────
