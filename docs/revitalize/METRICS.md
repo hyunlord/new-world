@@ -21,7 +21,7 @@ new behavior. Detailed distributions: `probe/p1_legacy/summary.md` and JSON.
 
 ## Game tuning
 
-Pending Part 2 untuned reference and Part 3 bounded tuning rounds.
+Part 2 reference, all three tuning rounds and final fresh verification follow below.
 
 ## Part 2 untuned world (16 seeds)
 
@@ -90,3 +90,9 @@ Knobs: move4, pause0.6, tether4, residents4, cooldown360, food_cost6, bushes20/c
 | home_distance_mean | 2.8811541565778853 | 2.167738164815897 | 4.499671052631579 | 1.5869565217391304 | 5.947368421052632 |
 
 Keep round2: both rounds2/3 pass higher-priority non-extinction, but round2 has fewer dehydration deaths (median75/max90 versus97.5/139). This sacrifices lower-priority idle-breach performance. None solves social seeking lock. Three tuning rounds exhausted; no further social or knob changes. p3_game_final copies round2, not a fresh run; final verification repeats it.
+
+## Part 5 fresh verification
+
+Source47ace745; release binary rebuilt. Legacy0..4 workers4 and game0..64 workers8, 10days, sample120, independent twins: PASS. Compare all JSONL fields except git_sha: legacy484 rows exactly match Part1; game7744 rows exactly match round2. Thus behavioral distributions above are reproduced, not assumed.
+
+Timing ms/agent-tick median: legacy=0.011784043331, game=0.000944597051, ratio=0.080158993 (T9 PASS). Full quantiles and days1/3/5/10: `probe/p5_legacy/summary.*`, `probe/p5_game/summary.*`. T1 and T6 FAIL; T2/T3/T4/T5/T7/T8/T9 PASS. Three-day required harness still fails seed1 with dehydration11 vs0. No fourth tuning round or out-of-scope social modification.

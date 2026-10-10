@@ -22,11 +22,10 @@ Authoritative specification: owner attachment, copied outside the clone to
 | 1 | tallies, shared scenes, probe, captures, frozen legacy pin | complete (capture exception) | 1748 tests, both Clippy checks, strict14 and smoke900 PASS; four legacy repeats deterministic |
 | 2 | default-legacy rules, world generation, terrain/building FFI | complete | 1764 tests; both Clippy checks; strict14/smoke900; live Godot 48 checks |
 | 3 | gated survival/growth loop, 64-seed tuning | implemented; survival gate blocked | four 64-seed twin batches PASS; 3-day zero-dehydration test fails |
-| 4 | deterministic art, truthful renderers/HUD, visual QA | pending | |
-| 5 | full verification, Korean report, pushed draft PR | pending | |
+| 4 | deterministic art, truthful renderers/HUD, visual QA | implemented locally; visual exception, global gate blocked | UI322 PASS/GPU96 unobservable; strict17; smoke900; ledger230 |
+| 5 | full verification, Korean report, handoff | verified partial delivery; no push/PR | debug+release1781 PASS/1 FAIL each; fresh68 twins PASS; gh absent |
 
-Each Part runs the owner's gates before its commit/push; remote landing is
-checked against local HEAD. No legacy behavioral assertion may be weakened.
+P0–P2 passed the owner gates before push; remote landing was checked against local HEAD. P3–P5 remain local because the retained survival gate fails. No legacy behavioral assertion may be weakened.
 
 ## Environment exception: captures
 
@@ -133,3 +132,9 @@ No Xvfb and no passwordless sudo: exercise the Part 0 item 5 capture exception.
 No screenshot, contact sheet, visual-quality acceptance, or ten-minute 4x
 render performance claim is made. Part 4 stays LOCAL because Part 3 retains
 the genuine survival failure and every pushed head must be green.
+
+## Final partial delivery
+
+Both final native suites run with --no-fail-fast:1781 passed,1 failed,0 ignored,113 result groups each. All expected1782 tests accounted for. Only required three-day survival fails seed1:dehydration11 versus0. Seeds2/3 inside that failed function were not reached. Both Clippy checks, strict17/14, smoke900, diff check pass; forbidden math0, changed-production unwrap calls0. Fresh68 twin runs and full legacy/selected-round sample comparison pass.
+
+No gh executable: draft PR skipped. Last green remote remains c438026. To preserve unpushed implementation without violating green-push policy, export local P3–P5 commits as a verified incremental git bundle plus complete evidence and report in an external handoff archive. Download only that delivery copy to macOS; all implementation remains on DGX. This is the explicit partial-delivery end state, not a claim that all goals were achieved.
