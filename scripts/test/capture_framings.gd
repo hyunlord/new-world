@@ -146,6 +146,8 @@ func _run() -> void:
 			"time_of_day": now["time_of_day"], "width": image.get_width(), "height": image.get_height(),
 			"entities": stem + ".entities.json",
 		})
+		if _plan == "art" and stem == "a_d2_1200_F2":
+			_write_forest_evidence()
 		if _plan == "art" and stem == "a_d2_1200_F1":
 			await _capture_strip("a_strip", true)
 			_camera.zoom = Vector2.ONE
@@ -267,7 +269,10 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
-		"agent_snapshot": _world.call("get_agent_snapshot"),
+		"agent_snapshot": _json_arrays(_world.call("get_agent_snapshot")),
+		"time_snapshot": _json_arrays(_world.call("get_time_snapshot")),
+		"tallies": _json_arrays(_world.call("get_tallies")),
+		"recent_deaths": _json_arrays(_world.call("get_recent_deaths")),
 		"head_dots": _draw_counter("SeekVizRenderer", "get_drawn_head_dot_count"),
 		"need_icons": _draw_counter("NeedBarRenderer", "get_drawn_icon_count"),
 		"need_icon_agent_ids": _draw_counter("NeedBarRenderer", "get_drawn_icon_agent_ids"),
@@ -370,14 +375,17 @@ func _capture_calibration() -> void:
 	if camera == null:
 		_fail("calibration scene requires Camera2D")
 		return
-	for zoom_level: int in [4, 6]:
+	for capture_spec: Array in [[4, false], [6, false], [4, true], [2, true]]:
+		var zoom_level: int = int(capture_spec[0])
+		var lineup: bool = bool(capture_spec[1])
+		scene.call("set_lineup", lineup)
 		camera.zoom = Vector2(zoom_level, zoom_level)
 		camera.force_update_scroll()
 		for frame: int in range(5):
 			await process_frame
 		await RenderingServer.frame_post_draw
 		var image: Image = root.get_texture().get_image()
-		var stem: String = "a_calib_z%d" % zoom_level
+		var stem: String = ("a_lineup_z%d" if lineup else "a_calib_z%d") % zoom_level
 		if image == null or image.save_png(ProjectSettings.globalize_path(_out.path_join(stem + ".png"))) != OK:
 			_fail("cannot save calibration framebuffer")
 			return
@@ -393,6 +401,28 @@ func _capture_calibration() -> void:
 		_manifest.append({"file": stem + ".png", "entities": stem + ".entities.json", "framing": "a_calib",
 			"zoom": zoom_level, "width": image.get_width(), "height": image.get_height()})
 	scene.queue_free()
+
+
+func _json_arrays(value: Variant) -> Variant:
+	if value is Dictionary:
+		var converted: Dictionary = {}
+		for key: Variant in value:
+			converted[key] = _json_arrays(value[key])
+		return converted
+	if value is PackedByteArray or value is PackedInt32Array or value is PackedInt64Array or value is PackedFloat32Array or value is PackedFloat64Array:
+		return Array(value)
+	return value
+
+
+func _write_forest_evidence() -> void:
+	var evidence: Dictionary = {}
+	for domain: String in ["terrain", "building", "construction", "settlement", "resource"]:
+		evidence[domain] = _json_arrays(_world.call("get_" + domain + "_snapshot"))
+	var viewport: Vector2 = Vector2(root.get_texture().get_size())
+	evidence["entities"] = Metadata.entities(_main, viewport, viewport / root.get_visible_rect().size)
+	evidence["tick"] = _world.call("get_time_snapshot")["tick"]
+	if not CapturePlans.write_json(_out.path_join("forest_evidence.json"), evidence):
+		_fail("cannot write forest evidence")
 
 
 func _draw_counter(node_name: String, method: String) -> Variant:

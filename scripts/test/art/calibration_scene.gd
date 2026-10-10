@@ -53,3 +53,58 @@ func _add(parent: Node, sprite_id: String, base: Vector2, role: String, id: int)
 	sprite.set_meta("calibration_kind", role)
 	sprite.set_meta("art_id", id)
 	return sprite
+
+
+var _lineup: Node2D
+var _lineup_actors: Array[Sprite2D] = []
+var _lineup_groups: Dictionary = {}
+var _lineup_icons: Dictionary = {}
+var _lineup_seconds: float = 1.375
+const Activity = preload("res://scripts/ui/agent_activity.gd")
+const LINEUP_ACTIVITIES: Array[String] = ["walk", "carry", "gather", "build", "eat", "drink", "sit", "talk"]
+
+
+func set_lineup(shown: bool) -> void:
+	(get_node("WorldObjects") as Node2D).visible = not shown
+	if _lineup == null:
+		_lineup = Node2D.new()
+		_lineup.name = "Lineup"
+		_lineup.y_sort_enabled = true
+		add_child(_lineup)
+		_lineup_groups = Activity.build_frame_groups(SpriteLibrary.entries())
+		for index: int in range(24):
+			var body: String = "child" if index >= 21 else ("adult_b" if index >= 8 and index < 16 else "adult_a")
+			var activity: String = LINEUP_ACTIVITIES[index % 8]
+			var actor: Sprite2D = Sprite2D.new()
+			_lineup.add_child(actor)
+			# Coprime permutation avoids an activity-labelled presentation order.
+			var slot: int = (index * 7 + 11) % 24
+			actor.position = Vector2(-150 + (slot % 6) * 60, -70 + (slot / 6) * 45)
+			actor.set_meta("art_kind", "agent")
+			actor.set_meta("art_id", 1000 + slot)
+			actor.set_meta("calibration_kind", "blind_lineup")
+			actor.set_meta("body", body)
+			actor.set_meta("activity", activity)
+			actor.set_meta("facing", "S")
+			actor.set_meta("variant", {"skin": index % 4, "hair": index % 5, "clothing": index % 6})
+			var icon: Sprite2D = Sprite2D.new()
+			actor.add_child(icon)
+			icon.set_meta("art_kind", "activity_icon")
+			icon.set_meta("art_id", 1000 + slot)
+			_lineup_icons[actor.get_instance_id()] = icon
+			_lineup_actors.append(actor)
+	_lineup.visible = shown
+	_update_lineup()
+
+
+func _update_lineup() -> void:
+	for actor: Sprite2D in _lineup_actors:
+		var choice: Dictionary = Activity.choose_frame(_lineup_groups, str(actor.get_meta("body")), str(actor.get_meta("activity")), "S", _lineup_seconds, 0.0)
+		var sprite_id: String = str(choice.get("sprite_id", ""))
+		if sprite_id.is_empty():
+			actor.set_meta("missing_lineup_frame", true)
+			continue
+		actor.set_meta("fallback_kind", choice.get("fallback_kind", ""))
+		SpriteLibrary.apply(actor, sprite_id)
+		SpriteLibrary.apply_variant(actor, actor.get_meta("variant"))
+		Activity.apply_activity_icon(actor, _lineup_icons[actor.get_instance_id()], choice, (get_node("Camera2D") as Camera2D).zoom.x)

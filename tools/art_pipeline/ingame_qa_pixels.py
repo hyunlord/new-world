@@ -71,18 +71,26 @@ def calibration_order(captures: list[Capture], repo: Path) -> list[Check]:
 def contrast(capture: Capture, repo: Path) -> Check:
     image_luma = luma(capture.image())
     occupied = np.zeros(image_luma.shape, dtype=np.uint16)
-    actors: list[Entity] = []
+    actors = [e for e in capture.entities if e.kind == 'agent' and e.visible]
+    blockers = []
     for entity in capture.entities:
-        if not entity.visible or 'shadow' in entity.kind or entity.kind == 'panel':
+        if not entity.visible or 'shadow' in entity.kind or entity.kind == 'panel' or entity.alpha <= 0:
+            continue
+        if entity.kind == 'tree' and entity.alpha <= .5:
             continue
         _, mask = placed(entity, capture, repo)
         occupied += mask.astype(np.uint16)
-        if entity.kind == 'agent':
-            actors.append(entity)
+        blockers.append((entity,mask))
     values, skipped = [], []
     for entity in actors:
         _, mask = placed(entity, capture, repo)
-        visible = mask & (occupied == 1)
+        visible = mask.copy()
+        order = (entity.draw_order[0],entity.world_anchor[1],entity.draw_order[1])
+        for other,other_mask in blockers:
+            other_order = (other.draw_order[0],other.world_anchor[1],other.draw_order[1])
+            if other.ident != entity.ident or other.kind != entity.kind:
+                if other_order > order:
+                    visible &= ~other_mask
         x0, y0, x1, y1 = box(entity, capture.scale)
         ring = np.zeros_like(mask)
         ring[max(0,y0-3):min(1080,y1+3), max(0,x0-3):min(1920,x1+3)] = True
@@ -98,11 +106,11 @@ def contrast(capture: Capture, repo: Path) -> Check:
             continue
         values.append((entity.ident, abs(float(image_luma[visible].mean()-image_luma[ring].mean()))))
     if not values:
-        return Check('A5', 'N/A', f'No unoccluded actor/ring pixels; excluded {skipped}')
+        return Check('A5', 'FAIL' if actors else 'N/A', f'No measurable actor/ring pixels; excluded {skipped}')
     numbers = [v for _,v in values]
     median, minimum = float(np.median(numbers)), min(numbers)
     return result('A5', median >= .15 and minimum >= .10 and not skipped,
-                  f'median={median:.4f}; min={minimum:.4f}; per actor={values}; unmeasurable={skipped}; opaque overlaps conservatively excluded')
+                  f'median={median:.4f}; min={minimum:.4f}; per actor={values}; unmeasurable={skipped}; opaque front occluders excluded; faded canopy pixels measured directly from blended framebuffer')
 
 
 def night(noon: Capture, dark: Capture) -> Check:

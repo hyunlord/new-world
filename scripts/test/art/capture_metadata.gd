@@ -52,11 +52,21 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 			"shown": item.is_visible_in_tree(),
 			"node_path": str(main.get_path_to(node)),
 		}
-		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "facing", "calibration_kind"]:
+		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
 		if node is Sprite2D:
 			var sprite: Sprite2D = node as Sprite2D
+			row["modulate_alpha"] = sprite.modulate.a
+			row["self_modulate_alpha"] = sprite.self_modulate.a
+			row["world_anchor"] = [sprite.global_position.x, sprite.global_position.y]
+			row["z_index"] = sprite.z_index + (sprite.get_parent().z_index if sprite.get_parent() is CanvasItem else 0)
+			row["sibling_index"] = sprite.get_index()
+			var cue_rect: Rect2 = rect
+			for child: Node in sprite.get_children():
+				if child is CanvasItem and (child as CanvasItem).is_visible_in_tree():
+					cue_rect = cue_rect.merge(bounds(child, scale_factor))
+			row["cue_rect"] = rect_array(cue_rect)
 			row["frame_size"] = [sprite.get_rect().size.x, sprite.get_rect().size.y]
 			row["flip_h"] = sprite.flip_h
 			row["texture_path"] = sprite.texture.resource_path if sprite.texture != null else ""

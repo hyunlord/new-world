@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import unicodedata
 import numpy as np
+from ingame_qa_atlas import distinct_activities, forest
 from ingame_qa_types import Capture, box, load_capture, luma
 from ingame_qa_pixels import Check, calibration_order, checker, contrast, night, result
 
@@ -107,9 +108,10 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) ->
     manifest = json.loads((directory/'manifest.json').read_text())
     captures = [load_capture(directory/row['file']) for row in manifest['captures']]
     expected = {'a_d1_0830_F2','a_d2_1200_F2','a_d2_1200_F2A','a_d2_1200_F2Z','a_d2_1200_F3','a_d2_1200_F4','a_d2_1200_F1','a_d2_1930_F2','a_d2_2300_F2N','a_d6_1200_F2','a_calib_z4','a_calib_z6'}
+    expected |= {'a_lineup_z4','a_lineup_z2'}
     expected |= {f'{prefix}_{index:02d}' for prefix in ['a_strip','a_evening'] for index in range(40)}
     actual = {capture.stem for capture in captures}
-    delivery = result('CAPTURE_SET',expected == actual and len(captures)==92,f'{len(captures)}/92 entries; missing={sorted(expected-actual)}; extra={sorted(actual-expected)}')
+    delivery = result('CAPTURE_SET',expected == actual and len(captures)==94,f'{len(captures)}/94 entries; missing={sorted(expected-actual)}; extra={sorted(actual-expected)}')
     by_stem = {capture.stem:capture for capture in captures}
     failures = []
     for capture in captures:
@@ -126,7 +128,7 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) ->
     checks.append(contrast(noon,repo) if noon else Check('A5','N/A','Missing noon capture'))
     checks.append(night(noon,dark) if noon and dark else Check('A6','N/A','Missing noon/night pair'))
     checks.append(animation(directory,captures))
-    scene_captures = [capture for capture in captures if not capture.stem.startswith('a_calib')]
+    scene_captures = [capture for capture in captures if not capture.stem.startswith(('a_calib','a_lineup'))]
     for code, evidence in [('A8',[(capture.stem,clutter(capture)) for capture in scene_captures if capture.selected<0]),('A9',[(capture.stem,interface(capture)) for capture in scene_captures])]:
         failed = [(stem,check.detail) for stem,check in evidence if check.status != 'PASS']
         status = 'FAIL' if any(check.status == 'FAIL' for _,check in evidence) else ('N/A' if failed or not evidence else 'PASS')
@@ -141,9 +143,10 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) ->
         checks.append(Check('A10','N/A','Missing live300frame timing'))
     if blind and blind.exists():
         data = json.loads(blind.read_text())
-        checks.append(result('A11',data['count']==24 and data['accuracy_4x']>=.8 and data['accuracy_2x']>=.6,json.dumps(data,ensure_ascii=False)))
+        checks.append(result('A11',data['count']==24 and data.get('calibration_lineup',False) and not data.get('absent_activities',[]) and data['accuracy_4x']>=.8 and data['accuracy_2x']>=.6,json.dumps(data,ensure_ascii=False)))
     else:
         checks.append(Check('A11','N/A','Blind labels not yet graded; no inference from pixel-change visibility'))
+    checks.extend([distinct_activities(repo),forest(directory)])
     checks.append(variety(noon) if noon else Check('A12','N/A','Missing noon capture'))
     output.parent.mkdir(parents=True,exist_ok=True)
     output.with_suffix('.json').write_text(json.dumps([asdict(check) for check in checks],indent=2,ensure_ascii=False)+'\n')

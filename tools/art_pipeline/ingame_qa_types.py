@@ -33,6 +33,10 @@ class Entity:
     region: tuple[int, int, int, int]
     name: str
     shown: bool = True
+    alpha: float = 1.0
+    world_anchor: tuple[float,float] = (0.0,0.0)
+    draw_order: tuple[int,int] = (0,0)
+    cue_rect: tuple[float,float,float,float] | None = None
 
 @dataclass(frozen=True, slots=True)
 class Label:
@@ -78,7 +82,9 @@ def load_capture(path: Path) -> Capture:
             tuple(int(variant.get(k, -1)) for k in ('skin', 'hair', 'clothing')),
             (int(row.get('tile_x', -999)), int(row.get('tile_y', -999))), str(row.get('activity', '')),
             str(row.get('facing', '')), str(row.get('calibration_kind', '')), int(row.get('building_kind', -1)),
-            bool(row.get('flip_h', False)), str(row.get('texture_path', '')), tuple(int(x) for x in row.get('region', [0, 0, 0, 0])), str(row.get('name', '')), bool(row.get('shown', row.get('visible', False)))))
+            bool(row.get('flip_h', False)), str(row.get('texture_path', '')), tuple(int(x) for x in row.get('region', [0, 0, 0, 0])), str(row.get('name', '')), bool(row.get('shown', row.get('visible', False))),
+            float(row.get('modulate_alpha',1))*float(row.get('self_modulate_alpha',1)),
+            tuple(row.get('world_anchor',[0,0])),(int(row.get('z_index',0)),int(row.get('sibling_index',0))),tuple(row['cue_rect']) if 'cue_rect' in row else None))
     snap = data.get('agent_snapshot', {})
     ids = snap.get('agent_ids', [])
     needs = tuple(int(agent) for i, agent in enumerate(ids)

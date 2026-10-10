@@ -50,7 +50,7 @@ for capture in manifest['captures']:
         standard.resize((960, 540), Image.Resampling.NEAREST).save(docs / target, quality=85)
         capture['published_file'] = target
     shutil.copy2(raw / capture['entities'], docs / capture['entities'])
-for extra in ['frame_times.json', 'strip.json', 'evening.json']:
+for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
 (docs / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')

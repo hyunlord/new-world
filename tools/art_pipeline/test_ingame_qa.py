@@ -3,12 +3,14 @@ from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 import json
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFont
 from ingame_qa import interface, variety
-from ingame_qa_pixels import checker
+from ingame_qa_pixels import checker, contrast
 from ingame_qa_types import Capture, Entity, Label, load_capture
+from make_blind_grid import cue_box, compose_grid
 
 
 def entity(kind: str = 'agent') -> Entity:
@@ -21,6 +23,25 @@ def capture(path: Path, entities: tuple[Entity,...]) -> Capture:
 
 
 class IngameQARegression(unittest.TestCase):
+    def test_blind_grid_preserves_tall_cues_and_last_row(self) -> None:
+        cue = Image.new('RGB',(72,200),(255,0,0))
+        grid = compose_grid([cue]*24,ImageFont.load_default())
+        self.assertEqual(grid.size,(1200,984))
+        pixels = np.asarray(grid)
+        red = (pixels == (255,0,0)).all(axis=2)
+        self.assertEqual(int(red.sum()),24*72*200)
+        for row in range(4):
+            self.assertFalse(red[row*246:row*246+38].any())
+            self.assertTrue(red[row*246+38:row*246+238,64:136].all())
+        self.assertFalse(red[-8:].any())
+
+
+    def test_blind_crop_includes_icon_without_changing_body_bounds(self) -> None:
+        actor = replace(entity(),rect=(100,120,64,96),cue_rect=(100,80,64,136))
+        self.assertEqual(cue_box(actor,2),(50,40,82,108))
+        self.assertEqual(actor.rect,(100,120,64,96))
+        self.assertEqual(cue_box(entity(),1),(0,0,64,64))
+
     def test_checker_requires_both_zooms_and_detects_one_mixed_pixel(self) -> None:
         with TemporaryDirectory() as temporary:
             directory = Path(temporary)
@@ -59,6 +80,23 @@ class IngameQARegression(unittest.TestCase):
                 'agent_snapshot':{'agent_ids':[1,2],'hungers':[76,90],'thirsts':[0,0],'sleeps':[0,0]}}
             path.with_suffix('.entities.json').write_text(json.dumps(data))
             self.assertEqual(load_capture(path).need_ids,(1,))
+
+    def test_faded_canopy_keeps_actual_blended_pixels_measurable(self) -> None:
+        actor = replace(entity(),rect=(50,50,4,4),world_anchor=(50,54),draw_order=(4,1))
+        tree = replace(entity('tree'),ident=2,rect=(50,50,4,4),world_anchor=(50,60),draw_order=(4,2),alpha=.45)
+        record = capture(Path('unused'),(actor,tree))
+        image = np.full((1080,1920,3),20,dtype=np.uint8)
+        image[50:54,50:54] = 80
+        mask = np.zeros((1080,1920),dtype=bool)
+        mask[50:54,50:54] = True
+        with patch('ingame_qa_types.Capture.image',return_value=image), patch('ingame_qa_pixels.placed',return_value=(image,mask)):
+            measured = contrast(record,Path('.'))
+            self.assertEqual(measured.status,'PASS')
+            self.assertIn('0.2353',measured.detail)
+            hidden = contrast(replace(record,entities=(actor,replace(tree,alpha=1))),Path('.'))
+            self.assertEqual(hidden.status,'FAIL')
+            behind = contrast(replace(record,entities=(actor,replace(tree,alpha=1,world_anchor=(50,40)))),Path('.'))
+            self.assertEqual(behind.status,'PASS')
 
     def test_variety_rejects_identical_neighbors(self) -> None:
         actors = tuple(replace(entity(),ident=i,tile=(i,0)) for i in range(12))

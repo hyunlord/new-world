@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 from collections import defaultdict
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
@@ -10,29 +11,52 @@ import time
 from PIL import Image, ImageDraw, ImageFont
 from ingame_qa_types import Capture, Entity, box, load_capture
 
-ACTIVITIES = ('walk','carry','gather','build','drink','talk','sit_or_idle','sleep','child')
+ACTIVITIES = ('walk','carry','gather','build','eat','drink','sit','talk','child')
+
+
+def cue_box(entity: Entity, scale: float) -> tuple[int,int,int,int]:
+    return box(replace(entity,rect=entity.cue_rect) if entity.cue_rect is not None else entity,scale)
 
 
 def category(entity: Entity) -> str:
     if entity.body == 'child':
         return 'child'
-    return 'sit_or_idle' if entity.activity in {'sit','idle'} else entity.activity
+    return entity.activity
+
+
+def compose_grid(crops: list[Image.Image], font: ImageFont.FreeTypeFont | ImageFont.ImageFont) -> Image.Image:
+    """Reserve the label band and fit complete cues without rescaling them."""
+    cell_width = max(200,max((crop.width for crop in crops),default=0)+20)
+    cue_height = max(154,max((crop.height for crop in crops),default=0))
+    cell_height = 38+cue_height+8
+    rows = max(1,(len(crops)+5)//6)
+    canvas = Image.new('RGB',(6*cell_width,rows*cell_height),(34,37,37))
+    draw = ImageDraw.Draw(canvas)
+    for index,crop in enumerate(crops):
+        left,top = (index%6)*cell_width,(index//6)*cell_height
+        canvas.paste(crop,(left+(cell_width-crop.width)//2,top+38+(cue_height-crop.height)//2))
+        draw.text((left+10,top+10),str(index+1),font=font,fill='white')
+    return canvas
 
 
 def create(raw: Path, output: Path, key_path: Path, repo: Path) -> None:
     """Balance observable activities and keep the answer mapping out of stdout."""
     manifest = json.loads((raw/'manifest.json').read_text())
+    lineup = (raw/'a_lineup_z4.entities.json').exists()
+    two_x = load_capture(raw/'a_lineup_z2.png') if lineup else None
     groups: dict[str,list[tuple[Capture,Entity]]] = defaultdict(list)
     seen: set[tuple[int,str,str]] = set()
     for row in manifest['captures']:
-        if 'calib' in row['file']:
+        if 'calib' in row['file'] or (lineup and row['file'] != 'a_lineup_z4.png'):
             continue
         capture = load_capture(raw/row['file'])
         if capture.zoom < 4:
             continue
         for entity in capture.entities:
+            if lineup and entity.role != 'blind_lineup':
+                continue
             label = category(entity)
-            x0,y0,x1,y1 = box(entity,capture.scale)
+            x0,y0,x1,y1 = cue_box(entity,capture.scale)
             identity = (entity.ident,entity.frame,label)
             if entity.kind != 'agent' or not entity.visible or label not in ACTIVITIES or identity in seen:
                 continue
@@ -58,20 +82,21 @@ def create(raw: Path, output: Path, key_path: Path, repo: Path) -> None:
     font = ImageFont.truetype(str(font_path),18) if font_path.exists() else ImageFont.load_default()
     answers = []
     for zoom in [4,2]:
-        canvas = Image.new('RGB',(1200,800),(34,37,37))
-        draw = ImageDraw.Draw(canvas)
+        crops: list[Image.Image] = []
         for index,(capture,entity) in enumerate(selected):
-            x0,y0,x1,y1 = box(entity,capture.scale)
-            source = Image.fromarray(capture.image()).crop((x0,y0,x1,y1))
-            width,height = round(entity.size[0]*zoom),round(entity.size[1]*zoom)
+            source_capture, source_entity = capture, entity
+            if zoom == 2 and two_x is not None:
+                source_capture = two_x
+                source_entity = next(e for e in two_x.entities if e.ident == entity.ident and e.role == 'blind_lineup')
+            x0,y0,x1,y1 = cue_box(source_entity,source_capture.scale)
+            source = Image.fromarray(source_capture.image()).crop((x0,y0,x1,y1))
+            width,height = round((x1-x0)*zoom/source_capture.zoom),round((y1-y0)*zoom/source_capture.zoom)
             crop = source.resize((width,height),Image.Resampling.NEAREST)
-            left,top = (index%6)*200,(index//6)*200
-            canvas.paste(crop,(left+(200-width)//2,top+38+(154-height)//2))
-            draw.text((left+10,top+10),str(index+1),font=font,fill='white')
+            crops.append(crop)
             if zoom == 4:
                 answers.append({'number':index+1,'activity':category(entity),'source':capture.stem,'agent_id':entity.ident,'frame_id':entity.frame})
-        canvas.save(output/f'blind_{zoom}x.png')
-    key = {'created_ns':time.time_ns(),'count':len(selected),'answers':answers,
+        compose_grid(crops,font).save(output/f'blind_{zoom}x.png')
+    key = {'created_ns':time.time_ns(),'count':len(selected),'answers':answers,'calibration_lineup':lineup,
            'absent_activities':[a for a in ACTIVITIES if not any(category(e)==a for _,e in selected)]}
     key_path.write_text(json.dumps(key,indent=2)+'\n')
     (output/'blind_instructions.txt').write_text('Label each number at both zooms using: '+', '.join(ACTIVITIES)+'.\nSave JSON {"4x":{"1":"label",...},"2x":{"1":"label",...}} before grading.\nAnswers are stored separately and must remain unopened until labels are saved.\n')
@@ -84,11 +109,13 @@ def grade(labels_path: Path, key_path: Path, output: Path) -> None:
         raise FileNotFoundError(labels_path)
     label_bytes = labels_path.read_bytes()
     labels = json.loads(label_bytes)
+    label_hash = hashlib.sha256(label_bytes).hexdigest()
+    labels_path.with_suffix('.sha256').write_text(label_hash+'  '+labels_path.name+'\n')
     key = json.loads(key_path.read_text())
     if labels_path.stat().st_mtime_ns < key['created_ns']:
         raise RuntimeError('Labels predate the blind grid; fresh blind observation is required')
     results = {'count':key['count'],'absent_activities':key['absent_activities'],
-               'observer_labels_sha256':hashlib.sha256(label_bytes).hexdigest(),'confusion':{}}
+               'observer_labels_sha256':label_hash,'calibration_lineup':key.get('calibration_lineup',False),'confusion':{}}
     for zoom in ['4x','2x']:
         matrix: dict[str,dict[str,int]] = defaultdict(lambda:defaultdict(int))
         correct = 0

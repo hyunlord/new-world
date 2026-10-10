@@ -6,17 +6,19 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-def before_after(raw: Path, output: Path, repo: Path) -> None:
+def before_after(raw: Path, output: Path, repo: Path, before_dir: Path | None = None) -> None:
     rows = [('d2_1200_F2','a_d2_1200_F2','Noon village'),
             ('d2_2200_F2N','a_d2_2300_F2N','Night village'),
             ('d2_1200_F1','a_d2_1200_F1','Overview'),
             ('d2_1200_F4','a_d2_1200_F4','Inspector')]
-    canvas = Image.new('RGB',(1920,4*570),(25,27,28))
+    if before_dir is not None:
+        rows = [('a_d2_1200_F2','a_d2_1200_F2','Noon village'),('a_d2_2300_F2N','a_d2_2300_F2N','Night village'),('a_d2_1200_F1','a_d2_1200_F1','Overview')]
+    canvas = Image.new('RGB',(1920,len(rows)*570),(25,27,28))
     draw = ImageDraw.Draw(canvas)
     font = ImageFont.truetype(str(repo/'assets/fonts/galmuri/Galmuri11.ttf'),18)
     for index,(old,new,title) in enumerate(rows):
         draw.text((12,index*570+5),title+' — before / after',font=font,fill='white')
-        for column,path in enumerate([repo/f'docs/revitalize/shots/final/{old}.jpg',raw/f'{new}.png']):
+        for column,path in enumerate([(before_dir/f'{old}.png' if before_dir is not None else repo/f'docs/revitalize/shots/final/{old}.jpg'),raw/f'{new}.png']):
             if not path.exists():
                 raise FileNotFoundError(path)
             with Image.open(path) as source:
@@ -50,15 +52,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('raw',type=Path)
     parser.add_argument('--output',type=Path,default=Path('docs/art/production'))
+    parser.add_argument('--before-dir',type=Path)
     parser.add_argument('--repo',type=Path,default=Path('.'))
     args = parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
-    before_after(args.raw,args.output,args.repo)
+    before_after(args.raw,args.output,args.repo,args.before_dir)
     evidence = [animation(args.raw,args.output,'strip.json','village_noon.gif'),
                 animation(args.raw,args.output,'evening.json','village_evening.gif')]
-    budgets = {str(folder):sum(path.stat().st_size for path in folder.rglob('*') if path.is_file()) for folder in [args.repo/'assets/art',args.repo/'docs/art/production']}
+    budgets = {str(folder):sum(path.stat().st_size for path in folder.rglob('*') if path.is_file()) for folder in [args.repo/'assets/art',args.output]}
     report = {'animations':evidence,'budget_bytes':budgets,'assets_limit_bytes':25_000_000,'docs_limit_bytes':40_000_000}
     (args.output/'report_artifacts.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report))
-    if budgets[str(args.repo/'assets/art')]>25_000_000 or budgets[str(args.repo/'docs/art/production')]>40_000_000:
+    if budgets[str(args.repo/'assets/art')]>25_000_000 or budgets[str(args.output)]>40_000_000:
         raise RuntimeError('Committed artifact byte budget exceeded; see report_artifacts.json')
