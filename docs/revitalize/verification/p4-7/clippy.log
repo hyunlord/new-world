@@ -1,0 +1,4 @@
+    Checking sim-systems v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-systems)
+    Checking sim-bridge v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-bridge)
+    Checking sim-test v0.7.0 (/private/tmp/claude-501/-Users-rexxa-work-new-world-pass4/5ce58e3a-6239-45a9-876e-cf1c9aa429b5/scratchpad/p4-gate/rust/crates/sim-test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.43s

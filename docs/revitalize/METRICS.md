@@ -1088,3 +1088,52 @@ Changes from round 0 only: forage window start 360 → 480 (all other knobs back
 Seed 22's stockpile in the spring after the first winter (days 28–36): round 0 `46, 38, 18, 31, 14, 23, 16, 8, 24`; round 3 `38, 23, 7, 0, 2, 1, 0, 5, 31`. The seed is marginal in every configuration; round 0 keeps births often enough to stay inside the 4-day limit.
 
 **Kept configuration: round 0 (the Part 4 `game_v10()`, commit `e72d7e28`).** In table priority order it is the only configuration that passes W1–W7; it fails W8, W9 and W10 (median 7.012 just over 7.0 and max 11.02), all three after three rounds (three-strikes rule).
+
+## Pass 4 final (Part 7, producer `0dc9a38d`, after the review fixes)
+
+All seven runs DETERMINISM PASS, run back to back on the Mac with no other job competing:
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p4-7_final_legacy` | legacy 0..4 × 10 | equal to `p3-7_final_legacy` on all 2,696 shared values (and to Pass 1 `p1_legacy` on all 569 shared values); only the summary `schema_version` differs (3/1 → 4) |
+| `p4-7_final_v8` | game 0..64 × 10 | equal to `p3-7_final_v8` on 4,081 shared values (schema_version only) |
+| `p4-7_final_v9_10day` | game_v9 0..64 × 10, clocks | equal to `p3-7_final_10day` on 4,046 shared values (schema_version only) |
+| `p4-7_final_v9_60day` | game_v9 0..32 × 60, clocks | equal to `p3-7_final_60day` on 16,060 shared values (schema_version only) |
+| `p4-7_final_v9_120day` | game_v9 0..32 × 120, clocks | same-host W11 baseline (0.000890 ms) |
+| `p4-7_final_v10_10day` | game_v10 0..64 × 10 | W targets |
+| `p4-7_final_v10_120day` | game_v10 0..32 × 120, clocks | W targets |
+
+W targets (`p4-7_final_targets/w_targets.md`; v9 evaluated the same way in `p4-7_v9_reference_targets/`). Values are median / p10 / p90 / min / max across seeds unless stated.
+
+| # | v9 (Pass 3 unchanged) | v10 final | v10 |
+|---|---|---|---|
+| W1 | determinism 64/64, 32/32; legacy/v8/v9 identical | same | PASS |
+| W2 dehydration day 10 / day 120 | 0/0/0/0/0 · 0/0/0/0/1 | 0/0/0/0/0 · 0/0/0/0/0 | PASS |
+| W3 starvation day 10 / day 120 | 0 · 0 | 0 · 0 | PASS |
+| W4 settlements at every day sample | 1 | 1 | PASS |
+| W5 births by day 4 | 7 / 3 / 7 / 0 / 7 | 7 / 7 / 7 / 7 / 7 | PASS |
+| W5 alive day 10 | 42 / 31 / 42 / 24 / 42 | 42 / 42 / 42 / 42 / 42 | PASS |
+| W5 longest stagnation (days) | 0 / 0 / 15.8 / 0 / 39 | 0 / 0 / 0 / 0 / 2 | PASS |
+| W6 old-age deaths by day 30 | 0 | 9 / 6 / 12 / 5 / 13 | PASS |
+| W6 births − deaths days 30–120 | 0 / 0 / 7.8 / 0 / 18 | 0 / −1 / 0 / −3 / 1 | PASS |
+| W6 alive at day samples ≥ 30 | 42 / 42 / 42 / 24 / 42 | 42 / 41 / 42 / 37 / 42 | PASS |
+| W6 child share day 120 | 0 | 0.095 / 0.048 / 0.170 / 0.024 / 0.195 | PASS |
+| W6 elder share day 120 | 0 | 0.262 / 0.214 / 0.333 / 0.171 / 0.381 | PASS |
+| W7 autumn-closing stock vs required | no seasons | 581 vs 150.5 (paired margin min 172.5) | PASS |
+| W7 max stock − 3 × max target | +486 (no target) | −455 / −544 / −374 / −650 / −359 | PASS |
+| W8 noon idle, spring–autumn (v9: all days) | 0.476 / 0.333 / 0.702 / 0.310 / 0.738 | 0.810 / 0.739 / 0.902 / 0.691 / 0.929 | FAIL |
+| W8 forage trips/day summer+autumn | 0 | 0 / 0 / 74 / 0 / 91 (summer 19, autumn 0) | FAIL |
+| W9 night in shelter | 0.976 / 0.929 / 1.0 / 0.905 / 1.0 | 1.0 / 0.955 / 1.0 / 0.929 / 1.0 | PASS |
+| W9 evening near hearth | 0.586 / 0.318 / 0.792 / 0.130 / 0.900 | 0.554 / 0.348 / 0.766 / 0.281 / 0.813 | FAIL (min) |
+| W10 T6a 10 / 120 (median) | 0.0005 / 0.0008 | 0.0010 / 0.0088 | PASS |
+| W10 home distance day 10 | 5.36 / 3.63 / 7.94 / 2.76 / 10.52 | 7.06 / 5.61 / 8.31 / 5.14 / 11.05 | FAIL |
+| W10 social / agent-day 10 / 120 | 0.645 / 0.841 | 0.650 / 0.835 (min 0.592 / 0.804) | PASS |
+| W11 ms per agent-tick 10 / 120 | 0.000780 / 0.000890 | 0.000989 / 0.001210 (limits 0.001170 / 0.001335) | PASS |
+
+120-day demography (v10 medians): day 10 alive 42, births 18, children 7, elders 3; day 30: births 27, old-age deaths 9, elders 8.5; day 60: 47 births, 29 deaths, elders 13; day 90: 71 / 53; day 120: 91 births, 73 old-age deaths, children 4, elders 11, mean age 31.0 days; alive median 42 throughout, minimum 37–42 from day 30. Stockpile swings with the seasons: 157 (spring median), 309.5 (summer), 491.5 (autumn), 254 (winter).
+
+Seasons (v10 final, opening-checkpoint attribution): supply/harvest/need per day spring 108/107/97.0, summer 180/138/97.0, autumn 144/121/98.9, winter 72/66/98.9; regrowth lost at the cap 2 / 39 / 20 / 10 per day; forage trips 0 / 19 / 0 / 0 per day.
+
+Seeds 7 and 8, v9 → v10 (alive, births, old-age deaths, stockpile at days 4 / 10 / 60 / 120):
+- seed 7: v9 31/7/0/107 · 42/18/0/178 · 42/18/0/659 · 42/18/0/1259 → v10 31/7/0/125 · 42/18/0/296 · 41/47/30/212 · 42/91/73/268 (no more unbounded hoard).
+- seed 8: v9 24/0/0/19 · 24/0/0/13 · 42/18/0/47 · 42/18/0/0 → v10 31/7/0/131 · 42/18/0/289 · 42/45/27/230 · 42/92/74/276 (no more stagnation).
