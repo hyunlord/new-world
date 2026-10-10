@@ -780,14 +780,17 @@ impl SettlementSystem {
             let birth_seed = new_agent_id
                 .wrapping_mul(0x9E37_79B9_7F4A_7C15)
                 .wrapping_add(BIRTH_RNG_SALT);
+            let (hunger_rate, thirst_rate, sleep_rate) = resources.rules.society.life_stage
+                .map_or((BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE),
+                    |rule| (rule.hunger_rate, rule.thirst_rate, rule.sleep_rate));
             let _ = world.insert(
                 entity,
                 (
                     MovementRng::new(birth_seed),
                     AgentState::Idle,
-                    Hunger::new(0.0, BIRTH_HUNGER_RATE),
-                    Thirst::new(0.0, BIRTH_THIRST_RATE),
-                    Sleep::new(0.0, BIRTH_SLEEP_RATE),
+                    Hunger::new(0.0, hunger_rate),
+                    Thirst::new(0.0, thirst_rate),
+                    Sleep::new(0.0, sleep_rate),
                     Social::new(0.0, BIRTH_SOCIAL_RATE),
                     Memory::new(),
                     // add-starvation-death — newborns carry BodyHealth too, so a
@@ -799,6 +802,10 @@ impl SettlementSystem {
                     Inventory::default(),
                 ),
             );
+
+            if resources.rules.society.life_stage.is_some() {
+                let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
+            }
 
             let parent = self.formation_event_ids.get(&sid).copied();
             let event_id = resources.issue_event_id();
@@ -1030,4 +1037,38 @@ mod tests {
         }
         assert_eq!(sys.tick_run_count(), 5);
     }
+    #[test]
+    fn newborn_life_stage_rates_are_rule_gated() {
+        use sim_core::components::Child;
+        use sim_core::rules::WorldRules;
+        for children in [false, true] {
+            let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
+            engine.resources.rules = if children { WorldRules::game_v9() } else { WorldRules::game_v8() };
+            if let BirthRule::Provisioned { cooldown_ticks, .. } = &mut engine.resources.rules.society.birth {
+                *cooldown_ticks = 720;
+            }
+            for _ in 0..3 {
+                let entity = engine.spawn_agent(10, 10);
+                engine.world.insert(entity, (Hunger::new(0.0, 0.05), Thirst::new(0.0, 0.08))).expect("founder needs");
+            }
+            engine.resources.building_registry.insert(100, (10, 10));
+            engine.resources.building_registry.insert(101, (11, 10));
+            engine.resources.building_kinds.insert((10, 10), BuildingKind::Hearth);
+            engine.resources.building_kinds.insert((11, 10), BuildingKind::Shelter);
+            for x in 10..20 { engine.resources.food_source_max.insert((x, 11), 4); }
+            let mut system = SettlementSystem::new();
+            system.tick(&mut engine.world, &mut engine.resources);
+            let sid = *engine.resources.settlements.keys().next().expect("formed");
+            engine.resources.settlements.get_mut(&sid).expect("settlement").store(ResourceKind::Food, 500);
+            engine.resources.current_tick = 720;
+            system.tick(&mut engine.world, &mut engine.resources);
+            assert_eq!(engine.resources.tallies.births, 1);
+            let mut query = engine.world.query::<(&Agent, &Hunger, &Thirst, &Sleep, Option<&Child>)>();
+            let (_, (_, hunger, thirst, sleep, child)) = query.iter().next().expect("newborn with sleep");
+            let expected = if children { (0.03, 0.048, 0.03) } else { (BIRTH_HUNGER_RATE, BIRTH_THIRST_RATE, BIRTH_SLEEP_RATE) };
+            assert_eq!((hunger.growth_rate, thirst.growth_rate, sleep.growth_rate), expected);
+            assert_eq!(child.map(|child| child.born_tick), children.then_some(720));
+        }
+    }
+
 }

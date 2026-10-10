@@ -43,7 +43,7 @@ check_memory
 (cd rust && cargo build --release -p sim-test --bin worldsim_probe)
 check_memory
 export WORLDSIM_GIT_SHA
-WORLDSIM_GIT_SHA=$(git rev-parse --short HEAD)
+WORLDSIM_GIT_SHA=$(git rev-parse HEAD)
 mkdir -p "$out"
 rust/target/release/worldsim_probe "${probe_args[@]}" "${workers_override[@]}" --out "$out"
 mkdir -p "docs/revitalize/probe/$label"

@@ -44,8 +44,9 @@
 use std::collections::BTreeMap;
 
 use hecs::World;
-use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget};
+use sim_core::components::{Agent, AgentId, AgentState, Child, Position, SeekTarget};
 use sim_engine::{RuntimeSystem, SimResources};
+use crate::runtime::decision::agent_decision::clock_in_window;
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
 /// next Brownian step. Each agent owns its own `MovementRng`, so trajectories
@@ -134,8 +135,12 @@ impl RuntimeSystem for AgentMovementSystem {
         if !resources.current_tick.is_multiple_of(rules.move_interval_ticks.max(1)) {
             return;
         }
+        let child_rule = resources.rules.society.life_stage;
+        let evening_radius = rules.evening_gather
+            .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
+            .map(|rule| rule.tether_radius);
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
-        if rules.idle_tether_radius.is_some() {
+        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some() {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
             for (_, settlement) in settlements {
@@ -151,13 +156,14 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state, seek, agent)) in world
+        for (_, (pos, rng, state, seek, agent, child)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
                 Option<&AgentState>,
                 Option<&SeekTarget>,
                 Option<&Agent>,
+                Option<&Child>,
             )>()
             .iter()
         {
@@ -215,7 +221,11 @@ impl RuntimeSystem for AgentMovementSystem {
             let mut nx = (pos.x as i64 + dx).clamp(0, max_x);
             let mut ny = (pos.y as i64 + dy).clamp(0, max_y);
             if let (Some(radius), Some(anchor)) = (
-                rules.idle_tether_radius,
+                if child.is_some() {
+                    child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
+                } else {
+                    evening_radius.or(rules.idle_tether_radius)
+                },
                 agent.and_then(|a| home.get(&a.id)),
             ) {
                 if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {

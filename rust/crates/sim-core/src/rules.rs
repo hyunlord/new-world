@@ -191,6 +191,17 @@ impl WorldRules {
         let mut rules = Self::game_v8();
         rules.society.settlement_anchor = SettlementAnchor::Hearth;
         rules.agent.strict_consume = true;
+        rules.agent.night_rest = Some(NightRestRule {
+            start_minute: 1260, end_minute: 360, fatigue_threshold: 0.0,
+            recovery_per_tick: 0.12, wake_preempt: 75.0,
+        });
+        rules.agent.evening_gather = Some(EveningGatherRule {
+            start_minute: 1080, end_minute: 1260, tether_radius: 3,
+        });
+        rules.society.life_stage = Some(LifeStageRule {
+            child_ticks: 5760, hunger_rate: 0.03, thirst_rate: 0.048,
+            sleep_rate: 0.03, tether_radius: 3,
+        });
         rules.society.relief_radius = Some(8);
         rules.society.birth = BirthRule::Provisioned {
             cooldown_ticks: 720,

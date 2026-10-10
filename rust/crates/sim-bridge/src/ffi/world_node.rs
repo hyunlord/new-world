@@ -37,7 +37,7 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, ConstructionSite, Hunger, Inventory, Memory, Position,
+    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Hunger, Inventory, Memory, Position,
     ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
@@ -1354,6 +1354,11 @@ pub struct AgentSnapshotRow {
     /// the gather → CARRY → deposit → stockpile chain visible. Read-only of
     /// `Inventory`; does not affect determinism.
     pub carried_food: i32,
+    /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood.
+    pub target_kind: u8,
+    /// Life stage: 0 adult, 1 child with a live Child component.
+    pub life_stage: u8,
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1374,7 +1379,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
-        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv),
+        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child),
     ) in world
         .query::<(
             &Agent,
@@ -1385,6 +1390,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Thirst>,
             Option<&Sleep>,
             Option<&Inventory>,
+            Option<&Child>,
         )>()
         .iter()
     {
@@ -1420,6 +1426,16 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         let carried_food = maybe_inv
             .map(|inv| inv.get(ResourceKind::Food) as i32)
             .unwrap_or(0);
+        let target_kind: u8 = match maybe_state.and_then(AgentState::target) {
+            None => 0,
+            Some(TargetKind::Food) => 1,
+            Some(TargetKind::Water) => 2,
+            Some(TargetKind::Sleep) => 3,
+            Some(TargetKind::ConstructionSite) => 4,
+            Some(TargetKind::Agent(_)) => 5,
+            Some(TargetKind::GatherFood) => 6,
+        };
+        let life_stage = u8::from(maybe_child.is_some());
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -1437,6 +1453,8 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             thirst,
             sleep,
             carried_food,
+            target_kind,
+            life_stage,
         });
     }
     rows
@@ -1542,6 +1560,14 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, row) in rows.iter().enumerate() {
         carried_foods[i] = row.carried_food;
     }
+    let mut target_kinds = PackedByteArray::new();
+    let mut life_stages = PackedByteArray::new();
+    target_kinds.resize(rows.len());
+    life_stages.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        target_kinds[i] = row.target_kind;
+        life_stages[i] = row.life_stage;
+    }
     let mut dict = VarDictionary::new();
     dict.set("ids", ids);
     dict.set("xs", xs);
@@ -1555,6 +1581,8 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("thirsts", thirsts);
     dict.set("sleeps", sleeps);
     dict.set("carried_foods", carried_foods);
+    dict.set("target_kinds", target_kinds);
+    dict.set("life_stages", life_stages);
     dict
 }
 
@@ -2786,5 +2814,82 @@ mod revitalize_world_snapshot_tests {
             BuildingSnapshotRow { id: 5, x: 5, y: 6, kind: 2 },
             BuildingSnapshotRow { id: 7, x: 1, y: 2, kind: 0 },
         ]);
+    }
+}
+
+
+#[cfg(test)]
+mod pass3_agent_snapshot_tests {
+    use super::*;
+
+    #[test]
+    fn empty_world_has_empty_parallel_snapshot_rows() {
+        let world = hecs::World::new();
+        let rows = collect_agent_snapshot(&world);
+        let (ids, xs, ys, states) = agent_rows_split(&rows);
+        assert!(rows.is_empty());
+        assert_eq!([ids.len(), xs.len(), ys.len(), states.len()], [0; 4]);
+        let target_kinds: Vec<u8> = rows.iter().map(|row| row.target_kind).collect();
+        let life_stages: Vec<u8> = rows.iter().map(|row| row.life_stage).collect();
+        assert!(target_kinds.is_empty());
+        assert!(life_stages.is_empty());
+    }
+
+    #[test]
+    fn missing_state_and_child_default_to_none_and_adult() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 7 }, Position::new(2, 3)));
+        let rows = collect_agent_snapshot(&world);
+        assert_eq!(rows.len(), 1);
+        assert_eq!((rows[0].target_kind, rows[0].life_stage), (0, 0));
+    }
+
+    #[test]
+    fn mixed_snapshot_targets_match_detail_and_live_child_markers() {
+        let mut world = hecs::World::new();
+        let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
+            Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood)];
+        let mut expected = Vec::new();
+        for (code, target) in targets.into_iter().enumerate() {
+            for consuming in [false, true] {
+                let state = match target {
+                    None => AgentState::Idle,
+                    Some(target) if consuming => AgentState::Consuming { target },
+                    Some(target) => AgentState::Seeking { target },
+                };
+                let entity = world.spawn((Agent { id: expected.len() as u64 },
+                    Position::new(2, 3), state, Hunger::new(10.0, 0.05),
+                    Thirst::new(20.0, 0.08), Sleep::new(30.0, 0.03)));
+                if consuming {
+                    world.insert_one(entity, Child { born_tick: 5 }).expect("child fixture");
+                }
+                expected.push((entity, code as u8, u8::from(consuming)));
+            }
+        }
+        let rows = collect_agent_snapshot(&world);
+        let (ids, xs, ys, states) = agent_rows_split(&rows);
+        let target_kinds: Vec<u8> = rows.iter().map(|row| row.target_kind).collect();
+        let life_stages: Vec<u8> = rows.iter().map(|row| row.life_stage).collect();
+        assert_eq!(rows.len(), expected.len());
+        assert_eq!([ids.len(), xs.len(), ys.len(), states.len(), target_kinds.len(),
+            life_stages.len()], [expected.len(); 6]);
+        for (entity, target, stage) in expected {
+            let index = rows.iter().position(|row| row.entity_bits == entity.to_bits().get())
+                .expect("fixture row present across archetypes");
+            let detail = collect_agent_detail(&world, entity.to_bits().get());
+            assert!(detail.found);
+            assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
+            assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
+        }
+    }
+
+    #[test]
+    fn maturation_removes_child_flag_from_next_snapshot() {
+        let mut world = hecs::World::new();
+        let entity = world.spawn((Agent { id: 1 }, Position::new(2, 3), Child { born_tick: 0 }));
+        assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 1);
+        world.remove_one::<Child>(entity).expect("child fixture exists");
+        assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 0);
     }
 }

@@ -8,6 +8,11 @@
 //! Future Phase 4 sub-stages (γ sprite, δ BodyHealth) extend this module
 //! with rendering hooks and a health subsystem respectively.
 
+pub mod beds;
+pub mod maturation;
 pub mod movement;
 
 pub use movement::{AgentMovementSystem, MovementRng};
+
+pub use beds::BedAssignmentSystem;
+pub use maturation::MaturationSystem;

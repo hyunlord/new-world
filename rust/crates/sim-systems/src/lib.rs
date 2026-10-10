@@ -301,9 +301,16 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_stockpile_systems(engine);
     register_stockpile_consume_systems(engine);
     register_shelter_planning_systems(engine);
+    register_rhythm_systems(engine);
 }
 
 /// Register the rules-gated shelter planner.
 pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::ShelterPlanningSystem::default()));
+}
+
+/// Register rules-gated child maturation and owned-shelter bed assignments.
+pub fn register_rhythm_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::agent::MaturationSystem));
+    engine.register_system(Box::new(runtime::agent::BedAssignmentSystem::default()));
 }

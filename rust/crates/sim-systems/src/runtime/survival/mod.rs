@@ -65,6 +65,7 @@ pub fn despawn_agent(
     let _ = world.despawn(entity);
     resources.social_chase_since.remove(&agent_id);
     resources.social_retry_after.remove(&agent_id);
+    resources.bed_of.remove(&agent_id);
 
     // Purge the four agent-keyed resource maps (drop any key referencing the
     // dead agent) — mirrors the pre-feature combat cleanup block.
@@ -199,6 +200,18 @@ impl RuntimeSystem for StarvationSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn death_removes_the_assigned_bed() {
+        let mut world = World::new();
+        let entity = world.spawn((Agent { id: 7 },));
+        let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        resources.bed_of.insert(7, (2, 2));
+        resources.bed_of.insert(8, (2, 2));
+        despawn_agent(&mut world, &mut resources, entity, 7, (2, 2), DeathReason::Starvation, 0);
+        assert!(!resources.bed_of.contains_key(&7));
+        assert_eq!(resources.bed_of.get(&8), Some(&(2, 2)));
+    }
 
     #[test]
     fn metadata() {
