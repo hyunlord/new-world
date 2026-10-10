@@ -47,3 +47,14 @@ python3 -m unittest discover -s tools/art_pipeline -p 'test_*.py' -v
 HUD renders use only palette roles, binary Galmuri font masks, exact 2x nearest expansion and reusable nine-slice panels. The lossless `hud_proof.png` demonstrates source texels; JPEG composites are not lossless pixel proofs. Night changes the clock text but does not tint the UI.
 
 `readability.json` records encoded-sRGB luma differences on a deterministic palette-ground strip at 1x and 4x; it includes the exact ground under opaque pixels as a second measure. It never recolors sprites to manufacture a pass. `audit_art.py` treats readability failures as art comparison warnings, while malformed/native-size/palette/alpha/baseline/path/size failures are fatal. Use `--require-source-margins` to also reject source-cell boundary contact.
+
+## Pass 2 (zero generation)
+
+`python3 tools/art_pipeline/pixel_normalize.py --v2` rebuilds native-size sprites
+and per-stage evidence from selected lossless sources. `hybrid_v2.py` creates H;
+`scene_v2.py` renders exact-scale scenes, `compare_v2.py` builds the board,
+`report_v2.py` updates only the Pass2 Korean assessment, and `audit_v2.py` verifies
+format/provenance without hiding content failures. See docs/art/VERIFICATION_V2.md.
+
+The legacy converter remains for reproducing pass1. Do not treat its fixed-box
+outputs or old readability strip as direction-selection evidence.

@@ -158,3 +158,18 @@ Median-cut from the original noon PNG (before JPEG compression), merge weighted 
 ### D3: 19 colours
 
 `#6A472D`, `#C19256`, `#7B6A3B`, `#BEB76A`, `#A8A043`, `#919440`, `#A1A53C`, `#90A034`, `#7D8F34`, `#91A84A`, `#313625`, `#516A29`, `#507C4E`, `#32654D`, `#154C43`, `#0C3431`, `#081011`, `#1B5C77`, `#1D5D8D`
+
+## Pass 2 native conversion amendment
+
+This offline comparison supersedes pass-1 fixed-box fitting only for `sprites_v2/`.
+Never rescale a recovered native sprite to meet a maximum. Class limits before the
+mandatory outside outline are: adult18×28, child14×22, small24×22, campfire24×26,
+building34×30, tree24×34. Final PNGs add one texel on each side for the outside
+outline; both dimensions are recorded. Anchor is bottom-centre on that outline.
+Buildings carry a2×2-tile footprint; other sprites may overhang their tile.
+Shared10×3 shadow ellipses are compositor layers, never baked into sprite alpha.
+
+Master palettes merge prior scene colors with32 native median-cut colors and
+source-derived accent ramps. Palette counts are diagnostic rather than fixed
+pass-1 limits. Semantic, size and grid failures are regeneration/review holds;
+format success alone is not production acceptance. See DIRECTION_REPORT Pass2.
