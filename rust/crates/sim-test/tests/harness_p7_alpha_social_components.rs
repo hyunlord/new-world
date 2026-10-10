@@ -489,6 +489,7 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
         TargetKind::ConstructionSite,
         TargetKind::Agent(0),
         TargetKind::GatherFood,
+        TargetKind::GatherWood,
     ];
     for k in kinds {
         match k {
@@ -498,6 +499,7 @@ fn harness_p7_alpha_a24_target_kind_five_variants_exhaustive() {
             TargetKind::ConstructionSite => {}
             TargetKind::Agent(_) => {}
             TargetKind::GatherFood => {}
+            TargetKind::GatherWood => {}
         }
     }
     // (b) Payload discrimination — distinct AgentId payloads compare
@@ -610,6 +612,7 @@ fn harness_p7_alpha_a28_target_kind_variant_set_audit() {
             TargetKind::ConstructionSite => "construction_site",
             TargetKind::Agent(_) => "agent",
             TargetKind::GatherFood => "gather_food",
+            TargetKind::GatherWood => "gather_wood",
         }
     }
     assert_eq!(classify(TargetKind::Food), "food");

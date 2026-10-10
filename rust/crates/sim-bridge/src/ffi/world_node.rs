@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v10(DEFAULT_GAME_SEED),
-                WorldRules::game_v10(),
+                &WorldGenConfig::game_v11(DEFAULT_GAME_SEED),
+                WorldRules::game_v11(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v10(self.world_seed),
-            WorldRules::game_v10(),
+            &WorldGenConfig::game_v11(self.world_seed),
+            WorldRules::game_v11(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -483,7 +483,7 @@ impl WorldSimNode {
             &self.engine.world,
             &self.engine.resources.settlements,
         );
-        settlement_rows_to_dict(&rows)
+        settlement_rows_to_dict(&rows, &self.engine.resources.fires)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1363,8 +1363,11 @@ pub struct AgentSnapshotRow {
     /// the gather → CARRY → deposit → stockpile chain visible. Read-only of
     /// `Inventory`; does not affect determinism.
     pub carried_food: i32,
+    /// Revitalize Pass 5 — carried `ResourceKind::Wood` count, 0 without an
+    /// `Inventory`. Read-only; drives a future stick-carry glyph.
+    pub carried_wood: i32,
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
-    /// 4 ConstructionSite, 5 Agent, 6 GatherFood.
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood (Pass 5).
     pub target_kind: u8,
     /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
     /// (Pass 4, live Elder component).
@@ -1454,6 +1457,9 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         let carried_food = maybe_inv
             .map(|inv| inv.get(ResourceKind::Food) as i32)
             .unwrap_or(0);
+        let carried_wood = maybe_inv
+            .map(|inv| inv.get(ResourceKind::Wood) as i32)
+            .unwrap_or(0);
         let target_kind: u8 = match maybe_state.and_then(AgentState::target) {
             None => 0,
             Some(TargetKind::Food) => 1,
@@ -1462,6 +1468,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::ConstructionSite) => 4,
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
+            Some(TargetKind::GatherWood) => 7,
         };
         let life_stage = if maybe_child.is_some() {
             1
@@ -1487,6 +1494,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             thirst,
             sleep,
             carried_food,
+            carried_wood,
             target_kind,
             life_stage,
         });
@@ -1594,6 +1602,12 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     for (i, row) in rows.iter().enumerate() {
         carried_foods[i] = row.carried_food;
     }
+    // Revitalize Pass 5 — additive parallel array of carried wood.
+    let mut carried_woods = PackedInt32Array::new();
+    carried_woods.resize(rows.len());
+    for (i, row) in rows.iter().enumerate() {
+        carried_woods[i] = row.carried_wood;
+    }
     let mut target_kinds = PackedByteArray::new();
     let mut life_stages = PackedByteArray::new();
     target_kinds.resize(rows.len());
@@ -1615,6 +1629,7 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
     dict.set("thirsts", thirsts);
     dict.set("sleeps", sleeps);
     dict.set("carried_foods", carried_foods);
+    dict.set("carried_woods", carried_woods);
     dict.set("target_kinds", target_kinds);
     dict.set("life_stages", life_stages);
     dict
@@ -1761,6 +1776,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::Agent(_)) => 5,
         // Direction-2 slice 2-2 — carry-pickup target (viz lands in slice 2-5).
         Some(TargetKind::GatherFood) => 6,
+        // Revitalize Pass 5 — firewood pickup target.
+        Some(TargetKind::GatherWood) => 7,
     };
     AgentDetailRow {
         found: true,
@@ -1928,7 +1945,8 @@ pub struct ResourceSnapshotRow {
     pub x: u32,
     /// Tile-y coordinate of the source tile.
     pub y: u32,
-    /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`.
+    /// Resource kind: `0 = Food`, `1 = Water`, `2 = Sleep`, `3 = Deadwood`
+    /// (Pass 5; registered spots persist at amount 0 between pickup and regrowth).
     pub kind: u8,
     /// Current stored amount on the tile (the `*_tiles` counter), CLAMPED to
     /// [`max`](Self::max). Drives the renderer's depletion/regen visual (marker
@@ -1998,6 +2016,13 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
         let max = resources.sleep_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
         let amount = amount.min(max);
         rows.push(ResourceSnapshotRow { x, y, kind: 2, amount, max });
+    }
+    // Revitalize Pass 5 — every registered deadwood spot, at amount 0 while
+    // emptied, so the pile stays visible between pickup and regrowth.
+    for (&(x, y), &capacity) in &resources.wood_source_max {
+        let max = capacity.max(1);
+        let amount = resources.wood_tiles.get(&(x, y)).copied().unwrap_or(0).min(max);
+        rows.push(ResourceSnapshotRow { x, y, kind: 3, amount, max });
     }
     rows.sort_by_key(|r| (r.kind, r.x, r.y));
     rows
@@ -2229,6 +2254,8 @@ pub struct SettlementSnapshotRow {
     /// stocked. Additive Direction-2 slice 2-5a field — surfaces the reserve
     /// the gather→deposit→consume chain (2-2/2-3a/2-4) fills and drains.
     pub food_stock: i32,
+    /// Revitalize Pass 5 — settlement `stockpile` Wood count, 0 when none.
+    pub wood_stock: i32,
 }
 
 /// Pure-Rust collector mirroring [`collect_construction_snapshot`] but
@@ -2287,6 +2314,11 @@ pub fn collect_settlement_snapshot(
                 .get(&ResourceKind::Food)
                 .copied()
                 .unwrap_or(0) as i32,
+            wood_stock: settlement
+                .stockpile
+                .get(&ResourceKind::Wood)
+                .copied()
+                .unwrap_or(0) as i32,
         });
     }
     // HashMap iteration order is not stable run-to-run; sort by the unique
@@ -2309,7 +2341,10 @@ pub fn collect_settlement_snapshot(
 /// - `formation_xs`: `PackedInt32Array` — fixed formation-anchor tile-x.
 /// - `formation_ys`: `PackedInt32Array` — fixed formation-anchor tile-y.
 /// - `food_stocks`: `PackedInt32Array` — `stockpile` Food count (slice 2-5a).
-fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
+fn settlement_rows_to_dict(
+    rows: &[SettlementSnapshotRow],
+    fires: &std::collections::BTreeMap<SettlementId, sim_engine::FireState>,
+) -> VarDictionary {
     let n = rows.len();
     let mut ids = PackedInt64Array::new();
     let mut settlement_ids = PackedInt32Array::new();
@@ -2327,6 +2362,15 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     formation_xs.resize(n);
     formation_ys.resize(n);
     food_stocks.resize(n);
+    // Revitalize Pass 5 — wood stock and fire state (1 lit, 0 out or no fire).
+    let mut wood_stocks = PackedInt32Array::new();
+    let mut fire_lit = PackedByteArray::new();
+    wood_stocks.resize(n);
+    fire_lit.resize(n);
+    for (i, row) in rows.iter().enumerate() {
+        wood_stocks[i] = row.wood_stock;
+        fire_lit[i] = u8::from(fires.get(&row.settlement_id).is_some_and(|fire| fire.lit));
+    }
     for (i, row) in rows.iter().enumerate() {
         ids[i] = row.entity_bits as i64;
         settlement_ids[i] = row.settlement_id as i32;
@@ -2346,6 +2390,8 @@ fn settlement_rows_to_dict(rows: &[SettlementSnapshotRow]) -> VarDictionary {
     dict.set("formation_xs", formation_xs);
     dict.set("formation_ys", formation_ys);
     dict.set("food_stocks", food_stocks);
+    dict.set("wood_stocks", wood_stocks);
+    dict.set("fire_lit", fire_lit);
     dict
 }
 
@@ -2615,6 +2661,13 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
     dict.set("deaths_combat", tallies.deaths_combat as i64);
     dict.set("deaths_old_age", tallies.deaths_old_age as i64);
+    // Revitalize Pass 5 tallies (display-only).
+    dict.set("meals_from_store", tallies.meals_from_store as i64);
+    dict.set("ground_meals", tallies.ground_meals as i64);
+    dict.set("wood_trips", tallies.wood_trips as i64);
+    dict.set("wood_gathered", tallies.wood_gathered as i64);
+    dict.set("gather_preempted", tallies.gather_preempted as i64);
+    dict.set("cold_member_hours", tallies.cold_member_hours as i64);
     dict
 }
 
@@ -2694,6 +2747,12 @@ mod revitalize_tooling_tests {
             forage_trips: 0,
             haul_deposits: 0,
             regen_lost_at_cap: 0,
+            meals_from_store: 0,
+            ground_meals: 0,
+            wood_trips: 0,
+            wood_gathered: 0,
+            gather_preempted: 0,
+            cold_member_hours: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
@@ -2920,7 +2979,7 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
             Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
-            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood)];
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood)];
         let mut expected = Vec::new();
         for (code, target) in targets.into_iter().enumerate() {
             for consuming in [false, true] {

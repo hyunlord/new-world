@@ -97,6 +97,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         "game" => crate::scenes::game_scene(seed),
         "game_v9" => crate::scenes::game_v9_scene(seed),
         "game_v10" => crate::scenes::game_v10_scene(seed),
+        "game_v11" => crate::scenes::game_v11_scene(seed),
         _ => crate::scenes::legacy_scene(),
     };
     let mut engine = make_scene();
@@ -166,7 +167,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             {
                 return Err(format!("non-finite metric at seed={seed} tick={tick}"));
             }
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10") {
+            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11") {
                 if let Some(twin) = &twin {
                     if row != sample(twin, &args.scene, seed, initial_shelters) {
                         return Err(format!(
@@ -247,7 +248,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         }
         if let Some(twin) = &mut twin {
             twin.tick();
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10")
+            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11")
                 && (long_run::trace(&engine) != long_run::trace(twin)
                     || super::fingerprint::fingerprint(&engine)
                         != super::fingerprint::fingerprint(twin))

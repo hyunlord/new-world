@@ -75,6 +75,7 @@ impl RuntimeSystem for StockpileDepositSystem {
             .map(|(entity, agent)| (agent.id, entity))
             .collect();
 
+        let firewood = resources.rules.society.firewood.is_some();
         // Iterate settlements in deterministic (sorted) SettlementId order.
         let mut settlement_ids: Vec<SettlementId> =
             resources.settlements.keys().copied().collect();
@@ -108,22 +109,27 @@ impl RuntimeSystem for StockpileDepositSystem {
                     continue;
                 }
 
-                // Drain ALL carried Food (stockpile is uncapped). `remove`
-                // returns the amount actually removed; `store` adds exactly that.
-                let taken = match world.get::<&mut Inventory>(entity) {
+                // Drain ALL carried Food (stockpile is uncapped), and under the
+                // Pass 5 firewood rule all carried Wood too. `remove` returns
+                // the amount actually removed; `store` adds exactly that.
+                let (taken, wood) = match world.get::<&mut Inventory>(entity) {
                     Ok(mut inv) => {
                         let n = inv.get(ResourceKind::Food);
-                        if n == 0 {
+                        let w = if firewood { inv.get(ResourceKind::Wood) } else { 0 };
+                        if n == 0 && w == 0 {
                             continue;
                         }
-                        inv.remove(ResourceKind::Food, n)
+                        let food = if n > 0 { inv.remove(ResourceKind::Food, n) } else { 0 };
+                        let wood = if w > 0 { inv.remove(ResourceKind::Wood, w) } else { 0 };
+                        (food, wood)
                     }
                     Err(_) => continue,
                 };
 
-                if taken > 0 {
+                if taken > 0 || wood > 0 {
                     if let Some(settlement) = resources.settlements.get_mut(&sid) {
                         settlement.store(ResourceKind::Food, taken);
+                        settlement.store(ResourceKind::Wood, wood);
                     }
                     // Pass 4: a member who walked home to haul has delivered.
                     if resources.haulers.remove(&aid) {

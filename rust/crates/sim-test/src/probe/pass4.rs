@@ -4,7 +4,8 @@ use sim_core::components::{
     Agent, AgentState, Child, Elder, Inventory, Life, Position, ResourceKind, TargetKind,
 };
 use sim_engine::SimEngine;
-use sim_systems::runtime::agent::haul_due;
+use sim_systems::runtime::agent::hauls_home;
+use sim_systems::runtime::settlement::firewood::in_gather_window;
 use sim_systems::runtime::decision::agent_decision::clock_in_window;
 use sim_systems::runtime::resource_regen::season_at;
 use sim_systems::runtime::settlement::food_economy::{stock_in_hand, stock_target, WINTER};
@@ -35,6 +36,8 @@ pub(super) fn metrics(engine: &SimEngine, fixed_supply: f64) -> Value {
     }
     let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
     let in_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
+    let firewood = r.rules.society.firewood;
+    let wood_window = in_gather_window(r);
     let mut query = engine.world.query::<(
         &Agent,
         &Position,
@@ -59,10 +62,13 @@ pub(super) fn metrics(engine: &SimEngine, fixed_supply: f64) -> Value {
             Some(AgentState::Seeking { target: TargetKind::GatherFood })
         ));
         let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+        // Pass 5: wood loads count as hauling under the firewood rule.
+        let wood = if firewood.is_some() { inventory.map_or(0, |inv| inv.get(ResourceKind::Wood)) } else { 0 };
         if child.is_none() && state.is_none_or(|s| *s == AgentState::Idle) {
             if let Some(&(x, y)) = homes.get(&agent.id) {
                 let distance = pos.x.abs_diff(x).max(pos.y.abs_diff(y));
-                hauling += u64::from(haul_due(&rule, carried, in_window, distance));
+                hauling += u64::from(hauls_home(Some(&rule), firewood.as_ref(), carried, wood,
+                    in_window, wood_window, distance));
             }
         }
     }

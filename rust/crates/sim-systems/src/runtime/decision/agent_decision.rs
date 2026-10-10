@@ -61,14 +61,18 @@ use sim_core::components::{
     MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
     TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
-use sim_core::rules::ForageRule;
+use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
+use crate::runtime::settlement::firewood::{wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
 
 /// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
 type Retarget = (AgentId, hecs::Entity, (u32, u32), (u32, u32));
+/// A wood gatherer to re-target (Pass 5): agent id, entity, position and its
+/// emptied spot (`None` when it had no target).
+type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
 
 /// Per-settlement forage inputs computed once per decision tick (Pass 4).
 #[derive(Debug, Clone)]
@@ -100,6 +104,41 @@ fn choose_bush(
                 && Some(**tile) != exclude
                 && chebyshev(**tile, home) <= rule.forage_radius
                 && claims.get(*tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+        })
+        .map(|(tile, _)| *tile)
+        .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// Per-settlement firewood inputs computed once per decision tick (Pass 5).
+#[derive(Debug, Clone)]
+struct WoodPlan {
+    /// Settlement formation tile; deadwood is measured from here.
+    home: (u32, u32),
+    /// Wood target in units.
+    target: f64,
+    /// Stockpile plus wood carried by members.
+    in_hand: u64,
+}
+
+/// Deterministic deadwood choice (Pass 5): among spots holding wood within
+/// `wood_radius` of `home` whose claim count is below the cap, minimise
+/// `(claims, chebyshev(agent, spot), y, x)`. `None` when no spot qualifies.
+fn choose_spot(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    agent: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+) -> Option<(u32, u32)> {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    wood_tiles
+        .iter()
+        .filter(|(tile, amount)| {
+            **amount >= 1
+                && Some(**tile) != exclude
+                && chebyshev(**tile, home) <= rule.wood_radius
+                && claims.get(*tile).copied().unwrap_or(0) < rule.max_gatherers_per_spot
         })
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
@@ -337,6 +376,10 @@ pub fn arm_priority_index(arm: CascadeArm) -> u8 {
 pub const BIAS_FLIP_THRESHOLD: f64 = 1.0;
 
 
+/// Critical need level used by Pass 5 rules when a world sets no
+/// `AgentRules::critical_preemption` (every Pass 5 world sets 75.0).
+pub const CRITICAL_NEED: f64 = 75.0;
+
 /// Hunger value strictly above which an Idle agent transitions to
 /// `Seeking { Food }`. Phase 5-β scope: a flat constant. Per-agent
 /// thresholds (temperament-driven) land in δ.
@@ -514,6 +557,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         let social_rule = resources.rules.agent.social_seek;
         let forage_rule = resources.rules.agent.forage
             .filter(|_| resources.rules.society.stock_target.is_some());
+        let firewood_rule = resources.rules.society.firewood;
         if social_rule.is_some() {
             resources.social_retry_after.retain(|_, after| tick < *after);
         }
@@ -557,6 +601,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                 // Pass 4: a member carrying a full haul load delivers it before building.
                 let loaded = forage_rule.is_some_and(|rule| {
                     inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= rule.haul_threshold)
+                }) || firewood_rule.is_some_and(|rule| {
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= rule.haul_threshold)
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
                  !children.contains(&a.id) && !elders.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
@@ -599,6 +645,35 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut forage_plans: BTreeMap<SettlementId, ForagePlan> = BTreeMap::new();
         let mut member_of: BTreeMap<AgentId, SettlementId> = BTreeMap::new();
         let mut claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        // Pass 5 — firewood inputs: each settlement's wood target and wood in
+        // hand, and the current claims on deadwood spots. Empty without the rule.
+        let wood_window = firewood_rule.is_some_and(|rule| {
+            clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
+        });
+        let mut wood_plans: BTreeMap<SettlementId, WoodPlan> = BTreeMap::new();
+        let mut wood_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        if firewood_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            let target = wood_target(resources).unwrap_or(0.0);
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                for id in &settlement.member_agents {
+                    member_of.entry(*id).or_insert(sid);
+                }
+                wood_plans.insert(sid, WoodPlan {
+                    home: settlement.formation_tile,
+                    target,
+                    in_hand: wood_in_hand(world, resources, sid),
+                });
+            }
+            for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
+                if matches!(state, AgentState::Seeking { target: TargetKind::GatherWood }) {
+                    *wood_claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+        }
+        let mut wood_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
         if forage_rule.is_some() {
             let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
             ids.sort_unstable();
@@ -620,6 +695,25 @@ impl RuntimeSystem for AgentDecisionSystem {
             }
         }
         let mut forage_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
+
+        // Pass 5 — meals at the hearth: each member's formation tile and
+        // whether its settlement's store holds food, computed once before the
+        // agent loop (sorted settlement id; first settlement wins). Empty
+        // without the meal rule.
+        let meal_rule = resources.rules.society.meals;
+        let mut meal_camp: BTreeMap<AgentId, ((u32, u32), bool)> = BTreeMap::new();
+        if meal_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                let stocked = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) >= 1;
+                for id in &settlement.member_agents {
+                    meal_camp.entry(*id).or_insert((settlement.formation_tile, stocked));
+                }
+            }
+        }
+        let critical_limit = resources.rules.agent.critical_preemption.unwrap_or(CRITICAL_NEED);
 
         // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
         // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
@@ -807,15 +901,52 @@ impl RuntimeSystem for AgentDecisionSystem {
             let worker = adult && !elders.contains(&agent.id);
             let social_ready = adult && (social_rule.is_none()
                 || !resources.social_retry_after.contains_key(&agent.id));
+            // Pass 5 — under the firewood rule a member carrying a full food
+            // or wood load hauls it home before any work arm fires again.
+            let loaded = firewood_rule.is_some_and(|rule| {
+                inventory_opt.as_ref().is_some_and(|inv| {
+                    inv.get(ResourceKind::Wood) >= rule.haul_threshold
+                        || forage_rule.is_some_and(|forage| inv.get(ResourceKind::Food) >= forage.haul_threshold)
+                })
+            });
+            // Pass 5 — under gathering preemption a member whose hunger or
+            // thirst is already critical starts no gathering trip (Forage,
+            // Firewood or Gather), so a preempted gatherer cannot be sent out
+            // again on the next tick while its need finds no source.
+            let critical_now = resources.rules.agent.preempt_gathering
+                && (hunger_opt.as_ref().is_some_and(|h| f64::from(h.value) >= critical_limit)
+                    || thirst_opt.as_ref().is_some_and(|t| t.value >= critical_limit));
+            let no_trips = loaded || critical_now;
             match *state {
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
                     // Hunger > Thirst > Fatigue > Construction > Social.
                     // Social is the lowest-priority drive — Needs and
                     // Construction always win.
-                    let need = actionable_need_with_fatigue_threshold(
+                    let mut need = actionable_need_with_fatigue_threshold(
                         hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold,
                     );
+                    // Pass 5 — a hungry member at camp whose store holds food
+                    // waits for its meal (StockpileConsumeSystem serves it
+                    // within five ticks) instead of walking to a bush; only a
+                    // critical water need may send it away meanwhile.
+                    // The wait keys on hunger itself (section 7.2), not on the
+                    // availability-filtered need: with every bush empty a hungry
+                    // member at a stocked camp still waits for its meal.
+                    let waiting_for_meal = meal_rule.is_some_and(|rule| {
+                        hunger_opt.as_ref().is_some_and(|h| h.value > HUNGER_THRESHOLD)
+                            && meal_camp.get(&agent.id).is_some_and(|(home, stocked)| {
+                                *stocked && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= rule.camp_radius
+                            })
+                    });
+                    if waiting_for_meal {
+                        let critical_water = availability.water
+                            && thirst_opt.as_ref().is_some_and(|t| t.value > critical_limit);
+                        if !critical_water {
+                            continue;
+                        }
+                        need = Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach));
+                    }
                     let breached = if let Some(need) = need {
                         Some(need)
                     } else if worker && if planning.is_some() {
@@ -993,7 +1124,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // (peer's own breach state ignored) so the bias
                         // can shift to Social over Construction.
                         let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
-                        if actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), None, None, availability, fatigue_threshold).is_some() {
+                        // A member waiting for its meal never flips back to a bush.
+                        if !waiting_for_meal
+                            && actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), None, None, availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Hunger, TargetKind::Food));
                         }
                         if actionable_need_with_fatigue_threshold(None, thirst_opt.as_deref(), None, availability, fatigue_threshold).is_some() {
@@ -1221,7 +1354,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_chase_since.insert(agent.id, tick);
                             }
                         }
-                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker).and_then(|rule| {
+                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker && !no_trips).and_then(|rule| {
                         // Pass 4 — Forage arm (after Combat, before Gather): a
                         // member with room and less than a haul load walks to a
                         // bush on purpose while the store is below its target.
@@ -1240,6 +1373,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                         resources.tallies.forage_trips += 1;
                         *state = AgentState::Seeking {
                             target: TargetKind::GatherFood,
+                        };
+                    } else if let Some(spot) = firewood_rule.filter(|_| wood_window && worker && !no_trips).and_then(|rule| {
+                        // Pass 5 — Firewood arm (after Forage, before Gather): a
+                        // member with room and less than a wood load walks to a
+                        // deadwood spot while the wood in hand is below target.
+                        let sid = member_of.get(&agent.id)?;
+                        let plan = wood_plans.get(sid)?;
+                        let inv = inventory_opt.as_ref()?;
+                        let room = inv.total() < INVENTORY_CAPACITY;
+                        let light = inv.get(ResourceKind::Wood) < rule.haul_threshold;
+                        if !(room && light && (plan.in_hand as f64) < plan.target) {
+                            return None;
+                        }
+                        choose_spot(&rule, plan.home, (pos.x, pos.y), &resources.wood_tiles, &wood_claims, None)
+                    }) {
+                        *wood_claims.entry(spot).or_default() += 1;
+                        wood_targets.insert(entity, spot);
+                        resources.tallies.wood_trips += 1;
+                        *state = AgentState::Seeking {
+                            target: TargetKind::GatherWood,
                         };
                     } else if let Some(_gather_tile) = {
                         // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
@@ -1263,7 +1416,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     (plan.in_hand as f64) < cap * plan.target
                                 })
                         });
-                        if worker && has_room && bounded {
+                        if worker && has_room && bounded && !no_trips {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,
@@ -1370,6 +1523,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                 }
                 AgentState::Seeking { target } => {
+                    // Pass 5 — critical hunger or thirst interrupts a gathering
+                    // trip: the gatherer becomes Idle (the post-pass drops its
+                    // SeekTarget) and the next decision tick serves the need.
+                    if resources.rules.agent.preempt_gathering
+                        && matches!(target, TargetKind::GatherFood | TargetKind::GatherWood)
+                        && (hunger_opt.as_ref().is_some_and(|h| f64::from(h.value) >= critical_limit)
+                            || thirst_opt.as_ref().is_some_and(|t| t.value >= critical_limit))
+                    {
+                        *state = AgentState::Idle;
+                        resources.tallies.gather_preempted += 1;
+                        continue;
+                    }
                     if matches!(target, TargetKind::Food | TargetKind::Water) {
                         if let Some(limit) = resources.rules.agent.critical_preemption {
                             if let Some((need, _)) = actionable_need_with_fatigue_threshold(
@@ -1388,7 +1553,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     TargetKind::Water => thirst_opt.as_ref()
                                         .filter(|_| availability.water).map(|t| t.value),
                                     TargetKind::Sleep | TargetKind::ConstructionSite
-                                        | TargetKind::Agent(_) | TargetKind::GatherFood => None,
+                                        | TargetKind::Agent(_) | TargetKind::GatherFood
+                                        | TargetKind::GatherWood => None,
                                 };
                                 // Keep an already-critical trip: competing hunger must not
                                 // repeatedly interrupt water seeking until the agent dehydrates.
@@ -1512,6 +1678,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // same "food present at current tile" edge as eating.
                         TargetKind::GatherFood => resources
                             .food_tiles
+                            .get(&key)
+                            .copied()
+                            .is_some_and(|v| v > 0),
+                        // Pass 5 — a firewood gatherer reaches its deadwood spot.
+                        TargetKind::GatherWood => resources
+                            .wood_tiles
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
@@ -1662,6 +1834,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
                                 resources.tallies.meals_eaten += 1;
                                 resources.tallies.meals_without_food += u64::from(!food_present);
+                                // Pass 5, display-only: a resolved ground meal.
+                                resources.tallies.ground_meals += 1;
                             }
                             *state = AgentState::Idle;
                         }
@@ -1698,6 +1872,31 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             }
                                         }
                                     }
+                                }
+                            }
+                            *state = AgentState::Idle;
+                        }
+                        // Pass 5 — firewood PICKUP (carry, NOT eat): take
+                        // min(spot amount, haul load - carried wood, room) and
+                        // remove an emptied spot (regrowth recreates it). The
+                        // transition to Idle is unconditional (freeze-critical).
+                        TargetKind::GatherWood => {
+                            let load = resources.rules.society.firewood.map_or(0, |rule| rule.haul_threshold);
+                            if let Some(inv) = inventory_opt.as_mut() {
+                                let carried = inv.get(ResourceKind::Wood);
+                                let room = INVENTORY_CAPACITY.saturating_sub(inv.total());
+                                let amount = resources.wood_tiles.get(&key).copied().unwrap_or(0);
+                                let take = u32::from(amount).min(load.saturating_sub(carried)).min(room);
+                                if take > 0 {
+                                    let overflow = inv.add(ResourceKind::Wood, take);
+                                    let actually = take - overflow;
+                                    let left = amount.saturating_sub(actually as u8);
+                                    if left == 0 {
+                                        resources.wood_tiles.remove(&key);
+                                    } else {
+                                        resources.wood_tiles.insert(key, left);
+                                    }
+                                    resources.tallies.wood_gathered += u64::from(actually);
                                 }
                             }
                             *state = AgentState::Idle;
@@ -1810,6 +2009,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         let mut retarget: Vec<Retarget> = Vec::new();
         let mut to_idle: Vec<hecs::Entity> = Vec::new();
+        // Pass 5 — deadwood targets held after this pass, and wood gatherers
+        // whose spot emptied (or who lost their target), re-targeted below.
+        let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        let mut wood_retarget: Vec<WoodRetarget> = Vec::new();
         for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
             .query::<(
                 &Agent,
@@ -1847,6 +2050,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                     };
                     if let Some(tile) = held {
                         *gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
+                // Pass 5 — a wood gatherer heads to the spot the Firewood arm
+                // chose, keeps a spot that still holds wood, and is re-targeted
+                // (never frozen) when its spot emptied.
+                AgentState::Seeking { target: TargetKind::GatherWood } => {
+                    let held = if let Some(spot) = wood_targets.get(&e) {
+                        seek_set.push((e, *spot));
+                        Some(*spot)
+                    } else {
+                        match seek_opt.map(|seek| seek.tile) {
+                            Some(tile) if resources.wood_tiles.get(&tile).is_some_and(|amount| *amount > 0) => Some(tile),
+                            old => {
+                                wood_retarget.push((agent.id, e, (pos.x, pos.y), old));
+                                None
+                            }
+                        }
+                    };
+                    if let Some(tile) = held {
+                        *wood_gather_claims.entry(tile).or_default() += 1;
                     }
                 }
                 // Resource targets stay stable; assigned beds follow bed reassignment.
@@ -1962,6 +2185,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                     None => to_idle.push(e),
                 }
+            }
+        }
+        // Pass 5 — re-target emptied deadwood spots in AgentId order by the
+        // firewood choice rule (claims recomputed, the empty spot excluded); a
+        // gatherer with no qualifying spot becomes Idle and drops its target.
+        wood_retarget.sort_by_key(|row| row.0);
+        for (id, e, pos, old) in wood_retarget {
+            let home = member_of.get(&id).and_then(|sid| wood_plans.get(sid)).map(|plan| plan.home);
+            let choice = firewood_rule.zip(home).and_then(|(rule, home)| {
+                choose_spot(&rule, home, pos, &resources.wood_tiles, &wood_gather_claims, old)
+            });
+            match choice {
+                Some(spot) => {
+                    *wood_gather_claims.entry(spot).or_default() += 1;
+                    seek_set.push((e, spot));
+                }
+                None => to_idle.push(e),
             }
         }
         for (e, tile) in seek_set {

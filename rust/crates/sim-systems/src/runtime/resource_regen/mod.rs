@@ -139,6 +139,21 @@ fn regen_channel(sources: &[((u32, u32), u8)], tiles: &mut HashMap<(u32, u32), u
     lost
 }
 
+/// Refill every registered deadwood spot toward its ceiling by `amount`
+/// (Pass 5), recreating an emptied spot. Never writes a zero value.
+fn regen_wood(
+    tiles: &mut std::collections::BTreeMap<(u32, u32), u8>,
+    sources: &std::collections::BTreeMap<(u32, u32), u8>,
+    amount: u8,
+) {
+    for (key, max) in sources {
+        let cur = tiles.get(key).copied().unwrap_or(0);
+        if cur < *max {
+            tiles.insert(*key, cur.saturating_add(amount).min(*max));
+        }
+    }
+}
+
 impl RuntimeSystem for ResourceRegenSystem {
     fn name(&self) -> &str {
         "ResourceRegenSystem"
@@ -170,6 +185,16 @@ impl RuntimeSystem for ResourceRegenSystem {
             // Display-only: counted in every scene, never read by simulation logic.
             resources.tallies.regen_lost_at_cap +=
                 regen_channel(&food, &mut resources.food_tiles, food_units);
+        }
+        // Pass 5: deadwood regrows through its own accumulator under the
+        // firewood rule; a zero-unit pulse skips the channel.
+        if let Some(rule) = resources.rules.society.firewood {
+            resources.wood_regen_acc += rule.regen_permille;
+            let units = resources.wood_regen_acc / 1000;
+            resources.wood_regen_acc %= 1000;
+            if units > 0 {
+                regen_wood(&mut resources.wood_tiles, &resources.wood_source_max, u8::try_from(units).unwrap_or(u8::MAX));
+            }
         }
         let water = snapshot(&resources.water_source_max);
         regen_channel(&water, &mut resources.water_tiles, WATER_REGEN_AMOUNT);

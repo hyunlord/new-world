@@ -84,6 +84,25 @@ pub struct Tallies {
     pub haul_deposits: u64,
     /// Food regrowth units discarded because a source was at its ceiling.
     pub regen_lost_at_cap: u64,
+    /// Food units served from a settlement store to a member (Pass 5).
+    pub meals_from_store: u64,
+    /// Ground meals resolved at a food tile (`Consuming { Food }`) (Pass 5).
+    pub ground_meals: u64,
+    /// Firewood trips started by the Firewood decision arm (Pass 5).
+    pub wood_trips: u64,
+    /// Wood units picked up from deadwood spots (Pass 5).
+    pub wood_gathered: u64,
+    /// Gathering trips interrupted by a critical need (Pass 5).
+    pub gather_preempted: u64,
+    /// Members marked `Cold`, summed over every hourly fire update (Pass 5).
+    pub cold_member_hours: u64,
+}
+
+/// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FireState {
+    /// Whether the last hourly update burned a full hour of wood.
+    pub lit: bool,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).
@@ -181,6 +200,15 @@ pub struct SimResources {
     /// Seasonal food regrowth accumulator in thousandths of a unit; stays zero
     /// without the season rule.
     pub food_regen_acc: u32,
+    /// Deadwood amount per tile; empty without deadwood worldgen (Pass 5).
+    pub wood_tiles: BTreeMap<(u32, u32), u8>,
+    /// Deadwood regrowth ceiling per registered spot; empty without deadwood worldgen.
+    pub wood_source_max: BTreeMap<(u32, u32), u8>,
+    /// Wood regrowth accumulator in thousandths of a unit; stays zero without
+    /// the firewood rule.
+    pub wood_regen_acc: u32,
+    /// Hearth fire per settlement; empty without the firewood rule.
+    pub fires: BTreeMap<SettlementId, FireState>,
     /// Members whose last movement was a haul step home; display-only, used to
     /// count `Tallies::haul_deposits`. Empty without the forage rule.
     pub haulers: BTreeSet<AgentId>,
@@ -367,6 +395,10 @@ impl SimResources {
             bed_of: BTreeMap::new(),
             shelter_plan_skips: 0,
             food_regen_acc: 0,
+            wood_tiles: BTreeMap::new(),
+            wood_source_max: BTreeMap::new(),
+            wood_regen_acc: 0,
+            fires: BTreeMap::new(),
             haulers: BTreeSet::new(),
             social_chase_since: BTreeMap::new(),
             social_retry_after: BTreeMap::new(),

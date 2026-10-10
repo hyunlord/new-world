@@ -48,7 +48,7 @@ use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Inventory, Position, ResourceKind, SeekTarget,
     SETTLEMENT_PROXIMITY_RADIUS,
 };
-use sim_core::rules::ForageRule;
+use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
 use crate::runtime::decision::agent_decision::clock_in_window;
 
@@ -108,6 +108,30 @@ pub fn haul_due(rule: &ForageRule, carried: u32, in_forage_window: bool, home_di
         && (carried >= rule.haul_threshold || (carried >= 1 && !in_forage_window))
 }
 
+/// Pass 5 haul home generalised to wood: a member carrying a full food load,
+/// a full wood load, or any food or wood outside both the forage and firewood
+/// windows, while farther than the deposit radius. Without the firewood rule
+/// this is exactly [`haul_due`] (false without the forage rule).
+pub fn hauls_home(
+    forage: Option<&ForageRule>,
+    firewood: Option<&FirewoodRule>,
+    carried_food: u32,
+    carried_wood: u32,
+    in_forage_window: bool,
+    in_wood_window: bool,
+    home_distance: u32,
+) -> bool {
+    match firewood {
+        None => forage.is_some_and(|rule| haul_due(rule, carried_food, in_forage_window, home_distance)),
+        Some(wood) => {
+            home_distance > SETTLEMENT_PROXIMITY_RADIUS
+                && (forage.is_some_and(|rule| carried_food >= rule.haul_threshold)
+                    || carried_wood >= wood.haul_threshold
+                    || ((carried_food >= 1 || carried_wood >= 1) && !in_forage_window && !in_wood_window))
+        }
+    }
+}
+
 /// Phase 4-β movement system.
 ///
 /// On every tick, queries `(&mut Position, &mut MovementRng)` and mutates each
@@ -155,10 +179,15 @@ impl RuntimeSystem for AgentMovementSystem {
         let forage = rules.forage.filter(|_| resources.rules.society.stock_target.is_some());
         let forage_window = forage
             .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
+        // Pass 5: wood loads are hauled home too under the firewood rule.
+        let firewood = resources.rules.society.firewood;
+        let wood_window = firewood.is_some_and(|rule| {
+            clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
+        });
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
         let elder_radius = resources.rules.society.aging.map(|rule| rule.elder_tether_radius);
         if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
-            || forage.is_some() || elder_radius.is_some()
+            || forage.is_some() || elder_radius.is_some() || firewood.is_some()
         {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
@@ -234,11 +263,16 @@ impl RuntimeSystem for AgentMovementSystem {
             }
             // Pass 4 haul home: a loaded idle member walks straight to its
             // formation tile instead of a Brownian step (no RNG draw).
-            if let (Some(rule), Some(agent), None) = (forage, agent, child) {
+            if let (true, Some(agent), None) = (forage.is_some() || firewood.is_some(), agent, child) {
                 if let Some(&anchor) = home.get(&agent.id) {
                     let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+                    let wood = if firewood.is_some() {
+                        inventory.map_or(0, |inv| inv.get(ResourceKind::Wood))
+                    } else {
+                        0
+                    };
                     let distance = pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1));
-                    if haul_due(&rule, carried, forage_window, distance) {
+                    if hauls_home(forage.as_ref(), firewood.as_ref(), carried, wood, forage_window, wood_window, distance) {
                         pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
                         pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
                         haul_steps.push(agent.id);
@@ -296,6 +330,30 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn hauls_home_generalises_haul_due_to_wood() {
+        use sim_core::rules::WorldRules;
+        let forage = WorldRules::game_v11().agent.forage.expect("forage");
+        let wood = WorldRules::game_v11().society.firewood.expect("firewood");
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        // Without the firewood rule: exactly haul_due, wood ignored.
+        for (food, window) in [(0, true), (1, true), (4, true), (1, false), (0, false)] {
+            assert_eq!(hauls_home(Some(&forage), None, food, 9, window, false, far),
+                haul_due(&forage, food, window, far));
+        }
+        assert!(!hauls_home(None, None, 9, 9, false, false, far));
+        let h = |food, carried_wood, fw, ww| hauls_home(Some(&forage), Some(&wood), food, carried_wood, fw, ww, far);
+        // Full loads go home inside the windows.
+        assert!(h(4, 0, true, true) && h(0, 2, true, true));
+        // Partial loads wait while either window is open...
+        assert!(!h(1, 0, true, true) && !h(0, 1, true, false) && !h(0, 1, false, true) && !h(3, 1, true, true));
+        // ...and go home once both are closed.
+        assert!(h(1, 0, false, false) && h(0, 1, false, false));
+        assert!(!h(0, 0, false, false));
+        // Never inside the deposit radius.
+        assert!(!hauls_home(Some(&forage), Some(&wood), 4, 2, false, false, SETTLEMENT_PROXIMITY_RADIUS));
     }
 
     #[test]

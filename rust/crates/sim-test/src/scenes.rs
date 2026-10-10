@@ -31,6 +31,14 @@ pub fn game_v10_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 5 fixture: v10 plus deadwood, meals, firewood and gathering preemption.
+pub fn game_v11_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v11(seed),
+        sim_core::rules::WorldRules::game_v11(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
