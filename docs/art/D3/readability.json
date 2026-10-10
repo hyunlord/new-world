@@ -1,0 +1,57 @@
+{
+  "direction": "D3",
+  "formula": "mean((0.2126 R + 0.7152 G + 0.0722 B)/255); encoded sRGB, not linear-light luminance",
+  "ground_selection": "Hue in [0.14,0.47], lowest saturation 3; RGB tie break; median luma base, extrema strokes. If no green, lowest saturation palette colors.",
+  "ground_colors": [
+    "#313625",
+    "#507C4E",
+    "#BEB76A"
+  ],
+  "ground_mean_luma": 0.43796905024509797,
+  "villagers": [
+    {
+      "sprite": "09_villager_gatherer.png",
+      "opaque_texels": 232,
+      "sprite_mean_luma": 0.19471190669371197,
+      "ground_mean_luma": 0.43796905024509797,
+      "ground_beneath_opaque_mean_luma": 0.43925690331304945,
+      "absolute_difference": 0.243257143551386,
+      "beneath_difference": 0.24454499661933748,
+      "target_pass": true
+    },
+    {
+      "sprite": "10_villager_builder.png",
+      "opaque_texels": 197,
+      "sprite_mean_luma": 0.19471869413755347,
+      "ground_mean_luma": 0.43796905024509797,
+      "ground_beneath_opaque_mean_luma": 0.43704340798248226,
+      "absolute_difference": 0.2432503561075445,
+      "beneath_difference": 0.2423247138449288,
+      "target_pass": true
+    },
+    {
+      "sprite": "11_villager_elder.png",
+      "opaque_texels": 227,
+      "sprite_mean_luma": 0.2072587717025136,
+      "ground_mean_luma": 0.43796905024509797,
+      "ground_beneath_opaque_mean_luma": 0.43814825948000347,
+      "absolute_difference": 0.23071027854258436,
+      "beneath_difference": 0.23088948777748985,
+      "target_pass": true
+    },
+    {
+      "sprite": "12_villager_child.png",
+      "opaque_texels": 265,
+      "sprite_mean_luma": 0.22394218867924526,
+      "ground_mean_luma": 0.43796905024509797,
+      "ground_beneath_opaque_mean_luma": 0.44080448094709584,
+      "absolute_difference": 0.2140268615658527,
+      "beneath_difference": 0.2168622922678506,
+      "target_pass": true
+    }
+  ],
+  "minimum_difference": 0.2140268615658527,
+  "threshold": 0.15,
+  "target_pass": true,
+  "adjustments": "None: original palette and normalized sprites remain unchanged."
+}

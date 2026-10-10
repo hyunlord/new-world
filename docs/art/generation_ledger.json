@@ -1,11 +1,11 @@
 {
-  "attempts": 13,
-  "successes": 13,
+  "attempts": 15,
+  "successes": 15,
   "failures": 0,
   "direction_counts": {
     "D1": 4,
-    "D2": 4,
-    "D3": 4
+    "D2": 5,
+    "D3": 5
   },
   "images": [
     {
@@ -90,7 +90,8 @@
         1254,
         1254
       ],
-      "time": "2026-10-10T08:12:55.828712+00:00"
+      "time": "2026-10-10T08:12:55.828712+00:00",
+      "selected": true
     },
     {
       "direction": "D2",
@@ -160,7 +161,8 @@
         1254,
         1254
       ],
-      "time": "2026-10-10T08:13:49.201223+00:00"
+      "time": "2026-10-10T08:13:49.201223+00:00",
+      "selected": false
     },
     {
       "direction": "D3",
@@ -230,7 +232,47 @@
         1254,
         1254
       ],
-      "time": "2026-10-10T08:13:51.146884+00:00"
+      "time": "2026-10-10T08:13:51.146884+00:00",
+      "selected": false
+    },
+    {
+      "direction": "D2",
+      "frame": "sheet_retry1",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-0149cc94-40b6-4418-9b14-30b875a1a85c.png",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with a wide empty margin; nothing touches a cell edge or another item; no shadows on the background; no text. Same pixel-art style, palette and lighting as the reference image, front three-quarter view, crisp square pixels, no anti-aliasing. Items, left to right, top to bottom: 1 campfire with a ring of stones; 2 lean-to shelter of branches and hides; 3 storage pit with baskets of food; 4 half-built lean-to frame; 5 berry bush full of red berries; 6 berry bush with two berries; 7 berry bush with one berry; 8 bare berry bush; 9 villager gatherer standing, facing the viewer; 10 villager builder holding a stone tool; 11 elderly villager with a walking stick; 12 child villager; 13 grey boulder; 14 young tree; 15 reed tuft; 16 woven basket of berries.\n\nRicher atmospheric pixel art of about 48 colours with hue-shifted shading: warm highlights, cool shadows, more texture on ground and foliage, gentle light falloff. Still crisp pixels with no blur.\nSquare sheet. Simplify details to survive native 16x24 people, 32x32 buildings, 16x16 bushes.\nCRITICAL grid correction: All 16 objects must fit strictly inside the central 55% width and height of each equal square cell. Leave at least 22% of every cell blank magenta on ALL FOUR sides, including smoke, tools and tree tips. Four equally spaced rows and columns, no grid lines. Objects must never cross quarter-image boundaries. Make each object much smaller than the previous sheet.",
+      "references": [
+        "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-830c7bbb-8934-4d6d-88b8-94e63c05c4a6.png"
+      ],
+      "tool": "image_gen",
+      "model": "not exposed",
+      "requested_size": "square",
+      "success": true,
+      "size": [
+        1254,
+        1254
+      ],
+      "time": "2026-10-10T08:18:20.650674+00:00",
+      "selected": true
+    },
+    {
+      "direction": "D3",
+      "frame": "sheet_retry1",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-d61dedc7-b861-45fe-8f3e-804669da8173.png",
+      "prompt": "A 4 \u00d7 4 grid sprite sheet on a solid flat magenta (#FF00FF) background. Every item is centred in its own equal square cell with a wide empty margin; nothing touches a cell edge or another item; no shadows on the background; no text. Same pixel-art style, palette and lighting as the reference image, front three-quarter view, crisp square pixels, no anti-aliasing. Items, left to right, top to bottom: 1 campfire with a ring of stones; 2 lean-to shelter of branches and hides; 3 storage pit with baskets of food; 4 half-built lean-to frame; 5 berry bush full of red berries; 6 berry bush with two berries; 7 berry bush with one berry; 8 bare berry bush; 9 villager gatherer standing, facing the viewer; 10 villager builder holding a stone tool; 11 elderly villager with a walking stick; 12 child villager; 13 grey boulder; 14 young tree; 15 reed tuft; 16 woven basket of berries.\n\nFlat, bold pixel art of about 20 colours, strong silhouettes, minimal texture, large simple shapes that stay readable when hundreds of people are on screen.\nSquare sheet. Simplify details to survive native 16x24 people, 32x32 buildings, 16x16 bushes. Very few large flat color regions.\nCRITICAL grid correction: All 16 objects must fit strictly inside the central 55% width and height of each equal square cell. Leave at least 22% of every cell blank magenta on ALL FOUR sides, including smoke, tools and tree tips. Four equally spaced rows and columns, no grid lines. Objects must never cross quarter-image boundaries. Make each object much smaller than the previous sheet.",
+      "references": [
+        "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a124d7-4a0f-74c1-816b-2501c33c013c/exec-7e5cfb7e-a0b1-4f2d-ab51-f0334b34c425.png"
+      ],
+      "tool": "image_gen",
+      "model": "not exposed",
+      "requested_size": "square",
+      "success": true,
+      "size": [
+        1254,
+        1254
+      ],
+      "time": "2026-10-10T08:18:13.591323+00:00",
+      "selected": true
     }
-  ]
+  ],
+  "quality_rejected_outputs": 2
 }
