@@ -78,6 +78,7 @@ fn pass5_v11_literal() -> WorldRules {
                 founder_age_max_ticks: 57_600,
                 founder_min_remaining_ticks: 4_320,
                 elder_tether_radius: 4,
+                elder_evening_tether: false,
             }),
             meals: Some(MealRule {
                 breakfast_start: 360,

@@ -215,6 +215,9 @@ pub struct AgingRule {
     pub founder_min_remaining_ticks: u64,
     /// Idle elder distance from the settlement formation tile.
     pub elder_tether_radius: u32,
+    /// Inside the evening-gather window an idle elder follows the evening
+    /// tether when it is tighter (Pass 6). False = the elder tether at all hours.
+    pub elder_evening_tether: bool,
 }
 /// Breakfast and dinner served from the settlement store (Pass 5).
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -341,6 +344,11 @@ impl WorldRules {
             firewood.urgent_start_minute = Some(420);
             rules.society.firewood = Some(firewood);
         }
+        // Part 4: elders join the evening camp.
+        if let Some(mut aging) = rules.society.aging {
+            aging.elder_evening_tether = true;
+            rules.society.aging = Some(aging);
+        }
         rules
     }
 
@@ -433,6 +441,7 @@ impl WorldRules {
             founder_age_max_ticks: 57_600,
             founder_min_remaining_ticks: 4_320,
             elder_tether_radius: 4,
+            elder_evening_tether: false,
         });
         rules.seasons = Some(SeasonRule {
             days_per_season: 7,
@@ -618,6 +627,10 @@ mod tests {
         new.night_season_from_evening = old.night_season_from_evening;
         new.urgent_start_minute = old.urgent_start_minute;
         new.cold_hunger_permille = old.cold_hunger_permille;
+        // Part 4 adds the elder evening tether.
+        if let (Some(aging), Some(old)) = (v12.society.aging.as_mut(), v11.society.aging) {
+            aging.elder_evening_tether = old.elder_evening_tether;
+        }
         assert_eq!(v12, v11);
     }
 

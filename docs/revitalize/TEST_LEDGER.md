@@ -585,3 +585,6 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | The same seven fields with their v11 values | struct-literal field addition (Part 0 test); the literal still equals `game_v11()` field by field |
 | 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_five_is_exactly_additive` → `schema_six_is_exactly_additive`: version 5 → 6, key count 53 + 15 + 15 → 53 + 15 + 15 + 6 | authorized probe schema move; every v5 key keeps its meaning |
 | 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | Adds a `game_v12` parse assertion and a `game_v13` rejection | strengthened |
+| 4 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` test `RULE` AgingRule literal | Add `elder_evening_tether: false` | struct-literal field addition with legacy value |
+| 4 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | Add `elder_evening_tether: false` | struct-literal field addition; the literal still equals `game_v11()` |
+| 4 | `rust/crates/sim-core/src/rules.rs` `game_v12_is_v11_plus_pass6_fields` (a Pass 6 test) | Also resets `aging.elder_evening_tether` before comparing with v11 | the test still pins every non-Pass-6 field of v12 to v11 |
