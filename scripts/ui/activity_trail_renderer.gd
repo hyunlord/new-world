@@ -33,6 +33,7 @@ const TRAIL_COLOR_SEEKING: Color = Color(1.0, 0.65, 0.15, TRAIL_ALPHA)         #
 const TRAIL_COLOR_CONSUMING_AGENT: Color = Color(1.0, 0.40, 0.75, TRAIL_ALPHA) # pink
 const TRAIL_COLOR_CONSUMING_OTHER: Color = Color(0.30, 0.95, 0.35, TRAIL_ALPHA) # green
 
+var _drawn_segment_count: int = 0
 var _world_sim: Node = null
 var _inspector: Node = null
 var _camera: Camera2D = null
@@ -113,6 +114,7 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	_drawn_segment_count = 0
 	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for aid in _history.keys():
 		if int(aid) != _selected_agent:
@@ -128,6 +130,7 @@ func _draw() -> void:
 		for p in hist:
 			pts.append(p as Vector2)
 		draw_polyline(pts, color, TRAIL_WIDTH / maxf(zoom, 0.01), true)
+		_drawn_segment_count += maxi(pts.size() - 1, 0)
 
 
 func _color_for_state_tag(tag: int) -> Color:
@@ -161,3 +164,7 @@ func _on_world_reset() -> void:
 	_seek_kind.clear()
 	_selected_agent = -1
 	queue_redraw()
+
+
+func get_drawn_segment_count() -> int:
+	return _drawn_segment_count if is_visible_in_tree() else 0

@@ -45,6 +45,7 @@ const CARRY_FILL_ALPHA: float = 0.85                # >= 0.15 UI minimum
 const CARRY_STROKE_ALPHA: float = 1.0               # >= 0.40 UI minimum
 const CARRY_STROKE_W: float = 1.0
 
+var _drawn_segment_count: int = 0
 var _world_sim: Node = null
 var _inspector: Node = null
 var _camera: Camera2D = null
@@ -104,6 +105,7 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	_drawn_segment_count = 0
 	var n: int = _xs.size()
 	if _ys.size() != n or _states.size() != n or _seek_kinds.size() != n \
 			or _target_xs.size() != n or _target_ys.size() != n:
@@ -121,6 +123,7 @@ func _draw() -> void:
 		if tag == 1 and _target_xs[i] >= 0 and _ids.size() == n and _ids[i] == selected:
 			var target_px: Vector2 = _tile_to_px(_target_xs[i], _target_ys[i])
 			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH / maxf(zoom, 0.01))
+			_drawn_segment_count += 1
 		# A — head dot above the agent.
 		var head: Vector2 = agent_px + Vector2(0.0, HEAD_OFFSET_Y)
 		if tag == 1:
@@ -156,3 +159,7 @@ func _kind_color(kind: int, a: float) -> Color:
 	elif kind == 3:
 		c = COLOR_SLEEP
 	return Color(c.r, c.g, c.b, a)
+
+
+func get_drawn_segment_count() -> int:
+	return _drawn_segment_count if is_visible_in_tree() else 0
