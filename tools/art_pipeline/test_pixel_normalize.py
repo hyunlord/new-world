@@ -7,6 +7,8 @@ import numpy as np
 from PIL import Image
 from pixel_normalize import block_mode, key_out, normalize, run
 from palette_tools import rgb_to_lab
+from check_native_grid import NativeGridTests
+from check_semantics_v2 import SemanticTests
 
 
 class NormalizeTests(unittest.TestCase):

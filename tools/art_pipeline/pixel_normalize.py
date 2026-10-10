@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -206,5 +207,35 @@ def main() -> int:
     return 0 if run(args.sheet, args.manifest, args.palette, args.output) else 1
 
 
+def outline(image: Image.Image, color: Color) -> Image.Image:
+    """Pad native texels by one and outline only perimeter-connected exterior."""
+    source = np.asarray(image.convert("RGBA"))
+    canvas = np.pad(source, ((1, 1), (1, 1), (0, 0)))
+    mask = canvas[..., 3] == 255
+    height, width = mask.shape
+    exterior = np.zeros_like(mask)
+    frontier = [(0, 0)]
+    while frontier:
+        y, x = frontier.pop()
+        if not (0 <= y < height and 0 <= x < width) or mask[y, x] or exterior[y, x]:
+            continue
+        exterior[y, x] = True
+        frontier.extend(((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)))
+    padded = np.pad(mask, 1)
+    dilated = np.zeros_like(mask)
+    for dy in range(3):
+        for dx in range(3):
+            dilated |= padded[dy:dy + height, dx:dx + width]
+    outside = dilated & exterior
+    canvas[outside, :3] = color
+    canvas[outside, 3] = 255
+    return Image.fromarray(canvas)
+
+
 if __name__ == "__main__":
+    if '--v2' in sys.argv:
+        sys.argv.remove('--v2')
+        from run_v2 import main as main_v2
+        main_v2()
+        raise SystemExit(0)
     raise SystemExit(main())

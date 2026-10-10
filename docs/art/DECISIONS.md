@@ -17,3 +17,15 @@
 - All normalized sprites pass structural tests. D1/D2 fail the 0.15 readability experiment; D3 passes. Preserve these failures as comparison evidence. No threshold relaxation or contrast-driven background cherry-picking.
 - Shared shadow is a separate production-layer specification in the bible; it is not baked into binary-alpha normalized sprite outputs or their luma measurements.
 - Two review rounds completed: first found baseline defect; second confirmed repair. Static Korean HUD review passed. No production decision made on behalf of owner.
+
+## Pass 2
+
+- The explicit pass-2 attachment authorizes this art branch and overrides the generic lead/main reset/merge workflow. Only docs/art and tools/art_pipeline change. Zero image-generation calls.
+- Use the lossless selected originals: D1_sheet.png, D2_sheet_retry1.png, D3_sheet_retry1.png. Preserve pass-1 files and scores as historical evidence.
+- Recover native silhouette dimensions first. Class maxima apply before the extra outside-outline padding; final canvas and anchors record that padding separately. No scale-to-fit.
+- Overview is a 1024x1024 world (64x64 tiles), centered without resampling in the 1920x1080 frame. HUD remains the pass-1 Galmuri 2x layer.
+- Graft graph is absent in this art clone; direct source reads provide the implementation evidence.
+- Native key rule remains exactly R>150, B>150, G<110, abs(R-B)<90 (alpha>=128). Axis periods differing by more than0.3 remain independent as requested; uncertain anisotropic results are flagged regenerate rather than manually corrected.
+- Fidelity is conservative: all step-3 opaque texels participate, including texels removed by required spill cleanup (compared against transparent black). Both direction mean and individual sprite mean are reported. Intentional alpha changes are diagnostic, not a separate failure.
+- Skin is a native adult-derived HSV/ΔE palette proxy and may include clothing. Water has no sheet cell, so the highlight is the nearest real native color to cool #BEDCE6. Neither proves anatomical segmentation or a newly authored water sprite.
+- Part1: 23 unit tests pass, including byte-exact5.9 phase recovery and each semantic check. D1/D2/D3 palette sizes67/86/57; strict content failures retained. Format checks alone no longer imply production readiness.
