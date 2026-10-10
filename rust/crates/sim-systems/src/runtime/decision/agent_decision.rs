@@ -337,6 +337,10 @@ pub fn arm_priority_index(arm: CascadeArm) -> u8 {
 pub const BIAS_FLIP_THRESHOLD: f64 = 1.0;
 
 
+/// Critical need level used by Pass 5 rules when a world sets no
+/// `AgentRules::critical_preemption` (every Pass 5 world sets 75.0).
+pub const CRITICAL_NEED: f64 = 75.0;
+
 /// Hunger value strictly above which an Idle agent transitions to
 /// `Seeking { Food }`. Phase 5-β scope: a flat constant. Per-agent
 /// thresholds (temperament-driven) land in δ.
@@ -621,6 +625,25 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         let mut forage_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
 
+        // Pass 5 — meals at the hearth: each member's formation tile and
+        // whether its settlement's store holds food, computed once before the
+        // agent loop (sorted settlement id; first settlement wins). Empty
+        // without the meal rule.
+        let meal_rule = resources.rules.society.meals;
+        let mut meal_camp: BTreeMap<AgentId, ((u32, u32), bool)> = BTreeMap::new();
+        if meal_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                let stocked = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) >= 1;
+                for id in &settlement.member_agents {
+                    meal_camp.entry(*id).or_insert((settlement.formation_tile, stocked));
+                }
+            }
+        }
+        let critical_limit = resources.rules.agent.critical_preemption.unwrap_or(CRITICAL_NEED);
+
         // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
         // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
         // AND it has no higher-priority drive breached (Needs +
@@ -813,9 +836,27 @@ impl RuntimeSystem for AgentDecisionSystem {
                     // Hunger > Thirst > Fatigue > Construction > Social.
                     // Social is the lowest-priority drive — Needs and
                     // Construction always win.
-                    let need = actionable_need_with_fatigue_threshold(
+                    let mut need = actionable_need_with_fatigue_threshold(
                         hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold,
                     );
+                    // Pass 5 — a hungry member at camp whose store holds food
+                    // waits for its meal (StockpileConsumeSystem serves it
+                    // within five ticks) instead of walking to a bush; only a
+                    // critical water need may send it away meanwhile.
+                    let waiting_for_meal = meal_rule.is_some_and(|rule| {
+                        matches!(need, Some((TargetKind::Food, _)))
+                            && meal_camp.get(&agent.id).is_some_and(|(home, stocked)| {
+                                *stocked && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= rule.camp_radius
+                            })
+                    });
+                    if waiting_for_meal {
+                        let critical_water = availability.water
+                            && thirst_opt.as_ref().is_some_and(|t| t.value > critical_limit);
+                        if !critical_water {
+                            continue;
+                        }
+                        need = Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach));
+                    }
                     let breached = if let Some(need) = need {
                         Some(need)
                     } else if worker && if planning.is_some() {
@@ -993,7 +1034,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // (peer's own breach state ignored) so the bias
                         // can shift to Social over Construction.
                         let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
-                        if actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), None, None, availability, fatigue_threshold).is_some() {
+                        // A member waiting for its meal never flips back to a bush.
+                        if !waiting_for_meal
+                            && actionable_need_with_fatigue_threshold(hunger_opt.as_deref(), None, None, availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Hunger, TargetKind::Food));
                         }
                         if actionable_need_with_fatigue_threshold(None, thirst_opt.as_deref(), None, availability, fatigue_threshold).is_some() {

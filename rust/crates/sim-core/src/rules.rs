@@ -308,7 +308,16 @@ impl WorldRules {
     /// Pass 5 village policies: v10 plus meals, firewood and gathering preemption.
     /// v10 stays frozen.
     pub const fn game_v11() -> Self {
-        Self::game_v10()
+        let mut rules = Self::game_v10();
+        rules.society.meals = Some(MealRule {
+            breakfast_start: 360,
+            breakfast_end: 480,
+            dinner_start: 1080,
+            dinner_end: 1200,
+            meal_hunger: 25.0,
+            camp_radius: 8,
+        });
+        rules
     }
 
     /// Pass 4 village policies: v9 retuned for twelve bushes. v9 stays frozen.
