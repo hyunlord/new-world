@@ -36,6 +36,23 @@ static func life_stage_counts(snapshot: Dictionary) -> Dictionary:
 	return counts
 
 
+static func deadwood_tile(snapshot: Dictionary, village: Vector2) -> Vector2:
+	var kinds: PackedInt32Array = snapshot.get("kinds", PackedInt32Array())
+	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
+	var best: Vector2 = Vector2(-1, -1)
+	var distance: float = INF
+	for index: int in mini(kinds.size(), mini(xs.size(), ys.size())):
+		if kinds[index] != 3:
+			continue
+		var tile: Vector2 = Vector2(xs[index], ys[index])
+		var candidate: float = maxf(absf(tile.x - village.x), absf(tile.y - village.y))
+		if candidate < distance or (candidate == distance and (tile.y < best.y or (tile.y == best.y and tile.x < best.x))):
+			best = tile
+			distance = candidate
+	return best
+
+
 static func tagged_nodes(parent: Node) -> Array[Node]:
 	var result: Array[Node] = []
 	if parent == null:
@@ -63,9 +80,15 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 			"modulate": [item.modulate.r, item.modulate.g, item.modulate.b, item.modulate.a],
 			"self_modulate": [item.self_modulate.r, item.self_modulate.g, item.self_modulate.b, item.self_modulate.a],
 		}
-		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "pose", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind"]:
+		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "pose", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind", "qa_status", "fire_lit", "glow_alpha", "wood_stock", "food_stock", "settlement_id", "woodpile_stage", "deadwood_stage", "resource_amount", "resource_max", "seated"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
+		for key: String in ["drawn_position", "tile"]:
+			if node.has_meta(key):
+				var point: Vector2 = Vector2(node.get_meta(key))
+				row[key] = [point.x, point.y]
+		if node is Label:
+			row["text"] = (node as Label).text
 		if node is Sprite2D:
 			var sprite: Sprite2D = node as Sprite2D
 			row["modulate_alpha"] = sprite.modulate.a

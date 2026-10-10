@@ -22,6 +22,9 @@ var _manifest: Array[Dictionary] = []
 var _selected_seeking: bool = false
 var _clock_offset: int = 0
 var _failed: bool = false
+var _motion_before: Dictionary = {}
+var _motion_start_tick: int = -1
+var _motion_end_tick: int = -1
 
 
 func _init() -> void:
@@ -107,6 +110,11 @@ func _run() -> void:
 			tile = _food_tile(tile)
 			if tile.x < 0:
 				_fail("F3 requires a food source; none exists at this tick")
+				return
+		if framing == "F5":
+			tile = _deadwood_tile(tile)
+			if tile.x < 0:
+				_fail("F5 requires a deadwood spot; none exists at this tick")
 				return
 		_selected_seeking = false
 		_set_agent_layers(framing != "F2A")
@@ -212,6 +220,10 @@ func _food_tile(village: Vector2) -> Vector2:
 	return best
 
 
+func _deadwood_tile(village: Vector2) -> Vector2:
+	return Metadata.deadwood_tile(_world.call("get_resource_snapshot"), village)
+
+
 func _open_inspector(inspector: Node) -> bool:
 	if inspector == null:
 		return false
@@ -244,7 +256,12 @@ func _advance_to(target: int) -> bool:
 	var tick: int = int(clock["tick"])
 	var trail: Node = _main.get_node_or_null("ActivityTrailRenderer")
 	while tick < target:
+		if target - tick <= 8:
+			_motion_before = _world.call("get_agent_snapshot")
+			_motion_start_tick = tick
 		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		if tick == target:
+			_motion_end_tick = tick
 		if trail != null:
 			trail.call("_process", 0.0)
 	return tick == target
@@ -266,11 +283,13 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
 	var data: Dictionary = {
-		"schema_version": 3, "camera_position": [_camera.position.x, _camera.position.y],
+		"schema_version": 4, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
 		"agent_snapshot": _json_arrays(agent_snapshot),
+		"settlement_snapshot": _json_arrays(_world.call("get_settlement_snapshot")),
+		"resource_snapshot": _json_arrays(_world.call("get_resource_snapshot")),
 		"life_stage_counts": Metadata.life_stage_counts(agent_snapshot),
 		"time_snapshot": _json_arrays(_world.call("get_time_snapshot")),
 		"tallies": _json_arrays(_world.call("get_tallies")),
@@ -282,6 +301,13 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"seek_segments": int(_main.get_node("SeekVizRenderer").call("get_drawn_segment_count")),
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
 	}
+	if tick == _motion_end_tick and _motion_start_tick >= 0:
+		data["agent_motion_evidence"] = {
+			"provenance": "observed_tile_displacement_during_final_synchronous_advance",
+			"start_tick": _motion_start_tick, "end_tick": _motion_end_tick,
+			"before": _json_arrays(_motion_before),
+			"after_source": "agent_snapshot",
+		}
 	var file: FileAccess = FileAccess.open(_out.path_join(stem + ".entities.json"), FileAccess.WRITE)
 	if file == null:
 		_fail("cannot write entity sidecar")

@@ -33,6 +33,8 @@ func _run() -> void:
 	agent.set_meta("art_kind", "agent")
 	agent.set_meta("art_id", 17)
 	agent.set_meta("pose", "sit")
+	agent.set_meta("drawn_position", Vector2(25, 31))
+	agent.set_meta("seated", true)
 	objects.add_child(agent)
 	agent.position = Vector2(25, 31)
 	agent.modulate.a = 0.45
@@ -46,6 +48,9 @@ func _run() -> void:
 	agent.add_child(icon)
 	var building: Sprite2D = Sprite2D.new()
 	building.set_meta("art_kind", "building")
+	building.set_meta("fire_lit", false)
+	building.set_meta("woodpile_stage", 2)
+	building.set_meta("glow_alpha", 0.0)
 	objects.add_child(building)
 	var shadow: Sprite2D = Sprite2D.new()
 	shadow.set_meta("agent_shadow", true)
@@ -60,11 +65,21 @@ func _run() -> void:
 	assert(is_equal_approx(float(rows[0]["modulate_alpha"]), 0.45))
 	assert(is_equal_approx(float(rows[0]["self_modulate_alpha"]), 0.8))
 	assert(rows[0]["pose"] == "sit")
+	assert(rows[0]["drawn_position"] == [25.0, 31.0] and rows[0]["seated"] == true)
+	assert(rows[1]["fire_lit"] == false and rows[1]["woodpile_stage"] == 2)
+	assert(rows[1]["glow_alpha"] == 0.0)
 	assert(is_equal_approx(float(rows[0]["modulate"][0]), 0.25))
 	assert(is_equal_approx(float(rows[0]["self_modulate"][2]), 0.5))
 	assert(Metadata.life_stage_counts({"life_stages": PackedByteArray([0, 1, 2, 0, 7])}) == {"adult": 2, "child": 1, "elder": 1, "unknown": 1})
 	assert(Metadata.life_stage_counts({}) == {"adult": 0, "child": 0, "elder": 0, "unknown": 0})
-	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 7)
+	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 9)
+	assert(Plans.ART_LONG[1] == [10, "15:00", "F2"] and Plans.ART_LONG[2] == [10, "15:00", "F5"])
+	assert(Metadata.deadwood_tile({}, Vector2.ZERO) == Vector2(-1, -1))
+	assert(Metadata.deadwood_tile({
+		"kinds": PackedInt32Array([0, 3, 3, 3, 3]),
+		"xs": PackedInt32Array([10, 8, 12, 11, 9]),
+		"ys": PackedInt32Array([10, 10, 8, 8, 8]),
+	}, Vector2(10, 10)) == Vector2(9, 8))
 	var previous: int = -1
 	for shot: Array in Plans.ART_LONG:
 		var clock: PackedStringArray = str(shot[1]).split(":")
