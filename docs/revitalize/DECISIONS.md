@@ -235,3 +235,7 @@ Supplemental startup validation (no third visual fix): exact tick0 displayed Day
 ### Part5 audit baseline correction
 
 Isolated mutation execution found an existing full-file HUD snapshot still pinned to105lines after the localized legend extended it to159. Earlier64 targeted static tests did not include this guard. Preserve both strict line-count and SHA256 equalities, update only their reviewed expected values, and record both assertions in TEST_LEDGER. Do not count a failing unmutated baseline as a killed mutant. Audit worktree will advance to this committed correction and rerun against clean source.
+
+### Part5 completed
+
+All597 primary mutants rerun on clean committed68bb8fff:593 killed,4 survived,0invalid,0baseline-invalid; raw99.329983%, not100%. Two survivors preserve whitespace-equivalent accepted literals, two remove an optional connect call from an allowlist guard. Do not add arbitrary spelling or required-presence assertions to inflate a metric. Three separately reported semantic supplements all killed. Required reset-subscription presence remains outside the proven allowlist contract. StrictHUD snapshot repin is logged; no behavioral assertion weakened.117functions fully accounted,114source contracts/3behavioralN/A, unresolved0. Isolatedtree clean,13sourcehashes restored, no active journals; runner/offline checksPASS. MainCargo slot released for finalfullgate. No dependency manifest changes or addedHashMap/HashSet/unwrap/SystemTime patterns in three simulationproductioncrates sincePass1base.
