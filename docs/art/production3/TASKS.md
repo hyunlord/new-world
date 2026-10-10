@@ -7,8 +7,8 @@
 | 2 | Stable age hair, idle facing and camp poses | complete | 2026-10-10T16:04:40Z | 2026-10-10T16:10:34Z |
 | 3 | Color region maps, despeckle, re-review, bounded fills and install | complete | 2026-10-10T16:11:42Z | 2026-10-10T16:35:33Z |
 | 4 | Real-data old-age/season consumers and localized inspector age | complete | 2026-10-10T16:36:00Z | 2026-10-10T16:39:37Z |
-| 5 | art, art_long and calibration windowed captures | complete | 2026-10-10T16:39:54Z |2026-10-10T16:44:09Z |
-| 6 | A1–A16, independent blind labels, comparisons and GIFs | pending | | |
+| 5 | art, art_long and calibration windowed captures | complete | 2026-10-10T16:39:54Z | 2026-10-10T16:44:09Z |
+| 6 | A1–A16, independent blind labels, comparisons and GIFs | complete | 2026-10-10T16:45:05Z |2026-10-10T16:49:07Z |
 | 7 | Final gate, optional compatibility, Korean report, green FF and draft PR | pending | | |
 
 Follow GOAL sections4–11 in order. Independent preparatory analysis may overlap, but the baseline gate must pass before implementation. Each Part records tests/evidence and is committed/pushed with remote equality.

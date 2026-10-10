@@ -6,11 +6,27 @@
 """Repository evidence coverage tests prevent silently omitting rejected attempts."""
 import json
 import unittest
+from tempfile import TemporaryDirectory
+from pathlib import Path
+from unittest.mock import patch
 
-from reprocess_p3 import ROOT, inventory
+from reprocess_p3 import ROOT, inventory, main
 
 
 class ReprocessCoverageTest(unittest.TestCase):
+    def test_frozen_evidence_refuses_rerun_before_any_write(self) -> None:
+        for filename in ['candidates.json', 'review_index.json']:
+            with self.subTest(filename=filename), TemporaryDirectory() as temporary:
+                output = Path(temporary)
+                frozen = output / filename
+                frozen.write_text('immutable evidence')
+                with patch('reprocess_p3.OUTPUT', output), patch('reprocess_p3.inventory') as scan:
+                    with self.assertRaisesRegex(ValueError, 'frozen review evidence'):
+                        main()
+                    scan.assert_not_called()
+                self.assertEqual(frozen.read_text(), 'immutable evidence')
+                self.assertEqual(list(output.iterdir()), [frozen])
+
     def test_every_unaccepted_physical_attempt_has_exactly_one_coverage_route(self) -> None:
         # Given the immutable Art Pass 2 final slot decisions and raw ledgers.
         old = ROOT / 'docs/art/production2'

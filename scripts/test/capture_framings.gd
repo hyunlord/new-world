@@ -251,9 +251,6 @@ func _advance_to(target: int) -> bool:
 
 
 func _set_agent_layers(shown: bool) -> void:
-	var agents: Node = _main.get_node_or_null("AgentRenderer")
-	if agents != null and agents.has_method("set_capture_visible"):
-		agents.call("set_capture_visible", shown)
 	Metadata.show_agents(_main, shown)
 	for node_name: String in ["SeekVizRenderer", "NeedBarRenderer", "ActivityTrailRenderer", "DeathVizRenderer"]:
 		var layer: CanvasItem = _main.get_node_or_null(node_name) as CanvasItem

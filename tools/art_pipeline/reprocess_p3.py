@@ -244,6 +244,8 @@ def freeze_review_index(output: Path) -> None:
 
 def main() -> None:
     """Publish complete source coverage before making independent review boards."""
+    if any((OUTPUT / name).exists() for name in ['candidates.json', 'review_index.json']):
+        raise ValueError('Refusing to change previously frozen review evidence')
     OUTPUT.mkdir(parents=True, exist_ok=True)
     coverage = inventory(ROOT)
     (OUTPUT / 'coverage.json').write_text(json.dumps(coverage, indent=2) + '\n')

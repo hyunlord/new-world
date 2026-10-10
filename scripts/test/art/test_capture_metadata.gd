@@ -4,6 +4,17 @@ const Metadata = preload("res://scripts/test/art/capture_metadata.gd")
 const Plans = preload("res://scripts/test/art/capture_plans.gd")
 
 
+class CaptureRenderer:
+	extends Node
+	var calls: int = 0
+	var managed: Array[CanvasItem] = []
+
+	func set_capture_visible(shown: bool) -> void:
+		calls += 1
+		for item: CanvasItem in managed:
+			item.visible = shown and str(item.get_meta("capture_state", "")) == "live"
+
+
 func _init() -> void:
 	call_deferred("_run")
 
@@ -65,6 +76,33 @@ func _run() -> void:
 	assert(rows[0]["z_index"] == 4 and rows[0]["sibling_index"] == 0)
 	var rect: Rect2 = Metadata.screen_rect(Rect2(1, 2, 18, 28), Transform2D(0.0, Vector2(4, 6)), Vector2(2, 2))
 	assert(rect == Rect2(10, 16, 36, 56))
+	var renderer: CaptureRenderer = CaptureRenderer.new()
+	renderer.name = "AgentRenderer"
+	main.add_child(renderer)
+	for state: String in ["live", "retired", "sheltered"]:
+		var managed_agent: Sprite2D = Sprite2D.new()
+		managed_agent.set_meta("art_kind", "agent")
+		managed_agent.set_meta("capture_state", state)
+		managed_agent.visible = state == "live"
+		objects.add_child(managed_agent)
+		renderer.managed.append(managed_agent)
+		var managed_shadow: Sprite2D = Sprite2D.new()
+		managed_shadow.set_meta("agent_shadow", true)
+		managed_shadow.set_meta("capture_state", state)
+		managed_shadow.visible = state == "live"
+		shadows.add_child(managed_shadow)
+		renderer.managed.append(managed_shadow)
+	var failures: int = 0
+	for shown: bool in [false, true]:
+		Metadata.show_agents(main, shown)
+		for managed: CanvasItem in renderer.managed:
+			var expected: bool = shown and str(managed.get_meta("capture_state")) == "live"
+			if managed.visible != expected:
+				push_error("Capture overrode renderer visibility for " + str(managed.get_meta("capture_state")))
+				failures += 1
+	if renderer.calls != 2:
+		push_error("Capture must delegate visibility exactly once per change")
+		failures += 1
 	main.queue_free()
-	print("capture metadata properties passed")
-	quit(0)
+	print("capture metadata failures=", failures)
+	quit(1 if failures > 0 else 0)

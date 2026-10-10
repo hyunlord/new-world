@@ -1,4 +1,4 @@
-"""Run A1–A12 against original windowed capture evidence; absent evidence never passes."""
+"""Run A1–A16 against original windowed capture evidence; absent evidence never passes."""
 from __future__ import annotations
 import argparse
 from dataclasses import asdict
@@ -104,7 +104,33 @@ def variety(capture: Capture) -> Check:
                   f'{len(set(looks))} tuples/{len(actors)} villagers; identical neighbors={same}/{len(pairs)} ({ratio:.3f})')
 
 
-def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) -> list[Check]:
+def degeneracy(captures: list[Capture]) -> Check:
+    """Keep the previous all-frame scope beside gameplay-only results."""
+    failures = []
+    excluded = [c.stem for c in captures if c.stem.startswith(('a_calib', 'a_lineup'))]
+    for capture in captures:
+        image = capture.image()
+        packed = image[...,0].astype(np.uint32)*65536 + image[...,1].astype(np.uint32)*256 + image[...,2]
+        spread, colors = float(luma(image).std()), len(np.unique(packed))
+        if spread < .04 or colors < 64:
+            failures.append((capture.stem, round(spread, 4), colors))
+    gameplay_failures = [row for row in failures if row[0] not in excluded]
+    count = len(captures) - len(excluded)
+    evidence = {'thresholds': {'luma_std_min': .04, 'colors_min': 64},
+        'old_all_frames': {'count': len(captures), 'status': 'FAIL' if failures or not captures else 'PASS', 'failures': failures},
+        'gameplay_only': {'count': count, 'failures': gameplay_failures}, 'excluded': excluded}
+    return result('A1', count > 0 and not gameplay_failures, json.dumps(evidence))
+
+
+def contrast_pair(noon: Capture | None, winter: Capture | None, repo: Path) -> Check:
+    """Require both prescribed frames without relaxing the pixel checker."""
+    rows = [(name, contrast(frame, repo) if frame else Check('A5', 'N/A', 'Missing capture'))
+            for name, frame in [('a_d2_1200_F2', noon), ('l_d24_1200_F2', winter)]]
+    status = 'FAIL' if any(check.status == 'FAIL' for _, check in rows) else ('PASS' if all(check.status == 'PASS' for _, check in rows) else 'N/A')
+    return Check('A5', status, json.dumps({name: asdict(check) for name, check in rows}))
+
+
+def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, long_raw: Path | None = None) -> list[Check]:
     manifest = json.loads((directory/'manifest.json').read_text())
     captures = [load_capture(directory/row['file']) for row in manifest['captures']]
     expected = {'a_d1_0830_F2','a_d2_1200_F2','a_d2_1200_F2A','a_d2_1200_F2Z','a_d2_1200_F3','a_d2_1200_F4','a_d2_1200_F1','a_d2_1930_F2','a_d2_2300_F2N','a_d6_1200_F2','a_calib_z4','a_calib_z6'}
@@ -113,22 +139,25 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) ->
     actual = {capture.stem for capture in captures}
     delivery = result('CAPTURE_SET',expected == actual and len(captures)==94,f'{len(captures)}/94 entries; missing={sorted(expected-actual)}; extra={sorted(actual-expected)}')
     by_stem = {capture.stem:capture for capture in captures}
-    failures = []
-    for capture in captures:
-        image = capture.image()
-        packed = image[...,0].astype(np.uint32)*65536 + image[...,1].astype(np.uint32)*256 + image[...,2]
-        spread, colors = float(luma(image).std()), len(np.unique(packed))
-        if spread<.04 or colors<64:
-            failures.append((capture.stem,round(spread,4),colors))
-    checks = [delivery,result('A1',bool(captures) and not failures,f'{len(captures)} frames tested; failing (std,colours)={failures}')]
+    long_captures = []
+    if long_raw is not None:
+        long_manifest = json.loads((long_raw/'manifest.json').read_text())
+        long_captures = [load_capture(long_raw/row['file']) for row in long_manifest['captures']]
+    checks = [delivery, degeneracy(captures + long_captures)]
+    if long_raw is not None:
+        expected_long = {f'l_d{day}_1200_F2' for day in [10,18,24,32,40]} | {'l_d24_1200_F1', 'l_d24_2300_F2N'}
+        actual_long = {capture.stem for capture in long_captures}
+        checks.append(result('LONG_CAPTURE_SET', actual_long == expected_long and len(long_captures) == 7,
+            f'{len(long_captures)}/7 captures (six requested, d32 supplementary); missing={sorted(expected_long-actual_long)}; extra={sorted(actual_long-expected_long)}'))
     calibration = [capture for capture in captures if capture.stem.startswith('a_calib')]
     checks += [checker(calibration),squash(captures,repo),*calibration_order(calibration,repo)]
     noon = by_stem.get('a_d2_1200_F2')
     dark = by_stem.get('a_d2_2300_F2N')
-    checks.append(contrast(noon,repo) if noon else Check('A5','N/A','Missing noon capture'))
+    winter = next((c for c in long_captures if c.stem == 'l_d24_1200_F2'), None)
+    checks.append(contrast_pair(noon, winter, repo))
     checks.append(night(noon,dark) if noon and dark else Check('A6','N/A','Missing noon/night pair'))
     checks.append(animation(directory,captures))
-    scene_captures = [capture for capture in captures if not capture.stem.startswith(('a_calib','a_lineup'))]
+    scene_captures = [capture for capture in captures + long_captures if not capture.stem.startswith(('a_calib','a_lineup'))]
     for code, evidence in [('A8',[(capture.stem,clutter(capture)) for capture in scene_captures if capture.selected<0]),('A9',[(capture.stem,interface(capture)) for capture in scene_captures])]:
         failed = [(stem,check.detail) for stem,check in evidence if check.status != 'PASS']
         status = 'FAIL' if any(check.status == 'FAIL' for _,check in evidence) else ('N/A' if failed or not evidence else 'PASS')
@@ -148,9 +177,17 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None) ->
         checks.append(Check('A11','N/A','Blind labels not yet graded; no inference from pixel-change visibility'))
     checks.extend([distinct_activities(repo),forest(directory)])
     checks.append(variety(noon) if noon else Check('A12','N/A','Missing noon capture'))
+    from ingame_qa_camp_p3 import camp_ground
+    checks.append(camp_ground(directory, repo))
+    if long_raw is not None:
+        from ingame_qa_age_p3 import age_seasons
+        checks.append(age_seasons(long_raw, repo))
+    else:
+        checks.append(Check('A16', 'N/A', 'Missing long-run capture evidence'))
     output.parent.mkdir(parents=True,exist_ok=True)
     output.with_suffix('.json').write_text(json.dumps([asdict(check) for check in checks],indent=2,ensure_ascii=False)+'\n')
     text = '# 실제 게임 캡처 QA\n\n원본 windowed framebuffer와 실제 렌더 노드 증거. N/A는 통과가 아니다.\n\n'
+    text += 'A1 범위 수정: Art Pass 2는 게임·보정·라인업 전체, Art Pass 3는 장기 캡처를 포함한 게임 화면만. 같은 캡처에 두 범위를 적용한 수치를 아래에 병기하며 임계값은 그대로 유지한다. 보정·라인업은 A2/A3/RAMP/A11로 검증한다.\n\n'
     text += '\n'.join(f'## {check.code}: {check.status}\n\n{check.detail}\n' for check in checks)
     output.write_text(text)
     return checks
@@ -161,6 +198,7 @@ if __name__ == '__main__':
     parser.add_argument('--output',type=Path,default=Path('docs/art/production/ingame_qa.md'))
     parser.add_argument('--repo',type=Path,default=Path('.'))
     parser.add_argument('--blind-result',type=Path)
+    parser.add_argument('--long-raw', type=Path)
     args = parser.parse_args()
-    for check in run(args.raw,args.output,args.repo,args.blind_result):
+    for check in run(args.raw,args.output,args.repo,args.blind_result,args.long_raw):
         print(check.code,check.status)

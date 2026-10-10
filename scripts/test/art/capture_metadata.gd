@@ -110,6 +110,10 @@ static func labels(parent: Node, scale_factor: Vector2) -> Array[Dictionary]:
 
 
 static func show_agents(main: Node, shown: bool) -> void:
+	var renderer: Node = main.get_node_or_null("AgentRenderer")
+	if renderer != null and renderer.has_method("set_capture_visible"):
+		renderer.call("set_capture_visible", shown)
+		return
 	for node: Node in tagged_nodes(main.get_node_or_null("WorldObjects")):
 		if str(node.get_meta("art_kind", "")) == "agent" and node is CanvasItem:
 			(node as CanvasItem).visible = shown
