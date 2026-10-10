@@ -42,10 +42,11 @@ use sim_core::components::{
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
 use sim_core::material::MaterialRegistry;
+use sim_core::rules::WorldRules;
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::worldgen::{build_world, WorldGenConfig, DEFAULT_GAME_SEED};
+use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
@@ -175,7 +176,10 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            engine: build_world(&WorldGenConfig::game_default(DEFAULT_GAME_SEED)),
+            engine: build_world_with(
+                &WorldGenConfig::game_v9(DEFAULT_GAME_SEED),
+                WorldRules::game_v9(),
+            ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
@@ -219,7 +223,10 @@ impl WorldSimNode {
     #[func]
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_world(&WorldGenConfig::game_default(self.world_seed));
+        self.engine = build_world_with(
+            &WorldGenConfig::game_v9(self.world_seed),
+            WorldRules::game_v9(),
+        );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
@@ -2460,7 +2467,7 @@ pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
 
 /// Build the legacy V7 lattice fixture used by harnesses.
 ///
-/// The live game uses `worldgen::build_world`. This frozen legacy constructor
+/// The live game uses `worldgen::build_world_with` with v9 rules. This frozen legacy constructor
 /// keeps the original registration, bootstrap and finite-scarcity order so
 /// historical behavioral tests and trajectory fingerprints remain comparable.
 pub fn init_production_engine() -> SimEngine {
@@ -2585,6 +2592,9 @@ mod revitalize_tooling_tests {
             deaths_dehydration: 13,
             deaths_combat: 14,
             social_completed: 0,
+            food_harvested: 0,
+            meals_eaten: 0,
+            meals_without_food: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

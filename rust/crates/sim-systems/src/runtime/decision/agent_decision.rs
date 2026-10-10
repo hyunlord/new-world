@@ -1486,8 +1486,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // RESOURCE_SOURCE_INFINITE sentinel never depletes.
                             // Finite tiles keep decrement-and-remove (Assertions
                             // 16/17). Need-decrement + Idle stay UNCONDITIONAL.
+                            let food_present = resources.food_tiles.get(&key)
+                                .is_some_and(|counter| *counter > 0);
                             if let Some(counter) = resources.food_tiles.get_mut(&key) {
                                 if *counter != RESOURCE_SOURCE_INFINITE {
+                                    resources.tallies.food_harvested += u64::from(*counter > 0);
                                     *counter = counter.saturating_sub(1);
                                     if *counter == 0 {
                                         resources.food_tiles.remove(&key);
@@ -1496,6 +1499,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                             if let Some(h) = hunger_opt {
                                 h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                                resources.tallies.meals_eaten += 1;
+                                resources.tallies.meals_without_food += u64::from(!food_present);
                             }
                             *state = AgentState::Idle;
                         }
@@ -1525,6 +1530,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 let overflow = inv.add(ResourceKind::Food, take);
                                                 let actually = take - overflow; // overflow == 0 (want <= room)
                                                 *counter = counter.saturating_sub(actually as u8);
+                                                resources.tallies.food_harvested += u64::from(actually);
                                                 if *counter == 0 {
                                                     resources.food_tiles.remove(&key);
                                                 }
@@ -1780,6 +1786,55 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn food_tallies_distinguish_finite_empty_and_infinite_sources() {
+        for (source, harvested, leaked) in [
+            (Some(2), 1, 0),
+            (Some(0), 0, 1),
+            (None, 0, 1),
+            (Some(RESOURCE_SOURCE_INFINITE), 0, 0),
+        ] {
+            // Given a hungry agent committing a ground meal.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::Food },
+                Hunger::new(60.0, 0.0),
+            )).unwrap();
+            if let Some(amount) = source {
+                engine.resources.food_tiles.insert((2, 2), amount);
+            }
+            // When the unchanged consume action resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then counters distinguish actual harvest from legacy free meals.
+            assert_eq!(engine.resources.tallies.food_harvested, harvested);
+            assert_eq!(engine.resources.tallies.meals_eaten, 1);
+            assert_eq!(engine.resources.tallies.meals_without_food, leaked);
+            assert_eq!(engine.world.get::<&Hunger>(entity).unwrap().value, 30.0);
+        }
+    }
+
+    #[test]
+    fn gather_tallies_count_only_finite_units_removed() {
+        for source in [0, 2, RESOURCE_SOURCE_INFINITE] {
+            // Given a gatherer with room and a finite or infinite source.
+            let mut engine = fresh_engine();
+            let entity = engine.spawn_agent(2, 2);
+            engine.world.insert(entity, (
+                AgentState::Consuming { target: TargetKind::GatherFood },
+                Inventory::default(),
+            )).unwrap();
+            engine.resources.food_tiles.insert((2, 2), source);
+            // When gathering resolves.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+            // Then only real finite decrements are harvested, never meals.
+            let expected = if source == RESOURCE_SOURCE_INFINITE { 0 } else { u64::from(source) };
+            assert_eq!(engine.resources.tallies.food_harvested, expected);
+            assert_eq!(engine.resources.tallies.meals_eaten, 0);
+            assert_eq!(engine.resources.tallies.meals_without_food, 0);
+        }
     }
 
     #[test]

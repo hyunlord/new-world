@@ -111,6 +111,7 @@ fn harness_population_births_gated_by_food_and_housing() {
         food_cost: 6,
         max_mean_hunger: 60.0,
         max_mean_thirst: 60.0,
+        sustain: None,
     };
     engine
         .resources

@@ -533,3 +533,12 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 |---|---|---|---|---|---|
 | rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs | harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head | A17.2 line-count equality | EXPECTED_LINES = 105 | EXPECTED_LINES = 159 | Pass 2 Part 4 localized activity legend; Part 5 audit baseline repair |
 | rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs | harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head | A17.3 SHA-256 equality | 905fcc65cc4e2003a8e166d234e6a9604a23511ff855cb50ed31f2484c68db71 | d24ba0db899d068a58d8804cc04b80a5db0f7ffdc9704f832033b3e4309a02b1 | Same reviewed 159-line HUD bytes; no weakened predicate |
+
+## Pass 3
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_tallies.rs` exhaustive Tallies literal | Add food_harvested, meals_eaten, meals_without_food = 0 | field addition, intent unchanged; existing assertions unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_loop.rs` Provisioned literal | Add sustain: None | field addition, intent unchanged; v8 birth behavior unchanged |
+| 1 | `rust/crates/sim-bridge/src/ffi/world_node.rs` revitalize_tooling_tests Tallies literal | Add three new counters = 0 | field addition, intent unchanged; additive Rust bridge merge touch-point |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertions | v2 -> v3 and exact additional 15 keys | authorized additive probe schema contract, all v2 key semantics retained |

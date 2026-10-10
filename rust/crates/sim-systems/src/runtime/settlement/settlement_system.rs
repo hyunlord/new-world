@@ -679,7 +679,7 @@ impl SettlementSystem {
                 continue;
             }
             if let BirthRule::Provisioned {
-                food_cost, max_mean_hunger, max_mean_thirst, ..
+                food_cost, max_mean_hunger, max_mean_thirst, sustain: _, ..
             } = resources.rules.society.birth {
                 let capacity = resources.rules.society.shelter_planning.map_or(
                     SETTLEMENT_MAX_POP,

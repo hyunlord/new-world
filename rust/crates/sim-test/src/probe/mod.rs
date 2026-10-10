@@ -3,6 +3,7 @@ mod args;
 mod deaths;
 mod deaths_observer;
 mod fingerprint;
+mod long_run;
 mod metrics;
 mod runner;
 mod summary;
@@ -26,9 +27,9 @@ mod tests {
     }
 
     #[test]
-    fn schema_two_is_exactly_additive() {
+    fn schema_three_is_exactly_additive() {
         let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
-        assert_eq!(sample["schema_version"], 2);
-        assert_eq!(sample.as_object().expect("sample object").len(), 38);
+        assert_eq!(sample["schema_version"], 3);
+        assert_eq!(sample.as_object().expect("sample object").len(), 53);
     }
 }

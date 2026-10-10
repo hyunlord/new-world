@@ -146,8 +146,8 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             .keys()
             .filter(|tile| !stamped_tiles.contains(*tile))
             .count();
-    json!({
-        "schema_version": 2, "scene": scene, "seed": seed,
+    let mut row = json!({
+        "schema_version": 3, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "tick": engine.current_tick(), "day": engine.current_tick() as f64 / r.ticks_per_day as f64,
         "alive": alive, "births": r.tallies.births,
@@ -168,7 +168,18 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         "idle_breach_actionable": actionable, "idle_breach_unavailable": unavailable,
         "social_chasing": social_chasing, "social_completed": r.tallies.social_completed,
         "fingerprint": fingerprint(engine)
-    })
+    });
+    if let (Some(base), Some(extra)) = (
+        row.as_object_mut(),
+        super::long_run::metrics(engine).as_object(),
+    ) {
+        base.extend(
+            extra
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
+        );
+    }
+    row
 }
 
 #[cfg(test)]

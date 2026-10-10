@@ -29,6 +29,11 @@ pub struct WorldGenConfig {
     pub mountain_coverage: f64,
 }
 impl WorldGenConfig {
+    /// Versioned generator entry point; Part 1 intentionally matches v8 inputs.
+    pub const fn game_v9(seed: u64) -> Self {
+        Self::game_default(seed)
+    }
+
     /// 64×64, 24 residents, 8 capacity-four bushes, 30/10/4 percent terrain.
     pub const fn game_default(seed: u64) -> Self {
         Self {
@@ -49,6 +54,11 @@ impl WorldGenConfig {
 /// Coverage fractions share the non-river tile count denominator and round to
 /// the nearest whole tile. Requires dimensions at least 32 and valid fractions.
 pub fn build_world(cfg: &WorldGenConfig) -> SimEngine {
+    build_world_with(cfg, WorldRules::game_v8())
+}
+
+/// Construct a seeded world with an explicitly selected rules version.
+pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     assert!(
         cfg.width >= 32 && cfg.height >= 32,
         "world must have room for the camp and food rings"
@@ -69,10 +79,11 @@ pub fn build_world(cfg: &WorldGenConfig) -> SimEngine {
     let mut engine = SimEngine::new(cfg.width, cfg.height, MaterialRegistry::new());
     crate::register_default_runtime_systems(&mut engine);
     engine.resources.world_seed = cfg.seed;
-    engine.resources.rules = WorldRules::game_v8();
-    engine.resources.time_of_day =
-        (engine.resources.rules.clock_offset_ticks % engine.resources.ticks_per_day) as f64
-            / engine.resources.ticks_per_day as f64 * 24.0;
+    engine.resources.rules = rules;
+    engine.resources.time_of_day = (engine.resources.rules.clock_offset_ticks
+        % engine.resources.ticks_per_day) as f64
+        / engine.resources.ticks_per_day as f64
+        * 24.0;
     terrain::generate(cfg, &mut engine.resources.tile_grid);
     camp::shore_water(&mut engine.resources);
     camp::populate(cfg, &mut engine);
@@ -81,6 +92,23 @@ pub fn build_world(cfg: &WorldGenConfig) -> SimEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn explicit_world_rules_are_retained_without_enabling_future_state() {
+        let config = WorldGenConfig::game_default(7);
+        let rules = WorldRules::default();
+        let engine = build_world_with(&config, rules);
+        assert_eq!(engine.resources.rules, rules);
+        assert!(engine.resources.building_owner.is_empty());
+        assert!(engine.resources.bed_of.is_empty());
+        assert_eq!(
+            engine
+                .world
+                .query::<&sim_core::components::Child>()
+                .iter()
+                .count(),
+            0
+        );
+    }
     #[test]
     fn default_configuration_is_explicit() {
         let cfg = WorldGenConfig::game_default(DEFAULT_GAME_SEED);

@@ -158,6 +158,7 @@ impl RuntimeSystem for StockpileConsumeSystem {
                 if got > 0 {
                     if let Ok(mut h) = world.get::<&mut Hunger>(entity) {
                         h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
+                        resources.tallies.meals_eaten += 1;
                     }
                 }
             }

@@ -15,6 +15,14 @@ pub fn game_scene(seed: u64) -> SimEngine {
     sim_systems::worldgen::build_world(&sim_systems::worldgen::WorldGenConfig::game_default(seed))
 }
 
+/// Versioned game fixture for opt-in village, food, and rhythm rules.
+pub fn game_v9_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v9(seed),
+        sim_core::rules::WorldRules::game_v9(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
