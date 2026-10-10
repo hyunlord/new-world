@@ -1,0 +1,2783 @@
+{
+  "direction": "D2",
+  "zoom4": {
+    "zoom": 4,
+    "villagers": [
+      {
+        "attributed_pixel_count": 2928,
+        "id": 17,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          1128,
+          192,
+          1180,
+          280
+        ],
+        "changed_fraction": 0.5104895104895105,
+        "visible": true,
+        "mean_luma_difference": 0.2324604478731383,
+        "mean_delta_e76": 45.0518041266391,
+        "box_mean_luma_difference": 0.15152263814616754,
+        "box_mean_delta_e76": 29.2148363926825
+      },
+      {
+        "attributed_pixel_count": 4688,
+        "id": 15,
+        "sprite": "11_villager_elder",
+        "box": [
+          1304,
+          252,
+          1380,
+          336
+        ],
+        "changed_fraction": 0.568922305764411,
+        "visible": true,
+        "mean_luma_difference": 0.2210244181221977,
+        "mean_delta_e76": 42.89777172889784,
+        "box_mean_luma_difference": 0.16479741903779055,
+        "box_mean_delta_e76": 31.848999832036004
+      },
+      {
+        "attributed_pixel_count": 1840,
+        "id": 16,
+        "sprite": "12_villager_child",
+        "box": [
+          1404,
+          364,
+          1436,
+          432
+        ],
+        "changed_fraction": 0.7058823529411765,
+        "visible": true,
+        "mean_luma_difference": 0.24260961636828643,
+        "mean_delta_e76": 45.84539799716317,
+        "box_mean_luma_difference": 0.2080714129181084,
+        "box_mean_delta_e76": 39.174281589999154
+      },
+      {
+        "attributed_pixel_count": 4688,
+        "id": 7,
+        "sprite": "11_villager_elder",
+        "box": [
+          672,
+          364,
+          748,
+          448
+        ],
+        "changed_fraction": 0.5839598997493735,
+        "visible": true,
+        "mean_luma_difference": 0.23652651810212136,
+        "mean_delta_e76": 38.15891398230655,
+        "box_mean_luma_difference": 0.17646778514914738,
+        "box_mean_delta_e76": 28.358297303599265
+      },
+      {
+        "attributed_pixel_count": 1840,
+        "id": 4,
+        "sprite": "12_villager_child",
+        "box": [
+          1136,
+          384,
+          1168,
+          452
+        ],
+        "changed_fraction": 0.7205882352941176,
+        "visible": true,
+        "mean_luma_difference": 0.2719251014492754,
+        "mean_delta_e76": 39.94979861440038,
+        "box_mean_luma_difference": 0.2331965974625144,
+        "box_mean_delta_e76": 34.176370379295285
+      },
+      {
+        "attributed_pixel_count": 4896,
+        "id": 18,
+        "sprite": "10_villager_builder",
+        "box": [
+          556,
+          428,
+          640,
+          516
+        ],
+        "changed_fraction": 0.5216450216450217,
+        "visible": true,
+        "mean_luma_difference": 0.21730815583749838,
+        "mean_delta_e76": 44.90046400097455,
+        "box_mean_luma_difference": 0.14608292504880743,
+        "box_mean_delta_e76": 30.039493075137475
+      },
+      {
+        "attributed_pixel_count": 2928,
+        "id": 1,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          848,
+          440,
+          900,
+          528
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.2556985020893603,
+        "mean_delta_e76": 38.66245614235827,
+        "box_mean_luma_difference": 0.16671163307280956,
+        "box_mean_delta_e76": 25.114505370306976
+      },
+      {
+        "attributed_pixel_count": 2928,
+        "id": 5,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          732,
+          488,
+          784,
+          576
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.2541016393442623,
+        "mean_delta_e76": 38.47285425446772,
+        "box_mean_luma_difference": 0.1656898642533937,
+        "box_mean_delta_e76": 24.99318667980358
+      },
+      {
+        "attributed_pixel_count": 4896,
+        "id": 2,
+        "sprite": "10_villager_builder",
+        "box": [
+          1032,
+          492,
+          1116,
+          580
+        ],
+        "changed_fraction": 0.5021645021645021,
+        "visible": true,
+        "mean_luma_difference": 0.24062321158528768,
+        "mean_delta_e76": 37.61733654767486,
+        "box_mean_luma_difference": 0.16177289873525166,
+        "box_mean_delta_e76": 25.206285304997394
+      },
+      {
+        "attributed_pixel_count": 4688,
+        "id": 3,
+        "sprite": "11_villager_elder",
+        "box": [
+          888,
+          576,
+          964,
+          660
+        ],
+        "changed_fraction": 0.5739348370927319,
+        "visible": true,
+        "mean_luma_difference": 0.24222750451716518,
+        "mean_delta_e76": 36.20746539907692,
+        "box_mean_luma_difference": 0.18065422379478105,
+        "box_mean_delta_e76": 26.925278669799066
+      },
+      {
+        "attributed_pixel_count": 4896,
+        "id": 6,
+        "sprite": "10_villager_builder",
+        "box": [
+          624,
+          592,
+          708,
+          680
+        ],
+        "changed_fraction": 0.5021645021645021,
+        "visible": true,
+        "mean_luma_difference": 0.23421579136229656,
+        "mean_delta_e76": 38.299427459177735,
+        "box_mean_luma_difference": 0.15728148883795942,
+        "box_mean_delta_e76": 25.66737796303828
+      },
+      {
+        "attributed_pixel_count": 4896,
+        "id": 10,
+        "sprite": "10_villager_builder",
+        "box": [
+          1252,
+          636,
+          1336,
+          724
+        ],
+        "changed_fraction": 0.5281385281385281,
+        "visible": true,
+        "mean_luma_difference": 0.22074469306676914,
+        "mean_delta_e76": 44.89967417463066,
+        "box_mean_luma_difference": 0.14835907308377896,
+        "box_mean_delta_e76": 30.038969943403213
+      },
+      {
+        "attributed_pixel_count": 1840,
+        "id": 8,
+        "sprite": "12_villager_child",
+        "box": [
+          1008,
+          668,
+          1040,
+          736
+        ],
+        "changed_fraction": 0.7205882352941176,
+        "visible": true,
+        "mean_luma_difference": 0.2719251014492754,
+        "mean_delta_e76": 39.94979861440038,
+        "box_mean_luma_difference": 0.2331965974625144,
+        "box_mean_delta_e76": 34.176370379295285
+      },
+      {
+        "attributed_pixel_count": 2928,
+        "id": 9,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          1140,
+          660,
+          1192,
+          748
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.2517636344155148,
+        "mean_delta_e76": 39.336729188991136,
+        "box_mean_luma_difference": 0.16391396407514056,
+        "box_mean_delta_e76": 25.55648250282558
+      },
+      {
+        "attributed_pixel_count": 1632,
+        "id": 12,
+        "sprite": "12_villager_child",
+        "box": [
+          804,
+          716,
+          836,
+          784
+        ],
+        "changed_fraction": 0.6470588235294118,
+        "visible": true,
+        "mean_luma_difference": 0.2679379008073818,
+        "mean_delta_e76": 39.22671134908146,
+        "box_mean_luma_difference": 0.2025833910034602,
+        "box_mean_delta_e76": 29.617678846105637
+      },
+      {
+        "attributed_pixel_count": 4688,
+        "id": 11,
+        "sprite": "11_villager_elder",
+        "box": [
+          1352,
+          704,
+          1428,
+          788
+        ],
+        "changed_fraction": 0.581453634085213,
+        "visible": true,
+        "mean_luma_difference": 0.21814416649936422,
+        "mean_delta_e76": 42.69927008797769,
+        "box_mean_luma_difference": 0.16268234704408077,
+        "box_mean_delta_e76": 31.703232962889132
+      },
+      {
+        "attributed_pixel_count": 4688,
+        "id": 19,
+        "sprite": "11_villager_elder",
+        "box": [
+          528,
+          720,
+          604,
+          804
+        ],
+        "changed_fraction": 0.581453634085213,
+        "visible": true,
+        "mean_luma_difference": 0.21880122866894194,
+        "mean_delta_e76": 42.643338795786015,
+        "box_mean_luma_difference": 0.16316485134404637,
+        "box_mean_delta_e76": 31.662160610477702
+      },
+      {
+        "attributed_pixel_count": 2928,
+        "id": 13,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          872,
+          784,
+          924,
+          872
+        ],
+        "changed_fraction": 0.5104895104895105,
+        "visible": true,
+        "mean_luma_difference": 0.23607342119361405,
+        "mean_delta_e76": 45.009562269115044,
+        "box_mean_luma_difference": 0.1538344357603181,
+        "box_mean_delta_e76": 29.187807511819198
+      },
+      {
+        "attributed_pixel_count": 4672,
+        "id": 14,
+        "sprite": "10_villager_builder",
+        "box": [
+          616,
+          788,
+          700,
+          876
+        ],
+        "changed_fraction": 0.4935064935064935,
+        "visible": true,
+        "mean_luma_difference": 0.21596648401826485,
+        "mean_delta_e76": 44.884046328629424,
+        "box_mean_luma_difference": 0.1369286070791953,
+        "box_mean_delta_e76": 28.4283166477118
+      },
+      {
+        "attributed_pixel_count": 1840,
+        "id": 20,
+        "sprite": "12_villager_child",
+        "box": [
+          1052,
+          816,
+          1084,
+          884
+        ],
+        "changed_fraction": 0.6985294117647058,
+        "visible": true,
+        "mean_luma_difference": 0.24256794543904517,
+        "mean_delta_e76": 45.87882475507326,
+        "box_mean_luma_difference": 0.20803617647058822,
+        "box_mean_delta_e76": 39.202546863231944
+      }
+    ],
+    "visible_fraction": 1.0,
+    "mean_luma_difference": 0.23963227411045307,
+    "mean_delta_e76": 41.529582290841105,
+    "box_mean_luma_difference": 0.17424741648899272,
+    "box_mean_delta_e76": 30.014623941422723,
+    "target": 0.9,
+    "target_pass": true,
+    "method": "Absolute Rec.709 sRGB luma delta /255; changed pixels >=0.12, visible >=20% full native sprite box. Full scene versus all villagers and their shadows removed; y-sort/object/HUD occlusion retained. Mean contrast uses only opaque texels attributed to that villager by a y-sorted ID mask; nonvillager sprites and HUD clear attribution. Fully hidden villagers have zero mean and attributed_pixel_count=0. Separate box_mean fields preserve full-box values. Underlay is the complete villagers-removed scene, including ground and objects."
+  },
+  "zoom1": {
+    "zoom": 1,
+    "villagers": [
+      {
+        "attributed_pixel_count": 183,
+        "id": 17,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          1002,
+          453,
+          1015,
+          475
+        ],
+        "changed_fraction": 0.5104895104895105,
+        "visible": true,
+        "mean_luma_difference": 0.2324604478731383,
+        "mean_delta_e76": 45.05180412663909,
+        "box_mean_luma_difference": 0.15152263814616754,
+        "box_mean_delta_e76": 29.2148363926825
+      },
+      {
+        "attributed_pixel_count": 293,
+        "id": 15,
+        "sprite": "11_villager_elder",
+        "box": [
+          1046,
+          468,
+          1065,
+          489
+        ],
+        "changed_fraction": 0.568922305764411,
+        "visible": true,
+        "mean_luma_difference": 0.22102441812219764,
+        "mean_delta_e76": 42.89777172889783,
+        "box_mean_luma_difference": 0.16479741903779052,
+        "box_mean_delta_e76": 31.848999832036004
+      },
+      {
+        "attributed_pixel_count": 115,
+        "id": 16,
+        "sprite": "12_villager_child",
+        "box": [
+          1071,
+          496,
+          1079,
+          513
+        ],
+        "changed_fraction": 0.7058823529411765,
+        "visible": true,
+        "mean_luma_difference": 0.2426096163682864,
+        "mean_delta_e76": 45.845397997163175,
+        "box_mean_luma_difference": 0.2080714129181084,
+        "box_mean_delta_e76": 39.17428158999915
+      },
+      {
+        "attributed_pixel_count": 293,
+        "id": 7,
+        "sprite": "11_villager_elder",
+        "box": [
+          888,
+          496,
+          907,
+          517
+        ],
+        "changed_fraction": 0.5839598997493735,
+        "visible": true,
+        "mean_luma_difference": 0.2365265181021214,
+        "mean_delta_e76": 38.15891398230655,
+        "box_mean_luma_difference": 0.17646778514914738,
+        "box_mean_delta_e76": 28.35829730359927
+      },
+      {
+        "attributed_pixel_count": 115,
+        "id": 4,
+        "sprite": "12_villager_child",
+        "box": [
+          1004,
+          501,
+          1012,
+          518
+        ],
+        "changed_fraction": 0.7205882352941176,
+        "visible": true,
+        "mean_luma_difference": 0.2719251014492754,
+        "mean_delta_e76": 39.94979861440036,
+        "box_mean_luma_difference": 0.23319659746251442,
+        "box_mean_delta_e76": 34.176370379295285
+      },
+      {
+        "attributed_pixel_count": 306,
+        "id": 18,
+        "sprite": "10_villager_builder",
+        "box": [
+          859,
+          512,
+          880,
+          534
+        ],
+        "changed_fraction": 0.5216450216450217,
+        "visible": true,
+        "mean_luma_difference": 0.21730815583749838,
+        "mean_delta_e76": 44.90046400097455,
+        "box_mean_luma_difference": 0.14608292504880735,
+        "box_mean_delta_e76": 30.03949307513747
+      },
+      {
+        "attributed_pixel_count": 183,
+        "id": 1,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          932,
+          515,
+          945,
+          537
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.25569850208936035,
+        "mean_delta_e76": 38.66245614235827,
+        "box_mean_luma_difference": 0.16671163307280956,
+        "box_mean_delta_e76": 25.114505370306976
+      },
+      {
+        "attributed_pixel_count": 183,
+        "id": 5,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          903,
+          527,
+          916,
+          549
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.25410163934426233,
+        "mean_delta_e76": 38.47285425446772,
+        "box_mean_luma_difference": 0.16568986425339366,
+        "box_mean_delta_e76": 24.99318667980358
+      },
+      {
+        "attributed_pixel_count": 306,
+        "id": 2,
+        "sprite": "10_villager_builder",
+        "box": [
+          978,
+          528,
+          999,
+          550
+        ],
+        "changed_fraction": 0.5021645021645021,
+        "visible": true,
+        "mean_luma_difference": 0.24062321158528768,
+        "mean_delta_e76": 37.61733654767485,
+        "box_mean_luma_difference": 0.16177289873525166,
+        "box_mean_delta_e76": 25.206285304997394
+      },
+      {
+        "attributed_pixel_count": 293,
+        "id": 3,
+        "sprite": "11_villager_elder",
+        "box": [
+          942,
+          549,
+          961,
+          570
+        ],
+        "changed_fraction": 0.5739348370927319,
+        "visible": true,
+        "mean_luma_difference": 0.24222750451716518,
+        "mean_delta_e76": 36.20746539907692,
+        "box_mean_luma_difference": 0.18065422379478105,
+        "box_mean_delta_e76": 26.925278669799066
+      },
+      {
+        "attributed_pixel_count": 306,
+        "id": 6,
+        "sprite": "10_villager_builder",
+        "box": [
+          876,
+          553,
+          897,
+          575
+        ],
+        "changed_fraction": 0.5021645021645021,
+        "visible": true,
+        "mean_luma_difference": 0.2342157913622965,
+        "mean_delta_e76": 38.299427459177735,
+        "box_mean_luma_difference": 0.1572814888379594,
+        "box_mean_delta_e76": 25.667377963038284
+      },
+      {
+        "attributed_pixel_count": 306,
+        "id": 10,
+        "sprite": "10_villager_builder",
+        "box": [
+          1033,
+          564,
+          1054,
+          586
+        ],
+        "changed_fraction": 0.5281385281385281,
+        "visible": true,
+        "mean_luma_difference": 0.2207446930667692,
+        "mean_delta_e76": 44.89967417463066,
+        "box_mean_luma_difference": 0.14835907308377894,
+        "box_mean_delta_e76": 30.03896994340321
+      },
+      {
+        "attributed_pixel_count": 115,
+        "id": 8,
+        "sprite": "12_villager_child",
+        "box": [
+          972,
+          572,
+          980,
+          589
+        ],
+        "changed_fraction": 0.7205882352941176,
+        "visible": true,
+        "mean_luma_difference": 0.2719251014492754,
+        "mean_delta_e76": 39.94979861440036,
+        "box_mean_luma_difference": 0.23319659746251442,
+        "box_mean_delta_e76": 34.176370379295285
+      },
+      {
+        "attributed_pixel_count": 183,
+        "id": 9,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          1005,
+          570,
+          1018,
+          592
+        ],
+        "changed_fraction": 0.5209790209790209,
+        "visible": true,
+        "mean_luma_difference": 0.2517636344155148,
+        "mean_delta_e76": 39.336729188991136,
+        "box_mean_luma_difference": 0.16391396407514056,
+        "box_mean_delta_e76": 25.55648250282558
+      },
+      {
+        "attributed_pixel_count": 102,
+        "id": 12,
+        "sprite": "12_villager_child",
+        "box": [
+          921,
+          584,
+          929,
+          601
+        ],
+        "changed_fraction": 0.6470588235294118,
+        "visible": true,
+        "mean_luma_difference": 0.26793790080738183,
+        "mean_delta_e76": 39.22671134908146,
+        "box_mean_luma_difference": 0.2025833910034602,
+        "box_mean_delta_e76": 29.617678846105637
+      },
+      {
+        "attributed_pixel_count": 293,
+        "id": 11,
+        "sprite": "11_villager_elder",
+        "box": [
+          1058,
+          581,
+          1077,
+          602
+        ],
+        "changed_fraction": 0.581453634085213,
+        "visible": true,
+        "mean_luma_difference": 0.21814416649936422,
+        "mean_delta_e76": 42.69927008797769,
+        "box_mean_luma_difference": 0.16268234704408077,
+        "box_mean_delta_e76": 31.703232962889132
+      },
+      {
+        "attributed_pixel_count": 293,
+        "id": 19,
+        "sprite": "11_villager_elder",
+        "box": [
+          852,
+          585,
+          871,
+          606
+        ],
+        "changed_fraction": 0.581453634085213,
+        "visible": true,
+        "mean_luma_difference": 0.21880122866894194,
+        "mean_delta_e76": 42.643338795786015,
+        "box_mean_luma_difference": 0.16316485134404637,
+        "box_mean_delta_e76": 31.662160610477702
+      },
+      {
+        "attributed_pixel_count": 183,
+        "id": 13,
+        "sprite": "09_villager_gatherer",
+        "box": [
+          938,
+          601,
+          951,
+          623
+        ],
+        "changed_fraction": 0.5104895104895105,
+        "visible": true,
+        "mean_luma_difference": 0.23607342119361405,
+        "mean_delta_e76": 45.009562269115044,
+        "box_mean_luma_difference": 0.1538344357603181,
+        "box_mean_delta_e76": 29.187807511819205
+      },
+      {
+        "attributed_pixel_count": 292,
+        "id": 14,
+        "sprite": "10_villager_builder",
+        "box": [
+          874,
+          602,
+          895,
+          624
+        ],
+        "changed_fraction": 0.4935064935064935,
+        "visible": true,
+        "mean_luma_difference": 0.21596648401826485,
+        "mean_delta_e76": 44.88404632862943,
+        "box_mean_luma_difference": 0.13778922672099145,
+        "box_mean_delta_e76": 28.548406532054052
+      },
+      {
+        "attributed_pixel_count": 115,
+        "id": 20,
+        "sprite": "12_villager_child",
+        "box": [
+          983,
+          609,
+          991,
+          626
+        ],
+        "changed_fraction": 0.6985294117647058,
+        "visible": true,
+        "mean_luma_difference": 0.24256794543904514,
+        "mean_delta_e76": 45.87882475507326,
+        "box_mean_luma_difference": 0.20803617647058822,
+        "box_mean_delta_e76": 39.202546863231944
+      }
+    ],
+    "visible_fraction": 1.0,
+    "mean_luma_difference": 0.23963227411045307,
+    "mean_delta_e76": 41.529582290841105,
+    "box_mean_luma_difference": 0.17429044747108252,
+    "box_mean_delta_e76": 30.02062843563984,
+    "target": 0.75,
+    "target_pass": true,
+    "method": "Absolute Rec.709 sRGB luma delta /255; changed pixels >=0.12, visible >=20% full native sprite box. Full scene versus all villagers and their shadows removed; y-sort/object/HUD occlusion retained. Mean contrast uses only opaque texels attributed to that villager by a y-sorted ID mask; nonvillager sprites and HUD clear attribution. Fully hidden villagers have zero mean and attributed_pixel_count=0. Separate box_mean fields preserve full-box values. Underlay is the complete villagers-removed scene, including ground and objects."
+  },
+  "world_size": [
+    1024,
+    1024
+  ],
+  "zoom4_native_crop": [
+    272,
+    377,
+    752,
+    647
+  ],
+  "overview_offset": [
+    448,
+    28
+  ],
+  "sprite_resampling": false,
+  "ground_roles": {
+    "grass": [
+      [
+        87,
+        94,
+        37
+      ],
+      [
+        115,
+        115,
+        40
+      ],
+      [
+        101,
+        97,
+        58
+      ],
+      [
+        115,
+        126,
+        93
+      ],
+      [
+        66,
+        80,
+        39
+      ]
+    ],
+    "earth": [
+      [
+        129,
+        97,
+        64
+      ],
+      [
+        153,
+        121,
+        74
+      ],
+      [
+        136,
+        118,
+        67
+      ],
+      [
+        165,
+        131,
+        75
+      ]
+    ],
+    "water": [
+      [
+        61,
+        96,
+        109
+      ],
+      [
+        67,
+        114,
+        139
+      ],
+      [
+        43,
+        80,
+        84
+      ],
+      [
+        46,
+        94,
+        137
+      ]
+    ],
+    "shore": [
+      165,
+      131,
+      75
+    ]
+  },
+  "ground_palette_source": "docs/art/D2/palette.hex",
+  "layout_source": "D2_F2_noon.png",
+  "layout_method": "Manually read concept arrangements; preserve relative hut/storage/frame/river/forest positions on native world grid.",
+  "clothing_changes": [
+    {
+      "sprite": "09_villager_gatherer",
+      "hue_degrees": -1,
+      "changed_pixels": 1
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "hue_degrees": 1,
+      "changed_pixels": 1
+    },
+    {
+      "sprite": "10_villager_builder",
+      "hue_degrees": -1,
+      "changed_pixels": 0
+    },
+    {
+      "sprite": "10_villager_builder",
+      "hue_degrees": 1,
+      "changed_pixels": 0
+    },
+    {
+      "sprite": "11_villager_elder",
+      "hue_degrees": -1,
+      "changed_pixels": 0
+    },
+    {
+      "sprite": "11_villager_elder",
+      "hue_degrees": 1,
+      "changed_pixels": 0
+    },
+    {
+      "sprite": "12_villager_child",
+      "hue_degrees": -1,
+      "changed_pixels": 0
+    },
+    {
+      "sprite": "12_villager_child",
+      "hue_degrees": 1,
+      "changed_pixels": 0
+    }
+  ],
+  "clothing_variation": "Attempted -1/0/+1 degree hue using low-saturation central lower-torso proxy; may include skin. Neutral pixels and integer RGB rounding can be no-ops. Not a verified garment segmentation.",
+  "tile_variant": "((x*73856093)^(y*19349663))%4",
+  "tile_border_exception": "Continuous river/shore geometry crosses tiles; local grass, earth marks and water glints stay inside borders.",
+  "night_tint": [
+    0.42,
+    0.48,
+    0.68
+  ],
+  "glow_rgb": [
+    1,
+    0.6,
+    0.25
+  ],
+  "hud_tinted": false,
+  "placements": [
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        496,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        528,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        272
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        440,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        472,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        504,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        536,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        568,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        600,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        632,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        304
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        496,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        528,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        336
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        440,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        472,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        504,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        536,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        568,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        600,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        632,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        368
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        400
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        432
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "05_berry_bush_full",
+      "anchor_world": [
+        586,
+        435
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "07_berry_bush_one",
+      "anchor_world": [
+        640,
+        435
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "anchor_world": [
+        560,
+        446
+      ],
+      "villager_id": 17
+    },
+    {
+      "sprite": "06_berry_bush_two",
+      "anchor_world": [
+        613,
+        450
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "08_berry_bush_bare",
+      "anchor_world": [
+        658,
+        458
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "02_lean_to",
+      "anchor_world": [
+        482,
+        460
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "11_villager_elder",
+      "anchor_world": [
+        607,
+        460
+      ],
+      "villager_id": 15
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        464
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "15_reed_tuft",
+      "anchor_world": [
+        407,
+        472
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "02_lean_to",
+      "anchor_world": [
+        581,
+        475
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "12_villager_child",
+      "anchor_world": [
+        627,
+        484
+      ],
+      "villager_id": 16
+    },
+    {
+      "sprite": "13_boulder",
+      "anchor_world": [
+        661,
+        487
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "11_villager_elder",
+      "anchor_world": [
+        449,
+        488
+      ],
+      "villager_id": 7
+    },
+    {
+      "sprite": "12_villager_child",
+      "anchor_world": [
+        560,
+        489
+      ],
+      "villager_id": 4
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        496
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "10_villager_builder",
+      "anchor_world": [
+        421,
+        505
+      ],
+      "villager_id": 18
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "anchor_world": [
+        490,
+        508
+      ],
+      "villager_id": 1
+    },
+    {
+      "sprite": "01_campfire",
+      "anchor_world": [
+        512,
+        512
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "anchor_world": [
+        461,
+        520
+      ],
+      "villager_id": 5
+    },
+    {
+      "sprite": "10_villager_builder",
+      "anchor_world": [
+        540,
+        521
+      ],
+      "villager_id": 2
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        528
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "03_storage_pit",
+      "anchor_world": [
+        606,
+        535
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "16_berry_basket",
+      "anchor_world": [
+        628,
+        540
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "11_villager_elder",
+      "anchor_world": [
+        503,
+        541
+      ],
+      "villager_id": 3
+    },
+    {
+      "sprite": "10_villager_builder",
+      "anchor_world": [
+        438,
+        546
+      ],
+      "villager_id": 6
+    },
+    {
+      "sprite": "15_reed_tuft",
+      "anchor_world": [
+        404,
+        553
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "10_villager_builder",
+      "anchor_world": [
+        595,
+        557
+      ],
+      "villager_id": 10
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "12_villager_child",
+      "anchor_world": [
+        528,
+        560
+      ],
+      "villager_id": 8
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        560
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "anchor_world": [
+        563,
+        563
+      ],
+      "villager_id": 9
+    },
+    {
+      "sprite": "12_villager_child",
+      "anchor_world": [
+        477,
+        572
+      ],
+      "villager_id": 12
+    },
+    {
+      "sprite": "11_villager_elder",
+      "anchor_world": [
+        619,
+        573
+      ],
+      "villager_id": 11
+    },
+    {
+      "sprite": "02_lean_to",
+      "anchor_world": [
+        464,
+        575
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "11_villager_elder",
+      "anchor_world": [
+        413,
+        577
+      ],
+      "villager_id": 19
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        592
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "09_villager_gatherer",
+      "anchor_world": [
+        496,
+        594
+      ],
+      "villager_id": 13
+    },
+    {
+      "sprite": "10_villager_builder",
+      "anchor_world": [
+        436,
+        595
+      ],
+      "villager_id": 14
+    },
+    {
+      "sprite": "12_villager_child",
+      "anchor_world": [
+        539,
+        597
+      ],
+      "villager_id": 20
+    },
+    {
+      "sprite": "04_shelter_frame",
+      "anchor_world": [
+        596,
+        599
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "15_reed_tuft",
+      "anchor_world": [
+        402,
+        613
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        440,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        472,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        568,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        600,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        632,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        624
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        496,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        528,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        656
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        440,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        472,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        504,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        536,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        568,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        600,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        632,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        688
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        496,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        528,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        720
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        280,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        312,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        344,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        440,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        472,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        504,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        536,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        568,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        600,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        632,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        664,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        696,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        728,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        760,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        792,
+        752
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        272,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        304,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        336,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        432,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        464,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        496,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        528,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        560,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        592,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        624,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        656,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        688,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        720,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        752,
+        784
+      ],
+      "villager_id": null
+    },
+    {
+      "sprite": "14_young_tree",
+      "anchor_world": [
+        784,
+        784
+      ],
+      "villager_id": null
+    }
+  ]
+}

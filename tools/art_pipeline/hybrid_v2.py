@@ -48,14 +48,16 @@ def main() -> None:
                 'actor_source': 'opaque colors used by corrected D3 actor sprites'}
     (sprites / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     (output / 'normalize_v2_report.md').write_text('# H composition\n\nD1 ground, boulder, young tree and reeds; D3 remaining corrected sprites. No rescaling. Source size/semantic failures remain applicable. Palette merge may change input colors by less than ΔE76 3.\n')
-    board = Image.new('RGB', (1024, 1280), '#25262b')
+    cell_w = max(image.width for image in images.values()) * 8 + 16
+    cell_h = max(image.height for image in images.values()) * 8 + 32
+    board = Image.new('RGB', (cell_w * 4, cell_h * 4), '#25262b')
     draw = ImageDraw.Draw(board)
     for i, (name, image) in enumerate(images.items()):
         image = quantize(image, palette)
-        x, y = (i % 4) * 256, (i // 4) * 320
+        x, y = (i % 4) * cell_w, (i // 4) * cell_h
         draw.text((x + 4, y + 4), name, fill='white')
         scaled = image.resize((image.width * 8, image.height * 8), Image.Resampling.NEAREST)
-        board.paste(scaled, (x + 8, y + 312 - scaled.height), scaled)
+        board.paste(scaled, (x + 8, y + cell_h - 8 - scaled.height), scaled)
     board.save(output / 'sprites_v2_contact.png')
     print(json.dumps({'palette_count': len(palette), 'sprites': len(entries)}))
 
