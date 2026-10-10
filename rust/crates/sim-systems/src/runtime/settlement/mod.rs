@@ -35,3 +35,6 @@ pub use housing::{housing_capacity, shelter_count};
 pub mod food_economy;
 /// Pass 5 firewood target and wood in hand.
 pub mod firewood;
+/// Pass 5 hearth fire and cold nights.
+pub mod fire;
+pub use fire::FireSystem;

@@ -23,7 +23,7 @@
 //! table, so the decay tick here is the unconditional fallback.
 
 use hecs::World;
-use sim_core::components::Hunger;
+use sim_core::components::{Cold, Hunger};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Phase 5-α need-decay system. Stateless — all per-agent state lives in
@@ -51,9 +51,24 @@ impl RuntimeSystem for HungerDecaySystem {
         1
     }
 
-    fn tick(&mut self, world: &mut World, _resources: &mut SimResources) {
-        for (_entity, hunger) in world.query::<&mut Hunger>().iter() {
-            hunger.tick();
+    fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        // Pass 5: a `Cold` agent's hunger grows by `growth_rate x
+        // cold_hunger_permille / 1000` under the firewood rule. Without the
+        // rule, and for every agent without `Cold`, the arithmetic is exactly
+        // `Hunger::tick`.
+        let Some(permille) = resources.rules.society.firewood.map(|rule| rule.cold_hunger_permille) else {
+            for (_entity, hunger) in world.query::<&mut Hunger>().iter() {
+                hunger.tick();
+            }
+            return;
+        };
+        for (_entity, (hunger, cold)) in world.query::<(&mut Hunger, Option<&Cold>)>().iter() {
+            if cold.is_some() {
+                let growth = hunger.growth_rate * permille as f32 / 1000.0;
+                hunger.value = (hunger.value + growth).min(Hunger::SATURATION).max(0.0);
+            } else {
+                hunger.tick();
+            }
         }
     }
 }

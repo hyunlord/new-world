@@ -90,6 +90,7 @@ impl RuntimeSystem for ShelterPlanningSystem {
                             || resources.food_source_max.contains_key(&tile)
                             || resources.water_tiles.contains_key(&tile)
                             || resources.sleep_tiles.contains_key(&tile)
+                            || resources.wood_source_max.contains_key(&tile)
                         {
                             continue;
                         }

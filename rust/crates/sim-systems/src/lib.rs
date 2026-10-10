@@ -285,6 +285,7 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 144  MaturationSystem (Revitalize Pass 3, interval 60)
 /// - 145  BedAssignmentSystem (Revitalize Pass 3)
 /// - 146  AgingSystem (Revitalize Pass 4, interval 60; no-op without the aging rule)
+/// - 147  FireSystem (Revitalize Pass 5, interval 60; no-op without the firewood rule)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -305,6 +306,12 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_stockpile_consume_systems(engine);
     register_shelter_planning_systems(engine);
     register_rhythm_systems(engine);
+    register_fire_systems(engine);
+}
+
+/// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60).
+pub fn register_fire_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::settlement::FireSystem::new()));
 }
 
 /// Register the rules-gated shelter planner.

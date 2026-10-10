@@ -317,6 +317,22 @@ impl WorldRules {
             meal_hunger: 25.0,
             camp_radius: 8,
         });
+        rules.society.firewood = Some(FirewoodRule {
+            gather_start_minute: 600,
+            gather_end_minute: 1020,
+            wood_radius: 18,
+            haul_threshold: 2,
+            max_gatherers_per_spot: 1,
+            regen_permille: 500,
+            base_days: 1.5,
+            winter_prep: true,
+            burn_start_minute: 1080,
+            burn_end_minute: 420,
+            burn_per_hour: [2, 1, 2, 3],
+            cold_start_minute: 1320,
+            cold_end_minute: 360,
+            cold_hunger_permille: 1500,
+        });
         rules
     }
 

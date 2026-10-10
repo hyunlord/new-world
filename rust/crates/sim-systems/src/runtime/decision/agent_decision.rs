@@ -61,10 +61,11 @@ use sim_core::components::{
     MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
     TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
-use sim_core::rules::ForageRule;
+use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
+use crate::runtime::settlement::firewood::{wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
 
 /// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
@@ -100,6 +101,41 @@ fn choose_bush(
                 && Some(**tile) != exclude
                 && chebyshev(**tile, home) <= rule.forage_radius
                 && claims.get(*tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+        })
+        .map(|(tile, _)| *tile)
+        .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
+
+/// Per-settlement firewood inputs computed once per decision tick (Pass 5).
+#[derive(Debug, Clone)]
+struct WoodPlan {
+    /// Settlement formation tile; deadwood is measured from here.
+    home: (u32, u32),
+    /// Wood target in units.
+    target: f64,
+    /// Stockpile plus wood carried by members.
+    in_hand: u64,
+}
+
+/// Deterministic deadwood choice (Pass 5): among spots holding wood within
+/// `wood_radius` of `home` whose claim count is below the cap, minimise
+/// `(claims, chebyshev(agent, spot), y, x)`. `None` when no spot qualifies.
+fn choose_spot(
+    rule: &FirewoodRule,
+    home: (u32, u32),
+    agent: (u32, u32),
+    wood_tiles: &BTreeMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+) -> Option<(u32, u32)> {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    wood_tiles
+        .iter()
+        .filter(|(tile, amount)| {
+            **amount >= 1
+                && Some(**tile) != exclude
+                && chebyshev(**tile, home) <= rule.wood_radius
+                && claims.get(*tile).copied().unwrap_or(0) < rule.max_gatherers_per_spot
         })
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
@@ -518,6 +554,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         let social_rule = resources.rules.agent.social_seek;
         let forage_rule = resources.rules.agent.forage
             .filter(|_| resources.rules.society.stock_target.is_some());
+        let firewood_rule = resources.rules.society.firewood;
         if social_rule.is_some() {
             resources.social_retry_after.retain(|_, after| tick < *after);
         }
@@ -561,6 +598,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                 // Pass 4: a member carrying a full haul load delivers it before building.
                 let loaded = forage_rule.is_some_and(|rule| {
                     inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= rule.haul_threshold)
+                }) || firewood_rule.is_some_and(|rule| {
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= rule.haul_threshold)
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
                  !children.contains(&a.id) && !elders.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
@@ -603,6 +642,35 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut forage_plans: BTreeMap<SettlementId, ForagePlan> = BTreeMap::new();
         let mut member_of: BTreeMap<AgentId, SettlementId> = BTreeMap::new();
         let mut claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        // Pass 5 — firewood inputs: each settlement's wood target and wood in
+        // hand, and the current claims on deadwood spots. Empty without the rule.
+        let wood_window = firewood_rule.is_some_and(|rule| {
+            clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
+        });
+        let mut wood_plans: BTreeMap<SettlementId, WoodPlan> = BTreeMap::new();
+        let mut wood_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        if firewood_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            let target = wood_target(resources).unwrap_or(0.0);
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                for id in &settlement.member_agents {
+                    member_of.entry(*id).or_insert(sid);
+                }
+                wood_plans.insert(sid, WoodPlan {
+                    home: settlement.formation_tile,
+                    target,
+                    in_hand: wood_in_hand(world, resources, sid),
+                });
+            }
+            for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
+                if matches!(state, AgentState::Seeking { target: TargetKind::GatherWood }) {
+                    *wood_claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+        }
+        let mut wood_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
         if forage_rule.is_some() {
             let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
             ids.sort_unstable();
@@ -830,6 +898,14 @@ impl RuntimeSystem for AgentDecisionSystem {
             let worker = adult && !elders.contains(&agent.id);
             let social_ready = adult && (social_rule.is_none()
                 || !resources.social_retry_after.contains_key(&agent.id));
+            // Pass 5 — under the firewood rule a member carrying a full food
+            // or wood load hauls it home before any work arm fires again.
+            let wood_loaded = firewood_rule.is_some_and(|rule| {
+                inventory_opt.as_ref().is_some_and(|inv| {
+                    inv.get(ResourceKind::Wood) >= rule.haul_threshold
+                        || forage_rule.is_some_and(|forage| inv.get(ResourceKind::Food) >= forage.haul_threshold)
+                })
+            });
             match *state {
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
@@ -1264,7 +1340,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_chase_since.insert(agent.id, tick);
                             }
                         }
-                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker).and_then(|rule| {
+                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker && !wood_loaded).and_then(|rule| {
                         // Pass 4 — Forage arm (after Combat, before Gather): a
                         // member with room and less than a haul load walks to a
                         // bush on purpose while the store is below its target.
@@ -1283,6 +1359,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                         resources.tallies.forage_trips += 1;
                         *state = AgentState::Seeking {
                             target: TargetKind::GatherFood,
+                        };
+                    } else if let Some(spot) = firewood_rule.filter(|_| wood_window && worker && !wood_loaded).and_then(|rule| {
+                        // Pass 5 — Firewood arm (after Forage, before Gather): a
+                        // member with room and less than a wood load walks to a
+                        // deadwood spot while the wood in hand is below target.
+                        let sid = member_of.get(&agent.id)?;
+                        let plan = wood_plans.get(sid)?;
+                        let inv = inventory_opt.as_ref()?;
+                        let room = inv.total() < INVENTORY_CAPACITY;
+                        let light = inv.get(ResourceKind::Wood) < rule.haul_threshold;
+                        if !(room && light && (plan.in_hand as f64) < plan.target) {
+                            return None;
+                        }
+                        choose_spot(&rule, plan.home, (pos.x, pos.y), &resources.wood_tiles, &wood_claims, None)
+                    }) {
+                        *wood_claims.entry(spot).or_default() += 1;
+                        wood_targets.insert(entity, spot);
+                        resources.tallies.wood_trips += 1;
+                        *state = AgentState::Seeking {
+                            target: TargetKind::GatherWood,
                         };
                     } else if let Some(_gather_tile) = {
                         // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
@@ -1306,7 +1402,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     (plan.in_hand as f64) < cap * plan.target
                                 })
                         });
-                        if worker && has_room && bounded {
+                        if worker && has_room && bounded && !wood_loaded {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,
@@ -1887,6 +1983,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         let mut retarget: Vec<Retarget> = Vec::new();
         let mut to_idle: Vec<hecs::Entity> = Vec::new();
+        // Pass 5 — deadwood targets held after this pass, and wood gatherers
+        // whose spot emptied (or who lost their target), re-targeted below.
+        let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        let mut wood_retarget: Vec<(AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>)> = Vec::new();
         for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
             .query::<(
                 &Agent,
@@ -1924,6 +2024,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                     };
                     if let Some(tile) = held {
                         *gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
+                // Pass 5 — a wood gatherer heads to the spot the Firewood arm
+                // chose, keeps a spot that still holds wood, and is re-targeted
+                // (never frozen) when its spot emptied.
+                AgentState::Seeking { target: TargetKind::GatherWood } => {
+                    let held = if let Some(spot) = wood_targets.get(&e) {
+                        seek_set.push((e, *spot));
+                        Some(*spot)
+                    } else {
+                        match seek_opt.map(|seek| seek.tile) {
+                            Some(tile) if resources.wood_tiles.get(&tile).is_some_and(|amount| *amount > 0) => Some(tile),
+                            old => {
+                                wood_retarget.push((agent.id, e, (pos.x, pos.y), old));
+                                None
+                            }
+                        }
+                    };
+                    if let Some(tile) = held {
+                        *wood_gather_claims.entry(tile).or_default() += 1;
                     }
                 }
                 // Resource targets stay stable; assigned beds follow bed reassignment.
@@ -2039,6 +2159,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                     None => to_idle.push(e),
                 }
+            }
+        }
+        // Pass 5 — re-target emptied deadwood spots in AgentId order by the
+        // firewood choice rule (claims recomputed, the empty spot excluded); a
+        // gatherer with no qualifying spot becomes Idle and drops its target.
+        wood_retarget.sort_by_key(|row| row.0);
+        for (id, e, pos, old) in wood_retarget {
+            let home = member_of.get(&id).and_then(|sid| wood_plans.get(sid)).map(|plan| plan.home);
+            let choice = firewood_rule.zip(home).and_then(|(rule, home)| {
+                choose_spot(&rule, home, pos, &resources.wood_tiles, &wood_gather_claims, old)
+            });
+            match choice {
+                Some(spot) => {
+                    *wood_gather_claims.entry(spot).or_default() += 1;
+                    seek_set.push((e, spot));
+                }
+                None => to_idle.push(e),
             }
         }
         for (e, tile) in seek_set {
