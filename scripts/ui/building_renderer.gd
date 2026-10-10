@@ -142,18 +142,15 @@ func _update_bushes() -> void:
 		seen[id] = true
 	_reap(_bushes, seen)
 
-func _update_stockpiles() -> void:
-	var snapshot: Dictionary = _world_sim.get_settlement_snapshot()
-	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
+func _food_totals_by_stockpile(snapshot: Dictionary) -> Dictionary:
 	var xs: PackedInt32Array = snapshot.get("formation_xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("formation_ys", PackedInt32Array())
 	var foods: PackedInt32Array = snapshot.get("food_stocks", PackedInt32Array())
-	var seen: Dictionary = {}
-	_label_anchors.clear()
-	for i: int in range(ids.size()):
-		if _stockpile_positions.is_empty():
-			continue
-		# Snapshot order is building-id order, so equal distances have a stable tie-break.
+	var totals: Dictionary = {}
+	if _stockpile_positions.is_empty():
+		return totals
+	for i: int in range(foods.size()):
+		# Building-id snapshot order keeps equal-distance choices stable.
 		var nearest: Vector2i = _stockpile_positions[0]
 		var best_distance: int = maxi(absi(nearest.x - xs[i]), absi(nearest.y - ys[i]))
 		for candidate: Vector2i in _stockpile_positions:
@@ -161,7 +158,17 @@ func _update_stockpiles() -> void:
 			if distance < best_distance:
 				nearest = candidate
 				best_distance = distance
-		var label: Label = _labels.get(ids[i]) as Label
+		# Shared anchors display one sum; every settlement contributes exactly once.
+		totals[nearest] = int(totals.get(nearest, 0)) + foods[i]
+	return totals
+
+func _update_stockpiles() -> void:
+	var totals: Dictionary = _food_totals_by_stockpile(_world_sim.get_settlement_snapshot())
+	var seen: Dictionary = {}
+	_label_anchors.clear()
+	for nearest: Vector2i in totals:
+		var id: int = (nearest.x << 32) | nearest.y
+		var label: Label = _labels.get(id) as Label
 		if label == null:
 			label = Label.new()
 			label.z_index = 6
@@ -170,10 +177,10 @@ func _update_stockpiles() -> void:
 			label.add_theme_color_override("font_outline_color", Color("141414"))
 			label.add_theme_constant_override("outline_size", 3)
 			add_child(label)
-			_labels[ids[i]] = label
-		label.text = str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % foods[i]
-		_label_anchors[ids[i]] = _tile_center(nearest.x, nearest.y) + Vector2(0, -18)
-		seen[ids[i]] = true
+			_labels[id] = label
+		label.text = str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % int(totals[nearest])
+		_label_anchors[id] = _tile_center(nearest.x, nearest.y) + Vector2(0, -18)
+		seen[id] = true
 	_reap(_labels, seen)
 
 func _update_labels() -> void:
