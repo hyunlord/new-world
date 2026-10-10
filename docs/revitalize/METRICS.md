@@ -875,3 +875,11 @@ Every clause with median/p10/p90/min/max: [round2 targets](probe/p3-5_round2_tar
 | 60 | 42 [42,42;42,42] | 116.5 [38.9,641.1;12,887] | 0 [0,0;0,0] |
 
 Timing ms/agent-tick median10day0.00074145 and60day0.00086803, both below1.5×same-host frozen baseline0.001181233836. This is run-level timing, not a graphics FPS/device-performance claim.
+
+### Part7 final cohorts
+
+Producer `6db6db6a315841b0e40d52e7c66811f0009a13e2`; all four fresh cohorts exit0/twins PASS. [Full final U1–U11 clauses and distributions](probe/p3-7_final_targets/u_targets.md), [machine evidence](probe/p3-7_final_targets/u_targets.json), [receipts](probe/p3-7_final_targets/receipts.json). All U targets PASS. Final v9 simulation values equal Round2 at every sample kind:10day10240rows/526285scalar checks,60day30720rows/1582779checks; only timing/git metadata differ. Therefore the complete60-day Round2 trajectories above also describe final results.
+
+Legacy4seeds exactly reproduce Pass1 and Pass2 (484rawrows;16056/35200scalar comparisons); v8game64x10 exactly reproduces Pass2 (7744rows/281568comparisons), with zero differences. Current producer legacy pin1/1PASS. [v8 comparison](probe/p3-7_final_v8/comparison.json); [legacy comparison](probe/p3-7_final_legacy/comparison-p1_legacy.json). Final v9 zero deaths in both cohorts; day60everyseed42residents, same-tickownedoverflow0, finalstockmedian116.5/min12.
+
+Final performance ms/agent-tick (median,p10,p90,min,max):10day (0.0007298523,0.0006297925,0.0011856014,0.0006074260,0.0017314190);60day (0.0008718874,0.0007079225,0.0012058925,0.0006674926,0.0013499535). U11 applies to medians, limit0.0011812338; some individual timing observations exceed it and are retained. This is simulation timing, not renderer FPS.
