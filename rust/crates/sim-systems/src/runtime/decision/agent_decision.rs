@@ -1225,11 +1225,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     _ => None,
                                 };
                                 let current_value = match target {
-                                    TargetKind::Food if availability.food =>
-                                        hunger_opt.as_ref().map(|h| f64::from(h.value)),
-                                    TargetKind::Water if availability.water =>
-                                        thirst_opt.as_ref().map(|t| t.value),
-                                    _ => None,
+                                    TargetKind::Food => hunger_opt.as_ref()
+                                        .filter(|_| availability.food).map(|h| f64::from(h.value)),
+                                    TargetKind::Water => thirst_opt.as_ref()
+                                        .filter(|_| availability.water).map(|t| t.value),
+                                    TargetKind::Sleep | TargetKind::ConstructionSite
+                                        | TargetKind::Agent(_) | TargetKind::GatherFood => None,
                                 };
                                 // Keep an already-critical trip: competing hunger must not
                                 // repeatedly interrupt water seeking until the agent dehydrates.
