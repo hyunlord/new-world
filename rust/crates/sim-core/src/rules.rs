@@ -337,6 +337,8 @@ impl WorldRules {
             firewood.winter_regen_units_per_day = Some(6);
             firewood.winter_deadwood_cap = Some(1);
             firewood.night_season_from_evening = true;
+            // Part 3: adults leave for wood at 07:00 when tonight's burn is not in hand.
+            firewood.urgent_start_minute = Some(420);
             rules.society.firewood = Some(firewood);
         }
         rules
