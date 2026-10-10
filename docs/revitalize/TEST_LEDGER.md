@@ -558,3 +558,17 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_three_is_exactly_additive` → `schema_four_is_exactly_additive`: version 3 → 4, key count 53 → 53 + 15 | authorized probe schema move; every v3 key keeps its meaning |
 | 1 | `rust/crates/sim-test/src/probe/deaths.rs` `dehydration_reads_first_saturation_on_death_tick_and_takes_precedence` | Death-row key count 23 → 23 + 2 (`death_reason`, `age_days_at_death`); adds assertions on both | authorized probe schema move; cause, thirst and row-count assertions unchanged |
 | 1 | `rust/crates/sim-test/src/probe/deaths.rs` `a_new_thirst_crossing_resets_history_without_double_counting` AgentFrame literal | Add `born_tick: None` | neutral fixture field for the additive observer metadata |
+
+## Pass 5
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_tallies.rs` exhaustive Tallies literal | Add `meals_from_store`, `ground_meals`, `wood_trips`, `wood_gathered`, `gather_preempted`, `cold_member_hours` = 0 | struct-literal field addition with legacy values; every assertion unchanged |
+| 1 | `rust/crates/sim-bridge/src/ffi/world_node.rs` `tallies_collector_preserves_all_four_counters` Tallies literal | Add the six Pass 5 counters = 0 | struct-literal field addition with legacy values |
+| 1 | `rust/crates/sim-core/src/rules.rs` `legacy_has_no_opt_in_behavior` | Expected AgentRules gains `preempt_gathering: false`, SocietyRules `meals: None`, `firewood: None` | struct-literal field addition with legacy values; whole-struct equality kept |
+| 1 | `rust/crates/sim-core/src/rules.rs` `pass3_fields_are_neutral_in_frozen_rules` | Also asserts the three Pass 5 fields are neutral for default and v8 | strengthened, not weakened (new tests also cover v9 and v10) |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_four_is_exactly_additive` → `schema_five_is_exactly_additive`: version 4 → 5, key count 53 + 15 → 53 + 15 + 15 | authorized probe schema move; every v4 key keeps its meaning |
+| 1 | `rust/crates/sim-test/tests/harness_p7_alpha_social_components.rs` (A27 variant loop, A28 `classify`), `harness_p6_alpha_construction_components.rs` (variant loop), `harness_p5_beta_decision.rs` (`discriminator`), `harness_p5_gamma_sleep_daynight_chronicle.rs` (three unreachable-arm matches) | Add the `TargetKind::GatherWood` arm (and, where the test lists variants or asserts each label, the new variant and its label) | required by the one authorized enum addition; the exhaustive no-wildcard matches still trip on any further variant |
+| 1 | `rust/crates/sim-bridge/src/ffi/world_node.rs` `mixed_snapshot_targets_match_detail_and_live_child_markers` | Target list gains `GatherWood` (code 7) | strengthened: snapshot and detail codes are checked for the new variant too |
+| 1 | `rust/crates/sim-core/src/components/agent_state.rs` truth-table and serde tests | Add `GatherWood` Seeking/Consuming cases | strengthened |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | Adds a `game_v11` parse assertion | strengthened |

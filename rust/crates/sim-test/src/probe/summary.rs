@@ -155,7 +155,8 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     })
     .collect();
     markdown.push_str(&pass4_sections(args, runs));
-    let report = json!({"schema_version":4,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    markdown.push_str(&pass5_sections(args, runs));
+    let report = json!({"schema_version":5,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
@@ -248,6 +249,92 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
             per_day("regen_lost_at_cap_total"),
             median_at(day, "home_distance_mean"),
         ));
+    }
+    out
+}
+
+/// Season (0..4) of elapsed day `day`, taken at its opening checkpoint (spring
+/// for day 1), exactly as the Seasons section attributes days.
+fn opening_season(run: &RunResult, day: u64) -> Option<u64> {
+    if day > 1 {
+        run.checkpoints.get(&(day - 1)).and_then(|row| row["season"].as_u64())
+    } else {
+        Some(0)
+    }
+}
+
+/// Pass 5 Meals, Fire and wood, and Work by hour sections.
+fn pass5_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
+    const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
+    let mut out = String::from("\n## Meals\n\nStore meals are units served from a settlement store (any scene); ground meals are resolved `Consuming { Food }` meals at a food tile. Per-day counter differences attributed to the season of the opening checkpoint, as in Seasons; the share is store / (store + ground) per seed-day (days with no meal skipped). Medians over seed-days; days 1–2 are excluded from the share column.\n\n| Season | Seed-days | Store meals/day | Ground meals/day | Store share (day ≥ 3) |\n|---|---:|---:|---:|---:|\n");
+    let mut fire = String::from("\n## Fire and wood\n\nWood stock and target are checkpoint values (08:00); burn/day is wood gathered minus the change in wood in hand (stockpile plus carried by members), since wood only leaves hands by burning; lit share is the share of 02:00 clock samples (days ≥ 3) with every settlement's fire lit; cold member-hours/day is the per-day difference of the hourly cold tally. Medians over seed-days.\n\n| Season | Seed-days | Wood stock | Wood target | Burn/day | Lit at 02:00 | Cold member-hours/day | Wood trips/day | Wood gathered/day |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    for (index, name) in SEASONS.iter().enumerate() {
+        let mut meals: [Vec<f64>; 3] = Default::default();
+        let mut wood: [Vec<f64>; 6] = Default::default();
+        let mut lit = Vec::new();
+        for run in runs {
+            for day in 1..=args.days {
+                if opening_season(run, day) != Some(index as u64) {
+                    continue;
+                }
+                let Some(row) = run.checkpoints.get(&day) else { continue };
+                let store = daily(run, day, "meals_from_store_total").unwrap_or(0.0);
+                let ground = daily(run, day, "ground_meals_total").unwrap_or(0.0);
+                meals[0].push(store);
+                meals[1].push(ground);
+                if day >= 3 && store + ground > 0.0 {
+                    meals[2].push(store / (store + ground));
+                }
+                let gathered = daily(run, day, "wood_gathered_total").unwrap_or(0.0);
+                for (column, value) in wood.iter_mut().zip([
+                    row["wood_stock"].as_f64().unwrap_or(0.0),
+                    row["wood_target"].as_f64().unwrap_or(0.0),
+                    gathered - daily(run, day, "wood_in_hand").unwrap_or(0.0),
+                    daily(run, day, "cold_member_hours_total").unwrap_or(0.0),
+                    daily(run, day, "wood_trips_total").unwrap_or(0.0),
+                    gathered,
+                ]) {
+                    column.push(value);
+                }
+            }
+            for ((day, minute), row) in &run.clock_rows {
+                if *minute == 120 && *day >= 3 && row["season"].as_u64() == Some(index as u64) {
+                    lit.push(row["fire_lit"].as_f64().unwrap_or(0.0));
+                }
+            }
+        }
+        if meals[0].is_empty() {
+            continue;
+        }
+        out.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} |\n", meals[0].len(),
+            percentile(&meals[0], 0.5), percentile(&meals[1], 0.5), percentile(&meals[2], 0.5)));
+        let lit_share = if lit.is_empty() { 0.0 } else { lit.iter().sum::<f64>() / lit.len() as f64 };
+        fire.push_str(&format!("| {name} | {} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            wood[0].len(), percentile(&wood[0], 0.5), percentile(&wood[1], 0.5), percentile(&wood[2], 0.5),
+            lit_share, percentile(&wood[3], 0.5), percentile(&wood[4], 0.5), percentile(&wood[5], 0.5)));
+    }
+    out.push_str(&fire);
+    out.push_str("\n## Work by hour\n\nAt each requested clock sample on days ≥ 2: adult work share (non-child, non-elder members gathering food or wood, building, or hauling home) and idle share (residents Idle and not hauling / all residents). Each seed's median over its days first, then quantiles across seeds. Spring–autumn excludes winter samples.\n\n| Clock | Adult work median | Adult work min | Idle median | Idle max | Adult work median (spring–autumn) | Idle median (spring–autumn) |\n|---|---:|---:|---:|---:|---:|---:|\n");
+    for minute in &args.clock_samples {
+        let seed_medians = |key: &str, work_seasons: bool| {
+            runs.iter()
+                .filter_map(|run| {
+                    let values: Vec<f64> = run.clock_rows.iter()
+                        .filter(|((day, m), row)| *m == *minute && *day >= 2
+                            && (!work_seasons || row["season"].as_u64() != Some(3)))
+                        .map(|(_, row)| row[key].as_f64().unwrap_or(0.0))
+                        .collect();
+                    (!values.is_empty()).then(|| percentile(&values, 0.5))
+                })
+                .collect::<Vec<_>>()
+        };
+        let work = seed_medians("adult_work_share", false);
+        let idle = seed_medians("idle_share", false);
+        out.push_str(&format!("| {:02}:{:02} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} | {:.3} |\n",
+            minute / 60, minute % 60, percentile(&work, 0.5), percentile(&work, 0.0),
+            percentile(&idle, 0.5), percentile(&idle, 1.0),
+            percentile(&seed_medians("adult_work_share", true), 0.5),
+            percentile(&seed_medians("idle_share", true), 0.5)));
     }
     out
 }

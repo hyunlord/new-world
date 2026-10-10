@@ -27,8 +27,28 @@ pub struct WorldGenConfig {
     pub hill_coverage: f64,
     /// Mountain fraction of all non-river tiles.
     pub mountain_coverage: f64,
+    /// Deadwood spots placed after every other step (Pass 5); zero places none.
+    pub deadwood_spots: u32,
+    /// Maximum wood at each deadwood spot.
+    pub deadwood_capacity: u8,
+    /// Innermost Chebyshev distance of a deadwood spot from the hearth.
+    pub deadwood_min_radius: u32,
+    /// Outermost Chebyshev distance of a deadwood spot from the hearth.
+    pub deadwood_max_radius: u32,
 }
 impl WorldGenConfig {
+    /// Pass 5 generator inputs: v10 plus twenty capacity-six deadwood spots
+    /// 5..=18 tiles from the hearth, drawn from their own stream.
+    pub const fn game_v11(seed: u64) -> Self {
+        Self {
+            deadwood_spots: 20,
+            deadwood_capacity: 6,
+            deadwood_min_radius: 5,
+            deadwood_max_radius: 18,
+            ..Self::game_v10(seed)
+        }
+    }
+
     /// Pass 4 generator inputs: v9 with twelve renewable food sources.
     pub const fn game_v10(seed: u64) -> Self {
         Self { berry_bushes: 12, ..Self::game_v9(seed) }
@@ -51,6 +71,10 @@ impl WorldGenConfig {
             forest_coverage: 0.30,
             hill_coverage: 0.10,
             mountain_coverage: 0.04,
+            deadwood_spots: 0,
+            deadwood_capacity: 0,
+            deadwood_min_radius: 0,
+            deadwood_max_radius: 0,
         }
     }
 }
@@ -92,6 +116,15 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     terrain::generate(cfg, &mut engine.resources.tile_grid);
     camp::shore_water(&mut engine.resources);
     camp::populate(cfg, &mut engine);
+    // Pass 5: deadwood comes last, from its own stream, so the rest of a v11
+    // world is identical to the v10 world of the same seed.
+    if cfg.deadwood_spots > 0 {
+        assert!(
+            cfg.deadwood_capacity > 0 && cfg.deadwood_min_radius <= cfg.deadwood_max_radius,
+            "deadwood requires a positive capacity and an ordered radius band"
+        );
+        camp::deadwood(cfg, &mut engine.resources);
+    }
     engine
 }
 #[cfg(test)]
@@ -113,6 +146,17 @@ mod tests {
                 .count(),
             0
         );
+    }
+    #[test]
+    fn game_v11_adds_only_deadwood_to_v10() {
+        let v11 = WorldGenConfig::game_v11(5);
+        assert_eq!(
+            (v11.deadwood_spots, v11.deadwood_capacity, v11.deadwood_min_radius, v11.deadwood_max_radius),
+            (20, 6, 5, 18)
+        );
+        let plain = WorldGenConfig { deadwood_spots: 0, deadwood_capacity: 0, deadwood_min_radius: 0, deadwood_max_radius: 0, ..v11 };
+        assert_eq!(plain, WorldGenConfig::game_v10(5));
+        assert_eq!(WorldGenConfig::game_v10(5).deadwood_spots, 0);
     }
     #[test]
     fn default_configuration_is_explicit() {

@@ -1388,7 +1388,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     TargetKind::Water => thirst_opt.as_ref()
                                         .filter(|_| availability.water).map(|t| t.value),
                                     TargetKind::Sleep | TargetKind::ConstructionSite
-                                        | TargetKind::Agent(_) | TargetKind::GatherFood => None,
+                                        | TargetKind::Agent(_) | TargetKind::GatherFood
+                                        | TargetKind::GatherWood => None,
                                 };
                                 // Keep an already-critical trip: competing hunger must not
                                 // repeatedly interrupt water seeking until the agent dehydrates.
@@ -1512,6 +1513,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // same "food present at current tile" edge as eating.
                         TargetKind::GatherFood => resources
                             .food_tiles
+                            .get(&key)
+                            .copied()
+                            .is_some_and(|v| v > 0),
+                        // Pass 5 — a firewood gatherer reaches its deadwood spot.
+                        TargetKind::GatherWood => resources
+                            .wood_tiles
                             .get(&key)
                             .copied()
                             .is_some_and(|v| v > 0),
@@ -1662,6 +1669,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
                                 resources.tallies.meals_eaten += 1;
                                 resources.tallies.meals_without_food += u64::from(!food_present);
+                                // Pass 5, display-only: a resolved ground meal.
+                                resources.tallies.ground_meals += 1;
                             }
                             *state = AgentState::Idle;
                         }
@@ -1698,6 +1707,31 @@ impl RuntimeSystem for AgentDecisionSystem {
                                             }
                                         }
                                     }
+                                }
+                            }
+                            *state = AgentState::Idle;
+                        }
+                        // Pass 5 — firewood PICKUP (carry, NOT eat): take
+                        // min(spot amount, haul load - carried wood, room) and
+                        // remove an emptied spot (regrowth recreates it). The
+                        // transition to Idle is unconditional (freeze-critical).
+                        TargetKind::GatherWood => {
+                            let load = resources.rules.society.firewood.map_or(0, |rule| rule.haul_threshold);
+                            if let Some(inv) = inventory_opt.as_mut() {
+                                let carried = inv.get(ResourceKind::Wood);
+                                let room = INVENTORY_CAPACITY.saturating_sub(inv.total());
+                                let amount = resources.wood_tiles.get(&key).copied().unwrap_or(0);
+                                let take = u32::from(amount).min(load.saturating_sub(carried)).min(room);
+                                if take > 0 {
+                                    let overflow = inv.add(ResourceKind::Wood, take);
+                                    let actually = take - overflow;
+                                    let left = amount.saturating_sub(actually as u8);
+                                    if left == 0 {
+                                        resources.wood_tiles.remove(&key);
+                                    } else {
+                                        resources.wood_tiles.insert(key, left);
+                                    }
+                                    resources.tallies.wood_gathered += u64::from(actually);
                                 }
                             }
                             *state = AgentState::Idle;

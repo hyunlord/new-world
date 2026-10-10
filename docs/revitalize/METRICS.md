@@ -1137,3 +1137,36 @@ Seasons (v10 final, opening-checkpoint attribution): supply/harvest/need per day
 Seeds 7 and 8, v9 → v10 (alive, births, old-age deaths, stockpile at days 4 / 10 / 60 / 120):
 - seed 7: v9 31/7/0/107 · 42/18/0/178 · 42/18/0/659 · 42/18/0/1259 → v10 31/7/0/125 · 42/18/0/296 · 41/47/30/212 · 42/91/73/268 (no more unbounded hoard).
 - seed 8: v9 24/0/0/19 · 24/0/0/13 · 42/18/0/47 · 42/18/0/0 → v10 31/7/0/131 · 42/18/0/289 · 42/45/27/230 · 42/92/74/276 (no more stagnation).
+
+## Pass 5 baseline
+
+Part 0 (2026-10-11, Mac `hyunlordui-MacBookPro.local`, Darwin 27.0.0 arm64), base `5cbcbc4f` + goal commit `175c2576`. All runs release, `--workers 4`, from a frozen copy of the base probe binary built before any Pass 5 edit.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p5-0_v10_10day` | game_v10 0..64 × 10, `--check-determinism` | DETERMINISM PASS; equal to `p4-7_final_v10_10day` on all 4,796 shared values (0 differences) |
+| (not kept) | the same with `--clock-samples 02:00,12:00,19:30` | DETERMINISM PASS; 397 differences, all under `rhythm` / `runs[*].rhythm`, because the Pass 4 reference ran without clock samples; every other value identical |
+| `p5-0_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | DETERMINISM PASS; equal to `p4-7_final_v9_10day` on all 4,796 shared values |
+| `p5-0_v10_120day` | game_v10 0..32 × 120, clocks 02:00,12:00,19:30 | DETERMINISM PASS; equal to `p4-7_final_v10_120day` on all 40,855 shared values |
+| `p5-0_v10_30day_seeds7-9` | game_v10 7..10 × 30, clocks 06:00,08:00,10:00,12:00,15:00,18:00,19:30,02:00 | rhythm: noon idle median 0.800 (seeds 0.781–0.829), evening near hearth 0.806, night in shelter 1.0 |
+
+Timing on this host, Part 0 (median ms per agent-tick, runs not isolated from each other): v10 10-day 0.000994, v9 10-day 0.000856, v10 120-day 0.001182, v10 30-day 0.001085. X12 uses a same-host v10 measurement taken in Part 5/7 next to the v11 runs.
+
+Fingerprints of `game_v10_scene(seed)` after 1,440 ticks (`sim_test::probe::fingerprint`), the constants of the Pass 5 `*_v10_unchanged` tests: seed 0 `0e38264bd3abe6ba` (forage trips 64, haul deposits 22), seed 1 `3b0590ec71558a58` (51, 27), seed 2 `d265695444b8b314` (71, 21), seed 3 `48120c365d543729` (49, 24). The Pass 4 v9 constants stay in `harness_forage_v9_unchanged`.
+
+### Noon-idle mechanism (game_v10 seeds 7..9, 30 days)
+
+Share of all residents in each state at each clock sample, mean over display days 1–29 of the three seeds (n = rows), and the total food left on the twelve bushes (capacity 48). Measured with a throwaway integration test (not committed) that classifies each agent: Idle split into hauling (`haul_due`) and plain idle; Seeking/Consuming of GatherFood = foraging; of Food = eating at a bush; of Agent = social; of Sleep = sleeping; Water and ConstructionSite = other.
+
+| Clock | n | Idle | Hauling | Foraging | Eating at a bush | Social | Sleeping | Other | Bush food total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 06:00 | 90 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.938 | 0.062 | 39.8 |
+| 08:00 | 90 | 0.360 | 0.032 | 0.173 | 0.012 | 0.356 | 0.000 | 0.067 | 32.2 |
+| 10:00 | 87 | 0.621 | 0.052 | 0.016 | 0.010 | 0.182 | 0.000 | 0.120 | 8.0 |
+| 12:00 | 87 | 0.760 | 0.025 | 0.055 | 0.029 | 0.014 | 0.000 | 0.117 | 8.0 |
+| 15:00 | 87 | 0.696 | 0.028 | 0.143 | 0.028 | 0.010 | 0.000 | 0.094 | 10.7 |
+| 18:00 | 87 | 0.856 | 0.007 | 0.014 | 0.004 | 0.007 | 0.000 | 0.111 | 5.5 |
+| 19:30 | 87 | 0.663 | 0.062 | 0.136 | 0.042 | 0.027 | 0.000 | 0.070 | 9.0 |
+| 02:00 | 90 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.999 | 0.001 | 22.0 |
+
+Reading: everybody wakes at 06:00 to bushes refilled overnight (39.8 of 48). By 08:00 the morning rush is under way (foraging 17 %, social 36 %); by 10:00 the bushes hold 8 units in total and stay there through noon, so neither the Forage arm (store above target) nor the opportunistic Gather arm (nothing within 8 tiles) has anything to do. Noon is 76 % plain idle, 12 % water trips and only 5.5 % foraging. Ground eating is small (1–4 %) at every hour because hungry residents find bushes near empty; the store feeds them only when no bush holds food. The evening uptick (13.6 % foraging at 19:30) is opportunistic gathering of the afternoon regrowth inside the hoard cap.

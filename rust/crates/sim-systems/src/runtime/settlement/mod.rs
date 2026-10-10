@@ -33,3 +33,5 @@ pub mod housing;
 pub use housing::{housing_capacity, shelter_count};
 /// Shared renewable supply and actual hunger requirements.
 pub mod food_economy;
+/// Pass 5 firewood target and wood in hand.
+pub mod firewood;

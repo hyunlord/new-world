@@ -36,6 +36,8 @@ pub struct AgentRules {
     pub evening_gather: Option<EveningGatherRule>,
     /// Purposeful daytime foraging and hauling. None = Pass 3 behaviour.
     pub forage: Option<ForageRule>,
+    /// Critical hunger or thirst interrupts a gathering trip (Pass 5). False = Pass 4 behaviour.
+    pub preempt_gathering: bool,
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -62,6 +64,10 @@ pub struct SocietyRules {
     pub stock_target: Option<StockTargetRule>,
     /// Aging and natural death. None = nobody ages (legacy, v8, v9).
     pub aging: Option<AgingRule>,
+    /// Shared meals from the settlement store. None = Pass 4 behaviour.
+    pub meals: Option<MealRule>,
+    /// Firewood gathering, the night fire and cold nights. None = Pass 4 behaviour.
+    pub firewood: Option<FirewoodRule>,
 }
 /// Conditions for a settlement to produce a child.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -210,6 +216,54 @@ pub struct AgingRule {
     /// Idle elder distance from the settlement formation tile.
     pub elder_tether_radius: u32,
 }
+/// Breakfast and dinner served from the settlement store (Pass 5).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct MealRule {
+    /// Inclusive first minute of breakfast.
+    pub breakfast_start: u32,
+    /// Exclusive final minute of breakfast.
+    pub breakfast_end: u32,
+    /// Inclusive first minute of dinner.
+    pub dinner_start: u32,
+    /// Exclusive final minute of dinner.
+    pub dinner_end: u32,
+    /// Hunger from which a member is served inside a meal window.
+    pub meal_hunger: f32,
+    /// Chebyshev distance from the formation tile that counts as at camp.
+    pub camp_radius: u32,
+}
+/// Firewood gathering, the night fire and cold nights (Pass 5).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct FirewoodRule {
+    /// Inclusive first minute of the firewood window.
+    pub gather_start_minute: u32,
+    /// Exclusive final minute of the firewood window.
+    pub gather_end_minute: u32,
+    /// Chebyshev deadwood radius around the formation tile.
+    pub wood_radius: u32,
+    /// Carried wood at which a gatherer walks home.
+    pub haul_threshold: u32,
+    /// Hard cap on gatherers heading to one deadwood spot.
+    pub max_gatherers_per_spot: u32,
+    /// Wood regrowth per spot per 120-tick pulse in thousandths.
+    pub regen_permille: u32,
+    /// Days of current burn kept in store.
+    pub base_days: f64,
+    /// Add a winter's burn to the target in summer and autumn (seasons only).
+    pub winter_prep: bool,
+    /// Inclusive first minute of the burn window.
+    pub burn_start_minute: u32,
+    /// Exclusive final minute of the burn window, possibly wrapping midnight.
+    pub burn_end_minute: u32,
+    /// Wood burned per hour: spring, summer, autumn, winter (index 0 without seasons).
+    pub burn_per_hour: [u16; 4],
+    /// Inclusive first minute of the cold window.
+    pub cold_start_minute: u32,
+    /// Exclusive final minute of the cold window, possibly wrapping midnight.
+    pub cold_end_minute: u32,
+    /// Hunger growth of a cold resident in thousandths of its normal rate.
+    pub cold_hunger_permille: u32,
+}
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SeasonRule {
@@ -232,6 +286,7 @@ impl Default for WorldRules {
                 night_rest: None,
                 evening_gather: None,
                 forage: None,
+                preempt_gathering: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -241,6 +296,8 @@ impl Default for WorldRules {
                 life_stage: None,
                 stock_target: None,
                 aging: None,
+                meals: None,
+                firewood: None,
             },
             clock_offset_ticks: 0,
             seasons: None,
@@ -248,6 +305,12 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 5 village policies: v10 plus meals, firewood and gathering preemption.
+    /// v10 stays frozen.
+    pub const fn game_v11() -> Self {
+        Self::game_v10()
+    }
+
     /// Pass 4 village policies: v9 retuned for twelve bushes. v9 stays frozen.
     pub const fn game_v10() -> Self {
         let mut rules = Self::game_v9();
@@ -345,6 +408,7 @@ impl WorldRules {
                 night_rest: None,
                 evening_gather: None,
                 forage: None,
+                preempt_gathering: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -370,6 +434,8 @@ impl WorldRules {
                 life_stage: None,
                 stock_target: None,
                 aging: None,
+                meals: None,
+                firewood: None,
             },
             clock_offset_ticks: 480,
             seasons: None,
@@ -395,6 +461,9 @@ mod tests {
             assert_eq!(rules.society.stock_target, None);
             assert_eq!(rules.society.aging, None);
             assert_eq!(rules.seasons, None);
+            assert!(!rules.agent.preempt_gathering);
+            assert_eq!(rules.society.meals, None);
+            assert_eq!(rules.society.firewood, None);
             if let Some(planning) = rules.society.shelter_planning {
                 assert_eq!(planning.housing, HousingCount::NearFormation);
                 assert_eq!(planning.planning_headroom, 0);
@@ -428,6 +497,24 @@ mod tests {
     }
 
     #[test]
+    fn pass5_fields_are_neutral_in_frozen_rules() {
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10()] {
+            assert!(!rules.agent.preempt_gathering);
+            assert_eq!(rules.society.meals, None);
+            assert_eq!(rules.society.firewood, None);
+        }
+    }
+
+    #[test]
+    fn game_v11_is_v10_plus_pass5_rules() {
+        let mut v11 = WorldRules::game_v11();
+        v11.agent.preempt_gathering = false;
+        v11.society.meals = None;
+        v11.society.firewood = None;
+        assert_eq!(v11, WorldRules::game_v10());
+    }
+
+    #[test]
     fn legacy_has_no_opt_in_behavior() {
         let r = WorldRules::default();
         assert_eq!(
@@ -443,6 +530,7 @@ mod tests {
                 night_rest: None,
                 evening_gather: None,
                 forage: None,
+                preempt_gathering: false,
             }
         );
         assert_eq!(
@@ -455,6 +543,8 @@ mod tests {
                 life_stage: None,
                 stock_target: None,
                 aging: None,
+                meals: None,
+                firewood: None,
             }
         );
         assert_eq!(r.clock_offset_ticks, 0);

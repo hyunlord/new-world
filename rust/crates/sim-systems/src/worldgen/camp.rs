@@ -13,6 +13,9 @@ use sim_core::{
 use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
 use std::collections::BTreeSet;
 type Tile = (u32, u32);
+/// Salt of the deadwood placement stream (Pass 5); distinct from every other
+/// worldgen, birth and aging salt.
+pub const DEADWOOD_SALT: u64 = 0xDEAD_0D00_F1E1_0005;
 pub(super) fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
 }
@@ -206,6 +209,55 @@ fn berries(cfg: &WorldGenConfig, r: &mut SimResources, c: Tile) {
     for (x, y) in chosen {
         r.set_food_tile(x, y, cfg.berry_capacity);
         r.set_food_source_max(x, y, cfg.berry_capacity);
+    }
+}
+/// Place `cfg.deadwood_spots` deadwood spots at full capacity (Pass 5).
+///
+/// Candidates are Forest tiles at Chebyshev `[min, max]` from the hearth,
+/// then Plain tiles once Forest runs out, never water, a building or a bush.
+/// Each list is sorted by `(y, x)` and Fisher–Yates shuffled with the
+/// dedicated `DEADWOOD_SALT` stream; a candidate is taken when it lies at
+/// least two tiles from every spot already chosen.
+pub(super) fn deadwood(cfg: &WorldGenConfig, r: &mut SimResources) {
+    let Some(hearth) = r
+        .building_kinds
+        .iter()
+        .find(|(_, kind)| **kind == BuildingKind::Hearth)
+        .map(|(tile, _)| *tile)
+    else {
+        return;
+    };
+    let mut rng = MovementRng::new(cfg.seed ^ DEADWOOD_SALT);
+    let band = cfg.deadwood_min_radius..=cfg.deadwood_max_radius;
+    let mut chosen: Vec<Tile> = Vec::new();
+    for kind in [TerrainType::Forest, TerrainType::Plain] {
+        let mut candidates: Vec<Tile> = tiles(r)
+            .filter(|&p| {
+                band.contains(&distance(p, hearth))
+                    && terrain(r, p) == kind
+                    && !r.water_tiles.contains_key(&p)
+                    && !r.building_kinds.contains_key(&p)
+                    && !r.food_source_max.contains_key(&p)
+                    && !r.food_tiles.contains_key(&p)
+            })
+            .collect();
+        candidates.sort_by_key(|&(x, y)| (y, x));
+        for i in (1..candidates.len()).rev() {
+            let j = (rng.next_u64() % (i as u64 + 1)) as usize;
+            candidates.swap(i, j);
+        }
+        for p in candidates {
+            if chosen.len() >= cfg.deadwood_spots as usize {
+                break;
+            }
+            if chosen.iter().all(|&q| distance(p, q) >= 2) {
+                chosen.push(p);
+            }
+        }
+    }
+    for p in chosen {
+        r.wood_tiles.insert(p, cfg.deadwood_capacity);
+        r.wood_source_max.insert(p, cfg.deadwood_capacity);
     }
 }
 #[cfg(test)]

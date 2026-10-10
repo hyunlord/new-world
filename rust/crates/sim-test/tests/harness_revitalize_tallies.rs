@@ -64,6 +64,12 @@ mod tests {
             forage_trips: 0,
             haul_deposits: 0,
             regen_lost_at_cap: 0,
+            meals_from_store: 0,
+            ground_meals: 0,
+            wood_trips: 0,
+            wood_gathered: 0,
+            gather_preempted: 0,
+            cold_member_hours: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

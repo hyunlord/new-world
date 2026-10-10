@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v10(DEFAULT_GAME_SEED),
-                WorldRules::game_v10(),
+                &WorldGenConfig::game_v11(DEFAULT_GAME_SEED),
+                WorldRules::game_v11(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v10(self.world_seed),
-            WorldRules::game_v10(),
+            &WorldGenConfig::game_v11(self.world_seed),
+            WorldRules::game_v11(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -1364,7 +1364,7 @@ pub struct AgentSnapshotRow {
     /// `Inventory`; does not affect determinism.
     pub carried_food: i32,
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
-    /// 4 ConstructionSite, 5 Agent, 6 GatherFood.
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood (Pass 5).
     pub target_kind: u8,
     /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
     /// (Pass 4, live Elder component).
@@ -1462,6 +1462,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::ConstructionSite) => 4,
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
+            Some(TargetKind::GatherWood) => 7,
         };
         let life_stage = if maybe_child.is_some() {
             1
@@ -1761,6 +1762,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::Agent(_)) => 5,
         // Direction-2 slice 2-2 — carry-pickup target (viz lands in slice 2-5).
         Some(TargetKind::GatherFood) => 6,
+        // Revitalize Pass 5 — firewood pickup target.
+        Some(TargetKind::GatherWood) => 7,
     };
     AgentDetailRow {
         found: true,
@@ -2694,6 +2697,12 @@ mod revitalize_tooling_tests {
             forage_trips: 0,
             haul_deposits: 0,
             regen_lost_at_cap: 0,
+            meals_from_store: 0,
+            ground_meals: 0,
+            wood_trips: 0,
+            wood_gathered: 0,
+            gather_preempted: 0,
+            cold_member_hours: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
@@ -2920,7 +2929,7 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
             Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
-            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood)];
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood)];
         let mut expected = Vec::new();
         for (code, target) in targets.into_iter().enumerate() {
             for consuming in [false, true] {
