@@ -8,5 +8,6 @@
     "A11",
     "A16 brief day40season"
   ],
-  "rounds": 2
+  "rounds": 2,
+  "python_final_review": "No findings: early refusal precedes writes and inventory; independent frozen-file regression checks unchanged bytes and file set."
 }

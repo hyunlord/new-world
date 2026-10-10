@@ -68,3 +68,9 @@ Brief SHA256: `22231c4fae1cb1ec6fa35c98dd46ed98659b7e681402fa2f7db23c34b15f927a`
 - A16 runtime components pass: HUDclock/tallies, winter terrain blue/red gain1.167669 on336048common clearpixels, allmeasurablewinterrampagreement1.0, day40hair. Five winter actors remain unmeasurable after conservative occlusion exclusion. OverallA16 remainsFAIL for requestedday40spring inconsistency. Supplementary32dayfour-seasonstrip is separately labelled.
 - A10 live300frames median6.048ms,p9515.162ms versusArt2median6.111,p9515.230. No capture SCRIPT ERROR. BothGIFs source40/encoded40frames;2,759,219 and2,952,123bytes. No threshold relaxation.
 - Independent GDScript review found no actionabledefects. Pythonreview found a frozen-evidence rerun hazard in reprocess_p3; added early refusal plus before/after regression. Frozen original evidence unchanged. QA177tests expected after addedtest; final fullgate will record actualcount.
+
+## Part7
+- Final source gate runs on f2f93835207bf7587df27dda27d70dbdd7cf04b3 with documentation-only work in progress. The publication commit will repeat the full gate into external evidence so no tracked output changes the tested HEAD.
+- Fetch found simulation green advanced to2f04737989301b9b753f14053b19e39207411eb2. Repeat the explicitly requested unpushed compatibility merge in this same checkout, then return to WIP. No simulation changes are incorporated into the art publication.
+- Final Python second review found no remaining frozen-evidence defect; both independent frozen-file guards precede writes. Final before/after and required season strip opened after capture correction.
+- Source gate completed:28/28 checks exit0, Rust1881/120suites, Python177, Godot21, strict26scripts/15FFI, clippy alltargets, bridge and900frame smoke. Checkpoint committed before switching to detached local compatibility merge.
