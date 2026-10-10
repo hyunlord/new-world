@@ -1586,3 +1586,20 @@ Seasons (120-day medians over seed-days; spring / summer / autumn / winter): woo
 No round 3. Y9 is the only failing target and none of the six knobs reaches it: summer gathers only for its own nights (target 19.5), so summer noon work is 0.07 against v11's 0.609, which was almost entirely winter-prep wood gathered in summer; each seed's spring–autumn median over 21 days is its 11th value, so seven summer days near zero pull it to the lower spring days (0.32) even with spring at 0.50 and autumn at 0.64. Rounds 1 and 2 and screens A–C (urgent start 07:00, 08:00, 09:00) all fail Y9 between 0.29 and 0.32. A third round would reproduce round 2. Tuning rounds used: 2 of 3.
 
 Gate on the round 2 head `d919dd0f` (code `3cf26767` + docs): green — debug 1,937 / release 1,937 passed, 0 failed; both Clippy variants; forbidden math 0; bridge build; Godot import; strict check; smoke clean; Python unit tests (`verification/p6-5/gate.txt`).
+
+## Pass 6 Part 7 — final verification
+
+### Reproduction of the frozen versions (code `3cf26767`, Part 7 probe binary)
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p6-7_final_legacy` | legacy 0..4 × 10, `--check-determinism` | DETERMINISM PASS; all 4,196 shared values equal `p5-7_final_legacy` except `schema_version` (5 → 6) |
+| `p6-7_final_v8` | game 0..64 × 10 | DETERMINISM PASS; all 5,581 shared values equal `p5-7_final_v8` except `schema_version` |
+| `p6-7_final_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | DETERMINISM PASS; all 5,546 equal `p5-7_final_v9_10day` except `schema_version` |
+| `p6-7_final_v9_120day` | game_v9 0..32 × 120, same clocks | DETERMINISM PASS; all 49,368 equal `p5-7_final_v9_120day` except `schema_version` |
+| `p6-7_final_v10_10day` | game_v10 0..64 × 10 (no clocks, as the reference) | DETERMINISM PASS; all 5,546 equal `p5-7_final_v10_10day` except `schema_version` |
+| `p6-7_final_v10_120day` | game_v10 0..32 × 120, clocks 02:00,12:00,19:30 | DETERMINISM PASS; all 49,855 equal `p5-7_final_v10_120day` except `schema_version` |
+| `p6-7_final_v11_repro_10day` | game_v11 0..64 × 10, the eight Part 0 clocks | DETERMINISM PASS; all 5,546 equal `p5-5_round3_10day` except `schema_version` |
+| `p6-7_final_v11_repro_120day` | game_v11 0..32 × 120, same clocks | DETERMINISM PASS; all 49,773 equal `p5-5_round3_120day` except `schema_version` |
+
+The schema-6 keys are additions (300 / 3,600 summary paths). The legacy pin test `harness_population_legacy_scene_pinned` passes in every gate.
