@@ -5196,3 +5196,14 @@ HUD_ACTIVITY_BUSY = Busy
 HUD_NEWS_TITLE = Village news
 INSPECTOR_CARRYING_FMT = Carrying %d food
 HUD_SPEED_FMT = Speed %s×
+
+# Art production pass 2: death news and optional seasons
+HUD_FEED_DEATH_STARVATION = A villager starved
+HUD_FEED_DEATH_DEHYDRATION = A villager died of thirst
+HUD_FEED_DEATH_COMBAT = A villager died in a fight
+HUD_FEED_DEATH_OLD_AGE = A villager died of old age
+HUD_SEASON_SPRING = Spring
+HUD_SEASON_SUMMER = Summer
+HUD_SEASON_AUTUMN = Autumn
+HUD_SEASON_WINTER = Winter
+HUD_SEASON_DAY_FMT = %s, day %d

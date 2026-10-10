@@ -40,6 +40,8 @@ const COLOR_STARVATION: Color = Color(0.45, 0.30, 0.15)   # brown
 const COLOR_DEHYDRATION: Color = Color(0.20, 0.45, 0.95)  # blue
 const COLOR_COMBAT: Color = Color(0.95, 0.15, 0.10)       # red
 
+const COLOR_OLD_AGE: Color = Color(0.70, 0.70, 0.70)
+
 var _world_sim: Node = null
 var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
@@ -104,6 +106,8 @@ func _reason_color(reason: int) -> Color:
 			return COLOR_DEHYDRATION
 		2:
 			return COLOR_COMBAT
+		3:
+			return COLOR_OLD_AGE
 		_:
 			return COLOR_COMBAT
 

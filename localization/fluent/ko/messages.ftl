@@ -5198,3 +5198,14 @@ HUD_ACTIVITY_BUSY = 활동 중
 HUD_NEWS_TITLE = 마을 소식
 INSPECTOR_CARRYING_FMT = 식량 %d개 운반 중
 HUD_SPEED_FMT = 속도 %s배
+
+# Art production pass 2: death news and optional seasons
+HUD_FEED_DEATH_STARVATION = 주민이 굶주려 죽었다
+HUD_FEED_DEATH_DEHYDRATION = 주민이 목말라 죽었다
+HUD_FEED_DEATH_COMBAT = 주민이 싸움으로 죽었다
+HUD_FEED_DEATH_OLD_AGE = 주민이 노환으로 세상을 떠났다
+HUD_SEASON_SPRING = 봄
+HUD_SEASON_SUMMER = 여름
+HUD_SEASON_AUTUMN = 가을
+HUD_SEASON_WINTER = 겨울
+HUD_SEASON_DAY_FMT = %s %d일째

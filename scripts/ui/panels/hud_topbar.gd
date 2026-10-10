@@ -126,6 +126,7 @@ func _refresh() -> void:
 	var minutes: int = clampi(int(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
 	var hour: int = int(minutes / 60.0)
 	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
+	_clock_label.text += _season_label(clock)
 	var food: int = 0
 	var stocks: Variant = _snapshot("get_settlement_snapshot").get("food_stocks", null)
 	if stocks is PackedInt32Array:
@@ -140,7 +141,7 @@ func _refresh() -> void:
 			if kinds[index] == 0 and amounts[index] < 255:
 				berries += amounts[index]
 	var tallies: Dictionary = _snapshot("get_tallies")
-	var deaths: int = int(tallies.get("deaths_starvation", 0)) + int(tallies.get("deaths_dehydration", 0)) + int(tallies.get("deaths_combat", 0))
+	var deaths: int = int(tallies.get("deaths_starvation", 0)) + int(tallies.get("deaths_dehydration", 0)) + int(tallies.get("deaths_combat", 0)) + int(tallies.get("deaths_old_age", 0))
 	var keys: Array[String] = ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"]
 	var values: Array[int] = [food, berries, int(tallies.get("births", 0)), deaths]
 	for index: int in 4:
@@ -167,3 +168,15 @@ func _loc(key: String) -> String:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_1, KEY_2, KEY_3, KEY_4]:
 		_display_speed = {KEY_1: 0.25, KEY_2: 0.5, KEY_3: 1.0, KEY_4: 2.0}[event.keycode]
+
+
+func _season_label(clock: Dictionary) -> String:
+	if not clock.has("season") or not clock.has("day_of_season") or int(clock.get("days_per_season", 0)) <= 0:
+		return ""
+	var season: int = int(clock["season"])
+	var day: int = int(clock["day_of_season"])
+	var keys: Array[String] = ["HUD_SEASON_SPRING", "HUD_SEASON_SUMMER", "HUD_SEASON_AUTUMN", "HUD_SEASON_WINTER"]
+	if season < 0 or season >= keys.size() or day < 0 or day >= int(clock["days_per_season"]):
+		return ""
+	# Pass 4 compatibility assumption: season and day_of_season are zero-based.
+	return " · " + (_loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day + 1])

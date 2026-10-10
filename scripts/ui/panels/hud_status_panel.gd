@@ -34,6 +34,10 @@ var _prev_construction_ids: Dictionary = {}
 var _prev_births: int = -1
 var _entries: Array = []  # each: { key: String, args: Array, born: int }
 var _suppress_feed: bool = false
+var _seen_deaths: Dictionary = {}
+var _death_current_tick: int = -1
+const DEATH_RETAIN_TICKS: int = 120
+const DEATH_NEWS_KEYS: Array[String] = ["HUD_FEED_DEATH_STARVATION", "HUD_FEED_DEATH_DEHYDRATION", "HUD_FEED_DEATH_COMBAT", "HUD_FEED_DEATH_OLD_AGE"]
 
 
 func _ready() -> void:
@@ -145,6 +149,8 @@ func _ingest_snapshots() -> void:
 	if _prev_births >= 0 and births > _prev_births:
 		_push("HUD_FEED_AGENT_BORN", [cur_count])
 	_prev_births = births
+	if _world_sim.has_method("get_recent_deaths"):
+		_ingest_deaths(_snapshot("get_recent_deaths"))
 
 
 func _loc(key: String) -> String:
@@ -193,7 +199,9 @@ func _refresh() -> void:
 			var row: HBoxContainer = HBoxContainer.new()
 			var key: String = str(entry.get("key", ""))
 			var icon_index: int = 16
-			if key == "HUD_FEED_AGENT_BORN":
+			if key in DEATH_NEWS_KEYS:
+				icon_index = 8
+			elif key == "HUD_FEED_AGENT_BORN":
 				icon_index = 7
 			elif key in ["HUD_FEED_SITE_STARTED", "HUD_FEED_SITE_COMPLETED"]:
 				icon_index = 4
@@ -209,9 +217,40 @@ func _on_world_reset() -> void:
 	_prev_construction_ids.clear()
 	_last_notified_food.clear()
 	_prev_births = -1
+	_seen_deaths.clear()
+	_death_current_tick = -1
 	_entries.clear()
 	_frame_tick = 0
 	_suppress_feed = true
 	_ingest_snapshots()
 	_suppress_feed = false
 	_refresh()
+
+
+func _ingest_deaths(snapshot: Dictionary) -> void:
+	var xs: Variant = snapshot.get("xs", null)
+	var ys: Variant = snapshot.get("ys", null)
+	var reasons: Variant = snapshot.get("reasons", null)
+	var ticks: Variant = snapshot.get("ticks", null)
+	var current_tick: Variant = snapshot.get("current_tick", null)
+	if not (xs is PackedInt32Array and ys is PackedInt32Array and reasons is PackedInt32Array and ticks is PackedInt64Array and current_tick is int):
+		return
+	if ys.size() != xs.size() or reasons.size() != xs.size() or ticks.size() != xs.size():
+		return
+	if _death_current_tick >= 0 and current_tick < _death_current_tick:
+		_seen_deaths.clear()
+		_entries.clear()
+	_death_current_tick = int(current_tick)
+	for key: String in _seen_deaths.keys():
+		if _death_current_tick - int(_seen_deaths[key]) >= DEATH_RETAIN_TICKS:
+			_seen_deaths.erase(key)
+	for index: int in xs.size():
+		var reason: int = int(reasons[index])
+		var tick: int = int(ticks[index])
+		if reason < 0 or reason >= DEATH_NEWS_KEYS.size() or tick > _death_current_tick or _death_current_tick - tick >= DEATH_RETAIN_TICKS:
+			continue
+		var key: String = "%d:%d:%d:%d" % [tick, xs[index], ys[index], reason]
+		if _seen_deaths.has(key):
+			continue
+		_seen_deaths[key] = tick
+		_push(DEATH_NEWS_KEYS[reason], [])
