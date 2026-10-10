@@ -302,6 +302,8 @@ fn per_reason_split(e: &SimEngine) -> (usize, usize, usize) {
                     DeathReason::Starvation => starvation += 1,
                     DeathReason::Dehydration => dehydration += 1,
                     DeathReason::Combat => combat += 1,
+                    // Pass 4: the legacy scarcity scene never ages anyone.
+                    DeathReason::OldAge => {}
                 }
             }
         }

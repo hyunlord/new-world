@@ -1,10 +1,100 @@
 //! Deterministic renewable food accounting shared by gates and probe reports.
 
 use crate::runtime::decision::HUNGER_CONSUME_AMOUNT;
-use crate::runtime::resource_regen::{FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
+use crate::runtime::resource_regen::{season_at, FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
 use hecs::World;
-use sim_core::components::{Agent, Hunger, SettlementId};
+use sim_core::components::{Agent, Hunger, Inventory, ResourceKind, SettlementId};
+use sim_core::rules::BirthRule;
 use sim_engine::SimResources;
+
+/// Winter index in `SeasonRule::regen_permille`.
+pub const WINTER: usize = 3;
+
+/// Renewable sources inside the formation tile's forage radius.
+fn source_count(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> usize {
+    let Some(settlement) = resources.settlements.get(&sid) else {
+        return 0;
+    };
+    let center = settlement.formation_tile;
+    resources
+        .food_source_max
+        .keys()
+        .filter(|tile| tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1)) <= forage_radius)
+        .count()
+}
+
+/// Supply under one season's regrowth permille, or the fixed rate without seasons.
+pub fn season_supply_per_day(
+    resources: &SimResources,
+    sid: SettlementId,
+    forage_radius: u32,
+    season: usize,
+) -> f64 {
+    let base = supply_per_day(resources, sid, forage_radius);
+    match resources.rules.seasons {
+        Some(rule) => base * f64::from(rule.regen_permille[season.min(WINTER)]) / 1000.0,
+        None => base,
+    }
+}
+
+/// Mean daily supply over a year; equals the fixed supply without seasons.
+pub fn annual_mean_supply(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    let base = supply_per_day(resources, sid, forage_radius);
+    match resources.rules.seasons {
+        Some(rule) => {
+            let total: u32 = rule.regen_permille.iter().map(|p| u32::from(*p)).sum();
+            base * f64::from(total) / 4000.0
+        }
+        None => base,
+    }
+}
+
+/// Winter daily supply; equals the fixed supply without seasons.
+pub fn winter_supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    season_supply_per_day(resources, sid, forage_radius, WINTER)
+}
+
+/// Catchment radius used by the store target: sustain radius, else forage radius, else 16.
+pub fn catchment_radius(resources: &SimResources) -> u32 {
+    match resources.rules.society.birth {
+        BirthRule::Provisioned { sustain: Some(rule), .. } => rule.forage_radius,
+        _ => resources.rules.agent.forage.map_or(16, |rule| rule.forage_radius),
+    }
+}
+
+/// Stockpile food plus food carried by live members, summed in AgentId order.
+pub fn stock_in_hand(world: &World, resources: &SimResources, sid: SettlementId) -> u64 {
+    let Some(settlement) = resources.settlements.get(&sid) else {
+        return 0;
+    };
+    let mut carried: Vec<_> = world
+        .query::<(&Agent, &Inventory)>()
+        .iter()
+        .filter(|(_, (agent, _))| settlement.member_agents.contains(&agent.id))
+        .map(|(_, (agent, inventory))| (agent.id, inventory.get(ResourceKind::Food)))
+        .collect();
+    carried.sort_by_key(|(id, _)| *id);
+    u64::from(settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))
+        + carried.iter().map(|(_, food)| u64::from(*food)).sum::<u64>()
+}
+
+/// Store target: `base_days x need`, plus in summer and autumn (seasons with
+/// winter preparation) `days_per_season x max(0, need - winter supply)`.
+/// `None` without a stock-target rule.
+pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) -> Option<f64> {
+    let rule = resources.rules.society.stock_target?;
+    let need = members_need_per_day(world, resources, sid);
+    let mut target = rule.base_days * need;
+    if let (true, Some(seasons), Some((season, _))) =
+        (rule.winter_prep, resources.rules.seasons, season_at(resources))
+    {
+        if season == 1 || season == 2 {
+            let winter = winter_supply_per_day(resources, sid, catchment_radius(resources));
+            target += f64::from(seasons.days_per_season) * (need - winter).max(0.0);
+        }
+    }
+    Some(target)
+}
 
 /// Founder food requirement per standard 1,440-tick day.
 pub const ADULT_NEED_PER_DAY: f64 = 2.4;
@@ -26,16 +116,7 @@ pub fn source_supply_per_day(ticks_per_day: u64) -> f64 {
 
 /// Renewable daily food supply inside the formation tile's forage radius.
 pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
-    let Some(settlement) = resources.settlements.get(&sid) else {
-        return 0.0;
-    };
-    let center = settlement.formation_tile;
-    let sources = resources
-        .food_source_max
-        .keys()
-        .filter(|tile| tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1)) <= forage_radius)
-        .count();
-    sources as f64 * source_supply_per_day(resources.ticks_per_day)
+    source_count(resources, sid, forage_radius) as f64 * source_supply_per_day(resources.ticks_per_day)
 }
 
 /// Sum actual daily needs of live members in stable agent-id order.

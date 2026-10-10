@@ -37,7 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Hunger, Inventory, Memory, Position,
+    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Elder, Hunger, Inventory, Life,
+    Memory, Position,
     ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
@@ -177,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v9(DEFAULT_GAME_SEED),
-                WorldRules::game_v9(),
+                &WorldGenConfig::game_v10(DEFAULT_GAME_SEED),
+                WorldRules::game_v10(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -224,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v9(self.world_seed),
-            WorldRules::game_v9(),
+            &WorldGenConfig::game_v10(self.world_seed),
+            WorldRules::game_v10(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -386,7 +387,15 @@ impl WorldSimNode {
     #[func]
     fn get_agent_snapshot(&self) -> VarDictionary {
         let rows = collect_agent_snapshot(&self.engine.world);
-        agent_rows_to_dict(&rows)
+        let mut dict = agent_rows_to_dict(&rows);
+        // Pass 4 — additive whole-day ages in the same row order (-1 without Life).
+        let ages = collect_agent_ages_days(
+            &self.engine.world,
+            self.engine.current_tick(),
+            self.engine.resources.ticks_per_day,
+        );
+        dict.set("ages_days", PackedInt32Array::from(ages.as_slice()));
+        dict
     }
 
     /// V7 Phase 14-γ FFI — single-agent detail dictionary for the click
@@ -1357,8 +1366,26 @@ pub struct AgentSnapshotRow {
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
     /// 4 ConstructionSite, 5 Agent, 6 GatherFood.
     pub target_kind: u8,
-    /// Life stage: 0 adult, 1 child with a live Child component.
+    /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
+    /// (Pass 4, live Elder component).
     pub life_stage: u8,
+}
+
+/// Pass 4 — whole-day age of every snapshot row, in [`collect_agent_snapshot`]
+/// order (the same `Agent` + `Position` archetype iteration); `-1` for a
+/// resident without `Life` (legacy, v8 and v9 worlds never age).
+pub fn collect_agent_ages_days(world: &hecs::World, tick: u64, ticks_per_day: u64) -> Vec<i32> {
+    world
+        .query::<(&Agent, &Position, Option<&Life>)>()
+        .iter()
+        .map(|(_, (_, _, life))| {
+            life.map_or(-1, |life| {
+                (life.age_ticks(tick).max(0) as u64)
+                    .checked_div(ticks_per_day)
+                    .map_or(0, |days| days.min(i32::MAX as u64) as i32)
+            })
+        })
+        .collect()
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1379,7 +1406,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
-        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child),
+        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child, maybe_elder),
     ) in world
         .query::<(
             &Agent,
@@ -1391,6 +1418,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Sleep>,
             Option<&Inventory>,
             Option<&Child>,
+            Option<&Elder>,
         )>()
         .iter()
     {
@@ -1435,7 +1463,13 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
         };
-        let life_stage = u8::from(maybe_child.is_some());
+        let life_stage = if maybe_child.is_some() {
+            1
+        } else if maybe_elder.is_some() {
+            2
+        } else {
+            0
+        };
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -2495,7 +2529,7 @@ pub fn seed_finite_resource_scarcity(engine: &mut SimEngine) {
 
 /// Build the legacy V7 lattice fixture used by harnesses.
 ///
-/// The live game uses `worldgen::build_world_with` with v9 rules. This frozen legacy constructor
+/// The live game uses `worldgen::build_world_with` with v10 rules. This frozen legacy constructor
 /// keeps the original registration, bootstrap and finite-scarcity order so
 /// historical behavioral tests and trajectory fingerprints remain comparable.
 pub fn init_production_engine() -> SimEngine {
@@ -2528,17 +2562,32 @@ pub struct TimeSnapshot {
     pub day_index: u64,
     /// Authoritative simulation hour in the range 0..24.
     pub time_of_day: f64,
+    /// Pass 4 season of `day_index`: 0 spring, 1 summer, 2 autumn, 3 winter (0 without seasons).
+    pub season: u32,
+    /// One-based day within the season (0 without seasons).
+    pub day_of_season: u32,
+    /// Days per season (0 without seasons).
+    pub days_per_season: u32,
 }
 
 /// Read the completed tick count and clock resources without mutation.
 pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     let ticks_per_day = engine.resources.ticks_per_day;
+    let day_index = engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
+        .checked_div(ticks_per_day).unwrap_or(0);
+    let days_per_season = engine.resources.rules.seasons.map_or(0, |rule| rule.days_per_season);
+    let (season, day_of_season) = match u64::from(days_per_season) {
+        0 => (0, 0),
+        per => (((day_index / per) % 4) as u32, (day_index % per) as u32 + 1),
+    };
     TimeSnapshot {
         tick: engine.current_tick(),
         ticks_per_day,
-        day_index: engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
-            .checked_div(ticks_per_day).unwrap_or(0),
+        day_index,
         time_of_day: engine.resources.time_of_day,
+        season,
+        day_of_season,
+        days_per_season,
     }
 }
 
@@ -2553,6 +2602,9 @@ fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
     dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
     dict.set("day_index", snapshot.day_index as i64);
     dict.set("time_of_day", snapshot.time_of_day);
+    dict.set("season", snapshot.season as i64);
+    dict.set("day_of_season", snapshot.day_of_season as i64);
+    dict.set("days_per_season", snapshot.days_per_season as i64);
     dict
 }
 
@@ -2562,6 +2614,7 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("deaths_starvation", tallies.deaths_starvation as i64);
     dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
     dict.set("deaths_combat", tallies.deaths_combat as i64);
+    dict.set("deaths_old_age", tallies.deaths_old_age as i64);
     dict
 }
 
@@ -2601,6 +2654,20 @@ mod revitalize_tooling_tests {
     }
 
     #[test]
+    fn time_snapshot_reports_seasons_from_the_display_day() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v10();
+        let first = collect_time_snapshot(&engine);
+        assert_eq!((first.season, first.day_of_season, first.days_per_season), (0, 1, 7));
+        // Display day 9 (zero-based) at 00:00 is the third day of summer.
+        advance_engine_ticks(&mut engine, (9 * 1440 - 480) as i64);
+        let summer = collect_time_snapshot(&engine);
+        assert_eq!((summer.day_index, summer.season, summer.day_of_season), (9, 1, 3));
+        engine.resources.rules = sim_core::rules::WorldRules::game_v9();
+        assert_eq!(collect_time_snapshot(&engine).days_per_season, 0);
+    }
+
+    #[test]
     fn time_snapshot_handles_disabled_clock() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.ticks_per_day = 0;
@@ -2623,6 +2690,10 @@ mod revitalize_tooling_tests {
             food_harvested: 0,
             meals_eaten: 0,
             meals_without_food: 0,
+            deaths_old_age: 0,
+            forage_trips: 0,
+            haul_deposits: 0,
+            regen_lost_at_cap: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
@@ -2882,6 +2953,23 @@ mod pass3_agent_snapshot_tests {
             assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
             assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
         }
+    }
+
+    #[test]
+    fn elders_report_stage_two_and_ages_follow_snapshot_order() {
+        use sim_core::components::{Elder, Life};
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(2, 3)));
+        world.spawn((Agent { id: 2 }, Position::new(2, 3), Life { born_tick: -2_880, lifespan_ticks: 90_000 }, Elder));
+        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 100 }, Life { born_tick: 100, lifespan_ticks: 90_000 }));
+        let rows = collect_agent_snapshot(&world);
+        let ages = collect_agent_ages_days(&world, 1_540, 1_440);
+        assert_eq!(rows.len(), ages.len());
+        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&ages)
+            .map(|(row, age)| (row.agent_id, (row.life_stage, *age))).collect();
+        assert_eq!(by_id[&1], (0, -1));
+        assert_eq!(by_id[&2], (2, 3));
+        assert_eq!(by_id[&3], (1, 1));
     }
 
     #[test]

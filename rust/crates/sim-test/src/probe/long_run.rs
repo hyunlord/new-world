@@ -1,7 +1,9 @@
 //! Additive v9 economy, housing and life-stage observations.
 use serde_json::{json, Value};
 use sim_core::{
-    components::{Agent, AgentState, BuildingKind, Child, Hunger, Position, TargetKind},
+    components::{
+        Agent, AgentState, BuildingKind, Child, Elder, Hunger, Life, Position, SeekTarget, TargetKind,
+    },
     rules::{BirthRule, HousingCount},
 };
 use sim_engine::SimEngine;
@@ -52,6 +54,10 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
         .count();
     // Union of catchments: an overlapping v8 bush contributes only once globally.
     let supply = source_count as f64 * source_supply_per_day(r.ticks_per_day);
+    // The production gate plans against the annual mean when seasons are on.
+    let planning_supply = r.rules.seasons.map_or(supply, |rule| {
+        supply * f64::from(rule.regen_permille.iter().map(|p| u32::from(*p)).sum::<u32>()) / 4000.0
+    });
     let mut homes = BTreeMap::new();
     let mut settlements: Vec<_> = r.settlements.values().collect();
     settlements.sort_by_key(|s| s.settlement_id);
@@ -99,7 +105,7 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     json!({"sample_kind":"periodic","minute_of_day":if r.ticks_per_day == 0 {0} else {(engine.current_tick()+r.rules.clock_offset_ticks)%r.ticks_per_day},
         "adults":adults,"children":children,"housing_capacity_owned":owned_capacity(engine),
         "food_supply_per_day":supply,"food_need_per_day":need,
-        "sustainable_adults":sustainable_adults(supply,utilization,r.ticks_per_day),
+        "sustainable_adults":sustainable_adults(planning_supply,utilization,r.ticks_per_day),
         "food_harvested_total":r.tallies.food_harvested,"meals_eaten_total":r.tallies.meals_eaten,
         "meals_without_food_total":r.tallies.meals_without_food,
         "beds_assigned":beds,"sleeping_in_shelter":sleeping,"idle_adults":idle,"idle_adults_near_hearth":near})
@@ -191,9 +197,13 @@ pub(super) fn check_maturation(engine: &SimEngine) -> Result<(), String> {
 pub(super) fn trace(engine: &SimEngine) -> Value {
     let mut agents: Vec<_> = engine
         .world
-        .query::<(&Agent, Option<&Child>)>()
+        .query::<(&Agent, Option<&Child>, Option<&Life>, Option<&Elder>, Option<&SeekTarget>)>()
         .iter()
-        .map(|(_, (agent, child))| (agent.id, child.map(|child| child.born_tick)))
+        .map(|(_, (agent, child, life, elder, seek))| {
+            (agent.id, child.map(|child| child.born_tick),
+                life.map(|life| (life.born_tick, life.lifespan_ticks)), elder.is_some(),
+                seek.map(|seek| seek.tile))
+        })
         .collect();
     agents.sort_by_key(|row| row.0);
     json!({"agents":agents,"beds":engine.resources.bed_of.iter().collect::<Vec<_>>(),

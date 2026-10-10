@@ -44,7 +44,11 @@
 use std::collections::BTreeMap;
 
 use hecs::World;
-use sim_core::components::{Agent, AgentId, AgentState, Child, Position, SeekTarget};
+use sim_core::components::{
+    Agent, AgentId, AgentState, Child, Elder, Inventory, Position, ResourceKind, SeekTarget,
+    SETTLEMENT_PROXIMITY_RADIUS,
+};
+use sim_core::rules::ForageRule;
 use sim_engine::{RuntimeSystem, SimResources};
 use crate::runtime::decision::agent_decision::clock_in_window;
 
@@ -96,6 +100,14 @@ impl MovementRng {
     }
 }
 
+/// Whether an Idle settlement member carrying `carried` food walks straight
+/// home under the forage rule: a full load (`>= haul_threshold`), or any food
+/// outside the forage window, while farther than the deposit radius.
+pub fn haul_due(rule: &ForageRule, carried: u32, in_forage_window: bool, home_distance: u32) -> bool {
+    home_distance > SETTLEMENT_PROXIMITY_RADIUS
+        && (carried >= rule.haul_threshold || (carried >= 1 && !in_forage_window))
+}
+
 /// Phase 4-β movement system.
 ///
 /// On every tick, queries `(&mut Position, &mut MovementRng)` and mutates each
@@ -139,8 +151,15 @@ impl RuntimeSystem for AgentMovementSystem {
         let evening_radius = rules.evening_gather
             .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
             .map(|rule| rule.tether_radius);
+        // Same gate as the decision system: foraging needs a store target too.
+        let forage = rules.forage.filter(|_| resources.rules.society.stock_target.is_some());
+        let forage_window = forage
+            .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
-        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some() {
+        let elder_radius = resources.rules.society.aging.map(|rule| rule.elder_tether_radius);
+        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
+            || forage.is_some() || elder_radius.is_some()
+        {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
             for (_, settlement) in settlements {
@@ -156,7 +175,9 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state, seek, agent, child)) in world
+        let mut haul_steps: Vec<AgentId> = Vec::new();
+        let mut not_hauling: Vec<AgentId> = Vec::new();
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -164,6 +185,8 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&SeekTarget>,
                 Option<&Agent>,
                 Option<&Child>,
+                Option<&Inventory>,
+                Option<&Elder>,
             )>()
             .iter()
         {
@@ -209,6 +232,25 @@ impl RuntimeSystem for AgentMovementSystem {
                     continue;
                 }
             }
+            // Pass 4 haul home: a loaded idle member walks straight to its
+            // formation tile instead of a Brownian step (no RNG draw).
+            if let (Some(rule), Some(agent), None) = (forage, agent, child) {
+                if let Some(&anchor) = home.get(&agent.id) {
+                    let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+                    let distance = pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1));
+                    if haul_due(&rule, carried, forage_window, distance) {
+                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
+                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
+                        haul_steps.push(agent.id);
+                        continue;
+                    }
+                    // Display-only: a member that stopped hauling before reaching
+                    // the deposit radius has not arrived by hauling.
+                    if distance > SETTLEMENT_PROXIMITY_RADIUS {
+                        not_hauling.push(agent.id);
+                    }
+                }
+            }
             // Idle / no AgentState: Brownian motion (unchanged).
             if rules.idle_pause_chance > 0.0 {
                 let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
@@ -223,6 +265,9 @@ impl RuntimeSystem for AgentMovementSystem {
             if let (Some(radius), Some(anchor)) = (
                 if child.is_some() {
                     child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
+                } else if elder.is_some() && elder_radius.is_some() {
+                    // Pass 4: elders keep to the camp at all hours.
+                    elder_radius
                 } else {
                     evening_radius.or(rules.idle_tether_radius)
                 },
@@ -236,6 +281,10 @@ impl RuntimeSystem for AgentMovementSystem {
             pos.x = nx as u32;
             pos.y = ny as u32;
         }
+        for id in not_hauling {
+            resources.haulers.remove(&id);
+        }
+        resources.haulers.extend(haul_steps);
     }
 }
 
@@ -247,6 +296,20 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn haul_due_needs_a_load_or_the_end_of_the_window_and_distance() {
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 1,
+        };
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        assert!(haul_due(&rule, 4, true, far));
+        assert!(!haul_due(&rule, 3, true, far));
+        assert!(haul_due(&rule, 1, false, far));
+        assert!(!haul_due(&rule, 0, false, far));
+        assert!(!haul_due(&rule, 9, true, SETTLEMENT_PROXIMITY_RADIUS));
     }
 
     #[test]

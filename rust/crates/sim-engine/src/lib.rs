@@ -38,7 +38,7 @@ use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
 use sim_core::rules::WorldRules;
-use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 /// FFI-originated event: a building was placed at `position` with influence
@@ -76,6 +76,14 @@ pub struct Tallies {
     pub meals_eaten: u64,
     /// Ground hunger relief events that found no food to consume.
     pub meals_without_food: u64,
+    /// Agents lost to old age under the aging rule (Pass 4).
+    pub deaths_old_age: u64,
+    /// Purposeful forage trips started by the Forage decision arm (Pass 4).
+    pub forage_trips: u64,
+    /// Stockpile deposits made by members who walked home to haul (Pass 4).
+    pub haul_deposits: u64,
+    /// Food regrowth units discarded because a source was at its ceiling.
+    pub regen_lost_at_cap: u64,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).
@@ -170,6 +178,12 @@ pub struct SimResources {
     pub bed_of: BTreeMap<AgentId, (u32, u32)>,
     /// Display-only count of planning attempts with no qualifying tile.
     pub shelter_plan_skips: u64,
+    /// Seasonal food regrowth accumulator in thousandths of a unit; stays zero
+    /// without the season rule.
+    pub food_regen_acc: u32,
+    /// Members whose last movement was a haul step home; display-only, used to
+    /// count `Tallies::haul_deposits`. Empty without the forage rule.
+    pub haulers: BTreeSet<AgentId>,
     /// Tick each active non-migrant social chase began; empty in legacy worlds.
     pub social_chase_since: BTreeMap<AgentId, u64>,
     /// Earliest tick each agent may retry a failed social chase.
@@ -352,6 +366,8 @@ impl SimResources {
             building_owner: BTreeMap::new(),
             bed_of: BTreeMap::new(),
             shelter_plan_skips: 0,
+            food_regen_acc: 0,
+            haulers: BTreeSet::new(),
             social_chase_since: BTreeMap::new(),
             social_retry_after: BTreeMap::new(),
             tile_grid: TileGrid::new(width, height),

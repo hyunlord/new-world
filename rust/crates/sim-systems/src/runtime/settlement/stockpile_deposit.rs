@@ -125,6 +125,10 @@ impl RuntimeSystem for StockpileDepositSystem {
                     if let Some(settlement) = resources.settlements.get_mut(&sid) {
                         settlement.store(ResourceKind::Food, taken);
                     }
+                    // Pass 4: a member who walked home to haul has delivered.
+                    if resources.haulers.remove(&aid) {
+                        resources.tallies.haul_deposits += 1;
+                    }
                 }
             }
         }
@@ -141,6 +145,28 @@ mod tests {
         assert_eq!(s.name(), "StockpileDepositSystem");
         assert_eq!(s.priority(), 141);
         assert_eq!(s.tick_interval(), 10);
+    }
+
+    #[test]
+    fn only_members_who_hauled_count_as_haul_deposits() {
+        use sim_core::components::Settlement;
+        use sim_core::material::MaterialRegistry;
+        let mut world = World::new();
+        let mut resources = SimResources::new(16, 16, MaterialRegistry::new());
+        let mut settlement = Settlement::new_with_id(1, 0);
+        settlement.formation_tile = (5, 5);
+        for id in [1, 2] {
+            let mut inventory = Inventory::default();
+            inventory.add(ResourceKind::Food, 4);
+            world.spawn((Agent { id }, Position::new(5, 6), inventory));
+            settlement.add_member_agent(id);
+        }
+        resources.settlements.insert(1, settlement);
+        resources.haulers.insert(2);
+        StockpileDepositSystem::new().tick(&mut world, &mut resources);
+        assert_eq!(resources.settlements[&1].stockpile.get(&ResourceKind::Food), Some(&8));
+        assert_eq!(resources.tallies.haul_deposits, 1);
+        assert!(resources.haulers.is_empty());
     }
 
     #[test]

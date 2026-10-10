@@ -29,6 +29,11 @@ pub struct WorldGenConfig {
     pub mountain_coverage: f64,
 }
 impl WorldGenConfig {
+    /// Pass 4 generator inputs: v9 with twelve renewable food sources.
+    pub const fn game_v10(seed: u64) -> Self {
+        Self { berry_bushes: 12, ..Self::game_v9(seed) }
+    }
+
     /// Versioned generator inputs with ten renewable food sources.
     pub const fn game_v9(seed: u64) -> Self {
         Self { berry_bushes: 10, ..Self::game_default(seed) }

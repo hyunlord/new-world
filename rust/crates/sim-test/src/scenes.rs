@@ -23,6 +23,14 @@ pub fn game_v9_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 4 fixture: twelve bushes with v10 foraging, aging and season rules.
+pub fn game_v10_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v10(seed),
+        sim_core::rules::WorldRules::game_v10(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

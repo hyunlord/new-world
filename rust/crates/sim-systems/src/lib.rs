@@ -282,6 +282,9 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// - 140  ResourceRegenSystem (add-resource-scarcity-regen, interval 120)
 /// - 141  StockpileDepositSystem (Direction-2 slice 2-3a, interval 10)
 /// - 142  StockpileConsumeSystem (Direction-2 slice 2-4, interval 5)
+/// - 144  MaturationSystem (Revitalize Pass 3, interval 60)
+/// - 145  BedAssignmentSystem (Revitalize Pass 3)
+/// - 146  AgingSystem (Revitalize Pass 4, interval 60; no-op without the aging rule)
 /// - 1000 InfluenceVisualizationSystem
 ///
 /// Harness A1b inspects this registry to verify
@@ -309,8 +312,9 @@ pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::ShelterPlanningSystem::default()));
 }
 
-/// Register rules-gated child maturation and owned-shelter bed assignments.
+/// Register rules-gated child maturation, owned-shelter bed assignments and aging.
 pub fn register_rhythm_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::agent::MaturationSystem));
     engine.register_system(Box::new(runtime::agent::BedAssignmentSystem::default()));
+    engine.register_system(Box::new(runtime::agent::AgingSystem));
 }

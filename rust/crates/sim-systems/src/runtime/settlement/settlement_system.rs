@@ -717,7 +717,9 @@ impl SettlementSystem {
                     continue;
                 }
                 if let Some(sustain) = sustain {
-                    let supply = super::food_economy::supply_per_day(
+                    // Pass 4: with seasons the gate plans against the annual mean
+                    // (identical to the fixed supply without seasons).
+                    let supply = super::food_economy::annual_mean_supply(
                         resources, sid, sustain.forage_radius,
                     );
                     let adult_need = super::food_economy::adult_need_per_day(resources.ticks_per_day);
@@ -805,6 +807,12 @@ impl SettlementSystem {
 
             if resources.rules.society.life_stage.is_some() {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
+            }
+            if let Some(rule) = resources.rules.society.aging {
+                let life = crate::runtime::agent::aging::newborn_life(
+                    resources.world_seed, new_agent_id, tick, &rule,
+                );
+                let _ = world.insert_one(entity, life);
             }
 
             let parent = self.formation_event_ids.get(&sid).copied();

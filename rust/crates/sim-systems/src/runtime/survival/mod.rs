@@ -66,6 +66,7 @@ pub fn despawn_agent(
     resources.social_chase_since.remove(&agent_id);
     resources.social_retry_after.remove(&agent_id);
     resources.bed_of.remove(&agent_id);
+    resources.haulers.remove(&agent_id);
 
     // Purge the four agent-keyed resource maps (drop any key referencing the
     // dead agent) — mirrors the pre-feature combat cleanup block.
@@ -95,6 +96,7 @@ pub fn despawn_agent(
         DeathReason::Starvation => resources.tallies.deaths_starvation += 1,
         DeathReason::Dehydration => resources.tallies.deaths_dehydration += 1,
         DeathReason::Combat => resources.tallies.deaths_combat += 1,
+        DeathReason::OldAge => resources.tallies.deaths_old_age += 1,
     }
 
     // Chronicle the death at its tile.
