@@ -4,7 +4,7 @@
 
 주민의 원래 피부·옷 색을 보존하고, 머리카락과 연령을 분리하며, 캠프의 겹침과 땔감·불 표시를 개선해 실제 시뮬레이션 결과를 화면에서 읽게 한다.
 
-**작성 상태: Parts 0–6 구현·두 번째 창 촬영·측정을 완료했다. 최종 시각 FAIL은 A5·A11·A12·A18이며 A17은 오류 0으로 PASS다. Part 7 최종 HEAD gate·호환 확인·발행만 대기다. 시각 완전 승인을 선언하지 않는다.**
+**Parts 0–7의 구현·측정·보고를 완료했다. 최종 시각 FAIL은 A5·A11·A12·A18이며 A17은 오류 0으로 PASS다. 최종 발행 SHA와 exact-HEAD 게이트 결과는 외부 publication 영수증에 기록한다. 시각 완전 승인을 선언하지 않는다.**
 
 ### 구현 내용
 
@@ -17,7 +17,7 @@
 | 4 | Pass 5 장작·화덕·가지 더미·끼니·HUD 연결, 새 소품 4개 설치. `PART4.md`, `wood/` |
 | 5 | 첫 촬영 ART 94/94·ART_LONG 9/9·보정 4장 완료, 원본 SHA·sidecar 확인. `PART5.md`, `capture_verification.json` |
 | 6 | round2 A1–A18, 독립 블라인드, 비교·계절·GIF·주민 시트 완료. A17 오류 88→0, A5·A11·A12·A18 실패 유지 |
-| 7 | 대기: 최종 HEAD gate, 호환 확인, green FF, PR 설명과 remote 증명 |
+| 7 | 전체 gate 34/34, 최신 simulation 임시 호환 31/31 및 창 10장, 한국어 보고·draft PR 갱신. 최종 커밋 재검증/양 브랜치 SHA는 publication 기록 |
 
 ### 구현 방법
 
@@ -154,7 +154,7 @@ A18은 Art Pass 3의 6/23, 저녁 미측정, 9/41, 8/41과 비교한다. 첫 촬
 | 7 | 시간·재고별 불/빛, 계절 장작 변화 | 정지화면의 낮 빈 화덕/밤 불·빛 및 A6 확인. A17 화덕·장작 단계 불일치 0. 독립 검토에서도 더미 노출 확인; 정확한 소진 시점 연속 관측 미검증 |
 | 8 | HUD·저장소·정보창 장작 | 정지화면 HUD·저장소 양쪽 표시 확인. 저장소 갱신 지연 수정 후 A17 라벨·HUD 합계 오류 0. 정보창은 헤드리스 검사만 완료 |
 | 9 | d32 봄, 주민색 계절 불변 | A16 계절 4장 일치, 겨울 주민 41/42 일치 1.0; 나머지 1명 미측정. 스트립은 d32 봄 |
-| 10 | SCRIPT ERROR 없음, 비슷한 프레임 시간 | round2 SCRIPT ERROR 0, 300프레임 7.547/15.329ms(이전 대비 +1.499/+0.167ms). 통제된 동등 성능 실험은 아님; 최종 HEAD gate만 대기 |
+| 10 | SCRIPT ERROR 없음, 비슷한 프레임 시간 | round2 SCRIPT ERROR 0, 300프레임 7.547/15.329ms(이전 대비 +1.499/+0.167ms). 통제된 동등 성능 실험은 아님; 전체 source gate 34/34 통과, 최종 발행 HEAD 재검증은 publication 기록 |
 
 최종 round2 산출물은 다음과 같다. 두 GIF 모두 원본 40프레임/인코딩 40프레임이며 각 8MB 이하이다. 경로는 `docs/art/production4/` 기준이고 `report_artifacts.json`·`presentation_artifacts.json`에 원본과 SHA를 기록했다.
 
@@ -171,7 +171,7 @@ A18은 Art Pass 3의 6/23, 저녁 미측정, 9/41, 8/41과 비교한다. 첫 촬
 
 ### 시뮬레이션 작업과의 호환
 
-Pass 5 `682b442617d3f4bb9b151c29d324b17dfe82da93`를 `ddfb856156a3d827a1f8098010c3c762e4b77f78`로 충돌 없이 병합했다. 그 baseline은 전체 gate 28/28을 통과했다. Pass 5 장작·불·재고·배고픔은 UI에서 타입과 행을 확인하여 읽고 시뮬레이션 규칙은 변경하지 않는다. 장기 화면의 Pass 5 화덕·장작·가지 단계와 UI 재고를 비교했고 round2 A17 오류 0을 확인했다. 저녁 agent11 eat pose는 2프레임 관측했으나 자연 아침 식사는 미검증이다. 이번 실행 중 **20:30 UTC fetch**에서 green은 같은 `682b442617d3f4bb9b151c29d324b17dfe82da93`였다. simulation WIP `0a40b57c`는 의도적으로 병합하지 않았다. 최종 fetch·필요시 로컬 미발행 호환 병합은 **대기**다.
+Pass 5 `682b442617d3f4bb9b151c29d324b17dfe82da93`를 `ddfb856156a3d827a1f8098010c3c762e4b77f78`로 충돌 없이 병합했다. 그 baseline은 전체 gate 28/28을 통과했다. Pass 5 장작·불·재고·배고픔은 UI에서 타입과 행을 확인하여 읽고 시뮬레이션 규칙은 변경하지 않는다. 장기 화면의 Pass 5 화덕·장작·가지 단계와 UI 재고를 비교했고 round2 A17 오류 0을 확인했다. 저녁 agent11 eat pose는 2프레임 관측했으나 자연 아침 식사는 미검증이다. 이번 실행 중 **20:30 UTC fetch**에서 green은 같은 `682b442617d3f4bb9b151c29d324b17dfe82da93`였다. simulation WIP `0a40b57c`는 의도적으로 병합하지 않았다. 후속 최종 fetch에서 green이 `70d2224eadf91d1fb2dc760426faf9a895e9c44c`로 전진했다. 같은 checkout의 detached HEAD에서 임시 병합 `f8aa2adefc15922adc0a3ed49f28642e0943d0ef`를 만들었고 충돌 0, bridge·strict·smoke·Godot 27개 및 오류 검사를 포함한 31/31 검사가 통과했다. 실제 창 10장과 raw SHA를 확인했고 낮·밤 2장을 직접 열었다. SCRIPT ERROR/ERROR 0. [호환 영수증](compatibility/result.json), [낮](compatibility/d2_1200_F2.jpg), [밤](compatibility/d2_2200_F2N.jpg). 최신 bridge는 `game_v12`이며 1·2·6일차에 한정한 호환 확인이다. 임시 병합은 푸시하지 않고 아트 WIP로 복귀했다. 발행 시뮬레이션 부모는 `682b4426`이며 최신 시뮬레이션으로 장기 A1–A18을 다시 측정한 결과가 아니다.
 
 ### 변경된 파일 목록
 
@@ -190,9 +190,10 @@ Pass 5 `682b442617d3f4bb9b151c29d324b17dfe82da93`를 `ddfb856156a3d827a1f8098010
 | 5 | `cdbd840123655abd577778290d8a19f38f90115d` | `PART5.md`, 첫 촬영/sidecar/hash 증거 |
 | 6 | `9f8b49af7e67f5947c247c027d654604b7027188` | woodpile 인접 위치, tick 동기 자원/라벨 갱신, QA 시간 범위·불일치 회귀 검사 |
 | 6 | `4739738ebbf8160e4456add220d31cdb06562005` | round2 QA·비교 이미지·GIF·블라인드 재사용 증명 |
-| 7 | 대기 | 최종 gate·보고·발행 증거 |
+| 7 | `27dd83f44e1f36912e0f6acacc8e4985c923b115` | 전체 gate 34/34 및 호환 검사 전 보고서 체크포인트 |
+| 7 최종 | 이 보고서를 봉인한 커밋 (`git log -1 --format=%H -- docs/art/production4/REPORT.md`) | 호환 증거·최종 보고·작업 기록; 전체 SHA는 최종 응답과 publication 영수증 |
 
-WIP `codex/art-production-2026-10-wip` 최종 HEAD 및 `git ls-remote` 동등성: **대기**. green `codex/art-production-2026-10` 최종 HEAD 및 원격 동등성: **대기**. PR [#511](https://github.com/hyunlord/new-world/pull/511) Art Pass 4 설명 업데이트: **대기**; draft 유지 확인: **대기**.
+PR [#511](https://github.com/hyunlord/new-world/pull/511)에 기존 설명을 보존하고 Art Pass 4 절을 추가했으며 draft 상태를 조회해 확인했다. 보고서는 자신을 포함하는 커밋 SHA를 내장할 수 없으므로 최종 WIP/green HEAD, 직렬 `git ls-remote` 일치, exact-HEAD 전체 gate, PR 재조회, clean status와 종료 시각은 [외부 발행 영수증](/Users/rexxa/work/art-production4-evidence/publication.json)에 기록한다. 재검증 로그는 `/Users/rexxa/work/art-production4-evidence/final-head-gate/`이며, 커밋별 전체 파일 목록은 `commit_files.json`과 각 커밋 diff에 있다.
 
 ### 자율 결정 목록
 
@@ -200,7 +201,7 @@ WIP `codex/art-production-2026-10-wip` 최종 HEAD 및 `git ls-remote` 동등성
 
 ### 확인된 제한사항
 
-자연색·동작 감사 최종 거절 83개(머리 지도 사유 29개), 승인 대체가 없는 성인 B 44개, 실제 carry 복구 0개, 새 장작 주민 0개를 남겼다. 승인 130개를 설치 130개로 보고하지 않는다. 최종 A5·A11·A12·A18 실패를 남긴다. A17은 수정 후 PASS지만 새 장작 주민 그림 승인을 의미하지 않는다. 실제 창 클릭, 자연 발생 아침 식사, 장작 수집부터 재생까지의 연속 시각 수용은 미검증이다. round2 산출물 예산 기록은 assets 1,851,001bytes/docs 29,942,328bytes로 한도 내지만 최종 25MB/40MB 계측은 **대기**다.
+자연색·동작 감사 최종 거절 83개(머리 지도 사유 29개), 승인 대체가 없는 성인 B 44개, 실제 carry 복구 0개, 새 장작 주민 0개를 남겼다. 승인 130개를 설치 130개로 보고하지 않는다. 최종 A5·A11·A12·A18 실패를 남긴다. A17은 수정 후 PASS지만 새 장작 주민 그림 승인을 의미하지 않는다. 실제 창 클릭, 자연 발생 아침 식사, 장작 수집부터 재생까지의 연속 시각 수용은 미검증이다. round2 산출물 예산 기록은 assets 1,851,001bytes/docs 29,942,328bytes로 한도 내지만 최종 25MB/40MB 계측은 `budget_verification.json`과 publication 영수증에 기록한다.
 
 ### Harness 결과
 
@@ -211,7 +212,8 @@ WIP `codex/art-production-2026-10-wip` 최종 HEAD 및 `git ls-remote` 동등성
 | Part 2 | Python 221; PNG manifest 612/612; import·ACTIVITY 통과 | 후보 시각 승인과 런타임 검증 구분 |
 | Part 3 | Godot 24/24; 관련 Rust 85/85; strict 27파일·15FFI; 변이 6/6 검출 | 군중 A18은 미측정 |
 | Part 4/5 촬영 전 전체 | Rust 1,912; Python 239; Godot 27; clippy/strict/bridge/smoke 통과; PNG manifest 620/620 | runtime 캡처 전 gate, 최종 HEAD 아님 |
-| 최종 HEAD | **대기** | `gates/final/` 생성·판독 후 Rust/clippy/strict/bridge/smoke/Python/Godot 수치 갱신 |
+| 최종 source gate | 34/34; Rust 1,912개/123 suites; Python 243; Godot 27; clippy/strict 29파일·15FFI/bridge/smoke 통과 | source `4739738e`, 로그 `gates/final/`; 보고서 봉인 HEAD 재실행은 외부 final-head-gate와 publication 영수증 |
+| 최신 simulation 임시 호환 | 31/31; Godot 27 포함, 실제 창 10장, ERROR 0 | `game_v12` 1·2·6일차 제한. 임시 병합 미발행 |
 
 ### 정직한 판단
 

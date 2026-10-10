@@ -46,3 +46,9 @@
 - Keep final winter A5 FAIL at25/42 measurable despite initial25/41 PASS. No rounding or threshold relaxation.
 - Keep A12 identity hash, seat radius, offsets and blocked water unchanged; final A11/A12/A18 failures remain explicit. Two runtime review rounds are exhausted.
 - Calibration sidecars are schema3, gameplay schema4; only paused stills carry a historical motion interval. Validation records actual schema scope instead of assuming all107 are gameplay.
+
+## Part 7 publication and compatibility
+
+- Source full gate34/34 passed:1912 Rust tests,243 Python tests,27 Godot tests plus clippy/strict/bridge/smoke.
+- Final fetch discovered simulation green70d2224e. Repeated same-checkout detached unpushed mergef8aa2ade: no conflicts,31 compatibility checks,10 window captures,zero errors. Latest bridge game_v12; no long acceptance extrapolation. Returned to art WIP27dd83f4.
+- Preserve existing PR511 description, append Art Pass4, keep draft. Seal report then repeat full gate at exact publication HEAD externally; record final SHA/remote equality in external publication.json to avoid self-referential commit hashes. Green advances only after that repeat passes.

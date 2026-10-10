@@ -1,0 +1,7 @@
+{
+  "assets_bytes": 1851001,
+  "docs_bytes_before_receipt": 31967282,
+  "assets_limit": 25000000,
+  "docs_limit": 40000000,
+  "scope": "All actual files, including ignored Godot import sidecars. Final post-sealing bytes in external publication receipt."
+}
