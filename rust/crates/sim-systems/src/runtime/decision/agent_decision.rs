@@ -58,12 +58,52 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Hunger, Inventory, Memory,
-    MemoryArm, Position, ResourceKind, SeekTarget, SettlementMigrant, Sleep, Social, TargetKind,
-    Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
+    MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
+    TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
+use sim_core::rules::ForageRule;
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
+use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
+
+/// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
+type Retarget = (AgentId, hecs::Entity, (u32, u32), (u32, u32));
+
+/// Per-settlement forage inputs computed once per decision tick (Pass 4).
+#[derive(Debug, Clone)]
+struct ForagePlan {
+    /// Settlement formation tile; bushes are measured from here.
+    home: (u32, u32),
+    /// Store target in food units.
+    target: f64,
+    /// Stockpile plus food carried by members.
+    in_hand: u64,
+}
+
+/// Deterministic forage bush choice: among tiles holding food within
+/// `forage_radius` of `home` whose claim count is below the cap, minimise
+/// `(claims, chebyshev(agent, bush), y, x)`. `None` when no bush qualifies.
+fn choose_bush(
+    rule: &ForageRule,
+    home: (u32, u32),
+    agent: (u32, u32),
+    food_tiles: &HashMap<(u32, u32), u8>,
+    claims: &BTreeMap<(u32, u32), u32>,
+    exclude: Option<(u32, u32)>,
+) -> Option<(u32, u32)> {
+    let chebyshev = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    food_tiles
+        .iter()
+        .filter(|(tile, amount)| {
+            **amount >= 1
+                && Some(**tile) != exclude
+                && chebyshev(**tile, home) <= rule.forage_radius
+                && claims.get(*tile).copied().unwrap_or(0) < rule.max_foragers_per_bush
+        })
+        .map(|(tile, _)| *tile)
+        .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
+}
 
 /// Resource presence used to select actionable survival needs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -469,6 +509,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         let children: BTreeSet<AgentId> = world.query::<(&Agent, &Child)>()
             .iter().map(|(_, (agent, _))| agent.id).collect();
         let social_rule = resources.rules.agent.social_seek;
+        let forage_rule = resources.rules.agent.forage
+            .filter(|_| resources.rules.society.stock_target.is_some());
         if social_rule.is_some() {
             resources.social_retry_after.retain(|_, after| tick < *after);
         }
@@ -507,10 +549,14 @@ impl RuntimeSystem for AgentDecisionSystem {
         if let Some(rule) = planning {
             let mut agents: Vec<_> = world.query::<(
                 &Agent, &Position, &AgentState, Option<&SeekTarget>,
-                Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>,
-            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social))| {
+                Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>, Option<&Inventory>,
+            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social, inv))| {
+                // Pass 4: a member carrying a full haul load delivers it before building.
+                let loaded = forage_rule.is_some_and(|rule| {
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= rule.haul_threshold)
+                });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
-                 !children.contains(&a.id) && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                 !children.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
                     && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
                     && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
                     && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
@@ -540,6 +586,37 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
         }
+
+        // Pass 4 — purposeful foraging inputs, computed once before the agent
+        // loop: each settlement's store target and stock in hand (sorted
+        // settlement id), each member's settlement, and the current claims on
+        // bushes (agents already heading to a bush). Empty without the rules.
+        let forage_window = forage_rule
+            .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
+        let mut forage_plans: BTreeMap<SettlementId, ForagePlan> = BTreeMap::new();
+        let mut member_of: BTreeMap<AgentId, SettlementId> = BTreeMap::new();
+        let mut claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        if forage_rule.is_some() {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                for id in &settlement.member_agents {
+                    member_of.entry(*id).or_insert(sid);
+                }
+                forage_plans.insert(sid, ForagePlan {
+                    home: settlement.formation_tile,
+                    target: stock_target(world, resources, sid).unwrap_or(0.0),
+                    in_hand: stock_in_hand(world, resources, sid),
+                });
+            }
+            for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
+                if matches!(state, AgentState::Seeking { target: TargetKind::GatherFood }) {
+                    *claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+        }
+        let mut forage_targets: HashMap<hecs::Entity, (u32, u32)> = HashMap::new();
 
         // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
         // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
@@ -1140,6 +1217,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_chase_since.insert(agent.id, tick);
                             }
                         }
+                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && adult).and_then(|rule| {
+                        // Pass 4 — Forage arm (after Combat, before Gather): a
+                        // member with room and less than a haul load walks to a
+                        // bush on purpose while the store is below its target.
+                        let sid = member_of.get(&agent.id)?;
+                        let plan = forage_plans.get(sid)?;
+                        let inv = inventory_opt.as_ref()?;
+                        let room = inv.total() < INVENTORY_CAPACITY;
+                        let light = inv.get(ResourceKind::Food) < rule.haul_threshold;
+                        if !(room && light && (plan.in_hand as f64) < plan.target) {
+                            return None;
+                        }
+                        choose_bush(&rule, plan.home, (pos.x, pos.y), &resources.food_tiles, &claims, None)
+                    }) {
+                        *claims.entry(bush).or_default() += 1;
+                        forage_targets.insert(entity, bush);
+                        resources.tallies.forage_trips += 1;
+                        *state = AgentState::Seeking {
+                            target: TargetKind::GatherFood,
+                        };
                     } else if let Some(_gather_tile) = {
                         // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
                         // when no higher-priority arm triggered, the agent has
@@ -1152,7 +1249,17 @@ impl RuntimeSystem for AgentDecisionSystem {
                         let has_room = inventory_opt
                             .as_ref()
                             .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
-                        if adult && has_room {
+                        // Pass 4 — under the forage rule opportunistic gathering
+                        // also stops at a haul load and, for members, once the
+                        // stock in hand reaches the hoard cap.
+                        let bounded = forage_rule.is_none_or(|rule| {
+                            inventory_opt.as_ref().is_some_and(|inv| inv.get(ResourceKind::Food) < rule.haul_threshold)
+                                && member_of.get(&agent.id).and_then(|sid| forage_plans.get(sid)).is_none_or(|plan| {
+                                    let cap = resources.rules.society.stock_target.map_or(0.0, |r| r.hoard_cap_factor);
+                                    (plan.in_hand as f64) < cap * plan.target
+                                })
+                        });
+                        if adult && has_room && bounded {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,
@@ -1694,6 +1801,10 @@ impl RuntimeSystem for AgentDecisionSystem {
 
         let mut seek_set: Vec<(hecs::Entity, (u32, u32))> = Vec::new();
         let mut seek_clear: Vec<hecs::Entity> = Vec::new();
+        // Pass 4 — gather targets held after this pass, and gatherers whose
+        // bush emptied before they arrived (re-targeted below).
+        let mut gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
+        let mut retarget: Vec<Retarget> = Vec::new();
         for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
             .query::<(
                 &Agent,
@@ -1705,6 +1816,31 @@ impl RuntimeSystem for AgentDecisionSystem {
             .iter()
         {
             match state {
+                // Pass 4 — under the forage rule a gatherer heads to the bush the
+                // Forage arm chose, keeps a bush that still holds food, and is
+                // re-targeted (never frozen) when its bush emptied.
+                AgentState::Seeking { target: TargetKind::GatherFood } if forage_rule.is_some() => {
+                    let held = if let Some(bush) = forage_targets.get(&e) {
+                        seek_set.push((e, *bush));
+                        Some(*bush)
+                    } else if let Some(seek) = seek_opt {
+                        if resources.food_tiles.get(&seek.tile).is_some_and(|amount| *amount > 0) {
+                            Some(seek.tile)
+                        } else {
+                            retarget.push((agent.id, e, (pos.x, pos.y), seek.tile));
+                            None
+                        }
+                    } else {
+                        let chosen = nearest_food_tile_in_radius(pos, &resources.food_tiles, GATHER_SCAN_RADIUS);
+                        if let Some(tile) = chosen {
+                            seek_set.push((e, tile));
+                        }
+                        chosen
+                    };
+                    if let Some(tile) = held {
+                        *gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
                 // Resource targets stay stable; assigned beds follow bed reassignment.
                 AgentState::Seeking { target: TargetKind::Food }
                 | AgentState::Seeking { target: TargetKind::Water }
@@ -1804,10 +1940,31 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
         }
+        // Pass 4 — re-target emptied bushes in AgentId order by the forage
+        // choice rule (claims recomputed, the empty tile excluded); a gatherer
+        // with no qualifying bush becomes Idle and drops its target.
+        let mut to_idle: Vec<hecs::Entity> = Vec::new();
+        if let Some(rule) = forage_rule {
+            retarget.sort_by_key(|row| row.0);
+            for (id, e, pos, old) in retarget {
+                let home = member_of.get(&id).and_then(|sid| forage_plans.get(sid)).map(|plan| plan.home);
+                match home.and_then(|home| choose_bush(&rule, home, pos, &resources.food_tiles, &gather_claims, Some(old))) {
+                    Some(bush) => {
+                        *gather_claims.entry(bush).or_default() += 1;
+                        seek_set.push((e, bush));
+                    }
+                    None => to_idle.push(e),
+                }
+            }
+        }
         for (e, tile) in seek_set {
             let _ = world.insert_one(e, SeekTarget { tile });
         }
         for e in seek_clear {
+            let _ = world.remove_one::<SeekTarget>(e);
+        }
+        for e in to_idle {
+            let _ = world.insert_one(e, AgentState::Idle);
             let _ = world.remove_one::<SeekTarget>(e);
         }
 
@@ -1902,6 +2059,28 @@ mod tests {
             assert_eq!(engine.resources.tallies.meals_eaten, 0);
             assert_eq!(engine.resources.tallies.meals_without_food, 0);
         }
+    }
+
+    #[test]
+    fn choose_bush_prefers_unclaimed_then_near_then_row_major() {
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 2,
+        };
+        let mut tiles = HashMap::new();
+        for tile in [(12, 10), (10, 12), (8, 10), (40, 40)] {
+            tiles.insert(tile, 3u8);
+        }
+        tiles.insert((11, 11), 0);
+        let mut claims = BTreeMap::new();
+        // (8,10) and (12,10) tie on distance 2 from (10,10); y then x picks (8,10).
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
+        claims.insert((8, 10), 1);
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((12, 10)));
+        claims.insert((12, 10), 2);
+        claims.insert((10, 12), 2);
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, None), Some((8, 10)));
+        assert_eq!(choose_bush(&rule, (10, 10), (10, 10), &tiles, &claims, Some((8, 10))), None);
     }
 
     #[test]

@@ -968,3 +968,22 @@ Seed 8 stays at the 24 founders with zero births until day 45 while its bushes k
 - Store: stockpile median 29.5 on day 1, 452.5 on day 118, 463.5 on day 120 (hoarding grows without bound).
 - Regrowth lost at the 4-unit cap: 32 units on day 1, about 13–15 per day later (median per seed-day 15 over all 120 days).
 - Harvest median 104 per day against a nominal supply of 120 and a need of 100.8.
+
+## Pass 4 Part 2 — forage, haul home, store target (no aging, no seasons)
+
+`p4-2_v10_10day` (64 × 10, determinism PASS) and `p4-2_v10_120day` (32 × 120, clock-sampled, determinism PASS) on `game_v10` = v9 + 12 bushes + utilization 0.705 + forage (06:00–18:00, radius 16, haul 4, 1 forager per bush) + stock target (1.5 days, hoard cap 2.0).
+
+| Metric | Pass 3 v9 | Part 2 v10 |
+|---|---|---|
+| births by day 4 (min over seeds) | 0 (seed 8 stagnant 45 days) | 7 |
+| alive day 10 (min / median) | 24 / 42 | 42 / 42 |
+| deaths of any cause, 120 days | 0 | 0 |
+| stockpile day 120 (median, min–max) | 463.5 | 274.5 (259–288) |
+| stock target day 120 | — | 151.2 (hoard cap 302.4) |
+| home distance day 10 (median, max) | 5.80 / 11.28 | 5.76 / 10.95 |
+| night in shelter (median) | 0.968 | 1.0 |
+| evening near hearth (median, min) | 0.69 / 0.11 | 0.80 / 0.70 |
+| noon idle (median) | 0.596 | 0.738 |
+| ms per agent-tick (10-day median) | 0.000778 | 0.000944 |
+
+Forage trips concentrate in the first two to four days (median total 81) while the store fills; once `stock_in_hand ≥ target` the Forage arm is silent and opportunistic gathering continues up to the hoard cap, after which most adults idle at noon. Population stays frozen at 42 (aging is Part 3).

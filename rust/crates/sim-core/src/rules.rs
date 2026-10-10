@@ -263,6 +263,18 @@ impl WorldRules {
                 forage_radius: 16,
             }),
         };
+        rules.agent.forage = Some(ForageRule {
+            start_minute: 360,
+            end_minute: 1080,
+            forage_radius: 16,
+            haul_threshold: 4,
+            max_foragers_per_bush: 1,
+        });
+        rules.society.stock_target = Some(StockTargetRule {
+            base_days: 1.5,
+            winter_prep: true,
+            hoard_cap_factor: 2.0,
+        });
         rules
     }
 
@@ -379,7 +391,7 @@ mod tests {
         }
     }
     #[test]
-    fn game_v10_differs_from_v9_only_in_sustain_utilization() {
+    fn game_v10_is_v9_plus_pass4_rules() {
         let mut v10 = WorldRules::game_v10();
         let BirthRule::Provisioned { sustain: Some(sustain), .. } = v10.society.birth else {
             panic!("v10 must keep provisioned sustain births");
@@ -389,6 +401,9 @@ mod tests {
         let usable = sustain.utilization * 144.0;
         assert!((42.0 * 2.4..43.0 * 2.4).contains(&usable));
         v10.society.birth = WorldRules::game_v9().society.birth;
+        assert!(v10.agent.forage.is_some() && v10.society.stock_target.is_some());
+        v10.agent.forage = None;
+        v10.society.stock_target = None;
         assert_eq!(v10, WorldRules::game_v9());
     }
 

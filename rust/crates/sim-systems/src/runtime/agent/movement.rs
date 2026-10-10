@@ -45,7 +45,8 @@ use std::collections::BTreeMap;
 
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Position, SeekTarget, SETTLEMENT_PROXIMITY_RADIUS,
+    Agent, AgentId, AgentState, Child, Inventory, Position, ResourceKind, SeekTarget,
+    SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::ForageRule;
 use sim_engine::{RuntimeSystem, SimResources};
@@ -150,8 +151,13 @@ impl RuntimeSystem for AgentMovementSystem {
         let evening_radius = rules.evening_gather
             .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
             .map(|rule| rule.tether_radius);
+        let forage = rules.forage;
+        let forage_window = forage
+            .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
-        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some() {
+        if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
+            || forage.is_some()
+        {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
             for (_, settlement) in settlements {
@@ -167,7 +173,8 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state, seek, agent, child)) in world
+        let mut haul_steps: Vec<AgentId> = Vec::new();
+        for (_, (pos, rng, state, seek, agent, child, inventory)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -175,6 +182,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&SeekTarget>,
                 Option<&Agent>,
                 Option<&Child>,
+                Option<&Inventory>,
             )>()
             .iter()
         {
@@ -220,6 +228,20 @@ impl RuntimeSystem for AgentMovementSystem {
                     continue;
                 }
             }
+            // Pass 4 haul home: a loaded idle member walks straight to its
+            // formation tile instead of a Brownian step (no RNG draw).
+            if let (Some(rule), Some(agent), None) = (forage, agent, child) {
+                if let Some(&anchor) = home.get(&agent.id) {
+                    let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+                    let distance = pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1));
+                    if haul_due(&rule, carried, forage_window, distance) {
+                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
+                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
+                        haul_steps.push(agent.id);
+                        continue;
+                    }
+                }
+            }
             // Idle / no AgentState: Brownian motion (unchanged).
             if rules.idle_pause_chance > 0.0 {
                 let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
@@ -247,6 +269,7 @@ impl RuntimeSystem for AgentMovementSystem {
             pos.x = nx as u32;
             pos.y = ny as u32;
         }
+        resources.haulers.extend(haul_steps);
     }
 }
 
@@ -258,6 +281,20 @@ mod tests {
 
     fn fresh_engine() -> SimEngine {
         SimEngine::new(32, 32, MaterialRegistry::new())
+    }
+
+    #[test]
+    fn haul_due_needs_a_load_or_the_end_of_the_window_and_distance() {
+        let rule = ForageRule {
+            start_minute: 360, end_minute: 1080, forage_radius: 16,
+            haul_threshold: 4, max_foragers_per_bush: 1,
+        };
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        assert!(haul_due(&rule, 4, true, far));
+        assert!(!haul_due(&rule, 3, true, far));
+        assert!(haul_due(&rule, 1, false, far));
+        assert!(!haul_due(&rule, 0, false, far));
+        assert!(!haul_due(&rule, 9, true, SETTLEMENT_PROXIMITY_RADIUS));
     }
 
     #[test]
