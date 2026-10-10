@@ -1,7 +1,15 @@
 class_name AgentActivity
 extends RefCounted
 
-static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, _hour: float) -> String:
+static func snapshot_target(snapshot: Dictionary, index: int) -> int:
+	var targets: Variant = snapshot.get("target_kinds")
+	return int(targets[index]) if targets is PackedByteArray and index >= 0 and index < targets.size() else -1
+
+static func snapshot_wood(snapshot: Dictionary, index: int) -> int:
+	var woods: Variant = snapshot.get("carried_woods")
+	return int(woods[index]) if woods is PackedInt32Array and index >= 0 and index < woods.size() else 0
+
+static func resolve(state: int, target_kind: int, has_targets: bool, moving: bool, carried: float, tile: Dictionary, _hour: float, carried_wood: int = 0) -> String:
 	if state == 2:
 		return "talk"
 	if state == 3:
@@ -13,6 +21,9 @@ static func resolve(state: int, target_kind: int, has_targets: bool, moving: boo
 				4: return "build"
 				5: return "talk"
 				6: return "gather"
+				7: return "gather_wood"
+		if not has_targets and bool(tile.get("wood", false)):
+			return "gather_wood"
 		if bool(tile.get("shelter", false)):
 			return "asleep"
 		if bool(tile.get("construction", false)):
@@ -23,6 +34,8 @@ static func resolve(state: int, target_kind: int, has_targets: bool, moving: boo
 			return "drink"
 		return "eat"
 	if state == 1 or moving:
+		if carried_wood > 0:
+			return "carry_wood"
 		return "carry" if carried > 0.0 else "walk"
 	return "idle"
 
@@ -55,7 +68,7 @@ static func camp_pose(activity: String, life_stage: int, agent_id: int, day: int
 	return "sit" if life_stage == 2 or animated else "idle"
 
 static func frame_index(activity: String, seconds: float, phase: float, count: int) -> int:
-	var fps: float = 8.0 if activity in ["walk", "carry", "run"] else (1.5 if activity == "idle" else 4.0)
+	var fps: float = 8.0 if activity in ["walk", "carry", "carry_wood", "run"] else (1.5 if activity == "idle" else 4.0)
 	return posmod(floori((seconds + phase) * fps), maxi(count, 1))
 
 static func elder_look(base: Dictionary, agent_id: int, life_stage: int) -> Dictionary:
@@ -88,7 +101,16 @@ static func build_frame_groups(entries: Dictionary) -> Dictionary:
 	return groups
 
 static func activity_icon(activity: String) -> String:
+	if activity in ["carry_wood", "gather_wood"]:
+		return wood_icon(ArtSpriteLibrary.entries())
 	return str({"walk": "U1_01", "carry": "U1_05", "gather": "U1_06", "build": "U1_04", "eat": "U1_12", "drink": "U1_11", "sit": "U1_13", "asleep": "U1_13", "talk": "U1_01"}.get(activity, ""))
+
+static func wood_icon(entries: Dictionary) -> String:
+	for sprite_id: String in ["W1_12", "W1_16"]:
+		var icon: Dictionary = entries.get(sprite_id, {})
+		if str(icon.get("qa_status", "")) == "accepted" and bool(icon.get("drawable", true)):
+			return sprite_id
+	return "S2_15"
 
 static func _real_carry(entry: Dictionary, body: String) -> bool:
 	return (str(entry.get("body","")) == body
@@ -101,6 +123,10 @@ static func _real_carry(entry: Dictionary, body: String) -> bool:
 static func choose_frame(groups: Dictionary, body: String, activity: String, facing: String, seconds: float, phase: float) -> Dictionary:
 	var view: String = "E" if facing == "W" else facing
 	var keys: Array[String] = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/idle/" + view]
+	var wood: bool = activity in ["carry_wood", "gather_wood"]
+	if wood:
+		var fallback: String = "walk" if activity == "carry_wood" else "crouch"
+		keys = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/" + fallback + "/" + view, body + "/" + fallback + "/S", body + "/" + fallback + "/E", body + "/" + fallback + "/N", body + "/" + fallback + "/W", body + "/idle/" + view, body + "/idle/S"]
 	var real_carry: bool = false
 	if activity == "carry":
 		for carry_view: String in ["S","E","N","W"]:
@@ -117,6 +143,8 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 			if real_carry and not _real_carry(entry,body):
 				continue
 			var basket: bool = bool(entry.get("contains_basket", false)) or str(entry.get("source_sprite", "")) == "direction_09_villager_gatherer"
+			if wood and (bool(entry.get("contains_bush", false)) or str(entry.get("activity", "")) in ["gather", "carry"]):
+				continue
 			if basket and activity != "carry":
 				continue
 			safe.append(entry)
@@ -124,7 +152,10 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 			continue
 		var chosen: Dictionary = safe[frame_index(activity, seconds, phase, safe.size())].duplicate()
 		var idle_fallback: bool = str(chosen.get("activity", "")) == "idle" and activity != "idle"
-		if idle_fallback:
+		if wood and str(chosen.get("activity", "")) != activity:
+			chosen["fallback_kind"] = "wood_icon"
+			chosen["activity_icon"] = activity_icon(activity)
+		elif idle_fallback:
 			chosen["fallback_kind"] = "idle_icon"
 			chosen["activity_icon"] = activity_icon(activity)
 		elif str(chosen.get("fallback_kind", "")) != "idle_icon":
@@ -133,7 +164,7 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 	return {}
 
 static func show_activity_icon(choice: Dictionary, zoom: float) -> bool:
-	return zoom >= 2.0 and str(choice.get("fallback_kind", "")) == "idle_icon" and not str(choice.get("activity_icon", "")).is_empty()
+	return zoom >= 2.0 and str(choice.get("fallback_kind", "")) in ["idle_icon", "wood_icon"] and not str(choice.get("activity_icon", "")).is_empty()
 
 static func apply_activity_icon(sprite: Sprite2D, icon: Sprite2D, choice: Dictionary, zoom: float) -> bool:
 	icon.visible = false

@@ -1074,7 +1074,9 @@ fn harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved() {
     // Type D — Phase 12-α to 13-ε constants.
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
     assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
@@ -1149,7 +1151,8 @@ fn harness_revitalize_inspector_gather_food_is_not_social_target() {
         .filter(|line| line.starts_with('"'))
         .map(|line| line.trim_end_matches(',').trim_matches('"'))
         .collect();
-    assert_eq!(keys.len(), 7, "all FFI target codes including GatherFood map explicitly");
+    assert_eq!(keys.len(), 8, "all FFI target codes including GatherFood and GatherWood map explicitly");
     assert_eq!(keys[5], "INSPECTOR_TARGET_AGENT");
     assert_eq!(keys[6], "INSPECTOR_TARGET_FOOD");
+    assert_eq!(keys[7], "INSPECTOR_TARGET_WOOD");
 }

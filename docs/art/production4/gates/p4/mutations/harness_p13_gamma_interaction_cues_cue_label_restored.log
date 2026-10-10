@@ -1,0 +1,24 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.75s
+     Running tests/harness_p13_gamma_interaction_cues.rs (rust/target/debug/deps/harness_p13_gamma_interaction_cues-3d900739fa1981d4)
+
+running 16 tests
+test harness_p13_gamma_a15_phase13_beta_resource_constants_preserved ... ok
+test harness_p13_gamma_a14_phase13_alpha_bootstrap_campfire_preserved ... ok
+test harness_p13_gamma_a11_state_tints_palette_preserved ... ok
+test harness_p13_gamma_a10_sprite_scale_baseline_preserved ... ok
+test harness_p13_gamma_a16_state_scale_boost_lookup_guards_bounds ... ok
+test harness_p13_gamma_a1_state_scale_boost_array_declared ... ok
+test harness_p13_gamma_a13_phase13_alpha_zoom_default_3x_preserved ... ok
+test harness_p13_gamma_a2_state_scale_boost_idle_index_is_baseline ... ok
+test harness_p13_gamma_a12_phase12_alpha_zoom_min_max_preserved ... ok
+test harness_p13_gamma_a3_state_scale_boost_active_indices_are_1_15 ... ok
+test harness_p13_gamma_a4_state_scale_boost_array_length_is_four ... ok
+test harness_p13_gamma_a6_recall_cue_scale_boost_preserved ... ok
+test harness_p13_gamma_a8_boost_cascade_uses_max_composition ... ok
+test harness_p13_gamma_a5_state_scale_boost_used_in_render_loop ... ok
+test harness_p13_gamma_a9_state_tag_clamp_uses_zero_three_bounds ... ok
+test harness_p13_gamma_a7_combat_cue_scale_boost_preserved ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

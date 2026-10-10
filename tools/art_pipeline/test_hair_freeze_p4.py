@@ -65,6 +65,15 @@ class HairFreezeTests(unittest.TestCase):
         self.assertEqual(row['rgba_sha256'], hashlib.sha256(self.sprite.tobytes()).hexdigest())
         self.assertEqual(row['mask_sha256'], digest(self.root / 'mask.png'))
 
+    def test_objects_and_children_need_no_reviewed_hair_map(self) -> None:
+        for body in ('', 'child'):
+            with self.subTest(body=body):
+                actor = replace(self.plan.sprites[0], body=body)
+                plan = replace(self.plan, sprites=(actor,))
+                before = self.registry_path.read_bytes()
+                self.assertEqual(freeze_selected_hair(self.request, plan), 0)
+                self.assertEqual(self.registry_path.read_bytes(), before)
+
     def test_conflicting_existing_mask_fails_before_write(self) -> None:
         old = Image.new('RGBA', (2, 4), (0, 0, 0, 255))
         old.putpixel((1, 0), (3, 0, 0, 255))

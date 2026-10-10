@@ -35,7 +35,7 @@ const STATE_LABELS: Array = ["UI_ACTION_IDLE", "INSPECTOR_STATE_SEEKING", "UI_AG
 
 # Index-aligned with the Phase 14-γ `target_kind` encoding in
 # `collect_agent_detail`:
-#   0=None, 1=Food, 2=Water, 3=Sleep, 4=ConstructionSite, 5=Agent, 6=GatherFood
+#   0=None, 1=Food, 2=Water, 3=Sleep, 4=ConstructionSite, 5=Agent, 6=GatherFood, 7=GatherWood
 const TARGET_LABELS: Array = [
 	"INSPECTOR_TARGET_NONE",
 	"INSPECTOR_TARGET_FOOD",
@@ -44,6 +44,7 @@ const TARGET_LABELS: Array = [
 	"INSPECTOR_TARGET_BUILD",
 	"INSPECTOR_TARGET_AGENT",
 	"INSPECTOR_TARGET_FOOD",
+	"INSPECTOR_TARGET_WOOD",
 ]
 
 var _locale: Node = null
@@ -161,7 +162,8 @@ func display_agent(detail: Dictionary) -> void:
 	_label_age.text = _age_line(agent_id)
 	_label_age.visible = not _label_age.text.is_empty()
 	_update_portrait(agent_id)
-	_carried_label.text = _loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id)
+	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
+	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carried_wood > 0 else (_loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id))
 	visible = true
 
 
@@ -231,6 +233,10 @@ func _update_portrait(agent_id: int) -> void:
 
 
 func _carried_food(agent_id: int) -> int:
+	return _carried_amount(agent_id, "carried_foods")
+
+
+func _carried_amount(agent_id: int, key: String) -> int:
 	if _world_sim == null:
 		return 0
 	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
@@ -238,7 +244,7 @@ func _carried_food(agent_id: int) -> int:
 		return 0
 	var data: Dictionary = snapshot
 	var ids: Variant = data.get("agent_ids", null)
-	var carried: Variant = data.get("carried_foods", null)
+	var carried: Variant = data.get(key, null)
 	if ids is PackedInt64Array and carried is PackedInt32Array:
 		for index: int in mini(ids.size(), carried.size()):
 			if ids[index] == agent_id:

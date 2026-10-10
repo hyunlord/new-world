@@ -4,6 +4,7 @@ const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
+const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
@@ -30,6 +31,7 @@ var _render_positions: Dictionary = {}
 var _drawn_positions: Dictionary = {}
 var _stationary_seconds: Dictionary = {}
 var _camp_seats = CampSeatsScript.new()
+var _pose_moments = PoseMoments.new()
 var _opaque_rects: Dictionary = {}
 var _idle_seconds: Dictionary = {}
 var _frame_groups: Dictionary = {}
@@ -112,14 +114,20 @@ func _process(delta: float) -> void:
 		_render_positions[agent_id] = ipos
 		var tile: Dictionary = _tile_context(Vector2i(xs[i], ys[i]), context)
 		var state: int = int(states[i]) if i < states.size() else 0
-		var has_targets: bool = snap.has("target_kinds")
-		var target: int = int(snap["target_kinds"][i]) if has_targets and i < snap["target_kinds"].size() else 0
+		var target: int = Activity.snapshot_target(snap, i)
+		var has_targets: bool = target >= 0
 		var carried: float = float(snap["carried_foods"][i]) if snap.has("carried_foods") and i < snap["carried_foods"].size() else 0.0
-		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour)
+		var wood: int = Activity.snapshot_wood(snap, i)
+		var moments: Dictionary = _pose_moments.update(agent_id, i, snap, Vector2i(xs[i], ys[i]), not moving, bool(tile.get("wood", false)), context["hearths"], delta)
+		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour, wood)
+		if bool(moments["pickup"]):
+			activity = "gather_wood"
 		_idle_seconds[agent_id] = Activity.idle_elapsed(activity, movement, float(_idle_seconds.get(agent_id, 0.0)), delta)
 		var partner_delta: Vector2 = _talk_delta(i, xs, ys) if activity == "talk" else Vector2.ZERO
 		var facing: String = Activity.render_facing(activity, movement, partner_delta, str(sprite.get_meta("facing", "S")), float(_idle_seconds[agent_id]))
 		var pose: String = Activity.camp_pose(activity, life_stage, agent_id, int(time.get("day_index", 0)), hour, bool(tile.get("near_camp", false)))
+		if bool(moments["meal"]):
+			pose = "eat"
 		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
 		var choice: Dictionary = frame_choice(body, pose, facing, float(look["phase"]))
 		var sprite_id: String = str(choice.get("sprite_id", ""))
@@ -144,7 +152,7 @@ func _process(delta: float) -> void:
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 		_update_activity_icon(agent_id, sprite, choice)
-		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "meal": false})
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "meal": bool(moments["meal"])})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
 		var agent_id: int = int(row["id"])
@@ -212,6 +220,7 @@ func _retire_missing(live: Dictionary) -> void:
 		_drawn_positions.erase(agent_id)
 		_stationary_seconds.erase(agent_id)
 		_idle_seconds.erase(agent_id)
+		_pose_moments.retire(agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.visible = false
 		_shadow_pool.append(shadow)
@@ -240,6 +249,7 @@ func _on_world_reset() -> void:
 	_camp_seats = CampSeatsScript.new()
 	_opaque_rects.clear()
 	_idle_seconds.clear()
+	_pose_moments.clear()
 	_animation_time = 0.0
 	_prev_positions.clear()
 	_curr_positions.clear()
@@ -388,7 +398,7 @@ func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary) 
 	Activity.apply_activity_icon(sprite, icon, choice, zoom)
 
 func _activity_context() -> Dictionary:
-	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "water": {}, "seat_blocked": {}}
+	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "wood": {}, "water": {}, "seat_blocked": {}}
 	var buildings: Dictionary = world_sim.get_building_snapshot()
 	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
@@ -408,6 +418,8 @@ func _activity_context() -> Dictionary:
 		for i: int in range(mini(sx.size(), sy.size())):
 			if source == "sites" or (i < sk.size() and sk[i] == 3):
 				context["seat_blocked"][Vector2i(sx[i], sy[i])] = true
+			if source == "food" and i < sk.size() and sk[i] == 3:
+				context["wood"][Vector2i(sx[i], sy[i])] = true
 			if source == "sites" or (i < sk.size() and sk[i] == 0):
 				context[source][Vector2i(sx[i], sy[i])] = true
 	var terrain: Dictionary = world_sim.get_terrain_snapshot()
@@ -433,7 +445,7 @@ func _tile_context(tile: Vector2i, context: Dictionary) -> Dictionary:
 		var index: int = t.y * width + t.x
 		if t.x >= 0 and t.x < width and t.y >= 0 and t.y < height and index < cells.size() and cells[index] == 4:
 			water = true
-	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "water": water, "near_hearth": near, "near_camp": near_camp}
+	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "wood": context.get("wood", {}).has(tile), "water": water, "near_hearth": near, "near_camp": near_camp}
 
 func _talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vector2:
 	var nearest: Vector2 = Vector2.ZERO

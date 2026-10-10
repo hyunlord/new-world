@@ -2157,7 +2157,7 @@
     "direction_09_villager_gatherer": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1717,
+        1828,
         81,
         17,
         30
@@ -2168,7 +2168,7 @@
     "direction_10_villager_builder": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1736,
+        1847,
         81,
         22,
         30
@@ -2179,7 +2179,7 @@
     "direction_11_villager_elder": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1760,
+        1871,
         81,
         21,
         30
@@ -2190,7 +2190,7 @@
     "direction_12_villager_child": {
       "page": "res://assets/art/atlas/world_0_regions.png",
       "rect": [
-        1783,
+        1894,
         81,
         14,
         23

@@ -14,6 +14,8 @@ var _sites_label: Label
 var _locale: Node = null
 var _clock_label: Label
 var _resource_labels: Array[Label] = []
+var _wood_label: Label
+var _wood_row: HBoxContainer
 var _speed_label: Label
 var _display_speed: float = 1.0
 var _clock_icon: Sprite2D
@@ -42,6 +44,15 @@ func _ready() -> void:
 	column.add_child(lower)
 	for index: int in [5, 6, 7, 8]:
 		_resource_labels.append(ArtUI.pair(lower, index))
+		if index == 5:
+			_wood_row = HBoxContainer.new()
+			_wood_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_wood_row.add_theme_constant_override("separation", 8)
+			lower.add_child(_wood_row)
+			_wood_label = Label.new()
+			_wood_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_wood_row.add_child(_wood_label)
+			_wood_row.hide()
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lower.add_child(spacer)
@@ -128,10 +139,18 @@ func _refresh() -> void:
 	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
 	_clock_label.text += _season_label(clock)
 	var food: int = 0
-	var stocks: Variant = _snapshot("get_settlement_snapshot").get("food_stocks", null)
+	var settlement: Dictionary = _snapshot("get_settlement_snapshot")
+	var stocks: Variant = settlement.get("food_stocks", null)
 	if stocks is PackedInt32Array:
 		for amount: int in stocks:
 			food += amount
+	var wood_stocks: Variant = settlement.get("wood_stocks", null)
+	_wood_row.visible = wood_stocks is PackedInt32Array
+	if wood_stocks is PackedInt32Array:
+		var wood: int = 0
+		for amount: int in wood_stocks:
+			wood += amount
+		_wood_label.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % wood
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
 	var kinds: Variant = resources.get("kinds", null)

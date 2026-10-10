@@ -84,6 +84,7 @@ func _run() -> void:
 		var y: int = int(sprite.get_meta("tile_y"))
 		if str(sprite.get_meta("art_kind")) == "tree" and codes[y*width+x] == 1:
 			forest_trees += 1
+	print("forest tree density: ", forest_trees, "/", forest_total, " = ", float(forest_trees)/forest_total)
 	_check(float(forest_trees)/forest_total >= 0.25 and float(forest_trees)/forest_total <= 0.35,"forest tree density over all forest tiles")
 	nature.call("refresh_snapshot")
 	for key: String in sprites:
@@ -157,6 +158,12 @@ func _check_construction_clearance(original: Node, world: Node, kind: String) ->
 	mock.free()
 
 func _check_clearing_sources() -> void:
+	var deadwood: Dictionary = {"xs": PackedInt32Array([90]), "ys": PackedInt32Array([90]), "kinds": PackedInt32Array([3]), "amounts": PackedInt32Array([0])}
+	var wood_clear: Dictionary = LAYOUT.clearings({}, {}, deadwood, {})
+	_check(wood_clear.size() == 9, "empty deadwood keeps exactly Chebyshev1 clear")
+	for dy: int in range(-1, 2):
+		for dx: int in range(-1, 2):
+			_check(wood_clear.has(Vector2i(90+dx, 90+dy)), "deadwood clears every Chebyshev1 neighbour")
 	var building: Dictionary = {"xs":PackedInt32Array([10]),"ys":PackedInt32Array([10])}
 	var site: Dictionary = {"xs":PackedInt32Array([30]),"ys":PackedInt32Array([30])}
 	var berry: Dictionary = {"xs":PackedInt32Array([50]),"ys":PackedInt32Array([50]),"kinds":PackedInt32Array([0])}
@@ -185,7 +192,7 @@ func _check_decal_clearance(world: Node) -> void:
 	renderer.set("_height",int(terrain["height"]))
 	var decals: Node2D = Node2D.new()
 	renderer.set("_decals",decals)
-	for kind: String in ["building","site","formation","berry"]:
+	for kind: String in ["building","site","formation","berry","deadwood"]:
 		renderer.call("_refresh_decals")
 		await process_frame
 		_check(decals.get_child_count() > 0,"decal clearance starts with populated map")
@@ -198,6 +205,9 @@ func _check_decal_clearance(world: Node) -> void:
 			"building": mock.buildings = snapshot
 			"site": mock.sites = snapshot
 			"formation": mock.settlements = {"formation_xs":PackedInt32Array([center.x]),"formation_ys":PackedInt32Array([center.y])}
+			"deadwood":
+				mock.resources = snapshot
+				mock.resources["kinds"] = PackedInt32Array([3])
 			"berry":
 				mock.resources = snapshot
 				mock.resources["kinds"] = PackedInt32Array([1])
@@ -208,7 +218,7 @@ func _check_decal_clearance(world: Node) -> void:
 		await process_frame
 		for remaining: Sprite2D in decals.get_children():
 			var tile: Vector2i = Vector2i(int(remaining.get_meta("tile_x")),int(remaining.get_meta("tile_y")))
-			_check(maxi(absi(tile.x-center.x),absi(tile.y-center.y)) > 3,"live " + kind + " clears decals throughout radius3")
+			_check(maxi(absi(tile.x-center.x),absi(tile.y-center.y)) > (1 if kind == "deadwood" else 3),"live " + kind + " clears decals throughout its radius")
 	decals.free()
 	renderer.free()
 	mock.free()

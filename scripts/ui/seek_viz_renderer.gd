@@ -31,6 +31,7 @@ const LINE_ALPHA := 0.8       # faint goal line — never obscures sprites
 const COLOR_FOOD: Color = Color(0.9, 0.2, 0.2)
 const COLOR_WATER: Color = Color(0.2, 0.5, 1.0)
 const COLOR_SLEEP: Color = Color(0.95, 0.75, 0.2)
+const COLOR_WOOD: Color = Color(0.55, 0.32, 0.16)
 const COLOR_GRAY: Color = Color(0.6, 0.6, 0.6)
 
 # V7 slice 2-5b — carry indicator (Food being hauled). Deliberately DISTINCT
@@ -56,6 +57,7 @@ var _xs: PackedInt32Array = PackedInt32Array()
 var _ys: PackedInt32Array = PackedInt32Array()
 var _states: PackedByteArray = PackedByteArray()
 var _seek_kinds: PackedByteArray = PackedByteArray()
+var _target_kinds: PackedByteArray = PackedByteArray()
 var _target_xs: PackedInt32Array = PackedInt32Array()
 var _target_ys: PackedInt32Array = PackedInt32Array()
 var _carried_foods: PackedInt32Array = PackedInt32Array()  # slice 2-5b (additive)
@@ -87,6 +89,8 @@ func _process(_delta: float) -> void:
 	var ys: Variant = snap_dict.get("ys", null)
 	var states: Variant = snap_dict.get("states", null)
 	var seek_kinds: Variant = snap_dict.get("seek_kinds", null)
+	var target_kinds: Variant = snap_dict.get("target_kinds", null)
+	_target_kinds = target_kinds if target_kinds is PackedByteArray else PackedByteArray()
 	var target_xs: Variant = snap_dict.get("target_xs", null)
 	var target_ys: Variant = snap_dict.get("target_ys", null)
 	if not (xs is PackedInt32Array and ys is PackedInt32Array \
@@ -126,7 +130,7 @@ func _draw() -> void:
 		# B — goal line for resource-Seeking agents that carry a target.
 		if tag == 1 and _target_xs[i] >= 0 and _ids.size() == n and _ids[i] == selected:
 			var target_px: Vector2 = _tile_to_px(_target_xs[i], _target_ys[i])
-			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA), LINE_WIDTH / maxf(zoom, 0.01))
+			draw_line(agent_px, target_px, _kind_color(kind, LINE_ALPHA, int(_target_kinds[i]) if i < _target_kinds.size() else 0), LINE_WIDTH / maxf(zoom, 0.01))
 			_drawn_segment_count += 1
 
 
@@ -136,9 +140,11 @@ func _tile_to_px(tx: int, ty: int) -> Vector2:
 	return Vector2(px, py)
 
 
-func _kind_color(kind: int, a: float) -> Color:
+func _kind_color(kind: int, a: float, target_kind: int = 0) -> Color:
 	var c: Color = COLOR_GRAY
-	if kind == 1:
+	if target_kind == 7:
+		c = COLOR_WOOD
+	elif kind == 1:
 		c = COLOR_FOOD
 	elif kind == 2:
 		c = COLOR_WATER

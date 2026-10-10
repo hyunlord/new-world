@@ -1,0 +1,132 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_a4_01",
+      "candidate_id": "V_a4_01@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x shoulder load reads as sticks, but the hair mask also selects several separated wood texels on the left; the white preview whitens the load beyond the two-texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_02",
+      "candidate_id": "V_a4_02@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The carried sticks are legible, but the mask leaves dark hair patches and includes multiple texels at the right-hand load; the white preview does not isolate whole hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_03",
+      "candidate_id": "V_a4_03@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x carry pose is clear, but blue coverage reaches the left sticks and several right load texels, producing white marks outside the hair beyond tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_04",
+      "candidate_id": "V_a4_04@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The sticks and south-facing carry pose read clearly. Several brown forehead/fringe hair texels remain inside the white-hair area, and the dark lower facial hair remains uncovered.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_05",
+      "candidate_id": "V_a4_05@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing load is legible, but a multi-texel brown fringe and lower long-hair patch remain outside the mask; the white preview retains substantial brown hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_06",
+      "candidate_id": "V_a4_06@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The sticks read at 2x, but the white preview retains a broad brown fringe inside the scalp region and the mask extends onto exposed face/arm areas.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_07",
+      "candidate_id": "V_a4_07@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The 2x load reads as sticks, but multiple separated left-side stick texels are included in the hair mask and become white in the preview, exceeding the non-hair allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_08",
+      "candidate_id": "V_a4_08@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The east-facing carry is recognizable, but the mask covers several left bundle texels, including an isolated outer tip; the white preview whitens wood beyond the allowed two texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_09",
+      "candidate_id": "V_a4_09@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear-view sticks protrude on both sides at 2x. The hair mask also selects multiple left and right bundle/arm texels, producing white non-hair marks beyond tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_10",
+      "candidate_id": "V_a4_10@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Rear-view sticks protrude on both sides at 2x, but the mask includes the left shoulder/load texel and two adjacent right bundle texels, exceeding the two non-hair texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_11",
+      "candidate_id": "V_a4_11@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear carry load is visible on both sides, but one left bundle texel and multiple right bundle texels are recoloured as hair; the white preview exceeds the non-hair tolerance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_12",
+      "candidate_id": "V_a4_12@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The rear bundle reads on both sides, but several separate right stick/hand texels and a left shoulder texel are covered by the mask and turn white.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_13",
+      "candidate_id": "V_a4_13@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The crouched pickup reaches a visible stick at 2x, but the white preview leaves the broad dark beard/lower hair region uncovered, exceeding the hair-edge allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_14",
+      "candidate_id": "V_a4_14@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "The standing south-facing gather frame does not show a clearly identifiable held stick at 2x; the raised dark shape beside the torso reads as an arm/hand mass rather than gathered wood.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_15",
+      "candidate_id": "V_a4_15@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The bent east-facing pickup reaches a visible ground stick, but several brown fringe texels remain within the white-hair scalp region; the preview does not recolour the whole hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_16",
+      "candidate_id": "V_a4_16@1",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "The raised stick is legible, but multiple texels of the stick/hand are selected by the mask and turn white, while brown fringe hair remains uncovered.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

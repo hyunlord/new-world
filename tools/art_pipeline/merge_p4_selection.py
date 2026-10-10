@@ -43,6 +43,7 @@ class RecoveryRequest:
     review_index: Path
     reviews: tuple[Path, ...]
     output: Path
+    baseline_selection_paths: tuple[Path, ...] = ()
 
 
 def choose_lowest(options: dict[str, list[CandidateRecord]],
@@ -107,7 +108,7 @@ def merge(request: RecoveryRequest) -> tuple[InstallPlan, dict]:
         path = root / supplied
         verify_file(path, expected)
         bindings[str(path)] = expected
-    for supplied, expected in json.loads(index_path.read_text()).get('source_sha256', {}).items():
+    for supplied, expected in index.get('source_sha256', {}).items():
         path = root / supplied
         verify_file(path, expected)
         bindings[str(path)] = expected
@@ -133,7 +134,10 @@ def merge(request: RecoveryRequest) -> tuple[InstallPlan, dict]:
     manifest = json.loads(manifest_path.read_text())
     bindings[str(manifest_path)] = digest(manifest_path)
     selections = []
-    for relative in ('docs/art/production3/reprocess/selection.json', 'docs/art/production3/installation_selection.json'):
+    defaults = [Path('docs/art/production3/reprocess/selection.json'), Path('docs/art/production3/installation_selection.json')]
+    recovery = Path('docs/art/production4/recovery/selection_run/selection.json')
+    if (root / recovery).exists(): defaults.insert(0, recovery)
+    for relative in request.baseline_selection_paths or defaults:
         path = root / relative
         selections.append(json.loads(path.read_text()))
         bindings[str(path)] = digest(path)
@@ -219,7 +223,7 @@ def merge(request: RecoveryRequest) -> tuple[InstallPlan, dict]:
             source_ledger = json.loads((root / decision['ledger']).read_text())
             record = next(row for row in source_ledger['candidates'] if row['id'] == decision['candidate_id'])
             for kind, image in (('native', sprite.native), ('sprite', sprite.sprite)):
-                original = load_image(Path(record['images'][kind]))
+                original = load_image(root / record['images'][kind])
                 if image.size != original.size or image.tobytes() != original.tobytes():
                     raise InstallError(f'Current approved pixels changed: {name}')
             source_candidates.append((Target(name, sprite.body, sprite.view, sprite.activity, sprite.frame), guarded_candidate(record)))

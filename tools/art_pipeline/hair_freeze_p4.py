@@ -59,6 +59,8 @@ def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
                 not any(row['candidate_id'] == identity and row['verdict'] == 'ok' for row in review['verdicts'])):
             raise InstallError(f'Selected hair lacks exact fresh approval: {target}')
         sprite = sprites[target]
+        if not sprite.body or sprite.body == 'child':
+            continue
         with Image.open(root / record['images']['sprite']) as opened:
             original = opened.convert('RGBA')
         if original.size != sprite.sprite.size or original.tobytes() != sprite.sprite.tobytes():

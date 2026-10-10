@@ -38,6 +38,11 @@ static func clearings(buildings: Dictionary, sites: Dictionary, food: Dictionary
 		for dy: int in range(-radius,radius+1):
 			for dx: int in range(-radius,radius+1):
 				cleared[center+Vector2i(dx,dy)] = true
+	for i: int in range(mini(fx.size(), mini(fy.size(), kinds.size()))):
+		if kinds[i] == 3:
+			for dy: int in range(-1, 2):
+				for dx: int in range(-1, 2):
+					cleared[Vector2i(fx[i]+dx, fy[i]+dy)] = true
 	return cleared
 
 ## Rank eligible tiles by independent value noise, with stable local variation.

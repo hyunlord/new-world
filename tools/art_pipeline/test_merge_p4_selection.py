@@ -105,6 +105,22 @@ class RecoverySelectionTests(unittest.TestCase):
             review.write_text(json.dumps([{'sprite_id': 'N3_02', 'candidate_id': 'N3_02@1',
                 'verdict': 'ok', 'reason': '', 'observation': 'Recognizable stone',
                 'unfitted_acceptable': None}]))
+            p2_record = dict(record, id='prior_p2', slot_id='N3_03', target_slot='N3_03', cell=3)
+            p2_ledger = root / 'p2_ledger.json'
+            p2_ledger.write_text(json.dumps(dict(ledger, candidates=[p2_record])))
+            p2_review = root / 'p2_review.json'
+            p2_review.write_text(json.dumps({'candidate_fingerprints': {'N3_03': candidate_fingerprint(p2_record)},
+                'verdicts': [{'sprite_id': 'N3_03', 'candidate_id': 'prior_p2', 'verdict': 'ok'}],
+                'prereview_bindings_sha256': {str(manifest): 'historical_pre_install_manifest'}}))
+            p2_selection = root / 'docs/art/production4/recovery/selection_run/selection.json'
+            p2_selection.parent.mkdir(parents=True)
+            p2_decision = dict(candidate_id='prior_p2', disposition='accepted', ledger=str(p2_ledger),
+                ledger_sha256=sha(p2_ledger), verdict=str(p2_review), verdict_sha256=sha(p2_review))
+            p2_selection.write_text(json.dumps(dict(selection, slots={'N3_03': p2_decision})))
+            installed = json.loads(manifest.read_text())
+            installed['assets'].append(dict(installed['assets'][0], sprite_id='N3_03',
+                qa_status='accepted', source='generated:prior_p2', fallback_kind='', candidate_id='prior_p2'))
+            manifest.write_text(json.dumps(installed))
             before = manifest.read_bytes()
             plan, report = merge(RecoveryRequest(root, Path('recovery.json'), Path('index.json'),
                 (Path('review.json'),), Path('output')))
@@ -112,9 +128,15 @@ class RecoverySelectionTests(unittest.TestCase):
             self.assertEqual(by_id['N3_01'].qa_status, 'fallback')
             self.assertEqual(by_id['N3_01'].source, 'generated:old_rejected')
             self.assertEqual(by_id['N3_02'].qa_status, 'accepted')
+            self.assertEqual(by_id['N3_03'].candidate_id, 'prior_p2')
             self.assertEqual(report['selected'], {'N3_02': 'N3_02@1'})
             self.assertEqual(manifest.read_bytes(), before)
             self.assertFalse((root / 'assets/art/production').exists())
+            explicit = RecoveryRequest(root, Path('recovery.json'), Path('index.json'),
+                (Path('review.json'),), Path('explicit_output'),
+                (p2_selection, root / 'docs/art/production3/installation_selection.json'))
+            explicit_plan, _ = merge(explicit)
+            self.assertEqual({sprite.slot_id for sprite in explicit_plan.sprites}, set(by_id))
 
 
 if __name__ == '__main__':

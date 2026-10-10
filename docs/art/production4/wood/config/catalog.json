@@ -1,0 +1,552 @@
+{
+  "schema_version": 1,
+  "source_selection": "docs/art/production2/final_selection.json",
+  "source_selection_sha256": "01bdd4a62ffc76a99927234193874d151562bd497fa708cb3fb569c31a06b368",
+  "checkpoint_attempted_cells": 64,
+  "sheets": [
+    {
+      "id": "V_a4",
+      "body": "adult_a",
+      "derive_missing": false,
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_a4_01",
+          "name": "carry_wood_S_0",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_a4_02",
+          "name": "carry_wood_S_1",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_a4_03",
+          "name": "carry_wood_S_2",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_a4_04",
+          "name": "carry_wood_S_3",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_a4_05",
+          "name": "carry_wood_E_0",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_a4_06",
+          "name": "carry_wood_E_1",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_a4_07",
+          "name": "carry_wood_E_2",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_a4_08",
+          "name": "carry_wood_E_3",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_a4_09",
+          "name": "carry_wood_N_0",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_a4_10",
+          "name": "carry_wood_N_1",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_a4_11",
+          "name": "carry_wood_N_2",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 2
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_a4_12",
+          "name": "carry_wood_N_3",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 3
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_a4_13",
+          "name": "gather_wood_S_0",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_a4_14",
+          "name": "gather_wood_S_1",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_a4_15",
+          "name": "gather_wood_E_0",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_a4_16",
+          "name": "gather_wood_E_1",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 1
+        }
+      ],
+      "reference_candidate": "V_a1_01@1"
+    },
+    {
+      "id": "V_b4",
+      "body": "adult_b",
+      "derive_missing": false,
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_b4_01",
+          "name": "carry_wood_S_0",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_b4_02",
+          "name": "carry_wood_S_1",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_b4_03",
+          "name": "carry_wood_S_2",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_b4_04",
+          "name": "carry_wood_S_3",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_b4_05",
+          "name": "carry_wood_E_0",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_b4_06",
+          "name": "carry_wood_E_1",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_b4_07",
+          "name": "carry_wood_E_2",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_b4_08",
+          "name": "carry_wood_E_3",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_b4_09",
+          "name": "carry_wood_N_0",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_b4_10",
+          "name": "carry_wood_N_1",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_b4_11",
+          "name": "carry_wood_N_2",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 2
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_b4_12",
+          "name": "carry_wood_N_3",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 3
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_b4_13",
+          "name": "gather_wood_S_0",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_b4_14",
+          "name": "gather_wood_S_1",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_b4_15",
+          "name": "gather_wood_E_0",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_b4_16",
+          "name": "gather_wood_E_1",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 1
+        }
+      ],
+      "reference_candidate": "V_b1_01@2"
+    },
+    {
+      "id": "V_c3",
+      "body": "child",
+      "derive_missing": false,
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "V_c3_01",
+          "name": "carry_wood_S_0",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "V_c3_02",
+          "name": "carry_wood_S_1",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 3,
+          "target_slot": "V_c3_03",
+          "name": "carry_wood_S_2",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 2
+        },
+        {
+          "cell": 4,
+          "target_slot": "V_c3_04",
+          "name": "carry_wood_S_3",
+          "activity": "carry_wood",
+          "view": "S",
+          "frame": 3
+        },
+        {
+          "cell": 5,
+          "target_slot": "V_c3_05",
+          "name": "carry_wood_E_0",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "V_c3_06",
+          "name": "carry_wood_E_1",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 1
+        },
+        {
+          "cell": 7,
+          "target_slot": "V_c3_07",
+          "name": "carry_wood_E_2",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 2
+        },
+        {
+          "cell": 8,
+          "target_slot": "V_c3_08",
+          "name": "carry_wood_E_3",
+          "activity": "carry_wood",
+          "view": "E",
+          "frame": 3
+        },
+        {
+          "cell": 9,
+          "target_slot": "V_c3_09",
+          "name": "carry_wood_N_0",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "V_c3_10",
+          "name": "carry_wood_N_1",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 1
+        },
+        {
+          "cell": 11,
+          "target_slot": "V_c3_11",
+          "name": "carry_wood_N_2",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 2
+        },
+        {
+          "cell": 12,
+          "target_slot": "V_c3_12",
+          "name": "carry_wood_N_3",
+          "activity": "carry_wood",
+          "view": "N",
+          "frame": 3
+        },
+        {
+          "cell": 13,
+          "target_slot": "V_c3_13",
+          "name": "gather_wood_S_0",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "V_c3_14",
+          "name": "gather_wood_S_1",
+          "activity": "gather_wood",
+          "view": "S",
+          "frame": 1
+        },
+        {
+          "cell": 15,
+          "target_slot": "V_c3_15",
+          "name": "gather_wood_E_0",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "V_c3_16",
+          "name": "gather_wood_E_1",
+          "activity": "gather_wood",
+          "view": "E",
+          "frame": 1
+        }
+      ],
+      "reference_candidate": "V_c1_01@1"
+    },
+    {
+      "id": "W1",
+      "body": "",
+      "derive_missing": false,
+      "cells": [
+        {
+          "cell": 1,
+          "target_slot": "W1_01",
+          "name": "deadwood_stage_3_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 2,
+          "target_slot": "W1_02",
+          "name": "deadwood_stage_3_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 3,
+          "target_slot": "W1_03",
+          "name": "deadwood_stage_2_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 4,
+          "target_slot": "W1_04",
+          "name": "deadwood_stage_2_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 5,
+          "target_slot": "W1_05",
+          "name": "deadwood_stage_1_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 6,
+          "target_slot": "W1_06",
+          "name": "deadwood_stage_1_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 7,
+          "target_slot": "W1_07",
+          "name": "deadwood_stage_0_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 8,
+          "target_slot": "W1_08",
+          "name": "deadwood_stage_0_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 9,
+          "target_slot": "W1_09",
+          "name": "woodpile_stage_1_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 10,
+          "target_slot": "W1_10",
+          "name": "woodpile_stage_2_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 11,
+          "target_slot": "W1_11",
+          "name": "woodpile_stage_3_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 12,
+          "target_slot": "W1_12",
+          "name": "wood_icon_variant_0",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 13,
+          "target_slot": "W1_13",
+          "name": "woodpile_stage_1_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 14,
+          "target_slot": "W1_14",
+          "name": "woodpile_stage_2_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 15,
+          "target_slot": "W1_15",
+          "name": "woodpile_stage_3_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        },
+        {
+          "cell": 16,
+          "target_slot": "W1_16",
+          "name": "wood_icon_variant_1",
+          "activity": "",
+          "view": "",
+          "frame": 0
+        }
+      ],
+      "reference_candidate": ""
+    }
+  ]
+}

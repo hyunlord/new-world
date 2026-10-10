@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5179,
+    "active_key_count": 5182,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5184,
+    "key_count": 5187,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1294,9 +1294,11 @@
     "HUD_SETTLEMENTS": "정착지",
     "HUD_SPEED_FMT": "속도 %s배",
     "HUD_STOCKPILE_FOOD": "식량",
+    "HUD_STOCKPILE_WOOD": "장작",
     "INSPECTOR_AGENT_FMT": "주민 %d",
     "INSPECTOR_AGE_FMT": "나이 %d일",
     "INSPECTOR_CARRYING_FMT": "식량 %d개 운반 중",
+    "INSPECTOR_CARRYING_WOOD_FMT": "나무 %d개 운반 중",
     "INSPECTOR_POS_FMT": "위치 (%d, %d)",
     "INSPECTOR_STAGE_ADULT": "어른",
     "INSPECTOR_STAGE_CHILD": "아이",
@@ -1311,6 +1313,7 @@
     "INSPECTOR_TARGET_NONE": "없음",
     "INSPECTOR_TARGET_SLEEP": "휴식",
     "INSPECTOR_TARGET_WATER": "물",
+    "INSPECTOR_TARGET_WOOD": "땔감",
     "ITEM_TEMPLATE_AXE": "도끼",
     "ITEM_TEMPLATE_BERRIES": "열매",
     "ITEM_TEMPLATE_COOKED_MEAT": "익힌 고기",

@@ -98,6 +98,7 @@ func _reconcile() -> void:
 	_fingerprint = fingerprint
 	_clearings = LAYOUT.clearings(buildings, sites, food, settlements)
 	var rocks: Dictionary = LAYOUT.rocks(_terrain,_width,_clearings)
+	var forest_supplement: Dictionary = _forest_supplement(food)
 	var seen: Dictionary = {}
 	for y: int in range(_height):
 		for x: int in range(_width):
@@ -109,7 +110,7 @@ func _reconcile() -> void:
 			var jitter: Vector2i = Vector2i((h>>8)%7-3,(h>>12)%5-2)
 			var key: String = "%d,%d" % [x,y]
 			if code == 1:
-				if LAYOUT.forest_tree(x,y):
+				if LAYOUT.forest_tree(x,y) or forest_supplement.has(tile):
 					_place(key+":tree", _tree_id(x,y,h), "direction_14_young_tree", "tree",tile,jitter,seen)
 				elif LAYOUT.roll(x,y,0x19AB) < 0.08:
 					_understory(key,tile,jitter,h,seen)
@@ -132,6 +133,27 @@ func _reconcile() -> void:
 			(_contacts[key] as Sprite2D).queue_free()
 			_sprites.erase(key)
 			_contacts.erase(key)
+
+## New resource clearings preserve the existing forest-density floor on free tiles.
+func _forest_supplement(resources: Dictionary) -> Dictionary:
+	var kinds: Variant = resources.get("kinds")
+	if not kinds is PackedInt32Array or not kinds.has(3):
+		return {}
+	var candidates: Array[Vector2i] = []
+	var existing: int = 0
+	for y: int in range(_height):
+		for x: int in range(_width):
+			var tile := Vector2i(x,y)
+			if _code(x,y) != 1 or _clearings.has(tile):
+				continue
+			var h: int = ((x*73856093) ^ (y*19349663)) & 0x7fffffff
+			if ART.is_suppressed(_tree_id(x,y,h)):
+				continue
+			if LAYOUT.forest_tree(x,y):
+				existing += 1
+			else:
+				candidates.append(tile)
+	return LAYOUT.patches(candidates, maxi(0, ceili(float(_terrain.count(1))*0.25)-existing), 0)
 
 func _understory(key: String, tile: Vector2i, jitter: Vector2i, h: int, seen: Dictionary) -> void:
 	var indices: Array[int] = [9,10,11,12,13,14,15]

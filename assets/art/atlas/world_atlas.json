@@ -8886,10 +8886,142 @@
       "fallback_kind": "",
       "activity_icon": ""
     },
-    "direction_01_campfire": {
+    "W1_06": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
         1475,
+        81,
+        25,
+        18
+      ],
+      "anchor": [
+        12,
+        17
+      ],
+      "class": "W1",
+      "frames": [],
+      "region_rect": [
+        1475,
+        81,
+        25,
+        18
+      ],
+      "source_path": "assets/art/production/W1/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "drawable": true,
+      "source": "generated:W1/06@1:v4:f=0.695652",
+      "qa_status": "accepted",
+      "source_sprite": "",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": ""
+    },
+    "W1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1502,
+        81,
+        26,
+        19
+      ],
+      "anchor": [
+        13,
+        18
+      ],
+      "class": "W1",
+      "frames": [],
+      "region_rect": [
+        1502,
+        81,
+        26,
+        19
+      ],
+      "source_path": "assets/art/production/W1/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "drawable": true,
+      "source": "generated:W1/09@1:v4:f=0.827586",
+      "qa_status": "accepted",
+      "source_sprite": "",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": ""
+    },
+    "W1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1530,
+        81,
+        26,
+        22
+      ],
+      "anchor": [
+        13,
+        21
+      ],
+      "class": "W1",
+      "frames": [],
+      "region_rect": [
+        1530,
+        81,
+        26,
+        22
+      ],
+      "source_path": "assets/art/production/W1/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "drawable": true,
+      "source": "generated:W1/11@1:v4:f=0.625",
+      "qa_status": "accepted",
+      "source_sprite": "",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": ""
+    },
+    "W1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1558,
+        81,
+        26,
+        21
+      ],
+      "anchor": [
+        13,
+        20
+      ],
+      "class": "W1",
+      "frames": [],
+      "region_rect": [
+        1558,
+        81,
+        26,
+        21
+      ],
+      "source_path": "assets/art/production/W1/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "drawable": true,
+      "source": "generated:W1/13@1:v4:f=0.827586",
+      "qa_status": "accepted",
+      "source_sprite": "",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": ""
+    },
+    "direction_01_campfire": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1586,
         81,
         25,
         28
@@ -8901,7 +9033,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1475,
+        1586,
         81,
         25,
         28
@@ -8922,7 +9054,7 @@
     "direction_02_lean_to": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1502,
+        1613,
         81,
         34,
         30
@@ -8934,7 +9066,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1502,
+        1613,
         81,
         34,
         30
@@ -8955,7 +9087,7 @@
     "direction_03_storage_pit": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1538,
+        1649,
         81,
         33,
         23
@@ -8967,7 +9099,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1538,
+        1649,
         81,
         33,
         23
@@ -8988,7 +9120,7 @@
     "direction_04_shelter_frame": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1573,
+        1684,
         81,
         34,
         29
@@ -9000,7 +9132,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1573,
+        1684,
         81,
         34,
         29
@@ -9021,7 +9153,7 @@
     "direction_05_berry_bush_full": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1609,
+        1720,
         81,
         27,
         24
@@ -9033,7 +9165,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1609,
+        1720,
         81,
         27,
         24
@@ -9054,7 +9186,7 @@
     "direction_06_berry_bush_two": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1638,
+        1749,
         81,
         25,
         24
@@ -9066,7 +9198,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1638,
+        1749,
         81,
         25,
         24
@@ -9087,7 +9219,7 @@
     "direction_07_berry_bush_one": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1665,
+        1776,
         81,
         24,
         24
@@ -9099,7 +9231,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1665,
+        1776,
         81,
         24,
         24
@@ -9120,7 +9252,7 @@
     "direction_08_berry_bush_bare": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1691,
+        1802,
         81,
         24,
         24
@@ -9132,7 +9264,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1691,
+        1802,
         81,
         24,
         24
@@ -9153,7 +9285,7 @@
     "direction_09_villager_gatherer": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1717,
+        1828,
         81,
         17,
         30
@@ -9165,7 +9297,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1717,
+        1828,
         81,
         17,
         30
@@ -9186,7 +9318,7 @@
     "direction_10_villager_builder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1736,
+        1847,
         81,
         22,
         30
@@ -9198,7 +9330,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1736,
+        1847,
         81,
         22,
         30
@@ -9219,7 +9351,7 @@
     "direction_11_villager_elder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1760,
+        1871,
         81,
         21,
         30
@@ -9231,7 +9363,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1760,
+        1871,
         81,
         21,
         30
@@ -9252,7 +9384,7 @@
     "direction_12_villager_child": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1783,
+        1894,
         81,
         14,
         23
@@ -9264,7 +9396,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1783,
+        1894,
         81,
         14,
         23
@@ -9285,7 +9417,7 @@
     "direction_13_boulder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1799,
+        1910,
         81,
         26,
         20
@@ -9297,7 +9429,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1799,
+        1910,
         81,
         26,
         20
@@ -9318,7 +9450,7 @@
     "direction_14_young_tree": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1827,
+        1938,
         81,
         26,
         30
@@ -9330,7 +9462,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1827,
+        1938,
         81,
         26,
         30
@@ -9351,7 +9483,7 @@
     "direction_15_reed_tuft": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1855,
+        1966,
         81,
         20,
         24
@@ -9363,7 +9495,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1855,
+        1966,
         81,
         20,
         24
@@ -9384,7 +9516,7 @@
     "direction_16_berry_basket": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1877,
+        1988,
         81,
         19,
         20
@@ -9396,7 +9528,7 @@
       "class": "direction",
       "frames": [],
       "region_rect": [
-        1877,
+        1988,
         81,
         19,
         20

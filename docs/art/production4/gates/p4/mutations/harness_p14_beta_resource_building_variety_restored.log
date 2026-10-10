@@ -1,0 +1,30 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running tests/harness_p14_beta_resource_building_variety.rs (rust/target/debug/deps/harness_p14_beta_resource_building_variety-0ee03251737b99b9)
+
+running 22 tests
+test harness_p14_beta_a10_water_modulate_branch_present ... ok
+test harness_p14_beta_a13_z_village_fixture_equals_five ... ok
+test harness_p14_beta_a11_village_fixture_paths_has_exactly_four_literals ... ok
+test harness_p14_beta_a12_village_fixture_positions_match_diamond_layout ... ok
+test harness_p14_beta_a15_phase_13_beta_resource_constants_preserved ... ok
+test harness_p14_beta_a14_village_fixture_placement_loop_present ... ok
+test harness_p14_beta_a17_phase_12_construction_constants_preserved ... ok
+test harness_p14_beta_a18_phase_12_gamma_furniture_constants_preserved ... ok
+test harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved ... ok
+test harness_p14_beta_a1_resource_type_paths_array_declared ... ok
+test harness_p14_beta_a22_no_rust_crate_modifications ... ok
+test harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries ... ok
+test harness_p14_beta_a3_resource_type_paths_index_0_references_legacy_constant ... ok
+test harness_p14_beta_a4_resource_type_paths_index_1_wood_literal ... ok
+test harness_p14_beta_a5_resource_type_paths_index_2_stone_literal ... ok
+test harness_p14_beta_a19_phase_14_alpha_agent_renderer_constants_preserved ... ok
+test harness_p14_beta_a6_resource_type_paths_index_3_water_literal ... ok
+test harness_p14_beta_a7_resource_type_paths_index_4_food_literal ... ok
+test harness_p14_beta_a8_resource_water_tint_constant_value ... ok
+test harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_iterator ... ok
+test harness_p14_beta_a20_new_resource_sprite_assets_exist_on_disk ... ok
+test harness_p14_beta_a21_new_village_fixture_assets_exist_on_disk ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

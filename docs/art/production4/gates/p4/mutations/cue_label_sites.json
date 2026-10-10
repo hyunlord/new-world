@@ -1,0 +1,42 @@
+[
+  {
+    "path": "rust/crates/sim-test/tests/harness_p13_gamma_interaction_cues.rs",
+    "test": "harness_p13_gamma_a6_recall_cue_scale_boost_preserved",
+    "needles": [
+      "var agent_id: int = int(agent_ids[i])",
+      "draw_agents.append({\"id\": agent_id,",
+      "var agent_id: int = int(row[\"id\"])",
+      "_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"
+    ]
+  },
+  {
+    "path": "rust/crates/sim-test/tests/harness_p13_gamma_interaction_cues.rs",
+    "test": "harness_p13_gamma_a7_combat_cue_scale_boost_preserved",
+    "needles": [
+      "var agent_id: int = int(agent_ids[i])",
+      "draw_agents.append({\"id\": agent_id,",
+      "var agent_id: int = int(row[\"id\"])",
+      "_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"
+    ]
+  },
+  {
+    "path": "rust/crates/sim-test/tests/harness_p13_gamma_interaction_cues.rs",
+    "test": "harness_p13_gamma_a8_boost_cascade_uses_max_composition",
+    "needles": [
+      "var agent_id: int = int(agent_ids[i])",
+      "draw_agents.append({\"id\": agent_id,",
+      "var agent_id: int = int(row[\"id\"])",
+      "_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"
+    ]
+  },
+  {
+    "path": "rust/crates/sim-test/tests/harness_p14_alpha_agent_sprite_overhaul.rs",
+    "test": "harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved",
+    "needles": [
+      "var agent_id: int = int(agent_ids[i])",
+      "draw_agents.append({\"id\": agent_id,",
+      "var agent_id: int = int(row[\"id\"])",
+      "_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"
+    ]
+  }
+]

@@ -451,7 +451,9 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
     assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 

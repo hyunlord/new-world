@@ -14063,6 +14063,182 @@
       ]
     },
     {
+      "sprite_id": "W1_06",
+      "path": "assets/art/production/W1/06.png",
+      "native_path": "assets/art/production/W1/06_native.png",
+      "source": "generated:W1/06@1:v4:f=0.695652",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "W1_06@1",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "W1",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        23,
+        16
+      ],
+      "canvas_size": [
+        25,
+        18
+      ],
+      "anchor": [
+        12,
+        17
+      ]
+    },
+    {
+      "path": "assets/art/production/W1/06_native.png",
+      "source": "generated:W1/06@1:v4:f=0.695652",
+      "qa_status": "accepted",
+      "native_size": [
+        23,
+        16
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "W1_09",
+      "path": "assets/art/production/W1/09.png",
+      "native_path": "assets/art/production/W1/09_native.png",
+      "source": "generated:W1/09@1:v4:f=0.827586",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "W1_09@1",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "W1",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        24,
+        17
+      ],
+      "canvas_size": [
+        26,
+        19
+      ],
+      "anchor": [
+        13,
+        18
+      ]
+    },
+    {
+      "path": "assets/art/production/W1/09_native.png",
+      "source": "generated:W1/09@1:v4:f=0.827586",
+      "qa_status": "accepted",
+      "native_size": [
+        24,
+        17
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "W1_11",
+      "path": "assets/art/production/W1/11.png",
+      "native_path": "assets/art/production/W1/11_native.png",
+      "source": "generated:W1/11@1:v4:f=0.625",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "W1_11@1",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "W1",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        24,
+        20
+      ],
+      "canvas_size": [
+        26,
+        22
+      ],
+      "anchor": [
+        13,
+        21
+      ]
+    },
+    {
+      "path": "assets/art/production/W1/11_native.png",
+      "source": "generated:W1/11@1:v4:f=0.625",
+      "qa_status": "accepted",
+      "native_size": [
+        24,
+        20
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "W1_13",
+      "path": "assets/art/production/W1/13.png",
+      "native_path": "assets/art/production/W1/13_native.png",
+      "source": "generated:W1/13@1:v4:f=0.827586",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "W1_13@1",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "W1",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        24,
+        19
+      ],
+      "canvas_size": [
+        26,
+        21
+      ],
+      "anchor": [
+        13,
+        20
+      ]
+    },
+    {
+      "path": "assets/art/production/W1/13_native.png",
+      "source": "generated:W1/13@1:v4:f=0.827586",
+      "qa_status": "accepted",
+      "native_size": [
+        24,
+        19
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
       "path": "assets/art/atlas/world_0.png",
       "source": "procedural:tools/art_pipeline/pack_atlas.py",
       "native_size": [
@@ -14223,12 +14399,12 @@
       "reason": "no_review_approved_candidate"
     }
   },
-  "installation_selection_sha256": "73db8d7240598601844bd95a2202591e07368172dbbdd47fc05f1773d50556c3",
+  "installation_selection_sha256": "584cea7542da8b32ae41d67d68e60b9c713b18a53bb980ad312df4b85939b99e",
   "audits": {
     "manifest_v4": {
       "schema_version": 1,
-      "png_count": 612,
-      "registered_png_count": 612,
+      "png_count": 620,
+      "registered_png_count": 620,
       "unregistered_pngs": [],
       "missing_pngs": [],
       "duplicate_paths": {},
@@ -16659,6 +16835,38 @@
         "assets/art/production/V_c2/16_native.png": [
           11,
           22
+        ],
+        "assets/art/production/W1/06.png": [
+          25,
+          18
+        ],
+        "assets/art/production/W1/06_native.png": [
+          23,
+          16
+        ],
+        "assets/art/production/W1/09.png": [
+          26,
+          19
+        ],
+        "assets/art/production/W1/09_native.png": [
+          24,
+          17
+        ],
+        "assets/art/production/W1/11.png": [
+          26,
+          22
+        ],
+        "assets/art/production/W1/11_native.png": [
+          24,
+          20
+        ],
+        "assets/art/production/W1/13.png": [
+          26,
+          21
+        ],
+        "assets/art/production/W1/13_native.png": [
+          24,
+          19
         ],
         "assets/art/terrain/camp_earth.png": [
           128,

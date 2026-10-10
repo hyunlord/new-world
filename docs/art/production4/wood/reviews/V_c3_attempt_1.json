@@ -1,0 +1,132 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_c3_01",
+      "candidate_id": "V_c3_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry shows a horizontal bundle with separate brown sticks and pale ends at 2x; child identity and cream clothing match.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_02",
+      "candidate_id": "V_c3_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front stepping pose visibly supports a bundle across the shoulders; stick shafts and ends remain readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_03",
+      "candidate_id": "V_c3_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry retains a compact but recognizable projecting stick bundle at 2x, with matching hair, tan skin and cream tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_04",
+      "candidate_id": "V_c3_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry has visible parallel wood pieces beside the head at 2x; pose and child proportions are coherent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_05",
+      "candidate_id": "V_c3_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing carry shows the bundle projecting behind the shoulder, with wood ends and short parallel shafts readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_06",
+      "candidate_id": "V_c3_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing child supports a horizontal wood bundle with visible brown shafts and pale ends at 2x; identity remains consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_07",
+      "candidate_id": "V_c3_07@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "At 2x the shoulder load reads as rounded brown lobes beside the head; separate sticks or a bundled-stick silhouette are not legible.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_08",
+      "candidate_id": "V_c3_08@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "At 2x the carried load merges into compact brown blocks around the head, without a readable stick bundle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_09",
+      "candidate_id": "V_c3_09@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear view is clear, but at 2x the load appears as two brown side lumps rather than recognizable bundled sticks.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_10",
+      "candidate_id": "V_c3_10@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear carry forms a broad dark shoulder bar with blocky side ends at 2x; the load does not clearly read as sticks.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_11",
+      "candidate_id": "V_c3_11@1",
+      "verdict": "reject",
+      "reason": "wrong_object",
+      "observation": "Rear-facing child is coherent, but the small brown side blocks at 2x do not resolve into a stick bundle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_12",
+      "candidate_id": "V_c3_12@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear carry clearly exposes parallel horizontal sticks beyond both shoulders at 2x; rear view and child identity are consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_13",
+      "candidate_id": "V_c3_13@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Crouched front gather pose reaches to a visible short horizontal stick at ground level; pickup action remains readable at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_14",
+      "candidate_id": "V_c3_14@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front gather recovery holds a visible brown stick beside the shoulder at 2x; matching tan skin, brown hair and cream clothing.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_15",
+      "candidate_id": "V_c3_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing crouch bends and reaches down to an elongated ground stick; pickup action and anatomy read clearly at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c3_16",
+      "candidate_id": "V_c3_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing upright gather frame visibly holds an angled stick in the raised hand at 2x; identity and colour families match.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

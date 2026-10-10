@@ -216,7 +216,10 @@ fn harness_p13_gamma_a6_recall_cue_scale_boost_preserved() {
         .filter(|line| !line.trim_start().starts_with('#'))
         .collect::<Vec<_>>()
         .join("\n");
-    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))"));
+    assert!(src.contains("var agent_id: int = int(agent_ids[i])"));
+    assert!(src.contains("draw_agents.append({\"id\": agent_id,"));
+    assert!(src.contains("var agent_id: int = int(row[\"id\"])"));
+    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"));
     assert!(src.contains("cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT"));
     assert!(src.contains("cue.position = feet"));
     assert!(src.contains("cue.width = 1.0"));
@@ -233,7 +236,10 @@ fn harness_p13_gamma_a7_combat_cue_scale_boost_preserved() {
         .filter(|line| !line.trim_start().starts_with('#'))
         .collect::<Vec<_>>()
         .join("\n");
-    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))"));
+    assert!(src.contains("var agent_id: int = int(agent_ids[i])"));
+    assert!(src.contains("draw_agents.append({\"id\": agent_id,"));
+    assert!(src.contains("var agent_id: int = int(row[\"id\"])"));
+    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"));
     assert!(src.contains("cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT"));
     assert!(src.contains("cue.position = feet"));
     assert!(src.contains("cue.width = 1.0"));
@@ -250,7 +256,10 @@ fn harness_p13_gamma_a8_boost_cascade_uses_max_composition() {
         .filter(|line| !line.trim_start().starts_with('#'))
         .collect::<Vec<_>>()
         .join("\n");
-    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))"));
+    assert!(src.contains("var agent_id: int = int(agent_ids[i])"));
+    assert!(src.contains("draw_agents.append({\"id\": agent_id,"));
+    assert!(src.contains("var agent_id: int = int(row[\"id\"])"));
+    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"));
     assert!(src.contains("cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT"));
     assert!(src.contains("cue.position = feet"));
     assert!(src.contains("cue.width = 1.0"));

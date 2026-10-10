@@ -41,6 +41,10 @@ func run() -> void:
 		for offset: Vector2i in [Vector2i(3,3), Vector2i(-3,-3), Vector2i.ZERO]:
 			check(bool(renderer.call("_tile_context", Vector2i(10,10)+offset, context)["near_camp"]), "Chebyshev3 included for " + source)
 		check(not bool(renderer.call("_tile_context", Vector2i(14,10), context)["near_camp"]), "Chebyshev4 excluded for " + source)
+		check(not bool(renderer.call("_tile_context", Vector2i(10,10), context)["wood"]), "legacy context without wood defaults false")
+		context["wood"] = {Vector2i(10,10): true}
+		check(bool(renderer.call("_tile_context", Vector2i(10,10), context)["wood"]), "deadwood tile included when optional context present")
+		check(not bool(renderer.call("_tile_context", Vector2i(11,10), context)["wood"]), "deadwood context applies only to exact tile")
 	renderer.free()
 	check(Activity.resolve(0, 0, true, false, 0.0, {"near_hearth": true}, 18.0) == "idle", "semantic activity stays idle")
 	print("IDLE CAMP %s: stages, day hash, hour and radius boundaries, semantic idle" % ("PASS" if failures == 0 else "FAIL"))

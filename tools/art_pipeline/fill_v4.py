@@ -108,7 +108,7 @@ def process(root: Path, catalog: dict, sheet_id: str, raw: Path, attempt: int, o
         try:
             with Image.open(record['images']['raw']) as crop:
                 fit=fit_cell_v4(crop,palette,decision.factor,measurement=measurements[record['id']],
-                    icon_canvas=record['sheet']=='U1',icon_size=target_size(decision.frame,scale)[0])
+                    icon_canvas=(record['sheet']=='U1' or record['sheet']=='W1' and record['cell'] in (12,16)),icon_size=target_size(decision.frame,scale)[0])
             folder=Path(record['images']['raw']).parent;save_image(fit.native,folder/'native.png');save_image(fit.sprite,folder/'sprite.png')
             record['images'].update(native=str(folder/'native.png'),sprite=str(folder/'sprite.png'))
             if not np.isfinite(fit.metrics['mean_delta_e']):raise ValueError('no_common_opaque_fidelity')
@@ -118,7 +118,7 @@ def process(root: Path, catalog: dict, sheet_id: str, raw: Path, attempt: int, o
             record['review_status']='pending' if report.passed else 'ineligible'
         except (ValueError,IndexError) as error:
             record['conversion_error']=f'{type(error).__name__}: {error}'
-            if record['sheet']=='U1' and 'Icon factor' in str(error):
+            if (record['sheet']=='U1' or record['sheet']=='W1' and record['cell'] in (12,16)) and 'Icon factor' in str(error):
                 with Image.open(record['images']['raw']) as crop:
                     prototype=fit_cell_v4(crop,palette,decision.factor,measurement=measurements[record['id']])
                 folder=Path(record['images']['raw']).parent
@@ -131,7 +131,7 @@ def process(root: Path, catalog: dict, sheet_id: str, raw: Path, attempt: int, o
         elif record['guards']['passed']:selected[record['slot_id']]=record['id']
     for (view,activity),original in actor_groups.items():
         passing=[r for r in original if r['guards']['passed']];completed=list(passing)
-        if passing:
+        if passing and sheet.get('derive_missing', True):
             for missing in original:
                 if not missing['guards']['passed']:
                     derived=_derive(missing,passing,cache,palette,scale);records.append(derived)

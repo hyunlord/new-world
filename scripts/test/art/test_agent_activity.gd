@@ -12,6 +12,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	_test_wood()
 	_test_frame_lookup()
 	_test_carry_other_views()
 	var shelter: Dictionary = {"shelter": true}
@@ -156,3 +157,48 @@ func _test_carry_other_views() -> void:
 		choice = Activity.choose_frame(groups,"adult_a","carry","S",0.0,0.0)
 		_check(choice.get("sprite_id","") == "real_carry","missing carry group borrows any real view before idle")
 		_check(not Activity.show_activity_icon(choice,4.0))
+
+func _test_wood() -> void:
+	for legacy: Dictionary in [{}, {"target_kinds": [7], "carried_woods": [10]}, {"target_kinds": PackedByteArray(), "carried_woods": PackedInt32Array()}]:
+		_check(Activity.snapshot_target(legacy, 0) == -1)
+		_check(Activity.snapshot_wood(legacy, 0) == 0)
+	var typed: Dictionary = {"target_kinds": PackedByteArray([7]), "carried_woods": PackedInt32Array([10])}
+	_check(Activity.snapshot_target(typed, 0) == 7 and Activity.snapshot_wood(typed, 0) == 10)
+	_check(Activity.snapshot_target(typed, 1) == -1 and Activity.snapshot_wood(typed, 1) == 0)
+	_check(Activity.resolve(3, 7, true, false, 0.0, {}, 12.0) == "gather_wood")
+	_check(Activity.resolve(3, 0, false, false, 0.0, {"wood": true, "food": true}, 12.0) == "gather_wood")
+	_check(Activity.resolve(3, 6, true, false, 0.0, {"wood": true}, 12.0) == "gather")
+	_check(Activity.resolve(1, 0, false, true, 10.0, {}, 12.0, 2) == "carry_wood")
+	_check(Activity.resolve(1, 0, false, true, 10.0, {}, 12.0, 0) == "carry")
+	_check(Activity.wood_icon({}) == "S2_15")
+	_check(Activity.wood_icon({"W1_12": {"qa_status": "rejected"}, "W1_16": {"qa_status": "accepted"}}) == "W1_16")
+	_check(Activity.wood_icon({"W1_12": {"qa_status": "accepted"}, "W1_16": {"qa_status": "accepted"}}) == "W1_12")
+	_check(Activity.wood_icon({"W1_16": {"qa_status": "accepted", "drawable": false}}) == "S2_15")
+	_check(Activity.wood_icon({"W1_12": {"qa_status": "provisional"}}) == "S2_15")
+	_check(Activity.wood_icon({"W1_12": {"qa_status": "accepted"}}) == "W1_12")
+	_check(Activity.wood_icon({"W1_12": {"qa_status": "accepted", "drawable": false}}) == "S2_15")
+	var entries: Dictionary = {
+		"own": {"body": "adult_a", "activity": "carry_wood", "view": "N", "qa_status": "accepted"},
+		"south": {"body": "adult_a", "activity": "carry_wood", "view": "S", "qa_status": "accepted"},
+		"walk": {"body": "adult_a", "activity": "walk", "view": "S", "qa_status": "accepted"},
+		"idle": {"body": "adult_a", "activity": "idle", "view": "S", "qa_status": "accepted"},
+		"crouch": {"body": "adult_a", "activity": "crouch", "view": "S", "qa_status": "accepted"},
+		"bush": {"body": "adult_a", "activity": "gather_wood", "view": "S", "qa_status": "accepted", "contains_bush": true},
+		"basket": {"body": "adult_a", "activity": "gather_wood", "view": "S", "qa_status": "accepted", "contains_basket": true},
+	}
+	var groups: Dictionary = Activity.build_frame_groups(entries)
+	_check(Activity.choose_frame(groups, "adult_a", "carry_wood", "N", 0.0, 0.0)["sprite_id"] == "own")
+	_check(Activity.choose_frame(groups, "adult_a", "carry_wood", "E", 0.0, 0.0)["sprite_id"] == "south")
+	groups.erase("adult_a/carry_wood/S")
+	var choice: Dictionary = Activity.choose_frame(groups, "adult_a", "carry_wood", "E", 0.0, 0.0)
+	_check(choice["sprite_id"] == "walk")
+	_check(Activity.show_activity_icon(choice, 2.0))
+	_check(not Activity.show_activity_icon(choice, 1.0))
+	choice = Activity.choose_frame(groups, "adult_a", "gather_wood", "N", 0.0, 0.0)
+	_check(choice["sprite_id"] == "crouch", "wood never uses bush or basket")
+	groups["adult_a/crouch/E"] = groups["adult_a/crouch/S"]
+	groups.erase("adult_a/crouch/S")
+	_check(Activity.choose_frame(groups, "adult_a", "gather_wood", "N", 0.0, 0.0)["sprite_id"] == "crouch", "any crouch view precedes idle")
+	groups.erase("adult_a/crouch/E")
+	choice = Activity.choose_frame(groups, "adult_a", "gather_wood", "E", 0.0, 0.0)
+	_check(choice["sprite_id"] == "idle" and Activity.show_activity_icon(choice, 2.0))

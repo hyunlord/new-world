@@ -67,6 +67,14 @@ def definitions() -> dict[str, list[CellSpec]]:
             if sheet == 'F2': size = (16,12)
             cells.append(CellSpec(name,size))
         sheets[sheet] = cells
+    wood_poses = [('S','carry_wood',4),('E','carry_wood',4),('N','carry_wood',4),
+                  ('S','gather_wood',2),('E','gather_wood',2)]
+    for sheet in ('V_a4','V_b4','V_c3'):
+        sheets[sheet] = _poses(wood_poses, (17,21) if sheet == 'V_c3' else (22,28))
+    sheets['W1'] = [CellSpec(f'deadwood_stage_{3-i//2}_variant_{i%2}', (24,16)) for i in range(8)]
+    for variant in range(2):
+        sheets['W1'].extend(CellSpec(f'woodpile_stage_{stage}_variant_{variant}', (24,20)) for stage in (1,2,3))
+        sheets['W1'].append(CellSpec(f'wood_icon_variant_{variant}', (16,16)))
     return sheets
 
 SHEETS = definitions()

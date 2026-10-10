@@ -4,6 +4,7 @@ const TILE_SIZE: int = 16
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const RECONCILE_FRAMES: int = 30
 const STOCKPILE_FOOD_KEY: String = "HUD_STOCKPILE_FOOD"
+const WOOD = preload("res://scripts/ui/wood_visuals.gd")
 const HASH = preload("res://scripts/ui/art_hash.gd")
 const ART = preload("res://scripts/ui/art_sprite_library.gd")
 const BUILDING_IDS: Array[String] = [
@@ -19,6 +20,7 @@ var _camera: Camera2D
 var _buildings: Dictionary = {}
 var _sites: Dictionary = {}
 var _bushes: Dictionary = {}
+var _deadwood: Dictionary = {}
 var _labels: Dictionary = {}
 var _label_anchors: Dictionary = {}
 var _objects: Node2D
@@ -58,6 +60,7 @@ func refresh_snapshot() -> void:
 	_update_buildings()
 	_update_construction_sites()
 	_update_bushes()
+	_update_deadwood()
 	_update_stockpiles()
 	_update_camp_props()
 	_update_labels()
@@ -117,7 +120,7 @@ func _update_buildings() -> void:
 	for i: int in range(ids.size()):
 		var kind: int = kinds[i]
 		var sprite: Sprite2D = _sprite_for(_buildings, ids[i])
-		var desired: String = "S1_%02d" % (11 + posmod(HASH.mix(int(ids[i])), 3)) if kind == 1 else ("S1_08" if kind == 2 else hearth_frame(_hour(), _elapsed))
+		var desired: String = "S1_%02d" % (11 + posmod(HASH.mix(int(ids[i])), 3)) if kind == 1 else ("S1_08" if kind == 2 else WOOD.hearth_frame(WOOD.settlement(_world_sim.get_settlement_snapshot(), Vector2i(xs[i], ys[i])), _hour(), _elapsed))
 		_configure(sprite, desired, "building", ids[i], xs[i], ys[i])
 		sprite.set_meta("building_kind", kind)
 		seen[ids[i]] = true
@@ -161,14 +164,44 @@ func _update_bushes() -> void:
 		seen[id] = true
 	_reap(_bushes, seen)
 
-func _food_totals_by_stockpile(snapshot: Dictionary) -> Dictionary:
+func _update_deadwood() -> void:
+	var snapshot: Dictionary = _world_sim.get_resource_snapshot()
+	var seen: Dictionary = {}
+	var valid: bool = true
+	for key: String in ["xs", "ys", "kinds", "amounts", "maxes"]:
+		valid = valid and snapshot.get(key) is PackedInt32Array
+	if valid:
+		var xs: PackedInt32Array = snapshot["xs"]
+		var ys: PackedInt32Array = snapshot["ys"]
+		var kinds: PackedInt32Array = snapshot["kinds"]
+		var amounts: PackedInt32Array = snapshot["amounts"]
+		var maxes: PackedInt32Array = snapshot["maxes"]
+		for i: int in range(mini(xs.size(), mini(ys.size(), mini(kinds.size(), mini(amounts.size(), maxes.size()))))):
+			if kinds[i] != 3:
+				continue
+			var id: int = (xs[i] << 32) | ys[i]
+			var stage: int = WOOD.deadwood_stage(amounts[i], maxes[i])
+			var sprite: Sprite2D = _sprite_for(_deadwood, id)
+			var frame: String = WOOD.deadwood_frame(stage)
+			_configure(sprite, frame, "deadwood", id, xs[i], ys[i])
+			sprite.modulate.a = 0.35 if stage == 0 and frame == "S2_15" else 1.0
+			sprite.set_meta("deadwood_stage", stage)
+			sprite.set_meta("resource_amount", amounts[i])
+			sprite.set_meta("resource_max", maxes[i])
+			var shadow: Sprite2D = _object_shadows.get(sprite.get_instance_id()) as Sprite2D
+			if shadow != null:
+				shadow.modulate.a = sprite.modulate.a * 0.4
+			seen[id] = true
+	_reap(_deadwood, seen)
+
+func _food_totals_by_stockpile(snapshot: Dictionary, column: String = "food_stocks") -> Dictionary:
 	var xs: PackedInt32Array = snapshot.get("formation_xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("formation_ys", PackedInt32Array())
-	var foods: PackedInt32Array = snapshot.get("food_stocks", PackedInt32Array())
+	var foods: PackedInt32Array = snapshot.get(column, PackedInt32Array()) if snapshot.get(column) is PackedInt32Array else PackedInt32Array()
 	var totals: Dictionary = {}
 	if _stockpile_positions.is_empty():
 		return totals
-	for i: int in range(foods.size()):
+	for i: int in range(mini(foods.size(), mini(xs.size(), ys.size()))):
 		# Building-id snapshot order keeps equal-distance choices stable.
 		var nearest: Vector2i = _stockpile_positions[0]
 		var best_distance: int = maxi(absi(nearest.x - xs[i]), absi(nearest.y - ys[i]))
@@ -182,7 +215,9 @@ func _food_totals_by_stockpile(snapshot: Dictionary) -> Dictionary:
 	return totals
 
 func _update_stockpiles() -> void:
-	var totals: Dictionary = _food_totals_by_stockpile(_world_sim.get_settlement_snapshot())
+	var settlement_snapshot: Dictionary = _world_sim.get_settlement_snapshot()
+	var totals: Dictionary = _food_totals_by_stockpile(settlement_snapshot)
+	var woods: Dictionary = _food_totals_by_stockpile(settlement_snapshot, "wood_stocks")
 	var seen: Dictionary = {}
 	_label_anchors.clear()
 	for nearest: Vector2i in totals:
@@ -201,6 +236,10 @@ func _update_stockpiles() -> void:
 			add_child(label)
 			_labels[id] = label
 		label.text = (str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % int(totals[nearest])) if _locale != null else str(int(totals[nearest]))
+		if woods.has(nearest):
+			label.text += " · " + (str(_locale.ltr("HUD_STOCKPILE_WOOD")) if _locale != null else "") + " %d" % int(woods[nearest])
+		label.set_meta("food_stock", int(totals[nearest]))
+		label.set_meta("wood_stock", int(woods.get(nearest, -1)))
 		_label_anchors[id] = _tile_center(nearest.x, nearest.y) + Vector2(0, -18)
 		seen[id] = true
 	_reap(_labels, seen)
@@ -222,7 +261,7 @@ static func construction_stage(progress: int, required: int) -> int:
 	return clampi(int(floor(4.0 * float(progress) / float(maxi(required, 1)))), 0, 3)
 
 static func hearth_frame(hour: float, elapsed: float) -> String:
-	return "S1_%02d" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else "S1_%02d" % (2 + int(elapsed * 8.0) % 4)
+	return WOOD.hearth_frame({}, hour, elapsed)
 
 static func storage_frame(food: int) -> String:
 	return "S1_08" if food <= 0 else ("S1_09" if food < 40 else "S1_10")
@@ -245,9 +284,15 @@ func _available(sprite_id: String) -> String:
 func _animate_hearths() -> void:
 	if _world_sim == null:
 		return
+	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
 	for sprite: Sprite2D in _buildings.values():
 		if int(sprite.get_meta("building_kind", -1)) == 0:
-			ART.apply(sprite, _available(hearth_frame(_hour(), _elapsed)))
+			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
+			var state: Dictionary = WOOD.settlement(settlements, tile)
+			ART.apply(sprite, _available(WOOD.hearth_frame(state, _hour(), _elapsed)))
+			sprite.set_meta("fire_lit", state.get("fire_lit", null))
+			sprite.set_meta("wood_stock", state.get("wood_stock", -1))
+			sprite.set_meta("settlement_id", state.get("settlement_id", -1))
 
 func _prop(id: int, art_id: String, tile: Vector2i, offset: Vector2, seen: Dictionary, occupied: Dictionary = {}) -> void:
 	var entry: Dictionary = ART.frame(art_id)
@@ -281,7 +326,13 @@ func _update_camp_props() -> void:
 		var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 		var kind: int = int(sprite.get_meta("building_kind"))
 		if kind == 0:
-			_place_adjacent(id+1, "S1_14", tile, Vector2i(-1,0), occupied, seen)
+			var state: Dictionary = WOOD.settlement(_world_sim.get_settlement_snapshot(), tile)
+			var stage: int = WOOD.pile_stage(int(state["wood_stock"])) if state.has("wood_stock") else -1
+			if stage != 0:
+				_place_adjacent(id+1, WOOD.pile_frame(stage) if stage > 0 else "S1_14", tile, Vector2i(-1,0), occupied, seen)
+				if seen.has(id+1):
+					(_props[id+1] as Sprite2D).set_meta("woodpile_stage", stage)
+			sprite.set_meta("woodpile_stage", stage)
 			var offsets: Array[Vector2i] = [Vector2i(0,1), Vector2i(1,0), Vector2i(0,-1), Vector2i(-1,1)]
 			for j: int in range(mini(shelters.size(),4)):
 				_place_adjacent(id+2+j, "S1_15", tile, offsets[j], occupied, seen)

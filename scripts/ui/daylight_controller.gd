@@ -1,5 +1,6 @@
 extends Node2D
 
+const WOOD = preload("res://scripts/ui/wood_visuals.gd")
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const TILE_SIZE: int = 16
 const NIGHT_TINT: Color = Color(0.42, 0.48, 0.68)
@@ -50,9 +51,13 @@ func _update_daylight() -> void:
 			break
 	_modulate.color = tint
 	var night_factor: float = clampf((1.0 - tint.r) / (1.0 - NIGHT_TINT.r), 0.0, 1.0)
+	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
 	for id: int in _glows.keys():
 		var glow: Sprite2D = _glows[id] as Sprite2D
-		glow.modulate = Color(1.0, 0.6, 0.25, 0.55 * night_factor * (1.0 + 0.05 * sin(_elapsed * PI)))
+		var state: Dictionary = WOOD.settlement(settlements, glow.get_meta("tile", Vector2i.ZERO))
+		glow.modulate = Color(1.0, 0.6, 0.25, WOOD.glow_alpha(state, night_factor, _elapsed))
+		glow.set_meta("fire_lit", state.get("fire_lit", null))
+		glow.set_meta("glow_alpha", glow.modulate.a)
 
 func _reconcile_hearths() -> void:
 	var snapshot: Dictionary = _world_sim.get_building_snapshot()
@@ -71,6 +76,9 @@ func _reconcile_hearths() -> void:
 			glow.material = _glow_material
 			add_child(glow)
 			_glows[ids[i]] = glow
+		glow.set_meta("tile", Vector2i(xs[i], ys[i]))
+		glow.set_meta("art_kind", "hearth_glow")
+		glow.set_meta("art_id", ids[i])
 		glow.position = SPRITE_ORIGIN + Vector2(xs[i], ys[i]) * TILE_SIZE + Vector2.ONE * (TILE_SIZE / 2.0)
 		seen[ids[i]] = true
 	for id: int in _glows.keys():

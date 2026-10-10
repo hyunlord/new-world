@@ -413,7 +413,14 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
+    // Art Pass 4: authoritative fire state delegates to a helper with legacy clock fallback.
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    let wood = include_str!("../../../../scripts/ui/wood_visuals.gd");
+    assert!(wood.contains("if not state.has(\"fire_lit\"):\n\t\treturn \"S1_%02d\" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
+    assert!(wood.contains("if bool(state[\"fire_lit\"]):\n\t\treturn \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
+    assert!(wood.contains("return \"S1_01\" if int(state.get(\"wood_stock\", 0)) > 0 else \"S1_16\""));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
     assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 

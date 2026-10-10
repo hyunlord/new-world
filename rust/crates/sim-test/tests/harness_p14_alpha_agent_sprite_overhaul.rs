@@ -430,7 +430,10 @@ fn harness_p14_alpha_a14_recall_and_combat_cue_constants_preserved() {
         .filter(|line| !line.trim_start().starts_with('#'))
         .collect::<Vec<_>>()
         .join("\n");
-    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))"));
+    assert!(src.contains("var agent_id: int = int(agent_ids[i])"));
+    assert!(src.contains("draw_agents.append({\"id\": agent_id,"));
+    assert!(src.contains("var agent_id: int = int(row[\"id\"])"));
+    assert!(src.contains("_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))"));
     assert!(src.contains("cue.default_color = COMBAT_CUE_TINT if combating else RECALL_CUE_TINT"));
     assert!(src.contains("cue.position = feet"));
     assert!(src.contains("cue.width = 1.0"));
@@ -475,7 +478,9 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
 fn harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("hearth_frame(_hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
+    assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
     assert!(src.contains("_configure(sprite, desired, \"building\", ids[i], xs[i], ys[i])"));
 }

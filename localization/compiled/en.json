@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5179,
+    "active_key_count": 5182,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5184,
+    "key_count": 5187,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1294,9 +1294,11 @@
     "HUD_SETTLEMENTS": "Settlements",
     "HUD_SPEED_FMT": "Speed %s×",
     "HUD_STOCKPILE_FOOD": "Food",
+    "HUD_STOCKPILE_WOOD": "Firewood",
     "INSPECTOR_AGENT_FMT": "Villager %d",
     "INSPECTOR_AGE_FMT": "Age %d days",
     "INSPECTOR_CARRYING_FMT": "Carrying %d food",
+    "INSPECTOR_CARRYING_WOOD_FMT": "Carrying %d wood",
     "INSPECTOR_POS_FMT": "Position (%d, %d)",
     "INSPECTOR_STAGE_ADULT": "Adult",
     "INSPECTOR_STAGE_CHILD": "Child",
@@ -1311,6 +1313,7 @@
     "INSPECTOR_TARGET_NONE": "None",
     "INSPECTOR_TARGET_SLEEP": "Rest",
     "INSPECTOR_TARGET_WATER": "Water",
+    "INSPECTOR_TARGET_WOOD": "Firewood",
     "ITEM_TEMPLATE_AXE": "Axe",
     "ITEM_TEMPLATE_BERRIES": "Berries",
     "ITEM_TEMPLATE_COOKED_MEAT": "Cooked Meat",

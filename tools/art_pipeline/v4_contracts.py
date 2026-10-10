@@ -14,8 +14,8 @@ from typing import Final
 import numpy as np
 from PIL import Image
 
-STANDING: Final = frozenset(('idle','walk','carry','gather','build','talk','crossed','hop','run'))
-CYCLES: Final = frozenset(('walk','carry','run'))
+STANDING: Final = frozenset(('idle','walk','carry','gather','build','talk','crossed','hop','run','carry_wood','gather_wood'))
+CYCLES: Final = frozenset(('walk','carry','run','carry_wood'))
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,6 +90,10 @@ def target_size(frame: FrameSpec, scale: WorldScale = WorldScale()) -> tuple[int
             return (24,12) if child else (30,16)
         return (17,scale.child_height) if child else (22,scale.adult_height)
     index = frame.cell
+    if frame.sheet == 'W1':
+        if index in (12,16):
+            return (16,16)
+        return (24,16) if index <= 8 else (24,20)
     targets = {'S1': (24,22), 'S2': (24,22), 'N1': (24,18), 'N2': (24,22),
                'N3': (12,12), 'F1': (16,16), 'F2': (16,12), 'U1': (16,16)}
     if frame.sheet not in targets:
@@ -164,7 +168,7 @@ def guard_frame(candidate: FrameCandidate, scale: WorldScale = WorldScale()) -> 
         errors.append('geometry')
     if frame.body and frame.activity in STANDING and abs(image.height-height)>2:
         errors.append('standing_height')
-    if frame.sheet == 'U1' and image.size != target_size(frame,scale):
+    if (frame.sheet == 'U1' or frame.sheet == 'W1' and frame.cell in (12,16)) and image.size != target_size(frame,scale):
         errors.append('icon_canvas')
     bbox = image.getchannel('A').getbbox()
     if bbox is None:
