@@ -279,3 +279,15 @@ Full gate p6-full at0ec143c027a2570ac97f7b5f78356345f892f0cb PASS: debug/release
 - Preliminary fullgate at019bba07 PASS: debug1850/release1850,0failed/ignored (+44vsPass2each), bothClippy, forbiddenmath0, bridgebuild, Godotimport/strict/smoke no nonaudioerrors. Rawlogs published under verification/p3-7-code. Read-onlyscopeaudit clear; completed missing mechanical/schema testledger entries. Final probes and publication-head verification follow.
 
 - Part7 final probes complete 2026-10-10T20:54:16.070863+09:00: producer6db6db6a, legacy4/v8game64/v9ten64/v9sixty32 twinsPASS, U1–U11 allPASS; v9allraw simulation values equalRound2, legacy/v8 frozen comparisons exact. No tuning afterRound2 and noRust changes after3450163d. Final report/evidence publication is docs-only; runfullgate again onthat exactWIPhead beforegreenFF, thenrecordfinalSHA inPR510 andfinalresponse. A report cannot embed its owncommitSHA; evidenceproducerSHA andpublicationSHA are explicitly distinguished.
+
+## Pass 4
+
+Executor: Claude Code (Opus 5.5, 1M context), unattended, on the Mac clone `/Users/rexxa/work/new-world-pass4`.
+
+- `PASS4_BASE_SHA` = `a8611e07aabbb4043f5fac2e8dd14b375a0ada5d` (both `codex/revitalize-2026-10-wip` and `codex/revitalize-2026-10`).
+- Run start: 2026-10-10 22:27:19 KST.
+- Host: `Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64`.
+- First-command check (0.2 item 5): no `.git/hooks/pre-commit` or `post-commit`; `git ls-files -v .claude/settings.json` → `S`; contents `{}`. Nothing to repair.
+- The working tree also carries an unrelated `.gitignore` edit and a new `.ignore` written by the local graft indexer before the run started; they are not part of this goal and are never staged.
+- Part 0 start: 2026-10-10 22:27 KST.
+- `tools/revitalize/run_bounded.sh <seconds> <command...>` added (Python `subprocess.run(timeout=…)`, 124 on timeout). `probe.sh` made portable: on Darwin it skips the `free -g` memory wait and checks disk with `df -Pk .`; paths resolve through Python `os.path.realpath` instead of GNU `realpath -m`; an exported `CARGO_BUILD_JOBS` is kept (defaults to 10 as before); usage names `game_v10`. Linux control flow is unchanged apart from honouring an exported job count, which the goal asks for.
