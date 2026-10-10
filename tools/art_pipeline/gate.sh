@@ -6,7 +6,7 @@ export GODOT_BIN="${GODOT_BIN:-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/G
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
 label="${1:-final}"
-out="docs/art/production/gates/$label"
+out="${GATE_OUTPUT_DIR:-docs/art/production/gates/$label}"
 mkdir -p "$out"
 status=0
 run_check() {
