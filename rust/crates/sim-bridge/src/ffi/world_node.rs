@@ -207,6 +207,24 @@ impl INode for WorldSimNode {
 
 #[godot_api]
 impl WorldSimNode {
+    /// Advance a bounded number of deterministic ticks for capture tooling.
+    #[func]
+    fn advance_ticks(&mut self, n: i64) -> i64 {
+        advance_engine_ticks(&mut self.engine, n) as i64
+    }
+
+    /// Read the authoritative simulation clock, independent of render frames.
+    #[func]
+    fn get_time_snapshot(&self) -> VarDictionary {
+        time_snapshot_to_dict(collect_time_snapshot(&self.engine))
+    }
+
+    /// Read cumulative births and deaths, never the rolling event buffer.
+    #[func]
+    fn get_tallies(&self) -> VarDictionary {
+        tallies_to_dict(collect_tallies(&self.engine.resources))
+    }
+
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -2383,4 +2401,116 @@ pub fn init_production_engine() -> SimEngine {
     bootstrap_spawn_agents(&mut engine);
     seed_finite_resource_scarcity(&mut engine);
     engine
+}
+
+/// Maximum synchronous tooling advance, preventing accidental unbounded work.
+const MAX_TOOLING_ADVANCE_TICKS: i64 = 200_000;
+
+/// Advance the same engine used by the runtime without invoking Godot.
+pub fn advance_engine_ticks(engine: &mut SimEngine, n: i64) -> u64 {
+    for _ in 0..n.clamp(0, MAX_TOOLING_ADVANCE_TICKS) {
+        engine.tick();
+    }
+    engine.current_tick()
+}
+
+/// Native simulation clock snapshot, testable without a Godot runtime.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct TimeSnapshot {
+    /// Number of completed simulation ticks.
+    pub tick: u64,
+    /// Simulation ticks in a day; zero disables the simulation clock.
+    pub ticks_per_day: u64,
+    /// Zero-based day, or zero when the simulation clock is disabled.
+    pub day_index: u64,
+    /// Authoritative simulation hour in the range 0..24.
+    pub time_of_day: f64,
+}
+
+/// Read the completed tick count and clock resources without mutation.
+pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
+    let ticks_per_day = engine.resources.ticks_per_day;
+    TimeSnapshot {
+        tick: engine.current_tick(),
+        ticks_per_day,
+        day_index: engine.current_tick().checked_div(ticks_per_day).unwrap_or(0),
+        time_of_day: engine.resources.time_of_day,
+    }
+}
+
+/// Read the cumulative counters without depending on event retention.
+pub fn collect_tallies(resources: &SimResources) -> sim_engine::Tallies {
+    resources.tallies
+}
+
+fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("tick", snapshot.tick as i64);
+    dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
+    dict.set("day_index", snapshot.day_index as i64);
+    dict.set("time_of_day", snapshot.time_of_day);
+    dict
+}
+
+fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("births", tallies.births as i64);
+    dict.set("deaths_starvation", tallies.deaths_starvation as i64);
+    dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
+    dict.set("deaths_combat", tallies.deaths_combat as i64);
+    dict
+}
+
+#[cfg(test)]
+mod revitalize_tooling_tests {
+    use super::{advance_engine_ticks, collect_tallies, collect_time_snapshot};
+    use sim_core::material::MaterialRegistry;
+    use sim_engine::{SimEngine, Tallies};
+
+    #[test]
+    fn time_snapshot_uses_completed_ticks_and_resource_clock() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.ticks_per_day = 12;
+        advance_engine_ticks(&mut engine, 17);
+        let snapshot = collect_time_snapshot(&engine);
+        assert_eq!(snapshot.tick, 17);
+        assert_eq!(snapshot.ticks_per_day, 12);
+        assert_eq!(snapshot.day_index, 1);
+        assert_eq!(snapshot.time_of_day, 10.0);
+    }
+
+    #[test]
+    fn time_snapshot_handles_disabled_clock() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.ticks_per_day = 0;
+        advance_engine_ticks(&mut engine, 3);
+        let snapshot = collect_time_snapshot(&engine);
+        assert_eq!(snapshot.tick, 3);
+        assert_eq!(snapshot.day_index, 0);
+        assert_eq!(snapshot.time_of_day, 0.0);
+    }
+
+    #[test]
+    fn tallies_collector_preserves_all_four_counters() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.tallies = Tallies {
+            births: 11,
+            deaths_starvation: 12,
+            deaths_dehydration: 13,
+            deaths_combat: 14,
+        };
+        let snapshot = collect_tallies(&engine.resources);
+        assert_eq!(snapshot.births, 11);
+        assert_eq!(snapshot.deaths_starvation, 12);
+        assert_eq!(snapshot.deaths_dehydration, 13);
+        assert_eq!(snapshot.deaths_combat, 14);
+        assert_eq!(engine.current_tick(), 0);
+    }
+
+    #[test]
+    fn tooling_advance_clamps_negative_and_excessive_requests() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        assert_eq!(advance_engine_ticks(&mut engine, -8), 0);
+        assert_eq!(advance_engine_ticks(&mut engine, 200_001), 200_000);
+    }
 }

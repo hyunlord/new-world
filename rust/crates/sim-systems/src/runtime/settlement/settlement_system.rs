@@ -740,6 +740,8 @@ impl SettlementSystem {
                 },
             );
 
+            resources.tallies.births += 1;
+
             if let Some(settlement) = resources.settlements.get_mut(&sid) {
                 settlement.add_member_agent(new_agent_id);
                 settlement.population_stats.current = settlement.member_agents.len() as u32;

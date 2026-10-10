@@ -88,6 +88,12 @@ pub fn despawn_agent(
         }
     }
 
+    match reason {
+        DeathReason::Starvation => resources.tallies.deaths_starvation += 1,
+        DeathReason::Dehydration => resources.tallies.deaths_dehydration += 1,
+        DeathReason::Combat => resources.tallies.deaths_combat += 1,
+    }
+
     // Chronicle the death at its tile.
     let width = resources.tile_grid.width;
     let tile_idx = position.1 * width + position.0;

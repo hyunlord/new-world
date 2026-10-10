@@ -58,4 +58,44 @@ provided. Headless smoke proves loading/execution, not visual acceptance.
 
 ## Part 1 legacy probe
 
-Pending instrumentation; measurements will be appended after the probe runs.
+Measured 2026-10-10 on the same host using the frozen `legacy_scene()`.
+Invocation: `--scene legacy --seeds 0..4 --days 10 --sample-every 120 --workers 4 --check-determinism`.
+Probe build metadata is `049e8043` (Part 0 HEAD with Part 1 instrumentation
+in the working tree). Four primary runs and four independent twins completed;
+`DETERMINISM PASS`. All 121 sampled fingerprints also match across the four
+primary seed labels. Legacy deliberately ignores the seed.
+
+| Metric | DGX measured | Supplied planner reference |
+|---|---:|---:|
+| Alive, day 10 | 44 | 44 |
+| Births through day 10 | 213 | 213 |
+| Dehydration deaths through day 10 | 233 (exact tally) | approximately 233 |
+| Starvation / combat deaths | 0 / 0 | 0 / 0 |
+| Food units / water tiles at day 10 | 0 / 0 | 0 / 0 |
+| Buildings / construction sites at day 10 | 3 / 0 | 3 / 0 |
+| Stockpiled food at day 10 | 0 | 0 |
+| Idle / agent-samples (tick 0 included, every 120 ticks) | 98.167888% | 90.6% |
+| Idle-with-breach / agent-samples (same sampling) | 70.403065% | 61.6% |
+| Home distance mean at day 10 (Chebyshev to formation tile) | 17.386364 | 16.2 |
+| Median run wall seconds, includes twin and I/O | 13.682738 | 10.6 (different hardware/method) |
+| Median primary-engine ms / agent-tick | 0.009588558 | not supplied |
+
+Population and cumulative deaths agree with the planner. The idle shares and
+home-distance measurement differ; the planner's exact sampling code and raw
+observations are unavailable, so their cause is not established and no platform
+or simulation discrepancy is inferred. The table states the current metric
+and sampling definitions explicitly. Wall time includes validation of a second
+engine and is not a like-for-like hardware performance comparison.
+
+The immutable two-day pin uses tick **2880**, alive **45**, births **42**,
+starvation **0**, dehydration **61**, combat **0**, fingerprint
+`527233d10db4ed16`. The day-10 fingerprint is `b9ce9cb344a98de5`.
+The pin test executes two independent fixture engines and checks both against
+these literal two-day measurements. Separate staged accounting tests force
+one starvation death, one dehydration death, one birth, and exercise combat
+accounting without treating bootstrap spawns as births.
+
+Raw samples: `.harness/evidence/revitalize/probe/p1_legacy/legacy_s0.jsonl`
+through `legacy_s3.jsonl`. Aggregate summaries accompany the Part 1 probe
+artifacts. Screenshot capture remains skipped under the Part 0 Xvfb exception;
+there are no baseline screenshots or visual-acceptance claims.

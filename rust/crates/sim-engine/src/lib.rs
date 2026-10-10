@@ -55,6 +55,20 @@ pub struct BuildingPlacedEvent {
     pub radius: u32,
 }
 
+/// Cumulative birth/death counters for display and measurement only.
+/// Never read by simulation logic, so they cannot affect determinism.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Tallies {
+    /// Agents born after world initialization; excludes initial spawns.
+    pub births: u64,
+    /// Agents lost to hunger saturation.
+    pub deaths_starvation: u64,
+    /// Agents lost to thirst saturation.
+    pub deaths_dehydration: u64,
+    /// Agents lost to combat damage.
+    pub deaths_combat: u64,
+}
+
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).
 ///
 /// Pushed by the shared `survival::despawn_agent` helper (the single death
@@ -287,6 +301,9 @@ pub struct SimResources {
     /// the death-marker overlay. Never read by simulation logic (determinism-
     /// safe); not serde-serialized.
     pub recent_deaths: Vec<RecentDeath>,
+
+    /// Lifetime population counters; independent of bounded event buffers.
+    pub tallies: Tallies,
 }
 
 impl SimResources {
@@ -329,6 +346,7 @@ impl SimResources {
             next_settlement_id: 1,
             building_registry: HashMap::new(),
             recent_deaths: Vec::new(),
+            tallies: Tallies::default(),
         }
     }
 

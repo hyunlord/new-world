@@ -19,7 +19,7 @@ Authoritative specification: owner attachment, copied outside the clone to
 | Part | Deliverable | State | Evidence |
 |---|---|---|---|
 | 0 | arm64 extension, baseline gates | complete | 1729 debug + release tests; clippy and Godot gates pass |
-| 1 | tallies, shared scenes, probe, captures, frozen legacy pin | pending | |
+| 1 | tallies, shared scenes, probe, captures, frozen legacy pin | complete (capture exception) | 1748 tests, both Clippy checks, strict14 and smoke900 PASS; four legacy repeats deterministic |
 | 2 | default-legacy rules, world generation, terrain/building FFI | pending | |
 | 3 | gated survival/growth loop, 64-seed tuning | pending | |
 | 4 | deterministic art, truthful renderers/HUD, visual QA | pending | |
@@ -48,3 +48,13 @@ used for fingerprints.
 The remote clone has no Graft CLI/index; the local macOS graph describes an
 older checkout. Use bounded source reads on the remote clone rather than
 using that stale graph as evidence.
+
+## Part 1 boundary
+
+Completed 2026-10-10 12:28:46 KST; Part 1 began after Part 0 push at ~12:18.
+Full debug tests: 1748 passed, zero failed (baseline1729 +19 new tests),
+110 result groups. Both Clippy checks: zero warnings. Strict GDScript14 and
+smoke900: PASS; capture/camera standalone check-only: PASS. Forbidden math
+scan and added-production unwrap scan: zero hits. Independent read-only
+review found no blockers. Four 10-day legacy repeats matched every sampled
+fingerprint. Raw evidence remains ignored; summaries are committed.

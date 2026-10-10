@@ -47,6 +47,7 @@ var _target_zoom: Vector2 = ZOOM_DEFAULT
 # whose process() drives the tick; gating its process_mode freezes the sim.
 var _world_sim: Node = null
 var _paused: bool = false
+var _auto_track: bool = true
 
 
 func _ready() -> void:
@@ -120,7 +121,13 @@ func _toggle_pause() -> void:
 		)
 
 
+func set_auto_track(enabled: bool) -> void:
+	_auto_track = enabled
+
+
 func _process(delta: float) -> void:
+	if not _auto_track:
+		return
 	# V7 H Phase A — gently track the agent swarm centroid so Brownian-
 	# dispersing agents (AgentMovementSystem) stay on-screen. Reads the same
 	# snapshot the renderers consume; converts the mean tile to world pixels
