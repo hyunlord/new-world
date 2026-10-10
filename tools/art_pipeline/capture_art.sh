@@ -12,6 +12,7 @@ case "$DOCS" in docs/art/*|"$ROOT"/docs/art/*) ;; *) echo 'Output must be under 
 GODOT_BIN="${GODOT_BIN:-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot}"
 export CARGO_BUILD_JOBS=8
 export WORLDSIM_GIT_SHA="$(git rev-parse HEAD)"
+export WORLDSIM_GIT_DIRTY="$(git status --porcelain | wc -l | tr -d ' ')"
 EVIDENCE="${CAPTURE_EVIDENCE:-$ROOT/.harness/evidence/art-production}"
 out="$EVIDENCE/shots/$PLAN"
 mkdir -p "$out" "$DOCS"
@@ -21,6 +22,7 @@ bash tools/art_pipeline/run_bounded.sh 1100 "$GODOT_BIN" --path . --rendering-dr
     --script res://scripts/test/capture_framings.gd -- --out "$out" --plan "$PLAN"
 python3 - "$out" "$DOCS" <<'PY'
 import json
+import hashlib
 from pathlib import Path
 import shutil
 import sys
@@ -35,7 +37,11 @@ for capture in manifest['captures']:
     standard = image.resize((1920, 1080), Image.Resampling.NEAREST)
     standard.save(raw / (source.stem + '.1920.png'))
     capture['raw_file'] = str(source.resolve())
+    capture['raw_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest()
     capture['standard_file'] = str((raw / (source.stem + '.1920.png')).resolve())
+    if source.stem.startswith(('a_strip_', 'a_evening_')):
+        capture['published_file'] = '../village_noon.gif' if source.stem.startswith('a_strip_') else '../village_evening.gif'
+        continue
     if source.stem in full:
         standard.save(docs / source.name)
         capture['published_file'] = source.name

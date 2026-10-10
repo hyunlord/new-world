@@ -27,14 +27,26 @@ func _ready() -> void:
 	for index: int in range(12):
 		var actor: Sprite2D = _add(objects, looks[index % looks.size()], Vector2(-132 + index * 24, 67), "ramp_variant", 10 + index)
 		actor.set_meta("body", index % 2)
-		actor.set_meta("variant", {"skin": index % 4, "hair": index % 5, "clothing": index % 6})
+		var variant: Dictionary = {"skin": index % 4, "hair": index % 5, "clothing": index % 6}
+		actor.set_meta("variant", variant)
+		SpriteLibrary.apply_variant(actor, variant)
 
 
 func _add(parent: Node, sprite_id: String, base: Vector2, role: String, id: int) -> Sprite2D:
 	var sprite: Sprite2D = Sprite2D.new()
 	sprite.name = role + "_" + str(id)
 	parent.add_child(sprite)
-	if not SpriteLibrary.apply(sprite, sprite_id):
+	var selected: String = sprite_id
+	if sprite_id == "direction_02_lean_to" and not SpriteLibrary.frame("S1_11").is_empty():
+		selected = "S1_11"
+	if "villager" in sprite_id:
+		var body: String = "child" if "child" in sprite_id else "adult_a"
+		for id_key: String in SpriteLibrary.entries():
+			var entry: Dictionary = SpriteLibrary.frame(id_key)
+			if str(entry.get("body", "")) == body and str(entry.get("activity", "")) == "idle" and str(entry.get("view", "")) == "S":
+				selected = id_key
+				break
+	if not SpriteLibrary.apply(sprite, selected):
 		push_error("Calibration sprite missing: " + sprite_id)
 	sprite.position = base
 	sprite.set_meta("art_kind", "villager" if "agent" in role or role == "ramp_variant" else "lean_to")

@@ -170,7 +170,7 @@ func _write_manifest() -> void:
 		return
 	manifest.store_string(JSON.stringify({
 		"schema_version": 2, "plan": _plan, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
-		"captures": _manifest,
+		"captures": _manifest, "worktree_changed_paths": int(OS.get_environment("WORLDSIM_GIT_DIRTY")),
 	}, "\t") + "\n")
 	manifest.close()
 	quit(0)
@@ -268,6 +268,9 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
 		"agent_snapshot": _world.call("get_agent_snapshot"),
+		"head_dots": _draw_counter("SeekVizRenderer", "get_drawn_head_dot_count"),
+		"need_icons": _draw_counter("NeedBarRenderer", "get_drawn_icon_count"),
+		"need_icon_agent_ids": _draw_counter("NeedBarRenderer", "get_drawn_icon_agent_ids"),
 		"selected_entity_bits": int(inspector.call("get_selected_entity_bits")), "selected_seeking": _selected_seeking,
 		"seek_segments": int(_main.get_node("SeekVizRenderer").call("get_drawn_segment_count")),
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
@@ -390,3 +393,8 @@ func _capture_calibration() -> void:
 		_manifest.append({"file": stem + ".png", "entities": stem + ".entities.json", "framing": "a_calib",
 			"zoom": zoom_level, "width": image.get_width(), "height": image.get_height()})
 	scene.queue_free()
+
+
+func _draw_counter(node_name: String, method: String) -> Variant:
+	var node: Node = _main.get_node_or_null(NodePath(node_name))
+	return node.call(method) if node != null and node.has_method(method) else null

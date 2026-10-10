@@ -49,9 +49,10 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 			"kind": str(node.get_meta("art_kind", node.get_meta("calibration_kind", "object"))),
 			"id": int(node.get_meta("art_id", 0)), "rect": rect_array(rect),
 			"visible": item.is_visible_in_tree() and rect.intersects(Rect2(Vector2.ZERO, viewport)),
+			"shown": item.is_visible_in_tree(),
 			"node_path": str(main.get_path_to(node)),
 		}
-		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "calibration_kind"]:
+		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "facing", "calibration_kind"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
 		if node is Sprite2D:
@@ -63,10 +64,11 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 		rows.append(row)
 	var ui: Node = main.get_node_or_null("UI")
 	if ui != null:
-		for node: Node in ui.get_children():
-			if node is Control and (node as Control).is_visible_in_tree():
+		for node: Node in ui.find_children("*", "PanelContainer", true, false):
+			var panel: Control = node as Control
+			if panel.is_visible_in_tree():
 				rows.append({"kind": "panel", "id": node.get_instance_id(), "name": str(node.name),
-					"rect": rect_array(bounds(node, scale_factor)), "visible": true})
+					"rect": rect_array(screen_rect(Rect2(Vector2.ZERO, panel.size), panel.get_global_transform_with_canvas(), scale_factor)), "visible": true})
 	return rows
 
 
