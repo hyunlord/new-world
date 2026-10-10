@@ -9,4 +9,4 @@
 | 4 | Firewood, fire, piles, meals, wood art | completed | 2026-10-10T19:45:13Z | 2026-10-10T20:18:48Z |
 | 5 | Fresh simulation merge/check; actual captures | completed | 2026-10-10T20:19:17Z | 2026-10-10T20:22:12Z |
 | 6 | A1-A18; independent blind test; comparisons/GIFs | completed | 2026-10-10T20:22:33Z | 2026-10-10T20:33:03Z |
-| 7 | Full gate; compatibility; Korean report; green FF; draft PR | pending |  | |
+| 7 | Full gate; compatibility; Korean report; green FF; draft PR | in_progress | 2026-10-10T20:33:29Z | |
