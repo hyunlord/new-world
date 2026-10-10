@@ -323,6 +323,14 @@ impl WorldRules {
             winter_prep: true,
             hoard_cap_factor: 1.5,
         });
+        // Part 5 round 3: two foragers may share a bush (Pass 4 range 1-2).
+        rules.agent.forage = Some(ForageRule {
+            start_minute: 360,
+            end_minute: 1080,
+            forage_radius: 16,
+            haul_threshold: 4,
+            max_foragers_per_bush: 2,
+        });
         rules.society.firewood = Some(FirewoodRule {
             gather_start_minute: 600,
             gather_end_minute: 1020,
@@ -544,6 +552,7 @@ mod tests {
         v11.society.meals = None;
         v11.society.firewood = None;
         v11.society.stock_target = WorldRules::game_v10().society.stock_target;
+        v11.agent.forage = WorldRules::game_v10().agent.forage;
         assert_eq!(v11, WorldRules::game_v10());
     }
 
