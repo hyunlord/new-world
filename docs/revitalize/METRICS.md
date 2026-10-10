@@ -1607,3 +1607,59 @@ The schema-6 keys are additions (300 / 3,600 summary paths). The legacy pin test
 ### Correction after the independent review (Y8 cold share)
 
 Rows are written after a completed tick, so the 22:00 sample shows the 21:00 fire update (outside the cold window, nobody marked) and the 06:00 sample the 05:00 one. `evaluate_pass6.py` now books the cold window and the night to the system tick (`system_minute`, `system_night_season`); the X7/Pass 5 definition (row minute) understated the share. Re-evaluated with the same raw runs: round 1 winter cold 0.330 / max 0.375 (**FAIL**; the round 1 table above shows the old 0.228), round 2 **0.152 / max 0.196 (PASS)** (old 0.098 / 0.134). The v11 baseline is 0 either way (`p6-1_v11_targets` unchanged). Screens A–C were measured with the old definition; their cold values above are low by the same bias. `p6-5_round1_targets` and `p6-5_round2_targets` hold the corrected evaluations; nothing else in them changed.
+
+### Final game_v12 and Y13 timing (back to back, nothing else running)
+
+Run 06:53–07:02 KST on the Mac with no other Godot, cargo or probe process (checked with `pgrep` first), in this order: `p6-7_final_v11_10day`, `p6-7_final_v12_10day`, `p6-7_final_v11_120day`, `p6-7_final_v12_120day` (all `--check-determinism`, the eight clocks, code `3cf26767` = the production code of the final head `01fd135d`). All DETERMINISM PASS. The v12 pair equals round 2 on all 5,846 / 53,385 shared values; the v11 pair equals Part 1's v11 runs on all 5,846 / 53,373. Median ms per agent-tick: v11 0.001073 → v12 0.001068 (10 days, 1.00×), v11 0.001273 → v12 0.001421 (120 days, 1.12×); Y13 limit 1.2×.
+
+Final evaluation (`p6-7_final_targets`, receipts from the reproduction table above and the gate's legacy pin test, same-host v11 timing):
+
+| Target | Clause | v11 (Part 1) | v12 final | v12 verdict |
+|---|---|---|---|---|
+| Y1 | legacy_pin | false | true | PASS |
+| Y1 | twins_10 | 64 | 64 | PASS |
+| Y1 | twins_120 | 32 | 32 | PASS |
+| Y1 | v10_repro | false | true | PASS |
+| Y1 | v11_repro | true | true | PASS |
+| Y1 | v8_repro | false | true | PASS |
+| Y1 | v9_repro | false | true | PASS |
+| Y2 | deaths_dehydration_10 | 0 / 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 / 0 | PASS |
+| Y2 | deaths_dehydration_120 | 0 / 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 / 0 | PASS |
+| Y2 | deaths_starvation_10 | 0 / 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 / 0 | PASS |
+| Y2 | deaths_starvation_120 | 0 / 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 / 0 | PASS |
+| Y3 | alive_band | 42 / 41 / 42 / 36 / 42 | 42 / 41 / 42 / 35 / 42 | PASS |
+| Y3 | alive_day10 | 42 / 42 / 42 / 42 / 42 | 42 / 42 / 42 / 42 / 42 | PASS |
+| Y3 | birth_by_day4 | 7 / 7 / 7 / 7 / 7 | 7 / 7 / 7 / 7 / 7 | PASS |
+| Y3 | child_share | 0.107 / 0.0476 / 0.17 / 0 / 0.195 | 0.107 / 0.0476 / 0.17 / 0.0238 / 0.195 | PASS |
+| Y3 | elder_share | 0.262 / 0.214 / 0.341 / 0.171 / 0.381 | 0.262 / 0.214 / 0.341 / 0.171 / 0.381 | PASS |
+| Y3 | old_age_by_day30 | 9 / 6 / 12 / 5 / 13 | 9 / 6 / 12 / 5 / 13 | PASS |
+| Y3 | one_settlement | 1 / 1 / 1 / 1 / 1 | 1 / 1 / 1 / 1 / 1 | PASS |
+| Y3 | replacement | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -3 / 1 | PASS |
+| Y3 | stagnation | 0 / 0 / 0 / 0 / 3 | 0 / 0 / 0 / 0 / 4 | PASS |
+| Y4 | every_seed | 0.986 / 0.968 / 0.992 / 0.937 / 0.995 | 0.985 / 0.967 / 0.992 / 0.926 / 0.995 | PASS |
+| Y4 | store_share | 0.99 / 0.949 / 1 / 0.674 / 1 | 0.99 / 0.948 / 1 / 0.677 / 1 | PASS |
+| Y4 | winter | 1 / 0.98 / 1 / 0.924 / 1 | 1 / 0.98 / 1 / 0.945 / 1 | PASS |
+| Y5 | autumn_wood | autumn 42 / 0 / 58 / 0 / 76; summer 44 / 0 / 113 / 0 / 139 | autumn 50 / 0 / 130 / 0 / 148; summer 0 / 0 / 36.3 / 0 / 54 | PASS |
+| Y5 | autumn_work | 0.458 / 0.283 / 0.639 / 0.231 / 0.722 | 0.635 / 0.466 / 0.749 / 0.262 / 0.785 | PASS |
+| Y6 | trip_days | 0 / 0 / 1 / 0 / 1 | 5 / 5 / 6 / 5 / 6 | PASS |
+| Y6 | trips | 0 / 0 / 19.3 / 0 / 24 | 96 / 89 / 109 / 84 / 117 | PASS |
+| Y7 | other_lit | 1 / 1 / 1 / 1 / 1 | 1 / 1 / 1 / 1 / 1 | PASS |
+| Y7 | winter_lit | 1 / 1 / 1 / 1 / 1 | 0.857 / 0.821 / 0.889 / 0.821 / 0.893 | PASS |
+| Y8 | winter_cold | 0 / 0 / 0 / 0 / 0 | 0.152 / 0.116 / 0.178 / 0.0982 / 0.196 | PASS |
+| Y8 | winter_food | 254 / 196 / 282 / 42 / 307 | 246 / 200 / 280 / 44 / 300 | PASS |
+| Y9 | idle_1200 | 0.512 / 0.392 / 0.575 / 0.3 / 0.767 | 0.619 / 0.548 / 0.692 / 0.333 / 0.905 | FAIL |
+| Y9 | work_1200 | 0.5 / 0.36 / 0.665 / 0.125 / 0.75 | 0.317 / 0.18 / 0.456 / 0.0417 / 0.68 | FAIL |
+| Y9 | work_1500 | 0.416 / 0.26 / 0.516 / 0.188 / 0.654 | 0.431 / 0.288 / 0.519 / 0.125 / 0.694 | PASS |
+| Y10 | evening_near_hearth | 0.59 / 0.385 / 0.764 / 0.333 / 0.8 | 0.64 / 0.433 / 0.807 / 0.368 / 0.864 | PASS |
+| Y10 | night_in_shelter | 1 / 0.955 / 1 / 0.929 / 1 | 1 / 0.955 / 1 / 0.929 / 1 | PASS |
+| Y11 | home_distance | 7.48 / 5.82 / 9.06 / 4.26 / 10.7 | 7.68 / 5.91 / 8.8 / 4.79 / 11.3 | PASS |
+| Y11 | social_10 | 0.608 / 0.559 / 0.651 / 0.53 / 0.679 | 0.624 / 0.587 / 0.661 / 0.563 / 0.685 | PASS |
+| Y11 | social_120 | 0.813 / 0.79 / 0.836 / 0.766 / 0.851 | 0.812 / 0.788 / 0.843 / 0.769 / 0.855 | PASS |
+| Y11 | t6a_10 | 0.000991 / 0.000248 / 0.00273 / 0 / 0.00421 | 0.000991 / 0.000248 / 0.00248 / 0 / 0.00371 | PASS |
+| Y11 | t6a_120 | 0.0084 / 0.00677 / 0.0115 / 0.00634 / 0.0139 | 0.00843 / 0.00676 / 0.0126 / 0.00487 / 0.0133 | PASS |
+| Y12 | day10 | 0 | 0 | PASS |
+| Y12 | day120 | 0 | 0 | PASS |
+| Y13 | day10 | 0.00114 / 0.00106 / 0.00144 / 0.00103 / 0.00171 | 0.00107 / 0.00104 / 0.0011 / 0.00101 / 0.00111 | PASS |
+| Y13 | day120 | 0.00133 / 0.00128 / 0.00161 / 0.00125 / 0.00165 | 0.00142 / 0.00137 / 0.00172 / 0.00133 / 0.00175 | PASS |
+
+Every Y target passes except Y9 (three-strike stop, round 2 notes). Full gate on the final code head `01fd135d`: green — debug 1,941 / release 1,941 passed (Pass 5: 1,912 each; +29 Pass 6 tests), 0 failed, 0 ignored; both Clippy variants; forbidden math 0; bridge build; Godot import; strict check; smoke without `SCRIPT ERROR`/`ERROR:`; Python unit tests (`verification/p6-7/gate.txt`).

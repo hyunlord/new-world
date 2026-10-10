@@ -1,0 +1,2928 @@
+{
+  "baseline_ms": 0.0010732631334342264,
+  "cold_window": [
+    1320,
+    360
+  ],
+  "inputs": {
+    "round10": ".harness/evidence/revitalize/probe/p6-7_final_v12_10day",
+    "round120": ".harness/evidence/revitalize/probe/p6-7_final_v12_120day",
+    "v11_targets": "docs/revitalize/probe/p6-1_v11_targets/y_targets.json"
+  },
+  "long_baseline_ms": 0.0012726677859777199,
+  "measures": {
+    "autumn_work_1200": {
+      "max": 0.7845643939393939,
+      "median": 0.6353991596638655,
+      "min": 0.2618371212121212,
+      "n": 32,
+      "p10": 0.46594871768052887,
+      "p90": 0.7492647058823529
+    },
+    "winter_food_store_at_end": {
+      "max": 300.0,
+      "median": 246.5,
+      "min": 44.0,
+      "n": 128,
+      "p10": 199.8,
+      "p90": 280.3
+    }
+  },
+  "passed": false,
+  "schema_version": 1,
+  "targets": {
+    "Y1": {
+      "clauses": {
+        "legacy_pin": {
+          "observed": true,
+          "passed": true,
+          "requirement": "legacy_pin verified externally"
+        },
+        "twins_10": {
+          "observed": 64,
+          "passed": true,
+          "requirement": "64 seeds, determinism checked"
+        },
+        "twins_120": {
+          "observed": 32,
+          "passed": true,
+          "requirement": "32 seeds, determinism checked"
+        },
+        "v10_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v10_repro verified externally"
+        },
+        "v11_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v11_repro verified externally"
+        },
+        "v8_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v8_repro verified externally"
+        },
+        "v9_repro": {
+          "observed": true,
+          "passed": true,
+          "requirement": "v9_repro verified externally"
+        }
+      },
+      "passed": true
+    },
+    "Y10": {
+      "clauses": {
+        "evening_near_hearth": {
+          "observed": {
+            "max": 0.8636363636363636,
+            "median": 0.6403726708074534,
+            "min": 0.3684210526315789,
+            "n": 32,
+            "p10": 0.4329391891891892,
+            "p90": 0.806923076923077
+          },
+          "passed": true,
+          "requirement": "median >= 0.55 and every seed >= 0.35"
+        },
+        "night_in_shelter": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 0.9285714285714286,
+            "n": 32,
+            "p10": 0.9547619047619047,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "median >= 0.80"
+        }
+      },
+      "passed": true
+    },
+    "Y11": {
+      "clauses": {
+        "home_distance": {
+          "observed": {
+            "max": 11.30952380952381,
+            "median": 7.678571428571429,
+            "min": 4.785714285714286,
+            "n": 64,
+            "p10": 5.911904761904762,
+            "p90": 8.804761904761905
+          },
+          "passed": true,
+          "requirement": "day-10 median <= 8.1, every seed <= 13"
+        },
+        "social_10": {
+          "observed": {
+            "max": 0.6846294704585373,
+            "median": 0.6237072113769428,
+            "min": 0.5634658813000177,
+            "n": 64,
+            "p10": 0.5865999674228807,
+            "p90": 0.6607116776623289
+          },
+          "passed": true,
+          "requirement": "median >= 0.40 and > 0 in every seed"
+        },
+        "social_120": {
+          "observed": {
+            "max": 0.8552184085346453,
+            "median": 0.811699299998669,
+            "min": 0.7691580202483226,
+            "n": 32,
+            "p10": 0.7882840347617203,
+            "p90": 0.8428797806078806
+          },
+          "passed": true,
+          "requirement": "median >= 0.40 and > 0 in every seed"
+        },
+        "t6a_10": {
+          "observed": {
+            "max": 0.003714710252600297,
+            "median": 0.0009905894006934125,
+            "min": 0.0,
+            "p10": 0.00024764735017335313,
+            "p90": 0.0024764735017335313
+          },
+          "passed": true,
+          "requirement": "cumulative actionable idle-breach share median <= 1%"
+        },
+        "t6a_120": {
+          "observed": {
+            "max": 0.013346365137676518,
+            "median": 0.008432920876942595,
+            "min": 0.004869764137046601,
+            "p10": 0.006760094204564719,
+            "p90": 0.01262339727555774
+          },
+          "passed": true,
+          "requirement": "cumulative actionable idle-breach share median <= 1%"
+        }
+      },
+      "passed": true
+    },
+    "Y12": {
+      "clauses": {
+        "day10": {
+          "observed": 0,
+          "passed": true,
+          "requirement": "no gatherer with hunger or thirst >= 90 at any 120-tick sample"
+        },
+        "day120": {
+          "observed": 0,
+          "passed": true,
+          "requirement": "no gatherer with hunger or thirst >= 90 at any 120-tick sample"
+        }
+      },
+      "passed": true
+    },
+    "Y13": {
+      "clauses": {
+        "day10": {
+          "observed": {
+            "limit": 0.0012879157601210717,
+            "max": 0.0011081652112892467,
+            "median": 0.0010683804142777981,
+            "min": 0.0010127070202613467,
+            "n": 64,
+            "p10": 0.0010382490786894757,
+            "p90": 0.0010964697958030858
+          },
+          "passed": true,
+          "requirement": "median ms/agent-tick <= 1.2 x same-host game_v11"
+        },
+        "day120": {
+          "observed": {
+            "limit": 0.0015272013431732638,
+            "max": 0.0017464066017609757,
+            "median": 0.0014210293282004827,
+            "min": 0.00133156534240101,
+            "n": 32,
+            "p10": 0.0013672988270721112,
+            "p90": 0.00171808740900482
+          },
+          "passed": true,
+          "requirement": "median ms/agent-tick <= 1.2 x same-host game_v11"
+        }
+      },
+      "passed": true
+    },
+    "Y2": {
+      "clauses": {
+        "deaths_dehydration_10": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 64,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "zero in every seed at day 10"
+        },
+        "deaths_dehydration_120": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "total median 0 and max <= 2"
+        },
+        "deaths_starvation_10": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 64,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "zero in every seed at day 10"
+        },
+        "deaths_starvation_120": {
+          "observed": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "total median 0 and max <= 2"
+        }
+      },
+      "passed": true
+    },
+    "Y3": {
+      "clauses": {
+        "alive_band": {
+          "observed": {
+            "max": 42.0,
+            "median": 42.0,
+            "min": 35.0,
+            "n": 2912,
+            "p10": 41.0,
+            "p90": 42.0
+          },
+          "passed": true,
+          "requirement": "alive in [32, 44] at every day sample from day 30"
+        },
+        "alive_day10": {
+          "observed": {
+            "max": 42.0,
+            "median": 42.0,
+            "min": 42.0,
+            "n": 64,
+            "p10": 42.0,
+            "p90": 42.0
+          },
+          "passed": true,
+          "requirement": "day-10 alive >= 30 in every seed"
+        },
+        "birth_by_day4": {
+          "observed": {
+            "max": 7.0,
+            "median": 7.0,
+            "min": 7.0,
+            "n": 64,
+            "p10": 7.0,
+            "p90": 7.0
+          },
+          "passed": true,
+          "requirement": "a birth by day 4 in every seed (10-day round)"
+        },
+        "child_share": {
+          "observed": {
+            "max": 0.1951219512195122,
+            "median": 0.10714285714285714,
+            "min": 0.023809523809523808,
+            "n": 32,
+            "p10": 0.047619047619047616,
+            "p90": 0.17032520325203254
+          },
+          "passed": true,
+          "requirement": "day-120 child share median in [0.03, 0.20] (W6)"
+        },
+        "elder_share": {
+          "observed": {
+            "max": 0.38095238095238093,
+            "median": 0.2619047619047619,
+            "min": 0.17073170731707318,
+            "n": 32,
+            "p10": 0.21428571428571427,
+            "p90": 0.3406504065040651
+          },
+          "passed": true,
+          "requirement": "day-120 elder share median in [0.08, 0.35] (W6)"
+        },
+        "old_age_by_day30": {
+          "observed": {
+            "max": 13.0,
+            "median": 9.0,
+            "min": 5.0,
+            "n": 32,
+            "p10": 6.0,
+            "p90": 12.0
+          },
+          "passed": true,
+          "requirement": ">= 1 old-age death by day 30 in every seed"
+        },
+        "one_settlement": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 1.0,
+            "n": 4480,
+            "p10": 1.0,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "one settlement at every day sample"
+        },
+        "replacement": {
+          "observed": {
+            "max": 1.0,
+            "median": 0.0,
+            "min": -3.0,
+            "n": 32,
+            "p10": -1.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "births >= deaths - 3 over days 30..120 in every seed"
+        },
+        "stagnation": {
+          "observed": {
+            "max": 4.0,
+            "median": 0.0,
+            "min": 0.0,
+            "n": 32,
+            "p10": 0.0,
+            "p90": 0.0
+          },
+          "passed": true,
+          "requirement": "longest stagnant run <= 4 days in every seed"
+        }
+      },
+      "passed": true
+    },
+    "Y4": {
+      "clauses": {
+        "every_seed": {
+          "observed": {
+            "max": 0.994729907773386,
+            "median": 0.9854274735027004,
+            "min": 0.9263764981526539,
+            "n": 32,
+            "p10": 0.9672347393921413,
+            "p90": 0.9924286532447807
+          },
+          "passed": true,
+          "requirement": "each seed's store share from day 3 >= 0.40"
+        },
+        "store_share": {
+          "observed": {
+            "max": 1.0,
+            "median": 0.9896907216494846,
+            "min": 0.6770833333333334,
+            "n": 3776,
+            "p10": 0.9479166666666666,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "store meals / all meals per seed-day from day 3, median >= 0.60"
+        },
+        "winter": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 0.9454545454545454,
+            "n": 896,
+            "p10": 0.9797979797979798,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "winter seed-day store share median >= 0.40"
+        }
+      },
+      "passed": true
+    },
+    "Y5": {
+      "clauses": {
+        "autumn_wood": {
+          "observed": {
+            "autumn": {
+              "max": 148.0,
+              "median": 50.0,
+              "min": 0.0,
+              "n": 896,
+              "p10": 0.0,
+              "p90": 130.0
+            },
+            "summer": {
+              "max": 54.0,
+              "median": 0.0,
+              "min": 0.0,
+              "n": 928,
+              "p10": 0.0,
+              "p90": 36.30000000000007
+            }
+          },
+          "passed": true,
+          "requirement": "autumn wood gathered per day median >= 1.5 x summer's (seed-days)"
+        },
+        "autumn_work": {
+          "observed": {
+            "floor": 0.40784549731918157,
+            "max": 0.7845643939393939,
+            "median": 0.6353991596638655,
+            "min": 0.2618371212121212,
+            "n": 32,
+            "p10": 0.46594871768052887,
+            "p90": 0.7492647058823529
+          },
+          "passed": true,
+          "requirement": "autumn adult work share at 12:00 median >= v11's autumn value - 0.05"
+        }
+      },
+      "passed": true
+    },
+    "Y6": {
+      "clauses": {
+        "trip_days": {
+          "observed": {
+            "max": 6.0,
+            "median": 5.0,
+            "min": 5.0,
+            "n": 128,
+            "p10": 5.0,
+            "p90": 6.0
+          },
+          "passed": true,
+          "requirement": "days with wood trips per winter (of 7), median over seed-winters >= 4"
+        },
+        "trips": {
+          "observed": {
+            "max": 117.0,
+            "median": 96.0,
+            "min": 84.0,
+            "n": 128,
+            "p10": 89.0,
+            "p90": 109.3
+          },
+          "passed": true,
+          "requirement": "wood trips per winter, median over seed-winters >= 20"
+        }
+      },
+      "passed": true
+    },
+    "Y7": {
+      "clauses": {
+        "other_lit": {
+          "observed": {
+            "max": 1.0,
+            "median": 1.0,
+            "min": 1.0,
+            "n": 32,
+            "p10": 1.0,
+            "p90": 1.0
+          },
+          "passed": true,
+          "requirement": "outside winter, 02:00 lit share: median >= 0.95, every seed >= 0.85"
+        },
+        "winter_lit": {
+          "observed": {
+            "max": 0.8928571428571429,
+            "median": 0.8571428571428571,
+            "min": 0.8214285714285714,
+            "n": 32,
+            "p10": 0.8214285714285714,
+            "p90": 0.8892857142857145
+          },
+          "passed": true,
+          "requirement": "per seed share of winter nights lit at 02:00: median in [0.70, 0.97], every seed >= 0.50"
+        }
+      },
+      "passed": true
+    },
+    "Y8": {
+      "clauses": {
+        "winter_cold": {
+          "observed": {
+            "max": 0.19616613418530351,
+            "median": 0.15171840701136685,
+            "min": 0.09822763185991885,
+            "n": 32,
+            "p10": 0.11614646663304483,
+            "p90": 0.17773849309136075
+          },
+          "passed": true,
+          "requirement": "winter cold members / members in the cold window: median <= 0.25, every seed <= 0.50"
+        },
+        "winter_food": {
+          "observed": {
+            "floor": 202.8,
+            "max": 300.0,
+            "median": 246.5,
+            "min": 44.0,
+            "n": 128,
+            "p10": 199.8,
+            "p90": 280.3
+          },
+          "passed": true,
+          "requirement": "food store at each winter's last periodic sample, median >= 0.8 x v11's"
+        }
+      },
+      "passed": true
+    },
+    "Y9": {
+      "clauses": {
+        "idle_1200": {
+          "observed": {
+            "max": 0.9047619047619048,
+            "median": 0.6190476190476191,
+            "min": 0.3333333333333333,
+            "n": 32,
+            "p10": 0.5476190476190477,
+            "p90": 0.6921245421245421
+          },
+          "passed": false,
+          "requirement": "idle share of all residents at 12:00 median <= 0.60 (spring-autumn)"
+        },
+        "work_1200": {
+          "observed": {
+            "max": 0.68,
+            "median": 0.3169642857142857,
+            "min": 0.041666666666666664,
+            "n": 32,
+            "p10": 0.18015873015873016,
+            "p90": 0.45554621848739496
+          },
+          "passed": false,
+          "requirement": "adult work share at 12:00 median >= 0.35 (spring-autumn)"
+        },
+        "work_1500": {
+          "observed": {
+            "max": 0.6944444444444444,
+            "median": 0.430952380952381,
+            "min": 0.125,
+            "n": 32,
+            "p10": 0.2879120879120879,
+            "p90": 0.5193513513513514
+          },
+          "passed": true,
+          "requirement": "adult work share at 15:00 median >= 0.25 (spring-autumn)"
+        }
+      },
+      "passed": false
+    }
+  },
+  "winter_burn_per_day": 39.0,
+  "winters": [
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 253.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 0,
+      "trip_days": 6,
+      "urgent_trips": 38.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 177.0,
+      "wood_trips": 113.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 239.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 0,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 180.0,
+      "wood_trips": 105.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 285.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 0,
+      "trip_days": 5,
+      "urgent_trips": 31.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 199.0,
+      "wood_trips": 99.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 274.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 0,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 95.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 249.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 258.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 1,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 94.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 546.0,
+      "first_display_day": 49,
+      "first_night_out": 6,
+      "food_store_at_end": 263.0,
+      "nights": 7,
+      "nights_out": 2,
+      "seed": 1,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 173.0,
+      "wood_trips": 110.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 253.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 1,
+      "trip_days": 5,
+      "urgent_trips": 30.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 198.0,
+      "wood_trips": 101.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 504.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 255.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 1,
+      "trip_days": 6,
+      "urgent_trips": 35.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 175.0,
+      "wood_trips": 108.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 214.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 2,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 212.0,
+      "wood_trips": 94.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 333.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 208.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 2,
+      "trip_days": 6,
+      "urgent_trips": 26.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 188.0,
+      "wood_trips": 92.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 224.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 2,
+      "trip_days": 5,
+      "urgent_trips": 12.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 212.0,
+      "wood_trips": 89.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 190.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 2,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 93.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 246.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 3,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 95.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 277.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 3,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 210.0,
+      "wood_trips": 96.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 260.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 3,
+      "trip_days": 5,
+      "urgent_trips": 30.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 200.0,
+      "wood_trips": 99.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 419.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 259.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 3,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 181.0,
+      "wood_trips": 106.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 238.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 4,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 181.0,
+      "wood_trips": 112.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 280.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 4,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 179.0,
+      "wood_trips": 108.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 284.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 4,
+      "trip_days": 5,
+      "urgent_trips": 17.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 95.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 284.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 4,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 97.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 204.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 5,
+      "trip_days": 5,
+      "urgent_trips": 14.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 92.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 204.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 5,
+      "trip_days": 5,
+      "urgent_trips": 12.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 84.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 215.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 5,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 94.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 223.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 5,
+      "trip_days": 5,
+      "urgent_trips": 10.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 88.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 456.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 209.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 6,
+      "trip_days": 6,
+      "urgent_trips": 31.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 178.0,
+      "wood_trips": 107.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 249.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 6,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 179.0,
+      "wood_trips": 111.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 215.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 6,
+      "trip_days": 5,
+      "urgent_trips": 14.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 205.0,
+      "wood_trips": 91.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 233.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 6,
+      "trip_days": 5,
+      "urgent_trips": 14.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 212.0,
+      "wood_trips": 91.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 251.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 252.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 7,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 97.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 275.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 7,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 97.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 239.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 7,
+      "trip_days": 5,
+      "urgent_trips": 30.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 197.0,
+      "wood_trips": 99.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 290.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 7,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 92.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 228.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 8,
+      "trip_days": 5,
+      "urgent_trips": 17.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 92.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 378.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 300.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 8,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 184.0,
+      "wood_trips": 104.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 498.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 235.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 8,
+      "trip_days": 6,
+      "urgent_trips": 31.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 174.0,
+      "wood_trips": 108.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 546.0,
+      "first_display_day": 105,
+      "first_night_out": 6,
+      "food_store_at_end": 282.0,
+      "nights": 7,
+      "nights_out": 2,
+      "seed": 8,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 172.0,
+      "wood_trips": 113.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 250.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 9,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 179.0,
+      "wood_trips": 112.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 229.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 9,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 205.0,
+      "wood_trips": 92.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 261.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 9,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 95.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 546.0,
+      "first_display_day": 105,
+      "first_night_out": 6,
+      "food_store_at_end": 219.0,
+      "nights": 7,
+      "nights_out": 2,
+      "seed": 9,
+      "trip_days": 6,
+      "urgent_trips": 29.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 172.0,
+      "wood_trips": 108.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 202.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 10,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 204.0,
+      "wood_trips": 87.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 234.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 10,
+      "trip_days": 6,
+      "urgent_trips": 31.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 186.0,
+      "wood_trips": 98.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 461.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 203.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 10,
+      "trip_days": 6,
+      "urgent_trips": 33.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 177.0,
+      "wood_trips": 112.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 168.0,
+      "first_display_day": 105,
+      "first_night_out": 0,
+      "food_store_at_end": 224.0,
+      "nights": 7,
+      "nights_out": 0,
+      "seed": 10,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 214.0,
+      "wood_trips": 93.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 234.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 11,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 180.0,
+      "wood_trips": 106.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 247.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 11,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 94.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 261.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 11,
+      "trip_days": 6,
+      "urgent_trips": 33.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 186.0,
+      "wood_trips": 102.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 461.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 254.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 11,
+      "trip_days": 6,
+      "urgent_trips": 35.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 178.0,
+      "wood_trips": 110.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 251.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 257.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 12,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 92.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 277.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 12,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 94.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 273.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 12,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 93.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 270.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 12,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 204.0,
+      "wood_trips": 94.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 197.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 13,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 96.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 195.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 13,
+      "trip_days": 6,
+      "urgent_trips": 21.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 188.0,
+      "wood_trips": 86.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 166.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 13,
+      "trip_days": 6,
+      "urgent_trips": 32.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 177.0,
+      "wood_trips": 108.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 378.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 201.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 13,
+      "trip_days": 6,
+      "urgent_trips": 32.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 184.0,
+      "wood_trips": 103.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 272.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 14,
+      "trip_days": 5,
+      "urgent_trips": 17.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 95.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 419.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 266.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 14,
+      "trip_days": 6,
+      "urgent_trips": 31.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 180.0,
+      "wood_trips": 105.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 504.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 249.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 14,
+      "trip_days": 6,
+      "urgent_trips": 36.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 176.0,
+      "wood_trips": 110.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 293.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 266.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 14,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 204.0,
+      "wood_trips": 95.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 242.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 15,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 180.0,
+      "wood_trips": 113.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 285.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 15,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 202.0,
+      "wood_trips": 97.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 255.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 15,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 202.0,
+      "wood_trips": 96.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 282.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 15,
+      "trip_days": 5,
+      "urgent_trips": 17.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 98.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 267.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 16,
+      "trip_days": 5,
+      "urgent_trips": 31.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 197.0,
+      "wood_trips": 99.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 335.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 280.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 16,
+      "trip_days": 5,
+      "urgent_trips": 38.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 195.0,
+      "wood_trips": 103.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 335.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 245.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 16,
+      "trip_days": 5,
+      "urgent_trips": 30.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 197.0,
+      "wood_trips": 97.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 281.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 16,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 182.0,
+      "wood_trips": 106.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 248.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 237.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 17,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 89.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 272.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 17,
+      "trip_days": 5,
+      "urgent_trips": 27.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 200.0,
+      "wood_trips": 94.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 335.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 248.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 17,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 89.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 265.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 17,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 93.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 244.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 215.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 18,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 90.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 275.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 18,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 210.0,
+      "wood_trips": 96.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 459.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 219.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 18,
+      "trip_days": 6,
+      "urgent_trips": 32.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 178.0,
+      "wood_trips": 107.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 209.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 274.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 18,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 211.0,
+      "wood_trips": 96.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 376.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 230.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 19,
+      "trip_days": 6,
+      "urgent_trips": 36.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 185.0,
+      "wood_trips": 106.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 237.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 19,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 95.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 225.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 19,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 206.0,
+      "wood_trips": 91.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 223.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 19,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 211.0,
+      "wood_trips": 91.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 462.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 251.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 20,
+      "trip_days": 6,
+      "urgent_trips": 33.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 177.0,
+      "wood_trips": 109.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 289.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 20,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 93.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 285.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 20,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 180.0,
+      "wood_trips": 111.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 168.0,
+      "first_display_day": 105,
+      "first_night_out": 0,
+      "food_store_at_end": 256.0,
+      "nights": 7,
+      "nights_out": 0,
+      "seed": 20,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 214.0,
+      "wood_trips": 92.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 503.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 109.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 21,
+      "trip_days": 6,
+      "urgent_trips": 24.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 176.0,
+      "wood_trips": 100.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 503.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 124.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 21,
+      "trip_days": 6,
+      "urgent_trips": 25.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 175.0,
+      "wood_trips": 99.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 347.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 102.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 21,
+      "trip_days": 6,
+      "urgent_trips": 26.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 183.0,
+      "wood_trips": 89.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 151.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 21,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 202.0,
+      "wood_trips": 91.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 332.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 61.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 22,
+      "trip_days": 5,
+      "urgent_trips": 28.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 197.0,
+      "wood_trips": 85.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 502.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 62.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 22,
+      "trip_days": 6,
+      "urgent_trips": 27.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 176.0,
+      "wood_trips": 93.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 75.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 22,
+      "trip_days": 5,
+      "urgent_trips": 13.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 85.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 44.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 22,
+      "trip_days": 6,
+      "urgent_trips": 35.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 182.0,
+      "wood_trips": 101.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 546.0,
+      "first_display_day": 21,
+      "first_night_out": 6,
+      "food_store_at_end": 242.0,
+      "nights": 7,
+      "nights_out": 2,
+      "seed": 23,
+      "trip_days": 6,
+      "urgent_trips": 35.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 173.0,
+      "wood_trips": 113.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 269.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 23,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 92.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 264.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 23,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 95.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 293.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 263.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 23,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 206.0,
+      "wood_trips": 95.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 377.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 266.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 24,
+      "trip_days": 6,
+      "urgent_trips": 32.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 183.0,
+      "wood_trips": 104.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 269.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 24,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 206.0,
+      "wood_trips": 92.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 283.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 24,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 186.0,
+      "wood_trips": 106.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 272.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 24,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 204.0,
+      "wood_trips": 92.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 232.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 25,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 95.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 226.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 25,
+      "trip_days": 5,
+      "urgent_trips": 12.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 211.0,
+      "wood_trips": 88.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 240.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 25,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 97.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 189.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 25,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 205.0,
+      "wood_trips": 89.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 293.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 296.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 26,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 204.0,
+      "wood_trips": 92.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 274.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 26,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 95.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 378.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 267.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 26,
+      "trip_days": 6,
+      "urgent_trips": 32.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 184.0,
+      "wood_trips": 100.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 209.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 268.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 26,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 212.0,
+      "wood_trips": 97.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 231.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 27,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 91.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 126.0,
+      "first_display_day": 49,
+      "first_night_out": 0,
+      "food_store_at_end": 258.0,
+      "nights": 7,
+      "nights_out": 0,
+      "seed": 27,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 216.0,
+      "wood_trips": 95.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 270.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 27,
+      "trip_days": 5,
+      "urgent_trips": 19.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 212.0,
+      "wood_trips": 98.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 247.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 253.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 27,
+      "trip_days": 5,
+      "urgent_trips": 16.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 92.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 334.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 226.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 28,
+      "trip_days": 5,
+      "urgent_trips": 26.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 200.0,
+      "wood_trips": 95.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 270.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 28,
+      "trip_days": 5,
+      "urgent_trips": 14.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 205.0,
+      "wood_trips": 92.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 294.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 258.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 28,
+      "trip_days": 5,
+      "urgent_trips": 28.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 198.0,
+      "wood_trips": 96.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 278.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 28,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 209.0,
+      "wood_trips": 97.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 546.0,
+      "first_display_day": 21,
+      "first_night_out": 6,
+      "food_store_at_end": 234.0,
+      "nights": 7,
+      "nights_out": 2,
+      "seed": 29,
+      "trip_days": 6,
+      "urgent_trips": 37.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 172.0,
+      "wood_trips": 117.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 236.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 29,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 201.0,
+      "wood_trips": 96.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 219.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 29,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 203.0,
+      "wood_trips": 97.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 336.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 234.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 29,
+      "trip_days": 5,
+      "urgent_trips": 27.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 199.0,
+      "wood_trips": 88.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 210.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 216.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 30,
+      "trip_days": 5,
+      "urgent_trips": 10.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 211.0,
+      "wood_trips": 87.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 230.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 30,
+      "trip_days": 5,
+      "urgent_trips": 15.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 93.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 168.0,
+      "first_display_day": 77,
+      "first_night_out": 0,
+      "food_store_at_end": 244.0,
+      "nights": 7,
+      "nights_out": 0,
+      "seed": 30,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 214.0,
+      "wood_trips": 96.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 215.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 30,
+      "trip_days": 5,
+      "urgent_trips": 10.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 208.0,
+      "wood_trips": 88.0,
+      "year": 3
+    },
+    {
+      "cold_member_hours": 459.0,
+      "first_display_day": 21,
+      "first_night_out": 7,
+      "food_store_at_end": 209.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 31,
+      "trip_days": 6,
+      "urgent_trips": 29.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 177.0,
+      "wood_trips": 107.0,
+      "year": 0
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 49,
+      "first_night_out": 7,
+      "food_store_at_end": 227.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 31,
+      "trip_days": 6,
+      "urgent_trips": 30.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 182.0,
+      "wood_trips": 102.0,
+      "year": 1
+    },
+    {
+      "cold_member_hours": 420.0,
+      "first_display_day": 77,
+      "first_night_out": 7,
+      "food_store_at_end": 226.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 31,
+      "trip_days": 6,
+      "urgent_trips": 34.0,
+      "wood_gathered": 51.0,
+      "wood_in_hand_at_start": 181.0,
+      "wood_trips": 109.0,
+      "year": 2
+    },
+    {
+      "cold_member_hours": 252.0,
+      "first_display_day": 105,
+      "first_night_out": 7,
+      "food_store_at_end": 242.0,
+      "nights": 7,
+      "nights_out": 1,
+      "seed": 31,
+      "trip_days": 5,
+      "urgent_trips": 18.0,
+      "wood_gathered": 45.0,
+      "wood_in_hand_at_start": 207.0,
+      "wood_trips": 97.0,
+      "year": 3
+    }
+  ],
+  "wood_by_season": [
+    {
+      "cold_member_hours": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 1120,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "food_store": {
+        "max": 257.0,
+        "median": 182.0,
+        "min": 0.0,
+        "n": 1088,
+        "p10": 63.80000000000001,
+        "p90": 226.30000000000007
+      },
+      "forage_trips": {
+        "max": 108.0,
+        "median": 57.0,
+        "min": 0.0,
+        "n": 1120,
+        "p10": 16.0,
+        "p90": 87.0
+      },
+      "lit_0200": 1.0,
+      "season": "spring",
+      "urgent_trips": {
+        "max": 42.0,
+        "median": 2.0,
+        "min": 0.0,
+        "n": 1120,
+        "p10": 0.0,
+        "p90": 21.0
+      },
+      "wood_gathered": {
+        "max": 68.0,
+        "median": 30.0,
+        "min": 0.0,
+        "n": 1120,
+        "p10": 0.0,
+        "p90": 53.0
+      },
+      "wood_stock": {
+        "max": 56.0,
+        "median": 26.0,
+        "min": 0.0,
+        "n": 1088,
+        "p10": 0.0,
+        "p90": 44.0
+      },
+      "wood_target": {
+        "max": 39.0,
+        "median": 39.0,
+        "min": 39.0,
+        "n": 1088,
+        "p10": 39.0,
+        "p90": 39.0
+      },
+      "wood_trips": {
+        "max": 42.0,
+        "median": 15.0,
+        "min": 0.0,
+        "n": 1120,
+        "p10": 0.0,
+        "p90": 31.0
+      }
+    },
+    {
+      "cold_member_hours": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 928,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "food_store": {
+        "max": 491.0,
+        "median": 279.5,
+        "min": 0.0,
+        "n": 960,
+        "p10": 160.9,
+        "p90": 407.1
+      },
+      "forage_trips": {
+        "max": 141.0,
+        "median": 111.5,
+        "min": 0.0,
+        "n": 928,
+        "p10": 0.0,
+        "p90": 129.0
+      },
+      "lit_0200": 1.0,
+      "season": "summer",
+      "urgent_trips": {
+        "max": 23.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 928,
+        "p10": 0.0,
+        "p90": 10.0
+      },
+      "wood_gathered": {
+        "max": 54.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 928,
+        "p10": 0.0,
+        "p90": 36.30000000000007
+      },
+      "wood_stock": {
+        "max": 51.0,
+        "median": 21.0,
+        "min": 7.0,
+        "n": 960,
+        "p10": 9.0,
+        "p90": 39.0
+      },
+      "wood_target": {
+        "max": 19.5,
+        "median": 19.5,
+        "min": 19.5,
+        "n": 960,
+        "p10": 19.5,
+        "p90": 19.5
+      },
+      "wood_trips": {
+        "max": 27.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 928,
+        "p10": 0.0,
+        "p90": 18.300000000000068
+      }
+    },
+    {
+      "cold_member_hours": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "food_store": {
+        "max": 647.0,
+        "median": 497.5,
+        "min": 120.0,
+        "n": 896,
+        "p10": 422.0,
+        "p90": 581.5
+      },
+      "forage_trips": {
+        "max": 128.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 3.5
+      },
+      "lit_0200": 1.0,
+      "season": "autumn",
+      "urgent_trips": {
+        "max": 34.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 0.0
+      },
+      "wood_gathered": {
+        "max": 148.0,
+        "median": 50.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 130.0
+      },
+      "wood_stock": {
+        "max": 215.0,
+        "median": 182.0,
+        "min": 7.0,
+        "n": 896,
+        "p10": 32.0,
+        "p90": 207.0
+      },
+      "wood_target": {
+        "max": 195.0,
+        "median": 195.0,
+        "min": 195.0,
+        "n": 896,
+        "p10": 195.0,
+        "p90": 195.0
+      },
+      "wood_trips": {
+        "max": 103.0,
+        "median": 25.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 78.0
+      }
+    },
+    {
+      "cold_member_hours": {
+        "max": 336.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 252.0
+      },
+      "food_store": {
+        "max": 651.0,
+        "median": 318.5,
+        "min": 10.0,
+        "n": 896,
+        "p10": 217.0,
+        "p90": 536.0
+      },
+      "forage_trips": {
+        "max": 84.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 23.0
+      },
+      "lit_0200": 0.8560267857142857,
+      "season": "winter",
+      "urgent_trips": {
+        "max": 20.0,
+        "median": 0.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 17.0
+      },
+      "wood_gathered": {
+        "max": 21.0,
+        "median": 6.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 20.0
+      },
+      "wood_stock": {
+        "max": 216.0,
+        "median": 106.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 12.0,
+        "p90": 184.5
+      },
+      "wood_target": {
+        "max": 156.0,
+        "median": 156.0,
+        "min": 156.0,
+        "n": 896,
+        "p10": 156.0,
+        "p90": 156.0
+      },
+      "wood_trips": {
+        "max": 45.0,
+        "median": 12.0,
+        "min": 0.0,
+        "n": 896,
+        "p10": 0.0,
+        "p90": 38.0
+      }
+    }
+  ],
+  "work_by_season": [
+    {
+      "idle_1200": {
+        "max": 0.9023809523809524,
+        "median": 0.5476190476190477,
+        "min": 0.3164313222079589,
+        "n": 32,
+        "p10": 0.45357142857142857,
+        "p90": 0.6703125000000001
+      },
+      "idle_1500": {
+        "max": 0.8095238095238095,
+        "median": 0.5952380952380952,
+        "min": 0.31067251461988304,
+        "n": 32,
+        "p10": 0.4743452380952381,
+        "p90": 0.7016666666666667
+      },
+      "season": "spring",
+      "work_1200": {
+        "max": 0.7646153846153847,
+        "median": 0.4990322580645161,
+        "min": 0.04257246376811594,
+        "n": 32,
+        "p10": 0.21635416666666668,
+        "p90": 0.6168478260869565
+      },
+      "work_1500": {
+        "max": 0.6923076923076923,
+        "median": 0.4322393663426272,
+        "min": 0.06256109481915934,
+        "n": 32,
+        "p10": 0.2982916666666667,
+        "p90": 0.5877450980392157
+      }
+    },
+    {
+      "idle_1200": {
+        "max": 0.9285714285714286,
+        "median": 0.7831010452961673,
+        "min": 0.4722222222222222,
+        "n": 32,
+        "p10": 0.6460714285714286,
+        "p90": 0.8672932330827068
+      },
+      "idle_1500": {
+        "max": 0.7380952380952381,
+        "median": 0.5488095238095239,
+        "min": 0.3333333333333333,
+        "n": 32,
+        "p10": 0.4739348370927318,
+        "p90": 0.6880952380952381
+      },
+      "season": "summer",
+      "work_1200": {
+        "max": 0.5384615384615384,
+        "median": 0.07417582417582418,
+        "min": 0.0,
+        "n": 32,
+        "p10": 0.0,
+        "p90": 0.25225806451612914
+      },
+      "work_1500": {
+        "max": 0.72,
+        "median": 0.41524621212121215,
+        "min": 0.16666666666666666,
+        "n": 32,
+        "p10": 0.2723076923076923,
+        "p90": 0.5329411764705883
+      }
+    },
+    {
+      "idle_1200": {
+        "max": 0.6904761904761905,
+        "median": 0.39285714285714285,
+        "min": 0.22619047619047616,
+        "n": 32,
+        "p10": 0.2857142857142857,
+        "p90": 0.5107142857142857
+      },
+      "idle_1500": {
+        "max": 0.7619047619047619,
+        "median": 0.5595238095238095,
+        "min": 0.2619047619047619,
+        "n": 32,
+        "p10": 0.47427409988385594,
+        "p90": 0.7261904761904763
+      },
+      "season": "autumn",
+      "work_1200": {
+        "max": 0.7845643939393939,
+        "median": 0.6353991596638655,
+        "min": 0.2618371212121212,
+        "n": 32,
+        "p10": 0.46594871768052887,
+        "p90": 0.7492647058823529
+      },
+      "work_1500": {
+        "max": 0.6622807017543859,
+        "median": 0.388975513975514,
+        "min": 0.06350806451612903,
+        "n": 32,
+        "p10": 0.17216701996113762,
+        "p90": 0.4749133403361345
+      }
+    },
+    {
+      "idle_1200": {
+        "max": 0.9047619047619048,
+        "median": 0.7857142857142857,
+        "min": 0.6309523809523809,
+        "n": 32,
+        "p10": 0.7142857142857143,
+        "p90": 0.8809523809523809
+      },
+      "idle_1500": {
+        "max": 0.9166666666666667,
+        "median": 0.7738095238095237,
+        "min": 0.35714285714285715,
+        "n": 32,
+        "p10": 0.6452380952380953,
+        "p90": 0.8781939605110337
+      },
+      "season": "winter",
+      "work_1200": {
+        "max": 0.2990074441687345,
+        "median": 0.13613669017763846,
+        "min": 0.03337041156840934,
+        "n": 32,
+        "p10": 0.03754300627464045,
+        "p90": 0.2728282342657343
+      },
+      "work_1500": {
+        "max": 0.6609195402298851,
+        "median": 0.1712966034597913,
+        "min": 0.0339080459770115,
+        "n": 32,
+        "p10": 0.03453618364908688,
+        "p90": 0.3453333333333334
+      }
+    }
+  ]
+}

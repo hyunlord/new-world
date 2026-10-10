@@ -13,4 +13,7 @@
 | 3 | 05:42 | 05:49 |
 | 4 | 05:49 | 05:57 |
 | 5 | 05:57 | 06:27 |
-| 6 | 06:27 | |
+| 6 | 06:16 | 06:27 (written while the Part 5 gate ran, 06:15–06:27) |
+| 7 | 06:27 | 07:05 |
+
+Total working time ≈ 2 h 2 min (05:03 → 07:05). The 10-hour rule never triggered. No context compaction occurred; the goal file was re-read at the start (Part 0) and sections were re-checked from the loaded copy at each Part.
