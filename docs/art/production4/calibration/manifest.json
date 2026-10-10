@@ -7,9 +7,9 @@
       "height": 1080,
       "width": 1920,
       "zoom": 4,
-      "raw_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_calib_z4.png",
+      "raw_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_calib_z4.png",
       "raw_sha256": "580af89ee4387a5197787f2010816cefb9e122eb63c592734182dfcf0732e9bb",
-      "standard_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_calib_z4.1920.png",
+      "standard_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_calib_z4.1920.png",
       "published_file": "a_calib_z4.jpg"
     },
     {
@@ -19,9 +19,9 @@
       "height": 1080,
       "width": 1920,
       "zoom": 6,
-      "raw_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_calib_z6.png",
+      "raw_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_calib_z6.png",
       "raw_sha256": "6da67a2a892262457ad7059aa8e99e1027258c91bcf131a4d74fe8ef79670c28",
-      "standard_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_calib_z6.1920.png",
+      "standard_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_calib_z6.1920.png",
       "published_file": "a_calib_z6.jpg"
     },
     {
@@ -31,9 +31,9 @@
       "height": 1080,
       "width": 1920,
       "zoom": 4,
-      "raw_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_lineup_z4.png",
+      "raw_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_lineup_z4.png",
       "raw_sha256": "9f83988e040c6f6f7c44f205cf03411670eab63d999a8aff76fd68112279075a",
-      "standard_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_lineup_z4.1920.png",
+      "standard_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_lineup_z4.1920.png",
       "published_file": "a_lineup_z4.jpg"
     },
     {
@@ -43,14 +43,14 @@
       "height": 1080,
       "width": 1920,
       "zoom": 2,
-      "raw_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_lineup_z2.png",
+      "raw_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_lineup_z2.png",
       "raw_sha256": "cf0a9e9f2b88a7c3d6a72337fbd03b739a1f9190ed3de0d64a788f33a406f14f",
-      "standard_file": "/Users/rexxa/work/art-production4-evidence/shots/calibration/a_lineup_z2.1920.png",
+      "standard_file": "/Users/rexxa/work/art-production4-evidence/round2/shots/calibration/a_lineup_z2.1920.png",
       "published_file": "a_lineup_z2.jpg"
     }
   ],
-  "git_sha": "48a34af77bb10bfc5d315c5204212f183d830e3f",
+  "git_sha": "9f8b49af7e67f5947c247c027d654604b7027188",
   "plan": "calibration",
   "schema_version": 2,
-  "worktree_changed_paths": 16
+  "worktree_changed_paths": 68
 }

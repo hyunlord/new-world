@@ -38,3 +38,11 @@
 - Part6 round1 windowed audit exposed missingwoodpiles (west-only footprint blocked) and30-frame resource/label lag. One bounded runtimefix tries legal adjacent footprints and refreshes on changed simulationtick. Initialraws/manifests/audits are preserved; round2 uses separate externalroot.
 - A17 movement correction: historical <=8tick displacement included two now-idle state0 carriers. Currentmoving requires snapshotstate1 ANDobserveddisplacement; old90violations andcorrected88bothpreserved. This does not change rendererstate or relaxcarryfallbackchecks.
 - A18 remaining failures are outside mandatedradius4 or exhaust legal48px seats; maintain exactgeometry ratherthanexpandcontract. Evidence crowd_diagnosis.md. Natural A12 has11/17 tuples versusminimum12; retain exactspecifiedhash.
+
+## Part 6 final evidence decisions
+
+- Preserve initial90 and temporally corrected88 A17 violations. Current moving requires state1 plus actual displacement; two state0 historical movers are diagnostic only. Final recapture has zero A17 violations.
+- Reuse frozen blind observer results only after exact file and pixel equality proof of both lineups.
+- Keep final winter A5 FAIL at25/42 measurable despite initial25/41 PASS. No rounding or threshold relaxation.
+- Keep A12 identity hash, seat radius, offsets and blocked water unchanged; final A11/A12/A18 failures remain explicit. Two runtime review rounds are exhausted.
+- Calibration sidecars are schema3, gameplay schema4; only paused stills carry a historical motion interval. Validation records actual schema scope instead of assuming all107 are gameplay.

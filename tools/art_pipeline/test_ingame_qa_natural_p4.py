@@ -75,6 +75,14 @@ class NaturalColourTests(unittest.TestCase):
         self.assertEqual(checked.status,'FAIL')
         self.assertIn('1 tuples/3',checked.detail)
 
+    def test_legacy_emulation_is_explicit_and_does_not_change_new_tuple(self) -> None:
+        actors = tuple(replace(entity(),ident=i,variant=(1,0),tile=(i,0)) for i in range(12))
+        checked = variety(capture(Path('unused'),actors))
+        self.assertEqual(checked.status,'FAIL')
+        self.assertIn('1 tuples/12',checked.detail)
+        self.assertIn('12 emulated from frozen P3',checked.detail)
+        self.assertIn('not captured skin/clothing metadata',checked.detail)
+
 
 if __name__ == '__main__':
     unittest.main()
