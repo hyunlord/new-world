@@ -757,3 +757,36 @@ Death census totals: `{"dehydration": 2, "starvation": 656}`.
 Day60 free-meal tally distribution: `{"max": 2146.0, "median": 762.0, "min": 313.0, "p10": 437.1, "p90": 1401.7000000000003}`.
 
 Rhythm: `{"evening_near_hearth_share": {"max": 0.25, "median": 0.12771739130434784, "min": 0.0, "p10": 0.03614285714285714, "p90": 0.2210526315789474}, "night_in_shelter_share": {"max": 0.0, "median": 0.0, "min": 0.0, "p10": 0.0, "p90": 0.0}, "noon_idle_share": {"max": 0.6382978723404256, "median": 0.5051020408163265, "min": 0.4, "p10": 0.43505434782608693, "p90": 0.5813953488372093}}`.
+
+### Part5 round1 — initial v9 rules (2025adc1)
+
+Knobs: bushes10, utilization0.85, reserve0.5days, cooldown720, headroom2, night1260..360/recovery0.12, child5760, eveningradius3. Both cohorts deterministic; v8/legacy all baseline-existing summary and raw fields reproduce exactly. No tuning change yet.
+
+| Target | Verdict |
+|---|---|
+| U1 | PASS |
+| U2 | FAIL |
+| U3 | PASS |
+| U4 | PASS |
+| U5 | PASS |
+| U6 | FAIL |
+| U7 | PASS |
+| U8 | PASS |
+| U9 | PASS |
+| U10 | PASS |
+| U11 | PASS |
+
+All median/p10/p90/min/max target clauses: [round1 targets](probe/p3-5_round1_targets/u_targets.md); source receipts and producer revision are in the adjacent JSON. U2 dehydration max14 in both runs; U6 all-sample population minimum18. Ten-day deaths57 and sixty-day deaths24 were all SeekingSleep, never returning to water after the observed thirst breach. No starvation; meals_without_food=0 under v9 (v8 sixty-day median762).
+
+| Day | Alive median [p10,p90;min,max] | Food stock median [p10,p90;min,max] | Starvation median [p10,p90;min,max] |
+|---|---|---|---|
+| 1 | 25 [24.1,25;24,25] | 29.5 [17.2,45.6;1,47] | 0 [0,0;0,0] |
+| 5 | 33 [27,33;24,33] | 47 [13.2,129.2;0,153] | 0 [0,0;0,0] |
+| 10 | 40.5 [29.2,42;24,42] | 42.5 [13.2,157.4;3,212] | 0 [0,0;0,0] |
+| 15 | 42 [32.3,42;24,42] | 49 [11.1,206.7;0,288] | 0 [0,0;0,0] |
+| 20 | 42 [33.2,42;24,42] | 62 [1.7,260.8;0,359] | 0 [0,0;0,0] |
+| 30 | 42 [35.1,42;24,42] | 62.5 [5.3,337.7;0,498] | 0 [0,0;0,0] |
+| 45 | 42 [36.1,42;25,42] | 80 [1.1,479.1;0,692] | 0 [0,0;0,0] |
+| 60 | 42 [42,42;42,42] | 116.5 [38.9,641.6;12,891] | 0 [0,0;0,0] |
+
+Round1 requires a correctness repair before parameter tuning. Observed seed33 agent12 reached old bed(24,25) while bed_of pointed to(25,24); position==SeekTarget!=bed_of, thirst100. This confirms the assigned-bed target became stale after reassignment. Retain initial tuning while repairing that synchronization; do not expand critical-preemption behavior without evidence.

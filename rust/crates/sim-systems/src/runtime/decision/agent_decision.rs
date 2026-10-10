@@ -1705,13 +1705,16 @@ impl RuntimeSystem for AgentDecisionSystem {
             .iter()
         {
             match state {
-                // Resource seeks: set ONCE, keep stable (α behavior unchanged —
-                // resource tiles are fixed, so never re-target while seeking).
+                // Resource targets stay stable; assigned beds follow bed reassignment.
                 AgentState::Seeking { target: TargetKind::Food }
                 | AgentState::Seeking { target: TargetKind::Water }
                 | AgentState::Seeking { target: TargetKind::Sleep }
                 | AgentState::Seeking { target: TargetKind::GatherFood } => {
-                    if seek_opt.is_none() {
+                    let bed_changed = resources.rules.agent.night_rest.is_some()
+                        && matches!(state, AgentState::Seeking { target: TargetKind::Sleep })
+                        && resources.bed_of.get(&agent.id).is_some_and(|bed|
+                            seek_opt.is_some_and(|seek| seek.tile != *bed));
+                    if seek_opt.is_none() || bed_changed {
                         let chosen = match state {
                             AgentState::Seeking { target: TargetKind::Water } => {
                                 nearest_resource_tile(pos, &resources.water_tiles)

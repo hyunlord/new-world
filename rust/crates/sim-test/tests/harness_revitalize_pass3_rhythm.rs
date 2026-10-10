@@ -268,3 +268,69 @@ fn harness_rhythm_bed_seek_ignores_intermediate_shelters() {
     ));
     assert!((engine.world.get::<&Sleep>(entity).unwrap().fatigue - 9.88).abs() < 1e-10);
 }
+
+#[test]
+fn harness_rhythm_sleep_seek_does_not_dehydrate_seed33() {
+    // Given the real game seed that exposed a stale sleep target after bed reassignment.
+    let mut engine = game_v9_scene(33);
+    // When the production scheduler runs for ten days without state injection.
+    advance_to(&mut engine, 14400);
+    // Then bed seeking does not leave villagers trapped until dehydration kills them.
+    assert_eq!(engine.resources.tallies.deaths_dehydration, 0);
+}
+
+#[test]
+fn harness_rhythm_reassigned_bed_replaces_existing_sleep_seek() {
+    // Given a walker at its old bed after the bed assignment changes.
+    let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
+    engine.resources.rules = WorldRules::game_v9();
+    engine.resources.current_tick = 784;
+    assert!(engine
+        .resources
+        .current_tick
+        .is_multiple_of(engine.resources.rules.agent.move_interval_ticks));
+    let entity = engine.spawn_agent(2, 2);
+    let id = engine.world.get::<&Agent>(entity).unwrap().id;
+    engine
+        .world
+        .insert(
+            entity,
+            (
+                AgentState::Seeking {
+                    target: TargetKind::Sleep,
+                },
+                sim_core::components::SeekTarget { tile: (2, 2) },
+                Sleep::new(10.0, 0.0),
+                MovementRng::new(1),
+            ),
+        )
+        .unwrap();
+    engine
+        .resources
+        .sleep_tiles
+        .insert((2, 2), RESOURCE_SOURCE_INFINITE);
+    engine
+        .resources
+        .sleep_tiles
+        .insert((3, 2), RESOURCE_SOURCE_INFINITE);
+    engine.resources.bed_of.insert(id, (3, 2));
+    // When decision reconciles the current assignment.
+    AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+    // Then movement reaches the new bed and the sleep arrival succeeds.
+    assert_eq!(
+        engine
+            .world
+            .get::<&sim_core::components::SeekTarget>(entity)
+            .unwrap()
+            .tile,
+        (3, 2)
+    );
+    AgentMovementSystem::new().tick(&mut engine.world, &mut engine.resources);
+    AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+    assert!(matches!(
+        *engine.world.get::<&AgentState>(entity).unwrap(),
+        AgentState::Consuming {
+            target: TargetKind::Sleep
+        }
+    ));
+}
