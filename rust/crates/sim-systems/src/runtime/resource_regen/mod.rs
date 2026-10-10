@@ -319,6 +319,19 @@ mod tests {
     }
 
     #[test]
+    fn regen_channel_counts_regrowth_lost_at_the_ceiling() {
+        let sources = [((0, 0), 4u8), ((1, 0), 4), ((2, 0), 4), ((3, 0), 4)];
+        let mut tiles = HashMap::new();
+        tiles.insert((0, 0), 4u8); // full: the whole pulse is lost
+        tiles.insert((1, 0), 3); // 3 + 2 overshoots by 1
+        tiles.insert((3, 0), RESOURCE_SOURCE_INFINITE); // sentinel loses nothing
+        // (2, 0) is absent: regrows from zero without loss.
+        assert_eq!(regen_channel(&sources, &mut tiles, 2), 2 + 1);
+        assert_eq!((tiles[&(0, 0)], tiles[&(1, 0)], tiles[&(2, 0)]), (4, 4, 2));
+        assert_eq!(tiles[&(3, 0)], RESOURCE_SOURCE_INFINITE);
+    }
+
+    #[test]
     fn metadata() {
         let s = ResourceRegenSystem::new();
         assert_eq!(s.name(), "ResourceRegenSystem");

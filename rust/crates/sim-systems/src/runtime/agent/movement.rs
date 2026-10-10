@@ -151,7 +151,8 @@ impl RuntimeSystem for AgentMovementSystem {
         let evening_radius = rules.evening_gather
             .filter(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute))
             .map(|rule| rule.tether_radius);
-        let forage = rules.forage;
+        // Same gate as the decision system: foraging needs a store target too.
+        let forage = rules.forage.filter(|_| resources.rules.society.stock_target.is_some());
         let forage_window = forage
             .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
@@ -175,6 +176,7 @@ impl RuntimeSystem for AgentMovementSystem {
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
         let mut haul_steps: Vec<AgentId> = Vec::new();
+        let mut not_hauling: Vec<AgentId> = Vec::new();
         for (_, (pos, rng, state, seek, agent, child, inventory, elder)) in world
             .query::<(
                 &mut Position,
@@ -242,6 +244,11 @@ impl RuntimeSystem for AgentMovementSystem {
                         haul_steps.push(agent.id);
                         continue;
                     }
+                    // Display-only: a member that stopped hauling before reaching
+                    // the deposit radius has not arrived by hauling.
+                    if distance > SETTLEMENT_PROXIMITY_RADIUS {
+                        not_hauling.push(agent.id);
+                    }
                 }
             }
             // Idle / no AgentState: Brownian motion (unchanged).
@@ -273,6 +280,9 @@ impl RuntimeSystem for AgentMovementSystem {
             }
             pos.x = nx as u32;
             pos.y = ny as u32;
+        }
+        for id in not_hauling {
+            resources.haulers.remove(&id);
         }
         resources.haulers.extend(haul_steps);
     }

@@ -33,7 +33,7 @@ pub(super) fn metrics(engine: &SimEngine, fixed_supply: f64) -> Value {
             }
         }
     }
-    let forage = r.rules.agent.forage;
+    let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
     let in_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
     let mut query = engine.world.query::<(
         &Agent,

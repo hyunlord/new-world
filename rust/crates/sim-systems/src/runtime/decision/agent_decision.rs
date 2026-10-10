@@ -1809,6 +1809,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         // bush emptied before they arrived (re-targeted below).
         let mut gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         let mut retarget: Vec<Retarget> = Vec::new();
+        let mut to_idle: Vec<hecs::Entity> = Vec::new();
         for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
             .query::<(
                 &Agent,
@@ -1836,8 +1837,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                         }
                     } else {
                         let chosen = nearest_food_tile_in_radius(pos, &resources.food_tiles, GATHER_SCAN_RADIUS);
-                        if let Some(tile) = chosen {
-                            seek_set.push((e, tile));
+                        match chosen {
+                            Some(tile) => seek_set.push((e, tile)),
+                            // The tile its Gather arm picked was emptied later in
+                            // this tick: idle instead of freezing without a target.
+                            None => to_idle.push(e),
                         }
                         chosen
                     };
@@ -1947,7 +1951,6 @@ impl RuntimeSystem for AgentDecisionSystem {
         // Pass 4 — re-target emptied bushes in AgentId order by the forage
         // choice rule (claims recomputed, the empty tile excluded); a gatherer
         // with no qualifying bush becomes Idle and drops its target.
-        let mut to_idle: Vec<hecs::Entity> = Vec::new();
         if let Some(rule) = forage_rule {
             retarget.sort_by_key(|row| row.0);
             for (id, e, pos, old) in retarget {

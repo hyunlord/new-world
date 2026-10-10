@@ -179,17 +179,23 @@ fn daily(run: &RunResult, day: u64, key: &str) -> Option<f64> {
 /// Pass 4 Seasons, Demography and Foraging sections.
 fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     const SEASONS: [&str; 4] = ["spring", "summer", "autumn", "winter"];
-    let mut out = String::from("\n## Seasons\n\nEach elapsed day is attributed to the season of its closing checkpoint (display 08:00 with the 480-tick clock offset), so a season-boundary day is counted in the new season. Without seasons every day is spring. Supply is the current-season nominal union-catchment supply; harvest, regrowth lost at the cap and forage trips are per-day counter differences; stock is the checkpoint stockpile. Values are medians over every seed-day in the season.\n\n| Season | Seed-days | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
+    let mut out = String::from("\n## Seasons\n\nEach elapsed day (checkpoint d−1 to d) is attributed to the season of its opening checkpoint; with the 480-tick clock offset that is the display day whose 08:00 starts the window, which holds 16 of its 24 hours. Day 1 opens at tick 0 (spring). Without seasons every day is spring. Supply is the current-season nominal union-catchment supply; harvest, regrowth lost at the cap and forage trips are per-day counter differences; stock is the checkpoint stockpile. Values are medians over every seed-day in the season.\n\n| Season | Seed-days | Supply/day | Harvest/day | Need/day | Stock | Regrowth lost at cap/day | Forage trips/day |\n|---|---:|---:|---:|---:|---:|---:|---:|\n");
     for (index, name) in SEASONS.iter().enumerate() {
         let mut columns: [Vec<f64>; 6] = Default::default();
         for run in runs {
             for day in 1..=args.days {
                 let Some(row) = run.checkpoints.get(&day) else { continue };
-                if row["season"].as_u64() != Some(index as u64) {
+                let opening = if day > 1 {
+                    run.checkpoints.get(&(day - 1)).and_then(|r| r["season"].as_u64())
+                } else {
+                    Some(0)
+                };
+                if opening != Some(index as u64) {
                     continue;
                 }
+                let opening_row = if day > 1 { run.checkpoints.get(&(day - 1)).unwrap_or(row) } else { row };
                 for (column, value) in columns.iter_mut().zip([
-                    row["food_supply_season_per_day"].as_f64(),
+                    opening_row["food_supply_season_per_day"].as_f64(),
                     daily(run, day, "food_harvested_total"),
                     row["food_need_per_day"].as_f64(),
                     row["stockpile_food"].as_f64(),

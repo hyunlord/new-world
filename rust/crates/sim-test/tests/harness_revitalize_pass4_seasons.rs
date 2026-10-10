@@ -69,6 +69,10 @@ fn harness_season_target_includes_winter() {
         let want = if season == 1 || season == 2 { base + 7.0 * (need - winter).max(0.0) } else { base };
         let got = stock_target(&engine.world, &engine.resources, 1).expect("target");
         assert_eq!(got, want, "display day {d}, season {season}");
+        // Independent numbers: 42 x 2.4 = 100.8 need, 1.5 days = 151.2, winter
+        // supply 12 x 12 x 0.5 = 72, so summer/autumn add 7 x 28.8 = 201.6.
+        let fixed = if season == 1 || season == 2 { 151.2 + 201.6 } else { 151.2 };
+        assert!((got - fixed).abs() < 1e-3, "display day {d}: target {got}, expected {fixed}");
         if season == 1 || season == 2 {
             assert!(got > base, "summer/autumn target must include the winter shortfall");
         }

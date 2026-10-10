@@ -159,6 +159,12 @@ def autumn_closings(seed: Seed) -> list[dict]:
     return closings
 
 
+def window_season(seed: Seed, day: int) -> int:
+    """Season of elapsed day `day` (checkpoint day-1 to day), taken at its opening
+    checkpoint; the window starts at display 08:00 of that display day."""
+    return int(seed.days[day - 1]["season"]) if day > 1 else SPRING
+
+
 def total_deaths(row: dict) -> float:
     return sum(float(row[k]) for k in ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age"))
 
@@ -195,7 +201,8 @@ def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dic
         "stagnation": clause(stagnation["max"] <= 4, stagnation, "longest run of days 2..N with members <= sustainable-3 and no birth <= 4 in every seed"),
     })
     old30 = quantiles(long.day_values(30, "deaths_old_age"))
-    margin = quantiles([(seed.days[long.duration]["births"] - seed.days[30]["births"]) - (total_deaths(seed.days[long.duration]) - total_deaths(seed.days[30])) for seed in long.seeds])
+    # Days 30..N inclusive: counters from the day-29 checkpoint to the last one.
+    margin = quantiles([(seed.days[long.duration]["births"] - seed.days[29]["births"]) - (total_deaths(seed.days[long.duration]) - total_deaths(seed.days[29])) for seed in long.seeds])
     band = quantiles([float(seed.days[d]["alive"]) for seed in long.seeds for d in seed.days if d >= 30])
     last = long.duration
     child_share = quantiles([ratio(seed.days[last]["children"], seed.days[last]["alive"]) for seed in long.seeds])
@@ -221,7 +228,7 @@ def evaluate(short: Round, long: Round, baseline_ms: float | None, receipts: dic
     work_seasons = {SPRING, SUMMER, AUTUMN} if seasons_on else None
     noon = quantiles(per_seed_median(long, NOON, "state_idle", "alive", work_seasons))
     trips = [daily_delta(seed, d, "forage_trips_total") for seed in long.seeds for d in seed.days
-             if not seasons_on or seed.days[d]["season"] in (SUMMER, AUTUMN)]
+             if not seasons_on or window_season(seed, d) in (SUMMER, AUTUMN)]
     trips_stats = quantiles(trips)
     result["W8"] = target({
         "noon_idle": clause(noon["median"] <= .45, noon, "noon idle share median <= 0.45 over spring-autumn days (all days without seasons)"),
