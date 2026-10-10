@@ -34,3 +34,9 @@ Productioncontact sheets preserve the specified6xlayout but publishJPEG85 to res
 Real art capture run at dc55c9a663320b57047c1ba50a6298e8164a06d0 produced92/92 frames. Documentation and static-test work was concurrent; render source matched that commit. Code gate and art acceptance remain separate. A5 min0.0548 and8unmeasurable occluded villagers fail; A11 blind labels saved before key reveal scored4/24 at both zooms. Ground chroma reduction cannot remove occlusion or provide missing activity silhouettes, so it was not used to chase the metric. Prescribed tree density was retained. The two bounded asset review rounds are complete.
 
 Publishing entity metadata with whitespace removed saves5,106,833bytes without changing JSON values; raw pretty JSON and framebuffers remain under .harness. GIFs each preserve40frames and stay under8MB. Native Godot visual QA uses real framebuffer checker/y-sort/ramp measurements plus two independent read-only visual reviews; web DOM/Lighthouse checks do not apply.
+
+## Publication boundary
+
+Finalcodegate19/19passed at64db8021f9e9cae4b8aabb0725a5d047bcab4ef1. Finalpublicationcommitwillbeverified againwithGATE_OUTPUT_DIR pointingoutsidecommitteddocs, avoiding a self-modifying evidencecommitloop. Render/art/locale/sourcefiles areunchangedfromthe92-framecapturecommitdc55c9a6. Compatibilitymergedlatest simulationa8611e07cleanlyinlocalce6d9494, captured92frames, thenreturnedWIPanddeletedthetemporarybranchwithoutpushingit.
+
+Rawmetadata forpublishedshots remainsunchanged; additional whitespace-onlycompactionofearlierP2/sheetJSON saves521,070bytes. Reportspacebudget remains40,000,000bytes. Independentper-Partwalltimers were notcollectedduringparallelwork; reportprovidescommitcheckpointwindows explicitlynotclaimedasexecutiondurations.

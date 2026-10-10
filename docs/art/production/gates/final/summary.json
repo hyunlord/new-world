@@ -1,0 +1,10 @@
+{
+  "tested_head": "64db8021f9e9cae4b8aabb0725a5d047bcab4ef1",
+  "gate_rows": 19,
+  "all_exit_zero": true,
+  "cargo_suites": 114,
+  "cargo_passed": 1806,
+  "cargo_failed": 0,
+  "python_tests": 57,
+  "godot_art_tests": 12
+}

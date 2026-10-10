@@ -1,6 +1,6 @@
 ## 구현 완료 보고
 
-이 문서는 **진행 중인 증거 기반 초안**이다. 제목은 요청된 고정 형식이며 작업 완료를 뜻하지 않는다. 최종 전체 코드 게이트, 최신 시뮬레이션 호환 시험과 원격 브랜치·PR 확인은 아직 대기 중이다. 실제 창 캡처 92장 및 A1–A12 검사는 완료됐고 A5·A11이 실패했다. 변경 단언의 SHA 고정 변이 검사는 아래 범위에서 완료됐다. 아래 수량은 작성 시점 스냅샷이며 부모 에이전트가 최종 증거로 갱신해야 한다.
+**기술 설치 및 증거 납품 완료, 시각 품질은 부분 납품(REVISE).** 전체 코드 게이트19개 항목이 통과했다. 실제 창92장에 대한 A1–A12 중10개는 통과했고 A5 대비·가림 및 A11 활동 식별은 실패했다. 변환기 §6.1 원시 JPEG·배음 복원도 미충족이다. 실패 기준을 완화하지 않았으며, 이 보고서의 제목은 아트 품질 전체 승인이라는 뜻이 아니다.
 
 ### 구현 의도
 
@@ -14,10 +14,10 @@
 | 1 | 격자 변환기 v3, 116색 생산 팔레트, D3 16셀 재측정 및 설치 | 당시 테스트 통과. 아래 §6.1 요구와 시험 사이의 차이는 미해결 |
 | 2 | 원본 크기 Sprite2D, 공통 발 기준 y 정렬, 정수 줌, 한국어·Galmuri, 캡처 도구 이식 | 전체 게이트 13개 항목 통과, 실제 창 10장 캡처 |
 | 3 | 16종 시트 생성·셀별 수용 기록, 영역 아틀라스 준비 | 42회 생성 종료, 고유 수용 13셀·절차적 대체 243셀 설치 및 패킹 커밋 |
-| 4 | `terrain_renderer.gd`의 6개 이중 격자 레이어와 지면 데칼, `nature_renderer.gd`의 결정적 자연물 배치 | Part 4 커밋 완료, 최종 통합 검사 대기 |
-| 5 | 활동·방향 추론, 프레임 선택, 팔레트 영역 셰이더, 구조물·광원·욕구 표시 | Part 5 커밋 완료, 대체 프레임 설치 후 전체 인게임 검증 대기 |
-| 6 | 상단 수치·아이콘, 하단 왼쪽 최근 4개 소식, 동일 색상 주민 초상, 욕구 막대, 인과 패널 | Part 6 커밋 완료. 파싱 및 헤드리스 패널 기하 확인, 창 QA 최종 판정 대기 |
-| 7–8 | 정량 QA, 식별 실험, 비교 그림·GIF, 변이 검사, 호환 시험, 최종 게이트·보고·초안 PR | 92장 캡처·A 검사 10/12 통과, A5·A11 실패. 변이 474개 사멸, 최종 게이트·호환·PR 대기 |
+| 4 | `terrain_renderer.gd`의 6개 이중 격자 레이어와 지면 데칼, `nature_renderer.gd`의 결정적 자연물 배치 | 실제 창에 설치 확인; 수관 가림으로 A5 실패 |
+| 5 | 활동·방향 추론, 프레임 선택, 팔레트 영역 셰이더, 구조물·광원·욕구 표시 | A7 애니메이션·A6 조명 통과, A11 식별 실패 |
+| 6 | 상단 수치·아이콘, 하단 왼쪽 최근 4개 소식, 동일 색상 주민 초상, 욕구 막대, 인과 패널 | A9 실제 90개 장면의 한국어·글꼴·배치 통과 |
+| 7–8 | 정량 QA, 식별 실험, 비교 그림·GIF, 변이 검사, 호환 시험, 최종 게이트·보고·초안 PR | 92장 캡처·A 검사 10/12 통과, A5·A11 실패. 변이474개 사멸, 호환 검증 및 코드 게이트19개 통과 |
 
 ### 구현 방법
 
@@ -64,44 +64,46 @@
 
 ### 변경된 파일 목록
 
-현재 기준 이후 모든 `art-prod` 커밋을 전체 SHA로 기록했다. 아래는 변경 디렉터리 집계이며 실제 전체 경로는 해당 커밋의 `git show --stat`에 있다. 이후 최종 검증·보고 커밋은 부모 에이전트가 추가한다.
+발행 직전까지의 모든 `art-prod` 커밋을 전체 SHA로 기록했다. 실제 전체 변경 경로는 changed_files.txt와 각 커밋의 git show --stat에 있다. 최종 보고 발행 커밋 자체는 PR와 사용자 메시지에서 식별한다.
 
-| 커밋 | 작업 | 변경 파일 집계 |
+| Part | 전체 SHA | 의도 |
 |---|---|---|
-| `5a20542f2c32c94a2ffdb05ae22b63d3667d4b0a` | art-prod(p0): bring in the direction work | 방향 브랜치 병합 |
-| `9425778ded8d75d43813b16ce3322c6504c5bbd3` | art-prod(p0): establish isolated production baseline and bounded gates | `docs/art/` 11개, `tools/art_pipeline/` 3개 |
-| `563b0f6c922ce78ecea5cb7df24f4aaeafbf01c0` | art-prod(p1): measure native sprites and derive the D3 production palette | `docs/art/` 5개, `tools/art_pipeline/` 8개 |
-| `35401db7e4ee72d9d45f2a940f2d26171bcf1bb3` | art-prod(p2): install the native D3 world and verify its first real capture | `assets/art/` 21개, `assets/fonts/` 3개, `assets/ui/` 1개, `docs/art/` 25개, `project.godot/` 1개, `rust/crates/` 23개, `scenes/main.tscn/` 1개, `scenes/test/` 1개, `scripts/core/` 1개, `scripts/test/` 9개, `scripts/ui/` 8개, `tools/art_pipeline/` 1개 |
-| `b350f91977c7d1011df04014de41dfdeebeadae1` | art-prod(p3): audit the first two character sheets without relaxing acceptance | `docs/art/` 6개, `tools/art_pipeline/` 4개 |
-| `74cf74fdbe267c306277e31dc95fbc88ae4c3866` | art-prod(p3): retain accepted structures and establish paired palette regions | `assets/art/` 11개, `docs/art/` 21개, `scripts/test/` 1개, `shaders/villager_ramp.gdshader/` 1개, `tools/art_pipeline/` 2개 |
-| `784fdc0ac7d683507027918577612e555f4653cd` | art-prod(p3): audit the nature sheets and preserve the accepted flint cell | `assets/art/` 3개, `docs/art/` 5개, `tools/art_pipeline/` 1개 |
-| `21ab30e8a0be7f52334198aa0ccf8ea4ad378802` | art-prod(p3): record rejected carry and work sheets for bounded retries | `docs/art/` 5개 |
-| `bb9cfcfdd27c6b691412a0c7f02c92aa2477e106` | art-prod(p3): audit camp and interface sheets within the evidence size budget | `docs/art/` 24개, `tools/art_pipeline/` 1개 |
-| `0f155bf0e61589db57a51c2c6d7401c9292c5d10` | art-prod(p3): record effect and adult rest sheet quality results | `assets/art/` 5개, `docs/art/` 5개 |
-| `8786daabf3f01f52e9fd69f0304d85d7a776db23` | art-prod(p3): preserve adult and child rest sheet measurements | `docs/art/` 5개 |
-| `cda2cd1f5e271ebd3dfddaebf52f1e48e1cbdd84` | art-prod(p3): measure decal and ambient creature candidates | `docs/art/` 5개 |
-| `4957612d21647c3e15ba4b1d183ca9a6c67a00b2` | art-prod(p3): retain very-small interface and effect retries | `docs/art/` 5개 |
-| `332b0fac6f78d49d1ef62abc45c6d66612f34864` | art-prod(p3): retain tiny decal and ambient retries | `assets/art/` 3개, `docs/art/` 4개 |
-| `1cdf5716a8ec47e126300a440d3657381d3481c5` | art-prod(p3): apply checkpoint prompt and expose converter audit gaps | `assets/art/` 5개, `docs/art/` 8개, `tools/art_pipeline/` 2개 |
-| `207ea67bc26315d5b8223888dd33360bddecb2b0` | art-prod(p3): close adult locomotion generation attempts | `docs/art/` 5개 |
-| `fb0f461bc3d7789a58bdd37ab2bfcc54dd4528a0` | art-prod(p4): connect muted terrain and deterministic nature | `assets/art/` 8개, `docs/art/` 1개, `scripts/test/` 2개, `scripts/ui/` 2개, `tools/art_pipeline/` 2개 |
-| `ab697f377b9f3bfd6690e403fe24bde1644c4671` | art-prod(p5): make resident activity and camp effects follow snapshots | `scenes/main.tscn/` 1개, `scripts/test/` 5개, `scripts/ui/` 8개 |
-| `198e71764a093cbec25eb0d264a9f6de45af7478` | art-prod(p6): organize Korean pixel HUD and preserve source contracts | `assets/ui/` 1개, `docs/art/` 1개, `localization/compiled/` 2개, `localization/fluent/` 2개, `localization/key_registry.json/` 1개, `rust/crates/` 20개, `scripts/ui/` 5개 |
-| `9a5c191dc85a0952f0716afa9103c6fcf38bf681` | art-prod(p3): record child locomotion and structure retries | `docs/art/` 5개 |
-| `43a4956de77c6db1a17d0c60caece62c9ddb1dab` | art-prod(p3): record nature retries without relaxing native limits | `assets/art/` 5개, `docs/art/` 5개 |
-| `0189eead423c0496bda04d93b2e2da57a3efea27` | art-prod(p7): prepare complete capture and assertion audit evidence | `docs/art/` 1개, `scripts/test/` 3개, `tools/art_pipeline/` 8개 |
-| `6c35aa00c0ab7bd68523fec0ea40b112a672e5e8` | art-prod(p3): record work pose retries against accepted view requirements | `docs/art/` 5개 |
-| `3dc751e32d85349e11d45cc5fcdc0ce8d78fb60f` | art-prod(p3): retain camp and adult rest rejection evidence | `docs/art/` 5개 |
-| `eee63e9e260081fb4ae5eb8c6dab045f4795ea4c` | art-prod(p3): retain remaining rest and play retries | `docs/art/` 5개 |
-| `86f16401e45feebbd81f268ce8ad5195899f1146` | art-prod(p3): close child locomotion and structure generation | `assets/art/` 3개, `docs/art/` 5개 |
-| `f85bfa55b9c80c7d101ee23df3367ba5463f933d` | art-prod(p3): close work pose generation at the cell attempt limit | `docs/art/` 5개 |
-| `92e9e5caeac1f84d6cd64a9e6705020550fdf267` | art-prod(p3): apply forty-call fallback checkpoint | `docs/art/` 6개 |
-| `678cfb05e73a280b2b45a1944f1b27c44c4d07e1` | art-prod(p3): close bounded character retries with honest rejection evidence | `docs/art/` 5개 |
-| `9b5751730a56f23aa852f4aefcf980670c9d3c9c` | art-prod(p3): fill exhausted production slots with explicit procedural provenance | `assets/art/` 491개, `docs/art/` 2개, `tools/art_pipeline/` 4개 |
-| `253c71c6023e81ba5d52bdbdb9b791932be1cf36` | art-prod(p3): retain recognizable native bodies in rest fallbacks | `assets/art/` 23개, `docs/art/` 3개, `tools/art_pipeline/` 3개 |
-| `dc55c9a663320b57047c1ba50a6298e8164a06d0` | art-prod(p7): preserve complete ledger mutation and integration evidence | `docs/art/` 633개 |
-| `a4c168fb684bd17e743d03bb152acfa71b8c558f` | art-prod(p7): preserve real panel non-overlap through the new layout | `docs/art/` 2개, `rust/crates/` 1개 |
-| `d149611ff38bc3decf3682ab131007ae446affd4` | art-prod(p7): publish real captures and retain failed visual acceptance results | `docs/art/` 81개 |
+| 0 | `5a20542f2c32c94a2ffdb05ae22b63d3667d4b0a` | art-prod(p0): bring in the direction work |
+| 0 | `9425778ded8d75d43813b16ce3322c6504c5bbd3` | art-prod(p0): establish isolated production baseline and bounded gates |
+| 1 | `563b0f6c922ce78ecea5cb7df24f4aaeafbf01c0` | art-prod(p1): measure native sprites and derive the D3 production palette |
+| 2 | `35401db7e4ee72d9d45f2a940f2d26171bcf1bb3` | art-prod(p2): install the native D3 world and verify its first real capture |
+| 3 | `b350f91977c7d1011df04014de41dfdeebeadae1` | art-prod(p3): audit the first two character sheets without relaxing acceptance |
+| 3 | `74cf74fdbe267c306277e31dc95fbc88ae4c3866` | art-prod(p3): retain accepted structures and establish paired palette regions |
+| 3 | `784fdc0ac7d683507027918577612e555f4653cd` | art-prod(p3): audit the nature sheets and preserve the accepted flint cell |
+| 3 | `21ab30e8a0be7f52334198aa0ccf8ea4ad378802` | art-prod(p3): record rejected carry and work sheets for bounded retries |
+| 3 | `bb9cfcfdd27c6b691412a0c7f02c92aa2477e106` | art-prod(p3): audit camp and interface sheets within the evidence size budget |
+| 3 | `0f155bf0e61589db57a51c2c6d7401c9292c5d10` | art-prod(p3): record effect and adult rest sheet quality results |
+| 3 | `8786daabf3f01f52e9fd69f0304d85d7a776db23` | art-prod(p3): preserve adult and child rest sheet measurements |
+| 3 | `cda2cd1f5e271ebd3dfddaebf52f1e48e1cbdd84` | art-prod(p3): measure decal and ambient creature candidates |
+| 3 | `4957612d21647c3e15ba4b1d183ca9a6c67a00b2` | art-prod(p3): retain very-small interface and effect retries |
+| 3 | `332b0fac6f78d49d1ef62abc45c6d66612f34864` | art-prod(p3): retain tiny decal and ambient retries |
+| 3 | `1cdf5716a8ec47e126300a440d3657381d3481c5` | art-prod(p3): apply checkpoint prompt and expose converter audit gaps |
+| 3 | `207ea67bc26315d5b8223888dd33360bddecb2b0` | art-prod(p3): close adult locomotion generation attempts |
+| 4 | `fb0f461bc3d7789a58bdd37ab2bfcc54dd4528a0` | art-prod(p4): connect muted terrain and deterministic nature |
+| 5 | `ab697f377b9f3bfd6690e403fe24bde1644c4671` | art-prod(p5): make resident activity and camp effects follow snapshots |
+| 6 | `198e71764a093cbec25eb0d264a9f6de45af7478` | art-prod(p6): organize Korean pixel HUD and preserve source contracts |
+| 3 | `9a5c191dc85a0952f0716afa9103c6fcf38bf681` | art-prod(p3): record child locomotion and structure retries |
+| 3 | `43a4956de77c6db1a17d0c60caece62c9ddb1dab` | art-prod(p3): record nature retries without relaxing native limits |
+| 7 | `0189eead423c0496bda04d93b2e2da57a3efea27` | art-prod(p7): prepare complete capture and assertion audit evidence |
+| 3 | `6c35aa00c0ab7bd68523fec0ea40b112a672e5e8` | art-prod(p3): record work pose retries against accepted view requirements |
+| 3 | `3dc751e32d85349e11d45cc5fcdc0ce8d78fb60f` | art-prod(p3): retain camp and adult rest rejection evidence |
+| 3 | `eee63e9e260081fb4ae5eb8c6dab045f4795ea4c` | art-prod(p3): retain remaining rest and play retries |
+| 3 | `86f16401e45feebbd81f268ce8ad5195899f1146` | art-prod(p3): close child locomotion and structure generation |
+| 3 | `f85bfa55b9c80c7d101ee23df3367ba5463f933d` | art-prod(p3): close work pose generation at the cell attempt limit |
+| 3 | `92e9e5caeac1f84d6cd64a9e6705020550fdf267` | art-prod(p3): apply forty-call fallback checkpoint |
+| 3 | `678cfb05e73a280b2b45a1944f1b27c44c4d07e1` | art-prod(p3): close bounded character retries with honest rejection evidence |
+| 3 | `9b5751730a56f23aa852f4aefcf980670c9d3c9c` | art-prod(p3): fill exhausted production slots with explicit procedural provenance |
+| 3 | `253c71c6023e81ba5d52bdbdb9b791932be1cf36` | art-prod(p3): retain recognizable native bodies in rest fallbacks |
+| 7 | `dc55c9a663320b57047c1ba50a6298e8164a06d0` | art-prod(p7): preserve complete ledger mutation and integration evidence |
+| 7 | `a4c168fb684bd17e743d03bb152acfa71b8c558f` | art-prod(p7): preserve real panel non-overlap through the new layout |
+| 7 | `d149611ff38bc3decf3682ab131007ae446affd4` | art-prod(p7): publish real captures and retain failed visual acceptance results |
+| 7 | `73972b0fcb5b72ab612254170c729dc33bc50363` | art-prod(p7): account for scoped test repairs and independent visual review |
+| 8 | `64db8021f9e9cae4b8aabb0725a5d047bcab4ef1` | art-prod(p8): permit exact-head verification without rewriting committed evidence |
 
 Part 6 주요 파일은 `scripts/ui/panels/{hud_topbar,hud_status_panel,agent_inspector_panel,causal_panel,art_ui}.gd`, `assets/ui/worldsim_theme.tres`다. 추가 키는 원문과 동일한 `HUD_NEWS_TITLE`, `INSPECTOR_CARRYING_FMT`, `HUD_SPEED_FMT`이며 영어·한국어 FTL과 `localization/compiled/{en,ko}.json`, `localization/key_registry.json`을 기존 컴파일러로 갱신했다. 주민 제목은 기존 `INSPECTOR_AGENT_FMT`를 재사용한다. 기존 키 ID는 보존한다.
 
@@ -148,47 +150,53 @@ RAMP는 12개 알려진 변형을 4×·6×에서 대조해 모두 실제 프레�
 
 ### 시뮬레이션 작업과의 호환
 
-이번 작업은 Rust 시뮬레이션·브리지·프로브를 변경하지 않는 계약이다. 최신 `origin/codex/revitalize-2026-10`을 별도 임시 로컬 분기에 병합하는 §12.5 시험은 아직 확인된 결과가 없다. 잠든 주민의 쉼터 내부 숨김, 저녁 모닥불 모임, `life_stages`가 있는 경우 어린이 표시를 최신 시뮬레이션과 함께 확인했다고 주장하지 않는다. 최종 보고에서 병합 결과·충돌 경로·시험 여부를 확정해야 한다.
+아트 `73972b0fcb5b72ab612254170c729dc33bc50363`와 최신 시뮬레이션 `a8611e07aabbb4043f5fac2e8dd14b375a0ada5d`를 임시 로컬 분기에 병합했다. 충돌 0건, 임시 병합 SHA `ce6d9494ba763b6f3f5689f333f60154ac7f39fb`, 브리지 빌드와 실제 창 92장 캡처 성공. 임시 분기는 삭제했고 원격에 푸시하지 않았다. WIP에 시뮬레이션 변경은 포함되지 않는다.
+
+두 선택적 키가 실제 스냅샷에 존재했다. 정오 성인24명·어린이1명이며 어린이24번은 child 프레임을 사용하지만 나무에 가려 독립 시각 식별은 입증하지 못했다. 19:30에 주민16명이 화로에서 Chebyshev3 이내에 앉았고 어린이도 앉은 프레임을 사용했다. 23:00에는 주민26명 중23명이 쉼터 타일에서 수면 상태로 숨겨졌고3명은 이동 상태로 남았다. 개별 주민의 쉼터 소유권은 이 렌더링 증거로 검증하지 않았다. [세부 증거](compatibility/README.md), [원시 요약](compatibility/summary.json).
 
 ### 자율 결정 목록
 
-`DECISIONS.md` 기준으로 독립 복제·WIP/green 분리, 실패를 포함한 생성 60회 제한, 창 실행 공유 잠금, D3 전용 설치, 차분한 지면 변환, Sprite2D 공유 정렬을 적용했다. 정수 줌 전환은 0.12초 보간 표본을 정수 단계로 맞춘다. 보고용 연락 시트는 JPEG85로 저장하되 원본·셀 자산은 무손실로 보존한다. 커밋 `784fdc0ac7d683507027918577612e555f4653cd` 제목의 flint는 잘못된 설명이며 실제 수용 셀은 N2_05 작은 바위다. 원격 확인, 호출 체크포인트 및 Part별 경과 시간은 최종 장부로 갱신해야 한다.
+`DECISIONS.md` 기준으로 독립 복제·WIP/green 분리, 실패를 포함한 생성 60회 제한, 창 실행 공유 잠금, D3 전용 설치, 차분한 지면 변환, Sprite2D 공유 정렬을 적용했다. 정수 줌 전환은 0.12초 보간 표본을 정수 단계로 맞춘다. 보고용 연락 시트는 JPEG85로 저장하되 원본·셀 자산은 무손실로 보존한다. 커밋 `784fdc0ac7d683507027918577612e555f4653cd` 제목의 flint는 잘못된 설명이며 실제 수용 셀은 N2_05 작은 바위다. 호출 체크포인트20·40을 보존했다. 최종 원격 SHA는 사용자 메시지, 커밋 체크포인트 시간은 아래에 기록한다. 독립 Part별 실행 시간은 병렬 작업 중 계측하지 못했으므로 커밋 간격을 실제 작업 시간으로 주장하지 않는다.
 
 
 Part별 시간은 아래 **커밋 체크포인트 사이의 근사 벽시계 구간**이다. 병렬 작업이 겹치므로 합산 가능한 노동 시간도, 실제 시작 시각도 아니다. 단일 커밋 Part는 직전 통합 체크포인트부터의 구간만 표시하므로 제작 시간을 과소대표한다. 실제 측정이 있는 변이 실행 453.874초는 위에 따로 기재했다.
 
-| Part | UTC 근사 구간 | 구간 길이 | 해석 |
-|---|---|---:|---|
-| 0 | 11:06:37–11:14:51 | 8분 14초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 1 | 11:14:51–11:15:09 | 0분 18초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 2 | 11:15:09–11:25:10 | 10분 1초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 3 | 11:25:29–12:20:57 | 55분 28초 | 첫–마지막 해당 커밋; 다른 Part와 중첩 |
-| 4 | 11:57:16–11:57:19 | 0분 3초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 5 | 11:57:19–11:59:14 | 1분 55초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 6 | 11:59:14–11:59:16 | 0분 2초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 7 | 12:01:34–12:01:36 | 0분 2초 | 직전 체크포인트–해당 마지막 커밋; 실제 작업 시작 아님 |
-| 8 | 미확정 | 미확정 | 최종 게이트·보고·PR 대기 |
+| Part | UTC 커밋 구간 | 측정 한계 |
+|---|---|---|
+| 0 | 11:06:54–11:14:51 | 커밋 간 7분 57초; 실제 작업 시간은 별도 계측하지 않음 |
+| 1 | 11:15:09–11:15:09 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
+| 2 | 11:25:10–11:25:10 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
+| 3 | 11:25:29–12:23:07 | 커밋 간 57분 38초; 실제 작업 시간은 별도 계측하지 않음 |
+| 4 | 11:57:19–11:57:19 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
+| 5 | 11:59:14–11:59:14 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
+| 6 | 11:59:16–11:59:16 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
+| 7 | 12:01:36–12:33:41 | 커밋 간 32분 5초; 실제 작업 시간은 별도 계측하지 않음 |
+| 8 | 12:35:43–12:35:43 | 단일 커밋 체크포인트; 병렬 작업의 독립 소요 시간 미계측 |
 
 ### 확인된 제한사항
 
-변환기의 원시 JPEG 90% 및 4px 배음 반례 요구는 명시적으로 실패한다. 생산 256셀 중 생성 수용은 13셀뿐이며 243셀은 절차적 대체다. 북·동 방향용 수용 원형이 없는 주민 동작은 정면 D3 대체여서 방향 정체성을 증명하지 못한다. D3 임시 셀의 크기·충실도 실패도 별도 남는다. A5 대비·가림과 A11 활동 식별은 실제 창 증거에서 실패했다. 두 시각 검토도 REVISE다. Part 4–6 커밋 및 변경 단언 변이 감사 통과를 최종 전체 gate·시각적 수용으로 확대하지 않는다. 비교 이미지·GIF·정량 QA는 게시됐으나 최종 코드 게이트·호환 시험·원격 확인·PR URL은 아직 갱신 대기다.
+변환기의 원시 JPEG 90% 및 4px 배음 반례 요구는 명시적으로 실패한다. 생산 256셀 중 생성 수용은 13셀뿐이며 243셀은 절차적 대체다. 북·동 방향용 수용 원형이 없는 주민 동작은 정면 D3 대체여서 방향 정체성을 증명하지 못한다. D3 임시 셀의 크기·충실도 실패도 별도 남는다. A5 대비·가림과 A11 활동 식별은 실제 창 증거에서 실패했다. 두 시각 검토도 REVISE다. Part 4–6 커밋 및 변경 단언 변이 감사 통과를 최종 전체 gate·시각적 수용으로 확대하지 않는다. 비교 이미지·GIF·정량 QA는 게시됐으나 호환 시험과 코드 게이트는 완료됐다. 최종 원격 SHA와 초안 PR URL은 발행 후 사용자 메시지에 기록한다.
 
 ### Harness 결과
 
-| 항목 | 기준 Part 0 | Part 2 | 최종 WIP |
-|---|---|---|---|
-| cargo test --workspace | 통과, 322초 | 통과, 315초 | 대기 |
-| Clippy | 통과, 14초 | 통과, 1초 | 대기 |
-| strict GDScript | 통과, 4초 | 통과, 4초 | 대기 |
-| sim-bridge build | 통과, 2초 | 통과, 1초 | 대기 |
-| headless smoke·오류 검색 | 통과, 7초·오류 검색 0 | 통과, 7초·오류 검색 0 | 대기 |
-| art_pipeline Python | 통과, 1초 | 통과, 2초 | 대기, 변환기 요구 차이 별도 기록 |
-| Godot art 장면 시험 | 당시 없음 | 6개 통과 | 대기 |
+전체 게이트 대상 `64db8021f9e9cae4b8aabb0725a5d047bcab4ef1`에서 **19/19 종료 코드0**. 이후 변경은 보고서·캡처·장부 기록뿐이다. 발행 커밋에서 같은 전체 게이트를 외부 증거 디렉터리 `.harness/evidence/art-production/final-head-gate/`로 재실행해 HEAD를 바꾸지 않고 확인한다. WIP·green의 정확한 최종 SHA와 `git ls-remote` 일치, 초안 PR URL은 최종 사용자 응답의 발행 기록에 제공한다.
 
-통합 게이트 `gates/integrated/results.tsv`의 `cargo_test=101`은 이전 204px/280px/상단 오른쪽 배치를 고정한 네 시험 실패를 기록한다. 해당 구형 고정은 의미 기반 실제 패널 기하 검사로 수정됐고 위 7개 추가 변이 감사가 통과했다. 당시 실패 기록은 지우지 않는다. 수정 후 `cargo test --workspace --no-fail-fast` 재검사는 `/tmp/art_full_static_scan.log` 기준 **114개 suite, 1,806개 통과, 0개 실패**다. **최종 전체 코드 게이트는 아직 대기**이며 부분 시험 통과만으로 green 전진을 주장하지 않는다.
+| 항목 | 결과 | 소요 |
+|---|---|---:|
+| cargo test --workspace | 1,806개 통과, 실패0 | 331초 |
+| cargo clippy --workspace --all-targets -- -D warnings | 통과 | 6초 |
+| strict GDScript | 통과 | 5초 |
+| sim-bridge build | 통과 | 4초 |
+| headless smoke·오류 검색 | 종료0, SCRIPT ERROR/ERROR0 | 7초 |
+| Python 파이프라인 | 57개 통과 | 2초 |
+| Godot 아트 장면 | 12개 통과 | 합계9초 |
 
-근거는 `gates/baseline/results.tsv`, `gates/p2/results.tsv`다. Part 6 다섯 스크립트는 별도 `--check-only` 통과했고 실제 Main의 헤드리스 패널 배치도 확인했다. 이 결과만으로 이후 모든 코드가 통과했다고 주장하지 않는다. 최종 green 전진·WIP 및 green의 전체 SHA와 `git ls-remote` 일치 확인·초안 PR `Art production 1: D3 world in the game`은 부모 에이전트의 최종 실행 대기다.
+근거: [final/results.tsv](gates/final/results.tsv). 구형 정보창 위치·폭 고정 때문에 실패했던 최초 통합 로그도 [integrated/results.tsv](gates/integrated/results.tsv)에 보존했다. 실제 비중첩 기하 계약으로 수정한 뒤 워크스페이스 전체1806개 재검사와 추가7개 변이 사멸이 확인됐다. 원래467개 변이 대상과 최종 렌더링 소스는 변하지 않았다. 창 캡처 당시 SHA와 최종 렌더링 파일의 동일성은 [capture_source_validity.json](capture_source_validity.json)에 기록했다.
+
+green은 코드 게이트 통과만 의미한다. A5·A11과 독립 converter literal audit의 종료1은 그대로 미달로 남는다. 초안 PR의 제목은 **Art production 1: D3 world in the game**, 대상은 `codex/revitalize-2026-10`, source는 `codex/art-production-2026-10`이며 #510 위에 쌓인다.
 
 ### 정직한 판단
 
-현재 증거로는 처음 보는 사람이 완성도 있는 픽셀 아트 게임으로 볼 수준이라고 승인할 수 없다. 선명한 네이티브 픽셀, 한국어 인터페이스, 밤 조명, 팔레트 출력과 성능은 검증됐지만, 실제 주민 대비 최소값과 활동 식별은 실패했다. 생성 수용 13셀에 비해 대체 243셀의 비중이 높고 정면 바구니 실루엣 반복·수관 가림·디테일 밀도 불일치·어두운 아이콘이 완성도를 낮춘다. 수정 두 차례 한도를 넘어 추가 작업을 했다고 주장하지 않으며 현재 결과를 검증된 기술 설치와 미수용 시각 품질로 구분한다. 다음 개선은 실제 활동을 구별할 수 있는 방향별 인물 원형, 주민·건물 주변 숲 가독성, 아이콘 대비에 집중해야 한다. 코드 게이트가 이후 통과하더라도 A5·A11 및 변환기 §6.1 실패는 별도로 남는다.
+현재 증거로는 처음 보는 사람이 완성도 있는 픽셀 아트 게임으로 볼 수준이라고 승인할 수 없다. 선명한 네이티브 픽셀, 한국어 인터페이스, 밤 조명, 팔레트 출력과 성능은 검증됐지만, 실제 주민 대비 최소값과 활동 식별은 실패했다. 생성 수용 13셀에 비해 대체 243셀의 비중이 높고 정면 바구니 실루엣 반복·수관 가림·디테일 밀도 불일치·어두운 아이콘이 완성도를 낮춘다. 수정 두 차례 한도를 넘어 추가 작업을 했다고 주장하지 않으며 현재 결과를 검증된 기술 설치와 미수용 시각 품질로 구분한다. 다음 개선은 실제 활동을 구별할 수 있는 방향별 인물 원형, 주민·건물 주변 숲 가독성, 아이콘 대비에 집중해야 한다. 코드 게이트가 통과했어도 A5·A11 및 변환기 §6.1 실패는 별도로 남는다.
+
+변경 경로 전체 목록: [changed_files.txt](changed_files.txt). 최종 보고 자체의 커밋은 자기 SHA를 포함할 수 없으므로 최종 사용자 메시지와 PR의 커밋 목록이 발행 기록을 보완한다.

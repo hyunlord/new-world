@@ -1,0 +1,14 @@
+{
+  "capture_head": "dc55c9a663320b57047c1ba50a6298e8164a06d0",
+  "verified_against": "64db8021f9e9cae4b8aabb0725a5d047bcab4ef1",
+  "runtime_source_paths": [
+    "scripts",
+    "scenes",
+    "shaders",
+    "assets",
+    "localization",
+    "project.godot"
+  ],
+  "changed_runtime_files": [],
+  "interpretation": "Final real captures remain valid for unchanged runtime/art files. Later changes are static tests, documentation and gate output handling."
+}
