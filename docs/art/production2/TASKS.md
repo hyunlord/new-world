@@ -10,4 +10,6 @@
 | 5 | Groves, clearings, canopy fade, season tint | completed | 2026-10-10T14:37:18Z | 2026-10-10T14:43:34Z |
 | 6 | Death count/news and localized season HUD | completed | 2026-10-10T14:43:34Z | 2026-10-10T14:49:27Z |
 | 7 | Windowed captures, A1–A14, blind review, compatibility | completed | 2026-10-10T14:49:27Z | 2026-10-10T14:55:18Z |
-| 8 | Final exact-head gate, Korean report, green FF and draft PR | in_progress | 2026-10-10T14:55:18Z | |
+| 8 | Final exact-head gate, Korean report, green FF and draft PR | completed | 2026-10-10T14:55:18Z | publication.json: completed_utc |
+
+Part 8 publication end UTC and exact commit/remote verification are recorded after the committed artifact gate in `.harness/evidence/art-production2/publication.json` and PR #511.

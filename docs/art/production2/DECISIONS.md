@@ -60,3 +60,9 @@
 - Locally merged `7a8ae053059f3d3eed376a427eadec235259fecd` into art `4908036f` without conflicts (temporary merge `276d8572`); never pushed, branch deleted after10windowed captures and22headless checks passed.
 - Actual bridge documents one-based `day_of_season`. Corrected HUD/tint assumptions in art-owned code after failing regression tests, then passed tests/review and observed 봄2일째.
 - life_stages, season keys and deaths_old_age are present. No elder or old-age death occurred in day1–6captures; full season transition remains unit-tested rather than observed.
+
+## Part 8: publication evidence
+
+- Full source gate at6a30aa33 passed25/25: Rust1850, Python129, Godot18. No simulation/static Rust test changes or mutation targets.
+- Publish report/evidence as a documentation-only commit, immediately push WIP, repeat the full gate on that exact commit into `.harness/evidence/art-production2/final-head-gate/`, then fast-forward green and verify both remote heads. Record final UTC/SHA/PR status in external publication.json to avoid a self-referential commit.
+- Independent final report audit found only a stale byte count; replaced it with current measured budget evidence. A1/A5/A11 remain failures.
