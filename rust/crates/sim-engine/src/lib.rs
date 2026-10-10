@@ -56,7 +56,7 @@ pub struct BuildingPlacedEvent {
     pub radius: u32,
 }
 
-/// Cumulative birth/death counters for display and measurement only.
+/// Cumulative population and social counters for display and measurement only.
 /// Never read by simulation logic, so they cannot affect determinism.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct Tallies {
@@ -68,6 +68,8 @@ pub struct Tallies {
     pub deaths_dehydration: u64,
     /// Agents lost to combat damage.
     pub deaths_combat: u64,
+    /// Completed social interactions, counted once per pair rather than per agent.
+    pub social_completed: u64,
 }
 
 /// A recently-recorded agent death (V7 viz-D `show-death-visual`).

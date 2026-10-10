@@ -3,7 +3,7 @@ use super::fingerprint::{fingerprint, state_tag};
 use serde_json::{json, Value};
 use sim_core::components::{
     Agent, AgentState, BuildingKind, ConstructionSite, Hunger, Inventory, Position, ResourceKind,
-    Sleep, Social, Thirst,
+    SettlementMigrant, Sleep, Social, TargetKind, Thirst,
 };
 use sim_engine::{SimEngine, RESOURCE_SOURCE_INFINITE};
 use std::collections::{BTreeMap, BTreeSet};
@@ -39,6 +39,16 @@ pub(super) fn shelter_count(engine: &SimEngine) -> usize {
         .count()
 }
 
+/// Current completed-shelter capacity; absent for legacy housing policy.
+pub(super) fn housing_capacity(engine: &SimEngine) -> Option<u64> {
+    engine
+        .resources
+        .rules
+        .society
+        .shelter_planning
+        .map(|rule| shelter_count(engine) as u64 * u64::from(rule.residents_per_shelter))
+}
+
 /// Collect the stable schema without changing simulation state.
 pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelters: usize) -> Value {
     let r = &engine.resources;
@@ -50,6 +60,27 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             homes.entry(*id).or_insert(settlement.formation_tile);
         }
     }
+    let available = [
+        r.food_tiles.values().any(|q| *q > 0),
+        r.water_tiles.values().any(|q| *q > 0),
+        r.sleep_tiles.values().any(|q| *q > 0),
+    ];
+    let mut actionable = 0u64;
+    let mut unavailable = 0u64;
+    let social_chasing = engine
+        .world
+        .query::<(&AgentState, Option<&SettlementMigrant>)>()
+        .iter()
+        .filter(|(_, (state, migrant))| {
+            migrant.is_none()
+                && matches!(
+                    state,
+                    AgentState::Seeking {
+                        target: TargetKind::Agent(_)
+                    }
+                )
+        })
+        .count();
     let mut query = engine.world.query::<(
         &Agent,
         &Position,
@@ -77,6 +108,20 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         match state_tag(state) {
             0 => {
                 idle += 1;
+                let needs = [
+                    h > 50.0,
+                    t > 50.0,
+                    sl.is_some_and(|sleep| sleep.fatigue > 50.0),
+                ];
+                if needs
+                    .iter()
+                    .zip(available)
+                    .any(|(breached, source)| *breached && source)
+                {
+                    actionable += 1;
+                } else if needs.into_iter().any(|breached| breached) {
+                    unavailable += 1;
+                }
                 if h > 50.0 || t > 50.0 {
                     breach += 1;
                 }
@@ -97,7 +142,7 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             .filter(|tile| !stamped_tiles.contains(*tile))
             .count();
     json!({
-        "schema_version": 1, "scene": scene, "seed": seed,
+        "schema_version": 2, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "tick": engine.current_tick(), "day": engine.current_tick() as f64 / r.ticks_per_day as f64,
         "alive": alive, "births": r.tallies.births,
@@ -115,6 +160,8 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
         "food_tiles_total": r.food_tiles.values().map(|v| u64::from(*v)).sum::<u64>(),
         "food_tiles_finite_total": r.food_tiles.values().filter(|v| **v != RESOURCE_SOURCE_INFINITE).map(|v| u64::from(*v)).sum::<u64>(),
         "water_tiles_count": r.water_tiles.values().filter(|v| **v > 0).count(),
+        "idle_breach_actionable": actionable, "idle_breach_unavailable": unavailable,
+        "social_chasing": social_chasing, "social_completed": r.tallies.social_completed,
         "fingerprint": fingerprint(engine)
     })
 }
@@ -122,6 +169,47 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn idle_actionable_falls_through_unavailable_food_and_counts_sleep() {
+        let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
+        let e = engine.spawn_agent(1, 1);
+        engine
+            .world
+            .insert(
+                e,
+                (
+                    AgentState::Idle,
+                    Hunger::new(80.0, 0.0),
+                    Thirst::new(70.0, 0.0),
+                    Sleep::new(0.0, 0.0),
+                ),
+            )
+            .expect("components");
+        engine.resources.water_tiles.insert((2, 2), 1);
+        let row = sample(&engine, "test", 0, 0);
+        assert_eq!(row["idle_breach_actionable"], 1);
+        assert_eq!(row["idle_breach_unavailable"], 0);
+        engine.resources.water_tiles.clear();
+        let row = sample(&engine, "test", 0, 0);
+        assert_eq!(row["idle_breach_actionable"], 0);
+        assert_eq!(row["idle_breach_unavailable"], 1);
+        engine
+            .world
+            .insert(
+                e,
+                (
+                    Hunger::new(0.0, 0.0),
+                    Thirst::new(0.0, 0.0),
+                    Sleep::new(80.0, 0.0),
+                ),
+            )
+            .expect("sleep");
+        engine.resources.sleep_tiles.insert((1, 1), 1);
+        let row = sample(&engine, "test", 0, 0);
+        assert_eq!(row["idle_breach_actionable"], 1);
+        assert_eq!(row["idle_with_breach"], 0); // v1 meaning stays hunger/thirst only.
+    }
+
     #[test]
     fn game_boot_shelters_are_initial_not_new_completions() {
         let mut engine = crate::scenes::game_scene(1);

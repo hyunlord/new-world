@@ -177,3 +177,15 @@ Independent agents prepare code in owned paths or ignored staged copies;
 leader integrates, runs heavyweight checks serially, commits and verifies
 remote heads. Max6 active children. No unavailable Graft graph is used as
 source evidence: DGX has no graft/rg, so bounded grep/source reads are used.
+
+### Pass 2 Part 1 schema compatibility
+
+Adding the requested public Tallies.social_completed field makes the frozen
+legacy test full Rust struct literal fail to compile. Preserve every original
+expected value and the fingerprint, tick, population and replay assertions;
+mechanically represent the original four-counter comparison as a tuple.
+This is a source compatibility adapter, not a re-pin: the test file is not
+byte-unchanged, and no equality implementation ignores the new counter.
+Other two full literals explicitly set the added field to0; the new social
+unit test independently verifies exact per-pair counts and unchanged outputs.
+The social counter test passed; full legacy trajectory verification follows.

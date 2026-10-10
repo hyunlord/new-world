@@ -3,7 +3,6 @@
 #[cfg(test)]
 mod tests {
     use sim_core::components::Agent;
-    use sim_engine::Tallies;
     use sim_test::{probe::fingerprint, scenes::legacy_scene};
 
     #[test]
@@ -12,12 +11,7 @@ mod tests {
         // d409e9b941ccc868747e4eb63953eafa6831bff7; Part 1 probe git_sha 049e8043.
         // Native scalar-bit fingerprint; Hunger intentionally remains legacy f32.
         const EXPECTED_FINGERPRINT: &str = "527233d10db4ed16";
-        const EXPECTED_TALLIES: Tallies = Tallies {
-            births: 42,
-            deaths_starvation: 0,
-            deaths_dehydration: 61,
-            deaths_combat: 0,
-        };
+        const EXPECTED_TALLIES: (u64, u64, u64, u64) = (42, 0, 61, 0);
         let mut fingerprints = Vec::with_capacity(2);
         for _ in 0..2 {
             let mut engine = legacy_scene();
@@ -26,7 +20,16 @@ mod tests {
             }
             assert_eq!(engine.current_tick(), 2_880);
             assert_eq!(engine.world.query::<&Agent>().iter().count(), 45);
-            assert_eq!(engine.resources.tallies, EXPECTED_TALLIES);
+            let tallies = engine.resources.tallies;
+            assert_eq!(
+                (
+                    tallies.births,
+                    tallies.deaths_starvation,
+                    tallies.deaths_dehydration,
+                    tallies.deaths_combat,
+                ),
+                EXPECTED_TALLIES
+            );
             let actual = fingerprint(&engine);
             assert_eq!(actual, EXPECTED_FINGERPRINT);
             fingerprints.push(actual);

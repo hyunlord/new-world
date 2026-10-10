@@ -302,6 +302,8 @@ impl RuntimeSystem for SocialInteractionSystem {
                 },
             );
 
+            resources.tallies.social_completed += 1;
+
             // Reset both agents → Idle + saturating-subtract loneliness.
             for entity in [*ent_a, *ent_b] {
                 if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
@@ -364,5 +366,89 @@ mod tests {
         sys.tick(&mut engine.world, &mut engine.resources);
         assert!(engine.resources.interaction_progress.is_empty());
         assert!(engine.resources.relationships.is_empty());
+    }
+
+    #[test]
+    fn completed_pair_is_counted_once_without_changing_social_outputs() {
+        let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
+        let first = engine.spawn_agent(2, 3);
+        let second = engine.spawn_agent(2, 3);
+        let first_id = engine.world.get::<&Agent>(first).expect("first agent").id;
+        let second_id = engine.world.get::<&Agent>(second).expect("second agent").id;
+        let key = RelationshipKey::new(first_id, second_id);
+        let mut system = SocialInteractionSystem::new();
+
+        for cycle in 1..=2_u64 {
+            for (entity, partner_id) in [(first, second_id), (second, first_id)] {
+                engine
+                    .world
+                    .insert(
+                        entity,
+                        (
+                            AgentState::Consuming {
+                                target: TargetKind::Agent(partner_id),
+                            },
+                            Social::new(80.0, 0.0),
+                        ),
+                    )
+                    .expect("stage mutual social pair");
+            }
+            for progress in 1..=REQUIRED_INTERACTION_PROGRESS {
+                system.tick(&mut engine.world, &mut engine.resources);
+                assert_eq!(
+                    engine.resources.interaction_progress.get(&key),
+                    Some(&progress)
+                );
+                assert_eq!(
+                    engine.resources.tallies.social_completed,
+                    if progress == REQUIRED_INTERACTION_PROGRESS {
+                        cycle
+                    } else {
+                        cycle - 1
+                    }
+                );
+            }
+            for entity in [first, second] {
+                assert_eq!(
+                    *engine
+                        .world
+                        .get::<&AgentState>(entity)
+                        .expect("agent state"),
+                    AgentState::Idle
+                );
+                assert_eq!(
+                    engine
+                        .world
+                        .get::<&Social>(entity)
+                        .expect("social need")
+                        .loneliness,
+                    80.0 - SOCIAL_CONSUME_AMOUNT
+                );
+            }
+            assert_eq!(
+                engine.resources.relationships[&key].familiarity,
+                (FAMILIARITY_BUMP * cycle as f64).min(1.0)
+            );
+            system.tick(&mut engine.world, &mut engine.resources);
+            assert_eq!(engine.resources.tallies.social_completed, cycle);
+            assert!(!engine.resources.interaction_progress.contains_key(&key));
+            let events = engine
+                .resources
+                .causal_log
+                .get(3 * 8 + 2)
+                .expect("pair tile log");
+            assert_eq!(
+                events
+                    .as_slice()
+                    .iter()
+                    .filter(|event| matches!(
+                        event,
+                        CausalEvent::SocialInteractionCompleted { agents, .. }
+                            if *agents == (key.smaller(), key.larger())
+                    ))
+                    .count() as u64,
+                cycle
+            );
+        }
     }
 }

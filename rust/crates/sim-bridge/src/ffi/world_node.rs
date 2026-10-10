@@ -2566,12 +2566,14 @@ mod revitalize_tooling_tests {
             deaths_starvation: 12,
             deaths_dehydration: 13,
             deaths_combat: 14,
+            social_completed: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
         assert_eq!(snapshot.deaths_starvation, 12);
         assert_eq!(snapshot.deaths_dehydration, 13);
         assert_eq!(snapshot.deaths_combat, 14);
+        assert_eq!(snapshot.social_completed, 0);
         assert_eq!(engine.current_tick(), 0);
     }
 
