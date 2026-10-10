@@ -378,3 +378,45 @@ fn harness_critical_preemption_food_seek_yields_to_available_critical_water() {
         }
     );
 }
+
+#[test]
+fn harness_critical_preemption_protects_an_already_critical_water_trip() {
+    for (thirst, interrupted) in [(74.0, true), (75.0, true), (76.0, false), (100.0, false)] {
+        let (mut engine, a, _) = fixture();
+        *engine.world.get::<&mut AgentState>(a).expect("state") = AgentState::Seeking {
+            target: TargetKind::Water,
+        };
+        engine.world.get::<&mut Hunger>(a).expect("hunger").value = 100.0;
+        engine.world.get::<&mut Thirst>(a).expect("thirst").value = thirst;
+        engine.resources.set_food_tile(13, 10, 1);
+        engine
+            .resources
+            .set_water_tile(12, 10, RESOURCE_SOURCE_INFINITE);
+        engine
+            .world
+            .insert_one(a, SeekTarget { tile: (12, 10) })
+            .expect("water goal");
+        decide(&mut engine, 0);
+        assert_eq!(
+            state(&engine, a),
+            if interrupted {
+                AgentState::Idle
+            } else {
+                AgentState::Seeking {
+                    target: TargetKind::Water,
+                }
+            },
+            "thirst {thirst}"
+        );
+        if !interrupted {
+            assert_eq!(
+                engine
+                    .world
+                    .get::<&SeekTarget>(a)
+                    .expect("retained water goal")
+                    .tile,
+                (12, 10)
+            );
+        }
+    }
+}

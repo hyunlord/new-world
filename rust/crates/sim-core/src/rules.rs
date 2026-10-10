@@ -114,13 +114,13 @@ impl WorldRules {
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
-                    cooldown_ticks: 360,
-                    food_cost: 3,
+                    cooldown_ticks: 1440,
+                    food_cost: 10,
                     max_mean_hunger: 60.0,
                     max_mean_thirst: 60.0,
                 },
                 shelter_planning: Some(ShelterPlanningRule {
-                    residents_per_shelter: 4,
+                    residents_per_shelter: 8,
                     max_shelters: 12,
                     plan_interval_ticks: 60,
                     ring_min: 2,

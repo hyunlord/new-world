@@ -1224,9 +1224,21 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     TargetKind::Sleep => sleep_opt.as_ref().map(|s| s.fatigue),
                                     _ => None,
                                 };
+                                let current_value = match target {
+                                    TargetKind::Food if availability.food =>
+                                        hunger_opt.as_ref().map(|h| f64::from(h.value)),
+                                    TargetKind::Water if availability.water =>
+                                        thirst_opt.as_ref().map(|t| t.value),
+                                    _ => None,
+                                };
+                                // Keep an already-critical trip: competing hunger must not
+                                // repeatedly interrupt water seeking until the agent dehydrates.
                                 // Restarting the same need would prevent arrival forever.
                                 // Idle's post-pass drops SeekTarget; carried goods remain owned.
-                                if need != target && value.is_some_and(|value| value > limit) {
+                                if need != target
+                                    && value.is_some_and(|value| value > limit)
+                                    && !current_value.is_some_and(|value| value > limit)
+                                {
                                     *state = AgentState::Idle;
                                     continue;
                                 }
