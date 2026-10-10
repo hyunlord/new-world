@@ -1452,3 +1452,9 @@ Informative v12 run at the Part 2 state (`p6-2_v12_120day`, game_v12 0..32 × 12
 ## Pass 6 Part 3 — urgent mornings
 
 4.5 v11 guard (`p6-3_v11_guard_10day`, `p6-3_v11_guard_120day`, Part 3 binary at `4cdc7125`): DETERMINISM PASS; identical to Part 1's v11 runs on all 5,846 / 53,373 shared values. The new tests (`harness_revitalize_pass6_urgent.rs`, 4) pass with the Pass 5 firewood, meal and preemption harnesses and the Part 0/2 tests; both Clippy variants clean.
+
+Informative v12 at the Part 3 state (`p6-3_v12_120day`, code `4cdc7125`, DETERMINISM PASS; long-round values only): urgent trips 50 per winter (median; 3 a day in spring), 124 wood trips and 7 trip-days per winter, winter lit 0.714 (min 0.643), cold 0.236 (max 0.268), winter food at the end 227 (floor 202.8). Two regressions against the Part 2 state: Y3 stagnation max 6 (one seed) and Y9 noon work 0.305 / idle 0.645 (Part 2: 0.397 / 0.574). Work by season at 12:00: spring 0.409 (Part 2 0.553), summer 0.051 (v11 0.609), autumn 0.596. Summer noon work fell by design (summer gathers only for its own nights); urgent mornings move spring's wood work from noon to 07:00–10:00.
+
+## Pass 6 Part 4 — elders at the evening fire
+
+4.5 v11 guard (`p6-4_v11_guard_10day`, `p6-4_v11_guard_120day`, Part 4 binary at `c1e407e7`): DETERMINISM PASS; identical to Part 1's v11 runs on all 5,846 / 53,373 shared values. New tests `harness_revitalize_pass6_elders.rs` (2) pass.
