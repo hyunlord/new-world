@@ -160,6 +160,10 @@ pub struct SimResources {
     pub site_owner: BTreeMap<(u32, u32), SettlementId>,
     /// Display-only count of planning attempts with no qualifying tile.
     pub shelter_plan_skips: u64,
+    /// Tick each active non-migrant social chase began; empty in legacy worlds.
+    pub social_chase_since: BTreeMap<AgentId, u64>,
+    /// Earliest tick each agent may retry a failed social chase.
+    pub social_retry_after: BTreeMap<AgentId, u64>,
 
     /// Tile grid (T7.1 land — wall / floor / terrain SoA).
     pub tile_grid: TileGrid,
@@ -336,6 +340,8 @@ impl SimResources {
             building_kinds: BTreeMap::new(),
             site_owner: BTreeMap::new(),
             shelter_plan_skips: 0,
+            social_chase_since: BTreeMap::new(),
+            social_retry_after: BTreeMap::new(),
             tile_grid: TileGrid::new(width, height),
             influence_grid: InfluenceGrid::new(width, height),
             material_registry: registry,
@@ -537,7 +543,8 @@ impl SimEngine {
         self.resources.time_of_day = if self.resources.ticks_per_day == 0 {
             0.0
         } else {
-            ((self.current_tick % self.resources.ticks_per_day) as f64
+            ((self.current_tick.saturating_add(self.resources.rules.clock_offset_ticks)
+                % self.resources.ticks_per_day) as f64
                 / self.resources.ticks_per_day as f64)
                 * 24.0
         };

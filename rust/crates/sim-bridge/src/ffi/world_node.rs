@@ -2501,7 +2501,8 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     TimeSnapshot {
         tick: engine.current_tick(),
         ticks_per_day,
-        day_index: engine.current_tick().checked_div(ticks_per_day).unwrap_or(0),
+        day_index: engine.current_tick().saturating_add(engine.resources.rules.clock_offset_ticks)
+            .checked_div(ticks_per_day).unwrap_or(0),
         time_of_day: engine.resources.time_of_day,
     }
 }
@@ -2545,6 +2546,23 @@ mod revitalize_tooling_tests {
         assert_eq!(snapshot.ticks_per_day, 12);
         assert_eq!(snapshot.day_index, 1);
         assert_eq!(snapshot.time_of_day, 10.0);
+    }
+
+    #[test]
+    fn harness_economy_clock_snapshot_rolls_day_at_offset_midnight() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.time_of_day = 8.0;
+        assert_eq!(super::collect_world_info(&engine.resources).clock_offset_ticks, 480);
+        let initial = collect_time_snapshot(&engine);
+        assert_eq!((initial.tick, initial.day_index, initial.time_of_day), (0, 0, 8.0));
+        advance_engine_ticks(&mut engine, 959);
+        let before = collect_time_snapshot(&engine);
+        assert_eq!((before.tick, before.day_index), (959, 0));
+        assert!((before.time_of_day - (23.0 + 59.0 / 60.0)).abs() < 1e-12);
+        advance_engine_ticks(&mut engine, 1);
+        let midnight = collect_time_snapshot(&engine);
+        assert_eq!((midnight.tick, midnight.day_index, midnight.time_of_day), (960, 1, 0.0));
     }
 
     #[test]
@@ -2598,6 +2616,8 @@ pub struct WorldInfoSnapshot {
     pub ticks_per_day: u64,
     /// Ticks between agent movement opportunities.
     pub move_interval_ticks: u64,
+    /// Display clock offset from elapsed ticks.
+    pub clock_offset_ticks: u64,
 }
 
 /// Read immutable world metadata directly from the authoritative resources.
@@ -2608,6 +2628,7 @@ pub fn collect_world_info(resources: &SimResources) -> WorldInfoSnapshot {
         height: resources.tile_grid.height,
         ticks_per_day: resources.ticks_per_day,
         move_interval_ticks: resources.rules.agent.move_interval_ticks,
+        clock_offset_ticks: resources.rules.clock_offset_ticks,
     }
 }
 
@@ -2618,6 +2639,7 @@ fn world_info_to_dict(snapshot: WorldInfoSnapshot) -> VarDictionary {
     dict.set("height", snapshot.height as i64);
     dict.set("ticks_per_day", snapshot.ticks_per_day as i64);
     dict.set("move_interval_ticks", snapshot.move_interval_ticks as i64);
+    dict.set("clock_offset_ticks", snapshot.clock_offset_ticks as i64);
     dict
 }
 

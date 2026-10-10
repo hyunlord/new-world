@@ -65,6 +65,50 @@ use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
 
+/// Resource presence used to select actionable survival needs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NeedAvailability {
+    /// Whether a breached hunger need may seek food.
+    pub food: bool,
+    /// Whether a breached thirst need may seek water.
+    pub water: bool,
+    /// Whether a breached fatigue need may seek sleep.
+    pub sleep: bool,
+}
+
+impl NeedAvailability {
+    /// Snapshot availability once per tick; legacy ignores source absence.
+    pub fn from_resources(resources: &SimResources) -> Self {
+        if resources.rules.agent.need_fallthrough {
+            Self {
+                food: resources.food_tiles.values().any(|amount| *amount > 0),
+                water: resources.water_tiles.values().any(|amount| *amount > 0),
+                sleep: resources.sleep_tiles.values().any(|amount| *amount > 0),
+            }
+        } else {
+            Self { food: true, water: true, sleep: true }
+        }
+    }
+}
+
+/// Highest-priority breached available survival need: hunger, thirst, fatigue.
+pub fn actionable_need(
+    hunger: Option<&Hunger>,
+    thirst: Option<&Thirst>,
+    sleep: Option<&Sleep>,
+    availability: NeedAvailability,
+) -> Option<(TargetKind, DecisionReason)> {
+    if availability.food && hunger.is_some_and(|need| need.value > HUNGER_THRESHOLD) {
+        Some((TargetKind::Food, DecisionReason::HungerThresholdBreach))
+    } else if availability.water && thirst.is_some_and(|need| need.value > THIRST_THRESHOLD) {
+        Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
+    } else if availability.sleep && sleep.is_some_and(|need| need.fatigue > FATIGUE_THRESHOLD) {
+        Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
+    } else {
+        None
+    }
+}
+
 /// Cascade arm identifier — the natural drives + non-natural arms whose
 /// eligibility is computed independently. Memory is a bias SOURCE, not an arm.
 ///
@@ -379,6 +423,12 @@ impl RuntimeSystem for AgentDecisionSystem {
             return;
         }
         let tick = resources.current_tick;
+        let availability = NeedAvailability::from_resources(resources);
+        let social_rule = resources.rules.agent.social_seek;
+        if social_rule.is_some() {
+            resources.social_retry_after.retain(|_, after| tick < *after);
+        }
+
 
         // V7 Phase 6-β / P6β-7 — co-location map snapshot. Pre-built
         // here (BEFORE the agent query) so the agent loop can look up
@@ -467,7 +517,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&Social>,
             )>();
             for (_, (a, pos, state, h, t, s, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle) {
+                if !matches!(*state, AgentState::Idle)
+                    || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
+                {
                     continue;
                 }
                 let lone_breach = social_opt.is_some_and(|x| x.loneliness > SOCIAL_THRESHOLD);
@@ -522,7 +574,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
             let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>)>();
             for (_, (a, pos, state, social_opt)) in q.iter() {
-                if !matches!(*state, AgentState::Idle) {
+                if !matches!(*state, AgentState::Idle)
+                    || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
+                {
                     continue;
                 }
                 if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
@@ -541,7 +595,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
             let mut q = world.query::<(&Agent, &Position, &AgentState)>();
             for (_, (a, pos, state)) in q.iter() {
-                if matches!(*state, AgentState::Idle) {
+                if matches!(*state, AgentState::Idle)
+                    && (social_rule.is_none() || !resources.social_retry_after.contains_key(&a.id))
+                {
                     map.entry((pos.x, pos.y)).or_default().push(a.id);
                 }
             }
@@ -621,27 +677,19 @@ impl RuntimeSystem for AgentDecisionSystem {
         ) in query.iter()
         {
             let tile_idx = pos.y * width + pos.x;
+            let social_ready = social_rule.is_none()
+                || !resources.social_retry_after.contains_key(&agent.id);
             match *state {
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
                     // Hunger > Thirst > Fatigue > Construction > Social.
                     // Social is the lowest-priority drive — Needs and
                     // Construction always win.
-                    let breached = if hunger_opt
-                        .as_ref()
-                        .is_some_and(|h| h.value > HUNGER_THRESHOLD)
-                    {
-                        Some((TargetKind::Food, DecisionReason::HungerThresholdBreach))
-                    } else if thirst_opt
-                        .as_ref()
-                        .is_some_and(|t| t.value > THIRST_THRESHOLD)
-                    {
-                        Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach))
-                    } else if sleep_opt
-                        .as_ref()
-                        .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD)
-                    {
-                        Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
+                    let need = actionable_need(
+                        hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability,
+                    );
+                    let breached = if let Some(need) = need {
+                        Some(need)
                     } else if if planning.is_some() {
                         assigned_builders.contains_key(&agent.id)
                     } else { construction_sites.contains_key(&(pos.x, pos.y)) } {
@@ -652,7 +700,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             TargetKind::ConstructionSite,
                             DecisionReason::ConstructionReason,
                         ))
-                    } else if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                    } else if social_ready && social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
                         // V7 Phase 7-β / P7β-6 — 5th cascade step. Pick the
                         // lowest-AgentId co-located social-eligible peer
                         // (deterministic tie-break). Eligibility (computed
@@ -817,13 +865,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // (peer's own breach state ignored) so the bias
                         // can shift to Social over Construction.
                         let mut eligible: Vec<(CascadeArm, TargetKind)> = Vec::new();
-                        if hunger_opt.as_ref().is_some_and(|h| h.value > HUNGER_THRESHOLD) {
+                        if actionable_need(hunger_opt.as_deref(), None, None, availability).is_some() {
                             eligible.push((CascadeArm::Hunger, TargetKind::Food));
                         }
-                        if thirst_opt.as_ref().is_some_and(|t| t.value > THIRST_THRESHOLD) {
+                        if actionable_need(None, thirst_opt.as_deref(), None, availability).is_some() {
                             eligible.push((CascadeArm::Thirst, TargetKind::Water));
                         }
-                        if sleep_opt.as_ref().is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD) {
+                        if actionable_need(None, None, sleep_opt.as_deref(), availability).is_some() {
                             eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
                         }
                         if if planning.is_some() { assigned_builders.contains_key(&agent.id) }
@@ -833,7 +881,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 TargetKind::ConstructionSite,
                             ));
                         }
-                        if social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
+                        if social_ready && social_opt.is_some_and(|s| s.loneliness > SOCIAL_THRESHOLD) {
                             if let Some(peer_id) = social_partner_breached_by_pos
                                 .get(&(pos.x, pos.y))
                                 .and_then(|peers| {
@@ -869,7 +917,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // entries with salience > SALIENCE_FLOOR even when the
                         // focal agent's loneliness does not breach
                         // SOCIAL_THRESHOLD. Symmetric to bias-only Construction.
-                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
+                        if social_ready && !eligible.iter().any(|(a, _)| *a == CascadeArm::Social)
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
                                     e.salience > SALIENCE_FLOOR && e.arm == MemoryArm::Social
@@ -1041,6 +1089,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // ConstructionSite states do not match the pattern.
                         if let AgentState::Seeking { target: TargetKind::Agent(_) } = *state {
                             social_seek_entities.insert(entity);
+                            if social_rule.is_some() {
+                                resources.social_chase_since.insert(agent.id, tick);
+                            }
                         }
                     } else if let Some(_gather_tile) = {
                         // Direction-2 slice 2-2 — Gather arm (priority 6). Fires
@@ -1161,6 +1212,27 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                 }
                 AgentState::Seeking { target } => {
+                    if matches!(target, TargetKind::Food | TargetKind::Water) {
+                        if let Some(limit) = resources.rules.agent.critical_preemption {
+                            if let Some((need, _)) = actionable_need(
+                                hunger_opt.as_deref(), thirst_opt.as_deref(),
+                                sleep_opt.as_deref(), availability,
+                            ) {
+                                let value = match need {
+                                    TargetKind::Food => hunger_opt.as_ref().map(|h| f64::from(h.value)),
+                                    TargetKind::Water => thirst_opt.as_ref().map(|t| t.value),
+                                    TargetKind::Sleep => sleep_opt.as_ref().map(|s| s.fatigue),
+                                    _ => None,
+                                };
+                                // Restarting the same need would prevent arrival forever.
+                                // Idle's post-pass drops SeekTarget; carried goods remain owned.
+                                if need != target && value.is_some_and(|value| value > limit) {
+                                    *state = AgentState::Idle;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
                     // V7 Phase 10-γ — settlement-migrant exit/preemption gate.
                     // Runs BEFORE the mutual-handshake logic. The Seeking{Agent}
                     // arm has NO automatic exit (a settlement member does not seek
@@ -1169,6 +1241,26 @@ impl RuntimeSystem for AgentDecisionSystem {
                     // it a member. Gated on the persistent SettlementMigrant marker
                     // so ζ social seekers (no marker) are untouched.
                     if let TargetKind::Agent(pid) = target {
+                        if let Some(rule) = social_rule.filter(|_| migrant_marker.is_none()) {
+                            let since = *resources.social_chase_since.entry(agent.id).or_insert(tick);
+                            if !agent_positions.contains_key(&pid) {
+                                *state = AgentState::Idle;
+                                resources.social_chase_since.remove(&agent.id);
+                                resources.social_retry_after.insert(agent.id, tick.saturating_add(rule.retry_cooldown_ticks));
+                                continue;
+                            }
+                            if actionable_need(hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability).is_some() {
+                                *state = AgentState::Idle;
+                                resources.social_chase_since.remove(&agent.id);
+                                continue;
+                            }
+                            if tick.saturating_sub(since) >= rule.max_chase_ticks {
+                                *state = AgentState::Idle;
+                                resources.social_chase_since.remove(&agent.id);
+                                resources.social_retry_after.insert(agent.id, tick.saturating_add(rule.retry_cooldown_ticks));
+                                continue;
+                            }
+                        }
                         if migrant_marker.is_some() {
                             let is_member = resources
                                 .settlements
@@ -1353,6 +1445,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     },
                                 );
                             }
+                        }
+                        if social_rule.is_some() && matches!(target, TargetKind::Agent(_)) {
+                            resources.social_chase_since.remove(&agent.id);
                         }
                         *state = AgentState::Consuming { target };
                     }

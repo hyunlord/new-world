@@ -8,6 +8,8 @@ pub struct WorldRules {
     pub agent: AgentRules,
     /// Settlement growth policy.
     pub society: SocietyRules,
+    /// Display clock offset in simulation ticks; zero in legacy worlds.
+    pub clock_offset_ticks: u64,
 }
 /// Individual movement policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -18,6 +20,20 @@ pub struct AgentRules {
     pub idle_pause_chance: f64,
     /// Maximum idle distance from home; absent in legacy worlds.
     pub idle_tether_radius: Option<u32>,
+    /// Bounded social seeking; absent preserves the legacy unbounded chase.
+    pub social_seek: Option<SocialSeekRule>,
+    /// Skip unavailable breached needs instead of masking lower-priority needs.
+    pub need_fallthrough: bool,
+    /// Interrupt census-identified food/water seeks for a different critical need.
+    pub critical_preemption: Option<f64>,
+}
+/// Limits on an unanswered social approach, enabled only by game rules.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SocialSeekRule {
+    /// Maximum ticks spent seeking a partner without a mutual handshake.
+    pub max_chase_ticks: u64,
+    /// Delay before another social attempt after timeout or partner loss.
+    pub retry_cooldown_ticks: u64,
 }
 /// Settlement birth and construction policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -69,11 +85,15 @@ impl Default for WorldRules {
                 move_interval_ticks: 1,
                 idle_pause_chance: 0.0,
                 idle_tether_radius: None,
+                social_seek: None,
+                need_fallthrough: false,
+                critical_preemption: None,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
                 shelter_planning: None,
             },
+            clock_offset_ticks: 0,
         }
     }
 }
@@ -85,6 +105,12 @@ impl WorldRules {
                 move_interval_ticks: 8,
                 idle_pause_chance: 0.4,
                 idle_tether_radius: Some(8),
+                social_seek: Some(SocialSeekRule {
+                    max_chase_ticks: 240,
+                    retry_cooldown_ticks: 480,
+                }),
+                need_fallthrough: true,
+                critical_preemption: Some(75.0),
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -103,6 +129,7 @@ impl WorldRules {
                     max_builders_per_site: 4,
                 }),
             },
+            clock_offset_ticks: 480,
         }
     }
 }
@@ -117,7 +144,10 @@ mod tests {
             AgentRules {
                 move_interval_ticks: 1,
                 idle_pause_chance: 0.0,
-                idle_tether_radius: None
+                idle_tether_radius: None,
+                social_seek: None,
+                need_fallthrough: false,
+                critical_preemption: None,
             }
         );
         assert_eq!(
@@ -127,6 +157,7 @@ mod tests {
                 shelter_planning: None
             }
         );
+        assert_eq!(r.clock_offset_ticks, 0);
         assert_ne!(r, WorldRules::game_v8());
     }
 }

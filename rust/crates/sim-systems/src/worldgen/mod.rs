@@ -70,6 +70,9 @@ pub fn build_world(cfg: &WorldGenConfig) -> SimEngine {
     crate::register_default_runtime_systems(&mut engine);
     engine.resources.world_seed = cfg.seed;
     engine.resources.rules = WorldRules::game_v8();
+    engine.resources.time_of_day =
+        (engine.resources.rules.clock_offset_ticks % engine.resources.ticks_per_day) as f64
+            / engine.resources.ticks_per_day as f64 * 24.0;
     terrain::generate(cfg, &mut engine.resources.tile_grid);
     camp::shore_water(&mut engine.resources);
     camp::populate(cfg, &mut engine);

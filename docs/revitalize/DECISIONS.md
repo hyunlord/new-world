@@ -193,3 +193,11 @@ The social counter test passed; full legacy trajectory verification follows.
 ### Part1 completed
 
 20 probe unit tests, social counter regression, legacy/tallies tests and all-target Clippy PASS.64 twins PASS;7,744 original behavioral rows identical. Partner-alive is measured before lethal phase; simultaneous deaths can report alive. Part2 review completed two rounds with objections resolved. Part1 metrics prose follows in a supplemental commit because report generation raised a formatting exception; the code and complete JSON/Markdown summaries were already committed and pushed safely. Boundary UTC:2026-10-10T08:05:01.159403+00:00.
+
+### Part2 post-fix census and bounded critical preemption
+
+16 seeds x10days, deterministic twins PASS: dehydration0, starvation536. Death states Idle260, SeekingFood166, SeekingWater82, SeekingAgent19, SeekingSleep9. Food unavailable at342/536 deaths; all166 SeekingFood deaths had positive food supply somewhere, and27/82 SeekingWater deaths did. Food and Water seeking exceed the literal5% trigger. Add critical_preemption legacyNone/game75 only for these observed states, and only when the highest actionable need targets a different activity. Resetting a seek for its own need would create a new starvation livelock; this anti-livelock restriction is an explicit interpretation of section7.4. No Gather/Construction interruption is justified by this census.
+
+New7 regression tests and legacy pin PASS;21 probe unit tests PASS. Unchanged3-day survival test now passes dehydration and population checks for all3 seeds but fails seed3 raw idle share18130/165503 (10.95% versus10%). Do not weaken it: Part3 allowed birth/resource-demand tuning follows.
+
+Part2 critical competing-need preemption implemented;10 new regression tests and all-target Clippy PASS. Full green promotion withheld because unchanged3-day raw-idle regression remains red; full gate will run after bounded Part3 tuning. Part2 boundary UTC:2026-10-10T08:09:22.257385+00:00. No existing behavioral assertion was changed in this Part.

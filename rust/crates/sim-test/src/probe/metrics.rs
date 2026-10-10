@@ -6,6 +6,7 @@ use sim_core::components::{
     SettlementMigrant, Sleep, Social, TargetKind, Thirst,
 };
 use sim_engine::{SimEngine, RESOURCE_SOURCE_INFINITE};
+use sim_systems::runtime::decision::agent_decision::{actionable_need, NeedAvailability};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Linearly interpolate a sorted quantile, returning zero for no observations.
@@ -60,7 +61,8 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             homes.entry(*id).or_insert(settlement.formation_tile);
         }
     }
-    let available = [
+    let availability = NeedAvailability::from_resources(r);
+    let physical_sources = [
         r.food_tiles.values().any(|q| *q > 0),
         r.water_tiles.values().any(|q| *q > 0),
         r.sleep_tiles.values().any(|q| *q > 0),
@@ -99,6 +101,7 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
     let (mut idle, mut seeking, mut consuming, mut breach, mut carried) =
         (0u64, 0u64, 0u64, 0u64, 0u64);
     for (agent, pos, state, h, t, sl, so, inv) in rows {
+        let has_actionable_need = actionable_need(h, t, sl, availability).is_some();
         let h = h.map_or(0.0, |v| f64::from(v.value));
         let t = t.map_or(0.0, |v| v.value);
         hunger.push(h);
@@ -113,13 +116,15 @@ pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
                     t > 50.0,
                     sl.is_some_and(|sleep| sleep.fatigue > 50.0),
                 ];
-                if needs
-                    .iter()
-                    .zip(available)
-                    .any(|(breached, source)| *breached && source)
+                actionable += u64::from(has_actionable_need);
+                // Physical unavailability remains observable even when legacy rules
+                // force the decision helper to consider absent resources available.
+                if needs.iter().any(|breached| *breached)
+                    && !needs
+                        .iter()
+                        .zip(physical_sources)
+                        .any(|(breached, source)| *breached && source)
                 {
-                    actionable += 1;
-                } else if needs.into_iter().any(|breached| breached) {
                     unavailable += 1;
                 }
                 if h > 50.0 || t > 50.0 {
@@ -172,6 +177,7 @@ mod tests {
     #[test]
     fn idle_actionable_falls_through_unavailable_food_and_counts_sleep() {
         let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
+        engine.resources.rules.agent.need_fallthrough = true;
         let e = engine.spawn_agent(1, 1);
         engine
             .world
@@ -208,6 +214,23 @@ mod tests {
         let row = sample(&engine, "test", 0, 0);
         assert_eq!(row["idle_breach_actionable"], 1);
         assert_eq!(row["idle_with_breach"], 0); // v1 meaning stays hunger/thirst only.
+    }
+
+    #[test]
+    fn legacy_helper_actionability_does_not_hide_physical_unavailability() {
+        let mut engine = SimEngine::new(8, 8, sim_core::material::MaterialRegistry::new());
+        let entity = engine.spawn_agent(1, 1);
+        engine
+            .world
+            .insert(entity, (AgentState::Idle, Hunger::new(80.0, 0.0)))
+            .expect("components");
+        let legacy = sample(&engine, "legacy", 0, 0);
+        assert_eq!(legacy["idle_breach_actionable"], 1);
+        assert_eq!(legacy["idle_breach_unavailable"], 1);
+        engine.resources.rules.agent.need_fallthrough = true;
+        let game = sample(&engine, "game", 0, 0);
+        assert_eq!(game["idle_breach_actionable"], 0);
+        assert_eq!(game["idle_breach_unavailable"], 1);
     }
 
     #[test]
