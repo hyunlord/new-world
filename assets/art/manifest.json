@@ -1350,6 +1350,62 @@
       ],
       "qa_status": "accepted",
       "role": "native_reference"
+    },
+    {
+      "sprite_id": "N2_05",
+      "path": "assets/art/production/N2/05.png",
+      "native_path": "assets/art/production/N2/05_native.png",
+      "source": "generated:N2/05",
+      "attempt": 1,
+      "native_size": [
+        18,
+        12
+      ],
+      "canvas_size": [
+        20,
+        14
+      ],
+      "anchor": [
+        10,
+        13
+      ],
+      "qa_status": "accepted",
+      "class": "N2",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "metrics": {
+        "native_size": [
+          18,
+          12
+        ],
+        "size_pass": true,
+        "mean_delta_e": 5.683259306330066,
+        "fidelity_pass": true,
+        "common_opaque": 119,
+        "keyed_out": 25,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/N2/05_native.png",
+      "source": "generated:N2/05",
+      "native_size": [
+        18,
+        12
+      ],
+      "anchor": [
+        9,
+        11
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
     }
   ]
 }
