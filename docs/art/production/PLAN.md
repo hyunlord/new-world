@@ -2,9 +2,9 @@
 
 |Part|Deliverable|State|
 |---|---|---|
-|0|Pinned clone/merge, wrappers, build and full baseline gate|in progress|
-|1|v3 grid/fidelity/semantic checks, production palette, D3 provisional installation assets|pending|
-|2|Native Sprite2D y-sort installation, integer camera, Korean font, capture port, first real capture|pending|
+|0|Pinned clone/merge, wrappers, build and full baseline gate|completed|
+|1|v3 grid/fidelity/semantic checks, production palette, D3 provisional installation assets|completed|
+|2|Native Sprite2D y-sort installation, integer camera, Korean font, capture port, first real capture|in progress|
 |3|16 production sheets, <=60 calls, acceptance/fallbacks, region atlas|pending|
 |4|Dual-grid terrain and deterministic nature|pending|
 |5|Activity animation, palette variants, structures/effects and warnings|pending|

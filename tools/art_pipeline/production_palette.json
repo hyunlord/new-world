@@ -1,0 +1,3568 @@
+{
+  "version": 1,
+  "source": "docs/art/D3/palette_v2.hex",
+  "count": 116,
+  "merge_delta_e76": 2,
+  "merge_rule": "stable first existing color retained; ground and villager roles preserve references",
+  "colors": [
+    {
+      "id": "c000",
+      "rgb": [
+        106,
+        71,
+        45
+      ],
+      "hex": "#6A472D",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 0
+        },
+        {
+          "ramp": "source_roles",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c001",
+      "rgb": [
+        193,
+        146,
+        86
+      ],
+      "hex": "#C19256",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 1
+        },
+        {
+          "ramp": "source_roles",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c002",
+      "rgb": [
+        123,
+        106,
+        59
+      ],
+      "hex": "#7B6A3B",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 2
+        },
+        {
+          "ramp": "source_roles",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c003",
+      "rgb": [
+        190,
+        183,
+        106
+      ],
+      "hex": "#BEB76A",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 3
+        },
+        {
+          "ramp": "source_roles",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "c004",
+      "rgb": [
+        168,
+        160,
+        67
+      ],
+      "hex": "#A8A043",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 4
+        },
+        {
+          "ramp": "source_roles",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "c005",
+      "rgb": [
+        145,
+        148,
+        64
+      ],
+      "hex": "#919440",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 5
+        },
+        {
+          "ramp": "source_roles",
+          "index": 5
+        }
+      ]
+    },
+    {
+      "id": "c006",
+      "rgb": [
+        161,
+        165,
+        60
+      ],
+      "hex": "#A1A53C",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 6
+        },
+        {
+          "ramp": "source_roles",
+          "index": 6
+        }
+      ]
+    },
+    {
+      "id": "c007",
+      "rgb": [
+        144,
+        160,
+        52
+      ],
+      "hex": "#90A034",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 7
+        },
+        {
+          "ramp": "source_roles",
+          "index": 7
+        }
+      ]
+    },
+    {
+      "id": "c008",
+      "rgb": [
+        125,
+        143,
+        52
+      ],
+      "hex": "#7D8F34",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 8
+        },
+        {
+          "ramp": "source_roles",
+          "index": 8
+        }
+      ]
+    },
+    {
+      "id": "c009",
+      "rgb": [
+        145,
+        168,
+        74
+      ],
+      "hex": "#91A84A",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 9
+        },
+        {
+          "ramp": "source_roles",
+          "index": 9
+        }
+      ]
+    },
+    {
+      "id": "c010",
+      "rgb": [
+        49,
+        54,
+        37
+      ],
+      "hex": "#313625",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 10
+        },
+        {
+          "ramp": "source_roles",
+          "index": 10
+        }
+      ]
+    },
+    {
+      "id": "c011",
+      "rgb": [
+        81,
+        106,
+        41
+      ],
+      "hex": "#516A29",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 11
+        },
+        {
+          "ramp": "source_roles",
+          "index": 11
+        }
+      ]
+    },
+    {
+      "id": "c012",
+      "rgb": [
+        80,
+        124,
+        78
+      ],
+      "hex": "#507C4E",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 12
+        },
+        {
+          "ramp": "source_roles",
+          "index": 12
+        }
+      ]
+    },
+    {
+      "id": "c013",
+      "rgb": [
+        50,
+        101,
+        77
+      ],
+      "hex": "#32654D",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 13
+        },
+        {
+          "ramp": "source_roles",
+          "index": 13
+        }
+      ]
+    },
+    {
+      "id": "c014",
+      "rgb": [
+        21,
+        76,
+        67
+      ],
+      "hex": "#154C43",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 14
+        },
+        {
+          "ramp": "source_roles",
+          "index": 14
+        }
+      ]
+    },
+    {
+      "id": "c015",
+      "rgb": [
+        12,
+        52,
+        49
+      ],
+      "hex": "#0C3431",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 15
+        },
+        {
+          "ramp": "source_roles",
+          "index": 15
+        }
+      ]
+    },
+    {
+      "id": "c016",
+      "rgb": [
+        8,
+        16,
+        17
+      ],
+      "hex": "#081011",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 16
+        },
+        {
+          "ramp": "source_roles",
+          "index": 16
+        }
+      ]
+    },
+    {
+      "id": "c017",
+      "rgb": [
+        27,
+        92,
+        119
+      ],
+      "hex": "#1B5C77",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 17
+        },
+        {
+          "ramp": "source_roles",
+          "index": 17
+        }
+      ]
+    },
+    {
+      "id": "c018",
+      "rgb": [
+        29,
+        93,
+        141
+      ],
+      "hex": "#1D5D8D",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 18
+        },
+        {
+          "ramp": "source_roles",
+          "index": 18
+        }
+      ]
+    },
+    {
+      "id": "c019",
+      "rgb": [
+        246,
+        230,
+        176
+      ],
+      "hex": "#F6E6B0",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 19
+        },
+        {
+          "ramp": "source_roles",
+          "index": 19
+        }
+      ]
+    },
+    {
+      "id": "c020",
+      "rgb": [
+        215,
+        189,
+        119
+      ],
+      "hex": "#D7BD77",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 20
+        },
+        {
+          "ramp": "source_roles",
+          "index": 20
+        },
+        {
+          "ramp": "skin_0",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c021",
+      "rgb": [
+        214,
+        158,
+        88
+      ],
+      "hex": "#D69E58",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 21
+        },
+        {
+          "ramp": "source_roles",
+          "index": 21
+        }
+      ]
+    },
+    {
+      "id": "c022",
+      "rgb": [
+        129,
+        154,
+        71
+      ],
+      "hex": "#819A47",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 22
+        },
+        {
+          "ramp": "source_roles",
+          "index": 22
+        }
+      ]
+    },
+    {
+      "id": "c023",
+      "rgb": [
+        216,
+        126,
+        51
+      ],
+      "hex": "#D87E33",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 23
+        },
+        {
+          "ramp": "source_roles",
+          "index": 23
+        }
+      ]
+    },
+    {
+      "id": "c024",
+      "rgb": [
+        159,
+        127,
+        83
+      ],
+      "hex": "#9F7F53",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 24
+        },
+        {
+          "ramp": "source_roles",
+          "index": 24
+        },
+        {
+          "ramp": "skin_0",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c025",
+      "rgb": [
+        88,
+        130,
+        37
+      ],
+      "hex": "#588225",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 25
+        },
+        {
+          "ramp": "source_roles",
+          "index": 25
+        }
+      ]
+    },
+    {
+      "id": "c026",
+      "rgb": [
+        62,
+        121,
+        37
+      ],
+      "hex": "#3E7925",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 26
+        },
+        {
+          "ramp": "source_roles",
+          "index": 26
+        }
+      ]
+    },
+    {
+      "id": "c027",
+      "rgb": [
+        201,
+        105,
+        42
+      ],
+      "hex": "#C9692A",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 27
+        },
+        {
+          "ramp": "source_roles",
+          "index": 27
+        }
+      ]
+    },
+    {
+      "id": "c028",
+      "rgb": [
+        168,
+        99,
+        41
+      ],
+      "hex": "#A86329",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 28
+        },
+        {
+          "ramp": "source_roles",
+          "index": 28
+        }
+      ]
+    },
+    {
+      "id": "c029",
+      "rgb": [
+        141,
+        87,
+        39
+      ],
+      "hex": "#8D5727",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 29
+        },
+        {
+          "ramp": "source_roles",
+          "index": 29
+        }
+      ]
+    },
+    {
+      "id": "c030",
+      "rgb": [
+        97,
+        93,
+        71
+      ],
+      "hex": "#615D47",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 30
+        },
+        {
+          "ramp": "source_roles",
+          "index": 30
+        }
+      ]
+    },
+    {
+      "id": "c031",
+      "rgb": [
+        51,
+        107,
+        41
+      ],
+      "hex": "#336B29",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 31
+        },
+        {
+          "ramp": "source_roles",
+          "index": 31
+        }
+      ]
+    },
+    {
+      "id": "c032",
+      "rgb": [
+        29,
+        98,
+        50
+      ],
+      "hex": "#1D6232",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 32
+        },
+        {
+          "ramp": "source_roles",
+          "index": 32
+        }
+      ]
+    },
+    {
+      "id": "c033",
+      "rgb": [
+        37,
+        84,
+        56
+      ],
+      "hex": "#255438",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 33
+        },
+        {
+          "ramp": "source_roles",
+          "index": 33
+        }
+      ]
+    },
+    {
+      "id": "c034",
+      "rgb": [
+        11,
+        81,
+        54
+      ],
+      "hex": "#0B5136",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 34
+        },
+        {
+          "ramp": "source_roles",
+          "index": 34
+        }
+      ]
+    },
+    {
+      "id": "c035",
+      "rgb": [
+        136,
+        65,
+        25
+      ],
+      "hex": "#884119",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 35
+        },
+        {
+          "ramp": "source_roles",
+          "index": 35
+        }
+      ]
+    },
+    {
+      "id": "c036",
+      "rgb": [
+        184,
+        12,
+        7
+      ],
+      "hex": "#B80C07",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 36
+        },
+        {
+          "ramp": "source_roles",
+          "index": 36
+        }
+      ]
+    },
+    {
+      "id": "c037",
+      "rgb": [
+        95,
+        57,
+        29
+      ],
+      "hex": "#5F391D",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 37
+        },
+        {
+          "ramp": "source_roles",
+          "index": 37
+        }
+      ]
+    },
+    {
+      "id": "c038",
+      "rgb": [
+        87,
+        36,
+        17
+      ],
+      "hex": "#572411",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 38
+        },
+        {
+          "ramp": "source_roles",
+          "index": 38
+        }
+      ]
+    },
+    {
+      "id": "c039",
+      "rgb": [
+        55,
+        60,
+        51
+      ],
+      "hex": "#373C33",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 39
+        },
+        {
+          "ramp": "source_roles",
+          "index": 39
+        }
+      ]
+    },
+    {
+      "id": "c040",
+      "rgb": [
+        58,
+        39,
+        25
+      ],
+      "hex": "#3A2719",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 40
+        },
+        {
+          "ramp": "source_roles",
+          "index": 40
+        }
+      ]
+    },
+    {
+      "id": "c041",
+      "rgb": [
+        45,
+        26,
+        18
+      ],
+      "hex": "#2D1A12",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 41
+        },
+        {
+          "ramp": "source_roles",
+          "index": 41
+        }
+      ]
+    },
+    {
+      "id": "c042",
+      "rgb": [
+        35,
+        11,
+        8
+      ],
+      "hex": "#230B08",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 42
+        },
+        {
+          "ramp": "source_roles",
+          "index": 42
+        }
+      ]
+    },
+    {
+      "id": "c043",
+      "rgb": [
+        8,
+        68,
+        51
+      ],
+      "hex": "#084433",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 43
+        },
+        {
+          "ramp": "source_roles",
+          "index": 43
+        }
+      ]
+    },
+    {
+      "id": "c044",
+      "rgb": [
+        5,
+        56,
+        47
+      ],
+      "hex": "#05382F",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 44
+        },
+        {
+          "ramp": "source_roles",
+          "index": 44
+        }
+      ]
+    },
+    {
+      "id": "c045",
+      "rgb": [
+        4,
+        45,
+        42
+      ],
+      "hex": "#042D2A",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 45
+        },
+        {
+          "ramp": "source_roles",
+          "index": 45
+        }
+      ]
+    },
+    {
+      "id": "c046",
+      "rgb": [
+        5,
+        33,
+        34
+      ],
+      "hex": "#052122",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 46
+        },
+        {
+          "ramp": "source_roles",
+          "index": 46
+        }
+      ]
+    },
+    {
+      "id": "c047",
+      "rgb": [
+        15,
+        7,
+        6
+      ],
+      "hex": "#0F0706",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 47
+        },
+        {
+          "ramp": "source_roles",
+          "index": 47
+        }
+      ]
+    },
+    {
+      "id": "c048",
+      "rgb": [
+        135,
+        5,
+        2
+      ],
+      "hex": "#870502",
+      "roles": [
+        "actor",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 48
+        },
+        {
+          "ramp": "source_roles",
+          "index": 48
+        }
+      ]
+    },
+    {
+      "id": "c049",
+      "rgb": [
+        251,
+        42,
+        58
+      ],
+      "hex": "#FB2A3A",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 49
+        },
+        {
+          "ramp": "source_roles",
+          "index": 49
+        }
+      ]
+    },
+    {
+      "id": "c050",
+      "rgb": [
+        90,
+        60,
+        34
+      ],
+      "hex": "#5A3C22",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 50
+        },
+        {
+          "ramp": "source_roles",
+          "index": 50
+        }
+      ]
+    },
+    {
+      "id": "c051",
+      "rgb": [
+        241,
+        191,
+        133
+      ],
+      "hex": "#F1BF85",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 51
+        },
+        {
+          "ramp": "source_roles",
+          "index": 51
+        }
+      ]
+    },
+    {
+      "id": "c052",
+      "rgb": [
+        251,
+        242,
+        209
+      ],
+      "hex": "#FBF2D1",
+      "roles": [
+        "actor",
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 52
+        },
+        {
+          "ramp": "source_roles",
+          "index": 52
+        }
+      ]
+    },
+    {
+      "id": "c053",
+      "rgb": [
+        129,
+        52,
+        11
+      ],
+      "hex": "#81340B",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 53
+        },
+        {
+          "ramp": "source_roles",
+          "index": 53
+        }
+      ]
+    },
+    {
+      "id": "c054",
+      "rgb": [
+        173,
+        157,
+        124
+      ],
+      "hex": "#AD9D7C",
+      "roles": [
+        "actor",
+        "skin",
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 54
+        },
+        {
+          "ramp": "source_roles",
+          "index": 54
+        },
+        {
+          "ramp": "skin_0",
+          "index": 1
+        },
+        {
+          "ramp": "clothing_0",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c055",
+      "rgb": [
+        217,
+        197,
+        199
+      ],
+      "hex": "#D9C5C7",
+      "roles": [
+        "actor",
+        "other"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 55
+        },
+        {
+          "ramp": "source_roles",
+          "index": 55
+        }
+      ]
+    },
+    {
+      "id": "c056",
+      "rgb": [
+        217,
+        216,
+        217
+      ],
+      "hex": "#D9D8D9",
+      "roles": [
+        "actor",
+        "other",
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "source_d3",
+          "index": 56
+        },
+        {
+          "ramp": "source_roles",
+          "index": 56
+        },
+        {
+          "ramp": "hair_4",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c057",
+      "rgb": [
+        76,
+        97,
+        53
+      ],
+      "hex": "#4C6135",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "grass",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c058",
+      "rgb": [
+        80,
+        114,
+        83
+      ],
+      "hex": "#507253",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "grass",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c059",
+      "rgb": [
+        88,
+        86,
+        70
+      ],
+      "hex": "#585646",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "grass",
+          "index": 2
+        },
+        {
+          "ramp": "earth",
+          "index": 2
+        },
+        {
+          "ramp": "rock",
+          "index": 1
+        },
+        {
+          "ramp": "camp_earth",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c060",
+      "rgb": [
+        134,
+        140,
+        82
+      ],
+      "hex": "#868C52",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "grass",
+          "index": 3
+        },
+        {
+          "ramp": "rock",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c061",
+      "rgb": [
+        41,
+        75,
+        57
+      ],
+      "hex": "#294B39",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "grass",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "c062",
+      "rgb": [
+        110,
+        100,
+        66
+      ],
+      "hex": "#6E6442",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "earth",
+          "index": 0
+        },
+        {
+          "ramp": "camp_earth",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c063",
+      "rgb": [
+        143,
+        122,
+        89
+      ],
+      "hex": "#8F7A59",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "earth",
+          "index": 1
+        },
+        {
+          "ramp": "camp_earth",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c064",
+      "rgb": [
+        160,
+        150,
+        126
+      ],
+      "hex": "#A0967E",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "earth",
+          "index": 3
+        },
+        {
+          "ramp": "camp_earth",
+          "index": 3
+        },
+        {
+          "ramp": "shore",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c065",
+      "rgb": [
+        62,
+        77,
+        33
+      ],
+      "hex": "#3E4D21",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "forest_floor",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c066",
+      "rgb": [
+        66,
+        94,
+        61
+      ],
+      "hex": "#425E3D",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "forest_floor",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c067",
+      "rgb": [
+        70,
+        67,
+        52
+      ],
+      "hex": "#464334",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "forest_floor",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c068",
+      "rgb": [
+        119,
+        118,
+        61
+      ],
+      "hex": "#77763D",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "forest_floor",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "c069",
+      "rgb": [
+        27,
+        57,
+        37
+      ],
+      "hex": "#1B3925",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "forest_floor",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "c070",
+      "rgb": [
+        91,
+        108,
+        70
+      ],
+      "hex": "#5B6C46",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hill",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c071",
+      "rgb": [
+        96,
+        125,
+        99
+      ],
+      "hex": "#607D63",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hill",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c072",
+      "rgb": [
+        100,
+        98,
+        84
+      ],
+      "hex": "#646254",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hill",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c073",
+      "rgb": [
+        148,
+        152,
+        102
+      ],
+      "hex": "#949866",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hill",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "c074",
+      "rgb": [
+        57,
+        86,
+        69
+      ],
+      "hex": "#395645",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hill",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "c075",
+      "rgb": [
+        3,
+        0,
+        0
+      ],
+      "hex": "#030000",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "rock",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c076",
+      "rgb": [
+        238,
+        234,
+        210
+      ],
+      "hex": "#EEEAD2",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "rock",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "c077",
+      "rgb": [
+        43,
+        91,
+        114
+      ],
+      "hex": "#2B5B72",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "water",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c078",
+      "rgb": [
+        47,
+        92,
+        133
+      ],
+      "hex": "#2F5C85",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "water",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c079",
+      "rgb": [
+        32,
+        75,
+        67
+      ],
+      "hex": "#204B43",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "water",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c080",
+      "rgb": [
+        20,
+        51,
+        49
+      ],
+      "hex": "#143331",
+      "roles": [
+        "ground"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "water",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "c081",
+      "rgb": [
+        181,
+        157,
+        85
+      ],
+      "hex": "#B59D55",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_1",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c082",
+      "rgb": [
+        141,
+        126,
+        92
+      ],
+      "hex": "#8D7E5C",
+      "roles": [
+        "skin",
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_1",
+          "index": 1
+        },
+        {
+          "ramp": "clothing_0",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c083",
+      "rgb": [
+        127,
+        97,
+        52
+      ],
+      "hex": "#7F6134",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_1",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c084",
+      "rgb": [
+        149,
+        126,
+        51
+      ],
+      "hex": "#957E33",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_2",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c085",
+      "rgb": [
+        111,
+        96,
+        62
+      ],
+      "hex": "#6F603E",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_2",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c086",
+      "rgb": [
+        97,
+        68,
+        22
+      ],
+      "hex": "#614416",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_2",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c087",
+      "rgb": [
+        116,
+        96,
+        15
+      ],
+      "hex": "#74600F",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_3",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c088",
+      "rgb": [
+        81,
+        68,
+        34
+      ],
+      "hex": "#514422",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_3",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c089",
+      "rgb": [
+        67,
+        42,
+        0
+      ],
+      "hex": "#432A00",
+      "roles": [
+        "skin"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "skin_3",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c090",
+      "rgb": [
+        63,
+        60,
+        54
+      ],
+      "hex": "#3F3C36",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_0",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c091",
+      "rgb": [
+        41,
+        38,
+        33
+      ],
+      "hex": "#292621",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_0",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c092",
+      "rgb": [
+        16,
+        11,
+        3
+      ],
+      "hex": "#100B03",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_0",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c093",
+      "rgb": [
+        99,
+        89,
+        69
+      ],
+      "hex": "#635945",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_1",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c094",
+      "rgb": [
+        75,
+        66,
+        47
+      ],
+      "hex": "#4B422F",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_1",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c095",
+      "rgb": [
+        47,
+        40,
+        22
+      ],
+      "hex": "#2F2816",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_1",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c096",
+      "rgb": [
+        149,
+        120,
+        89
+      ],
+      "hex": "#957859",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_2",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c097",
+      "rgb": [
+        122,
+        95,
+        65
+      ],
+      "hex": "#7A5F41",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_2",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c098",
+      "rgb": [
+        91,
+        67,
+        38
+      ],
+      "hex": "#5B4326",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_2",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c099",
+      "rgb": [
+        187,
+        185,
+        183
+      ],
+      "hex": "#BBB9B7",
+      "roles": [
+        "hair",
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_3",
+          "index": 0
+        },
+        {
+          "ramp": "hair_4",
+          "index": 2
+        },
+        {
+          "ramp": "clothing_2",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c100",
+      "rgb": [
+        160,
+        158,
+        156
+      ],
+      "hex": "#A09E9C",
+      "roles": [
+        "hair",
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_3",
+          "index": 1
+        },
+        {
+          "ramp": "clothing_2",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c101",
+      "rgb": [
+        129,
+        127,
+        125
+      ],
+      "hex": "#817F7D",
+      "roles": [
+        "hair",
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_3",
+          "index": 2
+        },
+        {
+          "ramp": "clothing_2",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c102",
+      "rgb": [
+        242,
+        241,
+        240
+      ],
+      "hex": "#F2F1F0",
+      "roles": [
+        "hair"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "hair_4",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c103",
+      "rgb": [
+        201,
+        184,
+        150
+      ],
+      "hex": "#C9B896",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_0",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c104",
+      "rgb": [
+        144,
+        131,
+        105
+      ],
+      "hex": "#908369",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_1",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c105",
+      "rgb": [
+        118,
+        106,
+        81
+      ],
+      "hex": "#766A51",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_1",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c106",
+      "rgb": [
+        88,
+        77,
+        53
+      ],
+      "hex": "#584D35",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_1",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c107",
+      "rgb": [
+        202,
+        196,
+        141
+      ],
+      "hex": "#CAC48D",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_3",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c108",
+      "rgb": [
+        174,
+        169,
+        115
+      ],
+      "hex": "#AEA973",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_3",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c109",
+      "rgb": [
+        142,
+        137,
+        85
+      ],
+      "hex": "#8E8955",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_3",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c110",
+      "rgb": [
+        219,
+        166,
+        127
+      ],
+      "hex": "#DBA67F",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_4",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c111",
+      "rgb": [
+        190,
+        140,
+        102
+      ],
+      "hex": "#BE8C66",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_4",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c112",
+      "rgb": [
+        156,
+        109,
+        73
+      ],
+      "hex": "#9C6D49",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_4",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "c113",
+      "rgb": [
+        144,
+        166,
+        151
+      ],
+      "hex": "#90A697",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_5",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "c114",
+      "rgb": [
+        118,
+        140,
+        125
+      ],
+      "hex": "#768C7D",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_5",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "c115",
+      "rgb": [
+        88,
+        109,
+        95
+      ],
+      "hex": "#586D5F",
+      "roles": [
+        "clothing"
+      ],
+      "ramp_positions": [
+        {
+          "ramp": "clothing_5",
+          "index": 2
+        }
+      ]
+    }
+  ],
+  "actor_palette": [
+    "c000",
+    "c001",
+    "c002",
+    "c003",
+    "c004",
+    "c005",
+    "c006",
+    "c007",
+    "c008",
+    "c009",
+    "c010",
+    "c011",
+    "c012",
+    "c013",
+    "c014",
+    "c015",
+    "c016",
+    "c017",
+    "c018",
+    "c019",
+    "c020",
+    "c021",
+    "c022",
+    "c023",
+    "c024",
+    "c025",
+    "c026",
+    "c027",
+    "c028",
+    "c029",
+    "c030",
+    "c031",
+    "c032",
+    "c033",
+    "c034",
+    "c035",
+    "c036",
+    "c037",
+    "c038",
+    "c039",
+    "c040",
+    "c041",
+    "c042",
+    "c043",
+    "c044",
+    "c045",
+    "c046",
+    "c047",
+    "c048",
+    "c049",
+    "c050",
+    "c051",
+    "c052",
+    "c053",
+    "c054",
+    "c055",
+    "c056"
+  ],
+  "ground_ramps": {
+    "grass": [
+      "c057",
+      "c058",
+      "c059",
+      "c060",
+      "c061"
+    ],
+    "earth": [
+      "c062",
+      "c063",
+      "c059",
+      "c064"
+    ],
+    "forest_floor": [
+      "c065",
+      "c066",
+      "c067",
+      "c068",
+      "c069"
+    ],
+    "hill": [
+      "c070",
+      "c071",
+      "c072",
+      "c073",
+      "c074"
+    ],
+    "rock": [
+      "c075",
+      "c059",
+      "c060",
+      "c076"
+    ],
+    "camp_earth": [
+      "c062",
+      "c063",
+      "c059",
+      "c064"
+    ],
+    "shore": [
+      "c064"
+    ],
+    "water": [
+      "c077",
+      "c078",
+      "c079",
+      "c080"
+    ]
+  },
+  "villager_ramps": {
+    "skin": [
+      [
+        "c020",
+        "c054",
+        "c024"
+      ],
+      [
+        "c081",
+        "c082",
+        "c083"
+      ],
+      [
+        "c084",
+        "c085",
+        "c086"
+      ],
+      [
+        "c087",
+        "c088",
+        "c089"
+      ]
+    ],
+    "hair": [
+      [
+        "c090",
+        "c091",
+        "c092"
+      ],
+      [
+        "c093",
+        "c094",
+        "c095"
+      ],
+      [
+        "c096",
+        "c097",
+        "c098"
+      ],
+      [
+        "c099",
+        "c100",
+        "c101"
+      ],
+      [
+        "c102",
+        "c056",
+        "c099"
+      ]
+    ],
+    "clothing": [
+      [
+        "c103",
+        "c054",
+        "c082"
+      ],
+      [
+        "c104",
+        "c105",
+        "c106"
+      ],
+      [
+        "c099",
+        "c100",
+        "c101"
+      ],
+      [
+        "c107",
+        "c108",
+        "c109"
+      ],
+      [
+        "c110",
+        "c111",
+        "c112"
+      ],
+      [
+        "c113",
+        "c114",
+        "c115"
+      ]
+    ]
+  },
+  "rgb_ramps": {
+    "ground": {
+      "grass": [
+        [
+          76,
+          97,
+          53
+        ],
+        [
+          80,
+          114,
+          83
+        ],
+        [
+          88,
+          86,
+          70
+        ],
+        [
+          134,
+          140,
+          82
+        ],
+        [
+          41,
+          75,
+          57
+        ]
+      ],
+      "earth": [
+        [
+          110,
+          100,
+          66
+        ],
+        [
+          143,
+          122,
+          89
+        ],
+        [
+          88,
+          86,
+          70
+        ],
+        [
+          160,
+          150,
+          126
+        ]
+      ],
+      "forest_floor": [
+        [
+          62,
+          77,
+          33
+        ],
+        [
+          66,
+          94,
+          61
+        ],
+        [
+          70,
+          67,
+          52
+        ],
+        [
+          119,
+          118,
+          61
+        ],
+        [
+          27,
+          57,
+          37
+        ]
+      ],
+      "hill": [
+        [
+          91,
+          108,
+          70
+        ],
+        [
+          96,
+          125,
+          99
+        ],
+        [
+          100,
+          98,
+          84
+        ],
+        [
+          148,
+          152,
+          102
+        ],
+        [
+          57,
+          86,
+          69
+        ]
+      ],
+      "rock": [
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          88,
+          86,
+          70
+        ],
+        [
+          134,
+          140,
+          82
+        ],
+        [
+          238,
+          234,
+          210
+        ]
+      ],
+      "camp_earth": [
+        [
+          110,
+          100,
+          66
+        ],
+        [
+          143,
+          122,
+          89
+        ],
+        [
+          88,
+          86,
+          70
+        ],
+        [
+          160,
+          150,
+          126
+        ]
+      ],
+      "shore": [
+        [
+          160,
+          150,
+          126
+        ]
+      ],
+      "water": [
+        [
+          43,
+          91,
+          114
+        ],
+        [
+          47,
+          92,
+          133
+        ],
+        [
+          32,
+          75,
+          67
+        ],
+        [
+          20,
+          51,
+          49
+        ]
+      ]
+    },
+    "villager": {
+      "skin": [
+        [
+          [
+            215,
+            189,
+            119
+          ],
+          [
+            173,
+            157,
+            124
+          ],
+          [
+            159,
+            127,
+            83
+          ]
+        ],
+        [
+          [
+            181,
+            157,
+            85
+          ],
+          [
+            141,
+            126,
+            92
+          ],
+          [
+            127,
+            97,
+            52
+          ]
+        ],
+        [
+          [
+            149,
+            126,
+            51
+          ],
+          [
+            111,
+            96,
+            62
+          ],
+          [
+            97,
+            68,
+            22
+          ]
+        ],
+        [
+          [
+            116,
+            96,
+            15
+          ],
+          [
+            81,
+            68,
+            34
+          ],
+          [
+            67,
+            42,
+            0
+          ]
+        ]
+      ],
+      "hair": [
+        [
+          [
+            63,
+            60,
+            54
+          ],
+          [
+            41,
+            38,
+            33
+          ],
+          [
+            16,
+            11,
+            3
+          ]
+        ],
+        [
+          [
+            99,
+            89,
+            69
+          ],
+          [
+            75,
+            66,
+            47
+          ],
+          [
+            47,
+            40,
+            22
+          ]
+        ],
+        [
+          [
+            149,
+            120,
+            89
+          ],
+          [
+            122,
+            95,
+            65
+          ],
+          [
+            91,
+            67,
+            38
+          ]
+        ],
+        [
+          [
+            187,
+            185,
+            183
+          ],
+          [
+            160,
+            158,
+            156
+          ],
+          [
+            129,
+            127,
+            125
+          ]
+        ],
+        [
+          [
+            242,
+            241,
+            240
+          ],
+          [
+            217,
+            216,
+            217
+          ],
+          [
+            187,
+            185,
+            183
+          ]
+        ]
+      ],
+      "clothing": [
+        [
+          [
+            201,
+            184,
+            150
+          ],
+          [
+            173,
+            157,
+            124
+          ],
+          [
+            141,
+            126,
+            92
+          ]
+        ],
+        [
+          [
+            144,
+            131,
+            105
+          ],
+          [
+            118,
+            106,
+            81
+          ],
+          [
+            88,
+            77,
+            53
+          ]
+        ],
+        [
+          [
+            187,
+            185,
+            183
+          ],
+          [
+            160,
+            158,
+            156
+          ],
+          [
+            129,
+            127,
+            125
+          ]
+        ],
+        [
+          [
+            202,
+            196,
+            141
+          ],
+          [
+            174,
+            169,
+            115
+          ],
+          [
+            142,
+            137,
+            85
+          ]
+        ],
+        [
+          [
+            219,
+            166,
+            127
+          ],
+          [
+            190,
+            140,
+            102
+          ],
+          [
+            156,
+            109,
+            73
+          ]
+        ],
+        [
+          [
+            144,
+            166,
+            151
+          ],
+          [
+            118,
+            140,
+            125
+          ],
+          [
+            88,
+            109,
+            95
+          ]
+        ]
+      ]
+    }
+  },
+  "unmerged_ground_rgb": {
+    "grass": [
+      [
+        76,
+        97,
+        53
+      ],
+      [
+        80,
+        114,
+        83
+      ],
+      [
+        88,
+        86,
+        70
+      ],
+      [
+        134,
+        140,
+        82
+      ],
+      [
+        41,
+        75,
+        57
+      ]
+    ],
+    "earth": [
+      [
+        110,
+        100,
+        66
+      ],
+      [
+        143,
+        122,
+        89
+      ],
+      [
+        88,
+        86,
+        70
+      ],
+      [
+        160,
+        150,
+        126
+      ]
+    ],
+    "forest_floor": [
+      [
+        62,
+        77,
+        33
+      ],
+      [
+        66,
+        94,
+        61
+      ],
+      [
+        70,
+        67,
+        52
+      ],
+      [
+        119,
+        118,
+        61
+      ],
+      [
+        27,
+        57,
+        37
+      ]
+    ],
+    "hill": [
+      [
+        91,
+        108,
+        70
+      ],
+      [
+        96,
+        125,
+        99
+      ],
+      [
+        100,
+        98,
+        84
+      ],
+      [
+        148,
+        152,
+        102
+      ],
+      [
+        57,
+        86,
+        69
+      ]
+    ],
+    "rock": [
+      [
+        3,
+        0,
+        0
+      ],
+      [
+        88,
+        86,
+        70
+      ],
+      [
+        134,
+        140,
+        82
+      ],
+      [
+        238,
+        234,
+        210
+      ]
+    ],
+    "camp_earth": [
+      [
+        110,
+        100,
+        66
+      ],
+      [
+        143,
+        122,
+        89
+      ],
+      [
+        88,
+        86,
+        70
+      ],
+      [
+        160,
+        150,
+        126
+      ]
+    ],
+    "shore": [
+      [
+        160,
+        150,
+        126
+      ]
+    ],
+    "water": [
+      [
+        43,
+        91,
+        114
+      ],
+      [
+        47,
+        92,
+        133
+      ],
+      [
+        32,
+        75,
+        67
+      ],
+      [
+        20,
+        51,
+        49
+      ]
+    ]
+  },
+  "source_ground_rgb": {
+    "grass": [
+      [
+        81,
+        106,
+        41
+      ],
+      [
+        80,
+        124,
+        78
+      ],
+      [
+        97,
+        93,
+        71
+      ],
+      [
+        145,
+        148,
+        64
+      ],
+      [
+        37,
+        84,
+        56
+      ]
+    ],
+    "earth": [
+      [
+        123,
+        106,
+        59
+      ],
+      [
+        159,
+        127,
+        83
+      ],
+      [
+        97,
+        93,
+        71
+      ],
+      [
+        173,
+        157,
+        124
+      ]
+    ],
+    "forest_floor": [
+      [
+        68,
+        85,
+        18
+      ],
+      [
+        67,
+        103,
+        55
+      ],
+      [
+        80,
+        73,
+        53
+      ],
+      [
+        131,
+        125,
+        42
+      ],
+      [
+        24,
+        65,
+        35
+      ]
+    ],
+    "hill": [
+      [
+        97,
+        117,
+        62
+      ],
+      [
+        98,
+        135,
+        96
+      ],
+      [
+        109,
+        105,
+        86
+      ],
+      [
+        159,
+        160,
+        89
+      ],
+      [
+        56,
+        95,
+        70
+      ]
+    ],
+    "rock": [
+      [
+        15,
+        7,
+        6
+      ],
+      [
+        97,
+        93,
+        71
+      ],
+      [
+        145,
+        148,
+        64
+      ],
+      [
+        251,
+        242,
+        209
+      ]
+    ],
+    "camp_earth": [
+      [
+        123,
+        106,
+        59
+      ],
+      [
+        159,
+        127,
+        83
+      ],
+      [
+        97,
+        93,
+        71
+      ],
+      [
+        173,
+        157,
+        124
+      ]
+    ],
+    "shore": [
+      [
+        173,
+        157,
+        124
+      ]
+    ],
+    "water": [
+      [
+        27,
+        92,
+        119
+      ],
+      [
+        29,
+        93,
+        141
+      ],
+      [
+        21,
+        76,
+        67
+      ],
+      [
+        12,
+        52,
+        49
+      ]
+    ]
+  },
+  "ground_transform": {
+    "chroma_factor": 0.72,
+    "lightness_offset": -3,
+    "hue_degrees": 4,
+    "water_chroma_factor": 0.85
+  },
+  "villager_derivation": {
+    "skin_base_rgb": [
+      [
+        215,
+        189,
+        119
+      ],
+      [
+        173,
+        157,
+        124
+      ],
+      [
+        159,
+        127,
+        83
+      ]
+    ],
+    "hide_seed_rgb": [
+      173,
+      157,
+      124
+    ],
+    "hair_lab_specs": [
+      [
+        -50,
+        0.2,
+        0
+      ],
+      [
+        -37,
+        0.65,
+        0
+      ],
+      [
+        -23,
+        1.15,
+        -15
+      ],
+      [
+        0,
+        0.08,
+        0
+      ],
+      [
+        20,
+        0.04,
+        0
+      ]
+    ],
+    "clothing_lab_specs": [
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        -20,
+        0.8,
+        0
+      ],
+      [
+        0,
+        0.08,
+        0
+      ],
+      [
+        3,
+        1.5,
+        15
+      ],
+      [
+        -3,
+        1.6,
+        -25
+      ],
+      [
+        -9,
+        0.65,
+        65
+      ]
+    ],
+    "shade_lightness_offsets": [
+      10,
+      0,
+      -12
+    ]
+  },
+  "variant_names": {
+    "skin": [
+      "light",
+      "medium",
+      "tan",
+      "deep"
+    ],
+    "hair": [
+      "black",
+      "dark_brown",
+      "auburn",
+      "grey",
+      "white"
+    ],
+    "clothing": [
+      "tan_hide",
+      "dark_hide",
+      "grey_fur",
+      "ochre_dyed",
+      "red_ochre",
+      "green_brown_fibre"
+    ]
+  }
+}
