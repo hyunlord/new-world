@@ -144,3 +144,6 @@ func _kind_color(kind: int, a: float) -> Color:
 
 func get_drawn_segment_count() -> int:
 	return _drawn_segment_count if is_visible_in_tree() else 0
+
+func get_drawn_head_dot_count() -> int:
+	return 0

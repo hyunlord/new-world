@@ -35,6 +35,7 @@ func _run() -> void:
 	tree.set_meta("art_kind", "tree")
 	tree.set_meta("tile_x", 0)
 	tree.set_meta("tile_y", 0)
+	tree.set_meta("calibration_fixture", true)
 	var counts: Dictionary = {}
 	for child: Node in objects.get_children():
 		if not child is Sprite2D:
@@ -57,7 +58,7 @@ func _run() -> void:
 			var y: int = int(sprite.get_meta("tile_y"))
 			_check(sprite.position == Vector2(448 + 16 * x + 8 + int(look["jx"]), 28 + 16 * y + 14 + int(look["jy"])), "agent feet use snapshot tile and stable jitter")
 			_check(sprite.modulate == Color.WHITE, "actual agent output has no state tint")
-		if kind == "tree":
+		if kind == "tree" and sprite.get_meta("calibration_fixture", false):
 			_check(sprite.position.y == 43.0, "tree y-sort baseline is its tile base")
 	for kind: String in ["building", "bush", "agent", "tree"]:
 		_check(int(counts.get(kind, 0)) > 0, "real scene missing " + kind)

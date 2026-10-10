@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://v7init"]
+[gd_scene load_steps=19 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://scripts/ui/terrain_renderer.gd" id="14_terrain"]
 [ext_resource type="Script" path="res://scripts/ui/building_renderer.gd" id="15_buildings"]
 [ext_resource type="Script" path="res://scripts/ui/daylight_controller.gd" id="16_daylight"]
+[ext_resource type="Script" path="res://scripts/ui/nature_renderer.gd" id="17_nature"]
+[ext_resource type="Script" path="res://scripts/ui/world_effects.gd" id="18_effects"]
 
 [node name="Main" type="Node2D"]
 
@@ -34,6 +36,12 @@ script = ExtResource("14_terrain")
 
 [node name="BuildingRenderer" type="Node2D" parent="."]
 script = ExtResource("15_buildings")
+
+[node name="NatureRenderer" type="Node2D" parent="."]
+script = ExtResource("17_nature")
+
+[node name="WorldEffects" type="Node2D" parent="."]
+script = ExtResource("18_effects")
 
 [node name="DaylightController" type="Node2D" parent="."]
 script = ExtResource("16_daylight")

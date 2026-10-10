@@ -1,6 +1,7 @@
 extends Node2D
 
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
+const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
@@ -23,6 +24,10 @@ var _shadows: Dictionary = {}
 var _cues: Dictionary = {}
 var _sprite_pool: Array[Sprite2D] = []
 var _shadow_pool: Array[Sprite2D] = []
+var _animation_time: float = 0.0
+var _render_positions: Dictionary = {}
+var _frame_groups: Dictionary = {}
+var _selection_ring: Line2D
 var _capture_visible: bool = true
 var _lerp_accumulator: float = 0.0
 var _move_duration: float = SIM_TICK_DURATION
@@ -47,6 +52,7 @@ func _process(delta: float) -> void:
 	var world_info: Dictionary = world_sim.get_world_info()
 	_move_duration = float(maxi(1, int(world_info.get("move_interval_ticks", 1)))) * SIM_TICK_DURATION
 	_lerp_accumulator += delta
+	_animation_time += delta
 	_clear_expired_recalling()
 	_clear_expired_combating()
 	var snap: Dictionary = world_sim.get_agent_snapshot()
@@ -77,6 +83,9 @@ func _process(delta: float) -> void:
 		_lerp_accumulator = 0.0
 	var lerp_t: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
 	var live: Dictionary = {}
+	var context: Dictionary = _activity_context()
+	var time: Dictionary = world_sim.get_time_snapshot()
+	var hour: float = float(time.get("time_of_day", 12.0))
 	for i in n:
 		var agent_id: int = int(agent_ids[i])
 		live[agent_id] = true
@@ -86,24 +95,41 @@ func _process(delta: float) -> void:
 		var sprite: Sprite2D = _ensure_agent(agent_id)
 		var look: Dictionary = ArtHashScript.look(agent_id)
 		var child: bool = snap.has("life_stages") and i < snap["life_stages"].size() and int(snap["life_stages"][i]) == 1
-		var sprite_id: String = "direction_12_villager_child" if child else LOOKS[posmod(ArtHashScript.mix(agent_id), LOOKS.size())]
+		var previous_position: Vector2 = _render_positions.get(agent_id, ipos)
+		var movement: Vector2 = ipos - previous_position
+		_render_positions[agent_id] = ipos
+		var tile: Dictionary = _tile_context(Vector2i(xs[i], ys[i]), context)
+		var state: int = int(states[i]) if i < states.size() else 0
+		var has_targets: bool = snap.has("target_kinds")
+		var target: int = int(snap["target_kinds"][i]) if has_targets and i < snap["target_kinds"].size() else 0
+		var carried: float = float(snap["carried_foods"][i]) if snap.has("carried_foods") and i < snap["carried_foods"].size() else 0.0
+		var activity: String = Activity.resolve(state, target, has_targets, movement.length_squared() > 0.000001, carried, tile, hour)
+		var facing: String = Activity.facing(movement, str(sprite.get_meta("facing", "S")))
+		if activity == "talk":
+			facing = Activity.facing(_talk_delta(i, xs, ys), facing)
+		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
+		var sprite_id: String = _animation_frame(body, activity, facing, float(look["phase"]), agent_id)
 		if str(sprite.get_meta("sprite_id", "")) != sprite_id:
 			SpriteLibrary.apply(sprite, sprite_id)
+		SpriteLibrary.apply_variant(sprite, look)
 		sprite.position = ipos.round()
-		if not is_equal_approx(curr_pos.x, prev_pos.x):
-			sprite.flip_h = curr_pos.x < prev_pos.x
-		sprite.visible = _capture_visible
+		sprite.flip_h = facing == "W"
+		var sheltered_sleep: bool = Activity.hidden(activity, has_targets, tile)
+		sprite.set_meta("sheltered_sleep", sheltered_sleep)
+		sprite.visible = _capture_visible and not sheltered_sleep
 		sprite.set_meta("entity_bits", int(ids[i]))
-		sprite.set_meta("body", "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b"))
+		sprite.set_meta("body", body)
 		sprite.set_meta("variant", {"skin": look["skin"], "hair": look["hair"], "clothing": look["clothing"]})
 		sprite.set_meta("tile_x", int(xs[i]))
 		sprite.set_meta("tile_y", int(ys[i]))
-		sprite.set_meta("activity", "walk" if i < states.size() and states[i] == 1 else "idle")
+		sprite.set_meta("activity", activity)
+		sprite.set_meta("facing", facing)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
 		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_ids[i]), _combating_agents.has(agent_ids[i]))
 	_retire_missing(live)
+	_update_selection_ring()
 	_ingest_memory_recalls(ids, xs, ys, n)
 	_ingest_combat_events(ids, agent_ids, xs, ys, n)
 
@@ -114,6 +140,7 @@ func _ensure_agent(agent_id: int) -> Sprite2D:
 	if sprite.get_parent() == null:
 		_objects.add_child(sprite)
 	sprite.name = "Agent_%d" % agent_id
+	sprite.set_meta("facing", "S")
 	sprite.set_meta("art_kind", "agent")
 	sprite.set_meta("art_id", agent_id)
 	_sprites[agent_id] = sprite
@@ -153,6 +180,7 @@ func _retire_missing(live: Dictionary) -> void:
 		sprite.visible = false
 		_sprite_pool.append(sprite)
 		_sprites.erase(agent_id)
+		_render_positions.erase(agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.visible = false
 		_shadow_pool.append(shadow)
@@ -175,6 +203,8 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	_render_positions.clear()
+	_animation_time = 0.0
 	_prev_positions.clear()
 	_curr_positions.clear()
 	_snapshot_checksum = -1
@@ -295,3 +325,111 @@ func _snapshot_checksum_from(agent_ids: PackedInt64Array, xs: PackedInt32Array, 
 		var aid: int = int(agent_ids[i])
 		h = (h * 1000003) ^ (aid * 73856093) ^ (int(xs[i]) * 19349663) ^ (int(ys[i]) * 83492791) ^ (i * 2654435761)
 	return h
+
+func _animation_frame(body: String, activity: String, facing: String, phase: float, agent_id: int) -> String:
+	if _frame_groups.is_empty():
+		var entries: Dictionary = SpriteLibrary.entries()
+		var names: Array = entries.keys()
+		names.sort()
+		for id: String in names:
+			var entry: Dictionary = entries[id]
+			var key: String = str(entry.get("body", "")) + "/" + str(entry.get("activity", "")) + "/" + str(entry.get("view", ""))
+			if not _frame_groups.has(key):
+				_frame_groups[key] = []
+			_frame_groups[key].append(id)
+	var view: String = "E" if facing == "W" else facing
+	for key: String in [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/" + activity + "/E", body + "/idle/" + view, body + "/idle/S"]:
+		if _frame_groups.has(key):
+			var frames: Array = _frame_groups[key]
+			return str(frames[Activity.frame_index(activity, _animation_time, phase, frames.size())])
+	return "direction_12_villager_child" if body == "child" else LOOKS[posmod(ArtHashScript.mix(agent_id), LOOKS.size())]
+
+func _activity_context() -> Dictionary:
+	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "water": {}}
+	var buildings: Dictionary = world_sim.get_building_snapshot()
+	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
+	var kinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
+	for i: int in range(mini(xs.size(), mini(ys.size(), kinds.size()))):
+		var tile: Vector2i = Vector2i(xs[i], ys[i])
+		if kinds[i] == 0:
+			context["hearths"].append(tile)
+		elif kinds[i] == 1:
+			context["shelters"][tile] = true
+	for source: String in ["sites", "food"]:
+		var snap: Dictionary = world_sim.get_construction_snapshot() if source == "sites" else world_sim.get_resource_snapshot()
+		var sx: PackedInt32Array = snap.get("xs", PackedInt32Array())
+		var sy: PackedInt32Array = snap.get("ys", PackedInt32Array())
+		var sk: PackedInt32Array = snap.get("kinds", PackedInt32Array())
+		for i: int in range(mini(sx.size(), sy.size())):
+			if source == "sites" or (i < sk.size() and sk[i] == 0):
+				context[source][Vector2i(sx[i], sy[i])] = true
+	var terrain: Dictionary = world_sim.get_terrain_snapshot()
+	context["terrain"] = terrain
+	return context
+
+func _tile_context(tile: Vector2i, context: Dictionary) -> Dictionary:
+	var near: bool = false
+	for hearth: Vector2i in context["hearths"]:
+		if maxi(absi(tile.x - hearth.x), absi(tile.y - hearth.y)) <= 3:
+			near = true
+	var terrain: Dictionary = context["terrain"]
+	var width: int = int(terrain.get("width", 0))
+	var height: int = int(terrain.get("height", 0))
+	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
+	var water: bool = false
+	for delta: Vector2i in [Vector2i.ZERO, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+		var t: Vector2i = tile + delta
+		var index: int = t.y * width + t.x
+		if t.x >= 0 and t.x < width and t.y >= 0 and t.y < height and index < cells.size() and cells[index] == 4:
+			water = true
+	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "water": water, "near_hearth": near}
+
+func _talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vector2:
+	var nearest: Vector2 = Vector2.ZERO
+	var distance: float = 3.0
+	for i: int in range(xs.size()):
+		if i == index:
+			continue
+		var delta: Vector2 = Vector2(xs[i] - xs[index], ys[i] - ys[index])
+		if maxf(absf(delta.x), absf(delta.y)) <= 1.0 and delta.length_squared() < distance:
+			nearest = delta
+			distance = delta.length_squared()
+	return nearest
+
+func get_agent_sprite(agent_id: int) -> Sprite2D:
+	return _sprites.get(agent_id) as Sprite2D
+
+func _update_selection_ring() -> void:
+	if _selection_ring == null:
+		_selection_ring = Line2D.new()
+		_selection_ring.name = "SelectionRing"
+		_selection_ring.width = 1.0
+		_selection_ring.default_color = Color("#D7BD77")
+		_selection_ring.set_meta("art_kind", "selection_ring")
+		_shadow_layer.add_child(_selection_ring)
+	_selection_ring.visible = false
+	var inspector: Node = get_node_or_null("../UI/AgentInspectorPanel")
+	if inspector == null or not _capture_visible:
+		return
+	var selected: int = int(inspector.call("get_selected_entity_bits"))
+	for sprite: Sprite2D in _sprites.values():
+		if int(sprite.get_meta("entity_bits", -1)) != selected or not sprite.visible:
+			continue
+		var pulse: int = posmod(floori(_animation_time * 2.0), 2)
+		var extent: float = float(7 + pulse)
+		_selection_ring.points = PackedVector2Array([Vector2(-extent, -1), Vector2(-extent + 2, -3), Vector2(extent - 2, -3), Vector2(extent, -1), Vector2(extent, 1), Vector2(extent - 2, 3), Vector2(-extent + 2, 3), Vector2(-extent, 1), Vector2(-extent, -1)])
+		_selection_ring.position = sprite.position
+		_selection_ring.set_meta("art_id", int(sprite.get_meta("art_id")))
+		_selection_ring.set_meta("frame_id", pulse)
+		_selection_ring.visible = true
+		return
+
+func get_active_agent_sprites() -> Array[Sprite2D]:
+	var active: Array[Sprite2D] = []
+	for sprite: Sprite2D in _sprites.values():
+		active.append(sprite)
+	return active
+
+func is_capture_visible() -> bool:
+	return _capture_visible

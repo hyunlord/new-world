@@ -58,3 +58,25 @@ static func shared_layer(owner: Node, layer_name: String, z: int, sorted: bool =
 	layer.z_index = z
 	layer.y_sort_enabled = sorted
 	return layer
+
+static var _variant_materials: Dictionary = {}
+
+static func apply_variant(sprite: Sprite2D, look: Dictionary) -> bool:
+	var entry: Dictionary = frame(str(sprite.get_meta("sprite_id", "")))
+	if entry.is_empty():
+		return false
+	var page: String = str(entry["page"])
+	var regions: String = page.get_basename() + "_regions.png"
+	if not ResourceLoader.exists(regions):
+		sprite.material = null
+		sprite.self_modulate = Color.WHITE
+		return false
+	if not _variant_materials.has(page):
+		var material: ShaderMaterial = ShaderMaterial.new()
+		material.shader = load("res://shaders/villager_ramp.gdshader") as Shader
+		material.set_shader_parameter("region_texture", load(regions))
+		material.set_shader_parameter("ramp_texture", load("res://assets/art/villager_ramps.png"))
+		_variant_materials[page] = material
+	sprite.material = _variant_materials[page] as ShaderMaterial
+	sprite.self_modulate = Color(float(look.get("skin", 0)) / 15.0, float(look.get("hair", 0)) / 15.0, float(look.get("clothing", 0)) / 15.0, 1.0)
+	return true
