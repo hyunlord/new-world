@@ -650,7 +650,7 @@ Retain R3: cooldown 1440, food cost 10, residents/shelter 8, social chase 240, r
 | R2 | 0.0 | 0 | 5.0 | 18.0 | 19 / 26 | 1.0 | FAIL |
 | R3 retained | 0.0 | 0 | 4.0 | 6.5 | 15 / 25 | 1.0 | FAIL |
 
-Remaining target failures: T10 housing overflow exceeds +6, despite zero dehydration deaths across both retained-R3 horizons; T5 median shelters completed is 1, below 2. T11 strict per-seed comparisons and T9 timing results remain recorded separately above; passing aggregate social rates must not conceal a failing individual seed.
+Remaining target failures: T10 housing overflow exceeds +6, with zero dehydration deaths across all 64 retained-R3 10-day seeds and one total dehydration death across the 16 retained-R3 30-day seeds (median 0, max 1); T5 median shelters completed is 1, below 2. T11 strict per-seed comparisons and T9 timing results remain recorded separately above; passing aggregate social rates must not conceal a failing individual seed.
 
 Retained R3 10-day strict T11: PASS; below-half-baseline seeds []; zero-social seeds [].
 Retained R3 30-day strict T11: PASS; below-half-baseline seeds []; zero-social seeds [].
