@@ -82,19 +82,19 @@ impl WorldRules {
     pub const fn game_v8() -> Self {
         Self {
             agent: AgentRules {
-                move_interval_ticks: 6,
-                idle_pause_chance: 0.6,
-                idle_tether_radius: Some(6),
+                move_interval_ticks: 8,
+                idle_pause_chance: 0.4,
+                idle_tether_radius: Some(8),
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
-                    cooldown_ticks: 720,
-                    food_cost: 6,
+                    cooldown_ticks: 360,
+                    food_cost: 3,
                     max_mean_hunger: 60.0,
                     max_mean_thirst: 60.0,
                 },
                 shelter_planning: Some(ShelterPlanningRule {
-                    residents_per_shelter: 6,
+                    residents_per_shelter: 4,
                     max_shelters: 12,
                     plan_interval_ticks: 60,
                     ring_min: 2,

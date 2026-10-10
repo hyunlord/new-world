@@ -52,7 +52,7 @@
 //! ever been recorded on the agent's tile the decision becomes a chain
 //! root (`parent: None`).
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
@@ -407,6 +407,46 @@ impl RuntimeSystem for AgentDecisionSystem {
             sites
         };
 
+        let planning = resources.rules.society.shelter_planning;
+        let mut assigned_builders: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        let mut builder_targets: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        if let Some(rule) = planning {
+            let mut agents: Vec<_> = world.query::<(
+                &Agent, &Position, &AgentState, Option<&SeekTarget>,
+                Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>,
+            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social))| {
+                (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
+                 h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                    && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
+                    && sleep.is_none_or(|v| v.fatigue <= FATIGUE_THRESHOLD)
+                    && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
+            }).collect();
+            agents.sort_by_key(|(id, ..)| *id);
+            for (id, pos, state, target, _) in &agents {
+                if matches!(state, AgentState::Seeking { target: TargetKind::ConstructionSite }
+                    | AgentState::Consuming { target: TargetKind::ConstructionSite }) {
+                    let tile = target.unwrap_or(*pos);
+                    if construction_sites.contains_key(&tile) {
+                        builder_targets.insert(*id, tile);
+                    }
+                }
+            }
+            for (tile, sid) in &resources.site_owner {
+                if !construction_sites.contains_key(tile) { continue; }
+                let Some(settlement) = resources.settlements.get(sid) else { continue; };
+                let active = builder_targets.values().filter(|target| *target == tile).count() as u32;
+                let slots = rule.max_builders_per_site.saturating_sub(active) as usize;
+                let mut candidates: Vec<_> = agents.iter().filter(|(id, _, state, _, eligible)| {
+                    *eligible && matches!(state, AgentState::Idle)
+                        && settlement.member_agents.contains(id) && !assigned_builders.contains_key(id)
+                }).map(|(id, pos, ..)| (pos.0.abs_diff(tile.0).max(pos.1.abs_diff(tile.1)), *id)).collect();
+                candidates.sort();
+                for (_, id) in candidates.into_iter().take(slots) {
+                    assigned_builders.insert(id, *tile);
+                }
+            }
+        }
+
         // V7 Phase 7-β / P7β-6 — social-eligible snapshot. An Idle agent is
         // social-eligible iff its loneliness breaches `SOCIAL_THRESHOLD`
         // AND it has no higher-priority drive breached (Needs +
@@ -602,7 +642,9 @@ impl RuntimeSystem for AgentDecisionSystem {
                         .is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD)
                     {
                         Some((TargetKind::Sleep, DecisionReason::FatigueThresholdBreach))
-                    } else if construction_sites.contains_key(&(pos.x, pos.y)) {
+                    } else if if planning.is_some() {
+                        assigned_builders.contains_key(&agent.id)
+                    } else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                         // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
                         // ONLY when no Need has breached AND a
                         // co-located active ConstructionSite exists.
@@ -784,7 +826,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                         if sleep_opt.as_ref().is_some_and(|s| s.fatigue > FATIGUE_THRESHOLD) {
                             eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
                         }
-                        if construction_sites.contains_key(&(pos.x, pos.y)) {
+                        if if planning.is_some() { assigned_builders.contains_key(&agent.id) }
+                            else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                             eligible.push((
                                 CascadeArm::Construction,
                                 TargetKind::ConstructionSite,
@@ -807,7 +850,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // the social_partner_breached_by_pos extension for the
                         // Social arm (plan §A17: Social natural winner →
                         // Construction flip via memory bias).
-                        if !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
+                        if planning.is_none()
+                            && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
                                     e.salience > SALIENCE_FLOOR
@@ -1188,6 +1232,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         }
                     }
                     let key = (pos.x, pos.y);
+                    if planning.is_some() && matches!(target, TargetKind::ConstructionSite) {
+                        match builder_targets.get(&agent.id) {
+                            Some(tile) if *tile != key => continue,
+                            Some(_) => {},
+                            None => { *state = AgentState::Idle; continue; }
+                        }
+                    }
                     let has_resource = match target {
                         TargetKind::Food => resources
                             .food_tiles
@@ -1556,6 +1607,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                         }
                     }
+                }
+                AgentState::Seeking { target: TargetKind::ConstructionSite }
+                    if planning.is_some() => {
+                    if let Some(tile) = assigned_builders.get(&agent.id).or_else(|| builder_targets.get(&agent.id)) {
+                        if seek_opt.map(|s| s.tile) != Some(*tile) { seek_set.push((e, *tile)); }
+                    } else if seek_opt.is_some() { seek_clear.push(e); }
                 }
                 // ConstructionSite seek (co-located) / Idle / Consuming → no
                 // goal; drop any stale SeekTarget.

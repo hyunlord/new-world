@@ -29,15 +29,15 @@ pub struct WorldGenConfig {
     pub mountain_coverage: f64,
 }
 impl WorldGenConfig {
-    /// 64×64, 24 residents, 12 capacity-six bushes, 30/10/4 percent terrain.
+    /// 64×64, 24 residents, 8 capacity-four bushes, 30/10/4 percent terrain.
     pub const fn game_default(seed: u64) -> Self {
         Self {
             seed,
             width: 64,
             height: 64,
             starting_agents: 24,
-            berry_bushes: 12,
-            berry_capacity: 6,
+            berry_bushes: 8,
+            berry_capacity: 4,
             forest_coverage: 0.30,
             hill_coverage: 0.10,
             mountain_coverage: 0.04,
@@ -89,7 +89,7 @@ mod tests {
                 cfg.berry_bushes,
                 cfg.berry_capacity
             ),
-            (64, 64, 24, 12, 6)
+            (64, 64, 24, 8, 4)
         );
     }
 }

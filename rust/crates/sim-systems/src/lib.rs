@@ -300,4 +300,10 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_resource_systems(engine);
     register_stockpile_systems(engine);
     register_stockpile_consume_systems(engine);
+    register_shelter_planning_systems(engine);
+}
+
+/// Register the rules-gated shelter planner.
+pub fn register_shelter_planning_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::settlement::ShelterPlanningSystem::default()));
 }

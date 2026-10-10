@@ -136,6 +136,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         }
     }
     output.flush().map_err(|e| e.to_string())?;
+    eprintln!("PROBE seed={seed} shelter_plan_skips={}", engine.resources.shelter_plan_skips);
     Ok(RunResult {
         seed,
         checkpoints,

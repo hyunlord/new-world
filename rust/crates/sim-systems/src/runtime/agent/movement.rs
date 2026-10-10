@@ -41,8 +41,10 @@
 //! zero new deps, and keeps the migration to a proper `rand_chacha`-backed
 //! source one type-swap away if a later phase needs it.
 
+use std::collections::BTreeMap;
+
 use hecs::World;
-use sim_core::components::{AgentState, Position, SeekTarget};
+use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
@@ -128,6 +130,20 @@ impl RuntimeSystem for AgentMovementSystem {
     }
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        let rules = resources.rules.agent;
+        if !resources.current_tick.is_multiple_of(rules.move_interval_ticks.max(1)) {
+            return;
+        }
+        let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        if rules.idle_tether_radius.is_some() {
+            let mut settlements: Vec<_> = resources.settlements.iter().collect();
+            settlements.sort_by_key(|(id, _)| **id);
+            for (_, settlement) in settlements {
+                for id in &settlement.member_agents {
+                    home.entry(*id).or_insert(settlement.formation_tile);
+                }
+            }
+        }
         let w = resources.tile_grid.width;
         let h = resources.tile_grid.height;
         if w == 0 || h == 0 {
@@ -135,12 +151,13 @@ impl RuntimeSystem for AgentMovementSystem {
         }
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
-        for (_, (pos, rng, state, seek)) in world
+        for (_, (pos, rng, state, seek, agent)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
                 Option<&AgentState>,
                 Option<&SeekTarget>,
+                Option<&Agent>,
             )>()
             .iter()
         {
@@ -187,10 +204,25 @@ impl RuntimeSystem for AgentMovementSystem {
                 }
             }
             // Idle / no AgentState: Brownian motion (unchanged).
+            if rules.idle_pause_chance > 0.0 {
+                let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
+                if value < rules.idle_pause_chance {
+                    continue;
+                }
+            }
             let dx = rng.next_step() as i64;
             let dy = rng.next_step() as i64;
-            let nx = (pos.x as i64 + dx).clamp(0, max_x);
-            let ny = (pos.y as i64 + dy).clamp(0, max_y);
+            let mut nx = (pos.x as i64 + dx).clamp(0, max_x);
+            let mut ny = (pos.y as i64 + dy).clamp(0, max_y);
+            if let (Some(radius), Some(anchor)) = (
+                rules.idle_tether_radius,
+                agent.and_then(|a| home.get(&a.id)),
+            ) {
+                if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {
+                    nx = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x);
+                    ny = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y);
+                }
+            }
             pos.x = nx as u32;
             pos.y = ny as u32;
         }

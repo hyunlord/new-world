@@ -64,9 +64,11 @@ use hecs::World;
 use sim_core::causal::event::{CausalEvent, DecisionReason, DissolutionCause, EventId};
 use sim_core::components::{
     Agent, AgentId, AgentState, BodyHealth, BuildingId, BuildingKind, Hunger, Inventory, Memory, Position,
+    ResourceKind,
     Settlement, SettlementId, Sleep, Social, Thirst, SETTLEMENT_FORMATION_AGENT_THRESHOLD,
     SETTLEMENT_FORMATION_BUILDING_THRESHOLD, SETTLEMENT_MAX_POP, SETTLEMENT_PROXIMITY_RADIUS,
 };
+use sim_core::rules::BirthRule;
 use sim_engine::{RuntimeSystem, SimResources};
 
 use crate::runtime::agent::MovementRng;
@@ -662,7 +664,11 @@ impl SettlementSystem {
                 Some(t) => t,
                 None => continue,
             };
-            if tick < last_birth.saturating_add(BIRTH_COOLDOWN_TICKS) {
+            let cooldown = match resources.rules.society.birth {
+                BirthRule::Legacy => BIRTH_COOLDOWN_TICKS,
+                BirthRule::Provisioned { cooldown_ticks, .. } => cooldown_ticks,
+            };
+            if tick < last_birth.saturating_add(cooldown) {
                 continue;
             }
             let settlement = match resources.settlements.get(&sid) {
@@ -671,6 +677,39 @@ impl SettlementSystem {
             };
             if settlement.population_stats.current >= SETTLEMENT_MAX_POP {
                 continue;
+            }
+            if let BirthRule::Provisioned {
+                food_cost, max_mean_hunger, max_mean_thirst, ..
+            } = resources.rules.society.birth {
+                let capacity = resources.rules.society.shelter_planning.map_or(
+                    SETTLEMENT_MAX_POP,
+                    |rule| {
+                        let shelters = resources.building_kinds.iter().filter(|(tile, kind)| {
+                            **kind == BuildingKind::Shelter
+                                && chebyshev(**tile, settlement.formation_tile)
+                                    <= SETTLEMENT_PROXIMITY_RADIUS + 3
+                        }).count() as u32;
+                        shelters.saturating_mul(rule.residents_per_shelter)
+                    },
+                );
+                if settlement.member_agents.len() as u32 >= capacity
+                    || settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) < food_cost
+                {
+                    continue;
+                }
+                let mut members: Vec<_> = world.query::<(&Agent, &Hunger, &Thirst)>()
+                    .iter().filter(|(_, (agent, _, _))| settlement.member_agents.contains(&agent.id))
+                    .map(|(_, (agent, hunger, thirst))| (agent.id, hunger.value, thirst.value)).collect();
+                members.sort_by_key(|(id, _, _)| *id);
+                if members.is_empty() {
+                    continue;
+                }
+                let count = members.len() as f64;
+                let hunger = members.iter().map(|(_, h, _)| *h as f64).sum::<f64>() / count;
+                let thirst = members.iter().map(|(_, _, t)| *t).sum::<f64>() / count;
+                if hunger > max_mean_hunger || thirst > max_mean_thirst {
+                    continue;
+                }
             }
             // Belonging-model birth anchor (membership-model-reform): a member
             // may now roam far outside SETTLEMENT_PROXIMITY_RADIUS, so the
@@ -757,6 +796,9 @@ impl SettlementSystem {
             resources.tallies.births += 1;
 
             if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                if let BirthRule::Provisioned { food_cost, .. } = resources.rules.society.birth {
+                    settlement.withdraw(ResourceKind::Food, food_cost);
+                }
                 settlement.add_member_agent(new_agent_id);
                 settlement.population_stats.current = settlement.member_agents.len() as u32;
                 settlement.population_stats.total_births =

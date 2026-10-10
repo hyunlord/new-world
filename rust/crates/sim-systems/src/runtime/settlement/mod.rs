@@ -23,3 +23,7 @@ pub mod stockpile_deposit;
 pub use settlement_system::{SettlementSystem, BIRTH_COOLDOWN_TICKS};
 pub use stockpile_consume::StockpileConsumeSystem;
 pub use stockpile_deposit::StockpileDepositSystem;
+
+/// Settlement housing planner.
+pub mod shelter_planning;
+pub use shelter_planning::ShelterPlanningSystem;

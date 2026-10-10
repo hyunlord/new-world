@@ -21,7 +21,7 @@ Authoritative specification: owner attachment, copied outside the clone to
 | 0 | arm64 extension, baseline gates | complete | 1729 debug + release tests; clippy and Godot gates pass |
 | 1 | tallies, shared scenes, probe, captures, frozen legacy pin | complete (capture exception) | 1748 tests, both Clippy checks, strict14 and smoke900 PASS; four legacy repeats deterministic |
 | 2 | default-legacy rules, world generation, terrain/building FFI | complete | 1764 tests; both Clippy checks; strict14/smoke900; live Godot 48 checks |
-| 3 | gated survival/growth loop, 64-seed tuning | pending | |
+| 3 | gated survival/growth loop, 64-seed tuning | implemented; survival gate blocked | four 64-seed twin batches PASS; 3-day zero-dehydration test fails |
 | 4 | deterministic art, truthful renderers/HUD, visual QA | pending | |
 | 5 | full verification, Korean report, pushed draft PR | pending | |
 
@@ -98,3 +98,19 @@ are not survival acceptance. Renderer ledger records eight replaced static
 test functions and three wording-only provenance corrections; no behavioral
 predicate, frozen pin, or test retirement changed. Captures remain skipped
 under the documented environment exception.
+
+## Part 3 scope conflict and tuning stop
+
+Initial seed1 trace identifies all 11 dehydration deaths as normal social Seeking Agent.
+No construction or GatherFood state occurs among thirst>=80 samples. A resident
+stands on infinite shore water at thirst100 while following a nonreciprocating
+peer; normal social seeking has no urgent-need preemption. Legacy pin passes.
+A real escape transition would change social behavior forbidden by sections8.3
+and12, so do not add it. Three allowed knob rounds preserve determinism but do
+not solve dehydration. Keep round2 under the stated priority order: it passes
+non-extinction and has fewer deaths than the other non-extinct configuration.
+The new survival assertion remains unchanged and failing; do not re-pin, ignore,
+or delete it to make the gate green. Part3 cannot be pushed under the every-push
+green rule. Continue Part4 locally and retain all evidence, then report this
+explicit conflict and the last green remote boundary. Night-rhythm stretch
+is skipped because T1 and T6 do not pass.

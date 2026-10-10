@@ -60,8 +60,8 @@ use std::collections::HashMap;
 
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
-use sim_core::components::{AgentState, BuildingBlueprint, ConstructionSite, Position, TargetKind};
-use sim_engine::{RuntimeSystem, SimResources};
+use sim_core::components::{AgentState, BuildingKind, BuildingBlueprint, ConstructionSite, Position, TargetKind};
+use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 /// Phase 6-β construction runtime system. Stateless — all per-site state
 /// lives in the [`ConstructionSite`] component.
@@ -197,7 +197,17 @@ impl RuntimeSystem for ConstructionSystem {
         // (e) For each completion edge: emit ConstructionCompleted then
         //     BuildingPlaced, reset all co-located Consuming agents to
         //     Idle, and despawn the site.
+        let mut completed: Vec<_> = completed.into_iter().collect();
+        if resources.rules.society.shelter_planning.is_some() {
+            completed.sort_by_key(|(_, (_, position))| *position);
+        }
         for (site_entity, (blueprint, position)) in completed {
+            if resources.rules.society.shelter_planning.is_some()
+                && resources.site_owner.remove(&position).is_some()
+            {
+                resources.building_kinds.insert(position, BuildingKind::Shelter);
+                resources.set_sleep_tile(position.0, position.1, RESOURCE_SOURCE_INFINITE);
+            }
             let tile_idx = position.1 * width + position.0;
 
             // Parent of ConstructionCompleted: the most recent
