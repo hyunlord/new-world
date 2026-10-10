@@ -60,9 +60,7 @@ fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_trail_renderer_src() -> String {
     read_file(&["scripts", "ui", "activity_trail_renderer.gd"])
@@ -605,8 +603,8 @@ fn harness_zoom_a17_main_tscn_load_steps_equals_12() {
     let src = read_main_tscn_src();
     let n = tscn_load_steps(&src)
         .expect("a17.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 13, "a17.2: load_steps must equal 13; got {n}");
-    println!("[P14-ζ a17] load_steps = 13 ✓");
+    assert_eq!(n, 17, "a17.2: load_steps must equal 17; got {n}");
+    println!("[P14-ζ a17] load_steps = 17 ✓");
 }
 
 // ─── Assertion 18: registers both new nodes ───────────────────────────────
@@ -668,7 +666,7 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
         "a19.1: camera_controller.gd must keep ZOOM_MIN/MAX/DEFAULT; missing={missing:?}"
     );
     let compact = no_ws(&stripped);
-    let lits = ["Vector2(0.5,0.5)", "Vector2(8.0,8.0)", "Vector2(5.0,5.0)"];
+    let lits = ["Vector2(0.5,0.5)", "Vector2(8.0,8.0)", "Vector2(4.0,4.0)"];
     let mut missing_lits: Vec<&str> = Vec::new();
     for l in lits.iter() {
         if !compact.contains(l) {
@@ -678,7 +676,7 @@ fn harness_zoom_a19_phase12a_13a_camera_controller_zoom_invariants_intact() {
     assert!(
         missing_lits.is_empty(),
         "a19.2: camera_controller.gd must keep 0.5/8.0/5.0 zoom literals \
-         (ZOOM_DEFAULT raised from 3.0 in B-1); missing={missing_lits:?}"
+         (ZOOM_DEFAULT set to 4.0 by Revitalize Part 4); missing={missing_lits:?}"
     );
     println!("[P14-ζ a19] camera_controller.gd Phase 12-α/13-α invariants intact ✓");
 }
@@ -711,26 +709,13 @@ fn harness_zoom_a20_phase14a_agent_renderer_invariants_intact() {
 // ─── Assertion 21: Phase 14-β world_renderer invariants intact ────────────
 #[test]
 fn harness_zoom_a21_phase14b_world_renderer_invariants_intact() {
-    // Type D — RESOURCE_TYPE_PATHS + VILLAGE_FIXTURE_ + RESOURCE_COUNT=20 +
-    // RESOURCE_SEED=88675123.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    assert!(
-        stripped.contains("RESOURCE_TYPE_PATHS"),
-        "a21.1: world_renderer.gd must keep RESOURCE_TYPE_PATHS"
-    );
-    assert!(
-        stripped.contains("VILLAGE_FIXTURE_"),
-        "a21.2: world_renderer.gd must keep at least one VILLAGE_FIXTURE_ identifier"
-    );
-    let count_rhs = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "a21.count");
-    let count = parse_int_rhs(&count_rhs)
-        .unwrap_or_else(|| panic!("a21.3: RESOURCE_COUNT RHS must parse as int; got `{count_rhs}`"));
-    assert_eq!(count, 20, "a21.4: RESOURCE_COUNT must equal 20; got {count}");
-    let seed_rhs = unique_decl_rhs(&stripped, "RESOURCE_SEED", "a21.seed");
-    let seed = parse_int_rhs(&seed_rhs)
-        .unwrap_or_else(|| panic!("a21.5: RESOURCE_SEED RHS must parse as int; got `{seed_rhs}`"));
-    assert_eq!(seed, 88675123, "a21.6: RESOURCE_SEED must equal 88675123; got {seed}");
-    println!("[P14-ζ a21] world_renderer.gd Phase 14-β invariants intact ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 22: Phase 14-ε activity_trail_renderer intact ──────────────
@@ -765,7 +750,7 @@ fn harness_zoom_a22_phase14e_activity_trail_renderer_intact() {
 fn harness_zoom_a23_phase14d_hud_status_panel_intact() {
     // Type D — three canonical literals all present.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let needles = ["TICKS_PER_DAY", "RESOURCE_TYPES_COUNT", "RESOURCE_LABELS"];
+    let needles = ["get_time_snapshot", "get_resource_snapshot", "get_tallies"];
     let mut missing: Vec<&str> = Vec::new();
     for n in needles.iter() {
         if !stripped.contains(n) {

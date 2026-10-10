@@ -447,8 +447,8 @@ fn harness_h_a9_zoom_invariants_unchanged() {
     );
     assert_eq!(
         no_ws(&def_rhs),
-        "Vector2(5.0,5.0)",
-        "a9.6: ZOOM_DEFAULT must equal Vector2(5.0,5.0) (raised from 3.0 in B-1); got `{def_rhs}`"
+        "Vector2(4.0,4.0)",
+        "a9.6: ZOOM_DEFAULT must equal Vector2(4.0,4.0) (set to 4.0 by Revitalize Part 4); got `{def_rhs}`"
     );
     println!("[H a9] ZOOM_MIN(0.5)/MAX(8.0)/DEFAULT(5.0) unchanged ✓");
 }
@@ -595,4 +595,33 @@ fn harness_h_a16_zoom_lod_thresholds_intact() {
         );
     }
     println!("[H a16] zoom_lod_controller LOD thresholds intact ✓");
+}
+
+
+#[test]
+fn harness_revitalize_camera_frames_settlement_before_optional_tracking() {
+    let stripped = strip_gd_comments(&read_camera_controller_src());
+    assert!(stripped.contains("var _auto_track: bool = false"));
+    assert!(stripped.contains("event.keycode == KEY_T"));
+    assert!(stripped.contains("get_settlement_snapshot"));
+    assert!(stripped.contains("formation_xs") && stripped.contains("formation_ys"));
+    assert!(stripped.contains("counts[index] > counts[best]"));
+    assert!(stripped.contains("counts[index] == counts[best] and ids[index] < ids[best]"));
+    let (s, e) = find_func_body(&stripped, "set_auto_track").expect("explicit framing hook");
+    assert!(stripped[s..e].contains("_initial_center_pending = false"));
+}
+
+
+#[test]
+fn harness_revitalize_camera_reset_preserves_explicit_framing_only() {
+    let stripped = strip_gd_comments(&read_camera_controller_src());
+    assert!(stripped.contains("connect(\"world_reset\", _on_world_reset)"));
+    assert!(stripped.contains("var _manual_framing: bool = false"));
+    let (s, e) = find_func_body(&stripped, "set_auto_track").expect("capture framing API");
+    assert!(stripped[s..e].contains("_manual_framing = not enabled"));
+    let (s, e) = find_func_body(&stripped, "_on_world_reset").expect("reset camera hook");
+    let body = &stripped[s..e];
+    assert!(body.contains("if _manual_framing or _world_sim == null:"));
+    assert!(body.contains("_initial_center_pending = true"));
+    assert!(body.contains("_center_on_first_settlement()"));
 }

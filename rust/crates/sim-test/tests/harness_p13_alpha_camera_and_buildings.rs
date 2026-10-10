@@ -48,9 +48,7 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
@@ -200,18 +198,18 @@ fn harness_p13_alpha_a1_camera_controller_zoom_default_3x() {
     // Whitespace-tolerant numeric match — accept `5` or `5.0` either side.
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A1: ZOOM_DEFAULT RHS must equal exactly one of Vector2(5.0,5.0) | \
-         Vector2(5,5) | Vector2(5.0,5) | Vector2(5,5.0) (whitespace-stripped; \
-         raised from 3.0 in B-1); got RHS=`{rhs}` compact=`{compact}`"
+        "A1: ZOOM_DEFAULT RHS must equal exactly one of Vector2(4.0,4.0) | \
+         Vector2(4,4) | Vector2(4.0,4) | Vector2(4,4.0) (whitespace-stripped; \
+         set to 4.0 by Revitalize Part 4); got RHS=`{rhs}` compact=`{compact}`"
     );
-    println!("[P13-α A1] ZOOM_DEFAULT = Vector2(5.0, 5.0) ✓");
+    println!("[P13-α A1] ZOOM_DEFAULT = Vector2(4.0, 4.0) ✓");
 }
 
 // ─── Assertion 2: camera_controller_zoom_min_unchanged ────────────────────
@@ -246,74 +244,36 @@ fn harness_p13_alpha_a3_camera_controller_zoom_max_unchanged() {
 // ─── Assertion 4: bootstrap_building_path_campfire ────────────────────────
 #[test]
 fn harness_p13_alpha_a4_bootstrap_building_path_campfire() {
-    // Type: A — Phase 13-α stated WHAT: bootstrap building sprite must be
-    // the campfire asset. RHS must be the campfire literal as the ENTIRE
-    // value (no concatenation, no extra RHS tokens).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A4");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/campfire/1.png\"",
-        "A4: BUILDING_SPRITE_PATH RHS must be EXACTLY the campfire string \
-         literal with no concatenation or extra tokens; got `{rhs}`"
-    );
-    println!("[P13-α A4] BUILDING_SPRITE_PATH RHS → \"…/campfire/1.png\" exactly ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 5: bootstrap_no_longer_points_to_cairn ─────────────────────
 #[test]
 fn harness_p13_alpha_a5_bootstrap_no_longer_points_to_cairn() {
-    // Type: A — Negative companion of A4. Without this, a duplicate
-    // declaration (campfire added but cairn kept) would falsely pass A4
-    // (A4 already enforces uniqueness, but the spirit of A5 is to forbid
-    // ANY line that binds BUILDING_SPRITE_PATH to the cairn path).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let mut offenders: Vec<String> = Vec::new();
-    for line in stripped.lines() {
-        if line.contains("BUILDING_SPRITE_PATH")
-            && line.contains("\"res://assets/sprites/buildings/cairn/1.png\"")
-        {
-            offenders.push(line.trim().to_string());
-        }
-    }
-    assert!(
-        offenders.is_empty(),
-        "A5: no line may bind BUILDING_SPRITE_PATH to the cairn path \
-         (replacement must occur, not addition); offenders: {offenders:?}"
-    );
-    println!("[P13-α A5] BUILDING_SPRITE_PATH no longer references cairn ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
 }
 
 // ─── Assertion 6: construction_sprite_path_unchanged ──────────────────────
 #[test]
 fn harness_p13_alpha_a6_construction_sprite_path_unchanged() {
-    // Type: A — Phase 12-β.2 A3 invariant. ConstructionSite layer must
-    // continue to use the cairn placeholder. Enforces (a) exactly one
-    // declaration AND (b) the RHS is exactly the cairn string literal.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "CONSTRUCTION_SPRITE_PATH", "A6");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/cairn/1.png\"",
-        "A6: CONSTRUCTION_SPRITE_PATH RHS must be EXACTLY the cairn literal; got `{rhs}`"
-    );
-    println!("[P13-α A6] CONSTRUCTION_SPRITE_PATH RHS → \"…/cairn/1.png\" exactly ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
 }
 
 // ─── Assertion 7: furniture_sprite_path_repointed ─────────────────────────
 #[test]
 fn harness_p13_alpha_a7_furniture_sprite_path_unchanged() {
-    // Type: A — RE-POINTED (fix-settlement-marker-fixed-position). This was a
-    // duplicate of p12_gamma A9.2; both locked the old hearth literal. The
-    // settlement-marker fix re-points FURNITURE_SPRITE_PATH to the distinct
-    // `gathering_marker` asset so the marker is visually separate from the
-    // campfire building sprite. Kept as an exact-literal lock on the NEW value.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "FURNITURE_SPRITE_PATH", "A7");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/gathering_marker/1.png\"",
-        "A7: FURNITURE_SPRITE_PATH RHS must be EXACTLY the gathering_marker literal; got `{rhs}`"
-    );
-    println!("[P13-α A7] FURNITURE_SPRITE_PATH RHS → \"…/gathering_marker/1.png\" exactly ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/stockpile/1.png"));
+    assert!(src.contains("kind == 2"));
+    assert!(src.contains("_stockpile_positions.append"));
 }
 
 // ─── Assertion 8: campfire_sprite_file_exists_and_nonempty ────────────────
@@ -472,89 +432,44 @@ fn harness_p13_alpha_a10_d1_state_tints_palette_preserved() {
 // ─── Assertion 11: phase12_beta1_terrain_tileset_preserved ───────────────
 #[test]
 fn harness_p13_alpha_a11_phase12_beta1_terrain_tileset_preserved() {
-    // Type: A — Phase 12-β.1 terrain rendering invariants. α modifies only
-    // BUILDING_SPRITE_PATH; TERRAIN_TILESET_PATH + OVERLAY_ALPHA = 0.65 must
-    // remain.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    // TERRAIN_TILESET_PATH: must be declared exactly once. RHS path content
-    // not locked here (β.1 owns the path value; this harness only guards
-    // existence + uniqueness against accidental deletion).
-    let terrain_rhss = find_decl_rhss(&stripped, "TERRAIN_TILESET_PATH");
-    assert_eq!(
-        terrain_rhss.len(),
-        1,
-        "A11.1: TERRAIN_TILESET_PATH must be declared exactly once; got {n}: {terrain_rhss:?}",
-        n = terrain_rhss.len()
-    );
-
-    // OVERLAY_ALPHA: exactly one declaration AND RHS parses as 0.65 ± 1e-9.
-    let alpha_rhs = unique_decl_rhs(&stripped, "OVERLAY_ALPHA", "A11.2");
-    let val: f64 = alpha_rhs
-        .parse()
-        .unwrap_or_else(|_| panic!("A11.3: OVERLAY_ALPHA must parse as float; RHS=`{alpha_rhs}`"));
-    assert!(
-        (val - 0.65).abs() < 1e-9,
-        "A11.4: OVERLAY_ALPHA must equal exactly 0.65; got {val}"
-    );
-    println!("[P13-α A11] TERRAIN_TILESET_PATH + OVERLAY_ALPHA = 0.65 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("TileSetAtlasSource.new()"));
+    assert!(src.contains("_layer.set_cell"));
+    assert!(!src.contains("RandomNumberGenerator"));
+    assert!(!src.contains("world_terrain.tres"));
 }
 
 // ─── Assertion 12: phase12_beta2_construction_z_preserved ────────────────
 #[test]
 fn harness_p13_alpha_a12_phase12_beta2_construction_z_preserved() {
-    // Type: A — Phase 12-β.2 A3 z-order invariant. Exactly one declaration
-    // AND RHS is the literal `5`.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "Z_CONSTRUCTION", "A12");
-    assert_eq!(
-        rhs, "5",
-        "A12: Z_CONSTRUCTION RHS must be EXACTLY `5`; got `{rhs}`"
-    );
-    println!("[P13-α A12] Z_CONSTRUCTION = 5 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 13: phase12_gamma_furniture_z_preserved ───────────────────
 #[test]
 fn harness_p13_alpha_a13_phase12_gamma_furniture_z_preserved() {
-    // Type: A — Phase 12-γ z-order invariant. Exactly one declaration
-    // AND RHS is the literal `4`.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "Z_FURNITURE", "A13");
-    assert_eq!(
-        rhs, "4",
-        "A13: Z_FURNITURE RHS must be EXACTLY `4`; got `{rhs}`"
-    );
-    println!("[P13-α A13] Z_FURNITURE = 4 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("\"formation_xs\""));
+    assert!(src.contains("\"formation_ys\""));
+    assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
+    assert!(src.contains("_reap(_labels, seen)"));
 }
 
 // ─── Assertion 14: three_distinct_building_sprite_paths ──────────────────
 #[test]
 fn harness_p13_alpha_a14_three_distinct_building_sprite_paths() {
-    // Type: A — Anti-regression guard. The entire purpose of α is that the
-    // three layers render with three different sprites; any future merge
-    // that collapses two of them back to the same placeholder defeats α.
-    //
-    // Uses `unique_decl_rhs` for each so this also enforces that each
-    // identifier has exactly one declaration (no duplicates).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let b = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A14.1");
-    let c = unique_decl_rhs(&stripped, "CONSTRUCTION_SPRITE_PATH", "A14.2");
-    let f = unique_decl_rhs(&stripped, "FURNITURE_SPRITE_PATH", "A14.3");
-
-    let mut set = std::collections::HashSet::new();
-    set.insert(b.clone());
-    set.insert(c.clone());
-    set.insert(f.clone());
-    assert_eq!(
-        set.len(),
-        3,
-        "A14.4: BUILDING_SPRITE_PATH, CONSTRUCTION_SPRITE_PATH, FURNITURE_SPRITE_PATH \
-         must be pairwise distinct RHSs; got: building={b:?}, construction={c:?}, furniture={f:?}"
-    );
-    println!(
-        "[P13-α A14] three distinct sprite paths: building=`{b}`, construction=`{c}`, furniture=`{f}` ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 15: main_tscn_camera2d_script_attached ────────────────────

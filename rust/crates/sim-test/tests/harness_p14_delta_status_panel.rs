@@ -58,9 +58,7 @@ fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn strip_gd_comments(src: &str) -> String {
     let mut out = String::with_capacity(src.len());
@@ -301,64 +299,41 @@ fn harness_p14_delta_a1_hud_status_panel_file_exists_and_extends_control() {
 // ─── A2: TICKS_PER_DAY == 100 ─────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a2_ticks_per_day_constant_present() {
-    // Type A — `const TICKS_PER_DAY ... = 100`.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "TICKS_PER_DAY", "A2");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("A2: TICKS_PER_DAY RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 100, "A2: TICKS_PER_DAY must equal 100; got {n}");
-    println!("[P14-δ A2] TICKS_PER_DAY = 100 ✓");
+    assert!(stripped.contains("get_time_snapshot"));
+    assert!(!stripped.contains("TICKS_PER_DAY"));
+    assert!(stripped.contains("time_of_day"));
 }
 
 // ─── A3: DAYS_PER_YEAR == 30 ──────────────────────────────────────────────
 #[test]
 fn harness_p14_delta_a3_days_per_year_constant_present() {
-    // Type A — `const DAYS_PER_YEAR ... = 30`.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "DAYS_PER_YEAR", "A3");
-    let n = parse_int_rhs(&rhs)
-        .unwrap_or_else(|| panic!("A3: DAYS_PER_YEAR RHS must parse as int; got `{rhs}`"));
-    assert_eq!(n, 30, "A3: DAYS_PER_YEAR must equal 30; got {n}");
-    println!("[P14-δ A3] DAYS_PER_YEAR = 30 ✓");
+    assert!(stripped.contains("day_index"));
+    assert!(stripped.contains("HUD_DAY_FMT"));
+    assert!(stripped.contains("HUD_PHASE_DAY") && stripped.contains("HUD_PHASE_NIGHT"));
+    assert!(!stripped.contains("DAYS_PER_YEAR"));
 }
 
 // ─── A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE == 20 ───────────────────
 #[test]
 fn harness_p14_delta_a4_resource_count_consistency_with_phase_14_beta() {
-    // Type D — guards Phase 13-β RESOURCE_COUNT = 20 alignment.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let types_rhs = unique_decl_rhs(&stripped, "RESOURCE_TYPES_COUNT", "A4.types");
-    let per_rhs = unique_decl_rhs(&stripped, "RESOURCE_PER_TYPE", "A4.per");
-    let types = parse_int_rhs(&types_rhs).unwrap_or_else(|| {
-        panic!("A4: RESOURCE_TYPES_COUNT RHS must parse as int; got `{types_rhs}`")
-    });
-    let per = parse_int_rhs(&per_rhs).unwrap_or_else(|| {
-        panic!("A4: RESOURCE_PER_TYPE RHS must parse as int; got `{per_rhs}`")
-    });
-    assert_eq!(types, 5, "A4: RESOURCE_TYPES_COUNT must equal 5; got {types}");
-    assert_eq!(per, 4, "A4: RESOURCE_PER_TYPE must equal 4; got {per}");
-    assert_eq!(
-        types * per,
-        20,
-        "A4: RESOURCE_TYPES_COUNT * RESOURCE_PER_TYPE must equal 20; got {}",
-        types * per
-    );
-    println!("[P14-δ A4] RESOURCE_TYPES_COUNT(5) * RESOURCE_PER_TYPE(4) = 20 ✓");
+    for source in ["get_settlement_snapshot", "food_stocks", "get_resource_snapshot", "amounts", "get_tallies"] {
+        assert!(stripped.contains(source), "HUD data source missing: {source}");
+    }
+    assert!(!stripped.contains("RESOURCE_PER_TYPE"));
 }
 
 // ─── A5: RESOURCE_LABELS exact order ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a5_resource_labels_array_exact_order() {
-    // Type A — exactly ["Berry", "Wood", "Stone", "Water", "Food"].
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
-    let rhs = unique_decl_rhs(&stripped, "RESOURCE_LABELS", "A5");
-    let compact = no_ws(&rhs);
-    let want = "[\"Berry\",\"Wood\",\"Stone\",\"Water\",\"Food\"]";
-    assert_eq!(
-        compact, want,
-        "A5: RESOURCE_LABELS must equal {want} (whitespace-collapsed); got `{compact}`"
-    );
-    println!("[P14-δ A5] RESOURCE_LABELS = [Berry, Wood, Stone, Water, Food] ✓");
+    for key in ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"] {
+        assert!(stripped.contains(key), "Localized metric missing: {key}");
+    }
+    assert!(!stripped.contains("RESOURCE_LABELS"));
+    assert!(no_ws(&stripped).contains("_loc(keys[i])"));
 }
 
 // ─── A6: top-right anchor + MOUSE_FILTER_IGNORE ───────────────────────────
@@ -577,64 +552,13 @@ fn harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved() {
 // ─── A14: world_renderer.gd resource registry preserved ──────────────────
 #[test]
 fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
-    // Type D — RESOURCE_TYPE_PATHS 5-entry, RESOURCE_COUNT == 20,
-    // RESOURCE_SEED == 88675123.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A14.count");
-    assert_eq!(
-        count.trim(),
-        "20",
-        "A14.1: RESOURCE_COUNT must equal 20; got `{count}`"
-    );
-
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A14.seed");
-    assert_eq!(
-        seed.trim(),
-        "88675123",
-        "A14.2: RESOURCE_SEED must equal 88675123; got `{seed}`"
-    );
-
-    // Count entries of RESOURCE_TYPE_PATHS array (5 res:// paths).
-    let decl_pos = stripped
-        .find("RESOURCE_TYPE_PATHS")
-        .expect("A14.3: RESOURCE_TYPE_PATHS symbol must exist");
-    let open_rel = stripped[decl_pos..]
-        .find('[')
-        .expect("A14.4: RESOURCE_TYPE_PATHS array must open with `[`");
-    let open_abs = decl_pos + open_rel;
-    let bytes = stripped.as_bytes();
-    let mut depth = 1i32;
-    let mut k = open_abs + 1;
-    while k < bytes.len() && depth > 0 {
-        match bytes[k] as char {
-            '[' => depth += 1,
-            ']' => depth -= 1,
-            _ => {}
-        }
-        k += 1;
-    }
-    assert_eq!(
-        depth, 0,
-        "A14.5: RESOURCE_TYPE_PATHS array must terminate with `]`"
-    );
-    let body = &stripped[open_abs + 1..k - 1];
-    // Count comma-separated entries (tolerates trailing comma + identifier
-    // aliases like RESOURCE_SPRITE_PATH; not just `res://` literals).
-    let entries: Vec<&str> = body
-        .split(',')
-        .map(|s| s.trim())
-        .filter(|s| !s.is_empty())
-        .collect();
-    assert_eq!(
-        entries.len(),
-        5,
-        "A14.6: RESOURCE_TYPE_PATHS must contain exactly 5 entries; got {} ({entries:?})",
-        entries.len()
-    );
-    println!(
-        "[P14-δ A14] RESOURCE_TYPE_PATHS(5 entries) + RESOURCE_COUNT=20 + RESOURCE_SEED=88675123 ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── A15: agent_inspector_panel.gd present (Phase 14-γ) ──────────────────
@@ -656,17 +580,17 @@ fn harness_p14_delta_a15_phase_14_gamma_agent_inspector_panel_present() {
 // ─── A16: VILLAGE_FIXTURE_* prefix preserved in world_renderer.gd ────────
 #[test]
 fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer() {
-    // Type D — at least one `VILLAGE_FIXTURE_` prefixed identifier.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let n = stripped.matches("VILLAGE_FIXTURE_").count();
-    assert!(
-        n >= 1,
-        "A16: world_renderer.gd must keep at least one `VILLAGE_FIXTURE_` identifier; got {n}"
-    );
-    println!("[P14-δ A16] VILLAGE_FIXTURE_ prefix preserved ({n} occurrences) ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
-// ─── A17: hud_topbar.gd byte hash equals the pre-δ HEAD snapshot ─────────
+// ─── A17: hud_topbar.gd byte hash equals the Revitalize Part 4 snapshot ─────────
 #[test]
 fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pre_phase_14_delta_head(
 ) {
@@ -675,10 +599,10 @@ fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pr
     // (2026-05-29) via:
     //   shasum -a 256 scripts/ui/panels/hud_topbar.gd
     //   wc -l scripts/ui/panels/hud_topbar.gd
-    // Expected: 103 lines and the hash below.
+    // Revitalize Part 4: 105 lines; localized snapshot counters replace the Tick label.
     const EXPECTED_HASH: &str =
-        "e52990e3b9cf8074a198af56153f5d6fe57e0bf8cd369c90d75ce0c2c459cca5";
-    const EXPECTED_LINES: usize = 103;
+        "905fcc65cc4e2003a8e166d234e6a9604a23511ff855cb50ed31f2484c68db71";
+    const EXPECTED_LINES: usize = 105;
 
     let path = project_root()
         .join("scripts")
@@ -691,14 +615,14 @@ fn harness_p14_delta_a17_hud_topbar_file_byte_or_line_count_unchanged_against_pr
     let got_lines = String::from_utf8_lossy(&bytes).lines().count();
     assert_eq!(
         got_lines, EXPECTED_LINES,
-        "A17.2: hud_topbar.gd line count must equal pre-δ HEAD ({EXPECTED_LINES}); got {got_lines}"
+        "A17.2: hud_topbar.gd line count must equal Revitalize Part 4 ({EXPECTED_LINES}); got {got_lines}"
     );
     assert_eq!(
         got_hash, EXPECTED_HASH,
-        "A17.3: hud_topbar.gd SHA-256 must equal pre-δ HEAD `{EXPECTED_HASH}`; got `{got_hash}`. \
-         Phase 13-δ requires hud_topbar.gd to be absolutely untouched."
+        "A17.3: hud_topbar.gd SHA-256 must equal Revitalize Part 4 `{EXPECTED_HASH}`; got `{got_hash}`. \
+         Revitalize HUD truthfulness snapshot changed; review and re-pin deliberately."
     );
     println!(
-        "[P14-δ A17] hud_topbar.gd hash + line count match pre-δ HEAD (sha256={got_hash}) ✓"
+        "[P14-δ A17] hud_topbar.gd hash + line count match Revitalize Part 4 (sha256={got_hash}) ✓"
     );
 }

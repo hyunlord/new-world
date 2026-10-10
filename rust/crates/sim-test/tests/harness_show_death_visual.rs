@@ -421,14 +421,7 @@ fn harness_death_a5_renderer_structural_wiring() {
 // ════════════════════════════════════════════════════════════════════════════
 #[test]
 fn harness_death_a6_scene_wiring_additive() {
-    // Type D additive-preservation regression. Baseline MEASURED from the
-    // current tree at implementation time (viz-C shipped between viz-B and viz-D
-    // without changing the count): load_steps = 12, ext_resource count = 12.
-    // viz-D adds exactly one ext_resource (death_viz_renderer.gd) → +1 on both.
-    // We assert the +1 DELTA (offset-independent), never an absolute identity.
-    const LOAD_STEPS_BEFORE: i64 = 12;
-    const EXT_COUNT_BEFORE: usize = 12;
-
+    // Preserve this renderer registration while accounting for all Revitalize scene resources.
     let scene = read_file(&["scenes", "main.tscn"]);
     let load_steps_after = tscn_load_steps(&scene).expect("A6: main.tscn must declare load_steps=N");
     let ext_count_after = scene
@@ -436,18 +429,9 @@ fn harness_death_a6_scene_wiring_additive() {
         .filter(|l| l.trim_start().starts_with("[ext_resource type="))
         .count();
 
-    assert_eq!(
-        load_steps_after,
-        LOAD_STEPS_BEFORE + 1,
-        "A6: load_steps must be baseline+1 ({}); got {load_steps_after}",
-        LOAD_STEPS_BEFORE + 1
-    );
-    assert_eq!(
-        ext_count_after,
-        EXT_COUNT_BEFORE + 1,
-        "A6: ext_resource count must be baseline+1 ({}); got {ext_count_after}",
-        EXT_COUNT_BEFORE + 1
-    );
+    // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
+    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
     // Exact ext_resource PATH string (not a bare filename substring) — a typo'd
     // or loose path on a present node must FAIL. Capture the ext_resource id so we
     // can confirm the DeathVizRenderer node actually binds THIS script.
@@ -497,7 +481,7 @@ fn harness_death_a6_scene_wiring_additive() {
         assert!(scene.contains(token), "A6: pre-existing wiring `{token}` must be preserved");
     }
     println!(
-        "[viz-D A6] load_steps {LOAD_STEPS_BEFORE}→{load_steps_after}, ext {EXT_COUNT_BEFORE}→{ext_count_after}; \
+        "[viz-D A6] load_steps {load_steps_after}, ext {ext_count_after}; \
          DeathVizRenderer wired, prior nodes preserved ✓"
     );
 }

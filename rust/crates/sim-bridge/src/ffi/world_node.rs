@@ -1864,8 +1864,9 @@ pub struct ResourceSnapshotRow {
     /// Current stored amount on the tile (the `*_tiles` counter), CLAMPED to
     /// [`max`](Self::max). Drives the renderer's depletion/regen visual (marker
     /// scale + alpha = amount/max). A finite source decreases as agents consume
-    /// and recovers via regen; a tile at `0` is removed from the map entirely
-    /// and so drops out of the snapshot (the marker disappears). Clamped to
+    /// and recovers via regen. Legacy scenes omit removed tiles; game rules
+    /// retain registered food sources at zero so depleted bushes remain visible.
+    /// Clamped to
     /// `max` so the displayed ratio never exceeds `1.0` (regen overshoot or a
     /// zero-cap source cannot make the marker read as more than full).
     pub amount: u8,
@@ -1904,6 +1905,21 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
         let amount = amount.min(max);
         rows.push(ResourceSnapshotRow { x, y, kind: 0, amount, max });
     }
+    if resources.rules.society.shelter_planning.is_some() {
+        // The bush persists between harvest and regrowth even when its live
+        // food counter is absent. The ceiling registry owns its existence.
+        for (&(x, y), &capacity) in &resources.food_source_max {
+            if !resources.food_tiles.contains_key(&(x, y)) {
+                rows.push(ResourceSnapshotRow {
+                    x,
+                    y,
+                    kind: 0,
+                    amount: 0,
+                    max: capacity.max(1),
+                });
+            }
+        }
+    }
     for (&(x, y), &amount) in resources.water_tiles.iter() {
         let max = resources.water_source_max.get(&(x, y)).copied().unwrap_or(amount).max(1);
         let amount = amount.min(max);
@@ -1916,6 +1932,33 @@ pub fn collect_resource_snapshot(resources: &SimResources) -> Vec<ResourceSnapsh
     }
     rows.sort_by_key(|r| (r.kind, r.x, r.y));
     rows
+}
+
+#[cfg(test)]
+mod depleted_food_snapshot_tests {
+    use super::*;
+
+    #[test]
+    fn game_snapshot_keeps_depleted_bush_and_sorts_without_duplicates() {
+        let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v8();
+        engine.resources.set_food_source_max(8, 4, 6);
+        engine.resources.set_food_source_max(2, 3, 6);
+        engine.resources.set_food_tile(8, 4, 3);
+        let rows = collect_resource_snapshot(&engine.resources);
+        assert_eq!(rows, vec![
+            ResourceSnapshotRow { x: 2, y: 3, kind: 0, amount: 0, max: 6 },
+            ResourceSnapshotRow { x: 8, y: 4, kind: 0, amount: 3, max: 6 },
+        ]);
+        assert!(!engine.resources.food_tiles.contains_key(&(2, 3)));
+    }
+
+    #[test]
+    fn legacy_snapshot_omits_source_without_live_food() {
+        let mut engine = SimEngine::new(16, 16, MaterialRegistry::new());
+        engine.resources.set_food_source_max(2, 3, 6);
+        assert!(collect_resource_snapshot(&engine.resources).is_empty());
+    }
 }
 
 /// Pure-Rust marshalling split — the SINGLE source of the `(xs, ys, kinds)`

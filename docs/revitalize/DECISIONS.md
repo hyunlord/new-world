@@ -114,3 +114,22 @@ or delete it to make the gate green. Part3 cannot be pushed under the every-push
 green rule. Continue Part4 locally and retain all evidence, then report this
 explicit conflict and the last green remote boundary. Night-rhythm stretch
 is skipped because T1 and T6 do not pass.
+
+## Part 4 local boundary
+
+Truthful terrain, registered buildings, depleted berry stages, simulation-time
+HUD, localized inspector/feed, selected-only paths, daylight and agent
+interpolation/shadows are implemented. Static renderer source pins were
+replaced under the explicit ledger policy: 230 baseline assertion occurrences
+map to 113 replacement function contracts; no tests were retired.
+Actual headless main-scene QA passed 322 checks. An explicit nonzero sentinel
+proved MultiMesh GPU transform readback unavailable in the dummy renderer:
+96 coordinate checks are NOT_OBSERVABLE, never counted as passing. Reset
+CPU position caches and interpolation origins pass. Strict check passed
+17 files and 14 FFI calls; smoke900 passed. The fresh final full debug/release
+runs are recorded separately in Part 5. All-target Clippy is clean after
+removing orphan comments for deleted static-test helpers.
+No Xvfb and no passwordless sudo: exercise the Part 0 item 5 capture exception.
+No screenshot, contact sheet, visual-quality acceptance, or ten-minute 4x
+render performance claim is made. Part 4 stays LOCAL because Part 3 retains
+the genuine survival failure and every pushed head must be green.

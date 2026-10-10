@@ -39,8 +39,14 @@ void vertex() {
 
 void fragment() {
 	vec4 tex = texture(TEXTURE, UV);
-	if (tex.a <= 0.01) {
-		COLOR = tex;
+	if (tex.a == 0.0) {
+		float neighbor_alpha = max(
+			max(texture(TEXTURE, UV + vec2(TEXTURE_PIXEL_SIZE.x, 0.0)).a,
+				texture(TEXTURE, UV - vec2(TEXTURE_PIXEL_SIZE.x, 0.0)).a),
+			max(texture(TEXTURE, UV + vec2(0.0, TEXTURE_PIXEL_SIZE.y)).a,
+				texture(TEXTURE, UV - vec2(0.0, TEXTURE_PIXEL_SIZE.y)).a)
+		);
+		COLOR = neighbor_alpha > 0.5 ? vec4(vec3(20.0 / 255.0), 0.9) : tex;
 	} else {
 		float hair_col = floor(v_palette.r * 7.0 + 0.5);
 		float body_col = floor(v_palette.g * 3.0 + 0.5);

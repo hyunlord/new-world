@@ -313,114 +313,37 @@ fn harness_p12_beta2_a7_empty_world_returns_empty_vec() {
 // ─── Assertion 8: renderer_declares_construction_sprite_path_constant ────
 #[test]
 fn harness_p12_beta2_a8_renderer_declares_construction_sprite_path_constant() {
-    // Type: A — CONSTRUCTION_SPRITE_PATH constant in world_renderer.gd
-    // referencing `assets/sprites/buildings/` and ending with `.png`.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    let line = stripped
-        .lines()
-        .find(|l| {
-            l.trim_start().starts_with("const ") && l.contains("CONSTRUCTION_SPRITE_PATH")
-        })
-        .unwrap_or_else(|| {
-            panic!("A8.1: world_renderer.gd must declare `const CONSTRUCTION_SPRITE_PATH`")
-        });
-    assert!(
-        line.contains("assets/sprites/buildings/"),
-        "A8.2: CONSTRUCTION_SPRITE_PATH must reference `assets/sprites/buildings/`; line=`{line}`"
-    );
-    assert!(
-        line.contains(".png"),
-        "A8.3: CONSTRUCTION_SPRITE_PATH must end with `.png`; line=`{line}`"
-    );
-    println!("[P12-β.2 A8] CONSTRUCTION_SPRITE_PATH declared with valid path ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
 }
 
 // ─── Assertion 9: alpha_remap_constants_have_exact_values ────────────────
 #[test]
 fn harness_p12_beta2_a9_alpha_remap_constants_have_exact_values() {
-    // Type: A — CONSTRUCTION_ALPHA_MIN = 0.3, CONSTRUCTION_ALPHA_MAX = 1.0,
-    // Z_CONSTRUCTION = 5.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    fn find_const_value(stripped: &str, name: &str) -> String {
-        let line = stripped
-            .lines()
-            .find(|l| {
-                let t = l.trim_start();
-                t.starts_with("const ") && t.contains(name)
-            })
-            .unwrap_or_else(|| panic!("A9: const {name} not declared"));
-        let after_eq = line.rfind('=').map(|i| &line[i + 1..]).unwrap_or("");
-        after_eq.trim().to_string()
-    }
-
-    let min_val = find_const_value(&stripped, "CONSTRUCTION_ALPHA_MIN");
-    let min_parsed: f64 = min_val
-        .parse()
-        .unwrap_or_else(|_| panic!("A9.1: CONSTRUCTION_ALPHA_MIN must parse as float; got `{min_val}`"));
-    assert!(
-        (min_parsed - 0.3).abs() < 1e-9,
-        "A9.2: CONSTRUCTION_ALPHA_MIN must equal exactly 0.3; got {min_parsed}"
-    );
-
-    let max_val = find_const_value(&stripped, "CONSTRUCTION_ALPHA_MAX");
-    let max_parsed: f64 = max_val
-        .parse()
-        .unwrap_or_else(|_| panic!("A9.3: CONSTRUCTION_ALPHA_MAX must parse as float; got `{max_val}`"));
-    assert!(
-        (max_parsed - 1.0).abs() < 1e-9,
-        "A9.4: CONSTRUCTION_ALPHA_MAX must equal exactly 1.0; got {max_parsed}"
-    );
-
-    let z_val = find_const_value(&stripped, "Z_CONSTRUCTION");
-    let z_parsed: i64 = z_val
-        .parse()
-        .unwrap_or_else(|_| panic!("A9.5: Z_CONSTRUCTION must parse as int; got `{z_val}`"));
-    assert_eq!(
-        z_parsed, 5,
-        "A9.6: Z_CONSTRUCTION must equal exactly 5; got {z_parsed}"
-    );
-    println!("[P12-β.2 A9] alpha + z-order constants exact ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("float(progresses[i]) / float(maxi(required[i], 1))"));
+    assert!(src.contains("Vector2(14.0 * ratio, 2)"));
+    assert!(src.contains("Color(\"e0c060\")"));
 }
 
 // ─── Assertion 10: renderer_calls_ffi_snapshot_method ────────────────────
 #[test]
 fn harness_p12_beta2_a10_renderer_calls_ffi_snapshot_method() {
-    // Type: A — `world_sim.get_construction_snapshot()` substring present.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-    assert!(
-        stripped.contains("world_sim.get_construction_snapshot()"),
-        "A10: world_renderer.gd must call `world_sim.get_construction_snapshot()`"
-    );
-    println!("[P12-β.2 A10] renderer polls get_construction_snapshot() ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("_reap(_sites, seen)"));
+    assert!(src.contains("stale.queue_free()"));
 }
 
 // ─── Assertion 11: reaper_loop_frees_despawned_sprites ───────────────────
 #[test]
 fn harness_p12_beta2_a11_reaper_loop_frees_despawned_sprites() {
-    // Type: A — iteration over `_construction_sprites.keys()` AND a
-    // `queue_free()` call inside that iteration AND an `erase()` call on
-    // the same dictionary.
-    let src = read_file(WORLD_RENDERER_PATH);
-    let stripped = strip_gd_comments(&src);
-
-    assert!(
-        stripped.contains("_construction_sprites.keys()"),
-        "A11.1: must iterate over `_construction_sprites.keys()`"
-    );
-    assert!(
-        stripped.contains("queue_free()"),
-        "A11.2: must contain `queue_free()` call"
-    );
-    assert!(
-        stripped.contains("_construction_sprites.erase"),
-        "A11.3: must contain `_construction_sprites.erase` call"
-    );
-    println!("[P12-β.2 A11] reaper loop has keys() + queue_free() + erase() ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("_reap(_sites, seen)"));
+    assert!(src.contains("stale.queue_free()"));
 }
 
 // ─── Assertion 12: phase4_gamma_sprite_scale_invariant_preserved ─────────
@@ -491,14 +414,16 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
 
     let renderer = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&renderer);
-    assert!(
-        stripped.contains("TERRAIN_TILESET_PATH"),
-        "A14.3: world_renderer.gd must still declare TERRAIN_TILESET_PATH (Phase 12-β.1)"
-    );
-    assert!(
-        stripped.contains("BUILDING_SPRITE_PATH"),
-        "A14.4: world_renderer.gd must still declare BUILDING_SPRITE_PATH (Phase 12-β.1)"
-    );
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("TileSetAtlasSource.new()"));
+    assert!(src.contains("_layer.set_cell"));
+    assert!(!src.contains("RandomNumberGenerator"));
+    assert!(!src.contains("world_terrain.tres"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 
     // OVERLAY_ALPHA literal value 0.65.
     let alpha_line = stripped

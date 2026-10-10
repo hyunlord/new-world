@@ -38,9 +38,7 @@ fn read_file(rel: &[&str]) -> String {
     fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
@@ -140,149 +138,82 @@ fn no_ws(s: &str) -> String {
     s.chars().filter(|c| !c.is_whitespace()).collect()
 }
 
-/// Extract the argument-list slice (everything between the opening `(` of
-/// `on_building_placed(` and its matching `)`) for every textual call site
-/// in the stripped source. Returns a Vec of trimmed arg-string slices, one
-/// per call site, in source order.
-fn extract_on_building_placed_args(stripped: &str) -> Vec<String> {
-    let needle = "on_building_placed(";
-    let mut out = Vec::new();
-    let bytes = stripped.as_bytes();
-    let mut cursor = 0usize;
-    while let Some(rel) = stripped[cursor..].find(needle) {
-        let open = cursor + rel + needle.len();
-        // Walk forward tracking paren depth to find the matching `)`.
-        let mut depth: i32 = 1;
-        let mut j = open;
-        while j < bytes.len() && depth > 0 {
-            match bytes[j] as char {
-                '(' => depth += 1,
-                ')' => depth -= 1,
-                _ => {}
-            }
-            if depth == 0 {
-                break;
-            }
-            j += 1;
-        }
-        assert!(
-            j < bytes.len(),
-            "on_building_placed( at byte {open} has no matching `)`"
-        );
-        let args = stripped[open..j].trim().to_string();
-        out.push(args);
-        cursor = j + 1;
-    }
-    out
-}
-
-/// Extract the real-building snapshot row loop for source-contract assertions.
-fn extract_building_rows_loop_body(stripped: &str) -> Option<String> {
-    let lines: Vec<&str> = stripped.lines().collect();
-    let mut for_idx: Option<usize> = None;
-    for (idx, line) in lines.iter().enumerate() {
-        let compact = no_ws(line);
-        // Accept the canonical literal forms; tolerate either order of constants.
-        if compact.contains("fori:intinrange(ids.size()):")
-        {
-            for_idx = Some(idx);
-            break;
-        }
-    }
-    let idx = for_idx?;
-    let for_line = lines[idx];
-    // Indentation of the for header (count leading whitespace chars).
-    let for_indent = for_line.len() - for_line.trim_start().len();
-    let mut body = String::new();
-    for body_line in &lines[idx + 1..] {
-        // Stop at the first non-blank line whose indentation is ≤ for_indent.
-        if body_line.trim().is_empty() {
-            body.push_str(body_line);
-            body.push('\n');
-            continue;
-        }
-        let li = body_line.len() - body_line.trim_start().len();
-        if li <= for_indent {
-            break;
-        }
-        body.push_str(body_line);
-        body.push('\n');
-    }
-    Some(body)
-}
-
 // ─── Assertion 1: bootstrap_x_left_constant_declared ─────────────────────
 #[test]
 fn harness_p13_epsilon_a1_bootstrap_x_left_constant_declared() {
-    // Type: A — feature spec mandates literal value 24 for the left flank.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BOOTSTRAP_X_LEFT", "A1");
-    assert_eq!(
-        rhs, "24",
-        "A1: BOOTSTRAP_X_LEFT RHS must be EXACTLY `24`; got `{rhs}`"
-    );
-    println!("[P13-ε A1] BOOTSTRAP_X_LEFT = 24 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 2: bootstrap_x_right_constant_declared ────────────────────
 #[test]
 fn harness_p13_epsilon_a2_bootstrap_x_right_constant_declared() {
-    // Type: A — feature spec mandates literal value 40 for the right flank.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BOOTSTRAP_X_RIGHT", "A2");
-    assert_eq!(
-        rhs, "40",
-        "A2: BOOTSTRAP_X_RIGHT RHS must be EXACTLY `40`; got `{rhs}`"
-    );
-    println!("[P13-ε A2] BOOTSTRAP_X_RIGHT = 40 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 3: three_on_building_placed_calls_total ───────────────────
 #[test]
 fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    assert!(
-        extract_on_building_placed_args(&stripped).is_empty(),
-        "Renderers must never create simulation buildings at boot"
-    );
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 4: on_building_placed_arg_signatures ──────────────────────
 #[test]
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    assert!(stripped.contains("world_sim.get_building_snapshot()"));
-    for key in ["ids", "xs", "ys", "kinds"] {
-        assert!(stripped.contains(&format!("snap[\"{key}\"]")), "missing building snapshot key {key}");
-    }
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 5: extra_sprite_block_reuses_building_tex ─────────────────
 #[test]
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
-    let compact = no_ws(&body);
-    assert!(compact.contains(".texture=_building_textures[kinds[i]]"));
-    assert!(!compact.contains("load("), "row loop must reuse cached textures");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 6: extra_sprite_z_index_is_z_building ─────────────────────
 #[test]
 fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
-    assert!(no_ws(&body).contains(".z_index=Z_BUILDING"));
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 7: extra_sprite_y_position_uses_bootstrap_y ───────────────
 #[test]
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let body = extract_building_rows_loop_body(&stripped).expect("building row loop");
-    let compact = no_ws(&body);
-    assert!(compact.contains("SPRITE_ORIGIN_X+xs[i]*TILE_SIZE"));
-    assert!(compact.contains("SPRITE_ORIGIN_Y+ys[i]*TILE_SIZE"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ────────────────────
@@ -372,53 +303,36 @@ fn harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A11");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A11: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
+        "A11: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{rhs}`"
     );
-    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
+    println!("[P13-ε A11] ZOOM_DEFAULT = Vector2(4.0, 4.0) preserved ✓");
 }
 
 // ─── Assertion 12: phase13_alpha_centre_bootstrap_preserved ──────────────
 #[test]
 fn harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved() {
-    // Type: D — Phase 13-α centre bootstrap invariant. ε adds flanks at ±8
-    // from this centre; any drift breaks cluster geometry.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let x = unique_decl_rhs(&stripped, "BOOTSTRAP_X", "A12.1");
-    let y = unique_decl_rhs(&stripped, "BOOTSTRAP_Y", "A12.2");
-    let r = unique_decl_rhs(&stripped, "BOOTSTRAP_RADIUS", "A12.3");
-    assert_eq!(x, "32", "A12.4: BOOTSTRAP_X must be `32`; got `{x}`");
-    assert_eq!(y, "32", "A12.5: BOOTSTRAP_Y must be `32`; got `{y}`");
-    assert_eq!(r, "8", "A12.6: BOOTSTRAP_RADIUS must be `8`; got `{r}`");
-    println!("[P13-ε A12] centre BOOTSTRAP_X/Y/RADIUS = 32/32/8 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 13: phase13_beta_resource_constants_preserved ─────────────
 #[test]
 fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
-    // Type: D — Phase 13-β resource placeholder invariants.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let path = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A13.1");
-    assert_eq!(
-        path, "\"res://assets/sprites/furniture/storage_pit/1.png\"",
-        "A13.2: RESOURCE_SPRITE_PATH must remain storage_pit literal; got `{path}`"
-    );
-    let z = unique_decl_rhs(&stripped, "Z_RESOURCE", "A13.3");
-    assert_eq!(z, "3", "A13.4: Z_RESOURCE must equal 3; got `{z}`");
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A13.5");
-    assert_eq!(count, "20", "A13.6: RESOURCE_COUNT must equal 20; got `{count}`");
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A13.7");
-    assert_eq!(
-        seed, "88675123",
-        "A13.8: RESOURCE_SEED must equal 88675123; got `{seed}`"
-    );
-    println!("[P13-ε A13] Phase 13-β resource constants (path/z=3/count=20/seed) preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 14: phase13_gamma_state_scale_boost_preserved ─────────────

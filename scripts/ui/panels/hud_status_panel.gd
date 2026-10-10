@@ -1,32 +1,11 @@
 extends Control
 
-# V7 Phase 14-δ — HUD status panel.
-#
-# Top-right anchored Control with three sections stacked vertically:
-# Day/Year header, 5-cell resource row, notification feed. Polls the
-# three existing SimBridge snapshots (get_agent_snapshot,
-# get_settlement_snapshot, get_construction_snapshot) through the same
-# Variant-safe pattern used by hud_topbar.gd. The HUD never modifies
-# sim state; it is read-only.
-#
-# Honest disclosure (verified Step 0 grep, 2026-05-29):
-#   - No backend sim-tick FFI exists; Day/Year are derived from a
-#     private frame counter (UI convention only).
-#   - No backend Inventory component; resource cells display the
-#     Phase 14-β placeholder-sprite distribution (4 per type).
-#   - No global causal-events FFI; notifications derive from
-#     snapshot id-set deltas only. Combat / social / memory events
-#     are out of scope this substage.
+# Simulation clock, resources and cumulative events; no frame-derived world facts.
 
 const HUD_MARGIN: int = 12
-const PANEL_WIDTH: float = 320.0
+const PANEL_WIDTH: float = 420.0
 const PANEL_HEIGHT: float = 180.0
-const TICKS_PER_DAY: int = 100
-const DAYS_PER_YEAR: int = 30
 
-const RESOURCE_TYPES_COUNT: int = 5
-const RESOURCE_PER_TYPE: int = 4
-const RESOURCE_LABELS: Array = ["Berry", "Wood", "Stone", "Water", "Food"]
 
 const MAX_VISIBLE_NOTIFICATIONS: int = 5
 const NOTIF_FADE_FRAMES: int = 480
@@ -44,60 +23,55 @@ var _world_sim: Node = null
 var _locale: Node = null
 var _frame_tick: int = 0
 var _day_label: Label
-var _year_label: Label
+var _phase_label: Label
 var _resource_labels: Array = []
 var _notification_vbox: VBoxContainer
 var _prev_settlement_ids: Dictionary = {}
 var _last_notified_food: Dictionary = {}  # settlement id → food_stock at last notified line
 var _prev_construction_ids: Dictionary = {}
-var _prev_agent_count: int = -1
-var _entries: Array = []  # each: { text: String, born: int }
+var _prev_births: int = -1
+var _entries: Array = []  # each: { key: String, args: Array, born: int }
+var _suppress_feed: bool = false
 
 
 func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	_locale = get_node_or_null("/root/Locale")
+	if _world_sim != null:
+		_world_sim.connect("world_reset", _on_world_reset)
 
-	# Anchor top-right of viewport with HUD_MARGIN inset.
 	anchor_left = 1.0
 	anchor_right = 1.0
-	anchor_top = 0.0
-	anchor_bottom = 0.0
-	offset_left = -(PANEL_WIDTH + float(HUD_MARGIN))
-	offset_right = -float(HUD_MARGIN)
-	offset_top = float(HUD_MARGIN)
-	offset_bottom = float(HUD_MARGIN) + PANEL_HEIGHT
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	var vbox := VBoxContainer.new()
+	var margin: MarginContainer = MarginContainer.new()
+	margin.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	margin.custom_minimum_size = Vector2(PANEL_WIDTH, PANEL_HEIGHT)
+	margin.add_theme_constant_override("margin_right", HUD_MARGIN)
+	margin.add_theme_constant_override("margin_top", HUD_MARGIN)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(margin)
+	var vbox: VBoxContainer = VBoxContainer.new()
 	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.anchor_right = 1.0
-	vbox.anchor_bottom = 1.0
-	add_child(vbox)
+	margin.add_child(vbox)
 
-	# Section 1: Day/Year header
-	var time_hbox := HBoxContainer.new()
+	var time_hbox: HBoxContainer = HBoxContainer.new()
 	time_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	time_hbox.add_theme_constant_override("separation", 12)
+	time_hbox.add_theme_constant_override("separation", HUD_MARGIN)
 	vbox.add_child(time_hbox)
 	_day_label = Label.new()
 	_day_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_day_label.text = "Day 0"
 	time_hbox.add_child(_day_label)
-	_year_label = Label.new()
-	_year_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_year_label.text = "Year 0"
-	time_hbox.add_child(_year_label)
+	_phase_label = Label.new()
+	_phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	time_hbox.add_child(_phase_label)
 
-	# Section 2: Resource cells (5 fixed cells)
-	var res_hbox := HBoxContainer.new()
+	var res_hbox: HBoxContainer = HBoxContainer.new()
 	res_hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	res_hbox.add_theme_constant_override("separation", 8)
 	vbox.add_child(res_hbox)
-	for i in RESOURCE_TYPES_COUNT:
-		var lbl := Label.new()
+	for _i: int in 4:
+		var lbl: Label = Label.new()
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lbl.text = "%s %d" % [RESOURCE_LABELS[i], RESOURCE_PER_TYPE]
 		_resource_labels.append(lbl)
 		res_hbox.add_child(lbl)
 
@@ -145,18 +119,18 @@ func _ingest_snapshots() -> void:
 					continue
 				var delta: int = food - int(_last_notified_food[sid])
 				if delta >= FEED_FOOD_DELTA_THRESHOLD:
-					_push(_loc("HUD_FEED_STOCKPILE_DEPOSIT") % [sid, delta])
+					_push("HUD_FEED_STOCKPILE_DEPOSIT", [sid, delta])
 					_last_notified_food[sid] = food
 				elif delta <= -FEED_FOOD_DELTA_THRESHOLD:
-					_push(_loc("HUD_FEED_STOCKPILE_CONSUME") % [sid, -delta])
+					_push("HUD_FEED_STOCKPILE_CONSUME", [sid, -delta])
 					_last_notified_food[sid] = food
 				# |delta| < threshold: leave last-notified unchanged so it accumulates
 	for id in cur_s.keys():
 		if not _prev_settlement_ids.has(id):
-			_push("Settlement %d formed" % int(id))
+			_push("HUD_FEED_SETTLEMENT_FORMED", [int(id)])
 	for id in _prev_settlement_ids.keys():
 		if not cur_s.has(id):
-			_push("Settlement %d dissolved" % int(id))
+			_push("HUD_FEED_SETTLEMENT_DISSOLVED", [int(id)])
 	_prev_settlement_ids = cur_s
 	# Drop food tracking for settlements no longer present (mirror the
 	# _prev_settlement_ids cleanup — a dissolved settlement stops tracking).
@@ -178,10 +152,10 @@ func _ingest_snapshots() -> void:
 				cur_c[int(cids_arr[i])] = true
 	for id in cur_c.keys():
 		if not _prev_construction_ids.has(id):
-			_push("Site %d started" % int(id))
+			_push("HUD_FEED_SITE_STARTED", [int(id)])
 	for id in _prev_construction_ids.keys():
 		if not cur_c.has(id):
-			_push("Site %d completed" % int(id))
+			_push("HUD_FEED_SITE_COMPLETED", [int(id)])
 	_prev_construction_ids = cur_c
 
 	var agent_snap: Variant = _world_sim.call("get_agent_snapshot")
@@ -192,9 +166,11 @@ func _ingest_snapshots() -> void:
 		if aids is PackedInt64Array:
 			var aids_arr: PackedInt64Array = aids
 			cur_count = aids_arr.size()
-	if _prev_agent_count >= 0 and cur_count > _prev_agent_count:
-		_push("Agent born (pop %d)" % cur_count)
-	_prev_agent_count = cur_count
+	var tallies: Dictionary = _snapshot("get_tallies")
+	var births: int = int(tallies.get("births", 0))
+	if _prev_births >= 0 and births > _prev_births:
+		_push("HUD_FEED_AGENT_BORN", [cur_count])
+	_prev_births = births
 
 
 func _loc(key: String) -> String:
@@ -203,8 +179,10 @@ func _loc(key: String) -> String:
 	return _locale.ltr(key) if _locale != null else key
 
 
-func _push(text: String) -> void:
-	_entries.append({ "text": text, "born": _frame_tick })
+func _push(key: String, args: Array) -> void:
+	if _suppress_feed:
+		return
+	_entries.append({ "key": key, "args": args, "born": _frame_tick })
 	if _entries.size() > MAX_VISIBLE_NOTIFICATIONS:
 		_entries.pop_front()
 
@@ -217,20 +195,67 @@ func _prune_old() -> void:
 	_entries = fresh
 
 
+func _snapshot(method: String) -> Dictionary:
+	if _world_sim == null:
+		return {}
+	var value: Variant = _world_sim.call(method)
+	return value if value is Dictionary else {}
+
+
 func _refresh() -> void:
-	@warning_ignore("integer_division")
-	var day: int = _frame_tick / TICKS_PER_DAY
-	@warning_ignore("integer_division")
-	var year: int = day / DAYS_PER_YEAR
-	if _day_label != null:
-		_day_label.text = "Day %d" % day
-	if _year_label != null:
-		_year_label.text = "Year %d" % year
+	var clock: Dictionary = _snapshot("get_time_snapshot")
+	var day_index: int = int(clock.get("day_index", 0))
+	var time_of_day: float = float(clock.get("time_of_day", 0.0))
+	var total_minutes: int = clampi(int(time_of_day * 60.0), 0, 1439)
+	var hour: int = int(total_minutes / 60.0)
+	var minute: int = total_minutes % 60
+	_day_label.text = (_loc("HUD_DAY_FMT") % (day_index + 1)) + " %02d:%02d" % [hour, minute]
+	_phase_label.text = _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
+
+	var food: int = 0
+	var settlements: Dictionary = _snapshot("get_settlement_snapshot")
+	var stocks: Variant = settlements.get("food_stocks", null)
+	if stocks is PackedInt32Array:
+		var stock_values: PackedInt32Array = stocks
+		for amount: int in stock_values:
+			food += amount
+	var berries: int = 0
+	var resources: Dictionary = _snapshot("get_resource_snapshot")
+	var kinds: Variant = resources.get("kinds", null)
+	var amounts: Variant = resources.get("amounts", null)
+	if kinds is PackedInt32Array and amounts is PackedInt32Array:
+		var kind_values: PackedInt32Array = kinds
+		var amount_values: PackedInt32Array = amounts
+		for i: int in mini(kind_values.size(), amount_values.size()):
+			if kind_values[i] == 0 and amount_values[i] < 255:
+				berries += amount_values[i]
+	var tallies: Dictionary = _snapshot("get_tallies")
+	var births: int = int(tallies.get("births", 0))
+	var deaths: int = int(tallies.get("deaths_starvation", 0)) + int(tallies.get("deaths_dehydration", 0)) + int(tallies.get("deaths_combat", 0))
+	var keys: Array[String] = ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"]
+	var values: Array[int] = [food, berries, births, deaths]
+	for i: int in _resource_labels.size():
+		var label: Label = _resource_labels[i]
+		label.text = _loc(keys[i]) + " %d" % values[i]
 	if _notification_vbox != null:
-		for child in _notification_vbox.get_children():
+		for child: Node in _notification_vbox.get_children():
+			_notification_vbox.remove_child(child)
 			child.queue_free()
-		for e in _entries:
-			var lbl := Label.new()
+		for entry: Dictionary in _entries:
+			var lbl: Label = Label.new()
 			lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			lbl.text = String(e.get("text", ""))
+			lbl.text = _loc(String(entry.get("key", ""))) % (entry.get("args", []) as Array)
 			_notification_vbox.add_child(lbl)
+
+
+func _on_world_reset() -> void:
+	_prev_settlement_ids.clear()
+	_prev_construction_ids.clear()
+	_last_notified_food.clear()
+	_prev_births = -1
+	_entries.clear()
+	_frame_tick = 0
+	_suppress_feed = true
+	_ingest_snapshots()
+	_suppress_feed = false
+	_refresh()

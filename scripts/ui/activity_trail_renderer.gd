@@ -24,7 +24,7 @@ const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
 const TRAIL_LENGTH := 16   # ring-buffer history depth per agent
 const TRAIL_WIDTH := 2.0
-const TRAIL_ALPHA := 0.4
+const TRAIL_ALPHA := 0.8
 const Z_TRAIL := 2          # above terrain (0), below agents
 
 # state_tag → trail colour. Idle (0) has no entry because Idle agents
@@ -34,6 +34,10 @@ const TRAIL_COLOR_CONSUMING_AGENT: Color = Color(1.0, 0.40, 0.75, TRAIL_ALPHA) #
 const TRAIL_COLOR_CONSUMING_OTHER: Color = Color(0.30, 0.95, 0.35, TRAIL_ALPHA) # green
 
 var _world_sim: Node = null
+var _inspector: Node = null
+var _camera: Camera2D = null
+var _selected_agent: int = -1
+var _seek_kind: Dictionary = {}
 # agent_id (int) → Array[Vector2] history (most-recent at end).
 var _history: Dictionary = {}
 # agent_id (int) → int state_tag (last observed; used in _draw).
@@ -42,6 +46,10 @@ var _state_tag: Dictionary = {}
 
 func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	if _world_sim != null:
+		_world_sim.connect("world_reset", _on_world_reset)
+	_inspector = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+	_camera = get_node_or_null("/root/Main/Camera2D") as Camera2D
 	z_index = Z_TRAIL
 
 
@@ -57,6 +65,8 @@ func _process(_delta: float) -> void:
 	var ys: Variant = snap_dict.get("ys", null)
 	var states: Variant = snap_dict.get("states", null)
 	var agent_ids: Variant = snap_dict.get("agent_ids", null)
+	var kinds: Variant = snap_dict.get("seek_kinds", null)
+	var seek_kinds: PackedByteArray = kinds if kinds is PackedByteArray else PackedByteArray()
 	if not (ids is PackedInt64Array and xs is PackedInt32Array \
 			and ys is PackedInt32Array and states is PackedByteArray \
 			and agent_ids is PackedInt64Array):
@@ -70,15 +80,22 @@ func _process(_delta: float) -> void:
 	if xs_arr.size() != n or ys_arr.size() != n \
 			or states_arr.size() != n or agent_ids_arr.size() != n:
 		return
+	var selected: int = int(_inspector.call("get_selected_entity_bits")) if _inspector != null else -1
+	_selected_agent = -1
 	# Update history ring buffer per agent_id.
 	var seen: Dictionary = {}
 	for i in n:
 		var aid: int = int(agent_ids_arr[i])
 		seen[aid] = true
+		if ids_arr[i] == selected:
+			_selected_agent = aid
+		_seek_kind[aid] = int(seek_kinds[i]) if i < seek_kinds.size() else 0
 		var px: float = float(SPRITE_ORIGIN_X + xs_arr[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var py: float = float(SPRITE_ORIGIN_Y + ys_arr[i] * TILE_SIZE) + float(TILE_SIZE) / 2.0
 		var hist: Array = _history.get(aid, []) as Array
-		hist.append(Vector2(px, py))
+		var point: Vector2 = Vector2(px, py)
+		if hist.is_empty() or hist.back() != point:
+			hist.append(point)
 		while hist.size() > TRAIL_LENGTH:
 			hist.pop_front()
 		_history[aid] = hist
@@ -91,22 +108,26 @@ func _process(_delta: float) -> void:
 	for aid in stale:
 		_history.erase(aid)
 		_state_tag.erase(aid)
+		_seek_kind.erase(aid)
 	queue_redraw()
 
 
 func _draw() -> void:
+	var zoom: float = _camera.zoom.x if _camera != null else 1.0
 	for aid in _history.keys():
+		if int(aid) != _selected_agent:
+			continue
 		var tag: int = int(_state_tag.get(aid, 0))
 		if tag == 0:
 			continue  # Idle — no trail
 		var hist: Array = _history[aid]
 		if hist.size() < 2:
 			continue
-		var color: Color = _color_for_state_tag(tag)
+		var color: Color = _color_for_kind(int(_seek_kind.get(aid, 0)), tag)
 		var pts: PackedVector2Array = PackedVector2Array()
 		for p in hist:
 			pts.append(p as Vector2)
-		draw_polyline(pts, color, TRAIL_WIDTH, true)
+		draw_polyline(pts, color, TRAIL_WIDTH / maxf(zoom, 0.01), true)
 
 
 func _color_for_state_tag(tag: int) -> Color:
@@ -122,3 +143,21 @@ func _color_for_state_tag(tag: int) -> Color:
 		return TRAIL_COLOR_CONSUMING_OTHER
 	# Defensive: unknown tag → transparent (no trail).
 	return Color(0, 0, 0, 0)
+
+
+func _color_for_kind(kind: int, tag: int) -> Color:
+	if kind == 1:
+		return Color(0.9, 0.2, 0.2, TRAIL_ALPHA)
+	if kind == 2:
+		return Color(0.2, 0.5, 1.0, TRAIL_ALPHA)
+	if kind == 3:
+		return Color(0.95, 0.75, 0.2, TRAIL_ALPHA)
+	return _color_for_state_tag(tag)
+
+
+func _on_world_reset() -> void:
+	_history.clear()
+	_state_tag.clear()
+	_seek_kind.clear()
+	_selected_agent = -1
+	queue_redraw()

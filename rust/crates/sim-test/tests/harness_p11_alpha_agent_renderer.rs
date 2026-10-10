@@ -471,6 +471,10 @@ fn harness_p11_alpha_agent_renderer_interpolates_positions() {
         "A14.5: agent_renderer.gd must advance `_lerp_accumulator` and divide \
          by `SIM_TICK_DURATION` (Gaffer accumulator)"
     );
+    assert!(stripped.contains("get_world_info"));
+    assert!(stripped.contains("move_interval_ticks"));
+    assert!(stripped.contains("_lerp_accumulator / _move_duration"));
+    assert!(stripped.contains("* SIM_TICK_DURATION"));
     println!(
         "[P11-α A14] agent_renderer.gd interpolates _prev_positions/_curr_positions with lerp_t ✓"
     );
@@ -608,8 +612,8 @@ fn harness_p11_alpha_shader_captures_instance_color() {
 fn harness_p11_alpha_shader_modulates_palette_output() {
     // Type: Type D regression/contract sync. V7 H Phase A: the per-instance tint is now the
     // vertex-captured `v_tint` (see A16). It must still multiply the palette
-    // output in the visible-alpha branch (tex.a > 0.01); the transparent
-    // branch never contributes a rendered pixel. We verify both the
+    // output in the visible-alpha branch; the transparent
+    // branch contributes only the untinted Revitalize outline. We verify both the
     // multiplication string and that it lives after the alpha guard so
     // transparent fragments are not also tinted.
     let src = read_palette_shader_src();
@@ -624,12 +628,12 @@ fn harness_p11_alpha_shader_modulates_palette_output() {
          so the per-instance state tint composites over the palette output"
     );
 
-    // Must live after the `tex.a <= 0.01` early-out (i.e. in the visible
+    // Must live after the `tex.a == 0.0` early-out (i.e. in the visible
     // branch). We find the early-out position and confirm the multiply
     // appears after it.
     let alpha_guard_pos = stripped
-        .find("tex.a <= 0.01")
-        .expect("A17.2: shader must contain the `tex.a <= 0.01` alpha guard");
+        .find("tex.a == 0.0")
+        .expect("A17.2: shader must contain the `tex.a == 0.0` alpha guard");
     let multiply_pos = stripped
         .find("palette_color.rgb * v_tint.rgb")
         .or_else(|| stripped.find("v_tint.rgb * palette_color.rgb"))
@@ -637,9 +641,12 @@ fn harness_p11_alpha_shader_modulates_palette_output() {
     assert!(
         multiply_pos > alpha_guard_pos,
         "A17.4: the palette_color.rgb * v_tint.rgb multiply must appear \
-         after the `tex.a <= 0.01` alpha guard so transparent fragments \
+         after the `tex.a == 0.0` alpha guard so transparent fragments \
          are not tinted (multiply_pos={multiply_pos}, alpha_guard_pos={alpha_guard_pos})"
     );
+    assert!(stripped.contains("neighbor_alpha > 0.5"));
+    assert!(stripped.contains("vec4(vec3(20.0 / 255.0), 0.9)"));
+    assert_eq!(stripped.matches("TEXTURE_PIXEL_SIZE").count(), 4);
     println!(
         "[P11-α A17] palette_swap.gdshader multiplies palette_color.rgb * v_tint.rgb in visible-α path ✓"
     );
@@ -1051,4 +1058,29 @@ fn harness_p11_alpha_d1_state_tints_exact_ordered_palette() {
         "[P11-α D1 A22] STATE_TINTS exact ordered palette matches D1 spec \
          for indices 0..=3 ✓"
     );
+}
+
+
+#[test]
+fn harness_revitalize_agent_shadows_follow_interpolated_feet() {
+    let stripped = strip_gd_comments(&read_agent_renderer_src());
+    assert!(stripped.contains("_shadow_mesh = MultiMesh.new()"));
+    assert!(stripped.contains("shadow_ellipse.png"));
+    assert!(stripped.contains("_shadow_mesh.instance_count = n"));
+    assert!(stripped.contains("_shadow_mesh.set_instance_transform_2d"));
+    assert!(stripped.contains("Vector2(px, py + SHADOW_FEET_OFFSET)"));
+    assert!(stripped.contains("const AGENT_Z: int = 8"));
+    assert!(stripped.contains("const SHADOW_Z: int = 7"));
+    assert!(stripped.contains("_shadow_instance.z_index = SHADOW_Z - AGENT_Z"));
+}
+
+
+#[test]
+fn harness_revitalize_agent_reset_discards_old_world_interpolation() {
+    let stripped = strip_gd_comments(&read_agent_renderer_src());
+    assert!(stripped.contains("connect(\"world_reset\", _on_world_reset)"));
+    let body = stripped.split("func _on_world_reset() -> void:").nth(1).expect("agent reset hook");
+    for reset in ["_prev_positions.clear()", "_curr_positions.clear()", "_snapshot_checksum = -1", "_lerp_accumulator = 0.0", "_recalling_agents.clear()", "_combating_agents.clear()", "_seen_recall_event_ids.clear()", "_seen_combat_event_ids.clear()", "multi_mesh.instance_count = 0", "_shadow_mesh.instance_count = 0", "_process(0.0)"] {
+        assert!(body.contains(reset), "reset must discard old-world state: {reset}");
+    }
 }

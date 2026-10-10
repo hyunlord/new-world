@@ -108,7 +108,7 @@ fn harness_t7_9_b_world_renderer_render_path_present() {
         "world_renderer.gd must declare `CHANNEL_WARMTH := 0` \
          (Warmth = InfluenceChannel index 0, the first overlay render target)"
     );
-    assert!(src.contains("world_sim.get_building_snapshot()"), "renderer must read real buildings");
+    assert!(include_str!("../../../../scripts/ui/building_renderer.gd").contains("_world_sim.get_building_snapshot()"), "building renderer must read real buildings");
     assert!(!src.contains("on_building_placed("), "renderer must not bootstrap simulation state");
     assert!(
         src.contains("Image.FORMAT_L8"),

@@ -468,14 +468,7 @@ fn parse_gd_const_f32(src: &str, name: &str) -> Option<f32> {
 // ─── A6: scene wiring is additive (delta-based, offset-independent) ─────────
 #[test]
 fn harness_needs_a6_scene_wiring_additive() {
-    // Type D additive-preservation regression. The +1 DELTA is the invariant
-    // (offset-independent), never an absolute identity. The baseline tracks the
-    // shared scene: viz-B's own land put it at load_steps/ext = 12; viz-D then
-    // added death_viz_renderer.gd, so this guard now describes the 12 → 13
-    // transition (baseline 12, +1 → 13). The +1-additive invariant is preserved.
-    const LOAD_STEPS_BEFORE: i64 = 12;
-    const EXT_COUNT_BEFORE: usize = 12;
-
+    // Preserve this renderer registration while accounting for all Revitalize scene resources.
     let scene = read_file(&["scenes", "main.tscn"]);
 
     let load_steps_after = tscn_load_steps(&scene).expect("A6: main.tscn must declare load_steps=N");
@@ -484,19 +477,9 @@ fn harness_needs_a6_scene_wiring_additive() {
         .filter(|l| l.trim_start().starts_with("[ext_resource type="))
         .count();
 
-    // (b) Additive delta — exactly one added on each.
-    assert_eq!(
-        load_steps_after,
-        LOAD_STEPS_BEFORE + 1,
-        "A6(b): load_steps must be baseline+1 ({}); got {load_steps_after}",
-        LOAD_STEPS_BEFORE + 1
-    );
-    assert_eq!(
-        ext_count_after,
-        EXT_COUNT_BEFORE + 1,
-        "A6(b): ext_resource count must be baseline+1 ({}); got {ext_count_after}",
-        EXT_COUNT_BEFORE + 1
-    );
+    // Revitalize adds terrain/building/daylight scripts; load_steps includes the scene.
+    assert_eq!(ext_count_after, 16, "all sixteen renderer/UI script resources remain");
+    assert_eq!(load_steps_after, ext_count_after as i64 + 1, "resource steps include the scene itself");
 
     // (c) Additive preservation — new wiring present, prior wiring intact.
     assert!(
@@ -523,7 +506,7 @@ fn harness_needs_a6_scene_wiring_additive() {
         assert!(scene.contains(token), "A6(c): pre-existing wiring `{token}` must be preserved (removal==0)");
     }
     println!(
-        "[viz-B A6] load_steps {LOAD_STEPS_BEFORE}→{load_steps_after}, ext {EXT_COUNT_BEFORE}→{ext_count_after}; \
+        "[viz-B A6] load_steps {load_steps_after}, ext {ext_count_after}; \
          NeedBarRenderer wired, prior nodes preserved ✓"
     );
 }

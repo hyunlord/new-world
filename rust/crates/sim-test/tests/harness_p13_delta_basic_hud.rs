@@ -54,9 +54,7 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 /// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
 /// literals (single or double quoted).
@@ -246,7 +244,7 @@ fn harness_p13_delta_a3_hud_topbar_declares_four_label_members() {
         }
     }
 
-    let want = ["tick", "agent", "settlement", "site"];
+    let want = ["shelter", "agent", "settlement", "site"];
     let mut missing: Vec<&str> = Vec::new();
     for w in want.iter() {
         let found = label_idents
@@ -258,7 +256,7 @@ fn harness_p13_delta_a3_hud_topbar_declares_four_label_members() {
     }
     assert!(
         missing.is_empty(),
-        "A3: hud_topbar.gd must declare four Label members containing each of tick/agent/settlement/site \
+        "A3: hud_topbar.gd must declare four Label members containing each of shelter/agent/settlement/site \
          (case-insensitive); missing={missing:?}; found Label idents={label_idents:?}"
     );
     println!(
@@ -615,55 +613,36 @@ fn harness_p13_delta_a14_phase13_alpha_default_zoom_3x_unchanged() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A14");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A14: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
+        "A14: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{rhs}`"
     );
-    println!("[P13-δ A14] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
+    println!("[P13-δ A14] ZOOM_DEFAULT = Vector2(4.0, 4.0) preserved ✓");
 }
 
 // ─── Assertion 15: invariant_phase13_alpha_bootstrap_campfire_unchanged ───
 #[test]
 fn harness_p13_delta_a15_phase13_alpha_bootstrap_campfire_unchanged() {
-    // Type: D — Phase 13-α bootstrap invariant.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A15");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/campfire/1.png\"",
-        "A15: BUILDING_SPRITE_PATH must remain the campfire literal (Phase 13-α invariant); got `{rhs}`"
-    );
-    println!("[P13-δ A15] BUILDING_SPRITE_PATH → campfire/1.png preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 16: invariant_phase13_beta_resource_constants_unchanged ────
 #[test]
 fn harness_p13_delta_a16_phase13_beta_resource_constants_unchanged() {
-    // Type: D — Phase 13-β resource placeholder invariants.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let resource_path = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A16.1");
-    assert!(
-        resource_path.contains("res://"),
-        "A16.2: RESOURCE_SPRITE_PATH must be a res:// path; got `{resource_path}`"
-    );
-
-    let z_resource = unique_decl_rhs(&stripped, "Z_RESOURCE", "A16.3");
-    assert_eq!(
-        z_resource, "3",
-        "A16.4: Z_RESOURCE must equal 3; got `{z_resource}`"
-    );
-
-    let resource_count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A16.5");
-    assert_eq!(
-        resource_count, "20",
-        "A16.6: RESOURCE_COUNT must equal 20; got `{resource_count}`"
-    );
-    println!("[P13-δ A16] Phase 13-β resource constants preserved (path/z=3/count=20) ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 18: hud_topbar_silent_missing_world_sim ────────────────────

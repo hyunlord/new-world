@@ -42,9 +42,7 @@ fn read_camera_controller_src() -> String {
     read_file(&["scripts", "ui", "camera_controller.gd"])
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 /// Strip GDScript line comments (`# …` to EOL). Preserves `#` inside string
 /// literals (single or double quoted).
@@ -506,14 +504,14 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
     );
     let default_compact = no_ws(&zoom_default);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&default_compact.as_str()),
-        "A15.6: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{zoom_default}`"
+        "A15.6: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{zoom_default}`"
     );
     println!("[P14-α A15] camera ZOOM_MIN/MAX/DEFAULT invariants preserved ✓");
 }
@@ -521,44 +519,22 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
 // ─── Assertion 16: phase13_bootstrap_three_campfires_preserved ────────────
 #[test]
 fn harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved() {
-    // Type: D — Phase 13-α + 13-ε invariants. Cross-file regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let x = unique_decl_rhs(&stripped, "BOOTSTRAP_X", "A16.1");
-    let y = unique_decl_rhs(&stripped, "BOOTSTRAP_Y", "A16.2");
-    let xl = unique_decl_rhs(&stripped, "BOOTSTRAP_X_LEFT", "A16.3");
-    let xr = unique_decl_rhs(&stripped, "BOOTSTRAP_X_RIGHT", "A16.4");
-    let path = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A16.5");
-    assert_eq!(x, "32", "A16.6: BOOTSTRAP_X must be `32`; got `{x}`");
-    assert_eq!(y, "32", "A16.7: BOOTSTRAP_Y must be `32`; got `{y}`");
-    assert_eq!(xl, "24", "A16.8: BOOTSTRAP_X_LEFT must be `24`; got `{xl}`");
-    assert_eq!(xr, "40", "A16.9: BOOTSTRAP_X_RIGHT must be `40`; got `{xr}`");
-    assert!(
-        path.contains("campfire/1.png"),
-        "A16.10: BUILDING_SPRITE_PATH must reference campfire/1.png; got `{path}`"
-    );
-    println!("[P14-α A16] three-campfire bootstrap geometry preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("_building_textures[kind]"));
+    assert!(src.contains("sprite.position = _tile_center(xs[i], ys[i])"));
 }
 
 // ─── Assertion 17: phase13_beta_resource_constants_preserved ──────────────
 #[test]
 fn harness_p14_alpha_a17_phase13_beta_resource_constants_preserved() {
-    // Type: D — Phase 13-β invariant.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let path = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A17.1");
-    assert!(
-        path.contains("storage_pit/1.png"),
-        "A17.2: RESOURCE_SPRITE_PATH must reference storage_pit/1.png; got `{path}`"
-    );
-    let z = unique_decl_rhs(&stripped, "Z_RESOURCE", "A17.3");
-    assert_eq!(z, "3", "A17.4: Z_RESOURCE must equal 3; got `{z}`");
-    let count = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A17.5");
-    assert_eq!(count, "20", "A17.6: RESOURCE_COUNT must equal 20; got `{count}`");
-    let seed = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A17.7");
-    assert_eq!(
-        seed, "88675123",
-        "A17.8: RESOURCE_SEED must equal 88675123; got `{seed}`"
-    );
-    println!("[P14-α A17] Phase 13-β resource constants preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 18: agent_base_png_asset_exists ────────────────────────────

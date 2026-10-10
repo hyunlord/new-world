@@ -5141,3 +5141,47 @@ UI_CAUSAL_EVENT_COMBAT_STARTED = Combat started
 UI_CAUSAL_EVENT_COMBAT_COMPLETED = Combat completed
 UI_AGENT_STATE_IN_COMBAT = In combat
 UI_COMBAT_HP_AFTER = HP after
+
+HUD_SETTLEMENTS = Settlements
+
+HUD_DAY_FMT = Day %d
+
+HUD_PHASE_DAY = Daytime
+
+HUD_PHASE_NIGHT = Night
+
+HUD_BERRIES = Berries
+
+HUD_FEED_SETTLEMENT_FORMED = Settlement %d founded
+
+HUD_FEED_SETTLEMENT_DISSOLVED = Settlement %d abandoned
+
+HUD_FEED_SITE_STARTED = Construction %d started
+
+HUD_FEED_SITE_COMPLETED = Construction %d finished
+
+HUD_FEED_AGENT_BORN = A child was born (population %d)
+
+INSPECTOR_AGENT_FMT = Villager %d
+
+INSPECTOR_POS_FMT = Position (%d, %d)
+
+INSPECTOR_STATE_FMT = State: %s
+
+INSPECTOR_TARGET_FMT = Target: %s
+
+INSPECTOR_STATE_SEEKING = On the way
+
+INSPECTOR_STATE_WORKING = Busy
+
+INSPECTOR_TARGET_NONE = None
+
+INSPECTOR_TARGET_FOOD = Food
+
+INSPECTOR_TARGET_WATER = Water
+
+INSPECTOR_TARGET_SLEEP = Rest
+
+INSPECTOR_TARGET_BUILD = Construction
+
+INSPECTOR_TARGET_AGENT = Another villager

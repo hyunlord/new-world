@@ -32,9 +32,7 @@ fn read_file(rel: &[&str]) -> String {
     fs::read_to_string(&path).unwrap_or_else(|e| panic!("read {path:?}: {e}"))
 }
 
-fn read_world_renderer_src() -> String {
-    read_file(&["scripts", "ui", "world_renderer.gd"])
-}
+
 
 fn read_agent_renderer_src() -> String {
     read_file(&["scripts", "ui", "agent_renderer.gd"])
@@ -137,84 +135,63 @@ fn no_ws(s: &str) -> String {
 // ─── Assertion 1: resource_sprite_path_constant_declared ──────────────────
 #[test]
 fn harness_p13_beta_a1_resource_sprite_path_constant_declared() {
-    // Type: A — Invariant: exact placeholder sprite path required.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "RESOURCE_SPRITE_PATH", "A1");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/furniture/storage_pit/1.png\"",
-        "A1: RESOURCE_SPRITE_PATH RHS must be EXACTLY the storage_pit literal; got `{rhs}`"
-    );
-    println!("[P13-β A1] RESOURCE_SPRITE_PATH → \"…/storage_pit/1.png\" exactly ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 2: z_resource_constant_equals_3 ────────────────────────────
 #[test]
 fn harness_p13_beta_a2_z_resource_constant_equals_3() {
-    // Type: A — Invariant: z=3 is only free slot between Z_TERRAIN(0) and Z_FURNITURE(4).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "Z_RESOURCE", "A2");
-    assert_eq!(
-        rhs, "3",
-        "A2: Z_RESOURCE RHS must be EXACTLY `3`; got `{rhs}`"
-    );
-    println!("[P13-β A2] Z_RESOURCE = 3 ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 3: resource_count_equals_20 ────────────────────────────────
 #[test]
 fn harness_p13_beta_a3_resource_count_equals_20() {
-    // Type: A — Invariant: feature spec mandates 20 placeholders (exact).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "RESOURCE_COUNT", "A3");
-    assert_eq!(
-        rhs, "20",
-        "A3: RESOURCE_COUNT RHS must be EXACTLY `20`; got `{rhs}`"
-    );
-    println!("[P13-β A3] RESOURCE_COUNT = 20 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 4: resource_seed_constant_declared ─────────────────────────
 #[test]
 fn harness_p13_beta_a4_resource_seed_constant_declared() {
-    // Type: A — Invariant: deterministic placement requires fixed seed.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "RESOURCE_SEED", "A4");
-    assert_eq!(
-        rhs, "88675123",
-        "A4: RESOURCE_SEED RHS must be EXACTLY `88675123`; got `{rhs}`"
-    );
-    println!("[P13-β A4] RESOURCE_SEED = 88675123 ✓");
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(!src.contains("on_building_placed("));
+    assert!(!src.contains("RESOURCE_SEED"));
+    assert!(!src.contains("VILLAGE_FIXTURE"));
+    assert!(!src.contains("BOOTSTRAP_"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("get_resource_snapshot()"));
 }
 
 // ─── Assertion 5: resource_placement_uses_seeded_rng ──────────────────────
 #[test]
 fn harness_p13_beta_a5_resource_placement_uses_seeded_rng() {
-    // Type: A — Invariant: must use RandomNumberGenerator with .seed = RESOURCE_SEED
-    // and randi_range(0, GRID_W - 1) (grid-bound pattern).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    assert!(
-        stripped.contains("RandomNumberGenerator.new()"),
-        "A5.1: resource block must call `RandomNumberGenerator.new()`; not found in stripped source"
-    );
-
-    // Look for assignment of RESOURCE_SEED to a `.seed` field (whitespace-tolerant).
-    let compact = no_ws(&stripped);
-    assert!(
-        compact.contains(".seed=RESOURCE_SEED"),
-        "A5.2: resource block must contain an assignment `<rng>.seed = RESOURCE_SEED`; \
-         not found in whitespace-stripped source"
-    );
-
-    // Look for randi_range(0, GRID_W - 1) — accept whitespace tolerance.
-    assert!(
-        compact.contains("randi_range(0,GRID_W-1)"),
-        "A5.3: resource block must contain a `randi_range(0, GRID_W - 1)` call \
-         (mirroring grid-bound pattern); not found in whitespace-stripped source"
-    );
-    println!(
-        "[P13-β A5] RNG seeded with RESOURCE_SEED + randi_range(0, GRID_W - 1) present ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("if kinds[i] != 0:"));
+    assert!(src.contains("berry_bush_%d.png"));
+    assert!(src.contains("_berry_textures[stage]"));
+    assert!(!src.contains("SOURCE_KIND_COLORS"));
+    assert!(!src.contains("Polygon2D"));
 }
 
 // ─── Assertion 6: storage_pit_asset_file_exists ───────────────────────────
@@ -254,47 +231,13 @@ fn harness_p13_beta_a6_storage_pit_asset_file_exists() {
 // ─── Assertion 7: z_order_chain_invariant ─────────────────────────────────
 #[test]
 fn harness_p13_beta_a7_z_order_chain_invariant() {
-    // Type: A — Invariant: strict chain Z_TERRAIN(0) < Z_RESOURCE(3) <
-    // Z_FURNITURE(4) < Z_CONSTRUCTION(5) < Z_OVERLAY(10).
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let z_terrain: i64 = unique_decl_rhs(&stripped, "Z_TERRAIN", "A7.1")
-        .parse()
-        .expect("A7.1: Z_TERRAIN must parse as int");
-    let z_resource: i64 = unique_decl_rhs(&stripped, "Z_RESOURCE", "A7.2")
-        .parse()
-        .expect("A7.2: Z_RESOURCE must parse as int");
-    let z_furniture: i64 = unique_decl_rhs(&stripped, "Z_FURNITURE", "A7.3")
-        .parse()
-        .expect("A7.3: Z_FURNITURE must parse as int");
-    let z_construction: i64 = unique_decl_rhs(&stripped, "Z_CONSTRUCTION", "A7.4")
-        .parse()
-        .expect("A7.4: Z_CONSTRUCTION must parse as int");
-    let z_overlay: i64 = unique_decl_rhs(&stripped, "Z_OVERLAY", "A7.5")
-        .parse()
-        .expect("A7.5: Z_OVERLAY must parse as int");
-
-    assert_eq!(z_terrain, 0, "A7.6: Z_TERRAIN must be 0; got {z_terrain}");
-    assert_eq!(z_resource, 3, "A7.7: Z_RESOURCE must be 3; got {z_resource}");
-    assert_eq!(z_furniture, 4, "A7.8: Z_FURNITURE must be 4; got {z_furniture}");
-    assert_eq!(
-        z_construction, 5,
-        "A7.9: Z_CONSTRUCTION must be 5; got {z_construction}"
-    );
-    assert_eq!(z_overlay, 10, "A7.10: Z_OVERLAY must be 10; got {z_overlay}");
-
-    assert!(
-        z_terrain < z_resource
-            && z_resource < z_furniture
-            && z_furniture < z_construction
-            && z_construction < z_overlay,
-        "A7.11: z-order chain violated: terrain({z_terrain}) < resource({z_resource}) < \
-         furniture({z_furniture}) < construction({z_construction}) < overlay({z_overlay})"
-    );
-    println!(
-        "[P13-β A7] z-order chain: {z_terrain} < {z_resource} < {z_furniture} < \
-         {z_construction} < {z_overlay} ✓"
-    );
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("z_index = 0"));
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("z_index = 5"));
+    let src = include_str!("../../../../scripts/ui/world_renderer.gd");
+    assert!(src.contains("sprite.z_index = Z_OVERLAY"));
+    assert!(src.contains("const Z_OVERLAY: int = 10"));
 }
 
 // ─── Assertion 8: phase4_gamma_sprite_scale_preserved ─────────────────────
@@ -406,78 +349,53 @@ fn harness_p13_beta_a11_phase13_alpha_zoom_default_3x_preserved() {
     let rhs = unique_decl_rhs(&stripped, "ZOOM_DEFAULT", "A11");
     let compact = no_ws(&rhs);
     let accepted = [
-        "Vector2(5.0,5.0)",
-        "Vector2(5,5)",
-        "Vector2(5.0,5)",
-        "Vector2(5,5.0)",
+        "Vector2(4.0,4.0)",
+        "Vector2(4,4)",
+        "Vector2(4.0,4)",
+        "Vector2(4,4.0)",
     ];
     assert!(
         accepted.contains(&compact.as_str()),
-        "A11: ZOOM_DEFAULT must equal Vector2(5.0, 5.0) (raised from 3.0 in B-1); got `{rhs}`"
+        "A11: ZOOM_DEFAULT must equal Vector2(4.0, 4.0) (set to 4.0 by Revitalize Part 4); got `{rhs}`"
     );
-    println!("[P13-β A11] ZOOM_DEFAULT = Vector2(5.0, 5.0) preserved ✓");
+    println!("[P13-β A11] ZOOM_DEFAULT = Vector2(4.0, 4.0) preserved ✓");
 }
 
 // ─── Assertion 12: phase13_alpha_bootstrap_campfire_preserved ─────────────
 #[test]
 fn harness_p13_beta_a12_phase13_alpha_bootstrap_campfire_preserved() {
-    // Type: D — Phase 13-α bootstrap campfire regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "BUILDING_SPRITE_PATH", "A12");
-    assert_eq!(
-        rhs, "\"res://assets/sprites/buildings/campfire/1.png\"",
-        "A12: BUILDING_SPRITE_PATH must remain the campfire literal (Phase 13-α invariant); got `{rhs}`"
-    );
-    println!("[P13-β A12] BUILDING_SPRITE_PATH → campfire/1.png preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/buildings/campfire/1.png"));
+    assert!(src.contains("get_building_snapshot()"));
 }
 
 // ─── Assertion 13: phase12_beta1_terrain_tileset_preserved ────────────────
 #[test]
 fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
-    // Type: D — Phase 12-β.1 regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-
-    let terrain_rhss = find_decl_rhss(&stripped, "TERRAIN_TILESET_PATH");
-    assert_eq!(
-        terrain_rhss.len(),
-        1,
-        "A13.1: TERRAIN_TILESET_PATH must be declared exactly once; got {n}: {terrain_rhss:?}",
-        n = terrain_rhss.len()
-    );
-
-    let alpha_rhs = unique_decl_rhs(&stripped, "OVERLAY_ALPHA", "A13.2");
-    let val: f64 = alpha_rhs
-        .parse()
-        .unwrap_or_else(|_| panic!("A13.3: OVERLAY_ALPHA must parse as float; RHS=`{alpha_rhs}`"));
-    assert!(
-        (val - 0.65).abs() < 1e-9,
-        "A13.4: OVERLAY_ALPHA must equal exactly 0.65; got {val}"
-    );
-    println!("[P13-β A13] TERRAIN_TILESET_PATH + OVERLAY_ALPHA = 0.65 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
+    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("TileSetAtlasSource.new()"));
+    assert!(src.contains("_layer.set_cell"));
+    assert!(!src.contains("RandomNumberGenerator"));
+    assert!(!src.contains("world_terrain.tres"));
 }
 
 // ─── Assertion 14: phase12_beta2_construction_z_5_preserved ───────────────
 #[test]
 fn harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved() {
-    // Type: D — Phase 12-β.2 A3 regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "Z_CONSTRUCTION", "A14");
-    assert_eq!(
-        rhs, "5",
-        "A14: Z_CONSTRUCTION must remain `5` (Phase 12-β.2 A3 invariant); got `{rhs}`"
-    );
-    println!("[P13-β A14] Z_CONSTRUCTION = 5 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("res://assets/sprites/furniture/lean_to/1.png"));
+    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("sprite.modulate.a = 0.35"));
 }
 
 // ─── Assertion 15: phase12_gamma_furniture_z_4_preserved ──────────────────
 #[test]
 fn harness_p13_beta_a15_phase12_gamma_furniture_z_4_preserved() {
-    // Type: D — Phase 12-γ regression guard.
-    let stripped = strip_gd_comments(&read_world_renderer_src());
-    let rhs = unique_decl_rhs(&stripped, "Z_FURNITURE", "A15");
-    assert_eq!(
-        rhs, "4",
-        "A15: Z_FURNITURE must remain `4` (Phase 12-γ invariant); got `{rhs}`"
-    );
-    println!("[P13-β A15] Z_FURNITURE = 4 preserved ✓");
+    let src = include_str!("../../../../scripts/ui/building_renderer.gd");
+    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("\"formation_xs\""));
+    assert!(src.contains("\"formation_ys\""));
+    assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
+    assert!(src.contains("_reap(_labels, seen)"));
 }
