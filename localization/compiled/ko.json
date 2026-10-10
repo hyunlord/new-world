@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5175,
+    "active_key_count": 5179,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5180,
+    "key_count": 5184,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1295,8 +1295,12 @@
     "HUD_SPEED_FMT": "속도 %s배",
     "HUD_STOCKPILE_FOOD": "식량",
     "INSPECTOR_AGENT_FMT": "주민 %d",
+    "INSPECTOR_AGE_FMT": "나이 %d일",
     "INSPECTOR_CARRYING_FMT": "식량 %d개 운반 중",
     "INSPECTOR_POS_FMT": "위치 (%d, %d)",
+    "INSPECTOR_STAGE_ADULT": "어른",
+    "INSPECTOR_STAGE_CHILD": "아이",
+    "INSPECTOR_STAGE_ELDER": "노인",
     "INSPECTOR_STATE_FMT": "상태: %s",
     "INSPECTOR_STATE_SEEKING": "이동 중",
     "INSPECTOR_STATE_WORKING": "작업 중",

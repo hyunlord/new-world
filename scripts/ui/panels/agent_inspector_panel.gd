@@ -52,6 +52,7 @@ var _selected_entity_bits: int = -1
 var _bar_headers: Array[Label] = []
 var _vbox: VBoxContainer
 var _label_id: Label
+var _label_age: Label
 var _label_pos: Label
 var _label_state: Label
 var _label_target: Label
@@ -83,6 +84,8 @@ func _ready() -> void:
 	_portrait = Sprite2D.new()
 	_portrait.position = Vector2(164, 120)
 	portrait_box.add_child(_portrait)
+	_label_age = _make_label("")
+	_label_age.visible = false
 	_label_pos = _make_label("")
 	_label_state = _make_label("")
 	_label_target = _make_label("")
@@ -155,6 +158,8 @@ func display_agent(detail: Dictionary) -> void:
 	_bar_headers[0].text = _loc("UI_HUNGER")
 	_bar_headers[1].text = _loc("NEED_THIRST")
 	_bar_headers[2].text = _loc("NEED_SLEEP")
+	_label_age.text = _age_line(agent_id)
+	_label_age.visible = not _label_age.text.is_empty()
 	_update_portrait(agent_id)
 	_carried_label.text = _loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id)
 	visible = true
@@ -239,3 +244,31 @@ func _carried_food(agent_id: int) -> int:
 			if ids[index] == agent_id:
 				return int(carried[index])
 	return 0
+
+
+func _age_line(agent_id: int) -> String:
+	if _world_sim == null:
+		return ""
+	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	if not (snapshot is Dictionary):
+		return ""
+	var data: Dictionary = snapshot
+	var ids: Variant = data.get("agent_ids", null)
+	var ages: Variant = data.get("ages_days", null)
+	var stages: Variant = data.get("life_stages", null)
+	if not (ids is PackedInt64Array and ages is PackedInt32Array and stages is PackedByteArray):
+		return ""
+	var stage_keys: Array[String] = ["INSPECTOR_STAGE_ADULT", "INSPECTOR_STAGE_CHILD", "INSPECTOR_STAGE_ELDER"]
+	for index: int in mini(ids.size(), mini(ages.size(), stages.size())):
+		if ids[index] != agent_id:
+			continue
+		var age: int = int(ages[index])
+		var stage: int = int(stages[index])
+		if age < 0 or stage >= stage_keys.size():
+			return ""
+		var age_format: String = _loc("INSPECTOR_AGE_FMT")
+		var stage_label: String = _loc(stage_keys[stage])
+		if age_format == "INSPECTOR_AGE_FMT" or stage_label == stage_keys[stage]:
+			return ""
+		return "%s · %s" % [stage_label, age_format % age]
+	return ""
