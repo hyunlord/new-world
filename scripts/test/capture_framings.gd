@@ -38,8 +38,8 @@ func _init() -> void:
 			push_error("capture: unknown or missing argument: " + args[i])
 			quit(2)
 			return
-	if _out.is_empty() or _plan not in ["baseline", "final", "art", "calibration"]:
-		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|calibration")
+	if _out.is_empty() or _plan not in ["baseline", "final", "art", "art_long", "calibration"]:
+		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|art_long|calibration")
 		quit(2)
 		return
 	call_deferred("_run")
@@ -85,6 +85,8 @@ func _run() -> void:
 		_fail("clock plan requires 1440 ticks per day")
 		return
 	var plan: Array[Array] = BASELINE if _plan == "baseline" else (CapturePlans.ART if _plan == "art" else FINAL)
+	if _plan == "art_long":
+		plan = CapturePlans.ART_LONG
 	for shot: Array in plan:
 		var target: int = int(shot[0])
 		var framing: String = str(shot[1])
@@ -93,7 +95,8 @@ func _run() -> void:
 			var clock: PackedStringArray = str(shot[1]).split(":")
 			target = (int(shot[0]) - 1) * 1440 + int(clock[0]) * 60 + int(clock[1]) - _clock_offset
 			framing = str(shot[2])
-			stem = ("a_" if _plan == "art" else "") + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
+			var prefix: String = "a_" if _plan == "art" else ("l_" if _plan == "art_long" else "")
+			stem = prefix + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
@@ -122,7 +125,7 @@ func _run() -> void:
 			var renderer: Node = _main.get_node_or_null(node_name)
 			if renderer != null and renderer.has_method("refresh_snapshot"):
 				renderer.call("refresh_snapshot")
-		await create_timer(0.4).timeout
+		await create_timer(1.15).timeout
 		for frame: int in range(5):
 			await process_frame
 		await RenderingServer.frame_post_draw
@@ -264,12 +267,14 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var rows: Array[Dictionary] = []
 	rows = Metadata.entities(_main, viewport, pixel_scale)
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
+	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
 	var data: Dictionary = {
 		"schema_version": 3, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
-		"agent_snapshot": _json_arrays(_world.call("get_agent_snapshot")),
+		"agent_snapshot": _json_arrays(agent_snapshot),
+		"life_stage_counts": Metadata.life_stage_counts(agent_snapshot),
 		"time_snapshot": _json_arrays(_world.call("get_time_snapshot")),
 		"tallies": _json_arrays(_world.call("get_tallies")),
 		"recent_deaths": _json_arrays(_world.call("get_recent_deaths")),

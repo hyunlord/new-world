@@ -7,6 +7,12 @@ const ART: Array[Array] = [
 	[2, "19:30", "F2"], [2, "23:00", "F2N"], [6, "12:00", "F2"],
 ]
 
+const ART_LONG: Array[Array] = [
+	[10, "12:00", "F2"], [18, "12:00", "F2"],
+	[24, "12:00", "F2"], [24, "12:00", "F1"], [24, "23:00", "F2N"],
+	[32, "12:00", "F2"], [40, "12:00", "F2"],
+]
+
 
 static func moving_agent(world: Node) -> int:
 	var snap: Dictionary = world.call("get_agent_snapshot")

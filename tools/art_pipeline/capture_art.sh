@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 PLAN="${1:-art}"
 DOCS="${2:-docs/art/production/shots}"
-case "$PLAN" in baseline|final|art|calibration) ;; *) echo 'Usage: capture_art.sh baseline|final|art|calibration <docs_dir>' >&2; exit 2;; esac
+case "$PLAN" in baseline|final|art|art_long|calibration) ;; *) echo 'Usage: capture_art.sh baseline|final|art|art_long|calibration <docs_dir>' >&2; exit 2;; esac
 case "$DOCS" in docs/art/*|"$ROOT"/docs/art/*) ;; *) echo 'Output must be under docs/art/.' >&2; exit 2;; esac
 [[ -d /Users/rexxa/work/.worldsim-godot-window.lock ]] || { echo 'Run capture_art.sh through with_window_lock.sh.' >&2; exit 2; }
 [[ "$(uname -s)" == Darwin && "$(launchctl managername)" == Aqua ]] || { echo 'Capture requires the Mac Aqua session.' >&2; exit 77; }
@@ -56,7 +56,7 @@ for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence
         shutil.copy2(raw / extra, docs / extra)
 published = json.loads(json.dumps(manifest))
 for metadata in docs.glob('*.json'):
-    if metadata.name == 'manifest.json':
+    if metadata.name == 'manifest.json' or metadata.name.startswith('manifest_'):
         continue
     compact = (json.dumps(json.loads(metadata.read_text()), ensure_ascii=False, separators=(',', ':')) + '\n').encode()
     metadata.with_suffix('.json.gz').write_bytes(gzip.compress(compact, mtime=0))
@@ -64,7 +64,20 @@ for metadata in docs.glob('*.json'):
 for capture in published['captures']:
     if (docs / (capture['entities'] + '.gz')).exists():
         capture['entities'] += '.gz'
-(docs / 'manifest.json').write_text(json.dumps(published, indent=2) + '\n')
+(docs / ('manifest_' + manifest['plan'] + '.json')).write_text(json.dumps(published, indent=2) + '\n')
+combined = published
+if manifest['plan'] in {'art', 'art_long'}:
+    sibling_plan = 'art_long' if manifest['plan'] == 'art' else 'art'
+    sibling_path = docs / ('manifest_' + sibling_plan + '.json')
+    if sibling_path.exists():
+        sibling = json.loads(sibling_path.read_text())
+        if sibling['git_sha'] != published['git_sha']:
+            raise ValueError('Cannot combine capture plans from different commits')
+        combined = dict(published)
+        combined['plan'] = 'art+art_long'
+        combined['captures'] = (published['captures'] + sibling['captures'] if manifest['plan'] == 'art' else sibling['captures'] + published['captures'])
+        combined['plan_manifests'] = ['manifest_art.json', 'manifest_art_long.json']
+(docs / 'manifest.json').write_text(json.dumps(combined, indent=2) + '\n')
 (raw / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
 print(f"Published {len(manifest['captures'])} captures; raw framebuffers: {raw}")
 PY

@@ -27,6 +27,15 @@ static func rect_array(rect: Rect2) -> Array[float]:
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 
 
+static func life_stage_counts(snapshot: Dictionary) -> Dictionary:
+	var counts: Dictionary = {"adult": 0, "child": 0, "elder": 0, "unknown": 0}
+	var stages: Variant = snapshot.get("life_stages", PackedByteArray())
+	for stage: int in stages:
+		var key: String = ["adult", "child", "elder"][stage] if stage >= 0 and stage <= 2 else "unknown"
+		counts[key] += 1
+	return counts
+
+
 static func tagged_nodes(parent: Node) -> Array[Node]:
 	var result: Array[Node] = []
 	if parent == null:
@@ -51,8 +60,10 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 			"visible": item.is_visible_in_tree() and rect.intersects(Rect2(Vector2.ZERO, viewport)),
 			"shown": item.is_visible_in_tree(),
 			"node_path": str(main.get_path_to(node)),
+			"modulate": [item.modulate.r, item.modulate.g, item.modulate.b, item.modulate.a],
+			"self_modulate": [item.self_modulate.r, item.self_modulate.g, item.self_modulate.b, item.self_modulate.a],
 		}
-		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind"]:
+		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "pose", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
 		if node is Sprite2D:
