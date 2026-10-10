@@ -4,7 +4,7 @@
 - PROD_BASE_SHA:0941e1b76ee250a017295fe923f7c0841dafaaa7. Direction merge:b5ead380c3eed047f6689224763d3713f7e5b02c, clean merge.
 - Only the fresh /Users/rexxa/work/new-world-art-prod clone is modified. WIP gets each Part; green only advances after full gate. No simulation/bridge changes, no harness hooks.
 - D3 throughout; muted D3 ground only. No D1/D2 assets installed.
-- Image budget60 including failures; checkpoints20/40. No calls yet. Windowed runs always use shared lock; headless checks do not.
+- Image budget60 including failures; checkpoints20/40. Final calls:42; see IMAGE_BUDGET.json. Windowed runs always use shared lock; headless checks do not.
 - Explicit task approval supersedes skill approval gates and generic lead/main reset workflow. Work follows the supplied Parts, preserving failed checks honestly.
 
 ## Part 0 baseline
@@ -26,3 +26,11 @@ Full gatepassed all13rows (cargo315s,Clippy1s,strict4s,bridge1s,smoke7s,Python2s
 ## Evidence storage
 
 Productioncontact sheets preserve the specified6xlayout but publishJPEG85 to respect40MBdocsbudget; rawgeneratedPNGandper-cellacceptedPNG remainlossless. Integrationcheckpointkeeps onlynoonpreviewandverdict inGit, all10rawcaptures andentityJSON remainin `.harness/evidence/art-integrated/shots/final`. Fullfinalartevidencewillbepublishedseparately. Commit784fdc0a title saysflint, butitsacceptedcellisN2_05smallboulder; manifest/report areauthoritative.
+
+## Final production and capture decisions
+
+42 generations ended after required bounded character/structure retries and the checkpoint40 fallback route. Unique accepted generated cells13, procedural cells243; accepted-per-attempt26 includes13 preserved repeats. Every raw was1254x1254 despite1024 requested. No resampling or relaxed thresholds. Adult sleep now uses exact rotation of accepted narrow N-walk bodyB, with the view/body substitution declared. Direction-specific identity and two distinct adult bodies remain unmet.
+
+Real art capture run at dc55c9a663320b57047c1ba50a6298e8164a06d0 produced92/92 frames. Documentation and static-test work was concurrent; render source matched that commit. Code gate and art acceptance remain separate. A5 min0.0548 and8unmeasurable occluded villagers fail; A11 blind labels saved before key reveal scored4/24 at both zooms. Ground chroma reduction cannot remove occlusion or provide missing activity silhouettes, so it was not used to chase the metric. Prescribed tree density was retained. The two bounded asset review rounds are complete.
+
+Publishing entity metadata with whitespace removed saves5,106,833bytes without changing JSON values; raw pretty JSON and framebuffers remain under .harness. GIFs each preserve40frames and stay under8MB. Native Godot visual QA uses real framebuffer checker/y-sort/ramp measurements plus two independent read-only visual reviews; web DOM/Lighthouse checks do not apply.

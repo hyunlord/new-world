@@ -25,3 +25,7 @@ These are node/data checks, not windowed pixel acceptance. The atlas inspection 
 - Activity mappings have the expected adult groups for idle, walk, carry, gather, build, drink, eat, talk, sit, and asleep. Child unsupported work/carry activities fall back to available idles; they must not be counted as distinct child activity art.
 - Generated/accepted status and procedural/fallback status remain separate. A filled slot is not a verified new view or a distinct body.
 - Windowed strip and calibration checks remain the authority for actual on-screen animation, palette output, y sorting, and pixel blocks.
+
+## Resolved final rest refresh
+
+The adult sleeping-bar and detached sitting-leg findings were repaired in253c71c6023e81ba5d52bdbdb9b791932be1cf36. See rest_fallback_refresh.json. Both adult sleeping natives are28x14 exact rotations of the accepted13x28 N-walk frame, with explicit identity/view substitution. Direction/body duplication remains unresolved.

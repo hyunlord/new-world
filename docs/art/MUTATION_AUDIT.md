@@ -42,3 +42,15 @@ These five rows alter failure messages rather than inspected source predicates. 
 | 333 | `harness_needs_a5_renderer_and_bridge_contract` | renderer draws native warning atlas regions |
 
 This audit verifies the changed source-inspection assertions. It does not establish visual quality, simulation correctness or device acceptance.
+
+## Art Production geometry delta — 2026-10-10
+
+**PASS: 7/7 additional semantic geometry mutants killed**, with no survivors or invalid results, against `a4c168fb684bd17e743d03bb152acfa71b8c558f`. This extends, rather than replaces, the 467-mutant audit at `0189eead423c0496bda04d93b2e2da57a3efea27`.
+
+The workspace gate exposed four legacy overlap tests still assuming a 204px inspector top, 280px width and top-right news. Their new checks read the actual inspector/news/topbar rectangles and preserve both non-overlap relationships and right-edge alignment. Seven added ledger rows are individually mapped in the [delta accounting](production/mutation-delta/assertion-accounting.json).
+
+All seven mutants are valid GDScript substitutions: altered top/width, disconnected constant bindings, shifted right alignment, and actual inspector overlap with news or topbar. They fail the intended geometry checks without relying on malformed source. The audit used the same isolated worktree, separate Cargo target and eight jobs. It restored every source file and finished clean.
+
+Elapsed delta execution: **2.673 seconds**, including its baselines. [Raw results](production/mutation-delta/results.jsonl) contain exact baseline and mutant log paths; logs are retained in the same directory. See the [delta summary](production/mutation-delta/summary.json) and [reproducible driver](production/mutation-delta/run_delta.py).
+
+Every source/test path covered by the earlier 467-mutant audit was compared between the two target commits and remained byte-identical; [comparison record](production/mutation-delta/prior-audit-validity.json). The combined evidence is therefore **474 killed mutants across two explicit target commits**, covering **343 ledger rows: 338 killed and 5 diagnostic-only reasons**. The original 291 unmapped inventory candidates remain outside the requested changed-assertion scope and unexecuted.
