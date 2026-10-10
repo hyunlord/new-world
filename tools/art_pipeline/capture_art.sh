@@ -22,6 +22,7 @@ bash tools/art_pipeline/run_bounded.sh 1100 "$GODOT_BIN" --path . --rendering-dr
     --script res://scripts/test/capture_framings.gd -- --out "$out" --plan "$PLAN"
 python3 - "$out" "$DOCS" <<'PY'
 import json
+import gzip
 import hashlib
 from pathlib import Path
 import shutil
@@ -53,7 +54,17 @@ for capture in manifest['captures']:
 for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
-(docs / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+published = json.loads(json.dumps(manifest))
+for metadata in docs.glob('*.json'):
+    if metadata.name == 'manifest.json':
+        continue
+    compact = (json.dumps(json.loads(metadata.read_text()), ensure_ascii=False, separators=(',', ':')) + '\n').encode()
+    metadata.with_suffix('.json.gz').write_bytes(gzip.compress(compact, mtime=0))
+    metadata.unlink()
+for capture in published['captures']:
+    if (docs / (capture['entities'] + '.gz')).exists():
+        capture['entities'] += '.gz'
+(docs / 'manifest.json').write_text(json.dumps(published, indent=2) + '\n')
 (raw / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
 print(f"Published {len(manifest['captures'])} captures; raw framebuffers: {raw}")
 PY

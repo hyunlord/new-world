@@ -48,3 +48,9 @@
 - Part4 종료 / Part5 시작: 2026-10-10T14:37:18Z. Renderer uses metadata groups and shared frame/icon helpers, no D3 catchall. Activity + 1000-ID elder headless tests PASS; strict 23files/15FFIcalls PASS. No stage2 preserves original appearance; with elders adult hair0–2 and elder3–4. Windowed visual acceptance remains Part7.
 
 - Part5 종료 / Part6 시작: 2026-10-10T14:43:34Z. Grove gain0.55→0.65 based on actual captureseed20261010. Final rendered326/1190forest=27.395%; fresh reload identical, clearing violations0. Seven Godot tests +strictPASS. Canopyprocess afteragentinterpolation fixed actualscene one-framebug; parentbenchmark635.067us for200agents/400trees excludesGPU. Season day_of_season assumes0-based; verify againstlatestgreen inPart7. Missingkeys restorewhite. No Rustassertion changed, so no new mutation targets.
+
+## Part 7: measured visual limits and evidence budget
+
+- Preserve A1/A5/A11 failures; thresholds unchanged. A13 shape difference is not proof of recognizable activity, particularly idle+icon carry fallbacks.
+- Public sidecars use lossless gzip with JSON manifest paths; raw original JSON/framebuffers remain under `.harness/evidence/art-production2`. This reduces docs from 52.24 MB to below 40 MB without changing frozen review evidence.
+- Window capture began at Part 6 HEAD with capture-tool edits, committed as `5433649a` during the run; no rendering source changed. Calibration ran at that committed head.
