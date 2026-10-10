@@ -14,3 +14,7 @@ Full baseline gate passed: cargo test 322s, Clippy14s, strict GDScript4s, bridge
 ## Production rendering decisions
 
 Under 200 villagers and 1,500 trees use pooled Sprite2D on one y-sorted layer. A y-sorted MultiMesh is reserved for a later 10k-agent renderer. Camera tween samples are snapped to the integer ladder, preserving nearest texels during the0.12s transition. The explicit art bible and BRIEF are the design system; web-specific Lighthouse/React rules do not apply to this native Godot surface.
+
+## Generation observations
+
+Calls1–4 requested1024×1024, but the built-in tool returned1254×1254. Raw files are preserved without resampling, and the converter measures their actual native grid. V_a1 andV_b1 accepted0/16 each; size and fidelity thresholds remain unchanged. After the first oversize sheet, prompts request less than half-cell figureheight and fewer flat colours; this is ordinary per-sheet size guidance, not the20-call checkpoint revision.
