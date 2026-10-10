@@ -1,0 +1,7548 @@
+{
+  "schema_version": 1,
+  "scale": {
+    "adult_height": 28,
+    "child_height": 21
+  },
+  "source_ledger": "docs/art/production2/candidates_round2.json",
+  "source_sha256": "b9b265abde5084727b02c016f7b616a27209d0796e7c3ab58f4c2fb6bdf36854",
+  "candidates": [
+    {
+      "id": "N3_01@1:p3decal",
+      "slot_id": "N3_01",
+      "sheet": "N3",
+      "cell": 1,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_01_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_01_1_p3decal/sprite.png"
+      },
+      "factor": 0.328042328042328,
+      "metrics": {
+        "native_before": [
+          21,
+          17
+        ],
+        "native_after": [
+          7,
+          6
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "new_period_xy": [
+          22.740967741935485,
+          22.740967741935485
+        ],
+        "phase_xy": [
+          0.4,
+          6.2
+        ],
+        "phase_origin_xy": [
+          -7.06,
+          -1.2599999999999998
+        ],
+        "sampling_phase_xy": [
+          15.680967741935486,
+          21.480967741935487
+        ],
+        "outlined_canvas": [
+          9,
+          8
+        ],
+        "factor": 0.328042328042328,
+        "mean_delta_e": 8.032749230844386,
+        "common_opaque": 27,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          102,
+          135,
+          258,
+          262
+        ],
+        "detected_period_xy": [
+          7.46,
+          6.9399999999999995
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "phase_xy": [
+          0.4,
+          6.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.1817425417765212
+        ],
+        "native_size": [
+          21,
+          17
+        ],
+        "spill_removed": 38,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_01@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_02@1:p3decal",
+      "slot_id": "N3_02",
+      "sheet": "N3",
+      "cell": 2,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_02_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_02_1_p3decal/sprite.png"
+      },
+      "factor": 0.2857142857142857,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          5.72,
+          5.72
+        ],
+        "new_period_xy": [
+          20.02,
+          20.02
+        ],
+        "phase_xy": [
+          5.0,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -0.7199999999999998,
+          -0.8199999999999994
+        ],
+        "sampling_phase_xy": [
+          19.3,
+          19.2
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.2857142857142857,
+        "mean_delta_e": 11.520405414956869,
+        "common_opaque": 38,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          84,
+          125,
+          243,
+          262
+        ],
+        "detected_period_xy": [
+          5.72,
+          5.74
+        ],
+        "period_xy": [
+          5.72,
+          5.72
+        ],
+        "phase_xy": [
+          5.0,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.08903837395239646
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 80,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_02@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_03@1:p3decal",
+      "slot_id": "N3_03",
+      "sheet": "N3",
+      "cell": 3,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_03_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_03_1_p3decal/sprite.png"
+      },
+      "factor": 0.3076923076923077,
+      "metrics": {
+        "native_before": [
+          25,
+          26
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "new_period_xy": [
+          19.175,
+          19.175
+        ],
+        "phase_xy": [
+          0.5,
+          0.7000000000000001
+        ],
+        "phase_origin_xy": [
+          -5.4,
+          -5.2
+        ],
+        "sampling_phase_xy": [
+          13.775,
+          13.975000000000001
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.3076923076923077,
+        "mean_delta_e": 10.361514379622175,
+        "common_opaque": 37,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          76,
+          110,
+          222,
+          263
+        ],
+        "detected_period_xy": [
+          5.78,
+          5.22
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "phase_xy": [
+          0.5,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.011945365298674826,
+          0.05967109662177249
+        ],
+        "native_size": [
+          25,
+          26
+        ],
+        "spill_removed": 76,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_03@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_04@1:p3decal",
+      "slot_id": "N3_04",
+      "sheet": "N3",
+      "cell": 4,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_4",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_04_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_04_1_p3decal/sprite.png"
+      },
+      "factor": 0.2857142857142857,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          5.5600000000000005,
+          5.5600000000000005
+        ],
+        "new_period_xy": [
+          19.460000000000004,
+          19.460000000000004
+        ],
+        "phase_xy": [
+          2.1,
+          0.0
+        ],
+        "phase_origin_xy": [
+          -3.4600000000000004,
+          -5.5600000000000005
+        ],
+        "sampling_phase_xy": [
+          16.000000000000004,
+          13.900000000000004
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.2857142857142857,
+        "mean_delta_e": 12.31375864620081,
+        "common_opaque": 38,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          61,
+          130,
+          214,
+          263
+        ],
+        "detected_period_xy": [
+          5.6,
+          5.8
+        ],
+        "period_xy": [
+          5.5600000000000005,
+          5.5600000000000005
+        ],
+        "phase_xy": [
+          2.1,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.013223401689329119,
+          1.2686081158097182
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 77,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_04@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_05@1:p3decal",
+      "slot_id": "N3_05",
+      "sheet": "N3",
+      "cell": 5,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_white",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_05_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_05_1_p3decal/sprite.png"
+      },
+      "factor": 0.2962962962962963,
+      "metrics": {
+        "native_before": [
+          27,
+          27
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "new_period_xy": [
+          19.575,
+          19.575
+        ],
+        "phase_xy": [
+          4.800000000000001,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -0.9999999999999991,
+          -0.8999999999999995
+        ],
+        "sampling_phase_xy": [
+          18.575,
+          18.675
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.2962962962962963,
+        "mean_delta_e": 5.759039795740995,
+        "common_opaque": 45,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          103,
+          99,
+          260,
+          252
+        ],
+        "detected_period_xy": [
+          7.52,
+          5.8
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          4.800000000000001,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.5877836200007519,
+          0.0
+        ],
+        "native_size": [
+          27,
+          27
+        ],
+        "spill_removed": 64,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_05@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_06@1:p3decal",
+      "slot_id": "N3_06",
+      "sheet": "N3",
+      "cell": 6,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_yellow",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_06_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_06_1_p3decal/sprite.png"
+      },
+      "factor": 0.38095238095238093,
+      "metrics": {
+        "native_before": [
+          21,
+          20
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "new_period_xy": [
+          20.475,
+          20.475
+        ],
+        "phase_xy": [
+          5.0,
+          4.3
+        ],
+        "phase_origin_xy": [
+          -2.8000000000000007,
+          -3.500000000000001
+        ],
+        "sampling_phase_xy": [
+          17.675,
+          16.975
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.38095238095238093,
+        "mean_delta_e": 19.26127795226714,
+        "common_opaque": 43,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          84,
+          99,
+          245,
+          253
+        ],
+        "detected_period_xy": [
+          4.9,
+          7.800000000000001
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "phase_xy": [
+          5.0,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.19787800866428717,
+          0.0
+        ],
+        "native_size": [
+          21,
+          20
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_06@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_07@1:p3decal",
+      "slot_id": "N3_07",
+      "sheet": "N3",
+      "cell": 7,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_purple",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_07_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_07_1_p3decal/sprite.png"
+      },
+      "factor": 0.2857142857142857,
+      "metrics": {
+        "native_before": [
+          28,
+          27
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "new_period_xy": [
+          19.950000000000003,
+          19.950000000000003
+        ],
+        "phase_xy": [
+          0.8,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -4.9,
+          -0.7999999999999998
+        ],
+        "sampling_phase_xy": [
+          15.050000000000002,
+          19.150000000000002
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.2857142857142857,
+        "mean_delta_e": 5.796295113277134,
+        "common_opaque": 30,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          68,
+          100,
+          228,
+          252
+        ],
+        "detected_period_xy": [
+          6.62,
+          5.72
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "phase_xy": [
+          0.8,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.4166595982478223,
+          0.06045885857772763
+        ],
+        "native_size": [
+          28,
+          27
+        ],
+        "spill_removed": 110,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_07@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_08@1:p3decal",
+      "slot_id": "N3_08",
+      "sheet": "N3",
+      "cell": 8,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_red",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_08_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_08_1_p3decal/sprite.png"
+      },
+      "factor": 0.2857142857142857,
+      "metrics": {
+        "native_before": [
+          28,
+          27
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "new_period_xy": [
+          19.88,
+          19.88
+        ],
+        "phase_xy": [
+          0.2,
+          0.0
+        ],
+        "phase_origin_xy": [
+          -5.4799999999999995,
+          -5.68
+        ],
+        "sampling_phase_xy": [
+          14.399999999999999,
+          14.2
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.2857142857142857,
+        "mean_delta_e": 14.326010765997905,
+        "common_opaque": 43,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 13,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          56,
+          99,
+          212,
+          250
+        ],
+        "detected_period_xy": [
+          6.48,
+          5.7
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          0.2,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.3766416912991695,
+          0.03555837894824586
+        ],
+        "native_size": [
+          28,
+          27
+        ],
+        "spill_removed": 74,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_08@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_09@1:p3decal",
+      "slot_id": "N3_09",
+      "sheet": "N3",
+      "cell": 9,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_09_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_09_1_p3decal/sprite.png"
+      },
+      "factor": 0.2551440329218107,
+      "metrics": {
+        "native_before": [
+          26,
+          27
+        ],
+        "native_after": [
+          7,
+          7
+        ],
+        "period_xy": [
+          5.3,
+          5.3
+        ],
+        "new_period_xy": [
+          20.772580645161288,
+          20.772580645161288
+        ],
+        "phase_xy": [
+          0.6000000000000001,
+          0.4
+        ],
+        "phase_origin_xy": [
+          -4.699999999999999,
+          -4.8999999999999995
+        ],
+        "sampling_phase_xy": [
+          16.07258064516129,
+          15.872580645161289
+        ],
+        "outlined_canvas": [
+          9,
+          9
+        ],
+        "factor": 0.2551440329218107,
+        "mean_delta_e": 11.388464239469359,
+        "common_opaque": 34,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 2,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          113,
+          90,
+          248,
+          234
+        ],
+        "detected_period_xy": [
+          4.98,
+          5.3
+        ],
+        "period_xy": [
+          5.3,
+          5.3
+        ],
+        "phase_xy": [
+          0.6000000000000001,
+          0.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.303800277321008,
+          0.0
+        ],
+        "native_size": [
+          26,
+          27
+        ],
+        "spill_removed": 80,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_09@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_10@1:p3decal",
+      "slot_id": "N3_10",
+      "sheet": "N3",
+      "cell": 10,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_10_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_10_1_p3decal/sprite.png"
+      },
+      "factor": 0.32,
+      "metrics": {
+        "native_before": [
+          24,
+          25
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.86,
+          5.86
+        ],
+        "new_period_xy": [
+          18.3125,
+          18.3125
+        ],
+        "phase_xy": [
+          2.8000000000000003,
+          4.3
+        ],
+        "phase_origin_xy": [
+          -3.06,
+          -1.5600000000000005
+        ],
+        "sampling_phase_xy": [
+          15.2525,
+          16.752499999999998
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.32,
+        "mean_delta_e": 7.672135292403412,
+        "common_opaque": 46,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 10,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          90,
+          225,
+          234
+        ],
+        "detected_period_xy": [
+          6.04,
+          5.84
+        ],
+        "period_xy": [
+          5.86,
+          5.86
+        ],
+        "phase_xy": [
+          2.8000000000000003,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.26242221401164717,
+          0.044680395826434814
+        ],
+        "native_size": [
+          24,
+          25
+        ],
+        "spill_removed": 81,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_10@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_11@1:p3decal",
+      "slot_id": "N3_11",
+      "sheet": "N3",
+      "cell": 11,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_11_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_11_1_p3decal/sprite.png"
+      },
+      "factor": 0.26495726495726496,
+      "metrics": {
+        "native_before": [
+          26,
+          21
+        ],
+        "native_after": [
+          7,
+          6
+        ],
+        "period_xy": [
+          5.5,
+          5.5
+        ],
+        "new_period_xy": [
+          20.758064516129032,
+          20.758064516129032
+        ],
+        "phase_xy": [
+          1.3,
+          5.300000000000001
+        ],
+        "phase_origin_xy": [
+          -4.2,
+          -0.1999999999999993
+        ],
+        "sampling_phase_xy": [
+          16.558064516129033,
+          20.558064516129033
+        ],
+        "outlined_canvas": [
+          9,
+          8
+        ],
+        "factor": 0.26495726495726496,
+        "mean_delta_e": 7.408897172472513,
+        "common_opaque": 32,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          76,
+          113,
+          222,
+          228
+        ],
+        "detected_period_xy": [
+          7.0600000000000005,
+          5.46
+        ],
+        "period_xy": [
+          5.5,
+          5.5
+        ],
+        "phase_xy": [
+          1.3,
+          5.300000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09720634204710751,
+          0.02596178222251973
+        ],
+        "native_size": [
+          26,
+          21
+        ],
+        "spill_removed": 55,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_11@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_12@1:p3decal",
+      "slot_id": "N3_12",
+      "sheet": "N3",
+      "cell": 12,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_12_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_12_1_p3decal/sprite.png"
+      },
+      "factor": 0.3076923076923077,
+      "metrics": {
+        "native_before": [
+          26,
+          21
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          5.62,
+          5.62
+        ],
+        "new_period_xy": [
+          18.265,
+          18.265
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.7000000000000001
+        ],
+        "phase_origin_xy": [
+          -0.3199999999999994,
+          -4.92
+        ],
+        "sampling_phase_xy": [
+          17.945,
+          13.345
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.3076923076923077,
+        "mean_delta_e": 7.67806927044742,
+        "common_opaque": 37,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          66,
+          107,
+          210,
+          225
+        ],
+        "detected_period_xy": [
+          6.08,
+          5.62
+        ],
+        "period_xy": [
+          5.62,
+          5.62
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.27771496943272506,
+          0.0
+        ],
+        "native_size": [
+          26,
+          21
+        ],
+        "spill_removed": 58,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_12@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_13@1:p3decal",
+      "slot_id": "N3_13",
+      "sheet": "N3",
+      "cell": 13,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_13_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_13_1_p3decal/sprite.png"
+      },
+      "factor": 0.3333333333333333,
+      "metrics": {
+        "native_before": [
+          24,
+          21
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "new_period_xy": [
+          17.1,
+          17.1
+        ],
+        "phase_xy": [
+          4.2,
+          0.5
+        ],
+        "phase_origin_xy": [
+          -1.5,
+          -5.2
+        ],
+        "sampling_phase_xy": [
+          15.600000000000001,
+          11.900000000000002
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.3333333333333333,
+        "mean_delta_e": 8.04053402605949,
+        "common_opaque": 49,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          112,
+          78,
+          246,
+          199
+        ],
+        "detected_period_xy": [
+          5.08,
+          5.8
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "phase_xy": [
+          4.2,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.402026190613071,
+          0.03841612859856144
+        ],
+        "native_size": [
+          24,
+          21
+        ],
+        "spill_removed": 68,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_13@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_14@1:p3decal",
+      "slot_id": "N3_14",
+      "sheet": "N3",
+      "cell": 14,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_14_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_14_1_p3decal/sprite.png"
+      },
+      "factor": 0.23076923076923078,
+      "metrics": {
+        "native_before": [
+          26,
+          24
+        ],
+        "native_after": [
+          6,
+          6
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "new_period_xy": [
+          24.61333333333333,
+          24.61333333333333
+        ],
+        "phase_xy": [
+          3.5,
+          5.4
+        ],
+        "phase_origin_xy": [
+          -2.1799999999999997,
+          -0.27999999999999936
+        ],
+        "sampling_phase_xy": [
+          22.43333333333333,
+          24.33333333333333
+        ],
+        "outlined_canvas": [
+          8,
+          8
+        ],
+        "factor": 0.23076923076923078,
+        "mean_delta_e": 9.54767888879143,
+        "common_opaque": 23,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          62,
+          236,
+          199
+        ],
+        "detected_period_xy": [
+          5.58,
+          5.72
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          3.5,
+          5.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.6992790150985637,
+          0.024744275556113794
+        ],
+        "native_size": [
+          26,
+          24
+        ],
+        "spill_removed": 75,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_14@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 6
+    },
+    {
+      "id": "N3_15@1:p3decal",
+      "slot_id": "N3_15",
+      "sheet": "N3",
+      "cell": 15,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_15_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_15_1_p3decal/sprite.png"
+      },
+      "factor": 0.20689655172413793,
+      "metrics": {
+        "native_before": [
+          29,
+          27
+        ],
+        "native_after": [
+          6,
+          6
+        ],
+        "period_xy": [
+          5.24,
+          5.24
+        ],
+        "new_period_xy": [
+          25.326666666666668,
+          25.326666666666668
+        ],
+        "phase_xy": [
+          2.5,
+          0.30000000000000004
+        ],
+        "phase_origin_xy": [
+          -2.74,
+          -4.94
+        ],
+        "sampling_phase_xy": [
+          22.586666666666666,
+          20.386666666666667
+        ],
+        "outlined_canvas": [
+          8,
+          8
+        ],
+        "factor": 0.20689655172413793,
+        "mean_delta_e": 5.845010612840534,
+        "common_opaque": 20,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 7,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          73,
+          62,
+          222,
+          205
+        ],
+        "detected_period_xy": [
+          5.8,
+          5.24
+        ],
+        "period_xy": [
+          5.24,
+          5.24
+        ],
+        "phase_xy": [
+          2.5,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.8028666726698525,
+          0.0
+        ],
+        "native_size": [
+          29,
+          27
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_15@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 6
+    },
+    {
+      "id": "N3_16@1:p3decal",
+      "slot_id": "N3_16",
+      "sheet": "N3",
+      "cell": 16,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "lily",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_16_1_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_16_1_p3decal/sprite.png"
+      },
+      "factor": 0.26666666666666666,
+      "metrics": {
+        "native_before": [
+          30,
+          23
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          5.32,
+          5.32
+        ],
+        "new_period_xy": [
+          19.950000000000003,
+          19.950000000000003
+        ],
+        "phase_xy": [
+          0.9,
+          0.6000000000000001
+        ],
+        "phase_origin_xy": [
+          -4.42,
+          -4.720000000000001
+        ],
+        "sampling_phase_xy": [
+          15.530000000000003,
+          15.230000000000002
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.26666666666666666,
+        "mean_delta_e": 6.402685408037861,
+        "common_opaque": 43,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          56,
+          70,
+          214,
+          193
+        ],
+        "detected_period_xy": [
+          7.88,
+          5.28
+        ],
+        "period_xy": [
+          5.32,
+          5.32
+        ],
+        "phase_xy": [
+          0.9,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.0923469668104049,
+          0.014082624204264734
+        ],
+        "native_size": [
+          30,
+          23
+        ],
+        "spill_removed": 78,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_16@1",
+      "source_raw_sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_01@2:p3decal",
+      "slot_id": "N3_01",
+      "sheet": "N3",
+      "cell": 1,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_01_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_01_2_p3decal/sprite.png"
+      },
+      "factor": 0.5333333333333333,
+      "metrics": {
+        "native_before": [
+          15,
+          13
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "new_period_xy": [
+          14.85,
+          14.85
+        ],
+        "phase_xy": [
+          4.3,
+          6.800000000000001
+        ],
+        "phase_origin_xy": [
+          -3.62,
+          -1.1199999999999992
+        ],
+        "sampling_phase_xy": [
+          11.23,
+          13.73
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.5333333333333333,
+        "mean_delta_e": 15.433704614869894,
+        "common_opaque": 35,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          132,
+          162,
+          247,
+          265
+        ],
+        "detected_period_xy": [
+          4.62,
+          4.44
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "phase_xy": [
+          4.3,
+          6.800000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.08164698203257219,
+          0.26371649302735667
+        ],
+        "native_size": [
+          15,
+          13
+        ],
+        "spill_removed": 25,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_01@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_02@2:p3decal",
+      "slot_id": "N3_02",
+      "sheet": "N3",
+      "cell": 2,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_02_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_02_2_p3decal/sprite.png"
+      },
+      "factor": 0.5,
+      "metrics": {
+        "native_before": [
+          16,
+          14
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "new_period_xy": [
+          15.92,
+          15.92
+        ],
+        "phase_xy": [
+          4.0,
+          7.7
+        ],
+        "phase_origin_xy": [
+          -3.96,
+          -0.2599999999999998
+        ],
+        "sampling_phase_xy": [
+          11.96,
+          15.66
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.5,
+        "mean_delta_e": 14.793815488453825,
+        "common_opaque": 40,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          108,
+          153,
+          229,
+          265
+        ],
+        "detected_period_xy": [
+          7.96,
+          7.859999999999999
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          4.0,
+          7.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0029975371634971696
+        ],
+        "native_size": [
+          16,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_02@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_03@2:p3decal",
+      "slot_id": "N3_03",
+      "sheet": "N3",
+      "cell": 3,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_03_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_03_2_p3decal/sprite.png"
+      },
+      "factor": 0.47058823529411764,
+      "metrics": {
+        "native_before": [
+          17,
+          11
+        ],
+        "native_after": [
+          8,
+          5
+        ],
+        "period_xy": [
+          7.98,
+          7.98
+        ],
+        "new_period_xy": [
+          16.9575,
+          16.9575
+        ],
+        "phase_xy": [
+          2.7,
+          2.7
+        ],
+        "phase_origin_xy": [
+          -5.28,
+          -5.28
+        ],
+        "sampling_phase_xy": [
+          11.677499999999998,
+          11.677499999999998
+        ],
+        "outlined_canvas": [
+          10,
+          7
+        ],
+        "factor": 0.47058823529411764,
+        "mean_delta_e": 15.273923151274733,
+        "common_opaque": 28,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          81,
+          186,
+          206,
+          265
+        ],
+        "detected_period_xy": [
+          7.98,
+          7.16
+        ],
+        "period_xy": [
+          7.98,
+          7.98
+        ],
+        "phase_xy": [
+          2.7,
+          2.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.23830120869756422
+        ],
+        "native_size": [
+          17,
+          11
+        ],
+        "spill_removed": 15,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_03@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_04@2:p3decal",
+      "slot_id": "N3_04",
+      "sheet": "N3",
+      "cell": 4,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_4",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_04_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_04_2_p3decal/sprite.png"
+      },
+      "factor": 0.47058823529411764,
+      "metrics": {
+        "native_before": [
+          14,
+          17
+        ],
+        "native_after": [
+          7,
+          8
+        ],
+        "period_xy": [
+          7.76,
+          7.76
+        ],
+        "new_period_xy": [
+          16.49,
+          16.49
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.7
+        ],
+        "phase_origin_xy": [
+          -1.959999999999999,
+          -0.05999999999999961
+        ],
+        "sampling_phase_xy": [
+          14.53,
+          16.43
+        ],
+        "outlined_canvas": [
+          9,
+          10
+        ],
+        "factor": 0.47058823529411764,
+        "mean_delta_e": 11.20040957294425,
+        "common_opaque": 37,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          69,
+          132,
+          178,
+          265
+        ],
+        "detected_period_xy": [
+          7.76,
+          7.92
+        ],
+        "period_xy": [
+          7.76,
+          7.76
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.10096794484523515
+        ],
+        "native_size": [
+          14,
+          17
+        ],
+        "spill_removed": 25,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_04@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_05@2:p3decal",
+      "slot_id": "N3_05",
+      "sheet": "N3",
+      "cell": 5,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_white",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_05_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_05_2_p3decal/sprite.png"
+      },
+      "factor": 0.2857142857142857,
+      "metrics": {
+        "native_before": [
+          26,
+          28
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          4.38,
+          4.38
+        ],
+        "new_period_xy": [
+          15.33,
+          15.33
+        ],
+        "phase_xy": [
+          0.1,
+          1.7000000000000002
+        ],
+        "phase_origin_xy": [
+          -4.28,
+          -2.6799999999999997
+        ],
+        "sampling_phase_xy": [
+          11.05,
+          12.65
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.2857142857142857,
+        "mean_delta_e": 13.273235425224595,
+        "common_opaque": 42,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          132,
+          115,
+          245,
+          235
+        ],
+        "detected_period_xy": [
+          4.82,
+          4.48
+        ],
+        "period_xy": [
+          4.38,
+          4.38
+        ],
+        "phase_xy": [
+          0.1,
+          1.7000000000000002
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.2689350966773286,
+          0.058327382800361094
+        ],
+        "native_size": [
+          26,
+          28
+        ],
+        "spill_removed": 83,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_05@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_06@2:p3decal",
+      "slot_id": "N3_06",
+      "sheet": "N3",
+      "cell": 6,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_yellow",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_06_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_06_2_p3decal/sprite.png"
+      },
+      "factor": 0.5,
+      "metrics": {
+        "native_before": [
+          15,
+          16
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          7.9,
+          7.9
+        ],
+        "new_period_xy": [
+          15.8,
+          15.8
+        ],
+        "phase_xy": [
+          1.6,
+          6.800000000000001
+        ],
+        "phase_origin_xy": [
+          -6.300000000000001,
+          -1.0999999999999996
+        ],
+        "sampling_phase_xy": [
+          9.5,
+          14.700000000000001
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.5,
+        "mean_delta_e": 15.67676485202051,
+        "common_opaque": 47,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          110,
+          115,
+          225,
+          235
+        ],
+        "detected_period_xy": [
+          7.98,
+          7.7
+        ],
+        "period_xy": [
+          7.9,
+          7.9
+        ],
+        "phase_xy": [
+          1.6,
+          6.800000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.015318054872805123,
+          0.09839479952958
+        ],
+        "native_size": [
+          15,
+          16
+        ],
+        "spill_removed": 31,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_06@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_07@2:p3decal",
+      "slot_id": "N3_07",
+      "sheet": "N3",
+      "cell": 7,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_purple",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_07_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_07_2_p3decal/sprite.png"
+      },
+      "factor": 0.2962962962962963,
+      "metrics": {
+        "native_before": [
+          26,
+          27
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          4.44,
+          4.44
+        ],
+        "new_period_xy": [
+          14.985000000000003,
+          14.985000000000003
+        ],
+        "phase_xy": [
+          4.3,
+          4.4
+        ],
+        "phase_origin_xy": [
+          -0.14000000000000057,
+          -0.040000000000000036
+        ],
+        "sampling_phase_xy": [
+          14.845000000000002,
+          14.945000000000004
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.2962962962962963,
+        "mean_delta_e": 12.321584274073885,
+        "common_opaque": 40,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          89,
+          115,
+          205,
+          235
+        ],
+        "detected_period_xy": [
+          4.4,
+          4.44
+        ],
+        "period_xy": [
+          4.44,
+          4.44
+        ],
+        "phase_xy": [
+          4.3,
+          4.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.020676036944564668,
+          0.0
+        ],
+        "native_size": [
+          26,
+          27
+        ],
+        "spill_removed": 134,
+        "fringe_repaired": 2
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_07@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_08@2:p3decal",
+      "slot_id": "N3_08",
+      "sheet": "N3",
+      "cell": 8,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_red",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_08_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_08_2_p3decal/sprite.png"
+      },
+      "factor": 0.40522875816993464,
+      "metrics": {
+        "native_before": [
+          15,
+          17
+        ],
+        "native_after": [
+          7,
+          8
+        ],
+        "period_xy": [
+          7.42,
+          7.42
+        ],
+        "new_period_xy": [
+          18.31064516129032,
+          18.31064516129032
+        ],
+        "phase_xy": [
+          1.1,
+          1.2000000000000002
+        ],
+        "phase_origin_xy": [
+          -6.32,
+          -6.22
+        ],
+        "sampling_phase_xy": [
+          11.99064516129032,
+          12.090645161290322
+        ],
+        "outlined_canvas": [
+          9,
+          10
+        ],
+        "factor": 0.40522875816993464,
+        "mean_delta_e": 14.43684161437442,
+        "common_opaque": 34,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 9,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          72,
+          106,
+          183,
+          235
+        ],
+        "detected_period_xy": [
+          4.38,
+          7.359999999999999
+        ],
+        "period_xy": [
+          7.42,
+          7.42
+        ],
+        "phase_xy": [
+          1.1,
+          1.2000000000000002
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.49483058199915053,
+          0.014589354700496781
+        ],
+        "native_size": [
+          15,
+          17
+        ],
+        "spill_removed": 32,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_08@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_09@2:p3decal",
+      "slot_id": "N3_09",
+      "sheet": "N3",
+      "cell": 9,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_09_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_09_2_p3decal/sprite.png"
+      },
+      "factor": 0.4920634920634921,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          7,
+          8
+        ],
+        "period_xy": [
+          7.38,
+          7.38
+        ],
+        "new_period_xy": [
+          14.99806451612903,
+          14.99806451612903
+        ],
+        "phase_xy": [
+          0.4,
+          1.8
+        ],
+        "phase_origin_xy": [
+          -6.9799999999999995,
+          -5.58
+        ],
+        "sampling_phase_xy": [
+          8.01806451612903,
+          9.41806451612903
+        ],
+        "outlined_canvas": [
+          9,
+          10
+        ],
+        "factor": 0.4920634920634921,
+        "mean_delta_e": 6.356076254747797,
+        "common_opaque": 38,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 9,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          135,
+          92,
+          232,
+          199
+        ],
+        "detected_period_xy": [
+          7.24,
+          7.4
+        ],
+        "period_xy": [
+          7.38,
+          7.38
+        ],
+        "phase_xy": [
+          0.4,
+          1.8
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.11287565659062163,
+          0.039987963867814384
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_09@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_10@2:p3decal",
+      "slot_id": "N3_10",
+      "sheet": "N3",
+      "cell": 10,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_10_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_10_2_p3decal/sprite.png"
+      },
+      "factor": 0.5714285714285714,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          8,
+          8
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "new_period_xy": [
+          13.650000000000002,
+          13.650000000000002
+        ],
+        "phase_xy": [
+          5.4,
+          4.6000000000000005
+        ],
+        "phase_origin_xy": [
+          -2.4000000000000004,
+          -3.2
+        ],
+        "sampling_phase_xy": [
+          11.250000000000002,
+          10.450000000000003
+        ],
+        "outlined_canvas": [
+          10,
+          10
+        ],
+        "factor": 0.5714285714285714,
+        "mean_delta_e": 10.81077407329808,
+        "common_opaque": 40,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 10,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          116,
+          92,
+          214,
+          199
+        ],
+        "detected_period_xy": [
+          7.76,
+          4.72
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "phase_xy": [
+          5.4,
+          4.6000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.04642793496065471,
+          0.5765790966380265
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_10@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_11@2:p3decal",
+      "slot_id": "N3_11",
+      "sheet": "N3",
+      "cell": 11,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_11_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_11_2_p3decal/sprite.png"
+      },
+      "factor": 0.32,
+      "metrics": {
+        "native_before": [
+          25,
+          18
+        ],
+        "native_after": [
+          8,
+          6
+        ],
+        "period_xy": [
+          4.3,
+          4.3
+        ],
+        "new_period_xy": [
+          13.4375,
+          13.4375
+        ],
+        "phase_xy": [
+          1.8,
+          1.1
+        ],
+        "phase_origin_xy": [
+          -2.5,
+          -3.1999999999999997
+        ],
+        "sampling_phase_xy": [
+          10.9375,
+          10.2375
+        ],
+        "outlined_canvas": [
+          10,
+          8
+        ],
+        "factor": 0.32,
+        "mean_delta_e": 6.3917312890057305,
+        "common_opaque": 34,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          89,
+          112,
+          195,
+          191
+        ],
+        "detected_period_xy": [
+          4.36,
+          4.28
+        ],
+        "period_xy": [
+          4.3,
+          4.3
+        ],
+        "phase_xy": [
+          1.8,
+          1.1
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.031307235261781134,
+          0.020386617481315317
+        ],
+        "native_size": [
+          25,
+          18
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_11@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_12@2:p3decal",
+      "slot_id": "N3_12",
+      "sheet": "N3",
+      "cell": 12,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_12_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_12_2_p3decal/sprite.png"
+      },
+      "factor": 0.5333333333333333,
+      "metrics": {
+        "native_before": [
+          15,
+          12
+        ],
+        "native_after": [
+          8,
+          7
+        ],
+        "period_xy": [
+          7.88,
+          7.88
+        ],
+        "new_period_xy": [
+          14.775,
+          14.775
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          2.0
+        ],
+        "phase_origin_xy": [
+          -4.58,
+          -5.88
+        ],
+        "sampling_phase_xy": [
+          10.195,
+          8.895
+        ],
+        "outlined_canvas": [
+          10,
+          9
+        ],
+        "factor": 0.5333333333333333,
+        "mean_delta_e": 6.8559219429493465,
+        "common_opaque": 41,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          75,
+          100,
+          184,
+          192
+        ],
+        "detected_period_xy": [
+          7.88,
+          7.92
+        ],
+        "period_xy": [
+          7.88,
+          7.88
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0031816122317629035
+        ],
+        "native_size": [
+          15,
+          12
+        ],
+        "spill_removed": 21,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_12@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_13@2:p3decal",
+      "slot_id": "N3_13",
+      "sheet": "N3",
+      "cell": 13,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_13_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_13_2_p3decal/sprite.png"
+      },
+      "factor": 0.26495726495726496,
+      "metrics": {
+        "native_before": [
+          26,
+          20
+        ],
+        "native_after": [
+          7,
+          6
+        ],
+        "period_xy": [
+          4.28,
+          4.28
+        ],
+        "new_period_xy": [
+          16.153548387096777,
+          16.153548387096777
+        ],
+        "phase_xy": [
+          1.5,
+          1.0
+        ],
+        "phase_origin_xy": [
+          -2.7800000000000002,
+          -3.2800000000000002
+        ],
+        "sampling_phase_xy": [
+          13.373548387096776,
+          12.873548387096776
+        ],
+        "outlined_canvas": [
+          9,
+          8
+        ],
+        "factor": 0.26495726495726496,
+        "mean_delta_e": 6.547827211248227,
+        "common_opaque": 30,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          131,
+          67,
+          245,
+          155
+        ],
+        "detected_period_xy": [
+          4.3,
+          4.64
+        ],
+        "period_xy": [
+          4.28,
+          4.28
+        ],
+        "phase_xy": [
+          1.5,
+          1.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09019041991089913,
+          0.15352118906512355
+        ],
+        "native_size": [
+          26,
+          20
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_13@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_14@2:p3decal",
+      "slot_id": "N3_14",
+      "sheet": "N3",
+      "cell": 14,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_14_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_14_2_p3decal/sprite.png"
+      },
+      "factor": 0.4,
+      "metrics": {
+        "native_before": [
+          14,
+          15
+        ],
+        "native_after": [
+          6,
+          6
+        ],
+        "period_xy": [
+          7.66,
+          7.66
+        ],
+        "new_period_xy": [
+          19.15,
+          19.15
+        ],
+        "phase_xy": [
+          7.2,
+          2.6
+        ],
+        "phase_origin_xy": [
+          -0.45999999999999996,
+          -5.0600000000000005
+        ],
+        "sampling_phase_xy": [
+          18.689999999999998,
+          14.089999999999998
+        ],
+        "outlined_canvas": [
+          8,
+          8
+        ],
+        "factor": 0.4,
+        "mean_delta_e": 16.432623669364602,
+        "common_opaque": 21,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          115,
+          58,
+          217,
+          163
+        ],
+        "detected_period_xy": [
+          7.58,
+          7.68
+        ],
+        "period_xy": [
+          7.66,
+          7.66
+        ],
+        "phase_xy": [
+          7.2,
+          2.6
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.07366739454012074,
+          0.005323253670478692
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 19,
+        "fringe_repaired": 1
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_14@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 6
+    },
+    {
+      "id": "N3_15@2:p3decal",
+      "slot_id": "N3_15",
+      "sheet": "N3",
+      "cell": 15,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_15_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_15_2_p3decal/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          6,
+          6
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "new_period_xy": [
+          18.573333333333334,
+          18.573333333333334
+        ],
+        "phase_xy": [
+          3.0,
+          0.6000000000000001
+        ],
+        "phase_origin_xy": [
+          -4.96,
+          -7.359999999999999
+        ],
+        "sampling_phase_xy": [
+          13.613333333333333,
+          11.213333333333335
+        ],
+        "outlined_canvas": [
+          8,
+          8
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 10.234567439323685,
+        "common_opaque": 24,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 12,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          59,
+          192,
+          167
+        ],
+        "detected_period_xy": [
+          7.9399999999999995,
+          7.92
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          3.0,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 12,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_15@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 6
+    },
+    {
+      "id": "N3_16@2:p3decal",
+      "slot_id": "N3_16",
+      "sheet": "N3",
+      "cell": 16,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "lily",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "images": {
+        "native": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_16_2_p3decal/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/docs/art/production3/decals/cache/N3_16_2_p3decal/sprite.png"
+      },
+      "factor": 0.24603174603174605,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          7,
+          5
+        ],
+        "period_xy": [
+          4.46,
+          4.46
+        ],
+        "new_period_xy": [
+          18.12774193548387,
+          18.12774193548387
+        ],
+        "phase_xy": [
+          0.8,
+          0.30000000000000004
+        ],
+        "phase_origin_xy": [
+          -3.66,
+          -4.16
+        ],
+        "sampling_phase_xy": [
+          14.467741935483868,
+          13.967741935483868
+        ],
+        "outlined_canvas": [
+          9,
+          7
+        ],
+        "factor": 0.24603174603174605,
+        "mean_delta_e": 11.59682892317313,
+        "common_opaque": 30,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          59,
+          51,
+          185,
+          158
+        ],
+        "detected_period_xy": [
+          7.16,
+          4.48
+        ],
+        "period_xy": [
+          4.46,
+          4.46
+        ],
+        "phase_xy": [
+          0.8,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.438463867530061,
+          0.01579834261033825
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "p3_native_decal_limit",
+      "source_candidate": "N3_16@2",
+      "source_raw_sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "native_limit": 8
+    },
+    {
+      "id": "N3_01@1",
+      "slot_id": "N3_01",
+      "sheet": "N3",
+      "cell": 1,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_1/sprite.png"
+      },
+      "factor": 0.5714285714285714,
+      "metrics": {
+        "native_before": [
+          21,
+          17
+        ],
+        "native_after": [
+          13,
+          10
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "new_period_xy": [
+          13.055000000000001,
+          13.055000000000001
+        ],
+        "phase_xy": [
+          0.4,
+          6.2
+        ],
+        "phase_origin_xy": [
+          -7.06,
+          -1.2599999999999998
+        ],
+        "sampling_phase_xy": [
+          5.995000000000002,
+          11.795000000000002
+        ],
+        "outlined_canvas": [
+          15,
+          12
+        ],
+        "factor": 0.5714285714285714,
+        "mean_delta_e": 7.246552496778172,
+        "common_opaque": 87,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          102,
+          135,
+          258,
+          262
+        ],
+        "detected_period_xy": [
+          7.46,
+          6.9399999999999995
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "phase_xy": [
+          0.4,
+          6.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.1817425417765212
+        ],
+        "native_size": [
+          21,
+          17
+        ],
+        "spill_removed": 38,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_02@1",
+      "slot_id": "N3_02",
+      "sheet": "N3",
+      "cell": 2,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_1/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          5.72,
+          5.72
+        ],
+        "new_period_xy": [
+          13.346666666666668,
+          13.346666666666668
+        ],
+        "phase_xy": [
+          5.0,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -0.7199999999999998,
+          -0.8199999999999994
+        ],
+        "sampling_phase_xy": [
+          12.626666666666669,
+          12.526666666666667
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 14.136101977718285,
+        "common_opaque": 93,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          84,
+          125,
+          243,
+          262
+        ],
+        "detected_period_xy": [
+          5.72,
+          5.74
+        ],
+        "period_xy": [
+          5.72,
+          5.72
+        ],
+        "phase_xy": [
+          5.0,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.08903837395239646
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 80,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_03@1",
+      "slot_id": "N3_03",
+      "sheet": "N3",
+      "cell": 3,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_1/sprite.png"
+      },
+      "factor": 0.46153846153846156,
+      "metrics": {
+        "native_before": [
+          25,
+          26
+        ],
+        "native_after": [
+          12,
+          13
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "new_period_xy": [
+          12.783333333333333,
+          12.783333333333333
+        ],
+        "phase_xy": [
+          0.5,
+          0.7000000000000001
+        ],
+        "phase_origin_xy": [
+          -5.4,
+          -5.2
+        ],
+        "sampling_phase_xy": [
+          7.383333333333333,
+          7.583333333333333
+        ],
+        "outlined_canvas": [
+          14,
+          15
+        ],
+        "factor": 0.46153846153846156,
+        "mean_delta_e": 14.554312392480746,
+        "common_opaque": 90,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error",
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          76,
+          110,
+          222,
+          263
+        ],
+        "detected_period_xy": [
+          5.78,
+          5.22
+        ],
+        "period_xy": [
+          5.9,
+          5.9
+        ],
+        "phase_xy": [
+          0.5,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.011945365298674826,
+          0.05967109662177249
+        ],
+        "native_size": [
+          25,
+          26
+        ],
+        "spill_removed": 76,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_04@1",
+      "slot_id": "N3_04",
+      "sheet": "N3",
+      "cell": 4,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_4",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_1/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          5.5600000000000005,
+          5.5600000000000005
+        ],
+        "new_period_xy": [
+          12.973333333333334,
+          12.973333333333334
+        ],
+        "phase_xy": [
+          2.1,
+          0.0
+        ],
+        "phase_origin_xy": [
+          -3.4600000000000004,
+          -5.5600000000000005
+        ],
+        "sampling_phase_xy": [
+          9.513333333333334,
+          7.413333333333334
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 9.499500117577753,
+        "common_opaque": 94,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          61,
+          130,
+          214,
+          263
+        ],
+        "detected_period_xy": [
+          5.6,
+          5.8
+        ],
+        "period_xy": [
+          5.5600000000000005,
+          5.5600000000000005
+        ],
+        "phase_xy": [
+          2.1,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.013223401689329119,
+          1.2686081158097182
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 77,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_05@1",
+      "slot_id": "N3_05",
+      "sheet": "N3",
+      "cell": 5,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_white",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_1/sprite.png"
+      },
+      "factor": 0.4444444444444444,
+      "metrics": {
+        "native_before": [
+          27,
+          27
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "new_period_xy": [
+          13.05,
+          13.05
+        ],
+        "phase_xy": [
+          4.800000000000001,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -0.9999999999999991,
+          -0.8999999999999995
+        ],
+        "sampling_phase_xy": [
+          12.05,
+          12.150000000000002
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.4444444444444444,
+        "mean_delta_e": 5.979005942850636,
+        "common_opaque": 103,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 9,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          103,
+          99,
+          260,
+          252
+        ],
+        "detected_period_xy": [
+          7.52,
+          5.8
+        ],
+        "period_xy": [
+          5.8,
+          5.8
+        ],
+        "phase_xy": [
+          4.800000000000001,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.5877836200007519,
+          0.0
+        ],
+        "native_size": [
+          27,
+          27
+        ],
+        "spill_removed": 64,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_06@1",
+      "slot_id": "N3_06",
+      "sheet": "N3",
+      "cell": 6,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_yellow",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_1/sprite.png"
+      },
+      "factor": 0.5714285714285714,
+      "metrics": {
+        "native_before": [
+          21,
+          20
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "new_period_xy": [
+          13.650000000000002,
+          13.650000000000002
+        ],
+        "phase_xy": [
+          5.0,
+          4.3
+        ],
+        "phase_origin_xy": [
+          -2.8000000000000007,
+          -3.500000000000001
+        ],
+        "sampling_phase_xy": [
+          10.850000000000001,
+          10.150000000000002
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.5714285714285714,
+        "mean_delta_e": 18.505014533135505,
+        "common_opaque": 94,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 4,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          84,
+          99,
+          245,
+          253
+        ],
+        "detected_period_xy": [
+          4.9,
+          7.800000000000001
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "phase_xy": [
+          5.0,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.19787800866428717,
+          0.0
+        ],
+        "native_size": [
+          21,
+          20
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_07@1",
+      "slot_id": "N3_07",
+      "sheet": "N3",
+      "cell": 7,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_purple",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_1/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          28,
+          27
+        ],
+        "native_after": [
+          13,
+          12
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "new_period_xy": [
+          13.3,
+          13.3
+        ],
+        "phase_xy": [
+          0.8,
+          4.9
+        ],
+        "phase_origin_xy": [
+          -4.9,
+          -0.7999999999999998
+        ],
+        "sampling_phase_xy": [
+          8.4,
+          12.5
+        ],
+        "outlined_canvas": [
+          15,
+          14
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 6.393641471634078,
+        "common_opaque": 69,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          68,
+          100,
+          228,
+          252
+        ],
+        "detected_period_xy": [
+          6.62,
+          5.72
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "phase_xy": [
+          0.8,
+          4.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.4166595982478223,
+          0.06045885857772763
+        ],
+        "native_size": [
+          28,
+          27
+        ],
+        "spill_removed": 110,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_08@1",
+      "slot_id": "N3_08",
+      "sheet": "N3",
+      "cell": 8,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_red",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_1/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          28,
+          27
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "new_period_xy": [
+          13.253333333333334,
+          13.253333333333334
+        ],
+        "phase_xy": [
+          0.2,
+          0.0
+        ],
+        "phase_origin_xy": [
+          -5.4799999999999995,
+          -5.68
+        ],
+        "sampling_phase_xy": [
+          7.773333333333334,
+          7.573333333333334
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 11.128514729772315,
+        "common_opaque": 101,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 30,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          56,
+          99,
+          212,
+          250
+        ],
+        "detected_period_xy": [
+          6.48,
+          5.7
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          0.2,
+          0.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.3766416912991695,
+          0.03555837894824586
+        ],
+        "native_size": [
+          28,
+          27
+        ],
+        "spill_removed": 74,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_09@1",
+      "slot_id": "N3_09",
+      "sheet": "N3",
+      "cell": 9,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_1/sprite.png"
+      },
+      "factor": 0.4444444444444444,
+      "metrics": {
+        "native_before": [
+          26,
+          27
+        ],
+        "native_after": [
+          12,
+          13
+        ],
+        "period_xy": [
+          5.3,
+          5.3
+        ],
+        "new_period_xy": [
+          11.925,
+          11.925
+        ],
+        "phase_xy": [
+          0.6000000000000001,
+          0.4
+        ],
+        "phase_origin_xy": [
+          -4.699999999999999,
+          -4.8999999999999995
+        ],
+        "sampling_phase_xy": [
+          7.225000000000001,
+          7.025000000000001
+        ],
+        "outlined_canvas": [
+          14,
+          15
+        ],
+        "factor": 0.4444444444444444,
+        "mean_delta_e": 4.686818980191829,
+        "common_opaque": 116,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 10,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          113,
+          90,
+          248,
+          234
+        ],
+        "detected_period_xy": [
+          4.98,
+          5.3
+        ],
+        "period_xy": [
+          5.3,
+          5.3
+        ],
+        "phase_xy": [
+          0.6000000000000001,
+          0.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.303800277321008,
+          0.0
+        ],
+        "native_size": [
+          26,
+          27
+        ],
+        "spill_removed": 80,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_10@1",
+      "slot_id": "N3_10",
+      "sheet": "N3",
+      "cell": 10,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_1/sprite.png"
+      },
+      "factor": 0.48,
+      "metrics": {
+        "native_before": [
+          24,
+          25
+        ],
+        "native_after": [
+          11,
+          12
+        ],
+        "period_xy": [
+          5.86,
+          5.86
+        ],
+        "new_period_xy": [
+          12.208333333333334,
+          12.208333333333334
+        ],
+        "phase_xy": [
+          2.8000000000000003,
+          4.3
+        ],
+        "phase_origin_xy": [
+          -3.06,
+          -1.5600000000000005
+        ],
+        "sampling_phase_xy": [
+          9.148333333333333,
+          10.648333333333333
+        ],
+        "outlined_canvas": [
+          13,
+          14
+        ],
+        "factor": 0.48,
+        "mean_delta_e": 7.006603164950005,
+        "common_opaque": 107,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 19,
+        "fire_texels": 3,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          90,
+          225,
+          234
+        ],
+        "detected_period_xy": [
+          6.04,
+          5.84
+        ],
+        "period_xy": [
+          5.86,
+          5.86
+        ],
+        "phase_xy": [
+          2.8000000000000003,
+          4.3
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.26242221401164717,
+          0.044680395826434814
+        ],
+        "native_size": [
+          24,
+          25
+        ],
+        "spill_removed": 81,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_11@1",
+      "slot_id": "N3_11",
+      "sheet": "N3",
+      "cell": 11,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_1/sprite.png"
+      },
+      "factor": 0.46153846153846156,
+      "metrics": {
+        "native_before": [
+          26,
+          21
+        ],
+        "native_after": [
+          13,
+          10
+        ],
+        "period_xy": [
+          5.5,
+          5.5
+        ],
+        "new_period_xy": [
+          11.916666666666666,
+          11.916666666666666
+        ],
+        "phase_xy": [
+          1.3,
+          5.300000000000001
+        ],
+        "phase_origin_xy": [
+          -4.2,
+          -0.1999999999999993
+        ],
+        "sampling_phase_xy": [
+          7.716666666666666,
+          11.716666666666667
+        ],
+        "outlined_canvas": [
+          15,
+          12
+        ],
+        "factor": 0.46153846153846156,
+        "mean_delta_e": 4.349501989419175,
+        "common_opaque": 95,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          76,
+          113,
+          222,
+          228
+        ],
+        "detected_period_xy": [
+          7.0600000000000005,
+          5.46
+        ],
+        "period_xy": [
+          5.5,
+          5.5
+        ],
+        "phase_xy": [
+          1.3,
+          5.300000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09720634204710751,
+          0.02596178222251973
+        ],
+        "native_size": [
+          26,
+          21
+        ],
+        "spill_removed": 55,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_12@1",
+      "slot_id": "N3_12",
+      "sheet": "N3",
+      "cell": 12,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_1/sprite.png"
+      },
+      "factor": 0.46153846153846156,
+      "metrics": {
+        "native_before": [
+          26,
+          21
+        ],
+        "native_after": [
+          12,
+          10
+        ],
+        "period_xy": [
+          5.62,
+          5.62
+        ],
+        "new_period_xy": [
+          12.176666666666666,
+          12.176666666666666
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.7000000000000001
+        ],
+        "phase_origin_xy": [
+          -0.3199999999999994,
+          -4.92
+        ],
+        "sampling_phase_xy": [
+          11.856666666666666,
+          7.256666666666666
+        ],
+        "outlined_canvas": [
+          14,
+          12
+        ],
+        "factor": 0.46153846153846156,
+        "mean_delta_e": 5.390901417167892,
+        "common_opaque": 82,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          66,
+          107,
+          210,
+          225
+        ],
+        "detected_period_xy": [
+          6.08,
+          5.62
+        ],
+        "period_xy": [
+          5.62,
+          5.62
+        ],
+        "phase_xy": [
+          5.300000000000001,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.27771496943272506,
+          0.0
+        ],
+        "native_size": [
+          26,
+          21
+        ],
+        "spill_removed": 58,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_13@1",
+      "slot_id": "N3_13",
+      "sheet": "N3",
+      "cell": 13,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_1/sprite.png"
+      },
+      "factor": 0.5,
+      "metrics": {
+        "native_before": [
+          24,
+          21
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "new_period_xy": [
+          11.4,
+          11.4
+        ],
+        "phase_xy": [
+          4.2,
+          0.5
+        ],
+        "phase_origin_xy": [
+          -1.5,
+          -5.2
+        ],
+        "sampling_phase_xy": [
+          9.9,
+          6.2
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.5,
+        "mean_delta_e": 4.484082707061905,
+        "common_opaque": 105,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          112,
+          78,
+          246,
+          199
+        ],
+        "detected_period_xy": [
+          5.08,
+          5.8
+        ],
+        "period_xy": [
+          5.7,
+          5.7
+        ],
+        "phase_xy": [
+          4.2,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.402026190613071,
+          0.03841612859856144
+        ],
+        "native_size": [
+          24,
+          21
+        ],
+        "spill_removed": 68,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_14@1",
+      "slot_id": "N3_14",
+      "sheet": "N3",
+      "cell": 14,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_1/sprite.png"
+      },
+      "factor": 0.46153846153846156,
+      "metrics": {
+        "native_before": [
+          26,
+          24
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "new_period_xy": [
+          12.306666666666665,
+          12.306666666666665
+        ],
+        "phase_xy": [
+          3.5,
+          5.4
+        ],
+        "phase_origin_xy": [
+          -2.1799999999999997,
+          -0.27999999999999936
+        ],
+        "sampling_phase_xy": [
+          10.126666666666665,
+          12.026666666666666
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.46153846153846156,
+        "mean_delta_e": 8.579091986207585,
+        "common_opaque": 87,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          62,
+          236,
+          199
+        ],
+        "detected_period_xy": [
+          5.58,
+          5.72
+        ],
+        "period_xy": [
+          5.68,
+          5.68
+        ],
+        "phase_xy": [
+          3.5,
+          5.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.6992790150985637,
+          0.024744275556113794
+        ],
+        "native_size": [
+          26,
+          24
+        ],
+        "spill_removed": 75,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_15@1",
+      "slot_id": "N3_15",
+      "sheet": "N3",
+      "cell": 15,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_1/sprite.png"
+      },
+      "factor": 0.41379310344827586,
+      "metrics": {
+        "native_before": [
+          29,
+          27
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          5.24,
+          5.24
+        ],
+        "new_period_xy": [
+          12.663333333333334,
+          12.663333333333334
+        ],
+        "phase_xy": [
+          2.5,
+          0.30000000000000004
+        ],
+        "phase_origin_xy": [
+          -2.74,
+          -4.94
+        ],
+        "sampling_phase_xy": [
+          9.923333333333334,
+          7.723333333333334
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.41379310344827586,
+        "mean_delta_e": 7.425617333895693,
+        "common_opaque": 87,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 34,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          73,
+          62,
+          222,
+          205
+        ],
+        "detected_period_xy": [
+          5.8,
+          5.24
+        ],
+        "period_xy": [
+          5.24,
+          5.24
+        ],
+        "phase_xy": [
+          2.5,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.8028666726698525,
+          0.0
+        ],
+        "native_size": [
+          29,
+          27
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_16@1",
+      "slot_id": "N3_16",
+      "sheet": "N3",
+      "cell": 16,
+      "attempt": 1,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "lily",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_1/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_1/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_1/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_1/sprite.png"
+      },
+      "factor": 0.4,
+      "metrics": {
+        "native_before": [
+          30,
+          23
+        ],
+        "native_after": [
+          12,
+          10
+        ],
+        "period_xy": [
+          5.32,
+          5.32
+        ],
+        "new_period_xy": [
+          13.3,
+          13.3
+        ],
+        "phase_xy": [
+          0.9,
+          0.6000000000000001
+        ],
+        "phase_origin_xy": [
+          -4.42,
+          -4.720000000000001
+        ],
+        "sampling_phase_xy": [
+          8.88,
+          8.58
+        ],
+        "outlined_canvas": [
+          14,
+          12
+        ],
+        "factor": 0.4,
+        "mean_delta_e": 6.817147569602136,
+        "common_opaque": 95,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          56,
+          70,
+          214,
+          193
+        ],
+        "detected_period_xy": [
+          7.88,
+          5.28
+        ],
+        "period_xy": [
+          5.32,
+          5.32
+        ],
+        "phase_xy": [
+          0.9,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          1.0923469668104049,
+          0.014082624204264734
+        ],
+        "native_size": [
+          30,
+          23
+        ],
+        "spill_removed": 78,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_01@2",
+      "slot_id": "N3_01",
+      "sheet": "N3",
+      "cell": 1,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        0,
+        313,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_01_2/sprite.png"
+      },
+      "factor": 0.8,
+      "metrics": {
+        "native_before": [
+          15,
+          13
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "new_period_xy": [
+          9.899999999999999,
+          9.899999999999999
+        ],
+        "phase_xy": [
+          4.3,
+          6.800000000000001
+        ],
+        "phase_origin_xy": [
+          -3.62,
+          -1.1199999999999992
+        ],
+        "sampling_phase_xy": [
+          6.2799999999999985,
+          8.78
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.8,
+        "mean_delta_e": 12.77002487965842,
+        "common_opaque": 91,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          132,
+          162,
+          247,
+          265
+        ],
+        "detected_period_xy": [
+          4.62,
+          4.44
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "phase_xy": [
+          4.3,
+          6.800000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.08164698203257219,
+          0.26371649302735667
+        ],
+        "native_size": [
+          15,
+          13
+        ],
+        "spill_removed": 25,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_02@2",
+      "slot_id": "N3_02",
+      "sheet": "N3",
+      "cell": 2,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        0,
+        627,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_02_2/sprite.png"
+      },
+      "factor": 0.75,
+      "metrics": {
+        "native_before": [
+          16,
+          14
+        ],
+        "native_after": [
+          12,
+          11
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "new_period_xy": [
+          10.613333333333333,
+          10.613333333333333
+        ],
+        "phase_xy": [
+          4.0,
+          7.7
+        ],
+        "phase_origin_xy": [
+          -3.96,
+          -0.2599999999999998
+        ],
+        "sampling_phase_xy": [
+          6.653333333333333,
+          10.353333333333333
+        ],
+        "outlined_canvas": [
+          14,
+          13
+        ],
+        "factor": 0.75,
+        "mean_delta_e": 12.412814434546526,
+        "common_opaque": 95,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          108,
+          153,
+          229,
+          265
+        ],
+        "detected_period_xy": [
+          7.96,
+          7.859999999999999
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          4.0,
+          7.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0029975371634971696
+        ],
+        "native_size": [
+          16,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_03@2",
+      "slot_id": "N3_03",
+      "sheet": "N3",
+      "cell": 3,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        0,
+        940,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_03_2/sprite.png"
+      },
+      "factor": 0.7058823529411765,
+      "metrics": {
+        "native_before": [
+          17,
+          11
+        ],
+        "native_after": [
+          12,
+          8
+        ],
+        "period_xy": [
+          7.98,
+          7.98
+        ],
+        "new_period_xy": [
+          11.305,
+          11.305
+        ],
+        "phase_xy": [
+          2.7,
+          2.7
+        ],
+        "phase_origin_xy": [
+          -5.28,
+          -5.28
+        ],
+        "sampling_phase_xy": [
+          6.0249999999999995,
+          6.0249999999999995
+        ],
+        "outlined_canvas": [
+          14,
+          10
+        ],
+        "factor": 0.7058823529411765,
+        "mean_delta_e": 12.934926803861368,
+        "common_opaque": 69,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          81,
+          186,
+          206,
+          265
+        ],
+        "detected_period_xy": [
+          7.98,
+          7.16
+        ],
+        "period_xy": [
+          7.98,
+          7.98
+        ],
+        "phase_xy": [
+          2.7,
+          2.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.23830120869756422
+        ],
+        "native_size": [
+          17,
+          11
+        ],
+        "spill_removed": 15,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_04@2",
+      "slot_id": "N3_04",
+      "sheet": "N3",
+      "cell": 4,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "grass_4",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        0,
+        1254,
+        313
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_04_2/sprite.png"
+      },
+      "factor": 0.7058823529411765,
+      "metrics": {
+        "native_before": [
+          14,
+          17
+        ],
+        "native_after": [
+          10,
+          12
+        ],
+        "period_xy": [
+          7.76,
+          7.76
+        ],
+        "new_period_xy": [
+          10.993333333333332,
+          10.993333333333332
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.7
+        ],
+        "phase_origin_xy": [
+          -1.959999999999999,
+          -0.05999999999999961
+        ],
+        "sampling_phase_xy": [
+          9.033333333333333,
+          10.933333333333334
+        ],
+        "outlined_canvas": [
+          12,
+          14
+        ],
+        "factor": 0.7058823529411765,
+        "mean_delta_e": 12.160617358730141,
+        "common_opaque": 77,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          69,
+          132,
+          178,
+          265
+        ],
+        "detected_period_xy": [
+          7.76,
+          7.92
+        ],
+        "period_xy": [
+          7.76,
+          7.76
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          7.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.10096794484523515
+        ],
+        "native_size": [
+          14,
+          17
+        ],
+        "spill_removed": 25,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_05@2",
+      "slot_id": "N3_05",
+      "sheet": "N3",
+      "cell": 5,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_white",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        313,
+        313,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_05_2/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          26,
+          28
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          4.38,
+          4.38
+        ],
+        "new_period_xy": [
+          10.22,
+          10.22
+        ],
+        "phase_xy": [
+          0.1,
+          1.7000000000000002
+        ],
+        "phase_origin_xy": [
+          -4.28,
+          -2.6799999999999997
+        ],
+        "sampling_phase_xy": [
+          5.94,
+          7.540000000000001
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 10.962516718179288,
+        "common_opaque": 96,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 4,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          132,
+          115,
+          245,
+          235
+        ],
+        "detected_period_xy": [
+          4.82,
+          4.48
+        ],
+        "period_xy": [
+          4.38,
+          4.38
+        ],
+        "phase_xy": [
+          0.1,
+          1.7000000000000002
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.2689350966773286,
+          0.058327382800361094
+        ],
+        "native_size": [
+          26,
+          28
+        ],
+        "spill_removed": 83,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_06@2",
+      "slot_id": "N3_06",
+      "sheet": "N3",
+      "cell": 6,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_yellow",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        313,
+        627,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_06_2/sprite.png"
+      },
+      "factor": 0.75,
+      "metrics": {
+        "native_before": [
+          15,
+          16
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          7.9,
+          7.9
+        ],
+        "new_period_xy": [
+          10.533333333333333,
+          10.533333333333333
+        ],
+        "phase_xy": [
+          1.6,
+          6.800000000000001
+        ],
+        "phase_origin_xy": [
+          -6.300000000000001,
+          -1.0999999999999996
+        ],
+        "sampling_phase_xy": [
+          4.2333333333333325,
+          9.433333333333334
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.75,
+        "mean_delta_e": 21.049640550324884,
+        "common_opaque": 107,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 2,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          110,
+          115,
+          225,
+          235
+        ],
+        "detected_period_xy": [
+          7.98,
+          7.7
+        ],
+        "period_xy": [
+          7.9,
+          7.9
+        ],
+        "phase_xy": [
+          1.6,
+          6.800000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.015318054872805123,
+          0.09839479952958
+        ],
+        "native_size": [
+          15,
+          16
+        ],
+        "spill_removed": 31,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_07@2",
+      "slot_id": "N3_07",
+      "sheet": "N3",
+      "cell": 7,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_purple",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        313,
+        940,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_07_2/sprite.png"
+      },
+      "factor": 0.4444444444444444,
+      "metrics": {
+        "native_before": [
+          26,
+          27
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          4.44,
+          4.44
+        ],
+        "new_period_xy": [
+          9.990000000000002,
+          9.990000000000002
+        ],
+        "phase_xy": [
+          4.3,
+          4.4
+        ],
+        "phase_origin_xy": [
+          -0.14000000000000057,
+          -0.040000000000000036
+        ],
+        "sampling_phase_xy": [
+          9.850000000000001,
+          9.950000000000003
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.4444444444444444,
+        "mean_delta_e": 13.915504308588915,
+        "common_opaque": 85,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          89,
+          115,
+          205,
+          235
+        ],
+        "detected_period_xy": [
+          4.4,
+          4.44
+        ],
+        "period_xy": [
+          4.44,
+          4.44
+        ],
+        "phase_xy": [
+          4.3,
+          4.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.020676036944564668,
+          0.0
+        ],
+        "native_size": [
+          26,
+          27
+        ],
+        "spill_removed": 134,
+        "fringe_repaired": 2
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_08@2",
+      "slot_id": "N3_08",
+      "sheet": "N3",
+      "cell": 8,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "flower_red",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        313,
+        1254,
+        627
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_08_2/sprite.png"
+      },
+      "factor": 0.7058823529411765,
+      "metrics": {
+        "native_before": [
+          15,
+          17
+        ],
+        "native_after": [
+          11,
+          13
+        ],
+        "period_xy": [
+          7.42,
+          7.42
+        ],
+        "new_period_xy": [
+          10.511666666666667,
+          10.511666666666667
+        ],
+        "phase_xy": [
+          1.1,
+          1.2000000000000002
+        ],
+        "phase_origin_xy": [
+          -6.32,
+          -6.22
+        ],
+        "sampling_phase_xy": [
+          4.191666666666666,
+          4.291666666666667
+        ],
+        "outlined_canvas": [
+          13,
+          15
+        ],
+        "factor": 0.7058823529411765,
+        "mean_delta_e": 15.257207310982192,
+        "common_opaque": 97,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 23,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error",
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          72,
+          106,
+          183,
+          235
+        ],
+        "detected_period_xy": [
+          4.38,
+          7.359999999999999
+        ],
+        "period_xy": [
+          7.42,
+          7.42
+        ],
+        "phase_xy": [
+          1.1,
+          1.2000000000000002
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.49483058199915053,
+          0.014589354700496781
+        ],
+        "native_size": [
+          15,
+          17
+        ],
+        "spill_removed": 32,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_09@2",
+      "slot_id": "N3_09",
+      "sheet": "N3",
+      "cell": 9,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        627,
+        313,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_09_2/sprite.png"
+      },
+      "factor": 0.8571428571428571,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          11,
+          13
+        ],
+        "period_xy": [
+          7.38,
+          7.38
+        ],
+        "new_period_xy": [
+          8.610000000000001,
+          8.610000000000001
+        ],
+        "phase_xy": [
+          0.4,
+          1.8
+        ],
+        "phase_origin_xy": [
+          -6.9799999999999995,
+          -5.58
+        ],
+        "sampling_phase_xy": [
+          1.6300000000000017,
+          3.030000000000001
+        ],
+        "outlined_canvas": [
+          13,
+          15
+        ],
+        "factor": 0.8571428571428571,
+        "mean_delta_e": 11.081238288908477,
+        "common_opaque": 105,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 18,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          135,
+          92,
+          232,
+          199
+        ],
+        "detected_period_xy": [
+          7.24,
+          7.4
+        ],
+        "period_xy": [
+          7.38,
+          7.38
+        ],
+        "phase_xy": [
+          0.4,
+          1.8
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.11287565659062163,
+          0.039987963867814384
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_10@2",
+      "slot_id": "N3_10",
+      "sheet": "N3",
+      "cell": 10,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "mushroom_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        627,
+        627,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_10_2/sprite.png"
+      },
+      "factor": 0.8571428571428571,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          11,
+          12
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "new_period_xy": [
+          9.100000000000001,
+          9.100000000000001
+        ],
+        "phase_xy": [
+          5.4,
+          4.6000000000000005
+        ],
+        "phase_origin_xy": [
+          -2.4000000000000004,
+          -3.2
+        ],
+        "sampling_phase_xy": [
+          6.700000000000001,
+          5.900000000000001
+        ],
+        "outlined_canvas": [
+          13,
+          14
+        ],
+        "factor": 0.8571428571428571,
+        "mean_delta_e": 15.872122372894408,
+        "common_opaque": 99,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 41,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          116,
+          92,
+          214,
+          199
+        ],
+        "detected_period_xy": [
+          7.76,
+          4.72
+        ],
+        "period_xy": [
+          7.800000000000001,
+          7.800000000000001
+        ],
+        "phase_xy": [
+          5.4,
+          4.6000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.04642793496065471,
+          0.5765790966380265
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 24,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_11@2",
+      "slot_id": "N3_11",
+      "sheet": "N3",
+      "cell": 11,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        627,
+        940,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_11_2/sprite.png"
+      },
+      "factor": 0.48,
+      "metrics": {
+        "native_before": [
+          25,
+          18
+        ],
+        "native_after": [
+          12,
+          9
+        ],
+        "period_xy": [
+          4.3,
+          4.3
+        ],
+        "new_period_xy": [
+          8.958333333333334,
+          8.958333333333334
+        ],
+        "phase_xy": [
+          1.8,
+          1.1
+        ],
+        "phase_origin_xy": [
+          -2.5,
+          -3.1999999999999997
+        ],
+        "sampling_phase_xy": [
+          6.458333333333334,
+          5.758333333333335
+        ],
+        "outlined_canvas": [
+          14,
+          11
+        ],
+        "factor": 0.48,
+        "mean_delta_e": 8.377216340445596,
+        "common_opaque": 79,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          89,
+          112,
+          195,
+          191
+        ],
+        "detected_period_xy": [
+          4.36,
+          4.28
+        ],
+        "period_xy": [
+          4.3,
+          4.3
+        ],
+        "phase_xy": [
+          1.8,
+          1.1
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.031307235261781134,
+          0.020386617481315317
+        ],
+        "native_size": [
+          25,
+          18
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_12@2",
+      "slot_id": "N3_12",
+      "sheet": "N3",
+      "cell": 12,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        627,
+        1254,
+        940
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_12_2/sprite.png"
+      },
+      "factor": 0.8,
+      "metrics": {
+        "native_before": [
+          15,
+          12
+        ],
+        "native_after": [
+          12,
+          10
+        ],
+        "period_xy": [
+          7.88,
+          7.88
+        ],
+        "new_period_xy": [
+          9.85,
+          9.85
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          2.0
+        ],
+        "phase_origin_xy": [
+          -4.58,
+          -5.88
+        ],
+        "sampling_phase_xy": [
+          5.27,
+          3.9699999999999998
+        ],
+        "outlined_canvas": [
+          14,
+          12
+        ],
+        "factor": 0.8,
+        "mean_delta_e": 9.463674951242954,
+        "common_opaque": 89,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": true
+      },
+      "review_status": "pending",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          75,
+          100,
+          184,
+          192
+        ],
+        "detected_period_xy": [
+          7.88,
+          7.92
+        ],
+        "period_xy": [
+          7.88,
+          7.88
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0031816122317629035
+        ],
+        "native_size": [
+          15,
+          12
+        ],
+        "spill_removed": 21,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_13@2",
+      "slot_id": "N3_13",
+      "sheet": "N3",
+      "cell": 13,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "pebble_3",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        0,
+        940,
+        313,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_13_2/sprite.png"
+      },
+      "factor": 0.46153846153846156,
+      "metrics": {
+        "native_before": [
+          26,
+          20
+        ],
+        "native_after": [
+          13,
+          10
+        ],
+        "period_xy": [
+          4.28,
+          4.28
+        ],
+        "new_period_xy": [
+          9.273333333333333,
+          9.273333333333333
+        ],
+        "phase_xy": [
+          1.5,
+          1.0
+        ],
+        "phase_origin_xy": [
+          -2.7800000000000002,
+          -3.2800000000000002
+        ],
+        "sampling_phase_xy": [
+          6.493333333333333,
+          5.993333333333333
+        ],
+        "outlined_canvas": [
+          15,
+          12
+        ],
+        "factor": 0.46153846153846156,
+        "mean_delta_e": 5.846578298177342,
+        "common_opaque": 92,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": []
+      },
+      "guards": {
+        "errors": [
+          "geometry"
+        ],
+        "warnings": [],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          131,
+          67,
+          245,
+          155
+        ],
+        "detected_period_xy": [
+          4.3,
+          4.64
+        ],
+        "period_xy": [
+          4.28,
+          4.28
+        ],
+        "phase_xy": [
+          1.5,
+          1.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.09019041991089913,
+          0.15352118906512355
+        ],
+        "native_size": [
+          26,
+          20
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_14@2",
+      "slot_id": "N3_14",
+      "sheet": "N3",
+      "cell": 14,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_1",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        313,
+        940,
+        627,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_14_2/sprite.png"
+      },
+      "factor": 0.8,
+      "metrics": {
+        "native_before": [
+          14,
+          15
+        ],
+        "native_after": [
+          11,
+          12
+        ],
+        "period_xy": [
+          7.66,
+          7.66
+        ],
+        "new_period_xy": [
+          9.575,
+          9.575
+        ],
+        "phase_xy": [
+          7.2,
+          2.6
+        ],
+        "phase_origin_xy": [
+          -0.45999999999999996,
+          -5.0600000000000005
+        ],
+        "sampling_phase_xy": [
+          9.114999999999998,
+          4.514999999999999
+        ],
+        "outlined_canvas": [
+          13,
+          14
+        ],
+        "factor": 0.8,
+        "mean_delta_e": 18.754507978700552,
+        "common_opaque": 81,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          115,
+          58,
+          217,
+          163
+        ],
+        "detected_period_xy": [
+          7.58,
+          7.68
+        ],
+        "period_xy": [
+          7.66,
+          7.66
+        ],
+        "phase_xy": [
+          7.2,
+          2.6
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.07366739454012074,
+          0.005323253670478692
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 19,
+        "fringe_repaired": 1
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_15@2",
+      "slot_id": "N3_15",
+      "sheet": "N3",
+      "cell": 15,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "leaf_2",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        627,
+        940,
+        940,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_15_2/sprite.png"
+      },
+      "factor": 0.8571428571428571,
+      "metrics": {
+        "native_before": [
+          13,
+          14
+        ],
+        "native_after": [
+          12,
+          12
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "new_period_xy": [
+          9.286666666666667,
+          9.286666666666667
+        ],
+        "phase_xy": [
+          3.0,
+          0.6000000000000001
+        ],
+        "phase_origin_xy": [
+          -4.96,
+          -7.359999999999999
+        ],
+        "sampling_phase_xy": [
+          4.326666666666667,
+          1.9266666666666676
+        ],
+        "outlined_canvas": [
+          14,
+          14
+        ],
+        "factor": 0.8571428571428571,
+        "mean_delta_e": 16.591087537610917,
+        "common_opaque": 98,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 37,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error"
+        ],
+        "warnings": [
+          "grid_suspect",
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          91,
+          59,
+          192,
+          167
+        ],
+        "detected_period_xy": [
+          7.9399999999999995,
+          7.92
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          3.0,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          13,
+          14
+        ],
+        "spill_removed": 12,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    },
+    {
+      "id": "N3_16@2",
+      "slot_id": "N3_16",
+      "sheet": "N3",
+      "cell": 16,
+      "attempt": 2,
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "name": "lily",
+      "source_kind": "generated",
+      "raw_path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "raw_box": [
+        940,
+        940,
+        1254,
+        1254
+      ],
+      "images": {
+        "raw": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_2/raw.png",
+        "unfitted": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_2/unfitted.png",
+        "native": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_2/native.png",
+        "sprite": "/Users/rexxa/work/new-world-art-prod/.harness/evidence/art-production2/candidates/N3_16_2/sprite.png"
+      },
+      "factor": 0.42857142857142855,
+      "metrics": {
+        "native_before": [
+          28,
+          24
+        ],
+        "native_after": [
+          13,
+          11
+        ],
+        "period_xy": [
+          4.46,
+          4.46
+        ],
+        "new_period_xy": [
+          10.406666666666666,
+          10.406666666666666
+        ],
+        "phase_xy": [
+          0.8,
+          0.30000000000000004
+        ],
+        "phase_origin_xy": [
+          -3.66,
+          -4.16
+        ],
+        "sampling_phase_xy": [
+          6.746666666666666,
+          6.246666666666666
+        ],
+        "outlined_canvas": [
+          15,
+          13
+        ],
+        "factor": 0.42857142857142855,
+        "mean_delta_e": 14.974400154621172,
+        "common_opaque": 101,
+        "keyed_out": 0,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "spill_removed": 0,
+        "fringe_repaired": 0,
+        "post_spill_projected_texels": 0,
+        "warnings": [
+          "colour_drift"
+        ]
+      },
+      "guards": {
+        "errors": [
+          "gross_colour_error",
+          "geometry"
+        ],
+        "warnings": [
+          "colour_drift"
+        ],
+        "passed": false
+      },
+      "review_status": "ineligible",
+      "conversion_error": null,
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          59,
+          51,
+          185,
+          158
+        ],
+        "detected_period_xy": [
+          7.16,
+          4.48
+        ],
+        "period_xy": [
+          4.46,
+          4.46
+        ],
+        "phase_xy": [
+          0.8,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.438463867530061,
+          0.01579834261033825
+        ],
+        "native_size": [
+          28,
+          24
+        ],
+        "spill_removed": 70,
+        "fringe_repaired": 0
+      },
+      "factor_source": "object_bounds"
+    }
+  ],
+  "review_status": "pending"
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "reviewer": "p3_decal_review_b",
+  "images_opened": [
+    "docs/art/production3/decals/review_03.png",
+    "docs/art/production3/decals/review_04.png"
+  ],
+  "verdicts": [
+    {"sprite_id":"N3_01","candidate_id":"N3_01@2:p3decal","verdict":"ok","reason":"","observation":"Uneven green shoots and a dark rooted base still read as a small grass tuft at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_02","candidate_id":"N3_02@2:p3decal","verdict":"ok","reason":"","observation":"Separated upper shoots and the broader green base preserve the grass-tuft reading at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_03","candidate_id":"N3_03@2:p3decal","verdict":"ok","reason":"","observation":"The low horizontal cluster retains short green blades and reads as a squat grass patch at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_04","candidate_id":"N3_04@2:p3decal","verdict":"ok","reason":"","observation":"Pale seed heads above a narrow green stem cluster retain the tall grass identity at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_05","candidate_id":"N3_05@2:p3decal","verdict":"ok","reason":"","observation":"Two white heads with warm centers remain distinct above green foliage, including at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_06","candidate_id":"N3_06@2:p3decal","verdict":"ok","reason":"","observation":"Yellow heads remain distinguishable from the lower green foliage and read as a tiny flower cluster at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_07","candidate_id":"N3_07@2:p3decal","verdict":"reject","reason":"detail_destroyed_by_fit","observation":"The source has clear purple petals; the fitted heads become isolated pale and orange marks with too little purple to read as purple flowers at 2x.","unfitted_acceptable":true},
+    {"sprite_id":"N3_08","candidate_id":"N3_08@2:p3decal","verdict":"ok","reason":"","observation":"Bright red flower heads above a green base preserve the red-flower reading at 2x despite simplified stems.","unfitted_acceptable":null},
+    {"sprite_id":"N3_09","candidate_id":"N3_09@2:p3decal","verdict":"ok","reason":"","observation":"The broad brown cap and pale descending stalk remain recognizable as a mushroom at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_10","candidate_id":"N3_10@2:p3decal","verdict":"ok","reason":"","observation":"The red cap, pale cap marks, and light stalk preserve the spotted-mushroom identity at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_11","candidate_id":"N3_11@2:p3decal","verdict":"ok","reason":"","observation":"An irregular highlighted gray mound with a darker foot still reads as a pebble at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_12","candidate_id":"N3_12@2:p3decal","verdict":"ok","reason":"","observation":"The compact angular gray form retains a lit upper face and shaded base, reading as a pebble at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_13","candidate_id":"N3_13@2:p3decal","verdict":"ok","reason":"","observation":"Two offset gray masses retain the paired-pebble silhouette even at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_14","candidate_id":"N3_14@2:p3decal","verdict":"ok","reason":"","observation":"The diagonal tapered green silhouette and lighter central area still suggest a single leaf at 2x.","unfitted_acceptable":null},
+    {"sprite_id":"N3_15","candidate_id":"N3_15@2:p3decal","verdict":"reject","reason":"detail_destroyed_by_fit","observation":"The source's lobed autumn-leaf outline and stem collapse into a short orange block; at 2x it no longer reads reliably as a leaf.","unfitted_acceptable":true},
+    {"sprite_id":"N3_16","candidate_id":"N3_16@2:p3decal","verdict":"ok","reason":"","observation":"A white bloom with a warm center remains above a broad green pad, preserving the water-lily reading at 2x.","unfitted_acceptable":null}
+  ]
+}

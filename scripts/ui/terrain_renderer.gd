@@ -6,6 +6,7 @@ const ART = preload("res://scripts/ui/art_sprite_library.gd")
 const MANIFEST: String = "res://assets/art/terrain/terrain_manifest.json"
 const LAYERS: Array[String] = ["water", "grass", "forest_floor", "camp_earth", "hill", "rock"]
 const SEASON = preload("res://scripts/ui/art_season_tint.gd")
+const LAYOUT = preload("res://scripts/ui/nature_layout.gd")
 const RIVER: int = 4
 var _world_sim: WorldSimNode
 var _layers: Dictionary = {}
@@ -133,7 +134,8 @@ func _refresh_decals() -> void:
 	var buildings: Dictionary = _world_sim.get_building_snapshot()
 	var resources: Dictionary = _world_sim.get_resource_snapshot()
 	var sites: Dictionary = _world_sim.get_construction_snapshot()
-	var fingerprint: int = hash([buildings, sites, resources.get("xs"), resources.get("ys")])
+	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var fingerprint: int = hash([buildings, sites, resources.get("xs"), resources.get("ys"), resources.get("kinds"), settlements.get("formation_xs"), settlements.get("formation_ys")])
 	if fingerprint == _decal_fingerprint:
 		return
 	_decal_fingerprint = fingerprint
@@ -145,12 +147,27 @@ func _refresh_decals() -> void:
 		var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
 		for i: int in range(xs.size()):
 			excluded[Vector2i(xs[i], ys[i])] = true
+	var cleared: Dictionary = LAYOUT.clearings(buildings,sites,resources,settlements,3)
+	var grass: Array[Vector2i] = []
+	var forest: Array[Vector2i] = []
+	for y: int in range(_height):
+		for x: int in range(_width):
+			var tile: Vector2i = Vector2i(x,y)
+			if cleared.has(tile) or excluded.has(tile) or _shore(x,y):
+				continue
+			if _code(x,y) == 0:
+				grass.append(tile)
+			elif _code(x,y) == 1:
+				forest.append(tile)
+	var patches: Dictionary = LAYOUT.patches(grass,floori(_terrain.count(0)*0.04),0x5DEC)
+	patches.merge(LAYOUT.patches(forest,floori(_terrain.count(1)*0.03),0x5DEC))
 	for y: int in range(_height):
 		for x: int in range(_width):
 			var code: int = _code(x, y)
 			var h: int = ((x*73856093) ^ (y*19349663)) & 0x7fffffff
-			var chance: int = 30 if code == 0 else (20 if code == 1 else (6 if code == RIVER else 0))
-			if h % 100 >= chance or excluded.has(Vector2i(x,y)) or (code != RIVER and _shore(x,y)):
+			var tile: Vector2i = Vector2i(x,y)
+			var selected: bool = h % 100 < 6 if code == RIVER else patches.has(tile)
+			if not selected or cleared.has(tile) or excluded.has(tile):
 				continue
 			var sprite_id: String = "N3_%02d" % (16 if code == RIVER else 1+(h>>8)%15)
 			if ART.frame(sprite_id).is_empty():
@@ -159,6 +176,8 @@ func _refresh_decals() -> void:
 			ART.apply(sprite, sprite_id)
 			sprite.position = SPRITE_ORIGIN + Vector2(x*16+8+(h>>12)%5-2, y*16+8+(h>>16)%5-2)
 			sprite.set_meta("art_kind", "decal")
+			sprite.set_meta("tile_x", x)
+			sprite.set_meta("tile_y", y)
 			_decals.add_child(sprite)
 
 func _update_season() -> void:

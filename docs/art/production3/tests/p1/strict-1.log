@@ -1,0 +1,13 @@
+[gdcheck] FAIL parse/warning: scripts/ui/nature_renderer.gd
+SCRIPT ERROR: Parse Error: Integer division. Decimal part will be discarded. (Warning treated as error.)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+ERROR: Failed to load script "res://scripts/ui/nature_renderer.gd" with error "Compilation failed".
+[gdcheck] FAIL parse/warning: scripts/ui/nature_layout.gd
+SCRIPT ERROR: Parse Error: Integer division. Decimal part will be discarded. (Warning treated as error.)
+ERROR: Failed to load script "res://scripts/ui/nature_layout.gd" with error "Parse error".
+[gdcheck] FAIL parse/warning: scripts/ui/terrain_renderer.gd
+SCRIPT ERROR: Parse Error: Integer division. Decimal part will be discarded. (Warning treated as error.)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+ERROR: Failed to load script "res://scripts/ui/terrain_renderer.gd" with error "Compilation failed".
+[gdcheck] FFI bindings: 15 GDScript call(s) all match Rust #[func] exports ✓
+[gdcheck] FAIL: parse=3 FFI=0

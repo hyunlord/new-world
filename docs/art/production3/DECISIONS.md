@@ -18,3 +18,12 @@ Brief SHA256: `22231c4fae1cb1ec6fa35c98dd46ed98659b7e681402fa2f7db23c34b15f927a`
 
 - P0 baseline: 25/25 checks exit0; Rust 1881 passed across120 result suites, Python129, Godot18. No SCRIPT ERROR/ERROR in logs. Full log evidence under gates/p0. No merge fallout edits required.
 - The density test white-tint assertion passed before the first renderer update; it does not establish actual Pass4 season tint neutrality. Part1 will exercise the renderer update and compare the real season resolver, preserving separate absent-key tests.
+
+## Part1
+- Independent salted value-noise ranking uses budgets of 6% of all hill tiles and45% of all mountain tiles. Clearings override budgets when eligible area is insufficient. Decals rank eligible patches up to4%/3%; missing/rejected IDs reduce actual coverage further. River lily probability is unchanged; required camp exclusion also applies to lilies.
+- All32 physical N3 candidates were re-fit from original raw grids (leaves6, other8). Fresh independent reviews:28visual ok/4reject. Preserve v4 gross color-error limit12; select lowest-error visually approved+guard-passing candidate per slot.13installed; N3_06,N3_07,N3_08suppressed. Two original attempts are reviewed in one round, not two correction rounds.
+- Used the existing verified installer and frozen selection/verdict fingerprints.256non-N3drawable PNGs and169region frames remain pixel-identical, despite atlas repacking. Original Production2 evidence untouched.
+- Density: rocks24/397hills,72/159mountains; decals72/2222grass,29/1190forest; forest trees325/1190. Both Godot tests PASS with deterministic independent reload. Strict26scripts/15FFI calls; Python131tests; nine relevant Rust surface suites PASS. Test-only native-file inspection emits13export warnings, no script errors.
+- Windowed baseline capture produced four frames. Parent opened t1440F1 andF2: camp is clear of rocks and ground decoration, map rocks form distinct outcrops, decals are small patch accents. White/grey young villagers and floating carry icons remain the explicitly pending Part2/3 problems.
+- Standalone ruff/basedpyright are unavailable on PATH; no tool dependencies installed. Python compilation/unit suite and existing strict gates used.
+- The one-off selection assembly initially referenced the candidate-ledger key `selected`; the installation schema uses `accepted`. Inspected actual schema, corrected assembly, then existing installer accepted all frozen evidence with zero unresolved targets. No assets were mutated by the failed assembly.

@@ -3,7 +3,7 @@
 | Part | Deliverable | Status | Start UTC | End UTC |
 |---|---|---|---|---|
 | 0 | Preserve brief, merge pinned Pass4, full baseline gate | complete | 2026-10-10T15:45:13Z | 2026-10-10T15:56:22Z |
-| 1 | All-object clearings, clustered rocks, small sparse decals | pending | | |
+| 1 | All-object clearings, clustered rocks, small sparse decals | complete | 2026-10-10T15:56:50Z | 2026-10-10T16:03:57Z |
 | 2 | Stable age hair, idle facing and camp poses | pending | | |
 | 3 | Color region maps, despeckle, re-review, bounded fills and install | pending | | |
 | 4 | Real-data old-age/season consumers and localized inspector age | pending | | |

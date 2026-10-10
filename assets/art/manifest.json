@@ -9696,136 +9696,10 @@
       "sprite_id": "N3_01",
       "path": "assets/art/production/N3/01.png",
       "native_path": "assets/art/production/N3/01_native.png",
-      "source": "procedural:ascii:grass:phase1",
-      "source_sprite": "",
-      "native_size": [
-        5,
-        4
-      ],
-      "canvas_size": [
-        7,
-        6
-      ],
-      "anchor": [
-        3,
-        5
-      ],
-      "qa_status": "fallback",
-      "class": "N3",
-      "body": "",
-      "view": "",
-      "activity": "",
-      "frame": 0,
-      "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
-      "limitations": [],
-      "drawable": false
-    },
-    {
-      "path": "assets/art/production/N3/01_native.png",
-      "source": "procedural:ascii:grass:phase1",
-      "native_size": [
-        5,
-        4
-      ],
-      "anchor": [
-        2,
-        3
-      ],
-      "qa_status": "fallback",
-      "role": "native_reference"
-    },
-    {
-      "sprite_id": "N3_02",
-      "path": "assets/art/production/N3/02.png",
-      "native_path": "assets/art/production/N3/02_native.png",
-      "source": "procedural:ascii:grass:phase2",
-      "source_sprite": "",
-      "native_size": [
-        5,
-        4
-      ],
-      "canvas_size": [
-        7,
-        6
-      ],
-      "anchor": [
-        3,
-        5
-      ],
-      "qa_status": "fallback",
-      "class": "N3",
-      "body": "",
-      "view": "",
-      "activity": "",
-      "frame": 0,
-      "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
-      "limitations": [],
-      "drawable": false
-    },
-    {
-      "path": "assets/art/production/N3/02_native.png",
-      "source": "procedural:ascii:grass:phase2",
-      "native_size": [
-        5,
-        4
-      ],
-      "anchor": [
-        2,
-        3
-      ],
-      "qa_status": "fallback",
-      "role": "native_reference"
-    },
-    {
-      "sprite_id": "N3_03",
-      "path": "assets/art/production/N3/03.png",
-      "native_path": "assets/art/production/N3/03_native.png",
-      "source": "procedural:ascii:grass:phase3",
-      "source_sprite": "",
-      "native_size": [
-        5,
-        4
-      ],
-      "canvas_size": [
-        7,
-        6
-      ],
-      "anchor": [
-        3,
-        5
-      ],
-      "qa_status": "fallback",
-      "class": "N3",
-      "body": "",
-      "view": "",
-      "activity": "",
-      "frame": 0,
-      "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
-      "limitations": [],
-      "drawable": false
-    },
-    {
-      "path": "assets/art/production/N3/03_native.png",
-      "source": "procedural:ascii:grass:phase3",
-      "native_size": [
-        5,
-        4
-      ],
-      "anchor": [
-        2,
-        3
-      ],
-      "qa_status": "fallback",
-      "role": "native_reference"
-    },
-    {
-      "sprite_id": "N3_04",
-      "path": "assets/art/production/N3/04.png",
-      "native_path": "assets/art/production/N3/04_native.png",
-      "source": "generated:N3/04@1:v4:f=0.428571",
-      "source_sprite": "",
+      "source": "generated:N3/01@1:v4:f=0.328042",
+      "source_sprite": "N3_01@1",
       "qa_status": "accepted",
-      "candidate_id": "N3_04@1",
+      "candidate_id": "N3_01@1:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -9836,25 +9710,157 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        11
+        7,
+        6
       ],
       "canvas_size": [
-        14,
-        13
+        9,
+        8
       ],
       "anchor": [
+        4,
+        7
+      ]
+    },
+    {
+      "path": "assets/art/production/N3/01_native.png",
+      "source": "generated:N3/01@1:v4:f=0.328042",
+      "qa_status": "accepted",
+      "native_size": [
         7,
-        12
+        6
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "N3_02",
+      "path": "assets/art/production/N3/02.png",
+      "native_path": "assets/art/production/N3/02_native.png",
+      "source": "generated:N3/02@1:v4:f=0.285714",
+      "source_sprite": "N3_02@1",
+      "qa_status": "accepted",
+      "candidate_id": "N3_02@1:p3decal",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "N3",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        8,
+        7
+      ],
+      "canvas_size": [
+        10,
+        9
+      ],
+      "anchor": [
+        5,
+        8
+      ]
+    },
+    {
+      "path": "assets/art/production/N3/02_native.png",
+      "source": "generated:N3/02@1:v4:f=0.285714",
+      "qa_status": "accepted",
+      "native_size": [
+        8,
+        7
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "N3_03",
+      "path": "assets/art/production/N3/03.png",
+      "native_path": "assets/art/production/N3/03_native.png",
+      "source": "generated:N3/03@1:v4:f=0.307692",
+      "source_sprite": "N3_03@1",
+      "qa_status": "accepted",
+      "candidate_id": "N3_03@1:p3decal",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "N3",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        8,
+        8
+      ],
+      "canvas_size": [
+        10,
+        10
+      ],
+      "anchor": [
+        5,
+        9
+      ]
+    },
+    {
+      "path": "assets/art/production/N3/03_native.png",
+      "source": "generated:N3/03@1:v4:f=0.307692",
+      "qa_status": "accepted",
+      "native_size": [
+        8,
+        8
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "N3_04",
+      "path": "assets/art/production/N3/04.png",
+      "native_path": "assets/art/production/N3/04_native.png",
+      "source": "generated:N3/04@2:v4:f=0.470588",
+      "source_sprite": "N3_04@2",
+      "qa_status": "accepted",
+      "candidate_id": "N3_04@2:p3decal",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "N3",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        7,
+        8
+      ],
+      "canvas_size": [
+        9,
+        10
+      ],
+      "anchor": [
+        4,
+        9
       ]
     },
     {
       "path": "assets/art/production/N3/04_native.png",
-      "source": "generated:N3/04@1:v4:f=0.428571",
+      "source": "generated:N3/04@2:v4:f=0.470588",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        11
+        7,
+        8
       ],
       "role": "native_reference",
       "anchor": [
@@ -9866,10 +9872,10 @@
       "sprite_id": "N3_05",
       "path": "assets/art/production/N3/05.png",
       "native_path": "assets/art/production/N3/05_native.png",
-      "source": "generated:N3/05@1:v4:f=0.444444",
-      "source_sprite": "",
+      "source": "generated:N3/05@1:v4:f=0.296296",
+      "source_sprite": "N3_05@1",
       "qa_status": "accepted",
-      "candidate_id": "N3_05@1",
+      "candidate_id": "N3_05@1:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -9880,25 +9886,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        12
+        8,
+        8
       ],
       "canvas_size": [
-        14,
-        14
+        10,
+        10
       ],
       "anchor": [
-        7,
-        13
+        5,
+        9
       ]
     },
     {
       "path": "assets/art/production/N3/05_native.png",
-      "source": "generated:N3/05@1:v4:f=0.444444",
+      "source": "generated:N3/05@1:v4:f=0.296296",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        12
+        8,
+        8
       ],
       "role": "native_reference",
       "anchor": [
@@ -10006,7 +10012,7 @@
       "contains_basket": false,
       "fallback_kind": "",
       "activity_icon": "",
-      "drawable": true,
+      "drawable": false,
       "native_size": [
         12,
         12
@@ -10038,52 +10044,10 @@
       "sprite_id": "N3_09",
       "path": "assets/art/production/N3/09.png",
       "native_path": "assets/art/production/N3/09_native.png",
-      "source": "procedural:ascii:mushroom:phase1",
-      "source_sprite": "",
-      "native_size": [
-        7,
-        4
-      ],
-      "canvas_size": [
-        9,
-        6
-      ],
-      "anchor": [
-        4,
-        5
-      ],
-      "qa_status": "fallback",
-      "class": "N3",
-      "body": "",
-      "view": "",
-      "activity": "",
-      "frame": 0,
-      "fallback_reason": "Brief 8.5/8.6: three character/structure attempts exhausted; very-small effect/icon retry exhausted; checkpoint40 low acceptance authorizes remaining nature procedural fallback",
-      "limitations": [],
-      "drawable": false
-    },
-    {
-      "path": "assets/art/production/N3/09_native.png",
-      "source": "procedural:ascii:mushroom:phase1",
-      "native_size": [
-        7,
-        4
-      ],
-      "anchor": [
-        3,
-        3
-      ],
-      "qa_status": "fallback",
-      "role": "native_reference"
-    },
-    {
-      "sprite_id": "N3_10",
-      "path": "assets/art/production/N3/10.png",
-      "native_path": "assets/art/production/N3/10_native.png",
-      "source": "generated:N3/10@1:v4:f=0.48",
-      "source_sprite": "",
+      "source": "generated:N3/09@2:v4:f=0.492063",
+      "source_sprite": "N3_09@2",
       "qa_status": "accepted",
-      "candidate_id": "N3_10@1",
+      "candidate_id": "N3_09@2:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10094,25 +10058,69 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        11,
-        12
+        7,
+        8
       ],
       "canvas_size": [
-        13,
-        14
+        9,
+        10
       ],
       "anchor": [
-        6,
-        13
+        4,
+        9
+      ]
+    },
+    {
+      "path": "assets/art/production/N3/09_native.png",
+      "source": "generated:N3/09@2:v4:f=0.492063",
+      "qa_status": "accepted",
+      "native_size": [
+        7,
+        8
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "N3_10",
+      "path": "assets/art/production/N3/10.png",
+      "native_path": "assets/art/production/N3/10_native.png",
+      "source": "generated:N3/10@1:v4:f=0.32",
+      "source_sprite": "N3_10@1",
+      "qa_status": "accepted",
+      "candidate_id": "N3_10@1:p3decal",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "class": "N3",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        8,
+        8
+      ],
+      "canvas_size": [
+        10,
+        10
+      ],
+      "anchor": [
+        5,
+        9
       ]
     },
     {
       "path": "assets/art/production/N3/10_native.png",
-      "source": "generated:N3/10@1:v4:f=0.48",
+      "source": "generated:N3/10@1:v4:f=0.32",
       "qa_status": "accepted",
       "native_size": [
-        11,
-        12
+        8,
+        8
       ],
       "role": "native_reference",
       "anchor": [
@@ -10124,10 +10132,10 @@
       "sprite_id": "N3_11",
       "path": "assets/art/production/N3/11.png",
       "native_path": "assets/art/production/N3/11_native.png",
-      "source": "generated:N3/11@2:v4:f=0.48",
-      "source_sprite": "",
+      "source": "generated:N3/11@2:v4:f=0.32",
+      "source_sprite": "N3_11@2",
       "qa_status": "accepted",
-      "candidate_id": "N3_11@2",
+      "candidate_id": "N3_11@2:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10138,25 +10146,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        9
+        8,
+        6
       ],
       "canvas_size": [
-        14,
-        11
+        10,
+        8
       ],
       "anchor": [
-        7,
-        10
+        5,
+        7
       ]
     },
     {
       "path": "assets/art/production/N3/11_native.png",
-      "source": "generated:N3/11@2:v4:f=0.48",
+      "source": "generated:N3/11@2:v4:f=0.32",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        9
+        8,
+        6
       ],
       "role": "native_reference",
       "anchor": [
@@ -10168,10 +10176,10 @@
       "sprite_id": "N3_12",
       "path": "assets/art/production/N3/12.png",
       "native_path": "assets/art/production/N3/12_native.png",
-      "source": "generated:N3/12@1:v4:f=0.461538",
-      "source_sprite": "",
+      "source": "generated:N3/12@2:v4:f=0.533333",
+      "source_sprite": "N3_12@2",
       "qa_status": "accepted",
-      "candidate_id": "N3_12@1",
+      "candidate_id": "N3_12@2:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10182,25 +10190,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        10
+        8,
+        7
       ],
       "canvas_size": [
-        14,
-        12
+        10,
+        9
       ],
       "anchor": [
-        7,
-        11
+        5,
+        8
       ]
     },
     {
       "path": "assets/art/production/N3/12_native.png",
-      "source": "generated:N3/12@1:v4:f=0.461538",
+      "source": "generated:N3/12@2:v4:f=0.533333",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        10
+        8,
+        7
       ],
       "role": "native_reference",
       "anchor": [
@@ -10212,10 +10220,10 @@
       "sprite_id": "N3_13",
       "path": "assets/art/production/N3/13.png",
       "native_path": "assets/art/production/N3/13_native.png",
-      "source": "generated:N3/13@1:v4:f=0.5",
-      "source_sprite": "",
+      "source": "generated:N3/13@2:v4:f=0.264957",
+      "source_sprite": "N3_13@2",
       "qa_status": "accepted",
-      "candidate_id": "N3_13@1",
+      "candidate_id": "N3_13@2:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10226,25 +10234,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        11
+        7,
+        6
       ],
       "canvas_size": [
-        14,
-        13
+        9,
+        8
       ],
       "anchor": [
-        7,
-        12
+        4,
+        7
       ]
     },
     {
       "path": "assets/art/production/N3/13_native.png",
-      "source": "generated:N3/13@1:v4:f=0.5",
+      "source": "generated:N3/13@2:v4:f=0.264957",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        11
+        7,
+        6
       ],
       "role": "native_reference",
       "anchor": [
@@ -10256,10 +10264,10 @@
       "sprite_id": "N3_14",
       "path": "assets/art/production/N3/14.png",
       "native_path": "assets/art/production/N3/14_native.png",
-      "source": "generated:N3/14@1:v4:f=0.461538",
-      "source_sprite": "",
+      "source": "generated:N3/14@1:v4:f=0.230769",
+      "source_sprite": "N3_14@1",
       "qa_status": "accepted",
-      "candidate_id": "N3_14@1",
+      "candidate_id": "N3_14@1:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10270,25 +10278,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        11
+        6,
+        6
       ],
       "canvas_size": [
-        14,
-        13
+        8,
+        8
       ],
       "anchor": [
-        7,
-        12
+        4,
+        7
       ]
     },
     {
       "path": "assets/art/production/N3/14_native.png",
-      "source": "generated:N3/14@1:v4:f=0.461538",
+      "source": "generated:N3/14@1:v4:f=0.230769",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        11
+        6,
+        6
       ],
       "role": "native_reference",
       "anchor": [
@@ -10300,10 +10308,10 @@
       "sprite_id": "N3_15",
       "path": "assets/art/production/N3/15.png",
       "native_path": "assets/art/production/N3/15_native.png",
-      "source": "generated:N3/15@1:v4:f=0.413793",
-      "source_sprite": "",
+      "source": "generated:N3/15@1:v4:f=0.206897",
+      "source_sprite": "N3_15@1",
       "qa_status": "accepted",
-      "candidate_id": "N3_15@1",
+      "candidate_id": "N3_15@1:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10314,25 +10322,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        12
+        6,
+        6
       ],
       "canvas_size": [
-        14,
-        14
+        8,
+        8
       ],
       "anchor": [
-        7,
-        13
+        4,
+        7
       ]
     },
     {
       "path": "assets/art/production/N3/15_native.png",
-      "source": "generated:N3/15@1:v4:f=0.413793",
+      "source": "generated:N3/15@1:v4:f=0.206897",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        12
+        6,
+        6
       ],
       "role": "native_reference",
       "anchor": [
@@ -10344,10 +10352,10 @@
       "sprite_id": "N3_16",
       "path": "assets/art/production/N3/16.png",
       "native_path": "assets/art/production/N3/16_native.png",
-      "source": "generated:N3/16@1:v4:f=0.4",
-      "source_sprite": "",
+      "source": "generated:N3/16@2:v4:f=0.246032",
+      "source_sprite": "N3_16@2",
       "qa_status": "accepted",
-      "candidate_id": "N3_16@1",
+      "candidate_id": "N3_16@2:p3decal",
       "body": "",
       "view": "",
       "activity": "",
@@ -10358,25 +10366,25 @@
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        12,
-        10
+        7,
+        5
       ],
       "canvas_size": [
-        14,
-        12
+        9,
+        7
       ],
       "anchor": [
-        7,
-        11
+        4,
+        6
       ]
     },
     {
       "path": "assets/art/production/N3/16_native.png",
-      "source": "generated:N3/16@1:v4:f=0.4",
+      "source": "generated:N3/16@2:v4:f=0.246032",
       "qa_status": "accepted",
       "native_size": [
-        12,
-        10
+        7,
+        5
       ],
       "role": "native_reference",
       "anchor": [
@@ -14106,24 +14114,6 @@
       "fallback_kind": "unaccepted_decorative",
       "reason": "no_review_approved_candidate"
     },
-    "N3_01": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unaccepted_decorative",
-      "reason": "no_review_approved_candidate"
-    },
-    "N3_02": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unaccepted_decorative",
-      "reason": "no_review_approved_candidate"
-    },
-    "N3_03": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unaccepted_decorative",
-      "reason": "no_review_approved_candidate"
-    },
     "N3_06": {
       "drawable": false,
       "qa_status": "suppressed",
@@ -14136,7 +14126,7 @@
       "fallback_kind": "unaccepted_decorative",
       "reason": "no_review_approved_candidate"
     },
-    "N3_09": {
+    "N3_08": {
       "drawable": false,
       "qa_status": "suppressed",
       "fallback_kind": "unaccepted_decorative",
@@ -14233,7 +14223,7 @@
       "reason": "no_review_approved_candidate"
     }
   },
-  "installation_selection_sha256": "462bdfd347f1672d98124ee5b2c922bfdc5c1d0688dc1670361d3a1a1fd7d774",
+  "installation_selection_sha256": "58e3a93565d0876ab53ac76e15e5973404376ac7764a5c0bdc2019fe7f2a4883",
   "audits": {
     "manifest_v4": {
       "schema_version": 1,

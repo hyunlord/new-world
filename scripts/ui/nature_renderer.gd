@@ -96,35 +96,29 @@ func _reconcile() -> void:
 	if fingerprint == _fingerprint:
 		return
 	_fingerprint = fingerprint
-	var excluded: Dictionary = {}
-	for snapshot: Dictionary in [buildings, sites]:
-		var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
-		for i: int in range(xs.size()):
-			excluded[Vector2i(xs[i],ys[i])] = true
 	_clearings = LAYOUT.clearings(buildings, sites, food, settlements)
+	var rocks: Dictionary = LAYOUT.rocks(_terrain,_width,_clearings)
 	var seen: Dictionary = {}
 	for y: int in range(_height):
 		for x: int in range(_width):
 			var tile: Vector2i = Vector2i(x,y)
-			if excluded.has(tile):
+			if _clearings.has(tile):
 				continue
 			var h: int = ((x*73856093) ^ (y*19349663)) & 0x7fffffff
 			var code: int = _code(x,y)
 			var jitter: Vector2i = Vector2i((h>>8)%7-3,(h>>12)%5-2)
 			var key: String = "%d,%d" % [x,y]
-			if not _clearings.has(tile):
-				if code == 1:
-					if LAYOUT.forest_tree(x,y):
-						_place(key+":tree", _tree_id(x,y,h), "direction_14_young_tree", "tree",tile,jitter,seen)
-					elif LAYOUT.roll(x,y,0x19AB) < 0.08:
-						_understory(key,tile,jitter,h,seen)
-				elif code == 0:
-					if LAYOUT.roll(x,y,0x3841) < 0.015:
-						_place(key+":tree",_tree_id(x,y,h),"direction_14_young_tree","tree",tile,jitter,seen)
-					elif LAYOUT.roll(x,y,0x9467) < 0.03:
-						_place(key+":shrub","N1_%02d" % (11+h%3),"direction_14_young_tree","shrub",tile,jitter,seen)
-			if (code == 3 and h%100 < 25) or code == 2:
+			if code == 1:
+				if LAYOUT.forest_tree(x,y):
+					_place(key+":tree", _tree_id(x,y,h), "direction_14_young_tree", "tree",tile,jitter,seen)
+				elif LAYOUT.roll(x,y,0x19AB) < 0.08:
+					_understory(key,tile,jitter,h,seen)
+			elif code == 0:
+				if LAYOUT.roll(x,y,0x3841) < 0.015:
+					_place(key+":tree",_tree_id(x,y,h),"direction_14_young_tree","tree",tile,jitter,seen)
+				elif LAYOUT.roll(x,y,0x9467) < 0.03:
+					_place(key+":shrub","N1_%02d" % (11+h%3),"direction_14_young_tree","shrub",tile,jitter,seen)
+			if rocks.has(tile):
 				var index: int = (10+h%2 if h%100 < 40 else 8+h%2) if code == 2 else 5+h%5
 				_place(key+":rock", "N2_%02d" % index, "direction_13_boulder", "rock",tile,jitter,seen)
 			if code != 4 and h%100 < 18:
