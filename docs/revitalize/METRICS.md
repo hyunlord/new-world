@@ -1528,3 +1528,59 @@ Screens after round 1 (32 × 120, no twin; the screen reproduces the formal 120-
 | C | A + `urgent_start_minute` 480 | 5 / −4 | 0.857 / 0.786 | 0.107 / 0.143; 245.5 | 0.315 / 0.631 | 0.659 / 0.346 | 1.05 | 23.5 |
 
 Spring noon work rises to 0.47–0.50 in A–C but the seed medians stay at 0.32: the seven summer days decide them. B is the only screen with every target but Y9 (and the Part 7 receipts) passing; round 2 takes it.
+
+### Round 2 (`p6-5_round2_*`, code `3cf26767`) — kept
+
+Configuration: round 1 plus `winter_prep_days` 4.0 and `urgent_start_minute` 540. Both runs DETERMINISM PASS; the 120-day run equals screen B on every value.
+
+| Target | Clause | Verdict | Observed (median / p10 / p90 / min / max) |
+|---|---|---|---|
+| Y1 | legacy_pin | FAIL | false |
+| Y1 | twins_10 | PASS | 64 |
+| Y1 | twins_120 | PASS | 32 |
+| Y1 | v10_repro | FAIL | false |
+| Y1 | v11_repro | FAIL | false |
+| Y1 | v8_repro | FAIL | false |
+| Y1 | v9_repro | FAIL | false |
+| Y2 | deaths_dehydration_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| Y2 | deaths_dehydration_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| Y2 | deaths_starvation_10 | PASS | 0 / 0 / 0 / 0 / 0 |
+| Y2 | deaths_starvation_120 | PASS | 0 / 0 / 0 / 0 / 0 |
+| Y3 | alive_band | PASS | 42 / 41 / 42 / 35 / 42 |
+| Y3 | alive_day10 | PASS | 42 / 42 / 42 / 42 / 42 |
+| Y3 | birth_by_day4 | PASS | 7 / 7 / 7 / 7 / 7 |
+| Y3 | child_share | PASS | 0.107 / 0.0476 / 0.17 / 0.0238 / 0.195 |
+| Y3 | elder_share | PASS | 0.262 / 0.214 / 0.341 / 0.171 / 0.381 |
+| Y3 | old_age_by_day30 | PASS | 9 / 6 / 12 / 5 / 13 |
+| Y3 | one_settlement | PASS | 1 / 1 / 1 / 1 / 1 |
+| Y3 | replacement | PASS | 0 / -1 / 0 / -3 / 1 |
+| Y3 | stagnation | PASS | 0 / 0 / 0 / 0 / 4 |
+| Y4 | every_seed | PASS | 0.985 / 0.967 / 0.992 / 0.926 / 0.995 |
+| Y4 | store_share | PASS | 0.99 / 0.948 / 1 / 0.677 / 1 |
+| Y4 | winter | PASS | 1 / 0.98 / 1 / 0.945 / 1 |
+| Y5 | autumn_wood | PASS | autumn 50 / 0 / 130 / 0 / 148; summer 0 / 0 / 36.3 / 0 / 54 |
+| Y5 | autumn_work | PASS | 0.635 / 0.466 / 0.749 / 0.262 / 0.785; floor 0.408 |
+| Y6 | trip_days | PASS | 5 / 5 / 6 / 5 / 6 |
+| Y6 | trips | PASS | 96 / 89 / 109 / 84 / 117 |
+| Y7 | other_lit | PASS | 1 / 1 / 1 / 1 / 1 |
+| Y7 | winter_lit | PASS | 0.857 / 0.821 / 0.889 / 0.821 / 0.893 |
+| Y8 | winter_cold | PASS | 0.0984 / 0.0804 / 0.125 / 0.0623 / 0.134 |
+| Y8 | winter_food | PASS | 246 / 200 / 280 / 44 / 300; floor 203 |
+| Y9 | idle_1200 | FAIL | 0.619 / 0.548 / 0.692 / 0.333 / 0.905 |
+| Y9 | work_1200 | FAIL | 0.317 / 0.18 / 0.456 / 0.0417 / 0.68 |
+| Y9 | work_1500 | PASS | 0.431 / 0.288 / 0.519 / 0.125 / 0.694 |
+| Y10 | evening_near_hearth | PASS | 0.64 / 0.433 / 0.807 / 0.368 / 0.864 |
+| Y10 | night_in_shelter | PASS | 1 / 0.955 / 1 / 0.929 / 1 |
+| Y11 | home_distance | PASS | 7.68 / 5.91 / 8.8 / 4.79 / 11.3 |
+| Y11 | social_10 | PASS | 0.624 / 0.587 / 0.661 / 0.563 / 0.685 |
+| Y11 | social_120 | PASS | 0.812 / 0.788 / 0.843 / 0.769 / 0.855 |
+| Y11 | t6a_10 | PASS | 0.000991 / 0.000248 / 0.00248 / 0 / 0.00371 |
+| Y11 | t6a_120 | PASS | 0.00843 / 0.00676 / 0.0126 / 0.00487 / 0.0133 |
+| Y12 | day10 | PASS | 0 |
+| Y12 | day120 | PASS | 0 |
+| Y13 | day10 | FAIL | 0.00109 / 0.00107 / 0.00113 / 0.00102 / 0.00128; limit – |
+| Y13 | day120 | FAIL | 0.00139 / 0.00136 / 0.00146 / 0.00133 / 0.00154; limit – |
+
+Seasons (120-day medians over seed-days; spring / summer / autumn / winter): wood stock 26 / 21 / 182 / 106 against targets 39 / 19.5 / 195 / 156; gathered 30 / 0 / 50 / 6 per day; wood trips 15 / 0 / 25 / 12; urgent trips 2 / 0 / 0 / 0 (p90 21 / 10 / 0 / 17); 02:00 lit 1.000 / 1.000 / 1.000 / 0.856; food store at 08:00 checkpoints in `y_targets.md`. Adult work at 12:00 (seed medians) 0.499 / 0.074 / 0.635 / 0.136; at 15:00 0.432 / 0.415 / 0.389 / 0.171; idle at 12:00 0.548 / 0.783 / 0.393 / 0.786. Winters (128): wood at the first winter day 202 (172–216), nights out 1 (0–2; 124 of 128 seed-winters have one), the dark night is the last winter night (night 7), trip-days 5 (5–6), wood trips 96, urgent trips 18.5, gathered 45, cold member-hours 336, food at the end 246 (44–300).
+
+No round 3. Y9 is the only failing target and none of the six knobs reaches it: summer gathers only for its own nights (target 19.5), so summer noon work is 0.07 against v11's 0.609, which was almost entirely winter-prep wood gathered in summer; each seed's spring–autumn median over 21 days is its 11th value, so seven summer days near zero pull it to the lower spring days (0.32) even with spring at 0.50 and autumn at 0.64. Rounds 1 and 2 and screens A–C (urgent start 07:00, 08:00, 09:00) all fail Y9 between 0.29 and 0.32. A third round would reproduce round 2. Tuning rounds used: 2 of 3.
