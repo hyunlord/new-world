@@ -3010,39 +3010,39 @@
       "sprite_id": "V_a2_15",
       "path": "assets/art/production/V_a2/15.png",
       "native_path": "assets/art/production/V_a2/15_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:P3_fill_01/13@1:v4:f=0.777778",
+      "source_sprite": "P3_fill_01_13@1",
+      "qa_status": "accepted",
+      "candidate_id": "P3_fill_01_13@1:p3",
       "body": "adult_a",
       "view": "S",
       "activity": "build",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        16,
-        28
-      ],
-      "canvas_size": [
-        18,
+        20,
         30
       ],
+      "canvas_size": [
+        22,
+        32
+      ],
       "anchor": [
-        9,
-        29
+        11,
+        31
       ]
     },
     {
       "path": "assets/art/production/V_a2/15_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:P3_fill_01/13@1:v4:f=0.777778",
+      "qa_status": "accepted",
       "native_size": [
-        16,
-        28
+        20,
+        30
       ],
       "role": "native_reference",
       "anchor": [
@@ -3054,39 +3054,39 @@
       "sprite_id": "V_a2_16",
       "path": "assets/art/production/V_a2/16.png",
       "native_path": "assets/art/production/V_a2/16_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_a1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:P3_fill_01/14@1:v4:f=0.777778",
+      "source_sprite": "P3_fill_01_14@1",
+      "qa_status": "accepted",
+      "candidate_id": "P3_fill_01_14@1:p3",
       "body": "adult_a",
       "view": "S",
       "activity": "build",
       "frame": 1,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        16,
-        28
+        18,
+        27
       ],
       "canvas_size": [
-        18,
-        30
+        20,
+        29
       ],
       "anchor": [
-        9,
-        29
+        10,
+        28
       ]
     },
     {
       "path": "assets/art/production/V_a2/16_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:P3_fill_01/14@1:v4:f=0.777778",
+      "qa_status": "accepted",
       "native_size": [
-        16,
-        28
+        18,
+        27
       ],
       "role": "native_reference",
       "anchor": [
@@ -5650,25 +5650,25 @@
       "sprite_id": "V_b3_13",
       "path": "assets/art/production/V_b3/13.png",
       "native_path": "assets/art/production/V_b3/13_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_b1_04",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_b3/13@1:v4:f=0.965517",
+      "source_sprite": "V_b3_13@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_b3_13@1:p3",
       "body": "adult_b",
       "view": "E",
       "activity": "asleep",
       "frame": 0,
       "class": "adult",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
-        28,
+        29,
         12
       ],
       "canvas_size": [
-        30,
+        31,
         14
       ],
       "anchor": [
@@ -5678,10 +5678,10 @@
     },
     {
       "path": "assets/art/production/V_b3/13_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_b3/13@1:v4:f=0.965517",
+      "qa_status": "accepted",
       "native_size": [
-        28,
+        29,
         12
       ],
       "role": "native_reference",
@@ -6618,17 +6618,17 @@
       "sprite_id": "V_c2_03",
       "path": "assets/art/production/V_c2/03.png",
       "native_path": "assets/art/production/V_c2/03_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_c1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:P3_fill_04/15@1:v4:f=0.6",
+      "source_sprite": "P3_fill_04_15@1",
+      "qa_status": "accepted",
+      "candidate_id": "P3_fill_04_15@1:p3",
       "body": "child",
       "view": "S",
       "activity": "hop",
       "frame": 0,
       "class": "child",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
@@ -6646,8 +6646,8 @@
     },
     {
       "path": "assets/art/production/V_c2/03_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:P3_fill_04/15@1:v4:f=0.6",
+      "qa_status": "accepted",
       "native_size": [
         12,
         21
@@ -7102,39 +7102,39 @@
       "sprite_id": "V_c2_14",
       "path": "assets/art/production/V_c2/14.png",
       "native_path": "assets/art/production/V_c2/14_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_c2_15",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_c2/14@1:v4:f=0.816226",
+      "source_sprite": "V_c2_14@1",
+      "qa_status": "accepted",
+      "candidate_id": "V_c2_14@1:p3",
       "body": "child",
       "view": "S",
       "activity": "eat",
       "frame": 0,
       "class": "child",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
         13,
-        15
+        18
       ],
       "canvas_size": [
         15,
-        17
+        20
       ],
       "anchor": [
         7,
-        16
+        19
       ]
     },
     {
       "path": "assets/art/production/V_c2/14_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_c2/14@1:v4:f=0.816226",
+      "qa_status": "accepted",
       "native_size": [
         13,
-        15
+        18
       ],
       "role": "native_reference",
       "anchor": [
@@ -7190,39 +7190,39 @@
       "sprite_id": "V_c2_16",
       "path": "assets/art/production/V_c2/16.png",
       "native_path": "assets/art/production/V_c2/16_native.png",
-      "source": "procedural:procedural",
-      "source_sprite": "V_c1_01",
-      "qa_status": "procedural",
-      "candidate_id": "",
+      "source": "generated:V_c2/16@2:v4:f=0.666667",
+      "source_sprite": "V_c2_16@2",
+      "qa_status": "accepted",
+      "candidate_id": "V_c2_16@2:p3",
       "body": "child",
       "view": "S",
       "activity": "hug",
       "frame": 0,
       "class": "child",
       "contains_basket": false,
-      "fallback_kind": "procedural",
+      "fallback_kind": "",
       "activity_icon": "",
       "drawable": true,
       "native_size": [
         11,
-        13
+        22
       ],
       "canvas_size": [
         13,
-        15
+        24
       ],
       "anchor": [
         6,
-        14
+        23
       ]
     },
     {
       "path": "assets/art/production/V_c2/16_native.png",
-      "source": "procedural:procedural",
-      "qa_status": "procedural",
+      "source": "generated:V_c2/16@2:v4:f=0.666667",
+      "qa_status": "accepted",
       "native_size": [
         11,
-        13
+        22
       ],
       "role": "native_reference",
       "anchor": [
@@ -14223,7 +14223,7 @@
       "reason": "no_review_approved_candidate"
     }
   },
-  "installation_selection_sha256": "8d881394d0d2f621897604d68de6bb166244f78563bbf6276bf2e3e5d8e3ed77",
+  "installation_selection_sha256": "73db8d7240598601844bd95a2202591e07368172dbbdd47fc05f1773d50556c3",
   "audits": {
     "manifest_v4": {
       "schema_version": 1,
@@ -15877,20 +15877,20 @@
           28
         ],
         "assets/art/production/V_a2/15.png": [
-          18,
-          30
+          22,
+          32
         ],
         "assets/art/production/V_a2/15_native.png": [
-          16,
-          28
-        ],
-        "assets/art/production/V_a2/16.png": [
-          18,
+          20,
           30
         ],
+        "assets/art/production/V_a2/16.png": [
+          20,
+          29
+        ],
         "assets/art/production/V_a2/16_native.png": [
-          16,
-          28
+          18,
+          27
         ],
         "assets/art/production/V_a3/01.png": [
           19,
@@ -16293,12 +16293,12 @@
           29
         ],
         "assets/art/production/V_b3/03.png": [
-          20,
-          27
+          19,
+          23
         ],
         "assets/art/production/V_b3/03_native.png": [
-          18,
-          25
+          17,
+          21
         ],
         "assets/art/production/V_b3/04.png": [
           19,
@@ -16365,19 +16365,19 @@
           27
         ],
         "assets/art/production/V_b3/12.png": [
-          20,
-          32
+          18,
+          29
         ],
         "assets/art/production/V_b3/12_native.png": [
-          18,
-          30
+          16,
+          27
         ],
         "assets/art/production/V_b3/13.png": [
-          30,
+          31,
           14
         ],
         "assets/art/production/V_b3/13_native.png": [
-          28,
+          29,
           12
         ],
         "assets/art/production/V_b3/14.png": [
@@ -16638,11 +16638,11 @@
         ],
         "assets/art/production/V_c2/14.png": [
           15,
-          17
+          20
         ],
         "assets/art/production/V_c2/14_native.png": [
           13,
-          15
+          18
         ],
         "assets/art/production/V_c2/15.png": [
           15,
@@ -16654,11 +16654,11 @@
         ],
         "assets/art/production/V_c2/16.png": [
           13,
-          15
+          24
         ],
         "assets/art/production/V_c2/16_native.png": [
           11,
-          13
+          22
         ],
         "assets/art/terrain/camp_earth.png": [
           128,

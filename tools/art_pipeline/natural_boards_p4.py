@@ -49,7 +49,14 @@ def hair_visuals(sprite: Image.Image, mask: Image.Image) -> tuple[Image.Image, I
 def compose(rows: list[BoardFrame], reference: Image.Image) -> Image.Image:
     max_width = max((r.sprite.width for r in rows), default=30)
     width = max(580, max_width * 18 + 90)
-    height = max(300, max((r.sprite.height for r in rows), default=32) * 6 + 150)
+    reference_x = max(88, 20 + 2 * max_width)
+    peers_x = max(166, reference_x + 2 * reference.width + 12)
+    peer_width = max(64, max((p.width for r in rows for p in r.peers), default=28) * 2 + 8)
+    peer_columns = max(1, (width - peers_x - 8) // peer_width)
+    peer_height = max((p.height for r in rows for p in r.peers), default=30) * 2 + 6
+    peer_rows = max(((len(r.peers) + peer_columns - 1) // peer_columns for r in rows), default=1)
+    grass_height = max(84, 26 + peer_rows * peer_height)
+    height = max(300, max((r.sprite.height for r in rows), default=32) * 6 + 66 + grass_height)
     board = Image.new('RGB', (width * 3, height * ((len(rows) + 2) // 3)), (161, 158, 152))
     draw = ImageDraw.Draw(board)
     for offset, row in enumerate(rows):
@@ -62,13 +69,13 @@ def compose(rows: list[BoardFrame], reference: Image.Image) -> Image.Image:
             overlay, white = hair_visuals(row.sprite, row.mask)
             paste(board, overlay, x + 24 + max_width * 6, y + 54, 6)
             paste(board, white, x + 40 + max_width * 12, y + 54, 4)
-        grass_y = y + height - 84
+        grass_y = y + height - grass_height
         draw.rectangle((x + 4, grass_y, x + width - 5, y + height - 3), fill=GRASS)
         paste(board, row.sprite, x + 12, grass_y + 8, 2)
-        paste(board, reference, x + 88, grass_y + 8, 2)
-        draw.text((x + 164, grass_y + 2), 'installed cycle 2x', fill='white')
-        for index, peer in enumerate(row.peers[:6]):
-            paste(board, peer, x + 166 + index * 64, grass_y + 17, 2)
+        paste(board, reference, x + reference_x, grass_y + 8, 2)
+        draw.text((x + peers_x, grass_y + 2), 'installed cycle 2x', fill='white')
+        for index, peer in enumerate(row.peers):
+            paste(board, peer, x + peers_x + (index % peer_columns) * peer_width, grass_y + 20 + (index // peer_columns) * peer_height, 2)
     return board
 
 

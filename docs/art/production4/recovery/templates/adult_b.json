@@ -1,0 +1,661 @@
+{
+  "verdicts": [
+    {
+      "candidate_id": "V_b1_09@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_09",
+      "target_slot": "V_b1_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_10@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_10",
+      "target_slot": "V_b1_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_11@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_11",
+      "target_slot": "V_b1_11",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_12@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_12",
+      "target_slot": "V_b1_12",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_09@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_09",
+      "target_slot": "V_b1_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_10@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_10",
+      "target_slot": "V_b1_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_11@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_11",
+      "target_slot": "V_b1_11",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_12@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_12",
+      "target_slot": "V_b1_12",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_09@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_09",
+      "target_slot": "V_b1_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_10@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_10",
+      "target_slot": "V_b1_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_11@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_11",
+      "target_slot": "V_b1_11",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b1_12@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b1_12",
+      "target_slot": "V_b1_12",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_01@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_01",
+      "target_slot": "V_b2_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_02@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_02",
+      "target_slot": "V_b2_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_03@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_03",
+      "target_slot": "V_b2_03",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_04@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_04",
+      "target_slot": "V_b2_04",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_05@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_05",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_06@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_06",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_07@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_07",
+      "target_slot": "V_b2_07",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_08@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_08",
+      "target_slot": "V_b2_08",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_09@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_09",
+      "target_slot": "V_b2_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_10@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_10",
+      "target_slot": "V_b2_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_13@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_13",
+      "target_slot": "V_b2_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_14@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_14",
+      "target_slot": "V_b2_14",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_01@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_01",
+      "target_slot": "V_b2_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_02@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_02",
+      "target_slot": "V_b2_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_03@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_03",
+      "target_slot": "V_b2_03",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_04@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_04",
+      "target_slot": "V_b2_04",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_05@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_05",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_06@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_06",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_07@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_07",
+      "target_slot": "V_b2_07",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_09@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_09",
+      "target_slot": "V_b2_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_10@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_10",
+      "target_slot": "V_b2_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_13@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_13",
+      "target_slot": "V_b2_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b2_14@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b2_14",
+      "target_slot": "V_b2_14",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_13@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_16@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_16",
+      "target_slot": "V_b3_16",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_13@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_16@2:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_16",
+      "target_slot": "V_b3_16",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_13@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "V_b3_16@3:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "V_b3_16",
+      "target_slot": "V_b3_16",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_05@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_05",
+      "target_slot": "V_b2_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_06@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_06",
+      "target_slot": "V_b2_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_07@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_07",
+      "target_slot": "V_b2_03",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_08@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_08",
+      "target_slot": "V_b2_04",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_09@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_09",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_10@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_10",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_11@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_11",
+      "target_slot": "V_b2_07",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_12@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_12",
+      "target_slot": "V_b2_08",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_13@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_13",
+      "target_slot": "V_b2_09",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_14@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_14",
+      "target_slot": "V_b2_10",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_15@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_15",
+      "target_slot": "V_b2_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_02_16@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_02_16",
+      "target_slot": "V_b2_14",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_01@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_01",
+      "target_slot": "P2V_b_N_gather_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_02@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_02",
+      "target_slot": "P2V_b_N_gather_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_03@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_03",
+      "target_slot": "P2V_b_N_build_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_04@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_04",
+      "target_slot": "P2V_b_N_build_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_05@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_05",
+      "target_slot": "P2V_b_S_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_07@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_07",
+      "target_slot": "P2V_b_N_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_08@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_08",
+      "target_slot": "P2V_b_N_drink_02",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_09@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_09",
+      "target_slot": "P2V_b_E_eat_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_11@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_11",
+      "target_slot": "P2V_b_N_eat_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_13@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_14@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_14",
+      "target_slot": "P2V_b_S_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P2_fill_05_15@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P2_fill_05_15",
+      "target_slot": "P2V_b_N_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_03@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_03",
+      "target_slot": "V_b2_03",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_04@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_04",
+      "target_slot": "V_b2_04",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_05@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_05",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_06@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_06",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_08@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_08",
+      "target_slot": "V_b2_08",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_11@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_11",
+      "target_slot": "V_b2_13",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_12@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_12",
+      "target_slot": "V_b2_14",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    },
+    {
+      "candidate_id": "P3_fill_02_15@1:p3",
+      "observation": "",
+      "reason": "",
+      "sprite_id": "P3_fill_02_15",
+      "target_slot": "P2V_b_S_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": ""
+    }
+  ]
+}

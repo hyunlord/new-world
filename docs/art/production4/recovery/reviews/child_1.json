@@ -1,0 +1,544 @@
+{
+  "verdicts": [
+    {
+      "candidate_id": "V_c1_09@1:p3",
+      "observation": "East-facing stride is readable at 2x; dark hair and cream garment retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_09",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_10@1:p3",
+      "observation": "East-facing passing step is readable at 2x with coherent limbs and reference clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_10",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_11@1:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_13@1:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_14@1:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_15@1:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_16@1:p3",
+      "observation": "Rear-facing walking pose is coherent at 2x with visible stepping legs.",
+      "reason": "",
+      "sprite_id": "V_c1_16",
+      "target_slot": "V_c1_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_05@2:p3",
+      "observation": "Front-facing step reads at 2x; warm tan skin and cream clothing retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_05",
+      "target_slot": "V_c1_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_06@2:p3",
+      "observation": "Front-facing passing step is coherent at 2x; hair and clothing remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_06",
+      "target_slot": "V_c1_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_07@2:p3",
+      "observation": "Front-facing walking stance reads at 2x with coherent arms and legs.",
+      "reason": "",
+      "sprite_id": "V_c1_07",
+      "target_slot": "V_c1_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_08@2:p3",
+      "observation": "Front-facing compact step reads at 2x with consistent brown hair and cream clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_08",
+      "target_slot": "V_c1_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_09@2:p3",
+      "observation": "East-facing stride is readable at 2x; dark hair and cream garment retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_09",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_10@2:p3",
+      "observation": "Blue stray texels remain on the crown above the brown hair.",
+      "reason": "artefact",
+      "sprite_id": "V_c1_10",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c1_11@2:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_12@2:p3",
+      "observation": "East-facing compact walking step remains coherent at 2x.",
+      "reason": "",
+      "sprite_id": "V_c1_12",
+      "target_slot": "V_c1_12",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_13@2:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_14@2:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_15@2:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_16@2:p3",
+      "observation": "Blue stray texels remain at the right hand and bottom foot edge.",
+      "reason": "artefact",
+      "sprite_id": "V_c1_16",
+      "target_slot": "V_c1_16",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c1_05@3:p3",
+      "observation": "Front-facing step reads at 2x; warm tan skin and cream clothing retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_05",
+      "target_slot": "V_c1_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_06@3:p3",
+      "observation": "Front-facing passing step is coherent at 2x; hair and clothing remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_06",
+      "target_slot": "V_c1_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_07@3:p3",
+      "observation": "Front-facing walking stance reads at 2x with coherent arms and legs.",
+      "reason": "",
+      "sprite_id": "V_c1_07",
+      "target_slot": "V_c1_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_08@3:p3",
+      "observation": "Blue stray texels remain beside the left arm.",
+      "reason": "artefact",
+      "sprite_id": "V_c1_08",
+      "target_slot": "V_c1_08",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c1_09@3:p3",
+      "observation": "Blue stray texels remain beneath both feet.",
+      "reason": "artefact",
+      "sprite_id": "V_c1_09",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c1_10@3:p3",
+      "observation": "East-facing passing step is readable at 2x with coherent limbs and reference clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_10",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_11@3:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_12@3:p3",
+      "observation": "East-facing compact walking step remains coherent at 2x.",
+      "reason": "",
+      "sprite_id": "V_c1_12",
+      "target_slot": "V_c1_12",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_13@3:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_14@3:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_15@3:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c1_16@3:p3",
+      "observation": "Blue stray texels remain on the right hair and hand edges.",
+      "reason": "artefact",
+      "sprite_id": "V_c1_16",
+      "target_slot": "V_c1_16",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_03@1:p3",
+      "observation": "Raised arms and tucked leg read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_03",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_04@1:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_05@1:p3",
+      "observation": "Blue stray texels remain beside the head and right foot.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_05",
+      "target_slot": "V_c2_05",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_06@1:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_07@1:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_08@1:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_10@1:p3",
+      "observation": "Blue stray texels remain beyond the raised right hand.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_10",
+      "target_slot": "V_c2_10",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_13@1:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_14@1:p3",
+      "observation": "Seated front-facing pose brings the hands toward the mouth and reads as eating at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_14",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_16@1:p3",
+      "observation": "Blue stray texels remain above the crown.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_16",
+      "target_slot": "V_c2_16",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_03@2:p3",
+      "observation": "Raised arms and tucked leg read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_03",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_04@2:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_05@2:p3",
+      "observation": "Blue stray texels remain along the top hair edge.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_05",
+      "target_slot": "V_c2_05",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_06@2:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_07@2:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_08@2:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_10@2:p3",
+      "observation": "Front-facing expressive arm gesture reads as talking at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_10",
+      "target_slot": "V_c2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_13@2:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_14@2:p3",
+      "observation": "Seated front-facing pose brings the hands toward the mouth and reads as eating at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_14",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_16@2:p3",
+      "observation": "Front-facing inward-folded arms read as a hugging gesture at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_16",
+      "target_slot": "V_c2_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_03@3:p3",
+      "observation": "Blue stray texels remain above the crown.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_03",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    },
+    {
+      "candidate_id": "V_c2_04@3:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_05@3:p3",
+      "observation": "Bent running arms and separated legs read as east-facing motion at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_05",
+      "target_slot": "V_c2_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_06@3:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_07@3:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_08@3:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_10@3:p3",
+      "observation": "Front-facing expressive arm gesture reads as talking at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_10",
+      "target_slot": "V_c2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_13@3:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    {
+      "candidate_id": "V_c2_14@3:p3",
+      "observation": "Blue stray texels remain beside the left arm.",
+      "reason": "artefact",
+      "sprite_id": "V_c2_14",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "reject"
+    }
+  ]
+}
