@@ -39,6 +39,14 @@ pub fn game_v11_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 6 fixture: the v11 world under the v12 rules (autumn wood, lean winter).
+pub fn game_v12_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v12(seed),
+        sim_core::rules::WorldRules::game_v12(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

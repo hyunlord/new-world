@@ -96,6 +96,10 @@ pub struct Tallies {
     pub gather_preempted: u64,
     /// Members marked `Cold`, summed over every hourly fire update (Pass 5).
     pub cold_member_hours: u64,
+    /// Firewood trips started while the member's settlement was in urgent mode (Pass 6).
+    pub urgent_wood_trips: u64,
+    /// Winter regrowth units that found no deadwood spot below the cap (Pass 6).
+    pub winter_wood_lost: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).

@@ -73,9 +73,12 @@ pub const SLEEP_REGEN_AMOUNT: u8 = 1;
 
 /// Display day index `(current_tick + clock_offset_ticks) / ticks_per_day`.
 pub fn day_index(resources: &SimResources) -> u64 {
-    resources
-        .current_tick
-        .saturating_add(resources.rules.clock_offset_ticks)
+    day_index_at(resources, resources.current_tick)
+}
+
+/// Display day index of simulation tick `tick`.
+pub fn day_index_at(resources: &SimResources, tick: u64) -> u64 {
+    tick.saturating_add(resources.rules.clock_offset_ticks)
         .checked_div(resources.ticks_per_day)
         .unwrap_or(0)
 }
@@ -85,12 +88,18 @@ pub fn day_index(resources: &SimResources) -> u64 {
 /// `season = (d / days_per_season) % 4` with 0 spring, 1 summer, 2 autumn,
 /// 3 winter; display day `d = 0` is the first day of spring.
 pub fn season_at(resources: &SimResources) -> Option<(usize, u32)> {
+    season_at_tick(resources, resources.current_tick)
+}
+
+/// `(season, one-based day of season)` of simulation tick `tick`; `None`
+/// when seasons are off. Same rule as [`season_at`].
+pub fn season_at_tick(resources: &SimResources, tick: u64) -> Option<(usize, u32)> {
     let rule = resources.rules.seasons?;
     let per_season = u64::from(rule.days_per_season);
     if per_season == 0 {
         return None;
     }
-    let d = day_index(resources);
+    let d = day_index_at(resources, tick);
     Some((((d / per_season) % 4) as usize, (d % per_season) as u32 + 1))
 }
 

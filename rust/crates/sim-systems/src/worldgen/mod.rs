@@ -37,6 +37,11 @@ pub struct WorldGenConfig {
     pub deadwood_max_radius: u32,
 }
 impl WorldGenConfig {
+    /// Pass 6 generator inputs: the same world as v11 (no worldgen change).
+    pub const fn game_v12(seed: u64) -> Self {
+        Self::game_v11(seed)
+    }
+
     /// Pass 5 generator inputs: v10 plus twenty capacity-six deadwood spots
     /// 5..=18 tiles from the hearth, drawn from their own stream.
     pub const fn game_v11(seed: u64) -> Self {
@@ -157,6 +162,12 @@ mod tests {
         let plain = WorldGenConfig { deadwood_spots: 0, deadwood_capacity: 0, deadwood_min_radius: 0, deadwood_max_radius: 0, ..v11 };
         assert_eq!(plain, WorldGenConfig::game_v10(5));
         assert_eq!(WorldGenConfig::game_v10(5).deadwood_spots, 0);
+    }
+    #[test]
+    fn game_v12_is_the_v11_world() {
+        for seed in [0, 5, DEFAULT_GAME_SEED] {
+            assert_eq!(WorldGenConfig::game_v12(seed), WorldGenConfig::game_v11(seed));
+        }
     }
     #[test]
     fn default_configuration_is_explicit() {

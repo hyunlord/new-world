@@ -579,3 +579,9 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | Part | File / test | Change | Preserved intent / merge touch-point |
 |---|---|---|---|
 | 0 | (none) | Part 0 only adds `harness_revitalize_pass6_frozen.rs` (v11 fingerprints for seeds 0–3 and the field-by-field `game_v11()` literal) | — |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_tallies.rs` exhaustive Tallies literal | Add `urgent_wood_trips`, `winter_wood_lost` = 0 | struct-literal field addition with legacy values; every assertion unchanged |
+| 1 | `rust/crates/sim-bridge/src/ffi/world_node.rs` `tallies_collector_preserves_all_four_counters` Tallies literal | Add the two Pass 6 counters = 0 | struct-literal field addition with legacy values |
+| 1 | `rust/crates/sim-systems/src/runtime/settlement/firewood.rs` test `rule()` FirewoodRule literal | Add the seven Pass 6 fields with their v11 values (`None`, `true`, `None`, `None`, `None`, `false`, `None`) | struct-literal field addition with legacy values; existing assertions unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | The same seven fields with their v11 values | struct-literal field addition (Part 0 test); the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_five_is_exactly_additive` → `schema_six_is_exactly_additive`: version 5 → 6, key count 53 + 15 + 15 → 53 + 15 + 15 + 6 | authorized probe schema move; every v5 key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | Adds a `game_v12` parse assertion and a `game_v13` rejection | strengthened |

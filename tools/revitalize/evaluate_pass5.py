@@ -35,11 +35,11 @@ SPRING, SUMMER, AUTUMN, WINTER = range(4)
 SCHEMA = 5
 
 
-def load_round(path: Path, duration: int) -> Round:
-    """Load a schema-5 round; every seed must have every day checkpoint."""
+def load_round(path: Path, duration: int, schema: int = SCHEMA) -> Round:
+    """Load a round of `schema` (5 by default); every seed must have every day checkpoint."""
     summary = json.loads((path / "summary.json").read_text())
-    if summary.get("schema_version") != SCHEMA:
-        raise EvidenceError(f"{path}: summary schema must be {SCHEMA}")
+    if summary.get("schema_version") != schema:
+        raise EvidenceError(f"{path}: summary schema must be {schema}")
     if int(max(map(int, summary["days"]))) != duration:
         raise EvidenceError(f"{path}: summary covers {max(map(int, summary['days']))} days, expected {duration}")
     seeds = []
@@ -52,8 +52,8 @@ def load_round(path: Path, duration: int) -> Round:
         with file.open() as stream:
             for line in stream:
                 row = json.loads(line)
-                if row.get("schema_version") != SCHEMA:
-                    raise EvidenceError(f"{file}: raw rows must be schema {SCHEMA}")
+                if row.get("schema_version") != schema:
+                    raise EvidenceError(f"{file}: raw rows must be schema {schema}")
                 tpd = round(row["tick"] / row["day"]) if row["day"] else 1440
                 kind = row["sample_kind"]
                 if kind == "day":

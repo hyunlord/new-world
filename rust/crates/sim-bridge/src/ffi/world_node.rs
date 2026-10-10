@@ -37,7 +37,7 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Elder, Hunger, Inventory, Life,
+    Agent, AgentId, AgentState, BodyHealth, Child, Cold, ConstructionSite, Elder, Hunger, Inventory, Life,
     Memory, Position,
     ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v11(DEFAULT_GAME_SEED),
-                WorldRules::game_v11(),
+                &WorldGenConfig::game_v12(DEFAULT_GAME_SEED),
+                WorldRules::game_v12(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v11(self.world_seed),
-            WorldRules::game_v11(),
+            &WorldGenConfig::game_v12(self.world_seed),
+            WorldRules::game_v12(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -395,6 +395,9 @@ impl WorldSimNode {
             self.engine.resources.ticks_per_day,
         );
         dict.set("ages_days", PackedInt32Array::from(ages.as_slice()));
+        // Pass 6 — additive cold flags in the same row order (1 with the Cold marker).
+        let colds = collect_agent_colds(&self.engine.world);
+        dict.set("colds", PackedByteArray::from(colds.as_slice()));
         dict
     }
 
@@ -483,7 +486,9 @@ impl WorldSimNode {
             &self.engine.world,
             &self.engine.resources.settlements,
         );
-        settlement_rows_to_dict(&rows, &self.engine.resources.fires)
+        // Pass 6 — additive floor of each settlement's wood target.
+        let wood_targets = collect_settlement_wood_targets(&rows, &self.engine.resources);
+        settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)
     }
 
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
@@ -1388,6 +1393,17 @@ pub fn collect_agent_ages_days(world: &hecs::World, tick: u64, ticks_per_day: u6
                     .map_or(0, |days| days.min(i32::MAX as u64) as i32)
             })
         })
+        .collect()
+}
+
+/// Pass 6 — `1` for every snapshot row whose agent carries the `Cold` marker,
+/// else `0`, in [`collect_agent_snapshot`] order (the same `Agent` +
+/// `Position` archetype iteration). All zero without the firewood rule.
+pub fn collect_agent_colds(world: &hecs::World) -> Vec<u8> {
+    world
+        .query::<(&Agent, &Position, Option<&Cold>)>()
+        .iter()
+        .map(|(_, (_, _, cold))| u8::from(cold.is_some()))
         .collect()
 }
 
@@ -2344,6 +2360,7 @@ pub fn collect_settlement_snapshot(
 fn settlement_rows_to_dict(
     rows: &[SettlementSnapshotRow],
     fires: &std::collections::BTreeMap<SettlementId, sim_engine::FireState>,
+    wood_targets: &[i32],
 ) -> VarDictionary {
     let n = rows.len();
     let mut ids = PackedInt64Array::new();
@@ -2392,7 +2409,16 @@ fn settlement_rows_to_dict(
     dict.set("food_stocks", food_stocks);
     dict.set("wood_stocks", wood_stocks);
     dict.set("fire_lit", fire_lit);
+    dict.set("wood_targets", PackedInt32Array::from(wood_targets));
     dict
+}
+
+/// Pass 6 — floor of the wood target of every settlement row, in row order;
+/// `0` for every row without the firewood rule.
+pub fn collect_settlement_wood_targets(rows: &[SettlementSnapshotRow], resources: &SimResources) -> Vec<i32> {
+    let target = sim_systems::runtime::settlement::firewood::wood_target(resources)
+        .map_or(0, |target| target.max(0.0).floor().min(f64::from(i32::MAX)) as i32);
+    vec![target; rows.len()]
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -2753,6 +2779,8 @@ mod revitalize_tooling_tests {
             wood_gathered: 0,
             gather_preempted: 0,
             cold_member_hours: 0,
+            urgent_wood_trips: 0,
+            winter_wood_lost: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
@@ -3029,6 +3057,46 @@ mod pass3_agent_snapshot_tests {
         assert_eq!(by_id[&1], (0, -1));
         assert_eq!(by_id[&2], (2, 3));
         assert_eq!(by_id[&3], (1, 1));
+    }
+
+    #[test]
+    fn colds_follow_snapshot_order() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(2, 3)));
+        world.spawn((Agent { id: 2 }, Position::new(2, 3), Cold));
+        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 0 }, Cold));
+        world.spawn((Agent { id: 4 }, Position::new(2, 3), Child { born_tick: 0 }));
+        let rows = collect_agent_snapshot(&world);
+        let colds = collect_agent_colds(&world);
+        assert_eq!(rows.len(), colds.len());
+        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&colds).map(|(row, cold)| (row.agent_id, *cold)).collect();
+        assert_eq!(by_id.into_iter().collect::<Vec<_>>(), vec![(1, 0), (2, 1), (3, 1), (4, 0)]);
+    }
+
+    #[test]
+    fn wood_targets_floor_the_target_per_settlement_row() {
+        let mut resources = SimResources::new(16, 16, MaterialRegistry::new());
+        let mut world = hecs::World::new();
+        for (sid, x) in [(1u32, 2u32), (2, 9)] {
+            let entity = world.spawn((Agent { id: u64::from(sid) }, Position::new(x, 3)));
+            let _ = entity;
+            let mut settlement = Settlement::new_with_id(sid, 0);
+            settlement.formation_tile = (x, 3);
+            settlement.add_member_agent(u64::from(sid));
+            resources.settlements.insert(sid, settlement);
+        }
+        let rows = collect_settlement_snapshot(&world, &resources.settlements);
+        assert_eq!(rows.len(), 2);
+        // No firewood rule: zero for every row.
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![0, 0]);
+        // v11 without seasons: 1.5 x 26 = 39; summer of a seasonal world 1.5 x 13 + 7 x 39 = 292.5 -> 292.
+        resources.rules = WorldRules::game_v11();
+        resources.rules.seasons = None;
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![39, 39]);
+        resources.rules = WorldRules::game_v11();
+        resources.current_tick = 7 * 1_440;
+        assert_eq!(collect_settlement_wood_targets(&rows, &resources), vec![292, 292]);
+        assert!(collect_settlement_wood_targets(&[], &resources).is_empty());
     }
 
     #[test]
