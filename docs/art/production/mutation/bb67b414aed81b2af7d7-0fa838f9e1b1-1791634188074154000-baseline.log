@@ -1,0 +1,10 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running tests/harness_show_death_visual.rs (target/debug/deps/harness_show_death_visual-c1458222e9550ad6)
+
+running 1 test
+test harness_death_a6_scene_wiring_additive ... [viz-D A6] load_steps 19, ext 18; DeathVizRenderer wired, prior nodes preserved ✓
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

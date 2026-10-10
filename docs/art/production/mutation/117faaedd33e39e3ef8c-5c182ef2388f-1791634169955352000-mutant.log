@@ -1,0 +1,19 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running tests/harness_p3_gamma_2_alpha_locale_panel_scaffold.rs (target/debug/deps/harness_p3_gamma_2_alpha_locale_panel_scaffold-014704f68905b6f9)
+
+running 1 test
+test harness_p3_gamma_2_alpha_causal_panel_gd_scaffold_present ... 
+thread 'harness_p3_gamma_2_alpha_causal_panel_gd_scaffold_present' (49590398) panicked at crates/sim-test/tests/harness_p3_gamma_2_alpha_locale_panel_scaffold.rs:152:5:
+causal_panel.gd must instantiate a `ColorRect` background dynamically (locked fact P3γ2α-U1: no .tscn, layout built in code)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_p3_gamma_2_alpha_causal_panel_gd_scaffold_present
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_p3_gamma_2_alpha_locale_panel_scaffold`

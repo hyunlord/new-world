@@ -1,0 +1,9 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running tests/harness_p14_epsilon_activity_trails.rs (target/debug/deps/harness_p14_epsilon_activity_trails-84b63933acc6f627)
+
+running 1 test
+test harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s
+

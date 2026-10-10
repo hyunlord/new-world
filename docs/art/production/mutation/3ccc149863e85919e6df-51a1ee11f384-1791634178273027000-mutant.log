@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/harness_s16_epsilon_state_viz.rs (target/debug/deps/harness_s16_epsilon_state_viz-3f66bd49fa34b7e3)
+
+running 1 test
+test harness_s16_epsilon_a9_renderer_and_scene_static_structure ... 
+thread 'harness_s16_epsilon_a9_renderer_and_scene_static_structure' (49599599) panicked at crates/sim-test/tests/harness_s16_epsilon_state_viz.rs:350:5:
+A9.3: debug head dots are removed; selected-only goal lines remain
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_s16_epsilon_a9_renderer_and_scene_static_structure
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_s16_epsilon_state_viz`

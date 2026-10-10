@@ -1,0 +1,9 @@
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/art-production-audit/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running tests/harness_g_phase_a_agent_frame_zoom.rs (target/debug/deps/harness_g_phase_a_agent_frame_zoom-9bf2d4a111c2b609)
+
+running 1 test
+test harness_g_a8_agent_renderer_cue_invariants_intact ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 14 filtered out; finished in 0.00s
+

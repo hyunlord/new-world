@@ -1,6 +1,6 @@
 # Per-assertion mutation plan
 
-Prepared from the current production working tree; **no mutation audit has run**. The final committed runtime SHA must be supplied before execution.
+Execution started against committed runtime `0189eead423c0496bda04d93b2e2da57a3efea27` in `/Users/rexxa/work/art-production-audit`. Evidence is under `docs/art/production/mutation/`; the mapped audit is now complete: 467/467 killed, zero survivors or invalid runs. See `mutation/README.md` and `mutation/mapped-summary.json`. The mapped execution scope contains 467 distinct candidate IDs, recorded in `execution-scope.json`.
 
 The ledger has 336 historical rows covering 151 test functions. 331 rows map to concrete source candidates and five rows alter diagnostics only. The inventory contains 758 candidates; candidate count is not assertion coverage.
 
@@ -16,7 +16,7 @@ Historical replacements are followed to their final implementation: building arg
 
 ## Ledger mapping
 
-L numbers refer to `docs/art/TEST_LEDGER.md`. Candidate IDs resolve to exact source file, token, operation and test in the inventory JSON. All mapped rows remain pending execution.
+L numbers refer to `docs/art/TEST_LEDGER.md`. Candidate IDs resolve to exact source file, token, operation and test in the inventory JSON. All mapped rows were killed; the table remains the pre-execution target plan, while `mutation/assertion-accounting.json` records the completed outcomes.
 
 | Ledger row | Test function | Final mutation targets (candidate IDs) or non-mutation reason |
 |---|---|---|

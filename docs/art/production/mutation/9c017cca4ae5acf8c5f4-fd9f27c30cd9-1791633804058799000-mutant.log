@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests/harness_h_phase_a_input_camera_color.rs (target/debug/deps/harness_h_phase_a_input_camera_color-458c9743efc30f93)
+
+running 1 test
+test harness_h_a9_zoom_invariants_unchanged ... 
+thread 'harness_h_a9_zoom_invariants_unchanged' (49104534) panicked at crates/sim-test/tests/harness_h_phase_a_input_camera_color.rs:435:5:
+assertion `left == right` failed: a9.4: ZOOM_MIN must equal Vector2(1.0,1.0); got `__MUTATED__`
+  left: "__MUTATED__"
+ right: "Vector2(1.0,1.0)"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    harness_h_a9_zoom_invariants_unchanged
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_h_phase_a_input_camera_color`
