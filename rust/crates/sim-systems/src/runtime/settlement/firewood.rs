@@ -13,6 +13,9 @@ use sim_engine::SimResources;
 /// Minutes in a day; windows are minute-of-day.
 const MINUTES_PER_DAY: u32 = 1440;
 
+/// Winter index of `SeasonRule` seasons and of `burn_per_hour`.
+const WINTER: usize = 3;
+
 /// Whole hours in the half-open, possibly midnight-wrapping burn window
 /// (13 for 18:00–07:00).
 pub fn burn_hours(rule: &FirewoodRule) -> u32 {
@@ -63,19 +66,24 @@ pub fn burn_per_day(rule: &FirewoodRule, season: usize) -> f64 {
     f64::from(rule.burn_per_hour[season.min(3)]) * f64::from(burn_hours(rule))
 }
 
-/// Wood target of every settlement: `base_days x burn_per_day(current)`, plus a
-/// winter's burn (`days_per_season x burn_per_day(winter)`) in summer and
-/// autumn when seasons are on and winter preparation is enabled. `None`
-/// without the firewood rule.
+/// Wood target of every settlement: `base(s) x burn_per_day(s) + prep(s)` for
+/// the current season `s` (Pass 6 section 7.2). `base(s)` is
+/// `winter_base_days` in winter when set, else `base_days`. With seasons on and
+/// winter preparation enabled, `prep(s) = prep_days x burn_per_day(winter)` in
+/// autumn, and in summer too under `winter_prep_in_summer`; `prep_days` is
+/// `winter_prep_days`, else `days_per_season` (Pass 5). `None` without the
+/// firewood rule.
 pub fn wood_target(resources: &SimResources) -> Option<f64> {
     let rule = resources.rules.society.firewood?;
     let season = burn_season(resources);
-    let mut target = rule.base_days * burn_per_day(&rule, season);
+    let base = if season == WINTER { rule.winter_base_days.unwrap_or(rule.base_days) } else { rule.base_days };
+    let mut target = base * burn_per_day(&rule, season);
     if let (true, Some(seasons), Some((current, _))) =
         (rule.winter_prep, resources.rules.seasons, season_at(resources))
     {
-        if current == 1 || current == 2 {
-            target += f64::from(seasons.days_per_season) * burn_per_day(&rule, 3);
+        if current == 2 || (current == 1 && rule.winter_prep_in_summer) {
+            let prep_days = rule.winter_prep_days.unwrap_or(f64::from(seasons.days_per_season));
+            target += prep_days * burn_per_day(&rule, WINTER);
         }
     }
     Some(target)

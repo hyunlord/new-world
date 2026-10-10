@@ -325,7 +325,21 @@ impl WorldRules {
     /// Pass 6 village policies: v11 with an autumn wood season, a lean winter,
     /// urgent mornings and elders at the evening fire. v11 stays frozen.
     pub const fn game_v12() -> Self {
-        Self::game_v11()
+        let mut rules = Self::game_v11();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2: autumn alone prepares three nights of winter burn; winter
+            // keeps four days of its own burn; deadwood lies under snow (one
+            // unit a spot) and six branches a day fall one spot at a time; the
+            // night belongs to the evening it began.
+            firewood.winter_prep_days = Some(3.0);
+            firewood.winter_prep_in_summer = false;
+            firewood.winter_base_days = Some(4.0);
+            firewood.winter_regen_units_per_day = Some(6);
+            firewood.winter_deadwood_cap = Some(1);
+            firewood.night_season_from_evening = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
     }
 
     /// Pass 5 village policies: v10 plus meals, firewood and gathering preemption.
