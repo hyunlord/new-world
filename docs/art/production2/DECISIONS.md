@@ -9,3 +9,7 @@
 - graft: 이 checkout의 첫 질의는 빈 그래프 결과. 다른 checkout의 그래프를 쓰지 않고 직접 소스를 확인한다. 확인된 절약 0.
 - 실행 계획: 사용자 지정 Part 0–8 순서를 유지한다. 독립 구현은 기준선 통과 후 분담하며 git commit/push/atlas 통합과 최종 gate는 리더가 직렬 수행한다.
 - Python: 사용자 지정 Pillow/NumPy와 표준 라이브러리만 사용; 새 의존성 설치 없음.
+- Part 0: 공유 window lock의 나이만으로 삭제하던 분기를 제거했다. Pass 4의 살아 있는 캡처 lock을 빼앗거나 이전 Production 1 기록을 수정하지 않고, 소유자가 해제할 때까지 기다린다.
+- 실행 계획 스킬 적용: 제공된 9개 Part가 실행 계획이며, 사용자 명시 지시에 따라 별도 승인 대기나 추가 worktree 생성은 하지 않는다.
+
+- Part 0 종료 / Part 1 시작: 2026-10-10T13:37:22Z. P0 full gate 19/19 PASS, Rust 1850 passed / 0 failed, Python 57, Godot scene 12. 원본 42/42 readable. Pass 3 merge a9763bf7 충돌 없음.

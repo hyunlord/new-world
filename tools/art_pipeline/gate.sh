@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Full production gate; no early exit so every failure remains visible.
 set -uo pipefail
-export CARGO_BUILD_JOBS=8
+export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 export GODOT_BIN="${GODOT_BIN:-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot}"
 root="$(git rev-parse --show-toplevel)"
 cd "$root"
@@ -18,7 +18,7 @@ run_check() {
  if (( code != 0 )); then status=1; fi
 }
 : > "$out/results.tsv"
-run_check cargo_test cargo test --manifest-path rust/Cargo.toml --workspace
+run_check cargo_test cargo test --manifest-path rust/Cargo.toml --workspace -- --test-threads="${CARGO_BUILD_JOBS}"
 run_check clippy cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets -- -D warnings
 run_check strict bash tools/harness/gdscript_strict_check.sh
 run_check bridge cargo build --manifest-path rust/Cargo.toml -p sim-bridge

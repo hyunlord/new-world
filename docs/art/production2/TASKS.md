@@ -2,8 +2,8 @@
 
 | Part | Outcome | Status | Start UTC | End UTC |
 |---|---|---|---|---|
-| 0 | Pinned Pass 3 baseline, CPU limits, full gate, 42-raw inventory | in_progress | 2026-10-10T13:29:26Z | |
-| 1 | Converter v4 and required tests | pending | | |
+| 0 | Pinned Pass 3 baseline, CPU limits, full gate, 42-raw inventory | completed | 2026-10-10T13:29:26Z | 2026-10-10T13:37:22Z |
+| 1 | Converter v4 and required tests | in_progress | 2026-10-10T13:37:22Z | |
 | 2 | All raw candidates, independent review, scale decision | pending | | |
 | 3 | Fill generation, honest fallbacks, installation | pending | | |
 | 4 | Villager frames, fallback icons, elder variants | pending | | |

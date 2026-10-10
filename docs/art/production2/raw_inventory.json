@@ -1,0 +1,595 @@
+{
+  "expected": 42,
+  "found": 42,
+  "readable": 42,
+  "raws": [
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a1/attempt_1.png",
+      "sheet": "V_a1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1432897,
+      "sha256": "ab741110f695bfc9f87c9300f6d70a5ce46e025d9317732b0a16e719c0850073",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a1/attempt_2.png",
+      "sheet": "V_a1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1362521,
+      "sha256": "a1328caf7838115e396953acf347094cd1931ad67e7fb15fb9f3c32f67491f66",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a1/attempt_3.png",
+      "sheet": "V_a1",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1365976,
+      "sha256": "a996c32e498e686d6afbd599df9639dab00f42855402f6a7b1bdd6c3a725dced",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a2/attempt_1.png",
+      "sheet": "V_a2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1454219,
+      "sha256": "5d9c32459eb2ea3e1ba2a4005ed2740c1107efddc8aed3414b54ca9c83250f76",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a2/attempt_2.png",
+      "sheet": "V_a2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1424366,
+      "sha256": "f64293027835fd0fd9066a4ffc2a2e4fc1e2230754638ac76591b10db93ac84e",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a2/attempt_3.png",
+      "sheet": "V_a2",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1441320,
+      "sha256": "98cf0f0af74e9fbaa32930121724e15923a4cd78e1597f90e4200cd194cf07fd",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a3/attempt_1.png",
+      "sheet": "V_a3",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1459315,
+      "sha256": "f62659bda8ece7dc02cfd0994dc8559831a66f591d10fedd0567fcdd251cab04",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a3/attempt_2.png",
+      "sheet": "V_a3",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1423093,
+      "sha256": "7ce0714ee47bc024d761aa25c977cf3f0e6eaa07ae51704faec12356d3373237",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_a3/attempt_3.png",
+      "sheet": "V_a3",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1411810,
+      "sha256": "62aeb6ffee5313f3cfd0cf5e2fe3d7e95fc9ac9ebe26019b2a2e748b2d23ced0",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b1/attempt_1.png",
+      "sheet": "V_b1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1388043,
+      "sha256": "fd364e20faecec7bb18aad8e89933d8d6c6e226aabed30829e0a2701504c55d5",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b1/attempt_2.png",
+      "sheet": "V_b1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1354852,
+      "sha256": "5775f3c7b91682c4e2f48a3021cff0ac6675f1be54844643b92e676475ea9d95",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b1/attempt_3.png",
+      "sheet": "V_b1",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1368238,
+      "sha256": "dfe0f4762ee6da3a97a6961d4c91e60524ce083d32d1e7917ce9e429b5fd1dec",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b2/attempt_1.png",
+      "sheet": "V_b2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1521595,
+      "sha256": "bcb824e3e6562ec1abda63b99cc722d161db90109bacf4ac7e156e885c8f1a05",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b2/attempt_2.png",
+      "sheet": "V_b2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1460107,
+      "sha256": "d10a51cde479a3b73af0e2b5ab2ba897a61e654ccf037ae874db377e1138ba13",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b2/attempt_3.png",
+      "sheet": "V_b2",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1444761,
+      "sha256": "c49f638f28fb7ee4f02350978b8e3e28b7cfda0b8c6d78eb278ee70848d97453",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b3/attempt_1.png",
+      "sheet": "V_b3",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1385485,
+      "sha256": "89e2ace882280a67b759843e2e166fda206f2e3b640a8d28406674fc0b235c55",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b3/attempt_2.png",
+      "sheet": "V_b3",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1431853,
+      "sha256": "e05f3b35e3825613dcd2565fbb4e660eaeaacba00779a407dc40d6da5ed11b79",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_b3/attempt_3.png",
+      "sheet": "V_b3",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1395612,
+      "sha256": "795360956d588cf1cd30179ceb65c6f3e5f1c6e4175db9c34b955fd4bf9467cc",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c1/attempt_1.png",
+      "sheet": "V_c1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1382473,
+      "sha256": "c73d4fb3ef4427f7b65c03eafbdcc85687c1a0eeff07ba7ac13409887df458f4",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c1/attempt_2.png",
+      "sheet": "V_c1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1347093,
+      "sha256": "68ed81e2200a5bdbd43a063dedea194d8a25a7befd6926f43633ee51d435c744",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c1/attempt_3.png",
+      "sheet": "V_c1",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1334489,
+      "sha256": "80419880ac946581844b43ccab45585bfc6c5e072a6ef54062ceffaa06741a1c",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c2/attempt_1.png",
+      "sheet": "V_c2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1357617,
+      "sha256": "7330c3aa2404802558cb047065143546fd01c21d99444f83ee17bd112d0015bb",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c2/attempt_2.png",
+      "sheet": "V_c2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1362282,
+      "sha256": "3530dbb9662a2ca346587b54a922dba49e0b3f47be3a5d58fed58d50b92f599d",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/V_c2/attempt_3.png",
+      "sheet": "V_c2",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1373084,
+      "sha256": "3a1caef4239a39336011521e59274d4d582e0a6bde6744558fc52b081e8e8812",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S1/attempt_1.png",
+      "sheet": "S1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1401595,
+      "sha256": "ec50e91ba4563b0aa5a59a2e03bb72a06771990430288db1ab91a2569d0fb6f7",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S1/attempt_2.png",
+      "sheet": "S1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1437897,
+      "sha256": "671f0f0c0fca8e2ddafc19f0d9fa840c40044c7b7fb4a5f092ca23b6a5b2e869",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S1/attempt_3.png",
+      "sheet": "S1",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1456519,
+      "sha256": "3ecd2f976f48fdcd74179436e384f0347aafd8efb80fc62baba96cb908ffa019",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S2/attempt_1.png",
+      "sheet": "S2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1515351,
+      "sha256": "704245774c5c89e2c1e2a1bbfb03139f3aa07630cf8359f406b34fdaa8eb3086",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S2/attempt_2.png",
+      "sheet": "S2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1449834,
+      "sha256": "61953d2fecbe2598e256f138a769e24d0cb03624bfa972654db0b334236ad7ab",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/S2/attempt_3.png",
+      "sheet": "S2",
+      "attempt": 3,
+      "exists": true,
+      "bytes": 1514672,
+      "sha256": "7bb22953d52f5ee88268c22be42954e266b2e7e3131bf6dda6e4a8fc5350553b",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N1/attempt_1.png",
+      "sheet": "N1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1418578,
+      "sha256": "9ca09f18feb4098f02b50323b76792a126c4a22f2fd5993ffde06a5976a16752",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N1/attempt_2.png",
+      "sheet": "N1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1413053,
+      "sha256": "70d6a23253e957949d197158e06376f523953453fb4f3ff8a3f9a3f3d921e542",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N2/attempt_1.png",
+      "sheet": "N2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1389228,
+      "sha256": "cef65a402d56c9399708b92d8c88c21bbe8d0df7f336a7bc0acb07b7348e25d5",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N2/attempt_2.png",
+      "sheet": "N2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1387487,
+      "sha256": "5289fe2039106a7dfc7155ea622d1657af41d032f0d68d9c7b91236a7a7e6a26",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N3/attempt_1.png",
+      "sheet": "N3",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1297462,
+      "sha256": "419b582b8145597fb95d24b9f92702c52643742d2b6b2dc6022cf8a140c261d1",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/N3/attempt_2.png",
+      "sheet": "N3",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1242083,
+      "sha256": "3e8e82a1a5174f7a5d1afd828a7438032426c7c8580427aeba22d862811c78ee",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/F1/attempt_1.png",
+      "sheet": "F1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1297446,
+      "sha256": "918d49bc386ff19e6f62edf74227201bf2c1fb6901b93878e09203074c6516a6",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/F1/attempt_2.png",
+      "sheet": "F1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1307135,
+      "sha256": "27b828c7bee28a86b4ddca85a46739a52fa458683d4b8576bae0ce765d2161b4",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/F2/attempt_1.png",
+      "sheet": "F2",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1323991,
+      "sha256": "c2302e46e410261c30b995ccfa0a9a0a6aa9469c2c67b954c35e583e1c75ca48",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/F2/attempt_2.png",
+      "sheet": "F2",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1314433,
+      "sha256": "d47645b1cc39e3593d27bbe0a271cd7f1312a75c7c911fa16fdc7368eb54b02d",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/U1/attempt_1.png",
+      "sheet": "U1",
+      "attempt": 1,
+      "exists": true,
+      "bytes": 1368794,
+      "sha256": "6e428e49509a542583e0a4eea9049cb5e18444654e9d59c8f76c53a40e9c6257",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    },
+    {
+      "path": "/Users/rexxa/work/art-production-raw/U1/attempt_2.png",
+      "sheet": "U1",
+      "attempt": 2,
+      "exists": true,
+      "bytes": 1287678,
+      "sha256": "04515693e749a12682a26b275813fc8045e70d1f8d3d6818f0504b3bdee31f36",
+      "size": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "readable": true
+    }
+  ]
+}
