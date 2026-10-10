@@ -5,18 +5,10 @@
 //! agent_count: 20
 //! lane: --quick
 //!
-//! Static GDScript text-parse regression test for the top-right overlap
-//! between `agent_inspector_panel.gd` (right-anchored, full-height) and
-//! `hud_status_panel.gd` (top-right, fixed 320×180). The fix pushes the
-//! inspector's top edge to `INSPECTOR_TOP_OFFSET = 204.0` so it begins
-//! below the status panel's bottom edge (HUD_MARGIN + PANEL_HEIGHT = 192).
-//!
-//! No Godot engine launch — these assertions parse file text only.
-//!
-//! Structural rigor: A2/A4 inspect ONLY the bare panel-rect assignments
-//! inside `_ready()` (identifier with no `obj.` prefix), so a child/background
-//! assignment such as `_vbox.offset_top = 8.0` or `bg.anchor_right = 1.0`
-//! can neither satisfy nor falsely break the guard.
+//! Static source checks for the production inspector, topbar and news geometry.
+//! The inspector sits below the topbar at the right; news is bottom-left.
+//! Both dimensions are read from the actual panel assignments, excluding children.
+//! No Godot launch or simulation behavior is involved.
 //!
 //! Run:
 //!   cargo test -p sim-test --test harness_fix_inspector_overlap -- --nocapture
@@ -165,6 +157,43 @@ fn ready_has_bare_assign(src: &str, target: &str, expected_rhs: &str) -> bool {
     })
 }
 
+/// Resolve a numeric layout argument or its module constant.
+fn layout_number(src: &str, value: &str) -> f64 {
+    value.trim().parse().ok().or_else(|| parse_const_float(src, value.trim()))
+        .unwrap_or_else(|| panic!("layout argument must be numeric or a constant: {value}"))
+}
+
+/// Parse only a bare panel Vector2 assignment in _ready, excluding child nodes.
+fn ready_vector(src: &str, target: &str) -> [f64; 2] {
+    let body = ready_body(src);
+    let prefix = format!("{target} = Vector2(");
+    let rhs = body.lines().find_map(|line| line.trim().strip_prefix(&prefix))
+        .expect("bare panel Vector2 assignment");
+    let (x, y) = rhs.strip_suffix(')').expect("Vector2 closes").split_once(',')
+        .expect("Vector2 has two arguments");
+    [layout_number(src, x), layout_number(src, y)]
+}
+
+/// Read the actual ArtUI panel rectangle, rather than unused legacy constants.
+fn hud_rect(src: &str) -> [f64; 4] {
+    let body = ready_body(src);
+    let args = body.split_once("ArtUI.panel(self, Rect2(").expect("HUD panel call").1
+        .split_once(')').expect("Rect2 closes").0;
+    let values: Vec<f64> = args.split(',').map(|value| layout_number(src, value)).collect();
+    values.try_into().expect("Rect2 has four arguments")
+}
+
+fn inspector_rect(src: &str) -> [f64; 4] {
+    let [x, y] = ready_vector(src, "position");
+    let [width, height] = ready_vector(src, "size");
+    [x, y, width, height]
+}
+
+fn disjoint(a: [f64; 4], b: [f64; 4]) -> bool {
+    a[0] + a[2] <= b[0] || b[0] + b[2] <= a[0]
+        || a[1] + a[3] <= b[1] || b[1] + b[3] <= a[1]
+}
+
 // ── A1: inspector_top_offset_const_exists_exactly_once_and_value ────────────
 
 #[test]
@@ -182,10 +211,10 @@ fn harness_inspector_top_offset_const_exists_and_value() {
     let value = parse_const_float(&src, "INSPECTOR_TOP_OFFSET")
         .expect("A1: INSPECTOR_TOP_OFFSET must parse to a numeric literal");
     // Type A: exact equality on a spec-derived layout constant
-    // (204.0 = PANEL_HEIGHT 180 + 2×HUD_MARGIN 12).
+    // 124 = topbar y12 + height100 + gap12.
     assert_eq!(
-        value, 204.0,
-        "A1: INSPECTOR_TOP_OFFSET must equal exactly 204.0, got {value}"
+        value, 124.0,
+        "A1: INSPECTOR_TOP_OFFSET must equal exactly 124.0, got {value}"
     );
 }
 
@@ -195,17 +224,15 @@ fn harness_inspector_top_offset_const_exists_and_value() {
 fn harness_inspector_ready_applies_offset_to_panel_rect() {
     let src = read_inspector_src();
 
-    // The panel rect's own `offset_top` is bound to the constant (bare
-    // assignment inside `_ready`, excluding `_vbox.offset_top`).
+    // Inspect the bare panel position, excluding any child assignments.
     assert!(
-        ready_has_bare_assign(&src, "offset_top", "INSPECTOR_TOP_OFFSET"),
-        "A2: `_ready` must contain bare panel `offset_top = INSPECTOR_TOP_OFFSET`"
+        ready_has_bare_assign(&src, "position", "Vector2(1548, INSPECTOR_TOP_OFFSET)"),
+        "A2: `_ready` must contain bare panel position bound to INSPECTOR_TOP_OFFSET"
     );
-    // The buggy panel-rect literal `offset_top = 0.0` must be gone, regardless
-    // of spacing, and without false-matching the child `_vbox.offset_top`.
+    // The size assignment supplies the dimensions used by the overlap check.
     assert!(
-        !ready_has_bare_assign(&src, "offset_top", "0.0"),
-        "A2: bare panel-rect `offset_top = 0.0` must be removed from `_ready`"
+        ready_has_bare_assign(&src, "size", "Vector2(PANEL_WIDTH, 620)"),
+        "A2: bare panel size must use PANEL_WIDTH and native layout height"
     );
 }
 
@@ -216,24 +243,13 @@ fn harness_inspector_no_overlap_invariant_cross_file() {
     let inspector = read_inspector_src();
     let status = read_status_panel_src();
 
-    let inspector_top = parse_const_float(&inspector, "INSPECTOR_TOP_OFFSET")
-        .expect("A3: INSPECTOR_TOP_OFFSET must parse");
-    let hud_margin =
-        parse_const_float(&status, "HUD_MARGIN").expect("A3: HUD_MARGIN must parse");
-    let panel_height =
-        parse_const_float(&status, "PANEL_HEIGHT").expect("A3: PANEL_HEIGHT must parse");
+    let topbar = read_file(&["scripts", "ui", "panels", "hud_topbar.gd"]);
+    let inspector = inspector_rect(&inspector);
+    let news = hud_rect(&status);
+    let topbar = hud_rect(&topbar);
+    assert!(disjoint(inspector, news), "inspector must not overlap the news panel");
+    assert!(disjoint(inspector, topbar), "inspector must not overlap the topbar");
 
-    let status_bottom = hud_margin + panel_height;
-
-    // Type D: the inspector's top edge must sit at or below the status panel
-    // bottom edge. `>=` keeps the guard valid under any compliant future
-    // offset; it re-flags overlap if a status-panel resize pushes the bottom
-    // edge past the inspector top.
-    assert!(
-        inspector_top >= status_bottom,
-        "A3: INSPECTOR_TOP_OFFSET ({inspector_top}) must be >= status-panel bottom \
-         (HUD_MARGIN {hud_margin} + PANEL_HEIGHT {panel_height} = {status_bottom})"
-    );
 }
 
 // ── A4: anchors_and_width_untouched_regression ─────────────────────────────
@@ -242,17 +258,20 @@ fn harness_inspector_no_overlap_invariant_cross_file() {
 fn harness_inspector_anchors_and_width_untouched_regression() {
     let src = read_inspector_src();
 
-    // Width unchanged (layout-position-only fix; scope containment).
+    // Pin the production inspector width.
     let width = parse_const_float(&src, "PANEL_WIDTH")
         .expect("A4: `const PANEL_WIDTH` must parse");
     assert_eq!(
-        width, 280.0,
-        "A4: PANEL_WIDTH must remain exactly 280.0, got {width}"
+        width, 360.0,
+        "A4: PANEL_WIDTH must remain exactly 360.0, got {width}"
     );
-    // The panel rect's own right anchor unchanged — bare assignment in
-    // `_ready`, NOT `bg.anchor_right` / `_vbox.anchor_right`.
+    // Preserve right alignment using actual panel rectangles.
     assert!(
-        ready_has_bare_assign(&src, "anchor_right", "1.0"),
-        "A4: `_ready` must keep bare panel `anchor_right = 1.0`"
+        {
+            let inspector = inspector_rect(&src);
+            let topbar = hud_rect(&read_file(&["scripts", "ui", "panels", "hud_topbar.gd"]));
+            inspector[0] + inspector[2] == topbar[0] + topbar[2]
+        },
+        "A4: inspector and topbar right edges must align"
     );
 }
