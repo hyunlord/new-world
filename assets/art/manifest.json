@@ -1574,6 +1574,118 @@
       ],
       "qa_status": "accepted",
       "role": "native_reference"
+    },
+    {
+      "sprite_id": "V_b1_03",
+      "path": "assets/art/production/V_b1/03.png",
+      "native_path": "assets/art/production/V_b1/03_native.png",
+      "source": "generated:V_b1/03",
+      "attempt": 2,
+      "native_size": [
+        16,
+        28
+      ],
+      "canvas_size": [
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "qa_status": "accepted",
+      "class": "adult",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "idle",
+      "frame": 0,
+      "metrics": {
+        "native_size": [
+          16,
+          28
+        ],
+        "size_pass": true,
+        "mean_delta_e": 5.070618569798519,
+        "fidelity_pass": true,
+        "common_opaque": 275,
+        "keyed_out": 49,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 35,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/V_b1/03_native.png",
+      "source": "generated:V_b1/03",
+      "native_size": [
+        16,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
+    },
+    {
+      "sprite_id": "V_b1_16",
+      "path": "assets/art/production/V_b1/16.png",
+      "native_path": "assets/art/production/V_b1/16_native.png",
+      "source": "generated:V_b1/16",
+      "attempt": 2,
+      "native_size": [
+        13,
+        28
+      ],
+      "canvas_size": [
+        15,
+        30
+      ],
+      "anchor": [
+        7,
+        29
+      ],
+      "qa_status": "accepted",
+      "class": "adult",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "walk",
+      "frame": 3,
+      "metrics": {
+        "native_size": [
+          13,
+          28
+        ],
+        "size_pass": true,
+        "mean_delta_e": 4.96595045206383,
+        "fidelity_pass": true,
+        "common_opaque": 224,
+        "keyed_out": 40,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 19,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/V_b1/16_native.png",
+      "source": "generated:V_b1/16",
+      "native_size": [
+        13,
+        28
+      ],
+      "anchor": [
+        6,
+        27
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
     }
   ]
 }

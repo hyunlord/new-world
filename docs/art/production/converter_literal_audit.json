@@ -1,0 +1,165 @@
+{
+  "literal_section_6_1_passed": false,
+  "cases": [
+    {
+      "scale": 5.3,
+      "phase": 0.0,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.39107142857142857,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 5.3,
+      "phase": 1.7,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.35714285714285715,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 5.3,
+      "phase": 3.1,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.36607142857142855,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 5.9,
+      "phase": 0.0,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.4785714285714286,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 5.9,
+      "phase": 1.7,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.4982142857142857,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 5.9,
+      "phase": 3.1,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.5375,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 6.4,
+      "phase": 0.0,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.5821428571428572,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 6.4,
+      "phase": 1.7,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.5767857142857142,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    },
+    {
+      "scale": 6.4,
+      "phase": 3.1,
+      "png_size": [
+        20,
+        28
+      ],
+      "jpeg_size": [
+        20,
+        28
+      ],
+      "png_fraction": 1.0,
+      "raw_jpeg_fraction": 0.6,
+      "known_palette_jpeg_fraction": 1.0,
+      "passed": false
+    }
+  ],
+  "harmonic": {
+    "expected_period": 4.0,
+    "actual_period": [
+      7.9,
+      7.9
+    ],
+    "expected_size": [
+      20,
+      28
+    ],
+    "actual_size": [
+      10,
+      15
+    ],
+    "passed": false
+  }
+}

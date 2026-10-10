@@ -26,7 +26,7 @@ def enlarged(native: np.ndarray, scale: float, phase: float) -> Image.Image:
 
 
 class NormalizeV3Test(unittest.TestCase):
-    def test_all_scale_phase_png_and_jpeg(self) -> None:
+    def test_png_recovery_and_known_palette_jpeg_normalization(self) -> None:
         palette = np.array([[72, 64, 44], [95, 84, 60], [131, 110, 80], [174, 150, 111], [212, 182, 142], [210, 25, 30], [30, 130, 70], [40, 100, 200]], dtype=np.uint8)
         native = palette[np.random.default_rng(91).integers(0, len(palette), (28, 20))]
         for scale in (5.3, 5.9, 6.4):
@@ -46,7 +46,7 @@ class NormalizeV3Test(unittest.TestCase):
                         self.assertGreaterEqual(float((delta < 3).mean()), .90 if jpeg else .98)
                         self.assertLess(abs(metadata['period_xy'][0] - scale), .1)
 
-    def test_harmonic_trap(self) -> None:
+    def test_production_period_with_alternating_edge_strength(self) -> None:
         native = np.tile(np.array([40, 45, 200, 205], dtype=np.uint8), 5)[None, :, None]
         native = np.broadcast_to(native, (28, 20, 3)).copy()
         native[1::2] += np.uint8(7)
