@@ -1518,6 +1518,62 @@
       ],
       "qa_status": "accepted",
       "role": "native_reference"
+    },
+    {
+      "sprite_id": "F2_01",
+      "path": "assets/art/production/F2/01.png",
+      "native_path": "assets/art/production/F2/01_native.png",
+      "source": "generated:F2/01",
+      "attempt": 2,
+      "native_size": [
+        16,
+        11
+      ],
+      "canvas_size": [
+        18,
+        13
+      ],
+      "anchor": [
+        9,
+        12
+      ],
+      "qa_status": "accepted",
+      "class": "F2",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0,
+      "metrics": {
+        "native_size": [
+          16,
+          11
+        ],
+        "size_pass": true,
+        "mean_delta_e": 4.981335455585005,
+        "fidelity_pass": true,
+        "common_opaque": 72,
+        "keyed_out": 21,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 5,
+        "format_pass": true,
+        "passed": true
+      }
+    },
+    {
+      "path": "assets/art/production/F2/01_native.png",
+      "source": "generated:F2/01",
+      "native_size": [
+        16,
+        11
+      ],
+      "anchor": [
+        8,
+        10
+      ],
+      "qa_status": "accepted",
+      "role": "native_reference"
     }
   ]
 }

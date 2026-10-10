@@ -1,0 +1,963 @@
+{
+  "sheet": "F2",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/art-production-raw/F2/attempt_2.png",
+  "accepted": 1,
+  "rejected": 15,
+  "preserved": 0,
+  "cells": [
+    {
+      "sprite_id": "F2_01",
+      "name": "bird_1",
+      "attempt": 2,
+      "accepted": true,
+      "reasons": [],
+      "metrics": {
+        "native_size": [
+          16,
+          11
+        ],
+        "size_pass": true,
+        "mean_delta_e": 4.981335455585005,
+        "fidelity_pass": true,
+        "common_opaque": 72,
+        "keyed_out": 21,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 5,
+        "format_pass": true,
+        "passed": true
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          116,
+          152,
+          237,
+          235
+        ],
+        "detected_period_xy": [
+          6.720000000000001,
+          7.5600000000000005
+        ],
+        "period_xy": [
+          7.5600000000000005,
+          7.5600000000000005
+        ],
+        "phase_xy": [
+          0.8,
+          6.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.641966526664256,
+          0.0
+        ],
+        "native_size": [
+          16,
+          11
+        ],
+        "spill_removed": 21,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_02",
+      "name": "bird_2",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          17
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.7692769125595635,
+        "fidelity_pass": true,
+        "common_opaque": 135,
+        "keyed_out": 34,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 5,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          103,
+          122,
+          227,
+          249
+        ],
+        "detected_period_xy": [
+          6.88,
+          7.42
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "phase_xy": [
+          5.5,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.16057399612160286,
+          0.010935268839446316
+        ],
+        "native_size": [
+          17,
+          17
+        ],
+        "spill_removed": 34,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_03",
+      "name": "bird_3",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          20,
+          12
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.7143392332405645,
+        "fidelity_pass": true,
+        "common_opaque": 127,
+        "keyed_out": 33,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 7,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          70,
+          152,
+          220,
+          243
+        ],
+        "detected_period_xy": [
+          7.4399999999999995,
+          7.4
+        ],
+        "period_xy": [
+          7.4,
+          7.4
+        ],
+        "phase_xy": [
+          0.6000000000000001,
+          0.4
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.23100803707507944,
+          0.0
+        ],
+        "native_size": [
+          20,
+          12
+        ],
+        "spill_removed": 33,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_04",
+      "name": "bird_4",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          16,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.901035999944548,
+        "fidelity_pass": true,
+        "common_opaque": 98,
+        "keyed_out": 29,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 6,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          63,
+          149,
+          184,
+          265
+        ],
+        "detected_period_xy": [
+          7.62,
+          7.720000000000001
+        ],
+        "period_xy": [
+          7.7,
+          7.7
+        ],
+        "phase_xy": [
+          6.1000000000000005,
+          1.4000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.01986678361090522,
+          0.00294246711267736
+        ],
+        "native_size": [
+          16,
+          15
+        ],
+        "spill_removed": 29,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_05",
+      "name": "butterfly_1",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 12.472004567844406,
+        "fidelity_pass": false,
+        "common_opaque": 126,
+        "keyed_out": 39,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 33,
+        "fire_texels": 27,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          116,
+          116,
+          244,
+          223
+        ],
+        "detected_period_xy": [
+          6.9399999999999995,
+          7.46
+        ],
+        "period_xy": [
+          7.5600000000000005,
+          7.5600000000000005
+        ],
+        "phase_xy": [
+          0.8,
+          6.300000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.358076056737299,
+          0.11389448189507499
+        ],
+        "native_size": [
+          17,
+          15
+        ],
+        "spill_removed": 39,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_06",
+      "name": "butterfly_2",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          14,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 13.975821105381968,
+        "fidelity_pass": false,
+        "common_opaque": 89,
+        "keyed_out": 28,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 16,
+        "fire_texels": 28,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          117,
+          109,
+          219,
+          222
+        ],
+        "detected_period_xy": [
+          7.859999999999999,
+          7.4399999999999995
+        ],
+        "period_xy": [
+          7.54,
+          7.54
+        ],
+        "phase_xy": [
+          4.3,
+          6.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.037472743842571855,
+          0.11709086902571954
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 28,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_07",
+      "name": "butterfly_3",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 14.08835571016612,
+        "fidelity_pass": false,
+        "common_opaque": 141,
+        "keyed_out": 22,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          85,
+          116,
+          212,
+          223
+        ],
+        "detected_period_xy": [
+          7.46,
+          7.46
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "phase_xy": [
+          0.1,
+          6.800000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          17,
+          15
+        ],
+        "spill_removed": 22,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_08",
+      "name": "butterfly_4",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          14,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 15.301793491250054,
+        "fidelity_pass": false,
+        "common_opaque": 91,
+        "keyed_out": 28,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          82,
+          109,
+          184,
+          222
+        ],
+        "detected_period_xy": [
+          7.78,
+          7.4399999999999995
+        ],
+        "period_xy": [
+          7.54,
+          7.54
+        ],
+        "phase_xy": [
+          3.3000000000000003,
+          6.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.40967951145739245,
+          0.11562116921761761
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 28,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_09",
+      "name": "fish_1",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          16,
+          14
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.303340310177319,
+        "fidelity_pass": false,
+        "common_opaque": 94,
+        "keyed_out": 20,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 11,
+        "fire_texels": 10,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          115,
+          86,
+          239,
+          192
+        ],
+        "detected_period_xy": [
+          7.9,
+          7.720000000000001
+        ],
+        "period_xy": [
+          7.74,
+          7.74
+        ],
+        "phase_xy": [
+          7.7,
+          7.1000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.07140992219855469,
+          0.0
+        ],
+        "native_size": [
+          16,
+          14
+        ],
+        "spill_removed": 20,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_10",
+      "name": "fish_2",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          11
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.5539457414109155,
+        "fidelity_pass": false,
+        "common_opaque": 97,
+        "keyed_out": 17,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 12,
+        "fire_texels": 9,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          98,
+          100,
+          235,
+          183
+        ],
+        "detected_period_xy": [
+          6.5,
+          7.88
+        ],
+        "period_xy": [
+          7.9399999999999995,
+          7.9399999999999995
+        ],
+        "phase_xy": [
+          7.4,
+          7.9
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.9449111091472294,
+          0.0
+        ],
+        "native_size": [
+          17,
+          11
+        ],
+        "spill_removed": 17,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_11",
+      "name": "fish_3",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          13,
+          16
+        ],
+        "size_pass": false,
+        "mean_delta_e": 8.16987141272066,
+        "fidelity_pass": false,
+        "common_opaque": 94,
+        "keyed_out": 26,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 10,
+        "fire_texels": 14,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          78,
+          201,
+          203
+        ],
+        "detected_period_xy": [
+          7.92,
+          7.92
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "phase_xy": [
+          6.6000000000000005,
+          6.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          13,
+          16
+        ],
+        "spill_removed": 26,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_12",
+      "name": "fish_4",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          15,
+          14
+        ],
+        "size_pass": false,
+        "mean_delta_e": 9.046224305864872,
+        "fidelity_pass": false,
+        "common_opaque": 91,
+        "keyed_out": 29,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 10,
+        "fire_texels": 16,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          77,
+          85,
+          192,
+          197
+        ],
+        "detected_period_xy": [
+          7.62,
+          7.859999999999999
+        ],
+        "period_xy": [
+          7.82,
+          7.82
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          0.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.47256657154219855,
+          0.024889135660913112
+        ],
+        "native_size": [
+          15,
+          14
+        ],
+        "spill_removed": 29,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_13",
+      "name": "dragonfly_1",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.385936971826767,
+        "fidelity_pass": true,
+        "common_opaque": 123,
+        "keyed_out": 28,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          104,
+          53,
+          251,
+          167
+        ],
+        "detected_period_xy": [
+          6.96,
+          7.640000000000001
+        ],
+        "period_xy": [
+          7.7,
+          7.7
+        ],
+        "phase_xy": [
+          1.6,
+          7.6000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.20213833927002628,
+          0.027512134735833558
+        ],
+        "native_size": [
+          19,
+          15
+        ],
+        "spill_removed": 28,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_14",
+      "name": "dragonfly_2",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          16
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.5413059246559,
+        "fidelity_pass": false,
+        "common_opaque": 111,
+        "keyed_out": 36,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          100,
+          45,
+          227,
+          173
+        ],
+        "detected_period_xy": [
+          7.54,
+          7.9399999999999995
+        ],
+        "period_xy": [
+          7.9399999999999995,
+          7.9399999999999995
+        ],
+        "phase_xy": [
+          4.7,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.41827003895821413,
+          0.0
+        ],
+        "native_size": [
+          17,
+          16
+        ],
+        "spill_removed": 36,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_15",
+      "name": "leaf_1",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          14,
+          15
+        ],
+        "size_pass": false,
+        "mean_delta_e": 12.759289149216396,
+        "fidelity_pass": false,
+        "common_opaque": 111,
+        "keyed_out": 22,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          92,
+          54,
+          201,
+          173
+        ],
+        "detected_period_xy": [
+          7.92,
+          7.9399999999999995
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          6.6000000000000005,
+          7.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 22,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "F2_16",
+      "name": "leaf_2",
+      "attempt": 2,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass"
+      ],
+      "metrics": {
+        "native_size": [
+          14,
+          16
+        ],
+        "size_pass": false,
+        "mean_delta_e": 14.055743515262503,
+        "fidelity_pass": false,
+        "common_opaque": 121,
+        "keyed_out": 22,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 1,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          77,
+          45,
+          188,
+          174
+        ],
+        "detected_period_xy": [
+          7.66,
+          7.9399999999999995
+        ],
+        "period_xy": [
+          7.9399999999999995,
+          7.9399999999999995
+        ],
+        "phase_xy": [
+          5.800000000000001,
+          0.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.016690153731293903,
+          0.0
+        ],
+        "native_size": [
+          14,
+          16
+        ],
+        "spill_removed": 22,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    }
+  ]
+}
