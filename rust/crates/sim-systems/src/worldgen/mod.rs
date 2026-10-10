@@ -29,9 +29,9 @@ pub struct WorldGenConfig {
     pub mountain_coverage: f64,
 }
 impl WorldGenConfig {
-    /// Versioned generator entry point; Part 1 intentionally matches v8 inputs.
+    /// Versioned generator inputs with ten renewable food sources.
     pub const fn game_v9(seed: u64) -> Self {
-        Self::game_default(seed)
+        Self { berry_bushes: 10, ..Self::game_default(seed) }
     }
 
     /// 64×64, 24 residents, 8 capacity-four bushes, 30/10/4 percent terrain.

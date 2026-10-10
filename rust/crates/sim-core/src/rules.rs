@@ -190,6 +190,19 @@ impl WorldRules {
     pub const fn game_v9() -> Self {
         let mut rules = Self::game_v8();
         rules.society.settlement_anchor = SettlementAnchor::Hearth;
+        rules.agent.strict_consume = true;
+        rules.society.relief_radius = Some(8);
+        rules.society.birth = BirthRule::Provisioned {
+            cooldown_ticks: 720,
+            food_cost: 10,
+            max_mean_hunger: 60.0,
+            max_mean_thirst: 60.0,
+            sustain: Some(SustainRule {
+                utilization: 0.85,
+                reserve_days: 0.5,
+                forage_radius: 16,
+            }),
+        };
         if let Some(mut planning) = rules.society.shelter_planning {
             planning.housing = HousingCount::Owned;
             planning.planning_headroom = 2;

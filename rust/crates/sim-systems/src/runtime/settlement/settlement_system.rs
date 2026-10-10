@@ -692,7 +692,7 @@ impl SettlementSystem {
                 continue;
             }
             if let BirthRule::Provisioned {
-                food_cost, max_mean_hunger, max_mean_thirst, sustain: _, ..
+                food_cost, max_mean_hunger, max_mean_thirst, sustain, ..
             } = resources.rules.society.birth {
                 let capacity = resources.rules.society.shelter_planning.map_or(
                     SETTLEMENT_MAX_POP,
@@ -715,6 +715,21 @@ impl SettlementSystem {
                 let thirst = members.iter().map(|(_, _, t)| *t).sum::<f64>() / count;
                 if hunger > max_mean_hunger || thirst > max_mean_thirst {
                     continue;
+                }
+                if let Some(sustain) = sustain {
+                    let supply = super::food_economy::supply_per_day(
+                        resources, sid, sustain.forage_radius,
+                    );
+                    let adult_need = super::food_economy::adult_need_per_day(resources.ticks_per_day);
+                    let future_need = (settlement.member_agents.len() as f64 + 1.0) * adult_need;
+                    let reserve = sustain.reserve_days
+                        * super::food_economy::members_need_per_day(world, resources, sid);
+                    let stock = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
+                    if future_need > sustain.utilization * supply
+                        || f64::from(stock) < f64::from(food_cost) + reserve
+                    {
+                        continue;
+                    }
                 }
             }
             // Belonging-model birth anchor (membership-model-reform): a member

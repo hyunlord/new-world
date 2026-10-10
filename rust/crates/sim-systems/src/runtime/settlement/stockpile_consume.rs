@@ -123,7 +123,9 @@ impl RuntimeSystem for StockpileConsumeSystem {
                     Ok(p) => (p.x, p.y),
                     Err(_) => continue,
                 };
-                if chebyshev(pos, home) > SETTLEMENT_PROXIMITY_RADIUS {
+                if chebyshev(pos, home) > resources.rules.society.relief_radius
+                    .unwrap_or(SETTLEMENT_PROXIMITY_RADIUS)
+                {
                     continue;
                 }
 

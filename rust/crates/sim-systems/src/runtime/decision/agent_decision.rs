@@ -1485,9 +1485,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // V7 Section 16-α0 — source guard: a tile at the
                             // RESOURCE_SOURCE_INFINITE sentinel never depletes.
                             // Finite tiles keep decrement-and-remove (Assertions
-                            // 16/17). Need-decrement + Idle stay UNCONDITIONAL.
+                            // 16/17). Legacy rules retain unconditional relief; strict rules require food.
                             let food_present = resources.food_tiles.get(&key)
                                 .is_some_and(|counter| *counter > 0);
+                            if resources.rules.agent.strict_consume && !food_present {
+                                *state = AgentState::Idle;
+                                continue;
+                            }
                             if let Some(counter) = resources.food_tiles.get_mut(&key) {
                                 if *counter != RESOURCE_SOURCE_INFINITE {
                                     resources.tallies.food_harvested += u64::from(*counter > 0);
