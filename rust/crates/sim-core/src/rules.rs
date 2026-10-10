@@ -314,8 +314,14 @@ impl WorldRules {
             breakfast_end: 480,
             dinner_start: 1080,
             dinner_end: 1200,
-            meal_hunger: 25.0,
+            meal_hunger: 30.0,
             camp_radius: 8,
+        });
+        // Part 5 round 2: a larger store and a tighter hoard cap (Pass 4 knobs).
+        rules.society.stock_target = Some(StockTargetRule {
+            base_days: 2.5,
+            winter_prep: true,
+            hoard_cap_factor: 1.5,
         });
         rules.society.firewood = Some(FirewoodRule {
             gather_start_minute: 600,
@@ -537,6 +543,7 @@ mod tests {
         v11.agent.preempt_gathering = false;
         v11.society.meals = None;
         v11.society.firewood = None;
+        v11.society.stock_target = WorldRules::game_v10().society.stock_target;
         assert_eq!(v11, WorldRules::game_v10());
     }
 

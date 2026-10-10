@@ -1,0 +1,18 @@
+head 5182fa861ed014da5ebd297ff7f193fb19c09ec2
+started 2026-10-11 01:33:07 KST
+prepare_bridge exit 0
+prepare_import exit 0
+test_debug exit 0
+test_debug passed 1909 failed 0 ignored 0
+test_release exit 0
+test_release passed 1909 failed 0 ignored 0
+clippy exit 0
+clippy_all_targets exit 0
+forbidden_math exit 0
+bridge_build exit 0
+godot_import exit 0
+strict_check exit 0
+smoke exit 0
+smoke_errors none
+python_unittest exit 0
+finished 2026-10-11 01:43:43 KST status 0
