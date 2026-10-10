@@ -123,7 +123,7 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             run.seed, run.max_owned_housing_overflow
         ));
     }
-    markdown.push_str("\n## Rhythm\n\nRatios are calculated at display-clock snapshots on days 2..N, then median per seed and across seeds. Empty denominators yield zero; observation counts distinguish missing clock samples. Clock/day extra rows never change periodic T6 sampling. Coincident sample kinds emit separate raw rows. Child observations run every tick; deaths are separated from observed maturation and living children may not remain marked Child beyond due tick +61.\n\n| Seed | Night share | Evening share | Noon idle share | Children observed | Maturations |\n|---|---:|---:|---:|---:|---:|\n");
+    markdown.push_str("\n## Rhythm\n\nRatios are calculated at display-clock snapshots on days 2..N, then median per seed and across seeds. Empty denominators yield zero; observation counts distinguish missing clock samples. Clock/day extra rows never change periodic T6 sampling. Coincident sample kinds emit separate raw rows. Child observations run every tick; deaths are separated from observed maturation and maturation must be observed at completed ticks due+1 through due+60 (systems run at internal tick completed-1); a living child still marked Child at completed due+60 fails.\n\n| Seed | Night share | Evening share | Noon idle share | Children observed | Maturations |\n|---|---:|---:|---:|---:|---:|\n");
     for run in runs {
         let r = rhythm(run);
         markdown.push_str(&format!(

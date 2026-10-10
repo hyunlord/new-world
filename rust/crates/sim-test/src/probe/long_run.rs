@@ -126,10 +126,23 @@ impl MaturationMonitor {
             .iter()
             .map(|(_, (agent, child))| (agent.id, child.map(|child| child.born_tick)))
             .collect();
-        for id in self.previous.keys() {
+        for (id, born_tick) in &self.previous {
             match live.get(id) {
                 None => self.died += 1,
-                Some(None) => self.matured += 1,
+                Some(None) => {
+                    if let Some(rule) = engine.resources.rules.society.life_stage {
+                        let due = born_tick.saturating_add(rule.child_ticks);
+                        let completed = engine.current_tick();
+                        // Systems see internal t; the observer sees completed t + 1.
+                        // Interval 60 permits internal due..=due+59, never earlier.
+                        if completed <= due || completed > due.saturating_add(60) {
+                            return Err(format!(
+                                "invalid maturation age: agent={id} born={born_tick} completed={completed} due={due}"
+                            ));
+                        }
+                    }
+                    self.matured += 1;
+                }
                 Some(Some(_)) => {}
             }
         }
@@ -151,15 +164,15 @@ impl MaturationMonitor {
     }
 }
 
-/// Fail a run if a living child persists more than one maturation interval late.
+/// Reject Child at completed due+60: internal due+59 was the last valid run.
 pub(super) fn check_maturation(engine: &SimEngine) -> Result<(), String> {
     if let Some(rule) = engine.resources.rules.society.life_stage {
         for (_, (agent, child)) in engine.world.query::<(&Agent, &Child)>().iter() {
             if engine.current_tick()
-                > child
+                >= child
                     .born_tick
                     .saturating_add(rule.child_ticks)
-                    .saturating_add(61)
+                    .saturating_add(60)
             {
                 return Err(format!(
                     "late child maturation: agent={} born={} current={} child_ticks={}",
@@ -190,6 +203,57 @@ pub(super) fn trace(engine: &SimEngine) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn maturation_completed_tick_bounds_and_death_are_distinct() {
+        use sim_core::{material::MaterialRegistry, rules::LifeStageRule};
+        // Due=10. Removal is valid at completed ticks 11..=70; a child
+        // remaining at completed 70 is already late. Death is not maturation.
+        for (completed, remove, death, valid) in [
+            (10, true, false, false),
+            (11, true, false, true),
+            (70, true, false, true),
+            (71, true, false, false),
+            (69, false, false, true),
+            (70, false, false, false),
+            (11, false, true, true),
+        ] {
+            let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
+            engine.resources.rules.society.life_stage = Some(LifeStageRule {
+                child_ticks: 10,
+                hunger_rate: 0.03,
+                thirst_rate: 0.048,
+                sleep_rate: 0.03,
+                tether_radius: 3,
+            });
+            let entity = engine.spawn_agent(1, 1);
+            engine
+                .world
+                .insert_one(entity, Child { born_tick: 0 })
+                .expect("child");
+            let mut monitor = MaturationMonitor::default();
+            monitor.observe(&engine).expect("initial child");
+            for _ in 0..completed {
+                engine.tick();
+            }
+            if remove {
+                engine.world.remove_one::<Child>(entity).expect("mature");
+            }
+            if death {
+                engine.world.despawn(entity).expect("death");
+            }
+            let result = monitor.observe(&engine);
+            assert_eq!(
+                result.is_ok(),
+                valid,
+                "tick={completed} remove={remove} death={death}"
+            );
+            if valid {
+                assert_eq!(monitor.matured, u64::from(remove));
+                assert_eq!(monitor.died, u64::from(death));
+            }
+        }
+    }
+
     #[test]
     fn owned_beds_children_food_and_idle_hearth_have_exact_values() {
         use sim_core::{
