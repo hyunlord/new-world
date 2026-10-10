@@ -22,3 +22,7 @@ Calls1–4 requested1024×1024, but the built-in tool returned1254×1254. Raw fi
 ## Part2 gate and first look
 
 Full gatepassed all13rows (cargo315s,Clippy1s,strict4s,bridge1s,smoke7s,Python2s,all6headlessarttests). Real finalplan10captures saved underp2, rawlosslessoutsidecommitteddocs. Firstlookandvisualverdictstored. The treepropertytest uses a directiontree through theproductionatlashelper; actualforestplacementverification remainsPart4/7. Reviewerrequested actualagentfeet andno-tint checks, added andpassed.
+
+## Evidence storage
+
+Productioncontact sheets preserve the specified6xlayout but publishJPEG85 to respect40MBdocsbudget; rawgeneratedPNGandper-cellacceptedPNG remainlossless. Integrationcheckpointkeeps onlynoonpreviewandverdict inGit, all10rawcaptures andentityJSON remainin `.harness/evidence/art-integrated/shots/final`. Fullfinalartevidencewillbepublishedseparately. Commit784fdc0a title saysflint, butitsacceptedcellisN2_05smallboulder; manifest/report areauthoritative.

@@ -1,0 +1,983 @@
+{
+  "sheet": "U1",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/art-production-raw/U1/attempt_1.png",
+  "accepted": 0,
+  "rejected": 16,
+  "preserved": 0,
+  "cells": [
+    {
+      "sprite_id": "U1_01",
+      "name": "people",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          23,
+          20
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.477766956394624,
+        "fidelity_pass": false,
+        "common_opaque": 292,
+        "keyed_out": 76,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 70,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          81,
+          123,
+          264,
+          282
+        ],
+        "detected_period_xy": [
+          7.96,
+          7.720000000000001
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          7.6000000000000005,
+          7.6000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.23463978341582084
+        ],
+        "native_size": [
+          23,
+          20
+        ],
+        "spill_removed": 76,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_02",
+      "name": "hearth",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          23,
+          26
+        ],
+        "size_pass": false,
+        "mean_delta_e": 10.15591102803368,
+        "fidelity_pass": false,
+        "common_opaque": 268,
+        "keyed_out": 52,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 37,
+        "fire_texels": 20,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          85,
+          120,
+          241,
+          296
+        ],
+        "detected_period_xy": [
+          6.720000000000001,
+          7.04
+        ],
+        "period_xy": [
+          6.720000000000001,
+          7.04
+        ],
+        "phase_xy": [
+          6.2,
+          4.6000000000000005
+        ],
+        "axis_periods_separate": true,
+        "axis_improvement_xy": [
+          0.21604209486629858,
+          0.28327610237760703
+        ],
+        "native_size": [
+          23,
+          26
+        ],
+        "spill_removed": 52,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_03",
+      "name": "shelter",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          24,
+          22
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.615551608806076,
+        "fidelity_pass": false,
+        "common_opaque": 292,
+        "keyed_out": 52,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 21,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          59,
+          121,
+          246,
+          292
+        ],
+        "detected_period_xy": [
+          7.24,
+          7.96
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          7.7,
+          7.2
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.3141470902415373,
+          0.0
+        ],
+        "native_size": [
+          24,
+          22
+        ],
+        "spill_removed": 52,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_04",
+      "name": "hammer",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          21
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.496845391910894,
+        "fidelity_pass": false,
+        "common_opaque": 155,
+        "keyed_out": 39,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 13,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          80,
+          120,
+          226,
+          284
+        ],
+        "detected_period_xy": [
+          7.4,
+          7.96
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          2.8000000000000003,
+          1.4000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.041214989203536626,
+          0.0
+        ],
+        "native_size": [
+          19,
+          21
+        ],
+        "spill_removed": 39,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_05",
+      "name": "basket",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          20
+        ],
+        "size_pass": false,
+        "mean_delta_e": 7.7028374447389965,
+        "fidelity_pass": false,
+        "common_opaque": 254,
+        "keyed_out": 36,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 18,
+        "fire_texels": 30,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          93,
+          115,
+          246,
+          270
+        ],
+        "detected_period_xy": [
+          7.9399999999999995,
+          7.96
+        ],
+        "period_xy": [
+          7.96,
+          7.96
+        ],
+        "phase_xy": [
+          1.1,
+          0.30000000000000004
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.0
+        ],
+        "native_size": [
+          19,
+          20
+        ],
+        "spill_removed": 36,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_06",
+      "name": "berries",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          22,
+          21
+        ],
+        "size_pass": false,
+        "mean_delta_e": 8.885469856892978,
+        "fidelity_pass": false,
+        "common_opaque": 301,
+        "keyed_out": 47,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 44,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          73,
+          106,
+          246,
+          270
+        ],
+        "detected_period_xy": [
+          7.82,
+          7.9399999999999995
+        ],
+        "period_xy": [
+          7.92,
+          7.92
+        ],
+        "phase_xy": [
+          5.9,
+          2.1
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.18676583993786275,
+          0.0014359236175808209
+        ],
+        "native_size": [
+          22,
+          21
+        ],
+        "spill_removed": 47,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_07",
+      "name": "sprout",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          18,
+          18
+        ],
+        "size_pass": false,
+        "mean_delta_e": 9.451372132625803,
+        "fidelity_pass": false,
+        "common_opaque": 192,
+        "keyed_out": 44,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 11,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          82,
+          134,
+          218,
+          270
+        ],
+        "detected_period_xy": [
+          7.78,
+          7.82
+        ],
+        "period_xy": [
+          7.78,
+          7.78
+        ],
+        "phase_xy": [
+          3.0,
+          0.6000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.06268364856435095
+        ],
+        "native_size": [
+          18,
+          18
+        ],
+        "spill_removed": 44,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_08",
+      "name": "cairn",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          22,
+          21
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.211655022048246,
+        "fidelity_pass": false,
+        "common_opaque": 268,
+        "keyed_out": 48,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          63,
+          111,
+          229,
+          270
+        ],
+        "detected_period_xy": [
+          7.26,
+          7.58
+        ],
+        "period_xy": [
+          7.46,
+          7.46
+        ],
+        "phase_xy": [
+          0.5,
+          1.1
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.08771849097781786,
+          0.06904048804861361
+        ],
+        "native_size": [
+          22,
+          21
+        ],
+        "spill_removed": 48,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_09",
+      "name": "sun",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          21,
+          38
+        ],
+        "size_pass": false,
+        "mean_delta_e": 33.04149163023721,
+        "fidelity_pass": false,
+        "common_opaque": 325,
+        "keyed_out": 1,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 60,
+        "fire_texels": 108,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          82,
+          79,
+          241,
+          239
+        ],
+        "detected_period_xy": [
+          7.800000000000001,
+          4.2
+        ],
+        "period_xy": [
+          7.800000000000001,
+          4.2
+        ],
+        "phase_xy": [
+          2.7,
+          3.6
+        ],
+        "axis_periods_separate": true,
+        "axis_improvement_xy": [
+          0.24924146465908556,
+          0.3529135770291903
+        ],
+        "native_size": [
+          21,
+          38
+        ],
+        "spill_removed": 1,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_10",
+      "name": "moon",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          21
+        ],
+        "size_pass": false,
+        "mean_delta_e": 5.245341080598955,
+        "fidelity_pass": true,
+        "common_opaque": 186,
+        "keyed_out": 38,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          90,
+          87,
+          221,
+          238
+        ],
+        "detected_period_xy": [
+          4.22,
+          7.28
+        ],
+        "period_xy": [
+          7.300000000000001,
+          7.300000000000001
+        ],
+        "phase_xy": [
+          3.0,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.037156364251125666,
+          0.0004427303807854907
+        ],
+        "native_size": [
+          19,
+          21
+        ],
+        "spill_removed": 38,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_11",
+      "name": "water",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          20,
+          16
+        ],
+        "size_pass": false,
+        "mean_delta_e": 20.68480096534738,
+        "fidelity_pass": false,
+        "common_opaque": 242,
+        "keyed_out": 12,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          75,
+          112,
+          235,
+          234
+        ],
+        "detected_period_xy": [
+          7.74,
+          7.82
+        ],
+        "period_xy": [
+          7.82,
+          7.82
+        ],
+        "phase_xy": [
+          2.4000000000000004,
+          2.0
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.053969236115551454,
+          0.0
+        ],
+        "native_size": [
+          20,
+          16
+        ],
+        "spill_removed": 12,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_12",
+      "name": "berry",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          17,
+          14
+        ],
+        "size_pass": false,
+        "mean_delta_e": 9.88903625940662,
+        "fidelity_pass": false,
+        "common_opaque": 144,
+        "keyed_out": 29,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 46,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          86,
+          112,
+          219,
+          218
+        ],
+        "detected_period_xy": [
+          7.7,
+          4.42
+        ],
+        "period_xy": [
+          7.7,
+          7.7
+        ],
+        "phase_xy": [
+          1.3,
+          7.5
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.8845074152919251
+        ],
+        "native_size": [
+          17,
+          14
+        ],
+        "spill_removed": 29,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_13",
+      "name": "sleep",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          17
+        ],
+        "size_pass": false,
+        "mean_delta_e": 14.968723342622999,
+        "fidelity_pass": false,
+        "common_opaque": 106,
+        "keyed_out": 37,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          92,
+          75,
+          240,
+          207
+        ],
+        "detected_period_xy": [
+          7.640000000000001,
+          7.78
+        ],
+        "period_xy": [
+          7.78,
+          7.78
+        ],
+        "phase_xy": [
+          1.4000000000000001,
+          7.7
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.07108711795430799,
+          0.0
+        ],
+        "native_size": [
+          19,
+          17
+        ],
+        "spill_removed": 37,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_14",
+      "name": "pause",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          14,
+          15
+        ],
+        "size_pass": true,
+        "mean_delta_e": 6.976265722702675,
+        "fidelity_pass": false,
+        "common_opaque": 126,
+        "keyed_out": 57,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          108,
+          83,
+          214,
+          202
+        ],
+        "detected_period_xy": [
+          7.9,
+          7.78
+        ],
+        "period_xy": [
+          7.9,
+          7.9
+        ],
+        "phase_xy": [
+          2.5,
+          7.6000000000000005
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.1622632322500801
+        ],
+        "native_size": [
+          14,
+          15
+        ],
+        "spill_removed": 57,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_15",
+      "name": "fast",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "fidelity_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          19,
+          16
+        ],
+        "size_pass": false,
+        "mean_delta_e": 6.0310926694846705,
+        "fidelity_pass": false,
+        "common_opaque": 178,
+        "keyed_out": 52,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 0,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          86,
+          83,
+          226,
+          202
+        ],
+        "detected_period_xy": [
+          7.24,
+          7.88
+        ],
+        "period_xy": [
+          7.24,
+          7.24
+        ],
+        "phase_xy": [
+          0.30000000000000004,
+          2.1
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.0,
+          0.18666620402860346
+        ],
+        "native_size": [
+          19,
+          16
+        ],
+        "spill_removed": 52,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    },
+    {
+      "sprite_id": "U1_16",
+      "name": "scroll",
+      "attempt": 1,
+      "accepted": false,
+      "reasons": [
+        "size_pass",
+        "exact_16x16"
+      ],
+      "metrics": {
+        "native_size": [
+          18,
+          19
+        ],
+        "size_pass": false,
+        "mean_delta_e": 4.968108997409132,
+        "fidelity_pass": true,
+        "common_opaque": 261,
+        "keyed_out": 32,
+        "palette_match_percent": 100.0,
+        "binary_alpha": true,
+        "berry_texels": 0,
+        "fire_texels": 13,
+        "format_pass": true,
+        "passed": false
+      },
+      "grid": {
+        "key_rule": "R>150 and B>150 and G<110 and abs(R-B)<90; source alpha>=128",
+        "source_bbox": [
+          77,
+          70,
+          219,
+          224
+        ],
+        "detected_period_xy": [
+          7.46,
+          7.9399999999999995
+        ],
+        "period_xy": [
+          7.9399999999999995,
+          7.9399999999999995
+        ],
+        "phase_xy": [
+          6.6000000000000005,
+          0.7000000000000001
+        ],
+        "axis_periods_separate": false,
+        "axis_improvement_xy": [
+          0.11064787982747415,
+          0.0
+        ],
+        "native_size": [
+          18,
+          19
+        ],
+        "spill_removed": 32,
+        "fringe_repaired": 0
+      },
+      "preserved": false
+    }
+  ]
+}

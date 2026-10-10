@@ -178,7 +178,7 @@ def normalize_sheet(root: Path, sheet: str, raw: Path, attempt: int) -> dict:
     out = root/'docs/art/production/sheets'; out.mkdir(parents=True,exist_ok=True)
     report = {'sheet':sheet,'attempt':attempt,'raw':str(raw),'accepted':sum(r['accepted'] for r in records),'rejected':sum(not r['accepted'] for r in records),'preserved':sum(r['preserved'] for r in records),'cells':records}
     (out/f'{sheet}_attempt_{attempt}.json').write_text(json.dumps(report,indent=2)+'\n')
-    contact.save(out/f'{sheet}_attempt_{attempt}.png')
+    contact.convert('RGB').save(out/f'{sheet}_attempt_{attempt}.jpg', quality=85)
     return report
 
 def prompt_for(sheet: str, very_small: bool = False) -> str:
@@ -198,7 +198,8 @@ def prompt_for(sheet: str, very_small: bool = False) -> str:
             if spec.name == 'S_idle_2': pose += ', shoulders 1 pixel lower for breathing'
             label = f'{facing}, {pose}'
         descriptions.append(label)
-    result = frame+'; '.join(descriptions)+'. '
+    rows = ['Row '+str(row+1)+': '+ '; '.join(descriptions[row*4:(row+1)*4])+'.' for row in range(4)]
+    result = frame+' '.join(rows)+' Exactly four rows and four columns, sixteen cells total. Do not add extra rows, columns, pose panels or conceptual panels. '
     if sheet.startswith('V_'):
         body = {'a':'a sturdy adult with shoulder-length dark hair, a short sleeveless hide tunic with a belt, bare arms and legs, leather foot wraps',
                 'b':'a slender adult with long dark hair tied back, a knee-length hide wrap dress with a fur collar, bare arms, leather foot wraps',

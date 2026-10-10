@@ -13,7 +13,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -73,7 +74,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -133,7 +135,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -193,7 +196,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -253,7 +257,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -313,7 +318,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -373,7 +379,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -433,7 +440,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -493,7 +501,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -553,7 +562,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -613,7 +623,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -673,7 +684,8 @@
       "accepted": false,
       "reasons": [
         "size_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -734,7 +746,8 @@
       "reasons": [
         "size_pass",
         "fidelity_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -795,7 +808,8 @@
       "reasons": [
         "size_pass",
         "fidelity_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -856,7 +870,8 @@
       "reasons": [
         "size_pass",
         "fidelity_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -917,7 +932,8 @@
       "reasons": [
         "size_pass",
         "fidelity_pass",
-        "missing_accepted_view_idle"
+        "missing_accepted_view_idle",
+        "invalid_grid_layout"
       ],
       "metrics": {
         "native_size": [
@@ -970,5 +986,10 @@
       },
       "preserved": false
     }
-  ]
+  ],
+  "manual_grid_review": {
+    "valid": false,
+    "observed_rows": 6,
+    "expected_rows": 4
+  }
 }
