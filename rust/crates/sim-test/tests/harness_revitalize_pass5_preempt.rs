@@ -84,6 +84,22 @@ fn harness_gather_preempted_by_thirst() {
 }
 
 #[test]
+fn harness_preempted_gatherer_is_not_sent_out_again() {
+    // Review fix: every bush empty (no reachable food need) and wood below
+    // target; after the preemption the critical member starts no new trip.
+    let (mut engine, gatherer) = seeker(WorldRules::game_v11(), TargetKind::GatherWood, (38, 20), 80.0, 0.0);
+    engine.resources.food_tiles.clear();
+    let mut decision = AgentDecisionSystem::new();
+    for _ in 0..20 {
+        decision.tick(&mut engine.world, &mut engine.resources);
+        engine.resources.current_tick += 1;
+        assert_eq!(state(&engine, gatherer), AgentState::Idle);
+    }
+    assert_eq!(engine.resources.tallies.gather_preempted, 1, "preempted once, never re-sent");
+    assert_eq!(engine.resources.tallies.wood_trips, 0);
+}
+
+#[test]
 fn harness_preempt_v10_unchanged() {
     // Under v10 a thirsty forager keeps walking (Pass 4 behaviour).
     let (mut engine, forager) = seeker(WorldRules::game_v10(), TargetKind::GatherFood, (38, 22), 0.0, 80.0);

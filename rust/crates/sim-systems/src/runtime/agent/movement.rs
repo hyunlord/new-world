@@ -333,6 +333,30 @@ mod tests {
     }
 
     #[test]
+    fn hauls_home_generalises_haul_due_to_wood() {
+        use sim_core::rules::WorldRules;
+        let forage = WorldRules::game_v11().agent.forage.expect("forage");
+        let wood = WorldRules::game_v11().society.firewood.expect("firewood");
+        let far = SETTLEMENT_PROXIMITY_RADIUS + 1;
+        // Without the firewood rule: exactly haul_due, wood ignored.
+        for (food, window) in [(0, true), (1, true), (4, true), (1, false), (0, false)] {
+            assert_eq!(hauls_home(Some(&forage), None, food, 9, window, false, far),
+                haul_due(&forage, food, window, far));
+        }
+        assert!(!hauls_home(None, None, 9, 9, false, false, far));
+        let h = |food, carried_wood, fw, ww| hauls_home(Some(&forage), Some(&wood), food, carried_wood, fw, ww, far);
+        // Full loads go home inside the windows.
+        assert!(h(4, 0, true, true) && h(0, 2, true, true));
+        // Partial loads wait while either window is open...
+        assert!(!h(1, 0, true, true) && !h(0, 1, true, false) && !h(0, 1, false, true) && !h(3, 1, true, true));
+        // ...and go home once both are closed.
+        assert!(h(1, 0, false, false) && h(0, 1, false, false));
+        assert!(!h(0, 0, false, false));
+        // Never inside the deposit radius.
+        assert!(!hauls_home(Some(&forage), Some(&wood), 4, 2, false, false, SETTLEMENT_PROXIMITY_RADIUS));
+    }
+
+    #[test]
     fn haul_due_needs_a_load_or_the_end_of_the_window_and_distance() {
         let rule = ForageRule {
             start_minute: 360, end_minute: 1080, forage_radius: 16,

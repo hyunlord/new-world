@@ -903,12 +903,20 @@ impl RuntimeSystem for AgentDecisionSystem {
                 || !resources.social_retry_after.contains_key(&agent.id));
             // Pass 5 — under the firewood rule a member carrying a full food
             // or wood load hauls it home before any work arm fires again.
-            let wood_loaded = firewood_rule.is_some_and(|rule| {
+            let loaded = firewood_rule.is_some_and(|rule| {
                 inventory_opt.as_ref().is_some_and(|inv| {
                     inv.get(ResourceKind::Wood) >= rule.haul_threshold
                         || forage_rule.is_some_and(|forage| inv.get(ResourceKind::Food) >= forage.haul_threshold)
                 })
             });
+            // Pass 5 — under gathering preemption a member whose hunger or
+            // thirst is already critical starts no gathering trip (Forage,
+            // Firewood or Gather), so a preempted gatherer cannot be sent out
+            // again on the next tick while its need finds no source.
+            let critical_now = resources.rules.agent.preempt_gathering
+                && (hunger_opt.as_ref().is_some_and(|h| f64::from(h.value) >= critical_limit)
+                    || thirst_opt.as_ref().is_some_and(|t| t.value >= critical_limit));
+            let no_trips = loaded || critical_now;
             match *state {
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
@@ -922,8 +930,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                     // waits for its meal (StockpileConsumeSystem serves it
                     // within five ticks) instead of walking to a bush; only a
                     // critical water need may send it away meanwhile.
+                    // The wait keys on hunger itself (section 7.2), not on the
+                    // availability-filtered need: with every bush empty a hungry
+                    // member at a stocked camp still waits for its meal.
                     let waiting_for_meal = meal_rule.is_some_and(|rule| {
-                        matches!(need, Some((TargetKind::Food, _)))
+                        hunger_opt.as_ref().is_some_and(|h| h.value > HUNGER_THRESHOLD)
                             && meal_camp.get(&agent.id).is_some_and(|(home, stocked)| {
                                 *stocked && pos.x.abs_diff(home.0).max(pos.y.abs_diff(home.1)) <= rule.camp_radius
                             })
@@ -1343,7 +1354,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_chase_since.insert(agent.id, tick);
                             }
                         }
-                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker && !wood_loaded).and_then(|rule| {
+                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker && !no_trips).and_then(|rule| {
                         // Pass 4 — Forage arm (after Combat, before Gather): a
                         // member with room and less than a haul load walks to a
                         // bush on purpose while the store is below its target.
@@ -1363,7 +1374,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         *state = AgentState::Seeking {
                             target: TargetKind::GatherFood,
                         };
-                    } else if let Some(spot) = firewood_rule.filter(|_| wood_window && worker && !wood_loaded).and_then(|rule| {
+                    } else if let Some(spot) = firewood_rule.filter(|_| wood_window && worker && !no_trips).and_then(|rule| {
                         // Pass 5 — Firewood arm (after Forage, before Gather): a
                         // member with room and less than a wood load walks to a
                         // deadwood spot while the wood in hand is below target.
@@ -1405,7 +1416,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     (plan.in_hand as f64) < cap * plan.target
                                 })
                         });
-                        if worker && has_room && bounded && !wood_loaded {
+                        if worker && has_room && bounded && !no_trips {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,

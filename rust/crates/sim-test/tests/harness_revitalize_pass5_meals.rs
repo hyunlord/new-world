@@ -156,6 +156,31 @@ fn harness_meal_empty_store_falls_back() {
 }
 
 #[test]
+fn harness_meal_waits_when_every_bush_is_empty() {
+    // Review fix: with need fallthrough an empty map hides the Food need, but a
+    // hungry member at a stocked camp still waits for its meal; no firewood or
+    // other arm sends it out (11:00, inside the firewood window, wood below target).
+    let (mut engine, entities) = meal_fixture(&[((21, 21), 60.0, 0.0)], 10, 661);
+    engine.resources.food_tiles.clear();
+    engine.resources.wood_tiles.insert((26, 20), 6);
+    engine.resources.wood_source_max.insert((26, 20), 6);
+    let start = engine.resources.current_tick;
+    let mut consume = StockpileConsumeSystem::new();
+    for tick in start..start + 5 {
+        engine.resources.current_tick = tick;
+        AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+        if hunger(&engine, entities[0]) > 50.0 {
+            assert_eq!(state(&engine, entities[0]), AgentState::Idle, "tick {tick}");
+        }
+        if tick % 5 == 0 {
+            consume.tick(&mut engine.world, &mut engine.resources);
+        }
+    }
+    assert!(hunger(&engine, entities[0]) < 50.0, "the member was not fed");
+    assert_eq!(engine.resources.tallies.wood_trips, 0, "no trip while it waited");
+}
+
+#[test]
 fn harness_meal_v10_unchanged() {
     for (seed, expected) in ["0e38264bd3abe6ba", "3b0590ec71558a58", "d265695444b8b314", "48120c365d543729"]
         .into_iter()
