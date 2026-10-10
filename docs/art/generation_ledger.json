@@ -15,12 +15,14 @@
         1254
       ],
       "references": [],
-      "time": "2026-10-10T08:08:12.906769+00:00",
+      "time": "2026-10-10T08:07:55.854264+00:00",
       "tool": "image_gen",
       "model": "not exposed by tool",
       "success": true,
       "direction": "smoke",
-      "frame": "smoke"
+      "frame": "smoke",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/smoke/smoke.png",
+      "sha256": "a2c42147e95f20cea30976e130176891ec4a8be14d6f743eefffbd9ce714d364"
     },
     {
       "direction": "D1",
@@ -36,7 +38,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:08:08.970828+00:00"
+      "time": "2026-10-10T08:08:08.970828+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D1/D1_F2_noon.png",
+      "sha256": "12a4959cc879e293aa2bf19f68c591a340d933a6bbc51117cb6dea11f0c6b802"
     },
     {
       "direction": "D1",
@@ -54,7 +58,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:10:57.940794+00:00"
+      "time": "2026-10-10T08:10:57.940794+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D1/D1_F2_night.png",
+      "sha256": "bc75eb053839aa64e38b78c0603f34e49d49a05e21bf7bc53e2799a12846cd69"
     },
     {
       "direction": "D1",
@@ -72,7 +78,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:12:23.066690+00:00"
+      "time": "2026-10-10T08:12:23.066690+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D1/D1_F1_overview.png",
+      "sha256": "6769f9381eb072afda006b859496e3fcb6d73ea724afdda9a2c04245020aa97d"
     },
     {
       "direction": "D1",
@@ -91,7 +99,9 @@
         1254
       ],
       "time": "2026-10-10T08:12:55.828712+00:00",
-      "selected": true
+      "selected": true,
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D1/D1_sheet.png",
+      "sha256": "8ce6a252533ce710e0371a9040c723ed7ab75242faac32b675b18db8200f5687"
     },
     {
       "direction": "D2",
@@ -107,7 +117,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:09:31.397873+00:00"
+      "time": "2026-10-10T08:09:31.397873+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D2/D2_F2_noon.png",
+      "sha256": "4dc6138ef6a743f4dff6ca42bd616418a329cd9e5da927a7c588f6fd65365e01"
     },
     {
       "direction": "D2",
@@ -125,7 +137,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:11:40.837312+00:00"
+      "time": "2026-10-10T08:11:40.837312+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D2/D2_F2_night.png",
+      "sha256": "1e3e1379f976616739ee9e7d72929f8b73f18c32a536b9f40bb4a37a5a4ed1e4"
     },
     {
       "direction": "D2",
@@ -143,7 +157,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:13:27.269315+00:00"
+      "time": "2026-10-10T08:13:27.269315+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D2/D2_F1_overview.png",
+      "sha256": "0177cee87b2cc2b7a9aea02684b6e68be6b9b040b4dccb110f0bbbfc69290e9d"
     },
     {
       "direction": "D2",
@@ -162,7 +178,9 @@
         1254
       ],
       "time": "2026-10-10T08:13:49.201223+00:00",
-      "selected": false
+      "selected": false,
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D2/D2_sheet.png",
+      "sha256": "3c2db500247094b3e9fe82c65b6d43f54bd22e9256551351808de9dc1f0f2336"
     },
     {
       "direction": "D3",
@@ -178,7 +196,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:10:19.267875+00:00"
+      "time": "2026-10-10T08:10:19.267875+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D3/D3_F2_noon.png",
+      "sha256": "c1e3c62885036afe6aca9cbc7ed795b98cfcbe375491418e46f0cf0e2e60bdde"
     },
     {
       "direction": "D3",
@@ -196,7 +216,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:12:51.853297+00:00"
+      "time": "2026-10-10T08:12:51.853297+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D3/D3_F2_night.png",
+      "sha256": "97c66c3533b326b70800455d92835b0debc9a0ff6d126ea2aedcd80de548d2dd"
     },
     {
       "direction": "D3",
@@ -214,7 +236,9 @@
         1672,
         941
       ],
-      "time": "2026-10-10T08:14:00.512552+00:00"
+      "time": "2026-10-10T08:14:00.512552+00:00",
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D3/D3_F1_overview.png",
+      "sha256": "c98fa5955f2fa6842ed90b04f40f10b1c239e60e286e62ea0fcb14c21c2f572f"
     },
     {
       "direction": "D3",
@@ -233,7 +257,9 @@
         1254
       ],
       "time": "2026-10-10T08:13:51.146884+00:00",
-      "selected": false
+      "selected": false,
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D3/D3_sheet.png",
+      "sha256": "4db4fca6e7b514e914e2596292870f66a51ed4b36f97183cbeea5eff80d2fd67"
     },
     {
       "direction": "D2",
@@ -252,7 +278,9 @@
         1254
       ],
       "time": "2026-10-10T08:18:20.650674+00:00",
-      "selected": true
+      "selected": true,
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D2/D2_sheet_retry1.png",
+      "sha256": "ed2aebf827e8629c3ce40744a03bfbbb9d644c8dc844483b5a3c30d428b0d455"
     },
     {
       "direction": "D3",
@@ -271,7 +299,9 @@
         1254
       ],
       "time": "2026-10-10T08:18:13.591323+00:00",
-      "selected": true
+      "selected": true,
+      "raw_copy": "/Users/rexxa/work/art-direction-raw/D3/D3_sheet_retry1.png",
+      "sha256": "cb705f365c0b841020dca9052a673c904e0352fb8fd710fed2daf6342cfd7a7a"
     }
   ],
   "quality_rejected_outputs": 2
