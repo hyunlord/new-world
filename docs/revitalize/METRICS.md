@@ -96,3 +96,13 @@ Keep round2: both rounds2/3 pass higher-priority non-extinction, but round2 has 
 Source47ace745; release binary rebuilt. Legacy0..4 workers4 and game0..64 workers8, 10days, sample120, independent twins: PASS. Compare all JSONL fields except git_sha: legacy484 rows exactly match Part1; game7744 rows exactly match round2. Thus behavioral distributions above are reproduced, not assumed.
 
 Timing ms/agent-tick median: legacy=0.011784043331, game=0.000944597051, ratio=0.080158993 (T9 PASS). Full quantiles and days1/3/5/10: `probe/p5_legacy/summary.*`, `probe/p5_game/summary.*`. T1 and T6 FAIL; T2/T3/T4/T5/T7/T8/T9 PASS. Three-day required harness still fails seed1 with dehydration11 vs0. No fourth tuning round or out-of-scope social modification.
+
+## Pass 2 Part 1: unchanged P5 death census
+
+64 seeds x10 days;64/64 deterministic twins PASS. All7,744 sample rows reproduce P5 v1 behavioral fields exactly, excluding schema_version/git_sha. Each schema2 row has38 keys. Measured source7cdc501c plus Part1 diff now committed as9d853102.
+
+4,715 deaths, all dehydration: SeekingAgent partner alive4,280, dead207; Idle145; SeekingFood46; SeekingWater35; ConsumingAgent2. Never sought water4,664/4,715 (98.918%). Water distance0-1:1,790;2-5:1,740;6-15:1,156;16+:29.
+
+Planner P2 census:6 seeds x5 days, earlier rules; social chasing86.3%, Idle13.5%, within1 tile17%. Current P5:95.16%,3.08%,37.96%. Different rules and horizons mean these are not controlled improvement percentages; both identify social seeking as dominant.
+
+Social pairs per agent-day median 0.476660962409, p10 0.382924959553, p90 0.606505343448, min 0.295776604892, max 1.529827478695. Per-seed T11 baseline in summary.json. Instrumented timing median0.0012097822478452105 ms/agent-tick versus original P5 0.0009445970510943427. Observer capture duration excluded from tick timing; postprocessing is outside timing.

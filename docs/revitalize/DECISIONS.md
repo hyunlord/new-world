@@ -189,3 +189,7 @@ byte-unchanged, and no equality implementation ignores the new counter.
 Other two full literals explicitly set the added field to0; the new social
 unit test independently verifies exact per-pair counts and unchanged outputs.
 The social counter test passed; full legacy trajectory verification follows.
+
+### Part1 completed
+
+20 probe unit tests, social counter regression, legacy/tallies tests and all-target Clippy PASS.64 twins PASS;7,744 original behavioral rows identical. Partner-alive is measured before lethal phase; simultaneous deaths can report alive. Part2 review completed two rounds with objections resolved. Part1 metrics prose follows in a supplemental commit because report generation raised a formatting exception; the code and complete JSON/Markdown summaries were already committed and pushed safely. Boundary UTC:2026-10-10T08:05:01.159403+00:00.
