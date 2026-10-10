@@ -275,6 +275,15 @@ impl WorldRules {
             winter_prep: true,
             hoard_cap_factor: 2.0,
         });
+        rules.society.aging = Some(AgingRule {
+            elder_age_ticks: 66_240,
+            lifespan_mean_ticks: 83_520,
+            lifespan_spread_ticks: 11_520,
+            founder_age_min_ticks: 8_640,
+            founder_age_max_ticks: 57_600,
+            founder_min_remaining_ticks: 4_320,
+            elder_tether_radius: 4,
+        });
         rules
     }
 
@@ -402,8 +411,10 @@ mod tests {
         assert!((42.0 * 2.4..43.0 * 2.4).contains(&usable));
         v10.society.birth = WorldRules::game_v9().society.birth;
         assert!(v10.agent.forage.is_some() && v10.society.stock_target.is_some());
+        assert!(v10.society.aging.is_some());
         v10.agent.forage = None;
         v10.society.stock_target = None;
+        v10.society.aging = None;
         assert_eq!(v10, WorldRules::game_v9());
     }
 

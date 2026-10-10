@@ -987,3 +987,17 @@ Seed 8 stays at the 24 founders with zero births until day 45 while its bushes k
 | ms per agent-tick (10-day median) | 0.000778 | 0.000944 |
 
 Forage trips concentrate in the first two to four days (median total 81) while the store fills; once `stock_in_hand ≥ target` the Forage arm is silent and opportunistic gathering continues up to the hoard cap, after which most adults idle at noon. Population stays frozen at 42 (aging is Part 3).
+
+## Pass 4 Part 3 — aging, elders, old-age replacement (no seasons)
+
+`p4-3_v10_10day` (64 × 10) and `p4-3_v10_120day` (32 × 120, clock-sampled), both DETERMINISM PASS. v10 now adds the aging rule (elder 46 d, lifespan 58 ± 8 d, founders aged 6–40 d with ≥ 3 d left, elder tether 4).
+
+| Day (120-day run) | alive median (min–max) | births | old-age deaths | children | elders | mean age (d) | stockpile |
+|---|---|---|---|---|---|---|---|
+| 10 | 42 (42–42) | 18 | 0 | 7 | 3 (0–7) | 21.4 | 252 |
+| 30 | 42 (40–42) | 27 | 9 (5–13) | 3 | 8.5 | 29.0 | 258 |
+| 60 | 42 (38–42) | 47 | 29 | 4.5 | 13 | 31.3 | 253 |
+| 90 | 42 (40–42) | 71 | 53 | 3 | 8 | 28.8 | 265 |
+| 120 | 42 (39–42) | 91 | 73 (69–78) | 4 | 11 | 31.0 | 251.5 |
+
+Starvation and dehydration remain zero in every seed. Rhythm (120 days): night in shelter median 1.0, evening near hearth median 0.807 (min 0.676), noon idle median 0.81 — worse than Part 2 because elders rest at the camp and foraging still stops once the store meets its target. Day-10 home distance median 5.35, max 10.95 (one seed).

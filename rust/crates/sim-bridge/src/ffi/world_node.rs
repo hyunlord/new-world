@@ -37,7 +37,8 @@ use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::causal::{CausalEvent, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Hunger, Inventory, Memory, Position,
+    Agent, AgentId, AgentState, BodyHealth, Child, ConstructionSite, Elder, Hunger, Inventory, Life,
+    Memory, Position,
     ResourceKind, SeekTarget, Settlement, SettlementId, Sleep, Social, TargetKind, Thirst,
 };
 use sim_core::influence::{DirtyRegion, InfluenceChannel};
@@ -386,7 +387,15 @@ impl WorldSimNode {
     #[func]
     fn get_agent_snapshot(&self) -> VarDictionary {
         let rows = collect_agent_snapshot(&self.engine.world);
-        agent_rows_to_dict(&rows)
+        let mut dict = agent_rows_to_dict(&rows);
+        // Pass 4 — additive whole-day ages in the same row order (-1 without Life).
+        let ages = collect_agent_ages_days(
+            &self.engine.world,
+            self.engine.current_tick(),
+            self.engine.resources.ticks_per_day,
+        );
+        dict.set("ages_days", PackedInt32Array::from(ages.as_slice()));
+        dict
     }
 
     /// V7 Phase 14-γ FFI — single-agent detail dictionary for the click
@@ -1357,8 +1366,26 @@ pub struct AgentSnapshotRow {
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
     /// 4 ConstructionSite, 5 Agent, 6 GatherFood.
     pub target_kind: u8,
-    /// Life stage: 0 adult, 1 child with a live Child component.
+    /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
+    /// (Pass 4, live Elder component).
     pub life_stage: u8,
+}
+
+/// Pass 4 — whole-day age of every snapshot row, in [`collect_agent_snapshot`]
+/// order (the same `Agent` + `Position` archetype iteration); `-1` for a
+/// resident without `Life` (legacy, v8 and v9 worlds never age).
+pub fn collect_agent_ages_days(world: &hecs::World, tick: u64, ticks_per_day: u64) -> Vec<i32> {
+    world
+        .query::<(&Agent, &Position, Option<&Life>)>()
+        .iter()
+        .map(|(_, (_, _, life))| {
+            life.map_or(-1, |life| {
+                (life.age_ticks(tick).max(0) as u64)
+                    .checked_div(ticks_per_day)
+                    .map_or(0, |days| days.min(i32::MAX as u64) as i32)
+            })
+        })
+        .collect()
 }
 
 /// P4-γ pure-Rust collector (Phase 7-δ extension): iterate the world for
@@ -1379,7 +1406,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
-        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child),
+        (agent, pos, maybe_state, maybe_seek, maybe_hunger, maybe_thirst, maybe_sleep, maybe_inv, maybe_child, maybe_elder),
     ) in world
         .query::<(
             &Agent,
@@ -1391,6 +1418,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Sleep>,
             Option<&Inventory>,
             Option<&Child>,
+            Option<&Elder>,
         )>()
         .iter()
     {
@@ -1435,7 +1463,13 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
         };
-        let life_stage = u8::from(maybe_child.is_some());
+        let life_stage = if maybe_child.is_some() {
+            1
+        } else if maybe_elder.is_some() {
+            2
+        } else {
+            0
+        };
         rows.push(AgentSnapshotRow {
             entity_bits: entity.to_bits().get(),
             x: pos.x,
@@ -2887,6 +2921,23 @@ mod pass3_agent_snapshot_tests {
             assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
             assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
         }
+    }
+
+    #[test]
+    fn elders_report_stage_two_and_ages_follow_snapshot_order() {
+        use sim_core::components::{Elder, Life};
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(2, 3)));
+        world.spawn((Agent { id: 2 }, Position::new(2, 3), Life { born_tick: -2_880, lifespan_ticks: 90_000 }, Elder));
+        world.spawn((Agent { id: 3 }, Position::new(2, 3), Child { born_tick: 100 }, Life { born_tick: 100, lifespan_ticks: 90_000 }));
+        let rows = collect_agent_snapshot(&world);
+        let ages = collect_agent_ages_days(&world, 1_540, 1_440);
+        assert_eq!(rows.len(), ages.len());
+        let by_id: std::collections::BTreeMap<_, _> = rows.iter().zip(&ages)
+            .map(|(row, age)| (row.agent_id, (row.life_stage, *age))).collect();
+        assert_eq!(by_id[&1], (0, -1));
+        assert_eq!(by_id[&2], (2, 3));
+        assert_eq!(by_id[&3], (1, 1));
     }
 
     #[test]

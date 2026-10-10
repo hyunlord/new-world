@@ -45,7 +45,7 @@ use std::collections::BTreeMap;
 
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Inventory, Position, ResourceKind, SeekTarget,
+    Agent, AgentId, AgentState, Child, Elder, Inventory, Position, ResourceKind, SeekTarget,
     SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::ForageRule;
@@ -155,8 +155,9 @@ impl RuntimeSystem for AgentMovementSystem {
         let forage_window = forage
             .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        let elder_radius = resources.rules.society.aging.map(|rule| rule.elder_tether_radius);
         if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
-            || forage.is_some()
+            || forage.is_some() || elder_radius.is_some()
         {
             let mut settlements: Vec<_> = resources.settlements.iter().collect();
             settlements.sort_by_key(|(id, _)| **id);
@@ -174,7 +175,7 @@ impl RuntimeSystem for AgentMovementSystem {
         let max_x = (w - 1) as i64;
         let max_y = (h - 1) as i64;
         let mut haul_steps: Vec<AgentId> = Vec::new();
-        for (_, (pos, rng, state, seek, agent, child, inventory)) in world
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -183,6 +184,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&Agent>,
                 Option<&Child>,
                 Option<&Inventory>,
+                Option<&Elder>,
             )>()
             .iter()
         {
@@ -256,6 +258,9 @@ impl RuntimeSystem for AgentMovementSystem {
             if let (Some(radius), Some(anchor)) = (
                 if child.is_some() {
                     child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
+                } else if elder.is_some() && elder_radius.is_some() {
+                    // Pass 4: elders keep to the camp at all hours.
+                    elder_radius
                 } else {
                     evening_radius.or(rules.idle_tether_radius)
                 },

@@ -138,6 +138,14 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 ),
             )
             .expect("newly spawned worldgen resident must exist");
+        // Pass 4: founders start already aged, from their own aging stream.
+        if let Some(rule) = engine.resources.rules.society.aging {
+            let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
+            if let Ok(id) = id {
+                let life = crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule);
+                let _ = engine.world.insert_one(entity, life);
+            }
+        }
     }
     berries(cfg, &mut engine.resources, c);
 }

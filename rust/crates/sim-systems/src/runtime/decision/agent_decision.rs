@@ -57,7 +57,7 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
-    Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Hunger, Inventory, Memory,
+    Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Hunger, Inventory, Memory,
     MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
     TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
@@ -508,6 +508,9 @@ impl RuntimeSystem for AgentDecisionSystem {
             clock_in_window(resources, rule.start_minute, rule.end_minute));
         let children: BTreeSet<AgentId> = world.query::<(&Agent, &Child)>()
             .iter().map(|(_, (agent, _))| agent.id).collect();
+        // Pass 4 — elders stay at the camp: no building, foraging, gathering or combat.
+        let elders: BTreeSet<AgentId> = world.query::<(&Agent, &Elder)>()
+            .iter().map(|(_, (agent, _))| agent.id).collect();
         let social_rule = resources.rules.agent.social_seek;
         let forage_rule = resources.rules.agent.forage
             .filter(|_| resources.rules.society.stock_target.is_some());
@@ -556,7 +559,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= rule.haul_threshold)
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
-                 !children.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                 !children.contains(&a.id) && !elders.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
                     && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
                     && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
                     && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
@@ -801,6 +804,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         {
             let tile_idx = pos.y * width + pos.x;
             let adult = !children.contains(&agent.id);
+            let worker = adult && !elders.contains(&agent.id);
             let social_ready = adult && (social_rule.is_none()
                 || !resources.social_retry_after.contains_key(&agent.id));
             match *state {
@@ -814,7 +818,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     );
                     let breached = if let Some(need) = need {
                         Some(need)
-                    } else if adult && if planning.is_some() {
+                    } else if worker && if planning.is_some() {
                         assigned_builders.contains_key(&agent.id)
                     } else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                         // V7 Phase 6-β / P6β-6: 4th cascade step. Fires
@@ -852,7 +856,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // strictly below -BIAS_FLIP_THRESHOLD.
                         // Requires a co-located idle peer (lowest-AgentId).
                         // Phase 9-β / P9β-2 / P9β-5.
-                        if let Some(memory) = memory_opt.filter(|_| adult) {
+                        if let Some(memory) = memory_opt.filter(|_| worker) {
                             let combat_delta = memory_weight_delta(
                                 memory,
                                 CascadeArm::Combat,
@@ -998,7 +1002,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         if actionable_need_with_fatigue_threshold(None, None, sleep_opt.as_deref(), availability, fatigue_threshold).is_some() {
                             eligible.push((CascadeArm::Fatigue, TargetKind::Sleep));
                         }
-                        if adult && if planning.is_some() { assigned_builders.contains_key(&agent.id) }
+                        if worker && if planning.is_some() { assigned_builders.contains_key(&agent.id) }
                             else { construction_sites.contains_key(&(pos.x, pos.y)) } {
                             eligible.push((
                                 CascadeArm::Construction,
@@ -1022,7 +1026,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // the social_partner_breached_by_pos extension for the
                         // Social arm (plan §A17: Social natural winner →
                         // Construction flip via memory bias).
-                        if adult && planning.is_none()
+                        if worker && planning.is_none()
                             && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
                             && memory_opt.is_some_and(|m| {
                                 m.entries.iter().any(|e| {
@@ -1217,7 +1221,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 resources.social_chase_since.insert(agent.id, tick);
                             }
                         }
-                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && adult).and_then(|rule| {
+                    } else if let Some(bush) = forage_rule.filter(|_| forage_window && worker).and_then(|rule| {
                         // Pass 4 — Forage arm (after Combat, before Gather): a
                         // member with room and less than a haul load walks to a
                         // bush on purpose while the store is below its target.
@@ -1259,7 +1263,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     (plan.in_hand as f64) < cap * plan.target
                                 })
                         });
-                        if adult && has_room && bounded {
+                        if worker && has_room && bounded {
                             nearest_food_tile_in_radius(
                                 pos,
                                 &resources.food_tiles,

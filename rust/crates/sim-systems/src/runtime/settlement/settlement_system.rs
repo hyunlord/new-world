@@ -806,6 +806,12 @@ impl SettlementSystem {
             if resources.rules.society.life_stage.is_some() {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
             }
+            if let Some(rule) = resources.rules.society.aging {
+                let life = crate::runtime::agent::aging::newborn_life(
+                    resources.world_seed, new_agent_id, tick, &rule,
+                );
+                let _ = world.insert_one(entity, life);
+            }
 
             let parent = self.formation_event_ids.get(&sid).copied();
             let event_id = resources.issue_event_id();
