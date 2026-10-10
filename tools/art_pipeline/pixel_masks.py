@@ -45,12 +45,26 @@ MASKS: dict[str, tuple[str, ...]] = {
 def make_mask(name: str, palette: list[Color], size: tuple[int, int] = (16, 16), variant: int = 0) -> Image.Image:
     """Render a named ASCII mask centred in an exact-size binary-alpha canvas."""
     pattern = MASKS[name]
+    if name == 'bird':
+        pattern = (
+            ('a.....a','.a...a.','..aba..','...a...'),
+            ('.......','aaa.aaa','..aba..','...a...'),
+            ('.......','.......','.aabaa.','a..a..a'),
+            ('.......','.a...a.','a.aba.a','...a...'),
+        )[variant % 4]
+    if name == 'fish' and variant % 4 >= 2:
+        pattern = ('...aa..','..abba.','.abba..','aa.....')
+    if name == 'butterfly' and variant % 2:
+        pattern = ('..a.a..','..aba..','...a...','..a.a..')
     labs = rgb_to_lab(np.asarray(palette, dtype=np.uint8))
     order = np.argsort(labs[:, 0])
     colors = {'a': palette[int(order[0])], 'b': palette[int(order[len(order) * 2 // 3])],
               'c': palette[int(order[len(order) // 3])]}
     image = Image.new('RGBA', size)
     ox, oy = (size[0] - len(pattern[0])) // 2, (size[1] - len(pattern)) // 2
+    if name in ('smoke','spark','dust','splash','sparkle','fish','dragonfly','leaf','sleep'):
+        ox += (variant % 3) - 1
+        oy += (variant // 3) % 2
     for y, row in enumerate(pattern):
         for x, key in enumerate(row):
             if key in colors:

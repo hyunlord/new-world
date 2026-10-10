@@ -1,27 +1,2358 @@
 {
   "version": 1,
+  "page_size": [
+    2048,
+    2048
+  ],
+  "gutter": 1,
+  "pages": [
+    "res://assets/art/atlas/world_0.png"
+  ],
   "sprites": {
-    "direction_01_campfire": {
+    "F1_01": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
         1,
         1,
-        25,
+        16,
+        18
+      ],
+      "anchor": [
+        8,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        1,
+        1,
+        16,
+        18
+      ],
+      "source_path": "assets/art/production/F1/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        19,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        19,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        39,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        39,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        59,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        59,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        79,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        79,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        99,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        99,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        119,
+        1,
+        18,
+        17
+      ],
+      "anchor": [
+        9,
+        16
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        119,
+        1,
+        18,
+        17
+      ],
+      "source_path": "assets/art/production/F1/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        139,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        139,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        159,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        159,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        179,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        179,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        199,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        199,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        219,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        219,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        239,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        239,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        259,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        259,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        279,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        279,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        299,
+        1,
+        18,
+        18
+      ],
+      "anchor": [
+        9,
+        17
+      ],
+      "class": "F1",
+      "frames": [],
+      "region_rect": [
+        299,
+        1,
+        18,
+        18
+      ],
+      "source_path": "assets/art/production/F1/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        319,
+        1,
+        18,
+        13
+      ],
+      "anchor": [
+        9,
+        12
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        319,
+        1,
+        18,
+        13
+      ],
+      "source_path": "assets/art/production/F2/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        339,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        339,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        359,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        359,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        379,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        379,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        399,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        399,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        419,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        419,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        439,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        439,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        459,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        459,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        479,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        479,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        499,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        499,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        519,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        519,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        539,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        539,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        559,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        559,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        579,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        579,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        599,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        599,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "F2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        619,
+        1,
+        18,
+        14
+      ],
+      "anchor": [
+        9,
+        13
+      ],
+      "class": "F2",
+      "frames": [],
+      "region_rect": [
+        619,
+        1,
+        18,
+        14
+      ],
+      "source_path": "assets/art/production/F2/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        639,
+        1,
+        30,
+        38
+      ],
+      "anchor": [
+        15,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        639,
+        1,
+        30,
+        38
+      ],
+      "source_path": "assets/art/production/N1/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        671,
+        1,
+        30,
+        38
+      ],
+      "anchor": [
+        15,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        671,
+        1,
+        30,
+        38
+      ],
+      "source_path": "assets/art/production/N1/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        703,
+        1,
+        30,
+        38
+      ],
+      "anchor": [
+        15,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        703,
+        1,
+        30,
+        38
+      ],
+      "source_path": "assets/art/production/N1/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        735,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        735,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        763,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        763,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        791,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        791,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        819,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        819,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        847,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        847,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        875,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        875,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N1/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        889,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        889,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N1/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        903,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        903,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N1/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        918,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        918,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N1/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        933,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        933,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N1/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        948,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        948,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        976,
+        1,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        976,
+        1,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/N1/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        991,
+        1,
+        26,
+        38
+      ],
+      "anchor": [
+        13,
+        37
+      ],
+      "class": "N1",
+      "frames": [],
+      "region_rect": [
+        991,
+        1,
+        26,
+        38
+      ],
+      "source_path": "assets/art/production/N1/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1019,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1019,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N2/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1034,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1034,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N2/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1049,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1049,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N2/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1064,
+        1,
+        13,
+        8
+      ],
+      "anchor": [
+        6,
+        7
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1064,
+        1,
+        13,
+        8
+      ],
+      "source_path": "assets/art/production/N2/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1079,
+        1,
+        20,
+        14
+      ],
+      "anchor": [
+        10,
+        13
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1079,
+        1,
+        20,
+        14
+      ],
+      "source_path": "assets/art/production/N2/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1101,
+        1,
+        26,
+        20
+      ],
+      "anchor": [
+        13,
+        19
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1101,
+        1,
+        26,
+        20
+      ],
+      "source_path": "assets/art/production/N2/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1129,
+        1,
+        26,
+        20
+      ],
+      "anchor": [
+        13,
+        19
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1129,
+        1,
+        26,
+        20
+      ],
+      "source_path": "assets/art/production/N2/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1157,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1157,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N2/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1171,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1171,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N2/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1185,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1185,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N2/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1199,
+        1,
+        31,
+        29
+      ],
+      "anchor": [
+        15,
         28
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1199,
+        1,
+        31,
+        29
+      ],
+      "source_path": "assets/art/production/N2/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1232,
+        1,
+        20,
+        24
+      ],
+      "anchor": [
+        10,
+        23
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1232,
+        1,
+        20,
+        24
+      ],
+      "source_path": "assets/art/production/N2/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1254,
+        1,
+        20,
+        24
+      ],
+      "anchor": [
+        10,
+        23
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1254,
+        1,
+        20,
+        24
+      ],
+      "source_path": "assets/art/production/N2/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1276,
+        1,
+        20,
+        24
+      ],
+      "anchor": [
+        10,
+        23
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1276,
+        1,
+        20,
+        24
+      ],
+      "source_path": "assets/art/production/N2/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1298,
+        1,
+        20,
+        24
+      ],
+      "anchor": [
+        10,
+        23
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1298,
+        1,
+        20,
+        24
+      ],
+      "source_path": "assets/art/production/N2/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1320,
+        1,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "N2",
+      "frames": [],
+      "region_rect": [
+        1320,
+        1,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/N2/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1334,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1334,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1343,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1343,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1352,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1352,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1361,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1361,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1370,
+        1,
+        7,
+        7
+      ],
+      "anchor": [
+        3,
+        6
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1370,
+        1,
+        7,
+        7
+      ],
+      "source_path": "assets/art/production/N3/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1379,
+        1,
+        7,
+        7
+      ],
+      "anchor": [
+        3,
+        6
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1379,
+        1,
+        7,
+        7
+      ],
+      "source_path": "assets/art/production/N3/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1388,
+        1,
+        7,
+        7
+      ],
+      "anchor": [
+        3,
+        6
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1388,
+        1,
+        7,
+        7
+      ],
+      "source_path": "assets/art/production/N3/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1397,
+        1,
+        7,
+        7
+      ],
+      "anchor": [
+        3,
+        6
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1397,
+        1,
+        7,
+        7
+      ],
+      "source_path": "assets/art/production/N3/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1406,
+        1,
+        9,
+        6
+      ],
+      "anchor": [
+        4,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1406,
+        1,
+        9,
+        6
+      ],
+      "source_path": "assets/art/production/N3/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1417,
+        1,
+        9,
+        6
+      ],
+      "anchor": [
+        4,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1417,
+        1,
+        9,
+        6
+      ],
+      "source_path": "assets/art/production/N3/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1428,
+        1,
+        9,
+        5
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1428,
+        1,
+        9,
+        5
+      ],
+      "source_path": "assets/art/production/N3/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1439,
+        1,
+        9,
+        5
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1439,
+        1,
+        9,
+        5
+      ],
+      "source_path": "assets/art/production/N3/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1450,
+        1,
+        9,
+        5
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1450,
+        1,
+        9,
+        5
+      ],
+      "source_path": "assets/art/production/N3/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1461,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1461,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1470,
+        1,
+        7,
+        6
+      ],
+      "anchor": [
+        3,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1470,
+        1,
+        7,
+        6
+      ],
+      "source_path": "assets/art/production/N3/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "N3_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1479,
+        1,
+        9,
+        6
+      ],
+      "anchor": [
+        4,
+        5
+      ],
+      "class": "N3",
+      "frames": [],
+      "region_rect": [
+        1479,
+        1,
+        9,
+        6
+      ],
+      "source_path": "assets/art/production/N3/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1490,
+        1,
+        26,
+        17
+      ],
+      "anchor": [
+        13,
+        16
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1490,
+        1,
+        26,
+        17
+      ],
+      "source_path": "assets/art/production/S1/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1518,
+        1,
+        24,
+        26
       ],
       "anchor": [
         12,
-        27
+        25
       ],
-      "class": "campfire",
-      "frames": [
-        "direction_01_campfire"
-      ]
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1518,
+        1,
+        24,
+        26
+      ],
+      "source_path": "assets/art/production/S1/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_02_lean_to": {
+    "S1_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        65,
+        1544,
+        1,
+        24,
+        26
+      ],
+      "anchor": [
+        12,
+        25
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1544,
+        1,
+        24,
+        26
+      ],
+      "source_path": "assets/art/production/S1/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1570,
+        1,
+        24,
+        26
+      ],
+      "anchor": [
+        12,
+        25
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1570,
+        1,
+        24,
+        26
+      ],
+      "source_path": "assets/art/production/S1/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1596,
+        1,
+        24,
+        26
+      ],
+      "anchor": [
+        12,
+        25
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1596,
+        1,
+        24,
+        26
+      ],
+      "source_path": "assets/art/production/S1/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1622,
+        1,
+        26,
+        16
+      ],
+      "anchor": [
+        13,
+        15
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1622,
+        1,
+        26,
+        16
+      ],
+      "source_path": "assets/art/production/S1/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1650,
+        1,
+        25,
+        16
+      ],
+      "anchor": [
+        12,
+        15
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1650,
+        1,
+        25,
+        16
+      ],
+      "source_path": "assets/art/production/S1/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1677,
+        1,
+        35,
+        23
+      ],
+      "anchor": [
+        17,
+        22
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1677,
+        1,
+        35,
+        23
+      ],
+      "source_path": "assets/art/production/S1/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1714,
+        1,
+        35,
+        23
+      ],
+      "anchor": [
+        17,
+        22
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1714,
+        1,
+        35,
+        23
+      ],
+      "source_path": "assets/art/production/S1/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1751,
+        1,
+        35,
+        23
+      ],
+      "anchor": [
+        17,
+        22
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1751,
+        1,
+        35,
+        23
+      ],
+      "source_path": "assets/art/production/S1/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1788,
         1,
         34,
         30
@@ -30,118 +2361,987 @@
         17,
         29
       ],
-      "class": "building",
-      "frames": [
-        "direction_02_lean_to"
-      ]
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1788,
+        1,
+        34,
+        30
+      ],
+      "source_path": "assets/art/production/S1/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_03_storage_pit": {
+    "S1_12": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        129,
+        1824,
         1,
-        33,
-        23
+        32,
+        30
       ],
       "anchor": [
         16,
-        22
+        29
       ],
-      "class": "building",
-      "frames": [
-        "direction_03_storage_pit"
-      ]
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1824,
+        1,
+        32,
+        30
+      ],
+      "source_path": "assets/art/production/S1/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_04_shelter_frame": {
+    "S1_13": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        193,
+        1858,
         1,
         34,
-        29
+        30
       ],
       "anchor": [
         17,
+        29
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1858,
+        1,
+        34,
+        30
+      ],
+      "source_path": "assets/art/production/S1/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1894,
+        1,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1894,
+        1,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/S1/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1909,
+        1,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1909,
+        1,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/S1/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1924,
+        1,
+        21,
+        9
+      ],
+      "anchor": [
+        10,
+        8
+      ],
+      "class": "S1",
+      "frames": [],
+      "region_rect": [
+        1924,
+        1,
+        21,
+        9
+      ],
+      "source_path": "assets/art/production/S1/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1947,
+        1,
+        32,
+        29
+      ],
+      "anchor": [
+        16,
         28
       ],
-      "class": "building",
-      "frames": [
-        "direction_04_shelter_frame"
-      ]
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        1947,
+        1,
+        32,
+        29
+      ],
+      "source_path": "assets/art/production/S2/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_05_berry_bush_full": {
+    "S2_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        257,
+        1981,
         1,
-        27,
-        24
+        32,
+        29
       ],
       "anchor": [
+        16,
+        28
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        1981,
+        1,
+        32,
+        29
+      ],
+      "source_path": "assets/art/production/S2/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        2015,
+        1,
+        32,
+        29
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        2015,
+        1,
+        32,
+        29
+      ],
+      "source_path": "assets/art/production/S2/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1,
+        41,
+        32,
+        29
+      ],
+      "anchor": [
+        16,
+        28
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        1,
+        41,
+        32,
+        29
+      ],
+      "source_path": "assets/art/production/S2/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        35,
+        41,
+        11,
+        8
+      ],
+      "anchor": [
+        5,
+        7
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        35,
+        41,
+        11,
+        8
+      ],
+      "source_path": "assets/art/production/S2/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        48,
+        41,
+        11,
+        8
+      ],
+      "anchor": [
+        5,
+        7
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        48,
+        41,
+        11,
+        8
+      ],
+      "source_path": "assets/art/production/S2/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        61,
+        41,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        61,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        75,
+        41,
         13,
-        23
-      ],
-      "class": "small object",
-      "frames": [
-        "direction_05_berry_bush_full"
-      ]
-    },
-    "direction_06_berry_bush_two": {
-      "page": "res://assets/art/atlas/world_0.png",
-      "rect": [
-        321,
-        1,
-        25,
-        24
+        5
       ],
       "anchor": [
-        12,
-        23
+        6,
+        4
       ],
-      "class": "small object",
-      "frames": [
-        "direction_06_berry_bush_two"
-      ]
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        75,
+        41,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/S2/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_07_berry_bush_one": {
+    "S2_09": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        385,
-        1,
-        24,
-        24
+        90,
+        41,
+        12,
+        7
       ],
       "anchor": [
-        12,
-        23
+        6,
+        6
       ],
-      "class": "small object",
-      "frames": [
-        "direction_07_berry_bush_one"
-      ]
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        90,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_08_berry_bush_bare": {
+    "S2_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        449,
-        1,
-        24,
-        24
+        104,
+        41,
+        19,
+        20
       ],
       "anchor": [
-        12,
-        23
+        9,
+        19
       ],
-      "class": "small object",
-      "frames": [
-        "direction_08_berry_bush_bare"
-      ]
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        104,
+        41,
+        19,
+        20
+      ],
+      "source_path": "assets/art/production/S2/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
-    "direction_09_villager_gatherer": {
+    "S2_11": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        1,
-        65,
+        125,
+        41,
+        19,
+        20
+      ],
+      "anchor": [
+        9,
+        19
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        125,
+        41,
+        19,
+        20
+      ],
+      "source_path": "assets/art/production/S2/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        146,
+        41,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        146,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        160,
+        41,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        160,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        174,
+        41,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        174,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        188,
+        41,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        188,
+        41,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/S2/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "S2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        203,
+        41,
+        12,
+        7
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "class": "S2",
+      "frames": [],
+      "region_rect": [
+        203,
+        41,
+        12,
+        7
+      ],
+      "source_path": "assets/art/production/S2/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        217,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        217,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/01.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        235,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        235,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/02.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        253,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        253,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/03.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        271,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        271,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/04.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        289,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        289,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/05.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        307,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        307,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/06.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        325,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        325,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/07.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        343,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        343,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/08.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        361,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        361,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/09.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        379,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        379,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/10.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        397,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        397,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/11.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        415,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        415,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/12.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        433,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        433,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/13.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        451,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        451,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/14.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        469,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        469,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/15.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "U1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        487,
+        41,
+        16,
+        16
+      ],
+      "anchor": [
+        8,
+        15
+      ],
+      "class": "U1",
+      "frames": [],
+      "region_rect": [
+        487,
+        41,
+        16,
+        16
+      ],
+      "source_path": "assets/art/production/U1/16.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "V_a1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        505,
+        41,
         17,
         30
       ],
@@ -149,50 +3349,2495 @@
         8,
         29
       ],
-      "class": "villager",
-      "frames": [
-        "direction_09_villager_gatherer"
-      ]
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        505,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/01.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "idle",
+      "frame": 0
     },
-    "direction_10_villager_builder": {
+    "V_a1_02": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        65,
-        65,
-        22,
+        524,
+        41,
+        17,
         30
       ],
       "anchor": [
-        11,
+        8,
         29
       ],
-      "class": "villager",
-      "frames": [
-        "direction_10_villager_builder"
-      ]
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        524,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/02.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "idle",
+      "frame": 1
     },
-    "direction_11_villager_elder": {
+    "V_a1_03": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        129,
-        65,
+        543,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        543,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/03.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_a1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        562,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        562,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/04.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_a1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        581,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        581,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/05.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_a1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        600,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        600,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/06.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_a1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        619,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        619,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/07.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_a1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        638,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        638,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/08.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_a1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        657,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        657,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/09.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_a1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        676,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        676,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/10.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_a1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        695,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        695,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/11.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_a1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        714,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        714,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/12.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_a1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        733,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        733,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/13.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_a1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        752,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        752,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/14.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_a1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        771,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        771,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/15.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_a1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        790,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        790,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a1/16.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_a2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        809,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        809,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/01.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_a2_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        828,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        828,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/02.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_a2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        847,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        847,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/03.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "carry",
+      "frame": 2
+    },
+    "V_a2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        866,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        866,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/04.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "carry",
+      "frame": 3
+    },
+    "V_a2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        885,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        885,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/05.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_a2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        904,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        904,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/06.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_a2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        923,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        923,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/07.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "carry",
+      "frame": 2
+    },
+    "V_a2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        942,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        942,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/08.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "carry",
+      "frame": 3
+    },
+    "V_a2_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        961,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        961,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/09.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "gather",
+      "frame": 0
+    },
+    "V_a2_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        980,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        980,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/10.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "gather",
+      "frame": 1
+    },
+    "V_a2_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        999,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        999,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/11.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "gather",
+      "frame": 0
+    },
+    "V_a2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1018,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1018,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/12.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "gather",
+      "frame": 1
+    },
+    "V_a2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1037,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1037,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/13.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "build",
+      "frame": 0
+    },
+    "V_a2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1056,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1056,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/14.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "build",
+      "frame": 1
+    },
+    "V_a2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1075,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1075,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/15.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "build",
+      "frame": 0
+    },
+    "V_a2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1094,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1094,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a2/16.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "build",
+      "frame": 1
+    },
+    "V_a3_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1113,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1113,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/01.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_a3_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1132,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1132,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/02.png",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_a3_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1151,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1151,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/03.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "drink",
+      "frame": 0
+    },
+    "V_a3_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1170,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1170,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/04.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "drink",
+      "frame": 1
+    },
+    "V_a3_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1189,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1189,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/05.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "eat",
+      "frame": 0
+    },
+    "V_a3_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1208,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1208,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/06.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "eat",
+      "frame": 1
+    },
+    "V_a3_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1227,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1227,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/07.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_a3_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1246,
+        41,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1246,
+        41,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_a3/08.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_a3_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1265,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1265,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/09.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "talk",
+      "frame": 0
+    },
+    "V_a3_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1284,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1284,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/10.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_a3_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1303,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1303,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/11.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "talk",
+      "frame": 0
+    },
+    "V_a3_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1322,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1322,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/12.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_a3_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1341,
+        41,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1341,
+        41,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/V_a3/13.png",
+      "body": "adult_a",
+      "view": "E",
+      "activity": "asleep",
+      "frame": 0
+    },
+    "V_a3_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1356,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1356,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/14.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "crouch",
+      "frame": 0
+    },
+    "V_a3_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1375,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1375,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/15.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "crouch",
+      "frame": 1
+    },
+    "V_a3_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1394,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1394,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_a3/16.png",
+      "body": "adult_a",
+      "view": "S",
+      "activity": "crossed",
+      "frame": 0
+    },
+    "V_b1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1413,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1413,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/01.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_b1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1432,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1432,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/02.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "idle",
+      "frame": 1
+    },
+    "V_b1_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1451,
+        41,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1451,
+        41,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/03.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_b1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1471,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1471,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/04.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_b1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1490,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1490,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/05.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_b1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1509,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1509,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/06.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_b1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1528,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1528,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/07.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_b1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1547,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1547,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/08.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_b1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1566,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1566,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/09.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_b1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1585,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1585,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/10.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_b1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1604,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1604,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/11.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_b1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1623,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1623,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/12.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_b1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1642,
+        41,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1642,
+        41,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/13.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_b1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1662,
+        41,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1662,
+        41,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/14.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_b1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1682,
+        41,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1682,
+        41,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/15.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_b1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1702,
+        41,
+        15,
+        30
+      ],
+      "anchor": [
+        7,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1702,
+        41,
+        15,
+        30
+      ],
+      "source_path": "assets/art/production/V_b1/16.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_b2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1719,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1719,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/01.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_b2_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1738,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1738,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/02.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_b2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1757,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1757,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/03.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "frame": 2
+    },
+    "V_b2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1776,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1776,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/04.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "carry",
+      "frame": 3
+    },
+    "V_b2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1795,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1795,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/05.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_b2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1814,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1814,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/06.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_b2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1833,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1833,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/07.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "frame": 2
+    },
+    "V_b2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1852,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1852,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/08.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "carry",
+      "frame": 3
+    },
+    "V_b2_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1871,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1871,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/09.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "gather",
+      "frame": 0
+    },
+    "V_b2_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1890,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1890,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/10.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "gather",
+      "frame": 1
+    },
+    "V_b2_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1909,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1909,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/11.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "gather",
+      "frame": 0
+    },
+    "V_b2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1928,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1928,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/12.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "gather",
+      "frame": 1
+    },
+    "V_b2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1947,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1947,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/13.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "build",
+      "frame": 0
+    },
+    "V_b2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1966,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1966,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/14.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "build",
+      "frame": 1
+    },
+    "V_b2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1985,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1985,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/15.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "frame": 0
+    },
+    "V_b2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        2004,
+        41,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        2004,
+        41,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b2/16.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "build",
+      "frame": 1
+    },
+    "V_b3_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        2023,
+        41,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        2023,
+        41,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/01.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry",
+      "frame": 0
+    },
+    "V_b3_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1,
+        73,
+        18,
+        30
+      ],
+      "anchor": [
+        9,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        1,
+        73,
+        18,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/02.png",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry",
+      "frame": 1
+    },
+    "V_b3_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
         21,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        21,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/03.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "frame": 0
+    },
+    "V_b3_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        40,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        40,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/04.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "drink",
+      "frame": 1
+    },
+    "V_b3_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        59,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        59,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/05.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "eat",
+      "frame": 0
+    },
+    "V_b3_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        78,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        78,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/06.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "eat",
+      "frame": 1
+    },
+    "V_b3_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        97,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        97,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/07.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_b3_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        116,
+        73,
+        17,
+        28
+      ],
+      "anchor": [
+        8,
+        27
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        116,
+        73,
+        17,
+        28
+      ],
+      "source_path": "assets/art/production/V_b3/08.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_b3_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        135,
+        73,
+        17,
         30
       ],
       "anchor": [
-        10,
+        8,
         29
       ],
-      "class": "villager",
-      "frames": [
-        "direction_11_villager_elder"
-      ]
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        135,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/09.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "talk",
+      "frame": 0
     },
-    "direction_12_villager_child": {
+    "V_b3_10": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        193,
-        65,
+        154,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        154,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/10.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_b3_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        173,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        173,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/11.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "talk",
+      "frame": 0
+    },
+    "V_b3_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        192,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        192,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/12.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_b3_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        211,
+        73,
+        13,
+        5
+      ],
+      "anchor": [
+        6,
+        4
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        211,
+        73,
+        13,
+        5
+      ],
+      "source_path": "assets/art/production/V_b3/13.png",
+      "body": "adult_b",
+      "view": "E",
+      "activity": "asleep",
+      "frame": 0
+    },
+    "V_b3_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        226,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        226,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/14.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "crouch",
+      "frame": 0
+    },
+    "V_b3_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        245,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        245,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/15.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "crouch",
+      "frame": 1
+    },
+    "V_b3_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        264,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "adult",
+      "frames": [],
+      "region_rect": [
+        264,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/production/V_b3/16.png",
+      "body": "adult_b",
+      "view": "S",
+      "activity": "crossed",
+      "frame": 0
+    },
+    "V_c1_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        283,
+        73,
         14,
         23
       ],
@@ -201,15 +5846,1142 @@
         22
       ],
       "class": "child",
-      "frames": [
-        "direction_12_villager_child"
-      ]
+      "frames": [],
+      "region_rect": [
+        283,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/01.png",
+      "body": "child",
+      "view": "S",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_c1_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        299,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        299,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/02.png",
+      "body": "child",
+      "view": "S",
+      "activity": "idle",
+      "frame": 1
+    },
+    "V_c1_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        315,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        315,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/03.png",
+      "body": "child",
+      "view": "N",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_c1_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        331,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        331,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/04.png",
+      "body": "child",
+      "view": "E",
+      "activity": "idle",
+      "frame": 0
+    },
+    "V_c1_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        347,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        347,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/05.png",
+      "body": "child",
+      "view": "S",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_c1_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        363,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        363,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/06.png",
+      "body": "child",
+      "view": "S",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_c1_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        379,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        379,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/07.png",
+      "body": "child",
+      "view": "S",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_c1_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        395,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        395,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/08.png",
+      "body": "child",
+      "view": "S",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_c1_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        411,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        411,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/09.png",
+      "body": "child",
+      "view": "E",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_c1_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        427,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        427,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/10.png",
+      "body": "child",
+      "view": "E",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_c1_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        443,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        443,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/11.png",
+      "body": "child",
+      "view": "E",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_c1_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        459,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        459,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/12.png",
+      "body": "child",
+      "view": "E",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_c1_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        475,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        475,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/13.png",
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "frame": 0
+    },
+    "V_c1_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        491,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        491,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/14.png",
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "frame": 1
+    },
+    "V_c1_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        507,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        507,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/15.png",
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "frame": 2
+    },
+    "V_c1_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        523,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        523,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c1/16.png",
+      "body": "child",
+      "view": "N",
+      "activity": "walk",
+      "frame": 3
+    },
+    "V_c2_01": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        539,
+        73,
+        14,
+        21
+      ],
+      "anchor": [
+        7,
+        20
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        539,
+        73,
+        14,
+        21
+      ],
+      "source_path": "assets/art/production/V_c2/01.png",
+      "body": "child",
+      "view": "S",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_c2_02": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        555,
+        73,
+        14,
+        21
+      ],
+      "anchor": [
+        7,
+        20
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        555,
+        73,
+        14,
+        21
+      ],
+      "source_path": "assets/art/production/V_c2/02.png",
+      "body": "child",
+      "view": "E",
+      "activity": "sit",
+      "frame": 0
+    },
+    "V_c2_03": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        571,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        571,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/03.png",
+      "body": "child",
+      "view": "S",
+      "activity": "hop",
+      "frame": 0
+    },
+    "V_c2_04": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        587,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        587,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/04.png",
+      "body": "child",
+      "view": "S",
+      "activity": "hop",
+      "frame": 1
+    },
+    "V_c2_05": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        603,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        603,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/05.png",
+      "body": "child",
+      "view": "E",
+      "activity": "run",
+      "frame": 0
+    },
+    "V_c2_06": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        619,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        619,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/06.png",
+      "body": "child",
+      "view": "E",
+      "activity": "run",
+      "frame": 1
+    },
+    "V_c2_07": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        635,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        635,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/07.png",
+      "body": "child",
+      "view": "E",
+      "activity": "run",
+      "frame": 2
+    },
+    "V_c2_08": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        651,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        651,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/08.png",
+      "body": "child",
+      "view": "E",
+      "activity": "run",
+      "frame": 3
+    },
+    "V_c2_09": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        667,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        667,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/09.png",
+      "body": "child",
+      "view": "S",
+      "activity": "talk",
+      "frame": 0
+    },
+    "V_c2_10": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        683,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        683,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/10.png",
+      "body": "child",
+      "view": "S",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_c2_11": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        699,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        699,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/11.png",
+      "body": "child",
+      "view": "E",
+      "activity": "talk",
+      "frame": 0
+    },
+    "V_c2_12": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        715,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        715,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/production/V_c2/12.png",
+      "body": "child",
+      "view": "E",
+      "activity": "talk",
+      "frame": 1
+    },
+    "V_c2_13": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        731,
+        73,
+        23,
+        14
+      ],
+      "anchor": [
+        11,
+        13
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        731,
+        73,
+        23,
+        14
+      ],
+      "source_path": "assets/art/production/V_c2/13.png",
+      "body": "child",
+      "view": "E",
+      "activity": "asleep",
+      "frame": 0
+    },
+    "V_c2_14": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        756,
+        73,
+        14,
+        21
+      ],
+      "anchor": [
+        7,
+        20
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        756,
+        73,
+        14,
+        21
+      ],
+      "source_path": "assets/art/production/V_c2/14.png",
+      "body": "child",
+      "view": "S",
+      "activity": "eat",
+      "frame": 0
+    },
+    "V_c2_15": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        772,
+        73,
+        14,
+        21
+      ],
+      "anchor": [
+        7,
+        20
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        772,
+        73,
+        14,
+        21
+      ],
+      "source_path": "assets/art/production/V_c2/15.png",
+      "body": "child",
+      "view": "S",
+      "activity": "eat",
+      "frame": 1
+    },
+    "V_c2_16": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        788,
+        73,
+        14,
+        21
+      ],
+      "anchor": [
+        7,
+        20
+      ],
+      "class": "child",
+      "frames": [],
+      "region_rect": [
+        788,
+        73,
+        14,
+        21
+      ],
+      "source_path": "assets/art/production/V_c2/16.png",
+      "body": "child",
+      "view": "S",
+      "activity": "hug",
+      "frame": 0
+    },
+    "direction_01_campfire": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        804,
+        73,
+        25,
+        28
+      ],
+      "anchor": [
+        12,
+        27
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        804,
+        73,
+        25,
+        28
+      ],
+      "source_path": "assets/art/direction/01_campfire.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_02_lean_to": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        831,
+        73,
+        34,
+        30
+      ],
+      "anchor": [
+        17,
+        29
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        831,
+        73,
+        34,
+        30
+      ],
+      "source_path": "assets/art/direction/02_lean_to.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_03_storage_pit": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        867,
+        73,
+        33,
+        23
+      ],
+      "anchor": [
+        16,
+        22
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        867,
+        73,
+        33,
+        23
+      ],
+      "source_path": "assets/art/direction/03_storage_pit.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_04_shelter_frame": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        902,
+        73,
+        34,
+        29
+      ],
+      "anchor": [
+        17,
+        28
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        902,
+        73,
+        34,
+        29
+      ],
+      "source_path": "assets/art/direction/04_shelter_frame.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_05_berry_bush_full": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        938,
+        73,
+        27,
+        24
+      ],
+      "anchor": [
+        13,
+        23
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        938,
+        73,
+        27,
+        24
+      ],
+      "source_path": "assets/art/direction/05_berry_bush_full.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_06_berry_bush_two": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        967,
+        73,
+        25,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        967,
+        73,
+        25,
+        24
+      ],
+      "source_path": "assets/art/direction/06_berry_bush_two.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_07_berry_bush_one": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        994,
+        73,
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        994,
+        73,
+        24,
+        24
+      ],
+      "source_path": "assets/art/direction/07_berry_bush_one.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_08_berry_bush_bare": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1020,
+        73,
+        24,
+        24
+      ],
+      "anchor": [
+        12,
+        23
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1020,
+        73,
+        24,
+        24
+      ],
+      "source_path": "assets/art/direction/08_berry_bush_bare.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_09_villager_gatherer": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1046,
+        73,
+        17,
+        30
+      ],
+      "anchor": [
+        8,
+        29
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1046,
+        73,
+        17,
+        30
+      ],
+      "source_path": "assets/art/direction/09_villager_gatherer.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_10_villager_builder": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1065,
+        73,
+        22,
+        30
+      ],
+      "anchor": [
+        11,
+        29
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1065,
+        73,
+        22,
+        30
+      ],
+      "source_path": "assets/art/direction/10_villager_builder.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_11_villager_elder": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1089,
+        73,
+        21,
+        30
+      ],
+      "anchor": [
+        10,
+        29
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1089,
+        73,
+        21,
+        30
+      ],
+      "source_path": "assets/art/direction/11_villager_elder.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
+    },
+    "direction_12_villager_child": {
+      "page": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1112,
+        73,
+        14,
+        23
+      ],
+      "anchor": [
+        7,
+        22
+      ],
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1112,
+        73,
+        14,
+        23
+      ],
+      "source_path": "assets/art/direction/12_villager_child.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
     "direction_13_boulder": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        257,
-        65,
+        1128,
+        73,
         26,
         20
       ],
@@ -217,16 +6989,25 @@
         13,
         19
       ],
-      "class": "small object",
-      "frames": [
-        "direction_13_boulder"
-      ]
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1128,
+        73,
+        26,
+        20
+      ],
+      "source_path": "assets/art/direction/13_boulder.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
     "direction_14_young_tree": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        321,
-        65,
+        1156,
+        73,
         26,
         30
       ],
@@ -234,16 +7015,25 @@
         13,
         29
       ],
-      "class": "tall",
-      "frames": [
-        "direction_14_young_tree"
-      ]
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1156,
+        73,
+        26,
+        30
+      ],
+      "source_path": "assets/art/direction/14_young_tree.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
     "direction_15_reed_tuft": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        385,
-        65,
+        1184,
+        73,
         20,
         24
       ],
@@ -251,16 +7041,25 @@
         10,
         23
       ],
-      "class": "small object",
-      "frames": [
-        "direction_15_reed_tuft"
-      ]
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1184,
+        73,
+        20,
+        24
+      ],
+      "source_path": "assets/art/direction/15_reed_tuft.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     },
     "direction_16_berry_basket": {
       "page": "res://assets/art/atlas/world_0.png",
       "rect": [
-        449,
-        65,
+        1206,
+        73,
         19,
         20
       ],
@@ -268,10 +7067,19 @@
         9,
         19
       ],
-      "class": "small object",
-      "frames": [
-        "direction_16_berry_basket"
-      ]
+      "class": "direction",
+      "frames": [],
+      "region_rect": [
+        1206,
+        73,
+        19,
+        20
+      ],
+      "source_path": "assets/art/direction/16_berry_basket.png",
+      "body": "",
+      "view": "",
+      "activity": "",
+      "frame": 0
     }
   }
 }
