@@ -70,6 +70,9 @@ use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
 
 /// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
 type Retarget = (AgentId, hecs::Entity, (u32, u32), (u32, u32));
+/// A wood gatherer to re-target (Pass 5): agent id, entity, position and its
+/// emptied spot (`None` when it had no target).
+type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
 
 /// Per-settlement forage inputs computed once per decision tick (Pass 4).
 #[derive(Debug, Clone)]
@@ -1509,6 +1512,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                     }
                 }
                 AgentState::Seeking { target } => {
+                    // Pass 5 — critical hunger or thirst interrupts a gathering
+                    // trip: the gatherer becomes Idle (the post-pass drops its
+                    // SeekTarget) and the next decision tick serves the need.
+                    if resources.rules.agent.preempt_gathering
+                        && matches!(target, TargetKind::GatherFood | TargetKind::GatherWood)
+                        && (hunger_opt.as_ref().is_some_and(|h| f64::from(h.value) >= critical_limit)
+                            || thirst_opt.as_ref().is_some_and(|t| t.value >= critical_limit))
+                    {
+                        *state = AgentState::Idle;
+                        resources.tallies.gather_preempted += 1;
+                        continue;
+                    }
                     if matches!(target, TargetKind::Food | TargetKind::Water) {
                         if let Some(limit) = resources.rules.agent.critical_preemption {
                             if let Some((need, _)) = actionable_need_with_fatigue_threshold(
@@ -1986,7 +2001,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         // Pass 5 — deadwood targets held after this pass, and wood gatherers
         // whose spot emptied (or who lost their target), re-targeted below.
         let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
-        let mut wood_retarget: Vec<(AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>)> = Vec::new();
+        let mut wood_retarget: Vec<WoodRetarget> = Vec::new();
         for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
             .query::<(
                 &Agent,

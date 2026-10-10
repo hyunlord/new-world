@@ -333,6 +333,7 @@ impl WorldRules {
             cold_end_minute: 360,
             cold_hunger_permille: 1500,
         });
+        rules.agent.preempt_gathering = true;
         rules
     }
 

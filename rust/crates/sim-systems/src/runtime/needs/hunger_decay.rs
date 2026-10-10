@@ -65,7 +65,7 @@ impl RuntimeSystem for HungerDecaySystem {
         for (_entity, (hunger, cold)) in world.query::<(&mut Hunger, Option<&Cold>)>().iter() {
             if cold.is_some() {
                 let growth = hunger.growth_rate * permille as f32 / 1000.0;
-                hunger.value = (hunger.value + growth).min(Hunger::SATURATION).max(0.0);
+                hunger.value = (hunger.value + growth).clamp(0.0, Hunger::SATURATION);
             } else {
                 hunger.tick();
             }
