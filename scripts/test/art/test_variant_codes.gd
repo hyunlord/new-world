@@ -25,12 +25,12 @@ func _initialize() -> void:
 	assert(material.shader != null)
 	assert(material.get_shader_parameter("region_texture") is Texture2D)
 	assert(material.get_shader_parameter("ramp_texture") is Texture2D)
-	for tone: int in range(3):
-		for hair: int in range(5):
+	for tone: int in range(4):
+		for hair: int in range(7):
 			assert(SpriteLibrary.apply_variant(sprite, {"tone": tone, "hair": hair}))
 			assert(roundi(sprite.self_modulate.r * 15.0) == tone)
 			assert(roundi(sprite.self_modulate.g * 15.0) == hair)
 			assert(sprite.self_modulate.b == 0.0)
 	sprite.free()
-	print("ART VARIANT CODES PASS: actual apply_variant, 3000 identities and all 15 tone/hair pairs; pixel proof requires calibration")
+	print("ART VARIANT CODES PASS: actual apply_variant, 3000 identities and all 28 tone/hair pairs; pixel proof requires calibration")
 	quit(0)

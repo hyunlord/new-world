@@ -42,7 +42,7 @@ def hair_visuals(sprite: Image.Image, mask: Image.Image) -> tuple[Image.Image, I
     overlay[hair, :3] = (70, 140, 255)
     with Image.open(ROOT / 'assets/art/villager_ramps.png') as image:
         ramp = np.asarray(image.convert('RGB'))
-    rgba[hair, :3] = ramp[8, np.clip(indices[..., 1][hair], 0, 2)]
+    rgba[hair, :3] = ramp[4 + 6, np.clip(indices[..., 1][hair], 0, 2)]
     return Image.fromarray(overlay), Image.fromarray(rgba)
 
 

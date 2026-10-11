@@ -23,9 +23,15 @@ class NaturalColourTests(unittest.TestCase):
             Image.new('RGB',(3,15),(240,230,220)).save(root/'assets/art/villager_ramps.png')
             actor = replace(entity(),texture='res://atlas.png',region=(0,0,3,1),variant=(0,4))
             actual = sprite_pixels(actor,root,variants=True)
-            np.testing.assert_array_equal(actual,[[[25,25,25,255],[23,23,23,127],[95,185,230,255]]])
-            bright = sprite_pixels(replace(actor,variant=(2,4)),root,variants=True)
-            np.testing.assert_array_equal(bright,[[[25,25,25,255],[28,28,28,127],[113,221,255,255]]])
+            np.testing.assert_array_equal(actual,[[[25,25,25,255],[23,23,23,127],[92,180,224,255]]])
+            bright = sprite_pixels(replace(actor,variant=(3,4)),root,variants=True)
+            np.testing.assert_array_equal(bright,[[[25,25,25,255],[29,29,29,127],[118,230,255,255]]])
+            expected_middle = (
+                [[[25,25,25,255],[25,25,25,127],[101,197,245,255]]],
+                [[[25,25,25,255],[27,27,27,127],[109,213,255,255]]],
+            )
+            for code, expected in enumerate(expected_middle, start=1):
+                np.testing.assert_array_equal(sprite_pixels(replace(actor,variant=(code,4)),root,variants=True), expected)
 
     def test_hair_uses_shade_not_tone_and_keeps_alpha(self) -> None:
         with TemporaryDirectory() as folder:
@@ -34,10 +40,10 @@ class NaturalColourTests(unittest.TestCase):
             Image.fromarray(np.array([[[3,0,0,255],[3,2,0,255]]],dtype=np.uint8)).save(root/'atlas_regions.png')
             (root/'assets/art').mkdir(parents=True)
             ramps = Image.new('RGB',(3,15))
-            ramps.putpixel((0,8),(250,240,230))
-            ramps.putpixel((2,8),(150,140,130))
+            ramps.putpixel((0,10),(250,240,230))
+            ramps.putpixel((2,10),(150,140,130))
             ramps.save(root/'assets/art/villager_ramps.png')
-            actor = replace(entity(),texture='res://atlas.png',region=(0,0,2,1),variant=(0,4))
+            actor = replace(entity(),texture='res://atlas.png',region=(0,0,2,1),variant=(0,6))
             np.testing.assert_array_equal(sprite_pixels(actor,root,variants=True),[[[250,240,230,81],[150,140,130,81]]])
 
     def test_metadata_keeps_old_values_without_inventing_tone(self) -> None:
@@ -52,7 +58,7 @@ class NaturalColourTests(unittest.TestCase):
             self.assertEqual(actors[1].variant,(-1,1))
             self.assertEqual(actors[1].legacy_variant,(3,1,5))
 
-    def test_child_zero_map_keeps_own_colour_at_neutral_tone(self) -> None:
+    def test_child_zero_map_uses_natural_colour_tone(self) -> None:
         with TemporaryDirectory() as folder:
             root = Path(folder)
             Image.new('RGBA',(1,1),(120,80,60,255)).save(root/'atlas.png')
@@ -60,7 +66,7 @@ class NaturalColourTests(unittest.TestCase):
             (root/'assets/art').mkdir(parents=True)
             Image.new('RGB',(3,15),(255,255,255)).save(root/'assets/art/villager_ramps.png')
             actor = replace(entity(),body='child',texture='res://atlas.png',region=(0,0,1,1),variant=(1,4))
-            np.testing.assert_array_equal(sprite_pixels(actor,root,variants=True),[[[120,80,60,255]]])
+            np.testing.assert_array_equal(sprite_pixels(actor,root,variants=True),[[[115,77,58,255]]])
 
     def test_old_capture_diagnostic_does_not_pass_new_tuple(self) -> None:
         actors = tuple(replace(entity(),ident=i,variant=(-1,i%5),legacy_variant=(i%4,i%5,i%6),tile=(i,0)) for i in range(12))
@@ -82,6 +88,7 @@ class NaturalColourTests(unittest.TestCase):
         self.assertIn('1 tuples/12',checked.detail)
         self.assertIn('12 emulated from frozen P3',checked.detail)
         self.assertIn('not captured skin/clothing metadata',checked.detail)
+        self.assertIn('A12-P4 (counterfactual)',checked.detail)
 
 
 if __name__ == '__main__':

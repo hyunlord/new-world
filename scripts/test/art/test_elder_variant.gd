@@ -14,9 +14,9 @@ func _initialize() -> void:
 		for stage: int in [0, 1]:
 			var look: Dictionary = Activity.elder_look(base, agent_id, stage)
 			without_elders.append(look)
-			check(int(look["hair"]) >= 0 and int(look["hair"]) <= 2, "nonelder has only hair 0..2")
+			check(int(look["hair"]) >= 0 and int(look["hair"]) <= 4, "nonelder has only hair 0..4")
 		var elder: Dictionary = Activity.elder_look(base, agent_id, 2)
-		check(int(elder["hair"]) == 3 + posmod(Hash.mix(agent_id), 2), "elder hair matches identity hash")
+		check(int(elder["hair"]) == 5 + posmod(Hash.mix(agent_id), 2), "elder hair matches identity hash")
 		elder_colors[elder["hair"]] = true
 		for stage: int in [0, 1]:
 			var after_elder: Dictionary = Activity.elder_look(base, agent_id, stage)
@@ -24,6 +24,6 @@ func _initialize() -> void:
 			for key: String in ["body", "tone", "skin", "clothing", "jx", "jy", "phase"]:
 				check(after_elder[key] == base[key] and elder[key] == base[key], "nonhair identity preserved")
 		check(base == Hash.look(agent_id), "base appearance not mutated")
-	check(elder_colors.has(3) and elder_colors.has(4), "both elder colors represented")
+	check(elder_colors.has(5) and elder_colors.has(6), "both elder colors represented")
 	print("ELDER %s: 1000 identities, all life stages, population independence" % ("PASS" if failures == 0 else "FAIL"))
 	quit(1 if failures else 0)

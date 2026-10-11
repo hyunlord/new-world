@@ -94,8 +94,9 @@ def _ages(capture: Capture, data: dict[str, Any]) -> dict[str, Any]:
     stages = dict(zip(snap.get("agent_ids", []), snap.get("life_stages", [])))
     rows = [{"id": e.ident, "stage": stages.get(e.ident), "hair": e.variant[1]} for e in capture.entities if e.kind == "agent" and e.visible]
     elders = sum(row["stage"] == 2 for row in rows)
-    valid = bool(rows) and elders > 0 and all(row["stage"] in (0, 1, 2) and (row["hair"] in (3, 4) if row["stage"] == 2 else row["hair"] in (0, 1, 2)) for row in rows)
-    return {"pass": valid, "visible_elders": elders, "actors": rows, "missing_stage_ids": [row["id"] for row in rows if row["stage"] is None]}
+    old_valid = bool(rows) and elders > 0 and all(row["stage"] in (0, 1, 2) and (row["hair"] in (3, 4) if row["stage"] == 2 else row["hair"] in (0, 1, 2)) for row in rows)
+    valid = bool(rows) and elders > 0 and all(row["stage"] in (0, 1, 2) and (row["hair"] in (5, 6) if row["stage"] == 2 else row["hair"] in (0, 1, 2, 3, 4)) for row in rows)
+    return {"pass": valid, "P5_rule": "elders 5..6; others 0..4", "P4_old_rule": {"pass": old_valid, "definition": "elders 3..4; others 0..2 on same captured codes"}, "visible_elders": elders, "actors": rows, "missing_stage_ids": [row["id"] for row in rows if row["stage"] is None]}
 
 
 def age_seasons(long_raw: Path, repo: Path, spring_day: int = 40) -> Check:

@@ -101,8 +101,15 @@ def variety(capture: Capture) -> Check:
     same = sum(looks[i]==looks[j] for i,j in pairs)
     ratio = same/len(pairs) if pairs else 0
     legacy = []
+    p4_looks = []
     emulated = 0
     for actor in actors:
+        identity = (actor.ident ^ 0x9E3779B9) & 0xFFFFFFFF
+        for _ in range(2):
+            identity = ((identity ^ (identity >> 16)) * 0x45D9F3B) & 0xFFFFFFFF
+        identity ^= identity >> 16
+        old_hair = 3 + identity % 2 if actor.variant[1] >= 5 else ((identity >> 11) % 5) % 3
+        p4_looks.append((actor.body, old_hair if actor.body != 'child' else -1, (identity >> 9) % 3))
         if actor.legacy_variant is not None:
             legacy.append(actor.legacy_variant)
         else:
@@ -117,7 +124,11 @@ def variety(capture: Capture) -> Check:
     old_ratio = old_same/len(pairs) if pairs else 0
     old_pass = bool(actors) and len(set(old_looks)) >= min(len(actors),12) and old_ratio <= .1
     diagnostic = f'A12-old (diagnostic): {len(set(old_looks))} tuples; identical neighbors={old_same}/{len(pairs)} ({old_ratio:.3f}); pass={old_pass}; {emulated} emulated from frozen P3 ece4e85e5e0b48945dddef61ba601a144db1397a ArtHash identity plus captured age-adjusted hair (not captured skin/clothing metadata)'
-    valid = all(0 <= actor.variant[0] <= 2 and 0 <= actor.variant[1] <= 4 for actor in actors)
+    p4_same = sum(p4_looks[i] == p4_looks[j] for i,j in pairs)
+    p4_ratio = p4_same / len(pairs) if pairs else 0
+    p4_pass = bool(actors) and len(set(p4_looks)) >= min(len(actors), 12) and p4_ratio <= .1
+    diagnostic += f'; A12-P4 (counterfactual): {len(set(p4_looks))} tuples; identical neighbors={p4_same}/{len(pairs)} ({p4_ratio:.3f}); pass={p4_pass}; body, adult hair 0..2 (elders 3..4), tone 0..2 emulated from same IDs; age inferred from captured P5 hair >=5; not historical pixel evidence'
+    valid = all(0 <= actor.variant[0] <= 3 and 0 <= actor.variant[1] <= 6 for actor in actors)
     return result('A12', bool(actors) and valid and len(set(looks))>=min(len(actors),12) and ratio<=.1,
                   f'{len(set(looks))} tuples/{len(actors)} villagers; identical neighbors={same}/{len(pairs)} ({ratio:.3f}); {diagnostic}')
 

@@ -74,9 +74,9 @@ static func frame_index(activity: String, seconds: float, phase: float, count: i
 static func elder_look(base: Dictionary, agent_id: int, life_stage: int) -> Dictionary:
 	var look: Dictionary = base.duplicate()
 	if life_stage == 2:
-		look["hair"] = 3 + posmod(ArtHash.mix(agent_id), 2)
+		look["hair"] = 5 + posmod(ArtHash.mix(agent_id), 2)
 	else:
-		look["hair"] = posmod(int(look["hair"]), 3)
+		look["hair"] = posmod(int(look["hair"]), 5)
 	return look
 
 static func build_frame_groups(entries: Dictionary) -> Dictionary:

@@ -129,12 +129,12 @@ def sprite_pixels(entity: Entity, repo: Path, variants: bool = False) -> Array |
         hair = region[..., 0] == 3
         natural = ~hair & (luma(pixels[..., :3]) >= .10)
         tone_code, hair_code = entity.variant
-        tone = .90 if tone_code < 1 else (1.0 if tone_code < 2 else 1.08)
+        tone = (.88, .96, 1.04, 1.12)[min(tone_code, 3)]
         pixels[natural, :3] = np.clip(
             np.floor(pixels[natural, :3].astype(np.float64) * tone + .5), 0, 255
         ).astype(np.uint8)
         shades = np.clip(region[..., 1], 0, 2)
-        pixels[hair, :3] = palette[4 + min(hair_code, 4), shades[hair]]
+        pixels[hair, :3] = palette[4 + min(hair_code, 6), shades[hair]]
     return pixels[:, ::-1].copy() if entity.flip else pixels
 
 

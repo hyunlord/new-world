@@ -14,7 +14,7 @@ from ingame_qa_age_p3 import _ages, _hud, _ramps, _terrain, age_seasons
 from ingame_qa_types import Capture, Entity, Label
 
 
-def actor(ident: int = 7, hair: int = 3) -> Entity:
+def actor(ident: int = 7, hair: int = 5) -> Entity:
     return Entity('agent', ident, (600, 300, 8, 8), True, 'a', 'a', (2, 2), 'adult_a', (1, hair), (1, 1), 'idle', 'S', '', -1, False, 'res://atlas.png', (0, 0, 2, 2), '', world_anchor=(1, 1))
 
 
@@ -26,6 +26,7 @@ class AgeSeasonTests(unittest.TestCase):
     def test_hair_requires_observed_elder_and_resolved_ids(self) -> None:
         cap = capture(Path('unused.png'), (actor(),))
         self.assertTrue(_ages(cap, {'agent_snapshot': {'agent_ids': [7], 'life_stages': [2]}})['pass'])
+        self.assertFalse(_ages(cap, {'agent_snapshot': {'agent_ids': [7], 'life_stages': [2]}})['P4_old_rule']['pass'])
         self.assertFalse(_ages(cap, {'agent_snapshot': {'agent_ids': [8], 'life_stages': [2]}})['pass'])
         self.assertFalse(_ages(cap, {'agent_snapshot': {'agent_ids': [7], 'life_stages': [0]}})['pass'])
         young = replace(cap, entities=(actor(hair=1),))
@@ -63,7 +64,7 @@ class AgeSeasonTests(unittest.TestCase):
             Image.new('RGBA', (2,2), (0,0,0,255)).save(root/'atlas_regions.png')
             Image.new('RGB', (3,14), (120,80,60)).save(root/'assets/art/villager_ramps.png')
             pixels = np.zeros((1080,1920,3), dtype=np.uint8)
-            pixels[300:308,600:608] = (120,80,60)
+            pixels[300:308,600:608] = (115,77,58)
             Image.fromarray(pixels).save(root/'screen.png')
             cap = capture(root/'screen.png', (actor(),))
             self.assertTrue(_ramps(cap,root)['pass'])
