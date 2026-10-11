@@ -1728,4 +1728,33 @@ Diagnosis: the Y3 failure is always seed 22 (and in B–D replacement −4 there
 
 Dataset v0 (`docs/worldmodel/DATASET_v0.md`, `dataset_v0_manifest.json`): 400 episodes, 1,368.3 MiB, recorded 14:39–14:51 from `0c46f69c` with `wm_r2` — A_obs 128 (1,078.3 MiB, 44 with agents), B_act 64 (221.1), C_cf 160 (30.6), OOD_v12 32 (19.3), OOD_long 16 (19.0). A 120-day episode takes 10–12 s with agents (one thread, four episodes in parallel), a 240-day one 21 s. Copied to the DGX and verified there (4,660 hashes, `sha256sum -c`).
 
-WM-Bench v0 (`docs/worldmodel/BENCH_v0.md`, `bench_v0.json`; `bench_v0.py`, 10 s): λ = 100 for both ridges (the top of the grid). Mean nMAE over V — T1: A test persistence 0.157 / daily naive 0.235 / ridge 0.099 / action ridge 0.100; B test 0.161 / 0.241 / 0.102 / 0.102; OOD_v12 0.159 / 0.249 / 0.106 / 0.107; OOD_long 0.161 / 0.234 / 0.099 / 0.100. T2 24 h (A test): persistence 0.136, ridge 0.143; 168 h: persistence 0.544, ridge 0.554, action ridge 0.537. T3 (448 A-test winter evenings, 54 dark): rule Brier 0.033 / AUC 0.981 / accuracy 0.967; logistic 0.001 / 1.000 / 0.998. T4 (24 test seeds): mean effects gift_wood −0.75 dark nights / −223 cold member-hours / +9.9 food; rot_wood +0.79 / +277 / −12.4; rain +0.29 / +119 / −6.4; cold_snap +0.33 / +115 / −5.3; no variant changes deaths. Sanity checks: ridge beats persistence on T1 food and wood stock in all four test splits; T3 logistic AUC ≥ 0.70; every variant changes a target in ≥ 25 % of test seeds (0.625 / 0.833 / 0.958 / 0.625).
+WM-Bench v0, **first run (superseded by the review round 1 re-run below; T1/T2 values changed, T3/T4/sanity identical)** (`docs/worldmodel/BENCH_v0.md`, `bench_v0.json`; `bench_v0.py`, 10 s): λ = 100 for both ridges (the top of the grid). Mean nMAE over V — T1: A test persistence 0.157 / daily naive 0.235 / ridge 0.099 / action ridge 0.100; B test 0.161 / 0.241 / 0.102 / 0.102; OOD_v12 0.159 / 0.249 / 0.106 / 0.107; OOD_long 0.161 / 0.234 / 0.099 / 0.100. T2 24 h (A test): persistence 0.136, ridge 0.143; 168 h: persistence 0.544, ridge 0.554, action ridge 0.537. T3 (448 A-test winter evenings, 54 dark): rule Brier 0.033 / AUC 0.981 / accuracy 0.967; logistic 0.001 / 1.000 / 0.998. T4 (24 test seeds): mean effects gift_wood −0.75 dark nights / −223 cold member-hours / +9.9 food; rot_wood +0.79 / +277 / −12.4; rain +0.29 / +119 / −6.4; cold_snap +0.33 / +115 / −5.3; no variant changes deaths. Sanity checks: ridge beats persistence on T1 food and wood stock in all four test splits; T3 logistic AUC ≥ 0.70; every variant changes a target in ≥ 25 % of test seeds (0.625 / 0.833 / 0.958 / 0.625).
+
+## Pass 7 Part 7 — final verification
+
+### Reproduction of the frozen versions (probe `probe_r2`, code `0c46f69c` = the Rust of every later head)
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p7-7_final_legacy` | legacy 0..4 × 10, `--check-determinism` | DETERMINISM PASS; all 4,496 shared values equal `p6-7_final_legacy` except `schema_version` (6 → 7) |
+| `p7-7_final_v8` | game 0..64 × 10 | DETERMINISM PASS; all 5,881 equal `p6-7_final_v8` except `schema_version` |
+| `p7-7_final_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | DETERMINISM PASS; all 5,846 equal `p6-7_final_v9_10day` except `schema_version` |
+| `p7-7_final_v9_120day` | game_v9 0..32 × 120, same clocks | DETERMINISM PASS; all 52,968 equal `p6-7_final_v9_120day` except `schema_version` |
+| `p7-7_final_v10_10day` | game_v10 0..64 × 10 (no clocks, as the reference) | DETERMINISM PASS; all 5,846 equal `p6-7_final_v10_10day` except `schema_version` |
+| `p7-7_final_v10_120day` | game_v10 0..32 × 120, clocks 02:00,12:00,19:30 | DETERMINISM PASS; all 53,455 equal `p6-7_final_v10_120day` except `schema_version` |
+| `p7-7_final_v11_10day` | game_v11 0..64 × 10, the eight clocks | DETERMINISM PASS; all 5,846 equal `p6-7_final_v11_10day` except `schema_version` |
+| `p7-7_final_v11_120day` | game_v11 0..32 × 120, same clocks | DETERMINISM PASS; all 53,373 equal `p6-7_final_v11_120day` except `schema_version` |
+| `p7-7_final_v12_10day` | game_v12 0..64 × 10, the eight clocks | DETERMINISM PASS; all 5,846 equal `p6-7_final_v12_10day` except `schema_version` |
+| `p7-7_final_v12_120day` | game_v12 0..32 × 120, same clocks | DETERMINISM PASS; all 53,385 equal `p6-7_final_v12_120day` except `schema_version` |
+
+The schema-7 keys are additions (250 / 3,000 summary paths). **Z6 again** with the final recorder (`wm_r2`, `0c46f69c`): `docs/revitalize/probe/p7-7_z6/` — PASS, 50 pairs equal up to tick 31,920 and different from tick 31,980; 6 applied 0 and are listed: windfall in seeds 0, 1, 3, 4, 5, 7 (all 20 spots at the winter cap; with weights 52/28/20 more of those winters are mild).
+
+### Z8 — timing (back to back, recorder off)
+
+Run 15:17:38–15:26:29 KST on the Mac with the release probe `probe_r2`, in this order: `p7-7_timing_v12_10day`, `p7-7_timing_v13_10day`, `p7-7_timing_v12_120day`, `p7-7_timing_v13_120day` (all `--check-determinism`, the eight clocks, `--workers 4`; all DETERMINISM PASS). Before starting, the art run (`new-world-art-prod`) was running a `cargo test`; the start waited until it went quiet (15:17:30). During the window a monitor sampled the CPU of art-run, Godot and rustc processes every 15 s: one art-run test binary used about one core (≈ 100 %) throughout, and from 15:19:08 to 15:19:38 it peaked at 295–580 % (during the 10-day pair). Median ms per agent-tick: v12 0.0010628 → v13 0.0010711 (10 days, **1.01×**), v12 0.0014576 → v13 0.0013519 (120 days, **0.93×**); limit 1.2×. Z8 PASS, with the art-run load recorded above.
+
+Recorder wall time per 120-day episode (dataset v0, `timing.json`, one thread per episode, four episodes in parallel while the Part 5 gate and probes also ran): without agents median 10.7 s (A_obs, 9.4–11.8), 10.2 s (B_act), 10.3 s (OOD_v12); with agents 12.6 s (A_obs, 9.8–17.8); 240 days 20.8 s; 35 days 2.5 s. The simulation alone takes about 9.3 s for a 120-day run (0.00135 ms × ~40 agents × 172,800 ticks), so the recorder adds roughly 15–35 %.
+
+### WM-Bench v0 re-run after review round 1 (L4 requested amounts, L5 scored-row denominator) — the published numbers
+
+λ = 100 for both ridges. Mean nMAE over V — T1 (persistence / daily naive / ridge / action ridge): A test 0.158 / 0.237 / 0.100 / 0.101; B test 0.161 / 0.243 / 0.103 / 0.103; OOD_v12 0.159 / 0.251 / 0.106 / 0.107; OOD_long 0.161 / 0.237 / 0.100 / 0.101. T2 24 h (persistence / ridge / action ridge): A test 0.139 / 0.145 / 0.146; B test 0.137 / 0.148 / 0.149; OOD_v12 0.137 / 0.209 / 0.205; OOD_long 0.135 / 0.147 / 0.148. T2 168 h: A test 0.554 / 0.557 / 0.541; B test 0.549 / 0.575 / 0.555; OOD_v12 0.553 / 0.453 / 0.419; OOD_long 0.536 / 0.543 / 0.528. T3, T4 and the sanity checks are identical to the first run (T3 logistic Brier 0.0015, AUC 1.000).

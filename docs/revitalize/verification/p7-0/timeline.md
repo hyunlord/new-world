@@ -12,6 +12,9 @@
 | 1 | 13:56 | 14:08:33 (commit `f070d7e5`) |
 | 2 | 14:08 | 14:10:08 (commit `a3669b66`; gate in a separate worktree 14:10:38–14:25:14, v12 guard probes 14:10–14:21) |
 | 3 | 14:10 | 14:15:17 (commit `dc6760b0`; v12 guard 14:21–14:28) |
-| 4 | 14:15 | |
+| 4 | 14:15 | 14:26:51 (commit `b3028594`) |
+| 5 | 14:27 | 14:50 (commits `0c46f69c` 14:38, `c53e163b` 14:50) |
+| 6 | 14:39 | 14:53 (dataset 14:39–14:51 in parallel with Part 5; commit `9775e6b2`) |
+| 7 | 14:53 | 15:38 (review rounds 1–2; final probes 14:58–15:10; Z8 15:17:38–15:26:29; final gate 15:28:20–15:38:31; report) |
 
 Note: the first draft of this table held estimated times (13:58, 14:24); they were replaced with `date` / commit times at 14:08.
