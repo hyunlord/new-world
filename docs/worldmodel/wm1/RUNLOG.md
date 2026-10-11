@@ -34,3 +34,6 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 |---|---|---|---|
 | start | 07:31:59 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0; `nvidia-smi` 07:32: only Xorg (18 MiB) and gnome-shell (6 MiB) on the GPU, 0 % util; disk 3.7 T, 962 G free; RAM 119 GiB, 80 GiB available, swap 15 GiB fully used (other users' services). No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. |
 | 0 | 07:32 | | GOAL_1_1.md committed unchanged; WM-1 run dirs present on the DGX (`m1tf_main_r3_s0/best.pt`, `m3_s0/lora/`, `w1_repro_832eaa2c/baselines.json`) |
+| 0 | 07:33 | | DGX code clone detached at `f3a39ee9`; venv torch 2.14.1+cu130, CUDA available. `v1src` cloned at `_build/v1src`, detached at `4c35e295`. v1 manifest: 432 episodes, 5,012 listed files, 0 missing; 224 extra files under `v1/` not in the manifest (schedule JSONs such as `s11000_b.json`), not counted |
+| 3.1 | 07:33 | | `m1tf_main_r3_s1` and `m1tf_main_r3_s2` launched in parallel on the GPU (code `f3a39ee9`, WM-1's recorded command with only seed/out changed); `nvidia-smi` before: no other compute process; after: 4.5 GB and 4.6 GB per job at step 150 |
+| 0 end | | 07:36 | pushed |
