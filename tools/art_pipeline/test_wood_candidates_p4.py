@@ -21,7 +21,7 @@ class WoodCandidatesTests(unittest.TestCase):
     def test_object_caps_and_exact_icon_canvas(self) -> None:
         for index in range(1,17):
             frame = FrameSpec('W1', index, 1)
-            expected = (24,16) if index <= 8 else ((16,16) if index in (12,16) else (24,20))
+            expected = (24,18) if index <= 8 else ((16,16) if index in (12,16) else (26,20))
             self.assertEqual(target_size(frame), expected)
             candidate = FrameCandidate(frame, Image.new('RGBA', expected, (120,80,40,255)), 0,100,True,0,0)
             self.assertTrue(guard_frame(candidate).passed)

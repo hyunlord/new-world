@@ -1,0 +1,341 @@
+{
+  "version": 1,
+  "frames": {
+    "V_a2_05": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_05.png",
+      "mask_sha256": "227f4778cf09e7f4ded76c3a121fb789a490baf37c65d1372e9d3c85308862af",
+      "rgba_sha256": "7a24062a6b3a060deed6665a3adf3c3cbc443e4950e9bc24b8c11fb04c17372a",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        18,
+        31
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_05@1:missing:derived",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_07_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "1f31588aea5e94f5e2328d19175886df5d7b6d28a70594a9b1d01a20d28c8247",
+      "hair_texels": 49
+    },
+    "V_a2_06": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_06.png",
+      "mask_sha256": "3ce299a8f95ffae120df60341bd47a7861ca005a12a4d4e368842b3a37ff34bb",
+      "rgba_sha256": "d34ad0912fd4b74d17e3043a81fff6d5e04d83479be95766b52585fd6d808c17",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        17,
+        31
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_06@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_06_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "21ca74f8ae1398254c271297fe4ede0453091d6f8247503437d1726ef0f309ba",
+      "hair_texels": 48
+    },
+    "V_a2_07": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_07.png",
+      "mask_sha256": "227f4778cf09e7f4ded76c3a121fb789a490baf37c65d1372e9d3c85308862af",
+      "rgba_sha256": "7a24062a6b3a060deed6665a3adf3c3cbc443e4950e9bc24b8c11fb04c17372a",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        18,
+        31
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_07@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_07_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "d2f93bf37b0dde8f63aa853738e25f3bc75816340ae1e5454b2dfdb9623812cb",
+      "hair_texels": 49
+    },
+    "V_a2_08": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_08.png",
+      "mask_sha256": "3ce299a8f95ffae120df60341bd47a7861ca005a12a4d4e368842b3a37ff34bb",
+      "rgba_sha256": "d34ad0912fd4b74d17e3043a81fff6d5e04d83479be95766b52585fd6d808c17",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        17,
+        31
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_08@1:missing:derived",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_06_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "2465e2b568d3d9e167fb094faf36bff2366eba5e4a0caea7dbae2e0edd0982c6",
+      "hair_texels": 48
+    },
+    "V_a2_01": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_01.png",
+      "mask_sha256": "ad089797209307f029e2639cbf924cc6101f98dcab1f2826ff076b1f3f1c1f26",
+      "rgba_sha256": "1f71db9f703982729121193c7dae7765b6fe53cb10a3e36f064743e2a17e15b2",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        16,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_01@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_01_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "c4b599394e4da495bffa20a99f7cf45a64c369b45c79d8980acfe7c922e352e6",
+      "hair_texels": 33
+    },
+    "V_a2_02": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_02.png",
+      "mask_sha256": "176b1114b1ef69c7a4973d30044cdc1e01069880b0157e75e68d0ba74ed064f3",
+      "rgba_sha256": "43703b7fe95712b584b7456e5db7f39e45c0d21f1bfd29c35eaed66766c59f48",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        17,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_02@1:p3:derived",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_04_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "48bc000f5c9d86aecbc750700cb2c1877a9f009658304c8a37c1848dd17f4eaa",
+      "hair_texels": 36
+    },
+    "V_a2_03": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_03.png",
+      "mask_sha256": "63312394246d2306fa92de8f8df4a84d59b93709b2c38d0e424eacec7be7502e",
+      "rgba_sha256": "a4753de9a52f7c16543af87a7000b13b90c67f83d387a044ef7f038a092015f6",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        17,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_03@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_03_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "1b64f5c3f743804ac1b1aa922d46304ccc0a3c6b12033cc369185dbd6f4f21d2",
+      "hair_texels": 39
+    },
+    "V_a2_04": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_a2_04.png",
+      "mask_sha256": "176b1114b1ef69c7a4973d30044cdc1e01069880b0157e75e68d0ba74ed064f3",
+      "rgba_sha256": "43703b7fe95712b584b7456e5db7f39e45c0d21f1bfd29c35eaed66766c59f48",
+      "body": "adult_a",
+      "activity": "carry",
+      "size": [
+        17,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P3_fill_01_04@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P3_fill_01_04_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "2c985e09e9178d270597c3b6ef2d2086a266029410559cab0c402111c7bc5d53",
+      "hair_texels": 36
+    },
+    "V_b2_05": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_05.png",
+      "mask_sha256": "d42bdcb9a4e3b189096f184d36ee174d773ba69aed9f6a927a7acca03b6630ff",
+      "rgba_sha256": "d70c3d250bf68046a692fe0edf5cfb0f01d15513016a1b6d57785ca44d92c422",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        19,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_09@1:p3:derived",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_11_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "5b83eff529787962b1cbf8330cbaf44b604340429933f3274ab2020f401d1624",
+      "hair_texels": 36
+    },
+    "V_b2_06": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_06.png",
+      "mask_sha256": "ce3c0fad7f3a746a3e21fe1e2ddcab00c40f574a8a7e37b7afd323a02707b48b",
+      "rgba_sha256": "d8cb116a3592269a3aae2868633c190f90f97fc17e63ef0ba0dd73c9af6ea0d6",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        16,
+        29
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_10@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_10_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "edffd9fe73aaf36f1235d386485a0efc8771090209d7cab3a4b2b3a4ae7073f9",
+      "hair_texels": 30
+    },
+    "V_b2_07": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_07.png",
+      "mask_sha256": "d42bdcb9a4e3b189096f184d36ee174d773ba69aed9f6a927a7acca03b6630ff",
+      "rgba_sha256": "d70c3d250bf68046a692fe0edf5cfb0f01d15513016a1b6d57785ca44d92c422",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        19,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_11@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_11_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "55f9711faf4ff694a3f0f9c4491380f180088ca71b41244e19349655f63bab4f",
+      "hair_texels": 36
+    },
+    "V_b2_08": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_08.png",
+      "mask_sha256": "b58cf205aff8e38e6500cf3ac13aa7904da49c3c729c7a7ffac27123b4546b01",
+      "rgba_sha256": "1e4658ae49b565ce8aefba9022883ad5c0bcea31f3f14ae80dbc4e4bc72b1954",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        16,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_12@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_12_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "e1fce5fc03cc5095016e729dd17831feabbc331fcecd26a2c6a7c0905b670d3a",
+      "hair_texels": 33
+    },
+    "V_b2_01": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_01.png",
+      "mask_sha256": "da1e8b2de1ba65c4532a0c3c3a24cd61df0c2517516549dd1650999435ae7fbd",
+      "rgba_sha256": "17122e52e387f0c57785b276212fdbc5753fd93b62f28c412a6250fdae411a74",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        14,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_05@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_05_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "6d5213b25bce2438ddbbab55e05a2086c3222a4de95c105c4070f93df2ed1b3b",
+      "hair_texels": 33
+    },
+    "V_b2_02": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_02.png",
+      "mask_sha256": "d45507da7e137ad9cd27144f5887e8a85f293bbed86df2e6e78304892505d147",
+      "rgba_sha256": "ed587e11cd4e9be788c7055d415b84a97f2baba88aa07a1ef995cfa6cf730769",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        14,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_06@1:missing:derived",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_08_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "8622387b9548875cda6367385545e3f05914e19c2dfc3804f0e5d6fcdc79e735",
+      "hair_texels": 32
+    },
+    "V_b2_03": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_03.png",
+      "mask_sha256": "ed94a2506b1839f8b0a9554086546253071c8a680fa2a80d8ed9d2d34d5df865",
+      "rgba_sha256": "ca5f7a7d265a063991a765ebf87717ac73beadbf005eec3f84f5c1767f98d9a9",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        14,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_07@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_07_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "d8d990402a54c1ea5d071219d999108d525550f58d69ebc5fee4634a95d1e27b",
+      "hair_texels": 30
+    },
+    "V_b2_04": {
+      "mask_path": "tools/art_pipeline/hair_masks_p5/V_b2_04.png",
+      "mask_sha256": "d45507da7e137ad9cd27144f5887e8a85f293bbed86df2e6e78304892505d147",
+      "rgba_sha256": "ed587e11cd4e9be788c7055d415b84a97f2baba88aa07a1ef995cfa6cf730769",
+      "body": "adult_b",
+      "activity": "carry",
+      "size": [
+        14,
+        30
+      ],
+      "source": "p4_stored",
+      "verdict": "ok",
+      "visual_verdict": "ok",
+      "visual_reason": "",
+      "candidate_id": "P2_fill_02_08@1:p3",
+      "reviewed_mask_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production4/recovery/masks/P2_fill_02_08_1_p3/sprite_hair_mask.png",
+      "review_path": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/envelope.json",
+      "review_sha256": "47b9e3947b4342a6dbccebfc8db13f3f84fd4974d5e0c9583672267a25c6d343",
+      "candidate_fingerprint": "b27dffb1a3236a4e0f1d41efea1f93ddf5e1f9be68fb590994f95be50fe9d8db",
+      "hair_texels": 32
+    }
+  }
+}

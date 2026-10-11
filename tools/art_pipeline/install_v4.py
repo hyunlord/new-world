@@ -18,7 +18,7 @@ from pixel_normalize import outline
 from procedural_animation import animate
 from production_sheets import SHEETS
 from salvage_verdicts import candidate_fingerprint
-from v4_contracts import FrameCandidate, FrameSpec, WorldScale, guard_chosen, guard_frame, guard_group, target_size
+from v4_contracts import FrameCandidate, FrameSpec, WorldScale, guard_chosen, guard_frame, guard_group, target_size, foot_anchor
 from salvage_v4 import guarded_candidate
 from v3_semantics import semantic_counts
 
@@ -316,7 +316,9 @@ def validate_assembled(sprites: tuple[PlannedSprite,...], chosen: tuple[tuple[Ta
         membership=100.0*sum(tuple(map(int,pixel)) in allowed for pixel in opaque)/max(1,len(opaque))
         candidate=FrameCandidate(FrameSpec(sheet,int(index),1,sprite.body,sprite.view,sprite.activity,sprite.native.size),
             sprite.native,source.mean_delta_e if source else 0.0,membership,
-            bool(np.all(np.isin(np.asarray(sprite.native)[...,3],[0,255]))),berry,fire)
+            bool(np.all(np.isin(np.asarray(sprite.native)[...,3],[0,255]))),berry,fire,
+            sprite.frame, source.despeckle_fraction if source else 0.0,
+            source.hair_mask_top if source else None)
         final[sprite.slot_id]=candidate
         report=guard_frame(candidate,scale)
         if not report.passed: raise InstallError(f'Assembled frame guard failed: {sprite.slot_id}: {report.errors}')
@@ -364,7 +366,7 @@ def apply_plan(plan: InstallPlan, approved_selection_sha256: str) -> None:
         hair = HairRegistry.load(plan.request.root)
         for sprite in plan.sprites:
             if sprite.body:
-                hair.resolve(HairFrame(sprite.body, sprite.activity, sprite.sprite))
+                hair.resolve(HairFrame(sprite.body, sprite.activity, sprite.sprite, sprite.frame))
     except ReviewedMapError as error:
         raise InstallError(str(error)) from error
     root=plan.request.root; path=root/'assets/art/manifest.json'; manifest=json.loads(path.read_text())
@@ -380,7 +382,7 @@ def apply_plan(plan: InstallPlan, approved_selection_sha256: str) -> None:
             'class':'child' if sprite.body=='child' else ('adult' if sprite.body else sheet),
             'contains_basket':sprite.contains_basket,'fallback_kind':sprite.fallback_kind,
             'activity_icon':sprite.activity_icon,'drawable':True,'native_size':list(sprite.native.size),
-            'canvas_size':list(sprite.sprite.size),'anchor':[sprite.sprite.width//2,sprite.sprite.height-1]}
+            'canvas_size':list(sprite.sprite.size),'anchor':list(foot_anchor(sprite.sprite, sprite.activity))}
         by_path[entry['path']]=entry
         by_path[str(native.relative_to(root))]={'path':str(native.relative_to(root)),'source':sprite.source,
             'qa_status':sprite.qa_status,'native_size':list(sprite.native.size),'role':'native_reference','anchor':[0,0]}

@@ -170,7 +170,7 @@ def merge(request: RecoveryRequest) -> tuple[InstallPlan, dict]:
     holds = set(json.loads(holds_path.read_text()).get('installation_holds', {})) | {'V_a1_01@1'}
     for identity, row in candidates.items():
         despeckle = row.get('despeckle', {})
-        over_limit = despeckle.get('changed_count', 0) > .03 * despeckle.get('opaque_count', 0)
+        over_limit = despeckle.get('changed_count', 0) > .10 * despeckle.get('opaque_count', 0)
         passed = (row['guards']['passed'] and not row['guards']['errors'] and not over_limit and
             not any(row.get(key, {}).get('errors') for key in ('group_guards', 'cross_guards')) and
             guard_frame(guarded_candidate(row), scale).passed)

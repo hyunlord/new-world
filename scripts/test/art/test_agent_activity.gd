@@ -12,6 +12,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	_test_copied_carry()
 	_test_wood()
 	_test_frame_lookup()
 	_test_carry_other_views()
@@ -202,3 +203,17 @@ func _test_wood() -> void:
 	groups.erase("adult_a/crouch/E")
 	choice = Activity.choose_frame(groups, "adult_a", "gather_wood", "E", 0.0, 0.0)
 	_check(choice["sprite_id"] == "idle" and Activity.show_activity_icon(choice, 2.0))
+
+func _test_copied_carry() -> void:
+	for body: String in ["adult_a", "adult_b", "child"]:
+		for copies: Array in [[2], [2, 3]]:
+			var entries: Dictionary = {}
+			for index: int in 4:
+				entries[str(index)] = {"body": body, "activity": "carry", "view": "S", "frame": index, "qa_status": "derived" if index in copies else "accepted", "source": "derived:same_cycle_phase_copy" if index in copies else "generated:reviewed"}
+			var groups: Dictionary = Activity.build_frame_groups(entries)
+			for step: int in 8:
+				var choice: Dictionary = Activity.choose_frame(groups, body, "carry", "S", float(step) / 8.0, 0.0)
+				_check(choice["frame"] == step % 4, "same phase copies keep four-slot carry playback and loop")
+				_check(not Activity.show_activity_icon(choice, 4.0), "real copy never uses floating icon")
+	var unreviewed: Dictionary = {"body": "adult_a", "activity": "carry", "qa_status": "derived", "source": "procedural:other"}
+	_check(not Activity._real_carry(unreviewed, "adult_a"), "unreviewed derivation is not real carry")

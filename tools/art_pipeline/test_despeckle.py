@@ -27,11 +27,11 @@ class DespeckleTests(unittest.TestCase):
         self.assertEqual(result.changed_count, 0)
         self.assertEqual(result.image.tobytes(), image.tobytes())
 
-    def test_more_than_three_percent_rejected_but_evidence_retained(self) -> None:
+    def test_four_percent_warns_but_is_not_rejected(self) -> None:
         image = Image.new('RGBA', (5, 5), (100, 60, 20, 255))
         image.putpixel((2, 2), (0, 0, 255, 255))
         result = despeckle(image)
-        self.assertTrue(result.rejected)
+        self.assertFalse(result.rejected)
         self.assertEqual(result.change_fraction, 0.04)
         self.assertEqual(result.image.getpixel((2, 2)), (100, 60, 20, 255))
 

@@ -115,7 +115,8 @@ static func wood_icon(entries: Dictionary) -> String:
 static func _real_carry(entry: Dictionary, body: String) -> bool:
 	return (str(entry.get("body","")) == body
 		and str(entry.get("activity","")) == "carry"
-		and str(entry.get("qa_status","")) == "accepted"
+		and (str(entry.get("qa_status","")) == "accepted"
+			or (str(entry.get("qa_status", "")) == "derived" and str(entry.get("source", "")) == "derived:same_cycle_phase_copy"))
 		and bool(entry.get("drawable",true))
 		and str(entry.get("fallback_kind","")) != "idle_icon"
 		and str(entry.get("activity_icon","")).is_empty())
@@ -131,7 +132,7 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 	if activity == "carry":
 		for carry_view: String in ["S","E","N","W"]:
 			for entry: Dictionary in groups.get(body+"/carry/"+carry_view,[]):
-				if _real_carry(entry,body):
+				if _real_carry(entry,body) and str(entry.get("qa_status", "")) == "accepted":
 					real_carry = true
 		if real_carry:
 			keys = [body+"/carry/"+view,body+"/carry/S",body+"/carry/E",body+"/carry/N",body+"/carry/W"]

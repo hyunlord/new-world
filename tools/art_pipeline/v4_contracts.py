@@ -66,6 +66,9 @@ class FrameCandidate:
     binary_alpha: bool
     berry_texels: int
     fire_texels: int
+    frame_index: int | None = None
+    despeckle_fraction: float = 0.0
+    hair_mask_top: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,12 +91,14 @@ def target_size(frame: FrameSpec, scale: WorldScale = WorldScale()) -> tuple[int
         child = frame.body == 'child'
         if frame.activity == 'asleep':
             return (24,12) if child else (30,16)
+        if frame.activity in ('carry_wood', 'gather_wood'):
+            return (26, scale.child_height) if child else (30, scale.adult_height)
         return (17,scale.child_height) if child else (22,scale.adult_height)
     index = frame.cell
     if frame.sheet == 'W1':
         if index in (12,16):
             return (16,16)
-        return (24,16) if index <= 8 else (24,20)
+        return (24,18) if index <= 8 else (26,20)
     targets = {'S1': (24,22), 'S2': (24,22), 'N1': (24,18), 'N2': (24,22),
                'N3': (12,12), 'F1': (16,16), 'F2': (16,12), 'U1': (16,16)}
     if frame.sheet not in targets:
@@ -149,11 +154,40 @@ def plan_factors(frames: Sequence[FrameSpec], scale: WorldScale = WorldScale()) 
     return tuple(result)
 
 
+def is_bend(candidate: FrameCandidate) -> bool:
+    """Only the explicitly indexed wood pickup pose bends below standing height."""
+    return candidate.frame.activity == 'gather_wood' and candidate.frame_index == 0
+
+
+def figure_height(candidate: FrameCandidate) -> int:
+    """Measure adults below the reviewed hair top when their load rises higher."""
+    if (candidate.frame.body.startswith('adult') and
+            candidate.frame.activity in ('carry_wood', 'gather_wood') and
+            candidate.hair_mask_top is not None):
+        return candidate.image.height - candidate.hair_mask_top
+    return candidate.image.height
+
+
+def foot_anchor(image: Image.Image, activity: str) -> tuple[int, int]:
+    """Keep an asymmetric wood load from translating the feet between frames."""
+    x = image.width // 2
+    if activity in ('carry_wood', 'gather_wood'):
+        pixels = np.asarray(image.convert('RGBA'))
+        columns = np.nonzero(pixels[-3:, :, 3] > 0)[1]
+        if len(columns):
+            x = int(np.floor(float(columns.mean()) + .5))
+    return x, image.height - 1
+
+
 def guard_frame(candidate: FrameCandidate, scale: WorldScale = WorldScale()) -> GuardReport:
     """Reject broken format/geometry or gross drift; moderate drift is a warning."""
     frame,image = candidate.frame,candidate.image
     errors: list[str] = []
     warnings: list[str] = []
+    if candidate.despeckle_fraction > .10:
+        errors.append('despeckle_over_10_percent')
+    elif candidate.despeckle_fraction > .03:
+        warnings.append('despeckle_over_3_percent')
     if candidate.palette_match_percent != 100.0:
         errors.append('palette_membership')
     alpha = np.asarray(image.convert('RGBA'))[...,3]
@@ -166,7 +200,7 @@ def guard_frame(candidate: FrameCandidate, scale: WorldScale = WorldScale()) -> 
     width,height = target_size(frame,scale)
     if image.width > width or (not frame.body or frame.activity == 'asleep') and image.height > height:
         errors.append('geometry')
-    if frame.body and frame.activity in STANDING and abs(image.height-height)>2:
+    if frame.body and frame.activity in STANDING and not is_bend(candidate) and abs(figure_height(candidate)-height)>2:
         errors.append('standing_height')
     if (frame.sheet == 'U1' or frame.sheet == 'W1' and frame.cell in (12,16)) and image.size != target_size(frame,scale):
         errors.append('icon_canvas')
@@ -208,11 +242,13 @@ def guard_group(candidates: Sequence[FrameCandidate], scale: WorldScale = WorldS
     errors: list[str] = []
     warnings: list[str] = []
     if first.body and first.activity in STANDING:
-        if abs(median(c.image.height for c in candidates)-target_size(first,scale)[1]) > 1:
+        heights = [figure_height(c) for c in candidates if not is_bend(c)]
+        if heights and abs(median(heights)-target_size(first,scale)[1]) > 1:
             errors.append('group_median_height')
     if first.activity in CYCLES:
-        ordered = sorted(candidates,key=lambda c:c.frame.cell)
-        spans = [box[3]-box[1] for c in ordered if (box:=c.image.getchannel('A').getbbox()) is not None]
+        ordered = sorted(candidates,key=lambda c:c.frame_index if c.frame_index is not None else c.frame.cell)
+        spans = [figure_height(c) if c.hair_mask_top is not None and c.frame.activity in ('carry_wood', 'gather_wood') else box[3]-box[1]
+                 for c in ordered if (box:=c.image.getchannel('A').getbbox()) is not None]
         if spans and max(spans)-min(spans)>1:
             errors.append('head_top')
         if len(ordered) == 2 and first.view == 'N' and first.activity == 'carry':
@@ -236,7 +272,7 @@ def guard_chosen(bushes: Sequence[FrameCandidate] = (), adults: Sequence[FrameCa
         counts = [c.berry_texels for c in bushes]
         if len(counts)!=4 or not (counts[0]>counts[1]>counts[2]>=1 and counts[3]==0):
             errors.append('berry_stage_order')
-    adult_heights = [c.image.height for c in adults if c.frame.activity in STANDING]
+    adult_heights = [figure_height(c) for c in adults if c.frame.activity in STANDING and not is_bend(c)]
     if children and not adult_heights:
         errors.append('missing_chosen_adult_reference')
     if adult_heights and any(c.image.height>=min(adult_heights) for c in children if c.frame.activity in STANDING):

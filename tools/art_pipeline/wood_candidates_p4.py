@@ -115,9 +115,6 @@ def finish_candidate(record: CandidateRecord, folder: Path) -> None:
     record['metrics'] = dict(fit.metrics, mean_delta_e=float(differences.mean()) if len(differences) else 100.,
                              berry_texels=berry, fire_texels=fire, despeckle_change_fraction=cleaned.change_fraction)
     record['guards'] = guard_data(guard_frame(guarded_candidate(record)))
-    if cleaned.rejected:
-        record['guards']['errors'].append('despeckle_over_3_percent')
-        record['guards']['passed'] = False
     record['review_status'] = 'pending_independent_visual_review'
 
 

@@ -26,7 +26,7 @@ class HairFreezeRequest(Protocol):
     output: Path
 
 
-def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
+def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan, *, production_pass: int = 4) -> int:
     """Validate every proposal before writing; preserve unrelated registry records."""
     root = request.root.resolve()
     output = root / request.output
@@ -40,8 +40,8 @@ def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
     report = json.loads((output / 'adjudication.json').read_text())
     if report['selection_sha256'] != plan.selection_sha256:
         raise InstallError('Hair freeze adjudication selection changed')
-    registry_path = root / 'tools/art_pipeline/reviewed_hair_maps_p4.json'
-    registry = json.loads(registry_path.read_text())
+    registry_path = root / f'tools/art_pipeline/reviewed_hair_maps_p{production_pass}.json'
+    registry = json.loads(registry_path.read_text()) if registry_path.exists() else {'version': 1, 'frames': {}}
     hair = HairRegistry.load(root)
     sprites = {sprite.slot_id: sprite for sprite in plan.sprites}
     proposals = []
@@ -77,7 +77,9 @@ def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
                 np.any(hair_pixels & (pixels[..., 3] == 0))):
             raise InstallError(f'Invalid selected hair mask: {target}')
         bbox = sprite.sprite.getchannel('A').getbbox()
-        excluded = sprite.body == 'child' or sprite.activity in ('asleep', 'lying') or bbox is None or bbox[2]-bbox[0] > bbox[3]-bbox[1]
+        mask_source = record.get('hair_mask_source', 'p4_stored' if production_pass == 5 else 'hair_maps')
+        width_exempt = (sprite.activity == 'gather_wood' and sprite.frame == 0) or mask_source == 'hair_key'
+        excluded = sprite.body == 'child' or sprite.activity in ('asleep', 'lying') or bbox is None or (not width_exempt and bbox[2]-bbox[0] > bbox[3]-bbox[1])
         if (excluded and np.any(hair_pixels)) or (sprite.body.startswith('adult') and not excluded and not np.any(hair_pixels)):
             raise InstallError(f'Selected hair violates body/pose mask contract: {target}')
         pixel_sha = hashlib.sha256(sprite.sprite.tobytes()).hexdigest()
@@ -87,12 +89,13 @@ def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
             raise InstallError(f'Conflicting proposed same-pixel hair masks: {target}')
         proposed_masks[key] = mask.tobytes()
         previous = hair.maps.get(key)
-        if previous is not None and (previous.image.size != mask.size or previous.image.tobytes() != mask.tobytes()):
+        if production_pass == 4 and previous is not None and (previous.image.size != mask.size or previous.image.tobytes() != mask.tobytes()):
             raise InstallError(f'Conflicting existing same-pixel hair mask: {target}')
-        path = root / f'tools/art_pipeline/hair_masks_p4/recovery/{target}.png'
+        folder = 'hair_masks_p5' if production_pass == 5 else 'hair_masks_p4/recovery'
+        path = root / f'tools/art_pipeline/{folder}/{target}.png'
         row = dict(registry['frames'].get(target, {}), mask_path=str(path.relative_to(root)),
             mask_sha256=digest(source), rgba_sha256=pixel_sha, body=sprite.body, activity=sprite.activity,
-            size=list(mask.size), source='hair_maps', verdict='ok', visual_verdict='ok', visual_reason='', candidate_id=identity,
+            size=list(mask.size), source=mask_source, verdict='ok', visual_verdict='ok', visual_reason='', candidate_id=identity,
             reviewed_mask_path=str(source), review_path=str(review_path), review_sha256=digest(review_path),
             candidate_fingerprint=candidate_fingerprint(record), hair_texels=int(np.count_nonzero(hair_pixels)))
         proposals.append((path, source.read_bytes(), row, target))
@@ -103,6 +106,15 @@ def freeze_selected_hair(request: HairFreezeRequest, plan: InstallPlan) -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
         registry['frames'][target] = row
+        if production_pass == 5:
+            for other, prior in list(registry['frames'].items()):
+                if other == target or (prior['body'], prior['activity'], prior['rgba_sha256']) != (row['body'], row['activity'], row['rgba_sha256']):
+                    continue
+                registry['frames'][other] = dict(prior, mask_path=row['mask_path'],
+                    mask_sha256=row['mask_sha256'], source=row['source'], verdict='ok',
+                    inherited_mask_from=target, review_path=row['review_path'],
+                    review_sha256=row['review_sha256'], candidate_id=row['candidate_id'],
+                    candidate_fingerprint=row['candidate_fingerprint'], hair_texels=row['hair_texels'])
     if proposals:
         atomic_json(registry_path, registry)
     return len(proposals)

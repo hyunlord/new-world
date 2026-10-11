@@ -82,9 +82,20 @@ def guarded_candidate(record: CandidateRecord) -> FrameCandidate:
     with Image.open(record['images']['native']) as source:
         image=source.convert('RGBA')
     metrics=record['metrics']
+    counts = record.get('despeckle', {})
+    fraction = (counts['changed_count'] / max(1, counts['opaque_count'])
+                if 'changed_count' in counts else metrics.get('despeckle_change_fraction', 0.0))
+    top = None
+    mask_path = record['images'].get('hair_mask') or record['images'].get('sprite_hair_mask')
+    if mask_path:
+        with Image.open(mask_path) as opened:
+            mask = np.asarray(opened.convert('RGBA'))
+        rows = np.nonzero((mask[..., 0] == 3) & (mask[..., 3] > 0))[0]
+        if len(rows):
+            top = max(0, int(rows.min()) - (mask.shape[0] - image.height) // 2)
     return FrameCandidate(frame_spec(record,image.size),image,metrics['mean_delta_e'],
                           metrics['palette_match_percent'],metrics['binary_alpha'],
-                          metrics['berry_texels'],metrics['fire_texels'])
+                          metrics['berry_texels'],metrics['fire_texels'], record.get('frame'), fraction, top)
 
 
 def _derive(target: CandidateRecord, passing: list[CandidateRecord], cache: Path,

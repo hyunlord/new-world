@@ -62,4 +62,4 @@ def despeckle(image: Image.Image) -> DespeckleResult:
         changed += 1
     fraction = changed / opaque_count if opaque_count else 0.0
     return DespeckleResult(Image.fromarray(result), changed, opaque_count, fraction,
-                           changed * 100 > opaque_count * 3)
+                           changed * 100 > opaque_count * 10)

@@ -10,7 +10,7 @@ import unittest
 from PIL import Image
 
 from v4_contracts import (ContractError, FrameCandidate, FrameSpec, WorldScale,
-                          guard_chosen, guard_frame, guard_group, plan_factors, target_size)
+                          guard_chosen, guard_frame, guard_group, plan_factors, target_size, foot_anchor)
 
 
 def actor(cell: int = 1, activity: str = 'idle', height: int = 33, sheet: str = 'V_a1',
@@ -25,6 +25,35 @@ def candidate(frame: FrameSpec, size: tuple[int,int] = (19,28), berries: int = 0
 
 
 class V4ContractTests(unittest.TestCase):
+    def test_v5_despeckle_bands(self) -> None:
+        item = candidate(actor())
+        self.assertNotIn('despeckle_over_3_percent', guard_frame(replace(item, despeckle_fraction=.03)).warnings)
+        self.assertIn('despeckle_over_3_percent', guard_frame(replace(item, despeckle_fraction=.10)).warnings)
+        self.assertTrue(guard_frame(replace(item, despeckle_fraction=.10)).passed)
+        self.assertIn('despeckle_over_10_percent', guard_frame(replace(item, despeckle_fraction=.10001)).errors)
+
+    def test_v5_wood_caps_bend_and_figure_top(self) -> None:
+        self.assertEqual(target_size(actor(activity='carry_wood')), (30, 28))
+        self.assertEqual(target_size(actor(activity='gather_wood', body='child')), (26, 21))
+        bend = replace(candidate(actor(activity='gather_wood'), (29, 18)), frame_index=0)
+        self.assertTrue(guard_frame(bend).passed)
+        self.assertIn('standing_height', guard_frame(replace(bend, frame_index=1)).errors)
+        standing = replace(bend, image=Image.new('RGBA', (29,28), (120,80,40,255)), frame_index=1)
+        self.assertTrue(guard_group([bend, standing]).passed)
+        self.assertTrue(guard_chosen(adults=[bend, standing], children=[candidate(actor(body='child'), (15,21))]).passed)
+        load = replace(candidate(actor(activity='carry_wood'), (30,32)), hair_mask_top=4)
+        self.assertTrue(guard_frame(load).passed)
+        self.assertTrue(guard_group([load]).passed)
+        self.assertIn('standing_height', guard_frame(replace(load, hair_mask_top=None)).errors)
+
+    def test_v5_wood_anchor_uses_feet(self) -> None:
+        image = Image.new('RGBA', (30, 30))
+        for y in range(27,30):
+            for x in range(3,8):
+                image.putpixel((x,y), (120,80,40,255))
+        self.assertEqual(foot_anchor(image, 'carry_wood'), (5,29))
+        self.assertEqual(foot_anchor(image, 'idle'), (15,29))
+
     def test_all_object_targets(self) -> None:
         cases = [('S1',1,(24,26)),('S1',7,(24,26)),('S1',16,(24,26)),('S1',8,(24,22)),
                  ('S1',14,(24,22)),('S1',15,(24,22)),('S1',11,(34,30)),('S1',13,(34,30)),

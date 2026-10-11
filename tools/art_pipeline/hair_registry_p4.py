@@ -23,6 +23,7 @@ class HairFrame:
     body: str
     activity: str
     image: Image.Image
+    frame_index: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,8 +48,13 @@ class HairRegistry:
     def load(cls, root: Path, registry_path: Path | None = None) -> HairRegistry:
         """Read frozen evidence once before any production writes can occur."""
         maps: dict[tuple[str, str, str], ResolvedHair] = {}
-        registry = registry_path or root / 'tools/art_pipeline/reviewed_hair_maps_p4.json'
-        if registry_path is not None or registry.exists():
+        registries = ([registry_path] if registry_path is not None else
+                      [root / f'tools/art_pipeline/reviewed_hair_maps_p{version}.json'
+                       for version in (4, 5)])
+        for registry in registries:
+            if registry_path is None and not registry.exists():
+                continue
+            layer_keys: set[tuple[str, str, str]] = set()
             for record in json.loads(registry.read_text())['frames'].values():
                 path = root / record['mask_path']
                 if hashlib.sha256(path.read_bytes()).hexdigest() != record['mask_sha256']:
@@ -67,10 +73,11 @@ class HairRegistry:
                 resolved = ResolvedHair(image, record['source'], record['mask_path'],
                                         record['mask_sha256'], record['verdict'])
                 previous = maps.get(key)
-                if previous is not None and (previous.image.size != image.size or
+                if key in layer_keys and previous is not None and (previous.image.size != image.size or
                                              previous.image.tobytes() != image.tobytes()):
                     raise ReviewedMapError(f'Conflicting reviewed masks: {key}')
-                maps[key] = previous if previous is not None and previous.verdict == 'reject' else resolved
+                maps[key] = previous if key in layer_keys and previous is not None and previous.verdict == 'reject' else resolved
+                layer_keys.add(key)
         palettes: dict[str, HairPalette] = {}
         palette_path = root / 'tools/art_pipeline/hair_palette_p4.json'
         if palette_path.exists():
@@ -96,8 +103,10 @@ class HairRegistry:
             palette = self.palettes.get(frame.body, HairPalette(frame.body, frozenset(), frozenset()))
             result = ResolvedHair(classify(rgba, palette, activity=frame.activity), 'hair_maps')
         bbox = rgba.getchannel('A').getbbox()
+        width_exempt = ((frame.activity == 'gather_wood' and frame.frame_index == 0) or
+                        result.source == 'hair_key')
         excluded = (frame.body == 'child' or frame.activity in ('asleep', 'lying') or
-                    bbox is None or bbox[2] - bbox[0] > bbox[3] - bbox[1])
+                    bbox is None or (not width_exempt and bbox[2] - bbox[0] > bbox[3] - bbox[1]))
         count = int(np.count_nonzero(np.asarray(result.image)[..., 0] == 3))
         if excluded and count:
             # Identical pixels can be reused as an asleep/lying fallback: the pose

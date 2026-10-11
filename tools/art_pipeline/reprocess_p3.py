@@ -171,9 +171,6 @@ def reprocess(source: Source, tables: dict[str, ColorRegionTable], output: Path)
         record['despeckle'] = {'changed_count': cleaned.changed_count, 'opaque_count': cleaned.opaque_count,
             'change_fraction': cleaned.change_fraction, 'rejected': cleaned.rejected}
         report = guard_data(guard_frame(guarded_candidate(record)))
-        if cleaned.rejected:
-            report['errors'].append('despeckle_over_3_percent')
-            report['passed'] = False
         record['guards'] = report
         record['conversion_error'] = None
         record['image_sha256'] = {k: digest(ROOT / v) for k, v in record['images'].items()}

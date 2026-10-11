@@ -114,7 +114,7 @@ def build_atlases(manifest_path: Path, *, diagnostic_path: Path | None = None,
         body = str(entry.get('body',next((value for value in ('adult_a','adult_b','child') if value in name),'default')))
         if name.startswith(('V_a','V_b','V_c')):
             body = {'a':'adult_a','b':'adult_b','c':'child'}[name[2]]
-        resolved = reviewed.resolve(HairFrame(body, str(entry.get('activity', '')), sprite))
+        resolved = reviewed.resolve(HairFrame(body, str(entry.get('activity', '')), sprite, entry.get('frame')))
         indices = resolved.image
         classification_source = resolved.source
         evidence = {}
