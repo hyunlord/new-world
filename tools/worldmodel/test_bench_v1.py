@@ -83,6 +83,21 @@ class BenchV1Tests(unittest.TestCase):
         out = b.rollout_batch(a, starts, 24, Const(), b.Variant("ridge"))
         np.testing.assert_allclose(out, a.v[starts] + 24 * np.arange(len(b.VARS)))
 
+    def test_rollout_oracle_reads_each_rows_severity(self) -> None:
+        # Review round 1 (M1): a start in autumn whose rollout enters winter sees the winter's severity.
+        a = ep_from(b.episode_arrays(fake_episode()))
+        seen = []
+
+        class Spy:
+            def predict(self, x):
+                seen.append(x[:, -4:].copy())
+                return np.zeros((len(x), len(b.VARS)))
+        start = np.array([b.row_of(20, 0)])  # autumn's last day
+        b.rollout_batch(a, start, 48, Spy(), b.Variant("ridge_severity_oracle", oracle=True))
+        levels = [int(np.argmax(x[0])) - 1 for x in seen]
+        self.assertEqual(levels[0], -1)
+        self.assertEqual(levels[-1], 2, "the rollout row in winter carries the winter's severity")
+
     def test_t3b_counts_dark_nights_among_the_five_remaining(self) -> None:
         arrays = b.episode_arrays(fake_episode())
         fire = b.VARS.index("fire_lit")
@@ -130,6 +145,8 @@ class BenchV1Tests(unittest.TestCase):
         e.agents = ag
         s = b.t5_scores([e])
         p = s["persistence"]
+        # One pair set for both baselines: alive at t+1, t and t-23 (t = 23..28); agent 1 is dead at row 25, so its
+        # pairs with t = 24 and t = 25 are dropped: 12 - 2 = 10 pairs.
         pairs = 2 * (n_rows - 1 - 23) - 2
         self.assertEqual(p["n"], pairs)
         self.assertAlmostEqual(p["position_chebyshev_mean"], (n_rows - 1 - 23) / pairs)
@@ -137,10 +154,11 @@ class BenchV1Tests(unittest.TestCase):
         self.assertEqual(p["target_kind_accuracy"], 1.0)
         self.assertIsNone(p["thirst_nmae"], "constant thirst: std 0")
         d = s["day_earlier"]
-        # 24 hours earlier: agent 1's pair whose target row is 25 is dropped (11 pairs); agent 0 moved 24 tiles.
-        self.assertEqual(d["n"], 11)
-        self.assertAlmostEqual(d["position_chebyshev_mean"], 24 * 6 / 11)
+        self.assertEqual(d["n"], pairs, "the same pairs as persistence")
+        self.assertAlmostEqual(d["position_chebyshev_mean"], 24 * 6 / pairs, msg="agent 0 moved 24 tiles in a day")
         self.assertEqual(d["state_tag_accuracy"], 1.0, "an even lag sees the same alternation phase")
+        # The same denominator: hunger nMAE scales with the error (2 per hour vs 48 per day) on the same pairs.
+        self.assertAlmostEqual(d["hunger_nmae"], 24 * p["hunger_nmae"])
 
 
 if __name__ == "__main__":

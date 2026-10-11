@@ -54,7 +54,7 @@ Predict V at row t+1 from rows up to t. Train: A train (action-aware: A + B trai
 
 ## T2 — rollout
 
-From every hour of one-based days 3, 10, 17, … (24 starts per start day; `every_hour`) and, as in v0, from 06:00 only (`0600_only`), roll the one-step model forward 24 h and 168 h; nMAE at the horizon. The oracle holds the start row's severity.
+From every hour of one-based days 3, 10, 17, … (24 starts per start day; `every_hour`) and, as in v0, from 06:00 only (`0600_only`), roll the one-step model forward 24 h and 168 h; nMAE at the horizon. The severity oracle reads the true hidden severity of every rollout row. At whole-day horizons `daily_naive` (the same hour of the last observed day) is the start row itself, so it equals `persistence` (kept, as in v0).
 
 ### 24 h — every_hour — A_test
 
@@ -144,7 +144,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.032 | 1.219 | 0.000 | 0.000 | 0.478 | 1.161 | 0.678 | 0.542 | 0.639 |
 | ridge | 0.268 | 0.280 | 0.062 | 0.205 | 0.197 | 0.186 | 0.491 | 0.481 | 0.271 |
 | ridge_action | 0.268 | 0.276 | 0.055 | 0.190 | 0.198 | 0.186 | 0.483 | 0.481 | 0.267 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.685 | 0.554 | 0.538 | 1.479 | 0.221 | 0.774 | 0.786 | 0.494 | 0.691 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.264 | 0.274 | 0.072 | 0.238 | 0.199 | 0.180 | 0.495 | 0.476 | 0.275 |
 
 ### 168 h — every_hour — B_test
 
@@ -154,7 +154,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.114 | 1.234 | 0.026 | 0.084 | 0.460 | 1.163 | 0.612 | 0.527 | 0.653 |
 | ridge | 0.254 | 0.287 | 0.071 | 0.239 | 0.181 | 0.201 | 0.500 | 0.447 | 0.272 |
 | ridge_action | 0.221 | 0.267 | 0.078 | 0.242 | 0.182 | 0.197 | 0.487 | 0.447 | 0.265 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.706 | 0.565 | 0.556 | 1.518 | 0.205 | 0.780 | 0.745 | 0.465 | 0.693 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.249 | 0.277 | 0.084 | 0.277 | 0.181 | 0.196 | 0.507 | 0.442 | 0.277 |
 
 ### 168 h — every_hour — OOD_v13
 
@@ -164,7 +164,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.082 | 1.238 | 0.000 | 0.000 | 0.458 | 1.144 | 0.841 | 0.544 | 0.663 |
 | ridge | 0.266 | 0.260 | 0.050 | 0.214 | 0.177 | 0.201 | 0.473 | 0.493 | 0.267 |
 | ridge_action | 0.269 | 0.256 | 0.046 | 0.202 | 0.178 | 0.202 | 0.468 | 0.494 | 0.264 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.707 | 0.544 | 0.529 | 1.771 | 0.204 | 0.795 | 0.827 | 0.509 | 0.736 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.264 | 0.240 | 0.064 | 0.265 | 0.179 | 0.188 | 0.472 | 0.487 | 0.270 |
 
 ### 168 h — every_hour — OOD_long
 
@@ -174,7 +174,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 0.953 | 1.212 | 0.000 | 0.000 | 0.386 | 1.128 | 0.727 | 0.525 | 0.616 |
 | ridge | 0.288 | 0.284 | 0.062 | 0.206 | 0.214 | 0.183 | 0.496 | 0.465 | 0.275 |
 | ridge_action | 0.289 | 0.281 | 0.055 | 0.191 | 0.214 | 0.183 | 0.490 | 0.466 | 0.271 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.683 | 0.559 | 0.524 | 1.430 | 0.244 | 0.737 | 0.797 | 0.479 | 0.682 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.285 | 0.270 | 0.076 | 0.250 | 0.215 | 0.176 | 0.500 | 0.460 | 0.279 |
 
 ### 168 h — 0600_only — A_test
 
@@ -184,7 +184,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.032 | 1.190 | 0.000 | 0.000 | 0.519 | 1.137 | 0.525 | 0.000 | 0.550 |
 | ridge | 0.259 | 0.289 | 0.103 | 0.453 | 0.199 | 0.144 | 0.592 | 0.229 | 0.284 |
 | ridge_action | 0.260 | 0.285 | 0.097 | 0.435 | 0.200 | 0.142 | 0.577 | 0.228 | 0.278 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.616 | 0.555 | 0.547 | 1.577 | 0.211 | 0.742 | 0.689 | 0.207 | 0.643 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.258 | 0.285 | 0.106 | 0.435 | 0.200 | 0.137 | 0.573 | 0.212 | 0.276 |
 
 ### 168 h — 0600_only — B_test
 
@@ -194,7 +194,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.109 | 1.210 | 0.078 | 0.289 | 0.503 | 1.137 | 0.576 | 0.000 | 0.613 |
 | ridge | 0.249 | 0.322 | 0.133 | 0.582 | 0.181 | 0.145 | 0.657 | 0.225 | 0.312 |
 | ridge_action | 0.214 | 0.294 | 0.122 | 0.558 | 0.182 | 0.142 | 0.633 | 0.228 | 0.297 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.630 | 0.588 | 0.587 | 1.723 | 0.195 | 0.734 | 0.680 | 0.201 | 0.667 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.246 | 0.315 | 0.140 | 0.582 | 0.181 | 0.139 | 0.644 | 0.207 | 0.307 |
 
 ### 168 h — 0600_only — OOD_v13
 
@@ -204,7 +204,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 1.070 | 1.186 | 0.000 | 0.000 | 0.496 | 1.132 | 0.453 | 0.000 | 0.542 |
 | ridge | 0.237 | 0.280 | 0.088 | 0.497 | 0.180 | 0.135 | 0.516 | 0.221 | 0.269 |
 | ridge_action | 0.239 | 0.275 | 0.084 | 0.482 | 0.180 | 0.133 | 0.501 | 0.220 | 0.264 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.610 | 0.549 | 0.534 | 1.874 | 0.194 | 0.756 | 0.674 | 0.202 | 0.674 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.234 | 0.259 | 0.089 | 0.449 | 0.182 | 0.124 | 0.488 | 0.206 | 0.254 |
 
 ### 168 h — 0600_only — OOD_long
 
@@ -214,7 +214,7 @@ From every hour of one-based days 3, 10, 17, … (24 starts per start day; `ever
 | daily_naive | 0.947 | 1.177 | 0.000 | 0.000 | 0.422 | 1.104 | 0.463 | 0.000 | 0.514 |
 | ridge | 0.270 | 0.287 | 0.100 | 0.438 | 0.224 | 0.141 | 0.581 | 0.219 | 0.282 |
 | ridge_action | 0.270 | 0.284 | 0.094 | 0.420 | 0.224 | 0.139 | 0.566 | 0.218 | 0.277 |
-| ridge_severity_oracle (reference: reads hidden severity) | 0.598 | 0.548 | 0.524 | 1.502 | 0.239 | 0.694 | 0.682 | 0.202 | 0.624 |
+| ridge_severity_oracle (reference: reads hidden severity) | 0.269 | 0.276 | 0.108 | 0.440 | 0.225 | 0.133 | 0.564 | 0.204 | 0.277 |
 
 ## T3 — dark night (arithmetic: 18:00 stock vs tonight's rate)
 
@@ -339,12 +339,12 @@ On C_cf test seeds, each variant's effect (variant − factual) on the first win
 
 ## T5 — agent next hour
 
-A agent episodes (test seeds [10112, 10113, 10114, 10115, 10116, 10117, 10118, 10119]): every agent alive at t+1 and at the source row. Persistence predicts row t, `day_earlier` row t+1−24. nMAE = MAE / std of the true next value.
+A agent episodes (test seeds [10112, 10113, 10114, 10115, 10116, 10117, 10118, 10119]): every agent alive at t+1, t and t−23 (one pair set for both baselines). Persistence predicts row t, `day_earlier` row t+1−24. nMAE = MAE / std of the true next value over those pairs.
 
 | Baseline | State tag acc. | Target kind acc. | Position Chebyshev | Hunger nMAE | Thirst nMAE | Fatigue nMAE | Pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| persistence | 0.744 | 0.718 | 2.468 | 0.445 | 0.595 | 0.255 | 940878 |
-| day_earlier | 0.757 | 0.738 | 4.749 | 1.219 | 0.688 | 0.172 | 924554 |
+| persistence | 0.741 | 0.714 | 2.490 | 0.450 | 0.607 | 0.256 | 924554 |
+| day_earlier | 0.757 | 0.738 | 4.749 | 1.223 | 0.696 | 0.172 | 924554 |
 
 ## Sanity checks
 
@@ -409,11 +409,14 @@ Best non-oracle baseline (mean nMAE over V for T1/T2). v0: dataset v0 (`game_v13
   - T4 rain: dark_nights MAE 0.708 (nMAE 1.000, zero_effect); cold_member_hours MAE 214.125 (nMAE 0.984, val_mean_effect); food_store MAE 9.750 (nMAE 1.000, zero_effect)
   - T4 cold_snap: dark_nights MAE 0.292 (nMAE 1.000, zero_effect); cold_member_hours MAE 116.792 (nMAE 0.870, val_mean_effect); food_store MAE 5.479 (nMAE 0.889, val_mean_effect)
   - T4 windfall: dark_nights MAE 0.375 (nMAE 1.000, zero_effect); cold_member_hours MAE 69.271 (nMAE 0.625, val_mean_effect); food_store MAE 5.604 (nMAE 0.810, val_mean_effect)
-  - T5 (persistence): state tag 0.744, target kind 0.718, Chebyshev 2.468, hunger/thirst/fatigue nMAE 0.445 / 0.595 / 0.255
+  - T5 (persistence): state tag 0.741, target kind 0.714, Chebyshev 2.490, hunger/thirst/fatigue nMAE 0.450 / 0.607 / 0.256
 
 ## Reading the numbers
 
-- **T3b is the task that needs the hidden weather inferred.** The observable ridge (stock, deadwood, the two previous nights' stock drops and the deadwood changes) reaches MAE 0.600 against the train mean's 0.995, and the severity oracle (the mean of each severity) only 0.609: two nights of observed burning tell as much about the next five nights as the hidden severity label, because the night draws make the label an incomplete description of the winter. A model should beat both.
-- **T3 stays nearly arithmetic** (observable logistic AUC 0.993): the fire burns only stockpile wood from 18:00, so the 02:00 state follows from the 18:00 stock and the night's rate, and last night's stock drop reveals the rate well. It is kept for comparison with v0 and labelled so.
-- **T2 at 168 h no longer favours persistence.** v1's ridges (no severity input) roll out to mean nMAE 0.27 where v0's ridge (severity one-hot, held at the start row's value during the rollout) stayed near persistence (0.54); v1's severity-oracle ridge, which holds the start row's severity the same way, degrades to 0.69. Holding a seasonal label constant across a season boundary pushes the rollout off its training distribution; the v0 168-hour numbers were limited by that, not by the dynamics. Every-hour starts (24 per start day) make T2 at 24 h harder than v0's 06:00-only protocol (0.188 against 0.134 for A test), because the 06:00 rows are the quietest hour (`cold_members` and `adults_working` are 0 then).
-- **T4 windfall** (new) changes a ranked target in every C_cf test seed: 20 units on the snow in the first winter cut cold member-hours by 69 on average (normalised MAE of the zero-effect baseline 1.0 by construction).
+- **T3b is the task that needs the hidden weather inferred.** The observable ridge (stock, deadwood, the two previous nights' stock drops, the deadwood changes, members) reaches MAE 0.600 against the train mean's 0.995; the severity oracle (each severity's mean) reaches 0.609. Two observed nights of burning say about as much about the next five as the hidden severity label does, because the night draws make the label an incomplete description of the winter. A model should beat both.
+- **T3 stays nearly arithmetic** (observable logistic AUC 0.993): the fire burns only stockpile wood from 18:00, so the 02:00 state follows from the 18:00 stock and the night's rate, and last night's stock drop reveals the rate. It is kept for comparison with v0 and labelled so.
+- **T2 at 168 h** (A test, every-hour starts): ridge 0.271, action ridge 0.267, severity oracle 0.275 (reads each rollout row's true severity), persistence 0.639.
+  v0's ridge read the severity as an input and held the start row's value through the rollout; its 168 h A-test number was 0.557 (persistence 0.554). In a first v1 run the oracle was built the same way (start row's severity held) and scored 0.691, worse than persistence, while the same oracle reading each row's severity scores as above: holding a seasonal label constant across a season boundary pushes a rollout off its training distribution, which is a likely reason v0's 168 h ridge stayed near persistence (not re-measured on v0, whose bench is frozen).
+- Every-hour starts make T2 at 24 h harder than v0's 06:00-only protocol (A test best 0.188 against 0.134): 06:00 is the quietest hour (`cold_members` and `adults_working` are 0 then).
+- At whole-day horizons `daily_naive` equals `persistence` (v0's definition, kept for comparability).
+- T3's oracle rule reads tonight's rate as `--burn` × 13 (`2,3,4`, `game_v14()`'s severity burns, given on the command line because the recorder's meta has no rules block); it must be updated if those burns change.

@@ -207,7 +207,9 @@ def rollout_starts(n_rows: int, horizon: int, every_hour: bool) -> list[int]:
 
 def rollout_batch(ep: Ep, starts: np.ndarray, horizon: int, model: Ridge, variant: Variant) -> np.ndarray:
     """Autoregressive ridge rollouts of every start at once; V after `horizon` steps, one row per start. The calendar
-    follows the clock; actions are those recorded; the oracle holds the start row's severity."""
+    follows the clock; actions are those recorded; the severity oracle reads the true hidden severity of every
+    rollout row (review round 1, M1: holding the start row's value took the oracle off its training distribution
+    whenever a rollout crossed into a winter)."""
     buf = np.zeros((len(starts), 24 + horizon, ep.v.shape[1]))
     for i, s in enumerate(starts):
         buf[i, :24] = ep.v[s - 23: s + 1]
@@ -219,7 +221,7 @@ def rollout_batch(ep: Ep, starts: np.ndarray, horizon: int, model: Ridge, varian
         if acts is not None:
             parts.append(acts[rows])
         if variant.oracle:
-            parts.append(onehot(ep.hidden_severity[starts], [-1, 0, 1, 2]))
+            parts.append(onehot(ep.hidden_severity[rows], [-1, 0, 1, 2]))
         x = np.concatenate(parts, axis=1)
         buf[:, 24 + k] = buf[:, 23 + k] + model.predict(x)
     return buf[:, 23 + horizon]
@@ -398,7 +400,8 @@ def effect_distribution(effects: dict) -> dict:
 
 # ------------------------------------------------------------------ T5 ------------------------------------------
 def t5_pairs(eps, lag: int):
-    """(truth at t+1, prediction from row t+1-lag) for every agent alive at t+1 and at t+1-lag."""
+    """(truth at t+1, prediction from row t+1-lag) for every agent alive at t+1, t and t-23: one common pair set
+    for both baselines (review round 1, L1)."""
     out = {k: ([], []) for k in ("x", "y", "state_tag", "target_kind", "hunger", "thirst", "fatigue")}
     for ep in eps:
         a = ep.agents
@@ -406,7 +409,7 @@ def t5_pairs(eps, lag: int):
         n = alive.shape[0]
         for t in range(23, n - 1):
             src = t + 1 - lag
-            mask = alive[t + 1] & alive[src]
+            mask = alive[t + 1] & alive[t] & alive[t - 23]
             for k in out:
                 out[k][0].append(a[k][t + 1][mask])
                 out[k][1].append(a[k][src][mask])
@@ -524,8 +527,9 @@ def markdown(r: dict, v0: dict | None) -> str:
         lines += [f"### {split}", "", *table(scores, v), ""]
     lines += ["## T2 — rollout", "",
               "From every hour of one-based days 3, 10, 17, … (24 starts per start day; `every_hour`) and, as in v0, from "
-              "06:00 only (`0600_only`), roll the one-step model forward 24 h and 168 h; nMAE at the horizon. The oracle "
-              "holds the start row's severity.", ""]
+              "06:00 only (`0600_only`), roll the one-step model forward 24 h and 168 h; nMAE at the horizon. The severity "
+              "oracle reads the true hidden severity of every rollout row. At whole-day horizons `daily_naive` (the same "
+              "hour of the last observed day) is the start row itself, so it equals `persistence` (kept, as in v0).", ""]
     for horizon, modes in r["T2"].items():
         for mode, splits in modes.items():
             for split, scores in splits.items():
@@ -572,8 +576,9 @@ def markdown(r: dict, v0: dict | None) -> str:
         lines.append(f"| {variant} | any ranked target changed | | | | | {fmt(d['changed_ranked_share'])} |")
     if "T5" in r:
         lines += ["", "## T5 — agent next hour", "",
-                  f"A agent episodes (test seeds {r['T5']['episodes']['test']}): every agent alive at t+1 and at the source row. "
-                  "Persistence predicts row t, `day_earlier` row t+1−24. nMAE = MAE / std of the true next value.", "",
+                  f"A agent episodes (test seeds {r['T5']['episodes']['test']}): every agent alive at t+1, t and t−23 (one pair "
+                  "set for both baselines). Persistence predicts row t, `day_earlier` row t+1−24. nMAE = MAE / std of the "
+                  "true next value over those pairs.", "",
                   "| Baseline | State tag acc. | Target kind acc. | Position Chebyshev | Hunger nMAE | Thirst nMAE | Fatigue nMAE | Pairs |",
                   "|---|---:|---:|---:|---:|---:|---:|---:|"]
         for name, s in r["T5"]["test"].items():
@@ -664,6 +669,41 @@ def to_beat(r: dict) -> str:
     return "\n".join(lines)
 
 
+def reading(r: dict, v0: dict | None) -> str:
+    """Notes on what the numbers say, filled from the report."""
+    b, t3 = r["T3b"], r["T3"]["logistic_observable"]
+    t2 = r["T2"]
+    a = lambda h, mode, name: mean_of(t2[h][mode]["A_test"][name])
+    lines = ["## Reading the numbers", "",
+             f"- **T3b is the task that needs the hidden weather inferred.** The observable ridge (stock, deadwood, the two "
+             f"previous nights' stock drops, the deadwood changes, members) reaches MAE {b['ridge']['mae']:.3f} against the "
+             f"train mean's {b['train_mean']['mae']:.3f}; the severity oracle (each severity's mean) reaches "
+             f"{b['severity_oracle_reference']['mae']:.3f}. Two observed nights of burning say about as much about the next "
+             "five as the hidden severity label does, because the night draws make the label an incomplete description of "
+             "the winter. A model should beat both.",
+             f"- **T3 stays nearly arithmetic** (observable logistic AUC {t3['auc']:.3f}): the fire burns only stockpile wood "
+             "from 18:00, so the 02:00 state follows from the 18:00 stock and the night's rate, and last night's stock drop "
+             "reveals the rate. It is kept for comparison with v0 and labelled so.",
+             f"- **T2 at 168 h** (A test, every-hour starts): ridge {a('168', 'every_hour', 'ridge'):.3f}, action ridge "
+             f"{a('168', 'every_hour', 'ridge_action'):.3f}, severity oracle {a('168', 'every_hour', 'ridge_severity_oracle'):.3f} "
+             f"(reads each rollout row's true severity), persistence {a('168', 'every_hour', 'persistence'):.3f}."]
+    if v0:
+        lines.append(f"  v0's ridge read the severity as an input and held the start row's value through the rollout; its 168 h "
+                     f"A-test number was {mean_of(v0['T2']['168']['A_test']['ridge']):.3f} (persistence "
+                     f"{mean_of(v0['T2']['168']['A_test']['persistence']):.3f}). In a first v1 run the oracle was built the same way "
+                     "(start row's severity held) and scored 0.691, worse than persistence, while the same oracle reading each "
+                     "row's severity scores as above: holding a seasonal label constant across a season boundary pushes a "
+                     "rollout off its training distribution, which is a likely reason v0's 168 h ridge stayed near persistence "
+                     "(not re-measured on v0, whose bench is frozen).")
+    lines += [f"- Every-hour starts make T2 at 24 h harder than v0's 06:00-only protocol (A test best "
+              f"{best_of(t2['24']['every_hour']['A_test'])[0]:.3f} against {best_of(t2['24']['0600_only']['A_test'])[0]:.3f}): "
+              "06:00 is the quietest hour (`cold_members` and `adults_working` are 0 then).",
+              "- At whole-day horizons `daily_naive` equals `persistence` (v0's definition, kept for comparability).",
+              "- T3's oracle rule reads tonight's rate as `--burn` × 13 (`2,3,4`, `game_v14()`'s severity burns, given on the "
+              "command line because the recorder's meta has no rules block); it must be updated if those burns change.", ""]
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", type=Path, default=Path(os.environ.get("WM_DATA_ROOT", "/Users/rexxa/work/worldsim-wm-data")))
@@ -679,7 +719,7 @@ def main(argv: list[str] | None = None) -> int:
     v0 = json.loads(args.v0.read_text()) if args.v0 and args.v0.exists() else None
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "bench_v1.json").write_text(json.dumps(report, indent=1, sort_keys=True, default=float) + "\n")
-    (args.out / "BENCH_v1.md").write_text(markdown(report, v0) + "\n" + to_beat(report))
+    (args.out / "BENCH_v1.md").write_text(markdown(report, v0) + "\n" + to_beat(report) + "\n" + reading(report, v0))
     print(json.dumps(report["sanity"]))
     return 0
 
