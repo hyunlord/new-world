@@ -38,6 +38,14 @@ class M1Tests(unittest.TestCase):
         opt.step()
         self.assertTrue(np.isfinite(float(tf)) and np.isfinite(float(roll)))
         self.assertEqual(set(parts), {"nll", "bce", "roll"})
+        tf5, _, roll5 = m.losses(self.model, self.stepper, bt, 6, {"roll_starts": 3, "tf_l1": 1.0, "v_weight": 5.0}, rng)
+        self.assertTrue(np.isfinite(float(tf5.detach())) and np.isfinite(float(roll5.detach())))
+        w = self.stepper.feature_weights(5.0).numpy()
+        self.assertAlmostEqual(float(w.mean()), 1.0, places=5)
+        v_cont = [list(self.lay.cont).index(i) for i in self.lay.v if i != self.lay.fire]
+        self.assertAlmostEqual(float(w[v_cont[0]] / w.min()), 5.0, places=4)
+        self.assertEqual(len(v_cont), 7)
+        np.testing.assert_array_equal(self.stepper.feature_weights(1.0).numpy(), np.ones(self.lay.n_cont))
         # Rollout starts honour the minimum context when it fits, and always leave room for k steps.
         pos = m.roll_positions(48, 6, {"roll_starts": 50, "roll_min_context": 40}, rng)
         self.assertTrue((pos >= 40).all() and (pos <= 42).all())

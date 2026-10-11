@@ -42,13 +42,16 @@ except ImportError:  # the Mac gate runs without torch; the torch tests skip
 
 DEFAULTS = dict(hidden=256, layers=2, lr=3e-4, weight_decay=1e-4, batch=64, window=168, k_max=24, roll_starts=8,
                 roll_weight=1.0, max_steps=12000, eval_every=400, patience=5, max_seconds=7200, warmup=168,
-                grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0)
+                grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0)
 # Recipe r1 = DEFAULTS. Recipe r2 (after r1 drifted at 168 h, DECISIONS D2.2): window 336, k_max 168,
 # roll_min_context 167 (rollouts start after a full 168-row context, as in evaluation), roll_starts 2, tf_l1 1.0,
 # clamp_nonneg 1, max_steps 4000, eval_every 200 (so a run ends on steps or patience inside the 2-hour cap on a
 # shared CPU, which keeps the same-seed rerun deterministic; DECISIONS D2.3-D2.4).
 R2 = dict(window=336, k_max=168, roll_min_context=167, roll_starts=2, tf_l1=1.0, clamp_nonneg=1, max_steps=4000,
           eval_every=200)
+# Recipe r3 (after r2 lost T1 and T2 24 h, DECISIONS D2.5): r2 + v_weight 5 — the eight V variables weigh 5x the
+# other state features in the L1 terms (teacher-forced and rollout) and the rollout fire BCE; weights rescaled to mean 1.
+R3 = dict(R2, v_weight=5.0)
 
 
 def pick_device(prefer: str = "auto") -> str:
@@ -102,6 +105,16 @@ class Stepper:
         if nonneg:   # features never negative in train (stocks, counts, flags) are clamped at 0 (recipe r2)
             lo = np.where(norm.lo >= 0, np.maximum(lo, 0.0), lo)
         self.lo, self.hi = t(lo), t(norm.hi + 0.25 * span)
+
+    def feature_weights(self, v_weight: float):
+        """Per continuous feature: v_weight on the V variables, 1 elsewhere, rescaled to mean 1."""
+        w = np.ones(len(self.lay.cont))
+        if v_weight != 1.0:
+            for i in self.lay.v:
+                if i != self.lay.fire:
+                    w[list(self.lay.cont).index(i)] = v_weight
+            w = w / w.mean()
+        return torch.tensor(w, dtype=torch.float32, device=self.mean.device)
 
     def next_state(self, state, mu, fire_logit, hard: bool = True):
         """state [..., Ds] raw -> next raw state; fire thresholded (straight-through when not `hard`)."""
@@ -209,8 +222,10 @@ def losses(model, stepper: Stepper, bt: dict, k: int, cfg: dict, rng: np.random.
     nll = 0.5 * (logvar + (y - mu) ** 2 / logvar.exp()).mean()
     bce = F.binary_cross_entropy_with_logits(fl, bt["fire_next"])
     tf = nll + bce
+    vw = cfg.get("v_weight", 1.0)
+    w = stepper.feature_weights(vw)
     if cfg.get("tf_l1", 0.0):
-        tf = tf + cfg["tf_l1"] * (y - mu).abs().mean()
+        tf = tf + cfg["tf_l1"] * ((y - mu).abs() * w).mean()
     B = inp.shape[0]
     js = torch.tensor(roll_positions(L, k, cfg, rng), device=inp.device)
     m = len(js)
@@ -221,12 +236,13 @@ def losses(model, stepper: Stepper, bt: dict, k: int, cfg: dict, rng: np.random.
     cur = flat(bt["state"][:, js])
     sev_hold = flat(bt["sev"][:, js])
     cont = stepper.cont
+    fire_w = float(w.max().item())   # the fire is a V variable: same (normalized) weight as the other V features
     roll = 0.0
     for i in range(k):
         cur = stepper.next_state(cur, mu_j, fl_j, hard=False)
         true = flat(bt["state"][:, js + i + 1])
         err = (cur[:, cont] - true[:, cont]) / stepper.std[cont]
-        roll = roll + err.abs().mean() + F.binary_cross_entropy_with_logits(fl_j, true[:, stepper.lay.fire])
+        roll = roll + (err.abs() * w).mean() + fire_w * F.binary_cross_entropy_with_logits(fl_j, true[:, stepper.lay.fire])
         if i == k - 1:
             break
         r = js + i + 1
