@@ -1790,3 +1790,19 @@ Code `4ab0778a`; release probe `probe_p2`. Workspace debug tests 2,005 passed, 0
 **Z6 for v14** (`make_dataset.py z6 --scene game_v14`, recorder `wm_p2` = `4ab0778a`, `check_z6.py` → `docs/revitalize/probe/p8-3_z6/`): seeds 0–7 × 7 kinds at tick 31,920 (day 23 12:00), 30 days — **PASS, 56 of 56**: every pair equals the factual `row_digest` at every row ≤ 31,920 and differs from tick 31,980; **windfall applied 10 in all 8 seeds** (Pass 7: 2 of 8), because it now lands on the snow. Recording took 41 s (64 episodes, four workers).
 
 Recorder checks (Part 2 binaries): `test_hidden_columns.py` (game_v14 seeds 0–1 × 30 days, recorder `--every 60`, probe `--sample-every 60`): `night_burn_per_hour`, `winter_fall_today` and the summed `wood_target` equal the probe keys at every common tick; `winter_severity` differs only on 07:00 rows of a season's first day (the documented completed-tick vs system-tick booking). `test_export_determinism.py` gains a game_v14 case (30 days, with agents and with a schedule): two runs at four workers and one at one worker are byte-identical; schema 2. Part 3 changes no Rust: the Part 3 probe and recorder are the Part 2 binaries, so the 4.5 guard of Part 2 stands for Part 3.
+
+### Part 1 held-out references (seeds 64–127 × 10, 32–95 × 120)
+
+`p8-1_v12_heldout_{10,120}day`, `p8-1_v13_heldout_{10,120}day` (`probe_p1`, the eight clocks, `--check-determinism`): all four DETERMINISM PASS. Evaluations `p8-1_v12_heldout_targets` (absolute) and `p8-1_v13_heldout_targets` (comparison mode against v12 held-out). Section 3.2 reproduces exactly:
+
+| held-out | v12 | v13 |
+|---|---|---|
+| Y3 replacement failing seeds | 1 (80: −4) | 2 (68: −4, 80: −4) |
+| Y10 evening near hearth failing seeds | 2 (55: 0.267, 75: 0.344) | 2 (55: 0.281, 76: 0.344) |
+| Y3 longest stagnation (max) | 4 | 2 |
+| no-dark-night share | 0.023 | 0.594 |
+| severity-only R² | — (no severity) | 0.943 (tuning 0.943) |
+| normal winters 0 / 1 / 2 / 3 dark | — | 0 / 62 / 3 / 0 |
+| first dark night 5 / 6 / 7 | 0 / 8 / 242 | 20 / 22 / 62 |
+
+Every other per-seed clause has no failing seed for either ruleset on the held-out seeds. v13 in comparison mode passes X2 (2 ≤ 1 + 1 and 2 ≤ 2 + 1).
