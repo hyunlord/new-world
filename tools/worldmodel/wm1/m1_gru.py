@@ -238,9 +238,34 @@ def calibration(model, stepper, preps: list, device: str, window: int) -> dict:
     return {"within_2sigma_mean": float(per.mean()), "within_2sigma": dict(zip(stepper.lay.variant.continuous_names, per.tolist()))}
 
 
-def train(args) -> int:
-    cfg = dict(DEFAULTS)
-    cfg.update({k: v for k, v in vars(args).items() if k in DEFAULTS and v is not None})
+class Kind:
+    """What differs between M1 (GRU) and M1b (transformer): the network, its loss and its predictor."""
+
+    def __init__(self, name, defaults, build, loss, predictor):
+        self.name, self.defaults, self.build, self.loss, self.predictor = name, defaults, build, loss, predictor
+
+
+def _gru_build(lay, cfg):
+    return M1GRU(lay.n_input, lay.n_cont, cfg["hidden"], cfg["layers"])
+
+
+def _gru_predictor(model, lay, norm, variant, device, cfg, round_counts=False):
+    return GRUPredictor(model, lay, norm, variant, device, cfg["warmup"], round_counts=round_counts)
+
+
+KINDS = {"m1_gru": Kind("m1_gru", DEFAULTS, _gru_build, lambda *a: losses(*a), _gru_predictor)}
+
+
+def kind_of(name: str) -> Kind:
+    if name not in KINDS:
+        __import__("wm1." + name)  # importing wm1.m1_tf registers its kind
+    return KINDS[name]
+
+
+def train(args, kind: Kind | None = None) -> int:
+    kind = kind or KINDS["m1_gru"]
+    cfg = dict(kind.defaults)
+    cfg.update({k: v for k, v in vars(args).items() if k in kind.defaults and v is not None})
     variant = d.VARIANTS[args.variant]
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -255,11 +280,11 @@ def train(args) -> int:
     norm = d.Normalizer.fit(train_eps, variant)
     lay = d.Layout(variant)
     preps = [d.prepare(ep, variant, norm) for ep in train_eps]
-    model = M1GRU(lay.n_input, lay.n_cont, cfg["hidden"], cfg["layers"]).to(device)
+    model = kind.build(lay, cfg).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
     stepper = Stepper(lay, norm, device)
-    pred = GRUPredictor(model, lay, norm, variant, device, cfg["warmup"])
-    config = {"model": "m1_gru", "variant": variant.name, "seed": args.seed, "hyper": cfg, "device": device,
+    pred = kind.predictor(model, lay, norm, variant, device, cfg)
+    config = {"model": kind.name, "variant": variant.name, "seed": args.seed, "hyper": cfg, "device": device,
               "torch": torch.__version__, "numpy": np.__version__, "python": sys.version.split()[0],
               "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(), "train_groups": train_groups,
               "val_groups": list(c.VAL_SPLITS), "train_episodes": len(train_eps), "input_names": list(variant.input_names()),
@@ -274,14 +299,14 @@ def train(args) -> int:
         model.train()
         k = 1 + int((cfg["k_max"] - 1) * min(1.0, step / max(1, half)))
         bt = batch_tensors(d.sample_windows(preps, cfg["window"], cfg["batch"], rng), device)
-        tf, parts, roll = losses(model, stepper, bt, k, cfg["roll_starts"], rng)
+        tf, parts, roll = kind.loss(model, stepper, bt, k, cfg["roll_starts"], rng)
         loss = tf + cfg["roll_weight"] * roll
         opt.zero_grad()
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), cfg["grad_clip"])
         opt.step()
         if step % 50 == 0:
-            log.write(json.dumps({"step": step, "k": k, "loss": float(loss), **parts, "t": time.time() - t0}) + "\n")
+            log.write(json.dumps({"step": step, "k": k, "loss": loss.item(), **parts, "t": time.time() - t0}) + "\n")
             log.flush()
         if step % cfg["eval_every"] == 0:
             score, per = val_score(pred, val, stds)
@@ -294,7 +319,7 @@ def train(args) -> int:
             log.write(json.dumps({"step": step, "eval": True, "val_t2_24": score, "per_split": per, "best": best,
                                   "k": k, "t": time.time() - t0}) + "\n")
             log.flush()
-            print(f"step {step} k {k} loss {float(loss):.4f} val {score:.4f} best {best:.4f}@{best_step} "
+            print(f"step {step} k {k} loss {loss.item():.4f} val {score:.4f} best {best:.4f}@{best_step} "
                   f"{time.time() - t0:.0f}s", flush=True)
             # Patience counts only after the rollout horizon has reached k_max (the curriculum's end).
             if bad >= cfg["patience"] and step >= half:
@@ -326,17 +351,17 @@ def train(args) -> int:
     return 0
 
 
-def load_predictor(run: Path, device: str = "auto") -> tuple[GRUPredictor, dict]:
+def load_predictor(run: Path, device: str = "auto") -> tuple[ev.Predictor, dict]:
     config = json.loads((run / "config.json").read_text())
+    kind = kind_of(config.get("model", "m1_gru"))
     variant = d.VARIANTS[config["variant"]]
     norm = d.Normalizer.from_json(config["normalizer"])
     lay = d.Layout(variant)
     dev = pick_device(device)
     torch.set_num_threads(config["hyper"].get("threads", 16))
-    model = M1GRU(lay.n_input, lay.n_cont, config["hyper"]["hidden"], config["hyper"]["layers"]).to(dev)
+    model = kind.build(lay, config["hyper"]).to(dev)
     model.load_state_dict(torch.load(run / "best.pt", map_location=dev))
-    return GRUPredictor(model, lay, norm, variant, dev, config["hyper"]["warmup"],
-                        round_counts=config.get("round_counts", False)), config
+    return kind.predictor(model, lay, norm, variant, dev, config["hyper"], round_counts=config.get("round_counts", False)), config
 
 
 def final(args) -> int:
