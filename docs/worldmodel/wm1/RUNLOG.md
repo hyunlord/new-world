@@ -25,3 +25,12 @@ Times are KST (Mac clock). Working-time budget: 12 h from the start (GOAL.md 0.3
 | 7 | 23:22 | 23:31 | review round 2: no blocking findings, W8 CONFIRMED; fixes committed |
 | gate | 23:31 | 23:32 | Mac 47 tests OK (3 Pass 7 recorder skips), DGX 47 tests OK 0 skips, allowed paths clean (`9f0ac8bf`) |
 | 7 end | | 23:33 | REPORT_WM1.md; green branch fast-forward; draft PR |
+
+## WM-1.1
+
+Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 0.3.6). Start 2026-10-12 07:31:59.
+
+| Part | Start | End | Notes |
+|---|---|---|---|
+| start | 07:31:59 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0; `nvidia-smi` 07:32: only Xorg (18 MiB) and gnome-shell (6 MiB) on the GPU, 0 % util; disk 3.7 T, 962 G free; RAM 119 GiB, 80 GiB available, swap 15 GiB fully used (other users' services). No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. |
+| 0 | 07:32 | | GOAL_1_1.md committed unchanged; WM-1 run dirs present on the DGX (`m1tf_main_r3_s0/best.pt`, `m3_s0/lora/`, `w1_repro_832eaa2c/baselines.json`) |

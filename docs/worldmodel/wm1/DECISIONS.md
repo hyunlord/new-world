@@ -53,3 +53,10 @@ Autonomous decisions of the WM-1 run (GOAL.md 0.3.1), newest last. Each: what, w
 - **D7.2 Severity-free and true-severity ridges (planner note, 23:00).** Pass 8 found that `bench_v0`'s T2 ridge rollouts hold the start row's severity, which breaks the ridge whenever a rollout crosses a season boundary. Added to the harness (`evaluate.RidgePredictor(severity="hold" | "true" | "none")`, `fit_ridge_without_severity`, `ridge_variants.py`, tested in `test_evaluate.py`): `ridge_nosev` / `ridge_action_nosev` — the bench's recipe (same lags, hour, season, optional 24-hour action sums, λ grid on the same validation roles) without any severity input; `ridge_truesev` / `ridge_action_truesev` — the bench's fitted ridges rolled out with each row's true severity, labelled an oracle reference. Run `ridge_variants_9e0f7b3b` on the same starts. The severity-free ridge reaches T2-168 0.223 / 0.227 / 0.241 (A test / B test / OOD_long), T2-any 168 h 0.238, T1 0.100 — far better than the bench's 0.541 / 0.549 / 0.528. W2 is now judged against the best of all baselines including these (the severity-free ridge is the best on every W2 split); the original bench-only verdict is kept beside it in the W table. M1's 168-hour claims in ANALYSIS.md and the report were rewritten accordingly.
 - **D7.3 Independent review, round 2.** No blocking findings; W8 CONFIRMED again; RESULTS.md regenerates byte-identical; M1b clean (pre-registered at 4666e687 about an hour before its metrics). Minor findings fixed (REVIEW.md "Resolution of round 2"); notably W2 and W2b are now judged against the best non-oracle baseline, with the oracle true-severity ridge shown for information — no verdict changes.
 
+
+## WM-1.1
+
+Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
+
+### Part 0
+- **E0.1** The Mac clone carries two unrelated local changes (`.gitignore` adds `/graft/`; an untracked `.ignore`) from the owner's graft tool. They are outside the allowed paths, so they are never staged; every commit stages explicit paths only.
