@@ -73,6 +73,29 @@ class BaselineFidelityTests(unittest.TestCase):
             bad.bench.v[start + 1:] = 1e6
             np.testing.assert_array_equal(pred.rollout(bad, np.array([start]), 24, bad.bench.actions).v, clean)
 
+    def test_severity_modes_of_the_ridge(self) -> None:
+        """hold = the bench's rollout; none = fit and rolled out without severity; true = each row's own severity."""
+        eps = [wrap(e) for e in self.test]
+        for e in eps:
+            e.bench.severity = np.where(e.bench.season == 3, 2, -1)
+        ep = eps[0]
+        sev_model = b.Ridge().fit(*b.stack([e.bench for e in eps], False), 1.0)
+        starts = ev.bench_starts(ep, 168)
+        held = ev.RidgePredictor(sev_model, False, "ridge").rollout(ep, starts, 168, ep.bench.actions).v
+        ref = np.stack([b.rollout(ep.bench, s, 168, sev_model, False) for s in starts])
+        np.testing.assert_allclose(held[:, -1], ref, atol=1e-9)
+        true = ev.RidgePredictor(sev_model, False, "ridge_true", "true").rollout(ep, starts, 168, ep.bench.actions).v
+        self.assertGreater(np.abs(true - held).max(), 0.0)   # a 168 h rollout crosses a season boundary
+        nosev, lam, _ = ev.fit_ridge_without_severity(eps, eps, False)
+        self.assertEqual(nosev.model.w.shape[0], sev_model.w.shape[0] - 4)
+        x = b.features(ep.bench.v, ep.bench.hour, ep.bench.season, ep.bench.severity, None, np.arange(30, 40))
+        np.testing.assert_array_equal(ev.drop_severity(x), np.delete(x, range(77, 81), axis=1))
+        other = wrap(synthetic(seed=7, role="test"))
+        other.bench.severity = np.zeros_like(other.bench.severity)
+        a = nosev.rollout(other, starts, 48, other.bench.actions).v
+        c = nosev.rollout(eps[0], starts, 48, eps[0].bench.actions).v
+        np.testing.assert_allclose(a, c)   # no severity input: changing the severity column changes nothing
+
     def test_any_hour_starts_cover_every_hour_of_the_start_days(self) -> None:
         ep = wrap(self.test[0])
         s = ev.any_hour_starts(ep, 24)

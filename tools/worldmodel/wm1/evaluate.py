@@ -83,12 +83,24 @@ class DailyNaive(StepPredictor):
         return Rollout(buf[:, 24:])
 
 
+SEV_COLS = slice(len(b.LAGS) * len(b.VARS) + 24 + 5, len(b.LAGS) * len(b.VARS) + 24 + 5 + 4)   # severity one-hot in b.features
+
+
+def drop_severity(x: np.ndarray) -> np.ndarray:
+    """`bench_v0.features` rows without the severity one-hot (the severity-free ridge's inputs)."""
+    return np.delete(x, np.arange(x.shape[1])[SEV_COLS], axis=1)
+
+
 class RidgePredictor(Predictor):
     """`bench_v0`'s ridge (or action-aware ridge) as a predictor; the rollout is `bench_v0.rollout` vectorized
-    over starts (severity held at the start row's value, calendar from the episode)."""
+    over starts (calendar from the episode). `severity` selects what the rollout feeds as severity:
+    "hold" — the start row's value (the bench's rule), "true" — each rollout row's true value (an oracle reference:
+    it reads the future winter draw), "none" — the model was fit without severity features."""
 
-    def __init__(self, model: b.Ridge, action_aware: bool, name: str):
-        self.model, self.action_aware, self.name = model, action_aware, name
+    def __init__(self, model: b.Ridge, action_aware: bool, name: str, severity: str = "hold"):
+        if severity not in ("hold", "true", "none"):
+            raise ValueError(severity)
+        self.model, self.action_aware, self.name, self.severity = model, action_aware, name, severity
 
     def rollout(self, ep, starts, horizon, actions):
         n = len(starts)
@@ -97,19 +109,37 @@ class RidgePredictor(Predictor):
         for i, s in enumerate(starts):
             buf[i, :24] = ep.bench.v[s - 23: s + 1]
         acts24 = b.actions_window(actions) if self.action_aware else None
-        sev = ep.bench.severity[starts]
+        held = ep.bench.severity[starts]
         idx = np.arange(n)
         for k in range(horizon):
             t = starts + k
             cur = 23 + k
+            sev = ep.bench.severity[t] if self.severity == "true" else held
             parts = [buf[idx, cur - lag + 1] for lag in lags]
-            parts += [b.onehot(ep.bench.hour[t], list(range(24))), b.onehot(ep.bench.season[t], [-1, 0, 1, 2, 3]),
-                      b.onehot(sev, [-1, 0, 1, 2])]
+            parts += [b.onehot(ep.bench.hour[t], list(range(24))), b.onehot(ep.bench.season[t], [-1, 0, 1, 2, 3])]
+            if self.severity != "none":
+                parts.append(b.onehot(sev, [-1, 0, 1, 2]))
             if acts24 is not None:
                 parts.append(acts24[t])
             x = np.concatenate(parts, axis=1)
             buf[:, cur + 1] = buf[:, cur] + self.model.predict(x)
         return Rollout(buf[:, 24:])
+
+
+def fit_ridge_without_severity(train: list[EpisodeData], val: list[EpisodeData], action_aware: bool):
+    """The bench's ridge recipe (lags, hour, season, optional 24-hour action sums; lambda from the bench grid on the
+    validation T1 mean nMAE) with the severity one-hot removed from the features."""
+    xs, ys = zip(*[b.episode_xy(ep.bench, action_aware)[:2] for ep in train])
+    x, y = drop_severity(np.vstack(xs)), np.vstack(ys)
+    std = b.split_std([ep.bench for ep in val])
+    best, scores = None, {}
+    for lam in b.LAMBDAS:
+        pred = RidgePredictor(b.Ridge().fit(x, y, lam), action_aware, "ridge_nosev", "none")
+        score = t1(pred, val, std)["mean"]
+        scores[str(lam)] = score
+        if best is None or score < best[0]:
+            best = (score, lam, pred)
+    return best[2], best[1], scores
 
 
 # ------------------------------------------------------------------ starts ----------------------------------------
