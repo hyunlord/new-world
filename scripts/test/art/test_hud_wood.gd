@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Topbar = preload("res://scripts/ui/panels/hud_topbar.gd")
+const Buildings = preload("res://scripts/ui/building_renderer.gd")
 const Seek = preload("res://scripts/ui/seek_viz_renderer.gd")
 var _failures: int = 0
 
@@ -24,6 +25,14 @@ func _check(condition: bool, message: String) -> void:
 		push_error(message)
 
 func _run() -> void:
+	_check(Buildings.wood_caption("Firewood", 205, 273) == "Firewood 205/273", "target caption")
+	_check(Buildings.wood_caption("Firewood", 205, 0) == "Firewood 205", "legacy caption")
+	_check(Buildings.wood_tint(205, 273) == Buildings.WOOD_SHORT_TINT, "only shortage is orange")
+	_check(Buildings.wood_tint(273, 273) == Color.WHITE and Buildings.wood_tint(0, 0) == Color.WHITE, "target reached or absent white")
+	var target_snapshot: Dictionary = {"formation_xs": PackedInt32Array([1, 9]), "formation_ys": PackedInt32Array([1, 9]), "wood_targets": PackedInt32Array([273, 273])}
+	_check(Buildings.wood_target(target_snapshot, Vector2i(1, 1)) == 273, "targets never summed")
+	target_snapshot.erase("wood_targets")
+	_check(Buildings.wood_target(target_snapshot, Vector2i(1, 1)) == 0, "missing target legacy")
 	var topbar: Control = Topbar.new()
 	root.add_child(topbar)
 	topbar.set_process(false)
@@ -65,6 +74,16 @@ func _run() -> void:
 	world.agents.erase("target_kinds")
 	seek._process(0.0)
 	_check(seek._target_kinds.is_empty(), "missing target key legacy")
+	world.agents = {"colds": PackedByteArray([1, 0, 1])}
+	for lang: String in ["en", "ko"]:
+		locale.call("set_language", lang)
+		topbar._refresh()
+		_check(topbar._cold_label.visible and topbar._cold_label.text == ("Cold 2" if lang == "en" else "추위 2"), "localized cold count")
+	_check(topbar._cold_label.get_index() == topbar._wood_row.get_index() + 1, "cold after wood")
+	for value: Variant in [null, [1], PackedByteArray([0])]:
+		world.agents["colds"] = value
+		topbar._refresh()
+		_check(not topbar._cold_label.visible, "no cold count hidden")
 	locale.call("set_language", language)
 	seek.free()
 	topbar.free()

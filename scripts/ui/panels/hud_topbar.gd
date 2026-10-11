@@ -14,6 +14,7 @@ var _sites_label: Label
 var _locale: Node = null
 var _clock_label: Label
 var _resource_labels: Array[Label] = []
+var _cold_label: Label
 var _wood_label: Label
 var _wood_row: HBoxContainer
 var _speed_label: Label
@@ -53,6 +54,10 @@ func _ready() -> void:
 			_wood_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			_wood_row.add_child(_wood_label)
 			_wood_row.hide()
+			_cold_label = Label.new()
+			_cold_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lower.add_child(_cold_label)
+			_cold_label.hide()
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lower.add_child(spacer)
@@ -151,6 +156,14 @@ func _refresh() -> void:
 		for amount: int in wood_stocks:
 			wood += amount
 		_wood_label.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % wood
+	var cold_count: int = 0
+	var colds: Variant = _snapshot("get_agent_snapshot").get("colds")
+	if colds is PackedByteArray:
+		for marker: int in colds:
+			if marker == 1:
+				cold_count += 1
+	_cold_label.visible = cold_count > 0
+	_cold_label.text = _loc("HUD_COLD") + " %d" % cold_count
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
 	var kinds: Variant = resources.get("kinds", null)

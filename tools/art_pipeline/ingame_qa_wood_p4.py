@@ -75,7 +75,8 @@ def wood(captures: list[Capture], repo: Path) -> Check:
             expected_pile = accepted(f'W1_{8+stage:02d}',f'W1_{12+stage:02d}','S2_15' if stage == 1 else 'S1_14')
             if (stage == 0 and piles) or (stage > 0 and (len(piles) != 1 or piles[0].get('sprite_id') != expected_pile)):
                 errors.append(f'{capture.stem}: hearth {row["id"]} pile sprite/count')
-        labels = [row for row in entities if row['kind'] == 'stockpile_label']
+        split_labels = [row for row in entities if row['kind'] == 'stockpile_wood_label']
+        labels = split_labels or [row for row in entities if row['kind'] == 'stockpile_label']
         stockpiles = [row for row in entities if row['kind'] == 'building' and row.get('building_kind') == 2]
         assigned = {}
         for i in range(len(settlement['settlement_ids'])):
@@ -100,8 +101,22 @@ def wood(captures: list[Capture], repo: Path) -> Check:
                 visible = capture.zoom>=2 and w>0 and h>0 and x<viewport[0] and y<viewport[1] and x+w>0 and y+h>0
                 if bool(label.get('visible')) != visible:
                     errors.append(f'{capture.stem}: stockpile label {ident} footprint visibility')
-            if label.get('wood_stock') != expected_stock or not re.search(r'(?:장작|Firewood)\s+'+str(expected_stock)+r'\b', label.get('text','')):
+            target = 0
+            targets = settlement.get('wood_targets', [])
+            if targets:
+                anchor = next(row for row in stockpiles if (int(row['tile_x']) << 32) | int(row['tile_y']) == ident)
+                index = min(range(len(settlement['settlement_ids'])), key=lambda i: max(abs(anchor['tile_x']-settlement['formation_xs'][i]), abs(anchor['tile_y']-settlement['formation_ys'][i])))
+                target = targets[index] if index < len(targets) else 0
+            suffix = f'{expected_stock}/{target}' if target > 0 else str(expected_stock)
+            pattern = r'(?:장작|Firewood)\s+' + re.escape(suffix) + r'(?![\d/])'
+            if label.get('wood_stock') != expected_stock or not re.search(pattern, label.get('text','')):
                 errors.append(f'{capture.stem}: stockpile {ident} wood label')
+            if target > 0 and (label.get('wood_target') != target or not split_labels):
+                errors.append(f'{capture.stem}: stockpile {ident} missing split target label')
+            if target > 0 and expected_stock < target:
+                tint = label.get('modulate', [])
+                if len(tint) < 3 or any(abs(a-b) > 0.001 for a,b in zip(tint[:3], (0.96,0.62,0.32), strict=True)):
+                    errors.append(f'{capture.stem}: stockpile {ident} shortage tint')
         woods = sum(settlement['wood_stocks'])
         hud = [label['text'] for label in data.get('labels',[]) if 'HudTopbar' in label.get('name','')]
         totals['hud'] += 1

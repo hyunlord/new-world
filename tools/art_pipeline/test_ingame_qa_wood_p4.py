@@ -90,3 +90,16 @@ class CompleteWoodEvidenceTests(unittest.TestCase):
     def test_missing_state_column_fails_instead_of_na(self):
         del self.data['agent_snapshot']['states']
         self.assertEqual(self.measure().status,'FAIL')
+
+    def test_split_label_target_and_tint(self):
+        self.data['settlement_snapshot']['wood_targets'] = [273]
+        self.data['entities'].extend([
+            {'kind':'building','id':2,'building_kind':2,'tile_x':1,'tile_y':1,'visible':True},
+            {'kind':'stockpile_label','id':(1<<32)|1,'text':'Food 5','shown':True,'visible':True,'rect':[0,0,40,20]},
+            {'kind':'stockpile_wood_label','id':(1<<32)|1,'wood_stock':1,'wood_target':273,'text':'Firewood 1/273','modulate':[0.96,0.62,0.32,1.0],'shown':True,'visible':True,'rect':[48,0,90,20]}])
+        self.assertEqual(self.measure().status,'PASS')
+        self.data['entities'][-1]['text'] = 'Firewood 1'
+        self.assertEqual(self.measure().status,'FAIL')
+        self.data['entities'][-1]['text'] = 'Firewood 1/273'
+        self.data['entities'][-1]['modulate'] = [1.0,1.0,1.0,1.0]
+        self.assertEqual(self.measure().status,'FAIL')

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5182,
+    "active_key_count": 5184,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5187,
+    "key_count": 5189,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1271,6 +1271,7 @@
     "HUD_ACTIVITY_LEGEND": "Activity markers",
     "HUD_ACTIVITY_OTHER": "Other target",
     "HUD_BERRIES": "Berries",
+    "HUD_COLD": "Cold",
     "HUD_DAY_FMT": "Day %d",
     "HUD_FEED_AGENT_BORN": "A child was born (population %d)",
     "HUD_FEED_DEATH_COMBAT": "A villager died in a fight",
@@ -1299,6 +1300,7 @@
     "INSPECTOR_AGE_FMT": "Age %d days",
     "INSPECTOR_CARRYING_FMT": "Carrying %d food",
     "INSPECTOR_CARRYING_WOOD_FMT": "Carrying %d wood",
+    "INSPECTOR_COLD": "Cold — the fire is out",
     "INSPECTOR_POS_FMT": "Position (%d, %d)",
     "INSPECTOR_STAGE_ADULT": "Adult",
     "INSPECTOR_STAGE_CHILD": "Child",

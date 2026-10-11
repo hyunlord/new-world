@@ -3,6 +3,7 @@ extends Node2D
 const TILE_SIZE: int = 16
 const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const RECONCILE_FRAMES: int = 30
+const WOOD_SHORT_TINT: Color = Color(0.96, 0.62, 0.32)
 const STOCKPILE_FOOD_KEY: String = "HUD_STOCKPILE_FOOD"
 const WOOD = preload("res://scripts/ui/wood_visuals.gd")
 const HASH = preload("res://scripts/ui/art_hash.gd")
@@ -238,9 +239,19 @@ func _update_stockpiles() -> void:
 			label.add_theme_constant_override("outline_size", 3)
 			add_child(label)
 			_labels[id] = label
+			var wood_label: Label = label.duplicate() as Label
+			wood_label.name = "Wood"
+			wood_label.set_meta("art_kind", "stockpile_wood_label")
+			label.add_child(wood_label)
 		label.text = (str(_locale.ltr(STOCKPILE_FOOD_KEY)) + " %d" % int(totals[nearest])) if _locale != null else str(int(totals[nearest]))
-		if woods.has(nearest):
-			label.text += " · " + (str(_locale.ltr("HUD_STOCKPILE_WOOD")) if _locale != null else "") + " %d" % int(woods[nearest])
+		var wood_label: Label = label.get_node("Wood") as Label
+		var target: int = wood_target(settlement_snapshot, nearest)
+		var stock: int = int(woods.get(nearest, 0))
+		wood_label.visible = woods.has(nearest)
+		wood_label.text = wood_caption(str(_locale.ltr("HUD_STOCKPILE_WOOD")) if _locale != null else "", stock, target)
+		wood_label.modulate = wood_tint(stock, target)
+		wood_label.set_meta("wood_stock", stock)
+		wood_label.set_meta("wood_target", target)
 		label.set_meta("food_stock", int(totals[nearest]))
 		label.set_meta("wood_stock", int(woods.get(nearest, -1)))
 		_label_anchors[id] = _tile_center(nearest.x, nearest.y) + Vector2(0, -18)
@@ -254,7 +265,11 @@ func _update_labels() -> void:
 		var label: Label = _labels[id] as Label
 		label.scale = Vector2.ONE / _camera.zoom
 		label.visible = _camera.zoom.x >= 2.0
+		var wood_label: Label = label.get_node("Wood") as Label
+		wood_label.position = Vector2(label.get_minimum_size().x + 8.0, 0.0)
 		var label_size: Vector2 = label.get_minimum_size()
+		if wood_label.visible:
+			label_size.x += 8.0 + wood_label.get_minimum_size().x
 		label.position = Vector2(_label_anchors[id]) - Vector2(label_size.x * 0.5, label_size.y) * label.scale
 
 func _hour() -> float:
@@ -436,3 +451,24 @@ static func prop_footprint_allowed(host: Vector2i, offset: Vector2, width: int, 
 			if tile != host and occupied.has(tile):
 				return false
 	return true
+
+static func wood_caption(caption: String, stock: int, target: int) -> String:
+	return caption + (" %d/%d" % [stock, target] if target > 0 else " %d" % stock)
+
+static func wood_tint(stock: int, target: int) -> Color:
+	return WOOD_SHORT_TINT if target > 0 and stock < target else Color.WHITE
+
+static func wood_target(snapshot: Dictionary, anchor: Vector2i) -> int:
+	var targets: Variant = snapshot.get("wood_targets")
+	var xs: Variant = snapshot.get("formation_xs")
+	var ys: Variant = snapshot.get("formation_ys")
+	if not (targets is PackedInt32Array and xs is PackedInt32Array and ys is PackedInt32Array):
+		return 0
+	var best_distance: int = 2147483647
+	var target: int = 0
+	for index: int in mini(targets.size(), mini(xs.size(), ys.size())):
+		var distance: int = maxi(absi(anchor.x - xs[index]), absi(anchor.y - ys[index]))
+		if distance < best_distance:
+			best_distance = distance
+			target = int(targets[index])
+	return target

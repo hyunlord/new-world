@@ -1,6 +1,8 @@
 class_name AgentActivity
 extends RefCounted
 
+const Cold = preload("res://scripts/ui/cold_effects.gd")
+
 static func snapshot_target(snapshot: Dictionary, index: int) -> int:
 	var targets: Variant = snapshot.get("target_kinds")
 	return int(targets[index]) if targets is PackedByteArray and index >= 0 and index < targets.size() else -1
@@ -81,6 +83,7 @@ static func elder_look(base: Dictionary, agent_id: int, life_stage: int) -> Dict
 
 static func build_frame_groups(entries: Dictionary) -> Dictionary:
 	var groups: Dictionary = {}
+	var audit_pages: Dictionary = {}
 	var names: Array = entries.keys()
 	names.sort()
 	for id: String in names:
@@ -95,6 +98,7 @@ static func build_frame_groups(entries: Dictionary) -> Dictionary:
 			groups[key] = []
 		var frame: Dictionary = entry.duplicate()
 		frame["sprite_id"] = id
+		frame["cold_audit_rejected"] = Cold.mark_audit(frame, audit_pages)
 		groups[key].append(frame)
 	for frames: Array in groups.values():
 		frames.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("frame", 0)) < int(b.get("frame", 0)))
@@ -124,6 +128,8 @@ static func _real_carry(entry: Dictionary, body: String) -> bool:
 static func choose_frame(groups: Dictionary, body: String, activity: String, facing: String, seconds: float, phase: float) -> Dictionary:
 	var view: String = "E" if facing == "W" else facing
 	var keys: Array[String] = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/idle/" + view]
+	if activity == "crossed":
+		keys = [body + "/crossed/" + view, body + "/crossed/S", body + "/sit/" + view, body + "/idle/" + view]
 	var wood: bool = activity in ["carry_wood", "gather_wood"]
 	if wood:
 		var fallback: String = "walk" if activity == "carry_wood" else "crouch"
@@ -140,6 +146,8 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 		var safe: Array[Dictionary] = []
 		for entry: Dictionary in groups.get(key, []):
 			if str(entry.get("body", "")) != body:
+				continue
+			if activity == "crossed" and bool(entry.get("cold_audit_rejected", false)):
 				continue
 			if real_carry and not _real_carry(entry,body):
 				continue

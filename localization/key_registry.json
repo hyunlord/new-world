@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5182,
-  "key_count": 5187,
+  "active_key_count": 5184,
+  "key_count": 5189,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -1233,6 +1233,7 @@
     "HUD_ACTIVITY_LEGEND": 5166,
     "HUD_ACTIVITY_OTHER": 5167,
     "HUD_BERRIES": 5143,
+    "HUD_COLD": 5187,
     "HUD_DAY_FMT": 5144,
     "HUD_FEED_AGENT_BORN": 5145,
     "HUD_FEED_DEATH_COMBAT": 5171,
@@ -1261,6 +1262,7 @@
     "INSPECTOR_AGE_FMT": 5180,
     "INSPECTOR_CARRYING_FMT": 5170,
     "INSPECTOR_CARRYING_WOOD_FMT": 5185,
+    "INSPECTOR_COLD": 5188,
     "INSPECTOR_POS_FMT": 5154,
     "INSPECTOR_STAGE_ADULT": 5181,
     "INSPECTOR_STAGE_CHILD": 5182,
@@ -10377,7 +10379,9 @@
     "INSPECTOR_STAGE_ELDER",
     "HUD_STOCKPILE_WOOD",
     "INSPECTOR_CARRYING_WOOD_FMT",
-    "INSPECTOR_TARGET_WOOD"
+    "INSPECTOR_TARGET_WOOD",
+    "HUD_COLD",
+    "INSPECTOR_COLD"
   ],
   "removed_key_count": 5,
   "removed_keys": [

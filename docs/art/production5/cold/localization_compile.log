@@ -1,0 +1,4 @@
+[localization_compile] owner-policy: entries=255 duplicate_keys=0 missing_for_duplicates=0 unused=0
+[localization_compile] ko: strings=5184 duplicates=0 duplicate_conflicts=0 owner_seen=0 owner_hits=0 owner_misses=0 owner_overrides=0 filled=0 updated=1 -> /Users/rexxa/work/new-world-art-prod/localization/compiled/ko.json
+[localization_compile] en: strings=5184 duplicates=0 duplicate_conflicts=0 owner_seen=0 owner_hits=0 owner_misses=0 owner_overrides=0 filled=0 updated=1 -> /Users/rexxa/work/new-world-art-prod/localization/compiled/en.json
+[localization_compile] report written: /Users/rexxa/work/new-world-art-prod/docs/art/production5/cold/localization_compile.json

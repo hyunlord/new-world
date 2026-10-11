@@ -1,6 +1,7 @@
 extends Node2D
 
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
+const Cold = preload("res://scripts/ui/cold_effects.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
@@ -128,6 +129,9 @@ func _process(delta: float) -> void:
 		var pose: String = Activity.camp_pose(activity, life_stage, agent_id, int(time.get("day_index", 0)), hour, bool(tile.get("near_camp", false)))
 		if bool(moments["meal"]):
 			pose = "eat"
+		var cold: bool = Cold.snapshot_cold(snap, i)
+		var base_pose: String = pose
+		pose = Cold.pose(pose, cold, moving)
 		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
 		var choice: Dictionary = frame_choice(body, pose, facing, float(look["phase"]))
 		var sprite_id: String = str(choice.get("sprite_id", ""))
@@ -148,15 +152,20 @@ func _process(delta: float) -> void:
 		sprite.set_meta("tile_y", int(ys[i]))
 		sprite.set_meta("activity", activity)
 		sprite.set_meta("pose", pose)
+		sprite.set_meta("cold_pose", str(choice.get("activity", pose)))
+		sprite.set_meta("cold_base_pose", base_pose)
+		sprite.set_meta("moving", moving)
 		sprite.set_meta("facing", facing)
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 		_update_activity_icon(agent_id, sprite, choice)
-		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "meal": bool(moments["meal"])})
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "cold": cold, "meal": bool(moments["meal"])})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
 		var agent_id: int = int(row["id"])
 		var sprite: Sprite2D = _sprites[agent_id]
+		Cold.apply(sprite, bool(row.get("cold", false)), bool(row["moving"]), agent_id, _animation_time)
+		sprite.set_meta("drawn_position", sprite.position)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
@@ -519,6 +528,8 @@ func has_drawn_position(agent_id: int) -> bool:
 	return _drawn_positions.has(agent_id)
 
 func get_drawn_position(agent_id: int) -> Vector2:
+	if _sprites.has(agent_id):
+		return (_sprites[agent_id] as Sprite2D).position
 	return Vector2(_drawn_positions.get(agent_id, Vector2.ZERO)).round()
 
 func drawn_entity_at(world_position: Vector2) -> int:

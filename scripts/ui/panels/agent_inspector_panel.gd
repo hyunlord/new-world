@@ -61,6 +61,7 @@ var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
 var _portrait: Sprite2D
+var _cold_label: Label
 var _carried_label: Label
 
 
@@ -94,6 +95,8 @@ func _ready() -> void:
 	_thirst_bar = _make_bar(_loc("NEED_THIRST"))
 	_sleep_bar = _make_bar(_loc("NEED_SLEEP"))
 	_carried_label = _make_label("")
+	_cold_label = _make_label("")
+	_cold_label.hide()
 
 
 func _make_label(text: String) -> Label:
@@ -164,6 +167,8 @@ func display_agent(detail: Dictionary) -> void:
 	_update_portrait(agent_id)
 	var carried_wood: int = _carried_amount(agent_id, "carried_woods")
 	_carried_label.text = (_loc("INSPECTOR_CARRYING_WOOD_FMT") % carried_wood) if carried_wood > 0 else (_loc("INSPECTOR_CARRYING_FMT") % _carried_food(agent_id))
+	_cold_label.text = _loc("INSPECTOR_COLD")
+	_cold_label.visible = _is_cold(agent_id)
 	visible = true
 
 
@@ -278,3 +283,17 @@ func _age_line(agent_id: int) -> String:
 			return ""
 		return "%s · %s" % [stage_label, age_format % age]
 	return ""
+
+func _is_cold(agent_id: int) -> bool:
+	if _world_sim == null:
+		return false
+	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	if not snapshot is Dictionary:
+		return false
+	var ids: Variant = snapshot.get("agent_ids")
+	var colds: Variant = snapshot.get("colds")
+	if ids is PackedInt64Array and colds is PackedByteArray:
+		for index: int in mini(ids.size(), colds.size()):
+			if ids[index] == agent_id:
+				return colds[index] == 1
+	return false
