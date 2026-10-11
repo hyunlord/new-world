@@ -283,6 +283,32 @@ pub struct FirewoodRule {
     /// Urgent mode: first minute of the firewood window while tonight's burn
     /// is not in hand (Pass 6). None = off.
     pub urgent_start_minute: Option<u32>,
+    /// Draw weights of a winter's severity (mild, normal, harsh), thousandths
+    /// summing to 1000 (Pass 7). None = every winter as Pass 6.
+    pub winter_severity_permille: Option<[u16; 3]>,
+    /// Winter burn per hour by severity; read only with weights (Pass 7).
+    pub winter_severity_burn_per_hour: [u16; 3],
+    /// Winter deadwood fall per day by severity; read only with weights and
+    /// `winter_regen_units_per_day` (Pass 7).
+    pub winter_severity_regen_units_per_day: [u32; 3],
+    /// A deadwood spot takes no more claims than the units it holds, and a
+    /// gatherer who has arrived keeps its claim until the pickup (Pass 7).
+    pub claims_bounded_by_amount: bool,
+    /// Night-by-night change of the winter burn per hour (Pass 8): a night
+    /// burns its rate + one of (-step, 0, +step), drawn per evening with these
+    /// weights (thousandths summing to 1000). Read only in a winter with
+    /// severity weights. None = every night at its severity's rate (v13).
+    pub winter_night_burn_permille: Option<[u16; 3]>,
+    /// Size of that change, burn units per hour (Pass 8).
+    pub winter_night_burn_step: u16,
+    /// Day-by-day change of the winter deadwood fall (Pass 8): the day's fall
+    /// is the severity's fall + an integer uniform in [-spread, +spread], floor
+    /// 0. Read only in a winter with severity weights; 0 = v13.
+    pub winter_fall_spread: u32,
+    /// Windfall lands on the snow (Pass 8): a winter windfall fills a spot up
+    /// to its max, and the snow burial runs only at the first regrowth pulse of
+    /// each winter. False = v13.
+    pub windfall_over_snow: bool,
 }
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -325,6 +351,46 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 8 village policies: v13 with winters that vary night by night and
+    /// day by day, and windfall that lands on the snow. v13 stays frozen.
+    pub const fn game_v14() -> Self {
+        let mut rules = Self::game_v13();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2 (variant C of section 3.3): severity weights 35 / 40 / 25 %
+            // with v13's burns (2 / 3 / 4) and falls (8 / 6 / 4); each winter
+            // night burns its rate -2, +0 or +2 an hour (25 / 50 / 25 %, drawn
+            // per evening, floor 1); each winter day's fall is the severity's
+            // +-2 (uniform, floor 0); windfall lands on the snow.
+            firewood.winter_severity_permille = Some([350, 400, 250]);
+            firewood.winter_night_burn_permille = Some([250, 500, 250]);
+            firewood.winter_night_burn_step = 2;
+            firewood.winter_fall_spread = 2;
+            firewood.windfall_over_snow = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
+    }
+
+    /// Pass 7 village policies: v12 with winters of drawn severity and claims
+    /// bounded by what a deadwood spot holds. v12 stays frozen.
+    pub const fn game_v13() -> Self {
+        let mut rules = Self::game_v12();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2: a winter is mild, normal or harsh; mild burns 2 an hour
+            // with 8 branches a day, normal is Pass 6 (3 and 6), harsh burns 4
+            // with 4 branches. A spot takes no more claims than the units it
+            // holds, and an arrived gatherer keeps its claim. Part 5 round 2:
+            // weights 52 / 28 / 20 % (start values 30 / 40 / 30 failed Y3 in
+            // one seed).
+            firewood.winter_severity_permille = Some([520, 280, 200]);
+            firewood.winter_severity_burn_per_hour = [2, 3, 4];
+            firewood.winter_severity_regen_units_per_day = [8, 6, 4];
+            firewood.claims_bounded_by_amount = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
+    }
+
     /// Pass 6 village policies: v11 with an autumn wood season, a lean winter,
     /// urgent mornings and elders at the evening fire. v11 stays frozen.
     pub const fn game_v12() -> Self {
@@ -402,6 +468,16 @@ impl WorldRules {
             winter_deadwood_cap: None,
             night_season_from_evening: false,
             urgent_start_minute: None,
+            // Pass 7 fields at the values that reproduce Pass 6 in v12.
+            winter_severity_permille: None,
+            winter_severity_burn_per_hour: [3, 3, 3],
+            winter_severity_regen_units_per_day: [6, 6, 6],
+            claims_bounded_by_amount: false,
+            // Pass 8 fields at the values that reproduce Pass 7 in v12 and v13.
+            winter_night_burn_permille: None,
+            winter_night_burn_step: 0,
+            winter_fall_spread: 0,
+            windfall_over_snow: false,
         });
         rules.agent.preempt_gathering = true;
         rules
@@ -634,6 +710,87 @@ mod tests {
             aging.elder_evening_tether = old.elder_evening_tether;
         }
         assert_eq!(v12, v11);
+    }
+
+    #[test]
+    fn game_v13_sets_the_pass7_fields() {
+        let rule = WorldRules::game_v13().society.firewood.expect("v13 firewood");
+        let weights = rule.winter_severity_permille.expect("v13 draws severity");
+        assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        // Normal severity is Pass 6's winter.
+        let v12 = WorldRules::game_v12().society.firewood.expect("v12 firewood");
+        assert_eq!(rule.winter_severity_burn_per_hour[1], v12.burn_per_hour[3]);
+        assert_eq!(Some(rule.winter_severity_regen_units_per_day[1]), v12.winter_regen_units_per_day);
+        assert!(rule.claims_bounded_by_amount);
+    }
+
+    #[test]
+    fn game_v13_is_v12_plus_pass7_fields() {
+        let v12 = WorldRules::game_v12();
+        let mut v13 = WorldRules::game_v13();
+        let (Some(old), Some(new)) = (v12.society.firewood, v13.society.firewood.as_mut()) else {
+            panic!("v12 and v13 both keep the firewood rule");
+        };
+        // Only the Pass 7 fields and the Pass 7 knob `cold_hunger_permille` may differ.
+        new.winter_severity_permille = old.winter_severity_permille;
+        new.winter_severity_burn_per_hour = old.winter_severity_burn_per_hour;
+        new.winter_severity_regen_units_per_day = old.winter_severity_regen_units_per_day;
+        new.claims_bounded_by_amount = old.claims_bounded_by_amount;
+        new.cold_hunger_permille = old.cold_hunger_permille;
+        assert_eq!(v13, v12);
+    }
+
+    #[test]
+    fn pass7_firewood_fields_reproduce_pass6_in_v11_and_v12() {
+        for rules in [WorldRules::game_v11(), WorldRules::game_v12()] {
+            let rule = rules.society.firewood.expect("firewood");
+            assert_eq!(rule.winter_severity_permille, None);
+            assert_eq!(rule.winter_severity_burn_per_hour, [3, 3, 3]);
+            assert_eq!(rule.winter_severity_regen_units_per_day, [6, 6, 6]);
+            assert!(!rule.claims_bounded_by_amount);
+        }
+    }
+
+    #[test]
+    fn pass8_firewood_fields_reproduce_pass7_in_v11_to_v13() {
+        for rules in [WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13()] {
+            let rule = rules.society.firewood.expect("firewood");
+            assert_eq!(rule.winter_night_burn_permille, None);
+            assert_eq!(rule.winter_night_burn_step, 0);
+            assert_eq!(rule.winter_fall_spread, 0);
+            assert!(!rule.windfall_over_snow);
+        }
+    }
+
+    #[test]
+    fn game_v14_sets_the_pass8_fields() {
+        let rule = WorldRules::game_v14().society.firewood.expect("v14 firewood");
+        let night = rule.winter_night_burn_permille.expect("v14 draws night burns");
+        assert_eq!(night.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        let weights = rule.winter_severity_permille.expect("v14 draws severity");
+        assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        assert!(rule.winter_night_burn_step > 0);
+        assert!(rule.winter_fall_spread > 0);
+        assert!(rule.windfall_over_snow);
+    }
+
+    #[test]
+    fn game_v14_is_v13_plus_pass8_fields() {
+        let v13 = WorldRules::game_v13();
+        let mut v14 = WorldRules::game_v14();
+        let (Some(old), Some(new)) = (v13.society.firewood, v14.society.firewood.as_mut()) else {
+            panic!("v13 and v14 both keep the firewood rule");
+        };
+        // Only the Pass 8 fields and the Part 4 knobs (severity weights, burns
+        // and falls) may differ.
+        new.winter_night_burn_permille = old.winter_night_burn_permille;
+        new.winter_night_burn_step = old.winter_night_burn_step;
+        new.winter_fall_spread = old.winter_fall_spread;
+        new.windfall_over_snow = old.windfall_over_snow;
+        new.winter_severity_permille = old.winter_severity_permille;
+        new.winter_severity_burn_per_hour = old.winter_severity_burn_per_hour;
+        new.winter_severity_regen_units_per_day = old.winter_severity_regen_units_per_day;
+        assert_eq!(v14, v13);
     }
 
     #[test]

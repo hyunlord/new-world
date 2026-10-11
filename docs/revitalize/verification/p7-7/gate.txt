@@ -1,0 +1,19 @@
+head 6df3a7e0924bfd3d90de847bafa144d909ebacf3
+started 2026-10-11 15:28:20 KST
+prepare_bridge exit 0
+prepare_import exit 0
+test_debug exit 0
+test_debug passed 1987 failed 0 ignored 0
+test_release exit 0
+test_release passed 1987 failed 0 ignored 0
+clippy exit 0
+clippy_all_targets exit 0
+forbidden_math exit 0
+bridge_build exit 0
+godot_import exit 0
+strict_check exit 0
+smoke exit 0
+smoke_errors none
+python_unittest exit 0
+python_worldmodel exit 0
+finished 2026-10-11 15:38:31 KST status 0

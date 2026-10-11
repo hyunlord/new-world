@@ -46,6 +46,35 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     }
     let fire_lit = !settlements.is_empty()
         && settlements.iter().all(|sid| r.fires.get(sid).is_some_and(|fire| fire.lit));
+    let WorkCounts { cold, critical, idle, adults, working, alive } = work_counts(engine, &homes);
+    let t = r.tallies;
+    json!({"meals_from_store_total": t.meals_from_store, "ground_meals_total": t.ground_meals,
+        "wood_stock": wood_stock, "wood_target": target, "wood_in_hand": in_hand,
+        "fire_lit": u64::from(fire_lit), "cold_members": cold,
+        "cold_member_hours_total": t.cold_member_hours, "wood_trips_total": t.wood_trips,
+        "wood_gathered_total": t.wood_gathered,
+        "deadwood_total": r.wood_tiles.values().map(|v| u64::from(*v)).sum::<u64>(),
+        "gather_preempted_total": t.gather_preempted, "gather_seekers_critical": critical,
+        "adult_work_share": share(working, adults), "idle_share": share(idle, alive)})
+}
+
+/// Counts behind the schema-five work and cold keys, from residents in
+/// AgentId order: `Cold` markers, critical gatherers, idle residents not
+/// hauling, settlement adults (neither child nor elder), those adults at work
+/// (the numerator of `adult_work_share`) and all residents.
+pub(crate) struct WorkCounts {
+    pub(crate) cold: u64,
+    pub(crate) critical: u64,
+    pub(crate) idle: u64,
+    pub(crate) adults: u64,
+    pub(crate) working: u64,
+    pub(crate) alive: u64,
+}
+
+/// [`WorkCounts`] of `engine`; `homes` maps each member to its settlement's
+/// formation tile (first settlement in id order).
+pub(crate) fn work_counts(engine: &SimEngine, homes: &BTreeMap<u64, (u32, u32)>) -> WorkCounts {
+    let r = &engine.resources;
     let forage = r.rules.agent.forage.filter(|_| r.rules.society.stock_target.is_some());
     let firewood = r.rules.society.firewood;
     let forage_window = forage.is_some_and(|rule| clock_in_window(r, rule.start_minute, rule.end_minute));
@@ -94,15 +123,23 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
             working += u64::from(at_work || hauling);
         }
     }
-    let t = r.tallies;
-    json!({"meals_from_store_total": t.meals_from_store, "ground_meals_total": t.ground_meals,
-        "wood_stock": wood_stock, "wood_target": target, "wood_in_hand": in_hand,
-        "fire_lit": u64::from(fire_lit), "cold_members": cold,
-        "cold_member_hours_total": t.cold_member_hours, "wood_trips_total": t.wood_trips,
-        "wood_gathered_total": t.wood_gathered,
-        "deadwood_total": r.wood_tiles.values().map(|v| u64::from(*v)).sum::<u64>(),
-        "gather_preempted_total": t.gather_preempted, "gather_seekers_critical": critical,
-        "adult_work_share": share(working, adults), "idle_share": share(idle, alive)})
+    WorkCounts { cold, critical, idle, adults, working, alive }
+}
+
+/// Settlement members mapped to their formation tile (first settlement in id order).
+pub(crate) fn member_homes(engine: &SimEngine) -> BTreeMap<u64, (u32, u32)> {
+    let r = &engine.resources;
+    let mut settlements: Vec<_> = r.settlements.keys().copied().collect();
+    settlements.sort_unstable();
+    let mut homes = BTreeMap::new();
+    for sid in &settlements {
+        if let Some(settlement) = r.settlements.get(sid) {
+            for id in &settlement.member_agents {
+                homes.entry(*id).or_insert(settlement.formation_tile);
+            }
+        }
+    }
+    homes
 }
 
 #[cfg(test)]

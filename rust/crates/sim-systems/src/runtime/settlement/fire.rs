@@ -18,6 +18,19 @@
 //! Pass 6: under `night_season_from_evening` the burn rate and the cold check
 //! use the season of the evening the night began (`firewood::night_season`),
 //! so the last winter night stays a winter night until the burn window ends.
+//!
+//! Pass 7: in a winter of drawn severity the hourly rate is
+//! `winter_severity_burn_per_hour[level]` of the night's winter
+//! (`firewood::winter_burn_per_hour` at the evening's tick). Two interventions
+//! act here: rain (`fire_blocked_until`) keeps a settlement's fire out without
+//! burning wood, and a cold snap flags the night (`cold_snap_tonight`, set at
+//! the first run inside the burn window while `cold_snap_nights > 0`, cleared
+//! with one night counted off at the first run outside it): the fire burns one
+//! more unit an hour and an unlit hearth leaves its members cold in any season.
+//!
+//! Pass 8: the hourly rate is `firewood::night_rate`, which adds the night's
+//! drawn change (`night_burn_delta` of the evening, floor 1) when night weights
+//! are set; the probe and the recorder read the same helper.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -26,7 +39,7 @@ use sim_core::components::{Agent, AgentId, Cold, ResourceKind, SettlementId};
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
 use crate::runtime::decision::agent_decision::clock_in_window;
-use crate::runtime::settlement::firewood::night_season;
+use crate::runtime::settlement::firewood::{night_rate, night_season};
 
 /// Winter index of `SeasonRule` seasons.
 const WINTER: usize = 3;
@@ -60,14 +73,29 @@ impl RuntimeSystem for FireSystem {
             return;
         };
         let burning = clock_in_window(resources, rule.burn_start_minute, rule.burn_end_minute);
+        // Pass 7 cold snap: flag the night from the first run inside the burn
+        // window; count it off at the first run outside it.
+        if burning && !resources.cold_snap_tonight && resources.cold_snap_nights > 0 {
+            resources.cold_snap_tonight = true;
+        } else if !burning && resources.cold_snap_tonight {
+            resources.cold_snap_tonight = false;
+            resources.cold_snap_nights = resources.cold_snap_nights.saturating_sub(1);
+        }
+        let snap = resources.cold_snap_tonight;
         // The night's season: the current season, or (Pass 6) the evening's.
         let season = night_season(resources, &rule);
-        let per_hour = u32::from(rule.burn_per_hour[season]);
+        // Pass 7: the night's rate, the severity of its winter included;
+        // Pass 8: the night's drawn change too (`night_rate`, cold snap included).
+        let per_hour = night_rate(resources, &rule, resources.current_tick);
+        let now = resources.current_tick;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut fires = BTreeMap::new();
         for sid in &ids {
+            // Pass 7 rain: the fire stays out and burns nothing.
+            let raining = resources.fire_blocked_until.get(sid).is_some_and(|until| now < *until);
             let lit = burning
+                && !raining
                 && resources
                     .settlements
                     .get_mut(sid)
@@ -76,8 +104,7 @@ impl RuntimeSystem for FireSystem {
         }
         resources.fires = fires;
 
-        let cold_night = resources.rules.seasons.is_some()
-            && season == WINTER
+        let cold_night = ((resources.rules.seasons.is_some() && season == WINTER) || snap)
             && clock_in_window(resources, rule.cold_start_minute, rule.cold_end_minute);
         let mut cold: BTreeSet<AgentId> = BTreeSet::new();
         if cold_night {

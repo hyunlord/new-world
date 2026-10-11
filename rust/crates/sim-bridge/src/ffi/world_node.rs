@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v12(DEFAULT_GAME_SEED),
-                WorldRules::game_v12(),
+                &WorldGenConfig::game_v14(DEFAULT_GAME_SEED),
+                WorldRules::game_v14(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v12(self.world_seed),
-            WorldRules::game_v12(),
+            &WorldGenConfig::game_v14(self.world_seed),
+            WorldRules::game_v14(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -267,6 +267,16 @@ impl WorldSimNode {
     #[func]
     fn get_tallies(&self) -> VarDictionary {
         tallies_to_dict(collect_tallies(&self.engine.resources))
+    }
+
+    /// Revitalize Pass 7 — the god's hand: apply one intervention now, between
+    /// ticks. `kind` is one of `gift_food`, `spoil_food`, `gift_wood`,
+    /// `rot_wood`, `rain`, `cold_snap`, `windfall`; `settlement_id < 0` means
+    /// home (the lowest settlement id now); `amount` is hours for rain, nights
+    /// for a cold snap and units otherwise. Returns `{ok, applied, tick}`.
+    #[func]
+    fn apply_intervention(&mut self, kind: GString, settlement_id: i64, amount: i64) -> VarDictionary {
+        intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
     }
 
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
@@ -2640,6 +2650,10 @@ pub struct TimeSnapshot {
     pub day_of_season: u32,
     /// Days per season (0 without seasons).
     pub days_per_season: u32,
+    /// Pass 7 severity of the winter at the completed tick: 0 mild, 1 normal,
+    /// 2 harsh, -1 outside a winter or without the rule or weights; from 00:00
+    /// to the burn end it reads the evening's winter (night booking).
+    pub winter_severity: i64,
 }
 
 /// Read the completed tick count and clock resources without mutation.
@@ -2660,7 +2674,76 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
         season,
         day_of_season,
         days_per_season,
+        winter_severity: sim_systems::runtime::settlement::firewood::winter_severity_at(
+            &engine.resources,
+            engine.current_tick(),
+        ),
     }
+}
+
+/// Pass 7: build an intervention from the FFI arguments. `None` for an
+/// unknown kind, a negative amount, or a settlement kind with no settlement
+/// (`settlement_id < 0` and no `home`, or an id beyond `u32`). `amount` above
+/// `u32::MAX` saturates. `cold_snap` and `windfall` ignore the settlement.
+pub fn parse_intervention(
+    kind: &str,
+    settlement_id: i64,
+    amount: i64,
+    home: Option<sim_core::components::SettlementId>,
+) -> Option<sim_engine::Intervention> {
+    use sim_systems::runtime::intervention::{intervention_from_kind, kind_needs_settlement};
+    if amount < 0 {
+        return None;
+    }
+    let amount = u32::try_from(amount).unwrap_or(u32::MAX);
+    let settlement = if !kind_needs_settlement(kind) {
+        0
+    } else if settlement_id < 0 {
+        home?
+    } else {
+        sim_core::components::SettlementId::try_from(settlement_id).ok()?
+    };
+    intervention_from_kind(kind, settlement, amount)
+}
+
+/// Pass 7: result of the `apply_intervention` command.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InterventionReply {
+    /// False for an unknown kind, a negative amount or no settlement.
+    pub ok: bool,
+    /// What the intervention changed (0 when nothing changed or not `ok`).
+    pub applied: u64,
+    /// Completed ticks when it was applied.
+    pub tick: u64,
+}
+
+/// Pass 7: parse and apply one intervention now (the `#[func]` body). `ok` is
+/// false when parsing fails or a settlement kind names a settlement that does
+/// not exist.
+pub fn apply_intervention_command(engine: &mut SimEngine, kind: &str, settlement_id: i64, amount: i64) -> InterventionReply {
+    use sim_systems::runtime::intervention::{home_settlement, kind_needs_settlement};
+    let home = home_settlement(&engine.resources);
+    // Review round 1 (L3): an explicit settlement id that does not exist is "no settlement".
+    let parsed = parse_intervention(kind, settlement_id, amount, home).filter(|_| {
+        !kind_needs_settlement(kind)
+            || settlement_id < 0
+            || u32::try_from(settlement_id).is_ok_and(|id| engine.resources.settlements.contains_key(&id))
+    });
+    match parsed {
+        Some(intervention) => {
+            let record = sim_systems::runtime::intervention::apply_intervention(engine, intervention);
+            InterventionReply { ok: true, applied: record.applied, tick: record.tick }
+        }
+        None => InterventionReply { ok: false, applied: 0, tick: engine.current_tick() },
+    }
+}
+
+fn intervention_reply_to_dict(reply: InterventionReply) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("ok", reply.ok);
+    dict.set("applied", reply.applied as i64);
+    dict.set("tick", reply.tick as i64);
+    dict
 }
 
 /// Read the cumulative counters without depending on event retention.
@@ -2677,6 +2760,7 @@ fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
     dict.set("season", snapshot.season as i64);
     dict.set("day_of_season", snapshot.day_of_season as i64);
     dict.set("days_per_season", snapshot.days_per_season as i64);
+    dict.set("winter_severity", snapshot.winter_severity);
     dict
 }
 
@@ -2747,6 +2831,58 @@ mod revitalize_tooling_tests {
     }
 
     #[test]
+    fn time_snapshot_reports_winter_severity_with_night_booking() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v12();
+        // v12 has no severity weights: -1 everywhere, winter included.
+        advance_engine_ticks(&mut engine, (21 * 1440) as i64);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+        if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
+            rule.winter_severity_permille = Some([1000, 0, 0]);
+        }
+        // Display day 21 at 08:00: the first winter day, a mild winter.
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, 0);
+        // Display day 28 at 02:00 belongs to the last winter evening.
+        advance_engine_ticks(&mut engine, (7 * 1440 - 360) as i64);
+        let night = collect_time_snapshot(&engine);
+        assert_eq!((night.day_index, night.season, night.winter_severity), (28, 0, 0));
+        // 07:00 ends the night: spring.
+        advance_engine_ticks(&mut engine, 300);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+    }
+
+    #[test]
+    fn parse_intervention_resolves_home_and_rejects_bad_input() {
+        use sim_engine::Intervention;
+        assert_eq!(super::parse_intervention("gift_food", -1, 30, Some(4)), Some(Intervention::GiftFood { settlement: 4, amount: 30 }));
+        assert_eq!(super::parse_intervention("rain", 7, 13, Some(4)), Some(Intervention::Rain { settlement: 7, hours: 13 }));
+        assert_eq!(super::parse_intervention("cold_snap", -1, 2, None), Some(Intervention::ColdSnap { nights: 2 }));
+        assert_eq!(super::parse_intervention("windfall", -5, 10, None), Some(Intervention::Windfall { units: 10 }));
+        assert_eq!(super::parse_intervention("flood", -1, 1, Some(4)), None);
+        assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
+        assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
+        assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
+    }
+
+    #[test]
+    fn apply_intervention_command_reports_ok_applied_and_tick() {
+        use super::apply_intervention_command;
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        advance_engine_ticks(&mut engine, 3);
+        let none = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((none.ok, none.applied, none.tick), (false, 0, 3));
+        engine.resources.settlements.insert(2, sim_core::components::Settlement::new_with_id(2, 0));
+        let gift = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((gift.ok, gift.applied, gift.tick), (true, 5, 3));
+        let missing = apply_intervention_command(&mut engine, "rain", 9, 5);
+        assert_eq!((missing.ok, missing.applied), (false, 0));
+        let snap = apply_intervention_command(&mut engine, "cold_snap", -1, 1);
+        assert_eq!((snap.ok, snap.applied), (true, 1));
+        assert_eq!(engine.resources.tallies.interventions_applied, 2);
+        assert_eq!(engine.resources.intervention_log.len(), 2);
+    }
+
+    #[test]
     fn time_snapshot_handles_disabled_clock() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.ticks_per_day = 0;
@@ -2781,6 +2917,8 @@ mod revitalize_tooling_tests {
             cold_member_hours: 0,
             urgent_wood_trips: 0,
             winter_wood_lost: 0,
+            wood_retargets: 0,
+            interventions_applied: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);
