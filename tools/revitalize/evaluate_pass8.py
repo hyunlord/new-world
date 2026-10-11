@@ -295,9 +295,15 @@ def evaluate(short: Round, long: Round, receipts: dict[str, bool], v11: dict | N
     pass6 = evaluate_pass6(short, long, None, {}, None, v11, cold_window)
     per_seed = per_seed_values(short, long, cold_window)
     result = {}
+    def twins(r: Round, sizes: tuple[int, ...]) -> dict:
+        declared = r.summary["seeds"]["end_exclusive"] - r.summary["seeds"]["start"]
+        return clause(r.summary["determinism_checked"] and len(r.seeds) == declared and declared in sizes,
+                      {"seeds": len(r.seeds), "range": r.summary["seeds"]},
+                      f"every seed of the set ({' or '.join(map(str, sizes))}), determinism checked")
     result["X1"] = target({
-        "twins_10": clause(short.summary["determinism_checked"] and len(short.seeds) == 64, len(short.seeds), "64 seeds, determinism checked"),
-        "twins_120": clause(long.summary["determinism_checked"] and len(long.seeds) == 32, len(long.seeds), "32 seeds, determinism checked"),
+        # Tuning sets are 64 x 10 and 32 x 120; held-out and fresh sets 64 x 10 and 64 x 120.
+        "twins_10": twins(short, (64,)),
+        f"twins_{long.duration}": twins(long, (32, 64)),
         **{name: clause(receipts.get(name, False), receipts.get(name, False), f"{name} verified externally") for name in RECEIPTS},
     })
     clauses = {f"Y2_{k}": c for k, c in pass6["Y2"]["clauses"].items()}

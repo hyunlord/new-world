@@ -1824,3 +1824,61 @@ Round 1 per target (median / min / max where useful):
 - By severity: mild (52) dark 0/1/2 = 44/6/2, night burn 2.29 (the floor of 1 lifts mild's −2 nights), fall 8.14, food at winter's end 246 (min 184); normal (50) 17/20/9/3/1, food 232.5 (min 41); harsh (26) 1/4/4/13/4, food 228.5 (min 48).
 
 Tuning stops at round 1 (1 of 3 rounds): every tunable target passes; `game_v14()` keeps the start values.
+
+## Pass 8 Part 5 — the held-out look (once)
+
+`p8-5_heldout_v14_10day` (game_v14 64..128 × 10) and `p8-5_heldout_v14_120day` (32..96 × 120), `probe_p2` (`4ab0778a`, `game_v14()` = round 1), `--check-determinism`, the eight clocks, run 18:44–18:52 KST: both DETERMINISM PASS. Evaluation `p8-5_heldout_v14_targets` in comparison mode against `p8-1_v12_heldout_targets`. **X2, X3, X4 and X5 pass on the held-out seeds**; no corrective round (10.3) is needed, so the fresh seeds are not used. X1's determinism clauses pass (64/64 and 64/64; see DECISIONS for the evaluator fix of the 120-day seed count); its repro receipts, X6, X7 and X8 are Part 7's.
+
+### X targets, tuning and held-out, v12 / v13 / v14
+
+v12 is evaluated in absolute mode (it is the reference; its held-out X2 'FAIL' is its own failing seeds), v13 and v14 in comparison mode against v12 on the same seeds. v12 has no severity, so its X3 values describe the Pass 6 calendar.
+
+| Measure | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| X2 verdict | PASS | PASS | PASS | FAIL | PASS | PASS |
+| X3 verdict | FAIL | FAIL | PASS | FAIL | FAIL | PASS |
+| X3a severity-only R² | — (no severity) | 0.943 | 0.530 | — (no severity) | 0.943 | 0.602 |
+| X3b normal mode share | — | 0.973 | 0.400 | — | 0.954 | 0.444 |
+| X3b harsh mode share | — | 0.571 | 0.500 | — | 0.513 | 0.543 |
+| X3c no-dark-night share | 0.031 | 0.547 | 0.484 | 0.023 | 0.594 | 0.574 |
+| X3d ≥ 2 dark share | 0.039 | 0.172 | 0.281 | 0.031 | 0.164 | 0.281 |
+| X3e first dark night distinct / 7th share | 2 / 0.960 | 3 / 0.621 | 4 / 0.424 | 2 / 0.968 | 3 / 0.596 | 4 / 0.339 |
+| X3f shares m/n/h | 0.000/0.000/0.000 | 0.547/0.289/0.164 | 0.406/0.391/0.203 | 0.000/0.000/0.000 | 0.594/0.254/0.152 | 0.398/0.422/0.180 |
+| X4 verdict | FAIL | PASS | PASS | FAIL | PASS | PASS |
+| X4 re-target share median | 0.514 | 0.050 | 0.055 | 0.516 | 0.051 | 0.051 |
+| X4 normal gathered median | 0.0 | 45.0 | 48.0 | 0.0 | 45.0 | 48.0 |
+| X5 verdict | PASS | PASS | PASS | PASS | PASS | PASS |
+| Y7 winter lit median | 0.857 | 0.893 | 0.857 | 0.857 | 0.929 | 0.893 |
+| Y8 winter cold median | 0.152 | 0.103 | 0.139 | 0.143 | 0.089 | 0.125 |
+| Y8 winter food median | 246.5 | 242.5 | 237.5 | 242.5 | 238.0 | 234.5 |
+| Y6 trips median | 96 | 46 | 48 | 96 | 46 | 48 |
+| Y2 starvation+dehydration (120 d max) | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Per-seed clauses — failing seeds (value); every clause not listed has no failing seed in any column:
+
+| Clause | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| Y10_evening_near_hearth_every_seed | none | none | none | 55 (0.267), 75 (0.344) | 55 (0.281), 76 (0.344) | 55 (0.281), 79 (0.344) |
+| Y3_replacement | none | none | none | 80 (-4.0) | 68 (-4.0), 80 (-4.0) | 80 (-4.0) |
+
+Distributions (median / p10 / p90 / min / max) of the per-seed values:
+
+| Clause | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| Y3_stagnation | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 3 | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 2 | 0 / 0 / 0 / 0 / 4 |
+| Y3_replacement | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -4 / 1 | 0 / -1 / 0 / -4 / 1 | 0 / -1 / 0 / -4 / 1 |
+| Y7_winter_lit_every_seed | 0.857 / 0.821 / 0.889 / 0.821 / 0.893 | 0.893 / 0.825 / 0.964 / 0.714 / 1 | 0.857 / 0.786 / 0.929 / 0.607 / 0.964 | 0.857 / 0.821 / 0.857 / 0.821 / 0.929 | 0.929 / 0.821 / 0.964 / 0.75 / 1 | 0.893 / 0.75 / 0.964 / 0.571 / 1 |
+| Y8_winter_cold_every_seed | 0.152 / 0.116 / 0.178 / 0.0982 / 0.196 | 0.103 / 0.0358 / 0.187 / 0 / 0.301 | 0.139 / 0.0813 / 0.221 / 0.0268 / 0.383 | 0.143 / 0.125 / 0.185 / 0.0894 / 0.188 | 0.0891 / 0.0268 / 0.197 / 0 / 0.241 | 0.125 / 0.0268 / 0.263 / 0 / 0.438 |
+| Y10_evening_near_hearth_every_seed | 0.64 / 0.433 / 0.807 / 0.368 / 0.864 | 0.643 / 0.416 / 0.791 / 0.353 / 0.852 | 0.648 / 0.421 / 0.793 / 0.379 / 0.885 | 0.655 / 0.387 / 0.825 / 0.267 / 0.926 | 0.662 / 0.384 / 0.826 / 0.281 / 0.944 | 0.658 / 0.38 / 0.827 / 0.281 / 0.931 |
+| Y11_home_distance_every_seed | 7.68 / 5.91 / 8.8 / 4.79 / 11.3 | 7.62 / 5.82 / 9.07 / 4.79 / 11.3 | 7.62 / 5.82 / 9.07 / 4.79 / 11.3 | 6.85 / 5.45 / 8.5 / 3.93 / 10.1 | 6.92 / 5.41 / 8.53 / 4.05 / 10.1 | 6.92 / 5.41 / 8.53 / 4.05 / 10.1 |
+
+### Dark nights by severity (seed-winters: tuning 128, held-out 256)
+
+| Set | Ruleset | mild: dark 0/1/2/3/4 | normal | harsh | first dark night 4/5/6/7 | night burn by severity (median) | fall by severity (median) |
+|---|---|---|---|---|---|---|---|
+| tuning | v13 | 70/0/0/0/0 | 0/36/1/0/0 | 0/0/12/9/0 | 0/9/13/36 | 2.00/3.00/4.00 | 8.00/6.00/4.00 |
+| tuning | v14 | 44/6/2/0/0 | 17/20/9/3/1 | 1/4/4/13/4 | 5/18/15/28 | 2.29/3.00/4.29 | 8.14/6.00/4.21 |
+| held-out | v13 | 152/0/0/0/0 | 0/62/3/0/0 | 0/0/19/20/0 | 0/20/22/62 | 2.00/3.00/4.00 | 8.00/6.00/4.00 |
+| held-out | v14 | 98/3/1/0/0 | 48/31/19/10/0 | 1/3/11/25/6 | 6/36/30/37 | 2.14/3.00/4.00 | 8.14/6.00/4.00 |
+
+Held-out v14 against tuning v14: R² 0.602 (tuning 0.530), no dark night 0.574 (0.484), ≥ 2 dark 0.281 (0.281), first dark night on 4 nights with 0.339 on the seventh (0.424); severity shares 0.398 / 0.422 / 0.180 against weights 0.35 / 0.40 / 0.25 (within 0.07). Per-seed clauses: v14 fails Y3 replacement in seed 80 (−4; v12 the same seed, v13 seeds 68 and 80) and Y10 evening near hearth in seeds 55 (0.281) and 79 (0.344) (v12: 55 and 75; v13: 55 and 76) — counts 1 ≤ 1 + 1 and 2 ≤ 2 + 1, so X2 passes in comparison mode. No starvation or dehydration death in any seed. Seed 80's replacement margin is −4 under all three rulesets: a weak village independent of the winter rule, as the planner found.

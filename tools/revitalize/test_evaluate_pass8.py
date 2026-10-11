@@ -165,6 +165,13 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(main(args + ["--out", str(self.root / "out4"), "--compare-to", str(self.root / "other.json")]), 2)
         self.assertEqual(main(args + ["--out", str(self.root / "out5"), "--severity-permille", "300,300,300"]), 2)
 
+    def test_x1_accepts_the_held_out_set_of_64_long_seeds(self) -> None:
+        short = load_round(write_round(self.root / "h10", 64, 10, False), 10)
+        for seeds, ok in ((64, True), (32, True), (48, False)):
+            long = load_round(write_round(self.root / f"h120_{seeds}", seeds, 120, True), 120)
+            result, _ = evaluate(short, long, RECEIPTS, p6.V11, (350, 400, 250))
+            self.assertEqual(result["X1"]["clauses"]["twins_120"]["passed"], ok, seeds)
+
     def test_schema_seven_rounds_are_invalid_evidence(self) -> None:
         with self.assertRaises(EvidenceError):
             load_round(p7.write_round(self.root / "bad", 2, 10, False), 10)

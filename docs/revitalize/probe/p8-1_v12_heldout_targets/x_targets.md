@@ -4,8 +4,8 @@ Values: median / p10 / p90 / min / max. Y9 is reported only. Severity weights No
 
 | Target | Clause | Verdict | Requirement | Observed |
 |---|---|---|---|---|
-| X1 | twins_10 | PASS | 64 seeds, determinism checked | 64 |
-| X1 | twins_120 | FAIL | 32 seeds, determinism checked | 64 |
+| X1 | twins_10 | PASS | every seed of the set (64), determinism checked | {"range": {"end_exclusive": 128, "start": 64}, "seeds": 64} |
+| X1 | twins_120 | PASS | every seed of the set (32 or 64), determinism checked | {"range": {"end_exclusive": 96, "start": 32}, "seeds": 64} |
 | X1 | legacy_pin | FAIL | legacy_pin verified externally | false |
 | X1 | v8_repro | FAIL | v8_repro verified externally | false |
 | X1 | v9_repro | FAIL | v9_repro verified externally | false |

@@ -1041,14 +1041,26 @@
           "requirement": "legacy_pin verified externally"
         },
         "twins_10": {
-          "observed": 64,
+          "observed": {
+            "range": {
+              "end_exclusive": 64,
+              "start": 0
+            },
+            "seeds": 64
+          },
           "passed": true,
-          "requirement": "64 seeds, determinism checked"
+          "requirement": "every seed of the set (64), determinism checked"
         },
         "twins_120": {
-          "observed": 32,
+          "observed": {
+            "range": {
+              "end_exclusive": 32,
+              "start": 0
+            },
+            "seeds": 32
+          },
           "passed": true,
-          "requirement": "32 seeds, determinism checked"
+          "requirement": "every seed of the set (32 or 64), determinism checked"
         },
         "v10_repro": {
           "observed": false,
