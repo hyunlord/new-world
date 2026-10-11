@@ -2,13 +2,15 @@
 """Write intervention schedules and record WorldSim datasets (Pass 7). numpy only.
 
 usage:
-  make_dataset.py z6 [--root WM_DATA_ROOT] [--no-run] [--workers 4]
+  make_dataset.py z6 [--root WM_DATA_ROOT] [--scene game_v13] [--no-run] [--workers 4]
   make_dataset.py v0 [--root WM_DATA_ROOT] [--splits A_obs,B_act,...] [--no-run] [--workers 4]
                      [--docs docs/worldmodel]
 
 `z6` writes the Z6 schedules (seeds 0-7 x seven kinds, one intervention at
 one-based day 23 12:00 = tick 31,920) under ROOT/z6/schedules and records them
 with the factual episodes under ROOT/z6/episodes (game_v13, 30 days, every 60).
+With `--scene game_v14` (Pass 8 section 8.1) the same schedules and episodes go
+under ROOT/z6_v14.
 
 `v0` writes the schedules of dataset v0 (PASS7_GOAL.md section 12.1), records
 every split under ROOT/v0/<split> with `export.sh --resume` (a finished episode
@@ -233,15 +235,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--no-run", action="store_true")
     parser.add_argument("--docs", type=Path, default=ROOT_DIR / "docs/worldmodel")
+    parser.add_argument("--scene", default="game_v13", help="z6 only: the scene (game_v14 records under ROOT/z6_v14)")
     args = parser.parse_args(argv)
     log = sys.stdout
     if args.command == "z6":
-        schedules = args.root / "z6" / "schedules"
+        z6 = args.root / ("z6" if args.scene == "game_v13" else f"z6_{args.scene.removeprefix('game_')}")
+        schedules = z6 / "schedules"
         z6_schedules(schedules)
         if not args.no_run:
-            export(["--scene", "game_v13", "--seeds", f"{Z6_SEEDS.start}..{Z6_SEEDS.stop}", "--days", "30", "--every", "60",
+            export(["--scene", args.scene, "--seeds", f"{Z6_SEEDS.start}..{Z6_SEEDS.stop}", "--days", "30", "--every", "60",
                     "--schedule-dir", str(schedules), "--include-factual", "--resume", "--workers", str(args.workers),
-                    "--out", str(args.root / "z6" / "episodes")], log)
+                    "--out", str(z6 / "episodes")], log)
         return 0
     if args.command == "v0":
         for split in args.splits.split(","):

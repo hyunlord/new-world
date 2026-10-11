@@ -1774,3 +1774,19 @@ Base `ce7acb25` (code head `6df3a7e0`), release probe built from the base and fr
 Fingerprints of `game_v13_scene(seed)` after 1,440 ticks (seeds 0–3), pinned in `harness_v13_fingerprints_unchanged`: `519530c0aaaae844` (forage 83, wood 20), `24d191164e3c4132` (69, 32), `b44a71909b8615cc` (84, 28), `c16d5b002bea6cc5` (55, 37).
 
 v0 sample rebuilt with the Part 0 recorder (`wm_p0`, `ce7acb25`) into `.harness/evidence/worldmodel/p8-0_sample/` (`--scene game_v13 --seeds 0..2 --days 10 --every 60 --agents`, `WORLDSIM_GIT_SHA=dc6760b0…`), `timing.json` removed: `diff -r` against `docs/worldmodel/sample/` finds no difference (byte-identical).
+
+## Pass 8 Part 1 — v14 skeleton, schema 8, recorder schema 2, the reference runs
+
+Release probe `probe_p1` built from `d6e34ea3` (verified byte-identical to a rebuild of that commit). Tuning runs `p8-1_v12_tuning_{10,120}day` (game_v12 0..64 × 10, 0..32 × 120) and `p8-1_v13_tuning_{10,120}day`, all `--check-determinism` with the eight clocks: DETERMINISM PASS; against Part 0 every shared value is identical (6,096 / 56,385 / 6,096 / 56,374) except `schema_version` (7 → 8); the new paths are the two schema-8 keys (5 statistics × days) and the summary `rules` block. Workspace debug tests 1,995 passed, 0 failed (Pass 7: 1,987); both Clippy variants clean; Python 55 + 21 tests OK.
+
+`p8-1_v12_tuning_targets` and `p8-1_v13_tuning_targets` (`evaluate_pass8.py`; v13 in comparison mode against v12): v12 has no failing seed in any per-seed clause on the tuning seeds. v13: X2 PASS (no failing seed either); X3 FAIL on (a) R² **0.943**, (b) normal winters 36 of 37 with one dark night (mode share 0.973), (e) first dark night on 3 distinct nights (5 / 6 / 7 = 9 / 13 / 36, 0.621 on the seventh); (c) no dark night 0.547, (d) ≥ 2 dark 0.172 and (f) shares 0.547 / 0.289 / 0.164 pass. X4 PASS (re-target share 0.050, normal gathered 45). These are section 3.3's v13 row.
+
+## Pass 8 Part 2 — winters that vary night by night
+
+Code `4ab0778a`; release probe `probe_p2`. Workspace debug tests 2,005 passed, 0 failed (+ the 9 tests of `harness_revitalize_pass8_winter.rs` and the rules unit tests); both Clippy variants clean. **4.5 v13 guard:** `p8-2_v13_guard_10day` / `p8-2_v13_guard_120day` (game_v13 0..64 × 10 and 0..32 × 120, Part 0 flags) — DETERMINISM PASS; every shared value equals Part 0 (only `schema_version` and the new keys differ) and all 57,588 values equal `p8-1_v13_tuning_120day`.
+
+## Pass 8 Part 3 — interventions and the recorder under v14
+
+**Z6 for v14** (`make_dataset.py z6 --scene game_v14`, recorder `wm_p2` = `4ab0778a`, `check_z6.py` → `docs/revitalize/probe/p8-3_z6/`): seeds 0–7 × 7 kinds at tick 31,920 (day 23 12:00), 30 days — **PASS, 56 of 56**: every pair equals the factual `row_digest` at every row ≤ 31,920 and differs from tick 31,980; **windfall applied 10 in all 8 seeds** (Pass 7: 2 of 8), because it now lands on the snow. Recording took 41 s (64 episodes, four workers).
+
+Recorder checks (Part 2 binaries): `test_hidden_columns.py` (game_v14 seeds 0–1 × 30 days, recorder `--every 60`, probe `--sample-every 60`): `night_burn_per_hour`, `winter_fall_today` and the summed `wood_target` equal the probe keys at every common tick; `winter_severity` differs only on 07:00 rows of a season's first day (the documented completed-tick vs system-tick booking). `test_export_determinism.py` gains a game_v14 case (30 days, with agents and with a schedule): two runs at four workers and one at one worker are byte-identical; schema 2. Part 3 changes no Rust: the Part 3 probe and recorder are the Part 2 binaries, so the 4.5 guard of Part 2 stands for Part 3.

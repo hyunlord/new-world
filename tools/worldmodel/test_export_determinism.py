@@ -37,10 +37,10 @@ class ExportDeterminismTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.tmp.cleanup()
 
-    def record(self, name: str, workers: int, *extra: str) -> Path:
+    def record(self, name: str, workers: int, *extra: str, scene: str = "game_v13", days: int = 10) -> Path:
         out = self.root / name
         env = {**os.environ, "WORLDSIM_GIT_SHA": "test"}
-        subprocess.run([str(BIN), "--scene", "game_v13", "--seeds", "0..4", "--days", "10", "--every", "60",
+        subprocess.run([str(BIN), "--scene", scene, "--seeds", "0..4", "--days", str(days), "--every", "60",
                         "--workers", str(workers), "--out", str(out), *extra],
                        check=True, capture_output=True, env=env)
         return out
@@ -56,6 +56,21 @@ class ExportDeterminismTests(unittest.TestCase):
                 self.assertEqual(first.keys(), second.keys())
                 self.assertEqual(first, second)
                 self.assertEqual(first, single)
+
+    def test_v14_runs_and_worker_counts_are_byte_identical(self) -> None:
+        # Pass 8 section 8.2: schema-2 game_v14 episodes, 30 days (the first
+        # winter's draws included), two runs at 4 workers and one at 1.
+        for label, extra in (("v14_agents", ("--agents",)),
+                             ("v14_schedule", ("--schedule-dir", str(self.schedules), "--include-factual"))):
+            with self.subTest(label):
+                first = tree(self.record(f"{label}_a", 4, *extra, scene="game_v14", days=30))
+                second = tree(self.record(f"{label}_b", 4, *extra, scene="game_v14", days=30))
+                single = tree(self.record(f"{label}_c", 1, *extra, scene="game_v14", days=30))
+                self.assertTrue(first)
+                self.assertEqual(first, second)
+                self.assertEqual(first, single)
+                meta = json.loads(first["game_v14_s0_none/meta.json"])
+                self.assertEqual(meta["schema_version"], 2)
 
     def test_schedule_episodes_share_the_factual_prefix(self) -> None:
         import numpy as np
