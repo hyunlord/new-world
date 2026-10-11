@@ -1,0 +1,69 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (4 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (2 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | blind_2x.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | blind_4x.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (2 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | blind_2x.png[39m[0m
+[  33% ] [90m[1mreimport[22m | blind_4x.png[39m[0m
+[  66% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (2 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+capture start: a_d1_0830_F2 tick=30 usec=736499
+capture saved: a_d1_0830_F2 tick=30 usec=1885017
+capture start: a_d2_1200_F2 tick=1680 usec=1885090
+capture saved: a_d2_1200_F2 tick=1680 usec=3871080
+capture start: a_d2_1200_F2A tick=1680 usec=3900225
+capture saved: a_d2_1200_F2A tick=1680 usec=5096645
+capture start: a_d2_1200_F2Z tick=1680 usec=5096696
+capture saved: a_d2_1200_F2Z tick=1680 usec=6323722
+capture start: a_d2_1200_F3 tick=1680 usec=6323771
+capture saved: a_d2_1200_F3 tick=1680 usec=7538647
+capture start: a_d2_1200_F4 tick=1680 usec=7538698
+capture saved: a_d2_1200_F4 tick=1680 usec=8769143
+capture start: a_d2_1200_F1 tick=1680 usec=8769203
+capture saved: a_d2_1200_F1 tick=1680 usec=10002040
+capture start: a_d2_1930_F2 tick=2130 usec=18080500
+capture saved: a_d2_1930_F2 tick=2130 usec=19426317
+capture start: a_d2_2300_F2N tick=2340 usec=24990351
+capture saved: a_d2_2300_F2N tick=2340 usec=26262884
+capture start: a_d6_1200_F2 tick=7440 usec=26262944
+capture saved: a_d6_1200_F2 tick=7440 usec=30581395
+Published 94 captures; raw framebuffers: /Users/rexxa/work/art-production6-evidence/shots/art

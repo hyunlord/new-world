@@ -23,3 +23,9 @@
 
 - First blind round retained unchanged (observer1 0.875/0.875, observer2 0.667/0.667). Investigation found calibration_scene used base sprites without the new CarryLoad layer, unlike live gameplay. Wire the same production load helper into the lineup and add a regression; the second and final blind round will use corrected framebuffer captures with a newly frozen key. This is a capture-surface fix, not a reinterpretation of the failed verdict.
 - A23 requires a snapshot-matching cold count in every frame: show the valid typed zero count as well, with neutral text and no snowflake. Invalid/missing legacy snapshot still hides it. The first natural set is preserved as round1; all final plans recapture at the correction commit.
+
+## Final capture and evidence packaging
+
+- All four final plans bind to 44011f92347dc4176cc115195b1cc55a16ff93ae. Earlier failed capture attempts and first screen-review round remain under external rejected/ and round1/; final logs contain zero SCRIPT ERROR.
+- Four warm-control cycle GIFs were moved byte-for-byte to the external evidence directory to meet the 30 MB documentation budget. Compressed sidecars retain absolute paths and SHA256; natural cold GIFs, original samples, contact sheets and required village GIFs are retained. See review/budget_relocations.json.
+- Cold-count zero is shown when a valid typed snapshot supplies zero; unavailable legacy counts remain hidden. Calibration now uses the same attached-load renderer as gameplay, so the second blind round assesses the installed composition.
