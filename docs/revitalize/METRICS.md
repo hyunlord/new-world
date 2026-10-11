@@ -1903,3 +1903,30 @@ T3 (448 A-test winter evenings, 64 dark): observable logistic Brier 0.020 / AUC 
 ### WM-Bench v1 re-run after review round 1 (M1, L1) — the published numbers
 
 `bench_v1.py` re-run after the fixes (T1, T3, T3b, T4 and the sanity checks unchanged): the T2 severity oracle now reads each rollout row's true severity — 168 h A test 0.275 (first run, start row's severity held: 0.691, worse than persistence 0.639); ridge 0.271 and action ridge 0.267 unchanged. T5 scores both baselines on one pair set (alive at t+1, t and t−23; 924,554 agent-hours): persistence state tag 0.741, target kind 0.714, Chebyshev 2.49, hunger/thirst/fatigue nMAE 0.450 / 0.607 / 0.256; 24 hours earlier 0.757, 0.738, 4.75, 1.223 / 0.696 / 0.172. The first-run T5 line above is superseded.
+
+## Pass 8 Part 7 — final verification
+
+### Reproduction of the frozen versions (probe `probe_p2`, code `4ab0778a` = the Rust of every later head)
+
+Run 19:11–19:31 KST with Pass 7's exact flags (`final_probes.sh`). All twelve DETERMINISM PASS; every shared value equals Pass 7's final summary except `schema_version` (7 → 8); the one-sided paths are the schema-8 keys and the `rules` block.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p8-7_final_legacy` | legacy 0..4 × 10 | all 4,746 shared values equal `p7-7_final_legacy` except `schema_version` |
+| `p8-7_final_v8` | game 0..64 × 10 | all 6,131 equal `p7-7_final_v8` except `schema_version` |
+| `p8-7_final_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | all 6,096 equal `p7-7_final_v9_10day` except `schema_version` |
+| `p8-7_final_v9_120day` | game_v9 0..32 × 120, same clocks | all 55,968 equal except `schema_version` |
+| `p8-7_final_v10_10day` | game_v10 0..64 × 10 | all 6,096 equal except `schema_version` |
+| `p8-7_final_v10_120day` | game_v10 0..32 × 120, clocks 02:00,12:00,19:30 | all 56,455 equal except `schema_version` |
+| `p8-7_final_v11_10day` | game_v11 0..64 × 10, the eight clocks | all 6,096 equal except `schema_version` |
+| `p8-7_final_v11_120day` | game_v11 0..32 × 120, same clocks | all 56,373 equal except `schema_version` |
+| `p8-7_final_v12_10day` | game_v12 0..64 × 10, the eight clocks | all 6,096 equal except `schema_version` |
+| `p8-7_final_v12_120day` | game_v12 0..32 × 120, same clocks | all 56,385 equal except `schema_version` |
+| `p8-7_final_v13_10day` | game_v13 0..64 × 10, the eight clocks | all 6,096 equal `p7-5_round2_10day` except `schema_version` |
+| `p8-7_final_v13_120day` | game_v13 0..32 × 120, same clocks | all 56,374 equal `p7-5_round2_120day` except `schema_version` |
+
+The final `game_v14` runs are Part 4's tuning runs (`p8-4_round1_*`) and Part 5's held-out runs (`p8-5_heldout_v14_*`), both from `probe_p2` with the eight clocks and the death census, `--check-determinism`: no Rust changed after them, so they are the final v14 probes. **X6 again** (`make_dataset.py z6 --scene game_v14` into a scratch root, `check_z6.py` → `docs/revitalize/probe/p8-7_z6/`): PASS 56 of 56, windfall applied in 8 of 8, every `.npy` byte-identical to Part 3's Z6 episodes.
+
+### X8 — timing (back to back, recorder off)
+
+Run 19:33:10–19:41:47 KST with `probe_p2`, in this order: `p8-7_timing_v13_10day`, `p8-7_timing_v14_10day`, `p8-7_timing_v13_120day`, `p8-7_timing_v14_120day` (all `--check-determinism`, the eight clocks, `--workers 4`; all DETERMINISM PASS). No Godot, cargo, probe, recorder or Python job of this or another WorldSim run was active (`pgrep`); a 15-second CPU monitor saw other users' processes: a `clawdbot` process at 83–110 % (one core) in 4 samples, a "Sow and Siege" app, `node`, `osascript` and Chrome at a median of 29 % (max 227 %) in 63 samples. Median ms per agent-tick: v13 0.0010639 → v14 0.0010696 (10 days, **1.005×**), v13 0.0013615 → v14 0.0013542 (120 days, **0.995×**); limit 1.2×. **X8 PASS.**
