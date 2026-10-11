@@ -45,6 +45,9 @@ def split_stds(groups: dict[str, list[EpisodeData]]) -> dict[str, np.ndarray]:
 
 
 def git_commit() -> str:
+    """The code commit of this job: `WM1_CODE_COMMIT` (set by the launcher at checkout) or the clone's HEAD."""
+    if os.environ.get("WM1_CODE_COMMIT"):
+        return os.environ["WM1_CODE_COMMIT"]
     try:
         return subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True,
                               check=True).stdout.strip()
