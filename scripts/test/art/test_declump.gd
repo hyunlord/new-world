@@ -28,7 +28,12 @@ func _initialize() -> void:
 	rows[0]["moving"] = true
 	check(not Seats.declump(rows, {}, targets, terrain, {}, rects).has(2), "moving villagers never shift")
 	rows[0]["moving"] = false
-	check(not Seats.declump(rows, {2: feet}, targets, terrain, {}, rects).has(2), "seated villagers never shift")
+	rows[0]["activity"] = "walk"
+	rows[0]["tile"] = Vector2i(30, 30)
+	check(not Seats.declump(rows, {}, targets, terrain, {}, rects).has(2), "paused walking animation never shifts")
+	check(not Seats.spread_offsets([rows[0]], {}).has(2), "paused walking animation never spreads")
+	rows[0].erase("activity")
+	check(Seats.declump(rows, {2: feet}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated villagers now resolve foreground overlap")
 	check(Seats.declump(rows, {3: targets[3]}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated front villagers still occlude")
 	rows[1]["moving"] = true
 	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "moving front villagers still occlude")
@@ -57,6 +62,8 @@ func _initialize() -> void:
 	check((Seats.declump(rows, {}, targets, terrain, {}, rects)[2] as Vector2).x < 0, "first side points away from nearest front agent")
 	_test_order_and_final_targets(terrain, feet)
 	_test_renderer(terrain, feet)
+	_test_d24(terrain, "d24_regression.json")
+	_test_d24(terrain, "d24_merged_regression.json")
 	print("DECLUMP %s: coverage, water, obstacles, exclusions, deterministic order, final front targets" % ("PASS" if failures == 0 else "FAIL"))
 	quit(1 if failures else 0)
 
@@ -99,3 +106,33 @@ func _test_renderer(terrain: Dictionary, feet: Vector2) -> void:
 	for sprite: Sprite2D in renderer._sprites.values():
 		sprite.free()
 	renderer.free()
+
+func _test_d24(terrain: Dictionary, fixture_name: String) -> void:
+	var fixture: Array = JSON.parse_string(FileAccess.get_file_as_string("res://docs/art/production6/crowd/" + fixture_name))
+	var rows: Array[Dictionary] = []
+	var targets: Dictionary = {}
+	var rects: Dictionary = {}
+	var seats: Dictionary = {}
+	for record: Dictionary in fixture:
+		var agent_id: int = int(record["id"])
+		rows.append({"id": agent_id, "visible": true, "moving": bool(record["moving"]), "activity": record["activity"]})
+		targets[agent_id] = Vector2(record["target"][0], record["target"][1])
+		var rect: Array = record["rect"]
+		rects[agent_id] = Rect2(rect[0], rect[1], rect[2], rect[3])
+		if record["seated"]:
+			seats[agent_id] = targets[agent_id]
+	var offsets: Dictionary = Seats.declump(rows, seats, targets, terrain, {}, rects)
+	for row: Dictionary in rows:
+		if row["activity"] == "walk":
+			check(not offsets.has(row["id"]), "d24 walking poses remain untouched even when moving flag false")
+	var moved_seats: int = 0
+	for agent_id: int in seats:
+		if offsets.get(agent_id, Vector2.ZERO) != Vector2.ZERO:
+			moved_seats += 1
+	check(moved_seats > 0, "d24 previously skipped seated actors now shift")
+	print(fixture_name, " moved_seats=", moved_seats, " offsets=", offsets)
+	for offset: Vector2 in offsets.values():
+		check(absf(offset.x) <= 8.0 and offset.y == 0.0, "d24 shifts stay within horizontal8px")
+	var reversed: Array[Dictionary] = rows.duplicate(true)
+	reversed.reverse()
+	check(Seats.declump(reversed, seats, targets, terrain, {}, rects) == offsets, "d24 front-to-back result deterministic")

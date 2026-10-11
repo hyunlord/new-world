@@ -83,7 +83,7 @@ func _free(point: Vector2) -> bool:
 	return true
 
 static func _eligible(row: Dictionary, hearth: Vector2i) -> bool:
-	if not bool(row.get("visible", false)) or bool(row.get("moving", true)):
+	if not bool(row.get("visible", false)) or _walking(row):
 		return false
 	if float(row.get("stationary_seconds", 0.0)) < 0.3:
 		return false
@@ -92,6 +92,9 @@ static func _eligible(row: Dictionary, hearth: Vector2i) -> bool:
 	var delta: Vector2i = (row["tile"] as Vector2i) - hearth
 	return maxi(absi(delta.x), absi(delta.y)) <= 6
 
+static func _walking(row: Dictionary) -> bool:
+	return bool(row.get("moving", true)) or str(row.get("activity", row.get("pose", ""))) in ["walk", "run", "carry", "carry_wood"]
+
 static func _tile_before(a: Vector2i, b: Vector2i) -> bool:
 	return a.y < b.y if a.y != b.y else a.x < b.x
 
@@ -99,7 +102,7 @@ static func spread_offsets(agents: Array[Dictionary], seated: Dictionary) -> Dic
 	var groups: Dictionary = {}
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
-		if bool(row.get("moving", true)) or seated.has(agent_id):
+		if _walking(row) or seated.has(agent_id):
 			continue
 		var tile: Vector2i = row["tile"]
 		if not groups.has(tile):
@@ -122,7 +125,7 @@ static func spread_offsets(agents: Array[Dictionary], seated: Dictionary) -> Dic
 
 ## Rects are manifest canvas rectangles relative to each agent's feet.
 ## Only drawing targets change; simulation positions remain untouched.
-static func declump(rows: Array[Dictionary], seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
+static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
 	var ordered: Array[Dictionary] = []
 	for row: Dictionary in rows:
 		var agent_id: int = int(row["id"])
@@ -140,7 +143,7 @@ static func declump(rows: Array[Dictionary], seated: Dictionary, targets: Dictio
 		var target: Vector2 = targets[agent_id]
 		var local_rect: Rect2 = rects[agent_id]
 		var offset := Vector2.ZERO
-		if not bool(row.get("moving", true)) and not seated.has(agent_id):
+		if not _walking(row):
 			if _covered(Rect2(target + local_rect.position, local_rect.size), fronts) >= 0.30:
 				var nearest: Vector2 = target
 				var distance: float = INF
@@ -153,7 +156,7 @@ static func declump(rows: Array[Dictionary], seated: Dictionary, targets: Dictio
 				var side: float = 1.0 if target.x > nearest.x else -1.0
 				if target.x == nearest.x:
 					side = 1.0 if posmod(agent_id, 2) == 0 else -1.0
-				var best_coverage: float = INF
+				var best_coverage: float = _covered(Rect2(target + local_rect.position, local_rect.size), fronts)
 				var found: bool = false
 				for magnitude: int in range(1, 9):
 					for direction: float in [side, -side]:

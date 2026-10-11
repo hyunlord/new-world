@@ -1,0 +1,610 @@
+[
+  {
+    "id": 13,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      864.0,
+      276.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 30,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      703.0,
+      330.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 22,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      384.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 25,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      760.0,
+      330.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 44,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      312.0
+    ],
+    "rect": [
+      -7,
+      -21,
+      14.0,
+      22.0
+    ]
+  },
+  {
+    "id": 4,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      816.0,
+      276.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 18,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      808.0,
+      330.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 32,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      716.0,
+      328.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 5,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      743.0,
+      236.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 29,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      848.0,
+      384.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 31,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      599.0,
+      394.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 3,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      800.0,
+      276.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 28,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      693.0,
+      345.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 0,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      784.0,
+      276.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 8,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      824.0,
+      258.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 16,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      805.0,
+      285.0
+    ],
+    "rect": [
+      -8,
+      -29,
+      16.0,
+      30.0
+    ]
+  },
+  {
+    "id": 26,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      708.0,
+      313.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 21,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      792.0,
+      330.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 17,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      814.0,
+      287.0
+    ],
+    "rect": [
+      -7.0,
+      -28,
+      14.0,
+      29.0
+    ]
+  },
+  {
+    "id": 33,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      744.0,
+      366.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 27,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      710.0,
+      362.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 15,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      776.0,
+      294.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 24,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      768.0,
+      312.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 20,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      784.0,
+      348.0
+    ],
+    "rect": [
+      -9,
+      -23,
+      18.0,
+      24.0
+    ]
+  },
+  {
+    "id": 11,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      832.0,
+      276.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 9,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      798.0,
+      277.0
+    ],
+    "rect": [
+      -10,
+      -29,
+      20.0,
+      30.0
+    ]
+  },
+  {
+    "id": 12,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      848.0,
+      276.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 10,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      815.0,
+      281.0
+    ],
+    "rect": [
+      -9,
+      -29,
+      18.0,
+      30.0
+    ]
+  },
+  {
+    "id": 40,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      724.0,
+      265.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 39,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      985.0,
+      459.0
+    ],
+    "rect": [
+      -7,
+      -29,
+      15.0,
+      30.0
+    ]
+  },
+  {
+    "id": 35,
+    "activity": "idle",
+    "moving": false,
+    "seated": false,
+    "target": [
+      812.0,
+      234.0
+    ],
+    "rect": [
+      -9,
+      -30,
+      18.0,
+      31.0
+    ]
+  },
+  {
+    "id": 41,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      840.0,
+      294.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 37,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      856.0,
+      330.0
+    ],
+    "rect": [
+      -10,
+      -27,
+      21.0,
+      28.0
+    ]
+  },
+  {
+    "id": 38,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      952.0,
+      428.0
+    ],
+    "rect": [
+      -8,
+      -30,
+      17.0,
+      31.0
+    ]
+  },
+  {
+    "id": 45,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      864.0,
+      384.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  },
+  {
+    "id": 7,
+    "activity": "walk",
+    "moving": false,
+    "seated": false,
+    "target": [
+      825.0,
+      264.0
+    ],
+    "rect": [
+      -7,
+      -28,
+      14.0,
+      29.0
+    ]
+  },
+  {
+    "id": 43,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      832.0,
+      312.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  },
+  {
+    "id": 42,
+    "activity": "idle",
+    "moving": false,
+    "seated": true,
+    "target": [
+      776.0,
+      330.0
+    ],
+    "rect": [
+      -7,
+      -22,
+      14.0,
+      23.0
+    ]
+  }
+]

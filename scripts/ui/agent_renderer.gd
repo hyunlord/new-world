@@ -165,7 +165,7 @@ func _process(delta: float) -> void:
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 		CarryLoad.apply(sprite, activity)
 		_update_activity_icon(agent_id, sprite, choice)
-		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "cold": cold, "meal": bool(moments["meal"])})
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"])})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
 		var agent_id: int = int(row["id"])

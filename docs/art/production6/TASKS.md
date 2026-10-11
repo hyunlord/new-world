@@ -11,7 +11,7 @@ Contract: GOAL.md SHA256 776d8bf4ac83ef4660db81a58e3f627baa6e09f577d8f52476d4442
 | 3 | HUD night and severity truth | 14:47:00 | 14:48:00 | Implemented; both HUD tests PASS; visual pending |
 | 4 | Load silhouette, attached props, review | 14:46:00 | 14:52:54 | Implemented; 20 approved food compositions byte-bound; five tests PASS; two wood composites rejected |
 | 5 | Intervention getter, panel, effects | 14:40:27 | 14:53:14 | Implemented; Rust test/clippy/build, Godot stub/real seven casts, integrated scene and strict PASS |
-| 6 | Winter crowd declump | 14:53:14 | | In progress |
-| 7 | Natural, intervention, calibration captures | | | Pending |
+| 6 | Winter crowd declump | 14:53:14 | 14:56:15 | Implemented; six tests PASS; final A18 pending |
+| 7 | Natural, intervention, calibration captures | 14:56:15 | | In progress |
 | 8 | A1–A25 measurements, blind reviews, presentations | | | Pending |
 | 9 | Full gate, publication, independent review, Korean report | | | Pending |
