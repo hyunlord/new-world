@@ -263,7 +263,12 @@ impl RuntimeSystem for ResourceRegenSystem {
                 }
             }
             match rule.winter_regen_units_per_day.filter(|_| winter) {
-                Some(per_day) => regen_wood_winter(resources, per_day, rule.winter_deadwood_cap),
+                Some(per_day) => {
+                    // Pass 7: a winter of drawn severity sets its own fall.
+                    let per_day = crate::runtime::settlement::firewood::severity_level_at(resources, &rule, resources.current_tick)
+                        .map_or(per_day, |level| rule.winter_severity_regen_units_per_day[usize::from(level).min(2)]);
+                    regen_wood_winter(resources, per_day, rule.winter_deadwood_cap)
+                }
                 None => {
                     resources.wood_regen_acc += rule.regen_permille;
                     let units = resources.wood_regen_acc / 1000;

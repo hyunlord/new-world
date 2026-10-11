@@ -18,6 +18,10 @@
 //! Pass 6: under `night_season_from_evening` the burn rate and the cold check
 //! use the season of the evening the night began (`firewood::night_season`),
 //! so the last winter night stays a winter night until the burn window ends.
+//!
+//! Pass 7: in a winter of drawn severity the hourly rate is
+//! `winter_severity_burn_per_hour[level]` of the night's winter
+//! (`firewood::winter_burn_per_hour` at the evening's tick).
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -26,7 +30,7 @@ use sim_core::components::{Agent, AgentId, Cold, ResourceKind, SettlementId};
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
 use crate::runtime::decision::agent_decision::clock_in_window;
-use crate::runtime::settlement::firewood::night_season;
+use crate::runtime::settlement::firewood::{night_season, night_tick_at, winter_burn_per_hour};
 
 /// Winter index of `SeasonRule` seasons.
 const WINTER: usize = 3;
@@ -62,7 +66,9 @@ impl RuntimeSystem for FireSystem {
         let burning = clock_in_window(resources, rule.burn_start_minute, rule.burn_end_minute);
         // The night's season: the current season, or (Pass 6) the evening's.
         let season = night_season(resources, &rule);
-        let per_hour = u32::from(rule.burn_per_hour[season]);
+        // Pass 7: the night's rate, the severity of its winter included.
+        let night = night_tick_at(resources, &rule, resources.current_tick);
+        let per_hour = u32::from(winter_burn_per_hour(resources, &rule, night));
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut fires = BTreeMap::new();

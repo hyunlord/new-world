@@ -135,6 +135,7 @@ fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
 /// Deterministic deadwood choice (Pass 5): among spots holding wood within
 /// `wood_radius` of `home` whose claim count is below the cap, minimise
 /// `(claims, chebyshev(agent, spot), y, x)`. `None` when no spot qualifies.
+/// Pass 7: under `claims_bounded_by_amount` the cap is `min(cap, amount)`.
 fn choose_spot(
     rule: &FirewoodRule,
     home: (u32, u32),
@@ -150,7 +151,12 @@ fn choose_spot(
             **amount >= 1
                 && Some(**tile) != exclude
                 && chebyshev(**tile, home) <= rule.wood_radius
-                && claims.get(*tile).copied().unwrap_or(0) < rule.max_gatherers_per_spot
+                && claims.get(*tile).copied().unwrap_or(0)
+                    < if rule.claims_bounded_by_amount {
+                        rule.max_gatherers_per_spot.min(u32::from(**amount))
+                    } else {
+                        rule.max_gatherers_per_spot
+                    }
         })
         .map(|(tile, _)| *tile)
         .min_by_key(|tile| (claims.get(tile).copied().unwrap_or(0), chebyshev(agent, *tile), tile.1, tile.0))
@@ -689,6 +695,14 @@ impl RuntimeSystem for AgentDecisionSystem {
             for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
                 if matches!(state, AgentState::Seeking { target: TargetKind::GatherWood }) {
                     *wood_claims.entry(seek.tile).or_default() += 1;
+                }
+            }
+            // Pass 7: a gatherer who has arrived holds its spot until the pickup.
+            if firewood_rule.is_some_and(|rule| rule.claims_bounded_by_amount) {
+                for (_, (state, pos)) in world.query::<(&AgentState, &Position)>().iter() {
+                    if matches!(state, AgentState::Consuming { target: TargetKind::GatherWood }) {
+                        *wood_claims.entry((pos.x, pos.y)).or_default() += 1;
+                    }
                 }
             }
         }
@@ -2100,6 +2114,16 @@ impl RuntimeSystem for AgentDecisionSystem {
                     };
                     if let Some(tile) = held {
                         *wood_gather_claims.entry(tile).or_default() += 1;
+                    }
+                }
+                // Pass 7 — an arrived gatherer keeps its claim (on its tile)
+                // until the pickup; its stale target is dropped as before.
+                AgentState::Consuming { target: TargetKind::GatherWood }
+                    if firewood_rule.is_some_and(|rule| rule.claims_bounded_by_amount) =>
+                {
+                    *wood_gather_claims.entry((pos.x, pos.y)).or_default() += 1;
+                    if seek_opt.is_some() {
+                        seek_clear.push(e);
                     }
                 }
                 // Resource targets stay stable; assigned beds follow bed reassignment.

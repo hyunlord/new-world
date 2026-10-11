@@ -339,7 +339,19 @@ impl WorldRules {
     /// Pass 7 village policies: v12 with winters of drawn severity and claims
     /// bounded by what a deadwood spot holds. v12 stays frozen.
     pub const fn game_v13() -> Self {
-        Self::game_v12()
+        let mut rules = Self::game_v12();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2: a winter is mild, normal or harsh (30 / 40 / 30 %); mild
+            // burns 2 an hour with 8 branches a day, normal is Pass 6 (3 and 6),
+            // harsh burns 4 with 4 branches. A spot takes no more claims than
+            // the units it holds, and an arrived gatherer keeps its claim.
+            firewood.winter_severity_permille = Some([300, 400, 300]);
+            firewood.winter_severity_burn_per_hour = [2, 3, 4];
+            firewood.winter_severity_regen_units_per_day = [8, 6, 4];
+            firewood.claims_bounded_by_amount = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
     }
 
     /// Pass 6 village policies: v11 with an autumn wood season, a lean winter,
@@ -656,6 +668,18 @@ mod tests {
             aging.elder_evening_tether = old.elder_evening_tether;
         }
         assert_eq!(v12, v11);
+    }
+
+    #[test]
+    fn game_v13_sets_the_pass7_fields() {
+        let rule = WorldRules::game_v13().society.firewood.expect("v13 firewood");
+        let weights = rule.winter_severity_permille.expect("v13 draws severity");
+        assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        // Normal severity is Pass 6's winter.
+        let v12 = WorldRules::game_v12().society.firewood.expect("v12 firewood");
+        assert_eq!(rule.winter_severity_burn_per_hour[1], v12.burn_per_hour[3]);
+        assert_eq!(Some(rule.winter_severity_regen_units_per_day[1]), v12.winter_regen_units_per_day);
+        assert!(rule.claims_bounded_by_amount);
     }
 
     #[test]
