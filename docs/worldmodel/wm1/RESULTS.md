@@ -10,12 +10,13 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 |---|---|---|---|---|
 | W1 | harness fidelity (bench baselines to 1e-3, T1–T4, every split) | — | max |diff| 3.5e-10 | PASS |
 | W2 | M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 % (judged against the best of all baselines, the oracle reference included; the original bench-only verdict beside it) | see Model column | [bench_v0 baselines (original W2)] A_test 0.275 [0.243, 0.327] vs 0.541 ridge_action (≤ 0.4867); B_test 0.272 [0.241, 0.327] vs 0.549 daily_naive (≤ 0.4938); OOD_long 0.277 [0.248, 0.329] vs 0.528 ridge_action (≤ 0.4756) → pass ‖ [+ severity-free ridges] A_test 0.275 [0.243, 0.327] vs 0.223 ridge_nosev (≤ 0.2007); B_test 0.272 [0.241, 0.327] vs 0.227 ridge_nosev (≤ 0.2039); OOD_long 0.277 [0.248, 0.329] vs 0.241 ridge_nosev (≤ 0.2170) → fail ‖ [+ true-severity ridges (oracle reference)] A_test 0.275 [0.243, 0.327] vs 0.223 ridge_nosev (≤ 0.2007); B_test 0.272 [0.241, 0.327] vs 0.227 ridge_nosev (≤ 0.2039); OOD_long 0.277 [0.248, 0.329] vs 0.241 ridge_nosev (≤ 0.2170) → fail — T1: A_test 0.123 [0.121, 0.127] vs 0.100; B_test 0.127 [0.125, 0.131] vs 0.102; OOD_v12 0.126 [0.124, 0.129] vs 0.100; OOD_long 0.126 [0.124, 0.130] vs 0.099 | FAIL (T2 168 h fail, T1 fail); original: pass on T2 168 h |
+| W2b | supplementary: the W2 test applied to M1b (transformer, recipe r3, one seed) — W2 itself is defined on M1 | best of all baselines | T2 168 h: A_test 0.122 vs 0.223 ridge_nosev; B_test 0.124 vs 0.227 ridge_nosev; OOD_long 0.120 vs 0.241 ridge_nosev — T1: A_test 0.068; B_test 0.068; OOD_v12 0.070; OOD_long 0.068 | would PASS (one seed) |
 | W3 | T4 nMAE below the best baseline in ≥ 3 of 4 variants on dark nights and cold member-hours; sign ≥ 0.75 | zero / val-mean effect | dark_nights: below best baseline in 0/4, mean sign acc 0.48 (cold_snap 1.12/1.00 sign 0.65; gift_wood 1.00/0.79 sign 0.38; rain 1.12/1.00 sign 0.50; rot_wood 1.00/0.79 sign 0.38) | cold_member_hours: below best baseline in 1/4, mean sign acc 0.37 (cold_snap 1.00/0.89 sign 0.35; gift_wood 1.00/0.72 sign 0.42; rain 1.00/1.00 sign 0.36; rot_wood 1.00/0.69 sign 0.36) | FAIL |
 | W4 | T3b A test: M1 main MAE below the ridge; gap to the severity oracle | ridge 0.130, oracle 0.134 | M1 main 0.568 [0.438, 0.766] (gap to oracle +0.434) | FAIL |
 | W5 | severity ablation (T2 winter rows, T3b, T4) with the three-seed spread | — | T2-any winter targets A test 24 h: blind 0.172 [0.171, 0.174] vs on 0.187; 168 h: blind 0.321 [0.273, 0.417] vs on 0.544; T3b MAE blind 0.568 [0.438, 0.766] vs on 0.203; T4 dark-night nMAE (mean of variants) blind 1.062 [1.000, 1.162] vs on 1.031 | REPORTED |
 | W6 | M2 T5 A test: state-tag acc ≥ persistence + 5 points; position error below persistence | persistence acc 0.723, Chebyshev 2.543 | M2 (m2_set_s0) acc 0.902, Chebyshev 2.038 | PASS |
 | W7 | same-seed rerun reproduces test metrics to 1e-6 (or nondeterminism measured) | — | max |diff| over 3765 test numbers (T4 effects included; 0 missing keys): 0.00e+00 | PASS |
-| W8 | leakage audit by an independent reviewer | — | see REVIEW.md | see REVIEW.md |
+| W8 | leakage audit by an independent reviewer | — | independent general-purpose reviewer, REVIEW.md | CONFIRMED |
 
 ## T1 next hour
 
@@ -31,6 +32,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.125 | 0.129 | 0.128 | 0.128 |
 | sev-blind, action-blind | 0.127 | 0.131 | 0.129 | 0.130 |
 | sev-on, action-blind | 0.130 | 0.134 | 0.134 | 0.132 |
+| **M1b transformer (main, r3, 1 seed)** | 0.068 | 0.068 | 0.070 | 0.068 |
 | sev-blind, action-aware (main) [r1] | 0.114 | 0.117 | 0.115 | 0.116 |
 | sev-on, action-aware [r1] | 0.118 | 0.121 | 0.120 | 0.121 |
 | sev-blind, action-aware (main) [r2] | 0.130 | 0.134 | 0.132 | 0.132 |
@@ -56,6 +58,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.143 | 0.147 | 0.145 | 0.144 |
 | sev-blind, action-blind | 0.139 | 0.142 | 0.136 | 0.141 |
 | sev-on, action-blind | 0.144 | 0.150 | 0.146 | 0.147 |
+| **M1b transformer (main, r3, 1 seed)** | 0.076 | 0.086 | 0.080 | 0.077 |
 | sev-blind, action-aware (main) [r1] | 0.118 | 0.127 | 0.116 | 0.118 |
 | sev-on, action-aware [r1] | 0.125 | 0.132 | 0.128 | 0.124 |
 | sev-blind, action-aware (main) [r2] | 0.149 | 0.151 | 0.147 | 0.150 |
@@ -81,6 +84,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.398 | 0.401 | 0.418 | 0.391 |
 | sev-blind, action-blind | 0.283 | 0.281 | 0.276 | 0.283 |
 | sev-on, action-blind | 0.456 | 0.459 | 0.476 | 0.442 |
+| **M1b transformer (main, r3, 1 seed)** | 0.122 | 0.124 | 0.116 | 0.120 |
 | sev-blind, action-aware (main) [r1] | 0.838 | 0.850 | 0.873 | 0.862 |
 | sev-on, action-aware [r1] | 0.590 | 0.605 | 0.637 | 0.578 |
 | sev-blind, action-aware (main) [r2] | 0.486 | 0.486 | 0.477 | 0.472 |
@@ -106,6 +110,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.188 | 0.195 | 0.191 | 0.187 |
 | sev-blind, action-blind | 0.190 | 0.196 | 0.195 | 0.187 |
 | sev-on, action-blind | 0.187 | 0.194 | 0.190 | 0.185 |
+| **M1b transformer (main, r3, 1 seed)** | 0.129 | 0.136 | 0.130 | 0.127 |
 | sev-blind, action-aware (main) [r1] | 0.176 | 0.190 | 0.185 | 0.177 |
 | sev-on, action-aware [r1] | 0.180 | 0.192 | 0.194 | 0.180 |
 | sev-blind, action-aware (main) [r2] | 0.190 | 0.200 | 0.197 | 0.189 |
@@ -131,6 +136,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.462 | 0.471 | 0.476 | 0.441 |
 | sev-blind, action-blind | 0.343 | 0.350 | 0.345 | 0.334 |
 | sev-on, action-blind | 0.504 | 0.513 | 0.526 | 0.477 |
+| **M1b transformer (main, r3, 1 seed)** | 0.171 | 0.176 | 0.163 | 0.164 |
 | sev-blind, action-aware (main) [r1] | 0.727 | 0.744 | 0.749 | 0.720 |
 | sev-on, action-aware [r1] | 0.616 | 0.636 | 0.631 | 0.594 |
 | sev-blind, action-aware (main) [r2] | 0.541 | 0.554 | 0.536 | 0.514 |
@@ -176,6 +182,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.0221 | 0.996 | 0.967 |
 | sev-blind, action-blind | 0.1174 | 0.094 | 0.879 |
 | sev-on, action-blind | 0.0141 | 0.998 | 0.978 |
+| **M1b transformer (main, r3, 1 seed)** | 0.0055 | 1.000 | 0.998 |
 | sev-blind, action-aware (main) [r1] | 0.0027 | 1.000 | 0.998 |
 | sev-on, action-aware [r1] | 0.0041 | 1.000 | 0.998 |
 | sev-blind, action-aware (main) [r2] | 0.0408 | 1.000 | 0.949 |
@@ -200,6 +207,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.203 / 0.80 | 0.312 / 0.69 | 1.055 / 0.02 | 0.148 / 0.85 |
 | sev-blind, action-blind | 0.844 / 0.50 | 0.625 / 0.53 | 1.055 / 0.02 | 0.773 / 0.54 |
 | sev-on, action-blind | 0.188 / 0.81 | 0.250 / 0.75 | 1.055 / 0.02 | 0.172 / 0.83 |
+| **M1b transformer (main, r3, 1 seed)** | 0.203 / 0.80 | 0.219 / 0.78 | 0.312 / 0.69 | 0.148 / 0.85 |
 | sev-blind, action-aware (main) [r1] | 0.625 / 0.55 | 0.531 / 0.53 | 0.719 / 0.28 | 0.547 / 0.62 |
 | sev-on, action-aware [r1] | 0.047 / 0.95 | 0.094 / 0.91 | 1.055 / 0.02 | 0.094 / 0.91 |
 | sev-blind, action-aware (main) [r2] | 0.781 / 0.50 | 0.594 / 0.53 | 1.055 / 0.02 | 0.734 / 0.54 |
@@ -221,6 +229,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.375 / 0.62 / 1.125 | 114.908 / 0.21 / 1.001 | 5.240 / 0.21 / 0.982 | 0.005 / 0.33 / — |
 | sev-blind, action-blind | 0.333 / 0.67 / 1.000 | 114.792 / 0.38 / 1.000 | 5.333 / 0.46 / 1.000 | 0.000 / 1.00 / — |
 | sev-on, action-blind | 0.333 / 0.67 / 1.000 | 114.792 / 0.38 / 1.000 | 5.333 / 0.46 / 1.000 | 0.000 / 1.00 / — |
+| **M1b transformer (main, r3, 1 seed)** | 0.333 / 0.67 / 1.000 | 115.042 / 0.29 / 1.002 | 9.292 / 0.00 / 1.742 | 0.042 / 0.96 / — |
 | sev-blind, action-aware (main) [r1] | 0.500 / 0.58 / 1.500 | 114.875 / 0.58 / 1.001 | 9.083 / 0.25 / 1.703 | 1.125 / 0.17 / — |
 | sev-on, action-aware [r1] | 0.250 / 0.75 / 0.750 | 116.625 / 0.42 / 1.016 | 11.583 / 0.29 / 2.172 | 1.750 / 0.12 / — |
 | sev-blind, action-aware (main) [r2] | 0.333 / 0.67 / 1.000 | 115.083 / 0.38 / 1.003 | 5.542 / 0.46 / 1.039 | 0.000 / 1.00 / — |
@@ -240,6 +249,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.750 / 0.38 / 1.000 | 223.298 / 0.08 / 1.000 | 9.783 / 0.62 / 0.991 | 0.000 / 0.21 / — |
 | sev-blind, action-blind | 0.750 / 0.38 / 1.000 | 223.292 / 0.38 / 1.000 | 9.875 / 0.38 / 1.000 | 0.000 / 1.00 / — |
 | sev-on, action-blind | 0.750 / 0.38 / 1.000 | 223.292 / 0.38 / 1.000 | 9.875 / 0.38 / 1.000 | 0.000 / 1.00 / — |
+| **M1b transformer (main, r3, 1 seed)** | 0.667 / 0.46 / 0.889 | 226.083 / 0.00 / 1.013 | 8.875 / 0.58 / 0.899 | 0.000 / 1.00 / — |
 | sev-blind, action-aware (main) [r1] | 0.750 / 0.38 / 1.000 | 355.333 / 0.00 / 1.591 | 23.250 / 0.00 / 2.354 | 2.875 / 0.00 / — |
 | sev-on, action-aware [r1] | 0.750 / 0.38 / 1.000 | 211.167 / 0.62 / 0.946 | 11.833 / 0.12 / 1.198 | 2.125 / 0.00 / — |
 | sev-blind, action-aware (main) [r2] | 0.750 / 0.38 / 1.000 | 223.292 / 0.38 / 1.000 | 9.667 / 0.58 / 0.979 | 0.000 / 1.00 / — |
@@ -259,6 +269,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.458 / 0.54 / 1.000 | 146.118 / 0.25 / 0.999 | 8.655 / 0.38 / 0.999 | 0.002 / 0.21 / — |
 | sev-blind, action-blind | 0.458 / 0.54 / 1.000 | 146.208 / 0.12 / 1.000 | 8.667 / 0.12 / 1.000 | 0.000 / 1.00 / — |
 | sev-on, action-blind | 0.458 / 0.54 / 1.000 | 146.208 / 0.12 / 1.000 | 8.667 / 0.12 / 1.000 | 0.000 / 1.00 / — |
+| **M1b transformer (main, r3, 1 seed)** | 0.458 / 0.54 / 1.000 | 145.625 / 0.62 / 0.996 | 10.333 / 0.33 / 1.192 | 0.000 / 1.00 / — |
 | sev-blind, action-aware (main) [r1] | 0.375 / 0.62 / 0.818 | 142.625 / 0.50 / 0.975 | 18.000 / 0.50 / 2.077 | 2.667 / 0.00 / — |
 | sev-on, action-aware [r1] | 0.667 / 0.33 / 1.455 | 161.583 / 0.12 / 1.105 | 20.625 / 0.12 / 2.380 | 1.000 / 0.29 / — |
 | sev-blind, action-aware (main) [r2] | 0.458 / 0.54 / 1.000 | 146.208 / 0.12 / 1.000 | 8.667 / 0.33 / 1.000 | 0.000 / 1.00 / — |
@@ -278,6 +289,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | sev-on, action-aware | 0.792 / 0.38 / 1.000 | 277.334 / 0.46 / 1.000 | 12.878 / 0.04 / 1.010 | 0.000 / 0.21 / — |
 | sev-blind, action-blind | 0.792 / 0.38 / 1.000 | 277.333 / 0.38 / 1.000 | 12.750 / 0.17 / 1.000 | 0.000 / 1.00 / — |
 | sev-on, action-blind | 0.792 / 0.38 / 1.000 | 277.333 / 0.38 / 1.000 | 12.750 / 0.17 / 1.000 | 0.000 / 1.00 / — |
+| **M1b transformer (main, r3, 1 seed)** | 0.875 / 0.38 / 1.105 | 276.708 / 0.62 / 0.998 | 14.042 / 0.29 / 1.101 | 0.000 / 1.00 / — |
 | sev-blind, action-aware (main) [r1] | 0.792 / 0.38 / 1.000 | 248.750 / 0.62 / 0.897 | 11.292 / 0.75 / 0.886 | 4.333 / 0.00 / — |
 | sev-on, action-aware [r1] | 0.792 / 0.38 / 1.000 | 348.292 / 0.00 / 1.256 | 18.125 / 0.08 / 1.422 | 0.833 / 0.33 / — |
 | sev-blind, action-aware (main) [r2] | 0.792 / 0.38 / 1.000 | 277.333 / 0.38 / 1.000 | 12.958 / 0.21 / 1.016 | 0.000 / 1.00 / — |
@@ -329,4 +341,5 @@ LoRA r16 on `Qwen--Qwen2.5-0.5B-Instruct`; 276 of 714 steps (39 % of one epoch) 
 | m1gru_sevon_aa_s0 | m1_gru | sev-on_action-aware | 0 | cuda | 0.1286 | 11200 | max_steps | True | 0.959 | 2631 |
 | m1gru_sevon_ab_r2_s0 | m1_gru | sev-on_action-blind | 0 | cuda | 0.1430 | 1200 | patience | True | 0.958 | 3483 |
 | m1gru_sevon_ab_r3_s0 | m1_gru | sev-on_action-blind | 0 | cuda | 0.1412 | 1200 | patience | True | 0.965 | 4247 |
+| m1tf_main_r3_s0 | m1_tf | sev-blind_action-aware | 0 | cuda | 0.0725 | 2400 | max_steps | True | 0.926 | 3309 |
 

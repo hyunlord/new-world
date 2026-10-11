@@ -138,6 +138,22 @@ def main() -> int:
                   "see Model column", txt + " — T1: " + "; ".join(t1_rows),
                   ("PASS" if main_ok and t1_ok else f"FAIL (T2 168 h {'pass' if main_ok else 'fail'}, T1 {'pass' if t1_ok else 'fail'})")
                   + f"; original: {'pass' if verdicts[0][1] else 'fail'} on T2 168 h"))
+        tf = load("m1tf_main_r3_s0", "metrics.json")
+        if tf:
+            rows, ok = [], True
+            for s_ in W2_SPLITS:
+                cand = {k: float(np.nanmean(v)) for k, v in bench["T2"]["168"][s_].items()}
+                if rv:
+                    cand.update({k: v["mean"] for k, v in rv["T2"]["168"][s_].items()})
+                name = min(cand, key=cand.get)
+                ok &= bool(tf["T2"]["168"][s_]["mean"] <= 0.9 * cand[name])
+                rows.append(f"{s_} {tf['T2']['168'][s_]['mean']:.3f} vs {cand[name]:.3f} {name}")
+            t1ok = all(tf["T1"][s_]["mean"] <= 1.05 * min([float(np.nanmean(v)) for v in bench["T1"][s_].values()]
+                                                          + ([v["mean"] for v in rv["T1"][s_].values()] if rv else []))
+                       for s_ in TESTS)
+            W.append(("W2b", "supplementary: the W2 test applied to M1b (transformer, recipe r3, one seed) — W2 itself is defined on M1",
+                      "best of all baselines", "T2 168 h: " + "; ".join(rows) + " — T1: " + "; ".join(f"{s_} {tf['T1'][s_]['mean']:.3f}" for s_ in TESTS),
+                      "would PASS (one seed)" if ok and t1ok else "would FAIL"))
         # W3
         if "T4" in m0:
             parts, okc = [], True
@@ -219,15 +235,17 @@ def main() -> int:
                   f"max |diff| over {len(diffs)} test numbers (T4 effects included; {len(missing)} missing keys): {mx:.2e}",
                   "PASS" if mx <= 1e-6 and not missing else "MEASURED (see DECISIONS)"))
     rev = DOCS / "REVIEW.md"
+    confirmed = rev.exists() and "W8 (leakage audit): CONFIRMED" in rev.read_text()
     W.append(("W8", "leakage audit by an independent reviewer", "—",
-              "see REVIEW.md" if rev.exists() else "pending", "see REVIEW.md" if rev.exists() else "PENDING"))
+              "independent general-purpose reviewer, REVIEW.md" if rev.exists() else "pending",
+              "CONFIRMED" if confirmed else ("see REVIEW.md" if rev.exists() else "PENDING")))
     L += ["## W table", "", "| # | Target | Baseline | Model | Result |", "|---|---|---|---|---|"]
     L += [f"| {a} | {b_} | {c_} | {d_} | {e} |" for a, b_, c_, d_, e in W]
     L.append("")
     # ---------------------------------------------------------------- model tables
     models = [(n, r) for n, r in VARIANT_RUNS.items() if load(r, "metrics.json")]
     other = [r for r in RECIPES if r != recipe]
-    extra = [("M1b transformer (main, r2)", "m1tf_main_r2_s0"), ("M1b transformer (main, r1)", "m1tf_main_s0")]
+    extra = [("**M1b transformer (main, r3, 1 seed)**", "m1tf_main_r3_s0")]
     for o in other:
         om, ov = runs_for(RECIPES[o])
         extra += [(f"{n} [{o}]", r) for n, r in ov.items()] + [(f"M1 main s{i} [{o}]", om[i]) for i in (1, 2)]

@@ -80,6 +80,7 @@ Val = mean of A val and B val (M2: A val); test columns are A test unless named.
 | `m1gru_sevon_aa_s0` | m1_gru / sev-on_action-aware / 0 | cuda | 12000 (11200) | 0.118 | 0.125 | 0.589 | 0.118 | 0.125 | 0.590 / 0.605 / 0.578 | 0.047 | `5d736cea` |
 | `m1gru_sevon_ab_r2_s0` | m1_gru / sev-on_action-blind / 0 | cuda | 2200 (1200) | 0.132 | 0.142 | 0.522 | 0.132 | 0.142 | 0.534 / 0.542 / 0.515 | 0.312 | `28b4a7a1` |
 | `m1gru_sevon_ab_r3_s0` | m1_gru / sev-on_action-blind / 0 | cuda | 2200 (1200) | 0.130 | 0.142 | 0.457 | 0.130 | 0.144 | 0.456 / 0.459 / 0.442 | 0.188 | `937862c1` |
+| `m1tf_main_r3_s0` | m1_tf / sev-blind_action-aware / 0 | cuda | 3000 (2400) | 0.068 | 0.072 | 0.123 | 0.068 | 0.076 | 0.122 / 0.124 / 0.120 | 0.203 | `a0270f0c` |
 | `m2_mlp_s0` | m2 (mlp) / — / 0 | cpu | 3696 | val state-tag 0.894 | val Chebyshev 2.212 | val score 1.222 | not test-evaluated (not selected) | | | | `899824df` |
 | `m2_set_s0` | m2 (set) / — / 0 | cpu | 1920 | val state-tag 0.910 | val Chebyshev 2.051 | val score 1.109 | state-tag 0.902 | Chebyshev 2.038 | needs nMAE 0.121 | — | `f985cbd5` |
 | `m3_s0` | m3 (LoRA r16, Qwen2.5-0.5B-Instruct) / — / 0 | cpu | 276 of 714 | — | — | — | parse rate 1.000 | 24 h nMAE 0.056 (daily naive 0.139) | — | — | `0a54e03b` |
@@ -103,6 +104,7 @@ m1gru_sevon_aa_r3_s0: python tools/worldmodel/wm1/m1_gru.py train --out /home/hy
 m1gru_sevon_aa_s0: python tools/worldmodel/wm1/m1_gru.py train --out /home/hyunlord/work/wm1-runs/m1gru_sevon_aa_s0 --variant sev-on_action-aware --seed 0 --threads 8
 m1gru_sevon_ab_r2_s0: python tools/worldmodel/wm1/m1_gru.py train --out /home/hyunlord/work/wm1-runs/m1gru_sevon_ab_r2_s0 --variant sev-on_action-blind --seed 0 --clamp-nonneg 1 --eval-every 200 --k-max 168 --max-steps 4000 --roll-min-context 167 --roll-starts 2 --tf-l1 1.0 --threads 8 --window 336
 m1gru_sevon_ab_r3_s0: python tools/worldmodel/wm1/m1_gru.py train --out /home/hyunlord/work/wm1-runs/m1gru_sevon_ab_r3_s0 --variant sev-on_action-blind --seed 0 --clamp-nonneg 1 --eval-every 200 --k-max 168 --max-steps 4000 --roll-min-context 167 --roll-starts 2 --tf-l1 1.0 --threads 8 --v-weight 5.0 --window 336
+m1tf_main_r3_s0: python tools/worldmodel/wm1/m1_tf.py train --out /home/hyunlord/work/wm1-runs/m1tf_main_r3_s0 --variant sev-blind_action-aware --seed 0 --batch 32 --clamp-nonneg 1 --eval-every 150 --k-max 168 --max-steps 3000 --roll-min-context 167 --roll-starts 1 --tf-l1 1.0 --threads 8 --v-weight 5.0 --window 336
 m2_mlp_s0: python tools/worldmodel/wm1/m2_agents.py train --out /home/hyunlord/work/wm1-runs/m2_mlp_s0 --arch mlp --seed 0 --epochs 4 --threads 8
 m2_set_s0: python tools/worldmodel/wm1/m2_agents.py train --out /home/hyunlord/work/wm1-runs/m2_set_s0 --arch set --seed 0 --epochs 2 --threads 8
 m3_s0: python tools/worldmodel/wm1/m3_text.py train --out /home/hyunlord/work/wm1-runs/m3_s0 --threads 4
