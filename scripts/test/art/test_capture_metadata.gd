@@ -80,7 +80,7 @@ func _run() -> void:
 	assert(is_equal_approx(float(rows[0]["self_modulate"][2]), 0.5))
 	assert(Metadata.life_stage_counts({"life_stages": PackedByteArray([0, 1, 2, 0, 7])}) == {"adult": 2, "child": 1, "elder": 1, "unknown": 1})
 	assert(Metadata.life_stage_counts({}) == {"adult": 0, "child": 0, "elder": 0, "unknown": 0})
-	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 13)
+	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 21)
 	for day: int in [23, 25, 27, 29]:
 		assert([day, "02:00", "F2N"] in Plans.ART_LONG)
 	assert(Plans.ART_LONG[1] == [10, "15:00", "F2"] and Plans.ART_LONG[2] == [10, "15:00", "F5"])

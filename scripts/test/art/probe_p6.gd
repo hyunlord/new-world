@@ -38,6 +38,8 @@ func _sample(world: Node, display_day: int, hour: int) -> Dictionary:
 	var cold_ids: Array[int] = []
 	var gathering_ids: Array[int] = []
 	var hauling_ids: Array[int] = []
+	var wood_target_ids: Array[int] = []
+	var wood_inventory_ids: Array[int] = []
 	var cold_sleeping_ids: Array[int] = []
 	for index: int in range(agents["agent_ids"].size()):
 		var id: int = int(agents["agent_ids"][index])
@@ -49,6 +51,10 @@ func _sample(world: Node, display_day: int, hour: int) -> Dictionary:
 				cold_sleeping_ids.append(id)
 		if state == 3 and target_kind == 7:
 			gathering_ids.append(id)
+		if target_kind == 7:
+			wood_target_ids.append(id)
+		if int(agents["carried_woods"][index]) > 0:
+			wood_inventory_ids.append(id)
 		if state == 1 and int(agents["carried_woods"][index]) > 0:
 			hauling_ids.append(id)
 	_check(int(clock["tick"]) == target, "target tick matches")
@@ -59,6 +65,8 @@ func _sample(world: Node, display_day: int, hour: int) -> Dictionary:
 		"cold_agent_ids": cold_ids, "cold_sleeping_ids": cold_sleeping_ids,
 		"wood_gatherers": gathering_ids.size(), "wood_gatherer_ids": gathering_ids,
 		"wood_haulers": hauling_ids.size(), "wood_hauler_ids": hauling_ids,
+		"wood_target_count": wood_target_ids.size(), "wood_target_ids": wood_target_ids,
+		"wood_inventory_count": wood_inventory_ids.size(), "wood_inventory_ids": wood_inventory_ids,
 		"settlement_ids": Array(settlements["settlement_ids"]),
 		"fire_lit": Array(settlements["fire_lit"]), "wood_stocks": Array(settlements["wood_stocks"]),
 	}
@@ -72,6 +80,13 @@ func run() -> void:
 	var samples: Array[Dictionary] = []
 	for day: int in [15, 16]:
 		samples.append(_sample(natural, day, 15))
+	if "--wood-only" in OS.get_cmdline_user_args():
+		var wood_file: FileAccess = FileAccess.open("res://docs/art/production6/baseline/probe_wood_detail.json", FileAccess.WRITE)
+		wood_file.store_string(JSON.stringify({"world_info": info, "natural_samples": samples, "failures": failures}, "\t") + "\n")
+		wood_file.close()
+		natural.free()
+		quit(0 if failures.is_empty() else 1)
+		return
 	for day: int in [23, 24, 25, 26, 27, 28, 29, 54, 55, 56, 57, 84, 85]:
 		samples.append(_sample(natural, day, 2))
 	natural.free()
