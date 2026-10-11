@@ -2,6 +2,7 @@ extends Node2D
 
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
+const MorningChill = preload("res://scripts/ui/morning_chill.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
@@ -33,6 +34,7 @@ var _drawn_positions: Dictionary = {}
 var _stationary_seconds: Dictionary = {}
 var _camp_seats = CampSeatsScript.new()
 var _pose_moments = PoseMoments.new()
+var _morning_chill = MorningChill.new()
 var _opaque_rects: Dictionary = {}
 var _idle_seconds: Dictionary = {}
 var _frame_groups: Dictionary = {}
@@ -95,6 +97,8 @@ func _process(delta: float) -> void:
 	var live: Dictionary = {}
 	var context: Dictionary = _activity_context()
 	var time: Dictionary = world_sim.get_time_snapshot()
+	var tick: int = int(time.get("tick", 0))
+	ingest_chill_snapshot(snap, tick)
 	var hour: float = float(time.get("time_of_day", 12.0))
 	var draw_agents: Array[Dictionary] = []
 	for i in n:
@@ -131,7 +135,7 @@ func _process(delta: float) -> void:
 			pose = "eat"
 		var cold: bool = Cold.snapshot_cold(snap, i)
 		var base_pose: String = pose
-		pose = Cold.pose(pose, cold, moving)
+		pose = Cold.pose(pose, cold or _morning_chill.alpha(agent_id, tick) > 0.0, moving)
 		var body: String = "child" if child else ("adult_a" if int(look["body"]) == 0 else "adult_b")
 		var choice: Dictionary = frame_choice(body, pose, facing, float(look["phase"]))
 		var sprite_id: String = str(choice.get("sprite_id", ""))
@@ -165,6 +169,7 @@ func _process(delta: float) -> void:
 		var agent_id: int = int(row["id"])
 		var sprite: Sprite2D = _sprites[agent_id]
 		Cold.apply(sprite, bool(row.get("cold", false)), bool(row["moving"]), agent_id, _animation_time)
+		_morning_chill.apply(sprite, agent_id, tick, _animation_time)
 		sprite.set_meta("drawn_position", sprite.position)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
@@ -242,6 +247,9 @@ func set_capture_visible(shown: bool) -> void:
 	_capture_visible = shown
 	_process(0.0)
 
+func ingest_chill_snapshot(snapshot: Dictionary, tick: int) -> void:
+	_morning_chill.ingest(snapshot, tick)
+
 func refresh_snapshot() -> void:
 	_prev_positions.clear()
 	_curr_positions.clear()
@@ -252,6 +260,7 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	_morning_chill.clear()
 	_render_positions.clear()
 	_drawn_positions.clear()
 	_stationary_seconds.clear()
