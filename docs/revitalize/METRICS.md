@@ -1663,3 +1663,16 @@ Final evaluation (`p6-7_final_targets`, receipts from the reproduction table abo
 | Y13 | day120 | 0.00133 / 0.00128 / 0.00161 / 0.00125 / 0.00165 | 0.00142 / 0.00137 / 0.00172 / 0.00133 / 0.00175 | PASS |
 
 Every Y target passes except Y9 (three-strike stop, round 2 notes). Full gate on the final code head `01fd135d`: green — debug 1,941 / release 1,941 passed (Pass 5: 1,912 each; +29 Pass 6 tests), 0 failed, 0 ignored; both Clippy variants; forbidden math 0; bridge build; Godot import; strict check; smoke without `SCRIPT ERROR`/`ERROR:`; Python unit tests (`verification/p6-7/gate.txt`).
+
+## Pass 7 baseline
+
+Base `fe60de21` (code head `01fd135d`), release probe built from the base and frozen as a copy (`probe_base`), `--workers 4`, run 13:48–13:55 KST. Flags exactly those of Pass 6's final runs (`## Pass 6 Part 7`): the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30` for v11 and v12, none for legacy.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p7-0_v12_10day` | game_v12 0..64 × 10, `--check-determinism`, the eight clocks | DETERMINISM PASS; all 5,846 shared values equal `p6-7_final_v12_10day` (0 differences, no one-sided paths) |
+| `p7-0_v12_120day` | game_v12 0..32 × 120, same flags | DETERMINISM PASS; all 53,385 equal `p6-7_final_v12_120day` |
+| `p7-0_v11_10day` | game_v11 0..64 × 10, same flags | DETERMINISM PASS; all 5,846 equal `p6-7_final_v11_10day` |
+| `p7-0_legacy` | legacy 0..4 × 10, `--check-determinism` | DETERMINISM PASS; all 4,496 equal `p6-7_final_legacy` |
+
+Fingerprints of `game_v12_scene(seed)` after 1,440 ticks (seeds 0–3), pinned in `harness_v12_fingerprints_unchanged`: `519530c0aaaae844` (forage 83, wood 20), `97f3bb5d07eb719c` (68, 32), `b44a71909b8615cc` (84, 28), `c16d5b002bea6cc5` (55, 37).

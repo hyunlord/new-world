@@ -588,3 +588,9 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 4 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` test `RULE` AgingRule literal | Add `elder_evening_tether: false` | struct-literal field addition with legacy value |
 | 4 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | Add `elder_evening_tether: false` | struct-literal field addition; the literal still equals `game_v11()` |
 | 4 | `rust/crates/sim-core/src/rules.rs` `game_v12_is_v11_plus_pass6_fields` (a Pass 6 test) | Also resets `aging.elder_evening_tether` before comparing with v11 | the test still pins every non-Pass-6 field of v12 to v11 |
+
+## Pass 7
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 0 | (none) | Part 0 only adds `harness_revitalize_pass7_frozen.rs` (v12 fingerprints for seeds 0–3 and the field-by-field `game_v12()` literal) | — |
