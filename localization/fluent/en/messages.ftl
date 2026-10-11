@@ -5219,3 +5219,22 @@ INSPECTOR_CARRYING_WOOD_FMT = Carrying %d wood
 
 HUD_COLD = Cold
 INSPECTOR_COLD = Cold — the fire is out
+
+HUD_SEASON_LAST_NIGHT_FMT = %s, night of day %d
+HUD_WINTER_MILD = Mild winter
+HUD_WINTER_NORMAL = Winter
+HUD_WINTER_HARSH = Harsh winter
+GOD_HAND_TITLE = God's hand
+GOD_HAND_GIFT_FOOD = Gift food
+GOD_HAND_SPOIL_FOOD = Spoil food
+GOD_HAND_GIFT_WOOD = Gift wood
+GOD_HAND_ROT_WOOD = Rot wood
+GOD_HAND_RAIN = Rain
+GOD_HAND_COLD_SNAP = Cold snap
+GOD_HAND_WINDFALL = Windfall
+GOD_HAND_APPLIED_FMT = %s %s — applied %d
+GOD_HAND_FAILED = Nothing happened
+GOD_HAND_COLD_SNAP_ACTIVE = Cold snap: %d nights
+GOD_HAND_LOG = Recent acts
+GOD_HAND_UNIT_HOURS = h
+GOD_HAND_UNIT_NIGHTS = nights

@@ -15,6 +15,8 @@ var _locale: Node = null
 var _clock_label: Label
 var _resource_labels: Array[Label] = []
 var _cold_label: Label
+var _cold_icon: TextureRect
+var _winter_label: Label
 var _wood_label: Label
 var _wood_row: HBoxContainer
 var _speed_label: Label
@@ -40,6 +42,10 @@ func _ready() -> void:
 	_settlements_label = ArtUI.pair(hbox, 2)
 	_shelters_label = ArtUI.pair(hbox, 3)
 	_sites_label = ArtUI.pair(hbox, 4)
+	_winter_label = Label.new()
+	_winter_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_winter_label.add_theme_color_override("font_color", Color("a8c0d0"))
+	hbox.add_child(_winter_label)
 	var lower: HBoxContainer = HBoxContainer.new()
 	lower.add_theme_constant_override("separation", 8)
 	column.add_child(lower)
@@ -58,6 +64,9 @@ func _ready() -> void:
 			_cold_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			lower.add_child(_cold_label)
 			_cold_label.hide()
+			_cold_icon = _make_cold_icon()
+			lower.add_child(_cold_icon)
+			_cold_icon.hide()
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lower.add_child(spacer)
@@ -143,6 +152,10 @@ func _refresh() -> void:
 	var hour: int = int(minutes / 60.0)
 	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
 	_clock_label.text += _season_label(clock)
+	var severity: int = int(clock.get("winter_severity", -1))
+	_winter_label.visible = severity >= 0 and severity <= 2
+	if _winter_label.visible:
+		_winter_label.text = _loc(["HUD_WINTER_MILD", "HUD_WINTER_NORMAL", "HUD_WINTER_HARSH"][severity])
 	var food: int = 0
 	var settlement: Dictionary = _snapshot("get_settlement_snapshot")
 	var stocks: Variant = settlement.get("food_stocks", null)
@@ -164,6 +177,8 @@ func _refresh() -> void:
 				cold_count += 1
 	_cold_label.visible = cold_count > 0
 	_cold_label.text = _loc("HUD_COLD") + " %d" % cold_count
+	_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
+	_cold_icon.visible = _cold_label.visible
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
 	var kinds: Variant = resources.get("kinds", null)
@@ -210,5 +225,26 @@ func _season_label(clock: Dictionary) -> String:
 	var keys: Array[String] = ["HUD_SEASON_SPRING", "HUD_SEASON_SUMMER", "HUD_SEASON_AUTUMN", "HUD_SEASON_WINTER"]
 	if season < 0 or season >= keys.size() or day < 1 or day > int(clock["days_per_season"]):
 		return ""
+	if int(clock.get("winter_severity", -1)) >= 0 and season != 3:
+		return " · " + (_loc("HUD_SEASON_LAST_NIGHT_FMT") % [_loc("HUD_SEASON_WINTER"), int(clock["days_per_season"])])
 	# Bridge contract: season is zero-based; day_of_season is one-based.
 	return " · " + (_loc("HUD_SEASON_DAY_FMT") % [_loc(keys[season]), day])
+
+
+func _make_cold_icon() -> TextureRect:
+	var pixels: Image = Image.create(9, 9, false, Image.FORMAT_RGBA8)
+	pixels.fill(Color.TRANSPARENT)
+	for coordinate: int in range(1, 8):
+		pixels.set_pixel(4, coordinate, Color("a8c0d0"))
+		pixels.set_pixel(coordinate, 4, Color("a8c0d0"))
+	for coordinate: int in [2, 3, 5, 6]:
+		pixels.set_pixel(coordinate, coordinate, Color("a8c0d0"))
+		pixels.set_pixel(coordinate, 8 - coordinate, Color("a8c0d0"))
+	var icon: TextureRect = TextureRect.new()
+	icon.texture = ImageTexture.create_from_image(pixels)
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	icon.custom_minimum_size = Vector2(18, 18)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return icon

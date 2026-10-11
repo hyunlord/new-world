@@ -8,7 +8,7 @@ Contract: GOAL.md SHA256 776d8bf4ac83ef4660db81a58e3f627baa6e09f577d8f52476d4442
 | 0 | Merge, gate, v14 probe, baseline | 14:19:19 | 14:40:27 | Complete; initial metadata count failure retained, focused recheck PASS |
 | 1 | Shelter frost, doorway breath, cold hearth, tint | 14:40:27 | 14:44:50 | Implemented; five headless tests PASS; visual pending |
 | 2 | Morning chill memory | 14:44:50 | 14:47:00 | Implemented; six headless tests PASS; visual pending |
-| 3 | HUD night and severity truth | | | Pending |
+| 3 | HUD night and severity truth | 14:47:00 | 14:48:00 | Implemented; both HUD tests PASS; visual pending |
 | 4 | Load silhouette, attached props, review | | | Pending |
 | 5 | Intervention getter, panel, effects | | | Pending |
 | 6 | Winter crowd declump | | | Pending |

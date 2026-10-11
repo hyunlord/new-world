@@ -8,13 +8,14 @@ var _failures: int = 0
 class SnapshotWorld extends Node:
 	var settlements: Dictionary = {}
 	var agents: Dictionary = {}
+	var clock: Dictionary = {}
 	func get_tallies() -> Dictionary: return {}
 	func get_agent_snapshot() -> Dictionary: return agents
 	func get_settlement_snapshot() -> Dictionary: return settlements
 	func get_construction_snapshot() -> Dictionary: return {}
 	func get_building_snapshot() -> Dictionary: return {}
 	func get_resource_snapshot() -> Dictionary: return {}
-	func get_time_snapshot() -> Dictionary: return {}
+	func get_time_snapshot() -> Dictionary: return clock
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -79,11 +80,22 @@ func _run() -> void:
 		locale.call("set_language", lang)
 		topbar._refresh()
 		_check(topbar._cold_label.visible and topbar._cold_label.text == ("Cold 2" if lang == "en" else "추위 2"), "localized cold count")
+		_check(topbar._cold_icon.visible, "cold count snowflake is visible")
+		_check(topbar._cold_label.get_theme_color("font_color") == Color("a8c0d0"), "cold count uses frost color")
+		for severity: int in range(3):
+			world.clock = {"winter_severity": severity}
+			topbar._refresh()
+			var key: String = ["HUD_WINTER_MILD", "HUD_WINTER_NORMAL", "HUD_WINTER_HARSH"][severity]
+			_check(topbar._winter_label.visible and topbar._winter_label.text == locale.ltr(key), "winter severity localized")
+		world.clock = {"winter_severity": -1}
+		topbar._refresh()
+		_check(not topbar._winter_label.visible, "severity absent outside booked winter")
 	_check(topbar._cold_label.get_index() == topbar._wood_row.get_index() + 1, "cold after wood")
 	for value: Variant in [null, [1], PackedByteArray([0])]:
 		world.agents["colds"] = value
 		topbar._refresh()
 		_check(not topbar._cold_label.visible, "no cold count hidden")
+		_check(not topbar._cold_icon.visible, "no cold snowflake hidden")
 	locale.call("set_language", language)
 	seek.free()
 	topbar.free()

@@ -22,6 +22,10 @@ func _run() -> void:
 	assert(topbar._season_label({"season": 3, "day_of_season": 30, "days_per_season": 30}).contains("30"))
 	assert(topbar._season_label({"season": 4, "day_of_season": 1, "days_per_season": 30}) == "")
 	assert(topbar._season_label({"season": 0, "day_of_season": 31, "days_per_season": 30}) == "")
+	var last_night: Dictionary = {"season": 0, "day_of_season": 1, "days_per_season": 7, "winter_severity": 1}
+	assert(topbar._season_label(last_night) == " · " + (topbar._loc("HUD_SEASON_LAST_NIGHT_FMT") % [topbar._loc("HUD_SEASON_WINTER"), 7]))
+	last_night["winter_severity"] = -1
+	assert(topbar._season_label(last_night) == " · " + (topbar._loc("HUD_SEASON_DAY_FMT") % [topbar._loc("HUD_SEASON_SPRING"), 1]))
 	topbar._refresh()
 	assert(topbar._clock_label.text == original_clock)
 	topbar.free()
