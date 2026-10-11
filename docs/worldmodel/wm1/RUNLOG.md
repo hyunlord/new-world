@@ -22,6 +22,6 @@ Times are KST (Mac clock). Working-time budget: 12 h from the start (GOAL.md 0.3
 | 7 | 22:28 | | review round 1 (fresh general-purpose subagent, 22:28–22:37): W8 CONFIRMED, 15 findings, fixes committed `9fc52162` |
 | 7 | 23:00 | | planner note: severity-free and true-severity ridges (`ridge_variants_9e0f7b3b`, 23:01–23:10); W2 re-judged against the best of all baselines (D7.2) |
 | 3 end | | 23:18 | M1b trained 22:16–23:11 (3,000 steps, GPU), test (after the kind-lookup fix) 23:12–23:18: T1 0.068, T2-168 0.122 / 0.124 / 0.120 |
-| 7 | 23:25 | | review round 2: no blocking findings, W8 CONFIRMED; fixes committed |
-| gate | 23:38 | 23:40 | Mac 47 tests OK (3 Pass 7 recorder skips), DGX 47 tests OK 0 skips, allowed paths clean (`9f0ac8bf`) |
+| 7 | 23:22 | 23:31 | review round 2: no blocking findings, W8 CONFIRMED; fixes committed |
+| gate | 23:31 | 23:32 | Mac 47 tests OK (3 Pass 7 recorder skips), DGX 47 tests OK 0 skips, allowed paths clean (`9f0ac8bf`) |
 | 7 end | | 23:33 | REPORT_WM1.md; green branch fast-forward; draft PR |
