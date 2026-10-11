@@ -1,0 +1,21 @@
+step 200 k 17 loss 0.1995 val 0.1965 best 0.1965@200 114s
+step 400 k 34 loss -0.0333 val 0.1633 best 0.1633@400 251s
+step 600 k 51 loss -0.0234 val 0.1508 best 0.1508@600 419s
+step 800 k 67 loss -0.1375 val 0.1529 best 0.1508@600 644s
+step 1000 k 84 loss -0.2097 val 0.1475 best 0.1475@1000 885s
+step 1200 k 101 loss -0.1607 val 0.1502 best 0.1475@1000 1163s
+step 1400 k 117 loss -0.3515 val 0.1423 best 0.1423@1400 1472s
+step 1600 k 134 loss -0.1647 val 0.1440 best 0.1423@1400 1941s
+step 1800 k 151 loss -0.3453 val 0.1462 best 0.1423@1400 2522s
+step 2000 k 168 loss -0.1778 val 0.1516 best 0.1423@1400 3069s
+step 2200 k 168 loss -0.3758 val 0.1523 best 0.1423@1400 3600s
+step 2400 k 168 loss -0.4952 val 0.1359 best 0.1359@2400 4067s
+step 2600 k 168 loss -0.4359 val 0.1300 best 0.1300@2600 4538s
+step 2800 k 168 loss -0.4064 val 0.1568 best 0.1300@2600 5010s
+step 3000 k 168 loss -0.4663 val 0.1652 best 0.1300@2600 5481s
+step 3200 k 168 loss -0.6634 val 0.1246 best 0.1246@3200 5852s
+step 3400 k 168 loss -0.5979 val 0.1364 best 0.1246@3200 6161s
+step 3600 k 168 loss -0.4974 val 0.1387 best 0.1246@3200 6465s
+step 3800 k 168 loss -0.7509 val 0.1269 best 0.1246@3200 6772s
+step 4000 k 168 loss -0.6333 val 0.1289 best 0.1246@3200 7065s
+done: best 0.1246 at 3200, stop max_steps, round True, 7228s
