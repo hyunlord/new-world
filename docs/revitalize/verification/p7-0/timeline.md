@@ -8,5 +8,8 @@
 
 | Part | start | end |
 |---|---|---|
-| 0 | 13:48:04 | 13:58 |
-| 1 | 13:58 | |
+| 0 | 13:48:04 | 13:56 (commit `3bf68d96` at 13:56:4x; the Part 1 code was started at about 13:52 while the last Part 0 probe ran) |
+| 1 | 13:56 | 14:09 |
+| 2 | 14:09 | |
+
+Note: the first draft of this table held estimated times (13:58, 14:24); they were replaced with `date` / commit times at 14:08.

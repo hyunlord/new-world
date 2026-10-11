@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v12(DEFAULT_GAME_SEED),
-                WorldRules::game_v12(),
+                &WorldGenConfig::game_v13(DEFAULT_GAME_SEED),
+                WorldRules::game_v13(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v12(self.world_seed),
-            WorldRules::game_v12(),
+            &WorldGenConfig::game_v13(self.world_seed),
+            WorldRules::game_v13(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -2640,6 +2640,10 @@ pub struct TimeSnapshot {
     pub day_of_season: u32,
     /// Days per season (0 without seasons).
     pub days_per_season: u32,
+    /// Pass 7 severity of the winter at the completed tick: 0 mild, 1 normal,
+    /// 2 harsh, -1 outside a winter or without the rule or weights; from 00:00
+    /// to the burn end it reads the evening's winter (night booking).
+    pub winter_severity: i64,
 }
 
 /// Read the completed tick count and clock resources without mutation.
@@ -2660,6 +2664,10 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
         season,
         day_of_season,
         days_per_season,
+        winter_severity: sim_systems::runtime::settlement::firewood::winter_severity_at(
+            &engine.resources,
+            engine.current_tick(),
+        ),
     }
 }
 
@@ -2677,6 +2685,7 @@ fn time_snapshot_to_dict(snapshot: TimeSnapshot) -> VarDictionary {
     dict.set("season", snapshot.season as i64);
     dict.set("day_of_season", snapshot.day_of_season as i64);
     dict.set("days_per_season", snapshot.days_per_season as i64);
+    dict.set("winter_severity", snapshot.winter_severity);
     dict
 }
 
@@ -2747,6 +2756,27 @@ mod revitalize_tooling_tests {
     }
 
     #[test]
+    fn time_snapshot_reports_winter_severity_with_night_booking() {
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::game_v12();
+        // v12 has no severity weights: -1 everywhere, winter included.
+        advance_engine_ticks(&mut engine, (21 * 1440) as i64);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+        if let Some(rule) = engine.resources.rules.society.firewood.as_mut() {
+            rule.winter_severity_permille = Some([1000, 0, 0]);
+        }
+        // Display day 21 at 08:00: the first winter day, a mild winter.
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, 0);
+        // Display day 28 at 02:00 belongs to the last winter evening.
+        advance_engine_ticks(&mut engine, (7 * 1440 - 360) as i64);
+        let night = collect_time_snapshot(&engine);
+        assert_eq!((night.day_index, night.season, night.winter_severity), (28, 0, 0));
+        // 07:00 ends the night: spring.
+        advance_engine_ticks(&mut engine, 300);
+        assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+    }
+
+    #[test]
     fn time_snapshot_handles_disabled_clock() {
         let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
         engine.resources.ticks_per_day = 0;
@@ -2781,6 +2811,8 @@ mod revitalize_tooling_tests {
             cold_member_hours: 0,
             urgent_wood_trips: 0,
             winter_wood_lost: 0,
+            wood_retargets: 0,
+            interventions_applied: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

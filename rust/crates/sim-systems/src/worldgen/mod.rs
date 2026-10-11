@@ -37,6 +37,11 @@ pub struct WorldGenConfig {
     pub deadwood_max_radius: u32,
 }
 impl WorldGenConfig {
+    /// Pass 7 generator inputs: the same world as v12 (no worldgen change).
+    pub const fn game_v13(seed: u64) -> Self {
+        Self::game_v12(seed)
+    }
+
     /// Pass 6 generator inputs: the same world as v11 (no worldgen change).
     pub const fn game_v12(seed: u64) -> Self {
         Self::game_v11(seed)
@@ -167,6 +172,12 @@ mod tests {
     fn game_v12_is_the_v11_world() {
         for seed in [0, 5, DEFAULT_GAME_SEED] {
             assert_eq!(WorldGenConfig::game_v12(seed), WorldGenConfig::game_v11(seed));
+        }
+    }
+    #[test]
+    fn game_v13_is_the_v12_world() {
+        for seed in [0, 5, DEFAULT_GAME_SEED] {
+            assert_eq!(WorldGenConfig::game_v13(seed), WorldGenConfig::game_v12(seed));
         }
     }
     #[test]

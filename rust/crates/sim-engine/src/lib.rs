@@ -41,6 +41,9 @@ use sim_core::rules::WorldRules;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
+pub mod intervention;
+pub use intervention::{Intervention, InterventionRecord};
+
 /// FFI-originated event: a building was placed at `position` with influence
 /// `radius` (Chebyshev distance, in tiles). Drained by
 /// `sim_systems::runtime::influence::BuildingStampSystem` each tick which
@@ -100,6 +103,11 @@ pub struct Tallies {
     pub urgent_wood_trips: u64,
     /// Winter regrowth units that found no deadwood spot below the cap (Pass 6).
     pub winter_wood_lost: u64,
+    /// Wood gatherers re-targeted because the spot they were walking to was
+    /// empty (Pass 7); counted in every version.
+    pub wood_retargets: u64,
+    /// Interventions that changed something (`applied > 0`) (Pass 7).
+    pub interventions_applied: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -219,6 +227,17 @@ pub struct SimResources {
     pub wood_winter_cursor: Option<(u32, u32)>,
     /// Hearth fire per settlement; empty without the firewood rule.
     pub fires: BTreeMap<SettlementId, FireState>,
+    /// Rain (Pass 7): a settlement's fire stays out while `current_tick` is
+    /// below its entry. Expired entries stay and block nothing. Empty unless
+    /// an intervention asks for rain.
+    pub fire_blocked_until: BTreeMap<SettlementId, u64>,
+    /// Cold-snap nights still to come or in progress (Pass 7); zero unless an
+    /// intervention asks for one.
+    pub cold_snap_nights: u32,
+    /// Whether the current night is a cold-snap night (Pass 7).
+    pub cold_snap_tonight: bool,
+    /// Every intervention applied, in order (Pass 7); display-only.
+    pub intervention_log: Vec<InterventionRecord>,
     /// Members whose last movement was a haul step home; display-only, used to
     /// count `Tallies::haul_deposits`. Empty without the forage rule.
     pub haulers: BTreeSet<AgentId>,
@@ -411,6 +430,10 @@ impl SimResources {
             wood_winter_acc: 0,
             wood_winter_cursor: None,
             fires: BTreeMap::new(),
+            fire_blocked_until: BTreeMap::new(),
+            cold_snap_nights: 0,
+            cold_snap_tonight: false,
+            intervention_log: Vec::new(),
             haulers: BTreeSet::new(),
             social_chase_since: BTreeMap::new(),
             social_retry_after: BTreeMap::new(),
@@ -657,6 +680,9 @@ mod tests {
         assert!(resources.building_kinds.is_empty());
         assert!(resources.site_owner.is_empty());
         assert_eq!(resources.shelter_plan_skips, 0);
+        assert!(resources.fire_blocked_until.is_empty());
+        assert_eq!((resources.cold_snap_nights, resources.cold_snap_tonight), (0, false));
+        assert!(resources.intervention_log.is_empty());
     }
 
     fn empty_registry() -> MaterialRegistry {

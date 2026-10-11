@@ -1676,3 +1676,9 @@ Base `fe60de21` (code head `01fd135d`), release probe built from the base and fr
 | `p7-0_legacy` | legacy 0..4 × 10, `--check-determinism` | DETERMINISM PASS; all 4,496 equal `p6-7_final_legacy` |
 
 Fingerprints of `game_v12_scene(seed)` after 1,440 ticks (seeds 0–3), pinned in `harness_v12_fingerprints_unchanged`: `519530c0aaaae844` (forage 83, wood 20), `97f3bb5d07eb719c` (68, 32), `b44a71909b8615cc` (84, 28), `c16d5b002bea6cc5` (55, 37).
+
+## Pass 7 Part 1 — v13 skeleton, schema 7, the v12 baseline
+
+`p7-1_v12_10day` (game_v12 0..64 × 10) and `p7-1_v12_120day` (0..32 × 120), both `--check-determinism` with the eight clocks, release probe built from the Part 1 code (frozen copy `probe_p1`). Both DETERMINISM PASS. Against Part 0: all 5,846 / 53,385 shared values identical except `schema_version` (6 → 7); the schema-7 keys are additions (250 / 3,000 summary paths: 5 keys × 5 statistics × days). Workspace debug tests 1,952 passed, 0 failed (Pass 6: 1,941).
+
+`p7-1_v12_targets` (`evaluate_pass7.py`, `--v11-targets p6-1_v11_targets`): every Z has a v12 value. Z2 and Z5 PASS (Pass 6's Y2–Y8, Y10–Y12 unchanged). Winters (128 seed-winters): wood gathered 45 / 45 / 51 / 45 / 51; re-targets 49 / 45 / 57 / 39 / 63 a winter; **re-target share 0.514** / 0.495 / 0.531 / 0.446 / 0.565 (the brief's 0.51); first dark night on the seventh in 119 of 124, the sixth in 5; no dark night in 4 (share 0.031), two or more in 5 (0.039). Severity −1 everywhere (no weights in v12). Z3 and Z4 therefore FAIL for v12, as expected; Z1/Z6/Z7/Z8 receipts are not given for the baseline.

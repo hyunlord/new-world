@@ -2091,6 +2091,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                         match seek_opt.map(|seek| seek.tile) {
                             Some(tile) if resources.wood_tiles.get(&tile).is_some_and(|amount| *amount > 0) => Some(tile),
                             old => {
+                                // Display-only (Pass 7): a gatherer whose spot is empty.
+                                resources.tallies.wood_retargets += u64::from(old.is_some());
                                 wood_retarget.push((agent.id, e, (pos.x, pos.y), old));
                                 None
                             }

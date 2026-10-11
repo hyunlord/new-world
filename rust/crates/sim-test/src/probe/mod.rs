@@ -8,6 +8,7 @@ mod metrics;
 mod pass4;
 mod pass5;
 mod pass6;
+mod pass7;
 mod runner;
 mod summary;
 
@@ -30,11 +31,12 @@ mod tests {
     }
 
     #[test]
-    fn schema_six_is_exactly_additive() {
+    fn schema_seven_is_exactly_additive() {
         // Schema 3 had 53 keys; schema 4 added the 15 Pass 4 keys; schema 5 the
-        // 15 Pass 5 keys; schema 6 adds the 6 Pass 6 keys and nothing else.
+        // 15 Pass 5 keys; schema 6 the 6 Pass 6 keys; schema 7 adds the 5 Pass 7
+        // keys and nothing else.
         let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
-        assert_eq!(sample["schema_version"], 6);
-        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6);
+        assert_eq!(sample["schema_version"], 7);
+        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5);
     }
 }

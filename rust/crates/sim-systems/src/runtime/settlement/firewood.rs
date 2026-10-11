@@ -3,8 +3,9 @@
 //! Pure reads: none of these helpers mutates simulation state or draws RNG.
 //! Without `SocietyRules::firewood` every helper reports nothing (`None` / 0).
 
+use crate::runtime::agent::MovementRng;
 use crate::runtime::decision::agent_decision::clock_in_window;
-use crate::runtime::resource_regen::{season_at, season_at_tick};
+use crate::runtime::resource_regen::{day_index_at, season_at, season_at_tick};
 use hecs::World;
 use sim_core::components::{Agent, Inventory, ResourceKind, SettlementId};
 use sim_core::rules::FirewoodRule;
@@ -42,6 +43,75 @@ pub fn night_season(resources: &SimResources, rule: &FirewoodRule) -> usize {
         }
     }
     burn_season(resources)
+}
+
+/// Salt of the winter severity draw (Pass 7): "WINTERSE" in ASCII.
+const SEVERITY_SALT: u64 = 0x5749_4E54_4552_5345;
+
+/// One splitmix64 step of `x` (the first output of a stream seeded with `x`).
+fn mix(x: u64) -> u64 {
+    MovementRng::new(x).next_u64()
+}
+
+/// Severity of the winter of `year` (Pass 7): 0 mild, 1 normal, 2 harsh.
+///
+/// `u = mix(mix(world_seed ^ SALT) ^ year) % 1000` against the cumulative
+/// `winter_severity_permille` weights. Pure: no state, no stream. The double
+/// mix keeps seed `s`, year `y` apart from seed `s ^ y`, year 0. Without
+/// weights every winter is normal (1).
+pub fn winter_severity(resources: &SimResources, rule: &FirewoodRule, year: u64) -> u8 {
+    let Some([w0, w1, _]) = rule.winter_severity_permille else {
+        return 1;
+    };
+    let u = mix(mix(resources.world_seed ^ SEVERITY_SALT) ^ year) % 1000;
+    if u < u64::from(w0) {
+        0
+    } else if u < u64::from(w0) + u64::from(w1) {
+        1
+    } else {
+        2
+    }
+}
+
+/// Year of simulation tick `tick`: display day / (4 x days_per_season); 0
+/// without seasons.
+pub fn year_at_tick(resources: &SimResources, tick: u64) -> u64 {
+    resources.rules.seasons.map_or(0, |seasons| {
+        day_index_at(resources, tick).checked_div(4 * u64::from(seasons.days_per_season)).unwrap_or(0)
+    })
+}
+
+/// The tick whose season and year a night belongs to (Pass 7): under
+/// `night_season_from_evening`, before `burn_end_minute` the same minute of the
+/// previous day (the evening the night began); otherwise `tick` itself. The
+/// booking of [`night_season`].
+pub fn night_tick_at(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u64 {
+    if rule.night_season_from_evening && resources.ticks_per_day != 0 {
+        let minute = tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
+        if minute < u64::from(rule.burn_end_minute % MINUTES_PER_DAY) {
+            return tick.saturating_sub(resources.ticks_per_day);
+        }
+    }
+    tick
+}
+
+/// Severity level of the winter holding `tick` (Pass 7), `None` outside a
+/// winter, without seasons or without weights. No night booking: callers
+/// pass the booked tick.
+pub fn severity_level_at(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> Option<u8> {
+    rule.winter_severity_permille?;
+    let (season, _) = season_at_tick(resources, tick)?;
+    (season == WINTER).then(|| winter_severity(resources, rule, year_at_tick(resources, tick)))
+}
+
+/// Display value of the winter severity at completed-or-system tick `tick`
+/// (Pass 7 probe schema 7, FFI and recorder): 0 mild, 1 normal, 2 harsh, -1
+/// outside a winter or without the rule or weights. Samples from 00:00 to the
+/// burn end follow the night booking ([`night_tick_at`]).
+pub fn winter_severity_at(resources: &SimResources, tick: u64) -> i64 {
+    resources.rules.society.firewood.map_or(-1, |rule| {
+        severity_level_at(resources, &rule, night_tick_at(resources, &rule, tick)).map_or(-1, i64::from)
+    })
 }
 
 /// Urgent mode (Pass 6): `urgent_start_minute` is set and `in_hand` wood is
@@ -142,6 +212,10 @@ mod tests {
             winter_deadwood_cap: None,
             night_season_from_evening: false,
             urgent_start_minute: None,
+            winter_severity_permille: None,
+            winter_severity_burn_per_hour: [3, 3, 3],
+            winter_severity_regen_units_per_day: [6, 6, 6],
+            claims_bounded_by_amount: false,
         }
     }
 
@@ -216,6 +290,44 @@ mod tests {
         let world = World::new();
         assert!(is_urgent(&world, &resources, 1));
         assert!(!is_urgent(&world, &resources, 2));
+    }
+
+    #[test]
+    fn severity_is_minus_one_without_weights_and_booked_by_evening() {
+        let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
+        assert_eq!(winter_severity_at(&resources, 0), -1);
+        resources.rules = WorldRules::game_v12();
+        // v12: no weights, so no severity anywhere.
+        for day in [0u64, 21, 27, 28] {
+            assert_eq!(winter_severity_at(&resources, day * 1440), -1);
+        }
+        let mut rule = resources.rules.society.firewood.expect("v12 firewood");
+        rule.winter_severity_permille = Some([0, 0, 1000]);
+        resources.rules.society.firewood = Some(rule);
+        // Display day 21 is the first winter day; 08:00 = day x 1440.
+        assert_eq!(winter_severity_at(&resources, 20 * 1440), -1);
+        assert_eq!(winter_severity_at(&resources, 21 * 1440), 2);
+        // 02:00 of display day 21 still belongs to the autumn evening of day 20.
+        assert_eq!(winter_severity_at(&resources, 21 * 1440 + 120 - 480), -1);
+        // 02:00 of display day 28 (spring) belongs to the last winter evening.
+        assert_eq!(winter_severity_at(&resources, 28 * 1440 + 120 - 480), 2);
+        assert_eq!(winter_severity_at(&resources, 28 * 1440 + 420 - 480), -1);
+        assert_eq!(year_at_tick(&resources, 28 * 1440), 1);
+        assert_eq!(year_at_tick(&resources, 27 * 1440), 0);
+    }
+
+    #[test]
+    fn severity_draw_follows_the_weights() {
+        let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
+        let mut r = rule();
+        assert_eq!(winter_severity(&resources, &r, 3), 1, "no weights: normal");
+        for (weights, level) in [([1000, 0, 0], 0), ([0, 1000, 0], 1), ([0, 0, 1000], 2)] {
+            r.winter_severity_permille = Some(weights);
+            for seed in 0..20 {
+                resources.world_seed = seed;
+                assert_eq!(winter_severity(&resources, &r, seed + 1), level);
+            }
+        }
     }
 
     #[test]

@@ -47,6 +47,15 @@ pub fn game_v12_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 7 fixture: the v12 world under the v13 rules (winters of drawn
+/// severity, claims bounded by what a spot holds).
+pub fn game_v13_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v13(seed),
+        sim_core::rules::WorldRules::game_v13(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
