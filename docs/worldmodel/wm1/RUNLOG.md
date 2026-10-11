@@ -15,3 +15,7 @@ Times are KST (Mac clock). Working-time budget: 12 h from the start (GOAL.md 0.3
 | 2 | 20:06 | | r3 (V-weighted losses, D2.5) main s0, rerun, s1, s2 launched; r3 sev-on / action-blind variants 20:35 |
 | 5 | 19:12 | | M3 LoRA on Qwen2.5-0.5B-Instruct, 4 threads (two earlier launches stopped for CPU, D2.3) |
 | gate prep | 19:35 | 19:38 | Pass 7 recorder built on the DGX in a separate clone (`wm1-runs/_build/src`, base commit) so the export tests run in the DGX gate |
+| 2 end | | 22:12 | r3 main test (3 seeds) done 22:12: T2-168 0.275 / 0.272 / 0.277; W2 fails on T1 (0.123 vs 0.100); W7 identical (r2 and r3) |
+| 5 end | | 22:18 | M3 test: parse rate 1.00, 24 h nMAE 0.056 (daily naive 0.139) |
+| 3 | 22:29 | | M1b reinstated on the GPU (D0.3a, D3.2): `m1tf_main_r3_s0` |
+| 6 | 22:20 | | ANALYSIS.md, RESULTS.md, METRICS.md run table; direct daily ridge reference |
