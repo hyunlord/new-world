@@ -1682,3 +1682,23 @@ Fingerprints of `game_v12_scene(seed)` after 1,440 ticks (seeds 0–3), pinned i
 `p7-1_v12_10day` (game_v12 0..64 × 10) and `p7-1_v12_120day` (0..32 × 120), both `--check-determinism` with the eight clocks, release probe built from the Part 1 code (frozen copy `probe_p1`). Both DETERMINISM PASS. Against Part 0: all 5,846 / 53,385 shared values identical except `schema_version` (6 → 7); the schema-7 keys are additions (250 / 3,000 summary paths: 5 keys × 5 statistics × days). Workspace debug tests 1,952 passed, 0 failed (Pass 6: 1,941).
 
 `p7-1_v12_targets` (`evaluate_pass7.py`, `--v11-targets p6-1_v11_targets`): every Z has a v12 value. Z2 and Z5 PASS (Pass 6's Y2–Y8, Y10–Y12 unchanged). Winters (128 seed-winters): wood gathered 45 / 45 / 51 / 45 / 51; re-targets 49 / 45 / 57 / 39 / 63 a winter; **re-target share 0.514** / 0.495 / 0.531 / 0.446 / 0.565 (the brief's 0.51); first dark night on the seventh in 119 of 124, the sixth in 5; no dark night in 4 (share 0.031), two or more in 5 (0.039). Severity −1 everywhere (no weights in v12). Z3 and Z4 therefore FAIL for v12, as expected; Z1/Z6/Z7/Z8 receipts are not given for the baseline.
+
+## Pass 7 Part 2 — winters of drawn severity, bounded claims
+
+Code `a3669b66`; release probe `probe_p2`.
+
+**4.5 v12 guard:** `p7-2_v12_guard_10day` / `p7-2_v12_guard_120day` (game_v12 0..64 × 10 and 0..32 × 120, Part 0 flags) — DETERMINISM PASS; all 6,096 / 56,385 shared values equal `p7-1_v12_*` (0 differences, no one-sided paths).
+
+**Gate** (`gate_pass7.sh`, run in a separate worktree of `a3669b66`, 14:10–14:25): green — debug 1,962 passed, release green, both Clippy variants clean, forbidden math 0, bridge build, Godot import, strict check, smoke without errors, Python tests; the worldmodel step was a recorded skip (no tests yet). `codex/revitalize-2026-10` fast-forwarded to `a3669b66`.
+
+**First look at v13 (starting values, not a recorded round):** `p7-2_v13_10day` / `p7-2_v13_120day`, evaluated into a scratch directory. Z3, Z4 and Z5 PASS: no dark night in 0.320 of the 128 seed-winters, two or more in 0.273, first dark night on nights 5 / 6 / 7 = 14 / 21 / 52 (0.598 on the seventh), severity shares mild 0.320 / normal 0.422 / harsh 0.258; re-target share median 0.056 (v12 0.514), normal-severity winter wood gathered 45 (floor 40.5). **Z2 FAILS on Y3 stagnation (max 6 > 4)**, the shape section 7.4 predicted. By severity (medians): mild 0 nights out, 38 wood gathered; normal 1 night (the seventh), 45; harsh 2 nights (first the sixth), 45; food at winter's end 244 / 241 / 229.
+
+## Pass 7 Part 3 — the god's hand
+
+Code `dc6760b0`; release probe `probe_p3`. **4.5 v12 guard:** `p7-3_v12_guard_10day` / `p7-3_v12_guard_120day` — DETERMINISM PASS; all 6,096 / 56,385 shared values equal `p7-1_v12_*` (0 differences). The eight tests of `harness_revitalize_pass7_interventions.rs` pass (prefix identity on seed 4 for every kind applied at the first evening; three-day null identity of all seven kinds at amount 0).
+
+## Pass 7 Part 4 — recorded worlds
+
+Recorder `worldsim_wm` (frozen copy `wm_p4`). A 10-day `game_v13` episode takes 0.55 s; a 30-day one 2.7 s (release, one thread). Sample: `docs/worldmodel/sample/` (seeds 0 and 1, 10 days, `--agents`), 1.8 MB. 9.4 byte identity (two runs, `--workers 1` against 4, with and without `--agents`, with a schedule directory) passes in `test_export_determinism.py`.
+
+**Z6** (`make_dataset.py z6`, `check_z6.py` → `docs/revitalize/probe/p7-z6/`): seeds 0–7 × 7 kinds, one intervention at tick 31,920 (day 23 12:00), 30 days, factual included — **PASS**: 52 pairs equal the factual `row_digest` at every row ≤ 31,920 and differ from the next row (tick 31,980); 4 applied 0 and are listed, not failed: windfall in seeds 1, 3, 4 and 7, mild winters where all 20 deadwood spots already hold the winter cap (deadwood total 20 at that row).

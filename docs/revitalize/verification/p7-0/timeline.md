@@ -9,7 +9,9 @@
 | Part | start | end |
 |---|---|---|
 | 0 | 13:48:04 | 13:56 (commit `3bf68d96` at 13:55:21; the Part 1 code was started at about 13:52 while the last Part 0 probe ran) |
-| 1 | 13:56 | 14:09 |
-| 2 | 14:09 | |
+| 1 | 13:56 | 14:08:33 (commit `f070d7e5`) |
+| 2 | 14:08 | 14:10:08 (commit `a3669b66`; gate in a separate worktree 14:10:38–14:25:14, v12 guard probes 14:10–14:21) |
+| 3 | 14:10 | 14:15:17 (commit `dc6760b0`; v12 guard 14:21–14:28) |
+| 4 | 14:15 | |
 
 Note: the first draft of this table held estimated times (13:58, 14:24); they were replaced with `date` / commit times at 14:08.

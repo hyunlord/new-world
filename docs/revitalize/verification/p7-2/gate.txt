@@ -1,0 +1,19 @@
+head a3669b665f8d636058392a7a73cc78f47ecc0ca1
+started 2026-10-11 14:10:38 KST
+prepare_bridge exit 0
+prepare_import exit 0
+test_debug exit 0
+test_debug passed 1962 failed 0 ignored 0
+test_release exit 0
+test_release passed 1962 failed 0 ignored 0
+clippy exit 0
+clippy_all_targets exit 0
+forbidden_math exit 0
+bridge_build exit 0
+godot_import exit 0
+strict_check exit 0
+smoke exit 0
+smoke_errors none
+python_unittest exit 0
+python_worldmodel skipped (no tools/worldmodel tests yet)
+finished 2026-10-11 14:25:14 KST status 0

@@ -53,7 +53,7 @@ pub(super) fn housing_capacity(engine: &SimEngine) -> Option<u64> {
 }
 
 /// Collect the stable schema without changing simulation state.
-pub(super) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelters: usize) -> Value {
+pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelters: usize) -> Value {
     let r = &engine.resources;
     let mut homes = BTreeMap::new();
     let mut settlements: Vec<_> = r.settlements.values().collect();
