@@ -598,7 +598,15 @@
       ],
       "intervention_effects": [],
       "notes": "Dark night palette, visible flame in B0, bare brown roof edges and HUD cold count 0. Cycle sheet shows a repeating pale puff projected in front of B1943, above the burning hearth; pixels do not distinguish hearth smoke from doorway breath, so no doorway ID is credited. Other doorways show no identifiable repeating breath.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "78260b26bf63415ec585a44702d36858718afcbe34ec15b4aac25a1045c6de8c",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d24_1200_F2": {
       "sha256": "2912c3c9ea637b9b5e540f6f2a8ef3cfb1fe2dcae3622871cd4f898fd222e360",
@@ -627,7 +635,15 @@
       ],
       "intervention_effects": [],
       "notes": "Dark night palette, visible flame in B0, bare brown roof edges and HUD cold count 0. Cycle sheet shows a repeating pale puff projected in front of B1943, above the burning hearth; pixels do not distinguish hearth smoke from doorway breath, so no doorway ID is credited. Other doorways show no identifiable repeating breath.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "5b951cadadcdf2aa2d319e73e117867df0757fd201ea130693903e0ac3af138f",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d25_0200_F2N": {
       "sha256": "cb7de8ab1acf1ced5424f3584b8cea3b3fcdcb1417c20352f32b5ecc1b0cd7a5",
@@ -644,7 +660,15 @@
       ],
       "intervention_effects": [],
       "notes": "Dark night palette, visible flame in B0, bare brown roof edges and HUD cold count 0. Cycle sheet shows a repeating pale puff projected in front of B1943, above the burning hearth; pixels do not distinguish hearth smoke from doorway breath, so no doorway ID is credited. Other doorways show no identifiable repeating breath.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "cb7de8ab1acf1ced5424f3584b8cea3b3fcdcb1417c20352f32b5ecc1b0cd7a5",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d27_0200_F2N": {
       "sha256": "fe0f84310c98aa89a0fb39eece7b21bcb938ca130a4256dc975ba57328e0bb10",
@@ -661,7 +685,15 @@
       ],
       "intervention_effects": [],
       "notes": "Dark night palette, visible flame in B0, bare brown roof edges and HUD cold count 0. Cycle sheet shows a repeating pale puff projected in front of B1943, above the burning hearth; pixels do not distinguish hearth smoke from doorway breath, so no doorway ID is credited. Other doorways show no identifiable repeating breath.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "fe0f84310c98aa89a0fb39eece7b21bcb938ca130a4256dc975ba57328e0bb10",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d27_0715_F2": {
       "sha256": "9bf261d2bc5349881448dfec638c5253f92e5fcc2671b1889b1a2cc23f402c5d",
@@ -680,7 +712,13 @@
       ],
       "intervention_effects": [],
       "notes": "Daylight warm/green palette, bare brown roofs without blue frost edging, many visible residents, gray unlit B0 hearth, HUD cold count 0. Crowding prevents reliable identification of a separate cold-agent animation; no chill ID inferred from posture alone.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "9bf261d2bc5349881448dfec638c5253f92e5fcc2671b1889b1a2cc23f402c5d",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "No distinctive world intervention effect or individually distinguishable shiver/breath/cold crossed-arms cue credited from the reviewed pixels. Empty arrays express visual uncertainty, not absence of hidden state."
+      }
     },
     "l_d28_0200_F2N": {
       "sha256": "38777ec1b1524a1467b8e3095df2fde841f710e0f502a16bdf514b1b8b2dee08",
@@ -708,7 +746,15 @@
       ],
       "intervention_effects": [],
       "notes": "Blue-white frost traces all six roof edges. B0 is a gray unlit stone-and-ash ring; cool wash and HUD cold count 42 are visible. Inspected full cycle contact sheet: no identifiable expanding/disappearing doorway breath on any shelter. Small doorway patches remain effectively static; occasional figures above roofs are not doorway breath. No visible outdoor agent can be assigned a chill ID.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "38777ec1b1524a1467b8e3095df2fde841f710e0f502a16bdf514b1b8b2dee08",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d28_0200_F2Z": {
       "sha256": "b23ecb10e16b547d486b1b9c91b98cf87bc55f6989b56302fc45169a38a1154a",
@@ -736,7 +782,15 @@
       ],
       "intervention_effects": [],
       "notes": "Blue-white frost traces all six roof edges. B0 is a gray unlit stone-and-ash ring; cool wash and HUD cold count 42 are visible. Inspected full cycle contact sheet: no identifiable expanding/disappearing doorway breath on any shelter. Small doorway patches remain effectively static; occasional figures above roofs are not doorway breath. No visible outdoor agent can be assigned a chill ID.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "b23ecb10e16b547d486b1b9c91b98cf87bc55f6989b56302fc45169a38a1154a",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d29_0200_F2N": {
       "sha256": "f3506471d8e18eacf411ca2bff353562ad1607dfa73fe9d70949678defedb5f9",
@@ -764,7 +818,15 @@
       ],
       "intervention_effects": [],
       "notes": "Blue-white frost traces all six roof edges. B0 is a gray unlit stone-and-ash ring; cool wash and HUD cold count 42 are visible. Inspected full cycle contact sheet: no identifiable expanding/disappearing doorway breath on any shelter. Small doorway patches remain effectively static; occasional figures above roofs are not doorway breath. No visible outdoor agent can be assigned a chill ID.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "f3506471d8e18eacf411ca2bff353562ad1607dfa73fe9d70949678defedb5f9",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Night/cool scene tint visible. This alone does not establish an intervention. No distinct individual cold pose or breath is attributable to an annotated agent."
+      }
     },
     "l_d29_0630_F2": {
       "sha256": "c86926e851a33a6e54492f7b78b0e6fe62fe2424e07e45393dc47b2f066f106b",
@@ -783,7 +845,13 @@
       ],
       "intervention_effects": [],
       "notes": "Daylight warm/green palette, bare brown roofs without blue frost edging, many visible residents, gray unlit B0 hearth, HUD cold count 0. Crowding prevents reliable identification of a separate cold-agent animation; no chill ID inferred from posture alone.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "c86926e851a33a6e54492f7b78b0e6fe62fe2424e07e45393dc47b2f066f106b",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "No distinctive world intervention effect or individually distinguishable shiver/breath/cold crossed-arms cue credited from the reviewed pixels. Empty arrays express visual uncertainty, not absence of hidden state."
+      }
     },
     "l_d29_0715_F2": {
       "sha256": "f31a931847266341aeacad7ddb9d438e046c83ea2fe45f28a13a0ea6c0a4aeb3",
@@ -802,7 +870,13 @@
       ],
       "intervention_effects": [],
       "notes": "Daylight warm/green palette, bare brown roofs without blue frost edging, many visible residents, gray unlit B0 hearth, HUD cold count 0. Crowding prevents reliable identification of a separate cold-agent animation; no chill ID inferred from posture alone.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "f31a931847266341aeacad7ddb9d438e046c83ea2fe45f28a13a0ea6c0a4aeb3",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "No distinctive world intervention effect or individually distinguishable shiver/breath/cold crossed-arms cue credited from the reviewed pixels. Empty arrays express visual uncertainty, not absence of hidden state."
+      }
     },
     "l_d32_1200_F2": {
       "sha256": "463ec274de9bda36cae35964a79efd725c1482206d424f070bc606b1ea7fd182",
@@ -836,7 +910,15 @@
         "panel"
       ],
       "notes": "Panel visibly reports food spoil 60 applied 60. Basket remains bright red/green; no distinctive world-space spoil cloud or before/after resource change can be established from this single frame. Effect label records readable UI feedback only.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "dda9741804a14b812eadd8ea08b3b4433e99f3dade6029ff43c5158574dc21c2",
+        "world_effects_visible": [
+          "label_flash"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Raw PNG reinspection shows the world-anchored stockpile food label in amber/gold above B28, unlike the ordinary white label in wind frames. A colored label accent is visible; a single frame does not establish flash duration or resource delta. No spoil particles or physical basket change distinguishable. The original spoil_food entry referred to panel feedback; this supplemental label_flash is the narrower world-space observation."
+      }
     },
     "god_d17_0200_F2N_cold_snap": {
       "sha256": "86b181bf6d8b9cb82176d3cef46790f2e943416ea5583c207eeac72cf07f617b",
@@ -856,7 +938,15 @@
         "panel"
       ],
       "notes": "Pale cold wash clearly overlays the night scene; panel says cold snap one night applied one. Hearth still burns, roof frost is not identifiable, cold HUD remains 0. A12 is washed blue with the scene but no individual chill animation can be proven.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "86b181bf6d8b9cb82176d3cef46790f2e943416ea5583c207eeac72cf07f617b",
+        "world_effects_visible": [
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Pale blue-gray wash visibly covers the world. A12 is tinted with the scene, but no identifiable shivering motion or separate breath/cold crossed-arms pose is proven. White puff over lit hearth cannot be confidently assigned to an agent."
+      }
     },
     "god_d23_1200_F2_gift": {
       "sha256": "bbd724f911ae357313c7b6660476c42475f33cfb3441e4798cccea179f8876a3",
@@ -878,7 +968,15 @@
         "panel"
       ],
       "notes": "Panel says wood gift 40 applied 40; HUD wood 201 and store label 201/156 are readable. This is text/count feedback, not independently visible newly delivered wood; no before frame establishes the increment.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "bbd724f911ae357313c7b6660476c42475f33cfb3441e4798cccea179f8876a3",
+        "world_effects_visible": [
+          "label_flash"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Raw PNG reinspection shows the world-anchored food label above B28 in bright green, while adjacent wood text is pale/white. Colored label accent is visible; no temporal flash cycle, newly falling wood, or actual resource increase is established. The original gift_wood entry referred to panel feedback; this supplemental label_flash credits only the visible world-anchored color accent, not its semantic correctness."
+      }
     },
     "god_d23_1205_F2_windfall_0200ms": {
       "sha256": "31143db4e86f6e4266b94a6bdec4ed59748f06419310f87e9cdef17697805cc8",
@@ -899,7 +997,13 @@
         "panel"
       ],
       "notes": "Panel says wind 20 applied 20. Compared both raw frames: residents change pose, but no distinct wind streak or unmistakable falling-branch animation is identifiable. Existing ground branches alone cannot prove intervention or its ending. Neither windfall nor windfall_ended is credited.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "31143db4e86f6e4266b94a6bdec4ed59748f06419310f87e9cdef17697805cc8",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "Compared both raw wind captures. No unambiguous wind streak, falling branch or effect-ending transition identified. Static ground branches and resident pose changes are insufficient. Panel text excluded."
+      }
     },
     "god_d23_1205_F2_windfall_1000ms": {
       "sha256": "5598161c32701024afbaeff7ab8198b0c97b8a540aaf50659a75435e72807f28",
@@ -920,7 +1024,13 @@
         "panel"
       ],
       "notes": "Panel says wind 20 applied 20. Compared both raw frames: residents change pose, but no distinct wind streak or unmistakable falling-branch animation is identifiable. Existing ground branches alone cannot prove intervention or its ending. Neither windfall nor windfall_ended is credited.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "5598161c32701024afbaeff7ab8198b0c97b8a540aaf50659a75435e72807f28",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "Compared both raw wind captures. No unambiguous wind streak, falling branch or effect-ending transition identified. Static ground branches and resident pose changes are insufficient. Panel text excluded."
+      }
     },
     "god_d24_1830_F2_rain": {
       "sha256": "6b8f7dfa48d4975c57dcc4cf73ee94a312794d4ac84b5fd268a4efb2af456700",
@@ -939,7 +1049,15 @@
         "panel"
       ],
       "notes": "Fine repeated rain streaks are visible across land and river; panel says rain 13 hours applied 13. Crowded residents obscure hearth, so no ash ID is assigned.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "6b8f7dfa48d4975c57dcc4cf73ee94a312794d4ac84b5fd268a4efb2af456700",
+        "world_effects_visible": [
+          "rain"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Repeated fine rain streaks visible over terrain and river; night frames also have a cool wash. Panel text/log excluded. No individually distinguishable cold-agent cue credited."
+      }
     },
     "god_d25_0200_F2N_rain_night": {
       "sha256": "7cc4ae30c7a36e5989790b7c885e7a5f783a928c7401486c45a5d2c7006dbf8f",
@@ -970,7 +1088,16 @@
         "panel"
       ],
       "notes": "Rain streaks persist over blue-gray night scene. Six roofs have frost edging, B0 is unlit gray ash, HUD cold count 42. Panel is readable; expanded recent-interventions log in panel-log image records spoil, cold snap, wood gift, wind and rain. Log is textual feedback and does not independently establish every world effect.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "7cc4ae30c7a36e5989790b7c885e7a5f783a928c7401486c45a5d2c7006dbf8f",
+        "world_effects_visible": [
+          "rain",
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Repeated fine rain streaks visible over terrain and river; night frames also have a cool wash. Panel text/log excluded. No individually distinguishable cold-agent cue credited."
+      }
     },
     "god_d25_0200_F2_panel_log": {
       "sha256": "9f5699068da6032129c96c4a6eb33f21f8471326cc911ead9b253be2e7e14f23",
@@ -1001,7 +1128,16 @@
         "panel"
       ],
       "notes": "Rain streaks persist over blue-gray night scene. Six roofs have frost edging, B0 is unlit gray ash, HUD cold count 42. Panel is readable; expanded recent-interventions log in panel-log image records spoil, cold snap, wood gift, wind and rain. Log is textual feedback and does not independently establish every world effect.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "9f5699068da6032129c96c4a6eb33f21f8471326cc911ead9b253be2e7e14f23",
+        "world_effects_visible": [
+          "rain",
+          "tint"
+        ],
+        "chill_agent_ids": [],
+        "notes": "Repeated fine rain streaks visible over terrain and river; night frames also have a cool wash. Panel text/log excluded. No individually distinguishable cold-agent cue credited."
+      }
     },
     "carry_2x": {
       "sha256": "b3cb46f8f05140436e691207f1105779aee768a99d7d67ca285c371753a8786c",
@@ -1012,7 +1148,13 @@
       "visible_cues": [],
       "intervention_effects": [],
       "notes": "Staged art comparison, not gameplay evidence. New adult carrying silhouettes hold a small basket/object out to the side at waist height while eating brings an object toward the mouth. Wood carry is visibly a horizontal shoulder load; child side carry remains small but separate from seated eating. Adult carry/eat distinction is readable at the shown 2x size.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "b3cb46f8f05140436e691207f1105779aee768a99d7d67ca285c371753a8786c",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "No distinctive world intervention effect or individually distinguishable shiver/breath/cold crossed-arms cue credited from the reviewed pixels. Empty arrays express visual uncertainty, not absence of hidden state."
+      }
     },
     "carry_lineup_2x": {
       "sha256": "d063ea43da62fb09390ac4ef8582226a807a724e3286f65b64cff4e725899ea2",
@@ -1023,7 +1165,13 @@
       "visible_cues": [],
       "intervention_effects": [],
       "notes": "Staged art comparison, not gameplay evidence. New adult carrying silhouettes hold a small basket/object out to the side at waist height while eating brings an object toward the mouth. Wood carry is visibly a horizontal shoulder load; child side carry remains small but separate from seated eating. Adult carry/eat distinction is readable at the shown 2x size.",
-      "scene_observer": "scene_final_review / independent pixel-only reviewer"
+      "scene_observer": "scene_final_review / independent pixel-only reviewer",
+      "world_effect_supplement": {
+        "sha256": "d063ea43da62fb09390ac4ef8582226a807a724e3286f65b64cff4e725899ea2",
+        "world_effects_visible": [],
+        "chill_agent_ids": [],
+        "notes": "No distinctive world intervention effect or individually distinguishable shiver/breath/cold crossed-arms cue credited from the reviewed pixels. Empty arrays express visual uncertainty, not absence of hidden state."
+      }
     }
   },
   "sources": [

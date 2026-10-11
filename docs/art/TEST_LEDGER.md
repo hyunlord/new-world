@@ -400,3 +400,4 @@ Orphan source-inspection helpers for the retired mesh/tint parsers and whole-fil
   - `harness_p14_zeta_zoom_adaptive.rs` / `harness_zoom_a17_main_tscn_load_steps_equals_12`.
   - `harness_show_death_visual.rs` / `harness_death_a6_scene_wiring_additive`.
   - `harness_show_agent_needs_bars.rs` / `harness_needs_a6_scene_wiring_additive`.
+  - Verification: exhaustive `cargo test -p sim-test --tests --no-fail-fast -- --test-threads=6` passed 1517 tests across 120 test binaries, exit0; scoped sim-test test-target Clippy passed with warnings denied. Terminal logs and machine-readable counts are retained in `docs/art/production6/gates/p9_static/`. No additional failed source pins surfaced; leader performs the third/final full gate separately.
