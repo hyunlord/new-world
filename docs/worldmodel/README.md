@@ -15,7 +15,7 @@ tools/worldmodel/export.sh --scene game_v13 --seeds 0..4 --days 120 --every 60 \
 - `export.sh` builds the release binary (`rust/target/release/worldsim_wm`) and only writes under `WM_DATA_ROOT` or `.harness/evidence/worldmodel/`. `WM_BIN` selects another binary (no build).
 - Scenes: `game`, `game_v9` … `game_v13`. Seeds are a half-open range. Days 1–400.
 - Without `--schedule-dir` every seed gives one episode, id `none`. With it, every file `s<seed>_<id>.json` in the directory (sorted by name) is one episode of that seed, plus the no-intervention episode `none` under `--include-factual`; a seed with neither is an error.
-- `--resume` keeps an episode whose `meta.json` hashes verify. An episode is written to `<dir>.tmp` and renamed when complete.
+- `--resume` keeps an episode whose `meta.json` hashes verify and whose scene, seed, days, every, agent flag, schedule and git sha (when `WORLDSIM_GIT_SHA` is set) equal the request. An episode is written to `<dir>.tmp` and renamed when complete.
 - Wall time goes to stderr and `timing.json`, which no hash or check reads.
 
 A schedule is a JSON list of `{"tick": u64, "kind": K, "settlement": "home" | <id>, "amount": u32}` in non-decreasing tick order. Kinds: `gift_food`, `spoil_food`, `gift_wood`, `rot_wood` (units), `rain` (hours: the settlement's fire stays out and burns nothing), `cold_snap` (nights: every fire burns one more unit an hour and an unlit hearth leaves its members cold in any season; `settlement` ignored), `windfall` (units of deadwood placed on the registered spots, one a spot per pass, up to their ceilings, the winter snow cap included; `settlement` ignored). `"home"` is the lowest settlement id at that tick (none: the row applies 0). Rows apply when the completed tick equals `tick`, in file order, after that tick's row is taken and before the next tick runs. Interventions draw no random numbers; an intervention with amount 0 changes nothing.
@@ -81,7 +81,7 @@ Float tables are `float32`, NaN where an entity does not exist (a settlement bef
 
 ### `settlements.npy` fields
 
-`members` (roster size), `food_stock`, `wood_stock`, `wood_target` (the firewood target; NaN without the rule), `fire_lit` (1 when the last hourly update burned a full hour), `wood_in_hand` (stockpile + carried by members), `formation_x`, `formation_y` (the hearth tile), `rain_ticks_left` (max(0, rain end − tick)).
+`members` (roster size), `food_stock`, `wood_stock`, `wood_target` (the firewood target as the systems last computed it, i.e. at the last system tick = the row's tick − 1: at a season boundary it still shows the previous season's target for that one row; NaN without the rule), `fire_lit` (1 when the last hourly update burned a full hour), `wood_in_hand` (stockpile + carried by members), `formation_x`, `formation_y` (the hearth tile), `rain_ticks_left` (max(0, rain end − tick)).
 
 ### `agents.npy` fields
 

@@ -8,7 +8,8 @@ bench_v0.json into --out. Settlement level throughout; the eight variables V are
 food stock, wood stock, fire lit (summed / max over settlements, 0 before the first
 settlement forms), cold members, alive, deadwood total, food on bushes and adults working.
 
-T1 next hour     predict V at row t+1 from rows <= t; nMAE = MAE / std of the variable over the test rows.
+T1 next hour     predict V at row t+1 from rows <= t; nMAE = MAE / std of the variable over the scored test rows
+                 (the T1 targets of the split, rows 24..T-1; T2 uses the same denominator).
 T2 rollout       from 06:00 of days 3, 10, 17, ... predict 24 h and 168 h ahead autoregressively; nMAE at the horizon.
 T3 dark night    at 18:00 of every winter evening of A test, P(fire out at 02:00); Brier, rank AUC, accuracy at 0.5.
 T4 counterfactual  on C_cf test seeds, each variant's effect on four targets; MAE and sign accuracy.
@@ -73,8 +74,9 @@ def episode_arrays(ep) -> dict:
     tick = col("tick").astype(np.int64)
     actions = np.zeros((len(tick), len(KINDS)))
     index = {int(t): i for i, t in enumerate(tick)}
+    # Review round 1 (L4): the requested amount of every intervention, whatever it applied.
     for rec in ep.interventions:
-        if rec["applied"] and int(rec["tick"]) in index:
+        if int(rec["tick"]) in index:
             actions[index[int(rec["tick"])], KINDS.index(rec["kind"])] += float(rec["amount"])
     deaths = sum(col(k) for k in ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age"))
     return dict(v=v, tick=tick, hour=(col("minute_of_day") // 60).astype(np.int64), season=col("season").astype(np.int64),
@@ -174,7 +176,9 @@ def stack(eps: list[Ep], action_aware: bool):
 
 
 def split_std(eps: list[Ep]) -> np.ndarray:
-    return np.vstack([ep.v for ep in eps]).std(axis=0)
+    """Std of each variable over the rows T1 scores (targets v[t+1], t = 23 .. T-2) of the split
+    (review round 1, L5); T2 uses the same denominator."""
+    return np.vstack([ep.v[24:] for ep in eps]).std(axis=0)
 
 
 def t1_scores(eps: list[Ep], model: Ridge | None, action_aware: bool, std: np.ndarray) -> dict[str, np.ndarray]:
@@ -428,7 +432,7 @@ def markdown(r: dict) -> str:
     v = r["vars"]
     lines = ["# WM-Bench v0", "",
              "First benchmark for WorldSim world models, on dataset v0 (`DATASET_v0.md`). Settlement level; numbers are "
-             "nMAE = MAE / standard deviation of the variable over the test split's rows (lower is better) unless stated. "
+             "nMAE = MAE / standard deviation of the variable over the test split's scored rows (the T1 targets, rows 24 … T−1 of every episode; T2 uses the same denominator; lower is better) unless stated. The action-aware ridge encodes each intervention by its requested amount. "
              "Produced by `tools/worldmodel/bench_v0.py` (numpy only).", "",
              f"Episodes: {json.dumps(r['counts'])}. Ridge λ chosen on validation: {r['lambda']['ridge']} "
              f"(action-aware {r['lambda']['ridge_action']}).", "",

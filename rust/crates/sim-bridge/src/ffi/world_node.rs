@@ -2717,10 +2717,19 @@ pub struct InterventionReply {
     pub tick: u64,
 }
 
-/// Pass 7: parse and apply one intervention now (the `#[func]` body).
+/// Pass 7: parse and apply one intervention now (the `#[func]` body). `ok` is
+/// false when parsing fails or a settlement kind names a settlement that does
+/// not exist.
 pub fn apply_intervention_command(engine: &mut SimEngine, kind: &str, settlement_id: i64, amount: i64) -> InterventionReply {
-    let home = sim_systems::runtime::intervention::home_settlement(&engine.resources);
-    match parse_intervention(kind, settlement_id, amount, home) {
+    use sim_systems::runtime::intervention::{home_settlement, kind_needs_settlement};
+    let home = home_settlement(&engine.resources);
+    // Review round 1 (L3): an explicit settlement id that does not exist is "no settlement".
+    let parsed = parse_intervention(kind, settlement_id, amount, home).filter(|_| {
+        !kind_needs_settlement(kind)
+            || settlement_id < 0
+            || u32::try_from(settlement_id).is_ok_and(|id| engine.resources.settlements.contains_key(&id))
+    });
+    match parsed {
         Some(intervention) => {
             let record = sim_systems::runtime::intervention::apply_intervention(engine, intervention);
             InterventionReply { ok: true, applied: record.applied, tick: record.tick }
@@ -2865,6 +2874,8 @@ mod revitalize_tooling_tests {
         engine.resources.settlements.insert(2, sim_core::components::Settlement::new_with_id(2, 0));
         let gift = apply_intervention_command(&mut engine, "gift_food", -1, 5);
         assert_eq!((gift.ok, gift.applied, gift.tick), (true, 5, 3));
+        let missing = apply_intervention_command(&mut engine, "rain", 9, 5);
+        assert_eq!((missing.ok, missing.applied), (false, 0));
         let snap = apply_intervention_command(&mut engine, "cold_snap", -1, 1);
         assert_eq!((snap.ok, snap.applied), (true, 1));
         assert_eq!(engine.resources.tallies.interventions_applied, 2);

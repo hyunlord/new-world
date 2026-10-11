@@ -437,12 +437,33 @@ pub fn verify_episode(dir: &Path) -> bool {
         })
 }
 
+/// Whether the finished episode in `dir` is the one `spec` asks for: its hashes
+/// verify and its meta records the same scene, seed, days, every, agent flag,
+/// schedule and (when `WORLDSIM_GIT_SHA` is set) git sha (review round 1, L1).
+pub fn episode_matches(dir: &Path, spec: &EpisodeSpec) -> bool {
+    let Ok(text) = fs::read_to_string(dir.join("meta.json")) else { return false };
+    let Ok(meta) = serde_json::from_str::<Value>(&text) else { return false };
+    let schedule = match &spec.schedule {
+        Some(text) => serde_json::from_str::<Value>(text).unwrap_or(Value::Null),
+        None => Value::Null,
+    };
+    let sha_ok = std::env::var("WORLDSIM_GIT_SHA").map_or(true, |sha| meta["git_sha"].as_str() == Some(sha.as_str()));
+    verify_episode(dir)
+        && meta["scene"].as_str() == Some(spec.scene.as_str())
+        && meta["seed"].as_u64() == Some(spec.seed)
+        && meta["days"].as_u64() == Some(spec.days)
+        && meta["every"].as_u64() == Some(spec.every)
+        && meta["agents_recorded"].as_bool() == Some(spec.agents)
+        && meta["schedule"] == schedule
+        && sha_ok
+}
+
 /// Record `spec` into `<out>/<dir_name>` (via a `.tmp` directory). With
-/// `resume`, a finished episode whose hashes verify is kept. Returns the wall
+/// `resume`, a finished episode that [`episode_matches`] `spec` is kept. Returns the wall
 /// seconds spent (0 when skipped).
 pub fn write_episode(spec: &EpisodeSpec, out: &Path, resume: bool) -> Result<f64, String> {
     let dir = out.join(spec.dir_name());
-    if resume && verify_episode(&dir) {
+    if resume && episode_matches(&dir, spec) {
         eprintln!("SKIP {} (verified)", spec.dir_name());
         return Ok(0.0);
     }
@@ -674,6 +695,20 @@ mod tests {
         assert_eq!(with.interventions[0]["applied"], 30);
         assert_eq!(with.meta["schedule"][0]["kind"], "gift_wood");
         assert_eq!(without.interventions, json!([]));
+    }
+
+    #[test]
+    fn resume_keeps_only_the_requested_episode() {
+        let out = std::env::temp_dir().join(format!("wm_resume_test_{}", std::process::id()));
+        let _ = fs::remove_dir_all(&out);
+        let base = spec(1, false, None);
+        write_episode(&base, &out, false).expect("write");
+        let dir = out.join(base.dir_name());
+        assert!(episode_matches(&dir, &base));
+        assert!(!episode_matches(&dir, &EpisodeSpec { agents: true, ..base.clone() }));
+        assert!(!episode_matches(&dir, &EpisodeSpec { days: 2, ..base.clone() }));
+        assert!(!episode_matches(&dir, &EpisodeSpec { every: 120, ..base.clone() }));
+        let _ = fs::remove_dir_all(&out);
     }
 
     #[test]
