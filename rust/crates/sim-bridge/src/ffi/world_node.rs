@@ -269,6 +269,16 @@ impl WorldSimNode {
         tallies_to_dict(collect_tallies(&self.engine.resources))
     }
 
+    /// Revitalize Pass 7 — the god's hand: apply one intervention now, between
+    /// ticks. `kind` is one of `gift_food`, `spoil_food`, `gift_wood`,
+    /// `rot_wood`, `rain`, `cold_snap`, `windfall`; `settlement_id < 0` means
+    /// home (the lowest settlement id now); `amount` is hours for rain, nights
+    /// for a cold snap and units otherwise. Returns `{ok, applied, tick}`.
+    #[func]
+    fn apply_intervention(&mut self, kind: GString, settlement_id: i64, amount: i64) -> VarDictionary {
+        intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
+    }
+
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -2671,6 +2681,62 @@ pub fn collect_time_snapshot(engine: &SimEngine) -> TimeSnapshot {
     }
 }
 
+/// Pass 7: build an intervention from the FFI arguments. `None` for an
+/// unknown kind, a negative amount, or a settlement kind with no settlement
+/// (`settlement_id < 0` and no `home`, or an id beyond `u32`). `amount` above
+/// `u32::MAX` saturates. `cold_snap` and `windfall` ignore the settlement.
+pub fn parse_intervention(
+    kind: &str,
+    settlement_id: i64,
+    amount: i64,
+    home: Option<sim_core::components::SettlementId>,
+) -> Option<sim_engine::Intervention> {
+    use sim_systems::runtime::intervention::{intervention_from_kind, kind_needs_settlement};
+    if amount < 0 {
+        return None;
+    }
+    let amount = u32::try_from(amount).unwrap_or(u32::MAX);
+    let settlement = if !kind_needs_settlement(kind) {
+        0
+    } else if settlement_id < 0 {
+        home?
+    } else {
+        sim_core::components::SettlementId::try_from(settlement_id).ok()?
+    };
+    intervention_from_kind(kind, settlement, amount)
+}
+
+/// Pass 7: result of the `apply_intervention` command.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InterventionReply {
+    /// False for an unknown kind, a negative amount or no settlement.
+    pub ok: bool,
+    /// What the intervention changed (0 when nothing changed or not `ok`).
+    pub applied: u64,
+    /// Completed ticks when it was applied.
+    pub tick: u64,
+}
+
+/// Pass 7: parse and apply one intervention now (the `#[func]` body).
+pub fn apply_intervention_command(engine: &mut SimEngine, kind: &str, settlement_id: i64, amount: i64) -> InterventionReply {
+    let home = sim_systems::runtime::intervention::home_settlement(&engine.resources);
+    match parse_intervention(kind, settlement_id, amount, home) {
+        Some(intervention) => {
+            let record = sim_systems::runtime::intervention::apply_intervention(engine, intervention);
+            InterventionReply { ok: true, applied: record.applied, tick: record.tick }
+        }
+        None => InterventionReply { ok: false, applied: 0, tick: engine.current_tick() },
+    }
+}
+
+fn intervention_reply_to_dict(reply: InterventionReply) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    dict.set("ok", reply.ok);
+    dict.set("applied", reply.applied as i64);
+    dict.set("tick", reply.tick as i64);
+    dict
+}
+
 /// Read the cumulative counters without depending on event retention.
 pub fn collect_tallies(resources: &SimResources) -> sim_engine::Tallies {
     resources.tallies
@@ -2774,6 +2840,35 @@ mod revitalize_tooling_tests {
         // 07:00 ends the night: spring.
         advance_engine_ticks(&mut engine, 300);
         assert_eq!(collect_time_snapshot(&engine).winter_severity, -1);
+    }
+
+    #[test]
+    fn parse_intervention_resolves_home_and_rejects_bad_input() {
+        use sim_engine::Intervention;
+        assert_eq!(super::parse_intervention("gift_food", -1, 30, Some(4)), Some(Intervention::GiftFood { settlement: 4, amount: 30 }));
+        assert_eq!(super::parse_intervention("rain", 7, 13, Some(4)), Some(Intervention::Rain { settlement: 7, hours: 13 }));
+        assert_eq!(super::parse_intervention("cold_snap", -1, 2, None), Some(Intervention::ColdSnap { nights: 2 }));
+        assert_eq!(super::parse_intervention("windfall", -5, 10, None), Some(Intervention::Windfall { units: 10 }));
+        assert_eq!(super::parse_intervention("flood", -1, 1, Some(4)), None);
+        assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
+        assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
+        assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
+    }
+
+    #[test]
+    fn apply_intervention_command_reports_ok_applied_and_tick() {
+        use super::apply_intervention_command;
+        let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+        advance_engine_ticks(&mut engine, 3);
+        let none = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((none.ok, none.applied, none.tick), (false, 0, 3));
+        engine.resources.settlements.insert(2, sim_core::components::Settlement::new_with_id(2, 0));
+        let gift = apply_intervention_command(&mut engine, "gift_food", -1, 5);
+        assert_eq!((gift.ok, gift.applied, gift.tick), (true, 5, 3));
+        let snap = apply_intervention_command(&mut engine, "cold_snap", -1, 1);
+        assert_eq!((snap.ok, snap.applied), (true, 1));
+        assert_eq!(engine.resources.tallies.interventions_applied, 2);
+        assert_eq!(engine.resources.intervention_log.len(), 2);
     }
 
     #[test]

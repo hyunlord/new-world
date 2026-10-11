@@ -9,6 +9,8 @@
 pub mod probe;
 /// Shared production-scene fixtures.
 pub mod scenes;
+/// World-model tooling: schedules, the state digest and the recorder (Pass 7).
+pub mod worldmodel;
 
 #[cfg(test)]
 mod tests {
