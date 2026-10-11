@@ -45,8 +45,10 @@ DEFAULTS = dict(hidden=256, layers=2, lr=3e-4, weight_decay=1e-4, batch=64, wind
                 grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0)
 # Recipe r1 = DEFAULTS. Recipe r2 (after r1 drifted at 168 h, DECISIONS D2.2): window 336, k_max 168,
 # roll_min_context 167 (rollouts start after a full 168-row context, as in evaluation), roll_starts 2, tf_l1 1.0,
-# clamp_nonneg 1.
-R2 = dict(window=336, k_max=168, roll_min_context=167, roll_starts=2, tf_l1=1.0, clamp_nonneg=1)
+# clamp_nonneg 1, max_steps 5000, eval_every 250 (so a run ends on steps or patience well inside the 2-hour cap
+# on a shared CPU, which keeps the same-seed rerun deterministic).
+R2 = dict(window=336, k_max=168, roll_min_context=167, roll_starts=2, tf_l1=1.0, clamp_nonneg=1, max_steps=5000,
+          eval_every=250)
 
 
 def pick_device(prefer: str = "auto") -> str:

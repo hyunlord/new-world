@@ -9,3 +9,4 @@ Times are KST (Mac clock). Working-time budget: 12 h from the start (GOAL.md 0.3
 | 0 end | | 17:59 | NOTES/DECISIONS/RUNLOG committed (`251f2b12`), pushed |
 | 1 | 18:00 | 18:31 | data.py, evaluate.py (T1–T4, T2-any, T3b), agents.py (T5), repro_bench.py; W1 on the DGX (`w1_repro_832eaa2c`, 1,226 s): worst |diff| 3.5e-10 → PASS |
 | 2 | 18:13 | | M1 GRU main s0 and sev-on s0 launched in parallel (8 threads each) while W1 ran; M1b and M2 code written in parallel |
+| 2 | 18:47 | | r1 main val: T2-24 0.115 (beats persistence 0.130) but T2-168 0.84 → recipe r2 (D2.2). M1b r1 stopped at step ~2,100 (r1 superseded, CPU). r2 main s0 18:47; r2 s1, s2, sev-on, both action-blind and the W7 rerun 18:53 (each GRU job uses ≈ 1 core) |
