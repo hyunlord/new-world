@@ -5,12 +5,12 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 PLAN="${1:-art}"
 DOCS="${2:-docs/art/production/shots}"
-case "$PLAN" in baseline|final|art|art_long|calibration) ;; *) echo 'Usage: capture_art.sh baseline|final|art|art_long|calibration <docs_dir>' >&2; exit 2;; esac
+case "$PLAN" in baseline|final|art|art_long|art_god|calibration) ;; *) echo 'Usage: capture_art.sh baseline|final|art|art_long|art_god|calibration <docs_dir>' >&2; exit 2;; esac
 case "$DOCS" in docs/art/*|"$ROOT"/docs/art/*) ;; *) echo 'Output must be under docs/art/.' >&2; exit 2;; esac
 [[ -d /Users/rexxa/work/.worldsim-godot-window.lock ]] || { echo 'Run capture_art.sh through with_window_lock.sh.' >&2; exit 2; }
 [[ "$(uname -s)" == Darwin && "$(launchctl managername)" == Aqua ]] || { echo 'Capture requires the Mac Aqua session.' >&2; exit 77; }
 GODOT_BIN="${GODOT_BIN:-/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot}"
-export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
+export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-6}"
 export WORLDSIM_GIT_SHA="$(git rev-parse HEAD)"
 export WORLDSIM_GIT_DIRTY="$(git status --porcelain | wc -l | tr -d ' ')"
 EVIDENCE="${CAPTURE_EVIDENCE:-$ROOT/.harness/evidence/art-production}"
@@ -87,7 +87,8 @@ if manifest['plan'] in {'art', 'art_long'}:
         combined['plan'] = 'art+art_long'
         combined['captures'] = (published['captures'] + sibling['captures'] if manifest['plan'] == 'art' else sibling['captures'] + published['captures'])
         combined['plan_manifests'] = ['manifest_art.json', 'manifest_art_long.json']
-(docs / 'manifest.json').write_text(json.dumps(combined, indent=2) + '\n')
+if manifest['plan'] != 'art_god':
+    (docs / 'manifest.json').write_text(json.dumps(combined, indent=2) + '\n')
 (raw / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
 print(f"Published {len(manifest['captures'])} captures; raw framebuffers: {raw}")
 PY

@@ -25,6 +25,9 @@ var _failed: bool = false
 var _motion_before: Dictionary = {}
 var _motion_start_tick: int = -1
 var _motion_end_tick: int = -1
+var _casts: Array[Dictionary] = []
+var _last_cast_usec: int = 0
+var _shot_elapsed_s: float = 0.0
 
 
 func _init() -> void:
@@ -41,8 +44,8 @@ func _init() -> void:
 			push_error("capture: unknown or missing argument: " + args[i])
 			quit(2)
 			return
-	if _out.is_empty() or _plan not in ["baseline", "final", "art", "art_long", "calibration"]:
-		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|art_long|calibration")
+	if _out.is_empty() or _plan not in ["baseline", "final", "art", "art_long", "art_god", "calibration"]:
+		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|art_long|art_god|calibration")
 		quit(2)
 		return
 	call_deferred("_run")
@@ -90,6 +93,8 @@ func _run() -> void:
 	var plan: Array[Array] = BASELINE if _plan == "baseline" else (CapturePlans.ART if _plan == "art" else FINAL)
 	if _plan == "art_long":
 		plan = CapturePlans.ART_LONG
+	if _plan == "art_god":
+		plan = CapturePlans.ART_GOD
 	for shot: Array in plan:
 		var target: int = int(shot[0])
 		var framing: String = str(shot[1])
@@ -100,6 +105,8 @@ func _run() -> void:
 			framing = str(shot[2])
 			var prefix: String = "a_" if _plan == "art" else ("l_" if _plan == "art_long" else "")
 			stem = prefix + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
+		if _plan == "art_god":
+			stem = "god_" + stem + "_" + str(shot[6])
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
@@ -115,6 +122,11 @@ func _run() -> void:
 			tile = _deadwood_tile(tile)
 			if tile.x < 0:
 				_fail("F5 requires a deadwood spot; none exists at this tick")
+				return
+		if framing == "FC":
+			tile = CapturePlans.wood_carrier_tile(_world.call("get_agent_snapshot"))
+			if tile.x < 0:
+				_fail("FC requires a walking wood carrier; none exists at this tick")
 				return
 		_selected_seeking = false
 		_set_agent_layers(framing != "F2A")
@@ -133,14 +145,37 @@ func _run() -> void:
 			var renderer: Node = _main.get_node_or_null(node_name)
 			if renderer != null and renderer.has_method("refresh_snapshot"):
 				renderer.call("refresh_snapshot")
-		await create_timer(1.15).timeout
-		for frame: int in range(5):
+		if _plan == "art_god":
+			if not str(shot[3]).is_empty():
+				# Reconcile the pre-cast resource snapshot, so a windfall increase is observed.
+				await create_timer(1.15).timeout
+				var reply: Dictionary = _world.call("apply_intervention", str(shot[3]), -1, int(shot[4]))
+				_last_cast_usec = Time.get_ticks_usec()
+				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": -1, "tick": target, "reply": reply})
+				if not bool(reply.get("ok", false)):
+					_fail("god scenario cast failed: " + str(shot[3]))
+					return
+			if framing == "CAST":
+				continue
+			if str(shot[6]) == "panel_log":
+				var panel: Node = _main.get_node_or_null("UI/GodHandPanel")
+				if panel != null and panel.has_method("set_log_open"):
+					panel.call("set_log_open", true)
+			var wait_seconds: float = float(shot[5])
+			if str(shot[6]) == "windfall_1000ms":
+				wait_seconds = maxf(0.0, 1.0 - float(Time.get_ticks_usec() - _last_cast_usec) / 1000000.0)
+			if wait_seconds > 0.0:
+				await create_timer(wait_seconds).timeout
+		else:
+			await create_timer(1.15).timeout
+		for frame: int in range(0 if _plan == "art_god" else 5):
 			await process_frame
 		await RenderingServer.frame_post_draw
 		var now: Dictionary = _world.call("get_time_snapshot")
 		if int(now["tick"]) != target:
 			_fail("wall-clock advanced a frozen capture")
 			return
+		_shot_elapsed_s = float(Time.get_ticks_usec() - _last_cast_usec) / 1000000.0 if _last_cast_usec > 0 else 0.0
 		var image: Image = root.get_texture().get_image()
 		if image == null or image.get_width() < 1920 or image.get_height() < 1080 or image.get_width() * 9 != image.get_height() * 16:
 			_fail("capture framebuffer must be at least 1920x1080 with 16:9 aspect; no placeholder is written")
@@ -153,6 +188,8 @@ func _run() -> void:
 			return
 		_manifest.append({
 			"file": filename, "tick": target, "framing": framing,
+			"scenario": "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO",
+			"intervention_casts": _casts.duplicate(true),
 			"tile_x": tile.x, "tile_y": tile.y, "zoom": _camera.zoom.x,
 			"time_of_day": now["time_of_day"], "width": image.get_width(), "height": image.get_height(),
 			"entities": stem + ".entities.json",
@@ -166,7 +203,7 @@ func _run() -> void:
 			await _measure_frame_times()
 		if _plan == "art" and stem == "a_d2_1930_F2":
 			await _capture_strip("a_evening", false)
-		if _plan == "art_long" and framing == "F2N":
+		if _plan == "art_long" and framing in ["F2N", "F2Z"]:
 			await _capture_cold_cycle(stem)
 	if _plan == "art":
 		_main.queue_free()
@@ -184,7 +221,9 @@ func _write_manifest() -> void:
 		_fail("cannot write manifest")
 		return
 	manifest.store_string(JSON.stringify({
-		"schema_version": 2, "plan": _plan, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
+		"schema_version": 3, "plan": _plan,
+		"scenario": "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO",
+		"intervention_casts": _casts, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
 		"captures": _manifest, "worktree_changed_paths": int(OS.get_environment("WORLDSIM_GIT_DIRTY")),
 	}, "\t") + "\n")
 	manifest.close()
@@ -256,12 +295,15 @@ func _fail(message: String) -> void:
 func _advance_to(target: int) -> bool:
 	var clock: Dictionary = _world.call("get_time_snapshot")
 	var tick: int = int(clock["tick"])
+	var agents: Node = _main.get_node_or_null("AgentRenderer")
 	var trail: Node = _main.get_node_or_null("ActivityTrailRenderer")
 	while tick < target:
 		if target - tick <= 8:
 			_motion_before = _world.call("get_agent_snapshot")
 			_motion_start_tick = tick
 		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		if agents != null and agents.has_method("ingest_chill_snapshot"):
+			agents.call("ingest_chill_snapshot", _world.call("get_agent_snapshot"), tick)
 		if tick == target:
 			_motion_end_tick = tick
 		if trail != null:
@@ -285,7 +327,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
 	var data: Dictionary = {
-		"schema_version": 5, "camera_position": [_camera.position.x, _camera.position.y],
+		"schema_version": 6, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
@@ -304,6 +346,12 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
 		"installed_groups": _installed_groups(),
 	}
+	data["scenario"] = "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO"
+	data["intervention_casts"] = _casts.duplicate(true)
+	data["seconds_since_last_cast"] = _shot_elapsed_s
+	data["intervention_state"] = _json_arrays(_world.call("get_intervention_state")) if _world.has_method("get_intervention_state") else {}
+	data["building_snapshot"] = _json_arrays(_world.call("get_building_snapshot"))
+	data["chill_tint_strength"] = _tint_strength()
 	if tick == _motion_end_tick and _motion_start_tick >= 0:
 		data["agent_motion_evidence"] = {
 			"provenance": "observed_tile_displacement_during_final_synchronous_advance",
@@ -335,6 +383,8 @@ func _capture_cold_cycle(stem: String) -> void:
 		var size: Vector2 = Vector2(root.get_texture().get_size())
 		var rows: Array[Dictionary] = Metadata.entities(_main, size, size / root.get_visible_rect().size)
 		var agents: Array[Dictionary] = []
+		var shelters: Array[Dictionary] = []
+		var hearths: Array[Dictionary] = []
 		for row: Dictionary in rows:
 			if row.get("kind") == "agent" and row.get("visible", false):
 				agents.append({"id": row["id"], "cold": row.get("cold", false), "pose": row.get("pose", ""), "puff_alpha": row.get("puff_alpha", 0.0), "shiver_offset": row.get("shiver_offset", 0.0)})
@@ -342,7 +392,16 @@ func _capture_cold_cycle(stem: String) -> void:
 				if bool(row.get("cold", false)) and alpha > best_alpha:
 					best_alpha = alpha
 					root.get_texture().get_image().save_png(_out.path_join(stem + ".cold_peak.png"))
-		samples.append({"real_time_usec": Time.get_ticks_usec(), "agents": agents})
+			if bool(row.get("visible", false)) and row.has("cold_sleepers"):
+				shelters.append(row)
+				var doorway_alpha: float = float(row.get("doorway_puff_alpha", 0.0))
+				if int(row.get("cold_sleepers", 0)) > 0 and doorway_alpha > best_alpha:
+					best_alpha = doorway_alpha
+					root.get_texture().get_image().save_png(_out.path_join(stem + ".cold_peak.png"))
+			if bool(row.get("visible", false)) and row.has("cold_ash"):
+				hearths.append(row)
+		samples.append({"real_time_usec": Time.get_ticks_usec(), "agents": agents,
+			"shelters": shelters, "hearths": hearths, "chill_tint_strength": _tint_strength()})
 		await create_timer(0.1).timeout
 	if not CapturePlans.write_json(_out.path_join(stem + ".cold_cycle.json"), {"simulation_frozen": true, "samples": samples}):
 		_fail("cannot write observed cold cycle")
@@ -468,7 +527,7 @@ func _json_arrays(value: Variant) -> Variant:
 		for key: Variant in value:
 			converted[key] = _json_arrays(value[key])
 		return converted
-	if value is PackedByteArray or value is PackedInt32Array or value is PackedInt64Array or value is PackedFloat32Array or value is PackedFloat64Array:
+	if value is PackedByteArray or value is PackedInt32Array or value is PackedInt64Array or value is PackedFloat32Array or value is PackedFloat64Array or value is PackedStringArray:
 		return Array(value)
 	return value
 
@@ -487,3 +546,12 @@ func _write_forest_evidence() -> void:
 func _draw_counter(node_name: String, method: String) -> Variant:
 	var node: Node = _main.get_node_or_null(NodePath(node_name))
 	return node.call(method) if node != null and node.has_method(method) else null
+
+
+func _tint_strength() -> float:
+	for node: Node in Metadata.tagged_nodes(_main):
+		if node.has_meta("night_chill_strength"):
+			return float(node.get_meta("night_chill_strength"))
+		if node.has_meta("chill_tint_strength"):
+			return float(node.get_meta("chill_tint_strength"))
+	return 0.0
