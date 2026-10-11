@@ -1758,3 +1758,19 @@ Recorder wall time per 120-day episode (dataset v0, `timing.json`, one thread pe
 ### WM-Bench v0 re-run after review round 1 (L4 requested amounts, L5 scored-row denominator) — the published numbers
 
 λ = 100 for both ridges. Mean nMAE over V — T1 (persistence / daily naive / ridge / action ridge): A test 0.158 / 0.237 / 0.100 / 0.101; B test 0.161 / 0.243 / 0.103 / 0.103; OOD_v12 0.159 / 0.251 / 0.106 / 0.107; OOD_long 0.161 / 0.237 / 0.100 / 0.101. T2 24 h (persistence / ridge / action ridge): A test 0.139 / 0.145 / 0.146; B test 0.137 / 0.148 / 0.149; OOD_v12 0.137 / 0.209 / 0.205; OOD_long 0.135 / 0.147 / 0.148. T2 168 h: A test 0.554 / 0.557 / 0.541; B test 0.549 / 0.575 / 0.555; OOD_v12 0.553 / 0.453 / 0.419; OOD_long 0.536 / 0.543 / 0.528. T3, T4 and the sanity checks are identical to the first run (T3 logistic Brier 0.0015, AUC 1.000).
+
+## Pass 8 baseline
+
+Base `ce7acb25` (code head `6df3a7e0`), release probe built from the base and frozen as a copy (`/Users/rexxa/work/p8bin/probe_p0`), `--workers 4`, run 17:57–18:03 KST. Flags exactly those of Pass 7's recorded runs: the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30` and `--check-determinism` for v12 and v13, `--check-determinism` only for legacy.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p8-0_v13_10day` | game_v13 0..64 × 10 | DETERMINISM PASS; all 6,096 shared values equal `p7-5_round2_10day` (0 differences, no one-sided paths) |
+| `p8-0_v13_120day` | game_v13 0..32 × 120 | DETERMINISM PASS; all 56,374 equal `p7-5_round2_120day` |
+| `p8-0_v12_10day` | game_v12 0..64 × 10 | DETERMINISM PASS; all 6,096 equal `p7-7_final_v12_10day` |
+| `p8-0_v12_120day` | game_v12 0..32 × 120 | DETERMINISM PASS; all 56,385 equal `p7-7_final_v12_120day` |
+| `p8-0_legacy` | legacy 0..4 × 10 | DETERMINISM PASS; all 4,746 equal `p7-7_final_legacy` |
+
+Fingerprints of `game_v13_scene(seed)` after 1,440 ticks (seeds 0–3), pinned in `harness_v13_fingerprints_unchanged`: `519530c0aaaae844` (forage 83, wood 20), `24d191164e3c4132` (69, 32), `b44a71909b8615cc` (84, 28), `c16d5b002bea6cc5` (55, 37).
+
+v0 sample rebuilt with the Part 0 recorder (`wm_p0`, `ce7acb25`) into `.harness/evidence/worldmodel/p8-0_sample/` (`--scene game_v13 --seeds 0..2 --days 10 --every 60 --agents`, `WORLDSIM_GIT_SHA=dc6760b0…`), `timing.json` removed: `diff -r` against `docs/worldmodel/sample/` finds no difference (byte-identical).
