@@ -94,7 +94,9 @@ func _run() -> void:
 	for value: Variant in [null, [1], PackedByteArray([0])]:
 		world.agents["colds"] = value
 		topbar._refresh()
-		_check(not topbar._cold_label.visible, "no cold count hidden")
+		_check(topbar._cold_label.visible == (value is PackedByteArray), "valid zero count shown; unsupported snapshot hidden")
+		if value is PackedByteArray:
+			_check(topbar._cold_label.text.ends_with(" 0"), "zero cold count remains auditable")
 		_check(not topbar._cold_icon.visible, "no cold snowflake hidden")
 	locale.call("set_language", language)
 	seek.free()

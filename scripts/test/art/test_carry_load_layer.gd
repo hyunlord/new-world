@@ -44,6 +44,16 @@ func run() -> void:
 	sprite.visible = false
 	Loads.apply(sprite, "carry")
 	check(not layer.visible, "hidden actor has no visible layer")
+	var calibration: Node = (load("res://scenes/test/art_calibration.tscn") as PackedScene).instantiate()
+	root.add_child(calibration)
+	calibration.call("set_lineup", true)
+	var checked: int = 0
+	for actor: Node in calibration.get_node("Lineup").get_children():
+		if actor.get_meta("activity", "") == "carry":
+			checked += 1
+			check(actor.get_meta("load_visible", false), "blind lineup uses the actual installed carry layer")
+	check(checked == 3, "lineup contains three current carry compositions")
+	calibration.free()
 	sprite.free()
 	print("CARRY_LOAD_LAYER failures=", failures)
 	quit(1 if failures else 0)

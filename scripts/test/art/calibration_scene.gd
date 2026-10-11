@@ -61,6 +61,7 @@ var _lineup_groups: Dictionary = {}
 var _lineup_icons: Dictionary = {}
 var _lineup_seconds: float = 1.375
 const Activity = preload("res://scripts/ui/agent_activity.gd")
+const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
 const LINEUP_ACTIVITIES: Array[String] = ["walk", "carry", "gather", "build", "eat", "drink", "sit", "talk"]
 
 
@@ -107,4 +108,5 @@ func _update_lineup() -> void:
 		actor.set_meta("fallback_kind", choice.get("fallback_kind", ""))
 		SpriteLibrary.apply(actor, sprite_id)
 		SpriteLibrary.apply_variant(actor, actor.get_meta("variant"))
+		CarryLoad.apply(actor, str(actor.get_meta("activity")))
 		Activity.apply_activity_icon(actor, _lineup_icons[actor.get_instance_id()], choice, (get_node("Camera2D") as Camera2D).zoom.x)

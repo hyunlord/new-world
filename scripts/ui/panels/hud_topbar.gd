@@ -175,10 +175,13 @@ func _refresh() -> void:
 		for marker: int in colds:
 			if marker == 1:
 				cold_count += 1
-	_cold_label.visible = cold_count > 0
+	_cold_label.visible = colds is PackedByteArray
 	_cold_label.text = _loc("HUD_COLD") + " %d" % cold_count
-	_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
-	_cold_icon.visible = _cold_label.visible
+	if cold_count > 0:
+		_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
+	else:
+		_cold_label.remove_theme_color_override("font_color")
+	_cold_icon.visible = cold_count > 0
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
 	var kinds: Variant = resources.get("kinds", null)
