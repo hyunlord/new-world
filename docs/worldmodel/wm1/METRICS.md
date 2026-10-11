@@ -46,3 +46,9 @@ this table before its test evaluation.
 
 The main recipe of the W table is chosen on validation (T2 168 h of the main seed-0 run, then T1), never on test.
 
+### M1b on the GPU (added 22:25, before any M1b number; DECISIONS D3.2)
+
+| Config | Model | Variant | Seeds | Run ids |
+|---|---|---|---|---|
+| M1b r3 | causal transformer, recipe r3 with batch 32 and 1 rollout start (memory), 3,000 steps, eval every 150 | sev-blind, action-aware | 0 | `m1tf_main_r3_s0` |
+
