@@ -10,3 +10,8 @@ Times are KST (Mac clock). Working-time budget: 12 h from the start (GOAL.md 0.3
 | 1 | 18:00 | 18:31 | data.py, evaluate.py (T1–T4, T2-any, T3b), agents.py (T5), repro_bench.py; W1 on the DGX (`w1_repro_832eaa2c`, 1,226 s): worst |diff| 3.5e-10 → PASS |
 | 2 | 18:13 | | M1 GRU main s0 and sev-on s0 launched in parallel (8 threads each) while W1 ran; M1b and M2 code written in parallel |
 | 2 | 18:47 | | r1 main val: T2-24 0.115 (beats persistence 0.130) but T2-168 0.84 → recipe r2 (D2.2). M1b r1 stopped at step ~2,100 (r1 superseded, CPU). r2 main s0 18:47; r2 s1, s2, sev-on, both action-blind and the W7 rerun 18:53 (each GRU job uses ≈ 1 core) |
+| 4 | 18:28 | 19:20 | M2 MLP (18:28–18:35) and set transformer (18:41–19:06) on the DGX; set transformer chosen on val; test (19:13–19:20): state-tag 0.902 vs persistence 0.724, Chebyshev 2.04 vs 2.54 → W6 PASS |
+| 2 | 19:05 | | r2 relaunched (4,000 steps, D2.4) — 7 jobs; r2 main s0 stopped by patience at step 2,200 (best 1,200) in 3,482 s; its rerun identical; test (20:03–20:31): T2-168 A/B/OOD_long 0.486 / 0.486 / 0.472 (≤ 10 % below the best baseline), T1 0.130 (fails), T4 effects ≈ 0 |
+| 2 | 20:06 | | r3 (V-weighted losses, D2.5) main s0, rerun, s1, s2 launched; r3 sev-on / action-blind variants 20:35 |
+| 5 | 19:12 | | M3 LoRA on Qwen2.5-0.5B-Instruct, 4 threads (two earlier launches stopped for CPU, D2.3) |
+| gate prep | 19:35 | 19:38 | Pass 7 recorder built on the DGX in a separate clone (`wm1-runs/_build/src`, base commit) so the export tests run in the DGX gate |
