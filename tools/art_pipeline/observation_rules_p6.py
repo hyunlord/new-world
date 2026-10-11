@@ -10,11 +10,11 @@ def chill_window(now: int, last_cold: int, first_clear: int, duration: float) ->
 
 
 def intervention_visible(stem: str, kind: str, elapsed: float, observed: list[str]) -> bool:
-    """A panel only proves its explicit shot; windfall must cease after 0.7 s."""
+    """A panel only proves its explicit shot; windfall must cease after 0.6 s."""
     if stem.endswith('_panel_log'):
         return 'panel' in observed
     if kind == 'windfall':
         if elapsed < 0:
             return False
-        return ('windfall' in observed) if elapsed < .7 else ('windfall' not in observed and 'windfall_ended' in observed)
+        return ('windfall' in observed) if elapsed < .6 else ('windfall' not in observed and 'windfall_ended' in observed)
     return kind in observed

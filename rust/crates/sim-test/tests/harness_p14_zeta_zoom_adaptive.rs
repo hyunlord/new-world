@@ -594,8 +594,12 @@ fn harness_zoom_a17_main_tscn_load_steps_equals_12() {
     let src = read_main_tscn_src();
     let n = tscn_load_steps(&src)
         .expect("a17.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 19, "a17.2: load_steps must equal 19; got {n}");
-    println!("[P14-ζ a17] load_steps = 17 ✓");
+    assert_eq!(n, 21, "Art Pass 6: twenty external resources plus the main scene; got {n}");
+    assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
+    assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
+    assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
+    assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
+    println!("[P14-ζ a17] load_steps = 21 ✓");
 }
 
 // ─── Assertion 18: registers both new nodes ───────────────────────────────

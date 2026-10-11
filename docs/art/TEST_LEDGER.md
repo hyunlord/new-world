@@ -394,3 +394,9 @@ Orphan source-inspection helpers for the retired mesh/tint parsers and whole-fil
   - `harness_p14_beta_resource_building_variety.rs` / `harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved`.
   - `harness_p14_gamma_click_inspector.rs` / `harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved`.
   - Verification: all eight affected integration-test binaries passed with `CARGO_BUILD_JOBS=6 cargo test --manifest-path rust/Cargo.toml -p sim-test` and the eight explicit `--test` targets above, `-- --test-threads=6`; `cargo clippy --manifest-path rust/Cargo.toml -p sim-test --tests -- -D warnings` passed; no obsolete three-argument state-call assertion remains; scoped `git diff --check` is clean. Full final gate is rerun separately by the leader.
+
+- Part 9 scene-count compatibility repair: retained final gate attempt2 `cargo_test.log` failed at `harness_p14_epsilon_activity_trails.rs:495` because the prior exact19 load steps omit the two authorized GodHand resources. Four static-source tests now require exact21 steps /20 external resources and explicitly bind `res://scenes/ui/god_hand_panel.tscn` to the UI GodHandPanel instance and `res://scripts/rendering/art/god_hand_effects.gd` to the world-level GodHandEffects node. Existing prior-renderer registration assertions remain intact; this is an exact additive-count update, not a relaxed bound.
+  - `harness_p14_epsilon_activity_trails.rs` / `harness_p14_epsilon_a12_main_tscn_load_steps_equals_12`.
+  - `harness_p14_zeta_zoom_adaptive.rs` / `harness_zoom_a17_main_tscn_load_steps_equals_12`.
+  - `harness_show_death_visual.rs` / `harness_death_a6_scene_wiring_additive`.
+  - `harness_show_agent_needs_bars.rs` / `harness_needs_a6_scene_wiring_additive`.

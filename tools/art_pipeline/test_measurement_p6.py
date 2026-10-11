@@ -171,3 +171,10 @@ def test_terrain_tint_does_not_hide_ground_but_panel_does(tmp_path: Path):
         path.with_suffix('.entities.json').write_text(json.dumps(data))
     result = _terrain(*(load_capture(path) for path in paths), data, data)
     assert not result['pass'] and result['mask_pixels'] == 0
+
+
+def test_windfall_ends_at_six_tenths_boundary():
+    from observation_rules_p6 import intervention_visible
+    assert intervention_visible('god_windfall', 'windfall', .59, ['windfall'])
+    assert not intervention_visible('god_windfall', 'windfall', .6, ['windfall'])
+    assert intervention_visible('god_windfall', 'windfall', .6, ['windfall_ended'])

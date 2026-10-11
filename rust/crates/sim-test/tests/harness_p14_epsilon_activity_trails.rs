@@ -492,8 +492,12 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 19, "A12.2: load_steps must equal 19 (Phase 14-ζ 9 → 11, viz-B 11 → 12, viz-D 12 → 13); got {n}");
-    println!("[P14-ε A12] load_steps = 17 (post viz-D DeathVizRenderer) ✓");
+    assert_eq!(n, 21, "Art Pass 6: twenty external resources plus the main scene; got {n}");
+    assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
+    assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
+    assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
+    assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
+    println!("[P14-ε A12] load_steps = 21 (Art Pass 6 GodHandPanel/GodHandEffects) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
