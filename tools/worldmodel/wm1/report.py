@@ -55,6 +55,11 @@ def load(run: str, name: str):
     return json.loads(p.read_text()) if p.exists() else None
 
 
+def ridge_variants() -> dict | None:
+    runs = sorted(p.name for p in RUNS.iterdir() if p.name.startswith("ridge_variants_"))
+    return load(runs[-1], "ridge_variants.json") if runs else None
+
+
 def best_baseline(scores: dict) -> tuple[float, str]:
     return min((v["mean"], k) for k, v in scores.items())
 
@@ -97,22 +102,42 @@ def main() -> int:
     W = []
     W.append(("W1", "harness fidelity (bench baselines to 1e-3, T1–T4, every split)", "—", f"max |diff| {w1['max_abs_diff']:.1e}",
               "PASS" if w1["pass"] else "FAIL"))
+    rv = ridge_variants()
     if m0:
-        rows, ok = [], True
-        for s in W2_SPLITS:
-            ref, name = best_baseline({k: {"mean": float(np.nanmean(v))} for k, v in bench["T2"]["168"][s].items()})
-            v = seeds(main_runs, lambda m: m["T2"]["168"][s]["mean"])
-            ok &= bool(v.mean() <= 0.9 * ref)
-            rows.append(f"{s} {mean_range(v)} vs {ref:.3f} ({name}; target ≤ {0.9 * ref:.4f})")
         t1_ok, t1_rows = True, []
-        for s in TESTS:
-            ref, name = best_baseline({k: {"mean": float(np.nanmean(v))} for k, v in bench["T1"][s].items()})
-            v = seeds(main_runs, lambda m: m["T1"][s]["mean"])
+        for s_ in TESTS:
+            cand = {k: float(np.nanmean(v)) for k, v in bench["T1"][s_].items()}
+            if rv:
+                cand.update({k: v["mean"] for k, v in rv["T1"][s_].items()})
+            ref = min(cand.values())
+            v = seeds(main_runs, lambda m: m["T1"][s_]["mean"])
             t1_ok &= bool(v.mean() <= 1.05 * ref)
-            t1_rows.append(f"{s} {mean_range(v)} vs {ref:.3f}")
-        W.append(("W2", "M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 %",
-                  "; ".join(r.split(" vs ")[1] for r in rows), "T2 168 h: " + "; ".join(r.split(" vs ")[0] for r in rows)
-                  + " — T1: " + "; ".join(t1_rows), "PASS" if ok and t1_ok else f"FAIL (T2 168 h {'pass' if ok else 'fail'}, T1 {'pass' if t1_ok else 'fail'})"))
+            t1_rows.append(f"{s_} {mean_range(v)} vs {ref:.3f}")
+        refsets = [("bench_v0 baselines (original W2)", False, False)]
+        if rv:
+            refsets += [("+ severity-free ridges", True, False), ("+ true-severity ridges (oracle reference)", True, True)]
+        verdicts = []
+        for label, add_nosev, add_true in refsets:
+            rows, ok = [], True
+            for s_ in W2_SPLITS:
+                cand = {k: float(np.nanmean(v)) for k, v in bench["T2"]["168"][s_].items()}
+                if add_nosev:
+                    cand.update({k: v["mean"] for k, v in rv["T2"]["168"][s_].items() if "nosev" in k})
+                if add_true:
+                    cand.update({k: v["mean"] for k, v in rv["T2"]["168"][s_].items() if "truesev" in k})
+                name = min(cand, key=cand.get)
+                ref = cand[name]
+                v = seeds(main_runs, lambda m: m["T2"]["168"][s_]["mean"])
+                ok &= bool(v.mean() <= 0.9 * ref)
+                rows.append(f"{s_} {mean_range(v)} vs {ref:.3f} {name} (≤ {0.9 * ref:.4f})")
+            verdicts.append((label, ok, rows))
+        main_label, main_ok, _ = verdicts[-1]
+        txt = " ‖ ".join(f"[{lab}] " + "; ".join(r) + f" → {'pass' if okk else 'fail'}" for lab, okk, r in verdicts)
+        W.append(("W2", "M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 % "
+                  "(judged against the best of all baselines, the oracle reference included; the original bench-only verdict beside it)",
+                  "see Model column", txt + " — T1: " + "; ".join(t1_rows),
+                  ("PASS" if main_ok and t1_ok else f"FAIL (T2 168 h {'pass' if main_ok else 'fail'}, T1 {'pass' if t1_ok else 'fail'})")
+                  + f"; original: {'pass' if verdicts[0][1] else 'fail'} on T2 168 h"))
         # W3
         if "T4" in m0:
             parts, okc = [], True
@@ -214,6 +239,11 @@ def main() -> int:
             bsrc = base[task] if h is None else base[task][h]
             for name in ("persistence", "daily_naive", "ridge", "ridge_action"):
                 L.append(f"| {name} | " + " | ".join(fmt(bsrc[s][name]["mean"]) for s in TESTS) + " |")
+            if rv:
+                rsrc = rv[task] if h is None else rv[task][h]
+                for name in rsrc[TESTS[0]]:
+                    lab = name + (" (oracle reference)" if "truesev" in name else "")
+                    L.append(f"| {lab} | " + " | ".join(fmt(rsrc[s][name]["mean"]) for s in TESTS) + " |")
             if main_runs:
                 L.append("| **M1 main (3 seeds)** | " + " | ".join(mean_range(seeds(main_runs, lambda m: (m[task] if h is None else m[task][h])[s]["mean"])) for s in TESTS) + " |")
             for name, r in models[1:]:

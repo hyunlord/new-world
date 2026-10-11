@@ -292,7 +292,9 @@ KINDS = {"m1_gru": Kind("m1_gru", DEFAULTS, _gru_build, lambda *a: losses(*a), _
 
 def kind_of(name: str) -> Kind:
     if name not in KINDS:
-        __import__("wm1." + name)  # importing wm1.m1_tf registers its kind
+        __import__("wm1." + name)  # importing wm1.m1_tf registers its kind in the module `wm1.m1_gru`
+        # When this file runs as a script it is `__main__`, a different module object from `wm1.m1_gru`.
+        KINDS.update(sys.modules["wm1.m1_gru"].KINDS)
     return KINDS[name]
 
 

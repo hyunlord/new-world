@@ -9,7 +9,7 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | # | Target | Baseline | Model | Result |
 |---|---|---|---|---|
 | W1 | harness fidelity (bench baselines to 1e-3, T1–T4, every split) | — | max |diff| 3.5e-10 | PASS |
-| W2 | M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 % | 0.541 (ridge_action; target ≤ 0.4867); 0.549 (daily_naive; target ≤ 0.4938); 0.528 (ridge_action; target ≤ 0.4756) | T2 168 h: A_test 0.275 [0.243, 0.327]; B_test 0.272 [0.241, 0.327]; OOD_long 0.277 [0.248, 0.329] — T1: A_test 0.123 [0.121, 0.127] vs 0.100; B_test 0.127 [0.125, 0.131] vs 0.103; OOD_v12 0.126 [0.124, 0.129] vs 0.106; OOD_long 0.126 [0.124, 0.130] vs 0.100 | FAIL (T2 168 h pass, T1 fail) |
+| W2 | M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 % (judged against the best of all baselines, the oracle reference included; the original bench-only verdict beside it) | see Model column | [bench_v0 baselines (original W2)] A_test 0.275 [0.243, 0.327] vs 0.541 ridge_action (≤ 0.4867); B_test 0.272 [0.241, 0.327] vs 0.549 daily_naive (≤ 0.4938); OOD_long 0.277 [0.248, 0.329] vs 0.528 ridge_action (≤ 0.4756) → pass ‖ [+ severity-free ridges] A_test 0.275 [0.243, 0.327] vs 0.223 ridge_nosev (≤ 0.2007); B_test 0.272 [0.241, 0.327] vs 0.227 ridge_nosev (≤ 0.2039); OOD_long 0.277 [0.248, 0.329] vs 0.241 ridge_nosev (≤ 0.2170) → fail ‖ [+ true-severity ridges (oracle reference)] A_test 0.275 [0.243, 0.327] vs 0.223 ridge_nosev (≤ 0.2007); B_test 0.272 [0.241, 0.327] vs 0.227 ridge_nosev (≤ 0.2039); OOD_long 0.277 [0.248, 0.329] vs 0.241 ridge_nosev (≤ 0.2170) → fail — T1: A_test 0.123 [0.121, 0.127] vs 0.100; B_test 0.127 [0.125, 0.131] vs 0.102; OOD_v12 0.126 [0.124, 0.129] vs 0.100; OOD_long 0.126 [0.124, 0.130] vs 0.099 | FAIL (T2 168 h fail, T1 fail); original: pass on T2 168 h |
 | W3 | T4 nMAE below the best baseline in ≥ 3 of 4 variants on dark nights and cold member-hours; sign ≥ 0.75 | zero / val-mean effect | dark_nights: below best baseline in 0/4, mean sign acc 0.48 (cold_snap 1.12/1.00 sign 0.65; gift_wood 1.00/0.79 sign 0.38; rain 1.12/1.00 sign 0.50; rot_wood 1.00/0.79 sign 0.38) | cold_member_hours: below best baseline in 1/4, mean sign acc 0.37 (cold_snap 1.00/0.89 sign 0.35; gift_wood 1.00/0.72 sign 0.42; rain 1.00/1.00 sign 0.36; rot_wood 1.00/0.69 sign 0.36) | FAIL |
 | W4 | T3b A test: M1 main MAE below the ridge; gap to the severity oracle | ridge 0.130, oracle 0.134 | M1 main 0.568 [0.438, 0.766] (gap to oracle +0.434) | FAIL |
 | W5 | severity ablation (T2 winter rows, T3b, T4) with the three-seed spread | — | T2-any winter targets A test 24 h: blind 0.172 [0.171, 0.174] vs on 0.187; 168 h: blind 0.321 [0.273, 0.417] vs on 0.544; T3b MAE blind 0.568 [0.438, 0.766] vs on 0.203; T4 dark-night nMAE (mean of variants) blind 1.062 [1.000, 1.162] vs on 1.031 | REPORTED |
@@ -25,6 +25,8 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | daily_naive | 0.237 | 0.243 | 0.251 | 0.237 |
 | ridge | 0.100 | 0.103 | 0.106 | 0.100 |
 | ridge_action | 0.101 | 0.103 | 0.107 | 0.101 |
+| ridge_action_nosev | 0.100 | 0.103 | 0.101 | 0.101 |
+| ridge_nosev | 0.100 | 0.102 | 0.100 | 0.099 |
 | **M1 main (3 seeds)** | 0.123 [0.121, 0.127] | 0.127 [0.125, 0.131] | 0.126 [0.124, 0.129] | 0.126 [0.124, 0.130] |
 | sev-on, action-aware | 0.125 | 0.129 | 0.128 | 0.128 |
 | sev-blind, action-blind | 0.127 | 0.131 | 0.129 | 0.130 |
@@ -46,6 +48,10 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | daily_naive | 0.139 | 0.137 | 0.137 | 0.135 |
 | ridge | 0.145 | 0.148 | 0.209 | 0.147 |
 | ridge_action | 0.146 | 0.149 | 0.205 | 0.148 |
+| ridge_action_nosev | 0.141 | 0.147 | 0.135 | 0.145 |
+| ridge_action_truesev (oracle reference) | 0.146 | 0.149 | 0.205 | 0.148 |
+| ridge_nosev | 0.138 | 0.141 | 0.132 | 0.141 |
+| ridge_truesev (oracle reference) | 0.145 | 0.148 | 0.209 | 0.147 |
 | **M1 main (3 seeds)** | 0.131 [0.124, 0.143] | 0.135 [0.129, 0.146] | 0.128 [0.122, 0.140] | 0.131 [0.125, 0.143] |
 | sev-on, action-aware | 0.143 | 0.147 | 0.145 | 0.144 |
 | sev-blind, action-blind | 0.139 | 0.142 | 0.136 | 0.141 |
@@ -67,6 +73,10 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | daily_naive | 0.554 | 0.549 | 0.553 | 0.536 |
 | ridge | 0.557 | 0.575 | 0.453 | 0.543 |
 | ridge_action | 0.541 | 0.555 | 0.419 | 0.528 |
+| ridge_action_nosev | 0.235 | 0.242 | 0.232 | 0.254 |
+| ridge_action_truesev (oracle reference) | 0.240 | 0.243 | 0.419 | 0.253 |
+| ridge_nosev | 0.223 | 0.227 | 0.220 | 0.241 |
+| ridge_truesev (oracle reference) | 0.233 | 0.233 | 0.453 | 0.245 |
 | **M1 main (3 seeds)** | 0.275 [0.243, 0.327] | 0.272 [0.241, 0.327] | 0.269 [0.240, 0.323] | 0.277 [0.248, 0.329] |
 | sev-on, action-aware | 0.398 | 0.401 | 0.418 | 0.391 |
 | sev-blind, action-blind | 0.283 | 0.281 | 0.276 | 0.283 |
@@ -88,6 +98,10 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | daily_naive | 0.199 | 0.202 | 0.193 | 0.191 |
 | ridge | 0.191 | 0.193 | 0.263 | 0.187 |
 | ridge_action | 0.192 | 0.196 | 0.261 | 0.189 |
+| ridge_action_nosev | 0.188 | 0.194 | 0.179 | 0.188 |
+| ridge_action_truesev (oracle reference) | 0.192 | 0.196 | 0.261 | 0.189 |
+| ridge_nosev | 0.185 | 0.189 | 0.176 | 0.184 |
+| ridge_truesev (oracle reference) | 0.191 | 0.193 | 0.263 | 0.187 |
 | **M1 main (3 seeds)** | 0.188 [0.187, 0.190] | 0.196 [0.195, 0.196] | 0.194 [0.189, 0.197] | 0.186 [0.185, 0.187] |
 | sev-on, action-aware | 0.188 | 0.195 | 0.191 | 0.187 |
 | sev-blind, action-blind | 0.190 | 0.196 | 0.195 | 0.187 |
@@ -109,6 +123,10 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | daily_naive | 0.665 | 0.666 | 0.653 | 0.622 |
 | ridge | 0.621 | 0.638 | 0.497 | 0.604 |
 | ridge_action | 0.596 | 0.609 | 0.459 | 0.580 |
+| ridge_action_nosev | 0.243 | 0.252 | 0.232 | 0.252 |
+| ridge_action_truesev (oracle reference) | 0.257 | 0.259 | 0.459 | 0.261 |
+| ridge_nosev | 0.238 | 0.244 | 0.227 | 0.246 |
+| ridge_truesev (oracle reference) | 0.256 | 0.258 | 0.497 | 0.259 |
 | **M1 main (3 seeds)** | 0.340 [0.307, 0.399] | 0.348 [0.313, 0.408] | 0.343 [0.310, 0.402] | 0.332 [0.301, 0.386] |
 | sev-on, action-aware | 0.462 | 0.471 | 0.476 | 0.441 |
 | sev-blind, action-blind | 0.343 | 0.350 | 0.345 | 0.334 |
