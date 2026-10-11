@@ -31,7 +31,7 @@ if torch is not None:
 
 DEFAULTS = dict(d_model=256, layers=4, heads=4, context=168, lr=3e-4, weight_decay=1e-4, batch=64, window=168,
                 k_max=24, roll_starts=4, roll_weight=1.0, max_steps=6000, eval_every=300, patience=5, max_seconds=7200,
-                warmup=168, grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0)
+                warmup=168, grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0)
 
 
 if torch is not None:
@@ -110,8 +110,9 @@ def losses_tf(model, stepper: g.Stepper, bt: dict, k: int, cfg: dict, rng: np.ra
     nll = 0.5 * (logvar + (bt["dtarget"] - mu) ** 2 / logvar.exp()).mean()
     bce = F.binary_cross_entropy_with_logits(fl, bt["fire_next"])
     tf = nll + bce
+    w = stepper.feature_weights(cfg.get("v_weight", 1.0))
     if cfg.get("tf_l1", 0.0):
-        tf = tf + cfg["tf_l1"] * (bt["dtarget"] - mu).abs().mean()
+        tf = tf + cfg["tf_l1"] * ((bt["dtarget"] - mu).abs() * w).mean()
     B = inp.shape[0]
     js = torch.tensor(g.roll_positions(L, k, cfg, rng), device=inp.device)
     m = len(js)
@@ -124,13 +125,14 @@ def losses_tf(model, stepper: g.Stepper, bt: dict, k: int, cfg: dict, rng: np.ra
     cur = flat(bt["state"][:, js])
     sev_hold = flat(bt["sev"][:, js])
     cont = stepper.cont
+    fire_w = float(w.max().item())
     roll = 0.0
     ones = torch.ones(B * m, 1, dtype=torch.bool, device=inp.device)
     for i in range(k):
         cur = stepper.next_state(cur, mu_j, fl_j, hard=False)
         true = flat(bt["state"][:, js + i + 1])
         err = (cur[:, cont] - true[:, cont]) / stepper.std[cont]
-        roll = roll + err.abs().mean() + F.binary_cross_entropy_with_logits(fl_j, true[:, stepper.lay.fire])
+        roll = roll + (err.abs() * w).mean() + fire_w * F.binary_cross_entropy_with_logits(fl_j, true[:, stepper.lay.fire])
         if i == k - 1:
             break
         r = js + i + 1

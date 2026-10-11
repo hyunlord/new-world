@@ -123,7 +123,7 @@ class M1bTests(unittest.TestCase):
         rng = np.random.default_rng(0)
         bt = m.batch_tensors(d.sample_windows([prep], 30, 3, rng), "cpu")
         stepper = m.Stepper(self.lay, self.norm, "cpu")
-        tf, parts, roll = self.tf.losses_tf(self.model, stepper, bt, 5, {"roll_starts": 2, "tf_l1": 1.0}, rng)
+        tf, parts, roll = self.tf.losses_tf(self.model, stepper, bt, 5, {"roll_starts": 2, "tf_l1": 1.0, "v_weight": 5.0}, rng)
         (tf + roll).backward()
         self.assertTrue(np.isfinite(float(tf.detach())) and np.isfinite(float(roll.detach())))
         pred = self.tf.TFPredictor(self.model, self.lay, self.norm, d.MAIN, "cpu", 24, context=24)
