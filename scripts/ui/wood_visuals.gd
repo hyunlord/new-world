@@ -27,7 +27,12 @@ static func settlement(snapshot: Dictionary, tile: Vector2i) -> Dictionary:
 		result["fire_lit"] = fires[best] == 1
 	return result
 
-static func hearth_frame(state: Dictionary, hour: float, elapsed: float) -> String:
+static func cold_ash(state: Dictionary, hour: float, winter_severity: int) -> bool:
+	return state.has("fire_lit") and not bool(state["fire_lit"]) and winter_severity >= 0 and (hour >= 18.0 or hour < 7.0)
+
+static func hearth_frame(state: Dictionary, hour: float, elapsed: float, winter_severity: int = -1) -> String:
+	if cold_ash(state, hour, winter_severity):
+		return "S1_16"
 	if not state.has("fire_lit"):
 		return "S1_%02d" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else "S1_%02d" % (2 + int(elapsed * 8.0) % 4)
 	if bool(state["fire_lit"]):

@@ -5,6 +5,7 @@ const SPRITE_ORIGIN: Vector2 = Vector2(448, 28)
 const RECONCILE_FRAMES: int = 30
 const WOOD_SHORT_TINT: Color = Color(0.96, 0.62, 0.32)
 const STOCKPILE_FOOD_KEY: String = "HUD_STOCKPILE_FOOD"
+const SHELTER_COLD = preload("res://scripts/ui/shelter_cold.gd")
 const WOOD = preload("res://scripts/ui/wood_visuals.gd")
 const HASH = preload("res://scripts/ui/art_hash.gd")
 const ART = preload("res://scripts/ui/art_sprite_library.gd")
@@ -35,6 +36,11 @@ var _props: Dictionary = {}
 var _death_cache: Dictionary = {}
 var _last_tick: int = -1
 var _snapshot_tick: int = -1
+var _chill_tint: ColorRect
+var _tint_strength: float = 0.0
+var _tint_target: float = 0.0
+var _tint_start: float = 0.0
+var _tint_elapsed: float = 0.0
 
 func _ready() -> void:
 	z_index = 5
@@ -45,6 +51,8 @@ func _ready() -> void:
 	_objects = ART.shared_layer(self, "WorldObjects", 4, true)
 	_shadows = ART.shared_layer(self, "Shadows", 3)
 	_shadow_texture = load("res://assets/art/contact_shadow.png") as Texture2D
+	_setup_chill_tint()
+	_world_sim.connect("world_reset", _reset_cold)
 	_world_sim.connect("world_reset", refresh_snapshot)
 	refresh_snapshot()
 
@@ -56,6 +64,7 @@ func _process(delta: float) -> void:
 	if tick != _snapshot_tick or _frame % RECONCILE_FRAMES == 0 or _buildings.is_empty():
 		refresh_snapshot()
 	_animate_hearths()
+	_update_shelter_cold(delta)
 	_update_cairns()
 	_update_labels()
 
@@ -307,8 +316,9 @@ func _animate_hearths() -> void:
 		if int(sprite.get_meta("building_kind", -1)) == 0:
 			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 			var state: Dictionary = WOOD.settlement(settlements, tile)
-			ART.apply(sprite, _available(WOOD.hearth_frame(state, _hour(), _elapsed)))
-			sprite.set_meta("fire_lit", state.get("fire_lit", null))
+			ART.apply(sprite, _available(WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get("winter_severity", -1)))))
+			_update_cold_ash(sprite, WOOD.cold_ash(state, _hour(), int(_world_sim.get_time_snapshot().get("winter_severity", -1))))
+			sprite.set_meta("fire_lit", state.get("fire_lit", true))
 			sprite.set_meta("wood_stock", state.get("wood_stock", -1))
 			sprite.set_meta("settlement_id", state.get("settlement_id", -1))
 
@@ -472,3 +482,68 @@ static func wood_target(snapshot: Dictionary, anchor: Vector2i) -> int:
 			best_distance = distance
 			target = int(targets[index])
 	return target
+
+func _setup_chill_tint() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "NightChillLayer"
+	layer.layer = 0
+	add_child(layer)
+	_chill_tint = ColorRect.new()
+	_chill_tint.name = "NightChillTint"
+	_chill_tint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_chill_tint.color = Color(0.80, 0.88, 1.0, 0.0)
+	_chill_tint.set_meta("art_kind", "night_chill_tint")
+	layer.add_child(_chill_tint)
+	_chill_tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+func _reset_cold() -> void:
+	_tint_strength = 0.0
+	_tint_target = 0.0
+	_tint_start = 0.0
+	_tint_elapsed = 0.0
+	if _chill_tint != null:
+		_chill_tint.color.a = 0.0
+	for sprite: Sprite2D in _buildings.values():
+		if int(sprite.get_meta("building_kind", -1)) == 1:
+			SHELTER_COLD.apply(sprite, 0, _elapsed, 0.4)
+
+func _update_shelter_cold(delta: float) -> void:
+	var agents: Dictionary = _world_sim.get_agent_snapshot() if _world_sim.has_method("get_agent_snapshot") else {}
+	var counts: Dictionary = SHELTER_COLD.sleeper_counts(agents, _world_sim.get_building_snapshot())
+	for sprite: Sprite2D in _buildings.values():
+		if int(sprite.get_meta("building_kind", -1)) == 1:
+			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
+			SHELTER_COLD.apply(sprite, int(counts.get(tile, 0)), _elapsed, delta)
+	var cold_snap: bool = false
+	if _world_sim.has_method("get_intervention_state"):
+		var intervention: Dictionary = _world_sim.call("get_intervention_state")
+		cold_snap = bool(intervention.get("cold_snap_tonight", false))
+	var target: float = 0.18 if cold_snap else (0.12 if not counts.is_empty() else 0.0)
+	if target != _tint_target:
+		_tint_start = _tint_strength
+		_tint_target = target
+		_tint_elapsed = 0.0
+	_tint_elapsed += maxf(delta, 0.0)
+	_tint_strength = SHELTER_COLD.tint_strength(_tint_start, _tint_target, _tint_elapsed)
+	set_meta("night_chill_strength", _tint_strength)
+	if _chill_tint != null:
+		_chill_tint.color.a = _tint_strength
+		_chill_tint.set_meta("night_chill_strength", _tint_strength)
+		_chill_tint.set_meta("cold_snap_tint", cold_snap)
+
+func _update_cold_ash(sprite: Sprite2D, cold: bool) -> void:
+	sprite.set_meta("cold_ash", cold)
+	var ash: Sprite2D = sprite.get_node_or_null("ColdAsh") as Sprite2D
+	if ash == null and cold:
+		ash = Sprite2D.new()
+		ash.name = "ColdAsh"
+		var pixels: Image = Image.create(3, 1, false, Image.FORMAT_RGBA8)
+		pixels.fill(Color("8A8A8A"))
+		ash.texture = ImageTexture.create_from_image(pixels)
+		ash.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		ash.set_meta("art_kind", "cold_ash")
+		ash.set_meta("art_id", sprite.get_meta("art_id", 0))
+		sprite.add_child(ash)
+	if ash != null:
+		ash.visible = cold
+		ash.position = Vector2(0, -2)

@@ -111,7 +111,7 @@ func _process(delta: float) -> void:
 		var sprite: Sprite2D = child as Sprite2D
 		var id: int = int(sprite.get_meta("art_id",0))
 		var kind: int = int(sprite.get_meta("building_kind",-1))
-		if kind == 0:
+		if kind == 0 and bool(sprite.get_meta("fire_lit", true)):
 			_fixed("smoke_%d" % id,"F1_%02d" % (1+int(_elapsed*4.0)%4),sprite.position+Vector2(0,-22),seen)
 			if hour >= 19.0:
 				_fixed("spark_%d" % id,"F1_%02d" % (5+int(_elapsed*6.0)%2),sprite.position+Vector2(2,-16),seen)
