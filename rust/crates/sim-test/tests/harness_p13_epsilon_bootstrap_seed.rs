@@ -177,7 +177,7 @@ fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -189,7 +189,7 @@ fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -213,7 +213,7 @@ fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));

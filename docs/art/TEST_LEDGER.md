@@ -378,3 +378,19 @@ Orphan source-inspection helpers for the retired mesh/tint parsers and whole-fil
 ## Art Pass 6
 
 - Part 0: `rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs`: keep art-side content assertions resolving the simulation merge's whitespace conflict; no unused sha256 import retained. No threshold relaxed.
+
+- Part 9 static-source repair: final gate attempt1 `cargo_test.log` failed at `harness_p12_beta2_construction_sites.rs:417`, `harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved`: old literal `WOOD.hearth_frame(state, _hour(), _elapsed)` rejected the authorized Part1 severity argument. Updated the13 exact call assertions below to require booked `winter_severity` from the time snapshot (default−1), preserving their settlement lookup, legacy three-argument wrapper, placement and other assertions. In the p12 beta2 A14 test, additionally require severity-fed cold-ash dispatch, ash metadata/visibility binding, winter-night/fire-out predicate, cold-ring S1_16 selection, and fire-lit smoke guard; retain legacy clock animation, lit animation and unlit wood-stock frame expectations unchanged. No simulation behavior or numeric threshold changed.
+  - `harness_p12_beta2_construction_sites.rs` / `harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved`.
+  - `harness_p12_beta_terrain.rs` / `harness_p12_beta_a10_bootstrap_building_sprite_loaded`.
+  - `harness_p12_beta_terrain.rs` / `harness_p12_beta_a11_bootstrap_sprite_positioned_at_bootstrap_tile`.
+  - `harness_p12_gamma_settlement_furniture.rs` / `harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved`.
+  - `harness_p13_alpha_camera_and_buildings.rs` / `harness_p13_alpha_a14_three_distinct_building_sprite_paths`.
+  - `harness_p13_epsilon_bootstrap_seed.rs` / `harness_p13_epsilon_a4_on_building_placed_arg_signatures`.
+  - `harness_p13_epsilon_bootstrap_seed.rs` / `harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex`.
+  - `harness_p13_epsilon_bootstrap_seed.rs` / `harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y`.
+  - `harness_p14_alpha_agent_sprite_overhaul.rs` / `harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved`.
+  - `harness_p14_beta_resource_building_variety.rs` / `harness_p14_beta_a12_village_fixture_positions_match_diamond_layout`.
+  - `harness_p14_beta_resource_building_variety.rs` / `harness_p14_beta_a14_village_fixture_placement_loop_present`.
+  - `harness_p14_beta_resource_building_variety.rs` / `harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved`.
+  - `harness_p14_gamma_click_inspector.rs` / `harness_p14_gamma_a28_phase12_to_13_visual_invariants_preserved`.
+  - Verification: all eight affected integration-test binaries passed with `CARGO_BUILD_JOBS=6 cargo test --manifest-path rust/Cargo.toml -p sim-test` and the eight explicit `--test` targets above, `-- --test-threads=6`; `cargo clippy --manifest-path rust/Cargo.toml -p sim-test --tests -- -D warnings` passed; no obsolete three-argument state-call assertion remains; scoped `git diff --check` is clean. Full final gate is rerun separately by the leader.

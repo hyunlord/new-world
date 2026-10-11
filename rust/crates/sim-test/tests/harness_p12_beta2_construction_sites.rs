@@ -413,11 +413,19 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    // Art Pass 4: authoritative fire state delegates to a helper with legacy clock fallback.
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    // Art Pass 6: booked winter severity drives cold ash; preserve the legacy clock fallback.
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
+    assert!(src.contains("_update_cold_ash(sprite, WOOD.cold_ash(state, _hour(), int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1))))"));
+    assert!(src.contains("sprite.set_meta(\"cold_ash\", cold)"));
+    assert!(src.contains("ash.visible = cold"));
     let wood = include_str!("../../../../scripts/ui/wood_visuals.gd");
+    assert!(wood.contains("winter_severity: int = -1"));
+    assert!(wood.contains("return state.has(\"fire_lit\") and not bool(state[\"fire_lit\"]) and winter_severity >= 0 and (hour >= 18.0 or hour < 7.0)"));
+    assert!(wood.contains("if cold_ash(state, hour, winter_severity):\n\t\treturn \"S1_16\""));
+    let effects = include_str!("../../../../scripts/ui/world_effects.gd");
+    assert!(effects.contains("if kind == 0 and bool(sprite.get_meta(\"fire_lit\", true)):"));
     assert!(wood.contains("if not state.has(\"fire_lit\"):\n\t\treturn \"S1_%02d\" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
     assert!(wood.contains("if bool(state[\"fire_lit\"]):\n\t\treturn \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
     assert!(wood.contains("return \"S1_01\" if int(state.get(\"wood_stock\", 0)) > 0 else \"S1_16\""));

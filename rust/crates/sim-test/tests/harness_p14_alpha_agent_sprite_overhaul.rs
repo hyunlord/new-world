@@ -478,7 +478,7 @@ fn harness_p14_alpha_a15_camera_zoom_invariants_preserved() {
 fn harness_p14_alpha_a16_phase13_bootstrap_three_campfires_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed)"));
+    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
