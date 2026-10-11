@@ -2,15 +2,15 @@ extends RefCounted
 
 const Library = preload("res://scripts/ui/art_sprite_library.gd")
 static var _manifest: Dictionary = {}
-static var _body: ImageTexture
-static var _props: ImageTexture
+static var _body: Texture2D
+static var _props: Texture2D
 
 static func _load() -> void:
 	if not _manifest.is_empty():
 		return
 	_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/atlas/carry_p6.json"))
-	_body = ImageTexture.create_from_image(Image.load_from_file(_manifest["body_page"]))
-	_props = ImageTexture.create_from_image(Image.load_from_file(_manifest["prop_page"]))
+	_body = load(str(_manifest["body_page"])) as Texture2D
+	_props = load(str(_manifest["prop_page"])) as Texture2D
 	_body.take_over_path(str(_manifest["body_page"]))
 	_props.take_over_path(str(_manifest["prop_page"]))
 
