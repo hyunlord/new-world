@@ -32,6 +32,18 @@ class M3SerializationTests(unittest.TestCase):
         self.assertIsNone(m.parse("not json"))
         self.assertIsNone(m.parse('{"food": 1}'))
 
+    def test_no_day_line_has_day_of_season_not_day(self) -> None:
+        ep = sample_episode(0)
+        for day in (3, 9):
+            r = ev.row_of(day, 360)
+            rec = json.loads(m.day_line(ep, day, no_day=True))
+            self.assertNotIn("day", rec)
+            self.assertEqual(rec["dos"], int(round(float(ep.calendar[r, -1]) * 7)))
+            self.assertEqual(rec["season"], int(ep.bench.season[r]))
+            np.testing.assert_allclose(m.parse(m.day_line(ep, day, no_day=True)), np.round(ep.bench.v[r]))
+        # Without the flag the line is unchanged (WM-1's M3 lines).
+        self.assertIn("day", json.loads(m.day_line(ep, 3)))
+
 
 if __name__ == "__main__":
     unittest.main()

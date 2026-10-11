@@ -6,8 +6,13 @@ D's line, generate day D+1's line. LoRA (rank 16) on A train days, one epoch or 
 first; evaluated on A test at the bench's T2 starts (06:00 of days 3, 10, 17, ...) at day granularity: JSON parse
 rate and nMAE of V at 24 h (bench denominator) against daily naive (= persistence at whole days).
 
+WM-1.1 (GOAL_1_1.md 9.3): `--no-day` replaces the absolute `"day": D` of every line by the stored day of season
+`"dos"` (the season field stays), so the line no longer names the calendar position within the 120-day episode;
+`--max-steps` caps the optimizer steps (M3-noday trains exactly M3's 276 steps). `no_day` is stored in
+`config.json`, and `final` builds the same lines.
+
 usage:
-  python3 tools/worldmodel/wm1/m3_text.py train --out RUN_DIR [--base PATH]
+  python3 tools/worldmodel/wm1/m3_text.py train --out RUN_DIR [--base PATH] [--no-day] [--max-steps N]
   python3 tools/worldmodel/wm1/m3_text.py final --run RUN_DIR
 """
 from __future__ import annotations
@@ -30,14 +35,16 @@ from wm1 import evaluate as ev
 KEYS = ("food", "wood", "fire", "cold", "alive", "dead", "bush", "work")
 DEFAULT_BASE = ("/home/hyunlord/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/"
                 "7ae557604adf67be50417f59c2c2f167def9a775")
-DEFAULTS = dict(rank=16, alpha=32, lr=2e-4, batch=16, max_seconds=7200, threads=16, max_new_tokens=96, epochs=1)
+DEFAULTS = dict(rank=16, alpha=32, lr=2e-4, batch=16, max_seconds=7200, threads=16, max_new_tokens=96, epochs=1,
+                max_steps=0)
 
 
-def day_line(ep, day: int) -> str:
-    """JSON line of one-based day `day` at 06:00."""
+def day_line(ep, day: int, no_day: bool = False) -> str:
+    """JSON line of one-based day `day` at 06:00; with `no_day` the day number becomes the day of season."""
     r = ev.row_of(day, 360)
     v = ep.bench.v[r]
-    rec = {"day": int(day), "season": int(ep.bench.season[r])}
+    when = {"dos": int(round(float(ep.calendar[r, -1]) * 7))} if no_day else {"day": int(day)}
+    rec = {**when, "season": int(ep.bench.season[r])}
     rec.update({k: int(round(float(x))) for k, x in zip(KEYS, v)})
     nxt = ev.row_of(day + 1, 360)
     acts = ep.bench.actions[r:nxt]
@@ -75,7 +82,8 @@ def train(args) -> int:
     torch.set_num_threads(cfg["threads"])
     t0 = time.time()
     g = c.load_groups(["A_train"], Path(args.root))
-    samples = [(day_line(ep, D), day_line(ep, D + 1)) for ep in g["A_train"] for D in days_of(ep)]
+    no_day = bool(args.no_day)
+    samples = [(day_line(ep, D, no_day), day_line(ep, D + 1, no_day)) for ep in g["A_train"] for D in days_of(ep)]
     tok = AutoTokenizer.from_pretrained(args.base)
     tok.padding_side = "right"   # the prompt-length label mask assumes right padding
     model = AutoModelForCausalLM.from_pretrained(args.base, torch_dtype=torch.float32)
@@ -86,14 +94,15 @@ def train(args) -> int:
     rng = np.random.default_rng(args.seed)
     order = rng.permutation(len(samples))
     steps = len(order) // cfg["batch"]
-    config = {"model": "m3_text", "base": args.base, "seed": args.seed, "hyper": cfg, "device": "cpu",
+    run_steps = min(steps, cfg["max_steps"]) if cfg["max_steps"] > 0 else steps
+    config = {"model": "m3_text", "base": args.base, "seed": args.seed, "hyper": cfg, "device": "cpu", "no_day": no_day,
               "torch": torch.__version__, "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(),
               "train_samples": len(samples), "steps_per_epoch": steps, "example": samples[0]}
     c.write_json(out / "config.json", config)
     log = (out / "train_log.jsonl").open("w")
     model.train()
-    done, stop = 0, "epoch"
-    for step in range(steps):
+    done, stop = 0, "epoch" if run_steps == steps else "max_steps"
+    for step in range(run_steps):
         idx = order[step * cfg["batch"]:(step + 1) * cfg["batch"]]
         prompts = [samples[i][0] + "\n" for i in idx]
         full = [samples[i][0] + "\n" + samples[i][1] + tok.eos_token for i in idx]
@@ -137,6 +146,7 @@ def final(args) -> int:
     model.eval()
     g = c.load_groups(["A_test"], Path(args.root))
     eps = g["A_test"]
+    no_day = bool(config.get("no_day", False))
     std = b.split_std([ep.bench for ep in eps])
     preds, trues, naive, ok, examples = [], [], [], 0, []
     t0 = time.time()
@@ -144,7 +154,7 @@ def final(args) -> int:
         for start in ev.bench_starts(ep, 24):
             day = int((start * b.EVERY + b.OFFSET) // b.TPD + 1)
             assert ev.row_of(day, 360) == start
-            prompt = day_line(ep, day) + "\n"
+            prompt = day_line(ep, day, no_day) + "\n"
             enc = tok(prompt, return_tensors="pt")
             with torch.no_grad():
                 gen = model.generate(**enc, max_new_tokens=config["hyper"]["max_new_tokens"], do_sample=False,
@@ -164,7 +174,7 @@ def final(args) -> int:
     p, t, n = np.array(preds), np.array(trues), np.array(naive)
     out = {"n": len(t), "parse_rate": ok / len(t), "m3": ev.summarize(b.nmae(p, t, std)),
            "daily_naive": ev.summarize(b.nmae(n, t, std)), "examples": examples, "seconds": time.time() - t0,
-           "config": {k: config[k] for k in ("base", "seed", "code_commit", "steps_done", "epoch_fraction")},
+           "config": {k: config[k] for k in ("base", "seed", "code_commit", "steps_done", "epoch_fraction")} | {"no_day": no_day},
            "eval_code_commit": c.git_commit(), "unparsed_scored_as": "persistence", "argv": sys.argv,
            "forced": bool(args.force)}
     c.write_json(run / "metrics.json", out)
@@ -180,6 +190,7 @@ def main(argv=None) -> int:
     tr.add_argument("--base", default=DEFAULT_BASE)
     tr.add_argument("--seed", type=int, default=0)
     tr.add_argument("--root", default=str(c.DEFAULT_ROOT))
+    tr.add_argument("--no-day", action="store_true", help="replace the absolute day by the day of season (WM-1.1)")
     for k, v in DEFAULTS.items():
         tr.add_argument(f"--{k.replace('_', '-')}", dest=k, type=type(v), default=None)
     fi = sub.add_parser("final")
