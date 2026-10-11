@@ -217,7 +217,7 @@ def losses(model, stepper: Stepper, bt: dict, k: int, roll_starts: int, rng: np.
         mm, _, ff, h = model(nxt.unsqueeze(1), h)
         mu_j, fl_j = mm[:, 0], ff[:, 0]
     roll = roll / k
-    return tf, {"nll": float(nll), "bce": float(bce), "roll": float(roll)}, roll
+    return tf, {"nll": nll.item(), "bce": bce.item(), "roll": roll.item()}, roll
 
 
 def val_score(pred: ev.Predictor, val: dict[str, list], stds: dict) -> tuple[float, dict]:
