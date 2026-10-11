@@ -7,15 +7,17 @@ GOAL SHA256: f4d5f44f66c00f0f1d3125a3bb2fec4a4b1e39bfea9d7d53de638d3434eafbc6.
 
 | Part | Start UTC | End UTC | Status / evidence |
 |---|---|---|---|
-| 0 baseline | 2026-10-11T04:49:47Z | 2026-10-11T05:02:05Z | PASS full gate; live snapshot keys verified |
-| 1 harvest | 2026-10-11T05:01:30Z | 2026-10-11T05:11:30Z | 10 groups,38 villager frames,13 W1 selected; A20 PASS;264 Python tests PASS |
-| 2 variety | 2026-10-11T05:01:30Z | 2026-10-11T05:05:00Z | exact ramps;52 Python+3 Godot tests PASS;pixel capture pending |
-| 3 masks | 2026-10-11T05:01:30Z | 2026-10-11T05:21:00Z | 60/105 frame approvals;8 wood frames+15 installed masks;14 status restorations;A20 PASS |
-| 4 key art | 2026-10-11T05:21:00Z | 2026-10-11T05:32:00Z |2 calls;key checkpoint STOP8/16;visual12/16+10/16;0 eligible new groups;274 Python PASS;A20 hardened/reviewed PASS |
-| 5 spacing | 2026-10-11T05:32:00Z | 2026-10-11T05:33:00Z |4 headless tests PASS;seat metadata regression/re-review PASS;windowed pending |
-| 6 cold | 2026-10-11T05:33:00Z | 2026-10-11T05:34:00Z |7 Godot+12 Python tests PASS;strict PASS;controlledcapture prepared;natural evidence pending |
-| 7 captures | 2026-10-11T05:34:00Z | | Pass6 ancestry verified;capture/measurement code frozen;pre-capture full gate next |
+| 0 baseline | 2026-10-11T04:49:47Z | 2026-10-11T05:02:14Z | PASS full gate; live snapshot keys verified |
+| 1 harvest | 2026-10-11T05:01:30Z | 2026-10-11T05:10:37Z | 10 groups,38 villager frames,13 W1 selected; A20 PASS;264 Python tests PASS |
+| 2 variety | 2026-10-11T05:01:30Z | 2026-10-11T05:11:21Z | exact ramps;52 Python+3 Godot tests PASS;pixel capture pending |
+| 3 masks | 2026-10-11T05:01:30Z | 2026-10-11T05:21:47Z | 60/105 frame approvals;8 wood frames+15 installed masks;14 status restorations;A20 PASS |
+| 4 key art | 2026-10-11T05:21:00Z | 2026-10-11T05:31:00Z |2 calls;key checkpoint STOP8/16;visual12/16+10/16;0 eligible new groups;274 Python PASS;A20 hardened/reviewed PASS |
+| 5 spacing | 2026-10-11T05:31:00Z | 2026-10-11T05:31:27Z |4 headless tests PASS;seat metadata regression/re-review PASS;windowed pending |
+| 6 cold | 2026-10-11T05:31:27Z | 2026-10-11T05:31:43Z |7 Godot+12 Python tests PASS;strict PASS;controlledcapture prepared;natural evidence pending |
+| 7 captures | 2026-10-11T05:31:43Z | | Pass6 ancestry verified;capture/measurement code frozen;pre-capture full gate next |
 | 8 measurement | | | pending |
 | 9 final | | | pending |
 
 Execution follows GOAL Parts and their dependency order. Independent code preparation may run in parallel; git mutations, atlas installation, gates and captures remain serialized. All independent visual reviews use fresh sessions without pipeline/history context.
+
+Timing convention: Part0–6 end times are verified Git commit timestamps in UTC; independent preparation began earlier in parallel. Parts5–6 formal integration intervals are shown, with prior preparation and tests recorded in their evidence folders. Earlier rounded ledger estimates were corrected against Git timestamps before publication.
