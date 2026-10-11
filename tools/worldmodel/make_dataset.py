@@ -3,8 +3,9 @@
 
 usage:
   make_dataset.py z6 [--root WM_DATA_ROOT] [--scene game_v13] [--no-run] [--workers 4]
-  make_dataset.py v0 [--root WM_DATA_ROOT] [--splits A_obs,B_act,...] [--no-run] [--workers 4]
-                     [--docs docs/worldmodel]
+  make_dataset.py v0|v1 [--root WM_DATA_ROOT] [--splits A_obs,B_act,...] [--no-run] [--workers 4]
+                        [--docs docs/worldmodel]
+  make_dataset.py manifest|manifest_v1 [--root WM_DATA_ROOT] [--docs docs/worldmodel]
 
 `z6` writes the Z6 schedules (seeds 0-7 x seven kinds, one intervention at
 one-based day 23 12:00 = tick 31,920) under ROOT/z6/schedules and records them
@@ -18,6 +19,10 @@ is skipped when its meta hashes verify and its meta records the same scene,
 seed, days, every, agent flag, schedule and git sha, so a stopped run resumes
 within one commit), then writes
 `dataset_v0_manifest.json` and `DATASET_v0.md` into --docs.
+
+`v1` does the same for dataset v1 (PASS8_GOAL.md section 11.1: game_v14,
+recorder schema 2, the windfall C_cf variant, OOD_v13) under ROOT/v1 and writes
+`dataset_v1_manifest.json` and `DATASET_v1.md`; v0's files are not touched.
 
 Days are one-based display days; the tick of day D at minute m is
 (D - 1) x 1440 + m - 480.
@@ -96,6 +101,26 @@ SPLITS = {
 }
 
 
+# Dataset v1 (Pass 8 section 11.1): game_v14, disjoint seeds, C_cf adds a windfall.
+C_VARIANTS_V1 = {**C_VARIANTS,
+                 "windfall": {"tick": tick_of(23, 12 * 60), "kind": "windfall", "amount": 20}}  # 31,920
+SPLITS_V1 = {
+    "A_obs": dict(scene="game_v14", seeds=range(10000, 10128), days=120,
+                  roles={"train": range(10000, 10096), "val": range(10096, 10112), "test": range(10112, 10128)},
+                  agents=[*range(10000, 10032), *range(10096, 10100), *range(10112, 10120)], schedules=None),
+    "B_act": dict(scene="game_v14", seeds=range(11000, 11064), days=120,
+                  roles={"train": range(11000, 11048), "val": range(11048, 11056), "test": range(11056, 11064)},
+                  agents=list(range(11056, 11064)), schedules="b_act"),
+    "C_cf": dict(scene="game_v14", seeds=range(12000, 12032), days=35,
+                 roles={"val": range(12000, 12008), "test": range(12008, 12032)}, agents=[], schedules="c_cf"),
+    "OOD_v13": dict(scene="game_v13", seeds=range(13000, 13032), days=120, roles={"test": range(13000, 13032)},
+                    agents=[], schedules=None),
+    "OOD_long": dict(scene="game_v14", seeds=range(14000, 14016), days=240, roles={"test": range(14000, 14016)},
+                     agents=[], schedules=None),
+}
+DATASETS = {"v0": (SPLITS, C_VARIANTS), "v1": (SPLITS_V1, C_VARIANTS_V1)}
+
+
 def b_act_schedule(seed: int, kinds=KINDS) -> list[dict]:
     """Eight interventions drawn with numpy.random.default_rng(seed): per row a tick,
     then a kind, then an amount; rows sorted by tick, then draw order."""
@@ -111,13 +136,13 @@ def b_act_schedule(seed: int, kinds=KINDS) -> list[dict]:
     return [row for _, _, row in sorted(rows, key=lambda r: (r[0], r[1]))]
 
 
-def write_schedules(split: str, spec: dict, out: Path) -> None:
+def write_schedules(split: str, spec: dict, out: Path, variants: dict = C_VARIANTS) -> None:
     out.mkdir(parents=True, exist_ok=True)
     for seed in spec["seeds"]:
         if spec["schedules"] == "b_act":
             (out / f"s{seed}_b.json").write_text(json.dumps(b_act_schedule(seed)) + "\n")
         elif spec["schedules"] == "c_cf":
-            for variant, row in C_VARIANTS.items():
+            for variant, row in variants.items():
                 (out / f"s{seed}_{variant}.json").write_text(
                     json.dumps([{"tick": row["tick"], "kind": row["kind"], "settlement": "home", "amount": row["amount"]}]) + "\n")
 
@@ -150,25 +175,26 @@ def role_of(spec: dict, seed: int) -> str:
     raise ValueError(f"seed {seed} has no role")
 
 
-def episode_ids(split: str, spec: dict) -> list[str]:
+def episode_ids(split: str, spec: dict, variants: dict = C_VARIANTS) -> list[str]:
     if spec["schedules"] == "b_act":
         return ["b"]
     if spec["schedules"] == "c_cf":
-        return ["none", *C_VARIANTS]
+        return ["none", *variants]
     return ["none"]
 
 
-def manifest(root: Path) -> dict:
+def manifest(root: Path, version: str = "v0") -> dict:
+    splits, variants = DATASETS[version]
     episodes, seen = [], {}
     total = 0
-    for split, spec in SPLITS.items():
+    for split, spec in splits.items():
         for seed in spec["seeds"]:
             key = seed
             if key in seen and seen[key] != (split, role_of(spec, seed)):
                 raise ValueError(f"seed {seed} appears in {seen[key]} and {(split, role_of(spec, seed))}")
             seen[key] = (split, role_of(spec, seed))
-            for eid in episode_ids(split, spec):
-                path = root / "v0" / split / f"{spec['scene']}_s{seed}_{eid}"
+            for eid in episode_ids(split, spec, variants):
+                path = root / version / split / f"{spec['scene']}_s{seed}_{eid}"
                 if not (path / "meta.json").exists():
                     raise ValueError(f"missing episode {path}")
                 meta = json.loads((path / "meta.json").read_text())
@@ -182,10 +208,13 @@ def manifest(root: Path) -> dict:
                         raise ValueError(f"{path / name}: hash differs from meta.json")
                 total += size
                 episodes.append({"split": split, "role": role_of(spec, seed), "scene": spec["scene"], "seed": seed,
-                                 "schedule_id": eid, "path": f"v0/{split}/{path.name}", "agents": meta["agents_recorded"],
+                                 "schedule_id": eid, "path": f"{version}/{split}/{path.name}", "agents": meta["agents_recorded"],
                                  "days": meta["days"], "rows": meta["rows"], "git_sha": meta["git_sha"],
-                                 "files": files, "size": size})
-    return {"schema_version": 1, "dataset": "worldsim-wm v0", "episodes": episodes, "total_size": total,
+                                 "recorder_schema": meta["schema_version"], "files": files, "size": size})
+    if version == "v0":
+        for e in episodes:
+            del e["recorder_schema"]  # v0's manifest format stays as committed
+    return {"schema_version": 1, "dataset": f"worldsim-wm {version}", "episodes": episodes, "total_size": total,
             "episode_count": len(episodes)}
 
 
@@ -227,9 +256,49 @@ def dataset_doc(man: dict) -> str:
     return "\n".join(lines)
 
 
+def dataset_doc_v1(man: dict) -> str:
+    lines = ["# WorldSim dataset v1", "",
+             "Recorded worlds for WM-Bench v1 (`BENCH_v1.md`), Pass 8. Recorder schema 2 (`README.md`): the world's "
+             "weather — `winter_severity`, the night's burn `night_burn_per_hour`, the day's deadwood fall "
+             "`winter_fall_today` — and the values that encode it (`wood_target`, `latent.npy`) are marked `hidden`; "
+             "`meta.json` lists `observable_fields`. The files live outside git under `WM_DATA_ROOT` "
+             "(`/Users/rexxa/work/worldsim-wm-data/v1/<split>/<episode>`); `dataset_v1_manifest.json` lists every episode "
+             "with the sha256 and size of every file.", "",
+             f"Episodes: {man['episode_count']}; total size {man['total_size'] / 2**20:.1f} MiB; recorder built from "
+             f"`{sorted({e['git_sha'] for e in man['episodes']})}`.", "",
+             "All splits use `--every 60` (a row per simulated hour). Days are one-based display days; the tick of day D at "
+             "minute m is (D − 1) × 1440 + m − 480.", "",
+             "| Split | Scene | Seeds | Days | Interventions | Roles | `--agents` | Episodes | Size (MiB) |",
+             "|---|---|---|---:|---|---|---|---:|---:|"]
+    descr = {"A_obs": "none", "B_act": "8 random each (`s<seed>_b.json`, v0's sampler)", "C_cf": "factual + 5 variants each",
+             "OOD_v13": "none", "OOD_long": "none"}
+    for split, spec in SPLITS_V1.items():
+        eps = [e for e in man["episodes"] if e["split"] == split]
+        roles = ", ".join(f"{r} {min(x)}–{max(x)}" for r, x in spec["roles"].items())
+        agents = ", ".join(f"{r.start}–{r.stop - 1}" for r, flag in runs(split, spec) if flag) or "none"
+        lines.append(f"| {split} | {spec['scene']} | {min(spec['seeds'])}–{max(spec['seeds'])} | {spec['days']} | {descr[split]} | "
+                     f"{roles} | {agents} | {len(eps)} | {sum(e['size'] for e in eps) / 2**20:.1f} |")
+    lines += ["", "## Schedules", "",
+              "- **B_act**: v0's sampler (`b_act_schedule`, `numpy.random.default_rng(seed)`), eight interventions a seed "
+              f"between day 2 00:00 (tick {B_FIRST}) and day 118 23:00 (tick {B_LAST}).",
+              "- **C_cf** variants, each against the same seed's factual episode `none`: " + "; ".join(
+                  f"`{v}` {r['kind']} {r['amount']} at tick {r['tick']}" for v, r in C_VARIANTS_V1.items()) + ". "
+              "`windfall` (new in v1) lands 20 units on the deadwood spots at day 23 12:00, in the first winter; under "
+              "`game_v14` it lands on the snow (spots fill to their max) instead of stopping at the winter cap.",
+              "", "## Splits and leakage", "",
+              "No seed appears in two splits or two roles (checked when the manifest is written), and v1's seeds "
+              "(10000–14015) are disjoint from dataset v0 (0–4015) and from the probe's tuning, held-out and fresh seeds "
+              "(0–191). OOD_v13 is Pass 7's ruleset (no night or day draws, windfall under the snow cap): a controlled "
+              "distribution shift. OOD_long runs 240 days (eight winters).", "",
+              "## Reproducing", "",
+              "```bash", "python3 tools/worldmodel/make_dataset.py v1          # resumable: matching episodes are skipped",
+              "python3 tools/worldmodel/bench_v1.py --root $WM_DATA_ROOT --out docs/worldmodel", "```", ""]
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=("z6", "v0", "manifest"))
+    parser.add_argument("command", choices=("z6", "v0", "manifest", "v1", "manifest_v1"))
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--splits", default=",".join(SPLITS))
     parser.add_argument("--workers", type=int, default=4)
@@ -247,12 +316,15 @@ def main(argv: list[str] | None = None) -> int:
                     "--schedule-dir", str(schedules), "--include-factual", "--resume", "--workers", str(args.workers),
                     "--out", str(z6 / "episodes")], log)
         return 0
-    if args.command == "v0":
-        for split in args.splits.split(","):
-            spec = SPLITS[split]
-            sched = args.root / "v0" / "schedules" / split
+    version = "v1" if args.command in ("v1", "manifest_v1") else "v0"
+    splits, variants = DATASETS[version]
+    if args.command in ("v0", "v1"):
+        chosen = args.splits.split(",") if args.splits != ",".join(SPLITS) else list(splits)
+        for split in chosen:
+            spec = splits[split]
+            sched = args.root / version / "schedules" / split
             if spec["schedules"]:
-                write_schedules(split, spec, sched)
+                write_schedules(split, spec, sched, variants)
             if args.no_run:
                 continue
             for seeds, agents in runs(split, spec):
@@ -263,13 +335,13 @@ def main(argv: list[str] | None = None) -> int:
                         extra.append("--include-factual")
                 export(["--scene", spec["scene"], "--seeds", f"{seeds.start}..{seeds.stop}", "--days", str(spec["days"]),
                         "--every", "60", *extra, "--resume", "--workers", str(args.workers),
-                        "--out", str(args.root / "v0" / split)], log)
+                        "--out", str(args.root / version / split)], log)
         if args.no_run:
             return 0
-    man = manifest(args.root)
+    man = manifest(args.root, version)
     args.docs.mkdir(parents=True, exist_ok=True)
-    (args.docs / "dataset_v0_manifest.json").write_text(json.dumps(man, indent=1, sort_keys=True) + "\n")
-    (args.docs / "DATASET_v0.md").write_text(dataset_doc(man))
+    (args.docs / f"dataset_{version}_manifest.json").write_text(json.dumps(man, indent=1, sort_keys=True) + "\n")
+    (args.docs / f"DATASET_{version}.md").write_text(dataset_doc(man) if version == "v0" else dataset_doc_v1(man))
     print(f"manifest: {man['episode_count']} episodes, {man['total_size'] / 2**20:.1f} MiB")
     return 0
 

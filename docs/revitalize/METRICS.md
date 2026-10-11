@@ -1882,3 +1882,20 @@ Distributions (median / p10 / p90 / min / max) of the per-seed values:
 | held-out | v14 | 98/3/1/0/0 | 48/31/19/10/0 | 1/3/11/25/6 | 6/36/30/37 | 2.14/3.00/4.00 | 8.14/6.00/4.00 |
 
 Held-out v14 against tuning v14: R² 0.602 (tuning 0.530), no dark night 0.574 (0.484), ≥ 2 dark 0.281 (0.281), first dark night on 4 nights with 0.339 on the seventh (0.424); severity shares 0.398 / 0.422 / 0.180 against weights 0.35 / 0.40 / 0.25 (within 0.07). Per-seed clauses: v14 fails Y3 replacement in seed 80 (−4; v12 the same seed, v13 seeds 68 and 80) and Y10 evening near hearth in seeds 55 (0.281) and 79 (0.344) (v12: 55 and 75; v13: 55 and 76) — counts 1 ≤ 1 + 1 and 2 ≤ 2 + 1, so X2 passes in comparison mode. No starvation or dehydration death in any seed. Seed 80's replacement margin is −4 under all three rulesets: a weak village independent of the winter rule, as the planner found.
+
+## Pass 8 Part 6 — dataset v1 and WM-Bench v1
+
+Dataset v1 (`docs/worldmodel/DATASET_v1.md`, `docs/worldmodel/dataset_v1_manifest.json`): 432 episodes, 1,383.8 MiB, recorded 18:55–19:08 KST from `4ab0778a` with `wm_p2` — A_obs 128 (44 with agents), B_act 64, C_cf 192 (32 seeds × factual + 5 variants), OOD_v13 32, OOD_long 16; recorder schema 2 throughout. B_act: 512 interventions, 35 windfalls applied 0 (outside winter, spots full); C_cf windfall applied 20 in 32 of 32 seeds. Copied to the DGX and all 5,012 hashes verified there (`sha256sum -c`), 19:10.
+
+WM-Bench v1 (`docs/worldmodel/BENCH_v1.md`, `bench_v1.json`; `bench_v1.py`, 7 s): λ — ridge 100, action ridge 100, severity-oracle ridge 100 (see the json). Mean nMAE over V, best non-oracle baseline:
+
+| Task | A test | B test | OOD_v13 | OOD_long |
+|---|---:|---:|---:|---:|
+| T1 next hour (ridge / action ridge) | 0.101 | 0.107 | 0.102 | 0.101 |
+| T1 persistence | 0.157 | 0.161 | 0.157 | 0.161 |
+| T2 24 h, every-hour starts | 0.188 | 0.196 | 0.196 | 0.191 |
+| T2 24 h, 06:00 starts (v0 protocol) | 0.134 | 0.167 | 0.136 | 0.133 |
+| T2 168 h, every-hour starts | 0.267 | 0.265 | 0.264 | 0.271 |
+| T2 168 h, 06:00 starts | 0.278 | 0.297 | 0.264 | 0.277 |
+
+T3 (448 A-test winter evenings, 64 dark): observable logistic Brier 0.020 / AUC 0.993 / accuracy 0.975; references: severity rule 0.036 / 0.979 / 0.964, severity logistic 0.021 / 0.995 / 0.973. **T3b** (64 A-test winters, 384 train): train mean MAE 0.995 / exact 0.203; ridge **0.600 / 0.516**; severity oracle (reference) 0.609 / 0.547. T4 (24 C_cf test seeds, ranked targets, best baseline MAE): gift_wood dark 0.521, cold 167.2, food 11.5; rot_wood 0.531, 147.8, 10.3; rain 0.708, 214.1, 9.75; cold_snap 0.292, 116.8, 5.48; windfall 0.375, 69.3, 5.60 (nMAE in BENCH_v1.md). T5 (8 test agent episodes, 940,878 agent-hours): persistence state tag 0.744, target kind 0.718, Chebyshev 2.47, hunger/thirst/fatigue nMAE 0.445 / 0.595 / 0.255; 24 hours earlier 0.757, 0.738, 4.75, 1.219 / 0.688 / 0.172. Sanity checks all hold: ridge beats persistence on T1 food and wood in all four test splits; the T3b ridge beats the train mean; every C_cf variant changes a ranked target in ≥ 25 % of test seeds; the severity oracle's T3b MAE is 0.609 (not 0).
