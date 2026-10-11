@@ -12,3 +12,13 @@
 - Part 4: first key sheet V_a6 is visually approved12/16 but key-clean8/16, below the mandatory12/16 checkpoint. Stop every further key sheet. The permitted child V_c4 sheet is approved10/16; neither generated sheet qualifies for fewer-than-half-approved retries. Total2/8calls, unusedbudget is not a reason to bypass the stop.
 - Part 4: preserve the original first-sheet conversion ledger after discovering stale initial conversion_failure flags. A separate reguarded ledger removes only obsolete initial-conversion state and proves112imagefilehashes unchanged; key-clean count and frozen checkpoint do not change.
 - Independent pipeline audit found hard-key-error propagation, normalized-to-original binding, content-only change coverage and animation-binding gaps. Harden these before final installation/acceptance and retain mutation regressions; earlier checkpoint audit results are superseded by the final stronger A20 audit, not retrospectively edited.
+
+## Part 8 measured decisions
+
+- Preserve round1 measurement files; correct stale long-plan9→13 and exclude foreground stockpile label text under the existing A16 UI-occlusion rule. Pixel tolerance±1 and agreement≥.99 remain unchanged.
+- A18 d24 FAIL3/37 remains: IDs25/7 are unseated stationary with optimal allowed shifts+2/+8; ID8 seated cannot shift. All allowed offsets leave excessive coverage. No wider shift or threshold relaxation.
+- A19(b) N/A: no sampled visible cold actor. Controlled GPU scene is explicitly labelled and is not natural simulation evidence. Its inherited1920×1080 stretch was corrected to1024×640; original external image retained.
+- New key generation remains stopped after2calls. Independent full-scene reviewers both NEEDS WORK; no retrospective candidate verdict changes.
+- Budget: compact only unbound JSON whitespace (semantic equality checked; external originals retained), preserve bound installer ledgers, optimize evening GIF disposal only after all40 decoded RGB frames and timings compare identical. Godot-generated ignored .import cache sidecars are not delivery files.
+
+- Final compatibility fetch observed simulation green `0c46f69c31344f3bde23ce625a84214c5ed72fc0`. Published art remains pinned to Pass6 `fe60de21249ad46ad2e2d9ca420d896066277c82`; the later head is tested only through a local unpushed detached merge.

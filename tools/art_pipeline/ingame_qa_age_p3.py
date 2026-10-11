@@ -78,7 +78,7 @@ def _ramps(capture: Capture, repo: Path) -> dict[str, Any]:
         for other in capture.entities:
             if not other.visible or other is entity or other.alpha <= 0:
                 continue
-            if other.kind == "panel" or _order(other) > _order(entity):
+            if other.kind in ("panel", "stockpile_label", "stockpile_wood_label") or _order(other) > _order(entity):
                 _exclude(mask, other.cue_rect or other.rect, capture.scale, 1)
         for label in capture.labels:
             _exclude(mask, label.rect, capture.scale, 1)

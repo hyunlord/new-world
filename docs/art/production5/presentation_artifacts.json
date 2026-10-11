@@ -1,0 +1,480 @@
+{
+  "missing": {},
+  "animations": [
+    {
+      "file": "village_noon.gif",
+      "bytes": 2188055,
+      "source_frames": 40,
+      "encoded_frames": 40,
+      "colors": 128,
+      "encoding": "original disposal=2 retained"
+    },
+    {
+      "file": "village_evening.gif",
+      "bytes": 1020967,
+      "source_frames": 40,
+      "encoded_frames": 40,
+      "colors": 128,
+      "encoding": "disposal=1; decoded RGB and timing identical"
+    }
+  ],
+  "before_after": [
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production4/shots/a_d2_1200_F2.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art/a_d2_1200_F2.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production4/shots/a_d2_2300_F2N.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art/a_d2_2300_F2N.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production4/shots/a_d2_1200_F1.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art/a_d2_1200_F1.png"
+  ],
+  "matched_framings": [
+    {
+      "stem": "a_d2_1200_F2",
+      "p4_camera": [
+        824.0,
+        324.0
+      ],
+      "p5_camera": [
+        824.0,
+        324.0
+      ],
+      "p4_zoom": [
+        4.0,
+        4.0
+      ],
+      "p5_zoom": [
+        4.0,
+        4.0
+      ],
+      "equal": true
+    },
+    {
+      "stem": "a_d2_2300_F2N",
+      "p4_camera": [
+        824.0,
+        324.0
+      ],
+      "p5_camera": [
+        824.0,
+        324.0
+      ],
+      "p4_zoom": [
+        4.0,
+        4.0
+      ],
+      "p5_zoom": [
+        4.0,
+        4.0
+      ],
+      "equal": true
+    },
+    {
+      "stem": "a_d2_1200_F1",
+      "p4_camera": [
+        968.0,
+        548.0
+      ],
+      "p5_camera": [
+        968.0,
+        548.0
+      ],
+      "p4_zoom": [
+        1.0,
+        1.0
+      ],
+      "p5_zoom": [
+        1.0,
+        1.0
+      ],
+      "equal": true
+    }
+  ],
+  "seasons": [
+    "/Users/rexxa/work/art-production5-evidence/shots/art_long/l_d10_1200_F2.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art_long/l_d18_1200_F2.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art_long/l_d24_1200_F2.png",
+    "/Users/rexxa/work/art-production5-evidence/shots/art_long/l_d32_1200_F2.png"
+  ],
+  "natural_sheet": [
+    {
+      "body": "adult_a",
+      "activity": "asleep",
+      "frame": "V_a3_13",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "build",
+      "frame": "V_a2_15",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "carry",
+      "frame": "V_a2_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "carry_wood",
+      "frame": "V_a4_09",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "crossed",
+      "frame": "V_a3_16",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "crouch",
+      "frame": "V_a3_14",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "drink",
+      "frame": "P2V_a_N_drink_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "eat",
+      "frame": "V_a3_05",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "gather",
+      "frame": "V_a2_11",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "gather_wood",
+      "frame": "V_a3_14",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "idle",
+      "frame": "V_a1_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "sit",
+      "frame": "V_a3_07",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "talk",
+      "frame": "V_a3_09",
+      "scale": 4
+    },
+    {
+      "body": "adult_a",
+      "activity": "walk",
+      "frame": "V_a1_05",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "asleep",
+      "frame": "P2V_b_S_asleep_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "build",
+      "frame": "V_b2_15",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "carry",
+      "frame": "V_b2_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "carry_wood",
+      "frame": "V_b4_09",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "crossed",
+      "frame": "V_b3_16",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "crouch",
+      "frame": "V_b3_14",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "drink",
+      "frame": "P2V_b_S_drink_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "eat",
+      "frame": "V_b3_05",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "gather",
+      "frame": "V_b2_11",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "gather_wood",
+      "frame": "V_b3_14",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "idle",
+      "frame": "V_b1_01",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "sit",
+      "frame": "V_b3_07",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "talk",
+      "frame": "V_b3_09",
+      "scale": 4
+    },
+    {
+      "body": "adult_b",
+      "activity": "walk",
+      "frame": "V_b1_05",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "asleep",
+      "frame": "V_c2_13",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "build",
+      "frame": "P2V_c_S_build_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "carry",
+      "frame": "P2V_c_S_carry_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "carry_wood",
+      "frame": "V_c1_05",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "drink",
+      "frame": "P2V_c_E_drink_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "eat",
+      "frame": "V_c2_14",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "gather",
+      "frame": "P2V_c_S_gather_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "gather_wood",
+      "frame": "V_c1_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "hop",
+      "frame": "V_c2_03",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "hug",
+      "frame": "V_c2_16",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "idle",
+      "frame": "V_c1_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "run",
+      "frame": "V_c2_05",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "sit",
+      "frame": "V_c2_01",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "talk",
+      "frame": "V_c2_09",
+      "scale": 4
+    },
+    {
+      "body": "child",
+      "activity": "walk",
+      "frame": "V_c1_05",
+      "scale": 4
+    }
+  ],
+  "harvest": [
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/harvest/installed_groups_final.json",
+    "/Users/rexxa/work/new-world-art-prod/assets/art/atlas/world_atlas.json",
+    "/Users/rexxa/work/new-world-art-prod/assets/art/atlas/world_0.png"
+  ],
+  "hair_masks": [
+    "/Users/rexxa/work/new-world-art-prod/assets/art/atlas/world_atlas.json",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_E_eat_01/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_E_eat_01/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/assets/art/atlas/world_0.png",
+    "/Users/rexxa/work/new-world-art-prod/assets/art/atlas/world_0_regions.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_E_eat_02/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_E_eat_02/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_S_drink_01/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_S_drink_01/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_S_drink_02/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/P2V_b_S_drink_02/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_01/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_01/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_02/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_02/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_03/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_03/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_04/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_04/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_05/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_05/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_06/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_06/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_07/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_07/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_08/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b1_08/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_05/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_05/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_06/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_06/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_07/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_07/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_08/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_08/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_11/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_11/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_12/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_12/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_15/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_15/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_16/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b2_16/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_03/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_03/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_05/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_05/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_06/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_06/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_07/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_07/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_09/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_09/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_10/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_10/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_12/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_12/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_14/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_14/original_mask.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_15/sprite.png",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/masks/inputs/V_b3_15/original_mask.png"
+  ],
+  "cold": {
+    "source": "/Users/rexxa/work/new-world-art-prod/docs/art/production5/cold/cold_scene.png",
+    "scope": "controlled scene test; not natural gameplay",
+    "source_sha256": "a6a7589baf686db8c49cdd3782be33dbfcbdc0a2b12ca2d789f961cbb259b51c"
+  },
+  "outputs": [
+    {
+      "file": "before_after.png",
+      "bytes": 317751,
+      "sha256": "2f6f5495c624138b4fa23b43f3947012e5c82ad2c0524b5deee2b98cde8506a8"
+    },
+    {
+      "file": "season_strip.png",
+      "bytes": 152172,
+      "sha256": "f3ed66b86c6046b1df0b4326c5431658c1317455fb3a7a5b097d4eef6f0740fe"
+    },
+    {
+      "file": "villagers_natural.png",
+      "bytes": 333733,
+      "sha256": "254867a05bfb16d84c5a5ec6c8fb65dc3784469c47e35047b5c3d89aa246caf6"
+    },
+    {
+      "file": "harvest_strip.png",
+      "bytes": 159734,
+      "sha256": "3fc8c60a40f471ca2c3b0eaeaa23a0adfe114af0b05a94d8af73671e29b02314"
+    },
+    {
+      "file": "hair_masks_before_after.png",
+      "bytes": 145161,
+      "sha256": "e43d234274a078bea148b17393f7e52c1e64513224f496e12c3ed26029929e7a"
+    },
+    {
+      "file": "cold_night.png",
+      "bytes": 9933,
+      "sha256": "df4ae287092da1e017df04d09024ee7a31398b78240700442128832bad9fc41b"
+    },
+    {
+      "file": "village_noon.gif",
+      "bytes": 2188055,
+      "sha256": "334810fe993b9826a29ecfd5f55a5a86ca7a1895da1eba10f2a0a597a2747c3b"
+    },
+    {
+      "file": "village_evening.gif",
+      "bytes": 1020967,
+      "sha256": "01fde08bba9e12ad712976fb2990c070f9737deda7439e01e780de8fc42d9468"
+    }
+  ],
+  "budget_bytes": {
+    "assets/art": 1343613,
+    "docs/art/production5": 39445368
+  },
+  "budget_scope": "Deliverable files; ignored Godot-generated .import caches excluded",
+  "assets_limit_bytes": 25000000,
+  "docs_limit_bytes": 40000000,
+  "budget_pass": true
+}

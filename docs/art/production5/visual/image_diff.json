@@ -1,0 +1,99 @@
+{
+  "reference": "docs/art/production4/shots/a_d2_1200_F2.png",
+  "actual": "docs/art/production5/shots/a_d2_1200_F2.png",
+  "method": "Pillow/numpy direct RGBA absolute pixel comparison; bundled bun runtime unavailable; intentional world/sprite changes expected",
+  "dimensionsMatch": true,
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "diffRatio": 0.07366849922839507,
+  "similarityScore": 0.9868125709195715,
+  "alphaChannelIntact": true,
+  "hotspots": [
+    {
+      "x": 840,
+      "y": 840,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.5222222222222223
+    },
+    {
+      "x": 960,
+      "y": 600,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.48638888888888887
+    },
+    {
+      "x": 840,
+      "y": 240,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.47
+    },
+    {
+      "x": 1440,
+      "y": 960,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.44222222222222224
+    },
+    {
+      "x": 720,
+      "y": 240,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.3877777777777778
+    },
+    {
+      "x": 1440,
+      "y": 600,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.37777777777777777
+    },
+    {
+      "x": 1200,
+      "y": 720,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.36
+    },
+    {
+      "x": 1320,
+      "y": 480,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.35777777777777775
+    },
+    {
+      "x": 1200,
+      "y": 360,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.3466666666666667
+    },
+    {
+      "x": 1320,
+      "y": 240,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.33444444444444443
+    },
+    {
+      "x": 1200,
+      "y": 840,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.33444444444444443
+    },
+    {
+      "x": 1560,
+      "y": 720,
+      "width": 120,
+      "height": 120,
+      "diffRatio": 0.2966666666666667
+    }
+  ]
+}

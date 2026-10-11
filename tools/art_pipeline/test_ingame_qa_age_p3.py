@@ -73,6 +73,9 @@ class AgeSeasonTests(unittest.TestCase):
             self.assertFalse(_ramps(cap,root)['pass'])
             panel = replace(actor(), kind='panel', rect=(600,300,3,8))
             self.assertTrue(_ramps(replace(cap,entities=(actor(),panel)),root)['pass'])
+            for kind in ('stockpile_label', 'stockpile_wood_label'):
+                label = replace(panel, kind=kind, world_anchor=(0,0), draw_order=(0,0))
+                self.assertTrue(_ramps(replace(cap,entities=(actor(),label)),root)['pass'])
             self.assertFalse(_ramps(replace(cap,entities=(actor(),replace(panel,rect=(600,300,8,8)))),root)['pass'])
 
     def test_missing_evidence_fails(self) -> None:

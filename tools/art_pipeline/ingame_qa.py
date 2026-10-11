@@ -163,7 +163,7 @@ def contrast_pair(noon: Capture | None, winter: Capture | None, repo: Path) -> C
     return Check('A5', status, json.dumps({name: asdict(check) for name, check in rows}))
 
 
-def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, long_raw: Path | None = None) -> list[Check]:
+def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, long_raw: Path | None = None, extra_long_stems: tuple[str, ...] = ()) -> list[Check]:
     manifest = json.loads((directory/'manifest.json').read_text())
     captures = [load_capture(directory/row['file']) for row in manifest['captures']]
     expected = {'a_d1_0830_F2','a_d2_1200_F2','a_d2_1200_F2A','a_d2_1200_F2Z','a_d2_1200_F3','a_d2_1200_F4','a_d2_1200_F1','a_d2_1930_F2','a_d2_2300_F2N','a_d6_1200_F2','a_calib_z4','a_calib_z6'}
@@ -179,9 +179,10 @@ def run(directory: Path, output: Path, repo: Path, blind: Path | None = None, lo
     checks = [delivery, degeneracy(captures + long_captures)]
     if long_raw is not None:
         expected_long = {f'l_d{day}_1200_F2' for day in [10,18,24,32,40]} | {'l_d24_1200_F1', 'l_d24_2300_F2N', 'l_d10_1500_F2', 'l_d10_1500_F5'}
+        expected_long.update(extra_long_stems)
         actual_long = {capture.stem for capture in long_captures}
-        checks.append(result('LONG_CAPTURE_SET', actual_long == expected_long and len(long_captures) == 9,
-            f'{len(long_captures)}/9 captures; missing={sorted(expected_long-actual_long)}; extra={sorted(actual_long-expected_long)}'))
+        checks.append(result('LONG_CAPTURE_SET', actual_long == expected_long and len(long_captures) == len(expected_long),
+            f'{len(long_captures)}/{len(expected_long)} captures; missing={sorted(expected_long-actual_long)}; extra={sorted(actual_long-expected_long)}'))
     calibration = [capture for capture in captures if capture.stem.startswith('a_calib')]
     checks += [checker(calibration),squash(captures,repo),*calibration_order(calibration,repo)]
     noon = by_stem.get('a_d2_1200_F2')

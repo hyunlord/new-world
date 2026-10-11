@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 from typing import Final, TypedDict
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageSequence
 
 from ingame_qa_types import Entity, sprite_pixels
 from report_artifacts import animation
@@ -232,6 +232,33 @@ def cold_night(raw: Path, long_raw: Path) -> ColdEvidence:
             'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest()}
 
 
+def compact_animation(raw: Path, manifest: str, filename: str) -> dict[str, int | str]:
+    """Keep a smaller disposal encoding only after exact decoded-frame comparison."""
+    result = animation(raw, OUTPUT, manifest, filename)
+    target = OUTPUT / filename
+    with Image.open(target) as source:
+        frames = [frame.convert('RGB').copy() for frame in ImageSequence.Iterator(source)]
+        source.seek(0)
+        durations = [frame.info.get('duration', 100) for frame in ImageSequence.Iterator(source)]
+    candidate = target.with_suffix('.compact.gif')
+    frames[0].save(candidate, save_all=True, append_images=frames[1:], duration=durations,
+                   loop=0, optimize=True, disposal=1)
+    with Image.open(candidate) as source:
+        decoded = [frame.convert('RGB').copy() for frame in ImageSequence.Iterator(source)]
+        source.seek(0)
+        encoded_durations = [frame.info.get('duration', 100) for frame in ImageSequence.Iterator(source)]
+    identical = len(decoded) == len(frames) and durations == encoded_durations and all(
+        before.tobytes() == after.tobytes() for before, after in zip(frames, decoded))
+    if identical and candidate.stat().st_size < target.stat().st_size:
+        candidate.replace(target)
+        result['encoding'] = 'disposal=1; decoded RGB and timing identical'
+    else:
+        candidate.unlink()
+        result['encoding'] = 'original disposal=2 retained'
+    result['bytes'] = target.stat().st_size
+    return result
+
+
 def main(raw: Path, long_raw: Path) -> None:
     """Publish available real evidence and list every missing required artifact."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -255,7 +282,7 @@ def main(raw: Path, long_raw: Path) -> None:
         evidence['missing']['hair_masks_before_after'] = 'Awaiting mask owner before/after board'
     for manifest, filename in (('strip.json', 'village_noon.gif'), ('evening.json', 'village_evening.gif')):
         try:
-            evidence['animations'].append(animation(raw, OUTPUT, manifest, filename))
+            evidence['animations'].append(compact_animation(raw, manifest, filename))
         except (FileNotFoundError, RuntimeError) as error:
             evidence['missing'][filename] = str(error)
     names = ('before_after.png', 'season_strip.png', 'villagers_natural.png',
@@ -265,7 +292,8 @@ def main(raw: Path, long_raw: Path) -> None:
         'sha256': hashlib.sha256((OUTPUT / name).read_bytes()).hexdigest()}
         for name in names if (OUTPUT / name).is_file()]
     evidence['budget_bytes'] = {str(folder.relative_to(ROOT)): sum(path.stat().st_size
-        for path in folder.rglob('*') if path.is_file()) for folder in (ROOT / 'assets/art', OUTPUT)}
+        for path in folder.rglob('*') if path.is_file() and path.suffix != '.import') for folder in (ROOT / 'assets/art', OUTPUT)}
+    evidence['budget_scope'] = 'Deliverable files; ignored Godot-generated .import caches excluded'
     evidence['assets_limit_bytes'] = 25_000_000
     evidence['docs_limit_bytes'] = 40_000_000
     evidence['budget_pass'] = evidence['budget_bytes']['assets/art'] <= 25_000_000 and evidence['budget_bytes']['docs/art/production5'] <= 40_000_000
