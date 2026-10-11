@@ -1,10 +1,18 @@
-"""Load a WorldSim recorded episode (Pass 7 recorder, schema 1). numpy only.
+"""Load a WorldSim recorded episode (recorder schema 1 of Pass 7 or schema 2 of
+Pass 8). numpy only.
 
     from wm_data import load_episode
-    ep = load_episode("/path/game_v13_s0_none")
+    ep = load_episode("/path/game_v14_s0_none")
     ep.meta["scene"], ep.arrays["global.npy"].shape
     ep.column("global.npy", "wood_trips_total")      # [T]
     ep.column("settlements.npy", "wood_stock")       # [T, S]
+    ep.observable("global.npy")                      # [T, G_obs], hidden columns dropped
+    ep.observable_names("global.npy")                # their names, in column order
+
+Schema 2 marks the world's hidden weather (`winter_severity`, the night's burn
+and the day's fall), the settlement `wood_target` and every `latent.npy`
+column as hidden; `meta["observable_fields"]` lists the rest per array. A model
+or baseline that must not see the hidden weather reads `observable` only.
 
 `load_episode` verifies the sha256 of every array file against meta.json
 (raises ValueError on a mismatch) unless verify=False.
@@ -17,6 +25,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
+
+SCHEMAS = (1, 2)
 
 
 @dataclass
@@ -38,6 +48,19 @@ class Episode:
         """The values of field `name`, with the last axis dropped."""
         return self.arrays[array][..., self.field_index(array, name)]
 
+    def observable_names(self, array: str) -> list[str]:
+        """Names of the observable (not hidden) fields of `array`, in column order:
+        `meta["observable_fields"]` in schema 2, the fields without `hidden` in schema 1."""
+        listed = self.meta.get("observable_fields", {}).get(array)
+        if listed is not None:
+            return list(listed)
+        return [f["name"] for f in self.meta["fields"][array] if not f.get("hidden", False)]
+
+    def observable(self, array: str) -> np.ndarray:
+        """`array` with its hidden columns dropped (last axis = `observable_names`)."""
+        index = [self.field_index(array, name) for name in self.observable_names(array)]
+        return self.arrays[array][..., index]
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -51,7 +74,7 @@ def load_episode(path, verify: bool = True, arrays: list[str] | None = None) -> 
     """Load meta.json, interventions.json and the arrays (all, or `arrays`)."""
     path = Path(path)
     meta = json.loads((path / "meta.json").read_text())
-    if meta.get("schema_version") != 1:
+    if meta.get("schema_version") not in SCHEMAS:
         raise ValueError(f"{path}: unsupported recorder schema {meta.get('schema_version')}")
     episode = Episode(path, meta, interventions=json.loads((path / "interventions.json").read_text()))
     for name, entry in meta["arrays"].items():

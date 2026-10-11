@@ -11,8 +11,10 @@ one-based day 23 12:00 = tick 31,920) under ROOT/z6/schedules and records them
 with the factual episodes under ROOT/z6/episodes (game_v13, 30 days, every 60).
 
 `v0` writes the schedules of dataset v0 (PASS7_GOAL.md section 12.1), records
-every split under ROOT/v0/<split> with `export.sh --resume` (an episode whose
-meta hashes verify is skipped, so a stopped run resumes), then writes
+every split under ROOT/v0/<split> with `export.sh --resume` (a finished episode
+is skipped when its meta hashes verify and its meta records the same scene,
+seed, days, every, agent flag, schedule and git sha, so a stopped run resumes
+within one commit), then writes
 `dataset_v0_manifest.json` and `DATASET_v0.md` into --docs.
 
 Days are one-based display days; the tick of day D at minute m is

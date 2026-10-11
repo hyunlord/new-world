@@ -602,3 +602,15 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_six_is_exactly_additive` → `schema_seven_is_exactly_additive`: version 6 → 7, key count + 5 | authorized probe schema move; every v6 key keeps its meaning |
 | 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v13` rejection becomes a `game_v13` acceptance; `game_v14` is rejected | flipped as section 6.1 asks; still pins the accepted scene list |
 | 4 | `rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs` private `sha256_hex` helper | Moved to `sim_test::worldmodel::sha256::sha256_hex` (section 9.1); the test imports it; the function body is unchanged | the hash assertion is unchanged; the moved function gains the "abc", empty-string and two-block test vectors |
+
+## Pass 8
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 0 | (none) | Part 0 only adds `harness_revitalize_pass8_frozen.rs` (v13 fingerprints for seeds 0–3 and the field-by-field `game_v13()` literal) | — |
+| 1 | `rust/crates/sim-systems/src/runtime/settlement/firewood.rs` test `rule()` FirewoodRule literal | Add the four Pass 8 fields with their v13 values (`None`, `0`, `0`, `false`) | struct-literal field addition with legacy values; existing assertions unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | The same four fields with their v13 values (v12 and v13 are built from v11) | struct-literal field addition; the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass7_frozen.rs` `pass6_v12_literal` | The same four fields | struct-literal field addition; the literal still equals `game_v12()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | The same four fields | struct-literal field addition (Part 0 test); the literal still equals `game_v13()` |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_seven_is_exactly_additive` → `schema_eight_is_exactly_additive`: version 7 → 8, key count + 2 | authorized probe schema move; every schema-7 key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v14` rejection becomes a `game_v14` acceptance; `game_v15` is rejected | flipped as section 4.2 asks; still pins the accepted scene list |

@@ -132,6 +132,104 @@ pub fn winter_burn_per_hour(resources: &SimResources, rule: &FirewoodRule, tick:
     }
 }
 
+/// Salt of the night burn draw (Pass 8): "NIGHTBUR" in ASCII.
+const NIGHT_BURN_SALT: u64 = 0x4E49_4748_5442_5552;
+
+/// Salt of the winter fall draw (Pass 8): "FALLSPRD" in ASCII.
+const FALL_SPREAD_SALT: u64 = 0x4641_4C4C_5350_5244;
+
+/// Night-by-night change of the winter burn per hour (Pass 8): with
+/// `u = mix(mix(world_seed ^ SALT) ^ evening_day) % 1000` against the
+/// cumulative `winter_night_burn_permille` weights, `-step`, 0 or `+step`.
+/// `evening_day` is the display day index of the evening the night began.
+/// Pure: no state, no stream. 0 unless that evening lies in a winter of drawn
+/// severity and night weights are set.
+pub fn night_burn_delta(resources: &SimResources, rule: &FirewoodRule, evening_day: u64) -> i16 {
+    let Some([w0, w1, _]) = rule.winter_night_burn_permille else {
+        return 0;
+    };
+    if !in_severity_winter(resources, rule, evening_day) {
+        return 0;
+    }
+    let step = i16::try_from(rule.winter_night_burn_step).unwrap_or(i16::MAX);
+    let u = mix(mix(resources.world_seed ^ NIGHT_BURN_SALT) ^ evening_day) % 1000;
+    if u < u64::from(w0) {
+        -step
+    } else if u < u64::from(w0) + u64::from(w1) {
+        0
+    } else {
+        step
+    }
+}
+
+/// Day-by-day change of the winter deadwood fall (Pass 8): with
+/// `u = mix(mix(world_seed ^ SALT) ^ day)`, `(u % (2 x spread + 1)) - spread`.
+/// Pure. 0 unless display day `day` lies in a winter of drawn severity and
+/// `winter_fall_spread > 0`.
+pub fn winter_fall_delta(resources: &SimResources, rule: &FirewoodRule, day: u64) -> i32 {
+    let spread = rule.winter_fall_spread;
+    if spread == 0 || !in_severity_winter(resources, rule, day) {
+        return 0;
+    }
+    let width = 2 * u64::from(spread) + 1;
+    let u = mix(mix(resources.world_seed ^ FALL_SPREAD_SALT) ^ day);
+    i32::try_from(u % width).unwrap_or(0) - i32::try_from(spread).unwrap_or(0)
+}
+
+/// Whether display day `day` lies in a winter of drawn severity (seasons on,
+/// severity weights set).
+fn in_severity_winter(resources: &SimResources, rule: &FirewoodRule, day: u64) -> bool {
+    // Any tick of display day `day` gives its season and year; take its last.
+    let tick = day
+        .saturating_add(1)
+        .saturating_mul(resources.ticks_per_day)
+        .saturating_sub(resources.rules.clock_offset_ticks.saturating_add(1));
+    severity_level_at(resources, rule, tick).is_some()
+}
+
+/// The rate `FireSystem` withdraws per settlement-hour at system tick `tick`
+/// (Pass 8): 0 outside the burn window; otherwise the night's rate
+/// ([`winter_burn_per_hour`] of the evening's tick), changed by the evening's
+/// [`night_burn_delta`] with a floor of 1 when night weights are set, plus 1
+/// while `cold_snap_tonight`. The fire, the probe key and the recorder all
+/// read it, so they never disagree. Villagers never read it: `wood_target`,
+/// [`tonight_burn`] and urgency keep the severity's rate.
+pub fn night_rate(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u32 {
+    if resources.ticks_per_day == 0 {
+        return 0;
+    }
+    let minute = tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
+    if !crate::runtime::decision::agent_decision::minute_in_window(minute, rule.burn_start_minute, rule.burn_end_minute) {
+        return 0;
+    }
+    let night = night_tick_at(resources, rule, tick);
+    let base = u32::from(winter_burn_per_hour(resources, rule, night));
+    let rate = if rule.winter_night_burn_permille.is_some() && severity_level_at(resources, rule, night).is_some() {
+        let delta = i64::from(night_burn_delta(resources, rule, day_index_at(resources, night)));
+        u32::try_from((i64::from(base) + delta).max(1)).unwrap_or(1)
+    } else {
+        base
+    };
+    rate + u32::from(resources.cold_snap_tonight)
+}
+
+/// Winter deadwood fall per day in force at tick `tick` (Pass 8): the
+/// severity's fall (or `winter_regen_units_per_day` without weights) plus the
+/// day's [`winter_fall_delta`], floor 0. `None` outside a winter or without
+/// the winter spread regrowth. `ResourceRegenSystem`, the probe key and the
+/// recorder all read it.
+pub fn winter_fall_at(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> Option<u32> {
+    let per_day = rule.winter_regen_units_per_day?;
+    let (season, _) = season_at_tick(resources, tick)?;
+    if season != WINTER {
+        return None;
+    }
+    let fall = severity_level_at(resources, rule, tick)
+        .map_or(per_day, |level| rule.winter_severity_regen_units_per_day[usize::from(level).min(2)]);
+    let delta = winter_fall_delta(resources, rule, day_index_at(resources, tick));
+    Some(u32::try_from((i64::from(fall) + i64::from(delta)).max(0)).unwrap_or(0))
+}
+
 /// Wood burned tonight (Pass 7): [`winter_burn_per_hour`] of the night's
 /// booked tick times the burn hours. Equals `burn_per_day(night_season)`
 /// without severity weights.
@@ -246,6 +344,10 @@ mod tests {
             winter_severity_burn_per_hour: [3, 3, 3],
             winter_severity_regen_units_per_day: [6, 6, 6],
             claims_bounded_by_amount: false,
+            winter_night_burn_permille: None,
+            winter_night_burn_step: 0,
+            winter_fall_spread: 0,
+            windfall_over_snow: false,
         }
     }
 

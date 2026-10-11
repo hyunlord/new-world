@@ -152,7 +152,7 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             .filter(|tile| !stamped_tiles.contains(*tile))
             .count();
     let mut row = json!({
-        "schema_version": 7, "scene": scene, "seed": seed,
+        "schema_version": 8, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "tick": engine.current_tick(), "day": engine.current_tick() as f64 / r.ticks_per_day as f64,
         "alive": alive, "births": r.tallies.births,
@@ -177,7 +177,7 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
     let economy = super::long_run::metrics(engine);
     let fixed_supply = economy["food_supply_per_day"].as_f64().unwrap_or(0.0);
     for extra in [economy, super::pass4::metrics(engine, fixed_supply), super::pass5::metrics(engine),
-        super::pass6::metrics(engine), super::pass7::metrics(engine)] {
+        super::pass6::metrics(engine), super::pass7::metrics(engine), super::pass8::metrics(engine)] {
         if let (Some(base), Some(extra)) = (row.as_object_mut(), extra.as_object()) {
             base.extend(extra.iter().map(|(key, value)| (key.clone(), value.clone())));
         }

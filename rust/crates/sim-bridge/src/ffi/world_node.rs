@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v13(DEFAULT_GAME_SEED),
-                WorldRules::game_v13(),
+                &WorldGenConfig::game_v14(DEFAULT_GAME_SEED),
+                WorldRules::game_v14(),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v13(self.world_seed),
-            WorldRules::game_v13(),
+            &WorldGenConfig::game_v14(self.world_seed),
+            WorldRules::game_v14(),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);

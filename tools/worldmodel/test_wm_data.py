@@ -65,6 +65,30 @@ class LoaderTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             ep.column("global.npy", "nonexistent")
 
+    def test_schema_one_sample_has_observable_columns(self) -> None:
+        # The committed v0 sample is schema 1: `observable` falls back to the
+        # per-field hidden flags (only the agents' lifespan is hidden there).
+        ep = load_episode(EPISODES[0])
+        self.assertEqual(ep.meta["schema_version"], 1)
+        names = ep.observable_names("global.npy")
+        self.assertEqual(names, [f["name"] for f in ep.meta["fields"]["global.npy"]])
+        self.assertEqual(ep.observable("global.npy").shape, ep.arrays["global.npy"].shape)
+        self.assertNotIn("lifespan_days", ep.observable_names("agents.npy"))
+        self.assertEqual(ep.observable("agents.npy").shape[-1], len(ep.meta["fields"]["agents.npy"]) - 1)
+
+    def test_schema_two_meta_drops_hidden_columns(self) -> None:
+        ep = load_episode(EPISODES[0])
+        fields = [dict(f) for f in ep.meta["fields"]["global.npy"]]
+        for f in fields:
+            f["hidden"] = f["name"] == "winter_severity"
+        names = [f["name"] for f in fields if not f["hidden"]]
+        ep.meta = {**ep.meta, "schema_version": 2, "fields": {**ep.meta["fields"], "global.npy": fields},
+                   "observable_fields": {"global.npy": names}}
+        self.assertNotIn("winter_severity", ep.observable_names("global.npy"))
+        got = ep.observable("global.npy")
+        self.assertEqual(got.shape[-1], len(fields) - 1)
+        np.testing.assert_array_equal(got[:, names.index("alive")], ep.column("global.npy", "alive"))
+
     def test_a_damaged_file_fails_verification(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             copy = Path(tmp) / EPISODES[0].name

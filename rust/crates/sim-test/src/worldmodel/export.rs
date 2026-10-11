@@ -30,10 +30,10 @@ use super::sha256::sha256_hex;
 use crate::probe::fingerprint;
 
 /// Recorder format version written into `meta.json`.
-pub const SCHEMA_VERSION: u64 = 1;
+pub const SCHEMA_VERSION: u64 = 2;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 6] = ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13"];
+pub const SCENES: [&str; 7] = ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14"];
 
 /// Build a fresh engine of `scene` and `seed`.
 pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
@@ -44,6 +44,7 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v11" => crate::scenes::game_v11_scene(seed),
         "game_v12" => crate::scenes::game_v12_scene(seed),
         "game_v13" => crate::scenes::game_v13_scene(seed),
+        "game_v14" => crate::scenes::game_v14_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -76,7 +77,7 @@ impl EpisodeSpec {
 
 /// Every value of one row before the tables are assembled.
 struct Row {
-    global: [f32; 33],
+    global: [f32; 35],
     settlements: BTreeMap<SettlementId, [f32; 9]>,
     agents: BTreeMap<u64, [f32; 17]>,
     resources: BTreeMap<(u8, u32, u32), (f32, f32)>,
@@ -102,6 +103,7 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
     let alive = num(&sample, "alive");
     let children = num(&sample, "children");
     let elders = num(&sample, "elders");
+    let (night_burn, winter_fall) = crate::probe::pass8::values(engine);
     let global = [
         now as f32,
         time.day_index as f32,
@@ -136,6 +138,8 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
         num(&sample, "fire_blocked_settlements"),
         num(&sample, "cold_snap_nights_left"),
         f32::from(u8::from(r.cold_snap_tonight)),
+        night_burn as f32,
+        winter_fall as f32,
     ];
     let mut ids: Vec<SettlementId> = r.settlements.keys().copied().collect();
     ids.sort_unstable();
@@ -402,8 +406,19 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         {"name": "kind", "dtype": "int64", "unit": "index", "meaning": "BuildingKind::code (0 hearth)", "hidden": false},
         {"name": "x", "dtype": "int64", "unit": "tiles", "meaning": "tile x", "hidden": false},
         {"name": "y", "dtype": "int64", "unit": "tiles", "meaning": "tile y", "hidden": false}]));
+    let observable: serde_json::Map<String, Value> = fields
+        .iter()
+        .map(|(name, list)| {
+            let names: Vec<Value> = list
+                .as_array()
+                .map(|cols| cols.iter().filter(|c| c["hidden"] != Value::Bool(true)).map(|c| c["name"].clone()).collect())
+                .unwrap_or_default();
+            (name.clone(), Value::Array(names))
+        })
+        .collect();
     let meta = json!({
         "schema_version": SCHEMA_VERSION,
+        "observable_fields": observable,
         "scene": spec.scene,
         "seed": spec.seed,
         "episode_id": spec.id,
@@ -512,7 +527,7 @@ pub struct WmArgs {
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v12|game_v13|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.
@@ -679,6 +694,38 @@ mod tests {
         assert_eq!(files.meta["rows"], 25);
         assert_eq!(files.meta["fields"]["global.npy"].as_array().expect("fields").len(), GLOBAL.len());
         assert!(files.meta["fields"]["agents.npy"][16]["hidden"].as_bool().expect("bool"));
+    }
+
+    #[test]
+    fn schema_two_hides_the_weather_and_lists_observable_fields() {
+        let files = record(&spec(1, true, None)).expect("record");
+        assert_eq!(files.meta["schema_version"], 2);
+        let hidden = |array: &str, name: &str| {
+            files.meta["fields"][array]
+                .as_array()
+                .expect("fields")
+                .iter()
+                .find(|c| c["name"] == name)
+                .map(|c| c["hidden"].as_bool().expect("bool"))
+                .expect(name)
+        };
+        for name in ["winter_severity", "night_burn_per_hour", "winter_fall_today"] {
+            assert!(hidden("global.npy", name), "{name}");
+        }
+        assert!(hidden("settlements.npy", "wood_target"));
+        assert!(hidden("agents.npy", "lifespan_days"));
+        assert!(LATENT.iter().all(|f| f.hidden));
+        assert!(!hidden("global.npy", "deadwood_total"));
+        let observable = files.meta["observable_fields"].as_object().expect("observable");
+        for (array, fields) in files.meta["fields"].as_object().expect("fields") {
+            let want: Vec<&Value> =
+                fields.as_array().expect("list").iter().filter(|c| c["hidden"] == false).map(|c| &c["name"]).collect();
+            let got: Vec<&Value> = observable[array].as_array().expect("names").iter().collect();
+            assert_eq!(got, want, "{array}");
+        }
+        assert_eq!(observable["latent.npy"], json!([]));
+        assert_eq!(GLOBAL[33].name, "night_burn_per_hour");
+        assert_eq!(GLOBAL[34].name, "winter_fall_today");
     }
 
     #[test]
