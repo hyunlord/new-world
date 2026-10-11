@@ -357,6 +357,7 @@ def final(args) -> int:
                      "day_earlier": A.t5(A.day_earlier, eps, std), "aggregate_adults_working": aggregate_working(pred, eps)}
     out["config"] = {k: config[k] for k in ("arch", "seed", "code_commit")}
     out["eval_code_commit"] = c.git_commit()
+    out["argv"], out["forced"] = sys.argv, bool(args.force)   # provenance of the single test evaluation
     c.write_json(run / "metrics.json", out)
     print(json.dumps({k: v["m2"]["state_tag_accuracy"] for k, v in out.items() if k.endswith("test")}))
     return 0

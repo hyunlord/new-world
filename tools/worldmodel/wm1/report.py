@@ -33,9 +33,14 @@ def val_168(run: str) -> float:
     return float(np.mean([v["val"]["T2"]["168"][n]["mean"] for n in v["val"]["T2"]["168"]])) if v else float("inf")
 
 
+def val_t1(run: str) -> float:
+    v = load(run, "val_metrics.json")
+    return float(np.mean([v["val"]["T1"][n]["mean"] for n in v["val"]["T1"]])) if v else float("inf")
+
+
 def choose_recipe() -> str:
-    """The main recipe: the one whose main seed-0 run has the lower validation T2 168 h (A val and B val mean)."""
-    scores = {r: val_168(f"m1gru_main{sfx}_s0") for r, sfx in RECIPES.items()}
+    """The main recipe: the lowest validation T2 168 h of the main seed-0 run (A val and B val mean), T1 breaking ties."""
+    scores = {r: (round(val_168(f"m1gru_main{sfx}_s0"), 6), val_t1(f"m1gru_main{sfx}_s0")) for r, sfx in RECIPES.items()}
     return min(scores, key=scores.get)
 
 
@@ -119,7 +124,7 @@ def main() -> int:
                     sg = seeds(main_runs, lambda m: m["T4"]["scores"][variant][target]["sign_accuracy"])
                     wins += int(bv is not None and mv.mean() < bv)
                     signs.append(sg.mean())
-                    detail.append(f"{variant} {mv.mean():.2f}/{bv:.2f} sign {sg.mean():.2f}")
+                    detail.append(f"{variant} {mv.mean():.2f}/{fmt(bv, 2)} sign {sg.mean():.2f}")
                 okt = wins >= 3 and float(np.mean(signs)) >= 0.75
                 okc &= okt
                 parts.append(f"{target}: below best baseline in {wins}/4, mean sign acc {np.mean(signs):.2f} ({'; '.join(detail)})")
@@ -161,23 +166,33 @@ def main() -> int:
                   "PASS" if ok else "FAIL"))
     rr = load(MAIN_SEEDS[0] + "_rerun", "metrics.json")
     if m0 and rr:
-        diffs = []
+        diffs, missing = [], []
 
-        def walk(x, y):
+        def walk(x, y, path=""):
             if isinstance(x, dict):
                 for k in x:
-                    if k in y and k not in ("config", "eval_code_commit", "seconds", "effects"):
-                        walk(x[k], y[k])
+                    if k in ("config", "eval_code_commit", "seconds", "argv", "forced"):
+                        continue
+                    if not isinstance(y, dict) or k not in y:
+                        missing.append(path + "/" + k)
+                        continue
+                    walk(x[k], y[k], path + "/" + k)
             elif isinstance(x, list):
-                for i, j in zip(x, y):
-                    walk(i, j)
-            elif isinstance(x, (int, float)) and isinstance(y, (int, float)) and not isinstance(x, bool):
-                if not (np.isnan(x) and np.isnan(y)):
+                if not isinstance(y, list) or len(x) != len(y):
+                    missing.append(path)
+                    return
+                for i, (p_, q_) in enumerate(zip(x, y)):
+                    walk(p_, q_, f"{path}[{i}]")
+            elif isinstance(x, (int, float)) and not isinstance(x, bool):
+                if not isinstance(y, (int, float)):
+                    missing.append(path)
+                elif not (np.isnan(x) and np.isnan(y)):
                     diffs.append(abs(x - y))
         walk(m0, rr)
         mx = max(diffs) if diffs else float("nan")
         W.append(("W7", "same-seed rerun reproduces test metrics to 1e-6 (or nondeterminism measured)", "—",
-                  f"max |diff| over {len(diffs)} test numbers: {mx:.2e}", "PASS" if mx <= 1e-6 else "MEASURED (see DECISIONS)"))
+                  f"max |diff| over {len(diffs)} test numbers (T4 effects included; {len(missing)} missing keys): {mx:.2e}",
+                  "PASS" if mx <= 1e-6 and not missing else "MEASURED (see DECISIONS)"))
     rev = DOCS / "REVIEW.md"
     W.append(("W8", "leakage audit by an independent reviewer", "—",
               "see REVIEW.md" if rev.exists() else "pending", "see REVIEW.md" if rev.exists() else "PENDING"))

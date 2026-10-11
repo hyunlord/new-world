@@ -14,8 +14,8 @@ Main recipe: **r3** (chosen by validation T2 168 h of the main seed-0 run: r1 0.
 | W4 | T3b A test: M1 main MAE below the ridge; gap to the severity oracle | ridge 0.130, oracle 0.134 | M1 main 0.568 [0.438, 0.766] (gap to oracle +0.434) | FAIL |
 | W5 | severity ablation (T2 winter rows, T3b, T4) with the three-seed spread | — | T2-any winter targets A test 24 h: blind 0.172 [0.171, 0.174] vs on 0.187; 168 h: blind 0.321 [0.273, 0.417] vs on 0.544; T3b MAE blind 0.568 [0.438, 0.766] vs on 0.203; T4 dark-night nMAE (mean of variants) blind 1.062 [1.000, 1.162] vs on 1.031 | REPORTED |
 | W6 | M2 T5 A test: state-tag acc ≥ persistence + 5 points; position error below persistence | persistence acc 0.723, Chebyshev 2.543 | M2 (m2_set_s0) acc 0.902, Chebyshev 2.038 | PASS |
-| W7 | same-seed rerun reproduces test metrics to 1e-6 (or nondeterminism measured) | — | max |diff| over 3381 test numbers: 0.00e+00 | PASS |
-| W8 | leakage audit by an independent reviewer | — | pending | PENDING |
+| W7 | same-seed rerun reproduces test metrics to 1e-6 (or nondeterminism measured) | — | max |diff| over 3765 test numbers (T4 effects included; 0 missing keys): 0.00e+00 | PASS |
+| W8 | leakage audit by an independent reviewer | — | see REVIEW.md | see REVIEW.md |
 
 ## T1 next hour
 

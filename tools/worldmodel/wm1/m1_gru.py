@@ -411,6 +411,7 @@ def final(args) -> int:
     out = ev.evaluate(pred, tests, c.split_stds(tests), cf_test=g["C_test"], t3_split="A_test")
     out["config"] = {k: config[k] for k in ("variant", "seed", "device", "code_commit", "round_counts")}
     out["eval_code_commit"] = c.git_commit()
+    out["argv"], out["forced"] = sys.argv, bool(args.force)   # provenance of the single test evaluation
     out["seconds"] = time.time() - t0
     c.write_json(target, out)
     print(f"final done {time.time() - t0:.0f}s")

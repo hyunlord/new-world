@@ -165,7 +165,8 @@ def final(args) -> int:
     out = {"n": len(t), "parse_rate": ok / len(t), "m3": ev.summarize(b.nmae(p, t, std)),
            "daily_naive": ev.summarize(b.nmae(n, t, std)), "examples": examples, "seconds": time.time() - t0,
            "config": {k: config[k] for k in ("base", "seed", "code_commit", "steps_done", "epoch_fraction")},
-           "eval_code_commit": c.git_commit(), "unparsed_scored_as": "persistence"}
+           "eval_code_commit": c.git_commit(), "unparsed_scored_as": "persistence", "argv": sys.argv,
+           "forced": bool(args.force)}
     c.write_json(run / "metrics.json", out)
     print(json.dumps({k: out[k] for k in ("n", "parse_rate")}), out["m3"]["mean"], out["daily_naive"]["mean"])
     return 0
