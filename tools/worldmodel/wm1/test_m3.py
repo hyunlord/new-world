@@ -27,6 +27,8 @@ class M3SerializationTests(unittest.TestCase):
         # The rain requested at day 4 10:00 belongs to day 4's line (06:00 day 4 .. 06:00 day 5).
         self.assertEqual(json.loads(m.day_line(ep, 4))["iv"], [["rain", 6]])
         self.assertEqual(json.loads(m.day_line(ep, 3))["iv"], [])
+        # Day numbers arriving as numpy integers (bench start rows) still serialize.
+        self.assertEqual(json.loads(m.day_line(ep, np.int64(3))), rec)
         self.assertIsNone(m.parse("not json"))
         self.assertIsNone(m.parse('{"food": 1}'))
 

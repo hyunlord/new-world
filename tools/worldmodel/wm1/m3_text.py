@@ -37,7 +37,7 @@ def day_line(ep, day: int) -> str:
     """JSON line of one-based day `day` at 06:00."""
     r = ev.row_of(day, 360)
     v = ep.bench.v[r]
-    rec = {"day": day, "season": int(ep.bench.season[r])}
+    rec = {"day": int(day), "season": int(ep.bench.season[r])}
     rec.update({k: int(round(float(x))) for k, x in zip(KEYS, v)})
     nxt = ev.row_of(day + 1, 360)
     acts = ep.bench.actions[r:nxt]
@@ -142,7 +142,7 @@ def final(args) -> int:
     t0 = time.time()
     for ep in eps:
         for start in ev.bench_starts(ep, 24):
-            day = (start * b.EVERY + b.OFFSET) // b.TPD + 1
+            day = int((start * b.EVERY + b.OFFSET) // b.TPD + 1)
             assert ev.row_of(day, 360) == start
             prompt = day_line(ep, day) + "\n"
             enc = tok(prompt, return_tensors="pt")
