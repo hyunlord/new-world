@@ -1,0 +1,451 @@
+{
+  "proposals": [],
+  "objects": {},
+  "original_bindings": {
+    "V_a6_01@1": {
+      "fingerprint": "ab6e8ce5f25164a1fafb1c8434f6d7cb0995c7b3cda8f818f0b0b913c52ed2e0",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_02@1": {
+      "fingerprint": "10353a3918dab121879d9aea83ff52e7bf79ba5ddf3288c9470d9d724284c46f",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_03@1": {
+      "fingerprint": "3ed326cc873cca88c9011dc717d27a505757462e2501921e5d802c801061a2a2",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_05@1": {
+      "fingerprint": "eee2c43d9232249c19f2c5295ae75417cb60e6a8a9e45dee6bbde3b873542956",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_06@1": {
+      "fingerprint": "1149d823d07f1f8fedf5641d9b22b1092f430341b5d828c231160b6fe74af660",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_07@1": {
+      "fingerprint": "e874a4a44f707103e500a62f000d0293c10998bd57a1f7bdab7b49421f901d2a",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_08@1": {
+      "fingerprint": "ec936476ca7150453d03d25772b5916d2182ac0f025be829587e7cdcee5ae9f5",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_09@1": {
+      "fingerprint": "30be76a3700cdbe6942cb6a389fac6bc3819d1de66d4e8776ded355ba2d009fd",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_12@1": {
+      "fingerprint": "ddd1a8a5f0164e5cf54e911f68432ffa30ec5f30f1b337cfcded24ee4c600ead",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_14@1": {
+      "fingerprint": "e1dab8918af7013f568b58139ae02a0574b5903f733b08d19a3f7cca9e88808d",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_15@1": {
+      "fingerprint": "0b94b352b6253b8ccbfc59d417936a1bf9019c7801df77629734dffc87aa1e5a",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_a6_16@1": {
+      "fingerprint": "038764ef755b4eba7d6747fa89bef43d7d1ddd39d9eaffc69d8e502e9e64a771",
+      "review_index": "docs/art/production5/keys/processed/V_a6_attempt_1/review_index_reguarded.json",
+      "review_path": "docs/art/production5/keys/processed/V_a6_attempt_1/reviews.json",
+      "ledger": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates_reguarded.json"
+    },
+    "V_c4_01@1": {
+      "fingerprint": "8f3a0bcb46e0f33eee3a05813ca5db59f74b6da28e8d30b6d84a34c3f6a398e2",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_02@1": {
+      "fingerprint": "ca3c40edce55cd2f38a2d633fa80e00283387bc38bd7c98938b96be7109b7e07",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_03@1": {
+      "fingerprint": "4238bd93768cb50194ccad8c31671d51a5f472a11c71d2dc80beaa47d55ebda4",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_04@1": {
+      "fingerprint": "021660b469f7e5ddb4aaf4b2edc58944a80633ded96fc4750d432d91d355b8e9",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_05@1": {
+      "fingerprint": "302d15f22c4ed4eada907d8be53b38e2f681206b826d34e97168d6e90809db5c",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_06@1": {
+      "fingerprint": "60bed1b5e7cc35d1aac7a26b91d1c594d623968b4cf3ccfb10ad950611ec64e2",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_07@1": {
+      "fingerprint": "afe61df9e81e8998f7e30afa831244b6309f62df24e8a78773623ec2ae82d35b",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_08@1": {
+      "fingerprint": "3c4642b41d92a04339ff4eb5461ad2508bfdd7e9b6d9ddc8d449320233fe427c",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_11@1": {
+      "fingerprint": "25df1006d118e547ff2ce1179fd07d2247b7e7883043f1a7f4af12f1699e3481",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    },
+    "V_c4_12@1": {
+      "fingerprint": "937b596151bd38d1052d9912e495a78ed55303b776435d5f66e866f3a2a56c04",
+      "review_index": "docs/art/production5/keys/processed/V_c4_attempt_1/review_index.json",
+      "review_path": "docs/art/production5/keys/processed/V_c4_attempt_1/reviews_normalized.json",
+      "ledger": "docs/art/production5/keys/processed/V_c4_attempt_1/candidates.json"
+    }
+  },
+  "approvals": {
+    "V_a6_01@1": {
+      "sprite_id": "V_a6_01",
+      "candidate_id": "V_a6_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing stride reads at 2x; tan skin, cream clothing and brown hair match the natural idle, with clean white-hair recolouring.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_02@1": {
+      "sprite_id": "V_a6_02",
+      "candidate_id": "V_a6_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing passing step remains legible at 2x; identity and hair recolouring remain consistent.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_03@1": {
+      "sprite_id": "V_a6_03",
+      "candidate_id": "V_a6_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing separated legs show the walk phase at 2x; clothing and natural hair match the idle.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_05@1": {
+      "sprite_id": "V_a6_05",
+      "candidate_id": "V_a6_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing wide stride is clear at 2x; profile, cream wrap and natural hair preserve the reference identity.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_06@1": {
+      "sprite_id": "V_a6_06",
+      "candidate_id": "V_a6_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing passing step reads at 2x; the raised rear foot and profile remain distinct, with clean hair recolouring.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_07@1": {
+      "sprite_id": "V_a6_07",
+      "candidate_id": "V_a6_07@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing stride remains legible at 2x; natural skin and clothing colour families match the idle.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_08@1": {
+      "sprite_id": "V_a6_08",
+      "candidate_id": "V_a6_08@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing passing step and profile read clearly at 2x; hair recolouring stays on the visible hair.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_09@1": {
+      "sprite_id": "V_a6_09",
+      "candidate_id": "V_a6_09@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing back view and carried basket with red contents are visible at 2x; white-hair preview preserves skin and clothing.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_12@1": {
+      "sprite_id": "V_a6_12",
+      "candidate_id": "V_a6_12@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing hammer strike and stone target remain identifiable at 2x; identity and white-hair recolouring are consistent.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_14@1": {
+      "sprite_id": "V_a6_14",
+      "candidate_id": "V_a6_14@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing hammer strike shows the back of the head and the stone target at 2x; hair recolouring is contained.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_15@1": {
+      "sprite_id": "V_a6_15",
+      "candidate_id": "V_a6_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing outstretched arm reaches into the berry bush at 2x; reference identity and natural colour families are preserved.",
+      "unfitted_acceptable": null
+    },
+    "V_a6_16@1": {
+      "sprite_id": "V_a6_16",
+      "candidate_id": "V_a6_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing bent arm holds a red berry away from the bush at 2x, reading as the gathering return phase; hair recolouring is clean.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_01@1": {
+      "sprite_id": "V_c4_01",
+      "candidate_id": "V_c4_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing child holds a visible brown load with red contents at 2x; hair, skin and build remain consistent with the natural idle.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_02@1": {
+      "sprite_id": "V_c4_02",
+      "candidate_id": "V_c4_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing carrying pose retains the basket between both arms at 2x and matches the reference child.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_03@1": {
+      "sprite_id": "V_c4_03",
+      "candidate_id": "V_c4_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket and red contents remain legible at 2x with the opposite stepping leg; natural identity is retained.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_04@1": {
+      "sprite_id": "V_c4_04",
+      "candidate_id": "V_c4_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The dark basket with red contents remains visible in front of the torso at 2x; front view and child identity agree.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_05@1": {
+      "sprite_id": "V_c4_05",
+      "candidate_id": "V_c4_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing child reaches into the berry bush; gathering contact is legible at 2x and the tan skin and brown hair match.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_06@1": {
+      "sprite_id": "V_c4_06",
+      "candidate_id": "V_c4_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing gathering frame shows the raised picked berry beside the bush at 2x; cream clothing and child identity remain consistent.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_07@1": {
+      "sprite_id": "V_c4_07",
+      "candidate_id": "V_c4_07@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing profile reaches toward the berry bush at 2x with matching brown hair and cream tunic.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_08@1": {
+      "sprite_id": "V_c4_08",
+      "candidate_id": "V_c4_08@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing child holds the picked berry just above the bush; profile and gathering action remain legible at 2x.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_11@1": {
+      "sprite_id": "V_c4_11",
+      "candidate_id": "V_c4_11@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The raised arm and grey tool head remain distinct at 2x above the east-facing kneeling child and stone workpiece.",
+      "unfitted_acceptable": null
+    },
+    "V_c4_12@1": {
+      "sprite_id": "V_c4_12",
+      "candidate_id": "V_c4_12@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing kneeling child extends the arm to a visible grey tool head against the stone at 2x; cream clothing and brown hair agree with the reference.",
+      "unfitted_acceptable": null
+    }
+  },
+  "exclusions": {
+    "V_a6_04@1": "visual_rejection",
+    "V_a6_10@1": "visual_rejection",
+    "V_a6_11@1": "visual_rejection",
+    "V_a6_13@1": "visual_rejection",
+    "V_c4_09@1": "visual_rejection",
+    "V_c4_10@1": "visual_rejection",
+    "V_c4_13@1": "visual_rejection",
+    "V_c4_14@1": "visual_rejection",
+    "V_c4_15@1": "visual_rejection",
+    "V_c4_16@1": "visual_rejection"
+  },
+  "trials": [
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "build"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "N",
+        "build"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "N",
+        "carry"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_a6",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "build"
+      ],
+      "source": [
+        "V_c4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "V_c4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "V_c4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "gather"
+      ],
+      "source": [
+        "V_c4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    }
+  ],
+  "baseline_manifest_sha256": "99e571c4169098b3e71459fe0f939ad9ee2213df077b2fd130093a0feac6831a"
+}

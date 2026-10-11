@@ -93,9 +93,12 @@ def guarded_candidate(record: CandidateRecord) -> FrameCandidate:
         rows = np.nonzero((mask[..., 0] == 3) & (mask[..., 3] > 0))[0]
         if len(rows):
             top = max(0, int(rows.min()) - (mask.shape[0] - image.height) // 2)
+    hard_errors = tuple(error for error in record.get('guards', {}).get('errors', [])
+                        if error in ('key_hair_missing', 'key_hair_outside_head', 'key_fringe',
+                                     'template_hair_unavailable', 'conversion_failure'))
     return FrameCandidate(frame_spec(record,image.size),image,metrics['mean_delta_e'],
                           metrics['palette_match_percent'],metrics['binary_alpha'],
-                          metrics['berry_texels'],metrics['fire_texels'], record.get('frame'), fraction, top)
+                          metrics['berry_texels'],metrics['fire_texels'], record.get('frame'), fraction, top, hard_errors)
 
 
 def _derive(target: CandidateRecord, passing: list[CandidateRecord], cache: Path,

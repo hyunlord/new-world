@@ -1,0 +1,132 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "V_c4_01",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "South-facing child holds a visible brown load with red contents at 2x; hair, skin and build remain consistent with the natural idle.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_02",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing carrying pose retains the basket between both arms at 2x and matches the reference child.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_03",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket and red contents remain legible at 2x with the opposite stepping leg; natural identity is retained.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_04",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The dark basket with red contents remains visible in front of the torso at 2x; front view and child identity agree.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_05",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing child reaches into the berry bush; gathering contact is legible at 2x and the tan skin and brown hair match.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_06",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing gathering frame shows the raised picked berry beside the bush at 2x; cream clothing and child identity remain consistent.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_07",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing profile reaches toward the berry bush at 2x with matching brown hair and cream tunic.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_08",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing child holds the picked berry just above the bush; profile and gathering action remain legible at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_09",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "detail_destroyed_by_fit",
+      "observation": "The raw preview shows hands and a red vessel at the mouth, but the fitted 2x sprite collapses these into the face and chest; drinking is not legible without the label.",
+      "unfitted_acceptable": true
+    },
+    {
+      "sprite_id": "V_c4_10",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "detail_destroyed_by_fit",
+      "observation": "The raw raised hands and mouth-level vessel are lost in the fitted 2x silhouette, which reads as a kneeling profile rather than drinking.",
+      "unfitted_acceptable": true
+    },
+    {
+      "sprite_id": "V_c4_11",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The raised arm and grey tool head remain distinct at 2x above the east-facing kneeling child and stone workpiece.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_12",
+      "candidate_id": 1,
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing kneeling child extends the arm to a visible grey tool head against the stone at 2x; cream clothing and brown hair agree with the reference.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_13",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "Pale detached hop-effect pixels remain beside and below the feet in the fitted sprite; they are visible at 2x.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_14",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "A detached dark horizontal hop-effect bar remains beneath the feet in the fitted 2x sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_15",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "Detached pale speech-ray texels remain beside the head in the fitted 2x sprite.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_c4_16",
+      "candidate_id": 1,
+      "verdict": "reject",
+      "reason": "artefact",
+      "observation": "Detached pale speech-ray texels remain to the left of the head in the fitted 2x sprite.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

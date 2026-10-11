@@ -1,0 +1,31 @@
+{
+  "candidates_sha256": "ce56bbac2da7fa341106f6ceeb016244164ad9c70d406ae4fc57a74948ce7278",
+  "candidate_fingerprints": {
+    "V_a6_01@1": "ab6e8ce5f25164a1fafb1c8434f6d7cb0995c7b3cda8f818f0b0b913c52ed2e0",
+    "V_a6_02@1": "10353a3918dab121879d9aea83ff52e7bf79ba5ddf3288c9470d9d724284c46f",
+    "V_a6_03@1": "3ed326cc873cca88c9011dc717d27a505757462e2501921e5d802c801061a2a2",
+    "V_a6_04@1": "6e3147cc56da86c7efa43301f3fc7ea5adb720626d23cd2738e2f2faeb4cb73d",
+    "V_a6_05@1": "eee2c43d9232249c19f2c5295ae75417cb60e6a8a9e45dee6bbde3b873542956",
+    "V_a6_06@1": "1149d823d07f1f8fedf5641d9b22b1092f430341b5d828c231160b6fe74af660",
+    "V_a6_07@1": "e874a4a44f707103e500a62f000d0293c10998bd57a1f7bdab7b49421f901d2a",
+    "V_a6_08@1": "ec936476ca7150453d03d25772b5916d2182ac0f025be829587e7cdcee5ae9f5",
+    "V_a6_09@1": "30be76a3700cdbe6942cb6a389fac6bc3819d1de66d4e8776ded355ba2d009fd",
+    "V_a6_10@1": "f7706bb05cd28d9f83df0bc370c5b0990dabe78dfc67b5b4f8bd640262f50143",
+    "V_a6_11@1": "2ebb646b7f0b6339e5a606899f5e63e062bc36fbbb6818019b15a6eb4036b1c4",
+    "V_a6_12@1": "ddd1a8a5f0164e5cf54e911f68432ffa30ec5f30f1b337cfcded24ee4c600ead",
+    "V_a6_13@1": "0a9589551ef03cd561dc8e6de9d9425b623e387eb737dce5adf1d5fe971e9260",
+    "V_a6_14@1": "e1dab8918af7013f568b58139ae02a0574b5903f733b08d19a3f7cca9e88808d",
+    "V_a6_15@1": "0b94b352b6253b8ccbfc59d417936a1bf9019c7801df77629734dffc87aa1e5a",
+    "V_a6_16@1": "038764ef755b4eba7d6747fa89bef43d7d1ddd39d9eaffc69d8e502e9e64a771"
+  },
+  "images_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_01.png": "e2ceaddf884dfb01f418b8dd8889a046c4f55c7766b9bda3dcb1d0eb9c29d99a",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_02.png": "a1e4586b1f99aa479d281596e0a52054d49387b514ee0969e111f4aa13abffc8",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_03.png": "4c20e86c26387d0c9f01a477fa425e2ca4c93a7ff08cd3bd01b28880a303303f",
+    "/Users/rexxa/work/new-world-art-prod/docs/art/production5/keys/boards/V_a6_attempt_1/page_04.png": "e5e546133c5f7fb6b6076e46a77ac8a2bb26ca60a8ff8e40e4d02edef59a17f1"
+  },
+  "source_sha256": {
+    "docs/art/production5/keys/processed/V_a6_attempt_1/candidates.json": "7ec5a1a3423c55b61f37467e97abebaa07e787074800d7b257aceea7e1aeb7a7"
+  },
+  "guard_correction_source": "docs/art/production5/keys/processed/V_a6_attempt_1/candidates.json"
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "colors": [
+    {"shade": 0, "name": "light", "hex": "#00DCD2", "rgb": [0, 220, 210]},
+    {"shade": 1, "name": "mid", "hex": "#00AAA2", "rgb": [0, 170, 162]},
+    {"shade": 2, "name": "dark", "hex": "#007D76", "rgb": [0, 125, 118]}
+  ]
+}

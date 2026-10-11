@@ -4,8 +4,8 @@
   "errors": [],
   "installations": 2,
   "final_bound_frames": 74,
-  "changed_villager_frames": 60,
-  "animation_groups": 12,
+  "changed_villager_frames": 61,
+  "animation_groups": 20,
   "rows": [
     {
       "target": "W1_01",

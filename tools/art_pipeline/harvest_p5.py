@@ -74,7 +74,9 @@ def copy_phase(target: CandidateRecord, source: CandidateRecord, cache: Path,
             (target.get('source_sheet', target['sheet']), target['attempt']) !=
             (source.get('source_sheet', source['sheet']), source['attempt'])):
         raise HarvestError('copy_requires_same_physical_set_and_phase')
-    result = _derive(target, [source], cache, palette, scale)
+    safe_target = deepcopy(target)
+    safe_target['guards'] = deepcopy(source['guards'])
+    result = _derive(safe_target, [source], cache, palette, scale)
     if result['derivation_rule'] != 'same_cycle_phase_copy':
         raise HarvestError('procedural_derivation_forbidden')
     # Source mask, fidelity and cleanup counts bind the copied pixels, not the bad target.

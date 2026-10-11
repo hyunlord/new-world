@@ -15,6 +15,7 @@ from pathlib import Path
 
 from PIL import Image
 from harvest_boards_p5 import boards, completion_id
+from harvest_bindings_p5 import freeze as freeze_bindings, verify_prepared, bind_review
 from harvest_p5 import Completion, binding_matches, completion_guard, completions, envelope_row, normalize
 from install_v4 import (InstallError, InstallPlan, InstallRequest, PlannedSprite, Target,
                        build_plan, digest, validate_assembled, verify_file)
@@ -178,6 +179,7 @@ def prepare(root: Path = Path.cwd(), output: Path = OUTPUT,
         if usable:
             selected_objects[target] = min(usable, key=lambda r: (len(r['guards']['warnings']), r['metrics']['mean_delta_e']))['id']
     atomic_json(output / 'installer_candidates.json', dict(schema_version=1, scale=dict(adult_height=28, child_height=21), candidates=list(all_records.values())))
+    freeze_bindings(output, proposals, all_records)
     payload = dict(proposals=proposals, objects=selected_objects, original_bindings=bindings,
                    approvals=approvals, exclusions=exclusions, trials=search,
                    baseline_manifest_sha256=digest(root / 'assets/art/manifest.json'))
@@ -188,6 +190,8 @@ def prepare(root: Path = Path.cwd(), output: Path = OUTPUT,
 
 def finalize(root: Path = Path.cwd(), output: Path = OUTPUT) -> tuple[InstallPlan, dict]:
     """Make a standard installer plan only from whole groups with frozen animation approval."""
+    if (output / 'adjudication.json').exists() and read(output / 'adjudication.json').get('applied'):
+        raise InstallError('Applied installation evidence is immutable; use a new output directory')
     search = read(output / 'search.json')
     ledger_path = output / 'installer_candidates.json'
     ledger = read(ledger_path)
@@ -201,6 +205,8 @@ def finalize(root: Path = Path.cwd(), output: Path = OUTPUT) -> tuple[InstallPla
             raise InstallError(f'Original review binding changed: {original_id}')
     records = {r['id']: r for r in ledger['candidates']}
     reviews_path = output / 'animation/final_reviews.json'
+    verify_prepared(output, search['proposals'], records, search['original_bindings'])
+    bind_review(output, reviews_path)
     reviews = {r['id']: r for r in read(reviews_path)['verdicts']}
     chosen = {target: records[identity] for target, identity in search['objects'].items()}
     groups, approved_groups = defaultdict(list), []

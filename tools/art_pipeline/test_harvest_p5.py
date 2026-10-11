@@ -89,6 +89,15 @@ class HarvestTests(unittest.TestCase):
         row['frame'] = 2
         self.assertFalse(binding_matches(row, fingerprints))
 
+    def test_key_conversion_errors_survive_normalization_and_exclude_completion(self) -> None:
+        for error in ('key_hair_missing', 'key_hair_outside_head', 'key_fringe'):
+            rows = self.records('build')[:2]
+            rows[0]['guards'] = dict(passed=False, errors=[error], warnings=[])
+            normalized = [normalize(r, WorldScale()) for r in rows]
+            self.assertIn(error, normalized[0]['guards']['errors'])
+            self.assertFalse(normalized[0]['guards']['passed'])
+            self.assertEqual(completions(normalized, {0:'a', 1:'b'}, self.cache, self.palette), ())
+
     def test_noncycle_requires_every_expected_frame(self) -> None:
         rows = self.records('drink')[:1]
         self.assertEqual(completions(rows, {0:'first', 1:'second'}, self.cache, self.palette), ())

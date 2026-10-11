@@ -9,6 +9,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from PIL import Image
+from harvest_baseline_p5 import rgba_hash
+from harvest_bindings_p5 import verify_prepared, bind_review
+from install_v4 import InstallError, verify_file
+from mask_installation_p5 import physical_set
 from salvage_verdicts import atomic_json, candidate_fingerprint
 
 
@@ -85,6 +89,34 @@ def audit(output: Path = Path('docs/art/production5/harvest')) -> dict:
 
 
 
+def current_content(root: Path, manifest: dict) -> dict:
+    """Hash native sprites and actual rendered mask texels, irrespective of labels."""
+    atlas = json.loads((root / 'assets/art/atlas/region_atlas.json').read_text())
+    pages, result = {}, {}
+    for target, row in manifest.items():
+        if not row.get('body'):
+            continue
+        values = {}
+        for field in ('path', 'native_path'):
+            with Image.open(root / row[field]) as image:
+                values[field] = dict(size=list(image.size), rgba_sha256=rgba_hash(image))
+        region = atlas['sprites'].get(target)
+        if region:
+            page = region['page'].removeprefix('res://')
+            if page not in pages:
+                with Image.open(root / page) as image:
+                    pages[page] = image.convert('RGBA')
+            x,y,w,h = region['rect']
+            values['mask'] = dict(size=[w,h], rgba_sha256=rgba_hash(pages[page].crop((x,y,x+w,y+h))))
+        result[target] = values
+    return result
+
+
+def content_changed(target: str, row: dict, old: dict, content: dict, baseline: dict) -> bool:
+    return (any(row.get(k) != old.get(k) for k in ('candidate_id','source','qa_status'))
+            or content.get(target) != baseline.get(target))
+
+
 def audit_all(root: Path = Path.cwd()) -> dict:
     """Audit the final pass-five manifest across immutable per-installation reports."""
     read = lambda path: json.loads(Path(path).read_text())
@@ -101,12 +133,28 @@ def audit_all(root: Path = Path.cwd()) -> dict:
         if report.get('applied'):
             installs.append((path.parent, report))
     rows, errors, covered, groups = [], [], set(), {}
+    content = current_content(root, manifest)
+    mask_report_path = base / 'masks/mask_installation.json'
+    mask_overrides = {}
+    if mask_report_path.exists():
+        mask_payload = read(mask_report_path)
+        if mask_payload.get('applied'):
+            mask_overrides = {entry['target']:entry for entry in mask_payload['frames']
+                              if entry.get('installed') and pixels(manifest[entry['target']]['path']) == pixels(entry['sprite_path'])}
+    baseline_content = read(base / 'harvest/baseline_content.json')['frames']
     originals = {}
     for name in ('docs/art/production4/recovery/candidates.json', 'docs/art/production4/wood/processed/candidates.json'):
         originals.update({r['id']:r for r in read(root / name)['candidates']})
     for directory, report in installs:
         records = {r['id']:r for r in read(directory / 'installer_candidates.json')['candidates']}
         envelope = read(directory / 'envelope.json')
+        try:
+            verify_prepared(directory, report['groups'], records, envelope['original_bindings'])
+            if not (directory / 'animation/review_bindings.json').exists():
+                raise InstallError('Missing frozen review binding')
+            bind_review(directory, directory / 'animation/final_reviews.json')
+        except (InstallError, KeyError, OSError) as error:
+            errors.append(f'{directory}:binding_integrity:{error}')
         reviews = {r['id']:r for r in read(directory / 'animation/final_reviews.json')['verdicts']}
         for group in report['groups']:
             installed = [manifest.get(records[i].get('target_slot', records[i]['slot_id']), {}) for i in group['candidate_ids']]
@@ -129,6 +177,15 @@ def audit_all(root: Path = Path.cwd()) -> dict:
             if any(pixels(str(root / installed[field])) != pixels(record['images'][kind])
                    for field,kind in (('path','sprite'),('native_path','native'))):
                 reasons.append('installed_pixels_changed')
+            if record['body'] in ('adult_a','adult_b'):
+                mask_path = mask_overrides.get(target, {}).get('mask_path', record['images'].get('sprite_hair_mask'))
+                if not mask_path:
+                    reasons.append('approved_hair_mask_missing')
+                else:
+                    with Image.open(mask_path) as mask:
+                        expected = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+                    if content[target].get('mask') != expected:
+                        reasons.append('installed_mask_changed')
             if candidate_fingerprint(record) != envelope['candidate_fingerprints'].get(record['slot_id']):
                 reasons.append('installer_fingerprint_changed')
             source_id = record.get('original_candidate_id', identity)
@@ -159,6 +216,11 @@ def audit_all(root: Path = Path.cwd()) -> dict:
     mask_report = base / 'masks/mask_installation.json'
     if mask_report.exists() and read(mask_report).get('applied'):
         payload = read(mask_report)
+        for path, expected in read(base / 'masks/installation_bindings.json')['files'].items():
+            try:
+                verify_file(root / path, expected)
+            except InstallError as error:
+                errors.append(f'mask_installation_binding:{error}')
         for entry in payload['frames']:
             target = entry['target']
             installed = manifest[target]
@@ -172,14 +234,36 @@ def audit_all(root: Path = Path.cwd()) -> dict:
                 errors.append(f'{target}:mask_fingerprint_changed')
             if not any(r['candidate_id']==record['id'] and r['verdict']=='ok' for r in verdicts):
                 errors.append(f'{target}:mask_not_approved')
+            with Image.open(root / entry['mask_path']) as mask:
+                expected_mask = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+            if content[target].get('mask') != expected_mask:
+                errors.append(f'{target}:installed_mask_changed')
             covered.add(target)
         for group in payload['groups']:
-            if group['verdict'] != 'ok':
+            current = [manifest[target] for target in group['frames']]
+            if any(content[row['sprite_id']]['path']['rgba_sha256'] != group['frame_rgba_sha256'][row['sprite_id']] for row in current):
+                continue
+            reviews = read(root / group['review_path'])['verdicts']
+            if not any(v['id']==group['id'] and v['verdict']=='ok' for v in reviews):
                 errors.append(f'{group["group"]}:mask_animation_not_approved')
+            try:
+                verify_file(Path(group['board']), group['board_sha256'])
+                verify_file(Path(group['gif']), group['gif_sha256'])
+            except InstallError as error:
+                errors.append(f'{group["group"]}:mask_animation_changed:{error}')
+            sources = sorted({physical_set(row,manifest) for row in current})
+            if sources != group['physical_sets'] or len(sources)!=1 or sources[0].startswith('unknown:'):
+                errors.append(f'{group["group"]}:mask_physical_set_changed')
+            key = tuple(group['group'])
+            sheet, attempt = sources[0].rsplit('@',1)
+            groups[key] = dict(group=group['group'],source=[sheet,int(attempt)],
+                copied_frames=[r['frame'] for r in current if r['source'].startswith('derived:')],
+                candidate_ids=[r.get('candidate_id') for r in current],animation_review=group['id'],
+                installation='docs/art/production5/masks',board=group['board'],gif=group['gif'])
     changed = []
     for target, row in manifest.items():
         old = baseline.get(target, {})
-        if row.get('body') and any(row.get(k) != old.get(k) for k in ('candidate_id','source','qa_status')):
+        if row.get('body') and content_changed(target, row, old, content, baseline_content):
             changed.append(target)
             if target not in covered:
                 errors.append(f'{target}:changed_without_bound_review')

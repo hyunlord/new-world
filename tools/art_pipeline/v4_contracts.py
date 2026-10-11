@@ -69,6 +69,7 @@ class FrameCandidate:
     frame_index: int | None = None
     despeckle_fraction: float = 0.0
     hair_mask_top: int | None = None
+    hard_errors: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -182,7 +183,7 @@ def foot_anchor(image: Image.Image, activity: str) -> tuple[int, int]:
 def guard_frame(candidate: FrameCandidate, scale: WorldScale = WorldScale()) -> GuardReport:
     """Reject broken format/geometry or gross drift; moderate drift is a warning."""
     frame,image = candidate.frame,candidate.image
-    errors: list[str] = []
+    errors: list[str] = list(candidate.hard_errors)
     warnings: list[str] = []
     if candidate.despeckle_fraction > .10:
         errors.append('despeckle_over_10_percent')

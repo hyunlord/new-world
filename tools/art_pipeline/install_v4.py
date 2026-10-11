@@ -319,7 +319,7 @@ def validate_assembled(sprites: tuple[PlannedSprite,...], chosen: tuple[tuple[Ta
             sprite.native,source.mean_delta_e if source else 0.0,membership,
             bool(np.all(np.isin(np.asarray(sprite.native)[...,3],[0,255]))),berry,fire,
             sprite.frame, source.despeckle_fraction if source else 0.0,
-            source.hair_mask_top if source else None)
+            source.hair_mask_top if source else None, source.hard_errors if source else ())
         final[sprite.slot_id]=candidate
         report=guard_frame(candidate,scale)
         if not report.passed: raise InstallError(f'Assembled frame guard failed: {sprite.slot_id}: {report.errors}')
