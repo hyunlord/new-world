@@ -1,0 +1,180 @@
+{
+	"evidence_kind": "controlled_presentation_scene",
+	"natural_simulation_capture": false,
+	"samples": [
+		{
+			"agents": [
+				{
+					"agent_id": 0,
+					"body": "adult_a",
+					"cold_pose": "crossed",
+					"colds": 1,
+					"fallback_kind": "",
+					"pose": "crossed",
+					"puff_alpha": 0.5225,
+					"scale": 6,
+					"shiver_offset": 1.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_a3_16"
+				},
+				{
+					"agent_id": 24,
+					"body": "adult_b",
+					"cold_pose": "crossed",
+					"colds": 1,
+					"fallback_kind": "retained_installed",
+					"pose": "crossed",
+					"puff_alpha": 0.5225,
+					"scale": 6,
+					"shiver_offset": 1.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_b3_16"
+				},
+				{
+					"agent_id": 48,
+					"body": "child",
+					"cold_pose": "sit",
+					"colds": 1,
+					"fallback_kind": "",
+					"pose": "crossed",
+					"puff_alpha": 0.5225,
+					"scale": 6,
+					"shiver_offset": 1.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_c2_01"
+				},
+				{
+					"agent_id": 0,
+					"body": "adult_a",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_a1_01"
+				},
+				{
+					"agent_id": 24,
+					"body": "adult_b",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "retained_installed",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_b1_01"
+				},
+				{
+					"agent_id": 48,
+					"body": "child",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_c1_01"
+				}
+			],
+			"image": "/Users/rexxa/work/art-production5-evidence/cold_scene_v2.png",
+			"seconds": 0.05
+		},
+		{
+			"agents": [
+				{
+					"agent_id": 0,
+					"body": "adult_a",
+					"cold_pose": "crossed",
+					"colds": 1,
+					"fallback_kind": "",
+					"pose": "crossed",
+					"puff_alpha": 0.429,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_a3_16"
+				},
+				{
+					"agent_id": 24,
+					"body": "adult_b",
+					"cold_pose": "crossed",
+					"colds": 1,
+					"fallback_kind": "retained_installed",
+					"pose": "crossed",
+					"puff_alpha": 0.429,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_b3_16"
+				},
+				{
+					"agent_id": 48,
+					"body": "child",
+					"cold_pose": "sit",
+					"colds": 1,
+					"fallback_kind": "",
+					"pose": "crossed",
+					"puff_alpha": 0.429,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_c2_01"
+				},
+				{
+					"agent_id": 0,
+					"body": "adult_a",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_a1_01"
+				},
+				{
+					"agent_id": 24,
+					"body": "adult_b",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "retained_installed",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_b1_01"
+				},
+				{
+					"agent_id": 48,
+					"body": "child",
+					"cold_pose": "idle",
+					"colds": 0,
+					"fallback_kind": "",
+					"pose": "idle",
+					"puff_alpha": 0.0,
+					"scale": 6,
+					"shiver_offset": 0.0,
+					"snapshot_kind": "controlled_test_fixture",
+					"sprite_id": "V_c1_01"
+				}
+			],
+			"image": "/Users/rexxa/work/art-production5-evidence/cold_scene_v2.shiver0.png",
+			"seconds": 0.22
+		}
+	],
+	"simulation_instantiated": false,
+	"source": "installed atlas and production presentation functions",
+	"viewport": [
+		1024,
+		640
+	]
+}

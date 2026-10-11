@@ -14,8 +14,8 @@ GOAL SHA256: f4d5f44f66c00f0f1d3125a3bb2fec4a4b1e39bfea9d7d53de638d3434eafbc6.
 | 4 key art | 2026-10-11T05:21:00Z | 2026-10-11T05:31:00Z |2 calls;key checkpoint STOP8/16;visual12/16+10/16;0 eligible new groups;274 Python PASS;A20 hardened/reviewed PASS |
 | 5 spacing | 2026-10-11T05:31:00Z | 2026-10-11T05:31:27Z |4 headless tests PASS;seat metadata regression/re-review PASS;windowed pending |
 | 6 cold | 2026-10-11T05:31:27Z | 2026-10-11T05:31:43Z |7 Godot+12 Python tests PASS;strict PASS;controlledcapture prepared;natural evidence pending |
-| 7 captures | 2026-10-11T05:31:43Z | | Pass6 ancestry verified;capture/measurement code frozen;pre-capture full gate next |
-| 8 measurement | | | pending |
+| 7 captures | 2026-10-11T05:31:43Z | 2026-10-11T05:55:58Z | 94 art + 13 long + calibration; controlled cold scene; pre-capture full gate37/37 |
+| 8 measurement | 2026-10-11T05:48:00Z | | final measurements and independent visual reviews |
 | 9 final | | | pending |
 
 Execution follows GOAL Parts and their dependency order. Independent code preparation may run in parallel; git mutations, atlas installation, gates and captures remain serialized. All independent visual reviews use fresh sessions without pipeline/history context.

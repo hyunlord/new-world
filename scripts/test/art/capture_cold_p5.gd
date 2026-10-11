@@ -24,6 +24,10 @@ func _run() -> void:
 		push_error("Use -- --output=/absolute/path/cold_scene.png; controlled presentation evidence only")
 		quit(2)
 		return
+	root.content_scale_size = SIZE
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
+	root.content_scale_factor = 1.0
 	root.size = SIZE
 	root.title = "Art Pass 5 controlled cold presentation test (not a natural simulation capture)"
 	_scene = Node2D.new()
@@ -88,7 +92,7 @@ func _run() -> void:
 			await RenderingServer.frame_post_draw
 			DirAccess.make_dir_recursive_absolute(destination.get_base_dir())
 			var screenshot: Image = root.get_texture().get_image()
-			if screenshot == null or screenshot.is_empty() or screenshot.save_png(destination) != OK:
+			if screenshot == null or screenshot.is_empty() or screenshot.get_size() != SIZE or screenshot.save_png(destination) != OK:
 				push_error("Controlled scene GPU screenshot failed: " + destination)
 				quit(1)
 				return

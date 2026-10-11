@@ -1,0 +1,56 @@
+{
+  "captures": [
+    {
+      "entities": "a_calib_z4.entities.json.gz",
+      "file": "a_calib_z4.png",
+      "framing": "a_calib",
+      "height": 1080,
+      "width": 1920,
+      "zoom": 4,
+      "raw_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_calib_z4.png",
+      "raw_sha256": "c202ae6ef7ceffde817c5573c92065de391b02e80f3881de7b0f20b0aa0bf45e",
+      "standard_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_calib_z4.1920.png",
+      "published_file": "a_calib_z4.jpg"
+    },
+    {
+      "entities": "a_calib_z6.entities.json.gz",
+      "file": "a_calib_z6.png",
+      "framing": "a_calib",
+      "height": 1080,
+      "width": 1920,
+      "zoom": 6,
+      "raw_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_calib_z6.png",
+      "raw_sha256": "5bcb8a5c8672651df233fa21c0f378fa898b0e93656da5447fdf6554580bb6b5",
+      "standard_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_calib_z6.1920.png",
+      "published_file": "a_calib_z6.jpg"
+    },
+    {
+      "entities": "a_lineup_z4.entities.json.gz",
+      "file": "a_lineup_z4.png",
+      "framing": "a_calib",
+      "height": 1080,
+      "width": 1920,
+      "zoom": 4,
+      "raw_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_lineup_z4.png",
+      "raw_sha256": "289eb1bf7a45039a2dc8c79bb65b9d18582063f0119ad925a13cc0076393174b",
+      "standard_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_lineup_z4.1920.png",
+      "published_file": "a_lineup_z4.jpg"
+    },
+    {
+      "entities": "a_lineup_z2.entities.json.gz",
+      "file": "a_lineup_z2.png",
+      "framing": "a_calib",
+      "height": 1080,
+      "width": 1920,
+      "zoom": 2,
+      "raw_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_lineup_z2.png",
+      "raw_sha256": "ae40723ec9d64cef1c3e4c4dd2b92cb637833b71c636dc37ef355a82a5a30a54",
+      "standard_file": "/Users/rexxa/work/art-production5-evidence/shots/calibration/a_lineup_z2.1920.png",
+      "published_file": "a_lineup_z2.jpg"
+    }
+  ],
+  "git_sha": "42f15c7e5231e788f540227e949c770d928211b2",
+  "plan": "calibration",
+  "schema_version": 2,
+  "worktree_changed_paths": 2
+}
