@@ -173,6 +173,8 @@ class Normalizer:
     std: np.ndarray
     dstd: np.ndarray
     fit_rows: int
+    lo: np.ndarray | None = None   # train minimum of every state feature
+    hi: np.ndarray | None = None   # train maximum
 
     @classmethod
     def fit(cls, eps: list[EpisodeData], variant: Variant) -> "Normalizer":
@@ -185,16 +187,18 @@ class Normalizer:
         std = rows.std(axis=0)
         dstd = deltas.std(axis=0)
         return cls(variant.state_names, variant.continuous_names, rows.mean(axis=0), np.where(std > 0, std, 1.0),
-                   np.where(dstd > 0, dstd, 1.0), int(rows.shape[0]))
+                   np.where(dstd > 0, dstd, 1.0), int(rows.shape[0]), rows.min(axis=0), rows.max(axis=0))
 
     def to_json(self) -> dict:
         return {"names": list(self.names), "continuous": list(self.continuous), "mean": self.mean.tolist(),
-                "std": self.std.tolist(), "dstd": self.dstd.tolist(), "fit_rows": self.fit_rows}
+                "std": self.std.tolist(), "dstd": self.dstd.tolist(), "fit_rows": self.fit_rows,
+                "lo": None if self.lo is None else self.lo.tolist(), "hi": None if self.hi is None else self.hi.tolist()}
 
     @classmethod
     def from_json(cls, d: dict) -> "Normalizer":
+        arr = lambda k: None if d.get(k) is None else np.array(d[k])
         return cls(tuple(d["names"]), tuple(d["continuous"]), np.array(d["mean"]), np.array(d["std"]),
-                   np.array(d["dstd"]), int(d["fit_rows"]))
+                   np.array(d["dstd"]), int(d["fit_rows"]), arr("lo"), arr("hi"))
 
 
 @dataclass
