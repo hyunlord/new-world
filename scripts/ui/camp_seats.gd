@@ -32,7 +32,7 @@ func update(hearths: Array[Vector2i], blocked: Dictionary, agents: Array[Diction
 			continue
 		var row: Dictionary = rows[agent_id]
 		var nearest: Dictionary = {}
-		var best_distance: float = 48.0 * 48.0
+		var best_distance: float = 64.0 * 64.0
 		for candidate: Dictionary in _candidates:
 			if not _eligible(row, candidate["hearth"]) or not _free(candidate["position"]):
 				continue
@@ -56,9 +56,9 @@ func _rebuild(hearths: Array[Vector2i], blocked: Dictionary) -> void:
 	for hearth: Vector2i in _hearths:
 		var feet := Vector2(456.0 + 16.0 * hearth.x, 42.0 + 16.0 * hearth.y)
 		for j: int in range(-4, 5):
-			for i: int in range(-6, 7):
-				var offset := Vector2(16 * i + 8 * posmod(j, 2), 14 * j)
-				if pow(offset.x / 88.0, 2) + pow(offset.y / 60.0, 2) > 1.0 or offset.length() < 14.0:
+			for i: int in range(-7, 8):
+				var offset := Vector2(16 * i + 8 * posmod(j, 2), 18 * j)
+				if pow(offset.x / 104.0, 2) + pow(offset.y / 72.0, 2) > 1.0 or offset.length() < 16.0:
 					continue
 				var point: Vector2 = feet + offset
 				var tile := Vector2i(((point - Vector2(456, 42)) / 16.0).round())
@@ -78,7 +78,7 @@ func _rebuild(hearths: Array[Vector2i], blocked: Dictionary) -> void:
 
 func _free(point: Vector2) -> bool:
 	for seat: Dictionary in _assignments.values():
-		if point.distance_squared_to(seat["position"]) < 14.0 * 14.0:
+		if point.distance_squared_to(seat["position"]) < 16.0 * 16.0:
 			return false
 	return true
 
@@ -87,10 +87,10 @@ static func _eligible(row: Dictionary, hearth: Vector2i) -> bool:
 		return false
 	if float(row.get("stationary_seconds", 0.0)) < 0.3:
 		return false
-	if not bool(row.get("meal", false)) and str(row.get("pose", "")) not in ["idle", "sit", "hop"]:
+	if not bool(row.get("meal", false)) and str(row.get("pose", "")) not in ["idle", "sit", "hop", "crossed"]:
 		return false
 	var delta: Vector2i = (row["tile"] as Vector2i) - hearth
-	return maxi(absi(delta.x), absi(delta.y)) <= 4
+	return maxi(absi(delta.x), absi(delta.y)) <= 6
 
 static func _tile_before(a: Vector2i, b: Vector2i) -> bool:
 	return a.y < b.y if a.y != b.y else a.x < b.x
@@ -119,3 +119,75 @@ static func spread_offsets(agents: Array[Dictionary], seated: Dictionary) -> Dic
 						offset = Vector2.from_angle(TAU * float(rank) / float(ids.size())) * 7.0
 			result[int(ids[rank])] = offset
 	return result
+
+## Rects are manifest canvas rectangles relative to each agent's feet.
+## Only drawing targets change; simulation positions remain untouched.
+static func declump(rows: Array[Dictionary], seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
+	var ordered: Array[Dictionary] = []
+	for row: Dictionary in rows:
+		var agent_id: int = int(row["id"])
+		if bool(row.get("visible", false)) and targets.has(agent_id) and rects.has(agent_id):
+			ordered.append(row)
+	ordered.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var ay: float = (targets[int(a["id"])] as Vector2).y
+		var by: float = (targets[int(b["id"])] as Vector2).y
+		return ay > by if ay != by else int(a["id"]) > int(b["id"])
+	)
+	var fronts: Array[Dictionary] = []
+	var result: Dictionary = {}
+	for row: Dictionary in ordered:
+		var agent_id: int = int(row["id"])
+		var target: Vector2 = targets[agent_id]
+		var local_rect: Rect2 = rects[agent_id]
+		var offset := Vector2.ZERO
+		if not bool(row.get("moving", true)) and not seated.has(agent_id):
+			if _covered(Rect2(target + local_rect.position, local_rect.size), fronts) >= 0.30:
+				var nearest: Vector2 = target
+				var distance: float = INF
+				for front: Dictionary in fronts:
+					var front_target: Vector2 = front["target"]
+					var candidate_distance: float = target.distance_squared_to(front_target)
+					if candidate_distance < distance:
+						distance = candidate_distance
+						nearest = front_target
+				var side: float = 1.0 if target.x > nearest.x else -1.0
+				if target.x == nearest.x:
+					side = 1.0 if posmod(agent_id, 2) == 0 else -1.0
+				var best_coverage: float = INF
+				var found: bool = false
+				for magnitude: int in range(1, 9):
+					for direction: float in [side, -side]:
+						var shift := Vector2(direction * magnitude, 0.0)
+						if not _declump_allowed(target + shift, terrain, blocked):
+							continue
+						var coverage: float = _covered(Rect2(target + shift + local_rect.position, local_rect.size), fronts)
+						if coverage < best_coverage:
+							best_coverage = coverage
+							offset = shift
+						if coverage < 0.30:
+							found = true
+							break
+					if found:
+						break
+			result[agent_id] = offset
+		fronts.append({"target": target + offset, "rect": Rect2(target + offset + local_rect.position, local_rect.size)})
+	return result
+
+static func _covered(rect: Rect2, fronts: Array[Dictionary]) -> float:
+	var area: float = rect.get_area()
+	if area <= 0.0:
+		return 0.0
+	var overlap: float = 0.0
+	for front: Dictionary in fronts:
+		overlap += rect.intersection(front["rect"]).get_area()
+	return minf(overlap / area, 1.0)
+
+static func _declump_allowed(point: Vector2, terrain: Dictionary, blocked: Dictionary) -> bool:
+	var tile := Vector2i(((point - Vector2(456, 42)) / 16.0).round())
+	if blocked.has(tile):
+		return false
+	var width: int = int(terrain.get("width", 0))
+	var height: int = int(terrain.get("height", 0))
+	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
+	var index: int = tile.y * width + tile.x
+	return tile.x >= 0 and tile.x < width and tile.y >= 0 and tile.y < height and index < cells.size() and cells[index] != 4

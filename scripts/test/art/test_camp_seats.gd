@@ -21,10 +21,10 @@ func _initialize() -> void:
 	var assigned: Dictionary = seats.update(hearths, {}, rows)
 	check(assigned.size() == 41, "41 idle villagers on five camp tiles all receive seats: %d" % assigned.size())
 	for first: int in assigned:
-		check((assigned[first] as Vector2).distance_to(rows[first - 1]["ipos"]) <= 48.0, "assigned seat remains within 48 pixels")
+		check((assigned[first] as Vector2).distance_to(rows[first - 1]["ipos"]) <= 64.0, "assigned seat remains within 64 pixels")
 		for second: int in assigned:
 			if first < second:
-				check((assigned[first] as Vector2).distance_to(assigned[second]) >= 14.0, "all seats are at least 14 pixels apart")
+				check((assigned[first] as Vector2).distance_to(assigned[second]) >= 16.0, "all seats are at least 16 pixels apart")
 	var fresh = Seats.new()
 	var reversed: Array[Dictionary] = rows.duplicate(true)
 	reversed.reverse()
@@ -55,11 +55,17 @@ func _initialize() -> void:
 	lone[0]["visible"] = false
 	check(seats.update(hearths, {}, lone).is_empty(), "invisible agents release seats")
 	lone[0]["visible"] = true
-	lone[0]["tile"] = Vector2i(15, 10)
-	check(seats.update(hearths, {}, lone).is_empty(), "simulation distance over four tiles is ineligible")
+	lone[0]["tile"] = Vector2i(16, 10)
+	lone[0]["ipos"] = Vector2(456, 42) + Vector2(16, 10) * 16.0
+	check(seats.update(hearths, {}, lone).has(99), "six-tile eligibility includes the boundary")
+	lone[0]["pose"] = "crossed"
+	lone[0]["meal"] = false
+	check(seats.update(hearths, {}, lone).has(99), "cold crossed pose keeps its seat")
+	lone[0]["tile"] = Vector2i(17, 10)
+	check(seats.update(hearths, {}, lone).is_empty(), "simulation distance over six tiles is ineligible")
 	lone[0]["tile"] = Vector2i(11, 10)
 	lone[0]["ipos"] = Vector2(-999, -999)
-	check(seats.update(hearths, {}, lone).is_empty(), "no assignment beyond 48 pixels")
+	check(seats.update(hearths, {}, lone).is_empty(), "no assignment beyond 64 pixels")
 	_test_ties_and_arrivals()
 	_test_spread()
 	print("CAMP SEATS %s: 41 villagers, separation, persistence, eligibility, rebuild, spread" % ("PASS" if failures == 0 else "FAIL"))

@@ -12,7 +12,7 @@ GOAL SHA256: f4d5f44f66c00f0f1d3125a3bb2fec4a4b1e39bfea9d7d53de638d3434eafbc6.
 | 2 variety | 2026-10-11T05:01:30Z | 2026-10-11T05:05:00Z | exact ramps;52 Python+3 Godot tests PASS;pixel capture pending |
 | 3 masks | 2026-10-11T05:01:30Z | 2026-10-11T05:21:00Z | 60/105 frame approvals;8 wood frames+15 installed masks;14 status restorations;A20 PASS |
 | 4 key art | 2026-10-11T05:21:00Z | 2026-10-11T05:32:00Z |2 calls;key checkpoint STOP8/16;visual12/16+10/16;0 eligible new groups;274 Python PASS;A20 hardened/reviewed PASS |
-| 5 spacing | | | pending |
+| 5 spacing | 2026-10-11T05:32:00Z | 2026-10-11T05:33:00Z |4 headless tests PASS;seat metadata regression/re-review PASS;windowed pending |
 | 6 cold | | | pending |
 | 7 captures | | | pending |
 | 8 measurement | | | pending |

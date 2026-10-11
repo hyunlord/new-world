@@ -1,0 +1,101 @@
+extends SceneTree
+const Seats = preload("res://scripts/ui/camp_seats.gd")
+const Renderer = preload("res://scripts/ui/agent_renderer.gd")
+var failures: int = 0
+
+func check(ok: bool, message: String) -> void:
+	if not ok:
+		push_error(message)
+		failures += 1
+
+func _initialize() -> void:
+	var cells := PackedByteArray()
+	cells.resize(64 * 64)
+	var terrain: Dictionary = {"width": 64, "height": 64, "terrain": cells}
+	var feet := Vector2(456, 42) + Vector2(30, 30) * 16.0
+	var rows: Array[Dictionary] = [
+		{"id": 2, "visible": true, "moving": false},
+		{"id": 3, "visible": true, "moving": false}]
+	var targets: Dictionary = {2: feet, 3: feet + Vector2(0, 16)}
+	var rects: Dictionary = {2: Rect2(-8, -29, 16, 30), 3: Rect2(-8, -29, 16, 30)}
+	var offsets: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	check(offsets[2] == Vector2(6, 0), "equal x even ID tries right first and takes first shift below threshold")
+	check(offsets[3] == Vector2.ZERO, "frontmost villager remains still")
+	check(_coverage(targets, rects, offsets) < 0.30, "vertically adjacent same-x villagers end below 0.30")
+	var reversed: Array[Dictionary] = rows.duplicate(true)
+	reversed.reverse()
+	check(Seats.declump(reversed, {}, targets, terrain, {}, rects) == offsets, "same input and reordered rows produce identical offsets")
+	rows[0]["moving"] = true
+	check(not Seats.declump(rows, {}, targets, terrain, {}, rects).has(2), "moving villagers never shift")
+	rows[0]["moving"] = false
+	check(not Seats.declump(rows, {2: feet}, targets, terrain, {}, rects).has(2), "seated villagers never shift")
+	check(Seats.declump(rows, {3: targets[3]}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "seated front villagers still occlude")
+	rows[1]["moving"] = true
+	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(6, 0), "moving front villagers still occlude")
+	rows[1]["moving"] = false
+	rows[1]["visible"] = false
+	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2.ZERO, "hidden villagers do not occlude")
+	rows[1]["visible"] = true
+	# At a tile's right edge every positive shift enters the water tile.
+	targets[2] = feet + Vector2(7, 0)
+	targets[3] = feet + Vector2(7, 16)
+	cells[30 * 64 + 31] = 4
+	terrain["terrain"] = cells
+	var wet: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	check(wet[2] == Vector2(-6, 0), "water anywhere on map forces the other side")
+	check(_coverage(targets, rects, wet) < 0.30, "water avoidance still reaches coverage threshold")
+	cells[30 * 64 + 31] = 0
+	terrain["terrain"] = cells
+	check(Seats.declump(rows, {}, targets, terrain, {Vector2i(31, 30): true}, rects)[2] == Vector2(-6, 0), "obstructed feet tiles force the other side")
+	check(Seats.declump(rows, {}, targets, terrain, {Vector2i(30, 30): true, Vector2i(31, 30): true}, rects)[2] == Vector2.ZERO, "all shifts blocked returns zero")
+	# Wide overlapping frames cannot reach threshold within eight pixels.
+	rects[2] = Rect2(-24, -29, 48, 30)
+	rects[3] = Rect2(-24, -29, 48, 30)
+	check(Seats.declump(rows, {}, targets, terrain, {}, rects)[2] == Vector2(8, 0), "unreachable threshold chooses allowed minimum coverage")
+	targets[2] = feet + Vector2(-1, 0)
+	targets[3] = feet + Vector2(0, 16)
+	check((Seats.declump(rows, {}, targets, terrain, {}, rects)[2] as Vector2).x < 0, "first side points away from nearest front agent")
+	_test_order_and_final_targets(terrain, feet)
+	_test_renderer(terrain, feet)
+	print("DECLUMP %s: coverage, water, obstacles, exclusions, deterministic order, final front targets" % ("PASS" if failures == 0 else "FAIL"))
+	quit(1 if failures else 0)
+
+func _coverage(targets: Dictionary, rects: Dictionary, offsets: Dictionary) -> float:
+	var back: Rect2 = rects[2]
+	var front: Rect2 = rects[3]
+	back.position += Vector2(targets[2]) + Vector2(offsets.get(2, Vector2.ZERO))
+	front.position += Vector2(targets[3]) + Vector2(offsets.get(3, Vector2.ZERO))
+	return back.intersection(front).get_area() / back.get_area()
+
+func _test_order_and_final_targets(terrain: Dictionary, feet: Vector2) -> void:
+	var rows: Array[Dictionary] = [
+		{"id": 1, "visible": true, "moving": false},
+		{"id": 2, "visible": true, "moving": false},
+		{"id": 3, "visible": true, "moving": false}]
+	var targets: Dictionary = {1: feet, 2: feet, 3: feet}
+	var rects: Dictionary = {1: Rect2(-4, -29, 8, 30), 2: Rect2(-4, -29, 8, 30), 3: Rect2(-4, -29, 8, 30)}
+	var offsets: Dictionary = Seats.declump(rows, {}, targets, terrain, {}, rects)
+	check(offsets[3] == Vector2.ZERO, "equal-y higher ID is frontmost")
+	check(offsets[2] == Vector2(6, 0), "middle ID moves right")
+	check(offsets[1] == Vector2(-6, 0), "rear odd ID chooses left against already-shifted fronts")
+
+func _test_renderer(terrain: Dictionary, feet: Vector2) -> void:
+	var renderer = Renderer.new()
+	var rows: Array[Dictionary] = []
+	for agent_id: int in [2, 3]:
+		var sprite := Sprite2D.new()
+		sprite.set_meta("frame_size", Vector2i(16, 30))
+		sprite.set_meta("anchor", Vector2(8, 29))
+		renderer._sprites[agent_id] = sprite
+		var tile := Vector2i(30, 30 + agent_id - 2)
+		rows.append({"id": agent_id, "ipos": feet + Vector2(0, (agent_id - 2) * 16), "tile": tile, "visible": true, "moving": false})
+	var context: Dictionary = {"hearths": [], "seat_blocked": {}, "terrain": terrain}
+	renderer._apply_drawn_positions(rows, context, 1.15)
+	var back: Sprite2D = renderer._sprites[2]
+	check(back.position == feet + Vector2(6, 0), "renderer applies declump using manifest metadata without a GPU texture")
+	check(back.get_meta("declump_offset") == Vector2(6, 0), "capture metadata exposes applied declump target")
+	check(back.get_meta("drawn_target") == feet + Vector2(6, 0), "capture metadata exposes final target")
+	check(rows[0]["ipos"] == feet, "declump never modifies simulation position")
+	for sprite: Sprite2D in renderer._sprites.values():
+		sprite.free()
+	renderer.free()

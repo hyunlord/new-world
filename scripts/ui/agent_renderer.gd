@@ -473,16 +473,31 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
 	# Only seat-adjacent terrain matters; never scan the whole world per frame.
 	for hearth: Vector2i in hearths:
-		for y: int in range(hearth.y - 4, hearth.y + 5):
-			for x: int in range(hearth.x - 6, hearth.x + 7):
+		for y: int in range(hearth.y - 5, hearth.y + 6):
+			for x: int in range(hearth.x - 7, hearth.x + 8):
 				var index: int = y * width + x
 				if x < 0 or x >= width or y < 0 or y >= height or index >= cells.size() or cells[index] == 4:
 					blocked[Vector2i(x, y)] = true
 	var seats: Dictionary = _camp_seats.update(hearths, blocked, agents)
 	var spread: Dictionary = CampSeatsScript.spread_offsets(agents, seats)
+	var targets: Dictionary = {}
+	var rects: Dictionary = {}
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
-		var target: Vector2 = seats.get(agent_id, Vector2(row["ipos"]) + Vector2(spread.get(agent_id, Vector2.ZERO)))
+		targets[agent_id] = seats.get(agent_id, Vector2(row["ipos"]) + Vector2(spread.get(agent_id, Vector2.ZERO)))
+		var sprite: Sprite2D = _sprites[agent_id]
+		var size: Vector2 = Vector2(sprite.get_meta("frame_size", Vector2i.ZERO))
+		var anchor: Vector2 = sprite.get_meta("anchor", Vector2.ZERO)
+		var origin: Vector2 = -anchor
+		if sprite.flip_h:
+			origin.x = anchor.x - size.x
+		if sprite.flip_v:
+			origin.y = anchor.y - size.y
+		rects[agent_id] = Rect2(origin, size)
+	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects)
+	for row: Dictionary in agents:
+		var agent_id: int = int(row["id"])
+		var target: Vector2 = Vector2(targets[agent_id]) + Vector2(declump.get(agent_id, Vector2.ZERO))
 		var drawn: Vector2 = _drawn_positions.get(agent_id, target)
 		drawn += (target - drawn) * (1.0 - exp(-delta / 0.08))
 		if drawn.distance_to(target) < 0.5:
@@ -492,6 +507,13 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		sprite.position = drawn.round()
 		sprite.set_meta("drawn_position", sprite.position)
 		sprite.set_meta("seated", seats.has(agent_id))
+		if seats.has(agent_id):
+			sprite.set_meta("seat", seats[agent_id])
+		elif sprite.has_meta("seat"):
+			sprite.remove_meta("seat")
+		sprite.set_meta("drawn_target", target)
+		sprite.set_meta("spread_offset", spread.get(agent_id, Vector2.ZERO))
+		sprite.set_meta("declump_offset", declump.get(agent_id, Vector2.ZERO))
 
 func has_drawn_position(agent_id: int) -> bool:
 	return _drawn_positions.has(agent_id)

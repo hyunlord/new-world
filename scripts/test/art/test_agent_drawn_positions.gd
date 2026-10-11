@@ -34,6 +34,7 @@ func _initialize() -> void:
 	context["seat_blocked"] = {}
 	renderer._apply_drawn_positions(rows, context, 1.15)
 	check(sprite.get_meta("seated"), "terrain change rebuilds blocked seats")
+	check(sprite.has_meta("seat") and sprite.get_meta("seat") == sprite.get_meta("drawn_target"), "capture records the persistent seat coordinate")
 	sprite.free()
 	renderer.free()
 	print("agent drawn positions: %d failures" % failures)
