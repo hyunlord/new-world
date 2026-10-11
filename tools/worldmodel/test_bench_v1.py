@@ -141,21 +141,22 @@ class BenchV1Tests(unittest.TestCase):
         ag["state_tag"][:, 1] = np.arange(n_rows) % 2  # agent 1 alternates its state
         ag["hunger"][:, 0] = np.arange(n_rows) * 2.0
         ag["alive"][25, 1] = False                    # agent 1 dead at row 25: pairs with it are dropped
+        ag["alive"][:3, 0] = False                    # agent 0 born at row 3 (review round 2, R2-4: the t-23 term)
         e = ep_from(b.episode_arrays(fake_episode()))
         e.agents = ag
         s = b.t5_scores([e])
         p = s["persistence"]
-        # One pair set for both baselines: alive at t+1, t and t-23 (t = 23..28); agent 1 is dead at row 25, so its
-        # pairs with t = 24 and t = 25 are dropped: 12 - 2 = 10 pairs.
-        pairs = 2 * (n_rows - 1 - 23) - 2
+        # One pair set for both baselines: alive at t+1, t and t-23 (t = 23..28). Agent 1 is dead at row 25 (t = 24
+        # and 25 dropped); agent 0 is born at row 3, so t - 23 < 3 drops t = 23, 24, 25: 12 - 2 - 3 = 7 pairs.
+        pairs = 2 * (n_rows - 1 - 23) - 2 - 3
         self.assertEqual(p["n"], pairs)
-        self.assertAlmostEqual(p["position_chebyshev_mean"], (n_rows - 1 - 23) / pairs)
-        self.assertAlmostEqual(p["state_tag_accuracy"], (n_rows - 1 - 23) / pairs)
+        self.assertAlmostEqual(p["position_chebyshev_mean"], 3 / pairs, msg="agent 0 keeps t = 26, 27, 28")
+        self.assertAlmostEqual(p["state_tag_accuracy"], 3 / pairs)
         self.assertEqual(p["target_kind_accuracy"], 1.0)
         self.assertIsNone(p["thirst_nmae"], "constant thirst: std 0")
         d = s["day_earlier"]
         self.assertEqual(d["n"], pairs, "the same pairs as persistence")
-        self.assertAlmostEqual(d["position_chebyshev_mean"], 24 * 6 / pairs, msg="agent 0 moved 24 tiles in a day")
+        self.assertAlmostEqual(d["position_chebyshev_mean"], 24 * 3 / pairs, msg="agent 0 moved 24 tiles in a day")
         self.assertEqual(d["state_tag_accuracy"], 1.0, "an even lag sees the same alternation phase")
         # The same denominator: hunger nMAE scales with the error (2 per hour vs 48 per day) on the same pairs.
         self.assertAlmostEqual(d["hunger_nmae"], 24 * p["hunger_nmae"])

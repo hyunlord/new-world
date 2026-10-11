@@ -7,7 +7,8 @@ usage: bench_v1.py [--root WM_DATA_ROOT] [--out docs/worldmodel] [--manifest doc
 Changes from v0 (`bench_v0.py`):
 - **Inputs are observable fields only** (`Episode.observable`, recorder schema 2): `winter_severity`, the night
   burn, the day's fall, `wood_target` and `latent.npy` are never inputs. A "severity oracle" variant of the ridge
-  (and of the T3/T3b baselines) reads the hidden severity and is labelled as an upper reference.
+  (and of the T3/T3b baselines) reads the hidden severity and is labelled as a reference; for these linear
+  baselines it is not an upper bound (review round 2, R2-1).
 - T1 as v0. T2 starts at every hour of one-based days 3, 10, 17, ... (24 starts per start day), horizons 24 h
   and 168 h; v0's 06:00-only number is reported beside it.
 - T3 as v0 ("arithmetic: 18:00 stock vs tonight's rate", whose rule needs the hidden severity, so it is an
@@ -321,14 +322,29 @@ def t3b(train, val, test) -> dict:
     x = {k: np.array([o["x"] for o in v], dtype=float) for k, v in rows.items()}
     y = {k: np.array([o["dark"] for o in v], dtype=float) for k, v in rows.items()}
     sev = {k: np.array([o["severity"] for o in v]) for k, v in rows.items()}
-    best = None
-    lam_scores = {}
-    for lam in LAMBDAS:
-        model = Ridge().fit(x["train"], y["train"][:, None], lam)
-        score = float(np.abs(model.predict(x["val"])[:, 0] - y["val"]).mean())
-        lam_scores[str(lam)] = score
-        if best is None or score < best[0]:
-            best = (score, lam, model)
+    def fit(columns):
+        """Ridge on the feature columns `columns`, λ chosen on val by MAE: (λ, model, val scores)."""
+        best, scores = None, {}
+        for lam in LAMBDAS:
+            model = Ridge().fit(x["train"][:, columns], y["train"][:, None], lam)
+            score = float(np.abs(model.predict(x["val"][:, columns])[:, 0] - y["val"]).mean())
+            scores[str(lam)] = score
+            if best is None or score < best[0]:
+                best = (score, lam, model)
+        return best[1], best[2], scores
+
+    all_columns = list(range(len(T3B_FEATURES)))
+    lam, model, lam_scores = fit(all_columns)
+    best = (None, lam, model)
+    # Review round 2 (R2-2): which observable features carry the outlook.
+    drops = [T3B_FEATURES.index("drop_last_night"), T3B_FEATURES.index("drop_night_before")]
+    ablation = {}
+    for name, columns in (("without_stock_drops", [c for c in all_columns if c not in drops]), ("stock_drops_only", drops),
+                          ("stock_and_deadwood_only", [T3B_FEATURES.index(f) for f in ("wood_stock", "deadwood_total",
+                                                                                        "deadwood_change_1", "deadwood_change_2")])):
+        _, m, _ = fit(columns)
+        ablation[name] = {"features": [T3B_FEATURES[c] for c in columns],
+                          **t3b_scores(m.predict(x["test"][:, columns])[:, 0], y["test"])}
     mean = float(y["train"].mean())
     per_sev = {level: float(y["train"][sev["train"] == level].mean()) if np.any(sev["train"] == level) else mean
                for level in (0, 1, 2)}
@@ -340,7 +356,7 @@ def t3b(train, val, test) -> dict:
             "severity_oracle_reference": t3b_scores(oracle, y["test"]),
             "lambda": best[1], "val_scores": lam_scores, "features": list(T3B_FEATURES),
             "train_n": int(len(y["train"])), "test_dark_by_severity": hist, "train_mean_value": mean,
-            "oracle_means": {str(k): v for k, v in per_sev.items()}}
+            "oracle_means": {str(k): v for k, v in per_sev.items()}, "ablation": ablation}
 
 
 # ------------------------------------------------------------------ T4 ------------------------------------------
@@ -468,6 +484,12 @@ def run(root: Path, manifest: dict, burn, hours: int, skip_t5: bool = False) -> 
     report["T3"] = {"rule_severity_oracle": t3_scores(rule, y_test),
                     "logistic_observable": t3_scores(obs.predict(t3_observable_design(test_rows)), y_test),
                     "logistic_severity_oracle": t3_scores(oracle.predict(t3_oracle_design(test_rows)), y_test),
+                    # Review round 2 (R2-2): the 18:00 stock alone, and the observable design without last night's drop.
+                    "logistic_stock_only": t3_scores(Logistic().fit(t3_observable_design(train_rows)[:, :1], y_train)
+                                                     .predict(t3_observable_design(test_rows)[:, :1]), y_test),
+                    "logistic_observable_without_last_drop": t3_scores(
+                        Logistic().fit(np.delete(t3_observable_design(train_rows), 4, axis=1), y_train)
+                        .predict(np.delete(t3_observable_design(test_rows), 4, axis=1)), y_test),
                     "base_rate_train": float(y_train.mean()), "train_n": int(len(y_train))}
     report["T3b"] = t3b(a_train, a_val, a_test)
     cf = data.get("C_cf", [])
@@ -518,8 +540,9 @@ def markdown(r: dict, v0: dict | None) -> str:
              "(lower is better) unless stated.", "",
              "**Inputs are observable fields only** (`wm_data.Episode.observable`): `winter_severity`, "
              "`night_burn_per_hour`, `winter_fall_today`, `wood_target` and `latent.npy` are never inputs. Rows marked "
-             "*reference* read the hidden severity (an oracle) and bound what reading the weather is worth; they are not "
-             "numbers to beat.", "",
+             "*reference* read the hidden severity (an oracle); they are not numbers to beat. For these linear baselines "
+             "they are not an upper bound either: a severity one-hot only shifts a linear model's hourly change, and the "
+             "tables show it adds nothing measurable (see *Reading the numbers*).", "",
              f"Episodes: {json.dumps(r['counts'])}. Ridge λ chosen on validation: {json.dumps(lam)}.", "",
              "Variables V: " + ", ".join(f"`{x}`" for x in v) + ".", "",
              "## T1 — next hour", "", "Predict V at row t+1 from rows up to t. Train: A train (action-aware: A + B train).", ""]
@@ -670,34 +693,43 @@ def to_beat(r: dict) -> str:
 
 
 def reading(r: dict, v0: dict | None) -> str:
-    """Notes on what the numbers say, filled from the report."""
-    b, t3 = r["T3b"], r["T3"]["logistic_observable"]
+    """Notes on what the numbers say, filled from the report (review round 2: every claim is measured here)."""
+    b, t3 = r["T3b"], r["T3"]
     t2 = r["T2"]
-    a = lambda h, mode, name: mean_of(t2[h][mode]["A_test"][name])
+    a = lambda h, mode, name, split="A_test": mean_of(t2[h][mode][split][name])
+    ab = b["ablation"]
+    oracle_worse = [split for split in t2["168"]["every_hour"]
+                    if a("168", "every_hour", "ridge_severity_oracle", split) > a("168", "every_hour", "ridge", split)]
     lines = ["## Reading the numbers", "",
-             f"- **T3b is the task that needs the hidden weather inferred.** The observable ridge (stock, deadwood, the two "
-             f"previous nights' stock drops, the deadwood changes, members) reaches MAE {b['ridge']['mae']:.3f} against the "
-             f"train mean's {b['train_mean']['mae']:.3f}; the severity oracle (each severity's mean) reaches "
-             f"{b['severity_oracle_reference']['mae']:.3f}. Two observed nights of burning say about as much about the next "
-             "five as the hidden severity label does, because the night draws make the label an incomplete description of "
-             "the winter. A model should beat both.",
-             f"- **T3 stays nearly arithmetic** (observable logistic AUC {t3['auc']:.3f}): the fire burns only stockpile wood "
-             "from 18:00, so the 02:00 state follows from the 18:00 stock and the night's rate, and last night's stock drop "
-             "reveals the rate. It is kept for comparison with v0 and labelled so.",
+             f"- **T3b needs the winter inferred.** The observable ridge reaches MAE {b['ridge']['mae']:.3f} against the train "
+             f"mean's {b['train_mean']['mae']:.3f}, level with the severity oracle ({b['severity_oracle_reference']['mae']:.3f}). "
+             f"Ablation (same splits and λ grid): without the two stock-drop features {ab['without_stock_drops']['mae']:.3f}, "
+             f"stock and deadwood level and changes alone {ab['stock_and_deadwood_only']['mae']:.3f}, the two stock drops "
+             f"alone {ab['stock_drops_only']['mae']:.3f}. The signal a linear model finds is in the stock and the deadwood "
+             "(whose daily fall is the other drawn quantity), not in last nights' burning. A model should beat the ridge "
+             "and the oracle.",
+             f"- **T3 stays nearly arithmetic**: the 18:00 stock alone gives AUC {t3['logistic_stock_only']['auc']:.3f} "
+             f"(observable logistic {t3['logistic_observable']['auc']:.3f}; without last night's drop "
+             f"{t3['logistic_observable_without_last_drop']['auc']:.3f}). The fire burns only stockpile wood from 18:00, so "
+             "the 02:00 state follows mostly from the 18:00 stock. Kept for comparison with v0 and labelled so.",
              f"- **T2 at 168 h** (A test, every-hour starts): ridge {a('168', 'every_hour', 'ridge'):.3f}, action ridge "
              f"{a('168', 'every_hour', 'ridge_action'):.3f}, severity oracle {a('168', 'every_hour', 'ridge_severity_oracle'):.3f} "
-             f"(reads each rollout row's true severity), persistence {a('168', 'every_hour', 'persistence'):.3f}."]
+             f"(reads each rollout row's true severity), persistence {a('168', 'every_hour', 'persistence'):.3f}. The oracle "
+             f"is worse than the plain ridge in {len(oracle_worse)} of {len(t2['168']['every_hour'])} test splits"
+             + (": knowing the severity buys a linear model nothing here." if len(oracle_worse) * 2 >= len(t2["168"]["every_hour"])
+                else ".")]
     if v0:
         lines.append(f"  v0's ridge read the severity as an input and held the start row's value through the rollout; its 168 h "
-                     f"A-test number was {mean_of(v0['T2']['168']['A_test']['ridge']):.3f} (persistence "
-                     f"{mean_of(v0['T2']['168']['A_test']['persistence']):.3f}). In a first v1 run the oracle was built the same way "
-                     "(start row's severity held) and scored 0.691, worse than persistence, while the same oracle reading each "
-                     "row's severity scores as above: holding a seasonal label constant across a season boundary pushes a "
-                     "rollout off its training distribution, which is a likely reason v0's 168 h ridge stayed near persistence "
+                     f"A-test number (06:00 starts) was {mean_of(v0['T2']['168']['A_test']['ridge']):.3f} (persistence "
+                     f"{mean_of(v0['T2']['168']['A_test']['persistence']):.3f}). In a first v1 run the oracle was built the same "
+                     "way and scored 0.643 at 06:00 starts (persistence 0.550) and 0.691 at every-hour starts (persistence "
+                     "0.639), first-run numbers recorded in METRICS: holding a seasonal label constant across a season boundary "
+                     "pushes a rollout off its training distribution, a likely reason v0's 168 h ridge stayed near persistence "
                      "(not re-measured on v0, whose bench is frozen).")
     lines += [f"- Every-hour starts make T2 at 24 h harder than v0's 06:00-only protocol (A test best "
               f"{best_of(t2['24']['every_hour']['A_test'])[0]:.3f} against {best_of(t2['24']['0600_only']['A_test'])[0]:.3f}): "
-              "06:00 is the quietest hour (`cold_members` and `adults_working` are 0 then).",
+              "06:00 falls in the quiet early-morning hours (`adults_working` is 0 from 04:00 to 06:00, and at A test's "
+              "06:00 start rows `cold_members` is also 0), while the late-morning hours are the busiest.",
               "- At whole-day horizons `daily_naive` equals `persistence` (v0's definition, kept for comparability).",
               "- T3's oracle rule reads tonight's rate as `--burn` × 13 (`2,3,4`, `game_v14()`'s severity burns, given on the "
               "command line because the recorder's meta has no rules block); it must be updated if those burns change.", ""]

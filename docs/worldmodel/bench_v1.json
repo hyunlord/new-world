@@ -1064,10 +1064,24 @@
    "n": 448,
    "positives": 64
   },
+  "logistic_observable_without_last_drop": {
+   "accuracy": 0.9754464285714286,
+   "auc": 0.9936116536458334,
+   "brier": 0.019910035204082164,
+   "n": 448,
+   "positives": 64
+  },
   "logistic_severity_oracle": {
    "accuracy": 0.9732142857142857,
    "auc": 0.9953409830729166,
    "brier": 0.02078698288040515,
+   "n": 448,
+   "positives": 64
+  },
+  "logistic_stock_only": {
+   "accuracy": 0.9709821428571429,
+   "auc": 0.9936116536458334,
+   "brier": 0.02323976162832529,
    "n": 448,
    "positives": 64
   },
@@ -1081,6 +1095,40 @@
   "train_n": 2688
  },
  "T3b": {
+  "ablation": {
+   "stock_and_deadwood_only": {
+    "exact_accuracy": 0.53125,
+    "features": [
+     "wood_stock",
+     "deadwood_total",
+     "deadwood_change_1",
+     "deadwood_change_2"
+    ],
+    "mae": 0.6012664521603782,
+    "n": 64
+   },
+   "stock_drops_only": {
+    "exact_accuracy": 0.5,
+    "features": [
+     "drop_last_night",
+     "drop_night_before"
+    ],
+    "mae": 0.7371142518751594,
+    "n": 64
+   },
+   "without_stock_drops": {
+    "exact_accuracy": 0.53125,
+    "features": [
+     "wood_stock",
+     "deadwood_total",
+     "deadwood_change_1",
+     "deadwood_change_2",
+     "members"
+    ],
+    "mae": 0.6049078590420174,
+    "n": 64
+   }
+  },
   "features": [
    "wood_stock",
    "deadwood_total",
@@ -1098,7 +1146,7 @@
   },
   "ridge": {
    "exact_accuracy": 0.515625,
-   "mae": 0.5999730699677928,
+   "mae": 0.5999730699677926,
    "n": 64
   },
   "severity_oracle_reference": {
@@ -1140,10 +1188,10 @@
   "train_mean_value": 1.0703125,
   "train_n": 384,
   "val_scores": {
-   "0.1": 0.585540038617794,
-   "1.0": 0.5855227475843565,
-   "10.0": 0.5857770193555552,
-   "100.0": 0.606404403632578
+   "0.1": 0.5855400386177938,
+   "1.0": 0.5855227475843563,
+   "10.0": 0.5857770193555549,
+   "100.0": 0.6064044036325782
   }
  },
  "T4": {
