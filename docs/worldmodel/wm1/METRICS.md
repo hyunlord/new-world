@@ -17,7 +17,7 @@ Test roles, OOD_v12, OOD_long and C_cf test are evaluated once per configuration
 | M1-sevon-noact | M1 GRU | sev-on, action-blind | 0 | `m1gru_sevon_ab_s0` |
 | M1-main rerun (W7) | M1 GRU | sev-blind, action-aware | 0 (same seed) | `m1gru_main_s0_rerun` |
 | M1b | causal transformer | sev-blind, action-aware | 0 | `m1tf_main_s0` (optional, drop order) |
-| M2 | agent model | — | 0 | `m2_s0` |
+| M2 | agent model (architecture chosen on val: set transformer `m2_set_s0`, val score 1.109, over the MLP `m2_mlp_s0`, 1.222; only the chosen one is test-evaluated) | — | 0 | `m2_set_s0` |
 | M3 | text world model (LoRA) | — | 0 | `m3_s0` (optional, first to drop) |
 
 A recipe change after a failed target (GOAL.md 0.3.7) gets a new run id suffix (`_r2`, `_r3`) and is added to
