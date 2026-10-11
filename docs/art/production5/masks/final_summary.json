@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "a/ok": 23,
+    "a/reject": 22,
+    "b/ok": 13,
+    "b/reject": 18,
+    "c/ok": 24,
+    "c/reject": 5
+  },
+  "initial_approved_retained": 54,
+  "round2_approved": 6,
+  "review_rounds": 2,
+  "raw_context_limitation": "Round1 recovery cards lacked raw at top level;76 original raw/unfitted contexts supplied later without changing earlier verdicts."
+}

@@ -21,7 +21,8 @@ from install_v4 import (InstallError, InstallPlan, InstallRequest, PlannedSprite
 from production_sheets import SHEETS
 from salvage_v4 import guard_data, guarded_candidate
 from salvage_verdicts import atomic_json, candidate_fingerprint
-from v4_contracts import WorldScale, guard_group
+from v4_contracts import FrameCandidate, FrameSpec, WorldScale, guard_chosen, guard_group
+from v3_semantics import semantic_counts
 
 DEFAULT_POOLS = (
     ('docs/art/production4/recovery/candidates.json', 'docs/art/production4/recovery/review_index.json',
@@ -42,6 +43,8 @@ def load_pools(pools: tuple[tuple[str, str, str], ...]) -> tuple[dict, dict, dic
         ledger, index, reviews = read(Path(ledger_name)), read(Path(index_name)), read(Path(review_name))
         verdicts = {r['candidate_id']: r for r in reviews['verdicts']}
         for row in ledger['candidates']:
+            if row.get('mask_scope') == 'c':
+                continue
             identity = row['id']
             if not binding_matches(row, index['candidate_fingerprints']):
                 exclusions[identity] = 'candidate_fingerprint_changed'
@@ -56,9 +59,9 @@ def load_pools(pools: tuple[tuple[str, str, str], ...]) -> tuple[dict, dict, dic
                 exclusions[identity] = 'installation_hold'
                 continue
             bindings[identity] = dict(fingerprint=candidate_fingerprint(row), review_index=index_name,
-                                      review_path=review_name)
+                                      review_path=review_name, ledger=ledger_name)
             approvals[identity] = verdicts[identity]
-            records[identity] = normalize(row, WorldScale(**ledger['scale']))
+            records[identity] = normalize(row, WorldScale(**ledger.get('scale', {})))
     return records, approvals, bindings, exclusions
 
 
@@ -80,9 +83,29 @@ def current_sprites(root: Path) -> dict[str, PlannedSprite]:
     return output
 
 
+def cross_guard(completion: Completion, current: dict[str, PlannedSprite]) -> tuple[str, ...]:
+    """Check the proposed whole group against the current world-sized drawables."""
+    final = {}
+    for target, sprite in current.items():
+        sheet, cell = target.rsplit('_', 1)
+        berry, fire = semantic_counts(sprite.native)
+        final[target] = FrameCandidate(FrameSpec(sheet, int(cell), 1, sprite.body, sprite.view,
+            sprite.activity, sprite.native.size), sprite.native, 0., 100., True, berry, fire, sprite.frame)
+    for row in completion.rows:
+        final[row.get('target_slot', row['slot_id'])] = guarded_candidate(row)
+    report = guard_chosen(
+        bushes=[final[k] for k in ('N2_01', 'N2_02', 'N2_03', 'N2_04') if k in final],
+        adults=[c for c in final.values() if c.frame.body.startswith('adult')],
+        children=[c for c in final.values() if c.frame.body == 'child'],
+        baskets=[final[k] for k in ('S2_10', 'S2_11') if k in final])
+    return report.errors
+
+
 def prepare(root: Path = Path.cwd(), output: Path = OUTPUT,
             pools: tuple[tuple[str, str, str], ...] = DEFAULT_POOLS) -> dict:
     """Freeze all ranked completions and first reviewable proposals without installation."""
+    if (output / 'adjudication.json').exists():
+        raise InstallError('Use a separate output directory; prior installation evidence is immutable')
     output.mkdir(parents=True, exist_ok=True)
     originals, approvals, bindings, exclusions = load_pools(pools)
     current = current_sprites(root)
@@ -119,7 +142,7 @@ def prepare(root: Path = Path.cwd(), output: Path = OUTPUT,
             search.append(dict(group=list(key[:3]), source=list(key[3:]), reason='no_complete_usable_set'))
         for completion in alternatives:
             identity = completion_id(completion)
-            failures = completion_guard(completion, WorldScale())
+            failures = completion_guard(completion, WorldScale()) + cross_guard(completion, current)
             old = [s for s in current.values() if (s.body, s.view, s.activity) == key[:3]]
             accepted = sum(s.qa_status == 'accepted' for s in old)
             real = len(completion.rows) - completion.copies
@@ -137,7 +160,7 @@ def prepare(root: Path = Path.cwd(), output: Path = OUTPUT,
                 row['group_guards'] = report
                 all_records[row['id']] = row
             ranked[key[:3]].append(completion)
-    for ledger_name, _, _ in pools:
+    for ledger_name, _, _ in tuple(dict.fromkeys((*DEFAULT_POOLS, *pools))):
         for row in read(Path(ledger_name)).get('lineage_candidates', []):
             all_records.setdefault(row['id'], row)
     proposals = []
@@ -169,6 +192,10 @@ def finalize(root: Path = Path.cwd(), output: Path = OUTPUT) -> tuple[InstallPla
     ledger_path = output / 'installer_candidates.json'
     ledger = read(ledger_path)
     for original_id, binding in search['original_bindings'].items():
+        if binding.get('ledger'):
+            original = next(r for r in read(Path(binding['ledger']))['candidates'] if r['id'] == original_id)
+            if candidate_fingerprint(original) != binding['fingerprint']:
+                raise InstallError(f'Original candidate pixels changed: {original_id}')
         index = read(Path(binding['review_index']))
         if index['candidate_fingerprints'].get(original_id) != binding['fingerprint']:
             raise InstallError(f'Original review binding changed: {original_id}')
@@ -201,7 +228,9 @@ def finalize(root: Path = Path.cwd(), output: Path = OUTPUT) -> tuple[InstallPla
                     original_bindings=search['original_bindings'], animation_reviews_sha256=digest(reviews_path))
     envelope_path = output / 'envelope.json'
     atomic_json(envelope_path, envelope)
-    selections = [read(root / p) for p in ('docs/art/production4/wood/selection_run/selection.json', 'docs/art/production4/recovery/selection_run/selection.json',
+    prior_paths = sorted((root / 'docs/art/production5').glob('**/selection.json'))
+    selections = [read(p) for p in prior_paths if p.resolve() != (output / 'selection.json').resolve()]
+    selections += [read(root / p) for p in ('docs/art/production4/wood/selection_run/selection.json', 'docs/art/production4/recovery/selection_run/selection.json',
                   'docs/art/production3/reprocess/selection.json', 'docs/art/production3/installation_selection.json') if (root / p).exists()]
     baseline = deepcopy(selections[-1])
     for entry in baseline['slots'].values():
@@ -240,6 +269,16 @@ def finalize(root: Path = Path.cwd(), output: Path = OUTPUT) -> tuple[InstallPla
         fallbacks_before=dict(Counter(s.fallback_kind for s in current.values() if s.qa_status == 'fallback')),
         fallbacks_after=dict(Counter(s.fallback_kind for s in final.values() if s.qa_status == 'fallback')),
         installer_validation='passed', applied=False)
+    approved_ids = {p['id'] for p in approved_groups}
+    for trial in search['trials']:
+        identity = trial.get('id')
+        if identity in approved_ids:
+            trial.update(status='installed', reason='animation_ok', review_strikes=0)
+        elif identity in reviews:
+            trial.update(status='review_rejected', reason=reviews[identity].get('reason', 'animation_rejected'))
+        elif not trial.get('reason'):
+            trial.update(status='untried', reason='higher_ranked_completion_approved' if tuple(trial['group']) in replaced_groups else 'awaiting_animation_review')
+    atomic_json(output / 'search.json', search)
     atomic_json(output / 'adjudication.json', report)
     atomic_json(output / 'installed_groups.json', {'groups': [dict(group=p['group'], source=p['source'],
         copied_frames=[records[i]['frame'] for i in p['candidate_ids'] if records[i]['source_kind'] == 'derived'],

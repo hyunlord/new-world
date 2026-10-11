@@ -10,8 +10,8 @@ GOAL SHA256: f4d5f44f66c00f0f1d3125a3bb2fec4a4b1e39bfea9d7d53de638d3434eafbc6.
 | 0 baseline | 2026-10-11T04:49:47Z | 2026-10-11T05:02:05Z | PASS full gate; live snapshot keys verified |
 | 1 harvest | 2026-10-11T05:01:30Z | 2026-10-11T05:11:30Z | 10 groups,38 villager frames,13 W1 selected; A20 PASS;264 Python tests PASS |
 | 2 variety | 2026-10-11T05:01:30Z | 2026-10-11T05:05:00Z | exact ramps;52 Python+3 Godot tests PASS;pixel capture pending |
-| 3 masks | 2026-10-11T05:01:30Z | | 105 proposals;round1 independent54ok51reject;one bounded revision |
-| 4 key art | | | pending |
+| 3 masks | 2026-10-11T05:01:30Z | 2026-10-11T05:21:00Z | 60/105 frame approvals;8 wood frames+15 installed masks;14 status restorations;A20 PASS |
+| 4 key art | 2026-10-11T05:21:00Z | | first-sheet generation and checkpoint |
 | 5 spacing | | | pending |
 | 6 cold | | | pending |
 | 7 captures | | | pending |

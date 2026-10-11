@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "copied_frames": [
+        0,
+        3
+      ],
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "animation_review": "adult_a_N_carry_wood_e6e605d391"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "copied_frames": [
+        3
+      ],
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "animation_review": "adult_b_N_carry_wood_082c6163a1"
+    }
+  ]
+}

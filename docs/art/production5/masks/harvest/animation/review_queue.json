@@ -1,0 +1,50 @@
+{
+  "groups": [
+    {
+      "id": "adult_a_N_carry_wood_e6e605d391",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "rank": 0,
+      "copies": 2,
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.gif"
+    },
+    {
+      "id": "adult_b_N_carry_wood_082c6163a1",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C1",
+      "rank": 0,
+      "copies": 1,
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.gif"
+    }
+  ]
+}

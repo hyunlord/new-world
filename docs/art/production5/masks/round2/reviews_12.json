@@ -1,0 +1,292 @@
+{
+  "verdicts": [
+    {
+      "sprite_id": "P2_fill_02_15",
+      "candidate_id": "P2_fill_02_15@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Raised tool reads at 2x, but mask selects a tool-side pixel while the visible scalp and long hair remain dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_04_02",
+      "candidate_id": "P2_fill_04_02@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Carry load reads at 2x; white preview leaves the broad rear long-hair section dark, exceeding two missed texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_01",
+      "candidate_id": "P2_fill_05_01@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Gather pose reads, but white preview leaves a substantial right-side hair section dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_02",
+      "candidate_id": "P2_fill_05_02@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "No visible hair coverage in the overlay; both recolored previews retain the entire brown scalp.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_03",
+      "candidate_id": "P2_fill_05_03@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask is on the raised tool area instead of the back of the head; visible brown scalp remains unchanged.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P2_fill_05_08",
+      "candidate_id": "P2_fill_05_08@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Hands read at the mouth; white preview retains a dark right-side hair strip longer than two texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "P3_fill_02_11",
+      "candidate_id": "P3_fill_02_11@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Tool is readable, but mask selects the raised hand/tool junction while the actual brown scalp stays uncolored.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a2_10",
+      "candidate_id": "V_a2_10@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview recolors a broad side-face area and leaves lower rear hair dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_09",
+      "candidate_id": "V_b1_09@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview recolors the crown but leaves the long rear hair mass dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b1_12",
+      "candidate_id": "V_b1_12@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview leaves the long hair behind the shoulder dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_03",
+      "candidate_id": "V_b2_03@2:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Load is readable; the right side of the long hair remains dark in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_04",
+      "candidate_id": "V_b2_04@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Only a thin left scalp strip is selected; most of the crown and right-side hair remain dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05@2:p3:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket and walking carry read at 2x; mask follows crown and rear hair, with face, hands and clothing preserved.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview leaves a brown crown strip and broken dark patches in the rear hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06@2:p3:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Carry load reads at 2x; crown and rear hair recolor coherently while skin and basket retain their colors.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Only upper hair is selected; a broad lower rear hair mass remains brown in the white preview.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Crown recolors but long rear hair remains dark over many texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_09",
+      "candidate_id": "V_b2_09@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Gathering reads; long rear hair is not selected and remains dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_10",
+      "candidate_id": "V_b2_10@2:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview retains the broad brown rear hair section behind the shoulder.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_10",
+      "candidate_id": "V_b2_10@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Recolored preview retains dark interior patches in the rear hair and crown edge beyond two texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_13",
+      "candidate_id": "V_b2_13@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask selects the raised tool head area; the visible scalp and rear hair remain dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_14",
+      "candidate_id": "V_b2_14@2:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "White preview leaves the lower rear long hair dark over multiple texels.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b2_14",
+      "candidate_id": "V_b2_14@3:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Only upper scalp is selected; rear long hair remains dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b3_16",
+      "candidate_id": "V_b3_16@1:p3:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask extends into both side-face regions; the white preview whitens cheek pixels beyond the two-texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_01",
+      "candidate_id": "V_a4_01@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Wood load reads at 2x, but the visible dark beard remains unrecolored below the mouth.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_02",
+      "candidate_id": "V_a4_02@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Flaxen preview also changes several wood-bundle pixels immediately left of the head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_03",
+      "candidate_id": "V_a4_03@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Flaxen mask covers cheek/face pixels around the central skin island, beyond the two non-hair texel allowance.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_04",
+      "candidate_id": "V_a4_04@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Flaxen preview changes wood/hand-side pixels left of the head while the beard remains dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_05",
+      "candidate_id": "V_a4_05@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Flaxen preview recolors a visible band of the wood bundle behind the head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_07",
+      "candidate_id": "V_a4_07@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask crosses into several wood-bundle pixels left of the hair.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_a4_13",
+      "candidate_id": "V_a4_13@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Gathering wood reads at 2x; the visible dark beard below the mouth remains outside the mask.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_01",
+      "candidate_id": "V_b4_01@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask includes multiple wood-bundle pixels left of the head; flaxen preview visibly recolors the load.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_02",
+      "candidate_id": "V_b4_02@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask includes wood pixels left of the head and leaves an interior brown crown patch.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_03",
+      "candidate_id": "V_b4_03@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Large mask islands lie on the wood bundle while most hair remains dark.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_04",
+      "candidate_id": "V_b4_04@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Mask recolors several wood-bundle pixels on both sides of the head.",
+      "unfitted_acceptable": null
+    },
+    {
+      "sprite_id": "V_b4_05",
+      "candidate_id": "V_b4_05@1:mask5:r2",
+      "verdict": "reject",
+      "reason": "hair_mask_wrong",
+      "observation": "Flaxen preview recolors wood pixels behind the head and leaves a brown crown/front hair patch.",
+      "unfitted_acceptable": null
+    }
+  ]
+}

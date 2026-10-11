@@ -3032,14 +3032,15 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P3_fill_01_05@1:missing:derived",
         "P3_fill_01_06@1:p3",
         "P3_fill_01_07@1:p3",
         "P3_fill_01_08@1:missing:derived"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "group": [
@@ -3177,14 +3178,15 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P3_fill_01_01@1:p3",
         "P3_fill_01_02@1:p3:derived",
         "P3_fill_01_03@1:p3",
         "P3_fill_01_04@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "adult_a_S_carry_72bc9f0fca",
@@ -3293,7 +3295,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P3_fill_01_01@1:p3",
         "P3_fill_01_02@1:p3:derived",
@@ -3322,7 +3324,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P3_fill_01_01@1:p3:derived",
         "P3_fill_01_02@1:p3:derived",
@@ -3529,14 +3531,15 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_02_09@1:p3:derived",
         "P2_fill_02_10@1:p3",
         "P2_fill_02_11@1:p3",
         "P2_fill_02_12@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "adult_b_E_carry_f0572275d1",
@@ -3616,7 +3619,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_02_09@1:p3:derived",
         "P2_fill_02_10@1:p3",
@@ -3674,7 +3677,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_02_09@1:p3:derived",
         "P2_fill_02_10@1:p3:derived",
@@ -3732,7 +3735,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P3_fill_02_05@1:p3",
         "P3_fill_02_06@1:p3",
@@ -3797,14 +3800,15 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_02_05@1:p3",
         "P2_fill_02_06@1:missing:derived",
         "P2_fill_02_07@1:p3",
         "P2_fill_02_08@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "adult_b_S_carry_1395dfb15a",
@@ -3826,7 +3830,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_02_05@1:p3",
         "P2_fill_02_06@1:missing:derived",
@@ -3855,7 +3859,7 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_02_05@1:p3:derived",
         "P2_fill_02_06@1:missing:derived",
@@ -4101,14 +4105,15 @@
         1,
         2
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_06_01@1:p3:derived",
         "P2_fill_06_02@1:p3",
         "P2_fill_06_03@1:p3",
         "P2_fill_06_04@1:p3:derived"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "child_E_carry_80c27ffdc7",
@@ -4265,7 +4270,7 @@
         2,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c2_05@2:missing:derived",
         "V_c2_06@2:p3",
@@ -4294,14 +4299,15 @@
         3,
         0
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "V_c2_05@3:p3",
         "V_c2_06@3:p3",
         "V_c2_07@3:p3",
         "V_c2_08@3:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "child_E_run_535c8277fb",
@@ -4323,7 +4329,7 @@
         3,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c2_05@3:p3",
         "V_c2_06@3:p3",
@@ -4352,7 +4358,7 @@
         3,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c2_05@3:p3",
         "V_c2_06@3:p3:derived",
@@ -4381,7 +4387,7 @@
         3,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c2_05@3:p3:derived",
         "V_c2_06@3:p3",
@@ -4410,7 +4416,7 @@
         3,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c2_05@3:p3",
         "V_c2_06@3:p3",
@@ -4439,14 +4445,15 @@
         1,
         0
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_03_05@1:p3",
         "P2_fill_03_06@1:p3",
         "P2_fill_03_07@1:p3",
         "P2_fill_03_08@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "child_E_walk_a4bcd43924",
@@ -4468,7 +4475,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_05@1:p3",
         "P2_fill_03_06@1:p3:derived",
@@ -4497,7 +4504,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_05@1:p3",
         "P2_fill_03_06@1:p3",
@@ -4526,7 +4533,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_05@1:p3",
         "P2_fill_03_06@1:p3",
@@ -4555,7 +4562,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_05@1:p3:derived",
         "P2_fill_03_06@1:p3",
@@ -4584,7 +4591,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c1_09@1:p3",
         "V_c1_10@1:p3",
@@ -4613,7 +4620,7 @@
         2,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c1_09@2:p3",
         "V_c1_10@2:missing:derived",
@@ -4707,14 +4714,15 @@
         1,
         0
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_03_09@1:p3",
         "P2_fill_03_10@1:p3",
         "P2_fill_03_11@1:p3",
         "P2_fill_03_12@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "child_N_walk_3e0ed96839",
@@ -4736,7 +4744,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_09@1:p3",
         "P2_fill_03_10@1:p3",
@@ -4765,7 +4773,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_09@1:p3",
         "P2_fill_03_10@1:p3",
@@ -4794,7 +4802,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_09@1:p3:derived",
         "P2_fill_03_10@1:p3",
@@ -4823,7 +4831,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_09@1:p3",
         "P2_fill_03_10@1:p3:derived",
@@ -4881,7 +4889,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "V_c1_13@1:p3:derived",
         "V_c1_14@1:p3",
@@ -5050,12 +5058,13 @@
         1,
         0
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P3_fill_03_13@1:p3",
         "P3_fill_03_14@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "group": [
@@ -5358,14 +5367,15 @@
         1,
         0
       ],
-      "reason": "",
+      "reason": "animation_ok",
       "candidate_ids": [
         "P2_fill_03_01@1:p3",
         "P2_fill_03_02@1:p3",
         "P2_fill_03_03@1:p3",
         "P2_fill_03_04@1:p3"
       ],
-      "status": "untried"
+      "status": "installed",
+      "review_strikes": 0
     },
     {
       "id": "child_S_walk_cfa7773acb",
@@ -5387,7 +5397,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_01@1:p3",
         "P2_fill_03_02@1:p3:derived",
@@ -5416,7 +5426,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_01@1:p3",
         "P2_fill_03_02@1:p3",
@@ -5445,7 +5455,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_01@1:p3:derived",
         "P2_fill_03_02@1:p3",
@@ -5474,7 +5484,7 @@
         1,
         1
       ],
-      "reason": "",
+      "reason": "higher_ranked_completion_approved",
       "candidate_ids": [
         "P2_fill_03_01@1:p3",
         "P2_fill_03_02@1:p3",

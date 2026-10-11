@@ -89,6 +89,17 @@ class HarvestTests(unittest.TestCase):
         row['frame'] = 2
         self.assertFalse(binding_matches(row, fingerprints))
 
+    def test_noncycle_requires_every_expected_frame(self) -> None:
+        rows = self.records('drink')[:1]
+        self.assertEqual(completions(rows, {0:'first', 1:'second'}, self.cache, self.palette), ())
+
+    def test_completed_installation_evidence_cannot_be_overwritten(self) -> None:
+        from merge_p5_selection import prepare
+        from install_v4 import InstallError
+        (self.cache / 'adjudication.json').write_text('{}')
+        with self.assertRaises(InstallError):
+            prepare(output=self.cache)
+
     def test_copy_envelope_names_approved_source(self) -> None:
         rows = self.records()
         derived = copy_phase(rows[0], rows[2], self.cache, self.palette, WorldScale())

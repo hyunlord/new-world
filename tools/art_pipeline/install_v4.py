@@ -297,7 +297,8 @@ def validate_physical_group(members: tuple[tuple[str,int,FrameCandidate],...], s
     if not report.ready_for_review: raise InstallError(f'Current selected group guard failed: {report.errors + report.warnings}')
 
 
-def validate_assembled(sprites: tuple[PlannedSprite,...], chosen: tuple[tuple[Target,FrameCandidate],...], scale: WorldScale) -> tuple[str,...]:
+def validate_assembled(sprites: tuple[PlannedSprite,...], chosen: tuple[tuple[Target,FrameCandidate],...], scale: WorldScale,
+                       *, reviewed_group_keys: frozenset[tuple[str, str, str]] = frozenset()) -> tuple[str,...]:
     """Recompute final geometry, animation and world-relative constraints from native pixels."""
     groups={}
     reviewed_groups={}
@@ -327,7 +328,7 @@ def validate_assembled(sprites: tuple[PlannedSprite,...], chosen: tuple[tuple[Ta
             # Runtime order is semantic frame, independent of physical fill-sheet cell positions.
             normalized=replace(candidate,frame=replace(candidate.frame,sheet='assembled',cell=sprite.frame+1))
             groups.setdefault(key,[]).append(normalized)
-            if sprite.qa_status in ("accepted","derived"):
+            if sprite.qa_status in ("accepted","derived") or key in reviewed_group_keys:
                 reviewed_groups.setdefault(key,[]).append(normalized)
     for key,members in reviewed_groups.items():
         report=guard_group(members,scale)

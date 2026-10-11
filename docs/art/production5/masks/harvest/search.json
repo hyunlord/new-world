@@ -1,0 +1,6283 @@
+{
+  "proposals": [
+    {
+      "id": "adult_a_N_carry_wood_e6e605d391",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "rank": 0,
+      "copies": 2,
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.gif"
+    },
+    {
+      "id": "adult_a_N_carry_wood_5d656e4b61",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "rank": 1,
+      "copies": 2,
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5:derived",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_5d656e4b61.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_5d656e4b61.gif"
+    },
+    {
+      "id": "adult_b_N_carry_wood_082c6163a1",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C1",
+      "rank": 0,
+      "copies": 1,
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.gif"
+    },
+    {
+      "id": "adult_b_N_carry_wood_9aac24fd12",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C2",
+      "rank": 1,
+      "copies": 2,
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5:derived",
+        "V_b4_12@1:missing:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_9aac24fd12.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_9aac24fd12.gif"
+    },
+    {
+      "id": "adult_b_N_carry_wood_7f857d9374",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C2",
+      "rank": 2,
+      "copies": 2,
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2:derived",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "board": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_7f857d9374.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_7f857d9374.gif"
+    }
+  ],
+  "objects": {
+    "W1_01": "W1_01@1",
+    "W1_02": "W1_02@1",
+    "W1_03": "W1_03@1",
+    "W1_04": "W1_04@1",
+    "W1_05": "W1_05@1",
+    "W1_06": "W1_06@1",
+    "W1_07": "W1_07@1",
+    "W1_08": "W1_08@1",
+    "W1_09": "W1_09@1",
+    "W1_11": "W1_11@1",
+    "W1_13": "W1_13@1",
+    "W1_15": "W1_15@1",
+    "W1_16": "W1_16@1"
+  },
+  "original_bindings": {
+    "V_a1_09@3:p3": {
+      "fingerprint": "06778e757c11a124a2aa97008eeaa305f906f087a6960cd950311384f0e8ad23",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a2_10@2:p3": {
+      "fingerprint": "8c76f45afdb1f50e0d32f32b9f4ee8262043aaa6c81f935f9868abac81eef919",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a2_15@3:p3": {
+      "fingerprint": "addf3d9475af740f697377efd3accf59edb79e2156d1591632fd4ab448dd3acd",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a3_11@1:p3": {
+      "fingerprint": "47b2ebbeb4c7f570767638df69e4ca092e84135a9cb4781ba945ef3f143a2c52",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a3_03@2:p3": {
+      "fingerprint": "68bd9ac86680e6f525b9174e06b98be513f6ab12d0867cb54acbc5331fe1de31",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a3_13@2:p3": {
+      "fingerprint": "34faaef890a7cd42a21eb2a4ad0513d7e2bbf64e00d8772e9a46aae5e6919617",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_a3_13@3:p3": {
+      "fingerprint": "43f367f2d12978bd054d856597d61e9494b2c1a77400b6576782652f65103983",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_b1_10@2:p3": {
+      "fingerprint": "9c94b98ab2b1f311701628a05dcc8e43fde3202b843ea0f6f48eebf62fe328db",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_b1_11@2:p3": {
+      "fingerprint": "671c197bf2867b85141f760b7e63b15b79ed40091c1d1b0f2e31dd9dd2063234",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_b2_13@2:p3": {
+      "fingerprint": "d2eb1e1344828ad28e42f0aae8103fcf4b07d45949e6e0e63092c7c871e40f4a",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_b3_13@1:p3": {
+      "fingerprint": "cab6a777fd2f9503a1e3337f0092c9cc76db605736d2071ada0e2d51fa216dd8",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_b3_13@2:p3": {
+      "fingerprint": "f973d1156b80ea28d3e8d799db73e9f4d5cd9675953b559a3cb25250c86f5c4d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_05@1:p3": {
+      "fingerprint": "8aade465954f5821da0e9a20e6fc06e01ae55812f60b1e93c4103f1662948eb8",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_07@1:p3": {
+      "fingerprint": "8eff7f82799eb65a6858758479171c83d345f9814015637cbec527af81b8491f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_08@1:p3": {
+      "fingerprint": "e483e87d2e470ac11ca7fa48bec0dc7c43ca48c435d23880ca50df9f68535eca",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_09@1:p3": {
+      "fingerprint": "0206dcfb49f1dec3a6cdb071eedf186caf5f9d76ed1c29a981200d329999645b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_10@1:p3": {
+      "fingerprint": "7dd6f342b117e767a6e09bd6da7d0a36c7fa02077a2e25ad325574dd1e6dbebf",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_11@1:p3": {
+      "fingerprint": "bf1ecd9332fcfadb60d9f207816ccae376348e9b897a4576f51a5508eef520b4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_02_12@1:p3": {
+      "fingerprint": "1c4f1638a22602d17ccb38e9c2a8c04b274f7ca5bb50c6df3aa8ae9ad04329b2",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_05_13@1:p3": {
+      "fingerprint": "608d155b831cce5224790451a920388d7756edc16ec87c94e20e0294b47ddcb6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_05_14@1:p3": {
+      "fingerprint": "70f9237ac68e2d83d780c1562b1613c14164e2378997fb268923ec6522643a34",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_05_15@1:p3": {
+      "fingerprint": "e3f161afe418e167d58839c5749f64937d6538e6aff7b6401fab123a3ae44b84",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_09@1:p3": {
+      "fingerprint": "f6451816ac1ca490146972498a6cd7c634068e43729c8d095442773de7ac6a34",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_10@1:p3": {
+      "fingerprint": "2bbdbb64be59d1696bfe608189b4ecd5a094206fef0ce0362173de2fdec58d9d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_11@1:p3": {
+      "fingerprint": "6c6a664bcd3eee6263a911f3727a27fde7b8262d524f6e073075a0abc5867e3b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_13@1:p3": {
+      "fingerprint": "d6ba760c68b5acf77d3db24ddf8d261e60826f7e2a635097169cab7444021241",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_14@1:p3": {
+      "fingerprint": "6e7e742f05f3515b689b0ffeb51fe405f8d0d5ad7b711301c0229bb4a5e0c4a0",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_15@1:p3": {
+      "fingerprint": "948e92ab1c1b5f658f012ad71eff4c2a5f21a0c27a89f04f4245c68d1738d697",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_16@1:p3": {
+      "fingerprint": "7e7b4e2404b074cb9466708dbb6e705b4de2a857e56e2abf73e2e3bbe0eca4e3",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_05@2:p3": {
+      "fingerprint": "fd1efdc0ef6376024eabadf57a30b8e0ebd0ee76b727ff92aa8fe3b8096b68e6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_06@2:p3": {
+      "fingerprint": "6be7cccd9f2ee2d9ddeff7b08c9b3825954e078cae90b2a8fe876aabc95c062f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_07@2:p3": {
+      "fingerprint": "3b765d09bd716a958afbd6d0c0253d899d12ced627f9e9b23a5b22bb1c47fd30",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_08@2:p3": {
+      "fingerprint": "d66565628ff88666af05149d1519eb25b712bc4d67c4f01222c92c14da2bf4d8",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_09@2:p3": {
+      "fingerprint": "e97259de2bd57e93341a9e39b61cff60b4a45da51b0448b8595e8c76bd9d147d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_11@2:p3": {
+      "fingerprint": "1162d4b2f9e8f2b0c0bebf6c2b80bc03b4691cf5b2a08dd849a121c10af0cd29",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_12@2:p3": {
+      "fingerprint": "108722e185ef9b5397d4eadb3c53247f850a8aa00d9e6356997a5188e78642c9",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_13@2:p3": {
+      "fingerprint": "5b213e9d0f88ed81a6b0afa2f2f4a81a9315a8d44d9a32773a8e015bd4ed7f07",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_14@2:p3": {
+      "fingerprint": "8523a1d4599743a7dba685e99bbc03cf4617c1cc6a40896497e7ecc9de0761d6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_15@2:p3": {
+      "fingerprint": "d59ac0486c9ad2c37a6335db14c5f6747811f765c08b94437fa6152a7eded7fe",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_05@3:p3": {
+      "fingerprint": "79ac1e94cbe0648e58a4883ee5b09ea472e2c0886b18a6af297b43c514cf4e5c",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_06@3:p3": {
+      "fingerprint": "da986dc93a50f2ee47b7a14d19eebe3ed4dc12a743f6a55ce04f04c55a5ac493",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_07@3:p3": {
+      "fingerprint": "97639ff87db3e076c36246aec7b19d9693a4f9367f5c9ea7834f2f23c60dc6e2",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_10@3:p3": {
+      "fingerprint": "e1f4d6554042f5ed54dc7f2c09de68d4b47b157db928c4dcc71c47155e15203f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_11@3:p3": {
+      "fingerprint": "bd88358b8d64396610711fc5761a7a3209986e79fd459dfd0d003819bb0595aa",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_12@3:p3": {
+      "fingerprint": "cf582437041ab03bc898c8d96c90874ff5f2aae18d0e1e218179556e189d1ff8",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_13@3:p3": {
+      "fingerprint": "dd7f31808d6334833186643eb2ba17bc500cbed711bfe1bc615366b3f7cd9ca4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_14@3:p3": {
+      "fingerprint": "eb1461f033983020708482aa33fc935725ad12b604611651d6451bfbbaeb02b4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c1_15@3:p3": {
+      "fingerprint": "af0d9cc200597ef87ee27793cc96fa646a1940e709180da07cb1c49d1a763c9f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_03@1:p3": {
+      "fingerprint": "87cdf7c4bb41ec0f57485e89af9ed5e661a2c08fb69d26c638ddc3563e42831c",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_04@1:p3": {
+      "fingerprint": "22fd6f2f6cc7231f89d6faa5dd8575acef8a823ad55202f0a1bf95cefda33675",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_06@1:p3": {
+      "fingerprint": "33491b2b7d358f773e0a9f60beaca3866509e5d62ff072d52f341d94294582a1",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_07@1:p3": {
+      "fingerprint": "4de1d63eec77494d1724dd69ff5e771ed0df69d31afa0aa866e2fabd9127f9ab",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_08@1:p3": {
+      "fingerprint": "0354d6cdf8047bcc1a84d02a0c1e0b1cf37e915a496ac9deee87da951dc59c1b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_13@1:p3": {
+      "fingerprint": "9d381e7a007e30ce9423a72a68fc69513aeb7d38db143fd330c4a5620fcbcdf3",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_14@1:p3": {
+      "fingerprint": "8c8390ef808b3f9c599cdf7597b2b5660bd6edf42a200cbfa0e7ab59b4f0132b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_03@2:p3": {
+      "fingerprint": "82781eb30bb9ed67df86dcaaf39f798dcc580550f7b67f5412511fff44034182",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_04@2:p3": {
+      "fingerprint": "db51efc3fbdc6eb47cbfc009353b5738f990f31aa8d756113f361bf1ed2a2273",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_06@2:p3": {
+      "fingerprint": "64bb5b4a709d36b5aa894c165affac2928fa402aa79a2d98ecbb85258973b8ae",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_07@2:p3": {
+      "fingerprint": "adeb472d399a61428e7b1e4f4f353e0fea954fa9dd93af19d54acfab0d7245cb",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_08@2:p3": {
+      "fingerprint": "cf9f3384d7dbe31aec827f5453e443a7cded161a94dcf91a7ae4554bfe909e81",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_10@2:p3": {
+      "fingerprint": "5bf1c20739a67f554c55da813b94e2d12c41361d5769aa0c275d2faf44c62798",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_13@2:p3": {
+      "fingerprint": "10c1b702f8c3adb3c0385b132a954120e2b653c9acd4df9a52b964ac793623c5",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_14@2:p3": {
+      "fingerprint": "1c4932390de5f58ccc584ea11cce2677f099e2bac5df2c26a2bbfa3110085a43",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_16@2:p3": {
+      "fingerprint": "ff325e23ac4caef11bd89b8754bafcd8659e04a8892a092c514b00dbb3f8d33f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_04@3:p3": {
+      "fingerprint": "21628994c39277341e3ea6c7e7efb60b8e54a3cc07beaf4f0393ac919452b644",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_05@3:p3": {
+      "fingerprint": "b7a27803d57ac43ebb076d4d5a504085b601d2f6b39c7ef8dc9ac8d85d89bd27",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_06@3:p3": {
+      "fingerprint": "77273d0d8ccb630c8bb15999f108a0f22d2982f2815a66e13926d00310ca0297",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_07@3:p3": {
+      "fingerprint": "0f0056cb7139fd79ab5aa5c5b6a005fcf418e5adcf9ace2e7618a97ce7f198f7",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_08@3:p3": {
+      "fingerprint": "3cfee1778de31550b6198ec24271fda723e9e69824f79807b809c568c7c8bac1",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_10@3:p3": {
+      "fingerprint": "2d5c802a5b5715da4bd4bd111cfa30f1879bf4e9eddb795d26012e5f85fdf414",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_13@3:p3": {
+      "fingerprint": "ea9a8923de2a7b00b0ca78083d9f8fc02ed3fb22f9ce963a57689d1842036c68",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "V_c2_16@3:p3": {
+      "fingerprint": "15c220e03d3b0bd3f5f74959ba1e3b9df767d2b9615fd851911505515c06279d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_01@1:p3": {
+      "fingerprint": "7f8a29838450ccdfd9cc3734d6c7d327e42af0e8b51e8d9af0e3f1020c284693",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_02@1:p3": {
+      "fingerprint": "b118a1db7bdf5787dfc40a608d3b14509e2444abec45ec3721ea95533473f7d6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_03@1:p3": {
+      "fingerprint": "135d9e0ebb0f9fa687c745abcb84f9c7b050ac5e250820060718e47a2bde4a6d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_04@1:p3": {
+      "fingerprint": "874811cae5943fca7918a52f4f36d94de78c5546ed93e7bb6765724f5828dd2d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_05@1:p3": {
+      "fingerprint": "1fb266176305128edb466350320bc1f5676c898f79bbdba39cc74b7206c206f8",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_06@1:p3": {
+      "fingerprint": "67431960dbf98b153fc31a7127fb31769e8ed4a11507b87fa8cadf201f494d58",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_07@1:p3": {
+      "fingerprint": "cc82996aab76b5d5a7b4318c207e62e7ab17a19d38d4c07ee8f5cd97b047ed54",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_08@1:p3": {
+      "fingerprint": "a84634ab5889807b1c17237fa5dafc2601c36fe9fa6fa8389ab60f282322c80f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_09@1:p3": {
+      "fingerprint": "511b0b7feeeada50ce019c183b59d6bf2bf18bd0e3db3164a81e467d6624fdf4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_10@1:p3": {
+      "fingerprint": "d0e40e5260227716bdbdaa2a3ddfd186f066f250f0c328dce22a715562e948bb",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_11@1:p3": {
+      "fingerprint": "e7c882aeeb33eefc502476058d1f6012834b730eef718c5fc3bf9b1f22c9f9fc",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_12@1:p3": {
+      "fingerprint": "58af5a3380d6c065898bf0c171c876e7fafa4a8ba1f9901e115878419119cb36",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_14@1:p3": {
+      "fingerprint": "edb0c243a1235a2aae28d7b05edea53a56cb51e9c94d90878156dcdb58fccb68",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_03_16@1:p3": {
+      "fingerprint": "66402f5838180865a2a33d2fb1082eca8e66affeeb35d797de87eae7cf2d83c6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_01@1:p3": {
+      "fingerprint": "7155c1a63c7df8ce90bdfc31dedb0dd819dc9cd1d170ac00408be19914fe9eeb",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_02@1:p3": {
+      "fingerprint": "dfe55a15f1aea0096df2cc95ce946e4df2cc537f4acd1a46d9774f133449da75",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_03@1:p3": {
+      "fingerprint": "ff1556aed84ec76ec16a3cb9818bd10d0f3f3d7f9decec917093dc7c6fb21321",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_04@1:p3": {
+      "fingerprint": "25635a334f7ed6dc6c391490a9c0c09f619f79be4530670a59f163d4f99ef4f2",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_08@1:p3": {
+      "fingerprint": "dd43db08c007e68ed716dce0243a5f80962723b1e3669b3435d2040ec35a0606",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_12@1:p3": {
+      "fingerprint": "84fe20420ed39b5f077662597cd134937ed86f0df4933ebfcf30c836ebeb9622",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P2_fill_06_16@1:p3": {
+      "fingerprint": "72b6bcd96b98e33b0d5dde25d5c68b0614b7af4b05633b57425128e19b4b7b73",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_01@1:p3": {
+      "fingerprint": "812ac8ff056c93dafd2361a0318dec926af20b86c83d7ac8f34571a594e49530",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_02@1:p3": {
+      "fingerprint": "92cc0305a457eb5ba4c2ad01b35882b2a0972c9905ad387b2823d557f306cfa3",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_03@1:p3": {
+      "fingerprint": "4dca7960429140e12404dc57ed5e8118bd453df31dcb7f1c786ba5c48a826469",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_04@1:p3": {
+      "fingerprint": "a6be13dd70166d8d583a54c9bf89defc9ca1d3c6578ecbff9cb280bbafa67956",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_06@1:p3": {
+      "fingerprint": "4c10b432a3f81a45786f0e680d61593f121811574425a58166d1e0af5d46dbb7",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_07@1:p3": {
+      "fingerprint": "766d3c45095b68bc6b1ef81ab580039af1afee5de0ed804dcb6f98138c0a3b2a",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_13@1:p3": {
+      "fingerprint": "aa9a6ca69fa937f414a2f918ddee7cd959aec2aec20a96ccb868ab7c6ee5ad61",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_01_14@1:p3": {
+      "fingerprint": "b99a4abdc4a2ddda077b401cfb6adfe139b3fee382623709d8c403f9c4b5a4da",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_02_05@1:p3": {
+      "fingerprint": "c29e697b568f76f87eabb9121ad968a8873e89b3553c4de9e99433116c9b4269",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_02_06@1:p3": {
+      "fingerprint": "15bcdf06f8ea3f430fdc08e73c12dfc0af1cdc97c55f34e60ca4ab412b317b98",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_02_08@1:p3": {
+      "fingerprint": "ff2748b0cc1dc05b04160d2ac8a5138d4c54a06722a2953eb6ea9c4524c4ae82",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_01@1:p3": {
+      "fingerprint": "531006bb1bd42f8710a020a4eaf25f5fa45a0a3717a8df700aac3f2a7aafcff5",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_02@1:p3": {
+      "fingerprint": "d3ad62d1d34b6ef2912f6f3bb31b70fa0df7d1e01d916803c6f81eaca05fac4b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_03@1:p3": {
+      "fingerprint": "085f5c6d6c620db004b0f8ee0b52241bb573beaf40446dcbe1dec8abd7609bb4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_04@1:p3": {
+      "fingerprint": "be6efa570d3c74bc63e54f5fe402302a77af8d00cb5912eeb9e519ff2a9aca90",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_05@1:p3": {
+      "fingerprint": "81a47defb7e75247ba4e6515bd1dd0591911273667b1dd7261b9e0d245e28ea2",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_06@1:p3": {
+      "fingerprint": "74b77a6424acdedef29a7620ec7fb6355b0003fbbe020552192b50f936c5bf9a",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_07@1:p3": {
+      "fingerprint": "31aeadd81514da18675e950f6f8310a8cd9be36f19b0955134a6ddba7dcef6f0",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_08@1:p3": {
+      "fingerprint": "3cd74b9f28888edebb247d754457bf574af7b2312931fb180e9176fb2401bbe4",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_13@1:p3": {
+      "fingerprint": "7a75413cfcc6973ad44575707f59f74666292537b1d20f90790e3370907a537d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_14@1:p3": {
+      "fingerprint": "d979b1b9680f27d3fbd863ba66781244557018319ca82803c0fdbfeee67c1ea7",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_15@1:p3": {
+      "fingerprint": "7987f04584bed44fafca2754968bd46ec7ca85ed13eef5c008c020bcf4c2e66f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_03_16@1:p3": {
+      "fingerprint": "016de9f2ed2092f73ea057354191950eda6b956c06848d4e0e987bf72a6831b1",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_01@1:p3": {
+      "fingerprint": "6f2b4778914fdebdd65091ce5867a2465057be745d3fc0f45ef3b87f83f8525a",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_02@1:p3": {
+      "fingerprint": "e1e7610a9fb0169ada3233c7f3117f046d13686c9a72eca3da42c4869e042d1b",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_03@1:p3": {
+      "fingerprint": "8e27083e29e07a5a54086ed12b7de5fbe0f08a2c0a1a2f18033e1a95dcc9b54f",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_04@1:p3": {
+      "fingerprint": "d09f708c8696a0c564c96234d1b1d88eac39a2c66fd206fff3bcb48c11677cc7",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_05@1:p3": {
+      "fingerprint": "422f18b86186769b5a2e78aa2aa4e9ea06700725970c7c084dc19971c9e4f8ff",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_06@1:p3": {
+      "fingerprint": "3fa746a4b88fc5069b2325d67a76824600503eb5dfe0e02ecd4689800e772e0c",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_07@1:p3": {
+      "fingerprint": "ec0c9d2eb9490d34ab50c99a25359ac0635e2d4966f316d8dbc02f88e0963326",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_09@1:p3": {
+      "fingerprint": "d182f4060e8b2fc7c7e8d54af678657efc53de46891354c8448a62c240c93905",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_10@1:p3": {
+      "fingerprint": "a212a22a83be878bd18b0ecd09f0cdffd1aad6fc7734dca07c9b98e1cffa2cec",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_11@1:p3": {
+      "fingerprint": "15f0a46daed9774926221047e9c23f5efe336b003d11f23a1768efb28519f533",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_12@1:p3": {
+      "fingerprint": "1b71f35aa4258bbfe0ae465f6957b983cd3fe1790f6223a384707c3a45efcf25",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_14@1:p3": {
+      "fingerprint": "c537f17505e9b4cd5c611b9e836b34804a52d9d699463cd5ceeb0e9ffd2a3697",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_15@1:p3": {
+      "fingerprint": "858c2a1ff1bf78a259bfe6e755f8cea42e4d530794cacfc5fea955f054e4f9e6",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "P3_fill_04_16@1:p3": {
+      "fingerprint": "18493c7ffde0a0f754a3cc4fd46a6dc434d62f09071157d8e1c20bd4b064cc4d",
+      "review_index": "docs/art/production4/recovery/review_index.json",
+      "review_path": "docs/art/production4/recovery/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/recovery/candidates.json"
+    },
+    "W1_01@1": {
+      "fingerprint": "c27efc639c240c642fa272d90871cfac7dd1431350a5f3d97cd8ce586f52fc94",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_02@1": {
+      "fingerprint": "8ff8f121d759f7c4c0fe8e5b6ed5984a486fbcdc86880b69e7957db724c6f839",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_03@1": {
+      "fingerprint": "f05611abd19b63d03e1d8e260df00887156f2e039b83d30ad135f67334619592",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_04@1": {
+      "fingerprint": "ce74fe34bc1bf4a473146d1a106c9b9f5f99407625b0c063cd20850e06f182aa",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_05@1": {
+      "fingerprint": "c5db42991ca62d2ede48be4bda002c701c7f206e53f4121f7dd1971f0b0d3409",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_06@1": {
+      "fingerprint": "9a969d10f4dd7b107bdfa0fd758940fd5ea18a0459af90525a6e144699c100ea",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_07@1": {
+      "fingerprint": "7c7da15ae7e47e821debc410698eeb73a48d503166fc0f894d572faf2ebb4ddb",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_08@1": {
+      "fingerprint": "d421d7f3f18ee27cc9ce9dc5c38cc7caa00b3e57a5241f0c807a68413a468fe6",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_09@1": {
+      "fingerprint": "1d54e1e741a9b640379fcd3cad928b1670229cb1af97e2d36607355f8e9c78dd",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_11@1": {
+      "fingerprint": "02a6791f8ed08f3dd04c4aeede2de31051d6af1b32adb06f374a6d72769beadf",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_13@1": {
+      "fingerprint": "7dfa3fb3dee12373fb7e8b1d888df75061b20d8745363c76f15accc1d6e6c65e",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_15@1": {
+      "fingerprint": "50f0c162351ac9c19a7ab20ab143cf1441970c0f4a8ab2906a2434afb2233521",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "W1_16@1": {
+      "fingerprint": "6c111fdcd2a5ee0c7a6ff419d68f140dbbd7209ed258020ec2956d1b926cb8d3",
+      "review_index": "docs/art/production4/wood/processed/review_index.json",
+      "review_path": "docs/art/production4/wood/reviews/final_reviews.json",
+      "ledger": "docs/art/production4/wood/processed/candidates.json"
+    },
+    "P2_fill_02_13@1:p3:mask5": {
+      "fingerprint": "d092ba0e026e2f886274743cdeabef1db58edf89a1a23fc6f1098e047b985853",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_02_14@1:p3:mask5": {
+      "fingerprint": "e2c21c805cd77f9754f094134389b25c8ca229f5ec8be717590c8a6146f4ec03",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_02_16@1:p3:mask5": {
+      "fingerprint": "7120e819f0703d1fb72c707a50ef72c054e5c1b212f9128a6afffcf3872d18c8",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_05_04@1:p3:mask5": {
+      "fingerprint": "8d2318c233e89a2b86df90369a771c2819d145e3adcc33c55b21ac161d9dc25e",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_05_07@1:p3:mask5": {
+      "fingerprint": "3a558ef1b1964dcfedd9790311231b2f684dea4e1eca965a4779e8cb541f99c5",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_05_09@1:p3:mask5": {
+      "fingerprint": "a7cebd13764e0d9849e09fe1db715e8ce2507cb0d749ab44b0577f8f2a683d08",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P2_fill_05_11@1:p3:mask5": {
+      "fingerprint": "640bf07802117eed10a322c67fddf37d1d9c3d2c3010144fd5dd286d595740ec",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P3_fill_02_03@1:p3:mask5": {
+      "fingerprint": "80e666f1bc5d97f98db074302c8d439d8354b769465f4aecb5c2f5f8ed51f33a",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P3_fill_02_04@1:p3:mask5": {
+      "fingerprint": "8a4fd15af894a513f6369d9229765977902bd5923c6e70e83e0bab7bc82c79e4",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P3_fill_02_12@1:p3:mask5": {
+      "fingerprint": "5d259bc37fea3bb0681e764c1866070c1eb245de503cb9496e868a2df324f854",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "P3_fill_02_15@1:p3:mask5": {
+      "fingerprint": "14b56a448f94520be576340daf2a2c6d8fe8407e3502376e14629a61d3f33c25",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b1_09@2:p3:mask5": {
+      "fingerprint": "d105881ab3951254213da8fd4a83cb49ef54cf8e8051a02aed2f0dce3b2d867b",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b1_09@3:p3:mask5": {
+      "fingerprint": "f40f4ec18ef112cf6ff70b4667a451e481f7cb68f272ddb264ca1da569791786",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b1_10@3:p3:mask5": {
+      "fingerprint": "a0f6380a4ef957b8b73fdf6d475b71fa10d1f69df2b3974d4ccec190439c8ee2",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b1_11@1:p3:mask5": {
+      "fingerprint": "3c1378858799b67993e358637a7b63d2748c384883ff05a22fb484ff29fc6493",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_01@2:p3:mask5": {
+      "fingerprint": "9f3d1f329f5262d74c10e13d27bb153b42741906b6c0ec7a7f41e1062ba992d5",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_01@3:p3:mask5": {
+      "fingerprint": "2d884f16a583a92ca40ed46f665a515aba17cdec9369188819a843182c803e35",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_02@3:p3:mask5": {
+      "fingerprint": "357bb8db9d899797199cc9949a266ba251b76da49bbcad3dc90019c48577d6ff",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_03@3:p3:mask5": {
+      "fingerprint": "090d351b81b88acaf3c763890456026950e9ba2c10ad16f29b2d95545d8f5f62",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_05@2:p3:mask5:r2": {
+      "fingerprint": "d3f271104aa7ba41d6aa131c7ad42fd62de13d24b02e2e54514a69c1493d6ff5",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_06@2:p3:mask5:r2": {
+      "fingerprint": "438d1d296c03d9e6eccb509b88b7444c4b3f7417a7fb2fc627a6f0ca2842fc34",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_07@2:p3:mask5": {
+      "fingerprint": "f3bfebd51b87614a416b32736537673e75721ad73e83653282d313bb68b5255b",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b2_09@2:p3:mask5": {
+      "fingerprint": "a0ddaa94e085b6b2740f4f473938b7ed9d2d2cf58b8c33bf12c80b714e40449f",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_06@1:mask5": {
+      "fingerprint": "fdd1e9f8d72c0869345acee01e5382374998a5c04d0d08ebdab1021f32779a76",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_08@1:mask5": {
+      "fingerprint": "82becd867613d6cb02c3b9691274ac2e929e9770022d6f13d0d803cbb94ccc55",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_09@1:mask5": {
+      "fingerprint": "56b8eec56d1eb886c80a0244bcff77545590b5fdf67b8fedf59f5cabfebeed18",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_10@1:mask5": {
+      "fingerprint": "e57f8e90231708cd605aa604d47653429da20ee543a88604ba801eb91ac97a8f",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_11@1:mask5": {
+      "fingerprint": "1357a133b4873e58df8761512b3b71def0c78b19c1e547b890b4aaaf0897a28f",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_12@1:mask5": {
+      "fingerprint": "dc466b5ca25c425d45c6ca4ecb6ca72ed99981a6884fc844a3f06e3b75546105",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_15@1:mask5": {
+      "fingerprint": "29e9cc3b85f79ae6c09b92abc4e98ec9e75e89608f5893e2a8211af6c70e55c3",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_a4_16@1:mask5": {
+      "fingerprint": "2802087af7afcd98173d010def742e4bc6473bb655a7b90cadd3e47be6f29d62",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b4_09@1:mask5:r2": {
+      "fingerprint": "28cf709afead11d2c7ff6c53c72b0003ca83c6ad8eb5988bcfcf0f6ee4a379ca",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b4_10@1:mask5:r2": {
+      "fingerprint": "b9295248eea206097dcc6c1677bc70a8042b8438fd0f3ffa2ed34e83e128957c",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b4_11@1:mask5": {
+      "fingerprint": "265f5bca45ab71f63c4a34eb631ce203a2635b0bf94778ebd6769055f52afcd6",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b4_14@1:mask5": {
+      "fingerprint": "9670406531e975e5789f9d020b697b9b5125a2d9fa20a905fc81971460d694a2",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    },
+    "V_b4_16@1:mask5": {
+      "fingerprint": "66ccf2ea60fc03e7aac9c99bb50a086d90a1ce7b642971b37fa7706506737748",
+      "review_index": "docs/art/production5/masks/final_review_index.json",
+      "review_path": "docs/art/production5/masks/final_reviews.json",
+      "ledger": "docs/art/production5/masks/final_candidates.json"
+    }
+  },
+  "approvals": {
+    "V_a1_09@3:p3": {
+      "candidate_id": "V_a1_09@3:p3",
+      "observation": "East-facing walking stride remains readable at 2x; tan skin and cream clothing match the reference, and the white-hair preview preserves the face.",
+      "reason": "",
+      "sprite_id": "V_a1_09",
+      "target_slot": "V_a1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a2_10@2:p3": {
+      "candidate_id": "V_a2_10@2:p3",
+      "observation": "East-facing gatherer reaches into the visible berry bush at 2x; scalp coverage is continuous and the white preview leaves skin and clothing unchanged.",
+      "reason": "",
+      "sprite_id": "V_a2_10",
+      "target_slot": "V_a2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a2_15@3:p3": {
+      "candidate_id": "V_a2_15@3:p3",
+      "observation": "Raised hammer and work stone read as building at 2x; the south-facing body, cream garment, and white-hair preview remain coherent.",
+      "reason": "",
+      "sprite_id": "V_a2_15",
+      "target_slot": "V_a2_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a3_11@1:p3": {
+      "candidate_id": "V_a3_11@1:p3",
+      "observation": "East-facing speaker extends a hand visibly at 2x; the mask follows the scalp and the white preview retains tan face and arms.",
+      "reason": "",
+      "sprite_id": "V_a3_11",
+      "target_slot": "V_a3_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a3_03@2:p3": {
+      "candidate_id": "V_a3_03@2:p3",
+      "observation": "The east-facing crouched figure brings hands to the mouth at 2x; head coverage changes to white without whitening the hands.",
+      "reason": "",
+      "sprite_id": "V_a3_03",
+      "target_slot": "V_a3_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a3_13@2:p3": {
+      "candidate_id": "V_a3_13@2:p3",
+      "observation": "East-facing sleeping figure lies curled on the bedding with coherent limbs and cream clothing; the intentionally empty hair mask is appropriate.",
+      "reason": "",
+      "sprite_id": "V_a3_13",
+      "target_slot": "V_a3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_a3_13@3:p3": {
+      "candidate_id": "V_a3_13@3:p3",
+      "observation": "Side-lying sleeping silhouette reads at 2x, with head resting near the hand and legs extending right; empty hair mask is appropriate.",
+      "reason": "",
+      "sprite_id": "V_a3_13",
+      "target_slot": "V_a3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_b1_10@2:p3": {
+      "candidate_id": "V_b1_10@2:p3",
+      "observation": "East walking silhouette, cream clothing and full white-hair recolour remain coherent at 2x.",
+      "reason": "",
+      "sprite_id": "V_b1_10",
+      "target_slot": "V_b1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_b1_11@2:p3": {
+      "candidate_id": "V_b1_11@2:p3",
+      "observation": "East stride and reference colours read clearly; white-hair preview preserves the face and clothing.",
+      "reason": "",
+      "sprite_id": "V_b1_11",
+      "target_slot": "V_b1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_b2_13@2:p3": {
+      "candidate_id": "V_b2_13@2:p3",
+      "observation": "Raised building tool reads at 2x; white hair remains separate from face, hands and clothing.",
+      "reason": "",
+      "sprite_id": "V_b2_13",
+      "target_slot": "V_b2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_b3_13@1:p3": {
+      "candidate_id": "V_b3_13@1:p3",
+      "observation": "Side-lying sleep pose reads clearly; cream clothing and brown hair match the reference family; empty mask is intentional.",
+      "reason": "",
+      "sprite_id": "V_b3_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_b3_13@2:p3": {
+      "candidate_id": "V_b3_13@2:p3",
+      "observation": "Side-lying sleep pose and cream clothing remain coherent; no mask is expected for sleep.",
+      "reason": "",
+      "sprite_id": "V_b3_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_05@1:p3": {
+      "candidate_id": "P2_fill_02_05@1:p3",
+      "observation": "Front-facing carry shows a distinct red-filled basket at 2x; white hair preserves face and clothing.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_05",
+      "target_slot": "V_b2_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_07@1:p3": {
+      "candidate_id": "P2_fill_02_07@1:p3",
+      "observation": "South carry, basket, natural colours and white-hair preview remain readable.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_07",
+      "target_slot": "V_b2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_08@1:p3": {
+      "candidate_id": "P2_fill_02_08@1:p3",
+      "observation": "Front carry has a clear load and coherent limbs; white recolour stays within the hair.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_08",
+      "target_slot": "V_b2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_09@1:p3": {
+      "candidate_id": "P2_fill_02_09@1:p3",
+      "observation": "East carry shows the basket at 2x, with coherent stride and white-hair preview.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_09",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_10@1:p3": {
+      "candidate_id": "P2_fill_02_10@1:p3",
+      "observation": "East carry load is distinct and the white-hair preview preserves skin and clothing.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_10",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_11@1:p3": {
+      "candidate_id": "P2_fill_02_11@1:p3",
+      "observation": "East carry stride and basket read at 2x; recolour preserves the face and body.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_11",
+      "target_slot": "V_b2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_02_12@1:p3": {
+      "candidate_id": "P2_fill_02_12@1:p3",
+      "observation": "East carry has a visible basket and intact silhouette; white-hair preview is coherent.",
+      "reason": "",
+      "sprite_id": "P2_fill_02_12",
+      "target_slot": "V_b2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_05_13@1:p3": {
+      "candidate_id": "P2_fill_05_13@1:p3",
+      "observation": "Side-lying sleep and bedding are clear; cream clothing stays in the reference family and no mask is expected.",
+      "reason": "",
+      "sprite_id": "P2_fill_05_13",
+      "target_slot": "V_b3_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_05_14@1:p3": {
+      "candidate_id": "P2_fill_05_14@1:p3",
+      "observation": "Front-facing prone sleep is coherent with the reference colours; intentionally empty hair mask.",
+      "reason": "",
+      "sprite_id": "P2_fill_05_14",
+      "target_slot": "P2V_b_S_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_05_15@1:p3": {
+      "candidate_id": "P2_fill_05_15@1:p3",
+      "observation": "Rear-facing sleep silhouette and cream clothing remain coherent; intentionally empty hair mask.",
+      "reason": "",
+      "sprite_id": "P2_fill_05_15",
+      "target_slot": "P2V_b_N_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_09@1:p3": {
+      "candidate_id": "V_c1_09@1:p3",
+      "observation": "East-facing stride is readable at 2x; dark hair and cream garment retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_09",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_10@1:p3": {
+      "candidate_id": "V_c1_10@1:p3",
+      "observation": "East-facing passing step is readable at 2x with coherent limbs and reference clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_10",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_11@1:p3": {
+      "candidate_id": "V_c1_11@1:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_13@1:p3": {
+      "candidate_id": "V_c1_13@1:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_14@1:p3": {
+      "candidate_id": "V_c1_14@1:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_15@1:p3": {
+      "candidate_id": "V_c1_15@1:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_16@1:p3": {
+      "candidate_id": "V_c1_16@1:p3",
+      "observation": "Rear-facing walking pose is coherent at 2x with visible stepping legs.",
+      "reason": "",
+      "sprite_id": "V_c1_16",
+      "target_slot": "V_c1_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_05@2:p3": {
+      "candidate_id": "V_c1_05@2:p3",
+      "observation": "Front-facing step reads at 2x; warm tan skin and cream clothing retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_05",
+      "target_slot": "V_c1_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_06@2:p3": {
+      "candidate_id": "V_c1_06@2:p3",
+      "observation": "Front-facing passing step is coherent at 2x; hair and clothing remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_06",
+      "target_slot": "V_c1_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_07@2:p3": {
+      "candidate_id": "V_c1_07@2:p3",
+      "observation": "Front-facing walking stance reads at 2x with coherent arms and legs.",
+      "reason": "",
+      "sprite_id": "V_c1_07",
+      "target_slot": "V_c1_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_08@2:p3": {
+      "candidate_id": "V_c1_08@2:p3",
+      "observation": "Front-facing compact step reads at 2x with consistent brown hair and cream clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_08",
+      "target_slot": "V_c1_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_09@2:p3": {
+      "candidate_id": "V_c1_09@2:p3",
+      "observation": "East-facing stride is readable at 2x; dark hair and cream garment retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_09",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_11@2:p3": {
+      "candidate_id": "V_c1_11@2:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_12@2:p3": {
+      "candidate_id": "V_c1_12@2:p3",
+      "observation": "East-facing compact walking step remains coherent at 2x.",
+      "reason": "",
+      "sprite_id": "V_c1_12",
+      "target_slot": "V_c1_12",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_13@2:p3": {
+      "candidate_id": "V_c1_13@2:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_14@2:p3": {
+      "candidate_id": "V_c1_14@2:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_15@2:p3": {
+      "candidate_id": "V_c1_15@2:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_05@3:p3": {
+      "candidate_id": "V_c1_05@3:p3",
+      "observation": "Front-facing step reads at 2x; warm tan skin and cream clothing retain the reference identity.",
+      "reason": "",
+      "sprite_id": "V_c1_05",
+      "target_slot": "V_c1_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_06@3:p3": {
+      "candidate_id": "V_c1_06@3:p3",
+      "observation": "Front-facing passing step is coherent at 2x; hair and clothing remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_06",
+      "target_slot": "V_c1_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_07@3:p3": {
+      "candidate_id": "V_c1_07@3:p3",
+      "observation": "Front-facing walking stance reads at 2x with coherent arms and legs.",
+      "reason": "",
+      "sprite_id": "V_c1_07",
+      "target_slot": "V_c1_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_10@3:p3": {
+      "candidate_id": "V_c1_10@3:p3",
+      "observation": "East-facing passing step is readable at 2x with coherent limbs and reference clothing.",
+      "reason": "",
+      "sprite_id": "V_c1_10",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_11@3:p3": {
+      "candidate_id": "V_c1_11@3:p3",
+      "observation": "East-facing open stride reads at 2x; anatomy and cream clothing remain coherent.",
+      "reason": "",
+      "sprite_id": "V_c1_11",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_12@3:p3": {
+      "candidate_id": "V_c1_12@3:p3",
+      "observation": "East-facing compact walking step remains coherent at 2x.",
+      "reason": "",
+      "sprite_id": "V_c1_12",
+      "target_slot": "V_c1_12",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_13@3:p3": {
+      "candidate_id": "V_c1_13@3:p3",
+      "observation": "Rear-facing walking pose reads at 2x with brown hair and cream garment.",
+      "reason": "",
+      "sprite_id": "V_c1_13",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_14@3:p3": {
+      "candidate_id": "V_c1_14@3:p3",
+      "observation": "Rear-facing passing step remains legible at 2x with coherent body silhouette.",
+      "reason": "",
+      "sprite_id": "V_c1_14",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c1_15@3:p3": {
+      "candidate_id": "V_c1_15@3:p3",
+      "observation": "Rear-facing stride reads at 2x; reference hair and clothing families remain consistent.",
+      "reason": "",
+      "sprite_id": "V_c1_15",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_03@1:p3": {
+      "candidate_id": "V_c2_03@1:p3",
+      "observation": "Raised arms and tucked leg read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_03",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_04@1:p3": {
+      "candidate_id": "V_c2_04@1:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_06@1:p3": {
+      "candidate_id": "V_c2_06@1:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_07@1:p3": {
+      "candidate_id": "V_c2_07@1:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_08@1:p3": {
+      "candidate_id": "V_c2_08@1:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_13@1:p3": {
+      "candidate_id": "V_c2_13@1:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_14@1:p3": {
+      "candidate_id": "V_c2_14@1:p3",
+      "observation": "Seated front-facing pose brings the hands toward the mouth and reads as eating at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_14",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_03@2:p3": {
+      "candidate_id": "V_c2_03@2:p3",
+      "observation": "Raised arms and tucked leg read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_03",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_04@2:p3": {
+      "candidate_id": "V_c2_04@2:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_06@2:p3": {
+      "candidate_id": "V_c2_06@2:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_07@2:p3": {
+      "candidate_id": "V_c2_07@2:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_08@2:p3": {
+      "candidate_id": "V_c2_08@2:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_10@2:p3": {
+      "candidate_id": "V_c2_10@2:p3",
+      "observation": "Front-facing expressive arm gesture reads as talking at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_10",
+      "target_slot": "V_c2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_13@2:p3": {
+      "candidate_id": "V_c2_13@2:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_14@2:p3": {
+      "candidate_id": "V_c2_14@2:p3",
+      "observation": "Seated front-facing pose brings the hands toward the mouth and reads as eating at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_14",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_16@2:p3": {
+      "candidate_id": "V_c2_16@2:p3",
+      "observation": "Front-facing inward-folded arms read as a hugging gesture at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_16",
+      "target_slot": "V_c2_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_04@3:p3": {
+      "candidate_id": "V_c2_04@3:p3",
+      "observation": "Raised arms and lifted legs read as a front-facing hop at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_04",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_05@3:p3": {
+      "candidate_id": "V_c2_05@3:p3",
+      "observation": "Bent running arms and separated legs read as east-facing motion at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_05",
+      "target_slot": "V_c2_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_06@3:p3": {
+      "candidate_id": "V_c2_06@3:p3",
+      "observation": "Bent arms and a lifted trailing leg give a coherent east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_06",
+      "target_slot": "V_c2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_07@3:p3": {
+      "candidate_id": "V_c2_07@3:p3",
+      "observation": "Extended stride and bent arms read as an east-facing run at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_07",
+      "target_slot": "V_c2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_08@3:p3": {
+      "candidate_id": "V_c2_08@3:p3",
+      "observation": "Lifted knee and bent arms retain a readable east-facing running pose at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_08",
+      "target_slot": "V_c2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_10@3:p3": {
+      "candidate_id": "V_c2_10@3:p3",
+      "observation": "Front-facing expressive arm gesture reads as talking at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_10",
+      "target_slot": "V_c2_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_13@3:p3": {
+      "candidate_id": "V_c2_13@3:p3",
+      "observation": "Horizontal side-resting body reads as asleep at 2x with coherent head and limbs.",
+      "reason": "",
+      "sprite_id": "V_c2_13",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "V_c2_16@3:p3": {
+      "candidate_id": "V_c2_16@3:p3",
+      "observation": "Front-facing child embraces a small figure; hug silhouette remains readable at 2x.",
+      "reason": "",
+      "sprite_id": "V_c2_16",
+      "target_slot": "V_c2_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_01@1:p3": {
+      "candidate_id": "P2_fill_03_01@1:p3",
+      "observation": "South-facing walking pose retains cream clothing and short brown hair.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_01",
+      "target_slot": "V_c1_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_02@1:p3": {
+      "candidate_id": "P2_fill_03_02@1:p3",
+      "observation": "South walking step and compact child proportions read at 2x.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_02",
+      "target_slot": "V_c1_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_03@1:p3": {
+      "candidate_id": "P2_fill_03_03@1:p3",
+      "observation": "Front walking frame shows offset legs with matching hair and clothing.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_03",
+      "target_slot": "V_c1_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_04@1:p3": {
+      "candidate_id": "P2_fill_03_04@1:p3",
+      "observation": "South-facing walking frame has coherent arms and stepping legs.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_04",
+      "target_slot": "V_c1_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_05@1:p3": {
+      "candidate_id": "P2_fill_03_05@1:p3",
+      "observation": "Right-facing profile and separated stride read as east walking.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_05",
+      "target_slot": "V_c1_09",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_06@1:p3": {
+      "candidate_id": "P2_fill_03_06@1:p3",
+      "observation": "East-facing walk retains the reference child and a readable step.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_06",
+      "target_slot": "V_c1_10",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_07@1:p3": {
+      "candidate_id": "P2_fill_03_07@1:p3",
+      "observation": "Profile walking frame shows a forward foot and coherent silhouette.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_07",
+      "target_slot": "V_c1_11",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_08@1:p3": {
+      "candidate_id": "P2_fill_03_08@1:p3",
+      "observation": "Right-facing walk is legible at 2x with matching cream garment.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_08",
+      "target_slot": "V_c1_12",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_09@1:p3": {
+      "candidate_id": "P2_fill_03_09@1:p3",
+      "observation": "Back of head and rear garment clearly read as north walking.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_09",
+      "target_slot": "V_c1_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_10@1:p3": {
+      "candidate_id": "P2_fill_03_10@1:p3",
+      "observation": "North-facing step retains rear view and child proportions.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_10",
+      "target_slot": "V_c1_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_11@1:p3": {
+      "candidate_id": "P2_fill_03_11@1:p3",
+      "observation": "Rear walking frame shows a readable leg offset and consistent colours.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_11",
+      "target_slot": "V_c1_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_12@1:p3": {
+      "candidate_id": "P2_fill_03_12@1:p3",
+      "observation": "North walking pose has back-facing head and coherent stepping legs.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_12",
+      "target_slot": "V_c1_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_14@1:p3": {
+      "candidate_id": "P2_fill_03_14@1:p3",
+      "observation": "Front-facing child holds a visible red-topped load in both arms at 2x.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_14",
+      "target_slot": "P2V_c_S_carry_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_03_16@1:p3": {
+      "candidate_id": "P2_fill_03_16@1:p3",
+      "observation": "South carry frame visibly supports a basket-like load against the chest.",
+      "reason": "",
+      "sprite_id": "P2_fill_03_16",
+      "target_slot": "P2V_c_S_carry_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_01@1:p3": {
+      "candidate_id": "P2_fill_06_01@1:p3",
+      "observation": "East carry frame shows a load held ahead of the torso at 2x.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_01",
+      "target_slot": "P2V_c_E_carry_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_02@1:p3": {
+      "candidate_id": "P2_fill_06_02@1:p3",
+      "observation": "Right-facing carry has a clear red-topped basket held in front.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_02",
+      "target_slot": "P2V_c_E_carry_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_03@1:p3": {
+      "candidate_id": "P2_fill_06_03@1:p3",
+      "observation": "East carry silhouette includes a distinct supported load at 2x.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_03",
+      "target_slot": "P2V_c_E_carry_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_04@1:p3": {
+      "candidate_id": "P2_fill_06_04@1:p3",
+      "observation": "Right-facing child visibly carries a basket; anatomy and colour family remain coherent.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_04",
+      "target_slot": "P2V_c_E_carry_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_08@1:p3": {
+      "candidate_id": "P2_fill_06_08@1:p3",
+      "observation": "East gather frame reaches toward the berry bush with a coherent crouched body.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_08",
+      "target_slot": "P2V_c_E_gather_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_12@1:p3": {
+      "candidate_id": "P2_fill_06_12@1:p3",
+      "observation": "East build frame shows a tool held beside the crouched body at 2x.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_12",
+      "target_slot": "P2V_c_E_build_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P2_fill_06_16@1:p3": {
+      "candidate_id": "P2_fill_06_16@1:p3",
+      "observation": "South eat pose brings food and hand to the mouth; child identity remains consistent.",
+      "reason": "",
+      "sprite_id": "P2_fill_06_16",
+      "target_slot": "V_c2_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_01@1:p3": {
+      "candidate_id": "P3_fill_01_01@1:p3",
+      "observation": "South-facing carrier holds a distinct red-filled basket across the torso at 2x; cream garment and tan skin remain in the reference colour families, with coherent white hair.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_01",
+      "target_slot": "V_a2_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_02@1:p3": {
+      "candidate_id": "P3_fill_01_02@1:p3",
+      "observation": "Front-facing carrier and bent stepping leg are readable at 2x, with the basket separated from the garment; white-hair preview preserves the face and load.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_02",
+      "target_slot": "V_a2_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_03@1:p3": {
+      "candidate_id": "P3_fill_01_03@1:p3",
+      "observation": "South-facing carry frame shows a clear basket held across the chest at 2x; the stepping pose and scalp-only white recolouring remain legible.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_03",
+      "target_slot": "V_a2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_04@1:p3": {
+      "candidate_id": "P3_fill_01_04@1:p3",
+      "observation": "South-facing carry frame retains a visible basket and narrow stepping silhouette at 2x; the white preview preserves face, hands, and cream clothing.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_04",
+      "target_slot": "V_a2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_06@1:p3": {
+      "candidate_id": "P3_fill_01_06@1:p3",
+      "observation": "East-facing carrier holds a distinct dark basket in front of the chest at 2x; tan skin and cream garment match the reference families, and white hair stays on the scalp.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_06",
+      "target_slot": "V_a2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_07@1:p3": {
+      "candidate_id": "P3_fill_01_07@1:p3",
+      "observation": "East-facing walking carrier has a visible basket and separated stride at 2x; head recolouring leaves the face and load intact.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_07",
+      "target_slot": "V_a2_07",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_13@1:p3": {
+      "candidate_id": "P3_fill_01_13@1:p3",
+      "observation": "South-facing builder raises a clearly visible hammer at 2x; the tool, arm, and body are coherent and the white-hair preview preserves tan skin.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_13",
+      "target_slot": "V_a2_15",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_01_14@1:p3": {
+      "candidate_id": "P3_fill_01_14@1:p3",
+      "observation": "South-facing downward building stroke shows both hands on a handle above a grey hammer head at 2x; cream garment and scalp recolouring remain coherent.",
+      "reason": "",
+      "sprite_id": "P3_fill_01_14",
+      "target_slot": "V_a2_16",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_02_05@1:p3": {
+      "candidate_id": "P3_fill_02_05@1:p3",
+      "observation": "East carry shows a distinct basket at 2x and a coherent white-hair recolour.",
+      "reason": "",
+      "sprite_id": "P3_fill_02_05",
+      "target_slot": "V_b2_05",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_02_06@1:p3": {
+      "candidate_id": "P3_fill_02_06@1:p3",
+      "observation": "East carry, cream clothing and white-hair preview remain coherent at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_02_06",
+      "target_slot": "V_b2_06",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_02_08@1:p3": {
+      "candidate_id": "P3_fill_02_08@1:p3",
+      "observation": "East carry load and bent arms remain legible; white hair preserves the face and clothes.",
+      "reason": "",
+      "sprite_id": "P3_fill_02_08",
+      "target_slot": "V_b2_08",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_01@1:p3": {
+      "candidate_id": "P3_fill_03_01@1:p3",
+      "observation": "South carry shows both hands around a red-topped load at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_01",
+      "target_slot": "P2V_c_S_carry_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_02@1:p3": {
+      "candidate_id": "P3_fill_03_02@1:p3",
+      "observation": "Front-facing carry has a distinct load against the chest and coherent legs.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_02",
+      "target_slot": "P2V_c_S_carry_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_03@1:p3": {
+      "candidate_id": "P3_fill_03_03@1:p3",
+      "observation": "South carry retains visible load, supporting hands and child proportions.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_03",
+      "target_slot": "P2V_c_S_carry_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_04@1:p3": {
+      "candidate_id": "P3_fill_03_04@1:p3",
+      "observation": "Front carry frame clearly cradles the basket-like load at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_04",
+      "target_slot": "P2V_c_S_carry_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_05@1:p3": {
+      "candidate_id": "P3_fill_03_05@1:p3",
+      "observation": "East-facing child holds the visible load forward of the torso.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_05",
+      "target_slot": "P2V_c_E_carry_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_06@1:p3": {
+      "candidate_id": "P3_fill_03_06@1:p3",
+      "observation": "Right profile carry supports a distinct red-topped basket at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_06",
+      "target_slot": "P2V_c_E_carry_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_07@1:p3": {
+      "candidate_id": "P3_fill_03_07@1:p3",
+      "observation": "East carry frame has a visible load and a coherent stepping silhouette.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_07",
+      "target_slot": "P2V_c_E_carry_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_08@1:p3": {
+      "candidate_id": "P3_fill_03_08@1:p3",
+      "observation": "Right-facing carry retains visible supported load and cream clothing.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_08",
+      "target_slot": "P2V_c_E_carry_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_13@1:p3": {
+      "candidate_id": "P3_fill_03_13@1:p3",
+      "observation": "South build shows a raised tool and work object clearly at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_13",
+      "target_slot": "P2V_c_S_build_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_14@1:p3": {
+      "candidate_id": "P3_fill_03_14@1:p3",
+      "observation": "Front-facing build has a visible tool beside the work object.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_14",
+      "target_slot": "P2V_c_S_build_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_15@1:p3": {
+      "candidate_id": "P3_fill_03_15@1:p3",
+      "observation": "East build shows a raised tool above the work object at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_15",
+      "target_slot": "P2V_c_E_build_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_03_16@1:p3": {
+      "candidate_id": "P3_fill_03_16@1:p3",
+      "observation": "East build crouches beside the work object with the tool visible at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_03_16",
+      "target_slot": "P2V_c_E_build_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_01@1:p3": {
+      "candidate_id": "P3_fill_04_01@1:p3",
+      "observation": "North build clearly shows the rear head and a tool raised overhead.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_01",
+      "target_slot": "P2V_c_N_build_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_02@1:p3": {
+      "candidate_id": "P3_fill_04_02@1:p3",
+      "observation": "Rear-facing build has a readable tool and bent working posture.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_02",
+      "target_slot": "P2V_c_N_build_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_03@1:p3": {
+      "candidate_id": "P3_fill_04_03@1:p3",
+      "observation": "South drink shows hands raised across the mouth at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_03",
+      "target_slot": "P2V_c_S_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_04@1:p3": {
+      "candidate_id": "P3_fill_04_04@1:p3",
+      "observation": "Front drink brings the hand and cup to mouth level; action reads at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_04",
+      "target_slot": "P2V_c_S_drink_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_05@1:p3": {
+      "candidate_id": "P3_fill_04_05@1:p3",
+      "observation": "East drink silhouette has a bent arm and hand at the mouth.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_05",
+      "target_slot": "P2V_c_E_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_06@1:p3": {
+      "candidate_id": "P3_fill_04_06@1:p3",
+      "observation": "Right-facing drink clearly lifts the hand to the mouth at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_06",
+      "target_slot": "P2V_c_E_drink_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_07@1:p3": {
+      "candidate_id": "P3_fill_04_07@1:p3",
+      "observation": "North drink shows raised arms at the sides of the head, consistent with hands at the hidden mouth.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_07",
+      "target_slot": "P2V_c_N_drink_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_09@1:p3": {
+      "candidate_id": "P3_fill_04_09@1:p3",
+      "observation": "South sleep frame shows a reclined child with closed eyes on bedding.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_09",
+      "target_slot": "P2V_c_S_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_10@1:p3": {
+      "candidate_id": "P3_fill_04_10@1:p3",
+      "observation": "Sideways sleeping child has closed eyes and coherent curled anatomy.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_10",
+      "target_slot": "V_c2_13",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_11@1:p3": {
+      "candidate_id": "P3_fill_04_11@1:p3",
+      "observation": "North sleep shows the rear of the head and a reclined body on bedding.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_11",
+      "target_slot": "P2V_c_N_asleep_01",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_12@1:p3": {
+      "candidate_id": "P3_fill_04_12@1:p3",
+      "observation": "South eat brings visible food to the mouth with a coherent standing body.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_12",
+      "target_slot": "V_c2_14",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_14@1:p3": {
+      "candidate_id": "P3_fill_04_14@1:p3",
+      "observation": "Front-biased gathering pose reaches into the berry bush and retains coherent child anatomy.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_14",
+      "target_slot": "P2V_c_S_gather_02",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_15@1:p3": {
+      "candidate_id": "P3_fill_04_15@1:p3",
+      "observation": "South hop lifts one leg with arms spread; jumping action reads at 2x.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_15",
+      "target_slot": "V_c2_03",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "P3_fill_04_16@1:p3": {
+      "candidate_id": "P3_fill_04_16@1:p3",
+      "observation": "Front hop has arms out and legs tucked together in a compact airborne pose.",
+      "reason": "",
+      "sprite_id": "P3_fill_04_16",
+      "target_slot": "V_c2_04",
+      "unfitted_acceptable": null,
+      "verdict": "ok"
+    },
+    "W1_01@1": {
+      "sprite_id": "W1_01",
+      "candidate_id": "W1_01@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Dense intersecting dead branches read as the fullest stage; the cluster remains distinct at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_02@1": {
+      "sprite_id": "W1_02",
+      "candidate_id": "W1_02@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Full branched deadwood cluster has a distinct second silhouette and reads at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_03@1": {
+      "sprite_id": "W1_03",
+      "candidate_id": "W1_03@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Reduced branch count and lower spread read as the next depletion stage at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_04@1": {
+      "sprite_id": "W1_04",
+      "candidate_id": "W1_04@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Reduced cluster retains visible cut limbs and reads as less wood than stage 3.",
+      "unfitted_acceptable": null
+    },
+    "W1_05@1": {
+      "sprite_id": "W1_05",
+      "candidate_id": "W1_05@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Sparse crossed limbs read as a nearly depleted deadwood source at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_06@1": {
+      "sprite_id": "W1_06",
+      "candidate_id": "W1_06@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Few remaining limbs form a sparse variant clearly below stage 2 in abundance.",
+      "unfitted_acceptable": null
+    },
+    "W1_07@1": {
+      "sprite_id": "W1_07",
+      "candidate_id": "W1_07@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Low bare patch with a few residual twigs reads as depleted at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_08@1": {
+      "sprite_id": "W1_08",
+      "candidate_id": "W1_08@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Flat scattered twig patch reads as depleted and is visibly sparser than stage 1.",
+      "unfitted_acceptable": null
+    },
+    "W1_09@1": {
+      "sprite_id": "W1_09",
+      "candidate_id": "W1_09@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Compact few-log pile reads as the small stack, with visible cut ends at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_11@1": {
+      "sprite_id": "W1_11",
+      "candidate_id": "W1_11@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Broad multi-log pile reads as the large stack, with distinguishable log ends at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_13@1": {
+      "sprite_id": "W1_13",
+      "candidate_id": "W1_13@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Few angled logs read as a small alternative stack at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_15@1": {
+      "sprite_id": "W1_15",
+      "candidate_id": "W1_15@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Numerous log ends and a taller layered silhouette read as the large alternative stack at 2x.",
+      "unfitted_acceptable": null
+    },
+    "W1_16@1": {
+      "sprite_id": "W1_16",
+      "candidate_id": "W1_16@1",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Upright sticks crossed by a horizontal binding read as a tied wood bundle at 2x.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_02_13@1:p3:mask5": {
+      "sprite_id": "P2_fill_02_13",
+      "candidate_id": "P2_fill_02_13@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Gathering posture and berry bush read at 2x; scalp recolours cleanly. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_02_14@1:p3:mask5": {
+      "sprite_id": "P2_fill_02_14",
+      "candidate_id": "P2_fill_02_14@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East-facing gathering and bush read clearly; light and black scalp previews preserve face. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_02_16@1:p3:mask5": {
+      "sprite_id": "P2_fill_02_16",
+      "candidate_id": "P2_fill_02_16@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Bent building pose retains a visible tool at 2x; scalp previews preserve skin and clothing. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_05_04@1:p3:mask5": {
+      "sprite_id": "P2_fill_05_04",
+      "candidate_id": "P2_fill_05_04@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear building stance and tool read at 2x; scalp recolours without visible spill onto the body. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_05_07@1:p3:mask5": {
+      "sprite_id": "P2_fill_05_07",
+      "candidate_id": "P2_fill_05_07@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Raised hands reach the mouth at 2x; back hair recolours while clothing and skin remain distinct. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_05_09@1:p3:mask5": {
+      "sprite_id": "P2_fill_05_09",
+      "candidate_id": "P2_fill_05_09@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Eating gesture reads at 2x; recoloured side scalp preserves face, hands, and tunic. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P2_fill_05_11@1:p3:mask5": {
+      "sprite_id": "P2_fill_05_11",
+      "candidate_id": "P2_fill_05_11@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Rear eating gesture and held food remain legible; light and black hair previews preserve the body. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P3_fill_02_03@1:p3:mask5": {
+      "sprite_id": "P3_fill_02_03",
+      "candidate_id": "P3_fill_02_03@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front-facing carried basket is clear at 2x; hair surrounds the face cleanly in both recolour previews. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P3_fill_02_04@1:p3:mask5": {
+      "sprite_id": "P3_fill_02_04",
+      "candidate_id": "P3_fill_02_04@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket and front carry posture read at 2x; recolouring remains confined to visible hair. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P3_fill_02_12@1:p3:mask5": {
+      "sprite_id": "P3_fill_02_12",
+      "candidate_id": "P3_fill_02_12@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Low hammer and building posture remain clear at 2x; scalp recolouring does not alter skin or clothes. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "P3_fill_02_15@1:p3:mask5": {
+      "sprite_id": "P3_fill_02_15",
+      "candidate_id": "P3_fill_02_15@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Hands meet the mouth in the front drinking pose; light and black previews retain the face. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b1_09@2:p3:mask5": {
+      "sprite_id": "V_b1_09",
+      "candidate_id": "V_b1_09@2:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking stride reads at 2x; long swept hair recolours through the tail with body colours preserved. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b1_09@3:p3:mask5": {
+      "sprite_id": "V_b1_09",
+      "candidate_id": "V_b1_09@3:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East stride and body remain consistent with the reference; side hair and tail recolour without visible body spill. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b1_10@3:p3:mask5": {
+      "sprite_id": "V_b1_10",
+      "candidate_id": "V_b1_10@3:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking silhouette is legible; light preview follows scalp and rear lock while keeping tunic unchanged. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b1_11@1:p3:mask5": {
+      "sprite_id": "V_b1_11",
+      "candidate_id": "V_b1_11@1:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "East walking pose and identity remain readable; upper hair and rear lock recolour cleanly. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_01@2:p3:mask5": {
+      "sprite_id": "V_b2_01",
+      "candidate_id": "V_b2_01@2:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carried basket reads at 2x; white and black hair leave face, hands, and load intact. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_01@3:p3:mask5": {
+      "sprite_id": "V_b2_01",
+      "candidate_id": "V_b2_01@3:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Front carry action and basket are distinct at 2x; recolour preserves the character's body colours. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_02@3:p3:mask5": {
+      "sprite_id": "V_b2_02",
+      "candidate_id": "V_b2_02@3:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket is visible between both hands at 2x; hair coverage follows both sides of the head. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_03@3:p3:mask5": {
+      "sprite_id": "V_b2_03",
+      "candidate_id": "V_b2_03@3:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The broad held basket remains readable at 2x; recolouring retains face, arms, and cream clothing. Raw crop unavailable on this card.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_05@2:p3:mask5:r2": {
+      "sprite_id": "V_b2_05",
+      "candidate_id": "V_b2_05@2:p3:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Basket and walking carry read at 2x; mask follows crown and rear hair, with face, hands and clothing preserved.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_06@2:p3:mask5:r2": {
+      "sprite_id": "V_b2_06",
+      "candidate_id": "V_b2_06@2:p3:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Carry load reads at 2x; crown and rear hair recolor coherently while skin and basket retain their colors.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_07@2:p3:mask5": {
+      "sprite_id": "V_b2_07",
+      "candidate_id": "V_b2_07@2:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "At 2x the fruit basket reads clearly; the light and black previews preserve face and clothing, with the long hair covered.",
+      "unfitted_acceptable": null
+    },
+    "V_b2_09@2:p3:mask5": {
+      "sprite_id": "V_b2_09",
+      "candidate_id": "V_b2_09@2:p3:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "Gathering at the berry bush reads at 2x; the long hair recolours coherently and the face stays unchanged.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_06@1:mask5": {
+      "sprite_id": "V_a4_06",
+      "candidate_id": "V_a4_06@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The 2x wood load is readable; the flaxen and black previews retain the face and clothing while recolouring the visible hair.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_08@1:mask5": {
+      "sprite_id": "V_a4_08",
+      "candidate_id": "V_a4_08@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The wood bundle reads at 2x and the mask follows the visible hair without substantial recolouring of skin or load.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_09@1:mask5": {
+      "sprite_id": "V_a4_09",
+      "candidate_id": "V_a4_09@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The back-facing hair recolours coherently; the carried wood remains readable and separate at 2x.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_10@1:mask5": {
+      "sprite_id": "V_a4_10",
+      "candidate_id": "V_a4_10@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The long rear hair is covered and the flaxen/black previews preserve the wood and clothing.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_11@1:mask5": {
+      "sprite_id": "V_a4_11",
+      "candidate_id": "V_a4_11@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The rear hair remains coherent in both previews and the wood bundle is legible at 2x.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_12@1:mask5": {
+      "sprite_id": "V_a4_12",
+      "candidate_id": "V_a4_12@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The mask follows the rear hair; the wood load and skin remain distinct in both recolours.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_15@1:mask5": {
+      "sprite_id": "V_a4_15",
+      "candidate_id": "V_a4_15@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The bent gathering pose and ground wood read at 2x; the hair recolours without visible face or clothing contamination.",
+      "unfitted_acceptable": null
+    },
+    "V_a4_16@1:mask5": {
+      "sprite_id": "V_a4_16",
+      "candidate_id": "V_a4_16@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The upright gathered branch reads at 2x; both recolours preserve the face, branch and clothes.",
+      "unfitted_acceptable": null
+    },
+    "V_b4_09@1:mask5:r2": {
+      "sprite_id": "V_b4_09",
+      "candidate_id": "V_b4_09@1:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing carry and the load remain readable at 2x; the mask covers the visible rear hair and the previews preserve clothing and arms.",
+      "unfitted_acceptable": null
+    },
+    "V_b4_10@1:mask5:r2": {
+      "sprite_id": "V_b4_10",
+      "candidate_id": "V_b4_10@1:mask5:r2",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "North-facing carry is legible at 2x; the rear scalp and hanging hair recolour together with no clear excess non-hair coverage.",
+      "unfitted_acceptable": null
+    },
+    "V_b4_11@1:mask5": {
+      "sprite_id": "V_b4_11",
+      "candidate_id": "V_b4_11@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The wood load reads at 2x; the rear hair recolours coherently in flaxen and black without changing the load.",
+      "unfitted_acceptable": null
+    },
+    "V_b4_14@1:mask5": {
+      "sprite_id": "V_b4_14",
+      "candidate_id": "V_b4_14@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The diagonal branch and gathering stance read at 2x; flaxen and black stay on the visible hair.",
+      "unfitted_acceptable": null
+    },
+    "V_b4_16@1:mask5": {
+      "sprite_id": "V_b4_16",
+      "candidate_id": "V_b4_16@1:mask5",
+      "verdict": "ok",
+      "reason": "",
+      "observation": "The held branch remains legible at 2x; the hair colour changes preserve the face and clothing.",
+      "unfitted_acceptable": null
+    }
+  },
+  "exclusions": {
+    "V_a2_10@3:p3": "visual_rejection",
+    "P2_fill_04_02@1:p3": "visual_rejection",
+    "V_b1_09@1:p3": "visual_rejection",
+    "V_b1_10@1:p3": "visual_rejection",
+    "V_b1_11@1:p3": "visual_rejection",
+    "V_b1_12@1:p3": "visual_rejection",
+    "V_b1_09@2:p3": "visual_rejection",
+    "V_b1_12@2:p3": "visual_rejection",
+    "V_b1_09@3:p3": "visual_rejection",
+    "V_b1_10@3:p3": "visual_rejection",
+    "V_b1_11@3:p3": "visual_rejection",
+    "V_b1_12@3:p3": "visual_rejection",
+    "V_b2_01@2:p3": "visual_rejection",
+    "V_b2_02@2:p3": "visual_rejection",
+    "V_b2_03@2:p3": "visual_rejection",
+    "V_b2_04@2:p3": "visual_rejection",
+    "V_b2_05@2:p3": "visual_rejection",
+    "V_b2_06@2:p3": "visual_rejection",
+    "V_b2_07@2:p3": "visual_rejection",
+    "V_b2_08@2:p3": "visual_rejection",
+    "V_b2_09@2:p3": "visual_rejection",
+    "V_b2_10@2:p3": "visual_rejection",
+    "V_b2_14@2:p3": "visual_rejection",
+    "V_b2_01@3:p3": "visual_rejection",
+    "V_b2_02@3:p3": "visual_rejection",
+    "V_b2_03@3:p3": "visual_rejection",
+    "V_b2_04@3:p3": "visual_rejection",
+    "V_b2_05@3:p3": "visual_rejection",
+    "V_b2_06@3:p3": "visual_rejection",
+    "V_b2_07@3:p3": "visual_rejection",
+    "V_b2_09@3:p3": "visual_rejection",
+    "V_b2_10@3:p3": "visual_rejection",
+    "V_b2_13@3:p3": "visual_rejection",
+    "V_b2_14@3:p3": "visual_rejection",
+    "V_b3_16@1:p3": "visual_rejection",
+    "V_b3_16@2:p3": "visual_rejection",
+    "V_b3_13@3:p3": "visual_rejection",
+    "V_b3_16@3:p3": "visual_rejection",
+    "P2_fill_02_06@1:p3": "visual_rejection",
+    "P2_fill_02_13@1:p3": "visual_rejection",
+    "P2_fill_02_14@1:p3": "visual_rejection",
+    "P2_fill_02_15@1:p3": "visual_rejection",
+    "P2_fill_02_16@1:p3": "visual_rejection",
+    "P2_fill_05_01@1:p3": "visual_rejection",
+    "P2_fill_05_02@1:p3": "visual_rejection",
+    "P2_fill_05_03@1:p3": "visual_rejection",
+    "P2_fill_05_04@1:p3": "visual_rejection",
+    "P2_fill_05_05@1:p3": "visual_rejection",
+    "P2_fill_05_07@1:p3": "visual_rejection",
+    "P2_fill_05_08@1:p3": "visual_rejection",
+    "P2_fill_05_09@1:p3": "visual_rejection",
+    "P2_fill_05_11@1:p3": "visual_rejection",
+    "V_c1_10@2:p3": "visual_rejection",
+    "V_c1_16@2:p3": "visual_rejection",
+    "V_c1_08@3:p3": "visual_rejection",
+    "V_c1_09@3:p3": "visual_rejection",
+    "V_c1_16@3:p3": "visual_rejection",
+    "V_c2_05@1:p3": "visual_rejection",
+    "V_c2_10@1:p3": "visual_rejection",
+    "V_c2_16@1:p3": "visual_rejection",
+    "V_c2_05@2:p3": "visual_rejection",
+    "V_c2_03@3:p3": "visual_rejection",
+    "V_c2_14@3:p3": "visual_rejection",
+    "P2_fill_06_05@1:p3": "visual_rejection",
+    "P2_fill_06_06@1:p3": "visual_rejection",
+    "P2_fill_06_09@1:p3": "visual_rejection",
+    "P3_fill_01_05@1:p3": "visual_rejection",
+    "P3_fill_01_08@1:p3": "visual_rejection",
+    "P3_fill_01_16@1:p3": "visual_rejection",
+    "P3_fill_02_03@1:p3": "visual_rejection",
+    "P3_fill_02_04@1:p3": "visual_rejection",
+    "P3_fill_02_11@1:p3": "visual_rejection",
+    "P3_fill_02_12@1:p3": "visual_rejection",
+    "P3_fill_02_15@1:p3": "visual_rejection",
+    "P3_fill_04_08@1:p3": "visual_rejection",
+    "P3_fill_04_13@1:p3": "visual_rejection",
+    "V_a4_01@1": "visual_rejection",
+    "V_a4_02@1": "visual_rejection",
+    "V_a4_03@1": "visual_rejection",
+    "V_a4_04@1": "visual_rejection",
+    "V_a4_05@1": "visual_rejection",
+    "V_a4_06@1": "visual_rejection",
+    "V_a4_07@1": "visual_rejection",
+    "V_a4_08@1": "visual_rejection",
+    "V_a4_09@1": "visual_rejection",
+    "V_a4_10@1": "visual_rejection",
+    "V_a4_11@1": "visual_rejection",
+    "V_a4_12@1": "visual_rejection",
+    "V_a4_13@1": "visual_rejection",
+    "V_a4_14@1": "visual_rejection",
+    "V_a4_15@1": "visual_rejection",
+    "V_a4_16@1": "visual_rejection",
+    "V_b4_01@1": "visual_rejection",
+    "V_b4_02@1": "visual_rejection",
+    "V_b4_03@1": "visual_rejection",
+    "V_b4_04@1": "visual_rejection",
+    "V_b4_05@1": "visual_rejection",
+    "V_b4_06@1": "visual_rejection",
+    "V_b4_07@1": "visual_rejection",
+    "V_b4_08@1": "visual_rejection",
+    "V_b4_09@1": "visual_rejection",
+    "V_b4_10@1": "visual_rejection",
+    "V_b4_11@1": "visual_rejection",
+    "V_b4_12@1": "visual_rejection",
+    "V_b4_13@1": "visual_rejection",
+    "V_b4_14@1": "visual_rejection",
+    "V_b4_15@1": "visual_rejection",
+    "V_b4_16@1": "visual_rejection",
+    "V_c3_01@1": "children_do_not_gather_wood",
+    "V_c3_02@1": "children_do_not_gather_wood",
+    "V_c3_03@1": "children_do_not_gather_wood",
+    "V_c3_04@1": "children_do_not_gather_wood",
+    "V_c3_05@1": "children_do_not_gather_wood",
+    "V_c3_06@1": "children_do_not_gather_wood",
+    "V_c3_07@1": "visual_rejection",
+    "V_c3_08@1": "visual_rejection",
+    "V_c3_09@1": "visual_rejection",
+    "V_c3_10@1": "visual_rejection",
+    "V_c3_11@1": "visual_rejection",
+    "V_c3_12@1": "children_do_not_gather_wood",
+    "V_c3_13@1": "children_do_not_gather_wood",
+    "V_c3_14@1": "children_do_not_gather_wood",
+    "V_c3_15@1": "children_do_not_gather_wood",
+    "V_c3_16@1": "children_do_not_gather_wood",
+    "W1_10@1": "visual_rejection",
+    "W1_12@1": "visual_rejection",
+    "W1_14@1": "visual_rejection",
+    "P2_fill_02_15@1:p3:mask5:r2": "visual_rejection",
+    "P2_fill_04_02@1:p3:mask5:r2": "visual_rejection",
+    "P2_fill_05_01@1:p3:mask5:r2": "visual_rejection",
+    "P2_fill_05_02@1:p3:mask5:r2": "visual_rejection",
+    "P2_fill_05_03@1:p3:mask5:r2": "visual_rejection",
+    "P2_fill_05_08@1:p3:mask5:r2": "visual_rejection",
+    "P3_fill_02_11@1:p3:mask5:r2": "visual_rejection",
+    "V_a2_10@3:p3:mask5:r2": "visual_rejection",
+    "V_b1_09@1:p3:mask5:r2": "visual_rejection",
+    "V_b1_12@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_03@2:p3:mask5:r2": "visual_rejection",
+    "V_b2_04@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_05@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_06@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_07@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_09@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_10@2:p3:mask5:r2": "visual_rejection",
+    "V_b2_10@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_13@3:p3:mask5:r2": "visual_rejection",
+    "V_b2_14@2:p3:mask5:r2": "visual_rejection",
+    "V_b2_14@3:p3:mask5:r2": "visual_rejection",
+    "V_b3_16@1:p3:mask5:r2": "visual_rejection",
+    "V_a4_01@1:mask5:r2": "visual_rejection",
+    "V_a4_02@1:mask5:r2": "visual_rejection",
+    "V_a4_03@1:mask5:r2": "visual_rejection",
+    "V_a4_04@1:mask5:r2": "visual_rejection",
+    "V_a4_05@1:mask5:r2": "visual_rejection",
+    "V_a4_07@1:mask5:r2": "visual_rejection",
+    "V_a4_13@1:mask5:r2": "visual_rejection",
+    "V_b4_01@1:mask5:r2": "visual_rejection",
+    "V_b4_02@1:mask5:r2": "visual_rejection",
+    "V_b4_03@1:mask5:r2": "visual_rejection",
+    "V_b4_04@1:mask5:r2": "visual_rejection",
+    "V_b4_05@1:mask5:r2": "visual_rejection",
+    "V_b4_06@1:mask5:r2": "visual_rejection",
+    "V_b4_07@1:mask5:r2": "visual_rejection",
+    "V_b4_08@1:mask5:r2": "visual_rejection",
+    "V_b4_12@1:mask5:r2": "visual_rejection",
+    "V_b4_13@1:mask5:r2": "visual_rejection",
+    "V_b4_15@1:mask5:r2": "visual_rejection"
+  },
+  "trials": [
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_a3",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_a3",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_a_E_carry_2853a70ad4",
+      "group": [
+        "adult_a",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.886251720215865,
+        10.839291511731066,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_01_05@1:missing:derived",
+        "P3_fill_01_06@1:p3",
+        "P3_fill_01_07@1:p3",
+        "P3_fill_01_08@1:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "drink"
+      ],
+      "source": [
+        "V_a3",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "V_a2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_a_E_gather_wood_3b5fb386c1",
+      "group": [
+        "adult_a",
+        "E",
+        "gather_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        11.51042778791195,
+        10.765815571019004,
+        1,
+        0
+      ],
+      "reason": "group_median_height",
+      "candidate_ids": [
+        "V_a4_15@1:mask5",
+        "V_a4_16@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "talk"
+      ],
+      "source": [
+        "V_a3",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_a1",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_a_N_carry_wood_966093fabb",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        10.771328683170998,
+        10.191270905732534,
+        1,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_130ad2f7f8",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.135777444667498,
+        10.03238309610666,
+        1,
+        1
+      ],
+      "reason": "group_median_height,head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5:derived",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_8bc8bf1e92",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.771328683170998,
+        10.10208252702394,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_5b462ea1fa",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.771328683170998,
+        10.280459284441129,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5:derived",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_552500fe2c",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.771328683170998,
+        10.35015871535841,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_2dd795cdd2",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.135777444667498,
+        9.943194717398065,
+        1,
+        2
+      ],
+      "reason": "group_median_height",
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5:derived",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_216fa91e09",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.135777444667498,
+        10.121571474815255,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5:derived",
+        "V_a4_11@1:mask5:derived",
+        "V_a4_12@1:mask5"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_N_carry_wood_e6e605d391",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.771328683170998,
+        10.260970336649816,
+        1,
+        2
+      ],
+      "reason": "animation_ok",
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "status": "installed",
+      "review_strikes": 0
+    },
+    {
+      "id": "adult_a_N_carry_wood_5d656e4b61",
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.771328683170998,
+        10.439347094067003,
+        1,
+        2
+      ],
+      "reason": "higher_ranked_completion_approved",
+      "candidate_ids": [
+        "V_a4_09@1:mask5",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5:derived",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_a_S_build_96a07afc9d",
+      "group": [
+        "adult_a",
+        "S",
+        "build"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        10.857231633665245,
+        10.218970895147656,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_01_13@1:p3",
+        "P3_fill_01_14@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_a",
+        "S",
+        "build"
+      ],
+      "source": [
+        "V_a2",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_a_S_carry_47093934aa",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        10.952268037689505,
+        10.43372777363291,
+        1,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_S_carry_3b62976eb3",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.674453791130468,
+        10.260037904907914,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3:derived",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_a_S_carry_72bc9f0fca",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.952268037689505,
+        10.227784501580828,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3:derived",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_S_carry_c7ab5f47cb",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.952268037689505,
+        10.607417642357905,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_S_carry_d31ef2d918",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.952268037689505,
+        10.639671045684992,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3:derived",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_S_carry_401d5476e6",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.257508562789525,
+        10.054094632855833,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3:derived",
+        "P3_fill_01_03@1:p3:derived",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_a_S_carry_01e0742e09",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.674453791130468,
+        10.465981176959996,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3:derived",
+        "P3_fill_01_02@1:p3:derived",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_a_S_carry_2ee1eeb1a8",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.952268037689505,
+        10.401474370305824,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3:derived",
+        "P3_fill_01_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_a_S_carry_537ab7ce75",
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.952268037689505,
+        10.813360914409987,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3:derived",
+        "P3_fill_01_02@1:p3",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_b_E_asleep_d6a790c91a",
+      "group": [
+        "adult_b",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_b3",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        8.734483291216788,
+        8.734483291216788,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_b3_13@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_b3",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "build"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "build"
+      ],
+      "source": [
+        "P3_fill_02",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "build"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_b_E_carry_87fdee3cac",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        9.431645373967546,
+        8.740009585701106,
+        1,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_3a2de4b6d8",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.796756978170887,
+        8.509326235993075,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_318c1faae0",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.431645373967546,
+        8.596501345041023,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3:derived",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_f0572275d1",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.431645373967546,
+        8.883517826361187,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3:derived",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_9d84be0379",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.431645373967546,
+        8.970692935409135,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3:derived",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_e02ec1a575",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.508911975135428,
+        8.365817995332995,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3:derived",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_f948c1bb50",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.796756978170887,
+        8.652834476653158,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3:derived",
+        "P2_fill_02_12@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_3630ac7397",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        9.431645373967546,
+        8.827184694749054,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3:derived",
+        "P2_fill_02_10@1:p3:derived",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_140346876f",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        9.431645373967546,
+        9.114201176069216,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3",
+        "P2_fill_02_10@1:p3:derived",
+        "P2_fill_02_11@1:p3:derived",
+        "P2_fill_02_12@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "adult_b_E_carry_2857052241",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        11.617272488704804,
+        11.441513445979759,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_02_05@1:p3",
+        "P3_fill_02_06@1:p3",
+        "P3_fill_02_07@1:missing:derived",
+        "P3_fill_02_08@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_1b9dc505ff",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.210071138226343,
+        10.234207856068327,
+        2,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_b2_05@2:p3:mask5:r2",
+        "V_b2_06@2:p3:mask5:r2",
+        "V_b2_07@2:p3:mask5",
+        "V_b2_08@2:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_44fdbe608a",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.536664491425581,
+        10.065856194368138,
+        2,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_b2_05@2:p3:mask5:r2:derived",
+        "V_b2_06@2:p3:mask5:r2",
+        "V_b2_07@2:p3:mask5",
+        "V_b2_08@2:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_E_carry_a19a9a97ed",
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        11.210071138226343,
+        10.402559517768518,
+        2,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_b2_05@2:p3:mask5:r2",
+        "V_b2_06@2:p3:mask5:r2",
+        "V_b2_07@2:p3:mask5:derived",
+        "V_b2_08@2:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "eat"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "gather_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_b1",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_b1",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_b1",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "asleep"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "build"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_b_N_carry_wood_082c6163a1",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.848564962150137,
+        8.274902244982558,
+        1,
+        1
+      ],
+      "reason": "animation_ok",
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "status": "installed",
+      "review_strikes": 0
+    },
+    {
+      "id": "adult_b_N_carry_wood_9aac24fd12",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.487361776865125,
+        7.881841120457484,
+        1,
+        2
+      ],
+      "reason": "higher_ranked_completion_approved",
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5:derived",
+        "V_b4_12@1:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_N_carry_wood_7f857d9374",
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.848564962150137,
+        8.667963369507632,
+        1,
+        2
+      ],
+      "reason": "higher_ranked_completion_approved",
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2:derived",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "drink"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "eat"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "asleep"
+      ],
+      "source": [
+        "P2_fill_05",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_b_S_carry_82ad145c3c",
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.81452014587407,
+        8.005736268393564,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_05@1:p3",
+        "P2_fill_02_06@1:missing:derived",
+        "P2_fill_02_07@1:p3",
+        "P2_fill_02_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_S_carry_1395dfb15a",
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.140331563834913,
+        7.837189122883775,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_05@1:p3",
+        "P2_fill_02_06@1:missing:derived",
+        "P2_fill_02_07@1:p3:derived",
+        "P2_fill_02_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "adult_b_S_carry_aa9cda4b83",
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.81452014587407,
+        8.174283413903353,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_02_05@1:p3:derived",
+        "P2_fill_02_06@1:missing:derived",
+        "P2_fill_02_07@1:p3",
+        "P2_fill_02_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_02",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "V_b2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "adult_b_S_carry_85524edf11",
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "V_b2",
+        3
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        10.859282625317078,
+        10.40004338409187,
+        3,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_b2_01@3:p3:mask5",
+        "V_b2_02@3:p3:mask5",
+        "V_b2_03@3:p3:mask5:derived",
+        "V_b2_04@3:missing:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "drink"
+      ],
+      "source": [
+        "P3_fill_02",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "gather_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_c2",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "asleep"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "build"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "build"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_E_carry_12c41398f8",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        9.461636356871137,
+        8.756706672141886,
+        1,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_9d2e84d00a",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.770614466396626,
+        8.58395119952326,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_71c9d62152",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.461636356871137,
+        8.65743502391457,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3:derived",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_b96661a8cd",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.461636356871137,
+        8.855978320369204,
+        1,
+        1
+      ],
+      "reason": "group_median_height,head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3:derived",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_c1d8d615ca",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.461636356871137,
+        8.929462144760514,
+        1,
+        1
+      ],
+      "reason": "group_median_height,head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3:derived",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_90b292eb75",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.770614466396626,
+        8.48467955129594,
+        1,
+        2
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3:derived",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_carry_80c27ffdc7",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        8.770614466396626,
+        8.683222847750574,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3:derived",
+        "P2_fill_06_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_cafc7dc714",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        9.461636356871137,
+        8.830190496533197,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3:derived",
+        "P2_fill_06_02@1:p3:derived",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_E_carry_4baf44addb",
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        9.461636356871137,
+        9.02873379298783,
+        1,
+        2
+      ],
+      "reason": "group_median_height",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3",
+        "P2_fill_06_02@1:p3:derived",
+        "P2_fill_06_03@1:p3:derived",
+        "P2_fill_06_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "drink"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "gather"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_E_run_bd3e92b6c8",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.9709247331693,
+        10.152429599484146,
+        2,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@2:missing:derived",
+        "V_c2_06@2:p3",
+        "V_c2_07@2:p3",
+        "V_c2_08@2:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_run_e2449b8b7d",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        11.951429520248977,
+        11.17599882499998,
+        3,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@3:p3",
+        "V_c2_06@3:p3",
+        "V_c2_07@3:p3",
+        "V_c2_08@3:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_run_535c8277fb",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.789184986148229,
+        10.860264629322934,
+        3,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@3:p3",
+        "V_c2_06@3:p3",
+        "V_c2_07@3:p3:derived",
+        "V_c2_08@3:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_run_c3267bff86",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.951429520248977,
+        10.797424592478404,
+        3,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@3:p3",
+        "V_c2_06@3:p3:derived",
+        "V_c2_07@3:p3",
+        "V_c2_08@3:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_run_7ab5080f9b",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.951429520248977,
+        11.491733020677026,
+        3,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@3:p3:derived",
+        "V_c2_06@3:p3",
+        "V_c2_07@3:p3",
+        "V_c2_08@3:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_run_402766f946",
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.951429520248977,
+        11.554573057521557,
+        3,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_05@3:p3",
+        "V_c2_06@3:p3",
+        "V_c2_07@3:p3",
+        "V_c2_08@3:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_3d861bcd73",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        7.552739372301474,
+        7.235745767800857,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3",
+        "P2_fill_03_06@1:p3",
+        "P2_fill_03_07@1:p3",
+        "P2_fill_03_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_a4bcd43924",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.500947412575979,
+        7.2227977778694825,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3",
+        "P2_fill_03_06@1:p3:derived",
+        "P2_fill_03_07@1:p3",
+        "P2_fill_03_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_1c2790daaa",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.552739372301474,
+        7.158555892488193,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3",
+        "P2_fill_03_06@1:p3",
+        "P2_fill_03_07@1:p3:derived",
+        "P2_fill_03_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_acbfd69796",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.552739372301474,
+        7.24869375773223,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3",
+        "P2_fill_03_06@1:p3",
+        "P2_fill_03_07@1:p3",
+        "P2_fill_03_08@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_ba38e4b9e2",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.552739372301474,
+        7.312935643113519,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3:derived",
+        "P2_fill_03_06@1:p3",
+        "P2_fill_03_07@1:p3",
+        "P2_fill_03_08@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_7f814a514a",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.219965899695971,
+        7.52204022144702,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c1_09@1:p3",
+        "V_c1_10@1:p3",
+        "V_c1_11@1:p3",
+        "V_c1_12@1:missing:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_efd12eac72",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.783262802524376,
+        11.17896887101054,
+        2,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c1_09@2:p3",
+        "V_c1_10@2:missing:derived",
+        "V_c1_11@2:p3",
+        "V_c1_12@2:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_E_walk_dcb0c82417",
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        3
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.591770320239485,
+        10.573331168738873,
+        3,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_09@3:missing:derived",
+        "V_c1_10@3:p3",
+        "V_c1_11@3:p3",
+        "V_c1_12@3:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "child",
+        "N",
+        "asleep"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "N",
+        "build"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "N",
+        "drink"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_N_walk_a7fb830e31",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        7.141249670149994,
+        6.879504952044937,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3",
+        "P2_fill_03_10@1:p3",
+        "P2_fill_03_11@1:p3",
+        "P2_fill_03_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_3e0ed96839",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.123012292737065,
+        6.753009496222412,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3",
+        "P2_fill_03_10@1:p3",
+        "P2_fill_03_11@1:p3",
+        "P2_fill_03_12@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_c381f5c588",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.141249670149994,
+        6.75337437846887,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3",
+        "P2_fill_03_10@1:p3",
+        "P2_fill_03_11@1:p3:derived",
+        "P2_fill_03_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_de4357826b",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.141249670149994,
+        7.005635525621004,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3:derived",
+        "P2_fill_03_10@1:p3",
+        "P2_fill_03_11@1:p3",
+        "P2_fill_03_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_a36aebd867",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        7.141249670149994,
+        7.006000407867462,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3",
+        "P2_fill_03_10@1:p3:derived",
+        "P2_fill_03_11@1:p3",
+        "P2_fill_03_12@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_acb94c42c4",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        9.25332504911936,
+        8.169668929832152,
+        1,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_13@1:p3",
+        "V_c1_14@1:p3",
+        "V_c1_15@1:p3",
+        "V_c1_16@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_N_walk_4615756ac9",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.367791899790719,
+        7.8241955041804765,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c1_13@1:p3:derived",
+        "V_c1_14@1:p3",
+        "V_c1_15@1:p3",
+        "V_c1_16@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_N_walk_a86b0f2fec",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.25332504911936,
+        7.874252810860942,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_13@1:p3",
+        "V_c1_14@1:p3",
+        "V_c1_15@1:p3",
+        "V_c1_16@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_N_walk_fde9ef17a5",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.25332504911936,
+        8.465085048803363,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_13@1:p3",
+        "V_c1_14@1:p3:derived",
+        "V_c1_15@1:p3",
+        "V_c1_16@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_N_walk_cf08fb63f4",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        9.25332504911936,
+        8.515142355483828,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_13@1:p3",
+        "V_c1_14@1:p3",
+        "V_c1_15@1:p3:derived",
+        "V_c1_16@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_N_walk_ead7c83129",
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.442399773160696,
+        9.856033557383912,
+        2,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_13@2:p3",
+        "V_c1_14@2:p3",
+        "V_c1_15@2:p3",
+        "V_c1_16@2:missing:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "asleep"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_S_build_2ffc94e5c1",
+      "group": [
+        "child",
+        "S",
+        "build"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        11.74437052224049,
+        10.531606570207833,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P3_fill_03_13@1:p3",
+        "P3_fill_03_14@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_S_carry_d7667a37c8",
+      "group": [
+        "child",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        11.882036767776476,
+        11.16785906509881,
+        1,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_03_01@1:p3",
+        "P3_fill_03_02@1:p3",
+        "P3_fill_03_03@1:p3:derived",
+        "P3_fill_03_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_carry_926321baae",
+      "group": [
+        "child",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        11.83276980661169,
+        11.155542324807612,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_03_01@1:p3",
+        "P3_fill_03_02@1:p3",
+        "P3_fill_03_03@1:p3:derived",
+        "P3_fill_03_04@1:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_carry_6249e3be72",
+      "group": [
+        "child",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "kind": "C2",
+      "copies": 2,
+      "rank": [
+        2,
+        11.882036767776476,
+        11.180175805390007,
+        1,
+        2
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "P3_fill_03_01@1:p3",
+        "P3_fill_03_02@1:p3:derived",
+        "P3_fill_03_03@1:p3:derived",
+        "P3_fill_03_04@1:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "drink"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "eat"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "eat"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "eat"
+      ],
+      "source": [
+        "V_c2",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "eat"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "gather"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "hop"
+      ],
+      "source": [
+        "P3_fill_04",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "hop"
+      ],
+      "source": [
+        "V_c2",
+        1
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "hop"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "hop"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_S_hug_a018304c0a",
+      "group": [
+        "child",
+        "S",
+        "hug"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        10.41295530235388,
+        10.41295530235388,
+        2,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "V_c2_16@2:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "hug"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "talk"
+      ],
+      "source": [
+        "V_c2",
+        2
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "talk"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    },
+    {
+      "id": "child_S_walk_08d1ab3e49",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        8.809087020640183,
+        8.083790108281587,
+        1,
+        0
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3",
+        "P2_fill_03_02@1:p3",
+        "P2_fill_03_03@1:p3",
+        "P2_fill_03_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_S_walk_cfa7773acb",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.186983535772097,
+        7.928264237064566,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3",
+        "P2_fill_03_02@1:p3:derived",
+        "P2_fill_03_03@1:p3",
+        "P2_fill_03_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_S_walk_1bcd5bffcb",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.809087020640183,
+        8.006301988240072,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3",
+        "P2_fill_03_02@1:p3",
+        "P2_fill_03_03@1:p3:derived",
+        "P2_fill_03_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_S_walk_75c135c6ef",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.809087020640183,
+        8.161278228323102,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3:derived",
+        "P2_fill_03_02@1:p3",
+        "P2_fill_03_03@1:p3",
+        "P2_fill_03_04@1:p3"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_S_walk_1d39c3592b",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        8.809087020640183,
+        8.23931597949861,
+        1,
+        1
+      ],
+      "reason": "does_not_improve_real_frame_count",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3",
+        "P2_fill_03_02@1:p3",
+        "P2_fill_03_03@1:p3",
+        "P2_fill_03_04@1:p3:derived"
+      ],
+      "status": "untried"
+    },
+    {
+      "id": "child_S_walk_c8c8919953",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C0",
+      "copies": 0,
+      "rank": [
+        0,
+        10.932093582063084,
+        10.261036738995255,
+        2,
+        0
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_05@2:p3",
+        "V_c1_06@2:p3",
+        "V_c1_07@2:p3",
+        "V_c1_08@2:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_walk_ed3f73324a",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.352298382410497,
+        9.881921519222184,
+        2,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_05@2:p3",
+        "V_c1_06@2:p3:derived",
+        "V_c1_07@2:p3",
+        "V_c1_08@2:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_walk_7e7bc8d460",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.932093582063084,
+        10.258992715526789,
+        2,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_05@2:p3:derived",
+        "V_c1_06@2:p3",
+        "V_c1_07@2:p3",
+        "V_c1_08@2:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_walk_66fed3c4c2",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.932093582063084,
+        10.26308076246372,
+        2,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_05@2:p3",
+        "V_c1_06@2:p3",
+        "V_c1_07@2:p3:derived",
+        "V_c1_08@2:p3"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "id": "child_S_walk_70b25f50fd",
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        2
+      ],
+      "kind": "C1",
+      "copies": 1,
+      "rank": [
+        1,
+        10.932093582063084,
+        10.640151958768325,
+        2,
+        1
+      ],
+      "reason": "head_top",
+      "candidate_ids": [
+        "V_c1_05@2:p3",
+        "V_c1_06@2:p3",
+        "V_c1_07@2:p3",
+        "V_c1_08@2:p3:derived"
+      ],
+      "status": "guard_rejected"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "V_c1",
+        3
+      ],
+      "reason": "no_complete_usable_set"
+    }
+  ],
+  "baseline_manifest_sha256": "ac7120f9d269d402f679d4a6852c417c740996a387b45043c0d92dcba5f57e96"
+}

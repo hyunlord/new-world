@@ -3980,7 +3980,7 @@
       "native_path": "assets/art/production/V_b1/06_native.png",
       "source": "generated:V_b1/06@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b1_06@2",
       "body": "adult_b",
       "view": "S",
@@ -4007,7 +4007,7 @@
     {
       "path": "assets/art/production/V_b1/06_native.png",
       "source": "generated:V_b1/06@2:v4:f=0.823529",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         13,
         28
@@ -4024,7 +4024,7 @@
       "native_path": "assets/art/production/V_b1/07_native.png",
       "source": "generated:V_b1/07@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b1_07@2",
       "body": "adult_b",
       "view": "S",
@@ -4051,7 +4051,7 @@
     {
       "path": "assets/art/production/V_b1/07_native.png",
       "source": "generated:V_b1/07@2:v4:f=0.823529",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         15,
         28
@@ -4068,7 +4068,7 @@
       "native_path": "assets/art/production/V_b1/08_native.png",
       "source": "generated:V_b1/08@2:v4:f=0.823529",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b1_08@2",
       "body": "adult_b",
       "view": "S",
@@ -4095,7 +4095,7 @@
     {
       "path": "assets/art/production/V_b1/08_native.png",
       "source": "generated:V_b1/08@2:v4:f=0.823529",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         14,
         28
@@ -4860,7 +4860,7 @@
       "native_path": "assets/art/production/V_b2/11_native.png",
       "source": "generated:V_b2/11@3:v4:f=0.933333",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b2_11@3",
       "body": "adult_b",
       "view": "S",
@@ -4887,7 +4887,7 @@
     {
       "path": "assets/art/production/V_b2/11_native.png",
       "source": "generated:V_b2/11@3:v4:f=0.933333",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         20,
         27
@@ -4904,7 +4904,7 @@
       "native_path": "assets/art/production/V_b2/12_native.png",
       "source": "generated:V_b2/12@3:v4:f=0.933333",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b2_12@3",
       "body": "adult_b",
       "view": "S",
@@ -4931,7 +4931,7 @@
     {
       "path": "assets/art/production/V_b2/12_native.png",
       "source": "generated:V_b2/12@3:v4:f=0.933333",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         17,
         29
@@ -5036,7 +5036,7 @@
       "native_path": "assets/art/production/V_b2/15_native.png",
       "source": "generated:V_b2/15@2:v4:f=0.777778",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b2_15@2",
       "body": "adult_b",
       "view": "S",
@@ -5063,7 +5063,7 @@
     {
       "path": "assets/art/production/V_b2/15_native.png",
       "source": "generated:V_b2/15@2:v4:f=0.777778",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         22,
         28
@@ -5080,7 +5080,7 @@
       "native_path": "assets/art/production/V_b2/16_native.png",
       "source": "generated:V_b2/16@2:v4:f=0.777778",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b2_16@2",
       "body": "adult_b",
       "view": "S",
@@ -5107,7 +5107,7 @@
     {
       "path": "assets/art/production/V_b2/16_native.png",
       "source": "generated:V_b2/16@2:v4:f=0.777778",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         20,
         28
@@ -5300,7 +5300,7 @@
       "native_path": "assets/art/production/V_b3/05_native.png",
       "source": "generated:V_b3/05@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_05@1",
       "body": "adult_b",
       "view": "S",
@@ -5327,7 +5327,7 @@
     {
       "path": "assets/art/production/V_b3/05_native.png",
       "source": "generated:V_b3/05@1:v4:f=0.965517",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         15,
         27
@@ -5344,7 +5344,7 @@
       "native_path": "assets/art/production/V_b3/06_native.png",
       "source": "generated:V_b3/06@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_06@1",
       "body": "adult_b",
       "view": "S",
@@ -5371,7 +5371,7 @@
     {
       "path": "assets/art/production/V_b3/06_native.png",
       "source": "generated:V_b3/06@1:v4:f=0.965517",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         15,
         27
@@ -5388,7 +5388,7 @@
       "native_path": "assets/art/production/V_b3/07_native.png",
       "source": "generated:V_b3/07@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_07@1",
       "body": "adult_b",
       "view": "S",
@@ -5415,7 +5415,7 @@
     {
       "path": "assets/art/production/V_b3/07_native.png",
       "source": "generated:V_b3/07@1:v4:f=0.965517",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         16,
         22
@@ -5476,7 +5476,7 @@
       "native_path": "assets/art/production/V_b3/09_native.png",
       "source": "generated:V_b3/09@1:v4:f=0.918033",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_09@1",
       "body": "adult_b",
       "view": "S",
@@ -5503,7 +5503,7 @@
     {
       "path": "assets/art/production/V_b3/09_native.png",
       "source": "generated:V_b3/09@1:v4:f=0.918033",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         20,
         29
@@ -5520,7 +5520,7 @@
       "native_path": "assets/art/production/V_b3/10_native.png",
       "source": "generated:V_b3/10@1:v4:f=0.918033",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_10@1",
       "body": "adult_b",
       "view": "S",
@@ -5547,7 +5547,7 @@
     {
       "path": "assets/art/production/V_b3/10_native.png",
       "source": "generated:V_b3/10@1:v4:f=0.918033",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         22,
         28
@@ -5696,7 +5696,7 @@
       "native_path": "assets/art/production/V_b3/14_native.png",
       "source": "generated:V_b3/14@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_14@1",
       "body": "adult_b",
       "view": "S",
@@ -5723,7 +5723,7 @@
     {
       "path": "assets/art/production/V_b3/14_native.png",
       "source": "generated:V_b3/14@1:v4:f=0.965517",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         16,
         23
@@ -5740,7 +5740,7 @@
       "native_path": "assets/art/production/V_b3/15_native.png",
       "source": "generated:V_b3/15@1:v4:f=0.965517",
       "source_sprite": "",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "candidate_id": "V_b3_15@1",
       "body": "adult_b",
       "view": "S",
@@ -5767,7 +5767,7 @@
     {
       "path": "assets/art/production/V_b3/15_native.png",
       "source": "generated:V_b3/15@1:v4:f=0.965517",
-      "qa_status": "fallback",
+      "qa_status": "accepted",
       "native_size": [
         15,
         23
@@ -14635,6 +14635,358 @@
       ]
     },
     {
+      "sprite_id": "V_a4_09",
+      "path": "assets/art/production/V_a4/09.png",
+      "native_path": "assets/art/production/V_a4/09_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "source_sprite": "V_a4_11@1:mask5",
+      "qa_status": "derived",
+      "candidate_id": "V_a4_09@1:mask5:derived",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 0,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        25,
+        28
+      ],
+      "canvas_size": [
+        27,
+        30
+      ],
+      "anchor": [
+        14,
+        29
+      ]
+    },
+    {
+      "path": "assets/art/production/V_a4/09_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "qa_status": "derived",
+      "native_size": [
+        25,
+        28
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_a4_10",
+      "path": "assets/art/production/V_a4/10.png",
+      "native_path": "assets/art/production/V_a4/10_native.png",
+      "source": "generated:V_a4/10@1:v4:f=0.666667",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "V_a4_10@1:mask5",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 1,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        24,
+        29
+      ],
+      "canvas_size": [
+        26,
+        31
+      ],
+      "anchor": [
+        13,
+        30
+      ]
+    },
+    {
+      "path": "assets/art/production/V_a4/10_native.png",
+      "source": "generated:V_a4/10@1:v4:f=0.666667",
+      "qa_status": "accepted",
+      "native_size": [
+        24,
+        29
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_a4_11",
+      "path": "assets/art/production/V_a4/11.png",
+      "native_path": "assets/art/production/V_a4/11_native.png",
+      "source": "generated:V_a4/11@1:v4:f=0.666667",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "V_a4_11@1:mask5",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 2,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        25,
+        28
+      ],
+      "canvas_size": [
+        27,
+        30
+      ],
+      "anchor": [
+        14,
+        29
+      ]
+    },
+    {
+      "path": "assets/art/production/V_a4/11_native.png",
+      "source": "generated:V_a4/11@1:v4:f=0.666667",
+      "qa_status": "accepted",
+      "native_size": [
+        25,
+        28
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_a4_12",
+      "path": "assets/art/production/V_a4/12.png",
+      "native_path": "assets/art/production/V_a4/12_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "source_sprite": "V_a4_10@1:mask5",
+      "qa_status": "derived",
+      "candidate_id": "V_a4_12@1:mask5:derived",
+      "body": "adult_a",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 3,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        24,
+        29
+      ],
+      "canvas_size": [
+        26,
+        31
+      ],
+      "anchor": [
+        13,
+        30
+      ]
+    },
+    {
+      "path": "assets/art/production/V_a4/12_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "qa_status": "derived",
+      "native_size": [
+        24,
+        29
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_b4_09",
+      "path": "assets/art/production/V_b4/09.png",
+      "native_path": "assets/art/production/V_b4/09_native.png",
+      "source": "generated:V_b4/09@1:v4:f=0.823529",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "V_b4_09@1:mask5:r2",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 0,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        25,
+        28
+      ],
+      "canvas_size": [
+        27,
+        30
+      ],
+      "anchor": [
+        13,
+        29
+      ]
+    },
+    {
+      "path": "assets/art/production/V_b4/09_native.png",
+      "source": "generated:V_b4/09@1:v4:f=0.823529",
+      "qa_status": "accepted",
+      "native_size": [
+        25,
+        28
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_b4_10",
+      "path": "assets/art/production/V_b4/10.png",
+      "native_path": "assets/art/production/V_b4/10_native.png",
+      "source": "generated:V_b4/10@1:v4:f=0.823529",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "V_b4_10@1:mask5:r2",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 1,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        22,
+        27
+      ],
+      "canvas_size": [
+        24,
+        29
+      ],
+      "anchor": [
+        10,
+        28
+      ]
+    },
+    {
+      "path": "assets/art/production/V_b4/10_native.png",
+      "source": "generated:V_b4/10@1:v4:f=0.823529",
+      "qa_status": "accepted",
+      "native_size": [
+        22,
+        27
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_b4_11",
+      "path": "assets/art/production/V_b4/11.png",
+      "native_path": "assets/art/production/V_b4/11_native.png",
+      "source": "generated:V_b4/11@1:v4:f=0.823529",
+      "source_sprite": "",
+      "qa_status": "accepted",
+      "candidate_id": "V_b4_11@1:mask5",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 2,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        25,
+        28
+      ],
+      "canvas_size": [
+        27,
+        30
+      ],
+      "anchor": [
+        10,
+        29
+      ]
+    },
+    {
+      "path": "assets/art/production/V_b4/11_native.png",
+      "source": "generated:V_b4/11@1:v4:f=0.823529",
+      "qa_status": "accepted",
+      "native_size": [
+        25,
+        28
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
+      "sprite_id": "V_b4_12",
+      "path": "assets/art/production/V_b4/12.png",
+      "native_path": "assets/art/production/V_b4/12_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "source_sprite": "V_b4_10@1:mask5:r2",
+      "qa_status": "derived",
+      "candidate_id": "V_b4_12@1:missing:derived",
+      "body": "adult_b",
+      "view": "N",
+      "activity": "carry_wood",
+      "frame": 3,
+      "class": "adult",
+      "contains_basket": false,
+      "fallback_kind": "",
+      "activity_icon": "",
+      "drawable": true,
+      "native_size": [
+        22,
+        27
+      ],
+      "canvas_size": [
+        24,
+        29
+      ],
+      "anchor": [
+        10,
+        28
+      ]
+    },
+    {
+      "path": "assets/art/production/V_b4/12_native.png",
+      "source": "derived:same_cycle_phase_copy",
+      "qa_status": "derived",
+      "native_size": [
+        22,
+        27
+      ],
+      "role": "native_reference",
+      "anchor": [
+        0,
+        0
+      ]
+    },
+    {
       "path": "assets/art/atlas/world_0.png",
       "source": "procedural:tools/art_pipeline/pack_atlas.py",
       "native_size": [
@@ -14842,30 +15194,6 @@
       "fallback_kind": "unresolved_actor",
       "reason": "no_safe_source"
     },
-    "V_a4_09": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_a4_10": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_a4_11": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_a4_12": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
     "V_a4_13": {
       "drawable": false,
       "qa_status": "suppressed",
@@ -14933,30 +15261,6 @@
       "reason": "no_safe_source"
     },
     "V_b4_08": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_b4_09": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_b4_10": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_b4_11": {
-      "drawable": false,
-      "qa_status": "suppressed",
-      "fallback_kind": "unresolved_actor",
-      "reason": "no_safe_source"
-    },
-    "V_b4_12": {
       "drawable": false,
       "qa_status": "suppressed",
       "fallback_kind": "unresolved_actor",

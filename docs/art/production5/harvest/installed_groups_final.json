@@ -1,0 +1,283 @@
+{
+  "groups": [
+    {
+      "group": [
+        "adult_a",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "copied_frames": [
+        0,
+        3
+      ],
+      "animation_review": "adult_a_E_carry_2853a70ad4",
+      "candidate_ids": [
+        "P3_fill_01_05@1:missing:derived",
+        "P3_fill_01_06@1:p3",
+        "P3_fill_01_07@1:p3",
+        "P3_fill_01_08@1:missing:derived"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/adult_a_E_carry_2853a70ad4.png",
+      "gif": "docs/art/production5/harvest/animation/adult_a_E_carry_2853a70ad4.gif"
+    },
+    {
+      "group": [
+        "adult_a",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P3_fill_01",
+        1
+      ],
+      "copied_frames": [
+        1
+      ],
+      "animation_review": "adult_a_S_carry_3b62976eb3",
+      "candidate_ids": [
+        "P3_fill_01_01@1:p3",
+        "P3_fill_01_02@1:p3:derived",
+        "P3_fill_01_03@1:p3",
+        "P3_fill_01_04@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/adult_a_S_carry_3b62976eb3.png",
+      "gif": "docs/art/production5/harvest/animation/adult_a_S_carry_3b62976eb3.gif"
+    },
+    {
+      "group": [
+        "adult_b",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "copied_frames": [
+        0
+      ],
+      "animation_review": "adult_b_E_carry_318c1faae0",
+      "candidate_ids": [
+        "P2_fill_02_09@1:p3:derived",
+        "P2_fill_02_10@1:p3",
+        "P2_fill_02_11@1:p3",
+        "P2_fill_02_12@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/adult_b_E_carry_318c1faae0.png",
+      "gif": "docs/art/production5/harvest/animation/adult_b_E_carry_318c1faae0.gif"
+    },
+    {
+      "group": [
+        "adult_b",
+        "S",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_02",
+        1
+      ],
+      "copied_frames": [
+        1
+      ],
+      "animation_review": "adult_b_S_carry_82ad145c3c",
+      "candidate_ids": [
+        "P2_fill_02_05@1:p3",
+        "P2_fill_02_06@1:missing:derived",
+        "P2_fill_02_07@1:p3",
+        "P2_fill_02_08@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/adult_b_S_carry_82ad145c3c.png",
+      "gif": "docs/art/production5/harvest/animation/adult_b_S_carry_82ad145c3c.gif"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "carry"
+      ],
+      "source": [
+        "P2_fill_06",
+        1
+      ],
+      "copied_frames": [
+        0,
+        3
+      ],
+      "animation_review": "child_E_carry_90b292eb75",
+      "candidate_ids": [
+        "P2_fill_06_01@1:p3:derived",
+        "P2_fill_06_02@1:p3",
+        "P2_fill_06_03@1:p3",
+        "P2_fill_06_04@1:p3:derived"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_E_carry_90b292eb75.png",
+      "gif": "docs/art/production5/harvest/animation/child_E_carry_90b292eb75.gif"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "run"
+      ],
+      "source": [
+        "V_c2",
+        3
+      ],
+      "copied_frames": [],
+      "animation_review": "child_E_run_e2449b8b7d",
+      "candidate_ids": [
+        "V_c2_05@3:p3",
+        "V_c2_06@3:p3",
+        "V_c2_07@3:p3",
+        "V_c2_08@3:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_E_run_e2449b8b7d.png",
+      "gif": "docs/art/production5/harvest/animation/child_E_run_e2449b8b7d.gif"
+    },
+    {
+      "group": [
+        "child",
+        "E",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "copied_frames": [],
+      "animation_review": "child_E_walk_3d861bcd73",
+      "candidate_ids": [
+        "P2_fill_03_05@1:p3",
+        "P2_fill_03_06@1:p3",
+        "P2_fill_03_07@1:p3",
+        "P2_fill_03_08@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_E_walk_3d861bcd73.png",
+      "gif": "docs/art/production5/harvest/animation/child_E_walk_3d861bcd73.gif"
+    },
+    {
+      "group": [
+        "child",
+        "N",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "copied_frames": [],
+      "animation_review": "child_N_walk_a7fb830e31",
+      "candidate_ids": [
+        "P2_fill_03_09@1:p3",
+        "P2_fill_03_10@1:p3",
+        "P2_fill_03_11@1:p3",
+        "P2_fill_03_12@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_N_walk_a7fb830e31.png",
+      "gif": "docs/art/production5/harvest/animation/child_N_walk_a7fb830e31.gif"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "build"
+      ],
+      "source": [
+        "P3_fill_03",
+        1
+      ],
+      "copied_frames": [],
+      "animation_review": "child_S_build_2ffc94e5c1",
+      "candidate_ids": [
+        "P3_fill_03_13@1:p3",
+        "P3_fill_03_14@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_S_build_2ffc94e5c1.png",
+      "gif": "docs/art/production5/harvest/animation/child_S_build_2ffc94e5c1.gif"
+    },
+    {
+      "group": [
+        "child",
+        "S",
+        "walk"
+      ],
+      "source": [
+        "P2_fill_03",
+        1
+      ],
+      "copied_frames": [],
+      "animation_review": "child_S_walk_08d1ab3e49",
+      "candidate_ids": [
+        "P2_fill_03_01@1:p3",
+        "P2_fill_03_02@1:p3",
+        "P2_fill_03_03@1:p3",
+        "P2_fill_03_04@1:p3"
+      ],
+      "installation": "docs/art/production5/harvest",
+      "board": "docs/art/production5/harvest/animation/child_S_walk_08d1ab3e49.png",
+      "gif": "docs/art/production5/harvest/animation/child_S_walk_08d1ab3e49.gif"
+    },
+    {
+      "group": [
+        "adult_a",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_a4",
+        1
+      ],
+      "copied_frames": [
+        0,
+        3
+      ],
+      "animation_review": "adult_a_N_carry_wood_e6e605d391",
+      "candidate_ids": [
+        "V_a4_09@1:mask5:derived",
+        "V_a4_10@1:mask5",
+        "V_a4_11@1:mask5",
+        "V_a4_12@1:mask5:derived"
+      ],
+      "installation": "docs/art/production5/masks/harvest",
+      "board": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_a_N_carry_wood_e6e605d391.gif"
+    },
+    {
+      "group": [
+        "adult_b",
+        "N",
+        "carry_wood"
+      ],
+      "source": [
+        "V_b4",
+        1
+      ],
+      "copied_frames": [
+        3
+      ],
+      "animation_review": "adult_b_N_carry_wood_082c6163a1",
+      "candidate_ids": [
+        "V_b4_09@1:mask5:r2",
+        "V_b4_10@1:mask5:r2",
+        "V_b4_11@1:mask5",
+        "V_b4_12@1:missing:derived"
+      ],
+      "installation": "docs/art/production5/masks/harvest",
+      "board": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.png",
+      "gif": "docs/art/production5/masks/harvest/animation/adult_b_N_carry_wood_082c6163a1.gif"
+    }
+  ]
+}
