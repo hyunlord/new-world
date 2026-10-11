@@ -2,6 +2,7 @@ extends SceneTree
 
 const Metadata = preload("res://scripts/test/art/capture_metadata.gd")
 const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
+const ColdTrace = preload("res://scripts/test/art/capture_cold_trace.gd")
 
 const ORIGIN: Vector2 = Vector2(448, 28)
 const TILE_SIZE: float = 16.0
@@ -28,6 +29,7 @@ var _motion_end_tick: int = -1
 var _casts: Array[Dictionary] = []
 var _last_cast_usec: int = 0
 var _shot_elapsed_s: float = 0.0
+var _cold_trace: RefCounted = ColdTrace.new()
 
 
 func _init() -> void:
@@ -107,6 +109,7 @@ func _run() -> void:
 			stem = prefix + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
 		if _plan == "art_god":
 			stem = "god_" + stem + "_" + str(shot[6])
+		print("capture start: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
@@ -149,9 +152,23 @@ func _run() -> void:
 			if not str(shot[3]).is_empty():
 				# Reconcile the pre-cast resource snapshot, so a windfall increase is observed.
 				await create_timer(1.15).timeout
-				var reply: Dictionary = _world.call("apply_intervention", str(shot[3]), -1, int(shot[4]))
+				var cast_panel: Node = _main.get_node_or_null("UI/GodHandPanel")
+				if cast_panel == null:
+					_fail("god scenario requires UI/GodHandPanel")
+					return
+				var presets: Dictionary = cast_panel.get_script().get_script_constant_map().get("PRESETS", {})
+				if int(presets.get(str(shot[3]), -1)) != int(shot[4]):
+					_fail("god scenario preset differs from panel: " + str(shot[3]))
+					return
+				var buttons: Dictionary = cast_panel.get("_buttons")
+				var button: Button = buttons.get(str(shot[3])) as Button
+				if button == null or button.disabled:
+					_fail("god scenario button missing or disabled: " + str(shot[3]))
+					return
+				button.emit_signal("pressed")
+				var reply: Dictionary = (cast_panel.get("_reply") as Dictionary).duplicate(true)
 				_last_cast_usec = Time.get_ticks_usec()
-				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": -1, "tick": target, "reply": reply})
+				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": -1, "tick": target, "reply": reply, "input_surface": "GodHandPanel button pressed"})
 				if not bool(reply.get("ok", false)):
 					_fail("god scenario cast failed: " + str(shot[3]))
 					return
@@ -170,7 +187,7 @@ func _run() -> void:
 			await create_timer(1.15).timeout
 		for frame: int in range(0 if _plan == "art_god" else 5):
 			await process_frame
-		await RenderingServer.frame_post_draw
+		await _render_frame()
 		var now: Dictionary = _world.call("get_time_snapshot")
 		if int(now["tick"]) != target:
 			_fail("wall-clock advanced a frozen capture")
@@ -186,6 +203,7 @@ func _run() -> void:
 			return
 		if not _write_entities(stem, target, image.get_size()):
 			return
+		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		_manifest.append({
 			"file": filename, "tick": target, "framing": framing,
 			"scenario": "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO",
@@ -302,8 +320,10 @@ func _advance_to(target: int) -> bool:
 			_motion_before = _world.call("get_agent_snapshot")
 			_motion_start_tick = tick
 		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		var snapshot: Dictionary = _world.call("get_agent_snapshot")
+		_cold_trace.ingest(snapshot, tick)
 		if agents != null and agents.has_method("ingest_chill_snapshot"):
-			agents.call("ingest_chill_snapshot", _world.call("get_agent_snapshot"), tick)
+			agents.call("ingest_chill_snapshot", snapshot, tick)
 		if tick == target:
 			_motion_end_tick = tick
 		if trail != null:
@@ -349,9 +369,13 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["scenario"] = "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO"
 	data["intervention_casts"] = _casts.duplicate(true)
 	data["seconds_since_last_cast"] = _shot_elapsed_s
+	data["intervention_effects"] = {}
+	for effects: Node in get_nodes_in_group("art_god_hand_effects"):
+		data["intervention_effects"] = _json_arrays(effects.call("metadata"))
 	data["intervention_state"] = _json_arrays(_world.call("get_intervention_state")) if _world.has_method("get_intervention_state") else {}
 	data["building_snapshot"] = _json_arrays(_world.call("get_building_snapshot"))
 	data["chill_tint_strength"] = _tint_strength()
+	data["cold_truth_trace"] = {"source": "FFI colds sampled independently of presentation", "max_sample_interval_ticks": 8, "agents": _cold_trace.rows()}
 	if tick == _motion_end_tick and _motion_start_tick >= 0:
 		data["agent_motion_evidence"] = {
 			"provenance": "observed_tile_displacement_during_final_synchronous_advance",
@@ -378,9 +402,15 @@ func _installed_groups() -> Variant:
 func _capture_cold_cycle(stem: String) -> void:
 	var samples: Array[Dictionary] = []
 	var best_alpha: float = 0.0
-	for index: int in range(26):
-		await RenderingServer.frame_post_draw
-		var size: Vector2 = Vector2(root.get_texture().get_size())
+	var images: Array[Image] = []
+	var clip_start_usec: int = Time.get_ticks_usec()
+	for index: int in range(51):
+		await _render_frame()
+		var sampled_usec: int = Time.get_ticks_usec()
+		var image: Image = root.get_texture().get_image()
+		var size: Vector2 = Vector2(image.get_size())
+		image.resize(1920, 1080, Image.INTERPOLATE_NEAREST)
+		images.append(image)
 		var rows: Array[Dictionary] = Metadata.entities(_main, size, size / root.get_visible_rect().size)
 		var agents: Array[Dictionary] = []
 		var shelters: Array[Dictionary] = []
@@ -400,14 +430,22 @@ func _capture_cold_cycle(stem: String) -> void:
 					root.get_texture().get_image().save_png(_out.path_join(stem + ".cold_peak.png"))
 			if bool(row.get("visible", false)) and row.has("cold_ash"):
 				hearths.append(row)
-		samples.append({"real_time_usec": Time.get_ticks_usec(), "agents": agents,
+		samples.append({"real_time_usec": sampled_usec, "file": "%s.cold_cycle_%02d.png" % [stem, index], "agents": agents,
 			"shelters": shelters, "hearths": hearths, "chill_tint_strength": _tint_strength()})
-		await create_timer(0.1).timeout
-	if not CapturePlans.write_json(_out.path_join(stem + ".cold_cycle.json"), {"simulation_frozen": true, "samples": samples}):
+		var remaining: float = float(clip_start_usec + (index + 1) * 100000 - Time.get_ticks_usec()) / 1000000.0
+		if remaining > 0.0:
+			await create_timer(remaining).timeout
+	for index: int in images.size():
+		if images[index].save_png(_out.path_join(str(samples[index]["file"]))) != OK:
+			_fail("cannot save cold cycle visual frame")
+			return
+	images.clear()
+	if not CapturePlans.write_json(_out.path_join(stem + ".cold_cycle.json"), {"simulation_frozen": true, "requested_interval_s": 0.1, "visual_size": [1920, 1080], "samples": samples}):
 		_fail("cannot write observed cold cycle")
 
 
 func _measure_frame_times() -> void:
+	DisplayServer.window_move_to_foreground()
 	_world.process_mode = Node.PROCESS_MODE_INHERIT
 	_world.call("set_sim_speed", 1.0)
 	var elapsed: Array[float] = []
@@ -423,7 +461,7 @@ func _measure_frame_times() -> void:
 	var ordered: Array[float] = elapsed.duplicate()
 	ordered.sort()
 	if not CapturePlans.write_json(_out.path_join("frame_times.json"), {
-		"frames": 300, "zoom": 1, "median_ms": (ordered[149] + ordered[150]) / 2.0,
+		"frames": 300, "zoom": 1, "forced_draw": false, "median_ms": (ordered[149] + ordered[150]) / 2.0,
 		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": false,
 	}):
 		_fail("cannot write frame timing evidence")
@@ -445,7 +483,7 @@ func _capture_strip(prefix: String, follow: bool) -> void:
 			if position != Vector2.INF:
 				_camera.position = position
 		_camera.force_update_scroll()
-		await RenderingServer.frame_post_draw
+		await _render_frame()
 		var now: Dictionary = _world.call("get_time_snapshot")
 		var stem: String = "%s_%02d" % [prefix, index]
 		var image: Image = root.get_texture().get_image()
@@ -501,7 +539,7 @@ func _capture_calibration() -> void:
 		camera.force_update_scroll()
 		for frame: int in range(5):
 			await process_frame
-		await RenderingServer.frame_post_draw
+		await _render_frame()
 		var image: Image = root.get_texture().get_image()
 		var stem: String = ("a_lineup_z%d" if lineup else "a_calib_z%d") % zoom_level
 		if image == null or image.save_png(ProjectSettings.globalize_path(_out.path_join(stem + ".png"))) != OK:
@@ -555,3 +593,11 @@ func _tint_strength() -> float:
 		if node.has_meta("chill_tint_strength"):
 			return float(node.get_meta("chill_tint_strength"))
 	return 0.0
+
+
+func _render_frame() -> void:
+	# macOS can suppress automatic draws for obscured windows while processing continues.
+	# Explicitly draw the real viewport instead of waiting indefinitely for that signal.
+	DisplayServer.window_move_to_foreground()
+	await process_frame
+	RenderingServer.force_draw(false)

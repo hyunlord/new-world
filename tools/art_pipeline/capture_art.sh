@@ -63,7 +63,23 @@ for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
 for cycle in raw.glob('*.cold_cycle.json'):
-    shutil.copy2(cycle, docs / cycle.name)
+    cycle_data = json.loads(cycle.read_text())
+    visual_frames: list[Image.Image] = []
+    visual_times: list[int] = []
+    for sample in cycle_data['samples']:
+        if 'file' not in sample:
+            continue
+        with Image.open(raw / sample['file']) as cycle_image:
+            visual_frames.append(cycle_image.convert('RGB').resize((960, 540), Image.Resampling.NEAREST))
+        visual_times.append(int(sample['real_time_usec']))
+    if visual_frames:
+        durations = [max(10, round((later - earlier) / 10000) * 10) for earlier, later in zip(visual_times, visual_times[1:])]
+        durations.append(durations[-1] if durations else 100)
+        gif_name = cycle.name.removesuffix('.json') + '.gif'
+        visual_frames[0].save(docs / gif_name, save_all=True, append_images=visual_frames[1:], duration=durations, loop=0, optimize=True)
+        cycle_data['published_visual'] = gif_name
+        cycle_data['published_visual_size'] = [960, 540]
+    (docs / cycle.name).write_text(json.dumps(cycle_data) + '\n')
 published = json.loads(json.dumps(manifest))
 for metadata in docs.glob('*.json'):
     if metadata.name == 'manifest.json' or metadata.name.startswith('manifest_'):
