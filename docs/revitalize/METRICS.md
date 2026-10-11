@@ -1806,3 +1806,21 @@ Recorder checks (Part 2 binaries): `test_hidden_columns.py` (game_v14 seeds 0–
 | first dark night 5 / 6 / 7 | 0 / 8 / 242 | 20 / 22 / 62 |
 
 Every other per-seed clause has no failing seed for either ruleset on the held-out seeds. v13 in comparison mode passes X2 (2 ≤ 1 + 1 and 2 ≤ 2 + 1).
+
+## Pass 8 Part 4 — tuning game_v14 on the tuning seeds
+
+Round 1 = section 7.1's start values (variant C of 3.3: severity weights 350/400/250, burns 2/3/4, falls 8/6/4; night weights 250/500/250, step 2; fall spread 2; windfall over snow). Runs `p8-4_round1_10day` (game_v14 0..64 × 10) and `p8-4_round1_120day` (0..32 × 120), probe `probe_p2` (`4ab0778a`), both `--check-determinism` with the eight clocks: DETERMINISM PASS. Evaluation `p8-4_round1_targets` (`evaluate_pass8.py --compare-to p8-1_v12_tuning_targets`). No screens were run.
+
+| Round | Weights | Night (−/0/+) × step | Fall spread | Burns / falls | X2 | X3 | X4 | X5 | R² | No dark | ≥ 2 dark | First dark 4/5/6/7 (7th share) | Shares m/n/h |
+|---|---|---|---|---|---|---|---|---|---:|---:|---:|---|---|
+| **round 1** | 350/400/250 | 250/500/250 × 2 | 2 | 2/3/4, 8/6/4 | PASS | PASS | PASS | PASS | **0.530** | 0.484 | 0.281 | 5 / 18 / 15 / 28 (0.424) | 0.406 / 0.391 / 0.203 |
+
+Round 1 per target (median / min / max where useful):
+- **X2** (comparison mode against v12's tuning evaluation, which has no failing seed): no failing seed in any per-seed clause — Y3 stagnation max 3, replacement min −3 (seed 22 now −3, passing), alive band, birth by day 4 (7 in every seed), alive at day 10 (42), old age by day 30 (min 5); Y7 winter lit every seed ≥ 0.607; Y8 winter cold every seed ≤ 0.383; Y10 evening near hearth every seed ≥ 0.379; Y11 home distance ≤ 11.3, social > 0; Y12 0. Y2: zero starvation and dehydration deaths in every seed (10 and 120 days). Child share median 0.107, elder share 0.262.
+- **X3**: (a) R² 0.530; (b) normal winters 0/1/2/3/4 dark = 17/20/9/3/1 (mode share 0.40), harsh 1/4/4/13/4 (0.50); (c) 0.484; (d) 0.281; (e) first dark night on 4 distinct nights, 0.424 on the seventh; (f) shares within 0.06 of the weights.
+- **X4**: re-target share median 0.055; normal-severity winter wood gathered 48 (floor 40.5).
+- **X5**: Y4 store share 0.99 (every seed ≥ 0.924, winter 1.0); Y5 autumn wood 50/day vs summer 0, autumn noon work 0.614; Y6 trip days 5, trips 48; Y7 winter lit 0.857, other lit 1.0; Y8 winter cold 0.139, winter food 237.5; Y10 night in shelter 1.0, evening near hearth 0.648; Y11 home distance 7.62, social 0.63 / 0.82, t6a 0.001 / 0.009.
+- Y9 (reported only): noon work 0.308, noon idle 0.667, 15:00 work 0.416.
+- By severity: mild (52) dark 0/1/2 = 44/6/2, night burn 2.29 (the floor of 1 lifts mild's −2 nights), fall 8.14, food at winter's end 246 (min 184); normal (50) 17/20/9/3/1, food 232.5 (min 41); harsh (26) 1/4/4/13/4, food 228.5 (min 48).
+
+Tuning stops at round 1 (1 of 3 rounds): every tunable target passes; `game_v14()` keeps the start values.
