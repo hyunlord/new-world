@@ -1,0 +1,58 @@
+test_action_window_sums_the_last_24_rows (test_bench_v0.MetricTests.test_action_window_sums_the_last_24_rows) ... ok
+test_auc_is_the_rank_statistic_with_ties (test_bench_v0.MetricTests.test_auc_is_the_rank_statistic_with_ties) ... ok
+test_c_cf_effects_compare_each_variant_with_its_factual (test_bench_v0.MetricTests.test_c_cf_effects_compare_each_variant_with_its_factual) ... ok
+test_nmae_divides_by_the_test_std (test_bench_v0.MetricTests.test_nmae_divides_by_the_test_std) ... ok
+test_ridge_recovers_a_linear_map_and_lambda_shrinks (test_bench_v0.MetricTests.test_ridge_recovers_a_linear_map_and_lambda_shrinks) ... ok
+test_rollout_feeds_predictions_back (test_bench_v0.MetricTests.test_rollout_feeds_predictions_back) ... ok
+test_t1_ridge_beats_persistence_on_a_learnable_series (test_bench_v0.MetricTests.test_t1_ridge_beats_persistence_on_a_learnable_series) ... ok
+test_winter_evenings_and_the_logistic_baseline (test_bench_v0.MetricTests.test_winter_evenings_and_the_logistic_baseline) ... ok
+test_b_act_schedules_are_seeded_sorted_and_on_the_grids (test_bench_v0.ScheduleTests.test_b_act_schedules_are_seeded_sorted_and_on_the_grids) ... ok
+test_splits_do_not_share_seeds_and_agent_runs_cover_their_seeds (test_bench_v0.ScheduleTests.test_splits_do_not_share_seeds_and_agent_runs_cover_their_seeds) ... ok
+test_ticks_of_the_named_moments (test_bench_v0.ScheduleTests.test_ticks_of_the_named_moments) ... ok
+test_resume_keeps_verified_episodes (test_export_determinism.ExportDeterminismTests.test_resume_keeps_verified_episodes) ... ok
+test_runs_and_worker_counts_are_byte_identical (test_export_determinism.ExportDeterminismTests.test_runs_and_worker_counts_are_byte_identical) ... ok
+test_schedule_episodes_share_the_factual_prefix (test_export_determinism.ExportDeterminismTests.test_schedule_episodes_share_the_factual_prefix) ... ok
+test_a_damaged_file_fails_verification (test_wm_data.LoaderTests.test_a_damaged_file_fails_verification) ... ok
+test_columns_by_name_and_simulation_invariants (test_wm_data.LoaderTests.test_columns_by_name_and_simulation_invariants) ... ok
+test_every_meta_field_is_documented (test_wm_data.LoaderTests.test_every_meta_field_is_documented) ... ok
+test_numpy_loads_every_file_and_meta_matches (test_wm_data.LoaderTests.test_numpy_loads_every_file_and_meta_matches) ... ok
+test_sample_exists (test_wm_data.LoaderTests.test_sample_exists) ... ok
+test_action_alignment (wm1.test_data.FeatureTests.test_action_alignment)
+An intervention of tick t is a feature of row t and first shows in row t+1 (its change target). ... ok
+test_shapes_and_bench_consistency (wm1.test_data.FeatureTests.test_shapes_and_bench_consistency) ... ok
+test_input_fields_of_each_variant (wm1.test_data.InputFieldTests.test_input_fields_of_each_variant) ... ok
+test_no_variant_reads_hidden_or_severity_revealing_fields (wm1.test_data.InputFieldTests.test_no_variant_reads_hidden_or_severity_revealing_fields) ... ok
+test_severity_blind_state_has_no_wood_target_column (wm1.test_data.InputFieldTests.test_severity_blind_state_has_no_wood_target_column) ... ok
+test_statistics_come_from_train_rows_only (wm1.test_data.NormalizationTests.test_statistics_come_from_train_rows_only) ... ok
+test_windows_are_contiguous_train_rows (wm1.test_data.NormalizationTests.test_windows_are_contiguous_train_rows) ... ok
+test_any_hour_starts_cover_every_hour_of_the_start_days (wm1.test_evaluate.BaselineFidelityTests.test_any_hour_starts_cover_every_hour_of_the_start_days) ... ok
+test_rollouts_never_read_the_future (wm1.test_evaluate.BaselineFidelityTests.test_rollouts_never_read_the_future) ... ok
+test_severity_modes_of_the_ridge (wm1.test_evaluate.BaselineFidelityTests.test_severity_modes_of_the_ridge)
+hold = the bench's rollout; none = fit and rolled out without severity; true = each row's own severity. ... ok
+test_step_rollout_equals_vectorized_daily_naive (wm1.test_evaluate.BaselineFidelityTests.test_step_rollout_equals_vectorized_daily_naive) ... ok
+test_t1_matches_bench (wm1.test_evaluate.BaselineFidelityTests.test_t1_matches_bench) ... ok
+test_t2_matches_bench (wm1.test_evaluate.BaselineFidelityTests.test_t2_matches_bench) ... ok
+test_cases_count_dark_nights_from_the_third_winter_day (wm1.test_evaluate.T3bTests.test_cases_count_dark_nights_from_the_third_winter_day) ... ok
+test_model_count_uses_the_fire_at_the_five_02h_rows (wm1.test_evaluate.T3bTests.test_model_count_uses_the_fire_at_the_five_02h_rows) ... ok
+test_a_prefix_mismatch_is_refused (wm1.test_evaluate.T4Tests.test_a_prefix_mismatch_is_refused) ... ok
+test_oracle_branches_reproduce_the_true_effects (wm1.test_evaluate.T4Tests.test_oracle_branches_reproduce_the_true_effects) ... ok
+test_actions_change_the_rollout_only_from_their_row (wm1.test_m1.M1Tests.test_actions_change_the_rollout_only_from_their_row) ... ok
+test_layerwise_states_continue_the_sequence (wm1.test_m1.M1Tests.test_layerwise_states_continue_the_sequence)
+The per-position states of `run` resume a sequence exactly as one pass would. ... ok
+test_one_training_step_runs_and_lowers_nothing_to_nan (wm1.test_m1.M1Tests.test_one_training_step_runs_and_lowers_nothing_to_nan) ... /home/hyunlord/work/new-world-wm1/tools/worldmodel/wm1/test_m1.py:39: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  self.assertTrue(np.isfinite(float(tf)) and np.isfinite(float(roll)))
+ok
+test_predictor_rollout_shapes_and_no_future_reads (wm1.test_m1.M1Tests.test_predictor_rollout_shapes_and_no_future_reads) ... ok
+test_cached_decoding_equals_a_full_pass (wm1.test_m1.M1bTests.test_cached_decoding_equals_a_full_pass) ... ok
+test_training_step_and_predictor (wm1.test_m1.M1bTests.test_training_step_and_predictor) ... ok
+test_features_shapes_and_alignment (wm1.test_m2.M2FeatureTests.test_features_shapes_and_alignment) ... ok
+test_nearest_neighbours_on_a_line (wm1.test_m2.M2FeatureTests.test_nearest_neighbours_on_a_line) ... ok
+test_hidden_lifespan_is_never_loaded (wm1.test_m2.T5Tests.test_hidden_lifespan_is_never_loaded) ... ok
+test_scored_rows_and_baselines (wm1.test_m2.T5Tests.test_scored_rows_and_baselines) ... ok
+test_day_lines_round_trip_and_cover_the_episode (wm1.test_m3.M3SerializationTests.test_day_lines_round_trip_and_cover_the_episode) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 15.087s
+
+OK
