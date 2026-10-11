@@ -39,17 +39,25 @@ for capture in manifest['captures']:
     standard.save(raw / (source.stem + '.1920.png'))
     capture['raw_file'] = str(source.resolve())
     capture['raw_sha256'] = hashlib.sha256(source.read_bytes()).hexdigest()
+    entity_source = raw / capture['entities']
+    capture['raw_entities_file'] = str(entity_source.resolve())
+    capture['raw_entities_sha256'] = hashlib.sha256(entity_source.read_bytes()).hexdigest()
     capture['standard_file'] = str((raw / (source.stem + '.1920.png')).resolve())
     if source.stem.startswith(('a_strip_', 'a_evening_')):
         capture['published_file'] = '../village_noon.gif' if source.stem.startswith('a_strip_') else '../village_evening.gif'
+        capture['entities'] = str(entity_source.resolve())
+        capture['published_frame_index'] = int(source.stem.rsplit('_', 1)[1])
+        capture['published_width'], capture['published_height'] = 960, 540
         continue
     if source.stem in full:
         standard.save(docs / source.name)
         capture['published_file'] = source.name
+        capture['published_width'], capture['published_height'] = 1920, 1080
     else:
         target = source.stem + '.jpg'
         standard.resize((960, 540), Image.Resampling.NEAREST).save(docs / target, quality=85)
         capture['published_file'] = target
+        capture['published_width'], capture['published_height'] = 960, 540
     shutil.copy2(raw / capture['entities'], docs / capture['entities'])
 for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():

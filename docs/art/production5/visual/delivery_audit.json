@@ -1,0 +1,97 @@
+{
+  "artifacts": [
+    {
+      "file": "before_after.png",
+      "bytes": 317751,
+      "size": [
+        1280,
+        1110
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "season_strip.png",
+      "bytes": 152172,
+      "size": [
+        1280,
+        208
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "villagers_natural.png",
+      "bytes": 333733,
+      "size": [
+        3926,
+        6568
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "harvest_strip.png",
+      "bytes": 159734,
+      "size": [
+        1280,
+        3552
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "hair_masks_before_after.png",
+      "bytes": 145161,
+      "size": [
+        1060,
+        5260
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "cold_night.png",
+      "bytes": 9933,
+      "size": [
+        1024,
+        640
+      ],
+      "frames": 1,
+      "sha256_match": true
+    },
+    {
+      "file": "village_noon.gif",
+      "bytes": 2188055,
+      "size": [
+        960,
+        540
+      ],
+      "frames": 40,
+      "sha256_match": true
+    },
+    {
+      "file": "village_evening.gif",
+      "bytes": 1020967,
+      "size": [
+        960,
+        540
+      ],
+      "frames": 40,
+      "sha256_match": true
+    }
+  ],
+  "capture_counts": {
+    "art": 94,
+    "art_long": 13,
+    "calibration": 4
+  },
+  "all_expected_artifacts": true,
+  "old_evidence_git_diff_empty": true,
+  "forbidden_simulation_source_diff_empty": true,
+  "independent_contract_review": "pipeline_review fresh delivery audit;80metadata references repaired and revalidated",
+  "limits": [
+    "Visual acceptance NEEDS WORK; A11,A18 FAIL",
+    "A19b N/A; controlled cold presentation only"
+  ]
+}

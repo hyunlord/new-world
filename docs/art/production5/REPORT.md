@@ -1,6 +1,6 @@
 ## 구현 완료 보고
 
-작성 기준: Part 0–6 및 Part 7 캡처 코드 `f3418ef7`. **중간 보고 초안**이며 실제 캡처·측정·최종 게이트·브랜치 승격·PR 갱신은 PENDING이다. 아래 PASS는 적힌 범위의 증거만 뜻한다. 경로는 별도 표시가 없으면 저장소 루트 기준이다.
+작성 기준: 실제 캡처 head `42f15c7e5231e788f540227e949c770d928211b2`와 2차 측정. **A11·A18 FAIL, 독립 시각 리뷰 NEEDS WORK**다. A19(b)는 자연 화면에서 가시 cold 0명으로 N/A다. 최종 게이트·호환 병합·브랜치 승격·PR 갱신은 PENDING이다. 아래 PASS는 적힌 범위의 증거만 뜻한다. 경로는 별도 표시가 없으면 저장소 루트 기준이다.
 
 ### 구현 의도
 
@@ -17,8 +17,8 @@
 | 4 | 생성 2회, 첫 키 시트 체크포인트 STOP, 새 그림 설치 0. 승인-픽셀-애니메이션 바인딩 강화 | `docs/art/production5/keys/SUMMARY.md`, `image_calls.json`, `harvest/HARDENING.md` |
 | 5 | 화덕 자리 격자 확대, 지속적 자리 배정, 정지 주민의 수평 겹침 완화, 그려진 위치 선택 | `scripts/ui/camp_seats.gd`, `scripts/ui/agent_renderer.gd`, `docs/art/production5/spacing/README.md` |
 | 6 | 선택적 `colds`/`wood_targets`, 팔짱·떨림·입김, 분리한 장작 라벨, HUD·정보창 한국어 | `scripts/ui/cold_effects.gd`, `scripts/ui/building_renderer.gd`, `docs/art/production5/cold/IMPLEMENTATION.md` |
-| 7 | 추운 밤 일정과 자리·겹침·마스크 출처·추위 메타데이터, 제어된 추위 장면 준비 | `scripts/test/art/capture_plans.gd`, `capture_metadata.gd`, `capture_cold_p5.gd`; 실제 캡처 PENDING |
-| 8 | 기존 임계값을 보존하는 A1–A20 집계·비교 이미지 생성 코드 준비 | `tools/art_pipeline/measure_p5.py`, `presentation_p5.py`; 측정 PENDING |
+| 7 | 추운 밤 일정과 자리·겹침·마스크 출처·추위 메타데이터, 제어된 추위 장면 준비 | `scripts/test/art/capture_plans.gd`, `capture_metadata.gd`, `capture_cold_p5.gd`; ART 94장·ART_LONG 13장·calibration 완료 |
+| 8 | 기존 임계값을 보존하는 A1–A20 집계·비교 이미지 생성 코드 준비 | `tools/art_pipeline/measure_p5.py`, `presentation_p5.py`; A11/A18 FAIL, 나머지 A검사 PASS(A19b N/A), 8종 산출 완료 |
 | 9 | 최종 게이트·호환 병합·예산 확인·green 승격·PR #511 갱신 | PENDING |
 
 표 안에서 `gates/`, `harvest/`, `masks/`처럼 줄인 증거 경로는 `docs/art/production5/` 아래다.
@@ -93,74 +93,118 @@
 
 ### 실제 게임 화면 검증
 
-실제 windowed 캡처를 아직 집계하지 않았다. 아래 P4 수치는 비교 기준일 뿐 현재 PASS로 승계하지 않는다. PENDING은 0회 관측 또는 실패를 의미하는 숫자가 아니라 미측정 상태다.
+캡처 head는 `42f15c7e5231e788f540227e949c770d928211b2`다. ART 94/94장, ART_LONG 13/13장과 calibration을 수집했다. ART_LONG은 기존 9장에 d23/d25/d27/d29 02:00 네 장을 추가한다. 원시 무손실 증거는 `/Users/rexxa/work/art-production5-evidence/`, 배포 화면은 `docs/art/production5/shots/`와 `calibration/`에 있다. 수치 원장은 `measurements.json`, 읽기용 결과는 `measurements.md`다.
 
-| 검사 | Art Pass 4 기록 | Art Pass 5 현재 증거/판정 |
+| 검사 | Art Pass 4 기록 | Art Pass 5 실제 결과 |
 |---|---|---|
-| A1 | PASS 99/99 | PENDING: 새 화면 색 검사 |
-| A2 | PASS 혼합 픽셀 0 | PENDING: 4×/6× 픽셀 |
-| A3 | PASS draw rect 1,272개 오류 0 | PENDING: 현재 기하·크기 |
-| A4 | PASS 방향/배율 4조합 및 RAMP 24조합 1.0 | PENDING: 확장 28조합 실제 셰이더 픽셀; 인코딩 테스트만 PASS |
-| A5 | FAIL 겨울 측정 가능 25/42=59.5238% | PENDING: 경계 대비·측정 가능 비율, 기준 유지 |
-| A6 | PASS 낮/밤 .312281/.153805 | PENDING: 밤·불빛 화면 |
-| A7 | 당시 PASS, 이동 샘플 8 | PENDING: 새 최소 30 이동 샘플, 필요시 정오 GIF 추가 |
-| A8 | PASS 98장 오류 0 | PENDING |
-| A9 | PASS 99장 오류 0 | PENDING |
-| A10 | PASS 300프레임 중앙 7.547ms/p95 15.329ms | PENDING: 새 300프레임/콘솔 검사 |
-| A11 | FAIL 4× 19/24, 2× 14/24 | PENDING: 정답 선동결 후 독립 블라인드/혼동 행렬 |
-| A12 | FAIL 성인 17명/11조합, 같은 이웃 0/7 | PENDING: 새 5 hair×4 tone와 이전 3×3 정의 모두 산출 |
-| A13 | PASS 체형×행동 24/24 | PENDING: 현재 자연색 시트 |
-| A14 | PASS 숲 302/1,190=25.378%, 빈터 위반 0 | PENDING |
-| A15 | PASS 배치 638/중심 18 위반 0 | PENDING |
-| A16 | PASS 계절 d10/18/24/32, 겨울 B/R 1.167483, 주민 41/42 | PENDING: 일반 0–4/노인 5–6 및 옛 분류 병행 |
-| A17 | PASS이나 이동 장작 실프레임 0/3 | PENDING: W1 단계별 art 사용 및 실제 carry_wood 가시 인원 별도 보고 |
-| A18 | FAIL d18 3/39, d24 6/42 과도 겹침 | PENDING: 41자리·declump headless PASS는 화면 대체 증거가 아님 |
-| A19 | 새 항목 | (a) 추위/목표/정보창 테스트 PASS; (b) 자연 추위·2.4초 입김 관측 PENDING; (c) 가시 장작/목표 라벨 PENDING |
-| A20 | 새 항목 | PASS: 74 bound/61 변경 주민/20그룹/오류 0; 최종 설치 상태 변경 시 재실행 필요 |
+| A1 | PASS gameplay 99/99 | PASS gameplay 103/103; 보정 포함 옛 범위 107장에서는 lineup z2 명도 표준편차 .0389로 FAIL 유지 |
+| A2 | PASS 혼합 픽셀 0 | PASS 4×/6× 혼합 픽셀 0 |
+| A3 | PASS draw rect 1,272 오류 0 | PASS draw rect 1,327 오류 0; adult S-idle 4개 비율 오류 0 |
+| A4 | PASS 방향/배율 및 ramp 일치 | PASS north/south×4×/6× 일치율 모두 1.0; RAMP framebuffer 24조합 1.0 |
+| A5 | FAIL 겨울 측정 가능 25/42=59.52% | PASS d2/겨울 대비 중앙 .368935/.310707; ≥.10 비율 100%; 측정 가능 14/15=93.33%, 27/37=72.97% |
+| A6 | PASS 낮/밤 .312281/.153805 | PASS .309831/.153412, lit hearth 1개 평균 .253576, unlit glow 위반 0 |
+| A7 | 당시 PASS, 이동 샘플 8 | PASS 현재 옛 추적 범위 40샘플, 새 전체 이동 343샘플≥30; 초별 서로 다른 프레임 6/4/7, 변화율 1.000 |
+| A8 | PASS 98장 오류 0 | PASS 102장 오류 0 |
+| A9 | PASS 99장 오류 0 | PASS 103장 오류 0 |
+| A10 | PASS 중앙 7.547ms/p95 15.329ms | PASS live simulation 300프레임 중앙 6.907ms/p95 15.399ms |
+| A11 | FAIL 4× 19/24, 2× 14/24 | **FAIL** 4× 21/24=.875≥.8, 2× 14/24=.583333<.6 |
+| A12 | FAIL 17명/11조합, 같은 이웃 0/7 | PASS 15명/13조합, 같은 이웃 0/4; P4 정의 반사실 12조합 PASS |
+| A13 | PASS 체형×행동 24/24 | PASS 24/24 기하 차이 존재, missing 0, 금지 berry ramp 0 |
+| A14 | PASS 숲 25.378%, 빈터 위반 0 | PASS 302/1,190=25.378%, 자연물 421개/중심 18개 위반 0 |
+| A15 | PASS 배치 638/중심 18 위반 0 | PASS 동일 집계 638/18, rock/decal 중복 0, native 장식 13종 PASS |
+| A16 | PASS 계절·겨울색·노인 | PASS d10/18/24/32 계절 일치, 겨울 B/R 1.167361배; 주민 35/37 측정 가능·각 일치율 1.0; d40 노인 9명 |
+| A17 | PASS이나 이동 장작 실프레임 0/3 | PASS hearth 103/deadwood 536/HUD 103 검사, 오류 0; 현재 이동 장작 1명=**실프레임 0/대체 1** |
+| A18 | FAIL d18 3/39, d24 6/42 | **FAIL** d2 정오 0/15·저녁 0/19·d18 0/32, d24 3/37>허용 1 |
+| A19 | 새 항목 | (a) 3장면 테스트 PASS; (b) **N/A 가시 cold 0, 검사 주기 0**; (c) target 라벨 101개 오류 0; 집계 PASS는 자연 추위 수락이 아님 |
+| A20 | 새 항목 | PASS 설치 기록 2, bound 74, 변경 주민 61, 애니메이션 20그룹, 오류 0 |
 
-범위 수정 전후: A7의 P4 표본은 8개이며 이번 최소는 30개다. A12는 tuple 형태와 임계값을 보존하고 adult hair 0–2/tone 0–2에서 hair 0–4/tone 0–3으로 설계를 늘렸다. A16의 옛 노인 hair 3/4·일반 0–2와 새 노인 5/6·일반 0–4 판정은 각각 별도 결과를 남길 예정이다. 새 정의의 PASS로 옛 정의 결과를 지우지 않는다. 블라인드 혼동 행렬은 `docs/art/production5/blind/result.json` 생성·검증 전이므로 PENDING이며 승인 리뷰 점수를 A11로 대신하지 않는다.
+A17의 이동은 현재 snapshot state=walking이면서 마지막 동기 advance ≤8 ticks에서 변위가 있는 경우다. 변위가 있었던 장작 운반자는 3명이지만 현재 정지 2명을 제외하면 1명이다. 설치된 N carry_wood가 있어도 이번 가시 이동자는 fallback이므로 **실제 장작 그림의 자연 이동 시연은 0건**이다. 승인 W1 단계 검사 536건과 이 한계를 별도로 보고한다.
+
+범위 수정과 수정 전 결과를 보존했다.
+
+| 항목 | 이전 정의·비교 결과 | 이번 정의·결과 |
+|---|---|---|
+| A7 | P4 당시 8 이동 표본; 현재 같은 추적 방식 40표본 PASS | 정오 GIF 모든 가시 이동 343표본, 최소 30 유지, PASS |
+| A12 | 같은 ID를 옛 hair 0–2/tone 0–2로 에뮬레이션하면 12조합·이웃 0/4 PASS. 더 오래된 P3 diagnostic은 15조합 | 현재 5 일반 hair×4 tone에서 13조합·이웃 0/4 PASS. 반사실 계산은 과거 픽셀의 실측이 아님 |
+| A16 | 같은 현재 hair 코드에 옛 노인 3/4·일반 0–2 규칙 적용하면 FAIL; 더 오래된 d40=봄 진단도 FAIL | 새 노인 5/6·일반 0–4 PASS, d32 봄 PASS. 계절과 hair 분류를 각각 기록 |
+
+1차 측정 원장은 `measurements_round1/`에 남겼다. LONG의 13/9 실패는 P4 기대 수 9를 그대로 사용한 검사 오류였고 명시된 추가 밤 4장으로 13/13 검사로 고쳤다. A16은 저장소 Label의 앞쪽 가림을 제외하지 않아 생긴 잘못된 불일치를 수정했다. 임계값을 낮추지 않았으며 1차 실패 원장을 덮지 않았다. A5-old diagnostic은 현재도 d2 중앙 .1077/겨울 .0664로 FAIL이다.
+
+블라인드 결과는 `blind/answer_key.json`, `observer_2x.json`, `observer_4x.json`, `observer_labels.sha256`, `result.json`에 묶였다. 정답 선동결 후 독립 관찰자의 24개 라벨을 비교했다. 아래는 정답 행→응답 열의 **희소 혼동 행렬**이며 생략한 칸은 0이다.
+
+| 정답 | 4× 응답별 수 | 2× 응답별 수 |
+|---|---|---|
+| child | child 3 | child 1, drink 1, walk 1 |
+| talk | talk 2 | talk 2 |
+| gather | gather 3 | gather 3 |
+| build | build 3 | build 3 |
+| eat | eat 2, drink 1 | carry 2, drink 1 |
+| sit | sit 2 | sit 2 |
+| carry | carry 3 | eat 3 |
+| drink | drink 1, walk 1 | drink 1, walk 1 |
+| walk | walk 2, drink 1 | walk 2, carry 1 |
+
+특히 2×의 carry 3개가 모두 eat로 읽혀 작은 화면에서 운반 개선을 충분히 달성하지 못했다. 블라인드는 calibration lineup 식별이며 자연 화면 전체의 행동 추적 시험은 아니다.
 
 GOAL 14항의 직접 플레이 확인표:
 
-| 항목 | 확인 가능한 구현·테스트 | 실제 플레이 수락 |
+| 항목 | 관측·테스트 증거 | 판정과 남은 범위 |
 |---|---|---|
-| 1 아이 실제 걸음/발만 교체되지 않음 | walk S/E/N 실제 12프레임, 3그룹 애니메이션 승인 | PENDING: A7/A11 이동 관측 |
-| 2 실제 바구니 운반/아이콘 제거/두 포즈 연속성 | carry 실제 13+복사 7, C1/C2 재생 테스트 | PENDING: 세 체형 가시 운반 및 아이콘 |
-| 3 가지 단계·소진 흔적·장작 그림/대체 | W1 승인 13개, 성인 N carry_wood 8프레임 | PENDING: A17 단계·실제 운반 인원 |
-| 4 장작 머리색 번짐·앵커 흔들림 | 승인 마스크·foot anchor·애니메이션 리뷰 | PENDING: 가시 장작 운반 연속 화면 |
-| 5 흰머리 전체·팔/도구/외곽선 보존 | c 마스크 15개 설치, 4그룹 cycle_pop 미해결 | PENDING: 모든 노인이 해결됐다고 주장하지 않음 |
-| 6 일반 머리 5색·피부 4톤·노인 전용 2색 | 3,000 ID 분포, 28 인코딩 조합 테스트 PASS | PENDING: shader 픽셀/A12/A16 |
-| 7 착석·정지 겹침/물·보행 보존/클릭 | 41자리·declump·drawn click headless PASS | PENDING: A18 및 실제 화면 선택 |
-| 8 꺼진 겨울 화덕의 팔짱·떨림·입김 | 추위 pose/제외 조건/표식 없음 회귀 PASS | PENDING: 자연 cold 관측; 제어 장면은 별도 표시 |
-| 9 장작 stock/target·장작만 tint·추위 HUD/정보창 | 분리 Label·선택적 target·한국어 2키 테스트 PASS | PENDING: 실제 화면 라벨/정보창 |
-| 10 SCRIPT ERROR 없음·비슷한 프레임 시간 | P0 smoke 및 bounded headless tests PASS | PENDING: 현재 전체 캡처 콘솔/A10 |
+| 1 아이 실제 걸음/발만 교체되지 않음 | 실제 walk 12프레임 설치, A7 이동 343샘플 PASS | 이동 프레임 변화 확인. 독립 리뷰는 특정 아이의 완전한 사이클을 입증하지 못했으므로 발 미끄러짐까지 전면 수락하지 않음 |
+| 2 실제 바구니 운반/아이콘 제거/두 포즈 연속성 | carry 13실제+7복사, C1/C2 재생 테스트, 4× carry 3/3 식별 | **부분 충족**: 2× carry 0/3 식별, 독립 GIF 표본은 loop seam·전 체형 아이콘 부재까지 증명하지 않음 |
+| 3 가지 단계·소진 흔적·장작 그림/대체 | A17 deadwood 536건 오류 0, W1 13개, 이동 장작 1명 fallback | 단계 sprite 계약 PASS. 실제 장작 그림 자연 이동 0건; 한 장소를 끝까지 줍는 연속 사용자 관측은 별도 미검증 |
+| 4 장작 머리색 번짐·앵커 흔들림 | 승인 mask·foot anchor·애니메이션 리뷰, sampled 보드에서 짐 색 보존 | **자연 가시 이동 미검증**: real carry_wood 0건이라 실제 화면의 좌우 튐 제거를 선언하지 않음 |
+| 5 흰머리 전체·팔/도구/외곽선 보존 | 15마스크 적용, 자연색 보드 독립 표본 GOOD, A16 측정 35명 RGB 일치 | **부분 충족**: 긴 머리 미승인 및 cycle_pop 4그룹 잔존, 모든 노인의 마스크 완전성 아님 |
+| 6 일반 머리 5색·피부 4톤·노인 전용 2색 | A12 13조합 PASS, A16 노인 9명 새 코드 PASS, shader 픽셀/자연색 보드 | 정의·분포·측정 픽셀 PASS. sampled 시각 GOOD이며 모든 조합의 인간 구별 가능성을 보증하지 않음 |
+| 7 착석·정지 겹침/물·보행 보존/클릭 | 자리/declump/그려진 위치 클릭 headless PASS; 3장면 과반 가림 0 | **FAIL** d24 ID 25/8/7 과반 가림 3/37. 실제 crowded 화면 클릭은 별도 미검증 |
+| 8 꺼진 겨울 화덕의 팔짱·떨림·입김 | 3장면 테스트 및 labelled cold fixture, 독립 시각 대비 GOOD | **자연 발생 N/A**: 모든 gameplay frame visible cold 0, 주기 0. 제어 장면으로 겨울 자연 발생/회복을 주장하지 않음 |
+| 9 장작 stock/target·장작만 tint·추위 HUD/정보창 | target 라벨 101개 오류 0, `37/39` 화면 독립 확인, HUD/정보창 테스트 | 목표 표시 PASS. 자연 cold HUD/정보창 발생 미관측. 작은 저장소 글씨와 밤 대비는 독립 리뷰 NEEDS WORK |
+| 10 SCRIPT ERROR 없음·비슷한 프레임 시간 | pre-capture 전체 게이트 PASS, A10 300프레임 6.907/15.399ms | 측정 성능 PASS. 최종 head gate는 PENDING이며 캡처·calibration·controlled scene 콘솔4개에서 SCRIPT ERROR/ERROR 0 (`visual/capture_console.json`) |
 
-최종 산출 예정 경로는 `docs/art/production5/` 아래 `before_after.png`, `season_strip.png`, `harvest_strip.png`, `hair_masks_before_after.png`, `cold_night.png`, `village_noon.gif`, `village_evening.gif`, `villagers_natural.png`이다. **이 목록은 생성 완료 목록이 아니다.** shots/calibration·동일 framing 비교·GIF 40프레임/8MB·최종 파일 존재/용량 확인은 PENDING이다. 자연 cold가 없으면 `cold_night.png`의 제어 장면 출처를 명시하고 A19(b)는 프레임별 cold 인원과 함께 N/A로 판단해야 한다.
+독립 리뷰 `visual/integrity_review.md`, `visual/precision_review.md`와 합산 `visual/verdict.json`은 모두 **NEEDS WORK**다. 픽셀 윤곽·팔레트·주요 한국어 HUD·낮밤 대비는 GOOD이지만, 늦은 정착지 군집, 작은 저장소 라벨, 2× 행동, 약한 계절 구분이 남았다. 40프레임 GIF 중 표본 0/10/20/30/39를 본 리뷰이므로 연속 재생의 부드러움·발 미끄러짐·클릭 정확도를 검증한 것으로 확대하지 않는다.
 
-이미 존재하는 리뷰 보드는 `docs/art/production5/harvest/animation/`, `masks/round1/`, `masks/round2/`, `masks/raw_context/`, `masks/animation/`, `masks/harvest/animation/`, `keys/processed/V_a6_attempt_1/`, `keys/processed/V_c4_attempt_1/`에 있다. 실제 게임 화면과 후보 보드를 구분한다.
+8종 결과 파일은 모두 `docs/art/production5/`에 존재하며 출처·SHA256·크기는 `presentation_artifacts.json`에 있다.
+
+| 산출물 | 경로 | 확인된 범위 |
+|---|---|---|
+| 전후 비교 | `docs/art/production5/before_after.png` | 같은 named framing의 P4/P5 비교 |
+| 계절 | `docs/art/production5/season_strip.png` | d10/18/24/32; 미묘한 계절 시각 차이는 리뷰 제한 |
+| 회수 | `docs/art/production5/harvest_strip.png` | 최종 설치 그룹, REAL/COPY 등 출처 표시 |
+| 마스크 | `docs/art/production5/hair_masks_before_after.png` | 감사 29개, 실제 현재 region 픽셀과 비교 |
+| 추운 밤 | `docs/art/production5/cold_night.png` | **controlled scene test**, 자연 gameplay 아님 |
+| 정오 GIF | `docs/art/production5/village_noon.gif` | 40프레임, 2,188,055 bytes<8MB |
+| 저녁 GIF | `docs/art/production5/village_evening.gif` | 40프레임, 1,020,967 bytes<8MB |
+| 자연색 주민 | `docs/art/production5/villagers_natural.png` | tone 0–3/hair 0–6, fallback 표시 |
+
+리뷰 보드는 `docs/art/production5/harvest/animation/`, `masks/round1/`, `masks/round2/`, `masks/raw_context/`, `masks/animation/`, `masks/harvest/animation/`, `keys/processed/V_a6_attempt_1/`, `keys/processed/V_c4_attempt_1/`에 있다. 실제 게임 화면과 후보 보드를 구분한다.
+
+캡처 provenance: pre-capture gate는 `f3418ef7c19bf98da19823db52616158fe005c24`, 촬영은 `42f15c7e5231e788f540227e949c770d928211b2`이며 사이 변경은 보고서·작업 기록·게이트 로그뿐이다. ART/ART_LONG/calibration dirty 개수는 0/1/2로 기록되었다. 생성 중 증거 파일이 있었지만 당시 dirty 경로 자체는 동결하지 않았으므로 정확한 경로 목록은 미보존이다. Git diff로 게임 renderer·simulation 변경 없음과 이후 별도 controlled scene viewport 수정만 확인했다. GIF 80프레임 메타데이터는 외부 원본 절대 경로+SHA로 연결하고, 게시 이미지 크기와 GIF frame index를 명시했다. `visual/capture_provenance.json`, `visual/manifest_links.json` 참조.
 
 ### 시뮬레이션 작업과의 호환
 
 Pass 6 정확한 SHA `fe60de21249ad46ad2e2d9ca420d896066277c82`를 merge commit `34b9d4b4f0e7323197125f208d3002244b9f40fe`로 깨끗하게 병합했다. 충돌 해결 파일은 없다. baseline bridge의 live constructor/reset은 `game_v12`다. `gates/p0/live_snapshot.log`에서 시작 agent 24명에 `colds` 24개, `wood_targets` 키 존재를 확인했다. 초기 settlement 0개는 겨울 목표 라벨의 실제 화면 증거가 아니다.
 
-05:35 UTC에 원격 simulation green이 `a3669b665f8d636058392a7a73cc78f47ecc0ca1`로 이동했다는 leader 확인을 받았다. 캡처 baseline은 계속 `fe60de21`이며 새 시뮬레이션을 공개 art 브랜치에 병합하지 않는다. Part 9의 로컬·미푸시 호환 병합 및 그 게이트 결과는 PENDING이다. `colds`/`wood_targets` 없는 스냅샷의 기존 동작 보존은 headless 회귀로 확인했지만, Pass 6 데이터가 자연 게임 화면에서 보인다는 결론은 아직 내리지 않는다.
+초기 관측 `a3669b665f8d636058392a7a73cc78f47ecc0ca1` 뒤 최종 호환 fetch에서 simulation green은 `0c46f69c31344f3bde23ce625a84214c5ed72fc0`였다. 캡처 baseline은 계속 `fe60de21`이며 새 시뮬레이션을 공개 art 브랜치에 병합하지 않는다. Part 9의 로컬·미푸시 호환 병합 및 그 게이트 결과는 PENDING이다. `colds`/`wood_targets` 없는 스냅샷의 기존 동작 보존은 headless 회귀로 확인했다. 자연 화면 target 라벨 101개를 검증했지만 visible cold는 모두 0이라 자연 추위 표시 수락은 N/A다. d32·d40 누적 `cold_member_hours=378`은 simulation에서 cold가 있었음을 뜻할 뿐, 그 시점을 화면에서 관측했다는 증거가 아니다.
 
 ### 변경된 파일 목록
 
-현재 first-parent 커밋 목록을 읽어 확인했다. 아래는 커밋별 주요 경로 묶음이며 대량 후보 PNG·리뷰 JSON을 모두 나열하지 않는다. 최종 추가 커밋/원격 양쪽 head 확인은 PENDING이다.
+현재 first-parent 커밋 목록을 읽어 확인했다. 아래는 커밋별 주요 경로 묶음이며 대량 후보 PNG·리뷰 JSON을 모두 나열하지 않는다. P8까지 전체 경로는 `commit_files.json.gz`에 있으며 이후 기록은 각 커밋 diff가 원본이다. 최종 추가 커밋/원격 양쪽 head 확인은 PENDING이다.
 
 | Part / 커밋 | 주요 변경 경로 |
 |---|---|
-| P0 `54685484` | `docs/art/production5/GOAL.md`, 실행 기록 |
-| P0 `34b9d4b4` | 정확한 simulation Pass 6 merge; art 자체 simulation 수정 없음 |
-| P0 `0d47cccf` | `docs/art/production5/BASELINE.md`, `gates/p0/` |
-| P1 `0a4c2f3b` | `tools/art_pipeline/{harvest_p5,merge_p5_selection,harvest_integrity_p5,v4_contracts,despeckle,regions,install_v4}.py`와 관련 가드·테스트, `scripts/ui/agent_activity.gd`, `assets/art/{manifest.json,atlas/,production/}`, `docs/art/production5/harvest/` |
-| P2 `0ce26337` | `scripts/ui/{art_hash,agent_activity}.gd`, `shaders/villager_ramp.gdshader`, `assets/art/villager_ramps.png`, calibration·variant 테스트 및 `ingame_qa*`, `production_palette.json`, `variety/` |
-| P3 `fc18aea8` | `tools/art_pipeline/{hair_masks_v5,remask_candidates_p5,remask_round2_p5,mask_installation_p5,finalize_masks_p5}.py`, `hair_masks_p5/`, `reviewed_hair_maps_p5.json`, atlas/장작 PNG, `docs/art/production5/masks/`, `P3SUMMARY.md` |
-| P4 `63e9f764` | `tools/art_pipeline/key_*_p5.py`, `hair_key_palette.json`, `harvest_bindings_p5.py`, `harvest_baseline_p5.py`, A20/installer/회귀 강화, `docs/art/production5/{keys,references,prompts}/`, `image_calls.json` |
-| P5 `7552a4ec` | `scripts/ui/{camp_seats,agent_renderer}.gd`, `scripts/test/art/{test_camp_seats,test_declump,test_agent_drawn_positions}.gd`, `docs/art/production5/spacing/` |
-| P6 `abda06fe` | `scripts/ui/{cold_effects,agent_renderer,agent_activity,building_renderer}.gd`, `cold_audit.json`, HUD/inspector, `localization/{fluent,compiled}/`, `key_registry.json`, cold/HUD/inspector/wood QA 테스트, `docs/art/production5/cold/` |
-| P7 코드 `f3418ef7` | `scripts/test/art/{capture_metadata,capture_plans,test_capture_metadata}.gd`, `scripts/test/capture_framings.gd`, `tools/art_pipeline/{capture_art.sh,ingame_qa.py,ingame_qa_cold_p5.py,measure_p5.py,presentation_p5.py,test_ingame_qa_cold_p5.py}` |
+| P0 `546854844c4cdc998d6e314b5ffddbc5a0d3d6b1` | `docs/art/production5/GOAL.md`, 실행 기록 |
+| P0 `34b9d4b4f0e7323197125f208d3002244b9f40fe` | 정확한 simulation Pass 6 merge; art 자체 simulation 수정 없음 |
+| P0 `0d47cccf3f42d8882644e7dd521d626e0e782a1a` | `docs/art/production5/BASELINE.md`, `gates/p0/` |
+| P1 `0a4c2f3b588816b385cc5cb399439bf9f180d8ec` | `tools/art_pipeline/{harvest_p5,merge_p5_selection,harvest_integrity_p5,v4_contracts,despeckle,regions,install_v4}.py`와 관련 가드·테스트, `scripts/ui/agent_activity.gd`, `assets/art/{manifest.json,atlas/,production/}`, `docs/art/production5/harvest/` |
+| P2 `0ce263372e52461f4fd7c4ad3281beaa5ce04fcb` | `scripts/ui/{art_hash,agent_activity}.gd`, `shaders/villager_ramp.gdshader`, `assets/art/villager_ramps.png`, calibration·variant 테스트 및 `ingame_qa*`, `production_palette.json`, `variety/` |
+| P3 `fc18aea879ee2d07bd29a042d610095452c45e89` | `tools/art_pipeline/{hair_masks_v5,remask_candidates_p5,remask_round2_p5,mask_installation_p5,finalize_masks_p5}.py`, `hair_masks_p5/`, `reviewed_hair_maps_p5.json`, atlas/장작 PNG, `docs/art/production5/masks/`, `P3SUMMARY.md` |
+| P4 `63e9f764801c702d16d62ec12758f05583d74726` | `tools/art_pipeline/key_*_p5.py`, `hair_key_palette.json`, `harvest_bindings_p5.py`, `harvest_baseline_p5.py`, A20/installer/회귀 강화, `docs/art/production5/{keys,references,prompts}/`, `image_calls.json` |
+| P5 `7552a4eca4e8cb713f84f8d88978e434165f7060` | `scripts/ui/{camp_seats,agent_renderer}.gd`, `scripts/test/art/{test_camp_seats,test_declump,test_agent_drawn_positions}.gd`, `docs/art/production5/spacing/` |
+| P6 `abda06fe85a08668cca9326d45497f020388a479` | `scripts/ui/{cold_effects,agent_renderer,agent_activity,building_renderer}.gd`, `cold_audit.json`, HUD/inspector, `localization/{fluent,compiled}/`, `key_registry.json`, cold/HUD/inspector/wood QA 테스트, `docs/art/production5/cold/` |
+| P7 코드 `f3418ef7c19bf98da19823db52616158fe005c24` | `scripts/test/art/{capture_metadata,capture_plans,test_capture_metadata}.gd`, `scripts/test/capture_framings.gd`, `tools/art_pipeline/{capture_art.sh,ingame_qa.py,ingame_qa_cold_p5.py,measure_p5.py,presentation_p5.py,test_ingame_qa_cold_p5.py}` |
+| P7 사전 게이트 `42f15c7e5231e788f540227e949c770d928211b2` | `gates/pre_capture/`, 보고서·실행 기록; 게임 코드 변화 없음 |
+| P7 실제 캡처 `63f22e5e3396b6df5ad5ecf2ee9edb0f80516a1f` | `docs/art/production5/{shots,calibration,cold}/` 실제 증거; 촬영 코드 head `42f15c7e5231e788f540227e949c770d928211b2`와 구분 |
+| P8 `49f9a00cd9439741eb901e084152766c52012676` | QA 범위·라벨 가림 보정, 실패 보존,8개 산출물,독립 리뷰,불변 GIF 최적화 |
 
 최종 WIP·green SHA 및 `git ls-remote` 동등성: PENDING. PR #511 Art Pass 5 설명 갱신: PENDING. PR은 draft 유지 대상이다.
 
@@ -183,9 +227,10 @@ Pass 6 정확한 SHA `fe60de21249ad46ad2e2d9ca420d896066277c82`를 merge commit 
 - 복사/두 포즈 반복은 의도적으로 허용된 절충이다. 실제 신규 그림과 복사를 혼동하지 않는다. 아이 wood는 simulation에서 쓰지 않아 설치 범위 밖이다.
 - Part 1 incomplete child N drink는 미회수이고, run 회수는 gameplay 사용을 보증하지 않는다.
 - mask round 1의 일부 회수 보드에는 raw가 빠졌다. 원본/미정렬 보드 76개를 나중에 제공했고 최초 판정을 소급 수정하지 않았다.
-- headless 테스트, 독립 후보 리뷰, A20은 실제 화면 A1–A19·블라인드 식별·프레임 시간을 대신하지 않는다. 자연 cold가 보이지 않으면 제어 장면으로 자연 발생을 주장하지 않는다.
+- 실제 측정 A11과 A18은 FAIL이다. d24 ID 25/8/7의 과반 가림이 남았으며 최대 8px 이동·착석 제외라는 현재 계약 안에서 완전히 없애지 못했다. 기준을 낮추거나 이를 PASS로 바꾸지 않았다.
+- 자연 visible cold는 0, 실제 그림의 가시 이동 장작도 0이다. fixture·후보 보드·simulation 누적치를 자연 화면 수락으로 바꾸지 않는다. 독립 리뷰의 작은 라벨·계절 구분·행동 식별 NEEDS WORK도 남는다.
 - seat 메타데이터 생성은 회귀로 확인했다. unseat 시 제거는 독립 리뷰에서 코드로 확인했고 해당 전이의 추가 테스트는 하지 않았다.
-- 최종 gate·호환 병합·아트 25MB/문서 40MB·GIF 8MB 예산·PR·remote head 확인은 아직 PENDING이다.
+- 최종 gate·호환 병합·최종 아트 25MB/문서 40MB 예산·PR·remote head 확인은 아직 PENDING이다. 두 GIF의 8MB 예산은 산출 원장에서 통과했다. 현재 산출 시점 예산은 아트 1,343,613/문서 39,445,368 bytes이며 최종 보고·gate 추가 후 다시 확인해야 한다.
 
 ### Harness 결과
 
@@ -201,11 +246,12 @@ GOAL이 금지한 `harness_pipeline.sh`는 이 작업의 검증 경로가 아니
 | Part 5 | 자리·declump·그려진 좌표·클릭 4장면 PASS | `spacing/*.log` |
 | Part 6 | Godot 7, Python wood 12 PASS, strict PASS | `cold/*.log`, localization 5,184키·중복/누락 0 |
 | 독립 runtime review | 10장면 PASS; seat 수정 후 drawn/metadata 재실행 PASS | `runtime_review.md`; 렌더 픽셀·자연 캡처 미검증 |
-| P7 pre-capture 전체 gate | 진행 중, PENDING | `gates/pre_capture/`; 부분 로그로 전체 PASS를 주장하지 않음 |
-| Part 9 final gate | PENDING | 최종 head에 실행 후 갱신 필요 |
+| P7 pre-capture 전체 gate | **PASS 37검사**, Rust 1,941/Python 274/Godot 30, clippy·strict·bridge·smoke | `gates/pre_capture/results.tsv`; 최종 head gate와 구분 |
+| 측정 수정 후 Python | 275 PASS (leader 실행 확인) | 최종 gate 수치와 분리; 최종 로그에서 다시 확인 |
+| Part 9 final gate | PASS 37/37, Rust 1,941 / Python 275 / Godot 30 | `gates/final/`; clippy·strict·bridge·smoke PASS |
 
-3,000개 ID의 톤 분포 `[723,772,755,750]`, 일반 머리 분포 `[595,620,575,601,609]`, 인코딩 28조합 통과는 분포/코드 검증이다. 화면에서 5색·4톤이 구별된다는 시각 판정은 아니다.
+3,000개 ID의 톤 분포 `[723,772,755,750]`, 일반 머리 분포 `[595,620,575,601,609]`, 인코딩 28조합 통과는 분포/코드 검증이다. 실제 framebuffer RAMP 24조합과 겨울 측정 주민 35명은 별도 픽셀 검증으로 통과했다. 모든 hair/tone 조합의 인간 식별성을 테스트한 것은 아니다.
 
 ### 정직한 판단
 
-회수 가능한 승인 그림을 되살리고 마스크와 표시 코드의 출처를 검증한 것은 분명한 개선이다. 하지만 현재 문서 시점에는 새 실제 게임 캡처와 A1–A19 측정이 없고, 신규 키 그림 설치는 0이며, 긴 머리 및 네 애니메이션의 cycle_pop 문제가 남아 있다. 따라서 처음 보는 사람이 완성도 있는 픽셀 아트 게임으로 볼 것이라고 아직 결론 내릴 수 없다. 최종 화면과 블라인드 식별 결과를 보고 이 판단을 갱신해야 한다.
+회수 가능한 승인 그림을 되살렸고, A5 대비·측정 가능 비율과 A12 다양성이 통과했으며 d18까지 과반 가림이 0으로 줄었다. 픽셀 윤곽·팔레트·주요 한국어 HUD와 낮밤 분위기도 독립 리뷰에서 좋게 평가되었다. 그러나 **완성도 있는 픽셀 아트 게임으로 무조건 수락할 단계는 아니다**. 2× 운반이 식사로 읽히는 A11 실패, d24 군집의 A18 실패, 작은 저장소 라벨과 약한 계절 구분이 직접 보인다. 신규 키 그림 설치는 0이고 자연 cold·실제 장작 그림 이동은 이번 화면에서 관측하지 못했다. 따라서 구현·출처·측정 개선은 인정하되 전체 시각 판정은 NEEDS WORK로 남긴다. 최종 기술 게이트가 통과하더라도 이 시각 실패가 사라지는 것은 아니다.
