@@ -446,10 +446,14 @@ func _capture_cold_cycle(stem: String) -> void:
 
 func _measure_frame_times() -> void:
 	DisplayServer.window_move_to_foreground()
+	if OS.get_name() == "macOS":
+		var activate: String = 'tell application "System Events" to set frontmost of first process whose unix id is %d to true' % OS.get_process_id()
+		OS.execute("/usr/bin/osascript", PackedStringArray(["-e", activate]))
+	var elapsed: Array[float] = []
+	# Keep simulation frozen until the actual foreground drawable is available.
+	await RenderingServer.frame_post_draw
 	_world.process_mode = Node.PROCESS_MODE_INHERIT
 	_world.call("set_sim_speed", 1.0)
-	var elapsed: Array[float] = []
-	await RenderingServer.frame_post_draw
 	var previous: int = Time.get_ticks_usec()
 	for frame: int in range(300):
 		await RenderingServer.frame_post_draw

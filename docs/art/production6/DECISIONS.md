@@ -18,3 +18,5 @@
 - Final screenshot waits use RenderingServer.force_draw(false) to avoid the observed occluded-window wait. Performance sampling retains natural frame_post_draw (forced_draw:false), so this workaround cannot improve reported frame timing. Cold cycles retain actual framebuffer frames for independent visual observation.
 
 - First final ART capture exposed Godot export warnings from Image.load_from_file on carry resource paths. This was a warning, not SCRIPT ERROR; stopped only our capture PID55052 and preserved its raw partial run under evidence/rejected/capture_attempt1. Use imported Texture2D resources instead; pixel provenance is unchanged. Re-run all final plans from the corrected source commit.
+
+- Second ART attempt failed because the natural frame-post-draw measurement waited on a backgrounded Mac window while simulation was already running, overshooting the next fixed capture tick. Preserve rejected/capture_attempt2. Activate only the current capture PID through macOS System Events and keep simulation frozen until the first real drawable; then measure300 normal draws with live simulation, no forced draws.
