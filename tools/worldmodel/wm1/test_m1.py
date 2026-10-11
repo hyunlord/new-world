@@ -33,11 +33,16 @@ class M1Tests(unittest.TestCase):
         rng = np.random.default_rng(0)
         bt = m.batch_tensors(d.sample_windows([prep], 48, 4, rng), "cpu")
         opt = m.torch.optim.AdamW(self.model.parameters(), lr=1e-3)
-        tf, parts, roll = m.losses(self.model, self.stepper, bt, 6, 3, rng)
+        tf, parts, roll = m.losses(self.model, self.stepper, bt, 6, {"roll_starts": 3, "roll_min_context": 40, "tf_l1": 1.0}, rng)
         (tf + roll).backward()
         opt.step()
         self.assertTrue(np.isfinite(float(tf)) and np.isfinite(float(roll)))
         self.assertEqual(set(parts), {"nll", "bce", "roll"})
+        # Rollout starts honour the minimum context when it fits, and always leave room for k steps.
+        pos = m.roll_positions(48, 6, {"roll_starts": 50, "roll_min_context": 40}, rng)
+        self.assertTrue((pos >= 40).all() and (pos <= 42).all())
+        pos = m.roll_positions(48, 30, {"roll_starts": 50, "roll_min_context": 40}, rng)
+        self.assertTrue((pos == 18).all())
 
     def test_layerwise_states_continue_the_sequence(self) -> None:
         """The per-position states of `run` resume a sequence exactly as one pass would."""
@@ -110,7 +115,7 @@ class M1bTests(unittest.TestCase):
         rng = np.random.default_rng(0)
         bt = m.batch_tensors(d.sample_windows([prep], 30, 3, rng), "cpu")
         stepper = m.Stepper(self.lay, self.norm, "cpu")
-        tf, parts, roll = self.tf.losses_tf(self.model, stepper, bt, 5, 2, rng)
+        tf, parts, roll = self.tf.losses_tf(self.model, stepper, bt, 5, {"roll_starts": 2, "tf_l1": 1.0}, rng)
         (tf + roll).backward()
         self.assertTrue(np.isfinite(float(tf.detach())) and np.isfinite(float(roll.detach())))
         pred = self.tf.TFPredictor(self.model, self.lay, self.norm, d.MAIN, "cpu", 24, context=24)

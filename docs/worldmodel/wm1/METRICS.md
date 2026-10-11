@@ -22,3 +22,14 @@ Test roles, OOD_v12, OOD_long and C_cf test are evaluated once per configuration
 
 A recipe change after a failed target (GOAL.md 0.3.7) gets a new run id suffix (`_r2`, `_r3`) and is added to
 this table before its test evaluation.
+
+### Recipe r2 (added 18:47, before any r2 test number; DECISIONS D2.2)
+
+| Config | Model | Variant | Seeds | Run ids |
+|---|---|---|---|---|
+| M1-main r2 | M1 GRU, recipe r2 | sev-blind, action-aware | 0, 1, 2 | `m1gru_main_r2_s0`, `m1gru_main_r2_s1`, `m1gru_main_r2_s2` |
+| M1-sevon r2 | M1 GRU, recipe r2 | sev-on, action-aware | 0 | `m1gru_sevon_aa_r2_s0` |
+| M1-blind-noact r2 | M1 GRU, recipe r2 | sev-blind, action-blind | 0 | `m1gru_blind_ab_r2_s0` |
+| M1-sevon-noact r2 | M1 GRU, recipe r2 | sev-on, action-blind | 0 | `m1gru_sevon_ab_r2_s0` |
+| M1-main r2 rerun (W7) | M1 GRU, recipe r2 | sev-blind, action-aware | 0 | `m1gru_main_r2_s0_rerun` |
+| M1b r2 | transformer, recipe r2 | sev-blind, action-aware | 0 | `m1tf_main_r2_s0` (optional) |

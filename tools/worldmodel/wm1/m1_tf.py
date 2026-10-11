@@ -31,7 +31,7 @@ if torch is not None:
 
 DEFAULTS = dict(d_model=256, layers=4, heads=4, context=168, lr=3e-4, weight_decay=1e-4, batch=64, window=168,
                 k_max=24, roll_starts=4, roll_weight=1.0, max_steps=6000, eval_every=300, patience=5, max_seconds=7200,
-                warmup=168, grad_clip=1.0, threads=16)
+                warmup=168, grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0)
 
 
 if torch is not None:
@@ -102,7 +102,7 @@ def append(cache: dict | None, kv: list, valid, keep: int | None = None) -> dict
     return new
 
 
-def losses_tf(model, stepper: g.Stepper, bt: dict, k: int, roll_starts: int, rng: np.random.Generator):
+def losses_tf(model, stepper: g.Stepper, bt: dict, k: int, cfg: dict, rng: np.random.Generator):
     """As `m1_gru.losses`: teacher-forced NLL + BCE, and the k-step rollout loss from `roll_starts` positions."""
     L = bt["dtarget"].shape[1]
     inp = torch.cat([bt["x_state"], bt["calendar"], bt["actions"], bt["sev"]], dim=-1)
@@ -110,8 +110,10 @@ def losses_tf(model, stepper: g.Stepper, bt: dict, k: int, roll_starts: int, rng
     nll = 0.5 * (logvar + (bt["dtarget"] - mu) ** 2 / logvar.exp()).mean()
     bce = F.binary_cross_entropy_with_logits(fl, bt["fire_next"])
     tf = nll + bce
+    if cfg.get("tf_l1", 0.0):
+        tf = tf + cfg["tf_l1"] * (bt["dtarget"] - mu).abs().mean()
     B = inp.shape[0]
-    js = torch.tensor(np.sort(rng.integers(0, L - k + 1, size=roll_starts)), device=inp.device)
+    js = torch.tensor(g.roll_positions(L, k, cfg, rng), device=inp.device)
     m = len(js)
     flat = lambda a: a.reshape(B * m, *a.shape[2:])
     rep = lambda t: t[:, None].expand(B, m, *t.shape[1:]).reshape(B * m, *t.shape[1:])
@@ -199,7 +201,7 @@ def _build(lay, cfg):
 
 def _predictor(model, lay, norm, variant, device, cfg, round_counts=False):
     return TFPredictor(model, lay, norm, variant, device, cfg["warmup"], round_counts=round_counts,
-                       context=cfg["context"])
+                       context=cfg["context"], nonneg=bool(cfg.get("clamp_nonneg", 0)))
 
 
 if torch is not None:

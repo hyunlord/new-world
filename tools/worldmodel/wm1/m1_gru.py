@@ -42,7 +42,11 @@ except ImportError:  # the Mac gate runs without torch; the torch tests skip
 
 DEFAULTS = dict(hidden=256, layers=2, lr=3e-4, weight_decay=1e-4, batch=64, window=168, k_max=24, roll_starts=8,
                 roll_weight=1.0, max_steps=12000, eval_every=400, patience=5, max_seconds=7200, warmup=168,
-                grad_clip=1.0, threads=16)
+                grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0)
+# Recipe r1 = DEFAULTS. Recipe r2 (after r1 drifted at 168 h, DECISIONS D2.2): window 336, k_max 168,
+# roll_min_context 167 (rollouts start after a full 168-row context, as in evaluation), roll_starts 2, tf_l1 1.0,
+# clamp_nonneg 1.
+R2 = dict(window=336, k_max=168, roll_min_context=167, roll_starts=2, tf_l1=1.0, clamp_nonneg=1)
 
 
 def pick_device(prefer: str = "auto") -> str:
@@ -86,13 +90,16 @@ if torch is not None:
 class Stepper:
     """Turns predicted normalized changes into the next state and the next model input (torch)."""
 
-    def __init__(self, lay: d.Layout, norm: d.Normalizer, device: str):
+    def __init__(self, lay: d.Layout, norm: d.Normalizer, device: str, nonneg: bool = False):
         t = lambda a: torch.tensor(np.asarray(a), dtype=torch.float32, device=device)
         self.lay = lay
         self.cont = torch.tensor(lay.cont, device=device)
         self.mean, self.std, self.dstd = t(norm.mean), t(norm.std), t(norm.dstd)
         span = norm.hi - norm.lo
-        self.lo, self.hi = t(norm.lo - 0.25 * span), t(norm.hi + 0.25 * span)
+        lo = norm.lo - 0.25 * span
+        if nonneg:   # features never negative in train (stocks, counts, flags) are clamped at 0 (recipe r2)
+            lo = np.where(norm.lo >= 0, np.maximum(lo, 0.0), lo)
+        self.lo, self.hi = t(lo), t(norm.hi + 0.25 * span)
 
     def next_state(self, state, mu, fire_logit, hard: bool = True):
         """state [..., Ds] raw -> next raw state; fire thresholded (straight-through when not `hard`)."""
@@ -112,10 +119,10 @@ class GRUPredictor(ev.Predictor):
     provides_t4 = True
 
     def __init__(self, model, lay: d.Layout, norm: d.Normalizer, variant: d.Variant, device: str, warmup: int = 168,
-                 name: str = "m1_gru", round_counts: bool = False, chunk: int = 4096):
+                 name: str = "m1_gru", round_counts: bool = False, chunk: int = 4096, nonneg: bool = False):
         self.model, self.lay, self.norm, self.variant = model, lay, norm, variant
         self.device, self.warmup, self.name, self.round_counts, self.chunk = device, warmup, name, round_counts, chunk
-        self.stepper = Stepper(lay, norm, device)
+        self.stepper = Stepper(lay, norm, device, nonneg)
 
     def rollout(self, ep, starts, horizon, actions):
         outs = [self._rollout(ep, starts[i:i + self.chunk], horizon, actions) for i in range(0, len(starts), self.chunk)]
@@ -184,9 +191,15 @@ def batch_tensors(win: dict, device: str) -> dict:
     return {k: torch.tensor(v, device=device) for k, v in win.items()}
 
 
-def losses(model, stepper: Stepper, bt: dict, k: int, roll_starts: int, rng: np.random.Generator):
-    """Teacher-forced Gaussian NLL + BCE, and the k-step rollout loss (L1 of the train-std-normalized continuous
-    state + fire BCE, averaged over the k steps) from `roll_starts` positions per window."""
+def roll_positions(L: int, k: int, cfg: dict, rng: np.random.Generator) -> np.ndarray:
+    """Rollout start positions j (the last teacher-forced row) with j + k <= L and j >= roll_min_context when it fits."""
+    lo = min(cfg.get("roll_min_context", 0), L - k)
+    return np.sort(rng.integers(lo, L - k + 1, size=cfg["roll_starts"]))
+
+
+def losses(model, stepper: Stepper, bt: dict, k: int, cfg: dict, rng: np.random.Generator):
+    """Teacher-forced Gaussian NLL + BCE (+ `tf_l1` x L1 of the mean), and the k-step rollout loss (L1 of the
+    train-std-normalized continuous state + fire BCE, averaged over the k steps) from `roll_starts` positions."""
     L = bt["dtarget"].shape[1]
     inp = torch.cat([bt["x_state"], bt["calendar"], bt["actions"], bt["sev"]], dim=-1)
     mu, logvar, fl, outs = model.run(inp[:, :L])
@@ -194,8 +207,10 @@ def losses(model, stepper: Stepper, bt: dict, k: int, roll_starts: int, rng: np.
     nll = 0.5 * (logvar + (y - mu) ** 2 / logvar.exp()).mean()
     bce = F.binary_cross_entropy_with_logits(fl, bt["fire_next"])
     tf = nll + bce
+    if cfg.get("tf_l1", 0.0):
+        tf = tf + cfg["tf_l1"] * (y - mu).abs().mean()
     B = inp.shape[0]
-    js = torch.tensor(np.sort(rng.integers(0, L - k + 1, size=roll_starts)), device=inp.device)
+    js = torch.tensor(roll_positions(L, k, cfg, rng), device=inp.device)
     m = len(js)
     flat = lambda a: a.reshape(B * m, *a.shape[2:])
     # The teacher-forced state after consuming row j's true input, for every layer: [layers, B*m, H].
@@ -250,7 +265,8 @@ def _gru_build(lay, cfg):
 
 
 def _gru_predictor(model, lay, norm, variant, device, cfg, round_counts=False):
-    return GRUPredictor(model, lay, norm, variant, device, cfg["warmup"], round_counts=round_counts)
+    return GRUPredictor(model, lay, norm, variant, device, cfg["warmup"], round_counts=round_counts,
+                        nonneg=bool(cfg.get("clamp_nonneg", 0)))
 
 
 KINDS = {"m1_gru": Kind("m1_gru", DEFAULTS, _gru_build, lambda *a: losses(*a), _gru_predictor)}
@@ -282,7 +298,7 @@ def train(args, kind: Kind | None = None) -> int:
     preps = [d.prepare(ep, variant, norm) for ep in train_eps]
     model = kind.build(lay, cfg).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
-    stepper = Stepper(lay, norm, device)
+    stepper = Stepper(lay, norm, device, bool(cfg.get("clamp_nonneg", 0)))
     pred = kind.predictor(model, lay, norm, variant, device, cfg)
     config = {"model": kind.name, "variant": variant.name, "seed": args.seed, "hyper": cfg, "device": device,
               "torch": torch.__version__, "numpy": np.__version__, "python": sys.version.split()[0],
@@ -299,7 +315,7 @@ def train(args, kind: Kind | None = None) -> int:
         model.train()
         k = 1 + int((cfg["k_max"] - 1) * min(1.0, step / max(1, half)))
         bt = batch_tensors(d.sample_windows(preps, cfg["window"], cfg["batch"], rng), device)
-        tf, parts, roll = kind.loss(model, stepper, bt, k, cfg["roll_starts"], rng)
+        tf, parts, roll = kind.loss(model, stepper, bt, k, cfg, rng)
         loss = tf + cfg["roll_weight"] * roll
         opt.zero_grad()
         loss.backward()
