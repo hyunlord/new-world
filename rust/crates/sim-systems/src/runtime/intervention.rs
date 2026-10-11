@@ -93,11 +93,18 @@ fn remove(resources: &mut SimResources, sid: SettlementId, kind: ResourceKind, a
 
 /// Passes over the registered deadwood spots in key order from the first key,
 /// one unit a spot while it is below its ceiling (its max; in winter
-/// `min(max, winter_deadwood_cap)`), until `units` are placed or a pass places
+/// `min(max, winter_deadwood_cap)`, unless the windfall lands on the snow,
+/// Pass 8 `windfall_over_snow`), until `units` are placed or a pass places
 /// none. The winter cursor is left alone. Returns the units placed.
 fn windfall(resources: &mut SimResources, now: u64, units: u32) -> u64 {
     let winter = season_at_tick(resources, now).is_some_and(|(season, _)| season == WINTER);
-    let cap = resources.rules.society.firewood.and_then(|rule| rule.winter_deadwood_cap).filter(|_| winter);
+    let cap = resources
+        .rules
+        .society
+        .firewood
+        .filter(|rule| !rule.windfall_over_snow)
+        .and_then(|rule| rule.winter_deadwood_cap)
+        .filter(|_| winter);
     let spots: Vec<((u32, u32), u8)> = resources.wood_source_max.iter().map(|(k, v)| (*k, *v)).collect();
     let mut placed = 0u32;
     while placed < units {

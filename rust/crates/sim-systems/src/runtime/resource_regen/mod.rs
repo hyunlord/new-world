@@ -257,7 +257,14 @@ impl RuntimeSystem for ResourceRegenSystem {
         // winter the snow cap and the spread regrowth replace it when set.
         if let Some(rule) = resources.rules.society.firewood {
             let winter = season_at(resources).is_some_and(|(season, _)| season == WINTER);
-            if winter {
+            // Pass 8 `windfall_over_snow`: the snow falls once, at the first
+            // pulse of each winter (the previous pulse was not winter), so a
+            // windfall's wood stays above the cap; without it every winter
+            // pulse buries (Pass 6).
+            let snowfall = !rule.windfall_over_snow
+                || resources.current_tick < REGEN_INTERVAL
+                || season_at_tick(resources, resources.current_tick - REGEN_INTERVAL).is_none_or(|(season, _)| season != WINTER);
+            if winter && snowfall {
                 if let Some(cap) = rule.winter_deadwood_cap {
                     bury_wood(&mut resources.wood_tiles, cap);
                 }

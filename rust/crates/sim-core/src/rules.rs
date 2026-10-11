@@ -354,7 +354,21 @@ impl WorldRules {
     /// Pass 8 village policies: v13 with winters that vary night by night and
     /// day by day, and windfall that lands on the snow. v13 stays frozen.
     pub const fn game_v14() -> Self {
-        Self::game_v13()
+        let mut rules = Self::game_v13();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2 (variant C of section 3.3): severity weights 35 / 40 / 25 %
+            // with v13's burns (2 / 3 / 4) and falls (8 / 6 / 4); each winter
+            // night burns its rate -2, +0 or +2 an hour (25 / 50 / 25 %, drawn
+            // per evening, floor 1); each winter day's fall is the severity's
+            // +-2 (uniform, floor 0); windfall lands on the snow.
+            firewood.winter_severity_permille = Some([350, 400, 250]);
+            firewood.winter_night_burn_permille = Some([250, 500, 250]);
+            firewood.winter_night_burn_step = 2;
+            firewood.winter_fall_spread = 2;
+            firewood.windfall_over_snow = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
     }
 
     /// Pass 7 village policies: v12 with winters of drawn severity and claims
@@ -746,6 +760,18 @@ mod tests {
             assert_eq!(rule.winter_fall_spread, 0);
             assert!(!rule.windfall_over_snow);
         }
+    }
+
+    #[test]
+    fn game_v14_sets_the_pass8_fields() {
+        let rule = WorldRules::game_v14().society.firewood.expect("v14 firewood");
+        let night = rule.winter_night_burn_permille.expect("v14 draws night burns");
+        assert_eq!(night.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        let weights = rule.winter_severity_permille.expect("v14 draws severity");
+        assert_eq!(weights.iter().map(|w| u32::from(*w)).sum::<u32>(), 1000);
+        assert!(rule.winter_night_burn_step > 0);
+        assert!(rule.winter_fall_spread > 0);
+        assert!(rule.windfall_over_snow);
     }
 
     #[test]
