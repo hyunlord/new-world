@@ -166,6 +166,8 @@ func _run() -> void:
 			await _measure_frame_times()
 		if _plan == "art" and stem == "a_d2_1930_F2":
 			await _capture_strip("a_evening", false)
+		if _plan == "art_long" and framing == "F2N":
+			await _capture_cold_cycle(stem)
 	if _plan == "art":
 		_main.queue_free()
 		await process_frame
@@ -283,7 +285,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
 	var data: Dictionary = {
-		"schema_version": 4, "camera_position": [_camera.position.x, _camera.position.y],
+		"schema_version": 5, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
@@ -300,6 +302,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"selected_entity_bits": int(inspector.call("get_selected_entity_bits")), "selected_seeking": _selected_seeking,
 		"seek_segments": int(_main.get_node("SeekVizRenderer").call("get_drawn_segment_count")),
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
+		"installed_groups": _installed_groups(),
 	}
 	if tick == _motion_end_tick and _motion_start_tick >= 0:
 		data["agent_motion_evidence"] = {
@@ -315,6 +318,34 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	file.store_string(JSON.stringify(data, "\t") + "\n")
 	file.close()
 	return true
+
+
+func _installed_groups() -> Variant:
+	var path: String = "res://docs/art/production5/harvest/installed_groups_final.json"
+	if not FileAccess.file_exists(path):
+		return []
+	return JSON.parse_string(FileAccess.get_file_as_string(path))
+
+
+func _capture_cold_cycle(stem: String) -> void:
+	var samples: Array[Dictionary] = []
+	var best_alpha: float = 0.0
+	for index: int in range(26):
+		await RenderingServer.frame_post_draw
+		var size: Vector2 = Vector2(root.get_texture().get_size())
+		var rows: Array[Dictionary] = Metadata.entities(_main, size, size / root.get_visible_rect().size)
+		var agents: Array[Dictionary] = []
+		for row: Dictionary in rows:
+			if row.get("kind") == "agent" and row.get("visible", false):
+				agents.append({"id": row["id"], "cold": row.get("cold", false), "pose": row.get("pose", ""), "puff_alpha": row.get("puff_alpha", 0.0), "shiver_offset": row.get("shiver_offset", 0.0)})
+				var alpha: float = float(row.get("puff_alpha", 0.0))
+				if bool(row.get("cold", false)) and alpha > best_alpha:
+					best_alpha = alpha
+					root.get_texture().get_image().save_png(_out.path_join(stem + ".cold_peak.png"))
+		samples.append({"real_time_usec": Time.get_ticks_usec(), "agents": agents})
+		await create_timer(0.1).timeout
+	if not CapturePlans.write_json(_out.path_join(stem + ".cold_cycle.json"), {"simulation_frozen": true, "samples": samples}):
+		_fail("cannot write observed cold cycle")
 
 
 func _measure_frame_times() -> void:

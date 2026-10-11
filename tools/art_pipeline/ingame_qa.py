@@ -43,6 +43,7 @@ def animation(directory: Path, captures: list[Capture]) -> Check:
     seconds: dict[int, set[str]] = {}
     start = frames[0]['real_time_usec']
     moving_samples = 0
+    all_moving_samples = 0
     for frame in frames:
         capture = by_name[frame['file']]
         second = int((frame['real_time_usec']-start)/1_000_000)
@@ -50,6 +51,8 @@ def animation(directory: Path, captures: list[Capture]) -> Check:
             if entity.kind != 'agent' or not entity.visible:
                 continue
             history.setdefault(entity.ident, set()).add(entity.frame)
+            if entity.activity in {'walk', 'carry', 'carry_wood'}:
+                all_moving_samples += 1
             if entity.ident == followed and entity.activity in {'walk','carry'}:
                 seconds.setdefault(second, set()).add(entity.frame)
                 moving_samples += 1
@@ -57,8 +60,9 @@ def animation(directory: Path, captures: list[Capture]) -> Check:
     full_seconds = {s:len(v) for s,v in seconds.items() if s+1 <= duration+.02}
     fraction = sum(len(v)>1 for v in history.values())/max(1,len(history))
     intervals = np.diff([frame['real_time_usec'] for frame in frames])/1_000_000
-    valid = bool(full_seconds) and min(full_seconds.values()) >= 3 and fraction >= .60
-    return result('A7', valid, f'moving samples={moving_samples}; distinct frames/full moving second={full_seconds}; changing fraction={fraction:.3f}; duration={duration:.3f}s; interval range={intervals.min():.3f}..{intervals.max():.3f}s')
+    old_valid = bool(full_seconds) and min(full_seconds.values()) >= 3 and fraction >= .60
+    valid = old_valid and all_moving_samples >= 30
+    return result('A7', valid, f'P4 scope: followed moving samples={moving_samples}, pass={old_valid}; P5 scope: all visible moving-villager samples in noon GIF={all_moving_samples}, minimum=30; distinct frames/full moving second={full_seconds}; changing fraction={fraction:.3f}; duration={duration:.3f}s; interval range={intervals.min():.3f}..{intervals.max():.3f}s')
 
 
 def clutter(capture: Capture) -> Check:

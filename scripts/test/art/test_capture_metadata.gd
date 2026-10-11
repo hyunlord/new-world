@@ -35,6 +35,10 @@ func _run() -> void:
 	agent.set_meta("pose", "sit")
 	agent.set_meta("drawn_position", Vector2(25, 31))
 	agent.set_meta("seated", true)
+	agent.set_meta("cold", true)
+	agent.set_meta("shiver_offset", 1.0)
+	agent.set_meta("puff_alpha", 0.4)
+	agent.set_meta("declump_offset", Vector2(3, 0))
 	objects.add_child(agent)
 	agent.position = Vector2(25, 31)
 	agent.modulate.a = 0.45
@@ -65,6 +69,10 @@ func _run() -> void:
 	assert(is_equal_approx(float(rows[0]["modulate_alpha"]), 0.45))
 	assert(is_equal_approx(float(rows[0]["self_modulate_alpha"]), 0.8))
 	assert(rows[0]["pose"] == "sit")
+	assert(rows[0].get("cold", false) == true)
+	assert(rows[0].get("shiver_offset", -1) == 1.0)
+	assert(rows[0].get("puff_alpha", -1) == 0.4)
+	assert(rows[0].get("declump_offset", []) == [3.0, 0.0])
 	assert(rows[0]["drawn_position"] == [25.0, 31.0] and rows[0]["seated"] == true)
 	assert(rows[1]["fire_lit"] == false and rows[1]["woodpile_stage"] == 2)
 	assert(rows[1]["glow_alpha"] == 0.0)
@@ -72,7 +80,9 @@ func _run() -> void:
 	assert(is_equal_approx(float(rows[0]["self_modulate"][2]), 0.5))
 	assert(Metadata.life_stage_counts({"life_stages": PackedByteArray([0, 1, 2, 0, 7])}) == {"adult": 2, "child": 1, "elder": 1, "unknown": 1})
 	assert(Metadata.life_stage_counts({}) == {"adult": 0, "child": 0, "elder": 0, "unknown": 0})
-	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 9)
+	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 13)
+	for day: int in [23, 25, 27, 29]:
+		assert([day, "02:00", "F2N"] in Plans.ART_LONG)
 	assert(Plans.ART_LONG[1] == [10, "15:00", "F2"] and Plans.ART_LONG[2] == [10, "15:00", "F5"])
 	assert(Metadata.deadwood_tile({}, Vector2.ZERO) == Vector2(-1, -1))
 	assert(Metadata.deadwood_tile({

@@ -54,6 +54,8 @@ for capture in manifest['captures']:
 for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
+for cycle in raw.glob('*.cold_cycle.json'):
+    shutil.copy2(cycle, docs / cycle.name)
 published = json.loads(json.dumps(manifest))
 for metadata in docs.glob('*.json'):
     if metadata.name == 'manifest.json' or metadata.name.startswith('manifest_'):

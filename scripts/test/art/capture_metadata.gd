@@ -83,7 +83,10 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "pose", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind", "qa_status", "fire_lit", "glow_alpha", "wood_stock", "food_stock", "settlement_id", "woodpile_stage", "deadwood_stage", "resource_amount", "resource_max", "seated"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
-		for key: String in ["drawn_position", "tile"]:
+		for key: String in ["cold", "shiver_offset", "puff_alpha", "wood_target", "cold_pose", "cold_base_pose", "moving"]:
+			if node.has_meta(key):
+				row[key] = node.get_meta(key)
+		for key: String in ["drawn_position", "tile", "declump_offset", "drawn_target", "spread_offset", "seat"]:
 			if node.has_meta(key):
 				var point: Vector2 = Vector2(node.get_meta(key))
 				row[key] = [point.x, point.y]
