@@ -16,8 +16,10 @@ GOAL SHA256: f4d5f44f66c00f0f1d3125a3bb2fec4a4b1e39bfea9d7d53de638d3434eafbc6.
 | 6 cold | 2026-10-11T05:31:27Z | 2026-10-11T05:31:43Z |7 Godot+12 Python tests PASS;strict PASS;controlledcapture prepared;natural evidence pending |
 | 7 captures | 2026-10-11T05:31:43Z | 2026-10-11T05:55:58Z | 94 art + 13 long + calibration; controlled cold scene; pre-capture full gate37/37 |
 | 8 measurement | 2026-10-11T05:48:00Z | 2026-10-11T05:57:29Z | A11/A18 FAIL retained; remaining checks PASS, A19b N/A;8 artifacts;2 visual reviewers NEEDS WORK;275 Python PASS |
-| 9 final | 2026-10-11T05:57:29Z | | full gate and local compatibility underway |
+| 9 final | 2026-10-11T05:57:29Z | 2026-10-11T06:13:46Z (artifact seal) | gate37/37;local compatibility34/34+17static+10windows PASS;PRdraft updated; exact-HEAD publication receipt follows |
 
 Execution follows GOAL Parts and their dependency order. Independent code preparation may run in parallel; git mutations, atlas installation, gates and captures remain serialized. All independent visual reviews use fresh sessions without pipeline/history context.
 
 Timing convention: Part0–6 end times are verified Git commit timestamps in UTC; independent preparation began earlier in parallel. Parts5–6 formal integration intervals are shown, with prior preparation and tests recorded in their evidence folders. Earlier rounded ledger estimates were corrected against Git timestamps before publication.
+
+Part9 artifact-seal timestamp is shown above. Post-seal exact-HEAD full-gate and remote publication finish time are recorded in `/Users/rexxa/work/art-production5-evidence/publication.json` (`finished_utc`), avoiding an endless self-referential report commit.

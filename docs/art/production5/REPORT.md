@@ -1,6 +1,6 @@
 ## 구현 완료 보고
 
-작성 기준: 실제 캡처 head `42f15c7e5231e788f540227e949c770d928211b2`와 2차 측정. **A11·A18 FAIL, 독립 시각 리뷰 NEEDS WORK**다. A19(b)는 자연 화면에서 가시 cold 0명으로 N/A다. 최종 게이트·호환 병합·브랜치 승격·PR 갱신은 PENDING이다. 아래 PASS는 적힌 범위의 증거만 뜻한다. 경로는 별도 표시가 없으면 저장소 루트 기준이다.
+작성 기준: 실제 캡처 head `42f15c7e5231e788f540227e949c770d928211b2`와 2차 측정. **A11·A18 FAIL, 독립 시각 리뷰 NEEDS WORK**다. A19(b)는 자연 화면에서 가시 cold 0명으로 N/A다. 전체 게이트37/37와 로컬 호환 검사34/34를 통과했고 PR #511 설명을 갱신했다. 발행 HEAD·양쪽 원격 일치·exact-HEAD 재검증은 외부 publication 영수증에 기록한다. 아래 PASS는 적힌 범위의 증거만 뜻한다. 경로는 별도 표시가 없으면 저장소 루트 기준이다.
 
 ### 구현 의도
 
@@ -19,7 +19,7 @@
 | 6 | 선택적 `colds`/`wood_targets`, 팔짱·떨림·입김, 분리한 장작 라벨, HUD·정보창 한국어 | `scripts/ui/cold_effects.gd`, `scripts/ui/building_renderer.gd`, `docs/art/production5/cold/IMPLEMENTATION.md` |
 | 7 | 추운 밤 일정과 자리·겹침·마스크 출처·추위 메타데이터, 제어된 추위 장면 준비 | `scripts/test/art/capture_plans.gd`, `capture_metadata.gd`, `capture_cold_p5.gd`; ART 94장·ART_LONG 13장·calibration 완료 |
 | 8 | 기존 임계값을 보존하는 A1–A20 집계·비교 이미지 생성 코드 준비 | `tools/art_pipeline/measure_p5.py`, `presentation_p5.py`; A11/A18 FAIL, 나머지 A검사 PASS(A19b N/A), 8종 산출 완료 |
-| 9 | 최종 게이트·호환 병합·예산 확인·green 승격·PR #511 갱신 | PENDING |
+| 9 | 전체 게이트37/37, 로컬 호환34/34·10창, 예산 검증, draft PR 설명 갱신 | `gates/final/`, `compatibility/result.json`, 외부 publication 영수증 |
 
 표 안에서 `gates/`, `harvest/`, `masks/`처럼 줄인 증거 경로는 `docs/art/production5/` 아래다.
 
@@ -159,7 +159,7 @@ GOAL 14항의 직접 플레이 확인표:
 | 7 착석·정지 겹침/물·보행 보존/클릭 | 자리/declump/그려진 위치 클릭 headless PASS; 3장면 과반 가림 0 | **FAIL** d24 ID 25/8/7 과반 가림 3/37. 실제 crowded 화면 클릭은 별도 미검증 |
 | 8 꺼진 겨울 화덕의 팔짱·떨림·입김 | 3장면 테스트 및 labelled cold fixture, 독립 시각 대비 GOOD | **자연 발생 N/A**: 모든 gameplay frame visible cold 0, 주기 0. 제어 장면으로 겨울 자연 발생/회복을 주장하지 않음 |
 | 9 장작 stock/target·장작만 tint·추위 HUD/정보창 | target 라벨 101개 오류 0, `37/39` 화면 독립 확인, HUD/정보창 테스트 | 목표 표시 PASS. 자연 cold HUD/정보창 발생 미관측. 작은 저장소 글씨와 밤 대비는 독립 리뷰 NEEDS WORK |
-| 10 SCRIPT ERROR 없음·비슷한 프레임 시간 | pre-capture 전체 게이트 PASS, A10 300프레임 6.907/15.399ms | 측정 성능 PASS. 최종 head gate는 PENDING이며 캡처·calibration·controlled scene 콘솔4개에서 SCRIPT ERROR/ERROR 0 (`visual/capture_console.json`) |
+| 10 SCRIPT ERROR 없음·비슷한 프레임 시간 | pre-capture 전체 게이트 PASS, A10 300프레임 6.907/15.399ms | 측정 성능 PASS. 최종 코드 gate37/37 PASS이며 캡처·calibration·controlled scene 콘솔4개에서 SCRIPT ERROR/ERROR 0 (`visual/capture_console.json`) |
 
 독립 리뷰 `visual/integrity_review.md`, `visual/precision_review.md`와 합산 `visual/verdict.json`은 모두 **NEEDS WORK**다. 픽셀 윤곽·팔레트·주요 한국어 HUD·낮밤 대비는 GOOD이지만, 늦은 정착지 군집, 작은 저장소 라벨, 2× 행동, 약한 계절 구분이 남았다. 40프레임 GIF 중 표본 0/10/20/30/39를 본 리뷰이므로 연속 재생의 부드러움·발 미끄러짐·클릭 정확도를 검증한 것으로 확대하지 않는다.
 
@@ -184,11 +184,11 @@ GOAL 14항의 직접 플레이 확인표:
 
 Pass 6 정확한 SHA `fe60de21249ad46ad2e2d9ca420d896066277c82`를 merge commit `34b9d4b4f0e7323197125f208d3002244b9f40fe`로 깨끗하게 병합했다. 충돌 해결 파일은 없다. baseline bridge의 live constructor/reset은 `game_v12`다. `gates/p0/live_snapshot.log`에서 시작 agent 24명에 `colds` 24개, `wood_targets` 키 존재를 확인했다. 초기 settlement 0개는 겨울 목표 라벨의 실제 화면 증거가 아니다.
 
-초기 관측 `a3669b665f8d636058392a7a73cc78f47ecc0ca1` 뒤 최종 호환 fetch에서 simulation green은 `0c46f69c31344f3bde23ce625a84214c5ed72fc0`였다. 캡처 baseline은 계속 `fe60de21`이며 새 시뮬레이션을 공개 art 브랜치에 병합하지 않는다. Part 9의 로컬·미푸시 호환 병합 및 그 게이트 결과는 PENDING이다. `colds`/`wood_targets` 없는 스냅샷의 기존 동작 보존은 headless 회귀로 확인했다. 자연 화면 target 라벨 101개를 검증했지만 visible cold는 모두 0이라 자연 추위 표시 수락은 N/A다. d32·d40 누적 `cold_member_hours=378`은 simulation에서 cold가 있었음을 뜻할 뿐, 그 시점을 화면에서 관측했다는 증거가 아니다.
+초기 관측 `a3669b665f8d636058392a7a73cc78f47ecc0ca1` 뒤 최종 호환 fetch에서 simulation green은 `0c46f69c31344f3bde23ce625a84214c5ed72fc0`였다. 캡처 baseline은 계속 `fe60de21`이며 새 시뮬레이션을 공개 art 브랜치에 병합하지 않는다. 같은 checkout의 detached HEAD에서 `631434e331265800b6d7524d40e513ea04947f3d`로 임시 병합했다. `harness_p14_delta_status_panel.rs`의 빈 줄 충돌1개만 정리하고 양쪽 assertion을 유지했으며 해당17테스트가 통과했다. Bridge·strict·smoke·Godot30개·오류 검사34/34 PASS, 실제 창10장과 원본SHA10개 일치, SCRIPT ERROR0, 낮·밤2장을 직접 확인했다. 결과는 `compatibility/result.json`과 두 JPEG에 있다. 이 병합은 미푸시이며 WIP `84cb3da6939d5776e1e692f605db77b255dd9ea3`로 복귀해 Pass6 bridge를 다시 빌드했다. game_v13의 d1/d2/d6에 한정한 호환 증거이며 장기 A1–A20 재측정이 아니다. `colds`/`wood_targets` 없는 스냅샷의 기존 동작 보존은 headless 회귀로 확인했다. 자연 화면 target 라벨 101개를 검증했지만 visible cold는 모두 0이라 자연 추위 표시 수락은 N/A다. d32·d40 누적 `cold_member_hours=378`은 simulation에서 cold가 있었음을 뜻할 뿐, 그 시점을 화면에서 관측했다는 증거가 아니다.
 
 ### 변경된 파일 목록
 
-현재 first-parent 커밋 목록을 읽어 확인했다. 아래는 커밋별 주요 경로 묶음이며 대량 후보 PNG·리뷰 JSON을 모두 나열하지 않는다. P8까지 전체 경로는 `commit_files.json.gz`에 있으며 이후 기록은 각 커밋 diff가 원본이다. 최종 추가 커밋/원격 양쪽 head 확인은 PENDING이다.
+현재 first-parent 커밋 목록을 읽어 확인했다. 아래는 커밋별 주요 경로 묶음이며 대량 후보 PNG·리뷰 JSON을 모두 나열하지 않는다. P8까지 전체 경로는 `commit_files.json.gz`에 있으며 이후 기록은 각 커밋 diff가 원본이다. 보고서 봉인 커밋 자체와 원격 양쪽 head는 최종 응답 및 외부 publication 영수증에 기록한다.
 
 | Part / 커밋 | 주요 변경 경로 |
 |---|---|
@@ -205,8 +205,10 @@ Pass 6 정확한 SHA `fe60de21249ad46ad2e2d9ca420d896066277c82`를 merge commit 
 | P7 사전 게이트 `42f15c7e5231e788f540227e949c770d928211b2` | `gates/pre_capture/`, 보고서·실행 기록; 게임 코드 변화 없음 |
 | P7 실제 캡처 `63f22e5e3396b6df5ad5ecf2ee9edb0f80516a1f` | `docs/art/production5/{shots,calibration,cold}/` 실제 증거; 촬영 코드 head `42f15c7e5231e788f540227e949c770d928211b2`와 구분 |
 | P8 `49f9a00cd9439741eb901e084152766c52012676` | QA 범위·라벨 가림 보정, 실패 보존,8개 산출물,독립 리뷰,불변 GIF 최적화 |
+| P9 `84cb3da6939d5776e1e692f605db77b255dd9ea3` | 전체 게이트와 캡처 source/metadata 링크,보고서·전수 검증 |
+| P9 최종 봉인 | `compatibility/`, 보고서·예산·발행 기록; 전체 SHA는 최종 응답 |
 
-최종 WIP·green SHA 및 `git ls-remote` 동등성: PENDING. PR #511 Art Pass 5 설명 갱신: PENDING. PR은 draft 유지 대상이다.
+PR [#511](https://github.com/hyunlord/new-world/pull/511)의 기존 설명을 보존하고 Art Pass5 절을 갱신했으며 draft=true를 재조회했다. WIP/green은 전체 exact-HEAD 게이트 통과 후 같은 커밋으로 fast-forward하며 강제 push는 하지 않는다. 최종 HEAD·직렬 `git ls-remote` 확인·clean status·재검증·종료 시각은 `/Users/rexxa/work/art-production5-evidence/publication.json`에 기록한다. exact-HEAD 게이트 원본은 `/Users/rexxa/work/art-production5-evidence/final-head-gate/`다. 자기 자신을 포함한 SHA를 보고서에 내장하지 않는다.
 
 ### 자율 결정 목록
 
@@ -230,7 +232,7 @@ Pass 6 정확한 SHA `fe60de21249ad46ad2e2d9ca420d896066277c82`를 merge commit 
 - 실제 측정 A11과 A18은 FAIL이다. d24 ID 25/8/7의 과반 가림이 남았으며 최대 8px 이동·착석 제외라는 현재 계약 안에서 완전히 없애지 못했다. 기준을 낮추거나 이를 PASS로 바꾸지 않았다.
 - 자연 visible cold는 0, 실제 그림의 가시 이동 장작도 0이다. fixture·후보 보드·simulation 누적치를 자연 화면 수락으로 바꾸지 않는다. 독립 리뷰의 작은 라벨·계절 구분·행동 식별 NEEDS WORK도 남는다.
 - seat 메타데이터 생성은 회귀로 확인했다. unseat 시 제거는 독립 리뷰에서 코드로 확인했고 해당 전이의 추가 테스트는 하지 않았다.
-- 최종 gate·호환 병합·최종 아트 25MB/문서 40MB 예산·PR·remote head 확인은 아직 PENDING이다. 두 GIF의 8MB 예산은 산출 원장에서 통과했다. 현재 산출 시점 예산은 아트 1,343,613/문서 39,445,368 bytes이며 최종 보고·gate 추가 후 다시 확인해야 한다.
+- 전체 코드 gate와 한정된 로컬 호환 gate는 PASS다. 최종 산출 용량은 `report_artifacts.json`/`budget.json`, 발행 상태는 외부 publication 영수증이 원본이다. Godot가 재생성하는 무시된 .import 캐시는 산출물이 아니며 종료 시 production5 캐시를 제거한다. 두40프레임 GIF는8MB 이하이며 저녁 GIF 최적화 전후 decoded RGB·duration이 전부 같다.
 
 ### Harness 결과
 

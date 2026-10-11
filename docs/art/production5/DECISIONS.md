@@ -22,3 +22,9 @@
 - Budget: compact only unbound JSON whitespace (semantic equality checked; external originals retained), preserve bound installer ledgers, optimize evening GIF disposal only after all40 decoded RGB frames and timings compare identical. Godot-generated ignored .import cache sidecars are not delivery files.
 
 - Final compatibility fetch observed simulation green `0c46f69c31344f3bde23ce625a84214c5ed72fc0`. Published art remains pinned to Pass6 `fe60de21249ad46ad2e2d9ca420d896066277c82`; the later head is tested only through a local unpushed detached merge.
+
+## Part 9 publication decisions
+
+- Full gate37/37:1941Rust,275Python,30Godot. New simulation `0c46f69c31344f3bde23ce625a84214c5ed72fc0` tested only in local detached merge `631434e331265800b6d7524d40e513ea04947f3d`. One whitespace-only static-source-test conflict; retained both assertion sets,17targeted tests PASS. Compatibility34checks and10actualwindows PASS. Returned to WIP and rebuilt Pass6 bridge.
+- Repaired80GIF metadata references to explicit external paths+hashes; no raw or reviewed pixels changed. Compatibility publishes2JPEGs; all10losslessraws remain external.
+- PR511 description updated and draft confirmed. Final branch equality, exact-head gate and completion time go to external publication.json to avoid a self-referential commit hash.
