@@ -31,6 +31,9 @@ use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::decision::nearest_resource_tile;
 
+/// Winter index of `SeasonRule` seasons.
+const WINTER: usize = 3;
+
 /// Engine `tick_interval` for [`ResourceRegenSystem`]: the system runs once
 /// every `REGEN_INTERVAL` ticks. The EFFECTIVE per-tile rate is therefore
 /// `*_REGEN_AMOUNT / REGEN_INTERVAL` units/tile/tick. Must be `> 1` — an
@@ -73,9 +76,12 @@ pub const SLEEP_REGEN_AMOUNT: u8 = 1;
 
 /// Display day index `(current_tick + clock_offset_ticks) / ticks_per_day`.
 pub fn day_index(resources: &SimResources) -> u64 {
-    resources
-        .current_tick
-        .saturating_add(resources.rules.clock_offset_ticks)
+    day_index_at(resources, resources.current_tick)
+}
+
+/// Display day index of simulation tick `tick`.
+pub fn day_index_at(resources: &SimResources, tick: u64) -> u64 {
+    tick.saturating_add(resources.rules.clock_offset_ticks)
         .checked_div(resources.ticks_per_day)
         .unwrap_or(0)
 }
@@ -85,12 +91,18 @@ pub fn day_index(resources: &SimResources) -> u64 {
 /// `season = (d / days_per_season) % 4` with 0 spring, 1 summer, 2 autumn,
 /// 3 winter; display day `d = 0` is the first day of spring.
 pub fn season_at(resources: &SimResources) -> Option<(usize, u32)> {
+    season_at_tick(resources, resources.current_tick)
+}
+
+/// `(season, one-based day of season)` of simulation tick `tick`; `None`
+/// when seasons are off. Same rule as [`season_at`].
+pub fn season_at_tick(resources: &SimResources, tick: u64) -> Option<(usize, u32)> {
     let rule = resources.rules.seasons?;
     let per_season = u64::from(rule.days_per_season);
     if per_season == 0 {
         return None;
     }
-    let d = day_index(resources);
+    let d = day_index_at(resources, tick);
     Some((((d / per_season) % 4) as usize, (d % per_season) as u32 + 1))
 }
 
@@ -140,16 +152,70 @@ fn regen_channel(sources: &[((u32, u32), u8)], tiles: &mut HashMap<(u32, u32), u
 }
 
 /// Refill every registered deadwood spot toward its ceiling by `amount`
-/// (Pass 5), recreating an emptied spot. Never writes a zero value.
+/// (Pass 5), recreating an emptied spot. Never writes a zero value. Under a
+/// winter `cap` (Pass 6, only when no spread regrowth is set) the ceiling is
+/// `min(capacity, cap)`.
 fn regen_wood(
     tiles: &mut std::collections::BTreeMap<(u32, u32), u8>,
     sources: &std::collections::BTreeMap<(u32, u32), u8>,
     amount: u8,
+    cap: Option<u8>,
 ) {
     for (key, max) in sources {
+        let ceiling = cap.map_or(*max, |cap| cap.min(*max));
         let cur = tiles.get(key).copied().unwrap_or(0);
-        if cur < *max {
-            tiles.insert(*key, cur.saturating_add(amount).min(*max));
+        if cur < ceiling {
+            tiles.insert(*key, cur.saturating_add(amount).min(ceiling));
+        }
+    }
+}
+
+/// Pass 6 snow cap: lower every deadwood spot above `cap` to `cap` (the rest
+/// lies under snow and is gone); a spot lowered to 0 leaves `tiles` (its
+/// `wood_source_max` registration stays), so no zero-valued tile is stored.
+fn bury_wood(tiles: &mut std::collections::BTreeMap<(u32, u32), u8>, cap: u8) {
+    if cap == 0 {
+        tiles.clear();
+    } else {
+        for amount in tiles.values_mut() {
+            *amount = (*amount).min(cap);
+        }
+    }
+}
+
+/// Pass 6 winter spread regrowth: `per_day` units a day over all spots, one
+/// spot at a time. The accumulator gains `per_day x 1000` per pulse against
+/// `1000 x pulses per day` per unit (exactly `per_day x 1000 / 12` thousandths
+/// per pulse at 12 pulses a day). Each whole unit goes to the next registered
+/// spot after `wood_winter_cursor` in key order, wrapping, whose amount is below
+/// `min(capacity, cap)`; the cursor moves to it. A unit that finds no such spot
+/// is lost (`Tallies::winter_wood_lost`, display-only). The Pass 5 accumulator
+/// is not touched.
+fn regen_wood_winter(resources: &mut SimResources, per_day: u32, cap: Option<u8>) {
+    let pulses_per_day = (resources.ticks_per_day / REGEN_INTERVAL).max(1);
+    let per_unit = 1000 * pulses_per_day;
+    resources.wood_winter_acc += u64::from(per_day) * 1000;
+    while resources.wood_winter_acc >= per_unit {
+        resources.wood_winter_acc -= per_unit;
+        let below = |key: &(u32, u32), max: &u8, tiles: &std::collections::BTreeMap<(u32, u32), u8>| {
+            tiles.get(key).copied().unwrap_or(0) < cap.map_or(*max, |cap| cap.min(*max))
+        };
+        let tiles = &resources.wood_tiles;
+        let after = resources.wood_winter_cursor;
+        let chosen = resources
+            .wood_source_max
+            .iter()
+            .filter(|(key, _)| after.is_none_or(|cursor| **key > cursor))
+            .chain(resources.wood_source_max.iter().filter(|(key, _)| after.is_some_and(|cursor| **key <= cursor)))
+            .find(|(key, max)| below(key, max, tiles))
+            .map(|(key, _)| *key);
+        match chosen {
+            Some(key) => {
+                let cur = resources.wood_tiles.get(&key).copied().unwrap_or(0);
+                resources.wood_tiles.insert(key, cur + 1);
+                resources.wood_winter_cursor = Some(key);
+            }
+            None => resources.tallies.winter_wood_lost += 1,
         }
     }
 }
@@ -187,13 +253,26 @@ impl RuntimeSystem for ResourceRegenSystem {
                 regen_channel(&food, &mut resources.food_tiles, food_units);
         }
         // Pass 5: deadwood regrows through its own accumulator under the
-        // firewood rule; a zero-unit pulse skips the channel.
+        // firewood rule; a zero-unit pulse skips the channel. Pass 6: in
+        // winter the snow cap and the spread regrowth replace it when set.
         if let Some(rule) = resources.rules.society.firewood {
-            resources.wood_regen_acc += rule.regen_permille;
-            let units = resources.wood_regen_acc / 1000;
-            resources.wood_regen_acc %= 1000;
-            if units > 0 {
-                regen_wood(&mut resources.wood_tiles, &resources.wood_source_max, u8::try_from(units).unwrap_or(u8::MAX));
+            let winter = season_at(resources).is_some_and(|(season, _)| season == WINTER);
+            if winter {
+                if let Some(cap) = rule.winter_deadwood_cap {
+                    bury_wood(&mut resources.wood_tiles, cap);
+                }
+            }
+            match rule.winter_regen_units_per_day.filter(|_| winter) {
+                Some(per_day) => regen_wood_winter(resources, per_day, rule.winter_deadwood_cap),
+                None => {
+                    resources.wood_regen_acc += rule.regen_permille;
+                    let units = resources.wood_regen_acc / 1000;
+                    resources.wood_regen_acc %= 1000;
+                    if units > 0 {
+                        let cap = rule.winter_deadwood_cap.filter(|_| winter);
+                        regen_wood(&mut resources.wood_tiles, &resources.wood_source_max, u8::try_from(units).unwrap_or(u8::MAX), cap);
+                    }
+                }
             }
         }
         let water = snapshot(&resources.water_source_max);

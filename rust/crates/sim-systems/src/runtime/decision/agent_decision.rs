@@ -65,7 +65,7 @@ use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
-use crate::runtime::settlement::firewood::{wood_in_hand, wood_target};
+use crate::runtime::settlement::firewood::{urgent_with, wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
 
 /// A gatherer whose bush emptied: agent id, entity, position and the empty tile.
@@ -118,6 +118,18 @@ struct WoodPlan {
     target: f64,
     /// Stockpile plus wood carried by members.
     in_hand: u64,
+    /// Urgent mode (Pass 6): tonight's burn is not in hand.
+    urgent: bool,
+}
+
+/// The firewood rule a member acts under (Pass 6): in urgent mode the
+/// per-spot claim cap doubles; otherwise the rule unchanged.
+fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
+    if urgent {
+        FirewoodRule { max_gatherers_per_spot: rule.max_gatherers_per_spot.saturating_mul(2), ..rule }
+    } else {
+        rule
+    }
 }
 
 /// Deterministic deadwood choice (Pass 5): among spots holding wood within
@@ -650,6 +662,11 @@ impl RuntimeSystem for AgentDecisionSystem {
         let wood_window = firewood_rule.is_some_and(|rule| {
             clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
         });
+        // Pass 6 — the firewood window of an urgent settlement's members.
+        let urgent_window = firewood_rule.is_some_and(|rule| {
+            rule.urgent_start_minute
+                .is_some_and(|start| clock_in_window(resources, start, rule.gather_end_minute))
+        });
         let mut wood_plans: BTreeMap<SettlementId, WoodPlan> = BTreeMap::new();
         let mut wood_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         if firewood_rule.is_some() {
@@ -661,10 +678,12 @@ impl RuntimeSystem for AgentDecisionSystem {
                 for id in &settlement.member_agents {
                     member_of.entry(*id).or_insert(sid);
                 }
+                let in_hand = wood_in_hand(world, resources, sid);
                 wood_plans.insert(sid, WoodPlan {
                     home: settlement.formation_tile,
                     target,
-                    in_hand: wood_in_hand(world, resources, sid),
+                    in_hand,
+                    urgent: urgent_with(resources, in_hand),
                 });
             }
             for (_, (state, seek)) in world.query::<(&AgentState, &SeekTarget)>().iter() {
@@ -1374,23 +1393,32 @@ impl RuntimeSystem for AgentDecisionSystem {
                         *state = AgentState::Seeking {
                             target: TargetKind::GatherFood,
                         };
-                    } else if let Some(spot) = firewood_rule.filter(|_| wood_window && worker && !no_trips).and_then(|rule| {
+                    } else if let Some((spot, urgent)) = firewood_rule.filter(|_| worker && !no_trips).and_then(|rule| {
                         // Pass 5 — Firewood arm (after Forage, before Gather): a
                         // member with room and less than a wood load walks to a
                         // deadwood spot while the wood in hand is below target.
+                        // Pass 6 — members of an urgent settlement use the urgent
+                        // window and twice the per-spot claim cap.
                         let sid = member_of.get(&agent.id)?;
                         let plan = wood_plans.get(sid)?;
+                        if !(if plan.urgent { urgent_window } else { wood_window }) {
+                            return None;
+                        }
                         let inv = inventory_opt.as_ref()?;
                         let room = inv.total() < INVENTORY_CAPACITY;
                         let light = inv.get(ResourceKind::Wood) < rule.haul_threshold;
                         if !(room && light && (plan.in_hand as f64) < plan.target) {
                             return None;
                         }
+                        let rule = urgent_rule(rule, plan.urgent);
                         choose_spot(&rule, plan.home, (pos.x, pos.y), &resources.wood_tiles, &wood_claims, None)
+                            .map(|spot| (spot, plan.urgent))
                     }) {
                         *wood_claims.entry(spot).or_default() += 1;
                         wood_targets.insert(entity, spot);
                         resources.tallies.wood_trips += 1;
+                        // Display-only (Pass 6): trips started in urgent mode.
+                        resources.tallies.urgent_wood_trips += u64::from(urgent);
                         *state = AgentState::Seeking {
                             target: TargetKind::GatherWood,
                         };
@@ -2192,9 +2220,11 @@ impl RuntimeSystem for AgentDecisionSystem {
         // gatherer with no qualifying spot becomes Idle and drops its target.
         wood_retarget.sort_by_key(|row| row.0);
         for (id, e, pos, old) in wood_retarget {
-            let home = member_of.get(&id).and_then(|sid| wood_plans.get(sid)).map(|plan| plan.home);
-            let choice = firewood_rule.zip(home).and_then(|(rule, home)| {
-                choose_spot(&rule, home, pos, &resources.wood_tiles, &wood_gather_claims, old)
+            let plan = member_of.get(&id).and_then(|sid| wood_plans.get(sid));
+            let choice = firewood_rule.zip(plan).and_then(|(rule, plan)| {
+                // Pass 6 — an urgent settlement's gatherers keep the doubled cap.
+                let rule = urgent_rule(rule, plan.urgent);
+                choose_spot(&rule, plan.home, pos, &resources.wood_tiles, &wood_gather_claims, old)
             });
             match choice {
                 Some(spot) => {

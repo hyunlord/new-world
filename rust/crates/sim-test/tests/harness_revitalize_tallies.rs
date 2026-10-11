@@ -70,6 +70,8 @@ mod tests {
             wood_gathered: 0,
             gather_preempted: 0,
             cold_member_hours: 0,
+            urgent_wood_trips: 0,
+            winter_wood_lost: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

@@ -96,6 +96,10 @@ pub struct Tallies {
     pub gather_preempted: u64,
     /// Members marked `Cold`, summed over every hourly fire update (Pass 5).
     pub cold_member_hours: u64,
+    /// Firewood trips started while the member's settlement was in urgent mode (Pass 6).
+    pub urgent_wood_trips: u64,
+    /// Winter regrowth units that found no deadwood spot below the cap (Pass 6).
+    pub winter_wood_lost: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -207,6 +211,12 @@ pub struct SimResources {
     /// Wood regrowth accumulator in thousandths of a unit; stays zero without
     /// the firewood rule.
     pub wood_regen_acc: u32,
+    /// Winter spread-regrowth accumulator (Pass 6) in thousandths of a unit
+    /// times pulses per day; stays zero without `winter_regen_units_per_day`.
+    pub wood_winter_acc: u64,
+    /// Last deadwood spot that received a winter unit (Pass 6); `None` until
+    /// the first one lands.
+    pub wood_winter_cursor: Option<(u32, u32)>,
     /// Hearth fire per settlement; empty without the firewood rule.
     pub fires: BTreeMap<SettlementId, FireState>,
     /// Members whose last movement was a haul step home; display-only, used to
@@ -398,6 +408,8 @@ impl SimResources {
             wood_tiles: BTreeMap::new(),
             wood_source_max: BTreeMap::new(),
             wood_regen_acc: 0,
+            wood_winter_acc: 0,
+            wood_winter_cursor: None,
             fires: BTreeMap::new(),
             haulers: BTreeSet::new(),
             social_chase_since: BTreeMap::new(),

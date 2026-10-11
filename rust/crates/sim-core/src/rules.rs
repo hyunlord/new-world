@@ -215,6 +215,9 @@ pub struct AgingRule {
     pub founder_min_remaining_ticks: u64,
     /// Idle elder distance from the settlement formation tile.
     pub elder_tether_radius: u32,
+    /// Inside the evening-gather window an idle elder follows the evening
+    /// tether when it is tighter (Pass 6). False = the elder tether at all hours.
+    pub elder_evening_tether: bool,
 }
 /// Breakfast and dinner served from the settlement store (Pass 5).
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -263,6 +266,23 @@ pub struct FirewoodRule {
     pub cold_end_minute: u32,
     /// Hunger growth of a cold resident in thousandths of its normal rate.
     pub cold_hunger_permille: u32,
+    /// Days of winter burn added while preparing for winter. None = `days_per_season` (Pass 5).
+    pub winter_prep_days: Option<f64>,
+    /// Summer also prepares for winter (Pass 5). False: autumn only (Pass 6).
+    pub winter_prep_in_summer: bool,
+    /// Days of current burn kept in store during winter. None = `base_days`.
+    pub winter_base_days: Option<f64>,
+    /// Winter deadwood regrowth in units per day over all spots, one spot at a
+    /// time. None = the Pass 5 per-spot regrowth all year.
+    pub winter_regen_units_per_day: Option<u32>,
+    /// Most wood a spot holds in winter; the rest lies under snow. None = no cap.
+    pub winter_deadwood_cap: Option<u8>,
+    /// Burn and cold use the season of the evening the night began (Pass 6).
+    /// False = the season of the current display day (Pass 5).
+    pub night_season_from_evening: bool,
+    /// Urgent mode: first minute of the firewood window while tonight's burn
+    /// is not in hand (Pass 6). None = off.
+    pub urgent_start_minute: Option<u32>,
 }
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -305,6 +325,35 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 6 village policies: v11 with an autumn wood season, a lean winter,
+    /// urgent mornings and elders at the evening fire. v11 stays frozen.
+    pub const fn game_v12() -> Self {
+        let mut rules = Self::game_v11();
+        if let Some(mut firewood) = rules.society.firewood {
+            // Part 2: autumn alone prepares winter burn (Part 5 round 2: four
+            // nights, one night short of a winter's need with the regrowth); winter
+            // keeps four days of its own burn; deadwood lies under snow (one
+            // unit a spot) and six branches a day fall one spot at a time; the
+            // night belongs to the evening it began.
+            firewood.winter_prep_days = Some(4.0);
+            firewood.winter_prep_in_summer = false;
+            firewood.winter_base_days = Some(4.0);
+            firewood.winter_regen_units_per_day = Some(6);
+            firewood.winter_deadwood_cap = Some(1);
+            firewood.night_season_from_evening = true;
+            // Part 3: adults leave for wood early when tonight's burn is not in
+            // hand (Part 5 round 2: 09:00 instead of the 07:00 start value).
+            firewood.urgent_start_minute = Some(540);
+            rules.society.firewood = Some(firewood);
+        }
+        // Part 4: elders join the evening camp.
+        if let Some(mut aging) = rules.society.aging {
+            aging.elder_evening_tether = true;
+            rules.society.aging = Some(aging);
+        }
+        rules
+    }
+
     /// Pass 5 village policies: v10 plus meals, firewood and gathering preemption.
     /// v10 stays frozen.
     pub const fn game_v11() -> Self {
@@ -346,6 +395,13 @@ impl WorldRules {
             cold_start_minute: 1320,
             cold_end_minute: 360,
             cold_hunger_permille: 1500,
+            winter_prep_days: None,
+            winter_prep_in_summer: true,
+            winter_base_days: None,
+            winter_regen_units_per_day: None,
+            winter_deadwood_cap: None,
+            night_season_from_evening: false,
+            urgent_start_minute: None,
         });
         rules.agent.preempt_gathering = true;
         rules
@@ -387,6 +443,7 @@ impl WorldRules {
             founder_age_max_ticks: 57_600,
             founder_min_remaining_ticks: 4_320,
             elder_tether_radius: 4,
+            elder_evening_tether: false,
         });
         rules.seasons = Some(SeasonRule {
             days_per_season: 7,
@@ -554,6 +611,41 @@ mod tests {
         v11.society.stock_target = WorldRules::game_v10().society.stock_target;
         v11.agent.forage = WorldRules::game_v10().agent.forage;
         assert_eq!(v11, WorldRules::game_v10());
+    }
+
+    #[test]
+    fn game_v12_is_v11_plus_pass6_fields() {
+        let v11 = WorldRules::game_v11();
+        let mut v12 = WorldRules::game_v12();
+        let (Some(old), Some(new)) = (v11.society.firewood, v12.society.firewood.as_mut()) else {
+            panic!("v11 and v12 both keep the firewood rule");
+        };
+        // Only the Pass 6 fields and the Pass 6 knob `cold_hunger_permille` may differ.
+        new.winter_prep_days = old.winter_prep_days;
+        new.winter_prep_in_summer = old.winter_prep_in_summer;
+        new.winter_base_days = old.winter_base_days;
+        new.winter_regen_units_per_day = old.winter_regen_units_per_day;
+        new.winter_deadwood_cap = old.winter_deadwood_cap;
+        new.night_season_from_evening = old.night_season_from_evening;
+        new.urgent_start_minute = old.urgent_start_minute;
+        new.cold_hunger_permille = old.cold_hunger_permille;
+        // Part 4 adds the elder evening tether.
+        if let (Some(aging), Some(old)) = (v12.society.aging.as_mut(), v11.society.aging) {
+            aging.elder_evening_tether = old.elder_evening_tether;
+        }
+        assert_eq!(v12, v11);
+    }
+
+    #[test]
+    fn pass6_firewood_fields_reproduce_pass5_in_v11() {
+        let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
+        assert_eq!(rule.winter_prep_days, None);
+        assert!(rule.winter_prep_in_summer);
+        assert_eq!(rule.winter_base_days, None);
+        assert_eq!(rule.winter_regen_units_per_day, None);
+        assert_eq!(rule.winter_deadwood_cap, None);
+        assert!(!rule.night_season_from_evening);
+        assert_eq!(rule.urgent_start_minute, None);
     }
 
     #[test]

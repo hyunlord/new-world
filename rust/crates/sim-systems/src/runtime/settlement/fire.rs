@@ -14,6 +14,10 @@
 //!   loses it. Markers are inserted and removed in AgentId order so archetype
 //!   layout (and with it query order) stays seed-independent.
 //! - `Tallies::cold_member_hours` grows by the number of marked members.
+//!
+//! Pass 6: under `night_season_from_evening` the burn rate and the cold check
+//! use the season of the evening the night began (`firewood::night_season`),
+//! so the last winter night stays a winter night until the burn window ends.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -22,8 +26,7 @@ use sim_core::components::{Agent, AgentId, Cold, ResourceKind, SettlementId};
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
 use crate::runtime::decision::agent_decision::clock_in_window;
-use crate::runtime::resource_regen::season_at;
-use crate::runtime::settlement::firewood::burn_season;
+use crate::runtime::settlement::firewood::night_season;
 
 /// Winter index of `SeasonRule` seasons.
 const WINTER: usize = 3;
@@ -57,7 +60,9 @@ impl RuntimeSystem for FireSystem {
             return;
         };
         let burning = clock_in_window(resources, rule.burn_start_minute, rule.burn_end_minute);
-        let per_hour = u32::from(rule.burn_per_hour[burn_season(resources)]);
+        // The night's season: the current season, or (Pass 6) the evening's.
+        let season = night_season(resources, &rule);
+        let per_hour = u32::from(rule.burn_per_hour[season]);
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut fires = BTreeMap::new();
@@ -71,7 +76,8 @@ impl RuntimeSystem for FireSystem {
         }
         resources.fires = fires;
 
-        let cold_night = season_at(resources).is_some_and(|(season, _)| season == WINTER)
+        let cold_night = resources.rules.seasons.is_some()
+            && season == WINTER
             && clock_in_window(resources, rule.cold_start_minute, rule.cold_end_minute);
         let mut cold: BTreeSet<AgentId> = BTreeSet::new();
         if cold_night {

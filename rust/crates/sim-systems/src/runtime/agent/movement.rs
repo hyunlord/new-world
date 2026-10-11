@@ -185,7 +185,12 @@ impl RuntimeSystem for AgentMovementSystem {
             clock_in_window(resources, rule.gather_start_minute, rule.gather_end_minute)
         });
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
-        let elder_radius = resources.rules.society.aging.map(|rule| rule.elder_tether_radius);
+        // Pass 4: elders keep to the camp at all hours. Pass 6: inside the
+        // evening-gather window they follow the evening tether when it is tighter.
+        let elder_radius = resources.rules.society.aging.map(|rule| match (rule.elder_evening_tether, evening_radius) {
+            (true, Some(evening)) => rule.elder_tether_radius.min(evening),
+            _ => rule.elder_tether_radius,
+        });
         if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
             || forage.is_some() || elder_radius.is_some() || firewood.is_some()
         {
@@ -300,7 +305,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 if child.is_some() {
                     child_rule.map(|rule| rule.tether_radius).or(rules.idle_tether_radius)
                 } else if elder.is_some() && elder_radius.is_some() {
-                    // Pass 4: elders keep to the camp at all hours.
+                    // Pass 4: elders keep to the camp (Pass 6: evening tether inside its window).
                     elder_radius
                 } else {
                     evening_radius.or(rules.idle_tether_radius)

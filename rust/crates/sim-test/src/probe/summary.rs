@@ -156,7 +156,7 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     .collect();
     markdown.push_str(&pass4_sections(args, runs));
     markdown.push_str(&pass5_sections(args, runs));
-    let report = json!({"schema_version":5,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    let report = json!({"schema_version":6,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
