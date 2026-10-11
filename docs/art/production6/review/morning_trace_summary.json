@@ -1,0 +1,54 @@
+{
+  "rows": [
+    {
+      "stem": "l_d27_0715_F2",
+      "tick": 37395,
+      "visible_agents": 40,
+      "rendered_chill_agents": 39,
+      "independently_identified_chill_agents": 0,
+      "last_cold_ticks": [
+        37320
+      ],
+      "first_clear_ticks": [
+        37328
+      ],
+      "source": "/Users/rexxa/work/art-production6-evidence/shots/art_long/l_d27_0715_F2.entities.json",
+      "sha256": "2b744928e11f3a7119bddbfd0d9640bc7f94be8c0863d649b96afbc630e86aca"
+    },
+    {
+      "stem": "l_d29_0630_F2",
+      "tick": 40230,
+      "visible_agents": 42,
+      "rendered_chill_agents": 42,
+      "independently_identified_chill_agents": 0,
+      "last_cold_ticks": [
+        37320,
+        40200
+      ],
+      "first_clear_ticks": [
+        37328,
+        40208
+      ],
+      "source": "/Users/rexxa/work/art-production6-evidence/shots/art_long/l_d29_0630_F2.entities.json",
+      "sha256": "219dc5c902cc758dfa32cbae396310550591dfd7026c9f4946c613fec43d9bae"
+    },
+    {
+      "stem": "l_d29_0715_F2",
+      "tick": 40275,
+      "visible_agents": 31,
+      "rendered_chill_agents": 31,
+      "independently_identified_chill_agents": 0,
+      "last_cold_ticks": [
+        37320,
+        40200
+      ],
+      "first_clear_ticks": [
+        37328,
+        40208
+      ],
+      "source": "/Users/rexxa/work/art-production6-evidence/shots/art_long/l_d29_0715_F2.entities.json",
+      "sha256": "fc2b4ef4009183be6b18393d53858c720d1325506c43646942d11ba98a878cf1"
+    }
+  ],
+  "finding": "The nominated day27 warm control contains genuine recent cold flags around06:00 in independent FFI trace. Keep A22 FAIL; do not suppress truthful memory or substitute another control."
+}

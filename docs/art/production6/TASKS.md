@@ -13,5 +13,5 @@ Contract: GOAL.md SHA256 776d8bf4ac83ef4660db81a58e3f627baa6e09f577d8f52476d4442
 | 5 | Intervention getter, panel, effects | 14:40:27 | 14:53:14 | Implemented; Rust test/clippy/build, Godot stub/real seven casts, integrated scene and strict PASS |
 | 6 | Winter crowd declump | 14:53:14 | 14:56:15 | Implemented; six tests PASS; final A18 pending |
 | 7 | Natural, intervention, calibration captures | 14:56:15 | 15:13:59 | Complete; 94 ART + 21 LONG + 8 GOD + 4 calibration, same 44011f92; zero SCRIPT ERROR |
-| 8 | A1–A25 measurements, blind reviews, presentations | 15:01:00 | | In progress; independent reviews parallel with captures |
+| 8 | A1–A25 measurements, blind reviews, presentations | 15:01:00 | 15:21:10 | Complete;21 PASS/4 FAIL; A19 body N/A preserved; two blind rounds retained |
 | 9 | Full gate, publication, independent review, Korean report | 15:12:00 | | Full gate running in parallel with evidence assembly |
