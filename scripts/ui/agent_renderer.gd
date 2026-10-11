@@ -3,6 +3,7 @@ extends Node2D
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const MorningChill = preload("res://scripts/ui/morning_chill.gd")
+const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
@@ -162,6 +163,7 @@ func _process(delta: float) -> void:
 		sprite.set_meta("facing", facing)
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
+		CarryLoad.apply(sprite, activity)
 		_update_activity_icon(agent_id, sprite, choice)
 		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "cold": cold, "meal": bool(moments["meal"])})
 	_apply_drawn_positions(draw_agents, context, delta)
@@ -511,7 +513,13 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 			origin.x = anchor.x - size.x
 		if sprite.flip_v:
 			origin.y = anchor.y - size.y
-		rects[agent_id] = Rect2(origin, size)
+		var footprint := Rect2(origin, size)
+		var load_layer: Sprite2D = sprite.get_node_or_null("CarryLoad") as Sprite2D
+		if load_layer != null and load_layer.visible:
+			var load_rect: Rect2 = load_layer.get_rect()
+			load_rect.position += load_layer.position
+			footprint = footprint.merge(load_rect)
+		rects[agent_id] = footprint
 	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])

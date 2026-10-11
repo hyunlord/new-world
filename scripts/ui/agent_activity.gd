@@ -133,7 +133,7 @@ static func choose_frame(groups: Dictionary, body: String, activity: String, fac
 	var wood: bool = activity in ["carry_wood", "gather_wood"]
 	if wood:
 		var fallback: String = "walk" if activity == "carry_wood" else "crouch"
-		keys = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/" + fallback + "/" + view, body + "/" + fallback + "/S", body + "/" + fallback + "/E", body + "/" + fallback + "/N", body + "/" + fallback + "/W", body + "/idle/" + view, body + "/idle/S"]
+		keys = [body + "/" + activity + "/" + view, body + "/" + activity + "/S", body + "/" + activity + "/N", body + "/" + activity + "/E", body + "/" + fallback + "/" + view, body + "/" + fallback + "/S", body + "/" + fallback + "/E", body + "/" + fallback + "/N", body + "/" + fallback + "/W", body + "/idle/" + view, body + "/idle/S"]
 	var real_carry: bool = false
 	if activity == "carry":
 		for carry_view: String in ["S","E","N","W"]:

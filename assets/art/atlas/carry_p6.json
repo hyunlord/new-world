@@ -1,0 +1,286 @@
+{
+  "body_page": "res://assets/art/atlas/carry_p6_body.png",
+  "prop_page": "res://assets/art/atlas/carry_p6_props.png",
+  "sprites": {
+    "V_a2_01": {
+      "kind": "food",
+      "anchor": [
+        13,
+        16
+      ],
+      "rect": [
+        0,
+        0,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_S"
+    },
+    "V_a2_02": {
+      "kind": "food",
+      "anchor": [
+        14,
+        16
+      ],
+      "rect": [
+        0,
+        7,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_S"
+    },
+    "V_a2_03": {
+      "kind": "food",
+      "anchor": [
+        14,
+        16
+      ],
+      "rect": [
+        0,
+        14,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_S"
+    },
+    "V_a2_04": {
+      "kind": "food",
+      "anchor": [
+        14,
+        16
+      ],
+      "rect": [
+        0,
+        21,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_S"
+    },
+    "V_a2_05": {
+      "kind": "food",
+      "anchor": [
+        15,
+        16
+      ],
+      "rect": [
+        0,
+        28,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_E"
+    },
+    "V_a2_06": {
+      "kind": "food",
+      "anchor": [
+        14,
+        16
+      ],
+      "rect": [
+        0,
+        35,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_E"
+    },
+    "V_a2_07": {
+      "kind": "food",
+      "anchor": [
+        15,
+        16
+      ],
+      "rect": [
+        0,
+        42,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_E"
+    },
+    "V_a2_08": {
+      "kind": "food",
+      "anchor": [
+        14,
+        16
+      ],
+      "rect": [
+        0,
+        49,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_E"
+    },
+    "V_a3_01": {
+      "kind": "food",
+      "anchor": [
+        16,
+        16
+      ],
+      "rect": [
+        0,
+        56,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_N"
+    },
+    "V_a3_02": {
+      "kind": "food",
+      "anchor": [
+        16,
+        16
+      ],
+      "rect": [
+        0,
+        63,
+        9,
+        7
+      ],
+      "group": "adult_a_carry_N"
+    },
+    "V_b2_01": {
+      "kind": "food",
+      "anchor": [
+        11,
+        16
+      ],
+      "rect": [
+        0,
+        70,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_S"
+    },
+    "V_b2_02": {
+      "kind": "food",
+      "anchor": [
+        11,
+        16
+      ],
+      "rect": [
+        0,
+        77,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_S"
+    },
+    "V_b2_03": {
+      "kind": "food",
+      "anchor": [
+        11,
+        16
+      ],
+      "rect": [
+        0,
+        84,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_S"
+    },
+    "V_b2_04": {
+      "kind": "food",
+      "anchor": [
+        11,
+        16
+      ],
+      "rect": [
+        0,
+        91,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_S"
+    },
+    "V_b2_05": {
+      "kind": "food",
+      "anchor": [
+        16,
+        16
+      ],
+      "rect": [
+        0,
+        98,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_E"
+    },
+    "V_b2_06": {
+      "kind": "food",
+      "anchor": [
+        13,
+        15
+      ],
+      "rect": [
+        0,
+        105,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_E"
+    },
+    "V_b2_07": {
+      "kind": "food",
+      "anchor": [
+        16,
+        16
+      ],
+      "rect": [
+        0,
+        112,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_E"
+    },
+    "V_b2_08": {
+      "kind": "food",
+      "anchor": [
+        13,
+        16
+      ],
+      "rect": [
+        0,
+        119,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_E"
+    },
+    "V_b3_01": {
+      "kind": "food",
+      "anchor": [
+        15,
+        16
+      ],
+      "rect": [
+        0,
+        126,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_N"
+    },
+    "V_b3_02": {
+      "kind": "food",
+      "anchor": [
+        15,
+        16
+      ],
+      "rect": [
+        0,
+        133,
+        9,
+        7
+      ],
+      "group": "adult_b_carry_N"
+    }
+  }
+}
