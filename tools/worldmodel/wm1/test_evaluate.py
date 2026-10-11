@@ -86,6 +86,20 @@ class BaselineFidelityTests(unittest.TestCase):
         np.testing.assert_allclose(held[:, -1], ref, atol=1e-9)
         true = ev.RidgePredictor(sev_model, False, "ridge_true", "true").rollout(ep, starts, 168, ep.bench.actions).v
         self.assertGreater(np.abs(true - held).max(), 0.0)   # a 168 h rollout crosses a season boundary
+        # With one severity on every row, "true" and "hold" must agree; with the severity of each row it equals a
+        # rollout whose held value is replaced row by row.
+        const = wrap(synthetic(seed=7, role="test"))
+        const.bench.severity = np.ones_like(const.bench.severity)
+        np.testing.assert_allclose(ev.RidgePredictor(sev_model, False, "t", "true").rollout(const, starts, 168, const.bench.actions).v,
+                                   ev.RidgePredictor(sev_model, False, "h").rollout(const, starts, 168, const.bench.actions).v)
+        s0 = starts[:1]
+        buf = list(ep.bench.v[s0[0] - 23: s0[0] + 1])
+        for k in range(24):
+            t_ = s0[0] + k
+            v_ = np.array(buf)
+            x_ = b.features(np.vstack([np.zeros((s0[0] - 23, 8)), v_]), ep.bench.hour, ep.bench.season, ep.bench.severity, None, np.array([t_]))
+            buf.append(buf[-1] + sev_model.predict(x_)[0])
+        np.testing.assert_allclose(true[0, :24], np.array(buf[24:]), atol=1e-9)
         nosev, lam, _ = ev.fit_ridge_without_severity(eps, eps, False)
         self.assertEqual(nosev.model.w.shape[0], sev_model.w.shape[0] - 4)
         x = b.features(ep.bench.v, ep.bench.hour, ep.bench.season, ep.bench.severity, None, np.arange(30, 40))

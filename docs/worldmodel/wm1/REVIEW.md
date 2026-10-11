@@ -135,5 +135,45 @@ The "model beats baseline" sentences hold: T2-168 and T2-any 168 h win; T2-24 wi
 | 12 | note | none needed |
 | 13 | minor | `final` records `argv` and `forced`; earlier evaluations documented in DECISIONS D7.1 |
 | 14 | minor | `None` guard; T1 tie-break implemented in `choose_recipe` |
-| 15 | note | provenance explained in DECISIONS D7.1 and `W1_REPRO.md`; `git_commit` prefers the launcher's commit |
+| 15 | note | provenance explained in DECISIONS D7.1 and `W1_REPRO.md`; `git_commit` already preferred the launcher's commit (899824df) |
+
+## Round 2 report (verbatim; fresh `general-purpose` subagent, `git diff 7e2a578d..ac55dd69`: round-1 fixes, the severity-free / true-severity ridges, the W2 logic, M1b)
+
+Round 2 is complete, and the report is above. No blocking findings, and W8 (leakage audit) is CONFIRMED. All 47 unit tests pass (3 skipped for torch). RESULTS.md regenerates byte-identical from HEAD. I made no changes to the repository.
+
+- **Round-1 fixes:** all are in the code and docs with file:line. One wording slip: `common.git_commit` already preferred the launcher's commit before round 1, so "now prefers" in D7.1 and REVIEW.md is wrong.
+- **New ridge baselines:** correct.
+  - The dropped columns 77–80 are exactly the severity one-hot of `bench_v0.features`.
+  - The severity-free ridge is fit on train roles only, with λ chosen on the same val roles and criterion as the bench.
+  - "hold" reproduces `bench_v0.rollout`; "true" reads each row's own severity and is labelled an oracle.
+  - All variants are scored on the same starts.
+  - Small test gap: the test only checks that "true" differs from "hold", not what it computes.
+- **W2 logic (minor):** both clauses, all three reference sets and the original verdict are there. But the headline verdict is taken from the set that includes the oracle true-severity ridges, which the docs say are not competitors; W2b does the same. The verdict doesn't change today, because the severity-free ridge is the best reference on every split. Fix: judge against the severity-free set and show the oracle set as information only. W2b is correctly labelled supplementary.
+- **M1b:** clean.
+  - The config matches D3.2 and GOAL 9, with train/val roles and normalization correct and no hidden fields.
+  - It was listed in METRICS.md at 4666e687, about an hour before its test evaluation and metrics commit.
+  - Its T1 path reads no rows after the start.
+  - All numbers in ANALYSIS §1 and §9 match `metrics.json`.
+- **ANALYSIS spot-check:** about 45 numbers match. The minor wording issues:
+  - Some numbers in §4 and §1 are from seed 0 but not labelled. The "ties winter" claim holds for seeds 0 and 1 only; the three-seed mean (0.321) loses to 0.278.
+  - §1 says M1b wins "every rollout task", but it loses T3, T3b and T4; it should say "every T1/T2 task".
+  - In §9, "85 of 96" counts non-zero effects on dark nights or cold member-hours only. Counting any target, all 96 are non-zero.
+- **Doc housekeeping:**
+  - A few timestamps contradict their commit times (the METRICS heading "22:25", D0.3a "22:20", the D3.3 launch time). The pre-registration is unaffected.
+  - D3.2 and D3.3 are filed under the wrong Part headings in DECISIONS.md.
+  - REPORT_WM1.md is still untracked.
+
+## Resolution of round 2
+
+| Finding | Resolution |
+|---|---|
+| D7.1 / REVIEW said `git_commit` "now prefers" the launcher commit | reworded: it already did since 899824df |
+| test of the "true" severity mode only checked it differs from "hold" | `test_severity_modes_of_the_ridge` now checks "true" = "hold" under a constant severity and "true" = a hand-written per-row-severity rollout |
+| W2 / W2b headline judged against a set including the oracle true-severity ridges | `report.py` judges both against the best *non-oracle* baseline (bench + severity-free ridges); the oracle set is shown for information. Verdicts unchanged (the severity-free ridge is the best reference on every split) |
+| unlabelled seed-0 numbers; "ties winter"; "every rollout task"; "85 of 96" | ANALYSIS §1/§4/§9 labelled and corrected (seeds 0–1 tie winter, the three-seed mean loses; "every T1 and T2 task"; non-zero on dark nights or cold member-hours) |
+| timestamps (METRICS r3 / M1b headings, D0.3a, D3.3) | corrected to the commit times (20:05, 22:15, 22:15, 22:15); the post-hoc reference reads "computed 22:20, listed 22:39" |
+| D3.2 / D3.3 under the wrong Part heading | moved under Part 3 |
+| REPORT_WM1.md untracked | committed |
+
+Two rounds are the maximum (GOAL 0.3.3); round 2 had no blocking findings, so no third round was run.
 

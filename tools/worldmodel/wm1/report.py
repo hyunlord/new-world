@@ -131,10 +131,12 @@ def main() -> int:
                 ok &= bool(v.mean() <= 0.9 * ref)
                 rows.append(f"{s_} {mean_range(v)} vs {ref:.3f} {name} (≤ {0.9 * ref:.4f})")
             verdicts.append((label, ok, rows))
-        main_label, main_ok, _ = verdicts[-1]
+        # The headline is judged against the non-oracle set (bench + severity-free ridges); the true-severity ridges read the
+        # future winter draw and are shown for information only.
+        main_label, main_ok, _ = verdicts[1] if len(verdicts) > 1 else verdicts[0]
         txt = " ‖ ".join(f"[{lab}] " + "; ".join(r) + f" → {'pass' if okk else 'fail'}" for lab, okk, r in verdicts)
         W.append(("W2", "M1 main T2 168 h ≥ 10 % below the best baseline on A test, B test, OOD_long; T1 within +5 % "
-                  "(judged against the best of all baselines, the oracle reference included; the original bench-only verdict beside it)",
+                  "(judged against the best non-oracle baseline, the severity-free ridges included; the original bench-only verdict and the oracle reference beside it)",
                   "see Model column", txt + " — T1: " + "; ".join(t1_rows),
                   ("PASS" if main_ok and t1_ok else f"FAIL (T2 168 h {'pass' if main_ok else 'fail'}, T1 {'pass' if t1_ok else 'fail'})")
                   + f"; original: {'pass' if verdicts[0][1] else 'fail'} on T2 168 h"))
@@ -144,7 +146,7 @@ def main() -> int:
             for s_ in W2_SPLITS:
                 cand = {k: float(np.nanmean(v)) for k, v in bench["T2"]["168"][s_].items()}
                 if rv:
-                    cand.update({k: v["mean"] for k, v in rv["T2"]["168"][s_].items()})
+                    cand.update({k: v["mean"] for k, v in rv["T2"]["168"][s_].items() if "nosev" in k})
                 name = min(cand, key=cand.get)
                 ok &= bool(tf["T2"]["168"][s_]["mean"] <= 0.9 * cand[name])
                 rows.append(f"{s_} {tf['T2']['168'][s_]['mean']:.3f} vs {cand[name]:.3f} {name}")
@@ -152,7 +154,7 @@ def main() -> int:
                                                           + ([v["mean"] for v in rv["T1"][s_].values()] if rv else []))
                        for s_ in TESTS)
             W.append(("W2b", "supplementary: the W2 test applied to M1b (transformer, recipe r3, one seed) — W2 itself is defined on M1",
-                      "best of all baselines", "T2 168 h: " + "; ".join(rows) + " — T1: " + "; ".join(f"{s_} {tf['T1'][s_]['mean']:.3f}" for s_ in TESTS),
+                      "best non-oracle baseline", "T2 168 h: " + "; ".join(rows) + " — T1: " + "; ".join(f"{s_} {tf['T1'][s_]['mean']:.3f}" for s_ in TESTS),
                       "would PASS (one seed)" if ok and t1ok else "would FAIL"))
         # W3
         if "T4" in m0:

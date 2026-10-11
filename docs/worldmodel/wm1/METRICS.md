@@ -34,7 +34,7 @@ this table before its test evaluation.
 | M1-main r2 rerun (W7) | M1 GRU, recipe r2 | sev-blind, action-aware | 0 | `m1gru_main_r2_s0_rerun` |
 | M1b r2 | transformer, recipe r2 | sev-blind, action-aware | 0 | `m1tf_main_r2_s0` (optional) |
 
-### Recipe r3 (added 20:10, before any r3 number; DECISIONS D2.5)
+### Recipe r3 (added 20:05, before any r3 number; DECISIONS D2.5)
 
 | Config | Model | Variant | Seeds | Run ids |
 |---|---|---|---|---|
@@ -46,13 +46,13 @@ this table before its test evaluation.
 
 The main recipe of the W table is chosen on validation (T2 168 h of the main seed-0 run, then T1), never on test.
 
-### M1b on the GPU (added 22:25, before any M1b number; DECISIONS D3.2)
+### M1b on the GPU (added 22:15, before any M1b number; DECISIONS D3.2)
 
 | Config | Model | Variant | Seeds | Run ids |
 |---|---|---|---|---|
 | M1b r3 | causal transformer, recipe r3 with batch 32 and 1 rollout start (memory), 3,000 steps, eval every 150 | sev-blind, action-aware | 0 | `m1tf_main_r3_s0` |
 
-### Post-hoc analysis reference (added 22:20, after M3's test number; review finding 11)
+### Post-hoc analysis reference (computed 22:20, listed 22:39, after M3's test number; review finding 11)
 
 | Config | What | Fit / selection | Run |
 |---|---|---|---|
