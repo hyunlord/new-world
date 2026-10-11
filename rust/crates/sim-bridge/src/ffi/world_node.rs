@@ -279,6 +279,23 @@ impl WorldSimNode {
         intervention_reply_to_dict(apply_intervention_command(&mut self.engine, &kind.to_string(), settlement_id, amount))
     }
 
+    /// Art Pass 6: read intervention presentation state without advancing the world.
+    #[func]
+    fn get_intervention_state(&self) -> VarDictionary {
+        let state = collect_intervention_state(&self.engine.resources, self.engine.current_tick());
+        let mut dict = VarDictionary::new();
+        dict.set("rain_settlement_ids", PackedInt32Array::from(state.rain_settlement_ids.as_slice()));
+        dict.set("rain_ticks_left", PackedInt32Array::from(state.rain_ticks_left.as_slice()));
+        dict.set("cold_snap_nights_left", i64::from(state.cold_snap_nights_left));
+        dict.set("cold_snap_tonight", state.cold_snap_tonight);
+        dict.set("log_ticks", PackedInt64Array::from(state.log_ticks.as_slice()));
+        let kinds: Vec<GString> = state.log_kinds.iter().map(|kind| GString::from(*kind)).collect();
+        dict.set("log_kinds", PackedStringArray::from(kinds.as_slice()));
+        dict.set("log_amounts", PackedInt64Array::from(state.log_amounts.as_slice()));
+        dict.set("log_applied", PackedInt64Array::from(state.log_applied.as_slice()));
+        dict
+    }
+
     /// V7 Section 16-γ — set the simulation-speed multiplier driving the
     /// per-frame accumulator increment. Stores [`clamp_sim_speed`]`(speed)`,
     /// so out-of-range requests are clamped to `[0.0, 4.0]`. Bound to the
@@ -2706,6 +2723,60 @@ pub fn parse_intervention(
     intervention_from_kind(kind, settlement, amount)
 }
 
+/// Read-only intervention presentation columns, ordered by settlement and log time.
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct InterventionState {
+    /// Settlement IDs with active rain, ascending.
+    pub rain_settlement_ids: Vec<i32>,
+    /// Remaining ticks paired with the settlement IDs, saturated to the FFI range.
+    pub rain_ticks_left: Vec<i32>,
+    /// Pending cold-snap nights, including tonight when active.
+    pub cold_snap_nights_left: u32,
+    /// Whether the simulation has booked tonight as a cold snap.
+    pub cold_snap_tonight: bool,
+    /// Ticks of the last 32 records, oldest first.
+    pub log_ticks: Vec<i64>,
+    /// Canonical intervention names, paired with log ticks.
+    pub log_kinds: Vec<&'static str>,
+    /// Requested units, hours or nights for each record.
+    pub log_amounts: Vec<i64>,
+    /// Applied amounts for each record.
+    pub log_applied: Vec<i64>,
+}
+
+/// Collect presentation state without mutating resources or consuming randomness.
+pub fn collect_intervention_state(resources: &SimResources, now: u64) -> InterventionState {
+    use sim_engine::Intervention;
+    use sim_systems::runtime::intervention::KINDS;
+    let mut state = InterventionState {
+        cold_snap_nights_left: resources.cold_snap_nights,
+        cold_snap_tonight: resources.cold_snap_tonight,
+        ..InterventionState::default()
+    };
+    let mut rain: Vec<_> = resources.fire_blocked_until.iter().filter(|(_, until)| **until > now).collect();
+    rain.sort_unstable_by_key(|(id, _)| **id);
+    for (id, until) in rain {
+        state.rain_settlement_ids.push(i32::try_from(*id).unwrap_or(i32::MAX));
+        state.rain_ticks_left.push(i32::try_from(*until - now).unwrap_or(i32::MAX));
+    }
+    for record in resources.intervention_log.iter().skip(resources.intervention_log.len().saturating_sub(32)) {
+        let (kind, amount) = match record.intervention {
+            Intervention::GiftFood { amount, .. } => (KINDS[0], amount),
+            Intervention::SpoilFood { amount, .. } => (KINDS[1], amount),
+            Intervention::GiftWood { amount, .. } => (KINDS[2], amount),
+            Intervention::RotWood { amount, .. } => (KINDS[3], amount),
+            Intervention::Rain { hours, .. } => (KINDS[4], hours),
+            Intervention::ColdSnap { nights } => (KINDS[5], nights),
+            Intervention::Windfall { units } => (KINDS[6], units),
+        };
+        state.log_ticks.push(i64::try_from(record.tick).unwrap_or(i64::MAX));
+        state.log_kinds.push(kind);
+        state.log_amounts.push(i64::from(amount));
+        state.log_applied.push(i64::try_from(record.applied).unwrap_or(i64::MAX));
+    }
+    state
+}
+
 /// Pass 7: result of the `apply_intervention` command.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct InterventionReply {
@@ -2862,6 +2933,37 @@ mod revitalize_tooling_tests {
         assert_eq!(super::parse_intervention("gift_wood", -1, -1, Some(4)), None);
         assert_eq!(super::parse_intervention("rot_wood", -1, 1, None), None);
         assert_eq!(super::parse_intervention("spoil_food", i64::MAX, 1, Some(4)), None);
+    }
+
+    #[test]
+    fn intervention_state_is_read_only_sorted_bounded_and_preserves_variant_amounts() {
+        use sim_engine::{InterventionRecord, SimResources};
+        use sim_systems::runtime::intervention::{intervention_from_kind, KINDS};
+        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
+        assert_eq!(super::collect_intervention_state(&resources, 0), super::InterventionState::default());
+        resources.fire_blocked_until.extend([(9, 30), (2, 20), (3, 10), (4, 9)]);
+        resources.cold_snap_nights = 2;
+        resources.cold_snap_tonight = true;
+        for tick in 0..35 {
+            resources.intervention_log.push(InterventionRecord {
+                tick,
+                intervention: intervention_from_kind(KINDS[usize::try_from(tick % 7).unwrap()], 2, u32::try_from(tick + 1).unwrap()).unwrap(),
+                applied: tick,
+            });
+        }
+        let state = super::collect_intervention_state(&resources, 10);
+        assert_eq!(state.rain_settlement_ids, [2, 9]);
+        assert_eq!(state.rain_ticks_left, [10, 20]);
+        assert_eq!((state.cold_snap_nights_left, state.cold_snap_tonight), (2, true));
+        assert_eq!(state.log_ticks, (3..35).collect::<Vec<i64>>());
+        assert_eq!(state.log_amounts, (4..36).collect::<Vec<i64>>());
+        assert_eq!(state.log_applied, state.log_ticks);
+        for (offset, kind) in state.log_kinds.iter().enumerate() {
+            assert_eq!(*kind, KINDS[(offset + 3) % 7]);
+        }
+        assert_eq!(state, super::collect_intervention_state(&resources, 10));
+        assert_eq!(resources.intervention_log.len(), 35);
+        assert_eq!(resources.fire_blocked_until.len(), 4);
     }
 
     #[test]

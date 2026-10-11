@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://v7init"]
+[gd_scene load_steps=21 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/ui/world_renderer.gd" id="1_renderer"]
 [ext_resource type="Script" path="res://scripts/ui/panels/causal_panel.gd" id="2_causal"]
@@ -19,6 +19,9 @@
 [ext_resource type="Script" path="res://scripts/ui/daylight_controller.gd" id="16_daylight"]
 [ext_resource type="Script" path="res://scripts/ui/nature_renderer.gd" id="17_nature"]
 [ext_resource type="Script" path="res://scripts/ui/world_effects.gd" id="18_effects"]
+
+[ext_resource type="PackedScene" path="res://scenes/ui/god_hand_panel.tscn" id="19_god_panel"]
+[ext_resource type="Script" path="res://scripts/rendering/art/god_hand_effects.gd" id="20_god_effects"]
 
 [node name="Main" type="Node2D"]
 
@@ -42,6 +45,9 @@ script = ExtResource("17_nature")
 
 [node name="WorldEffects" type="Node2D" parent="."]
 script = ExtResource("18_effects")
+
+[node name="GodHandEffects" type="Node2D" parent="."]
+script = ExtResource("20_god_effects")
 
 [node name="DaylightController" type="Node2D" parent="."]
 script = ExtResource("16_daylight")
@@ -90,3 +96,5 @@ script = ExtResource("6_inspector")
 
 [node name="HudStatusPanel" type="Control" parent="UI"]
 script = ExtResource("7_status")
+
+[node name="GodHandPanel" parent="UI" instance=ExtResource("19_god_panel")]

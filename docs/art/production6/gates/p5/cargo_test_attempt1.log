@@ -1,0 +1,17 @@
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-art-prod/rust/crates/sim-bridge)
+error[E0433]: failed to resolve: use of undeclared type `SimResources`
+    --> crates/sim-bridge/src/ffi/world_node.rs:2942:29
+     |
+2942 |         let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
+     |                             ^^^^^^^^^^^^ use of undeclared type `SimResources`
+     |
+help: consider importing one of these structs
+     |
+2857 +     use crate::ffi::world_node::SimResources;
+     |
+2857 +     use sim_engine::SimResources;
+     |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `sim-bridge` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
