@@ -102,7 +102,8 @@
 - `05bb3ecd` (Part 5): `tools/worldmodel/{make_dataset.py,wm_data.py,test_families.py,test_export_determinism.py}`, DECISIONS
 - `ba278357` (Part 6, 리뷰 1): `harness_revitalize_pass9_rng.rs`, `sim-test/src/worldmodel/export.rs`, `fork_metrics.py`, `test_fork_metrics.py`, `docs/revitalize/probe/{p9-3_forks,p9-6_review}`, `verification/p9-5/gate.txt`, DECISIONS
 - `8d3ad643` (Part 6, 리뷰 2): `harness_revitalize_pass9_rng.rs`, `fork_metrics.py`, `test_fork_metrics.py`, `p9-6_review/review_round2.md`, DECISIONS
-- 보고서 커밋(Part 6): `docs/revitalize/{REPORT_PASS9.md,METRICS.md,DECISIONS.md}`, `docs/revitalize/probe/p9-3_forks/{fork_metrics.*,p6_forks.sh}`, `docs/revitalize/verification/p9-6/gate.txt`. 해시는 최종 메시지와 다음 커밋의 목록에 있다.
+- `39411236` (Part 6, 보고서): `docs/revitalize/{REPORT_PASS9.md,METRICS.md,DECISIONS.md}`, `docs/revitalize/probe/p9-3_forks/{fork_metrics.*,p6_forks.sh}`, `docs/revitalize/verification/p9-6/gate.txt`
+- 이 커밋(Part 6): 보고서의 커밋 목록. `8d3ad643` 이후는 모두 문서만 바뀌었다(최종 게이트 녹색 헤드 = `8d3ad643`).
 
 ### 측정 결과
 
