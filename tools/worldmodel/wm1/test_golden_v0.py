@@ -4,6 +4,7 @@ the golden values computed at the merge commit b20a991f, before the schema-4 ext
 Run: python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'
 """
 import json
+import math
 import unittest
 
 from wm1 import golden_v0
@@ -19,8 +20,16 @@ class GoldenV0Tests(unittest.TestCase):
 
     def test_ridge_and_calendar_numbers_equal_the_merge_commit(self) -> None:
         # Review round 1: computed by `compute_more` from the merge commit's code (b20a991f) in a separate worktree.
-        golden = json.loads(golden_v0.TARGET.read_text())
-        self.assertEqual(golden_v0.compute_more(), golden["harness_more"])
+        # The ridge's linear solve goes through the platform's BLAS (Accelerate on the Mac, OpenBLAS on the DGX), whose
+        # last bits differ between machines; its numbers are compared to 1e-12 relative, every other value exactly.
+        golden = json.loads(golden_v0.TARGET.read_text())["harness_more"]
+        now = golden_v0.compute_more()
+        self.assertEqual(set(now), set(golden))
+        for k, v in golden.items():
+            if k.startswith("ridge_nosev_T"):
+                self.assertTrue(math.isclose(float(now[k]), float(v), rel_tol=1e-12, abs_tol=0.0), (k, now[k], v))
+            else:
+                self.assertEqual(now[k], v, k)
 
 
 if __name__ == "__main__":
