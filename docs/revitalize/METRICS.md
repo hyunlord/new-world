@@ -2173,3 +2173,51 @@ All probe runs use Pass 10's flags (the eight clocks `02:00,06:00,08:00,10:00,12
 | `p11-0_legacy` | `p10-7_final_legacy` | 5115 | 0 |
 
 The two v15 differences are `schema_version` only (Pass 9's binary wrote 9, Pass 10's 10); every determinism twin passes. Frozen pins `harness_revitalize_pass11_frozen.rs` (v16 digests seeds 0–3 at 1,440 and 40,320 ticks, `game_v16_neutral()` and `WorldVariety::draw` literals) pass on the base.
+
+### Part 1–2 — 4.6 guard (commit `600cb93d`, `probe_p12`, 22:32–22:46 KST)
+
+`p11-2_guard_v16_*` and `p11-2_guard_v16n_*` (tuning sets, 64 × 10 and 32 × 120) equal Part 0's `p11-0_v16_*` / `p11-0_v16n_*` on every shared value (11,484 / 84,211 / 11,036 / 83,968); the only difference is `schema_version` 10 → 11. All determinism twins pass. (Parts 1 and 2 share one commit; see DECISIONS.)
+
+### Part 3 — tuning
+
+Exploration (not judged rounds; disclosed as 4.4 asks): scratch seeds 900000–900031 × 120 days, `game_v17` unless noted, run by a scratch binary outside the clone (`/Users/rexxa/work/p11bin/scratch`, path dependencies on the clone's crates, knobs set on the `WorldRules` value in process; never committed). Quick statistics computed in process (seed-winter = display days 21–27 + 28 k; stage attribution approximate). Config D–G include the shared-bush supply change (below).
+
+| Run | Knobs (exposure child/adult/elder, hunger weight; fission) | Seeds with fission | First-fission day median / IQR | ≥ 2 alive day 120 | Seed-winters with a death / median / max | Stage child/adult/elder (A–G: counted old-age deaths of the same tick, unreliable) | Starvation+dehydration median / max |
+|---|---|---:|---|---:|---|---|---|
+| A | start: 8/6/8, 0.5; 28, 0.95 | 0.97 | 28 / 0.5 | 0.94 | 0.59 / 4 / 86 | 0.02 / 0.30 / 0.68 | 3.5 / 51 |
+| B | start, `game_v17_nofission` | – | – | – | 0.42 / 0 / 26 | 0.03 / 0.07 / 0.90 | 0 / 0 |
+| C | 7/5/5, 0.5; 30, 1.0 | 0.91 | 28 / 0 | 0.91 | 0.45 / 0 / 49 | 0.01 / 0.24 / 0.75 | 5 / 42 |
+| D | C + shared-bush supply | 0.91 | 28 / 0 | 0.91 | 0.38 / 0 / 23 | 0.01 / 0.10 / 0.89 | 0 / 18 |
+| E | 6/7/5, 1.0; 32, 1.0 | 0.81 | 28 / 1.75 | 0.78 | 0.55 / 3 / 72 | 0.01 / 0.36 / 0.63 | 0 / 2 |
+| F | 5/5/5, 1.0; 32, 1.0 | 0.81 | 28 / 0 | 0.81 | 0.29 / 0 / 22 | 0.00 / 0.11 / 0.89 | 0 / 6 |
+| G | 5/6/5, 1.0; 32, 1.0 | 0.81 | 28 / 0.75 | 0.81 | 0.43 / 0 / 33 | 0.00 / 0.23 / 0.77 | 0 / 6 |
+| H | 9/4/6, 0.5; 32, 1.0 (first fixed stage attribution) | 0.81 | 28 / 0 | 0.81 | 0.40 / 0 / 20 | (scratch shares unreliable) | 0 / 7 |
+| I | 8/5/6, 0.5; 32, 1.0 | 0.81 | 28 / 0 | 0.81 | 0.39 / 0 / 30 | – | 0 / 5 |
+| J | H + utilization 0.76 | 0.75 | 28 / 1 | 0.75 | 0.45 / 0 / 21 | – | 0 / 8 |
+| K | J + `min_members` 30 | 0.91 | 28 / 0 | 0.91 | 0.48 / 0 / 21 | – | 0 / 19 |
+| L | 9/5/6, 0.5; region bushes 7–11 | 0.81 | 28 / 0 | 0.81 | 0.42 / 0 / 33 | – | 0 / 5 |
+| M | L + region deadwood 8–14 | 0.81 | 28 / 0 | 0.81 | 0.43 / 0 / 33 | – | 0 / 6 |
+| N | L + region deadwood 8–14 + cooldown 42 (after round 2) | 0.81 | 28 / 0 | 0.75 | 0.39 / 0 / 19 | – | 0 / 4 |
+| N2 | N + region resources beyond the camp's reach (after round 2) | 0.81 | 28 / 0 | 0.75 | 0.40 / 0 / 25 | – | 0 / 4 |
+
+Findings that shaped round 1. (1) With the start values both villages' birth gates counted the same bushes (centres 22–28 apart, forage radius 16): famines with empty stores in both villages (262 starvation/dehydration deaths in 32 seeds, half in the original village, by the probe's death census on the same seeds). Under `FissionRule` a bush inside the catchments of n settlements with members now counts 1/n in the capacity-weighted supply (`food_economy::weighted_source_count`; v8–v16 untouched). (2) The first fission is pinned to display day 28 (the first spring day after the 14-day minimum age): the birth gate holds every village at its capacity from about day 14 (members/capacity at day 28 06:00 were equal in 27 of 32 seeds and within 2 in the rest), so with `crowding` ≤ 1.0 the daily check fires at the first opportunity whenever capacity ≥ `min_members`, and never otherwise. Within the allowed knobs the first-fission day is a threshold on a static world parameter, not a state that varies. (3) The scratch stage shares of A–G were wrong (see the header); the probe of round 1 showed adults taking 0.81 of exposure deaths at [5, 6, 5] with hunger weight 1.0.
+A scratch probe with H's exposure knobs (built from the uncommitted tree, seeds 900000–900031) read stages from the death census: exposure deaths elder 0.56 / child 0.27 / adult 0.17, starvation + dehydration 35 (all in daughters, late winter, empty stores). A second scratch experiment (after round 2; seeds 900000–900031 × 120 days, the eight clocks) measured the median adult work share at 15:00 (12:00): `game_v16` 0.154 (0.272), `game_v17_nofission` round 2 0.068 (0.305), the same build without wild regions 0.160 (0.269) — the regions, whose bushes (16 tiles) and deadwood (16–18 tiles) fell inside the camp's forage and wood radii, made the original village richer and idle in the afternoon.
+
+| Round (commit) | Knobs | Scene | J1 | J2 | J3 | J4 | J5 | J6 |
+|---|---|---|---|---|---|---|---|---|
+| 1 (`867fa6e2`) | exposure [5, 6, 5], hunger weight 1.0; fission 32 / 1.0; shared-bush supply | v17 | PASS | PASS | FAIL: first-fission median, IQR | PASS | FAIL: adult share, max share of members, starvation | FAIL: Y9 work_1500 |
+| 1 | same | v17_nofission | PASS | PASS | – | – | (adult share 0.99, reported) | FAIL: Y9 work_1200, work_1500, X4 normal gathered |
+| 2 (`0bdd99e5`) | exposure [9, 5, 6], 0.5; region bushes 7–11; regional fall at the camp's per-spot rate | v17 | PASS | PASS | FAIL: first-fission median, IQR | PASS | FAIL: max share of members, starvation | FAIL: Y10 evening every seed, Y9 work_1200, work_1500 |
+| 2 | same | v17_nofission | PASS | PASS | – | – | (adult share 0.13, reported) | FAIL: Y9 work_1200, work_1500, idle_1200 |
+
+Round details (game_v17, tuning seeds): round 1 — fissions in 0.81 of seeds, first-fission day median 28 / IQR 0, ≥ 2 settlements alive on day 120 0.81, cancellations 0 / 61, daughters alive 28 days after founding 0.75 (39 / 52; 0.30 of 61 daughters dissolved or merged); exposure stages child / adult / elder 0.00 / 0.81 / 0.19 (506 deaths in 48 seed-winters), seed-winters with a death 0.375, median 0, max share of members 0.70, mild / normal / harsh means 0.72 / 2.40 / 13.72, most deaths in one settlement-hour median 2 (max 7); starvation + dehydration day 120 median 0, max 17. Round 2 — fissions 0.81, first day median 28 / IQR 0, ≥ 2 alive 0.75, daughters alive 28 days 0.78 (40 / 51; 0.27 dissolved or merged); stages 0.18 / 0.43 / 0.39 (415 deaths, 49 seed-winters), share 0.38, median 0, max share 0.50, mild / normal / harsh 0.62 / 2.08 / 10.96, settlement-hour median 1 (max 6); starvation max 22 (in daughters founded at regions with 0–3 bushes, seeds 19, 11, 9, 28). game_v17_nofission rounds 1 / 2: seed-winters with a death 0.16 / 0.18, max share 0.34 / 0.26, starvation 0 / 0.
+| 3 (`c5b200d7`) | round 2 + fission `cooldown_days` 42, region deadwood 8–14, region resources beyond the camp's forage and wood radii | v17 | PASS | PASS | FAIL: first-fission median, IQR | PASS | FAIL: max share of members, starvation | FAIL: Y9 work_1200, work_1500 |
+| 3 | same | v17_nofission | PASS | PASS | – | – | (adult share 0.15, reported) | FAIL: Y9 work_1200, work_1500, idle_1200 |
+
+Round 3 detail (game_v17): fissions 0.81 of seeds, first day median 28 / IQR 0 (26 seeds; max 34), ≥ 2 alive on day 120 0.72, cancellations 0 / 44, daughters alive 28 days 0.79 (33 / 42; 0.23 of 44 dissolved or merged); exposure stages child / adult / elder 0.22 / 0.42 / 0.37 (283 deaths, 43 seed-winters), settlement-hour median 1 (max 5), max share of members 0.46 (seeds 24 and 27, day-106 winters of 4-settlement worlds); starvation + dehydration median 0, max 9. game_v17_nofission: adult share 0.15 (75 deaths), starvation 0.
+
+**Frozen knobs (round 3, 3 of 3 judged rounds used, after 15 disclosed scratch configurations A–N2):** exposure `damage_per_cold_hour` [child 9, adult 5, elder 6], `hunger_weight` 0.5, `heal_block_hours` 2, hardiness 700–1300; `rain_soak_permille` 300; `SustainRule::utilization` 0.78 (v16's); `FissionRule` `min_members` 32, `crowding` 1.0, `group_share` 0.35, `group_min` 6, `group_max` 14, `min_adults` 4, `cooldown_days` 42, `min_age_days` 14, `site_clearance` 16, `stock_share` true, `max_settlements` 4, `settle_timeout_days` 2, `remnant_members` 2; wild regions 1–3, region bushes 7–11, region deadwood 8–14.
+
+**Frozen commit:** `c5b200d7` (`c5b200d7ee618b465d6aa0fdf054fb82d820eed6`, Part 3, 00:01 KST on 2026-10-13). Parts 4–6 run `probe_frozen` / `wm_frozen` built from it (sha256 `1aa47e82…` / `47f70a9e…`; `probe_frozen` = `probe_p3r3`); recordings carry `WORLDSIM_GIT_SHA` = that commit.
+
+Unmet after three rounds (hypotheses, evidence above): J3's first-fission timing (the check fires at the first spring day after the minimum age whenever the static capacity reaches `min_members`; with `crowding` ≤ 1.0 no allowed knob makes it a state that varies by seed); J5's starvation and max-share clauses (daughters founded at regions with few bushes, and four-settlement worlds whose late daughters run out of wood in the fourth winter); J6's Y9 work shares (the 15:00 adult work share of `game_v17_nofission` stays below v16's; a scratch experiment tied most of the drop to the wild regions, and moving region resources beyond the camp's reach in round 3 did not restore it on the tuning seeds — the remaining cause was not isolated within the rounds).
