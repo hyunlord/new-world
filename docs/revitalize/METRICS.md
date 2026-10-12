@@ -2130,3 +2130,22 @@ Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 
 VRF / mean effect / sign stability / divergence tables: `docs/revitalize/probe/p10-6_forks/fork_metrics.md`.
 
 Note (review round 2, L6): the probe's reported `food_supply_per_day` (`probe/long_run.rs`) counts bushes unweighted; the game_v16 birth gate and store target use the capacity-weighted estimate (`min(cap, 4) / 4` per bush). The difference is reporting only.
+
+### Part 7 — final reproduction and final gate
+
+Final reproduction (`probe_frozen` = the final Rust, Pass 9's flags, 18:14–18:25): `p10-7_final_legacy`, `_v8`, `_v9_10day` / `_120day`, `_v10_*`, `_v11_*`, `_v12_*`, `_v13_*`, `_v14_*` equal `p9-6_final_*` on every shared value (4,849 to 57,658 per run); the only difference is `schema_version` 9 → 10 (plus the new keys); all 14 determinism twins pass. v15: Part 0 and the three guards.
+
+Final gate (`gate_pass10.sh` on `14372ea2`, 20:29–20:53 KST, `verification/p10-7/gate.txt`): every step exit 0; cargo test debug 2,054 / release 2,054 passed, 0 failed (Pass 9: 2,029 each); clippy both; forbidden math 0; strict check; bridge build; smoke without `SCRIPT ERROR`/`ERROR:`; Python 86 (`tools/revitalize`) + 42 (`tools/worldmodel`). `codex/revitalize-2026-10` fast-forwarded to `14372ea2` at 20:53 (earlier to `58119582` at 17:33).
+
+| H | Verdict | Where |
+|---|---|---|
+| H1 | PASS | round 2 + held-out twins, legacy pin test, Part 0 / guards / Part 7 reproductions |
+| H2 | PASS | `p10-3_round2_*_targets`, `p10-4_heldout_*_targets` |
+| H3 | PASS | same (game_v16) |
+| H4 | PASS | same + `harness_exposure_only_from_cold` |
+| H5 | PASS | v16_neutral vs v15, tuning and held-out |
+| H6 | PASS | `p10-4_heldout_v16_targets` (128 seeds) |
+| H7 | FAIL (wood) | `p10-5_pilot/diversity.md` |
+| H8 | FAIL (only rot_wood) | `p10-6_forks/fork_metrics.md` |
+| H9 | PASS | recorder byte identity (v14/v15/v16 families), schemas 1–3 load, v16 fork tests |
+| H10 | PASS | `p10-4_timing_*_targets` |
