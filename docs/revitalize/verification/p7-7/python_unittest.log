@@ -1,0 +1,57 @@
+.....................................INVALID EVIDENCE: severity weights must be three thousandths summing to 1000
+........INVALID EVIDENCE: winter trace needs seasons
+...
+----------------------------------------------------------------------
+Ran 48 tests in 26.194s
+
+OK
+PASS
+W1: PASS 
+W2: PASS 
+W3: PASS 
+W4: PASS 
+W5: PASS 
+W6: PASS 
+W7: PASS 
+W8: PASS 
+W9: PASS 
+W10: PASS 
+W11: PASS 
+PASS
+X1: PASS 
+X2: PASS 
+X3: PASS 
+X4: PASS 
+X5: PASS 
+X6: PASS 
+X7: PASS 
+X8: PASS 
+X9: PASS 
+X10: PASS 
+X11: PASS 
+X12: PASS 
+PASS
+Y1: PASS 
+Y2: PASS 
+Y3: PASS 
+Y4: PASS 
+Y5: PASS 
+Y6: PASS 
+Y7: PASS 
+Y8: PASS 
+Y9: PASS 
+Y10: PASS 
+Y11: PASS 
+Y12: PASS 
+Y13: PASS 
+FAIL
+Z1: FAIL legacy_pin, v8_repro, v9_repro, v10_repro, v11_repro, v12_repro
+Z2: PASS 
+Z3: FAIL no_dark_night, two_or_more, first_night_spread
+Z4: PASS 
+Z5: PASS 
+Z6: FAIL receipt
+Z7: FAIL receipt
+Z8: FAIL day10, day120, recorder
+Y9: PASS 
+wrote /var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/tmpkm8ift4x/t.md

@@ -1,0 +1,31 @@
+    Checking serde_core v1.0.229
+    Checking libc v0.2.190
+    Checking cfg-if v1.0.5
+    Checking zerocopy v0.8.62
+    Checking once_cell v1.21.4
+    Checking glam v0.30.10
+    Checking spin v0.9.9
+    Checking base64 v0.21.7
+    Checking thiserror v1.0.69
+    Checking arrayvec v0.7.8
+    Checking godot-ffi v0.4.5
+    Checking godot-cell v0.4.5
+    Checking getrandom v0.3.4
+    Checking zmij v1.0.23
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking serde v1.0.229
+    Checking bitflags v2.13.2
+    Checking serde_json v1.0.152
+    Checking ron v0.8.1
+    Checking ahash v0.8.12
+    Checking hashbrown v0.14.5
+    Checking hecs v0.10.5
+    Checking godot-core v0.4.5
+    Checking sim-core v0.7.0 (/Users/rexxa/work/p8-gate/rust/crates/sim-core)
+    Checking sim-engine v0.7.0 (/Users/rexxa/work/p8-gate/rust/crates/sim-engine)
+    Checking sim-systems v0.7.0 (/Users/rexxa/work/p8-gate/rust/crates/sim-systems)
+    Checking godot v0.4.5
+    Checking sim-bridge v0.7.0 (/Users/rexxa/work/p8-gate/rust/crates/sim-bridge)
+    Checking sim-test v0.7.0 (/Users/rexxa/work/p8-gate/rust/crates/sim-test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 12.68s

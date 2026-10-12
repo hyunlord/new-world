@@ -2019,7 +2019,23 @@ All probe runs use Pass 9's flags (the eight clocks `02:00,06:00,08:00,10:00,12:
 
 ### Part 3 — tuning (tuning seeds 0–63 × 10, 0–31 × 120; v15 reference = the guard run of the same binary)
 
-Exploration before round 1 (not a round: scratch seeds 5000–5031 × 120, `game_v16`, a scratch probe outside the clone with environment overrides, never committed; see DECISIONS): exposure [5, 4, 6] / 2 → seed-winters with a death 0.008; [6, 4, 7] / 2 → 0.039 with one wipe of 21; [10, 4, 5] / 2 → 0.258, max share 0.20, but 8 starvation deaths in a capacity-3 world; + capacity-weighted supply (min(cap, 4) / 4) → 0.266, max 0.15, no starvation; plain cap / 4 → starvation 15–42 in six capacity-5 worlds; [12, 4, 5] → 0.305; [9, 4, 6] / 1 → one wipe of 14.
+Exploration (not a judged round): 13 scratch configurations on seeds 5000–5031 × 120 days (seeds of no judged or pilot set), run by a probe built from a copy of the tree outside the clone that reads the knobs from environment variables (never committed). 11 ran before round 1 and 2 before round 2; the judged rounds below use the committed code on the tuning seeds only.
+
+| Run | Time | Scene | Exposure (child, adult, elder / block h) | Utilization | Supply weighting | Seed-winters with a death | Max share of members | Starvation + dehydration (max per seed, seeds) |
+|---|---|---|---|---|---|---:|---:|---|
+| A | 16:35 | v16 | 5,4,6 / 2 | – | – | 0.008 | 0.350 | 11 (1 seeds) |
+| B | 16:36 | v16 | 6,4,7 / 2 | – | – | 0.039 | 0.525 | 7 (1 seeds) |
+| C | 16:39 | v16 | 5,3,5 / 1 | – | – | 0.008 | 0.125 | 9 (1 seeds) |
+| D | 16:40 | v16 | 7,5,8 / 2 | – | – | 0.156 | 0.550 | 9 (1 seeds) |
+| E | 16:42 | v16 | 10,4,5 / 2 | – | – | 0.258 | 0.200 | 8 (1 seeds) |
+| F | 16:42 | v16 | 12,4,5 / 2 | – | – | 0.305 | 0.200 | 8 (1 seeds) |
+| G | 16:42 | v16 | 9,4,6 / 1 | – | – | 0.250 | 0.350 | 7 (1 seeds) |
+| H | 16:42 | v16 | 10,4,5 / 2 | 0.78 | – | 0.266 | 0.154 | 0 (0 seeds) |
+| I | 16:45 | v16 | 10,4,5 / 2 | – | min(cap,4)/4 | 0.266 | 0.150 | 0 (0 seeds) |
+| J | 16:45 | v16 | 10,4,5 / 2 | – | cap/4 | 0.273 | 0.381 | 42 (6 seeds) |
+| K | 16:45 | v16_neutral | 10,4,5 / 2 | – | – | 0.273 | 0.143 | 0 (0 seeds) |
+| L | 16:57 | v16 | 10,4,5 / 2 | 0.78 | min(cap,4)/4 | 0.273 | 0.154 | 0 (0 seeds) |
+| M | 16:57 | v16_neutral | 10,4,5 / 2 | 0.78 | min(cap,4)/4 (no effect) | 0.250 | 0.150 | 0 (0 seeds) |
 
 | Round | Knobs | Scene | H1 | H2 | H3 | H4 | H5 | H6 |
 |---|---|---|---|---|---|---|---|---|
@@ -2035,9 +2051,9 @@ Round 1 H3 detail — v16_neutral: share 0.195, median 0, max share 0.119, means
 | 2 | round 1 + `SustainRule::utilization` 0.81 → 0.78 in both v16 rulesets | v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
 | 2 | same | v16 | PASS | PASS | PASS | PASS | PASS | PASS |
 
-Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means mild/normal/harsh 0.06/0.30/1.54, starvation+dehydration day-120 median/max 0/0; v16: share 0.242, median 0, max share 0.182, means mild/normal/harsh 0.06/0.32/2.24, starvation+dehydration day-120 median/max 0/0. v15 guard of the round-2 binary (`p10-3_round2_v15_guard_*`) equals Part 0 on every shared value (only `schema_version`). H1 here takes the legacy pin and the v8–v15 reproductions as receipts (Part 0 and the guards; re-checked in Part 7).
+Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means mild/normal/harsh 0.06/0.30/1.54, starvation+dehydration day-120 median/max 0/0; v16: share 0.242, median 0, max share 0.182, means mild/normal/harsh 0.06/0.32/2.24, starvation+dehydration day-120 median/max 0/0. v15 guard of the round-2 binary (`p10-3_round2_v15_guard_*`) equals Part 0 on every shared value (only `schema_version`). H1's receipts: v13–v15 and legacy were reproduced in Part 0 and by the guards, v8–v12 were pinned by tests; the probe reproduction of legacy and v8–v14 against Pass 9's finals is Part 7's (`p10-7_final_*`, every run reproduces). All `h_targets.json` were regenerated in Part 7 after review round 1 with these receipts and the stricter H5 rule (the verdicts did not change).
 
-**Frozen knobs (round 2):** exposure `damage_per_cold_hour` [child 10, adult 4, elder 5], `heal_block_hours` 2; `SustainRule::utilization` 0.78 in `game_v16_neutral` and `game_v16`; `SustainRule::capacity_weighted` in `game_v16`; variety ranges and `CLIMATE_PERMILLE` as in 7.1 (unchanged). Strikes used: 2 of 3.
+**Frozen knobs (round 2):** exposure `damage_per_cold_hour` [child 10, adult 4, elder 5], `heal_block_hours` 2; `SustainRule::utilization` 0.78 in `game_v16_neutral` and `game_v16`; `SustainRule::capacity_weighted` in `game_v16`; variety ranges and `CLIMATE_PERMILLE` as in 7.1 (unchanged). Strikes used: 2 of 3 judged rounds, after 13 disclosed scratch configurations on seeds 5000–5031 (table above). The capacity weighting feeds the supply estimate behind both the birth gate and the summer/autumn winter-prep store target, so in capacity-3 worlds it also raises that target (review round 1, M1).
 
 **Frozen commit:** `58119582` (`581195820e8e6e79924f0583339da077bfc8d9f7`, Part 3, 17:06 KST). Parts 4–6 run `probe_frozen` / `wm_frozen` built from it (`probe_frozen` is byte-identical to the round-2 probe `probe_p3r2`); recordings carry `WORLDSIM_GIT_SHA` = that commit.
 
@@ -2047,8 +2063,10 @@ Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means
 
 | Scene | H1 | H2 | H3 | H4 | H5 | H6 (tuning + held-out, 128 seeds) |
 |---|---|---|---|---|---|---|
-| v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| v16_neutral | PASS | PASS | PASS | PASS | PASS¹ | – |
 | v16 | PASS | PASS | PASS | PASS | FAIL: Y9_work_1500 (reported: H5 is judged on v16_neutral) | PASS |
+
+¹ One population clause passes by the "no new failure" rule: Y9 `work_1200` (v16_neutral 0.344, v15 0.308, both below 0.35; v16_neutral is the better). In round 2 the same rule passes Y9 `idle_1200` (0.620 vs v15 0.634, both above 0.60). From Part 7 the rule needs v16 no worse than v15 in the requirement's direction (review round 1, L1); both cases meet it.
 
 H3 detail — v16_neutral: share 0.207, median 0, max share 0.154, means mild/normal/harsh 0.00/0.32/2.09 (n 102/108/46), starvation+dehydration day-120 median/max 0/0; v16: share 0.266, median 0, max share 0.176, means mild/normal/harsh 0.00/0.37/2.07 (n 89/107/60), starvation+dehydration day-120 median/max 0/0.
 
@@ -2105,7 +2123,7 @@ Seeds 12000–12031, 35 days, R = 4 forked at 28,800, the five C_cf variants and
 | rot_wood | 0.562 | +1.180 | 0.562 (18 / 32) | +1.117 / +1.352 |
 | windfall | 0.000 | -0.164 | 0.531 (17 / 32) | -0.367 / -0.309 |
 
-Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 row, exposure deaths included (`--deaths-with-exposure`). By cause the whole effect is exposure: rain −0.59 exposure deaths (births −0.39), cold_snap +0.16 (+0.12), rot_wood +1.18 (+0.57), gift_wood −0.63 (−0.41); old age and starvation 0 for every variant.
+Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 row, exposure deaths included (`--deaths-with-exposure`). By cause the whole effect is exposure: rain −0.59 exposure deaths (births effect −0.39), cold_snap +0.16 (births effect +0.12), rot_wood +1.18 (+0.57), gift_wood −0.63 (−0.41); old age and starvation effects 0 for every variant. The "differs from v15" column compares different worlds (game_v16 seed 12000 is not game_v15 seed 12000 under world variety) and replicate means over R = 4 against R = 8, so "differs" is nearly automatic; it is reported as asked, not as evidence of a changed intervention.
 
 **H8: FAIL** — of {rain, cold_snap, rot_wood} only rot_wood has deaths effect > 0 in ≥ 0.25 of seeds (0.56) with mean ≥ 0.25 (+1.18); rain's mean is −0.59 (0 seeds positive) and cold_snap's +0.16 (0.06 of seeds). gift_wood's mean deaths effect −0.63 ≤ 0 holds. Rain keeps the fire out for its 13 hours but burns no wood, so the saved wood keeps a later night lit and breaks the streak that would have killed (its dark-night effect is still +0.27); a two-night cold snap mostly costs hp that a fed village heals.
 

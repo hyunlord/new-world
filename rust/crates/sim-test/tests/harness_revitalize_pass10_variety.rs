@@ -87,12 +87,26 @@ fn harness_variety_ranges() {
         Some(CLIMATE_SEVERITY_PERMILLE[1]),
         WorldRules::game_v15().society.firewood.and_then(|f| f.winter_severity_permille)
     );
-    // Each draw is keyed on its parameter index with replicate 0 and tick 0.
-    let v = WorldVariety::draw(77);
-    let raw = keyed_u64(77, STREAM_WORLD_VARIETY, 0, 0, 0, 0);
-    let span = u64::from(RANGES.starting_agents.1 - RANGES.starting_agents.0 + 1);
-    assert_eq!(u64::from(v.starting_agents), u64::from(RANGES.starting_agents.0) + sim_core::rng::below(raw, span));
+    // Every draw is keyed on its parameter index (slot) with subject, tick and
+    // replicate 0: all eight values follow from that formula alone, and a
+    // replicate-3 key would have given other raw values.
     assert!(STREAMS.contains(&STREAM_WORLD_VARIETY));
+    for seed in [77u64, 1_234, 99_999] {
+        let v = WorldVariety::draw(seed);
+        let raw = |slot: u32| keyed_u64(seed, STREAM_WORLD_VARIETY, 0, 0, slot, 0);
+        let pick = |slot: u32, (lo, hi): (u32, u32)| lo as u64 + sim_core::rng::below(raw(slot), u64::from(hi - lo + 1));
+        assert_eq!(u64::from(v.starting_agents), pick(0, RANGES.starting_agents));
+        assert_eq!(u64::from(v.berry_bushes), pick(1, RANGES.berry_bushes));
+        assert_eq!(u64::from(v.berry_capacity), pick(2, RANGES.berry_capacity));
+        assert_eq!(u64::from(v.deadwood_spots), pick(3, RANGES.deadwood_spots));
+        assert_eq!(u64::from(v.deadwood_capacity), pick(4, RANGES.deadwood_capacity));
+        assert_eq!(u64::from(v.forest_permille), pick(5, RANGES.forest_permille));
+        assert_eq!(u64::from(v.food_regen_permille), pick(7, RANGES.food_regen_permille));
+        let roll = sim_core::rng::below(raw(6), 1000) as u16;
+        let climate = if roll < CLIMATE_PERMILLE[0] { 0 } else if roll < CLIMATE_PERMILLE[0] + CLIMATE_PERMILLE[1] { 1 } else { 2 };
+        assert_eq!(v.climate, climate);
+        assert!((0..8).any(|slot| keyed_u64(seed, STREAM_WORLD_VARIETY, 0, 0, slot, 3) != raw(slot)));
+    }
 }
 
 #[test]
@@ -108,12 +122,10 @@ fn harness_variety_independent_of_replicate() {
         assert_eq!(forked.resources.world_variety, plain.resources.world_variety);
         assert_eq!(state_digest(&forked), state_digest(&plain));
         assert_eq!(forked.resources.worldgen_report, plain.resources.worldgen_report);
-        // A world built while the replicate in force is 3 (as a fork at tick 0
-        // would see) still draws the same parameters.
-        let v = WorldVariety::draw(seed);
-        let cfg = WorldGenConfig::game_v16(seed);
-        let mut rebuilt = build_world_with(&cfg, WorldRules::game_v16(seed));
-        rebuilt.resources.world_variety = Some(v);
+        // The world is built from `WorldGenConfig::game_v16` / `WorldRules::game_v16`,
+        // whose only input is the seed (`WorldVariety::draw` takes no replicate).
+        let mut rebuilt = build_world_with(&WorldGenConfig::game_v16(seed), WorldRules::game_v16(seed));
+        rebuilt.resources.world_variety = Some(WorldVariety::draw(seed));
         assert_eq!(state_digest(&rebuilt), state_digest(&plain));
     }
 }
@@ -145,4 +157,26 @@ fn harness_variety_deterministic() {
     // Different seeds give different worlds (not one fixed recipe).
     let distinct: std::collections::BTreeSet<_> = (0..64u64).map(WorldVariety::draw).collect();
     assert!(distinct.len() > 60);
+}
+
+#[test]
+fn harness_variety_worldgen_accepts_every_drawn_world() {
+    // Review round 1, L12: the live game builds a game_v16 world for any seed;
+    // worldgen must place every requested bush and deadwood spot without
+    // panicking. Seeds 0..400 (no judged or pilot meaning at tick 0).
+    let failures: Vec<u64> = (0..400u64)
+        .filter(|&seed| {
+            let v = WorldVariety::draw(seed);
+            let engine = std::panic::catch_unwind(|| game_v16_scene(seed));
+            match engine {
+                Ok(e) => {
+                    e.resources.food_source_max.len() != v.berry_bushes as usize
+                        || e.resources.worldgen_report.deadwood_spots_placed != v.deadwood_spots
+                        || e.world.query::<&Agent>().iter().count() != v.starting_agents as usize
+                }
+                Err(_) => true,
+            }
+        })
+        .collect();
+    assert!(failures.is_empty(), "worlds not built as drawn: {failures:?}");
 }

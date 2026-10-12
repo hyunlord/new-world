@@ -7,7 +7,7 @@ from pathlib import Path
 import test_evaluate_pass6 as p6
 import test_evaluate_pass8 as p8t
 from evaluate_pass4 import EvidenceError, Round, Seed
-from evaluate_pass10 import RANGES, cold_night_tick, h2, h3, h6, load_round, main, mean_weights
+from evaluate_pass10 import RANGES, cold_night_tick, direction, h2, h3, h6, load_round, main, mean_weights, no_worse
 
 RULES10 = {**p8t.RULES, "keyed_draws": 1, "noise_replicate": 0}
 NEUTRAL = {"starting_agents": 24, "berry_bushes": 12, "berry_capacity": 4, "deadwood_spots": 20,
@@ -133,6 +133,20 @@ class EvaluatorTenTests(unittest.TestCase):
         self.assertFalse(result["clauses"]["parameter_means"]["passed"])
         self.assertFalse(result["clauses"]["climate_shares"]["passed"])
 
+    def test_population_escape_needs_v16_no_worse_than_v15(self) -> None:
+        # Review round 1, L1.
+        work = lambda m, ok: {"passed": ok, "observed": {"median": m}, "requirement": "adult work share at 12:00 median >= 0.35"}
+        idle = lambda m, ok: {"passed": ok, "observed": {"median": m}, "requirement": "idle share median <= 0.60"}
+        self.assertEqual((direction(work(0, 0)["requirement"]), direction(idle(0, 0)["requirement"])), (1, -1))
+        self.assertTrue(no_worse(work(.34, False), work(.31, False)))
+        self.assertFalse(no_worse(work(.30, False), work(.31, False)))
+        self.assertTrue(no_worse(idle(.62, False), idle(.63, False)))
+        self.assertFalse(no_worse(idle(.64, False), idle(.63, False)))
+        self.assertIsNone(direction("median in [0.70, 0.97] and every seed >= 0.50 and <= 1"))
+        nested = {"passed": False, "observed": {"autumn": {"median": 2.0}, "summer": {"median": 1.0}},
+                  "requirement": "autumn wood gathered per day median >= 1.5 x summer's"}
+        self.assertTrue(no_worse(nested, {**nested, "observed": {"autumn": {"median": 1.5}}}))
+
     def test_per_seed_weights_never_come_from_the_rules_block(self) -> None:
         r = fake_round([run(0, 10, info=seed_info(weights=(500, 350, 150))),
                         run(1, 10, info=seed_info(weights=(200, 400, 400)))], 10)
@@ -144,8 +158,10 @@ class EvaluatorTenTests(unittest.TestCase):
         (self.root / "v11.json").write_text(json.dumps({"measures": p6.V11}))
         base = ["--round10", str(a), "--round120", str(b), "--v11-targets", str(self.root / "v11.json"),
                 "--legacy-pin", "PASS", "--v8-v15-repro", "PASS"]
-        self.assertIn(main(base + ["--out", str(self.root / "out")]), (0, 1))
+        # The synthetic rounds carry no seed-winters, so H3 fails (share undefined): exit 1.
+        self.assertEqual(main(base + ["--out", str(self.root / "out")]), 1)
         report = json.loads((self.root / "out" / "h_targets.json").read_text())
+        self.assertFalse(report["targets"]["H3"]["passed"])
         self.assertEqual(report["probe_schema"], 10)
         self.assertTrue(report["targets"]["H1"]["passed"])
         self.assertTrue(report["targets"]["H2"]["passed"])

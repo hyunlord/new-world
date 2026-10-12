@@ -32,9 +32,12 @@ which describes the first seed only.
   `evaluate_pass8.evaluate` on both scenes. Per-seed clauses of Pass 6 Y10,
   Y11, Y12 pass when this run's failing seeds number at most v15's + 1;
   population clauses of Y4, Y5, Y6, Y9, Y10, Y11 and Pass 8 X3 (b)-(e), X4
-  pass when they pass or v15 fails them too (no new failure). Y2, Y3, Y7,
-  Y8 and X3 (a), (f) are reported only (Y3's population clauses are replaced
-  by H2; `total_deaths` of Pass 4 ignores exposure).
+  pass when they pass, or when v15 fails them too and v16's median is no
+  worse than v15's in the requirement's direction (review round 1, L1: no
+  escape for a clause whose direction cannot be read). Y2, Y3, Y7, Y8 and
+  X3 (a), (f) are reported only (Y3's population clauses are replaced by H2;
+  the reported Y3 births-minus-deaths margin uses Pass 4's `total_deaths`,
+  which excludes exposure deaths).
 - H6 (`--variety`: 10-day game_v16 runs, e.g. tuning + held-out): every
   parameter's mean within +-10 % of its range centre, each climate's share
   within +-0.10 of its weight; deadwood shortfalls and berry-repair swaps
@@ -252,10 +255,11 @@ def h5(short: Round, long: Round, v15_short: Round | None, v15_long: Round | Non
     def population(name: str, mine: dict, theirs: dict | None) -> dict:
         if theirs is None:
             return clause(mine["passed"], {"v16": mine["observed"]}, f"{mine['requirement']} (no v15 reference)")
-        return clause(mine["passed"] or not theirs["passed"],
+        escape = not mine["passed"] and not theirs["passed"] and no_worse(mine, theirs)
+        return clause(mine["passed"] or escape,
                       {"v16": mine["observed"], "v16_passed": mine["passed"], "v15_passed": theirs["passed"],
-                       "v15": theirs["observed"]},
-                      f"no new failure vs v15: {mine['requirement']}")
+                       "v15": theirs["observed"], "escaped_as_no_worse_than_v15": escape},
+                      f"no new failure vs v15 (v16 no worse than v15 when both fail): {mine['requirement']}")
 
     def ref_clause(group: str, key: str) -> dict | None:
         return ref_targets[group]["clauses"].get(key) if ref_targets else None
@@ -278,6 +282,37 @@ def h5(short: Round, long: Round, v15_short: Round | None, v15_long: Round | Non
                 "winters": p8.winters_table(long), "r2": p8.r_squared(p8.winters_table(long)),
                 "work_by_season": p8.work_by_season(long), "wood_by_season": p8.wood_by_season(long, 360)}
     return target(clauses), reported
+
+
+def direction(requirement: str) -> int | None:
+    """+1 when larger is better (the requirement bounds a value from below), -1 when smaller
+    is better, None when the text has no single direction."""
+    lower, upper = ">=" in requirement or "≥" in requirement, "<=" in requirement or "≤" in requirement
+    if lower and not upper:
+        return 1
+    if upper and not lower:
+        return -1
+    return None
+
+
+def median_of(observed) -> float | None:
+    """The median a population clause reports (directly or under its first quantile block)."""
+    if isinstance(observed, dict):
+        if isinstance(observed.get("median"), (int, float)):
+            return float(observed["median"])
+        for value in observed.values():
+            if isinstance(value, dict) and isinstance(value.get("median"), (int, float)):
+                return float(value["median"])
+    return None
+
+
+def no_worse(mine: dict, theirs: dict) -> bool:
+    """Whether v16's failing clause is at least as good as v15's failing clause (review round 1, L1)."""
+    sign = direction(mine["requirement"])
+    a, b = median_of(mine["observed"]), median_of(theirs["observed"])
+    if sign is None or a is None or b is None:
+        return False
+    return sign * (a - b) >= 0
 
 
 def h6(rounds: list[Round], ranges: dict, climate: tuple[int, int, int]) -> tuple[dict, dict]:

@@ -143,9 +143,13 @@ pub struct SustainRule {
     /// Chebyshev distance within which renewable bushes count.
     pub forage_radius: u32,
     /// Pass 10 (`game_v16`): each bush counts `min(capacity, 4) / 4` of a
-    /// source in the supply estimate, so worlds of capacity-3 bushes (which
-    /// lose regrowth at their cap) do not overstate their supply. False =
-    /// every bush counts one source (v9–v15, v16_neutral).
+    /// source in the supply estimate (`food_economy::supply_per_day`), so
+    /// worlds of capacity-3 bushes (which lose regrowth at their cap) do not
+    /// overstate their supply. The estimate feeds both the birth gate
+    /// (`annual_mean_supply`) and the summer/autumn winter-prep store target
+    /// (`winter_supply_per_day` in `stock_target`), so in capacity-3 worlds it
+    /// also raises that target. False = every bush counts one source (v9–v15,
+    /// v16_neutral).
     pub capacity_weighted: bool,
 }
 /// Sustained sleep in a minute-of-day window.

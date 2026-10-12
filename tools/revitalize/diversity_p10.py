@@ -188,7 +188,8 @@ def pilot(args) -> int:
         out["scenes"][scene] = d
         print(scene, "H7", "PASS" if d["h7"]["passed"] else "FAIL",
               {k: (fmt(v['eta2']), fmt(v['r2_abs'])) for k, v in h7.items()}, f"{time.time() - t0:.0f}s", flush=True)
-    pairs = [("exposure", "game_v15", "game_v16_neutral"), ("variety", "game_v16_neutral", "game_v16")]
+    # Review round 1, L2: v15 -> v16_neutral is exposure plus Part 3's tighter birth gate (utilization 0.78).
+    pairs = [("exposure (+ utilization 0.78)", "game_v15", "game_v16_neutral"), ("variety", "game_v16_neutral", "game_v16")]
     out["attribution"] = {}
     for label, a, b in pairs:
         if a in out["scenes"] and b in out["scenes"]:

@@ -12399,6 +12399,7 @@
       "clauses": {
         "X3_b_spread_within_severity": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "harsh": {
                 "histogram": {
@@ -12451,10 +12452,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: normal and harsh winters each: the most common dark-night count <= 0.75 of them"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): normal and harsh winters each: the most common dark-night count <= 0.75 of them"
         },
         "X3_c_no_dark_night": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "n": 256,
               "share": 0.5625
@@ -12467,10 +12469,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: share of seed-winters with no dark night in [0.15, 0.60]"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): share of seed-winters with no dark night in [0.15, 0.60]"
         },
         "X3_d_two_or_more": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "n": 256,
               "share": 0.2890625
@@ -12483,10 +12486,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: share of seed-winters with >= 2 dark nights in [0.10, 0.50]"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): share of seed-winters with >= 2 dark nights in [0.10, 0.50]"
         },
         "X3_e_first_night_spread": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "distinct_first_nights": 4,
               "histogram": {
@@ -12513,10 +12517,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: first dark night on >= 4 distinct nights, <= 0.50 of them on the seventh"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): first dark night on >= 4 distinct nights, <= 0.50 of them on the seventh"
         },
         "X4_normal_gathered": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "floor": 40.5,
               "max": 57.0,
@@ -12539,10 +12544,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: median winter wood gathered over normal-severity seed-winters >= 40.5"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): median winter wood gathered over normal-severity seed-winters >= 40.5"
         },
         "X4_retarget_share": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.17647058823529413,
               "median": 0.05741758241758242,
@@ -12563,7 +12569,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: winter wood_retargets / winter wood trips, median over seed-winters <= 0.10"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): winter wood_retargets / winter wood trips, median over seed-winters <= 0.10"
         },
         "Y10_evening_near_hearth_every_seed": {
           "observed": {
@@ -12580,6 +12586,7 @@
         },
         "Y10_evening_near_hearth_median": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.9354838709677419,
               "median": 0.6566964285714285,
@@ -12600,10 +12607,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: evening near-hearth share median >= 0.55"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): evening near-hearth share median >= 0.55"
         },
         "Y10_night_in_shelter": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 1.0,
               "median": 1.0,
@@ -12624,7 +12632,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: median >= 0.80"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): median >= 0.80"
         },
         "Y11_home_distance_every_seed": {
           "observed": {
@@ -12639,6 +12647,7 @@
         },
         "Y11_home_distance_median": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 10.333333333333334,
               "median": 6.892857142857142,
@@ -12659,7 +12668,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: day-10 home distance median <= 8.1"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): day-10 home distance median <= 8.1"
         },
         "Y11_social_10_every_seed": {
           "observed": {
@@ -12674,6 +12683,7 @@
         },
         "Y11_social_10_median": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.6935984154863784,
               "median": 0.6469288481461133,
@@ -12694,7 +12704,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: social completions per agent-day median >= 0.40"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): social completions per agent-day median >= 0.40"
         },
         "Y11_social_120_every_seed": {
           "observed": {
@@ -12709,6 +12719,7 @@
         },
         "Y11_social_120_median": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.8583770633820698,
               "median": 0.8205683413110019,
@@ -12729,10 +12740,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: social completions per agent-day median >= 0.40"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): social completions per agent-day median >= 0.40"
         },
         "Y11_t6a_10": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.0029717682020802376,
               "median": 0.0008722738408342659,
@@ -12751,10 +12763,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: cumulative actionable idle-breach share median <= 1%"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): cumulative actionable idle-breach share median <= 1%"
         },
         "Y11_t6a_120": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.012845550355230816,
               "median": 0.008595844538293523,
@@ -12773,7 +12786,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: cumulative actionable idle-breach share median <= 1%"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): cumulative actionable idle-breach share median <= 1%"
         },
         "Y12_day10": {
           "observed": {
@@ -12799,6 +12812,7 @@
         },
         "Y4_every_seed": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.9979877515310586,
               "median": 0.9863950473768147,
@@ -12819,10 +12833,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: each seed's store share from day 3 >= 0.40"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): each seed's store share from day 3 >= 0.40"
         },
         "Y4_store_share": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 1.0,
               "median": 0.98989898989899,
@@ -12843,10 +12858,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: store meals / all meals per seed-day from day 3, median >= 0.60"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): store meals / all meals per seed-day from day 3, median >= 0.60"
         },
         "Y4_winter": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 1.0,
               "median": 1.0,
@@ -12867,10 +12883,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: winter seed-day store share median >= 0.40"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): winter seed-day store share median >= 0.40"
         },
         "Y5_autumn_wood": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "autumn": {
                 "max": 148.0,
@@ -12911,10 +12928,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: autumn wood gathered per day median >= 1.5 x summer's (seed-days)"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): autumn wood gathered per day median >= 1.5 x summer's (seed-days)"
         },
         "Y5_autumn_work": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "floor": 0.40784549731918157,
               "max": 0.8273026315789473,
@@ -12937,10 +12955,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: autumn adult work share at 12:00 median >= v11's autumn value - 0.05"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): autumn adult work share at 12:00 median >= v11's autumn value - 0.05"
         },
         "Y6_trip_days": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 7.0,
               "median": 5.0,
@@ -12961,10 +12980,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: days with wood trips per winter (of 7), median over seed-winters >= 4"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): days with wood trips per winter (of 7), median over seed-winters >= 4"
         },
         "Y6_trips": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 66.0,
               "median": 47.0,
@@ -12985,10 +13005,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: wood trips per winter, median over seed-winters >= 20"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): wood trips per winter, median over seed-winters >= 20"
         },
         "Y9_idle_1200": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.8809523809523809,
               "median": 0.6190476190476191,
@@ -13009,10 +13030,11 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: idle share of all residents at 12:00 median <= 0.60 (spring-autumn)"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): idle share of all residents at 12:00 median <= 0.60 (spring-autumn)"
         },
         "Y9_work_1200": {
           "observed": {
+            "escaped_as_no_worse_than_v15": true,
             "v15": {
               "max": 0.7142857142857143,
               "median": 0.3076923076923077,
@@ -13033,10 +13055,11 @@
             "v16_passed": false
           },
           "passed": true,
-          "requirement": "no new failure vs v15: adult work share at 12:00 median >= 0.35 (spring-autumn)"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): adult work share at 12:00 median >= 0.35 (spring-autumn)"
         },
         "Y9_work_1500": {
           "observed": {
+            "escaped_as_no_worse_than_v15": false,
             "v15": {
               "max": 0.7333333333333333,
               "median": 0.4166666666666667,
@@ -13057,7 +13080,7 @@
             "v16_passed": true
           },
           "passed": true,
-          "requirement": "no new failure vs v15: adult work share at 15:00 median >= 0.25 (spring-autumn)"
+          "requirement": "no new failure vs v15 (v16 no worse than v15 when both fail): adult work share at 15:00 median >= 0.25 (spring-autumn)"
         }
       },
       "passed": true

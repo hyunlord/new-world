@@ -139,7 +139,6 @@ mod tests {
         assert!(parse(&["--days", "150", "--scene", "game_v14"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v15"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v16_neutral"]).is_ok());
-        assert!(parse(&["--days", "150", "--scene", "game_v16_neutral"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v16"]).is_ok());
         assert!(parse(&["--scene", "game_v17"]).is_err());
         assert!(parse(&["--days", "151"]).is_err());

@@ -972,6 +972,15 @@ mod tests {
     }
 
     #[test]
+    fn exposure_death_reason_encoding_is_locked() {
+        // Pass 10: the one new variant takes the next code; the renderer's
+        // colour switch keys off `as_u8`.
+        assert_eq!(DeathReason::Exposure.as_str(), "exposure");
+        assert_eq!(DeathReason::Exposure.as_u8(), 4);
+        assert_eq!(DeathReason::OldAge.as_u8(), 3);
+    }
+
+    #[test]
     fn agent_died_records_fields_and_round_trips() {
         let ev = CausalEvent::AgentDied {
             id: 500,

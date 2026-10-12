@@ -18,3 +18,5 @@ python3 tools/revitalize/fork_metrics.py --root $D/p10/forks --scene game_v16 --
 ```
 
 Wall time (recorder log, 17:41:35–17:57:32 KST): branch families 896 episodes 591 s, placebos 256 listed (224 recorded) 171 s, unforked 224 + 64 episodes 151 + 45 s; 1,400 recorded episodes. Metrics: 13 s.
+
+Provenance (review round 1, L10): `shasum -a 256` of `wm_frozen` = `282037ec5fb41650712cf1cb25863f8611a902949a620d2a02cc5b27379cf6ff`, of `probe_frozen` = `c10bd3762e3f38ed6f59fabbb44d2d8bf01d1177fc287face9406683fb0ab74e`. Rebuilt in Part 7 from the review-round-1 tree (whose only non-test Rust change after `58119582` is a doc comment), both binaries are byte-identical to these frozen copies.

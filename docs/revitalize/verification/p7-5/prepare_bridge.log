@@ -1,0 +1,5 @@
+   Compiling sim-core v0.7.0 (/Users/rexxa/work/p7-gate/rust/crates/sim-core)
+   Compiling sim-engine v0.7.0 (/Users/rexxa/work/p7-gate/rust/crates/sim-engine)
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/p7-gate/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/p7-gate/rust/crates/sim-bridge)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.58s

@@ -164,7 +164,7 @@ Train seeds 20000..20095 (calendar statistics fitted here), test seeds 20096..20
 
 ## Attribution (difference of the metric)
 
-**exposure**
+**exposure (+ utilization 0.78)**
 
 | Variable | Δη² | ΔR²_abs | ΔR²_year |
 |---|---:|---:|---:|
