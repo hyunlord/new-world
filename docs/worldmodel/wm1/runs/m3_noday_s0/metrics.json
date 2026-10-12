@@ -1,0 +1,70 @@
+{
+ "argv": [
+  "tools/worldmodel/wm1/m3_text.py",
+  "final",
+  "--run",
+  "/home/hyunlord/work/wm1-runs/m3_noday_s0"
+ ],
+ "config": {
+  "base": "/home/hyunlord/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B-Instruct/snapshots/7ae557604adf67be50417f59c2c2f167def9a775",
+  "code_commit": "74f4d79db2f15ebbf066efc3adf2b95a8c143c8b",
+  "epoch_fraction": 0.3865546218487395,
+  "no_day": true,
+  "seed": 0,
+  "steps_done": 276
+ },
+ "daily_naive": {
+  "mean": 0.13930669075648872,
+  "per_var": [
+   0.183701309593496,
+   0.2553173891718698,
+   0.0,
+   0.0,
+   0.14568688211078784,
+   0.16389664918506347,
+   0.36585129599069277,
+   0.0
+  ]
+ },
+ "eval_code_commit": "9f4fd3f37165e90f7a104eb62e39b8d5815c4e84",
+ "examples": [
+  {
+   "output": "{\"dos\":4,\"season\":0,\"food\":95,\"wood\":46,\"fire\":1,\"cold\":0,\"alive\":29,\"dead\":120,\"bush\":36,\"work\":0,\"iv\":[]}",
+   "prompt": "{\"dos\":3,\"season\":0,\"food\":68,\"wood\":28,\"fire\":1,\"cold\":0,\"alive\":27,\"dead\":120,\"bush\":36,\"work\":0,\"iv\":[]}"
+  },
+  {
+   "output": "{\"dos\":4,\"season\":1,\"food\":267,\"wood\":9,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":120,\"bush\":48,\"work\":0,\"iv\":[]}",
+   "prompt": "{\"dos\":3,\"season\":1,\"food\":215,\"wood\":23,\"fire\":1,\"cold\":0,\"alive\":41,\"dead\":120,\"bush\":41,\"work\":0,\"iv\":[]}"
+  },
+  {
+   "output": "{\"dos\":4,\"season\":2,\"food\":516,\"wood\":209,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":118,\"bush\":48,\"work\":0,\"iv\":[]}",
+   "prompt": "{\"dos\":3,\"season\":2,\"food\":492,\"wood\":187,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":94,\"bush\":48,\"work\":0,\"iv\":[]}"
+  },
+  {
+   "output": "{\"dos\":4,\"season\":3,\"food\":318,\"wood\":129,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":20,\"bush\":26,\"work\":0,\"iv\":[]}",
+   "prompt": "{\"dos\":3,\"season\":3,\"food\":349,\"wood\":155,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":20,\"bush\":27,\"work\":0,\"iv\":[]}"
+  },
+  {
+   "output": "{\"dos\":4,\"season\":0,\"food\":187,\"wood\":51,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":120,\"bush\":36,\"work\":0,\"iv\":[]}",
+   "prompt": "{\"dos\":3,\"season\":0,\"food\":199,\"wood\":39,\"fire\":1,\"cold\":0,\"alive\":42,\"dead\":120,\"bush\":32,\"work\":0,\"iv\":[]}"
+  }
+ ],
+ "forced": false,
+ "m3": {
+  "mean": 0.05497253958805923,
+  "per_var": [
+   0.07493961299099797,
+   0.13338926524470232,
+   0.0,
+   0.0,
+   0.04608462597382064,
+   0.031542972135229816,
+   0.15382384035972307,
+   0.0
+  ]
+ },
+ "n": 272,
+ "parse_rate": 1.0,
+ "seconds": 2779.9627447128296,
+ "unparsed_scored_as": "persistence"
+}
