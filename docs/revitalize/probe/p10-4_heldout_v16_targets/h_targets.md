@@ -1,0 +1,82 @@
+# Pass 10 H targets (held-out)
+
+Scene `game_v16`. Values: median / p10 / p90 / min / max where quantiles are shown.
+
+| Target | Clause | Verdict | Requirement | Observed |
+|---|---|---|---|---|
+| H1 | twins_10 | PASS | every seed of the set (64), determinism checked | {"range": {"end_exclusive": 128, "start": 64}, "seeds": 64} |
+| H1 | twins_120 | PASS | every seed of the set (32 or 64), determinism checked | {"range": {"end_exclusive": 96, "start": 32}, "seeds": 64} |
+| H1 | legacy_pin | PASS | legacy_pin verified externally | true |
+| H1 | v8_v15_repro | PASS | v8_v15_repro verified externally | true |
+| H2 | one_settlement | PASS | one settlement at every day checkpoint, every seed | {"failing": [], "n": 64} |
+| H2 | alive_floor | PASS | alive >= max(8, 0.4 x starting agents) at every 08:00 checkpoint and 06:00 sample, every seed | {"failing": {}, "min_alive_over_floor": {"max": 19.0, "median": 14.799999999999999, "min": 7.199999999999999, "n": 64, "p10": 12.0, "p90": 17.2}, "n": 64} |
+| H2 | retention | PASS | alive on day 120 >= 0.6 x alive on day 21, every seed | {"failing": {}, "n": 64, "retention": {"max": 1.0333333333333334, "median": 1.0, "min": 0.8, "n": 64, "p10": 0.9594285714285714, "p90": 1.0}} |
+| H3 | share_with_death | PASS | share of seed-winters with >= 1 exposure death in [0.15, 0.60] | {"n": 256, "share": 0.265625} |
+| H3 | median_deaths | PASS | median exposure deaths per seed-winter <= 2 | {"max": 7.0, "median": 0.0, "min": 0.0, "n": 256, "p10": 0.0, "p90": 3.0} |
+| H3 | max_share_of_members | PASS | every seed-winter: exposure deaths <= 0.35 x members at the winter's start | {"max_share": 0.17647058823529413, "over": []} |
+| H3 | increasing_with_severity | PASS | mean exposure deaths per seed-winter strictly increasing mild < normal < harsh | {"harsh": 2.066666666666667, "mild": 0.0, "normal": 0.37383177570093457} |
+| H3 | starvation_10 | PASS | starvation + dehydration 0 in every seed at day 10 | {"failing": {}} |
+| H3 | starvation_long | PASS | starvation + dehydration by day 120: median <= 1 and max <= 6 | {"max": 0.0, "median": 0.0, "min": 0.0, "n": 64, "p10": 0.0, "p90": 0.0} |
+| H4 | cold_window | PASS | every exposure death on a FireSystem run in the cold window of a winter night (plus harness_exposure_only_from_cold, a test receipt) | {"deaths": 164, "outside": []} |
+| H5 | Y10_evening_near_hearth_every_seed | PASS | failing seeds <= reference's + 1 (per-seed median evening near-hearth share >= 0.35) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {"55": 0.3076923076923077}, "reference_n_failing": 1} |
+| H5 | Y11_home_distance_every_seed | PASS | failing seeds <= reference's + 1 (day-10 home distance <= 13) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {}, "reference_n_failing": 0} |
+| H5 | Y11_social_10_every_seed | PASS | failing seeds <= reference's + 1 (social completions per agent-day > 0) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {}, "reference_n_failing": 0} |
+| H5 | Y11_social_120_every_seed | PASS | failing seeds <= reference's + 1 (social completions per agent-day > 0) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {}, "reference_n_failing": 0} |
+| H5 | Y12_day10 | PASS | failing seeds <= reference's + 1 (no gatherer with hunger or thirst >= 90 at any 120-tick sample) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {}, "reference_n_failing": 0} |
+| H5 | Y12_day120 | PASS | failing seeds <= reference's + 1 (no gatherer with hunger or thirst >= 90 at any 120-tick sample) | {"failing": {}, "n": 64, "n_failing": 0, "reference_failing": {}, "reference_n_failing": 0} |
+| H5 | Y4_store_share | PASS | no new failure vs v15: store meals / all meals per seed-day from day 3, median >= 0.60 | {"v15": {"max": 1.0, "median": 0.98989898989899, "min": 0.7441860465116279, "n": 7552, "p10": 0.9550561797752809, "p90": 1.0}, "v15_passed": true, "v16": {"max": 1.0, "median": 0.9886363636363636, "min": 0.684931506849315, "n": 7552, "p10": 0.9491525423728814, "p90": 1.0}, "v16_passed": true} |
+| H5 | Y4_every_seed | PASS | no new failure vs v15: each seed's store share from day 3 >= 0.40 | {"v15": {"max": 0.9979877515310586, "median": 0.9863950473768147, "min": 0.9587547269369449, "n": 64, "p10": 0.9669049308535818, "p90": 0.9951588213794418}, "v15_passed": true, "v16": {"max": 0.9947373550336225, "median": 0.9820126468383034, "min": 0.9460778874958393, "n": 64, "p10": 0.970834330048693, "p90": 0.9928282828282828}, "v16_passed": true} |
+| H5 | Y4_winter | PASS | no new failure vs v15: winter seed-day store share median >= 0.40 | {"v15": {"max": 1.0, "median": 1.0, "min": 0.9375, "n": 1792, "p10": 0.9801980198019802, "p90": 1.0}, "v15_passed": true, "v16": {"max": 1.0, "median": 1.0, "min": 0.9019607843137255, "n": 1792, "p10": 0.975, "p90": 1.0}, "v16_passed": true} |
+| H5 | Y5_autumn_wood | PASS | no new failure vs v15: autumn wood gathered per day median >= 1.5 x summer's (seed-days) | {"v15": {"autumn": {"max": 148.0, "median": 50.0, "min": 0.0, "n": 1792, "p10": 0.0, "p90": 129.0}, "summer": {"max": 55.0, "median": 0.0, "min": 0.0, "n": 1856, "p10": 0.0, "p90": 38.0}}, "v15_passed": true, "v16": {"autumn": {"max": 201.0, "median": 46.0, "min": 0.0, "n": 1792, "p10": 0.0, "p90": 109.0}, "summer": {"max": 58.0, "median": 0.0, "min": 0.0, "n": 1856, "p10": 0.0, "p90": 38.0}}, "v16_passed": true} |
+| H5 | Y5_autumn_work | PASS | no new failure vs v15: autumn adult work share at 12:00 median >= v11's autumn value - 0.05 | {"v15": {"floor": 0.40784549731918157, "max": 0.8273026315789473, "median": 0.6108350998056881, "min": 0.22539682539682537, "n": 64, "p10": 0.4347692012499315, "p90": 0.7421774193548387}, "v15_passed": true, "v16": {"floor": 0.40784549731918157, "max": 0.8535714285714285, "median": 0.5719246031746031, "min": 0.17567567567567569, "n": 64, "p10": 0.2671875539071934, "p90": 0.7671911421911422}, "v16_passed": true} |
+| H5 | Y6_trip_days | PASS | no new failure vs v15: days with wood trips per winter (of 7), median over seed-winters >= 4 | {"v15": {"max": 7.0, "median": 5.0, "min": 1.0, "n": 256, "p10": 2.5, "p90": 7.0}, "v15_passed": true, "v16": {"max": 7.0, "median": 5.0, "min": 1.0, "n": 256, "p10": 3.0, "p90": 7.0}, "v16_passed": true} |
+| H5 | Y6_trips | PASS | no new failure vs v15: wood trips per winter, median over seed-winters >= 20 | {"v15": {"max": 66.0, "median": 47.0, "min": 24.0, "n": 256, "p10": 37.0, "p90": 56.5}, "v15_passed": true, "v16": {"max": 73.0, "median": 47.0, "min": 20.0, "n": 256, "p10": 36.0, "p90": 58.0}, "v16_passed": true} |
+| H5 | Y10_night_in_shelter | PASS | no new failure vs v15: median >= 0.80 | {"v15": {"max": 1.0, "median": 1.0, "min": 0.9523809523809523, "n": 64, "p10": 0.9761904761904762, "p90": 1.0}, "v15_passed": true, "v16": {"max": 1.0, "median": 1.0, "min": 0.9473684210526315, "n": 64, "p10": 0.9794166666666666, "p90": 1.0}, "v16_passed": true} |
+| H5 | Y10_evening_near_hearth_median | PASS | no new failure vs v15: evening near-hearth share median >= 0.55 | {"v15": {"max": 0.9354838709677419, "median": 0.6566964285714285, "min": 0.3076923076923077, "n": 64, "p10": 0.38431372549019605, "p90": 0.8116071428571429}, "v15_passed": true, "v16": {"max": 0.8947368421052632, "median": 0.6975051975051976, "min": 0.4666666666666667, "n": 64, "p10": 0.523607427055703, "p90": 0.842625}, "v16_passed": true} |
+| H5 | Y11_home_distance_median | PASS | no new failure vs v15: day-10 home distance median <= 8.1 | {"v15": {"max": 10.333333333333334, "median": 6.892857142857142, "min": 4.357142857142857, "n": 64, "p10": 5.511904761904763, "p90": 9.026190476190477}, "v15_passed": true, "v16": {"max": 12.225806451612904, "median": 7.0023939808481535, "min": 2.1794871794871793, "n": 64, "p10": 4.706878306878306, "p90": 9.695121951219512}, "v16_passed": true} |
+| H5 | Y11_t6a_10 | PASS | no new failure vs v15: cumulative actionable idle-breach share median <= 1% | {"v15": {"max": 0.0029717682020802376, "median": 0.0008722738408342659, "min": 0.0, "p10": 0.00024764735017335313, "p90": 0.002228826151560178}, "v15_passed": true, "v16": {"max": 0.003771551724137931, "median": 0.0007343955546290372, "min": 0.0, "p10": 0.0, "p90": 0.0020584930095467312}, "v16_passed": true} |
+| H5 | Y11_social_10_median | PASS | no new failure vs v15: social completions per agent-day median >= 0.40 | {"v15": {"max": 0.6935984154863784, "median": 0.6469288481461133, "min": 0.5471249571780046, "n": 64, "p10": 0.6021708865609914, "p90": 0.6726708770880825}, "v15_passed": true, "v16": {"max": 0.8206896551724138, "median": 0.6653386088349691, "min": 0.5609169072180905, "n": 64, "p10": 0.609945632281188, "p90": 0.7532012389596725}, "v16_passed": true} |
+| H5 | Y11_t6a_120 | PASS | no new failure vs v15: cumulative actionable idle-breach share median <= 1% | {"v15": {"max": 0.012845550355230816, "median": 0.008595844538293523, "min": 0.005735185534969178, "p10": 0.006973135200069469, "p90": 0.011911672428606725}, "v15_passed": true, "v16": {"max": 0.011985380062709883, "median": 0.008684384819579345, "min": 0.005856016887118465, "p10": 0.007322632654965143, "p90": 0.011167438835706787}, "v16_passed": true} |
+| H5 | Y11_social_120_median | PASS | no new failure vs v15: social completions per agent-day median >= 0.40 | {"v15": {"max": 0.8583770633820698, "median": 0.8205683413110019, "min": 0.7619149311324181, "n": 64, "p10": 0.7964866773910195, "p90": 0.8429496057274937}, "v15_passed": true, "v16": {"max": 0.8582062264939406, "median": 0.8174332302287586, "min": 0.7680985838952011, "n": 64, "p10": 0.7927701091526059, "p90": 0.8414567814863037}, "v16_passed": true} |
+| H5 | Y9_work_1200 | PASS | no new failure vs v15: adult work share at 12:00 median >= 0.35 (spring-autumn) | {"v15": {"max": 0.7142857142857143, "median": 0.3076923076923077, "min": 0.03571428571428571, "n": 64, "p10": 0.1123931623931624, "p90": 0.51}, "v15_passed": false, "v16": {"max": 0.72, "median": 0.37037037037037035, "min": 0.04, "n": 64, "p10": 0.14814814814814814, "p90": 0.6221153846153846}, "v16_passed": true} |
+| H5 | Y9_work_1500 | FAIL | no new failure vs v15: adult work share at 15:00 median >= 0.25 (spring-autumn) | {"v15": {"max": 0.7333333333333333, "median": 0.4166666666666667, "min": 0.06451612903225806, "n": 64, "p10": 0.1646273637374861, "p90": 0.6280834914611008}, "v15_passed": true, "v16": {"max": 0.4473684210526316, "median": 0.2406896551724138, "min": 0.0, "n": 64, "p10": 0.03367816091954023, "p90": 0.41166666666666674}, "v16_passed": false} |
+| H5 | Y9_idle_1200 | PASS | no new failure vs v15: idle share of all residents at 12:00 median <= 0.60 (spring-autumn) | {"v15": {"max": 0.8809523809523809, "median": 0.6190476190476191, "min": 0.35714285714285715, "n": 64, "p10": 0.5, "p90": 0.7619047619047619}, "v15_passed": false, "v16": {"max": 0.8333333333333334, "median": 0.6167964404894327, "min": 0.3939393939393939, "n": 64, "p10": 0.4722689075630252, "p90": 0.7722872340425533}, "v16_passed": false} |
+| H5 | X3_b_spread_within_severity | PASS | no new failure vs v15: normal and harsh winters each: the most common dark-night count <= 0.75 of them | {"v15": {"harsh": {"histogram": {"0": 1, "1": 3, "2": 16, "3": 16, "4": 10}, "mode_share": 0.34782608695652173, "n": 46}, "normal": {"histogram": {"0": 48, "1": 29, "2": 21, "3": 9, "4": 1}, "mode_share": 0.4444444444444444, "n": 108}}, "v15_passed": true, "v16": {"harsh": {"histogram": {"0": 1, "1": 1, "2": 20, "3": 26, "4": 12}, "mode_share": 0.43333333333333335, "n": 60}, "normal": {"histogram": {"0": 46, "1": 24, "2": 26, "3": 11}, "mode_share": 0.42990654205607476, "n": 107}}, "v16_passed": true} |
+| H5 | X3_c_no_dark_night | PASS | no new failure vs v15: share of seed-winters with no dark night in [0.15, 0.60] | {"v15": {"n": 256, "share": 0.5625}, "v15_passed": true, "v16": {"n": 256, "share": 0.5}, "v16_passed": true} |
+| H5 | X3_d_two_or_more | PASS | no new failure vs v15: share of seed-winters with >= 2 dark nights in [0.10, 0.50] | {"v15": {"n": 256, "share": 0.2890625}, "v15_passed": true, "v16": {"n": 256, "share": 0.375}, "v16_passed": true} |
+| H5 | X3_e_first_night_spread | PASS | no new failure vs v15: first dark night on >= 4 distinct nights, <= 0.50 of them on the seventh | {"v15": {"distinct_first_nights": 4, "histogram": {"4": 11, "5": 27, "6": 36, "7": 38}, "n": 112, "seventh_share": 0.3392857142857143}, "v15_passed": true, "v16": {"distinct_first_nights": 4, "histogram": {"4": 12, "5": 37, "6": 47, "7": 32}, "n": 128, "seventh_share": 0.25}, "v16_passed": true} |
+| H5 | X4_retarget_share | PASS | no new failure vs v15: winter wood_retargets / winter wood trips, median over seed-winters <= 0.10 | {"v15": {"max": 0.17647058823529413, "median": 0.05741758241758242, "min": 0.0, "n": 256, "p10": 0.0, "p90": 0.10526315789473684}, "v15_passed": true, "v16": {"max": 0.16666666666666666, "median": 0.05555555555555555, "min": 0.0, "n": 256, "p10": 0.0, "p90": 0.10724554341575618}, "v16_passed": true} |
+| H5 | X4_normal_gathered | PASS | no new failure vs v15: median winter wood gathered over normal-severity seed-winters >= 40.5 | {"v15": {"floor": 40.5, "max": 57.0, "median": 48.0, "min": 36.0, "n": 108, "p10": 42.0, "p90": 53.3}, "v15_passed": true, "v16": {"floor": 40.5, "max": 63.0, "median": 47.0, "min": 34.0, "n": 107, "p10": 40.0, "p90": 56.0}, "v16_passed": true} |
+| H6 | parameter_means | PASS | every parameter's mean within +-10 % of its range centre | {"n": 128, "outside": []} |
+| H6 | climate_shares | PASS | each climate's share within +-0.10 of its CLIMATE_PERMILLE weight | {"n": 128, "shares": [0.375, 0.2578125, 0.3671875], "weights": [333, 334, 333]} |
+| H6 | counted | PASS | deadwood shortfalls and berry-repair swaps counted (explained in the report) | {"berry_swap_seeds": 0, "deadwood_shortfall_seeds": 0} |
+
+## Exposure deaths per seed-winter, by severity
+
+| Severity | Seed-winters | Mean deaths | Share with a death | Dark nights (mean) | Deaths (count: winters) |
+|---|---:|---:|---:|---:|---|
+| mild | 89 | 0.000 | 0.000 | 0.10 | {"0": 89} |
+| normal | 107 | 0.374 | 0.178 | 1.02 | {"0": 88, "1": 9, "2": 3, "3": 4, "4": 2, "5": 1} |
+| harsh | 60 | 2.067 | 0.817 | 2.78 | {"0": 11, "1": 14, "2": 15, "3": 9, "4": 5, "5": 4, "6": 1, "7": 1} |
+
+| Dark nights in the winter | Seed-winters | Mean deaths | Max deaths |
+|---:|---:|---:|---:|
+| 0 | 128 | 0.000 | 0 |
+| 1 | 32 | 0.000 | 0 |
+| 2 | 47 | 1.149 | 5 |
+| 3 | 37 | 1.703 | 5 |
+| 4 | 12 | 3.917 | 7 |
+
+## World variety (H6)
+
+| Parameter | Range | Centre | Mean | Min | Max | Distinct |
+|---|---|---:|---:|---:|---:|---:|
+| starting_agents | [18, 30] | 24.0 | 23.953 | 18 | 30 | 13 |
+| berry_bushes | [9, 15] | 12.0 | 12.211 | 9 | 15 | 7 |
+| berry_capacity | [3, 5] | 4.0 | 4.109 | 3 | 5 | 3 |
+| deadwood_spots | [14, 26] | 20.0 | 19.766 | 14 | 26 | 13 |
+| deadwood_capacity | [5, 7] | 6.0 | 6.117 | 5 | 7 | 3 |
+| forest_permille | [220, 380] | 300.0 | 294.242 | 221 | 380 | 90 |
+| food_regen_permille | [850, 1150] | 1000.0 | 1004.352 | 851 | 1150 | 108 |
+
+Climate shares {"mild": 0.375, "normal": 0.2578125, "harsh": 0.3671875} (weights [333, 334, 333]); deadwood shortfalls in 0 seeds; berry-repair swaps in 0 seeds.

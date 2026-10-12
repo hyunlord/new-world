@@ -2038,3 +2038,22 @@ Round 1 H3 detail — v16_neutral: share 0.195, median 0, max share 0.119, means
 Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means mild/normal/harsh 0.06/0.30/1.54, starvation+dehydration day-120 median/max 0/0; v16: share 0.242, median 0, max share 0.182, means mild/normal/harsh 0.06/0.32/2.24, starvation+dehydration day-120 median/max 0/0. v15 guard of the round-2 binary (`p10-3_round2_v15_guard_*`) equals Part 0 on every shared value (only `schema_version`). H1 here takes the legacy pin and the v8–v15 reproductions as receipts (Part 0 and the guards; re-checked in Part 7).
 
 **Frozen knobs (round 2):** exposure `damage_per_cold_hour` [child 10, adult 4, elder 5], `heal_block_hours` 2; `SustainRule::utilization` 0.78 in `game_v16_neutral` and `game_v16`; `SustainRule::capacity_weighted` in `game_v16`; variety ranges and `CLIMATE_PERMILLE` as in 7.1 (unchanged). Strikes used: 2 of 3.
+
+**Frozen commit:** `58119582` (`581195820e8e6e79924f0583339da077bfc8d9f7`, Part 3, 17:06 KST). Parts 4–6 run `probe_frozen` / `wm_frozen` built from it (`probe_frozen` is byte-identical to the round-2 probe `probe_p3r2`); recordings carry `WORLDSIM_GIT_SHA` = that commit.
+
+### Part 4 — held-out health (frozen commit; seeds 64–127 × 10, 32–95 × 120)
+
+`p10-4_heldout_v15_*` (H5's reference, `probe_frozen`) equals Part 0's v15 held-out runs on every shared value (6,214 / 58,731; only `schema_version`). Determinism twins pass in all six runs.
+
+| Scene | H1 | H2 | H3 | H4 | H5 | H6 (tuning + held-out, 128 seeds) |
+|---|---|---|---|---|---|---|
+| v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| v16 | PASS | PASS | PASS | PASS | FAIL: Y9_work_1500 (reported: H5 is judged on v16_neutral) | PASS |
+
+H3 detail — v16_neutral: share 0.207, median 0, max share 0.154, means mild/normal/harsh 0.00/0.32/2.09 (n 102/108/46), starvation+dehydration day-120 median/max 0/0; v16: share 0.266, median 0, max share 0.176, means mild/normal/harsh 0.00/0.37/2.07 (n 89/107/60), starvation+dehydration day-120 median/max 0/0.
+
+H5 for v16 (reported only; section 10 judges v16_neutral): every clause passes except Pass 6 Y9 `work_1500` (adult work share at 15:00, median 0.241 vs ≥ 0.25; v15 on the same seeds 0.417; tuning-seed round 2 gave 0.254). v16_neutral's is 0.388. The drop comes with the world variety, not with exposure.
+
+H6 (128 seeds of game_v16): parameter means berry_bushes 12.21 (centre 12), berry_capacity 4.11 (centre 4), deadwood_capacity 6.12 (centre 6), deadwood_spots 19.77 (centre 20), food_regen_permille 1004.35 (centre 1000), forest_permille 294.24 (centre 300), starting_agents 23.95 (centre 24); climate shares harsh 0.367, mild 0.375, normal 0.258 (weights 0.333 / 0.334 / 0.333); deadwood shortfalls 0 seeds; berry-repair swaps 0 seeds.
+
+Worldgen counts (H6 "counted and explained"): none of the 128 judged game_v16 seeds and none of the 128 game_v15 seeds needed a berry-repair swap or placed fewer deadwood spots than asked. A wider count on one-day worlds of seeds 1000–2999 (`probe_frozen`, measurement only): berry-repair swaps in 4 / 2,000 game_v15 seeds (1–3 swaps) and 16 / 2,000 game_v16 seeds (1–8 swaps; more where the forest share is low and up to 15 bushes need forest edges), deadwood shortfalls in 0 / 2,000 of either — the 5–18 band holds far more than 26 tiles two apart.
