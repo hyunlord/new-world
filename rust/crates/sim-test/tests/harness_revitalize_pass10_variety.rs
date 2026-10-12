@@ -163,7 +163,10 @@ fn harness_variety_deterministic() {
 fn harness_variety_worldgen_accepts_every_drawn_world() {
     // Review round 1, L12: the live game builds a game_v16 world for any seed;
     // worldgen must place every requested bush and deadwood spot without
-    // panicking. Seeds 0..400 (no judged or pilot meaning at tick 0).
+    // panicking. Seeds 0..400 (no judged or pilot meaning at tick 0). A deadwood
+    // shortfall is a legal, counted outcome (H6), but none occurs with the
+    // frozen ranges, so it is treated here as a regression on purpose (review
+    // round 2, L5): a change that makes one appear should be looked at.
     let failures: Vec<u64> = (0..400u64)
         .filter(|&seed| {
             let v = WorldVariety::draw(seed);

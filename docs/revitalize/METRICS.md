@@ -2066,11 +2066,11 @@ Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means
 | v16_neutral | PASS | PASS | PASS | PASS | PASS¹ | – |
 | v16 | PASS | PASS | PASS | PASS | FAIL: Y9_work_1500 (reported: H5 is judged on v16_neutral) | PASS |
 
-¹ One population clause passes by the "no new failure" rule: Y9 `work_1200` (v16_neutral 0.344, v15 0.308, both below 0.35; v16_neutral is the better). In round 2 the same rule passes Y9 `idle_1200` (0.620 vs v15 0.634, both above 0.60). From Part 7 the rule needs v16 no worse than v15 in the requirement's direction (review round 1, L1); both cases meet it.
+¹ Population clauses that pass by the "no new failure" rule (both scenes fail the bound, v16 no worse than v15 on the bounded statistic; from Part 7 the statistic and direction come from an explicit per-clause table, review rounds 1 L1 and 2 M1). Every escape in every run is a Pass 6 Y9 median: round 1 v16_neutral `idle_1200` 0.619 vs v15 0.634 and `work_1200` 0.3077 vs 0.3077 (an exact tie); round 1 v16 `idle_1200` 0.631 vs 0.634 and `work_1200` 0.333 vs 0.308; round 2 v16_neutral `idle_1200` 0.620 vs 0.634; round 2 v16 `idle_1200` 0.621 vs 0.634; held-out v16_neutral `work_1200` 0.344 vs 0.308; held-out v16 `idle_1200` 0.617 vs 0.619; the timing runs as round 2.
 
 H3 detail — v16_neutral: share 0.207, median 0, max share 0.154, means mild/normal/harsh 0.00/0.32/2.09 (n 102/108/46), starvation+dehydration day-120 median/max 0/0; v16: share 0.266, median 0, max share 0.176, means mild/normal/harsh 0.00/0.37/2.07 (n 89/107/60), starvation+dehydration day-120 median/max 0/0.
 
-H5 for v16 (reported only; section 10 judges v16_neutral): every clause passes except Pass 6 Y9 `work_1500` (adult work share at 15:00, median 0.241 vs ≥ 0.25; v15 on the same seeds 0.417; tuning-seed round 2 gave 0.254). v16_neutral's is 0.388. The drop comes with the world variety, not with exposure.
+H5 for v16 (reported only; section 10 judges v16_neutral): every clause passes, or escapes as no worse than v15 (Y9 `idle_1200`, footnote ¹), except Pass 6 Y9 `work_1500` (adult work share at 15:00, median 0.241 vs ≥ 0.25; v15 on the same seeds 0.417; tuning-seed round 2 gave 0.254). v16_neutral's is 0.388. The drop comes with the world variety, not with exposure.
 
 H6 (128 seeds of game_v16): parameter means berry_bushes 12.21 (centre 12), berry_capacity 4.11 (centre 4), deadwood_capacity 6.12 (centre 6), deadwood_spots 19.77 (centre 20), food_regen_permille 1004.35 (centre 1000), forest_permille 294.24 (centre 300), starting_agents 23.95 (centre 24); climate shares harsh 0.367, mild 0.375, normal 0.258 (weights 0.333 / 0.334 / 0.333); deadwood shortfalls 0 seeds; berry-repair swaps 0 seeds.
 
@@ -2099,7 +2099,7 @@ Attribution (Δη²): exposure (v16_neutral − v15; includes round 2's tighter 
 
 Deaths per episode by day 120 (mean of 112): game_v15 old age 72.87, exposure 0.00, starvation + dehydration 0.00; game_v16_neutral old age 70.74, exposure 2.00, starvation + dehydration 0.00; game_v16 old age 64.67, exposure 2.32, starvation + dehydration 0.00.
 
-11.5 (declared adjustment): not used. Scratch recordings of game_v16 on seeds 30000–30111 (outside every judged and pilot set; a scratch recorder outside the clone reading the ranges from an environment variable) with 7.1's ranges, with the wood ranges widened by the allowed step (deadwood spots 12–28, capacity 3–9) and with every range widened by its step plus climate weights [383, 234, 383] gave wood η² 0.073 / 0.094 / 0.111 (food 0.331 / 0.327 / 0.524, alive 0.960 / 0.960 / 0.976): no allowed variety change brings wood near 0.30, so a second pilot could not change H7's verdict and was not recorded (see DECISIONS).
+11.5 (declared adjustment): not used. Scratch recordings of game_v16 on seeds 30000–30111 (outside every judged and pilot set; a scratch recorder outside the clone reading the ranges from an environment variable) with 7.1's ranges, with the wood ranges widened by the allowed step (deadwood spots 12–28, capacity 3–9) and with every range widened by its step plus climate weights [383, 234, 383] (this third set exceeds the climate step, −100 against ±50: an over-wide check, not an allowed set) gave wood η² 0.073 / 0.094 / 0.111 (food 0.331 / 0.327 / 0.524, alive 0.960 / 0.960 / 0.976). None of the three tested sets, the widest beyond the allowed step, came near 0.30, so a second pilot was judged unable to change H7's verdict and was not recorded (see DECISIONS).
 
 ### Part 4 — H10 timing (back to back, 17:58–18:12 KST, nothing else heavy; `probe_frozen`, tuning sets with twins)
 
@@ -2128,3 +2128,5 @@ Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 
 **H8: FAIL** — of {rain, cold_snap, rot_wood} only rot_wood has deaths effect > 0 in ≥ 0.25 of seeds (0.56) with mean ≥ 0.25 (+1.18); rain's mean is −0.59 (0 seeds positive) and cold_snap's +0.16 (0.06 of seeds). gift_wood's mean deaths effect −0.63 ≤ 0 holds. Rain keeps the fire out for its 13 hours but burns no wood, so the saved wood keeps a later night lit and breaks the streak that would have killed (its dark-night effect is still +0.27); a two-night cold snap mostly costs hp that a fed village heals.
 
 VRF / mean effect / sign stability / divergence tables: `docs/revitalize/probe/p10-6_forks/fork_metrics.md`.
+
+Note (review round 2, L6): the probe's reported `food_supply_per_day` (`probe/long_run.rs`) counts bushes unweighted; the game_v16 birth gate and store target use the capacity-weighted estimate (`min(cap, 4) / 4` per bush). The difference is reporting only.

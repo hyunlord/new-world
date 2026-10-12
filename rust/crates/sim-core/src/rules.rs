@@ -409,7 +409,8 @@ impl WorldRules {
     }
 
     /// [`Self::game_v16`] for given hidden parameters; `WorldVariety::NEUTRAL`
-    /// gives `game_v16_neutral()` exactly.
+    /// gives `game_v16_neutral()` except `capacity_weighted` (which has no
+    /// effect where every bush holds 4, so the worlds are digest-identical).
     pub const fn game_v16_with(variety: &crate::variety::WorldVariety) -> Self {
         let mut rules = Self::game_v16_neutral();
         if let Some(mut firewood) = rules.society.firewood {
@@ -420,8 +421,9 @@ impl WorldRules {
             seasons.regen_permille = variety.scale_regen(seasons.regen_permille);
             rules.seasons = Some(seasons);
         }
-        // Part 3 round 1: the birth gate weighs bushes by their capacity
-        // (no effect where every bush holds 4, i.e. the neutral world).
+        // Part 3 round 1: the supply estimate behind the birth gate and the
+        // winter-prep store target weighs bushes by their capacity (no effect
+        // where every bush holds 4, i.e. the neutral world).
         if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
             rules.society.birth
         {

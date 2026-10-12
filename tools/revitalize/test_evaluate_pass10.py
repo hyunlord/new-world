@@ -7,7 +7,8 @@ from pathlib import Path
 import test_evaluate_pass6 as p6
 import test_evaluate_pass8 as p8t
 from evaluate_pass4 import EvidenceError, Round, Seed
-from evaluate_pass10 import RANGES, cold_night_tick, direction, h2, h3, h6, load_round, main, mean_weights, no_worse
+from evaluate_pass10 import (ESCAPE_STAT, RANGES, cold_night_tick, h2, h3, h6, load_round, main, mean_weights, no_worse,
+                              population_clause)
 
 RULES10 = {**p8t.RULES, "keyed_draws": 1, "noise_replicate": 0}
 NEUTRAL = {"starting_agents": 24, "berry_bushes": 12, "berry_capacity": 4, "deadwood_spots": 20,
@@ -134,18 +135,33 @@ class EvaluatorTenTests(unittest.TestCase):
         self.assertFalse(result["clauses"]["climate_shares"]["passed"])
 
     def test_population_escape_needs_v16_no_worse_than_v15(self) -> None:
-        # Review round 1, L1.
-        work = lambda m, ok: {"passed": ok, "observed": {"median": m}, "requirement": "adult work share at 12:00 median >= 0.35"}
-        idle = lambda m, ok: {"passed": ok, "observed": {"median": m}, "requirement": "idle share median <= 0.60"}
-        self.assertEqual((direction(work(0, 0)["requirement"]), direction(idle(0, 0)["requirement"])), (1, -1))
-        self.assertTrue(no_worse(work(.34, False), work(.31, False)))
-        self.assertFalse(no_worse(work(.30, False), work(.31, False)))
-        self.assertTrue(no_worse(idle(.62, False), idle(.63, False)))
-        self.assertFalse(no_worse(idle(.64, False), idle(.63, False)))
-        self.assertIsNone(direction("median in [0.70, 0.97] and every seed >= 0.50 and <= 1"))
-        nested = {"passed": False, "observed": {"autumn": {"median": 2.0}, "summer": {"median": 1.0}},
-                  "requirement": "autumn wood gathered per day median >= 1.5 x summer's"}
-        self.assertTrue(no_worse(nested, {**nested, "observed": {"autumn": {"median": 1.5}}}))
+        # Review round 1, L1, and round 2, M1: the statistic and direction come from ESCAPE_STAT.
+        q = lambda med, lo=0.0: {"median": med, "min": lo, "max": 1.0, "n": 10}
+        failing = lambda obs, req="r": {"passed": False, "observed": obs, "requirement": req}
+        self.assertTrue(no_worse("Y9_work_1200", failing(q(.34)), failing(q(.31))))
+        self.assertFalse(no_worse("Y9_work_1200", failing(q(.30)), failing(q(.31))))
+        self.assertTrue(no_worse("Y9_idle_1200", failing(q(.62)), failing(q(.63))))
+        self.assertFalse(no_worse("Y9_idle_1200", failing(q(.64)), failing(q(.63))))
+        # Y4 every_seed bounds the minimum: a better median with a worse minimum does not escape.
+        self.assertFalse(no_worse("Y4_every_seed", failing(q(.9, .30)), failing(q(.5, .35))))
+        self.assertTrue(no_worse("Y4_every_seed", failing(q(.5, .36)), failing(q(.9, .35))))
+        # Y5 autumn_wood bounds autumn - 1.5 x summer, not the autumn median alone.
+        wood = lambda a, s: failing({"autumn": {"median": a}, "summer": {"median": s}})
+        self.assertFalse(no_worse("Y5_autumn_wood", wood(2.0, 1.5), wood(1.5, 1.0)))
+        self.assertTrue(no_worse("Y5_autumn_wood", wood(1.4, 1.0), wood(1.5, 1.1)))
+        # Two-sided or compound clauses never escape; unknown clauses are an error.
+        share = lambda x: failing({"share": x, "n": 10})
+        self.assertIsNone(ESCAPE_STAT["X3_d_two_or_more"])
+        self.assertFalse(no_worse("X3_d_two_or_more", share(.3), share(.6)))
+        with self.assertRaises(EvidenceError):
+            no_worse("Y7_winter_lit_median", failing(q(.5)), failing(q(.4)))
+        # The verdict itself: both fail and v16 worse -> FAIL; both fail and v16 no worse -> PASS.
+        worse = population_clause("Y9_work_1200", failing(q(.30), ">= 0.35"), failing(q(.31), ">= 0.35"))
+        better = population_clause("Y9_work_1200", failing(q(.33), ">= 0.35"), failing(q(.31), ">= 0.35"))
+        self.assertEqual((worse["passed"], better["passed"]), (False, True))
+        self.assertTrue(better["observed"]["escaped_as_no_worse_than_v15"])
+        passing = population_clause("Y9_work_1200", {"passed": True, "observed": q(.4), "requirement": "r"}, failing(q(.31)))
+        self.assertTrue(passing["passed"])
 
     def test_per_seed_weights_never_come_from_the_rules_block(self) -> None:
         r = fake_round([run(0, 10, info=seed_info(weights=(500, 350, 150))),

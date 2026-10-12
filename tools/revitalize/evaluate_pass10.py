@@ -32,9 +32,11 @@ which describes the first seed only.
   `evaluate_pass8.evaluate` on both scenes. Per-seed clauses of Pass 6 Y10,
   Y11, Y12 pass when this run's failing seeds number at most v15's + 1;
   population clauses of Y4, Y5, Y6, Y9, Y10, Y11 and Pass 8 X3 (b)-(e), X4
-  pass when they pass, or when v15 fails them too and v16's median is no
-  worse than v15's in the requirement's direction (review round 1, L1: no
-  escape for a clause whose direction cannot be read). Y2, Y3, Y7, Y8 and
+  pass when they pass, or when v15 fails them too and v16 is no worse than
+  v15 on the statistic the clause bounds, in its better direction
+  (`ESCAPE_STAT`: e.g. Y4 `every_seed` compares minima, Y5 `autumn_wood`
+  autumn - 1.5 x summer; X3 (c)-(e) are two-sided or compound and never
+  escape; review rounds 1 L1 and 2 M1). Y2, Y3, Y7, Y8 and
   X3 (a), (f) are reported only (Y3's population clauses are replaced by H2;
   the reported Y3 births-minus-deaths margin uses Pass 4's `total_deaths`,
   which excludes exposure deaths).
@@ -252,14 +254,7 @@ def h5(short: Round, long: Round, v15_short: Round | None, v15_long: Round | Non
     for name in H5_PER_SEED:
         clauses[name] = p8.per_seed_clause(name, entries[name], ref_per_seed)
 
-    def population(name: str, mine: dict, theirs: dict | None) -> dict:
-        if theirs is None:
-            return clause(mine["passed"], {"v16": mine["observed"]}, f"{mine['requirement']} (no v15 reference)")
-        escape = not mine["passed"] and not theirs["passed"] and no_worse(mine, theirs)
-        return clause(mine["passed"] or escape,
-                      {"v16": mine["observed"], "v16_passed": mine["passed"], "v15_passed": theirs["passed"],
-                       "v15": theirs["observed"], "escaped_as_no_worse_than_v15": escape},
-                      f"no new failure vs v15 (v16 no worse than v15 when both fail): {mine['requirement']}")
+    population = population_clause
 
     def ref_clause(group: str, key: str) -> dict | None:
         return ref_targets[group]["clauses"].get(key) if ref_targets else None
@@ -268,11 +263,11 @@ def h5(short: Round, long: Round, v15_short: Round | None, v15_long: Round | Non
         if key.startswith(H5_POPULATION_PREFIXES):
             clauses[key] = population(key, item, ref_clause("X5", key))
     for key, item in targets["Y9"]["clauses"].items():
-        clauses[f"Y9_{key}"] = population(key, item, ref_clause("Y9", key))
+        clauses[f"Y9_{key}"] = population(f"Y9_{key}", item, ref_clause("Y9", key))
     for key in H5_X3:
-        clauses[f"X3_{key}"] = population(key, targets["X3"]["clauses"][key], ref_clause("X3", key))
+        clauses[f"X3_{key}"] = population(f"X3_{key}", targets["X3"]["clauses"][key], ref_clause("X3", key))
     for key, item in targets["X4"]["clauses"].items():
-        clauses[f"X4_{key}"] = population(key, item, ref_clause("X4", key))
+        clauses[f"X4_{key}"] = population(f"X4_{key}", item, ref_clause("X4", key))
     reported = {"X2": targets["X2"], "X3_a_r2": targets["X3"]["clauses"]["a_r2"],
                 "X3_f_severity_shares": targets["X3"]["clauses"]["f_severity_shares"],
                 "Y7_Y8": {k: v for k, v in targets["X5"]["clauses"].items() if k.startswith(("Y7_", "Y8_"))},
@@ -284,35 +279,63 @@ def h5(short: Round, long: Round, v15_short: Round | None, v15_long: Round | Non
     return target(clauses), reported
 
 
-def direction(requirement: str) -> int | None:
-    """+1 when larger is better (the requirement bounds a value from below), -1 when smaller
-    is better, None when the text has no single direction."""
-    lower, upper = ">=" in requirement or "≥" in requirement, "<=" in requirement or "≤" in requirement
-    if lower and not upper:
-        return 1
-    if upper and not lower:
-        return -1
-    return None
+# H5's "no worse than v15" test (review round 1, L1; round 2, M1): for every population
+# clause, the statistic its bound is on and the better direction (+1 larger is better, -1
+# smaller is better). None = the clause is two-sided or compound and never escapes. A
+# population clause missing here is an error, so a new clause cannot inherit a guess.
+ESCAPE_STAT = {
+    "Y4_store_share": ("median", 1), "Y4_every_seed": ("min", 1), "Y4_winter": ("median", 1),
+    "Y5_autumn_wood": ("autumn_minus_1.5_summer", 1), "Y5_autumn_work": ("median", 1),
+    "Y6_trip_days": ("median", 1), "Y6_trips": ("median", 1),
+    "Y9_work_1200": ("median", 1), "Y9_work_1500": ("median", 1), "Y9_idle_1200": ("median", -1),
+    "Y10_night_in_shelter": ("median", 1), "Y10_evening_near_hearth_median": ("median", 1),
+    "Y11_home_distance_median": ("median", -1), "Y11_t6a_10": ("median", -1), "Y11_t6a_120": ("median", -1),
+    "Y11_social_10_median": ("median", 1), "Y11_social_120_median": ("median", 1),
+    "X3_b_spread_within_severity": ("max_mode_share", -1),
+    "X3_c_no_dark_night": None, "X3_d_two_or_more": None, "X3_e_first_night_spread": None,
+    "X4_retarget_share": ("median", -1), "X4_normal_gathered": ("median", 1),
+}
 
 
-def median_of(observed) -> float | None:
-    """The median a population clause reports (directly or under its first quantile block)."""
-    if isinstance(observed, dict):
-        if isinstance(observed.get("median"), (int, float)):
-            return float(observed["median"])
-        for value in observed.values():
-            if isinstance(value, dict) and isinstance(value.get("median"), (int, float)):
-                return float(value["median"])
-    return None
+def escape_statistic(name: str, observed: dict) -> float | None:
+    """The statistic `ESCAPE_STAT[name]` reads from a clause's observed block (None when absent)."""
+    spec = ESCAPE_STAT[name]
+    if spec is None:
+        return None
+    stat, _ = spec
+    try:
+        if stat in ("median", "min"):
+            return float(observed[stat])
+        if stat == "autumn_minus_1.5_summer":
+            return float(observed["autumn"]["median"]) - 1.5 * float(observed["summer"]["median"])
+        if stat == "max_mode_share":
+            shares = [float(v["mode_share"]) for v in observed.values() if v.get("mode_share") is not None]
+            return max(shares) if shares else None
+    except (KeyError, TypeError, ValueError):
+        return None
+    raise EvidenceError(f"unknown escape statistic {stat}")
 
 
-def no_worse(mine: dict, theirs: dict) -> bool:
-    """Whether v16's failing clause is at least as good as v15's failing clause (review round 1, L1)."""
-    sign = direction(mine["requirement"])
-    a, b = median_of(mine["observed"]), median_of(theirs["observed"])
-    if sign is None or a is None or b is None:
+def no_worse(name: str, mine: dict, theirs: dict) -> bool:
+    """Whether v16's failing clause `name` is at least as good as v15's failing clause."""
+    if name not in ESCAPE_STAT:
+        raise EvidenceError(f"H5 population clause {name} has no escape rule")
+    spec = ESCAPE_STAT[name]
+    a, b = escape_statistic(name, mine["observed"]), escape_statistic(name, theirs["observed"])
+    if spec is None or a is None or b is None:
         return False
-    return sign * (a - b) >= 0
+    return spec[1] * (a - b) >= 0
+
+
+def population_clause(name: str, mine: dict, theirs: dict | None) -> dict:
+    """H5's verdict on population clause `name`: it passes, or v15 fails it too and v16 is no worse."""
+    if theirs is None:
+        return clause(mine["passed"], {"v16": mine["observed"]}, f"{mine['requirement']} (no v15 reference)")
+    escape = not mine["passed"] and not theirs["passed"] and no_worse(name, mine, theirs)
+    return clause(mine["passed"] or escape,
+                  {"v16": mine["observed"], "v16_passed": mine["passed"], "v15_passed": theirs["passed"],
+                   "v15": theirs["observed"], "escaped_as_no_worse_than_v15": escape},
+                  f"no new failure vs v15 (v16 no worse than v15 when both fail): {mine['requirement']}")
 
 
 def h6(rounds: list[Round], ranges: dict, climate: tuple[int, int, int]) -> tuple[dict, dict]:
