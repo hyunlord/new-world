@@ -215,11 +215,16 @@ impl SettlementSystem {
             .iter()
             .map(|(id, pos)| (*id, *pos))
             .collect();
-        let new_buildings: BuildingPosList = buildings
+        let mut new_buildings: BuildingPosList = buildings
             .iter()
             .filter(|(bid, _)| !self.seen_building_ids.contains(bid))
             .copied()
             .collect();
+        // Pass 9: under keyed draws new buildings are routed in BuildingId order
+        // (HashMap order otherwise; history records only).
+        if resources.rules.agent.keyed_draws {
+            new_buildings.sort_by_key(|(bid, _)| *bid);
+        }
         self.seen_building_ids = resources.building_registry.keys().copied().collect();
         (buildings, new_buildings)
     }
@@ -622,6 +627,7 @@ impl SettlementSystem {
         event_id: EventId,
         position: (u32, u32),
     ) {
+        let keyed = resources.rules.agent.keyed_draws;
         let mut best: Option<(SettlementId, u32)> = None;
         for (sid, anchor) in &self.formation_tiles {
             let d = chebyshev(*anchor, position);
@@ -631,6 +637,9 @@ impl SettlementSystem {
             match best {
                 None => best = Some((*sid, d)),
                 Some((_, bd)) if d < bd => best = Some((*sid, d)),
+                // Pass 9: under keyed draws an exact tie goes to the lower
+                // settlement id instead of the first in HashMap order.
+                Some((bs, bd)) if keyed && d == bd && *sid < bs => best = Some((*sid, d)),
                 _ => {}
             }
         }
@@ -831,9 +840,14 @@ impl SettlementSystem {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
             }
             if let Some(rule) = resources.rules.society.aging {
-                let life = crate::runtime::agent::aging::newborn_life(
-                    resources.world_seed, new_agent_id, tick, &rule,
-                );
+                let life = match lineage {
+                    Some(lineage) => crate::runtime::agent::aging::keyed_newborn_life(
+                        resources.world_seed, lineage.key, tick, resources.noise_replicate_for(tick), &rule,
+                    ),
+                    None => crate::runtime::agent::aging::newborn_life(
+                        resources.world_seed, new_agent_id, tick, &rule,
+                    ),
+                };
                 let _ = world.insert_one(entity, life);
             }
 

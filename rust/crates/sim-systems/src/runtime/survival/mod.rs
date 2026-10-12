@@ -193,6 +193,11 @@ impl RuntimeSystem for StarvationSystem {
             // Gray zone (need in (SAFE_NEED_CEILING, SATURATION)) → no-op.
         }
 
+        // Pass 9: under keyed draws deaths are booked in AgentId order (event
+        // ids, the per-tile causal ring and despawn order no longer follow hecs order).
+        if resources.rules.agent.keyed_draws {
+            deaths.sort_by_key(|row| row.1);
+        }
         for (entity, agent_id, position, reason) in deaths {
             despawn_agent(world, resources, entity, agent_id, position, reason, tick);
         }

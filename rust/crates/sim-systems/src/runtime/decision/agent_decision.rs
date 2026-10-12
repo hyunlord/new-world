@@ -913,6 +913,13 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Inventory>,
             Option<&SettlementMigrant>,
         )>();
+        // Pass 9: under keyed draws the agents are processed in AgentId order
+        // (first-come claims, tile decrements and event ids no longer follow
+        // hecs order); v8–v14 keep hecs order.
+        let mut rows: Vec<_> = query.iter().collect();
+        if resources.rules.agent.keyed_draws {
+            rows.sort_by_key(|(_, row)| row.1.id);
+        }
         for (
             entity,
             (
@@ -927,7 +934,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 mut inventory_opt,
                 migrant_marker,
             ),
-        ) in query.iter()
+        ) in rows
         {
             let tile_idx = pos.y * width + pos.x;
             let adult = !children.contains(&agent.id);
@@ -2055,16 +2062,19 @@ impl RuntimeSystem for AgentDecisionSystem {
         // whose spot emptied (or who lost their target), re-targeted below.
         let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         let mut wood_retarget: Vec<WoodRetarget> = Vec::new();
-        for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
-            .query::<(
-                &Agent,
-                &Position,
-                &AgentState,
-                Option<&SeekTarget>,
-                Option<&SettlementMigrant>,
-            )>()
-            .iter()
-        {
+        let mut post_query = world.query::<(
+            &Agent,
+            &Position,
+            &AgentState,
+            Option<&SeekTarget>,
+            Option<&SettlementMigrant>,
+        )>();
+        let mut post_rows: Vec<_> = post_query.iter().collect();
+        // Pass 9: the SeekTarget post-pass also runs in AgentId order under keyed draws.
+        if resources.rules.agent.keyed_draws {
+            post_rows.sort_by_key(|(_, row)| row.0.id);
+        }
+        for (e, (agent, pos, state, seek_opt, migrant_marker)) in post_rows {
             match state {
                 // Pass 4 — under the forage rule a gatherer heads to the bush the
                 // Forage arm chose, keeps a bush that still holds food, and is
@@ -2225,6 +2235,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
         }
+        drop(post_query); // release the World borrow before the deferred inserts
         // Pass 4 — re-target emptied bushes in AgentId order by the forage
         // choice rule (claims recomputed, the empty tile excluded); a gatherer
         // with no qualifying bush becomes Idle and drops its target.

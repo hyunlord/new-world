@@ -198,7 +198,7 @@ impl RuntimeSystem for ConstructionSystem {
         //     BuildingPlaced, reset all co-located Consuming agents to
         //     Idle, and despawn the site.
         let mut completed: Vec<_> = completed.into_iter().collect();
-        if resources.rules.society.shelter_planning.is_some() {
+        if resources.rules.society.shelter_planning.is_some() || resources.rules.agent.keyed_draws {
             completed.sort_by_key(|(_, (_, position))| *position);
         }
         for (site_entity, (blueprint, position)) in completed {
