@@ -19,7 +19,7 @@ population drifts across years, which only absolute time can see. The severity d
 variance where they repeat (A_train: η² within equal sequences 0.128 vs 0.163 for `food_stock`, 0.217 vs 0.306 for
 `adults_working`, 0.052 vs 0.696 for `cold_members`): cold members are mostly a function of the winter draw.
 Dataset v1 (game_v14) is not more diverse in this sense: A_test η² of `food_stock` rises (0.085 → 0.195) and
-OOD_long's (0.190 → 0.299), but the stock and population variables keep η² <= 0.06 and R²_abs >= 0.93, and
+OOD_long's (0.190 → 0.299), its R²_abs falls from 0.90 to 0.77, but the other stock and population variables keep η² <= 0.06 and R²_abs >= 0.93 on A_test (OOD_long `alive`: 0.89, η² 0.10), and
 `cold_members` stays at η² ≈ 0.6. A benchmark that wants to separate dynamics from the calendar needs seeds whose
 stock trajectories differ by much more than this (see WM1_1.md, "What this means for the research plan").
 
@@ -132,6 +132,8 @@ stock trajectories differ by much more than this (see WM1_1.md, "What this means
 | B_test | 0 | — | — | — | — | — | — | — | — |
 | OOD_long | 2 | 0.041 | 0.009 | 0.002 | 0.060 | 0.020 | 0.012 | 0.061 | 0.142 |
 | OOD_v12 | 32 | 0.105 | 0.022 | 0.013 | 0.160 | 0.030 | 0.023 | 0.120 | 0.281 |
+
+> The v1 test-split diagnostics below (A_test, B_test, OOD_v13, OOD_long) were first computed by the `--val-only` run committed with METRICS_1_1.md, i.e. before the pre-registration (descriptive; METRICS_1_1.md amendment 2, review round 1 finding 1).
 
 ## v1: R²_abs
 

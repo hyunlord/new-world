@@ -11,7 +11,7 @@
 | X5 (ridge_nosev) | **NONE** | NONE | T2_168/A_test: 0.223 vs 0.076 = 2.94×; T2_168/B_test: 0.227 vs 0.082 = 2.78×; T2_168/OOD_long: 0.241 vs 0.084 = 2.87×; T2any_168/A_test: 0.238 vs 0.132 = 1.80×; T2any_168/B_test: 0.244 vs 0.143 = 1.70×; T2any_168/OOD_long: 0.246 vs 0.136 = 1.82× |
 | X5 (m1_gru_main_r3) | **NONE** | NONE | T2_168/A_test: 0.275 vs 0.076 = 3.62×; T2_168/B_test: 0.272 vs 0.082 = 3.34×; T2_168/OOD_long: 0.277 vs 0.084 = 3.30×; T2any_168/A_test: 0.340 vs 0.132 = 2.58×; T2any_168/B_test: 0.348 vs 0.143 = 2.43×; T2any_168/OOD_long: 0.332 vs 0.136 = 2.45× |
 | X5 (ridge_action_nosev (extra)) | **NONE** | NONE | T2_168/A_test: 0.235 vs 0.076 = 3.09×; T2_168/B_test: 0.242 vs 0.082 = 2.97×; T2_168/OOD_long: 0.254 vs 0.084 = 3.03×; T2any_168/A_test: 0.243 vs 0.132 = 1.84×; T2any_168/B_test: 0.252 vs 0.143 = 1.76×; T2any_168/OOD_long: 0.252 vs 0.136 = 1.86× |
-| X6 | descriptive | — | see the severity table |
+| X6 | n/a (inputs missing) | — | — |
 
 ## X3 by task
 

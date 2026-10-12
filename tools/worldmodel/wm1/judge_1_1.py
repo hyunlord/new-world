@@ -204,7 +204,7 @@ def markdown(o: dict) -> str:
     for name, r in x["X5"].items():
         ev = "; ".join(f"{k}: {fmt(c['mean'])} vs {fmt(c['cal'])} = {fmt(c['ratio'], 2)}×" for k, c in r["cal_best"]["cells"].items())
         L.append(f"| X5 ({name}) | **{r['cal_best']['verdict']}** | {r['cal_best_fair']['verdict']} | {ev} |")
-    L.append("| X6 | descriptive | — | see the severity table |")
+    L.append("| X6 | descriptive | — | see the severity table |" if o["X"]["X6"] else "| X6 | n/a (inputs missing) | — | — |")
     L += ["", "## X3 by task", "", "| task | vs cal_best | vs cal_best_fair |", "|---|---|---|"]
     for t, r in x["X3_by_task"].items():
         L.append(f"| {t} | {r['cal_best']['verdict']} | {r['cal_best_fair']['verdict']} |")

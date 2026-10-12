@@ -193,3 +193,27 @@ Checked: leakage (train-only fits, val-only selection, rows <= s, no severity / 
 | 5 | MINOR | The no-future-reads test used single-start calls only. | `test_climatology.py` now also perturbs rows > s and calls with every start at once (passes). |
 | 6 | MINOR | `judge_1_1.py` X6 would crash with sev-on present and a sev-blind seed missing; a NaN model nMAE would pass into skill. | Fixed (X6 only when all three seeds exist; skill returns "—" for a missing / NaN model value). |
 | 7–10 | NOTE | cumulative-sum rounding in analog distances (not a leak; could flip exact near-ties); `assert`-based guards in `diversity_v1.py`; the failed first v0 diversity run computed in memory and wrote nothing; `food_stock` R²_abs on A_test is 0.899, just below the 0.9 flag. | Recorded; the 0.899 is stated in WM1_1.md. |
+
+### Round 2 (fresh `general-purpose` subagent, 14:21–14:28, on `db9c2538`)
+
+About 40 numbers of WM1_1.md recomputed from the raw JSON files; sections 3, 6 and 9 and every stated range match. Verdict: **no BLOCKING finding, three MAJOR, nine MINOR, three NOTEs**. All fixed in the next commit except where stated.
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| 1 | MAJOR | The headline "the calendar beats every WM-1 model at 24 h and 168 h" is false for M3 (0.056 at 24 h, better than `an5` / `an5_off`). | Restricted to M1 / M1b / ridges, with M3 named as the exception. |
+| 2 | MAJOR | Limitations said the DGX was unreachable "for a period" and jobs were re-run; neither is true. M3-noday "24 h numbers" do not exist. | Rewritten: unreachable from about 11:20 to the end of the run, four jobs lost and not re-run, consequences listed; DECISIONS E4.3 added. |
+| 3 | MAJOR | Single-seed fair-bar skill stated as a finding ("what the transformer does show", "real but small"). | Labelled seed 0 only, not pre-registered; 24 h fair skill −0.02 to +0.09 stated; noted that even three matching seeds would give WEAK, not KEEP. |
+| 4 | MINOR | Seed 0's val T2-24 is 0.0725, not 0.068. | Corrected (0.072; seed 2 is the best of the three on val). |
+| 5 | MINOR | Fair-bar range 0.78–0.93× / +0.07 should be 0.78–0.94× / +0.06. | Corrected. |
+| 6 | MINOR | "every stock keeps R²_abs >= 0.93" on v1 is wrong for food (0.77); "v1 did not move these numbers" understates the doubled food η². | Corrected in WM1_1.md and DIVERSITY.md. |
+| 7 | MINOR | The header said "before any test number" and "one amendment"; DIVERSITY.md's v1 test-split tables lacked the pre-registration label. | Header qualified (two amendments); label added to DIVERSITY.md. |
+| 8 | MINOR | DECISIONS E4.1 still promised re-runs. | E4.3 closes it. |
+| 9 | MINOR | The RUNLOG outage rows were uncommitted. | Committed. |
+| 10 | MINOR | KEEP is already excluded for X2 / X3 by seed 0. | Stated in the X table and summary. |
+| 11 | MINOR | X5's factor 1.7–3.6 is against `cal_best` only. | Both ranges given (1.2–2.1× against the fair bar). |
+| 12 | MINOR | "Even CalAbs beats the transformer at 24 h and 168 h" is wrong at 24 h. | Restricted to 168 h bench starts. |
+| 13 | NOTE | The dataset-v2 thresholds are post hoc. | Marked as heuristic targets. |
+| 14 | NOTE | The T3 / T3b event-task claims are post hoc and single-seed. | Marked so. |
+| 15 | NOTE | judge.md printed X6 as descriptive though it is empty. | `judge_1_1.py` prints "n/a (inputs missing)"; judge output regenerated. |
+
+Two rounds reached (GOAL_1_1.md 0.3.3); no third round.
