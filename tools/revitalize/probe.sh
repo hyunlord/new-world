@@ -8,7 +8,7 @@ probe_args=()
 while (( $# )); do
     case "$1" in
         --help|-h)
-            echo 'usage: probe.sh [--label LABEL] --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14 --seeds a..b --days N --sample-every N --workers 1..8 [--out .harness/evidence/revitalize/probe/DIR] [--check-determinism]'
+            echo 'usage: probe.sh [--label LABEL] --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14|game_v15 --seeds a..b --days N --sample-every N --workers 1..8 [--out .harness/evidence/revitalize/probe/DIR] [--check-determinism]'
             echo 'Default output and summary label: scene name. --out must remain under the raw ignored probe directory.'
             exit 0 ;;
         --label) label="${2:?missing label}"; shift 2 ;;

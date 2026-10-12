@@ -614,3 +614,19 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | The same four fields | struct-literal field addition (Part 0 test); the literal still equals `game_v13()` |
 | 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_seven_is_exactly_additive` → `schema_eight_is_exactly_additive`: version 7 → 8, key count + 2 | authorized probe schema move; every schema-7 key keeps its meaning |
 | 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v14` rejection becomes a `game_v14` acceptance; `game_v15` is rejected | flipped as section 4.2 asks; still pins the accepted scene list |
+
+## Pass 9
+
+| Part | Test | Change | Why it is allowed |
+|---|---|---|---|
+| 1 | `rust/crates/sim-core/src/rules.rs` test `legacy_has_no_opt_in_behavior` AgentRules literal | Add `keyed_draws: false` | struct-literal field addition with the legacy value; the assertion still pins `WorldRules::default().agent` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass7_frozen.rs` `pass6_v12_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v12()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v13()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass9_frozen.rs` `pass8_v14_literal` | Add `keyed_draws: false` (Part 0 test) | struct-literal field addition; the literal still equals `game_v14()` |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_eight_is_exactly_additive` → `schema_nine_is_exactly_additive`: version 8 → 9, key count unchanged (schema 9's two keys are in the summary's rules block) | authorized probe schema move; every schema-8 row key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/probe/pass8.rs` test `winter_fall_and_rules_block_read_the_rule` | `rules_block` takes the engine's resources (it reports the noise replicate); the legacy block gains `keyed_draws: 0, noise_replicate: 0`; v15 and a forked v15 checked | probe schema 9 move; the firewood assertions are unchanged |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v15` rejection becomes a `game_v15` acceptance; `game_v16` is rejected | flipped as section 4.2 asks, as Passes 6–8 did; still pins the accepted scene list |
+| 1 | `rust/crates/sim-test/src/worldmodel/export.rs` test `schema_two_hides_the_weather_and_lists_observable_fields` | `schema_version` 2 → 3 | authorized recorder schema move; every hidden-field and observable-field assertion is unchanged |
+| 1 | `tools/worldmodel/test_export_determinism.py` `test_v14_runs_and_worker_counts_are_byte_identical` | `schema_version` 2 → 3 | authorized recorder schema move; byte identity across runs and worker counts still asserted |
+| 1 | `tools/worldmodel/test_hidden_columns.py` `test_hidden_columns_equal_the_probe_keys` | `schema_version` 2 → 3 | authorized recorder schema move; the hidden columns still equal the probe keys row by row |

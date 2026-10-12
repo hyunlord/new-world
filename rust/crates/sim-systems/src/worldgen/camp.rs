@@ -141,6 +141,10 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 ),
             )
             .expect("newly spawned worldgen resident must exist");
+        // Pass 9: under keyed draws a founder's lineage key is its spawn index.
+        if engine.resources.rules.agent.keyed_draws {
+            let _ = engine.world.insert_one(entity, sim_core::components::Lineage::founder(cfg.seed, i));
+        }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {
             let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);

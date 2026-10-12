@@ -3,17 +3,21 @@
 Run: python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'
 """
 import json
+import os
 import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 
 import numpy as np
 
-from wm_data import load_episode, verify_episode
+from wm_data import load_episode, sha256_file, verify_episode
 
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE = ROOT / "docs/worldmodel/sample"
+BIN = Path(os.environ.get("WM_BIN", ROOT / "rust/target/release/worldsim_wm"))
+V1_CF = Path(os.environ.get("WM_DATA_ROOT", "/Users/rexxa/work/worldsim-wm-data")) / "v1/C_cf/game_v14_s12000_none"
 EPISODES = sorted(p for p in SAMPLE.iterdir() if (p / "meta.json").exists()) if SAMPLE.exists() else []
 
 
@@ -101,6 +105,58 @@ class LoaderTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_episode(copy)
             load_episode(copy, verify=False)
+
+
+@unittest.skipUnless(BIN.exists(), f"recorder not built: {BIN}")
+class SchemaThreeTests(unittest.TestCase):
+    """Pass 9: the loader reads schema 1 (the committed sample, above), schema 2
+    and schema 3 episodes."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        out = Path(self.tmp.name) / "wm"
+        subprocess.run([str(BIN), "--scene", "game_v15", "--seeds", "3..4", "--days", "1", "--every", "60",
+                        "--agents", "--workers", "1", "--out", str(out)],
+                       check=True, capture_output=True, env={**os.environ, "WORLDSIM_GIT_SHA": "test"})
+        self.path = out / "game_v15_s3_none"
+
+    def tearDown(self) -> None:
+        self.tmp.cleanup()
+
+    def test_schema_three_carries_lineage_keys_as_identity(self) -> None:
+        ep = load_episode(self.path)
+        self.assertEqual(ep.meta["schema_version"], 3)
+        self.assertIs(ep.meta["keyed_draws"], True)
+        self.assertIsNone(ep.meta["noise_fork"])
+        keys = ep.lineage_keys()
+        self.assertEqual(keys.dtype, np.uint64)
+        self.assertEqual(keys.shape, ep.arrays["agent_ids.npy"].shape)
+        self.assertTrue((keys != 0).all())
+        self.assertEqual(len(set(keys.tolist())), len(keys))
+        field = ep.meta["fields"]["agent_keys.npy"][0]
+        self.assertTrue(field["identity"] and field["hidden"])
+        self.assertEqual(ep.meta["observable_fields"]["agent_keys.npy"], [])
+
+    def test_schema_two_layout_still_loads(self) -> None:
+        # A schema-2 episode is a schema-3 one without the lineage keys and the
+        # two randomness meta keys (Pass 8's recorder wrote exactly that).
+        meta = json.loads((self.path / "meta.json").read_text())
+        (self.path / "agent_keys.npy").unlink()
+        for key in ("keyed_draws", "noise_fork"):
+            del meta[key]
+        del meta["arrays"]["agent_keys.npy"], meta["fields"]["agent_keys.npy"], meta["observable_fields"]["agent_keys.npy"]
+        meta["schema_version"] = 2
+        (self.path / "meta.json").write_text(json.dumps(meta))
+        ep = load_episode(self.path)
+        self.assertEqual(ep.meta["schema_version"], 2)
+        self.assertIsNone(ep.lineage_keys())
+        self.assertIn("agents.npy", ep.arrays)
+
+    @unittest.skipUnless(V1_CF.exists(), f"dataset v1 not present: {V1_CF}")
+    def test_recorded_schema_two_episode_loads(self) -> None:
+        ep = load_episode(V1_CF)
+        self.assertEqual(ep.meta["schema_version"], 2)
+        self.assertEqual(sha256_file(V1_CF / "global.npy"), ep.meta["arrays"]["global.npy"]["sha256"])
 
 
 if __name__ == "__main__":

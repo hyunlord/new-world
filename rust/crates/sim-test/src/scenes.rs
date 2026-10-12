@@ -65,6 +65,15 @@ pub fn game_v14_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 9 fixture: the v14 world under the v15 rules (keyed random draws,
+/// lineage keys, decisions in AgentId order; same balance as v14).
+pub fn game_v15_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v15(seed),
+        sim_core::rules::WorldRules::game_v15(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

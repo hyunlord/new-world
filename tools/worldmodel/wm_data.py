@@ -1,5 +1,5 @@
-"""Load a WorldSim recorded episode (recorder schema 1 of Pass 7 or schema 2 of
-Pass 8). numpy only.
+"""Load a WorldSim recorded episode (recorder schema 1 of Pass 7, schema 2 of
+Pass 8 or schema 3 of Pass 9). numpy only.
 
     from wm_data import load_episode
     ep = load_episode("/path/game_v14_s0_none")
@@ -14,6 +14,13 @@ and the day's fall), the settlement `wood_target` and every `latent.npy`
 column as hidden; `meta["observable_fields"]` lists the rest per array. A model
 or baseline that must not see the hidden weather reads `observable` only.
 
+Schema 3 adds, with `--agents`, `agent_keys.npy` (uint64 [N], aligned with
+`agent_ids.npy`): each agent's lineage key, 0 when it has none. It is an
+identity field (`"identity": true`, hidden), never an input: agents are
+matched across the arms of a fork by lineage key, never by `AgentId`
+(`ep.lineage_keys()`). `meta["keyed_draws"]` and `meta["noise_fork"]` (null or
+`{tick, replicate}`) describe the randomness of the run.
+
 `load_episode` verifies the sha256 of every array file against meta.json
 (raises ValueError on a mismatch) unless verify=False.
 """
@@ -26,7 +33,7 @@ from pathlib import Path
 
 import numpy as np
 
-SCHEMAS = (1, 2)
+SCHEMAS = (1, 2, 3)
 
 
 @dataclass
@@ -55,6 +62,10 @@ class Episode:
         if listed is not None:
             return list(listed)
         return [f["name"] for f in self.meta["fields"][array] if not f.get("hidden", False)]
+
+    def lineage_keys(self) -> np.ndarray | None:
+        """Lineage key per agent in `agent_ids.npy` order (schema 3 with agents), else None."""
+        return self.arrays.get("agent_keys.npy")
 
     def observable(self, array: str) -> np.ndarray:
         """`array` with its hidden columns dropped (last axis = `observable_names`)."""

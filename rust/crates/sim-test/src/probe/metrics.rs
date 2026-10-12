@@ -152,7 +152,7 @@ pub(crate) fn sample(engine: &SimEngine, scene: &str, seed: u64, initial_shelter
             .filter(|tile| !stamped_tiles.contains(*tile))
             .count();
     let mut row = json!({
-        "schema_version": 8, "scene": scene, "seed": seed,
+        "schema_version": 9, "scene": scene, "seed": seed,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "tick": engine.current_tick(), "day": engine.current_tick() as f64 / r.ticks_per_day as f64,
         "alive": alive, "births": r.tallies.births,

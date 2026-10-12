@@ -38,6 +38,10 @@ pub struct AgentRules {
     pub forage: Option<ForageRule>,
     /// Critical hunger or thirst interrupts a gathering trip (Pass 5). False = Pass 4 behaviour.
     pub preempt_gathering: bool,
+    /// Keyed random draws, lineage keys and AgentId-ordered decisions (Pass 9):
+    /// every random number is a pure function of (seed, stream, lineage key,
+    /// tick, slot, replicate). False = the sequential streams and hecs order of v8–v14.
+    pub keyed_draws: bool,
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -333,6 +337,7 @@ impl Default for WorldRules {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -351,6 +356,15 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 9 village policies: v14 with keyed random draws, lineage keys and
+    /// decisions in AgentId order. Same balance and mechanics; only which random
+    /// number an event receives changes. v14 stays frozen.
+    pub const fn game_v15() -> Self {
+        let mut rules = Self::game_v14();
+        rules.agent.keyed_draws = true;
+        rules
+    }
+
     /// Pass 8 village policies: v13 with winters that vary night by night and
     /// day by day, and windfall that lands on the snow. v13 stays frozen.
     pub const fn game_v14() -> Self {
@@ -582,6 +596,7 @@ impl WorldRules {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -794,6 +809,18 @@ mod tests {
     }
 
     #[test]
+    fn game_v15_is_v14_plus_keyed_draws() {
+        let mut v15 = WorldRules::game_v15();
+        assert!(v15.agent.keyed_draws);
+        v15.agent.keyed_draws = false;
+        assert_eq!(v15, WorldRules::game_v14());
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14()] {
+            assert!(!rules.agent.keyed_draws);
+        }
+    }
+
+    #[test]
     fn pass6_firewood_fields_reproduce_pass5_in_v11() {
         let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
         assert_eq!(rule.winter_prep_days, None);
@@ -822,6 +849,7 @@ mod tests {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             }
         );
         assert_eq!(

@@ -767,6 +767,25 @@ impl SettlementSystem {
                 None => Vec::new(),
             };
 
+            // Pass 9: under keyed draws the newborn's lineage key comes from the
+            // first parent's key and birth count (never from the id counter);
+            // the parent's count advances. Without a first parent carrying a
+            // lineage (not expected in a keyed world) the key falls back to the
+            // settlement and tick of the birth.
+            let lineage = resources.rules.agent.keyed_draws.then(|| {
+                let parent = parent_ids.first().and_then(|first| {
+                    world.query_mut::<(&Agent, &mut sim_core::components::Lineage)>()
+                        .into_iter()
+                        .find(|(_, (agent, _))| agent.id == *first)
+                        .map(|(_, (_, lineage))| lineage.child(resources.world_seed))
+                });
+                parent.unwrap_or(sim_core::components::Lineage {
+                    key: sim_core::rng::keyed_u64(
+                        resources.world_seed, sim_core::rng::STREAM_NEWBORN, u64::from(sid), tick, u32::MAX, 0,
+                    ),
+                    births: 0,
+                })
+            });
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -805,6 +824,9 @@ impl SettlementSystem {
                 ),
             );
 
+            if let Some(lineage) = lineage {
+                let _ = world.insert_one(entity, lineage);
+            }
             if resources.rules.society.life_stage.is_some() {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
             }

@@ -70,7 +70,7 @@ class ExportDeterminismTests(unittest.TestCase):
                 self.assertEqual(first, second)
                 self.assertEqual(first, single)
                 meta = json.loads(first["game_v14_s0_none/meta.json"])
-                self.assertEqual(meta["schema_version"], 2)
+                self.assertEqual(meta["schema_version"], 3)
 
     def test_schedule_episodes_share_the_factual_prefix(self) -> None:
         import numpy as np

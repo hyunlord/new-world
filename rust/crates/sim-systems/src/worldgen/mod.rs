@@ -37,6 +37,11 @@ pub struct WorldGenConfig {
     pub deadwood_max_radius: u32,
 }
 impl WorldGenConfig {
+    /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
+    pub const fn game_v15(seed: u64) -> Self {
+        Self::game_v14(seed)
+    }
+
     /// Pass 8 generator inputs: the same world as v13 (no worldgen change).
     pub const fn game_v14(seed: u64) -> Self {
         Self::game_v13(seed)

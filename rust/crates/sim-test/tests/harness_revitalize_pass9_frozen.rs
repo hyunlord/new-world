@@ -43,6 +43,7 @@ fn pass8_v14_literal() -> WorldRules {
                 max_foragers_per_bush: 2,
             }),
             preempt_gathering: true,
+            keyed_draws: false,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {

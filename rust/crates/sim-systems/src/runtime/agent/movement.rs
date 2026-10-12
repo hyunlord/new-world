@@ -384,6 +384,14 @@ mod tests {
     }
 
     #[test]
+    fn keyed_mix_is_one_movement_rng_output() {
+        // Pass 9: `sim_core::rng::mix` is the splitmix64 step this stream uses.
+        for x in [0u64, 1, 42, u64::MAX, 0x9E37_79B9_7F4A_7C15] {
+            assert_eq!(sim_core::rng::mix(x), MovementRng::new(x).next_u64());
+        }
+    }
+
+    #[test]
     fn splitmix_escapes_zero_seed() {
         let mut r = MovementRng::new(0);
         assert_ne!(r.next_u64(), 0);
