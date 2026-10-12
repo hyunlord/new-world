@@ -2294,3 +2294,47 @@ Seeds 12000–12031, `--every 60`, no `--agents`, schedules = the `rot_wood` and
 | (b) gift_wood vs factual of the same replicate, per pair | 0.172 | 0.50 |
 
 Seeds differing in at least one / in every replicate: rot_wood 0.31 / 0.22, gift_wood 0.22 / 0.13. A small act (60 wood rotten or given on day 21) changes the number of villages later in the year or the first-fission day in about a quarter (rot) or a sixth (gift) of the worlds, against about a tenth from agent noise alone; the effect on the population at day 118 is small (≈ 2 agents for rot_wood).
+
+### Part 7 — final reproduction (`probe_final` built from `ff7e0fd9`, the final Rust; Pass 10's flags; 00:45–01:43 KST)
+
+| run | reference | shared values | differences | note |
+|---|---|---:|---:|---|
+| `p11-7_final_legacy` | `p10-7_final_legacy` | 5115 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v8` | `p10-7_final_v8` | 8240 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v9_10day` | `p10-7_final_v9_10day` | 8205 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v9_120day` | `p10-7_final_v9_120day` | 67963 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v10_10day` | `p10-7_final_v10_10day` | 8397 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v10_120day` | `p10-7_final_v10_120day` | 68546 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v11_10day` | `p10-7_final_v11_10day` | 10712 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v11_120day` | `p10-7_final_v11_120day` | 83707 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v12_10day` | `p10-7_final_v12_10day` | 10712 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v12_120day` | `p10-7_final_v12_120day` | 83719 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v13_10day` | `p10-7_final_v13_10day` | 10842 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v13_120day` | `p10-7_final_v13_120day` | 83774 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v14_10day` | `p10-7_final_v14_10day` | 10844 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v14_120day` | `p10-7_final_v14_120day` | 83775 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v15_10day` | `p11-0_v15_10day` | 10844 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v15_120day` | `p11-0_v15_120day` | 83781 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v16_10day` | `p11-0_v16_10day` | 11484 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v16_120day` | `p11-0_v16_120day` | 84211 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v16n_10day` | `p11-0_v16n_10day` | 11036 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v16n_120day` | `p11-0_v16n_120day` | 83968 | 1 | `schema_version` 10 → 11 only |
+| `p11-7_final_v17_10day` | `p11-3_round3_v17_10day` | 16226 | 0 | identical |
+| `p11-7_final_v17_120day` | `p11-3_round3_v17_120day` | 97206 | 0 | identical |
+| `p11-7_final_v17n_10day` | `p11-3_round3_v17n_10day` | 15394 | 0 | identical |
+| `p11-7_final_v17n_120day` | `p11-3_round3_v17n_120day` | 95097 | 0 | identical |
+| `p11-7_final_heldout_v17_10day` | `p11-4_heldout_v17_10day` | 16231 | 0 | identical |
+| `p11-7_final_heldout_v17_120day` | `p11-4_heldout_v17_120day` | 130812 | 0 | identical |
+| `p11-7_final_heldout_v17n_10day` | `p11-4_heldout_v17n_10day` | 15399 | 0 | identical |
+| `p11-7_final_heldout_v17n_120day` | `p11-4_heldout_v17n_120day` | 127126 | 0 | identical |
+
+Every legacy, v8–v16 run reproduces Pass 10's final (or Part 0's) summaries on every shared value; every determinism twin passes. Every `game_v17` and `game_v17_nofission` run of the final binary (tuning and held-out) is identical to the frozen-commit run of the same set, so the post-freeze review fixes (M1 timeout retarget, L2, L4) changed no probe result.
+
+### Part 7 — J12 timing (back to back, 01:47–02:05 KST, nothing else heavy; `probe_final`, tuning sets with twins)
+
+| Duration | game_v16 ms / agent-tick | game_v17_nofission | ratio | game_v17 | ratio |
+|---|---:|---:|---:|---:|---:|
+| 10day | 0.0012756 | 0.0012756 | 1.000 | 0.0013254 | 1.039 |
+| 120day | 0.0017171 | 0.0017480 | 1.018 | 0.0018300 | 1.066 |
+
+J12: **PASS** (≤ 1.3 for both scenes and durations; `p11-7_timing_*_targets`). The timing runs reproduce the round-3 summaries (v17 scenes) and Part 0's (v16) on every simulation value. All J-target files were regenerated with the final evaluator (report-only targets marked; receipts backed by the Part 0/2/3 guards and this Part's reproduction).

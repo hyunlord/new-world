@@ -1,4 +1,4 @@
-# Pass 11 Part 4 held-out v17 (J5 pooled with tuning)
+# Pass 11 Part 4 held-out v17 (J5 pooled with tuning; receipts: Part 0/2/3 guards and Part 7 reproduction)
 
 Scene `game_v17`.
 

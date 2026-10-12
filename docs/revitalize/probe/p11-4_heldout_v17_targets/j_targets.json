@@ -1413,7 +1413,7 @@
     "long_days": 120,
     "round10": ".harness/evidence/revitalize/probe/p11-4_heldout_v17_10day",
     "round120": ".harness/evidence/revitalize/probe/p11-4_heldout_v17_120day",
-    "title": "Pass 11 Part 4 held-out v17 (J5 pooled with tuning)",
+    "title": "Pass 11 Part 4 held-out v17 (J5 pooled with tuning; receipts: Part 0/2/3 guards and Part 7 reproduction)",
     "v11_targets": "docs/revitalize/probe/p6-1_v11_targets/y_targets.json",
     "v16_round10": ".harness/evidence/revitalize/probe/p11-0_v16_heldout_10day",
     "v16_round120": ".harness/evidence/revitalize/probe/p11-0_v16_heldout_120day",
