@@ -380,6 +380,28 @@ impl WorldRules {
         rules
     }
 
+    /// Pass 10 village policies of world `seed`: v16_neutral with the
+    /// climate and the food regrowth of its hidden parameters
+    /// (`WorldVariety::draw`). The worldgen side is `WorldGenConfig::game_v16`.
+    pub const fn game_v16(seed: u64) -> Self {
+        Self::game_v16_with(&crate::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v16`] for given hidden parameters; `WorldVariety::NEUTRAL`
+    /// gives `game_v16_neutral()` exactly.
+    pub const fn game_v16_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v16_neutral();
+        if let Some(mut firewood) = rules.society.firewood {
+            firewood.winter_severity_permille = Some(variety.winter_severity_permille());
+            rules.society.firewood = Some(firewood);
+        }
+        if let Some(mut seasons) = rules.seasons {
+            seasons.regen_permille = variety.scale_regen(seasons.regen_permille);
+            rules.seasons = Some(seasons);
+        }
+        rules
+    }
+
     /// Pass 9 village policies: v14 with keyed random draws, lineage keys and
     /// decisions in AgentId order. Same balance and mechanics; only which random
     /// number an event receives changes. v14 stays frozen.

@@ -33,8 +33,9 @@ use crate::probe::fingerprint;
 pub const SCHEMA_VERSION: u64 = 4;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 9] =
-    ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral"];
+pub const SCENES: [&str; 10] = [
+    "game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral", "game_v16",
+];
 
 /// Build a fresh engine of `scene` and `seed`.
 pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
@@ -48,6 +49,7 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v14" => crate::scenes::game_v14_scene(seed),
         "game_v15" => crate::scenes::game_v15_scene(seed),
         "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
+        "game_v16" => crate::scenes::game_v16_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -566,7 +568,7 @@ pub struct WmArgs {
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.
@@ -806,6 +808,18 @@ mod tests {
         assert_eq!(AGENT[17].name, "hp");
         assert!(!hidden("agents.npy", "hp"));
         assert_eq!(files.meta["world_variety"], Value::Null);
+    }
+
+    #[test]
+    fn schema_four_records_the_hidden_world_variety_of_game_v16() {
+        let files = record(&EpisodeSpec { scene: "game_v16".into(), ..spec(1, true, None) }).expect("record");
+        let v = sim_core::variety::WorldVariety::draw(3);
+        assert_eq!(files.meta["world_variety"]["hidden"], true);
+        assert_eq!(files.meta["world_variety"]["values"]["starting_agents"], v.starting_agents);
+        assert_eq!(files.meta["world_variety"]["values"]["climate"], v.climate);
+        assert!(files.meta["observable_fields"].get("world_variety").is_none());
+        let neutral = record(&EpisodeSpec { scene: "game_v16_neutral".into(), ..spec(1, false, None) }).expect("record");
+        assert_eq!(neutral.meta["world_variety"], Value::Null);
     }
 
     #[test]

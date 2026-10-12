@@ -111,6 +111,7 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v14" => crate::scenes::game_v14_scene(seed),
         "game_v15" => crate::scenes::game_v15_scene(seed),
         "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
+        "game_v16" => crate::scenes::game_v16_scene(seed),
         _ => crate::scenes::legacy_scene(),
     }
 }
@@ -331,19 +332,19 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16")
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn v16_scenes_take_both_twin_checks() {
+    fn both_v16_scenes_take_both_twin_checks() {
         // Pass 10: a scene missing from the list would skip its determinism
         // checks silently. Both checks in `run_seed` call `twin_checked`.
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

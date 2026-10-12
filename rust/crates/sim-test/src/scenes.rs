@@ -83,6 +83,23 @@ pub fn game_v16_neutral_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 10 fixture: world `seed` with its hidden parameters
+/// (`WorldVariety::draw(seed)`) under the v16 rules.
+pub fn game_v16_scene(seed: u64) -> SimEngine {
+    game_v16_scene_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+}
+
+/// [`game_v16_scene`] for given hidden parameters (recorded in
+/// `SimResources::world_variety`, measurement only).
+pub fn game_v16_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v16_with(seed, variety),
+        sim_core::rules::WorldRules::game_v16_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

@@ -180,6 +180,19 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertIsNone(ep.world_variety())
         self.assertIsNotNone(ep.lineage_keys())
 
+    def test_game_v16_world_variety_is_hidden_meta(self) -> None:
+        out = Path(self.tmp.name) / "v16"
+        subprocess.run([str(BIN), "--scene", "game_v16", "--seeds", "5..6", "--days", "1", "--every", "60",
+                        "--workers", "1", "--out", str(out)],
+                       check=True, capture_output=True, env={**os.environ, "WORLDSIM_GIT_SHA": "test"})
+        ep = load_episode(out / "game_v16_s5_none")
+        variety = ep.world_variety()
+        self.assertEqual(set(variety), {"starting_agents", "berry_bushes", "berry_capacity", "deadwood_spots",
+                                        "deadwood_capacity", "forest_permille", "climate", "food_regen_permille"})
+        self.assertIs(ep.meta["world_variety"]["hidden"], True)
+        self.assertNotIn("world_variety", ep.observable_meta())
+        self.assertEqual(int(ep.column("global.npy", "alive")[0]), variety["starting_agents"])
+
     @unittest.skipUnless(P9_FORK.exists(), f"Pass 9 fork data not present: {P9_FORK}")
     def test_recorded_schema_three_episode_loads(self) -> None:
         ep = load_episode(P9_FORK)

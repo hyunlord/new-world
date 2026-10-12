@@ -35,9 +35,20 @@ pub const STREAM_FOUNDER: u64 = 0x464F_554E_4445_5252;
 /// Lineage: a newborn's key from its first parent's key and birth count.
 pub const STREAM_NEWBORN: u64 = 0x4E45_5742_4F52_4E4B;
 
+/// World variety (Pass 10): the hidden parameters of a world, slot = parameter
+/// index, subject, tick and replicate always 0 ("WORLDVAR" in ASCII).
+pub const STREAM_WORLD_VARIETY: u64 = 0x574F_524C_4456_4152;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 6] =
-    [STREAM_MOVE_PAUSE, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_LIFESPAN, STREAM_FOUNDER, STREAM_NEWBORN];
+pub const STREAMS: [u64; 7] = [
+    STREAM_MOVE_PAUSE,
+    STREAM_MOVE_DX,
+    STREAM_MOVE_DY,
+    STREAM_LIFESPAN,
+    STREAM_FOUNDER,
+    STREAM_NEWBORN,
+    STREAM_WORLD_VARIETY,
+];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).
 pub const fn mix(x: u64) -> u64 {
