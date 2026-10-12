@@ -1,5 +1,7 @@
 # WM-1 analysis
 
+> Qualified by WM1_1.md (calendar baselines).
+
 What the first learned world models on dataset v0 can and cannot do, measured through one harness that reproduces WM-Bench v0 exactly (W1). All numbers are test numbers unless marked *val*; full tables are in `RESULTS.md` (generated from `runs/*/metrics.json`), the run list in `METRICS.md`, the reasons for every choice in `DECISIONS.md`. nMAE = MAE / the bench's split std, mean over the eight variables V (food stock, wood stock, fire lit, cold members, alive, deadwood total, food on bushes, adults working).
 
 ## 1. Summary

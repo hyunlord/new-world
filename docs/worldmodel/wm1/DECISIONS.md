@@ -77,3 +77,7 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 - **E3.1** `m3_noday_s0` uses WM-1's M3 recipe (`--threads 4`, rank 16, batch 16, lr 2e-4, seed 0 → the same sample order) with `--max-steps 276` and `--max-seconds 28800` instead of 7,200, so the step count, not the wall clock on a loaded CPU, binds: it trained exactly 276 steps (6,687 s), the same 4,416 samples as M3.
 - **E3.2** `m1tf_main_r3_s1` stopped by patience at step 2,100 (best 1,350) under WM-1's recipe; it is used as trained (the recipe is fixed; no rerun).
 - **E3.3** M1b reproducibility on the GPU was not measured in WM-1 and is not measured here; s0 is not rerun (GOAL_1_1.md 8.3).
+
+### Part 4
+- **E4.1** From about 11:20 the DGX stopped answering (first SSH banner timeouts, then no Tailscale ping reply), while `m1tf_main_r3_s1_final`, `m1tf_main_r3_s2_final`, `m3_noday_s0_final` and the `m1tf_sevon_aa_r3_s0` training were running on it (GPU memory at 11:10: 12.7 GB + 2.7 GB + 2.7 GB; RAM 92 GiB available at 11:07; other users' jobs had pushed the load average to 45 earlier). Nothing can be moved to the Mac (no heavy compute there; checkpoints live on the DGX), so the run waits for the DGX and re-runs whatever did not finish; work that needs no DGX (DIVERSITY.md, judge_1_1.py, WM1_1.md tables) continues meanwhile.
+- **E4.2** `judge_1_1.py` computes the skill tables and the X verdicts from the result JSON files only (no data), on the Mac; its rules are those of METRICS_1_1.md section 3 (unit-tested KEEP / WEAK / NONE logic).

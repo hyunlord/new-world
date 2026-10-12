@@ -45,4 +45,7 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 3 | | ≈ 09:31 | `m3_noday_s0` training done: 276 steps, 6,687 s (stop `max_steps`) |
 | 3.2 | 11:01 | | `m1tf_sevon_aa_r3_s0` launched on the GPU (code `74f4d79d`); GPU idle before |
 | 1 | 11:03 | 11:05 | code `dfec0bdd` pushed; `calendar_val_dfec0bdd` (14 s) and `diversity_v1_dfec0bdd --val-only` (13 s) on the DGX CPU |
-| 1 end | | 11:15 | METRICS_1_1.md (pre-registration with the val selection) committed and pushed |
+| 1 end | | 11:07 | METRICS_1_1.md (pre-registration with the val selection) committed (`9f4fd3f3`, 11:07:28) and pushed |
+| 4 | 11:07 | | test jobs from `9f4fd3f3` (11:07:56): `calendar_9f4fd3f3` (all nine members, 49 s), `m1tf_main_r3_s1_final`, `m1tf_main_r3_s2_final` (GPU, alongside the sev-on training: 12.7 GB + 2.7 GB + 2.7 GB), `m3_noday_s0_final` (CPU), `diversity_v1_9f4fd3f3` (full, 54 s); `diversity_9f4fd3f3` stopped on OOD_v12's missing severity draw before writing output |
+| 2 | 11:08 | 11:09 | `diversity.py` fixed for OOD_v12 (amendment in METRICS_1_1.md, `1076b53d`); `diversity_1076b53d` run |
+| 2 end, 5 end | | 11:12 | results committed (`f1be85c4`); DIVERSITY.md (`8cd6cd3a`) |
