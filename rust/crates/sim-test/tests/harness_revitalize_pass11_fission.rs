@@ -194,7 +194,7 @@ fn harness_fission_group_resampled_by_replicate() {
         let bushes = bushes_for(seed, 30);
         let check = tick_at(28, 360);
         let pick = |fork: Option<NoiseFork>| {
-            let (mut engine, _) = world(seed, bushes, &village(32));
+            let (mut engine, _) = world(seed, bushes, &village(36));
             engine.resources.noise_fork = fork;
             let mut system = FissionSystem::new();
             run(&mut engine, &mut system, check, check + 1);

@@ -74,8 +74,20 @@ fn hp(engine: &SimEngine, entity: Entity) -> f64 {
     engine.world.get::<&BodyHealth>(entity).expect("health").hp
 }
 
+/// The goal's start values (section 6.2): the mechanism tests below use them
+/// explicitly so their numbers do not move with Part 3's tuning.
+const START: ExposureRule =
+    ExposureRule { damage_per_cold_hour: [8.0, 6.0, 8.0], heal_block_hours: 2, hunger_weight: 0.5, use_hardiness: true };
+
+/// v17 rules with the exposure start values.
+fn start_rules() -> WorldRules {
+    let mut rules = WorldRules::game_v17_nofission(0);
+    rules.society.exposure = Some(START);
+    rules
+}
+
 fn v17_exposure() -> ExposureRule {
-    WorldRules::game_v17_nofission(0).society.exposure.expect("v17 exposure")
+    START
 }
 
 #[test]
@@ -137,7 +149,7 @@ fn harness_exposure_v2_formula() {
         (4, Stage::Child, Some(1100), 60.0, 100.0),
         (5, Stage::Elder, Some(900), 40.0, 100.0),
     ];
-    let (mut engine, entities) = fixture(WorldRules::game_v17_nofission(0), night, &cases);
+    let (mut engine, entities) = fixture(start_rules(), night, &cases);
     FireSystem::new().tick(&mut engine.world, &mut engine.resources);
     for (&(id, stage, hardiness, hunger, start), entity) in cases.iter().zip(&entities) {
         let index = match stage {
@@ -182,7 +194,7 @@ fn night_and_day(engine: &mut SimEngine, day: u64, entity: Entity) -> bool {
 
 #[test]
 fn harness_exposure_adult_can_die() {
-    let rules = WorldRules::game_v17_nofission(0);
+    let rules = start_rules();
     // Frail and hungry: hardiness 1300, hunger fixed at 99 (below
     // `Hunger::SATURATION` 100, so no starvation damage), thirst 0.
     let (mut engine, entities) = fixture(rules, tick_at(21, 1320), &[(1, Stage::Adult, Some(1300), 99.0, 100.0)]);
@@ -219,6 +231,16 @@ fn harness_exposure_adult_can_die() {
     assert!(night_and_day(&mut engine, 21, entities[0]));
     assert!(night_and_day(&mut engine, 22, entities[0]));
     assert_eq!(engine.resources.tallies.deaths_exposure, 0);
+
+    // The tuned v17 rule keeps both properties: the frail hungry adult dies
+    // within two dark nights, the hardy fed one survives them.
+    let tuned = WorldRules::game_v17_nofission(0);
+    assert!(tuned.society.exposure.expect("exposure").use_hardiness);
+    let (mut engine, entities) = fixture(tuned, tick_at(21, 1320), &[(1, Stage::Adult, Some(1300), 99.0, 100.0)]);
+    let survived_first = night_and_day(&mut engine, 21, entities[0]);
+    assert!(!survived_first || !night_and_day(&mut engine, 22, entities[0]), "frail adult dies within two nights");
+    let (mut engine, entities) = fixture(tuned, tick_at(21, 1320), &[(1, Stage::Adult, Some(700), 0.0, 100.0)]);
+    assert!(night_and_day(&mut engine, 21, entities[0]) && night_and_day(&mut engine, 22, entities[0]));
 }
 
 #[test]
