@@ -13,6 +13,13 @@ One feature vector per recorded hour of an episode:
 Never inputs: `latent.npy`, `lifespan_days`, `winter_severity` as a column (only the severity-on one-hot),
 `wood_target` in severity-blind variants. Targets: the next row's change of every continuous state feature
 (divided by the train std of that change) and the next `fire_lit` as a binary.
+
+Recorder schema >= 2 (GOAL_1_2.md 7.1; the p10 pilot is schema 4): observable columns only (`wm_data`'s observable
+filter; a hidden column raises `bench_v1.HiddenInput`). v0's columns keep their order, `s.wood_target` is dropped
+(hidden), and when recorded `d.deaths_exposure` (hourly difference) and `g.injured_members` are appended. The
+settlement reduction stays sum / max. `EpisodeData.bench` stays a `bench_v0.Ep`, built from
+`bench_v1.episode_arrays` with `severity` = the hidden severity (labels for breakdowns only) and `deaths` including
+the exposure deaths (as `Layout.deaths`). Severity-on variants cannot be built on schema >= 2 data.
 """
 from __future__ import annotations
 
@@ -23,6 +30,7 @@ import numpy as np
 
 import wm1  # noqa: F401  (puts tools/worldmodel on sys.path)
 import bench_v0 as b
+import bench_v1 as bv1
 from wm_data import load_episode
 
 GLOBAL_STATE = ("alive", "children", "elders", "adults", "cold_members", "deadwood_total", "food_on_bushes_total",
@@ -49,13 +57,27 @@ V_STATE = ("s.food_stock", "s.wood_stock", "s.fire_lit", "g.cold_members", "g.al
 FIRE = "s.fire_lit"
 COLD_HOURS = "d.cold_member_hours_total"
 DEATHS = ("d.deaths_starvation", "d.deaths_dehydration", "d.deaths_combat", "d.deaths_old_age")
+EXPOSURE = "d.deaths_exposure"
+# Recorder schema >= 2: `s.wood_target` is hidden; schema 4 appends these two observable columns (in this order).
+OBS_APPEND = (EXPOSURE, "g.injured_members")
+ALL_STATE_OBS = tuple(n for n in ALL_STATE if n not in SEVERITY_ONLY) + OBS_APPEND
+# Hidden in schema >= 2 (labels and analysis only): never a column of the observable table or an input.
+HIDDEN_V2 = ("winter_severity", "night_burn_per_hour", "winter_fall_today", "wood_target", "latent", "lifespan_days",
+             "world_variety", "berry_bushes", "berry_capacity", "climate", "deadwood_capacity", "deadwood_spots",
+             "food_regen_permille", "forest_permille", "starting_agents")
 
 
 @dataclass(frozen=True)
 class Variant:
-    """Which inputs a model may read: the severity (`sev_on`) and the interventions (`action_aware`)."""
+    """Which inputs a model may read: the severity (`sev_on`) and the interventions (`action_aware`). `obs_state`
+    (recorder schema >= 2) is the observable table's column list; such a variant is never severity-on."""
     sev_on: bool
     action_aware: bool
+    obs_state: tuple[str, ...] | None = None
+
+    def __post_init__(self):
+        if self.obs_state is not None and self.sev_on:
+            raise ValueError("severity-on variants need the hidden severity: not available on recorder schema >= 2")
 
     @property
     def name(self) -> str:
@@ -63,6 +85,8 @@ class Variant:
 
     @property
     def state_names(self) -> tuple[str, ...]:
+        if self.obs_state is not None:
+            return self.obs_state
         return tuple(n for n in ALL_STATE if self.sev_on or n not in SEVERITY_ONLY)
 
     @property
@@ -83,6 +107,13 @@ MAIN = Variant(sev_on=False, action_aware=True)
 VARIANTS = {v.name: v for v in (Variant(False, True), Variant(True, True), Variant(False, False), Variant(True, False))}
 
 
+def variant_for(name: str, obs_state: tuple[str, ...] | None = None) -> Variant:
+    """The variant `name` on v0 (`obs_state` None) or on observable-schema data with that column list (raises
+    ValueError for a severity-on name)."""
+    v = VARIANTS[name]
+    return v if obs_state is None else Variant(v.sev_on, v.action_aware, tuple(obs_state))
+
+
 @dataclass
 class EpisodeData:
     """One episode: the bench's arrays (`bench`, a `bench_v0.Ep`) and every candidate state column (`table`)."""
@@ -91,18 +122,22 @@ class EpisodeData:
     seed: int
     eid: str
     bench: b.Ep
-    table: np.ndarray          # [T, len(ALL_STATE)] float64
+    table: np.ndarray          # [T, len(names)] float64
     calendar: np.ndarray       # [T, len(CALENDAR)]
     interventions: list
+    names: tuple = ALL_STATE   # the table's columns (ALL_STATE for v0; the observable list for schema >= 2)
+    schema: int = 1            # recorder schema of the episode
 
     @property
     def rows(self) -> int:
         return self.table.shape[0]
 
     def state(self, variant: Variant) -> np.ndarray:
-        return self.table[:, [ALL_STATE.index(n) for n in variant.state_names]]
+        return self.table[:, [self.names.index(n) for n in variant.state_names]]
 
     def severity_onehot(self) -> np.ndarray:
+        if self.schema >= 2:
+            raise ValueError("the severity is hidden in recorder schema >= 2: no severity input")
         return b.onehot(self.bench.severity, [0, 1, 2, -1])
 
 
@@ -131,12 +166,63 @@ def episode_table(ep) -> np.ndarray:
     return np.nan_to_num(table, nan=0.0)
 
 
+def episode_table_observable(ep) -> tuple[np.ndarray, tuple[str, ...]]:
+    """The observable state table of a schema >= 2 episode and its column names (ALL_STATE without `s.wood_target`,
+    then `d.deaths_exposure` and `g.injured_members` when the episode records them). Every column goes through
+    `bench_v1.observable_column`, which refuses a hidden field."""
+    t = ep.arrays["global.npy"].shape[0]
+    gcol = lambda name: bv1.observable_column(ep, "global.npy", name).astype(np.float64)
+    s = ep.arrays["settlements.npy"]
+    scol = ((lambda name: bv1.observable_column(ep, "settlements.npy", name).astype(np.float64)) if s.shape[1]
+            else (lambda name: np.zeros((t, 0))))
+    gobs = set(ep.observable_names("global.npy"))
+    names, cols = [], []
+    for x in GLOBAL_STATE:
+        names.append(f"g.{x}")
+        cols.append(gcol(x))
+    tallies = GLOBAL_TALLIES + (("deaths_exposure",) if "deaths_exposure" in gobs else ())
+    for x in GLOBAL_TALLIES:
+        names.append(f"d.{x}")
+        cols.append(np.concatenate([[0.0], np.diff(gcol(x))]))
+    for x in SETTLEMENT_SUM:
+        names.append(f"s.{x}")
+        cols.append(np.nansum(scol(x), axis=1))
+    for x in SETTLEMENT_MAX:
+        names.append(f"s.{x}")
+        cols.append(np.nan_to_num(scol(x), nan=0.0).max(axis=1, initial=0.0))
+    names.append("s.present")
+    cols.append((~np.isnan(scol("members"))).any(axis=1).astype(np.float64))
+    if "deaths_exposure" in tallies:
+        names.append(EXPOSURE)
+        cols.append(np.concatenate([[0.0], np.diff(gcol("deaths_exposure"))]))
+    if "injured_members" in gobs:
+        names.append("g.injured_members")
+        cols.append(gcol("injured_members"))
+    return np.nan_to_num(np.stack(cols, axis=1), nan=0.0), tuple(names)
+
+
+def bench_of(ep, split: str, role: str, seed: int, eid: str) -> b.Ep:
+    """The `bench_v0.Ep` of a loaded episode: v0's arrays for schema 1; for schema >= 2 `bench_v1.episode_arrays`
+    (observable inputs) with `severity` = the hidden severity (labels only) and the exposure deaths in `deaths`."""
+    if int(ep.meta.get("schema_version", 1)) < 2:
+        return b.Ep(split, role, seed, eid, **b.episode_arrays(ep))
+    arrays = bv1.episode_arrays(ep)
+    severity = arrays.pop("hidden_severity")
+    if "deaths_exposure" in ep.observable_names("global.npy"):
+        arrays["deaths"] = arrays["deaths"] + bv1.observable_column(ep, "global.npy", "deaths_exposure")
+    return b.Ep(split, role, seed, eid, severity=severity, **arrays)
+
+
 def from_episode(ep, split: str, role: str, seed: int, eid: str) -> EpisodeData:
-    bench = b.Ep(split, role, seed, eid, **b.episode_arrays(ep))
+    schema = int(ep.meta.get("schema_version", 1))
+    bench = bench_of(ep, split, role, seed, eid)
     g = ep.arrays["global.npy"]
     dos = g[:, ep.field_index("global.npy", "day_of_season")]
-    return EpisodeData(split, role, seed, eid, bench, episode_table(ep),
-                       calendar_features(bench.hour, bench.season, dos), list(ep.interventions))
+    cal = calendar_features(bench.hour, bench.season, dos)
+    if schema < 2:
+        return EpisodeData(split, role, seed, eid, bench, episode_table(ep), cal, list(ep.interventions))
+    table, names = episode_table_observable(ep)
+    return EpisodeData(split, role, seed, eid, bench, table, cal, list(ep.interventions), names, schema)
 
 
 def load_split(root: Path, manifest: dict, split: str, roles: tuple[str, ...] | None = None,
@@ -225,7 +311,7 @@ class Layout:
         self.fire = names.index(FIRE)
         self.v = np.array([names.index(n) for n in V_STATE])
         self.cold_hours = names.index(COLD_HOURS)
-        self.deaths = np.array([names.index(n) for n in DEATHS])
+        self.deaths = np.array([names.index(n) for n in DEATHS + ((EXPOSURE,) if EXPOSURE in names else ())])
         self.n_state = len(names)
         self.n_cont = len(self.cont)
         self.n_input = len(variant.input_names())
@@ -234,6 +320,8 @@ class Layout:
 def prepare(ep: EpisodeData, variant: Variant, norm: Normalizer, actions: np.ndarray | None = None) -> Prepared:
     """Normalize one episode. `actions` overrides the recorded requested amounts (T4 rollouts)."""
     lay = Layout(variant)
+    if variant.sev_on and ep.schema >= 2:
+        raise ValueError("severity-on variants cannot be prepared on recorder schema >= 2 data")
     state = ep.state(variant)
     x = (state - norm.mean) / norm.std
     acts = ep.bench.actions if actions is None else actions

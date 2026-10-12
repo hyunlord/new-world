@@ -9,6 +9,10 @@ usage:
   python3 tools/worldmodel/wm1/m1_gru.py train --out RUN_DIR --variant sev-blind_action-aware --seed 0 [...]
   python3 tools/worldmodel/wm1/m1_gru.py final --run RUN_DIR      # test evaluation, once per configuration
 
+`--dataset` (GOAL_1_2.md 6.3; default `v0`): the training, validation and test groups come from `common.DATASETS`;
+`config.json` stores the dataset and `final` reads it from there (a dataset without a counterfactual group skips
+T3 / T4 and runs the dataset's task list with the bias-removed T2 scores).
+
 Rollouts (evaluation and the predictor): warm the GRU up from a zero state on the last `warmup` observed rows
 (<= the start row; 168 = the training window), then feed back its own predictions: the continuous features add the
 predicted mean change, `fire_lit` is thresholded at 0.5; the calendar follows the episode, the actions are the given
@@ -298,20 +302,28 @@ def kind_of(name: str) -> Kind:
     return KINDS[name]
 
 
+def dataset_variant(ds: c.Dataset, name: str) -> d.Variant:
+    """The variant `name` on dataset `ds` (observable datasets: the schema-4 table, severity-on refused)."""
+    return d.variant_for(name, d.ALL_STATE_OBS if ds.observable else None)
+
+
 def train(args, kind: Kind | None = None) -> int:
     kind = kind or KINDS["m1_gru"]
     cfg = dict(kind.defaults)
     cfg.update({k: v for k, v in vars(args).items() if k in kind.defaults and v is not None})
-    variant = d.VARIANTS[args.variant]
+    ds = c.dataset(getattr(args, "dataset", "v0"))
+    variant = dataset_variant(ds, args.variant)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     device = pick_device(args.device)
     set_seed(args.seed, cfg["threads"])
     t0 = time.time()
-    train_groups = ["A_train", "B_train"] if variant.action_aware else ["A_train"]
-    g = c.load_groups(train_groups + list(c.VAL_SPLITS), Path(args.root))
+    train_groups = ds.train_groups(variant.action_aware)
+    g = c.load_groups(train_groups + list(ds.val), Path(args.root), ds.name)
     train_eps = [ep for n in train_groups for ep in g[n]]
-    val = {n: g[n] for n in c.VAL_SPLITS}
+    if any(ep.names != (d.ALL_STATE_OBS if ds.observable else d.ALL_STATE) for ep in train_eps):
+        raise SystemExit(f"{ds.name}: an episode's feature table differs from the dataset's column list")
+    val = {n: g[n] for n in ds.val}
     stds = c.split_stds(val)
     norm = d.Normalizer.fit(train_eps, variant)
     lay = d.Layout(variant)
@@ -322,8 +334,9 @@ def train(args, kind: Kind | None = None) -> int:
     pred = kind.predictor(model, lay, norm, variant, device, cfg)
     config = {"model": kind.name, "variant": variant.name, "seed": args.seed, "hyper": cfg, "device": device,
               "torch": torch.__version__, "numpy": np.__version__, "python": sys.version.split()[0],
-              "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(), "train_groups": train_groups,
-              "val_groups": list(c.VAL_SPLITS), "train_episodes": len(train_eps), "input_names": list(variant.input_names()),
+              "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(ds.name), "train_groups": train_groups,
+              "dataset": ds.name, "val_groups": list(ds.val), "train_episodes": len(train_eps),
+              "input_names": list(variant.input_names()),
               "normalizer": norm.to_json(), "data_root": str(args.root), "threads": torch.get_num_threads()}
     c.write_json(out / "config.json", config)
     rng = np.random.default_rng(args.seed)
@@ -375,8 +388,11 @@ def train(args, kind: Kind | None = None) -> int:
         choice[str(rc)] = {"t2_24": s24, "t2_168": s168}
     round_counts = choice["True"]["t2_24"] + choice["True"]["t2_168"] < choice["False"]["t2_24"] + choice["False"]["t2_168"]
     pred.round_counts = round_counts
-    val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split="none", any_hour=False, t1_on=True)
-    cal_preps = [d.prepare(ep, variant, norm) for n in c.VAL_SPLITS for ep in val[n]]
+    if ds.tasks is None:
+        val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split="none", any_hour=False, t1_on=True)
+    else:
+        val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split=None, tasks=ds.tasks, bias_removed=True)
+    cal_preps = [d.prepare(ep, variant, norm) for n in ds.val for ep in val[n]]
     summary = {"best_val_t2_24": best, "best_step": best_step, "last_step": step, "stop": stop,
                "seconds": time.time() - t0, "round_counts": round_counts, "rounding_val": choice,
                "calibration_val": calibration(model, stepper, cal_preps, device, cfg["window"]), "val": val_metrics}
@@ -390,7 +406,7 @@ def train(args, kind: Kind | None = None) -> int:
 def load_predictor(run: Path, device: str = "auto") -> tuple[ev.Predictor, dict]:
     config = json.loads((run / "config.json").read_text())
     kind = kind_of(config.get("model", "m1_gru"))
-    variant = d.VARIANTS[config["variant"]]
+    variant = dataset_variant(c.dataset(config.get("dataset", "v0")), config["variant"])
     norm = d.Normalizer.from_json(config["normalizer"])
     lay = d.Layout(variant)
     dev = pick_device(device)
@@ -398,6 +414,16 @@ def load_predictor(run: Path, device: str = "auto") -> tuple[ev.Predictor, dict]
     model = kind.build(lay, config["hyper"]).to(dev)
     model.load_state_dict(torch.load(run / "best.pt", map_location=dev))
     return kind.predictor(model, lay, norm, variant, dev, config["hyper"], round_counts=config.get("round_counts", False)), config
+
+
+def test_plan(config: dict) -> tuple[c.Dataset, list[str], dict]:
+    """What `final` loads and runs for a run's config.json: the dataset (WM-1 runs have no `dataset` key: v0), the
+    groups to load, and the `evaluate` keywords (v0: every task, T3 on A_test, T4 on C_test; a dataset without a
+    counterfactual group: its task list, no T3 / T4, bias-removed T2)."""
+    ds = c.dataset(config.get("dataset", "v0"))
+    if ds.cf is None:
+        return ds, list(ds.test), {"t3_split": None, "tasks": ds.tasks, "bias_removed": True}
+    return ds, list(ds.test) + [ds.cf], {"t3_split": ds.t3_test}
 
 
 def final(args) -> int:
@@ -408,9 +434,11 @@ def final(args) -> int:
         raise SystemExit(f"{target} exists: test metrics are computed once per configuration")
     pred, config = load_predictor(run, args.device)
     t0 = time.time()
-    g = c.load_groups(list(c.TEST_SPLITS) + ["C_test"], Path(args.root))
-    tests = {n: g[n] for n in c.TEST_SPLITS}
-    out = ev.evaluate(pred, tests, c.split_stds(tests), cf_test=g["C_test"], t3_split="A_test")
+    ds, groups, kwargs = test_plan(config)
+    g = c.load_groups(groups, Path(args.root), ds.name)
+    tests = {n: g[n] for n in ds.test}
+    out = ev.evaluate(pred, tests, c.split_stds(tests), cf_test=g[ds.cf] if ds.cf else None, **kwargs)
+    out["dataset"] = ds.name
     out["config"] = {k: config[k] for k in ("variant", "seed", "device", "code_commit", "round_counts")}
     out["eval_code_commit"] = c.git_commit()
     out["argv"], out["forced"] = sys.argv, bool(args.force)   # provenance of the single test evaluation
@@ -429,6 +457,7 @@ def main(argv=None) -> int:
     tr.add_argument("--seed", type=int, default=0)
     tr.add_argument("--root", default=str(c.DEFAULT_ROOT))
     tr.add_argument("--device", default="auto")
+    tr.add_argument("--dataset", default="v0", choices=sorted(c.DATASETS))
     for k, v in DEFAULTS.items():
         tr.add_argument(f"--{k.replace('_', '-')}", dest=k, type=type(v), default=None)
     fi = sub.add_parser("final")

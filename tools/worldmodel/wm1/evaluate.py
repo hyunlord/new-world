@@ -9,6 +9,12 @@ Tasks: T1 (next hour), T2 (24 h / 168 h from the bench's 06:00 starts), T2-any (
 T3 (18:00 -> fire out at 02:00), T3b (winter outlook from 06:00 of each winter's third day), T4 (C_cf
 counterfactual rollouts). T5 (agents) lives in `wm1.agents`. Every metric uses `bench_v0`'s definitions: the
 split std of V over the T1 rows as the nMAE denominator, `rollout_starts`, `winter_evenings`, `c_cf_targets`.
+
+GOAL_1_2.md 7.1-7.2: `evaluate(tasks=...)` runs a subset of the tasks (the p10 pilot: T1, T2, T2_any; no
+interventions, hidden severity) and `bias_removed=True` adds, to every T2 score, the nMAE of the error after
+subtracting each episode's mean error over its scored starts (per variable; the same split std): a predictor's static
+per-world offset is removed, what it gets wrong about how the world moves is kept. The every-hour starts equal
+`bench_v1.rollout_starts(n, h, True)` and the 06:00 starts `bench_v1.rollout_starts(n, h, False)` (tested).
 """
 from __future__ import annotations
 
@@ -65,6 +71,10 @@ class Persistence(StepPredictor):
     def step(self, history, ctx):
         return history[-1]
 
+    def rollout(self, ep, starts, horizon, actions):
+        # Vectorized `step` (the same values: every predicted row is the start row).
+        return Rollout(np.repeat(ep.bench.v[np.asarray(starts)][:, None, :], horizon, axis=1))
+
 
 class DailyNaive(StepPredictor):
     name = "daily_naive"
@@ -103,6 +113,8 @@ class RidgePredictor(Predictor):
         self.model, self.action_aware, self.name, self.severity = model, action_aware, name, severity
 
     def rollout(self, ep, starts, horizon, actions):
+        if getattr(ep, "schema", 1) >= 2 and self.severity != "none":
+            raise ValueError("the severity is hidden in recorder schema >= 2: only a severity-free ridge (`none`)")
         n = len(starts)
         lags = np.array(b.LAGS)
         buf = np.zeros((n, 24 + horizon, len(b.VARS)))
@@ -184,8 +196,20 @@ def t1(pred: Predictor, eps: list[EpisodeData], std: np.ndarray) -> dict:
     return summarize(b.nmae(np.vstack(preds), np.vstack(trues), std))
 
 
+def demeaned_errors(preds: list[np.ndarray], trues: list[np.ndarray]) -> np.ndarray:
+    """Per episode (one array per episode, rows = its scored starts): prediction - truth minus the episode's mean
+    error per variable, stacked."""
+    return np.vstack([(p - t) - (p - t).mean(axis=0, keepdims=True) for p, t in zip(preds, trues)])
+
+
+def bias_removed_score(preds: list[np.ndarray], trues: list[np.ndarray], std: np.ndarray) -> dict:
+    """nMAE of the per-episode de-meaned error (GOAL_1_2.md 7.2), with the split std."""
+    e = demeaned_errors(preds, trues)
+    return summarize(b.nmae(e, np.zeros_like(e), std))
+
+
 def t2(pred: Predictor, eps: list[EpisodeData], std: np.ndarray, horizon: int, any_hour: bool = False,
-       breakdown: bool = False) -> dict:
+       breakdown: bool = False, bias_removed: bool = False) -> dict:
     preds, trues, season, severity, hour = [], [], [], [], []
     for ep in eps:
         s = any_hour_starts(ep, horizon) if any_hour else bench_starts(ep, horizon)
@@ -200,6 +224,8 @@ def t2(pred: Predictor, eps: list[EpisodeData], std: np.ndarray, horizon: int, a
         return {}
     p, t = np.vstack(preds), np.vstack(trues)
     out = summarize(b.nmae(p, t, std)) | {"n": int(len(t))}
+    if bias_removed:
+        out["bias_removed"] = bias_removed_score(preds, trues, std)
     if breakdown:
         season, severity, hour = np.concatenate(season), np.concatenate(severity), np.concatenate(hour)
         out["by_target_season"] = {str(k): summarize(b.nmae(p[season == k], t[season == k], std)) | {"n": int((season == k).sum())}
@@ -413,22 +439,42 @@ def t4(pred: Predictor, test_eps: list[EpisodeData]) -> dict:
 
 
 # ------------------------------------------------------------------ driver ----------------------------------------
+TASKS = ("T1", "T2", "T2_any", "T3", "T3b", "T4")
+
+
 def evaluate(pred: Predictor, splits: dict[str, list[EpisodeData]], stds: dict[str, np.ndarray],
-             cf_test: list[EpisodeData] | None, t3_split: str = "A_test", any_hour: bool = True,
-             t1_on: bool = True) -> dict:
-    """Every task for one predictor on the given (test or val) splits."""
-    out: dict = {"T1": {}, "T2": {"24": {}, "168": {}}, "T2_any": {"24": {}, "168": {}}, "T3b": {}}
+             cf_test: list[EpisodeData] | None, t3_split: str | None = "A_test", any_hour: bool = True,
+             t1_on: bool = True, tasks: tuple[str, ...] | None = None, bias_removed: bool = False) -> dict:
+    """Every task for one predictor on the given (test or val) splits. `tasks` None: WM-1's set (T1 unless `t1_on`
+    is False, T2, T2-any unless `any_hour` is False, T3b, T3 on `t3_split`, T4 on `cf_test`); otherwise exactly the
+    named tasks (T3 needs `t3_split`, T4 `cf_test`). `bias_removed` adds the bias-removed T2 scores."""
+    if tasks is None:
+        out: dict = {"T1": {}, "T2": {"24": {}, "168": {}}, "T2_any": {"24": {}, "168": {}}, "T3b": {}}
+        run = {"T1": t1_on, "T2": True, "T2_any": any_hour, "T3b": True}
+    else:
+        unknown = set(tasks) - set(TASKS)
+        if unknown:
+            raise ValueError(f"unknown tasks {sorted(unknown)}")
+        if "T3" in tasks and t3_split not in splits:
+            raise ValueError(f"T3 needs its split {t3_split} among {sorted(splits)}")
+        if "T4" in tasks and cf_test is None:
+            raise ValueError("T4 needs the counterfactual group")
+        out = {k: ({"24": {}, "168": {}} if k in ("T2", "T2_any") else {}) for k in tasks if k in ("T1", "T2", "T2_any", "T3b")}
+        run = {k: k in tasks for k in ("T1", "T2", "T2_any", "T3b")}
     for name, eps in splits.items():
-        if t1_on:
+        if run["T1"]:
             out["T1"][name] = t1(pred, eps, stds[name])
         for h in (24, 168):
-            out["T2"][str(h)][name] = t2(pred, eps, stds[name], h, breakdown=True)
-            if any_hour:
-                out["T2_any"][str(h)][name] = t2(pred, eps, stds[name], h, any_hour=True, breakdown=True)
-        out["T3b"][name] = t3b(pred, eps)
-    if t3_split in splits:
+            if run["T2"]:
+                out["T2"][str(h)][name] = t2(pred, eps, stds[name], h, breakdown=True, bias_removed=bias_removed)
+            if run["T2_any"]:
+                out["T2_any"][str(h)][name] = t2(pred, eps, stds[name], h, any_hour=True, breakdown=True,
+                                                 bias_removed=bias_removed)
+        if run["T3b"]:
+            out["T3b"][name] = t3b(pred, eps)
+    if (tasks is None or "T3" in tasks) and t3_split in splits:
         out["T3"] = t3(pred, splits[t3_split])
-    if cf_test is not None and pred.provides_t4:
+    if (tasks is None or "T4" in tasks) and cf_test is not None and pred.provides_t4:
         out["T4"] = t4(pred, cf_test)
     return out
 

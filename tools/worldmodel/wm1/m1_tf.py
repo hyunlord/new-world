@@ -219,6 +219,7 @@ def main(argv=None) -> int:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--root", default=str(g.c.DEFAULT_ROOT))
     ap.add_argument("--device", default="auto")
+    ap.add_argument("--dataset", default="v0", choices=sorted(g.c.DATASETS))
     for k, v in DEFAULTS.items():
         ap.add_argument(f"--{k.replace('_', '-')}", dest=k, type=type(v), default=None)
     args = ap.parse_args(argv)

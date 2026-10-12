@@ -96,3 +96,15 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 
 ### Part 0
 - **F0.1** The Mac clone has an unstaged `.gitignore` change and an untracked `.ignore` (both from the local `graft` code-index tool, which predates this run). They are not part of this run and are never staged; every commit stages explicit paths only.
+
+### Part 1
+- **F1.1** The pilot manifest is built from the episodes' `meta.json` files only (`wm1/pilot_manifest.py`, run on the Mac's read-only copy; the DGX copy is byte-identical by `rsync --checksum` and `verify_episode`). `files` carries each array's sha256 from `meta.json` (`meta.json` and `interventions.json` themselves have no recorded hash). Group names of a pilot dataset are `train`, `val`, `test`.
+- **F1.2** `--dataset` lands on the scripts this run uses (`m1_gru.py train/final`, `m1_tf.py train`, `climatology.py val/final`) in the Part 2 commit, because it needs the schema-4 feature table; WM-1's other scripts (`m2_agents`, `m3_text`, `diversity`, `ridge_variants`, `repro_bench`, `direct_ridge`, `plot_cf`) stay v0-only (they read agents, C_cf or the v0 severity) and are unchanged. `final` reads the dataset from `config.json` (a WM-1 run without the key is v0) through `m1_gru.test_plan` (tested).
+
+### Part 2
+- **F2.1** `EpisodeData.bench.deaths` of a schema-4 episode includes `deaths_exposure` (`bench_v1.episode_arrays`' four-cause sum plus the exposure column), so that a model's rollout deaths (`bench.deaths[start]` + the cumulative predicted change of `Layout.deaths`, which includes exposure) stay on one definition. Nothing on the pilot reads it (no T4).
+- **F2.2** `EpisodeData` gains `names` (the table's columns) and `schema`; `Variant` gains `obs_state` (the observable column list; a severity-on observable variant raises `ValueError`). v0 objects keep their defaults, so every v0 path is unchanged; `test_golden_v0.py` asserts it bit for bit against values computed at the merge commit before the edit.
+- **F2.3** `Persistence` gets a vectorized `rollout` (the same values as its `step`, tested): the step loop rebuilt the whole history for every start and step, which would have taken hours on the pilot's every-hour starts.
+- **F2.4** The harness's every-hour and 06:00 start sets already equal `bench_v1.rollout_starts(n, h, True / False)` on 120-day episodes (tested on synthetic episodes); the split std is `bench_v0.split_std` = `bench_v1.split_std` (rows ≥ 24 of the scored split).
+- **F2.5** The bias-removed score is reported for T2 and T2-any (24 h and 168 h) of every pilot predictor; selection keys `T2br_*` (06:00) and `T2anybr_*` (every hour) name `cal_best_anom` (and `cal_best_anom_fair`).
+- **F2.6** The observable ridge of `bench_v1` is `evaluate.fit_ridge_without_severity(train, val, action_aware=False)` (lags of V, hour, season; λ from the bench grid on the validation T1 mean nMAE; rollout with `severity="none"`), the same features and selection as `bench_v1`'s `ridge`. It is evaluated by `climatology.py` beside persistence as a reference.
