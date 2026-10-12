@@ -61,9 +61,12 @@ fn harness_lineage_keys_do_not_collide() {
 
 #[test]
 fn harness_v15_newborns_carry_their_first_parents_key() {
-    // Every newborn of a 28-day v15 run has a lineage key that no founder or
-    // other newborn has, and the founders' birth counts add up to the births.
-    let mut engine = game_v15_scene(1);
+    // Every resident of a 28-day v15 run carries a lineage, keys are distinct,
+    // and every newborn's key lies in the child closure of the founders' keys
+    // (founder -> child -> grandchild), i.e. it came from a first parent and its
+    // birth count, never from the settlement/tick fallback (review round 1, M1).
+    let seed = 1;
+    let mut engine = game_v15_scene(seed);
     for _ in 0..40_320 {
         engine.tick();
     }
@@ -73,6 +76,25 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
     let alive = engine.world.query::<&Agent>().iter().count();
     assert_eq!(rows.len(), alive, "every resident carries a lineage");
     assert!(engine.resources.tallies.births > 0);
+    let mut closure = BTreeSet::new();
+    let mut generation: Vec<Lineage> = (0..24).map(|i| Lineage::founder(seed, i)).collect();
+    for depth in 0..3 {
+        let mut next = Vec::new();
+        for parent in &generation {
+            closure.insert(parent.key);
+            let mut p = *parent;
+            for _ in 0..if depth == 0 { 400 } else { 40 } {
+                next.push(p.child(seed));
+            }
+        }
+        generation = next;
+    }
+    closure.extend(generation.iter().map(|l| l.key));
+    let newborns: Vec<u64> = keys.iter().copied().filter(|k| !(0..24).any(|i| Lineage::founder(seed, i).key == *k)).collect();
+    assert!(!newborns.is_empty());
+    for key in newborns {
+        assert!(closure.contains(&key), "newborn key {key:#x} is not a first parent's child");
+    }
 }
 
 // ---------------------------------------------------------------- section 7.4 ----

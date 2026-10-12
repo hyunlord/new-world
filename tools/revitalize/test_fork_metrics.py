@@ -42,6 +42,23 @@ class StatisticsTests(unittest.TestCase):
         self.assertIsNone(stats["vrf_seeds_both_noisy"])
         self.assertFalse(stats["passes_g0b"])
 
+    def test_constant_fractional_columns_are_exactly_quiet(self) -> None:
+        # Review round 1, L4: a constant non-integer column is noise-free, not a rounding ratio.
+        y_f = np.full((6, 6), 0.1) + np.arange(6)[:, None] * 0.37
+        stats = effect_stats(y_f + 2.0, y_f, resamples=20)
+        self.assertEqual(stats["v_paired"], 0.0)
+        self.assertIsNone(stats["vrf"])
+
+    def test_quiet_bootstrap_resamples_are_excluded(self) -> None:
+        # Review round 1, L5: one noisy seed among quiet ones; resamples without it have no VRF.
+        y_f = np.zeros((4, 4))
+        y_f[0] = [0, 1, 0, 1]
+        y_v = y_f.copy()
+        stats = effect_stats(y_v, y_f, resamples=200)
+        self.assertTrue(math.isinf(stats["vrf"]))
+        self.assertGreater(stats["bootstrap_quiet_resamples"], 0)
+        self.assertTrue(math.isinf(stats["vrf_lo"]))
+
     def test_hand_computed_vrf(self) -> None:
         # One seed, R = 3. Factual 0, 1, 2; variant 1, 3, 2.
         y_f = np.array([[0.0, 1.0, 2.0]])

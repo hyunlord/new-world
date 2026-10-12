@@ -24,7 +24,7 @@ Noisy seeds: seeds whose 8 replicates do not all give the same value, in the fac
 | rot_wood | food_store | 3.55 | [2.09, 7.23] | 21.3 | 75.6 | 32 / 32 / 32 | 3.55 | -19.3 | 0.875 | 3.27 | 20.6 | reported |
 | rot_wood | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
 | rot_wood | births | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
-| rain | dark_nights | 1 | [1, ∞] | 0.0162 | 0.0162 | 3 / 1 / 1 | 1 | 0.23 | 0.938 | 0 | 1 | fail |
+| rain | dark_nights | 1 | [1, 1] | 0.0162 | 0.0162 | 3 / 1 / 1 | 1 | 0.23 | 0.938 | 0 | 1 | fail |
 | rain | cold_member_hours | 1.69 | [1.09, 3.51] | 295 | 499 | 12 / 6 / 5 | 5.8 | 64.8 | 0.875 | 0 | 180 | pass |
 | rain | food_store | 16.5 | [9.34, 30.9] | 4.69 | 77.3 | 32 / 32 / 32 | 16.5 | -2 | 0.906 | 1.32 | 10.4 | reported |
 | rain | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
@@ -76,11 +76,11 @@ G0b (dark nights and cold member-hours of every C_cf variant): **FAIL**; exclude
 
 | variant | intervention tick | first agent moved (ticks after) | moved share after 1 h / 6 h / 24 h / 72 h | first diff: dark nights | cold member-hours | food store | deaths | births |
 |---|---:|---|---|---|---|---|---|---|
-| gift_wood | 29400 | 2.46e+03 (never 0) | 0 / 0 / 0 / 0.542 | 7.83e+03 (never 8) | 7.83e+03 (never 8) | 3.96e+03 (never 0) | – (never 32) | 1.54e+04 (never 30) |
-| rot_wood | 29400 | 1.05e+03 (never 0) | 0 / 0 / 0.107 / 0.405 | 6.36e+03 (never 0) | 6.36e+03 (never 0) | 2.85e+03 (never 0) | – (never 32) | 1.64e+04 (never 25) |
-| rain | 33720 | 1.02e+03 (never 0) | 0 / 0 / 0.607 / 0.667 | 60 (never 0) | 300 (never 0) | 480 (never 0) | – (never 32) | 1.21e+04 (never 27) |
+| gift_wood | 29400 | 2.46e+03 (never 0) | 0 / 0 / 0 / 0.548 | 7.83e+03 (never 8) | 7.83e+03 (never 8) | 3.96e+03 (never 0) | – (never 32) | 1.54e+04 (never 30) |
+| rot_wood | 29400 | 1.05e+03 (never 0) | 0 / 0 / 0.107 / 0.417 | 6.36e+03 (never 0) | 6.36e+03 (never 0) | 2.85e+03 (never 0) | – (never 32) | 1.64e+04 (never 25) |
+| rain | 33720 | 1.02e+03 (never 0) | 0 / 0 / 0.619 / 0.663 | 60 (never 0) | 300 (never 0) | 480 (never 0) | – (never 32) | 1.21e+04 (never 27) |
 | cold_snap | 35160 | 2.55e+03 (never 0) | 0 / 0 / 0 / 0.643 | 2.04e+03 (never 2) | 1.98e+03 (never 3) | 1.89e+03 (never 0) | – (never 32) | 8.76e+03 (never 28) |
-| windfall | 31920 | 60 (never 0) | 0 / 0.422 / 0.0952 / 0.571 | 5.31e+03 (never 8) | 5.31e+03 (never 10) | 420 (never 0) | – (never 32) | 1.39e+04 (never 27) |
+| windfall | 31920 | 60 (never 0) | 0.405 / 0.41 / 0.167 / 0.631 | 5.31e+03 (never 8) | 5.31e+03 (never 10) | 420 (never 0) | – (never 32) | 1.39e+04 (never 27) |
 | gift1 | 29400 | 4.44e+03 (never 3) | 0 / 0 / 0 / 0 | 1.01e+04 (never 29) | – (never 32) | 60 (never 0) | – (never 32) | 1.64e+04 (never 27) |
 
 ## Newborn lineage keys (Y6, reported only)

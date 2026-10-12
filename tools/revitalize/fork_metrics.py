@@ -45,11 +45,16 @@ BOOT_SEED = 9
 
 # ------------------------------------------------------------------ statistics -------------------------------------
 def vrf_of(y_v: np.ndarray, y_f: np.ndarray) -> tuple[float, float, float | None]:
-    """(V_p, V_u, VRF) for arrays [S, R] of one variant and target; VRF None = no agent noise."""
+    """(V_p, V_u, VRF) for arrays [S, R] of one variant and target; VRF None = no agent noise.
+    A variance at or below 1e-12 x max(1, mean square of the values) counts as 0 (rounding
+    of a constant non-integer column; review round 1, L4)."""
     paired = y_v - y_f
     unpaired = y_v - np.roll(y_f, -1, axis=1)
     v_p = float(np.var(paired, axis=1, ddof=1).mean())
     v_u = float(np.var(unpaired, axis=1, ddof=1).mean())
+    floor = 1e-12 * max(1.0, float(np.mean(y_v ** 2)), float(np.mean(y_f ** 2))) if y_v.size else 0.0
+    v_p = 0.0 if v_p <= floor else v_p
+    v_u = 0.0 if v_u <= floor else v_u
     if v_p == 0.0:
         return v_p, v_u, (math.inf if v_u > 0.0 else None)
     return v_p, v_u, v_u / v_p
@@ -64,15 +69,22 @@ def effect_stats(y_v: np.ndarray, y_f: np.ndarray, resamples: int = RESAMPLES, b
     paired = y_v - y_f
     seeds = y_v.shape[0]
     lo = hi = None
+    quiet = 0
     if vrf is not None:
         rng = np.random.default_rng(boot_seed)
         draws = []
         for _ in range(resamples):
             index = rng.integers(0, seeds, seeds)
             value = vrf_of(y_v[index], y_f[index])[2]
-            draws.append(math.inf if value is None else value)
-        lo = float(np.quantile(draws, 0.025, method="inverted_cdf"))
-        hi = float(np.quantile(draws, 0.975, method="inverted_cdf"))
+            # A resample of seeds with no agent noise at all has no VRF: excluded
+            # (review round 1, L5); counted in `bootstrap_quiet_resamples`.
+            if value is None:
+                quiet += 1
+            else:
+                draws.append(value)
+        if draws:
+            lo = float(np.quantile(draws, 0.025, method="inverted_cdf"))
+            hi = float(np.quantile(draws, 0.975, method="inverted_cdf"))
     seed_mean = paired.mean(axis=1)
     # Where the agent noise reaches the outcome: seeds whose replicates differ in each arm.
     f_noisy, v_noisy = np.std(y_f, axis=1) > 0, np.std(y_v, axis=1) > 0
@@ -89,7 +101,7 @@ def effect_stats(y_v: np.ndarray, y_f: np.ndarray, resamples: int = RESAMPLES, b
         "median_abs_seed_mean": float(np.median(np.abs(seed_mean))),
         "seeds": int(seeds), "replicates": int(y_v.shape[1]),
         "seeds_factual_noisy": int(f_noisy.sum()), "seeds_variant_noisy": int(v_noisy.sum()), "seeds_both_noisy": int(both.sum()),
-        "vrf_seeds_both_noisy": vrf_both,
+        "vrf_seeds_both_noisy": vrf_both, "bootstrap_quiet_resamples": quiet,
     }
 
 
@@ -225,12 +237,16 @@ def build(args) -> dict:
                     placebo.append({"seed": seed, "id": pid, "replicate": k, **result})
     replicate0 = []
     if args.unforked:
+        # Every family must have its unforked run; a missing one counts as a failure
+        # (review round 1, L6).
         for seed in seeds:
             for eid in ids:
                 unforked = args.unforked / episode_name(scene, seed, eid, None)
                 if unforked.exists():
                     result = identity(root / episode_name(scene, seed, eid, 0), unforked)
-                    replicate0.append({"seed": seed, "id": eid, **result})
+                else:
+                    result = {"identical": False, "missing_unforked_run": True}
+                replicate0.append({"seed": seed, "id": eid, **result})
     report["g0a"] = {"placebo_runs": len(placebo), "placebo_identical": sum(r["identical"] for r in placebo),
                      "replicate0_runs": len(replicate0), "replicate0_identical": sum(r["identical"] for r in replicate0),
                      "failures": [r for r in placebo + replicate0 if not r["identical"]]}
@@ -272,8 +288,11 @@ def summarize_divergence(per_seed: list[dict], start: int) -> dict:
     moved = [d["first_moved_tick"] - start for d in per_seed if d["first_moved_tick"] is not None]
     out["first_moved"] = {"median_ticks_after": float(np.median(moved)) if moved else None,
                           "never": sum(1 for d in per_seed if d["first_moved_tick"] is None)}
+    # The row `hours` after the intervention, by its tick (row 0 is the intervention
+    # tick itself, taken before the intervention; review round 1, L1).
+    ticks = per_seed[0]["ticks"] if per_seed else []
     for hours in (1, 6, 24, 72):
-        row = min(hours - 1, shares.shape[1] - 1) if shares.shape[1] else None
+        row = ticks.index(start + 60 * hours) if start + 60 * hours in ticks else None
         out[f"median_moved_share_after_{hours}h"] = float(np.median(shares[:, row])) if row is not None else None
     return out
 

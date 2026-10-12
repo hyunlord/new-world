@@ -621,8 +621,10 @@ impl WmArgs {
                 if parsed.schedule_dir.is_none() || !parsed.include_factual {
                     return Err("--fork-tick needs --schedule-dir and --include-factual".into());
                 }
-                if tick >= parsed.days * 1440 {
-                    return Err("--fork-tick must lie inside the run".into());
+                // Tick 0 is rejected: founders' lives are drawn at worldgen, before
+                // the recorder could set the fork (review round 1, L3).
+                if tick == 0 || tick >= parsed.days * 1440 {
+                    return Err("--fork-tick must lie inside the run (1..days x 1440)".into());
                 }
             }
             None if parsed.replicates != 0 => return Err("--replicates needs --fork-tick".into()),
@@ -827,5 +829,10 @@ mod tests {
         assert!(parse("--scene game_v13 --seeds 0..2 --days 10 --workers 9 --out x").is_err());
         assert!(parse("--scene game_v13 --seeds 0..2 --days 10 --include-factual --out x").is_err());
         assert!(parse("--scene game_v13 --seeds 0..2 --days 401 --out x").is_err());
+        let fork = |t: &str| parse(&format!("--scene game_v15 --seeds 0..2 --days 2 --schedule-dir d --include-factual --fork-tick {t} --replicates 2 --out x"));
+        assert!(fork("1440").is_ok());
+        assert!(fork("0").is_err());
+        assert!(fork("2880").is_err());
+        assert!(parse("--scene game_v15 --seeds 0..2 --days 2 --fork-tick 10 --replicates 2 --out x").is_err());
     }
 }
