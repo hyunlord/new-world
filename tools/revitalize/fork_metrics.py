@@ -74,6 +74,10 @@ def effect_stats(y_v: np.ndarray, y_f: np.ndarray, resamples: int = RESAMPLES, b
         lo = float(np.quantile(draws, 0.025, method="inverted_cdf"))
         hi = float(np.quantile(draws, 0.975, method="inverted_cdf"))
     seed_mean = paired.mean(axis=1)
+    # Where the agent noise reaches the outcome: seeds whose replicates differ in each arm.
+    f_noisy, v_noisy = np.std(y_f, axis=1) > 0, np.std(y_v, axis=1) > 0
+    both = f_noisy & v_noisy
+    vrf_both = vrf_of(y_v[both], y_f[both])[2] if both.sum() >= 1 else None
     stable = [bool(np.all(np.sign(row) == np.sign(m))) for row, m in zip(paired, seed_mean)]
     return {
         "v_paired": v_p, "v_unpaired": v_u, "vrf": vrf, "vrf_lo": lo, "vrf_hi": hi,
@@ -84,6 +88,8 @@ def effect_stats(y_v: np.ndarray, y_f: np.ndarray, resamples: int = RESAMPLES, b
         "spread_median_std": float(np.median(np.std(paired, axis=1, ddof=1))),
         "median_abs_seed_mean": float(np.median(np.abs(seed_mean))),
         "seeds": int(seeds), "replicates": int(y_v.shape[1]),
+        "seeds_factual_noisy": int(f_noisy.sum()), "seeds_variant_noisy": int(v_noisy.sum()), "seeds_both_noisy": int(both.sum()),
+        "vrf_seeds_both_noisy": vrf_both,
     }
 
 
@@ -107,8 +113,9 @@ def sha256(path: Path) -> str:
 
 def identity(a: Path, b: Path) -> dict:
     """Section 8.1's identity of two episodes: every `.npy` equal by sha256, `interventions.json`
-    equal after removing amount-0 records, `meta.json` equal except `episode_id`, `noise_fork`
-    and `schedule` (a placebo's schedule holds only amount-0 rows; checked)."""
+    equal after removing amount-0 records, `meta.json` equal except `episode_id` and `noise_fork`,
+    with `schedule` compared after removing amount-0 rows (a placebo's schedule differs from the
+    factual's null only by such rows)."""
     npy_a = sorted(p.name for p in a.glob("*.npy"))
     npy_b = sorted(p.name for p in b.glob("*.npy"))
     differing = [n for n in npy_a if n not in npy_b or sha256(a / n) != sha256(b / n)] + [n for n in npy_b if n not in npy_a]
@@ -116,12 +123,12 @@ def identity(a: Path, b: Path) -> dict:
     inter_a = json.loads((a / "interventions.json").read_text())
     inter_b = json.loads((b / "interventions.json").read_text())
     meta_a, meta_b = json.loads((a / "meta.json").read_text()), json.loads((b / "meta.json").read_text())
-    schedules_ok = all(all(row.get("amount") == 0 for row in (m.get("schedule") or [])) for m in (meta_a, meta_b))
+    schedules_ok = drop(meta_a.get("schedule") or []) == drop(meta_b.get("schedule") or [])
     strip = lambda m: {k: v for k, v in m.items() if k not in ("episode_id", "noise_fork", "schedule")}
     meta_diff = sorted(k for k in set(strip(meta_a)) | set(strip(meta_b)) if strip(meta_a).get(k) != strip(meta_b).get(k))
     same = not differing and drop(inter_a) == drop(inter_b) and not meta_diff and schedules_ok
     return {"identical": same, "npy_differing": differing, "interventions_equal": drop(inter_a) == drop(inter_b),
-            "meta_differing": meta_diff, "schedules_only_amount_zero": schedules_ok}
+            "meta_differing": meta_diff, "schedules_equal_without_amount_zero": schedules_ok}
 
 
 def series(path: Path) -> dict:
@@ -308,13 +315,17 @@ def markdown(report: dict) -> str:
               "VRF = V_unpaired / V_paired, variances over replicates within a seed, averaged over seeds; 95 % interval from a "
               "cluster bootstrap over seeds. The unpaired arm still shares worldgen, weather and the whole prefix up to the fork, "
               "so VRF measures the value of pairing the post-fork agent noise only.", "",
-              "| variant | target | VRF | 95 % CI | V_paired | V_unpaired | mean effect | sign stability | median std | median abs seed mean | G0b |",
-              "|---|---|---:|---|---:|---:|---:|---:|---:|---:|---|"]
+              "Noisy seeds: seeds whose 8 replicates do not all give the same value, in the factual (f), the variant (v) and both; "
+              "where the factual is constant within a seed, the paired and unpaired differences have the same variance and that "
+              "seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only).", "",
+              "| variant | target | VRF | 95 % CI | V_paired | V_unpaired | noisy seeds f / v / both | VRF (both noisy) | mean effect | sign stability | median std | median abs seed mean | G0b |",
+              "|---|---|---:|---|---:|---:|---|---:|---:|---:|---:|---:|---|"]
     for eid, by_target in report["vrf"].items():
         for t, s in by_target.items():
             gate = ("no agent noise" if s["no_agent_noise"] else ("pass" if s["passes_g0b"] else "fail")) if t in GATED else "reported"
             lines.append(f"| {eid} | {t} | {fmt(s['vrf'])} | [{fmt(s['vrf_lo'])}, {fmt(s['vrf_hi'])}] | {fmt(s['v_paired'])} | "
-                         f"{fmt(s['v_unpaired'])} | {fmt(s['mean_effect'])} | {fmt(s['sign_stability'])} | {fmt(s['spread_median_std'])} | "
+                         f"{fmt(s['v_unpaired'])} | {s['seeds_factual_noisy']} / {s['seeds_variant_noisy']} / {s['seeds_both_noisy']} | "
+                         f"{fmt(s['vrf_seeds_both_noisy'])} | {fmt(s['mean_effect'])} | {fmt(s['sign_stability'])} | {fmt(s['spread_median_std'])} | "
                          f"{fmt(s['median_abs_seed_mean'])} | {gate} |")
     g0b = report["g0b"]
     lines += ["", f"G0b (dark nights and cold member-hours of every C_cf variant): **{'PASS' if g0b['passed'] else 'FAIL'}**; "

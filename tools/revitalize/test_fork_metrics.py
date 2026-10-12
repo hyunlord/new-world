@@ -20,6 +20,7 @@ class StatisticsTests(unittest.TestCase):
         self.assertEqual(stats["v_paired"], 0.0)
         self.assertTrue(math.isinf(stats["vrf"]) and math.isinf(stats["vrf_lo"]))
         self.assertTrue(stats["passes_g0b"])
+        self.assertEqual((stats["seeds_factual_noisy"], stats["seeds_both_noisy"]), (6, 6))
         self.assertAlmostEqual(stats["mean_effect"], 2.0)
         self.assertEqual(stats["sign_stability"], 1.0)
 
@@ -28,6 +29,17 @@ class StatisticsTests(unittest.TestCase):
         stats = effect_stats(y_f + 1, y_f, resamples=20)
         self.assertIsNone(stats["vrf"])
         self.assertTrue(stats["no_agent_noise"])
+        self.assertFalse(stats["passes_g0b"])
+
+    def test_constant_factual_gives_vrf_one(self) -> None:
+        # Noise only in the variant arm: pairing has nothing to cancel.
+        rng = np.random.default_rng(3)
+        y_f = np.repeat(np.arange(5.0)[:, None], 8, axis=1)
+        y_v = y_f + rng.integers(0, 3, size=(5, 8))
+        stats = effect_stats(y_v, y_f, resamples=50)
+        self.assertEqual(stats["vrf"], 1.0)
+        self.assertEqual(stats["seeds_factual_noisy"], 0)
+        self.assertIsNone(stats["vrf_seeds_both_noisy"])
         self.assertFalse(stats["passes_g0b"])
 
     def test_hand_computed_vrf(self) -> None:
@@ -96,7 +108,11 @@ class IdentityTests(unittest.TestCase):
             gift = episode(root, "g", data, real, {**placebo_meta, "schedule": [{**placebo_meta["schedule"][0], "amount": 3}]})
             result = identity(gift, factual)
             self.assertFalse(result["identical"])
-            self.assertFalse(result["interventions_equal"] and result["schedules_only_amount_zero"])
+            self.assertFalse(result["interventions_equal"] and result["schedules_equal_without_amount_zero"])
+            # A real variant against itself unforked: same nonzero schedule, identical.
+            same_gift = episode(root, "g2", data, real, {**placebo_meta, "noise_fork": None,
+                                                         "schedule": [{**placebo_meta["schedule"][0], "amount": 3}]})
+            self.assertTrue(identity(gift, same_gift)["identical"])
             other = episode(root, "o", data, [], {**meta, "seed": 4})
             self.assertEqual(identity(other, factual)["meta_differing"], ["seed"])
 
