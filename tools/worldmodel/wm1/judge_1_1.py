@@ -53,7 +53,7 @@ def verdict(cells: dict[str, tuple[list[float], float]]) -> str:
 
 
 def skill(model: float, cal: float) -> float | None:
-    if cal is None or not np.isfinite(cal) or cal == 0:
+    if cal is None or not np.isfinite(cal) or cal == 0 or model is None or not np.isfinite(model):
         return None
     return 1.0 - model / cal
 
@@ -164,7 +164,7 @@ def main(argv=None) -> int:
     # X6
     sevon = models.get(SEVON)
     x6 = {}
-    if sevon:
+    if sevon and all(models.get(n) for n in M1B):
         blind = [models[n] for n in M1B]
         for s in SPLITS:
             x6.setdefault("T3b_mae", {})[s] = {"sev_on": sevon["T3b"][s]["mae"],

@@ -67,7 +67,7 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 - **E1.2** Ties in the validation selection go to the earlier member of the order cal_abs, cal_year, ap1_abs, ap1_year, apfit_abs, apfit_year, an1, an5, an5_off. They occur only on T3 / T3b among the non-analog members (identical fire predictions), never for `cal_best`.
 - **E1.3** No A_train variable has `split_std` 0, so the analog distance scales every variable by its train std (the code would use scale 1 for a zero std).
 - **E1.4** `climatology.py val` evaluates every member on A_val and B_val through `evaluate.evaluate` with `t3_split="A_val"` (T3 on A_val only, GOAL_1_1.md 6.2). The final run evaluates every member on the four test splits, not only the two selected ones, so the tables can show all nine.
-- **E1.5** v1's selection is recorded before any v1 test number: `diversity_v1.py --val-only` writes the val scores and the selection; the full run (after METRICS_1_1.md) adds the test roles.
+- **E1.5** v1's selection is recorded before any v1 calendar-family test score: `diversity_v1.py --val-only` writes the val scores and the selection; the full run (after METRICS_1_1.md) adds the test-role scores. Correction after review round 1: the `--val-only` run also computed the descriptive diagnostics of v1's test splits (amendment in METRICS_1_1.md); they are labelled as computed before pre-registration.
 
 ### Part 2
 - **E2.1** η² within groups of equal winter-severity sequences pools only groups with at least two episodes (a singleton group has zero within-group variance by construction); its denominator is the same episodes' sum of squares around the split's pooled mean. The number of episodes used is reported.

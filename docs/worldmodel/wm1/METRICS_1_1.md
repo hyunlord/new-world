@@ -141,9 +141,18 @@ row 23 .. T−2). Library and statistics from v1 A_train (96 episodes, 2,881 row
 
 ## Amendments
 
-- **2026-10-12 11:10 (before any diversity number existed; the first `diversity.py` run stopped with an error on
+- **2026-10-12 11:08 (before any v0 diversity number existed; the first `diversity.py` run stopped with an error on
   OOD_v12 before writing output).** `diversity.py`'s severity assertion (season 3 and severity >= 0 at 18:00 of each
   winter's first day) is relaxed for OOD_v12 only: game_v12 is the Pass 6 ruleset without winter severity
   (DATASET_v0.md), so its episodes read −1 there; the assertion now requires −1 for OOD_v12 and >= 0 for every
   other split. Its "distinct sequences" count is therefore 1 (no draw). No other change; `climatology.py` and
   `calcore.py` are unchanged.
+- **2026-10-12 (post-hoc disclosure after review round 1, finding 1).** The v1 validation run
+  `diversity_v1_dfec0bdd --val-only`, committed together with this file, already contained the *descriptive*
+  diagnostics (R²_abs, R²_year, η², divergence, spread) of v1's test splits (A_test, B_test, OOD_v13, OOD_long),
+  because `--val-only` skips only the calendar-family scores of the test roles. R²_abs of a test split is the
+  squared-error skill of CalAbs there, i.e. a test-role baseline number that existed before this file. No X rule uses
+  v1 numbers and v1's selection used v1 A_val and B_val only, so no verdict or selection is affected; the v1
+  test-split diagnostics are labelled "computed before pre-registration (descriptive)". `diversity_v1.py` is not
+  changed (the numbers it produced stay reproducible); the v1 calendar-family test scores (`diversity_v1_9f4fd3f3`)
+  were first computed after this file.

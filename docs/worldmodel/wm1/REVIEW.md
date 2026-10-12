@@ -177,3 +177,19 @@ Round 2 is complete, and the report is above. No blocking findings, and W8 (leak
 
 Two rounds are the maximum (GOAL 0.3.3); round 2 had no blocking findings, so no third round was run.
 
+
+## WM-1.1
+
+### Round 1 (fresh `general-purpose` subagent, 12:42–12:53, on `e29ef99f`; M1b seeds 1–2, sev-on and M3-noday test numbers did not exist yet because the DGX was unreachable)
+
+Checked: leakage (train-only fits, val-only selection, rows <= s, no severity / actions input), pre-registration order, the wrap rule and analog shift, the α fit, η² / R² / divergence / spread / severity sequences, seven skill cells recomputed by hand from the raw JSONs (all equal to `judge_1_1.py`'s), the X logic, `diversity_v1.py`'s import isolation, the `m3_text.py` change. 65 unit tests OK (3 recorder skips). Verdict: **no BLOCKING finding, one MAJOR, five MINOR, four NOTEs**.
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| 1 | MAJOR | `diversity_v1.py --val-only` computes the descriptive diagnostics of v1's test splits too (it skips only the test-role calendar scores), and that output was committed with METRICS_1_1.md, so v1 test-split R²_abs (a CalAbs skill) existed before the pre-registration; METRICS' "no v1 test number exists" and E1.5 were wrong. No X rule uses v1 and v1's selection used val only. | Dated post-hoc disclosure in METRICS_1_1.md; E1.5 corrected; v1 test-split diagnostics labelled "computed before pre-registration (descriptive)" in WM1_1.md. Code not changed (the published numbers stay reproducible). |
+| 2 | MINOR | The OOD_v12 amendment was dated 11:10, its commit is 11:08:36. | Corrected to 11:08. |
+| 3 | MINOR | The wrap rule's `p(r') == p(r)`, `r' < T_tr` is asserted only in tests, not at run time. | Not changed in `calcore.py` after its test numbers existed (no number affected; the property is algebraic and unit-tested). Recorded. |
+| 4 | MINOR | `analog_neighbours` would index wrongly for a start < 23 (negative index). All harness starts are >= 23. | Not changed (same reason as 3); recorded as a limitation of the function. |
+| 5 | MINOR | The no-future-reads test used single-start calls only. | `test_climatology.py` now also perturbs rows > s and calls with every start at once (passes). |
+| 6 | MINOR | `judge_1_1.py` X6 would crash with sev-on present and a sev-blind seed missing; a NaN model nMAE would pass into skill. | Fixed (X6 only when all three seeds exist; skill returns "—" for a missing / NaN model value). |
+| 7–10 | NOTE | cumulative-sum rounding in analog distances (not a leak; could flip exact near-ties); `assert`-based guards in `diversity_v1.py`; the failed first v0 diversity run computed in memory and wrote nothing; `food_stock` R²_abs on A_test is 0.899, just below the 0.9 flag. | Recorded; the 0.899 is stated in WM1_1.md. |

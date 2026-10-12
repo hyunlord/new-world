@@ -104,6 +104,10 @@ class PredictorTests(unittest.TestCase):
                 other = synth_ep(v2, ep.seed, role="test")
                 got = pred.rollout(other, np.array([s]), h, other.bench.actions).v
                 np.testing.assert_array_equal(got[0], base[i], err_msg=f"{member} reads rows > {s}")
+                # Grouped call (every start at once): the perturbed start's row still matches.
+                got_all = pred.rollout(other, starts, h, other.bench.actions).v
+                np.testing.assert_allclose(got_all[i], base[i], rtol=0, atol=1e-9,
+                                           err_msg=f"{member} reads rows > {s} in a grouped call")
             # Actions, severity, wood_target and lifespans: the predictor reads none of them.
             acts = np.ones_like(ep.bench.actions) * 50.0
             sev = np.full(self.T, 2, dtype=np.int64)
