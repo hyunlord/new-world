@@ -76,3 +76,9 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 2 end, 3 | | 21:59:00 | probe and judge code (`ef880949`, 21:58); METRICS_1_2.md committed (`1a7dfdb6`, 21:59:00) and pushed before any test-role number |
 | 3 (baselines on test) | 21:59:13 | 21:59:30 | DGX at `1a7dfdb6`: `calendar_{p10_v16,p10_v15,p10_v16n}_1a7dfdb6` (`climatology.py final`, nine members + persistence + ridge; 15–16 s each, CPU); `calendar.json` written 21:59:29, after the pre-registration commit |
 | 5 | 22:00 | 22:04 | `families.py` + synthetic-family tests (`096d92d2`). Real-data smoke: 24 episodes (`game_v16_s1200{0,1}_{none,rot_wood,rain}_r{0..3}`, 82,560 KiB on the Mac, 83,219,656 bytes on the DGX) copied 22:03:00–22:03:06 into `p10/forks_smoke/game_v16_s<seed>/`; 24 of 24 verified; `families_smoke_096d92d2` (persistence and zero effect; < 1 s) |
+| review 1 | 22:05 | 22:18 | review round 1 (fresh `general-purpose` subagent; 1 MAJOR, 2 MINOR, 6 NOTE); fixes `c2465716`, `10624bf9` (REVIEW.md `## WM-1.2`) |
+| 4.1 | | 23:16:50 | `m1tf_p10v16_r3_s1`: stop `patience` at step 2,250, best step 1,500 (val T2 24 h 0.1060), 4,949 s; GPU 20.9 GB per job at k = 168 |
+| 4.1 | 23:17:14 | 23:19:26 | `m1tf_p10v16_r3_s1` `final` from `1a7dfdb6` (129 s); `metrics.json` 23:19:26 |
+| 4.1 | 23:20:33 | | `m1tf_p10v16_r3_s2` launched (code `1a7dfdb6`, same command, seed 2) |
+| 4.1 | | 23:55:50 | `m1tf_p10v16_r3_s0`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1008), 7,256 s |
+| 4.1 | 23:55:57 | 23:58:04 | `m1tf_p10v16_r3_s0` `final` from `1a7dfdb6` (125 s), then in the same slot `m1tf_p10v15_r3_s0` launched 23:58:05 (code `1a7dfdb6`, `--dataset p10_v15`, seed 0) |
