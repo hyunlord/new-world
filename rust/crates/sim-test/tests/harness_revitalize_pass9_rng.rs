@@ -124,14 +124,16 @@ fn harness_keyed_step_balanced() {
         let dy = keyed_step(5, STREAM_MOVE_DY, 41, tick, 0, 0);
         cells[(dx + 1) as usize][(dy + 1) as usize] += 1;
     }
-    for x in 0..3 {
-        let row: u32 = cells[x].iter().sum();
-        assert!((f64::from(row) / 1e6 - 1.0 / 3.0).abs() <= 0.01, "dx {x}");
-        for y in 0..3 {
-            let col: u32 = (0..3).map(|i| cells[i][y]).sum();
-            assert!((f64::from(col) / 1e6 - 1.0 / 3.0).abs() <= 0.01, "dy {y}");
-            assert!((f64::from(cells[x][y]) / 1e6 - 1.0 / 9.0).abs() <= 0.01, "cell {x},{y}");
+    let share = |count: u32| f64::from(count) / 1e6;
+    for (x, row) in cells.iter().enumerate() {
+        assert!((share(row.iter().sum()) - 1.0 / 3.0).abs() <= 0.01, "dx {x}");
+        for (y, cell) in row.iter().enumerate() {
+            assert!((share(*cell) - 1.0 / 9.0).abs() <= 0.01, "cell {x},{y}");
         }
+    }
+    for y in 0..3 {
+        let column: u32 = cells.iter().map(|row| row[y]).sum();
+        assert!((share(column) - 1.0 / 3.0).abs() <= 0.01, "dy {y}");
     }
 }
 
