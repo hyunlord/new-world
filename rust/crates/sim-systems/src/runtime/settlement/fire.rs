@@ -31,15 +31,25 @@
 //! Pass 8: the hourly rate is `firewood::night_rate`, which adds the night's
 //! drawn change (`night_burn_delta` of the evening, floor 1) when night weights
 //! are set; the probe and the recorder read the same helper.
+//!
+//! Pass 10 (`SocietyRules::exposure`): after the markers are set, every agent
+//! marked `Cold` this hour, in AgentId order, loses
+//! `damage_per_cold_hour[stage]` hp (child, adult, elder) and records this run's
+//! tick in its `ExposureClock`; an agent whose hp reaches 0 dies of exposure
+//! through `despawn_agent`, deaths booked in AgentId order.
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use hecs::World;
-use sim_core::components::{Agent, AgentId, Cold, ResourceKind, SettlementId};
+use sim_core::causal::event::DeathReason;
+use sim_core::components::{
+    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Position, ResourceKind, SettlementId,
+};
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
 use crate::runtime::decision::agent_decision::clock_in_window;
 use crate::runtime::settlement::firewood::{night_rate, night_season};
+use crate::runtime::survival::despawn_agent;
 
 /// Winter index of `SeasonRule` seasons.
 const WINTER: usize = 3;
@@ -122,13 +132,18 @@ impl RuntimeSystem for FireSystem {
             .collect();
         agents.sort_by_key(|(id, ..)| *id);
         let mut marked = 0u64;
+        let mut exposed: Vec<(AgentId, hecs::Entity)> = Vec::new();
         for (id, entity, has) in agents {
             match (cold.contains(&id), has) {
                 (true, false) => {
                     let _ = world.insert_one(entity, Cold);
                     marked += 1;
+                    exposed.push((id, entity));
                 }
-                (true, true) => marked += 1,
+                (true, true) => {
+                    marked += 1;
+                    exposed.push((id, entity));
+                }
                 (false, true) => {
                     let _ = world.remove_one::<Cold>(entity);
                 }
@@ -136,6 +151,55 @@ impl RuntimeSystem for FireSystem {
             }
         }
         resources.tallies.cold_member_hours += marked;
+        if let Some(exposure) = resources.rules.society.exposure {
+            expose(world, resources, &exposure.damage_per_cold_hour, &exposed, now);
+        }
+    }
+}
+
+/// Pass 10: wound every agent marked `Cold` this hour (`exposed`, in AgentId
+/// order) by its life stage's hourly damage, stamp its `ExposureClock` with
+/// this run's tick, and book exposure deaths in AgentId order.
+fn expose(
+    world: &mut World,
+    resources: &mut SimResources,
+    damage_per_cold_hour: &[f64; 3],
+    exposed: &[(AgentId, hecs::Entity)],
+    now: u64,
+) {
+    let mut deaths: Vec<(hecs::Entity, AgentId, (u32, u32))> = Vec::new();
+    for &(id, entity) in exposed {
+        let stage = if world.get::<&Child>(entity).is_ok() {
+            0
+        } else if world.get::<&Elder>(entity).is_ok() {
+            2
+        } else {
+            1
+        };
+        let stamped = match world.get::<&mut ExposureClock>(entity) {
+            Ok(mut clock) => {
+                clock.last_cold_tick = now;
+                true
+            }
+            Err(_) => false,
+        };
+        if !stamped {
+            let _ = world.insert_one(entity, ExposureClock { last_cold_tick: now });
+        }
+        let dead = match world.get::<&mut BodyHealth>(entity) {
+            Ok(mut health) => {
+                health.apply_damage(damage_per_cold_hour[stage]);
+                health.is_dead()
+            }
+            Err(_) => false,
+        };
+        if dead {
+            let position = world.get::<&Position>(entity).map(|p| (p.x, p.y)).unwrap_or((0, 0));
+            deaths.push((entity, id, position));
+        }
+    }
+    for (entity, id, position) in deaths {
+        despawn_agent(world, resources, entity, id, position, DeathReason::Exposure, now);
     }
 }
 

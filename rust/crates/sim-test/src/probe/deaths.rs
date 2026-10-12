@@ -190,7 +190,7 @@ impl Census {
 pub(super) struct DeathTracker {
     history: BTreeMap<AgentId, History>,
     observations: SharedObservations,
-    baseline: [u64; 4],
+    baseline: [u64; 5],
     /// Run aggregates checked against production counters.
     pub(super) census: Census,
 }
@@ -253,10 +253,13 @@ impl DeathTracker {
             };
             history.observe(at_death, tick);
             let reason = recorded_reason(engine, id, at_death.position);
-            // Old age comes from the recorded reason; the three Pass 3 causes keep
-            // their saturation inference so v8/v9 census rows stay comparable.
+            // Old age and (Pass 10) exposure come from the recorded reason; the
+            // three Pass 3 causes keep their saturation inference so v8/v9 census
+            // rows stay comparable.
             let cause = if reason == Some(DeathReason::OldAge) {
                 "old_age"
+            } else if reason == Some(DeathReason::Exposure) {
+                "exposure"
             } else if at_death.thirst >= Thirst::SATURATION {
                 "dehydration"
             } else if at_death.hunger >= f64::from(Hunger::SATURATION) {
@@ -308,7 +311,7 @@ impl DeathTracker {
         Ok((records, observed.elapsed))
     }
     fn cross_check(&self, engine: &SimEngine) -> Result<(), String> {
-        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age"]
+        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age", "exposure"]
             .into_iter()
             .zip(tallies(engine))
             .zip(self.baseline)
@@ -322,9 +325,9 @@ impl DeathTracker {
         Ok(())
     }
 }
-fn tallies(engine: &SimEngine) -> [u64; 4] {
+fn tallies(engine: &SimEngine) -> [u64; 5] {
     let t = &engine.resources.tallies;
-    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age]
+    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age, t.deaths_exposure]
 }
 
 #[cfg(test)]

@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SAMPLE = ROOT / "docs/worldmodel/sample"
 BIN = Path(os.environ.get("WM_BIN", ROOT / "rust/target/release/worldsim_wm"))
 V1_CF = Path(os.environ.get("WM_DATA_ROOT", "/Users/rexxa/work/worldsim-wm-data")) / "v1/C_cf/game_v14_s12000_none"
+# Pass 10: a real schema-3 episode recorded by Pass 9 (read-only).
+P9_FORK = Path(os.environ.get("WM_DATA_ROOT", "/Users/rexxa/work/worldsim-wm-data")) / "p9/unforked/game_v15_s12000_none"
 EPISODES = sorted(p for p in SAMPLE.iterdir() if (p / "meta.json").exists()) if SAMPLE.exists() else []
 
 
@@ -110,7 +112,7 @@ class LoaderTests(unittest.TestCase):
 @unittest.skipUnless(BIN.exists(), f"recorder not built: {BIN}")
 class SchemaThreeTests(unittest.TestCase):
     """Pass 9: the loader reads schema 1 (the committed sample, above), schema 2
-    and schema 3 episodes."""
+    and schema 3 episodes; Pass 10: and schema 4 (the recorder's own)."""
 
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
@@ -125,7 +127,7 @@ class SchemaThreeTests(unittest.TestCase):
 
     def test_schema_three_carries_lineage_keys_as_identity(self) -> None:
         ep = load_episode(self.path)
-        self.assertEqual(ep.meta["schema_version"], 3)
+        self.assertEqual(ep.meta["schema_version"], 4)
         self.assertIs(ep.meta["keyed_draws"], True)
         self.assertIsNone(ep.meta["noise_fork"])
         keys = ep.lineage_keys()
@@ -137,9 +139,57 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertTrue(field["identity"] and field["hidden"])
         self.assertEqual(ep.meta["observable_fields"]["agent_keys.npy"], [])
 
+    def _rewrite_as_schema_three(self) -> None:
+        # A schema-3 episode is a schema-4 one without the two appended global
+        # columns, the appended agent `hp` field and the `world_variety` meta key.
+        meta = json.loads((self.path / "meta.json").read_text())
+        for name, drop in (("global.npy", 2), ("agents.npy", 1)):
+            data = np.load(self.path / name)
+            np.save(self.path / name, np.ascontiguousarray(data[..., :-drop]))
+            meta["arrays"][name]["shape"] = list(data.shape[:-1]) + [data.shape[-1] - drop]
+            meta["arrays"][name]["sha256"] = sha256_file(self.path / name)
+            meta["fields"][name] = meta["fields"][name][:-drop]
+            meta["observable_fields"][name] = [f["name"] for f in meta["fields"][name] if not f["hidden"]]
+        del meta["world_variety"]
+        meta["schema_version"] = 3
+        (self.path / "meta.json").write_text(json.dumps(meta))
+
+    def test_schema_four_appends_exposure_columns_and_hp(self) -> None:
+        ep = load_episode(self.path)
+        g = [f["name"] for f in ep.meta["fields"]["global.npy"]]
+        self.assertEqual(g[-2:], ["deaths_exposure", "injured_members"])
+        self.assertEqual(ep.meta["fields"]["agents.npy"][-1]["name"], "hp")
+        self.assertIn("hp", ep.observable_names("agents.npy"))
+        self.assertIsNone(ep.meta["world_variety"])
+        self.assertIsNone(ep.world_variety())
+        self.assertEqual((ep.column("global.npy", "deaths_exposure") == 0).all(), True)
+        hp = ep.column("agents.npy", "hp")
+        self.assertTrue((hp[~np.isnan(hp)] == 100.0).all())  # day one is spring: nobody is cold
+        # A hidden meta block is dropped by observable_meta.
+        ep.meta["world_variety"] = {"hidden": True, "values": {"starting_agents": 20}}
+        self.assertEqual(ep.world_variety(), {"starting_agents": 20})
+        self.assertNotIn("world_variety", ep.observable_meta())
+        self.assertIn("scene", ep.observable_meta())
+
+    def test_schema_three_layout_still_loads(self) -> None:
+        self._rewrite_as_schema_three()
+        ep = load_episode(self.path)
+        self.assertEqual(ep.meta["schema_version"], 3)
+        self.assertEqual(ep.arrays["global.npy"].shape[1], 35)
+        self.assertEqual(ep.arrays["agents.npy"].shape[2], 17)
+        self.assertIsNone(ep.world_variety())
+        self.assertIsNotNone(ep.lineage_keys())
+
+    @unittest.skipUnless(P9_FORK.exists(), f"Pass 9 fork data not present: {P9_FORK}")
+    def test_recorded_schema_three_episode_loads(self) -> None:
+        ep = load_episode(P9_FORK)
+        self.assertEqual(ep.meta["schema_version"], 3)
+        self.assertEqual(ep.arrays["global.npy"].shape[1], 35)
+
     def test_schema_two_layout_still_loads(self) -> None:
         # A schema-2 episode is a schema-3 one without the lineage keys and the
         # two randomness meta keys (Pass 8's recorder wrote exactly that).
+        self._rewrite_as_schema_three()
         meta = json.loads((self.path / "meta.json").read_text())
         (self.path / "agent_keys.npy").unlink()
         for key in ("keyed_draws", "noise_fork"):

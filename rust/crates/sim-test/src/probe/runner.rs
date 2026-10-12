@@ -47,6 +47,13 @@ pub(super) struct RunResult {
     pub(super) clock_rows: BTreeMap<(u64, u32), Value>,
     /// Every-tick child observation evidence.
     pub(super) maturation: Value,
+    /// Internal ticks (completed tick − 1, the system tick) of every exposure
+    /// death in the death census (Pass 10).
+    pub(super) exposure_death_ticks: Vec<u64>,
+    /// Per-seed world facts at tick 0 (Pass 10, `pass10::seed_info`).
+    pub(super) seed_info: Value,
+    /// Ticks per day and clock offset of the run (Pass 10 seed-winter windows).
+    pub(super) clock: (u64, u64),
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -103,6 +110,7 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v13" => crate::scenes::game_v13_scene(seed),
         "game_v14" => crate::scenes::game_v14_scene(seed),
         "game_v15" => crate::scenes::game_v15_scene(seed),
+        "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
         _ => crate::scenes::legacy_scene(),
     }
 }
@@ -112,6 +120,8 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
     let initial_shelters = shelter_count(&engine);
+    let seed_info = super::pass10::seed_info(&engine);
+    let mut exposure_death_ticks = Vec::new();
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
@@ -177,7 +187,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             {
                 return Err(format!("non-finite metric at seed={seed} tick={tick}"));
             }
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15") {
+            if twin_checked(&args.scene) {
                 if let Some(twin) = &twin {
                     if row != sample(twin, &args.scene, seed, initial_shelters) {
                         return Err(format!(
@@ -239,6 +249,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         let (records, observer_time) = deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
         tick_seconds += elapsed.saturating_sub(observer_time).as_secs_f64();
         for record in records {
+            if record["cause"] == "exposure" {
+                exposure_death_ticks.push(record["tick"].as_u64().unwrap_or(0).saturating_sub(1));
+            }
             serde_json::to_writer(&mut death_output, &record).map_err(|e| e.to_string())?;
             death_output.write_all(b"\n").map_err(|e| e.to_string())?;
         }
@@ -258,7 +271,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         }
         if let Some(twin) = &mut twin {
             twin.tick();
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15")
+            if twin_checked(&args.scene)
                 && (long_run::trace(&engine) != long_run::trace(twin)
                     || super::fingerprint::fingerprint(&engine)
                         != super::fingerprint::fingerprint(twin))
@@ -295,6 +308,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         max_owned_housing_overflow,
         clock_rows,
         maturation: maturation.report(),
+        exposure_death_ticks,
+        seed_info,
+        clock: (ticks_per_day, engine.resources.rules.clock_offset_ticks),
         wall_seconds: started.elapsed().as_secs_f64(),
         ms_per_agent_tick: if agent_ticks == 0 {
             0.0
@@ -312,8 +328,27 @@ fn share(numerator: u64, denominator: u64) -> f64 {
     }
 }
 
+/// Whether `scene` takes the observable twin check and the trace/fingerprint
+/// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
+fn twin_checked(scene: &str) -> bool {
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral")
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn v16_scenes_take_both_twin_checks() {
+        // Pass 10: a scene missing from the list would skip its determinism
+        // checks silently. Both checks in `run_seed` call `twin_checked`.
+        let source = include_str!("runner.rs");
+        assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
+        assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
+        for scene in ["game_v15", "game_v16_neutral"] {
+            assert!(super::twin_checked(scene));
+            assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
+        }
+    }
+
     #[test]
     fn reports_first_observed_divergence_with_seed_and_tick() {
         let a = serde_json::json!({"tick":120,"fingerprint":"a"});

@@ -2771,6 +2771,8 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("deaths_dehydration", tallies.deaths_dehydration as i64);
     dict.set("deaths_combat", tallies.deaths_combat as i64);
     dict.set("deaths_old_age", tallies.deaths_old_age as i64);
+    // Revitalize Pass 10: cold-night deaths under the exposure rule.
+    dict.set("deaths_exposure", tallies.deaths_exposure as i64);
     // Revitalize Pass 5 tallies (display-only).
     dict.set("meals_from_store", tallies.meals_from_store as i64);
     dict.set("ground_meals", tallies.ground_meals as i64);
@@ -2919,6 +2921,7 @@ mod revitalize_tooling_tests {
             winter_wood_lost: 0,
             wood_retargets: 0,
             interventions_applied: 0,
+            deaths_exposure: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

@@ -38,6 +38,7 @@ use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
 use sim_core::rules::WorldRules;
+use sim_core::variety::WorldVariety;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -109,6 +110,8 @@ pub struct Tallies {
     pub wood_retargets: u64,
     /// Interventions that changed something (`applied > 0`) (Pass 7).
     pub interventions_applied: u64,
+    /// Agents lost to cold-night wounds under the exposure rule (Pass 10).
+    pub deaths_exposure: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -408,6 +411,25 @@ pub struct SimResources {
     /// Noise fork (Pass 9): from its tick on, keyed draws use its replicate.
     /// `None` (the default and every unforked run) means replicate 0.
     pub noise_fork: Option<NoiseFork>,
+
+    /// The hidden world parameters this world was built from (Pass 10);
+    /// `None` outside `game_v16`. Measurement only, never read by systems.
+    pub world_variety: Option<WorldVariety>,
+
+    /// What worldgen placed against what it was asked for (Pass 10).
+    /// Measurement only, never read by systems.
+    pub worldgen_report: WorldGenReport,
+}
+
+/// Worldgen counts kept for measurement (Pass 10): never read by systems.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct WorldGenReport {
+    /// Deadwood spots the generator was asked for.
+    pub deadwood_spots_requested: u32,
+    /// Deadwood spots it placed (fewer when the radius band ran out of tiles).
+    pub deadwood_spots_placed: u32,
+    /// Terrain label swaps made by the berry-edge repair.
+    pub berry_repair_swaps: u32,
 }
 
 impl SimResources {
@@ -473,6 +495,8 @@ impl SimResources {
             recent_deaths: Vec::new(),
             tallies: Tallies::default(),
             noise_fork: None,
+            world_variety: None,
+            worldgen_report: WorldGenReport::default(),
         }
     }
 

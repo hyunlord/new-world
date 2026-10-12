@@ -18,7 +18,7 @@ use sim_bridge::ffi::world_node::{
     collect_agent_colds, collect_agent_snapshot, collect_building_snapshot, collect_resource_snapshot,
     collect_terrain_snapshot, collect_time_snapshot,
 };
-use sim_core::components::{Agent, Life, Lineage, ResourceKind, SettlementId};
+use sim_core::components::{Agent, BodyHealth, Life, Lineage, ResourceKind, SettlementId};
 use sim_engine::{Intervention, NoiseFork, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::settlement::firewood::{wood_in_hand, wood_target, year_at_tick};
 
@@ -30,10 +30,11 @@ use super::sha256::sha256_hex;
 use crate::probe::fingerprint;
 
 /// Recorder format version written into `meta.json`.
-pub const SCHEMA_VERSION: u64 = 3;
+pub const SCHEMA_VERSION: u64 = 4;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 8] = ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15"];
+pub const SCENES: [&str; 9] =
+    ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral"];
 
 /// Build a fresh engine of `scene` and `seed`.
 pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
@@ -46,6 +47,7 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v13" => crate::scenes::game_v13_scene(seed),
         "game_v14" => crate::scenes::game_v14_scene(seed),
         "game_v15" => crate::scenes::game_v15_scene(seed),
+        "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -84,9 +86,9 @@ impl EpisodeSpec {
 
 /// Every value of one row before the tables are assembled.
 struct Row {
-    global: [f32; 35],
+    global: [f32; 37],
     settlements: BTreeMap<SettlementId, [f32; 9]>,
-    agents: BTreeMap<u64, [f32; 17]>,
+    agents: BTreeMap<u64, [f32; 18]>,
     keys: BTreeMap<u64, u64>,
     resources: BTreeMap<(u8, u32, u32), (f32, f32)>,
     buildings: BTreeMap<u64, (u8, u32, u32)>,
@@ -148,6 +150,8 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
         f32::from(u8::from(r.cold_snap_tonight)),
         night_burn as f32,
         winter_fall as f32,
+        num(&sample, "deaths_exposure"),
+        num(&sample, "injured_members"),
     ];
     let mut ids: Vec<SettlementId> = r.settlements.keys().copied().collect();
     ids.sort_unstable();
@@ -188,6 +192,8 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
             map
         };
         let lives: BTreeMap<u64, Life> = engine.world.query::<(&Agent, &Life)>().iter().map(|(_, (a, l))| (a.id, *l)).collect();
+        let hps: BTreeMap<u64, f64> =
+            engine.world.query::<(&Agent, &BodyHealth)>().iter().map(|(_, (a, h))| (a.id, h.hp)).collect();
         let tpd = r.ticks_per_day.max(1) as f64;
         let snapshot = collect_agent_snapshot(&engine.world);
         let colds = collect_agent_colds(&engine.world);
@@ -215,6 +221,7 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
                 settlement,
                 life.map_or(f32::NAN, |l| (l.age_ticks(now) as f64 / tpd) as f32),
                 life.map_or(f32::NAN, |l| (l.lifespan_ticks as f64 / tpd) as f32),
+                hps.get(&row.agent_id).map_or(f32::NAN, |hp| *hp as f32),
             ]);
         }
         for row in collect_resource_snapshot(r) {
@@ -364,7 +371,7 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         let mut table = Vec::with_capacity(t * n * AGENT.len());
         for row in &rows {
             for id in &agent_order {
-                table.extend(row.agents.get(id).copied().unwrap_or([f32::NAN; 17]));
+                table.extend(row.agents.get(id).copied().unwrap_or([f32::NAN; 18]));
             }
         }
         push("agents.npy", npy::f32_file(&[t, n, AGENT.len()], &table), Dtype::F32, vec![t, n, AGENT.len()]);
@@ -451,6 +458,10 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         "agents_recorded": spec.agents,
         "keyed_draws": engine.resources.rules.agent.keyed_draws,
         "noise_fork": spec.fork.map_or(Value::Null, |fork| json!({"tick": fork.tick, "replicate": fork.replicate})),
+        // Schema 4: the world's hidden parameters (game_v16 only), marked
+        // hidden inside the block; never an input of a model of what a player sees.
+        "world_variety": engine.resources.world_variety.map_or(Value::Null, |v| json!({
+            "hidden": true, "values": crate::probe::pass10::variety_json(&v)})),
         "schedule": schedule,
         "arrays": array_meta,
         "fields": fields,
@@ -555,7 +566,7 @@ pub struct WmArgs {
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.
@@ -762,7 +773,7 @@ mod tests {
     #[test]
     fn schema_two_hides_the_weather_and_lists_observable_fields() {
         let files = record(&spec(1, true, None)).expect("record");
-        assert_eq!(files.meta["schema_version"], 3);
+        assert_eq!(files.meta["schema_version"], 4);
         let hidden = |array: &str, name: &str| {
             files.meta["fields"][array]
                 .as_array()
@@ -789,6 +800,12 @@ mod tests {
         assert_eq!(observable["latent.npy"], json!([]));
         assert_eq!(GLOBAL[33].name, "night_burn_per_hour");
         assert_eq!(GLOBAL[34].name, "winter_fall_today");
+        // Schema 4 appends its columns after every earlier one.
+        assert_eq!(GLOBAL[35].name, "deaths_exposure");
+        assert_eq!(GLOBAL[36].name, "injured_members");
+        assert_eq!(AGENT[17].name, "hp");
+        assert!(!hidden("agents.npy", "hp"));
+        assert_eq!(files.meta["world_variety"], Value::Null);
     }
 
     #[test]

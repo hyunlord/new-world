@@ -74,6 +74,15 @@ pub fn game_v15_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 10 fixture: the v15 world under the v16_neutral rules (v15 plus
+/// exposure: a cold night wounds and health can reach zero).
+pub fn game_v16_neutral_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v15(seed),
+        sim_core::rules::WorldRules::game_v16_neutral(),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

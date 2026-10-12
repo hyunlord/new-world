@@ -1,5 +1,5 @@
 """Load a WorldSim recorded episode (recorder schema 1 of Pass 7, schema 2 of
-Pass 8 or schema 3 of Pass 9). numpy only.
+Pass 8, schema 3 of Pass 9 or schema 4 of Pass 10). numpy only.
 
     from wm_data import load_episode
     ep = load_episode("/path/game_v14_s0_none")
@@ -21,6 +21,13 @@ matched across the arms of a fork by lineage key, never by `AgentId`
 (`ep.lineage_keys()`). `meta["keyed_draws"]` and `meta["noise_fork"]` (null or
 `{tick, replicate}`) describe the randomness of the run.
 
+Schema 4 (Pass 10) appends `deaths_exposure` and `injured_members` to
+`global.npy` and, with `--agents`, `hp` as the last field of `agents.npy`;
+`meta["world_variety"]` is null or `{"hidden": true, "values": {...}}`, the
+world's hidden parameters (`game_v16`). Hidden is marked inside the block, so
+`ep.observable_meta()` drops it and `ep.world_variety()` reads it (labels and
+analysis only, never an input).
+
 A branch family (`--fork-tick T --replicates R`, `make_dataset.py families`) is
 one directory per root seed; `load_family(path)` returns its factual and
 variants by replicate (`fam.factual[k]`, `fam.variants["rain"][k]`).
@@ -37,7 +44,7 @@ from pathlib import Path
 
 import numpy as np
 
-SCHEMAS = (1, 2, 3)
+SCHEMAS = (1, 2, 3, 4)
 
 
 @dataclass
@@ -70,6 +77,16 @@ class Episode:
     def lineage_keys(self) -> np.ndarray | None:
         """Lineage key per agent in `agent_ids.npy` order (schema 3 with agents), else None."""
         return self.arrays.get("agent_keys.npy")
+
+    def observable_meta(self) -> dict:
+        """`meta` without its hidden blocks (schema 4: any top-level entry that is a dict
+        marked `"hidden": true`, i.e. `world_variety`)."""
+        return {k: v for k, v in self.meta.items() if not (isinstance(v, dict) and v.get("hidden") is True)}
+
+    def world_variety(self) -> dict | None:
+        """The hidden world parameters (schema 4, `game_v16`), else None. Ground truth only."""
+        block = self.meta.get("world_variety")
+        return block.get("values") if isinstance(block, dict) else None
 
     def observable(self, array: str) -> np.ndarray:
         """`array` with its hidden columns dropped (last axis = `observable_names`)."""
@@ -128,8 +145,8 @@ def load_family(path, verify: bool = True, arrays: list[str] | None = None) -> F
     for member in sorted(p for p in path.iterdir() if (p / "meta.json").exists()):
         ep = load_episode(member, verify=verify, arrays=arrays)
         fork = ep.meta.get("noise_fork")
-        if ep.meta.get("schema_version") != 3 or not fork:
-            raise ValueError(f"{member}: not a branch-family member (schema 3 with noise_fork)")
+        if ep.meta.get("schema_version") not in (3, 4) or not fork:
+            raise ValueError(f"{member}: not a branch-family member (schema 3 or 4 with noise_fork)")
         key = (ep.meta["scene"], int(ep.meta["seed"]), int(fork["tick"]))
         if scene is None:
             scene, seed, fork_tick = key

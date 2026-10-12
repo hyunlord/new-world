@@ -120,6 +120,7 @@ fn pass7_v13_literal() -> WorldRules {
                 winter_fall_spread: 0,
                 windfall_over_snow: false,
             }),
+            exposure: None,
         },
         clock_offset_ticks: 480,
         seasons: Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] }),

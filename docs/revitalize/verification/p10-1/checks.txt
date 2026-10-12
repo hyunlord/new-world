@@ -1,0 +1,8 @@
+Part 1 checks on the working tree committed as revitalize(p10-1) (2026-10-12 KST)
+cargo test --workspace --release -- --test-threads=6 : passed 2042, failed 0, ignored 0 (before the clippy-only test edits; harness_revitalize_pass10_exposure re-run after them: 6 passed)
+cargo clippy --workspace -- -D warnings : clean
+cargo clippy --workspace --all-targets -- -D warnings : clean
+python3 -m unittest discover -s tools/revitalize : 83 tests OK
+python3 -m unittest discover -s tools/worldmodel : OK
+4.6 v15 guard (probe_p1): p10-1_v15_guard_10day vs p10-0_v15_10day 6,214 shared values, only schema_version 9 -> 10 differs (plus new keys); p10-1_v15_guard_120day vs p10-0_v15_120day 57,597 shared values, only schema_version differs; determinism twins pass
+The full gate (gate_pass10.sh) runs before the green branch moves.

@@ -267,6 +267,10 @@ pub(super) fn deadwood(cfg: &WorldGenConfig, r: &mut SimResources) {
             }
         }
     }
+    // Pass 10: counted for measurement only (fewer than requested when the
+    // radius band runs out of tiles two apart).
+    r.worldgen_report.deadwood_spots_requested = cfg.deadwood_spots;
+    r.worldgen_report.deadwood_spots_placed = chosen.len() as u32;
     for p in chosen {
         r.wood_tiles.insert(p, cfg.deadwood_capacity);
         r.wood_source_max.insert(p, cfg.deadwood_capacity);

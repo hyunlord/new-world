@@ -72,6 +72,9 @@ pub struct SocietyRules {
     pub meals: Option<MealRule>,
     /// Firewood gathering, the night fire and cold nights. None = Pass 4 behaviour.
     pub firewood: Option<FirewoodRule>,
+    /// Cold-night wounds that can kill (Pass 10). None = v8–v15 behaviour
+    /// (cold only speeds hunger).
+    pub exposure: Option<ExposureRule>,
 }
 /// Conditions for a settlement to produce a child.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -314,6 +317,14 @@ pub struct FirewoodRule {
     /// each winter. False = v13.
     pub windfall_over_snow: bool,
 }
+/// Pass 10: a cold night wounds; health can reach zero.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct ExposureRule {
+    /// HP lost per hour spent `Cold`, by life stage: [child, adult, elder].
+    pub damage_per_cold_hour: [f64; 3],
+    /// No healing while `Cold` and for this many hours after the last cold hour.
+    pub heal_block_hours: u32,
+}
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SeasonRule {
@@ -349,6 +360,7 @@ impl Default for WorldRules {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
             },
             clock_offset_ticks: 0,
             seasons: None,
@@ -356,6 +368,18 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 10 village policies without world variety: v15 plus exposure (a
+    /// cold night wounds, by life stage, and blocks healing for a while; health
+    /// can reach zero). Nothing else changes. v15 stays frozen.
+    pub const fn game_v16_neutral() -> Self {
+        let mut rules = Self::game_v15();
+        rules.society.exposure = Some(ExposureRule {
+            damage_per_cold_hour: [9.0, 6.0, 9.0],
+            heal_block_hours: 2,
+        });
+        rules
+    }
+
     /// Pass 9 village policies: v14 with keyed random draws, lineage keys and
     /// decisions in AgentId order. Same balance and mechanics; only which random
     /// number an event receives changes. v14 stays frozen.
@@ -624,6 +648,7 @@ impl WorldRules {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
             },
             clock_offset_ticks: 480,
             seasons: None,
@@ -821,6 +846,21 @@ mod tests {
     }
 
     #[test]
+    fn game_v16_neutral_is_v15_plus_exposure() {
+        let mut v16 = WorldRules::game_v16_neutral();
+        let exposure = v16.society.exposure.expect("v16_neutral exposure");
+        assert_eq!(exposure.damage_per_cold_hour, [9.0, 6.0, 9.0]);
+        assert_eq!(exposure.heal_block_hours, 2);
+        v16.society.exposure = None;
+        assert_eq!(v16, WorldRules::game_v15());
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
+            WorldRules::game_v15()] {
+            assert_eq!(rules.society.exposure, None);
+        }
+    }
+
+    #[test]
     fn pass6_firewood_fields_reproduce_pass5_in_v11() {
         let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
         assert_eq!(rule.winter_prep_days, None);
@@ -864,6 +904,7 @@ mod tests {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
             }
         );
         assert_eq!(r.clock_offset_ticks, 0);

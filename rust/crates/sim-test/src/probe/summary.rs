@@ -50,7 +50,16 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             "max_alive":r.max_alive,"housing_capacity_at_max_alive":r.housing_at_max_alive,
             "final_housing_capacity":r.final_housing_capacity,"max_same_tick_housing_overflow":r.max_housing_overflow,
             "death_census":r.census.to_json(),"max_owned_housing_overflow":r.max_owned_housing_overflow,
-            "maturation":r.maturation,"rhythm":rhythm(r)})
+            "maturation":r.maturation,"rhythm":rhythm(r),
+            // Pass 10 (schema 10): per-seed facts; never read them from the
+            // `rules` block, which comes from the first seed only.
+            "deaths_exposure":r.checkpoints.values().last().map_or(json!(0), |row| row["deaths_exposure"].clone()),
+            "seed_info":r.seed_info,
+            "exposure_death_ticks":r.exposure_death_ticks,
+            "seed_winters":super::pass10::seed_winters(&r.clock_rows, &r.exposure_death_ticks, args.days, r.clock.0, r.clock.1),
+            "dawn_health":super::pass10::dawn_health(&r.clock_rows),
+            "alive_daily":r.checkpoints.values().map(|row| row["alive"].clone()).collect::<Vec<_>>(),
+            "settlements_daily":r.checkpoints.values().map(|row| row["settlements"].clone()).collect::<Vec<_>>()})
     }).collect();
     let mut census = Census::default();
     for run in runs {
@@ -157,7 +166,7 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     markdown.push_str(&pass4_sections(args, runs));
     markdown.push_str(&pass5_sections(args, runs));
     let rules = super::pass8::rules_block(&super::runner::scene_engine(&args.scene, args.seeds.start).resources);
-    let report = json!({"schema_version":9,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    let report = json!({"schema_version":10,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,
@@ -217,7 +226,7 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
         }
         out.push('\n');
     }
-    out.push_str("\n## Demography\n\nMedians across seeds at each elapsed-day checkpoint. Births and deaths are cumulative; adults include elders; mean age covers residents with `Life` (zero without aging).\n\n| Day | Alive | Births | Starvation | Dehydration | Combat | Old age | Children | Adults | Elders | Mean age (days) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
+    out.push_str("\n## Demography\n\nMedians across seeds at each elapsed-day checkpoint. Births and deaths are cumulative; adults include elders; mean age covers residents with `Life` (zero without aging).\n\n| Day | Alive | Births | Starvation | Dehydration | Combat | Old age | Exposure | Children | Adults | Elders | Mean age (days) |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n");
     let median_at = |day: u64, key: &str| {
         percentile(
             &runs
@@ -230,7 +239,7 @@ fn pass4_sections(args: &ProbeArgs, runs: &[RunResult]) -> String {
     for day in 1..=args.days {
         out.push_str(&format!("| {day} |"));
         for key in ["alive", "births", "deaths_starvation", "deaths_dehydration", "deaths_combat",
-            "deaths_old_age", "children", "adults", "elders", "mean_age_days"] {
+            "deaths_old_age", "deaths_exposure", "children", "adults", "elders", "mean_age_days"] {
             out.push_str(&format!(" {:.3} |", median_at(day, key)));
         }
         out.push('\n');

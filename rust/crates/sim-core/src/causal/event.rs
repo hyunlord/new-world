@@ -70,6 +70,9 @@ pub enum DeathReason {
     Combat,
     /// Age reached the drawn `Life::lifespan_ticks` under the aging rule.
     OldAge,
+    /// `BodyHealth.hp` reached 0 from cold-night wounds under the exposure
+    /// rule (Pass 10): dealt by `FireSystem` to a resident marked `Cold`.
+    Exposure,
 }
 
 impl DeathReason {
@@ -81,6 +84,7 @@ impl DeathReason {
             DeathReason::Dehydration => "dehydration",
             DeathReason::Combat => "combat",
             DeathReason::OldAge => "old_age",
+            DeathReason::Exposure => "exposure",
         }
     }
 
@@ -88,7 +92,9 @@ impl DeathReason {
     /// (V7 viz-D `show-death-visual`). Mirrors [`DeathReason::as_str`]; the
     /// GDScript colour switch keys off these exact values:
     /// `0 = Starvation` (brown), `1 = Dehydration` (blue), `2 = Combat` (red),
-    /// `3 = OldAge` (Pass 4; the renderer predates it and needs its own colour).
+    /// `3 = OldAge` (Pass 4; the renderer predates it and needs its own colour),
+    /// `4 = Exposure` (Pass 10; likewise drawn in the fallback colour until the
+    /// renderer learns it).
     /// Any other value would mis-colour the marker, so the mapping is a locked
     /// contract.
     pub fn as_u8(&self) -> u8 {
@@ -97,6 +103,7 @@ impl DeathReason {
             DeathReason::Dehydration => 1,
             DeathReason::Combat => 2,
             DeathReason::OldAge => 3,
+            DeathReason::Exposure => 4,
         }
     }
 }

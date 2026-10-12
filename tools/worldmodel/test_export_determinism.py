@@ -70,7 +70,7 @@ class ExportDeterminismTests(unittest.TestCase):
                 self.assertEqual(first, second)
                 self.assertEqual(first, single)
                 meta = json.loads(first["game_v14_s0_none/meta.json"])
-                self.assertEqual(meta["schema_version"], 3)
+                self.assertEqual(meta["schema_version"], 4)
 
     def test_v15_fork_families_are_byte_identical(self) -> None:
         # Pass 9 Y7: schema-3 game_v15 branch families (agents, lineage keys,
@@ -83,7 +83,7 @@ class ExportDeterminismTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first, single)
         meta = json.loads(first["game_v15_s2_a_r2/meta.json"])
-        self.assertEqual((meta["schema_version"], meta["keyed_draws"], meta["noise_fork"]), (3, True, {"tick": 1440, "replicate": 2}))
+        self.assertEqual((meta["schema_version"], meta["keyed_draws"], meta["noise_fork"]), (4, True, {"tick": 1440, "replicate": 2}))
         self.assertIn("game_v15_s2_a_r2/agent_keys.npy", first)
 
     def test_schedule_episodes_share_the_factual_prefix(self) -> None:
