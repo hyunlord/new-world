@@ -2149,3 +2149,27 @@ Final gate (`gate_pass10.sh` on `14372ea2`, 20:29–20:53 KST, `verification/p10
 | H8 | FAIL (only rot_wood) | `p10-6_forks/fork_metrics.md` |
 | H9 | PASS | recorder byte identity (v14/v15/v16 families), schemas 1–3 load, v16 fork tests |
 | H10 | PASS | `p10-4_timing_*_targets` |
+
+## Pass 11 — villages that split: wild regions, fission, exposure v2, soaking rain (`game_v17_nofission`, `game_v17`)
+
+All probe runs use Pass 10's flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries frozen in `/Users/rexxa/work/p11bin/`.
+
+### Part 0 — baseline reproduction (`probe_p0`, byte-identical to Pass 10's `probe_frozen`; 21:21–22:04 KST)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p11-0_v16_10day` | `p10-3_round2_v16_10day` | 11484 | 0 |
+| `p11-0_v16_120day` | `p10-3_round2_v16_120day` | 84211 | 0 |
+| `p11-0_v16n_10day` | `p10-3_round2_v16n_10day` | 11036 | 0 |
+| `p11-0_v16n_120day` | `p10-3_round2_v16n_120day` | 83968 | 0 |
+| `p11-0_v16_heldout_10day` | `p10-4_heldout_v16_10day` | 11484 | 0 |
+| `p11-0_v16_heldout_120day` | `p10-4_heldout_v16_120day` | 110181 | 0 |
+| `p11-0_v16n_heldout_10day` | `p10-4_heldout_v16n_10day` | 11036 | 0 |
+| `p11-0_v16n_heldout_120day` | `p10-4_heldout_v16n_120day` | 109702 | 0 |
+| `p11-0_v15_10day` | `p10-0_v15_10day` | 6214 | 1 |
+| `p11-0_v15_120day` | `p10-0_v15_120day` | 57597 | 1 |
+| `p11-0_v14_10day` | `p10-7_final_v14_10day` | 10844 | 0 |
+| `p11-0_v14_120day` | `p10-7_final_v14_120day` | 83775 | 0 |
+| `p11-0_legacy` | `p10-7_final_legacy` | 5115 | 0 |
+
+The two v15 differences are `schema_version` only (Pass 9's binary wrote 9, Pass 10's 10); every determinism twin passes. Frozen pins `harness_revitalize_pass11_frozen.rs` (v16 digests seeds 0–3 at 1,440 and 40,320 ticks, `game_v16_neutral()` and `WorldVariety::draw` literals) pass on the base.
