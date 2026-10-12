@@ -48,7 +48,7 @@ fn pass5_v11_literal() -> WorldRules {
                 food_cost: 10,
                 max_mean_hunger: 60.0,
                 max_mean_thirst: 60.0,
-                sustain: Some(SustainRule { utilization: 0.81, reserve_days: 0.5, forage_radius: 16 }),
+                sustain: Some(SustainRule { utilization: 0.81, reserve_days: 0.5, forage_radius: 16, capacity_weighted: false }),
             },
             shelter_planning: Some(ShelterPlanningRule {
                 residents_per_shelter: 8,

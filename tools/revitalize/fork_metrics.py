@@ -2,6 +2,14 @@
 """Fork metrics of PASS9_GOAL.md section 8: placebo identity, variance
 reduction from pairing, v14 single forks, divergence horizon. stdlib + numpy.
 
+Pass 10 (PASS10_GOAL.md section 12): `--deaths-with-exposure` adds
+`deaths_exposure` (recorder schema 4) to the death count of the targets (at the
+day-29 06:00 row) and of the divergence series (`bench_v1` itself unchanged);
+`--v15 DIR --v15-replicates R` compares each variant's replicate-mean
+dark-night effect per seed with Pass 9's game_v15 families ("differs" = the
+two seed means differ); per variant the report adds the share of seeds whose
+replicate-mean deaths effect is > 0 and the mean deaths effect over seeds.
+
 usage: fork_metrics.py --root DIR --scene game_v15 --seeds 12000..12032 --replicates 8 --fork-tick 28800
                        --variants gift_wood,rot_wood,rain,cold_snap,windfall [--gift1 gift1]
                        [--placebos p0_gift_wood,...] [--placebo-seeds 12000..12008] [--unforked DIR]
@@ -123,12 +131,15 @@ def episode_name(scene: str, seed: int, eid: str, replicate: int | None) -> str:
     return f"{scene}_s{seed}_{eid}" + ("" if replicate is None else f"_r{replicate}")
 
 
-def targets_of(path: Path) -> dict[str, float]:
-    """The C_cf targets of one episode plus births at the day-29 06:00 row (reported only)."""
+def targets_of(path: Path, with_exposure: bool = False) -> dict[str, float]:
+    """The C_cf targets of one episode plus births at the day-29 06:00 row (reported only).
+    `with_exposure` (Pass 10) adds `deaths_exposure` at that row to the deaths target."""
     loaded = load_episode(path, arrays=["global.npy", "settlements.npy"])
     ep = Ep("", "", int(loaded.meta["seed"]), str(loaded.meta["episode_id"]), **episode_arrays(loaded))
     out = c_cf_targets(ep)
     out["births"] = float(loaded.column("global.npy", "births")[row_of(28, 360)])
+    if with_exposure:
+        out["deaths"] += float(loaded.column("global.npy", "deaths_exposure")[row_of(28, 360)])
     return out
 
 
@@ -156,14 +167,17 @@ def identity(a: Path, b: Path) -> dict:
             "meta_differing": meta_diff, "schedules_equal_without_amount_zero": schedules_ok}
 
 
-def series(path: Path) -> dict:
-    """Per-row series behind each target, the agent positions and lineage keys."""
+def series(path: Path, with_exposure: bool = False) -> dict:
+    """Per-row series behind each target, the agent positions and lineage keys
+    (`with_exposure`: exposure deaths counted in the deaths series, Pass 10)."""
     ep = load_episode(path)
     g = lambda name: ep.column("global.npy", name)
     s = ep.arrays["settlements.npy"]
     fire = np.nan_to_num(ep.column("settlements.npy", "fire_lit"), nan=0.0).max(axis=1, initial=0.0) if s.shape[1] else np.zeros(len(g("tick")))
     food = np.nansum(ep.column("settlements.npy", "food_stock"), axis=1) if s.shape[1] else np.zeros(len(g("tick")))
     deaths = sum(g(k) for k in ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age"))
+    if with_exposure:
+        deaths = deaths + g("deaths_exposure")
     agents = ep.arrays["agents.npy"]
     xy = agents[..., [ep.field_index("agents.npy", "x"), ep.field_index("agents.npy", "y")]]
     return {"tick": g("tick").astype(np.int64), "dark_nights": fire, "cold_member_hours": g("cold_member_hours_total"),
@@ -214,13 +228,13 @@ def parse_range(text: str) -> range:
     return range(int(a), int(b))
 
 
-def collect(root: Path, scene: str, seeds: range, ids: list[str], replicates: int) -> dict:
+def collect(root: Path, scene: str, seeds: range, ids: list[str], replicates: int, with_exposure: bool = False) -> dict:
     """targets[id][target] -> array [S, R]."""
     out = {eid: {t: np.zeros((len(seeds), replicates)) for t in (*T4_TARGETS, "births")} for eid in ids}
     for si, seed in enumerate(seeds):
         for eid in ids:
             for k in range(replicates):
-                values = targets_of(root / episode_name(scene, seed, eid, k))
+                values = targets_of(root / episode_name(scene, seed, eid, k), with_exposure)
                 for t, value in values.items():
                     out[eid][t][si, k] = value
     return out
@@ -232,7 +246,9 @@ def build(args) -> dict:
     report: dict = {"scene": scene, "seeds": [seeds.start, seeds.stop], "replicates": reps, "fork_tick": args.fork_tick,
                     "targets": list(T4_TARGETS), "gated_targets": list(GATED), "resamples": RESAMPLES, "boot_seed": BOOT_SEED}
     ids = ["none", *variants] + ([args.gift1] if args.gift1 else [])
-    values = collect(root, scene, seeds, ids, reps)
+    with_exposure = getattr(args, "deaths_with_exposure", False)
+    report["deaths_with_exposure"] = with_exposure
+    values = collect(root, scene, seeds, ids, reps, with_exposure)
     report["vrf"] = {}
     for eid in ids[1:]:
         report["vrf"][eid] = {t: effect_stats(values[eid][t], values["none"][t]) for t in (*T4_TARGETS, "births")}
@@ -266,8 +282,8 @@ def build(args) -> dict:
         start = int(ticks.get(eid, args.fork_tick))
         per_seed, keys = [], []
         for seed in seeds:
-            f = series(root / episode_name(scene, seed, "none", 0))
-            v = series(root / episode_name(scene, seed, eid, 0))
+            f = series(root / episode_name(scene, seed, "none", 0), with_exposure)
+            v = series(root / episode_name(scene, seed, eid, 0), with_exposure)
             per_seed.append(divergence(f, v, start))
             keys.append(newborn_key_match(f, v, start))
         report["divergence"][eid] = summarize_divergence(per_seed, start)
@@ -277,7 +293,30 @@ def build(args) -> dict:
                                        "share": (sum(k["newborns_both_equal_key"] for k in keys) / either) if either else None}
     if args.v14:
         report["v14_single_fork"] = v14_comparison(args.v14, values, variants, seeds, report)
+    report["deaths_effect"] = {eid: deaths_effect(values[eid]["deaths"], values["none"]["deaths"]) for eid in ids[1:]}
+    if getattr(args, "v15", None):
+        v15 = collect(args.v15, "game_v15", seeds, ids, args.v15_replicates)
+        report["v15_dark_night_comparison"] = {
+            eid: dark_night_differs(values[eid]["dark_nights"], values["none"]["dark_nights"],
+                                    v15[eid]["dark_nights"], v15["none"]["dark_nights"]) for eid in ids[1:]}
+        report["v15_dark_night_comparison_source"] = {"root": str(args.v15), "replicates": args.v15_replicates}
     return report
+
+
+def deaths_effect(y_v: np.ndarray, y_f: np.ndarray) -> dict:
+    """Pass 10 (H8): the replicate-mean deaths effect per seed, mean_k (y_v[s,k] - y_f[s,k]);
+    the share of seeds where it is > 0 and its mean over seeds."""
+    per_seed = (y_v - y_f).mean(axis=1)
+    return {"per_seed": [float(x) for x in per_seed], "share_positive": float(np.mean(per_seed > 0)),
+            "mean": float(per_seed.mean()), "share_negative": float(np.mean(per_seed < 0))}
+
+
+def dark_night_differs(v16_v: np.ndarray, v16_f: np.ndarray, v15_v: np.ndarray, v15_f: np.ndarray) -> dict:
+    """Pass 10: per seed, whether the replicate-mean dark-night effect of v16 differs from v15's."""
+    a, b = (v16_v - v16_f).mean(axis=1), (v15_v - v15_f).mean(axis=1)
+    differs = np.abs(a - b) > 1e-9
+    return {"share_differs": float(np.mean(differs)), "v16_mean": float(a.mean()), "v15_mean": float(b.mean()),
+            "seeds_differing": int(differs.sum()), "seeds": int(len(a))}
 
 
 def replicate0_identity(root: Path, unforked_root: Path, scene: str, seeds, ids: list[str]) -> list[dict]:
@@ -344,7 +383,7 @@ def fmt(x) -> str:
 
 
 def markdown(report: dict) -> str:
-    lines = [f"# Pass 9 fork metrics ({report['scene']}, seeds {report['seeds'][0]}–{report['seeds'][1] - 1}, "
+    lines = [f"# Fork metrics ({report['scene']}, seeds {report['seeds'][0]}–{report['seeds'][1] - 1}, "
              f"R = {report['replicates']}, fork tick {report['fork_tick']})", ""]
     g0a = report["g0a"]
     lines += ["## G0a — placebo identity", "",
@@ -390,6 +429,16 @@ def markdown(report: dict) -> str:
                      f"{fmt(d['median_moved_share_after_24h'])} / {fmt(d['median_moved_share_after_72h'])} | "
                      f"{cell('first_diff_dark_nights')} | {cell('first_diff_cold_member_hours')} | {cell('first_diff_food_store')} | "
                      f"{cell('first_diff_deaths')} | {cell('first_diff_births')} |")
+    if "deaths_effect" in report:
+        lines += ["", "## Deaths effect (replicate mean per seed" + (", exposure deaths included" if report.get("deaths_with_exposure") else "") + ")", "",
+                  "Deaths up to the day-29 06:00 row, variant minus factual of the same replicate, averaged over the replicates of each seed.", "",
+                  "| variant | seeds with effect > 0 | seeds with effect < 0 | mean effect over seeds | dark-night effect differs from v15 (seeds) |",
+                  "|---|---:|---:|---:|---|"]
+        comp = report.get("v15_dark_night_comparison", {})
+        for eid, d in report["deaths_effect"].items():
+            c = comp.get(eid)
+            cell = f"{c['share_differs']:.3f} ({c['seeds_differing']} / {c['seeds']}; v16 {c['v16_mean']:.3f}, v15 {c['v15_mean']:.3f})" if c else "–"
+            lines.append(f"| {eid} | {d['share_positive']:.3f} | {d['share_negative']:.3f} | {d['mean']:.3f} | {cell} |")
     lines += ["", "## Newborn lineage keys (Y6, reported only)", "",
               "Newborns born at or after the intervention in either arm (replicate 0), and how many carry a key present among the "
               "other arm's newborns.", "", "| variant | newborns (either arm) | equal key in both | share |", "|---|---:|---:|---:|"]
@@ -412,6 +461,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--unforked", type=Path)
     parser.add_argument("--v14", type=Path)
     parser.add_argument("--intervention-ticks")
+    parser.add_argument("--deaths-with-exposure", action="store_true",
+                        help="count deaths_exposure (recorder schema 4) in the deaths target and series")
+    parser.add_argument("--v15", type=Path, help="Pass 9's game_v15 branch families (read-only) for the dark-night comparison")
+    parser.add_argument("--v15-replicates", type=int, default=8)
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args(argv)
     report = build(args)

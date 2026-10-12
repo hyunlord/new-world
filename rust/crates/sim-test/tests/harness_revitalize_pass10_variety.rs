@@ -21,7 +21,14 @@ fn run(mut engine: sim_engine::SimEngine, ticks: u64) -> (String, u64) {
 fn harness_variety_neutral_equals_v16_neutral() {
     // A game_v16 world built from the neutral parameters is the v16_neutral world.
     assert_eq!(WorldGenConfig::game_v16_with(5, &WorldVariety::NEUTRAL), WorldGenConfig::game_v15(5));
-    assert_eq!(WorldRules::game_v16_with(&WorldVariety::NEUTRAL), WorldRules::game_v16_neutral());
+    // Rules: equal except the capacity-weighted supply estimate (Part 3), which
+    // changes nothing where every bush holds 4 (the digests below agree).
+    let mut rules = WorldRules::game_v16_with(&WorldVariety::NEUTRAL);
+    if let sim_core::rules::BirthRule::Provisioned { sustain: Some(ref mut sustain), .. } = rules.society.birth {
+        assert!(sustain.capacity_weighted);
+        sustain.capacity_weighted = false;
+    }
+    assert_eq!(rules, WorldRules::game_v16_neutral());
     for seed in [0, 6] {
         let neutral = game_v16_scene_with(seed, &WorldVariety::NEUTRAL);
         assert_eq!(neutral.resources.world_variety, Some(WorldVariety::NEUTRAL));

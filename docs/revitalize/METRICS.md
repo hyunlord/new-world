@@ -2012,3 +2012,29 @@ All probe runs use Pass 9's flags (the eight clocks `02:00,06:00,08:00,10:00,12:
 | `p10-0_v13_10day` | `p9-6_final_v13_10day` | 6,212 | 0 |
 | `p10-0_v13_120day` | `p9-6_final_v13_120day` | 57,590 | 0 |
 | `p10-0_legacy` | `p9-6_final_legacy` | 4,849 | 0 |
+
+### Part 1 and 2 — 4.6 guards and first looks
+
+`p10-1_v15_guard_*` (`probe_p1`) and `p10-2_v15_guard_*` (`probe_p2`) equal `p10-0_v15_*` on every shared value (6,214 / 57,597); only `schema_version` 9 → 10 differs. First looks at the start knobs (exposure [9, 6, 9] / 2 h; 7.1's ranges): `game_v16_neutral` (`p10-1_v16n_*`) passes H2, H4, H5 and fails H3's maximum (seed-winter deaths bimodal: 0 or 7–21, max share 0.51); `game_v16` (`p10-2_v16_*`) fails H2 in seed 24 and H3's maximum (0.69), passes H4, H5, H6.
+
+### Part 3 — tuning (tuning seeds 0–63 × 10, 0–31 × 120; v15 reference = the guard run of the same binary)
+
+Exploration before round 1 (not a round: scratch seeds 5000–5031 × 120, `game_v16`, a scratch probe outside the clone with environment overrides, never committed; see DECISIONS): exposure [5, 4, 6] / 2 → seed-winters with a death 0.008; [6, 4, 7] / 2 → 0.039 with one wipe of 21; [10, 4, 5] / 2 → 0.258, max share 0.20, but 8 starvation deaths in a capacity-3 world; + capacity-weighted supply (min(cap, 4) / 4) → 0.266, max 0.15, no starvation; plain cap / 4 → starvation 15–42 in six capacity-5 worlds; [12, 4, 5] → 0.305; [9, 4, 6] / 1 → one wipe of 14.
+
+| Round | Knobs | Scene | H1 | H2 | H3 | H4 | H5 | H6 |
+|---|---|---|---|---|---|---|---|---|
+| start | [9, 6, 9] / 2 h, ranges of 7.1 | v16_neutral | – | PASS | FAIL (max) | PASS | PASS | – |
+| start | same | v16 | – | FAIL (seed 24) | FAIL (max) | PASS | PASS | PASS |
+| 1 | [10, 4, 5] / 2 h; v16: capacity-weighted supply | v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| 1 | same | v16 | PASS | PASS | FAIL: max_share_of_members | PASS | PASS | PASS |
+
+Round 1 H3 detail — v16_neutral: share 0.195, median 0, max share 0.119, means mild/normal/harsh 0.06/0.28/1.62, starvation+dehydration day-120 median/max 0/0; v16: share 0.250, median 0, max share 0.371, means mild/normal/harsh 0.06/0.38/2.44, starvation+dehydration day-120 median/max 0/4. The one failing seed-winter is seed 24's last winter (9 bushes, 28 founders, 35 residents, 4 dark nights of a harsh winter): 13 exposure deaths (4 children, 9 non-elder adults weakened by hunger; 4 starvation deaths in the same seed) = 0.371 of the members. Every other seed-winter loses at most 5 (0.11), mostly children, spread over hours and nights. Evaluations: `docs/revitalize/probe/p10-3_round1_*_targets/`.
+
+| Round | Knobs | Scene | H1 | H2 | H3 | H4 | H5 | H6 |
+|---|---|---|---|---|---|---|---|---|
+| 2 | round 1 + `SustainRule::utilization` 0.81 → 0.78 in both v16 rulesets | v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| 2 | same | v16 | PASS | PASS | PASS | PASS | PASS | PASS |
+
+Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means mild/normal/harsh 0.06/0.30/1.54, starvation+dehydration day-120 median/max 0/0; v16: share 0.242, median 0, max share 0.182, means mild/normal/harsh 0.06/0.32/2.24, starvation+dehydration day-120 median/max 0/0. v15 guard of the round-2 binary (`p10-3_round2_v15_guard_*`) equals Part 0 on every shared value (only `schema_version`). H1 here takes the legacy pin and the v8–v15 reproductions as receipts (Part 0 and the guards; re-checked in Part 7).
+
+**Frozen knobs (round 2):** exposure `damage_per_cold_hour` [child 10, adult 4, elder 5], `heal_block_hours` 2; `SustainRule::utilization` 0.78 in `game_v16_neutral` and `game_v16`; `SustainRule::capacity_weighted` in `game_v16`; variety ranges and `CLIMATE_PERMILLE` as in 7.1 (unchanged). Strikes used: 2 of 3.

@@ -7,8 +7,8 @@ from pathlib import Path
 
 import numpy as np
 
-from fork_metrics import (constant_rows, divergence, effect_stats, identity, newborn_key_match, replicate0_identity,
-                          summarize_divergence, vrf_of)
+from fork_metrics import (constant_rows, dark_night_differs, deaths_effect, divergence, effect_stats, identity,
+                          newborn_key_match, replicate0_identity, series, summarize_divergence, targets_of, vrf_of)
 
 
 class StatisticsTests(unittest.TestCase):
@@ -194,6 +194,62 @@ class DivergenceTests(unittest.TestCase):
         f = self.arm(np.zeros((3, 3, 2)), [[1, 0, 0], [1, 1, 1], [1, 1, 1]], [1, 5, 6], [0, 0, 0])
         v = self.arm(np.zeros((3, 3, 2)), [[1, 0, 0], [1, 1, 1], [1, 1, 1]], [1, 5, 8], [0, 0, 0])
         self.assertEqual(newborn_key_match(f, v, 0), {"newborns_either": 3, "newborns_both_equal_key": 1, "share": 1 / 3})
+
+
+def write_episode(path: Path, exposure_at_0600_day29: float, starvation: float = 0.0) -> Path:
+    """A minimal schema-4 episode (rows every 60 ticks, 35 days) with the columns the C_cf targets read."""
+    import hashlib
+    t = 35 * 24 + 1
+    gnames = ["tick", "minute_of_day", "season", "winter_severity", "cold_members", "alive", "deadwood_total",
+              "food_on_bushes_total", "adults_working", "cold_member_hours_total", "births", "deaths_starvation",
+              "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
+    g = np.zeros((t, len(gnames)), dtype=np.float32)
+    g[:, 0] = 60 * np.arange(t)
+    g[:, 1] = (60 * np.arange(t) + 480) % 1440
+    g[:, 5] = 40
+    row = (28 * 1440 + 360 - 480) // 60
+    g[row:, gnames.index("deaths_exposure")] = exposure_at_0600_day29
+    g[row:, gnames.index("deaths_starvation")] = starvation
+    s = np.zeros((t, 1, 4), dtype=np.float32)
+    s[:, 0, 2] = 1.0  # fire lit
+    s[:, 0, 3] = 40
+    agents = np.zeros((t, 1, 2), dtype=np.float32)
+    path.mkdir(parents=True)
+    arrays = {"global.npy": g, "settlements.npy": s, "agents.npy": agents, "agent_alive.npy": np.ones((t, 1), dtype=np.uint8),
+              "agent_keys.npy": np.array([7], dtype=np.uint64)}
+    meta = {"schema_version": 4, "seed": 1, "episode_id": "none", "arrays": {}, "fields": {
+        "global.npy": [{"name": n, "hidden": n == "winter_severity"} for n in gnames],
+        "settlements.npy": [{"name": n, "hidden": False} for n in ("food_stock", "wood_stock", "fire_lit", "members")],
+        "agents.npy": [{"name": n, "hidden": False} for n in ("x", "y")]}}
+    meta["observable_fields"] = {k: [f["name"] for f in v if not f["hidden"]] for k, v in meta["fields"].items()}
+    for name, data in arrays.items():
+        np.save(path / name, data)
+        meta["arrays"][name] = {"shape": list(data.shape), "dtype": str(data.dtype),
+                                "sha256": hashlib.sha256((path / name).read_bytes()).hexdigest()}
+    (path / "meta.json").write_text(json.dumps(meta))
+    (path / "interventions.json").write_text("[]")
+    return path
+
+
+class ExposureDeathsTests(unittest.TestCase):
+    def test_deaths_with_exposure_reads_the_day29_0600_row(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            ep = write_episode(Path(tmp) / "e", exposure_at_0600_day29=3.0, starvation=1.0)
+            self.assertEqual(targets_of(ep)["deaths"], 1.0)
+            self.assertEqual(targets_of(ep, with_exposure=True)["deaths"], 4.0)
+            plain, counted = series(ep), series(ep, with_exposure=True)
+            row = (28 * 1440 + 360 - 480) // 60
+            self.assertEqual((float(plain["deaths"][row]), float(counted["deaths"][row])), (1.0, 4.0))
+            self.assertEqual(float(counted["deaths"][row - 1]), 0.0)
+
+    def test_deaths_effect_and_v15_comparison(self) -> None:
+        y_f = np.zeros((4, 2))
+        y_v = np.array([[1.0, 0.0], [0.0, 0.0], [-1.0, 0.0], [2.0, 2.0]])
+        d = deaths_effect(y_v, y_f)
+        self.assertEqual((d["share_positive"], d["share_negative"]), (0.5, 0.25))
+        self.assertAlmostEqual(d["mean"], (0.5 + 0 - 0.5 + 2) / 4)
+        c = dark_night_differs(y_v, y_f, np.zeros((4, 8)), np.zeros((4, 8)))
+        self.assertEqual((c["seeds_differing"], c["share_differs"]), (3, 0.75))
 
 
 if __name__ == "__main__":

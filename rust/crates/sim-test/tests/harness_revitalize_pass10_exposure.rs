@@ -133,34 +133,57 @@ fn harness_exposure_inert_before_v16() {
     assert_eq!(WorldRules::game_v15().society.exposure, None);
 }
 
-#[test]
-fn harness_exposure_kills_a_cold_elder() {
+/// The rule's hourly damage by stage: (child, adult, elder).
+fn damage(engine: &SimEngine) -> (f64, f64, f64) {
+    let d = engine.resources.rules.society.exposure.expect("exposure rule").damage_per_cold_hour;
+    (d[0], d[1], d[2])
+}
+
+/// An elder with `start` hp beside a fresh adult and child: the fire is out
+/// from 22:00; returns the cold hour (1-based) in which the elder died.
+fn elder_death_hour(start: f64, rule: Option<sim_core::rules::ExposureRule>) -> u64 {
     let night = tick_at(21, 1320); // 22:00 of the first winter day, fire out
     let (mut engine, residents) =
-        exposure_fixture(night, &[(1, Stage::Elder, 20.0), (2, Stage::Adult, 100.0), (3, Stage::Child, 100.0)]);
+        exposure_fixture(night, &[(1, Stage::Elder, start), (2, Stage::Adult, 100.0), (3, Stage::Child, 100.0)]);
+    if rule.is_some() {
+        engine.resources.rules.society.exposure = rule;
+    }
+    let (dc, da, de) = damage(&engine);
     let (elder, adult, child) = (residents[0].1, residents[1].1, residents[2].1);
-    fire_at(&mut engine, night);
-    assert!(!engine.resources.fires[&1].lit);
-    assert!(engine.world.get::<&Cold>(elder).is_ok());
-    assert_eq!(hp(&engine, elder), 11.0);
-    assert_eq!(hp(&engine, adult), 94.0);
-    assert_eq!(hp(&engine, child), 91.0);
-    fire_at(&mut engine, night + 60);
-    assert_eq!(hp(&engine, elder), 2.0);
-    assert!(engine.world.contains(elder));
-    fire_at(&mut engine, night + 120); // the third cold hour
-    assert!(!engine.world.contains(elder), "an elder at 20 hp dies within three cold hours");
-    assert_eq!(engine.resources.tallies.deaths_exposure, 1);
-    assert_eq!(engine.resources.tallies.cold_member_hours, 3 + 3 + 3);
-    let deaths = deaths_at_home(&engine);
-    assert_eq!(deaths.len(), 1);
-    assert_eq!((deaths[0].1, deaths[0].2, deaths[0].3), (1, DeathReason::Exposure, night + 120));
-    assert!(!engine.resources.settlements[&1].member_agents.contains(&1));
-    // Tallied once: later hours wound the others but kill no one else yet.
-    fire_at(&mut engine, night + 180);
-    assert_eq!(engine.resources.tallies.deaths_exposure, 1);
-    assert_eq!(engine.resources.tallies.deaths_starvation + engine.resources.tallies.deaths_old_age, 0);
-    assert_eq!((hp(&engine, adult), hp(&engine, child)), (76.0, 64.0));
+    for hour in 1..=8u64 {
+        fire_at(&mut engine, night + 60 * (hour - 1));
+        assert!(!engine.resources.fires[&1].lit);
+        assert_eq!(hp(&engine, adult), 100.0 - da * hour as f64);
+        assert_eq!(hp(&engine, child), 100.0 - dc * hour as f64);
+        if !engine.world.contains(elder) {
+            assert_eq!(engine.resources.tallies.deaths_exposure, 1);
+            assert_eq!(engine.resources.tallies.cold_member_hours, 3 * hour);
+            let deaths = deaths_at_home(&engine);
+            assert_eq!(deaths.len(), 1);
+            assert_eq!((deaths[0].1, deaths[0].2, deaths[0].3), (1, DeathReason::Exposure, night + 60 * (hour - 1)));
+            assert!(!engine.resources.settlements[&1].member_agents.contains(&1));
+            // Tallied once: the next hour wounds the others but kills no one else.
+            fire_at(&mut engine, night + 60 * hour);
+            assert_eq!(engine.resources.tallies.deaths_exposure, 1);
+            assert_eq!(engine.resources.tallies.deaths_starvation + engine.resources.tallies.deaths_old_age, 0);
+            return hour;
+        }
+        assert!(engine.world.get::<&Cold>(elder).is_ok());
+        assert_eq!(hp(&engine, elder), start - de * hour as f64);
+    }
+    panic!("the elder survived the night");
+}
+
+#[test]
+fn harness_exposure_kills_a_cold_elder() {
+    // Start values ([9, 6, 9]): an elder at 20 hp dies within three cold hours
+    // (20 - 9 - 9 = 2 > 0, then dead in the third hour), as 6.4 states.
+    let start = sim_core::rules::ExposureRule { damage_per_cold_hour: [9.0, 6.0, 9.0], heal_block_hours: 2 };
+    assert_eq!(elder_death_hour(20.0, Some(start)), 3);
+    // Tuned rule: an elder at three hours' damage dies in the third cold hour.
+    let tuned = WorldRules::game_v16_neutral().society.exposure.expect("rule").damage_per_cold_hour[2];
+    assert_eq!(elder_death_hour(3.0 * tuned, None), 3);
+    assert_eq!(elder_death_hour(3.0 * tuned + 0.5, None), 4);
 }
 
 #[test]
@@ -172,14 +195,16 @@ fn harness_exposure_blocks_healing() {
     for hour in 0..8 {
         fire_at(&mut engine, night + 60 * hour);
     }
-    assert_eq!(hp(&engine, adult), 52.0);
+    let (_, da, _) = damage(&engine);
+    let after_night = 100.0 - 8.0 * da;
+    assert_eq!(hp(&engine, adult), after_night);
     let last_cold = night + 60 * 7;
     assert_eq!(engine.world.get::<&ExposureClock>(adult).expect("clock").last_cold_tick, last_cold);
     // While Cold: no healing even though both needs are met.
     let mut survival = StarvationSystem::new();
     engine.resources.current_tick = last_cold + 30;
     survival.tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(hp(&engine, adult), 52.0);
+    assert_eq!(hp(&engine, adult), after_night);
     // 06:00: the cold window ends, the marker leaves.
     fire_at(&mut engine, last_cold + 60);
     assert!(engine.world.get::<&Cold>(adult).is_err());
@@ -188,12 +213,14 @@ fn harness_exposure_blocks_healing() {
     for tick in [last_cold + 60, last_cold + 120, last_cold + 179] {
         engine.resources.current_tick = tick;
         survival.tick(&mut engine.world, &mut engine.resources);
-        assert_eq!(hp(&engine, adult), 52.0, "tick {tick}");
+        assert_eq!(hp(&engine, adult), after_night, "tick {tick}");
     }
-    // The block ends at last_cold + 60 + 120: healing resumes at 3 hp an hour.
+    // The block ends at last_cold + 60 + 60 x heal_block_hours (2): healing
+    // resumes at 3 hp an hour.
+    assert_eq!(engine.resources.rules.society.exposure.expect("rule").heal_block_hours, 2);
     engine.resources.current_tick = last_cold + 180;
     survival.tick(&mut engine.world, &mut engine.resources);
-    assert_eq!(hp(&engine, adult), 52.05);
+    assert_eq!(hp(&engine, adult), after_night + 0.05);
     // The same resident without the rule heals at once (v15 behaviour).
     let (mut plain, residents) = exposure_fixture(night, &[(1, Stage::Adult, 52.0)]);
     plain.resources.rules = WorldRules::game_v15();
@@ -216,9 +243,11 @@ fn harness_exposure_adult_survives_one_night() {
     }
     assert_eq!(engine.resources.tallies.cold_member_hours, 3 * 8);
     let (adult, child, elder) = (residents[0].1, residents[1].1, residents[2].1);
-    assert_eq!(hp(&engine, adult), 100.0 - 8.0 * 6.0);
-    assert_eq!(hp(&engine, child), 100.0 - 8.0 * 9.0);
-    assert_eq!(hp(&engine, elder), 100.0 - 8.0 * 9.0);
+    let (dc, da, de) = damage(&engine);
+    assert_eq!(hp(&engine, adult), 100.0 - 8.0 * da);
+    assert_eq!(hp(&engine, child), 100.0 - 8.0 * dc);
+    assert_eq!(hp(&engine, elder), 100.0 - 8.0 * de);
+    assert!(hp(&engine, adult) > 0.0, "an adult at full hp survives one full dark night");
     assert_eq!(engine.resources.tallies.deaths_exposure, 0);
     assert!(engine.world.query::<&Cold>().iter().next().is_none());
 }

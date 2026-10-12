@@ -142,6 +142,11 @@ pub struct SustainRule {
     pub reserve_days: f64,
     /// Chebyshev distance within which renewable bushes count.
     pub forage_radius: u32,
+    /// Pass 10 (`game_v16`): each bush counts `min(capacity, 4) / 4` of a
+    /// source in the supply estimate, so worlds of capacity-3 bushes (which
+    /// lose regrowth at their cap) do not overstate their supply. False =
+    /// every bush counts one source (v9–v15, v16_neutral).
+    pub capacity_weighted: bool,
 }
 /// Sustained sleep in a minute-of-day window.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -370,13 +375,25 @@ impl Default for WorldRules {
 impl WorldRules {
     /// Pass 10 village policies without world variety: v15 plus exposure (a
     /// cold night wounds, by life stage, and blocks healing for a while; health
-    /// can reach zero). Nothing else changes. v15 stays frozen.
+    /// can reach zero) and, from Part 3 round 2, a birth gate with utilization
+    /// 0.78. v15 stays frozen.
     pub const fn game_v16_neutral() -> Self {
         let mut rules = Self::game_v15();
         rules.society.exposure = Some(ExposureRule {
-            damage_per_cold_hour: [9.0, 6.0, 9.0],
+            // Part 3 round 1 (start values [9, 6, 9] / 2): children 10, adults
+            // 4, elders 5 an hour, healing blocked for two hours after the cold.
+            damage_per_cold_hour: [10.0, 4.0, 5.0],
             heal_block_hours: 2,
         });
+        // Part 3 round 2: a tighter birth gate (utilization 0.81 -> 0.78, both v16
+        // rulesets) so the poorest drawn worlds do not starve in winter.
+        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
+            rules.society.birth
+        {
+            sustain.utilization = 0.78;
+            rules.society.birth =
+                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
+        }
         rules
     }
 
@@ -398,6 +415,15 @@ impl WorldRules {
         if let Some(mut seasons) = rules.seasons {
             seasons.regen_permille = variety.scale_regen(seasons.regen_permille);
             rules.seasons = Some(seasons);
+        }
+        // Part 3 round 1: the birth gate weighs bushes by their capacity
+        // (no effect where every bush holds 4, i.e. the neutral world).
+        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
+            rules.society.birth
+        {
+            sustain.capacity_weighted = true;
+            rules.society.birth =
+                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
         }
         rules
     }
@@ -557,6 +583,7 @@ impl WorldRules {
                 utilization: 0.81,
                 reserve_days: 0.5,
                 forage_radius: 16,
+                capacity_weighted: false,
             }),
         };
         rules.agent.forage = Some(ForageRule {
@@ -614,6 +641,7 @@ impl WorldRules {
                 utilization: 0.85,
                 reserve_days: 0.5,
                 forage_radius: 16,
+                capacity_weighted: false,
             }),
         };
         if let Some(mut planning) = rules.society.shelter_planning {
@@ -871,9 +899,14 @@ mod tests {
     fn game_v16_neutral_is_v15_plus_exposure() {
         let mut v16 = WorldRules::game_v16_neutral();
         let exposure = v16.society.exposure.expect("v16_neutral exposure");
-        assert_eq!(exposure.damage_per_cold_hour, [9.0, 6.0, 9.0]);
+        assert_eq!(exposure.damage_per_cold_hour, [10.0, 4.0, 5.0]);
         assert_eq!(exposure.heal_block_hours, 2);
         v16.society.exposure = None;
+        let BirthRule::Provisioned { sustain: Some(ref mut sustain), .. } = v16.society.birth else {
+            panic!("v16_neutral keeps provisioned sustain births");
+        };
+        assert_eq!(sustain.utilization, 0.78);
+        sustain.utilization = 0.81;
         assert_eq!(v16, WorldRules::game_v15());
         for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
             WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
