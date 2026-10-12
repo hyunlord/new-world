@@ -82,3 +82,5 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 4.1 | 23:20:33 | | `m1tf_p10v16_r3_s2` launched (code `1a7dfdb6`, same command, seed 2) |
 | 4.1 | | 23:55:50 | `m1tf_p10v16_r3_s0`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1008), 7,256 s |
 | 4.1 | 23:55:57 | 23:58:04 | `m1tf_p10v16_r3_s0` `final` from `1a7dfdb6` (125 s), then in the same slot `m1tf_p10v15_r3_s0` launched 23:58:05 (code `1a7dfdb6`, `--dataset p10_v15`, seed 0) |
+| 4.1 | | 01:20:4x | `m1tf_p10v16_r3_s2`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1052), 7,190 s |
+| 4.1, 4.3 | 01:20:58 | ≈ 01:26 | `m1tf_p10v16_r3_s2` `final` from `1a7dfdb6` (125 s); then in the same slot the probes `probe_m1tf_p10v16_r3_s{0,1,2}` (≈ 51 s each, GPU, from `1a7dfdb6`) |
