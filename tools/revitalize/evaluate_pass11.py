@@ -237,7 +237,7 @@ def relabel_text(text: str) -> str:
 
 def j6(short: Round, long: Round, v16_short: Round | None, v16_long: Round | None, v11: dict | None) -> tuple[dict, dict]:
     targets, reported = p10.h5(short, long, v16_short, v16_long, v11)
-    return relabel(targets), reported
+    return relabel(targets), relabel(reported)
 
 
 def j9(rounds: list[Round]) -> tuple[dict, dict]:

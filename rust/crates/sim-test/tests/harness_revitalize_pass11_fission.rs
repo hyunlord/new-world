@@ -470,7 +470,8 @@ fn harness_fission_founds_daughter_in_a_whole_world() {
     assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
     // The store is delivered (nothing could be spent on the founding tick:
     // FissionSystem runs last) and the two shelters are the daughter's.
-    assert!(daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) >= record.food_taken.min(1));
+    assert_eq!(daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0), record.food_taken);
+    assert_eq!(daughter.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0), record.wood_taken);
     let shelters = engine
         .resources
         .building_kinds
@@ -504,7 +505,8 @@ fn harness_shared_bushes_count_once() {
     other.add_member_agent(99);
     engine.resources.settlements.insert(2, other);
     let shared = supply_per_day(&engine.resources, 1, 16);
-    // Bushes x = 30..=36 lie within 16 of both (20, 20) and (44, 20)? 44 - 30 = 14: all ten do.
+    // Bushes x = 30..=36 lie within 16 of both (20, 20) and (44, 20); x = 37..=39 lie
+    // beyond 16 of the first settlement, so they never enter its supply.
     assert!((shared - alone / 2.0).abs() < 1e-9, "alone {alone}, shared {shared}");
     // Without the fission rule nothing is shared (v16 accounting).
     engine.resources.rules = WorldRules::game_v16(5);

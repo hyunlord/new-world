@@ -252,9 +252,6 @@ class ExposureDeathsTests(unittest.TestCase):
         self.assertEqual((c["seeds_differing"], c["share_differs"]), (3, 0.75))
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class HomeSlotFireTests(unittest.TestCase):
     """Pass 11: with --home-slot-fire, dark nights come from the home settlement's slot."""
@@ -285,3 +282,7 @@ class HomeSlotFireTests(unittest.TestCase):
                 self.assertEqual(float(series(ep)["dark_nights"][r_of(23, 120)]), 0.0)
             finally:
                 fork_metrics.HOME_SLOT_FIRE = False
+
+
+if __name__ == "__main__":
+    unittest.main()
