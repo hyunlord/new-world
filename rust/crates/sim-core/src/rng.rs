@@ -39,8 +39,30 @@ pub const STREAM_NEWBORN: u64 = 0x4E45_5742_4F52_4E4B;
 /// index, subject, tick and replicate always 0 ("WORLDVAR" in ASCII).
 pub const STREAM_WORLD_VARIETY: u64 = 0x574F_524C_4456_4152;
 
+/// Hardiness (Pass 11): a resident's frailty factor, subject = its lineage
+/// key, tick, slot and replicate always 0 (an identity trait, not noise;
+/// "HARDINES" in ASCII).
+pub const STREAM_HARDINESS: u64 = 0x4841_5244_494E_4553;
+
+/// Wild regions (Pass 11): the centre of region r, slot = r, subject, tick
+/// and replicate 0 ("REGIONCT" in ASCII).
+pub const STREAM_REGION: u64 = 0x5245_4749_4F4E_4354;
+
+/// Wild regions (Pass 11): the bush shuffle of region r, slot = r, subject,
+/// tick 0, replicate 0 ("REGBUSH_" in ASCII).
+pub const STREAM_REGION_BUSH: u64 = 0x5245_4742_5553_485F;
+
+/// Wild regions (Pass 11): the deadwood shuffle of region r, slot = r,
+/// subject, tick 0, replicate 0 ("REGWOOD_" in ASCII).
+pub const STREAM_REGION_WOOD: u64 = 0x5245_4757_4F4F_445F;
+
+/// Fission (Pass 11): the rank of a member in the departing group, subject =
+/// its lineage key, tick = the check's tick, replicate = the noise replicate
+/// in force ("FISSION_" in ASCII).
+pub const STREAM_FISSION: u64 = 0x4649_5353_494F_4E5F;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 7] = [
+pub const STREAMS: [u64; 12] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -48,6 +70,11 @@ pub const STREAMS: [u64; 7] = [
     STREAM_FOUNDER,
     STREAM_NEWBORN,
     STREAM_WORLD_VARIETY,
+    STREAM_HARDINESS,
+    STREAM_REGION,
+    STREAM_REGION_BUSH,
+    STREAM_REGION_WOOD,
+    STREAM_FISSION,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

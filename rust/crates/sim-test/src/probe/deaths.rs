@@ -291,6 +291,8 @@ impl DeathTracker {
                 "settlement_food_stock_at_death":at_death.settlement_food,
                 "formation_distance_at_death":at_death.home.map(distance),
                 "life_stage_at_death":if at_death.child { "child" } else { "adult" },
+                "stage":if at_death.child { "child" } else if at_death.elder { "elder" } else { "adult" },
+                "settlement_at_death":at_death.settlement,
                 "bed_assigned":at_death.bed,
                 "death_reason":reason.map(|reason| reason.as_str()),
                 "age_days_at_death":at_death.born_tick.map(|born| {
@@ -374,8 +376,10 @@ mod tests {
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0]["cause"], "dehydration");
         assert_eq!(rows[0]["thirst_at_death"], 100.0);
-        // Schema 4 adds death_reason and age_days_at_death to the 23 Pass 3 keys.
-        assert_eq!(rows[0].as_object().expect("object").len(), 23 + 2);
+        // Schema 4 adds death_reason and age_days_at_death to the 23 Pass 3 keys;
+        // Pass 11 adds `stage` and `settlement_at_death`.
+        assert_eq!(rows[0].as_object().expect("object").len(), 23 + 2 + 2);
+        assert_eq!(rows[0]["stage"], "adult");
         assert_eq!(rows[0]["death_reason"], "dehydration");
         assert!(rows[0]["age_days_at_death"].is_null());
     }
@@ -402,6 +406,7 @@ mod tests {
         assert_eq!(rows[0]["settlement_food_stock_at_death"], 17);
         assert_eq!(rows[0]["formation_distance_at_death"], 2);
         assert_eq!(rows[0]["life_stage_at_death"], "child");
+        assert_eq!(rows[0]["stage"], "child");
         assert_eq!(rows[0]["bed_assigned"], true);
     }
 
@@ -526,6 +531,8 @@ mod tests {
             home: None,
             settlement_food: None,
             child: false,
+            elder: false,
+            settlement: None,
             bed: false,
             born_tick: None,
         };

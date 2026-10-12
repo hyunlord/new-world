@@ -220,6 +220,60 @@ fn regen_wood_winter(resources: &mut SimResources, per_day: u32, cap: Option<u8>
     }
 }
 
+/// A deadwood spot of one area: (tile, capacity).
+type AreaSpot = ((u32, u32), u8);
+
+/// Pass 11 regional winter fall (`FirewoodRule::regional_wood`): the day's
+/// `per_day` units are split between the areas of `wood_spot_area` (0 = camp,
+/// r + 1 = wild region r) in proportion to their spot counts. Area a's
+/// accumulator gains `per_day x 1000 x n_a` per pulse against
+/// `1000 x pulses per day x N` per unit (N = all spots), so the areas together
+/// receive exactly the world total of [`regen_wood_winter`]. Each area's units
+/// go round-robin over its own spots in key order after its own cursor, as
+/// [`regen_wood_winter`] does over all spots; a unit that finds no spot of its
+/// area below the cap is lost (`winter_wood_lost`). Areas in id order.
+fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Option<u8>) {
+    let pulses_per_day = (resources.ticks_per_day / REGEN_INTERVAL).max(1);
+    let mut spots: std::collections::BTreeMap<u8, Vec<AreaSpot>> = std::collections::BTreeMap::new();
+    for (key, max) in &resources.wood_source_max {
+        let area = resources.wood_spot_area.get(key).copied().unwrap_or(0);
+        spots.entry(area).or_default().push((*key, *max));
+    }
+    let total: u64 = spots.values().map(|list| list.len() as u64).sum();
+    if total == 0 {
+        return;
+    }
+    let per_unit = 1000 * pulses_per_day * total;
+    for (area, list) in spots {
+        let acc = resources.wood_area_acc.entry(area).or_insert(0);
+        *acc += u64::from(per_day) * 1000 * list.len() as u64;
+        let mut units = 0u64;
+        while *acc >= per_unit {
+            *acc -= per_unit;
+            units += 1;
+        }
+        for _ in 0..units {
+            let after = resources.wood_area_cursor.get(&area).copied();
+            let tiles = &resources.wood_tiles;
+            let below = |key: &(u32, u32), max: &u8| tiles.get(key).copied().unwrap_or(0) < cap.map_or(*max, |cap| cap.min(*max));
+            let chosen = list
+                .iter()
+                .filter(|(key, _)| after.is_none_or(|cursor| *key > cursor))
+                .chain(list.iter().filter(|(key, _)| after.is_some_and(|cursor| *key <= cursor)))
+                .find(|(key, max)| below(key, max))
+                .map(|(key, _)| *key);
+            match chosen {
+                Some(key) => {
+                    let cur = resources.wood_tiles.get(&key).copied().unwrap_or(0);
+                    resources.wood_tiles.insert(key, cur + 1);
+                    resources.wood_area_cursor.insert(area, key);
+                }
+                None => resources.tallies.winter_wood_lost += 1,
+            }
+        }
+    }
+}
+
 impl RuntimeSystem for ResourceRegenSystem {
     fn name(&self) -> &str {
         "ResourceRegenSystem"
@@ -275,7 +329,11 @@ impl RuntimeSystem for ResourceRegenSystem {
                     // Pass 8: changed day by day (`winter_fall_at`, floor 0).
                     let per_day = crate::runtime::settlement::firewood::winter_fall_at(resources, &rule, resources.current_tick)
                         .unwrap_or(per_day);
-                    regen_wood_winter(resources, per_day, rule.winter_deadwood_cap)
+                    if rule.regional_wood && !resources.wood_spot_area.is_empty() {
+                        regen_wood_winter_by_area(resources, per_day, rule.winter_deadwood_cap)
+                    } else {
+                        regen_wood_winter(resources, per_day, rule.winter_deadwood_cap)
+                    }
                 }
                 None => {
                     resources.wood_regen_acc += rule.regen_permille;

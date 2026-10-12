@@ -25,7 +25,7 @@ const fn h(name: &'static str, unit: &'static str, meaning: &'static str) -> Fie
 }
 
 /// Columns of `global.npy` (float32 [T, G]).
-pub const GLOBAL: [Field; 37] = [
+pub const GLOBAL: [Field; 39] = [
     f("tick", "ticks", "completed simulation ticks of the row"),
     f("day_index", "days", "zero-based display day ((tick + clock_offset) / ticks_per_day)"),
     f("minute_of_day", "minutes", "display minute of the day, 0..1439"),
@@ -63,10 +63,15 @@ pub const GLOBAL: [Field; 37] = [
     h("winter_fall_today", "units/day", "winter deadwood fall per day in force at the system tick (firewood::winter_fall_at: the severity's fall plus the day's drawn change, floor 0), -1 outside a winter (schema 2)"),
     f("deaths_exposure", "agents", "cumulative deaths of cold-night wounds under the exposure rule (schema 4)"),
     f("injured_members", "agents", "settlement members whose hp is below their maximum (schema 4)"),
+    f("settlements_alive", "settlements", "settlements with at least one member (schema 5)"),
+    f("fissions_total", "fissions", "cumulative daughter settlements founded by fission (schema 5)"),
 ];
 
-/// Columns of `settlements.npy` (float32 [T, S, F]); NaN while a settlement does not exist.
-pub const SETTLEMENT: [Field; 9] = [
+/// Columns of `settlements.npy` (float32 [T, S, F]); NaN while a settlement
+/// does not exist. Schema 5: a settlement's slot (its index in
+/// `settlement_ids.npy`, first-seen order) is kept for its lifetime; a
+/// dissolved settlement's slot stays NaN afterwards.
+pub const SETTLEMENT: [Field; 11] = [
     f("members", "agents", "roster size"),
     f("food_stock", "units", "food in the stockpile"),
     f("wood_stock", "units", "wood in the stockpile"),
@@ -76,10 +81,12 @@ pub const SETTLEMENT: [Field; 9] = [
     f("formation_x", "tiles", "formation (hearth) tile x"),
     f("formation_y", "tiles", "formation (hearth) tile y"),
     f("rain_ticks_left", "ticks", "max(0, fire_blocked_until - tick)"),
+    f("parent_slot", "index", "index into settlement_ids.npy of the settlement it split from, -1 none (schema 5)"),
+    f("founded_tick", "ticks", "simulation tick the settlement formed (schema 5)"),
 ];
 
 /// Columns of `agents.npy` (float32 [T, N, A]); NaN where the agent is not alive.
-pub const AGENT: [Field; 18] = [
+pub const AGENT: [Field; 20] = [
     f("x", "tiles", "tile x"),
     f("y", "tiles", "tile y"),
     f("state_tag", "index", "0 idle, 1 seeking, 2 social consuming, 3 consuming"),
@@ -98,6 +105,8 @@ pub const AGENT: [Field; 18] = [
     f("age_days", "days", "Life::age_ticks / ticks_per_day; NaN without Life"),
     Field { name: "lifespan_days", unit: "days", meaning: "Life::lifespan_ticks / ticks_per_day (drawn at birth); NaN without Life", hidden: true },
     f("hp", "hp", "BodyHealth hp, 0..max_hp (schema 4; a player can see a villager's health)"),
+    h("hardiness", "thousandths", "Hardiness::permille, the exposure damage factor (higher = frailer), NaN without one (schema 5; a latent trait a model must infer)"),
+    f("founding", "flag", "1 while walking with a fission group (Founding marker) (schema 5)"),
 ];
 
 /// Columns of `resources.npy` (float32 [T, R, 3]).

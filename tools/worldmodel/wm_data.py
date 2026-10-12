@@ -44,7 +44,7 @@ from pathlib import Path
 
 import numpy as np
 
-SCHEMAS = (1, 2, 3, 4)
+SCHEMAS = (1, 2, 3, 4, 5)
 
 
 @dataclass
@@ -145,7 +145,7 @@ def load_family(path, verify: bool = True, arrays: list[str] | None = None) -> F
     for member in sorted(p for p in path.iterdir() if (p / "meta.json").exists()):
         ep = load_episode(member, verify=verify, arrays=arrays)
         fork = ep.meta.get("noise_fork")
-        if ep.meta.get("schema_version") not in (3, 4) or not fork:
+        if ep.meta.get("schema_version") not in (3, 4, 5) or not fork:
             raise ValueError(f"{member}: not a branch-family member (schema 3 or 4 with noise_fork)")
         key = (ep.meta["scene"], int(ep.meta["seed"]), int(fork["tick"]))
         if scene is None:

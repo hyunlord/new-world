@@ -37,14 +37,19 @@
 //! `damage_per_cold_hour[stage]` hp (child, adult, elder) and records this run's
 //! tick in its `ExposureClock`; an agent whose hp reaches 0 dies of exposure
 //! through `despawn_agent`, deaths booked in AgentId order.
+//!
+//! Pass 11 (exposure v2, `game_v17`): the hourly damage is scaled by the
+//! resident's `Hardiness` and by its hunger (`exposure_damage`).
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use hecs::World;
 use sim_core::causal::event::DeathReason;
 use sim_core::components::{
-    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Position, ResourceKind, SettlementId,
+    Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger, Position,
+    ResourceKind, SettlementId,
 };
+use sim_core::rules::ExposureRule;
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
 use crate::runtime::decision::agent_decision::clock_in_window;
@@ -124,6 +129,13 @@ impl RuntimeSystem for FireSystem {
                     cold.extend(settlement.member_agents.iter().copied());
                 }
             }
+            // Pass 11: a founder on its way is not at its parent's fire
+            // (no `Founding` marker exists outside `game_v17`).
+            if resources.rules.society.fission.is_some() {
+                for (_, (agent, _)) in world.query::<(&Agent, &Founding)>().iter() {
+                    cold.remove(&agent.id);
+                }
+            }
         }
         let mut agents: Vec<(AgentId, hecs::Entity, bool)> = world
             .query::<(&Agent, Option<&Cold>)>()
@@ -152,7 +164,7 @@ impl RuntimeSystem for FireSystem {
         }
         resources.tallies.cold_member_hours += marked;
         if let Some(exposure) = resources.rules.society.exposure {
-            expose(world, resources, &exposure.damage_per_cold_hour, &exposed, now);
+            expose(world, resources, &exposure, &exposed, now);
         }
     }
 }
@@ -160,10 +172,14 @@ impl RuntimeSystem for FireSystem {
 /// Pass 10: wound every agent marked `Cold` this hour (`exposed`, in AgentId
 /// order) by its life stage's hourly damage, stamp its `ExposureClock` with
 /// this run's tick, and book exposure deaths in AgentId order.
+///
+/// Pass 11 (exposure v2): the damage is [`exposure_damage`] — the stage's
+/// rate times the hardiness factor (with `use_hardiness`) times the hunger
+/// factor (with `hunger_weight`). With v16's values both factors are 1.
 fn expose(
     world: &mut World,
     resources: &mut SimResources,
-    damage_per_cold_hour: &[f64; 3],
+    rule: &ExposureRule,
     exposed: &[(AgentId, hecs::Entity)],
     now: u64,
 ) {
@@ -186,9 +202,12 @@ fn expose(
         if !stamped {
             let _ = world.insert_one(entity, ExposureClock { last_cold_tick: now });
         }
+        let hardiness = world.get::<&Hardiness>(entity).ok().map(|h| *h);
+        let hunger = world.get::<&Hunger>(entity).map(|h| f64::from(h.value)).unwrap_or(0.0);
+        let damage = exposure_damage(rule, stage, hardiness, hunger);
         let dead = match world.get::<&mut BodyHealth>(entity) {
             Ok(mut health) => {
-                health.apply_damage(damage_per_cold_hour[stage]);
+                health.apply_damage(damage);
                 health.is_dead()
             }
             Err(_) => false,
@@ -201,6 +220,32 @@ fn expose(
     for (entity, id, position) in deaths {
         despawn_agent(world, resources, entity, id, position, DeathReason::Exposure, now);
     }
+}
+
+/// Pass 11: the hourly exposure damage of a `Cold` resident of life stage
+/// `stage` (0 child, 1 adult, 2 elder):
+///
+/// ```text
+/// damage_per_cold_hour[stage]
+///   × (hardiness_permille / 1000   if use_hardiness, else 1)
+///   × (1 + hunger_weight × clamp((hunger − 50) / 50, 0, 1))
+/// ```
+///
+/// A resident without a `Hardiness` (not expected under `use_hardiness`)
+/// counts factor 1. With v16's rule (`use_hardiness` false, `hunger_weight`
+/// 0) this is exactly `damage_per_cold_hour[stage]`.
+pub fn exposure_damage(rule: &ExposureRule, stage: usize, hardiness: Option<Hardiness>, hunger: f64) -> f64 {
+    let mut damage = rule.damage_per_cold_hour[stage];
+    if rule.use_hardiness {
+        if let Some(hardiness) = hardiness {
+            damage *= hardiness.factor();
+        }
+    }
+    if rule.hunger_weight != 0.0 {
+        let excess = ((hunger - 50.0) / 50.0).clamp(0.0, 1.0);
+        damage *= 1.0 + rule.hunger_weight * excess;
+    }
+    damage
 }
 
 #[cfg(test)]

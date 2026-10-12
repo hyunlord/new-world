@@ -59,7 +59,11 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             "seed_winters":super::pass10::seed_winters(&r.clock_rows, &r.exposure_death_ticks, args.days, r.clock.0, r.clock.1),
             "dawn_health":super::pass10::dawn_health(&r.clock_rows),
             "alive_daily":r.checkpoints.values().map(|row| row["alive"].clone()).collect::<Vec<_>>(),
-            "settlements_daily":r.checkpoints.values().map(|row| row["settlements"].clone()).collect::<Vec<_>>()})
+            "settlements_daily":r.checkpoints.values().map(|row| row["settlements"].clone()).collect::<Vec<_>>(),
+            // Pass 11 (schema 11): fission, settlements alive and exposure by
+            // stage and settlement-hour, per seed.
+            "settlements_alive_daily":r.checkpoints.values().map(|row| row["settlements_alive"].clone()).collect::<Vec<_>>(),
+            "pass11":r.pass11})
     }).collect();
     let mut census = Census::default();
     for run in runs {
@@ -166,7 +170,7 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
     markdown.push_str(&pass4_sections(args, runs));
     markdown.push_str(&pass5_sections(args, runs));
     let rules = super::pass8::rules_block(&super::runner::scene_engine(&args.scene, args.seeds.start).resources);
-    let report = json!({"schema_version":10,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
+    let report = json!({"schema_version":11,"rules":rules,"rhythm":rhythm_distributions, "death_census":census.to_json(), "scene":args.scene, "seeds":{"start":args.seeds.start,"end_exclusive":args.seeds.end}, "days":days, "runs":timing, "timing":{"wall_seconds":distribution(&runs.iter().map(|r|r.wall_seconds).collect::<Vec<_>>()),"ms_per_agent_tick":distribution(&runs.iter().map(|r|r.ms_per_agent_tick).collect::<Vec<_>>())}, "determinism_checked":args.check_determinism});
     fs::write(
         args.out.join("summary.json"),
         serde_json::to_vec_pretty(&report).map_err(|e| e.to_string())?,

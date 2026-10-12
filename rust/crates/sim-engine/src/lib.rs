@@ -112,6 +112,18 @@ pub struct Tallies {
     pub interventions_applied: u64,
     /// Agents lost to cold-night wounds under the exposure rule (Pass 10).
     pub deaths_exposure: u64,
+    /// Daughter settlements founded by fission (Pass 11).
+    pub fissions: u64,
+    /// Fissions whose group departed but founded nothing (Pass 11).
+    pub fissions_cancelled: u64,
+    /// Daily fission checks that found every other condition met but no free
+    /// site (Pass 11).
+    pub fission_blocked_no_site: u64,
+    /// Settlements merged away as remnants (Pass 11).
+    pub remnant_merges: u64,
+    /// Members moved between settlements by the exclusivity pass of
+    /// `SettlementSystem` (Pass 11 measurement; counted in every version).
+    pub exclusivity_moves: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -419,6 +431,78 @@ pub struct SimResources {
     /// What worldgen placed against what it was asked for (Pass 10).
     /// Measurement only, never read by systems.
     pub worldgen_report: WorldGenReport,
+
+    /// Wild regions placed by worldgen (Pass 11, `game_v17`), in region
+    /// order; empty in every earlier world. `FissionSystem` reads the centres
+    /// as founding sites.
+    pub wild_regions: Vec<WildRegion>,
+
+    /// Area of each deadwood spot (Pass 11, `game_v17`): 0 = the camp area,
+    /// r + 1 = wild region r. Empty in every earlier world. Read by the
+    /// regional winter fall (`FirewoodRule::regional_wood`).
+    pub wood_spot_area: BTreeMap<(u32, u32), u8>,
+
+    /// Per-area winter-fall accumulators (Pass 11, regional wood only).
+    pub wood_area_acc: BTreeMap<u8, u64>,
+
+    /// Per-area winter-fall cursors (Pass 11, regional wood only).
+    pub wood_area_cursor: BTreeMap<u8, (u32, u32)>,
+
+    /// Hearth tiles that never anchor a new settlement again (Pass 11): the
+    /// hearth of a cancelled founding, a merged remnant or a settlement that
+    /// lost every member. Empty outside `game_v17`.
+    pub retired_hearths: BTreeSet<(u32, u32)>,
+
+    /// Every fission that departed (Pass 11), in departure order;
+    /// measurement only, never read by systems other than `FissionSystem`.
+    pub fission_log: Vec<FissionRecord>,
+
+    /// Every settlement dissolution as (settlement, tick) (Pass 11);
+    /// measurement only, never read by systems.
+    pub dissolutions: Vec<(SettlementId, u64)>,
+}
+
+/// One departed fission group (Pass 11); measurement only.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FissionRecord {
+    /// `FissionSystem` counter, from 1.
+    pub fission_id: u32,
+    /// The settlement the group left.
+    pub parent: SettlementId,
+    /// The founding site (a wild-region centre).
+    pub site: (u32, u32),
+    /// Tick of departure.
+    pub depart_tick: u64,
+    /// Group members, ascending.
+    pub members: Vec<AgentId>,
+    /// Adults in the group.
+    pub adults: u32,
+    /// The daughter settlement, once founded.
+    pub daughter: Option<SettlementId>,
+    /// Tick the daughter formed.
+    pub founded_tick: Option<u64>,
+    /// Tick the fission was cancelled.
+    pub cancelled_tick: Option<u64>,
+    /// Food and wood the group took from the parent's store.
+    pub food_taken: u32,
+    /// See `food_taken`.
+    pub wood_taken: u32,
+    /// Whether the group settled where its leader stood after the timeout.
+    pub settled_at_leader: bool,
+}
+
+/// One wild region placed by worldgen (Pass 11).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WildRegion {
+    /// Centre tile (a walkable, non-water tile 22–28 from the camp hearth).
+    pub centre: (u32, u32),
+    /// Bushes placed around it.
+    pub bushes: u32,
+    /// Deadwood spots placed around it.
+    pub deadwood: u32,
+    /// Chebyshev distance from the centre to the nearest water tile
+    /// (`u32::MAX` without water); measurement only.
+    pub water_distance: u32,
 }
 
 /// Worldgen counts kept for measurement (Pass 10): never read by systems.
@@ -430,6 +514,18 @@ pub struct WorldGenReport {
     pub deadwood_spots_placed: u32,
     /// Terrain label swaps made by the berry-edge repair.
     pub berry_repair_swaps: u32,
+    /// Wild regions asked for (Pass 11).
+    pub regions_requested: u32,
+    /// Wild regions placed (fewer when no candidate centre was left).
+    pub regions_placed: u32,
+    /// Region bushes asked for over the placed regions.
+    pub region_bushes_requested: u32,
+    /// Region bushes placed.
+    pub region_bushes_placed: u32,
+    /// Region deadwood spots asked for over the placed regions.
+    pub region_deadwood_requested: u32,
+    /// Region deadwood spots placed.
+    pub region_deadwood_placed: u32,
 }
 
 impl SimResources {
@@ -497,6 +593,13 @@ impl SimResources {
             noise_fork: None,
             world_variety: None,
             worldgen_report: WorldGenReport::default(),
+            wild_regions: Vec::new(),
+            wood_spot_area: BTreeMap::new(),
+            wood_area_acc: BTreeMap::new(),
+            wood_area_cursor: BTreeMap::new(),
+            retired_hearths: BTreeSet::new(),
+            fission_log: Vec::new(),
+            dissolutions: Vec::new(),
         }
     }
 

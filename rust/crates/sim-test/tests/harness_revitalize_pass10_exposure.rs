@@ -178,7 +178,7 @@ fn elder_death_hour(start: f64, rule: Option<sim_core::rules::ExposureRule>) -> 
 fn harness_exposure_kills_a_cold_elder() {
     // Start values ([9, 6, 9]): an elder at 20 hp dies within three cold hours
     // (20 - 9 - 9 = 2 > 0, then dead in the third hour), as 6.4 states.
-    let start = sim_core::rules::ExposureRule { damage_per_cold_hour: [9.0, 6.0, 9.0], heal_block_hours: 2 };
+    let start = sim_core::rules::ExposureRule { damage_per_cold_hour: [9.0, 6.0, 9.0], heal_block_hours: 2, hunger_weight: 0.0, use_hardiness: false };
     assert_eq!(elder_death_hour(20.0, Some(start)), 3);
     // Tuned rule: an elder at three hours' damage dies in the third cold hour.
     let tuned = WorldRules::game_v16_neutral().society.exposure.expect("rule").damage_per_cold_hour[2];

@@ -123,8 +123,11 @@ fn pass10_v16_neutral_literal() -> WorldRules {
                 winter_night_burn_step: 2,
                 winter_fall_spread: 2,
                 windfall_over_snow: true,
+                rain_soak_permille: 0,
+                regional_wood: false,
             }),
-            exposure: Some(ExposureRule { damage_per_cold_hour: [10.0, 4.0, 5.0], heal_block_hours: 2 }),
+            exposure: Some(ExposureRule { damage_per_cold_hour: [10.0, 4.0, 5.0], heal_block_hours: 2, hunger_weight: 0.0, use_hardiness: false }),
+            fission: None,
         },
         clock_offset_ticks: 480,
         seasons: Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] }),
@@ -151,18 +154,20 @@ fn harness_game_v16_neutral_rules_are_the_pass10_literal() {
     assert_eq!(v16n, literal);
 }
 
-/// `WorldVariety::draw(seed)` for seeds 0–3 as Pass 10 left it.
+/// `WorldVariety::draw(seed)` for seeds 0–3 as Pass 10 left it (slots 0..7;
+/// Pass 11's wild-region slots 8..10 are new and v16 never reads them, so the
+/// pin compares `draw(seed).without_regions()`).
 const DRAWS: [(u64, WorldVariety); 4] = [
-    (0, WorldVariety { starting_agents: 23, berry_bushes: 14, berry_capacity: 4, deadwood_spots: 20, deadwood_capacity: 5, forest_permille: 241, climate: 2, food_regen_permille: 900 }),
-    (1, WorldVariety { starting_agents: 23, berry_bushes: 11, berry_capacity: 5, deadwood_spots: 18, deadwood_capacity: 5, forest_permille: 239, climate: 1, food_regen_permille: 875 }),
-    (2, WorldVariety { starting_agents: 21, berry_bushes: 14, berry_capacity: 4, deadwood_spots: 14, deadwood_capacity: 7, forest_permille: 259, climate: 1, food_regen_permille: 903 }),
-    (3, WorldVariety { starting_agents: 26, berry_bushes: 9, berry_capacity: 5, deadwood_spots: 23, deadwood_capacity: 7, forest_permille: 299, climate: 2, food_regen_permille: 890 }),
+    (0, WorldVariety { starting_agents: 23, berry_bushes: 14, berry_capacity: 4, deadwood_spots: 20, deadwood_capacity: 5, forest_permille: 241, climate: 2, food_regen_permille: 900, wild_regions: 0, region_bushes: 0, region_deadwood: 0 }),
+    (1, WorldVariety { starting_agents: 23, berry_bushes: 11, berry_capacity: 5, deadwood_spots: 18, deadwood_capacity: 5, forest_permille: 239, climate: 1, food_regen_permille: 875, wild_regions: 0, region_bushes: 0, region_deadwood: 0 }),
+    (2, WorldVariety { starting_agents: 21, berry_bushes: 14, berry_capacity: 4, deadwood_spots: 14, deadwood_capacity: 7, forest_permille: 259, climate: 1, food_regen_permille: 903, wild_regions: 0, region_bushes: 0, region_deadwood: 0 }),
+    (3, WorldVariety { starting_agents: 26, berry_bushes: 9, berry_capacity: 5, deadwood_spots: 23, deadwood_capacity: 7, forest_permille: 299, climate: 2, food_regen_permille: 890, wild_regions: 0, region_bushes: 0, region_deadwood: 0 }),
 ];
 
 #[test]
 fn harness_world_variety_draws_are_the_pass10_literals() {
     for (seed, literal) in DRAWS {
-        let v = WorldVariety::draw(seed);
+        let v = WorldVariety::draw(seed).without_regions();
         assert_eq!(v.starting_agents, literal.starting_agents, "seed {seed}");
         assert_eq!(v.berry_bushes, literal.berry_bushes, "seed {seed}");
         assert_eq!(v.berry_capacity, literal.berry_capacity, "seed {seed}");

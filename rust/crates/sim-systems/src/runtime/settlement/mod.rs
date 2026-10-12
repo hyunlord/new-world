@@ -38,3 +38,6 @@ pub mod firewood;
 /// Pass 5 hearth fire and cold nights.
 pub mod fire;
 pub use fire::FireSystem;
+/// Pass 11 village fission (`game_v17`).
+pub mod fission;
+pub use fission::FissionSystem;

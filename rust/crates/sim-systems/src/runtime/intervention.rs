@@ -7,6 +7,10 @@
 //! number is drawn. Rain and cold snaps leave state that `FireSystem` reads;
 //! every other kind changes stockpiles or deadwood directly. The log and the
 //! tally are display-only.
+//!
+//! Pass 11: under `FirewoodRule::rain_soak_permille` (`game_v17`) a rain also
+//! removes `floor(wood × permille / 1000)` from the settlement's stored wood at
+//! application (`InterventionRecord::soaked_wood`).
 
 use sim_core::components::{ResourceKind, SettlementId};
 use sim_engine::{Intervention, InterventionRecord, SimEngine, SimResources};
@@ -49,6 +53,7 @@ pub fn home_settlement(resources: &SimResources) -> Option<SettlementId> {
 pub fn apply_intervention(engine: &mut SimEngine, intervention: Intervention) -> InterventionRecord {
     let now = engine.current_tick();
     let resources = &mut engine.resources;
+    let mut soaked_wood = 0u64;
     let applied = match intervention {
         Intervention::GiftFood { settlement, amount } => add(resources, settlement, ResourceKind::Food, amount),
         Intervention::SpoilFood { settlement, amount } => remove(resources, settlement, ResourceKind::Food, amount),
@@ -61,6 +66,15 @@ pub fn apply_intervention(engine: &mut SimEngine, intervention: Intervention) ->
                 let until = now.saturating_add(u64::from(hours) * resources.ticks_per_day / 24);
                 let entry = resources.fire_blocked_until.entry(settlement).or_insert(0);
                 *entry = (*entry).max(until);
+                // Pass 11: the rain soaks a share of the stored wood.
+                let soak = resources.rules.society.firewood.map_or(0, |rule| rule.rain_soak_permille);
+                if soak > 0 {
+                    if let Some(store) = resources.settlements.get_mut(&settlement) {
+                        let wood = store.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0);
+                        let lost = (u64::from(wood) * u64::from(soak) / 1000) as u32;
+                        soaked_wood = u64::from(store.withdraw(ResourceKind::Wood, lost));
+                    }
+                }
                 u64::from(hours)
             }
         }
@@ -70,7 +84,7 @@ pub fn apply_intervention(engine: &mut SimEngine, intervention: Intervention) ->
         }
         Intervention::Windfall { units } => windfall(resources, now, units),
     };
-    let record = InterventionRecord { tick: now, intervention, applied };
+    let record = InterventionRecord { tick: now, intervention, applied, soaked_wood };
     resources.intervention_log.push(record);
     resources.tallies.interventions_applied += u64::from(applied > 0);
     record
@@ -91,7 +105,8 @@ fn remove(resources: &mut SimResources, sid: SettlementId, kind: ResourceKind, a
         .map_or(0, |settlement| u64::from(settlement.withdraw(kind, amount)))
 }
 
-/// Passes over the registered deadwood spots in key order from the first key,
+/// Passes over the registered deadwood spots in key order from the first key
+/// (Pass 11 `regional_wood`: nearest to the home settlement first),
 /// one unit a spot while it is below its ceiling (its max; in winter
 /// `min(max, winter_deadwood_cap)`, unless the windfall lands on the snow,
 /// Pass 8 `windfall_over_snow`), until `units` are placed or a pass places
@@ -105,7 +120,14 @@ fn windfall(resources: &mut SimResources, now: u64, units: u32) -> u64 {
         .filter(|rule| !rule.windfall_over_snow)
         .and_then(|rule| rule.winter_deadwood_cap)
         .filter(|_| winter);
-    let spots: Vec<((u32, u32), u8)> = resources.wood_source_max.iter().map(|(k, v)| (*k, *v)).collect();
+    let mut spots: Vec<((u32, u32), u8)> = resources.wood_source_max.iter().map(|(k, v)| (*k, *v)).collect();
+    // Pass 11 (`regional_wood`): the home settlement's nearest spots first
+    // (Chebyshev distance to its formation tile, then key order).
+    if resources.rules.society.firewood.is_some_and(|rule| rule.regional_wood) {
+        if let Some(home) = home_settlement(resources).and_then(|sid| resources.settlements.get(&sid)).map(|s| s.formation_tile) {
+            spots.sort_by_key(|((x, y), _)| (x.abs_diff(home.0).max(y.abs_diff(home.1)), *x, *y));
+        }
+    }
     let mut placed = 0u32;
     while placed < units {
         let mut this_pass = 0u32;

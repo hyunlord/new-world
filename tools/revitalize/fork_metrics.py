@@ -48,7 +48,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "worldmodel"))
-from bench_v1 import Ep, T4_TARGETS, c_cf_targets, episode_arrays, row_of  # noqa: E402
+from bench_v1 import VARS, Ep, T4_TARGETS, c_cf_targets, episode_arrays, row_of  # noqa: E402
 from wm_data import load_episode  # noqa: E402
 
 GATED = ("dark_nights", "cold_member_hours")
@@ -131,11 +131,33 @@ def episode_name(scene: str, seed: int, eid: str, replicate: int | None) -> str:
     return f"{scene}_s{seed}_{eid}" + ("" if replicate is None else f"_r{replicate}")
 
 
+# Pass 11 (`--home-slot-fire`): read the fire of the home settlement's slot (the
+# lowest id in settlement_ids.npy) instead of the max over every slot, so a
+# daughter's lit fire cannot hide rain on home. bench_v1 is left untouched.
+HOME_SLOT_FIRE = False
+
+
+def home_fire(loaded) -> np.ndarray | None:
+    """fire_lit of the home settlement's slot per row (NaN -> 0); None without settlements."""
+    ids = loaded.arrays.get("settlement_ids.npy")
+    s = loaded.arrays["settlements.npy"]
+    if ids is None or not s.shape[1]:
+        return None
+    home = int(np.argmin(ids))
+    return np.nan_to_num(loaded.column("settlements.npy", "fire_lit")[:, home], nan=0.0)
+
+
 def targets_of(path: Path, with_exposure: bool = False) -> dict[str, float]:
     """The C_cf targets of one episode plus births at the day-29 06:00 row (reported only).
-    `with_exposure` (Pass 10) adds `deaths_exposure` at that row to the deaths target."""
-    loaded = load_episode(path, arrays=["global.npy", "settlements.npy"])
-    ep = Ep("", "", int(loaded.meta["seed"]), str(loaded.meta["episode_id"]), **episode_arrays(loaded))
+    `with_exposure` (Pass 10) adds `deaths_exposure` at that row to the deaths target;
+    `HOME_SLOT_FIRE` (Pass 11) reads dark nights from the home settlement's slot."""
+    loaded = load_episode(path, arrays=["global.npy", "settlements.npy", "settlement_ids.npy"])
+    arrays = episode_arrays(loaded)
+    if HOME_SLOT_FIRE:
+        fire = home_fire(loaded)
+        if fire is not None:
+            arrays["v"][:, VARS.index("fire_lit")] = fire
+    ep = Ep("", "", int(loaded.meta["seed"]), str(loaded.meta["episode_id"]), **arrays)
     out = c_cf_targets(ep)
     out["births"] = float(loaded.column("global.npy", "births")[row_of(28, 360)])
     if with_exposure:
@@ -174,6 +196,8 @@ def series(path: Path, with_exposure: bool = False) -> dict:
     g = lambda name: ep.column("global.npy", name)
     s = ep.arrays["settlements.npy"]
     fire = np.nan_to_num(ep.column("settlements.npy", "fire_lit"), nan=0.0).max(axis=1, initial=0.0) if s.shape[1] else np.zeros(len(g("tick")))
+    if HOME_SLOT_FIRE and s.shape[1]:
+        fire = home_fire(ep)
     food = np.nansum(ep.column("settlements.npy", "food_stock"), axis=1) if s.shape[1] else np.zeros(len(g("tick")))
     deaths = sum(g(k) for k in ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age"))
     if with_exposure:
@@ -248,6 +272,7 @@ def build(args) -> dict:
     ids = ["none", *variants] + ([args.gift1] if args.gift1 else [])
     with_exposure = getattr(args, "deaths_with_exposure", False)
     report["deaths_with_exposure"] = with_exposure
+    report["home_slot_fire"] = HOME_SLOT_FIRE
     values = collect(root, scene, seeds, ids, reps, with_exposure)
     report["vrf"] = {}
     for eid in ids[1:]:
@@ -461,12 +486,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--unforked", type=Path)
     parser.add_argument("--v14", type=Path)
     parser.add_argument("--intervention-ticks")
+    parser.add_argument("--home-slot-fire", action="store_true",
+                        help="Pass 11: dark nights from the home settlement's slot (lowest id), not the max over slots")
     parser.add_argument("--deaths-with-exposure", action="store_true",
                         help="count deaths_exposure (recorder schema 4) in the deaths target and series")
     parser.add_argument("--v15", type=Path, help="Pass 9's game_v15 branch families (read-only) for the dark-night comparison")
     parser.add_argument("--v15-replicates", type=int, default=8)
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args(argv)
+    global HOME_SLOT_FIRE
+    HOME_SLOT_FIRE = args.home_slot_fire
     report = build(args)
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "fork_metrics.json").write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=True) + "\n")

@@ -132,6 +132,11 @@ pub struct Settlement {
     /// [`Settlement::withdraw`] (used by slices 2-3/2-4). Zero counts are never
     /// stored — `withdraw` drops a key the moment it reaches 0.
     pub stockpile: BTreeMap<ResourceKind, u32>,
+
+    /// The settlement this one split from (Pass 11 fission); `None` for every
+    /// settlement formed by the formation scan alone (all earlier worlds).
+    #[serde(default)]
+    pub parent: Option<SettlementId>,
 }
 
 impl Settlement {
@@ -146,6 +151,7 @@ impl Settlement {
             community_history: Vec::with_capacity(SETTLEMENT_HISTORY_CAP),
             founded_at,
             stockpile: BTreeMap::new(),
+            parent: None,
         }
     }
 

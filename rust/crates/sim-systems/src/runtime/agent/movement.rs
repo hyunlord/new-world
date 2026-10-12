@@ -47,7 +47,7 @@ use std::collections::BTreeMap;
 
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, Inventory, Position, ResourceKind, SeekTarget,
+    Agent, AgentId, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SeekTarget,
     SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
@@ -219,7 +219,7 @@ impl RuntimeSystem for AgentMovementSystem {
         let seed = resources.world_seed;
         let tick = resources.current_tick;
         let replicate = resources.noise_replicate_for(tick);
-        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage)) in world
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -230,6 +230,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&Inventory>,
                 Option<&Elder>,
                 Option<&Lineage>,
+                Option<&Founding>,
             )>()
             .iter()
         {
@@ -277,7 +278,9 @@ impl RuntimeSystem for AgentMovementSystem {
             }
             // Pass 4 haul home: a loaded idle member walks straight to its
             // formation tile instead of a Brownian step (no RNG draw).
-            if let (true, Some(agent), None) = (forage.is_some() || firewood.is_some(), agent, child) {
+            // Pass 11: a founder on its way never hauls home (no `Founding`
+            // marker exists outside `game_v17`).
+            if let (true, Some(agent), None, None) = (forage.is_some() || firewood.is_some(), agent, child, founding) {
                 if let Some(&anchor) = home.get(&agent.id) {
                     let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
                     let wood = if firewood.is_some() {
@@ -336,7 +339,8 @@ impl RuntimeSystem for AgentMovementSystem {
                 } else {
                     evening_radius.or(rules.idle_tether_radius)
                 },
-                agent.and_then(|a| home.get(&a.id)),
+                // Pass 11: no tether pulls a founder on its way back home.
+                agent.filter(|_| founding.is_none()).and_then(|a| home.get(&a.id)),
             ) {
                 if (nx as u32).abs_diff(anchor.0).max((ny as u32).abs_diff(anchor.1)) > radius {
                     nx = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x);
