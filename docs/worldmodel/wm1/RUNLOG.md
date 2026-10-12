@@ -59,3 +59,9 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 
 | 7 (resume) | 20:52 | | DGX reachable again: no reboot / OOM / kernel error (DECISIONS E7.1); `m1tf_main_r3_s1_final` and `_s2_final` had finished at 11:27 and `m3_noday_s0_final` at 11:54 (exit 0, from `9f4fd3f3`), `m1tf_sevon_aa_r3_s0` training at 12:11 (not evaluated, E7.3). Results copied, judge rerun, WM1_1.md and REPORT_WM1_1.md updated (`ec3495c4` and the next commit) |
 | gate | 20:57 | 20:58 | `72ddc4ff`: Mac 65 tests OK, 3 skipped (recorder not built on the Mac); DGX 65 tests OK, 0 skipped (`gate_72ddc4ff`, `WM_BIN` = WM-1's recorder build); allowed paths clean. Green branch fast-forwarded to the commit that records it |
+
+## WM-1.2
+
+| Part | Start | End | Notes |
+|---|---|---|---|
+| start | 21:40:06 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0; `nvidia-smi` 21:40: only Xorg (125 MiB) and gnome-shell (20 MiB), 0 % util; RAM 119 GiB, 110 GiB available; swap 15.5 of 16 GiB used (other users' services). No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. Base `d5380301` = both WM branches on origin |
