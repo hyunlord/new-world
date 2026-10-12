@@ -86,6 +86,21 @@ class ExportDeterminismTests(unittest.TestCase):
         self.assertEqual((meta["schema_version"], meta["keyed_draws"], meta["noise_fork"]), (4, True, {"tick": 1440, "replicate": 2}))
         self.assertIn("game_v15_s2_a_r2/agent_keys.npy", first)
 
+    def test_v16_fork_families_are_byte_identical(self) -> None:
+        # Pass 10 H9: schema-4 game_v16 branch families (agents, hp, lineage keys, the hidden
+        # world variety in meta, noise forks at tick 1,440, R = 3), 4 days: two runs at 4 workers
+        # and one at 1.
+        extra = ("--agents", "--schedule-dir", str(self.schedules), "--include-factual", "--fork-tick", "1440", "--replicates", "3")
+        first = tree(self.record("v16_fork_a", 4, *extra, scene="game_v16", days=4))
+        second = tree(self.record("v16_fork_b", 4, *extra, scene="game_v16", days=4))
+        single = tree(self.record("v16_fork_c", 1, *extra, scene="game_v16", days=4))
+        self.assertEqual(len({k.split("/")[0] for k in first}), 4 * 2 * 3)
+        self.assertEqual(first, second)
+        self.assertEqual(first, single)
+        meta = json.loads(first["game_v16_s2_a_r2/meta.json"])
+        self.assertEqual((meta["schema_version"], meta["noise_fork"]), (4, {"tick": 1440, "replicate": 2}))
+        self.assertIs(meta["world_variety"]["hidden"], True)
+
     def test_schedule_episodes_share_the_factual_prefix(self) -> None:
         import numpy as np
         out = self.record("prefix", 2, "--schedule-dir", str(self.schedules), "--include-factual")

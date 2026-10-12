@@ -2082,3 +2082,31 @@ Attribution (Δη²): exposure (v16_neutral − v15; includes round 2's tighter 
 Deaths per episode by day 120 (mean of 112): game_v15 old age 72.87, exposure 0.00, starvation + dehydration 0.00; game_v16_neutral old age 70.74, exposure 2.00, starvation + dehydration 0.00; game_v16 old age 64.67, exposure 2.32, starvation + dehydration 0.00.
 
 11.5 (declared adjustment): not used. Scratch recordings of game_v16 on seeds 30000–30111 (outside every judged and pilot set; a scratch recorder outside the clone reading the ranges from an environment variable) with 7.1's ranges, with the wood ranges widened by the allowed step (deadwood spots 12–28, capacity 3–9) and with every range widened by its step plus climate weights [383, 234, 383] gave wood η² 0.073 / 0.094 / 0.111 (food 0.331 / 0.327 / 0.524, alive 0.960 / 0.960 / 0.976): no allowed variety change brings wood near 0.30, so a second pilot could not change H7's verdict and was not recorded (see DECISIONS).
+
+### Part 4 — H10 timing (back to back, 17:58–18:12 KST, nothing else heavy; `probe_frozen`, tuning sets with twins)
+
+| Duration | game_v15 ms / agent-tick | game_v16_neutral | ratio | game_v16 | ratio |
+|---|---:|---:|---:|---:|---:|
+| 10day | 0.0011412 | 0.0011721 | 1.027 | 0.0012091 | 1.060 |
+| 120day | 0.0014388 | 0.0016967 | 1.179 | 0.0016874 | 1.173 |
+
+H10: **PASS** (≤ 1.25 for both scenes and durations). The timing runs reproduce the round-2 summaries (v16 scenes) and Part 0's (v15) on every simulation value.
+
+### Part 6 — consequential interventions (fork experiment, game_v16, frozen recorder)
+
+Seeds 12000–12031, 35 days, R = 4 forked at 28,800, the five C_cf variants and the one-unit gift plus the factual; placebos on 12000–12007; 1,400 recorded episodes (17:41–17:57). G0a: placebos 224 / 224 identical, replicate 0 = unforked 224 / 224: **PASS**. G0b (reported, Pass 9's gate): FAIL as in Pass 9 (dark nights VRF 1.00 for every variant; cold member-hours passes for gift_wood, rot_wood, rain, windfall, gift1, fails for cold_snap's lower bound 0.997).
+
+| variant | seeds with deaths effect > 0 | mean deaths effect | dark-night effect differs from v15 (seeds) | mean dark-night effect v16 / v15 |
+|---|---:|---:|---|---|
+| cold_snap | 0.062 | +0.156 | 0.562 (18 / 32) | +0.328 / +0.480 |
+| gift1 | 0.000 | -0.008 | 0.031 (1 / 32) | +0.008 / +0.000 |
+| gift_wood | 0.000 | -0.625 | 0.562 (18 / 32) | -0.734 / -0.820 |
+| rain | 0.000 | -0.594 | 0.594 (19 / 32) | +0.266 / +0.230 |
+| rot_wood | 0.562 | +1.180 | 0.562 (18 / 32) | +1.117 / +1.352 |
+| windfall | 0.000 | -0.164 | 0.531 (17 / 32) | -0.367 / -0.309 |
+
+Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 row, exposure deaths included (`--deaths-with-exposure`). By cause the whole effect is exposure: rain −0.59 exposure deaths (births −0.39), cold_snap +0.16 (+0.12), rot_wood +1.18 (+0.57), gift_wood −0.63 (−0.41); old age and starvation 0 for every variant.
+
+**H8: FAIL** — of {rain, cold_snap, rot_wood} only rot_wood has deaths effect > 0 in ≥ 0.25 of seeds (0.56) with mean ≥ 0.25 (+1.18); rain's mean is −0.59 (0 seeds positive) and cold_snap's +0.16 (0.06 of seeds). gift_wood's mean deaths effect −0.63 ≤ 0 holds. Rain keeps the fire out for its 13 hours but burns no wood, so the saved wood keeps a later night lit and breaks the streak that would have killed (its dark-night effect is still +0.27); a two-night cold snap mostly costs hp that a fed village heals.
+
+VRF / mean effect / sign stability / divergence tables: `docs/revitalize/probe/p10-6_forks/fork_metrics.md`.

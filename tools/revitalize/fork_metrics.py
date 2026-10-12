@@ -394,7 +394,7 @@ def markdown(report: dict) -> str:
               "VRF = V_unpaired / V_paired, variances over replicates within a seed, averaged over seeds; 95 % interval from a "
               "cluster bootstrap over seeds. The unpaired arm still shares worldgen, weather and the whole prefix up to the fork, "
               "so VRF measures the value of pairing the post-fork agent noise only.", "",
-              "Noisy seeds: seeds whose 8 replicates do not all give the same value, in the factual (f), the variant (v) and both; "
+              f"Noisy seeds: seeds whose {report['replicates']} replicates do not all give the same value, in the factual (f), the variant (v) and both; "
               "where the factual is constant within a seed, the paired and unpaired differences have the same variance and that "
               "seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only). "
               "Bootstrap resamples with no agent noise at all have no VRF and are left out of the interval; their count is shown "
