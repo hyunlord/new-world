@@ -141,4 +141,9 @@ row 23 .. T−2). Library and statistics from v1 A_train (96 episodes, 2,881 row
 
 ## Amendments
 
-(none)
+- **2026-10-12 11:10 (before any diversity number existed; the first `diversity.py` run stopped with an error on
+  OOD_v12 before writing output).** `diversity.py`'s severity assertion (season 3 and severity >= 0 at 18:00 of each
+  winter's first day) is relaxed for OOD_v12 only: game_v12 is the Pass 6 ruleset without winter severity
+  (DATASET_v0.md), so its episodes read −1 there; the assertion now requires −1 for OOD_v12 and >= 0 for every
+  other split. Its "distinct sequences" count is therefore 1 (no draw). No other change; `climatology.py` and
+  `calcore.py` are unchanged.

@@ -28,15 +28,19 @@ GROUPS = ("A_train", "A_val", "A_test", "B_test", "OOD_v12", "OOD_long")
 LAST_WINTER_DAY = 218
 
 
+NO_DRAW_SCENES = ("OOD_v12",)   # game_v12 (Pass 6 ruleset) has no winter severity (DATASET_v0.md)
+
+
 def severity_sequence(ep) -> tuple[int, ...]:
-    """The winter-severity draw of every winter (18:00 of days 22, 50, ..., up to day 218 where the episode has it)."""
+    """The winter-severity draw of every winter (18:00 of days 22, 50, ..., up to day 218 where the episode has it).
+    Episodes of a scene without severity draws (OOD_v12) must read -1 at every winter evening."""
     out = []
     for day in cc.winter_days(ep.rows, LAST_WINTER_DAY):
         r = cc.row_of(day, 1080)
-        if int(ep.bench.season[r]) != 3 or int(ep.bench.severity[r]) < 0:
-            raise ValueError(f"seed {ep.seed} day {day} 18:00: season {ep.bench.season[r]}, "
-                             f"severity {ep.bench.severity[r]}")
-        out.append(int(ep.bench.severity[r]))
+        sev = int(ep.bench.severity[r])
+        if int(ep.bench.season[r]) != 3 or (sev < 0) != (ep.split in NO_DRAW_SCENES):
+            raise ValueError(f"seed {ep.seed} day {day} 18:00: season {ep.bench.season[r]}, severity {sev}")
+        out.append(sev)
     return tuple(out)
 
 
