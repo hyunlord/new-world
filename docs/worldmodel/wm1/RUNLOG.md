@@ -69,3 +69,8 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 0 | 21:41 | 21:43 | DGX code clone detached at `b20a991f`; venv torch 2.14.1+cu130, numpy 2.5.2, CUDA available. Build clone `_build/src_wm12` at `b20a991f`: `cargo build --release -p sim-test` 21:41:10–21:42:24 (74 s, exit 0) → `worldsim_wm`, `worldsim_probe` |
 | 1 | 21:42 | 21:43 | `rsync -a --checksum` of `p10/pilot/` (3 × 112 episodes, 228,815,078 bytes) and `p9/unforked/game_v15_s12000_none` (3,615,682 bytes) to the DGX: 13 s. `wm_data.verify_episode` on the DGX: 337 of 337 OK; the 336 pilot episodes are schema 4, 2,881 rows, `git_sha` = `58119582…`; the p9 episode is schema 3 with `git_sha` `ba278357…` (Pass 9's recording, expected) |
 | 0 end | | 21:44 | DGX discovery pre-check with the WM-1.2 binaries (`WM_BIN`, `PROBE_BIN`, `WM_DATA_ROOT`): 88 tests OK, 0 skipped (63 s) |
+| 1 end | | 21:47 | pilot manifest and the dataset registry (`45556317`) |
+| 2 | 21:46 | 21:52 | v0 golden values at the merge (`d1b15ecf`); schema-4 harness, `evaluate(tasks=, bias_removed=)`, `--dataset` (`da379c17`); Mac discovery 103 OK / 17 skipped |
+| 2 | 21:52 | 21:54 | DGX at `da379c17`: `calendar_val_{p10_v16,p10_v15,p10_v16n}_da379c17` (10–11 s each, CPU); M1b smoke `_smoke_m1tf_da379c17` (4 steps, 79 s, exit 0; not a result) |
+| 4.1 | 21:54:26 | | `m1tf_p10v16_r3_s0` and `_s1` launched together on the GPU (code `da379c17`); `nvidia-smi` before: no compute process; after: 3.4 GB each; RAM 100 GiB available |
+| 2 end, 3 | | 22:05 | probe and judge code (`ef880949`); METRICS_1_2.md committed and pushed (next commit) before any test-role number |
