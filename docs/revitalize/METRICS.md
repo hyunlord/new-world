@@ -2221,3 +2221,47 @@ Round 3 detail (game_v17): fissions 0.81 of seeds, first day median 28 / IQR 0 (
 **Frozen commit:** `c5b200d7` (`c5b200d7ee618b465d6aa0fdf054fb82d820eed6`, Part 3, 00:01 KST on 2026-10-13). Parts 4–6 run `probe_frozen` / `wm_frozen` built from it (sha256 `1aa47e82…` / `47f70a9e…`; `probe_frozen` = `probe_p3r3`); recordings carry `WORLDSIM_GIT_SHA` = that commit.
 
 Unmet after three rounds (hypotheses, evidence above): J3's first-fission timing (the check fires at the first spring day after the minimum age whenever the static capacity reaches `min_members`; with `crowding` ≤ 1.0 no allowed knob makes it a state that varies by seed); J5's starvation and max-share clauses (daughters founded at regions with few bushes, and four-settlement worlds whose late daughters run out of wood in the fourth winter); J6's Y9 work shares (the 15:00 adult work share of `game_v17_nofission` stays below v16's; a scratch experiment tied most of the drop to the wild regions, and moving region resources beyond the camp's reach in round 3 did not restore it on the tuning seeds — the remaining cause was not isolated within the rounds).
+
+### Part 3 — 4.6 guard on the frozen commit (`probe_frozen`, 00:02–00:28 KST)
+
+`p11-3_guard_v16_*` and `p11-3_guard_v16n_*` (tuning sets) equal Part 0's runs on every shared value (11,484 / 84,211 / 11,036 / 83,968); only `schema_version` 10 → 11 differs; all twins pass. (Review round 1, M2: this guard finished after the round-3 targets were written with `--v8-v16-repro PASS`; the receipt is backed by this guard and by Part 7's reproduction.)
+
+### Part 4 — held-out health (frozen commit; seeds 64–127 × 10, 32–95 × 120; 00:02–00:28 KST)
+
+| Scene | J1 | J2 | J3 | J4 | J5 | J6 | J9 (tuning + held-out 10-day, 128 seeds) |
+|---|---|---|---|---|---|---|---|
+| v17 | PASS | PASS | FAIL: first-fission median 28, IQR 1 | PASS (0.85) | FAIL: max share of members 0.48, starvation max 9 | (reported) FAIL: Y9 work_1200 0.335 vs v16 0.370, work_1500 0.174 vs 0.241 | PASS |
+| v17_nofission | PASS | PASS | – | – | (reported) PASS | FAIL: Y9 work_1500 0.116 vs v16 0.241 (both fail; worse), idle_1200 0.623 vs 0.617 (both fail; worse) | PASS |
+
+v17 detail: fissions in 0.72 of the 64 seeds (75 attempts, 0 cancelled), first-fission day median 28 (p90 29.5, max 32), ≥ 2 settlements alive on day 120 0.64, never above 4; daughters alive 28 days after founding 0.85 (64 / 75), 0.20 dissolved or merged by day 120; founders median 13 (11–14). Exposure (J5 stage clauses pooled over tuning round 3 and held-out, 131 seed-winters with a death, 827 deaths): child 0.23, adult 0.41, elder 0.36 (all seed-winters had elders at their start); most deaths in one settlement-hour: median 1, max 9 (288 settlement-nights). H3 on held-out: seed-winters with a death 0.34, median 0, max 34 deaths, max share of members 0.48 (seeds 38 and 47, day-78 winters), mild / normal / harsh means 0.30 / 1.66 / 5.65 (increasing); starvation + dehydration 0 at day 10 in every seed, day 120 median 0, max 9. J2: alive ≥ max(8, 0.4 × founders) at every sample, day-120 retention min 0.80, no settlement lingering with 1–2 members over 48 h. v17_nofission: exposure stages child 0.59 / adult 0.15 / elder 0.26 (233 deaths, 86 seed-winters), seed-winters with a death 0.24, max share 0.27, mild / normal / harsh 0.01 / 0.36 / 1.98, starvation 0.
+
+J9 (128 seeds, 10-day rounds of game_v17): every mean within ±10 % of its range centre — founders 23.95 (24), bushes 12.21 (12), capacity 4.11 (4), deadwood spots 19.77 (20), capacity 6.12 (6), forest 294.2 (300), food regen 1004.4 (1000), wild regions 1.98 (2), region bushes 9.03 (9), region deadwood 10.83 (11); climate shares within ±0.10. Region placement failures 0 (every requested region placed). Shortfalls counted: region bushes 746 short of the requested total in 93 of 128 seeds (the camp berries' filter — Forest beside Plain, 2–6 from the centre, beyond the camp's 18-tile reach — finds few tiles near the map edge, where many centres lie), region deadwood 39 short; distance from a region centre to water median 16 (1–30). The bush shortfall is the main reason daughters at some sites starve (J5).
+
+### Part 5 — the diversity pilot (frozen commit; seeds 22000–22095 fit, 22096–22111 scored; recording 00:02–00:23 KST)
+
+Every pilot `meta.json` carries the frozen commit and schema 5 (336 episodes). 11.2 implementation check: `diversity_p11.py check-v1` reproduces WM-1.1's 12 dataset-v1 A_test numbers within 0.002 (`p11-5_pilot/check_v1.json`).
+
+| Variable | η² / dyn-η² / R²_abs game_v15 (P10 pilot) | game_v16 (P10 pilot) | game_v16 | game_v17_nofission | game_v17 |
+|---|---|---|---|---|---|
+| food_stock | 0.153 / 0.130 / 0.845 | 0.500 / 0.320 / 0.474 | 0.411 / 0.298 / 0.573 | 0.437 / 0.434 / 0.548 | 0.672 / 0.694 / 0.309 |
+| wood_stock | 0.055 / 0.057 / 0.942 | 0.063 / 0.065 / 0.934 | 0.068 / 0.069 / 0.929 | 0.068 / 0.069 / 0.929 | 0.269 / 0.276 / 0.709 |
+| fire_lit | 0.041 / 0.044 / 0.956 | 0.040 / 0.043 / 0.957 | 0.044 / 0.048 / 0.952 | 0.045 / 0.048 / 0.951 | 0.045 / 0.048 / 0.951 |
+| cold_members | 0.586 / 0.586 / 0.359 | 0.582 / 0.582 / 0.354 | 0.598 / 0.599 / 0.358 | 0.598 / 0.598 / 0.361 | 0.615 / 0.616 / 0.338 |
+| alive | 0.021 / 0.790 / 0.978 | 0.978 / 0.999 / −0.043 | 0.953 / 0.998 / 0.004 | 0.953 / 0.998 / 0.003 | 0.908 / 0.933 / 0.079 |
+| deadwood_total | 0.030 / 0.030 / 0.968 | 0.168 / 0.087 / 0.827 | 0.187 / 0.097 / 0.809 | 0.318 / 0.116 / 0.681 | 0.340 / 0.124 / 0.658 |
+| food_on_bushes_total | 0.124 / 0.133 / 0.872 | 0.503 / 0.492 / 0.468 | 0.375 / 0.442 / 0.606 | 0.826 / 0.467 / 0.164 | 0.802 / 0.576 / 0.169 |
+| adults_working | 0.304 / 0.299 / 0.676 | 0.484 / 0.490 / 0.474 | 0.474 / 0.475 / 0.491 | 0.490 / 0.493 / 0.472 | 0.492 / 0.491 / 0.478 |
+
+**J7 (judged once, game_v17): FAIL** — food_stock 0.672 / R²_abs 0.309 (pass), alive 0.908 / 0.079 (pass), wood_stock 0.269 / 0.709 (fail, just below 0.30 and just above 0.70); dyn-η² alive 0.933 and food_stock 0.694 (pass, ≥ 0.25).
+
+Reading dyn-η²: by its definition (subtract each episode's own mean of display days 3–10, η² over days ≥ 11) `alive` scores 0.79–0.999 in every scene since game_v15, because a world's later population level (its capacity, reached after day 10) differs from its founders' level; the statistic removes the founding offset but not the capacity offset, so for `alive` it is not a test of diverging histories. For food it separates: game_v16 0.30, game_v17_nofission 0.43, game_v17 0.69.
+
+Attribution (Δη² / Δdyn-η²): v16 → v17_nofission (exposure v2 + rain + regions) food +0.026 / +0.136, wood 0.000 / 0.000, alive 0.000 / 0.000, deadwood +0.131 / +0.019, bushes +0.451 / +0.025, work +0.016 / +0.018; v17_nofission → v17 (fission) food +0.235 / +0.260, wood +0.201 / +0.207, alive −0.045 / −0.065, cold +0.017 / +0.017, deadwood +0.022 / +0.008, bushes −0.024 / +0.109, work +0.002 / −0.002.
+
+Settlements alive (game_v17, 16 test seeds) at days 30 / 60 / 90 / 118: means 1.19 / 1.50 / 1.69 / 1.69, variances 0.15 / 0.25 / 0.72 / 0.72; day 118: 9 seeds one village, 3 two, 4 three (every earlier scene: one in every seed).
+
+T2 nMAE 24 h → 168 h (test std, every-hour starts), game_v17: food persistence 0.114 → 0.651, apfit_abs 0.077 → 0.345, cal_abs 0.630, an5 0.228; wood persistence 0.221 → 0.974, apfit_abs 0.179 → 0.295, cal_abs 0.375, an5 0.214; alive persistence 0.024 → 0.117, apfit_abs 0.026 → 0.133, cal_abs 0.767, an5 0.199 (game_v16 on the same seeds: alive persistence 0.027 → 0.103).
+
+Deaths per episode by day 120 (mean of 112): game_v16 old age 66.07, exposure 2.46; game_v17_nofission 65.43 / 2.89; game_v17 old age 73.59, exposure 8.19, starvation 0.18, dehydration 0.23.
+
+Part 2 scratch (disclosed here as 4.4 asks; review round 1, L7): seeds 900000–900011 × 120 days of game_v17 at the start values, with the existing membership rule and with sticky membership — `resolve_exclusivity` moves per seed 0–2,667 (median ≈ 600) versus 0–5.
