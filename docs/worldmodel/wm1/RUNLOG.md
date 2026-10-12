@@ -88,3 +88,4 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 4.1 | 01:33:01 | 01:34:01 | `m1tf_p10v15_r3_s0` `final` from `1a7dfdb6` (60 s) |
 | 4 end, 6 | 01:34 | 01:36 | run files copied (no checkpoints); `judge_1_2.py` → `runs/judge_1_2` (Z1 NONE, Z1b WEAK, Z2 NONE, Z3 NONE); WM1_2.md (`ad25396d`) |
 | 7 | 01:50 | | REPORT_WM1_2.md (Korean, section 13 format); final gate on the report commit (next row) |
+| gate | 01:52 | 01:54 | `0dc77783`: Mac 114 OK / 17 skipped (recorder not built on the Mac); DGX 114 OK / 0 skipped (`gate_0dc77783`, 65 s, `WM_BIN` / `PROBE_BIN` from `_build/src_wm12`); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `d5380301..0dc77783`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6128723524. This record is a docs-only commit; the gate is re-run on it and the green branch moved to it |

@@ -160,7 +160,8 @@ WM-1.1에서는 v0 시드들이 거의 같은 궤적을 그려(η² 0.02–0.09)
 
 ### 게이트 결과
 - 맥: `python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'` → **114 tests OK, 17 skipped**(전부 레코더 바이너리 미빌드; torch 테스트 스킵 없음).
-- DGX(venv, `WM_BIN`/`PROBE_BIN` = `_build/src_wm12` 빌드, `WM_DATA_ROOT`): **114 tests OK, 0 skipped**(`gate_cc913c43`, 약 65초). 이전 `1fabb472`의 사전 점검은 골든 ridge 마지막 자리 차이로 1건 실패 → F7.1로 처리 후 통과. 이후 커밋은 문서만 변경; 최종 헤드에서 다시 실행(최종 메시지).
+- DGX(venv, `WM_BIN`/`PROBE_BIN` = `_build/src_wm12` 빌드, `WM_DATA_ROOT`): **114 tests OK, 0 skipped**(`gate_cc913c43`, 약 65초). 이전 `1fabb472`의 사전 점검은 골든 ridge 마지막 자리 차이로 1건 실패 → F7.1로 처리 후 통과. 이후 커밋은 문서만 변경. 보고서 커밋 `0dc77783`에서 다시 실행: 맥 114 OK / 17 skipped, DGX 114 OK / 0 skipped(`gate_0dc77783`) → `codex/worldmodel-2026-10`을 `d5380301..0dc77783`로 fast-forward. 이 기록을 담은 문서 전용 커밋에서도 게이트를 다시 돌리고 녹색 브랜치를 그 커밋으로 옮김(최종 메시지에 해시와 `git ls-remote`).
+- PR #512 코멘트: https://github.com/hyunlord/new-world/pull/512#issuecomment-6128723524
 - 허용 경로: `git diff --name-only b20a991f..HEAD` 중 `tools/worldmodel/wm1/`, `docs/worldmodel/wm1/` 밖 **0개**.
 
 ### 정직한 판단
