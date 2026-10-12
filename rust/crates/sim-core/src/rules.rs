@@ -477,7 +477,8 @@ impl WorldRules {
             group_min: 6,
             group_max: 14,
             min_adults: 4,
-            cooldown_days: 28,
+            // Part 3 round 3 (start value 28).
+            cooldown_days: 42,
             min_age_days: 14,
             site_clearance: 16,
             stock_share: true,

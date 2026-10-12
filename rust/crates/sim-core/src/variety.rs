@@ -46,7 +46,8 @@ pub const RANGES: VarietyRanges = VarietyRanges {
     wild_regions: (1, 3),
     // Part 3 round 2: 5..=9 -> 7..=11 (+2 at both ends).
     region_bushes: (7, 11),
-    region_deadwood: (6, 12),
+    // Part 3 round 3: 6..=12 -> 8..=14 (+2 at both ends).
+    region_deadwood: (8, 14),
 };
 
 /// Climate weights in thousandths: mild-leaning, neutral, harsh-leaning.
@@ -180,7 +181,7 @@ mod tests {
             assert!(v.climate < 3);
             assert!((1..=3).contains(&v.wild_regions));
             assert!((7..=11).contains(&v.region_bushes));
-            assert!((6..=12).contains(&v.region_deadwood));
+            assert!((8..=14).contains(&v.region_deadwood));
             assert_eq!(v, WorldVariety::draw(seed));
         }
     }

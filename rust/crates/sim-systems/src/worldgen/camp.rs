@@ -315,7 +315,8 @@ fn keyed_shuffle(tiles: &mut [Tile], seed: u64, stream: u64, region: u32) {
 /// no building, water or food source) and deadwood (Forest, then Plain; no
 /// water, building or food; two tiles from every deadwood spot), each list
 /// shuffled by its own keyed stream (`STREAM_REGION_BUSH` /
-/// `STREAM_REGION_WOOD`, slot r). Shortfalls are counted, never asserted;
+/// `STREAM_REGION_WOOD`, slot r); both lie farther from the camp hearth than
+/// the camp's forage and wood radii (Part 3). Shortfalls are counted, never asserted;
 /// terrain is never edited. Every draw uses replicate 0.
 pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
     use sim_core::rng::{keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_WOOD};
@@ -331,6 +332,16 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
         r.wood_spot_area.insert(spot, 0);
     }
     let water: Vec<Tile> = r.water_tiles.keys().copied().collect();
+    // Part 3: region bushes and deadwood lie beyond the camp's forage and wood
+    // radii, so the original village's economy is v16's (a region bush at 16
+    // or deadwood at 16-18 tiles would be the camp's too).
+    let camp_reach = r
+        .rules
+        .agent
+        .forage
+        .map_or(0, |f| f.forage_radius)
+        .max(r.rules.society.firewood.map_or(0, |f| f.wood_radius));
+    let beyond_camp = |p: Tile| distance(p, hearth) > camp_reach;
     r.worldgen_report.regions_requested = cfg.wild_regions;
     let mut centres: Vec<Tile> = Vec::new();
     for region in 0..cfg.wild_regions {
@@ -347,7 +358,7 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
         }
         let centre = candidates[keyed_below(cfg.seed, STREAM_REGION, 0, 0, region, 0, candidates.len() as u64) as usize];
         centres.push(centre);
-        let ring = |p: Tile| (REGION_RING_MIN..=REGION_RING_MAX).contains(&distance(p, centre));
+        let ring = |p: Tile| (REGION_RING_MIN..=REGION_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p);
         // Bushes: the camp berries' candidate filter inside the ring.
         let mut bushes: Vec<Tile> = tiles(r)
             .filter(|&p| {

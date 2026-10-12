@@ -319,6 +319,8 @@ def build(args) -> dict:
     if args.v14:
         report["v14_single_fork"] = v14_comparison(args.v14, values, variants, seeds, report)
     report["deaths_effect"] = {eid: deaths_effect(values[eid]["deaths"], values["none"]["deaths"]) for eid in ids[1:]}
+    if getattr(args, "deaths_by_stage", False):
+        report["deaths_by_stage_effect"] = deaths_by_stage_effects(root, scene, seeds, ids, reps)
     if getattr(args, "v15", None):
         v15 = collect(args.v15, "game_v15", seeds, ids, args.v15_replicates)
         report["v15_dark_night_comparison"] = {
@@ -407,6 +409,41 @@ def fmt(x) -> str:
     return f"{x:.3g}" if isinstance(x, float) else str(x)
 
 
+STAGES = ("adult", "child", "elder")
+
+
+def deaths_by_stage(path: Path) -> list[float]:
+    """Pass 11: agents that died before the day-29 06:00 row, by the life stage of their last
+    alive row (agents.npy `life_stage`: 0 adult, 1 child, 2 elder); all causes."""
+    ep = load_episode(path, arrays=["agents.npy", "agent_alive.npy"])
+    alive = ep.arrays["agent_alive.npy"].astype(bool)
+    stage = ep.column("agents.npy", "life_stage")
+    end = row_of(28, 360)
+    out = [0.0, 0.0, 0.0]
+    for j in range(alive.shape[1]):
+        rows = np.nonzero(alive[: end + 1, j])[0]
+        if len(rows) and not alive[end, j]:
+            last = int(rows[-1])
+            if last < end:
+                out[int(stage[last, j])] += 1.0
+    return out
+
+
+def deaths_by_stage_effects(root: Path, scene: str, seeds: range, ids: list[str], replicates: int) -> dict:
+    """Replicate-mean (variant - factual) deaths by stage per seed, then the mean over seeds."""
+    base = {(s, k): deaths_by_stage(root / episode_name(scene, s, "none", k)) for s in seeds for k in range(replicates)}
+    out = {}
+    for eid in ids[1:]:
+        per_seed = []
+        for s in seeds:
+            diffs = [np.subtract(deaths_by_stage(root / episode_name(scene, s, eid, k)), base[(s, k)]) for k in range(replicates)]
+            per_seed.append(np.mean(diffs, axis=0))
+        mean = np.mean(per_seed, axis=0)
+        out[eid] = {stage: float(mean[i]) for i, stage in enumerate(STAGES)}
+        out[eid]["seeds_positive"] = {stage: float(np.mean([p[i] > 0 for p in per_seed])) for i, stage in enumerate(STAGES)}
+    return out
+
+
 def markdown(report: dict) -> str:
     lines = [f"# Fork metrics ({report['scene']}, seeds {report['seeds'][0]}–{report['seeds'][1] - 1}, "
              f"R = {report['replicates']}, fork tick {report['fork_tick']})", ""]
@@ -464,6 +501,11 @@ def markdown(report: dict) -> str:
             c = comp.get(eid)
             cell = f"{c['share_differs']:.3f} ({c['seeds_differing']} / {c['seeds']}; v16 {c['v16_mean']:.3f}, v15 {c['v15_mean']:.3f})" if c else "–"
             lines.append(f"| {eid} | {d['share_positive']:.3f} | {d['share_negative']:.3f} | {d['mean']:.3f} | {cell} |")
+    if "deaths_by_stage_effect" in report:
+        lines += ["", "## Deaths effect by life stage (Pass 11; all causes, replicate mean, mean over seeds)", "",
+                  "| variant | adult | child | elder | seeds with adult effect > 0 |", "|---|---:|---:|---:|---:|"]
+        for eid, d in report["deaths_by_stage_effect"].items():
+            lines.append(f"| {eid} | {d['adult']:.3f} | {d['child']:.3f} | {d['elder']:.3f} | {d['seeds_positive']['adult']:.3f} |")
     lines += ["", "## Newborn lineage keys (Y6, reported only)", "",
               "Newborns born at or after the intervention in either arm (replicate 0), and how many carry a key present among the "
               "other arm's newborns.", "", "| variant | newborns (either arm) | equal key in both | share |", "|---|---:|---:|---:|"]
@@ -486,6 +528,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--unforked", type=Path)
     parser.add_argument("--v14", type=Path)
     parser.add_argument("--intervention-ticks")
+    parser.add_argument("--deaths-by-stage", action="store_true", help="Pass 11: deaths effect by life stage (needs --agents recordings)")
     parser.add_argument("--home-slot-fire", action="store_true",
                         help="Pass 11: dark nights from the home settlement's slot (lowest id), not the max over slots")
     parser.add_argument("--deaths-with-exposure", action="store_true",

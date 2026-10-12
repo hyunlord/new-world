@@ -374,3 +374,58 @@ fn harness_fission_order_independent() {
     assert_eq!(fingerprint(&a), fingerprint(&b));
     assert_eq!(a.resources.fission_log, b.resources.fission_log);
 }
+
+#[test]
+fn harness_v17_regions_placed() {
+    let distance = |a: (u32, u32), b: (u32, u32)| a.0.abs_diff(b.0).max(a.1.abs_diff(b.1));
+    let mut placed = 0;
+    for seed in [0u64, 7, 31, 900_001, 900_017] {
+        let engine = game_v17_scene(seed);
+        let r = &engine.resources;
+        let v = r.world_variety.expect("variety");
+        let hearth = *r
+            .building_kinds
+            .iter()
+            .find(|(_, kind)| **kind == BuildingKind::Hearth)
+            .map(|(tile, _)| tile)
+            .expect("camp hearth");
+        assert!(r.wild_regions.len() as u32 <= u32::from(v.wild_regions));
+        assert_eq!(r.worldgen_report.regions_requested, u32::from(v.wild_regions));
+        assert_eq!(r.worldgen_report.regions_placed as usize, r.wild_regions.len());
+        let reach = r.rules.agent.forage.map_or(0, |f| f.forage_radius).max(r.rules.society.firewood.map_or(0, |f| f.wood_radius));
+        for (i, region) in r.wild_regions.iter().enumerate() {
+            let c = region.centre;
+            assert!((22..=28).contains(&distance(c, hearth)), "seed {seed}: centre {c:?}");
+            assert!(!r.water_tiles.contains_key(&c));
+            for other in &r.wild_regions[..i] {
+                assert!(distance(c, other.centre) >= 20);
+            }
+            assert!(region.bushes <= v.region_bushes && region.deadwood <= v.region_deadwood);
+        }
+        // Every region bush and deadwood spot lies in some region's ring and beyond the camp's reach.
+        for (tile, area) in &r.wood_spot_area {
+            if *area > 0 {
+                let region = r.wild_regions[usize::from(*area) - 1];
+                assert!((2..=6).contains(&distance(*tile, region.centre)));
+                assert!(distance(*tile, hearth) > reach);
+            }
+        }
+        // Deterministic and independent of the replicate.
+        let mut forked = game_v17_scene(seed);
+        forked.apply_noise_fork(3);
+        assert_eq!(forked.resources.wild_regions, r.wild_regions);
+        assert_eq!(forked.resources.wood_spot_area, r.wood_spot_area);
+        assert_eq!(game_v17_scene(seed).resources.wild_regions, r.wild_regions);
+        // The camp of the v17 world is the v16 world's (same bushes and deadwood near it).
+        let v16 = game_v16_scene(seed);
+        for (tile, max) in &v16.resources.wood_source_max {
+            assert_eq!(r.wood_source_max.get(tile), Some(max));
+            assert_eq!(r.wood_spot_area.get(tile), Some(&0));
+        }
+        for (tile, max) in &v16.resources.food_source_max {
+            assert_eq!(r.food_source_max.get(tile), Some(max));
+        }
+        placed += r.wild_regions.len();
+    }
+    assert!(placed >= 5);
+}
