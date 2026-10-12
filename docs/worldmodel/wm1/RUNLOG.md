@@ -80,7 +80,10 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 4.1 | | 23:16:50 | `m1tf_p10v16_r3_s1`: stop `patience` at step 2,250, best step 1,500 (val T2 24 h 0.1060), 4,949 s; GPU 20.9 GB per job at k = 168 |
 | 4.1 | 23:17:14 | 23:19:26 | `m1tf_p10v16_r3_s1` `final` from `1a7dfdb6` (129 s); `metrics.json` 23:19:26 |
 | 4.1 | 23:20:33 | | `m1tf_p10v16_r3_s2` launched (code `1a7dfdb6`, same command, seed 2) |
-| 4.1 | | 23:55:50 | `m1tf_p10v16_r3_s0`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1008), 7,256 s |
+| 4.1 | | 23:55:26 | `m1tf_p10v16_r3_s0`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1008), 7,256 s |
 | 4.1 | 23:55:57 | 23:58:04 | `m1tf_p10v16_r3_s0` `final` from `1a7dfdb6` (125 s), then in the same slot `m1tf_p10v15_r3_s0` launched 23:58:05 (code `1a7dfdb6`, `--dataset p10_v15`, seed 0) |
-| 4.1 | | 01:20:4x | `m1tf_p10v16_r3_s2`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1052), 7,190 s |
-| 4.1, 4.3 | 01:20:58 | ≈ 01:26 | `m1tf_p10v16_r3_s2` `final` from `1a7dfdb6` (125 s); then in the same slot the probes `probe_m1tf_p10v16_r3_s{0,1,2}` (≈ 51 s each, GPU, from `1a7dfdb6`) |
+| 4.1 | | 01:20:28 | `m1tf_p10v16_r3_s2`: stop `max_steps` (3,000), best step 2,850 (val T2 24 h 0.1052), 7,190 s |
+| 4.1, 4.3 | 01:20:58 | 01:25:58 | `m1tf_p10v16_r3_s2` `final` from `1a7dfdb6` (125 s; `metrics.json` 01:23:04); then in the same slot the probes `probe_m1tf_p10v16_r3_s{0,1,2}` (≈ 51–60 s each, GPU, from `1a7dfdb6`; `probe.json` 01:23:58, 01:24:56, 01:25:57) |
+| 4.1 | | 01:32:13 | `m1tf_p10v15_r3_s0`: stop `patience` at step 2,700, best step 1,950 (val T2 24 h 0.0802), 5,644 s |
+| 4.1 | 01:33:01 | 01:34:01 | `m1tf_p10v15_r3_s0` `final` from `1a7dfdb6` (60 s) |
+| 4 end, 6 | 01:34 | 01:45 | run files copied (no checkpoints); `judge_1_2.py` → `runs/judge_1_2` (Z1 NONE, Z1b WEAK, Z2 NONE, Z3 NONE); WM1_2.md (`ad25396d`) |
