@@ -310,6 +310,19 @@ impl FissionSystem {
                             Some(hearth) => {
                                 if let Some(g) = self.groups.get_mut(&id) {
                                     g.placed = Some((hearth, tick));
+                                    // Review round 1, M1: a group settling where its
+                                    // leader stands walks to the new hearth, not to
+                                    // the region centre it could not reach.
+                                    if at_leader {
+                                        g.site = hearth;
+                                        for member in &alive {
+                                            if let Some((entity, ..)) = roster.get(member) {
+                                                if let Ok(mut founding) = world.get::<&mut Founding>(*entity) {
+                                                    founding.site = hearth;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 if let Some(record) = resources.fission_log.get_mut(group.log) {
                                     record.settled_at_leader = at_leader;
@@ -324,7 +337,7 @@ impl FissionSystem {
     }
 
     /// Dissolve settlement `sid` explicitly (its buildings stay) and retire its hearth.
-    fn dissolve(resources: &mut SimResources, sid: SettlementId, tick: u64) {
+    fn dissolve(resources: &mut SimResources, sid: SettlementId, final_population: u32, tick: u64) {
         let Some(settlement) = resources.settlements.remove(&sid) else { return };
         let tile = settlement.formation_tile;
         resources.retired_hearths.insert(tile);
@@ -339,7 +352,7 @@ impl FissionSystem {
                 id,
                 parent: None,
                 settlement_id: sid,
-                final_population: settlement.population_stats.current,
+                final_population,
                 cause: DissolutionCause::EmptyMembersAndBuildings,
                 last_member_id: None,
                 last_building_id: None,
@@ -356,7 +369,7 @@ impl FissionSystem {
             let members = resources.settlements.get(&sid).map_or(0, |s| s.member_agents.len() as u32);
             if members == 0 {
                 self.remnant_since.remove(&sid);
-                Self::dissolve(resources, sid, tick);
+                Self::dissolve(resources, sid, 0, tick);
             } else if members <= rule.remnant_members {
                 let since = *self.remnant_since.entry(sid).or_insert(tick);
                 if tick >= since + resources.ticks_per_day {
@@ -366,7 +379,8 @@ impl FissionSystem {
                         settlement.population_stats.current = 0;
                     }
                     resources.tallies.remnant_merges += 1;
-                    Self::dissolve(resources, sid, tick);
+                    // Review round 1, L4: the event carries the members before the merge.
+                    Self::dissolve(resources, sid, members, tick);
                 }
             } else {
                 self.remnant_since.remove(&sid);
@@ -443,7 +457,9 @@ impl FissionSystem {
                 }
                 group.insert(*id);
             }
-            let leader = group.iter().copied().find(|id| roster.get(id).is_some_and(|row| row.2)).unwrap_or(adults[0]);
+            let Some(leader) = group.iter().copied().find(|id| roster.get(id).is_some_and(|row| row.2)) else {
+                continue; // no adult in the group (only with `min_adults` 0)
+            };
             self.next_id += 1;
             let fission_id = self.next_id;
             let (food, wood) = if rule.stock_share {

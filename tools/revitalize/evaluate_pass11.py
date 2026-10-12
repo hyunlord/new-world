@@ -38,7 +38,8 @@ never from its `rules` block (the first seed only).
   Pass 10's H5 with game_v16 as the reference (per-clause escape table
   `evaluate_pass10.ESCAPE_STAT`). Judged for `game_v17_nofission`, reported for
   `game_v17` (whose probe measures home distance and evening-at-the-hearth
-  per agent against its own settlement's formation tile).
+  per agent against its own settlement's formation tile, agents walking with
+  a fission group included — review round 1, M3).
 - J9 (`--variety`: 10-day v17 rounds): every hidden parameter's mean within
   +-10 % of its range centre (the eight of Pass 10 plus the three wild-region
   parameters); region placement failures and bush / deadwood shortfalls counted.
@@ -220,8 +221,23 @@ def j5(short: Round, long: Round, pooled: list[Round]) -> tuple[dict, dict]:
     return target(clauses), {"stage_pool": pool, "h3": h3_tables, "settlement_night_max": dict(Counter(hours))}
 
 
+def relabel(value):
+    """Review round 1, L6: Pass 10's H5 labels the candidate `v16` and the reference `v15`;
+    here the candidate is a v17 scene and the reference game_v16."""
+    if isinstance(value, dict):
+        return {relabel_text(k): relabel(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [relabel(v) for v in value]
+    return relabel_text(value) if isinstance(value, str) else value
+
+
+def relabel_text(text: str) -> str:
+    return text.replace("v16", "\0").replace("v15", "game_v16").replace("\0", "v17")
+
+
 def j6(short: Round, long: Round, v16_short: Round | None, v16_long: Round | None, v11: dict | None) -> tuple[dict, dict]:
-    return p10.h5(short, long, v16_short, v16_long, v11)
+    targets, reported = p10.h5(short, long, v16_short, v16_long, v11)
+    return relabel(targets), reported
 
 
 def j9(rounds: list[Round]) -> tuple[dict, dict]:
@@ -271,7 +287,8 @@ def markdown(title: str, scene: str, targets: dict, extra: dict) -> str:
             observed = json.dumps(item["observed"], sort_keys=True)
             if len(observed) > 500:
                 observed = observed[:500] + "…"
-            lines.append(f"| {name} | {key} | {'PASS' if item['passed'] else 'FAIL'} | {item['requirement']} | {observed} |")
+            verdict = ("PASS" if item["passed"] else "FAIL") + (" (reported only)" if entry.get("reported_only") else "")
+            lines.append(f"| {name} | {key} | {verdict} | {item['requirement']} | {observed} |")
     if "fission" in extra:
         lines += ["", "## Fission per seed", "", "| Seed | Fissions | Attempts | Cancelled | Blocked days | First fission day | Alive at 30/60/90/118 | Merges |",
                   "|---:|---:|---:|---:|---:|---:|---|---:|"]
@@ -328,7 +345,12 @@ def main(argv: list[str] | None = None) -> int:
     except (EvidenceError, OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
         print(f"INVALID EVIDENCE: {exc}", file=sys.stderr)
         return 2
-    passed = all(t["passed"] for t in targets.values())
+    # Section 10: J5 is judged on game_v17 (reported for game_v17_nofission); J6 is
+    # judged on game_v17_nofission (reported for game_v17). Review round 1, L6.
+    reported_only = {"game_v17": {"J6"}, "game_v17_nofission": {"J5"}}.get(scene, set())
+    for name in reported_only & set(targets):
+        targets[name]["reported_only"] = True
+    passed = all(t["passed"] for name, t in targets.items() if name not in reported_only)
     report = {"schema_version": 1, "probe_schema": SCHEMA, "scene": scene, "passed": passed, "targets": targets,
               "j2_per_seed": j2_seeds, "j5": j5_detail, "j6_reported": j6_reported, "extra": extra,
               "seeds": {"round10": short.summary["seeds"], "round120": long.summary["seeds"]},
@@ -339,7 +361,8 @@ def main(argv: list[str] | None = None) -> int:
     (args.out / "j_targets.md").write_text(text)
     print("PASS" if passed else "FAIL")
     for name, entry in targets.items():
-        print(f"{name}: {'PASS' if entry['passed'] else 'FAIL'} " + ", ".join(k for k, c in entry["clauses"].items() if not c["passed"]))
+        print(f"{name}: {'PASS' if entry['passed'] else 'FAIL'}{' (reported only)' if entry.get('reported_only') else ''} "
+              + ", ".join(k for k, c in entry["clauses"].items() if not c["passed"]))
     return 0 if passed else 1
 
 

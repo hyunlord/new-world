@@ -311,6 +311,10 @@ fn harness_fission_timeout_and_cancel() {
     run(&mut engine, &mut system, check + 1, check + 2 * 1440 + 1);
     assert!(engine.resources.fission_log[0].settled_at_leader);
     assert_eq!(engine.resources.building_kinds.get(&spot), Some(&BuildingKind::Hearth));
+    // Review round 1, M1: every founder now walks to the placed hearth.
+    for (_, founding) in engine.world.query::<&Founding>().iter() {
+        assert_eq!(founding.site, spot);
+    }
     // No daughter forms here (no SettlementSystem), so one day later it is
     // cancelled and the hearth retired.
     run(&mut engine, &mut system, check + 2 * 1440 + 1, check + 3 * 1440 + 2);
@@ -428,4 +432,81 @@ fn harness_v17_regions_placed() {
         placed += r.wild_regions.len();
     }
     assert!(placed >= 5);
+}
+
+/// Review round 1, M4: the real founding path in a whole v17 world — the
+/// group walks, the stamped hearth and shelters are registered, the formation
+/// scan forms the daughter, and on that tick the group is moved, the store
+/// delivered, the parent linked and the shelters owned by the daughter.
+#[test]
+fn harness_fission_founds_daughter_in_a_whole_world() {
+    let mut engine = game_v17_scene(900_000);
+    let mut departed = None;
+    for _ in 0..40 * 1440 {
+        let attempts = engine.resources.fission_log.len();
+        engine.tick();
+        if departed.is_none() && engine.resources.fission_log.len() > attempts {
+            departed = Some(engine.current_tick());
+        }
+        if engine.resources.tallies.fissions == 1 {
+            break;
+        }
+    }
+    assert!(departed.is_some(), "a group departed");
+    assert_eq!(engine.resources.tallies.fissions, 1, "a daughter was founded");
+    let record = engine.resources.fission_log[0].clone();
+    let daughter_id = record.daughter.expect("daughter");
+    let daughter = &engine.resources.settlements[&daughter_id];
+    let parent = &engine.resources.settlements[&record.parent];
+    assert_eq!(daughter.parent, Some(record.parent));
+    // The hearth is registered through the building queue and is the daughter's anchor.
+    assert_eq!(engine.resources.building_kinds.get(&daughter.formation_tile), Some(&BuildingKind::Hearth));
+    assert!(engine.resources.building_registry.values().any(|p| *p == daughter.formation_tile));
+    // Every living founder is a member of the daughter only, and no longer walks.
+    let living: BTreeSet<AgentId> = engine.world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    for id in record.members.iter().filter(|id| living.contains(id)) {
+        assert!(daughter.member_agents.contains(id) && !parent.member_agents.contains(id), "agent {id}");
+    }
+    assert_eq!(engine.world.query::<&Founding>().iter().count(), 0);
+    // The store is delivered (nothing could be spent on the founding tick:
+    // FissionSystem runs last) and the two shelters are the daughter's.
+    assert!(daughter.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0) >= record.food_taken.min(1));
+    let shelters = engine
+        .resources
+        .building_kinds
+        .iter()
+        .filter(|(tile, kind)| {
+            **kind == BuildingKind::Shelter
+                && tile.0.abs_diff(daughter.formation_tile.0).max(tile.1.abs_diff(daughter.formation_tile.1)) <= 3
+        })
+        .map(|(tile, _)| *tile)
+        .collect::<Vec<_>>();
+    assert_eq!(shelters.len(), 2);
+    for tile in shelters {
+        assert_eq!(engine.resources.building_owner.get(&tile), Some(&daughter_id));
+    }
+    // Sticky membership: nobody else moved between the villages.
+    assert_eq!(engine.resources.tallies.exclusivity_moves, 0);
+}
+
+/// Review round 1, M5: under `FissionRule` a bush inside two settlements'
+/// forage radii counts one half in each settlement's capacity.
+#[test]
+fn harness_shared_bushes_count_once() {
+    use sim_systems::runtime::settlement::food_economy::supply_per_day;
+    let (mut engine, _) = world(5, 0, &village(4));
+    for x in 30..40 {
+        engine.resources.set_food_source_max(x, 20, 4);
+    }
+    let alone = supply_per_day(&engine.resources, 1, 16);
+    let mut other = Settlement::new_with_id(2, 0);
+    other.formation_tile = (44, 20);
+    other.add_member_agent(99);
+    engine.resources.settlements.insert(2, other);
+    let shared = supply_per_day(&engine.resources, 1, 16);
+    // Bushes x = 30..=36 lie within 16 of both (20, 20) and (44, 20)? 44 - 30 = 14: all ten do.
+    assert!((shared - alone / 2.0).abs() < 1e-9, "alone {alone}, shared {shared}");
+    // Without the fission rule nothing is shared (v16 accounting).
+    engine.resources.rules = WorldRules::game_v16(5);
+    assert!((supply_per_day(&engine.resources, 1, 16) - alone).abs() < 1e-9);
 }
