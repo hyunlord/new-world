@@ -73,4 +73,6 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 2 | 21:46 | 21:52 | v0 golden values at the merge (`d1b15ecf`); schema-4 harness, `evaluate(tasks=, bias_removed=)`, `--dataset` (`da379c17`); Mac discovery 103 OK / 17 skipped |
 | 2 | 21:52 | 21:54 | DGX at `da379c17`: `calendar_val_{p10_v16,p10_v15,p10_v16n}_da379c17` (10–11 s each, CPU); M1b smoke `_smoke_m1tf_da379c17` (4 steps, 79 s, exit 0; not a result) |
 | 4.1 | 21:54:26 | | `m1tf_p10v16_r3_s0` and `_s1` launched together on the GPU (code `da379c17`); `nvidia-smi` before: no compute process; after: 3.4 GB each; RAM 100 GiB available |
-| 2 end, 3 | | 22:05 | probe and judge code (`ef880949`); METRICS_1_2.md committed and pushed (next commit) before any test-role number |
+| 2 end, 3 | | 21:59:00 | probe and judge code (`ef880949`, 21:58); METRICS_1_2.md committed (`1a7dfdb6`, 21:59:00) and pushed before any test-role number |
+| 3 (baselines on test) | 21:59:13 | 21:59:30 | DGX at `1a7dfdb6`: `calendar_{p10_v16,p10_v15,p10_v16n}_1a7dfdb6` (`climatology.py final`, nine members + persistence + ridge; 15–16 s each, CPU); `calendar.json` written 21:59:29, after the pre-registration commit |
+| 5 | 22:00 | 22:04 | `families.py` + synthetic-family tests (`096d92d2`). Real-data smoke: 24 episodes (`game_v16_s1200{0,1}_{none,rot_wood,rain}_r{0..3}`, 82,560 KiB on the Mac, 83,219,656 bytes on the DGX) copied 22:03:00–22:03:06 into `p10/forks_smoke/game_v16_s<seed>/`; 24 of 24 verified; `families_smoke_096d92d2` (persistence and zero effect; < 1 s) |
