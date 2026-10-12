@@ -1994,3 +1994,21 @@ Fork experiment re-recorded with the final recorder (`wm_p6`, `ba278357`, 12:58�
 ### Part 6 — final gate
 
 `gate_pass9.sh` on `8d3ad643` (13:27–13:46 KST): every step exit 0; cargo test debug 2,029 / release 2,029 passed, 0 failed (Pass 8: 2,005 each); clippy both; forbidden math 0; strict check; bridge build; smoke without errors; Python 77 (`tools/revitalize`) + 37 (`tools/worldmodel`).
+
+## Pass 10 — exposure mortality, hidden world variety, measured seed diversity (`game_v16_neutral`, `game_v16`)
+
+All probe runs use Pass 9's flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries frozen in `/Users/rexxa/work/p10bin/`.
+
+### Part 0 — baseline reproduction (`probe_p0`, = Pass 9's `probe_p6`)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p10-0_v15_10day` | `p9-2_v15_10day` | 6,214 | 0 |
+| `p10-0_v15_120day` | `p9-2_v15_120day` | 57,597 | 0 |
+| `p10-0_v15_heldout_10day` | `p9-4_v15_heldout_10day` | 6,214 | 0 |
+| `p10-0_v15_heldout_120day` | `p9-4_v15_heldout_120day` | 58,731 | 0 |
+| `p10-0_v14_10day` | `p9-6_final_v14_10day` | 6,214 | 0 |
+| `p10-0_v14_120day` | `p9-6_final_v14_120day` | 57,591 | 0 |
+| `p10-0_v13_10day` | `p9-6_final_v13_10day` | 6,212 | 0 |
+| `p10-0_v13_120day` | `p9-6_final_v13_120day` | 57,590 | 0 |
+| `p10-0_legacy` | `p9-6_final_legacy` | 4,849 | 0 |
