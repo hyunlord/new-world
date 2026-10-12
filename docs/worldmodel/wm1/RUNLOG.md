@@ -38,9 +38,10 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 3.1 | 07:33 | | `m1tf_main_r3_s1` and `m1tf_main_r3_s2` launched in parallel on the GPU (code `f3a39ee9`, WM-1's recorded command with only seed/out changed); `nvidia-smi` before: no other compute process; after: 4.5 GB and 4.6 GB per job at step 150 |
 | 0 end | | 07:36 | pushed |
 | 3 | 07:39 | | `m3_noday_s0` launched on the DGX CPU (4 threads, code `74f4d79d`, `--no-day --max-steps 276`); DGX load average 19–45 from other users' jobs |
-| 1 | 07:40 | | calcore.py, climatology.py (+ tests) written on the Mac |
-| 2 | 07:55 | | diversity.py, diversity_v1.py (+ tests) written on the Mac |
-| pause | ≈ 10:00 | 11:01 | the session stopped (Claude usage limit, then a dropped connection); the DGX jobs kept running. GOAL_1_1.md, the task list and `git log` re-read on resume |
+| 1 | 07:40 | | calcore.py written on the Mac; climatology.py and its tests ≈ 09:50–09:59 |
+| 2 | 09:55 | | diversity.py, diversity_v1.py (+ tests) written on the Mac (09:59–10:00, `--val-only` 11:04) |
+| pause | ≈ 07:53 | ≈ 09:50 | the session stalled (API unavailable / dropped connection twice, then resumed by the owner's "continue"); the DGX jobs kept running |
+| pause | ≈ 10:00 | 11:01 | Claude usage limit; the DGX jobs kept running. GOAL_1_1.md, the task list, `git log` and the DGX job logs re-read on resume |
 | 3.1 end | | ≈ 10:52 | `m1tf_main_r3_s1`: stop by patience, best step 1,350, 4,741 s; `m1tf_main_r3_s2`: 3,000 steps, best 2,850, 6,353 s (GPU, both in parallel; 4.5–4.6 GB GPU memory each at step 150) |
 | 3 | | ≈ 09:31 | `m3_noday_s0` training done: 276 steps, 6,687 s (stop `max_steps`) |
 | 3.2 | 11:01 | | `m1tf_sevon_aa_r3_s0` launched on the GPU (code `74f4d79d`); GPU idle before |
@@ -53,3 +54,5 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 6 | 12:42 | 12:57 | review round 1 (fresh `general-purpose` subagent): 0 BLOCKING, 1 MAJOR (v1 pre-registration disclosure), 5 MINOR; fixes `93788473` |
 | 6 | 13:15 | 14:20 | WM1_1.md generated from the judge output with the results that exist (`db9c2538`); the 8-hour working-time budget (07:32 start, minus the 1-hour pause) leaves until ≈ 16:30, so Part 6 finishes without the lost DGX results |
 | gate (Mac) | 14:20 | 14:20 | 65 tests OK, 3 skipped (Pass 7 recorder not built on the Mac); `git diff --name-only b2cf872c..HEAD` only under `tools/worldmodel/wm1/` and `docs/worldmodel/wm1/`. DGX half of the gate: not runnable (outage) |
+| 6 | 14:21 | 14:28 | review round 2 (fresh subagent): 0 BLOCKING, 3 MAJOR, 9 MINOR, 3 NOTE; all fixed (`accfe657`) |
+| 6 end | | 14:35 | REPORT_WM1_1.md (Korean, section 14 format); Mac gate re-run on the final head; DGX still unreachable, so the green branch stays at `b2cf872c`; PR #512 comment |

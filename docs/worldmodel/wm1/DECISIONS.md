@@ -60,7 +60,7 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 
 ### Part 0
 - **E0.1** The Mac clone carries two unrelated local changes (`.gitignore` adds `/graft/`; an untracked `.ignore`) from the owner's graft tool. They are outside the allowed paths, so they are never staged; every commit stages explicit paths only.
-- **E0.2** The run stopped from about 10:00 to 11:01 (usage limit, then a dropped connection). The working-time clock (8 h) excludes that hour; the DGX jobs were unaffected.
+- **E0.2** The session stalled twice: about 07:53–09:50 (API unavailable / dropped connections) and 10:00–11:01 (usage limit). The 8-hour working-time clock excludes both (≈ 3 h); the DGX jobs were unaffected. The DGX outage from 11:20 (E4.1) counts as working time.
 
 ### Part 1
 - **E1.1** The member prediction math (calendar means, wrap, α, analogs) lives in `calcore.py` as `predict_member`, so the v0 harness predictor (`climatology.CalendarPredictor`) and the v1 entry point (`diversity_v1.py`, which may not import `wm1`) share one implementation.
