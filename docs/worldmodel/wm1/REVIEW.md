@@ -228,10 +228,30 @@ Scope: the merge, v0 bit-identity, leakage, role split, the bias-removed score a
 |---|---|---|---|
 | R1-1 | MAJOR | `judge_1_2.py` read `calendar_val_<ds>_<sha>` and `calendar_<ds>_<sha>` with one sha; the committed runs are `…_da379c17` (val) and `…_1a7dfdb6` (test), so the judge crashed on the real directories; the test fixture used one sha for both | `--val-sha` / `--test-sha`, a clear error when a directory is missing, the test uses two shas and checks the error. Path handling only; no rule changed (dated amendment in METRICS_1_2.md) |
 | R1-2 | MINOR | `judge_1_2.py` had no `sys.path` insert (`ModuleNotFoundError: wm1` from the documented command) | inserted, as the other scripts do |
-| R1-3 | MINOR | the golden harness numbers cover persistence only | `golden_v0.compute_more()` adds the severity-free ridge (λ, T1, T2 24 h) and three calendar members on the sample, computed from the merge commit's code in a separate worktree (identical to the current code's) and asserted by `test_golden_v0.py` |
+| R1-3 | MINOR | the golden harness numbers cover persistence only | `golden_v0.compute_more()` adds the severity-free ridge (λ, T1, T2 24 h) and three calendar members on the sample, computed from the merge commit's code in a separate worktree (identical to the current code's) and asserted by `test_golden_v0.py` (the two ridge values to 1e-12 relative since `cc913c43`: the platform BLAS differs in the last bit between Mac and DGX, DECISIONS F7.1) |
 | R1-4 | NOTE | v0 `config.json` / `metrics.json` gain a `dataset` key | additive; kept |
 | R1-5 | NOTE | the judge tabulates `p10_v16` and `p10_v15`, not `p10_v16n` | `p10_v16n` is reported from its calendar files in WM1_2.md; it has no model |
 | R1-6 | NOTE | `families.check_prefix` skipped `settlement_ids.npy` | now checked |
 | R1-7 | NOTE | the start-set test used 1,200 rows while F2.4 says 120 days | the test now uses 2,881 rows (408 / 384 starts) |
 | R1-8 | NOTE | the manifest's per-file sha256 is not re-checked at load (`load_episode` checks against `meta.json`) | pre-existing behaviour; kept |
 | R1-9 | NOTE | pre-registration order not checkable from the Mac before the model runs exist | checked in round 2 against the DGX `metrics.json` times |
+
+### Round 2 (fresh `general-purpose` subagent, 2026-10-13 ≈ 01:37–01:49; head `cc913c43`)
+
+Scope: pre-registration order, the Z verdicts, every number in WM1_2.md, leakage and roles in the run configs, the family evaluator, the round-1 fixes, allowed paths. The reviewer re-derived every `cal_best` from the val scores, recomputed Z1–Z3 by hand (Z1 0.22067 vs `an5` 0.20648 NONE; Z1b 0.16049 vs `an5_off` 0.16704 WEAK, KEEP needs ≤ 0.13363; Z2 0.22339 vs `cal_abs` 0.21112 NONE; Z3 0.20920 vs `an5` 0.13782 NONE), all 16 Z4 skills and the Z5 values, re-ran the judge (byte-identical output), and checked every test file's commit fields: METRICS_1_2.md committed 21:59:00 and pushed 21:59:02, fetched by the DGX at 21:59:13; every test file written afterwards from `1a7dfdb6` with `forced` false; every config has 65 inputs with no hidden field, 80 / 16 / 16 worlds. Mac discovery: 114 OK, 17 skipped (recorder only). No BLOCKING or MAJOR finding.
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| R2-1 | MINOR | WM1_2.md said persistence is the best `alive` predictor at 168 h; `an5_off` is better (0.058 vs 0.080) | corrected in the Z4 paragraph and in (b) |
+| R2-2 | MINOR | "a better food level (Z4 raw)" contradicts the skill −0.151 against `an5` | now "better than `apfit_abs`'s, still worse than `an5`'s" |
+| R2-3 | MINOR | "+50–60 % for every forecaster that borrows from other worlds" overgeneralized (members range 0.95–2.28) | the per-member range is stated; the paragraph names the members |
+| R2-4 | MINOR | "ahead at 24 h on both scores" holds only at every-hour starts | the 06:00 numbers (behind `an5_off`) are stated beside them |
+| R2-5 | MINOR | rounding: model ratio 1.05 (not 1.06), gap 0.014 = 1.75 × the seed spread, s2 T1 0.078 | corrected |
+| R2-6 | MINOR | section (c): "≈ 0.107 at step 1,500" held for s0 only, s1's curve is not flat, the world-sampling claim was not measured | rewritten with per-seed values; states that no resampling over worlds was computed |
+| R2-7 | MINOR | Z4/Z5 prose leaned past the numbers (bushes −13 % vs `an5`, "almost perfectly" for R² 0.89, food regrowth and climate do beat the raw row) | rewritten with the numbers; the λ-at-grid-edge of the climate / forest probes is noted |
+| R2-8 | MINOR | RUNLOG gave 01:45 for a step committed at 01:36:15 | corrected to 01:36 |
+| R2-9 | NOTE | provenance (`WM1_CODE_COMMIT`, run-once guards) is self-reported; order confirmed by `stat` times and the reflog | recorded; no change |
+| R2-10 | NOTE | Z4's bias-removed baseline is `cal_best_anom` where GOAL_1_2.md 8 says `cal_best` | registered in METRICS_1_2.md before any number (for a bias-removed score, the bias-removed selection is the matching baseline); kept |
+| R2-11 | NOTE | climate (and 2 of 3 forest) probes chose the largest λ of the grid | stated in WM1_2.md; the grid was pre-registered and is not changed |
+| R2-12 | NOTE | `cc913c43` loosens the ridge part of the golden test; R1-3's text did not say so; DGX gate on `cc913c43` not checked by the reviewer | R1-3 updated; the DGX gate on `cc913c43` ran: 114 OK, 0 skipped (`gate_cc913c43`) |
+| R2-13 | NOTE | the family smoke has single-settlement worlds only; the v15 control is one seed | stated in WM1_2.md (limitations, relative table) |

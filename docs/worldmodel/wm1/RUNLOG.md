@@ -86,4 +86,4 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 4.1, 4.3 | 01:20:58 | 01:25:58 | `m1tf_p10v16_r3_s2` `final` from `1a7dfdb6` (125 s; `metrics.json` 01:23:04); then in the same slot the probes `probe_m1tf_p10v16_r3_s{0,1,2}` (≈ 51–60 s each, GPU, from `1a7dfdb6`; `probe.json` 01:23:58, 01:24:56, 01:25:57) |
 | 4.1 | | 01:32:13 | `m1tf_p10v15_r3_s0`: stop `patience` at step 2,700, best step 1,950 (val T2 24 h 0.0802), 5,644 s |
 | 4.1 | 01:33:01 | 01:34:01 | `m1tf_p10v15_r3_s0` `final` from `1a7dfdb6` (60 s) |
-| 4 end, 6 | 01:34 | 01:45 | run files copied (no checkpoints); `judge_1_2.py` → `runs/judge_1_2` (Z1 NONE, Z1b WEAK, Z2 NONE, Z3 NONE); WM1_2.md (`ad25396d`) |
+| 4 end, 6 | 01:34 | 01:36 | run files copied (no checkpoints); `judge_1_2.py` → `runs/judge_1_2` (Z1 NONE, Z1b WEAK, Z2 NONE, Z3 NONE); WM1_2.md (`ad25396d`) |
