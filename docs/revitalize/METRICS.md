@@ -2265,3 +2265,32 @@ T2 nMAE 24 h → 168 h (test std, every-hour starts), game_v17: food persistence
 Deaths per episode by day 120 (mean of 112): game_v16 old age 66.07, exposure 2.46; game_v17_nofission 65.43 / 2.89; game_v17 old age 73.59, exposure 8.19, starvation 0.18, dehydration 0.23.
 
 Part 2 scratch (disclosed here as 4.4 asks; review round 1, L7): seeds 900000–900011 × 120 days of game_v17 at the start values, with the existing membership rule and with sticky membership — `resolve_exclusivity` moves per seed 0–2,667 (median ≈ 600) versus 0–5.
+
+### Part 6 — consequential interventions (fork experiment, game_v17, frozen recorder, 00:28–00:45 KST)
+
+Seeds 12000–12031, 35 days, R = 4 forked at 28,800, the five C_cf variants and the one-unit gift plus the factual; placebos on 12000–12007; 1,152 forked + 288 unforked episodes. Dark nights read from the home settlement's slot (`--home-slot-fire`), exposure deaths counted (`--deaths-with-exposure`). G0a: placebos 224 / 224 identical, replicate 0 = unforked 224 / 224: **PASS**. G0b (reported): FAIL as in Passes 9–10 (dark-night VRF 1 for every variant; cold member-hours passes for every variant).
+
+| variant | seeds with deaths effect > 0 | mean deaths effect | mean dark-night effect | deaths effect by stage adult / child / elder |
+|---|---:|---:|---:|---|
+| cold_snap | 0.312 | +0.297 | +0.297 | +0.055 / +0.172 / +0.070 |
+| gift1 | 0.062 | −0.023 | 0.000 | −0.016 / −0.008 / 0.000 |
+| gift_wood | 0.000 | −0.727 | −0.797 | −0.156 / −0.359 / −0.211 |
+| rain | 0.062 | −0.359 | +0.695 | −0.078 / −0.133 / −0.148 |
+| rot_wood | 0.594 | +1.617 | +1.055 | +0.422 / +0.805 / +0.391 |
+| windfall | 0.031 | −0.273 | −0.367 | −0.109 / −0.094 / −0.070 |
+
+(Stage effects: all causes, agents gone by the day-29 06:00 row by their last life stage, replicate mean, mean over seeds.)
+
+**J8: FAIL** — placebo identity 100 % (pass); rain: dark-night effect +0.70 (pass) but mean deaths effect −0.36 (fail: rain still saves lives on average); cold_snap (0.31 of seeds positive) and rot_wood (0.59) have positive deaths effects in ≥ 0.25 of seeds (pass, two of three); gift_wood mean deaths effect −0.73 ≤ 0 (pass). Hypothesis: a 13-hour rain spares 13 hours of burn (3–4 wood an hour in winter, ≈ 40–50 wood) while the soak at 300 ‰ removes 30 % of a store that is usually 30–60 wood (≈ 10–18): the rain still leaves more wood for the following nights. A soak large enough to remove more than the spared burn (≈ 700 ‰ at those stores, above the allowed 150–500) or a rain that also burns would be needed; J8 was not measured in Part 3, so no round could tune it.
+
+### Part 6.2 — macro sensitivity (game_v17, 120 days, frozen recorder, 00:45–00:58 KST; J11 reported)
+
+Seeds 12000–12031, `--every 60`, no `--agents`, schedules = the `rot_wood` and `gift_wood` files plus the factual, forked at 28,800 with R = 2 (192 episodes, 739 s). Shape = settlements alive at the 08:00 rows of days 60 / 90 / 118 and the first-fission day.
+
+| Comparison | Share differing | Mean abs Δ alive day 118 |
+|---|---:|---:|
+| (a) factual replicate 0 vs 1 (noise only), per seed | 0.094 | 1.56 |
+| (b) rot_wood vs factual of the same replicate, per seed-replicate pair | 0.266 | 1.95 |
+| (b) gift_wood vs factual of the same replicate, per pair | 0.172 | 0.50 |
+
+Seeds differing in at least one / in every replicate: rot_wood 0.31 / 0.22, gift_wood 0.22 / 0.13. A small act (60 wood rotten or given on day 21) changes the number of villages later in the year or the first-fission day in about a quarter (rot) or a sixth (gift) of the worlds, against about a tenth from agent noise alone; the effect on the population at day 118 is small (≈ 2 agents for rot_wood).
