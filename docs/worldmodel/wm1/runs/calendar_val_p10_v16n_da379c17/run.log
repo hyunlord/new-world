@@ -1,0 +1,20 @@
+cal_abs 5s
+cal_year 5s
+ap1_abs 5s
+ap1_year 5s
+apfit_abs 5s
+apfit_year 5s
+an1 8s
+an5 9s
+an5_off 10s
+persistence 10s
+ridge 11s
+T1 an5_off 0.0699 apfit_year 0.0815
+T2_24 an5 0.0684 apfit_year 0.0803
+T2any_24 an5 0.1226 apfit_year 0.1401
+T2br_24 an5 0.074 apfit_year 0.0834
+T2anybr_24 an5 0.1275 apfit_year 0.1436
+T2_168 an5 0.0768 apfit_year 0.1329
+T2any_168 an5 0.1462 apfit_year 0.2046
+T2br_168 an5 0.0784 cal_year 0.1364
+T2anybr_168 an5 0.1508 cal_year 0.2131

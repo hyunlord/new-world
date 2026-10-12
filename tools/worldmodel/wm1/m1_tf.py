@@ -89,6 +89,18 @@ if torch is not None:
             mu, logvar, fl, _ = self.run(x)
             return mu, logvar, fl, None
 
+        @torch.no_grad()
+        def hidden(self, x, valid=None):
+            """The final layer-normed state `self.ln(z)` at the last position of x [B, L, n_in] (valid [B, L]):
+            [B, d_model]. Inference only (the world identification probe, GOAL_1_2.md 9.3); `run` is unchanged."""
+            B, L, _ = x.shape
+            if valid is None:
+                valid = torch.ones(B, L, dtype=torch.bool, device=x.device)
+            z = self.proj(x)
+            for blk in self.blocks:
+                z, _, _ = blk(z, None, None, None, valid)
+            return self.ln(z)[:, -1]
+
 
 def append(cache: dict | None, kv: list, valid, keep: int | None = None) -> dict:
     """Append new tokens' keys / values; keep only the last `keep` positions when given."""
