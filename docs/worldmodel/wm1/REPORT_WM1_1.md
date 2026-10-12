@@ -191,7 +191,10 @@ T3(A_test Brier): `an5` 0.0077, CalAbs 0.0759; M1b 0.0055 / 0.0045 / 0.0036. T3b
 - 장애의 네트워크 쪽 근본 원인은 확정하지 못함.
 
 ### 게이트 결과
-GATE_PLACEHOLDER
+- **Mac**(`72ddc4ff`): `python3 -m unittest discover -s tools/worldmodel -p 'test_*.py'` → 65개 실행, OK, skip 3(Pass 7 레코더가 Mac에 빌드되어 있지 않아 `test_export_determinism`의 3개).
+- **DGX**(`72ddc4ff`, venv torch 2.14.1+cu130, `WM_BIN` = WM-1이 `_build/src`에 빌드한 레코더): 65개 실행, OK, **skip 0**(15.9 s; WM-1의 0 skip과 같음). 기록 `runs/gate_72ddc4ff/`.
+- **허용 경로**: `git diff --name-only b2cf872c..HEAD`의 모든 파일이 `tools/worldmodel/wm1/` 또는 `docs/worldmodel/wm1/` 아래(밖 0개). WM-1 기존 테스트는 변경 없이 통과(`test_m3.py`는 테스트 추가만).
+- 두 기기 모두 green → `codex/worldmodel-2026-10`을 게이트 기록을 담은 다음 WIP 커밋(`72ddc4ff` 이후 변경은 `docs/worldmodel/wm1/` 문서·게이트 로그뿐)으로 fast-forward.
 
 ### 정직한 판단
 - **M1b의 168시간 성능은 역학 학습인가, 달력 암기인가?** v0에서는 "역학 학습"이라 부를 수 없다. 사전 등록 규칙으로 X2 = NONE: 세 시드 평균이 검증으로 고른 유사 사례 기준선(이 세계의 평소 궤적을 따라갈 뿐인 예측기)보다 모든 셀에서 21–53% 나쁘다. 절대시간을 읽지 않는 공정 기준보다는 8–26% 좋아(WEAK) 7일 문맥에서 연중 위치 이상의 정보를 쓰고 있지만, 그것이 역학인지 궤적 맞추기인지는 v0로 구별할 수 없다. 단기(T1·24시간)도 X3 = NONE. 반면 이번 겨울의 상태에 달린 사건 과제(T3, T3b)에서는 대체로 달력보다 낫다(사후) — 상태를 쓴다는 가장 분명한 신호다.

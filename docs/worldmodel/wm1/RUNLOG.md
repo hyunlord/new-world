@@ -58,3 +58,4 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 6 end | | 14:35 | REPORT_WM1_1.md (Korean, section 14 format); Mac gate re-run on the final head; DGX still unreachable, so the green branch stays at `b2cf872c`; PR #512 comment |
 
 | 7 (resume) | 20:52 | | DGX reachable again: no reboot / OOM / kernel error (DECISIONS E7.1); `m1tf_main_r3_s1_final` and `_s2_final` had finished at 11:27 and `m3_noday_s0_final` at 11:54 (exit 0, from `9f4fd3f3`), `m1tf_sevon_aa_r3_s0` training at 12:11 (not evaluated, E7.3). Results copied, judge rerun, WM1_1.md and REPORT_WM1_1.md updated (`ec3495c4` and the next commit) |
+| gate | 20:57 | 20:58 | `72ddc4ff`: Mac 65 tests OK, 3 skipped (recorder not built on the Mac); DGX 65 tests OK, 0 skipped (`gate_72ddc4ff`, `WM_BIN` = WM-1's recorder build); allowed paths clean. Green branch fast-forwarded to the commit that records it |
