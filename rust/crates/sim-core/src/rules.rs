@@ -444,12 +444,12 @@ impl WorldRules {
     pub const fn game_v17_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
         let mut rules = Self::game_v16_with(variety);
         rules.society.exposure = Some(ExposureRule {
-            // Part 3 round 1 (start values [8, 6, 8], hunger weight 0.5):
-            // children 5, adults 6, elders 5 an hour, scaled by hardiness and
-            // by hunger with weight 1.
-            damage_per_cold_hour: [5.0, 6.0, 5.0],
+            // Part 3 round 2 (start values [8, 6, 8], hunger weight 0.5; round
+            // 1 [5, 6, 5], weight 1): children 9, adults 5, elders 6 an hour,
+            // scaled by hardiness and by hunger with weight 0.5.
+            damage_per_cold_hour: [9.0, 5.0, 6.0],
             heal_block_hours: 2,
-            hunger_weight: 1.0,
+            hunger_weight: 0.5,
             use_hardiness: true,
         });
         if let Some(mut firewood) = rules.society.firewood {

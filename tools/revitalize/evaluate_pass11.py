@@ -61,7 +61,7 @@ SCHEMA = 11
 BASELINE_SCENE = "game_v16"
 TIMING_FACTOR = 1.3
 STAGES = ("child", "adult", "elder")
-RANGES = {**p10.RANGES, "wild_regions": (1, 3), "region_bushes": (5, 9), "region_deadwood": (6, 12)}
+RANGES = {**p10.RANGES, "wild_regions": (1, 3), "region_bushes": (7, 11), "region_deadwood": (6, 12)}
 
 
 def load_round(path: Path, duration: int) -> Round:

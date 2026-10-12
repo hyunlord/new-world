@@ -223,13 +223,14 @@ fn regen_wood_winter(resources: &mut SimResources, per_day: u32, cap: Option<u8>
 /// A deadwood spot of one area: (tile, capacity).
 type AreaSpot = ((u32, u32), u8);
 
-/// Pass 11 regional winter fall (`FirewoodRule::regional_wood`): the day's
-/// `per_day` units are split between the areas of `wood_spot_area` (0 = camp,
-/// r + 1 = wild region r) in proportion to their spot counts. Area a's
-/// accumulator gains `per_day x 1000 x n_a` per pulse against
-/// `1000 x pulses per day x N` per unit (N = all spots), so the areas together
-/// receive exactly the world total of [`regen_wood_winter`]. Each area's units
-/// go round-robin over its own spots in key order after its own cursor, as
+/// Pass 11 regional winter fall (`FirewoodRule::regional_wood`): every area of
+/// `wood_spot_area` (0 = camp, r + 1 = wild region r) receives a budget
+/// proportional to its spot count at the camp's per-spot rate: area a gets
+/// `per_day x n_a / n_camp` units a day (accumulator `per_day x 1000 x n_a`
+/// per pulse against `1000 x pulses per day x n_camp` per unit), so the camp
+/// keeps exactly v16's daily fall and the regions do not dilute it (without
+/// camp spots the denominator is all spots). Each area's units go round-robin
+/// over its own spots in key order after its own cursor, as
 /// [`regen_wood_winter`] does over all spots; a unit that finds no spot of its
 /// area below the cap is lost (`winter_wood_lost`). Areas in id order.
 fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Option<u8>) {
@@ -240,10 +241,12 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
         spots.entry(area).or_default().push((*key, *max));
     }
     let total: u64 = spots.values().map(|list| list.len() as u64).sum();
-    if total == 0 {
+    let camp = spots.get(&0).map_or(0, |list| list.len() as u64);
+    let reference = if camp > 0 { camp } else { total };
+    if reference == 0 {
         return;
     }
-    let per_unit = 1000 * pulses_per_day * total;
+    let per_unit = 1000 * pulses_per_day * reference;
     for (area, list) in spots {
         let acc = resources.wood_area_acc.entry(area).or_insert(0);
         *acc += u64::from(per_day) * 1000 * list.len() as u64;

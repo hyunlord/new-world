@@ -44,7 +44,8 @@ pub const RANGES: VarietyRanges = VarietyRanges {
     forest_permille: (220, 380),
     food_regen_permille: (850, 1150),
     wild_regions: (1, 3),
-    region_bushes: (5, 9),
+    // Part 3 round 2: 5..=9 -> 7..=11 (+2 at both ends).
+    region_bushes: (7, 11),
     region_deadwood: (6, 12),
 };
 
@@ -178,7 +179,7 @@ mod tests {
             assert!((3..=5).contains(&v.berry_capacity));
             assert!(v.climate < 3);
             assert!((1..=3).contains(&v.wild_regions));
-            assert!((5..=9).contains(&v.region_bushes));
+            assert!((7..=11).contains(&v.region_bushes));
             assert!((6..=12).contains(&v.region_deadwood));
             assert_eq!(v, WorldVariety::draw(seed));
         }
