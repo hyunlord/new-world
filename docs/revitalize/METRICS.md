@@ -2057,3 +2057,28 @@ H5 for v16 (reported only; section 10 judges v16_neutral): every clause passes e
 H6 (128 seeds of game_v16): parameter means berry_bushes 12.21 (centre 12), berry_capacity 4.11 (centre 4), deadwood_capacity 6.12 (centre 6), deadwood_spots 19.77 (centre 20), food_regen_permille 1004.35 (centre 1000), forest_permille 294.24 (centre 300), starting_agents 23.95 (centre 24); climate shares harsh 0.367, mild 0.375, normal 0.258 (weights 0.333 / 0.334 / 0.333); deadwood shortfalls 0 seeds; berry-repair swaps 0 seeds.
 
 Worldgen counts (H6 "counted and explained"): none of the 128 judged game_v16 seeds and none of the 128 game_v15 seeds needed a berry-repair swap or placed fewer deadwood spots than asked. A wider count on one-day worlds of seeds 1000–2999 (`probe_frozen`, measurement only): berry-repair swaps in 4 / 2,000 game_v15 seeds (1–3 swaps) and 16 / 2,000 game_v16 seeds (1–8 swaps; more where the forest share is low and up to 15 bushes need forest edges), deadwood shortfalls in 0 / 2,000 of either — the 5–18 band holds far more than 26 tiles two apart.
+
+### Part 5 — the diversity pilot (frozen commit; seeds 20000–20095 fit, 20096–20111 scored)
+
+11.2 implementation check: `diversity_p10.py check-v1` reproduces WM-1.1's dataset-v1 A_test values within 0.002 (η² food 0.1946, wood 0.0489, fire 0.0387, cold 0.5982, alive 0.0613, deadwood 0.0270, bushes 0.1360, work 0.2837; R²_abs food 0.7676, wood 0.9470, fire 0.9589, alive 0.9320; `p10-5_pilot/check_v1.json`).
+
+| Variable | η² / R²_abs game_v15 | game_v16_neutral | game_v16 |
+|---|---|---|---|
+| food_stock | 0.153 / 0.845 | 0.112 / 0.885 | 0.500 / 0.474 |
+| wood_stock | 0.055 / 0.942 | 0.056 / 0.941 | 0.063 / 0.934 |
+| fire_lit | 0.041 / 0.956 | 0.042 / 0.955 | 0.040 / 0.957 |
+| cold_members | 0.586 / 0.359 | 0.603 / 0.361 | 0.582 / 0.354 |
+| alive | 0.021 / 0.978 | 0.030 / 0.967 | 0.978 / -0.043 |
+| deadwood_total | 0.030 / 0.968 | 0.030 / 0.968 | 0.168 / 0.827 |
+| food_on_bushes_total | 0.124 / 0.872 | 0.154 / 0.839 | 0.503 / 0.468 |
+| adults_working | 0.304 / 0.676 | 0.327 / 0.653 | 0.484 / 0.474 |
+
+**H7 (judged once, game_v16): FAIL** — food η² 0.500 / R²_abs 0.474 (pass), alive 0.978 / -0.043 (pass), wood 0.063 / 0.934 (fail). game_v15 and game_v16_neutral fail every clause.
+
+T2 nMAE, 24 h → 168 h (every-hour starts, test split std) for game_v16: food_stock: persistence 0.142 → 0.823, apfit_abs 0.090 → 0.327, CalAbs 0.584, an5 0.216; wood_stock: persistence 0.276 → 1.174, apfit_abs 0.175 → 0.200, CalAbs 0.202, an5 0.178; alive: persistence 0.024 → 0.080, apfit_abs 0.026 → 0.089, CalAbs 0.861, an5 0.146.
+
+Attribution (Δη²): exposure (v16_neutral − v15; includes round 2's tighter birth gate) food_stock -0.041, wood_stock +0.002, fire_lit +0.001, cold_members +0.018, alive +0.010, deadwood_total +0.000, food_on_bushes_total +0.030, adults_working +0.023; variety (v16 − v16_neutral) food_stock +0.388, wood_stock +0.007, fire_lit -0.002, cold_members -0.021, alive +0.947, deadwood_total +0.138, food_on_bushes_total +0.349, adults_working +0.157.
+
+Deaths per episode by day 120 (mean of 112): game_v15 old age 72.87, exposure 0.00, starvation + dehydration 0.00; game_v16_neutral old age 70.74, exposure 2.00, starvation + dehydration 0.00; game_v16 old age 64.67, exposure 2.32, starvation + dehydration 0.00.
+
+11.5 (declared adjustment): not used. Scratch recordings of game_v16 on seeds 30000–30111 (outside every judged and pilot set; a scratch recorder outside the clone reading the ranges from an environment variable) with 7.1's ranges, with the wood ranges widened by the allowed step (deadwood spots 12–28, capacity 3–9) and with every range widened by its step plus climate weights [383, 234, 383] gave wood η² 0.073 / 0.094 / 0.111 (food 0.331 / 0.327 / 0.524, alive 0.960 / 0.960 / 0.976): no allowed variety change brings wood near 0.30, so a second pilot could not change H7's verdict and was not recorded (see DECISIONS).
