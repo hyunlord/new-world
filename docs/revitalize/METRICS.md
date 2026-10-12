@@ -2338,3 +2338,9 @@ Every legacy, v8–v16 run reproduces Pass 10's final (or Part 0's) summaries on
 | 120day | 0.0017171 | 0.0017480 | 1.018 | 0.0018300 | 1.066 |
 
 J12: **PASS** (≤ 1.3 for both scenes and durations; `p11-7_timing_*_targets`). The timing runs reproduce the round-3 summaries (v17 scenes) and Part 0's (v16) on every simulation value. All J-target files were regenerated with the final evaluator (report-only targets marked; receipts backed by the Part 0/2/3 guards and this Part's reproduction).
+
+### Part 7 — held-out v16 / v16_neutral with the final binary, J10, and the post-review verification re-recordings (02:07–02:48 KST)
+
+- Held-out (review round 2, L6): `p11-7_final_heldout_v16_*` and `_v16n_*` (`probe_final`, seeds 64–127 × 10, 32–95 × 120) equal Pass 10's `p10-4_heldout_v16*` on every shared value (11,484 / 110,181 / 11,036 / 109,702); only `schema_version` 10 → 11; twins pass.
+- **J10: PASS.** `wm_final`, game_v17 with agents, seeds 900000–900006 × 30 days (5 fissions founded on day 28 or 29, so the founding, parent-slot and founded-tick columns are exercised), recorded at workers 4, 4 and 1: all 102 data files byte-identical; only the 7 `timing.json` (wall seconds, excluded by definition as in `test_export_determinism.py`) differ. The automated tests `test_v14/v15/v16/v17_fork_families_are_byte_identical` (schema 5, workers 4 / 4 / 1) pass; schemas 1–4 load (`test_wm_data.py`); the v15/v16 fork tests (`harness_revitalize_pass9_forks`, `pass10_forks`) pass.
+- Verification re-recordings with `wm_final` (post-review code, labelled with the frozen commit's sha so `meta.json` compares): pilot `game_v17_nofission` 112 / 112 and `game_v17` 112 / 112, forks 1,120 / 1,120, macro 192 / 192 episodes identical to the frozen-commit recordings (every array's sha256 and `interventions.json`). Together with the probe reproduction above: the post-freeze review fixes changed no result of Parts 3–6.
