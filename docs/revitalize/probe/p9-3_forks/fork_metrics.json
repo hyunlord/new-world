@@ -2108,6 +2108,7 @@
     "passed": true,
     "placebo_identical": 448,
     "placebo_runs": 448,
+    "replicate0_expected": 224,
     "replicate0_identical": 224,
     "replicate0_runs": 224
   },

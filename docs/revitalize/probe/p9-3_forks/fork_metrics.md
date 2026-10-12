@@ -10,11 +10,11 @@
 
 VRF = V_unpaired / V_paired, variances over replicates within a seed, averaged over seeds; 95 % interval from a cluster bootstrap over seeds. The unpaired arm still shares worldgen, weather and the whole prefix up to the fork, so VRF measures the value of pairing the post-fork agent noise only.
 
-Noisy seeds: seeds whose 8 replicates do not all give the same value, in the factual (f), the variant (v) and both; where the factual is constant within a seed, the paired and unpaired differences have the same variance and that seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only).
+Noisy seeds: seeds whose 8 replicates do not all give the same value, in the factual (f), the variant (v) and both; where the factual is constant within a seed, the paired and unpaired differences have the same variance and that seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only). Bootstrap resamples with no agent noise at all have no VRF and are left out of the interval; their count is shown in brackets after it.
 
 | variant | target | VRF | 95 % CI | V_paired | V_unpaired | noisy seeds f / v / both | VRF (both noisy) | mean effect | sign stability | median std | median abs seed mean | G0b |
 |---|---|---:|---|---:|---:|---|---:|---:|---:|---:|---:|---|
-| gift_wood | dark_nights | 1 | [1, 1] | 0.0246 | 0.0246 | 3 / 2 / 1 | 1 | -0.82 | 0.938 | 0 | 1 | fail |
+| gift_wood | dark_nights | 1 | [1, 1] (30 quiet) | 0.0246 | 0.0246 | 3 / 2 / 1 | 1 | -0.82 | 0.938 | 0 | 1 | fail |
 | gift_wood | cold_member_hours | 1.54 | [0.943, 3.07] | 348 | 535 | 12 / 6 / 5 | 2.78 | -282 | 1 | 0 | 336 | fail |
 | gift_wood | food_store | 5.89 | [3.37, 12.7] | 13.1 | 77.2 | 32 / 32 / 32 | 5.89 | 13.2 | 0.781 | 2.29 | 14.5 | reported |
 | gift_wood | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
@@ -24,22 +24,22 @@ Noisy seeds: seeds whose 8 replicates do not all give the same value, in the fac
 | rot_wood | food_store | 3.55 | [2.09, 7.23] | 21.3 | 75.6 | 32 / 32 / 32 | 3.55 | -19.3 | 0.875 | 3.27 | 20.6 | reported |
 | rot_wood | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
 | rot_wood | births | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
-| rain | dark_nights | 1 | [1, 1] | 0.0162 | 0.0162 | 3 / 1 / 1 | 1 | 0.23 | 0.938 | 0 | 1 | fail |
+| rain | dark_nights | 1 | [1, 1] (96 quiet) | 0.0162 | 0.0162 | 3 / 1 / 1 | 1 | 0.23 | 0.938 | 0 | 1 | fail |
 | rain | cold_member_hours | 1.69 | [1.09, 3.51] | 295 | 499 | 12 / 6 / 5 | 5.8 | 64.8 | 0.875 | 0 | 180 | pass |
 | rain | food_store | 16.5 | [9.34, 30.9] | 4.69 | 77.3 | 32 / 32 / 32 | 16.5 | -2 | 0.906 | 1.32 | 10.4 | reported |
 | rain | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
 | rain | births | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
-| cold_snap | dark_nights | 1 | [1, 1] | 0.0273 | 0.0273 | 3 / 2 / 0 | – | 0.48 | 0.844 | 0 | 0.375 | fail |
+| cold_snap | dark_nights | 1 | [1, 1] (10 quiet) | 0.0273 | 0.0273 | 3 / 2 / 0 | – | 0.48 | 0.844 | 0 | 0.375 | fail |
 | cold_snap | cold_member_hours | 1.63 | [1.14, 2.36] | 351 | 571 | 12 / 12 / 6 | 3.62 | 155 | 0.844 | 0 | 168 | pass |
 | cold_snap | food_store | 24.9 | [12.3, 55.3] | 3.05 | 76 | 32 / 32 / 32 | 24.9 | -6.89 | 0.781 | 0.707 | 6.69 | reported |
 | cold_snap | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
 | cold_snap | births | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
-| windfall | dark_nights | 1 | [1, 1] | 0.0363 | 0.0363 | 3 / 3 / 0 | – | -0.309 | 0.875 | 0 | 0 | fail |
+| windfall | dark_nights | 1 | [1, 1] (3 quiet) | 0.0363 | 0.0363 | 3 / 3 / 0 | – | -0.309 | 0.875 | 0 | 0 | fail |
 | windfall | cold_member_hours | 2.17 | [1.4, 3.36] | 242 | 525 | 12 / 8 / 8 | 2.57 | -125 | 1 | 0 | 126 | pass |
 | windfall | food_store | 3.86 | [2.13, 8.54] | 16.8 | 65 | 32 / 32 / 32 | 3.86 | 6.88 | 0.5 | 2.61 | 7 | reported |
 | windfall | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
 | windfall | births | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |
-| gift1 | dark_nights | ∞ | [∞, ∞] | 0 | 0.0357 | 3 / 3 / 3 | ∞ | 0 | 1 | 0 | 0 | pass |
+| gift1 | dark_nights | ∞ | [∞, ∞] (96 quiet) | 0 | 0.0357 | 3 / 3 / 3 | ∞ | 0 | 1 | 0 | 0 | pass |
 | gift1 | cold_member_hours | 23.3 | [11.6, ∞] | 28.7 | 671 | 12 / 11 / 11 | 30.4 | 0.332 | 0.938 | 0 | 0 | pass |
 | gift1 | food_store | 5.65 | [2.68, 14.3] | 12.1 | 68.5 | 32 / 32 / 32 | 5.65 | 0.34 | 0.219 | 2.13 | 0.875 | reported |
 | gift1 | deaths | – | [–, –] | 0 | 0 | 0 / 0 / 0 | – | 0 | 1 | 0 | 0 | reported |

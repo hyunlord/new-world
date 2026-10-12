@@ -1930,3 +1930,67 @@ The final `game_v14` runs are Part 4's tuning runs (`p8-4_round1_*`) and Part 5'
 ### X8 — timing (back to back, recorder off)
 
 Run 19:33:10–19:41:47 KST with `probe_p2`, in this order: `p8-7_timing_v13_10day`, `p8-7_timing_v14_10day`, `p8-7_timing_v13_120day`, `p8-7_timing_v14_120day` (all `--check-determinism`, the eight clocks, `--workers 4`; all DETERMINISM PASS). No Godot, cargo, probe, recorder or Python job of this or another WorldSim run was active (`pgrep`); a 15-second CPU monitor saw other users' processes: a `clawdbot` process at 83–110 % (one core) in 4 samples, a "Sow and Siege" app, `node`, `osascript` and Chrome at a median of 29 % (max 227 %) in 63 samples. Median ms per agent-tick: v13 0.0010639 → v14 0.0010696 (10 days, **1.005×**), v13 0.0013615 → v14 0.0013542 (120 days, **0.995×**); limit 1.2×. **X8 PASS.**
+
+## Pass 9 — keyed randomness, lineage keys, noise forks (`game_v15`)
+
+All probe runs use Pass 8's flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy and v8–v10 with their own Pass 8 flags). Binaries frozen in `/Users/rexxa/work/p9bin/`: `probe_p0` (`4c35e295`, byte-identical to Pass 8's `probe_p2`), `probe_p2` / `wm_p2` (`874dbf54`, the Part 2 Rust; every later Rust change is a test or the recorder's fork-tick validation), `wm_p6` (`ba278357`).
+
+### Part 0 — baseline reproduction (`probe_p0`)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p9-0_v14_10day` | `p8-4_round1_10day` | 6,212 | 0 |
+| `p9-0_v14_120day` | `p8-4_round1_120day` | 57,589 | 0 |
+| `p9-0_v13_10day` | `p8-7_final_v13_10day` | 6,210 | 0 |
+| `p9-0_v13_120day` | `p8-7_final_v13_120day` | 57,588 | 0 |
+| `p9-0_legacy` | `p8-7_final_legacy` | 4,847 | 0 |
+
+### Part 2 — v14 guard (4.5, `probe_p2`)
+
+`p9-2_v14_guard_10day` / `_120day` vs Part 0: 6,212 / 57,589 shared values, the only difference `schema_version` 8 → 9 (plus the two new rules keys).
+
+### Part 3 — fork experiment (`wm_p2`; re-recorded with `wm_p6` in Part 6, see below)
+
+`game_v15`, seeds 12000–12031, 35 days, `--every 60`, `--agents`, R = 8 replicates forked at tick 28,800; 2,520 recorded episodes (1,792 family members, 448 placebo members, 280 unforked runs), 31 min, 8.8 GiB. Full tables: `docs/revitalize/probe/p9-3_forks/fork_metrics.md`.
+
+G0a: placebos 448 / 448 identical, replicate 0 = unforked run 224 / 224. **PASS**.
+
+G0b (VRF = V_unpaired / V_paired, 95 % cluster bootstrap over seeds):
+
+| variant | dark nights VRF [95 %] | cold member-hours VRF [95 %] | food store VRF (reported) | mean effect: dark nights / cold hours / food |
+|---|---|---|---|---|
+| gift_wood 60 | 1.00 [1.00, 1.00] | 1.54 [0.94, 3.07] | 5.89 | −0.82 / −282 / +13.2 |
+| rot_wood 60 | 1.19 [1.00, 1.70] | 1.81 [1.16, 2.38] | 3.55 | +1.35 / +434 / −19.3 |
+| rain 13 h | 1.00 [1.00, 1.00] | 1.69 [1.09, 3.51] | 16.5 | +0.23 / +65 / −2.0 |
+| cold_snap 2 | 1.00 [1.00, 1.00] | 1.63 [1.14, 2.36] | 24.9 | +0.48 / +155 / −6.9 |
+| windfall 20 | 1.00 [1.00, 1.00] | 2.17 [1.40, 3.36] | 3.86 | −0.31 / −125 / +6.9 |
+| gift_food 1 | ∞ | 23.3 [11.6, ∞] | 5.65 | 0 / +0.33 / +0.34 |
+
+Seeds whose 8 factual replicates are not all equal: dark nights 3 / 32, cold member-hours 12 / 32, food store 32 / 32; deaths and births at day 29 06:00 never differ (0 / 32). G0b: **FAIL** (dark nights of every variant; cold hours of gift_wood).
+
+Divergence (replicate 0, medians over seeds): first differing agent position 60 (windfall) to 2,550 (cold_snap) ticks after the intervention, 4,440 for the one-unit gift; rain changes the fire after 60 ticks; deaths never differ within 35 days. Newborn key matches across arms (Y6): 98.4–100 %.
+
+v14 single forks (8.3): mean over seeds |Δ_v14 − mean_k Δ_v15| 0.25–0.43 dark nights, 58–100 cold member-hours, 3.8–7.2 food, against v15's median within-seed spread 0 / 0–15 / 0.7–3.3.
+
+### Part 4 — v15 health and shape (`probe_p2`)
+
+| set | X2 | X3 | X4 | X5 | R² (v14 → v15) | v14→v15 intervals excluding 0 |
+|---|---|---|---|---|---|---|
+| tuning 0–63 × 10, 0–31 × 120 | PASS | PASS | PASS | PASS | 0.530 → 0.594 | 0 of 29 |
+| held-out 64–127 × 10, 32–95 × 120 | PASS | PASS | PASS | PASS | 0.602 → 0.564 | 0 of 29 |
+
+(29 = 10 X3 statistics + 19 median clauses; two of the median clauses read the pooled summary and have no per-seed interval.) Comparison mode against `p8-1_v12_tuning_targets` / `p8-1_v12_heldout_targets`. Determinism twins pass in all four runs.
+
+Iteration-order ablations (tuning, day-10 / day-120 median forage trips): v14 905 / 4,773; v14 + AgentId order 878.5 / 4,685; v15 keyed in hecs order 910.5 / 4,744.5; v15 888 / 4,556.5. Their only interval excluding 0 is R² (+0.073, +0.065).
+
+Y8 timing (back to back, 12:11–12:21 KST): ms per agent-tick v14 0.0011744 / v15 0.0011563 (10 days, 0.985×), v14 0.0014555 / v15 0.0015884 (120 days, 1.091×).
+
+### Part 6 — final reproduction (`probe_p2`)
+
+Legacy, v8, v9–v13 (10 and 120 days) and v14 (10 and 120 days) reproduce Pass 8's final summaries (`p8-7_final_*`, `p8-4_round1_*`) on every shared value; the only differences are `schema_version` 8 → 9 and the two new rules keys. All 14 determinism twins pass.
+
+Fork experiment re-recorded with the final recorder (`wm_p6`, `ba278357`, 12:58–13:27): 42,840 files byte-identical to the Part 3 recording (`meta.json` up to the `git_sha` label); `fork_metrics` unchanged apart from the new "(N quiet)" annotations.
+
+### Part 6 — final gate
+
+`gate_pass9.sh` on `8d3ad643` (13:27–13:46 KST): every step exit 0; cargo test debug 2,029 / release 2,029 passed, 0 failed (Pass 8: 2,005 each); clippy both; forbidden math 0; strict check; bridge build; smoke without errors; Python 77 (`tools/revitalize`) + 37 (`tools/worldmodel`).
