@@ -1,0 +1,6 @@
+A_train 96 eta2 {'food_stock': 0.163, 'wood_stock': 0.048, 'fire_lit': 0.032, 'cold_members': 0.696, 'alive': 0.032, 'deadwood_total': 0.034, 'food_on_bushes_total': 0.133, 'adults_working': 0.306} median div day 1.0 never 0
+A_val 16 eta2 {'food_stock': 0.262, 'wood_stock': 0.046, 'fire_lit': 0.031, 'cold_members': 0.691, 'alive': 0.068, 'deadwood_total': 0.03, 'food_on_bushes_total': 0.134, 'adults_working': 0.301} median div day 1.0 never 0
+A_test 16 eta2 {'food_stock': 0.085, 'wood_stock': 0.048, 'fire_lit': 0.038, 'cold_members': 0.625, 'alive': 0.021, 'deadwood_total': 0.031, 'food_on_bushes_total': 0.125, 'adults_working': 0.296} median div day 1.0 never 0
+B_test 8 eta2 {'food_stock': 0.09, 'wood_stock': 0.056, 'fire_lit': 0.037, 'cold_members': 0.633, 'alive': 0.026, 'deadwood_total': 0.034, 'food_on_bushes_total': 0.119, 'adults_working': 0.269} median div day 1.0 never 0
+OOD_v12 32 eta2 {'food_stock': 0.105, 'wood_stock': 0.022, 'fire_lit': 0.013, 'cold_members': 0.16, 'alive': 0.03, 'deadwood_total': 0.023, 'food_on_bushes_total': 0.12, 'adults_working': 0.281} median div day 1.0 never 0
+OOD_long 16 eta2 {'food_stock': 0.19, 'wood_stock': 0.049, 'fire_lit': 0.034, 'cold_members': 0.63, 'alive': 0.051, 'deadwood_total': 0.032, 'food_on_bushes_total': 0.129, 'adults_working': 0.277} median div day 1.0 never 0
