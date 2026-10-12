@@ -1,0 +1,59 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:01<07:57,  1.65s/it]Loading weights:  27%|██▋       | 77/290 [00:01<00:03, 58.92it/s]Loading weights:  38%|███▊      | 111/290 [00:01<00:02, 81.39it/s]Loading weights:  47%|████▋     | 137/290 [00:02<00:01, 85.42it/s]Loading weights:  56%|█████▌    | 161/290 [00:02<00:01, 102.02it/s]Loading weights:  62%|██████▏   | 181/290 [00:02<00:01, 82.83it/s] Loading weights:  71%|███████▏  | 207/290 [00:03<00:01, 67.99it/s]Loading weights:  84%|████████▍ | 244/290 [00:03<00:00, 94.46it/s]Loading weights:  90%|████████▉ | 260/290 [00:03<00:00, 86.17it/s]Loading weights: 100%|██████████| 290/290 [00:03<00:00, 79.09it/s]
+step 0/714 loss 0.8959 43s
+step 5/714 loss 0.4547 170s
+step 10/714 loss 0.3383 295s
+step 15/714 loss 0.3386 415s
+step 20/714 loss 0.3423 541s
+step 25/714 loss 0.2946 669s
+step 30/714 loss 0.2591 801s
+step 35/714 loss 0.2815 939s
+step 40/714 loss 0.2676 1071s
+step 45/714 loss 0.2712 1199s
+step 50/714 loss 0.2293 1337s
+step 55/714 loss 0.2734 1479s
+step 60/714 loss 0.2747 1618s
+step 65/714 loss 0.2549 1772s
+step 70/714 loss 0.2387 1910s
+step 75/714 loss 0.2709 2049s
+step 80/714 loss 0.2100 2196s
+step 85/714 loss 0.2252 2339s
+step 90/714 loss 0.2334 2479s
+step 95/714 loss 0.2063 2623s
+step 100/714 loss 0.2487 2761s
+step 105/714 loss 0.1920 2899s
+step 110/714 loss 0.2077 3039s
+step 115/714 loss 0.2195 3176s
+step 120/714 loss 0.2046 3315s
+step 125/714 loss 0.2153 3456s
+step 130/714 loss 0.2347 3596s
+step 135/714 loss 0.2111 3738s
+step 140/714 loss 0.1922 3876s
+step 145/714 loss 0.2058 4019s
+step 150/714 loss 0.1906 4161s
+step 155/714 loss 0.1814 4300s
+step 160/714 loss 0.2018 4441s
+step 165/714 loss 0.2064 4570s
+step 170/714 loss 0.2071 4695s
+step 175/714 loss 0.1785 4821s
+step 180/714 loss 0.1912 4943s
+step 185/714 loss 0.2017 5065s
+step 190/714 loss 0.1906 5177s
+step 195/714 loss 0.2371 5276s
+step 200/714 loss 0.1722 5392s
+step 205/714 loss 0.1997 5515s
+step 210/714 loss 0.1598 5637s
+step 215/714 loss 0.1998 5760s
+step 220/714 loss 0.1785 5879s
+step 225/714 loss 0.2140 5996s
+step 230/714 loss 0.1771 6090s
+step 235/714 loss 0.1938 6161s
+step 240/714 loss 0.2226 6232s
+step 245/714 loss 0.1933 6301s
+step 250/714 loss 0.1921 6370s
+step 255/714 loss 0.1830 6437s
+step 260/714 loss 0.1789 6504s
+step 265/714 loss 0.1761 6568s
+step 270/714 loss 0.1954 6629s
+step 275/714 loss 0.1678 6687s
+done 276/714 steps, stop max_steps

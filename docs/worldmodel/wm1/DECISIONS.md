@@ -60,3 +60,20 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 
 ### Part 0
 - **E0.1** The Mac clone carries two unrelated local changes (`.gitignore` adds `/graft/`; an untracked `.ignore`) from the owner's graft tool. They are outside the allowed paths, so they are never staged; every commit stages explicit paths only.
+- **E0.2** The run stopped from about 10:00 to 11:01 (usage limit, then a dropped connection). The working-time clock (8 h) excludes that hour; the DGX jobs were unaffected.
+
+### Part 1
+- **E1.1** The member prediction math (calendar means, wrap, α, analogs) lives in `calcore.py` as `predict_member`, so the v0 harness predictor (`climatology.CalendarPredictor`) and the v1 entry point (`diversity_v1.py`, which may not import `wm1`) share one implementation.
+- **E1.2** Ties in the validation selection go to the earlier member of the order cal_abs, cal_year, ap1_abs, ap1_year, apfit_abs, apfit_year, an1, an5, an5_off. They occur only on T3 / T3b among the non-analog members (identical fire predictions), never for `cal_best`.
+- **E1.3** No A_train variable has `split_std` 0, so the analog distance scales every variable by its train std (the code would use scale 1 for a zero std).
+- **E1.4** `climatology.py val` evaluates every member on A_val and B_val through `evaluate.evaluate` with `t3_split="A_val"` (T3 on A_val only, GOAL_1_1.md 6.2). The final run evaluates every member on the four test splits, not only the two selected ones, so the tables can show all nine.
+- **E1.5** v1's selection is recorded before any v1 test number: `diversity_v1.py --val-only` writes the val scores and the selection; the full run (after METRICS_1_1.md) adds the test roles.
+
+### Part 2
+- **E2.1** η² within groups of equal winter-severity sequences pools only groups with at least two episodes (a singleton group has zero within-group variance by construction); its denominator is the same episodes' sum of squares around the split's pooled mean. The number of episodes used is reported.
+- **E2.2** Divergence: pairs that never differ are counted separately and excluded from min / median / max. A_train uses 500 of its 4,560 pairs (`numpy.random.default_rng(0)`, without replacement); every other split uses all pairs (OOD_v12: 496).
+
+### Part 3
+- **E3.1** `m3_noday_s0` uses WM-1's M3 recipe (`--threads 4`, rank 16, batch 16, lr 2e-4, seed 0 → the same sample order) with `--max-steps 276` and `--max-seconds 28800` instead of 7,200, so the step count, not the wall clock on a loaded CPU, binds: it trained exactly 276 steps (6,687 s), the same 4,416 samples as M3.
+- **E3.2** `m1tf_main_r3_s1` stopped by patience at step 2,100 (best 1,350) under WM-1's recipe; it is used as trained (the recipe is fixed; no rerun).
+- **E3.3** M1b reproducibility on the GPU was not measured in WM-1 and is not measured here; s0 is not rerun (GOAL_1_1.md 8.3).

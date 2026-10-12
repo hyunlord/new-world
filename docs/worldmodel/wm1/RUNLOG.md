@@ -37,3 +37,12 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 0 | 07:33 | | DGX code clone detached at `f3a39ee9`; venv torch 2.14.1+cu130, CUDA available. `v1src` cloned at `_build/v1src`, detached at `4c35e295`. v1 manifest: 432 episodes, 5,012 listed files, 0 missing; 224 extra files under `v1/` not in the manifest (schedule JSONs such as `s11000_b.json`), not counted |
 | 3.1 | 07:33 | | `m1tf_main_r3_s1` and `m1tf_main_r3_s2` launched in parallel on the GPU (code `f3a39ee9`, WM-1's recorded command with only seed/out changed); `nvidia-smi` before: no other compute process; after: 4.5 GB and 4.6 GB per job at step 150 |
 | 0 end | | 07:36 | pushed |
+| 3 | 07:39 | | `m3_noday_s0` launched on the DGX CPU (4 threads, code `74f4d79d`, `--no-day --max-steps 276`); DGX load average 19–45 from other users' jobs |
+| 1 | 07:40 | | calcore.py, climatology.py (+ tests) written on the Mac |
+| 2 | 07:55 | | diversity.py, diversity_v1.py (+ tests) written on the Mac |
+| pause | ≈ 10:00 | 11:01 | the session stopped (Claude usage limit, then a dropped connection); the DGX jobs kept running. GOAL_1_1.md, the task list and `git log` re-read on resume |
+| 3.1 end | | ≈ 10:52 | `m1tf_main_r3_s1`: stop by patience, best step 1,350, 4,741 s; `m1tf_main_r3_s2`: 3,000 steps, best 2,850, 6,353 s (GPU, both in parallel; 4.5–4.6 GB GPU memory each at step 150) |
+| 3 | | ≈ 09:31 | `m3_noday_s0` training done: 276 steps, 6,687 s (stop `max_steps`) |
+| 3.2 | 11:01 | | `m1tf_sevon_aa_r3_s0` launched on the GPU (code `74f4d79d`); GPU idle before |
+| 1 | 11:03 | 11:05 | code `dfec0bdd` pushed; `calendar_val_dfec0bdd` (14 s) and `diversity_v1_dfec0bdd --val-only` (13 s) on the DGX CPU |
+| 1 end | | 11:15 | METRICS_1_1.md (pre-registration with the val selection) committed and pushed |
