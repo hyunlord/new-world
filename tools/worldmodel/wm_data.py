@@ -21,6 +21,10 @@ matched across the arms of a fork by lineage key, never by `AgentId`
 (`ep.lineage_keys()`). `meta["keyed_draws"]` and `meta["noise_fork"]` (null or
 `{tick, replicate}`) describe the randomness of the run.
 
+A branch family (`--fork-tick T --replicates R`, `make_dataset.py families`) is
+one directory per root seed; `load_family(path)` returns its factual and
+variants by replicate (`fam.factual[k]`, `fam.variants["rain"][k]`).
+
 `load_episode` verifies the sha256 of every array file against meta.json
 (raises ValueError on a mismatch) unless verify=False.
 """
@@ -99,6 +103,49 @@ def load_episode(path, verify: bool = True, arrays: list[str] | None = None) -> 
             raise ValueError(f"{file}: shape or dtype differs from meta.json")
         episode.arrays[name] = data
     return episode
+
+
+@dataclass
+class Family:
+    """A branch family (Pass 9): one root seed's factual and variants, each as R
+    replicates sharing the prefix up to the fork tick."""
+    path: Path
+    seed: int
+    scene: str
+    fork_tick: int
+    replicates: int
+    factual: dict[int, Episode]
+    variants: dict[str, dict[int, Episode]]
+
+
+def load_family(path, verify: bool = True, arrays: list[str] | None = None) -> Family:
+    """Load the family directory `path` (members `<scene>_s<seed>_<id>_r<k>`): the factual
+    (`id` = `none`) and every variant, by replicate. Members must share scene, seed and
+    fork tick, carry `noise_fork.replicate` = k, and every id must have replicates 0..R-1."""
+    path = Path(path)
+    members: dict[str, dict[int, Episode]] = {}
+    scene = seed = fork_tick = None
+    for member in sorted(p for p in path.iterdir() if (p / "meta.json").exists()):
+        ep = load_episode(member, verify=verify, arrays=arrays)
+        fork = ep.meta.get("noise_fork")
+        if ep.meta.get("schema_version") != 3 or not fork:
+            raise ValueError(f"{member}: not a branch-family member (schema 3 with noise_fork)")
+        key = (ep.meta["scene"], int(ep.meta["seed"]), int(fork["tick"]))
+        if scene is None:
+            scene, seed, fork_tick = key
+        elif key != (scene, seed, fork_tick):
+            raise ValueError(f"{member}: scene, seed or fork tick differs from the family")
+        replicate = int(fork["replicate"])
+        if not member.name.endswith(f"_r{replicate}"):
+            raise ValueError(f"{member}: directory name and noise_fork.replicate differ")
+        members.setdefault(ep.meta["episode_id"], {})[replicate] = ep
+    if "none" not in members:
+        raise ValueError(f"{path}: no factual member")
+    r = len(members["none"])
+    for eid, reps in members.items():
+        if sorted(reps) != list(range(r)):
+            raise ValueError(f"{path}: {eid} has replicates {sorted(reps)}, expected 0..{r - 1}")
+    return Family(path, seed, scene, fork_tick, r, members.pop("none"), members)
 
 
 def verify_episode(path) -> bool:

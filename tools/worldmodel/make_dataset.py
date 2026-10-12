@@ -6,6 +6,9 @@ usage:
   make_dataset.py v0|v1 [--root WM_DATA_ROOT] [--splits A_obs,B_act,...] [--no-run] [--workers 4]
                         [--docs docs/worldmodel]
   make_dataset.py manifest|manifest_v1 [--root WM_DATA_ROOT] [--docs docs/worldmodel]
+  make_dataset.py families --name NAME --scene game_v15 --seeds a..b --days N --fork-tick T --replicates R
+                           --schedule-dir DIR --family-splits train=a..b,val=c..d,test=e..f
+                           [--agents] [--every 60] [--root WM_DATA_ROOT] [--no-run] [--workers 4]
 
 `z6` writes the Z6 schedules (seeds 0-7 x seven kinds, one intervention at
 one-based day 23 12:00 = tick 31,920) under ROOT/z6/schedules and records them
@@ -23,6 +26,17 @@ within one commit), then writes
 `v1` does the same for dataset v1 (PASS8_GOAL.md section 11.1: game_v14,
 recorder schema 2, the windfall C_cf variant, OOD_v13) under ROOT/v1 and writes
 `dataset_v1_manifest.json` and `DATASET_v1.md`; v0's files are not touched.
+
+`families` (Pass 9 section 10, the format dataset v2 will use) records branch
+families: for every root seed, the factual and every schedule of
+`--schedule-dir` (`s<seed>_<id>.json`), each as R members that share the
+prefix up to the fork tick and use noise replicate k after it (k = 0 is the
+canonical run). A family is one directory `ROOT/NAME/<scene>_s<seed>/` holding
+its members `<scene>_s<seed>_<id>_r<k>`; `wm_data.load_family` loads it.
+`ROOT/NAME/families_manifest.json` lists every family (root seed, split, fork
+tick, replicates, members with file hashes). Splits are assigned per root seed
+(`--family-splits`, every seed in exactly one split), so the members of one
+family never cross splits.
 
 Days are one-based display days; the tick of day D at minute m is
 (D - 1) x 1440 + m - 480.
@@ -296,17 +310,100 @@ def dataset_doc_v1(man: dict) -> str:
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------- branch families (Pass 9) -------------------------
+def parse_range(text: str) -> range:
+    a, b = text.split("..")
+    return range(int(a), int(b))
+
+
+def family_splits(text: str, seeds: range) -> dict[int, str]:
+    """Split of every root seed from `name=a..b,...`; each seed in exactly one split."""
+    out: dict[int, str] = {}
+    for item in text.split(","):
+        name, span = item.split("=")
+        for seed in parse_range(span):
+            if seed in out:
+                raise ValueError(f"seed {seed} is in splits {out[seed]} and {name}")
+            out[seed] = name
+    missing = [s for s in seeds if s not in out]
+    if missing:
+        raise ValueError(f"seeds without a split: {missing}")
+    return {s: out[s] for s in seeds}
+
+
+def family_schedule_ids(schedule_dir: Path, seed: int) -> list[str]:
+    prefix = f"s{seed}_"
+    return sorted(p.name[len(prefix):-len(".json")] for p in schedule_dir.glob(f"{prefix}*.json"))
+
+
+def families_manifest(root: Path, name: str, scene: str, splits: dict[int, str], fork_tick: int, replicates: int,
+                      schedule_dir: Path) -> dict:
+    """Every family of ROOT/NAME with its split and members (hashes checked against meta.json)."""
+    families = []
+    for seed, split in splits.items():
+        family_dir = root / name / f"{scene}_s{seed}"
+        members = []
+        for eid in ["none", *family_schedule_ids(schedule_dir, seed)]:
+            for k in range(replicates):
+                path = family_dir / f"{scene}_s{seed}_{eid}_r{k}"
+                meta = json.loads((path / "meta.json").read_text())
+                if meta["noise_fork"] != {"tick": fork_tick, "replicate": k} or meta["seed"] != seed:
+                    raise ValueError(f"{path}: noise_fork or seed differs from the family")
+                files = {}
+                for file in sorted(p.name for p in path.iterdir() if p.is_file() and p.name != "timing.json"):
+                    files[file] = sha256_file(path / file)
+                    if file in meta["arrays"] and files[file] != meta["arrays"][file]["sha256"]:
+                        raise ValueError(f"{path / file}: hash differs from meta.json")
+                members.append({"schedule_id": eid, "replicate": k, "path": f"{name}/{family_dir.name}/{path.name}",
+                                "files": files})
+        families.append({"root_seed": seed, "split": split, "scene": scene, "fork_tick": fork_tick,
+                         "replicates": replicates, "path": f"{name}/{family_dir.name}", "members": members})
+    return {"schema_version": 1, "dataset": f"worldsim-wm families {name}", "families": families,
+            "family_count": len(families), "member_count": sum(len(f["members"]) for f in families)}
+
+
+def run_families(args, log) -> int:
+    seeds = parse_range(args.seeds)
+    splits = family_splits(args.family_splits, seeds)
+    out = args.root / args.name
+    if not args.no_run:
+        for seed in seeds:
+            extra = ["--agents"] if args.agents else []
+            export(["--scene", args.scene, "--seeds", f"{seed}..{seed + 1}", "--days", str(args.days), "--every", str(args.every),
+                    *extra, "--schedule-dir", str(args.schedule_dir), "--include-factual", "--fork-tick", str(args.fork_tick),
+                    "--replicates", str(args.replicates), "--resume", "--workers", str(args.workers),
+                    "--out", str(out / f"{args.scene}_s{seed}")], log)
+    man = families_manifest(args.root, args.name, args.scene, splits, args.fork_tick, args.replicates, args.schedule_dir)
+    (out / "families_manifest.json").write_text(json.dumps(man, indent=1, sort_keys=True) + "\n")
+    print(f"families: {man['family_count']} families, {man['member_count']} members")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=("z6", "v0", "manifest", "v1", "manifest_v1"))
+    parser.add_argument("command", choices=("z6", "v0", "manifest", "v1", "manifest_v1", "families"))
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--splits", default=",".join(SPLITS))
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--no-run", action="store_true")
     parser.add_argument("--docs", type=Path, default=ROOT_DIR / "docs/worldmodel")
     parser.add_argument("--scene", default="game_v13", help="z6 only: the scene (game_v14 records under ROOT/z6_v14)")
+    parser.add_argument("--name", help="families: dataset directory under ROOT")
+    parser.add_argument("--seeds", help="families: root seeds a..b (half-open)")
+    parser.add_argument("--days", type=int, help="families: display days")
+    parser.add_argument("--every", type=int, default=60, help="families: ticks between rows")
+    parser.add_argument("--fork-tick", type=int, help="families: fork tick")
+    parser.add_argument("--replicates", type=int, help="families: members per schedule (R)")
+    parser.add_argument("--schedule-dir", type=Path, help="families: s<seed>_<id>.json schedules")
+    parser.add_argument("--family-splits", help="families: name=a..b,... (per root seed)")
+    parser.add_argument("--agents", action="store_true", help="families: record agents")
     args = parser.parse_args(argv)
     log = sys.stdout
+    if args.command == "families":
+        for name in ("name", "seeds", "days", "fork_tick", "replicates", "schedule_dir", "family_splits"):
+            if getattr(args, name) is None:
+                parser.error(f"families needs --{name.replace('_', '-')}")
+        return run_families(args, log)
     if args.command == "z6":
         z6 = args.root / ("z6" if args.scene == "game_v13" else f"z6_{args.scene.removeprefix('game_')}")
         schedules = z6 / "schedules"
