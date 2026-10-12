@@ -11,3 +11,9 @@ components::Life { born_tick: i64, lifespan_ticks: u64 } holds a resident's birt
 ## Revitalize Pass 5 cold-night substrate
 
 components::Cold is a zero-sized marker for a settlement member spending a winter night inside FirewoodRule's cold window while its settlement's fire is out. FireSystem (priority 147, interval 60) attaches and removes it in AgentId order; HungerDecaySystem grows a marked agent's hunger by growth_rate × cold_hunger_permille / 1000 instead of growth_rate. SocietyRules::firewood controls it; absent rules (legacy, v8, v9, v10) never attach it. The marker does not update itself or draw RNG.
+
+## Revitalize Pass 9 keyed draws and lineage
+
+rng (sim_core::rng) holds the keyed-draw primitive: keyed_u64(seed, stream, subject, tick, slot, replicate) = five chained splitmix64 outputs, a pure function of its key; keyed_unit_f64, below / keyed_below (multiply-shift, one draw) and keyed_step derive from it. Stream constants (STREAM_MOVE_PAUSE, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_LIFESPAN, STREAM_FOUNDER, STREAM_NEWBORN) are listed in STREAMS and must stay distinct. NoiseFork { tick, replicate } names a noise fork (SimResources::noise_fork, sim-engine).
+
+components::Lineage { key: u64, births: u32 } is a resident's identity for keyed draws: founders Lineage::founder(seed, spawn index), newborns first_parent.child(seed) (advances the parent's births). AgentRules::keyed_draws (game_v15) controls attachment; v8–v14 never attach it. It never updates itself; it is never derived from AgentId.

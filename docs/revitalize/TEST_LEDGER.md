@@ -602,3 +602,53 @@ The final Part 4 HUD legend at code HEAD 005ca150e3b5daa75cfe6a21047a6897744f780
 | 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_six_is_exactly_additive` → `schema_seven_is_exactly_additive`: version 6 → 7, key count + 5 | authorized probe schema move; every v6 key keeps its meaning |
 | 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v13` rejection becomes a `game_v13` acceptance; `game_v14` is rejected | flipped as section 6.1 asks; still pins the accepted scene list |
 | 4 | `rust/crates/sim-test/tests/harness_p14_delta_status_panel.rs` private `sha256_hex` helper | Moved to `sim_test::worldmodel::sha256::sha256_hex` (section 9.1); the test imports it; the function body is unchanged | the hash assertion is unchanged; the moved function gains the "abc", empty-string and two-block test vectors |
+
+## Pass 8
+
+| Part | File / test | Change | Preserved intent / merge touch-point |
+|---|---|---|---|
+| 0 | (none) | Part 0 only adds `harness_revitalize_pass8_frozen.rs` (v13 fingerprints for seeds 0–3 and the field-by-field `game_v13()` literal) | — |
+| 1 | `rust/crates/sim-systems/src/runtime/settlement/firewood.rs` test `rule()` FirewoodRule literal | Add the four Pass 8 fields with their v13 values (`None`, `0`, `0`, `false`) | struct-literal field addition with legacy values; existing assertions unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | The same four fields with their v13 values (v12 and v13 are built from v11) | struct-literal field addition; the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass7_frozen.rs` `pass6_v12_literal` | The same four fields | struct-literal field addition; the literal still equals `game_v12()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | The same four fields | struct-literal field addition (Part 0 test); the literal still equals `game_v13()` |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_seven_is_exactly_additive` → `schema_eight_is_exactly_additive`: version 7 → 8, key count + 2 | authorized probe schema move; every schema-7 key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v14` rejection becomes a `game_v14` acceptance; `game_v15` is rejected | flipped as section 4.2 asks; still pins the accepted scene list |
+
+## Pass 9
+
+| Part | Test | Change | Why it is allowed |
+|---|---|---|---|
+| 1 | `rust/crates/sim-core/src/rules.rs` test `legacy_has_no_opt_in_behavior` AgentRules literal | Add `keyed_draws: false` | struct-literal field addition with the legacy value; the assertion still pins `WorldRules::default().agent` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass7_frozen.rs` `pass6_v12_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v12()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | Add `keyed_draws: false` | struct-literal field addition; the literal still equals `game_v13()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass9_frozen.rs` `pass8_v14_literal` | Add `keyed_draws: false` (Part 0 test) | struct-literal field addition; the literal still equals `game_v14()` |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_eight_is_exactly_additive` → `schema_nine_is_exactly_additive`: version 8 → 9, key count unchanged (schema 9's two keys are in the summary's rules block) | authorized probe schema move; every schema-8 row key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/probe/pass8.rs` test `winter_fall_and_rules_block_read_the_rule` | `rules_block` takes the engine's resources (it reports the noise replicate); the legacy block gains `keyed_draws: 0, noise_replicate: 0`; v15 and a forked v15 checked | probe schema 9 move; the firewood assertions are unchanged |
+| 1 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v15` rejection becomes a `game_v15` acceptance; `game_v16` is rejected | flipped as section 4.2 asks, as Passes 6–8 did; still pins the accepted scene list |
+| 1 | `rust/crates/sim-test/src/worldmodel/export.rs` test `schema_two_hides_the_weather_and_lists_observable_fields` | `schema_version` 2 → 3 | authorized recorder schema move; every hidden-field and observable-field assertion is unchanged |
+| 1 | `tools/worldmodel/test_export_determinism.py` `test_v14_runs_and_worker_counts_are_byte_identical` | `schema_version` 2 → 3 | authorized recorder schema move; byte identity across runs and worker counts still asserted |
+| 1 | `tools/worldmodel/test_hidden_columns.py` `test_hidden_columns_equal_the_probe_keys` | `schema_version` 2 → 3 | authorized recorder schema move; the hidden columns still equal the probe keys row by row |
+
+## Pass 10
+
+| Part | Test | Change | Why it is allowed |
+|---|---|---|---|
+| 1 | `rust/crates/sim-core/src/rules.rs` test `legacy_has_no_opt_in_behavior` SocietyRules literal | Add `exposure: None` | struct-literal field addition with the legacy value; the assertion still pins `WorldRules::default().society` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass6_frozen.rs` `pass5_v11_literal` | Add `exposure: None` | struct-literal field addition; the literal still equals `game_v11()` field by field |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass7_frozen.rs` `pass6_v12_literal` | Add `exposure: None` | struct-literal field addition; the literal still equals `game_v12()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass8_frozen.rs` `pass7_v13_literal` | Add `exposure: None` | struct-literal field addition; the literal still equals `game_v13()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass9_frozen.rs` `pass8_v14_literal` | Add `exposure: None` | struct-literal field addition; the literal still equals `game_v14()` |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_pass10_frozen.rs` `pass9_v15_literal` | Add `exposure: None` (Part 0 test) | struct-literal field addition; the literal still equals `game_v15()` |
+| 1 | `rust/crates/sim-bridge/src/ffi/world_node.rs` test `tallies_collector_preserves_all_four_counters` Tallies literal | Add `deaths_exposure: 0` | struct-literal field addition with the legacy value; the four asserted counters are unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_revitalize_tallies.rs` `after_deaths` Tallies literal | Add `deaths_exposure: 0` | struct-literal field addition; the legacy world never has the exposure rule, so the expected tallies are unchanged |
+| 1 | `rust/crates/sim-test/tests/harness_fix_d_memory_arm.rs`, `harness_a15_controlled_determinism.rs`, `harness_resource_scarcity.rs` exhaustive `match` on `DeathReason` | Add `DeathReason::Exposure => {}` | exhaustive `match` arm for the one allowed new variant; legacy worlds have no exposure rule, so nothing new is counted |
+| 1 | `rust/crates/sim-test/src/probe/mod.rs` schema assertion | `schema_nine_is_exactly_additive` → `schema_ten_is_exactly_additive`: version 9 → 10, key count + 3 (`deaths_exposure`, `min_hp`, `injured_members`) | authorized probe schema move; every schema-9 row key keeps its meaning |
+| 1 | `rust/crates/sim-test/src/worldmodel/export.rs` test `schema_two_hides_the_weather_and_lists_observable_fields` | `schema_version` 3 → 4; adds assertions that schema 4 appends `deaths_exposure`, `injured_members` (global 35, 36) and the observable `hp` (agent field 17) and that `world_variety` is null for a v13 world | authorized recorder schema move; every hidden-field and observable-field assertion is unchanged (field 16 `lifespan_days` still pinned hidden by `first_row_is_the_fresh_engine_and_shapes_match_the_fields`) |
+| 1 | `tools/worldmodel/test_export_determinism.py` (`test_v14_runs_and_worker_counts_are_byte_identical`, `test_v15_fork_families_are_byte_identical`) | `schema_version` 3 → 4 | authorized recorder schema move; byte identity across runs and worker counts still asserted |
+| 1 | `tools/worldmodel/test_hidden_columns.py` `test_hidden_columns_equal_the_probe_keys` | `schema_version` 3 → 4 | authorized recorder schema move; the hidden columns still equal the probe keys row by row |
+| 1 | `tools/worldmodel/test_wm_data.py` `SchemaThreeTests` | The freshly recorded episode is schema 4 (`test_schema_three_carries_lineage_keys_as_identity` asserts 4); `test_schema_two_layout_still_loads` first rewrites it to schema 3's layout (drops the two appended global columns, the appended agent `hp`, `world_variety`), then to schema 2's as before; new tests load a schema-3 layout, a real Pass 9 schema-3 episode (when present) and check schema 4's columns | authorized recorder schema move; schemas 1, 2 and 3 are still loaded and asserted |
+| 2 | `rust/crates/sim-test/src/probe/args.rs` scene parse test | The `game_v16` rejection becomes `game_v16_neutral` and `game_v16` acceptances; `game_v17` is rejected | flipped as section 4.2 asks, as Passes 6–9 did; still pins the accepted scene list |
+| 3 | `rust/crates/sim-core/src/rules.rs` SustainRule literals of `game_v9()` / `game_v10()` | Add `capacity_weighted: false` | struct-literal field addition with the legacy value (the constructors themselves, so v9–v15 keep their behaviour; the frozen literal tests confirm it) |
+| 3 | `rust/crates/sim-test/tests/harness_revitalize_pass{6,7,8,9,10}_frozen.rs` SustainRule literals | Add `capacity_weighted: false` | struct-literal field addition; each literal still equals its frozen ruleset |

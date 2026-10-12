@@ -242,6 +242,8 @@ fn per_reason_split(e: &SimEngine) -> (usize, usize, usize) {
                     DeathReason::Combat => combat += 1,
                     // Pass 4: the legacy scarcity scene never ages anyone.
                     DeathReason::OldAge => {}
+                    // Pass 10: legacy worlds have no exposure rule.
+                    DeathReason::Exposure => {}
                 }
             }
         }

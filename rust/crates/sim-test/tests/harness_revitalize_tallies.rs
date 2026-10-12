@@ -74,6 +74,7 @@ mod tests {
             winter_wood_lost: 0,
             wood_retargets: 0,
             interventions_applied: 0,
+            deaths_exposure: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

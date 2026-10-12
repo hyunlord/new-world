@@ -74,10 +74,12 @@ pub(super) fn repair_berry_edges(
     camp: (u32, u32),
 ) {
     use super::camp::{berry_candidates, cluster_centers, distance};
-    for _ in 0..resources.tile_grid.len() {
+    for swaps in 0..resources.tile_grid.len() {
         let candidates = berry_candidates(resources, camp);
         let centers = cluster_centers(cfg, &candidates);
         if candidates.len() >= cfg.berry_bushes as usize && centers.len() == 3 {
+            // Pass 10: counted for measurement only.
+            resources.worldgen_report.berry_repair_swaps = swaps as u32;
             return;
         }
         let grid = &resources.tile_grid;

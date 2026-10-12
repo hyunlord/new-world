@@ -18,8 +18,8 @@ use sim_bridge::ffi::world_node::{
     collect_agent_colds, collect_agent_snapshot, collect_building_snapshot, collect_resource_snapshot,
     collect_terrain_snapshot, collect_time_snapshot,
 };
-use sim_core::components::{Agent, Life, ResourceKind, SettlementId};
-use sim_engine::{Intervention, SimEngine, RESOURCE_SOURCE_INFINITE};
+use sim_core::components::{Agent, BodyHealth, Life, Lineage, ResourceKind, SettlementId};
+use sim_engine::{Intervention, NoiseFork, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::settlement::firewood::{wood_in_hand, wood_target, year_at_tick};
 
 use super::digest::state_digest;
@@ -30,10 +30,12 @@ use super::sha256::sha256_hex;
 use crate::probe::fingerprint;
 
 /// Recorder format version written into `meta.json`.
-pub const SCHEMA_VERSION: u64 = 1;
+pub const SCHEMA_VERSION: u64 = 4;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 6] = ["game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13"];
+pub const SCENES: [&str; 10] = [
+    "game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral", "game_v16",
+];
 
 /// Build a fresh engine of `scene` and `seed`.
 pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
@@ -44,6 +46,10 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v11" => crate::scenes::game_v11_scene(seed),
         "game_v12" => crate::scenes::game_v12_scene(seed),
         "game_v13" => crate::scenes::game_v13_scene(seed),
+        "game_v14" => crate::scenes::game_v14_scene(seed),
+        "game_v15" => crate::scenes::game_v15_scene(seed),
+        "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
+        "game_v16" => crate::scenes::game_v16_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -65,20 +71,27 @@ pub struct EpisodeSpec {
     pub id: String,
     /// Schedule text (verbatim JSON) when the episode has one.
     pub schedule: Option<String>,
+    /// Noise fork of a branch-family member (Pass 9): replicate `k` from tick
+    /// `T` on; `None` for an unforked episode.
+    pub fork: Option<NoiseFork>,
 }
 
 impl EpisodeSpec {
-    /// Directory name `<scene>_s<seed>_<id>`.
+    /// Directory name `<scene>_s<seed>_<id>`, plus `_r<k>` for a fork member.
     pub fn dir_name(&self) -> String {
-        format!("{}_s{}_{}", self.scene, self.seed, self.id)
+        match self.fork {
+            Some(fork) => format!("{}_s{}_{}_r{}", self.scene, self.seed, self.id, fork.replicate),
+            None => format!("{}_s{}_{}", self.scene, self.seed, self.id),
+        }
     }
 }
 
 /// Every value of one row before the tables are assembled.
 struct Row {
-    global: [f32; 33],
+    global: [f32; 37],
     settlements: BTreeMap<SettlementId, [f32; 9]>,
-    agents: BTreeMap<u64, [f32; 17]>,
+    agents: BTreeMap<u64, [f32; 18]>,
+    keys: BTreeMap<u64, u64>,
     resources: BTreeMap<(u8, u32, u32), (f32, f32)>,
     buildings: BTreeMap<u64, (u8, u32, u32)>,
     latent: [f32; 7],
@@ -102,6 +115,7 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
     let alive = num(&sample, "alive");
     let children = num(&sample, "children");
     let elders = num(&sample, "elders");
+    let (night_burn, winter_fall) = crate::probe::pass8::values(engine);
     let global = [
         now as f32,
         time.day_index as f32,
@@ -136,6 +150,10 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
         num(&sample, "fire_blocked_settlements"),
         num(&sample, "cold_snap_nights_left"),
         f32::from(u8::from(r.cold_snap_tonight)),
+        night_burn as f32,
+        winter_fall as f32,
+        num(&sample, "deaths_exposure"),
+        num(&sample, "injured_members"),
     ];
     let mut ids: Vec<SettlementId> = r.settlements.keys().copied().collect();
     ids.sort_unstable();
@@ -160,8 +178,10 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
         ]);
     }
     let mut agent_rows = BTreeMap::new();
+    let mut keys = BTreeMap::new();
     let mut resources = BTreeMap::new();
     if agents {
+        keys = engine.world.query::<(&Agent, &Lineage)>().iter().map(|(_, (a, l))| (a.id, l.key)).collect();
         let member_of: BTreeMap<u64, SettlementId> = {
             let mut map = BTreeMap::new();
             for sid in &ids {
@@ -174,6 +194,8 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
             map
         };
         let lives: BTreeMap<u64, Life> = engine.world.query::<(&Agent, &Life)>().iter().map(|(_, (a, l))| (a.id, *l)).collect();
+        let hps: BTreeMap<u64, f64> =
+            engine.world.query::<(&Agent, &BodyHealth)>().iter().map(|(_, (a, h))| (a.id, h.hp)).collect();
         let tpd = r.ticks_per_day.max(1) as f64;
         let snapshot = collect_agent_snapshot(&engine.world);
         let colds = collect_agent_colds(&engine.world);
@@ -201,6 +223,7 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
                 settlement,
                 life.map_or(f32::NAN, |l| (l.age_ticks(now) as f64 / tpd) as f32),
                 life.map_or(f32::NAN, |l| (l.lifespan_ticks as f64 / tpd) as f32),
+                hps.get(&row.agent_id).map_or(f32::NAN, |hp| *hp as f32),
             ]);
         }
         for row in collect_resource_snapshot(r) {
@@ -227,7 +250,7 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
         r.cold_snap_nights as f32,
         f32::from(u8::from(r.cold_snap_tonight)),
     ];
-    Row { global, settlements, agents: agent_rows, resources, buildings, latent, digest: state_digest(engine) }
+    Row { global, settlements, agents: agent_rows, keys, resources, buildings, latent, digest: state_digest(engine) }
 }
 
 /// Keys in first-seen order over all rows (rows are each sorted by key).
@@ -299,6 +322,9 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         if tick == total {
             break;
         }
+        if let Some(fork) = spec.fork.filter(|fork| fork.tick == tick) {
+            engine.apply_noise_fork(fork.replicate);
+        }
         apply_due(&mut engine, &entries, &mut next);
         engine.tick();
     }
@@ -337,12 +363,17 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         let n = agent_order.len();
         let agent_ids: Vec<i64> = agent_order.iter().map(|id| *id as i64).collect();
         push("agent_ids.npy", npy::i64_file(&[n], &agent_ids), Dtype::I64, vec![n]);
+        // Schema 3: the lineage key of each agent (0 without one), aligned with
+        // agent_ids; an identity field for matching agents across arms.
+        let agent_keys: Vec<u64> =
+            agent_order.iter().map(|id| rows.iter().find_map(|r| r.keys.get(id).copied()).unwrap_or(0)).collect();
+        push("agent_keys.npy", npy::u64_file(&[n], &agent_keys), Dtype::U64, vec![n]);
         let alive: Vec<u8> = rows.iter().flat_map(|r| agent_order.iter().map(|id| u8::from(r.agents.contains_key(id)))).collect();
         push("agent_alive.npy", npy::u8_file(&[t, n], &alive), Dtype::U8, vec![t, n]);
         let mut table = Vec::with_capacity(t * n * AGENT.len());
         for row in &rows {
             for id in &agent_order {
-                table.extend(row.agents.get(id).copied().unwrap_or([f32::NAN; 17]));
+                table.extend(row.agents.get(id).copied().unwrap_or([f32::NAN; 18]));
             }
         }
         push("agents.npy", npy::f32_file(&[t, n, AGENT.len()], &table), Dtype::F32, vec![t, n, AGENT.len()]);
@@ -392,6 +423,8 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
     if spec.agents {
         fields.insert("agents.npy".into(), fields_json(&AGENT, "float32"));
         fields.insert("resources.npy".into(), fields_json(&RESOURCE, "float32"));
+        fields.insert("agent_keys.npy".into(), json!([
+            {"name": "lineage_key", "dtype": "uint64", "unit": "id", "meaning": "lineage key of the agent in agent_ids order (0 without one): an identity field for matching agents across the arms of a fork, not an input", "hidden": true, "identity": true}]));
         fields.insert("resource_keys.npy".into(), json!([
             {"name": "kind", "dtype": "int32", "unit": "index", "meaning": "0 food, 1 water, 2 sleep, 3 deadwood", "hidden": false},
             {"name": "x", "dtype": "int32", "unit": "tiles", "meaning": "tile x", "hidden": false},
@@ -402,8 +435,19 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         {"name": "kind", "dtype": "int64", "unit": "index", "meaning": "BuildingKind::code (0 hearth)", "hidden": false},
         {"name": "x", "dtype": "int64", "unit": "tiles", "meaning": "tile x", "hidden": false},
         {"name": "y", "dtype": "int64", "unit": "tiles", "meaning": "tile y", "hidden": false}]));
+    let observable: serde_json::Map<String, Value> = fields
+        .iter()
+        .map(|(name, list)| {
+            let names: Vec<Value> = list
+                .as_array()
+                .map(|cols| cols.iter().filter(|c| c["hidden"] != Value::Bool(true)).map(|c| c["name"].clone()).collect())
+                .unwrap_or_default();
+            (name.clone(), Value::Array(names))
+        })
+        .collect();
     let meta = json!({
         "schema_version": SCHEMA_VERSION,
+        "observable_fields": observable,
         "scene": spec.scene,
         "seed": spec.seed,
         "episode_id": spec.id,
@@ -414,6 +458,12 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
         "clock_offset_ticks": engine.resources.rules.clock_offset_ticks,
         "git_sha": std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
         "agents_recorded": spec.agents,
+        "keyed_draws": engine.resources.rules.agent.keyed_draws,
+        "noise_fork": spec.fork.map_or(Value::Null, |fork| json!({"tick": fork.tick, "replicate": fork.replicate})),
+        // Schema 4: the world's hidden parameters (game_v16 only), marked
+        // hidden inside the block; never an input of a model of what a player sees.
+        "world_variety": engine.resources.world_variety.map_or(Value::Null, |v| json!({
+            "hidden": true, "values": crate::probe::pass10::variety_json(&v)})),
         "schedule": schedule,
         "arrays": array_meta,
         "fields": fields,
@@ -455,6 +505,7 @@ pub fn episode_matches(dir: &Path, spec: &EpisodeSpec) -> bool {
         && meta["every"].as_u64() == Some(spec.every)
         && meta["agents_recorded"].as_bool() == Some(spec.agents)
         && meta["schedule"] == schedule
+        && meta["noise_fork"] == spec.fork.map_or(Value::Null, |fork| json!({"tick": fork.tick, "replicate": fork.replicate}))
         && sha_ok
 }
 
@@ -509,10 +560,15 @@ pub struct WmArgs {
     pub out: PathBuf,
     /// Keep finished episodes whose hashes verify.
     pub resume: bool,
+    /// Branch families (Pass 9): fork tick T; every seed and schedule gets
+    /// `replicates` episodes sharing the prefix up to T.
+    pub fork_tick: Option<u64>,
+    /// Replicates per branch-family member (with `fork_tick`).
+    pub replicates: u32,
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v12|game_v13|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.
@@ -528,6 +584,8 @@ impl WmArgs {
             workers: 1,
             out: PathBuf::new(),
             resume: false,
+            fork_tick: None,
+            replicates: 0,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -549,6 +607,8 @@ impl WmArgs {
                         "--schedule-dir" => parsed.schedule_dir = Some(value.into()),
                         "--workers" => parsed.workers = value.parse().map_err(|_| "invalid workers")?,
                         "--out" => parsed.out = value.into(),
+                        "--fork-tick" => parsed.fork_tick = Some(value.parse().map_err(|_| "invalid fork tick")?),
+                        "--replicates" => parsed.replicates = value.parse().map_err(|_| "invalid replicates")?,
                         _ => return Err(format!("unknown argument {flag}\n{USAGE}")),
                     }
                 }
@@ -566,6 +626,23 @@ impl WmArgs {
         if parsed.include_factual && parsed.schedule_dir.is_none() {
             return Err("--include-factual needs --schedule-dir".into());
         }
+        match parsed.fork_tick {
+            Some(tick) => {
+                if !(1..=64).contains(&parsed.replicates) {
+                    return Err("--fork-tick needs --replicates 1..=64".into());
+                }
+                if parsed.schedule_dir.is_none() || !parsed.include_factual {
+                    return Err("--fork-tick needs --schedule-dir and --include-factual".into());
+                }
+                // Tick 0 is rejected: founders' lives are drawn at worldgen, before
+                // the recorder could set the fork (review round 1, L3).
+                if tick == 0 || tick >= parsed.days * 1440 {
+                    return Err("--fork-tick must lie inside the run (1..days x 1440)".into());
+                }
+            }
+            None if parsed.replicates != 0 => return Err("--replicates needs --fork-tick".into()),
+            None => {}
+        }
         Ok(parsed)
     }
 
@@ -580,6 +657,7 @@ impl WmArgs {
             agents: self.agents,
             id,
             schedule,
+            fork: None,
         };
         let mut files: Vec<(String, PathBuf)> = Vec::new();
         if let Some(dir) = &self.schedule_dir {
@@ -616,6 +694,18 @@ impl WmArgs {
             } else if found == 0 {
                 return Err(format!("seed {seed} has no schedule file and --include-factual is not set"));
             }
+        }
+        // Pass 9: every episode becomes a branch family of `replicates` members.
+        if let Some(tick) = self.fork_tick {
+            episodes = episodes
+                .into_iter()
+                .flat_map(|spec| {
+                    (0..self.replicates).map(move |replicate| EpisodeSpec {
+                        fork: Some(NoiseFork { tick, replicate }),
+                        ..spec.clone()
+                    })
+                })
+                .collect();
         }
         Ok(episodes)
     }
@@ -662,6 +752,7 @@ mod tests {
             agents,
             id: if schedule.is_some() { "t".into() } else { "none".into() },
             schedule: schedule.map(str::to_string),
+            fork: None,
         }
     }
 
@@ -679,6 +770,56 @@ mod tests {
         assert_eq!(files.meta["rows"], 25);
         assert_eq!(files.meta["fields"]["global.npy"].as_array().expect("fields").len(), GLOBAL.len());
         assert!(files.meta["fields"]["agents.npy"][16]["hidden"].as_bool().expect("bool"));
+    }
+
+    #[test]
+    fn schema_two_hides_the_weather_and_lists_observable_fields() {
+        let files = record(&spec(1, true, None)).expect("record");
+        assert_eq!(files.meta["schema_version"], 4);
+        let hidden = |array: &str, name: &str| {
+            files.meta["fields"][array]
+                .as_array()
+                .expect("fields")
+                .iter()
+                .find(|c| c["name"] == name)
+                .map(|c| c["hidden"].as_bool().expect("bool"))
+                .expect(name)
+        };
+        for name in ["winter_severity", "night_burn_per_hour", "winter_fall_today"] {
+            assert!(hidden("global.npy", name), "{name}");
+        }
+        assert!(hidden("settlements.npy", "wood_target"));
+        assert!(hidden("agents.npy", "lifespan_days"));
+        assert!(LATENT.iter().all(|f| f.hidden));
+        assert!(!hidden("global.npy", "deadwood_total"));
+        let observable = files.meta["observable_fields"].as_object().expect("observable");
+        for (array, fields) in files.meta["fields"].as_object().expect("fields") {
+            let want: Vec<&Value> =
+                fields.as_array().expect("list").iter().filter(|c| c["hidden"] == false).map(|c| &c["name"]).collect();
+            let got: Vec<&Value> = observable[array].as_array().expect("names").iter().collect();
+            assert_eq!(got, want, "{array}");
+        }
+        assert_eq!(observable["latent.npy"], json!([]));
+        assert_eq!(GLOBAL[33].name, "night_burn_per_hour");
+        assert_eq!(GLOBAL[34].name, "winter_fall_today");
+        // Schema 4 appends its columns after every earlier one.
+        assert_eq!(GLOBAL[35].name, "deaths_exposure");
+        assert_eq!(GLOBAL[36].name, "injured_members");
+        assert_eq!(AGENT[17].name, "hp");
+        assert!(!hidden("agents.npy", "hp"));
+        assert_eq!(files.meta["world_variety"], Value::Null);
+    }
+
+    #[test]
+    fn schema_four_records_the_hidden_world_variety_of_game_v16() {
+        let files = record(&EpisodeSpec { scene: "game_v16".into(), ..spec(1, true, None) }).expect("record");
+        let v = sim_core::variety::WorldVariety::draw(3);
+        assert_eq!(files.meta["world_variety"]["hidden"], true);
+        assert_eq!(files.meta["world_variety"]["values"]["starting_agents"], v.starting_agents);
+        assert_eq!(files.meta["world_variety"]["values"]["climate"], v.climate);
+        assert!(files.meta["observable_fields"].get("world_variety").is_none());
+        let neutral = record(&EpisodeSpec { scene: "game_v16_neutral".into(), ..spec(1, false, None) }).expect("record");
+        assert_eq!(neutral.meta["world_variety"], Value::Null);
     }
 
     #[test]
@@ -719,5 +860,10 @@ mod tests {
         assert!(parse("--scene game_v13 --seeds 0..2 --days 10 --workers 9 --out x").is_err());
         assert!(parse("--scene game_v13 --seeds 0..2 --days 10 --include-factual --out x").is_err());
         assert!(parse("--scene game_v13 --seeds 0..2 --days 401 --out x").is_err());
+        let fork = |t: &str| parse(&format!("--scene game_v15 --seeds 0..2 --days 2 --schedule-dir d --include-factual --fork-tick {t} --replicates 2 --out x"));
+        assert!(fork("1440").is_ok());
+        assert!(fork("0").is_err());
+        assert!(fork("2880").is_err());
+        assert!(parse("--scene game_v15 --seeds 0..2 --days 2 --fork-tick 10 --replicates 2 --out x").is_err());
     }
 }

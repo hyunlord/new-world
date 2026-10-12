@@ -10,6 +10,7 @@ use sim_core::rules::AgingRule;
 use sim_engine::{RuntimeSystem, SimResources};
 
 use super::MovementRng;
+use sim_core::rng::{below, keyed_u64, STREAM_LIFESPAN};
 use crate::runtime::survival::despawn_agent;
 
 /// Salt of the per-agent aging stream; distinct from every other stream salt.
@@ -52,6 +53,40 @@ pub fn founder_life(world_seed: u64, agent_id: u64, rule: &AgingRule) -> Life {
 pub fn newborn_life(world_seed: u64, agent_id: u64, tick: u64, rule: &AgingRule) -> Life {
     let mut rng = aging_stream(world_seed, agent_id);
     Life { born_tick: tick as i64, lifespan_ticks: draw_lifespan(&mut rng, rule) }
+}
+
+/// Draw `slot` of a resident's keyed lifespan stream (Pass 9 section 7.1):
+/// `keyed_u64(seed, STREAM_LIFESPAN, lineage key, 0, slot, replicate)`. No tick
+/// in the key, so a birth shifted by a tick keeps its lifespan.
+fn life_draw(world_seed: u64, key: u64, slot: u32, replicate: u32) -> u64 {
+    keyed_u64(world_seed, STREAM_LIFESPAN, key, 0, slot, replicate)
+}
+
+/// Mean of three keyed uniforms in `[mean - spread, mean + spread]` (slots 1–3, multiply-shift).
+fn keyed_lifespan(world_seed: u64, key: u64, replicate: u32, rule: &AgingRule) -> u64 {
+    let span = 2 * rule.lifespan_spread_ticks + 1;
+    let sum: u64 = (1..=3).map(|slot| below(life_draw(world_seed, key, slot, replicate), span)).sum();
+    rule.lifespan_mean_ticks - rule.lifespan_spread_ticks + sum / 3
+}
+
+/// A founder's age and lifespan under keyed draws: slot 0 the age, slots 1–3
+/// the lifespan, slot 4 the top-up (always drawn, used only when the founder
+/// would die too soon, so the draw count never depends on the values).
+pub fn keyed_founder_life(world_seed: u64, key: u64, replicate: u32, rule: &AgingRule) -> Life {
+    let range = rule.founder_age_max_ticks - rule.founder_age_min_ticks + 1;
+    let age = rule.founder_age_min_ticks + below(life_draw(world_seed, key, 0, replicate), range);
+    let top_up = below(life_draw(world_seed, key, 4, replicate), FOUNDER_TOP_UP_TICKS);
+    let mut lifespan = keyed_lifespan(world_seed, key, replicate, rule);
+    if lifespan < age + rule.founder_min_remaining_ticks {
+        lifespan = age + rule.founder_min_remaining_ticks + top_up;
+    }
+    Life { born_tick: -(age as i64), lifespan_ticks: lifespan }
+}
+
+/// A newborn's life under keyed draws, born at simulation tick `tick`
+/// (slots 1–3; `replicate` is the noise replicate in force at the birth).
+pub fn keyed_newborn_life(world_seed: u64, key: u64, tick: u64, replicate: u32, rule: &AgingRule) -> Life {
+    Life { born_tick: tick as i64, lifespan_ticks: keyed_lifespan(world_seed, key, replicate, rule) }
 }
 
 /// Promotes elders and removes residents whose age reached their lifespan.
@@ -114,6 +149,44 @@ mod tests {
             assert!((72_000..=95_040).contains(&life.lifespan_ticks));
             assert_eq!(life, newborn_life(9, id, 100, &RULE));
         }
+    }
+
+    #[test]
+    fn keyed_lifespans_ignore_the_birth_tick_and_stay_in_range() {
+        // Pass 9: no tick in the key, so a birth shifted by a tick keeps its lifespan.
+        for key in 0..300u64 {
+            let a = keyed_newborn_life(9, key, 100, 0, &RULE);
+            let b = keyed_newborn_life(9, key, 101, 0, &RULE);
+            assert_eq!(a.lifespan_ticks, b.lifespan_ticks);
+            assert_eq!((a.born_tick, b.born_tick), (100, 101));
+            assert!((72_000..=95_040).contains(&a.lifespan_ticks));
+        }
+        // The replicate changes the draw; another key does too.
+        let differs = (0..50u64).any(|key| {
+            keyed_newborn_life(9, key, 0, 0, &RULE).lifespan_ticks != keyed_newborn_life(9, key, 0, 1, &RULE).lifespan_ticks
+        });
+        assert!(differs);
+    }
+
+    #[test]
+    fn keyed_founders_keep_the_minimum_remaining_life() {
+        // With these values the top-up is never needed (57,600 + 4,320 < 72,000);
+        // older founders exercise slot 4.
+        let old = AgingRule { founder_age_max_ticks: 90_000, ..RULE };
+        let mut topped = 0;
+        for key in 0..2_000u64 {
+            for rule in [RULE, old] {
+                let life = keyed_founder_life(3, key, 0, &rule);
+                let age = (-life.born_tick) as u64;
+                assert!((rule.founder_age_min_ticks..=rule.founder_age_max_ticks).contains(&age));
+                assert!(life.lifespan_ticks >= age + 4_320);
+                if keyed_lifespan(3, key, 0, &rule) < age + 4_320 {
+                    topped += 1;
+                    assert!(life.lifespan_ticks < age + 4_320 + FOUNDER_TOP_UP_TICKS);
+                }
+            }
+        }
+        assert!(topped > 0, "the top-up slot is exercised");
     }
 
     #[test]

@@ -16,7 +16,7 @@ T4 counterfactual  on C_cf test seeds, each variant's effect on four targets; MA
 
 Baselines: persistence; daily naive (24 h earlier); ridge on lags {1,2,3,6,12,24} of V plus hour, season and
 severity one-hots, predicting the hourly change (lambda from {0.1, 1, 10, 100} on validation); the action-aware
-ridge adds, per intervention kind, the amount applied over the last 24 hours. T3: the rule "wood at 18:00 <
+ridge adds, per intervention kind, the amount requested over the last 24 hours. T3: the rule "wood at 18:00 <
 tonight's burn" and a logistic regression; T4: zero effect and the per-variant mean effect of C_cf val.
 """
 from __future__ import annotations
@@ -52,7 +52,7 @@ class Ep:
     hour: np.ndarray         # [T] int 0..23
     season: np.ndarray       # [T] int -1..3
     severity: np.ndarray     # [T] int -1..2
-    actions: np.ndarray      # [T, 7]: amount applied at the row's tick (after the row), per kind
+    actions: np.ndarray      # [T, 7]: amount requested at the row's tick (applied after the row), per kind
     wood_stock: np.ndarray   # [T]
     members: np.ndarray      # [T]
     cold_hours: np.ndarray   # [T] cumulative cold member-hours
@@ -142,7 +142,7 @@ def features(v: np.ndarray, hour: np.ndarray, season: np.ndarray, severity: np.n
 
 
 def actions_window(actions: np.ndarray) -> np.ndarray:
-    """Per row t: amounts applied at rows t-23 .. t (the 24 hours ending with row t's tick)."""
+    """Per row t: amounts requested at rows t-23 .. t (the 24 hours ending with row t's tick)."""
     c = np.cumsum(np.vstack([np.zeros((1, actions.shape[1])), actions]), axis=0)
     t = np.arange(actions.shape[0])
     return c[t + 1] - c[np.maximum(t - 23, 0)]

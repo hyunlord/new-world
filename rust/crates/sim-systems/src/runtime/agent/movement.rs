@@ -41,6 +41,8 @@
 //! zero new deps, and keeps the migration to a proper `rand_chacha`-backed
 //! source one type-swap away if a later phase needs it.
 
+use sim_core::components::Lineage;
+use sim_core::rng::{keyed_step, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE};
 use std::collections::BTreeMap;
 
 use hecs::World;
@@ -211,7 +213,13 @@ impl RuntimeSystem for AgentMovementSystem {
         let max_y = (h - 1) as i64;
         let mut haul_steps: Vec<AgentId> = Vec::new();
         let mut not_hauling: Vec<AgentId> = Vec::new();
-        for (_, (pos, rng, state, seek, agent, child, inventory, elder)) in world
+        // Pass 9: under keyed draws an idle step is a pure function of (seed,
+        // lineage key, tick, replicate); the sequential stream is not advanced.
+        let keyed = rules.keyed_draws;
+        let seed = resources.world_seed;
+        let tick = resources.current_tick;
+        let replicate = resources.noise_replicate_for(tick);
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -221,6 +229,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&Child>,
                 Option<&Inventory>,
                 Option<&Elder>,
+                Option<&Lineage>,
             )>()
             .iter()
         {
@@ -290,15 +299,32 @@ impl RuntimeSystem for AgentMovementSystem {
                     }
                 }
             }
-            // Idle / no AgentState: Brownian motion (unchanged).
-            if rules.idle_pause_chance > 0.0 {
-                let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
-                if value < rules.idle_pause_chance {
-                    continue;
+            // Idle / no AgentState: Brownian motion. v8–v14 (and any mover
+            // without a lineage key) draw from the agent's sequential stream;
+            // v15 draws each number from its key (section 7.1).
+            let (dx, dy) = match lineage.filter(|_| keyed) {
+                Some(lineage) => {
+                    let key = lineage.key;
+                    if rules.idle_pause_chance > 0.0
+                        && keyed_unit_f64(seed, STREAM_MOVE_PAUSE, key, tick, 0, replicate) < rules.idle_pause_chance
+                    {
+                        continue;
+                    }
+                    (
+                        keyed_step(seed, STREAM_MOVE_DX, key, tick, 0, replicate) as i64,
+                        keyed_step(seed, STREAM_MOVE_DY, key, tick, 0, replicate) as i64,
+                    )
                 }
-            }
-            let dx = rng.next_step() as i64;
-            let dy = rng.next_step() as i64;
+                None => {
+                    if rules.idle_pause_chance > 0.0 {
+                        let value = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
+                        if value < rules.idle_pause_chance {
+                            continue;
+                        }
+                    }
+                    (rng.next_step() as i64, rng.next_step() as i64)
+                }
+            };
             let mut nx = (pos.x as i64 + dx).clamp(0, max_x);
             let mut ny = (pos.y as i64 + dy).clamp(0, max_y);
             if let (Some(radius), Some(anchor)) = (
@@ -381,6 +407,14 @@ mod tests {
         assert_eq!(s.name(), "AgentMovementSystem");
         assert_eq!(s.priority(), 120);
         assert_eq!(s.tick_interval(), 1);
+    }
+
+    #[test]
+    fn keyed_mix_is_one_movement_rng_output() {
+        // Pass 9: `sim_core::rng::mix` is the splitmix64 step this stream uses.
+        for x in [0u64, 1, 42, u64::MAX, 0x9E37_79B9_7F4A_7C15] {
+            assert_eq!(sim_core::rng::mix(x), MovementRng::new(x).next_u64());
+        }
     }
 
     #[test]

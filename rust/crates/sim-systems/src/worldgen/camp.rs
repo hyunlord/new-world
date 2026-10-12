@@ -141,11 +141,23 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 ),
             )
             .expect("newly spawned worldgen resident must exist");
+        // Pass 9: under keyed draws a founder's lineage key is its spawn index,
+        // and its age and lifespan are keyed on it (born before tick 0: the
+        // replicate in force at tick 0).
+        let lineage = engine.resources.rules.agent.keyed_draws.then(|| sim_core::components::Lineage::founder(cfg.seed, i));
+        if let Some(lineage) = lineage {
+            let _ = engine.world.insert_one(entity, lineage);
+        }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {
             let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
             if let Ok(id) = id {
-                let life = crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule);
+                let life = match lineage {
+                    Some(lineage) => crate::runtime::agent::aging::keyed_founder_life(
+                        cfg.seed, lineage.key, engine.resources.noise_replicate_for(0), &rule,
+                    ),
+                    None => crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule),
+                };
                 let _ = engine.world.insert_one(entity, life);
             }
         }
@@ -255,6 +267,10 @@ pub(super) fn deadwood(cfg: &WorldGenConfig, r: &mut SimResources) {
             }
         }
     }
+    // Pass 10: counted for measurement only (fewer than requested when the
+    // radius band runs out of tiles two apart).
+    r.worldgen_report.deadwood_spots_requested = cfg.deadwood_spots;
+    r.worldgen_report.deadwood_spots_placed = chosen.len() as u32;
     for p in chosen {
         r.wood_tiles.insert(p, cfg.deadwood_capacity);
         r.wood_source_max.insert(p, cfg.deadwood_capacity);

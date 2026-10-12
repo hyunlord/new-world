@@ -1,0 +1,7 @@
+Part 2 checks on the working tree committed as revitalize(p10-2) (2026-10-12 KST)
+cargo test --workspace --release -- --test-threads=6 : passed 2049, failed 0, ignored 0
+harness_revitalize_pass10_variety (seeds moved off the pilot ranges): 4 passed
+python3 -m unittest discover -s tools/worldmodel -p test_wm_data.py : 14 OK
+4.6 v15 guard (probe_p2): p10-2_v15_guard_10day / _120day vs p10-0_v15_* : 6,214 / 57,597 shared values, only schema_version 9 -> 10 differs (plus new keys); determinism twins pass
+First game_v16 tuning runs (p10-2_v16_*, start knobs): determinism twins pass; see METRICS.md Pass 10.
+cargo clippy --workspace --all-targets -- -D warnings : clean

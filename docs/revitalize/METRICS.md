@@ -1758,3 +1758,375 @@ Recorder wall time per 120-day episode (dataset v0, `timing.json`, one thread pe
 ### WM-Bench v0 re-run after review round 1 (L4 requested amounts, L5 scored-row denominator) — the published numbers
 
 λ = 100 for both ridges. Mean nMAE over V — T1 (persistence / daily naive / ridge / action ridge): A test 0.158 / 0.237 / 0.100 / 0.101; B test 0.161 / 0.243 / 0.103 / 0.103; OOD_v12 0.159 / 0.251 / 0.106 / 0.107; OOD_long 0.161 / 0.237 / 0.100 / 0.101. T2 24 h (persistence / ridge / action ridge): A test 0.139 / 0.145 / 0.146; B test 0.137 / 0.148 / 0.149; OOD_v12 0.137 / 0.209 / 0.205; OOD_long 0.135 / 0.147 / 0.148. T2 168 h: A test 0.554 / 0.557 / 0.541; B test 0.549 / 0.575 / 0.555; OOD_v12 0.553 / 0.453 / 0.419; OOD_long 0.536 / 0.543 / 0.528. T3, T4 and the sanity checks are identical to the first run (T3 logistic Brier 0.0015, AUC 1.000).
+
+## Pass 8 baseline
+
+Base `ce7acb25` (code head `6df3a7e0`), release probe built from the base and frozen as a copy (`/Users/rexxa/work/p8bin/probe_p0`), `--workers 4`, run 17:57–18:03 KST. Flags exactly those of Pass 7's recorded runs: the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30` and `--check-determinism` for v12 and v13, `--check-determinism` only for legacy.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p8-0_v13_10day` | game_v13 0..64 × 10 | DETERMINISM PASS; all 6,096 shared values equal `p7-5_round2_10day` (0 differences, no one-sided paths) |
+| `p8-0_v13_120day` | game_v13 0..32 × 120 | DETERMINISM PASS; all 56,374 equal `p7-5_round2_120day` |
+| `p8-0_v12_10day` | game_v12 0..64 × 10 | DETERMINISM PASS; all 6,096 equal `p7-7_final_v12_10day` |
+| `p8-0_v12_120day` | game_v12 0..32 × 120 | DETERMINISM PASS; all 56,385 equal `p7-7_final_v12_120day` |
+| `p8-0_legacy` | legacy 0..4 × 10 | DETERMINISM PASS; all 4,746 equal `p7-7_final_legacy` |
+
+Fingerprints of `game_v13_scene(seed)` after 1,440 ticks (seeds 0–3), pinned in `harness_v13_fingerprints_unchanged`: `519530c0aaaae844` (forage 83, wood 20), `24d191164e3c4132` (69, 32), `b44a71909b8615cc` (84, 28), `c16d5b002bea6cc5` (55, 37).
+
+v0 sample rebuilt with the Part 0 recorder (`wm_p0`, `ce7acb25`) into `.harness/evidence/worldmodel/p8-0_sample/` (`--scene game_v13 --seeds 0..2 --days 10 --every 60 --agents`, `WORLDSIM_GIT_SHA=dc6760b0…`), `timing.json` removed: `diff -r` against `docs/worldmodel/sample/` finds no difference (byte-identical).
+
+## Pass 8 Part 1 — v14 skeleton, schema 8, recorder schema 2, the reference runs
+
+Release probe `probe_p1` built from `d6e34ea3` (verified byte-identical to a rebuild of that commit). Tuning runs `p8-1_v12_tuning_{10,120}day` (game_v12 0..64 × 10, 0..32 × 120) and `p8-1_v13_tuning_{10,120}day`, all `--check-determinism` with the eight clocks: DETERMINISM PASS; against Part 0 every shared value is identical (6,096 / 56,385 / 6,096 / 56,374) except `schema_version` (7 → 8); the new paths are the two schema-8 keys (5 statistics × days) and the summary `rules` block. Workspace debug tests 1,995 passed, 0 failed (Pass 7: 1,987); both Clippy variants clean; Python 55 + 21 tests OK.
+
+`p8-1_v12_tuning_targets` and `p8-1_v13_tuning_targets` (`evaluate_pass8.py`; v13 in comparison mode against v12): v12 has no failing seed in any per-seed clause on the tuning seeds. v13: X2 PASS (no failing seed either); X3 FAIL on (a) R² **0.943**, (b) normal winters 36 of 37 with one dark night (mode share 0.973), (e) first dark night on 3 distinct nights (5 / 6 / 7 = 9 / 13 / 36, 0.621 on the seventh); (c) no dark night 0.547, (d) ≥ 2 dark 0.172 and (f) shares 0.547 / 0.289 / 0.164 pass. X4 PASS (re-target share 0.050, normal gathered 45). These are section 3.3's v13 row.
+
+## Pass 8 Part 2 — winters that vary night by night
+
+Code `4ab0778a`; release probe `probe_p2`. Workspace debug tests 2,005 passed, 0 failed (+ the 9 tests of `harness_revitalize_pass8_winter.rs` and the rules unit tests); both Clippy variants clean. **4.5 v13 guard:** `p8-2_v13_guard_10day` / `p8-2_v13_guard_120day` (game_v13 0..64 × 10 and 0..32 × 120, Part 0 flags) — DETERMINISM PASS; every shared value equals Part 0 (only `schema_version` and the new keys differ) and all 57,588 values equal `p8-1_v13_tuning_120day`.
+
+## Pass 8 Part 3 — interventions and the recorder under v14
+
+**Z6 for v14** (`make_dataset.py z6 --scene game_v14`, recorder `wm_p2` = `4ab0778a`, `check_z6.py` → `docs/revitalize/probe/p8-3_z6/`): seeds 0–7 × 7 kinds at tick 31,920 (day 23 12:00), 30 days — **PASS, 56 of 56**: every pair equals the factual `row_digest` at every row ≤ 31,920 and differs from tick 31,980; **windfall applied 10 in all 8 seeds** (Pass 7: 2 of 8), because it now lands on the snow. Recording took 41 s (64 episodes, four workers).
+
+Recorder checks (Part 2 binaries): `test_hidden_columns.py` (game_v14 seeds 0–1 × 30 days, recorder `--every 60`, probe `--sample-every 60`): `night_burn_per_hour`, `winter_fall_today` and the summed `wood_target` equal the probe keys at every common tick; `winter_severity` differs only on 07:00 rows of a season's first day (the documented completed-tick vs system-tick booking). `test_export_determinism.py` gains a game_v14 case (30 days, with agents and with a schedule): two runs at four workers and one at one worker are byte-identical; schema 2. Part 3 changes no Rust: the Part 3 probe and recorder are the Part 2 binaries, so the 4.5 guard of Part 2 stands for Part 3.
+
+### Part 1 held-out references (seeds 64–127 × 10, 32–95 × 120)
+
+`p8-1_v12_heldout_{10,120}day`, `p8-1_v13_heldout_{10,120}day` (`probe_p1`, the eight clocks, `--check-determinism`): all four DETERMINISM PASS. Evaluations `p8-1_v12_heldout_targets` (absolute) and `p8-1_v13_heldout_targets` (comparison mode against v12 held-out). Section 3.2 reproduces exactly:
+
+| held-out | v12 | v13 |
+|---|---|---|
+| Y3 replacement failing seeds | 1 (80: −4) | 2 (68: −4, 80: −4) |
+| Y10 evening near hearth failing seeds | 2 (55: 0.267, 75: 0.344) | 2 (55: 0.281, 76: 0.344) |
+| Y3 longest stagnation (max) | 4 | 2 |
+| no-dark-night share | 0.023 | 0.594 |
+| severity-only R² | — (no severity) | 0.943 (tuning 0.943) |
+| normal winters 0 / 1 / 2 / 3 dark | — | 0 / 62 / 3 / 0 |
+| first dark night 5 / 6 / 7 | 0 / 8 / 242 | 20 / 22 / 62 |
+
+Every other per-seed clause has no failing seed for either ruleset on the held-out seeds. v13 in comparison mode passes X2 (2 ≤ 1 + 1 and 2 ≤ 2 + 1).
+
+## Pass 8 Part 4 — tuning game_v14 on the tuning seeds
+
+Round 1 = section 7.1's start values (variant C of 3.3: severity weights 350/400/250, burns 2/3/4, falls 8/6/4; night weights 250/500/250, step 2; fall spread 2; windfall over snow). Runs `p8-4_round1_10day` (game_v14 0..64 × 10) and `p8-4_round1_120day` (0..32 × 120), probe `probe_p2` (`4ab0778a`), both `--check-determinism` with the eight clocks: DETERMINISM PASS. Evaluation `p8-4_round1_targets` (`evaluate_pass8.py --compare-to p8-1_v12_tuning_targets`). No screens were run.
+
+| Round | Weights | Night (−/0/+) × step | Fall spread | Burns / falls | X2 | X3 | X4 | X5 | R² | No dark | ≥ 2 dark | First dark 4/5/6/7 (7th share) | Shares m/n/h |
+|---|---|---|---|---|---|---|---|---|---:|---:|---:|---|---|
+| **round 1** | 350/400/250 | 250/500/250 × 2 | 2 | 2/3/4, 8/6/4 | PASS | PASS | PASS | PASS | **0.530** | 0.484 | 0.281 | 5 / 18 / 15 / 28 (0.424) | 0.406 / 0.391 / 0.203 |
+
+Round 1 per target (median / min / max where useful):
+- **X2** (comparison mode against v12's tuning evaluation, which has no failing seed): no failing seed in any per-seed clause — Y3 stagnation max 3, replacement min −3 (seed 22 now −3, passing), alive band, birth by day 4 (7 in every seed), alive at day 10 (42), old age by day 30 (min 5); Y7 winter lit every seed ≥ 0.607; Y8 winter cold every seed ≤ 0.383; Y10 evening near hearth every seed ≥ 0.379; Y11 home distance ≤ 11.3, social > 0; Y12 0. Y2: zero starvation and dehydration deaths in every seed (10 and 120 days). Child share median 0.107, elder share 0.262.
+- **X3**: (a) R² 0.530; (b) normal winters 0/1/2/3/4 dark = 17/20/9/3/1 (mode share 0.40), harsh 1/4/4/13/4 (0.50); (c) 0.484; (d) 0.281; (e) first dark night on 4 distinct nights, 0.424 on the seventh; (f) shares within 0.06 of the weights.
+- **X4**: re-target share median 0.055; normal-severity winter wood gathered 48 (floor 40.5).
+- **X5**: Y4 store share 0.99 (every seed ≥ 0.924, winter 1.0); Y5 autumn wood 50/day vs summer 0, autumn noon work 0.614; Y6 trip days 5, trips 48; Y7 winter lit 0.857, other lit 1.0; Y8 winter cold 0.139, winter food 237.5; Y10 night in shelter 1.0, evening near hearth 0.648; Y11 home distance 7.62, social 0.63 / 0.82, t6a 0.001 / 0.009.
+- Y9 (reported only): noon work 0.308, noon idle 0.667, 15:00 work 0.416.
+- By severity: mild (52) dark 0/1/2 = 44/6/2, night burn 2.29 (the floor of 1 lifts mild's −2 nights), fall 8.14, food at winter's end 246 (min 184); normal (50) 17/20/9/3/1, food 232.5 (min 41); harsh (26) 1/4/4/13/4, food 228.5 (min 48).
+
+Tuning stops at round 1 (1 of 3 rounds): every tunable target passes; `game_v14()` keeps the start values.
+
+## Pass 8 Part 5 — the held-out look (once)
+
+`p8-5_heldout_v14_10day` (game_v14 64..128 × 10) and `p8-5_heldout_v14_120day` (32..96 × 120), `probe_p2` (`4ab0778a`, `game_v14()` = round 1), `--check-determinism`, the eight clocks, run 18:44–18:52 KST: both DETERMINISM PASS. Evaluation `p8-5_heldout_v14_targets` in comparison mode against `p8-1_v12_heldout_targets`. **X2, X3, X4 and X5 pass on the held-out seeds**; no corrective round (10.3) is needed, so the fresh seeds are not used. X1's determinism clauses pass (64/64 and 64/64; see DECISIONS for the evaluator fix of the 120-day seed count); its repro receipts, X6, X7 and X8 are Part 7's.
+
+### X targets, tuning and held-out, v12 / v13 / v14
+
+v12 is evaluated in absolute mode (it is the reference; its held-out X2 'FAIL' is its own failing seeds), v13 and v14 in comparison mode against v12 on the same seeds. v12 has no severity, so its X3 values describe the Pass 6 calendar.
+
+| Measure | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| X2 verdict | PASS | PASS | PASS | FAIL | PASS | PASS |
+| X3 verdict | FAIL | FAIL | PASS | FAIL | FAIL | PASS |
+| X3a severity-only R² | — (no severity) | 0.943 | 0.530 | — (no severity) | 0.943 | 0.602 |
+| X3b normal mode share | — | 0.973 | 0.400 | — | 0.954 | 0.444 |
+| X3b harsh mode share | — | 0.571 | 0.500 | — | 0.513 | 0.543 |
+| X3c no-dark-night share | 0.031 | 0.547 | 0.484 | 0.023 | 0.594 | 0.574 |
+| X3d ≥ 2 dark share | 0.039 | 0.172 | 0.281 | 0.031 | 0.164 | 0.281 |
+| X3e first dark night distinct / 7th share | 2 / 0.960 | 3 / 0.621 | 4 / 0.424 | 2 / 0.968 | 3 / 0.596 | 4 / 0.339 |
+| X3f shares m/n/h | 0.000/0.000/0.000 | 0.547/0.289/0.164 | 0.406/0.391/0.203 | 0.000/0.000/0.000 | 0.594/0.254/0.152 | 0.398/0.422/0.180 |
+| X4 verdict | FAIL | PASS | PASS | FAIL | PASS | PASS |
+| X4 re-target share median | 0.514 | 0.050 | 0.055 | 0.516 | 0.051 | 0.051 |
+| X4 normal gathered median | 0.0 | 45.0 | 48.0 | 0.0 | 45.0 | 48.0 |
+| X5 verdict | PASS | PASS | PASS | PASS | PASS | PASS |
+| Y7 winter lit median | 0.857 | 0.893 | 0.857 | 0.857 | 0.929 | 0.893 |
+| Y8 winter cold median | 0.152 | 0.103 | 0.139 | 0.143 | 0.089 | 0.125 |
+| Y8 winter food median | 246.5 | 242.5 | 237.5 | 242.5 | 238.0 | 234.5 |
+| Y6 trips median | 96 | 46 | 48 | 96 | 46 | 48 |
+| Y2 starvation+dehydration (120 d max) | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Per-seed clauses — failing seeds (value); every clause not listed has no failing seed in any column:
+
+| Clause | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| Y10_evening_near_hearth_every_seed | none | none | none | 55 (0.267), 75 (0.344) | 55 (0.281), 76 (0.344) | 55 (0.281), 79 (0.344) |
+| Y3_replacement | none | none | none | 80 (-4.0) | 68 (-4.0), 80 (-4.0) | 80 (-4.0) |
+
+Distributions (median / p10 / p90 / min / max) of the per-seed values:
+
+| Clause | tuning v12 | tuning v13 | tuning v14 | held-out v12 | held-out v13 | held-out v14 |
+|---|---|---|---|---|---|---|
+| Y3_stagnation | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 3 | 0 / 0 / 0 / 0 / 4 | 0 / 0 / 0 / 0 / 2 | 0 / 0 / 0 / 0 / 4 |
+| Y3_replacement | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -3 / 1 | 0 / -1 / 0 / -4 / 1 | 0 / -1 / 0 / -4 / 1 | 0 / -1 / 0 / -4 / 1 |
+| Y7_winter_lit_every_seed | 0.857 / 0.821 / 0.889 / 0.821 / 0.893 | 0.893 / 0.825 / 0.964 / 0.714 / 1 | 0.857 / 0.786 / 0.929 / 0.607 / 0.964 | 0.857 / 0.821 / 0.857 / 0.821 / 0.929 | 0.929 / 0.821 / 0.964 / 0.75 / 1 | 0.893 / 0.75 / 0.964 / 0.571 / 1 |
+| Y8_winter_cold_every_seed | 0.152 / 0.116 / 0.178 / 0.0982 / 0.196 | 0.103 / 0.0358 / 0.187 / 0 / 0.301 | 0.139 / 0.0813 / 0.221 / 0.0268 / 0.383 | 0.143 / 0.125 / 0.185 / 0.0894 / 0.188 | 0.0891 / 0.0268 / 0.197 / 0 / 0.241 | 0.125 / 0.0268 / 0.263 / 0 / 0.438 |
+| Y10_evening_near_hearth_every_seed | 0.64 / 0.433 / 0.807 / 0.368 / 0.864 | 0.643 / 0.416 / 0.791 / 0.353 / 0.852 | 0.648 / 0.421 / 0.793 / 0.379 / 0.885 | 0.655 / 0.387 / 0.825 / 0.267 / 0.926 | 0.662 / 0.384 / 0.826 / 0.281 / 0.944 | 0.658 / 0.38 / 0.827 / 0.281 / 0.931 |
+| Y11_home_distance_every_seed | 7.68 / 5.91 / 8.8 / 4.79 / 11.3 | 7.62 / 5.82 / 9.07 / 4.79 / 11.3 | 7.62 / 5.82 / 9.07 / 4.79 / 11.3 | 6.85 / 5.45 / 8.5 / 3.93 / 10.1 | 6.92 / 5.41 / 8.53 / 4.05 / 10.1 | 6.92 / 5.41 / 8.53 / 4.05 / 10.1 |
+
+### Dark nights by severity (seed-winters: tuning 128, held-out 256)
+
+| Set | Ruleset | mild: dark 0/1/2/3/4 | normal | harsh | first dark night 4/5/6/7 | night burn by severity (median) | fall by severity (median) |
+|---|---|---|---|---|---|---|---|
+| tuning | v13 | 70/0/0/0/0 | 0/36/1/0/0 | 0/0/12/9/0 | 0/9/13/36 | 2.00/3.00/4.00 | 8.00/6.00/4.00 |
+| tuning | v14 | 44/6/2/0/0 | 17/20/9/3/1 | 1/4/4/13/4 | 5/18/15/28 | 2.29/3.00/4.29 | 8.14/6.00/4.21 |
+| held-out | v13 | 152/0/0/0/0 | 0/62/3/0/0 | 0/0/19/20/0 | 0/20/22/62 | 2.00/3.00/4.00 | 8.00/6.00/4.00 |
+| held-out | v14 | 98/3/1/0/0 | 48/31/19/10/0 | 1/3/11/25/6 | 6/36/30/37 | 2.14/3.00/4.00 | 8.14/6.00/4.00 |
+
+Held-out v14 against tuning v14: R² 0.602 (tuning 0.530), no dark night 0.574 (0.484), ≥ 2 dark 0.281 (0.281), first dark night on 4 nights with 0.339 on the seventh (0.424); severity shares 0.398 / 0.422 / 0.180 against weights 0.35 / 0.40 / 0.25 (within 0.07). Per-seed clauses: v14 fails Y3 replacement in seed 80 (−4; v12 the same seed, v13 seeds 68 and 80) and Y10 evening near hearth in seeds 55 (0.281) and 79 (0.344) (v12: 55 and 75; v13: 55 and 76) — counts 1 ≤ 1 + 1 and 2 ≤ 2 + 1, so X2 passes in comparison mode. No starvation or dehydration death in any seed. Seed 80's replacement margin is −4 under all three rulesets: a weak village independent of the winter rule, as the planner found.
+
+## Pass 8 Part 6 — dataset v1 and WM-Bench v1
+
+Dataset v1 (`docs/worldmodel/DATASET_v1.md`, `docs/worldmodel/dataset_v1_manifest.json`): 432 episodes, 1,383.8 MiB, recorded 18:55–19:08 KST from `4ab0778a` with `wm_p2` — A_obs 128 (44 with agents), B_act 64, C_cf 192 (32 seeds × factual + 5 variants), OOD_v13 32, OOD_long 16; recorder schema 2 throughout. B_act: 512 interventions, 35 windfalls applied 0 (outside winter, spots full); C_cf windfall applied 20 in 32 of 32 seeds. Copied to the DGX and all 5,012 hashes verified there (`sha256sum -c`), 19:10.
+
+WM-Bench v1 (`docs/worldmodel/BENCH_v1.md`, `bench_v1.json`; `bench_v1.py`, 7 s): λ — ridge 100, action ridge 100, severity-oracle ridge 100 (see the json). Mean nMAE over V, best non-oracle baseline:
+
+| Task | A test | B test | OOD_v13 | OOD_long |
+|---|---:|---:|---:|---:|
+| T1 next hour (ridge / action ridge) | 0.101 | 0.107 | 0.102 | 0.101 |
+| T1 persistence | 0.157 | 0.161 | 0.157 | 0.161 |
+| T2 24 h, every-hour starts | 0.188 | 0.196 | 0.196 | 0.191 |
+| T2 24 h, 06:00 starts (v0 protocol) | 0.134 | 0.167 | 0.136 | 0.133 |
+| T2 168 h, every-hour starts | 0.267 | 0.265 | 0.264 | 0.271 |
+| T2 168 h, 06:00 starts | 0.278 | 0.297 | 0.264 | 0.277 |
+
+T3 (448 A-test winter evenings, 64 dark): observable logistic Brier 0.020 / AUC 0.993 / accuracy 0.975; references: severity rule 0.036 / 0.979 / 0.964, severity logistic 0.021 / 0.995 / 0.973. **T3b** (64 A-test winters, 384 train): train mean MAE 0.995 / exact 0.203; ridge **0.600 / 0.516**; severity oracle (reference) 0.609 / 0.547. T4 (24 C_cf test seeds, ranked targets, best baseline MAE): gift_wood dark 0.521, cold 167.2, food 11.5; rot_wood 0.531, 147.8, 10.3; rain 0.708, 214.1, 9.75; cold_snap 0.292, 116.8, 5.48; windfall 0.375, 69.3, 5.60 (nMAE in BENCH_v1.md). T5 (8 test agent episodes, 940,878 agent-hours): persistence state tag 0.744, target kind 0.718, Chebyshev 2.47, hunger/thirst/fatigue nMAE 0.445 / 0.595 / 0.255; 24 hours earlier 0.757, 0.738, 4.75, 1.219 / 0.688 / 0.172. Sanity checks all hold: ridge beats persistence on T1 food and wood in all four test splits; the T3b ridge beats the train mean; every C_cf variant changes a ranked target in ≥ 25 % of test seeds; the severity oracle's T3b MAE is 0.609 (not 0).
+
+### WM-Bench v1 re-run after review round 1 (M1, L1) — the published numbers
+
+`bench_v1.py` re-run after the fixes (T1, T3, T3b, T4 and the sanity checks unchanged): the T2 severity oracle now reads each rollout row's true severity — 168 h A test 0.275 (first run, start row's severity held: 0.691, worse than persistence 0.639); ridge 0.271 and action ridge 0.267 unchanged. T5 scores both baselines on one pair set (alive at t+1, t and t−23; 924,554 agent-hours): persistence state tag 0.741, target kind 0.714, Chebyshev 2.49, hunger/thirst/fatigue nMAE 0.450 / 0.607 / 0.256; 24 hours earlier 0.757, 0.738, 4.75, 1.223 / 0.696 / 0.172. The first-run T5 line above is superseded.
+
+## Pass 8 Part 7 — final verification
+
+### Reproduction of the frozen versions (probe `probe_p2`, code `4ab0778a` = the Rust of every later head)
+
+Run 19:11–19:31 KST with Pass 7's exact flags (`final_probes.sh`). All twelve DETERMINISM PASS; every shared value equals Pass 7's final summary except `schema_version` (7 → 8); the one-sided paths are the schema-8 keys and the `rules` block.
+
+| Label | Command | Comparison |
+|---|---|---|
+| `p8-7_final_legacy` | legacy 0..4 × 10 | all 4,746 shared values equal `p7-7_final_legacy` except `schema_version` |
+| `p8-7_final_v8` | game 0..64 × 10 | all 6,131 equal `p7-7_final_v8` except `schema_version` |
+| `p8-7_final_v9_10day` | game_v9 0..64 × 10, clocks 02:00,12:00,19:30 | all 6,096 equal `p7-7_final_v9_10day` except `schema_version` |
+| `p8-7_final_v9_120day` | game_v9 0..32 × 120, same clocks | all 55,968 equal except `schema_version` |
+| `p8-7_final_v10_10day` | game_v10 0..64 × 10 | all 6,096 equal except `schema_version` |
+| `p8-7_final_v10_120day` | game_v10 0..32 × 120, clocks 02:00,12:00,19:30 | all 56,455 equal except `schema_version` |
+| `p8-7_final_v11_10day` | game_v11 0..64 × 10, the eight clocks | all 6,096 equal except `schema_version` |
+| `p8-7_final_v11_120day` | game_v11 0..32 × 120, same clocks | all 56,373 equal except `schema_version` |
+| `p8-7_final_v12_10day` | game_v12 0..64 × 10, the eight clocks | all 6,096 equal except `schema_version` |
+| `p8-7_final_v12_120day` | game_v12 0..32 × 120, same clocks | all 56,385 equal except `schema_version` |
+| `p8-7_final_v13_10day` | game_v13 0..64 × 10, the eight clocks | all 6,096 equal `p7-5_round2_10day` except `schema_version` |
+| `p8-7_final_v13_120day` | game_v13 0..32 × 120, same clocks | all 56,374 equal `p7-5_round2_120day` except `schema_version` |
+
+The final `game_v14` runs are Part 4's tuning runs (`p8-4_round1_*`) and Part 5's held-out runs (`p8-5_heldout_v14_*`), both from `probe_p2` with the eight clocks and the death census, `--check-determinism`: no Rust changed after them, so they are the final v14 probes. **X6 again** (`make_dataset.py z6 --scene game_v14` into a scratch root, `check_z6.py` → `docs/revitalize/probe/p8-7_z6/`): PASS 56 of 56, windfall applied in 8 of 8, every `.npy` byte-identical to Part 3's Z6 episodes.
+
+### X8 — timing (back to back, recorder off)
+
+Run 19:33:10–19:41:47 KST with `probe_p2`, in this order: `p8-7_timing_v13_10day`, `p8-7_timing_v14_10day`, `p8-7_timing_v13_120day`, `p8-7_timing_v14_120day` (all `--check-determinism`, the eight clocks, `--workers 4`; all DETERMINISM PASS). No Godot, cargo, probe, recorder or Python job of this or another WorldSim run was active (`pgrep`); a 15-second CPU monitor saw other users' processes: a `clawdbot` process at 83–110 % (one core) in 4 samples, a "Sow and Siege" app, `node`, `osascript` and Chrome at a median of 29 % (max 227 %) in 63 samples. Median ms per agent-tick: v13 0.0010639 → v14 0.0010696 (10 days, **1.005×**), v13 0.0013615 → v14 0.0013542 (120 days, **0.995×**); limit 1.2×. **X8 PASS.**
+
+## Pass 9 — keyed randomness, lineage keys, noise forks (`game_v15`)
+
+All probe runs use Pass 8's flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy and v8–v10 with their own Pass 8 flags). Binaries frozen in `/Users/rexxa/work/p9bin/`: `probe_p0` (`4c35e295`, byte-identical to Pass 8's `probe_p2`), `probe_p2` / `wm_p2` (`874dbf54`, the Part 2 Rust; every later Rust change is a test or the recorder's fork-tick validation), `wm_p6` (`ba278357`).
+
+### Part 0 — baseline reproduction (`probe_p0`)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p9-0_v14_10day` | `p8-4_round1_10day` | 6,212 | 0 |
+| `p9-0_v14_120day` | `p8-4_round1_120day` | 57,589 | 0 |
+| `p9-0_v13_10day` | `p8-7_final_v13_10day` | 6,210 | 0 |
+| `p9-0_v13_120day` | `p8-7_final_v13_120day` | 57,588 | 0 |
+| `p9-0_legacy` | `p8-7_final_legacy` | 4,847 | 0 |
+
+### Part 2 — v14 guard (4.5, `probe_p2`)
+
+`p9-2_v14_guard_10day` / `_120day` vs Part 0: 6,212 / 57,589 shared values, the only difference `schema_version` 8 → 9 (plus the two new rules keys).
+
+### Part 3 — fork experiment (`wm_p2`; re-recorded with `wm_p6` in Part 6, see below)
+
+`game_v15`, seeds 12000–12031, 35 days, `--every 60`, `--agents`, R = 8 replicates forked at tick 28,800; 2,520 recorded episodes (1,792 family members, 448 placebo members, 280 unforked runs), 31 min, 8.8 GiB. Full tables: `docs/revitalize/probe/p9-3_forks/fork_metrics.md`.
+
+G0a: placebos 448 / 448 identical, replicate 0 = unforked run 224 / 224. **PASS**.
+
+G0b (VRF = V_unpaired / V_paired, 95 % cluster bootstrap over seeds):
+
+| variant | dark nights VRF [95 %] | cold member-hours VRF [95 %] | food store VRF (reported) | mean effect: dark nights / cold hours / food |
+|---|---|---|---|---|
+| gift_wood 60 | 1.00 [1.00, 1.00] | 1.54 [0.94, 3.07] | 5.89 | −0.82 / −282 / +13.2 |
+| rot_wood 60 | 1.19 [1.00, 1.70] | 1.81 [1.16, 2.38] | 3.55 | +1.35 / +434 / −19.3 |
+| rain 13 h | 1.00 [1.00, 1.00] | 1.69 [1.09, 3.51] | 16.5 | +0.23 / +65 / −2.0 |
+| cold_snap 2 | 1.00 [1.00, 1.00] | 1.63 [1.14, 2.36] | 24.9 | +0.48 / +155 / −6.9 |
+| windfall 20 | 1.00 [1.00, 1.00] | 2.17 [1.40, 3.36] | 3.86 | −0.31 / −125 / +6.9 |
+| gift_food 1 | ∞ | 23.3 [11.6, ∞] | 5.65 | 0 / +0.33 / +0.34 |
+
+Seeds whose 8 factual replicates are not all equal: dark nights 3 / 32, cold member-hours 12 / 32, food store 32 / 32; deaths and births at day 29 06:00 never differ (0 / 32). G0b: **FAIL** (dark nights of every variant; cold hours of gift_wood).
+
+Divergence (replicate 0, medians over seeds): first differing agent position 60 (windfall) to 2,550 (cold_snap) ticks after the intervention, 4,440 for the one-unit gift; rain changes the fire after 60 ticks; deaths never differ within 35 days. Newborn key matches across arms (Y6): 98.4–100 %.
+
+v14 single forks (8.3): mean over seeds |Δ_v14 − mean_k Δ_v15| 0.25–0.43 dark nights, 58–100 cold member-hours, 3.8–7.2 food, against v15's median within-seed spread 0 / 0–15 / 0.7–3.3.
+
+### Part 4 — v15 health and shape (`probe_p2`)
+
+| set | X2 | X3 | X4 | X5 | R² (v14 → v15) | v14→v15 intervals excluding 0 |
+|---|---|---|---|---|---|---|
+| tuning 0–63 × 10, 0–31 × 120 | PASS | PASS | PASS | PASS | 0.530 → 0.594 | 0 of 29 |
+| held-out 64–127 × 10, 32–95 × 120 | PASS | PASS | PASS | PASS | 0.602 → 0.564 | 0 of 29 |
+
+(29 = 10 X3 statistics + 19 median clauses; two of the median clauses read the pooled summary and have no per-seed interval.) Comparison mode against `p8-1_v12_tuning_targets` / `p8-1_v12_heldout_targets`. Determinism twins pass in all four runs.
+
+Iteration-order ablations (tuning, day-10 / day-120 median forage trips): v14 905 / 4,773; v14 + AgentId order 878.5 / 4,685; v15 keyed in hecs order 910.5 / 4,744.5; v15 888 / 4,556.5. Their only interval excluding 0 is R² (+0.073, +0.065).
+
+Y8 timing (back to back, 12:11–12:21 KST): ms per agent-tick v14 0.0011744 / v15 0.0011563 (10 days, 0.985×), v14 0.0014555 / v15 0.0015884 (120 days, 1.091×).
+
+### Part 6 — final reproduction (`probe_p2`)
+
+Legacy, v8, v9–v13 (10 and 120 days) and v14 (10 and 120 days) reproduce Pass 8's final summaries (`p8-7_final_*`, `p8-4_round1_*`) on every shared value; the only differences are `schema_version` 8 → 9 and the two new rules keys. All 14 determinism twins pass.
+
+Fork experiment re-recorded with the final recorder (`wm_p6`, `ba278357`, 12:58–13:27): 42,840 files byte-identical to the Part 3 recording (`meta.json` up to the `git_sha` label); `fork_metrics` unchanged apart from the new "(N quiet)" annotations.
+
+### Part 6 — final gate
+
+`gate_pass9.sh` on `8d3ad643` (13:27–13:46 KST): every step exit 0; cargo test debug 2,029 / release 2,029 passed, 0 failed (Pass 8: 2,005 each); clippy both; forbidden math 0; strict check; bridge build; smoke without errors; Python 77 (`tools/revitalize`) + 37 (`tools/worldmodel`).
+
+## Pass 10 — exposure mortality, hidden world variety, measured seed diversity (`game_v16_neutral`, `game_v16`)
+
+All probe runs use Pass 9's flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries frozen in `/Users/rexxa/work/p10bin/`.
+
+### Part 0 — baseline reproduction (`probe_p0`, = Pass 9's `probe_p6`)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p10-0_v15_10day` | `p9-2_v15_10day` | 6,214 | 0 |
+| `p10-0_v15_120day` | `p9-2_v15_120day` | 57,597 | 0 |
+| `p10-0_v15_heldout_10day` | `p9-4_v15_heldout_10day` | 6,214 | 0 |
+| `p10-0_v15_heldout_120day` | `p9-4_v15_heldout_120day` | 58,731 | 0 |
+| `p10-0_v14_10day` | `p9-6_final_v14_10day` | 6,214 | 0 |
+| `p10-0_v14_120day` | `p9-6_final_v14_120day` | 57,591 | 0 |
+| `p10-0_v13_10day` | `p9-6_final_v13_10day` | 6,212 | 0 |
+| `p10-0_v13_120day` | `p9-6_final_v13_120day` | 57,590 | 0 |
+| `p10-0_legacy` | `p9-6_final_legacy` | 4,849 | 0 |
+
+### Part 1 and 2 — 4.6 guards and first looks
+
+`p10-1_v15_guard_*` (`probe_p1`) and `p10-2_v15_guard_*` (`probe_p2`) equal `p10-0_v15_*` on every shared value (6,214 / 57,597); only `schema_version` 9 → 10 differs. First looks at the start knobs (exposure [9, 6, 9] / 2 h; 7.1's ranges): `game_v16_neutral` (`p10-1_v16n_*`) passes H2, H4, H5 and fails H3's maximum (seed-winter deaths bimodal: 0 or 7–21, max share 0.51); `game_v16` (`p10-2_v16_*`) fails H2 in seed 24 and H3's maximum (0.69), passes H4, H5, H6.
+
+### Part 3 — tuning (tuning seeds 0–63 × 10, 0–31 × 120; v15 reference = the guard run of the same binary)
+
+Exploration (not a judged round): 13 scratch configurations on seeds 5000–5031 × 120 days (seeds of no judged or pilot set), run by a probe built from a copy of the tree outside the clone that reads the knobs from environment variables (never committed). 11 ran before round 1 and 2 before round 2; the judged rounds below use the committed code on the tuning seeds only.
+
+| Run | Time | Scene | Exposure (child, adult, elder / block h) | Utilization | Supply weighting | Seed-winters with a death | Max share of members | Starvation + dehydration (max per seed, seeds) |
+|---|---|---|---|---|---|---:|---:|---|
+| A | 16:35 | v16 | 5,4,6 / 2 | – | – | 0.008 | 0.350 | 11 (1 seeds) |
+| B | 16:36 | v16 | 6,4,7 / 2 | – | – | 0.039 | 0.525 | 7 (1 seeds) |
+| C | 16:39 | v16 | 5,3,5 / 1 | – | – | 0.008 | 0.125 | 9 (1 seeds) |
+| D | 16:40 | v16 | 7,5,8 / 2 | – | – | 0.156 | 0.550 | 9 (1 seeds) |
+| E | 16:42 | v16 | 10,4,5 / 2 | – | – | 0.258 | 0.200 | 8 (1 seeds) |
+| F | 16:42 | v16 | 12,4,5 / 2 | – | – | 0.305 | 0.200 | 8 (1 seeds) |
+| G | 16:42 | v16 | 9,4,6 / 1 | – | – | 0.250 | 0.350 | 7 (1 seeds) |
+| H | 16:42 | v16 | 10,4,5 / 2 | 0.78 | – | 0.266 | 0.154 | 0 (0 seeds) |
+| I | 16:45 | v16 | 10,4,5 / 2 | – | min(cap,4)/4 | 0.266 | 0.150 | 0 (0 seeds) |
+| J | 16:45 | v16 | 10,4,5 / 2 | – | cap/4 | 0.273 | 0.381 | 42 (6 seeds) |
+| K | 16:45 | v16_neutral | 10,4,5 / 2 | – | – | 0.273 | 0.143 | 0 (0 seeds) |
+| L | 16:57 | v16 | 10,4,5 / 2 | 0.78 | min(cap,4)/4 | 0.273 | 0.154 | 0 (0 seeds) |
+| M | 16:57 | v16_neutral | 10,4,5 / 2 | 0.78 | min(cap,4)/4 (no effect) | 0.250 | 0.150 | 0 (0 seeds) |
+
+| Round | Knobs | Scene | H1 | H2 | H3 | H4 | H5 | H6 |
+|---|---|---|---|---|---|---|---|---|
+| start | [9, 6, 9] / 2 h, ranges of 7.1 | v16_neutral | – | PASS | FAIL (max) | PASS | PASS | – |
+| start | same | v16 | – | FAIL (seed 24) | FAIL (max) | PASS | PASS | PASS |
+| 1 | [10, 4, 5] / 2 h; v16: capacity-weighted supply | v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| 1 | same | v16 | PASS | PASS | FAIL: max_share_of_members | PASS | PASS | PASS |
+
+Round 1 H3 detail — v16_neutral: share 0.195, median 0, max share 0.119, means mild/normal/harsh 0.06/0.28/1.62, starvation+dehydration day-120 median/max 0/0; v16: share 0.250, median 0, max share 0.371, means mild/normal/harsh 0.06/0.38/2.44, starvation+dehydration day-120 median/max 0/4. The one failing seed-winter is seed 24's last winter (9 bushes, 28 founders, 35 residents, 4 dark nights of a harsh winter): 13 exposure deaths (4 children, 9 non-elder adults weakened by hunger; 4 starvation deaths in the same seed) = 0.371 of the members. Every other seed-winter loses at most 5 (0.11), mostly children, spread over hours and nights. Evaluations: `docs/revitalize/probe/p10-3_round1_*_targets/`.
+
+| Round | Knobs | Scene | H1 | H2 | H3 | H4 | H5 | H6 |
+|---|---|---|---|---|---|---|---|---|
+| 2 | round 1 + `SustainRule::utilization` 0.81 → 0.78 in both v16 rulesets | v16_neutral | PASS | PASS | PASS | PASS | PASS | – |
+| 2 | same | v16 | PASS | PASS | PASS | PASS | PASS | PASS |
+
+Round 2 H3 detail — v16_neutral: share 0.203, median 0, max share 0.100, means mild/normal/harsh 0.06/0.30/1.54, starvation+dehydration day-120 median/max 0/0; v16: share 0.242, median 0, max share 0.182, means mild/normal/harsh 0.06/0.32/2.24, starvation+dehydration day-120 median/max 0/0. v15 guard of the round-2 binary (`p10-3_round2_v15_guard_*`) equals Part 0 on every shared value (only `schema_version`). H1's receipts: v13–v15 and legacy were reproduced in Part 0 and by the guards, v8–v12 were pinned by tests; the probe reproduction of legacy and v8–v14 against Pass 9's finals is Part 7's (`p10-7_final_*`, every run reproduces). All `h_targets.json` were regenerated in Part 7 after review round 1 with these receipts and the stricter H5 rule (the verdicts did not change).
+
+**Frozen knobs (round 2):** exposure `damage_per_cold_hour` [child 10, adult 4, elder 5], `heal_block_hours` 2; `SustainRule::utilization` 0.78 in `game_v16_neutral` and `game_v16`; `SustainRule::capacity_weighted` in `game_v16`; variety ranges and `CLIMATE_PERMILLE` as in 7.1 (unchanged). Strikes used: 2 of 3 judged rounds, after 13 disclosed scratch configurations on seeds 5000–5031 (table above). The capacity weighting feeds the supply estimate behind both the birth gate and the summer/autumn winter-prep store target, so in capacity-3 worlds it also raises that target (review round 1, M1).
+
+**Frozen commit:** `58119582` (`581195820e8e6e79924f0583339da077bfc8d9f7`, Part 3, 17:06 KST). Parts 4–6 run `probe_frozen` / `wm_frozen` built from it (`probe_frozen` is byte-identical to the round-2 probe `probe_p3r2`); recordings carry `WORLDSIM_GIT_SHA` = that commit.
+
+### Part 4 — held-out health (frozen commit; seeds 64–127 × 10, 32–95 × 120)
+
+`p10-4_heldout_v15_*` (H5's reference, `probe_frozen`) equals Part 0's v15 held-out runs on every shared value (6,214 / 58,731; only `schema_version`). Determinism twins pass in all six runs.
+
+| Scene | H1 | H2 | H3 | H4 | H5 | H6 (tuning + held-out, 128 seeds) |
+|---|---|---|---|---|---|---|
+| v16_neutral | PASS | PASS | PASS | PASS | PASS¹ | – |
+| v16 | PASS | PASS | PASS | PASS | FAIL: Y9_work_1500 (reported: H5 is judged on v16_neutral) | PASS |
+
+¹ Population clauses that pass by the "no new failure" rule (both scenes fail the bound, v16 no worse than v15 on the bounded statistic; from Part 7 the statistic and direction come from an explicit per-clause table, review rounds 1 L1 and 2 M1). Every escape in every run is a Pass 6 Y9 median: round 1 v16_neutral `idle_1200` 0.619 vs v15 0.634 and `work_1200` 0.3077 vs 0.3077 (an exact tie); round 1 v16 `idle_1200` 0.631 vs 0.634 and `work_1200` 0.333 vs 0.308; round 2 v16_neutral `idle_1200` 0.620 vs 0.634; round 2 v16 `idle_1200` 0.621 vs 0.634; held-out v16_neutral `work_1200` 0.344 vs 0.308; held-out v16 `idle_1200` 0.617 vs 0.619; the timing runs as round 2.
+
+H3 detail — v16_neutral: share 0.207, median 0, max share 0.154, means mild/normal/harsh 0.00/0.32/2.09 (n 102/108/46), starvation+dehydration day-120 median/max 0/0; v16: share 0.266, median 0, max share 0.176, means mild/normal/harsh 0.00/0.37/2.07 (n 89/107/60), starvation+dehydration day-120 median/max 0/0.
+
+H5 for v16 (reported only; section 10 judges v16_neutral): every clause passes, or escapes as no worse than v15 (Y9 `idle_1200`, footnote ¹), except Pass 6 Y9 `work_1500` (adult work share at 15:00, median 0.241 vs ≥ 0.25; v15 on the same seeds 0.417; tuning-seed round 2 gave 0.254). v16_neutral's is 0.388. The drop comes with the world variety, not with exposure.
+
+H6 (128 seeds of game_v16): parameter means berry_bushes 12.21 (centre 12), berry_capacity 4.11 (centre 4), deadwood_capacity 6.12 (centre 6), deadwood_spots 19.77 (centre 20), food_regen_permille 1004.35 (centre 1000), forest_permille 294.24 (centre 300), starting_agents 23.95 (centre 24); climate shares harsh 0.367, mild 0.375, normal 0.258 (weights 0.333 / 0.334 / 0.333); deadwood shortfalls 0 seeds; berry-repair swaps 0 seeds.
+
+Worldgen counts (H6 "counted and explained"): none of the 128 judged game_v16 seeds and none of the 128 game_v15 seeds needed a berry-repair swap or placed fewer deadwood spots than asked. A wider count on one-day worlds of seeds 1000–2999 (`probe_frozen`, measurement only): berry-repair swaps in 4 / 2,000 game_v15 seeds (1–3 swaps) and 16 / 2,000 game_v16 seeds (1–8 swaps; more where the forest share is low and up to 15 bushes need forest edges), deadwood shortfalls in 0 / 2,000 of either — the 5–18 band holds far more than 26 tiles two apart.
+
+### Part 5 — the diversity pilot (frozen commit; seeds 20000–20095 fit, 20096–20111 scored)
+
+11.2 implementation check: `diversity_p10.py check-v1` reproduces WM-1.1's dataset-v1 A_test values within 0.002 (η² food 0.1946, wood 0.0489, fire 0.0387, cold 0.5982, alive 0.0613, deadwood 0.0270, bushes 0.1360, work 0.2837; R²_abs food 0.7676, wood 0.9470, fire 0.9589, alive 0.9320; `p10-5_pilot/check_v1.json`).
+
+| Variable | η² / R²_abs game_v15 | game_v16_neutral | game_v16 |
+|---|---|---|---|
+| food_stock | 0.153 / 0.845 | 0.112 / 0.885 | 0.500 / 0.474 |
+| wood_stock | 0.055 / 0.942 | 0.056 / 0.941 | 0.063 / 0.934 |
+| fire_lit | 0.041 / 0.956 | 0.042 / 0.955 | 0.040 / 0.957 |
+| cold_members | 0.586 / 0.359 | 0.603 / 0.361 | 0.582 / 0.354 |
+| alive | 0.021 / 0.978 | 0.030 / 0.967 | 0.978 / -0.043 |
+| deadwood_total | 0.030 / 0.968 | 0.030 / 0.968 | 0.168 / 0.827 |
+| food_on_bushes_total | 0.124 / 0.872 | 0.154 / 0.839 | 0.503 / 0.468 |
+| adults_working | 0.304 / 0.676 | 0.327 / 0.653 | 0.484 / 0.474 |
+
+**H7 (judged once, game_v16): FAIL** — food η² 0.500 / R²_abs 0.474 (pass), alive 0.978 / -0.043 (pass), wood 0.063 / 0.934 (fail). game_v15 and game_v16_neutral fail every clause.
+
+T2 nMAE, 24 h → 168 h (every-hour starts, test split std) for game_v16: food_stock: persistence 0.142 → 0.823, apfit_abs 0.090 → 0.327, CalAbs 0.584, an5 0.216; wood_stock: persistence 0.276 → 1.174, apfit_abs 0.175 → 0.200, CalAbs 0.202, an5 0.178; alive: persistence 0.024 → 0.080, apfit_abs 0.026 → 0.089, CalAbs 0.861, an5 0.146.
+
+Attribution (Δη²): exposure (v16_neutral − v15; includes round 2's tighter birth gate) food_stock -0.041, wood_stock +0.002, fire_lit +0.001, cold_members +0.018, alive +0.010, deadwood_total +0.000, food_on_bushes_total +0.030, adults_working +0.023; variety (v16 − v16_neutral) food_stock +0.388, wood_stock +0.007, fire_lit -0.002, cold_members -0.021, alive +0.947, deadwood_total +0.138, food_on_bushes_total +0.349, adults_working +0.157.
+
+Deaths per episode by day 120 (mean of 112): game_v15 old age 72.87, exposure 0.00, starvation + dehydration 0.00; game_v16_neutral old age 70.74, exposure 2.00, starvation + dehydration 0.00; game_v16 old age 64.67, exposure 2.32, starvation + dehydration 0.00.
+
+11.5 (declared adjustment): not used. Scratch recordings of game_v16 on seeds 30000–30111 (outside every judged and pilot set; a scratch recorder outside the clone reading the ranges from an environment variable) with 7.1's ranges, with the wood ranges widened by the allowed step (deadwood spots 12–28, capacity 3–9) and with every range widened by its step plus climate weights [383, 234, 383] (this third set exceeds the climate step, −100 against ±50: an over-wide check, not an allowed set) gave wood η² 0.073 / 0.094 / 0.111 (food 0.331 / 0.327 / 0.524, alive 0.960 / 0.960 / 0.976). None of the three tested sets, the widest beyond the allowed step, came near 0.30, so a second pilot was judged unable to change H7's verdict and was not recorded (see DECISIONS).
+
+### Part 4 — H10 timing (back to back, 17:58–18:12 KST, nothing else heavy; `probe_frozen`, tuning sets with twins)
+
+| Duration | game_v15 ms / agent-tick | game_v16_neutral | ratio | game_v16 | ratio |
+|---|---:|---:|---:|---:|---:|
+| 10day | 0.0011412 | 0.0011721 | 1.027 | 0.0012091 | 1.060 |
+| 120day | 0.0014388 | 0.0016967 | 1.179 | 0.0016874 | 1.173 |
+
+H10: **PASS** (≤ 1.25 for both scenes and durations). The timing runs reproduce the round-2 summaries (v16 scenes) and Part 0's (v15) on every simulation value.
+
+### Part 6 — consequential interventions (fork experiment, game_v16, frozen recorder)
+
+Seeds 12000–12031, 35 days, R = 4 forked at 28,800, the five C_cf variants and the one-unit gift plus the factual; placebos on 12000–12007; 1,400 recorded episodes (17:41–17:57). G0a: placebos 224 / 224 identical, replicate 0 = unforked 224 / 224: **PASS**. G0b (reported, Pass 9's gate): FAIL as in Pass 9 (dark nights VRF 1.00 for every variant; cold member-hours passes for gift_wood, rot_wood, rain, windfall, gift1, fails for cold_snap's lower bound 0.997).
+
+| variant | seeds with deaths effect > 0 | mean deaths effect | dark-night effect differs from v15 (seeds) | mean dark-night effect v16 / v15 |
+|---|---:|---:|---|---|
+| cold_snap | 0.062 | +0.156 | 0.562 (18 / 32) | +0.328 / +0.480 |
+| gift1 | 0.000 | -0.008 | 0.031 (1 / 32) | +0.008 / +0.000 |
+| gift_wood | 0.000 | -0.625 | 0.562 (18 / 32) | -0.734 / -0.820 |
+| rain | 0.000 | -0.594 | 0.594 (19 / 32) | +0.266 / +0.230 |
+| rot_wood | 0.562 | +1.180 | 0.562 (18 / 32) | +1.117 / +1.352 |
+| windfall | 0.000 | -0.164 | 0.531 (17 / 32) | -0.367 / -0.309 |
+
+Deaths effect = replicate-mean (variant − factual) deaths by the day-29 06:00 row, exposure deaths included (`--deaths-with-exposure`). By cause the whole effect is exposure: rain −0.59 exposure deaths (births effect −0.39), cold_snap +0.16 (births effect +0.12), rot_wood +1.18 (+0.57), gift_wood −0.63 (−0.41); old age and starvation effects 0 for every variant. The "differs from v15" column compares different worlds (game_v16 seed 12000 is not game_v15 seed 12000 under world variety) and replicate means over R = 4 against R = 8, so "differs" is nearly automatic; it is reported as asked, not as evidence of a changed intervention.
+
+**H8: FAIL** — of {rain, cold_snap, rot_wood} only rot_wood has deaths effect > 0 in ≥ 0.25 of seeds (0.56) with mean ≥ 0.25 (+1.18); rain's mean is −0.59 (0 seeds positive) and cold_snap's +0.16 (0.06 of seeds). gift_wood's mean deaths effect −0.63 ≤ 0 holds. Rain keeps the fire out for its 13 hours but burns no wood, so the saved wood keeps a later night lit and breaks the streak that would have killed (its dark-night effect is still +0.27); a two-night cold snap mostly costs hp that a fed village heals.
+
+VRF / mean effect / sign stability / divergence tables: `docs/revitalize/probe/p10-6_forks/fork_metrics.md`.
+
+Note (review round 2, L6): the probe's reported `food_supply_per_day` (`probe/long_run.rs`) counts bushes unweighted; the game_v16 birth gate and store target use the capacity-weighted estimate (`min(cap, 4) / 4` per bush). The difference is reporting only.

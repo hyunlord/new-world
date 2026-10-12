@@ -196,6 +196,8 @@ fn behavioural_fingerprint(e: &SimEngine) -> u64 {
                     DeathReason::Combat => comb += 1,
                     // Pass 4: legacy worlds never age, so old age is never counted here.
                     DeathReason::OldAge => {}
+                    // Pass 10: legacy worlds have no exposure rule.
+                    DeathReason::Exposure => {}
                 }
             }
         }

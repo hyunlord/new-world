@@ -37,6 +37,37 @@ pub struct WorldGenConfig {
     pub deadwood_max_radius: u32,
 }
 impl WorldGenConfig {
+    /// Pass 10 generator inputs of world `seed`: v15's recipe with the
+    /// founders, bushes, deadwood and forest of its hidden parameters
+    /// (`WorldVariety::draw`). Never redrawn; worldgen accepts every range.
+    pub const fn game_v16(seed: u64) -> Self {
+        Self::game_v16_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v16`] for given hidden parameters; `WorldVariety::NEUTRAL`
+    /// gives `game_v15(seed)` exactly.
+    pub const fn game_v16_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
+        Self {
+            starting_agents: variety.starting_agents,
+            berry_bushes: variety.berry_bushes,
+            berry_capacity: variety.berry_capacity,
+            deadwood_spots: variety.deadwood_spots,
+            deadwood_capacity: variety.deadwood_capacity,
+            forest_coverage: variety.forest_permille as f64 / 1000.0,
+            ..Self::game_v15(seed)
+        }
+    }
+
+    /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
+    pub const fn game_v15(seed: u64) -> Self {
+        Self::game_v14(seed)
+    }
+
+    /// Pass 8 generator inputs: the same world as v13 (no worldgen change).
+    pub const fn game_v14(seed: u64) -> Self {
+        Self::game_v13(seed)
+    }
+
     /// Pass 7 generator inputs: the same world as v12 (no worldgen change).
     pub const fn game_v13(seed: u64) -> Self {
         Self::game_v12(seed)
@@ -172,6 +203,12 @@ mod tests {
     fn game_v12_is_the_v11_world() {
         for seed in [0, 5, DEFAULT_GAME_SEED] {
             assert_eq!(WorldGenConfig::game_v12(seed), WorldGenConfig::game_v11(seed));
+        }
+    }
+    #[test]
+    fn game_v14_is_the_v13_world() {
+        for seed in [0, 5, DEFAULT_GAME_SEED] {
+            assert_eq!(WorldGenConfig::game_v14(seed), WorldGenConfig::game_v13(seed));
         }
     }
     #[test]

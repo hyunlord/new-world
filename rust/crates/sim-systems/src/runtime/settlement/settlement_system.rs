@@ -215,11 +215,16 @@ impl SettlementSystem {
             .iter()
             .map(|(id, pos)| (*id, *pos))
             .collect();
-        let new_buildings: BuildingPosList = buildings
+        let mut new_buildings: BuildingPosList = buildings
             .iter()
             .filter(|(bid, _)| !self.seen_building_ids.contains(bid))
             .copied()
             .collect();
+        // Pass 9: under keyed draws new buildings are routed in BuildingId order
+        // (HashMap order otherwise; history records only).
+        if resources.rules.agent.keyed_draws {
+            new_buildings.sort_by_key(|(bid, _)| *bid);
+        }
         self.seen_building_ids = resources.building_registry.keys().copied().collect();
         (buildings, new_buildings)
     }
@@ -622,6 +627,7 @@ impl SettlementSystem {
         event_id: EventId,
         position: (u32, u32),
     ) {
+        let keyed = resources.rules.agent.keyed_draws;
         let mut best: Option<(SettlementId, u32)> = None;
         for (sid, anchor) in &self.formation_tiles {
             let d = chebyshev(*anchor, position);
@@ -631,6 +637,9 @@ impl SettlementSystem {
             match best {
                 None => best = Some((*sid, d)),
                 Some((_, bd)) if d < bd => best = Some((*sid, d)),
+                // Pass 9: under keyed draws an exact tie goes to the lower
+                // settlement id instead of the first in HashMap order.
+                Some((bs, bd)) if keyed && d == bd && *sid < bs => best = Some((*sid, d)),
                 _ => {}
             }
         }
@@ -767,6 +776,25 @@ impl SettlementSystem {
                 None => Vec::new(),
             };
 
+            // Pass 9: under keyed draws the newborn's lineage key comes from the
+            // first parent's key and birth count (never from the id counter);
+            // the parent's count advances. Without a first parent carrying a
+            // lineage (not expected in a keyed world) the key falls back to the
+            // settlement and tick of the birth.
+            let lineage = resources.rules.agent.keyed_draws.then(|| {
+                let parent = parent_ids.first().and_then(|first| {
+                    world.query_mut::<(&Agent, &mut sim_core::components::Lineage)>()
+                        .into_iter()
+                        .find(|(_, (agent, _))| agent.id == *first)
+                        .map(|(_, (_, lineage))| lineage.child(resources.world_seed))
+                });
+                parent.unwrap_or(sim_core::components::Lineage {
+                    key: sim_core::rng::keyed_u64(
+                        resources.world_seed, sim_core::rng::STREAM_NEWBORN, u64::from(sid), tick, u32::MAX, 0,
+                    ),
+                    births: 0,
+                })
+            });
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -805,13 +833,21 @@ impl SettlementSystem {
                 ),
             );
 
+            if let Some(lineage) = lineage {
+                let _ = world.insert_one(entity, lineage);
+            }
             if resources.rules.society.life_stage.is_some() {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
             }
             if let Some(rule) = resources.rules.society.aging {
-                let life = crate::runtime::agent::aging::newborn_life(
-                    resources.world_seed, new_agent_id, tick, &rule,
-                );
+                let life = match lineage {
+                    Some(lineage) => crate::runtime::agent::aging::keyed_newborn_life(
+                        resources.world_seed, lineage.key, tick, resources.noise_replicate_for(tick), &rule,
+                    ),
+                    None => crate::runtime::agent::aging::newborn_life(
+                        resources.world_seed, new_agent_id, tick, &rule,
+                    ),
+                };
                 let _ = world.insert_one(entity, life);
             }
 

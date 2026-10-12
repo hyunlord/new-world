@@ -40,6 +40,7 @@ fn pass5_v11_literal() -> WorldRules {
                 max_foragers_per_bush: 2,
             }),
             preempt_gathering: true,
+            keyed_draws: false,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {
@@ -47,7 +48,7 @@ fn pass5_v11_literal() -> WorldRules {
                 food_cost: 10,
                 max_mean_hunger: 60.0,
                 max_mean_thirst: 60.0,
-                sustain: Some(SustainRule { utilization: 0.81, reserve_days: 0.5, forage_radius: 16 }),
+                sustain: Some(SustainRule { utilization: 0.81, reserve_days: 0.5, forage_radius: 16, capacity_weighted: false }),
             },
             shelter_planning: Some(ShelterPlanningRule {
                 residents_per_shelter: 8,
@@ -114,7 +115,12 @@ fn pass5_v11_literal() -> WorldRules {
                 winter_severity_burn_per_hour: [3, 3, 3],
                 winter_severity_regen_units_per_day: [6, 6, 6],
                 claims_bounded_by_amount: false,
+                winter_night_burn_permille: None,
+                winter_night_burn_step: 0,
+                winter_fall_spread: 0,
+                windfall_over_snow: false,
             }),
+            exposure: None,
         },
         clock_offset_ticks: 480,
         seasons: Some(SeasonRule { days_per_season: 7, regen_permille: [750, 1250, 1000, 500] }),

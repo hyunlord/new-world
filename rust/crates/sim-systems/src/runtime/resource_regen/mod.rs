@@ -257,16 +257,24 @@ impl RuntimeSystem for ResourceRegenSystem {
         // winter the snow cap and the spread regrowth replace it when set.
         if let Some(rule) = resources.rules.society.firewood {
             let winter = season_at(resources).is_some_and(|(season, _)| season == WINTER);
-            if winter {
+            // Pass 8 `windfall_over_snow`: the snow falls once, at the first
+            // pulse of each winter (the previous pulse was not winter), so a
+            // windfall's wood stays above the cap; without it every winter
+            // pulse buries (Pass 6).
+            let snowfall = !rule.windfall_over_snow
+                || resources.current_tick < REGEN_INTERVAL
+                || season_at_tick(resources, resources.current_tick - REGEN_INTERVAL).is_none_or(|(season, _)| season != WINTER);
+            if winter && snowfall {
                 if let Some(cap) = rule.winter_deadwood_cap {
                     bury_wood(&mut resources.wood_tiles, cap);
                 }
             }
             match rule.winter_regen_units_per_day.filter(|_| winter) {
                 Some(per_day) => {
-                    // Pass 7: a winter of drawn severity sets its own fall.
-                    let per_day = crate::runtime::settlement::firewood::severity_level_at(resources, &rule, resources.current_tick)
-                        .map_or(per_day, |level| rule.winter_severity_regen_units_per_day[usize::from(level).min(2)]);
+                    // Pass 7: a winter of drawn severity sets its own fall;
+                    // Pass 8: changed day by day (`winter_fall_at`, floor 0).
+                    let per_day = crate::runtime::settlement::firewood::winter_fall_at(resources, &rule, resources.current_tick)
+                        .unwrap_or(per_day);
                     regen_wood_winter(resources, per_day, rule.winter_deadwood_cap)
                 }
                 None => {
