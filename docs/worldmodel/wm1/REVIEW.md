@@ -217,3 +217,21 @@ About 40 numbers of WM1_1.md recomputed from the raw JSON files; sections 3, 6 a
 | 15 | NOTE | judge.md printed X6 as descriptive though it is empty. | `judge_1_1.py` prints "n/a (inputs missing)"; judge output regenerated. |
 
 Two rounds reached (GOAL_1_1.md 0.3.3); no third round.
+
+## WM-1.2
+
+### Round 1 (fresh `general-purpose` subagent, 2026-10-12 ≈ 22:05–22:18; code up to `a7d816f8`)
+
+Scope: the merge, v0 bit-identity, leakage, role split, the bias-removed score and `cal_best_anom`, the family evaluator, the Z-rule and probe implementations. The reviewer re-derived the golden values from the merge commit's code (exact match), rebuilt the pilot manifest from the data (exact match), checked a real pilot episode's table (35 observable columns; V equal to `bench.v`; no hidden column), and checked every-hour starts on 2,881 rows. Mac discovery: 113 tests OK, 17 skipped (recorder only).
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| R1-1 | MAJOR | `judge_1_2.py` read `calendar_val_<ds>_<sha>` and `calendar_<ds>_<sha>` with one sha; the committed runs are `…_da379c17` (val) and `…_1a7dfdb6` (test), so the judge crashed on the real directories; the test fixture used one sha for both | `--val-sha` / `--test-sha`, a clear error when a directory is missing, the test uses two shas and checks the error. Path handling only; no rule changed (dated amendment in METRICS_1_2.md) |
+| R1-2 | MINOR | `judge_1_2.py` had no `sys.path` insert (`ModuleNotFoundError: wm1` from the documented command) | inserted, as the other scripts do |
+| R1-3 | MINOR | the golden harness numbers cover persistence only | `golden_v0.compute_more()` adds the severity-free ridge (λ, T1, T2 24 h) and three calendar members on the sample, computed from the merge commit's code in a separate worktree (identical to the current code's) and asserted by `test_golden_v0.py` |
+| R1-4 | NOTE | v0 `config.json` / `metrics.json` gain a `dataset` key | additive; kept |
+| R1-5 | NOTE | the judge tabulates `p10_v16` and `p10_v15`, not `p10_v16n` | `p10_v16n` is reported from its calendar files in WM1_2.md; it has no model |
+| R1-6 | NOTE | `families.check_prefix` skipped `settlement_ids.npy` | now checked |
+| R1-7 | NOTE | the start-set test used 1,200 rows while F2.4 says 120 days | the test now uses 2,881 rows (408 / 384 starts) |
+| R1-8 | NOTE | the manifest's per-file sha256 is not re-checked at load (`load_episode` checks against `meta.json`) | pre-existing behaviour; kept |
+| R1-9 | NOTE | pre-registration order not checkable from the Mac before the model runs exist | checked in round 2 against the DGX `metrics.json` times |

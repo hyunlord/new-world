@@ -165,7 +165,8 @@ class InputListTests(unittest.TestCase):
 
 class HarnessTests(unittest.TestCase):
     def test_start_sets_equal_bench_v1(self) -> None:
-        ep = synth(4, rows=1200)
+        ep = synth(4, rows=2881)                      # a 120-day episode, as the pilot's
+        self.assertEqual((len(ev.any_hour_starts(ep, 24)), len(ev.any_hour_starts(ep, 168))), (408, 384))
         for h in (24, 168):
             self.assertEqual(ev.any_hour_starts(ep, h).tolist(), bv1.rollout_starts(ep.rows, h, True))
             self.assertEqual(ev.bench_starts(ep, h).tolist(), bv1.rollout_starts(ep.rows, h, False))

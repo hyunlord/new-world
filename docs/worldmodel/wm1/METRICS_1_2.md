@@ -137,3 +137,10 @@ use the seeds that exist and say so; KEEP then needs every existing seed below `
   over 16 worlds × 384 every-hour starts at 168 h, but world-level effects have only 16 independent draws.
 - GPU reproducibility of M1b is not measured (as in WM-1.1).
 - R² on 16 test worlds is noisy; no confidence interval is pre-registered.
+
+## Amendment 2026-10-12 (review round 1, before any model test number)
+
+`judge_1_2.py` took one commit sha for both calendar run directories; the validation runs are `…_da379c17` and the
+test runs `…_1a7dfdb6`, so it now takes `--val-sha` and `--test-sha` (and inserts its own `sys.path`). No rule,
+member, threshold or score definition changed. `families.py` also checks `settlement_ids.npy` in its prefix check
+(not used by any Z rule). At the time of this amendment no `metrics.json` of an M1b run and no probe output exists.

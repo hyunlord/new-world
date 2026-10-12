@@ -40,8 +40,8 @@ class ZTests(unittest.TestCase):
         members["an5"] = result(0.5, 0.4)          # cal_best raw
         members["cal_abs"] = result(0.9, 0.3)      # cal_best_anom
         for ds in ("p10_v16", "p10_v15"):
-            write(root, f"calendar_val_{ds}_abc/calendar_val.json", selection("an5", "cal_abs"))
-            write(root, f"calendar_{ds}_abc/calendar.json",
+            write(root, f"calendar_val_{ds}_vvv/calendar_val.json", selection("an5", "cal_abs"))
+            write(root, f"calendar_{ds}_ttt/calendar.json",
                   {"test": members, "references": {"persistence": result(2.0, 2.0), "ridge": result(0.7, 0.6)}})
         for run, (raw, br) in v16_models.items():
             write(root, f"{run}/metrics.json", result(raw, br))
@@ -52,7 +52,7 @@ class ZTests(unittest.TestCase):
             root = Path(tmp)
             self.build(root, {"m1tf_p10v16_r3_s0": (0.35, 0.35), "m1tf_p10v16_r3_s1": (0.38, 0.32),
                               "m1tf_p10v16_r3_s2": (0.39, 0.33)}, (0.6, 0.5))
-            r = j.run(root, "abc", "abc")
+            r = j.run(root, "vvv", "ttt")
             self.assertEqual(r["Z"]["Z1"]["verdict"], "KEEP")       # mean 0.373 <= 0.8 x 0.5, all < 0.5
             self.assertEqual(r["Z"]["Z1"]["against"], "an5")
             self.assertEqual(r["Z"]["Z2"]["verdict"], "NONE")       # bias-removed 0.333 vs cal_abs 0.3
@@ -69,12 +69,14 @@ class ZTests(unittest.TestCase):
             self.assertEqual(t["persistence"]["mean"], 2.0)
             self.assertEqual(t["models_mean"]["seeds"], 3)
             self.assertIn("Z1", j.markdown(r))
+            with self.assertRaises(SystemExit):              # the two run directories carry different commits
+                j.run(root, "ttt", "vvv")
 
     def test_weak_and_missing_seed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self.build(root, {"m1tf_p10v16_r3_s0": (0.3, 0.2), "m1tf_p10v16_r3_s1": (0.55, 0.25)}, (0.45, 0.3))
-            r = j.run(root, "abc", "abc")
+            r = j.run(root, "vvv", "ttt")
             self.assertEqual(r["Z"]["Z1"]["n_seeds"], 2)
             self.assertEqual(r["Z"]["Z1"]["verdict"], "WEAK")        # mean 0.425 < 0.5, above 0.4; one seed >= 0.5
             self.assertEqual(r["Z"]["Z2"]["verdict"], "KEEP")

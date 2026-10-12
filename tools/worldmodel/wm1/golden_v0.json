@@ -40,6 +40,14 @@
   "persistence_T2_168_0600_val": "1.0529798257069116",
   "persistence_T2_24_any_val": "0.32393224461981646"
  },
+ "harness_more": {
+  "an1_T2_24_any_val": "0.3785684749221407",
+  "apfit_abs_T2_24_any_val": "0.3785684749221407",
+  "cal_abs_T2_24_any_val": "0.3785684749221407",
+  "ridge_nosev_T1_val": "0.1675374075928088",
+  "ridge_nosev_T2_24_any_val": "0.2966567263164782",
+  "ridge_nosev_lambda": "10.0"
+ },
  "variants": {
   "sev-blind_action-aware": {
    "dtarget": "aa7f16bd8f9e58c1d9b36355033b08d6bf0f6a3f2f37be1975557e105334c824",

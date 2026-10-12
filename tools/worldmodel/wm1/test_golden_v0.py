@@ -17,6 +17,11 @@ class GoldenV0Tests(unittest.TestCase):
         self.assertEqual(now["variants"], golden["variants"])
         self.assertEqual(now["harness"], golden["harness"])
 
+    def test_ridge_and_calendar_numbers_equal_the_merge_commit(self) -> None:
+        # Review round 1: computed by  from the merge commit's code (b20a991f) in a separate worktree.
+        golden = json.loads(golden_v0.TARGET.read_text())
+        self.assertEqual(golden_v0.compute_more(), golden["harness_more"])
+
 
 if __name__ == "__main__":
     unittest.main()

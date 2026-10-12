@@ -5,14 +5,18 @@ family's validation selection (`calendar_val_<ds>_<sha8>/calendar_val.json`) and
 (`calendar_<ds>_<sha8>/calendar.json`, which also hold persistence and the observable ridge), the models'
 `metrics.json` and the probes' `probe.json`. Writes `judge.json` and `judge.md`.
 
-usage: python3 tools/worldmodel/wm1/judge_1_2.py --runs docs/worldmodel/wm1/runs --v16-cal SHA8 --v15-cal SHA8 \
+usage: python3 tools/worldmodel/wm1/judge_1_2.py --runs docs/worldmodel/wm1/runs --val-sha SHA8 --test-sha SHA8 \
            --out docs/worldmodel/wm1/runs/judge_1_2
+(`--val-sha`: the code commit of the `calendar_val_<ds>_<sha8>` runs; `--test-sha`: of the `calendar_<ds>_<sha8>` runs.)
 """
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 
@@ -157,11 +161,13 @@ def markdown(r: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def run(runs: Path, v16_cal: str, v15_cal: str) -> dict:
+def run(runs: Path, val_sha: str, test_sha: str) -> dict:
     data = {}
-    for ds, sha, names in (("p10_v16", v16_cal, M1B_V16), ("p10_v15", v15_cal, M1B_V15)):
-        cal_val = load(runs / f"calendar_val_{ds}_{sha}" / "calendar_val.json")
-        cal_test = load(runs / f"calendar_{ds}_{sha}" / "calendar.json")
+    for ds, names in (("p10_v16", M1B_V16), ("p10_v15", M1B_V15)):
+        cal_val = load(runs / f"calendar_val_{ds}_{val_sha}" / "calendar_val.json")
+        cal_test = load(runs / f"calendar_{ds}_{test_sha}" / "calendar.json")
+        if cal_val is None or cal_test is None:
+            raise SystemExit(f"{ds}: calendar_val_{ds}_{val_sha} or calendar_{ds}_{test_sha} missing under {runs}")
         models = {n: m for n in names if (m := load(runs / n / "metrics.json"))}
         data[ds] = (cal_val, cal_test, models)
     v16, v15 = data["p10_v16"], data["p10_v15"]
@@ -177,11 +183,11 @@ def run(runs: Path, v16_cal: str, v15_cal: str) -> dict:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--runs", default="docs/worldmodel/wm1/runs")
-    ap.add_argument("--v16-cal", required=True)
-    ap.add_argument("--v15-cal", required=True)
+    ap.add_argument("--val-sha", required=True)
+    ap.add_argument("--test-sha", required=True)
     ap.add_argument("--out", required=True)
     args = ap.parse_args(argv)
-    r = run(Path(args.runs), args.v16_cal, args.v15_cal)
+    r = run(Path(args.runs), args.val_sha, args.test_sha)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "judge.json").write_text(json.dumps(r, indent=1, sort_keys=True, default=float) + "\n")

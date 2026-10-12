@@ -112,6 +112,8 @@ def check_prefix(fam, row: int) -> None:
     ref = fam.factual[0]
     members = [*fam.factual.values(), *(ep for reps in fam.variants.values() for ep in reps.values())]
     for ep in members:
+        if not np.array_equal(ep.arrays["settlement_ids.npy"], ref.arrays["settlement_ids.npy"]):
+            raise ValueError(f"{ep.path}: settlement ids differ from the factual's")
         for name in ("global.npy", "settlements.npy"):
             if not np.array_equal(ep.arrays[name][: row + 1], ref.arrays[name][: row + 1], equal_nan=True):
                 raise ValueError(f"{ep.path}: rows <= {row} of {name} differ from the factual's prefix")
