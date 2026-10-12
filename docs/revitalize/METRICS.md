@@ -2344,3 +2344,22 @@ J12: **PASS** (≤ 1.3 for both scenes and durations; `p11-7_timing_*_targets`).
 - Held-out (review round 2, L6): `p11-7_final_heldout_v16_*` and `_v16n_*` (`probe_final`, seeds 64–127 × 10, 32–95 × 120) equal Pass 10's `p10-4_heldout_v16*` on every shared value (11,484 / 110,181 / 11,036 / 109,702); only `schema_version` 10 → 11; twins pass.
 - **J10: PASS.** `wm_final`, game_v17 with agents, seeds 900000–900006 × 30 days (5 fissions founded on day 28 or 29, so the founding, parent-slot and founded-tick columns are exercised), recorded at workers 4, 4 and 1: all 102 data files byte-identical; only the 7 `timing.json` (wall seconds, excluded by definition as in `test_export_determinism.py`) differ. The automated tests `test_v14/v15/v16/v17_fork_families_are_byte_identical` (schema 5, workers 4 / 4 / 1) pass; schemas 1–4 load (`test_wm_data.py`); the v15/v16 fork tests (`harness_revitalize_pass9_forks`, `pass10_forks`) pass.
 - Verification re-recordings with `wm_final` (post-review code, labelled with the frozen commit's sha so `meta.json` compares): pilot `game_v17_nofission` 112 / 112 and `game_v17` 112 / 112, forks 1,120 / 1,120, macro 192 / 192 episodes identical to the frozen-commit recordings (every array's sha256 and `interventions.json`). Together with the probe reproduction above: the post-freeze review fixes changed no result of Parts 3–6.
+
+### Part 7 — final gate and J verdicts
+
+Final gate (`gate_pass11.sh` on `e6dedd34`, the last commit that changes code or tests; 02:23–02:48 KST in a detached worktree; `verification/p11-7/gate.txt`): every step exit 0; cargo test debug 2,078 / release 2,078 passed, 0 failed (Pass 10: 2,054 each); clippy both; forbidden math 0; strict check; bridge build; smoke without `SCRIPT ERROR`/`ERROR:`; Python 95 (`tools/revitalize`) + 45 (`tools/worldmodel`). Later commits change docs only. An earlier gate on `600cb93d` (Parts 1–2) was green at 23:02 (2,075 each); one started on `1295cfbc` was stopped when review round 2 changed tests.
+
+| J | Verdict | Where |
+|---|---|---|
+| J1 | PASS | twins of every v17 round (tuning, held-out, final, timing); legacy pin test; legacy and v8–v16 reproductions (Part 0, guards, Part 7) |
+| J2 | PASS | `p11-3_round3_v17*_targets`, `p11-4_heldout_v17*_targets` |
+| J3 | FAIL (first-fission timing) | same; share 0.72–0.81, ≥ 2 alive 0.64–0.72, cancellations 0 pass |
+| J4 | PASS | 0.79 (tuning), 0.85 (held-out) |
+| J5 | FAIL (max share 0.48, starvation max 9) | stage clauses pass (adult 0.41, child 0.23, hour median 1) |
+| J6 | FAIL (Y9 work_1500, idle_1200 on game_v17_nofission) | `p11-4_heldout_v17n_targets`, round 3 |
+| J7 | FAIL (wood 0.269 / 0.709) | `p11-5_pilot/diversity.md` |
+| J8 | FAIL (rain mean deaths effect −0.36) | `p11-6_forks/fork_metrics.md` |
+| J9 | PASS (drawn parameters; realized region bushes 0.67) | `p11-4_heldout_v17_targets` |
+| J10 | PASS | byte identity, schema loads, fork tests |
+| J11 | reported | `p11-6_macro/macro.md` |
+| J12 | PASS (1.000–1.066) | `p11-7_timing_*_targets` |
