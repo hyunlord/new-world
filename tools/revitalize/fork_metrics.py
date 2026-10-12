@@ -21,7 +21,12 @@ agent noise", excluded from G0b). The 95 % interval is a percentile cluster
 bootstrap over seeds (2,000 resamples, a fresh `numpy.random.default_rng(9)`
 per variant and target, so values never depend on the order of computation;
 percentiles by `inverted_cdf`, i.e. order statistics, which handle infinite
-resamples).
+resamples). A resample of seeds with no agent noise at all has no VRF and is
+left out of the percentiles; the count is `bootstrap_quiet_resamples` (shown
+beside the interval). A seed's replicates count as constant when their range
+is at most 1e-9 x max(1, largest absolute value) (exact for integer targets;
+rounding residue of fractional ones), in the variances and the noisy-seed
+counts alike.
 """
 from __future__ import annotations
 
@@ -44,17 +49,25 @@ BOOT_SEED = 9
 
 
 # ------------------------------------------------------------------ statistics -------------------------------------
+def constant_rows(a: np.ndarray) -> np.ndarray:
+    """Per row: whether its values are equal up to rounding (range <= 1e-9 x max(1, max |value|))."""
+    scale = np.maximum(1.0, np.abs(a).max(axis=1)) if a.size else np.ones(len(a))
+    return np.ptp(a, axis=1) <= 1e-9 * scale
+
+
+def within_variance(a: np.ndarray) -> float:
+    """Mean over rows of the within-row variance (ddof=1); a constant row contributes 0."""
+    var = np.var(a, axis=1, ddof=1)
+    return float(np.where(constant_rows(a), 0.0, var).mean())
+
+
 def vrf_of(y_v: np.ndarray, y_f: np.ndarray) -> tuple[float, float, float | None]:
     """(V_p, V_u, VRF) for arrays [S, R] of one variant and target; VRF None = no agent noise.
-    A variance at or below 1e-12 x max(1, mean square of the values) counts as 0 (rounding
-    of a constant non-integer column; review round 1, L4)."""
+    Rows constant up to rounding contribute variance 0 (review rounds 1 and 2, L4 / R2-3)."""
     paired = y_v - y_f
     unpaired = y_v - np.roll(y_f, -1, axis=1)
-    v_p = float(np.var(paired, axis=1, ddof=1).mean())
-    v_u = float(np.var(unpaired, axis=1, ddof=1).mean())
-    floor = 1e-12 * max(1.0, float(np.mean(y_v ** 2)), float(np.mean(y_f ** 2))) if y_v.size else 0.0
-    v_p = 0.0 if v_p <= floor else v_p
-    v_u = 0.0 if v_u <= floor else v_u
+    v_p = within_variance(paired)
+    v_u = within_variance(unpaired)
     if v_p == 0.0:
         return v_p, v_u, (math.inf if v_u > 0.0 else None)
     return v_p, v_u, v_u / v_p
@@ -87,7 +100,7 @@ def effect_stats(y_v: np.ndarray, y_f: np.ndarray, resamples: int = RESAMPLES, b
             hi = float(np.quantile(draws, 0.975, method="inverted_cdf"))
     seed_mean = paired.mean(axis=1)
     # Where the agent noise reaches the outcome: seeds whose replicates differ in each arm.
-    f_noisy, v_noisy = np.std(y_f, axis=1) > 0, np.std(y_v, axis=1) > 0
+    f_noisy, v_noisy = ~constant_rows(y_f), ~constant_rows(y_v)
     both = f_noisy & v_noisy
     vrf_both = vrf_of(y_v[both], y_f[both])[2] if both.sum() >= 1 else None
     stable = [bool(np.all(np.sign(row) == np.sign(m))) for row, m in zip(paired, seed_mean)]
@@ -235,22 +248,15 @@ def build(args) -> dict:
                 for k in range(reps):
                     result = identity(root / episode_name(scene, seed, pid, k), root / episode_name(scene, seed, "none", k))
                     placebo.append({"seed": seed, "id": pid, "replicate": k, **result})
-    replicate0 = []
-    if args.unforked:
-        # Every family must have its unforked run; a missing one counts as a failure
-        # (review round 1, L6).
-        for seed in seeds:
-            for eid in ids:
-                unforked = args.unforked / episode_name(scene, seed, eid, None)
-                if unforked.exists():
-                    result = identity(root / episode_name(scene, seed, eid, 0), unforked)
-                else:
-                    result = {"identical": False, "missing_unforked_run": True}
-                replicate0.append({"seed": seed, "id": eid, **result})
+    replicate0 = replicate0_identity(root, args.unforked, scene, seeds, ids) if args.unforked else []
     report["g0a"] = {"placebo_runs": len(placebo), "placebo_identical": sum(r["identical"] for r in placebo),
                      "replicate0_runs": len(replicate0), "replicate0_identical": sum(r["identical"] for r in replicate0),
                      "failures": [r for r in placebo + replicate0 if not r["identical"]]}
-    report["g0a"]["passed"] = (report["g0a"]["placebo_identical"] == len(placebo)
+    # Nothing compared is not a pass (review round 2, R2-5): placebos and every
+    # family's replicate 0 must be present.
+    report["g0a"]["replicate0_expected"] = len(seeds) * len(ids)
+    report["g0a"]["passed"] = (len(placebo) > 0 and report["g0a"]["placebo_identical"] == len(placebo)
+                               and len(replicate0) == len(seeds) * len(ids)
                                and report["g0a"]["replicate0_identical"] == len(replicate0))
     # Divergence horizon (8.4) and newborn key match (Y6) at replicate 0.
     ticks = dict(item.split("=") for item in args.intervention_ticks.split(",")) if args.intervention_ticks else {}
@@ -272,6 +278,21 @@ def build(args) -> dict:
     if args.v14:
         report["v14_single_fork"] = v14_comparison(args.v14, values, variants, seeds, report)
     return report
+
+
+def replicate0_identity(root: Path, unforked_root: Path, scene: str, seeds, ids: list[str]) -> list[dict]:
+    """8.1.2: replicate 0 of every family against its unforked run; a missing unforked run
+    counts as a failure (review round 1, L6)."""
+    out = []
+    for seed in seeds:
+        for eid in ids:
+            unforked = unforked_root / episode_name(scene, seed, eid, None)
+            if unforked.exists():
+                result = identity(root / episode_name(scene, seed, eid, 0), unforked)
+            else:
+                result = {"identical": False, "missing_unforked_run": True}
+            out.append({"seed": seed, "id": eid, **result})
+    return out
 
 
 def summarize_divergence(per_seed: list[dict], start: int) -> dict:
@@ -336,13 +357,16 @@ def markdown(report: dict) -> str:
               "so VRF measures the value of pairing the post-fork agent noise only.", "",
               "Noisy seeds: seeds whose 8 replicates do not all give the same value, in the factual (f), the variant (v) and both; "
               "where the factual is constant within a seed, the paired and unpaired differences have the same variance and that "
-              "seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only).", "",
+              "seed contributes VRF 1. VRF (both noisy) restricts V_p and V_u to the seeds noisy in both arms (reported only). "
+              "Bootstrap resamples with no agent noise at all have no VRF and are left out of the interval; their count is shown "
+              "in brackets after it.", "",
               "| variant | target | VRF | 95 % CI | V_paired | V_unpaired | noisy seeds f / v / both | VRF (both noisy) | mean effect | sign stability | median std | median abs seed mean | G0b |",
               "|---|---|---:|---|---:|---:|---|---:|---:|---:|---:|---:|---|"]
     for eid, by_target in report["vrf"].items():
         for t, s in by_target.items():
             gate = ("no agent noise" if s["no_agent_noise"] else ("pass" if s["passes_g0b"] else "fail")) if t in GATED else "reported"
-            lines.append(f"| {eid} | {t} | {fmt(s['vrf'])} | [{fmt(s['vrf_lo'])}, {fmt(s['vrf_hi'])}] | {fmt(s['v_paired'])} | "
+            quiet = f" ({s['bootstrap_quiet_resamples']} quiet)" if s.get("bootstrap_quiet_resamples") else ""
+            lines.append(f"| {eid} | {t} | {fmt(s['vrf'])} | [{fmt(s['vrf_lo'])}, {fmt(s['vrf_hi'])}]{quiet} | {fmt(s['v_paired'])} | "
                          f"{fmt(s['v_unpaired'])} | {s['seeds_factual_noisy']} / {s['seeds_variant_noisy']} / {s['seeds_both_noisy']} | "
                          f"{fmt(s['vrf_seeds_both_noisy'])} | {fmt(s['mean_effect'])} | {fmt(s['sign_stability'])} | {fmt(s['spread_median_std'])} | "
                          f"{fmt(s['median_abs_seed_mean'])} | {gate} |")

@@ -78,7 +78,9 @@ fn harness_v15_newborns_carry_their_first_parents_key() {
     assert!(engine.resources.tallies.births > 0);
     let mut closure = BTreeSet::new();
     let mut generation: Vec<Lineage> = (0..24).map(|i| Lineage::founder(seed, i)).collect();
-    for depth in 0..3 {
+    // Three levels (founders, 400 children each, 40 grandchildren per child):
+    // a 28-day village has ~22-26 births, nearly all from one founder (review round 2).
+    for depth in 0..2 {
         let mut next = Vec::new();
         for parent in &generation {
             closure.insert(parent.key);

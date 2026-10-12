@@ -7,7 +7,8 @@ from pathlib import Path
 
 import numpy as np
 
-from fork_metrics import effect_stats, identity, newborn_key_match, divergence, vrf_of
+from fork_metrics import (constant_rows, divergence, effect_stats, identity, newborn_key_match, replicate0_identity,
+                          summarize_divergence, vrf_of)
 
 
 class StatisticsTests(unittest.TestCase):
@@ -48,6 +49,18 @@ class StatisticsTests(unittest.TestCase):
         stats = effect_stats(y_f + 2.0, y_f, resamples=20)
         self.assertEqual(stats["v_paired"], 0.0)
         self.assertIsNone(stats["vrf"])
+
+    def test_constancy_is_per_row_and_scale_aware(self) -> None:
+        # Review round 2, R2-3: a +-1 difference at level 1e5 is noise; a constant
+        # fractional row is not; R = 7 rows of 0.1 are constant.
+        rows = np.array([[1e5, 1e5 + 1, 1e5, 1e5, 1e5, 1e5, 1e5], [0.1] * 7, [0.3 * 3] * 7])
+        self.assertEqual(constant_rows(rows).tolist(), [False, True, True])
+        y_f = np.full((32, 8), 1e5)
+        y_v = y_f.copy()
+        y_v[0, 3] += 1
+        stats = effect_stats(y_v, y_f, resamples=20)
+        self.assertFalse(stats["no_agent_noise"])
+        self.assertEqual((stats["seeds_factual_noisy"], stats["seeds_variant_noisy"]), (0, 1))
 
     def test_quiet_bootstrap_resamples_are_excluded(self) -> None:
         # Review round 1, L5: one noisy seed among quiet ones; resamples without it have no VRF.
@@ -134,7 +147,32 @@ class IdentityTests(unittest.TestCase):
             self.assertEqual(identity(other, factual)["meta_differing"], ["seed"])
 
 
+class ReplicateZeroTests(unittest.TestCase):
+    def test_missing_unforked_run_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            meta = {"scene": "game_v15", "episode_id": "none", "noise_fork": {"tick": 5, "replicate": 0}, "schedule": None}
+            data = {"global.npy": np.arange(4.0)}
+            (root / "forks").mkdir()
+            (root / "unforked").mkdir()
+            episode(root / "forks", "game_v15_s1_none_r0", data, [], meta)
+            episode(root / "forks", "game_v15_s2_none_r0", data, [], meta)
+            episode(root / "unforked", "game_v15_s1_none", data, [], {**meta, "noise_fork": None})
+            rows = replicate0_identity(root / "forks", root / "unforked", "game_v15", [1, 2], ["none"])
+            self.assertEqual([r["identical"] for r in rows], [True, False])
+            self.assertTrue(rows[1]["missing_unforked_run"])
+
+
 class DivergenceTests(unittest.TestCase):
+    def test_moved_share_rows_are_found_by_tick(self) -> None:
+        # Review round 2, R2-6: row 0 is the intervention tick; "after 1 h" is row 1.
+        ticks = [29400 + 60 * i for i in range(80)]
+        per_seed = [{"ticks": ticks, "moved_share": [float(i) for i in range(80)], "first_moved_tick": 29460,
+                     "first_target_diff_tick": {k: None for k in ("dark_nights", "cold_member_hours", "food_store", "deaths", "births")}}]
+        out = summarize_divergence(per_seed, 29400)
+        self.assertEqual([out[f"median_moved_share_after_{h}h"] for h in (1, 6, 24, 72)], [1.0, 6.0, 24.0, 72.0])
+        self.assertEqual(out["first_moved"]["median_ticks_after"], 60.0)
+
     def arm(self, xy, alive, keys, food):
         t = len(food)
         zeros = np.zeros(t)
