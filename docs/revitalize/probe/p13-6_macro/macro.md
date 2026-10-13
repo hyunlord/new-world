@@ -39,3 +39,8 @@ bash /Users/rexxa/work/p13bin/p13_macro.sh 9f0d38ca… game_v19 game_v18
 python3 tools/revitalize/macro_sensitivity.py --root p13/macro --scene game_v19 --seeds 12000..12032 --variants rot_wood,gift_wood,spoil_food,gift_food --replicates 2 --j11 28800 --out docs/revitalize/probe/p13-6_macro/game_v19
 python3 tools/revitalize/macro_sensitivity.py --root p13/macro_v18 --scene game_v18 --seeds 12000..12032 --variants rot_wood,gift_wood,spoil_food,gift_food --replicates 2 --j11 28800 --out docs/revitalize/probe/p13-6_macro/game_v18
 ```
+
+## Limitations (review round 1)
+
+- A fission whose group departed and was then cancelled leaves no settlement row, so its `depart_tick` is not recorded and the post-fork rule cannot see it. Cancellations were 0 of 63 attempts on the held-out probe and 0 of 32 on tuning round 3; they were not counted in these macro arms.
+- Like-for-like shares over pairs where both runs split after the fork (v19): noise ≠ 0 in 0.45 (n 20), > 3 d in 0.15; rot_wood ≠ 0 0.595 / > 3 d 0.108; gift_wood 0.568 / 0.189; spoil_food 0.641 / 0.103; gift_food 0.667 / 0.167; the most common act shift is one day (0.30–0.44). gift_wood is later in 0.41 and rot_wood earlier in 0.49 of their pairs, close to gift_food (0.53 later) and spoil_food (0.51 earlier): part of the signed effect is a general perturbation, not the food channel alone.
