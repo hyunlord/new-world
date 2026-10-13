@@ -89,3 +89,11 @@ Times are KST (Mac clock). Working-time budget: 8 h from the start (GOAL_1_1.md 
 | 4 end, 6 | 01:34 | 01:36 | run files copied (no checkpoints); `judge_1_2.py` → `runs/judge_1_2` (Z1 NONE, Z1b WEAK, Z2 NONE, Z3 NONE); WM1_2.md (`ad25396d`) |
 | 7 | 01:50 | | REPORT_WM1_2.md (Korean, section 13 format); final gate on the report commit (next row) |
 | gate | 01:52 | 01:54 | `0dc77783`: Mac 114 OK / 17 skipped (recorder not built on the Mac); DGX 114 OK / 0 skipped (`gate_0dc77783`, 65 s, `WM_BIN` / `PROBE_BIN` from `_build/src_wm12`); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `d5380301..0dc77783`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6128723524. This record is a docs-only commit; the gate is re-run on it and the green branch moved to it |
+
+## WM-1.3
+
+Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 2026-10-14 23:27 KST plus recorded pauses.
+
+| Part | Start | End | Notes |
+|---|---|---|---|
+| start | 2026-10-13 11:27:14 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0, `nproc` 20; `nvidia-smi` 11:27: only Xorg (125 MiB) and gnome-shell (21 MiB), 0 % util; RAM 119 GiB, 100 GiB available; swap 15.5 of 16 GiB used (other users' services); disk 3.7 T, 1.6 T free. No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. Base `a43bdab2` = both WM branches on origin |

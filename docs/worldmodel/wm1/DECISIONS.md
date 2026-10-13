@@ -122,3 +122,8 @@ Decisions of the WM-1.1 run (GOAL_1_1.md). Ids `E<part>.<n>`.
 
 ### Part 7
 - **F7.1** The DGX gate pre-check on `1fabb472` failed one test: `compute_more`'s two ridge numbers differ from the Mac-computed golden in the last digit (0.16753740759280883 vs …088; 0.296656726316479 vs …4782). The ridge's `np.linalg.solve` runs on the platform BLAS (Accelerate on the Mac, OpenBLAS on the DGX); no code differs. Those two values are now compared to 1e-12 relative; the λ, the calendar numbers and every original golden value (feature table, targets, persistence harness numbers: pure element-wise arithmetic) stay exact and pass on both machines.
+
+## WM-1.3
+
+### Part 0
+- **G0.1** As F0.1: the Mac clone's unstaged `.gitignore` change and untracked `.ignore` belong to the local `graft` code-index tool, predate this run and are never staged. The time rule (GOAL_1_3.md 0.3.5) counts from the start at 2026-10-13 11:27:14 KST, so no new training starts after 2026-10-14 23:27 KST (pauses excluded). Mac ↔ DGX ssh uses a throwaway `ssh -F` file in the session scratch directory (`~/.ssh/config` untouched).
