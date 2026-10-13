@@ -2,6 +2,7 @@ extends Control
 
 # Simulation clock, resources and cumulative events; no frame-derived world facts.
 
+const Selection = preload("res://scripts/core/settlement_selection.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 
 const HUD_MARGIN: int = 12
@@ -36,6 +37,7 @@ var _entries: Array = []  # each: { key: String, args: Array, born: int }
 var _feed_log: Array[Dictionary] = []
 var _suppress_feed: bool = false
 var _seen_deaths: Dictionary = {}
+var _seen_society_events: Dictionary = {}
 var _death_current_tick: int = -1
 const DEATH_RETAIN_TICKS: int = 120
 const DEATH_NEWS_KEYS: Array[String] = ["HUD_FEED_DEATH_STARVATION", "HUD_FEED_DEATH_DEHYDRATION", "HUD_FEED_DEATH_COMBAT", "HUD_FEED_DEATH_OLD_AGE", "HUD_FEED_DEATH_EXPOSURE"]
@@ -73,6 +75,11 @@ func _process(_delta: float) -> void:
 
 func _ingest_snapshots() -> void:
 	var settle_snap: Variant = _world_sim.call("get_settlement_snapshot")
+	var society: Dictionary = _snapshot("get_society_snapshot") if _world_sim.has_method("get_society_snapshot") else {}
+	var settlements: Dictionary = settle_snap if settle_snap is Dictionary else {}
+	if not settlements.has("settlement_ids"):
+		settlements["settlement_ids"] = PackedInt32Array(Array(settlements.get("ids", PackedInt64Array())))
+	Selection.observe(society, settlements)
 	var cur_s: Dictionary = {}
 	if settle_snap is Dictionary:
 		var sd: Dictionary = settle_snap
@@ -98,18 +105,13 @@ func _ingest_snapshots() -> void:
 					continue
 				var delta: int = food - int(_last_notified_food[sid])
 				if delta >= FEED_FOOD_DELTA_THRESHOLD:
-					_push("HUD_FEED_STOCKPILE_DEPOSIT", [sid, delta])
+					_push("HUD_FEED_STOCKPILE_DEPOSIT", [Selection.number_for(sid), delta])
 					_last_notified_food[sid] = food
 				elif delta <= -FEED_FOOD_DELTA_THRESHOLD:
-					_push("HUD_FEED_STOCKPILE_CONSUME", [sid, -delta])
+					_push("HUD_FEED_STOCKPILE_CONSUME", [Selection.number_for(sid), -delta])
 					_last_notified_food[sid] = food
 				# |delta| < threshold: leave last-notified unchanged so it accumulates
-	for id in cur_s.keys():
-		if not _prev_settlement_ids.has(id):
-			_push("HUD_FEED_SETTLEMENT_FORMED", [int(id)])
-	for id in _prev_settlement_ids.keys():
-		if not cur_s.has(id):
-			_push("HUD_FEED_SETTLEMENT_DISSOLVED", [int(id)])
+	_ingest_society(society, cur_s)
 	_prev_settlement_ids = cur_s
 	# Drop food tracking for settlements no longer present (mirror the
 	# _prev_settlement_ids cleanup — a dissolved settlement stops tracking).
@@ -224,6 +226,7 @@ func _on_world_reset() -> void:
 	_prev_births = -1
 	_feed_log.clear()
 	_seen_deaths.clear()
+	_seen_society_events.clear()
 	_death_current_tick = -1
 	_entries.clear()
 	_frame_tick = 0
@@ -272,3 +275,41 @@ func get_feed_log() -> Array[Dictionary]:
 
 func get_visible_feed() -> Array:
 	return _entries.duplicate(true)
+
+
+func _ingest_society(society: Dictionary, alive: Dictionary) -> void:
+	var now: int = int(society.get("current_tick", _snapshot("get_time_snapshot").get("tick", 0)))
+	var events: Array[Dictionary] = []
+	var fissions: PackedInt32Array = society.get("fission_ids", PackedInt32Array())
+	for index: int in fissions.size():
+		var fid: int = fissions[index]
+		var parent: int = int(society["fission_parents"][index])
+		var depart: int = int(society["fission_depart_ticks"][index])
+		events.append({"id": "depart:%d" % fid, "key": "HUD_FEED_FISSION_DEPARTED", "args": [int(society["fission_sizes"][index]), Selection.number_for(parent)], "tick": depart})
+		var founded: int = int(society["fission_founded_ticks"][index])
+		var daughter: int = int(society["fission_daughters"][index])
+		if founded >= 0 and daughter >= 0:
+			events.append({"id": "founded:%d" % daughter, "key": "HUD_FEED_SETTLEMENT_FOUNDED", "args": [Selection.number_for(daughter)], "tick": founded})
+		var cancelled: int = int(society["fission_cancelled_ticks"][index])
+		if cancelled >= 0:
+			events.append({"id": "cancel:%d" % fid, "key": "HUD_FEED_FISSION_CANCELLED", "args": [], "tick": cancelled})
+	var ids: PackedInt32Array = society.get("settlement_ids", PackedInt32Array())
+	var parents: PackedInt32Array = society.get("parent_ids", PackedInt32Array())
+	var ticks: PackedInt64Array = society.get("founded_ticks", PackedInt64Array())
+	for id: int in alive:
+		if _prev_settlement_ids.has(id):
+			continue
+		var index: int = ids.find(id)
+		var parent: int = int(parents[index]) if index >= 0 and index < parents.size() else -1
+		var tick: int = int(ticks[index]) if index >= 0 and index < ticks.size() else now
+		events.append({"id": "founded:%d" % id, "key": "HUD_FEED_SETTLEMENT_FOUNDED" if parent >= 0 else "HUD_FEED_SETTLEMENT_FORMED", "args": [Selection.number_for(id)], "tick": tick})
+	for id: int in _prev_settlement_ids:
+		if not alive.has(id):
+			events.append({"id": "abandoned:%d" % id, "key": "HUD_FEED_SETTLEMENT_ABANDONED", "args": [Selection.number_for(id)], "tick": now, "tick_source": "first_observed_absent"})
+	events.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["tick"]) < int(b["tick"]))
+	for event: Dictionary in events:
+		var id: String = str(event["id"])
+		if _seen_society_events.has(id):
+			continue
+		_seen_society_events[id] = true
+		_push(str(event["key"]), event["args"], int(event["tick"]), {"society_event_id": id, "tick_source": event.get("tick_source", "simulation")})

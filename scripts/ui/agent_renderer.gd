@@ -3,6 +3,7 @@ extends Node2D
 const ArtHashScript = preload("res://scripts/ui/art_hash.gd")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const MorningChill = preload("res://scripts/ui/morning_chill.gd")
+const FoundingGroups = preload("res://scripts/ui/founding_group_renderer.gd")
 const CarryLoad = preload("res://scripts/ui/carry_load_layer.gd")
 const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
@@ -56,6 +57,9 @@ var _seen_combat_event_ids: Dictionary = {}
 func _ready() -> void:
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
 	_shadow_layer = SpriteLibrary.shared_layer(self, "Shadows", 3)
+	var founding_layer := FoundingGroups.new()
+	founding_layer.name = "FoundingGroups"
+	add_child(founding_layer)
 	world_sim = get_node_or_null("../WorldSim") as WorldSimNode
 	if world_sim != null:
 		world_sim.connect("world_reset", _on_world_reset)
@@ -70,6 +74,8 @@ func _process(delta: float) -> void:
 	_clear_expired_recalling()
 	_clear_expired_combating()
 	var snap: Dictionary = world_sim.get_agent_snapshot()
+	var society: Dictionary = world_sim.get_society_snapshot()
+	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -166,6 +172,7 @@ func _process(delta: float) -> void:
 		sprite.set_meta("fallback_kind", str(choice.get("fallback_kind", "")))
 		sprite.set_meta("qa_status", str(choice.get("qa_status", "unavailable")))
 		CarryLoad.apply(sprite, activity)
+		CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
 		_update_activity_icon(agent_id, sprite, choice)
 		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"])})
 	_apply_drawn_positions(draw_agents, context, delta)

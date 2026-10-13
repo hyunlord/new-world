@@ -1,0 +1,10 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+SCRIPT ERROR: Invalid type in 'PackedInt32Array' constructor. Cannot convert argument 1 from PackedInt64Array to Array.
+          at: _ingest_snapshots (res://scripts/ui/panels/hud_status_panel.gd:81)
+          GDScript backtrace (most recent call first):
+              [0] _ingest_snapshots (res://scripts/ui/panels/hud_status_panel.gd:81)
+              [1] _on_world_reset (res://scripts/ui/panels/hud_status_panel.gd:234)
+              [2] run (res://scripts/test/art/test_founding_group.gd:93)
+FOUNDING_GROUP failures=0
