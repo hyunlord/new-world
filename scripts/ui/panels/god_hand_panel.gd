@@ -1,5 +1,6 @@
 extends PanelContainer
 
+const Selection = preload("res://scripts/core/settlement_selection.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PRESETS: Dictionary = {"gift_food": 60, "spoil_food": 60, "gift_wood": 40, "rot_wood": 40, "rain": 13, "cold_snap": 1, "windfall": 20}
 var _world: Node
@@ -12,6 +13,7 @@ var _log_toggle: Button
 var _log: VBoxContainer
 var _reply: Dictionary = {}
 var _reply_kind: String = ""
+var _reply_target: int = -1
 var _toast_left: float = 0.0
 
 func _ready() -> void:
@@ -84,12 +86,19 @@ func amount_text(kind: String, amount: int) -> String:
 	return str(amount) + suffix
 
 func reply_text(kind: String, amount: int, applied: int) -> String:
-	return _loc("GOD_HAND_APPLIED_FMT") % [_loc("GOD_HAND_" + kind.to_upper()), amount_text(kind, amount), applied]
+	var target: int = _reply_target if _reply_target >= 0 else Selection.resolved_target()
+	return _loc("GOD_HAND_APPLIED_TARGET_FMT") % [Selection.name_for(target, _locale, false), _loc("GOD_HAND_" + kind.to_upper()), amount_text(kind, amount), applied]
 
 func cast_kind(kind: String) -> void:
 	if _world == null or not PRESETS.has(kind):
 		return
-	_reply = _world.call("apply_intervention", kind, -1, int(PRESETS[kind]))
+	_reply_target = Selection.resolved_target()
+	_reply = _world.call("apply_intervention", kind, Selection.selected_id, int(PRESETS[kind]))
+	if bool(_reply.get("ok", false)):
+		Selection.record_cast(int(_reply.get("tick", -1)), kind, _reply_target)
+		for effect: Node in get_tree().get_nodes_in_group("art_god_hand_effects"):
+			if effect.has_method("notify_cast"):
+				effect.call("notify_cast", kind, _reply_target)
 	_reply_kind = kind
 	_toast_left = 4.0
 	refresh_state()
@@ -101,9 +110,14 @@ func set_log_open(open: bool) -> void:
 func refresh_state() -> void:
 	if _title == null:
 		return
-	_title.text = _loc("GOD_HAND_TITLE")
+	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
 	_log_toggle.text = _loc("GOD_HAND_LOG")
 	var settlements: Dictionary = _world.call("get_settlement_snapshot") if _world != null else {}
+	if _world != null and _world.has_method("get_society_snapshot"):
+		Selection.observe(_world.call("get_society_snapshot"), settlements)
+	else:
+		Selection.observe({}, settlements)
+	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
 	var ready_to_cast: bool = not settlements.get("settlement_ids", PackedInt32Array()).is_empty()
 	for kind: String in _buttons:
 		var button: Button = _buttons[kind]
@@ -124,4 +138,4 @@ func refresh_state() -> void:
 		var row := _log.get_child(index) as Label
 		row.visible = first + index < kinds.size()
 		if row.visible:
-			row.text = reply_text(kinds[first + index], amounts[first + index], applied[first + index])
+			row.text = _loc("GOD_HAND_APPLIED_FMT") % [_loc("GOD_HAND_" + kinds[first + index].to_upper()), amount_text(kinds[first + index], amounts[first + index]), applied[first + index]]

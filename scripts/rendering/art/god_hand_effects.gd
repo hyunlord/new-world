@@ -1,5 +1,6 @@
 extends Node2D
 
+const Selection = preload("res://scripts/core/settlement_selection.gd")
 const ART = preload("res://scripts/ui/art_sprite_library.gd")
 const ORIGIN := Vector2(448, 28)
 const RAIN_COLOR := Color(0.624, 0.706, 0.784, 0.5)
@@ -17,6 +18,8 @@ var _previous_log: Array[String] = []
 var _previous_wood: Dictionary = {}
 var _falls: Dictionary = {}
 var _flash_kind: String = ""
+var _flash_target: int = -1
+var _notified_target: int = -1
 var _flash_born: float = -2.0
 var _flash_label: Label
 
@@ -43,6 +46,8 @@ func _reset() -> void:
 	_rain_ids.clear()
 	_state.clear()
 	_flash_kind = ""
+	_flash_target = -1
+	_notified_target = -1
 	_flash_born = -2.0
 	if is_instance_valid(_flash_label):
 		_flash_label.self_modulate = Color.WHITE
@@ -101,7 +106,9 @@ func _observe(resources: Dictionary) -> void:
 					_falls[tile] = _elapsed
 		elif kind in ["gift_food", "spoil_food", "gift_wood", "rot_wood"]:
 			_flash_kind = kind
+			_flash_target = _notified_target if _notified_target >= 0 else Selection.cast_target(ticks[index], kind)
 			_flash_born = _elapsed
+	_notified_target = -1
 	_previous_log = records
 	_previous_wood = wood
 
@@ -149,6 +156,10 @@ func _update_flash(settlements: Dictionary) -> void:
 	for index: int in ids.size():
 		if ids[index] < ids[home]:
 			home = index
+	if _flash_target >= 0:
+		home = ids.find(_flash_target)
+		if home < 0:
+			return
 	var anchor := Vector2(xs[home], ys[home])
 	var distance: float = INF
 	for child: Node in _buildings.get_children():
@@ -195,5 +206,10 @@ func metadata() -> Dictionary:
 		falls.append({"tile": [tile.x, tile.y], "age": age, "offset_y": fall_offset(age)})
 	var flashes: Array[Dictionary] = []
 	if _elapsed - _flash_born < 1.2:
-		flashes.append({"kind": _flash_kind, "age": _elapsed - _flash_born, "color": "7CC46A" if _flash_kind.begins_with("gift") else "8A6A3A"})
+		flashes.append({"settlement_id": _flash_target, "kind": _flash_kind, "age": _elapsed - _flash_born, "color": "7CC46A" if _flash_kind.begins_with("gift") else "8A6A3A"})
 	return {"rain_streaks": _rain_streaks, "rain_settlement_ids": _rain_ids.duplicate(), "cold_snap_tonight": bool(_state.get("cold_snap_tonight", false)), "windfall_falls": falls, "stockpile_flashes": flashes}
+
+
+func notify_cast(kind: String, target: int) -> void:
+	if kind in ["gift_food", "spoil_food", "gift_wood", "rot_wood"]:
+		_notified_target = target

@@ -9,7 +9,7 @@ Contract: GOAL.md SHA256 `7b41130c8516c0c349876747a9b2ee4ab4e22c5479dda2cf50bd82
 | 1 | Multi-settlement audit and exact hearth matching | 2026-10-13T02:37:24Z | 2026-10-13T02:40:24Z | complete, three scene tests and strict pass |
 | 2 | Five death reasons and durable feed | 2026-10-13T02:40:27Z | 2026-10-13T02:44:49Z | complete, five-reason and old-age scene tests pass |
 | 3 | Read-only society snapshot | 2026-10-13T02:44:53Z | 2026-10-13T02:51:18Z | complete, real FFI short and natural-fission checks pass; existing Rust fixture blocks unit/all-target gates |
-| 4 | Labels, selection, belonging and god target | | | pending |
+| 4 | Labels, selection, belonging and god target | 2026-10-13T02:51:43Z | 2026-10-13T03:00:05Z | complete, six Godot tests and 88 static contracts pass; three windowed views reviewed |
 | 5 | Founding feed, trail, site and bundles | | | pending |
 | 6 | One attempt at breath and windfall | | | pending |
 | 7 | Natural, society, intervention and calibration captures | | | pending |

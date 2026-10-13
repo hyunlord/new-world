@@ -5239,3 +5239,15 @@ GOD_HAND_LOG = Recent acts
 GOD_HAND_UNIT_HOURS = h
 GOD_HAND_UNIT_NIGHTS = nights
 HUD_FEED_DEATH_EXPOSURE = A villager froze to death
+
+# Art Pass 7: many villages and founding
+SETTLEMENT_LABEL_FMT = Village %d
+SETTLEMENT_LABEL_DAUGHTER_FMT = Village %d · from %d
+SETTLEMENT_ABANDONED_FMT = Abandoned village %d
+HUD_SETTLEMENTS_FMT = Villages %d
+GOD_HAND_TARGET_FMT = God's hand — %s
+GOD_HAND_APPLIED_TARGET_FMT = %s: %s %s — applied %d
+HUD_FEED_FISSION_DEPARTED = %d people left Village %d
+HUD_FEED_SETTLEMENT_FOUNDED = Village %d was founded
+HUD_FEED_FISSION_CANCELLED = A group turned back
+HUD_FEED_SETTLEMENT_ABANDONED = Village %d was abandoned

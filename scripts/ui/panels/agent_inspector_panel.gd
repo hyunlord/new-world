@@ -51,6 +51,8 @@ var _locale: Node = null
 var _world_sim: Node = null
 var _selected_entity_bits: int = -1
 var _bar_headers: Array[Label] = []
+const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
+var _village_label: Label
 var _vbox: VBoxContainer
 var _label_id: Label
 var _label_age: Label
@@ -88,6 +90,7 @@ func _ready() -> void:
 	portrait_box.add_child(_portrait)
 	_label_age = _make_label("")
 	_label_age.visible = false
+	_village_label = _make_label("")
 	_label_pos = _make_label("")
 	_label_state = _make_label("")
 	_label_target = _make_label("")
@@ -152,6 +155,9 @@ func display_agent(detail: Dictionary) -> void:
 	var sleep_val: float = float(detail.get("sleep", 0.0))
 	_selected_entity_bits = _resolve_entity_bits(agent_id)
 	_label_id.text = _loc("INSPECTOR_AGENT_FMT") % agent_id
+	var home: int = SettlementSelection.home_for_agent(agent_id)
+	_village_label.visible = home >= 0
+	_village_label.text = SettlementSelection.name_for(home, _locale) if home >= 0 else ""
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _loc(STATE_LABELS[state_tag])
 	_label_target.text = _loc("INSPECTOR_TARGET_FMT") % _loc(TARGET_LABELS[target_kind])

@@ -8,6 +8,8 @@ const Activity = preload("res://scripts/ui/agent_activity.gd")
 const SpriteLibrary = preload("res://scripts/ui/art_sprite_library.gd")
 const CampSeatsScript = preload("res://scripts/ui/camp_seats.gd")
 const PoseMoments = preload("res://scripts/ui/agent_pose_moments.gd")
+const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
+const SETTLEMENT_OUTLINE = preload("res://shaders/settlement_outline.gdshader")
 const TILE_SIZE := 16
 const SPRITE_ORIGIN_X := 448
 const SPRITE_ORIGIN_Y := 28
@@ -173,6 +175,7 @@ func _process(delta: float) -> void:
 		Cold.apply(sprite, bool(row.get("cold", false)), bool(row["moving"]), agent_id, _animation_time)
 		_morning_chill.apply(sprite, agent_id, tick, _animation_time)
 		sprite.set_meta("drawn_position", sprite.position)
+		_apply_settlement_outline(sprite, agent_id)
 		var shadow: Sprite2D = _shadows[agent_id]
 		shadow.position = sprite.position
 		shadow.visible = sprite.visible
@@ -532,6 +535,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var sprite: Sprite2D = _sprites[agent_id]
 		sprite.position = drawn.round()
 		sprite.set_meta("drawn_position", sprite.position)
+		_apply_settlement_outline(sprite, agent_id)
 		sprite.set_meta("seated", seats.has(agent_id))
 		if seats.has(agent_id):
 			sprite.set_meta("seat", seats[agent_id])
@@ -607,3 +611,37 @@ func get_active_agent_sprites() -> Array[Sprite2D]:
 
 func is_capture_visible() -> bool:
 	return _capture_visible
+
+
+static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int) -> void:
+	var home: int = SettlementSelection.home_for_agent(agent_id)
+	var selected: bool = SettlementSelection.selected_id >= 0 and home == SettlementSelection.selected_id
+	sprite.set_meta("home_settlement_id", home)
+	sprite.set_meta("settlement_outline", selected)
+	var outline: Sprite2D = sprite.get_node_or_null("SettlementOutline") as Sprite2D
+	if not selected or sprite.texture == null:
+		if outline != null:
+			outline.hide()
+		return
+	if outline == null:
+		outline = Sprite2D.new()
+		outline.name = "SettlementOutline"
+		outline.show_behind_parent = true
+		outline.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var material := ShaderMaterial.new()
+		material.shader = SETTLEMENT_OUTLINE
+		outline.material = material
+		sprite.add_child(outline)
+	outline.texture = sprite.texture
+	outline.region_enabled = sprite.region_enabled
+	outline.region_rect = sprite.region_rect.grow(1.0)
+	outline.centered = sprite.centered
+	outline.offset = sprite.offset - Vector2.ONE
+	outline.flip_h = sprite.flip_h
+	outline.flip_v = sprite.flip_v
+	var material := outline.material as ShaderMaterial
+	var size: Vector2 = sprite.texture.get_size()
+	var rect: Rect2 = sprite.region_rect
+	material.set_shader_parameter("atlas_rect", Vector4(rect.position.x / size.x, rect.position.y / size.y, rect.end.x / size.x, rect.end.y / size.y))
+	material.set_shader_parameter("outline_color", SettlementSelection.color_for(home))
+	outline.show()

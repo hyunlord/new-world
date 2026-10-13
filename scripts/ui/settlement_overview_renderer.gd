@@ -43,6 +43,11 @@ const OVERVIEW_ALPHA := 0.28
 const OVERVIEW_COLOR: Color = Color(0.35, 0.75, 1.0, OVERVIEW_ALPHA)  # soft blue region
 const SETTLEMENT_REGION_RADIUS_TILES := 5   # mirrors sim-core SETTLEMENT_PROXIMITY_RADIUS
 
+const Labels = preload("res://scripts/ui/settlement_labels.gd")
+var _drawn_discs: Array[Dictionary] = []
+var _colors: Dictionary = {}
+var _names: Dictionary = {}
+var _ids: PackedInt32Array = PackedInt32Array()
 var _world_sim: Node = null
 # Cached per-frame parallel arrays consumed by _draw.
 var _centroids: PackedVector2Array = PackedVector2Array()
@@ -53,6 +58,7 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	z_index = Z_OVERVIEW
 	visible = false   # zoom_lod_controller shows this only at MEDIUM/FAR
+	call_deferred("_create_labels")
 
 
 func _process(_delta: float) -> void:
@@ -65,6 +71,7 @@ func _process(_delta: float) -> void:
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
+	_ids = snap_dict.get("settlement_ids", PackedInt32Array())
 	var xs: Variant = snap_dict.get("formation_xs", null)
 	var ys: Variant = snap_dict.get("formation_ys", null)
 	if not (xs is PackedInt32Array and ys is PackedInt32Array):
@@ -89,5 +96,24 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	_drawn_discs.clear()
 	for i in _centroids.size():
-		draw_circle(_centroids[i], _radii[i], OVERVIEW_COLOR)
+		var color: Color = _colors.get(int(_ids[i]), OVERVIEW_COLOR) if i < _ids.size() else OVERVIEW_COLOR
+		color.a = OVERVIEW_ALPHA
+		draw_circle(_centroids[i], _radii[i], color)
+		_drawn_discs.append({"id": int(_ids[i]) if i < _ids.size() else -1, "color": color.to_html(false), "alpha": color.a, "drawn": true, "center": [_centroids[i].x, _centroids[i].y], "radius": _radii[i]})
+
+
+func set_presentation(colors: Dictionary, names: Dictionary) -> void:
+	_colors = colors.duplicate()
+	_names = names.duplicate()
+	queue_redraw()
+
+func _create_labels() -> void:
+	if get_parent().get_node_or_null("SettlementLabels") == null:
+		var layer := Labels.new()
+		layer.name = "SettlementLabels"
+		get_parent().add_child(layer)
+
+func capture_metadata() -> Dictionary:
+	return {"overview_visible": visible, "overview_discs": _drawn_discs.duplicate(true) if visible else []}

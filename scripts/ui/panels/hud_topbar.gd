@@ -145,7 +145,8 @@ func _refresh() -> void:
 	if _agents_label != null:
 		_agents_label.text = _loc("UI_POPULATION") + " %d" % agent_n
 	if _settlements_label != null:
-		_settlements_label.text = _loc("HUD_SETTLEMENTS") + " %d" % settle_n
+		_settlements_label.text = _loc("HUD_SETTLEMENTS_FMT") % settle_n
+		_settlements_label.visible = settle_n >= 2
 	if _sites_label != null:
 		_sites_label.text = _loc("BUILDING_STATE_BUILDING") + " %d" % site_n
 
