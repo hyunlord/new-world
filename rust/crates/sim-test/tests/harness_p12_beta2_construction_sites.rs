@@ -425,8 +425,10 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
     assert!(wood.contains("return state.has(\"fire_lit\") and not bool(state[\"fire_lit\"]) and winter_severity >= 0 and (hour >= 18.0 or hour < 7.0)"));
     assert!(wood.contains("if cold_ash(state, hour, winter_severity):\n\t\treturn \"S1_16\""));
     let effects = include_str!("../../../../scripts/ui/world_effects.gd");
-    assert!(effects.contains("if kind == 0 and bool(sprite.get_meta(\"fire_lit\", true)):"));
-    assert!(wood.contains("if not state.has(\"fire_lit\"):\n\t\treturn \"S1_%02d\" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
+    assert!(effects.contains("if kind == 0 and bool(sprite.get_meta(\"fire_lit\", false)):"));
+    // Art Pass 7: a hearth with no settlement of its own (orphan or retired) shows cold ash, never a borrowed or clock-driven fire.
+    assert!(wood.contains("if not state.has(\"fire_lit\"):\n\t\treturn true"));
+    assert!(!wood.contains("return \"S1_%02d\" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0"));
     assert!(wood.contains("if bool(state[\"fire_lit\"]):\n\t\treturn \"S1_%02d\" % (2 + int(elapsed * 8.0) % 4)"));
     assert!(wood.contains("return \"S1_01\" if int(state.get(\"wood_stock\", 0)) > 0 else \"S1_16\""));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));

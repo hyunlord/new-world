@@ -3082,6 +3082,7 @@ mod revitalize_tooling_tests {
                 tick,
                 intervention: intervention_from_kind(KINDS[usize::try_from(tick % 7).unwrap()], 2, u32::try_from(tick + 1).unwrap()).unwrap(),
                 applied: tick,
+                soaked_wood: 0,
             });
         }
         let state = super::collect_intervention_state(&resources, 10);
@@ -3434,7 +3435,7 @@ mod society_snapshot_tests {
         assert_eq!(snapshot.fission_daughters, vec![20, -1]);
         assert_eq!(snapshot.retired_hearth_xs, vec![2, 9]);
         assert_eq!(snapshot.retired_hearth_ys, vec![5, 4]);
-        assert_eq!(snapshot.current_tick, 1_440);
+        assert_eq!(snapshot.current_tick, engine.resources.current_tick as i64);
     }
 }
 
