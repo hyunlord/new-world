@@ -1,0 +1,77 @@
+{
+ "factual_first_fission_day_mean": 27.137931034482758,
+ "replicates": 4,
+ "scene": "game_v19",
+ "seeds": [
+  12000,
+  12032
+ ],
+ "variants": {
+  "cold_snap": {
+   "episodes_with_fission": 31,
+   "episodes_with_post_fork_fission": 23,
+   "factual_drop_same_hours_mean": null,
+   "first_fission_day_mean": 27.516129032258064,
+   "post_fork_first_fission_day_mean": 32.91304347826087,
+   "rain_hours_in_burn_window_mean": 0.0,
+   "share_first_fission_day_differs": 0.0625,
+   "share_post_fork_first_fission_day_differs": 0.0625,
+   "wood_drop_over_rain_hours_mean": null
+  },
+  "gift1": {
+   "episodes_with_fission": 28,
+   "episodes_with_post_fork_fission": 20,
+   "factual_drop_same_hours_mean": null,
+   "first_fission_day_mean": 26.857142857142858,
+   "post_fork_first_fission_day_mean": 32.8,
+   "rain_hours_in_burn_window_mean": 0.0,
+   "share_first_fission_day_differs": 0.0546875,
+   "share_post_fork_first_fission_day_differs": 0.0546875,
+   "wood_drop_over_rain_hours_mean": null
+  },
+  "gift_wood": {
+   "episodes_with_fission": 28,
+   "episodes_with_post_fork_fission": 20,
+   "factual_drop_same_hours_mean": null,
+   "first_fission_day_mean": 27.214285714285715,
+   "post_fork_first_fission_day_mean": 33.3,
+   "rain_hours_in_burn_window_mean": 0.0,
+   "share_first_fission_day_differs": 0.1171875,
+   "share_post_fork_first_fission_day_differs": 0.1171875,
+   "wood_drop_over_rain_hours_mean": null
+  },
+  "rain": {
+   "episodes_with_fission": 35,
+   "episodes_with_post_fork_fission": 27,
+   "factual_drop_same_hours_mean": 35.734375,
+   "first_fission_day_mean": 28.228571428571428,
+   "post_fork_first_fission_day_mean": 33.03703703703704,
+   "rain_hours_in_burn_window_mean": 11.0,
+   "share_first_fission_day_differs": 0.1171875,
+   "share_post_fork_first_fission_day_differs": 0.1171875,
+   "wood_drop_over_rain_hours_mean": 34.9375
+  },
+  "rot_wood": {
+   "episodes_with_fission": 35,
+   "episodes_with_post_fork_fission": 27,
+   "factual_drop_same_hours_mean": null,
+   "first_fission_day_mean": 28.314285714285713,
+   "post_fork_first_fission_day_mean": 33.148148148148145,
+   "rain_hours_in_burn_window_mean": 0.0,
+   "share_first_fission_day_differs": 0.109375,
+   "share_post_fork_first_fission_day_differs": 0.109375,
+   "wood_drop_over_rain_hours_mean": null
+  },
+  "windfall": {
+   "episodes_with_fission": 28,
+   "episodes_with_post_fork_fission": 20,
+   "factual_drop_same_hours_mean": null,
+   "first_fission_day_mean": 27.035714285714285,
+   "post_fork_first_fission_day_mean": 33.05,
+   "rain_hours_in_burn_window_mean": 0.0,
+   "share_first_fission_day_differs": 0.0625,
+   "share_post_fork_first_fission_day_differs": 0.0625,
+   "wood_drop_over_rain_hours_mean": null
+  }
+ }
+}

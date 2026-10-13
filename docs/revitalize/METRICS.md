@@ -2572,3 +2572,67 @@ J6 reference: game_v16 on the same held-out seeds (`p11-7_final_heldout_v16_*`, 
 | J5 | FAIL only `max_share_settlement_winter`: 0.533 (2 over in the pooled set: held-out seed 84 camp 12/25 = 0.48 and tuning seed 24 daughter 8/15, both the harsh winter from day 106); stage shares child 0.604 / adult 0.373 / elder 0.022 PASS; seed-winters with a death 0.168 PASS; mild < normal < harsh; starvation + dehydration 0 | reported: fails only H3 share with a death |
 | J6 | reported | FAIL: Y9 work_1500 0.211 (v16 0.241, bound 0.25), idle_1200 0.629 (v16 0.617, both > 0.60); work_1200 0.357 PASS; every other clause PASS |
 | J9 | parameter means and climate shares PASS; region bushes 2,519 / 2,519, deadwood 3,692 / 3,716 (0.994); placement failures 3 of 255 regions (1 of 2, 2 of 3, 2 of 3) — the same three worlds and the same water-rule cause as Pass 12 (v19's worldgen is v18's); the clause itself FAILS (counted and explained) | same worlds |
+
+### Part 3 — 4.6 guard on the frozen commit (`probe_frozen`, 23:59–00:21 KST)
+
+`p13-3_guard_*` (v18, v18_nofission, v17, v16 tuning sets) equal Part 2's guard runs on every value (0 differences in all eight), hence Part 0's on every shared value (only `schema_version` 12 → 13).
+
+### Part 6.2 — macro sensitivity, J11 (frozen recorder; seeds 12000–12031, 120 days, R = 2, fork 28,800; `docs/revitalize/probe/p13-6_macro/macro.md`; recorded 23:39–00:38 KST)
+
+Post-fork fission = the first fission whose group departed after the fork (schema-6 `depart_tick`). game_v18 recorded fresh with the same five arms and the same rule reproduces Pass 12's noise numbers exactly (0.688 / 34.5 / 18.4).
+
+| Comparison | v19: n both split after fork / share day differs > 3 d / mean abs Δ day / signed shift mean / share shift < 0, > 0, ≠ 0 / mean abs Δ alive 118 / c-rule | v18: same columns |
+|---|---|---|
+| (a) factual r0 vs r1 (noise only) | 20 / 0.094 / 3.550 / — / — / 2.406 / 0.094 | 14 / 0.688 / 34.500 / — / — / 18.406 / 0.688 |
+| rot_wood 60 | 37 / 0.109 / 3.000 / -1.595 / 0.486, 0.108, 0.595 / 2.688 / 0.109 | 35 / 0.016 / 0.000 / 0.000 / 0.000, 0.000, 0.000 / 0.703 / 0.016 |
+| gift_wood 60 | 37 / 0.156 / 4.405 / 0.892 / 0.162, 0.405, 0.568 / 1.984 / 0.188 | 36 / 0.016 / 2.444 / 2.444 / 0.000, 0.028, 0.028 / 0.688 / 0.016 |
+| spoil_food 60 | 39 / 0.078 / 3.103 / -0.692 / 0.513, 0.128, 0.641 / 2.156 / 0.094 | 36 / 0.000 / 0.000 / 0.000 / 0.000, 0.000, 0.000 / 0.031 / 0.000 |
+| gift_food 60 | 36 / 0.156 / 4.111 / 2.667 / 0.139, 0.528, 0.667 / 1.922 / 0.188 | 36 / 0.016 / 2.444 / 2.444 / 0.000, 0.028, 0.028 / 0.672 / 0.016 |
+
+**J11 (game_v19): FAIL** — (a) PASS (share > 3 d 0.094 ≤ 0.35; mean abs Δ day 3.550 ≤ 7 with n 20; mean abs Δ alive 2.406 ≤ 5); (b) FAIL (spoil_food earlier 0.513 of 39, gift_food later 0.528 of 36, both < 0.60); (c) FAIL (noise_c 0.094; rot_wood 0.109, spoil_food 0.094, gift_food 0.188; none reaches noise_c + 0.10 = 0.194). Against v18 the order is reversed: in v18 a re-roll of the noise moves the post-fork split in 0.69 of seeds by 34.5 days and no act moves it (spoil and gift ≠ 0 in 0.00–0.03); in v19 noise moves it by 3.6 days in 0.09 of seeds and each act moves it in 0.57–0.67 of the pairs, in its own sign in 0.51–0.53 (opposite sign 0.13–0.14).
+
+### Part 5 — the replicate pilot (frozen recorder `wm_frozen`; fresh worlds 26000–26063 × R = 4, noise fork at tick 1, 120 days; recording 23:39–00:55 KST; `docs/revitalize/probe/p13-5_pilot/`)
+
+Implementation check (11.2): dataset v1 A_test reproduces WM-1.1's 12 published numbers within ±0.002 (`check_v1`). All four scenes recorded (the `game_v17` arm was not dropped).
+
+**Path share and path spread** (all replicates; PS / PSD mean over days 60/90/118, 90 % bootstrap over worlds; differences paired by world; `paths.md` has every day):
+
+| Variable | game_v16 PS [90 %] / PSD | game_v17 PS [90 %] / PSD | game_v18 PS [90 %] / PSD | game_v19 PS [90 %] / PSD | game_v18 - game_v17 PS [90 %] | game_v19 - game_v16 PS [90 %] | game_v19 - game_v17 PS [90 %] | game_v19 - game_v18 PS [90 %] |
+|---|---|---|---|---|---|---|---|---|
+| alive | 0.002 [0.002, 0.003] / 0.049 | 0.006 [0.004, 0.008] / 0.079 | 0.276 [0.212, 0.350] / 0.591 | 0.019 [0.010, 0.030] / 0.143 | 0.270 [0.207, 0.343] | 0.016 [0.008, 0.027] | 0.013 [0.004, 0.024] | -0.257 [-0.331, -0.193] |
+| food_stock | 0.027 [0.021, 0.037] / 0.077 | 0.022 [0.017, 0.030] / 0.082 | 0.307 [0.245, 0.388] / 0.366 | 0.024 [0.013, 0.040] / 0.099 | 0.286 [0.223, 0.363] | -0.003 [-0.018, 0.013] | 0.002 [-0.012, 0.018] | -0.284 [-0.363, -0.219] |
+| wood_stock | 0.639 [0.567, 0.749] / 0.073 | 0.098 [0.078, 0.126] / 0.063 | 0.460 [0.391, 0.540] / 0.175 | 0.072 [0.059, 0.090] / 0.066 | 0.362 [0.290, 0.435] | -0.567 [-0.674, -0.493] | -0.026 [-0.053, -0.000] | -0.388 [-0.465, -0.317] |
+| settlements_alive | — [—, —] / — | 0.017 [0.008, 0.030] / 0.134 | 0.456 [0.368, 0.554] / 0.733 | 0.011 [0.004, 0.020] / 0.115 | 0.439 [0.354, 0.533] | — [—, —] | -0.006 [-0.020, 0.007] | -0.445 [-0.541, -0.354] |
+| deadwood_total | 0.052 [0.038, 0.074] / 0.100 | 0.007 [0.006, 0.010] / 0.053 | 0.008 [0.006, 0.011] / 0.057 | 0.006 [0.004, 0.008] / 0.047 | 0.001 [-0.001, 0.002] | -0.046 [-0.068, -0.032] | -0.002 [-0.003, -0.001] | -0.002 [-0.004, -0.001] |
+| food_on_bushes_total | 0.081 [0.067, 0.103] / 0.076 | 0.012 [0.009, 0.019] / 0.084 | 0.147 [0.100, 0.218] / 0.323 | 0.015 [0.010, 0.023] / 0.095 | 0.135 [0.089, 0.202] | -0.066 [-0.087, -0.050] | 0.003 [-0.004, 0.010] | -0.132 [-0.201, -0.085] |
+| adults_working | 0.298 [0.250, 0.367] / 0.124 | 0.173 [0.144, 0.215] / 0.119 | 0.317 [0.271, 0.381] / 0.166 | 0.183 [0.145, 0.238] / 0.132 | 0.144 [0.088, 0.202] | -0.116 [-0.178, -0.056] | 0.009 [-0.037, 0.059] | -0.135 [-0.191, -0.079] |
+
+**Replicate 0 (train 26000–26047, test 26048–26063)**, η² / R²_abs / R²_year / UBS (reported only) / dyn-η²:
+
+| Variable | game_v16 | game_v17 | game_v18 | game_v19 |
+|---|---|---|---|---|
+| food_stock | 0.395 / 0.597 / 0.571 / 0.288 / 0.319 | 0.511 / 0.467 / 0.371 / 0.461 / 0.580 | 0.632 / 0.358 / 0.229 / 0.519 / 0.656 | 0.624 / 0.373 / 0.234 / 0.553 / 0.658 |
+| wood_stock | 0.076 / 0.921 / 0.920 / 0.085 / 0.077 | 0.236 / 0.748 / 0.677 / 0.193 / 0.248 | 0.293 / 0.694 / 0.639 / 0.257 / 0.301 | 0.317 / 0.681 / 0.618 / 0.237 / 0.328 |
+| alive | 0.962 / 0.036 / 0.006 / 0.343 / 0.999 | 0.826 / 0.153 / -0.009 / 0.696 / 0.833 | 0.817 / 0.173 / 0.004 / 0.820 / 0.820 | 0.821 / 0.175 / 0.003 / 0.910 / 0.826 |
+
+Settlements alive (test seeds, mean at days 30/60/90/118): game_v16 1.00/1.00/1.00/1.00; game_v17 1.38/1.69/1.94/2.00; game_v18 1.12/1.56/1.75/1.88; game_v19 1.00/1.38/1.81/1.94
+Baseline nMAE at 168 h for `alive`, persistence: game_v17 0.128; game_v18 0.102; game_v19 0.098; cal_abs / apfit_abs: game_v17 alive — / 0.742 / 0.126; game_v18 alive — / 0.720 / 0.133; game_v19 alive — / 0.713 / 0.125.
+UBS paired bootstrap game_v19 - game_v17 (90 %): alive [0.002, 0.403], food [-0.013, 0.214]
+UBS paired bootstrap game_v19 - game_v18 (90 %): alive [-0.073, 0.288], food [-0.075, 0.152]
+
+**First-fission day** (display day of the first departure that founded a daughter; no split by day 120 = censored at 121) and identification (`pilot.md`):
+
+| Scene | worlds × R | censored runs (no split by day 120) | worlds split in every replicate | W (within) | B (between) | PS first-fission day | within-world SD (d) | between-world SD (d) | PS (worlds split in every replicate) | r(day, θ) | r(day, early s) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|
+| game_v16 | 64 × 4 | 256 | 0 | 0.000 | 0.000 | — | 0.000 | 0.000 | — | — (n —) | — (n —) |
+| game_v17 | 64 × 4 | 96 | 40 | 0.128 | 1983.283 | 0.000 | 0.357 | 44.534 | 0.088 | — (n —) | — (n —) |
+| game_v18 | 64 × 4 | 118 | 22 | 716.276 | 972.484 | 0.424 | 26.763 | 33.935 | 0.839 | — (n —) | — (n —) |
+| game_v19 | 64 × 4 | 87 | 42 | 28.910 | 1368.250 | 0.021 | 5.377 | 37.087 | 0.089 | 0.472 (n 43) | -0.271 (n 43) |
+
+Reading: in v19 the first-fission day of a world is fixed by the world (within-world SD 5.4 days against 26.8 in v18; path share 0.021 against 0.424), and it follows the world's hidden θ (r = 0.47 across worlds on replicate 0; 0.84 on the held-out probe, which reads the camp's first θ exactly) more than its early scarcity (r = −0.27). Path share of `alive` drops from v18's 0.276 to 0.019 — back to v17's level (0.006) — and the same holds for food (0.024) and settlements (0.011). UBS on replicate 0 rises for v19 (alive 0.910 vs v18 0.820) although its path share fell by 0.26: the ridge cannot see θ, so a world-level hidden draw counts as "history" there.
+
+**J7 (game_v19): FAIL** — (a) PASS: food η² 0.624 / R²_abs 0.373, wood 0.317 / 0.681, alive 0.821 / 0.175; (b) FAIL: PS(alive) 0.019 (bound [0.10, 0.50]), PS(food_stock) 0.024 (bound [0.10, 0.60]); PS(alive) v19 − v18 = −0.257 [−0.331, −0.193] < 0 PASS.
+
+### Part 6.1 — consequences (35 days, frozen recorder, `game_v19`, seeds 12000–12031, R = 4; 00:38–00:56 KST; `docs/revitalize/probe/p13-6_forks/`)
+
+Placebo identity 224 / 224 (G0a), replicate 0 = unforked 224 / 224. Deaths effect (replicate mean per seed, exposure included), share of seeds > 0 / < 0 / mean: gift_wood 0.000 / 0.281 / −0.367; rot_wood 0.438 / 0.000 / +0.844; **rain 0.375 / 0.000 / +1.016**; cold_snap 0.156 / 0.000 / +0.172; windfall 0.031 / 0.125 / −0.125; gift1 0.031 / 0.031 / +0.023. Dark-night effect (mean): rain +1.69, rot_wood +1.12, cold_snap +0.40, gift_wood −0.68. Wet burn: over the rain hours inside the burn window (11 per episode) the home store lost 34.94 units against 35.73 on the factual's dry night. G0b (variance reduction) FAIL as in earlier passes (reported). Post-fork first fission (35-day runs) differs from the factual in 0.05–0.12 of episodes. **J8: PASS** (placebo 100 %; rain ≥ 0 and dark-night > 0; rot_wood and rain raise deaths in ≥ 0.25 of seeds; gift_wood ≤ 0).
