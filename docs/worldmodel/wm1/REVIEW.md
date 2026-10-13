@@ -258,7 +258,7 @@ Scope: pre-registration order, the Z verdicts, every number in WM1_2.md, leakage
 
 ## WM-1.3
 
-### Round 1 (fresh `general-purpose` subagent, 2026-10-13 ≈ 22:14–22:25; head `2c9a368f`)
+### Round 1 (fresh `general-purpose` subagent, 2026-10-13 ≈ 22:13–22:24; head `2c9a368f`)
 
 Scope: the merge, GOAL 4.1 (v0 / p10 numbers), 4.2 (input lists, roles, nested sets, hidden fields; the real `config.json` of `m1tf_w13v16_n400_s0`), pre-registration order against the DGX file times, the bootstrap by hand on one real comparison, `ramp_steps` and the online WM-1.2 rule against `a43bdab2`'s code, the judge's rules. The reviewer reproduced: the merge brings exactly the 253 files of `14372ea2..31559232` (outside `wm1/` the tree equals `31559232`) and `8f6b10ed..HEAD` touches only `wm1/` paths (136); Mac 142 OK / 22 skipped, DGX gate on `166eb737` 142 OK / 0 skipped (incl. the WM-1.2 number recompute); 65 inputs in WM-1.2's order and `train_episodes` 400 in the DGX config; METRICS committed 12:23:37, pushed 12:25:12, every DGX test output written 12:26:20 or later from `166eb737` with `forced` false, `docs/` copies byte-identical; bootstrap by hand for `n400_s0` − `an5` (T2-any 168 h): raw −0.0144294 [−0.0204632, −0.0087725], bias-removed +0.0011184 [−0.0047206, 0.0068978], equal to `bs.paired`; mean of per-world means = pooled mean within 7e-16 (384 starts per world); `Wm12Rule` replays the logs to best steps 2,400 (s0) and 2,850 (s1). No BLOCKING finding.
 

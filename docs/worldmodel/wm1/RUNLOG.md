@@ -122,3 +122,4 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 17:05:36 | 20:41:37 | `m1tf_w13v16_n400_s1`: stop `max_steps` (9,000), best step 7,500 (val 0.0778), 12,909 s; WM-1.2 rule: best 2,850 (0.0951), stop at the cap |
 | 4.2 | 20:41:37 | 21:06:06 | its finals from `166eb737`: `final` 20:52:39, `_short` 21:03:50, `_legacy` 21:06:06, exit 0 |
 | 4.1 | 20:41:37 | | `m1tf_w13v16_n400_s2` started |
+| 7 (review 1) | 22:13 | 22:36 | review round 1 (fresh subagent): no BLOCKING, 1 MAJOR, 3 MINOR, 4 NOTE; fixes and METRICS amendment `60347cc3`; `_setup/prereg_sha` → `60347cc3`; DGX gate on `60347cc3`: 143 OK, 0 skipped (88 s) |
