@@ -5,11 +5,14 @@
 # min(30000, DEADLINE - now - 3600); not started when that is below MIN_SECONDS. After a run ends, its test
 # evaluations (final, the WM-1.2-rule checkpoint, the legacy test, the probe) are launched in the background from
 # the pre-registration commit in _setup/prereg_sha when that file exists (else they are left to the operator).
+# Watchdog (added after m1tf_w13v16_n400_s1 hung in a CUDA call, DECISIONS G4.3): a run whose train_log.jsonl has
+# not changed for HANG_SECONDS is killed, moved to _aborted/<run>_hang_<HHMM>, and started again once.
 set -u
 SLOT=$1; SHA=$2; shift 2
 W=/home/hyunlord/work/wm1-runs
 DEADLINE=$(cat $W/_setup/deadline_epoch)          # 2026-10-14 23:27:14 KST + recorded pauses
 MIN_SECONDS=10800
+HANG_SECONDS=1800
 LOG=$W/_queue/$SLOT.log
 mkdir -p $W/_queue
 code_dir() {   # a detached worktree of the DGX code clone at $1
@@ -21,20 +24,37 @@ code_dir() {   # a detached worktree of the DGX code clone at $1
 source /home/hyunlord/work/wm1-venv/bin/activate
 for spec in "$@"; do
   IFS=: read RUN DS SEED <<< "$spec"
+  for attempt in 1 2; do
   NOW=$(date +%s)
   MAXS=$(( DEADLINE - NOW - 3600 )); [ $MAXS -gt 30000 ] && MAXS=30000
-  if [ $MAXS -lt $MIN_SECONDS ]; then echo "$(date +%F_%T) $RUN not started: max_seconds $MAXS < $MIN_SECONDS" >> $LOG; continue; fi
-  if [ -e $W/$RUN ]; then echo "$(date +%F_%T) $RUN exists: skipped" >> $LOG; continue; fi
+  if [ $MAXS -lt $MIN_SECONDS ]; then echo "$(date +%F_%T) $RUN not started: max_seconds $MAXS < $MIN_SECONDS" >> $LOG; continue 2; fi
+  if [ -e $W/$RUN ]; then echo "$(date +%F_%T) $RUN exists: skipped" >> $LOG; continue 2; fi
   CD=$(code_dir $SHA)
   mkdir -p $W/$RUN
   echo "$(date +%F_%T) $RUN start ds=$DS seed=$SEED code=$SHA max_seconds=$MAXS" >> $LOG
   date +%s > $W/$RUN/train.start
-  ( cd $CD && WM1_CODE_COMMIT=$SHA WM_DATA_ROOT=/home/hyunlord/work/worldsim-wm-data python3 tools/worldmodel/wm1/m1_tf.py train \
+  ( cd $CD && WM1_CODE_COMMIT=$SHA WM_DATA_ROOT=/home/hyunlord/work/worldsim-wm-data exec python3 tools/worldmodel/wm1/m1_tf.py train \
       --dataset $DS --out $W/$RUN --variant sev-blind_action-blind --seed $SEED --batch 32 --clamp-nonneg 1 \
       --eval-every 150 --k-max 168 --max-steps 9000 --ramp-steps 1500 --patience 12 --roll-min-context 167 \
-      --roll-starts 1 --tf-l1 1.0 --threads 8 --v-weight 5.0 --window 336 --max-seconds $MAXS ) > $W/$RUN/train.out 2>&1
-  echo $? > $W/$RUN/train.exit
+      --roll-starts 1 --tf-l1 1.0 --threads 8 --v-weight 5.0 --window 336 --max-seconds $MAXS ) > $W/$RUN/train.out 2>&1 &
+  TPID=$!
+  HUNG=0
+  while kill -0 $TPID 2>/dev/null; do
+    sleep 60
+    LAST=$(stat -c %Y $W/$RUN/train_log.jsonl 2>/dev/null || cat $W/$RUN/train.start)
+    if kill -0 $TPID 2>/dev/null && [ $(( $(date +%s) - LAST )) -gt $HANG_SECONDS ]; then HUNG=1; kill $TPID; sleep 15; kill -9 $TPID 2>/dev/null; break; fi
+  done
+  wait $TPID; RC=$?
+  if [ $HUNG = 1 ]; then
+    echo "$(date +%F_%T) $RUN hung (train_log.jsonl silent > $HANG_SECONDS s): killed, moved to _aborted" >> $LOG
+    mkdir -p $W/_aborted; mv $W/$RUN $W/_aborted/${RUN}_hang_$(date +%H%M)
+    continue
+  fi
+  echo $RC > $W/$RUN/train.exit
   date +%s > $W/$RUN/train.end
+  break
+  done
+  [ -e $W/$RUN/train.exit ] || continue
   echo "$(date +%F_%T) $RUN end exit=$(cat $W/$RUN/train.exit)" >> $LOG
   if [ -s $W/_setup/prereg_sha ]; then
     nohup bash $W/_setup/finals_w13.sh $RUN $DS > /dev/null 2>&1 &
