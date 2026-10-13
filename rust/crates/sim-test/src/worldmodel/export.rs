@@ -33,8 +33,9 @@ use crate::probe::fingerprint;
 pub const SCHEMA_VERSION: u64 = 5;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 12] = [
+pub const SCENES: [&str; 14] = [
     "game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17",
+    "game_v18_nofission", "game_v18",
 ];
 
 /// Build a fresh engine of `scene` and `seed`.
@@ -52,6 +53,8 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v16" => crate::scenes::game_v16_scene(seed),
         "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
         "game_v17" => crate::scenes::game_v17_scene(seed),
+        "game_v18_nofission" => crate::scenes::game_v18_nofission_scene(seed),
+        "game_v18" => crate::scenes::game_v18_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -593,7 +596,7 @@ pub struct WmArgs {
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|game_v18_nofission|game_v18|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.

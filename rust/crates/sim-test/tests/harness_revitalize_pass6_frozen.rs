@@ -41,6 +41,7 @@ fn pass5_v11_literal() -> WorldRules {
             }),
             preempt_gathering: true,
             keyed_draws: false,
+            local_food_availability: false,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {
@@ -121,6 +122,8 @@ fn pass5_v11_literal() -> WorldRules {
                 windfall_over_snow: false,
                 rain_soak_permille: 0,
                 regional_wood: false,
+                area_fall_floor_permille: 0,
+                rain_wet_burn: false,
             }),
             exposure: None,
             fission: None,

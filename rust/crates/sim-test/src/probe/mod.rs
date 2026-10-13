@@ -41,9 +41,9 @@ mod tests {
         // 15 Pass 5 keys; schema 6 the 6 Pass 6 keys; schema 7 the 5 Pass 7
         // keys; schema 8 the 2 Pass 8 keys; schema 9 adds no row key (its two
         // keys live in the summary's rules block); schema 10 the 3 Pass 10 keys;
-        // schema 11 the 8 Pass 11 keys; schema 12 the 12 Pass 12 keys.
+        // schema 11 the 8 Pass 11 keys; schema 12 the 14 Pass 12 keys.
         let sample = super::metrics::sample(&crate::scenes::legacy_scene(), "legacy", 0, 0);
         assert_eq!(sample["schema_version"], 12);
-        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 12);
+        assert_eq!(sample.as_object().expect("sample object").len(), 53 + 15 + 15 + 6 + 5 + 2 + 3 + 8 + 14);
     }
 }

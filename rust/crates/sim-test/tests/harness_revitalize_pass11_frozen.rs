@@ -45,6 +45,7 @@ fn pass10_v16_neutral_literal() -> WorldRules {
             }),
             preempt_gathering: true,
             keyed_draws: true,
+            local_food_availability: false,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {
@@ -125,6 +126,8 @@ fn pass10_v16_neutral_literal() -> WorldRules {
                 windfall_over_snow: true,
                 rain_soak_permille: 0,
                 regional_wood: false,
+                area_fall_floor_permille: 0,
+                rain_wet_burn: false,
             }),
             exposure: Some(ExposureRule { damage_per_cold_hour: [10.0, 4.0, 5.0], heal_block_hours: 2, hunger_weight: 0.0, use_hardiness: false }),
             fission: None,

@@ -52,6 +52,7 @@ fn pass11_v17_seed0_literal() -> WorldRules {
             }),
             preempt_gathering: true,
             keyed_draws: true,
+            local_food_availability: false,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {
@@ -141,6 +142,8 @@ fn pass11_v17_seed0_literal() -> WorldRules {
                 windfall_over_snow: true,
                 rain_soak_permille: 300,
                 regional_wood: true,
+                area_fall_floor_permille: 0,
+                rain_wet_burn: false,
             }),
             exposure: Some(ExposureRule {
                 damage_per_cold_hour: [9.0, 5.0, 6.0],
@@ -162,6 +165,8 @@ fn pass11_v17_seed0_literal() -> WorldRules {
                 max_settlements: 4,
                 settle_timeout_days: 2,
                 remnant_members: 2,
+                allowed_seasons: [true, true, false, false],
+                hazard: None,
             }),
         },
         clock_offset_ticks: 480,

@@ -4,14 +4,17 @@
 //! one Pass 11 difference reverted to `game_v16` (the reverse half); each
 //! `fwd_<name>` scene is `game_v16` with one Pass 11 difference added (the
 //! forward half). Nothing here is a `sim-core` constructor: the scenes edit
-//! the v16 / v17 rules and worldgen configs they are built from.
+//! the v16 / v17 rules and worldgen configs they are built from. Two
+//! sub-bisection scenes split the regions into bushes only and deadwood only,
+//! and `abl_local_food` checks the Part 1 hypothesis (v17_nofission with the
+//! Pass 12 J6 fix, `local_food_availability`).
 use sim_core::rules::WorldRules;
 use sim_core::variety::WorldVariety;
 use sim_engine::SimEngine;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 
 /// Every ablation scene name the probe accepts.
-pub const SCENES: [&str; 13] = [
+pub const SCENES: [&str; 16] = [
     "abl_no_regions",
     "abl_v16_damage",
     "abl_no_hunger_weight",
@@ -25,6 +28,9 @@ pub const SCENES: [&str; 13] = [
     "fwd_hunger_weight",
     "fwd_hardiness",
     "fwd_exposure_v2",
+    "fwd_regions_bushes_only",
+    "fwd_regions_wood_only",
+    "abl_local_food",
 ];
 
 /// Whether `scene` is an ablation scene.
@@ -57,6 +63,12 @@ pub fn engine(scene: &str, seed: u64) -> Option<SimEngine> {
     let v17_exposure = v17n.society.exposure;
     let gen16 = WorldGenConfig::game_v16_with(seed, &variety);
     let gen17 = WorldGenConfig::game_v17_with(seed, &variety);
+    // Part 1 sub-bisection: the regions with only their bushes or only their deadwood.
+    let gen17 = match scene {
+        "fwd_regions_bushes_only" => WorldGenConfig { region_deadwood: 0, ..gen17 },
+        "fwd_regions_wood_only" => WorldGenConfig { region_bushes: 0, ..gen17 },
+        _ => gen17,
+    };
     let (gen, mut rules) = match scene {
         n if n.starts_with("abl_") => (if n == "abl_no_regions" { gen16 } else { gen17 }, v17n),
         n if n.starts_with("fwd_") => (if n.starts_with("fwd_regions") { gen17 } else { gen16 }, v16),
@@ -70,7 +82,10 @@ pub fn engine(scene: &str, seed: u64) -> Option<SimEngine> {
         "abl_no_regional_wood" => edit_firewood(&mut rules, |f| f.regional_wood = false),
         "abl_no_rain_soak" => edit_firewood(&mut rules, |f| f.rain_soak_permille = 0),
         "abl_v16_exposure" => rules.society.exposure = v16_exposure,
-        "fwd_regions" => {}
+        // Part 1 hypothesis check: v17_nofission with Pass 12's J6 fix
+        // (`AgentRules::local_food_availability`), not a reversion.
+        "abl_local_food" => rules.agent.local_food_availability = true,
+        "fwd_regions" | "fwd_regions_bushes_only" | "fwd_regions_wood_only" => {}
         "fwd_regions_regional_wood" => edit_firewood(&mut rules, |f| f.regional_wood = true),
         "fwd_v17_damage" => edit_exposure(&mut rules, |e| e.damage_per_cold_hour = v17_exposure.map_or([0.0; 3], |x| x.damage_per_cold_hour)),
         "fwd_hunger_weight" => edit_exposure(&mut rules, |e| e.hunger_weight = v17_exposure.map_or(0.0, |x| x.hunger_weight)),
@@ -102,7 +117,7 @@ mod tests {
                 assert_eq!(rules == v17n, scene == "abl_no_regions", "{scene}");
             } else {
                 assert_eq!(regions, scene.starts_with("fwd_regions"), "{scene}");
-                assert_eq!(rules == v16, scene == "fwd_regions", "{scene}");
+                assert_eq!(rules == v16, matches!(scene, "fwd_regions" | "fwd_regions_bushes_only" | "fwd_regions_wood_only"), "{scene}");
             }
         }
         assert!(engine("game_v17", 5).is_none());

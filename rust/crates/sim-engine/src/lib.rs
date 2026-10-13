@@ -124,6 +124,15 @@ pub struct Tallies {
     /// Members moved between settlements by the exclusivity pass of
     /// `SettlementSystem` (Pass 11 measurement; counted in every version).
     pub exclusivity_moves: u64,
+    /// Wood a raining settlement burned wet (Pass 12, `rain_wet_burn`).
+    pub wet_burn_wood: u64,
+    /// Wood added to settled wild regions by the winter-fall floor (Pass 12,
+    /// `area_fall_floor_permille`): the units the floor added to the
+    /// settled areas' accumulators (before the snow cap).
+    pub area_floor_wood: u64,
+    /// Winter-fall units lost to the snow cap in a settled wild region
+    /// (Pass 12, floor on); included in `winter_wood_lost`.
+    pub winter_wood_lost_settled: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -448,6 +457,10 @@ pub struct SimResources {
     /// Per-area winter-fall cursors (Pass 11, regional wood only).
     pub wood_area_cursor: BTreeMap<u8, (u32, u32)>,
 
+    /// Pass 12: measurement-only accumulator of the extra the winter-fall
+    /// floor adds (feeds `Tallies::area_floor_wood`; never read by systems).
+    pub wood_area_floor_acc: u64,
+
     /// Hearth tiles that never anchor a new settlement again (Pass 11): the
     /// hearth of a cancelled founding, a merged remnant or a settlement that
     /// lost every member. Empty outside `game_v17`.
@@ -460,6 +473,41 @@ pub struct SimResources {
     /// Every settlement dissolution as (settlement, tick) (Pass 11);
     /// measurement only, never read by systems.
     pub dissolutions: Vec<(SettlementId, u64)>,
+
+    /// Every daily fission check that reached the hazard draw (Pass 12,
+    /// `FissionRule::hazard`), in check order; measurement only, never read
+    /// by systems. Empty without a hazard.
+    pub fission_checks: Vec<FissionCheck>,
+}
+
+/// One daily fission check that reached the hazard draw (Pass 12);
+/// measurement only. Factors and the hazard in thousandths.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FissionCheck {
+    /// Tick of the check.
+    pub tick: u64,
+    /// The settlement checked.
+    pub settlement: SettlementId,
+    /// Its members.
+    pub members: u32,
+    /// `sustain_capacity`.
+    pub capacity: u32,
+    /// Its stockpile food.
+    pub food: u32,
+    /// Size factor.
+    pub g: i64,
+    /// Crowding factor.
+    pub q: i64,
+    /// Scarcity factor.
+    pub s: i64,
+    /// Hazard.
+    pub h: i64,
+    /// The keyed draw in 0..1000.
+    pub draw: u64,
+    /// `draw < h`.
+    pub split: bool,
+    /// Whether a free site existed.
+    pub site_free: bool,
 }
 
 /// One departed fission group (Pass 11); measurement only.
@@ -526,6 +574,14 @@ pub struct WorldGenReport {
     pub region_deadwood_requested: u32,
     /// Region deadwood spots placed.
     pub region_deadwood_placed: u32,
+    /// Region bushes added by the Pass 12 fill (`region_fill`), by tier 2
+    /// (Forest in the ring), 3 (Plain with a Forest neighbour in the ring),
+    /// 4 (either, ring 7–9) and 5 (any Plain, ring 2–9); included in
+    /// `region_bushes_placed`.
+    pub region_fill_bushes: [u32; 4],
+    /// Region deadwood spots added by the Pass 12 fill (tier 2, ring 7–9);
+    /// included in `region_deadwood_placed`.
+    pub region_fill_deadwood: u32,
 }
 
 impl SimResources {
@@ -597,9 +653,11 @@ impl SimResources {
             wood_spot_area: BTreeMap::new(),
             wood_area_acc: BTreeMap::new(),
             wood_area_cursor: BTreeMap::new(),
+            wood_area_floor_acc: 0,
             retired_hearths: BTreeSet::new(),
             fission_log: Vec::new(),
             dissolutions: Vec::new(),
+            fission_checks: Vec::new(),
         }
     }
 

@@ -42,6 +42,13 @@ pub struct AgentRules {
     /// every random number is a pure function of (seed, stream, lineage key,
     /// tick, slot, replicate). False = the sequential streams and hecs order of v8–v14.
     pub keyed_draws: bool,
+    /// Pass 12 (`game_v18`, the J6 fix): a settlement member's hunger counts
+    /// as actionable (food available) only while a food tile with food lies
+    /// within its settlement's catchment radius (`food_economy::catchment_radius`)
+    /// of the formation tile; non-members keep the world-wide check. False =
+    /// v8–v17 (any food tile anywhere makes food available, so a full wild
+    /// region far from the camp keeps a camp's hungry members off the store).
+    pub local_food_availability: bool,
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -339,6 +346,17 @@ pub struct FirewoodRule {
     /// and a windfall fills the home settlement's nearest spots first. False =
     /// v8–v16 (one world-total round robin; windfall in key order).
     pub regional_wood: bool,
+    /// Winter-fall floor of settled wild regions (Pass 12, `game_v18`; needs
+    /// `regional_wood`): while a settlement with a member has its formation
+    /// tile within Chebyshev 9 of region r's centre, area r + 1's per-pulse
+    /// accumulator adds `max(per_day × 1000 × n_area, per_day ×
+    /// area_fall_floor_permille × n_camp)` instead of `per_day × 1000 ×
+    /// n_area` (extra wood; the camp's own fall is never reduced). 0 = v8–v17.
+    pub area_fall_floor_permille: u32,
+    /// Rain burns wet wood (Pass 12, `game_v18`): a raining settlement inside
+    /// the burn window still withdraws the hour's wood (`Tallies::wet_burn_wood`)
+    /// and its fire stays out. False = v8–v17 (rain burns nothing).
+    pub rain_wet_burn: bool,
 }
 /// Pass 10: a cold night wounds; health can reach zero.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -387,6 +405,44 @@ pub struct FissionRule {
     pub settle_timeout_days: u32,
     /// A settlement with this many members or fewer for 24 hours merges away.
     pub remnant_members: u32,
+    /// Seasons in which the daily check may split a settlement (Pass 12):
+    /// spring, summer, autumn, winter. `[true, true, false, false]` = v17.
+    pub allowed_seasons: [bool; 4],
+    /// The daily split hazard (Pass 12, `game_v18`); `None` = v17's crowding
+    /// gate (`members >= crowding × capacity`).
+    pub hazard: Option<FissionHazard>,
+}
+/// Pass 12: the daily probability that a settlement splits, rising with its
+/// size, its crowding against the birth gate's capacity and a shortfall in
+/// its food store (`FissionSystem`, in thousandths; i64 arithmetic).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FissionHazard {
+    /// Size factor 0 at or below this many members.
+    pub size_lo: u32,
+    /// Size factor 1 at or above this many members.
+    pub size_hi: u32,
+    /// Crowding factor 0 at or below members / capacity (thousandths).
+    pub crowd_lo_permille: u32,
+    /// Crowding factor 1 at or above members / capacity (thousandths).
+    pub crowd_hi_permille: u32,
+    /// A store below members × adult need × this many days is short.
+    pub scarcity_days: u32,
+    /// Weight of the crowding factor (the two weights sum to 1000).
+    pub weight_crowd_permille: u32,
+    /// Weight of the scarcity factor.
+    pub weight_scarcity_permille: u32,
+    /// The hazard's ceiling per daily check (thousandths).
+    pub max_daily_permille: u32,
+}
+impl FissionHazard {
+    /// The hazard's invariants: `size_hi > size_lo`, `crowd_hi > crowd_lo`,
+    /// the weights sum to 1000 and the ceiling is at most 1000.
+    pub const fn is_valid(&self) -> bool {
+        self.size_hi > self.size_lo
+            && self.crowd_hi_permille > self.crowd_lo_permille
+            && self.weight_crowd_permille + self.weight_scarcity_permille == 1000
+            && self.max_daily_permille <= 1000
+    }
 }
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -412,6 +468,7 @@ impl Default for WorldRules {
                 forage: None,
                 preempt_gathering: false,
                 keyed_draws: false,
+                local_food_availability: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -485,7 +542,70 @@ impl WorldRules {
             max_settlements: 4,
             settle_timeout_days: 2,
             remnant_members: 2,
+            // Pass 12 fields at the values that reproduce Pass 11.
+            allowed_seasons: [true, true, false, false],
+            hazard: None,
         });
+        rules
+    }
+
+    /// Pass 12 village policies of world `seed` without fission:
+    /// `game_v17_nofission` with rain that burns wet wood and the Pass 12
+    /// daughter and rhythm fixes (none of which acts without a daughter or an
+    /// intervention, except where noted). Hidden parameters from
+    /// `WorldVariety::draw_v18`; worldgen `WorldGenConfig::game_v18`.
+    pub const fn game_v18_nofission(seed: u64) -> Self {
+        Self::game_v18_nofission_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v18_nofission`] for given hidden parameters.
+    pub const fn game_v18_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v17_nofission_with(variety);
+        // Pass 12 section 7.5 (Part 1's J6 finding): food availability is
+        // local to a member's catchment.
+        rules.agent.local_food_availability = true;
+        if let Some(mut firewood) = rules.society.firewood {
+            firewood.rain_wet_burn = true;
+            // Pass 12 section 7.3 (c), DAUGHTER_DIAGNOSIS.md (d): settled
+            // regions get at least 0.6 of the camp's winter fall.
+            firewood.area_fall_floor_permille = 600;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
+    }
+
+    /// The `game_v18` split hazard (Pass 12 section 7.1 start values).
+    pub const V18_HAZARD: FissionHazard = FissionHazard {
+        size_lo: 20,
+        size_hi: 40,
+        crowd_lo_permille: 850,
+        crowd_hi_permille: 1050,
+        scarcity_days: 2,
+        weight_crowd_permille: 500,
+        weight_scarcity_permille: 500,
+        max_daily_permille: 120,
+    };
+
+    /// Pass 12 village policies of world `seed`: `game_v18_nofission` plus
+    /// fission as a daily hazard (`FissionHazard`), autumn departures allowed.
+    pub const fn game_v18(seed: u64) -> Self {
+        Self::game_v18_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v18`] for given hidden parameters.
+    pub const fn game_v18_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v18_nofission_with(variety);
+        let hazard = Self::V18_HAZARD;
+        debug_assert!(hazard.is_valid());
+        let base = Self::game_v17_with(variety);
+        if let Some(mut fission) = base.society.fission {
+            fission.min_members = 22;
+            fission.min_age_days = 10;
+            fission.cooldown_days = 28;
+            fission.allowed_seasons = [true, true, true, false];
+            fission.hazard = Some(hazard);
+            rules.society.fission = Some(fission);
+        }
         rules
     }
 
@@ -688,6 +808,9 @@ impl WorldRules {
             // Pass 11 field at the value that reproduces Pass 10 in v11–v16.
             rain_soak_permille: 0,
             regional_wood: false,
+            // Pass 12 fields at the values that reproduce Pass 11 in v11–v17.
+            area_fall_floor_permille: 0,
+            rain_wet_burn: false,
         });
         rules.agent.preempt_gathering = true;
         rules
@@ -795,6 +918,7 @@ impl WorldRules {
                 forage: None,
                 preempt_gathering: false,
                 keyed_draws: false,
+                local_food_availability: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -1077,6 +1201,49 @@ mod tests {
     }
 
     #[test]
+    fn pass12_fields_are_neutral_before_v18() {
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
+            WorldRules::game_v15(), WorldRules::game_v16_neutral(), WorldRules::game_v16(0), WorldRules::game_v17(0),
+            WorldRules::game_v17(7), WorldRules::game_v17_nofission(3)] {
+            if let Some(firewood) = rules.society.firewood {
+                assert_eq!(firewood.area_fall_floor_permille, 0);
+                assert!(!firewood.rain_wet_burn);
+            }
+            if let Some(fission) = rules.society.fission {
+                assert_eq!(fission.allowed_seasons, [true, true, false, false]);
+                assert_eq!(fission.hazard, None);
+            }
+            assert!(!rules.agent.local_food_availability);
+        }
+    }
+
+    #[test]
+    fn game_v18_hazard_is_valid_and_v18_nofission_has_no_fission() {
+        assert!(WorldRules::V18_HAZARD.is_valid());
+        for bad in [
+            FissionHazard { size_hi: 20, ..WorldRules::V18_HAZARD },
+            FissionHazard { crowd_hi_permille: 850, ..WorldRules::V18_HAZARD },
+            FissionHazard { weight_crowd_permille: 400, ..WorldRules::V18_HAZARD },
+            FissionHazard { max_daily_permille: 1001, ..WorldRules::V18_HAZARD },
+        ] {
+            assert!(!bad.is_valid());
+        }
+        for seed in [0, 7, 1234] {
+            let v18 = WorldRules::game_v18(seed);
+            let fission = v18.society.fission.expect("v18 fission");
+            assert_eq!(fission.hazard, Some(WorldRules::V18_HAZARD));
+            assert_eq!(fission.allowed_seasons, [true, true, true, false]);
+            assert_eq!((fission.min_members, fission.min_age_days, fission.cooldown_days), (22, 10, 28));
+            let mut stripped = v18;
+            stripped.society.fission = None;
+            assert_eq!(stripped, WorldRules::game_v18_nofission(seed));
+            assert!(v18.society.firewood.is_some_and(|f| f.rain_wet_burn));
+            assert!(v18.agent.local_food_availability);
+        }
+    }
+
+    #[test]
     fn pass6_firewood_fields_reproduce_pass5_in_v11() {
         let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
         assert_eq!(rule.winter_prep_days, None);
@@ -1106,6 +1273,7 @@ mod tests {
                 forage: None,
                 preempt_gathering: false,
                 keyed_draws: false,
+                local_food_availability: false,
             }
         );
         assert_eq!(

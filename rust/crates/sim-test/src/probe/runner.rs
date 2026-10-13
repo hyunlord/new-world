@@ -56,6 +56,8 @@ pub(super) struct RunResult {
     pub(super) clock: (u64, u64),
     /// Per-seed schema-eleven block (Pass 11, `pass11::seed_block`).
     pub(super) pass11: Value,
+    /// Per-seed schema-twelve block (Pass 12, `pass12::seed_block`).
+    pub(super) pass12: Value,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -116,6 +118,8 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v16" => crate::scenes::game_v16_scene(seed),
         "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
         "game_v17" => crate::scenes::game_v17_scene(seed),
+        "game_v18_nofission" => crate::scenes::game_v18_nofission_scene(seed),
+        "game_v18" => crate::scenes::game_v18_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
@@ -137,6 +141,8 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     // Pass 11 J2: consecutive hours each settlement has had 1–2 members.
     let mut remnant_hours: BTreeMap<u32, u64> = BTreeMap::new();
     let mut max_remnant_hours = 0u64;
+    // Pass 12 J5: members of every settlement at 18:00 of each winter's first day.
+    let mut winter_members: BTreeMap<u64, BTreeMap<u32, u32>> = BTreeMap::new();
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
@@ -183,7 +189,14 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let mut tick_seconds = 0.0;
     let (mut agent_samples, mut breaches, mut actionable, mut unavailable) =
         (0u64, 0u64, 0u64, 0u64);
+    let winter_starts: BTreeMap<u64, u64> = super::pass10::WINTER_FIRST_DAYS
+        .iter()
+        .filter_map(|d| clock_tick(*d, 1080, ticks_per_day, engine.resources.rules.clock_offset_ticks).map(|t| (t, *d)))
+        .collect();
     for tick in 0..=total_ticks {
+        if let Some(day) = winter_starts.get(&tick) {
+            winter_members.insert(*day, super::pass12::members_now(&engine));
+        }
         let regular = tick.is_multiple_of(args.sample_every);
         let checkpoint = tick > 0 && tick.is_multiple_of(ticks_per_day);
         let clock = clock_schedule.get(&tick).copied();
@@ -332,6 +345,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         "PROBE seed={seed} shelter_plan_skips={}",
         engine.resources.shelter_plan_skips
     );
+    let pass12 = super::pass12::seed_block(&engine, &winter_members, &exposure_deaths, args.days);
     let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
     if let Some(object) = pass11.as_object_mut() {
         object.insert("max_hours_with_1_to_2_members".into(), serde_json::json!(max_remnant_hours));
@@ -339,6 +353,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     Ok(RunResult {
         seed,
         pass11,
+        pass12,
         checkpoints,
         census: deaths.census,
         agent_days,
@@ -377,7 +392,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18")
         || super::ablation::is_ablation(scene)
 }
 
@@ -390,7 +405,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "abl_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

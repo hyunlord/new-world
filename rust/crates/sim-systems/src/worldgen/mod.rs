@@ -41,6 +41,12 @@ pub struct WorldGenConfig {
     pub region_bushes: u32,
     /// Deadwood spots asked for in each wild region (Pass 11).
     pub region_deadwood: u32,
+    /// Pass 12 (`game_v18`): a region short of its bushes or deadwood is
+    /// filled from looser candidate tiers (`camp::regions`). False = v17.
+    pub region_fill: bool,
+    /// Pass 12 (`game_v18`): a region centre candidate needs a water tile
+    /// within this Chebyshev distance. None = v17 (no water rule).
+    pub region_water_max: Option<u32>,
 }
 impl WorldGenConfig {
     /// Pass 10 generator inputs of world `seed`: v15's recipe with the
@@ -79,6 +85,20 @@ impl WorldGenConfig {
             region_deadwood: variety.region_deadwood,
             ..Self::game_v16_with(seed, variety)
         }
+    }
+
+    /// Pass 12 generator inputs of world `seed` (`game_v18` and
+    /// `game_v18_nofission`): v17's world from `WorldVariety::draw_v18`, with
+    /// regions that deliver what they promise (`region_fill`) and centres
+    /// near water (`region_water_max`).
+    pub const fn game_v18(seed: u64) -> Self {
+        Self::game_v18_with(seed, &sim_core::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v18`] for given hidden parameters.
+    pub const fn game_v18_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
+        // Section 7.3 (a), DAUGHTER_DIAGNOSIS.md (b): centres within 12 of water.
+        Self { region_fill: true, region_water_max: Some(12), ..Self::game_v17_with(seed, variety) }
     }
 
     /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
@@ -142,6 +162,8 @@ impl WorldGenConfig {
             wild_regions: 0,
             region_bushes: 0,
             region_deadwood: 0,
+            region_fill: false,
+            region_water_max: None,
         }
     }
 }

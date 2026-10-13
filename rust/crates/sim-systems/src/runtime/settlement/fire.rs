@@ -40,6 +40,11 @@
 //!
 //! Pass 11 (exposure v2, `game_v17`): the hourly damage is scaled by the
 //! resident's `Hardiness` and by its hunger (`exposure_damage`).
+//!
+//! Pass 12 (`FirewoodRule::rain_wet_burn`, `game_v18`): a raining settlement
+//! inside the burn window still withdraws the hour's wood (all it holds, if
+//! less; `Tallies::wet_burn_wood`) and its fire stays out — the wood burns
+//! wet and gives no warmth.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -109,6 +114,11 @@ impl RuntimeSystem for FireSystem {
         for sid in &ids {
             // Pass 7 rain: the fire stays out and burns nothing.
             let raining = resources.fire_blocked_until.get(sid).is_some_and(|until| now < *until);
+            // Pass 12: under `rain_wet_burn` the rain burns the hour's wood wet.
+            if burning && raining && rule.rain_wet_burn {
+                let wet = resources.settlements.get_mut(sid).map_or(0, |settlement| settlement.withdraw(ResourceKind::Wood, per_hour));
+                resources.tallies.wet_burn_wood += u64::from(wet);
+            }
             let lit = burning
                 && !raining
                 && resources

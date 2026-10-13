@@ -494,6 +494,22 @@ pub fn nearest_resource_tile(
         .copied()
 }
 
+/// Pass 12 (`local_food_availability`): the Manhattan-nearest food tile with
+/// food within Chebyshev `radius` of `home` (tie-break `(dist, x, y)`), the
+/// meal target of a settlement member; `None` when the catchment is bare.
+pub fn nearest_local_food(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    home: (u32, u32),
+    radius: u32,
+) -> Option<(u32, u32)> {
+    tiles
+        .iter()
+        .filter(|(t, amount)| **amount > 0 && t.0.abs_diff(home.0).max(t.1.abs_diff(home.1)) <= radius)
+        .map(|(t, _)| *t)
+        .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
+}
+
 /// Nearest *eligible* food tile for the `CascadeArm::Gather` arm: the
 /// Manhattan-nearest tile (deterministic `(dist, x, y)` tie-break) among ONLY
 /// those food tiles holding count `> 0` AND within `radius` Chebyshev of `pos`.
@@ -531,6 +547,29 @@ pub fn nearest_food_tile_in_radius(
         })
 }
 
+/// Pass 12 (`local_food_availability`): [`nearest_food_tile_in_radius`] for
+/// the Gather arm, restricted for a settlement member (`local` = its formation
+/// tile and catchment radius) to tiles inside its catchment; `None` = as v17.
+pub fn nearest_gather_tile(
+    pos: &Position,
+    tiles: &std::collections::HashMap<(u32, u32), u8>,
+    radius: u32,
+    local: Option<((u32, u32), u32)>,
+) -> Option<(u32, u32)> {
+    let Some((home, catchment)) = local else {
+        return nearest_food_tile_in_radius(pos, tiles, radius);
+    };
+    tiles
+        .iter()
+        .filter(|((tx, ty), v)| {
+            **v > 0
+                && (*tx as i64 - pos.x as i64).abs().max((*ty as i64 - pos.y as i64).abs()) <= radius as i64
+                && tx.abs_diff(home.0).max(ty.abs_diff(home.1)) <= catchment
+        })
+        .map(|(k, _)| *k)
+        .min_by_key(|(tx, ty)| ((*tx as i64 - pos.x as i64).abs() + (*ty as i64 - pos.y as i64).abs(), *tx, *ty))
+}
+
 /// Phase 5-β decision system. Stateless — all per-agent state lives
 /// in the [`AgentState`], [`Hunger`], [`Thirst`] components and the
 /// sparse `food_tiles` / `water_tiles` maps on [`SimResources`].
@@ -564,6 +603,34 @@ impl RuntimeSystem for AgentDecisionSystem {
         }
         let tick = resources.current_tick;
         let availability = NeedAvailability::from_resources(resources);
+        // Pass 12 (`local_food_availability`, `game_v18`, the J6 fix): a
+        // member's food availability is whether a food tile with food lies in
+        // its settlement's catchment (settlements in id order, first wins),
+        // and its meal target (post-pass) is the nearest such tile.
+        // Empty without the rule, so every earlier world is untouched.
+        let catchment = crate::runtime::settlement::food_economy::catchment_radius(resources);
+        let mut local_home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
+        let local_food: BTreeMap<AgentId, bool> = if resources.rules.agent.local_food_availability {
+            let radius = catchment;
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            let mut out = BTreeMap::new();
+            for sid in ids {
+                let Some(settlement) = resources.settlements.get(&sid) else { continue };
+                let home = settlement.formation_tile;
+                let food = resources
+                    .food_tiles
+                    .iter()
+                    .any(|(tile, amount)| *amount > 0 && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= radius);
+                for id in &settlement.member_agents {
+                    out.entry(*id).or_insert(food);
+                    local_home.entry(*id).or_insert(home);
+                }
+            }
+            out
+        } else {
+            BTreeMap::new()
+        };
         let fatigue_threshold = fatigue_threshold_at(resources);
         let night_rest = resources.rules.agent.night_rest.filter(|rule|
             clock_in_window(resources, rule.start_minute, rule.end_minute));
@@ -945,6 +1012,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         ) in rows
         {
             let tile_idx = pos.y * width + pos.x;
+            // Pass 12: this member's food availability (see `local_food`).
+            let availability = local_food
+                .get(&agent.id)
+                .map_or(availability, |food| NeedAvailability { food: *food && availability.food, ..availability });
             let adult = !children.contains(&agent.id);
             let worker = adult && !elders.contains(&agent.id);
             let social_ready = adult && (social_rule.is_none()
@@ -1489,11 +1560,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 })
                         });
                         if worker && has_room && bounded && !no_trips {
-                            nearest_food_tile_in_radius(
-                                pos,
-                                &resources.food_tiles,
-                                GATHER_SCAN_RADIUS,
-                            )
+                            nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)))
                         } else {
                             None
                         }
@@ -2136,7 +2203,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             None
                         }
                     } else {
-                        let chosen = nearest_food_tile_in_radius(pos, &resources.food_tiles, GATHER_SCAN_RADIUS);
+                        let chosen = nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)));
                         match chosen {
                             Some(tile) => seek_set.push((e, tile)),
                             // The tile its Gather arm picked was emptied later in
@@ -2207,12 +2274,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // the exact selector the arm used so the chosen tile is
                             // identical.
                             AgentState::Seeking { target: TargetKind::GatherFood } => {
-                                nearest_food_tile_in_radius(
-                                    pos,
-                                    &resources.food_tiles,
-                                    GATHER_SCAN_RADIUS,
-                                )
+                                nearest_gather_tile(pos, &resources.food_tiles, GATHER_SCAN_RADIUS, local_home.get(&agent.id).map(|home| (*home, catchment)))
                             }
+                            // Pass 12 (`local_food_availability`): a member eats
+                            // at the nearest food tile with food in its catchment.
+                            _ if local_home.contains_key(&agent.id) => local_home
+                                .get(&agent.id)
+                                .and_then(|home| nearest_local_food(pos, &resources.food_tiles, *home, catchment)),
                             // Food (eat) uses the unfiltered nearest (eat path
                             // unchanged from V7 Section 16-α).
                             _ => nearest_resource_tile(pos, &resources.food_tiles),

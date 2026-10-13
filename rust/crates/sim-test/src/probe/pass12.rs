@@ -11,10 +11,18 @@
 //! (any other Agent target). `adult_act_walking` counts the adults in a
 //! Seeking state (on their way to any target) and `adult_act_total` all
 //! adult members; `adult_act_forage + wood + build + haul` is the numerator of
-//! `adult_work_share`.
+//! `adult_work_share`. `wet_burn_wood_total` and `area_floor_wood_total` are
+//! the cumulative Pass 12 tallies (rain burning wet wood, the settled-region
+//! winter-fall floor).
+//!
+//! Per-seed block ([`seed_block`]): every daily fission check that reached the
+//! hazard draw, the first day each settlement reached it, members of every
+//! settlement at 18:00 of each winter's first day with its exposure deaths in
+//! the winter window, and the worldgen fill counts.
 use serde_json::{json, Value};
-use sim_core::components::{Agent, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, TargetKind};
+use sim_core::components::{Agent, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SettlementId, TargetKind};
 use sim_engine::SimEngine;
+use std::collections::{BTreeMap, BTreeSet};
 use sim_systems::runtime::agent::hauls_home;
 use sim_systems::runtime::decision::agent_decision::clock_in_window;
 use sim_systems::runtime::settlement::firewood::in_gather_window;
@@ -78,7 +86,99 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     }
     row.insert("adult_act_walking".into(), json!(walking));
     row.insert("adult_act_total".into(), json!(total));
+    row.insert("wet_burn_wood_total".into(), json!(r.tallies.wet_burn_wood));
+    row.insert("area_floor_wood_total".into(), json!(r.tallies.area_floor_wood));
     Value::Object(row)
+}
+
+/// Members of every settlement now (for the winter-start samples).
+pub(super) fn members_now(engine: &SimEngine) -> BTreeMap<SettlementId, u32> {
+    engine.resources.settlements.iter().map(|(sid, s)| (*sid, s.member_agents.len() as u32)).collect()
+}
+
+/// The per-seed schema-twelve block.
+///
+/// `fission_checks`: every logged hazard check as [tick, settlement, members,
+/// capacity, food, g, q, s, h, draw, split (0/1), site_free (0/1)].
+/// `first_draw_day`: per settlement, the zero-based display day
+/// ((tick + offset) / ticks_per_day) of its first logged check.
+/// `settlement_winters`: for each winter whose window [day D 18:00, day D+7
+/// 07:00) lies inside the run, every settlement with members at day D 18:00,
+/// founded inside the window or with an exposure death in it:
+/// `members_at_winter_start` (a settlement founded inside the window counts
+/// its fission group's size), `exposure_deaths`, `founded_inside`.
+pub(super) fn seed_block(
+    engine: &SimEngine,
+    winter_members: &BTreeMap<u64, BTreeMap<SettlementId, u32>>,
+    exposure: &[super::pass11::ExposureDeath],
+    run_days: u64,
+) -> Value {
+    let r = &engine.resources;
+    let tpd = r.ticks_per_day.max(1);
+    let offset = r.rules.clock_offset_ticks;
+    let checks: Vec<Value> = r
+        .fission_checks
+        .iter()
+        .map(|c| json!([c.tick, c.settlement, c.members, c.capacity, c.food, c.g, c.q, c.s, c.h, c.draw, u8::from(c.split), u8::from(c.site_free)]))
+        .collect();
+    let mut first: BTreeMap<SettlementId, u64> = BTreeMap::new();
+    for c in &r.fission_checks {
+        first.entry(c.settlement).or_insert((c.tick + offset) / tpd);
+    }
+    let founders: BTreeMap<SettlementId, (u64, usize)> = r
+        .fission_log
+        .iter()
+        .filter_map(|f| Some((f.daughter?, (f.founded_tick?, f.members.len()))))
+        .collect();
+    let mut winters = Vec::new();
+    for d in super::pass10::WINTER_FIRST_DAYS {
+        let (Some(start), Some(end)) = (
+            super::args::clock_tick(d, 1080, tpd, offset),
+            super::args::clock_tick(d + 7, 420, tpd, offset),
+        ) else {
+            continue;
+        };
+        if end > run_days * tpd {
+            continue;
+        }
+        let at_start = winter_members.get(&d).cloned().unwrap_or_default();
+        let deaths: BTreeMap<SettlementId, u64> = exposure
+            .iter()
+            .filter(|(tick, ..)| (start..end).contains(tick))
+            .filter_map(|(_, _, sid)| *sid)
+            .fold(BTreeMap::new(), |mut acc, sid| {
+                *acc.entry(sid).or_insert(0) += 1;
+                acc
+            });
+        let inside: BTreeSet<SettlementId> =
+            founders.iter().filter(|(_, (tick, _))| (start..end).contains(tick)).map(|(sid, _)| *sid).collect();
+        let ids: BTreeSet<SettlementId> = at_start
+            .iter()
+            .filter(|(_, m)| **m > 0)
+            .map(|(sid, _)| *sid)
+            .chain(inside.iter().copied())
+            .chain(deaths.keys().copied())
+            .collect();
+        let rows: Vec<Value> = ids
+            .iter()
+            .map(|sid| {
+                let members = if inside.contains(sid) {
+                    founders.get(sid).map_or(0, |(_, n)| *n as u64)
+                } else {
+                    u64::from(at_start.get(sid).copied().unwrap_or(0))
+                };
+                json!({"settlement": sid, "members_at_winter_start": members,
+                    "exposure_deaths": deaths.get(sid).copied().unwrap_or(0), "founded_inside": inside.contains(sid)})
+            })
+            .collect();
+        winters.push(json!({"first_day": d, "start_tick": start, "end_tick": end, "settlements": rows}));
+    }
+    let w = r.worldgen_report;
+    let t = r.tallies;
+    json!({"fission_checks": checks, "first_draw_day": first.iter().map(|(sid, day)| json!([sid, day])).collect::<Vec<_>>(),
+        "settlement_winters": winters, "region_fill_bushes": w.region_fill_bushes, "region_fill_deadwood": w.region_fill_deadwood,
+        "wet_burn_wood": t.wet_burn_wood, "area_floor_wood": t.area_floor_wood, "winter_wood_lost_settled": t.winter_wood_lost_settled,
+        "winter_wood_lost": t.winter_wood_lost})
 }
 
 #[cfg(test)]

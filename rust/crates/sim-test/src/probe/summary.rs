@@ -63,7 +63,9 @@ pub(super) fn write(args: &ProbeArgs, runs: &[RunResult]) -> Result<(), String> 
             // Pass 11 (schema 11): fission, settlements alive and exposure by
             // stage and settlement-hour, per seed.
             "settlements_alive_daily":r.checkpoints.values().map(|row| row["settlements_alive"].clone()).collect::<Vec<_>>(),
-            "pass11":r.pass11})
+            "pass11":r.pass11,
+            // Pass 12 (schema 12): hazard checks, settlement-winters, fill counts.
+            "pass12":r.pass12})
     }).collect();
     let mut census = Census::default();
     for run in runs {
