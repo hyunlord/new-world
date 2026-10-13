@@ -670,11 +670,6 @@ impl WorldRules {
     /// [`Self::game_v19_nofission`] for given hidden parameters.
     pub const fn game_v19_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
         let mut rules = Self::game_v18_nofission_with(variety);
-        // Part 3 round 1: exposure child damage 8 -> 7 (J5 child share).
-        if let Some(mut exposure) = rules.society.exposure {
-            exposure.damage_per_cold_hour = [7.0, 5.0, 5.0];
-            rules.society.exposure = Some(exposure);
-        }
         if let Some(mut firewood) = rules.society.firewood {
             // Pass 13 section 7.2.
             firewood.floor_separate = true;
@@ -700,8 +695,9 @@ impl WorldRules {
 
     /// The `game_v19` pressure (Pass 13 section 7.1 start values).
     pub const V19_PRESSURE: FissionPressure = FissionPressure {
-        threshold_table: ThresholdLaw::Exponential { mean_permille: 1200 },
-        decay_permille: 10,
+        // Part 3 round 2: mean 1200 -> 1000, decay 10 -> 50.
+        threshold_table: ThresholdLaw::Exponential { mean_permille: 1000 },
+        decay_permille: 50,
         reset_on_split: true,
     };
 

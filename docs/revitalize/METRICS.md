@@ -2550,3 +2550,7 @@ Scratch exploration (4.4, disclosed; seeds 902000–902031, 120 days, R = 2, for
 `p13-2_guard_v18_*`, `_v18n_*`, `_v17_*`, `_v16_*` (tuning sets) equal Part 0's runs on every shared value (17,502 / 132,718 / 16,670 / 104,565 / 17,502 / 107,146 / 15,144 / 103,923); the only difference is `schema_version` 12 → 13 (plus the two new row keys and the `pass13` block). All determinism twins pass.
 
 ### Part 3 — tuning (tuning seeds; `evaluate_pass13.py`, game_v16 reference `p13-0_v16_*`; per-round J11 check on scratch seeds 901100–901131)
+
+| Round | Commit | Knobs (changes) | J3 (v19) | J4 | J5 (v19) | J6 (v19n) | J11 check (901100–901131) |
+|---|---|---|---|---|---|---|---|
+| 1 | `b08461cd` | scarcity_days 2 → 4, weights crowd/scarcity 350/650 → 0/1000, ceiling 200 → 300, size 28/48 → 24/44, `min_members` 32 → 28, exposure child 8 → 7 (θ mean 1200, decay 10) | PASS: share 0.656, median 62, IQR 55 (31–86), peak 0.19, ≥ 2 alive 0.656, cancellations 0/32; first-fission day vs camp θ r = 0.89, vs early scarcity r = 0.30 | PASS 23/23 (31 daughters, none dissolved) | FAIL: seed-winters with a death 0.109 (< 0.15), settlement-winter max 0.467 (seed 24, daughter 7/15, day 106); child share 0.54, adult 0.46 | FAIL: work_1500 0.213 (v16 0.254), idle_1200 0.627; other clauses PASS | (a) PASS: > 3 d 0.000, mean abs Δ 0.56 d (n 16), Δ alive 0.56; (b) FAIL: spoil earlier 0.344 (later 0.156), gift later 0.387 (earlier 0.161); (c) FAIL: noise 0.031, rot_wood 0.172, spoil 0.078, gift 0.062 |
