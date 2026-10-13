@@ -670,6 +670,11 @@ impl WorldRules {
     /// [`Self::game_v19_nofission`] for given hidden parameters.
     pub const fn game_v19_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
         let mut rules = Self::game_v18_nofission_with(variety);
+        // Part 3 round 1: exposure child damage 8 -> 7 (J5 child share).
+        if let Some(mut exposure) = rules.society.exposure {
+            exposure.damage_per_cold_hour = [7.0, 5.0, 5.0];
+            rules.society.exposure = Some(exposure);
+        }
         if let Some(mut firewood) = rules.society.firewood {
             // Pass 13 section 7.2.
             firewood.floor_separate = true;
@@ -679,16 +684,18 @@ impl WorldRules {
     }
 
     /// The `game_v19` hazard terms (Pass 13 section 7.1 start values:
-    /// `V18_HAZARD` with a ceiling of 200 and scarcity weighed 650 / crowding 350).
+    /// `V18_HAZARD` with a ceiling of 200 and scarcity weighed 650 / crowding
+    /// 350; Part 3 round 1: size 24 / 44, scarcity_days 4, crowding 0 /
+    /// scarcity 1000, ceiling 300).
     pub const V19_HAZARD: FissionHazard = FissionHazard {
-        size_lo: 28,
-        size_hi: 48,
+        size_lo: 24,
+        size_hi: 44,
         crowd_lo_permille: 850,
         crowd_hi_permille: 1050,
-        scarcity_days: 2,
-        weight_crowd_permille: 350,
-        weight_scarcity_permille: 650,
-        max_daily_permille: 200,
+        scarcity_days: 4,
+        weight_crowd_permille: 0,
+        weight_scarcity_permille: 1000,
+        max_daily_permille: 300,
     };
 
     /// The `game_v19` pressure (Pass 13 section 7.1 start values).
@@ -714,6 +721,8 @@ impl WorldRules {
         if let Some(mut fission) = base.society.fission {
             fission.hazard = Some(hazard);
             fission.pressure = Some(Self::V19_PRESSURE);
+            // Part 3 round 1: 32 -> 28.
+            fission.min_members = 28;
             debug_assert!(fission.hazard.is_some());
             rules.society.fission = Some(fission);
         }
