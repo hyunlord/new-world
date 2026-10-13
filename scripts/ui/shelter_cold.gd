@@ -1,6 +1,5 @@
 extends RefCounted
 
-const Cold = preload("res://scripts/ui/cold_effects.gd")
 const FROST: Color = Color("D8E8F0")
 const FROST_LOWER: Color = Color("A8C0D0")
 const FADE_SECONDS: float = 0.4
@@ -51,6 +50,10 @@ static func fade(alpha: float, cold: bool, delta: float) -> float:
 static func tint_strength(start: float, target: float, elapsed: float) -> float:
 	return lerpf(start, target, smoothstep(0.0, 1.0, clampf(elapsed, 0.0, 1.0)))
 
+static func doorway_breath(cold: bool, shelter_id: int, seconds: float) -> Dictionary:
+	var age: float = fposmod(seconds + float(posmod(shelter_id, 16)) * 0.1, 1.6)
+	return {"alpha": 0.85 * (1.0 - age / 1.2) if cold and age < 1.2 else 0.0, "rise": 6.0 * minf(age / 1.2, 1.0)}
+
 static func apply(sprite: Sprite2D, sleepers: int, seconds: float, delta: float) -> void:
 	var alpha: float = fade(float(sprite.get_meta("frost_alpha", 0.0)), sleepers > 0, delta)
 	sprite.set_meta("cold_sleepers", sleepers)
@@ -77,14 +80,14 @@ static func apply(sprite: Sprite2D, sleepers: int, seconds: float, delta: float)
 		overlay.offset = sprite.offset
 		overlay.modulate.a = alpha
 		overlay.visible = alpha > 0.0
-	var puff: Dictionary = Cold.breath(sleepers > 0, int(sprite.get_meta("art_id", 0)), seconds)
+	var puff: Dictionary = doorway_breath(sleepers > 0, int(sprite.get_meta("art_id", 0)), seconds)
 	sprite.set_meta("doorway_puff_alpha", puff.alpha)
 	var breath: Sprite2D = sprite.get_node_or_null("DoorwayColdBreath") as Sprite2D
 	if breath == null and sleepers > 0:
 		breath = Sprite2D.new()
 		breath.name = "DoorwayColdBreath"
 		if _breath_texture == null:
-			var pixels: Image = Image.create(3, 2, false, Image.FORMAT_RGBA8)
+			var pixels: Image = Image.create(5, 3, false, Image.FORMAT_RGBA8)
 			pixels.fill(Color.WHITE)
 			_breath_texture = ImageTexture.create_from_image(pixels)
 		breath.texture = _breath_texture

@@ -6,6 +6,10 @@ const ORIGIN := Vector2(448, 28)
 const RAIN_COLOR := Color(0.624, 0.706, 0.784, 0.5)
 const GIFT_COLOR := Color("7CC46A")
 const SPOIL_COLOR := Color("8A6A3A")
+const WINDFALL_DROP_SECONDS: float = 0.8
+const WINDFALL_DUST_SECONDS: float = 0.6
+const WINDFALL_DUST_WIDTH: float = 2.0
+const WINDFALL_DUST_COLOR := Color("E8D8B8")
 var _world: Node
 var _objects: Node
 var _buildings: Node
@@ -113,11 +117,14 @@ func _observe(resources: Dictionary) -> void:
 	_previous_wood = wood
 
 static func fall_offset(age: float) -> float:
-	if age < 0.0 or age >= 0.6:
+	if age < 0.0 or age >= WINDFALL_DROP_SECONDS:
 		return 0.0
-	if age < 0.4:
-		return -6.0 * (1.0 - age / 0.4)
-	return -sin((age - 0.4) / 0.2 * PI)
+	if age < 0.6:
+		return -6.0 * (1.0 - age / 0.6)
+	return -sin((age - 0.6) / 0.2 * PI)
+
+static func dust_alpha(age: float) -> float:
+	return 0.85 * (1.0 - age / WINDFALL_DUST_SECONDS) if age >= 0.0 and age < WINDFALL_DUST_SECONDS else 0.0
 
 func _update_falls() -> void:
 	if _objects != null:
@@ -135,7 +142,7 @@ func _update_falls() -> void:
 			sprite.set_meta("windfall_offset", offset_y)
 			sprite.set_meta("windfall_age", age if _falls.has(tile) else -1.0)
 	for tile: Vector2i in _falls.keys():
-		if _elapsed - float(_falls[tile]) >= 0.6:
+		if _elapsed - float(_falls[tile]) >= WINDFALL_DROP_SECONDS:
 			_falls.erase(tile)
 
 func _update_flash(settlements: Dictionary) -> void:
@@ -176,6 +183,12 @@ func _update_flash(settlements: Dictionary) -> void:
 
 func _draw() -> void:
 	_rain_streaks = 0
+	for tile: Vector2i in _falls:
+		var dust_age: float = _elapsed - float(_falls[tile])
+		var alpha: float = dust_alpha(dust_age)
+		if alpha > 0.0:
+			var center: Vector2 = ORIGIN + Vector2(tile) * 16.0 + Vector2(8, 8)
+			draw_arc(center, 4.0 + 4.0 * dust_age / WINDFALL_DUST_SECONDS, 0.0, TAU, 16, Color(WINDFALL_DUST_COLOR, alpha), WINDFALL_DUST_WIDTH, false)
 	var transform: Transform2D = get_global_transform_with_canvas()
 	var inverse: Transform2D = transform.affine_inverse()
 	var zoom: float = transform.get_scale().x
@@ -201,13 +214,16 @@ func _draw() -> void:
 
 func metadata() -> Dictionary:
 	var falls: Array[Dictionary] = []
+	var dust: Array[Dictionary] = []
 	for tile: Vector2i in _falls:
 		var age: float = _elapsed - float(_falls[tile])
-		falls.append({"tile": [tile.x, tile.y], "age": age, "offset_y": fall_offset(age)})
+		falls.append({"tile": [tile.x, tile.y], "age": age, "offset_y": fall_offset(age), "duration": WINDFALL_DROP_SECONDS})
+		if dust_alpha(age) > 0.0:
+			dust.append({"tile": [tile.x, tile.y], "age": age, "alpha": dust_alpha(age), "duration": WINDFALL_DUST_SECONDS, "width": WINDFALL_DUST_WIDTH, "color": "E8D8B8"})
 	var flashes: Array[Dictionary] = []
 	if _elapsed - _flash_born < 1.2:
 		flashes.append({"settlement_id": _flash_target, "kind": _flash_kind, "age": _elapsed - _flash_born, "color": "7CC46A" if _flash_kind.begins_with("gift") else "8A6A3A"})
-	return {"rain_streaks": _rain_streaks, "rain_settlement_ids": _rain_ids.duplicate(), "cold_snap_tonight": bool(_state.get("cold_snap_tonight", false)), "windfall_falls": falls, "stockpile_flashes": flashes}
+	return {"rain_streaks": _rain_streaks, "rain_settlement_ids": _rain_ids.duplicate(), "cold_snap_tonight": bool(_state.get("cold_snap_tonight", false)), "windfall_falls": falls, "windfall_dust": dust, "stockpile_flashes": flashes}
 
 
 func notify_cast(kind: String, target: int) -> void:
