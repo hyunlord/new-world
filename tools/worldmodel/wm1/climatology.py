@@ -24,7 +24,8 @@ dataset's `train` group, every member is scored on `val` over T1, T2 24 / 168 h 
 their bias-removed versions (no T3 / T3b: no interventions, hidden severity), and selected per task: `cal_best`,
 `cal_best_fair`, and on the bias-removed tasks `cal_best_anom` (= that task's `cal_best`). Persistence and the
 severity-free ridge of `bench_v1` (refit on `train`, lambda on `val` T1) are evaluated beside them as references.
-Every T2 score carries its per-world scores (GOAL_1_3.md 7.3). On a dataset with `train_seeds` (the nested WM-1.3
+Every T2 score carries its per-world scores (GOAL_1_3.md 7.3); `final --eval-dataset NAME` scores the family fit on
+`--dataset` on NAME's test split (the legacy test, GOAL_1_3.md 10.3). On a dataset with `train_seeds` (the nested WM-1.3
 training sets) the family, the ridge and the analog library see only those train worlds (`common.load_groups`).
 """
 from __future__ import annotations
@@ -169,9 +170,14 @@ def references(train: list[EpisodeData], val: list[EpisodeData]) -> tuple[dict, 
     return {"persistence": ev.Persistence(), "ridge": ridge}, {"ridge_lambda": lam, "ridge_val_t1": scores}
 
 
-def _run_observable(args, ds: c.Dataset, roles: list[str], selection: dict | None, t0: float) -> dict:
-    """Fit on `train`, evaluate the nine members and the references on `roles` (val or test groups)."""
-    g = c.load_groups(["train", "val"] + [r for r in roles if r not in ("train", "val")], Path(args.root), ds.name)
+def _run_observable(args, ds: c.Dataset, roles: list[str], selection: dict | None, t0: float,
+                    eval_ds: c.Dataset | None = None) -> dict:
+    """Fit on `train`, evaluate the nine members and the references on `roles` (val or test groups); with `eval_ds`
+    the test group comes from that dataset (GOAL_1_3.md 10.3, the legacy test), the fit from `ds`."""
+    g = c.load_groups(["train", "val"] + [r for r in roles if r not in ("train", "val") and eval_ds is None],
+                      Path(args.root), ds.name)
+    if eval_ds is not None:
+        g |= c.load_groups([r for r in roles if r not in ("train", "val")], Path(args.root), eval_ds.name)
     fit = CalendarFit(g["train"], T_TR, split=ds.groups["train"][0])
     if not fit.year_covered:
         raise SystemExit("m_year leaves a year position uncovered")
@@ -187,7 +193,7 @@ def _run_observable(args, ds: c.Dataset, roles: list[str], selection: dict | Non
         ref_results[name] = ev.evaluate(p, splits, stds, **kw)
         print(f"{name} {time.time() - t0:.0f}s", flush=True)
     return {"fit": fit.summary(), "results": results, "references": ref_results, "reference_info": ref_info,
-            "dataset": ds.name, "groups": {n: [int(ep.seed) for ep in g[n]] for n in g},
+            "dataset": ds.name, "eval_dataset": (eval_ds or ds).name, "groups": {n: [int(ep.seed) for ep in g[n]] for n in g},
             "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(ds.name), "argv": sys.argv}
 
 
@@ -236,8 +242,11 @@ def cmd_final(args) -> int:
     ds = c.dataset(args.dataset)
     if sel_json.get("dataset", "v0") != ds.name:
         raise SystemExit(f"the selection is of dataset {sel_json.get('dataset', 'v0')}, not {ds.name}")
+    eval_ds = c.dataset(args.eval_dataset) if getattr(args, "eval_dataset", None) else None
+    if eval_ds is not None and (ds.name == "v0" or eval_ds.name == "v0"):
+        raise SystemExit("--eval-dataset is for observable datasets only")
     if ds.name != "v0":
-        run = _run_observable(args, ds, list(ds.test), sel, t0)
+        run = _run_observable(args, ds, list(ds.test), sel, t0, eval_ds)
         out = {**{k: v for k, v in run.items() if k != "results"}, "test": run["results"], "selection": sel,
                "seconds": time.time() - t0, "forced": bool(args.force)}
         c.write_json(target, out)
@@ -269,6 +278,8 @@ def main(argv=None) -> int:
         if name == "final":
             p.add_argument("--selection", required=True, help="calendar_val.json of the pre-registered selection")
             p.add_argument("--force", action="store_true")
+            p.add_argument("--eval-dataset", dest="eval_dataset", default=None, choices=sorted(c.DATASETS),
+                           help="score this dataset's test split (fit and selection stay on --dataset)")
     args = ap.parse_args(argv)
     return cmd_val(args) if args.cmd == "val" else cmd_final(args)
 
