@@ -111,3 +111,4 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 3 | 12:22 | 12:25:13 | METRICS_1_3.md committed (`166eb737`, 12:23:37) and pushed 12:25:13 (one HTTP 408 retry), before any test-role number; `_setup/prereg_sha` = `166eb737` on the DGX |
 | 5 | 12:25:30 | 12:28:38 | from `166eb737` (CPU): `calendar_{w13_v16_n80,n200,n400,w13_v17_n400}_166eb737` (51 / 113 / 188 / 185 s; `calendar.json` 12:26:20–12:28:37) and the legacy `calendar_w13_v16_n400_on_p10_v16_166eb737` (67 s); WM-1.2's three runs on the new test chained on the GPU (`m1tf_p10v16_r3_s<S>_on_w13v16`) |
 | gate | 12:30 | 12:32 | DGX gate on `166eb737`: 142 tests OK, 0 skipped (90 s) |
+| 5 (Y3) | 12:25:30 | 12:57 | WM-1.2's runs on the new test from `166eb737` (GPU, chained, beside the training): `m1tf_p10v16_r3_s{0,1,2}_on_w13v16` 649 / 635 / 640 s, exit 0 |
