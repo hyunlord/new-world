@@ -518,6 +518,13 @@ impl WorldSimNode {
         settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)
     }
 
+    /// Art Pass 7: read settlement lineage, roster identity and founding history.
+    #[func]
+    fn get_society_snapshot(&self) -> VarDictionary {
+        let snapshot = collect_society_snapshot(&self.engine.world, &self.engine.resources);
+        society_snapshot_to_dict(&snapshot)
+    }
+
     /// P7-δ FFI — return every known relationship pair (familiarity > 0
     /// OR hostility > 0) as a flat `Array<Dictionary>`. Each dict has
     /// keys `id_a: i64`, `id_b: i64`, `familiarity: f64`, `hostility: f64`,
@@ -2371,6 +2378,126 @@ pub fn collect_settlement_snapshot(
     rows
 }
 
+#[derive(Debug, Default, PartialEq, Eq)]
+struct SocietySnapshot {
+    settlement_ids: Vec<i32>,
+    parent_ids: Vec<i32>,
+    founded_ticks: Vec<i64>,
+    member_counts: Vec<i32>,
+    home_agent_ids: Vec<i64>,
+    home_settlement_ids: Vec<i32>,
+    founder_agent_ids: Vec<i64>,
+    founder_fission_ids: Vec<i32>,
+    founder_site_xs: Vec<i32>,
+    founder_site_ys: Vec<i32>,
+    founder_leader: Vec<u8>,
+    founder_since_ticks: Vec<i64>,
+    fission_ids: Vec<i32>,
+    fission_parents: Vec<i32>,
+    fission_site_xs: Vec<i32>,
+    fission_site_ys: Vec<i32>,
+    fission_sizes: Vec<i32>,
+    fission_depart_ticks: Vec<i64>,
+    fission_founded_ticks: Vec<i64>,
+    fission_cancelled_ticks: Vec<i64>,
+    fission_daughters: Vec<i32>,
+    retired_hearth_xs: Vec<i32>,
+    retired_hearth_ys: Vec<i32>,
+    current_tick: i64,
+}
+
+fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> SocietySnapshot {
+    use sim_core::components::Founding;
+
+    // Match the existing bridge's integer representation, including u64 AgentId bits.
+    let mut snapshot = SocietySnapshot {
+        current_tick: resources.current_tick as i64,
+        ..SocietySnapshot::default()
+    };
+    for row in collect_settlement_snapshot(world, &resources.settlements) {
+        let settlement = &resources.settlements[&row.settlement_id];
+        snapshot.settlement_ids.push(settlement.settlement_id as i32);
+        snapshot.parent_ids.push(settlement.parent.map_or(-1, |id| id as i32));
+        snapshot.founded_ticks.push(settlement.founded_at as i64);
+        snapshot.member_counts.push(settlement.member_agents.len() as i32);
+    }
+    let mut homes: Vec<_> = resources.settlements.values()
+        .flat_map(|settlement| settlement.member_agents.iter()
+            .map(|&agent_id| (agent_id, settlement.settlement_id)))
+        .collect();
+    homes.sort_unstable();
+    for (agent_id, settlement_id) in homes {
+        snapshot.home_agent_ids.push(agent_id as i64);
+        snapshot.home_settlement_ids.push(settlement_id as i32);
+    }
+    let mut founders: Vec<_> = world.query::<(&Agent, &Founding)>().iter()
+        .map(|(_, (agent, founding))| (agent.id, *founding)).collect();
+    founders.sort_unstable_by_key(|(agent_id, _)| *agent_id);
+    for (agent_id, founding) in founders {
+        snapshot.founder_agent_ids.push(agent_id as i64);
+        snapshot.founder_fission_ids.push(founding.fission_id as i32);
+        snapshot.founder_site_xs.push(founding.site.0 as i32);
+        snapshot.founder_site_ys.push(founding.site.1 as i32);
+        snapshot.founder_leader.push(u8::from(agent_id == founding.leader));
+        snapshot.founder_since_ticks.push(founding.since_tick as i64);
+    }
+    let mut fissions: Vec<_> = resources.fission_log.iter().collect();
+    fissions.sort_unstable_by_key(|record| record.fission_id);
+    for record in fissions {
+        snapshot.fission_ids.push(record.fission_id as i32);
+        snapshot.fission_parents.push(record.parent as i32);
+        snapshot.fission_site_xs.push(record.site.0 as i32);
+        snapshot.fission_site_ys.push(record.site.1 as i32);
+        snapshot.fission_sizes.push(record.members.len() as i32);
+        snapshot.fission_depart_ticks.push(record.depart_tick as i64);
+        snapshot.fission_founded_ticks.push(record.founded_tick.map_or(-1, |tick| tick as i64));
+        snapshot.fission_cancelled_ticks.push(record.cancelled_tick.map_or(-1, |tick| tick as i64));
+        snapshot.fission_daughters.push(record.daughter.map_or(-1, |id| id as i32));
+    }
+    for &(x, y) in &resources.retired_hearths {
+        snapshot.retired_hearth_xs.push(x as i32);
+        snapshot.retired_hearth_ys.push(y as i32);
+    }
+    snapshot
+}
+
+fn society_snapshot_to_dict(snapshot: &SocietySnapshot) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    for (key, values) in [
+        ("settlement_ids", &snapshot.settlement_ids),
+        ("parent_ids", &snapshot.parent_ids),
+        ("member_counts", &snapshot.member_counts),
+        ("home_settlement_ids", &snapshot.home_settlement_ids),
+        ("founder_fission_ids", &snapshot.founder_fission_ids),
+        ("founder_site_xs", &snapshot.founder_site_xs),
+        ("founder_site_ys", &snapshot.founder_site_ys),
+        ("fission_ids", &snapshot.fission_ids),
+        ("fission_parents", &snapshot.fission_parents),
+        ("fission_site_xs", &snapshot.fission_site_xs),
+        ("fission_site_ys", &snapshot.fission_site_ys),
+        ("fission_sizes", &snapshot.fission_sizes),
+        ("fission_daughters", &snapshot.fission_daughters),
+        ("retired_hearth_xs", &snapshot.retired_hearth_xs),
+        ("retired_hearth_ys", &snapshot.retired_hearth_ys),
+    ] {
+        dict.set(key, PackedInt32Array::from(values.as_slice()));
+    }
+    for (key, values) in [
+        ("founded_ticks", &snapshot.founded_ticks),
+        ("home_agent_ids", &snapshot.home_agent_ids),
+        ("founder_agent_ids", &snapshot.founder_agent_ids),
+        ("founder_since_ticks", &snapshot.founder_since_ticks),
+        ("fission_depart_ticks", &snapshot.fission_depart_ticks),
+        ("fission_founded_ticks", &snapshot.fission_founded_ticks),
+        ("fission_cancelled_ticks", &snapshot.fission_cancelled_ticks),
+    ] {
+        dict.set(key, PackedInt64Array::from(values.as_slice()));
+    }
+    dict.set("founder_leader", PackedByteArray::from(snapshot.founder_leader.as_slice()));
+    dict.set("current_tick", snapshot.current_tick);
+    dict
+}
+
 /// Marshal a [`SettlementSnapshotRow`] slice into the FFI dictionary
 /// shape consumed by `WorldRenderer._update_settlement_furniture`.
 /// Eight parallel `PackedArray`s, lengths always equal to `rows.len()`.
@@ -3227,6 +3354,89 @@ mod revitalize_world_snapshot_tests {
     }
 }
 
+
+#[cfg(test)]
+mod society_snapshot_tests {
+    use super::*;
+    use sim_core::components::Founding;
+    use sim_engine::FissionRecord;
+
+    #[test]
+    fn society_joins_built_world_agents_and_preserves_order_filter_and_history() {
+        let seed = 20_261_013;
+        let mut engine = build_world_with(
+            &WorldGenConfig::game_v17(seed), WorldRules::game_v17(seed),
+        );
+        advance_engine_ticks(&mut engine, 1_440);
+        let agent_rows = collect_agent_snapshot(&engine.world);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        assert!(!snapshot.home_agent_ids.is_empty());
+        for (&agent_id, &home_id) in snapshot.home_agent_ids.iter().zip(&snapshot.home_settlement_ids) {
+            assert!(agent_rows.iter().any(|row| row.agent_id as i64 == agent_id));
+            assert!(engine.resources.settlements[&(home_id as u32)].member_agents.contains(&(agent_id as u64)));
+        }
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+
+        let first = snapshot.home_agent_ids[0] as u64;
+        let second = snapshot.home_agent_ids[1] as u64;
+        let parent = snapshot.home_settlement_ids[0] as u32;
+        let mut daughter = Settlement::new_with_id(20, 120);
+        daughter.parent = Some(parent);
+        daughter.add_member_agent(second);
+        engine.resources.settlements.get_mut(&parent).unwrap().member_agents.remove(&second);
+        engine.resources.settlements.insert(20, daughter);
+        let mut hidden = Settlement::new_with_id(30, 130);
+        hidden.add_member_agent(u64::MAX);
+        engine.resources.settlements.insert(30, hidden);
+        let first_entity = engine.world.query::<&Agent>().iter()
+            .find(|(_, agent)| agent.id == first).map(|(entity, _)| entity).unwrap();
+        engine.world.insert_one(first_entity, Founding {
+            site: (8, 9), fission_id: 2, leader: first, since_tick: 100,
+        }).unwrap();
+        engine.resources.fission_log = vec![
+            FissionRecord {
+                fission_id: 2, parent, site: (8, 9), depart_tick: 100,
+                members: vec![first], adults: 1, daughter: None, founded_tick: None,
+                cancelled_tick: None, food_taken: 0, wood_taken: 0, settled_at_leader: false,
+            },
+            FissionRecord {
+                fission_id: 1, parent, site: (2, 3), depart_tick: 80,
+                members: vec![second], adults: 1, daughter: Some(20), founded_tick: Some(120),
+                cancelled_tick: Some(90), food_taken: 0, wood_taken: 0, settled_at_leader: false,
+            },
+        ];
+        engine.resources.retired_hearths.extend([(9, 4), (2, 5)]);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        let settlement_rows = collect_settlement_snapshot(&engine.world, &engine.resources.settlements);
+        assert_eq!(snapshot.settlement_ids, settlement_rows.iter().map(|row| row.settlement_id as i32).collect::<Vec<_>>());
+        assert_eq!(snapshot.settlement_ids, vec![parent as i32, 20]);
+        assert_eq!(snapshot.parent_ids, vec![-1, parent as i32]);
+        assert_eq!(snapshot.founded_ticks[1], 120);
+        assert_eq!(snapshot.member_counts[0] as usize, engine.resources.settlements[&parent].member_agents.len());
+        let member_index = snapshot.home_agent_ids.iter().position(|&id| id == first as i64).unwrap();
+        assert_eq!(snapshot.home_settlement_ids[member_index], parent as i32);
+        assert_eq!(snapshot.home_agent_ids.last(), Some(&-1));
+        assert_eq!(snapshot.home_settlement_ids.last(), Some(&30));
+        assert_eq!(snapshot.founder_agent_ids, vec![first as i64]);
+        assert_eq!(snapshot.founder_fission_ids, vec![2]);
+        assert_eq!(snapshot.founder_site_xs, vec![8]);
+        assert_eq!(snapshot.founder_site_ys, vec![9]);
+        assert_eq!(snapshot.founder_leader, vec![1]);
+        assert_eq!(snapshot.founder_since_ticks, vec![100]);
+        assert_eq!(snapshot.fission_ids, vec![1, 2]);
+        assert_eq!(snapshot.fission_parents, vec![parent as i32, parent as i32]);
+        assert_eq!(snapshot.fission_site_xs, vec![2, 8]);
+        assert_eq!(snapshot.fission_site_ys, vec![3, 9]);
+        assert_eq!(snapshot.fission_sizes, vec![1, 1]);
+        assert_eq!(snapshot.fission_depart_ticks, vec![80, 100]);
+        assert_eq!(snapshot.fission_founded_ticks, vec![120, -1]);
+        assert_eq!(snapshot.fission_cancelled_ticks, vec![90, -1]);
+        assert_eq!(snapshot.fission_daughters, vec![20, -1]);
+        assert_eq!(snapshot.retired_hearth_xs, vec![2, 9]);
+        assert_eq!(snapshot.retired_hearth_ys, vec![5, 4]);
+        assert_eq!(snapshot.current_tick, 1_440);
+    }
+}
 
 #[cfg(test)]
 mod pass3_agent_snapshot_tests {
