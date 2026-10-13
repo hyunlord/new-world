@@ -116,6 +116,8 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v16" => crate::scenes::game_v16_scene(seed),
         "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
         "game_v17" => crate::scenes::game_v17_scene(seed),
+        // Pass 12 Part 1: the test-only J6 bisection scenes.
+        name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
     }
 }
@@ -376,6 +378,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
     matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17")
+        || super::ablation::is_ablation(scene)
 }
 
 #[cfg(test)]
