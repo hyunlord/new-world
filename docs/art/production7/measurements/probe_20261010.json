@@ -1,0 +1,152 @@
+{
+  "scene": "game_v17",
+  "seed": 20261010,
+  "days": 120,
+  "source": "/Users/rexxa/work/art-production7-evidence/probe-live",
+  "source_sha256": {
+    "summary.json": "a4ab76f27358e3b207dc69c97109afae79993af510af7219313c9ecea7c16cf4",
+    "summary.md": "4a9119a2410e67ff4d885fda59826a005faea4f0e86c971b38f8a8982e6bbf64",
+    "game_v17_s20261010.jsonl": "cd86d89c97f0706cfefa2b022fb5b4c8626dea73350294484d531ff62506ebc2",
+    "game_v17_s20261010_deaths.jsonl": "ac8802cfa02bf056b23c739b3cdce0bd5bdca86090149f84f1fadb2685750d38"
+  },
+  "tick_convention": "death tick is completed tick; internal_tick=tick-1; fission log ticks are internal",
+  "wall_seconds": 17.178349625,
+  "pass11": {
+    "exclusivity_moves": 0,
+    "exposure_by_winter": [
+      {
+        "adult": 0,
+        "child": 0,
+        "elder": 0,
+        "elders_at_start": 12,
+        "first_day": 22
+      },
+      {
+        "adult": 0,
+        "child": 1,
+        "elder": 0,
+        "elders_at_start": 6,
+        "first_day": 50
+      },
+      {
+        "adult": 0,
+        "child": 1,
+        "elder": 0,
+        "elders_at_start": 11,
+        "first_day": 78
+      },
+      {
+        "adult": 0,
+        "child": 0,
+        "elder": 0,
+        "elders_at_start": 7,
+        "first_day": 106
+      }
+    ],
+    "exposure_settlement_nights": [
+      {
+        "deaths": 1,
+        "max_in_one_hour": 1,
+        "night_day": 55,
+        "settlement": 1
+      },
+      {
+        "deaths": 1,
+        "max_in_one_hour": 1,
+        "night_day": 83,
+        "settlement": 1
+      }
+    ],
+    "first_fission_day": null,
+    "first_fission_tick": null,
+    "fission_attempts": 0,
+    "fission_blocked_no_site": 0,
+    "fission_log": [],
+    "fissions": 0,
+    "fissions_cancelled": 0,
+    "max_exposure_deaths_one_settlement_one_hour": 1,
+    "max_hours_with_1_to_2_members": 0,
+    "remnant_merges": 0,
+    "settlements": [
+      {
+        "alive_28_days_after_founding": true,
+        "dissolved_tick": null,
+        "founded_day": 0,
+        "founded_tick": 0,
+        "founders": null,
+        "members_at": [
+          28,
+          29,
+          29,
+          29
+        ],
+        "parent": null,
+        "settlement_id": 1
+      }
+    ]
+  },
+  "exposure_deaths": [
+    {
+      "age_days_at_death": 3.25,
+      "agent_id": 53,
+      "bed_assigned": true,
+      "cause": "exposure",
+      "death_reason": "exposure",
+      "dominant_state_since_thirst_breach": "Consuming{Sleep}",
+      "drank_since_breach": true,
+      "first_state_after_thirst_breach": "Idle",
+      "food_available_at_death": true,
+      "formation_distance_at_death": 2,
+      "git_sha": "07e148dfe8d1960d16076209b40e91ed3bf0d926",
+      "home_distance_at_death": 2,
+      "hunger_at_death": 32.069793701171875,
+      "life_stage_at_death": "child",
+      "partner_alive": null,
+      "scene": "game_v17",
+      "schema_version": 1,
+      "seed": 20261010,
+      "settlement_at_death": 1,
+      "settlement_food_stock_at_death": 174,
+      "sought_water_since_breach": true,
+      "stage": "child",
+      "state_at_death": "Consuming{Sleep}",
+      "thirst_at_death": 44.5920000000035,
+      "tick": 80341,
+      "ticks_since_thirst_breach": 512,
+      "water_distance_at_death": 3,
+      "internal_tick": 80340
+    },
+    {
+      "age_days_at_death": 3.375,
+      "agent_id": 60,
+      "bed_assigned": true,
+      "cause": "exposure",
+      "death_reason": "exposure",
+      "dominant_state_since_thirst_breach": "Consuming{Sleep}",
+      "drank_since_breach": false,
+      "first_state_after_thirst_breach": "Consuming{Sleep}",
+      "food_available_at_death": true,
+      "formation_distance_at_death": 2,
+      "git_sha": "07e148dfe8d1960d16076209b40e91ed3bf0d926",
+      "home_distance_at_death": 2,
+      "hunger_at_death": 41.06962966918945,
+      "life_stage_at_death": "child",
+      "partner_alive": null,
+      "scene": "game_v17",
+      "schema_version": 1,
+      "seed": 20261010,
+      "settlement_at_death": 1,
+      "settlement_food_stock_at_death": 171,
+      "sought_water_since_breach": false,
+      "stage": "child",
+      "state_at_death": "Consuming{Sleep}",
+      "thirst_at_death": 53.23200000000301,
+      "tick": 120721,
+      "ticks_since_thirst_breach": 67,
+      "water_distance_at_death": 3,
+      "internal_tick": 120720
+    }
+  ],
+  "final_population": 29,
+  "final_settlements": 1
+}

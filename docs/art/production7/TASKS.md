@@ -5,7 +5,7 @@ Contract: GOAL.md SHA256 `7b41130c8516c0c349876747a9b2ee4ab4e22c5479dda2cf50bd82
 
 | Part | Work | Start UTC | End UTC | Status |
 |---|---|---|---|---|
-| 0 | Merge, baseline gate, v17 measurements, capture tooling and baselines | 2026-10-13T02:29:19Z | | in progress |
+| 0 | Merge, baseline gate, v17 measurements, capture tooling and baselines | 2026-10-13T02:29:19Z | 2026-10-13T02:37:07Z | complete with recorded Rust fixture failure |
 | 1 | Multi-settlement audit and exact hearth matching | | | pending |
 | 2 | Five death reasons and durable feed | | | pending |
 | 3 | Read-only society snapshot | | | pending |
