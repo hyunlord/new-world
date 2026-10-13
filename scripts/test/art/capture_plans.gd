@@ -7,6 +7,9 @@ const ART: Array[Array] = [
 	[2, "19:30", "F2"], [2, "23:00", "F2N"], [6, "12:00", "F2"],
 ]
 
+# Society dates are populated from Part 0 measurements, never from planner estimates.
+const ART_SOCIETY: Array[Array] = []
+
 const ART_LONG: Array[Array] = [
 	[10, "12:00", "F2"], [10, "15:00", "F2"], [10, "15:00", "F5"],
 	[15, "15:00", "F2"], [15, "15:30", "FC"], [16, "15:00", "FC"],

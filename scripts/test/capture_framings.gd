@@ -2,6 +2,7 @@ extends SceneTree
 
 const Metadata = preload("res://scripts/test/art/capture_metadata.gd")
 const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
+const Selection = preload("res://scripts/core/settlement_selection.gd")
 const ColdTrace = preload("res://scripts/test/art/capture_cold_trace.gd")
 
 const ORIGIN: Vector2 = Vector2(448, 28)
@@ -29,6 +30,11 @@ var _motion_end_tick: int = -1
 var _casts: Array[Dictionary] = []
 var _last_cast_usec: int = 0
 var _shot_elapsed_s: float = 0.0
+var _original_id: int = -1
+var _daughter_id: int = -1
+var _seed: int = 20261010
+var _target_name: String = ""
+var _plan_row: Array = []
 var _cold_trace: RefCounted = ColdTrace.new()
 
 
@@ -46,8 +52,8 @@ func _init() -> void:
 			push_error("capture: unknown or missing argument: " + args[i])
 			quit(2)
 			return
-	if _out.is_empty() or _plan not in ["baseline", "final", "art", "art_long", "art_god", "calibration"]:
-		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|art_long|art_god|calibration")
+	if _out.is_empty() or _plan not in ["baseline", "final", "art", "art_long", "art_society", "art_god", "calibration"]:
+		push_error("capture: requires --out DIRECTORY --plan baseline|final|art|art_long|art_society|art_god|calibration")
 		quit(2)
 		return
 	call_deferred("_run")
@@ -97,7 +103,29 @@ func _run() -> void:
 		plan = CapturePlans.ART_LONG
 	if _plan == "art_god":
 		plan = CapturePlans.ART_GOD
+	if _plan == "art_society":
+		plan = CapturePlans.ART_SOCIETY
+	var override_path: String = OS.get_environment("CAPTURE_PLAN_JSON")
+	if not override_path.is_empty():
+		var override_rows: Variant = JSON.parse_string(FileAccess.get_file_as_string(override_path))
+		if not override_rows is Array:
+			_fail("CAPTURE_PLAN_JSON must contain an array of plan rows")
+			return
+		plan = []
+		for row: Variant in override_rows:
+			if not row is Array:
+				_fail("capture plan row must be an array")
+				return
+			plan.append(row)
+	if plan.is_empty():
+		_fail("capture plan requires measured dates; supply CAPTURE_PLAN_JSON")
+		return
 	for shot: Array in plan:
+		_plan_row = shot.duplicate(true)
+		if shot.size() == 2 and str(shot[0]) == "RESET":
+			await _reset_capture_world(int(shot[1]))
+			continue
+		_target_name = str(shot[7]) if _plan == "art_god" and shot.size() > 7 else (str(shot[3]) if _plan == "art_society" and shot.size() > 3 else "")
 		var target: int = int(shot[0])
 		var framing: String = str(shot[1])
 		var stem: String = "%s_t%d_%s" % [_plan, target, framing]
@@ -105,17 +133,38 @@ func _run() -> void:
 			var clock: PackedStringArray = str(shot[1]).split(":")
 			target = (int(shot[0]) - 1) * 1440 + int(clock[0]) * 60 + int(clock[1]) - _clock_offset
 			framing = str(shot[2])
-			var prefix: String = "a_" if _plan == "art" else ("l_" if _plan == "art_long" else "")
+			var prefix: String = "a_" if _plan == "art" else ("l_" if _plan == "art_long" else ("soc_" if _plan == "art_society" else ""))
 			stem = prefix + "d%d_%s%s_%s" % [int(shot[0]), clock[0], clock[1], framing]
 		if _plan == "art_god":
 			stem = "god_" + stem + "_" + str(shot[6])
+		if not _target_name.is_empty():
+			stem += "_" + _target_name
+		if _plan == "art_society" and shot.size() > 4:
+			stem += "_selected_" + str(shot[4])
 		print("capture start: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
 			_fail("simulation did not reach requested tick")
 			return
+		Selection.clear()
+		var selection_target: String = str(shot[4]) if _plan == "art_society" and shot.size() > 4 else (_target_name if _plan == "art_god" else "")
+		if selection_target in ["orig", "daughter"]:
+			var selected: int = _settlement_id(selection_target)
+			if selected < 0:
+				_fail("selected settlement unavailable: " + selection_target)
+				return
+			Selection.select(selected)
 		var tile: Vector2 = Vector2(32, 32) if framing == "F1" else _village_tile()
+		if _target_name in ["orig", "daughter"] or framing == "FS":
+			tile = _settlement_tile("daughter" if framing == "FS" else _target_name)
+		if _target_name == "leader" or framing == "FD":
+			tile = _founder_tile()
+		if _target_name == "all" or framing == "FV":
+			tile = _settlement_bounds().get_center()
+		if tile.x < 0:
+			_fail("framing %s target %s unavailable (FD requires a living founder leader)" % [framing, _target_name])
+			return
 		if framing == "F3":
 			tile = _food_tile(tile)
 			if tile.x < 0:
@@ -141,6 +190,8 @@ func _run() -> void:
 			return
 		_camera.position = ORIGIN + tile * TILE_SIZE + Vector2(8, 8)
 		_camera.zoom = Vector2.ONE if framing == "F1" else (Vector2(6, 6) if framing == "F2Z" else Vector2(4, 4))
+		if framing == "FV" or _target_name == "all":
+			_camera.zoom = Vector2.ONE * _all_villages_zoom()
 		_camera.reset_smoothing()
 		_camera.force_update_scroll()
 		# Reconcile infrequent object renderers after synchronous tooling ticks.
@@ -168,7 +219,7 @@ func _run() -> void:
 				button.emit_signal("pressed")
 				var reply: Dictionary = (cast_panel.get("_reply") as Dictionary).duplicate(true)
 				_last_cast_usec = Time.get_ticks_usec()
-				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": -1, "tick": target, "reply": reply, "input_surface": "GodHandPanel button pressed"})
+				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": Selection.selected_id, "seed": _seed, "tick": target, "reply": reply, "input_surface": "GodHandPanel button pressed"})
 				if not bool(reply.get("ok", false)):
 					_fail("god scenario cast failed: " + str(shot[3]))
 					return
@@ -206,7 +257,8 @@ func _run() -> void:
 		print("capture saved: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		_manifest.append({
 			"file": filename, "tick": target, "framing": framing,
-			"scenario": "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO",
+			"scenario": _scenario(),
+			"seed": _seed, "capture_plan_row": _plan_row.duplicate(true),
 			"intervention_casts": _casts.duplicate(true),
 			"tile_x": tile.x, "tile_y": tile.y, "zoom": _camera.zoom.x,
 			"time_of_day": now["time_of_day"], "width": image.get_width(), "height": image.get_height(),
@@ -240,7 +292,7 @@ func _write_manifest() -> void:
 		return
 	manifest.store_string(JSON.stringify({
 		"schema_version": 3, "plan": _plan,
-		"scenario": "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO",
+		"scenario": _scenario(), "seed": _seed,
 		"intervention_casts": _casts, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
 		"captures": _manifest, "worktree_changed_paths": int(OS.get_environment("WORLDSIM_GIT_DIRTY")),
 	}, "\t") + "\n")
@@ -315,11 +367,15 @@ func _advance_to(target: int) -> bool:
 	var tick: int = int(clock["tick"])
 	var agents: Node = _main.get_node_or_null("AgentRenderer")
 	var trail: Node = _main.get_node_or_null("ActivityTrailRenderer")
+	var status: Node = _main.get_node_or_null("UI/HudStatusPanel")
 	while tick < target:
 		if target - tick <= 8:
 			_motion_before = _world.call("get_agent_snapshot")
 			_motion_start_tick = tick
 		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		_remember_settlements()
+		if status != null and status.has_method("_ingest_snapshots"):
+			status.call("_ingest_snapshots")
 		var snapshot: Dictionary = _world.call("get_agent_snapshot")
 		_cold_trace.ingest(snapshot, tick)
 		if agents != null and agents.has_method("ingest_chill_snapshot"):
@@ -366,7 +422,10 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		"trail_segments": int(_main.get_node("ActivityTrailRenderer").call("get_drawn_segment_count")),
 		"installed_groups": _installed_groups(),
 	}
-	data["scenario"] = "INTERVENTION SCENARIO" if _plan == "art_god" else "NATURAL SCENARIO"
+	data["scenario"] = _scenario()
+	data["seed"] = _seed
+	data["capture_plan_row"] = _plan_row.duplicate(true)
+	data["selected_settlement_id"] = Selection.selected_id
 	data["intervention_casts"] = _casts.duplicate(true)
 	data["seconds_since_last_cast"] = _shot_elapsed_s
 	data["intervention_effects"] = {}
@@ -500,7 +559,7 @@ func _capture_strip(prefix: String, follow: bool) -> void:
 		var entry: Dictionary = {"file": stem + ".png", "entities": stem + ".entities.json",
 			"tick": int(now["tick"]), "framing": prefix, "zoom": _camera.zoom.x,
 			"width": image.get_width(), "height": image.get_height(),
-			"real_time_usec": start_usec, "followed_agent_id": followed}
+			"real_time_usec": start_usec, "followed_agent_id": followed, "scenario": _scenario(), "seed": _seed}
 		frames.append(entry)
 		_manifest.append(entry)
 		var remaining: float = float(clip_start_usec + (index + 1) * 100000 - Time.get_ticks_usec()) / 1000000.0
@@ -552,13 +611,13 @@ func _capture_calibration() -> void:
 		var viewport: Vector2 = Vector2(image.get_size())
 		var pixel_scale: Vector2 = viewport / root.get_visible_rect().size
 		if not CapturePlans.write_json(_out.path_join(stem + ".entities.json"), {
-			"schema_version": 3, "entities": Metadata.entities(scene, viewport, pixel_scale),
+			"schema_version": 3, "scenario": "CALIBRATION", "entities": Metadata.entities(scene, viewport, pixel_scale),
 			"zoom": [zoom_level, zoom_level], "viewport_size": [image.get_width(), image.get_height()],
 			"framebuffer_scale": pixel_scale.x,
 		}):
 			_fail("cannot write calibration metadata")
 			return
-		_manifest.append({"file": stem + ".png", "entities": stem + ".entities.json", "framing": "a_calib",
+		_manifest.append({"file": stem + ".png", "entities": stem + ".entities.json", "framing": "a_calib", "scenario": "CALIBRATION",
 			"zoom": zoom_level, "width": image.get_width(), "height": image.get_height()})
 	scene.queue_free()
 
@@ -605,3 +664,93 @@ func _render_frame() -> void:
 	DisplayServer.window_move_to_foreground()
 	await process_frame
 	RenderingServer.force_draw(false)
+
+
+func _scenario() -> String:
+	if _plan == "art_god":
+		return "INTERVENTION SCENARIO"
+	return "SOCIETY SCENARIO seed %d" % _seed if _plan == "art_society" else "NATURAL SCENARIO"
+
+
+func _reset_capture_world(seed: int) -> void:
+	_seed = seed
+	_original_id = -1
+	_daughter_id = -1
+	Selection.reset()
+	_casts.clear()
+	_last_cast_usec = 0
+	_motion_before.clear()
+	_motion_start_tick = -1
+	_motion_end_tick = -1
+	_cold_trace = ColdTrace.new()
+	_world.call("reset_world", seed)
+	_world.call("set_sim_speed", 0.0)
+	_world.process_mode = Node.PROCESS_MODE_DISABLED
+	var info: Dictionary = _world.call("get_world_info")
+	_clock_offset = int(info.get("clock_offset_ticks", 0))
+	await process_frame
+	await process_frame
+	_camera.call("set_auto_track", false)
+	_camera.position_smoothing_enabled = false
+
+
+func _remember_settlements() -> void:
+	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var ordered: Array = Array(snap.get("settlement_ids", PackedInt32Array()))
+	ordered.sort()
+	for id: int in ordered:
+		if _original_id < 0:
+			_original_id = id
+		elif _daughter_id < 0 and id != _original_id:
+			_daughter_id = id
+
+
+func _settlement_id(target: String) -> int:
+	_remember_settlements()
+	return _original_id if target == "orig" else _daughter_id
+
+
+func _settlement_tile(target: String) -> Vector2:
+	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var ids: PackedInt32Array = snap.get("settlement_ids", PackedInt32Array())
+	var index: int = ids.find(_settlement_id(target))
+	if index < 0:
+		return Vector2(-1, -1)
+	return Vector2(snap["formation_xs"][index], snap["formation_ys"][index])
+
+
+func _settlement_bounds() -> Rect2:
+	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var xs: PackedInt32Array = snap.get("formation_xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("formation_ys", PackedInt32Array())
+	if xs.is_empty():
+		return Rect2(Vector2(32, 32), Vector2.ZERO)
+	var bounds: Rect2 = Rect2(Vector2(xs[0], ys[0]), Vector2.ZERO)
+	for index: int in xs.size():
+		bounds = bounds.expand(Vector2(xs[index], ys[index]))
+	return bounds
+
+
+func _all_villages_zoom() -> float:
+	var extent: Vector2 = (_settlement_bounds().size + Vector2(12, 12)) * TILE_SIZE
+	var viewport: Vector2 = root.get_visible_rect().size
+	for zoom_step: float in [8.0, 6.0, 4.0, 3.0, 2.0, 1.0]:
+		if extent.x * zoom_step <= viewport.x and extent.y * zoom_step <= viewport.y:
+			return zoom_step
+	return 1.0
+
+
+func _founder_tile() -> Vector2:
+	if not _world.has_method("get_society_snapshot"):
+		return Vector2(-1, -1)
+	var society: Dictionary = _world.call("get_society_snapshot")
+	var leaders: PackedByteArray = society.get("founder_leader", PackedByteArray())
+	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
+	var agents: Dictionary = _world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+	for index: int in founders.size():
+		if index < leaders.size() and leaders[index] == 1:
+			var agent_index: int = ids.find(founders[index])
+			if agent_index >= 0:
+				return Vector2(agents["xs"][agent_index], agents["ys"][agent_index])
+	return Vector2(-1, -1)
