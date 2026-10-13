@@ -1,0 +1,111 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (17 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | soc_d28_2200_F2_orig.jpg[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | soc_d29_0630_FD_leader.jpg[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | soc_d29_0630_FT_site.jpg[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | soc_d29_0700_FD_leader.jpg[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | soc_d29_0800_FD_leader.jpg[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | soc_d29_0819_FS_daughter.jpg[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | soc_d29_0909_FV_all.jpg[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | soc_d29_1200_FV_all.jpg[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | soc_d29_1200_FV_all_selected_daughter.jpg[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | soc_d29_1200_FV_all_selected_orig.jpg[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | soc_d51_0200_F2N_daughter.jpg[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | soc_d51_1200_FV_all.jpg[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | soc_d84_0200_F2N_daughter.jpg[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | soc_d84_1200_FV_all.jpg[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | soc_d85_0101_DE_daughter.jpg[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | soc_d85_0630_FD_leader.jpg[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | soc_d85_0842_FV_all.jpg[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (16 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | soc_d28_2200_F2_orig.jpg[39m[0m
+[   5% ] [90m[1mreimport[22m | soc_d29_0630_FD_leader.jpg[39m[0m
+[  11% ] [90m[1mreimport[22m | soc_d29_0700_FD_leader.jpg[39m[0m
+[  17% ] [90m[1mreimport[22m | soc_d29_0800_FD_leader.jpg[39m[0m
+[  23% ] [90m[1mreimport[22m | soc_d29_0819_FS_daughter.jpg[39m[0m
+[  29% ] [90m[1mreimport[22m | soc_d29_0909_FV_all.jpg[39m[0m
+[  35% ] [90m[1mreimport[22m | soc_d29_1200_FV_all.jpg[39m[0m
+[  41% ] [90m[1mreimport[22m | soc_d29_1200_FV_all_selected_daughter.jpg[39m[0m
+[  47% ] [90m[1mreimport[22m | soc_d29_1200_FV_all_selected_orig.jpg[39m[0m
+[  52% ] [90m[1mreimport[22m | soc_d51_0200_F2N_daughter.jpg[39m[0m
+[  58% ] [90m[1mreimport[22m | soc_d51_1200_FV_all.jpg[39m[0m
+[  64% ] [90m[1mreimport[22m | soc_d84_0200_F2N_daughter.jpg[39m[0m
+[  70% ] [90m[1mreimport[22m | soc_d84_1200_FV_all.jpg[39m[0m
+[  76% ] [90m[1mreimport[22m | soc_d85_0101_DE_daughter.jpg[39m[0m
+[  82% ] [90m[1mreimport[22m | soc_d85_0630_FD_leader.jpg[39m[0m
+[  88% ] [90m[1mreimport[22m | soc_d85_0842_FV_all.jpg[39m[0m
+[  94% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (16 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+OpenGL API 4.1 Metal - 91.7 - Compatibility - Using Device: Apple - Apple M4 Max
+
+WorldRenderer ready (T7.9.B render mechanism)
+CameraController ready (default zoom 4.0×)
+capture start: god_d10_1200_F2_spoil tick=13200 usec=773863
+capture saved: god_d10_1200_F2_spoil tick=13200 usec=12577006
+capture start: god_d16_1700_CAST_ tick=22140 usec=12577060
+capture start: god_d17_0200_F2N_cold_snap tick=22680 usec=22019152
+capture saved: god_d17_0200_F2N_cold_snap tick=22680 usec=23696278
+capture start: god_d23_1200_F2_gift tick=31920 usec=23696331
+capture saved: god_d23_1200_F2_gift tick=31920 usec=34920453
+capture start: god_d23_1205_F2_windfall_0200ms tick=31925 usec=34920516
+capture saved: god_d23_1205_F2_windfall_0200ms tick=31925 usec=36327460
+capture start: god_d23_1205_F2_windfall_1000ms tick=31925 usec=36327523
+capture saved: god_d23_1205_F2_windfall_1000ms tick=31925 usec=36987054
+capture start: god_d24_1700_CAST_ tick=33660 usec=36987113
+capture start: god_d24_1830_F2_rain tick=33750 usec=39794786
+capture saved: god_d24_1830_F2_rain tick=33750 usec=41076832
+capture start: god_d25_0200_F2N_rain_night tick=34200 usec=41076898
+capture saved: god_d25_0200_F2N_rain_night tick=34200 usec=42718810
+capture start: god_d25_0200_F2_panel_log tick=34200 usec=42718874
+capture saved: god_d25_0200_F2_panel_log tick=34200 usec=43906715
+capture start: god_d50_1700_F2_soc_rain_daughter tick=71100 usec=44029713
+capture saved: god_d50_1700_F2_soc_rain_daughter tick=71100 usec=151357917
+capture start: god_d51_0200_F2N_soc_rain_night_daughter tick=71640 usec=151357989
+capture saved: god_d51_0200_F2N_soc_rain_night_daughter tick=71640 usec=153853495
+capture start: god_d51_0200_F2N_soc_original_night_orig tick=71640 usec=153853553
+capture saved: god_d51_0200_F2N_soc_original_night_orig tick=71640 usec=155027502
+capture start: god_d51_0200_FV_soc_both_night_all tick=71640 usec=155027563
+capture saved: god_d51_0200_FV_soc_both_night_all tick=71640 usec=156217217
+Published 12 captures; raw framebuffers: /Users/rexxa/work/art-production7-evidence/final_capture/shots/art_god
