@@ -2402,3 +2402,15 @@ p10 pilot UBS (mean 60/90/118): `game_v15` food 0.246, wood 0.088, alive 0.171; 
 ### Part 1 — the J6 bisection (`probe_p1`, `probe_p1b`–`p1d`; 11:52–12:57 KST)
 
 Tuning seeds 0–31 × 120 days, every twin passed. Gap in Pass 6 Y9 `work_1500` on these seeds: game_v16 0.254 − game_v17_nofission 0.119 = 0.135 (held-out per Pass 11: 0.241 − 0.116). Decisive: the wild regions' bushes (`abl_no_regions` restores 1.000 of the gap, `fwd_regions` 1.107, `fwd_regions_bushes_only` 1.107, `fwd_regions_wood_only` 0.000); every exposure, rain and regional-wood difference within noise. Activity that took the afternoon: foraging (adults at 15:00 0.178 → 0.128, idle 0.592 → 0.656). Mechanism: region-bush food reaches the store through the incidental Gather arm, the store holds its target in 93 % of 15:00 rows (v16 82.5 %), the forage arm is off. The v18 flag `local_food_availability` (availability, meal target and Gather tile inside the catchment) restores 0.707 of the gap on v17_nofission (`abl_local_food3`). Full table and versions: `docs/revitalize/probe/p12-1_bisect/BISECTION.md`.
+
+### Part 2 — 4.6 guard (commit `40dda8f2`, `probe_p2`, 12:55–13:15 KST)
+
+`p12-2_guard_v17_*`, `p12-2_guard_v17n_*`, `p12-2_guard_v16_*` (tuning sets, 64 × 10 and 32 × 120) equal Part 0's runs on every shared value (16,226 / 97,206 / 15,394 / 95,097 / 13,868 / 94,339); the only difference is `schema_version` 11 → 12 (plus the new schema-12 keys). All determinism twins pass.
+
+### Part 3 — tuning (tuning seeds; `evaluate_pass12.py`, game_v16 reference `p12-0_v16_*`)
+
+Scratch exploration before round 1 (disclosed as 4.4 asks): `p12-scratch_A` = the Part 2 start values (`scratch_probe_a`, = `probe_p2`'s rules before the final J6-fix version; game_v18 and game_v18_nofission, seeds 900000–900031 × 120 days, no twin): fission share 0.906, first-fission display day median 33 / IQR 51 / peak share 0.10, ≥ 2 alive at day 120 0.906, daughters alive 28 d 1.00, settlement-winters over 0.35: 2 of 231 (max 0.53), starvation + dehydration max 0.
+
+| Round | Commit | Knobs (changes) | J3 | J4 | J5 | J6 (v18_nofission) |
+|---|---|---|---|---|---|---|
+| 1 | `40dda8f2` | 7.1/7.3 start values (hazard 20/40/850/1050/2/500/500/120, min_members 22, min_age 10, cooldown 28, seasons T,T,T,F; floor 600; water 12; region bushes 8–12, deadwood 12–18) | FAIL: fission share 0.969, ≥ 2 alive 0.969 (timing PASS: median 35, IQR 23.5, peak 0.097; cancellations 0/49) | PASS 1.00 (41/41) | FAIL: settlement-winter max 0.417 (3 of 243 over: seed 5 parent 8/20 and daughter 5/12 after an autumn split at day 103, seed 24 daughter 18/50 with 7 dark nights); stage shares child 0.52 / adult 0.25 / elder 0.23; S+D max 1 | FAIL: Y9 work_1500 0.230 (v16 0.254), idle_1200 0.627 (v16 0.621, both > 0.60); work_1200 0.373 PASS |

@@ -568,7 +568,8 @@ impl WorldRules {
             firewood.rain_wet_burn = true;
             // Pass 12 section 7.3 (c), DAUGHTER_DIAGNOSIS.md (d): settled
             // regions get at least 0.6 of the camp's winter fall.
-            firewood.area_fall_floor_permille = 600;
+            // Part 3 round 2: 600 -> 1000.
+            firewood.area_fall_floor_permille = 1000;
             rules.society.firewood = Some(firewood);
         }
         rules
@@ -576,8 +577,9 @@ impl WorldRules {
 
     /// The `game_v18` split hazard (Pass 12 section 7.1 start values).
     pub const V18_HAZARD: FissionHazard = FissionHazard {
-        size_lo: 20,
-        size_hi: 40,
+        // Part 3 round 2: 20 / 40 -> 28 / 48.
+        size_lo: 28,
+        size_hi: 48,
         crowd_lo_permille: 850,
         crowd_hi_permille: 1050,
         scarcity_days: 2,
@@ -599,7 +601,8 @@ impl WorldRules {
         debug_assert!(hazard.is_valid());
         let base = Self::game_v17_with(variety);
         if let Some(mut fission) = base.society.fission {
-            fission.min_members = 22;
+            // Part 3 round 2: 22 -> 32.
+            fission.min_members = 32;
             fission.min_age_days = 10;
             fission.cooldown_days = 28;
             fission.allowed_seasons = [true, true, true, false];
@@ -1234,7 +1237,7 @@ mod tests {
             let fission = v18.society.fission.expect("v18 fission");
             assert_eq!(fission.hazard, Some(WorldRules::V18_HAZARD));
             assert_eq!(fission.allowed_seasons, [true, true, true, false]);
-            assert_eq!((fission.min_members, fission.min_age_days, fission.cooldown_days), (22, 10, 28));
+            assert_eq!((fission.min_members, fission.min_age_days, fission.cooldown_days), (32, 10, 28));
             let mut stripped = v18;
             stripped.society.fission = None;
             assert_eq!(stripped, WorldRules::game_v18_nofission(seed));

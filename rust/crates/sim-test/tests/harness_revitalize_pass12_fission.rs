@@ -2,7 +2,7 @@
 use sim_core::components::{Agent, AgentId, AgentState, Child, Elder, Lineage, Position, ResourceKind, Settlement};
 use sim_core::material::MaterialRegistry;
 use sim_core::rng::{keyed_below, NoiseFork, STREAM_FISSION_HAZARD};
-use sim_core::rules::WorldRules;
+use sim_core::rules::{FissionHazard, WorldRules};
 use sim_engine::{FissionCheck, RuntimeSystem, SimEngine, WildRegion};
 use sim_systems::runtime::settlement::fission::{hazard_terms, sustain_capacity};
 use sim_systems::runtime::settlement::food_economy::adult_need_per_day;
@@ -12,6 +12,29 @@ use sim_test::scenes::{game_v17_scene, game_v18_nofission_scene, game_v18_scene}
 
 const HOME: (u32, u32) = (20, 20);
 const SITE: (u32, u32) = (46, 20);
+
+/// The goal's start values (7.1): the mechanism tests use them explicitly so
+/// their numbers do not move with Part 3's tuning.
+const START: FissionHazard = FissionHazard {
+    size_lo: 20,
+    size_hi: 40,
+    crowd_lo_permille: 850,
+    crowd_hi_permille: 1050,
+    scarcity_days: 2,
+    weight_crowd_permille: 500,
+    weight_scarcity_permille: 500,
+    max_daily_permille: 120,
+};
+
+/// `game_v18(seed)` with the start hazard and `min_members` 22 (7.1's start values).
+fn start_rules(seed: u64) -> WorldRules {
+    let mut rules = WorldRules::game_v18(seed);
+    if let Some(fission) = rules.society.fission.as_mut() {
+        fission.hazard = Some(START);
+        fission.min_members = 22;
+    }
+    rules
+}
 
 /// Tick at which the display clock (480-tick offset) reads `minute` on the
 /// zero-based display day `day` (season = (day / 7) % 4).
@@ -96,7 +119,7 @@ fn harness_hazard_inert_in_v17() {
 
 #[test]
 fn harness_hazard_formula() {
-    let hz = WorldRules::V18_HAZARD;
+    let hz = START;
     // Pure terms (need per member 1.0): an ordinary case, capacity 0 (counts
     // as 1: q = 1000), an empty store (s = 1000) and size at size_lo (h = 0).
     assert_eq!(hazard_terms(&hz, 30, 30, 30, 1.0), (500, 750, 500, 37));
@@ -110,7 +133,7 @@ fn harness_hazard_formula() {
     let seed = 900_412;
     let check = tick_at(28, 360);
     for (bushes, food, members) in [(0u32, 100u32, 30u64), (40, 0, 30), (200, 2000, 30), (40, 100, 22)] {
-        let mut engine = world(WorldRules::game_v18(seed), seed, bushes, food, members, false);
+        let mut engine = world(start_rules(seed), seed, bushes, food, members, false);
         let capacity = sustain_capacity(&engine.resources, 1).expect("capacity");
         let resident_members = engine.resources.settlements[&1].member_agents.len() as u32;
         run(&mut engine, check, check + 1);
@@ -164,7 +187,7 @@ fn harness_hazard_keyed_with_replicate() {
 
 #[test]
 fn harness_hazard_rises_with_shortfall() {
-    let hz = WorldRules::V18_HAZARD;
+    let hz = START;
     let mut last = i64::MAX;
     for food in (0..=200).step_by(10) {
         let h = hazard_terms(&hz, 30, 30, food, 1.0).3;
@@ -177,7 +200,7 @@ fn harness_hazard_rises_with_shortfall() {
     let seed = 900_413;
     let check = tick_at(28, 360);
     let hazard_with = |food: u32| {
-        let mut engine = world(WorldRules::game_v18(seed), seed, 40, food, 30, false);
+        let mut engine = world(start_rules(seed), seed, 40, food, 30, false);
         run(&mut engine, check, check + 1);
         engine.resources.fission_checks[0]
     };
@@ -192,12 +215,12 @@ fn harness_allowed_seasons() {
     // v18: spring (day 28), summer (day 35) and autumn (day 14) checks reach
     // the draw; winter (day 21) never does.
     for (day, logged) in [(14u64, true), (21, false), (28, true), (35, true)] {
-        let mut engine = world(WorldRules::game_v18(seed), seed, 0, 0, 30, false);
+        let mut engine = world(start_rules(seed), seed, 0, 0, 30, false);
         run(&mut engine, tick_at(day, 360), tick_at(day, 360) + 1);
         assert_eq!(!engine.resources.fission_checks.is_empty(), logged, "day {day}");
     }
     // No allowed season: no check at all.
-    let mut rules = WorldRules::game_v18(seed);
+    let mut rules = start_rules(seed);
     if let Some(fission) = rules.society.fission.as_mut() {
         fission.allowed_seasons = [false; 4];
     }
@@ -222,7 +245,7 @@ fn harness_hazard_order_independent() {
     let seed = 900_415;
     let check = tick_at(28, 360);
     let outcome = |reverse: bool| {
-        let mut engine = world(WorldRules::game_v18(seed), seed, 0, 0, 30, reverse);
+        let mut engine = world(start_rules(seed), seed, 0, 0, 30, reverse);
         run(&mut engine, check, check + 1);
         (engine.resources.fission_checks.clone(), engine.resources.fission_log.clone())
     };

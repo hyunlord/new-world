@@ -624,7 +624,17 @@ mod tests {
 
     #[test]
     fn hazard_terms_follow_the_formula() {
-        let hz = sim_core::rules::WorldRules::V18_HAZARD;
+        // The goal's start values (7.1), so the numbers do not move with tuning.
+        let hz = FissionHazard {
+            size_lo: 20,
+            size_hi: 40,
+            crowd_lo_permille: 850,
+            crowd_hi_permille: 1050,
+            scarcity_days: 2,
+            weight_crowd_permille: 500,
+            weight_scarcity_permille: 500,
+            max_daily_permille: 120,
+        };
         // need per member 1.0: 30 members, 2 days -> need 60.
         // g = (30 - 20) * 1000 / 20 = 500; c = 30000 / 30 = 1000; q = 150 * 1000 / 200 = 750;
         // s = 1000 - 30 * 1000 / 60 = 500; h = 120 * 500 * (500 * 750 + 500 * 500) / 1e9 = 37.
