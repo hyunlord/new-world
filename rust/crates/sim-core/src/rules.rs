@@ -561,6 +561,11 @@ impl WorldRules {
     /// [`Self::game_v18_nofission`] for given hidden parameters.
     pub const fn game_v18_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
         let mut rules = Self::game_v17_nofission_with(variety);
+        // Part 3 round 3: exposure [9, 5, 6] -> [8, 5, 5] (child and elder).
+        if let Some(mut exposure) = rules.society.exposure {
+            exposure.damage_per_cold_hour = [8.0, 5.0, 5.0];
+            rules.society.exposure = Some(exposure);
+        }
         // Pass 12 section 7.5 (Part 1's J6 finding): food availability is
         // local to a member's catchment.
         rules.agent.local_food_availability = true;
