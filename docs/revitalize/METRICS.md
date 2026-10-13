@@ -2636,3 +2636,11 @@ Reading: in v19 the first-fission day of a world is fixed by the world (within-w
 ### Part 6.1 — consequences (35 days, frozen recorder, `game_v19`, seeds 12000–12031, R = 4; 00:38–00:56 KST; `docs/revitalize/probe/p13-6_forks/`)
 
 Placebo identity 224 / 224 (G0a), replicate 0 = unforked 224 / 224. Deaths effect (replicate mean per seed, exposure included), share of seeds > 0 / < 0 / mean: gift_wood 0.000 / 0.281 / −0.367; rot_wood 0.438 / 0.000 / +0.844; **rain 0.375 / 0.000 / +1.016**; cold_snap 0.156 / 0.000 / +0.172; windfall 0.031 / 0.125 / −0.125; gift1 0.031 / 0.031 / +0.023. Dark-night effect (mean): rain +1.69, rot_wood +1.12, cold_snap +0.40, gift_wood −0.68. Wet burn: over the rain hours inside the burn window (11 per episode) the home store lost 34.94 units against 35.73 on the factual's dry night. G0b (variance reduction) FAIL as in earlier passes (reported). Post-fork first fission (35-day runs) differs from the factual in 0.05–0.12 of episodes. **J8: PASS** (placebo 100 %; rain ≥ 0 and dark-night > 0; rot_wood and rain raise deaths in ≥ 0.25 of seeds; gift_wood ≤ 0).
+
+### Part 7 — final gate (`2ba871c0`, the frozen code; 00:38–01:30 KST)
+
+`verification/p13-7/gate.txt`: debug 2,119 / release 2,119 passed, 0 failed (Pass 12 2,103); clippy (both), forbidden math, bridge build, Godot import, strict check, smoke (no `SCRIPT ERROR`/`ERROR:`), Python `tools/revitalize` (127) and `tools/worldmodel` (49, including `test_v19_fork_families_are_byte_identical`) all exit 0. `codex/revitalize-2026-10` fast-forwarded to `2ba871c0`; every later commit changes only documentation and probe outputs.
+
+### Part 7 — final reproduction (`probe_final` = `probe_frozen`, code `9f0d38ca`; 00:58–02:03 KST, Pass 12's flags)
+
+Against Pass 12's finals (`p12-7_final_*`; for v18 its timing runs), every run differs only in `schema_version` (12 → 13); all determinism twins pass. Shared values: legacy 6,463; v8 15,266; v9 11,865 / 87,499; v10 12,057 / 88,082; v11 14,372 / 103,243; v12 14,372 / 103,255; v13 14,502 / 103,310; v14 14,504 / 103,311; v15 14,504 / 103,317; v16 15,144 / 103,923; v16_neutral 14,696 / 103,632; v17 17,502 / 107,146; v17_nofission 16,670 / 104,681; v18 17,502 / 132,718; v18_nofission 16,670 / 104,565 (10-day / 120-day). Both v19 scenes on tuning and held-out are round 3 and Part 4 (same binary). **J1: PASS.**
