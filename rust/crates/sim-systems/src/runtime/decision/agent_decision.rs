@@ -612,6 +612,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut local_home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
         let local_food: BTreeMap<AgentId, bool> = if resources.rules.agent.local_food_availability {
             let radius = catchment;
+            // Review round 1, M1: a founder still walking to its site stays on
+            // its parent's roster but is not tied to the parent's catchment
+            // (v17's world-wide rule applies to it until its daughter forms).
+            let walking: BTreeSet<AgentId> = world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
             let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
             ids.sort_unstable();
             let mut out = BTreeMap::new();
@@ -622,7 +626,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     .food_tiles
                     .iter()
                     .any(|(tile, amount)| *amount > 0 && tile.0.abs_diff(home.0).max(tile.1.abs_diff(home.1)) <= radius);
-                for id in &settlement.member_agents {
+                for id in settlement.member_agents.iter().filter(|id| !walking.contains(id)) {
                     out.entry(*id).or_insert(food);
                     local_home.entry(*id).or_insert(home);
                 }

@@ -143,6 +143,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let mut max_remnant_hours = 0u64;
     // Pass 12 J5: members of every settlement at 18:00 of each winter's first day.
     let mut winter_members: BTreeMap<u64, BTreeMap<u32, u32>> = BTreeMap::new();
+    // Pass 12 (review round 1, L5): members of each settlement at the first
+    // hourly sample after it formed.
+    let mut formed_members: BTreeMap<u32, u32> = BTreeMap::new();
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
@@ -301,6 +304,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
                 .iter()
                 .map(|(sid, s)| (*sid, (1..=2).contains(&s.member_agents.len())))
                 .collect();
+            for (sid, s) in &engine.resources.settlements {
+                formed_members.entry(*sid).or_insert(s.member_agents.len() as u32);
+            }
             remnant_hours.retain(|sid, _| small.get(sid).copied().unwrap_or(false));
             for (sid, is_small) in small {
                 if is_small {
@@ -345,7 +351,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         "PROBE seed={seed} shelter_plan_skips={}",
         engine.resources.shelter_plan_skips
     );
-    let pass12 = super::pass12::seed_block(&engine, &winter_members, &exposure_deaths, args.days);
+    let pass12 = super::pass12::seed_block(&engine, &winter_members, &formed_members, &exposure_deaths, args.days);
     let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
     if let Some(object) = pass11.as_object_mut() {
         object.insert("max_hours_with_1_to_2_members".into(), serde_json::json!(max_remnant_hours));

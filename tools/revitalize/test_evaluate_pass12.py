@@ -47,6 +47,12 @@ class Pass12Tests(unittest.TestCase):
         self.assertEqual((t["low"]["split_rate"], t["mid"]["split_rate"], t["high"]["split_rate"]), (0.0, 0.0, 1.0))
         self.assertEqual(t["n"], 9)
 
+    def test_terciles_do_not_sort_ties_by_outcome(self):
+        # Six checks at h = 10, three of them splits, ordered so the splits come first in tick order.
+        checks = [(t, 1, 30, 30, 0, 0, 0, 0, 10, 0, int(t < 3), 1) for t in range(6)]
+        t = e.hazard_terciles(round_of([run(1, checks=checks)]))
+        self.assertEqual(t["low"]["split_rate"], 1.0)  # ties keep tick order, not split order
+
     def test_pearson(self):
         self.assertAlmostEqual(e.pearson([1, 2, 3, 4], [2, 4, 6, 8]), 1.0)
         self.assertIsNone(e.pearson([1, 1, 1], [1, 2, 3]))

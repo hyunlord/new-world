@@ -25,6 +25,7 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "tools/worldmodel"))
 from wm_data import load_episode  # noqa: E402
+from macro_sensitivity import post_fork_first_fission  # noqa: E402
 
 TPD, OFFSET, EVERY = 1440, 480, 60
 BURN = (1080, 420)
@@ -65,6 +66,7 @@ def main(argv=None) -> int:
     ap.add_argument("--seeds", required=True)
     ap.add_argument("--replicates", type=int, required=True)
     ap.add_argument("--variants", required=True)
+    ap.add_argument("--fork-tick", type=int, default=28800)
     ap.add_argument("--out", required=True, type=Path)
     args = ap.parse_args(argv)
     a, b = args.seeds.split("..")
@@ -76,7 +78,7 @@ def main(argv=None) -> int:
     out["factual_first_fission_day_mean"] = float(np.mean([f["first"] for f in factual.values() if f["first"] is not None])) \
         if any(f["first"] is not None for f in factual.values()) else None
     for v in variants:
-        drops, fdrops, firsts, differ, rain_hours = [], [], [], [], []
+        drops, fdrops, firsts, differ, rain_hours, post_differ, post_days = [], [], [], [], [], [], []
         for s in seeds:
             for k in range(args.replicates):
                 ep, f = load(name(s, v, k)), factual[(s, k)]
@@ -88,12 +90,21 @@ def main(argv=None) -> int:
                 if ep["first"] is not None:
                     firsts.append(ep["first"])
                 differ.append(ep["first"] != f["first"])
+                # Review round 1, L7: the first fission founded after the fork.
+                pv = post_fork_first_fission(name(s, v, k), args.fork_tick)
+                pf = post_fork_first_fission(name(s, "none", k), args.fork_tick)
+                post_differ.append(pv != pf)
+                if pv is not None:
+                    post_days.append(pv)
         out["variants"][v] = {"rain_hours_in_burn_window_mean": float(np.mean(rain_hours)),
                               "wood_drop_over_rain_hours_mean": float(np.mean(drops)) if drops else None,
                               "factual_drop_same_hours_mean": float(np.mean(fdrops)) if fdrops else None,
                               "first_fission_day_mean": float(np.mean(firsts)) if firsts else None,
                               "episodes_with_fission": len(firsts),
-                              "share_first_fission_day_differs": float(np.mean(differ))}
+                              "share_first_fission_day_differs": float(np.mean(differ)),
+                              "post_fork_first_fission_day_mean": float(np.mean(post_days)) if post_days else None,
+                              "episodes_with_post_fork_fission": len(post_days),
+                              "share_post_fork_first_fission_day_differs": float(np.mean(post_differ))}
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "fork_extras.json").write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
     fmt = lambda x: "—" if x is None else f"{x:.2f}"
@@ -101,12 +112,15 @@ def main(argv=None) -> int:
              f"Scene `{args.scene}`, seeds {seeds.start}..{seeds.stop}, R = {args.replicates}. Wood drop = the home store's "
              "hourly decrease over the variant's rain hours inside the burn window (factual over the same rows beside it). "
              f"Factual mean first-fission display day {fmt(out['factual_first_fission_day_mean'])}. `fork_extras_p12.py`.", "",
-             "| Variant | Rain hours in burn window | Wood drop over them | Factual drop, same hours | First-fission day mean (episodes) | Share with a different first-fission day |",
-             "|---|---:|---:|---:|---:|---:|"]
+             "Most first fissions precede the fork (display day ~21), so the post-fork columns compare the first fission "
+             "founded after the fork (35-day runs: up to day 35).", "",
+             "| Variant | Rain hours in burn window | Wood drop over them | Factual drop, same hours | First-fission day mean (episodes) | Share with a different first-fission day | Post-fork first fission day mean (episodes) | Share with a different post-fork day |",
+             "|---|---:|---:|---:|---:|---:|---:|---:|"]
     for v, m in out["variants"].items():
         lines.append(f"| {v} | {fmt(m['rain_hours_in_burn_window_mean'])} | {fmt(m['wood_drop_over_rain_hours_mean'])} | "
                      f"{fmt(m['factual_drop_same_hours_mean'])} | {fmt(m['first_fission_day_mean'])} ({m['episodes_with_fission']}) | "
-                     f"{fmt(m['share_first_fission_day_differs'])} |")
+                     f"{fmt(m['share_first_fission_day_differs'])} | {fmt(m['post_fork_first_fission_day_mean'])} "
+                     f"({m['episodes_with_post_fork_fission']}) | {fmt(m['share_post_fork_first_fission_day_differs'])} |")
     (args.out / "fork_extras.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
     return 0

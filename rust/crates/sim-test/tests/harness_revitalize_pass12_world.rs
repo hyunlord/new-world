@@ -221,6 +221,11 @@ fn hungry(rules: WorldRules, local_bush: bool) -> AgentState {
 
 /// [`hungry`] with the member's meal target (its `SeekTarget`, if any).
 fn hungry_with_target(rules: WorldRules, local_bush: bool) -> (AgentState, Option<(u32, u32)>) {
+    hungry_founder(rules, local_bush, false)
+}
+
+/// [`hungry_with_target`], optionally with the member walking with a fission group (`Founding`).
+fn hungry_founder(rules: WorldRules, local_bush: bool, founder: bool) -> (AgentState, Option<(u32, u32)>) {
     let mut engine = SimEngine::new(64, 64, MaterialRegistry::new());
     engine.resources.rules = rules;
     engine.resources.current_tick = 1440 + 720 - 480;
@@ -244,6 +249,12 @@ fn hungry_with_target(rules: WorldRules, local_bush: bool) -> (AgentState, Optio
         )
         .expect("components");
     settlement.add_member_agent(id);
+    if founder {
+        engine
+            .world
+            .insert_one(entity, sim_core::components::Founding { site: (50, 50), fission_id: 1, leader: id, since_tick: 0 })
+            .expect("founding");
+    }
     engine.resources.settlements.insert(1, settlement);
     engine.resources.set_food_tile(50, 50, 4);
     engine.resources.set_food_source_max(50, 50, 4);
@@ -273,6 +284,10 @@ fn harness_local_food_availability_only_in_v18() {
     let (_, v18_target) = hungry_with_target(WorldRules::game_v18_nofission(0), true);
     assert_eq!(v17_target, Some((37, 20)), "v17 eats at the nearest bush anywhere");
     assert_eq!(v18_target, Some((30, 22)), "v18 eats inside its catchment");
+    // Review round 1, M1: a founder still walking keeps the world-wide rule.
+    let (state, target) = hungry_founder(WorldRules::game_v18(0), false, true);
+    assert_eq!(state, seeking_food);
+    assert_eq!(target, Some((37, 20)));
     assert!(!WorldRules::game_v17(0).agent.local_food_availability && WorldRules::game_v18(0).agent.local_food_availability);
 }
 

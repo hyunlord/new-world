@@ -80,10 +80,12 @@ def pearson(xs: list[float], ys: list[float]) -> float | None:
 
 def hazard_terciles(long: Round) -> dict:
     """Split rate per daily check by tercile of h (equal-count groups over every logged check, sorted by h)."""
-    checks = [(int(c[8]), int(c[10])) for run in runs(long) for c in run["pass12"]["fission_checks"]]
+    # Review round 1, L2: sort by h, ties by (seed, tick, settlement) — never by the outcome.
+    keyed = sorted((int(c[8]), int(run["seed"]), int(c[0]), int(c[1]), int(c[10]))
+                   for run in runs(long) for c in run["pass12"]["fission_checks"])
+    checks = [(h, split) for h, _, _, _, split in keyed]
     if not checks:
         return {"n": 0}
-    checks.sort()
     n = len(checks)
     out = {"n": n}
     for i, name in enumerate(("low", "mid", "high")):

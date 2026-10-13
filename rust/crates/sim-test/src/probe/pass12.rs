@@ -91,9 +91,17 @@ pub(super) fn metrics(engine: &SimEngine) -> Value {
     Value::Object(row)
 }
 
-/// Members of every settlement now (for the winter-start samples).
+/// Members of every settlement now (for the winter-start samples), founders
+/// still walking with a fission group left out (review round 1, L5: they are
+/// not at the parent's fire).
 pub(super) fn members_now(engine: &SimEngine) -> BTreeMap<SettlementId, u32> {
-    engine.resources.settlements.iter().map(|(sid, s)| (*sid, s.member_agents.len() as u32)).collect()
+    let walking: BTreeSet<u64> = engine.world.query::<(&Agent, &Founding)>().iter().map(|(_, (a, _))| a.id).collect();
+    engine
+        .resources
+        .settlements
+        .iter()
+        .map(|(sid, s)| (*sid, s.member_agents.iter().filter(|id| !walking.contains(id)).count() as u32))
+        .collect()
 }
 
 /// The per-seed schema-twelve block.
@@ -105,11 +113,13 @@ pub(super) fn members_now(engine: &SimEngine) -> BTreeMap<SettlementId, u32> {
 /// `settlement_winters`: for each winter whose window [day D 18:00, day D+7
 /// 07:00) lies inside the run, every settlement with members at day D 18:00,
 /// founded inside the window or with an exposure death in it:
-/// `members_at_winter_start` (a settlement founded inside the window counts
-/// its fission group's size), `exposure_deaths`, `founded_inside`.
+/// `members_at_winter_start` (founders still walking left out; a settlement
+/// founded inside the window counts its members at the first hourly sample
+/// after it formed), `exposure_deaths`, `founded_inside`.
 pub(super) fn seed_block(
     engine: &SimEngine,
     winter_members: &BTreeMap<u64, BTreeMap<SettlementId, u32>>,
+    formed_members: &BTreeMap<SettlementId, u32>,
     exposure: &[super::pass11::ExposureDeath],
     run_days: u64,
 ) -> Value {
@@ -163,7 +173,12 @@ pub(super) fn seed_block(
             .iter()
             .map(|sid| {
                 let members = if inside.contains(sid) {
-                    founders.get(sid).map_or(0, |(_, n)| *n as u64)
+                    // Review round 1, L5: the founders alive when the daughter
+                    // formed (its members at the first hourly sample after),
+                    // else the departing group's size.
+                    formed_members
+                        .get(sid)
+                        .map_or_else(|| founders.get(sid).map_or(0, |(_, n)| *n as u64), |m| u64::from(*m))
                 } else {
                     u64::from(at_start.get(sid).copied().unwrap_or(0))
                 };
