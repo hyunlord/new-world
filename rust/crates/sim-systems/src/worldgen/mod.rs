@@ -101,6 +101,17 @@ impl WorldGenConfig {
         Self { region_fill: true, region_water_max: Some(12), ..Self::game_v17_with(seed, variety) }
     }
 
+    /// Pass 13 generator inputs of world `seed` (`game_v19` and
+    /// `game_v19_nofission`): v18's world (no worldgen change).
+    pub const fn game_v19(seed: u64) -> Self {
+        Self::game_v18(seed)
+    }
+
+    /// [`Self::game_v19`] for given hidden parameters.
+    pub const fn game_v19_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
+        Self::game_v18_with(seed, variety)
+    }
+
     /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
     pub const fn game_v15(seed: u64) -> Self {
         Self::game_v14(seed)

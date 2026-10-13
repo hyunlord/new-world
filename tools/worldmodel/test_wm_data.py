@@ -112,8 +112,8 @@ class LoaderTests(unittest.TestCase):
 @unittest.skipUnless(BIN.exists(), f"recorder not built: {BIN}")
 class SchemaThreeTests(unittest.TestCase):
     """Pass 9: the loader reads schema 1 (the committed sample, above), schema 2
-    and schema 3 episodes; Pass 10: and schema 4; Pass 11: and schema 5 (the
-    recorder's own)."""
+    and schema 3 episodes; Pass 10: and schema 4; Pass 11: and schema 5; Pass
+    13: and schema 6 (the recorder's own)."""
 
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
@@ -128,7 +128,7 @@ class SchemaThreeTests(unittest.TestCase):
 
     def test_schema_three_carries_lineage_keys_as_identity(self) -> None:
         ep = load_episode(self.path)
-        self.assertEqual(ep.meta["schema_version"], 5)
+        self.assertEqual(ep.meta["schema_version"], 6)
         self.assertIs(ep.meta["keyed_draws"], True)
         self.assertIsNone(ep.meta["noise_fork"])
         keys = ep.lineage_keys()
@@ -140,10 +140,25 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertTrue(field["identity"] and field["hidden"])
         self.assertEqual(ep.meta["observable_fields"]["agent_keys.npy"], [])
 
+    def _rewrite_as_schema_five(self) -> None:
+        # A schema-5 episode is a schema-6 one without the three appended
+        # settlement columns (hidden P and theta, observable depart_tick).
+        meta = json.loads((self.path / "meta.json").read_text())
+        name, drop = "settlements.npy", 3
+        data = np.load(self.path / name)
+        np.save(self.path / name, np.ascontiguousarray(data[..., :-drop]))
+        meta["arrays"][name]["shape"] = list(data.shape[:-1]) + [data.shape[-1] - drop]
+        meta["arrays"][name]["sha256"] = sha256_file(self.path / name)
+        meta["fields"][name] = meta["fields"][name][:-drop]
+        meta["observable_fields"][name] = [f["name"] for f in meta["fields"][name] if not f["hidden"]]
+        meta["schema_version"] = 5
+        (self.path / "meta.json").write_text(json.dumps(meta))
+
     def _rewrite_as_schema_four(self) -> None:
         # A schema-4 episode is a schema-5 one without the two appended global
         # columns, the two appended settlement columns and the two appended
         # agent columns.
+        self._rewrite_as_schema_five()
         meta = json.loads((self.path / "meta.json").read_text())
         for name, drop in (("global.npy", 2), ("settlements.npy", 2), ("agents.npy", 2)):
             data = np.load(self.path / name)
@@ -193,7 +208,7 @@ class SchemaThreeTests(unittest.TestCase):
         g = [f["name"] for f in ep.meta["fields"]["global.npy"]]
         self.assertEqual(g[-2:], ["settlements_alive", "fissions_total"])
         s = [f["name"] for f in ep.meta["fields"]["settlements.npy"]]
-        self.assertEqual(s[-2:], ["parent_slot", "founded_tick"])
+        self.assertEqual(s[-5:-3], ["parent_slot", "founded_tick"])
         a = ep.meta["fields"]["agents.npy"]
         self.assertEqual([f["name"] for f in a[-2:]], ["hardiness", "founding"])
         self.assertIs(a[-2]["hidden"], True)
@@ -201,6 +216,27 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertIn("founding", ep.observable_names("agents.npy"))
         self.assertEqual(int(ep.column("global.npy", "settlements_alive")[-1]), 1)
         self.assertTrue((ep.column("settlements.npy", "parent_slot")[~np.isnan(ep.column("settlements.npy", "parent_slot"))] == -1).all())
+
+    def test_schema_six_appends_hidden_pressure_and_depart_tick(self) -> None:
+        ep = load_episode(self.path)
+        s = ep.meta["fields"]["settlements.npy"]
+        self.assertEqual([f["name"] for f in s[-3:]], ["fission_pressure", "fission_threshold", "depart_tick"])
+        self.assertEqual([f["hidden"] for f in s[-3:]], [True, True, False])
+        observable = ep.observable_names("settlements.npy")
+        self.assertNotIn("fission_pressure", observable)
+        self.assertNotIn("fission_threshold", observable)
+        self.assertIn("depart_tick", observable)
+        # game_v15 has no fission: P and theta 0, depart_tick -1 wherever the settlement exists.
+        for name, want in (("fission_pressure", 0), ("fission_threshold", 0), ("depart_tick", -1)):
+            col = ep.column("settlements.npy", name)
+            self.assertTrue((col[~np.isnan(col)] == want).all(), name)
+
+    def test_schema_five_layout_still_loads(self) -> None:
+        self._rewrite_as_schema_five()
+        ep = load_episode(self.path)
+        self.assertEqual(ep.meta["schema_version"], 5)
+        self.assertEqual(ep.arrays["settlements.npy"].shape[2], 11)
+        self.assertEqual(ep.meta["fields"]["settlements.npy"][-1]["name"], "founded_tick")
 
     def test_schema_four_layout_still_loads(self) -> None:
         self._rewrite_as_schema_four()

@@ -124,6 +124,7 @@ fn pass5_v11_literal() -> WorldRules {
                 regional_wood: false,
                 area_fall_floor_permille: 0,
                 rain_wet_burn: false,
+                floor_separate: false,
             }),
             exposure: None,
             fission: None,

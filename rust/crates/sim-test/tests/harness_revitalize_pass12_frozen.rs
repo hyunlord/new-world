@@ -144,6 +144,7 @@ fn pass11_v17_seed0_literal() -> WorldRules {
                 regional_wood: true,
                 area_fall_floor_permille: 0,
                 rain_wet_burn: false,
+                floor_separate: false,
             }),
             exposure: Some(ExposureRule {
                 damage_per_cold_hour: [9.0, 5.0, 6.0],
@@ -167,6 +168,7 @@ fn pass11_v17_seed0_literal() -> WorldRules {
                 remnant_members: 2,
                 allowed_seasons: [true, true, false, false],
                 hazard: None,
+                pressure: None,
             }),
         },
         clock_offset_ticks: 480,

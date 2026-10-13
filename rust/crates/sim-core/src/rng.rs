@@ -76,8 +76,14 @@ pub const STREAM_REGION_FILL_BUSH: u64 = 0x5246_494C_4255_5348;
 /// ("RFILWOOD" in ASCII).
 pub const STREAM_REGION_FILL_WOOD: u64 = 0x5246_494C_574F_4F44;
 
+/// Fission threshold (Pass 13, `game_v19`): the hidden threshold θ of a
+/// settlement, subject = its settlement id, tick 0, slot = its number of
+/// splits so far, replicate always 0 (a world draw: a noise fork never
+/// redraws it; "FISSTHRS" in ASCII).
+pub const STREAM_FISSION_THRESHOLD: u64 = 0x4649_5353_5448_5253;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 15] = [
+pub const STREAMS: [u64; 16] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -93,6 +99,7 @@ pub const STREAMS: [u64; 15] = [
     STREAM_FISSION_HAZARD,
     STREAM_REGION_FILL_BUSH,
     STREAM_REGION_FILL_WOOD,
+    STREAM_FISSION_THRESHOLD,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

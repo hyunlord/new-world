@@ -133,6 +133,12 @@ pub struct Tallies {
     /// Winter-fall units lost to the snow cap in a settled wild region
     /// (Pass 12, floor on); included in `winter_wood_lost`.
     pub winter_wood_lost_settled: u64,
+    /// Floor units placed from the separate settled-area accumulator (Pass
+    /// 13, `FirewoodRule::floor_separate`).
+    pub area_floor_placed: u64,
+    /// Floor units of the separate accumulator that found no spot below its
+    /// `max` (Pass 13, `floor_separate`); included in `winter_wood_lost`.
+    pub area_floor_lost_at_max: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -461,13 +467,18 @@ pub struct SimResources {
     /// floor adds (feeds `Tallies::area_floor_wood`; never read by systems).
     pub wood_area_floor_acc: u64,
 
+    /// Pass 13 (`FirewoodRule::floor_separate`): per-area accumulators of the
+    /// settled-area floor's extra, placed with ceiling `max`. Empty otherwise.
+    pub wood_area_floor_sep: BTreeMap<u8, u64>,
+
     /// Hearth tiles that never anchor a new settlement again (Pass 11): the
     /// hearth of a cancelled founding, a merged remnant or a settlement that
     /// lost every member. Empty outside `game_v17`.
     pub retired_hearths: BTreeSet<(u32, u32)>,
 
-    /// Every fission that departed (Pass 11), in departure order;
-    /// measurement only, never read by systems other than `FissionSystem`.
+    /// Every fission that departed (Pass 11), in departure order; read by
+    /// `FissionSystem` and, for a settlement's split count when it forms
+    /// (Pass 13 threshold key), by `SettlementSystem`.
     pub fission_log: Vec<FissionRecord>,
 
     /// Every settlement dissolution as (settlement, tick) (Pass 11);
@@ -508,6 +519,12 @@ pub struct FissionCheck {
     pub split: bool,
     /// Whether a free site existed.
     pub site_free: bool,
+    /// Pass 13 (`FissionRule::pressure`): the pressure P after today's
+    /// accumulation (0 without pressure; the draw is then 0 and `split` is
+    /// P ≥ θ and P > 0).
+    pub pressure: u64,
+    /// Pass 13: the settlement's threshold θ (0 without pressure).
+    pub threshold: u64,
 }
 
 /// One departed fission group (Pass 11); measurement only.
@@ -537,6 +554,10 @@ pub struct FissionRecord {
     pub wood_taken: u32,
     /// Whether the group settled where its leader stood after the timeout.
     pub settled_at_leader: bool,
+    /// Pass 13: the parent's pressure P at the split (0 without pressure).
+    pub pressure_at_split: u64,
+    /// Pass 13: the parent's threshold θ at the split (0 without pressure).
+    pub threshold_at_split: u64,
 }
 
 /// One wild region placed by worldgen (Pass 11).
@@ -654,6 +675,7 @@ impl SimResources {
             wood_area_acc: BTreeMap::new(),
             wood_area_cursor: BTreeMap::new(),
             wood_area_floor_acc: 0,
+            wood_area_floor_sep: BTreeMap::new(),
             retired_hearths: BTreeSet::new(),
             fission_log: Vec::new(),
             dissolutions: Vec::new(),

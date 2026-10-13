@@ -83,6 +83,8 @@ mod tests {
             wet_burn_wood: 0,
             area_floor_wood: 0,
             winter_wood_lost_settled: 0,
+            area_floor_placed: 0,
+            area_floor_lost_at_max: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

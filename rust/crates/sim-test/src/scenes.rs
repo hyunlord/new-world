@@ -167,6 +167,38 @@ pub fn game_v18_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety)
     engine
 }
 
+/// Pass 13 fixture: world `seed` with its v18 hidden parameters under the v19
+/// rules without fission (the settled-area floor in its own accumulator).
+pub fn game_v19_nofission_scene(seed: u64) -> SimEngine {
+    game_v19_nofission_scene_with(seed, &sim_core::variety::WorldVariety::draw_v18(seed))
+}
+
+/// [`game_v19_nofission_scene`] for given hidden parameters.
+pub fn game_v19_nofission_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v19_with(seed, variety),
+        sim_core::rules::WorldRules::game_v19_nofission_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
+/// Pass 13 fixture: world `seed` under the v19 rules (fission by accumulated
+/// pressure against a hidden threshold).
+pub fn game_v19_scene(seed: u64) -> SimEngine {
+    game_v19_scene_with(seed, &sim_core::variety::WorldVariety::draw_v18(seed))
+}
+
+/// [`game_v19_scene`] for given hidden parameters.
+pub fn game_v19_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v19_with(seed, variety),
+        sim_core::rules::WorldRules::game_v19_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

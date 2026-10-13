@@ -70,6 +70,21 @@
 //! `keyed_below(seed, STREAM_FISSION_HAZARD, sid, tick, 0, r, 1000) < h`, r the
 //! noise replicate in force. Every check that reaches the draw is logged in
 //! `SimResources::fission_checks` (measurement only).
+//!
+//! **Pass 13 (`game_v19`).** With `pressure` set (it requires `hazard`) the
+//! daily draw is not made: on a morning every gate before the site choice
+//! passes (season, world cooldown, `max_settlements`, age, own cooldown,
+//! `min_members`, departed group, capacity), the settlement's pressure P
+//! (`Settlement::fission_pressure`, thousandths) grows by h, or, when h = 0,
+//! falls by `decay_permille` (floor 0); on a morning any gate fails —
+//! including the gates that end the check for every higher id (world
+//! cooldown, `max_settlements`, a lower id splitting that morning) — P
+//! neither grows nor decays. The settlement splits when P ≥ θ
+//! (`Settlement::fission_threshold`) and P > 0 and a site is free; a split
+//! blocked by no free site or by group formation keeps P and θ. After a
+//! split P returns to 0 (`reset_on_split`) and θ is redrawn with k = the
+//! parent's fission records (`fission_threshold`, a world draw: never the
+//! replicate). θ is drawn when the settlement forms (`SettlementSystem`).
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -79,6 +94,7 @@ use sim_core::components::{
     Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, SeekTarget,
     SettlementId, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
 };
+use sim_core::fission_threshold::fission_threshold;
 use sim_core::rng::{keyed_below, keyed_u64, STREAM_FISSION, STREAM_FISSION_HAZARD};
 use sim_core::rules::{BirthRule, FissionHazard, FissionRule};
 use sim_core::TerrainType;
@@ -464,8 +480,31 @@ impl FissionSystem {
                 Some(hazard) => {
                     let food = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
                     let (g, q, s, h) = hazard_terms(&hazard, members, capacity, food, adult_need_per_day(tpd));
-                    let replicate = resources.noise_replicate_for(tick);
-                    let draw = keyed_below(resources.world_seed, STREAM_FISSION_HAZARD, u64::from(sid), tick, 0, replicate, 1000);
+                    let (draw, split, pressure, threshold) = match rule.pressure {
+                        None => {
+                            let replicate = resources.noise_replicate_for(tick);
+                            let draw = keyed_below(resources.world_seed, STREAM_FISSION_HAZARD, u64::from(sid), tick, 0, replicate, 1000);
+                            (draw, (draw as i64) < h, 0, 0)
+                        }
+                        // Pass 13: accumulate (every gate passed today), no draw.
+                        Some(law) => {
+                            let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
+                            let Some(settlement) = resources.settlements.get_mut(&sid) else { continue };
+                            if settlement.fission_threshold == 0 {
+                                // A settlement formed without its draw (e.g. deserialized
+                                // from before Pass 13) draws it now, with the same key.
+                                settlement.fission_threshold =
+                                    fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                            }
+                            settlement.fission_pressure = if h > 0 {
+                                settlement.fission_pressure.saturating_add(h as u64)
+                            } else {
+                                settlement.fission_pressure.saturating_sub(u64::from(law.decay_permille))
+                            };
+                            let (p, theta) = (settlement.fission_pressure, settlement.fission_threshold);
+                            (0, p > 0 && p >= theta, p, theta)
+                        }
+                    };
                     check = Some(FissionCheck {
                         tick,
                         settlement: sid,
@@ -477,11 +516,14 @@ impl FissionSystem {
                         s,
                         h,
                         draw,
-                        split: (draw as i64) < h,
+                        split,
                         site_free: false,
+                        pressure,
+                        threshold,
                     });
                 }
             }
+            let Some(settlement) = resources.settlements.get(&sid) else { continue };
             // Site: the free wild-region centre nearest the parent.
             let home = settlement.formation_tile;
             let site = resources
@@ -553,6 +595,8 @@ impl FissionSystem {
                 resources.haulers.remove(id);
             }
             let adults_in_group = group.iter().filter(|id| roster.get(id).is_some_and(|row| row.2)).count() as u32;
+            let (pressure_at_split, threshold_at_split) =
+                resources.settlements.get(&sid).map_or((0, 0), |s| (s.fission_pressure, s.fission_threshold));
             resources.fission_log.push(FissionRecord {
                 fission_id,
                 parent: sid,
@@ -566,7 +610,21 @@ impl FissionSystem {
                 food_taken: food,
                 wood_taken: wood,
                 settled_at_leader: false,
+                pressure_at_split,
+                threshold_at_split,
             });
+            // Pass 13: the parent's pressure resets and θ is redrawn (k now
+            // counts this record).
+            if let Some(law) = rule.pressure {
+                let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
+                let theta = fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                if let Some(parent) = resources.settlements.get_mut(&sid) {
+                    if law.reset_on_split {
+                        parent.fission_pressure = 0;
+                    }
+                    parent.fission_threshold = theta;
+                }
+            }
             self.groups.insert(
                 fission_id,
                 Group { parent: sid, site, members: group, leader, since: tick, food, wood, placed: None, log: resources.fission_log.len() - 1 },

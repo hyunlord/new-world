@@ -128,6 +128,7 @@ fn pass10_v16_neutral_literal() -> WorldRules {
                 regional_wood: false,
                 area_fall_floor_permille: 0,
                 rain_wet_burn: false,
+                floor_separate: false,
             }),
             exposure: Some(ExposureRule { damage_per_cold_hour: [10.0, 4.0, 5.0], heal_block_hours: 2, hunger_weight: 0.0, use_hardiness: false }),
             fission: None,

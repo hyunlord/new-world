@@ -357,6 +357,12 @@ pub struct FirewoodRule {
     /// the burn window still withdraws the hour's wood (`Tallies::wet_burn_wood`)
     /// and its fire stays out. False = v8–v17 (rain burns nothing).
     pub rain_wet_burn: bool,
+    /// The settled-area floor keeps its own accumulator (Pass 13, `game_v19`;
+    /// needs `area_fall_floor_permille`): a settled area's extra (floor −
+    /// normal fall) accrues in a separate per-area accumulator whose units are
+    /// placed with ceiling `max` instead of the snow cap `min(cap, max)`; the
+    /// normal fall keeps the cap. False = v8–v18 (one shared accumulator).
+    pub floor_separate: bool,
 }
 /// Pass 10: a cold night wounds; health can reach zero.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -411,6 +417,41 @@ pub struct FissionRule {
     /// The daily split hazard (Pass 12, `game_v18`); `None` = v17's crowding
     /// gate (`members >= crowding × capacity`).
     pub hazard: Option<FissionHazard>,
+    /// Accumulated pressure against a hidden threshold (Pass 13, `game_v19`;
+    /// requires `hazard`, whose terms it reuses — the daily draw is then not
+    /// made); `None` = v8–v18.
+    pub pressure: Option<FissionPressure>,
+}
+/// Pass 13: the law of a settlement's hidden fission threshold θ (thousandths).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ThresholdLaw {
+    /// θ = mean × E(u), E the exponential quantile (`fission_threshold`).
+    Exponential {
+        /// Mean of θ in thousandths of a hazard-day.
+        mean_permille: u32,
+    },
+    /// θ uniform in `[lo, hi)`.
+    Uniform {
+        /// Lowest θ.
+        lo_permille: u32,
+        /// Highest θ (exclusive).
+        hi_permille: u32,
+    },
+}
+/// Pass 13 (`game_v19`): fission by accumulated pressure. Each eligible
+/// morning a settlement adds the hazard h (Pass 12's terms, thousandths) to
+/// its pressure P, or, when h = 0, P decays by `decay_permille` (floor 0); it
+/// splits when P ≥ θ (and P > 0), θ being a world draw it carries for life
+/// and redraws after each split (`fission_threshold`). On a day any gate
+/// fails P neither grows nor decays.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct FissionPressure {
+    /// The law of θ.
+    pub threshold_table: ThresholdLaw,
+    /// Daily decay of P on an eligible day with h = 0 (0 = none).
+    pub decay_permille: u32,
+    /// The parent's P returns to 0 after its split.
+    pub reset_on_split: bool,
 }
 /// Pass 12: the daily probability that a settlement splits, rising with its
 /// size, its crowding against the birth gate's capacity and a shortfall in
@@ -545,6 +586,7 @@ impl WorldRules {
             // Pass 12 fields at the values that reproduce Pass 11.
             allowed_seasons: [true, true, false, false],
             hazard: None,
+            pressure: None,
         });
         rules
     }
@@ -612,6 +654,67 @@ impl WorldRules {
             fission.cooldown_days = 28;
             fission.allowed_seasons = [true, true, true, false];
             fission.hazard = Some(hazard);
+            rules.society.fission = Some(fission);
+        }
+        rules
+    }
+
+    /// Pass 13 village policies of world `seed` without fission:
+    /// `game_v18_nofission` with the settled-area floor in its own
+    /// accumulator (`FirewoodRule::floor_separate`). Hidden parameters from
+    /// `WorldVariety::draw_v18`; worldgen `WorldGenConfig::game_v19`.
+    pub const fn game_v19_nofission(seed: u64) -> Self {
+        Self::game_v19_nofission_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v19_nofission`] for given hidden parameters.
+    pub const fn game_v19_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v18_nofission_with(variety);
+        if let Some(mut firewood) = rules.society.firewood {
+            // Pass 13 section 7.2.
+            firewood.floor_separate = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
+    }
+
+    /// The `game_v19` hazard terms (Pass 13 section 7.1 start values:
+    /// `V18_HAZARD` with a ceiling of 200 and scarcity weighed 650 / crowding 350).
+    pub const V19_HAZARD: FissionHazard = FissionHazard {
+        size_lo: 28,
+        size_hi: 48,
+        crowd_lo_permille: 850,
+        crowd_hi_permille: 1050,
+        scarcity_days: 2,
+        weight_crowd_permille: 350,
+        weight_scarcity_permille: 650,
+        max_daily_permille: 200,
+    };
+
+    /// The `game_v19` pressure (Pass 13 section 7.1 start values).
+    pub const V19_PRESSURE: FissionPressure = FissionPressure {
+        threshold_table: ThresholdLaw::Exponential { mean_permille: 1200 },
+        decay_permille: 10,
+        reset_on_split: true,
+    };
+
+    /// Pass 13 village policies of world `seed`: `game_v19_nofission` plus
+    /// fission by accumulated pressure against a hidden threshold
+    /// (`FissionPressure`), the v18 gates otherwise.
+    pub const fn game_v19(seed: u64) -> Self {
+        Self::game_v19_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v19`] for given hidden parameters.
+    pub const fn game_v19_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v19_nofission_with(variety);
+        let hazard = Self::V19_HAZARD;
+        debug_assert!(hazard.is_valid());
+        let base = Self::game_v18_with(variety);
+        if let Some(mut fission) = base.society.fission {
+            fission.hazard = Some(hazard);
+            fission.pressure = Some(Self::V19_PRESSURE);
+            debug_assert!(fission.hazard.is_some());
             rules.society.fission = Some(fission);
         }
         rules
@@ -819,6 +922,7 @@ impl WorldRules {
             // Pass 12 fields at the values that reproduce Pass 11 in v11–v17.
             area_fall_floor_permille: 0,
             rain_wet_burn: false,
+            floor_separate: false,
         });
         rules.agent.preempt_gathering = true;
         rules

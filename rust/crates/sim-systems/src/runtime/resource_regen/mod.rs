@@ -245,7 +245,15 @@ type AreaSpot = ((u32, u32), u8);
 /// per pulse (extra wood; `per_unit` and the camp's fall unchanged). The extra
 /// is counted in `Tallies::area_floor_wood` and units lost to the cap in a
 /// settled area in `Tallies::winter_wood_lost_settled`.
-fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Option<u8>, floor_permille: u32) {
+///
+/// Pass 13 (`floor_separate`, `game_v19`): a settled area's accumulator adds
+/// only the normal `per_day × 1000 × n_area`; the extra goes to a separate
+/// per-area accumulator (`SimResources::wood_area_floor_sep`) whose units, after
+/// the area's normal units, go round-robin over the same spots (same cursor)
+/// with ceiling `max` instead of `min(cap, max)` (`Tallies::area_floor_placed`;
+/// a unit with no spot below its max is lost: `area_floor_lost_at_max`, also
+/// counted in `winter_wood_lost`).
+fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Option<u8>, floor_permille: u32, floor_separate: bool) {
     let pulses_per_day = (resources.ticks_per_day / REGEN_INTERVAL).max(1);
     let mut spots: std::collections::BTreeMap<u8, Vec<AreaSpot>> = std::collections::BTreeMap::new();
     for (key, max) in &resources.wood_source_max {
@@ -287,17 +295,30 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
                 resources.tallies.area_floor_wood += 1;
             }
         }
+        // Pass 13: with `floor_separate` the extra accrues apart (ceiling max).
+        let (shared, separate) = if floor_separate && add > normal { (normal, add - normal) } else { (add, 0) };
         let acc = resources.wood_area_acc.entry(area).or_insert(0);
-        *acc += add;
+        *acc += shared;
         let mut units = 0u64;
         while *acc >= per_unit {
             *acc -= per_unit;
             units += 1;
         }
-        for _ in 0..units {
+        let mut floor_units = 0u64;
+        if separate > 0 {
+            let acc = resources.wood_area_floor_sep.entry(area).or_insert(0);
+            *acc += separate;
+            while *acc >= per_unit {
+                *acc -= per_unit;
+                floor_units += 1;
+            }
+        }
+        for unit in 0..units + floor_units {
+            let floor_unit = unit >= units;
             let after = resources.wood_area_cursor.get(&area).copied();
             let tiles = &resources.wood_tiles;
-            let below = |key: &(u32, u32), max: &u8| tiles.get(key).copied().unwrap_or(0) < cap.map_or(*max, |cap| cap.min(*max));
+            let ceiling = |max: u8| if floor_unit { max } else { cap.map_or(max, |cap| cap.min(max)) };
+            let below = |key: &(u32, u32), max: &u8| tiles.get(key).copied().unwrap_or(0) < ceiling(*max);
             let chosen = list
                 .iter()
                 .filter(|(key, _)| after.is_none_or(|cursor| *key > cursor))
@@ -309,10 +330,15 @@ fn regen_wood_winter_by_area(resources: &mut SimResources, per_day: u32, cap: Op
                     let cur = resources.wood_tiles.get(&key).copied().unwrap_or(0);
                     resources.wood_tiles.insert(key, cur + 1);
                     resources.wood_area_cursor.insert(area, key);
+                    resources.tallies.area_floor_placed += u64::from(floor_unit);
                 }
                 None => {
                     resources.tallies.winter_wood_lost += 1;
-                    resources.tallies.winter_wood_lost_settled += u64::from(settled.contains(&area));
+                    if floor_unit {
+                        resources.tallies.area_floor_lost_at_max += 1;
+                    } else {
+                        resources.tallies.winter_wood_lost_settled += u64::from(settled.contains(&area));
+                    }
                 }
             }
         }
@@ -375,7 +401,13 @@ impl RuntimeSystem for ResourceRegenSystem {
                     let per_day = crate::runtime::settlement::firewood::winter_fall_at(resources, &rule, resources.current_tick)
                         .unwrap_or(per_day);
                     if rule.regional_wood && !resources.wood_spot_area.is_empty() {
-                        regen_wood_winter_by_area(resources, per_day, rule.winter_deadwood_cap, rule.area_fall_floor_permille)
+                        regen_wood_winter_by_area(
+                            resources,
+                            per_day,
+                            rule.winter_deadwood_cap,
+                            rule.area_fall_floor_permille,
+                            rule.floor_separate,
+                        )
                     } else {
                         regen_wood_winter(resources, per_day, rule.winter_deadwood_cap)
                     }

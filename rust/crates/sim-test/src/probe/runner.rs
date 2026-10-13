@@ -58,6 +58,8 @@ pub(super) struct RunResult {
     pub(super) pass11: Value,
     /// Per-seed schema-twelve block (Pass 12, `pass12::seed_block`).
     pub(super) pass12: Value,
+    /// Per-seed schema-thirteen block (Pass 13, `pass13::seed_block`).
+    pub(super) pass13: Value,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -120,6 +122,8 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v17" => crate::scenes::game_v17_scene(seed),
         "game_v18_nofission" => crate::scenes::game_v18_nofission_scene(seed),
         "game_v18" => crate::scenes::game_v18_scene(seed),
+        "game_v19_nofission" => crate::scenes::game_v19_nofission_scene(seed),
+        "game_v19" => crate::scenes::game_v19_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
@@ -351,6 +355,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         "PROBE seed={seed} shelter_plan_skips={}",
         engine.resources.shelter_plan_skips
     );
+    let pass13 = super::pass13::seed_block(&engine);
     let pass12 = super::pass12::seed_block(&engine, &winter_members, &formed_members, &exposure_deaths, args.days);
     let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
     if let Some(object) = pass11.as_object_mut() {
@@ -360,6 +365,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         seed,
         pass11,
         pass12,
+        pass13,
         checkpoints,
         census: deaths.census,
         agent_days,
@@ -398,7 +404,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19")
         || super::ablation::is_ablation(scene)
 }
 
@@ -411,7 +417,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "abl_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

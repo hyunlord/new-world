@@ -23,6 +23,7 @@ pub mod causal;
 pub mod components;
 pub mod influence;
 pub mod material;
+pub mod fission_threshold;
 pub mod rng;
 pub mod rules;
 pub mod tile;
