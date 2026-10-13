@@ -112,3 +112,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 5 | 12:25:30 | 12:28:38 | from `166eb737` (CPU): `calendar_{w13_v16_n80,n200,n400,w13_v17_n400}_166eb737` (51 / 113 / 188 / 185 s; `calendar.json` 12:26:20–12:28:37) and the legacy `calendar_w13_v16_n400_on_p10_v16_166eb737` (67 s); WM-1.2's three runs on the new test chained on the GPU (`m1tf_p10v16_r3_s<S>_on_w13v16`) |
 | gate | 12:30 | 12:32 | DGX gate on `166eb737`: 142 tests OK, 0 skipped (90 s) |
 | 5 (Y3) | 12:25:30 | 12:57 | WM-1.2's runs on the new test from `166eb737` (GPU, chained, beside the training): `m1tf_p10v16_r3_s{0,1,2}_on_w13v16` 649 / 635 / 640 s, exit 0 |
+| pause | ≈ 14:55 | 15:11 | Claude usage limit; the DGX training kept running. GOAL_1_3.md, `git log` and the DGX queue / job logs re-read on resume. The deadline file `_setup/deadline_epoch` moved by 960 s (new deadline 2026-10-14 23:43:14 KST) |
+| 4.1 | 12:21:56 | 16:18:56 | `m1tf_w13v16_n400_s0`: stop `max_steps` (9,000), best step 8,100 (val T2 24 h 0.0772) → not converged; 14,217 s (training alone, 1.5–1.6 s/step at k = 168; the three WM-1.2 cross-world finals ran beside its ramp). WM-1.2 rule: best step 2,400 (0.0967), stop at the 3,000 cap |
+| 4.2 | 16:18:56 | 16:42:09 | its finals from `166eb737` (beside the next training): `final` 16:19–16:29 (606 s), `_short` 16:39:54, `_legacy` 16:42:09, exit 0 |
+| 4.1 | 16:18:56 | | `m1tf_w13v16_n400_s1` started (`--max-seconds 30000`) |
