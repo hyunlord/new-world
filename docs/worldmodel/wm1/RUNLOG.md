@@ -129,3 +129,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 00:39:40 | 03:45:41 | `m1tf_w13v17_n400_s0`: stop `patience` at step 7,200, best step 5,400 (val 0.0616), 11,153 s; WM-1.2 rule: best 2,550, stop at the cap |
 | 4.2, 4.4 | 03:45:41 | 03:58:03 | from `60347cc3`: `final` 03:56:07, probe `probe_m1tf_w13v17_n400_s0` 03:58:03, exit 0 |
 | 4.1 | 03:45:41 | | `m1tf_w13v16_n80_s0` started |
+| 4.1 | 03:45:41 | 07:35:44 | `m1tf_w13v16_n80_s0`: stop `max_steps`, best step 9,000 (val 0.0770) → not converged, 13,764 s; WM-1.2 rule: best 3,000 (0.0927), stop at the cap |
+| 4.2 | 07:35:44 | 07:57:23 | its finals from `60347cc3`: `final` 07:46:33, `_short` 07:57:23, exit 0 |
+| 4.1 | 07:35:44 | | `m1tf_w13v16_n80_s1` started |
