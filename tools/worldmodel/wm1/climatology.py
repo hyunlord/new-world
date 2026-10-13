@@ -24,6 +24,8 @@ dataset's `train` group, every member is scored on `val` over T1, T2 24 / 168 h 
 their bias-removed versions (no T3 / T3b: no interventions, hidden severity), and selected per task: `cal_best`,
 `cal_best_fair`, and on the bias-removed tasks `cal_best_anom` (= that task's `cal_best`). Persistence and the
 severity-free ridge of `bench_v1` (refit on `train`, lambda on `val` T1) are evaluated beside them as references.
+Every T2 score carries its per-world scores (GOAL_1_3.md 7.3). On a dataset with `train_seeds` (the nested WM-1.3
+training sets) the family, the ridge and the analog library see only those train worlds (`common.load_groups`).
 """
 from __future__ import annotations
 
@@ -177,7 +179,7 @@ def _run_observable(args, ds: c.Dataset, roles: list[str], selection: dict | Non
     stds = c.split_stds(splits)
     refs, ref_info = references(g["train"], g["val"])
     results, ref_results = {}, {}
-    kw = dict(cf_test=None, t3_split=None, tasks=ds.tasks, bias_removed=True)
+    kw = dict(cf_test=None, t3_split=None, tasks=ds.tasks, bias_removed=True, per_world=True)
     for m, p in predictors(fit).items():
         results[m] = ev.evaluate(p, splits, stds, **kw)
         print(f"{m} {time.time() - t0:.0f}s", flush=True)

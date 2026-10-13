@@ -242,7 +242,8 @@ class FinalPlanTests(unittest.TestCase):
                                                  {"t3_split": "A_test"}))
         ds, groups, kw = m1_gru.test_plan({"variant": "sev-blind_action-blind", "dataset": "p10_v16"})
         self.assertEqual((ds.name, groups), ("p10_v16", ["test"]))
-        self.assertEqual(kw, {"t3_split": None, "tasks": ("T1", "T2", "T2_any"), "bias_removed": True})
+        self.assertEqual(kw, {"t3_split": None, "tasks": ("T1", "T2", "T2_any"), "bias_removed": True,
+                                  "per_world": True})
 
 
 if __name__ == "__main__":

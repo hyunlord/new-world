@@ -34,7 +34,12 @@ class Dataset:
     """What a WM-1 script needs to know about one dataset (GOAL_1_2.md 6.3). Group names map to (manifest split,
     role); `train` / `train_action` are the training groups of action-blind / action-aware variants; `cf` is the
     counterfactual group (None: no T3 / T4); `tasks` is the `evaluate.evaluate` task list (None: every v0 task);
-    `observable` marks recorder-schema >= 2 data (observable feature table, no severity input)."""
+    `observable` marks recorder-schema >= 2 data (observable feature table, no severity input).
+
+    GOAL_1_3.md 4.2, 6.3: `train_seeds` (half-open [lo, hi), or None: every train episode) keeps only those seeds of
+    the `train` group (nested training sets share one manifest; roles stay train / val / test); `extra_state` are the
+    `global.npy` columns this dataset appends to the observable state table after `g.injured_members` (state
+    features, chosen per dataset, never per schema)."""
     name: str
     manifest: Path
     groups: dict = field(hash=False)
@@ -47,6 +52,8 @@ class Dataset:
     t3_test: str | None
     tasks: tuple | None = None
     observable: bool = False
+    train_seeds: tuple[int, int] | None = None
+    extra_state: tuple[str, ...] = ()
 
     def train_groups(self, action_aware: bool) -> list[str]:
         return list(self.train_action if action_aware else self.train)
@@ -57,12 +64,27 @@ def _pilot(name: str, scene: str) -> Dataset:
                    ("train",), ("train",), ("val",), ("test",), None, None, None, ("T1", "T2", "T2_any"), True)
 
 
+W13_MANIFEST = REPO / "docs/worldmodel/wm1/w13_manifest.json"
+# GOAL_1_3.md 4.2: schema-5 globals of the game_v17 arm (raw levels; `fissions_total` deliberately not differenced).
+V17_EXTRA = ("g.settlements_alive", "g.fissions_total")
+
+
+def _w13(name: str, scene: str, train_seeds: tuple[int, int], extra: tuple[str, ...] = ()) -> Dataset:
+    return Dataset(name, W13_MANIFEST, {"train": (scene, "train"), "val": (scene, "val"), "test": (scene, "test")},
+                   ("train",), ("train",), ("val",), ("test",), None, None, None, ("T1", "T2", "T2_any"), True,
+                   train_seeds, extra)
+
+
 DATASETS = {
     "v0": Dataset("v0", MANIFEST, GROUPS, ("A_train",), ("A_train", "B_train"), VAL_SPLITS, TEST_SPLITS, "C_test",
                   "A_val", "A_test"),
     "p10_v16": _pilot("p10_v16", "game_v16"),
     "p10_v16n": _pilot("p10_v16n", "game_v16_neutral"),
     "p10_v15": _pilot("p10_v15", "game_v15"),
+    "w13_v16_n80": _w13("w13_v16_n80", "game_v16", (30000, 30080)),
+    "w13_v16_n200": _w13("w13_v16_n200", "game_v16", (30000, 30200)),
+    "w13_v16_n400": _w13("w13_v16_n400", "game_v16", (30000, 30400)),
+    "w13_v17_n400": _w13("w13_v17_n400", "game_v17", (32000, 32400), V17_EXTRA),
 }
 
 
@@ -87,11 +109,19 @@ def manifest_sha(ds: str = "v0") -> str:
     return hashlib.sha256(dataset(ds).manifest.read_bytes()).hexdigest()
 
 
+def group_seeds(spec: Dataset, name: str) -> set[int] | None:
+    """The seeds a group keeps (`train_seeds` on the `train` role), None for every seed."""
+    if spec.train_seeds is None or spec.groups[name][1] != "train":
+        return None
+    return set(range(*spec.train_seeds))
+
+
 def load_groups(names, root: Path = DEFAULT_ROOT, ds: str = "v0") -> dict[str, list[EpisodeData]]:
     """Load the named groups of dataset `ds`; each episode is sha256-verified by `wm_data.load_episode`."""
     spec = dataset(ds)
     m = manifest(ds)
-    return {n: load_split(root, m, spec.groups[n][0], roles=(spec.groups[n][1],)) for n in names}
+    return {n: load_split(root, m, spec.groups[n][0], roles=(spec.groups[n][1],), seeds=group_seeds(spec, n),
+                          extra=spec.extra_state) for n in names}
 
 
 def split_stds(groups: dict[str, list[EpisodeData]]) -> dict[str, np.ndarray]:

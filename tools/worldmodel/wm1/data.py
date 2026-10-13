@@ -20,6 +20,11 @@ filter; a hidden column raises `bench_v1.HiddenInput`). v0's columns keep their 
 settlement reduction stays sum / max. `EpisodeData.bench` stays a `bench_v0.Ep`, built from
 `bench_v1.episode_arrays` with `severity` = the hidden severity (labels for breakdowns only) and `deaths` including
 the exposure deaths (as `Layout.deaths`). Severity-on variants cannot be built on schema >= 2 data.
+
+GOAL_1_3.md 4.2: a dataset may append observable `global.npy` levels after `g.injured_members` (`common.Dataset.
+extra_state`; the game_v17 arm: `g.settlements_alive`, `g.fissions_total`), before the calendar: they are state
+features (normalized, predicted, rolled out). The settlement columns `parent_slot` and `founded_tick` (schema 5) are
+never read.
 """
 from __future__ import annotations
 
@@ -64,7 +69,10 @@ ALL_STATE_OBS = tuple(n for n in ALL_STATE if n not in SEVERITY_ONLY) + OBS_APPE
 # Hidden in schema >= 2 (labels and analysis only): never a column of the observable table or an input.
 HIDDEN_V2 = ("winter_severity", "night_burn_per_hour", "winter_fall_today", "wood_target", "latent", "lifespan_days",
              "world_variety", "berry_bushes", "berry_capacity", "climate", "deadwood_capacity", "deadwood_spots",
-             "food_regen_permille", "forest_permille", "starting_agents")
+             "food_regen_permille", "forest_permille", "starting_agents", "wild_regions", "region_bushes",
+             "region_deadwood", "regions")
+# Schema-5 settlement columns that are observable but never inputs (GOAL_1_3.md 4.2).
+NOT_INPUTS_V5 = ("parent_slot", "founded_tick")
 
 
 @dataclass(frozen=True)
@@ -166,10 +174,11 @@ def episode_table(ep) -> np.ndarray:
     return np.nan_to_num(table, nan=0.0)
 
 
-def episode_table_observable(ep) -> tuple[np.ndarray, tuple[str, ...]]:
+def episode_table_observable(ep, extra: tuple[str, ...] = ()) -> tuple[np.ndarray, tuple[str, ...]]:
     """The observable state table of a schema >= 2 episode and its column names (ALL_STATE without `s.wood_target`,
-    then `d.deaths_exposure` and `g.injured_members` when the episode records them). Every column goes through
-    `bench_v1.observable_column`, which refuses a hidden field."""
+    then `d.deaths_exposure` and `g.injured_members` when the episode records them, then the dataset's `extra`
+    `g.<field>` columns as raw levels, GOAL_1_3.md 4.2). Every column goes through `bench_v1.observable_column`,
+    which refuses a hidden field; a missing extra field raises KeyError."""
     t = ep.arrays["global.npy"].shape[0]
     gcol = lambda name: bv1.observable_column(ep, "global.npy", name).astype(np.float64)
     s = ep.arrays["settlements.npy"]
@@ -198,6 +207,11 @@ def episode_table_observable(ep) -> tuple[np.ndarray, tuple[str, ...]]:
     if "injured_members" in gobs:
         names.append("g.injured_members")
         cols.append(gcol("injured_members"))
+    for x in extra:
+        if not x.startswith("g."):
+            raise ValueError(f"extra state column {x}: only global.npy levels (`g.<field>`) are supported")
+        names.append(x)
+        cols.append(gcol(x[2:]))
     return np.nan_to_num(np.stack(cols, axis=1), nan=0.0), tuple(names)
 
 
@@ -213,21 +227,24 @@ def bench_of(ep, split: str, role: str, seed: int, eid: str) -> b.Ep:
     return b.Ep(split, role, seed, eid, severity=severity, **arrays)
 
 
-def from_episode(ep, split: str, role: str, seed: int, eid: str) -> EpisodeData:
+def from_episode(ep, split: str, role: str, seed: int, eid: str, extra: tuple[str, ...] = ()) -> EpisodeData:
     schema = int(ep.meta.get("schema_version", 1))
+    if extra and schema < 2:
+        raise ValueError("extra state columns need an observable-schema episode")
     bench = bench_of(ep, split, role, seed, eid)
     g = ep.arrays["global.npy"]
     dos = g[:, ep.field_index("global.npy", "day_of_season")]
     cal = calendar_features(bench.hour, bench.season, dos)
     if schema < 2:
         return EpisodeData(split, role, seed, eid, bench, episode_table(ep), cal, list(ep.interventions))
-    table, names = episode_table_observable(ep)
+    table, names = episode_table_observable(ep, extra)
     return EpisodeData(split, role, seed, eid, bench, table, cal, list(ep.interventions), names, schema)
 
 
 def load_split(root: Path, manifest: dict, split: str, roles: tuple[str, ...] | None = None,
-               seeds: set[int] | None = None) -> list[EpisodeData]:
-    """Episodes of `split` (optionally only some roles / seeds) in manifest order, sha256-verified on load."""
+               seeds: set[int] | None = None, extra: tuple[str, ...] = ()) -> list[EpisodeData]:
+    """Episodes of `split` (optionally only some roles / seeds) in manifest order, sha256-verified on load; `extra`
+    appends those observable global columns to the state table (`episode_table_observable`)."""
     out = []
     for entry in manifest["episodes"]:
         if entry["split"] != split or (roles is not None and entry["role"] not in roles):
@@ -235,7 +252,7 @@ def load_split(root: Path, manifest: dict, split: str, roles: tuple[str, ...] | 
         if seeds is not None and entry["seed"] not in seeds:
             continue
         ep = load_episode(Path(root) / entry["path"], arrays=["global.npy", "settlements.npy"])
-        out.append(from_episode(ep, split, entry["role"], entry["seed"], entry["schedule_id"]))
+        out.append(from_episode(ep, split, entry["role"], entry["seed"], entry["schedule_id"], extra))
     return out
 
 

@@ -9,6 +9,14 @@ val one-hot MSE), accuracy of the argmax on test. Reference: the same ridges fro
 (the 35 columns of the observable table). `starting_agents` equals `alive` at row 0, so the reference recovers it
 almost trivially from the row-166 population.
 
+GOAL_1_3.md 9.4 (Y6, game_v17): `PARAMS` gains the region parameters (`wild_regions`, `region_bushes`,
+`region_deadwood`; a parameter absent from a dataset's `world_variety` is skipped, so p10 runs probe the seven of
+WM-1.2), the train role keeps the dataset's `train_seeds`, and on a dataset whose table carries `g.fissions_total` and
+`g.settlements_alive` three labels are read from those observable columns after training (labels only, never an
+input of the probe window, which ends at row 166): fission by day 120 (`fissions_total` > 0 at the last row; argmax
+of a one-vs-rest ridge, accuracy against the train majority class), `settlements_alive` at row 2,832 (ridge R^2), and
+the first-fission display day among the worlds that split (ridge R^2, only when its test variance is above 0).
+
 usage (DGX, venv): python3 tools/worldmodel/wm1/probe_world.py --run RUN_DIR --out OUT_DIR
 """
 from __future__ import annotations
@@ -30,12 +38,14 @@ from wm1 import common as c
 from wm1 import data as d
 
 PARAMS = ("starting_agents", "berry_bushes", "berry_capacity", "deadwood_spots", "deadwood_capacity",
-          "forest_permille", "food_regen_permille")
+          "forest_permille", "food_regen_permille", "wild_regions", "region_bushes", "region_deadwood")
 CATEGORY = "climate"
 CLIMATES = (0, 1, 2)
 LAMBDAS = (0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0)
 DAY, MINUTE = 8, 360
 WINDOW = 168
+SETTLEMENTS_ROW = 2832
+FISSIONS, SETTLEMENTS = "g.fissions_total", "g.settlements_alive"
 
 
 def probe_row() -> int:
@@ -61,10 +71,65 @@ def fit_select(xtr, ytr, xva, yva):
     return best[2], best[1], scores
 
 
+def classify(x: dict, y: dict, classes: tuple) -> dict:
+    """One-vs-rest ridge on one-hot targets (lambda on val one-hot MSE); argmax accuracy on test and the accuracy of
+    the train majority class."""
+    hot = {r: b.onehot(y[r].astype(np.int64), list(classes)) for r in y}
+    m, lam, scores = fit_select(x["train"], hot["train"], x["val"], hot["val"])
+    pred = np.array(classes)[m.predict(x["test"]).argmax(axis=1)]
+    truth = y["test"]
+    majority = np.array(classes)[np.array([np.sum(y["train"] == k) for k in classes]).argmax()]
+    return {"accuracy_test": float(np.mean(pred == truth)), "lambda": lam, "val_mse": scores,
+            "majority_train_class_accuracy_test": float(np.mean(truth == majority)),
+            "test_counts": [int(np.sum(truth == k)) for k in classes]}
+
+
+def regress(x: dict, y: dict) -> dict:
+    m, lam, scores = fit_select(x["train"], y["train"][:, None], x["val"], y["val"][:, None])
+    return {"r2_test": r2(y["test"], m.predict(x["test"])[:, 0]), "lambda": lam, "val_mse": scores,
+            "test_variance": float(np.var(y["test"]))}
+
+
+def first_split_day(fissions: np.ndarray) -> float:
+    """Display day of the first row with `fissions_total` > 0 (NaN when the world never splits)."""
+    rows = np.nonzero(fissions > 0)[0]
+    return float((rows[0] * b.EVERY + b.OFFSET) // b.TPD + 1) if len(rows) else float("nan")
+
+
+def observable_labels(eps: list[d.EpisodeData]) -> dict[str, np.ndarray] | None:
+    """Y6's labels from observable columns of the whole episode (read after training; labels only), or None when the
+    table has no fission columns."""
+    if not eps or FISSIONS not in eps[0].names or SETTLEMENTS not in eps[0].names:
+        return None
+    fis = [ep.table[:, ep.names.index(FISSIONS)] for ep in eps]
+    return {"fission_by_day120": np.array([float(f[-1] > 0) for f in fis]),
+            "settlements_alive_row2832": np.array([ep.table[SETTLEMENTS_ROW, ep.names.index(SETTLEMENTS)] for ep in eps]),
+            "first_fission_day": np.array([first_split_day(f) for f in fis])}
+
+
+def probe_observable(x: dict, labels: dict) -> dict:
+    """The three Y6 labels: fission yes / no (classification), settlements alive (R^2), first-fission day (R^2 on
+    the worlds that split, only when its test variance is above 0)."""
+    out = {"fission_by_day120": classify(x, {r: labels[r]["fission_by_day120"] for r in x}, (0, 1)),
+           "settlements_alive_row2832": regress(x, {r: labels[r]["settlements_alive_row2832"] for r in x})}
+    keep = {r: np.isfinite(labels[r]["first_fission_day"]) for r in x}
+    days = {r: labels[r]["first_fission_day"][keep[r]] for r in x}
+    counts = {r: int(keep[r].sum()) for r in x}
+    variance = float(np.var(days["test"])) if counts["test"] else 0.0
+    if variance > 0 and min(counts.values()) >= 2:
+        out["first_fission_day"] = regress({r: x[r][keep[r]] for r in x}, days) | {"worlds": counts}
+    else:
+        out["first_fission_day"] = {"skipped": "test variance 0 (or too few worlds that split)", "worlds": counts,
+                                    "test_variance": variance,
+                                    "test_values": sorted({float(v) for v in days["test"]})}
+    return out
+
+
 def probe(x: dict[str, np.ndarray], y: dict[str, dict[str, np.ndarray]]) -> dict:
-    """x[role] [E, D]; y[role][param] [E]. R^2 per parameter on test, climate accuracy on test."""
+    """x[role] [E, D]; y[role][param] [E]. R^2 per parameter on test, climate accuracy on test (a parameter missing
+    from the labels is skipped)."""
     out = {}
-    for p in PARAMS:
+    for p in (p for p in PARAMS if p in y["train"]):
         m, lam, scores = fit_select(x["train"], y["train"][p][:, None], x["val"], y["val"][p][:, None])
         pred = m.predict(x["test"])[:, 0]
         out[p] = {"r2_test": r2(y["test"][p], pred), "lambda": lam, "val_mse": scores,
@@ -81,16 +146,19 @@ def probe(x: dict[str, np.ndarray], y: dict[str, dict[str, np.ndarray]]) -> dict
 
 
 def labels(root: Path, ds: str, role: str) -> tuple[list[int], dict[str, np.ndarray]]:
-    """world_variety of every episode of a role, in manifest order (meta.json read directly: labels only)."""
+    """world_variety of every episode of a role (the train role keeps the dataset's `train_seeds`), in manifest
+    order (meta.json read directly: labels only); the parameters every episode carries."""
     spec = c.dataset(ds)
     split, _ = spec.groups[role]
+    keep = c.group_seeds(spec, role)
     seeds, rows = [], []
     for e in c.manifest(ds)["episodes"]:
-        if e["split"] == split and e["role"] == role:
+        if e["split"] == split and e["role"] == role and (keep is None or int(e["seed"]) in keep):
             meta = json.loads((root / e["path"] / "meta.json").read_text())
             seeds.append(int(e["seed"]))
             rows.append(meta["world_variety"]["values"])
-    return seeds, {k: np.array([r[k] for r in rows], dtype=np.float64) for k in PARAMS + (CATEGORY,)}
+    names = [k for k in PARAMS + (CATEGORY,) if all(k in r for r in rows)]
+    return seeds, {k: np.array([r[k] for r in rows], dtype=np.float64) for k in names}
 
 
 def hidden_states(pred, eps: list[d.EpisodeData], s: int) -> np.ndarray:
@@ -126,19 +194,25 @@ def main(argv=None) -> int:
         raise SystemExit("the probe reads M1TF.hidden")
     s = probe_row()
     g = c.load_groups(["train", "val", "test"], Path(args.root), ds)
-    xs, xr, ys = {}, {}, {}
+    xs, xr, ys, obs = {}, {}, {}, {}
     for role in ("train", "val", "test"):
         seeds, ys[role] = labels(Path(args.root), ds, role)
         if seeds != [int(ep.seed) for ep in g[role]]:
             raise SystemExit(f"{role}: label order differs from the loaded episodes")
         xs[role] = hidden_states(pred, g[role], s)
         xr[role] = np.stack([ep.state(pred.variant)[s] for ep in g[role]])
+        obs[role] = observable_labels(g[role])
     out = {"run": str(run), "dataset": ds, "row": s, "window": [s - WINDOW + 1, s],
            "hidden_dim": int(xs["train"].shape[1]), "reference_columns": list(pred.variant.state_names),
            "model": probe(xs, ys), "reference_raw_row": probe(xr, ys),
            "counts": {r: len(g[r]) for r in g}, "code_commit": c.git_commit(),
            "run_code_commit": config["code_commit"], "manifest_sha256": c.manifest_sha(ds), "argv": sys.argv,
            "seconds": time.time() - t0}
+    if obs["train"] is not None:
+        out["model_observable"] = probe_observable(xs, obs)
+        out["reference_observable"] = probe_observable(xr, obs)
+        out["observable_label_rows"] = {"settlements_alive": SETTLEMENTS_ROW, "fission_by_day120": "last row"}
+        out["seconds"] = time.time() - t0
     c.write_json(target, out)
     print(json.dumps({p: (v.get("r2_test", v.get("accuracy_test"))) for p, v in out["model"].items()}))
     return 0
