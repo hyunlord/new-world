@@ -5238,3 +5238,4 @@ GOD_HAND_COLD_SNAP_ACTIVE = Cold snap: %d nights
 GOD_HAND_LOG = Recent acts
 GOD_HAND_UNIT_HOURS = h
 GOD_HAND_UNIT_NIGHTS = nights
+HUD_FEED_DEATH_EXPOSURE = A villager froze to death

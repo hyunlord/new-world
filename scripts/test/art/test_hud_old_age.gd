@@ -33,6 +33,11 @@ func _run() -> void:
 	world.tallies["deaths_old_age"] = 5
 	topbar._refresh()
 	assert(topbar._resource_labels[3].text.ends_with(" 14"))
+	world.tallies["deaths_exposure"] = 6
+	topbar._refresh()
+	assert(topbar._resource_labels[3].text.ends_with(" 20"))
+	assert(topbar.get_death_total() == 20)
+	world.tallies.erase("deaths_exposure")
 	world.tallies.erase("deaths_old_age")
 	topbar._refresh()
 	assert(topbar._resource_labels[3].text.ends_with(" 9"))

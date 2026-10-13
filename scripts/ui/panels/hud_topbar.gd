@@ -23,6 +23,8 @@ var _speed_label: Label
 var _display_speed: float = 1.0
 var _clock_icon: Sprite2D
 var _pause_icon: Control
+var _death_total: int = 0
+const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
 
 
 func _ready() -> void:
@@ -148,7 +150,7 @@ func _refresh() -> void:
 		_sites_label.text = _loc("BUILDING_STATE_BUILDING") + " %d" % site_n
 
 	var clock: Dictionary = _snapshot("get_time_snapshot")
-	var minutes: int = clampi(int(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
+	var minutes: int = clampi(roundi(float(clock.get("time_of_day", 0.0)) * 60.0), 0, 1439)
 	var hour: int = int(minutes / 60.0)
 	_clock_label.text = (_loc("HUD_DAY_FMT") % (int(clock.get("day_index", 0)) + 1)) + " %02d:%02d · " % [hour, minutes % 60] + _loc("HUD_PHASE_NIGHT" if hour >= 21 or hour < 5 else "HUD_PHASE_DAY")
 	_clock_label.text += _season_label(clock)
@@ -191,7 +193,10 @@ func _refresh() -> void:
 			if kinds[index] == 0 and amounts[index] < 255:
 				berries += amounts[index]
 	var tallies: Dictionary = _snapshot("get_tallies")
-	var deaths: int = int(tallies.get("deaths_starvation", 0)) + int(tallies.get("deaths_dehydration", 0)) + int(tallies.get("deaths_combat", 0)) + int(tallies.get("deaths_old_age", 0))
+	var deaths: int = 0
+	for key: String in DEATH_TALLY_KEYS:
+		deaths += int(tallies.get(key, 0))
+	_death_total = deaths
 	var keys: Array[String] = ["HUD_STOCKPILE_FOOD", "HUD_BERRIES", "UI_BIRTHS", "UI_DEATHS"]
 	var values: Array[int] = [food, berries, int(tallies.get("births", 0)), deaths]
 	for index: int in 4:
@@ -251,3 +256,7 @@ func _make_cold_icon() -> TextureRect:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return icon
+
+
+func get_death_total() -> int:
+	return _death_total

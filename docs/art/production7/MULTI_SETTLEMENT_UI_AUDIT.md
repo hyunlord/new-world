@@ -6,7 +6,7 @@ Part 1 정적 조사. 아래 위치는 Art Pass 6 렌더링 코드의 수정 전
 |---|---|---|---|
 | U01 | `scripts/ui/wood_visuals.gd:6` | 화덕 타일에서 가장 가까운 formation을 고른다. 버려진 화덕도 다른 마을의 장작·불 상태를 물려받는다. | Part 1 필수 수정: formation 타일이 같은 행만 반환, 미일치 `{}`. |
 | U02 | `scripts/ui/wood_visuals.gd:30`, `:33`, `:43` | 빈 상태는 cold_ash=false, 켜진 화덕 애니메이션과 야간 광원으로 해석된다. 정확 매칭만 고쳐서는 꺼지지 않는다. | Part 1: 미일치 상태는 재·불 없음·광원 0. 부분 열 누락도 다른 마을로 추측하지 않는다. |
-| U03 | `scripts/ui/building_renderer.gd:136`, `:311`, `:357` | 각 화덕을 순회하지만 U01을 통해 상태를 가져온다. `:321`의 fire_lit 기본값 true도 잘못된 연기의 원인이다. `:357`은 화덕 장작 더미 상태다. | Part 1: 정확 타일 매칭 전파, 기본 fire_lit=false, 미소속 더미 생성 금지. Part 4: retired hearth/건물 표현. |
+| U03 | `scripts/ui/building_renderer.gd:136`, `:311`, `:357` | 각 화덕을 순회하지만 U01을 통해 상태를 가져온다. `:321`의 fire_lit 기본값 true도 잘못된 연기의 원인이다. `:357`은 화덕 장작 더미 상태다. | Part 1: 정확 타일 매칭 전파, 기본 fire_lit=false. 장식 fallback 한계는 U39. Part 4: retired hearth/건물 표현. |
 | U04 | `scripts/ui/daylight_controller.gd:54`, `:62` | 모든 화덕에 개별 광원은 있으나 U01의 이웃 마을 상태를 쓴다. | Part 1 공통 helper 수정으로 해결. 각 화덕 광원 상태를 `test_every_hearth`로 확인. |
 | U05 | `scripts/ui/world_effects.gd:108`, `:114` | 모든 건물 순회, 화덕 메타 fire_lit 기본 true여서 미소속 화덕도 연기·불티 가능. | Part 1: false 기본값과 U03 메타 전파. 연기 없음은 생략 불가. |
 | U06 | `scripts/ui/camera_controller.gd:180` | 함수 이름은 first지만 member_count 최대, 동률이면 낮은 ID를 선택한다. | 유지 가능: 최초 정착/리셋 때만 초기 카메라 중심을 잡는 명시적 탐색 기본값. `_initial_center_pending=false` 후 새 마을 출현이 카메라를 강제로 빼앗지 않는다. Part 0 촬영 target 선택은 별도. |

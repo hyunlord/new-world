@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5202,
+    "active_key_count": 5203,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5207,
+    "key_count": 5208,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1290,6 +1290,7 @@
     "HUD_FEED_AGENT_BORN": "아이가 태어났다 (인구 %d)",
     "HUD_FEED_DEATH_COMBAT": "주민이 싸움으로 죽었다",
     "HUD_FEED_DEATH_DEHYDRATION": "주민이 목말라 죽었다",
+    "HUD_FEED_DEATH_EXPOSURE": "주민이 얼어 죽었다",
     "HUD_FEED_DEATH_OLD_AGE": "주민이 노환으로 세상을 떠났다",
     "HUD_FEED_DEATH_STARVATION": "주민이 굶주려 죽었다",
     "HUD_FEED_SETTLEMENT_DISSOLVED": "정착지 %d 해체",

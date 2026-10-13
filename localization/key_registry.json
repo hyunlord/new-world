@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5202,
-  "key_count": 5207,
+  "active_key_count": 5203,
+  "key_count": 5208,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -1252,6 +1252,7 @@
     "HUD_FEED_AGENT_BORN": 5145,
     "HUD_FEED_DEATH_COMBAT": 5171,
     "HUD_FEED_DEATH_DEHYDRATION": 5172,
+    "HUD_FEED_DEATH_EXPOSURE": 5207,
     "HUD_FEED_DEATH_OLD_AGE": 5173,
     "HUD_FEED_DEATH_STARVATION": 5174,
     "HUD_FEED_SETTLEMENT_DISSOLVED": 5146,
@@ -10417,7 +10418,8 @@
     "HUD_SEASON_LAST_NIGHT_FMT",
     "HUD_WINTER_HARSH",
     "HUD_WINTER_MILD",
-    "HUD_WINTER_NORMAL"
+    "HUD_WINTER_NORMAL",
+    "HUD_FEED_DEATH_EXPOSURE"
   ],
   "removed_key_count": 5,
   "removed_keys": [

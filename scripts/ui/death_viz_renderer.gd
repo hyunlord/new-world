@@ -15,6 +15,7 @@ extends Node2D
 #   age >= FADE_TICKS or age < 0 → NOT drawn (faded out / clock skew guard)
 #   alpha = 1.0 - age / FADE_TICKS   (fresh = opaque, older = transparent)
 #   colour by reason: 0 Starvation = brown, 1 Dehydration = blue, 2 Combat = red
+#   3 Old age = light grey, 4 Exposure = pale ice, unknown = darker grey
 #
 # Honest disclosure:
 #   - Read-only. Simulation state is never mutated.
@@ -35,12 +36,15 @@ const RETAIN_TICKS := 120
 const MARKER_RADIUS := 8.0       # ≈ TILE_SIZE / 2 — large enough to read
 const STROKE_WIDTH := 2.0
 
-# Reason → colour (locked, §2). reason_u8: 0 = Starvation, 1 = Dehydration, 2 = Combat.
+# Reason colours are shared by live marks and capture evidence.
 const COLOR_STARVATION: Color = Color(0.45, 0.30, 0.15)   # brown
 const COLOR_DEHYDRATION: Color = Color(0.20, 0.45, 0.95)  # blue
 const COLOR_COMBAT: Color = Color(0.95, 0.15, 0.10)       # red
 
 const COLOR_OLD_AGE: Color = Color(0.70, 0.70, 0.70)
+const COLOR_EXPOSURE: Color = Color(0.70, 0.84, 0.97)
+const COLOR_UNKNOWN: Color = Color(0.55, 0.55, 0.55)
+var _unknown_reasons_logged: Dictionary = {}
 
 var _world_sim: Node = null
 var _xs: PackedInt32Array = PackedInt32Array()
@@ -48,6 +52,7 @@ var _ys: PackedInt32Array = PackedInt32Array()
 var _reasons: PackedInt32Array = PackedInt32Array()
 var _ticks: PackedInt64Array = PackedInt64Array()
 var _current_tick: int = 0
+var _drawn_deaths: Array[Dictionary] = []
 
 
 func _ready() -> void:
@@ -80,6 +85,7 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	_drawn_deaths.clear()
 	var n: int = _xs.size()
 	if _ys.size() != n or _reasons.size() != n or _ticks.size() != n:
 		return
@@ -96,6 +102,7 @@ func _draw() -> void:
 		var r: float = MARKER_RADIUS
 		draw_line(c + Vector2(-r, -r), c + Vector2(r, r), col, STROKE_WIDTH)
 		draw_line(c + Vector2(-r, r), c + Vector2(r, -r), col, STROKE_WIDTH)
+		_drawn_deaths.append({"tick": _ticks[i], "x": _xs[i], "y": _ys[i], "reason": _reasons[i], "color": [col.r, col.g, col.b], "alpha": alpha})
 
 
 func _reason_color(reason: int) -> Color:
@@ -108,11 +115,20 @@ func _reason_color(reason: int) -> Color:
 			return COLOR_COMBAT
 		3:
 			return COLOR_OLD_AGE
+		4:
+			return COLOR_EXPOSURE
 		_:
-			return COLOR_COMBAT
+			if not _unknown_reasons_logged.has(reason):
+				_unknown_reasons_logged[reason] = true
+				print("DeathViz: unknown death reason %d rendered grey" % reason)
+			return COLOR_UNKNOWN
 
 
 func _tile_to_px(tx: int, ty: int) -> Vector2:
 	var px: float = float(SPRITE_ORIGIN_X + tx * TILE_SIZE) + float(TILE_SIZE) / 2.0
 	var py: float = float(SPRITE_ORIGIN_Y + ty * TILE_SIZE) + float(TILE_SIZE) / 2.0
 	return Vector2(px, py)
+
+
+func capture_metadata() -> Array[Dictionary]:
+	return _drawn_deaths.duplicate(true)

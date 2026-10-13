@@ -33,11 +33,12 @@ var _last_notified_food: Dictionary = {}  # settlement id → food_stock at last
 var _prev_construction_ids: Dictionary = {}
 var _prev_births: int = -1
 var _entries: Array = []  # each: { key: String, args: Array, born: int }
+var _feed_log: Array[Dictionary] = []
 var _suppress_feed: bool = false
 var _seen_deaths: Dictionary = {}
 var _death_current_tick: int = -1
 const DEATH_RETAIN_TICKS: int = 120
-const DEATH_NEWS_KEYS: Array[String] = ["HUD_FEED_DEATH_STARVATION", "HUD_FEED_DEATH_DEHYDRATION", "HUD_FEED_DEATH_COMBAT", "HUD_FEED_DEATH_OLD_AGE"]
+const DEATH_NEWS_KEYS: Array[String] = ["HUD_FEED_DEATH_STARVATION", "HUD_FEED_DEATH_DEHYDRATION", "HUD_FEED_DEATH_COMBAT", "HUD_FEED_DEATH_OLD_AGE", "HUD_FEED_DEATH_EXPOSURE"]
 
 
 func _ready() -> void:
@@ -159,10 +160,14 @@ func _loc(key: String) -> String:
 	return _locale.ltr(key) if _locale != null else key
 
 
-func _push(key: String, args: Array) -> void:
+func _push(key: String, args: Array, event_tick: int = -1, metadata: Dictionary = {}) -> void:
 	if _suppress_feed:
 		return
-	_entries.append({ "key": key, "args": args, "born": _frame_tick })
+	var tick: int = event_tick if event_tick >= 0 else int(_snapshot("get_time_snapshot").get("tick", 0))
+	var record: Dictionary = metadata.duplicate(true)
+	record.merge({"key": key, "args": args.duplicate(true), "tick": tick}, true)
+	_feed_log.append(record)
+	_entries.append({ "key": key, "args": args.duplicate(true), "born": _frame_tick })
 	if _entries.size() > MAX_VISIBLE_NOTIFICATIONS:
 		_entries.pop_front()
 
@@ -217,6 +222,7 @@ func _on_world_reset() -> void:
 	_prev_construction_ids.clear()
 	_last_notified_food.clear()
 	_prev_births = -1
+	_feed_log.clear()
 	_seen_deaths.clear()
 	_death_current_tick = -1
 	_entries.clear()
@@ -244,13 +250,25 @@ func _ingest_deaths(snapshot: Dictionary) -> void:
 	for key: String in _seen_deaths.keys():
 		if _death_current_tick - int(_seen_deaths[key]) >= DEATH_RETAIN_TICKS:
 			_seen_deaths.erase(key)
+	var occurrences: Dictionary = {}
 	for index: int in xs.size():
 		var reason: int = int(reasons[index])
 		var tick: int = int(ticks[index])
 		if reason < 0 or reason >= DEATH_NEWS_KEYS.size() or tick > _death_current_tick or _death_current_tick - tick >= DEATH_RETAIN_TICKS:
 			continue
-		var key: String = "%d:%d:%d:%d" % [tick, xs[index], ys[index], reason]
+		var tuple: String = "%d:%d:%d:%d" % [tick, xs[index], ys[index], reason]
+		var ordinal: int = int(occurrences.get(tuple, 0))
+		occurrences[tuple] = ordinal + 1
+		var key: String = "%s:%d" % [tuple, ordinal]
 		if _seen_deaths.has(key):
 			continue
 		_seen_deaths[key] = tick
-		_push(DEATH_NEWS_KEYS[reason], [])
+		_push(DEATH_NEWS_KEYS[reason], [], tick, {"death_id": key, "reason": reason})
+
+
+func get_feed_log() -> Array[Dictionary]:
+	return _feed_log.duplicate(true)
+
+
+func get_visible_feed() -> Array:
+	return _entries.duplicate(true)
