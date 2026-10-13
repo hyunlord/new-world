@@ -1,7 +1,7 @@
 //! Probe-only observation between needs decay and the two lethal systems.
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Hunger, Life, Position, ResourceKind, Thirst,
+    Agent, AgentId, AgentState, Child, Elder, Hunger, Life, Position, ResourceKind, SettlementId, Thirst,
 };
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use std::{
@@ -27,6 +27,10 @@ pub(super) struct AgentFrame {
     pub(super) settlement_food: Option<u32>,
     /// Whether Child was present before death.
     pub(super) child: bool,
+    /// Whether Elder was present before death (Pass 11).
+    pub(super) elder: bool,
+    /// Lowest settlement id listing the agent as a member (Pass 11).
+    pub(super) settlement: Option<SettlementId>,
     /// Whether the agent had a bed before despawn cleanup.
     pub(super) bed: bool,
     /// Birth tick under the aging rule; absent without `Life`.
@@ -48,11 +52,13 @@ pub(super) struct Frame {
 pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
     let mut homes = BTreeMap::new();
     let mut stocks = BTreeMap::new();
+    let mut sids = BTreeMap::new();
     let mut settlements: Vec<_> = resources.settlements.values().collect();
     settlements.sort_by_key(|s| s.settlement_id);
     for settlement in settlements {
         for id in &settlement.member_agents {
             homes.entry(*id).or_insert(settlement.formation_tile);
+            sids.entry(*id).or_insert(settlement.settlement_id);
             stocks.entry(*id).or_insert(
                 settlement
                     .stockpile
@@ -72,9 +78,10 @@ pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
                 Option<&Thirst>,
                 Option<&Child>,
                 Option<&Life>,
+                Option<&Elder>,
             )>()
             .iter()
-            .map(|(_, (agent, pos, state, hunger, thirst, child, life))| {
+            .map(|(_, (agent, pos, state, hunger, thirst, child, life, elder))| {
                 (
                     agent.id,
                     AgentFrame {
@@ -85,6 +92,8 @@ pub(super) fn capture(world: &World, resources: &SimResources) -> Frame {
                         home: homes.get(&agent.id).copied(),
                         settlement_food: stocks.get(&agent.id).copied(),
                         child: child.is_some(),
+                        elder: elder.is_some(),
+                        settlement: sids.get(&agent.id).copied(),
                         bed: resources.bed_of.contains_key(&agent.id),
                         born_tick: life.map(|life| life.born_tick),
                     },

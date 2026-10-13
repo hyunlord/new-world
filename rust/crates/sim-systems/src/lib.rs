@@ -309,9 +309,12 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_fire_systems(engine);
 }
 
-/// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60).
+/// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60)
+/// and the Pass 11 fission system (priority 148, interval 1).
 pub fn register_fire_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::settlement::FireSystem::new()));
+    // Pass 11: rules-gated village fission (priority 148, after the fire).
+    engine.register_system(Box::new(runtime::settlement::FissionSystem::new()));
 }
 
 /// Register the rules-gated shelter planner.

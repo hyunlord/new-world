@@ -348,6 +348,8 @@ mod tests {
             winter_night_burn_step: 0,
             winter_fall_spread: 0,
             windfall_over_snow: false,
+            rain_soak_permille: 0,
+            regional_wood: false,
         }
     }
 

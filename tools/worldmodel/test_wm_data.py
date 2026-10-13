@@ -112,7 +112,8 @@ class LoaderTests(unittest.TestCase):
 @unittest.skipUnless(BIN.exists(), f"recorder not built: {BIN}")
 class SchemaThreeTests(unittest.TestCase):
     """Pass 9: the loader reads schema 1 (the committed sample, above), schema 2
-    and schema 3 episodes; Pass 10: and schema 4 (the recorder's own)."""
+    and schema 3 episodes; Pass 10: and schema 4; Pass 11: and schema 5 (the
+    recorder's own)."""
 
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
@@ -127,7 +128,7 @@ class SchemaThreeTests(unittest.TestCase):
 
     def test_schema_three_carries_lineage_keys_as_identity(self) -> None:
         ep = load_episode(self.path)
-        self.assertEqual(ep.meta["schema_version"], 4)
+        self.assertEqual(ep.meta["schema_version"], 5)
         self.assertIs(ep.meta["keyed_draws"], True)
         self.assertIsNone(ep.meta["noise_fork"])
         keys = ep.lineage_keys()
@@ -139,9 +140,25 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertTrue(field["identity"] and field["hidden"])
         self.assertEqual(ep.meta["observable_fields"]["agent_keys.npy"], [])
 
+    def _rewrite_as_schema_four(self) -> None:
+        # A schema-4 episode is a schema-5 one without the two appended global
+        # columns, the two appended settlement columns and the two appended
+        # agent columns.
+        meta = json.loads((self.path / "meta.json").read_text())
+        for name, drop in (("global.npy", 2), ("settlements.npy", 2), ("agents.npy", 2)):
+            data = np.load(self.path / name)
+            np.save(self.path / name, np.ascontiguousarray(data[..., :-drop]))
+            meta["arrays"][name]["shape"] = list(data.shape[:-1]) + [data.shape[-1] - drop]
+            meta["arrays"][name]["sha256"] = sha256_file(self.path / name)
+            meta["fields"][name] = meta["fields"][name][:-drop]
+            meta["observable_fields"][name] = [f["name"] for f in meta["fields"][name] if not f["hidden"]]
+        meta["schema_version"] = 4
+        (self.path / "meta.json").write_text(json.dumps(meta))
+
     def _rewrite_as_schema_three(self) -> None:
         # A schema-3 episode is a schema-4 one without the two appended global
         # columns, the appended agent `hp` field and the `world_variety` meta key.
+        self._rewrite_as_schema_four()
         meta = json.loads((self.path / "meta.json").read_text())
         for name, drop in (("global.npy", 2), ("agents.npy", 1)):
             data = np.load(self.path / name)
@@ -157,8 +174,8 @@ class SchemaThreeTests(unittest.TestCase):
     def test_schema_four_appends_exposure_columns_and_hp(self) -> None:
         ep = load_episode(self.path)
         g = [f["name"] for f in ep.meta["fields"]["global.npy"]]
-        self.assertEqual(g[-2:], ["deaths_exposure", "injured_members"])
-        self.assertEqual(ep.meta["fields"]["agents.npy"][-1]["name"], "hp")
+        self.assertEqual(g[-4:-2], ["deaths_exposure", "injured_members"])
+        self.assertEqual(ep.meta["fields"]["agents.npy"][-3]["name"], "hp")
         self.assertIn("hp", ep.observable_names("agents.npy"))
         self.assertIsNone(ep.meta["world_variety"])
         self.assertIsNone(ep.world_variety())
@@ -170,6 +187,29 @@ class SchemaThreeTests(unittest.TestCase):
         self.assertEqual(ep.world_variety(), {"starting_agents": 20})
         self.assertNotIn("world_variety", ep.observable_meta())
         self.assertIn("scene", ep.observable_meta())
+
+    def test_schema_five_appends_fission_columns_and_hidden_hardiness(self) -> None:
+        ep = load_episode(self.path)
+        g = [f["name"] for f in ep.meta["fields"]["global.npy"]]
+        self.assertEqual(g[-2:], ["settlements_alive", "fissions_total"])
+        s = [f["name"] for f in ep.meta["fields"]["settlements.npy"]]
+        self.assertEqual(s[-2:], ["parent_slot", "founded_tick"])
+        a = ep.meta["fields"]["agents.npy"]
+        self.assertEqual([f["name"] for f in a[-2:]], ["hardiness", "founding"])
+        self.assertIs(a[-2]["hidden"], True)
+        self.assertNotIn("hardiness", ep.observable_names("agents.npy"))
+        self.assertIn("founding", ep.observable_names("agents.npy"))
+        self.assertEqual(int(ep.column("global.npy", "settlements_alive")[-1]), 1)
+        self.assertTrue((ep.column("settlements.npy", "parent_slot")[~np.isnan(ep.column("settlements.npy", "parent_slot"))] == -1).all())
+
+    def test_schema_four_layout_still_loads(self) -> None:
+        self._rewrite_as_schema_four()
+        ep = load_episode(self.path)
+        self.assertEqual(ep.meta["schema_version"], 4)
+        self.assertEqual(ep.arrays["global.npy"].shape[1], 37)
+        self.assertEqual(ep.arrays["settlements.npy"].shape[2], 9)
+        self.assertEqual(ep.arrays["agents.npy"].shape[2], 18)
+        self.assertIsNotNone(ep.lineage_keys())
 
     def test_schema_three_layout_still_loads(self) -> None:
         self._rewrite_as_schema_three()

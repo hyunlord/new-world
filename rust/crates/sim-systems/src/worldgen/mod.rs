@@ -35,6 +35,12 @@ pub struct WorldGenConfig {
     pub deadwood_min_radius: u32,
     /// Outermost Chebyshev distance of a deadwood spot from the hearth.
     pub deadwood_max_radius: u32,
+    /// Wild regions placed after every other step (Pass 11); zero places none.
+    pub wild_regions: u32,
+    /// Bushes asked for in each wild region (Pass 11).
+    pub region_bushes: u32,
+    /// Deadwood spots asked for in each wild region (Pass 11).
+    pub region_deadwood: u32,
 }
 impl WorldGenConfig {
     /// Pass 10 generator inputs of world `seed`: v15's recipe with the
@@ -55,6 +61,23 @@ impl WorldGenConfig {
             deadwood_capacity: variety.deadwood_capacity,
             forest_coverage: variety.forest_permille as f64 / 1000.0,
             ..Self::game_v15(seed)
+        }
+    }
+
+    /// Pass 11 generator inputs of world `seed` (`game_v17` and
+    /// `game_v17_nofission`): v16's world plus the wild regions of its hidden
+    /// parameters.
+    pub const fn game_v17(seed: u64) -> Self {
+        Self::game_v17_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v17`] for given hidden parameters.
+    pub const fn game_v17_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
+        Self {
+            wild_regions: variety.wild_regions as u32,
+            region_bushes: variety.region_bushes,
+            region_deadwood: variety.region_deadwood,
+            ..Self::game_v16_with(seed, variety)
         }
     }
 
@@ -116,6 +139,9 @@ impl WorldGenConfig {
             deadwood_capacity: 0,
             deadwood_min_radius: 0,
             deadwood_max_radius: 0,
+            wild_regions: 0,
+            region_bushes: 0,
+            region_deadwood: 0,
         }
     }
 }
@@ -165,6 +191,11 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
             "deadwood requires a positive capacity and an ordered radius band"
         );
         camp::deadwood(cfg, &mut engine.resources);
+    }
+    // Pass 11: wild regions come after everything else, from their own keyed
+    // streams, so the rest of a v17 world is identical to the v16 world.
+    if cfg.wild_regions > 0 {
+        camp::regions(cfg, &mut engine.resources);
     }
     engine
 }

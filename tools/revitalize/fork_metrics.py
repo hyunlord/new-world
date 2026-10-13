@@ -48,7 +48,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "worldmodel"))
-from bench_v1 import Ep, T4_TARGETS, c_cf_targets, episode_arrays, row_of  # noqa: E402
+from bench_v1 import VARS, Ep, T4_TARGETS, c_cf_targets, episode_arrays, row_of  # noqa: E402
 from wm_data import load_episode  # noqa: E402
 
 GATED = ("dark_nights", "cold_member_hours")
@@ -131,11 +131,33 @@ def episode_name(scene: str, seed: int, eid: str, replicate: int | None) -> str:
     return f"{scene}_s{seed}_{eid}" + ("" if replicate is None else f"_r{replicate}")
 
 
+# Pass 11 (`--home-slot-fire`): read the fire of the home settlement's slot (the
+# lowest id in settlement_ids.npy) instead of the max over every slot, so a
+# daughter's lit fire cannot hide rain on home. bench_v1 is left untouched.
+HOME_SLOT_FIRE = False
+
+
+def home_fire(loaded) -> np.ndarray | None:
+    """fire_lit of the home settlement's slot per row (NaN -> 0); None without settlements."""
+    ids = loaded.arrays.get("settlement_ids.npy")
+    s = loaded.arrays["settlements.npy"]
+    if ids is None or not s.shape[1]:
+        return None
+    home = int(np.argmin(ids))
+    return np.nan_to_num(loaded.column("settlements.npy", "fire_lit")[:, home], nan=0.0)
+
+
 def targets_of(path: Path, with_exposure: bool = False) -> dict[str, float]:
     """The C_cf targets of one episode plus births at the day-29 06:00 row (reported only).
-    `with_exposure` (Pass 10) adds `deaths_exposure` at that row to the deaths target."""
-    loaded = load_episode(path, arrays=["global.npy", "settlements.npy"])
-    ep = Ep("", "", int(loaded.meta["seed"]), str(loaded.meta["episode_id"]), **episode_arrays(loaded))
+    `with_exposure` (Pass 10) adds `deaths_exposure` at that row to the deaths target;
+    `HOME_SLOT_FIRE` (Pass 11) reads dark nights from the home settlement's slot."""
+    loaded = load_episode(path, arrays=["global.npy", "settlements.npy", "settlement_ids.npy"])
+    arrays = episode_arrays(loaded)
+    if HOME_SLOT_FIRE:
+        fire = home_fire(loaded)
+        if fire is not None:
+            arrays["v"][:, VARS.index("fire_lit")] = fire
+    ep = Ep("", "", int(loaded.meta["seed"]), str(loaded.meta["episode_id"]), **arrays)
     out = c_cf_targets(ep)
     out["births"] = float(loaded.column("global.npy", "births")[row_of(28, 360)])
     if with_exposure:
@@ -174,6 +196,8 @@ def series(path: Path, with_exposure: bool = False) -> dict:
     g = lambda name: ep.column("global.npy", name)
     s = ep.arrays["settlements.npy"]
     fire = np.nan_to_num(ep.column("settlements.npy", "fire_lit"), nan=0.0).max(axis=1, initial=0.0) if s.shape[1] else np.zeros(len(g("tick")))
+    if HOME_SLOT_FIRE and s.shape[1]:
+        fire = home_fire(ep)
     food = np.nansum(ep.column("settlements.npy", "food_stock"), axis=1) if s.shape[1] else np.zeros(len(g("tick")))
     deaths = sum(g(k) for k in ("deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age"))
     if with_exposure:
@@ -248,6 +272,7 @@ def build(args) -> dict:
     ids = ["none", *variants] + ([args.gift1] if args.gift1 else [])
     with_exposure = getattr(args, "deaths_with_exposure", False)
     report["deaths_with_exposure"] = with_exposure
+    report["home_slot_fire"] = HOME_SLOT_FIRE
     values = collect(root, scene, seeds, ids, reps, with_exposure)
     report["vrf"] = {}
     for eid in ids[1:]:
@@ -294,6 +319,8 @@ def build(args) -> dict:
     if args.v14:
         report["v14_single_fork"] = v14_comparison(args.v14, values, variants, seeds, report)
     report["deaths_effect"] = {eid: deaths_effect(values[eid]["deaths"], values["none"]["deaths"]) for eid in ids[1:]}
+    if getattr(args, "deaths_by_stage", False):
+        report["deaths_by_stage_effect"] = deaths_by_stage_effects(root, scene, seeds, ids, reps)
     if getattr(args, "v15", None):
         v15 = collect(args.v15, "game_v15", seeds, ids, args.v15_replicates)
         report["v15_dark_night_comparison"] = {
@@ -382,6 +409,41 @@ def fmt(x) -> str:
     return f"{x:.3g}" if isinstance(x, float) else str(x)
 
 
+STAGES = ("adult", "child", "elder")
+
+
+def deaths_by_stage(path: Path) -> list[float]:
+    """Pass 11: agents that died before the day-29 06:00 row, by the life stage of their last
+    alive row (agents.npy `life_stage`: 0 adult, 1 child, 2 elder); all causes."""
+    ep = load_episode(path, arrays=["agents.npy", "agent_alive.npy"])
+    alive = ep.arrays["agent_alive.npy"].astype(bool)
+    stage = ep.column("agents.npy", "life_stage")
+    end = row_of(28, 360)
+    out = [0.0, 0.0, 0.0]
+    for j in range(alive.shape[1]):
+        rows = np.nonzero(alive[: end + 1, j])[0]
+        if len(rows) and not alive[end, j]:
+            last = int(rows[-1])
+            if last < end:
+                out[int(stage[last, j])] += 1.0
+    return out
+
+
+def deaths_by_stage_effects(root: Path, scene: str, seeds: range, ids: list[str], replicates: int) -> dict:
+    """Replicate-mean (variant - factual) deaths by stage per seed, then the mean over seeds."""
+    base = {(s, k): deaths_by_stage(root / episode_name(scene, s, "none", k)) for s in seeds for k in range(replicates)}
+    out = {}
+    for eid in ids[1:]:
+        per_seed = []
+        for s in seeds:
+            diffs = [np.subtract(deaths_by_stage(root / episode_name(scene, s, eid, k)), base[(s, k)]) for k in range(replicates)]
+            per_seed.append(np.mean(diffs, axis=0))
+        mean = np.mean(per_seed, axis=0)
+        out[eid] = {stage: float(mean[i]) for i, stage in enumerate(STAGES)}
+        out[eid]["seeds_positive"] = {stage: float(np.mean([p[i] > 0 for p in per_seed])) for i, stage in enumerate(STAGES)}
+    return out
+
+
 def markdown(report: dict) -> str:
     lines = [f"# Fork metrics ({report['scene']}, seeds {report['seeds'][0]}–{report['seeds'][1] - 1}, "
              f"R = {report['replicates']}, fork tick {report['fork_tick']})", ""]
@@ -439,6 +501,11 @@ def markdown(report: dict) -> str:
             c = comp.get(eid)
             cell = f"{c['share_differs']:.3f} ({c['seeds_differing']} / {c['seeds']}; v16 {c['v16_mean']:.3f}, v15 {c['v15_mean']:.3f})" if c else "–"
             lines.append(f"| {eid} | {d['share_positive']:.3f} | {d['share_negative']:.3f} | {d['mean']:.3f} | {cell} |")
+    if "deaths_by_stage_effect" in report:
+        lines += ["", "## Deaths effect by life stage (Pass 11; all causes, replicate mean, mean over seeds)", "",
+                  "| variant | adult | child | elder | seeds with adult effect > 0 |", "|---|---:|---:|---:|---:|"]
+        for eid, d in report["deaths_by_stage_effect"].items():
+            lines.append(f"| {eid} | {d['adult']:.3f} | {d['child']:.3f} | {d['elder']:.3f} | {d['seeds_positive']['adult']:.3f} |")
     lines += ["", "## Newborn lineage keys (Y6, reported only)", "",
               "Newborns born at or after the intervention in either arm (replicate 0), and how many carry a key present among the "
               "other arm's newborns.", "", "| variant | newborns (either arm) | equal key in both | share |", "|---|---:|---:|---:|"]
@@ -461,12 +528,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--unforked", type=Path)
     parser.add_argument("--v14", type=Path)
     parser.add_argument("--intervention-ticks")
+    parser.add_argument("--deaths-by-stage", action="store_true", help="Pass 11: deaths effect by life stage (needs --agents recordings)")
+    parser.add_argument("--home-slot-fire", action="store_true",
+                        help="Pass 11: dark nights from the home settlement's slot (lowest id), not the max over slots")
     parser.add_argument("--deaths-with-exposure", action="store_true",
                         help="count deaths_exposure (recorder schema 4) in the deaths target and series")
     parser.add_argument("--v15", type=Path, help="Pass 9's game_v15 branch families (read-only) for the dark-night comparison")
     parser.add_argument("--v15-replicates", type=int, default=8)
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args(argv)
+    global HOME_SLOT_FIRE
+    HOME_SLOT_FIRE = args.home_slot_fire
     report = build(args)
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "fork_metrics.json").write_text(json.dumps(report, indent=2, sort_keys=True, allow_nan=True) + "\n")

@@ -178,8 +178,8 @@ impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
             engine: build_world_with(
-                &WorldGenConfig::game_v16(DEFAULT_GAME_SEED),
-                WorldRules::game_v16(DEFAULT_GAME_SEED),
+                &WorldGenConfig::game_v17(DEFAULT_GAME_SEED),
+                WorldRules::game_v17(DEFAULT_GAME_SEED),
             ),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -225,8 +225,8 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_world_with(
-            &WorldGenConfig::game_v16(self.world_seed),
-            WorldRules::game_v16(self.world_seed),
+            &WorldGenConfig::game_v17(self.world_seed),
+            WorldRules::game_v17(self.world_seed),
         );
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -2773,6 +2773,10 @@ fn tallies_to_dict(tallies: sim_engine::Tallies) -> VarDictionary {
     dict.set("deaths_old_age", tallies.deaths_old_age as i64);
     // Revitalize Pass 10: cold-night deaths under the exposure rule.
     dict.set("deaths_exposure", tallies.deaths_exposure as i64);
+    // Revitalize Pass 11 tallies (display-only).
+    dict.set("fissions", tallies.fissions as i64);
+    dict.set("fissions_cancelled", tallies.fissions_cancelled as i64);
+    dict.set("remnant_merges", tallies.remnant_merges as i64);
     // Revitalize Pass 5 tallies (display-only).
     dict.set("meals_from_store", tallies.meals_from_store as i64);
     dict.set("ground_meals", tallies.ground_meals as i64);
@@ -2922,6 +2926,11 @@ mod revitalize_tooling_tests {
             wood_retargets: 0,
             interventions_applied: 0,
             deaths_exposure: 0,
+            fissions: 0,
+            fissions_cancelled: 0,
+            fission_blocked_no_site: 0,
+            remnant_merges: 0,
+            exclusivity_moves: 0,
         };
         let snapshot = collect_tallies(&engine.resources);
         assert_eq!(snapshot.births, 11);

@@ -252,5 +252,37 @@ class ExposureDeathsTests(unittest.TestCase):
         self.assertEqual((c["seeds_differing"], c["share_differs"]), (3, 0.75))
 
 
+
+class HomeSlotFireTests(unittest.TestCase):
+    """Pass 11: with --home-slot-fire, dark nights come from the home settlement's slot."""
+
+    def test_a_daughter_fire_does_not_hide_a_dark_home(self) -> None:
+        import hashlib
+        import fork_metrics
+        from bench_v1 import row_of as r_of
+        with tempfile.TemporaryDirectory() as tmp:
+            ep = write_episode(Path(tmp) / "e", exposure_at_0600_day29=0.0)
+            s = np.load(ep / "settlements.npy")
+            two = np.concatenate([s, s], axis=1)
+            two[:, 0, 2] = 1.0  # the daughter (id 5, slot 0) always lit
+            for day in range(21, 28):  # the home (id 1, slot 1) dark at 02:00 of days 23..29
+                two[r_of(day + 1, 120), 1, 2] = 0.0
+            np.save(ep / "settlements.npy", two)
+            np.save(ep / "settlement_ids.npy", np.array([5, 1], dtype=np.int64))
+            meta = json.loads((ep / "meta.json").read_text())
+            for name in ("settlements.npy", "settlement_ids.npy"):
+                data = np.load(ep / name)
+                meta["arrays"][name] = {"shape": list(data.shape), "dtype": str(data.dtype),
+                                        "sha256": hashlib.sha256((ep / name).read_bytes()).hexdigest()}
+            (ep / "meta.json").write_text(json.dumps(meta))
+            self.assertEqual(targets_of(ep)["dark_nights"], 0.0)
+            try:
+                fork_metrics.HOME_SLOT_FIRE = True
+                self.assertEqual(targets_of(ep)["dark_nights"], 7.0)
+                self.assertEqual(float(series(ep)["dark_nights"][r_of(23, 120)]), 0.0)
+            finally:
+                fork_metrics.HOME_SLOT_FIRE = False
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -39,7 +39,7 @@ pub(crate) fn health(engine: &SimEngine) -> (f64, u64) {
 /// berry-repair terrain swaps).
 pub(super) fn seed_info(engine: &SimEngine) -> Value {
     let r = &engine.resources;
-    json!({
+    let mut info = json!({
         "world_variety": r.world_variety.map(|v| variety_json(&v)),
         "winter_severity_permille": r.rules.society.firewood.and_then(|rule| rule.winter_severity_permille),
         "food_regen_permille": r.rules.seasons.map(|s| s.regen_permille),
@@ -49,15 +49,55 @@ pub(super) fn seed_info(engine: &SimEngine) -> Value {
         "berry_repair_swaps": r.worldgen_report.berry_repair_swaps,
         "exposure": r.rules.society.exposure.map(|e| json!({
             "damage_per_cold_hour": e.damage_per_cold_hour, "heal_block_hours": e.heal_block_hours})),
-    })
+    });
+    // Pass 11: per-seed v17 facts, present only in worlds that have them so
+    // earlier outputs are unchanged.
+    if let Some(object) = info.as_object_mut() {
+        if let Some(regions) = super::pass11::regions_json(engine) {
+            object.insert("wild_regions".into(), regions);
+        }
+        if let Some(e) = r.rules.society.exposure.filter(|e| e.use_hardiness || e.hunger_weight != 0.0) {
+            object.insert("exposure_v2".into(), json!({"hunger_weight": e.hunger_weight, "use_hardiness": e.use_hardiness}));
+        }
+        if let Some(rain) = r.rules.society.firewood.filter(|f| f.rain_soak_permille > 0 || f.regional_wood) {
+            object.insert("firewood_v17".into(), json!({"rain_soak_permille": rain.rain_soak_permille,
+                "regional_wood": rain.regional_wood}));
+        }
+        if let Some(f) = r.rules.society.fission {
+            object.insert("fission".into(), json!({"min_members": f.min_members, "crowding": f.crowding,
+                "group_share": f.group_share, "group_min": f.group_min, "group_max": f.group_max,
+                "min_adults": f.min_adults, "cooldown_days": f.cooldown_days, "min_age_days": f.min_age_days,
+                "site_clearance": f.site_clearance, "stock_share": f.stock_share,
+                "max_settlements": f.max_settlements, "settle_timeout_days": f.settle_timeout_days,
+                "remnant_members": f.remnant_members}));
+        }
+        if let Some(utilization) = match r.rules.society.birth {
+            sim_core::rules::BirthRule::Provisioned { sustain: Some(s), .. } if r.rules.society.fission.is_some()
+                || r.rules.society.exposure.is_some_and(|e| e.use_hardiness) => Some(s.utilization),
+            _ => None,
+        } {
+            object.insert("sustain_utilization".into(), json!(utilization));
+        }
+    }
+    info
 }
 
-/// The eight hidden parameters of a `game_v16` world as a JSON object.
+/// The eight hidden parameters of a `game_v16` world as a JSON object (Pass
+/// 11: plus the three wild-region parameters when the world has regions).
 pub(crate) fn variety_json(v: &sim_core::variety::WorldVariety) -> Value {
-    json!({"starting_agents": v.starting_agents, "berry_bushes": v.berry_bushes,
+    let mut out = json!({"starting_agents": v.starting_agents, "berry_bushes": v.berry_bushes,
         "berry_capacity": v.berry_capacity, "deadwood_spots": v.deadwood_spots,
         "deadwood_capacity": v.deadwood_capacity, "forest_permille": v.forest_permille,
-        "climate": v.climate, "food_regen_permille": v.food_regen_permille})
+        "climate": v.climate, "food_regen_permille": v.food_regen_permille});
+    // Pass 11: the wild-region parameters, only for worlds that have regions.
+    if v.wild_regions > 0 {
+        if let Some(object) = out.as_object_mut() {
+            object.insert("wild_regions".into(), json!(v.wild_regions));
+            object.insert("region_bushes".into(), json!(v.region_bushes));
+            object.insert("region_deadwood".into(), json!(v.region_deadwood));
+        }
+    }
+    out
 }
 
 /// Seed-winter rows of one run: for each winter whose window

@@ -118,14 +118,15 @@ fn harness_variety_independent_of_replicate() {
         let mut forked = game_v16_scene(seed);
         forked.apply_noise_fork(3);
         assert_eq!(forked.resources.noise_replicate_for(0), 3);
-        assert_eq!(plain.resources.world_variety, Some(WorldVariety::draw(seed)));
+        // Pass 11: v16 records slots 0..7 only (its world has no wild regions).
+        assert_eq!(plain.resources.world_variety, Some(WorldVariety::draw(seed).without_regions()));
         assert_eq!(forked.resources.world_variety, plain.resources.world_variety);
         assert_eq!(state_digest(&forked), state_digest(&plain));
         assert_eq!(forked.resources.worldgen_report, plain.resources.worldgen_report);
         // The world is built from `WorldGenConfig::game_v16` / `WorldRules::game_v16`,
         // whose only input is the seed (`WorldVariety::draw` takes no replicate).
         let mut rebuilt = build_world_with(&WorldGenConfig::game_v16(seed), WorldRules::game_v16(seed));
-        rebuilt.resources.world_variety = Some(WorldVariety::draw(seed));
+        rebuilt.resources.world_variety = Some(WorldVariety::draw(seed).without_regions());
         assert_eq!(state_digest(&rebuilt), state_digest(&plain));
     }
 }

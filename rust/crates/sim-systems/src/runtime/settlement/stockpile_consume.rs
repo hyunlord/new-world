@@ -145,6 +145,11 @@ impl RuntimeSystem for StockpileConsumeSystem {
                 if chebyshev(pos, home) > radius {
                     continue;
                 }
+                // Pass 11: a founder on its way is not served from its
+                // parent's store (no `Founding` marker outside `game_v17`).
+                if world.get::<&sim_core::components::Founding>(entity).is_ok() {
+                    continue;
+                }
 
                 // Double-dip gate: skip members already on the ground-eat path
                 // (Seeking{Food}/Consuming{Food}). A missing AgentState is

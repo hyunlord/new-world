@@ -1,8 +1,8 @@
 //! Hidden world parameters drawn from a world's seed (Pass 10).
 //!
 //! Each parameter is one keyed draw on `STREAM_WORLD_VARIETY` with slot =
-//! its index in the struct (0..7) and subject, tick and replicate 0, so a
-//! noise fork never changes the world. An integer range `lo..=hi` is
+//! its index in the struct (0..7; Pass 11's wild regions 8..10) and subject,
+//! tick and replicate 0, so a noise fork never changes the world. An integer range `lo..=hi` is
 //! `lo + below(draw, hi - lo + 1)`; the climate is the index of
 //! `below(draw, 1000)` in the cumulative `CLIMATE_PERMILLE`.
 use serde::{Deserialize, Serialize};
@@ -26,6 +26,12 @@ pub struct VarietyRanges {
     pub forest_permille: (u32, u32),
     /// Scale of the seasonal food regrowth, thousandths.
     pub food_regen_permille: (u32, u32),
+    /// Wild regions away from the camp (Pass 11, slot 8).
+    pub wild_regions: (u32, u32),
+    /// Bushes per wild region (Pass 11, slot 9).
+    pub region_bushes: (u32, u32),
+    /// Deadwood spots per wild region (Pass 11, slot 10).
+    pub region_deadwood: (u32, u32),
 }
 
 /// The ranges `game_v16` draws from.
@@ -37,6 +43,11 @@ pub const RANGES: VarietyRanges = VarietyRanges {
     deadwood_capacity: (5, 7),
     forest_permille: (220, 380),
     food_regen_permille: (850, 1150),
+    wild_regions: (1, 3),
+    // Part 3 round 2: 5..=9 -> 7..=11 (+2 at both ends).
+    region_bushes: (7, 11),
+    // Part 3 round 3: 6..=12 -> 8..=14 (+2 at both ends).
+    region_deadwood: (8, 14),
 };
 
 /// Climate weights in thousandths: mild-leaning, neutral, harsh-leaning.
@@ -69,6 +80,12 @@ pub struct WorldVariety {
     pub climate: u8,
     /// Scale of `SeasonRule::regen_permille` in thousandths (v15: 1000).
     pub food_regen_permille: u32,
+    /// Pass 11: wild regions placed away from the camp (`game_v17`; v16: 0).
+    pub wild_regions: u8,
+    /// Pass 11: bushes in each wild region (v16: 0).
+    pub region_bushes: u32,
+    /// Pass 11: deadwood spots in each wild region (v16: 0).
+    pub region_deadwood: u32,
 }
 
 impl WorldVariety {
@@ -82,6 +99,9 @@ impl WorldVariety {
         forest_permille: 300,
         climate: 1,
         food_regen_permille: 1000,
+        wild_regions: 0,
+        region_bushes: 0,
+        region_deadwood: 0,
     };
 
     /// The hidden parameters of world `seed` (never reads a replicate).
@@ -108,7 +128,16 @@ impl WorldVariety {
             forest_permille: uniform(seed, 5, ranges.forest_permille),
             climate,
             food_regen_permille: uniform(seed, 7, ranges.food_regen_permille),
+            wild_regions: uniform(seed, 8, ranges.wild_regions) as u8,
+            region_bushes: uniform(seed, 9, ranges.region_bushes),
+            region_deadwood: uniform(seed, 10, ranges.region_deadwood),
         }
+    }
+
+    /// This world's parameters without wild regions: what `game_v16` uses
+    /// and records (slots 0..7 only), so v16 outputs stay unchanged.
+    pub const fn without_regions(&self) -> Self {
+        Self { wild_regions: 0, region_bushes: 0, region_deadwood: 0, ..*self }
     }
 
     /// The winter severity weights of this world's climate.
@@ -150,6 +179,9 @@ mod tests {
             assert!((18..=30).contains(&v.starting_agents));
             assert!((3..=5).contains(&v.berry_capacity));
             assert!(v.climate < 3);
+            assert!((1..=3).contains(&v.wild_regions));
+            assert!((7..=11).contains(&v.region_bushes));
+            assert!((8..=14).contains(&v.region_deadwood));
             assert_eq!(v, WorldVariety::draw(seed));
         }
     }

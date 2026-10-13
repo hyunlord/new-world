@@ -120,6 +120,8 @@ pub const REFERENCE_BUSH_CAPACITY: u8 = 4;
 
 /// Sources inside the formation tile's forage radius, each weighted
 /// `min(capacity, 4) / 4` (Pass 10, `game_v16`). Summed over sorted tiles.
+/// Pass 11: under `FissionRule` a bush shared with n − 1 other settlements'
+/// catchments counts 1/n.
 fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
     let Some(settlement) = resources.settlements.get(&sid) else {
         return 0.0;
@@ -132,6 +134,29 @@ fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_rad
         .map(|(tile, max)| (*tile, (*max).min(REFERENCE_BUSH_CAPACITY)))
         .collect();
     weights.sort_unstable();
+    // Pass 11 (`game_v17`, under `FissionRule`): a bush inside the forage
+    // radius of n settlements (this one and every other with a member) counts
+    // 1/n, so overlapping catchments are not planned twice by two birth gates.
+    if resources.rules.society.fission.is_some() {
+        let mut others: Vec<(u32, u32)> = resources
+            .settlements
+            .iter()
+            .filter(|(other, s)| **other != sid && !s.member_agents.is_empty())
+            .map(|(_, s)| s.formation_tile)
+            .collect();
+        others.sort_unstable();
+        return weights
+            .iter()
+            .map(|(tile, w)| {
+                let shared = others
+                    .iter()
+                    .filter(|c| tile.0.abs_diff(c.0).max(tile.1.abs_diff(c.1)) <= forage_radius)
+                    .count();
+                f64::from(*w) / (1 + shared) as f64
+            })
+            .sum::<f64>()
+            / f64::from(REFERENCE_BUSH_CAPACITY);
+    }
     weights.iter().map(|(_, w)| f64::from(*w)).sum::<f64>() / f64::from(REFERENCE_BUSH_CAPACITY)
 }
 
