@@ -1,10 +1,12 @@
-# WorldSim recorded worlds (`worldsim_wm`, recorder schema 2)
+# WorldSim recorded worlds (`worldsim_wm`, recorder schema 3)
 
 WorldSim is a deterministic village simulation. The recorder `worldsim_wm` runs a scene for a number of days, optionally under a schedule of interventions (the god's hand), and writes one directory of NPY arrays per episode: what the renderer sees, plus the hidden state the next step depends on. The same arguments give byte-identical files whatever the worker count (`tools/worldmodel/test_export_determinism.py`).
 
 This page documents the format. The datasets live outside git (`WM_DATA_ROOT`, default `/Users/rexxa/work/worldsim-wm-data`); `sample/` holds two `game_v13` episodes × 10 days with agents, recorded in schema 1 by the Pass 7 recorder (they still load). See `DATASET_v0.md` / `BENCH_v0.md` for v0 (schema 1, `game_v13`) and `DATASET_v1.md` / `BENCH_v1.md` for v1 (schema 2, `game_v14`).
 
 **Schema 2 (Pass 8)** adds two `global.npy` columns (`night_burn_per_hour`, `winter_fall_today`) at the end, so the first 33 columns keep their schema-1 positions, and marks the world's hidden weather as `hidden`: `winter_severity`, `night_burn_per_hour`, `winter_fall_today` (global), `wood_target` (settlements: in winter it is `winter_base_days` × the severity's burn × 13) and every `latent.npy` column (the change of `wood_winter_acc` gives the day's fall); `lifespan_days` stays hidden. `meta.json` gains `observable_fields` (per array, every field not hidden, in column order). Behaviour that depends on the severity (urgent trips, stock changes, dark nights) stays observable: inferring the winter from it is the point. A model or baseline of what a player sees reads `ep.observable(array)` only.
+
+**Schema 3 (Pass 9)** adds, with `--agents`, `agent_keys.npy` (field `lineage_key`): each agent's lineage key, aligned with `agent_ids.npy`, 0 for an agent without one (worlds before `game_v15` attach none). It is an identity field (`"identity": true`, also `hidden`), not an input: agents are matched across the arms of a fork by this key, never by `AgentId`, which is the engine's monotonic id and shifts with any earlier spawn. `meta.json` gains `keyed_draws` (whether the world uses keyed random draws, i.e. `game_v15`) and `noise_fork` (null, or `{tick, replicate}` for a member of a branch family recorded with `--fork-tick T --replicates R`: it shares the prefix up to row T with its family and uses noise replicate `replicate` after it; replicate 0 is the canonical run). A branch family member's directory is `<scene>_s<seed>_<id>_r<k>`.
 
 ## Export
 
@@ -39,6 +41,7 @@ Float tables are `float32`, NaN where an entity does not exist (a settlement bef
 | `building_keys.npy` | int64 [B, 4] | `id`, `kind` (BuildingKind code, 0 hearth), `x`, `y`; first-seen order |
 | `building_present.npy` | uint8 [T, B] | 1 while the building is registered |
 | `agent_ids.npy` | int64 [N] | agent ids, first-seen order (`--agents`) |
+| `agent_keys.npy` | uint64 [N] | schema 3: lineage key per agent (`lineage_key`), aligned with `agent_ids.npy`; identity field, not an input (`--agents`) |
 | `agent_alive.npy` | uint8 [T, N] | 1 while alive (`--agents`) |
 | `agents.npy` | float32 [T, N, 17] | per-agent row (`--agents`) |
 | `resource_keys.npy` | int32 [R, 3] | `kind` (0 food, 1 water, 2 sleep, 3 deadwood), `x`, `y`; tiles at the infinite sentinel (water, camp and shelter sleep tiles) are left out (`--agents`) |
@@ -50,7 +53,7 @@ Float tables are `float32`, NaN where an entity does not exist (a settlement bef
 
 ### `meta.json` keys
 
-`schema_version` (2; the v0 dataset and the committed sample are 1), `observable_fields` (schema 2: per array, the names of the fields not marked hidden, in column order), `scene`, `seed`, `episode_id` (`none` or the schedule id), `days`, `every`, `rows` (T), `ticks_per_day` (1440), `clock_offset_ticks` (480: tick 0 is 08:00 of display day 0), `git_sha` (the commit the recorder was built from), `agents_recorded`, `schedule` (the schedule file verbatim, or null), `arrays` (per file: `dtype`, `shape`, `sha256`), `fields` (per table: a list of `name`, `dtype`, `unit`, `meaning`, `hidden`), `terrain_static`, `final_fingerprint` (the probe fingerprint after the last tick), `row_rule`, `missing_value`, `not_markov`.
+`schema_version` (3; v1 is 2; the v0 dataset and the committed sample are 1), `keyed_draws` (schema 3), `noise_fork` (schema 3: null or `{tick, replicate}`), `observable_fields` (schema 2: per array, the names of the fields not marked hidden, in column order), `scene`, `seed`, `episode_id` (`none` or the schedule id), `days`, `every`, `rows` (T), `ticks_per_day` (1440), `clock_offset_ticks` (480: tick 0 is 08:00 of display day 0), `git_sha` (the commit the recorder was built from), `agents_recorded`, `schedule` (the schedule file verbatim, or null), `arrays` (per file: `dtype`, `shape`, `sha256`), `fields` (per table: a list of `name`, `dtype`, `unit`, `meaning`, `hidden`), `terrain_static`, `final_fingerprint` (the probe fingerprint after the last tick), `row_rule`, `missing_value`, `not_markov`.
 
 ### `global.npy` fields
 
@@ -114,7 +117,7 @@ wood = ep.column("settlements.npy", "wood_stock")                # [T, S]
 lit = ep.column("settlements.npy", "fire_lit")
 ```
 
-`ep.observable(array)` returns the array without its hidden columns and `ep.observable_names(array)` their names (schema 2 reads `observable_fields`; schema 1 falls back to the per-field `hidden` flags). `load_episode(path, verify=True, arrays=None)` loads schema 1 and 2 and reads `meta.json`, `interventions.json` and the arrays, checks every file's sha256, shape and dtype against `meta.json`, and looks columns up by name (`ep.column(array, field)`). numpy only.
+`ep.observable(array)` returns the array without its hidden columns and `ep.observable_names(array)` their names (schema 2 reads `observable_fields`; schema 1 falls back to the per-field `hidden` flags). `load_episode(path, verify=True, arrays=None)` loads schema 1, 2 and 3 and reads `meta.json`, `interventions.json` and the arrays, checks every file's sha256, shape and dtype against `meta.json`, and looks columns up by name (`ep.column(array, field)`). numpy only.
 
 ## What is not exported
 

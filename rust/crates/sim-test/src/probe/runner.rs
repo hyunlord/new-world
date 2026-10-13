@@ -47,6 +47,15 @@ pub(super) struct RunResult {
     pub(super) clock_rows: BTreeMap<(u64, u32), Value>,
     /// Every-tick child observation evidence.
     pub(super) maturation: Value,
+    /// Internal ticks (completed tick − 1, the system tick) of every exposure
+    /// death in the death census (Pass 10).
+    pub(super) exposure_death_ticks: Vec<u64>,
+    /// Per-seed world facts at tick 0 (Pass 10, `pass10::seed_info`).
+    pub(super) seed_info: Value,
+    /// Ticks per day and clock offset of the run (Pass 10 seed-winter windows).
+    pub(super) clock: (u64, u64),
+    /// Per-seed schema-eleven block (Pass 11, `pass11::seed_block`).
+    pub(super) pass11: Value,
 }
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
@@ -102,6 +111,11 @@ pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v12" => crate::scenes::game_v12_scene(seed),
         "game_v13" => crate::scenes::game_v13_scene(seed),
         "game_v14" => crate::scenes::game_v14_scene(seed),
+        "game_v15" => crate::scenes::game_v15_scene(seed),
+        "game_v16_neutral" => crate::scenes::game_v16_neutral_scene(seed),
+        "game_v16" => crate::scenes::game_v16_scene(seed),
+        "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
+        "game_v17" => crate::scenes::game_v17_scene(seed),
         _ => crate::scenes::legacy_scene(),
     }
 }
@@ -111,6 +125,16 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
     let initial_shelters = shelter_count(&engine);
+    let seed_info = super::pass10::seed_info(&engine);
+    let mut exposure_death_ticks = Vec::new();
+    // Pass 11: exposure deaths with stage and settlement; settlements and
+    // elders at every day checkpoint.
+    let mut exposure_deaths: Vec<super::pass11::ExposureDeath> = Vec::new();
+    let mut settlement_days: BTreeMap<u64, super::pass11::SettlementDay> = BTreeMap::new();
+    let mut elders_by_day: BTreeMap<u64, u64> = BTreeMap::new();
+    // Pass 11 J2: consecutive hours each settlement has had 1–2 members.
+    let mut remnant_hours: BTreeMap<u32, u64> = BTreeMap::new();
+    let mut max_remnant_hours = 0u64;
     let mut deaths = DeathTracker::install(&mut engine);
     let git_sha = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut twin = args.check_determinism.then(make_scene);
@@ -176,7 +200,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
             {
                 return Err(format!("non-finite metric at seed={seed} tick={tick}"));
             }
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14") {
+            if twin_checked(&args.scene) {
                 if let Some(twin) = &twin {
                     if row != sample(twin, &args.scene, seed, initial_shelters) {
                         return Err(format!(
@@ -226,6 +250,11 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
                 });
                 row["housing_capacity"] = serde_json::json!(housing_capacity(&engine));
                 checkpoints.insert(tick / ticks_per_day, row);
+                settlement_days.insert(tick / ticks_per_day, super::pass11::settlements_now(&engine));
+                elders_by_day.insert(
+                    tick / ticks_per_day,
+                    engine.world.query::<&sim_core::components::Elder>().iter().count() as u64,
+                );
             }
         }
         if tick == total_ticks {
@@ -238,10 +267,34 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         let (records, observer_time) = deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
         tick_seconds += elapsed.saturating_sub(observer_time).as_secs_f64();
         for record in records {
+            if record["cause"] == "exposure" {
+                exposure_death_ticks.push(record["tick"].as_u64().unwrap_or(0).saturating_sub(1));
+                exposure_deaths.push((
+                    record["tick"].as_u64().unwrap_or(0).saturating_sub(1),
+                    record["stage"].as_str().unwrap_or("adult").to_string(),
+                    record["settlement_at_death"].as_u64().map(|sid| sid as u32),
+                ));
+            }
             serde_json::to_writer(&mut death_output, &record).map_err(|e| e.to_string())?;
             death_output.write_all(b"\n").map_err(|e| e.to_string())?;
         }
         maturation.observe(&engine)?;
+        if engine.current_tick().is_multiple_of(60) {
+            let small: BTreeMap<u32, bool> = engine
+                .resources
+                .settlements
+                .iter()
+                .map(|(sid, s)| (*sid, (1..=2).contains(&s.member_agents.len())))
+                .collect();
+            remnant_hours.retain(|sid, _| small.get(sid).copied().unwrap_or(false));
+            for (sid, is_small) in small {
+                if is_small {
+                    let hours = remnant_hours.entry(sid).or_insert(0);
+                    *hours += 1;
+                    max_remnant_hours = max_remnant_hours.max(*hours);
+                }
+            }
+        }
         let alive = engine.world.query::<&Agent>().iter().count() as u64;
         if !engine.resources.settlements.is_empty() {
             max_owned_housing_overflow = max_owned_housing_overflow
@@ -257,7 +310,7 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         }
         if let Some(twin) = &mut twin {
             twin.tick();
-            if matches!(args.scene.as_str(), "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14")
+            if twin_checked(&args.scene)
                 && (long_run::trace(&engine) != long_run::trace(twin)
                     || super::fingerprint::fingerprint(&engine)
                         != super::fingerprint::fingerprint(twin))
@@ -277,8 +330,13 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         "PROBE seed={seed} shelter_plan_skips={}",
         engine.resources.shelter_plan_skips
     );
+    let mut pass11 = super::pass11::seed_block(&engine, &settlement_days, &exposure_deaths, &elders_by_day, args.days);
+    if let Some(object) = pass11.as_object_mut() {
+        object.insert("max_hours_with_1_to_2_members".into(), serde_json::json!(max_remnant_hours));
+    }
     Ok(RunResult {
         seed,
+        pass11,
         checkpoints,
         census: deaths.census,
         agent_days,
@@ -294,6 +352,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         max_owned_housing_overflow,
         clock_rows,
         maturation: maturation.report(),
+        exposure_death_ticks,
+        seed_info,
+        clock: (ticks_per_day, engine.resources.rules.clock_offset_ticks),
         wall_seconds: started.elapsed().as_secs_f64(),
         ms_per_agent_tick: if agent_ticks == 0 {
             0.0
@@ -311,8 +372,27 @@ fn share(numerator: u64, denominator: u64) -> f64 {
     }
 }
 
+/// Whether `scene` takes the observable twin check and the trace/fingerprint
+/// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
+fn twin_checked(scene: &str) -> bool {
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17")
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn both_v16_scenes_take_both_twin_checks() {
+        // Pass 10: a scene missing from the list would skip its determinism
+        // checks silently. Both checks in `run_seed` call `twin_checked`.
+        let source = include_str!("runner.rs");
+        assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
+        assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17"] {
+            assert!(super::twin_checked(scene));
+            assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
+        }
+    }
+
     #[test]
     fn reports_first_observed_divergence_with_seed_and_tick() {
         let a = serde_json::json!({"tick":120,"fingerprint":"a"});

@@ -23,8 +23,10 @@ pub mod causal;
 pub mod components;
 pub mod influence;
 pub mod material;
+pub mod rng;
 pub mod rules;
 pub mod tile;
+pub mod variety;
 
 pub use components::{Agent, Position};
 pub use tile::TileGrid;

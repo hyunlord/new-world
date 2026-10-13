@@ -42,7 +42,7 @@ impl ProbeArgs {
                 continue;
             }
             if flag == "--help" {
-                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
+                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
             }
             let value = args
                 .next()
@@ -66,8 +66,8 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14") {
-            return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13 or game_v14".into());
+        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17") {
+            return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission or game_v17".into());
         }
         if parsed.seeds.is_empty() {
             return Err("seeds must be a nonempty half-open range".into());
@@ -137,7 +137,12 @@ mod tests {
         assert!(parse(&["--days", "150", "--scene", "game_v12"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v13"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v14"]).is_ok());
-        assert!(parse(&["--scene", "game_v15"]).is_err());
+        assert!(parse(&["--days", "150", "--scene", "game_v15"]).is_ok());
+        assert!(parse(&["--days", "150", "--scene", "game_v16_neutral"]).is_ok());
+        assert!(parse(&["--days", "150", "--scene", "game_v16"]).is_ok());
+        assert!(parse(&["--days", "150", "--scene", "game_v17_nofission"]).is_ok());
+        assert!(parse(&["--days", "150", "--scene", "game_v17"]).is_ok());
+        assert!(parse(&["--scene", "game_v18"]).is_err());
         assert!(parse(&["--days", "151"]).is_err());
     }
     #[test]

@@ -68,6 +68,10 @@ pub struct InterventionRecord {
     pub intervention: Intervention,
     /// Units changed, hours or nights set, or units placed; 0 when nothing changed.
     pub applied: u64,
+    /// Wood removed from the settlement's store by a soaking rain (Pass 11,
+    /// `FirewoodRule::rain_soak_permille`); 0 for every other kind and
+    /// outside `game_v17`. `applied` keeps meaning the hours of a rain.
+    pub soaked_wood: u64,
 }
 
 #[cfg(test)]
@@ -76,7 +80,7 @@ mod tests {
 
     #[test]
     fn records_compare_by_value() {
-        let a = InterventionRecord { tick: 5, intervention: Intervention::ColdSnap { nights: 1 }, applied: 1 };
+        let a = InterventionRecord { tick: 5, intervention: Intervention::ColdSnap { nights: 1 }, applied: 1, soaked_wood: 0 };
         assert_eq!(a, a);
         assert_ne!(a, InterventionRecord { applied: 0, ..a });
     }

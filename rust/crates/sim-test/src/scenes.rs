@@ -65,6 +65,74 @@ pub fn game_v14_scene(seed: u64) -> SimEngine {
     )
 }
 
+/// Pass 9 fixture: the v14 world under the v15 rules (keyed random draws,
+/// lineage keys, decisions in AgentId order; same balance as v14).
+pub fn game_v15_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v15(seed),
+        sim_core::rules::WorldRules::game_v15(),
+    )
+}
+
+/// Pass 10 fixture: the v15 world under the v16_neutral rules (v15 plus
+/// exposure: a cold night wounds and health can reach zero).
+pub fn game_v16_neutral_scene(seed: u64) -> SimEngine {
+    sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v15(seed),
+        sim_core::rules::WorldRules::game_v16_neutral(),
+    )
+}
+
+/// Pass 10 fixture: world `seed` with its hidden parameters
+/// (`WorldVariety::draw(seed)`) under the v16 rules.
+pub fn game_v16_scene(seed: u64) -> SimEngine {
+    game_v16_scene_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+}
+
+/// [`game_v16_scene`] for given hidden parameters (recorded in
+/// `SimResources::world_variety`, measurement only).
+pub fn game_v16_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v16_with(seed, variety),
+        sim_core::rules::WorldRules::game_v16_with(variety),
+    );
+    // Pass 11: v16 has no wild regions; it records slots 0..7 only.
+    engine.resources.world_variety = Some(variety.without_regions());
+    engine
+}
+
+/// Pass 11 fixture: world `seed` with its hidden parameters, wild regions
+/// included, under the v17 rules without fission (exposure v2, soaking rain).
+pub fn game_v17_nofission_scene(seed: u64) -> SimEngine {
+    game_v17_nofission_scene_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+}
+
+/// [`game_v17_nofission_scene`] for given hidden parameters.
+pub fn game_v17_nofission_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v17_with(seed, variety),
+        sim_core::rules::WorldRules::game_v17_nofission_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
+/// Pass 11 fixture: world `seed` with its hidden parameters, wild regions
+/// included, under the v17 rules (exposure v2, soaking rain, fission).
+pub fn game_v17_scene(seed: u64) -> SimEngine {
+    game_v17_scene_with(seed, &sim_core::variety::WorldVariety::draw(seed))
+}
+
+/// [`game_v17_scene`] for given hidden parameters.
+pub fn game_v17_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v17_with(seed, variety),
+        sim_core::rules::WorldRules::game_v17_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

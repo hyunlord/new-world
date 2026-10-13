@@ -58,7 +58,7 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Hunger, Inventory, Memory,
-    MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
+    Founding, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
     TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
@@ -572,6 +572,13 @@ impl RuntimeSystem for AgentDecisionSystem {
         // Pass 4 — elders stay at the camp: no building, foraging, gathering or combat.
         let elders: BTreeSet<AgentId> = world.query::<(&Agent, &Elder)>()
             .iter().map(|(_, (agent, _))| agent.id).collect();
+        // Pass 11 — founders on their way to a fission site (`game_v17` only;
+        // no `Founding` marker exists in any earlier world).
+        let founding: BTreeMap<AgentId, Founding> = if resources.rules.society.fission.is_some() {
+            world.query::<(&Agent, &Founding)>().iter().map(|(_, (agent, f))| (agent.id, *f)).collect()
+        } else {
+            BTreeMap::new()
+        };
         let social_rule = resources.rules.agent.social_seek;
         let forage_rule = resources.rules.agent.forage
             .filter(|_| resources.rules.society.stock_target.is_some());
@@ -623,7 +630,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                     inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= rule.haul_threshold)
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
-                 !children.contains(&a.id) && !elders.contains(&a.id) && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
+                 !children.contains(&a.id) && !elders.contains(&a.id) && !founding.contains_key(&a.id)
+                    && !loaded && h.is_none_or(|v| v.value <= HUNGER_THRESHOLD)
                     && t.is_none_or(|v| v.value <= THIRST_THRESHOLD)
                     && sleep.is_none_or(|v| v.fatigue <= fatigue_threshold)
                     && social.is_none_or(|v| v.loneliness <= SOCIAL_THRESHOLD))
@@ -913,6 +921,13 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&mut Inventory>,
             Option<&SettlementMigrant>,
         )>();
+        // Pass 9: under keyed draws the agents are processed in AgentId order
+        // (first-come claims, tile decrements and event ids no longer follow
+        // hecs order); v8–v14 keep hecs order.
+        let mut rows: Vec<_> = query.iter().collect();
+        if resources.rules.agent.keyed_draws {
+            rows.sort_by_key(|(_, row)| row.1.id);
+        }
         for (
             entity,
             (
@@ -927,7 +942,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 mut inventory_opt,
                 migrant_marker,
             ),
-        ) in query.iter()
+        ) in rows
         {
             let tile_idx = pos.y * width + pos.x;
             let adult = !children.contains(&agent.id);
@@ -951,6 +966,21 @@ impl RuntimeSystem for AgentDecisionSystem {
                     || thirst_opt.as_ref().is_some_and(|t| t.value >= critical_limit));
             let no_trips = loaded || critical_now;
             match *state {
+                AgentState::Idle if founding.contains_key(&agent.id) => {
+                    // Pass 11 — a founder: an actionable need pre-empts the walk
+                    // (the marker stays); otherwise it walks to the site,
+                    // before any work, forage, firewood, meal, social, building
+                    // or combat arm. Every founder, the leader included, holds
+                    // Seeking{Agent(leader)}; the post-pass targets the site.
+                    let need = actionable_need_with_fatigue_threshold(
+                        hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold,
+                    );
+                    *state = match (need, founding.get(&agent.id)) {
+                        (Some((target, _)), _) => AgentState::Seeking { target },
+                        (None, Some(f)) => AgentState::Seeking { target: TargetKind::Agent(f.leader) },
+                        (None, None) => AgentState::Idle,
+                    };
+                }
                 AgentState::Idle => {
                     // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
                     // Hunger > Thirst > Fatigue > Construction > Social.
@@ -1564,6 +1594,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                         }
                     }
                 }
+                AgentState::Seeking { target: TargetKind::Agent(_) } if founding.contains_key(&agent.id) => {
+                    // Pass 11 — a walking founder: no social gate, no chase
+                    // timeout, no handshake (the leader's self-target is allowed
+                    // only here). An actionable need pre-empts the walk and the
+                    // stale site target is dropped; the marker stays.
+                    if let Some((need, _)) = actionable_need_with_fatigue_threshold(
+                        hunger_opt.as_deref(), thirst_opt.as_deref(), sleep_opt.as_deref(), availability, fatigue_threshold,
+                    ) {
+                        *state = AgentState::Seeking { target: need };
+                        preempt_clear_seek.push(entity);
+                    }
+                }
                 AgentState::Seeking { target } => {
                     // Pass 5 — critical hunger or thirst interrupts a gathering
                     // trip: the gatherer becomes Idle (the post-pass drops its
@@ -2055,17 +2097,30 @@ impl RuntimeSystem for AgentDecisionSystem {
         // whose spot emptied (or who lost their target), re-targeted below.
         let mut wood_gather_claims: BTreeMap<(u32, u32), u32> = BTreeMap::new();
         let mut wood_retarget: Vec<WoodRetarget> = Vec::new();
-        for (e, (agent, pos, state, seek_opt, migrant_marker)) in world
-            .query::<(
-                &Agent,
-                &Position,
-                &AgentState,
-                Option<&SeekTarget>,
-                Option<&SettlementMigrant>,
-            )>()
-            .iter()
-        {
+        let mut post_query = world.query::<(
+            &Agent,
+            &Position,
+            &AgentState,
+            Option<&SeekTarget>,
+            Option<&SettlementMigrant>,
+            Option<&Founding>,
+        )>();
+        let mut post_rows: Vec<_> = post_query.iter().collect();
+        // Pass 9: the SeekTarget post-pass also runs in AgentId order under keyed draws.
+        if resources.rules.agent.keyed_draws {
+            post_rows.sort_by_key(|(_, row)| row.0.id);
+        }
+        for (e, (agent, pos, state, seek_opt, migrant_marker, founding_marker)) in post_rows {
             match state {
+                // Pass 11 — a walking founder (the leader included) heads to
+                // its group's site.
+                AgentState::Seeking { target: TargetKind::Agent(_) } if founding_marker.is_some() => {
+                    if let Some(f) = founding_marker {
+                        if seek_opt.map(|s| s.tile) != Some(f.site) {
+                            seek_set.push((e, f.site));
+                        }
+                    }
+                }
                 // Pass 4 — under the forage rule a gatherer heads to the bush the
                 // Forage arm chose, keeps a bush that still holds food, and is
                 // re-targeted (never frozen) when its bush emptied.
@@ -2225,6 +2280,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 }
             }
         }
+        drop(post_query); // release the World borrow before the deferred inserts
         // Pass 4 — re-target emptied bushes in AgentId order by the forage
         // choice rule (claims recomputed, the empty tile excluded); a gatherer
         // with no qualifying bush becomes Idle and drops its target.

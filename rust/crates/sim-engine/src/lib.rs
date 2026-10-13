@@ -38,11 +38,13 @@ use sim_core::influence::{InfluenceGrid, MaterialBlockingCache};
 use sim_core::material::MaterialRegistry;
 use sim_core::tile::TileGrid;
 use sim_core::rules::WorldRules;
+use sim_core::variety::WorldVariety;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 pub mod intervention;
 pub use intervention::{Intervention, InterventionRecord};
+pub use sim_core::rng::NoiseFork;
 
 /// FFI-originated event: a building was placed at `position` with influence
 /// `radius` (Chebyshev distance, in tiles). Drained by
@@ -108,6 +110,20 @@ pub struct Tallies {
     pub wood_retargets: u64,
     /// Interventions that changed something (`applied > 0`) (Pass 7).
     pub interventions_applied: u64,
+    /// Agents lost to cold-night wounds under the exposure rule (Pass 10).
+    pub deaths_exposure: u64,
+    /// Daughter settlements founded by fission (Pass 11).
+    pub fissions: u64,
+    /// Fissions whose group departed but founded nothing (Pass 11).
+    pub fissions_cancelled: u64,
+    /// Daily fission checks that found every other condition met but no free
+    /// site (Pass 11).
+    pub fission_blocked_no_site: u64,
+    /// Settlements merged away as remnants (Pass 11).
+    pub remnant_merges: u64,
+    /// Members moved between settlements by the exclusivity pass of
+    /// `SettlementSystem` (Pass 11 measurement; counted in every version).
+    pub exclusivity_moves: u64,
 }
 
 /// A settlement's hearth fire, updated hourly by `FireSystem` (Pass 5).
@@ -403,6 +419,113 @@ pub struct SimResources {
 
     /// Lifetime population counters; independent of bounded event buffers.
     pub tallies: Tallies,
+
+    /// Noise fork (Pass 9): from its tick on, keyed draws use its replicate.
+    /// `None` (the default and every unforked run) means replicate 0.
+    pub noise_fork: Option<NoiseFork>,
+
+    /// The hidden world parameters this world was built from (Pass 10);
+    /// `None` outside `game_v16`. Measurement only, never read by systems.
+    pub world_variety: Option<WorldVariety>,
+
+    /// What worldgen placed against what it was asked for (Pass 10).
+    /// Measurement only, never read by systems.
+    pub worldgen_report: WorldGenReport,
+
+    /// Wild regions placed by worldgen (Pass 11, `game_v17`), in region
+    /// order; empty in every earlier world. `FissionSystem` reads the centres
+    /// as founding sites.
+    pub wild_regions: Vec<WildRegion>,
+
+    /// Area of each deadwood spot (Pass 11, `game_v17`): 0 = the camp area,
+    /// r + 1 = wild region r. Empty in every earlier world. Read by the
+    /// regional winter fall (`FirewoodRule::regional_wood`).
+    pub wood_spot_area: BTreeMap<(u32, u32), u8>,
+
+    /// Per-area winter-fall accumulators (Pass 11, regional wood only).
+    pub wood_area_acc: BTreeMap<u8, u64>,
+
+    /// Per-area winter-fall cursors (Pass 11, regional wood only).
+    pub wood_area_cursor: BTreeMap<u8, (u32, u32)>,
+
+    /// Hearth tiles that never anchor a new settlement again (Pass 11): the
+    /// hearth of a cancelled founding, a merged remnant or a settlement that
+    /// lost every member. Empty outside `game_v17`.
+    pub retired_hearths: BTreeSet<(u32, u32)>,
+
+    /// Every fission that departed (Pass 11), in departure order;
+    /// measurement only, never read by systems other than `FissionSystem`.
+    pub fission_log: Vec<FissionRecord>,
+
+    /// Every settlement dissolution as (settlement, tick) (Pass 11);
+    /// measurement only, never read by systems.
+    pub dissolutions: Vec<(SettlementId, u64)>,
+}
+
+/// One departed fission group (Pass 11); measurement only.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FissionRecord {
+    /// `FissionSystem` counter, from 1.
+    pub fission_id: u32,
+    /// The settlement the group left.
+    pub parent: SettlementId,
+    /// The founding site (a wild-region centre).
+    pub site: (u32, u32),
+    /// Tick of departure.
+    pub depart_tick: u64,
+    /// Group members, ascending.
+    pub members: Vec<AgentId>,
+    /// Adults in the group.
+    pub adults: u32,
+    /// The daughter settlement, once founded.
+    pub daughter: Option<SettlementId>,
+    /// Tick the daughter formed.
+    pub founded_tick: Option<u64>,
+    /// Tick the fission was cancelled.
+    pub cancelled_tick: Option<u64>,
+    /// Food and wood the group took from the parent's store.
+    pub food_taken: u32,
+    /// See `food_taken`.
+    pub wood_taken: u32,
+    /// Whether the group settled where its leader stood after the timeout.
+    pub settled_at_leader: bool,
+}
+
+/// One wild region placed by worldgen (Pass 11).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WildRegion {
+    /// Centre tile (a walkable, non-water tile 22–28 from the camp hearth).
+    pub centre: (u32, u32),
+    /// Bushes placed around it.
+    pub bushes: u32,
+    /// Deadwood spots placed around it.
+    pub deadwood: u32,
+    /// Chebyshev distance from the centre to the nearest water tile
+    /// (`u32::MAX` without water); measurement only.
+    pub water_distance: u32,
+}
+
+/// Worldgen counts kept for measurement (Pass 10): never read by systems.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct WorldGenReport {
+    /// Deadwood spots the generator was asked for.
+    pub deadwood_spots_requested: u32,
+    /// Deadwood spots it placed (fewer when the radius band ran out of tiles).
+    pub deadwood_spots_placed: u32,
+    /// Terrain label swaps made by the berry-edge repair.
+    pub berry_repair_swaps: u32,
+    /// Wild regions asked for (Pass 11).
+    pub regions_requested: u32,
+    /// Wild regions placed (fewer when no candidate centre was left).
+    pub regions_placed: u32,
+    /// Region bushes asked for over the placed regions.
+    pub region_bushes_requested: u32,
+    /// Region bushes placed.
+    pub region_bushes_placed: u32,
+    /// Region deadwood spots asked for over the placed regions.
+    pub region_deadwood_requested: u32,
+    /// Region deadwood spots placed.
+    pub region_deadwood_placed: u32,
 }
 
 impl SimResources {
@@ -467,7 +590,23 @@ impl SimResources {
             building_registry: HashMap::new(),
             recent_deaths: Vec::new(),
             tallies: Tallies::default(),
+            noise_fork: None,
+            world_variety: None,
+            worldgen_report: WorldGenReport::default(),
+            wild_regions: Vec::new(),
+            wood_spot_area: BTreeMap::new(),
+            wood_area_acc: BTreeMap::new(),
+            wood_area_cursor: BTreeMap::new(),
+            retired_hearths: BTreeSet::new(),
+            fission_log: Vec::new(),
+            dissolutions: Vec::new(),
         }
+    }
+
+    /// The noise replicate keyed draws use at simulation tick `tick` (Pass 9):
+    /// the fork's replicate from its tick on, 0 before it and without a fork.
+    pub fn noise_replicate_for(&self, tick: u64) -> u32 {
+        self.noise_fork.map_or(0, |fork| fork.replicate_at(tick))
     }
 
     /// Allocate the next monotonic [`EventId`] (V7 Phase 3-β / P3β-1).
@@ -650,6 +789,16 @@ impl SimEngine {
         self.current_tick
     }
 
+    /// Fork the noise (Pass 9): from the current tick on (the next `tick()`
+    /// call sees `current_tick` equal to it) every keyed draw uses `replicate`.
+    /// Replicate 0 is the canonical run, so it is a no-op by definition.
+    pub fn apply_noise_fork(&mut self, replicate: u32) {
+        if replicate == 0 {
+            return;
+        }
+        self.resources.noise_fork = Some(NoiseFork { tick: self.current_tick, replicate });
+    }
+
     /// Spawn an agent at tile-coordinate `(x, y)` (V7 Phase 4-α / P4α-2-a;
     /// Phase 5-α: now mints an [`AgentId`] internally).
     ///
@@ -665,12 +814,31 @@ impl SimEngine {
     }
 }
 
+/// Fork the noise of `engine` at its current tick (Pass 9 section 7.3); see
+/// [`SimEngine::apply_noise_fork`]. Replicate 0 is a no-op.
+pub fn apply_noise_fork(engine: &mut SimEngine, replicate: u32) {
+    engine.apply_noise_fork(replicate);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use sim_core::influence::InfluenceChannel;
     use std::sync::atomic::{AtomicU32, Ordering};
     use std::sync::Arc;
+
+    #[test]
+    fn noise_fork_starts_at_the_current_tick_and_replicate_zero_is_a_no_op() {
+        let mut engine = SimEngine::new(4, 4, MaterialRegistry::new());
+        assert_eq!(engine.resources.noise_replicate_for(0), 0);
+        apply_noise_fork(&mut engine, 0);
+        assert_eq!(engine.resources.noise_fork, None);
+        engine.tick();
+        engine.tick();
+        apply_noise_fork(&mut engine, 5);
+        assert_eq!(engine.resources.noise_fork, Some(NoiseFork { tick: 2, replicate: 5 }));
+        assert_eq!((engine.resources.noise_replicate_for(1), engine.resources.noise_replicate_for(2)), (0, 5));
+    }
 
     #[test]
     fn generated_world_resources_start_legacy_and_empty() {

@@ -21,7 +21,7 @@
 
 use hecs::{Entity, World};
 use sim_core::causal::event::{CausalEvent, DeathReason};
-use sim_core::components::{Agent, AgentId, BodyHealth, Hunger, Position, Thirst};
+use sim_core::components::{Agent, AgentId, BodyHealth, Cold, ExposureClock, Hunger, Position, Thirst};
 use sim_engine::{RecentDeath, RuntimeSystem, SimResources};
 
 /// HP removed per tick while `Hunger.value >= Hunger::SATURATION`.
@@ -97,6 +97,7 @@ pub fn despawn_agent(
         DeathReason::Dehydration => resources.tallies.deaths_dehydration += 1,
         DeathReason::Combat => resources.tallies.deaths_combat += 1,
         DeathReason::OldAge => resources.tallies.deaths_old_age += 1,
+        DeathReason::Exposure => resources.tallies.deaths_exposure += 1,
     }
 
     // Chronicle the death at its tile.
@@ -153,12 +154,15 @@ impl RuntimeSystem for StarvationSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let tick = resources.current_tick;
+        // Pass 10: under the exposure rule a resident does not heal while
+        // `Cold` or within `heal_block_hours` after its last cold hour.
+        let heal_block = resources.rules.society.exposure.map(|rule| rule.heal_block_hours);
 
         // Deferred death list — never despawn mid-query.
         let mut deaths: Vec<(Entity, AgentId, (u32, u32), DeathReason)> = Vec::new();
 
-        for (entity, (agent, position, hunger, thirst, health)) in world
-            .query::<(&Agent, &Position, &Hunger, &Thirst, &mut BodyHealth)>()
+        for (entity, (agent, position, hunger, thirst, health, cold, clock)) in world
+            .query::<(&Agent, &Position, &Hunger, &Thirst, &mut BodyHealth, Option<&Cold>, Option<&ExposureClock>)>()
             .iter()
         {
             let hunger_saturated = hunger.value >= Hunger::SATURATION;
@@ -186,6 +190,9 @@ impl RuntimeSystem for StarvationSystem {
             } else if (hunger.value as f64) < SAFE_NEED_CEILING
                 && thirst.value < SAFE_NEED_CEILING
                 && health.hp < health.max_hp
+                && !heal_block.is_some_and(|hours| {
+                    cold.is_some() || clock.is_some_and(|clock| clock.blocks_healing(tick, hours))
+                })
             {
                 // Both needs met and not at full hp → recover slowly.
                 health.heal(STARVATION_HEAL_PER_TICK);
@@ -193,6 +200,11 @@ impl RuntimeSystem for StarvationSystem {
             // Gray zone (need in (SAFE_NEED_CEILING, SATURATION)) → no-op.
         }
 
+        // Pass 9: under keyed draws deaths are booked in AgentId order (event
+        // ids, the per-tile causal ring and despawn order no longer follow hecs order).
+        if resources.rules.agent.keyed_draws {
+            deaths.sort_by_key(|row| row.1);
+        }
         for (entity, agent_id, position, reason) in deaths {
             despawn_agent(world, resources, entity, agent_id, position, reason, tick);
         }

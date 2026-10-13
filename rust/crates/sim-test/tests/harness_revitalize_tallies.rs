@@ -74,6 +74,12 @@ mod tests {
             winter_wood_lost: 0,
             wood_retargets: 0,
             interventions_applied: 0,
+            deaths_exposure: 0,
+            fissions: 0,
+            fissions_cancelled: 0,
+            fission_blocked_no_site: 0,
+            remnant_merges: 0,
+            exclusivity_moves: 0,
         };
         assert_eq!(engine.resources.tallies, after_deaths);
         survival.tick(&mut engine.world, &mut engine.resources);

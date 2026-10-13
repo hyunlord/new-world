@@ -4,7 +4,7 @@ use crate::runtime::decision::HUNGER_CONSUME_AMOUNT;
 use crate::runtime::resource_regen::{season_at, FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
 use hecs::World;
 use sim_core::components::{Agent, Hunger, Inventory, ResourceKind, SettlementId};
-use sim_core::rules::BirthRule;
+use sim_core::rules::{BirthRule, SustainRule};
 use sim_engine::SimResources;
 
 /// Winter index in `SeasonRule::regen_permille`.
@@ -114,9 +114,64 @@ pub fn source_supply_per_day(ticks_per_day: u64) -> f64 {
     f64::from(FOOD_REGEN_AMOUNT) * ticks_per_day as f64 / REGEN_INTERVAL as f64
 }
 
+/// Bush capacity at which a bush counts one whole source under
+/// `SustainRule::capacity_weighted` (Pass 10; v15's capacity).
+pub const REFERENCE_BUSH_CAPACITY: u8 = 4;
+
+/// Sources inside the formation tile's forage radius, each weighted
+/// `min(capacity, 4) / 4` (Pass 10, `game_v16`). Summed over sorted tiles.
+/// Pass 11: under `FissionRule` a bush shared with n − 1 other settlements'
+/// catchments counts 1/n.
+fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    let Some(settlement) = resources.settlements.get(&sid) else {
+        return 0.0;
+    };
+    let center = settlement.formation_tile;
+    let mut weights: Vec<((u32, u32), u8)> = resources
+        .food_source_max
+        .iter()
+        .filter(|(tile, _)| tile.0.abs_diff(center.0).max(tile.1.abs_diff(center.1)) <= forage_radius)
+        .map(|(tile, max)| (*tile, (*max).min(REFERENCE_BUSH_CAPACITY)))
+        .collect();
+    weights.sort_unstable();
+    // Pass 11 (`game_v17`, under `FissionRule`): a bush inside the forage
+    // radius of n settlements (this one and every other with a member) counts
+    // 1/n, so overlapping catchments are not planned twice by two birth gates.
+    if resources.rules.society.fission.is_some() {
+        let mut others: Vec<(u32, u32)> = resources
+            .settlements
+            .iter()
+            .filter(|(other, s)| **other != sid && !s.member_agents.is_empty())
+            .map(|(_, s)| s.formation_tile)
+            .collect();
+        others.sort_unstable();
+        return weights
+            .iter()
+            .map(|(tile, w)| {
+                let shared = others
+                    .iter()
+                    .filter(|c| tile.0.abs_diff(c.0).max(tile.1.abs_diff(c.1)) <= forage_radius)
+                    .count();
+                f64::from(*w) / (1 + shared) as f64
+            })
+            .sum::<f64>()
+            / f64::from(REFERENCE_BUSH_CAPACITY);
+    }
+    weights.iter().map(|(_, w)| f64::from(*w)).sum::<f64>() / f64::from(REFERENCE_BUSH_CAPACITY)
+}
+
 /// Renewable daily food supply inside the formation tile's forage radius.
 pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
-    source_count(resources, sid, forage_radius) as f64 * source_supply_per_day(resources.ticks_per_day)
+    let weighted = matches!(
+        resources.rules.society.birth,
+        BirthRule::Provisioned { sustain: Some(SustainRule { capacity_weighted: true, .. }), .. }
+    );
+    let sources = if weighted {
+        weighted_source_count(resources, sid, forage_radius)
+    } else {
+        source_count(resources, sid, forage_radius) as f64
+    };
+    sources * source_supply_per_day(resources.ticks_per_day)
 }
 
 /// Sum actual daily needs of live members in stable agent-id order.

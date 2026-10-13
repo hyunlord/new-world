@@ -190,7 +190,7 @@ impl Census {
 pub(super) struct DeathTracker {
     history: BTreeMap<AgentId, History>,
     observations: SharedObservations,
-    baseline: [u64; 4],
+    baseline: [u64; 5],
     /// Run aggregates checked against production counters.
     pub(super) census: Census,
 }
@@ -253,10 +253,13 @@ impl DeathTracker {
             };
             history.observe(at_death, tick);
             let reason = recorded_reason(engine, id, at_death.position);
-            // Old age comes from the recorded reason; the three Pass 3 causes keep
-            // their saturation inference so v8/v9 census rows stay comparable.
+            // Old age and (Pass 10) exposure come from the recorded reason; the
+            // three Pass 3 causes keep their saturation inference so v8/v9 census
+            // rows stay comparable.
             let cause = if reason == Some(DeathReason::OldAge) {
                 "old_age"
+            } else if reason == Some(DeathReason::Exposure) {
+                "exposure"
             } else if at_death.thirst >= Thirst::SATURATION {
                 "dehydration"
             } else if at_death.hunger >= f64::from(Hunger::SATURATION) {
@@ -288,6 +291,8 @@ impl DeathTracker {
                 "settlement_food_stock_at_death":at_death.settlement_food,
                 "formation_distance_at_death":at_death.home.map(distance),
                 "life_stage_at_death":if at_death.child { "child" } else { "adult" },
+                "stage":if at_death.child { "child" } else if at_death.elder { "elder" } else { "adult" },
+                "settlement_at_death":at_death.settlement,
                 "bed_assigned":at_death.bed,
                 "death_reason":reason.map(|reason| reason.as_str()),
                 "age_days_at_death":at_death.born_tick.map(|born| {
@@ -308,7 +313,7 @@ impl DeathTracker {
         Ok((records, observed.elapsed))
     }
     fn cross_check(&self, engine: &SimEngine) -> Result<(), String> {
-        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age"]
+        for ((cause, actual), baseline) in ["dehydration", "starvation", "other", "old_age", "exposure"]
             .into_iter()
             .zip(tallies(engine))
             .zip(self.baseline)
@@ -322,9 +327,9 @@ impl DeathTracker {
         Ok(())
     }
 }
-fn tallies(engine: &SimEngine) -> [u64; 4] {
+fn tallies(engine: &SimEngine) -> [u64; 5] {
     let t = &engine.resources.tallies;
-    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age]
+    [t.deaths_dehydration, t.deaths_starvation, t.deaths_combat, t.deaths_old_age, t.deaths_exposure]
 }
 
 #[cfg(test)]
@@ -371,8 +376,10 @@ mod tests {
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0]["cause"], "dehydration");
         assert_eq!(rows[0]["thirst_at_death"], 100.0);
-        // Schema 4 adds death_reason and age_days_at_death to the 23 Pass 3 keys.
-        assert_eq!(rows[0].as_object().expect("object").len(), 23 + 2);
+        // Schema 4 adds death_reason and age_days_at_death to the 23 Pass 3 keys;
+        // Pass 11 adds `stage` and `settlement_at_death`.
+        assert_eq!(rows[0].as_object().expect("object").len(), 23 + 2 + 2);
+        assert_eq!(rows[0]["stage"], "adult");
         assert_eq!(rows[0]["death_reason"], "dehydration");
         assert!(rows[0]["age_days_at_death"].is_null());
     }
@@ -399,6 +406,7 @@ mod tests {
         assert_eq!(rows[0]["settlement_food_stock_at_death"], 17);
         assert_eq!(rows[0]["formation_distance_at_death"], 2);
         assert_eq!(rows[0]["life_stage_at_death"], "child");
+        assert_eq!(rows[0]["stage"], "child");
         assert_eq!(rows[0]["bed_assigned"], true);
     }
 
@@ -523,6 +531,8 @@ mod tests {
             home: None,
             settlement_food: None,
             child: false,
+            elder: false,
+            settlement: None,
             bed: false,
             born_tick: None,
         };

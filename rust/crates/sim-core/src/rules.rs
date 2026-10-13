@@ -38,6 +38,10 @@ pub struct AgentRules {
     pub forage: Option<ForageRule>,
     /// Critical hunger or thirst interrupts a gathering trip (Pass 5). False = Pass 4 behaviour.
     pub preempt_gathering: bool,
+    /// Keyed random draws, lineage keys and AgentId-ordered decisions (Pass 9):
+    /// every random number is a pure function of (seed, stream, lineage key,
+    /// tick, slot, replicate). False = the sequential streams and hecs order of v8–v14.
+    pub keyed_draws: bool,
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -68,6 +72,13 @@ pub struct SocietyRules {
     pub meals: Option<MealRule>,
     /// Firewood gathering, the night fire and cold nights. None = Pass 4 behaviour.
     pub firewood: Option<FirewoodRule>,
+    /// Cold-night wounds that can kill (Pass 10). None = v8–v15 behaviour
+    /// (cold only speeds hunger).
+    pub exposure: Option<ExposureRule>,
+    /// Village fission (Pass 11): a crowded settlement sends a group to found
+    /// a daughter settlement at a wild region. None = v8–v16 and
+    /// `game_v17_nofission` (no settlement ever splits).
+    pub fission: Option<FissionRule>,
 }
 /// Conditions for a settlement to produce a child.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -135,6 +146,15 @@ pub struct SustainRule {
     pub reserve_days: f64,
     /// Chebyshev distance within which renewable bushes count.
     pub forage_radius: u32,
+    /// Pass 10 (`game_v16`): each bush counts `min(capacity, 4) / 4` of a
+    /// source in the supply estimate (`food_economy::supply_per_day`), so
+    /// worlds of capacity-3 bushes (which lose regrowth at their cap) do not
+    /// overstate their supply. The estimate feeds both the birth gate
+    /// (`annual_mean_supply`) and the summer/autumn winter-prep store target
+    /// (`winter_supply_per_day` in `stock_target`), so in capacity-3 worlds it
+    /// also raises that target. False = every bush counts one source (v9–v15,
+    /// v16_neutral).
+    pub capacity_weighted: bool,
 }
 /// Sustained sleep in a minute-of-day window.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -309,6 +329,64 @@ pub struct FirewoodRule {
     /// to its max, and the snow burial runs only at the first regrowth pulse of
     /// each winter. False = v13.
     pub windfall_over_snow: bool,
+    /// Rain soaks the woodpile (Pass 11): `Intervention::Rain` on a settlement
+    /// also removes `floor(wood × rain_soak_permille / 1000)` of its stored
+    /// wood at application. 0 = v8–v16 (rain only keeps the fire out).
+    pub rain_soak_permille: u32,
+    /// Regional deadwood (Pass 11): the winter fall is split into a budget
+    /// per area (the camp area and each wild region, `wood_spot_area`)
+    /// proportional to its spot count, each with its own round-robin cursor,
+    /// and a windfall fills the home settlement's nearest spots first. False =
+    /// v8–v16 (one world-total round robin; windfall in key order).
+    pub regional_wood: bool,
+}
+/// Pass 10: a cold night wounds; health can reach zero.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct ExposureRule {
+    /// HP lost per hour spent `Cold`, by life stage: [child, adult, elder].
+    pub damage_per_cold_hour: [f64; 3],
+    /// No healing while `Cold` and for this many hours after the last cold hour.
+    pub heal_block_hours: u32,
+    /// Pass 11: hunger adds to the cold. The hourly damage is multiplied by
+    /// `1 + hunger_weight × clamp((hunger − 50) / 50, 0, 1)`. 0.0 = v16.
+    pub hunger_weight: f64,
+    /// Pass 11: the hourly damage is multiplied by the resident's
+    /// `Hardiness::permille / 1000` (a frailty factor: higher = more damage),
+    /// and every resident carries a `Hardiness`. False = v16.
+    pub use_hardiness: bool,
+}
+/// Pass 11: a crowded settlement splits; a group walks to a wild region and
+/// founds a daughter settlement (`FissionSystem`, daily at 06:00).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+pub struct FissionRule {
+    /// Smallest parent (members) that can split.
+    pub min_members: u32,
+    /// The parent must hold at least `crowding × capacity` members, capacity
+    /// being the population the `SustainRule` birth gate admits.
+    pub crowding: f64,
+    /// Share of the parent's members that leaves.
+    pub group_share: f64,
+    /// Smallest group.
+    pub group_min: u32,
+    /// Largest group.
+    pub group_max: u32,
+    /// Adults the group must hold (no elder leaves).
+    pub min_adults: u32,
+    /// Days between two fissions of one parent, and of the world.
+    pub cooldown_days: u32,
+    /// Days a settlement must exist before it can split.
+    pub min_age_days: u32,
+    /// A site is free when no settlement's formation tile lies within this
+    /// Chebyshev distance of it.
+    pub site_clearance: u32,
+    /// The group takes its share of the parent's food and wood.
+    pub stock_share: bool,
+    /// Most settlements alive (≥ 1 member) at once.
+    pub max_settlements: u32,
+    /// Days after departure before the group settles where its leader stands.
+    pub settle_timeout_days: u32,
+    /// A settlement with this many members or fewer for 24 hours merges away.
+    pub remnant_members: u32,
 }
 /// Four seasons scaling food regrowth.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -333,6 +411,7 @@ impl Default for WorldRules {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -344,6 +423,8 @@ impl Default for WorldRules {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
+                fission: None,
             },
             clock_offset_ticks: 0,
             seasons: None,
@@ -351,6 +432,132 @@ impl Default for WorldRules {
     }
 }
 impl WorldRules {
+    /// Pass 11 village policies of world `seed` without fission: v16 with
+    /// exposure v2 (hardiness, hunger and per-stage damage) and rain that
+    /// soaks the woodpile. The worldgen side (`WorldGenConfig::game_v17`, wild
+    /// regions included) is shared with `game_v17`.
+    pub const fn game_v17_nofission(seed: u64) -> Self {
+        Self::game_v17_nofission_with(&crate::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v17_nofission`] for given hidden parameters.
+    pub const fn game_v17_nofission_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v16_with(variety);
+        rules.society.exposure = Some(ExposureRule {
+            // Part 3 round 2 (start values [8, 6, 8], hunger weight 0.5; round
+            // 1 [5, 6, 5], weight 1): children 9, adults 5, elders 6 an hour,
+            // scaled by hardiness and by hunger with weight 0.5.
+            damage_per_cold_hour: [9.0, 5.0, 6.0],
+            heal_block_hours: 2,
+            hunger_weight: 0.5,
+            use_hardiness: true,
+        });
+        if let Some(mut firewood) = rules.society.firewood {
+            firewood.rain_soak_permille = 300;
+            firewood.regional_wood = true;
+            rules.society.firewood = Some(firewood);
+        }
+        rules
+    }
+
+    /// Pass 11 village policies of world `seed`: `game_v17_nofission` plus
+    /// village fission (`FissionRule`).
+    pub const fn game_v17(seed: u64) -> Self {
+        Self::game_v17_with(&crate::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v17`] for given hidden parameters.
+    pub const fn game_v17_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v17_nofission_with(variety);
+        rules.society.fission = Some(FissionRule {
+            // Part 3 round 1 (start values 28 and 0.95).
+            min_members: 32,
+            crowding: 1.0,
+            group_share: 0.35,
+            group_min: 6,
+            group_max: 14,
+            min_adults: 4,
+            // Part 3 round 3 (start value 28).
+            cooldown_days: 42,
+            min_age_days: 14,
+            site_clearance: 16,
+            stock_share: true,
+            max_settlements: 4,
+            settle_timeout_days: 2,
+            remnant_members: 2,
+        });
+        rules
+    }
+
+    /// Pass 10 village policies without world variety: v15 plus exposure (a
+    /// cold night wounds, by life stage, and blocks healing for a while; health
+    /// can reach zero) and, from Part 3 round 2, a birth gate with utilization
+    /// 0.78. v15 stays frozen.
+    pub const fn game_v16_neutral() -> Self {
+        let mut rules = Self::game_v15();
+        rules.society.exposure = Some(ExposureRule {
+            // Part 3 round 1 (start values [9, 6, 9] / 2): children 10, adults
+            // 4, elders 5 an hour, healing blocked for two hours after the cold.
+            damage_per_cold_hour: [10.0, 4.0, 5.0],
+            heal_block_hours: 2,
+            // Pass 11 fields at the values that reproduce Pass 10.
+            hunger_weight: 0.0,
+            use_hardiness: false,
+        });
+        // Part 3 round 2: a tighter birth gate (utilization 0.81 -> 0.78, both v16
+        // rulesets) so the poorest drawn worlds do not starve in winter.
+        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
+            rules.society.birth
+        {
+            sustain.utilization = 0.78;
+            rules.society.birth =
+                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
+        }
+        rules
+    }
+
+    /// Pass 10 village policies of world `seed`: v16_neutral with the
+    /// climate and the food regrowth of its hidden parameters
+    /// (`WorldVariety::draw`). The worldgen side is `WorldGenConfig::game_v16`.
+    pub const fn game_v16(seed: u64) -> Self {
+        Self::game_v16_with(&crate::variety::WorldVariety::draw(seed))
+    }
+
+    /// [`Self::game_v16`] for given hidden parameters; `WorldVariety::NEUTRAL`
+    /// gives `game_v16_neutral()` except `capacity_weighted` (which has no
+    /// effect where every bush holds 4, so the worlds are digest-identical).
+    pub const fn game_v16_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v16_neutral();
+        if let Some(mut firewood) = rules.society.firewood {
+            firewood.winter_severity_permille = Some(variety.winter_severity_permille());
+            rules.society.firewood = Some(firewood);
+        }
+        if let Some(mut seasons) = rules.seasons {
+            seasons.regen_permille = variety.scale_regen(seasons.regen_permille);
+            rules.seasons = Some(seasons);
+        }
+        // Part 3 round 1: the supply estimate behind the birth gate and the
+        // winter-prep store target weighs bushes by their capacity (no effect
+        // where every bush holds 4, i.e. the neutral world).
+        if let BirthRule::Provisioned { sustain: Some(mut sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst } =
+            rules.society.birth
+        {
+            sustain.capacity_weighted = true;
+            rules.society.birth =
+                BirthRule::Provisioned { sustain: Some(sustain), cooldown_ticks, food_cost, max_mean_hunger, max_mean_thirst };
+        }
+        rules
+    }
+
+    /// Pass 9 village policies: v14 with keyed random draws, lineage keys and
+    /// decisions in AgentId order. Same balance and mechanics; only which random
+    /// number an event receives changes. v14 stays frozen.
+    pub const fn game_v15() -> Self {
+        let mut rules = Self::game_v14();
+        rules.agent.keyed_draws = true;
+        rules
+    }
+
     /// Pass 8 village policies: v13 with winters that vary night by night and
     /// day by day, and windfall that lands on the snow. v13 stays frozen.
     pub const fn game_v14() -> Self {
@@ -478,6 +685,9 @@ impl WorldRules {
             winter_night_burn_step: 0,
             winter_fall_spread: 0,
             windfall_over_snow: false,
+            // Pass 11 field at the value that reproduces Pass 10 in v11–v16.
+            rain_soak_permille: 0,
+            regional_wood: false,
         });
         rules.agent.preempt_gathering = true;
         rules
@@ -497,6 +707,7 @@ impl WorldRules {
                 utilization: 0.81,
                 reserve_days: 0.5,
                 forage_radius: 16,
+                capacity_weighted: false,
             }),
         };
         rules.agent.forage = Some(ForageRule {
@@ -554,6 +765,7 @@ impl WorldRules {
                 utilization: 0.85,
                 reserve_days: 0.5,
                 forage_radius: 16,
+                capacity_weighted: false,
             }),
         };
         if let Some(mut planning) = rules.society.shelter_planning {
@@ -582,6 +794,7 @@ impl WorldRules {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -609,6 +822,8 @@ impl WorldRules {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
+                fission: None,
             },
             clock_offset_ticks: 480,
             seasons: None,
@@ -794,6 +1009,74 @@ mod tests {
     }
 
     #[test]
+    fn game_v15_is_v14_plus_keyed_draws() {
+        let mut v15 = WorldRules::game_v15();
+        assert!(v15.agent.keyed_draws);
+        v15.agent.keyed_draws = false;
+        assert_eq!(v15, WorldRules::game_v14());
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14()] {
+            assert!(!rules.agent.keyed_draws);
+        }
+    }
+
+    #[test]
+    fn game_v16_neutral_is_v15_plus_exposure() {
+        let mut v16 = WorldRules::game_v16_neutral();
+        let exposure = v16.society.exposure.expect("v16_neutral exposure");
+        assert_eq!(exposure.damage_per_cold_hour, [10.0, 4.0, 5.0]);
+        assert_eq!(exposure.heal_block_hours, 2);
+        v16.society.exposure = None;
+        let BirthRule::Provisioned { sustain: Some(ref mut sustain), .. } = v16.society.birth else {
+            panic!("v16_neutral keeps provisioned sustain births");
+        };
+        assert_eq!(sustain.utilization, 0.78);
+        sustain.utilization = 0.81;
+        assert_eq!(v16, WorldRules::game_v15());
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
+            WorldRules::game_v15()] {
+            assert_eq!(rules.society.exposure, None);
+        }
+    }
+
+    #[test]
+    fn pass11_fields_are_neutral_before_v17() {
+        for rules in [WorldRules::default(), WorldRules::game_v8(), WorldRules::game_v9(), WorldRules::game_v10(),
+            WorldRules::game_v11(), WorldRules::game_v12(), WorldRules::game_v13(), WorldRules::game_v14(),
+            WorldRules::game_v15(), WorldRules::game_v16_neutral(), WorldRules::game_v16(0), WorldRules::game_v16(7)] {
+            assert_eq!(rules.society.fission, None);
+            if let Some(firewood) = rules.society.firewood {
+                assert_eq!(firewood.rain_soak_permille, 0);
+                assert!(!firewood.regional_wood);
+            }
+            if let Some(exposure) = rules.society.exposure {
+                assert_eq!(exposure.hunger_weight, 0.0);
+                assert!(!exposure.use_hardiness);
+            }
+        }
+    }
+
+    #[test]
+    fn game_v17_is_v16_plus_pass11_fields() {
+        for seed in [0, 7, 1234] {
+            let mut v17 = WorldRules::game_v17(seed);
+            assert!(v17.society.fission.is_some());
+            v17.society.fission = None;
+            assert_eq!(v17, WorldRules::game_v17_nofission(seed));
+            let exposure = v17.society.exposure.expect("v17 exposure");
+            assert!(exposure.use_hardiness && exposure.hunger_weight > 0.0);
+            v17.society.exposure = WorldRules::game_v16(seed).society.exposure;
+            if let Some(firewood) = v17.society.firewood.as_mut() {
+                assert!(firewood.rain_soak_permille > 0 && firewood.regional_wood);
+                firewood.rain_soak_permille = 0;
+                firewood.regional_wood = false;
+            }
+            assert_eq!(v17, WorldRules::game_v16(seed));
+        }
+    }
+
+    #[test]
     fn pass6_firewood_fields_reproduce_pass5_in_v11() {
         let rule = WorldRules::game_v11().society.firewood.expect("v11 firewood");
         assert_eq!(rule.winter_prep_days, None);
@@ -822,6 +1105,7 @@ mod tests {
                 evening_gather: None,
                 forage: None,
                 preempt_gathering: false,
+                keyed_draws: false,
             }
         );
         assert_eq!(
@@ -836,6 +1120,8 @@ mod tests {
                 aging: None,
                 meals: None,
                 firewood: None,
+                exposure: None,
+                fission: None,
             }
         );
         assert_eq!(r.clock_offset_ticks, 0);

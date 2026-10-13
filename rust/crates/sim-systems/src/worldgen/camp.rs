@@ -141,11 +141,28 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 ),
             )
             .expect("newly spawned worldgen resident must exist");
+        // Pass 9: under keyed draws a founder's lineage key is its spawn index,
+        // and its age and lifespan are keyed on it (born before tick 0: the
+        // replicate in force at tick 0).
+        let lineage = engine.resources.rules.agent.keyed_draws.then(|| sim_core::components::Lineage::founder(cfg.seed, i));
+        if let Some(lineage) = lineage {
+            let _ = engine.world.insert_one(entity, lineage);
+            // Pass 11: under exposure v2 every founder carries its hardiness,
+            // keyed on its lineage (replicate 0: an identity trait).
+            if engine.resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
+                let _ = engine.world.insert_one(entity, sim_core::components::Hardiness::draw(cfg.seed, lineage.key));
+            }
+        }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {
             let id = engine.world.get::<&sim_core::components::Agent>(entity).map(|a| a.id);
             if let Ok(id) = id {
-                let life = crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule);
+                let life = match lineage {
+                    Some(lineage) => crate::runtime::agent::aging::keyed_founder_life(
+                        cfg.seed, lineage.key, engine.resources.noise_replicate_for(0), &rule,
+                    ),
+                    None => crate::runtime::agent::aging::founder_life(cfg.seed, id, &rule),
+                };
                 let _ = engine.world.insert_one(entity, life);
             }
         }
@@ -255,11 +272,154 @@ pub(super) fn deadwood(cfg: &WorldGenConfig, r: &mut SimResources) {
             }
         }
     }
+    // Pass 10: counted for measurement only (fewer than requested when the
+    // radius band runs out of tiles two apart).
+    r.worldgen_report.deadwood_spots_requested = cfg.deadwood_spots;
+    r.worldgen_report.deadwood_spots_placed = chosen.len() as u32;
     for p in chosen {
         r.wood_tiles.insert(p, cfg.deadwood_capacity);
         r.wood_source_max.insert(p, cfg.deadwood_capacity);
     }
 }
+/// Innermost Chebyshev distance of a wild-region centre from the camp hearth (Pass 11).
+pub const REGION_MIN_DISTANCE: u32 = 22;
+/// Outermost Chebyshev distance of a wild-region centre from the camp hearth.
+pub const REGION_MAX_DISTANCE: u32 = 28;
+/// Smallest Chebyshev distance between two wild-region centres.
+pub const REGION_SEPARATION: u32 = 20;
+/// Innermost ring of a region's bushes and deadwood around its centre.
+pub const REGION_RING_MIN: u32 = 2;
+/// Outermost ring of a region's bushes and deadwood around its centre.
+pub const REGION_RING_MAX: u32 = 6;
+
+/// Fisher–Yates shuffle of `tiles` (already in (y, x) order) keyed on
+/// `(seed, stream, slot = region)`: swap index i uses the draw at tick i.
+fn keyed_shuffle(tiles: &mut [Tile], seed: u64, stream: u64, region: u32) {
+    for i in (1..tiles.len()).rev() {
+        let j = sim_core::rng::keyed_below(seed, stream, 0, i as u64, region, 0, i as u64 + 1) as usize;
+        tiles.swap(i, j);
+    }
+}
+
+/// Pass 11 (`game_v17`): place `cfg.wild_regions` wild regions after the camp,
+/// its berries and its deadwood (which stay exactly v16's).
+///
+/// Region r (in order): its centre is drawn uniformly by
+/// `keyed_below(seed, STREAM_REGION, 0, 0, r, 0, n)` among the walkable,
+/// non-water tiles at Chebyshev distance 22–28 from the camp hearth and at
+/// least 20 from every earlier centre, listed in (y, x) order; with no
+/// candidate the region is skipped (counted). Then `region_bushes` bushes of
+/// `berry_capacity` and `region_deadwood` deadwood spots of
+/// `deadwood_capacity` at Chebyshev 2–6 from the centre, chosen with the
+/// candidate filters of the camp's berries (Forest with a Plain neighbour,
+/// no building, water or food source) and deadwood (Forest, then Plain; no
+/// water, building or food; two tiles from every deadwood spot), each list
+/// shuffled by its own keyed stream (`STREAM_REGION_BUSH` /
+/// `STREAM_REGION_WOOD`, slot r); both lie farther from the camp hearth than
+/// the camp's forage and wood radii (Part 3). Shortfalls are counted, never asserted;
+/// terrain is never edited. Every draw uses replicate 0.
+pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
+    use sim_core::rng::{keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_WOOD};
+    let Some(hearth) = r
+        .building_kinds
+        .iter()
+        .find(|(_, kind)| **kind == BuildingKind::Hearth)
+        .map(|(tile, _)| *tile)
+    else {
+        return;
+    };
+    for spot in r.wood_source_max.keys().copied().collect::<Vec<_>>() {
+        r.wood_spot_area.insert(spot, 0);
+    }
+    let water: Vec<Tile> = r.water_tiles.keys().copied().collect();
+    // Part 3: region bushes and deadwood lie beyond the camp's forage and wood
+    // radii, so the original village's economy is v16's (a region bush at 16
+    // or deadwood at 16-18 tiles would be the camp's too).
+    let camp_reach = r
+        .rules
+        .agent
+        .forage
+        .map_or(0, |f| f.forage_radius)
+        .max(r.rules.society.firewood.map_or(0, |f| f.wood_radius));
+    let beyond_camp = |p: Tile| distance(p, hearth) > camp_reach;
+    r.worldgen_report.regions_requested = cfg.wild_regions;
+    let mut centres: Vec<Tile> = Vec::new();
+    for region in 0..cfg.wild_regions {
+        let candidates: Vec<Tile> = tiles(r)
+            .filter(|&p| {
+                (REGION_MIN_DISTANCE..=REGION_MAX_DISTANCE).contains(&distance(p, hearth))
+                    && walkable(r, p)
+                    && !r.water_tiles.contains_key(&p)
+                    && centres.iter().all(|&c| distance(p, c) >= REGION_SEPARATION)
+            })
+            .collect();
+        if candidates.is_empty() {
+            continue;
+        }
+        let centre = candidates[keyed_below(cfg.seed, STREAM_REGION, 0, 0, region, 0, candidates.len() as u64) as usize];
+        centres.push(centre);
+        let ring = |p: Tile| (REGION_RING_MIN..=REGION_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p);
+        // Bushes: the camp berries' candidate filter inside the ring.
+        let mut bushes: Vec<Tile> = tiles(r)
+            .filter(|&p| {
+                ring(p)
+                    && terrain(r, p) == TerrainType::Forest
+                    && !r.building_kinds.contains_key(&p)
+                    && !r.water_tiles.contains_key(&p)
+                    && !r.food_source_max.contains_key(&p)
+                    && r.tile_grid.neighbors_4(p.0, p.1).iter().any(|&q| terrain(r, q) == TerrainType::Plain)
+            })
+            .collect();
+        keyed_shuffle(&mut bushes, cfg.seed, STREAM_REGION_BUSH, region);
+        bushes.truncate(cfg.region_bushes as usize);
+        bushes.sort_by_key(|&(x, y)| (y, x));
+        for &(x, y) in &bushes {
+            r.set_food_tile(x, y, cfg.berry_capacity);
+            r.set_food_source_max(x, y, cfg.berry_capacity);
+        }
+        // Deadwood: the camp deadwood's candidate filter inside the ring.
+        let mut chosen: Vec<Tile> = Vec::new();
+        for kind in [TerrainType::Forest, TerrainType::Plain] {
+            let mut candidates: Vec<Tile> = tiles(r)
+                .filter(|&p| {
+                    ring(p)
+                        && terrain(r, p) == kind
+                        && !r.water_tiles.contains_key(&p)
+                        && !r.building_kinds.contains_key(&p)
+                        && !r.food_source_max.contains_key(&p)
+                        && !r.food_tiles.contains_key(&p)
+                })
+                .collect();
+            keyed_shuffle(&mut candidates, cfg.seed, STREAM_REGION_WOOD, region + if kind == TerrainType::Plain { 1 << 16 } else { 0 });
+            for p in candidates {
+                if chosen.len() >= cfg.region_deadwood as usize {
+                    break;
+                }
+                if chosen.iter().all(|&q| distance(p, q) >= 2) && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2) {
+                    chosen.push(p);
+                }
+            }
+        }
+        for &p in &chosen {
+            r.wood_tiles.insert(p, cfg.deadwood_capacity);
+            r.wood_source_max.insert(p, cfg.deadwood_capacity);
+            r.wood_spot_area.insert(p, region as u8 + 1);
+        }
+        r.worldgen_report.regions_placed += 1;
+        r.worldgen_report.region_bushes_requested += cfg.region_bushes;
+        r.worldgen_report.region_bushes_placed += bushes.len() as u32;
+        r.worldgen_report.region_deadwood_requested += cfg.region_deadwood;
+        r.worldgen_report.region_deadwood_placed += chosen.len() as u32;
+        let water_distance = water.iter().map(|&q| distance(centre, q)).min().unwrap_or(u32::MAX);
+        r.wild_regions.push(sim_engine::WildRegion {
+            centre,
+            bushes: bushes.len() as u32,
+            deadwood: chosen.len() as u32,
+            water_distance,
+        });
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

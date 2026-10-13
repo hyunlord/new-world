@@ -215,11 +215,16 @@ impl SettlementSystem {
             .iter()
             .map(|(id, pos)| (*id, *pos))
             .collect();
-        let new_buildings: BuildingPosList = buildings
+        let mut new_buildings: BuildingPosList = buildings
             .iter()
             .filter(|(bid, _)| !self.seen_building_ids.contains(bid))
             .copied()
             .collect();
+        // Pass 9: under keyed draws new buildings are routed in BuildingId order
+        // (HashMap order otherwise; history records only).
+        if resources.rules.agent.keyed_draws {
+            new_buildings.sort_by_key(|(bid, _)| *bid);
+        }
         self.seen_building_ids = resources.building_registry.keys().copied().collect();
         (buildings, new_buildings)
     }
@@ -259,6 +264,15 @@ impl SettlementSystem {
         let live_building_ids: HashSet<BuildingId> =
             buildings.iter().map(|(id, _)| *id).collect();
         let cap = SETTLEMENT_MAX_POP as usize;
+        // Pass 11 (`game_v17`, under `FissionRule`): membership is sticky — the
+        // proximity sync admits only agents that belong to no settlement, so a
+        // member foraging near another village's hearth stays home (Part 0
+        // audit g8). Without the rule the set is empty and nothing changes.
+        let settled: HashSet<AgentId> = if resources.rules.society.fission.is_some() {
+            resources.settlements.values().flat_map(|s| s.member_agents.iter().copied()).collect()
+        } else {
+            HashSet::new()
+        };
         for (id, settlement) in resources.settlements.iter_mut() {
             let formation_tile = match self.formation_tiles.get(id).copied() {
                 Some(t) => t,
@@ -273,7 +287,10 @@ impl SettlementSystem {
             // ADD in-radius live agents — deterministic (sorted) + cap-respecting.
             let mut in_radius: Vec<AgentId> = agent_positions
                 .iter()
-                .filter(|(_, pos)| chebyshev(formation_tile, **pos) <= SETTLEMENT_PROXIMITY_RADIUS)
+                .filter(|(aid, pos)| {
+                    chebyshev(formation_tile, **pos) <= SETTLEMENT_PROXIMITY_RADIUS
+                        && (!settled.contains(aid) || settlement.member_agents.contains(aid))
+                })
                 .map(|(aid, _)| *aid)
                 .collect();
             in_radius.sort_unstable();
@@ -361,6 +378,8 @@ impl SettlementSystem {
                     if sid != keep {
                         if let Some(settlement) = resources.settlements.get_mut(&sid) {
                             settlement.remove_member_agent(aid);
+                            // Pass 11 measurement (display only, every version).
+                            resources.tallies.exclusivity_moves += 1;
                         }
                     }
                 }
@@ -384,8 +403,15 @@ impl SettlementSystem {
         width: u32,
         tick: u64,
     ) {
-        let mut existing_anchors: Vec<(u32, u32)> =
-            self.formation_tiles.values().copied().collect();
+        // Pass 11: only anchors of settlements that still exist block a
+        // candidate (`FissionSystem` dissolves settlements outside this
+        // system; before Pass 11 both maps always hold the same ids).
+        let mut existing_anchors: Vec<(u32, u32)> = self
+            .formation_tiles
+            .iter()
+            .filter(|(sid, _)| resources.settlements.contains_key(sid))
+            .map(|(_, tile)| *tile)
+            .collect();
         let mut candidate_tiles: Vec<(u32, u32)> = agent_positions.values().copied().collect();
         candidate_tiles.sort();
         candidate_tiles.dedup();
@@ -408,6 +434,11 @@ impl SettlementSystem {
             candidate_tiles = hearths;
         }
         for candidate in candidate_tiles {
+            // Pass 11: a retired hearth never anchors a settlement again
+            // (empty outside `game_v17`).
+            if resources.retired_hearths.contains(&candidate) {
+                continue;
+            }
             // Skip candidates inside an existing settlement's radius.
             if existing_anchors
                 .iter()
@@ -622,6 +653,7 @@ impl SettlementSystem {
         event_id: EventId,
         position: (u32, u32),
     ) {
+        let keyed = resources.rules.agent.keyed_draws;
         let mut best: Option<(SettlementId, u32)> = None;
         for (sid, anchor) in &self.formation_tiles {
             let d = chebyshev(*anchor, position);
@@ -631,6 +663,9 @@ impl SettlementSystem {
             match best {
                 None => best = Some((*sid, d)),
                 Some((_, bd)) if d < bd => best = Some((*sid, d)),
+                // Pass 9: under keyed draws an exact tie goes to the lower
+                // settlement id instead of the first in HashMap order.
+                Some((bs, bd)) if keyed && d == bd && *sid < bs => best = Some((*sid, d)),
                 _ => {}
             }
         }
@@ -767,6 +802,25 @@ impl SettlementSystem {
                 None => Vec::new(),
             };
 
+            // Pass 9: under keyed draws the newborn's lineage key comes from the
+            // first parent's key and birth count (never from the id counter);
+            // the parent's count advances. Without a first parent carrying a
+            // lineage (not expected in a keyed world) the key falls back to the
+            // settlement and tick of the birth.
+            let lineage = resources.rules.agent.keyed_draws.then(|| {
+                let parent = parent_ids.first().and_then(|first| {
+                    world.query_mut::<(&Agent, &mut sim_core::components::Lineage)>()
+                        .into_iter()
+                        .find(|(_, (agent, _))| agent.id == *first)
+                        .map(|(_, (_, lineage))| lineage.child(resources.world_seed))
+                });
+                parent.unwrap_or(sim_core::components::Lineage {
+                    key: sim_core::rng::keyed_u64(
+                        resources.world_seed, sim_core::rng::STREAM_NEWBORN, u64::from(sid), tick, u32::MAX, 0,
+                    ),
+                    births: 0,
+                })
+            });
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -805,13 +859,26 @@ impl SettlementSystem {
                 ),
             );
 
+            if let Some(lineage) = lineage {
+                let _ = world.insert_one(entity, lineage);
+                // Pass 11: a newborn's hardiness, keyed on its lineage
+                // (replicate 0: an identity trait, not noise).
+                if resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
+                    let _ = world.insert_one(entity, sim_core::components::Hardiness::draw(resources.world_seed, lineage.key));
+                }
+            }
             if resources.rules.society.life_stage.is_some() {
                 let _ = world.insert_one(entity, sim_core::components::Child { born_tick: tick });
             }
             if let Some(rule) = resources.rules.society.aging {
-                let life = crate::runtime::agent::aging::newborn_life(
-                    resources.world_seed, new_agent_id, tick, &rule,
-                );
+                let life = match lineage {
+                    Some(lineage) => crate::runtime::agent::aging::keyed_newborn_life(
+                        resources.world_seed, lineage.key, tick, resources.noise_replicate_for(tick), &rule,
+                    ),
+                    None => crate::runtime::agent::aging::newborn_life(
+                        resources.world_seed, new_agent_id, tick, &rule,
+                    ),
+                };
                 let _ = world.insert_one(entity, life);
             }
 
@@ -912,6 +979,8 @@ impl SettlementSystem {
                 },
             );
             resources.settlements.remove(&sid);
+            // Pass 11 measurement (display only).
+            resources.dissolutions.push((sid, tick));
             resources.building_owner.retain(|_, owner| *owner != sid);
             // FULL local-state clear so the same area can re-form.
             // Without clearing `formation_tiles` the area would be
