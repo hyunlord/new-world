@@ -120,3 +120,48 @@ bash tools/art_pipeline/run_bounded.sh 1400 /Users/rexxa/Downloads/Godot.app/Con
 120일 probe의 사건 census는 매 tick 검사했고 샘플은 60 tick마다 기록했다. headless Godot의 별도 달력 관측은 02:00/07:15/15:00 일별 조회이며 시뮬레이션을 변경하지 않는다. 성능 합격 판정용 실행이 아니다.
 
 Part 0 기록 시점에 독립 headless 달력 교차검증은 실행 중이며, 위 사건·추위 값은 종료 코드0인 release probe의 관측이다. headless `headless_<seed>.json`이 완성된 뒤 별도로 결과를 추가한다. 실행 중인 headless를 완료 또는 PASS로 계산하지 않았다.
+
+## 완료된 headless 기본 시드 교차검증
+
+`measure-live.log`: 종료 코드0, `P7 MEASURE PASS seed=20261010 rows=361`. 기본 seed 20261010, offset480, tpd1440 직접 확인. probe와 겹치는 모든 02:00/15:00 행에서 cold 수 불일치0. 모든 07:15 행은 cold0: 아침 효과는 cold 플래그 대신 누적 노출/별도 presentation 관측으로 판단해야 한다.
+
+| 가을 화면일 15:00 | Consuming GatherWood | Seeking + carried wood >0 |
+|---|---:|---:|
+| 15 | 0 | 3 |
+| 16 | 0 | 2 |
+| 17 | 0 | 1 |
+| 18 | 0 | 0 |
+| 19 | 0 | 0 |
+| 20 | 0 | 0 |
+| 21 | 0 | 0 |
+| 43 | 0 | 9 |
+| 44 | 0 | 4 |
+| 45 | 0 | 0 |
+| 46 | 0 | 0 |
+| 47 | 0 | 1 |
+| 48 | 0 | 0 |
+| 49 | 0 | 0 |
+| 71 | 0 | 5 |
+| 72 | 0 | 3 |
+| 73 | 0 | 0 |
+| 74 | 0 | 0 |
+| 75 | 0 | 0 |
+| 76 | 0 | 0 |
+| 77 | 0 | 0 |
+
+d15 15:00 목재 운반3명, d16 15:00 운반2명으로 가을 운반 캡처를 선택한다. probe `wood_gatherers_now`는 Seeking 또는 Consuming GatherWood; headless `wood_gatherer_ids`는 Consuming만 포함한다. 이 정의 차이는 수집 지표 차이이며 시뮬레이션 불일치가 아니다. 원자료 `measurements/headless_20261010.json` (361행).
+
+## 완료된 headless 사회 시나리오 교차검증
+
+`measure-society.log`: 종료 코드0, `P7 MEASURE PASS seed=20261013 rows=361`. probe와 겹치는 모든 02:00/15:00 행에서 cold 수 및 마을 수 불일치0. 원자료 `measurements/headless_20261013.json`.
+
+| 화면시각 | tick | 마을 ids | 화덕 점화(같은 순서) | cold 주민 수 |
+|---|---:|---|---|---:|
+| d29 15:00 | 40740 | [1, 2] | [0, 0] | 0 |
+| d51 02:00 | 71640 | [1, 2] | [1, 1] | 0 |
+| d84 02:00 | 119160 | [1, 2] | [1, 0] | 15 |
+| d85 02:00 | 120600 | [1, 2] | [0, 0] | 50 |
+| d85 15:00 | 121380 | [1, 2, 3] | [0, 0, 0] | 0 |
+| d121 02:00 | 172440 | [1, 2, 3] | [1, 1, 1] | 0 |
+
+두 headless 실행 모두 완료했다. 앞의 “실행 중” 기록은 Part 0 당시 상태를 보존한 것이며, 이 후속 관측으로 완료 상태를 추가한다. 모든 원자료는 자연 시나리오이며 god intervention은 없었다.

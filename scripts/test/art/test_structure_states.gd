@@ -27,10 +27,10 @@ func _initialize() -> void:
 	assert(Structures.construction_stage(50,100) == 2)
 	assert(Structures.construction_stage(75,100) == 3)
 	assert(Structures.construction_stage(200,100) == 3)
-	assert(Structures.hearth_frame(0,0) == "S1_06")
-	assert(Structures.hearth_frame(4.99,0.25) == "S1_07")
-	assert(Structures.hearth_frame(5,0) == "S1_02")
-	assert(Structures.hearth_frame(23.99,0.375) == "S1_05")
+	assert(Structures.hearth_frame(0,0) == "S1_16")
+	assert(Structures.hearth_frame(4.99,0.25) == "S1_16")
+	assert(Structures.hearth_frame(5,0) == "S1_16")
+	assert(Structures.hearth_frame(23.99,0.375) == "S1_16")
 	assert(Structures.storage_frame(0) == "S1_08")
 	assert(Structures.storage_frame(39) == "S1_09")
 	assert(Structures.storage_frame(40) == "S1_10")
@@ -39,7 +39,8 @@ func _initialize() -> void:
 	assert(is_equal_approx(Structures.cairn_alpha(87,100),0.52))
 	assert(Structures.cairn_alpha(100,100) == 0.0)
 	var snapshot: Dictionary = {"settlement_ids": PackedInt32Array([9, 2]), "ids": PackedInt64Array([1, 8]), "formation_xs": PackedInt32Array([0, 2]), "formation_ys": PackedInt32Array([0, 0]), "wood_stocks": PackedInt32Array([28, 287]), "fire_lit": PackedByteArray([0, 1])}
-	assert(Wood.settlement(snapshot, Vector2i(1, 0))["settlement_id"] == 2)
+	assert(Wood.settlement(snapshot, Vector2i(1, 0)).is_empty())
+	assert(Wood.settlement(snapshot, Vector2i(2, 0))["settlement_id"] == 2)
 	assert(Wood.settlement(snapshot, Vector2i.ZERO)["wood_stock"] == 28)
 	assert(Wood.settlement({}, Vector2i.ZERO).is_empty())
 	snapshot["wood_stocks"] = PackedInt32Array([28])
@@ -59,7 +60,7 @@ func _initialize() -> void:
 	assert(Wood.glow_alpha({"fire_lit": false}, 1.0, 0.0) == 0.0)
 	assert(Wood.glow_alpha({"fire_lit": true}, 0.0, 0.0) == 0.0)
 	assert(is_equal_approx(Wood.glow_alpha({"fire_lit": true}, 1.0, 0.0), 0.55))
-	assert(is_equal_approx(Wood.glow_alpha({}, 1.0, 0.0), 0.55))
+	assert(Wood.glow_alpha({}, 1.0, 0.0) == 0.0)
 	for pair: Array in [[0,0], [1,1], [28,1], [39,1], [40,2], [149,2], [150,3], [287,3], [311,3], [158,3]]:
 		assert(Wood.pile_stage(pair[0]) == pair[1])
 	for pair: Array in [[0,0], [1,1], [10,1], [11,2], [20,2], [21,3], [30,3], [100,3]]:

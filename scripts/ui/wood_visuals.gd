@@ -10,12 +10,9 @@ static func settlement(snapshot: Dictionary, tile: Vector2i) -> Dictionary:
 	var xs: PackedInt32Array = snapshot["formation_xs"]
 	var ys: PackedInt32Array = snapshot["formation_ys"]
 	var best: int = -1
-	var distance: int = 2147483647
 	for i: int in range(mini(ids.size(), mini(xs.size(), ys.size()))):
-		var current: int = maxi(absi(tile.x-xs[i]), absi(tile.y-ys[i]))
-		if current < distance or (current == distance and (best < 0 or ids[i] < ids[best])):
+		if tile == Vector2i(xs[i], ys[i]) and (best < 0 or ids[i] < ids[best]):
 			best = i
-			distance = current
 	if best < 0:
 		return {}
 	var result: Dictionary = {"settlement_id": ids[best]}
@@ -28,19 +25,19 @@ static func settlement(snapshot: Dictionary, tile: Vector2i) -> Dictionary:
 	return result
 
 static func cold_ash(state: Dictionary, hour: float, winter_severity: int) -> bool:
+	if not state.has("fire_lit"):
+		return true
 	return state.has("fire_lit") and not bool(state["fire_lit"]) and winter_severity >= 0 and (hour >= 18.0 or hour < 7.0)
 
 static func hearth_frame(state: Dictionary, hour: float, elapsed: float, winter_severity: int = -1) -> String:
 	if cold_ash(state, hour, winter_severity):
 		return "S1_16"
-	if not state.has("fire_lit"):
-		return "S1_%02d" % (6 + int(elapsed * 4.0) % 2) if hour < 5.0 else "S1_%02d" % (2 + int(elapsed * 8.0) % 4)
 	if bool(state["fire_lit"]):
 		return "S1_%02d" % (2 + int(elapsed * 8.0) % 4)
 	return "S1_01" if int(state.get("wood_stock", 0)) > 0 else "S1_16"
 
 static func glow_alpha(state: Dictionary, night_factor: float, elapsed: float) -> float:
-	return 0.0 if state.has("fire_lit") and not bool(state["fire_lit"]) else 0.55 * night_factor * (1.0 + 0.05 * sin(elapsed * PI))
+	return 0.0 if not bool(state.get("fire_lit", false)) else 0.55 * night_factor * (1.0 + 0.05 * sin(elapsed * PI))
 
 static func pile_stage(stock: int) -> int:
 	return 0 if stock <= 0 else (1 if stock < 40 else (2 if stock < 150 else 3))

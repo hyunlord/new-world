@@ -18,7 +18,7 @@ func _initialize() -> void:
 		check(not Wood.cold_ash(out, hour, 0), "no daytime cold ash")
 	check(not Wood.cold_ash(out, 2.0, -1), "no summer cold ash")
 	check(not Wood.cold_ash({"fire_lit": true}, 2.0, 2), "lit hearth no cold ash")
-	check(not Wood.cold_ash({}, 2.0, 2), "missing flag no invented cold")
+	check(Wood.cold_ash({}, 2.0, 2), "unmatched hearth stays cold rather than inventing a fire")
 	var booked: Dictionary = {"season": 0, "winter_severity": 1, "time_of_day": 2.0}
 	check(Wood.cold_ash(out, booked.time_of_day, booked.winter_severity), "spring calendar booked winter night keeps ash")
 	var renderer: Node2D = Renderer.new()

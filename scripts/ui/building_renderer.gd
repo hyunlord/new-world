@@ -318,7 +318,7 @@ func _animate_hearths() -> void:
 			var state: Dictionary = WOOD.settlement(settlements, tile)
 			ART.apply(sprite, _available(WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get("winter_severity", -1)))))
 			_update_cold_ash(sprite, WOOD.cold_ash(state, _hour(), int(_world_sim.get_time_snapshot().get("winter_severity", -1))))
-			sprite.set_meta("fire_lit", state.get("fire_lit", true))
+			sprite.set_meta("fire_lit", state.get("fire_lit", false))
 			sprite.set_meta("wood_stock", state.get("wood_stock", -1))
 			sprite.set_meta("settlement_id", state.get("settlement_id", -1))
 
