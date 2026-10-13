@@ -2488,3 +2488,42 @@ Tuning (the timing runs, with twins): game_v18 and game_v18_nofission equal roun
 ### Part 7 — final reproduction (`probe_final`, commit `1127455b`, 15:49–17:27 KST, Pass 11's flags)
 
 Against Pass 11's finals (`p11-7_final_*`), every run differs only in `schema_version` (11 → 12); all 28 determinism twins pass. Shared values: legacy 5,727; v8 13,990; v9 10,589 / 77,915; v10 10,781 / 78,498; v11 13,096 / 93,659; v12 13,096 / 93,671; v13 13,226 / 93,726; v14 13,228 / 93,727; v15 13,228 / 93,733; v16 13,868 / 94,339; v16_neutral 13,420 / 94,048; v17 16,226 / 97,206; v17_nofission 15,394 / 95,097; held-out v17 16,231 / 130,812; held-out v17_nofission 15,399 / 127,126 (10-day / 120-day). Code changed after Parts 5–6 (review round 1, `1127455b`); everything it affects was rerun: final tuning and held-out v18 runs, the pilot's v18 scenes, the forks and the macro run (`p12-7_final_*`); verdicts unchanged.
+
+## Pass 13 — a split the village builds up to (pressure against a hidden threshold), a measure of how much of a world's future is its path (`game_v19_nofission`, `game_v19`)
+
+All probe runs use Pass 12's final flags (eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries in `/Users/rexxa/work/p13bin/`. Scratch exploration of this pass (4.4) is disclosed where it happened.
+
+### Part 0 — baseline reproduction (`probe_p0` = Pass 12's `probe_final`, byte-identical; 20:53–21:19 KST)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p13-0_v18_10day` / `_120day` | `p12-7_timing_v18_*` | 17,502 / 132,718 | 0 / 0 |
+| `p13-0_v18n_10day` / `_120day` | `p12-7_timing_v18n_*` | 16,670 / 104,565 | 0 / 0 |
+| `p13-0_v17_10day` / `_120day` | `p12-7_final_v17_*` | 17,502 / 107,146 | 0 / 0 |
+| `p13-0_v16_10day` / `_120day` | `p12-7_final_v16_*` | 15,144 / 103,923 | 0 / 0 |
+| `p13-0_v15_10day` / `_120day` | `p12-7_final_v15_*` | 14,504 / 103,317 | 0 / 0 |
+| `p13-0_legacy` | `p12-7_final_legacy` | 6,463 | 0 |
+
+Every determinism twin passes. Frozen pins `harness_revitalize_pass13_frozen.rs` (v18 and v18_nofission digests, seeds 0–3 at 1,440 and 40,320 ticks; literals of `game_v18(0)` and `V18_HAZARD`) pass on the base.
+
+### Part 0.4 — the replicate measure on old worlds (`paths_p13.py`; worlds 901000–901031 × R = 4, noise fork at tick 1, 120 days; `docs/revitalize/probe/p13-0_paths/`)
+
+Replicate 0 equals the unforked recording on worlds 901000 and 901001 (every array byte-identical). PS = path share (mean over days 60/90/118, 90 % bootstrap over worlds), PSD = path spread (sqrt(W) / S_j).
+
+| Variable | game_v16 PS [90 %] / PSD | game_v17 PS [90 %] / PSD | game_v18 PS [90 %] / PSD | game_v17 - game_v16 PS [90 %] | game_v18 - game_v16 PS [90 %] | game_v18 - game_v17 PS [90 %] |
+|---|---|---|---|---|---|---|
+| alive | 0.001 [0.001, 0.002] / 0.034 | 0.003 [0.001, 0.005] / 0.052 | 0.306 [0.212, 0.437] / 0.633 | 0.001 [0.000, 0.004] | 0.305 [0.211, 0.436] | 0.304 [0.208, 0.435] |
+| food_stock | 0.019 [0.014, 0.032] / 0.073 | 0.013 [0.009, 0.021] / 0.069 | 0.301 [0.210, 0.438] / 0.383 | -0.007 [-0.018, 0.000] | 0.281 [0.188, 0.415] | 0.288 [0.196, 0.421] |
+| wood_stock | 0.662 [0.592, 0.757] / 0.071 | 0.063 [0.050, 0.087] / 0.054 | 0.488 [0.377, 0.621] / 0.182 | -0.599 [-0.686, -0.535] | -0.174 [-0.335, -0.024] | 0.425 [0.309, 0.555] |
+| settlements_alive | — [—, —] / — | 0.007 [0.000, 0.021] / 0.090 | 0.474 [0.366, 0.606] / 0.764 | — [—, —] | — [—, —] | 0.467 [0.355, 0.598] |
+| deadwood_total | 0.033 [0.024, 0.053] / 0.096 | 0.005 [0.003, 0.008] / 0.047 | 0.007 [0.004, 0.013] / 0.057 | -0.028 [-0.046, -0.019] | -0.026 [-0.043, -0.017] | 0.002 [0.000, 0.005] |
+| food_on_bushes_total | 0.120 [0.089, 0.164] / 0.098 | 0.011 [0.008, 0.019] / 0.080 | 0.193 [0.116, 0.308] / 0.364 | -0.109 [-0.153, -0.077] | 0.074 [-0.020, 0.183] | 0.183 [0.103, 0.293] |
+| adults_working | 0.385 [0.288, 0.525] / 0.143 | 0.175 [0.135, 0.243] / 0.122 | 0.396 [0.296, 0.541] / 0.183 | -0.210 [-0.337, -0.111] | 0.012 [-0.091, 0.116] | 0.222 [0.132, 0.342] |
+
+UBS on replicate 0 (Pass 12's tool, reported only; mean of days 60/90/118, alive / food_stock / wood_stock): game_v16 0.394 / 0.261 / 0.082; game_v17 0.731 / 0.518 / 0.218; game_v18 0.995 / 0.597 / 0.269
+
+Reading: in v16 and v17 the population at day 60–118 is fixed by the world (PS(alive) 0.001 and 0.003 — v17's day-29 split is a function of the state), while v18's daily die makes 0.31 of the between-run variance of `alive` and 0.47 of `settlements_alive` path. UBS on the same replicate-0 worlds ranks v17 (0.73) far above v16 (0.39) for `alive` although its path share is 0.003: the threshold effect Pass 12 suspected. The J7b anchor: PS(alive) v18 = 0.306 [0.212, 0.437].
+
+### Part 0.5 — the open J5 cases (`docs/revitalize/probe/p13-0_j5/j5_diag.md`)
+
+Inputs: Pass 12's final held-out run and the tuning timing run (pooled child share 0.717, reproduced), and `--agents` recordings of seeds 24, 39, 66, 77. 193 of the 195 dead children were born inside the winter window (child stage 4 days; births 1.06 per seed-day in winter windows vs 1.14 overall); per 100 at the winter's start children die at 11.6, adults 0.35. The four settlement-winters over 0.35 are all harsh winters with the settlement's own fire out at every death (40/40): two young daughters (39: founded day 105 autumn, 8/14, 13 births in the window; 77: founded day 71 autumn, 11/28, 13 births) and two camps that entered the winter with stock 0 and 57 after an autumn split took their adults (66: 12/26; 24: 9/25, no newborn deaths). Without the newborn deaths the four ratios would be 0.071 / 0.27 / 0.21 / 0.36 and the pooled stage shares 0.03 / 0.83 / 0.13 (adult share above J5's 0.50). Burn need inside the window 310–490 against a target of 208 and 51–69 units of fall within 18 tiles.
