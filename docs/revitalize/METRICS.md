@@ -2644,3 +2644,7 @@ Placebo identity 224 / 224 (G0a), replicate 0 = unforked 224 / 224. Deaths effec
 ### Part 7 — final reproduction (`probe_final` = `probe_frozen`, code `9f0d38ca`; 00:58–02:03 KST, Pass 12's flags)
 
 Against Pass 12's finals (`p12-7_final_*`; for v18 its timing runs), every run differs only in `schema_version` (12 → 13); all determinism twins pass. Shared values: legacy 6,463; v8 15,266; v9 11,865 / 87,499; v10 12,057 / 88,082; v11 14,372 / 103,243; v12 14,372 / 103,255; v13 14,502 / 103,310; v14 14,504 / 103,311; v15 14,504 / 103,317; v16 15,144 / 103,923; v16_neutral 14,696 / 103,632; v17 17,502 / 107,146; v17_nofission 16,670 / 104,681; v18 17,502 / 132,718; v18_nofission 16,670 / 104,565 (10-day / 120-day). Both v19 scenes on tuning and held-out are round 3 and Part 4 (same binary). **J1: PASS.**
+
+### Part 7 — timing (J12; `probe_final`, tuning sets, back to back 02:03–02:26 KST)
+
+Before the start: no Godot, cargo, rustc or worldsim process of anyone (only idle MCP helper processes), load average 6.2; during the runs 4.1–6.0. Median ms per agent-tick (10-day / 120-day): game_v16 0.001247 / 0.001697; game_v19 0.001332 / 0.001763; game_v19_nofission 0.001276 / 0.001757; game_v16 again 0.001187 / 0.001708. Ratios against the mean of the two v16 sets: game_v19 **1.094 / 1.036**, game_v19_nofission 1.048 / 1.032 (against the preceding v16 alone: v19 1.068 / 1.039). The v19 timing runs equal round 3 on every value (0 differences). **J12: PASS.**
