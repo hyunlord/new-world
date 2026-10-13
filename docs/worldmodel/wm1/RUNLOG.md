@@ -118,3 +118,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 16:18:56 | | `m1tf_w13v16_n400_s1` started (`--max-seconds 30000`) |
 | 4.1 | 16:18:56 | 17:04 | first `m1tf_w13v16_n400_s1` hung after step 1,500 (no log since 16:50:53; NVRM out-of-memory errors 16:47:15–16 in the kernel log): killed, moved to `_aborted/m1tf_w13v16_n400_s1_hang_1650` (DECISIONS G4.3) |
 | 4.1 | 17:05:36 | | queue relaunched (`slot_w13_v2.sh B`, watchdog 30 min): `m1tf_w13v16_n400_s1` again, then n400_s2, v17_s0, n80_s0, n80_s1, v17_s1, n200_s0 |
+| pause | ≈ 18:44 | 19:54 | the session's turn ended (API unavailable / dropped connection); on resume the first SSH attempts timed out in the banner exchange while the DGX answered ping (transient), then connected. The training kept running (step 7,500 at 19:54). Deadline file moved by 4,200 s (new deadline 2026-10-15 00:53:14 KST) |
+| 4.1 | 17:05:36 | 20:41:37 | `m1tf_w13v16_n400_s1`: stop `max_steps` (9,000), best step 7,500 (val 0.0778), 12,909 s; WM-1.2 rule: best 2,850 (0.0951), stop at the cap |
+| 4.2 | 20:41:37 | 21:06:06 | its finals from `166eb737`: `final` 20:52:39, `_short` 21:03:50, `_legacy` 21:06:06, exit 0 |
+| 4.1 | 20:41:37 | | `m1tf_w13v16_n400_s2` started |
