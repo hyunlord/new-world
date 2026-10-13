@@ -2363,3 +2363,38 @@ Final gate (`gate_pass11.sh` on `e6dedd34`, the last commit that changes code or
 | J10 | PASS | byte identity, schema loads, fork tests |
 | J11 | reported | `p11-6_macro/macro.md` |
 | J12 | PASS (1.000–1.066) | `p11-7_timing_*_targets` |
+
+## Pass 12 — a split under pressure, daughters that can live, rain that hurts, a diversity measure for histories (`game_v18_nofission`, `game_v18`)
+
+All probe runs use Pass 11's final flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries frozen in `/Users/rexxa/work/p12bin/`.
+
+### Part 0 — baseline reproduction (`probe_p0`, byte-identical to Pass 11's `probe_final`; 11:27–11:52 KST)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p12-0_v17_10day` | `p11-7_final_v17_10day` | 16226 | 0 |
+| `p12-0_v17_120day` | `p11-7_final_v17_120day` | 97206 | 0 |
+| `p12-0_v17n_10day` | `p11-7_final_v17n_10day` | 15394 | 0 |
+| `p12-0_v17n_120day` | `p11-7_final_v17n_120day` | 95097 | 0 |
+| `p12-0_v16_10day` | `p11-7_final_v16_10day` | 13868 | 0 |
+| `p12-0_v16_120day` | `p11-7_final_v16_120day` | 94339 | 0 |
+| `p12-0_v15_10day` | `p11-7_final_v15_10day` | — | 0 |
+| `p12-0_v15_120day` | `p11-7_final_v15_120day` | — | 0 |
+| `p12-0_legacy` | `p11-7_final_legacy` | — | 0 |
+
+Every determinism twin passes. Frozen pins `harness_revitalize_pass12_frozen.rs` (v17 and v17_nofission digests seeds 0–3 at 1,440 and 40,320 ticks with births and fissions; literals of `WorldRules::game_v17(0)` and `RANGES`) pass on the base.
+
+### Part 0 — UBS on old data (5.2, `diversity_p12.py`, read-only; `docs/revitalize/probe/p12-0_ubs/`)
+
+Mean over days 60/90/118, all 112 episodes; R²_static / UBS (old dyn-η² on the test split for continuity).
+
+| Variable | p10 `game_v15` | p10 `game_v16` | p11 `game_v16` | p11 `game_v17_nofission` | p11 `game_v17` |
+|---|---|---|---|---|---|
+| food_stock | see `p10_pilot/ubs.md` | | 0.547 / 0.299 (0.298) | 0.639 / 0.267 (0.434) | 0.275 / 0.516 (0.694) |
+| wood_stock | | | 0.073 / 0.084 (0.069) | 0.081 / 0.081 (0.069) | 0.078 / 0.207 (0.276) |
+| alive | | | 0.907 / 0.309 (0.998) | 0.901 / 0.319 (0.998) | 0.371 / 0.881 (0.933) |
+| deadwood_total | | | 0.959 / 0.103 (0.097) | 0.994 / 0.053 (0.116) | 0.987 / 0.076 (0.124) |
+| food_on_bushes_total | | | 0.379 / 0.221 (0.442) | 0.967 / 0.163 (0.467) | 0.696 / 0.434 (0.576) |
+| adults_working | | | 0.431 / 0.176 (0.475) | 0.369 / 0.196 (0.493) | 0.308 / 0.244 (0.491) |
+
+p10 pilot UBS (mean 60/90/118): `game_v15` food 0.246, wood 0.088, alive 0.171; `game_v16` food 0.299, wood 0.088, alive 0.240 (bootstrap Δ v16 − v15: food [0.022, 0.112], alive [0.026, 0.143]). Synthetic checks (`test_diversity_p12.py`): static linear worlds UBS < 0.05; an independent random walk after day 10 UBS > 0.3; a static effect quadratic in a hidden parameter that appears only after day 10 gives UBS(alive) **0.970** — the linear ridge counts a nonlinear static effect as unexplained. `game_v17`'s alive UBS 0.881 must be read with that in mind: whether a v17 world splits is a threshold of its day-29 population (planner's reading), i.e. a nonlinear static effect, not history.
