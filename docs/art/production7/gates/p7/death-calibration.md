@@ -4,11 +4,13 @@
 
 1920×1080 PNG의 상단과 창 제목에 `SYNTHETIC CALIBRATION / NOT NATURAL SIMULATION EVIDENCE`를 표시한다. 실제 크기의 마커 5개, 원인별 색상 코드, 실제 상단 합계5, 실제 알림 최대4줄, 별도 진단용 전체 feed log5줄을 함께 보여준다. 전체 로그 목록은 `get_feed_log()`의 실제 결과를 Locale로 번역한 표시이다.
 
-출력은 `--out` 디렉터리의 `calibration_deaths_p7.png`와 `.json`이다. JSON에는 `natural=false`, `simulation_instantiated=false`, PNG SHA256, 실행 시 전달한 source SHA, 생산 스크립트 경로, 실제 `_draw()`가 기록한 마커, 실제 표시 알림·전체 로그·합계가 들어간다. 원인 순서·마커5·표시4·로그5·합계5·viewport 크기를 검사하여 실패 시 exit1로 종료한다. headless 실행은 거부하며 headless `--check-only`만 허용한다.
+출력은 `--out` 디렉터리의 `calibration_deaths_p7.png`와 `.json`이다. JSON에는 `natural=false`, `simulation_instantiated=false`, PNG SHA256, 실행 시 전달한 source SHA, 생산 스크립트 경로, 실제 `_draw()`가 기록한 마커, 실제 표시 알림·전체 로그·합계가 들어간다. 원인 순서·마커5·표시4·로그5·합계5·viewport 크기를 검사하여 실패 시 exit1로 종료한다. headless 캡처는 거부한다. `--validate-fixture`는 그림·캡처를 제외한 실제 노드 생성과 입력 연결만 headless로 검사한다.
 
 첫 파싱 검사에서 스크립트 상수의 `resource_path` 조회가 지원되지 않아 오류가 났다. Godot 종료 코드는 0이었지만 SCRIPT ERROR를 확인하여 실패로 판정했다 (`death-calibration-parse-attempt1.log`). metadata의 출처를 명시적 resource 경로로 바꾸고 재검사한다. 창 실행·화면 검증은 리더의 window lock 실행 후 별도로 기록한다.
 
 수정 후 재검사: exit0, SCRIPT ERROR 없음 (`death-calibration-parse.log`). `git diff --check` 통과.
+
+첫 창 실행은 `Locale.set_locale`가 실제 API가 아니어서 실패했다. 원본 실패 로그 `/Users/rexxa/work/art-production7-evidence/p7-death-calibration.log`를 보존한다. `scripts/core/locale.gd`의 실제 `set_language` API와 기존 HUD 호출을 확인하여 수정했다. 이후 headless `--validate-fixture`로 실제 production 노드들을 생성하고 renderer 입력5·알림4·로그5·합계5를 확인했다: exit0, `DEATH CALIBRATION FIXTURE PASS; drawing and capture not tested`, SCRIPT ERROR 없음 (`death-calibration-fixture.log`). 이는 두 번째 창 실행이나 시각 검증을 대신하지 않는다.
 
 리더 실행 명령(저장소 루트, `launchctl asuser` 배경 세션 내부의 lock):
 

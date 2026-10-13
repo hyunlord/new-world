@@ -10,6 +10,7 @@ const STEM := "calibration_deaths_p7"
 var _main: Node2D
 var _locale: Node
 var _out: String = "res://docs/art/production7/calibration"
+var _validate_fixture: bool = false
 
 class SnapshotWorld extends Node:
 	signal world_reset
@@ -32,11 +33,13 @@ func _run() -> void:
 	var arguments: PackedStringArray = OS.get_cmdline_user_args()
 	if arguments.size() == 2 and arguments[0] == "--out":
 		_out = arguments[1]
+	elif arguments == PackedStringArray(["--validate-fixture"]):
+		_validate_fixture = true
 	elif not arguments.is_empty():
 		push_error("Usage: -- --out /absolute/output/directory")
 		quit(2)
 		return
-	if DisplayServer.get_name() == "headless":
+	if DisplayServer.get_name() == "headless" and not _validate_fixture:
 		push_error("Death calibration requires a real window")
 		quit(2)
 		return
@@ -51,7 +54,7 @@ func _run() -> void:
 	root.size = SIZE
 	root.title = SCENARIO
 	_locale = root.get_node("Locale")
-	_locale.call("set_locale", "ko")
+	_locale.call("set_language", "ko")
 	_main = Node2D.new()
 	_main.name = "Main"
 	root.add_child(_main)
@@ -90,6 +93,12 @@ func _run() -> void:
 		_label("%d  %s" % [index, translated], Rect2(760, 618 + index * 58, 1080, 42), 24)
 	_label("실제 HUD 알림: 최대 4줄 · 마지막 줄에 추위 사망", Rect2(24, 786, 720, 34), 20)
 	_label("합성 화면은 자연 사망 발생률·A26 자연 캡처 합격의 증거가 아닙니다.", Rect2(760, 990, 1130, 40), 22)
+	if _validate_fixture:
+		var fixture_valid: bool = log.size() == 5 and news.call("get_visible_feed").size() == 4 and topbar.call("get_death_total") == 5 and viz.get("_xs").size() == 5
+		print("DEATH CALIBRATION FIXTURE %s; drawing and capture not tested" % ["PASS" if fixture_valid else "FAIL"])
+		_main.free()
+		quit(0 if fixture_valid else 1)
+		return
 	for frame: int in 3:
 		await process_frame
 	await RenderingServer.frame_post_draw

@@ -284,7 +284,7 @@ func _run() -> void:
 			await _measure_frame_times()
 		if _plan == "art" and stem == "a_d2_1930_F2":
 			await _capture_strip("a_evening", false)
-		if _plan == "art_long" and framing in ["F2N", "F2Z"]:
+		if _plan == "art_long" and framing in ["F2N", "F2Z", "DE"]:
 			await _capture_cold_cycle(stem)
 	if _plan == "art":
 		_main.queue_free()
