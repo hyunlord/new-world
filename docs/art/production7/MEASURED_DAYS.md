@@ -149,11 +149,11 @@ Part 0 기록 시점에 독립 headless 달력 교차검증은 실행 중이며,
 | 76 | 0 | 0 |
 | 77 | 0 | 0 |
 
-d15 15:00 목재 운반3명, d16 15:00 운반2명으로 가을 운반 캡처를 선택한다. probe `wood_gatherers_now`는 Seeking 또는 Consuming GatherWood; headless `wood_gatherer_ids`는 Consuming만 포함한다. 이 정의 차이는 수집 지표 차이이며 시뮬레이션 불일치가 아니다. 원자료 `measurements/headless_20261010.json` (361행).
+d15 15:00 목재 운반3명, d16 15:00 운반2명으로 가을 운반 캡처를 선택한다. probe `wood_gatherers_now`는 Seeking 또는 Consuming GatherWood; headless `wood_gatherer_ids`는 Consuming만 포함한다. 이 정의 차이는 수집 지표 차이이며 시뮬레이션 불일치가 아니다. 원자료 [headless_20261010.json.gz](measurements/headless_20261010.json.gz) (361행).
 
 ## 완료된 headless 사회 시나리오 교차검증
 
-`measure-society.log`: 종료 코드0, `P7 MEASURE PASS seed=20261013 rows=361`. probe와 겹치는 모든 02:00/15:00 행에서 cold 수 및 마을 수 불일치0. 원자료 `measurements/headless_20261013.json`.
+`measure-society.log`: 종료 코드0, `P7 MEASURE PASS seed=20261013 rows=361`. probe와 겹치는 모든 02:00/15:00 행에서 cold 수 및 마을 수 불일치0. 원자료 [headless_20261013.json.gz](measurements/headless_20261013.json.gz).
 
 | 화면시각 | tick | 마을 ids | 화덕 점화(같은 순서) | cold 주민 수 |
 |---|---:|---|---|---:|
@@ -165,3 +165,6 @@ d15 15:00 목재 운반3명, d16 15:00 운반2명으로 가을 운반 캡처를 
 | d121 02:00 | 172440 | [1, 2, 3] | [1, 1, 1] | 0 |
 
 두 headless 실행 모두 완료했다. 앞의 “실행 중” 기록은 Part 0 당시 상태를 보존한 것이며, 이 후속 관측으로 완료 상태를 추가한다. 모든 원자료는 자연 시나리오이며 god intervention은 없었다.
+
+
+최종 공개 용량 한도를 위해 headless 두 원자료는 gzip으로 무손실 압축했다. `gzip -dc docs/art/production7/measurements/headless_20261010.json.gz`로 원래 JSON을 읽을 수 있다. 압축 해제 바이트와 외부 원본 보존본의 SHA-256이 일치함을 검증했으며 [압축 기록](measurements/headless_compression.json)에 경로·해시·크기를 기록했다. 측정값과 행은 변경하지 않았다.

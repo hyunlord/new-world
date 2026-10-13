@@ -112,3 +112,17 @@ U01~U05와 U38의 Part 1 범위를 구현했다. `wood_visuals.settlement`는 �
 ### 현재 증거로 닫을 수 없는 항목
 
 A30의 모든 항목 판정과 프레임 비교는 아직 없다. U22의 공유 저장고 목표 제한은 수정되었다고 주장하지 않는다. abandoned의 건물 소속은 `Selection.retired_building`의 retired hearth 주변/최근접 기준인 UI 추정이며 simulation 소유권 getter가 아니다. 실제 소멸 사건이 캡처되지 않으면 abandoned 회귀 테스트와 자연 화면 확인을 구분한다. 기존 실패/재시도 로그는 삭제하지 않으며 위 표에는 현재 성공 로그만 명시적으로 연결했다.
+
+## Part 8 도구 재검토: 28f58e56 기준, 최종 측정 대기
+
+`audit_closure.json`에 39개 항목별 코드·테스트·실제 manifest 근거를 기록했다. 현재 fixed21 / justified13 / pending5이며, pending은 U08/U09(성능), U29(성능 및 전체 시나리오 최종 수집), U35(cold-cycle 재측정), U37(개입 포함 최종 partition)이다. 이는 A30 PASS가 아니다.
+
+U27/U28은 실제 사회17장·개입12장 manifest와 구현을 확인해 기능 수정으로 기록했다. U31은 실제 자연 합본121장=ART94+LONG27이며 사회·개입이 별도 manifest인 것을 확인했다. U32는 `_p7` 정확 formation 검사와 실제 A17 PASS(화덕74회)를 확인했으며 미소속 화덕의 owner/stock/stage=-1은 알 수 없음/장식 상태로 보존한다. 자연 orphan 사례가 없으므로 해당 경계는 회귀 테스트 근거로만 판단한다. U30/U33/U34/U36은 전달 target framing/전체 순회/기존 anchor 정책을 코드와 도구로 재확인해 유지 근거를 기록했다.
+
+현재 자연 manifest는 `28f58e56a2289bde129946b7f630192cd94496b2`, 사회·개입은 `0f634fec92381315538d865c53ff44b88998c157`이다. 측정 JSON은 아직 중간 결과로 A19 FAIL, A26 134프레임 PASS, A29 개입0장 N/A, A30 쌍 없음 N/A를 담고 있다. 이후 캡처 파일·블라인드·성능 파일의 존재만으로 이 판정을 덮어쓰지 않는다. 최종 측정이 끝나야 pending을 다시 판단한다. FD 3장의 깃발이 화면 밖인 A28 실패도 감사 도구 구현 완료와 구분하여 유지한다.
+
+## 최종 캡처 이후 감사 판정
+
+앞 절은 당시 중간 상태로 보존한다. 최종 `final_capture_integrity.json`은 모든 시나리오가 동일 source `28f58e56a2289bde129946b7f630192cd94496b2`임을 확인한다. 이미지/sidecar154쌍은 자연117, 사회17, 개입12, 교정8이며 hash/scenario/death census 오류가 없다. U29의 수집 도구, U35의 production7 cold 검사, U37의 전체 시나리오 분리 증거를 완료로 갱신했다. 따라서 39개 항목의 최종 상태는 fixed24 / justified13 / pending2다. 문간 숨결9/13과 shiver 식별 없음 등 실제 시각 제한은 검사 도구 완료와 별개로 남는다.
+
+**U08/U09 및 A30 성능은 해결되지 않았다.** `performance_final/frame_times_soc_1.json.gz`와 `frame_times_soc_3.json.gz`는 동일run `43729-352817`, 줌1, simulation frozen 상태의 각300프레임이다. 중앙값은9.7695→15.828ms, 비율1.620144(+62.01%)로 +15% 한도 초과다. 호스트1분 부하도176.70→36.20으로 달라 통제된 동일 부하 비교가 아니다. 성능 문제의 원인을 terrain/nature 각 renderer로 단정할 수 없으며, 코드를 변경하거나 기준을 낮추지 않고 U08/U09를 pending으로 유지한다. 감사 JSON에 이 수치와 FAIL을 명시했다. 모든 항목에 처리 상태가 있지만 모든 항목이 해결된 것은 아니며 A30 PASS를 주장하지 않는다.
