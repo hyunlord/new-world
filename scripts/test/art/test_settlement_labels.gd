@@ -38,7 +38,54 @@ func run() -> void:
 	layer._update_labels()
 	check(layer.capture_metadata()["labels"].size() == 2, "one label per alive settlement")
 	for row: Dictionary in layer.capture_metadata()["labels"]:
-		check(int(row["screen_font_px"]) == 10, "screen-size label font")
+		check(int(row["screen_font_px"]) == 12, "label uses allowed maximum screen font")
+		var actual: Label = layer._labels[int(row["id"])]
+		check(actual.get_theme_font_size("font_size") == 12, "actual label font matches metadata")
+		var rectangle: Array = row["screen_rect"]
+		check(is_equal_approx(float(rectangle[2]), actual.size.x + 10.0) and is_equal_approx(float(rectangle[3]), actual.size.y + 6.0), "click rectangle contains padded backplate")
+	for zoom: float in [0.5, 1.0, 2.0, 4.0, 8.0]:
+		layer.scale = Vector2.ONE * zoom
+		layer._update_labels()
+		var label: Label = layer._labels[7]
+		check(is_equal_approx(label.get_global_transform_with_canvas().get_scale().x, 1.0), "font and padding retain screen size at every zoom")
+	layer.scale = Vector2.ONE
+	layer._update_labels()
+	var objects := Node2D.new()
+	objects.name = "WorldObjects"
+	root.add_child(objects)
+	var obstacle := Sprite2D.new()
+	var texture := Image.create(40, 40, false, Image.FORMAT_RGBA8)
+	texture.fill(Color.WHITE)
+	obstacle.texture = ImageTexture.create_from_image(texture)
+	obstacle.position = Vector2(60, 60)
+	obstacle.set_meta("art_kind", "building")
+	objects.add_child(obstacle)
+	var placed: Rect2 = layer._clear_sprite_bounds(Rect2(45, 45, 60, 24))
+	check(placed.end.y <= 40.0 - Labels.LABEL_SPRITE_GAP_PX, "placement clears actual roof sprite with screen gap")
+	check(placed.position.x == 45.0, "collision avoidance retains formation horizontal anchor")
+	obstacle.position = Vector2(60, 20)
+	var blocked: Rect2 = layer._clear_sprite_bounds(Rect2(45, -20, 60, 24))
+	check(blocked.position.y >= 6.0, "stacked roof near viewport top cannot push label offscreen")
+	obstacle.set_meta("art_kind", "agent")
+	obstacle.position = Vector2(60, 60)
+	var walking: Rect2 = layer._clear_sprite_bounds(Rect2(45, 45, 60, 24))
+	check(walking.position == Vector2(45, 45), "moving agents never move label geometry")
+	var ui := Node.new()
+	ui.name = "UI"
+	root.add_child(ui)
+	var hud := Control.new()
+	hud.name = "HudTopbar"
+	ui.add_child(hud)
+	var hud_panel := PanelContainer.new()
+	hud_panel.position = Vector2(12, 12)
+	hud_panel.size = Vector2(300, 100)
+	hud.add_child(hud_panel)
+	obstacle.set_meta("art_kind", "building")
+	obstacle.position = Vector2(60, 120)
+	var below_hud: Rect2 = layer._clear_sprite_bounds(Rect2(45, 80, 60, 24))
+	check(below_hud.position.y >= 118.0, "blocked roof retains bounded label below actual HUD bottom plus gap")
+	ui.free()
+	objects.free()
 	Selection.observe({"settlement_ids": PackedInt32Array([42]), "parent_ids": PackedInt32Array([7]), "member_counts": PackedInt32Array([4])}, {"settlement_ids": PackedInt32Array([42]), "formation_xs": PackedInt32Array([20]), "formation_ys": PackedInt32Array([21])})
 	check(Selection.number_for(42) == 2 and Selection.number_for(7) == 1, "dissolution preserves both numbers")
 	Selection.observe({"settlement_ids": PackedInt32Array([42, 50])})
