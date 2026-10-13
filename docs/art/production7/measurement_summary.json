@@ -1,6 +1,6 @@
 {
-  "gate_source": "docs/art/production7/gates/p0",
-  "provisional_gate": true,
+  "gate_source": "docs/art/production7/gates/final",
+  "provisional_gate": false,
   "canonical": "measurements.json",
   "scope": "One acceptance row per A1-A30; calibration-only and failed subsidiary diagnostics remain explicit.",
   "rows": [
@@ -333,9 +333,9 @@
     {
       "code": "A20",
       "status": "PASS",
-      "detail": "{\"head\": \"28f58e56a2289bde129946b7f630192cd94496b2\", \"final_bound_frames\": 74, \"changed_villager_frames\": 61, \"animation_groups\": 20, \"installations\": 2, \"errors\": []}",
+      "detail": "{\"head\": \"847f96b928352cd48d7e5e49bf3c748ee8cfffdc\", \"final_bound_frames\": 74, \"changed_villager_frames\": 61, \"animation_groups\": 20, \"installations\": 2, \"errors\": []}",
       "metrics": {
-        "head": "28f58e56a2289bde129946b7f630192cd94496b2",
+        "head": "847f96b928352cd48d7e5e49bf3c748ee8cfffdc",
         "final_bound_frames": 74,
         "changed_villager_frames": 61,
         "animation_groups": 20,

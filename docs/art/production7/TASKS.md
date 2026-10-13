@@ -14,4 +14,4 @@ Contract: GOAL.md SHA256 `7b41130c8516c0c349876747a9b2ee4ab4e22c5479dda2cf50bd82
 | 6 | One attempt at breath and windfall | 2026-10-13T03:07:42Z | 2026-10-13T03:09:59Z | implementation complete, two scene tests pass; single-look visual measurement in Parts7–8 |
 | 7 | Natural, society, intervention and calibration captures | 2026-10-13T03:10:08Z | 2026-10-13T04:01:02Z | complete: 94+27+17+12+4 at28f58e56; same-source A30 pair recorded separately |
 | 8 | A1–A30, blind reviews and boards | 2026-10-13T04:01:02Z | 2026-10-13T04:10:43Z | complete:25PASS/5FAIL; final gate binding follows in Part9 |
-| 9 | Final gate, publication, compatibility and Korean report | 2026-10-13T04:10:43Z | | in progress |
+| 9 | Final gate, publication, compatibility and Korean report | 2026-10-13T04:10:43Z | 2026-10-13T04:23:22Z | complete: full gate RED retained, scoped plan repair verified, PR draft description updated; final documentation publication |

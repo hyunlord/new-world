@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/hyunlord/new-world/pull/511",
+  "description_updated": true,
+  "previous_body_preserved": true,
+  "body_sha256": "84b94e8968845f17ec231b4b2eb5d4d8cb9ec8701249d5615097c0ee42b888eb",
+  "isDraft": true,
+  "headRefName": "codex/art-production-2026-10",
+  "baseRefName": "codex/revitalize-2026-10",
+  "verified_utc": "2026-10-13T04:22:10.477648+00:00",
+  "note": "PR head remains prior green art commit; ArtPass7 is WIP-only while gate is red."
+}

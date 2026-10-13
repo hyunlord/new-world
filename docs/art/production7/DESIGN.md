@@ -20,3 +20,7 @@ One optional breath revision:5×3px birth alpha0.85,6px rise/1.2s,every1.6s. One
 
 ## Verification
 Native windowed Godot through shared window lock; headless behavior tests; natural/live, natural/society and intervention captures separate. Two blind observers see only frozen images and allowed answers. A1–A30 thresholds unchanged. Browser and Lighthouse checks are inapplicable to this Godot surface.
+
+## 최종 독립 검토 반영
+
+초기10px 이름표 설계는 역사 기록이다. 최종28f58e56은12화면px 글자,5×3px 여백, 어두운 배경판과 정적 지붕 회피를 사용한다. HUD 하단과 뷰포트 경계를 지키고 움직이는 주민 때문에 위치가 흔들리지 않는다. 한 번 수정 후 두 독립 검토자 모두 ACCEPT였으며 세 번째 시각 수정은 하지 않았다.
