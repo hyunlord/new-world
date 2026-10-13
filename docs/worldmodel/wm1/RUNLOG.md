@@ -97,3 +97,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | Part | Start | End | Notes |
 |---|---|---|---|
 | start | 2026-10-13 11:27:14 | | Mac: Darwin 27.0.0 arm64 (T6041). DGX: Linux 6.14.0-1015-nvidia aarch64, GB10, driver 580.126.09, CUDA 13.0, `nproc` 20; `nvidia-smi` 11:27: only Xorg (125 MiB) and gnome-shell (21 MiB), 0 % util; RAM 119 GiB, 100 GiB available; swap 15.5 of 16 GiB used (other users' services); disk 3.7 T, 1.6 T free. No git hooks in the Mac clone; `.claude/settings.json` = `{}` with skip-worktree `S`. Base `a43bdab2` = both WM branches on origin |
+| 0 | 11:27 | 11:28 | `GOAL_1_3.md` committed unchanged (`60083d4d`); `31559232` (= `origin/codex/revitalize-2026-10`) merged with `--no-ff` (`8f6b10ed`), no conflicts (`git merge-tree` exit 0; 253 files, all outside `wm1/`). Mac discovery after the merge: 117 tests OK, 20 skipped (recorder not built on the Mac) |
+| 0 | 11:28 | 11:31 | DGX code clone detached at `8f6b10ed`. Build clone `_build/src_wm13` (fresh `git clone` of the DGX code clone, detached at `8f6b10ed`): `cargo build --release -p sim-test` 11:28:34–11:30:07 (93 s, exit 0) → `worldsim_wm`, `worldsim_probe` |
+| 0 end | 11:31 | 11:33 | DGX gate at `8f6b10ed` (`gate_8f6b10ed`, `WM_BIN` / `PROBE_BIN` from `_build/src_wm13`, `WM_DATA_ROOT`): 117 tests OK, 0 skipped (76 s) |
