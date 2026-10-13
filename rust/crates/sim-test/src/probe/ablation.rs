@@ -8,13 +8,17 @@
 //! sub-bisection scenes split the regions into bushes only and deadwood only,
 //! and `abl_local_food` checks the Part 1 hypothesis (v17_nofission with the
 //! Pass 12 J6 fix, `local_food_availability`).
+//!
+//! Pass 13 Part 1 (the J6 remainder): each `abl18_<name>` scene is
+//! `game_v18_nofission` (rules, worldgen, `draw_v18` variety) with one
+//! remaining v17/v18 difference reverted to `game_v16`.
 use sim_core::rules::WorldRules;
 use sim_core::variety::WorldVariety;
 use sim_engine::SimEngine;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig};
 
 /// Every ablation scene name the probe accepts.
-pub const SCENES: [&str; 16] = [
+pub const SCENES: [&str; 26] = [
     "abl_no_regions",
     "abl_v16_damage",
     "abl_no_hunger_weight",
@@ -31,6 +35,16 @@ pub const SCENES: [&str; 16] = [
     "fwd_regions_bushes_only",
     "fwd_regions_wood_only",
     "abl_local_food",
+    "abl18_v16_damage",
+    "abl18_no_hunger_weight",
+    "abl18_no_hardiness",
+    "abl18_v16_exposure",
+    "abl18_no_regional_wood",
+    "abl18_no_region_deadwood",
+    "abl18_no_region_bushes",
+    "abl18_no_regions",
+    "abl18_no_wet_burn",
+    "abl18_no_area_floor",
 ];
 
 /// Whether `scene` is an ablation scene.
@@ -56,6 +70,9 @@ fn edit_firewood(rules: &mut WorldRules, f: impl FnOnce(&mut sim_core::rules::Fi
 /// other name). The recorded `world_variety` is the one the worldgen used
 /// (slots 0..7 only when the world has no regions, as `game_v16`).
 pub fn engine(scene: &str, seed: u64) -> Option<SimEngine> {
+    if scene.starts_with("abl18_") {
+        return engine18(scene, seed);
+    }
     let variety = WorldVariety::draw(seed);
     let v16 = WorldRules::game_v16_with(&variety);
     let v17n = WorldRules::game_v17_nofission_with(&variety);
@@ -99,6 +116,39 @@ pub fn engine(scene: &str, seed: u64) -> Option<SimEngine> {
     Some(engine)
 }
 
+/// Pass 13 Part 1: `game_v18_nofission` with one difference reverted.
+fn engine18(scene: &str, seed: u64) -> Option<SimEngine> {
+    let variety = WorldVariety::draw_v18(seed);
+    let v16_exposure = WorldRules::game_v16_with(&WorldVariety::draw(seed)).society.exposure;
+    let mut rules = WorldRules::game_v18_nofission_with(&variety);
+    let gen18 = WorldGenConfig::game_v18_with(seed, &variety);
+    let gen = match scene {
+        "abl18_no_region_deadwood" => WorldGenConfig { region_deadwood: 0, ..gen18 },
+        "abl18_no_region_bushes" => WorldGenConfig { region_bushes: 0, ..gen18 },
+        "abl18_no_regions" => WorldGenConfig { wild_regions: 0, region_bushes: 0, region_deadwood: 0, ..gen18 },
+        _ => gen18,
+    };
+    match scene {
+        "abl18_v16_damage" => edit_exposure(&mut rules, |e| e.damage_per_cold_hour = v16_exposure.map_or([0.0; 3], |x| x.damage_per_cold_hour)),
+        "abl18_no_hunger_weight" => edit_exposure(&mut rules, |e| e.hunger_weight = 0.0),
+        "abl18_no_hardiness" => edit_exposure(&mut rules, |e| e.use_hardiness = false),
+        "abl18_v16_exposure" => rules.society.exposure = v16_exposure,
+        "abl18_no_regional_wood" => edit_firewood(&mut rules, |f| {
+            f.regional_wood = false;
+            // The settled-area floor needs `regional_wood`.
+            f.area_fall_floor_permille = 0;
+        }),
+        "abl18_no_wet_burn" => edit_firewood(&mut rules, |f| f.rain_wet_burn = false),
+        "abl18_no_area_floor" => edit_firewood(&mut rules, |f| f.area_fall_floor_permille = 0),
+        "abl18_no_region_deadwood" | "abl18_no_region_bushes" | "abl18_no_regions" => {}
+        _ => return None,
+    }
+    let regions = gen.wild_regions > 0;
+    let mut engine = build_world_with(&gen, rules);
+    engine.resources.world_variety = Some(if regions { variety } else { variety.without_regions() });
+    Some(engine)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -108,7 +158,8 @@ mod tests {
         let variety = WorldVariety::draw(5);
         let v16 = WorldRules::game_v16_with(&variety);
         let v17n = WorldRules::game_v17_nofission_with(&variety);
-        for scene in SCENES {
+        for scene in SCENES.iter().filter(|s| !s.starts_with("abl18_")) {
+            let scene = *scene;
             let e = engine(scene, 5).expect("ablation scene");
             let rules = e.resources.rules;
             let regions = !e.resources.wild_regions.is_empty();
@@ -121,6 +172,25 @@ mod tests {
             }
         }
         assert!(engine("game_v17", 5).is_none());
+    }
+
+    #[test]
+    fn each_v18_scene_differs_from_v18_nofission_in_one_place() {
+        let v18n = WorldRules::game_v18_nofission(5);
+        let base = crate::scenes::game_v18_nofission_scene(5);
+        for scene in SCENES.iter().filter(|s| s.starts_with("abl18_")) {
+            let e = engine(scene, 5).expect("ablation scene");
+            let worldgen_only = matches!(*scene, "abl18_no_region_deadwood" | "abl18_no_region_bushes" | "abl18_no_regions");
+            assert_eq!(e.resources.rules == v18n, worldgen_only, "{scene}");
+            assert_eq!(e.resources.wild_regions.is_empty(), *scene == "abl18_no_regions", "{scene}");
+        }
+        // The worldgen-only scenes change the regions' contents and nothing else of the rules.
+        let bushes = engine("abl18_no_region_bushes", 5).expect("scene");
+        assert_eq!(bushes.resources.wild_regions.len(), base.resources.wild_regions.len());
+        assert!(bushes.resources.food_source_max.len() < base.resources.food_source_max.len());
+        let wood = engine("abl18_no_region_deadwood", 5).expect("scene");
+        assert!(wood.resources.wood_source_max.len() < base.resources.wood_source_max.len());
+        assert_eq!(wood.resources.food_source_max.len(), base.resources.food_source_max.len());
     }
 
     #[test]
