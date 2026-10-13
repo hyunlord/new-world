@@ -2440,3 +2440,51 @@ J6 reference: game_v16 on the same held-out seeds (`p11-7_final_heldout_v16_*`, 
 | J5 | FAIL: pooled child share 0.725 (> 0.70), adult 0.249, elder 0.026; settlement-winter max 0.571 (4 over of the pooled set: held-out seeds 39 (daughter 8/14), 66 (parent 12/26), 77 (daughter 11/28), tuning seed 24 (9/25)); Pass 11's world-level ratio max 0.267 (passes); share of seed-winters with a death 0.195, median 0, mild < normal < harsh (0 / 0.30 / 2.83); per-hour median 1; starvation + dehydration 0 at day 10 and max 0 at day 120 | reported: passes |
 | J6 | reported: fails Y5 autumn work, Y9 | FAIL: Y9 work_1500 0.213 (v16 0.241), idle_1200 0.629 (v16 0.617; both > 0.60); work_1200 0.357 PASS; every other clause PASS |
 | J9 | parameter means and climate shares PASS; realized region bushes 2,519 / 2,519 (1.00), deadwood 3,692 / 3,716 (0.994); placement failures 3 regions of 255 (seeds with 1 of 2, 2 of 3, 2 of 3 placed) — counted and explained: the water rule (centre within 12 of water) leaves no candidate centre 22–28 from the hearth and 20 from the earlier centres | same worlds |
+
+### Part 5 — diversity pilot (frozen recorder `wm_frozen`; seeds 24000–24111; recording 13:53–14:24 KST; `p12-5_pilot/`)
+
+Implementation check (11.2): dataset v1 A_test reproduces WM-1.1's 12 published numbers within ±0.002 (`p12-5_pilot/check_v1`). After review round 1 the two v18 scenes were re-recorded with the final recorder (`wm_final`, commit `1127455b`): game_v18_nofission row digests identical in 112 of 112 episodes, game_v18 in 110 of 112; every metric below is from the final recordings (`p12-7_final_pilot/`) and equals the frozen-recorder values to the third decimal except where noted.
+
+| Variable | game_v16 | game_v17 | game_v18_nofission | game_v18 |
+|---|---|---|---|---|
+| food_stock η² / R²_abs / R²_static / UBS / dyn-η² | 0.332 / 0.651 / 0.596 / 0.295 / 0.195 | 0.472 / 0.475 / 0.305 / 0.502 / 0.502 | 0.311 / 0.672 / 0.633 / 0.271 / 0.185 | 0.532 / 0.457 / 0.388 / 0.536 / 0.534 |
+| wood_stock | 0.069 / 0.929 / 0.049 / 0.084 / 0.069 | 0.190 / 0.786 / 0.031 / 0.210 / 0.198 | 0.068 / 0.930 / 0.044 / 0.084 / 0.069 | 0.236 / 0.749 / 0.130 / 0.249 / 0.240 |
+| alive | 0.900 / −0.102 / 0.899 / 0.320 / 0.998 | 0.735 / 0.184 / 0.442 / 0.801 / 0.785 | 0.899 / −0.106 / 0.894 / 0.329 / 0.998 | 0.741 / 0.230 / 0.445 / 0.837 / 0.756 |
+| deadwood_total | 0.207 / 0.781 / 0.959 / 0.107 / 0.107 | 0.330 / 0.669 / 0.978 / 0.089 / 0.147 | 0.358 / 0.638 / 0.995 / 0.043 / 0.132 | 0.351 / 0.644 / 0.988 / 0.069 / 0.150 |
+| food_on_bushes_total | 0.342 / 0.631 / 0.488 / 0.236 / 0.409 | 0.640 / 0.337 / 0.626 / 0.446 / 0.424 | 0.835 / 0.155 / 0.979 / 0.130 / 0.410 | 0.751 / 0.232 / 0.684 / 0.472 / 0.508 |
+| adults_working | 0.474 / 0.491 / 0.324 / 0.202 / 0.474 | 0.438 / 0.528 / 0.272 / 0.244 / 0.439 | 0.473 / 0.492 / 0.331 / 0.204 / 0.476 | 0.480 / 0.488 / 0.373 / 0.240 / 0.479 |
+
+Settlements alive at days 30/60/90/118 (16 test seeds, mean): v16 and v18_nofission 1/1/1/1; v17 1.50/1.75/2.25/2.25 (8 of 16 split by day 30); v18 1.06/1.25/1.56/2.06 (day 118: 3 seeds with 1, 10 with 2, 2 with 3, 1 with 4). Baseline nMAE at 168 h (persistence / cal_abs / apfit_abs): alive v17 0.149 / 0.758 / 0.137, v18 0.139 / 0.709 / 0.160; food v17 0.779 / 0.592 / 0.298, v18 0.733 / 0.563 / 0.307.
+
+Attribution (Δη² / ΔUBS): v17 → v18_nofission (wet burn — inert without interventions —, region fill, daughter fixes, J6 fix, exposure): food −0.160 / −0.231, wood −0.123 / −0.126, alive +0.164 / −0.472; v18_nofission → v18 (hazard fission): food +0.221 / +0.265, wood +0.168 / +0.165, alive −0.158 / +0.509. Paired bootstraps of ΔUBS (90 %): v18 − v17 food 0.034 [−0.063, 0.140], wood 0.038 [0.010, 0.076], alive 0.036 [−0.102, 0.163]; v18 − v18_nofission alive 0.509 [0.432, 0.630]. Within game_v18 by whether the world split (ridge refit per subset): split (66) alive R²_static / UBS 0.140 / 0.811, no split (46) 0.878 / 0.362.
+
+**J7 (game_v18): FAIL** — η² ≥ 0.30 and R²_abs ≤ 0.70: food PASS (0.532 / 0.457), alive PASS (0.741 / 0.230), wood FAIL (0.236 / 0.749); J7b: ΔUBS intervals for alive and food include 0 (FAIL); mean R²_static(alive) v18 0.445 vs v17 0.442 (FAIL by 0.003).
+
+### Part 6 — forks (12.1; `p12-6_forks/` frozen recorder; final re-recording `p12-7_final_forks/` identical on every reported number)
+
+Placebo identity 224 / 224, replicate 0 = unforked 224 / 224 (G0a PASS). Deaths effect (replicate mean per seed, exposure included), share of seeds > 0 / mean: gift_wood 0.000 / −0.375; rot_wood 0.500 / +1.141; **rain 0.500 / +1.164** (Pass 11: −0.36); cold_snap 0.188 / +0.141; windfall 0.000 / −0.148; gift1 0.031 / +0.008. Dark-night effect (mean): rain +1.76, rot_wood +1.13, cold_snap +0.41, gift_wood −0.68. Wet burn: over the rain hours inside the burn window (11 per episode) the home store lost 34.99 units against 35.72 on the factual's dry night over the same hours. First fission: factual mean display day 18.6 (mostly before the fork); the first fission founded after the fork differs from the factual in 0.01–0.02 of episodes (7 episodes split after the fork). G0b (variance reduction) FAIL as in earlier passes (reported). **J8: PASS.**
+
+### Part 6 — macro sensitivity (12.2; 120 days, rot_wood / gift_wood / spoil_food 60 at tick 29,400 on home, R = 2; `p12-6_macro/` frozen recorder)
+
+Frozen recorder and the final re-recording (`p12-7_final_macro/`, `wm_final`) give the same table. Factual r0: 18 of 32 seeds split, 16 after the fork, 2 only before it.
+
+| Comparison | Share differing (settlement counts or post-fork first-fission day) | Mean abs Δ post-fork day (n seeds where both split after the fork) | Mean abs Δ alive day 118 |
+|---|---:|---:|---:|
+| (a) factual r0 vs r1 (noise only) | 0.688 | 34.5 (14) | 18.4 |
+| (b) rot_wood 60 vs factual, same replicate | 0.016 | 0.0 (35) | 0.70 |
+| (b) gift_wood vs factual | 0.016 | 2.4 (36) | 0.69 |
+| (b) spoil_food 60 at tick 29,400 on home (written explicitly into `p12/schedules/macro`) | 0.000 | 0.0 (36) | 0.03 |
+
+**J11 (reported)**: interventions move the timing far less than noise does — the hazard draw is keyed with the replicate, so a noise fork redraws "when", while a small act of the god changes h by a few thousandths and rarely flips a draw.
+
+### Part 7 — timing (J12; `probe_final`, tuning sets, back to back 15:11–15:49 KST)
+
+No Godot, cargo or worldsim process of anyone else; foreign load: a "Sow and Siege.app" game build launching intermittently (another project), a Chrome helper (~93 % CPU) and the macOS storage indexer (~95 %); load averages 6.8 at the start, 63 at 15:20 (between the v16 and v18_nofission sets), 22 at 15:41. Median ms per agent-tick (10-day / 120-day): game_v16 0.00209 / 0.00274; game_v18_nofission 0.00198 / 0.00277; game_v18 0.00208 / 0.00317; bracketing game_v16 rerun after v18 (15:41–15:48) 0.00178 / 0.00243. Ratios v18 / v16: 10-day 0.996, 120-day 1.158 against the preceding v16 set, 1.305 against the following one, 1.226 against their mean; v18_nofission 0.948 / 1.011. **J12: PASS against the adjacent run and the bracket mean (≤ 1.3), borderline against the later bracket.**
+
+### Part 7 — final runs on `1127455b` (review round 1 fixes)
+
+Tuning (the timing runs, with twins): game_v18 and game_v18_nofission equal round 3 on every shared value (0 differences; the fixes do not touch these seeds). Held-out (`p12-7_final_heldout_*`): game_v18_nofission identical to Part 4; game_v18 10-day identical, 120-day 1,151 values differ (3 of 64 seeds: 63 and 77 diverge after a fission group was walking, 94 changes only the founded-inside member count). Final held-out J verdicts are Part 4's: J3 PASS (share 0.703, median 38, IQR 38, peak 0.111), J4 PASS (56/56), J5 FAIL (pooled child share 0.717, settlement-winter max 0.571, 4 over), J9 region-placement clause FAIL (3 of 255 regions; counted and explained), v18_nofission J6 FAIL (work_1500 0.213 vs v16 0.241; idle_1200 0.629 vs 0.617). h terciles after the tie fix: split rate 0.015 / 0.024 / 0.045. Gate on `1127455b`: green (`verification/p12-7/gate.txt`: debug 2,103 / release 2,103 passed, 0 failed; Pass 11 2,078).
+
+### Part 7 — final reproduction (`probe_final`, commit `1127455b`, 15:49–17:27 KST, Pass 11's flags)
+
+Against Pass 11's finals (`p11-7_final_*`), every run differs only in `schema_version` (11 → 12); all 28 determinism twins pass. Shared values: legacy 5,727; v8 13,990; v9 10,589 / 77,915; v10 10,781 / 78,498; v11 13,096 / 93,659; v12 13,096 / 93,671; v13 13,226 / 93,726; v14 13,228 / 93,727; v15 13,228 / 93,733; v16 13,868 / 94,339; v16_neutral 13,420 / 94,048; v17 16,226 / 97,206; v17_nofission 15,394 / 95,097; held-out v17 16,231 / 130,812; held-out v17_nofission 15,399 / 127,126 (10-day / 120-day). Code changed after Parts 5–6 (review round 1, `1127455b`); everything it affects was rerun: final tuning and held-out v18 runs, the pilot's v18 scenes, the forks and the macro run (`p12-7_final_*`); verdicts unchanged.
