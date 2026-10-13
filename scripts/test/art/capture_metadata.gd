@@ -83,10 +83,10 @@ static func entities(main: Node, viewport: Vector2, scale_factor: Vector2) -> Ar
 		for key: String in ["entity_bits", "building_kind", "sprite_id", "frame_id", "body", "variant", "tile_x", "tile_y", "activity", "pose", "facing", "calibration_kind", "missing_lineup_frame", "fallback_kind", "qa_status", "fire_lit", "glow_alpha", "wood_stock", "food_stock", "settlement_id", "woodpile_stage", "deadwood_stage", "resource_amount", "resource_max", "seated"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
-		for key: String in ["cold", "shiver_offset", "puff_alpha", "wood_target", "cold_pose", "cold_base_pose", "moving", "cold_sleepers", "frost_alpha", "doorway_puff_alpha", "cold_ash", "chill_tint_strength", "night_chill_strength", "cold_snap_tint", "chill_alpha", "chill_since_tick", "chill_shiver_offset", "chill_puff_alpha", "load_visible", "load_kind", "load_frame_id", "load_flip_h", "load_z_index", "rain_streak_count", "rain_ticks_left", "windfall_alpha", "windfall_offset", "stock_flash_alpha", "windfall_age", "intervention_flash_kind", "intervention_flash_alpha", "intervention_effects"]:
+		for key: String in ["cold", "shiver_offset", "puff_alpha", "wood_target", "cold_pose", "cold_base_pose", "moving", "cold_sleepers", "frost_alpha", "doorway_puff_alpha", "cold_ash", "chill_tint_strength", "night_chill_strength", "cold_snap_tint", "chill_alpha", "chill_since_tick", "chill_shiver_offset", "chill_puff_alpha", "load_visible", "load_kind", "load_frame_id", "load_flip_h", "load_z_index", "founder_bundle_visible", "founder_bundle_suppressed", "settlement_outline", "rain_streak_count", "rain_ticks_left", "windfall_alpha", "windfall_offset", "stock_flash_alpha", "windfall_age", "intervention_flash_kind", "intervention_flash_alpha", "intervention_effects"]:
 			if node.has_meta(key):
 				row[key] = node.get_meta(key)
-		for key: String in ["drawn_position", "tile", "declump_offset", "drawn_target", "spread_offset", "seat", "load_anchor"]:
+		for key: String in ["drawn_position", "tile", "declump_offset", "drawn_target", "spread_offset", "seat", "load_anchor", "founder_bundle_anchor"]:
 			if node.has_meta(key):
 				var point: Vector2 = Vector2(node.get_meta(key))
 				row[key] = [point.x, point.y]

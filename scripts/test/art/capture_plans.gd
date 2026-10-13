@@ -8,7 +8,25 @@ const ART: Array[Array] = [
 ]
 
 # Society dates are populated from Part 0 measurements, never from planner estimates.
-const ART_SOCIETY: Array[Array] = []
+const ART_SOCIETY: Array[Array] = [
+	["RESET", 20261013],
+	[28, "22:00", "F2", "orig"],
+	[29, "06:30", "FD", "leader"], [29, "06:30", "FT", "site"],
+	[29, "07:00", "FD", "leader"], [29, "08:00", "FD", "leader"], [29, "08:19", "FS", "daughter"],
+	[29, "09:09", "FV", "all"],
+	[29, "12:00", "FV", "all"],
+	[29, "12:00", "FV", "all", "orig"], [29, "12:00", "FV", "all", "daughter"],
+	[51, "02:00", "F2N", "daughter"], [51, "12:00", "FV", "all"],
+	[84, "02:00", "F2N", "daughter"], [84, "12:00", "FV", "all"],
+	[85, "01:01", "DE", "daughter"], [85, "06:30", "FD", "leader"],
+	[85, "08:42", "FV", "all"],
+]
+
+# This required observation is impossible: the first group founded at 08:09.
+# Run separately to preserve the explicit FD failure without losing the main plan.
+const ART_SOCIETY_REJECTED_WALK: Array[Array] = [
+	["RESET", 20261013], [29, "10:00", "FD", "leader"],
+]
 
 const ART_LONG: Array[Array] = [
 	[10, "12:00", "F2"], [10, "15:00", "F2"], [10, "15:00", "F5"],
@@ -20,6 +38,8 @@ const ART_LONG: Array[Array] = [
 	[28, "02:00", "F2N"], [28, "02:00", "F2Z"], [29, "02:00", "F2N"],
 	[29, "06:30", "F2"], [29, "07:15", "F2"],
 	[32, "12:00", "F2"], [40, "12:00", "F2"],
+	[56, "02:00", "F2N"], [57, "02:00", "F2N"], [57, "03:01", "DE"],
+	[84, "02:00", "F2N"], [85, "02:00", "F2N"], [85, "04:01", "DE"],
 ]
 
 
@@ -71,6 +91,11 @@ const ART_GOD: Array[Array] = [
 	[24, "18:30", "F2", "", 0, 1.15, "rain"],
 	[25, "02:00", "F2N", "", 0, 1.15, "rain_night"],
 	[25, "02:00", "F2", "", 0, 1.15, "panel_log"],
+	["RESET", 20261013],
+	[50, "17:00", "F2", "rain", 13, 0.5, "soc_rain", "daughter"],
+	[51, "02:00", "F2N", "", 0, 1.15, "soc_rain_night", "daughter"],
+	[51, "02:00", "F2N", "", 0, 1.15, "soc_original_night", "orig"],
+	[51, "02:00", "FV", "", 0, 1.15, "soc_both_night", "all"],
 ]
 
 

@@ -62,3 +62,53 @@ U01~U05와 U38의 Part 1 범위를 구현했다. `wood_visuals.settlement`는 �
 | 변경 파일 whitespace | git diff --check exit=0 | 명령 실행 결과 |
 
 이 결과는 렌더러 동작 테스트이며 창 화면/블라인드 가독성 판정이 아니다. U03의 abandoned 건물 외형과 Parts 2~8 항목은 여전히 담당 Part의 검증이 필요하다.
+
+## Parts 1~6 이후 처리 상태 (Part 7 시작 시 재검토)
+
+위 원본 조사·Part 1 기록은 역사로 유지한다. 아래는 현재 구현을 다시 읽고 추가한 처리표다. `구현`은 코드와 명시한 테스트 근거이며 A26~A30의 화면/성능 PASS를 뜻하지 않는다. `유지`는 단일 마을로 제한되지 않는 이유가 확인된 기존 동작이다. 촬영·측정 도구가 병행 수정 중인 U27~U37은 실제 Part 7~8 출력 전까지 보류한다.
+
+| ID | 처리 상태 | 현재 근거와 남은 검증 |
+|---|---|---|
+| U01 | 구현 | `scripts/ui/wood_visuals.gd:6` 정확 좌표 매칭. `test_every_hearth.gd`, p1/every_hearth.log failures=0. |
+| U02 | 구현 | `scripts/ui/wood_visuals.gd:27` 미소속 재, `:39` 광원 0. p1/cold_hearth.log와 every_hearth.log failures=0. |
+| U03 | 구현 | `scripts/ui/building_renderer.gd:321` 기본 fire=false. `scripts/ui/settlement_labels.gd:159` abandoned shader 적용. p4/abandoned.log failures=0; 실제 자연 소멸 화면은 대기. |
+| U04 | 구현 | `scripts/ui/daylight_controller.gd:57` 공통 정확 매칭 helper 소비. `test_every_hearth.gd` 개별 lit/unlit/orphan 광원 검사. 실제 밤 화면은 대기. |
+| U05 | 구현 | `scripts/ui/world_effects.gd:114` 메타 누락 false. 실제 effects 인스턴스의 미소속·소멸 smoke 제거를 p1/every_hearth.log에서 확인. |
+| U06 | 유지 | `scripts/ui/camera_controller.gd:180` 최초 중심만 최대 마을로 지정, 이후 pending=false. 새 마을 출현 시 카메라를 재중앙화하지 않는 탐색 기본값. |
+| U07 | 유지 | `scripts/ui/nature_layout.gd:19` 모든 buildings/sites/formation을 순회한다. 첫 마을만 clearing하지 않는다. |
+| U08 | 유지·성능 보류 | `scripts/ui/terrain_renderer.gd:133` formation 변화 때 decal 전면 갱신, 동일 fingerprint는 반환. 정확성 유지 근거와 성능 검증은 별개이며 A30 300프레임 비교 대기. |
+| U09 | 유지·성능 보류 | `scripts/ui/nature_renderer.gd:90` formation 변화 때 전 영역 reconcile 및 키별 재사용. A30 실제 비교 대기. |
+| U10 | 구현 | `scripts/ui/settlement_overview_renderer.gd:98`, `:107` 마을별 전달 색/이름 사용; getter 범위·alpha 0.28 유지. `scripts/ui/settlement_labels.gd:64` 10px 라벨. p4/labels_pair_isolated.log failures=0; A27 블라인드 대기. |
+| U11 | 유지 | 기존 zoom tier는 전체 렌더 계층 정책. `scripts/ui/settlement_overview_renderer.gd:112` 코드 생성 labels와 `scripts/ui/settlement_labels.gd:94` 역줌 스케일로 라벨 분리. 모든 줌 화면 검증 대기. |
+| U12 | 구현 | `scripts/ui/panels/hud_topbar.gd:153` 새 문자열/다중 마을 가시성. `test_settlement_labels.gd` 실제 row/icon 숨김과 다른 HUD 보존 확인; p4/labels_pair_isolated.log failures=0. |
+| U13 | 유지 | `scripts/ui/panels/hud_topbar.gd:167` 이후 전체 식량/장작 합계는 세계 자원 의미. 소속 판단에 사용하지 않는다. |
+| U14 | 구현 | `scripts/ui/panels/hud_topbar.gd:28`, `:268` 명시적 다섯 death key. `test_death_exposure.gd` 추가 deaths_unrelated=999 제외까지 확인; p2/death_exposure_green.log. |
+| U15 | 구현 | `scripts/ui/panels/hud_status_panel.gd:280` fission 로그 tick으로 depart/found/cancel 복원·중복 방지, disappeared는 최초 관측 tick임을 메타에 명시. p5/founding_group_green.log failures=0. 실제 사회 장면 A28 대기. |
+| U16 | 구현 | `scripts/ui/panels/hud_status_panel.gd:108`, `:111` Selection.number_for(sid). `test_founding_group.gd:68` raw42 대신 UI2 검증. |
+| U17 | 구현·촬영 보류 | `scripts/ui/panels/hud_status_panel.gd:43`, `:165`, `:239` 다섯 이유·무제한 feed_log·reset 경계. p2/death_exposure_green.log. 동기 advance 캡처에서 모든 사망 수집 확인은 U29와 함께 대기. |
+| U18 | 구현 | `scripts/ui/death_viz_renderer.gd:108` exposure 얼음색, unknown 회색/한 번 경고. `test_death_exposure.gd` 다섯 색/미지 이유 검증. 실제 죽음 화면 A26 대기. |
+| U19 | 구현 | `scripts/ui/panels/agent_inspector_panel.gd:158` AgentId→home→마을 이름. FFI join은 p3/society-short.log와 society-natural.log failures=0. 실제 inspector 화면 검증은 별도. |
+| U20 | 기존 유지·소속 구현 | 기존 모든 화덕 근접 연출 유지. `scripts/ui/agent_renderer.gd:623` 소속 outline, `scripts/ui/founding_group_renderer.gd:1` 별도 founder 레이어. p4/select.log와 p5/founding_group_green.log failures=0; A27/A28 화면 대기. |
+| U21 | 유지 | `scripts/ui/building_renderer.gd:210` 모든 마을 stock을 nearest anchor로 한 번씩 합산. 저장소 소유권 표시가 아닌 자원 anchor 정책. |
+| U22 | 유지·한계 명시 | `scripts/ui/building_renderer.gd:471` 공유 anchor의 목표는 최근접 마을 하나. 실제 소유권 FFI 없음. 합계 재고/단일 목표 혼합 가능성을 그대로 공개하며 정확 소속 정보로 해석하지 않는다. |
+| U23 | 구현 | `scripts/ui/panels/god_hand_panel.gd:88`, `:92`, `:110` 선택 ID와 대상 이름, 시전 후 선택 변경에도 toast 대상 유지. p4/select.log failures=0; 실제 daughter rain A29 대기. |
+| U24 | 유지·실증 보류 | `scripts/rendering/art/god_hand_effects.gd:74` 실제 rain ids 별 중심을 순회. stub 테스트와 P6 God hand 회귀는 통과했으나 실제 선택 daughter 및 원래 불 동시 화면은 A29 대기. |
+| U25 | 구현 | `scripts/rendering/art/god_hand_effects.gd:113`, `:148`, `:229` 시전 당시 target 보존 후 해당 저장고 flash. p4/select.log의 target freeze, p6/god_hand.log 회귀 failures=0. |
+| U26 | 유지 | `scenes/main.tscn:1` load_steps=21 유지; `scripts/ui/settlement_overview_renderer.gd:112` 동적 labels, `scripts/ui/agent_renderer.gd:60`이 founding 레이어 생성. scene 노드 하나는 다중 마을 순회 renderer다. |
+| U27 | Part 7 결과 대기 | `scripts/test/capture_framings.gd` RESET/target/FD/FS/FV 현재 병행 수정 중. 최종 시나리오 manifest·행 성공/실패·선택 결과 확인 전 완료로 닫지 않는다. |
+| U28 | Part 7 결과 대기 | 동일 capture script의 actual target/scenario/society/feed/death metadata는 최종 sidecar를 검사해야 한다. 자연·사회·개입 오염 여부 포함. |
+| U29 | Part 7~8 결과 대기 | 동기 feed ingest와 A30 동일 부하·동일 FV 300프레임 결과 필요. 구현 유무만으로 사망 누락 없음/프레임 예산 PASS를 주장하지 않는다. |
+| U30 | 기존 유지·촬영 보류 | `scripts/test/art/capture_metadata.gd:39` 선택된 마을 주위 deadwood를 찾는 helper는 소속 추론 아님. 최종 target 전달과 실제 이미지 대응은 촬영 결과 대기. |
+| U31 | Part 7 결과 대기 | `tools/art_pipeline/capture_art.sh` society whitelist 및 combined manifest 제외의 실제 배포 결과 검사 필요. |
+| U32 | Part 8 결과 대기 | `_p7` wood 검사에서 정확 formation matching과 orphan 꺼짐 검증 필요. `_p6/_p4` 원본은 역사 보존. |
+| U33 | Part 8 결과 대기 | `_p7` 자원 검사는 U21/U22의 합계/목표 정책 및 알려진 한계를 구분해야 한다. |
+| U34 | Part 8 결과 대기 | 화덕별 순회는 유지 가능하지만 orphan 재와 live/soc/god 증거 분리를 실제 measurement에서 확인해야 한다. |
+| U35 | Part 8 결과 대기 | 기존 cold 검사의 모든 target/라벨 순회는 단일 마을 문제가 없다. `_p7` 복사본 실행과 실제 산출물은 대기. |
+| U36 | 기존 유지·Part 8 보류 | atlas/camp coverage는 모든 formation 좌표 사용. 호출되는 `_p7` 측정의 시나리오 범위와 결과 확인 대기. |
+| U37 | Part 8 결과 대기 | production7 출력, live natural A1~A25, 사회 A26~A30 및 별도 A18, 개입 A29의 분리된 측정 결과가 필요하다. |
+| U38 | 구현 | `scripts/test/art/test_structure_states.gd:30`, `:42`, `:63` 빈 상태 재/정확 좌표/no glow로 기대 변경. p1/structure_states.log PASS. 이전 코드의 잘못된 최근접 기대는 보존 대상 동작이 아니다. |
+| U39 | 유지 | `scripts/ui/building_renderer.gd:357`, `:378` 미소속 장식 fallback/첫 shelter 장식은 소속·실제 재고 수치 아님. 생존 마을 수·정체성을 표현하는 라벨을 대신하지 않는다. |
+
+### 현재 증거로 닫을 수 없는 항목
+
+A30의 모든 항목 판정과 프레임 비교는 아직 없다. U22의 공유 저장고 목표 제한은 수정되었다고 주장하지 않는다. abandoned의 건물 소속은 `Selection.retired_building`의 retired hearth 주변/최근접 기준인 UI 추정이며 simulation 소유권 getter가 아니다. 실제 소멸 사건이 캡처되지 않으면 abandoned 회귀 테스트와 자연 화면 확인을 구분한다. 기존 실패/재시도 로그는 삭제하지 않으며 위 표에는 현재 성공 로그만 명시적으로 연결했다.

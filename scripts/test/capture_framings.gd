@@ -3,6 +3,7 @@ extends SceneTree
 const Metadata = preload("res://scripts/test/art/capture_metadata.gd")
 const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
+const SocietyTrace = preload("res://scripts/test/art/capture_society_trace.gd")
 const ColdTrace = preload("res://scripts/test/art/capture_cold_trace.gd")
 
 const ORIGIN: Vector2 = Vector2(448, 28)
@@ -32,6 +33,8 @@ var _last_cast_usec: int = 0
 var _shot_elapsed_s: float = 0.0
 var _original_id: int = -1
 var _daughter_id: int = -1
+var _death_trace: RefCounted = SocietyTrace.new()
+var _run_id: String = "%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
 var _seed: int = 20261010
 var _target_name: String = ""
 var _plan_row: Array = []
@@ -98,6 +101,10 @@ func _run() -> void:
 	if int(info.get("ticks_per_day", 0)) != 1440:
 		_fail("clock plan requires 1440 ticks per day")
 		return
+	if _plan == "art_society" and OS.get_environment("CAPTURE_SOCIETY_PERF_ONLY") == "1":
+		await _measure_society_pair()
+		_write_manifest()
+		return
 	var plan: Array[Array] = BASELINE if _plan == "baseline" else (CapturePlans.ART if _plan == "art" else FINAL)
 	if _plan == "art_long":
 		plan = CapturePlans.ART_LONG
@@ -162,6 +169,10 @@ func _run() -> void:
 			tile = _founder_tile()
 		if _target_name == "all" or framing == "FV":
 			tile = _settlement_bounds().get_center()
+		if framing == "FT":
+			tile = _founder_site_tile()
+		if framing == "DE":
+			tile = _recent_exposure_tile()
 		if tile.x < 0:
 			_fail("framing %s target %s unavailable (FD requires a living founder leader)" % [framing, _target_name])
 			return
@@ -292,7 +303,7 @@ func _write_manifest() -> void:
 		return
 	manifest.store_string(JSON.stringify({
 		"schema_version": 3, "plan": _plan,
-		"scenario": _scenario(), "seed": _seed,
+		"scenario": _scenario(), "seed": _seed, "run_id": _run_id, "performance_only": OS.get_environment("CAPTURE_SOCIETY_PERF_ONLY") == "1",
 		"intervention_casts": _casts, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
 		"captures": _manifest, "worktree_changed_paths": int(OS.get_environment("WORLDSIM_GIT_DIRTY")),
 	}, "\t") + "\n")
@@ -373,6 +384,7 @@ func _advance_to(target: int) -> bool:
 			_motion_before = _world.call("get_agent_snapshot")
 			_motion_start_tick = tick
 		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		_death_trace.ingest(_world.call("get_recent_deaths"))
 		_remember_settlements()
 		if status != null and status.has_method("_ingest_snapshots"):
 			status.call("_ingest_snapshots")
@@ -401,6 +413,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var rows: Array[Dictionary] = []
 	rows = Metadata.entities(_main, viewport, pixel_scale)
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
+	_death_trace.ingest(_world.call("get_recent_deaths"))
 	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
 	var data: Dictionary = {
 		"schema_version": 6, "camera_position": [_camera.position.x, _camera.position.y],
@@ -426,6 +439,28 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["seed"] = _seed
 	data["capture_plan_row"] = _plan_row.duplicate(true)
 	data["selected_settlement_id"] = Selection.selected_id
+	data["measured_days_source"] = "docs/art/production7/MEASURED_DAYS.md"
+	data["society_snapshot"] = _json_arrays(_world.call("get_society_snapshot")) if _world.has_method("get_society_snapshot") else {}
+	data["death_truth_trace"] = {"source": "independent FFI recent_deaths census", "max_sample_interval_ticks": _death_trace.max_interval_ticks, "window_start_tick": 0, "window_end_tick": tick, "deaths": _death_trace.rows()}
+	data["death_drawn"] = _draw_counter("DeathVizRenderer", "capture_metadata")
+	for death: Dictionary in data["death_drawn"]:
+		var death_world: Vector2 = ORIGIN + Vector2(death["x"], death["y"]) * TILE_SIZE + Vector2(8, 8)
+		var death_screen: Vector2 = (root.get_canvas_transform() * death_world) * pixel_scale
+		death["screen_position"] = [death_screen.x, death_screen.y]
+		death["in_view"] = Rect2(Vector2.ZERO, viewport).has_point(death_screen)
+	data["feed_log"] = _draw_counter("UI/HudStatusPanel", "get_feed_log")
+	data["feed_visible"] = _draw_counter("UI/HudStatusPanel", "get_visible_feed")
+	data["hud_death_total"] = _draw_counter("UI/HudTopbar", "get_death_total")
+	var society_layers: Dictionary = {}
+	for layer: Node in get_nodes_in_group("art_society_layers"):
+		if layer.has_method("capture_metadata"):
+			society_layers.merge(layer.call("capture_metadata"))
+	data["society_presentation"] = society_layers
+	_enrich_society_view(society_layers, rows, viewport, pixel_scale)
+	var five_deaths: Dictionary = {}
+	for key: String in ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]:
+		five_deaths[key] = data["tallies"].get(key, 0)
+	data["death_tallies"] = five_deaths
 	data["intervention_casts"] = _casts.duplicate(true)
 	data["seconds_since_last_cast"] = _shot_elapsed_s
 	data["intervention_effects"] = {}
@@ -503,29 +538,35 @@ func _capture_cold_cycle(stem: String) -> void:
 		_fail("cannot write observed cold cycle")
 
 
-func _measure_frame_times() -> void:
+func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = false) -> void:
 	DisplayServer.window_move_to_foreground()
 	if OS.get_name() == "macOS":
 		var activate: String = 'tell application "System Events" to set frontmost of first process whose unix id is %d to true' % OS.get_process_id()
 		OS.execute("/usr/bin/osascript", PackedStringArray(["-e", activate]))
+	var load_status: Dictionary = _performance_load_status()
+	var start_tick: int = int(_world.call("get_time_snapshot")["tick"])
+	var settlements: Dictionary = _world.call("get_settlement_snapshot")
 	var elapsed: Array[float] = []
 	# Keep simulation frozen until the actual foreground drawable is available.
 	await RenderingServer.frame_post_draw
-	_world.process_mode = Node.PROCESS_MODE_INHERIT
-	_world.call("set_sim_speed", 1.0)
+	if not frozen:
+		_world.process_mode = Node.PROCESS_MODE_INHERIT
+		_world.call("set_sim_speed", 1.0)
 	var previous: int = Time.get_ticks_usec()
 	for frame: int in range(300):
 		await RenderingServer.frame_post_draw
 		var current: int = Time.get_ticks_usec()
+		_death_trace.ingest(_world.call("get_recent_deaths"))
 		elapsed.append(float(current - previous) / 1000.0)
 		previous = current
 	_world.call("set_sim_speed", 0.0)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
 	var ordered: Array[float] = elapsed.duplicate()
 	ordered.sort()
-	if not CapturePlans.write_json(_out.path_join("frame_times.json"), {
-		"frames": 300, "zoom": 1, "forced_draw": false, "median_ms": (ordered[149] + ordered[150]) / 2.0,
-		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": false,
+	if not CapturePlans.write_json(_out.path_join(filename), {
+		"frames": 300, "zoom": _camera.zoom.x, "forced_draw": false, "run_id": _run_id,
+		"seed": _seed, "tick": start_tick, "alive_count": settlements.get("settlement_ids", []).size(), "load_status": load_status, "median_ms": (ordered[149] + ordered[150]) / 2.0,
+		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": frozen,
 	}):
 		_fail("cannot write frame timing evidence")
 
@@ -683,6 +724,7 @@ func _reset_capture_world(seed: int) -> void:
 	_motion_start_tick = -1
 	_motion_end_tick = -1
 	_cold_trace = ColdTrace.new()
+	_death_trace.reset()
 	_world.call("reset_world", seed)
 	_world.call("set_sim_speed", 0.0)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
@@ -754,3 +796,79 @@ func _founder_tile() -> Vector2:
 			if agent_index >= 0:
 				return Vector2(agents["xs"][agent_index], agents["ys"][agent_index])
 	return Vector2(-1, -1)
+
+
+func _founder_site_tile() -> Vector2:
+	if not _world.has_method("get_society_snapshot"):
+		return Vector2(-1, -1)
+	var society: Dictionary = _world.call("get_society_snapshot")
+	var xs: PackedInt32Array = society.get("founder_site_xs", PackedInt32Array())
+	var ys: PackedInt32Array = society.get("founder_site_ys", PackedInt32Array())
+	return Vector2(xs[0], ys[0]) if not xs.is_empty() else Vector2(-1, -1)
+
+
+func _recent_exposure_tile() -> Vector2:
+	var deaths: Dictionary = _world.call("get_recent_deaths")
+	var reasons: PackedInt32Array = deaths.get("reasons", PackedInt32Array())
+	var ticks: PackedInt64Array = deaths.get("ticks", PackedInt64Array())
+	var best: int = -1
+	for index: int in reasons.size():
+		if reasons[index] == 4 and int(deaths["current_tick"]) - ticks[index] < 120 and (best < 0 or ticks[index] > ticks[best]):
+			best = index
+	return Vector2(deaths["xs"][best], deaths["ys"][best]) if best >= 0 else Vector2(-1, -1)
+
+
+func _enrich_society_view(presentation: Dictionary, entities: Array[Dictionary], viewport: Vector2, scale_factor: Vector2) -> void:
+	var transform: Transform2D = root.get_canvas_transform()
+	var view: Rect2 = Rect2(Vector2.ZERO, viewport)
+	for group: Dictionary in presentation.get("founding_groups", []):
+		var start: Array = group.get("start", [0, 0])
+		var finish: Array = group.get("end", [0, 0])
+		var start_screen: Vector2 = (transform * Vector2(start[0], start[1])) * scale_factor
+		var site_screen: Vector2 = (transform * Vector2(finish[0], finish[1])) * scale_factor
+		group["leader_screen"] = [start_screen.x, start_screen.y]
+		group["site_screen"] = [site_screen.x, site_screen.y]
+		group["leader_in_view"] = view.has_point(start_screen)
+		group["site_in_view"] = view.has_point(site_screen)
+		group["marker_in_view"] = bool(group.get("marker_visible", false)) and view.has_point(site_screen)
+		for bundle: Dictionary in group.get("bundles", []):
+			bundle["agent_in_view"] = false
+			for entity: Dictionary in entities:
+				if entity.get("kind") == "agent" and int(entity.get("id", -1)) == int(bundle.get("agent_id", -2)):
+					bundle["agent_in_view"] = entity.get("visible", false)
+					bundle["agent_screen_rect"] = entity.get("rect", [])
+
+
+func _performance_load_status() -> Dictionary:
+	var uptime_output: Array = []
+	var process_output: Array = []
+	var uptime_code: int = OS.execute("/usr/bin/uptime", PackedStringArray(), uptime_output, true)
+	var process_code: int = OS.execute("/usr/bin/pgrep", PackedStringArray(["-fl", "cargo|worldsim_|rustc"]), process_output, true)
+	return {"unix_time": Time.get_unix_time_from_system(), "uptime": uptime_output, "uptime_exit_code": uptime_code, "processes": process_output, "pgrep_exit_code": process_code}
+
+
+func _measure_society_pair() -> void:
+	# Replay is forward-only within this reset, with no captures between the pair.
+	# The measured three-settlement extent requires the 1x integer zoom step.
+	await _reset_capture_world(20261013)
+	if not _advance_to(39720):
+		_fail("A30 did not reach day 28 22:00")
+		return
+	_camera.position = ORIGIN + _settlement_bounds().get_center() * TILE_SIZE + Vector2(8, 8)
+	_camera.zoom = Vector2.ONE
+	_camera.force_update_scroll()
+	await create_timer(1.15).timeout
+	await _render_frame()
+	await _measure_frame_times("frame_times_soc_1.json", true)
+	if not _advance_to(121002):
+		_fail("A30 did not reach the measured third founding")
+		return
+	var settlements: Dictionary = _world.call("get_settlement_snapshot")
+	if settlements.get("settlement_ids", []).size() != 3 or not is_equal_approx(_all_villages_zoom(), 1.0):
+		_fail("A30 three-village count or paired FV zoom differs from measurement")
+		return
+	_camera.position = ORIGIN + _settlement_bounds().get_center() * TILE_SIZE + Vector2(8, 8)
+	_camera.force_update_scroll()
+	await create_timer(1.15).timeout
+	await _render_frame()
+	await _measure_frame_times("frame_times_soc_3.json", true)

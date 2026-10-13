@@ -55,11 +55,12 @@ for capture in manifest['captures']:
         capture['published_width'], capture['published_height'] = 1920, 1080
     else:
         target = source.stem + '.jpg'
-        standard.resize((960, 540), Image.Resampling.NEAREST).save(docs / target, quality=85)
+        published_size = (1920, 1080) if manifest['plan'] == 'art_society' else (960, 540)
+        standard.resize(published_size, Image.Resampling.NEAREST).save(docs / target, quality=85)
         capture['published_file'] = target
-        capture['published_width'], capture['published_height'] = 960, 540
+        capture['published_width'], capture['published_height'] = published_size
     shutil.copy2(raw / capture['entities'], docs / capture['entities'])
-for extra in ['frame_times.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
+for extra in ['frame_times.json', 'frame_times_soc_1.json', 'frame_times_soc_3.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
 for cycle in raw.glob('*.cold_cycle.json'):
