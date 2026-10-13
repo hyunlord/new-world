@@ -256,6 +256,29 @@ class BootstrapTests(unittest.TestCase):
             bs.world_scores(node)
 
 
+class ProbeObservableTests(unittest.TestCase):
+    def test_first_fission_day_inside_the_train_range(self) -> None:
+        from wm1 import probe_world as pw
+        rng = np.random.default_rng(0)
+        x = {r: rng.normal(size=(n, 4)) for r, n in (("train", 60), ("val", 20), ("test", 20))}
+        lab = {}
+        for r in x:
+            day = 29 + np.round(2 * np.abs(x[r][:, 0]))
+            day[::4] = np.nan                                   # worlds that never split
+            if r == "test":
+                day[1] = 85.0
+            lab[r] = {"fission_by_day120": np.isfinite(day).astype(float),
+                      "settlements_alive_row2832": 1.0 + np.isfinite(day), "first_fission_day": day}
+        out = pw.probe_observable(x, lab)
+        ff = out["first_fission_day"]
+        self.assertEqual(ff["test_outside_train_range"], [85.0])
+        self.assertEqual(ff["worlds"]["test"], 15)
+        self.assertIsNotNone(ff["r2_test_inside_train_range"])
+        self.assertEqual(pw.first_split_day(np.array([0, 0, 1, 1.0])), float((2 * 60 + 480) // 1440 + 1))
+        self.assertTrue(np.isnan(pw.first_split_day(np.zeros(5))))
+        self.assertIn("accuracy_test", out["fission_by_day120"])
+
+
 class CrossDatasetTests(unittest.TestCase):
     def test_input_list_must_match(self) -> None:
         v16 = list(m.dataset_variant(c.dataset("p10_v16"), "sev-blind_action-blind").input_names())

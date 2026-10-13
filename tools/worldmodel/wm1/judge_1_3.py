@@ -112,6 +112,15 @@ class Data:
         return node(res["references"].get(name), key, h)
 
 
+def converged_of(data: Data, run: str) -> bool | None:
+    """GOAL_1_3.md 9.2: not converged when the run ended on `max_steps` or `time` with its best step in the last
+    10 % of its steps (best step >= 0.9 x last step, inclusive: DECISIONS G4.4)."""
+    v = data.val.get(run)
+    if not v:
+        return None
+    return not (v["stop"] in ("max_steps", "time") and v["best_step"] >= 0.9 * v["last_step"])
+
+
 def model_scores(results: list[dict | None], key: str, h: str, br: bool, var: int | None = None) -> list[dict]:
     return [w for w in (worlds(node(r, key, h), br, var) for r in results) if w]
 
@@ -125,6 +134,7 @@ def rule(data: Data, ds: str, runs: tuple, key: str, h: str, br: bool, label: st
     base = worlds(data.cal_node(ds, base_name, key, h), br)
     out = {"label": label, "dataset": ds, "against": f"{base_name} = {member}", "seeds_present": len(seeds),
            "seeds_expected": len(runs), "task": CELLS[(key, h)][1 if br else 0]}
+    out["converged"] = {r: converged_of(data, r) for r in runs if (which or data.metrics).get(r)}
     if not seeds or base is None:
         return out | {"verdict": "n/a"}
     return out | bs.verdict(seeds, base)
@@ -173,7 +183,9 @@ def y5(data: Data) -> dict:
                 if seeds:
                     pv = [per_var(node(r, "T2_any", h), br) for r in res if node(r, "T2_any", h)]
                     row["M1b"] = bs.interval(bs.average(seeds)) | {"seeds": len(seeds),
-                                                                   "per_var": np.mean(pv, axis=0).tolist()}
+                                                                   "per_var": np.mean(pv, axis=0).tolist(),
+                                                                   "converged": [converged_of(data, r) for r in RUNS[ds]
+                                                                                 if data.metrics.get(r)]}
                 for name in ("cal_best_anom" if br else "cal_best", "an5", "apfit_abs"):
                     n = data.cal_node(ds, name, "T2_any", h)
                     if n:
@@ -290,6 +302,7 @@ def y6(data: Data) -> dict:
             k: {"model": metric(mo[k]) if "skipped" not in mo[k] else None,
                 "reference": metric(ro[k]) if "skipped" not in ro[k] else None,
                 "majority": mo[k].get("majority_train_class_accuracy_test"), "detail": mo[k]} for k in mo}
+        out["observable_reference_detail"] = ro
     return out
 
 
@@ -322,16 +335,18 @@ def ci(x: dict | None, digits: int = 3) -> str:
 def markdown(r: dict) -> str:
     y = r["Y"]
     lines = ["# WM-1.3 judge output", "", "Intervals: world-level paired bootstrap, B = 2,000, 95 % percentile.", "",
-             "## Y table", "", "| # | comparison | M1b seed mean (seeds) | baseline | model − baseline [95 % CI] | verdict |",
-             "|---|---|---|---|---|---|"]
+             "## Y table", "", "| # | comparison | M1b seed mean (seeds) | baseline | model − baseline [95 % CI] | "
+             "each seed − baseline [95 % CI] | runs converged | verdict |", "|---|---|---|---|---|---|---|---|"]
     for k in ("Y1", "Y1b", "Y2", "Y4", "Y4br", "Y1_n80", "Y1_n200"):
         x = y[k]
         if x.get("verdict") == "n/a" or "ci_diff" not in x:
-            lines.append(f"| {k} | {x['label']} | n/a | {x['against']} | — | n/a |")
+            lines.append(f"| {k} | {x['label']} | n/a | {x['against']} | — | — | — | n/a |")
             continue
         seeds = ", ".join(fmt(s) for s in x["seeds"])
+        own = "; ".join(ci(c) for c in x["seed_ci_diff"])
+        conv = ", ".join({True: "yes", False: "not converged", None: "?"}[v] for v in x.get("converged", {}).values())
         lines.append(f"| {k} | {x['label']} | {fmt(x['model'])} ({seeds}) | {x['against']} {fmt(x['baseline'])} | "
-                     f"{ci(x['ci_diff'])} | **{x['verdict']}** |")
+                     f"{ci(x['ci_diff'])} | {own} | {conv} | **{x['verdict']}** |")
     t = y["Y3"]
     lines += ["", "### Y3 data vs steps (v16 test, raw, T2 168 h every hour; no verdict)", "",
               "| quantity | point [95 % CI] |", "|---|---|"]
@@ -341,10 +356,14 @@ def markdown(r: dict) -> str:
     lines.append(f"| scale helps the model more than the calendar (CI of Δ_data − Δ_cal below 0) | "
                  f"{t.get('scale_helps_model_more', 'n/a')} |")
     for name, tab in y["Y5"].items():
-        lines += ["", f"### Y5 learning curve — {name}", "", "| N | M1b | cal_best (member) | an5 | apfit_abs |", "|---|---|---|---|---|"]
+        lines += ["", f"### Y5 learning curve — {name}", "", "| N | M1b (seeds; converged) | cal_best (member) | an5 | apfit_abs |",
+                  "|---|---|---|---|---|"]
         for n, row in tab.items():
             cb = row.get("cal_best_anom") or row.get("cal_best")
-            lines.append(f"| {n} | {ci(row.get('M1b'))} | {ci(cb)} ({(cb or {}).get('member', '—')}) | {ci(row.get('an5'))} | "
+            mb = row.get("M1b")
+            tag = "" if not mb else f" ({mb['seeds']}; " + ", ".join(
+                {True: "yes", False: "not conv.", None: "?"}[v] for v in mb.get("converged", [])) + ")"
+            lines.append(f"| {n} | {ci(mb)}{tag} | {ci(cb)} ({(cb or {}).get('member', '—')}) | {ci(row.get('an5'))} | "
                          f"{ci(row.get('apfit_abs'))} |")
     for ds, sk in r["skills"].items():
         for which, tab in sk.items():
@@ -362,6 +381,10 @@ def markdown(r: dict) -> str:
         for k, v in z.get("observable", {}).items():
             extra = f" (majority {fmt(v['majority'])})" if v.get("majority") is not None else ""
             lines.append(f"| {k}{extra} | {fmt(v['model'])} | {fmt(v['reference'])} |")
+            if "r2_test_inside_train_range" in v["detail"]:
+                ref = (z["observable_reference_detail"].get(k) or {}).get("r2_test_inside_train_range")
+                lines.append(f"| {k}, test worlds inside the train range {v['detail']['train_range']} (outside: "
+                             f"{v['detail']['test_outside_train_range']}) | {fmt(v['detail']['r2_test_inside_train_range'])} | {fmt(ref)} |")
     lines += ["", "## Convergence", "", "| run | stop | best step | last step | seconds | converged | WM-1.2-rule best step / stop |",
               "|---|---|---:|---:|---:|---|---|"]
     for run_name, v in r["convergence"].items():

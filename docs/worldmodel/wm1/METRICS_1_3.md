@@ -206,3 +206,32 @@ bias-removed tables per dataset, size and horizon (members, `cal_best`, `cal_bes
   val worlds, so both sides are tuned on val identically.
 - `game_v17`'s fission is pinned to display day 29 (Pass 11); its splits differ by world in whether and how often
   they happen, not when.
+
+## Amendment 2026-10-13 22:40 (review round 1, before any `game_v17` model or probe number)
+
+At the time of this amendment the test numbers that exist are the calendar family / persistence / ridge on the four
+w13 datasets and the legacy test, WM-1.2's three runs on the new test, and `m1tf_w13v16_n400_s0` / `_s1` with their
+`_short` and `_legacy` evaluations (all from `166eb737`). No `game_v17` model, no probe and no N = 80 / 200 model has
+a test number. No rule, member, threshold, score definition or selection changes.
+
+1. **Fission timing (corrects sections 5 Y6 and 6).** "Pinned to display day 29" is wrong for the recorded worlds:
+   the first split falls on display days 29–36 (train: 155 of 243 splitting worlds on day 29, variance 1.50; test:
+   34 of 53 on day 29, 18 on days 30–36, one world on day 85, variance 58.3). Fission is *eligible* from day 29; whether
+   and how often a world splits varies, its date varies little. The Y6 first-fission probe runs (its test variance is
+   above 0) and additionally reports the R² on the test worlds whose first split lies inside the train range of
+   first-split days (`r2_test_inside_train_range`, `test_outside_train_range`; `probe_world.py`), so that the one
+   day-85 world does not decide the number alone.
+2. **Disclosure.** `w13_describe_b7a48fed` (GOAL_1_3.md 6.4: η², R²_abs, dyn-η² of the test split with Pass 11's
+   `scene_block`, and the fission labels of every role) ran at 12:10–12:12, before this file's commit. It scores no
+   forecaster of the Y rules and selects nothing; it is the data description the goal asks for.
+3. **Convergence flag.** "Best step in the last 10 %" is read inclusively: a run that ended on `max_steps` or `time`
+   is not converged when best step ≥ 0.9 × last step (DECISIONS G4.4). The flag is shown in the Y, Y5 and convergence
+   tables (`judge_1_3.py`).
+4. **Launcher.** `w13_launch/slot.sh` gained a watchdog after a hung CUDA context (DECISIONS G4.3); the training
+   command and every hyper-parameter are unchanged.
+5. **Code of the later test jobs.** The test evaluations still to run (`n400_s2`, the `game_v17` runs and the probe,
+   the N = 80 and N = 200 runs) run from the commit that adds this amendment; its diff to `166eb737` under `tools/`
+   is `probe_world.py` (the extra first-fission output above), `judge_1_3.py` (convergence flags and per-seed
+   intervals in the markdown), `test_w13.py` and `w13_launch/slot.sh`. `evaluate.py`, `m1_gru.py`, `m1_tf.py`,
+   `data.py`, `common.py`, `climatology.py` and `bootstrap.py` are byte-identical, so every model score is computed by
+   the same code as before.

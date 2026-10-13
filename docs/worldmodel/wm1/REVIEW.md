@@ -255,3 +255,20 @@ Scope: pre-registration order, the Z verdicts, every number in WM1_2.md, leakage
 | R2-11 | NOTE | climate (and 2 of 3 forest) probes chose the largest λ of the grid | stated in WM1_2.md; the grid was pre-registered and is not changed |
 | R2-12 | NOTE | `cc913c43` loosens the ridge part of the golden test; R1-3's text did not say so; DGX gate on `cc913c43` not checked by the reviewer | R1-3 updated; the DGX gate on `cc913c43` ran: 114 OK, 0 skipped (`gate_cc913c43`) |
 | R2-13 | NOTE | the family smoke has single-settlement worlds only; the v15 control is one seed | stated in WM1_2.md (limitations, relative table) |
+
+## WM-1.3
+
+### Round 1 (fresh `general-purpose` subagent, 2026-10-13 ≈ 22:14–22:25; head `2c9a368f`)
+
+Scope: the merge, GOAL 4.1 (v0 / p10 numbers), 4.2 (input lists, roles, nested sets, hidden fields; the real `config.json` of `m1tf_w13v16_n400_s0`), pre-registration order against the DGX file times, the bootstrap by hand on one real comparison, `ramp_steps` and the online WM-1.2 rule against `a43bdab2`'s code, the judge's rules. The reviewer reproduced: the merge brings exactly the 253 files of `14372ea2..31559232` (outside `wm1/` the tree equals `31559232`) and `8f6b10ed..HEAD` touches only `wm1/` paths (136); Mac 142 OK / 22 skipped, DGX gate on `166eb737` 142 OK / 0 skipped (incl. the WM-1.2 number recompute); 65 inputs in WM-1.2's order and `train_episodes` 400 in the DGX config; METRICS committed 12:23:37, pushed 12:25:12, every DGX test output written 12:26:20 or later from `166eb737` with `forced` false, `docs/` copies byte-identical; bootstrap by hand for `n400_s0` − `an5` (T2-any 168 h): raw −0.0144294 [−0.0204632, −0.0087725], bias-removed +0.0011184 [−0.0047206, 0.0068978], equal to `bs.paired`; mean of per-world means = pooled mean within 7e-16 (384 starts per world); `Wm12Rule` replays the logs to best steps 2,400 (s0) and 2,850 (s1). No BLOCKING finding.
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| R1-1 | MAJOR | METRICS says `game_v17` fission is "pinned to display day 29"; `describe.json` (written before the pre-registration) shows first splits on days 29–36 and one test world at day 85 (test variance 58.3), which would dominate the first-fission R² | dated METRICS amendment (item 1); `probe_world.py` also reports the R² on test worlds inside the train range of first-split days (tested); WM1_3 drops "pinned" |
+| R1-2 | MINOR | `w13_describe` read the test split (η², fission labels) before the pre-registration commit, undisclosed | disclosed in the amendment (item 2) and in WM1_3; it scores no forecaster |
+| R1-3 | MINOR | `judge_1_3.py` counts best step = 0.9 × last as not converged; the flag appears only in the convergence table, GOAL 9.2 says every table | inclusive reading recorded (G4.4); the flag is now in the Y and Y5 tables |
+| R1-4 | MINOR | the `slot.sh` watchdog came after the pre-registration without an amendment | amendment item 4 |
+| R1-5 | NOTE | the watchdog's 1,800 s window vs the silent end-of-run validation work (≈ 6 min on s0) | margin is 5 ×; watched on every run |
+| R1-6 | NOTE | `eval_code_commit` comes from `WM1_CODE_COMMIT`, not git | the reviewer checked the DGX worktrees are at the stated commits and clean; kept |
+| R1-7 | NOTE | per-seed paired CIs are in `judge.json` but not in `judge.md` | now in the Y table |
+| R1-8 | NOTE | `--eval-dataset` output does not record the target manifest's sha | the p10 manifest is unchanged since WM-1.2 (sha `d1d0a847…`); kept |

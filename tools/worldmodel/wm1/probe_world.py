@@ -118,6 +118,16 @@ def probe_observable(x: dict, labels: dict) -> dict:
     variance = float(np.var(days["test"])) if counts["test"] else 0.0
     if variance > 0 and min(counts.values()) >= 2:
         out["first_fission_day"] = regress({r: x[r][keep[r]] for r in x}, days) | {"worlds": counts}
+        # METRICS_1_3.md amendment (review round 1, F1): also the R^2 on the test worlds whose first split lies inside
+        # the train range of first-split days (a world splitting later than any train world is reported apart).
+        hi = float(days["train"].max())
+        inside = days["test"] <= hi
+        m, lam, _ = fit_select(x["train"][keep["train"]], days["train"][:, None], x["val"][keep["val"]],
+                               days["val"][:, None])
+        pred = m.predict(x["test"][keep["test"]])[:, 0]
+        out["first_fission_day"] |= {"train_range": [float(days["train"].min()), hi],
+                                     "test_outside_train_range": sorted(float(v) for v in days["test"][~inside]),
+                                     "r2_test_inside_train_range": r2(days["test"][inside], pred[inside])}
     else:
         out["first_fission_day"] = {"skipped": "test variance 0 (or too few worlds that split)", "worlds": counts,
                                     "test_variance": variance,
