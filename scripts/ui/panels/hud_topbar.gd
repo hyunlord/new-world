@@ -10,6 +10,7 @@ var _world_sim: Node = null
 var _shelters_label: Label
 var _agents_label: Label
 var _settlements_label: Label
+var _settlements_row: HBoxContainer
 var _sites_label: Label
 var _locale: Node = null
 var _clock_label: Label
@@ -41,7 +42,11 @@ func _ready() -> void:
 	_clock_label = ArtUI.pair(hbox, 9)
 	_clock_icon = hbox.get_child(0).get_child(0) as Sprite2D
 	_agents_label = ArtUI.pair(hbox, 1)
-	_settlements_label = ArtUI.pair(hbox, 2)
+	_settlements_row = HBoxContainer.new()
+	_settlements_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_settlements_row.add_theme_constant_override("separation", 8)
+	hbox.add_child(_settlements_row)
+	_settlements_label = ArtUI.pair(_settlements_row, 2)
 	_shelters_label = ArtUI.pair(hbox, 3)
 	_sites_label = ArtUI.pair(hbox, 4)
 	_winter_label = Label.new()
@@ -147,6 +152,7 @@ func _refresh() -> void:
 	if _settlements_label != null:
 		_settlements_label.text = _loc("HUD_SETTLEMENTS_FMT") % settle_n
 		_settlements_label.visible = settle_n >= 2
+		_settlements_row.visible = settle_n >= 2
 	if _sites_label != null:
 		_sites_label.text = _loc("BUILDING_STATE_BUILDING") + " %d" % site_n
 

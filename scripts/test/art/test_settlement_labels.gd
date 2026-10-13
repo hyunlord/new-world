@@ -49,10 +49,11 @@ func run() -> void:
 	topbar.set_process(false)
 	topbar._world_sim = world
 	topbar._refresh()
-	check(not topbar._settlements_label.visible, "actual topbar one village hidden")
+	check(not topbar._settlements_label.is_visible_in_tree() and not topbar._settlements_row.is_visible_in_tree(), "actual topbar one village label and icon hidden")
+	check(topbar._clock_label.is_visible_in_tree() and topbar._agents_label.is_visible_in_tree() and topbar._sites_label.is_visible_in_tree(), "one village keeps clock population and construction visible")
 	world.ids = PackedInt64Array([7, 42])
 	topbar._refresh()
-	check(topbar._settlements_label.visible and topbar._settlements_label.text == str(locale.call("ltr", "HUD_SETTLEMENTS_FMT")) % 2, "actual topbar two villages count localized")
+	check(topbar._settlements_label.visible and topbar._settlements_row.is_visible_in_tree() and topbar._settlements_label.text == str(locale.call("ltr", "HUD_SETTLEMENTS_FMT")) % 2, "actual topbar two villages count localized")
 	topbar.free()
 	world.free()
 	Selection.observe(society, settlements)
