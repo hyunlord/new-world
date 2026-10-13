@@ -2422,3 +2422,21 @@ Scratch exploration between rounds 2 and 3 (seeds 900000–900031 × 120 days, n
 Round 2's J4 cell: 25 of 25 daughters judged 28 days after founding were alive (30 daughters, 5 founded too late to judge).
 
 **Freeze** (after three of three judged rounds): commit `8142cc3a` (round 3, the best state: J1–J4 and J9 pass; J5 misses by one settlement-winter at 0.36; J6 misses Y9 work_1500 by 0.010). Binaries `p12bin/probe_frozen` (sha256 `5d92f398…`), `p12bin/wm_frozen` (sha256 `4d321052…`). Strikes (0.3 rule 7): J5 settlement-winter max — three rounds (0.417 → 0.38 → 0.36); hypothesis: seed 24's harsh winter (6–7 world dark nights) runs both villages out of wood whatever the floor; the remaining knob (adult damage) trades directly against J5's adult share (scratch B: adult 4 → adult share 0.05). J6 Y9 work_1500 on v18_nofission — three rounds (0.230, 0.230, 0.240); hypothesis: the 0.29 of Part 1's gap that the local-food flag does not restore (BISECTION.md), a mechanism question for follow-up work, not a knob.
+
+### Part 3 — 4.6 guard on the frozen commit (`probe_frozen`, 13:46–14:05 KST)
+
+`p12-3_guard_*` (v17, v17_nofission, v16 tuning sets) equal Part 2's guard runs on every value (0 differences in all six), hence Part 0's on every shared value.
+
+### Part 4 — held-out health (frozen `8142cc3a`, `probe_frozen`; held-out seeds 64–127 × 10 and 32–95 × 120; 13:46–14:05 KST, concurrently with the guard and the start of the pilot recording; no knob changed)
+
+J6 reference: game_v16 on the same held-out seeds (`p11-7_final_heldout_v16_*`, Pass 11's final binary, schema 11). J5 for game_v18 pools the stage counts and settlement-winters of tuning round 3 and held-out (`--extra-round120`); its H3 clauses are the held-out set's. J9 over the 128 seeds of both 10-day sets.
+
+| Target | game_v18 | game_v18_nofission |
+|---|---|---|
+| J1 | PASS (twins 64/64, 32/32... held-out 64 × 10 and 64 × 120) | PASS |
+| J2 | PASS | PASS |
+| J3 | **PASS**: fission share 0.703 (64 seeds), first-fission display day median 38, IQR 38 (p25 20, p75 58), peak day 15 holds 0.111, ≥ 2 alive at day 120 0.703, cancellations 0/67, never above max. h terciles: split rate per daily check 0.009 (h 0–18) / 0.027 (18–27) / 0.048 (27–66). First-fission day correlation with hidden parameters: all |r| ≤ 0.16 (berry_bushes −0.16, region_deadwood +0.16, wild_regions −0.15) | — |
+| J4 | **PASS** 1.00 (56 of 56 judged; 67 daughters, none dissolved or merged; founded spring 24, summer 15, autumn 28) | — |
+| J5 | FAIL: pooled child share 0.725 (> 0.70), adult 0.249, elder 0.026; settlement-winter max 0.571 (4 over of the pooled set: held-out seeds 39 (daughter 8/14), 66 (parent 12/26), 77 (daughter 11/28), tuning seed 24 (9/25)); Pass 11's world-level ratio max 0.267 (passes); share of seed-winters with a death 0.195, median 0, mild < normal < harsh (0 / 0.30 / 2.83); per-hour median 1; starvation + dehydration 0 at day 10 and max 0 at day 120 | reported: passes |
+| J6 | reported: fails Y5 autumn work, Y9 | FAIL: Y9 work_1500 0.213 (v16 0.241), idle_1200 0.629 (v16 0.617; both > 0.60); work_1200 0.357 PASS; every other clause PASS |
+| J9 | parameter means and climate shares PASS; realized region bushes 2,519 / 2,519 (1.00), deadwood 3,692 / 3,716 (0.994); placement failures 3 regions of 255 (seeds with 1 of 2, 2 of 3, 2 of 3 placed) — counted and explained: the water rule (centre within 12 of water) leaves no candidate centre 22–28 from the hearth and 20 from the earlier centres | same worlds |
