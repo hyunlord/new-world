@@ -1,0 +1,31 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.10s
+     Running unittests src/lib.rs (target/debug/deps/sim_bridge-f853611d32e40646)
+
+running 24 tests
+test ffi::world_node::pass3_agent_snapshot_tests::empty_world_has_empty_parallel_snapshot_rows ... ok
+test ffi::world_node::depleted_food_snapshot_tests::legacy_snapshot_omits_source_without_live_food ... ok
+test ffi::world_node::depleted_food_snapshot_tests::game_snapshot_keeps_depleted_bush_and_sorts_without_duplicates ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::missing_state_and_child_default_to_none_and_adult ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::colds_follow_snapshot_order ... ok
+test ffi::world_node::revitalize_tooling_tests::harness_economy_clock_snapshot_rolls_day_at_offset_midnight ... ok
+test ffi::world_node::revitalize_tooling_tests::intervention_feed_identity_distinguishes_equal_casts_and_targets ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::elders_report_stage_two_and_ages_follow_snapshot_order ... ok
+test ffi::world_node::revitalize_tooling_tests::parse_intervention_resolves_home_and_rejects_bad_input ... ok
+test ffi::world_node::revitalize_tooling_tests::tallies_collector_preserves_all_four_counters ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_handles_disabled_clock ... ok
+test ffi::world_node::revitalize_tooling_tests::apply_intervention_command_reports_ok_applied_and_tick ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::maturation_removes_child_flag_from_next_snapshot ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::wood_targets_floor_the_target_per_settlement_row ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_uses_completed_ticks_and_resource_clock ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_reports_seasons_from_the_display_day ... ok
+test ffi::world_node::pass3_agent_snapshot_tests::mixed_snapshot_targets_match_detail_and_live_child_markers ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::terrain_snapshot_preserves_all_codes_and_row_major_elevation ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::world_info_reads_world_seed_dimensions_and_rules ... ok
+test ffi::world_node::revitalize_world_snapshot_tests::building_snapshot_sorts_ids_and_defaults_legacy_to_hearth ... ok
+test ffi::world_node::revitalize_tooling_tests::intervention_state_is_read_only_sorted_bounded_and_preserves_variant_amounts ... ok
+test ffi::world_node::revitalize_tooling_tests::time_snapshot_reports_winter_severity_with_night_booking ... ok
+test ffi::world_node::revitalize_tooling_tests::tooling_advance_clamps_negative_and_excessive_requests ... ok
+test ffi::world_node::society_snapshot_tests::society_joins_built_world_agents_and_preserves_order_filter_and_history ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+

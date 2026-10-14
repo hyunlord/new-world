@@ -21,3 +21,37 @@ Morning chill persists90game minutes after cleared cold for awake villagers, fin
 
 ## Verification
 Natural live A1–A25, separate natural society A18 and A26–A32, labelled intervention A24/A33. Exact source/capture manifests, raw evidence outside git. A30 alternating50frame blocks,300on+300off, process brackets -1000/+1000 plus viewport CPU; GPU separate, vsync restored. Frozen blind answer files and fresh independent observers. Thresholds are never weakened; FAIL/N/A are retained. No image generation planned.
+
+## News panel
+
+Reuse existing ArtUI panel, existing theme and four-row typography. The counter uses the same Label styling below the rows. Daily summaries use20px text within the existing540px row so stored/eaten values remain readable. No new visual palette or assets. Protected news uses simulation ticks: 240 minimum protection and 480 tick expiry. Source event ticks and first observation ticks remain separate. Food summaries use observed ordinary stock changes; explicit casts and fission transfers are separately logged.
+
+## Full feed key to class table
+
+| Key | Class | Visible eligible | Village argument position (zero-based) |
+|---|---|---|---|
+| HUD_FEED_DEATH_STARVATION | protected | yes | none |
+| HUD_FEED_DEATH_DEHYDRATION | protected | yes | none |
+| HUD_FEED_DEATH_COMBAT | protected | yes | none |
+| HUD_FEED_DEATH_OLD_AGE | protected | yes | none |
+| HUD_FEED_DEATH_EXPOSURE | protected | yes | none |
+| HUD_FEED_FISSION_DEPARTED | protected | yes | 1 |
+| HUD_FEED_SETTLEMENT_FOUNDED | protected | yes | 0 |
+| HUD_FEED_FISSION_CANCELLED | protected | yes | none |
+| HUD_FEED_SETTLEMENT_ABANDONED | protected | yes | 0 |
+| HUD_FEED_SETTLEMENT_FORMED | protected | yes | 0 |
+| HUD_FEED_GOD_CAST_FMT | protected | yes | 0 |
+| HUD_FEED_SETTLEMENT_DISSOLVED | protected legacy alias, no current producer | yes if explicitly pushed | 0 |
+| HUD_FEED_AGENT_BORN | ordinary | yes | none (population) |
+| HUD_FEED_SITE_STARTED | ordinary | yes | none (construction ID) |
+| HUD_FEED_SITE_COMPLETED | ordinary | yes | none (construction ID) |
+| HUD_FEED_DAY_SUMMARY_FMT | ordinary | yes | 0 |
+| HUD_FEED_STOCKPILE_DEPOSIT | routine | never | 0 |
+| HUD_FEED_STOCKPILE_CONSUME | routine | never | 0 |
+| HUD_FEED_MORE_FMT | presentation counter, not an event | counter only | none |
+
+Store the same explicit mapping in `DESIGN.md` and code. Unknown keys should not silently become protected. Counter creation must not append feed events.
+
+### Protected history counter
+
+The four visible rows expire after480simulation ticks; minimum240tick protection remains unchanged. The +N counter represents all additional protected history not currently visible, including expired rows, until world reset. It is not an unread indicator: no acknowledgement or history-reader feature is claimed. Ordinary and routine history never contributes to this counter. This preserves A31 representation across widely spaced captures without keeping stale rows onscreen.

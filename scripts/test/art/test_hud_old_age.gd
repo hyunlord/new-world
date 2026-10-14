@@ -6,6 +6,7 @@ const DeathViz = preload("res://scripts/ui/death_viz_renderer.gd")
 
 class SnapshotWorld extends Node:
 	signal world_reset
+	var clock: Dictionary = {"tick": 0}
 	var tallies: Dictionary = {"deaths_starvation": 2, "deaths_dehydration": 3, "deaths_combat": 4}
 	func get_tallies() -> Dictionary: return tallies
 	func get_agent_snapshot() -> Dictionary: return {}
@@ -13,7 +14,7 @@ class SnapshotWorld extends Node:
 	func get_construction_snapshot() -> Dictionary: return {}
 	func get_building_snapshot() -> Dictionary: return {}
 	func get_resource_snapshot() -> Dictionary: return {}
-	func get_time_snapshot() -> Dictionary: return {}
+	func get_time_snapshot() -> Dictionary: return clock
 	func get_recent_deaths() -> Dictionary: return {}
 
 func _initialize() -> void:
@@ -57,7 +58,7 @@ func _run() -> void:
 	news._ingest_deaths(snapshot)
 	assert(news._entries.is_empty())
 	news._push("HUD_FEED_AGENT_BORN", [1])
-	news._frame_tick = 500
+	world.clock["tick"] = 500
 	news._prune_old()
 	assert(news._entries.is_empty())
 	news._ingest_deaths(snapshot)

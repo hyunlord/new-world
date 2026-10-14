@@ -162,8 +162,8 @@ ALERT_HUD_INJURED_FMT = {n} injured
 ALERT_HUD_LOW_FOOD = Low food
 ALERT_HUD_TECH_RISK_FMT = {n} tech at risk
 HUD_STOCKPILE_FOOD = Food
-HUD_FEED_STOCKPILE_DEPOSIT = Settlement %d stored %d Food
-HUD_FEED_STOCKPILE_CONSUME = Settlement %d used %d Food (famine)
+HUD_FEED_STOCKPILE_DEPOSIT = Village %d stored %d Food
+HUD_FEED_STOCKPILE_CONSUME = Village %d ate %d Food
 ALERT_HUNGER = Hungry - food low
 ALERT_HUNGRY = Hungry
 ALERT_HUNGRY_DETAIL = Low food
@@ -5152,9 +5152,9 @@ HUD_PHASE_NIGHT = Night
 
 HUD_BERRIES = Berries
 
-HUD_FEED_SETTLEMENT_FORMED = Settlement %d founded
+HUD_FEED_SETTLEMENT_FORMED = Village %d formed
 
-HUD_FEED_SETTLEMENT_DISSOLVED = Settlement %d abandoned
+HUD_FEED_SETTLEMENT_DISSOLVED = Village %d abandoned
 
 HUD_FEED_SITE_STARTED = Construction %d started
 
@@ -5251,3 +5251,6 @@ HUD_FEED_FISSION_DEPARTED = %d people left Village %d
 HUD_FEED_SETTLEMENT_FOUNDED = Village %d was founded
 HUD_FEED_FISSION_CANCELLED = A group turned back
 HUD_FEED_SETTLEMENT_ABANDONED = Village %d was abandoned
+HUD_FEED_DAY_SUMMARY_FMT = Village %d today: food %+d (stored %d, eaten %d)
+HUD_FEED_MORE_FMT = +%d more
+HUD_FEED_GOD_CAST_FMT = God's hand on Village %d: %s

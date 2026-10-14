@@ -92,10 +92,18 @@ func reply_text(kind: String, amount: int, applied: int) -> String:
 func cast_kind(kind: String) -> void:
 	if _world == null or not PRESETS.has(kind):
 		return
+	for feed: Node in get_tree().get_nodes_in_group("art_news_feed"):
+		feed.call("_ingest_snapshots")
 	_reply_target = Selection.resolved_target()
 	_reply = _world.call("apply_intervention", kind, Selection.selected_id, int(PRESETS[kind]))
 	if bool(_reply.get("ok", false)):
 		Selection.record_cast(int(_reply.get("tick", -1)), kind, _reply_target)
+		var state: Dictionary = _world.call("get_intervention_state") if _world.has_method("get_intervention_state") else {}
+		var ids: PackedInt64Array = state.get("log_ids", PackedInt64Array())
+		for feed: Node in get_tree().get_nodes_in_group("art_news_feed"):
+			if not ids.is_empty():
+				feed.call("record_cast_context", ids[-1], _reply_target)
+			feed.call("_ingest_snapshots")
 		for effect: Node in get_tree().get_nodes_in_group("art_god_hand_effects"):
 			if effect.has_method("notify_cast"):
 				effect.call("notify_cast", kind, _reply_target)

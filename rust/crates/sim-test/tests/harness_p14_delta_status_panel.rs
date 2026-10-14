@@ -308,15 +308,17 @@ fn harness_p14_delta_a8_variant_safe_pattern_matches_hud_topbar_idiom() {
 // ─── A9: notification feed constants ──────────────────────────────────────
 #[test]
 fn harness_p14_delta_a9_notification_feed_constants_present() {
-    // Type A — MAX_VISIBLE_NOTIFICATIONS == 5 AND NOTIF_FADE_FRAMES == 480.
+    // Type A — MAX_VISIBLE_NOTIFICATIONS == 5 AND NOTIF_FADE_TICKS == 480.
     let stripped = strip_gd_comments(&read_hud_status_panel_src());
     let max_rhs = unique_decl_rhs(&stripped, "MAX_VISIBLE_NOTIFICATIONS", "A9.max");
-    let fade_rhs = unique_decl_rhs(&stripped, "NOTIF_FADE_FRAMES", "A9.fade");
+    let fade_rhs = unique_decl_rhs(&stripped, "NOTIF_FADE_TICKS", "A9.fade");
+    let protected_rhs = unique_decl_rhs(&stripped, "PROTECTED_RETAIN_TICKS", "A9.protected");
+    assert_eq!(parse_int_rhs(&protected_rhs), Some(240));
     let max_n = parse_int_rhs(&max_rhs).unwrap_or_else(|| {
         panic!("A9: MAX_VISIBLE_NOTIFICATIONS RHS must parse as int; got `{max_rhs}`")
     });
     let fade_n = parse_int_rhs(&fade_rhs).unwrap_or_else(|| {
-        panic!("A9: NOTIF_FADE_FRAMES RHS must parse as int; got `{fade_rhs}`")
+        panic!("A9: NOTIF_FADE_TICKS RHS must parse as int; got `{fade_rhs}`")
     });
     assert_eq!(
         max_n, 4,
@@ -324,9 +326,9 @@ fn harness_p14_delta_a9_notification_feed_constants_present() {
     );
     assert_eq!(
         fade_n, 480,
-        "A9: NOTIF_FADE_FRAMES must equal 480; got {fade_n}"
+        "A9: NOTIF_FADE_TICKS must equal 480; got {fade_n}"
     );
-    println!("[P14-δ A9] MAX_VISIBLE_NOTIFICATIONS=5 + NOTIF_FADE_FRAMES=480 ✓");
+    println!("[P14-δ A9] MAX_VISIBLE_NOTIFICATIONS=5 + NOTIF_FADE_TICKS=480 ✓");
 }
 
 // ─── A10: main.tscn registers HudStatusPanel under UI ─────────────────────

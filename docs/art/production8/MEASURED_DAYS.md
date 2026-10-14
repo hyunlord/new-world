@@ -319,3 +319,5 @@ getter 482행, probe와 동일 tick 479행, cold·생존마을 불일치 0건.
 | 77 | () |
 
 headless 원자료는 measurements/headless_<seed>.json.gz에 무손실 압축했고 외부 evidence 원본도 보존했다.
+
+두 headless 실행은 모두 종료코드0, `P8 MEASURE PASS ... rows=482`를 기록했다. 첫 교차검증은 Godot PackedByteArray의 `fire_lit` 값이 JSON 배열 대신 문자열 `"[1]"`로 직렬화되는 경계 형식 때문에 실패했다. 명시적으로 정수 배열 문자열을 해석하도록 수정한 재실행은 종료코드0/PASS이며, 처음 실패 로그 `art-production8-evidence/crosscheck-p0.log`와 재실행 로그 `crosscheck-p0-retry.log`를 둘 다 보존했다. gzip 해제 바이트의 SHA256이 외부 원본 및 기록값과 일치함을 확인했다.

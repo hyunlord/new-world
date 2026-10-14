@@ -5,6 +5,7 @@ const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const SocietyTrace = preload("res://scripts/test/art/capture_society_trace.gd")
 const ColdTrace = preload("res://scripts/test/art/capture_cold_trace.gd")
+const EventTrace = preload("res://scripts/test/art/capture_event_trace_p8.gd")
 
 const ORIGIN: Vector2 = Vector2(448, 28)
 const TILE_SIZE: float = 16.0
@@ -39,6 +40,7 @@ var _seed: int = 20261010
 var _target_name: String = ""
 var _plan_row: Array = []
 var _cold_trace: RefCounted = ColdTrace.new()
+var _event_trace: RefCounted = EventTrace.new()
 
 
 func _init() -> void:
@@ -98,6 +100,7 @@ func _run() -> void:
 		return
 	var info: Dictionary = _world.call("get_world_info")
 	_clock_offset = int(info.get("clock_offset_ticks", 0))
+	_sample_event_truth(_world.call("get_agent_snapshot"))
 	if int(info.get("ticks_per_day", 0)) != 1440:
 		_fail("clock plan requires 1440 ticks per day")
 		return
@@ -229,6 +232,7 @@ func _run() -> void:
 					return
 				button.emit_signal("pressed")
 				var reply: Dictionary = (cast_panel.get("_reply") as Dictionary).duplicate(true)
+				_sample_event_truth(_world.call("get_agent_snapshot"))
 				_last_cast_usec = Time.get_ticks_usec()
 				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": Selection.selected_id, "seed": _seed, "tick": target, "reply": reply, "input_surface": "GodHandPanel button pressed"})
 				if not bool(reply.get("ok", false)):
@@ -379,16 +383,19 @@ func _advance_to(target: int) -> bool:
 	var agents: Node = _main.get_node_or_null("AgentRenderer")
 	var trail: Node = _main.get_node_or_null("ActivityTrailRenderer")
 	var status: Node = _main.get_node_or_null("UI/HudStatusPanel")
+	var motion_start: int = maxi(tick, target - 8)
 	while tick < target:
-		if target - tick <= 8:
+		if tick == motion_start:
 			_motion_before = _world.call("get_agent_snapshot")
 			_motion_start_tick = tick
-		tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+		# Observe each stock delta and the exact 20:00 closing boundary.
+		tick = int(_world.call("advance_ticks", 1))
 		_death_trace.ingest(_world.call("get_recent_deaths"))
 		_remember_settlements()
 		if status != null and status.has_method("_ingest_snapshots"):
 			status.call("_ingest_snapshots")
 		var snapshot: Dictionary = _world.call("get_agent_snapshot")
+		_sample_event_truth(snapshot)
 		_cold_trace.ingest(snapshot, tick)
 		if agents != null and agents.has_method("ingest_chill_snapshot"):
 			agents.call("ingest_chill_snapshot", snapshot, tick)
@@ -397,6 +404,10 @@ func _advance_to(target: int) -> bool:
 		if trail != null:
 			trail.call("_process", 0.0)
 	return tick == target
+
+
+func _sample_event_truth(agents: Dictionary) -> void:
+	_event_trace.ingest(_world.call("get_time_snapshot"), _world.call("get_settlement_snapshot"), _world.call("get_society_snapshot"), _world.call("get_construction_snapshot"), _world.call("get_tallies"), _world.call("get_intervention_state"), agents)
 
 
 func _set_agent_layers(shown: bool) -> void:
@@ -450,6 +461,8 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		death["in_view"] = Rect2(Vector2.ZERO, viewport).has_point(death_screen)
 	data["feed_log"] = _draw_counter("UI/HudStatusPanel", "get_feed_log")
 	data["feed_visible"] = _draw_counter("UI/HudStatusPanel", "get_visible_feed")
+	data["feed_audit"] = _draw_counter("UI/HudStatusPanel", "capture_feed_metadata")
+	data["event_truth_trace"] = _event_trace.metadata()
 	data["hud_death_total"] = _draw_counter("UI/HudTopbar", "get_death_total")
 	var society_layers: Dictionary = {}
 	for layer: Node in get_nodes_in_group("art_society_layers"):
@@ -724,10 +737,12 @@ func _reset_capture_world(seed: int) -> void:
 	_motion_start_tick = -1
 	_motion_end_tick = -1
 	_cold_trace = ColdTrace.new()
+	_event_trace.reset()
 	_death_trace.reset()
 	_world.call("reset_world", seed)
 	_world.call("set_sim_speed", 0.0)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
+	_sample_event_truth(_world.call("get_agent_snapshot"))
 	var info: Dictionary = _world.call("get_world_info")
 	_clock_offset = int(info.get("clock_offset_ticks", 0))
 	await process_frame

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5213,
+    "active_key_count": 5216,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5218,
+    "key_count": 5221,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1298,13 +1298,13 @@
     "HUD_FEED_FISSION_CANCELLED": "A group turned back",
     "HUD_FEED_FISSION_DEPARTED": "%d people left Village %d",
     "HUD_FEED_SETTLEMENT_ABANDONED": "Village %d was abandoned",
-    "HUD_FEED_SETTLEMENT_DISSOLVED": "Settlement %d abandoned",
-    "HUD_FEED_SETTLEMENT_FORMED": "Settlement %d founded",
+    "HUD_FEED_SETTLEMENT_DISSOLVED": "Village %d abandoned",
+    "HUD_FEED_SETTLEMENT_FORMED": "Village %d formed",
     "HUD_FEED_SETTLEMENT_FOUNDED": "Village %d was founded",
     "HUD_FEED_SITE_COMPLETED": "Construction %d finished",
     "HUD_FEED_SITE_STARTED": "Construction %d started",
-    "HUD_FEED_STOCKPILE_CONSUME": "Settlement %d used %d Food (famine)",
-    "HUD_FEED_STOCKPILE_DEPOSIT": "Settlement %d stored %d Food",
+    "HUD_FEED_STOCKPILE_CONSUME": "Village %d ate %d Food",
+    "HUD_FEED_STOCKPILE_DEPOSIT": "Village %d stored %d Food",
     "HUD_NEWS_TITLE": "Village news",
     "HUD_PHASE_DAY": "Daytime",
     "HUD_PHASE_NIGHT": "Night",
@@ -5252,6 +5252,9 @@
     "ZODIAC_SAGITTARIUS": "Sagittarius",
     "ZODIAC_SCORPIO": "Scorpio",
     "ZODIAC_TAURUS": "Taurus",
-    "ZODIAC_VIRGO": "Virgo"
+    "ZODIAC_VIRGO": "Virgo",
+    "HUD_FEED_DAY_SUMMARY_FMT": "Village %d today: food %+d (stored %d, eaten %d)",
+    "HUD_FEED_MORE_FMT": "+%d more",
+    "HUD_FEED_GOD_CAST_FMT": "God's hand on Village %d: %s"
   }
 }

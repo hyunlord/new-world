@@ -5,8 +5,8 @@ Start: 2026-10-14T01:12:55Z. Deadline rule: after 2026-10-14T11:12:55Z finish cu
 | Part | Deliverable | Start UTC | End UTC | State |
 |---|---|---|---|---|
 | 0 | Preserve brief, merge, gate, measure worlds, baseline captures | 2026-10-14T01:12:55Z | 2026-10-14T02:04:00Z | complete; headless crosscheck 479 shared ticks/world, zero mismatches |
-| 1 | Classified news, summaries, retention, wording + tests | 2026-10-14T02:04:00Z | | in progress |
-| 2 | Offscreen arrows + tests | | | pending |
+| 1 | Classified news, summaries, retention, wording + tests | 2026-10-14T02:04:00Z | 2026-10-14T02:17:51Z | complete |
+| 2 | Offscreen arrows + tests | 2026-10-14T02:17:51Z | | in progress |
 | 3 | Pressure getter and meter + tests | | | pending |
 | 4 | Crowd diagnosis/fix, chill, effects, paired CPU measurement | | | pending |
 | 5 | Natural, society, intervention captures with provenance | | | pending |

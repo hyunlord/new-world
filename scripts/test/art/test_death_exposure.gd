@@ -58,9 +58,10 @@ func _run() -> void:
 	assert(news.get_feed_log()[5]["death_id"] != news.get_feed_log()[6]["death_id"])
 	news._ingest_deaths(duplicate)
 	assert(news.get_feed_log().size() == 7)
-	news._frame_tick = 500
+	world.clock["tick"] = 40389 + 500
 	news._prune_old()
 	assert(news.get_visible_feed().is_empty() and news.get_feed_log().size() == 7)
+	world.clock["tick"] = 40389
 	news._push("HUD_FEED_AGENT_BORN", [9])
 	assert(news.get_feed_log()[-1]["tick"] == 40389)
 	var copied_log: Array = news.get_feed_log()

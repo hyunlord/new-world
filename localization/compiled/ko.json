@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5213,
+    "active_key_count": 5216,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5218,
+    "key_count": 5221,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -1298,13 +1298,13 @@
     "HUD_FEED_FISSION_CANCELLED": "무리가 돌아왔다",
     "HUD_FEED_FISSION_DEPARTED": "%d명이 %d번 마을을 떠났다",
     "HUD_FEED_SETTLEMENT_ABANDONED": "%d번 마을이 버려졌다",
-    "HUD_FEED_SETTLEMENT_DISSOLVED": "정착지 %d 해체",
-    "HUD_FEED_SETTLEMENT_FORMED": "정착지 %d 형성",
+    "HUD_FEED_SETTLEMENT_DISSOLVED": "%d번 마을이 버려졌다",
+    "HUD_FEED_SETTLEMENT_FORMED": "%d번 마을이 형성되었다",
     "HUD_FEED_SETTLEMENT_FOUNDED": "%d번 마을이 세워졌다",
     "HUD_FEED_SITE_COMPLETED": "건설 %d 완료",
     "HUD_FEED_SITE_STARTED": "건설 %d 시작",
-    "HUD_FEED_STOCKPILE_CONSUME": "정착지 %d 기근 식량 %d 소비",
-    "HUD_FEED_STOCKPILE_DEPOSIT": "정착지 %d 식량 %d 적재",
+    "HUD_FEED_STOCKPILE_CONSUME": "%d번 마을 식량 %d 소비",
+    "HUD_FEED_STOCKPILE_DEPOSIT": "%d번 마을 식량 %d 저장",
     "HUD_NEWS_TITLE": "마을 소식",
     "HUD_PHASE_DAY": "낮",
     "HUD_PHASE_NIGHT": "밤",
@@ -5252,6 +5252,9 @@
     "ZODIAC_SAGITTARIUS": "사수자리",
     "ZODIAC_SCORPIO": "전갈자리",
     "ZODIAC_TAURUS": "황소자리",
-    "ZODIAC_VIRGO": "처녀자리"
+    "ZODIAC_VIRGO": "처녀자리",
+    "HUD_FEED_DAY_SUMMARY_FMT": "%d번 마을 오늘: 식량 %+d (저장 %d, 소비 %d)",
+    "HUD_FEED_MORE_FMT": "+%d건 더",
+    "HUD_FEED_GOD_CAST_FMT": "%d번 마을에 신의 손: %s"
   }
 }

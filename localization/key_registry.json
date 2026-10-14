@@ -1,6 +1,6 @@
 {
-  "active_key_count": 5213,
-  "key_count": 5218,
+  "active_key_count": 5216,
+  "key_count": 5221,
   "key_to_id": {
     "ACE_DOMESTIC_VIOLENCE": 0,
     "ACE_EMOTIONAL_ABUSE": 1,
@@ -5219,7 +5219,10 @@
     "ZODIAC_SAGITTARIUS": 4033,
     "ZODIAC_SCORPIO": 4034,
     "ZODIAC_TAURUS": 4035,
-    "ZODIAC_VIRGO": 4036
+    "ZODIAC_VIRGO": 4036,
+    "HUD_FEED_DAY_SUMMARY_FMT": 5218,
+    "HUD_FEED_GOD_CAST_FMT": 5219,
+    "HUD_FEED_MORE_FMT": 5220
   },
   "keys": [
     "ACE_DOMESTIC_VIOLENCE",
@@ -10439,7 +10442,10 @@
     "HUD_SETTLEMENTS_FMT",
     "SETTLEMENT_ABANDONED_FMT",
     "SETTLEMENT_LABEL_DAUGHTER_FMT",
-    "SETTLEMENT_LABEL_FMT"
+    "SETTLEMENT_LABEL_FMT",
+    "HUD_FEED_DAY_SUMMARY_FMT",
+    "HUD_FEED_GOD_CAST_FMT",
+    "HUD_FEED_MORE_FMT"
   ],
   "removed_key_count": 5,
   "removed_keys": [

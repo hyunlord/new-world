@@ -289,6 +289,8 @@ impl WorldSimNode {
         dict.set("cold_snap_nights_left", i64::from(state.cold_snap_nights_left));
         dict.set("cold_snap_tonight", state.cold_snap_tonight);
         dict.set("log_ticks", PackedInt64Array::from(state.log_ticks.as_slice()));
+        dict.set("log_ids", PackedInt64Array::from(state.log_ids.as_slice()));
+        dict.set("log_settlement_ids", PackedInt32Array::from(state.log_settlement_ids.as_slice()));
         let kinds: Vec<GString> = state.log_kinds.iter().map(|kind| GString::from(*kind)).collect();
         dict.set("log_kinds", PackedStringArray::from(kinds.as_slice()));
         dict.set("log_amounts", PackedInt64Array::from(state.log_amounts.as_slice()));
@@ -2401,6 +2403,7 @@ struct SocietySnapshot {
     fission_founded_ticks: Vec<i64>,
     fission_cancelled_ticks: Vec<i64>,
     fission_daughters: Vec<i32>,
+    fission_food_taken: Vec<i64>,
     retired_hearth_xs: Vec<i32>,
     retired_hearth_ys: Vec<i32>,
     current_tick: i64,
@@ -2453,6 +2456,7 @@ fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> So
         snapshot.fission_founded_ticks.push(record.founded_tick.map_or(-1, |tick| tick as i64));
         snapshot.fission_cancelled_ticks.push(record.cancelled_tick.map_or(-1, |tick| tick as i64));
         snapshot.fission_daughters.push(record.daughter.map_or(-1, |id| id as i32));
+        snapshot.fission_food_taken.push(i64::from(record.food_taken));
     }
     for &(x, y) in &resources.retired_hearths {
         snapshot.retired_hearth_xs.push(x as i32);
@@ -2490,6 +2494,7 @@ fn society_snapshot_to_dict(snapshot: &SocietySnapshot) -> VarDictionary {
         ("fission_depart_ticks", &snapshot.fission_depart_ticks),
         ("fission_founded_ticks", &snapshot.fission_founded_ticks),
         ("fission_cancelled_ticks", &snapshot.fission_cancelled_ticks),
+        ("fission_food_taken", &snapshot.fission_food_taken),
     ] {
         dict.set(key, PackedInt64Array::from(values.as_slice()));
     }
@@ -2863,6 +2868,10 @@ pub struct InterventionState {
     pub cold_snap_tonight: bool,
     /// Ticks of the last 32 records, oldest first.
     pub log_ticks: Vec<i64>,
+    /// Absolute record indices, stable across the bounded presentation window.
+    pub log_ids: Vec<i64>,
+    /// Actual target settlement, or -1 for world-wide interventions.
+    pub log_settlement_ids: Vec<i32>,
     /// Canonical intervention names, paired with log ticks.
     pub log_kinds: Vec<&'static str>,
     /// Requested units, hours or nights for each record.
@@ -2886,7 +2895,7 @@ pub fn collect_intervention_state(resources: &SimResources, now: u64) -> Interve
         state.rain_settlement_ids.push(i32::try_from(*id).unwrap_or(i32::MAX));
         state.rain_ticks_left.push(i32::try_from(*until - now).unwrap_or(i32::MAX));
     }
-    for record in resources.intervention_log.iter().skip(resources.intervention_log.len().saturating_sub(32)) {
+    for (index, record) in resources.intervention_log.iter().enumerate().skip(resources.intervention_log.len().saturating_sub(32)) {
         let (kind, amount) = match record.intervention {
             Intervention::GiftFood { amount, .. } => (KINDS[0], amount),
             Intervention::SpoilFood { amount, .. } => (KINDS[1], amount),
@@ -2896,6 +2905,16 @@ pub fn collect_intervention_state(resources: &SimResources, now: u64) -> Interve
             Intervention::ColdSnap { nights } => (KINDS[5], nights),
             Intervention::Windfall { units } => (KINDS[6], units),
         };
+        let settlement = match record.intervention {
+            Intervention::GiftFood { settlement, .. }
+            | Intervention::SpoilFood { settlement, .. }
+            | Intervention::GiftWood { settlement, .. }
+            | Intervention::RotWood { settlement, .. }
+            | Intervention::Rain { settlement, .. } => i32::try_from(settlement).unwrap_or(i32::MAX),
+            Intervention::ColdSnap { .. } | Intervention::Windfall { .. } => -1,
+        };
+        state.log_ids.push(i64::try_from(index).unwrap_or(i64::MAX));
+        state.log_settlement_ids.push(settlement);
         state.log_ticks.push(i64::try_from(record.tick).unwrap_or(i64::MAX));
         state.log_kinds.push(kind);
         state.log_amounts.push(i64::from(amount));
@@ -3094,6 +3113,8 @@ mod revitalize_tooling_tests {
         assert_eq!(state.rain_ticks_left, [10, 20]);
         assert_eq!((state.cold_snap_nights_left, state.cold_snap_tonight), (2, true));
         assert_eq!(state.log_ticks, (3..35).collect::<Vec<i64>>());
+        assert_eq!(state.log_ids, (3..35).collect::<Vec<i64>>());
+        assert_eq!(state.log_settlement_ids, (3..35).map(|index| if index % 7 < 5 { 2 } else { -1 }).collect::<Vec<i32>>());
         assert_eq!(state.log_amounts, (4..36).collect::<Vec<i64>>());
         assert_eq!(state.log_applied, state.log_ticks);
         for (offset, kind) in state.log_kinds.iter().enumerate() {
@@ -3102,6 +3123,25 @@ mod revitalize_tooling_tests {
         assert_eq!(state, super::collect_intervention_state(&resources, 10));
         assert_eq!(resources.intervention_log.len(), 35);
         assert_eq!(resources.fire_blocked_until.len(), 4);
+    }
+
+    #[test]
+    fn intervention_feed_identity_distinguishes_equal_casts_and_targets() {
+        use sim_engine::{Intervention, InterventionRecord, SimResources};
+        let mut resources = SimResources::new(1, 1, MaterialRegistry::new());
+        for settlement in [7, 42, 7] {
+            resources.intervention_log.push(InterventionRecord {
+                tick: 12,
+                intervention: Intervention::GiftFood { settlement, amount: 60 },
+                applied: 60,
+                soaked_wood: 0,
+            });
+        }
+        let state = super::collect_intervention_state(&resources, 12);
+        assert_eq!(state.log_ids, [0, 1, 2]);
+        assert_eq!(state.log_ticks, [12, 12, 12]);
+        assert_eq!(state.log_settlement_ids, [7, 42, 7]);
+        assert_eq!(state.log_applied, [60, 60, 60]);
     }
 
     #[test]
@@ -3407,13 +3447,13 @@ mod society_snapshot_tests {
             FissionRecord {
                 fission_id: 2, parent, site: (8, 9), depart_tick: 100,
                 members: vec![first], adults: 1, daughter: None, founded_tick: None,
-                cancelled_tick: None, food_taken: 0, wood_taken: 0, settled_at_leader: false,
+                cancelled_tick: None, food_taken: 23, wood_taken: 0, settled_at_leader: false,
                 pressure_at_split: 0, threshold_at_split: 0,
             },
             FissionRecord {
                 fission_id: 1, parent, site: (2, 3), depart_tick: 80,
                 members: vec![second], adults: 1, daughter: Some(20), founded_tick: Some(120),
-                cancelled_tick: Some(90), food_taken: 0, wood_taken: 0, settled_at_leader: false,
+                cancelled_tick: Some(90), food_taken: 17, wood_taken: 0, settled_at_leader: false,
                 pressure_at_split: 0, threshold_at_split: 0,
             },
         ];
@@ -3444,6 +3484,7 @@ mod society_snapshot_tests {
         assert_eq!(snapshot.fission_founded_ticks, vec![120, -1]);
         assert_eq!(snapshot.fission_cancelled_ticks, vec![90, -1]);
         assert_eq!(snapshot.fission_daughters, vec![20, -1]);
+        assert_eq!(snapshot.fission_food_taken, vec![17, 23]);
         assert_eq!(snapshot.retired_hearth_xs, vec![2, 9]);
         assert_eq!(snapshot.retired_hearth_ys, vec![5, 4]);
         assert_eq!(snapshot.current_tick, engine.resources.current_tick as i64);
