@@ -443,3 +443,8 @@ Existing stockpile locale/registry tests and screen clock contract remain unchan
 - Part1 `scripts/test/art/test_hud_old_age.gd`: the other legacy frame-clock expiry fixture now injects world tick500; optional tally, dedup, expiry, rollback and malformed-array checks remain intact. Evidence: `production8/gates/p1/test_hud_old_age.log`.
 
 - Part1 durable protected-history counter: `test_feed_priority.gd` additionally requires expired departure/cast/burst IDs represented after800ticks and cleared on reset. The counter is additional protected history, not unread acknowledgement; it never includes routine/ordinary lines.
+
+| Art Pass 8 Part5 fixture | Preserved contract | Measured v19 expectation | Evidence |
+|---|---|---|---|
+| `scripts/test/art/test_capture_plans_p6.gd` | Exact natural plan, chronological per-world replay, explicit reset boundaries, deterministic carrier, retained intervention scenarios | Replace v17 exact27 with v19 exact30 from `production8/MEASURED_DAYS.md`; retain original scenario and add separately reset P/G worlds; validate all paired roles, days, amounts, targets and unique exact stems. No acceptance threshold changed. | `production8/gates/p5capture/plans.log` retains stale-fixture failure; `plans-v19.log`: explicit PASS, exit0 |
+| `scripts/test/art/test_capture_metadata.gd` | All existing raw metadata/geometry checks and seasonal frame assertions | Cold nights28/29,55/56/57,84/85; warm-control26 07:15; exactly one real live exposure at57 04:01 instead of two stale v17 dates. | `production8/gates/p5capture/metadata.log` retains stale-fixture failure; `metadata-v19.log`: failures=0, exit0 |

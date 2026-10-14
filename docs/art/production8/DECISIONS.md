@@ -24,3 +24,6 @@
 - A18 preserves the 3 screen-pixel perpendicular limit and original occlusion threshold even where it cannot resolve a dense cluster; blocked or non-improving offsets remain zero. Raw sidecars include direction and both world/screen offset vectors.
 - A28 retains its inherited stake-on-screen criterion exactly; the new offscreen-arrow solution is measured independently by A32. A proposed P8 A28 reinterpretation was rejected and reverted before measurement.
 - The post-Part3 INT64 boundary guard requires intentional integer division; a local integer_division warning annotation preserves exact thirds rather than replacing it with floating-point rounding. Subsequent strict check passed.
+
+- Part5 ART_GOD executes four chronological reset-bounded segments (live, society, P, G), preserving the1100s per-window limit. Each paired segment explicitly RESETs the same seed, retains the exact three cast dates and runs to day120. Combined provenance retains each source run_id and world_epoch; P/G need not share a process (only A30 does). No scenario/date/cast is dropped.
+- Final sidecars and cast/frame manifest rows carry run_id, world_epoch, world_label and code SHA to distinguish equal epoch numbers across independently bounded P/G processes.

@@ -10,36 +10,34 @@ const ART: Array[Array] = [
 # Society dates are populated from Part 0 measurements, never from planner estimates.
 const ART_SOCIETY: Array[Array] = [
 	["RESET", 20261013],
-	[28, "22:00", "F2", "orig"],
-	[29, "06:30", "FD", "leader"], [29, "06:30", "FT", "site"],
-	[29, "07:00", "FD", "leader"], [29, "08:00", "FD", "leader"], [29, "08:19", "FS", "daughter"],
-	[29, "09:09", "FV", "all"],
-	[29, "12:00", "FV", "all"],
-	[29, "12:00", "FV", "all", "orig"], [29, "12:00", "FV", "all", "daughter"],
+	[32, "22:00", "F2W", "orig"],
+	[33, "06:30", "FD", "leader"], [33, "06:30", "FT", "site"],
+	[33, "08:00", "FD", "leader"], [33, "08:59", "FS", "daughter"],
+	[33, "09:00", "F2W", "orig"], [33, "09:49", "FV", "all"],
+	[33, "12:00", "FV", "all"],
+	[33, "12:00", "FV", "all", "orig"], [33, "12:00", "FV", "all", "daughter"],
 	[51, "02:00", "F2N", "daughter"], [51, "12:00", "FV", "all"],
 	[84, "02:00", "F2N", "daughter"], [84, "12:00", "FV", "all"],
-	[85, "01:01", "DE", "daughter"], [85, "06:30", "FD", "leader"],
-	[85, "08:42", "FV", "all"],
+	[89, "06:30", "FD", "leader"], [89, "12:34", "FV", "all"],
+	[120, "12:00", "FV", "all"],
 ]
 
-# This required observation is impossible: the first group founded at 08:09.
-# Run separately to preserve the explicit FD failure without losing the main plan.
-const ART_SOCIETY_REJECTED_WALK: Array[Array] = [
-	["RESET", 20261013], [29, "10:00", "FD", "leader"],
-]
+# The v19 first walk lasts through the required +2h frame; no rejected walk is needed.
+const ART_SOCIETY_REJECTED_WALK: Array[Array] = []
 
 const ART_LONG: Array[Array] = [
 	[10, "12:00", "F2"], [10, "15:00", "F2"], [10, "15:00", "F5"],
-	[15, "15:00", "F2"], [15, "15:30", "FC"], [16, "15:00", "FC"],
-	[18, "12:00", "F2"],
-	[23, "02:00", "F2N"],
+	[15, "15:00", "F2"], [15, "15:00", "FC"], [16, "15:00", "FC"],
+	[18, "12:00", "F2"], [23, "02:00", "F2N"],
 	[24, "12:00", "F2"], [24, "12:00", "F1"], [24, "23:00", "F2N"],
-	[25, "02:00", "F2N"], [27, "02:00", "F2N"], [27, "07:15", "F2"],
-	[28, "02:00", "F2N"], [28, "02:00", "F2Z"], [29, "02:00", "F2N"],
-	[29, "06:30", "F2"], [29, "07:15", "F2"],
-	[32, "12:00", "F2"], [40, "12:00", "F2"],
-	[56, "02:00", "F2N"], [57, "02:00", "F2N"], [57, "03:01", "DE"],
-	[84, "02:00", "F2N"], [85, "02:00", "F2N"], [85, "04:01", "DE"],
+	[26, "07:15", "F2"],
+	[28, "02:00", "F2N"], [28, "02:00", "F2Z"], [28, "07:15", "F2"],
+	[29, "02:00", "F2N"], [29, "06:30", "F2"], [29, "07:15", "F2"],
+	[32, "12:00", "F2"], [40, "12:00", "F2"], [43, "15:00", "FC"],
+	[55, "02:00", "F2N"], [56, "02:00", "F2N"],
+	[57, "02:00", "F2N"], [57, "04:01", "DE"], [57, "07:15", "F2"],
+	[71, "15:00", "FC"],
+	[84, "02:00", "F2N"], [85, "02:00", "F2N"], [85, "07:15", "F2"],
 ]
 
 
@@ -79,9 +77,13 @@ static func write_json(path: String, data: Variant) -> bool:
 
 
 # Cast-only entries and images share one chronological, forward-only world.
-# Extra fields: kind, amount, cumulative real seconds since cast, suffix.
+# Extra fields: kind, amount, cumulative real seconds since cast, suffix, target.
+# Optional index8 metadata: paired_world, case_id, stem_override, role.
+# At equal06:00 ticks, morning precedes the next cast to preserve the pre-dose reading.
 const ART_GOD: Array[Array] = [
 	[10, "12:00", "F2", "spoil_food", 60, 0.5, "spoil"],
+	[10, "12:05", "F2", "rot_wood", 40, 0.5, "rot_wood"],
+	[10, "12:10", "F2", "gift_food", 60, 0.5, "gift_food"],
 	[16, "17:00", "CAST", "cold_snap", 1, 0.0, ""],
 	[17, "02:00", "F2N", "", 0, 1.15, "cold_snap"],
 	[23, "12:00", "F2", "gift_wood", 40, 1.0, "gift"],
@@ -96,6 +98,22 @@ const ART_GOD: Array[Array] = [
 	[51, "02:00", "F2N", "", 0, 1.15, "soc_rain_night", "daughter"],
 	[51, "02:00", "F2N", "", 0, 1.15, "soc_original_night", "orig"],
 	[51, "02:00", "FV", "", 0, 1.15, "soc_both_night", "all"],
+	["RESET", 20261013],
+	[30, "06:00", "F2", "spoil_food", 60, 0.5, "p_spoil_cast", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d30_0600_F2_cast_orig", "role": "cast"}],
+	[31, "06:00", "F2", "", 0, 1.15, "p_spoil_morning", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d31_0600_F2_morning_orig", "role": "morning"}],
+	[31, "06:00", "F2", "spoil_food", 60, 0.5, "p_spoil_cast", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d31_0600_F2_cast_orig", "role": "cast"}],
+	[32, "06:00", "F2", "", 0, 1.15, "p_spoil_morning", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d32_0600_F2_morning_orig", "role": "morning"}],
+	[32, "06:00", "F2", "spoil_food", 60, 0.5, "p_spoil_cast", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d32_0600_F2_cast_orig", "role": "cast"}],
+	[33, "06:00", "F2", "", 0, 1.15, "p_spoil_morning", "orig", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d33_0600_F2_morning_orig", "role": "morning"}],
+	[120, "12:00", "FV", "", 0, 1.15, "p_spoil_final", "all", {"paired_world": "P", "case_id": "a33", "stem_override": "p_spoil_d120_1200_FV_final_all", "role": "final"}],
+	["RESET", 20261013],
+	[30, "06:00", "F2", "gift_food", 60, 0.5, "p_gift_cast", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d30_0600_F2_cast_orig", "role": "cast"}],
+	[31, "06:00", "F2", "", 0, 1.15, "p_gift_morning", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d31_0600_F2_morning_orig", "role": "morning"}],
+	[31, "06:00", "F2", "gift_food", 60, 0.5, "p_gift_cast", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d31_0600_F2_cast_orig", "role": "cast"}],
+	[32, "06:00", "F2", "", 0, 1.15, "p_gift_morning", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d32_0600_F2_morning_orig", "role": "morning"}],
+	[32, "06:00", "F2", "gift_food", 60, 0.5, "p_gift_cast", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d32_0600_F2_cast_orig", "role": "cast"}],
+	[33, "06:00", "F2", "", 0, 1.15, "p_gift_morning", "orig", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d33_0600_F2_morning_orig", "role": "morning"}],
+	[120, "12:00", "FV", "", 0, 1.15, "p_gift_final", "all", {"paired_world": "G", "case_id": "a33", "stem_override": "p_gift_d120_1200_FV_final_all", "role": "final"}],
 ]
 
 

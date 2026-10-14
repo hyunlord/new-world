@@ -31,6 +31,11 @@ var _motion_before: Dictionary = {}
 var _motion_start_tick: int = -1
 var _motion_end_tick: int = -1
 var _casts: Array[Dictionary] = []
+var _all_casts: Array[Dictionary] = []
+var _world_epoch: int = 0
+var _world_label: String = "default"
+var _row_options: Dictionary = {}
+var _need_provenance: Dictionary = {}
 var _last_cast_usec: int = 0
 var _shot_elapsed_s: float = 0.0
 var _original_id: int = -1
@@ -45,6 +50,9 @@ var _event_trace: RefCounted = EventTrace.new()
 
 
 func _init() -> void:
+	if _capture_fixture_mode():
+		call_deferred("_run")
+		return
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	var i: int = 0
 	while i < args.size():
@@ -136,6 +144,8 @@ func _run() -> void:
 		if shot.size() == 2 and str(shot[0]) == "RESET":
 			await _reset_capture_world(int(shot[1]))
 			continue
+		_row_options = shot[8].duplicate(true) if shot.size() > 8 and shot[8] is Dictionary else {}
+		_world_label = str(_row_options.get("paired_world", "default"))
 		_target_name = str(shot[7]) if _plan == "art_god" and shot.size() > 7 else (str(shot[3]) if _plan == "art_society" and shot.size() > 3 else "")
 		var target: int = int(shot[0])
 		var framing: String = str(shot[1])
@@ -152,6 +162,8 @@ func _run() -> void:
 			stem += "_" + _target_name
 		if _plan == "art_society" and shot.size() > 4:
 			stem += "_selected_" + str(shot[4])
+		if _row_options.has("stem_override"):
+			stem = "god_" + str(_row_options["stem_override"])
 		print("capture start: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
 		var before: Dictionary = _world.call("get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
@@ -162,10 +174,11 @@ func _run() -> void:
 		var selection_target: String = str(shot[4]) if _plan == "art_society" and shot.size() > 4 else (_target_name if _plan == "art_god" else "")
 		if selection_target in ["orig", "daughter"]:
 			var selected: int = _settlement_id(selection_target)
-			if selected < 0:
+			if selected < 0 and not _is_paired():
 				_fail("selected settlement unavailable: " + selection_target)
 				return
-			Selection.select(selected)
+			if selected >= 0:
+				Selection.select(selected)
 		var tile: Vector2 = Vector2(32, 32) if framing == "F1" else _village_tile()
 		if _target_name in ["orig", "daughter"] or framing == "FS":
 			tile = _settlement_tile("daughter" if framing == "FS" else _target_name)
@@ -177,6 +190,8 @@ func _run() -> void:
 			tile = _founder_site_tile()
 		if framing == "DE":
 			tile = _recent_exposure_tile()
+		if tile.x < 0 and _is_paired():
+			tile = _village_tile()
 		if tile.x < 0:
 			_fail("framing %s target %s unavailable (FD requires a living founder leader)" % [framing, _target_name])
 			return
@@ -204,7 +219,7 @@ func _run() -> void:
 			_fail("inspector capture requires a living agent and inspector")
 			return
 		_camera.position = ORIGIN + tile * TILE_SIZE + Vector2(8, 8)
-		_camera.zoom = Vector2.ONE if framing == "F1" else (Vector2(6, 6) if framing == "F2Z" else Vector2(4, 4))
+		_camera.zoom = Vector2.ONE if framing == "F1" else (Vector2(2, 2) if framing == "F2W" else (Vector2(6, 6) if framing == "F2Z" else Vector2(4, 4)))
 		if framing == "FV" or _target_name == "all":
 			_camera.zoom = Vector2.ONE * _all_villages_zoom()
 		_camera.reset_smoothing()
@@ -218,26 +233,7 @@ func _run() -> void:
 			if not str(shot[3]).is_empty():
 				# Reconcile the pre-cast resource snapshot, so a windfall increase is observed.
 				await create_timer(1.15).timeout
-				var cast_panel: Node = _main.get_node_or_null("UI/GodHandPanel")
-				if cast_panel == null:
-					_fail("god scenario requires UI/GodHandPanel")
-					return
-				var presets: Dictionary = cast_panel.get_script().get_script_constant_map().get("PRESETS", {})
-				if int(presets.get(str(shot[3]), -1)) != int(shot[4]):
-					_fail("god scenario preset differs from panel: " + str(shot[3]))
-					return
-				var buttons: Dictionary = cast_panel.get("_buttons")
-				var button: Button = buttons.get(str(shot[3])) as Button
-				if button == null or button.disabled:
-					_fail("god scenario button missing or disabled: " + str(shot[3]))
-					return
-				button.emit_signal("pressed")
-				var reply: Dictionary = (cast_panel.get("_reply") as Dictionary).duplicate(true)
-				_sample_event_truth(_world.call("get_agent_snapshot"))
-				_last_cast_usec = Time.get_ticks_usec()
-				_casts.append({"kind": shot[3], "amount": shot[4], "settlement_id": Selection.selected_id, "seed": _seed, "tick": target, "reply": reply, "input_surface": "GodHandPanel button pressed"})
-				if not bool(reply.get("ok", false)):
-					_fail("god scenario cast failed: " + str(shot[3]))
+				if not _perform_capture_cast(shot, target):
 					return
 			if framing == "CAST":
 				continue
@@ -276,6 +272,7 @@ func _run() -> void:
 			"scenario": _scenario(),
 			"seed": _seed, "capture_plan_row": _plan_row.duplicate(true),
 			"intervention_casts": _casts.duplicate(true),
+			"world_epoch": _world_epoch, "world_label": _world_label, "capture_options": _row_options.duplicate(true), "run_id": _run_id,
 			"tile_x": tile.x, "tile_y": tile.y, "zoom": _camera.zoom.x,
 			"time_of_day": now["time_of_day"], "width": image.get_width(), "height": image.get_height(),
 			"entities": stem + ".entities.json",
@@ -309,7 +306,7 @@ func _write_manifest() -> void:
 	manifest.store_string(JSON.stringify({
 		"schema_version": 3, "plan": _plan,
 		"scenario": _scenario(), "seed": _seed, "run_id": _run_id, "performance_only": OS.get_environment("CAPTURE_SOCIETY_PERF_ONLY") == "1",
-		"intervention_casts": _casts, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
+		"intervention_casts": _all_casts, "git_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
 		"captures": _manifest, "worktree_changed_paths": int(OS.get_environment("WORLDSIM_GIT_DIRTY")),
 	}, "\t") + "\n")
 	manifest.close()
@@ -476,6 +473,12 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 		five_deaths[key] = data["tallies"].get(key, 0)
 	data["death_tallies"] = five_deaths
 	data["intervention_casts"] = _casts.duplicate(true)
+	data["run_id"] = _run_id
+	data["git_sha"] = OS.get_environment("WORLDSIM_GIT_SHA")
+	data["world_epoch"] = _world_epoch
+	data["world_label"] = _world_label
+	data["capture_options"] = _row_options.duplicate(true)
+	data["original_settlement_observation"] = _original_observation()
 	data["seconds_since_last_cast"] = _shot_elapsed_s
 	data["intervention_effects"] = {}
 	for effects: Node in get_nodes_in_group("art_god_hand_effects"):
@@ -561,14 +564,14 @@ func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = 
 	var start_tick: int = int(_world.call("get_time_snapshot")["tick"])
 	var settlements: Dictionary = _world.call("get_settlement_snapshot")
 	var elapsed: Array[float] = []
-	# Keep simulation frozen until the actual foreground drawable is available.
-	await RenderingServer.frame_post_draw
+	# Forced viewport draw avoids an unbounded post-draw wait when macOS obscures the window.
+	await _render_frame()
 	if not frozen:
 		_world.process_mode = Node.PROCESS_MODE_INHERIT
 		_world.call("set_sim_speed", 1.0)
 	var previous: int = Time.get_ticks_usec()
 	for frame: int in range(300):
-		await RenderingServer.frame_post_draw
+		await _render_frame()
 		var current: int = Time.get_ticks_usec()
 		_death_trace.ingest(_world.call("get_recent_deaths"))
 		elapsed.append(float(current - previous) / 1000.0)
@@ -578,8 +581,9 @@ func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = 
 	var ordered: Array[float] = elapsed.duplicate()
 	ordered.sort()
 	if not CapturePlans.write_json(_out.path_join(filename), {
-		"metric": "frame_post_draw wall-clock pacing diagnostic; not CPU cost",
-		"frames": 300, "zoom": _camera.zoom.x, "forced_draw": false, "run_id": _run_id,
+		"metric": "process_frame plus force_draw wall-clock pacing diagnostic; not CPU cost",
+		"pacing_changed": true, "historical_metric": "frame_post_draw wall-clock pacing",
+		"frames": 300, "zoom": _camera.zoom.x, "forced_draw": true, "run_id": _run_id,
 		"seed": _seed, "tick": start_tick, "alive_count": settlements.get("settlement_ids", []).size(), "load_status": load_status, "median_ms": (ordered[149] + ordered[150]) / 2.0,
 		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": frozen,
 	}):
@@ -730,6 +734,8 @@ func _scenario() -> String:
 
 func _reset_capture_world(seed: int) -> void:
 	_seed = seed
+	_world_epoch += 1
+	_world_label = "default"
 	_original_id = -1
 	_daughter_id = -1
 	Selection.reset()
@@ -904,3 +910,105 @@ func _measure_society_pair() -> void:
 		_fail("cannot write A30 CPU timing evidence; runtime state already restored")
 	elif not bool(result["valid"]):
 		_fail("invalid A30 CPU measurement: " + str(result["errors"]))
+
+
+func _is_paired() -> bool:
+	return str(_row_options.get("case_id", "")) == "a33" and str(_row_options.get("paired_world", "")) in ["P", "G"]
+
+
+func _perform_capture_cast(shot: Array, tick: int) -> bool:
+	var kind: String = str(shot[3])
+	var requested_target: int = _settlement_id(_target_name) if _target_name in ["orig", "daughter"] else Selection.resolved_target()
+	var observation: Dictionary = _original_observation()
+	if _is_paired() and not bool(observation["need_provenance"]["valid"]):
+		_fail("paired scarcity provenance no longer matches Rust source")
+		return false
+	var cast: Dictionary = {"kind": kind, "amount": int(shot[4]), "settlement_id": requested_target, "seed": _seed, "tick": tick, "world_epoch": _world_epoch, "world_label": _world_label, "capture_options": _row_options.duplicate(true), "run_id": _run_id, "precast_original": observation}
+	var snapshot: Dictionary = _world.call("get_settlement_snapshot")
+	var ids: PackedInt32Array = snapshot.get("settlement_ids", PackedInt32Array())
+	if _is_paired() and (requested_target < 0 or not ids.has(requested_target)):
+		cast["reply"] = {"ok": false, "applied": 0, "reason": "paired target unavailable"}
+		cast["input_surface"] = "not invoked: missing paired target"
+		_casts.append(cast)
+		_all_casts.append(cast.duplicate(true))
+		return true
+	var panel: Node = _main.get_node_or_null("UI/GodHandPanel")
+	if panel == null:
+		_fail("god scenario requires UI/GodHandPanel")
+		return false
+	var presets: Dictionary = panel.get_script().get_script_constant_map().get("PRESETS", {})
+	if int(presets.get(kind, -1)) != int(shot[4]):
+		_fail("god scenario preset differs from panel: " + kind)
+		return false
+	var buttons: Dictionary = panel.get("_buttons")
+	var button: Button = buttons.get(kind) as Button
+	if button == null or button.disabled:
+		_fail("god scenario button missing or disabled: " + kind)
+		return false
+	button.emit_signal("pressed")
+	var reply: Dictionary = (panel.get("_reply") as Dictionary).duplicate(true)
+	_sample_event_truth(_world.call("get_agent_snapshot"))
+	_last_cast_usec = Time.get_ticks_usec()
+	cast["reply"] = reply
+	cast["input_surface"] = "GodHandPanel button pressed"
+	_casts.append(cast)
+	_all_casts.append(cast.duplicate(true))
+	if not bool(reply.get("ok", false)) and not _is_paired():
+		_fail("god scenario cast failed: " + kind)
+		return false
+	return true
+
+
+func _source_number(path: String, expression: String) -> float:
+	var pattern := RegEx.new()
+	if pattern.compile(expression) != OK:
+		return -1.0
+	var matched: RegExMatch = pattern.search(FileAccess.get_file_as_string(path))
+	return float(matched.get_string(1)) if matched != null else -1.0
+
+
+func _load_need_provenance() -> Dictionary:
+	if not _need_provenance.is_empty():
+		return _need_provenance
+	var economy: String = "res://rust/crates/sim-systems/src/runtime/settlement/food_economy.rs"
+	var decision: String = "res://rust/crates/sim-systems/src/runtime/decision/agent_decision.rs"
+	var rules: String = "res://rust/crates/sim-core/src/rules.rs"
+	var growth: float = _source_number(economy, "pub fn adult_need_per_day\\(ticks_per_day: u64\\) -> f64 \\{\\s*([0-9.]+) \\* ticks_per_day as f64 / f64::from\\(HUNGER_CONSUME_AMOUNT\\)")
+	var consume: float = _source_number(decision, "pub const HUNGER_CONSUME_AMOUNT: f32 = ([0-9.]+);")
+	var days: float = _source_number(rules, "(?s)pub const V19_HAZARD: FissionHazard = FissionHazard \\{[^}]*?scarcity_days: ([0-9]+),")
+	var info: Dictionary = _world.call("get_world_info")
+	var ticks_per_day: int = int(info.get("ticks_per_day", 0))
+	var valid: bool = growth > 0.0 and consume > 0.0 and days > 0.0 and ticks_per_day > 0
+	_need_provenance = {"valid": valid, "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day", "growth_per_tick": growth, "food_consume_amount": consume, "ticks_per_day": ticks_per_day, "scarcity_days": days, "adult_need_per_day": growth * float(ticks_per_day) / consume if valid else null, "source_files": []}
+	for path: String in [economy, decision, rules]:
+		_need_provenance["source_files"].append({"path": path, "sha256": FileAccess.get_sha256(path)})
+	return _need_provenance
+
+
+func _original_observation() -> Dictionary:
+	var original: int = _settlement_id("orig")
+	var settlement: Dictionary = _world.call("get_settlement_snapshot")
+	var society: Dictionary = _world.call("get_society_snapshot")
+	var ids: PackedInt32Array = settlement.get("settlement_ids", PackedInt32Array())
+	var society_ids: PackedInt32Array = society.get("settlement_ids", PackedInt32Array())
+	var row: int = ids.find(original)
+	var society_row: int = society_ids.find(original)
+	var need: Dictionary = _load_need_provenance()
+	var result: Dictionary = {"settlement_id": original, "found": row >= 0, "need_provenance": need.duplicate(true), "time_snapshot": _json_arrays(_world.call("get_time_snapshot"))}
+	if row < 0:
+		return result
+	var members: int = int(settlement["member_counts"][row])
+	var food: int = int(settlement["food_stocks"][row])
+	result["members"] = members
+	result["food"] = food
+	result["adult_need_per_day"] = need["adult_need_per_day"]
+	result["scarcity_days"] = need["scarcity_days"]
+	result["scarcity_line"] = maxi(1, int(floor(float(members) * float(need["adult_need_per_day"]) * float(need["scarcity_days"])))) if bool(need["valid"]) else null
+	result["below_scarcity_line"] = food < int(result["scarcity_line"]) if bool(need["valid"]) else null
+	result["pressure"] = int(society["fission_pressures"][society_row]) if society_row >= 0 else null
+	result["threshold"] = int(society["fission_thresholds"][society_row]) if society_row >= 0 else null
+	return result
+
+
+func _capture_fixture_mode() -> bool:
+	return false

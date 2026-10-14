@@ -80,10 +80,15 @@ func _run() -> void:
 	assert(is_equal_approx(float(rows[0]["self_modulate"][2]), 0.5))
 	assert(Metadata.life_stage_counts({"life_stages": PackedByteArray([0, 1, 2, 0, 7])}) == {"adult": 2, "child": 1, "elder": 1, "unknown": 1})
 	assert(Metadata.life_stage_counts({}) == {"adult": 0, "child": 0, "elder": 0, "unknown": 0})
-	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 27)
-	for day: int in [23, 25, 27, 29, 56, 57, 84, 85]:
+	assert(Plans.ART.size() == 10 and Plans.ART_LONG.size() == 30)
+	for day: int in [23, 28, 29, 55, 56, 57, 84, 85]:
 		assert([day, "02:00", "F2N"] in Plans.ART_LONG)
-	assert([57, "03:01", "DE"] in Plans.ART_LONG and [85, "04:01", "DE"] in Plans.ART_LONG)
+	assert([57, "04:01", "DE"] in Plans.ART_LONG)
+	assert([26, "07:15", "F2"] in Plans.ART_LONG, "measured warm control")
+	var exposure_frames: int = 0
+	for shot: Array in Plans.ART_LONG:
+		exposure_frames += int(shot[2] == "DE")
+	assert(exposure_frames == 1, "v19 live has exactly one measured exposure event")
 	assert(Plans.ART_LONG[1] == [10, "15:00", "F2"] and Plans.ART_LONG[2] == [10, "15:00", "F5"])
 	assert(Metadata.deadwood_tile({}, Vector2.ZERO) == Vector2(-1, -1))
 	assert(Metadata.deadwood_tile({
