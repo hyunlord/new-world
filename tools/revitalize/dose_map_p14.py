@@ -371,6 +371,22 @@ def k_targets(arms: dict, pairs: dict, seeds_of: dict, prereg: list[str] | None)
     return k
 
 
+def best_arms(arms: dict, min_seeds: int = 16) -> dict:
+    """PASS14_GOAL.md 7: per kind (spoil_food, gift_food), among arms that are not `*E` and have >= `min_seeds` seeds,
+    the largest right-direction share (ties: larger ENR, then smaller total dose = amount x doses; a tie left after
+    those three rules goes to the arm with fewer doses, a rule Pass 14 adds)."""
+    out = {}
+    for kind in ("spoil_food", "gift_food"):
+        cands = [(n, a) for n, a in arms.items() if a["kind"] == kind and a["when"] != "E" and len(a["seeds"]) >= min_seeds
+                 and a["point"]["right_share"] is not None]
+        key = lambda na: (-na[1]["point"]["right_share"], -(na[1]["point"]["enr"] if na[1]["point"]["enr"] is not None else -1.0),
+                          na[1]["amount"] * na[1]["doses"], na[1]["doses"])
+        ranked = sorted(cands, key=key)
+        out[kind] = {"best": ranked[0][0] if ranked else None,
+                     "ranking": [[n, a["point"]["right_share"], a["point"]["enr"], a["amount"] * a["doses"], len(a["seeds"])] for n, a in ranked]}
+    return out
+
+
 def run(a) -> dict:
     root = Path(a.root)
     lo, hi = (int(x) for x in a.seeds.split(".."))

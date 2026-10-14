@@ -173,5 +173,18 @@ class EndToEnd(unittest.TestCase):
             self.assertTrue(dm.run(a)["checks"]["errors"])
 
 
+class Best(unittest.TestCase):
+    def test_best_arms_rule(self):
+        mk = lambda kind, when, share, enr, amount, doses=1, n=20: {"kind": kind, "when": when, "amount": amount, "doses": doses,
+                                                                    "seeds": list(range(n)), "point": {"right_share": share, "enr": enr}}
+        arms = {"sp60L": mk("spoil_food", "L", 0.6, 1.0, 60), "sp240L": mk("spoil_food", "L", 0.7, 1.5, 240),
+                "sp3x80L": mk("spoil_food", "L", 0.7, 1.5, 80, 3), "sp240E": mk("spoil_food", "E", 0.9, 3.0, 240),
+                "sp240H": mk("spoil_food", "H", 0.95, 3.0, 240, n=15),
+                "gf60L": mk("gift_food", "L", 0.5, None, 60), "gf120L": mk("gift_food", "L", 0.5, 2.0, 120)}
+        b = dm.best_arms(arms)
+        self.assertEqual(b["spoil_food"]["best"], "sp240L")  # E excluded, H has < 16 seeds; tie with sp3x80L on share, ENR and total dose -> fewer doses
+        self.assertEqual(b["gift_food"]["best"], "gf120L")   # tie on share -> larger ENR (None ranks last)
+
+
 if __name__ == "__main__":
     unittest.main()
