@@ -1,0 +1,42 @@
+{
+  "captures": [
+    {
+      "capture_plan_row": [
+        33.0,
+        "09:49",
+        "FV",
+        "all"
+      ],
+      "entities": "soc_d33_0949_FV_all.entities.json.gz",
+      "file": "soc_d33_0949_FV_all.png",
+      "framing": "FV",
+      "height": 1080,
+      "intervention_casts": [],
+      "scenario": "SOCIETY SCENARIO seed 20261013",
+      "seed": 20261013,
+      "tick": 46189,
+      "tile_x": 23.0,
+      "tile_y": 51.5,
+      "time_of_day": 9.81666666666667,
+      "width": 1920,
+      "zoom": 1.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.png",
+      "raw_sha256": "061578d92b6c598d055d3dd6a4e7d31f9d411da0fff12d91be9ecb542bd93bd3",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.entities.json",
+      "raw_entities_sha256": "aa280e6bfecbb4a94ce1d189a53393c4d46c556712c1026dbd86bba0c652d727",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+      "published_file": "soc_d33_0949_FV_all.jpg",
+      "published_width": 1920,
+      "published_height": 1080
+    }
+  ],
+  "git_sha": "6a808fb9af5004521327f9e19070b78d9cb0014b",
+  "intervention_casts": [],
+  "performance_only": false,
+  "plan": "art_society",
+  "run_id": "33687-393337",
+  "scenario": "SOCIETY SCENARIO seed 20261013",
+  "schema_version": 3,
+  "seed": 20261013,
+  "worktree_changed_paths": 7
+}

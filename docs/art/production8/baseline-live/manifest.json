@@ -1,0 +1,41 @@
+{
+  "captures": [
+    {
+      "capture_plan_row": [
+        2.0,
+        "12:00",
+        "F2"
+      ],
+      "entities": "d2_1200_F2.entities.json.gz",
+      "file": "d2_1200_F2.png",
+      "framing": "F2",
+      "height": 1080,
+      "intervention_casts": [],
+      "scenario": "NATURAL SCENARIO",
+      "seed": 20261010,
+      "tick": 1680,
+      "tile_x": 22.0,
+      "tile_y": 20.0,
+      "time_of_day": 12.0,
+      "width": 1920,
+      "zoom": 4.0,
+      "raw_file": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.png",
+      "raw_sha256": "0b3f455221a24a44cd484b3e919fd3d1e189081d94224f336eada8f7890b30bb",
+      "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.entities.json",
+      "raw_entities_sha256": "8c7b02667fb73ff5db28798066288018e56b87ebc6bb204c4aa308488215a206",
+      "standard_file": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.1920.png",
+      "published_file": "d2_1200_F2.jpg",
+      "published_width": 960,
+      "published_height": 540
+    }
+  ],
+  "git_sha": "6a808fb9af5004521327f9e19070b78d9cb0014b",
+  "intervention_casts": [],
+  "performance_only": false,
+  "plan": "final",
+  "run_id": "26297-438900",
+  "scenario": "NATURAL SCENARIO",
+  "schema_version": 3,
+  "seed": 20261010,
+  "worktree_changed_paths": 3
+}
