@@ -1,5 +1,11 @@
 extends SceneTree
 
+const FixedDelta = preload("res://scripts/test/art/test_fixed_delta_p9.gd")
+var _identity_delta_samples: int = 0
+var _identity_delta_valid: bool = true
+
+const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
+
 # One framing per launch. Identical absolute frames keep accumulated visual clocks aligned.
 signal frame_settled
 const Selection = preload("res://scripts/core/settlement_selection.gd")
@@ -19,10 +25,8 @@ func _init() -> void:
 func _run() -> void:
 	var framing: String = OS.get_environment("P9_IDENTITY_ID")
 	var output: String = OS.get_environment("P9_IDENTITY_OUT")
-	var args: PackedStringArray = OS.get_cmdline_args()
-	var fps_index: int = args.find("--fixed-fps")
-	if not CASES.has(framing) or output.is_empty() or fps_index < 0 or fps_index + 1 >= args.size() or args[fps_index + 1] != "60":
-		_fail("requires P9_IDENTITY_ID=P1|P2|P4|P5|P6, P9_IDENTITY_OUT and --fixed-fps 60")
+	if not CASES.has(framing) or output.is_empty():
+		_fail("requires P9_IDENTITY_ID=P1|P2|P4|P5|P6 and P9_IDENTITY_OUT")
 		return
 	root.size = Vector2i(1920, 1080)
 	var scene: PackedScene = load("res://scenes/main.tscn") as PackedScene
@@ -33,7 +37,7 @@ func _run() -> void:
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(_main)
 	current_scene = _main
-	_reads = _main.get_node_or_null("SimReads")
+	_reads = ReadRoute.resolve(_world)
 	_camera.call("set_auto_track", false)
 	_camera.position_smoothing_enabled = false
 	_camera.process_mode = Node.PROCESS_MODE_DISABLED
@@ -43,13 +47,13 @@ func _run() -> void:
 		return
 	var spec: Array = CASES[framing]
 	if int(spec[3]) > 0:
-		_mutate("reset_world_stress", [int(spec[0]), int(spec[3])])
+		ReadRoute.mutate(_world, "reset_world_stress", [int(spec[0]), int(spec[3])])
 	else:
-		_mutate("reset_world", [int(spec[0])])
-	_mutate("advance_ticks", [int(spec[1])])
+		ReadRoute.mutate(_world, "reset_world", [int(spec[0])])
+	ReadRoute.mutate(_world, "advance_ticks", [int(spec[1])])
 	_world.call("set_sim_speed", 0.0)
 	Selection.set_layers_enabled(self, true)
-	var settlements: Dictionary = _world.call("get_settlement_snapshot")
+	var settlements: Dictionary = ReadRoute.read(_world, "get_settlement_snapshot")
 	var ids: PackedInt32Array = settlements["settlement_ids"]
 	if ids.is_empty():
 		_fail("framing requires first settlement")
@@ -64,7 +68,7 @@ func _run() -> void:
 	_camera.reset_smoothing()
 	_camera.force_update_scroll()
 	if framing == "P6":
-		var agents: Dictionary = _world.call("get_agent_snapshot")
+		var agents: Dictionary = ReadRoute.read(_world, "get_agent_snapshot")
 		var agent_ids: PackedInt64Array = agents["agent_ids"]
 		if agent_ids.is_empty():
 			_fail("P6 requires a living agent")
@@ -85,27 +89,20 @@ func _run() -> void:
 	await _until_frame(130)
 	RenderingServer.force_draw(false)
 	var image: Image = root.get_texture().get_image()
-	var time: Dictionary = _world.call("get_time_snapshot")
-	if Engine.get_process_frames() - state_frame != 120 or int(time["tick"]) != int(spec[1]) or image.get_size() != Vector2i(1920, 1080):
+	var time: Dictionary = ReadRoute.read(_world, "get_time_snapshot")
+	if not _identity_delta_valid or _identity_delta_samples == 0 or Engine.get_process_frames() - state_frame != 120 or int(time["tick"]) != int(spec[1]) or image.get_size() != Vector2i(1920, 1080):
 		_fail("capture frame, tick, or framebuffer invariant failed")
 		return
 	if DirAccess.make_dir_recursive_absolute(output) != OK or image.save_png(output.path_join(framing + ".png")) != OK:
 		_fail("cannot save capture")
 		return
-	var manifest: Dictionary = {"framing": framing, "seed": spec[0], "tick": time["tick"], "state_change_frame": state_frame, "capture_frame": Engine.get_process_frames(), "settle_frames": 120, "fixed_fps": 60, "camera": [_camera.position.x, _camera.position.y], "zoom": spec[2], "debug_build": OS.is_debug_build(), "sim_reads": _reads != null}
+	var manifest: Dictionary = {"framing": framing, "seed": spec[0], "tick": time["tick"], "state_change_frame": state_frame, "capture_frame": Engine.get_process_frames(), "settle_frames": 120, "fixed_fps": 60, "validated_delta_samples": _identity_delta_samples, "delta_tolerance": 0.000000001, "camera": [_camera.position.x, _camera.position.y], "zoom": spec[2], "debug_build": OS.is_debug_build(), "sim_reads": _reads != null}
 	var file := FileAccess.open(output.path_join(framing + ".json"), FileAccess.WRITE)
 	if file == null:
 		_fail("cannot save manifest")
 		return
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	quit(0)
-
-func _mutate(method: String, arguments: Array) -> void:
-	# Runtime lookup keeps this script runnable unchanged on the pre-SimReads checkout.
-	if _reads != null and _reads.has_method(method):
-		_reads.callv(method, arguments)
-	else:
-		_world.callv(method, arguments)
 
 func _until_frame(target: int) -> void:
 	while Engine.get_process_frames() < target:
@@ -119,3 +116,12 @@ func _settled() -> void:
 func _fail(message: String) -> void:
 	push_error("identity-p9: " + message)
 	quit(1)
+
+
+func _process(delta: float) -> bool:
+	if true:
+		_identity_delta_samples += 1
+		if not FixedDelta.accepts_delta(delta):
+			_identity_delta_valid = false
+			_fail("identity requires actual process delta 1/60 on every frame; observed %.15f" % delta)
+	return false

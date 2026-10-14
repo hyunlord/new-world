@@ -36,7 +36,7 @@ func _process(_delta: float) -> void:
 	_update_canopies()
 
 func refresh_snapshot() -> void:
-	var terrain: Dictionary = _world_sim.get_terrain_snapshot()
+	var terrain: Dictionary = SimReads.read(_world_sim, "get_terrain_snapshot")
 	_terrain = terrain.get("terrain", PackedByteArray())
 	_elevation = terrain.get("elevation", PackedByteArray())
 	_width = int(terrain.get("width", 0))
@@ -88,10 +88,10 @@ func _place(key: String, art_id: String, fallback: String, kind: String, tile: V
 	seen[key] = true
 
 func _reconcile() -> void:
-	var buildings: Dictionary = _world_sim.get_building_snapshot()
-	var sites: Dictionary = _world_sim.get_construction_snapshot()
-	var food: Dictionary = _world_sim.get_resource_snapshot()
-	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var sites: Dictionary = SimReads.read(_world_sim, "get_construction_snapshot")
+	var food: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var fingerprint: int = hash([buildings, sites, food.get("xs"), food.get("ys"), food.get("kinds"), settlements.get("formation_xs"), settlements.get("formation_ys")])
 	if fingerprint == _fingerprint:
 		return
@@ -163,7 +163,7 @@ func _understory(key: String, tile: Vector2i, jitter: Vector2i, h: int, seen: Di
 
 func _update_canopies() -> void:
 	var heads: Dictionary = CANOPY.buckets(_objects)
-	var tint: Color = SEASON.resolve(_world_sim.get_time_snapshot())
+	var tint: Color = SEASON.resolve(SimReads.read(_world_sim, "get_time_snapshot"))
 	for sprite: Sprite2D in _sprites.values():
 		var opacity: float = CANOPY.alpha(sprite,heads) if str(sprite.get_meta("art_kind")) == "tree" else 1.0
 		sprite.modulate = Color(tint.r,tint.g,tint.b,opacity)

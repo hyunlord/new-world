@@ -1,4 +1,6 @@
 extends SceneTree
+
+const ReadRoute = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 ## One launch = one world. The caller owns quiet/window locks and the 10 minute gap.
 ## --world W0|W1|W200|W500|W1000|W2000 --phase baseline|after --out <session.json>
 
@@ -10,9 +12,7 @@ const METRICS: Array[String] = ["primary_cpu_ms", "process_ms", "render_cpu_ms",
 class MeasurementRuntime extends Session.Runtime:
 	var reader: Node
 	func read(getter: String) -> Dictionary:
-		if is_instance_valid(reader) and reader.has_method("peek_uncounted"):
-			return reader.call("peek_uncounted", getter)
-		return world.call(getter)
+		return ReadRoute.read(world, getter, true)
 	func snapshot() -> Dictionary:
 		var settled: Dictionary = read("get_settlement_snapshot")
 		var alive_settlements: int = 0
@@ -79,11 +79,11 @@ func _run() -> void:
 	_camera.position_smoothing_enabled = false
 	_prior_camera_mode = _camera.process_mode
 	_camera.process_mode = Node.PROCESS_MODE_DISABLED
-	var reader: Node = _main.get_node_or_null("SimReads")
+	var reader: Node = ReadRoute.resolve(_world)
 	var spec: Array = WORLDS[_options["world"]]
-	_mutate(reader, "reset_world_stress" if int(spec[2]) > 0 else "reset_world", [spec[0], spec[2]] if int(spec[2]) > 0 else [spec[0]])
+	ReadRoute.mutate(_world, "reset_world_stress" if int(spec[2]) > 0 else "reset_world", [spec[0], spec[2]] if int(spec[2]) > 0 else [spec[0]])
 	_world.call("set_sim_speed", 0.0)
-	_mutate(reader, "advance_ticks", [spec[1]])
+	ReadRoute.mutate(_world, "advance_ticks", [spec[1]])
 	_runtime = MeasurementRuntime.new()
 	_runtime.tree = self
 	_runtime.world = _world
@@ -137,18 +137,18 @@ func _run() -> void:
 	Engine.max_fps = prior_max_fps
 	_finish()
 
-func _mutate(reader: Node, method: String, args: Array) -> void:
-	if is_instance_valid(reader) and reader.has_method(method):
-		reader.callv(method, args)
-	else:
-		_world.callv(method, args)
-
 func _sample() -> Dictionary:
 	var sample: Dictionary = await _runtime.next_frame()
+	var inspector: CanvasItem = _main.get_node_or_null("UI/AgentInspectorPanel") as CanvasItem
+	var renderer: Node = _main.get_node_or_null("WorldRenderer")
+	sample["direct_read_context"] = {"inspector_visible": inspector.visible if inspector != null else null, "influence_channel": renderer.get("current_channel") if renderer != null else null}
 	var reader: Node = _runtime.reader
 	if is_instance_valid(reader) and reader.has_method("frame_call_counts"):
 		var counts: Dictionary = reader.call("frame_call_counts")
 		sample["ffi_calls"] = counts.duplicate(true)
+		sample["ffi_counter_frame"] = int(reader.call("frame_id")) if reader.has_method("frame_id") else -1
+		if int(sample["ffi_counter_frame"]) != int(sample["process_frame"]):
+			_errors.append("FFI counters do not match process frame: %s != %s" % [sample["ffi_counter_frame"], sample["process_frame"]])
 		if reader.has_method("frame_call_usec"):
 			var timings: Dictionary = reader.call("frame_call_usec")
 			sample["ffi_call_usec"] = timings.duplicate(true)

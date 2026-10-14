@@ -48,6 +48,10 @@ PY
 
 accepted=()
 for world in W0 W500 W1 W200 W1000 W2000; do
+  if [[ ${P9_REQUIRED_ONLY:-0} == 1 && ( $world == W1000 || $world == W2000 ) ]]; then
+    echo "Deferred optional world: $phase $world (P9_REQUIRED_ONLY=1)" >&2
+    continue
+  fi
   success=0
   highest=0
   selected=""

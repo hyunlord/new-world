@@ -425,8 +425,8 @@ fn harness_resource_decorative_layer_preserved_static() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 13: existing agent spawn intact ─────────────────────────────

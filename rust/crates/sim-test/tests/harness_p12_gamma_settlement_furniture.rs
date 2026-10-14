@@ -394,7 +394,7 @@ fn harness_p12_gamma_a9_world_renderer_declares_furniture_sprite_path_and_z_cons
 #[test]
 fn harness_p12_gamma_a10_world_renderer_polls_ffi_and_reaps_stale_sprites() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));
@@ -444,14 +444,14 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     let renderer = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&renderer);
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
     assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -477,7 +477,7 @@ fn harness_p12_gamma_a12_phase12_alpha_beta1_beta2_invariants_preserved() {
     // β.2 A3: CONSTRUCTION_SPRITE_PATH + Z_CONSTRUCTION = 5.
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("z_index = 5"));
@@ -559,7 +559,7 @@ fn harness_p12_gamma_a14_dict_marshaller_sets_formation_keys() {
 #[test]
 fn harness_p12_gamma_a15_world_renderer_reads_formation_arrays() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));

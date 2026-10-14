@@ -63,7 +63,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
-	var snap: Variant = _world_sim.call("get_recent_deaths")
+	var snap: Variant = SimReads.read(_world_sim, "get_recent_deaths")
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap

@@ -19,22 +19,22 @@ func _check(condition: bool, message: String) -> void:
 		push_error(message)
 
 func _advance(world: Node, target: int) -> void:
-	var clock: Dictionary = world.call("get_time_snapshot")
+	var clock: Dictionary = SimReads.read(world, "get_time_snapshot")
 	var tick: int = int(clock["tick"])
 	while tick < target:
-		var advanced: int = int(world.call("advance_ticks", mini(60, target - tick)))
+		var advanced: int = int(SimReads.mutate(world, "advance_ticks", [mini(60, target - tick)]))
 		if advanced <= tick:
 			_check(false, "advance_ticks stopped before target %d" % target)
 			return
 		tick = advanced
 
 func _sample(world: Node, display_day: int, hour: int) -> Dictionary:
-	var info: Dictionary = world.call("get_world_info")
+	var info: Dictionary = SimReads.read(world, "get_world_info")
 	var target: int = (display_day - 1) * int(info["ticks_per_day"]) + hour * int(info["ticks_per_day"]) / 24 - int(info["clock_offset_ticks"])
 	_advance(world, target)
-	var clock: Dictionary = world.call("get_time_snapshot")
-	var agents: Dictionary = world.call("get_agent_snapshot")
-	var settlements: Dictionary = world.call("get_settlement_snapshot")
+	var clock: Dictionary = SimReads.read(world, "get_time_snapshot")
+	var agents: Dictionary = SimReads.read(world, "get_agent_snapshot")
+	var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 	var cold_ids: Array[int] = []
 	var gathering_ids: Array[int] = []
 	var hauling_ids: Array[int] = []
@@ -75,7 +75,7 @@ func _sample(world: Node, display_day: int, hour: int) -> Dictionary:
 
 func run() -> void:
 	var natural: Node = _world()
-	var info: Dictionary = natural.call("get_world_info")
+	var info: Dictionary = SimReads.read(natural, "get_world_info")
 	_check(int(info.get("seed", -1)) == 20261010, "default live seed")
 	var samples: Array[Dictionary] = []
 	for day: int in [15, 16]:
@@ -91,17 +91,17 @@ func run() -> void:
 		samples.append(_sample(natural, day, 2))
 	natural.free()
 	var intervention: Node = _world()
-	var before: Dictionary = intervention.call("get_settlement_snapshot")
+	var before: Dictionary = SimReads.read(intervention, "get_settlement_snapshot")
 	_check(before["settlement_ids"].is_empty(), "fresh world has no settlement")
-	var rejected: Dictionary = intervention.call("apply_intervention", "gift_food", -1, 10)
+	var rejected: Dictionary = SimReads.mutate(intervention, "apply_intervention", ["gift_food", -1, 10])
 	_check(not bool(rejected.get("ok", true)), "gift_food rejected before settlement")
 	var settlement: Dictionary = before
 	var tick: int = 0
 	while settlement["settlement_ids"].is_empty() and tick < 14400:
-		tick = int(intervention.call("advance_ticks", 60))
-		settlement = intervention.call("get_settlement_snapshot")
+		tick = int(SimReads.mutate(intervention, "advance_ticks", [60]))
+		settlement = SimReads.read(intervention, "get_settlement_snapshot")
 	_check(not settlement["settlement_ids"].is_empty(), "settlement formed within ten days")
-	var accepted: Dictionary = intervention.call("apply_intervention", "gift_food", -1, 10)
+	var accepted: Dictionary = SimReads.mutate(intervention, "apply_intervention", ["gift_food", -1, 10])
 	_check(bool(accepted.get("ok", false)), "gift_food accepted after settlement")
 	_check(int(accepted.get("applied", -1)) >= 0, "gift_food applied is nonnegative")
 	var result: Dictionary = {

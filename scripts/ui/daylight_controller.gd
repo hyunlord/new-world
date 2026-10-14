@@ -41,7 +41,7 @@ func _process(delta: float) -> void:
 	_update_doorways()
 
 func _update_daylight() -> void:
-	var snapshot: Dictionary = _world_sim.get_time_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
 	var hour: float = fposmod(float(snapshot.get("time_of_day", 0.0)), 24.0)
 	var tint: Color = NIGHT_TINT
 	for i: int in range(HOURS.size() - 1):
@@ -51,7 +51,7 @@ func _update_daylight() -> void:
 			break
 	_modulate.color = tint
 	var night_factor: float = clampf((1.0 - tint.r) / (1.0 - NIGHT_TINT.r), 0.0, 1.0)
-	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	for id: int in _glows.keys():
 		var glow: Sprite2D = _glows[id] as Sprite2D
 		var state: Dictionary = WOOD.settlement(settlements, glow.get_meta("tile", Vector2i.ZERO))
@@ -60,7 +60,7 @@ func _update_daylight() -> void:
 		glow.set_meta("glow_alpha", glow.modulate.a)
 
 func _reconcile_hearths() -> void:
-	var snapshot: Dictionary = _world_sim.get_building_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
@@ -97,7 +97,7 @@ func _radial_texture(size: int) -> Texture2D:
 	return ImageTexture.create_from_image(image)
 
 func _update_doorways() -> void:
-	var hour: float = float(_world_sim.get_time_snapshot().get("time_of_day",12.0))
+	var hour: float = float(SimReads.read(_world_sim, "get_time_snapshot").get("time_of_day",12.0))
 	var seen: Dictionary = {}
 	var objects: Node2D = get_node_or_null("../WorldObjects") as Node2D
 	if objects == null:

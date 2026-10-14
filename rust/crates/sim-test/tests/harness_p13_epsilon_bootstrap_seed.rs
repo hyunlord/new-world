@@ -142,8 +142,8 @@ fn harness_p13_epsilon_a1_bootstrap_x_left_constant_declared() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 2: bootstrap_x_right_constant_declared ────────────────────
@@ -155,8 +155,8 @@ fn harness_p13_epsilon_a2_bootstrap_x_right_constant_declared() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 3: three_on_building_placed_calls_total ───────────────────
@@ -168,16 +168,16 @@ fn harness_p13_epsilon_a3_three_on_building_placed_calls_total() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 4: on_building_placed_arg_signatures ──────────────────────
 #[test]
 fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -188,8 +188,8 @@ fn harness_p13_epsilon_a4_on_building_placed_arg_signatures() {
 #[test]
 fn harness_p13_epsilon_a5_extra_sprite_block_reuses_building_tex() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -212,8 +212,8 @@ fn harness_p13_epsilon_a6_extra_sprite_z_index_is_z_building() {
 #[test]
 fn harness_p13_epsilon_a7_extra_sprite_y_position_uses_bootstrap_y() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -312,14 +312,14 @@ fn harness_p13_epsilon_a11_phase13_alpha_default_zoom_3x_preserved() {
 fn harness_p13_epsilon_a12_phase13_alpha_centre_bootstrap_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_01_campfire"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 13: phase13_beta_resource_constants_preserved ─────────────
 #[test]
 fn harness_p13_epsilon_a13_phase13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));

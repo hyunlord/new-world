@@ -26,10 +26,10 @@ func run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(world)
 	world.call("set_sim_speed", 0.0)
-	world.call("reset_world", seed)
+	SimReads.mutate(world, "reset_world", [seed])
 	await process_frame
 	await process_frame
-	var info: Dictionary = world.call("get_world_info")
+	var info: Dictionary = SimReads.read(world, "get_world_info")
 	var rows: Array[Dictionary] = []
 	var ticks_per_day: int = int(info["ticks_per_day"])
 	var offset: int = int(info["clock_offset_ticks"])
@@ -45,7 +45,7 @@ func run() -> void:
 				for candidate: int in founding_ticks:
 					if candidate > tick:
 						step = mini(step, candidate - tick)
-				var next_tick: int = int(world.call("advance_ticks", step))
+				var next_tick: int = int(SimReads.mutate(world, "advance_ticks", [step]))
 				if next_tick <= tick:
 					push_error("advance_ticks did not progress")
 					world.free()
@@ -53,7 +53,7 @@ func run() -> void:
 					return
 				tick = next_tick
 				if founding_ticks.has(tick):
-					var founded: Dictionary = world.call("get_settlement_snapshot")
+					var founded: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 					var alive: int = 0
 					for members: int in founded["member_counts"]:
 						if members > 0:
@@ -61,12 +61,12 @@ func run() -> void:
 					founding_checks.append({"tick": tick, "settlements_alive": alive, "snapshot": founded})
 					if alive >= 3 and first_three_alive_tick < 0:
 						first_three_alive_tick = tick
-				var sampled: Dictionary = world.call("get_agent_snapshot")
+				var sampled: Dictionary = SimReads.read(world, "get_agent_snapshot")
 				for index: int in sampled["agent_ids"].size():
 					if int(sampled["colds"][index]) == 1:
 						cold_last_seen[int(sampled["agent_ids"][index])] = tick
-			var agents: Dictionary = world.call("get_agent_snapshot")
-			var settlements: Dictionary = world.call("get_settlement_snapshot")
+			var agents: Dictionary = SimReads.read(world, "get_agent_snapshot")
+			var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 			var cold_ids: Array[int] = []
 			var gatherers: Array[int] = []
 			var carriers: Array[int] = []
@@ -84,13 +84,13 @@ func run() -> void:
 					preceding_12h_cold_ids.append(id)
 			preceding_12h_cold_ids.sort()
 			var row: Dictionary = {"tick": tick, "display_day": day, "minute": minute,
-				"clock": world.call("get_time_snapshot"), "cold_ids": cold_ids,
+				"clock": SimReads.read(world, "get_time_snapshot"), "cold_ids": cold_ids,
 				"preceding_12h_cold_ids": preceding_12h_cold_ids, "cold_sample_max_ticks": 60,
 				"cold_ids_scope": "observed only; warm absence requires cumulative cold_member_hours equality",
 				"wood_gatherer_ids": gatherers, "wood_carrier_ids": carriers,
-				"settlements": settlements, "tallies": world.call("get_tallies")}
+				"settlements": settlements, "tallies": SimReads.read(world, "get_tallies")}
 			if world.has_method("get_society_snapshot"):
-				row["society"] = world.call("get_society_snapshot")
+				row["society"] = SimReads.read(world, "get_society_snapshot")
 			rows.append(row)
 		if day % 7 == 0:
 			print("P8 MEASURE seed=%d day=%d tick=%d" % [seed, day, tick])

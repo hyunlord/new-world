@@ -8,24 +8,24 @@ func _run() -> void:
 	var world := WorldSimNode.new()
 	root.add_child(world)
 	world.set_process(false)
-	var settlements: Dictionary = world.get_settlement_snapshot()
+	var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 	for attempt: int in 120:
 		if not settlements.get("settlement_ids", PackedInt32Array()).is_empty():
 			break
-		world.advance_ticks(60)
-		settlements = world.get_settlement_snapshot()
+		SimReads.mutate(world, "advance_ticks", [60])
+		settlements = SimReads.read(world, "get_settlement_snapshot")
 	if settlements.get("settlement_ids", PackedInt32Array()).is_empty():
 		push_error("No real settlement after 7200 ticks")
 		quit(1)
 		return
 	for kind: String in PRESETS:
-		var reply: Dictionary = world.apply_intervention(kind, -1, PRESETS[kind])
+		var reply: Dictionary = SimReads.mutate(world, "apply_intervention", [kind, -1, PRESETS[kind]])
 		if not bool(reply.get("ok", false)) or int(reply.get("applied", -1)) < 0:
 			push_error("Real intervention failed: " + kind + " " + str(reply))
 			quit(1)
 			return
 		print("REAL_INTERVENTION ", kind, " ", reply)
-	var state: Dictionary = world.call("get_intervention_state")
+	var state: Dictionary = SimReads.read(world, "get_intervention_state")
 	if state.get("log_kinds", PackedStringArray()).size() != 7 or state.get("rain_settlement_ids", PackedInt32Array()).is_empty():
 		push_error("Real getter lost applied records or active rain")
 		quit(1)

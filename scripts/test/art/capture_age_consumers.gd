@@ -37,23 +37,23 @@ func _run() -> void:
 	current_scene = _main
 	_camera.call("set_auto_track", false)
 	_camera.position_smoothing_enabled = false
-	var info: Dictionary = _world.call("get_world_info")
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
 	var offset: int = int(info.get("clock_offset_ticks", 0))
 	if int(info.get("ticks_per_day", 0)) != 1440:
 		quit(2)
 		return
 	for day: int in [2, 10, 18, 24, 40]:
 		var target: int = (day - 1) * 1440 + 720 - offset
-		var clock: Dictionary = _world.call("get_time_snapshot")
+		var clock: Dictionary = SimReads.read(_world, "get_time_snapshot")
 		var tick: int = int(clock.get("tick", -1))
 		while tick < target:
 			var previous: int = tick
-			tick = int(_world.call("advance_ticks", mini(8, target - tick)))
+			tick = int(SimReads.mutate(_world, "advance_ticks", [mini(8, target - tick)]))
 			if tick <= previous:
 				push_error("Natural tick advancement stalled")
 				quit(1)
 				return
-			var deaths: Dictionary = _world.call("get_recent_deaths")
+			var deaths: Dictionary = SimReads.read(_world, "get_recent_deaths")
 			var reasons: PackedInt32Array = deaths.get("reasons", PackedInt32Array())
 			for index: int in reasons.size():
 				var reason: int = reasons[index]
@@ -76,7 +76,7 @@ func _run() -> void:
 func _capture(stem: String, death_index: int) -> void:
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
 	inspector.call("close")
-	var agents: Dictionary = _world.call("get_agent_snapshot")
+	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var ids: PackedInt64Array = agents.get("ids", PackedInt64Array())
 	var agent_ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
 	var stages: PackedByteArray = agents.get("life_stages", PackedByteArray())
@@ -96,7 +96,7 @@ func _capture(stem: String, death_index: int) -> void:
 			var detail: Dictionary = _world.call("get_agent_detail", ids[selected])
 			detail["entity_bits"] = ids[selected]
 			inspector.call("display_agent", detail)
-	var deaths: Dictionary = _world.call("get_recent_deaths")
+	var deaths: Dictionary = SimReads.read(_world, "get_recent_deaths")
 	if death_index >= 0:
 		tile = Vector2(deaths["xs"][death_index], deaths["ys"][death_index])
 	_camera.position = Vector2(448, 28) + tile * 16.0 + Vector2(8, 8)
@@ -136,7 +136,7 @@ func _capture(stem: String, death_index: int) -> void:
 	for key: Variant in terrain_layers:
 		var layer: CanvasItem = terrain_layers[key] as CanvasItem
 		terrain_tints[str(key)] = layer.modulate.to_html()
-	_records.append({"file": stem + ".png", "time_snapshot": _world.call("get_time_snapshot"), "tallies": _world.call("get_tallies"), "selected": selected_record, "inspector_labels": _labels(inspector), "hud_labels": _labels(topbar), "news_labels": _labels(status), "news_entries": (status.get("_entries") as Array).duplicate(true), "death_snapshot": deaths, "death_renderer_colors": reason_colors, "agents": looks, "terrain_tints": terrain_tints, "world_object_tints": _object_tints()})
+	_records.append({"file": stem + ".png", "time_snapshot": SimReads.read(_world, "get_time_snapshot"), "tallies": SimReads.read(_world, "get_tallies"), "selected": selected_record, "inspector_labels": _labels(inspector), "hud_labels": _labels(topbar), "news_labels": _labels(status), "news_entries": (status.get("_entries") as Array).duplicate(true), "death_snapshot": deaths, "death_renderer_colors": reason_colors, "agents": looks, "terrain_tints": terrain_tints, "world_object_tints": _object_tints()})
 
 
 func _labels(node: Node) -> Array[String]:

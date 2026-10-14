@@ -314,7 +314,7 @@ fn harness_p12_beta2_a7_empty_world_returns_empty_vec() {
 fn harness_p12_beta2_a8_renderer_declares_construction_sprite_path_constant() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
@@ -331,7 +331,7 @@ fn harness_p12_beta2_a9_alpha_remap_constants_have_exact_values() {
 #[test]
 fn harness_p12_beta2_a10_renderer_calls_ffi_snapshot_method() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("_reap(_sites, seen)"));
     assert!(src.contains("stale.queue_free()"));
 }
@@ -340,7 +340,7 @@ fn harness_p12_beta2_a10_renderer_calls_ffi_snapshot_method() {
 #[test]
 fn harness_p12_beta2_a11_reaper_loop_frees_despawned_sprites() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("_reap(_sites, seen)"));
     assert!(src.contains("stale.queue_free()"));
 }
@@ -406,18 +406,18 @@ fn harness_p12_beta2_a14_phase12_alpha_and_beta1_invariants_preserved() {
     let renderer = read_file(WORLD_RENDERER_PATH);
     let stripped = strip_gd_comments(&renderer);
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
     assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
     assert!(!src.contains("world_terrain.tres"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
     // Art Pass 6: booked winter severity drives cold ash; preserve the legacy clock fallback.
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
-    assert!(src.contains("_update_cold_ash(sprite, WOOD.cold_ash(state, _hour(), int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1))))"));
+    assert!(src.contains("_update_cold_ash(sprite, WOOD.cold_ash(state, hour, winter_severity))"));
     assert!(src.contains("sprite.set_meta(\"cold_ash\", cold)"));
     assert!(src.contains("ash.visible = cold"));
     let wood = include_str!("../../../../scripts/ui/wood_visuals.gd");

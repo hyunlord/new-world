@@ -123,7 +123,7 @@ func _run() -> void:
 		"source_sha": OS.get_environment("WORLDSIM_GIT_SHA"),
 		"locale": "ko", "viewport": [SIZE.x, SIZE.y], "file": STEM + ".png",
 		"png_sha256": FileAccess.get_sha256(png_path),
-		"death_tallies": world.get_tallies(), "hud_death_total": total,
+		"death_tallies": SimReads.read(world, "get_tallies"), "hud_death_total": total,
 		"drawn_deaths": deaths, "visible_feed": visible_feed, "feed_log": log,
 		"validation_pass": valid,
 	}

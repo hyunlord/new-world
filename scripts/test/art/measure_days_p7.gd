@@ -14,10 +14,10 @@ func run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(world)
 	world.call("set_sim_speed", 0.0)
-	world.call("reset_world", seed)
+	SimReads.mutate(world, "reset_world", [seed])
 	await process_frame
 	await process_frame
-	var info: Dictionary = world.call("get_world_info")
+	var info: Dictionary = SimReads.read(world, "get_world_info")
 	var rows: Array[Dictionary] = []
 	var ticks_per_day: int = int(info["ticks_per_day"])
 	var offset: int = int(info["clock_offset_ticks"])
@@ -28,15 +28,15 @@ func run() -> void:
 			if target < tick:
 				continue
 			while tick < target:
-				var next_tick: int = int(world.call("advance_ticks", mini(60, target - tick)))
+				var next_tick: int = int(SimReads.mutate(world, "advance_ticks", [mini(60, target - tick)]))
 				if next_tick <= tick:
 					push_error("advance_ticks did not progress")
 					world.free()
 					quit(1)
 					return
 				tick = next_tick
-			var agents: Dictionary = world.call("get_agent_snapshot")
-			var settlements: Dictionary = world.call("get_settlement_snapshot")
+			var agents: Dictionary = SimReads.read(world, "get_agent_snapshot")
+			var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 			var cold_ids: Array[int] = []
 			var gatherers: Array[int] = []
 			var carriers: Array[int] = []
@@ -49,11 +49,11 @@ func run() -> void:
 				if int(agents["states"][i]) == 1 and int(agents["carried_woods"][i]) > 0:
 					carriers.append(id)
 			var row: Dictionary = {"tick": tick, "display_day": day, "minute": minute,
-				"clock": world.call("get_time_snapshot"), "cold_ids": cold_ids,
+				"clock": SimReads.read(world, "get_time_snapshot"), "cold_ids": cold_ids,
 				"wood_gatherer_ids": gatherers, "wood_carrier_ids": carriers,
-				"settlements": settlements, "tallies": world.call("get_tallies")}
+				"settlements": settlements, "tallies": SimReads.read(world, "get_tallies")}
 			if world.has_method("get_society_snapshot"):
-				row["society"] = world.call("get_society_snapshot")
+				row["society"] = SimReads.read(world, "get_society_snapshot")
 			rows.append(row)
 		if day % 7 == 0:
 			print("P7 MEASURE seed=%d day=%d tick=%d" % [seed, day, tick])

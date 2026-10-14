@@ -28,24 +28,24 @@ func run() -> void:
 	labels.configure(world)
 	for sample: Array in [[0, 0], [333, 0], [334, 1], [666, 1], [667, 2], [1000, 2], [1200, 2]]:
 		world.pressure = sample[0]
-		Selection.observe(world.get_society_snapshot(), world.get_settlement_snapshot())
+		Selection.observe(SimReads.read(world, "get_society_snapshot"), SimReads.read(world, "get_settlement_snapshot"))
 		var state: Dictionary = Selection.restlessness_for(7)
 		check(state["stage"] == sample[1] and state["pressure"] == sample[0] and state["threshold"] == 1000, "exact rational thirds and raw values")
 	world.threshold = 9223372036854775807
 	world.pressure = 9223372036854775807
-	Selection.observe(world.get_society_snapshot(), world.get_settlement_snapshot())
+	Selection.observe(SimReads.read(world, "get_society_snapshot"), SimReads.read(world, "get_settlement_snapshot"))
 	check(Selection.restlessness_for(7)["stage"] == 2, "saturated int64 pressure and theta do not overflow")
 	world.threshold = 1000
-	Selection.observe(world.get_society_snapshot(), world.get_settlement_snapshot())
+	Selection.observe(SimReads.read(world, "get_society_snapshot"), SimReads.read(world, "get_settlement_snapshot"))
 	check(Selection.restlessness_for(7)["stage"] == 2, "saturated pressure with ordinary theta remains ready")
 	world.threshold = 3
 	for pressure: int in [0, 1, 2]:
 		world.pressure = pressure
-		Selection.observe(world.get_society_snapshot(), world.get_settlement_snapshot())
+		Selection.observe(SimReads.read(world, "get_society_snapshot"), SimReads.read(world, "get_settlement_snapshot"))
 		check(Selection.restlessness_for(7)["stage"] == pressure, "exact third equality advances stage")
 	world.threshold = 1000
 	world.pressure = 700
-	Selection.observe(world.get_society_snapshot(), world.get_settlement_snapshot())
+	Selection.observe(SimReads.read(world, "get_society_snapshot"), SimReads.read(world, "get_settlement_snapshot"))
 	for zoom: float in [1.0, 2.0, 4.0, 8.0]:
 		labels.scale = Vector2.ONE * zoom
 		labels._update_labels()

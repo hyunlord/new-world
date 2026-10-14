@@ -165,6 +165,8 @@ def validate_measurements(session: Session, blocks: Sequence[Mapping[str, Json]]
             if sample.get("paired") is not True or frame <= previous_frame:
                 raise EvidenceError(f"Unpaired/non-increasing process frame in {label}")
             previous_frame = frame
+            if "ffi_calls" in sample and sample.get("ffi_counter_frame") != frame:
+                raise EvidenceError(f"FFI counters do not match process frame in {label}")
             state = mapping(sample["state"])
             tick, ticks_run = number(state["tick"]), number(sample["ticks_run"])
             if ticks_run != tick - previous_tick or (not running and ticks_run != 0):
@@ -176,6 +178,10 @@ def validate_measurements(session: Session, blocks: Sequence[Mapping[str, Json]]
                 counts = mapping(sample.get("ffi_calls"))
                 if any(number(count) < 0 or not number(count).is_integer() for count in counts.values()):
                     raise EvidenceError(f"Invalid FFI counters in {label}")
+                if condition == "frozen" and expected_zoom == 4:
+                    context = mapping(sample.get("direct_read_context"))
+                    if context.get("inspector_visible") is not False or context.get("influence_channel") != -1:
+                        raise EvidenceError(f"F4 requires closed inspector and influence overlay in {label}")
     required_ablation = session.world in {"W0", "W500"} and (session.phase == "baseline" or payload.get("ablation_dropped") is not True)
     if required_ablation:
         rows = [mapping(row) for row in sequence(payload["ablation"])]

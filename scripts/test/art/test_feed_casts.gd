@@ -12,10 +12,10 @@ func run() -> void:
 	root.add_child(world)
 	world.set_process(false)
 	for attempt: int in 120:
-		if not world.get_settlement_snapshot().get("settlement_ids", PackedInt32Array()).is_empty():
+		if not SimReads.read(world, "get_settlement_snapshot").get("settlement_ids", PackedInt32Array()).is_empty():
 			break
-		world.advance_ticks(60)
-	var settlement_ids: PackedInt32Array = world.get_settlement_snapshot()["settlement_ids"]
+		SimReads.mutate(world, "advance_ticks", [60])
+	var settlement_ids: PackedInt32Array = SimReads.read(world, "get_settlement_snapshot")["settlement_ids"]
 	assert(not settlement_ids.is_empty())
 	var news := News.new()
 	root.add_child(news)
@@ -30,7 +30,7 @@ func run() -> void:
 	var button: Button = panel._buttons["gift_food"]
 	for index: int in 40:
 		button.emit_signal("pressed")
-	var state: Dictionary = world.get_intervention_state()
+	var state: Dictionary = SimReads.read(world, "get_intervention_state")
 	assert(state["log_ids"] == PackedInt64Array(range(8, 40)), "rolling source retains absolute identity")
 	assert(state["log_settlement_ids"].size() == 32)
 	var casts: Array[Dictionary] = []

@@ -43,8 +43,8 @@ func _reset() -> void:
 	_last_dust.clear()
 	if _world == null:
 		return
-	_rng.seed = int(_world.get_world_info().get("seed",1))
-	var terrain: Dictionary = _world.get_terrain_snapshot()
+	_rng.seed = int(SimReads.read(_world, "get_world_info").get("seed",1))
+	var terrain: Dictionary = SimReads.read(_world, "get_terrain_snapshot")
 	var width: int = int(terrain.get("width",64))
 	var types: PackedByteArray = terrain.get("terrain",PackedByteArray())
 	_river.clear()
@@ -79,7 +79,7 @@ func _process(delta: float) -> void:
 	if _world == null or _objects == null:
 		return
 	_elapsed += delta
-	var hour: float = float(_world.get_time_snapshot().get("time_of_day",12.0))
+	var hour: float = float(SimReads.read(_world, "get_time_snapshot").get("time_of_day",12.0))
 	var seen: Dictionary = {}
 	var sleeping_tiles: Dictionary = {}
 	var capture_visible: bool = _agents != null and bool(_agents.call("is_capture_visible"))

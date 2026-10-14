@@ -131,7 +131,7 @@ fn no_ws(s: &str) -> String {
 #[test]
 fn harness_p13_beta_a1_resource_sprite_path_constant_declared() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -160,8 +160,8 @@ fn harness_p13_beta_a3_resource_count_equals_20() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 4: resource_seed_constant_declared ─────────────────────────
@@ -173,15 +173,15 @@ fn harness_p13_beta_a4_resource_seed_constant_declared() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 5: resource_placement_uses_seeded_rng ──────────────────────
 #[test]
 fn harness_p13_beta_a5_resource_placement_uses_seeded_rng() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -318,14 +318,14 @@ fn harness_p13_beta_a11_phase13_alpha_zoom_default_3x_preserved() {
 fn harness_p13_beta_a12_phase13_alpha_bootstrap_campfire_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_01_campfire"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 13: phase12_beta1_terrain_tileset_preserved ────────────────
 #[test]
 fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
     assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
@@ -337,7 +337,7 @@ fn harness_p13_beta_a13_phase12_beta1_terrain_tileset_preserved() {
 fn harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
@@ -345,7 +345,7 @@ fn harness_p13_beta_a14_phase12_beta2_construction_z_5_preserved() {
 #[test]
 fn harness_p13_beta_a15_phase12_gamma_furniture_z_4_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));

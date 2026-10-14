@@ -46,7 +46,7 @@ fn assert_png_at(path: &PathBuf, label: &str) {
 #[test]
 fn harness_p14_beta_a1_resource_type_paths_array_declared() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -58,7 +58,7 @@ fn harness_p14_beta_a1_resource_type_paths_array_declared() {
 #[test]
 fn harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -70,7 +70,7 @@ fn harness_p14_beta_a2_resource_type_paths_has_exactly_five_entries() {
 #[test]
 fn harness_p14_beta_a3_resource_type_paths_index_0_references_legacy_constant() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -87,8 +87,8 @@ fn harness_p14_beta_a4_resource_type_paths_index_1_wood_literal() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 5: resource_type_paths_index_2_stone_literal ──────────────
@@ -100,8 +100,8 @@ fn harness_p14_beta_a5_resource_type_paths_index_2_stone_literal() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 6: resource_type_paths_index_3_water_literal ──────────────
@@ -113,15 +113,15 @@ fn harness_p14_beta_a6_resource_type_paths_index_3_water_literal() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 7: resource_type_paths_index_4_food_literal ───────────────
 #[test]
 fn harness_p14_beta_a7_resource_type_paths_index_4_food_literal() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -133,7 +133,7 @@ fn harness_p14_beta_a7_resource_type_paths_index_4_food_literal() {
 #[test]
 fn harness_p14_beta_a8_resource_water_tint_constant_value() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
     assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
@@ -144,7 +144,7 @@ fn harness_p14_beta_a8_resource_water_tint_constant_value() {
 #[test]
 fn harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_iterator() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -156,7 +156,7 @@ fn harness_p14_beta_a9_resource_scatter_loop_uses_modulo_cycle_and_indexed_itera
 #[test]
 fn harness_p14_beta_a10_water_modulate_branch_present() {
     let src = include_str!("../../../../scripts/ui/terrain_renderer.gd");
-    assert!(src.contains("get_terrain_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
     assert!(src.contains("TileSetAtlasSource.new()"));
     assert!(src.contains("layer.set_cell"));
     assert!(!src.contains("RandomNumberGenerator"));
@@ -172,16 +172,16 @@ fn harness_p14_beta_a11_village_fixture_paths_has_exactly_four_literals() {
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── Assertion 12: village_fixture_positions_match_diamond_layout ────────
 #[test]
 fn harness_p14_beta_a12_village_fixture_positions_match_diamond_layout() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -204,8 +204,8 @@ fn harness_p14_beta_a13_z_village_fixture_equals_five() {
 #[test]
 fn harness_p14_beta_a14_village_fixture_placement_loop_present() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -216,7 +216,7 @@ fn harness_p14_beta_a14_village_fixture_placement_loop_present() {
 #[test]
 fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -228,8 +228,8 @@ fn harness_p14_beta_a15_phase_13_beta_resource_constants_preserved() {
 #[test]
 fn harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get(\"winter_severity\", -1)))"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("WOOD.hearth_frame(state, hour, _elapsed, winter_severity)"));
     assert!(src.contains("var state: Dictionary = WOOD.settlement(settlements, tile)"));
     assert!(src.contains("return WOOD.hearth_frame({}, hour, elapsed)"));
     assert!(src.contains("sprite.position = _tile_center(x, y)"));
@@ -241,7 +241,7 @@ fn harness_p14_beta_a16_phase_13_alpha_bootstrap_constants_preserved() {
 fn harness_p14_beta_a17_phase_12_construction_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_04_shelter_frame"));
-    assert!(src.contains("get_construction_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
     assert!(src.contains("ART.apply(sprite, _available(sprite_id))"));
 }
 
@@ -249,7 +249,7 @@ fn harness_p14_beta_a17_phase_12_construction_constants_preserved() {
 #[test]
 fn harness_p14_beta_a18_phase_12_gamma_furniture_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_settlement_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_settlement_snapshot\")"));
     assert!(src.contains("\"formation_xs\""));
     assert!(src.contains("\"formation_ys\""));
     assert!(src.contains("_tile_center(nearest.x, nearest.y)"));

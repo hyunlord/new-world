@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ReaderCompat = preload("res://scripts/test/art/test_sim_reads_equivalence_p9.gd")
 const Probe = preload("res://scripts/test/art/frame_cpu_probe.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const TRANSITION_FRAMES: int = 3
@@ -32,11 +33,11 @@ class Runtime extends RefCounted:
 		return snapshot()
 
 	func snapshot() -> Dictionary:
-		var settled: Dictionary = world.call("get_settlement_snapshot")
+		var settled: Dictionary = ReaderCompat.read(world, "get_settlement_snapshot", true)
 		var alive: int = 0
 		for count: int in settled.get("member_counts", []):
 			alive += int(count > 0)
-		return {"tick": int(world.call("get_time_snapshot")["tick"]), "camera": [camera.position.x, camera.position.y], "zoom": [camera.zoom.x, camera.zoom.y], "population": world.call("get_agent_snapshot")["agent_ids"].size(), "alive_count": alive, "selected_id": Selection.selected_id, "simulation_frozen": world.process_mode == Node.PROCESS_MODE_DISABLED}
+		return {"tick": int(ReaderCompat.read(world, "get_time_snapshot", true)["tick"]), "camera": [camera.position.x, camera.position.y], "zoom": [camera.zoom.x, camera.zoom.y], "population": ReaderCompat.read(world, "get_agent_snapshot", true)["agent_ids"].size(), "alive_count": alive, "selected_id": Selection.selected_id, "simulation_frozen": world.process_mode == Node.PROCESS_MODE_DISABLED}
 
 	func set_enabled(enabled: bool) -> void:
 		Selection.set_layers_enabled(tree, enabled)

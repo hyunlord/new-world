@@ -461,7 +461,7 @@ fn harness_p14_delta_a13_phase_14_alpha_role_bucket_invariants_preserved() {
 #[test]
 fn harness_p14_delta_a14_phase_14_beta_resource_registry_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));
@@ -494,8 +494,8 @@ fn harness_p14_delta_a16_village_fixture_constants_preserved_in_world_renderer()
     assert!(!src.contains("VILLAGE_FIXTURE"));
     assert!(!src.contains("BOOTSTRAP_"));
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_building_snapshot()"));
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
 }
 
 // ─── A17: hud_topbar.gd byte hash equals the Revitalize Part 4 snapshot ─────────

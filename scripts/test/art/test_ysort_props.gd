@@ -18,7 +18,7 @@ func _run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(main)
 	await process_frame
-	world.call("advance_ticks", 1)
+	SimReads.mutate(world, "advance_ticks", [1])
 	var renderer: Node = main.get_node("BuildingRenderer")
 	var agents: Node = main.get_node("AgentRenderer")
 	renderer.call("refresh_snapshot")

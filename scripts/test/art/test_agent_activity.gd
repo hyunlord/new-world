@@ -57,7 +57,7 @@ func _run() -> void:
 	var context: Dictionary = renderer.call("_activity_context")
 	_check(context.has("food") and context.has("hearths") and context.has("terrain"))
 	_check((context["terrain"] as Dictionary).has("terrain"))
-	var snapshot: Dictionary = world.call("get_agent_snapshot")
+	var snapshot: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var ids: PackedInt64Array = snapshot["ids"]
 	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
 	inspector.call("display_agent", world.call("get_agent_detail", ids[0]))

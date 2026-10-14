@@ -131,7 +131,7 @@ func _try_agent_click(world_pos: Vector2) -> bool:
 			if bool(drawn_detail.get("found", false)) and drawn_panel != null and drawn_panel.has_method("display_agent"):
 				drawn_panel.call("display_agent", drawn_detail)
 				return true
-	var snap: Dictionary = world_sim.get_agent_snapshot()
+	var snap: Dictionary = SimReads.read(world_sim, "get_agent_snapshot")
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())

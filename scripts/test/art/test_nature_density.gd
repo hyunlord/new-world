@@ -18,18 +18,18 @@ func _run() -> void:
 	root.add_child(main)
 	var tick: int = 0
 	while tick < 1680:
-		tick = int(world.call("advance_ticks",mini(8,1680-tick)))
+		tick = int(SimReads.mutate(world, "advance_ticks", [mini(8,1680-tick)]))
 	var building: Node = main.get_node("BuildingRenderer")
 	_check(building.call("_available","S2_08") == "S2_08","suppressed structures never resurrect direction art")
 	var nature: Node = main.get_node("NatureRenderer")
 	nature.call("refresh_snapshot")
 	await process_frame
-	var terrain: Dictionary = world.call("get_terrain_snapshot")
+	var terrain: Dictionary = SimReads.read(world, "get_terrain_snapshot")
 	var codes: PackedByteArray = terrain["terrain"]
 	var width: int = int(terrain["width"])
-	var cleared: Dictionary = LAYOUT.clearings(world.call("get_building_snapshot"),world.call("get_construction_snapshot"),world.call("get_resource_snapshot"),world.call("get_settlement_snapshot"))
+	var cleared: Dictionary = LAYOUT.clearings(SimReads.read(world, "get_building_snapshot"),SimReads.read(world, "get_construction_snapshot"),SimReads.read(world, "get_resource_snapshot"),SimReads.read(world, "get_settlement_snapshot"))
 	nature.call("_update_canopies")
-	var expected_tint: Color = SEASON.resolve(world.call("get_time_snapshot"))
+	var expected_tint: Color = SEASON.resolve(SimReads.read(world, "get_time_snapshot"))
 	_check(SEASON.resolve({}) == Color.WHITE,"absent season keys remain white")
 	var rock_counts: Dictionary = {2: 0, 3: 0}
 	var rock_tiles: Dictionary = {}
@@ -95,7 +95,7 @@ func _run() -> void:
 	root.add_child(reloaded)
 	tick = 0
 	while tick < 1680:
-		tick = int(reloaded_world.call("advance_ticks",mini(8,1680-tick)))
+		tick = int(SimReads.mutate(reloaded_world, "advance_ticks", [mini(8,1680-tick)]))
 	var reloaded_nature: Node = reloaded.get_node("NatureRenderer")
 	reloaded_nature.call("refresh_snapshot")
 	var reloaded_sprites: Dictionary = reloaded_nature.get("_sprites")
@@ -111,10 +111,10 @@ func _decals(main: Node, world: Node) -> Dictionary:
 	var renderer: Node = main.get_node("TerrainRenderer")
 	renderer.call("refresh_snapshot")
 	await process_frame
-	var snapshot: Dictionary = world.call("get_terrain_snapshot")
+	var snapshot: Dictionary = SimReads.read(world, "get_terrain_snapshot")
 	var codes: PackedByteArray = snapshot["terrain"]
 	var width: int = int(snapshot["width"])
-	var cleared: Dictionary = LAYOUT.clearings(world.call("get_building_snapshot"),world.call("get_construction_snapshot"),world.call("get_resource_snapshot"),world.call("get_settlement_snapshot"),3)
+	var cleared: Dictionary = LAYOUT.clearings(SimReads.read(world, "get_building_snapshot"),SimReads.read(world, "get_construction_snapshot"),SimReads.read(world, "get_resource_snapshot"),SimReads.read(world, "get_settlement_snapshot"),3)
 	var counts: Dictionary = {0: 0,1: 0,4: 0}
 	var placements: Dictionary = {}
 	for sprite: Sprite2D in (renderer.get("_decals") as Node2D).get_children():

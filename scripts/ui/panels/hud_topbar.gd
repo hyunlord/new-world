@@ -111,7 +111,7 @@ func _refresh() -> void:
 	var shelter_n: int = 0
 
 	if _world_sim != null:
-		var agent_snap: Variant = _world_sim.call("get_agent_snapshot")
+		var agent_snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 		if agent_snap is Dictionary:
 			var agent_dict: Dictionary = agent_snap
 			var ids: Variant = agent_dict.get("ids", null)
@@ -119,7 +119,7 @@ func _refresh() -> void:
 				var ids_arr: PackedInt64Array = ids
 				agent_n = ids_arr.size()
 
-		var settle_snap: Variant = _world_sim.call("get_settlement_snapshot")
+		var settle_snap: Variant = SimReads.read(_world_sim, "get_settlement_snapshot")
 		if settle_snap is Dictionary:
 			var settle_dict: Dictionary = settle_snap
 			var sids: Variant = settle_dict.get("ids", null)
@@ -127,7 +127,7 @@ func _refresh() -> void:
 				var sids_arr: PackedInt64Array = sids
 				settle_n = sids_arr.size()
 
-		var construct_snap: Variant = _world_sim.call("get_construction_snapshot")
+		var construct_snap: Variant = SimReads.read(_world_sim, "get_construction_snapshot")
 		if construct_snap is Dictionary:
 			var construct_dict: Dictionary = construct_snap
 			var cids: Variant = construct_dict.get("ids", null)
@@ -135,7 +135,7 @@ func _refresh() -> void:
 				var cids_arr: PackedInt64Array = cids
 				site_n = cids_arr.size()
 
-		var building_snap: Variant = _world_sim.call("get_building_snapshot")
+		var building_snap: Variant = SimReads.read(_world_sim, "get_building_snapshot")
 		if building_snap is Dictionary:
 			var building_dict: Dictionary = building_snap
 			var kinds: Variant = building_dict.get("kinds", null)
@@ -219,7 +219,7 @@ func _refresh() -> void:
 func _snapshot(method: String) -> Dictionary:
 	if _world_sim == null:
 		return {}
-	var value: Variant = _world_sim.call(method)
+	var value: Variant = SimReads.read(_world_sim, method)
 	return value if value is Dictionary else {}
 
 

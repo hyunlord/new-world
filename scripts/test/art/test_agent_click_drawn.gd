@@ -21,7 +21,7 @@ func _run() -> void:
 	var agents: Node = main.get_node("AgentRenderer")
 	var renderer: Node = main.get_node("WorldRenderer")
 	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
-	var snapshot: Dictionary = world.get_agent_snapshot()
+	var snapshot: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var ids: PackedInt64Array = snapshot["ids"]
 	var agent_ids: PackedInt64Array = snapshot["agent_ids"]
 	_check(ids.size() >= 2, "real world supplies two selectable villagers")

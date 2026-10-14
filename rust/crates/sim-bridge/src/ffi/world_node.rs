@@ -404,6 +404,21 @@ impl WorldSimNode {
         event_views_to_variant_array(&views)
     }
 
+    /// Art Pass 9: filtered causal events in input-tile/ring order, once per id.
+    #[func]
+    fn get_tile_causal_events(
+        &self,
+        xs: PackedInt32Array,
+        ys: PackedInt32Array,
+        kinds: PackedStringArray,
+    ) -> VarArray {
+        let tiles: Vec<(i32, i32)> = xs.as_slice().iter().copied()
+            .zip(ys.as_slice().iter().copied()).collect();
+        let names: Vec<String> = kinds.as_slice().iter().map(ToString::to_string).collect();
+        let kinds: Vec<&str> = names.iter().map(String::as_str).collect();
+        event_views_to_variant_array(&collect_tile_causal_events(&self.engine.resources, &tiles, &kinds))
+    }
+
     /// γ-1: walk the causal chain backwards from `event_id` on tile
     /// `(x, y)`, returning `[child, parent, grand-parent, …]`.
     ///
@@ -1257,6 +1272,76 @@ pub fn collect_event_chain(
         .iter()
         .map(|ev| CausalEventView::from_event(ev))
         .collect()
+}
+
+/// Collect matching events once, preserving tile input order and oldest-first rings.
+/// Invalid coordinates are ignored, just like the single-tile getter.
+pub fn collect_tile_causal_events(
+    resources: &SimResources,
+    tiles: &[(i32, i32)],
+    kinds: &[&str],
+) -> Vec<CausalEventView> {
+    let mut seen = std::collections::BTreeSet::new();
+    let mut events = Vec::new();
+    for &(x, y) in tiles {
+        for event in try_collect_tile_causal_history(resources, x, y) {
+            if kinds.contains(&event.kind) && seen.insert(event.id) {
+                events.push(event);
+            }
+        }
+    }
+    events
+}
+
+#[cfg(test)]
+mod art_p9_causal_batch_tests {
+    use super::*;
+
+    fn fixture() -> SimEngine {
+        let mut engine = SimEngine::new(2, 2, MaterialRegistry::new());
+        let placed = |id| CausalEvent::BuildingPlaced {
+            id, parent: None, position: (0, 0), radius: 1, tick: 3,
+        };
+        engine.resources.causal_log.push(0, placed(9));
+        engine.resources.causal_log.push(0, placed(2));
+        engine.resources.causal_log.push(1, placed(2));
+        engine.resources.causal_log.push(1, placed(7));
+        engine.resources.causal_log.push(1, CausalEvent::InfluenceChanged {
+            id: 11, parent: None, channel: InfluenceChannel::Warmth,
+            position: (1, 0), old: 0.0, new: 1.0, tick: 4,
+        });
+        engine
+    }
+
+    #[test]
+    fn empty_input_and_invalid_tiles_are_empty() {
+        let engine = fixture();
+        assert!(collect_tile_causal_events(&engine.resources, &[], &["building_placed"]).is_empty());
+        assert!(collect_tile_causal_events(&engine.resources, &[(-1, 0), (2, 2)], &["building_placed"]).is_empty());
+    }
+
+    #[test]
+    fn shared_events_are_emitted_once() {
+        let engine = fixture();
+        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0), (0, 0)], &["building_placed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![9, 2, 7]);
+    }
+
+    #[test]
+    fn kinds_filter_excludes_other_events() {
+        let engine = fixture();
+        assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &["combat_started"]).is_empty());
+        assert!(collect_tile_causal_events(&engine.resources, &[(0, 0)], &[]).is_empty());
+        let events = collect_tile_causal_events(&engine.resources, &[(0, 0), (1, 0)], &["influence_changed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![11]);
+    }
+
+    #[test]
+    fn input_tile_and_ring_order_win_over_event_id_order() {
+        let engine = fixture();
+        let events = collect_tile_causal_events(&engine.resources, &[(1, 0), (0, 0)], &["building_placed"]);
+        assert_eq!(events.iter().map(|event| event.id).collect::<Vec<_>>(), vec![2, 7, 9]);
+    }
 }
 
 /// γ-1 pure-Rust FFI-mirror of `WorldSimNode::get_tile_causal_history`.

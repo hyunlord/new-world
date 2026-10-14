@@ -542,14 +542,14 @@ fn harness_p13_delta_a14_phase13_alpha_default_zoom_3x_unchanged() {
 fn harness_p13_delta_a15_phase13_alpha_bootstrap_campfire_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_01_campfire"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 16: invariant_phase13_beta_resource_constants_unchanged ────
 #[test]
 fn harness_p13_delta_a16_phase13_beta_resource_constants_unchanged() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));

@@ -44,9 +44,11 @@ def fixture(world: str = "W500", phase: str = "baseline") -> Payload:
                     "setup_cpu_ms": 0.1, "gpu_ms": 0.0, "pacing_ms": 16.0,
                     "ticks_run": ticks, "process_frame": frame, "paired": True,
                     "state": {"tick": tick, "camera": [448, 28], "zoom": [zoom, zoom]},
+                    "direct_read_context": {"inspector_visible": False, "influence_channel": -1},
                 }
                 if phase == "after":
                     sample["ffi_calls"] = {"get_time_snapshot": 1}
+                    sample["ffi_counter_frame"] = frame
                 samples.append(sample)
             row[key] = samples
         blocks.append(row)
@@ -207,6 +209,30 @@ def main() -> None:
 class CollectorBoundaryTests(unittest.TestCase):
     def test_synthetic_measurement_boundaries(self) -> None:
         main()
+
+    def test_ffi_counter_alignment(self) -> None:
+        for counter_frame in (None, -1):
+            with self.subTest(counter_frame=counter_frame), tempfile.TemporaryDirectory(prefix="p9-counter-frame-") as directory:
+                payload = fixture(phase="after")
+                sample = first_sample(payload)
+                if counter_frame is None:
+                    del sample["ffi_counter_frame"]
+                else:
+                    sample["ffi_counter_frame"] = counter_frame
+                path = Path(directory) / "session.json"
+                path.write_text(json.dumps(payload))
+                with self.assertRaisesRegex(summary.EvidenceError, "FFI counters do not match process frame"):
+                    summary.load_session(path)
+
+    def test_f4_requires_measured_closed_context(self) -> None:
+        for context in ({}, {"inspector_visible": True, "influence_channel": -1}, {"inspector_visible": False, "influence_channel": 0}):
+            with self.subTest(context=context), tempfile.TemporaryDirectory(prefix="p9-f4-context-") as directory:
+                payload = fixture(phase="after")
+                first_sample(payload)["direct_read_context"] = context
+                path = Path(directory) / "session.json"
+                path.write_text(json.dumps(payload))
+                with self.assertRaisesRegex(summary.EvidenceError, "F4 requires closed"):
+                    summary.load_session(path)
 
 
 if __name__ == "__main__":

@@ -202,7 +202,7 @@ func _loc(key: String) -> String:
 func _resolve_entity_bits(agent_id: int) -> int:
 	if _world_sim == null:
 		return -1
-	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	var snapshot: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snapshot is Dictionary):
 		return -1
 	var data: Dictionary = snapshot
@@ -250,7 +250,7 @@ func _carried_food(agent_id: int) -> int:
 func _carried_amount(agent_id: int, key: String) -> int:
 	if _world_sim == null:
 		return 0
-	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	var snapshot: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snapshot is Dictionary):
 		return 0
 	var data: Dictionary = snapshot
@@ -266,7 +266,7 @@ func _carried_amount(agent_id: int, key: String) -> int:
 func _age_line(agent_id: int) -> String:
 	if _world_sim == null:
 		return ""
-	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	var snapshot: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snapshot is Dictionary):
 		return ""
 	var data: Dictionary = snapshot
@@ -293,7 +293,7 @@ func _age_line(agent_id: int) -> String:
 func _is_cold(agent_id: int) -> bool:
 	if _world_sim == null:
 		return false
-	var snapshot: Variant = _world_sim.call("get_agent_snapshot")
+	var snapshot: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not snapshot is Dictionary:
 		return false
 	var ids: Variant = snapshot.get("agent_ids")

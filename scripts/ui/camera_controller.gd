@@ -143,7 +143,7 @@ func _process(delta: float) -> void:
 	# on the SPRITE_ORIGIN + tile*TILE_SIZE basis, then eases toward it.
 	if _world_sim == null:
 		return
-	var snap: Variant = _world_sim.call("get_agent_snapshot")
+	var snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	if not (snap is Dictionary):
 		return
 	var snap_dict: Dictionary = snap
@@ -180,7 +180,7 @@ func _tile_center(tile_x: float, tile_y: float) -> Vector2:
 func _center_on_first_settlement() -> void:
 	if _world_sim == null:
 		return
-	var snapshot: Dictionary = _world_sim.call("get_settlement_snapshot")
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var ids: PackedInt32Array = snapshot.get("settlement_ids", PackedInt32Array())
 	var counts: PackedInt32Array = snapshot.get("member_counts", PackedInt32Array())
 	var xs: PackedInt32Array = snapshot.get("formation_xs", PackedInt32Array())
@@ -199,6 +199,6 @@ func _on_world_reset() -> void:
 	if _manual_framing or _world_sim == null:
 		return
 	_initial_center_pending = true
-	var world_info: Dictionary = _world_sim.call("get_world_info")
+	var world_info: Dictionary = SimReads.read(_world_sim, "get_world_info")
 	position = _tile_center(float(world_info.get("width", 64)) / 2.0, float(world_info.get("height", 64)) / 2.0)
 	_center_on_first_settlement()

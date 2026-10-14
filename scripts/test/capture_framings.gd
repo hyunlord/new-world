@@ -103,13 +103,13 @@ func _run() -> void:
 	current_scene = _main
 	_camera.call("set_auto_track", false)
 	_camera.position_smoothing_enabled = false
-	var start: Dictionary = _world.call("get_time_snapshot")
+	var start: Dictionary = SimReads.read(_world, "get_time_snapshot")
 	if int(start["tick"]) != 0:
 		_fail("initial simulation tick is not zero")
 		return
-	var info: Dictionary = _world.call("get_world_info")
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
 	_clock_offset = int(info.get("clock_offset_ticks", 0))
-	_sample_event_truth(_world.call("get_agent_snapshot"))
+	_sample_event_truth(SimReads.read(_world, "get_agent_snapshot"))
 	if int(info.get("ticks_per_day", 0)) != 1440:
 		_fail("clock plan requires 1440 ticks per day")
 		return
@@ -165,7 +165,7 @@ func _run() -> void:
 		if _row_options.has("stem_override"):
 			stem = "god_" + str(_row_options["stem_override"])
 		print("capture start: %s tick=%d usec=%d" % [stem, target, Time.get_ticks_usec()])
-		var before: Dictionary = _world.call("get_time_snapshot")
+		var before: Dictionary = SimReads.read(_world, "get_time_snapshot")
 		var delta_ticks: int = target - int(before["tick"])
 		if delta_ticks < 0 or not _advance_to(target):
 			_fail("simulation did not reach requested tick")
@@ -206,7 +206,7 @@ func _run() -> void:
 				_fail("F5 requires a deadwood spot; none exists at this tick")
 				return
 		if framing == "FC":
-			tile = CapturePlans.wood_carrier_tile(_world.call("get_agent_snapshot"))
+			tile = CapturePlans.wood_carrier_tile(SimReads.read(_world, "get_agent_snapshot"))
 			if tile.x < 0:
 				_fail("FC requires a walking wood carrier; none exists at this tick")
 				return
@@ -251,7 +251,7 @@ func _run() -> void:
 		for frame: int in range(0 if _plan == "art_god" else 5):
 			await process_frame
 		await _render_frame()
-		var now: Dictionary = _world.call("get_time_snapshot")
+		var now: Dictionary = SimReads.read(_world, "get_time_snapshot")
 		if int(now["tick"]) != target:
 			_fail("wall-clock advanced a frozen capture")
 			return
@@ -314,7 +314,7 @@ func _write_manifest() -> void:
 
 
 func _village_tile() -> Vector2:
-	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var ids: PackedInt32Array = snap["settlement_ids"]
 	var counts: PackedInt32Array = snap["member_counts"]
 	var xs: PackedInt32Array = snap["formation_xs"]
@@ -327,7 +327,7 @@ func _village_tile() -> Vector2:
 
 
 func _food_tile(village: Vector2) -> Vector2:
-	var snap: Dictionary = _world.call("get_resource_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_resource_snapshot")
 	var kinds: PackedInt32Array = snap["kinds"]
 	var xs: PackedInt32Array = snap["xs"]
 	var ys: PackedInt32Array = snap["ys"]
@@ -345,13 +345,13 @@ func _food_tile(village: Vector2) -> Vector2:
 
 
 func _deadwood_tile(village: Vector2) -> Vector2:
-	return Metadata.deadwood_tile(_world.call("get_resource_snapshot"), village)
+	return Metadata.deadwood_tile(SimReads.read(_world, "get_resource_snapshot"), village)
 
 
 func _open_inspector(inspector: Node) -> bool:
 	if inspector == null:
 		return false
-	var snap: Dictionary = _world.call("get_agent_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var ids: PackedInt64Array = snap["ids"]
 	var agent_ids: PackedInt64Array = snap["agent_ids"]
 	if ids.is_empty():
@@ -376,7 +376,7 @@ func _fail(message: String) -> void:
 
 
 func _advance_to(target: int) -> bool:
-	var clock: Dictionary = _world.call("get_time_snapshot")
+	var clock: Dictionary = SimReads.read(_world, "get_time_snapshot")
 	var tick: int = int(clock["tick"])
 	var agents: Node = _main.get_node_or_null("AgentRenderer")
 	var trail: Node = _main.get_node_or_null("ActivityTrailRenderer")
@@ -384,15 +384,15 @@ func _advance_to(target: int) -> bool:
 	var motion_start: int = maxi(tick, target - 8)
 	while tick < target:
 		if tick == motion_start:
-			_motion_before = _world.call("get_agent_snapshot")
+			_motion_before = SimReads.read(_world, "get_agent_snapshot")
 			_motion_start_tick = tick
 		# Observe each stock delta and the exact 20:00 closing boundary.
-		tick = int(_world.call("advance_ticks", 1))
-		_death_trace.ingest(_world.call("get_recent_deaths"))
+		tick = int(SimReads.mutate(_world, "advance_ticks", [1]))
+		_death_trace.ingest(SimReads.read(_world, "get_recent_deaths"))
 		_remember_settlements()
 		if status != null and status.has_method("_ingest_snapshots"):
 			status.call("_ingest_snapshots")
-		var snapshot: Dictionary = _world.call("get_agent_snapshot")
+		var snapshot: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 		_sample_event_truth(snapshot)
 		_cold_trace.ingest(snapshot, tick)
 		if agents != null and agents.has_method("ingest_chill_snapshot"):
@@ -405,7 +405,7 @@ func _advance_to(target: int) -> bool:
 
 
 func _sample_event_truth(agents: Dictionary) -> void:
-	_event_trace.ingest(_world.call("get_time_snapshot"), _world.call("get_settlement_snapshot"), _world.call("get_society_snapshot"), _world.call("get_construction_snapshot"), _world.call("get_tallies"), _world.call("get_intervention_state"), agents)
+	_event_trace.ingest(SimReads.read(_world, "get_time_snapshot"), SimReads.read(_world, "get_settlement_snapshot"), SimReads.read(_world, "get_society_snapshot"), SimReads.read(_world, "get_construction_snapshot"), SimReads.read(_world, "get_tallies"), SimReads.read(_world, "get_intervention_state"), agents)
 
 
 func _set_agent_layers(shown: bool) -> void:
@@ -422,20 +422,20 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	var rows: Array[Dictionary] = []
 	rows = Metadata.entities(_main, viewport, pixel_scale)
 	var inspector: Node = _main.get_node("UI/AgentInspectorPanel")
-	_death_trace.ingest(_world.call("get_recent_deaths"))
-	var agent_snapshot: Dictionary = _world.call("get_agent_snapshot")
+	_death_trace.ingest(SimReads.read(_world, "get_recent_deaths"))
+	var agent_snapshot: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var data: Dictionary = {
 		"schema_version": 6, "camera_position": [_camera.position.x, _camera.position.y],
 		"zoom": [_camera.zoom.x, _camera.zoom.y], "viewport_size": [image_size.x, image_size.y],
 		"clock_offset_ticks": _clock_offset, "tick": tick, "entities": rows,
 		"framebuffer_scale": pixel_scale.x, "labels": Metadata.labels(_main.get_node_or_null("UI"), pixel_scale),
 		"agent_snapshot": _json_arrays(agent_snapshot),
-		"settlement_snapshot": _json_arrays(_world.call("get_settlement_snapshot")),
-		"resource_snapshot": _json_arrays(_world.call("get_resource_snapshot")),
+		"settlement_snapshot": _json_arrays(SimReads.read(_world, "get_settlement_snapshot")),
+		"resource_snapshot": _json_arrays(SimReads.read(_world, "get_resource_snapshot")),
 		"life_stage_counts": Metadata.life_stage_counts(agent_snapshot),
-		"time_snapshot": _json_arrays(_world.call("get_time_snapshot")),
-		"tallies": _json_arrays(_world.call("get_tallies")),
-		"recent_deaths": _json_arrays(_world.call("get_recent_deaths")),
+		"time_snapshot": _json_arrays(SimReads.read(_world, "get_time_snapshot")),
+		"tallies": _json_arrays(SimReads.read(_world, "get_tallies")),
+		"recent_deaths": _json_arrays(SimReads.read(_world, "get_recent_deaths")),
 		"head_dots": _draw_counter("SeekVizRenderer", "get_drawn_head_dot_count"),
 		"need_icons": _draw_counter("NeedBarRenderer", "get_drawn_icon_count"),
 		"need_icon_agent_ids": _draw_counter("NeedBarRenderer", "get_drawn_icon_agent_ids"),
@@ -449,7 +449,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["capture_plan_row"] = _plan_row.duplicate(true)
 	data["selected_settlement_id"] = Selection.selected_id
 	data["measured_days_source"] = "docs/art/production8/MEASURED_DAYS.md"
-	data["society_snapshot"] = _json_arrays(_world.call("get_society_snapshot")) if _world.has_method("get_society_snapshot") else {}
+	data["society_snapshot"] = _json_arrays(SimReads.read(_world, "get_society_snapshot")) if _world.has_method("get_society_snapshot") else {}
 	data["death_truth_trace"] = {"source": "independent FFI recent_deaths census", "max_sample_interval_ticks": _death_trace.max_interval_ticks, "window_start_tick": 0, "window_end_tick": tick, "deaths": _death_trace.rows()}
 	data["death_drawn"] = _draw_counter("DeathVizRenderer", "capture_metadata")
 	for death: Dictionary in data["death_drawn"]:
@@ -483,8 +483,8 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["intervention_effects"] = {}
 	for effects: Node in get_nodes_in_group("art_god_hand_effects"):
 		data["intervention_effects"] = _json_arrays(effects.call("metadata"))
-	data["intervention_state"] = _json_arrays(_world.call("get_intervention_state")) if _world.has_method("get_intervention_state") else {}
-	data["building_snapshot"] = _json_arrays(_world.call("get_building_snapshot"))
+	data["intervention_state"] = _json_arrays(SimReads.read(_world, "get_intervention_state")) if _world.has_method("get_intervention_state") else {}
+	data["building_snapshot"] = _json_arrays(SimReads.read(_world, "get_building_snapshot"))
 	data["chill_tint_strength"] = _tint_strength()
 	data["cold_truth_trace"] = {"source": "FFI colds sampled independently of presentation", "max_sample_interval_ticks": 1, "agents": _cold_trace.rows()}
 	if tick == _motion_end_tick and _motion_start_tick >= 0:
@@ -561,8 +561,8 @@ func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = 
 		var activate: String = 'tell application "System Events" to set frontmost of first process whose unix id is %d to true' % OS.get_process_id()
 		OS.execute("/usr/bin/osascript", PackedStringArray(["-e", activate]))
 	var load_status: Dictionary = _performance_load_status()
-	var start_tick: int = int(_world.call("get_time_snapshot")["tick"])
-	var settlements: Dictionary = _world.call("get_settlement_snapshot")
+	var start_tick: int = int(SimReads.read(_world, "get_time_snapshot")["tick"])
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var elapsed: Array[float] = []
 	# Forced viewport draw avoids an unbounded post-draw wait when macOS obscures the window.
 	await _render_frame()
@@ -573,7 +573,7 @@ func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = 
 	for frame: int in range(300):
 		await _render_frame()
 		var current: int = Time.get_ticks_usec()
-		_death_trace.ingest(_world.call("get_recent_deaths"))
+		_death_trace.ingest(SimReads.read(_world, "get_recent_deaths"))
 		elapsed.append(float(current - previous) / 1000.0)
 		previous = current
 	_world.call("set_sim_speed", 0.0)
@@ -607,7 +607,7 @@ func _capture_strip(prefix: String, follow: bool) -> void:
 				_camera.position = position
 		_camera.force_update_scroll()
 		await _render_frame()
-		var now: Dictionary = _world.call("get_time_snapshot")
+		var now: Dictionary = SimReads.read(_world, "get_time_snapshot")
 		var stem: String = "%s_%02d" % [prefix, index]
 		var image: Image = root.get_texture().get_image()
 		if image == null:
@@ -696,10 +696,10 @@ func _json_arrays(value: Variant) -> Variant:
 func _write_forest_evidence() -> void:
 	var evidence: Dictionary = {}
 	for domain: String in ["terrain", "building", "construction", "settlement", "resource"]:
-		evidence[domain] = _json_arrays(_world.call("get_" + domain + "_snapshot"))
+		evidence[domain] = _json_arrays(SimReads.read(_world, "get_" + domain + "_snapshot"))
 	var viewport: Vector2 = Vector2(root.get_texture().get_size())
 	evidence["entities"] = Metadata.entities(_main, viewport, viewport / root.get_visible_rect().size)
-	evidence["tick"] = _world.call("get_time_snapshot")["tick"]
+	evidence["tick"] = SimReads.read(_world, "get_time_snapshot")["tick"]
 	if not CapturePlans.write_json(_out.path_join("forest_evidence.json"), evidence):
 		_fail("cannot write forest evidence")
 
@@ -747,11 +747,11 @@ func _reset_capture_world(seed: int) -> void:
 	_cold_trace = ColdTrace.new()
 	_event_trace.reset()
 	_death_trace.reset()
-	_world.call("reset_world", seed)
+	SimReads.mutate(_world, "reset_world", [seed])
 	_world.call("set_sim_speed", 0.0)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
-	_sample_event_truth(_world.call("get_agent_snapshot"))
-	var info: Dictionary = _world.call("get_world_info")
+	_sample_event_truth(SimReads.read(_world, "get_agent_snapshot"))
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
 	_clock_offset = int(info.get("clock_offset_ticks", 0))
 	await process_frame
 	await process_frame
@@ -760,7 +760,7 @@ func _reset_capture_world(seed: int) -> void:
 
 
 func _remember_settlements() -> void:
-	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var ordered: Array = Array(snap.get("settlement_ids", PackedInt32Array()))
 	ordered.sort()
 	for id: int in ordered:
@@ -776,7 +776,7 @@ func _settlement_id(target: String) -> int:
 
 
 func _settlement_tile(target: String) -> Vector2:
-	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var ids: PackedInt32Array = snap.get("settlement_ids", PackedInt32Array())
 	var index: int = ids.find(_settlement_id(target))
 	if index < 0:
@@ -785,7 +785,7 @@ func _settlement_tile(target: String) -> Vector2:
 
 
 func _settlement_bounds() -> Rect2:
-	var snap: Dictionary = _world.call("get_settlement_snapshot")
+	var snap: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var xs: PackedInt32Array = snap.get("formation_xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("formation_ys", PackedInt32Array())
 	if xs.is_empty():
@@ -808,10 +808,10 @@ func _all_villages_zoom() -> float:
 func _founder_tile() -> Vector2:
 	if not _world.has_method("get_society_snapshot"):
 		return Vector2(-1, -1)
-	var society: Dictionary = _world.call("get_society_snapshot")
+	var society: Dictionary = SimReads.read(_world, "get_society_snapshot")
 	var leaders: PackedByteArray = society.get("founder_leader", PackedByteArray())
 	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
-	var agents: Dictionary = _world.call("get_agent_snapshot")
+	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var ids: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
 	for index: int in founders.size():
 		if index < leaders.size() and leaders[index] == 1:
@@ -824,14 +824,14 @@ func _founder_tile() -> Vector2:
 func _founder_site_tile() -> Vector2:
 	if not _world.has_method("get_society_snapshot"):
 		return Vector2(-1, -1)
-	var society: Dictionary = _world.call("get_society_snapshot")
+	var society: Dictionary = SimReads.read(_world, "get_society_snapshot")
 	var xs: PackedInt32Array = society.get("founder_site_xs", PackedInt32Array())
 	var ys: PackedInt32Array = society.get("founder_site_ys", PackedInt32Array())
 	return Vector2(xs[0], ys[0]) if not xs.is_empty() else Vector2(-1, -1)
 
 
 func _recent_exposure_tile() -> Vector2:
-	var deaths: Dictionary = _world.call("get_recent_deaths")
+	var deaths: Dictionary = SimReads.read(_world, "get_recent_deaths")
 	var reasons: PackedInt32Array = deaths.get("reasons", PackedInt32Array())
 	var ticks: PackedInt64Array = deaths.get("ticks", PackedInt64Array())
 	var best: int = -1
@@ -878,7 +878,7 @@ func _measure_society_pair() -> void:
 	if not _advance_to(126994):
 		_fail("A30 did not reach the measured first three-living-settlement tick")
 		return
-	var settlements: Dictionary = _world.call("get_settlement_snapshot")
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var alive: int = 0
 	for count: int in settlements.get("member_counts", []):
 		alive += int(count > 0)
@@ -924,7 +924,7 @@ func _perform_capture_cast(shot: Array, tick: int) -> bool:
 		_fail("paired scarcity provenance no longer matches Rust source")
 		return false
 	var cast: Dictionary = {"kind": kind, "amount": int(shot[4]), "settlement_id": requested_target, "seed": _seed, "tick": tick, "world_epoch": _world_epoch, "world_label": _world_label, "capture_options": _row_options.duplicate(true), "run_id": _run_id, "precast_original": observation}
-	var snapshot: Dictionary = _world.call("get_settlement_snapshot")
+	var snapshot: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	var ids: PackedInt32Array = snapshot.get("settlement_ids", PackedInt32Array())
 	if _is_paired() and (requested_target < 0 or not ids.has(requested_target)):
 		cast["reply"] = {"ok": false, "applied": 0, "reason": "paired target unavailable"}
@@ -947,7 +947,7 @@ func _perform_capture_cast(shot: Array, tick: int) -> bool:
 		return false
 	button.emit_signal("pressed")
 	var reply: Dictionary = (panel.get("_reply") as Dictionary).duplicate(true)
-	_sample_event_truth(_world.call("get_agent_snapshot"))
+	_sample_event_truth(SimReads.read(_world, "get_agent_snapshot"))
 	_last_cast_usec = Time.get_ticks_usec()
 	cast["reply"] = reply
 	cast["input_surface"] = "GodHandPanel button pressed"
@@ -976,7 +976,7 @@ func _load_need_provenance() -> Dictionary:
 	var growth: float = _source_number(economy, "pub fn adult_need_per_day\\(ticks_per_day: u64\\) -> f64 \\{\\s*([0-9.]+) \\* ticks_per_day as f64 / f64::from\\(HUNGER_CONSUME_AMOUNT\\)")
 	var consume: float = _source_number(decision, "pub const HUNGER_CONSUME_AMOUNT: f32 = ([0-9.]+);")
 	var days: float = _source_number(rules, "(?s)pub const V19_HAZARD: FissionHazard = FissionHazard \\{[^}]*?scarcity_days: ([0-9]+),")
-	var info: Dictionary = _world.call("get_world_info")
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
 	var ticks_per_day: int = int(info.get("ticks_per_day", 0))
 	var valid: bool = growth > 0.0 and consume > 0.0 and days > 0.0 and ticks_per_day > 0
 	_need_provenance = {"valid": valid, "source": "Rust adult_need_per_day and V19_HAZARD source literals; live world ticks_per_day", "growth_per_tick": growth, "food_consume_amount": consume, "ticks_per_day": ticks_per_day, "scarcity_days": days, "adult_need_per_day": growth * float(ticks_per_day) / consume if valid else null, "source_files": []}
@@ -987,14 +987,14 @@ func _load_need_provenance() -> Dictionary:
 
 func _original_observation() -> Dictionary:
 	var original: int = _settlement_id("orig")
-	var settlement: Dictionary = _world.call("get_settlement_snapshot")
-	var society: Dictionary = _world.call("get_society_snapshot")
+	var settlement: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
+	var society: Dictionary = SimReads.read(_world, "get_society_snapshot")
 	var ids: PackedInt32Array = settlement.get("settlement_ids", PackedInt32Array())
 	var society_ids: PackedInt32Array = society.get("settlement_ids", PackedInt32Array())
 	var row: int = ids.find(original)
 	var society_row: int = society_ids.find(original)
 	var need: Dictionary = _load_need_provenance()
-	var result: Dictionary = {"settlement_id": original, "found": row >= 0, "need_provenance": need.duplicate(true), "time_snapshot": _json_arrays(_world.call("get_time_snapshot"))}
+	var result: Dictionary = {"settlement_id": original, "found": row >= 0, "need_provenance": need.duplicate(true), "time_snapshot": _json_arrays(SimReads.read(_world, "get_time_snapshot"))}
 	if row < 0:
 		return result
 	var members: int = int(settlement["member_counts"][row])

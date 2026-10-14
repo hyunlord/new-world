@@ -42,7 +42,7 @@ const ART_LONG: Array[Array] = [
 
 
 static func moving_agent(world: Node) -> int:
-	var snap: Dictionary = world.call("get_agent_snapshot")
+	var snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
 	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())

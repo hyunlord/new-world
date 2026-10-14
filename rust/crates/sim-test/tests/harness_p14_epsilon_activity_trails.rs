@@ -492,12 +492,12 @@ fn harness_p14_epsilon_a12_main_tscn_load_steps_equals_12() {
         break;
     }
     let n = found_n.expect("A12.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 21, "Art Pass 6: twenty external resources plus the main scene; got {n}");
+    assert_eq!(n, 22, "Art Pass 9: twenty-one external resources plus the main scene; got {n}");
     assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
     assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
     assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
     assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
-    println!("[P14-ε A12] load_steps = 21 (Art Pass 6 GodHandPanel/GodHandEffects) ✓");
+    println!("[P14-ε A12] load_steps = 22 (Art Pass 9 SimReads added) ✓");
 }
 
 // ─── A13: agent_renderer.gd Phase 14-α/13-γ/11-α/4-γ invariants intact ───
@@ -528,7 +528,7 @@ fn harness_p14_epsilon_a13_regression_guard_agent_renderer_phase_invariants_inta
 #[test]
 fn harness_p14_epsilon_a14_regression_guard_world_renderer_phase_14_beta_intact() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));

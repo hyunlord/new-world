@@ -60,7 +60,7 @@ func _process(_delta: float) -> void:
 		_refresh_decals()
 
 func refresh_snapshot() -> void:
-	var snapshot: Dictionary = _world_sim.get_terrain_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_terrain_snapshot")
 	_width = int(snapshot.get("width", 0))
 	_height = int(snapshot.get("height", 0))
 	_terrain = snapshot.get("terrain", PackedByteArray())
@@ -106,7 +106,7 @@ func _fill_layer(layer_name: String) -> void:
 			layer.set_cell(Vector2i(x, y), 0, Vector2i(column, mask))
 
 func _refresh_camp() -> void:
-	var snapshot: Dictionary = _world_sim.get_building_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
 	var fingerprint: int = hash(snapshot)
 	if fingerprint == _building_fingerprint:
 		return
@@ -131,10 +131,10 @@ func _shore(x: int, y: int) -> bool:
 	return false
 
 func _refresh_decals() -> void:
-	var buildings: Dictionary = _world_sim.get_building_snapshot()
-	var resources: Dictionary = _world_sim.get_resource_snapshot()
-	var sites: Dictionary = _world_sim.get_construction_snapshot()
-	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var buildings: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var resources: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
+	var sites: Dictionary = SimReads.read(_world_sim, "get_construction_snapshot")
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var fingerprint: int = hash([buildings, sites, resources.get("xs"), resources.get("ys"), resources.get("kinds"), settlements.get("formation_xs"), settlements.get("formation_ys")])
 	if fingerprint == _decal_fingerprint:
 		return
@@ -181,7 +181,7 @@ func _refresh_decals() -> void:
 			_decals.add_child(sprite)
 
 func _update_season() -> void:
-	var tint: Color = SEASON.resolve(_world_sim.get_time_snapshot())
+	var tint: Color = SEASON.resolve(SimReads.read(_world_sim, "get_time_snapshot"))
 	for layer: TileMapLayer in _layers.values():
 		layer.modulate = tint
 	_decals.modulate = tint

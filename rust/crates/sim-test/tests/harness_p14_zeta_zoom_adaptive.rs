@@ -594,12 +594,12 @@ fn harness_zoom_a17_main_tscn_load_steps_equals_12() {
     let src = read_main_tscn_src();
     let n = tscn_load_steps(&src)
         .expect("a17.1: main.tscn must have `[gd_scene ... load_steps=N ...]`");
-    assert_eq!(n, 21, "Art Pass 6: twenty external resources plus the main scene; got {n}");
+    assert_eq!(n, 22, "Art Pass 9: twenty-one external resources plus the main scene; got {n}");
     assert!(src.contains("[ext_resource type=\"PackedScene\" path=\"res://scenes/ui/god_hand_panel.tscn\" id=\"19_god_panel\"]"));
     assert!(src.contains("[ext_resource type=\"Script\" path=\"res://scripts/rendering/art/god_hand_effects.gd\" id=\"20_god_effects\"]"));
     assert!(src.contains("[node name=\"GodHandEffects\" type=\"Node2D\" parent=\".\"]\nscript = ExtResource(\"20_god_effects\")"));
     assert!(src.contains("[node name=\"GodHandPanel\" parent=\"UI\" instance=ExtResource(\"19_god_panel\")]"));
-    println!("[P14-ζ a17] load_steps = 21 ✓");
+    println!("[P14-ζ a17] load_steps = 22 ✓");
 }
 
 // ─── Assertion 18: registers both new nodes ───────────────────────────────
@@ -704,7 +704,7 @@ fn harness_zoom_a20_phase14a_agent_renderer_invariants_intact() {
 #[test]
 fn harness_zoom_a21_phase14b_world_renderer_invariants_intact() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));

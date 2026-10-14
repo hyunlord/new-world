@@ -110,9 +110,9 @@ func _ingest_snapshots() -> void:
 	_clock = clock
 	_food.begin()
 	_food.prepare_clock(_clock)
-	var settle_snap: Variant = _world_sim.call("get_settlement_snapshot")
+	var settle_snap: Variant = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var society: Dictionary = _snapshot("get_society_snapshot") if _world_sim.has_method("get_society_snapshot") else {}
-	var settlements: Dictionary = settle_snap if settle_snap is Dictionary else {}
+	var settlements: Dictionary = settle_snap.duplicate() if settle_snap is Dictionary else {}
 	if not settlements.has("settlement_ids"):
 		settlements["settlement_ids"] = PackedInt32Array(Array(settlements.get("ids", PackedInt64Array())))
 	Selection.observe(society, settlements)
@@ -164,7 +164,7 @@ func _ingest_snapshots() -> void:
 	for id in stale_food:
 		_last_notified_food.erase(id)
 
-	var construct_snap: Variant = _world_sim.call("get_construction_snapshot")
+	var construct_snap: Variant = SimReads.read(_world_sim, "get_construction_snapshot")
 	var cur_c: Dictionary = {}
 	if construct_snap is Dictionary:
 		var cd: Dictionary = construct_snap
@@ -181,7 +181,7 @@ func _ingest_snapshots() -> void:
 			_push("HUD_FEED_SITE_COMPLETED", [int(id)], -1, {"event_id": "site:complete:%d" % id})
 	_prev_construction_ids = cur_c
 
-	var agent_snap: Variant = _world_sim.call("get_agent_snapshot")
+	var agent_snap: Variant = SimReads.read(_world_sim, "get_agent_snapshot")
 	var cur_count: int = 0
 	if agent_snap is Dictionary:
 		var ad: Dictionary = agent_snap
@@ -306,7 +306,7 @@ func _ingest_transfers(society: Dictionary) -> void:
 func _snapshot(method: String) -> Dictionary:
 	if _world_sim == null:
 		return {}
-	var value: Variant = _world_sim.call(method)
+	var value: Variant = SimReads.read(_world_sim, method)
 	return value if value is Dictionary else {}
 
 

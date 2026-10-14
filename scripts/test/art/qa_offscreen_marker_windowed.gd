@@ -16,20 +16,20 @@ func run() -> void:
 	await process_frame
 	world.call("set_sim_speed", 0.0)
 	world.process_mode = Node.PROCESS_MODE_DISABLED
-	world.call("reset_world", 20261013)
+	SimReads.mutate(world, "reset_world", [20261013])
 	world.call("set_sim_speed", 0.0)
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	var started: int = Time.get_ticks_msec()
 	var batches: int = 0
-	while int(world.call("get_time_snapshot")["tick"]) < 45991:
-		var now: int = int(world.call("get_time_snapshot")["tick"])
+	while int(SimReads.read(world, "get_time_snapshot")["tick"]) < 45991:
+		var now: int = int(SimReads.read(world, "get_time_snapshot")["tick"])
 		if batches >= 500 or Time.get_ticks_msec() - started > 900000:
 			push_error("MARKER_WINDOWED bounded advance expired tick=%d batches=%d" % [now, batches])
 			quit(1)
 			return
 		print("MARKER_WINDOWED batch start tick=", now, " elapsed_ms=", Time.get_ticks_msec() - started)
-		world.call("advance_ticks", mini(1000, 45991 - now))
-		var reached: int = int(world.call("get_time_snapshot")["tick"])
+		SimReads.mutate(world, "advance_ticks", [mini(1000, 45991 - now)])
+		var reached: int = int(SimReads.read(world, "get_time_snapshot")["tick"])
 		print("MARKER_WINDOWED batch end tick=", reached, " elapsed_ms=", Time.get_ticks_msec() - started)
 		if reached <= now:
 			push_error("MARKER_WINDOWED advance made no progress")
@@ -43,9 +43,9 @@ func run() -> void:
 	camera.call("set_auto_track", false)
 	camera.zoom = Vector2(4, 4)
 	var groups: Node2D = main.get_node("AgentRenderer/FoundingGroups")
-	var society: Dictionary = world.call("get_society_snapshot")
-	Selection.observe(society, world.call("get_settlement_snapshot"))
-	groups.call("refresh_snapshots", society, world.call("get_agent_snapshot"))
+	var society: Dictionary = SimReads.read(world, "get_society_snapshot")
+	Selection.observe(society, SimReads.read(world, "get_settlement_snapshot"))
+	groups.call("refresh_snapshots", society, SimReads.read(world, "get_agent_snapshot"))
 	var raw: Array = groups.get("_groups")
 	if raw.is_empty():
 		push_error("MARKER_WINDOWED no actual walking group at measured tick")
@@ -91,7 +91,7 @@ func run() -> void:
 	passed = passed and selected_passed
 	root.get_texture().get_image().save_png(out.path_join("selected-after.png"))
 	var file := FileAccess.open(out.path_join("result.json"), FileAccess.WRITE)
-	file.store_string(JSON.stringify({"passed": passed, "scenario": "SOCIETY SCENARIO seed 20261013", "tick": int(world.call("get_time_snapshot")["tick"]), "event": "Viewport.push_input InputEventMouseButton left pressed", "before": before, "after": after, "camera_after": [founding_camera.x, founding_camera.y], "selected_before": selected_before, "selected_after": selected_after, "selected_passed": selected_passed, "selected_camera_after": [camera.position.x, camera.position.y], "forced_draw": true}, "\t"))
+	file.store_string(JSON.stringify({"passed": passed, "scenario": "SOCIETY SCENARIO seed 20261013", "tick": int(SimReads.read(world, "get_time_snapshot")["tick"]), "event": "Viewport.push_input InputEventMouseButton left pressed", "before": before, "after": after, "camera_after": [founding_camera.x, founding_camera.y], "selected_before": selected_before, "selected_after": selected_after, "selected_passed": selected_passed, "selected_camera_after": [camera.position.x, camera.position.y], "forced_draw": true}, "\t"))
 	file.close()
 	print("MARKER_WINDOWED passed=", passed, " out=", out)
 	quit(0 if passed else 1)

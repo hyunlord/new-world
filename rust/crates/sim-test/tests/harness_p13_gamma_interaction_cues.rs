@@ -364,14 +364,14 @@ fn harness_p13_gamma_a13_phase13_alpha_zoom_default_3x_preserved() {
 fn harness_p13_gamma_a14_phase13_alpha_bootstrap_campfire_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
     assert!(src.contains("direction_01_campfire"));
-    assert!(src.contains("get_building_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
 }
 
 // ─── Assertion 15: phase13_beta_resource_constants_preserved ─────────────
 #[test]
 fn harness_p13_gamma_a15_phase13_beta_resource_constants_preserved() {
     let src = include_str!("../../../../scripts/ui/building_renderer.gd");
-    assert!(src.contains("get_resource_snapshot()"));
+    assert!(src.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     assert!(src.contains("if kinds[i] != 0:"));
     assert!(src.contains("BUSH_IDS[stage]"));
     assert!(src.contains("else BUSH_IDS[stage], \"bush\", id, xs[i], ys[i])"));

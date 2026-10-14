@@ -17,7 +17,7 @@ func _run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(main)
 	await process_frame
-	world.call("advance_ticks", 1)
+	SimReads.mutate(world, "advance_ticks", [1])
 	var renderer: Node = main.get_node("TerrainRenderer")
 	renderer.call("refresh_snapshot")
 	var layers: Dictionary = renderer.get("_layers")
@@ -30,7 +30,7 @@ func _run() -> void:
 	var water: TileSetAtlasSource = (layers["water"] as TileMapLayer).tile_set.get_source(0) as TileSetAtlasSource
 	_check(water.get_tile_animation_frames_count(Vector2i(0,15)) == 4, "water four animation frames")
 	_check(is_equal_approx(water.get_tile_animation_speed(Vector2i(0,15)),3.0), "water animation 3fps")
-	var snapshot: Dictionary = world.call("get_terrain_snapshot")
+	var snapshot: Dictionary = SimReads.read(world, "get_terrain_snapshot")
 	var codes: PackedByteArray = snapshot["terrain"]
 	var width: int = int(snapshot["width"])
 	for index: int in range(codes.size()):

@@ -45,7 +45,7 @@ static func warning_rows(snapshot: Dictionary) -> Array[Dictionary]:
 func _process(_delta: float) -> void:
 	if _world_sim == null or _agent_renderer == null:
 		return
-	var snapshot: Dictionary = _world_sim.call("get_agent_snapshot")
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
 	_warnings = warning_rows(snapshot)
 	queue_redraw()
 

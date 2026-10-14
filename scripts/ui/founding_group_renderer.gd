@@ -29,7 +29,7 @@ func _reset() -> void:
 func _process(_delta: float) -> void:
 	if _world == null or not _world.has_method("get_society_snapshot"):
 		return
-	refresh_snapshots(_world.call("get_society_snapshot"), _world.call("get_agent_snapshot"))
+	refresh_snapshots(SimReads.read(_world, "get_society_snapshot"), SimReads.read(_world, "get_agent_snapshot"))
 
 func refresh_snapshots(society: Dictionary, agents: Dictionary) -> void:
 	_groups.clear()

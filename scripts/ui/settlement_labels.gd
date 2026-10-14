@@ -50,8 +50,8 @@ func _reset() -> void:
 func refresh_snapshot() -> void:
 	if _world == null or not _world.has_method("get_society_snapshot"):
 		return
-	var society: Dictionary = _world.call("get_society_snapshot")
-	var settlements: Dictionary = _world.call("get_settlement_snapshot")
+	var society: Dictionary = SimReads.read(_world, "get_society_snapshot")
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
 	Selection.observe(society, settlements)
 	_last_tick = int(society.get("current_tick", -1))
 	var overview: Node = get_node_or_null("../SettlementOverviewRenderer")
@@ -67,7 +67,7 @@ func refresh_snapshot() -> void:
 func _process(_delta: float) -> void:
 	if _world == null:
 		return
-	var time: Dictionary = _world.call("get_time_snapshot")
+	var time: Dictionary = SimReads.read(_world, "get_time_snapshot")
 	if int(time.get("tick", -1)) != _last_tick:
 		refresh_snapshot()
 	_update_labels()

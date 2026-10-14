@@ -59,7 +59,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	_elapsed += delta
 	_frame += 1
-	var tick: int = int(_world_sim.get_time_snapshot().get("tick", -1))
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
 	# Resource stocks and amounts must match the same simulation tick as the actors.
 	if tick != _snapshot_tick or _frame % RECONCILE_FRAMES == 0 or _buildings.is_empty():
 		refresh_snapshot()
@@ -69,7 +69,7 @@ func _process(delta: float) -> void:
 	_update_labels()
 
 func refresh_snapshot() -> void:
-	_snapshot_tick = int(_world_sim.get_time_snapshot().get("tick", -1))
+	_snapshot_tick = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
 	_update_buildings()
 	_update_construction_sites()
 	_update_bushes()
@@ -123,7 +123,9 @@ func _configure(sprite: Sprite2D, sprite_id: String, kind: String, id: int, x: i
 	shadow.visible = sprite.texture != null
 
 func _update_buildings() -> void:
-	var snapshot: Dictionary = _world_sim.get_building_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
+	var hour: float = _hour()
 	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
@@ -133,7 +135,7 @@ func _update_buildings() -> void:
 	for i: int in range(ids.size()):
 		var kind: int = kinds[i]
 		var sprite: Sprite2D = _sprite_for(_buildings, ids[i])
-		var desired: String = "S1_%02d" % (11 + posmod(HASH.mix(int(ids[i])), 3)) if kind == 1 else ("S1_08" if kind == 2 else WOOD.hearth_frame(WOOD.settlement(_world_sim.get_settlement_snapshot(), Vector2i(xs[i], ys[i])), _hour(), _elapsed))
+		var desired: String = "S1_%02d" % (11 + posmod(HASH.mix(int(ids[i])), 3)) if kind == 1 else ("S1_08" if kind == 2 else WOOD.hearth_frame(WOOD.settlement(settlements, Vector2i(xs[i], ys[i])), hour, _elapsed))
 		_configure(sprite, desired, "building", ids[i], xs[i], ys[i])
 		sprite.set_meta("building_kind", kind)
 		seen[ids[i]] = true
@@ -142,7 +144,7 @@ func _update_buildings() -> void:
 	_reap(_buildings, seen)
 
 func _update_construction_sites() -> void:
-	var snapshot: Dictionary = _world_sim.get_construction_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_construction_snapshot")
 	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
@@ -158,7 +160,7 @@ func _update_construction_sites() -> void:
 	_reap(_sites, seen)
 
 func _update_bushes() -> void:
-	var snapshot: Dictionary = _world_sim.get_resource_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
 	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
 	var kinds: PackedInt32Array = snapshot.get("kinds", PackedInt32Array())
@@ -178,7 +180,7 @@ func _update_bushes() -> void:
 	_reap(_bushes, seen)
 
 func _update_deadwood() -> void:
-	var snapshot: Dictionary = _world_sim.get_resource_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_resource_snapshot")
 	var seen: Dictionary = {}
 	var valid: bool = true
 	for key: String in ["xs", "ys", "kinds", "amounts", "maxes"]:
@@ -228,7 +230,7 @@ func _food_totals_by_stockpile(snapshot: Dictionary, column: String = "food_stoc
 	return totals
 
 func _update_stockpiles() -> void:
-	var settlement_snapshot: Dictionary = _world_sim.get_settlement_snapshot()
+	var settlement_snapshot: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var totals: Dictionary = _food_totals_by_stockpile(settlement_snapshot)
 	var woods: Dictionary = _food_totals_by_stockpile(settlement_snapshot, "wood_stocks")
 	var seen: Dictionary = {}
@@ -282,7 +284,7 @@ func _update_labels() -> void:
 		label.position = Vector2(_label_anchors[id]) - Vector2(label_size.x * 0.5, label_size.y) * label.scale
 
 func _hour() -> float:
-	return float(_world_sim.get_time_snapshot().get("time_of_day", 12.0)) if _world_sim != null else 12.0
+	return float(SimReads.read(_world_sim, "get_time_snapshot").get("time_of_day", 12.0)) if _world_sim != null else 12.0
 
 static func construction_stage(progress: int, required: int) -> int:
 	return clampi(int(floor(4.0 * float(progress) / float(maxi(required, 1)))), 0, 3)
@@ -311,13 +313,16 @@ func _available(sprite_id: String) -> String:
 func _animate_hearths() -> void:
 	if _world_sim == null:
 		return
-	var settlements: Dictionary = _world_sim.get_settlement_snapshot()
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
+	var clock: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
+	var hour: float = float(clock.get("time_of_day", 12.0))
+	var winter_severity: int = int(clock.get("winter_severity", -1))
 	for sprite: Sprite2D in _buildings.values():
 		if int(sprite.get_meta("building_kind", -1)) == 0:
 			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 			var state: Dictionary = WOOD.settlement(settlements, tile)
-			ART.apply(sprite, _available(WOOD.hearth_frame(state, _hour(), _elapsed, int(_world_sim.get_time_snapshot().get("winter_severity", -1)))))
-			_update_cold_ash(sprite, WOOD.cold_ash(state, _hour(), int(_world_sim.get_time_snapshot().get("winter_severity", -1))))
+			ART.apply(sprite, _available(WOOD.hearth_frame(state, hour, _elapsed, winter_severity)))
+			_update_cold_ash(sprite, WOOD.cold_ash(state, hour, winter_severity))
 			sprite.set_meta("fire_lit", state.get("fire_lit", false))
 			sprite.set_meta("wood_stock", state.get("wood_stock", -1))
 			sprite.set_meta("settlement_id", state.get("settlement_id", -1))
@@ -348,13 +353,14 @@ func _update_camp_props() -> void:
 			shelters.append(sprite)
 	for site: Sprite2D in _sites.values():
 		occupied[Vector2i(int(site.get_meta("tile_x")), int(site.get_meta("tile_y")))] = true
-	var totals: Dictionary = _food_totals_by_stockpile(_world_sim.get_settlement_snapshot())
+	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
+	var totals: Dictionary = _food_totals_by_stockpile(settlements)
 	for sprite: Sprite2D in _buildings.values():
 		var id: int = int(sprite.get_meta("art_id")) * 100
 		var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 		var kind: int = int(sprite.get_meta("building_kind"))
 		if kind == 0:
-			var state: Dictionary = WOOD.settlement(_world_sim.get_settlement_snapshot(), tile)
+			var state: Dictionary = WOOD.settlement(settlements, tile)
 			var stage: int = WOOD.pile_stage(int(state["wood_stock"])) if state.has("wood_stock") else -1
 			if stage != 0:
 				if stage > 0:
@@ -410,7 +416,7 @@ func _place_adjacent(id: int, art_id: String, tile: Vector2i, delta: Vector2i, o
 func _update_cairns() -> void:
 	if _world_sim == null:
 		return
-	var deaths: Dictionary = _world_sim.get_recent_deaths()
+	var deaths: Dictionary = SimReads.read(_world_sim, "get_recent_deaths")
 	var tick: int = int(deaths.get("current_tick",0))
 	if tick < _last_tick:
 		for record: Dictionary in _death_cache.values():
@@ -429,7 +435,7 @@ func _update_cairns() -> void:
 		_configure(cairn,"S2_%02d" % (12+posmod(HASH.mix(xs[i]*65536+ys[i]),2)),"cairn",HASH.mix(xs[i]*65536+ys[i]),xs[i],ys[i])
 		cairn.set_meta("art_kind","cairn")
 		_death_cache[key] = {"sprite":cairn,"tick":int(ticks[i])}
-	var day_ticks: int = int(_world_sim.get_world_info().get("ticks_per_day",7200))
+	var day_ticks: int = int(SimReads.read(_world_sim, "get_world_info").get("ticks_per_day",7200))
 	for key: String in _death_cache.keys():
 		var record: Dictionary = _death_cache[key]
 		var age: int = tick-int(record["tick"])
@@ -508,15 +514,15 @@ func _reset_cold() -> void:
 			SHELTER_COLD.apply(sprite, 0, _elapsed, 0.4)
 
 func _update_shelter_cold(delta: float) -> void:
-	var agents: Dictionary = _world_sim.get_agent_snapshot() if _world_sim.has_method("get_agent_snapshot") else {}
-	var counts: Dictionary = SHELTER_COLD.sleeper_counts(agents, _world_sim.get_building_snapshot())
+	var agents: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot") if _world_sim.has_method("get_agent_snapshot") else {}
+	var counts: Dictionary = SHELTER_COLD.sleeper_counts(agents, SimReads.read(_world_sim, "get_building_snapshot"))
 	for sprite: Sprite2D in _buildings.values():
 		if int(sprite.get_meta("building_kind", -1)) == 1:
 			var tile := Vector2i(int(sprite.get_meta("tile_x")), int(sprite.get_meta("tile_y")))
 			SHELTER_COLD.apply(sprite, int(counts.get(tile, 0)), _elapsed, delta)
 	var cold_snap: bool = false
 	if _world_sim.has_method("get_intervention_state"):
-		var intervention: Dictionary = _world_sim.call("get_intervention_state")
+		var intervention: Dictionary = SimReads.read(_world_sim, "get_intervention_state")
 		cold_snap = bool(intervention.get("cold_snap_tonight", false))
 	var target: float = 0.18 if cold_snap else (0.12 if not counts.is_empty() else 0.0)
 	if target != _tint_target:

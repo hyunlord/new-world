@@ -107,10 +107,10 @@ func cast_kind(kind: String) -> void:
 	for feed: Node in get_tree().get_nodes_in_group("art_news_feed"):
 		feed.call("_ingest_snapshots")
 	_reply_target = Selection.resolved_target()
-	_reply = _world.call("apply_intervention", kind, Selection.selected_id, int(PRESETS[kind]))
+	_reply = SimReads.mutate(_world, "apply_intervention", [kind, Selection.selected_id, int(PRESETS[kind])])
 	if bool(_reply.get("ok", false)):
 		Selection.record_cast(int(_reply.get("tick", -1)), kind, _reply_target)
-		var state: Dictionary = _world.call("get_intervention_state") if _world.has_method("get_intervention_state") else {}
+		var state: Dictionary = SimReads.read(_world, "get_intervention_state") if _world.has_method("get_intervention_state") else {}
 		var ids: PackedInt64Array = state.get("log_ids", PackedInt64Array())
 		for feed: Node in get_tree().get_nodes_in_group("art_news_feed"):
 			if not ids.is_empty():
@@ -132,9 +132,9 @@ func refresh_state() -> void:
 		return
 	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
 	_log_toggle.text = _loc("GOD_HAND_LOG")
-	var settlements: Dictionary = _world.call("get_settlement_snapshot") if _world != null else {}
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot") if _world != null else {}
 	if _world != null and _world.has_method("get_society_snapshot"):
-		Selection.observe(_world.call("get_society_snapshot"), settlements)
+		Selection.observe(SimReads.read(_world, "get_society_snapshot"), settlements)
 	else:
 		Selection.observe({}, settlements)
 	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
@@ -151,7 +151,7 @@ func refresh_state() -> void:
 		button.text = _loc("GOD_HAND_" + kind.to_upper())
 		button.tooltip_text = button.text + " " + amount_text(kind, int(PRESETS[kind]))
 		button.disabled = not ready_to_cast
-	var state: Dictionary = _world.call("get_intervention_state") if _world != null and _world.has_method("get_intervention_state") else {}
+	var state: Dictionary = SimReads.read(_world, "get_intervention_state") if _world != null and _world.has_method("get_intervention_state") else {}
 	_snap.visible = bool(state.get("cold_snap_tonight", false))
 	_snap.text = _loc("GOD_HAND_COLD_SNAP_ACTIVE") % int(state.get("cold_snap_nights_left", 0))
 	_toast.visible = _toast_left > 0.0

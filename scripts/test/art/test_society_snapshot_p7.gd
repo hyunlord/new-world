@@ -21,20 +21,20 @@ func _run() -> void:
 		_world.free()
 		quit(1)
 		return
-	_world.reset_world(SEED)
+	SimReads.mutate(_world, "reset_world", [SEED])
 	await process_frame
 	await process_frame
-	_world.advance_ticks(1440)
+	SimReads.mutate(_world, "advance_ticks", [1440])
 	_verify_snapshot()
-	var snapshot: Dictionary = _world.get_society_snapshot()
+	var snapshot: Dictionary = SimReads.read(_world, "get_society_snapshot")
 	_check(snapshot.settlement_ids.size() == 1, "Built v17 world forms one original settlement")
 	_check(snapshot.home_agent_ids.size() > 0, "Built world has joined roster members")
 	_check(snapshot.parent_ids[0] == -1, "Original has no parent")
-	_check(snapshot == _world.get_society_snapshot(), "Read-only getter leaves state unchanged")
+	_check(snapshot == SimReads.read(_world, "get_society_snapshot"), "Read-only getter leaves state unchanged")
 	if OS.get_environment("SOCIETY_LONG_TEST") == "1":
-		_world.advance_ticks(40230 - int(snapshot.current_tick))
+		SimReads.mutate(_world, "advance_ticks", [40230 - int(snapshot.current_tick)])
 		_verify_snapshot()
-		snapshot = _world.get_society_snapshot()
+		snapshot = SimReads.read(_world, "get_society_snapshot")
 		_check(snapshot.founder_agent_ids.size() == 13, "Natural departure contains 13 founders")
 		_check(snapshot.fission_ids == PackedInt32Array([1]), "First natural fission recorded")
 		_check(snapshot.fission_depart_ticks == PackedInt64Array([40200]), "Measured departure tick")
@@ -45,9 +45,9 @@ func _run() -> void:
 		for agent_id: int in snapshot.founder_agent_ids:
 			var index: int = snapshot.home_agent_ids.find(agent_id)
 			_check(index >= 0 and snapshot.home_settlement_ids[index] == 1, "Founder belongs to parent while walking")
-		_world.advance_ticks(100)
+		SimReads.mutate(_world, "advance_ticks", [100])
 		_verify_snapshot()
-		snapshot = _world.get_society_snapshot()
+		snapshot = SimReads.read(_world, "get_society_snapshot")
 		_check(snapshot.settlement_ids == PackedInt32Array([1, 2]), "Natural founding adds daughter")
 		_check(snapshot.parent_ids == PackedInt32Array([-1, 1]), "Daughter identifies original parent")
 		_check(snapshot.founder_agent_ids.is_empty(), "Founding removes walking markers")
@@ -55,10 +55,10 @@ func _run() -> void:
 		_check(snapshot.fission_daughters == PackedInt32Array([2]), "Log retains daughter")
 		_check(snapshot.fission_cancelled_ticks == PackedInt64Array([-1]), "Natural fission not cancelled")
 		print("SOCIETY NATURAL FISSION: seed=20261013 depart=40200 found=40329 size=13")
-	_world.reset_world(SEED)
+	SimReads.mutate(_world, "reset_world", [SEED])
 	await process_frame
 	await process_frame
-	snapshot = _world.get_society_snapshot()
+	snapshot = SimReads.read(_world, "get_society_snapshot")
 	_check(snapshot.current_tick == 0, "Reset clears time")
 	_check(snapshot.fission_ids.is_empty() and snapshot.founder_agent_ids.is_empty(), "Reset clears fission state")
 	_check(snapshot.retired_hearth_xs.is_empty(), "Reset clears retired hearths")
@@ -68,9 +68,9 @@ func _run() -> void:
 	quit(0 if _failures == 0 else 1)
 
 func _verify_snapshot() -> void:
-	var society: Dictionary = _world.get_society_snapshot()
-	var settlements: Dictionary = _world.get_settlement_snapshot()
-	var agents: Dictionary = _world.get_agent_snapshot()
+	var society: Dictionary = SimReads.read(_world, "get_society_snapshot")
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
+	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var groups: Array = [
 		["settlement_ids", "parent_ids", "founded_ticks", "member_counts"],
 		["home_agent_ids", "home_settlement_ids"],

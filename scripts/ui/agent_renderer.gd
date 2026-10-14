@@ -55,6 +55,8 @@ var _recalling_agents: Dictionary = {}
 var _combating_agents: Dictionary = {}
 var _seen_recall_event_ids: Dictionary = {}
 var _seen_combat_event_ids: Dictionary = {}
+var _last_causal_tick: int = -1
+var _causal_rearm: bool = false
 
 func _ready() -> void:
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
@@ -69,14 +71,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if world_sim == null:
 		return
-	var world_info: Dictionary = world_sim.get_world_info()
+	var world_info: Dictionary = SimReads.read(world_sim, "get_world_info")
 	_move_duration = float(maxi(1, int(world_info.get("move_interval_ticks", 1)))) * SIM_TICK_DURATION
 	_lerp_accumulator += delta
 	_animation_time += delta
 	_clear_expired_recalling()
 	_clear_expired_combating()
-	var snap: Dictionary = world_sim.get_agent_snapshot()
-	var society: Dictionary = world_sim.get_society_snapshot()
+	var snap: Dictionary = SimReads.read(world_sim, "get_agent_snapshot")
+	var society: Dictionary = SimReads.read(world_sim, "get_society_snapshot")
 	var founders: PackedInt64Array = society.get("founder_agent_ids", PackedInt64Array())
 	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
@@ -107,7 +109,7 @@ func _process(delta: float) -> void:
 	var lerp_t: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
 	var live: Dictionary = {}
 	var context: Dictionary = _activity_context()
-	var time: Dictionary = world_sim.get_time_snapshot()
+	var time: Dictionary = SimReads.read(world_sim, "get_time_snapshot")
 	var tick: int = int(time.get("tick", 0))
 	ingest_chill_snapshot(snap, tick)
 	var hour: float = float(time.get("time_of_day", 12.0))
@@ -193,8 +195,7 @@ func _process(delta: float) -> void:
 		_update_cue(agent_id, sprite.position, _recalling_agents.has(agent_id), _combating_agents.has(agent_id))
 	_retire_missing(live)
 	_update_selection_ring()
-	_ingest_memory_recalls(ids, xs, ys, n)
-	_ingest_combat_events(ids, agent_ids, xs, ys, n)
+	_ingest_causal_events(tick, xs, ys)
 
 func _ensure_agent(agent_id: int) -> Sprite2D:
 	if _sprites.has(agent_id):
@@ -311,6 +312,8 @@ func _on_world_reset() -> void:
 	_combating_agents.clear()
 	_seen_recall_event_ids.clear()
 	_seen_combat_event_ids.clear()
+	_last_causal_tick = -1
+	_causal_rearm = false
 	_retire_missing({})
 	_process(0.0)
 
@@ -320,35 +323,41 @@ func mark_agent_recalling(agent_id: int) -> void:
 func recall_cue_remaining(agent_id: int) -> int:
 	return int(_recalling_agents.get(agent_id, 0))
 
-func _ingest_memory_recalls(_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
-	if world_sim == null:
+func _ingest_causal_events(tick: int, xs: PackedInt32Array, ys: PackedInt32Array) -> void:
+	if world_sim == null or (tick == _last_causal_tick and not _causal_rearm):
 		return
-	if not world_sim.has_method("get_tile_causal_history"):
+	if not world_sim.has_method("get_tile_causal_events"):
 		return
-	var visited_tiles: Dictionary = {}
-	for i in n:
-		var key: int = (int(xs[i]) << 20) | int(ys[i])
-		if visited_tiles.has(key):
+	_last_causal_tick = tick
+	_causal_rearm = false
+	var visited: Dictionary = {}
+	var tile_xs := PackedInt32Array()
+	var tile_ys := PackedInt32Array()
+	for i: int in range(mini(xs.size(), ys.size())):
+		var tile := Vector2i(xs[i], ys[i])
+		if visited.has(tile):
 			continue
-		visited_tiles[key] = true
-		var history: Array = world_sim.get_tile_causal_history(int(xs[i]), int(ys[i]))
-		for ev in history:
-			if not (ev is Dictionary):
-				continue
-			var dev: Dictionary = ev
-			if String(dev.get("kind", "")) != "memory_recalled":
-				continue
-			var event_id: int = int(dev.get("id", -1))
-			if event_id < 0:
-				continue
-			if _seen_recall_event_ids.has(event_id):
-				continue
-			_seen_recall_event_ids[event_id] = true
-			var agent_id: int = int(dev.get("agent_id", -1))
-			if agent_id >= 0:
-				mark_agent_recalling(agent_id)
+		visited[tile] = true
+		tile_xs.append(tile.x)
+		tile_ys.append(tile.y)
+	var events: Array = SimReads.causal_events(world_sim, tile_xs, tile_ys, PackedStringArray(["memory_recalled", "combat_started"]))
+	_ingest_memory_recalls(events)
+	_ingest_combat_events(events)
+
+func _ingest_memory_recalls(events: Array) -> void:
+	for ev: Dictionary in events:
+		if String(ev.get("kind", "")) != "memory_recalled":
+			continue
+		var event_id: int = int(ev.get("id", -1))
+		if event_id < 0 or _seen_recall_event_ids.has(event_id):
+			continue
+		_seen_recall_event_ids[event_id] = true
+		var agent_id: int = int(ev.get("agent_id", -1))
+		if agent_id >= 0:
+			mark_agent_recalling(agent_id)
 	if _seen_recall_event_ids.size() > _SEEN_RECALL_MAX:
 		_seen_recall_event_ids.clear()
+		_causal_rearm = true
 
 func _clear_expired_recalling() -> void:
 	if _recalling_agents.is_empty():
@@ -372,35 +381,20 @@ func mark_agent_combating(agent_id: int) -> void:
 func combat_cue_remaining(agent_id: int) -> int:
 	return int(_combating_agents.get(agent_id, 0))
 
-func _ingest_combat_events(_ids: PackedInt64Array, _agent_ids: PackedInt64Array, xs: PackedInt32Array, ys: PackedInt32Array, n: int) -> void:
-	if world_sim == null:
-		return
-	if not world_sim.has_method("get_tile_causal_history"):
-		return
-	var visited_tiles: Dictionary = {}
-	for i in n:
-		var key: int = (int(xs[i]) << 20) | int(ys[i])
-		if visited_tiles.has(key):
+func _ingest_combat_events(events: Array) -> void:
+	for ev: Dictionary in events:
+		if String(ev.get("kind", "")) != "combat_started":
 			continue
-		visited_tiles[key] = true
-		var history: Array = world_sim.get_tile_causal_history(int(xs[i]), int(ys[i]))
-		for ev in history:
-			if not (ev is Dictionary):
-				continue
-			var dev: Dictionary = ev
-			if String(dev.get("kind", "")) != "combat_started":
-				continue
-			var event_id: int = int(dev.get("id", -1))
-			if event_id < 0:
-				continue
-			if _seen_combat_event_ids.has(event_id):
-				continue
-			_seen_combat_event_ids[event_id] = true
-			var agent_id: int = int(dev.get("agent_id", -1))
-			if agent_id >= 0:
-				mark_agent_in_combat(agent_id)
+		var event_id: int = int(ev.get("id", -1))
+		if event_id < 0 or _seen_combat_event_ids.has(event_id):
+			continue
+		_seen_combat_event_ids[event_id] = true
+		var agent_id: int = int(ev.get("agent_id", -1))
+		if agent_id >= 0:
+			mark_agent_in_combat(agent_id)
 	if _seen_combat_event_ids.size() > _SEEN_COMBAT_MAX:
 		_seen_combat_event_ids.clear()
+		_causal_rearm = true
 
 func _clear_expired_combating() -> void:
 	if _combating_agents.is_empty():
@@ -451,7 +445,7 @@ func _update_activity_icon(agent_id: int, sprite: Sprite2D, choice: Dictionary) 
 
 func _activity_context() -> Dictionary:
 	var context: Dictionary = {"shelters": {}, "hearths": [], "sites": {}, "food": {}, "wood": {}, "water": {}, "seat_blocked": {}}
-	var buildings: Dictionary = world_sim.get_building_snapshot()
+	var buildings: Dictionary = SimReads.read(world_sim, "get_building_snapshot")
 	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
 	var kinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
@@ -463,7 +457,7 @@ func _activity_context() -> Dictionary:
 		elif kinds[i] == 1:
 			context["shelters"][tile] = true
 	for source: String in ["sites", "food"]:
-		var snap: Dictionary = world_sim.get_construction_snapshot() if source == "sites" else world_sim.get_resource_snapshot()
+		var snap: Dictionary = SimReads.read(world_sim, "get_construction_snapshot") if source == "sites" else SimReads.read(world_sim, "get_resource_snapshot")
 		var sx: PackedInt32Array = snap.get("xs", PackedInt32Array())
 		var sy: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		var sk: PackedInt32Array = snap.get("kinds", PackedInt32Array())
@@ -474,7 +468,7 @@ func _activity_context() -> Dictionary:
 				context["wood"][Vector2i(sx[i], sy[i])] = true
 			if source == "sites" or (i < sk.size() and sk[i] == 0):
 				context[source][Vector2i(sx[i], sy[i])] = true
-	var terrain: Dictionary = world_sim.get_terrain_snapshot()
+	var terrain: Dictionary = SimReads.read(world_sim, "get_terrain_snapshot")
 	context["terrain"] = terrain
 	return context
 

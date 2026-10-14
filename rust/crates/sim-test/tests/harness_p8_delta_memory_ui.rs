@@ -968,13 +968,13 @@ fn harness_p8_delta_memory_recalling_cue_has_real_caller() {
         src.contains("\"memory_recalled\""),
         "WIRING: scripts/ui/agent_renderer.gd must reference the `\"memory_recalled\"` FFI discriminator so its `mark_agent_recalling(...)` call site is driven by real causal events (not a synthetic stub).",
     );
-    // (d) the file must call `get_tile_causal_history` (the existing FFI
-    // surface that returns recall events). This anchors (c) to a real FFI
+    // (d) the file must call the additive batched causal reader with the recall
+    // discriminator. This anchors (c) to a real FFI
     // read instead of, say, a hard-coded constant that happens to spell
     // the discriminator.
     assert!(
-        src.contains("get_tile_causal_history"),
-        "WIRING: scripts/ui/agent_renderer.gd must call `world_sim.get_tile_causal_history(...)` so the recall cue is driven by the actual causal-log FFI, not a stub.",
+        src.contains(r#"SimReads.causal_events(world_sim, tile_xs, tile_ys, PackedStringArray(["memory_recalled", "combat_started"]))"#),
+        "WIRING: the recall cue must consume the batched causal-log reader with the memory_recalled filter, not a stub.",
     );
 }
 

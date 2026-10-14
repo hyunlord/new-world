@@ -62,7 +62,7 @@ func _reset() -> void:
 	_falls.clear()
 	_rain_centers.clear()
 	_rain_ids.clear()
-	_state.clear()
+	_state = {}
 	_flash_kind = ""
 	_flash_target = -1
 	_notified_target = -1
@@ -76,9 +76,9 @@ func _process(delta: float) -> void:
 	if _world == null or not _world.has_method("get_intervention_state"):
 		return
 	_elapsed += delta
-	_state = _world.call("get_intervention_state")
-	var settlements: Dictionary = _world.call("get_settlement_snapshot")
-	var resources: Dictionary = _world.call("get_resource_snapshot")
+	_state = SimReads.read(_world, "get_intervention_state")
+	var settlements: Dictionary = SimReads.read(_world, "get_settlement_snapshot")
+	var resources: Dictionary = SimReads.read(_world, "get_resource_snapshot")
 	_observe(resources, settlements)
 	_rain_centers.clear()
 	_rain_ids.clear()
@@ -274,10 +274,10 @@ func notify_cast(kind: String, target: int) -> void:
 		_notified_target = target
 		if _world == null:
 			return
-		var state: Dictionary = _world.call("get_intervention_state")
+		var state: Dictionary = SimReads.read(_world, "get_intervention_state")
 		var ids: PackedInt64Array = state.get("log_ids", PackedInt64Array())
 		if not ids.is_empty():
-			_pending_piles[str(ids[-1])] = _capture_pile(kind, target, _world.call("get_settlement_snapshot"))
+			_pending_piles[str(ids[-1])] = _capture_pile(kind, target, SimReads.read(_world, "get_settlement_snapshot"))
 
 func _capture_pile(kind: String, target: int, settlements: Dictionary) -> Dictionary:
 	if _objects == null or target < 0:

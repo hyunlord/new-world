@@ -17,16 +17,16 @@ mod tests {
                 assert!(!source.contains(forbidden), "renderer contains {forbidden}");
             }
         }
-        assert!(buildings.contains("get_building_snapshot()"));
-        assert!(buildings.contains("get_construction_snapshot()"));
-        assert!(buildings.contains("get_resource_snapshot()"));
+        assert!(buildings.contains("SimReads.read(_world_sim, \"get_building_snapshot\")"));
+        assert!(buildings.contains("SimReads.read(_world_sim, \"get_construction_snapshot\")"));
+        assert!(buildings.contains("SimReads.read(_world_sim, \"get_resource_snapshot\")"));
     }
 
     #[test]
     fn harness_territory_terrain_renderer_uses_ffi() {
         let source = include_str!("../../../../scripts/ui/terrain_renderer.gd");
         assert!(source.contains("\"rock\": return code == 2"));
-        assert!(source.contains("get_terrain_snapshot()"));
+        assert!(source.contains("SimReads.read(_world_sim, \"get_terrain_snapshot\")"));
         assert!(!source.contains("RandomNumberGenerator"));
         assert!(
             source.contains("\"hill\": return code == 2 or code == 3"),
@@ -40,7 +40,8 @@ mod tests {
         let status = include_str!("../../../../scripts/ui/panels/hud_status_panel.gd");
         assert!(topbar.contains(r#"_snapshot("get_time_snapshot")"#));
         assert!(topbar.contains(r#"_snapshot("get_tallies")"#));
-        assert!(topbar.contains("_world_sim.call(method)"));
+        assert!(topbar.contains("var value: Variant = SimReads.read(_world_sim, method)"));
+        assert!(topbar.contains("return value if value is Dictionary else {}"));
         for source in [topbar, status] {
             for forbidden in ["TICKS_PER_DAY", "\"Berry", "\"Wood", "\"Tick %d"] {
                 assert!(!source.contains(forbidden), "HUD contains {forbidden}");

@@ -40,19 +40,19 @@ func _run() -> void:
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	root.add_child(main)
 	await process_frame
-	world.call("advance_ticks", 1)
+	SimReads.mutate(world, "advance_ticks", [1])
 	var nature: Node = main.get_node("NatureRenderer")
 	nature.call("refresh_snapshot")
 	await process_frame
-	var cleared: Dictionary = LAYOUT.clearings(world.call("get_building_snapshot"),world.call("get_construction_snapshot"),world.call("get_resource_snapshot"),world.call("get_settlement_snapshot"))
+	var cleared: Dictionary = LAYOUT.clearings(SimReads.read(world, "get_building_snapshot"),SimReads.read(world, "get_construction_snapshot"),SimReads.read(world, "get_resource_snapshot"),SimReads.read(world, "get_settlement_snapshot"))
 	var excluded: Dictionary = {}
 	for method: String in ["get_building_snapshot","get_construction_snapshot"]:
-		var snapshot: Dictionary = world.call(method)
+		var snapshot: Dictionary = SimReads.read(world, method)
 		var xs: PackedInt32Array = snapshot["xs"]
 		var ys: PackedInt32Array = snapshot["ys"]
 		for i: int in range(xs.size()):
 			excluded[Vector2i(xs[i],ys[i])] = true
-	var food: Dictionary = world.call("get_resource_snapshot")
+	var food: Dictionary = SimReads.read(world, "get_resource_snapshot")
 	var food_tiles: Dictionary = {}
 	for i: int in range(food["xs"].size()):
 		if int(food["kinds"][i]) == 0:
@@ -74,7 +74,7 @@ func _run() -> void:
 			_check(not food_tiles.has(tile), "trees leave food source tiles clear")
 		before[key] = [sprite.position,sprite.get_meta("sprite_id")]
 	_check(trees > 0 and trees < 1500, "tree node population budget")
-	var terrain: Dictionary = world.call("get_terrain_snapshot")
+	var terrain: Dictionary = SimReads.read(world, "get_terrain_snapshot")
 	var width: int = int(terrain["width"])
 	var codes: PackedByteArray = terrain["terrain"]
 	var forest_total: int = codes.count(1)
@@ -105,11 +105,11 @@ func _check_construction_clearance(original: Node, world: Node, kind: String) ->
 	script.source_code = source.replace("var _world_sim: WorldSimNode", "var _world_sim: Node")
 	_check(script.reload() == OK, "nature source compiles with snapshot test double")
 	var mock: SnapshotDouble = SnapshotDouble.new()
-	mock.terrain = world.call("get_terrain_snapshot")
-	mock.buildings = world.call("get_building_snapshot")
-	mock.sites = world.call("get_construction_snapshot").duplicate(true)
-	mock.resources = world.call("get_resource_snapshot")
-	mock.settlements = world.call("get_settlement_snapshot")
+	mock.terrain = SimReads.read(world, "get_terrain_snapshot")
+	mock.buildings = SimReads.read(world, "get_building_snapshot")
+	mock.sites = SimReads.read(world, "get_construction_snapshot").duplicate(true)
+	mock.resources = SimReads.read(world, "get_resource_snapshot")
+	mock.settlements = SimReads.read(world, "get_settlement_snapshot")
 	var renderer: Node2D = Node2D.new()
 	renderer.set_script(script)
 	renderer.set("_world_sim", mock)
@@ -183,7 +183,7 @@ func _check_decal_clearance(world: Node) -> void:
 	script.source_code = source.replace("var _world_sim: WorldSimNode", "var _world_sim: Node")
 	_check(script.reload() == OK,"terrain compiles with snapshot test double")
 	var mock: SnapshotDouble = SnapshotDouble.new()
-	var terrain: Dictionary = world.call("get_terrain_snapshot")
+	var terrain: Dictionary = SimReads.read(world, "get_terrain_snapshot")
 	var renderer: Node2D = Node2D.new()
 	renderer.set_script(script)
 	renderer.set("_world_sim",mock)
