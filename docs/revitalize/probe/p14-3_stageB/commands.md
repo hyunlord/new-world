@@ -1,6 +1,6 @@
 # Pass 14 Part 3 — Stage B exact commands (DGX)
 
-`D=/home/hyunlord/work/worldsim-wm-data/p14`; frozen binaries as Stage A; `WORLDSIM_GIT_SHA=2ba871c0…`; code clone detached at `062e67e5` (PREREG commit, timeline and schedules) and `0cd073a8` (scoring). PREREG committed 12:23:27 KST and pushed 12:23:29; the timeline probe started 12:23:36.
+`D=/home/hyunlord/work/worldsim-wm-data/p14`; frozen binaries as Stage A; `WORLDSIM_GIT_SHA=2ba871c0…`; code clone detached at `062e67e5` (PREREG commit; timeline and schedules), `11271117` (recording; adds only docs and schedules) and `0cd073a8` (scoring). PREREG committed 12:23:27 KST and pushed 12:23:29; the timeline probe started 12:23:36.
 
 ```bash
 # timeline probe (tools/revitalize/p14_dgx/p3_timelineB.sh; 12:23:36–12:36:09 KST)
