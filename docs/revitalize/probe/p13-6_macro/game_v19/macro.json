@@ -1,0 +1,2098 @@
+{
+ "fork_tick": 28800,
+ "j11": {
+  "a": {
+   "mean_abs_delta_alive_118": {
+    "passed": true,
+    "value": 2.40625
+   },
+   "mean_abs_delta_day": {
+    "n": 20,
+    "passed": true,
+    "value": 3.55
+   },
+   "share_day_differs_gt3": {
+    "passed": true,
+    "value": 0.09375
+   }
+  },
+  "b": {
+   "gift_food_later": {
+    "n": 36,
+    "passed": false,
+    "value": 0.5277777777777778
+   },
+   "spoil_food_earlier": {
+    "n": 39,
+    "passed": false,
+    "value": 0.5128205128205128
+   }
+  },
+  "c": {
+   "noise_c": 0.09375,
+   "passed": false,
+   "variants_over": []
+  },
+  "not_measured": [],
+  "passed": false
+ },
+ "noise": {
+  "mean_abs_delta_alive_118": {
+   "passed": true,
+   "value": 2.40625
+  },
+  "mean_abs_delta_day": {
+   "n": 20,
+   "passed": true,
+   "value": 3.55
+  },
+  "n_both_split_after_fork": 20,
+  "noise_c": 0.09375,
+  "share_day_differs_gt3": {
+   "passed": true,
+   "value": 0.09375
+  }
+ },
+ "per_seed": {
+  "12000": {
+   "gift_food": [
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 65,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 65,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 65,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 54.0,
+     "post_fork_day": 63,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12001": {
+   "gift_food": [
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": 117,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": 117,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 119,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 36.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 57.0,
+     "post_fork_day": 92,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": 117,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12002": {
+   "gift_food": [
+    {
+     "alive_118": 82.0,
+     "post_fork_day": 89,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 79.0,
+     "post_fork_day": 90,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 85.0,
+     "post_fork_day": 88,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 79.0,
+     "post_fork_day": 90,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 86.0,
+     "post_fork_day": 88,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 124.0,
+     "post_fork_day": 65,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 82.0,
+     "post_fork_day": 89,
+     "settlements_118": 3
+    }
+   ]
+  },
+  "12003": {
+   "gift_food": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 63,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 63,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 63,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 64,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 63,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 62,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 68.0,
+     "post_fork_day": 62,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 61,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 68.0,
+     "post_fork_day": 61,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12004": {
+   "gift_food": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12005": {
+   "gift_food": [
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 32.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12006": {
+   "gift_food": [
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 23.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12007": {
+   "gift_food": [
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 46.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12008": {
+   "gift_food": [
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 92.0,
+     "post_fork_day": 58,
+     "settlements_118": 3
+    }
+   ]
+  },
+  "12009": {
+   "gift_food": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 119,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 37.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12010": {
+   "gift_food": [
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 24.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12011": {
+   "gift_food": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 65.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 65.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 65.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 32,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 65.0,
+     "post_fork_day": 33,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12012": {
+   "gift_food": [
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 34.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12013": {
+   "gift_food": [
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 31,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 31,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 158.0,
+     "post_fork_day": 31,
+     "settlements_118": 4
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 159.0,
+     "post_fork_day": 30,
+     "settlements_118": 4
+    }
+   ]
+  },
+  "12014": {
+   "gift_food": [
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 147.0,
+     "post_fork_day": 34,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 148.0,
+     "post_fork_day": 34,
+     "settlements_118": 4
+    }
+   ]
+  },
+  "12015": {
+   "gift_food": [
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 20.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12016": {
+   "gift_food": [
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 32,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 31,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 31,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 31,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 123.0,
+     "post_fork_day": 31,
+     "settlements_118": 3
+    }
+   ]
+  },
+  "12017": {
+   "gift_food": [
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": null,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12018": {
+   "gift_food": [
+    {
+     "alive_118": 86.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 90.0,
+     "post_fork_day": 68,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 91.0,
+     "post_fork_day": 85,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 88.0,
+     "post_fork_day": 67,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 91.0,
+     "post_fork_day": 66,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 93.0,
+     "post_fork_day": 64,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 84.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    }
+   ]
+  },
+  "12019": {
+   "gift_food": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 34,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12020": {
+   "gift_food": [
+    {
+     "alive_118": 61.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 92,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 59.0,
+     "post_fork_day": 115,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 92,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 92,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 61.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 61.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 91,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 56.0,
+     "post_fork_day": 116,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 89.0,
+     "post_fork_day": 90,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12021": {
+   "gift_food": [
+    {
+     "alive_118": 128.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 129.0,
+     "post_fork_day": 37,
+     "settlements_118": 4
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 130.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 127.0,
+     "post_fork_day": 38,
+     "settlements_118": 4
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 129.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 129.0,
+     "post_fork_day": 38,
+     "settlements_118": 4
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 157.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 158.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 157.0,
+     "post_fork_day": 35,
+     "settlements_118": 4
+    },
+    {
+     "alive_118": 129.0,
+     "post_fork_day": 36,
+     "settlements_118": 4
+    }
+   ]
+  },
+  "12022": {
+   "gift_food": [
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 59,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 58,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 69.0,
+     "post_fork_day": 58,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 59,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 37,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 37,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 70.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12023": {
+   "gift_food": [
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 31.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12024": {
+   "gift_food": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": 118,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 33.0,
+     "post_fork_day": 120,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 33.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12025": {
+   "gift_food": [
+    {
+     "alive_118": 63.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 36,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 64.0,
+     "post_fork_day": 35,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12026": {
+   "gift_food": [
+    {
+     "alive_118": 53.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 53.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 93,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 93,
+     "settlements_118": 2
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 93,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": 115,
+     "settlements_118": 2
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 93,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 53.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 87.0,
+     "post_fork_day": 94,
+     "settlements_118": 2
+    },
+    {
+     "alive_118": 53.0,
+     "post_fork_day": 114,
+     "settlements_118": 2
+    }
+   ]
+  },
+  "12027": {
+   "gift_food": [
+    {
+     "alive_118": 83.0,
+     "post_fork_day": 88,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 83.0,
+     "post_fork_day": 88,
+     "settlements_118": 3
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 79.0,
+     "post_fork_day": 89,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 86.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 86.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 85.0,
+     "post_fork_day": 87,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 91.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 83.0,
+     "post_fork_day": 88,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 91.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 90.0,
+     "post_fork_day": 86,
+     "settlements_118": 3
+    }
+   ]
+  },
+  "12028": {
+   "gift_food": [
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 26.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12029": {
+   "gift_food": [
+    {
+     "alive_118": 50.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 50.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 50.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 50.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 50.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 49.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12030": {
+   "gift_food": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 36.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 37.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    },
+    {
+     "alive_118": 38.0,
+     "post_fork_day": null,
+     "settlements_118": 1
+    }
+   ]
+  },
+  "12031": {
+   "gift_food": [
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 64,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 67,
+     "settlements_118": 3
+    }
+   ],
+   "gift_wood": [
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 65,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 120.0,
+     "post_fork_day": 64,
+     "settlements_118": 3
+    }
+   ],
+   "none": [
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 64,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 66,
+     "settlements_118": 3
+    }
+   ],
+   "rot_wood": [
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 66,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 65,
+     "settlements_118": 3
+    }
+   ],
+   "spoil_food": [
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 64,
+     "settlements_118": 3
+    },
+    {
+     "alive_118": 121.0,
+     "post_fork_day": 65,
+     "settlements_118": 3
+    }
+   ]
+  }
+ },
+ "replicates": 2,
+ "scene": "game_v19",
+ "seeds": [
+  12000,
+  12032
+ ],
+ "variants": {
+  "gift_food": {
+   "mean_abs_delta_alive_118": 1.921875,
+   "mean_abs_delta_day": 4.111111111111111,
+   "n_both_split_after_fork": 36,
+   "share_day_differs_gt3": 0.15625,
+   "share_shift_negative": 0.1388888888888889,
+   "share_shift_nonzero": 0.6666666666666666,
+   "share_shift_positive": 0.5277777777777778,
+   "signed_shift_mean": 2.6666666666666665,
+   "variant_c": 0.1875,
+   "variant_c_minus_noise_c": 0.09375
+  },
+  "gift_wood": {
+   "mean_abs_delta_alive_118": 1.984375,
+   "mean_abs_delta_day": 4.405405405405405,
+   "n_both_split_after_fork": 37,
+   "share_day_differs_gt3": 0.15625,
+   "share_shift_negative": 0.16216216216216217,
+   "share_shift_nonzero": 0.5675675675675675,
+   "share_shift_positive": 0.40540540540540543,
+   "signed_shift_mean": 0.8918918918918919,
+   "variant_c": 0.1875,
+   "variant_c_minus_noise_c": 0.09375
+  },
+  "rot_wood": {
+   "mean_abs_delta_alive_118": 2.6875,
+   "mean_abs_delta_day": 3.0,
+   "n_both_split_after_fork": 37,
+   "share_day_differs_gt3": 0.109375,
+   "share_shift_negative": 0.4864864864864865,
+   "share_shift_nonzero": 0.5945945945945946,
+   "share_shift_positive": 0.10810810810810811,
+   "signed_shift_mean": -1.5945945945945945,
+   "variant_c": 0.109375,
+   "variant_c_minus_noise_c": 0.015625
+  },
+  "spoil_food": {
+   "mean_abs_delta_alive_118": 2.15625,
+   "mean_abs_delta_day": 3.1025641025641026,
+   "n_both_split_after_fork": 39,
+   "share_day_differs_gt3": 0.078125,
+   "share_shift_negative": 0.5128205128205128,
+   "share_shift_nonzero": 0.6410256410256411,
+   "share_shift_positive": 0.1282051282051282,
+   "signed_shift_mean": -0.6923076923076923,
+   "variant_c": 0.09375,
+   "variant_c_minus_noise_c": 0.0
+  }
+ }
+}

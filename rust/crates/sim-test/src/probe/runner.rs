@@ -106,7 +106,7 @@ fn check_sample(first: &Value, second: &Value, seed: u64) -> Result<(), String> 
 }
 
 /// A fresh engine of the probe scene `scene` (legacy for any other name).
-pub(super) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
+pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
     match scene {
         "game" => crate::scenes::game_scene(seed),
         "game_v9" => crate::scenes::game_v9_scene(seed),

@@ -1,0 +1,1755 @@
+{
+ "fork_tick": 14280,
+ "days": 120,
+ "arms": {
+  "sp240L": [
+   "spoil_food",
+   240,
+   "L",
+   1
+  ],
+  "gf240L": [
+   "gift_food",
+   240,
+   "L",
+   1
+  ],
+  "sp240E": [
+   "spoil_food",
+   240,
+   "E",
+   1
+  ],
+  "gf240E": [
+   "gift_food",
+   240,
+   "E",
+   1
+  ]
+ },
+ "seeds_per_arm": {
+  "sp240L": 51,
+  "gf240L": 51,
+  "sp240E": 64,
+  "gf240E": 64
+ },
+ "files": [
+  {
+   "file": "s14000_sp240E.json",
+   "seed": 14000,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14000_gf240E.json",
+   "seed": 14000,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14001_sp240L.json",
+   "seed": 14001,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14001_gf240L.json",
+   "seed": 14001,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14001_sp240E.json",
+   "seed": 14001,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14001_gf240E.json",
+   "seed": 14001,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14002_sp240L.json",
+   "seed": 14002,
+   "arm": "sp240L",
+   "cast_tick": 81960,
+   "sha256": "89ecaac35701e6a84478a22c6178eda77ea56f3fbab2d2a1e58bae0d313b3810"
+  },
+  {
+   "file": "s14002_gf240L.json",
+   "seed": 14002,
+   "arm": "gf240L",
+   "cast_tick": 81960,
+   "sha256": "24c3570b77f2a003512d5e0c091d93d4159d7f850123e62d8a681e1bd73346d4"
+  },
+  {
+   "file": "s14002_sp240E.json",
+   "seed": 14002,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14002_gf240E.json",
+   "seed": 14002,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14003_sp240L.json",
+   "seed": 14003,
+   "arm": "sp240L",
+   "cast_tick": 83400,
+   "sha256": "48874cf04bf802f517d4e044d9ec4dbc239718cd9744efa359b1dd6c550949a2"
+  },
+  {
+   "file": "s14003_gf240L.json",
+   "seed": 14003,
+   "arm": "gf240L",
+   "cast_tick": 83400,
+   "sha256": "7b970951bc40f1c8e5645108730ff2e344ebd1eca60e56b8618b496585282941"
+  },
+  {
+   "file": "s14003_sp240E.json",
+   "seed": 14003,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14003_gf240E.json",
+   "seed": 14003,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14004_sp240L.json",
+   "seed": 14004,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14004_gf240L.json",
+   "seed": 14004,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14004_sp240E.json",
+   "seed": 14004,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14004_gf240E.json",
+   "seed": 14004,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14005_sp240E.json",
+   "seed": 14005,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14005_gf240E.json",
+   "seed": 14005,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14006_sp240L.json",
+   "seed": 14006,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14006_gf240L.json",
+   "seed": 14006,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14006_sp240E.json",
+   "seed": 14006,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14006_gf240E.json",
+   "seed": 14006,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14007_sp240E.json",
+   "seed": 14007,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14007_gf240E.json",
+   "seed": 14007,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14008_sp240L.json",
+   "seed": 14008,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14008_gf240L.json",
+   "seed": 14008,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14008_sp240E.json",
+   "seed": 14008,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14008_gf240E.json",
+   "seed": 14008,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14009_sp240L.json",
+   "seed": 14009,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14009_gf240L.json",
+   "seed": 14009,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14009_sp240E.json",
+   "seed": 14009,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14009_gf240E.json",
+   "seed": 14009,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14010_sp240L.json",
+   "seed": 14010,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14010_gf240L.json",
+   "seed": 14010,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14010_sp240E.json",
+   "seed": 14010,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14010_gf240E.json",
+   "seed": 14010,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14011_sp240L.json",
+   "seed": 14011,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14011_gf240L.json",
+   "seed": 14011,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14011_sp240E.json",
+   "seed": 14011,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14011_gf240E.json",
+   "seed": 14011,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14012_sp240L.json",
+   "seed": 14012,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14012_gf240L.json",
+   "seed": 14012,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14012_sp240E.json",
+   "seed": 14012,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14012_gf240E.json",
+   "seed": 14012,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14013_sp240L.json",
+   "seed": 14013,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14013_gf240L.json",
+   "seed": 14013,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14013_sp240E.json",
+   "seed": 14013,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14013_gf240E.json",
+   "seed": 14013,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14014_sp240L.json",
+   "seed": 14014,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14014_gf240L.json",
+   "seed": 14014,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14014_sp240E.json",
+   "seed": 14014,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14014_gf240E.json",
+   "seed": 14014,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14015_sp240E.json",
+   "seed": 14015,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14015_gf240E.json",
+   "seed": 14015,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14016_sp240L.json",
+   "seed": 14016,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14016_gf240L.json",
+   "seed": 14016,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14016_sp240E.json",
+   "seed": 14016,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14016_gf240E.json",
+   "seed": 14016,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14017_sp240L.json",
+   "seed": 14017,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14017_gf240L.json",
+   "seed": 14017,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14017_sp240E.json",
+   "seed": 14017,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14017_gf240E.json",
+   "seed": 14017,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14018_sp240L.json",
+   "seed": 14018,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14018_gf240L.json",
+   "seed": 14018,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14018_sp240E.json",
+   "seed": 14018,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14018_gf240E.json",
+   "seed": 14018,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14019_sp240L.json",
+   "seed": 14019,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14019_gf240L.json",
+   "seed": 14019,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14019_sp240E.json",
+   "seed": 14019,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14019_gf240E.json",
+   "seed": 14019,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14020_sp240L.json",
+   "seed": 14020,
+   "arm": "sp240L",
+   "cast_tick": 81960,
+   "sha256": "89ecaac35701e6a84478a22c6178eda77ea56f3fbab2d2a1e58bae0d313b3810"
+  },
+  {
+   "file": "s14020_gf240L.json",
+   "seed": 14020,
+   "arm": "gf240L",
+   "cast_tick": 81960,
+   "sha256": "24c3570b77f2a003512d5e0c091d93d4159d7f850123e62d8a681e1bd73346d4"
+  },
+  {
+   "file": "s14020_sp240E.json",
+   "seed": 14020,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14020_gf240E.json",
+   "seed": 14020,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14021_sp240L.json",
+   "seed": 14021,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14021_gf240L.json",
+   "seed": 14021,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14021_sp240E.json",
+   "seed": 14021,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14021_gf240E.json",
+   "seed": 14021,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14022_sp240E.json",
+   "seed": 14022,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14022_gf240E.json",
+   "seed": 14022,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14023_sp240L.json",
+   "seed": 14023,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14023_gf240L.json",
+   "seed": 14023,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14023_sp240E.json",
+   "seed": 14023,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14023_gf240E.json",
+   "seed": 14023,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14024_sp240E.json",
+   "seed": 14024,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14024_gf240E.json",
+   "seed": 14024,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14025_sp240L.json",
+   "seed": 14025,
+   "arm": "sp240L",
+   "cast_tick": 58920,
+   "sha256": "8fc27ff10cfcc899710f5423a494ac970918ab5c41df60eef7c07eefc8dcf7fd"
+  },
+  {
+   "file": "s14025_gf240L.json",
+   "seed": 14025,
+   "arm": "gf240L",
+   "cast_tick": 58920,
+   "sha256": "67e9306775492401ffa44070827d4b7ec74381fbb742c2bce2f367decf4dbdad"
+  },
+  {
+   "file": "s14025_sp240E.json",
+   "seed": 14025,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14025_gf240E.json",
+   "seed": 14025,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14026_sp240E.json",
+   "seed": 14026,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14026_gf240E.json",
+   "seed": 14026,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14027_sp240E.json",
+   "seed": 14027,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14027_gf240E.json",
+   "seed": 14027,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14028_sp240L.json",
+   "seed": 14028,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14028_gf240L.json",
+   "seed": 14028,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14028_sp240E.json",
+   "seed": 14028,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14028_gf240E.json",
+   "seed": 14028,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14029_sp240L.json",
+   "seed": 14029,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14029_gf240L.json",
+   "seed": 14029,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14029_sp240E.json",
+   "seed": 14029,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14029_gf240E.json",
+   "seed": 14029,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14030_sp240E.json",
+   "seed": 14030,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14030_gf240E.json",
+   "seed": 14030,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14031_sp240L.json",
+   "seed": 14031,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14031_gf240L.json",
+   "seed": 14031,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14031_sp240E.json",
+   "seed": 14031,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14031_gf240E.json",
+   "seed": 14031,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14032_sp240L.json",
+   "seed": 14032,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14032_gf240L.json",
+   "seed": 14032,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14032_sp240E.json",
+   "seed": 14032,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14032_gf240E.json",
+   "seed": 14032,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14033_sp240L.json",
+   "seed": 14033,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14033_gf240L.json",
+   "seed": 14033,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14033_sp240E.json",
+   "seed": 14033,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14033_gf240E.json",
+   "seed": 14033,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14034_sp240E.json",
+   "seed": 14034,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14034_gf240E.json",
+   "seed": 14034,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14035_sp240E.json",
+   "seed": 14035,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14035_gf240E.json",
+   "seed": 14035,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14036_sp240L.json",
+   "seed": 14036,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14036_gf240L.json",
+   "seed": 14036,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14036_sp240E.json",
+   "seed": 14036,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14036_gf240E.json",
+   "seed": 14036,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14037_sp240L.json",
+   "seed": 14037,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14037_gf240L.json",
+   "seed": 14037,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14037_sp240E.json",
+   "seed": 14037,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14037_gf240E.json",
+   "seed": 14037,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14038_sp240E.json",
+   "seed": 14038,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14038_gf240E.json",
+   "seed": 14038,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14039_sp240L.json",
+   "seed": 14039,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14039_gf240L.json",
+   "seed": 14039,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14039_sp240E.json",
+   "seed": 14039,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14039_gf240E.json",
+   "seed": 14039,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14040_sp240L.json",
+   "seed": 14040,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14040_gf240L.json",
+   "seed": 14040,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14040_sp240E.json",
+   "seed": 14040,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14040_gf240E.json",
+   "seed": 14040,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14041_sp240L.json",
+   "seed": 14041,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14041_gf240L.json",
+   "seed": 14041,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14041_sp240E.json",
+   "seed": 14041,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14041_gf240E.json",
+   "seed": 14041,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14042_sp240L.json",
+   "seed": 14042,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14042_gf240L.json",
+   "seed": 14042,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14042_sp240E.json",
+   "seed": 14042,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14042_gf240E.json",
+   "seed": 14042,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14043_sp240L.json",
+   "seed": 14043,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14043_gf240L.json",
+   "seed": 14043,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14043_sp240E.json",
+   "seed": 14043,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14043_gf240E.json",
+   "seed": 14043,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14044_sp240L.json",
+   "seed": 14044,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14044_gf240L.json",
+   "seed": 14044,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14044_sp240E.json",
+   "seed": 14044,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14044_gf240E.json",
+   "seed": 14044,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14045_sp240L.json",
+   "seed": 14045,
+   "arm": "sp240L",
+   "cast_tick": 81960,
+   "sha256": "89ecaac35701e6a84478a22c6178eda77ea56f3fbab2d2a1e58bae0d313b3810"
+  },
+  {
+   "file": "s14045_gf240L.json",
+   "seed": 14045,
+   "arm": "gf240L",
+   "cast_tick": 81960,
+   "sha256": "24c3570b77f2a003512d5e0c091d93d4159d7f850123e62d8a681e1bd73346d4"
+  },
+  {
+   "file": "s14045_sp240E.json",
+   "seed": 14045,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14045_gf240E.json",
+   "seed": 14045,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14046_sp240L.json",
+   "seed": 14046,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14046_gf240L.json",
+   "seed": 14046,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14046_sp240E.json",
+   "seed": 14046,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14046_gf240E.json",
+   "seed": 14046,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14047_sp240L.json",
+   "seed": 14047,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14047_gf240L.json",
+   "seed": 14047,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14047_sp240E.json",
+   "seed": 14047,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14047_gf240E.json",
+   "seed": 14047,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14048_sp240E.json",
+   "seed": 14048,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14048_gf240E.json",
+   "seed": 14048,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14049_sp240L.json",
+   "seed": 14049,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14049_gf240L.json",
+   "seed": 14049,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14049_sp240E.json",
+   "seed": 14049,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14049_gf240E.json",
+   "seed": 14049,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14050_sp240L.json",
+   "seed": 14050,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14050_gf240L.json",
+   "seed": 14050,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14050_sp240E.json",
+   "seed": 14050,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14050_gf240E.json",
+   "seed": 14050,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14051_sp240L.json",
+   "seed": 14051,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14051_gf240L.json",
+   "seed": 14051,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14051_sp240E.json",
+   "seed": 14051,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14051_gf240E.json",
+   "seed": 14051,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14052_sp240L.json",
+   "seed": 14052,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14052_gf240L.json",
+   "seed": 14052,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14052_sp240E.json",
+   "seed": 14052,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14052_gf240E.json",
+   "seed": 14052,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14053_sp240L.json",
+   "seed": 14053,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14053_gf240L.json",
+   "seed": 14053,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14053_sp240E.json",
+   "seed": 14053,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14053_gf240E.json",
+   "seed": 14053,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14054_sp240L.json",
+   "seed": 14054,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14054_gf240L.json",
+   "seed": 14054,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14054_sp240E.json",
+   "seed": 14054,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14054_gf240E.json",
+   "seed": 14054,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14055_sp240L.json",
+   "seed": 14055,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14055_gf240L.json",
+   "seed": 14055,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14055_sp240E.json",
+   "seed": 14055,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14055_gf240E.json",
+   "seed": 14055,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14056_sp240L.json",
+   "seed": 14056,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14056_gf240L.json",
+   "seed": 14056,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14056_sp240E.json",
+   "seed": 14056,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14056_gf240E.json",
+   "seed": 14056,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14057_sp240L.json",
+   "seed": 14057,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14057_gf240L.json",
+   "seed": 14057,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14057_sp240E.json",
+   "seed": 14057,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14057_gf240E.json",
+   "seed": 14057,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14058_sp240L.json",
+   "seed": 14058,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14058_gf240L.json",
+   "seed": 14058,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14058_sp240E.json",
+   "seed": 14058,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14058_gf240E.json",
+   "seed": 14058,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14059_sp240L.json",
+   "seed": 14059,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14059_gf240L.json",
+   "seed": 14059,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14059_sp240E.json",
+   "seed": 14059,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14059_gf240E.json",
+   "seed": 14059,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14060_sp240L.json",
+   "seed": 14060,
+   "arm": "sp240L",
+   "cast_tick": 40200,
+   "sha256": "157a92098b4f10cb7b7b00ce2875a407e6de1b323c9b65781d375570cda8668a"
+  },
+  {
+   "file": "s14060_gf240L.json",
+   "seed": 14060,
+   "arm": "gf240L",
+   "cast_tick": 40200,
+   "sha256": "c473c6a29c8bcc38957160c20620be7935c2b1b39510cbd2a4b24357848a0378"
+  },
+  {
+   "file": "s14060_sp240E.json",
+   "seed": 14060,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14060_gf240E.json",
+   "seed": 14060,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14061_sp240L.json",
+   "seed": 14061,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14061_gf240L.json",
+   "seed": 14061,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14061_sp240E.json",
+   "seed": 14061,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14061_gf240E.json",
+   "seed": 14061,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14062_sp240L.json",
+   "seed": 14062,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14062_gf240L.json",
+   "seed": 14062,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14062_sp240E.json",
+   "seed": 14062,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14062_gf240E.json",
+   "seed": 14062,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  },
+  {
+   "file": "s14063_sp240L.json",
+   "seed": 14063,
+   "arm": "sp240L",
+   "cast_tick": 15720,
+   "sha256": "ce7c4ee5dce541195a60b1ee9f627db877817da6acab52b65938999c96a3ca16"
+  },
+  {
+   "file": "s14063_gf240L.json",
+   "seed": 14063,
+   "arm": "gf240L",
+   "cast_tick": 15720,
+   "sha256": "6640a571b99e2f5e7b84a2736567e58799831b68f3e6997e0d14ae003f0f281c"
+  },
+  {
+   "file": "s14063_sp240E.json",
+   "seed": 14063,
+   "arm": "sp240E",
+   "cast_tick": 29400,
+   "sha256": "14615c9abef0769bc6b04d5aaa166c9d83cd56d83808163e2669be5ef8d86be7"
+  },
+  {
+   "file": "s14063_gf240E.json",
+   "seed": 14063,
+   "arm": "gf240E",
+   "cast_tick": 29400,
+   "sha256": "ee6f9bee5b22eb09be81df2776bb5e6dec01a50fc09fac020cd05f1b8c6d1986"
+  }
+ ],
+ "missing": [
+  [
+   14000,
+   "sp240L"
+  ],
+  [
+   14000,
+   "gf240L"
+  ],
+  [
+   14005,
+   "sp240L"
+  ],
+  [
+   14005,
+   "gf240L"
+  ],
+  [
+   14007,
+   "sp240L"
+  ],
+  [
+   14007,
+   "gf240L"
+  ],
+  [
+   14015,
+   "sp240L"
+  ],
+  [
+   14015,
+   "gf240L"
+  ],
+  [
+   14022,
+   "sp240L"
+  ],
+  [
+   14022,
+   "gf240L"
+  ],
+  [
+   14024,
+   "sp240L"
+  ],
+  [
+   14024,
+   "gf240L"
+  ],
+  [
+   14026,
+   "sp240L"
+  ],
+  [
+   14026,
+   "gf240L"
+  ],
+  [
+   14027,
+   "sp240L"
+  ],
+  [
+   14027,
+   "gf240L"
+  ],
+  [
+   14030,
+   "sp240L"
+  ],
+  [
+   14030,
+   "gf240L"
+  ],
+  [
+   14034,
+   "sp240L"
+  ],
+  [
+   14034,
+   "gf240L"
+  ],
+  [
+   14035,
+   "sp240L"
+  ],
+  [
+   14035,
+   "gf240L"
+  ],
+  [
+   14038,
+   "sp240L"
+  ],
+  [
+   14038,
+   "gf240L"
+  ],
+  [
+   14048,
+   "sp240L"
+  ],
+  [
+   14048,
+   "gf240L"
+  ]
+ ],
+ "timeline_sha256": "2206296bd27dea59386a944302b072357742ed5451bd45b8fc50c95b2e86747a"
+}

@@ -173,6 +173,15 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
     speed.clamp(0.0, 4.0)
 }
 
+/// Revitalize Pass 15 — the stress world of `seed` with `agents` founders on
+/// the game's 64 × 64 map under the `game_v19` rules
+/// (`WorldGenConfig::stress_v19`). Pure (no Godot) so the harness can check
+/// it directly. Benchmark only — lets the art line measure frame times on a
+/// crowded world; never called by the game's UI.
+pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
+    build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
+}
+
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
@@ -228,6 +237,19 @@ impl WorldSimNode {
             &WorldGenConfig::game_v19(self.world_seed),
             WorldRules::game_v19(self.world_seed),
         );
+        self.accumulator = 0.0;
+        self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
+        true
+    }
+
+    /// Revitalize Pass 15 — rebuild as the stress world of `seed` with
+    /// `agents` founders (clamped to 1..=5000), as [`Self::reset_world`] does
+    /// otherwise ([`build_stress_engine`]). Benchmark only — lets the art line
+    /// measure frame times on a crowded world; never called by the game's UI.
+    #[func]
+    fn reset_world_stress(&mut self, seed: i64, agents: i64) -> bool {
+        self.world_seed = seed as u64;
+        self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
@@ -3019,6 +3041,15 @@ mod revitalize_tooling_tests {
     use super::{advance_engine_ticks, collect_tallies, collect_time_snapshot};
     use sim_core::material::MaterialRegistry;
     use sim_engine::{SimEngine, Tallies};
+
+    #[test]
+    fn stress_engine_has_the_requested_founders() {
+        // Pass 15 6.4.
+        let engine = super::build_stress_engine(15100, 500);
+        assert_eq!(engine.world.query::<&sim_core::components::Agent>().iter().count(), 500);
+        assert_eq!((engine.resources.world_seed, engine.current_tick()), (15100, 0));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v19(15100));
+    }
 
     #[test]
     fn time_snapshot_uses_completed_ticks_and_resource_clock() {
