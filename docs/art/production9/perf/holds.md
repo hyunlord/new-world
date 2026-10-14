@@ -1,0 +1,3 @@
+- 2026-10-14T23:17:07Z pid=17053 WAIT_START owner=codex-art-pass9 purpose=baseline-W0-attempt1 hold_limit=3600
+- 2026-10-14T23:17:07Z pid=17053 CHECK load=6.31 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=0s
+- 2026-10-14T23:17:07Z pid=17053 WAIT_BUSY next_poll=300s

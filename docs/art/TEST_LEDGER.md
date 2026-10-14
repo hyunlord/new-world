@@ -448,3 +448,9 @@ Existing stockpile locale/registry tests and screen clock contract remain unchan
 |---|---|---|---|
 | `scripts/test/art/test_capture_plans_p6.gd` | Exact natural plan, chronological per-world replay, explicit reset boundaries, deterministic carrier, retained intervention scenarios | Replace v17 exact27 with v19 exact30 from `production8/MEASURED_DAYS.md`; retain original scenario and add separately reset P/G worlds; validate all paired roles, days, amounts, targets and unique exact stems. No acceptance threshold changed. | `production8/gates/p5capture/plans.log` retains stale-fixture failure; `plans-v19.log`: explicit PASS, exit0 |
 | `scripts/test/art/test_capture_metadata.gd` | All existing raw metadata/geometry checks and seasonal frame assertions | Cold nights28/29,55/56/57,84/85; warm-control26 07:15; exactly one real live exposure at57 04:01 instead of two stale v17 dates. | `production8/gates/p5capture/metadata.log` retains stale-fixture failure; `metadata-v19.log`: failures=0, exit0 |
+
+## Art Pass 9
+
+| File | Preserved contract | Change | Evidence |
+|---|---|---|---|
+| `scripts/test/art/test_zoom_ladder.gd` | Every zoom remains an integer ladder step with equal axes; completed zoom equals its target; gesture accumulation keeps8 then reaches6 | Replace two unrelated0.15s timer waits with the actual Tween.finished signal. All assertions and production camera code unchanged; gate timeout unchanged. | `production9/debug/zoom-old-fixed5.log` reproduces original line17 failure; `zoom-fixed5.log` and `zoom-fixed-normal.log` explicitly PASS, exit0 |
