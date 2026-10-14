@@ -2697,3 +2697,25 @@ Applied amounts: every gift, rain and cold snap applied in full; `sp240L` applie
 - Timing: T_high (the fullest pre-departure store, s = 0) is the weakest time for both kinds (spoil 0.558 / 4.9 d, gift 0.288 / 2.7 d, ENR 1.46 / 0.79): with the store well above the line, a 240 spoil leaves s at 0 and a 240 gift changes nothing the hazard reads.
 - Direction and shape: an earlier split raises the population — `sp240L` +12.4 alive at day 118 and +9.1 deaths (old age) by day 120, settlement count different from the factual at day 118 in 0.25 of pairs (noise 0.036); a gift delays the split and lowers the population (`gf240E` −5.1 alive).
 - Why the gift share stays near 0.5: a gift can only make a split later if the factual splits after the cast; 11 of 32 factual worlds never depart within 120 days, so a gift on those seeds can only tie (ties 0.43–0.60 of gift pairs).
+
+### Part 2 — pre-registration (`p14-2_prereg/PREREG.md`, commit `062e67e5`, 12:23:27 KST, pushed 12:23:29)
+
+`sp240L` and `gf240L` (gift tie with `gf120L` at 0.518 broken by ENR 4.26 vs 3.69), controls `sp240E`, `gf240E`; seeds 14000–14063, R = 2, fork 14,280, Part 0's timing rule on Stage B's own timeline; K2 thresholds unchanged. No Stage B file existed on the DGX before 12:23:36 (first file 12:23:59).
+
+### Part 3 — Stage B: confirmation on fresh worlds (seeds 14000–14063; timeline 12:23–12:36, recording 12:37–13:15 KST; `docs/revitalize/probe/p14-3_stageB/dose_map.md`)
+
+Timeline: food line reproduces s on 3,996 of 3,996 checks; T_low for 51 of 64 seeds (5 by the after-first-departure clause; 11 seeds never reach an eligible check), T_high 48, T_eve 64; 19 seeds never depart; 0 cancelled. T_low on day 12 (26 seeds), day 29 (20), days 42–59 (5). 588 episodes (mean 15.4 s), 0 check errors; factual r0 departures equal the probe's fission log on 64 of 64 seeds. Noise: L seeds 39 pairs where both depart, mean |Δday| 2.77, share > 3 d 0.103; E seeds 42 / 2.07 / 0.071.
+
+| arm | seeds | right share [90 %] | earlier / later / tie | mean \|Δday\| [90 %] (n both) | ENR [90 %] | d118 settlements differ (noise) | alive d118 Δ [90 %] | deaths to d120 Δ [90 %] |
+|---|---:|---|---|---|---|---|---|---|
+| sp240L | 51 | 0.794 [0.696, 0.873] | 0.794 / 0.000 / 0.206 | 26.04 [19.99, 32.50] (79) | 9.40 [5.51, 22.61] | 0.206 (0.078) | +7.44 [4.64, 10.39] | +10.51 [7.63, 13.45] |
+| gf240L | 51 | 0.382 [0.284, 0.490] | 0.078 / 0.382 / 0.539 | 5.39 [3.10, 7.86] (74) | 1.95 [1.00, 4.57] | 0.078 (0.078) | −2.42 [−4.12, −1.00] | −2.15 [−3.92, −0.57] |
+| sp240E | 64 | 0.469 [0.375, 0.570] | 0.469 / 0.062 / 0.469 | 7.89 [5.11, 11.07] (85) | 3.81 [2.13, 8.81] | 0.094 (0.062) | +2.34 [0.72, 4.16] | +2.52 [1.24, 3.95] |
+| gf240E | 64 | 0.594 [0.500, 0.688] | 0.008 / 0.594 / 0.398 | 8.06 [5.71, 10.59] (83) | 3.89 [2.15, 9.89] | 0.070 (0.062) | −2.65 [−4.46, −1.17] | −3.91 [−5.68, −2.25] |
+
+`sp240L` applied 23,584 of 24,480 units (23 of 102 rows short, minimum 0.53 of 240), `sp240E` 30,624 of 30,720; gifts in full.
+
+**K2: FAIL.**
+- `sp240L`: right-direction share 0.794 ≥ 0.75 **PASS**; ENR 9.40 ≥ 2.0 **PASS**; day-118 settlement count differs in 0.206 of pairs vs the noise's 0.078 + 0.15 = 0.228 **FAIL** (short by 0.022; at day 60 and day 90 the shares are 0.324 and 0.255 against noise 0.020 and 0.000). Arm FAIL.
+- `gf240L`: right share 0.382 **FAIL**; ENR 1.95 **FAIL**; settlement share 0.078 vs 0.228 **FAIL**. Arm FAIL.
+- The spoil effect replicates on fresh worlds (Stage A 0.786 / 22.4 d / ENR 8.19 → Stage B 0.794 / 26.0 d / 9.40); the gift at T_low does not (Stage A 0.518 / ENR 4.26 → Stage B 0.382 / 1.95). The eve-of-winter gift does (Stage A 0.578 / 4.87 → Stage B 0.594 / 3.89): Stage B repeats Stage A's timing contrast — paired on the 51 T_low seeds, spoil T_low − T_eve +0.206 [+0.118, +0.285], gift −0.343 [−0.461, −0.225].
