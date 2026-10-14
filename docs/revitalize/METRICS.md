@@ -2753,3 +2753,25 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 - **I3** base vs final: **105,187 shared values, 0 differences**; determinism PASS.
 - **I2**: all 20 sha256 (18 `.npy` arrays + 2 `interventions.json`) identical (`diff p15-0_base/i2_sha256.txt p15-0_final/i2_sha256.txt` empty).
 - No existing scene calls the stress code: `stress_v19`, `build_stress_engine` and `reset_world_stress` appear only in their definitions, their unit tests and `sim-test/src/perf.rs` (grep over `rust/crates` and `scripts`).
+
+### Part 2 — profiling overhead (timed batch, 00:14:45 KST, not contended)
+
+- `worldsim_perf overhead --scene game_v19 --seed 15000 --days 30 --repeats 3` (alternating): plain 1.765 / 1.791 / 1.789 s, profiled 1.786 / 1.785 / 1.785 s; medians 1.789 vs 1.785 s → **overhead −0.22 %**; the profiled runs end on the plain runs' fingerprint (3 of 3). `p15-0_final/overhead_game_v19_s15000_d30.json`.
+
+### Part 3 — sweeps (one timed batch 00:15:26–00:25:01 KST, not contended) and scaling (`p15-4_scaling/scaling.md`)
+
+| # | question | measured | verdict |
+|---|---|---|---|
+| P1 | `game_v19` natural, 32 worlds × 120 days | worst mean 0.129 ms, worst p99.9 0.304 ms, max 1.935 ms; 0 ticks > 8 ms | **PASS** |
+| P2 | fed stress n = 500, 8 worlds | median mean 0.303 ms; pooled p99.9 0.634 ms (22,560 ticks); per-world max ≤ 0.827 ms; 0 ticks > 16.67 ms | **PASS** |
+| P3 | UI reads at n = 500 (single calls, Rust side) | 26.4 µs (WIP), 26.5 µs (art); ×callers 99 µs (WIP), 285 µs (art; `get_society_snapshot` and `get_intervention_state` untimed, art-only) | **PASS** |
+| P4 | N_max | ≥ 2,000 (every size passes; n = 2,000 median mean 1.622 ms); interpolated 5,142 alive (extrapolated) | **comfortable** |
+| P5 | growth | no system with a superlinear natural slope; `AgentMovementSystem` stress slope 1.21 [1.19, 1.23] at 1.4 % share is the only superlinear slope; none near-quadratic, none crowding-driven | **clean** |
+
+- Whole tick: natural slope 0.94 [0.92, 0.96] (3,808 full days with alive ≥ 15), stress fed 1.06 [1.04, 1.09], raw 1.08 [1.05, 1.11], map 0.12 [0.09, 0.15] per tile.
+- Shares at n = 500 (median over seeds): `AgentDecisionSystem` 60.0 % (natural slope 0.98, stress 1.13), `SettlementSystem` 21.9 % (1.08 / 0.98), `MemorySystem` 7.0 % (0.94 / 1.03), everything else ≤ 2.4 %.
+- µs per agent-tick (fed): 1.04 (n = 25), 0.76 (50), 0.66 (100), 0.60 (200), **0.61 (500)**, 0.67 (1,000), 0.81 (2,000); natural 1.72 (48 alive on average).
+- Slow ticks: stress — the 06:01 wake-up (whole tick ≈ 2.7–2.9× the mean, nearly all `AgentDecisionSystem`); natural — isolated 0.5–1.9 ms single-system spikes (decision 474 / settlement 74 / fission 32 / memory 28 of 640 kept).
+- Repeatability (seed 15100, n = 500, fed, ×3): 0.3035, 0.3034, 0.3062 ms — CV 0.52 %.
+- Raw (no gifts) stress: n = 2,000 ends with 1,688 alive on average; mean 1.404 ms, pooled p99.9 2.641 ms.
+- Part 5 trigger: none (P2 passes; no near-quadratic system) → no fix.
