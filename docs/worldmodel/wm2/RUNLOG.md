@@ -22,3 +22,5 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4 (cost) | 02:05 | 02:13 | cost check 2 (`a34c8396`, `--val-batch 512`): M1b-act 1.554 s/step, validation 7.8 s (3.6 %), 23,437 MiB; M1-long 0.396 s/step, validation 1.6 s (2.7 %); no start subsample (DECISIONS H4.1) |
 | 4.1 | 02:14:09 | | `_setup/queue.sh a34c8396` (detached, one training at a time): `wm2_m1bact_v19_s0` started (`--max-seconds 21600`), then m1long_s0, m1bact_s1, m1long_s1, m1bact_s2, m1b_v16_s0 |
 | 1 (6.4) | 02:14:09 | | `_setup/record_floor.sh` (detached, 4 workers, nice 10): the floor families of both scenes, then two unforked `game_v19` test worlds |
+| 3 | 02:14 | 02:15:36 | METRICS.md committed (`b57ef7bb`, 02:15:36) and pushed before any test-role number (no `metrics.json` / `effects.json` / `split.json` / `floor.json` / `calendar.json` on the DGX at that time); `git diff a34c8396 b57ef7bb -- tools` empty; `_setup/prereg_sha` = `b57ef7bb` |
+| 5 | 02:17 | | `baselines.sh test b57ef7bb` (CPU, nice 10): calendar family on `v2_v19_fact` and `v2_v16` test, split-timing baselines, effect baselines |
