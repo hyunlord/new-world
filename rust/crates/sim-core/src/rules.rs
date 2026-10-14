@@ -49,6 +49,114 @@ pub struct AgentRules {
     /// v8–v17 (any food tile anywhere makes food available, so a full wild
     /// region far from the camp keeps a camp's hungry members off the store).
     pub local_food_availability: bool,
+    /// Pass 16 (`game_v20`): every resident carries a `Temperament` (four
+    /// heritable axes) and, with `effects`, four everyday choices lean with
+    /// it. None = v8–v19 (no temperament is drawn or stored).
+    pub temperament: Option<TemperamentRule>,
+}
+/// Pass 16 (`game_v20`): how temperament leans everyday choices. Each axis
+/// moves one value the code already has, per person, by `span × d / 500`
+/// with `d = axis − 500` (−500 … +500, `i32` division truncating toward
+/// zero); with `effects: false` (`game_v20_inert`, the placebo) every
+/// function returns its base value.
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
+pub struct TemperamentRule {
+    /// Whether the leans act; false draws and stores temperament only.
+    pub effects: bool,
+    /// NS: change of an adult's idle tether radius at d = ±500 (tiles).
+    pub ns_tether_span: i32,
+    /// HA: change of the night-rest start at d = ±500 (minutes; cautious earlier).
+    pub ha_bedtime_span_minutes: i32,
+    /// RD: change of the loneliness growth rate at d = ±500 (permille of the base).
+    pub rd_social_rate_span_permille: i32,
+    /// P: change of the food haul load at d = ±500 (units).
+    pub p_food_haul_span: i32,
+    /// P: change of the wood haul load at d = ±500 (units).
+    pub p_wood_haul_span: i32,
+    /// NS: weight of novelty seeking in the fission departure rank
+    /// (`unit draw − weight × ns / 1,000,000`).
+    pub ns_departure_weight: u32,
+}
+
+/// An axis's distance from the mean, `axis − 500`, as `i32`.
+const fn lean(axis: u16) -> i32 {
+    axis as i32 - crate::components::temperament::TEMPERAMENT_MEAN
+}
+
+impl TemperamentRule {
+    /// NS → idle tether: `max(2, base + ns_tether_span × d_ns / 500)` (base 8
+    /// gives 4 … 12 at span 4); `base` without effects.
+    pub const fn tether(&self, base: u32, t: &crate::components::Temperament) -> u32 {
+        if !self.effects {
+            return base;
+        }
+        let v = base as i32 + self.ns_tether_span * lean(t.ns) / 500;
+        if v < 2 {
+            2
+        } else {
+            v as u32
+        }
+    }
+
+    /// HA → bedtime: `start − ha_bedtime_span_minutes × d_ha / 500` minutes
+    /// (21:00 gives 20:00 for the most cautious … 22:00 for the boldest at
+    /// span 60), wrapped onto the day; `start` without effects.
+    pub const fn bedtime(&self, start: u32, t: &crate::components::Temperament) -> u32 {
+        if !self.effects {
+            return start;
+        }
+        (start as i32 - self.ha_bedtime_span_minutes * lean(t.ha) / 500).rem_euclid(1440) as u32
+    }
+
+    /// RD → loneliness growth rate: `base × (1000 + rd_social_rate_span_permille
+    /// × d_rd / 500) / 1000` (0.04 gives 0.02 … 0.06 at span 500); `base`
+    /// without effects.
+    pub fn social_rate(&self, base: f64, t: &crate::components::Temperament) -> f64 {
+        if !self.effects {
+            return base;
+        }
+        let permille = 1000 + self.rd_social_rate_span_permille * lean(t.rd) / 500;
+        base * f64::from(permille) / 1000.0
+    }
+
+    /// P → food load before hauling home: `clamp(base + p_food_haul_span ×
+    /// d_p / 500, 1, 8)` (4 gives 2 … 6 at span 2); `base` without effects.
+    pub const fn food_haul(&self, base: u32, t: &crate::components::Temperament) -> u32 {
+        if !self.effects {
+            return base;
+        }
+        Self::haul(base, self.p_food_haul_span, t.p)
+    }
+
+    /// P → wood load before hauling home: `clamp(base + p_wood_haul_span ×
+    /// d_p / 500, 1, 8)` (2 gives 1 … 3 at span 1); `base` without effects.
+    pub const fn wood_haul(&self, base: u32, t: &crate::components::Temperament) -> u32 {
+        if !self.effects {
+            return base;
+        }
+        Self::haul(base, self.p_wood_haul_span, t.p)
+    }
+
+    const fn haul(base: u32, span: i32, p: u16) -> u32 {
+        let v = base as i32 + span * lean(p) / 500;
+        if v < 1 {
+            1
+        } else if v > 8 {
+            8
+        } else {
+            v as u32
+        }
+    }
+
+    /// NS → the fission departure rank key: `unit − ns_departure_weight × ns
+    /// / 1,000,000` (lower ranks leave first; weight 1,000 makes NS 1,000
+    /// subtract 1.0); `unit` without effects.
+    pub fn departure_key(&self, unit: f64, t: &crate::components::Temperament) -> f64 {
+        if !self.effects {
+            return unit;
+        }
+        unit - f64::from(self.ns_departure_weight) * f64::from(t.ns) / 1_000_000.0
+    }
 }
 /// Limits on an unanswered social approach, enabled only by game rules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -510,6 +618,7 @@ impl Default for WorldRules {
                 preempt_gathering: false,
                 keyed_draws: false,
                 local_food_availability: false,
+                temperament: None,
             },
             society: SocietyRules {
                 birth: BirthRule::Legacy,
@@ -730,6 +839,47 @@ impl WorldRules {
             debug_assert!(fission.hazard.is_some());
             rules.society.fission = Some(fission);
         }
+        rules
+    }
+
+    /// The `game_v20` temperament rule (Pass 16 section 6.2).
+    pub const V20_TEMPERAMENT: TemperamentRule = TemperamentRule {
+        effects: true,
+        ns_tether_span: 4,
+        ha_bedtime_span_minutes: 60,
+        rd_social_rate_span_permille: 500,
+        p_food_haul_span: 2,
+        p_wood_haul_span: 1,
+        ns_departure_weight: 1000,
+    };
+
+    /// Pass 16 village policies of world `seed`: `game_v19` with temperament
+    /// (`V20_TEMPERAMENT`): every resident carries four heritable axes and
+    /// four everyday choices lean with them. Worldgen `WorldGenConfig::game_v20`
+    /// (= `game_v19`).
+    pub const fn game_v20(seed: u64) -> Self {
+        Self::game_v20_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v20`] for given hidden parameters.
+    pub const fn game_v20_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v19_with(variety);
+        rules.agent.temperament = Some(Self::V20_TEMPERAMENT);
+        rules
+    }
+
+    /// The placebo of [`Self::game_v20`]: temperament is drawn and stored but
+    /// `effects` is false, so no choice leans with it (must equal `game_v19`).
+    pub const fn game_v20_inert(seed: u64) -> Self {
+        Self::game_v20_inert_with(&crate::variety::WorldVariety::draw_v18(seed))
+    }
+
+    /// [`Self::game_v20_inert`] for given hidden parameters.
+    pub const fn game_v20_inert_with(variety: &crate::variety::WorldVariety) -> Self {
+        let mut rules = Self::game_v19_with(variety);
+        let mut rule = Self::V20_TEMPERAMENT;
+        rule.effects = false;
+        rules.agent.temperament = Some(rule);
         rules
     }
 
@@ -1044,6 +1194,7 @@ impl WorldRules {
                 preempt_gathering: false,
                 keyed_draws: false,
                 local_food_availability: false,
+                temperament: None,
             },
             society: SocietyRules {
                 birth: BirthRule::Provisioned {
@@ -1399,6 +1550,7 @@ mod tests {
                 preempt_gathering: false,
                 keyed_draws: false,
                 local_food_availability: false,
+                temperament: None,
             }
         );
         assert_eq!(
@@ -1419,5 +1571,78 @@ mod tests {
         );
         assert_eq!(r.clock_offset_ticks, 0);
         assert_ne!(r, WorldRules::game_v8());
+    }
+
+    fn axes(ns: u16, ha: u16, rd: u16, p: u16) -> crate::components::Temperament {
+        crate::components::Temperament { ns, ha, rd, p }
+    }
+
+    #[test]
+    fn temperament_functions_at_the_extremes_and_the_mean() {
+        let r = WorldRules::V20_TEMPERAMENT;
+        let (lo, mid, hi) = (axes(0, 0, 0, 0), axes(500, 500, 500, 500), axes(1000, 1000, 1000, 1000));
+        // NS → tether (base 8): 4, 8, 12.
+        assert_eq!([r.tether(8, &lo), r.tether(8, &mid), r.tether(8, &hi)], [4, 8, 12]);
+        // The floor of 2.
+        assert_eq!(r.tether(3, &lo), 2);
+        // HA → bedtime (start 21:00 = 1260): bold 22:00, mean 21:00, cautious 20:00.
+        assert_eq!([r.bedtime(1260, &lo), r.bedtime(1260, &mid), r.bedtime(1260, &hi)], [1320, 1260, 1200]);
+        // RD → loneliness rate (base 0.04): 0.02, 0.04, 0.06.
+        assert_eq!(r.social_rate(0.04, &lo), 0.04 * 500.0 / 1000.0);
+        assert_eq!(r.social_rate(0.04, &mid), 0.04 * 1000.0 / 1000.0);
+        assert_eq!(r.social_rate(0.04, &hi), 0.04 * 1500.0 / 1000.0);
+        assert!((r.social_rate(0.04, &lo) - 0.02).abs() < 1e-15);
+        assert!((r.social_rate(0.04, &hi) - 0.06).abs() < 1e-15);
+        // P → food haul (base 4): 2, 4, 6; wood haul (base 2): 1, 2, 3.
+        assert_eq!([r.food_haul(4, &lo), r.food_haul(4, &mid), r.food_haul(4, &hi)], [2, 4, 6]);
+        assert_eq!([r.wood_haul(2, &lo), r.wood_haul(2, &mid), r.wood_haul(2, &hi)], [1, 2, 3]);
+        // The clamps of 1 and 8.
+        assert_eq!(TemperamentRule { p_wood_haul_span: 2, ..r }.wood_haul(2, &lo), 1);
+        assert_eq!(TemperamentRule { p_food_haul_span: 6, ..r }.food_haul(4, &hi), 8);
+        // NS → departure key: NS 0 subtracts 0, NS 500 subtracts 0.5, NS 1000 subtracts 1.0.
+        assert_eq!(r.departure_key(0.25, &lo), 0.25);
+        assert_eq!(r.departure_key(0.25, &mid), 0.25 - 0.5);
+        assert_eq!(r.departure_key(0.25, &hi), 0.25 - 1.0);
+        // Truncation toward zero, symmetric: d = ±1 moves nothing at these spans.
+        let (minus, plus) = (axes(499, 499, 499, 499), axes(501, 501, 501, 501));
+        assert_eq!([r.tether(8, &minus), r.tether(8, &plus)], [8, 8]);
+        assert_eq!([r.bedtime(1260, &minus), r.bedtime(1260, &plus)], [1260, 1260]);
+        assert_eq!([r.food_haul(4, &minus), r.food_haul(4, &plus)], [4, 4]);
+        // d = ±125: tether 8 ± 1, bedtime 1260 ∓ 15, food 4 ± 0 (2 × 125 / 500 = 0).
+        let (q1, q3) = (axes(375, 375, 375, 375), axes(625, 625, 625, 625));
+        assert_eq!([r.tether(8, &q1), r.tether(8, &q3)], [7, 9]);
+        assert_eq!([r.bedtime(1260, &q1), r.bedtime(1260, &q3)], [1275, 1245]);
+        assert_eq!([r.food_haul(4, &q1), r.food_haul(4, &q3)], [4, 4]);
+    }
+
+    #[test]
+    fn temperament_without_effects_returns_every_base() {
+        let r = WorldRules::game_v20_inert(0).agent.temperament.expect("inert carries the rule");
+        assert!(!r.effects);
+        for t in [axes(0, 0, 0, 0), axes(500, 500, 500, 500), axes(1000, 1000, 1000, 1000), axes(17, 993, 250, 750)] {
+            assert_eq!(r.tether(8, &t), 8);
+            assert_eq!(r.bedtime(1260, &t), 1260);
+            assert_eq!(r.social_rate(0.04, &t).to_bits(), 0.04f64.to_bits());
+            assert_eq!(r.food_haul(4, &t), 4);
+            assert_eq!(r.wood_haul(2, &t), 2);
+            assert_eq!(r.departure_key(0.375, &t).to_bits(), 0.375f64.to_bits());
+        }
+    }
+
+    #[test]
+    fn game_v20_is_game_v19_with_temperament() {
+        for seed in 0..8u64 {
+            let v19 = WorldRules::game_v19(seed);
+            for (v20, effects) in [(WorldRules::game_v20(seed), true), (WorldRules::game_v20_inert(seed), false)] {
+                assert_eq!(v20.agent.temperament.map(|t| t.effects), Some(effects));
+                assert_eq!(
+                    WorldRules { agent: AgentRules { temperament: None, ..v20.agent }, ..v20 },
+                    v19
+                );
+            }
+            assert_eq!(v19.agent.temperament, None);
+        }
+        assert_eq!(WorldRules::default().agent.temperament, None);
+        assert_eq!(WorldRules::game_v8().agent.temperament, None);
     }
 }

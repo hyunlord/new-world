@@ -46,6 +46,7 @@ fn pass10_v16_neutral_literal() -> WorldRules {
             preempt_gathering: true,
             keyed_draws: true,
             local_food_availability: false,
+            temperament: None,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {

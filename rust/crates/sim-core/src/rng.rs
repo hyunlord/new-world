@@ -82,8 +82,13 @@ pub const STREAM_REGION_FILL_WOOD: u64 = 0x5246_494C_574F_4F44;
 /// redraws it; "FISSTHRS" in ASCII).
 pub const STREAM_FISSION_THRESHOLD: u64 = 0x4649_5353_5448_5253;
 
+/// Temperament (Pass 16, `game_v20`): a resident's four axes, subject = its
+/// lineage key, tick 0, slot = 4·axis + s for the three uniforms s ∈ {1, 2,
+/// 3}, replicate always 0 (an identity trait, not noise; "TEMPRMNT" in ASCII).
+pub const STREAM_TEMPERAMENT: u64 = 0x5445_4D50_524D_4E54;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 16] = [
+pub const STREAMS: [u64; 17] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -100,6 +105,7 @@ pub const STREAMS: [u64; 16] = [
     STREAM_REGION_FILL_BUSH,
     STREAM_REGION_FILL_WOOD,
     STREAM_FISSION_THRESHOLD,
+    STREAM_TEMPERAMENT,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

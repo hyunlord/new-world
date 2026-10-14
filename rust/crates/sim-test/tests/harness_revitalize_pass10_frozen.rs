@@ -45,6 +45,7 @@ fn pass9_v15_literal() -> WorldRules {
             preempt_gathering: true,
             keyed_draws: true,
             local_food_availability: false,
+            temperament: None,
         },
         society: SocietyRules {
             birth: BirthRule::Provisioned {

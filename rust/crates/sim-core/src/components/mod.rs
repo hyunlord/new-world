@@ -62,6 +62,7 @@ pub mod settlement;
 pub mod settlement_migrant;
 pub mod sleep;
 pub mod social;
+pub mod temperament;
 pub mod thirst;
 
 pub use agent::{Agent, AgentId};
@@ -75,6 +76,7 @@ pub use cold::Cold;
 pub use exposure_clock::ExposureClock;
 pub use founding::Founding;
 pub use hardiness::Hardiness;
+pub use temperament::Temperament;
 pub use life::{Elder, Life};
 pub use lineage::Lineage;
 pub use inventory::{Inventory, INVENTORY_CAPACITY};
