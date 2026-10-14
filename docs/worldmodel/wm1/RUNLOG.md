@@ -134,3 +134,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 07:35:44 | | `m1tf_w13v16_n80_s1` started |
 | pause | ≈ 08:12 | ≈ 08:54 | the session's turn ended (API unavailable / dropped connection); the DGX training kept running. Deadline file moved by 2,520 s (new deadline 2026-10-15 01:35:14 KST) |
 | outage | ≈ 08:54 | 09:59:50 | on resume the DGX did not answer (SSH `Operation timed out`, ICMP ping 100 % loss); `tailscale ping` reached it only via the Tokyo DERP relay (`direct connection not established`), as in WM-1.1's outage (DECISIONS E7.1). SSH over the relay worked from 09:59:50; `m1tf_w13v16_n80_s1` had kept training (step 5,700). Not counted as a pause |
+| 4.1 | 07:35:44 | 11:32:46 | `m1tf_w13v16_n80_s1`: stop `max_steps`, best step 8,400 (val 0.0794) → not converged, 14,182 s; WM-1.2 rule: best 2,850 (0.0933), stop at the cap |
+| 4.2 | 11:32:46 | 11:54:37 | its finals from `60347cc3`: `final` 11:43:40, `_short` 11:54:37, exit 0 |
+| 4.1 | 11:32:46 | | `m1tf_w13v17_n400_s1` started |
