@@ -1,0 +1,36 @@
+{
+  "build_profile": "release",
+  "contended": false,
+  "git_sha": "8f05214221929cde880c8932ae0d95d3c4bb8110",
+  "machine": {
+    "cpu": "Apple M4 Max",
+    "memsize": "38654705664",
+    "ncpu": "14",
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+    "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+  },
+  "median_plain_seconds": 1.7893125410000001,
+  "median_profiled_seconds": 1.7853369159999999,
+  "mode": "overhead",
+  "overhead_pct": -0.22218728751425276,
+  "pass": 15,
+  "plain_wall_seconds": [
+    1.7653763329999999,
+    1.790533166,
+    1.7893125410000001
+  ],
+  "profiled_wall_seconds": [
+    1.785562833,
+    1.7853369159999999,
+    1.784635542
+  ],
+  "repeats": 3,
+  "same_fingerprint": [
+    true,
+    true,
+    true
+  ],
+  "scene": "game_v19",
+  "seed": 15000,
+  "ticks": 43200
+}

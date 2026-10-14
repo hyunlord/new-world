@@ -23,7 +23,7 @@ while true; do
     busy=$(for name in Godot cargo rustc clippy-driver worldsim_perf worldsim_probe worldsim_wm; do pgrep -x "$name" | sed "s/^/$name:/"; done | tr '\n' ' ')
     {
         echo "check $(date '+%F %T %Z') waited ${waited}s loadavg $(sysctl -n vm.loadavg)"
-        echo "  pgrep -fl: $(pgrep -fl 'Godot|cargo|rustc|worldsim_' | cut -c1-160 | tr '\n' ';')"
+        echo "  pgrep -fl: $(pgrep -fl 'Godot|cargo|rustc|worldsim_' | grep -v 'npm exec' | cut -c1-160 | tr '\n' ';') (npm exec MCP servers omitted)"
         echo "  blocking by name: ${busy:-none}"
     } >> "$LOG"
     if awk -v l="$load1" -v m="$LOAD_LIMIT" 'BEGIN{exit !(l < m)}' && [ -z "$busy" ]; then
