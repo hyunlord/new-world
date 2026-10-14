@@ -3408,11 +3408,13 @@ mod society_snapshot_tests {
                 fission_id: 2, parent, site: (8, 9), depart_tick: 100,
                 members: vec![first], adults: 1, daughter: None, founded_tick: None,
                 cancelled_tick: None, food_taken: 0, wood_taken: 0, settled_at_leader: false,
+                pressure_at_split: 0, threshold_at_split: 0,
             },
             FissionRecord {
                 fission_id: 1, parent, site: (2, 3), depart_tick: 80,
                 members: vec![second], adults: 1, daughter: Some(20), founded_tick: Some(120),
                 cancelled_tick: Some(90), food_taken: 0, wood_taken: 0, settled_at_leader: false,
+                pressure_at_split: 0, threshold_at_split: 0,
             },
         ];
         engine.resources.retired_hearths.extend([(9, 4), (2, 5)]);
