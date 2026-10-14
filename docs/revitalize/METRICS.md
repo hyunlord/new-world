@@ -2764,7 +2764,7 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 |---|---|---|---|
 | P1 | `game_v19` natural, 32 worlds × 120 days | worst mean 0.129 ms, worst p99.9 0.304 ms, max 1.935 ms; 0 ticks > 8 ms | **PASS** |
 | P2 | fed stress n = 500, 8 worlds | median mean 0.303 ms; pooled p99.9 0.634 ms (22,560 ticks); per-world max ≤ 0.827 ms; 0 ticks > 16.67 ms | **PASS** |
-| P3 | UI reads at n = 500 (single calls, Rust side) | 26.4 µs (WIP), 26.5 µs (art); ×callers 99 µs (WIP), 285 µs (art; `get_society_snapshot` and `get_intervention_state` untimed, art-only) | **PASS** |
+| P3 | UI reads at n = 500 (single calls, Rust side) | 26.4 µs (WIP), 26.5 µs (art, partial: 2 art-only getters untimed); ×callers 99 µs (WIP), 285 µs (art; `get_society_snapshot` and `get_intervention_state` untimed, art-only) | **PASS** |
 | P4 | N_max | ≥ 2,000 (every size passes; n = 2,000 median mean 1.622 ms); interpolated 5,142 alive (extrapolated) | **comfortable** |
 | P5 | growth | no system with a superlinear natural slope; `AgentMovementSystem` stress slope 1.21 [1.19, 1.23] at 1.4 % share is the only superlinear slope; none near-quadratic, none crowding-driven | **clean** |
 
@@ -2772,6 +2772,8 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 - Shares at n = 500 (median over seeds): `AgentDecisionSystem` 60.0 % (natural slope 0.98, stress 1.13), `SettlementSystem` 21.9 % (1.08 / 0.98), `MemorySystem` 7.0 % (0.94 / 1.03), everything else ≤ 2.4 %.
 - µs per agent-tick (fed): 1.04 (n = 25), 0.76 (50), 0.66 (100), 0.60 (200), **0.61 (500)**, 0.67 (1,000), 0.81 (2,000); natural 1.72 (48 alive on average).
 - Slow ticks: stress — the 06:01 wake-up (whole tick ≈ 2.7–2.9× the mean, nearly all `AgentDecisionSystem`); natural — isolated 0.5–1.9 ms single-system spikes (decision 474 / settlement 74 / fission 32 / memory 28 of 640 kept).
-- Repeatability (seed 15100, n = 500, fed, ×3): 0.3035, 0.3034, 0.3062 ms — CV 0.52 %.
+- Repeatability (seed 15100, n = 500, fed, ×3): contended first set 0.3035, 0.3034, 0.3062 ms (CV 0.52 %); gated set (review M1, 01:43:51, load 3.57) 0.3084, 0.2987, 0.2998 ms (**CV 1.8 %**).
+- Start loads: natural 2.95; fed 13.41, repeatability 9.85, raw 9.85, map 7.02 — the last four ran contended in section 1's sense inside the one-gate batch (review round 1, M1). **P2 recheck** (gated, 01:43:44, load 2.94): median mean 0.2971 ms (−2.1 %), pooled p99.9 0.608 ms, max 0.823 ms, fingerprints identical on 8 of 8 seeds → PASS.
+- Supplementary fed sizes (gated, 01:25:53, load 2.09): median mean 2.536 / 3.648 / 5.715 / 8.170 ms at n = 3,000 / 4,000 / 6,000 / 8,000; pooled p99.9 5.91 / 9.52 / 16.79 / 27.11 ms; ticks > 16.67 ms 0 / 0 / 24 / 35. Mean reaches 4.0 ms at ≈ 4,350 (log-log between measured sizes); pooled p99.9 reaches 8.0 ms at ≈ 3,600.
 - Raw (no gifts) stress: n = 2,000 ends with 1,688 alive on average; mean 1.404 ms, pooled p99.9 2.641 ms.
 - Part 5 trigger: none (P2 passes; no near-quadratic system) → no fix.

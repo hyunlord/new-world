@@ -12,6 +12,8 @@ Runs: natural 32, stress 112, map 24. All times are one Mac's (MacBook Pro, Appl
 | P4 | N_max reported; comfortable if ≥ 1,000 | ≥ 2,000 (every size passes); interpolated 5,142 alive (extrapolated beyond the largest size) | comfortable |
 | P5 | clean if no system with natural slope ≥ 1.2 has ≥ 5 % of tick time at n = 500 | none | clean |
 
+P2 recheck (fed n = 500 rerun with its own load gate, review round 1 M1): 8 worlds, median mean 0.2971 ms, pooled p99.9 0.608 ms, max 0.823 ms, contended False, same fingerprints as the sweep True → PASS.
+
 ## Tick time per sweep
 
 | sweep | size | worlds | mean alive | median mean ms | pooled p99.9 ms | worst p99.9 ms | max ms | ticks > 8 ms | ticks > 16.67 ms | µs per agent-tick |
@@ -194,7 +196,7 @@ Distinct agent tiles T = 69.0, hearths H = 1.0 (medians over the n = 500 runs).
 
 ## Repeatability (seed 15100, n = 500, fed)
 
-- mean tick 0.3035, 0.3034, 0.3062 ms; coefficient of variation 0.0052
+- mean tick 0.3084, 0.2987, 0.2998 ms; coefficient of variation 0.0176
 
 ## Reference slopes for the later passes' rule (seed 15100, n = 100, 500, 1000, fed)
 
@@ -218,6 +220,24 @@ Distinct agent tiles T = 69.0, hearths H = 1.0 (medians over the n = 500 runs).
 
 - P2 fails: False; near-quadratic system with ≥ 10 % at n = 500: none → fix allowed: False
 
+
+## Timed batches and their start loads
+
+Section 1: a timed batch starts only when the 1-minute load average is < 4 and no Godot / cargo / rustc / worldsim process runs; otherwise it waits (10-minute checks) and after 2 hours runs anyway, `contended`. The launcher (`tools/revitalize/perf_batch_p15.sh`) logs every check to `/Users/rexxa/work/p15-data/batches.log`. The load came from foreign processes this run did not start.
+
+| batch / sweep | gate passed (KST) | 1-min load at start | JSON `contended` | contended in section 1's sense |
+|---|---|---:|---|---|
+| overhead (Part 2) | 00:14:45 (after 30 min) | 3.33 | false | no |
+| Part 3 batch: natural | 00:15:26 | 2.95 | false | no |
+| Part 3 batch: fed (25–2,000) | (same gate) 00:22:49 | 13.41 | false | **yes** — started inside the one-gate batch above the limit (review round 1, M1) |
+| Part 3 batch: repeatability ×3 | (same gate) 00:23:55 | 9.85 | false | **yes** |
+| Part 3 batch: raw (25–2,000) | (same gate) 00:23:59 | 9.85 | false | **yes** |
+| Part 3 batch: map | (same gate) 00:24:58 | 7.02 | false | **yes** |
+| supplementary fed 3,000–8,000 | 01:25:53 (after 60 min) | 2.09 | false | no |
+| recheck fed n = 500 (M1) | 01:43:44 (after 10 min) | 2.94 | false | no |
+| repeatability ×3 (M1) | 01:43:51 | 3.57 | false | no |
+
+The recheck reproduces the contended fed n = 500 runs closely (median mean 0.2971 vs 0.3034 ms, −2.1 %; pooled p99.9 0.608 vs 0.634 ms; identical end fingerprints on all eight seeds). The gated repeats (0.3084, 0.2987, 0.2998 ms; CV 1.8 %) are the repeatability figure; the contended ones (CV 0.5 %) are kept for reference.
 
 ## Per-frame caller inventory (6.5)
 

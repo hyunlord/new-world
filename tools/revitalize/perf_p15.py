@@ -634,7 +634,8 @@ def main(argv=None):
     parser.add_argument("--stress", required=True)
     parser.add_argument("--map", default=None)
     parser.add_argument("--overhead", default=None)
-    parser.add_argument("--repeat", default=None)
+    parser.add_argument("--repeat", action="append", default=[], help="repeatability run directories (one run each)")
+    parser.add_argument("--recheck", default=None, help="gated rerun of the fed n = 500 runs (review round 1, M1)")
     parser.add_argument("--extra", default=None, help="supplementary fed sizes (outside the P table)")
     parser.add_argument("--sidecars", action="append", default=[], help="extra directory holding <subdir>/<stem>.tick_us.bin")
     parser.add_argument("--out", required=True)
@@ -647,9 +648,21 @@ def main(argv=None):
     if args.overhead:
         with open(args.overhead) as stream:
             overhead = json.load(stream)
-    repeat = load_runs(args.repeat)[0] if args.repeat else None
+    repeat = {}
+    for index, directory in enumerate(args.repeat):
+        for stem, run in load_runs(directory)[0].items():
+            repeat[f"{index}:{stem}"] = run
+    repeat = repeat or None
     extra = load_runs(args.extra)[0] if args.extra else None
     out = analyse(natural, stress, map_runs, overhead, repeat, extra)
+    if args.recheck:
+        recheck = list(load_runs(args.recheck)[0].values())
+        pooled = pooled_steady(recheck)
+        out["recheck_500"] = {"seeds": len(recheck), "median_mean_ms": statistics.median(r["tick_summary"]["mean_ms"] for r in recheck),
+                              "pooled_p999_ms": percentile(pooled, 99.9) / 1000.0 if pooled else None,
+                              "max_ms": max(r["tick_summary"]["max_ms"] for r in recheck),
+                              "contended": any(r["contended"] for r in recheck),
+                              "same_fingerprints_as_sweep": all(r["fingerprint"] == next((s["fingerprint"] for s in stress.values() if s["feed"] == "fed" and s["agents_requested"] == 500 and s["seed"] == r["seed"]), None) for r in recheck)}
     any_run = next(iter((natural or stress).values()))
     out["_intervals"] = {s["name"]: s["interval"] for s in any_run["systems"]}
     out["failures"] = {"stress": failures, "map": map_failures}
@@ -658,6 +671,9 @@ def main(argv=None):
         json.dump(out, stream, indent=1, sort_keys=True)
         stream.write("\n")
     text = render(out)
+    if out.get("recheck_500"):
+        r = out["recheck_500"]
+        text = text.replace("## Tick time per sweep", f"P2 recheck (fed n = 500 rerun with its own load gate, review round 1 M1): {r['seeds']} worlds, median mean {r['median_mean_ms']:.4f} ms, pooled p99.9 {fmt_ms(r['pooled_p999_ms'])} ms, max {r['max_ms']:.3f} ms, contended {r['contended']}, same fingerprints as the sweep {r['same_fingerprints_as_sweep']} → {'PASS' if r['pooled_p999_ms'] is not None and r['median_mean_ms'] <= B1_MS and r['pooled_p999_ms'] <= B2_MS else 'not PASS'}.\n\n## Tick time per sweep", 1)
     if failures or map_failures:
         text += "## Runs that did not complete\n\n" + "\n".join(f"- {f.get('stem')}: {f.get('status')} {f.get('error', '')}".rstrip() for f in failures + map_failures) + "\n\n"
     for extra in ("batches.md", "inventory.md", "audit.md"):
