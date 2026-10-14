@@ -144,4 +144,6 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.2 | 19:12:50 | 19:22:35 | its finals from `60347cc3`: `final` 19:17:43, `_short` 19:22:35, exit 0 |
 | pause | ≈ 18:38 | ≈ 20:29 | the Mac was unresponsive (the local connectivity logger wrote nothing 18:38–19:50; an SSH call issued 19:51 returned at 20:29); the DGX finished the last run and its finals meanwhile. No training was pending, so the deadline is not moved |
 | 5, 6 | 20:29 | | final `judge_1_3` (`runs/judge_1_3/`), WM1_3.md assembled |
-| 7 (review 2) | 20:30 | 20:58 | review round 2 (fresh subagent): no BLOCKING, 2 MAJOR, 9 MINOR, 4 NOTE (all wording or records); fixes in WM1_3.md, DECISIONS G4.4 / G4.6 / G6.1, METRICS amendment heading, RUNLOG; DGX gate on `03580fef` 143 OK / 0 skipped (76 s) |
+| 7 (review 2) | 20:30 | 20:52 | review round 2 (fresh subagent): no BLOCKING, 2 MAJOR, 9 MINOR, 4 NOTE (all wording or records); fixes in WM1_3.md, DECISIONS G4.4 / G4.6 / G6.1, METRICS amendment heading, RUNLOG; DGX gate on `03580fef` 143 OK / 0 skipped (76 s) |
+| gate | 20:53 | 20:55 | `ad24cd47`: Mac 143 OK / 22 skipped (recorder / data not on the Mac); DGX 143 OK / 0 skipped (`gate_ad24cd47`, 72 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `a43bdab2..ad24cd47`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6167749573 |
+| 7 | 20:56 | | REPORT_WM1_3.md (Korean, section 13 format); this record is a docs-only commit; the gate is re-run on it and the green branch moved to it |
