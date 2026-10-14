@@ -45,13 +45,18 @@ class Job:
 
 
 def _is_tf(pred) -> bool:
-    from wm1 import m1_tf
-    return isinstance(pred, m1_tf.TFPredictor)
+    """The transformer predictor (duck-typed: when `m1_gru.py` / `m1_tf.py` run as scripts their classes live in
+    `__main__`, not in the `wm1` modules, so `isinstance` against the `wm1` classes would fail)."""
+    return hasattr(pred.model, "blocks")
+
+
+def _is_m1(pred) -> bool:
+    return all(hasattr(pred, a) for a in ("model", "stepper", "lay", "norm", "variant", "warmup"))
 
 
 def rollout_jobs(pred, jobs: list[Job], chunk: int = 128) -> list[RolloutX]:
     """Every job's rollout (in job order), batched `chunk` jobs at a time (jobs sorted by horizon inside)."""
-    if not isinstance(pred, g.GRUPredictor):
+    if not _is_m1(pred):
         raise TypeError("rollout_jobs supports the M1 predictors (m1_gru.GRUPredictor, m1_tf.TFPredictor)")
     order = sorted(range(len(jobs)), key=lambda i: -jobs[i].horizon)
     out: list[RolloutX | None] = [None] * len(jobs)
@@ -97,7 +102,7 @@ def _chunk(pred, jobs: list[Job]) -> list[RolloutX]:
         cache = m1_tf.append(None, kv, valid, keep=pred.context - 1)
         mu, fl = mu[:, -1], fl[:, -1]
         ones = torch.ones(n, 1, dtype=torch.bool, device=dev)
-    elif pred.burn_in == "full":
+    elif getattr(pred, "burn_in", "window") == "full":
         mu_all, _, fl_all, outs = model.run(torch.cat([x_state, cal, act, sev], -1))   # one pass per distinct input
         hidden = outs[:, ar, starts].contiguous()
         mu, fl = mu_all[ar, starts], fl_all[ar, starts]
