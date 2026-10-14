@@ -50,6 +50,16 @@ pub const RANGES: VarietyRanges = VarietyRanges {
     region_deadwood: (8, 14),
 };
 
+/// The ranges `game_v18` draws from (Pass 12): `RANGES` with the wild-region
+/// slots of Pass 12 section 7.3 (b); the other slots are `RANGES`', so a
+/// seed's other parameters are identical across v17 and v18.
+pub const RANGES_V18: VarietyRanges = VarietyRanges {
+    // Section 7.3 (b) start values (DAUGHTER_DIAGNOSIS.md (a) and (d)).
+    region_bushes: (8, 12),
+    region_deadwood: (12, 18),
+    ..RANGES
+};
+
 /// Climate weights in thousandths: mild-leaning, neutral, harsh-leaning.
 pub const CLIMATE_PERMILLE: [u16; 3] = [333, 334, 333];
 
@@ -107,6 +117,12 @@ impl WorldVariety {
     /// The hidden parameters of world `seed` (never reads a replicate).
     pub const fn draw(seed: u64) -> Self {
         Self::draw_with(seed, &RANGES, &CLIMATE_PERMILLE)
+    }
+
+    /// The hidden parameters of world `seed` under `RANGES_V18` (Pass 12,
+    /// `game_v18`; never reads a replicate).
+    pub const fn draw_v18(seed: u64) -> Self {
+        Self::draw_with(seed, &RANGES_V18, &CLIMATE_PERMILLE)
     }
 
     /// [`Self::draw`] with explicit ranges and climate weights.
@@ -170,6 +186,16 @@ mod tests {
         let low = WorldVariety { food_regen_permille: 850, ..n };
         // 1250 x 850 / 1000 = 1062.5, rounded down.
         assert_eq!(low.scale_regen([750, 1250, 1000, 500]), [637, 1062, 850, 425]);
+    }
+
+    #[test]
+    fn v18_draws_share_every_slot_but_the_region_sizes() {
+        for seed in 0..500 {
+            let (a, b) = (WorldVariety::draw(seed), WorldVariety::draw_v18(seed));
+            assert_eq!(WorldVariety { region_bushes: 0, region_deadwood: 0, ..a }, WorldVariety { region_bushes: 0, region_deadwood: 0, ..b });
+            assert!((RANGES_V18.region_bushes.0..=RANGES_V18.region_bushes.1).contains(&b.region_bushes));
+            assert!((RANGES_V18.region_deadwood.0..=RANGES_V18.region_deadwood.1).contains(&b.region_deadwood));
+        }
     }
 
     #[test]

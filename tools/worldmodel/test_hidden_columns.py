@@ -61,7 +61,7 @@ class HiddenColumnTests(unittest.TestCase):
     def test_hidden_columns_equal_the_probe_keys(self) -> None:
         for seed in SEEDS:
             ep = load_episode(self.root / "wm" / f"game_v14_s{seed}_none")
-            self.assertEqual(ep.meta["schema_version"], 5)
+            self.assertEqual(ep.meta["schema_version"], 6)
             probe = self.probe_rows(seed)
             ticks = ep.column("global.npy", "tick").astype(np.int64)
             burn = ep.column("global.npy", "night_burn_per_hour")

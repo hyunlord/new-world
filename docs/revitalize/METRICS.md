@@ -2363,3 +2363,212 @@ Final gate (`gate_pass11.sh` on `e6dedd34`, the last commit that changes code or
 | J10 | PASS | byte identity, schema loads, fork tests |
 | J11 | reported | `p11-6_macro/macro.md` |
 | J12 | PASS (1.000–1.066) | `p11-7_timing_*_targets` |
+
+## Pass 12 — a split under pressure, daughters that can live, rain that hurts, a diversity measure for histories (`game_v18_nofission`, `game_v18`)
+
+All probe runs use Pass 11's final flags (the eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries frozen in `/Users/rexxa/work/p12bin/`.
+
+### Part 0 — baseline reproduction (`probe_p0`, byte-identical to Pass 11's `probe_final`; 11:27–11:52 KST)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p12-0_v17_10day` | `p11-7_final_v17_10day` | 16226 | 0 |
+| `p12-0_v17_120day` | `p11-7_final_v17_120day` | 97206 | 0 |
+| `p12-0_v17n_10day` | `p11-7_final_v17n_10day` | 15394 | 0 |
+| `p12-0_v17n_120day` | `p11-7_final_v17n_120day` | 95097 | 0 |
+| `p12-0_v16_10day` | `p11-7_final_v16_10day` | 13868 | 0 |
+| `p12-0_v16_120day` | `p11-7_final_v16_120day` | 94339 | 0 |
+| `p12-0_v15_10day` | `p11-7_final_v15_10day` | — | 0 |
+| `p12-0_v15_120day` | `p11-7_final_v15_120day` | — | 0 |
+| `p12-0_legacy` | `p11-7_final_legacy` | — | 0 |
+
+Every determinism twin passes. Frozen pins `harness_revitalize_pass12_frozen.rs` (v17 and v17_nofission digests seeds 0–3 at 1,440 and 40,320 ticks with births and fissions; literals of `WorldRules::game_v17(0)` and `RANGES`) pass on the base.
+
+### Part 0 — UBS on old data (5.2, `diversity_p12.py`, read-only; `docs/revitalize/probe/p12-0_ubs/`)
+
+Mean over days 60/90/118, all 112 episodes; R²_static / UBS (old dyn-η² on the test split for continuity).
+
+| Variable | p10 `game_v15` | p10 `game_v16` | p11 `game_v16` | p11 `game_v17_nofission` | p11 `game_v17` |
+|---|---|---|---|---|---|
+| food_stock | see `p10_pilot/ubs.md` | | 0.547 / 0.299 (0.298) | 0.639 / 0.267 (0.434) | 0.275 / 0.516 (0.694) |
+| wood_stock | | | 0.073 / 0.084 (0.069) | 0.081 / 0.081 (0.069) | 0.078 / 0.207 (0.276) |
+| alive | | | 0.907 / 0.309 (0.998) | 0.901 / 0.319 (0.998) | 0.371 / 0.881 (0.933) |
+| deadwood_total | | | 0.959 / 0.103 (0.097) | 0.994 / 0.053 (0.116) | 0.987 / 0.076 (0.124) |
+| food_on_bushes_total | | | 0.379 / 0.221 (0.442) | 0.967 / 0.163 (0.467) | 0.696 / 0.434 (0.576) |
+| adults_working | | | 0.431 / 0.176 (0.475) | 0.369 / 0.196 (0.493) | 0.308 / 0.244 (0.491) |
+
+p10 pilot UBS (mean 60/90/118): `game_v15` food 0.246, wood 0.088, alive 0.171; `game_v16` food 0.299, wood 0.088, alive 0.240 (bootstrap Δ v16 − v15: food [0.022, 0.112], alive [0.026, 0.143]). Synthetic checks (`test_diversity_p12.py`): static linear worlds UBS < 0.05; an independent random walk after day 10 UBS > 0.3; a static effect quadratic in a hidden parameter that appears only after day 10 gives UBS(alive) **0.970** — the linear ridge counts a nonlinear static effect as unexplained. `game_v17`'s alive UBS 0.881 must be read with that in mind: whether a v17 world splits is a threshold of its day-29 population (planner's reading), i.e. a nonlinear static effect, not history.
+
+### Part 1 — the J6 bisection (`probe_p1`, `probe_p1b`–`p1d`; 11:52–12:57 KST)
+
+Tuning seeds 0–31 × 120 days, every twin passed. Gap in Pass 6 Y9 `work_1500` on these seeds: game_v16 0.254 − game_v17_nofission 0.119 = 0.135 (held-out per Pass 11: 0.241 − 0.116). Decisive: the wild regions' bushes (`abl_no_regions` restores 1.000 of the gap, `fwd_regions` 1.107, `fwd_regions_bushes_only` 1.107, `fwd_regions_wood_only` 0.000); every exposure, rain and regional-wood difference within noise. Activity that took the afternoon: foraging (adults at 15:00 0.178 → 0.128, idle 0.592 → 0.656). Mechanism: region-bush food reaches the store through the incidental Gather arm, the store holds its target in 93 % of 15:00 rows (v16 82.5 %), the forage arm is off. The v18 flag `local_food_availability` (availability, meal target and Gather tile inside the catchment) restores 0.707 of the gap on v17_nofission (`abl_local_food3`). Full table and versions: `docs/revitalize/probe/p12-1_bisect/BISECTION.md`.
+
+### Part 2 — 4.6 guard (commit `40dda8f2`, `probe_p2`, 12:55–13:15 KST)
+
+`p12-2_guard_v17_*`, `p12-2_guard_v17n_*`, `p12-2_guard_v16_*` (tuning sets, 64 × 10 and 32 × 120) equal Part 0's runs on every shared value (16,226 / 97,206 / 15,394 / 95,097 / 13,868 / 94,339); the only difference is `schema_version` 11 → 12 (plus the new schema-12 keys). All determinism twins pass.
+
+### Part 3 — tuning (tuning seeds; `evaluate_pass12.py`, game_v16 reference `p12-0_v16_*`)
+
+Scratch exploration before round 1 (disclosed as 4.4 asks): `p12-scratch_A` = the Part 2 start values (`scratch_probe_a`, = `probe_p2`'s rules before the final J6-fix version; game_v18 and game_v18_nofission, seeds 900000–900031 × 120 days, no twin): fission share 0.906, first-fission display day median 33 / IQR 51 / peak share 0.10, ≥ 2 alive at day 120 0.906, daughters alive 28 d 1.00, settlement-winters over 0.35: 2 of 231 (max 0.53), starvation + dehydration max 0.
+
+| Round | Commit | Knobs (changes) | J3 | J4 | J5 | J6 (v18_nofission) |
+|---|---|---|---|---|---|---|
+| 1 | `40dda8f2` | 7.1/7.3 start values (hazard 20/40/850/1050/2/500/500/120, min_members 22, min_age 10, cooldown 28, seasons T,T,T,F; floor 600; water 12; region bushes 8–12, deadwood 12–18) | FAIL: fission share 0.969, ≥ 2 alive 0.969 (timing PASS: median 35, IQR 23.5, peak 0.097; cancellations 0/49) | PASS 1.00 (41/41) | FAIL: settlement-winter max 0.417 (3 of 243 over: seed 5 parent 8/20 and daughter 5/12 after an autumn split at day 103, seed 24 daughter 18/50 with 7 dark nights); stage shares child 0.52 / adult 0.25 / elder 0.23; S+D max 1 | FAIL: Y9 work_1500 0.230 (v16 0.254), idle_1200 0.627 (v16 0.621, both > 0.60); work_1200 0.373 PASS |
+| 2 | `e94f7404` | min_members 22 → 32, hazard size_lo/size_hi 20/40 → 28/48, area_fall_floor 600 → 1000 | **PASS**: fission share 0.75, first-fission display day median 39.5, IQR 34, peak 0.125 (day 39), ≥ 2 alive 0.75, cancellations 0/30 | PASS (25 of 25 judged... share 1.00 of judged) | FAIL: settlement-winter max 0.38 (2 of 198 over, both seed 24's harsh winter from day 106 with 6 world dark nights: parent 9/25, daughter 19/50); stage shares child 0.54 / adult 0.17 / elder 0.29; S+D max 2 | FAIL (unchanged by fission knobs): work_1500 0.230, idle_1200 0.627 |
+
+Scratch exploration between rounds 2 and 3 (seeds 900000–900031 × 120 days, no twin; `scratch_probe_b` built from round 2's tree with two knob edits and then restored — the restored build is byte-identical to `probe_r2`): B = round 2 + region bushes 5–9 + exposure [8, 4, 5]; C = round 2 (game_v18_nofission, game_v16). v18_nofission work_1500: C 0.174, B 0.175 (game_v16 on these seeds 0.239) — the region-bush range does not move the afternoon, dropped. game_v18 under B: settlement-winters over 0.35: 0 of 202, but exposure stage shares child 0.95 / adult 0.05 (J5 adult bound ≥ 0.15) — adult damage 4 is too low, dropped. Round 3 keeps the adult rate and lowers child and elder by one.
+| 3 | `8142cc3a` | exposure [9, 5, 6] → [8, 5, 5] (v18 scenes only) | **PASS** (unchanged: share 0.75, median 39.5, IQR 34, peak 0.125, ≥ 2 alive 0.75) | **PASS** 1.00 (25 of 25 judged; 30 daughters, none dissolved) | FAIL only `max_share_settlement_winter`: max 0.36 (1 of 198: seed 24's parent, 9 of 25, harsh winter from day 106); stage shares child 0.63 / adult 0.31 / elder 0.06; share of seed-winters with a death 0.164; S+D max 2 | FAIL only Y9 work_1500 0.240 (v16 0.254, bound 0.25); work_1200 0.375 PASS, idle_1200 0.620 (v16 0.621, escape) PASS |
+
+Round 2's J4 cell: 25 of 25 daughters judged 28 days after founding were alive (30 daughters, 5 founded too late to judge).
+
+**Freeze** (after three of three judged rounds): commit `8142cc3a` (round 3, the best state: J1–J4 and J9 pass; J5 misses by one settlement-winter at 0.36; J6 misses Y9 work_1500 by 0.010). Binaries `p12bin/probe_frozen` (sha256 `5d92f398…`), `p12bin/wm_frozen` (sha256 `4d321052…`). Strikes (0.3 rule 7): J5 settlement-winter max — three rounds (0.417 → 0.38 → 0.36); hypothesis: seed 24's harsh winter (6–7 world dark nights) runs both villages out of wood whatever the floor; the remaining knob (adult damage) trades directly against J5's adult share (scratch B: adult 4 → adult share 0.05). J6 Y9 work_1500 on v18_nofission — three rounds (0.230, 0.230, 0.240); hypothesis: the 0.29 of Part 1's gap that the local-food flag does not restore (BISECTION.md), a mechanism question for follow-up work, not a knob.
+
+### Part 3 — 4.6 guard on the frozen commit (`probe_frozen`, 13:46–14:05 KST)
+
+`p12-3_guard_*` (v17, v17_nofission, v16 tuning sets) equal Part 2's guard runs on every value (0 differences in all six), hence Part 0's on every shared value.
+
+### Part 4 — held-out health (frozen `8142cc3a`, `probe_frozen`; held-out seeds 64–127 × 10 and 32–95 × 120; 13:46–14:05 KST, concurrently with the guard and the start of the pilot recording; no knob changed)
+
+J6 reference: game_v16 on the same held-out seeds (`p11-7_final_heldout_v16_*`, Pass 11's final binary, schema 11). J5 for game_v18 pools the stage counts and settlement-winters of tuning round 3 and held-out (`--extra-round120`); its H3 clauses are the held-out set's. J9 over the 128 seeds of both 10-day sets.
+
+| Target | game_v18 | game_v18_nofission |
+|---|---|---|
+| J1 | PASS (twins 64/64, 32/32... held-out 64 × 10 and 64 × 120) | PASS |
+| J2 | PASS | PASS |
+| J3 | **PASS**: fission share 0.703 (64 seeds), first-fission display day median 38, IQR 38 (p25 20, p75 58), peak day 15 holds 0.111, ≥ 2 alive at day 120 0.703, cancellations 0/67, never above max. h terciles: split rate per daily check 0.009 (h 0–18) / 0.027 (18–27) / 0.048 (27–66). First-fission day correlation with hidden parameters: all |r| ≤ 0.16 (berry_bushes −0.16, region_deadwood +0.16, wild_regions −0.15) | — |
+| J4 | **PASS** 1.00 (56 of 56 judged; 67 daughters, none dissolved or merged; founded spring 24, summer 15, autumn 28) | — |
+| J5 | FAIL: pooled child share 0.725 (> 0.70), adult 0.249, elder 0.026; settlement-winter max 0.571 (4 over of the pooled set: held-out seeds 39 (daughter 8/14), 66 (parent 12/26), 77 (daughter 11/28), tuning seed 24 (9/25)); Pass 11's world-level ratio max 0.267 (passes); share of seed-winters with a death 0.195, median 0, mild < normal < harsh (0 / 0.30 / 2.83); per-hour median 1; starvation + dehydration 0 at day 10 and max 0 at day 120 | reported: passes |
+| J6 | reported: fails Y5 autumn work, Y9 | FAIL: Y9 work_1500 0.213 (v16 0.241), idle_1200 0.629 (v16 0.617; both > 0.60); work_1200 0.357 PASS; every other clause PASS |
+| J9 | parameter means and climate shares PASS; realized region bushes 2,519 / 2,519 (1.00), deadwood 3,692 / 3,716 (0.994); placement failures 3 regions of 255 (seeds with 1 of 2, 2 of 3, 2 of 3 placed) — counted and explained: the water rule (centre within 12 of water) leaves no candidate centre 22–28 from the hearth and 20 from the earlier centres | same worlds |
+
+### Part 5 — diversity pilot (frozen recorder `wm_frozen`; seeds 24000–24111; recording 13:53–14:24 KST; `p12-5_pilot/`)
+
+Implementation check (11.2): dataset v1 A_test reproduces WM-1.1's 12 published numbers within ±0.002 (`p12-5_pilot/check_v1`). After review round 1 the two v18 scenes were re-recorded with the final recorder (`wm_final`, commit `1127455b`): game_v18_nofission row digests identical in 112 of 112 episodes, game_v18 in 110 of 112; every metric below is from the final recordings (`p12-7_final_pilot/`) and equals the frozen-recorder values to the third decimal except where noted.
+
+| Variable | game_v16 | game_v17 | game_v18_nofission | game_v18 |
+|---|---|---|---|---|
+| food_stock η² / R²_abs / R²_static / UBS / dyn-η² | 0.332 / 0.651 / 0.596 / 0.295 / 0.195 | 0.472 / 0.475 / 0.305 / 0.502 / 0.502 | 0.311 / 0.672 / 0.633 / 0.271 / 0.185 | 0.532 / 0.457 / 0.388 / 0.536 / 0.534 |
+| wood_stock | 0.069 / 0.929 / 0.049 / 0.084 / 0.069 | 0.190 / 0.786 / 0.031 / 0.210 / 0.198 | 0.068 / 0.930 / 0.044 / 0.084 / 0.069 | 0.236 / 0.749 / 0.130 / 0.249 / 0.240 |
+| alive | 0.900 / −0.102 / 0.899 / 0.320 / 0.998 | 0.735 / 0.184 / 0.442 / 0.801 / 0.785 | 0.899 / −0.106 / 0.894 / 0.329 / 0.998 | 0.741 / 0.230 / 0.445 / 0.837 / 0.756 |
+| deadwood_total | 0.207 / 0.781 / 0.959 / 0.107 / 0.107 | 0.330 / 0.669 / 0.978 / 0.089 / 0.147 | 0.358 / 0.638 / 0.995 / 0.043 / 0.132 | 0.351 / 0.644 / 0.988 / 0.069 / 0.150 |
+| food_on_bushes_total | 0.342 / 0.631 / 0.488 / 0.236 / 0.409 | 0.640 / 0.337 / 0.626 / 0.446 / 0.424 | 0.835 / 0.155 / 0.979 / 0.130 / 0.410 | 0.751 / 0.232 / 0.684 / 0.472 / 0.508 |
+| adults_working | 0.474 / 0.491 / 0.324 / 0.202 / 0.474 | 0.438 / 0.528 / 0.272 / 0.244 / 0.439 | 0.473 / 0.492 / 0.331 / 0.204 / 0.476 | 0.480 / 0.488 / 0.373 / 0.240 / 0.479 |
+
+Settlements alive at days 30/60/90/118 (16 test seeds, mean): v16 and v18_nofission 1/1/1/1; v17 1.50/1.75/2.25/2.25 (8 of 16 split by day 30); v18 1.06/1.25/1.56/2.06 (day 118: 3 seeds with 1, 10 with 2, 2 with 3, 1 with 4). Baseline nMAE at 168 h (persistence / cal_abs / apfit_abs): alive v17 0.149 / 0.758 / 0.137, v18 0.139 / 0.709 / 0.160; food v17 0.779 / 0.592 / 0.298, v18 0.733 / 0.563 / 0.307.
+
+Attribution (Δη² / ΔUBS): v17 → v18_nofission (wet burn — inert without interventions —, region fill, daughter fixes, J6 fix, exposure): food −0.160 / −0.231, wood −0.123 / −0.126, alive +0.164 / −0.472; v18_nofission → v18 (hazard fission): food +0.221 / +0.265, wood +0.168 / +0.165, alive −0.158 / +0.509. Paired bootstraps of ΔUBS (90 %): v18 − v17 food 0.034 [−0.063, 0.140], wood 0.038 [0.010, 0.076], alive 0.036 [−0.102, 0.163]; v18 − v18_nofission alive 0.509 [0.432, 0.630]. Within game_v18 by whether the world split (ridge refit per subset): split (66) alive R²_static / UBS 0.140 / 0.811, no split (46) 0.878 / 0.362.
+
+**J7 (game_v18): FAIL** — η² ≥ 0.30 and R²_abs ≤ 0.70: food PASS (0.532 / 0.457), alive PASS (0.741 / 0.230), wood FAIL (0.236 / 0.749); J7b: ΔUBS intervals for alive and food include 0 (FAIL); mean R²_static(alive) v18 0.445 vs v17 0.442 (FAIL by 0.003).
+
+### Part 6 — forks (12.1; `p12-6_forks/` frozen recorder; final re-recording `p12-7_final_forks/` identical on every reported number)
+
+Placebo identity 224 / 224, replicate 0 = unforked 224 / 224 (G0a PASS). Deaths effect (replicate mean per seed, exposure included), share of seeds > 0 / mean: gift_wood 0.000 / −0.375; rot_wood 0.500 / +1.141; **rain 0.500 / +1.164** (Pass 11: −0.36); cold_snap 0.188 / +0.141; windfall 0.000 / −0.148; gift1 0.031 / +0.008. Dark-night effect (mean): rain +1.76, rot_wood +1.13, cold_snap +0.41, gift_wood −0.68. Wet burn: over the rain hours inside the burn window (11 per episode) the home store lost 34.99 units against 35.72 on the factual's dry night over the same hours. First fission: factual mean display day 18.6 (mostly before the fork); the first fission founded after the fork differs from the factual in 0.01–0.02 of episodes (7 episodes split after the fork). G0b (variance reduction) FAIL as in earlier passes (reported). **J8: PASS.**
+
+### Part 6 — macro sensitivity (12.2; 120 days, rot_wood / gift_wood / spoil_food 60 at tick 29,400 on home, R = 2; `p12-6_macro/` frozen recorder)
+
+Frozen recorder and the final re-recording (`p12-7_final_macro/`, `wm_final`) give the same table. Factual r0: 18 of 32 seeds split, 16 after the fork, 2 only before it.
+
+| Comparison | Share differing (settlement counts or post-fork first-fission day) | Mean abs Δ post-fork day (n seeds where both split after the fork) | Mean abs Δ alive day 118 |
+|---|---:|---:|---:|
+| (a) factual r0 vs r1 (noise only) | 0.688 | 34.5 (14) | 18.4 |
+| (b) rot_wood 60 vs factual, same replicate | 0.016 | 0.0 (35) | 0.70 |
+| (b) gift_wood vs factual | 0.016 | 2.4 (36) | 0.69 |
+| (b) spoil_food 60 at tick 29,400 on home (written explicitly into `p12/schedules/macro`) | 0.000 | 0.0 (36) | 0.03 |
+
+**J11 (reported)**: interventions move the timing far less than noise does — the hazard draw is keyed with the replicate, so a noise fork redraws "when", while a small act of the god changes h by a few thousandths and rarely flips a draw.
+
+### Part 7 — timing (J12; `probe_final`, tuning sets, back to back 15:11–15:49 KST)
+
+No Godot, cargo or worldsim process of anyone else; foreign load: a "Sow and Siege.app" game build launching intermittently (another project), a Chrome helper (~93 % CPU) and the macOS storage indexer (~95 %); load averages 6.8 at the start, 63 at 15:20 (between the v16 and v18_nofission sets), 22 at 15:41. Median ms per agent-tick (10-day / 120-day): game_v16 0.00209 / 0.00274; game_v18_nofission 0.00198 / 0.00277; game_v18 0.00208 / 0.00317; bracketing game_v16 rerun after v18 (15:41–15:48) 0.00178 / 0.00243. Ratios v18 / v16: 10-day 0.996, 120-day 1.158 against the preceding v16 set, 1.305 against the following one, 1.226 against their mean; v18_nofission 0.948 / 1.011. **J12: PASS against the adjacent run and the bracket mean (≤ 1.3), borderline against the later bracket.**
+
+### Part 7 — final runs on `1127455b` (review round 1 fixes)
+
+Tuning (the timing runs, with twins): game_v18 and game_v18_nofission equal round 3 on every shared value (0 differences; the fixes do not touch these seeds). Held-out (`p12-7_final_heldout_*`): game_v18_nofission identical to Part 4; game_v18 10-day identical, 120-day 1,151 values differ (3 of 64 seeds: 63 and 77 diverge after a fission group was walking, 94 changes only the founded-inside member count). Final held-out J verdicts are Part 4's: J3 PASS (share 0.703, median 38, IQR 38, peak 0.111), J4 PASS (56/56), J5 FAIL (pooled child share 0.717, settlement-winter max 0.571, 4 over), J9 region-placement clause FAIL (3 of 255 regions; counted and explained), v18_nofission J6 FAIL (work_1500 0.213 vs v16 0.241; idle_1200 0.629 vs 0.617). h terciles after the tie fix: split rate 0.015 / 0.024 / 0.045. Gate on `1127455b`: green (`verification/p12-7/gate.txt`: debug 2,103 / release 2,103 passed, 0 failed; Pass 11 2,078).
+
+### Part 7 — final reproduction (`probe_final`, commit `1127455b`, 15:49–17:27 KST, Pass 11's flags)
+
+Against Pass 11's finals (`p11-7_final_*`), every run differs only in `schema_version` (11 → 12); all 28 determinism twins pass. Shared values: legacy 5,727; v8 13,990; v9 10,589 / 77,915; v10 10,781 / 78,498; v11 13,096 / 93,659; v12 13,096 / 93,671; v13 13,226 / 93,726; v14 13,228 / 93,727; v15 13,228 / 93,733; v16 13,868 / 94,339; v16_neutral 13,420 / 94,048; v17 16,226 / 97,206; v17_nofission 15,394 / 95,097; held-out v17 16,231 / 130,812; held-out v17_nofission 15,399 / 127,126 (10-day / 120-day). Code changed after Parts 5–6 (review round 1, `1127455b`); everything it affects was rerun: final tuning and held-out v18 runs, the pilot's v18 scenes, the forks and the macro run (`p12-7_final_*`); verdicts unchanged.
+
+## Pass 13 — a split the village builds up to (pressure against a hidden threshold), a measure of how much of a world's future is its path (`game_v19_nofission`, `game_v19`)
+
+All probe runs use Pass 12's final flags (eight clocks `02:00,06:00,08:00,10:00,12:00,15:00,18:00,19:30`, `--sample-every` 120, `--workers 4`, `--check-determinism`; legacy with its own flags). Binaries in `/Users/rexxa/work/p13bin/`. Scratch exploration of this pass (4.4) is disclosed where it happened.
+
+### Part 0 — baseline reproduction (`probe_p0` = Pass 12's `probe_final`, byte-identical; 20:53–21:19 KST)
+
+| run | reference | shared values | differences |
+|---|---|---:|---:|
+| `p13-0_v18_10day` / `_120day` | `p12-7_timing_v18_*` | 17,502 / 132,718 | 0 / 0 |
+| `p13-0_v18n_10day` / `_120day` | `p12-7_timing_v18n_*` | 16,670 / 104,565 | 0 / 0 |
+| `p13-0_v17_10day` / `_120day` | `p12-7_final_v17_*` | 17,502 / 107,146 | 0 / 0 |
+| `p13-0_v16_10day` / `_120day` | `p12-7_final_v16_*` | 15,144 / 103,923 | 0 / 0 |
+| `p13-0_v15_10day` / `_120day` | `p12-7_final_v15_*` | 14,504 / 103,317 | 0 / 0 |
+| `p13-0_legacy` | `p12-7_final_legacy` | 6,463 | 0 |
+
+Every determinism twin passes. Frozen pins `harness_revitalize_pass13_frozen.rs` (v18 and v18_nofission digests, seeds 0–3 at 1,440 and 40,320 ticks; literals of `game_v18(0)` and `V18_HAZARD`) pass on the base.
+
+### Part 0.4 — the replicate measure on old worlds (`paths_p13.py`; worlds 901000–901031 × R = 4, noise fork at tick 1, 120 days; `docs/revitalize/probe/p13-0_paths/`)
+
+Replicate 0 equals the unforked recording on worlds 901000 and 901001 (every array byte-identical). PS = path share (mean over days 60/90/118, 90 % bootstrap over worlds), PSD = path spread (sqrt(W) / S_j).
+
+| Variable | game_v16 PS [90 %] / PSD | game_v17 PS [90 %] / PSD | game_v18 PS [90 %] / PSD | game_v17 - game_v16 PS [90 %] | game_v18 - game_v16 PS [90 %] | game_v18 - game_v17 PS [90 %] |
+|---|---|---|---|---|---|---|
+| alive | 0.001 [0.001, 0.002] / 0.034 | 0.003 [0.001, 0.005] / 0.052 | 0.306 [0.212, 0.437] / 0.633 | 0.001 [0.000, 0.004] | 0.305 [0.211, 0.436] | 0.304 [0.208, 0.435] |
+| food_stock | 0.019 [0.014, 0.032] / 0.073 | 0.013 [0.009, 0.021] / 0.069 | 0.301 [0.210, 0.438] / 0.383 | -0.007 [-0.018, 0.000] | 0.281 [0.188, 0.415] | 0.288 [0.196, 0.421] |
+| wood_stock | 0.662 [0.592, 0.757] / 0.071 | 0.063 [0.050, 0.087] / 0.054 | 0.488 [0.377, 0.621] / 0.182 | -0.599 [-0.686, -0.535] | -0.174 [-0.335, -0.024] | 0.425 [0.309, 0.555] |
+| settlements_alive | — [—, —] / — | 0.007 [0.000, 0.021] / 0.090 | 0.474 [0.366, 0.606] / 0.764 | — [—, —] | — [—, —] | 0.467 [0.355, 0.598] |
+| deadwood_total | 0.033 [0.024, 0.053] / 0.096 | 0.005 [0.003, 0.008] / 0.047 | 0.007 [0.004, 0.013] / 0.057 | -0.028 [-0.046, -0.019] | -0.026 [-0.043, -0.017] | 0.002 [0.000, 0.005] |
+| food_on_bushes_total | 0.120 [0.089, 0.164] / 0.098 | 0.011 [0.008, 0.019] / 0.080 | 0.193 [0.116, 0.308] / 0.364 | -0.109 [-0.153, -0.077] | 0.074 [-0.020, 0.183] | 0.183 [0.103, 0.293] |
+| adults_working | 0.385 [0.288, 0.525] / 0.143 | 0.175 [0.135, 0.243] / 0.122 | 0.396 [0.296, 0.541] / 0.183 | -0.210 [-0.337, -0.111] | 0.012 [-0.091, 0.116] | 0.222 [0.132, 0.342] |
+
+UBS on replicate 0 (Pass 12's tool, reported only; mean of days 60/90/118, alive / food_stock / wood_stock): game_v16 0.394 / 0.261 / 0.082; game_v17 0.731 / 0.518 / 0.218; game_v18 0.995 / 0.597 / 0.269
+
+Reading: in v16 and v17 the population at day 60–118 is fixed by the world (PS(alive) 0.001 and 0.003 — v17's day-29 split is a function of the state), while v18's daily die makes 0.31 of the between-run variance of `alive` and 0.47 of `settlements_alive` path. UBS on the same replicate-0 worlds ranks v17 (0.73) far above v16 (0.39) for `alive` although its path share is 0.003: the threshold effect Pass 12 suspected. The J7b anchor: PS(alive) v18 = 0.306 [0.212, 0.437].
+
+### Part 0.5 — the open J5 cases (`docs/revitalize/probe/p13-0_j5/j5_diag.md`)
+
+Inputs: Pass 12's final held-out run and the tuning timing run (pooled child share 0.717, reproduced), and `--agents` recordings of seeds 24, 39, 66, 77. 193 of the 195 dead children were born inside the winter window (child stage 4 days; births 1.06 per seed-day in winter windows vs 1.14 overall); per 100 at the winter's start children die at 11.6, adults 0.35. The four settlement-winters over 0.35 are all harsh winters with the settlement's own fire out at every death (40/40): two young daughters (39: founded day 105 autumn, 8/14, 13 births in the window; 77: founded day 71 autumn, 11/28, 13 births) and two camps that entered the winter with stock 0 and 57 after an autumn split took their adults (66: 12/26; 24: 9/25, no newborn deaths). Without the newborn deaths the four ratios would be 0.071 / 0.27 / 0.21 / 0.36 and the pooled stage shares 0.03 / 0.83 / 0.13 (adult share above J5's 0.50). Burn need inside the window 310–490 against a target of 208 and 51–69 units of fall within 18 tiles.
+
+### Part 1 — the J6 remainder (`probe_p1`, tuning seeds 0–31 × 120 days, every twin passed; 21:19–21:44 KST; `docs/revitalize/probe/p13-1_j6/bisect.md`)
+
+Gap in Pass 6 Y9 `work_1500`: game_v16 0.254 − game_v18_nofission 0.240 = 0.014 on these seeds. Activity at 15:00 (pooled): foraging 0.178 → 0.167, idle 0.592 → 0.606, everything else within 0.002. Share of the gap restored by one reversion: region bushes 0.118 (`abl18_no_region_bushes`, `abl18_no_regions`; foraging back to 0.181); region deadwood, regional wood, wet burn, area floor 0.000 (inert without fission or interventions); hunger weight 0.000; v16 exposure damage −0.60, no hardiness −0.67, v16 exposure −0.01 (noise of a 0.014 gap). No difference explains half → no J6 mechanism (DECISIONS).
+
+### Part 2 — v19 mechanisms (commit `20fb22e5`)
+
+Fission by accumulated pressure (7.1), floor in its own accumulator (7.2), probe schema 13, recorder schema 6, `game_v19` scenes and live game. No J5 / J6 mechanism (Part 0.5, Part 1). Start values: Exponential θ mean 1200, decay 10, reset on split; hazard 28 / 48 / 850 / 1050 / scarcity_days 2 / crowd 350 / scarcity 650 / ceiling 200; v18 gates.
+
+Scratch exploration (4.4, disclosed; seeds 902000–902031, 120 days, R = 2, fork 28,800, rot_wood / spoil_food 60 / gift_food 60 at 29,400 on home; build of the Part 2 tree before the commit, identical rules):
+
+- **A = start values.** Noise (r0 vs r1): post-fork day differs by > 3 days in 0.000 of seeds, mean |Δ day| 0.27 (n 15), mean |Δ alive 118| 0.22 — against Pass 12's v18 0.688 / 34.5 / 18.4. Interventions (same replicate): spoil_food earlier in 0.233 of the 30 pairs that split after the fork (later 0.000), gift_food later in 0.100 (earlier 0.067), rot_wood ±0.27 / 0.23; c-rule 0.000 / 0.047 / 0.047. J11 (a) passes, (b) and (c) fail. Cause, from the recordings: the spoil leaves the home store about 13 units short into spring (days 28–45: −13.5 → −9.7; gift +6 → +1), but with `scarcity_days` 2 the scarcity line is 2 × members × need ≈ 154 and day-28 stores are 107–358, so s = 0 in most worlds and the deficit never reaches h; the intervention lands at day 20.75, the eve of a winter in which P is frozen.
+- **B** = A with `scarcity_days` 4, weights crowd 150 / scarcity 850, ceiling 300 (θ mean 1200). J3 (probe, same seeds): fission share 0.56, first-fission display day median 35, IQR 27.8, peak 0.17, ≥ 2 alive 0.56. Macro: noise > 3 d 0.031, mean |Δ day| 0.50 (n 18), |Δ alive| 0.41; spoil_food earlier 0.222 (later 0.000), gift_food later 0.250 (earlier 0.139), c-rule 0.078 / 0.047 / 0.031 (rot / spoil / gift) vs noise 0.031.
+- **C** = A with `scarcity_days` 4, weights 0 / 1000, ceiling 300, θ mean 1800. J3: share 0.47, median 63, IQR 50, peak 0.13. Macro: noise > 3 d 0.031, mean |Δ day| 2.07 (n 15), |Δ alive| 1.13; spoil_food earlier **0.533** (later 0.100; mean shift −2.0 d), gift_food later **0.400** (earlier 0.200; mean +3.2 d), rot_wood earlier 0.467; c-rule 0.031 / 0.062 / 0.062 vs noise 0.031. Only 15 of 32 seeds split after the fork, so (c)'s share over all seed-replicates stays small.
+- **D** = C with θ mean 900, size 24 / 44, `min_members` 28. J3: share 0.72, median 34, IQR 30, peak 0.17, ≥ 2 alive 0.72. Macro: noise > 3 d 0.094, mean |Δ day| 2.09 (n 22), |Δ alive| 1.00, noise c-rule 0.125; spoil_food earlier 0.533 (later 0.022), gift_food later 0.289 (earlier 0.156), rot_wood earlier 0.644; c-rule 0.078 / 0.141 / 0.062.
+- **E** = C with θ mean 1200. J3: share 0.47, median 39, IQR 27. Macro: noise 0.000 / 0.40 d / 0.38; spoil_food earlier 0.567, gift_food later 0.267; c-rule 0.031 / 0.062 / 0.016 vs noise 0.031.
+- Reading: once the hazard reads only food against a 4-day line, spoiling food moves the split earlier in about half of the pairs and almost never later, but gifting food rarely moves it later: the gift (+30 at day 22) is gathered away before winter (+6 at day 28, +1 at day 45), while the spoil's deficit survives the winter (−13 at day 28). Round 1 takes D's structure with θ mean 1200 between D and E, and the child exposure damage 7 for J5.
+
+### Part 2 — 4.6 guard (`probe_p2` = commit `20fb22e5`, 22:11–22:37 KST)
+
+`p13-2_guard_v18_*`, `_v18n_*`, `_v17_*`, `_v16_*` (tuning sets) equal Part 0's runs on every shared value (17,502 / 132,718 / 16,670 / 104,565 / 17,502 / 107,146 / 15,144 / 103,923); the only difference is `schema_version` 12 → 13 (plus the two new row keys and the `pass13` block). All determinism twins pass.
+
+### Part 3 — tuning (tuning seeds; `evaluate_pass13.py`, game_v16 reference `p13-0_v16_*`; per-round J11 check on scratch seeds 901100–901131)
+
+| Round | Commit | Knobs (changes) | J3 (v19) | J4 | J5 (v19) | J6 (v19n) | J11 check (901100–901131) |
+|---|---|---|---|---|---|---|---|
+| 1 | `b08461cd` | scarcity_days 2 → 4, weights crowd/scarcity 350/650 → 0/1000, ceiling 200 → 300, size 28/48 → 24/44, `min_members` 32 → 28, exposure child 8 → 7 (θ mean 1200, decay 10) | PASS: share 0.656, median 62, IQR 55 (31–86), peak 0.19, ≥ 2 alive 0.656, cancellations 0/32; first-fission day vs camp θ r = 0.89, vs early scarcity r = 0.30 | PASS 23/23 (31 daughters, none dissolved) | FAIL: seed-winters with a death 0.109 (< 0.15), settlement-winter max 0.467 (seed 24, daughter 7/15, day 106); child share 0.54, adult 0.46 | FAIL: work_1500 0.213 (v16 0.254), idle_1200 0.627; other clauses PASS | (a) PASS: > 3 d 0.000, mean abs Δ 0.56 d (n 16), Δ alive 0.56; (b) FAIL: spoil earlier 0.344 (later 0.156), gift later 0.387 (earlier 0.161); (c) FAIL: noise 0.031, rot_wood 0.172, spoil 0.078, gift 0.062 |
+| 2 | `f587a4a9` | θ mean 1200 → 1000, decay 10 → 50, exposure child 7 → 8 | PASS: share 0.594, median 33, IQR 60.5 (30–90.5), peak 0.16, ≥ 2 alive 0.594, cancellations 0/27; r(day, θ) 0.79, r(day, early s) 0.09 | PASS | FAIL: child share 0.74 (> 0.70), settlement-winter max 0.389 (seed 24, daughter 14/36, day 106); share with a death passes | FAIL: work_1500 0.240 (v16 0.254), idle passes | (a) PASS but noise grows: > 3 d 0.031, mean abs Δ 5.08 d (n 12), Δ alive 2.56; (b) FAIL: spoil earlier 0.333 (later 0.208), gift later 0.273; (c) FAIL: noise 0.062, rot 0.094, spoil 0.062, gift 0.047 |
+| 3 | `9f0d38ca` | θ mean 1000 → 1200, decay 50 → 10 (round 1's), exposure child 8 → 7.5 | PASS: share 0.656, median 62, IQR 55 (31–86), peak 0.19, ≥ 2 alive 0.656, cancellations 0/32; r(day, θ) 0.89, r(day, early s) 0.30 | PASS 1.00 (31 daughters, none dissolved) | FAIL: seed-winters with a death 0.133 (< 0.15), settlement-winter max 0.533 (seed 24, daughter 8/15, day 106); child share 0.66, adult 0.34 PASS | FAIL only work_1500 0.248 (v16 0.254, bound 0.25); idle PASS | (a) PASS: > 3 d 0.000, mean abs Δ 0.63 d (n 16), Δ alive 0.44; (b) FAIL: spoil earlier 0.313 (later 0.188), gift later 0.419 (earlier 0.226); (c) FAIL: noise 0.031, rot 0.156, spoil 0.062, gift 0.047 |
+
+**Freeze** (after three of three judged rounds): commit `9f0d38ca` (round 3: J1–J4 and J9 pass; J5 misses on two clauses; J6 misses `work_1500` by 0.002; J11 (a) passes, (b) and (c) fail). Binaries `p13bin/probe_frozen` (sha256 `9e8240bb…`), `p13bin/wm_frozen` (sha256 `1844ebc3…`). Strikes (0.3 rule 7): **J5** — three rounds (child damage 7 / 8 / 7.5: too few seed-winters with a death / child share 0.74 / 0.133 with a death; seed 24's harsh day-106 winter over 0.35 every round). Hypothesis: the floor of H3 (≥ 0.15 of seed-winters with a death) and the child-share ceiling are both moved by the same newborn deaths (Part 0.5), so child damage alone cannot satisfy both; seed 24 is a daughter darkened by a harsh winter whatever the knobs. **J6** — three rounds (0.213 / 0.240 / 0.248, bound 0.25): Part 1's residual, a mechanism question. **J11** — three rounds: noise no longer moves the split (mean |Δ| 0.56–0.63 d at the start values, 5.1 d with decay 50), but a spoil or gift of 60 food at day 20.75 moves the post-fork split in its sign in only 0.31–0.42 of the pairs. Hypothesis: the act lands on the eve of a winter in which P is frozen, the gift is gathered away before the spring, and a 13-unit spring deficit changes the integrated pressure by about a day — a scarcity line that reacts more (or an act in spring) would be needed, outside the knob set.
+
+### Part 4 — held-out health (frozen `9f0d38ca`, `probe_frozen`; held-out seeds 64–127 × 10 and 32–95 × 120; 23:39–23:59 KST, concurrently with the pilot and macro recordings; no knob changed)
+
+J6 reference: game_v16 on the same held-out seeds (`p11-7_final_heldout_v16_*`, as Pass 12). J5 for game_v19 pools the held-out round with tuning round 3 (`--extra-round120`); its H3 clauses are the held-out set's. J9 over the 128 seeds of both 10-day sets.
+
+| Target | game_v19 | game_v19_nofission |
+|---|---|---|
+| J1 | PASS (twins 64/64 and 64/64 held-out; legacy pin and v8–v18 reproduction from Parts 0/2/7) | PASS |
+| J2 | PASS | PASS |
+| J3 | **PASS**: fission share 0.656 (64 seeds), first-fission display day median 58, IQR 32.8 (30.3–63), peak day 29 holds 0.167, ≥ 2 alive at day 120 0.656, cancellations 0/63, never above max. First-fission day vs the camp's θ r = **0.84** (n 42), vs early scarcity r = −0.20; P / θ at the split median 1.07; the camp's P first passed θ/2 at display day median 34 | — |
+| J4 | **PASS** 1.00 (63 daughters, all alive 28 days after founding; founded spring 55, summer 8, autumn 0); **upper report: dissolved or merged within 120 days 0 / 63, within the first winter 0 / 63** — daughters still cannot fail | — |
+| J5 | FAIL only `max_share_settlement_winter`: 0.533 (2 over in the pooled set: held-out seed 84 camp 12/25 = 0.48 and tuning seed 24 daughter 8/15, both the harsh winter from day 106); stage shares child 0.604 / adult 0.373 / elder 0.022 PASS; seed-winters with a death 0.168 PASS; mild < normal < harsh; starvation + dehydration 0 | reported: fails only H3 share with a death |
+| J6 | reported | FAIL: Y9 work_1500 0.211 (v16 0.241, bound 0.25), idle_1200 0.629 (v16 0.617, both > 0.60); work_1200 0.357 PASS; every other clause PASS |
+| J9 | parameter means and climate shares PASS; region bushes 2,519 / 2,519, deadwood 3,692 / 3,716 (0.994); placement failures 3 of 255 regions (1 of 2, 2 of 3, 2 of 3) — the same three worlds and the same water-rule cause as Pass 12 (v19's worldgen is v18's); the clause itself FAILS (counted and explained) | same worlds |

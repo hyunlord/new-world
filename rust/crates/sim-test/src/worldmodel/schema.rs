@@ -71,7 +71,7 @@ pub const GLOBAL: [Field; 39] = [
 /// does not exist. Schema 5: a settlement's slot (its index in
 /// `settlement_ids.npy`, first-seen order) is kept for its lifetime; a
 /// dissolved settlement's slot stays NaN afterwards.
-pub const SETTLEMENT: [Field; 11] = [
+pub const SETTLEMENT: [Field; 14] = [
     f("members", "agents", "roster size"),
     f("food_stock", "units", "food in the stockpile"),
     f("wood_stock", "units", "wood in the stockpile"),
@@ -83,6 +83,9 @@ pub const SETTLEMENT: [Field; 11] = [
     f("rain_ticks_left", "ticks", "max(0, fire_blocked_until - tick)"),
     f("parent_slot", "index", "index into settlement_ids.npy of the settlement it split from, -1 none (schema 5)"),
     f("founded_tick", "ticks", "simulation tick the settlement formed (schema 5)"),
+    h("fission_pressure", "thousandths", "accumulated fission pressure P (Settlement::fission_pressure; game_v19, 0 elsewhere) (schema 6; a latent state a model must infer)"),
+    h("fission_threshold", "thousandths", "hidden fission threshold theta, a world draw per settlement and split (Settlement::fission_threshold; game_v19, 0 elsewhere) (schema 6)"),
+    f("depart_tick", "ticks", "tick its founding group left the parent (FissionRecord::depart_tick), -1 for a settlement not founded by fission (schema 6)"),
 ];
 
 /// Columns of `agents.npy` (float32 [T, N, A]); NaN where the agent is not alive.

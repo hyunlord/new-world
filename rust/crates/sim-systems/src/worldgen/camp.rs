@@ -291,6 +291,10 @@ pub const REGION_SEPARATION: u32 = 20;
 pub const REGION_RING_MIN: u32 = 2;
 /// Outermost ring of a region's bushes and deadwood around its centre.
 pub const REGION_RING_MAX: u32 = 6;
+/// Innermost ring of the Pass 12 fill's outer tier (`region_fill`).
+pub const REGION_FILL_RING_MIN: u32 = 7;
+/// Outermost ring of the Pass 12 fill's outer tier.
+pub const REGION_FILL_RING_MAX: u32 = 9;
 
 /// Fisher–Yates shuffle of `tiles` (already in (y, x) order) keyed on
 /// `(seed, stream, slot = region)`: swap index i uses the draw at tick i.
@@ -318,8 +322,26 @@ fn keyed_shuffle(tiles: &mut [Tile], seed: u64, stream: u64, region: u32) {
 /// `STREAM_REGION_WOOD`, slot r); both lie farther from the camp hearth than
 /// the camp's forage and wood radii (Part 3). Shortfalls are counted, never asserted;
 /// terrain is never edited. Every draw uses replicate 0.
+///
+/// Pass 12 (`game_v18`): with `region_water_max` a centre candidate needs a
+/// water tile within that Chebyshev distance (filtered before the draw). With
+/// `region_fill`, right after a region's bushes are chosen and before its
+/// deadwood, a short region takes more bushes in tiers, each tier's list
+/// shuffled by `STREAM_REGION_FILL_BUSH` with slot `r + (tier << 16)`, never
+/// on water, a building, a food source or a deadwood spot and always beyond
+/// the camp's reach: tier 2 Forest in the ring 2–6 without the Plain-neighbour
+/// condition, tier 3 Plain with a Forest neighbour in the ring, tier 4 either
+/// of the two in the ring 7–9, and (Part 2 finding: some regions hold no
+/// Forest at all within reach) tier 5 any Plain tile in the ring 2–9. After
+/// the deadwood pass a short region takes
+/// more deadwood in tier 2: ring 7–9, Forest then Plain
+/// (`STREAM_REGION_FILL_WOOD`, slots `r + (2 << 16)` and `r + (3 << 16)`),
+/// with the existing two-tile spacing. Tier counts go to the worldgen report.
 pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
-    use sim_core::rng::{keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_WOOD};
+    use sim_core::rng::{
+        keyed_below, STREAM_REGION, STREAM_REGION_BUSH, STREAM_REGION_FILL_BUSH, STREAM_REGION_FILL_WOOD,
+        STREAM_REGION_WOOD,
+    };
     let Some(hearth) = r
         .building_kinds
         .iter()
@@ -351,6 +373,7 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                     && walkable(r, p)
                     && !r.water_tiles.contains_key(&p)
                     && centres.iter().all(|&c| distance(p, c) >= REGION_SEPARATION)
+                    && cfg.region_water_max.is_none_or(|max| water.iter().any(|&q| distance(p, q) <= max))
             })
             .collect();
         if candidates.is_empty() {
@@ -372,6 +395,43 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
             .collect();
         keyed_shuffle(&mut bushes, cfg.seed, STREAM_REGION_BUSH, region);
         bushes.truncate(cfg.region_bushes as usize);
+        // Pass 12: fill a short region from looser tiers (none in v17).
+        if cfg.region_fill {
+            let far = |p: Tile| (REGION_FILL_RING_MIN..=REGION_FILL_RING_MAX).contains(&distance(p, centre)) && beyond_camp(p);
+            let forest_edge = |p: Tile| {
+                terrain(r, p) == TerrainType::Plain
+                    && r.tile_grid.neighbors_4(p.0, p.1).iter().any(|&q| terrain(r, q) == TerrainType::Forest)
+            };
+            let mut added = [0u32; 4];
+            for (tier, slot) in [(2u32, 0usize), (3, 1), (4, 2), (5, 3)] {
+                if bushes.len() >= cfg.region_bushes as usize {
+                    break;
+                }
+                let mut extra: Vec<Tile> = tiles(r)
+                    .filter(|&p| {
+                        let place = match tier {
+                            2 => ring(p) && terrain(r, p) == TerrainType::Forest,
+                            3 => ring(p) && forest_edge(p),
+                            4 => far(p) && (terrain(r, p) == TerrainType::Forest || forest_edge(p)),
+                            _ => (ring(p) || far(p)) && terrain(r, p) == TerrainType::Plain,
+                        };
+                        place
+                            && !r.water_tiles.contains_key(&p)
+                            && !r.building_kinds.contains_key(&p)
+                            && !r.food_source_max.contains_key(&p)
+                            && !r.wood_source_max.contains_key(&p)
+                            && !bushes.contains(&p)
+                    })
+                    .collect();
+                keyed_shuffle(&mut extra, cfg.seed, STREAM_REGION_FILL_BUSH, region + (tier << 16));
+                let take = (cfg.region_bushes as usize - bushes.len()).min(extra.len());
+                bushes.extend_from_slice(&extra[..take]);
+                added[slot] = take as u32;
+            }
+            for (total, n) in r.worldgen_report.region_fill_bushes.iter_mut().zip(added) {
+                *total += n;
+            }
+        }
         bushes.sort_by_key(|&(x, y)| (y, x));
         for &(x, y) in &bushes {
             r.set_food_tile(x, y, cfg.berry_capacity);
@@ -399,6 +459,33 @@ pub(super) fn regions(cfg: &WorldGenConfig, r: &mut SimResources) {
                     chosen.push(p);
                 }
             }
+        }
+        // Pass 12: fill a short region's deadwood from the ring 7–9 (none in v17).
+        if cfg.region_fill && chosen.len() < cfg.region_deadwood as usize {
+            let before = chosen.len();
+            for (kind, tier) in [(TerrainType::Forest, 2u32), (TerrainType::Plain, 3)] {
+                let mut candidates: Vec<Tile> = tiles(r)
+                    .filter(|&p| {
+                        (REGION_FILL_RING_MIN..=REGION_FILL_RING_MAX).contains(&distance(p, centre))
+                            && beyond_camp(p)
+                            && terrain(r, p) == kind
+                            && !r.water_tiles.contains_key(&p)
+                            && !r.building_kinds.contains_key(&p)
+                            && !r.food_source_max.contains_key(&p)
+                            && !r.food_tiles.contains_key(&p)
+                    })
+                    .collect();
+                keyed_shuffle(&mut candidates, cfg.seed, STREAM_REGION_FILL_WOOD, region + (tier << 16));
+                for p in candidates {
+                    if chosen.len() >= cfg.region_deadwood as usize {
+                        break;
+                    }
+                    if chosen.iter().all(|&q| distance(p, q) >= 2) && r.wood_source_max.keys().all(|&q| distance(p, q) >= 2) {
+                        chosen.push(p);
+                    }
+                }
+            }
+            r.worldgen_report.region_fill_deadwood += (chosen.len() - before) as u32;
         }
         for &p in &chosen {
             r.wood_tiles.insert(p, cfg.deadwood_capacity);

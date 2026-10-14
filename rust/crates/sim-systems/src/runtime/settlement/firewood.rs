@@ -350,6 +350,9 @@ mod tests {
             windfall_over_snow: false,
             rain_soak_permille: 0,
             regional_wood: false,
+            area_fall_floor_permille: 0,
+            rain_wet_burn: false,
+            floor_separate: false,
         }
     }
 

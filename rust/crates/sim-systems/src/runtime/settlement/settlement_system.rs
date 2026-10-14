@@ -466,6 +466,17 @@ impl SettlementSystem {
             // in `self.formation_tiles` below. Fixed for the settlement's
             // lifetime so the FFI marker does not drift with the live centroid.
             settlement.formation_tile = candidate;
+            // Pass 13 (`game_v19`): the hidden fission threshold, a world draw
+            // keyed by the new id and its splits so far (none for a fresh id).
+            if let Some(pressure) = resources.rules.society.fission.and_then(|f| f.pressure) {
+                let k = resources.fission_log.iter().filter(|r| r.parent == new_id).count() as u32;
+                settlement.fission_threshold = sim_core::fission_threshold::fission_threshold(
+                    pressure.threshold_table,
+                    resources.world_seed,
+                    u64::from(new_id),
+                    k,
+                );
+            }
             let mut founding_members: Vec<AgentId> = Vec::new();
             for (aid, pos) in agent_positions {
                 if chebyshev(candidate, *pos) <= SETTLEMENT_PROXIMITY_RADIUS {
