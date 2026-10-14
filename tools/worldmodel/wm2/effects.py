@@ -372,13 +372,14 @@ def inv_std_of(fact_v: list[np.ndarray]) -> np.ndarray:
 
 
 def case_json(x: Case) -> dict:
+    """A case without its an5 window (only `base` uses it)."""
     return {"seed": x.seed, "arm": x.arm, "rep": x.rep, "role": x.role, "cast_tick": x.cast_tick, "cast_row": x.cast_row,
-            "truth": x.truth, "shift": x.shift, "censored": list(x.censored), "window": x.window.tolist()}
+            "truth": x.truth, "shift": x.shift, "censored": list(x.censored)}
 
 
 def case_from(j: dict) -> Case:
     return Case(j["seed"], j["arm"], j["rep"], j["role"], j["cast_tick"], j["cast_row"], j["truth"], j["shift"],
-                tuple(j["censored"]), np.array(j["window"]))
+                tuple(j["censored"]), None)
 
 
 def stds_json(stds: dict) -> dict:

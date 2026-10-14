@@ -84,9 +84,14 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(ds.groups["val"], ((c.V19_FACT, c.V19_ARM_R0), "val"))
         self.assertEqual(ds.groups["test"], (c.V19_ALL, "test"))
         self.assertEqual((ds.train_groups(True), list(ds.val), ds.extra_state), (["train"], ["val"], c.V17_EXTRA))
+        self.assertEqual((ds.groups["val_fact"], ds.val_report), (("v19_fact", "val"), ("val_fact",)))
         fact = c.dataset("v2_v19_fact")
         self.assertEqual({k: v for k, v in fact.groups.items()},
-                         {"train": ("v19_fact", "train"), "val": ("v19_fact", "val"), "test": ("v19_fact", "test")})
+                         {"train": ("v19_fact", "train"), "val": ("v19_fact", "val"), "test": ("v19_fact", "test"),
+                          "val_fact": ("v19_fact", "val")})
+        self.assertEqual(c.dataset("v2_v16").groups["val_fact"], ("v16", "val"))
+        for old in ("v0", "p10_v16", "w13_v16_n400", "w13_v17_n400"):
+            self.assertEqual(c.dataset(old).val_report, ())
         self.assertEqual(c.dataset("v2_v16").groups["test"], ("v16", "test"))
         self.assertEqual(c.dataset("v2_v16").extra_state, ())
         self.assertEqual(c.split_names("a"), ("a",))
@@ -460,3 +465,80 @@ class SplitDayTests(unittest.TestCase):
 def b_lambdas():
     import bench_v0
     return bench_v0.LAMBDAS
+
+
+def write_episode(root, rel: str, ep: Episode, seed: int, eid: str) -> None:
+    """Write a synthetic episode as the recorder does (arrays + meta.json with sha256 / shape / dtype)."""
+    from wm_data import sha256_file
+    out = root / rel
+    out.mkdir(parents=True)
+    meta = json.loads(json.dumps(ep.meta))
+    meta.update({"scene": "game_v19", "seed": seed, "episode_id": eid, "rows": ep.arrays["global.npy"].shape[0],
+                 "every": 60, "days": 120, "arrays": {}})
+    for name, a in ep.arrays.items():
+        np.save(out / name, a)
+        meta["arrays"][name] = {"sha256": sha256_file(out / name), "shape": list(a.shape), "dtype": str(a.dtype)}
+    (out / "meta.json").write_text(json.dumps(meta))
+    (out / "interventions.json").write_text(json.dumps(ep.interventions))
+
+
+@unittest.skipUnless(HAVE_TORCH, "torch is not installed")
+class TrainEndToEndTests(unittest.TestCase):
+    """`m1_gru.train` on a synthetic v2-style dataset written to disk: multi-split groups, the factual val report,
+    the validation-start subsample, both model kinds (M1-long with `--burn-in full`)."""
+
+    def test_train_writes_val_metrics_for_both_kinds(self) -> None:
+        import argparse
+        import tempfile
+        from pathlib import Path
+        from wm1 import m1_tf
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entries = []
+            for seed, role in [(s, "train") for s in range(6)] + [(s, "val") for s in range(6, 9)]:
+                for eid, split, rep in (("none", "v19_fact", 0), ("gf240E", "v19_arm_r0", 0), ("none", "v19_none_r1", 1)):
+                    ep = synth_v6(seed + 10 * rep, 700)
+                    if eid != "none":
+                        ep.interventions = [{"tick": 300 * 60, "kind": "gift_food", "amount": 240, "applied": 240,
+                                             "settlement": 1}]
+                    rel = f"v2/game_v19_s{seed}_{eid}_r{rep}"
+                    write_episode(root, rel, ep, seed, eid)
+                    entries.append({"scene": "game_v19", "seed": seed, "role": role, "split": split,
+                                    "schedule_id": eid, "path": rel})
+            man = root / "manifest.json"
+            man.write_text(json.dumps({"episodes": entries}))
+            spec = c.Dataset("tmp_v2", man, {"train": (c.V19_ALL, "train"), "val": ((c.V19_FACT, c.V19_ARM_R0), "val"),
+                                             "test": (c.V19_ALL, "test"), "val_fact": (c.V19_FACT, "val")},
+                             ("train",), ("train",), ("val",), ("test",), None, None, None, ("T1", "T2", "T2_any"),
+                             True, None, c.V17_EXTRA, ("val_fact",))
+            c.DATASETS["tmp_v2"] = spec
+            try:
+                for script, kind, extra in (("gru", m.KINDS["m1_gru"], {"hidden": 16, "burn_in": "full"}),
+                                            ("tf", m1_tf.KINDS["m1_tf"] if hasattr(m1_tf, "KINDS") else m.kind_of("m1_tf"),
+                                             {"d_model": 16, "layers": 1, "heads": 2, "context": 24})):
+                    out = root / f"run_{script}"
+                    args = argparse.Namespace(out=str(out), variant="sev-blind_action-aware", seed=0, root=str(root),
+                                              device="cpu", dataset="tmp_v2")
+                    for k in kind.defaults:
+                        setattr(args, k, None)
+                    for k, v in dict(window=48, batch=4, max_steps=4, eval_every=2, ramp_steps=1, k_max=6,
+                                     roll_min_context=20, roll_starts=1, warmup=24, threads=1, patience=1,
+                                     val_frac=0.5, **extra).items():
+                        setattr(args, k, v)
+                    self.assertEqual(m.train(args, kind), 0)
+                    cfg = json.loads((out / "config.json").read_text())
+                    val = json.loads((out / "val_metrics.json").read_text())
+                    self.assertEqual(cfg["train_episodes"], 18)
+                    self.assertEqual(cfg["val_episodes"], 6)
+                    self.assertEqual(len(cfg["input_names"]), 74)
+                    self.assertGreater(cfg["val_starts"], 0)
+                    self.assertEqual(sorted(val["val"]["T2_any"]["168"]), ["val_fact"])
+                    self.assertIn("bias_removed", val["val"]["T2_any"]["168"]["val_fact"])
+                    log = [json.loads(x) for x in (out / "train_log.jsonl").read_text().splitlines()]
+                    self.assertTrue(any("eval_s" in x for x in log))
+                    if script == "gru":
+                        self.assertEqual(cfg["hyper"]["burn_in"], "full")
+                        pred, _ = m.load_predictor(out, "cpu")
+                        self.assertEqual(pred.burn_in, "full")
+            finally:
+                del c.DATASETS["tmp_v2"]

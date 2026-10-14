@@ -474,7 +474,8 @@ def train(args, kind: Kind | None = None) -> int:
     set_seed(args.seed, cfg["threads"])
     t0 = time.time()
     train_groups = ds.train_groups(variant.action_aware)
-    g = c.load_groups(train_groups + list(ds.val), Path(args.root), ds.name)
+    report = [n for n in ds.val_report if n not in ds.val]
+    g = c.load_groups(train_groups + list(ds.val) + report, Path(args.root), ds.name)
     train_eps = [ep for n in train_groups for ep in g[n]]
     want = variant.state_names if ds.observable else d.ALL_STATE
     if any(ep.names != want for ep in train_eps + [ep for n in ds.val for ep in g[n]]):
@@ -552,6 +553,10 @@ def train(args, kind: Kind | None = None) -> int:
     round_counts, choice = choose_rounding(pred, val, stds, keep)
     if ds.tasks is None:
         val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split="none", any_hour=False, t1_on=True)
+    elif ds.val_report:
+        rep = {n: g[n] for n in ds.val_report}
+        val_metrics = ev.evaluate(pred, rep, c.split_stds(rep), cf_test=None, t3_split=None, tasks=ds.tasks,
+                                  bias_removed=True)
     else:
         val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split=None, tasks=ds.tasks, bias_removed=True)
     cal_preps = [d.prepare(ep, variant, norm) for n in ds.val for ep in val[n]]

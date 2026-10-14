@@ -43,7 +43,9 @@ class Dataset:
 
     WM-2 (docs/worldmodel/wm2/GOAL.md 7.1): a group's split may be a tuple of manifest splits; the group is their
     episodes in that order (`load_groups`), e.g. every member of the dataset-v2 families (factual and arms, both
-    replicates) as one training group."""
+    replicates) as one training group. `val_report` (empty: the `val` groups) names the groups whose full validation
+    metrics `m1_gru.train` writes at the end of training (WM-2: the factual validation worlds; early stopping and the
+    rounding choice stay on `val`)."""
     name: str
     manifest: Path
     groups: dict = field(hash=False)
@@ -58,6 +60,7 @@ class Dataset:
     observable: bool = False
     train_seeds: tuple[int, int] | None = None
     extra_state: tuple[str, ...] = ()
+    val_report: tuple[str, ...] = ()
 
     def train_groups(self, action_aware: bool) -> list[str]:
         return list(self.train_action if action_aware else self.train)
@@ -86,10 +89,12 @@ V19_FACT, V19_ARM_R0, V19_NONE_R1, V19_ARM_R1 = "v19_fact", "v19_arm_r0", "v19_n
 V19_ALL = (V19_FACT, V19_ARM_R0, V19_NONE_R1, V19_ARM_R1)
 
 
-def _v2(name: str, train: str | tuple, val: str | tuple, test: str | tuple, extra: tuple[str, ...]) -> Dataset:
-    return Dataset(name, V2_MANIFEST, {"train": (train, "train"), "val": (val, "val"), "test": (test, "test")},
+def _v2(name: str, train: str | tuple, val: str | tuple, test: str | tuple, extra: tuple[str, ...],
+        fact: str = V19_FACT) -> Dataset:
+    return Dataset(name, V2_MANIFEST, {"train": (train, "train"), "val": (val, "val"), "test": (test, "test"),
+                                       "val_fact": (fact, "val")},
                    ("train",), ("train",), ("val",), ("test",), None, None, None, ("T1", "T2", "T2_any"), True,
-                   None, extra)
+                   None, extra, ("val_fact",))
 
 
 DATASETS = {
@@ -107,7 +112,7 @@ DATASETS = {
     # effect evaluation reads them through `wm2.effects`). The factual-only view and the game_v16 control.
     "v2_v19": _v2("v2_v19", V19_ALL, (V19_FACT, V19_ARM_R0), V19_ALL, V17_EXTRA),
     "v2_v19_fact": _v2("v2_v19_fact", V19_FACT, V19_FACT, V19_FACT, V17_EXTRA),
-    "v2_v16": _v2("v2_v16", "v16", "v16", "v16", ()),
+    "v2_v16": _v2("v2_v16", "v16", "v16", "v16", (), fact="v16"),
 }
 
 
