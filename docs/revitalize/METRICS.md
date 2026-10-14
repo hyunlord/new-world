@@ -2758,12 +2758,12 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 
 - `worldsim_perf overhead --scene game_v19 --seed 15000 --days 30 --repeats 3` (alternating): plain 1.765 / 1.791 / 1.789 s, profiled 1.786 / 1.785 / 1.785 s; medians 1.789 vs 1.785 s → **overhead −0.22 %**; the profiled runs end on the plain runs' fingerprint (3 of 3). `p15-0_final/overhead_game_v19_s15000_d30.json`.
 
-### Part 3 — sweeps (one timed batch 00:15:26–00:25:01 KST, not contended) and scaling (`p15-4_scaling/scaling.md`)
+### Part 3 — sweeps (one timed batch 00:15:26–00:25:01 KST; gate at load 2.95; natural not contended, fed / repeat / raw / map started at 13.41 / 9.85 / 9.85 / 7.02 — contended in section 1's sense) and scaling (`p15-4_scaling/scaling.md`)
 
 | # | question | measured | verdict |
 |---|---|---|---|
 | P1 | `game_v19` natural, 32 worlds × 120 days | worst mean 0.129 ms, worst p99.9 0.304 ms, max 1.935 ms; 0 ticks > 8 ms | **PASS** |
-| P2 | fed stress n = 500, 8 worlds | median mean 0.303 ms; pooled p99.9 0.634 ms (22,560 ticks); per-world max ≤ 0.827 ms; 0 ticks > 16.67 ms | **PASS** |
+| P2 | fed stress n = 500, 8 worlds | median mean 0.303 ms; pooled p99.9 0.634 ms (22,560 ticks); per-world max ≤ 0.827 ms; 0 ticks > 16.67 ms (sweep started at load 13.4; gated recheck 0.297 / 0.608 ms, also PASS) | **PASS** |
 | P3 | UI reads at n = 500 (single calls, Rust side) | 26.4 µs (WIP), 26.5 µs (art, partial: 2 art-only getters untimed); ×callers 99 µs (WIP), 285 µs (art; `get_society_snapshot` and `get_intervention_state` untimed, art-only) | **PASS** |
 | P4 | N_max | ≥ 2,000 (every size passes; n = 2,000 median mean 1.622 ms); interpolated 5,142 alive (extrapolated) | **comfortable** |
 | P5 | growth | no system with a superlinear natural slope; `AgentMovementSystem` stress slope 1.21 [1.19, 1.23] at 1.4 % share is the only superlinear slope; none near-quadratic, none crowding-driven | **clean** |
@@ -2777,3 +2777,8 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 - Supplementary fed sizes (gated, 01:25:53, load 2.09): median mean 2.536 / 3.648 / 5.715 / 8.170 ms at n = 3,000 / 4,000 / 6,000 / 8,000; pooled p99.9 5.91 / 9.52 / 16.79 / 27.11 ms; ticks > 16.67 ms 0 / 0 / 24 / 35. Mean reaches 4.0 ms at ≈ 4,350 (log-log between measured sizes); pooled p99.9 reaches 8.0 ms at ≈ 3,600.
 - Raw (no gifts) stress: n = 2,000 ends with 1,688 alive on average; mean 1.404 ms, pooled p99.9 2.641 ms.
 - Part 5 trigger: none (P2 passes; no near-quadratic system) → no fix.
+
+### Part 6 — review and gate (00:51–02:45 KST)
+
+- Review round 1 (0 High, 2 Medium, 7 Low) and round 2 (0 High, 1 Medium, 7 Low), all handled (`REVIEW_PASS15.md`); recomputations by the reviewers: one run from its sidecar, the settlement stress slope, P2 pooled p99.9, the recheck, the repeats' CV, the supplementary crossings.
+- **Gate green on `da8e45c7`** (`verification/p15_gate/gate.txt`): debug 2,134 / 0 failed, release 2,134 / 0, both clippy clean, forbidden-math clean, bridge build, Godot import, strict check, smoke without errors, Python revitalize 163 OK, worldmodel 49 OK (24 skipped, `WM_BIN`/`PROBE_BIN` = /nonexistent), `worldsim_perf quick` exit 0 (mean 0.302 ms), allowed paths OK. `codex/revitalize-2026-10` → `da8e45c7`.

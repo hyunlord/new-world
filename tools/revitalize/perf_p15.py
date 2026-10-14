@@ -524,7 +524,10 @@ def render(out):
               "steady state = every tick after the first 60.", ""]
     p = out["p_table"]
     lines += ["## P table" + hdr, "", "| # | rule | measured | verdict |", "|---|---|---|---|"]
-    lines.append(f"| P1 | every natural world meets B1 and B2 | {p['P1']['worlds']} worlds; worst mean {out['natural']['max_mean_ms']:.4f} ms, worst p99.9 {out['natural']['max_p999_ms']:.3f} ms, max {out['natural']['max_ms']:.3f} ms | {'PASS' if p['P1']['pass'] else 'FAIL'} |")
+    if out["natural"]["worlds"]:
+        lines.append(f"| P1 | every natural world meets B1 and B2 | {p['P1']['worlds']} worlds; worst mean {out['natural']['max_mean_ms']:.4f} ms, worst p99.9 {out['natural']['max_p999_ms']:.3f} ms, max {out['natural']['max_ms']:.3f} ms | {'PASS' if p['P1']['pass'] else 'FAIL'} |")
+    else:
+        lines.append("| P1 | every natural world meets B1 and B2 | no natural runs | — |")
     p2 = p["P2"]
     lines.append(f"| P2 | n = 500 fed: median world mean ≤ 4.0 ms, pooled p99.9 ≤ 8.0 ms | {p2['seeds']} worlds; median mean {p2['median_mean_ms']:.4f} ms; pooled p99.9 {fmt_ms(p2['pooled_p999_ms'])} ms | {'NOT COMPUTABLE (sidecars missing)' if p2['pass'] is None else ('PASS' if p2['pass'] else 'FAIL')} |" if p2["seeds"] else "| P2 | — | no n = 500 runs | FAIL |")
     p3 = p["P3"]
