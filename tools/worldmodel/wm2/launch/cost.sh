@@ -6,14 +6,14 @@
 set -u
 SHA=$1
 W=/home/hyunlord/work/wm1-runs/wm2
-O=$W/_cost
+O=$W/_cost${COST_TAG:-}
 mkdir -p $O
 D=$W/_code/${SHA:0:8}
 [ -d "$D" ] || { git -C /home/hyunlord/work/new-world-wm1 fetch -q origin; git -C /home/hyunlord/work/new-world-wm1 worktree add -f --detach "$D" "$SHA" >/dev/null 2>&1; }
 source /home/hyunlord/work/wm1-venv/bin/activate
 cd $D
 RECIPE="--window 336 --eval-every 200 --patience 12 --batch 32 --clamp-nonneg 1 --k-max 168 --roll-min-context 167 \
-  --roll-starts 1 --tf-l1 1.0 --threads 8 --v-weight 5.0 --ramp-steps 1 --max-steps 200 --max-seconds 7200"
+  --roll-starts 1 --tf-l1 1.0 --threads 8 --v-weight 5.0 --ramp-steps 1 --max-steps 200 --max-seconds 7200 ${VALFLAGS:-}"
 for spec in "tf m1_tf.py" "gru m1_gru.py --burn-in full"; do
   set -- $spec; NAME=$1; SCRIPT=$2; shift 2
   OUT=$O/$NAME; rm -rf $OUT; mkdir -p $OUT

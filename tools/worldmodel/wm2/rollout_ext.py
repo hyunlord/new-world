@@ -10,7 +10,8 @@ test checks that `rollout_jobs` reproduces `pred.rollout` on the shared fields. 
 the last row's calendar and actions (`clamp`, as the predictors do); each job's result is cut to its own horizon.
 
 The two extra series are the continuous stepped state (never rounded): the split event (`v2.split_event_row`) is
-defined on it. The calendar family, `an5`, persistence and the ridge do not predict these columns.
+defined on it; a model without those state columns (the `game_v16` control) gets None. Jobs that share an episode and
+an actions array share one prepared input (and, for the full burn-in, one teacher-forced pass). The calendar family, `an5`, persistence and the ridge do not predict these columns.
 """
 from __future__ import annotations
 
@@ -52,9 +53,6 @@ def rollout_jobs(pred, jobs: list[Job], chunk: int = 128) -> list[RolloutX]:
     """Every job's rollout (in job order), batched `chunk` jobs at a time (jobs sorted by horizon inside)."""
     if not isinstance(pred, g.GRUPredictor):
         raise TypeError("rollout_jobs supports the M1 predictors (m1_gru.GRUPredictor, m1_tf.TFPredictor)")
-    for n in EXTRA:
-        if n not in pred.lay.names:
-            raise ValueError(f"the model's state has no {n}: no split / settlement outcomes")
     order = sorted(range(len(jobs)), key=lambda i: -jobs[i].horizon)
     out: list[RolloutX | None] = [None] * len(jobs)
     for i in range(0, len(order), chunk):
@@ -72,13 +70,19 @@ def _chunk(pred, jobs: list[Job]) -> list[RolloutX]:
     if len(T) != 1:
         raise ValueError("jobs of one chunk must have episodes of equal length")
     T = T.pop()
-    preps = [d.prepare(j.ep, pred.variant, pred.norm, actions=j.actions) for j in jobs]
+    # One prepared input per distinct (episode, actions) pair; every job indexes its pair (`eu`).
+    uniq: dict = {}
+    eu_list = [uniq.setdefault((id(j.ep), id(j.actions)), len(uniq)) for j in jobs]
+    first = {}
+    for j, u in zip(jobs, eu_list):
+        first.setdefault(u, j)
+    preps = [d.prepare(first[u].ep, pred.variant, pred.norm, actions=first[u].actions) for u in range(len(uniq))]
     tt = lambda a: torch.tensor(np.stack(a), dtype=torch.float32, device=dev)
     x_state, cal = tt([p.x_state for p in preps]), tt([p.calendar for p in preps])
     act, sev = tt([p.actions for p in preps]), tt([p.sev for p in preps])
     state_raw = tt([p.state for p in preps])
     n = len(jobs)
-    ar = torch.arange(n, device=dev)
+    ar = torch.tensor(eu_list, device=dev)
     starts = torch.tensor([j.start for j in jobs], device=dev)
     H = max(j.horizon for j in jobs)
     W = pred.warmup
@@ -94,7 +98,7 @@ def _chunk(pred, jobs: list[Job]) -> list[RolloutX]:
         mu, fl = mu[:, -1], fl[:, -1]
         ones = torch.ones(n, 1, dtype=torch.bool, device=dev)
     elif pred.burn_in == "full":
-        mu_all, _, fl_all, outs = model.run(torch.cat([x_state, cal, act, sev], -1))
+        mu_all, _, fl_all, outs = model.run(torch.cat([x_state, cal, act, sev], -1))   # one pass per distinct input
         hidden = outs[:, ar, starts].contiguous()
         mu, fl = mu_all[ar, starts], fl_all[ar, starts]
     else:
@@ -112,7 +116,8 @@ def _chunk(pred, jobs: list[Job]) -> list[RolloutX]:
     cur = state_raw[ar, starts]
     sev_hold = sev[ar, starts]
     vidx, didx = torch.tensor(lay.v, device=dev), torch.tensor(lay.deaths, device=dev)
-    sa_i, ft_i = lay.names.index(EXTRA[0]), lay.names.index(EXTRA[1])
+    has_extra = all(x in lay.names for x in EXTRA)
+    sa_i, ft_i = (lay.names.index(EXTRA[0]), lay.names.index(EXTRA[1])) if has_extra else (lay.fire, lay.fire)
     vs, probs, chs, des, sas, fts = [], [], [], [], [], []
     for k in range(H):
         cur = pred.stepper.next_state(cur, mu, fl)
@@ -143,5 +148,6 @@ def _chunk(pred, jobs: list[Job]) -> list[RolloutX]:
         vv = v[i, :h]
         if pred.round_counts:
             vv, cold, deaths = np.round(vv), np.round(cold), np.round(deaths)
-        out.append(RolloutX(vv[None], prob[i, :h][None], cold[None], deaths[None], sa[i, :h][None], ft[i, :h][None]))
+        out.append(RolloutX(vv[None], prob[i, :h][None], cold[None], deaths[None],
+                            sa[i, :h][None] if has_extra else None, ft[i, :h][None] if has_extra else None))
     return out

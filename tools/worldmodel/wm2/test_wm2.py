@@ -542,3 +542,38 @@ class TrainEndToEndTests(unittest.TestCase):
                         self.assertEqual(pred.burn_in, "full")
             finally:
                 del c.DATASETS["tmp_v2"]
+
+
+@unittest.skipUnless(HAVE_TORCH, "torch is not installed")
+class BatchedValidationTests(unittest.TestCase):
+    def test_batched_validation_equals_the_per_episode_path(self) -> None:
+        from wm1 import m1_tf
+        m.set_seed(0, 2)
+        variant = m.dataset_variant(c.dataset("v2_v19"), "sev-blind_action-aware")
+        eps = [d.from_episode(synth_v6(s, 700), "v19_fact", "val", s, "none", c.V17_EXTRA) for s in (1, 2, 3)]
+        norm = d.Normalizer.fit([d.from_episode(synth_v6(9, 700), "v19_fact", "train", 9, "none", c.V17_EXTRA)], variant)
+        lay = d.Layout(variant)
+        val = {"val": eps}
+        stds = c.split_stds(val)
+        gru = m.M1GRU(lay.n_input, lay.n_cont, 16, 2)
+        preds = [m.GRUPredictor(gru, lay, norm, variant, "cpu", burn_in="full", nonneg=True),
+                 m.GRUPredictor(gru, lay, norm, variant, "cpu", warmup=24),
+                 m1_tf.TFPredictor(m1_tf.M1TF(lay.n_input, lay.n_cont, 16, 1, 2, context=24), lay, norm, variant, "cpu",
+                                   24, context=24)]
+        for p in preds:
+            for h in (24, 168):
+                a = m.val_t2(p, val, stds, h)["val"]
+                bb = m.val_t2(p, val, stds, h, batch=7)["val"]
+                self.assertAlmostEqual(a, bb, places=5)
+            self.assertAlmostEqual(m.val_score(p, val, stds)[0], m.val_score(p, val, stds, batch=5)[0], places=5)
+        # A model without the two extra state columns (the game_v16 control) rolls too; its extras are None.
+        v16 = m.dataset_variant(c.dataset("v2_v16"), "sev-blind_action-blind")
+        e16 = [d.from_episode(synth_v6(4, 700), "v16", "val", 4, "none")]
+        n16 = d.Normalizer.fit([d.from_episode(synth_v6(8, 700), "v16", "train", 8, "none")], v16)
+        p16 = m.GRUPredictor(m.M1GRU(d.Layout(v16).n_input, d.Layout(v16).n_cont, 8, 2), d.Layout(v16), n16, v16, "cpu",
+                             warmup=24)
+        from wm2 import rollout_ext as rx
+        ro = rx.rollout_jobs(p16, [rx.Job(e16[0], 100, e16[0].bench.actions, 10)])[0]
+        self.assertIsNone(ro.fissions_total)
+        self.assertAlmostEqual(m.val_t2(p16, {"v": e16}, c.split_stds({"v": e16}), 24)["v"],
+                               m.val_t2(p16, {"v": e16}, c.split_stds({"v": e16}), 24, batch=4)["v"], places=5)

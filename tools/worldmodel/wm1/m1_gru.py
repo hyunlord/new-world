@@ -18,7 +18,8 @@ from row 0: in training the rows before each window run as one batched no-grad p
 sequences), then the window runs with gradient from those per-layer states (truncated BPTT); in evaluation the
 teacher-forced states of every row are computed once per episode and indexed by start. `--burn-in window` (default)
 is the behaviour of WM-1.3. `--val-frac F` (< 1) scores early stopping on a fixed subsample of the validation starts
-(`numpy.random.default_rng(0)`, the same for every run; 1 = every start, WM-1.3).
+(`numpy.random.default_rng(0)`, the same for every run; 1 = every start, WM-1.3). `--val-batch N` (> 0) rolls the
+validation starts of every episode of a group through `wm2.rollout_ext` in batches of N (0 = per episode, WM-1.3).
 
 GOAL_1_3.md 7.2-7.4: `--ramp-steps` decouples the k curriculum and the patience start from `--max-steps` (0 = half of
 it); every run evaluated on WM-1.2's grid (every 150 steps) also replays WM-1.2's stopping rule online and keeps that
@@ -60,7 +61,7 @@ except ImportError:  # the Mac gate runs without torch; the torch tests skip
 DEFAULTS = dict(hidden=256, layers=2, lr=3e-4, weight_decay=1e-4, batch=64, window=168, k_max=24, roll_starts=8,
                 roll_weight=1.0, max_steps=12000, eval_every=400, patience=5, max_seconds=7200, warmup=168,
                 grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0, ramp_steps=0,
-                burn_in="window", val_frac=1.0)
+                burn_in="window", val_frac=1.0, val_batch=0)
 BURN_IN = ("window", "full")
 # `ramp_steps` (GOAL_1_3.md 7.2): the steps of the k curriculum and the start of patience; 0 = `max_steps // 2` (the
 # WM-1 / WM-1.2 behaviour). An int, so the parser builds `--ramp-steps` with `type=int`.
@@ -345,19 +346,34 @@ def val_starts(val: dict[str, list], frac: float, horizon: int = 24) -> dict | N
     return out
 
 
-def val_score(pred: ev.Predictor, val: dict[str, list], stds: dict, keep: dict | None = None) -> tuple[float, dict]:
-    """Validation T2 24 h (06:00 starts) per group and their mean; `keep` (`val_starts`) restricts the starts."""
-    if keep is None:
-        per = {n: ev.t2(pred, eps, stds[n], 24)["mean"] for n, eps in val.items()}
-        return float(np.mean(list(per.values()))), per
+def val_t2(pred: ev.Predictor, val: dict[str, list], stds: dict, horizon: int, keep: dict | None = None,
+           batch: int = 0) -> dict:
+    """Validation T2 (06:00 starts) per group: `evaluate.t2`'s pooled mean nMAE; `keep` (`val_starts`) restricts the
+    starts; `batch` > 0 rolls every (episode, start) of a group through `wm2.rollout_ext.rollout_jobs` in batches of
+    that many jobs (the same rollouts batched across episodes, WM-2: DECISIONS H4.1)."""
+    if keep is None and not batch:
+        return {n: ev.t2(pred, eps, stds[n], horizon)["mean"] for n, eps in val.items()}
     per = {}
     for n, eps in val.items():
-        preds, trues = [], []
-        for ep in eps:
-            s = keep[(n, int(ep.seed), ep.eid)]
-            preds.append(ev.run_rollouts(pred, ep, s, 24).v[:, -1])
-            trues.append(ep.bench.v[s + 24])
+        starts = [(ep, keep[(n, int(ep.seed), ep.eid)] if keep is not None else ev.bench_starts(ep, horizon))
+                  for ep in eps]
+        if batch:
+            from wm2 import rollout_ext as rx
+            jobs = [rx.Job(ep, int(s0), ep.bench.actions, horizon) for ep, ss in starts for s0 in ss]
+            ros = rx.rollout_jobs(pred, jobs, chunk=batch)
+            preds = [np.stack([ro.v[0, -1] for ro in ros])]
+            trues = [np.stack([j.ep.bench.v[j.start + horizon] for j in jobs])]
+        else:
+            preds = [ev.run_rollouts(pred, ep, ss, horizon).v[:, -1] for ep, ss in starts if len(ss)]
+            trues = [ep.bench.v[ss + horizon] for ep, ss in starts if len(ss)]
         per[n] = float(np.nanmean(b.nmae(np.vstack(preds), np.vstack(trues), stds[n])))
+    return per
+
+
+def val_score(pred: ev.Predictor, val: dict[str, list], stds: dict, keep: dict | None = None,
+              batch: int = 0) -> tuple[float, dict]:
+    """Validation T2 24 h (06:00 starts) per group and their mean (`val_t2`)."""
+    per = val_t2(pred, val, stds, 24, keep, batch)
     return float(np.mean(list(per.values()))), per
 
 
@@ -447,13 +463,14 @@ class Wm12Rule:
                 "stop_step": self.stop_step if self.stop else last_step, "checkpoint": WM12_CKPT}
 
 
-def choose_rounding(pred, val: dict, stds: dict, keep: dict | None = None) -> tuple[bool, dict]:
+def choose_rounding(pred, val: dict, stds: dict, keep: dict | None = None, batch: int = 0) -> tuple[bool, dict]:
     """Output rounding of count variables chosen on val (T2 24 h + 168 h, 06:00 starts)."""
     choice = {}
     for rc in (False, True):
         pred.round_counts = rc
-        s24, _ = val_score(pred, val, stds, keep)
-        s168 = float(np.mean([ev.t2(pred, eps, stds[n], 168)["mean"] for n, eps in val.items()]))
+        s24, _ = val_score(pred, val, stds, keep, batch)
+        s168 = float(np.mean(list(val_t2(pred, val, stds, 168, None, batch).values())) if batch else
+                     np.mean([ev.t2(pred, eps, stds[n], 168)["mean"] for n, eps in val.items()]))
         choice[str(rc)] = {"t2_24": s24, "t2_168": s168}
     rc = choice["True"]["t2_24"] + choice["True"]["t2_168"] < choice["False"]["t2_24"] + choice["False"]["t2_168"]
     pred.round_counts = rc
@@ -483,6 +500,7 @@ def train(args, kind: Kind | None = None) -> int:
     val = {n: g[n] for n in ds.val}
     stds = c.split_stds(val)
     keep = val_starts(val, float(cfg.get("val_frac", 1.0)))
+    vb = int(cfg.get("val_batch", 0))
     norm = d.Normalizer.fit(train_eps, variant)
     lay = d.Layout(variant)
     preps = [d.prepare(ep, variant, norm) for ep in train_eps]
@@ -520,7 +538,7 @@ def train(args, kind: Kind | None = None) -> int:
             log.flush()
         if step % cfg["eval_every"] == 0:
             te = time.time()
-            score, per = val_score(pred, val, stds, keep)
+            score, per = val_score(pred, val, stds, keep, int(cfg.get("val_batch", 0)))
             eval_s = time.time() - te
             improved = score < best - 1e-6
             if improved:
@@ -547,10 +565,10 @@ def train(args, kind: Kind | None = None) -> int:
     if wm12_summary is not None and (out / WM12_CKPT).exists():
         # The checkpoint WM-1.2's rule would have kept, with its own rounding choice on val.
         model.load_state_dict(torch.load(out / WM12_CKPT, map_location=device))
-        wm12_summary["round_counts"], wm12_summary["rounding_val"] = choose_rounding(pred, val, stds, keep)
+        wm12_summary["round_counts"], wm12_summary["rounding_val"] = choose_rounding(pred, val, stds, keep, vb)
     model.load_state_dict(torch.load(out / "best.pt", map_location=device))
     # Choose the output rounding of count variables on val (T2 24 h and 168 h).
-    round_counts, choice = choose_rounding(pred, val, stds, keep)
+    round_counts, choice = choose_rounding(pred, val, stds, keep, vb)
     if ds.tasks is None:
         val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split="none", any_hour=False, t1_on=True)
     elif ds.val_report:
