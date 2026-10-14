@@ -789,6 +789,62 @@ impl SimResources {
     }
 }
 
+/// Wall-time bookkeeping of one registered system inside a [`TickProfile`]
+/// (Revitalize Pass 15, measurement only).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SystemProfile {
+    /// The system's [`RuntimeSystem::name`].
+    pub name: String,
+    /// The system's [`RuntimeSystem::priority`].
+    pub priority: u32,
+    /// The system's [`RuntimeSystem::tick_interval`].
+    pub interval: u64,
+    /// Ticks in which the system was due and ran.
+    pub calls: u64,
+    /// Summed wall time of those runs, nanoseconds (saturating).
+    pub total_ns: u64,
+    /// Longest single run, nanoseconds.
+    pub max_ns: u64,
+}
+
+/// Per-system and per-tick wall times gathered by [`SimEngine::tick_profiled`]
+/// (Revitalize Pass 15, measurement only; nothing in the simulation reads it).
+///
+/// `systems` and `last_tick_ns` follow the engine's execution order (the
+/// order [`SimEngine::system_names`] returns). Build one with
+/// [`SimEngine::new_tick_profile`].
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TickProfile {
+    /// One entry per registered system, in execution order.
+    pub systems: Vec<SystemProfile>,
+    /// Profiled ticks so far.
+    pub ticks: u64,
+    /// Wall time of every profiled whole tick, microseconds (rounded to the
+    /// nearest µs, saturating at `u32::MAX`); `tick_us.len() == ticks`.
+    pub tick_us: Vec<u32>,
+    /// Summed wall time of the recent-deaths prune step, nanoseconds.
+    pub prune_ns: u64,
+    /// Each system's wall time in the most recent profiled tick,
+    /// nanoseconds; 0 for a system that was not due in that tick.
+    pub last_tick_ns: Vec<u64>,
+}
+
+impl TickProfile {
+    /// Add one run of the system at `index` that took `ns` nanoseconds.
+    fn record_system(&mut self, index: usize, ns: u64) {
+        let entry = &mut self.systems[index];
+        entry.calls += 1;
+        entry.total_ns = entry.total_ns.saturating_add(ns);
+        entry.max_ns = entry.max_ns.max(ns);
+        self.last_tick_ns[index] = ns;
+    }
+}
+
+/// Elapsed nanoseconds since `start`, saturating at `u64::MAX`.
+fn elapsed_ns(start: std::time::Instant) -> u64 {
+    u64::try_from(start.elapsed().as_nanos()).unwrap_or(u64::MAX)
+}
+
 /// Owns the world, the resources, and the priority-sorted system list.
 pub struct SimEngine {
     /// Entity component storage.
@@ -834,18 +890,71 @@ impl SimEngine {
     /// Run one tick: dispatches every due system, then advances the
     /// tick counter and updates the day/night clock.
     pub fn tick(&mut self) {
+        self.tick_inner(None);
+    }
+
+    /// Run one tick exactly as [`SimEngine::tick`] does and add its wall
+    /// times to `profile` (Revitalize Pass 15, measurement only: the
+    /// simulation never reads the profile, so a profiled run reaches the same
+    /// state as an unprofiled one). If `profile` does not hold one entry per
+    /// registered system it is first replaced by [`SimEngine::new_tick_profile`]
+    /// (its earlier contents are discarded; no panic).
+    pub fn tick_profiled(&mut self, profile: &mut TickProfile) {
+        if profile.systems.len() != self.systems.len() || profile.last_tick_ns.len() != self.systems.len() {
+            *profile = self.new_tick_profile();
+        }
+        self.tick_inner(Some(profile));
+    }
+
+    /// An empty [`TickProfile`] for this engine's registered systems, in
+    /// execution order.
+    pub fn new_tick_profile(&self) -> TickProfile {
+        TickProfile {
+            systems: self
+                .systems
+                .iter()
+                .map(|s| SystemProfile {
+                    name: s.name().to_string(),
+                    priority: s.priority(),
+                    interval: s.tick_interval(),
+                    ..SystemProfile::default()
+                })
+                .collect(),
+            last_tick_ns: vec![0; self.systems.len()],
+            ..TickProfile::default()
+        }
+    }
+
+    /// The body of [`SimEngine::tick`]; `std::time::Instant` is read only
+    /// when `profile` is given, and the simulation statements are the same
+    /// statements in the same order either way.
+    fn tick_inner(&mut self, mut profile: Option<&mut TickProfile>) {
+        let tick_start = profile.as_ref().map(|_| std::time::Instant::now());
         self.resources.current_tick = self.current_tick;
         // V7 viz-D — prune the display-only recent-deaths buffer once entries
         // age past the retain window. `saturating_sub` guards the defensive
         // `entry.tick > current_tick` case (age 0, kept). Order-independent →
         // deterministic.
         let tick = self.current_tick;
+        let prune_start = profile.as_ref().map(|_| std::time::Instant::now());
         self.resources
             .recent_deaths
             .retain(|d| tick.saturating_sub(d.tick as u64) < RECENT_DEATH_RETAIN_TICKS);
-        for system in &mut self.systems {
+        if let (Some(p), Some(start)) = (profile.as_deref_mut(), prune_start) {
+            p.prune_ns = p.prune_ns.saturating_add(elapsed_ns(start));
+        }
+        for (index, system) in self.systems.iter_mut().enumerate() {
             if self.current_tick.is_multiple_of(system.tick_interval()) {
-                system.tick(&mut self.world, &mut self.resources);
+                match profile.as_deref_mut() {
+                    None => system.tick(&mut self.world, &mut self.resources),
+                    Some(p) => {
+                        let start = std::time::Instant::now();
+                        system.tick(&mut self.world, &mut self.resources);
+                        p.record_system(index, elapsed_ns(start));
+                    }
+                }
+            } else if let Some(p) = profile.as_deref_mut() {
+                p.last_tick_ns[index] = 0;
             }
         }
         self.current_tick += 1;
@@ -862,6 +971,11 @@ impl SimEngine {
                 / self.resources.ticks_per_day as f64)
                 * 24.0
         };
+        if let (Some(p), Some(start)) = (profile, tick_start) {
+            let us = elapsed_ns(start).saturating_add(500) / 1000;
+            p.tick_us.push(u32::try_from(us).unwrap_or(u32::MAX));
+            p.ticks += 1;
+        }
     }
 
     /// Number of completed ticks since construction.
@@ -1028,6 +1142,61 @@ mod tests {
             ticks_run: Arc::new(AtomicU32::new(0)),
         }));
         assert_eq!(engine.system_names(), vec!["low", "mid", "high"]);
+    }
+
+    #[test]
+    fn tick_profile_counts_due_ticks_and_every_whole_tick() {
+        // Pass 15 6.1: two dummy systems (interval 1 and 3) over 7 ticks.
+        let every = Arc::new(AtomicU32::new(0));
+        let third = Arc::new(AtomicU32::new(0));
+        let mut engine = SimEngine::new(32, 32, empty_registry());
+        engine.register_system(Box::new(AtomicMock { name: "third", priority: 20, interval: 3, ticks_run: third.clone() }));
+        engine.register_system(Box::new(AtomicMock { name: "every", priority: 10, interval: 1, ticks_run: every.clone() }));
+        let mut profile = engine.new_tick_profile();
+        let names: Vec<&str> = profile.systems.iter().map(|s| s.name.as_str()).collect();
+        assert_eq!(names, engine.system_names());
+        assert_eq!((profile.systems[0].priority, profile.systems[1].interval), (10, 3));
+        for _ in 0..7 {
+            engine.tick_profiled(&mut profile);
+        }
+        // Ticks 0..7: "third" is due at 0, 3, 6.
+        assert_eq!((profile.systems[0].calls, profile.systems[1].calls), (7, 3));
+        assert_eq!((every.load(Ordering::SeqCst), third.load(Ordering::SeqCst)), (7, 3));
+        assert_eq!(profile.ticks, 7);
+        assert_eq!(profile.tick_us.len() as u64, profile.ticks);
+        assert!(profile.systems.iter().all(|s| s.max_ns <= s.total_ns));
+        assert_eq!(engine.current_tick(), 7);
+        // Tick 7 is not a multiple of 3: "third" was not due in the latest tick.
+        engine.tick_profiled(&mut profile);
+        assert_eq!(profile.last_tick_ns[1], 0);
+        assert_eq!(profile.systems[1].calls, 3);
+        assert_eq!(profile.tick_us.len(), 8);
+    }
+
+    #[test]
+    fn tick_profile_with_the_wrong_system_count_is_rebuilt() {
+        let mut engine = SimEngine::new(32, 32, empty_registry());
+        engine.register_system(Box::new(AtomicMock { name: "a", priority: 1, interval: 1, ticks_run: Arc::new(AtomicU32::new(0)) }));
+        let mut profile = TickProfile { ticks: 99, tick_us: vec![1; 99], ..TickProfile::default() };
+        engine.tick_profiled(&mut profile);
+        assert_eq!(profile.systems.len(), 1);
+        assert_eq!(profile.last_tick_ns.len(), 1);
+        assert_eq!((profile.ticks, profile.tick_us.len(), profile.systems[0].calls), (1, 1, 1));
+    }
+
+    #[test]
+    fn profiled_and_plain_ticks_advance_the_same_clock() {
+        let mut plain = SimEngine::new(32, 32, empty_registry());
+        let mut profiled = SimEngine::new(32, 32, empty_registry());
+        let mut profile = profiled.new_tick_profile();
+        for _ in 0..50 {
+            plain.tick();
+            profiled.tick_profiled(&mut profile);
+        }
+        assert_eq!(plain.current_tick(), profiled.current_tick());
+        assert_eq!(plain.resources.time_of_day.to_bits(), profiled.resources.time_of_day.to_bits());
+        assert_eq!(plain.resources.current_tick, profiled.resources.current_tick);
+        assert_eq!(profile.ticks, 50);
     }
 
     #[test]

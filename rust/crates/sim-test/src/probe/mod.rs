@@ -21,6 +21,7 @@ mod summary;
 pub use args::ProbeArgs;
 pub use fingerprint::fingerprint;
 pub use runner::run;
+pub(crate) use runner::scene_engine;
 
 #[cfg(test)]
 mod tests {

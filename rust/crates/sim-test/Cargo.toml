@@ -30,3 +30,7 @@ path = "src/bin/worldsim_probe.rs"
 [[bin]]
 name = "worldsim_wm"
 path = "src/bin/worldsim_wm.rs"
+
+[[bin]]
+name = "worldsim_perf"
+path = "src/bin/worldsim_perf.rs"

@@ -112,6 +112,14 @@ impl WorldGenConfig {
         Self::game_v18_with(seed, variety)
     }
 
+    /// Revitalize Pass 15 stress world: [`Self::game_v19`]`(seed)` with
+    /// `agents` founders on a `side × side` map (run it under
+    /// `WorldRules::game_v19(seed)`). Benchmark-only; not a game scene; never
+    /// used by the recorder or the probe's scenes.
+    pub const fn stress_v19(seed: u64, agents: u32, side: u32) -> Self {
+        Self { starting_agents: agents, width: side, height: side, ..Self::game_v19(seed) }
+    }
+
     /// Pass 9 generator inputs: the same world as v14 (no worldgen change).
     pub const fn game_v15(seed: u64) -> Self {
         Self::game_v14(seed)
@@ -294,5 +302,24 @@ mod tests {
             ),
             (64, 64, 24, 8, 4)
         );
+    }
+    #[test]
+    fn stress_v19_changes_only_the_founders_and_the_map() {
+        // Pass 15 6.2.
+        for seed in [0, 7, 15100] {
+            let base = WorldGenConfig::game_v19(seed);
+            let stress = WorldGenConfig::stress_v19(seed, 500, 64);
+            assert_eq!(stress.starting_agents, 500);
+            assert_eq!(WorldGenConfig { starting_agents: base.starting_agents, ..stress }, base);
+            assert_eq!(WorldGenConfig::stress_v19(seed, base.starting_agents, 64), base);
+            let wide = WorldGenConfig::stress_v19(seed, base.starting_agents, 128);
+            assert_eq!(WorldGenConfig { width: 64, height: 64, ..wide }, base);
+        }
+    }
+    #[test]
+    fn stress_v19_world_starts_with_the_requested_founders() {
+        let engine = build_world_with(&WorldGenConfig::stress_v19(15100, 500, 64), WorldRules::game_v19(15100));
+        assert_eq!(engine.current_tick(), 0);
+        assert_eq!(engine.world.query::<&sim_core::components::Agent>().iter().count(), 500);
     }
 }
