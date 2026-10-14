@@ -2719,3 +2719,16 @@ Timeline: food line reproduces s on 3,996 of 3,996 checks; T_low for 51 of 64 se
 - `sp240L`: right-direction share 0.794 ≥ 0.75 **PASS**; ENR 9.40 ≥ 2.0 **PASS**; day-118 settlement count differs in 0.206 of pairs vs the noise's 0.078 + 0.15 = 0.228 **FAIL** (short by 0.022; at day 60 and day 90 the shares are 0.324 and 0.255 against noise 0.020 and 0.000). Arm FAIL.
 - `gf240L`: right share 0.382 **FAIL**; ENR 1.95 **FAIL**; settlement share 0.078 vs 0.228 **FAIL**. Arm FAIL.
 - The spoil effect replicates on fresh worlds (Stage A 0.786 / 22.4 d / ENR 8.19 → Stage B 0.794 / 26.0 d / 9.40); the gift at T_low does not (Stage A 0.518 / ENR 4.26 → Stage B 0.382 / 1.95). The eve-of-winter gift does (Stage A 0.578 / 4.87 → Stage B 0.594 / 3.89): Stage B repeats Stage A's timing contrast — paired on the 51 T_low seeds, spoil T_low − T_eve +0.206 [+0.118, +0.285], gift −0.343 [−0.461, −0.225].
+
+### Part 4 — the intervention map and the amendments (13:20 KST)
+
+- **K6: delivered** — `docs/revitalize/INTERVENTION_MAP.md`: dose–response at T_low, the timing contrast (T_low / T_high / T_eve at 240, both stages), single vs split dose, the wood and weather arms' deaths, Stage B's confirmed effect sizes with intervals, the acts that do not change a world beyond noise, and a dataset-v2 schedule (factual + spoil 240 at T_low, spoil 120 at T_low, gift 240 at T_eve, rot_wood 120 at T_eve; R = 2; expected ENR ≈ 9, 4.6, 3.9–4.9 and 1.7 on the split day, the last as a deaths lever of +1.6 beyond noise).
+- **K7: applied** (`docs/revitalize/probe/p14-4_amendments/amendments.md`, `evaluate_pass14.py` on Pass 13's committed outputs, no rerun). Beside Pass 13's verdicts:
+
+| Pass 13 output | Pass 13 verdict | Pass 14 amended verdict | detail |
+|---|---|---|---|
+| J6 held-out (`p13-4`, v19n vs Pass 11's held-out v16, same seeds) | FAIL (`Y9_work_1500`, `Y9_idle_1200`) | **PASS** | work 15:00 0.2113 vs 0.2407 (worse by 0.0294, margin 0.0006); idle 12:00 0.6288 vs 0.6168 (0.0120); work 12:00 0.3571 vs 0.3704 (0.0132); every other clause passed in Pass 13 |
+| J6 tuning round 3 (`p13-3_round3`, vs `p13-0_v16`) | FAIL (`Y9_work_1500`) | **PASS** | work 15:00 0.2480 vs 0.2540 (0.0060); idle −0.0003; work 12:00 better by 0.0102 |
+| J7 (Part 5 pilot, game_v19) | FAIL (J7b path-share band) | **PASS** on (a) | (a) food η² 0.624 / R²_abs 0.373, wood 0.317 / 0.681, alive 0.821 / 0.175; J7b reported: PS(alive) 0.019 [0.010, 0.030], PS(food) 0.024 [0.013, 0.040], PS(alive) v19 − v18 −0.257 [−0.331, −0.193] |
+
+The absolute Y9 bounds remain reported: v19n's work share at 15:00 is under 0.25 in both runs (held-out v16 too).
