@@ -1,0 +1,44 @@
+{
+  "verified_at": "2026-10-14T04:02:13+00:00",
+  "rounds": 1,
+  "source_matches": [
+    {
+      "image": "F01.png",
+      "sha256": "adb3d168942c0618729631c79c4074fb401f8c9a5c42e37ea260039a3508de81",
+      "matches": true
+    },
+    {
+      "image": "F02.png",
+      "sha256": "5a757e25c98a49bdd5d0b8cf99d24f514ddc138f1b2965e18159f54148fa4ec6",
+      "matches": true
+    },
+    {
+      "image": "F03.png",
+      "sha256": "2ebf1333741dae19a89803ca5ac7e2b50af497b2f38f9f45c7c7ed68722a2ab9",
+      "matches": true
+    },
+    {
+      "image": "F04.png",
+      "sha256": "f62c3d3d4dc2d085be46147b5dc1c7b762e91f1dc1b72df41c2d047d82e33864",
+      "matches": true
+    },
+    {
+      "image": "F05.png",
+      "sha256": "bab359fe777c7e593eec9d567621127930427e5608fba8450f0922a221324a7f",
+      "matches": true
+    },
+    {
+      "image": "F06.png",
+      "sha256": "6ec2b2d6208b6435d252610b1ef7561d218a36d110644c846e6a8900e10b6a93",
+      "matches": true
+    },
+    {
+      "image": "F07.png",
+      "sha256": "056c789309b65c478a9290085ea367955b2a903ab8b516fac7cfd0cc78bee9b1",
+      "matches": true
+    }
+  ],
+  "verdict_unchanged": true,
+  "runtime_unchanged": true,
+  "overall": "NEEDS WORK"
+}
