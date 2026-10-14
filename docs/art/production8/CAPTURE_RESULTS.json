@@ -1,0 +1,82 @@
+[
+  {
+    "plan": "art",
+    "run": "final",
+    "start": "2026-10-14T03:00:54.069564+00:00",
+    "end": "2026-10-14T03:01:37.621899+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-art-console.log",
+    "sha256": "2842dd40fb4a3368fe409b6e88169829b1c2b7f0d0be678a6ed5301c940c691d",
+    "script_errors": []
+  },
+  {
+    "plan": "art_long",
+    "run": "final",
+    "start": "2026-10-14T03:01:37.622178+00:00",
+    "end": "2026-10-14T03:08:25.288158+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-art_long-console.log",
+    "sha256": "2041a0f70ca20cc6f4477047a21d9784368f02075f6ff7228cae4afb85a720f6",
+    "script_errors": []
+  },
+  {
+    "plan": "art_society",
+    "run": "final",
+    "start": "2026-10-14T03:08:25.288615+00:00",
+    "end": "2026-10-14T03:19:04.305130+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-art_society-console.log",
+    "sha256": "87d4dc3eadc045c393f6ca55ef911ec8f9d2678effbe099a5d642bde370e8da9",
+    "script_errors": []
+  },
+  {
+    "plan": "art_god",
+    "run": "final-god-live",
+    "start": "2026-10-14T03:19:04.305559+00:00",
+    "end": "2026-10-14T03:20:18.814537+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-god-live-art_god-console.log",
+    "sha256": "b1b49f9046c58eb4afdd82569c6d679c6122db7da740bf74ca543d7cc1274c6c",
+    "script_errors": []
+  },
+  {
+    "plan": "art_god",
+    "run": "final-god-society",
+    "start": "2026-10-14T03:20:18.814937+00:00",
+    "end": "2026-10-14T03:23:21.506217+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-god-society-art_god-console.log",
+    "sha256": "1dcde65d82c68de1221833b05c4731b029cf5e2601fd1e370edabbd2ffe61baf",
+    "script_errors": []
+  },
+  {
+    "plan": "art_god",
+    "run": "final-god-p",
+    "start": "2026-10-14T03:23:21.506447+00:00",
+    "end": "2026-10-14T03:34:13.879541+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-god-p-art_god-console.log",
+    "sha256": "487ca4e86f289bbe7543f889a6f68951ccb635badf6ea1ecda142deb20b4ace4",
+    "script_errors": []
+  },
+  {
+    "plan": "art_god",
+    "run": "final-god-g",
+    "start": "2026-10-14T03:34:13.879926+00:00",
+    "end": "2026-10-14T03:43:20.284004+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-god-g-art_god-console.log",
+    "sha256": "33537e71c24b8d873574be755f53e6bf20b9e4ec42874215d84cd2252ca35b45",
+    "script_errors": []
+  },
+  {
+    "plan": "art_society",
+    "run": "final-perf",
+    "start": "2026-10-14T03:43:20.284416+00:00",
+    "end": "2026-10-14T03:50:06.119023+00:00",
+    "exit_code": 0,
+    "log": "/Users/rexxa/work/art-production8-evidence/final-perf-art_society-console.log",
+    "sha256": "c3cf63389e8e28f839cfb71881954384b2841f19e62f591efb674a35893183b2",
+    "script_errors": []
+  }
+]

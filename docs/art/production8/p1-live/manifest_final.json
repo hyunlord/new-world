@@ -24,9 +24,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p1-live/shots/final/d2_1200_F2.entities.json",
       "raw_entities_sha256": "dd0cdf1c8b10d3b4960fededbdf83697626985d297e51e56e5b8c215b9403a44",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p1-live/shots/final/d2_1200_F2.1920.png",
-      "published_file": "d2_1200_F2.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "d2_1200_F2.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "8ebfc8e4532c7e4a4d9fa241ea27a89908a43af91ad316f3876e472f78a1a74a"
     },
     {
       "capture_plan_row": [

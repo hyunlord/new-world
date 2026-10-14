@@ -25,9 +25,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p1-society/shots/art_society/soc_d33_0900_F2_orig.entities.json",
       "raw_entities_sha256": "26eed1f41c98b9ea9e05b2eac5a031b9398725bb33acd744d86b4c3de108c77a",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p1-society/shots/art_society/soc_d33_0900_F2_orig.1920.png",
-      "published_file": "soc_d33_0900_F2_orig.jpg",
+      "published_file": "soc_d33_0900_F2_orig.png",
       "published_width": 1920,
-      "published_height": 1080
+      "published_height": 1080,
+      "published_sha256": "45ee05e5053342b3e8c8c1a6044109f2d669c9f8392fc7c6851f93beb8854532"
     }
   ],
   "git_sha": "b526860e351548008849842b433c30a1fedef635",

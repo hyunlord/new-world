@@ -24,9 +24,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.entities.json",
       "raw_entities_sha256": "8c7b02667fb73ff5db28798066288018e56b87ebc6bb204c4aa308488215a206",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.1920.png",
-      "published_file": "d2_1200_F2.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "d2_1200_F2.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "1829da100bcc4fc7941c1d54ff9417fb3f1fa7f2c22cb3908c4298b123b389ea"
     }
   ],
   "git_sha": "6a808fb9af5004521327f9e19070b78d9cb0014b",

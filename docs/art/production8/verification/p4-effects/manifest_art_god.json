@@ -42,9 +42,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1200_F2_spoil.entities.json",
       "raw_entities_sha256": "45fde8a2226826256225a11d803e06b40527b9908fb3b76a3be26eed82c6213b",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1200_F2_spoil.1920.png",
-      "published_file": "god_d23_1200_F2_spoil.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1200_F2_spoil.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "c6082e49dca19e1bae8ce49992261948442f939c186337914f138319641dfe4f"
     },
     {
       "capture_plan_row": [
@@ -101,9 +102,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1201_F2_gift_food.entities.json",
       "raw_entities_sha256": "ea4ce31f59a88dbaee6877ed235eaee8fe4452a130ee5bcaf27c7b31561af6fa",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1201_F2_gift_food.1920.png",
-      "published_file": "god_d23_1201_F2_gift_food.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1201_F2_gift_food.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "e8768b2971587a2f580045158a97714e3014aa2f98522ee88ca57de551164192"
     },
     {
       "capture_plan_row": [
@@ -173,9 +175,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1202_F2_rot_wood.entities.json",
       "raw_entities_sha256": "28de635b68fb3e73c5d21d261ea37497db2e74c5fd6b46e205c61b73e2175d58",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1202_F2_rot_wood.1920.png",
-      "published_file": "god_d23_1202_F2_rot_wood.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1202_F2_rot_wood.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "fd6bfac824c2c1ff6947ae002322486fa87011980c316e531a9f2063b918d96f"
     },
     {
       "capture_plan_row": [
@@ -258,9 +261,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1203_F2_gift.entities.json",
       "raw_entities_sha256": "9884c9b0624654a2e623ee9dac07a6e5323270866935468c465898d4fe4e16cd",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1203_F2_gift.1920.png",
-      "published_file": "god_d23_1203_F2_gift.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1203_F2_gift.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "60e00349def9bb5c236fb3c2804f937e490f651fa5770e9038adea9a9887873f"
     },
     {
       "capture_plan_row": [
@@ -356,9 +360,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_0200ms.entities.json",
       "raw_entities_sha256": "515c2216014ebf136331e3fd58e2e4f560fb8e5dd1d2bb0969490ccef4069a4a",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_0200ms.1920.png",
-      "published_file": "god_d23_1205_F2_windfall_0200ms.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1205_F2_windfall_0200ms.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "0ffa1c7c1fef5275ec71fb1edfcaed22a4f716a92d85bb9f95ae29ea5a435f4b"
     },
     {
       "capture_plan_row": [
@@ -454,9 +459,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_1000ms.entities.json",
       "raw_entities_sha256": "3a6a7f58a0347cc772c68607d21f0cc9225715eddee1c5cfc1254cb06a4a1942",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_1000ms.1920.png",
-      "published_file": "god_d23_1205_F2_windfall_1000ms.jpg",
-      "published_width": 960,
-      "published_height": 540
+      "published_file": "god_d23_1205_F2_windfall_1000ms.png",
+      "published_width": 1920,
+      "published_height": 1080,
+      "published_sha256": "7a17fbfa3ecdeaa56a65208b190563682760d5b9d22e6e1f20bf498b109ea0b3"
     }
   ],
   "git_sha": "2ee8f1fbc360c9db2279f6986e9181b0fdfc23c3",

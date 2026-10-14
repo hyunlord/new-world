@@ -1,0 +1,278 @@
+{
+  "backup": "/Users/rexxa/work/art-production8-evidence/published-jpeg-originals-diagnostics",
+  "upgrades": [
+    {
+      "old_path": "baseline-live/d2_1200_F2.jpg",
+      "new_path": "baseline-live/d2_1200_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.1920.png",
+      "source_sha256": "1829da100bcc4fc7941c1d54ff9417fb3f1fa7f2c22cb3908c4298b123b389ea",
+      "old_sha256": "bbaf987225a9edde10344980b05f7c6c1bc06463180dae0b6413f68da1fb97d6",
+      "new_sha256": "1829da100bcc4fc7941c1d54ff9417fb3f1fa7f2c22cb3908c4298b123b389ea",
+      "old_bytes": 134028,
+      "new_bytes": 121289,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "baseline-society/soc_d33_0949_FV_all.jpg",
+      "new_path": "baseline-society/soc_d33_0949_FV_all.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+      "source_sha256": "2e0e61a30e83fd039a8ec7ab961b04725bfa1cedfa5f4559e8ef0f90bb1bcaa1",
+      "old_sha256": "e7f764500a1ee26a46c55d93eca23f40a606590e06f1732d81ba4f6e97150b4c",
+      "new_sha256": "2e0e61a30e83fd039a8ec7ab961b04725bfa1cedfa5f4559e8ef0f90bb1bcaa1",
+      "old_bytes": 299916,
+      "new_bytes": 298217,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "p1-live/d2_1200_F2.jpg",
+      "new_path": "p1-live/d2_1200_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p1-live/shots/final/d2_1200_F2.1920.png",
+      "source_sha256": "8ebfc8e4532c7e4a4d9fa241ea27a89908a43af91ad316f3876e472f78a1a74a",
+      "old_sha256": "2960451d30b7299313be37208f0107270b9ca353fe9422fb8af73a547f2f147b",
+      "new_sha256": "8ebfc8e4532c7e4a4d9fa241ea27a89908a43af91ad316f3876e472f78a1a74a",
+      "old_bytes": 129361,
+      "new_bytes": 117480,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "p1-society/soc_d33_0900_F2_orig.jpg",
+      "new_path": "p1-society/soc_d33_0900_F2_orig.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p1-society/shots/art_society/soc_d33_0900_F2_orig.1920.png",
+      "source_sha256": "45ee05e5053342b3e8c8c1a6044109f2d669c9f8392fc7c6851f93beb8854532",
+      "old_sha256": "0fa391b4323eb2175fff084ff8a83fd9e6a4e8e36f1e591bd1ac1a43c1643f93",
+      "new_sha256": "45ee05e5053342b3e8c8c1a6044109f2d669c9f8392fc7c6851f93beb8854532",
+      "old_bytes": 278164,
+      "new_bytes": 101923,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "p1-society-final/soc_d33_0900_F2_orig.jpg",
+      "new_path": "p1-society-final/soc_d33_0900_F2_orig.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p1-society-final/shots/art_society/soc_d33_0900_F2_orig.1920.png",
+      "source_sha256": "cda0328f5176e9ee0a7cfbc1bc5f58ec90defc5ea39f2f0fbd59d3b26079bcbe",
+      "old_sha256": "edf338490f765eec6d53fbd80a4013acb2a9f88fc3cb6bef17d50805ab1ad90c",
+      "new_sha256": "cda0328f5176e9ee0a7cfbc1bc5f58ec90defc5ea39f2f0fbd59d3b26079bcbe",
+      "old_bytes": 278761,
+      "new_bytes": 102256,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p3-meter/soc_d32_2000_F2_orig_selected_orig.jpg",
+      "new_path": "verification/p3-meter/soc_d32_2000_F2_orig_selected_orig.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d32_2000_F2_orig_selected_orig.1920.png",
+      "source_sha256": "7b4c582f5afde96ca4222d45266be3b713d8a08abc6cd4865b2aaaa93e1e91fb",
+      "old_sha256": "230c9edb8e5bb9c9ce9a8917d5eeb06148172c7821fc6802b8731a4139f1b2b5",
+      "new_sha256": "7b4c582f5afde96ca4222d45266be3b713d8a08abc6cd4865b2aaaa93e1e91fb",
+      "old_bytes": 268024,
+      "new_bytes": 115047,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p3-meter/soc_d33_0630_FD_leader.jpg",
+      "new_path": "verification/p3-meter/soc_d33_0630_FD_leader.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0630_FD_leader.1920.png",
+      "source_sha256": "dc558768054c18eb6bcf503fe7667b72dd7a0a79905f1a170c17b03171fbf63c",
+      "old_sha256": "d358038110ef77ed4097f9f4008d678d62bd2e0481412167a6e0c18e4b2cf66b",
+      "new_sha256": "dc558768054c18eb6bcf503fe7667b72dd7a0a79905f1a170c17b03171fbf63c",
+      "old_bytes": 248802,
+      "new_bytes": 112174,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p3-meter/soc_d33_0859_FS_daughter_selected_daughter.jpg",
+      "new_path": "verification/p3-meter/soc_d33_0859_FS_daughter_selected_daughter.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0859_FS_daughter_selected_daughter.1920.png",
+      "source_sha256": "8af98128c5d393389c9fbb364e0f7dc2aedb8e3b311dd527915923ce760b5248",
+      "old_sha256": "78c2e1654af495a2afd1e1c844aff26099bb3d1593a5ce2f764214e446ebcc85",
+      "new_sha256": "8af98128c5d393389c9fbb364e0f7dc2aedb8e3b311dd527915923ce760b5248",
+      "old_bytes": 223222,
+      "new_bytes": 62587,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-crowd/l_d26_0715_F2.jpg",
+      "new_path": "verification/p4-crowd/l_d26_0715_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-crowd/shots/art_long/l_d26_0715_F2.1920.png",
+      "source_sha256": "5b0670c4ffba03da202c4be9e35856ffec290eb792f3fc1539825c000c2a5046",
+      "old_sha256": "7f433b94d85c7e96bae5cf635e6426032225868789f2d55ce00992b27791a238",
+      "new_sha256": "5b0670c4ffba03da202c4be9e35856ffec290eb792f3fc1539825c000c2a5046",
+      "old_bytes": 124227,
+      "new_bytes": 114958,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-crowd/l_d28_0715_F2.jpg",
+      "new_path": "verification/p4-crowd/l_d28_0715_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-crowd/shots/art_long/l_d28_0715_F2.1920.png",
+      "source_sha256": "2f09830a03fb9beed7319cec19790e36d4acc7d3cbc9590e508cc42737fd2e9e",
+      "old_sha256": "5c2a6ff174b795918fbb2b2f9f3cb983d11bd09c48b19af8e3c75e87d58d6b23",
+      "new_sha256": "2f09830a03fb9beed7319cec19790e36d4acc7d3cbc9590e508cc42737fd2e9e",
+      "old_bytes": 132745,
+      "new_bytes": 120806,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-crowd/l_d29_0630_F2.jpg",
+      "new_path": "verification/p4-crowd/l_d29_0630_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-crowd/shots/art_long/l_d29_0630_F2.1920.png",
+      "source_sha256": "ce33a5f6f3495108e38b4ea87bf32fc426794980077d7c2fd11a50e3b97ad462",
+      "old_sha256": "4a953ace09a2b13d4a5ea4a94e0641171aa680891625544d4994c79f5cce0aac",
+      "new_sha256": "ce33a5f6f3495108e38b4ea87bf32fc426794980077d7c2fd11a50e3b97ad462",
+      "old_bytes": 119852,
+      "new_bytes": 111215,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-crowd/l_d29_0715_F2.jpg",
+      "new_path": "verification/p4-crowd/l_d29_0715_F2.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-crowd/shots/art_long/l_d29_0715_F2.1920.png",
+      "source_sha256": "3d875150ea2c09cfd6ec6d8967475134e3bf6e765abd2a3df7b9130c9e3a3fd4",
+      "old_sha256": "44f0dd89d1e9eba07635d07a7fffd2da34dc179b3298f3abe02b591643a53ab5",
+      "new_sha256": "3d875150ea2c09cfd6ec6d8967475134e3bf6e765abd2a3df7b9130c9e3a3fd4",
+      "old_bytes": 128974,
+      "new_bytes": 116320,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1200_F2_spoil.jpg",
+      "new_path": "verification/p4-effects/god_d23_1200_F2_spoil.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1200_F2_spoil.1920.png",
+      "source_sha256": "c6082e49dca19e1bae8ce49992261948442f939c186337914f138319641dfe4f",
+      "old_sha256": "06afeb9bd88091cb6c55930694cc62c7a104445468172cb7a76fffd7f5dc4b8d",
+      "new_sha256": "c6082e49dca19e1bae8ce49992261948442f939c186337914f138319641dfe4f",
+      "old_bytes": 132618,
+      "new_bytes": 125099,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1201_F2_gift_food.jpg",
+      "new_path": "verification/p4-effects/god_d23_1201_F2_gift_food.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1201_F2_gift_food.1920.png",
+      "source_sha256": "e8768b2971587a2f580045158a97714e3014aa2f98522ee88ca57de551164192",
+      "old_sha256": "359f84964b33108cb5be96efd1fd2e2fb33c6f9e092856b8b0f92f25521f5088",
+      "new_sha256": "e8768b2971587a2f580045158a97714e3014aa2f98522ee88ca57de551164192",
+      "old_bytes": 134656,
+      "new_bytes": 123918,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1202_F2_rot_wood.jpg",
+      "new_path": "verification/p4-effects/god_d23_1202_F2_rot_wood.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1202_F2_rot_wood.1920.png",
+      "source_sha256": "fd6bfac824c2c1ff6947ae002322486fa87011980c316e531a9f2063b918d96f",
+      "old_sha256": "e3ea474834f4096cac605d2519e7c8920ad80f3c2e9adbb000268236b6b944e4",
+      "new_sha256": "fd6bfac824c2c1ff6947ae002322486fa87011980c316e531a9f2063b918d96f",
+      "old_bytes": 134502,
+      "new_bytes": 124293,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1203_F2_gift.jpg",
+      "new_path": "verification/p4-effects/god_d23_1203_F2_gift.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1203_F2_gift.1920.png",
+      "source_sha256": "60e00349def9bb5c236fb3c2804f937e490f651fa5770e9038adea9a9887873f",
+      "old_sha256": "42155014ba706be697f8dbf01df185ad3d01aeb931f127551fcc7b75b194a297",
+      "new_sha256": "60e00349def9bb5c236fb3c2804f937e490f651fa5770e9038adea9a9887873f",
+      "old_bytes": 135256,
+      "new_bytes": 124386,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1205_F2_windfall_0200ms.jpg",
+      "new_path": "verification/p4-effects/god_d23_1205_F2_windfall_0200ms.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_0200ms.1920.png",
+      "source_sha256": "0ffa1c7c1fef5275ec71fb1edfcaed22a4f716a92d85bb9f95ae29ea5a435f4b",
+      "old_sha256": "f23a98db62de1838e1690a025ad9739914a4f6038175d7051b890e562db90ca5",
+      "new_sha256": "0ffa1c7c1fef5275ec71fb1edfcaed22a4f716a92d85bb9f95ae29ea5a435f4b",
+      "old_bytes": 135935,
+      "new_bytes": 128278,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    },
+    {
+      "old_path": "verification/p4-effects/god_d23_1205_F2_windfall_1000ms.jpg",
+      "new_path": "verification/p4-effects/god_d23_1205_F2_windfall_1000ms.png",
+      "source": "/Users/rexxa/work/art-production8-evidence/p4-effects/shots/art_god/god_d23_1205_F2_windfall_1000ms.1920.png",
+      "source_sha256": "7a17fbfa3ecdeaa56a65208b190563682760d5b9d22e6e1f20bf498b109ea0b3",
+      "old_sha256": "0ee7ce232b92066a2915d25fdfbc56bc32393ae85a531662f3829332dede1c43",
+      "new_sha256": "7a17fbfa3ecdeaa56a65208b190563682760d5b9d22e6e1f20bf498b109ea0b3",
+      "old_bytes": 136096,
+      "new_bytes": 129037,
+      "pixel_and_byte_identity": true,
+      "resize": false
+    }
+  ],
+  "manifests": [
+    {
+      "path": "baseline-live/manifest.json",
+      "original_sha256": "d290751c0a1e074829c644cb15eb96385c14f15c5c1265a1250a1a9d3852df26",
+      "updated_sha256": "7a37044df3b650b61f4b7f62ec34169053e88d306486f50c76b74fd6708c2c5e"
+    },
+    {
+      "path": "baseline-live/manifest_final.json",
+      "original_sha256": "d290751c0a1e074829c644cb15eb96385c14f15c5c1265a1250a1a9d3852df26",
+      "updated_sha256": "7a37044df3b650b61f4b7f62ec34169053e88d306486f50c76b74fd6708c2c5e"
+    },
+    {
+      "path": "baseline-society/manifest_art_society.json",
+      "original_sha256": "0535d8079bb16ba562d755a60b6bf2d4f5ca1261f7a01113228f1198d0fee5b3",
+      "updated_sha256": "65b93abb61df0df2c58fea101652c6ec2ad72f74663fe755f8ccc68267f2b9fa"
+    },
+    {
+      "path": "p1-live/manifest.json",
+      "original_sha256": "df94c98eaf138822595d53c605278cb07919efd1e42719592e57f4d8243efe75",
+      "updated_sha256": "9f4bac2889ec3139bf20905e63210e2badd925202febbbadce3076ccf20c0446"
+    },
+    {
+      "path": "p1-live/manifest_final.json",
+      "original_sha256": "df94c98eaf138822595d53c605278cb07919efd1e42719592e57f4d8243efe75",
+      "updated_sha256": "9f4bac2889ec3139bf20905e63210e2badd925202febbbadce3076ccf20c0446"
+    },
+    {
+      "path": "p1-society/manifest_art_society.json",
+      "original_sha256": "63a36d5a6388fe7a01d303fe8ddc1301b8a2593a12743e6b7baad127ad79fa2d",
+      "updated_sha256": "f9558226982799f34494db9f7fdbd492571f56192f55c0e4a5ba9e1e08c4276a"
+    },
+    {
+      "path": "p1-society-final/manifest_art_society.json",
+      "original_sha256": "ef677936567cbc8147b9f0ff02ec79b81b6b938e34fc5a37157cfe8faab05efe",
+      "updated_sha256": "643354b29348c1b2c307e0d751b3a9066c9fe723b03938197e80554fdb6b87f6"
+    },
+    {
+      "path": "verification/p3-meter/manifest_art_society.json",
+      "original_sha256": "58f568c01d4fcd5afc5506a8d179b50a6a56cfb6642abda785eb06b7966cb9cc",
+      "updated_sha256": "c8c1966b75e261358b328e62af5ada24acf025d90035b9974b2c345535ea384d"
+    },
+    {
+      "path": "verification/p4-crowd/manifest.json",
+      "original_sha256": "389d4a10c8fdb868bf50e8d09c677663750314a081cd0f9a44f067e60a8f78d5",
+      "updated_sha256": "c6e47881248f072bd482a572983c799ce1195cc9cc53c279406d3e7bf6035399"
+    },
+    {
+      "path": "verification/p4-crowd/manifest_art_long.json",
+      "original_sha256": "389d4a10c8fdb868bf50e8d09c677663750314a081cd0f9a44f067e60a8f78d5",
+      "updated_sha256": "c6e47881248f072bd482a572983c799ce1195cc9cc53c279406d3e7bf6035399"
+    },
+    {
+      "path": "verification/p4-effects/manifest_art_god.json",
+      "original_sha256": "7ca8d8ac5cb35bcdad5a46f5c90603ce3304b18c980bd2b7fc4fb75a8d5ede45",
+      "updated_sha256": "ec2fae6c8eac9a726c2b790f2a7fca31d0f10446cb07c1e9946aa7fd6572cd33"
+    }
+  ]
+}

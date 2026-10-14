@@ -26,9 +26,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d32_2000_F2_orig_selected_orig.entities.json",
       "raw_entities_sha256": "3038e2e136f0b410c6b831d7d77a7e7e0079e6cb41538453678e781bc6a317c4",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d32_2000_F2_orig_selected_orig.1920.png",
-      "published_file": "soc_d32_2000_F2_orig_selected_orig.jpg",
+      "published_file": "soc_d32_2000_F2_orig_selected_orig.png",
       "published_width": 1920,
-      "published_height": 1080
+      "published_height": 1080,
+      "published_sha256": "7b4c582f5afde96ca4222d45266be3b713d8a08abc6cd4865b2aaaa93e1e91fb"
     },
     {
       "capture_plan_row": [
@@ -55,9 +56,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0630_FD_leader.entities.json",
       "raw_entities_sha256": "85ba67607604f52415f2af018dbbbb9c2a5c39911b9ff2b2fe4cf1942355a234",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0630_FD_leader.1920.png",
-      "published_file": "soc_d33_0630_FD_leader.jpg",
+      "published_file": "soc_d33_0630_FD_leader.png",
       "published_width": 1920,
-      "published_height": 1080
+      "published_height": 1080,
+      "published_sha256": "dc558768054c18eb6bcf503fe7667b72dd7a0a79905f1a170c17b03171fbf63c"
     },
     {
       "capture_plan_row": [
@@ -85,9 +87,10 @@
       "raw_entities_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0859_FS_daughter_selected_daughter.entities.json",
       "raw_entities_sha256": "531ead359ddd48c693a4a59ac5169af5f4b744d64085bfd92b66907230f16032",
       "standard_file": "/Users/rexxa/work/art-production8-evidence/p3-meter/shots/art_society/soc_d33_0859_FS_daughter_selected_daughter.1920.png",
-      "published_file": "soc_d33_0859_FS_daughter_selected_daughter.jpg",
+      "published_file": "soc_d33_0859_FS_daughter_selected_daughter.png",
       "published_width": 1920,
-      "published_height": 1080
+      "published_height": 1080,
+      "published_sha256": "8af98128c5d393389c9fbb364e0f7dc2aedb8e3b311dd527915923ce760b5248"
     }
   ],
   "git_sha": "cad635946407a37df7d2679a9419f173195e90e5",

@@ -27,3 +27,10 @@
 
 - Part5 ART_GOD executes four chronological reset-bounded segments (live, society, P, G), preserving the1100s per-window limit. Each paired segment explicitly RESETs the same seed, retains the exact three cast dates and runs to day120. Combined provenance retains each source run_id and world_epoch; P/G need not share a process (only A30 does). No scenario/date/cast is dropped.
 - Final sidecars and cast/frame manifest rows carry run_id, world_epoch, world_label and code SHA to distinguish equal epoch numbers across independently bounded P/G processes.
+
+- Part6 A26 is restricted to the exact measured society scenario and seed, as GOAL section10 states. The inherited visible-exposure threshold is unchanged; a natural live exposure cannot satisfy it. The all-scenario aggregation survives only as a labeled diagnostic, and daughter exposure remains N/A when none occurred.
+- Independent blind answers are immutable. Society parent numbers serialized as strings were converted to identical integers in separate grading copies before the first verdict; original bytes and hashes are retained. No answer, uncertainty or verdict was replaced.
+- The default standalone typechecker lacked the actual Python interpreter and CLI import root. The corrected execution environment points to tools/art_pipeline and /opt/homebrew/bin/python3; actual type errors are fixed without ignores or weakened settings. Dynamic-data warnings are reported separately.
+
+- Final capture source is cefc77b0; later changes are evidence and QA tooling only. Independent round1 screen verdict remains NEEDS WORK. No visual threshold is relaxed to obtain acceptance; the brief explicitly permits recording failures and continuing.
+- A33 dates stay the premeasured baseline days30/31/32 in both worlds. P splits onday31 and its day32 original-village membership is25, so that last Pcast no longer meets the original eligibility condition. Preserve this intervention-induced protocol limitation and the failing final pressure comparison; do not reschedule after seeing outcomes.
