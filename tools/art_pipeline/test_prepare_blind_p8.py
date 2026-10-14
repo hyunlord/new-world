@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from prepare_blind_p8 import freeze, source
 
 

@@ -5,10 +5,10 @@ Uses only the Python standard library.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
 import hashlib
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 from typing import NotRequired, TypedDict
 
@@ -110,9 +110,10 @@ def main(source: Path) -> None:
     for row in live:
         prior = by_tick.get(row.tick - 720)
         night = by_tick.get(row.tick - 315)
-        if row.minute_of_day == 435 and clock.day(row.tick) <= 60 and prior and night:
-            if prior.cold_member_hours_total == row.cold_member_hours_total and night.fire_lit > 0 and row.cold_members == 0:
-                warm.append(row)
+        if (row.minute_of_day == 435 and clock.day(row.tick) <= 60 and prior and night
+                and prior.cold_member_hours_total == row.cold_member_hours_total
+                and night.fire_lit > 0 and row.cold_members == 0):
+            warm.append(row)
     inspected_seeds = [20261010] + ([selected.seed] if selected else [])
     deaths = []
     histories = []

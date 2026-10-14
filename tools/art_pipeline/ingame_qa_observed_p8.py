@@ -9,10 +9,12 @@ Renderer metadata is diagnostic, never sufficient to PASS visual gates. Review r
 are bound to exact lossless screenshot SHA256. Missing independent evidence fails.
 """
 from __future__ import annotations
+
 import hashlib
 import json
-from pathlib import Path
 import re
+from pathlib import Path
+
 from ingame_qa_pixels import Check, result
 from ingame_qa_types import Capture, load_capture
 from observation_rules_p8 import chill_window, intervention_visible
@@ -43,7 +45,7 @@ def observed_checks(captures: list[Capture], god_raw: Path, gate: Path, *, morni
         time = data.get('time_snapshot', {})
         settlement = data.get('settlement_snapshot', {})
         entities = data.get('entities', [])
-        day = int(time.get('day_index', -2)) + 1
+        _ = int(time.get('day_index', -2)) + 1
         hour = float(time.get('time_of_day', -1))
         severity = int(time.get('winter_severity', -1))
         winter_night = severity >= 0 and (hour >= 18 or 0 <= hour < 7)

@@ -6,8 +6,8 @@
 """Compare independently observed source events with the emitted feed census."""
 from __future__ import annotations
 
-from pathlib import Path
 import json
+from pathlib import Path
 
 
 def event_errors(path: Path) -> list[str]:

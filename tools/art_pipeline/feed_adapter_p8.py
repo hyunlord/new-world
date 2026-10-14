@@ -9,8 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ingame_qa_news_p8 import FeedEvent, Movement, NewsFrame, Summary
 from event_oracle_p8 import event_errors
+from ingame_qa_news_p8 import FeedEvent, Movement, NewsFrame, Summary
 
 
 def feed_frames(paths: list[Path], departure_stem: str) -> list[NewsFrame]:

@@ -4,7 +4,10 @@
 # ///
 # Run: imported by ingame_qa_observed_p8.py
 """P8 observer timing follows the explicitly revised windfall ring duration."""
+
 from observation_rules_p6 import chill_window
+
+__all__ = ["chill_window", "intervention_visible"]
 
 
 def intervention_visible(stem: str, kind: str, elapsed: float, observed: list[str]) -> bool:

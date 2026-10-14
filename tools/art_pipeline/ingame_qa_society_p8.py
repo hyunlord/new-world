@@ -1,21 +1,23 @@
 """P7 society checks keep raw facts, draw evidence and blind recognition separate."""
 from __future__ import annotations
-from dataclasses import asdict
-import json
+
 import hashlib
+import json
+from dataclasses import asdict
 from pathlib import Path
+
 from blind_p7 import check_blind
-from ingame_qa_pixels import Check, result
 from ingame_qa_deaths_p7 import check_death_frame
 from ingame_qa_founding_p8 import check_founding_frame
-from ingame_qa_villages_p7 import check_village_frame
 from ingame_qa_intervention_p8 import intervention
+from ingame_qa_pixels import Check, result
+from ingame_qa_villages_p7 import check_village_frame
 
 
 def society_checks(frames, society_dir: Path, output: Path, performance_dir: Path | None = None, *, society_seed: int) -> list[Check]:
     """Evaluate every frame; zero eligible frames never satisfies a gate."""
     manifest_path = society_dir/'manifest.json'
-    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+    _ = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     deaths = []
     village_errors = []
     founding_errors = []

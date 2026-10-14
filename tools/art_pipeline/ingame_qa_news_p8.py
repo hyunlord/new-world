@@ -6,8 +6,8 @@
 """Audit feed completeness and food summaries without trusting visibility claims."""
 from __future__ import annotations
 
-from collections import Counter
 import json
+from collections import Counter
 from typing import NotRequired, TypedDict
 
 from ingame_qa_pixels import Check, result
@@ -83,9 +83,8 @@ def news(frames: list[NewsFrame]) -> Check:
             identity = event['event_id']
             if event['event_class'] == 'routine' and (event['visible'] or identity in visible):
                 errors.append(prefix + 'visible routine event: ' + identity)
-            if identity in protected:
-                if identity not in visible | overflow:
-                    errors.append(prefix + 'new protected event absent from feed/+N: ' + identity)
+            if identity in protected and identity not in visible | overflow:
+                errors.append(prefix + 'new protected event absent from feed/+N: ' + identity)
         for summary in frame['summaries']:
             deltas = [movement['delta'] for movement in frame['movements']
                       if movement['village_id'] == summary['village_id'] and not movement['excluded']

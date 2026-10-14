@@ -6,13 +6,13 @@ CLI requires all four completed segment manifests and empty destination director
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
 import gzip
 import hashlib
 import json
-from pathlib import Path
 import shutil
 import tempfile
+from dataclasses import dataclass
+from pathlib import Path
 from typing import TypeAlias, cast
 
 Json: TypeAlias = None | bool | int | float | str | list['Json'] | dict[str, 'Json']
@@ -32,13 +32,13 @@ def digest(path: Path) -> str:
 
 def record(value: Json) -> Record:
     if not isinstance(value, dict):
-        raise ValueError('expected JSON object')
+        raise TypeError('expected JSON object')
     return value
 
 
 def rows(value: Json) -> list[Record]:
     if not isinstance(value, list):
-        raise ValueError('expected JSON array')
+        raise TypeError('expected JSON array')
     return [record(item) for item in value]
 
 

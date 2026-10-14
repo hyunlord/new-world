@@ -34,3 +34,5 @@
 
 - Final capture source is cefc77b0; later changes are evidence and QA tooling only. Independent round1 screen verdict remains NEEDS WORK. No visual threshold is relaxed to obtain acceptance; the brief explicitly permits recording failures and continuing.
 - A33 dates stay the premeasured baseline days30/31/32 in both worlds. P splits onday31 and its day32 original-village membership is25, so that last Pcast no longer meets the original eligibility condition. Preserve this intervention-induced protocol limitation and the failing final pressure comparison; do not reschedule after seeing outcomes.
+
+- Final static audit uses cached uvx tools with the repository default Ruff rules. It found27style/unused-code findings despite the earlier essential-rule pass. These are retained, fixed only in P8 QA tools without altering numeric predicates, and checked again. The final publication commit receives a fresh full gate in an external output directory so its SHA can remain fixed during exact-head verification.

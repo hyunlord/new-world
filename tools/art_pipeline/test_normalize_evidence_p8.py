@@ -3,8 +3,16 @@ import json
 from pathlib import Path
 
 import pytest
-
-from normalize_evidence_p8 import Document, Json, array, load, mapping, normalize, number, rows
+from normalize_evidence_p8 import (
+    Document,
+    Json,
+    array,
+    load,
+    mapping,
+    normalize,
+    number,
+    rows,
+)
 
 
 def at(value: Json, *keys: str | int) -> Json:
@@ -123,6 +131,7 @@ def test_pacing_sources_retained_read_only(tmp_path: Path) -> None:
 
 def test_output_preserves_blind_fields_and_rejects_outside_docs(tmp_path: Path) -> None:
     import tempfile
+
     from normalize_evidence_p8 import EvidenceError, write_evidence
     root = Path(__file__).resolve().parents[2] / 'docs/art/production8'
     with tempfile.TemporaryDirectory(dir=root, prefix='.normalize-test-') as directory:
@@ -138,6 +147,7 @@ def test_output_preserves_blind_fields_and_rejects_outside_docs(tmp_path: Path) 
 
 def test_source_cannot_be_reused_as_output() -> None:
     import tempfile
+
     from normalize_evidence_p8 import EvidenceError, write_evidence
     root = Path(__file__).resolve().parents[2] / 'docs/art/production8'
     with tempfile.TemporaryDirectory(dir=root, prefix='.normalize-test-') as directory:

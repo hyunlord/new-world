@@ -6,16 +6,17 @@
 """A20: audit installed pixels against frozen original approvals and animation reviews."""
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import subprocess
 from pathlib import Path
 from typing import NotRequired, TypedDict
-from PIL import Image
+
 from harvest_baseline_p5 import rgba_hash
 from harvest_bindings_p5 import verify_prepared
 from install_v4 import InstallError, verify_file
 from mask_installation_p5 import physical_set
+from PIL import Image
 from salvage_verdicts import atomic_json, candidate_fingerprint
 
 
@@ -97,8 +98,10 @@ def content_changed(target: str, row: ManifestAsset, old: ManifestAsset, content
             or content.get(target) != baseline.get(target))
 
 
-def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
+def audit_all(root: Path | None = None) -> IntegrityReport:
     """Audit current assets against frozen Pass 5 hair and harvest approvals read-only."""
+    if root is None:
+        root = Path.cwd()
     read = lambda path: json.loads(Path(path).read_text())
     base = root / 'docs/art/production5'
     manifest = {r['sprite_id']:r for r in read(root / 'assets/art/manifest.json')['assets']
@@ -144,10 +147,10 @@ def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
             installed = [manifest.get(records[i].get('target_slot', records[i]['slot_id']), {}) for i in group['candidate_ids']]
             if all(row.get('candidate_id') == identity for row, identity in zip(installed, group['candidate_ids'])):
                 key = tuple(group['group'])
-                groups[key] = dict(group=group['group'], source=group['source'],
-                    copied_frames=[records[i]['frame'] for i in group['candidate_ids'] if records[i]['source_kind']=='derived'],
-                    animation_review=group['id'], candidate_ids=group['candidate_ids'],
-                    installation=str(directory.relative_to(root)), board=group['board'], gif=group['gif'])
+                groups[key] = {'group': group['group'], 'source': group['source'],
+                    'copied_frames': [records[i]['frame'] for i in group['candidate_ids'] if records[i]['source_kind']=='derived'],
+                    'animation_review': group['id'], 'candidate_ids': group['candidate_ids'],
+                    'installation': str(directory.relative_to(root)), 'board': group['board'], 'gif': group['gif']}
                 if reviews.get(group['id'], {}).get('verdict') != 'ok':
                     errors.append(f'{key}:animation_not_ok')
                 if len({(records[i].get('source_sheet', records[i]['sheet']), records[i]['attempt']) for i in group['candidate_ids']}) != 1:
@@ -167,7 +170,7 @@ def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
                     reasons.append('approved_hair_mask_missing')
                 else:
                     with Image.open(mask_path) as mask:
-                        expected = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+                        expected = {'size': list(mask.size), 'rgba_sha256': rgba_hash(mask)}
                     if content[target].get('mask') != expected:
                         reasons.append('installed_mask_changed')
             if candidate_fingerprint(record) != envelope['candidate_fingerprints'].get(record['slot_id']):
@@ -196,7 +199,7 @@ def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
                 reasons.append('animation_group_not_bound')
             covered.add(target)
             errors.extend(f'{target}:{reason}' for reason in reasons)
-            rows.append(dict(target=target, candidate_id=identity, installation=str(directory.relative_to(root)), errors=reasons))
+            rows.append({'target': target, 'candidate_id': identity, 'installation': str(directory.relative_to(root)), 'errors': reasons})
     mask_report = base / 'masks/mask_installation.json'
     if mask_report.exists() and read(mask_report).get('applied'):
         payload = read(mask_report)
@@ -219,7 +222,7 @@ def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
             if not any(r['candidate_id']==record['id'] and r['verdict']=='ok' for r in verdicts):
                 errors.append(f'{target}:mask_not_approved')
             with Image.open(root / entry['mask_path']) as mask:
-                expected_mask = dict(size=list(mask.size), rgba_sha256=rgba_hash(mask))
+                expected_mask = {'size': list(mask.size), 'rgba_sha256': rgba_hash(mask)}
             if content[target].get('mask') != expected_mask:
                 errors.append(f'{target}:installed_mask_changed')
             covered.add(target)
@@ -240,10 +243,10 @@ def audit_all(root: Path = Path.cwd()) -> IntegrityReport:
                 errors.append(f'{group["group"]}:mask_physical_set_changed')
             key = tuple(group['group'])
             sheet, attempt = sources[0].rsplit('@',1)
-            groups[key] = dict(group=group['group'],source=[sheet,int(attempt)],
-                copied_frames=[r['frame'] for r in current if r['source'].startswith('derived:')],
-                candidate_ids=[r.get('candidate_id') for r in current],animation_review=group['id'],
-                installation='docs/art/production5/masks',board=group['board'],gif=group['gif'])
+            groups[key] = {'group': group['group'],'source': [sheet,int(attempt)],
+                'copied_frames': [r['frame'] for r in current if r['source'].startswith('derived:')],
+                'candidate_ids': [r.get('candidate_id') for r in current],'animation_review': group['id'],
+                'installation': 'docs/art/production5/masks','board': group['board'],'gif': group['gif']}
     changed = []
     for target, row in manifest.items():
         old = baseline.get(target, {})
