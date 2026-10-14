@@ -2650,3 +2650,7 @@ First-fission display day on the pilot's replicate 0 (departure day; numpy defau
 ### Part 7 — timing (J12; `probe_final`, tuning sets, back to back 02:03–02:26 KST)
 
 Before the start: no Godot, cargo, rustc or worldsim process of anyone (only idle MCP helper processes), load average 6.2; during the runs 4.1–6.0. Median ms per agent-tick (10-day / 120-day): game_v16 0.001247 / 0.001697; game_v19 0.001332 / 0.001763; game_v19_nofission 0.001276 / 0.001757; game_v16 again 0.001187 / 0.001708. Ratios against the mean of the two v16 sets: game_v19 **1.094 / 1.036**, game_v19_nofission 1.048 / 1.032 (against the preceding v16 alone: v19 1.068 / 1.039). The v19 timing runs equal round 3 on every value (0 differences). **J12: PASS.**
+
+## Pass 14 — when and how hard must the god push? A dose–timing map of interventions on `game_v19` (no rule changes)
+
+No rule or Rust change: `game_v19` is Pass 13's freeze (`2ba871c0`). Every probe and recording ran on the DGX Spark (`/home/hyunlord/work/p14-build`, frozen binaries) under `nice -n 10` with 4 workers; scoring on the DGX with the WM venv's numpy, tests on the Mac.
