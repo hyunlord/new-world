@@ -1,6 +1,8 @@
 extends RefCounted
 ## Presentation identity persists through dissolution and is cleared only on world reset.
 const PALETTE: Array[Color] = [Color("E0B060"), Color("7FB0D8"), Color("B88AD0"), Color("8CC07A")]
+static var layers_enabled: bool = true
+static var _layer_states: Array[Dictionary] = []
 static var selected_id: int = -1
 static var _numbers: Dictionary = {}
 static var _history: Dictionary = {}
@@ -9,6 +11,34 @@ static var _alive: Array[int] = []
 static var _retired: Dictionary = {}
 static var _casts: Dictionary = {}
 
+static func set_layers_enabled(tree: SceneTree, enabled: bool) -> void:
+	if layers_enabled == enabled:
+		return
+	layers_enabled = enabled
+	if enabled:
+		_restore_layer_states()
+	else:
+		for node: Node in tree.get_nodes_in_group("art_society_layers"):
+			_layer_states.append({"node": weakref(node), "process_mode": node.process_mode, "visible": node.visible if node is CanvasItem else false})
+			node.process_mode = Node.PROCESS_MODE_DISABLED
+			if node is CanvasItem:
+				node.hide()
+				node.queue_redraw()
+	for node: Node in tree.get_nodes_in_group("art_society_inspectors"):
+		if node.has_method("set_village_layers_enabled"):
+			node.call("set_village_layers_enabled", enabled)
+
+static func _restore_layer_states() -> void:
+	for saved: Dictionary in _layer_states:
+		var node: Node = (saved["node"] as WeakRef).get_ref() as Node
+		if node == null:
+			continue
+		node.process_mode = int(saved["process_mode"]) as Node.ProcessMode
+		if node is CanvasItem:
+			node.visible = bool(saved["visible"])
+			node.queue_redraw()
+	_layer_states.clear()
+
 static func select(id: int) -> void:
 	selected_id = id
 
@@ -16,6 +46,8 @@ static func clear() -> void:
 	selected_id = -1
 
 static func reset() -> void:
+	layers_enabled = true
+	_restore_layer_states()
 	clear()
 	_numbers.clear()
 	_history.clear()
@@ -154,6 +186,8 @@ static func restlessness_for(id: int) -> Dictionary:
 	var threshold: int = int(row.get("threshold", 0))
 	var stage: int = 0
 	if threshold > 0:
+		# Exact quotient/remainder avoids float rounding and signed integer overflow.
+		@warning_ignore("integer_division")
 		var third: int = threshold / 3
 		var remainder: int = threshold % 3
 		var first: int = third + (1 if remainder > 0 else 0)

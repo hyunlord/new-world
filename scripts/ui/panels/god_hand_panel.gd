@@ -21,6 +21,7 @@ var _reply_target: int = -1
 var _toast_left: float = 0.0
 
 func _ready() -> void:
+	add_to_group("art_society_inspectors")
 	theme = THEME
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -137,10 +138,13 @@ func refresh_state() -> void:
 	else:
 		Selection.observe({}, settlements)
 	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
-	var restless: Dictionary = Selection.restlessness_for(Selection.selected_id)
-	_restless_row.visible = Selection.selected_id >= 0 and bool(restless["visible"])
-	_restless_label.text = _loc("VILLAGE_RESTLESS_TITLE") + ": " + _loc(str(restless["state_key"]))
-	_restless_meter.call("display", restless, Selection.color_for(Selection.selected_id))
+	if Selection.layers_enabled:
+		var restless: Dictionary = Selection.restlessness_for(Selection.selected_id)
+		_restless_row.visible = Selection.selected_id >= 0 and bool(restless["visible"])
+		_restless_label.text = _loc("VILLAGE_RESTLESS_TITLE") + ": " + _loc(str(restless["state_key"]))
+		_restless_meter.call("display", restless, Selection.color_for(Selection.selected_id))
+	else:
+		_restless_row.hide()
 	var ready_to_cast: bool = not settlements.get("settlement_ids", PackedInt32Array()).is_empty()
 	for kind: String in _buttons:
 		var button: Button = _buttons[kind]
@@ -162,3 +166,9 @@ func refresh_state() -> void:
 		row.visible = first + index < kinds.size()
 		if row.visible:
 			row.text = _loc("GOD_HAND_APPLIED_FMT") % [_loc("GOD_HAND_" + kinds[first + index].to_upper()), amount_text(kinds[first + index], amounts[first + index]), applied[first + index]]
+
+func set_village_layers_enabled(enabled: bool) -> void:
+	if not enabled and _restless_row != null:
+		_restless_row.hide()
+	elif enabled:
+		refresh_state()

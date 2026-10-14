@@ -1,5 +1,6 @@
 extends RefCounted
 
+const OUTLINE = preload("res://shaders/settlement_outline.gdshader")
 const Cold = preload("res://scripts/ui/cold_effects.gd")
 const WINDOW_MINUTES: int = 90
 const FADE_MINUTES: int = 30
@@ -44,12 +45,10 @@ func alpha(agent_id: int, tick: int) -> float:
 func apply(sprite: Sprite2D, agent_id: int, tick: int, seconds: float) -> void:
 	var awake: bool = str(sprite.get_meta("activity", "")) != "asleep"
 	var strength: float = alpha(agent_id, tick) if sprite.visible and awake else 0.0
-	var moving: bool = bool(sprite.get_meta("moving", false))
-	var offset: float = Cold.shiver(strength > 0.0, moving, agent_id, seconds) * strength
-	sprite.position.x += offset
 	sprite.set_meta("chill_alpha", strength)
 	sprite.set_meta("chill_since_tick", since_tick(agent_id))
-	sprite.set_meta("chill_shiver_offset", offset)
+	sprite.set_meta("chill_shiver_offset", 0.0)
+	_apply_outline(sprite, strength)
 	var puff: Dictionary = Cold.breath(strength > 0.0, agent_id, seconds)
 	var puff_alpha: float = float(puff["alpha"]) * strength
 	sprite.set_meta("chill_puff_alpha", puff_alpha)
@@ -65,6 +64,39 @@ func apply(sprite: Sprite2D, agent_id: int, tick: int, seconds: float) -> void:
 		child.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.add_child(child)
 	if child != null:
+		child.scale = Vector2.ONE * 1.5
 		child.visible = puff_alpha > 0.0
 		child.modulate = Color(1.0, 1.0, 1.0, puff_alpha)
 		child.position = Vector2(0.0, sprite.offset.y - 3.0 - float(puff["rise"]))
+
+func _apply_outline(sprite: Sprite2D, strength: float) -> void:
+	sprite.set_meta("chill_outline_alpha", 0.8 * strength)
+	var outline: Sprite2D = sprite.get_node_or_null("ChillOutline") as Sprite2D
+	if strength <= 0.0 or sprite.texture == null:
+		if outline != null:
+			outline.hide()
+		return
+	if outline == null:
+		outline = Sprite2D.new()
+		outline.name = "ChillOutline"
+		outline.show_behind_parent = true
+		outline.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var new_material := ShaderMaterial.new()
+		new_material.shader = OUTLINE
+		outline.material = new_material
+		sprite.add_child(outline)
+	outline.texture = sprite.texture
+	outline.region_enabled = true
+	var rect: Rect2 = sprite.region_rect if sprite.region_enabled else Rect2(Vector2.ZERO, sprite.texture.get_size())
+	outline.region_rect = rect.grow(1.0)
+	outline.centered = sprite.centered
+	outline.offset = sprite.offset - Vector2.ONE
+	outline.flip_h = sprite.flip_h
+	outline.flip_v = sprite.flip_v
+	var material := outline.material as ShaderMaterial
+	var size: Vector2 = sprite.texture.get_size()
+	material.set_shader_parameter("atlas_rect", Vector4(rect.position.x / size.x, rect.position.y / size.y, rect.end.x / size.x, rect.end.y / size.y))
+	var tint := Color("CFE3F5")
+	tint.a = 0.8 * strength
+	material.set_shader_parameter("outline_color", tint)
+	outline.show()

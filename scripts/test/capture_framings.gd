@@ -5,6 +5,7 @@ const CapturePlans = preload("res://scripts/test/art/capture_plans.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const SocietyTrace = preload("res://scripts/test/art/capture_society_trace.gd")
 const ColdTrace = preload("res://scripts/test/art/capture_cold_trace.gd")
+const FrameMeasure = preload("res://scripts/test/art/frame_measure_session.gd")
 const EventTrace = preload("res://scripts/test/art/capture_event_trace_p8.gd")
 
 const ORIGIN: Vector2 = Vector2(448, 28)
@@ -577,6 +578,7 @@ func _measure_frame_times(filename: String = "frame_times.json", frozen: bool = 
 	var ordered: Array[float] = elapsed.duplicate()
 	ordered.sort()
 	if not CapturePlans.write_json(_out.path_join(filename), {
+		"metric": "frame_post_draw wall-clock pacing diagnostic; not CPU cost",
 		"frames": 300, "zoom": _camera.zoom.x, "forced_draw": false, "run_id": _run_id,
 		"seed": _seed, "tick": start_tick, "alive_count": settlements.get("settlement_ids", []).size(), "load_status": load_status, "median_ms": (ordered[149] + ordered[150]) / 2.0,
 		"p95_ms": ordered[284], "samples_ms": elapsed, "simulation_frozen": frozen,
@@ -861,32 +863,44 @@ func _performance_load_status() -> Dictionary:
 	var uptime_output: Array = []
 	var process_output: Array = []
 	var uptime_code: int = OS.execute("/usr/bin/uptime", PackedStringArray(), uptime_output, true)
-	var process_code: int = OS.execute("/usr/bin/pgrep", PackedStringArray(["-fl", "cargo|worldsim_|rustc"]), process_output, true)
+	var process_code: int = OS.execute("/usr/bin/pgrep", PackedStringArray(["-fl", "cargo|worldsim_|rustc|Godot"]), process_output, true)
 	return {"unix_time": Time.get_unix_time_from_system(), "uptime": uptime_output, "uptime_exit_code": uptime_code, "processes": process_output, "pgrep_exit_code": process_code}
 
 
 func _measure_society_pair() -> void:
-	# Replay is forward-only within this reset, with no captures between the pair.
-	# The measured three-settlement extent requires the 1x integer zoom step.
 	await _reset_capture_world(20261013)
-	if not _advance_to(39720):
-		_fail("A30 did not reach day 28 22:00")
-		return
-	_camera.position = ORIGIN + _settlement_bounds().get_center() * TILE_SIZE + Vector2(8, 8)
-	_camera.zoom = Vector2.ONE
-	_camera.force_update_scroll()
-	await create_timer(1.15).timeout
-	await _render_frame()
-	await _measure_frame_times("frame_times_soc_1.json", true)
-	if not _advance_to(121002):
-		_fail("A30 did not reach the measured third founding")
+	if not _advance_to(126994):
+		_fail("A30 did not reach the measured first three-living-settlement tick")
 		return
 	var settlements: Dictionary = _world.call("get_settlement_snapshot")
-	if settlements.get("settlement_ids", []).size() != 3 or not is_equal_approx(_all_villages_zoom(), 1.0):
-		_fail("A30 three-village count or paired FV zoom differs from measurement")
+	var alive: int = 0
+	for count: int in settlements.get("member_counts", []):
+		alive += int(count > 0)
+	if alive != 3:
+		_fail("A30 expected exactly three living settlements at tick 126994")
 		return
+	var previous_selection: int = Selection.selected_id
+	Selection.select(_original_id)
 	_camera.position = ORIGIN + _settlement_bounds().get_center() * TILE_SIZE + Vector2(8, 8)
+	_camera.zoom = Vector2.ONE * _all_villages_zoom()
 	_camera.force_update_scroll()
+	DisplayServer.window_move_to_foreground()
 	await create_timer(1.15).timeout
 	await _render_frame()
-	await _measure_frame_times("frame_times_soc_3.json", true)
+	var backend = FrameMeasure.Runtime.new()
+	backend.tree = self
+	backend.world = _world
+	backend.camera = _camera
+	var load_before: Dictionary = _performance_load_status()
+	var result: Dictionary = await FrameMeasure.collect(backend)
+	Selection.select(previous_selection)
+	result["selection_restored"] = Selection.selected_id == previous_selection
+	result["seed"] = 20261013
+	result["run_id"] = _run_id
+	result["git_sha"] = OS.get_environment("WORLDSIM_GIT_SHA")
+	result["load_before"] = load_before
+	result["load_after"] = _performance_load_status()
+	if not CapturePlans.write_json(_out.path_join("frame_times_soc_layers.json"), result):
+		_fail("cannot write A30 CPU timing evidence; runtime state already restored")
+	elif not bool(result["valid"]):
+		_fail("invalid A30 CPU measurement: " + str(result["errors"]))

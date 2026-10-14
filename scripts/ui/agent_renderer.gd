@@ -35,6 +35,8 @@ var _shadow_pool: Array[Sprite2D] = []
 var _animation_time: float = 0.0
 var _render_positions: Dictionary = {}
 var _drawn_positions: Dictionary = {}
+var _walking_directions: Dictionary = {}
+var _walking_tiles: Dictionary = {}
 var _stationary_seconds: Dictionary = {}
 var _camp_seats = CampSeatsScript.new()
 var _pose_moments = PoseMoments.new()
@@ -124,6 +126,8 @@ func _process(delta: float) -> void:
 		var previous_position: Vector2 = _render_positions.get(agent_id, ipos)
 		var movement: Vector2 = ipos - previous_position
 		var moving: bool = movement.length_squared() > 0.000001
+		if moving and not _walking_directions.has(agent_id):
+			_walking_directions[agent_id] = movement.normalized()
 		_stationary_seconds[agent_id] = 0.0 if moving else float(_stationary_seconds.get(agent_id, 0.0)) + delta
 		_render_positions[agent_id] = ipos
 		var tile: Dictionary = _tile_context(Vector2i(xs[i], ys[i]), context)
@@ -174,7 +178,7 @@ func _process(delta: float) -> void:
 		CarryLoad.apply(sprite, activity)
 		CarryLoad.apply_founder(sprite, founders.has(agent_id), activity, carried, wood, base_pose)
 		_update_activity_icon(agent_id, sprite, choice)
-		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"])})
+		draw_agents.append({"id": agent_id, "ipos": ipos, "tile": Vector2i(xs[i], ys[i]), "visible": sprite.visible, "moving": moving, "stationary_seconds": _stationary_seconds[agent_id], "pose": pose, "activity": activity, "cold": cold, "meal": bool(moments["meal"]), "walking_direction": _walking_directions.get(agent_id, Vector2.ZERO)})
 	_apply_drawn_positions(draw_agents, context, delta)
 	for row: Dictionary in draw_agents:
 		var agent_id: int = int(row["id"])
@@ -244,6 +248,8 @@ func _retire_missing(live: Dictionary) -> void:
 			_activity_icons.erase(agent_id)
 		_render_positions.erase(agent_id)
 		_drawn_positions.erase(agent_id)
+		_walking_directions.erase(agent_id)
+		_walking_tiles.erase(agent_id)
 		_stationary_seconds.erase(agent_id)
 		_idle_seconds.erase(agent_id)
 		_pose_moments.retire(agent_id)
@@ -261,6 +267,20 @@ func set_capture_visible(shown: bool) -> void:
 
 func ingest_chill_snapshot(snapshot: Dictionary, tick: int) -> void:
 	_morning_chill.ingest(snapshot, tick)
+	var ids: PackedInt64Array = snapshot.get("agent_ids", PackedInt64Array())
+	var xs: PackedInt32Array = snapshot.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snapshot.get("ys", PackedInt32Array())
+	if xs.size() != ids.size() or ys.size() != ids.size():
+		return
+	for index: int in ids.size():
+		var agent_id: int = int(ids[index])
+		var tile := Vector2(xs[index], ys[index])
+		if _walking_tiles.has(agent_id):
+			var direction: Vector2 = tile - Vector2(_walking_tiles[agent_id])
+			if not direction.is_zero_approx():
+				_walking_directions[agent_id] = direction.normalized()
+		_walking_tiles[agent_id] = tile
+
 
 func refresh_snapshot() -> void:
 	_prev_positions.clear()
@@ -275,6 +295,8 @@ func _on_world_reset() -> void:
 	_morning_chill.clear()
 	_render_positions.clear()
 	_drawn_positions.clear()
+	_walking_directions.clear()
+	_walking_tiles.clear()
 	_stationary_seconds.clear()
 	_camp_seats = CampSeatsScript.new()
 	_opaque_rects.clear()
@@ -551,6 +573,21 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		sprite.set_meta("drawn_target", target)
 		sprite.set_meta("spread_offset", spread.get(agent_id, Vector2.ZERO))
 		sprite.set_meta("declump_offset", declump.get(agent_id, Vector2.ZERO))
+	var rounded: Dictionary = {}
+	for row: Dictionary in agents:
+		var agent_id: int = int(row["id"])
+		rounded[agent_id] = (_sprites[agent_id] as Sprite2D).position
+	var canvas: Transform2D = _objects.get_global_transform_with_canvas() if _objects != null else get_global_transform_with_canvas()
+	var lateral: Dictionary = CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas)
+	for row: Dictionary in agents:
+		var agent_id: int = int(row["id"])
+		var sprite: Sprite2D = _sprites[agent_id]
+		var offset: Vector2 = lateral.get(agent_id, Vector2.ZERO)
+		sprite.position += offset
+		sprite.set_meta("walker_lateral_offset", offset)
+		sprite.set_meta("walker_lateral_screen_offset", canvas.basis_xform(offset))
+		sprite.set_meta("walking_direction", row.get("walking_direction", Vector2.ZERO))
+		sprite.set_meta("drawn_position", sprite.position)
 
 func has_drawn_position(agent_id: int) -> bool:
 	return _drawn_positions.has(agent_id)
@@ -621,6 +658,12 @@ func is_capture_visible() -> bool:
 
 
 static func _apply_settlement_outline(sprite: Sprite2D, agent_id: int) -> void:
+	if not SettlementSelection.layers_enabled:
+		var existing: Sprite2D = sprite.get_node_or_null("SettlementOutline") as Sprite2D
+		if existing != null:
+			existing.hide()
+		sprite.set_meta("settlement_outline", false)
+		return
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	var selected: bool = SettlementSelection.selected_id >= 0 and home == SettlementSelection.selected_id
 	sprite.set_meta("home_settlement_id", home)

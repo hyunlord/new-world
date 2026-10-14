@@ -194,3 +194,55 @@ static func _declump_allowed(point: Vector2, terrain: Dictionary, blocked: Dicti
 	var cells: PackedByteArray = terrain.get("terrain", PackedByteArray())
 	var index: int = tile.y * width + tile.x
 	return tile.x >= 0 and tile.x < width and tile.y >= 0 and tile.y < height and index < cells.size() and cells[index] != 4
+
+## Screen-pixel lateral relief uses the already rounded drawing positions.
+static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D) -> Dictionary:
+	var ordered: Array[Dictionary] = []
+	for row: Dictionary in rows:
+		var agent_id: int = int(row["id"])
+		if bool(row.get("visible", false)) and positions.has(agent_id) and rects.has(agent_id):
+			ordered.append(row)
+	ordered.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["id"]) < int(b["id"]))
+	var result: Dictionary = {}
+	var inverse: Transform2D = canvas.affine_inverse()
+	for row: Dictionary in ordered:
+		if not _walking(row):
+			continue
+		var agent_id: int = int(row["id"])
+		var position: Vector2 = positions[agent_id]
+		var direction: Vector2 = canvas.basis_xform(Vector2(row.get("walking_direction", Vector2.ZERO))).normalized()
+		if direction.is_zero_approx():
+			continue
+		var local_rect: Rect2 = rects[agent_id]
+		var others: Array[Rect2] = []
+		for other: Dictionary in ordered:
+			var other_id: int = int(other["id"])
+			if other_id != agent_id:
+				var other_rect: Rect2 = rects[other_id]
+				others.append(Rect2(Vector2(positions[other_id]) + Vector2(result.get(other_id, Vector2.ZERO)) + other_rect.position, other_rect.size))
+		var best: float = _walker_overlap(Rect2(position + local_rect.position, local_rect.size), others)
+		var offset := Vector2.ZERO
+		if best <= 0.0:
+			continue
+		var side: float = 1.0 if posmod(agent_id, 2) == 0 else -1.0
+		var perpendicular := Vector2(-direction.y, direction.x)
+		for magnitude: int in range(1, 4):
+			for sign_value: float in [side, -side]:
+				var screen_shift: Vector2 = (perpendicular * float(magnitude) * sign_value).round()
+				if screen_shift.length() > 3.0 or absf(screen_shift.dot(direction)) > 0.001:
+					continue
+				var shift: Vector2 = inverse.basis_xform(screen_shift)
+				if not _declump_allowed(position + shift, terrain, blocked):
+					continue
+				var overlap: float = _walker_overlap(Rect2(position + shift + local_rect.position, local_rect.size), others)
+				if overlap < best - 0.00001:
+					best = overlap
+					offset = shift
+		result[agent_id] = offset
+	return result
+
+static func _walker_overlap(rect: Rect2, others: Array[Rect2]) -> float:
+	var area: float = 0.0
+	for other: Rect2 in others:
+		area += rect.intersection(other).get_area()
+	return area

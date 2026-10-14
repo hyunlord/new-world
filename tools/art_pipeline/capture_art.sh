@@ -60,7 +60,7 @@ for capture in manifest['captures']:
         capture['published_file'] = target
         capture['published_width'], capture['published_height'] = published_size
     shutil.copy2(raw / capture['entities'], docs / capture['entities'])
-for extra in ['frame_times.json', 'frame_times_soc_1.json', 'frame_times_soc_3.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
+for extra in ['frame_times.json', 'frame_times_soc_1.json', 'frame_times_soc_3.json', 'frame_times_soc_layers.json', 'strip.json', 'evening.json', 'forest_evidence.json']:
     if (raw / extra).exists():
         shutil.copy2(raw / extra, docs / extra)
 for cycle in raw.glob('*.cold_cycle.json'):

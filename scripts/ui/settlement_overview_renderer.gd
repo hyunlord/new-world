@@ -43,6 +43,7 @@ const OVERVIEW_ALPHA := 0.28
 const OVERVIEW_COLOR: Color = Color(0.35, 0.75, 1.0, OVERVIEW_ALPHA)  # soft blue region
 const SETTLEMENT_REGION_RADIUS_TILES := 5   # mirrors sim-core SETTLEMENT_PROXIMITY_RADIUS
 
+const Selection = preload("res://scripts/core/settlement_selection.gd")
 const Labels = preload("res://scripts/ui/settlement_labels.gd")
 var _drawn_discs: Array[Dictionary] = []
 var _colors: Dictionary = {}
@@ -55,6 +56,7 @@ var _radii: PackedFloat32Array = PackedFloat32Array()
 
 
 func _ready() -> void:
+	add_to_group("art_society_layers")
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	z_index = Z_OVERVIEW
 	visible = false   # zoom_lod_controller shows this only at MEDIUM/FAR
@@ -63,7 +65,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	# Skip all snapshot work while hidden (CLOSE zoom) — overview off.
-	if not visible:
+	if not visible or not Selection.layers_enabled:
 		return
 	if _world_sim == null:
 		return
@@ -96,6 +98,9 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	if not Selection.layers_enabled:
+		_drawn_discs.clear()
+		return
 	_drawn_discs.clear()
 	for i in _centroids.size():
 		var color: Color = _colors.get(int(_ids[i]), OVERVIEW_COLOR) if i < _ids.size() else OVERVIEW_COLOR

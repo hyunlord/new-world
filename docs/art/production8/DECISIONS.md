@@ -19,3 +19,8 @@
 - Part2 arrow stays on the viewport-centre-to-target ray while top/bottom HUD bands inset its edge; no direction rotation to dodge individual panels. Actual viewport containment determines stake/arrow exclusivity. Window input QA uses forced rendering on macOS and preserves the interrupted first attempt. Final A32 blind evidence will use the final capture pipeline.
 
 - Part3 uses the existing selected-village God Hand panel as village inspector context. Labels show the same three-segment meter at zoom>=2. Getter integer values saturate at i64MAX; UI thirds use quotient/remainder boundaries to avoid multiplication overflow. No pressure is inferred for missing getter fields.
+
+- A30 records process, viewport render CPU, frame setup CPU and GPU separately. The literal process+render CPU median is the primary threshold; process+render+setup is also reported as a diagnostic. GPU zero is unavailable. Existing wall-clock measurements remain pacing evidence only. Original village is selected in both conditions to exercise selected outlines.
+- A18 preserves the 3 screen-pixel perpendicular limit and original occlusion threshold even where it cannot resolve a dense cluster; blocked or non-improving offsets remain zero. Raw sidecars include direction and both world/screen offset vectors.
+- A28 retains its inherited stake-on-screen criterion exactly; the new offscreen-arrow solution is measured independently by A32. A proposed P8 A28 reinterpretation was rejected and reverted before measurement.
+- The post-Part3 INT64 boundary guard requires intentional integer division; a local integer_division warning annotation preserves exact thirds rather than replacing it with floating-point rounding. Subsequent strict check passed.
