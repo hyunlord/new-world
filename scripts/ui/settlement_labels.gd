@@ -1,5 +1,6 @@
 extends Node2D
 ## Names and selection use persistent AgentId/SettlementId joins, never spatial membership.
+const Marker = preload("res://scripts/ui/offscreen_marker.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const FONT = preload("res://assets/fonts/galmuri/Galmuri9.ttf")
 const ABANDONED_SHADER = preload("res://shaders/abandoned_building.gdshader")
@@ -8,6 +9,7 @@ const LABEL_FONT_PX := 12
 const LABEL_PADDING := Vector2(5, 3)
 const LABEL_BACKPLATE := Color(0.08, 0.07, 0.06, 0.86)
 const LABEL_SPRITE_GAP_PX := 6.0
+var _selected_marker: Dictionary = {}
 var _world: Node
 var _locale: Node
 var _labels: Dictionary = {}
@@ -38,6 +40,7 @@ func _reset() -> void:
 		label.queue_free()
 	_labels.clear()
 	_drawn.clear()
+	_selected_marker.clear()
 
 func refresh_snapshot() -> void:
 	if _world == null or not _world.has_method("get_society_snapshot"):
@@ -108,6 +111,16 @@ func _update_labels() -> void:
 		if not seen.has(id):
 			(_labels[id] as Label).queue_free()
 			_labels.erase(id)
+	_selected_marker.clear()
+	if Selection.selected_id >= 0:
+		var tile: Vector2i = Selection.formation_for(Selection.selected_id)
+		if tile.x >= 0:
+			var target: Vector2 = ORIGIN + Vector2(tile) * 16.0 + Vector2(8, 8)
+			_selected_marker = Marker.geometry(get_global_transform_with_canvas() * target, get_viewport_rect(), Marker.playable_rect(self))
+			_selected_marker["id"] = Selection.selected_id
+			_selected_marker["target_world"] = [target.x, target.y]
+			_selected_marker["marker_color"] = Selection.color_for(Selection.selected_id).to_html(false)
+			_selected_marker["stake_visible"] = false
 	queue_redraw()
 
 func _clear_sprite_bounds(bounds: Rect2) -> Rect2:
@@ -153,7 +166,15 @@ func _draw() -> void:
 		var from := Vector2(plate.position.x, plate.end.y)
 		draw_line(from, from + Vector2(plate.size.x, 0.0), color, (2.0 if Selection.selected_id == id else 1.0) / zoom)
 
+	if not _selected_marker.is_empty():
+		Marker.draw_marker(self, _selected_marker, Selection.color_for(Selection.selected_id))
+
 func _input(event: InputEvent) -> void:
+	if visible and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and Marker.hit(_selected_marker, event.position):
+		var target: Array = _selected_marker["target_world"]
+		Marker.pan(get_viewport().get_camera_2d(), Vector2(target[0], target[1]))
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		Selection.clear()
 
@@ -218,6 +239,7 @@ func _update_abandoned() -> void:
 func capture_metadata() -> Dictionary:
 	var result: Dictionary = Selection.capture_metadata(_locale)
 	result["labels"] = _drawn.duplicate(true)
+	result["selected_marker"] = _selected_marker.duplicate(true)
 	var overview: Node = get_node_or_null("../SettlementOverviewRenderer")
 	if overview != null and overview.has_method("capture_metadata"):
 		result.merge(overview.call("capture_metadata"))

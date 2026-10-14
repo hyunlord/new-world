@@ -5254,3 +5254,5 @@ HUD_FEED_SETTLEMENT_ABANDONED = Village %d was abandoned
 HUD_FEED_DAY_SUMMARY_FMT = Village %d today: food %+d (stored %d, eaten %d)
 HUD_FEED_MORE_FMT = +%d more
 HUD_FEED_GOD_CAST_FMT = God's hand on Village %d: %s
+
+FOUNDING_SITE_DISTANCE_FMT = %d tiles

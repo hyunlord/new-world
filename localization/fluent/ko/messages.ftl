@@ -5256,3 +5256,5 @@ HUD_FEED_SETTLEMENT_ABANDONED = %d번 마을이 버려졌다
 HUD_FEED_DAY_SUMMARY_FMT = %d번 마을 오늘: 식량 %+d (저장 %d, 소비 %d)
 HUD_FEED_MORE_FMT = +%d건 더
 HUD_FEED_GOD_CAST_FMT = %d번 마을에 신의 손: %s
+
+FOUNDING_SITE_DISTANCE_FMT = %d칸

@@ -450,7 +450,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["seed"] = _seed
 	data["capture_plan_row"] = _plan_row.duplicate(true)
 	data["selected_settlement_id"] = Selection.selected_id
-	data["measured_days_source"] = "docs/art/production7/MEASURED_DAYS.md"
+	data["measured_days_source"] = "docs/art/production8/MEASURED_DAYS.md"
 	data["society_snapshot"] = _json_arrays(_world.call("get_society_snapshot")) if _world.has_method("get_society_snapshot") else {}
 	data["death_truth_trace"] = {"source": "independent FFI recent_deaths census", "max_sample_interval_ticks": _death_trace.max_interval_ticks, "window_start_tick": 0, "window_end_tick": tick, "deaths": _death_trace.rows()}
 	data["death_drawn"] = _draw_counter("DeathVizRenderer", "capture_metadata")
@@ -482,7 +482,7 @@ func _write_entities(stem: String, tick: int, image_size: Vector2i) -> bool:
 	data["intervention_state"] = _json_arrays(_world.call("get_intervention_state")) if _world.has_method("get_intervention_state") else {}
 	data["building_snapshot"] = _json_arrays(_world.call("get_building_snapshot"))
 	data["chill_tint_strength"] = _tint_strength()
-	data["cold_truth_trace"] = {"source": "FFI colds sampled independently of presentation", "max_sample_interval_ticks": 8, "agents": _cold_trace.rows()}
+	data["cold_truth_trace"] = {"source": "FFI colds sampled independently of presentation", "max_sample_interval_ticks": 1, "agents": _cold_trace.rows()}
 	if tick == _motion_end_tick and _motion_start_tick >= 0:
 		data["agent_motion_evidence"] = {
 			"provenance": "observed_tile_displacement_during_final_synchronous_advance",
@@ -845,7 +845,10 @@ func _enrich_society_view(presentation: Dictionary, entities: Array[Dictionary],
 		group["site_screen"] = [site_screen.x, site_screen.y]
 		group["leader_in_view"] = view.has_point(start_screen)
 		group["site_in_view"] = view.has_point(site_screen)
-		group["marker_in_view"] = bool(group.get("marker_visible", false)) and view.has_point(site_screen)
+		var edge: Array = group.get("edge_screen_position", [0, 0])
+		var edge_screen: Vector2 = Vector2(edge[0], edge[1]) * scale_factor
+		group["edge_framebuffer_position"] = [edge_screen.x, edge_screen.y]
+		group["marker_in_view"] = (bool(group.get("stake_visible", false)) and view.has_point(site_screen)) or (bool(group.get("edge_visible", false)) and view.has_point(edge_screen))
 		for bundle: Dictionary in group.get("bundles", []):
 			bundle["agent_in_view"] = false
 			for entity: Dictionary in entities:

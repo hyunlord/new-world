@@ -1,5 +1,6 @@
 extends Node2D
 ## Read-only founding trail and destination; no inferred or simulated membership.
+const Marker = preload("res://scripts/ui/offscreen_marker.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const ORIGIN := Vector2(448, 28)
 const TRAIL_COLOR := Color("E8D8A899")
@@ -67,10 +68,18 @@ func _draw() -> void:
 		while cursor < distance:
 			draw_line(start + direction * cursor, start + direction * minf(cursor + DASH_PX, distance), TRAIL_COLOR, 1.0)
 			cursor += DASH_PX + GAP_PX
-		var dark := Color("352b23")
-		draw_rect(Rect2(finish + Vector2(0, -6), Vector2(1, 6)), dark)
-		draw_rect(Rect2(finish + Vector2(0, -7), Vector2(6, 5)), dark)
-		draw_rect(Rect2(finish + Vector2(1, -6), Vector2(4, 3)), group["marker_color"])
+		var marker: Dictionary = Marker.geometry(get_global_transform_with_canvas() * finish, get_viewport_rect(), Marker.playable_rect(self))
+		if bool(marker["stake_visible"]):
+			var dark := Color("352b23")
+			draw_rect(Rect2(finish + Vector2(0, -6), Vector2(1, 6)), dark)
+			draw_rect(Rect2(finish + Vector2(0, -7), Vector2(6, 5)), dark)
+			draw_rect(Rect2(finish + Vector2(1, -6), Vector2(4, 3)), group["marker_color"])
+		var tiles: float = start.distance_to(finish) / 16.0
+		marker["distance_tiles"] = tiles
+		marker["displayed_distance_tiles"] = roundi(tiles)
+		var locale: Node = get_node_or_null("/root/Locale")
+		var text: String = str(locale.call("ltr", "FOUNDING_SITE_DISTANCE_FMT")) % roundi(tiles) if locale != null else ""
+		Marker.draw_marker(self, marker, group["marker_color"], text)
 		var row: Dictionary = group.duplicate(true)
 		row["start"] = [start.x, start.y]
 		row["end"] = [finish.x, finish.y]
@@ -79,7 +88,8 @@ func _draw() -> void:
 		row["trail_alpha"] = TRAIL_COLOR.a
 		row["dash_px"] = DASH_PX
 		row["gap_px"] = GAP_PX
-		row["marker_visible"] = true
+		row.merge(marker)
+		row["marker_visible"] = bool(marker["stake_visible"]) or bool(marker["edge_visible"])
 		row["trail_visible"] = distance > 0.0
 		row["bundles"] = _bundle_metadata(group["founder_ids"])
 		_drawn.append(row)
@@ -98,3 +108,13 @@ func _bundle_metadata(founders: Array) -> Array[Dictionary]:
 
 func capture_metadata() -> Dictionary:
 	return {"founding_groups": _drawn.duplicate(true)}
+
+func _input(event: InputEvent) -> void:
+	if not visible or not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	for row: Dictionary in _drawn:
+		if Marker.hit(row, event.position):
+			var target: Array = row["end"]
+			Marker.pan(get_viewport().get_camera_2d(), Vector2(target[0], target[1]))
+			get_viewport().set_input_as_handled()
+			return

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5216,
+    "active_key_count": 5217,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5221,
+    "key_count": 5222,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -1238,6 +1238,7 @@
     "FACET_X_SOCIAL_BOLDNESS": "Social Boldness",
     "FACET_X_SOCIAL_SELF_ESTEEM": "Social Self-Esteem",
     "FAMILY_GENERATION_FMT": "Gen {n}",
+    "FOUNDING_SITE_DISTANCE_FMT": "%d tiles",
     "FURN_DRYING_RACK": "Drying Rack",
     "FURN_FIRE_PIT": "Fire Pit",
     "FURN_HEARTH": "Hearth",
@@ -1290,6 +1291,7 @@
     "HUD_COLD": "Cold",
     "HUD_DAY_FMT": "Day %d",
     "HUD_FEED_AGENT_BORN": "A child was born (population %d)",
+    "HUD_FEED_DAY_SUMMARY_FMT": "Village %d today: food %+d (stored %d, eaten %d)",
     "HUD_FEED_DEATH_COMBAT": "A villager died in a fight",
     "HUD_FEED_DEATH_DEHYDRATION": "A villager died of thirst",
     "HUD_FEED_DEATH_EXPOSURE": "A villager froze to death",
@@ -1297,6 +1299,8 @@
     "HUD_FEED_DEATH_STARVATION": "A villager starved",
     "HUD_FEED_FISSION_CANCELLED": "A group turned back",
     "HUD_FEED_FISSION_DEPARTED": "%d people left Village %d",
+    "HUD_FEED_GOD_CAST_FMT": "God's hand on Village %d: %s",
+    "HUD_FEED_MORE_FMT": "+%d more",
     "HUD_FEED_SETTLEMENT_ABANDONED": "Village %d was abandoned",
     "HUD_FEED_SETTLEMENT_DISSOLVED": "Village %d abandoned",
     "HUD_FEED_SETTLEMENT_FORMED": "Village %d formed",
@@ -5252,9 +5256,6 @@
     "ZODIAC_SAGITTARIUS": "Sagittarius",
     "ZODIAC_SCORPIO": "Scorpio",
     "ZODIAC_TAURUS": "Taurus",
-    "ZODIAC_VIRGO": "Virgo",
-    "HUD_FEED_DAY_SUMMARY_FMT": "Village %d today: food %+d (stored %d, eaten %d)",
-    "HUD_FEED_MORE_FMT": "+%d more",
-    "HUD_FEED_GOD_CAST_FMT": "God's hand on Village %d: %s"
+    "ZODIAC_VIRGO": "Virgo"
   }
 }
