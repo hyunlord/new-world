@@ -2738,3 +2738,10 @@ The absolute Y9 bounds remain reported: v19n's work share at 15:00 is under 0.25
 ## Pass 15 — how many people can this world hold? A performance baseline and a per-agent budget (no rule changes)
 
 Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark and `PERF_BUDGET.md`. Every number below is from one Mac (MacBook Pro, Apple M4 Max, 14 cores, 36 GiB, rustc 1.93.1); the simulation is single-threaded.
+
+### Part 0 — base build and identity references (22:33–22:50 KST)
+
+- Base `f5373ab2` built on this Mac (`../new-world-p15-base`, release): `worldsim_probe` `0629d8a7…d3d2`, `worldsim_wm` `013aa9da…35a9`.
+- **I1** `game_v19`, seeds 0–32, 120 days, round 3's flags, `--check-determinism`: vs Pass 13's `p13-3_round3_v19_120day/summary.json` (`compare_summaries.py`, timing excluded) **155,815 shared values, 0 differences**, no key on one side only; determinism twins PASS. The Mac build of `f5373ab2` reproduces Pass 13 exactly (no portability difference).
+- **I3** `game_v16`, same flags: vs `p13-3_guard_v16_120day/summary.json` **105,187 shared values, 0 differences**; determinism PASS.
+- **I2** `worldsim_wm --scene game_v19 --seeds 12000..12002 --days 120 --every 60` (2 episodes): sha256 of 20 files (18 `.npy` arrays + 2 `interventions.json`) in `p15-0_base/i2_sha256.txt`.
