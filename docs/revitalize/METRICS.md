@@ -2745,3 +2745,11 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 - **I1** `game_v19`, seeds 0–32, 120 days, round 3's flags, `--check-determinism`: vs Pass 13's `p13-3_round3_v19_120day/summary.json` (`compare_summaries.py`, timing excluded) **155,815 shared values, 0 differences**, no key on one side only; determinism twins PASS. The Mac build of `f5373ab2` reproduces Pass 13 exactly (no portability difference).
 - **I3** `game_v16`, same flags: vs `p13-3_guard_v16_120day/summary.json` **105,187 shared values, 0 differences**; determinism PASS.
 - **I2** `worldsim_wm --scene game_v19 --seeds 12000..12002 --days 120 --every 60` (2 episodes): sha256 of 20 files (18 `.npy` arrays + 2 `interventions.json`) in `p15-0_base/i2_sha256.txt`.
+
+### Part 2 — behaviour proof (23:36–23:45 KST)
+
+- Final binaries built at the pushed Part 1 commit `8f052142` (release): `worldsim_probe` `c1026633…f7fd`, `worldsim_wm` `2bc17a7a…23e2`, `worldsim_perf` `b7ba6abc…8c58`.
+- **I1** base vs final (`p15-0_base/i1_v19` vs `p15-0_final/i1_v19`): **155,815 shared values, 0 differences**; determinism PASS.
+- **I3** base vs final: **105,187 shared values, 0 differences**; determinism PASS.
+- **I2**: all 20 sha256 (18 `.npy` arrays + 2 `interventions.json`) identical (`diff p15-0_base/i2_sha256.txt p15-0_final/i2_sha256.txt` empty).
+- No existing scene calls the stress code: `stress_v19`, `build_stress_engine` and `reset_world_stress` appear only in their definitions, their unit tests and `sim-test/src/perf.rs` (grep over `rust/crates` and `scripts`).
