@@ -272,3 +272,25 @@ Scope: the merge, GOAL 4.1 (v0 / p10 numbers), 4.2 (input lists, roles, nested s
 | R1-6 | NOTE | `eval_code_commit` comes from `WM1_CODE_COMMIT`, not git | the reviewer checked the DGX worktrees are at the stated commits and clean; kept |
 | R1-7 | NOTE | per-seed paired CIs are in `judge.json` but not in `judge.md` | now in the Y table |
 | R1-8 | NOTE | `--eval-dataset` output does not record the target manifest's sha | the p10 manifest is unchanged since WM-1.2 (sha `d1d0a847…`); kept |
+
+### Round 2 (fresh `general-purpose` subagent, 2026-10-14 ≈ 20:30–20:45; head `9b7d9281`, then `03580fef`)
+
+Scope: the judge re-run, the Y verdicts and Y3 by hand, every number of WM1_3.md, the pre-registration order of the outputs written after the amendment, the convergence flags, allowed paths. The reviewer reproduced `judge.md` / `judge.json` byte for byte; by hand with numpy (per-world blocks, `default_rng(0)` draws on sorted seeds): Y1 0.1942 vs 0.2074, −0.0132 [−0.0187, −0.0080] WEAK; Y1b −0.0254 [−0.0274, −0.0234] WEAK; Y2 +0.0024 [−0.0033, 0.0081] TIE; Y4 −0.0021 [−0.0081, 0.0035] TIE; Y4br +0.0126 [0.0070, 0.0183] NONE; N = 80 −0.0305 WEAK, N = 200 −0.0276 WEAK; Y3 Δ_steps −0.0170, Δ_data −0.0023, Δ_cal −0.0196, Δ_data − Δ_cal +0.0173 [0.0138, 0.0208], Δ_steps_xworld −0.0291. 330 of 359 WM1_3.md table rows appear verbatim in judge.md, the other 29 and ≈ 45 prose numbers were recomputed. Every output written after `60347cc3` carries that commit, every earlier one `166eb737`, all `forced` false and written after the respective push; `git diff 166eb737 60347cc3 -- tools/` touches only `probe_world.py`, `judge_1_3.py`, `test_w13.py`, `w13_launch/slot.sh`. `8f6b10ed..HEAD` touches only `wm1/` paths. The cited Pass 12 numbers are correct. No BLOCKING finding.
+
+| # | severity | finding | resolution |
+|---|---|---|---|
+| R2-1 | MAJOR | WM1_3 §1 said the N = 80 runs "lose to `an5`" under WM-1.2's rule; at their WM-1.2-rule checkpoints they beat `an5`(N = 80) (0.214 vs 0.227, −0.014 [−0.020, −0.007]) and only the N = 400 runs lose (+0.008 [0.003, 0.013]) | §1 and §5 now state both, with the paired intervals marked as not pre-registered |
+| R2-2 | MAJOR | §8(a) said the bias-removed score is a tie at every N; at N = 200 (one seed) it is −0.006 [−0.012, −0.001], at N = 80 −0.004 [−0.009, 0.002] | the level-not-movement reading is limited to N = 400 (Y2); the N = 80 / 200 paired numbers are given (§5, §8(a)) |
+| R2-3 | MINOR | "trained until validation stops improving" while 5 of 6 `game_v16` runs hit the cap unconverged | now "trained to 9,000 steps (mostly not converged)" |
+| R2-4 | MINOR | §9 claimed longer training would only strengthen "steps, not data" | replaced: Δ_data was measured with step-capped training; the interaction was not measured |
+| R2-5 | MINOR | §4 legacy comparison (model 0.221 → 0.198) presented as a data effect and the 80- vs 16-world contrast as an interval-width effect | labelled confounded; the different test worlds are named (§4, §8(b)) |
+| R2-6 | MINOR | §8(c) compared nMAE levels across scenes | only within-scene model − calendar differences remain |
+| R2-7 | MINOR | §2 said every test number came from `166eb737` | now "from `166eb737` or, after the amendment, `60347cc3`" |
+| R2-8 | MINOR | "still falling at the cap" (n400_s0's late curve is noisy: 0.1148 at 7,500, 0.0780–0.0866 after 8,100) and the WM-1.2-rule range 0.092–0.096 (actual 0.0918–0.0967) | §6 and G4.4 reworded; range 0.092–0.097 |
+| R2-9 | MINOR | `n200_s0` got `--max-seconds 26246` from a deadline the slot script read at its own launch; GOAL 9.1's formula gives 30,000 | recorded as a launcher deviation (RUNLOG, G4.6); no effect (stopped on `max_steps`) |
+| R2-10 | MINOR | G6.1 claimed round 2 had checked the prose before it finished | rewritten after the fixes |
+| R2-11 | MINOR | GOAL 9.2's "every table" vs the amendment's Y / Y5 / convergence tables | notes under Appendix A and in §9 say which runs are not converged |
+| R2-12 | NOTE | the amendment heading said 22:35; `60347cc3` was committed 22:25:24, pushed 22:25:26 | heading and RUNLOG corrected to 22:25 |
+| R2-13 | NOTE | end-of-run validation is 6–7 min, test evaluations 5–11 min, legacy ≈ 2 min | §6 corrected |
+| R2-14 | NOTE | `climate` accuracy 0.388 = the train-majority rate; N = 80 seed gap 0.012 | stated in the probe table and §9 |
+| R2-15 | NOTE | Pass 13 adds a path-share measure (PS) on the same branch; `game_v17` PS(alive) ≈ 0 | mentioned beside UBS in §8(d) |

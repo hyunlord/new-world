@@ -207,7 +207,7 @@ bias-removed tables per dataset, size and horizon (members, `cal_best`, `cal_bes
 - `game_v17`'s fission is pinned to display day 29 (Pass 11); its splits differ by world in whether and how often
   they happen, not when.
 
-## Amendment 2026-10-13 22:35 (review round 1, before any `game_v17` model or probe number)
+## Amendment 2026-10-13 22:25 (review round 1, before any `game_v17` model or probe number)
 
 At the time of this amendment the test numbers that exist are the calendar family / persistence / ridge on the four
 w13 datasets and the legacy test, WM-1.2's three runs on the new test, and `m1tf_w13v16_n400_s0` / `_s1` with their

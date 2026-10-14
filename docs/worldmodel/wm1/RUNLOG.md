@@ -122,7 +122,7 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 17:05:36 | 20:41:37 | `m1tf_w13v16_n400_s1`: stop `max_steps` (9,000), best step 7,500 (val 0.0778), 12,909 s; WM-1.2 rule: best 2,850 (0.0951), stop at the cap |
 | 4.2 | 20:41:37 | 21:06:06 | its finals from `166eb737`: `final` 20:52:39, `_short` 21:03:50, `_legacy` 21:06:06, exit 0 |
 | 4.1 | 20:41:37 | | `m1tf_w13v16_n400_s2` started |
-| 7 (review 1) | 22:13 | 22:36 | review round 1 (fresh subagent): no BLOCKING, 1 MAJOR, 3 MINOR, 4 NOTE; fixes and METRICS amendment `60347cc3`; `_setup/prereg_sha` → `60347cc3`; DGX gate on `60347cc3`: 143 OK, 0 skipped (88 s) |
+| 7 (review 1) | 22:13 | 22:25 | review round 1 (fresh subagent): no BLOCKING, 1 MAJOR, 3 MINOR, 4 NOTE; fixes and METRICS amendment `60347cc3`; `_setup/prereg_sha` → `60347cc3`; DGX gate on `60347cc3`: 143 OK, 0 skipped (88 s) |
 | 4.1 | 20:41:37 | 00:39:40 | `m1tf_w13v16_n400_s2`: stop `max_steps`, best step 8,700 (val 0.0772) → not converged, 14,253 s; WM-1.2 rule: best 3,000 (0.0958), stop at the cap |
 | 4.2 | 00:39:40 | 01:03:43 | its finals from `60347cc3`: `final` 00:50:25, `_short` 01:01:27, `_legacy` 01:03:43, exit 0 |
 | 4.1 | 00:39:40 | | `m1tf_w13v17_n400_s0` started |
@@ -139,8 +139,9 @@ Times are KST (Mac clock). The 36-hour training deadline (GOAL_1_3.md 0.3.5) is 
 | 4.1 | 11:32:46 | | `m1tf_w13v17_n400_s1` started |
 | 4.1 | 11:32:46 | 15:25:48 | `m1tf_w13v17_n400_s1`: stop `max_steps`, best step 7,350 (val 0.0604) → converged by the 10 % rule, 13,953 s; WM-1.2 rule: best 2,100, stop `patience` |
 | 4.2 | 15:25:48 | 15:36:43 | its `final` from `60347cc3`, exit 0 |
-| 4.1 | 15:25:48 | | `m1tf_w13v16_n200_s0` started (`--max-seconds 26246` = deadline − now − 3,600) |
+| 4.1 | 15:25:48 | | `m1tf_w13v16_n200_s0` started (`--max-seconds 26246`: the slot script had read the deadline file at its own launch, 17:05:36, and missed the later extensions — GOAL 9.1's formula gives 30,000; no effect, the run stopped on `max_steps`; DECISIONS G4.6) |
 | 4.1 | 15:25:48 | 19:12:50 | `m1tf_w13v16_n200_s0`: stop `max_steps`, best step 8,700 (val 0.0784) → not converged, 13,612 s; WM-1.2 rule: best 2,550 (0.0918), stop at the cap. Slot B done: all eight runs trained, none dropped |
 | 4.2 | 19:12:50 | 19:22:35 | its finals from `60347cc3`: `final` 19:17:43, `_short` 19:22:35, exit 0 |
 | pause | ≈ 18:38 | ≈ 20:29 | the Mac was unresponsive (the local connectivity logger wrote nothing 18:38–19:50; an SSH call issued 19:51 returned at 20:29); the DGX finished the last run and its finals meanwhile. No training was pending, so the deadline is not moved |
 | 5, 6 | 20:29 | | final `judge_1_3` (`runs/judge_1_3/`), WM1_3.md assembled |
+| 7 (review 2) | 20:30 | 20:58 | review round 2 (fresh subagent): no BLOCKING, 2 MAJOR, 9 MINOR, 4 NOTE (all wording or records); fixes in WM1_3.md, DECISIONS G4.4 / G4.6 / G6.1, METRICS amendment heading, RUNLOG; DGX gate on `03580fef` 143 OK / 0 skipped (76 s) |
