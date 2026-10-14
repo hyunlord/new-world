@@ -1,0 +1,254 @@
+{
+  "status": "PASS",
+  "scope": "GOAL section11 exact eight keys; Part7 final verified",
+  "git_head": "2ee8f1fbc360c9db2279f6986e9181b0fdfc23c3",
+  "required_keys": 8,
+  "locale_rows": 16,
+  "value_checks": 80,
+  "failed_checks": 0,
+  "duplicate_key_count": 0,
+  "registry_key_count": 5226,
+  "registry_active_key_count": 5221,
+  "registry_index_alignment": true,
+  "locales": {
+    "en": {
+      "fluent_key_count": 5211,
+      "compiled_key_count": 5221,
+      "compiled_meta_duplicate_count": 0,
+      "compiled_meta_conflict_count": 0
+    },
+    "ko": {
+      "fluent_key_count": 5212,
+      "compiled_key_count": 5221,
+      "compiled_meta_duplicate_count": 0,
+      "compiled_meta_conflict_count": 0
+    }
+  },
+  "rows": [
+    {
+      "key": "HUD_FEED_DAY_SUMMARY_FMT",
+      "locale": "en",
+      "id": 5218,
+      "value": "Village %d today: food %+d (stored %d, eaten %d)",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "HUD_FEED_MORE_FMT",
+      "locale": "en",
+      "id": 5220,
+      "value": "+%d more",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "FOUNDING_SITE_DISTANCE_FMT",
+      "locale": "en",
+      "id": 5221,
+      "value": "%d tiles",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_CALM",
+      "locale": "en",
+      "id": 5222,
+      "value": "Calm",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_UNEASY",
+      "locale": "en",
+      "id": 5225,
+      "value": "Uneasy",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_READY",
+      "locale": "en",
+      "id": 5223,
+      "value": "Ready to split",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_TITLE",
+      "locale": "en",
+      "id": 5224,
+      "value": "Restlessness",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "HUD_FEED_GOD_CAST_FMT",
+      "locale": "en",
+      "id": 5219,
+      "value": "God's hand on Village %d: %s",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "HUD_FEED_DAY_SUMMARY_FMT",
+      "locale": "ko",
+      "id": 5218,
+      "value": "%d번 마을 오늘: 식량 %+d (저장 %d, 소비 %d)",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "HUD_FEED_MORE_FMT",
+      "locale": "ko",
+      "id": 5220,
+      "value": "+%d건 더",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "FOUNDING_SITE_DISTANCE_FMT",
+      "locale": "ko",
+      "id": 5221,
+      "value": "%d칸",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_CALM",
+      "locale": "ko",
+      "id": 5222,
+      "value": "평온",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_UNEASY",
+      "locale": "ko",
+      "id": 5225,
+      "value": "술렁임",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_READY",
+      "locale": "ko",
+      "id": 5223,
+      "value": "갈라질 기세",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "VILLAGE_RESTLESS_TITLE",
+      "locale": "ko",
+      "id": 5224,
+      "value": "술렁임 정도",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    },
+    {
+      "key": "HUD_FEED_GOD_CAST_FMT",
+      "locale": "ko",
+      "id": 5219,
+      "value": "%d번 마을에 신의 손: %s",
+      "checks": {
+        "fluent_exact": true,
+        "compiled_exact": true,
+        "fluent_occurs_once": true,
+        "registry_roundtrip": true,
+        "format_tokens_match": true
+      }
+    }
+  ],
+  "duplicates": {
+    "localization/key_registry.json": [],
+    "localization/fluent/en/messages.ftl": [],
+    "localization/compiled/en.json": [],
+    "localization/fluent/ko/messages.ftl": [],
+    "localization/compiled/ko.json": []
+  },
+  "source_sha256": {
+    "localization/key_registry.json": "d6d0776a04bfbe4c27b0a6f412e40ffaac678a8750d47fd99924c37f278c2c21",
+    "localization/fluent/en/messages.ftl": "13f3b219907045501508ce7c9d30adae84fc0f55ba9ed45abe5b9f598ed9db93",
+    "localization/compiled/en.json": "f188d9b4a2c1b5509fd57fc31630b1455ede6b51f8275c918c404873e5ed5055",
+    "localization/fluent/ko/messages.ftl": "f3f824ff5447587786efa0f399c0e8ffb340a78c86d7d9c7430500349ed491c9",
+    "localization/compiled/ko.json": "7f737e2ae9d4f44429c1020dd40485c639efef205089cd2e70f437f59f3bc982"
+  },
+  "errors": [],
+  "final_reverified_at": "2026-10-14T04:01:34+00:00",
+  "final_reverified_head": "485a533fef91be5ef63b73c00f2882f19f074165"
+}

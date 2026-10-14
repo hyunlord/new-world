@@ -11,6 +11,6 @@ Start: 2026-10-14T01:12:55Z. Deadline rule: after 2026-10-14T11:12:55Z finish cu
 | 4 | Crowd diagnosis/fix, chill, effects, paired CPU measurement | 2026-10-14T02:37:24Z | 2026-10-14T02:59:40Z | complete; CPU on19.059ms/off17.1195ms, valid300each |
 | 5 | Natural, society, intervention captures with provenance | 2026-10-14T03:00:07Z | 2026-10-14T03:59:45Z | complete;169images,8jobs,zero console errors |
 | 6 | A1–A33 measurements and boards | 2026-10-14T03:59:45Z | 2026-10-14T04:01:05Z | complete;22PASS/11FAIL, unchanged thresholds |
-| 7 | Localization completeness and duplicate audit | 2026-10-14T04:01:05Z | | in progress |
-| 8 | Independent final screen review | | | pending |
+| 7 | Localization completeness and duplicate audit | 2026-10-14T04:01:05Z | 2026-10-14T04:01:46+00:00 | complete;80checks,zero duplicates |
+| 8 | Independent final screen review | 2026-10-14T04:01:46+00:00 | | in progress |
 | 9 | Exact code gate, publication, Korean report, draft PR | | | pending |
