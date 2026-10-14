@@ -1,0 +1,22 @@
+{
+ "all_identical": true,
+ "rows": [
+  {
+   "diffs": [],
+   "identical": true,
+   "member": "/home/hyunlord/work/worldsim-wm-data/v2/v16/floor_s99240/fam/game_v16_s42480/game_v16_s42480_none_r0",
+   "npy": 9,
+   "seed": 42480,
+   "unforked": "/home/hyunlord/work/worldsim-wm-data/v2/v16/game_v16_s42480_none"
+  },
+  {
+   "diffs": [],
+   "identical": true,
+   "member": "/home/hyunlord/work/worldsim-wm-data/v2/v16/floor_s99240/fam/game_v16_s42481/game_v16_s42481_none_r0",
+   "npy": 9,
+   "seed": 42481,
+   "unforked": "/home/hyunlord/work/worldsim-wm-data/v2/v16/game_v16_s42481_none"
+  }
+ ],
+ "seconds": 0.005652427673339844
+}

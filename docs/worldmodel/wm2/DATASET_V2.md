@@ -14,7 +14,7 @@ Recorded on the DGX Spark by `worldsim_wm` / `worldsim_probe` built at the merge
 | cast times | `timeline_p14.py` → `T_low` / `T_high` / `T_eve` per world; `schedules_p14.py --arms sp240L,sp120L,gf240E,rw120E` | 2,098 schedule files | — | 1 s |
 | families (6.2) | `worldsim_wm --scene game_v19 --seeds 40000..40560 --fork-tick 14280 --replicates 2 --schedule-dir … --include-factual --days 120 --every 60`, 8 workers | 5,316 | 4.99 GB (0.94 MB each) | 10,281 s |
 | control (6.3) | `worldsim_wm --scene game_v16 --seeds 42000..42560 --days 120 --every 60`, 8 workers | 560 | 0.43 GB | 658 s |
-| noise floor (6.4) | per scene, test worlds, s ∈ {20,040, 56,040, 99,240}: `--fork-tick s --replicates 4 --schedule-dir <empty> --include-factual`, 4 workers beside the first training | 2 × 960 | see RUNLOG | see RUNLOG |
+| noise floor (6.4) | per scene, test worlds, s ∈ {20,040, 56,040, 99,240}: `--fork-tick s --replicates 4 --schedule-dir <empty> --include-factual`, 4 workers beside the first training | 2 × 960 | 0.87 GB (`game_v19`), 0.74 GB (`game_v16`) | 3,511 s + 2,456 s |
 
 The DGX was shared (load average 12–31 from other users' jobs during the family recording), so the per-episode time
 (≈ 1.9 s at 8 workers) is slower than WM-1.3's 2.3 s per `game_v17` episode-worker suggests.
@@ -80,4 +80,4 @@ to beat on mean absolute error.
 
 ## Noise-floor families
 
-See RUNLOG (Part 1, 6.4) for their recording; `v2_floor_manifest.json` lists them once recorded.
+For every test world of both scenes and each start s (display days 15, 40 and 70 at 06:00), a factual-only family forked at s with R = 4 replicates (`v2/<scene>/floor_s<s>/fam/`): 6 × 80 families, 1,920 episodes, all verified and listed in `v2_floor_manifest.json`. Every member equals `none_r0` over rows <= row(s) (`runs/floor_post/check_*.json`), and replicate 0 is bit-identical to an unforked recording of the same world for the two worlds checked per scene and start (`runs/floor_post/r0_*.json`; `game_v19`: 40480 and 40481 recorded unforked in `v2/v19/_unforked/`; `game_v16`: the control episodes).
