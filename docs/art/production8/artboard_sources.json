@@ -1,0 +1,216 @@
+[
+  {
+    "file": "docs/art/production8/news.png",
+    "sha256": "49f086c635d6d54ab7607b1a8159040b1a223a131156202f504203f37b08014f",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+        "sha256": "2e0e61a30e83fd039a8ec7ab961b04725bfa1cedfa5f4559e8ef0f90bb1bcaa1",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0900_F2W_orig.1920.png",
+        "sha256": "19253a23b429e3107949fb8987c180634708f6c98f859c8d0177198f34b16ca9",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "SOCiETY SCENARIO: before and after news feed; unaltered captures"
+  },
+  {
+    "file": "docs/art/production8/way.png",
+    "sha256": "1f15d7fc0b0793f0f466359ac534692fc4f3c7c0bcdfecb366ea31f0a467b9a0",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0630_FD_leader.1920.png",
+        "sha256": "754dca1dbb17d04be53f09ca0e49a33e03e46d9fe6e2ed7e10c8be093f68141b",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0630_FT_site.1920.png",
+        "sha256": "8beb050ee7639215899846046a286d02c26588ee14c64327c584aa07b246b053",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "SOCIETY SCENARIO: leader arrow and actual destination stake"
+  },
+  {
+    "file": "docs/art/production8/restless.png",
+    "sha256": "5f696de78b788bbf22d3d87ef0151d493283603fee92d256cd3784fd227feba6",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d32_2200_F2W_orig.1920.png",
+        "sha256": "da4d5fed6ea3811e249436c1afa2309fbac69498805834dc578c2aa65f3a9a86",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0859_FS_daughter.1920.png",
+        "sha256": "88573b380fba0b6ea2589b0e54dd275c9a626dfef10613c817be0f2de2d80d4c",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "SOCIETY SCENARIO: pressure before split and daughter after founding"
+  },
+  {
+    "file": "docs/art/production8/crowds.png",
+    "sha256": "0d3dff553273e0ec21437676298037dfc55dcc44e89d52bf9f6bf2aeab45e669",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production7-evidence/shots/art_long/l_d29_0630_F2.1920.png",
+        "sha256": "85ac6433ee82daa1a6e69103d32904319ab5deffe1cfcb54dd8a8f3ad6fd691c",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_long/l_d29_0630_F2.1920.png",
+        "sha256": "78cb376edec1fa8ea14a2e465b7ca3c7fc95d9b2fac4e4aaf10e037d3a49695a",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "NATURAL SCENARIO: prior and current morning; simulation versions differ"
+  },
+  {
+    "file": "docs/art/production8/effects.png",
+    "sha256": "3ab39770ecbb65749fc4cb0e8f18123e6464e4c07b4bd2bad208c675af55d823",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1200_F2_spoil.1920.png",
+        "sha256": "a78bc32decdb233d29cb97f05aaad21fcfb69b2b2a8a96dc5e3f2ab68b94477d",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1205_F2_rot_wood.1920.png",
+        "sha256": "f361372733b031c5d30c8a578f5fb796834114b6cc5485cd77f580cfccdb7193",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_god/god_d10_1210_F2_gift_food.1920.png",
+        "sha256": "ad190b1ec21db292fcb4710d635a55c3dd7131abb7f607766df675fc42771884",
+        "board_rect": [
+          0,
+          2276,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "INTERVENTION SCENARIO: actual food and wood cast effects"
+  },
+  {
+    "file": "docs/art/production8/before-after-live.png",
+    "sha256": "031a3e9f5bf94e6e95fab9e2134f9b9606bc1d2aaa8bca6d44690214ca2e858b",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/baseline-live/shots/final/d2_1200_F2.1920.png",
+        "sha256": "1829da100bcc4fc7941c1d54ff9417fb3f1fa7f2c22cb3908c4298b123b389ea",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art/a_d2_1200_F2.1920.png",
+        "sha256": "e6fb271e46ff8d52a9dfc24f9269e537f44619616943ac0924ae7fc3bdefde32",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "NATURAL SCENARIO same v19 seed/day/framing: before and after"
+  },
+  {
+    "file": "docs/art/production8/before-after-society.png",
+    "sha256": "944401d6119542a1d14a0eb504fcf926530cc14583fce23a77544ed4ad8e756e",
+    "sources": [
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/baseline-society/shots/art_society/soc_d33_0949_FV_all.1920.png",
+        "sha256": "2e0e61a30e83fd039a8ec7ab961b04725bfa1cedfa5f4559e8ef0f90bb1bcaa1",
+        "board_rect": [
+          0,
+          60,
+          1920,
+          1080
+        ],
+        "scale": 1
+      },
+      {
+        "path": "/Users/rexxa/work/art-production8-evidence/final/shots/art_society/soc_d33_0949_FV_all.1920.png",
+        "sha256": "328b842380c81ebf91309f628c519e36c9fe8a30907880219db819e7393f352a",
+        "board_rect": [
+          0,
+          1168,
+          1920,
+          1080
+        ],
+        "scale": 1
+      }
+    ],
+    "caption": "SOCIETY SCENARIO same v19 seed/tick/FV: before and after"
+  }
+]

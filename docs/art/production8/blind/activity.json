@@ -1,0 +1,176 @@
+{
+  "created_ns": 1791946950245359000,
+  "count": 24,
+  "answers": [
+    {
+      "number": 1,
+      "activity": "sit",
+      "source": "a_lineup_z4",
+      "agent_id": 1013,
+      "frame_id": "V_b3_07"
+    },
+    {
+      "number": 2,
+      "activity": "gather",
+      "source": "a_lineup_z4",
+      "agent_id": 1017,
+      "frame_id": "V_a2_12"
+    },
+    {
+      "number": 3,
+      "activity": "build",
+      "source": "a_lineup_z4",
+      "agent_id": 1016,
+      "frame_id": "V_b2_16"
+    },
+    {
+      "number": 4,
+      "activity": "walk",
+      "source": "a_lineup_z4",
+      "agent_id": 1003,
+      "frame_id": "V_a1_08"
+    },
+    {
+      "number": 5,
+      "activity": "gather",
+      "source": "a_lineup_z4",
+      "agent_id": 1001,
+      "frame_id": "V_a2_12"
+    },
+    {
+      "number": 6,
+      "activity": "eat",
+      "source": "a_lineup_z4",
+      "agent_id": 1023,
+      "frame_id": "V_b3_06"
+    },
+    {
+      "number": 7,
+      "activity": "carry",
+      "source": "a_lineup_z4",
+      "agent_id": 1002,
+      "frame_id": "V_b2_04"
+    },
+    {
+      "number": 8,
+      "activity": "walk",
+      "source": "a_lineup_z4",
+      "agent_id": 1011,
+      "frame_id": "V_a1_08"
+    },
+    {
+      "number": 9,
+      "activity": "build",
+      "source": "a_lineup_z4",
+      "agent_id": 1000,
+      "frame_id": "V_a2_16"
+    },
+    {
+      "number": 10,
+      "activity": "child",
+      "source": "a_lineup_z4",
+      "agent_id": 1014,
+      "frame_id": "V_c1_02"
+    },
+    {
+      "number": 11,
+      "activity": "child",
+      "source": "a_lineup_z4",
+      "agent_id": 1004,
+      "frame_id": "V_c2_10"
+    },
+    {
+      "number": 12,
+      "activity": "child",
+      "source": "a_lineup_z4",
+      "agent_id": 1021,
+      "frame_id": "V_c2_01"
+    },
+    {
+      "number": 13,
+      "activity": "carry",
+      "source": "a_lineup_z4",
+      "agent_id": 1018,
+      "frame_id": "V_a2_04"
+    },
+    {
+      "number": 14,
+      "activity": "build",
+      "source": "a_lineup_z4",
+      "agent_id": 1008,
+      "frame_id": "V_a2_16"
+    },
+    {
+      "number": 15,
+      "activity": "eat",
+      "source": "a_lineup_z4",
+      "agent_id": 1007,
+      "frame_id": "V_a3_06"
+    },
+    {
+      "number": 16,
+      "activity": "talk",
+      "source": "a_lineup_z4",
+      "agent_id": 1012,
+      "frame_id": "V_a3_10"
+    },
+    {
+      "number": 17,
+      "activity": "walk",
+      "source": "a_lineup_z4",
+      "agent_id": 1019,
+      "frame_id": "V_b1_08"
+    },
+    {
+      "number": 18,
+      "activity": "eat",
+      "source": "a_lineup_z4",
+      "agent_id": 1015,
+      "frame_id": "V_a3_06"
+    },
+    {
+      "number": 19,
+      "activity": "gather",
+      "source": "a_lineup_z4",
+      "agent_id": 1009,
+      "frame_id": "V_b2_12"
+    },
+    {
+      "number": 20,
+      "activity": "sit",
+      "source": "a_lineup_z4",
+      "agent_id": 1005,
+      "frame_id": "V_a3_07"
+    },
+    {
+      "number": 21,
+      "activity": "drink",
+      "source": "a_lineup_z4",
+      "agent_id": 1006,
+      "frame_id": "P2V_b_S_drink_02"
+    },
+    {
+      "number": 22,
+      "activity": "drink",
+      "source": "a_lineup_z4",
+      "agent_id": 1022,
+      "frame_id": "V_a1_02"
+    },
+    {
+      "number": 23,
+      "activity": "talk",
+      "source": "a_lineup_z4",
+      "agent_id": 1020,
+      "frame_id": "V_b3_10"
+    },
+    {
+      "number": 24,
+      "activity": "carry",
+      "source": "a_lineup_z4",
+      "agent_id": 1010,
+      "frame_id": "V_a2_04"
+    }
+  ],
+  "calibration_lineup": true,
+  "absent_activities": []
+}

@@ -10,8 +10,16 @@ import hashlib
 import json
 import sys
 from pathlib import Path
+from typing import NotRequired, TypedDict
 
 from probe_models_p8 import CastDay, Clock, Death, Run, Sample, SeedSelection, Summary
+
+
+class Provenance(TypedDict):
+    path: str
+    sha256: str
+    git_sha: NotRequired[str]
+    wall_seconds: NotRequired[float]
 
 
 def samples(path: Path) -> tuple[Sample, ...]:
@@ -70,7 +78,7 @@ def main(source: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     tables = {}
     choices = []
-    provenance = [{"path": str(source / "summary.json"),
+    provenance: list[Provenance] = [{"path": str(source / "summary.json"),
                    "sha256": hashlib.sha256((source / "summary.json").read_bytes()).hexdigest()}]
     for run in sorted(summary.runs, key=lambda item: item.seed):
         path = source / f"game_v19_s{run.seed}.jsonl"

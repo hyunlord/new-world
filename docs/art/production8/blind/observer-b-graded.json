@@ -1,0 +1,74 @@
+{
+  "observer_id": "blind_observer_b",
+  "count": 24,
+  "absent_activities": [],
+  "observer_labels_sha256": "754c4caf035ccd701a960eb1dd88f99a3bfb1b0ea951272600574ddbf1509fa9",
+  "calibration_lineup": true,
+  "confusion": {
+    "4x": {
+      "sit": {
+        "sit": 2
+      },
+      "gather": {
+        "gather": 3
+      },
+      "build": {
+        "build": 3
+      },
+      "walk": {
+        "walk": 3
+      },
+      "eat": {
+        "eat": 3
+      },
+      "carry": {
+        "carry": 3
+      },
+      "child": {
+        "unsure": 1,
+        "child": 2
+      },
+      "talk": {
+        "talk": 2
+      },
+      "drink": {
+        "drink": 1,
+        "walk": 1
+      }
+    },
+    "2x": {
+      "sit": {
+        "sit": 2
+      },
+      "gather": {
+        "gather": 3
+      },
+      "build": {
+        "build": 3
+      },
+      "walk": {
+        "walk": 2,
+        "unsure": 1
+      },
+      "eat": {
+        "eat": 3
+      },
+      "carry": {
+        "carry": 3
+      },
+      "child": {
+        "unsure": 1,
+        "child": 2
+      },
+      "talk": {
+        "talk": 2
+      },
+      "drink": {
+        "drink": 1,
+        "walk": 1
+      }
+    }
+  },
+  "accuracy_4x": 0.9166666666666666,
+  "accuracy_2x": 0.875
+}

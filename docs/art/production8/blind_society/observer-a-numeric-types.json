@@ -1,0 +1,40 @@
+{
+  "observer_id": "blind_observer_a",
+  "A27": {
+    "1": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "2": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "3": {
+      "count": 2,
+      "parents": {
+        "2": 1
+      }
+    },
+    "4": {
+      "count": 3,
+      "parents": {
+        "2": 1,
+        "3": 2
+      }
+    }
+  },
+  "A28": {
+    "1": "moving away to settle",
+    "2": "moving away to settle"
+  },
+  "direction": {
+    "D01": "S",
+    "D02": "S",
+    "D03": "NW"
+  },
+  "notes": "Village counts and lineage come from visible village labels and HUD text. W01/W02 show a group with carried bundle-like marks, a dotted route away from the village, and a departure message. Direction judgments assume screen-up is north: D01/D02 routes run mostly down, and D03 runs up and left. These are still-image judgments."
+}
