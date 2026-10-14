@@ -8,7 +8,7 @@ Runs: natural 32, stress 112, map 24. All times are one Mac's (MacBook Pro, Appl
 |---|---|---|---|
 | P1 | every natural world meets B1 and B2 | 32 worlds; worst mean 0.1292 ms, worst p99.9 0.304 ms, max 1.935 ms | PASS |
 | P2 | n = 500 fed: median world mean ≤ 4.0 ms, pooled p99.9 ≤ 8.0 ms | 8 worlds; median mean 0.3034 ms; pooled p99.9 0.634 ms | PASS |
-| P3 | one call of every per-frame getter, summed ≤ 2.0 ms | WIP 0.0264 ms, art 0.0265 ms (×callers: WIP 0.0994 ms, art 0.2850 ms) | PASS |
+| P3 | one call of every per-frame getter, summed ≤ 2.0 ms | WIP 0.0264 ms, art 0.0265 ms (art partial: 2 art-only per-frame getters untimed) (×callers: WIP 0.0994 ms, art 0.2850 ms) | PASS |
 | P4 | N_max reported; comfortable if ≥ 1,000 | ≥ 2,000 (every size passes); interpolated 5,142 alive (extrapolated beyond the largest size) | comfortable |
 | P5 | clean if no system with natural slope ≥ 1.2 has ≥ 5 % of tick time at n = 500 | none | clean |
 
@@ -84,6 +84,19 @@ Runs: natural 32, stress 112, map 24. All times are one Mac's (MacBook Pro, Appl
 | 15105 | 0.3165 | 0.658 | 0.795 | 0 | 500.0 | False |
 | 15106 | 0.2956 | 0.688 | 0.788 | 0 | 500.0 | False |
 | 15107 | 0.3076 | 0.644 | 0.785 | 0 | 500.0 | False |
+
+### Supplementary fed sizes (outside the pre-registered P table)
+
+| size | worlds | mean alive | median mean ms | pooled p99.9 ms | max ms | ticks > 16.67 ms | µs per agent-tick | contended |
+|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 3,000 | 8 | 3000.0 | 2.5363 | 5.907 | 9.169 | 0 | 0.845 | False |
+| 4,000 | 8 | 4000.0 | 3.6479 | 9.523 | 14.466 | 0 | 0.912 | False |
+| 6,000 | 8 | 6000.0 | 5.7153 | 16.794 | 30.685 | 24 | 0.953 | False |
+| 8,000 | 8 | 8000.0 | 8.1697 | 27.105 | 52.322 | 35 | 1.021 | False |
+
+- largest size (planned + supplementary) whose median fed mean tick ≤ 4.0 ms: 4,000
+- 4.0 ms crossing interpolated between neighbouring measured sizes (log-log): 4,347
+- whole-tick fit over all fed sizes with mean alive ≥ 80: 1.12 [1.10, 1.13] (n 72) → 4.0 ms at 4,484
 
 ### Slow-tick causes (the 20 slowest steady ticks kept per run)
 
@@ -182,6 +195,24 @@ Distinct agent tiles T = 69.0, hearths H = 1.0 (medians over the n = 500 runs).
 ## Repeatability (seed 15100, n = 500, fed)
 
 - mean tick 0.3035, 0.3034, 0.3062 ms; coefficient of variation 0.0052
+
+## Reference slopes for the later passes' rule (seed 15100, n = 100, 500, 1000, fed)
+
+- whole tick: 1.00 [0.45, 1.55] (n 3)
+
+| system | stress slope (rule design) |
+|---|---|
+| AgentDecisionSystem | 1.06 [0.39, 1.73] (n 3) |
+| SettlementSystem | 0.96 [0.81, 1.12] (n 3) |
+| MemorySystem | 0.98 [0.81, 1.15] (n 3) |
+| StockpileConsumeSystem | 0.99 [0.78, 1.21] (n 3) |
+| CombatSystem | 0.93 [0.38, 1.47] (n 3) |
+| AgentMovementSystem | 1.23 [1.00, 1.46] (n 3) |
+| StarvationSystem | 0.64 [-0.07, 1.35] (n 3) |
+| StaleSeekTargetSystem | 0.76 [0.04, 1.48] (n 3) |
+| InfluenceUpdateSystem | 0.10 [-0.14, 0.33] (n 3) |
+| SocialInteractionSystem | 0.69 [0.30, 1.09] (n 3) |
+| ConstructionSystem | 0.63 [-0.06, 1.32] (n 3) |
 
 ## Part 5 trigger
 

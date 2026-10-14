@@ -5,8 +5,8 @@ usage: perf_p15.py --natural DIR --stress DIR --map DIR [--overhead FILE] [--rep
 
 Reads the per-run JSON files of `worldsim_perf` (and, for pooled percentiles, their
 `<stem>.tick_us.bin` sidecars when present) and writes `scaling.json` and `scaling.md`
-into --out. `inventory.md` and `audit.md` in --out, when present, are appended to
-`scaling.md` (the per-frame caller inventory of 6.5 and the static audit of 7.4).
+into --out. `batches.md`, `inventory.md` and `audit.md` in --out, when present, are appended to
+`scaling.md` (the timed batches' start loads, the per-frame caller inventory of 6.5 and the static audit of 7.4).
 
 Slopes are ordinary least squares on logs with a 95 % interval b +- t(0.975, n - 2) * se(b),
 se(b) = sqrt(SSE / (n - 2) / Sxx). Classes: b < 1.2 linear or better, 1.2 <= b < 1.7
@@ -63,12 +63,14 @@ def _betacf(a, b, x):
         aa = m * (b - m) * x / ((qam + m2) * (a + m2))
         d = 1.0 + aa * d
         d = 1.0 / (d if abs(d) > 1e-300 else 1e-300)
-        c = 1.0 + aa / c if abs(c) > 1e-300 else 1e-300
+        c = 1.0 + aa / c
+        c = c if abs(c) > 1e-300 else 1e-300
         h *= d * c
         aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
         d = 1.0 + aa * d
         d = 1.0 / (d if abs(d) > 1e-300 else 1e-300)
-        c = 1.0 + aa / c if abs(c) > 1e-300 else 1e-300
+        c = 1.0 + aa / c
+        c = c if abs(c) > 1e-300 else 1e-300
         delta = d * c
         h *= delta
         if abs(delta - 1.0) < 1e-15:
@@ -233,12 +235,22 @@ def by_size(runs):
     return dict(sorted(sizes.items()))
 
 
+SIDECAR_DIRS = []
+
+
+def sidecar_path(run):
+    """The run's `.tick_us.bin`: beside its JSON, else in a --sidecars directory (same sub-directory name)."""
+    candidates = [os.path.join(run["_dir"], run["_stem"] + ".tick_us.bin")]
+    candidates += [os.path.join(d, os.path.basename(os.path.normpath(run["_dir"])), run["_stem"] + ".tick_us.bin") for d in SIDECAR_DIRS]
+    return next((c for c in candidates if os.path.exists(c)), None)
+
+
 def pooled_steady(runs):
     """Pooled steady tick times (µs) of `runs` from their sidecars; None if any sidecar is missing."""
     pooled = []
     for run in runs:
-        path = os.path.join(run["_dir"], run["_stem"] + ".tick_us.bin")
-        if not os.path.exists(path):
+        path = sidecar_path(run)
+        if path is None:
             return None
         pooled.extend(read_tick_us(path)[WARMUP_TICKS:])
     return sorted(pooled)
@@ -294,6 +306,14 @@ def slow_causes(runs):
     n = sum(tops.values())
     return {"ticks": n, "largest_system": sorted(tops.items(), key=lambda kv: -kv[1])[:5],
             "clocks": sorted(clocks.items(), key=lambda kv: -kv[1])[:5], "worst": worst}
+
+
+def rule_reference(fed, seed=15100, sizes=(100, 500, 1000)):
+    """Stress slopes on the later passes' rule design (PERF_BUDGET section 2(b)): one seed, three sizes."""
+    runs = {k: r for k, r in fed.items() if r["seed"] == seed and r["agents_requested"] in sizes}
+    pts, tick = stress_points(runs, min_x=0)
+    return {"seed": seed, "sizes": list(sizes), "runs": len(runs), "whole_tick": fit(tick),
+            "systems": {n: fit(p_) for n, p_ in pts.items()}}
 
 
 def analyse(natural, stress, map_runs, overhead=None, repeat=None, extra=None):
@@ -417,7 +437,13 @@ def analyse(natural, stress, map_runs, overhead=None, repeat=None, extra=None):
     # P table.
     p1 = bool(nat_rows) and all(w["b1"] and w["b2"] for w in nat_rows)
     row500 = out["fed_sizes"].get(str(TARGET))
-    p2 = bool(row500) and row500["median_mean_ms"] <= B1_MS and (row500["pooled_p999_ms"] is not None and row500["pooled_p999_ms"] <= B2_MS)
+    # A missing sidecar makes P2 "not computable" (None), never FAIL.
+    if not row500:
+        p2 = False
+    elif row500["pooled_p999_ms"] is None:
+        p2 = None
+    else:
+        p2 = row500["median_mean_ms"] <= B1_MS and row500["pooled_p999_ms"] <= B2_MS
     p3 = snap["wip"]["single_sum_us"] / 1000.0 <= B3_MS and snap["art"]["single_sum_us"] / 1000.0 <= B3_MS
     nmax_value = largest_pass if not every else max(all_sizes)
     p4_comfortable = bool(nmax_value and nmax_value >= 2 * TARGET)
@@ -435,7 +461,8 @@ def analyse(natural, stress, map_runs, overhead=None, repeat=None, extra=None):
     # Optional-fix trigger (Part 5).
     trig = [n for n, s in slopes.items() if (s["share_500"] or 0.0) >= OPTIONAL_FIX_SHARE and (
         (s["natural"] and s["natural"]["b"] >= 1.7) or (s["stress"] and s["stress"]["b"] >= 1.7 and not s["crowding_driven"]))]
-    out["part5_trigger"] = {"p2_fails": not p2, "near_quadratic_major": trig, "fix_allowed": (not p2) or bool(trig)}
+    out["part5_trigger"] = {"p2_fails": p2 is False, "near_quadratic_major": trig, "fix_allowed": p2 is False or bool(trig)}
+    out["rule_reference_slopes"] = rule_reference(fed)
 
     if overhead:
         out["overhead"] = {k: overhead[k] for k in ("median_plain_seconds", "median_profiled_seconds", "overhead_pct", "same_fingerprint", "plain_wall_seconds", "profiled_wall_seconds")}
@@ -499,9 +526,9 @@ def render(out):
     lines += ["## P table" + hdr, "", "| # | rule | measured | verdict |", "|---|---|---|---|"]
     lines.append(f"| P1 | every natural world meets B1 and B2 | {p['P1']['worlds']} worlds; worst mean {out['natural']['max_mean_ms']:.4f} ms, worst p99.9 {out['natural']['max_p999_ms']:.3f} ms, max {out['natural']['max_ms']:.3f} ms | {'PASS' if p['P1']['pass'] else 'FAIL'} |")
     p2 = p["P2"]
-    lines.append(f"| P2 | n = 500 fed: median world mean ≤ 4.0 ms, pooled p99.9 ≤ 8.0 ms | {p2['seeds']} worlds; median mean {p2['median_mean_ms']:.4f} ms; pooled p99.9 {fmt_ms(p2['pooled_p999_ms'])} ms | {'PASS' if p2['pass'] else 'FAIL'} |" if p2["seeds"] else "| P2 | — | no n = 500 runs | FAIL |")
+    lines.append(f"| P2 | n = 500 fed: median world mean ≤ 4.0 ms, pooled p99.9 ≤ 8.0 ms | {p2['seeds']} worlds; median mean {p2['median_mean_ms']:.4f} ms; pooled p99.9 {fmt_ms(p2['pooled_p999_ms'])} ms | {'NOT COMPUTABLE (sidecars missing)' if p2['pass'] is None else ('PASS' if p2['pass'] else 'FAIL')} |" if p2["seeds"] else "| P2 | — | no n = 500 runs | FAIL |")
     p3 = p["P3"]
-    lines.append(f"| P3 | one call of every per-frame getter, summed ≤ 2.0 ms | WIP {p3['wip_single_ms']:.4f} ms, art {p3['art_single_ms']:.4f} ms (×callers: WIP {p3['wip_callers_ms']:.4f} ms, art {p3['art_callers_ms']:.4f} ms) | {'PASS' if p3['pass'] else 'FAIL'} |")
+    lines.append(f"| P3 | one call of every per-frame getter, summed ≤ 2.0 ms | WIP {p3['wip_single_ms']:.4f} ms, art {p3['art_single_ms']:.4f} ms (art partial: 2 art-only per-frame getters untimed) (×callers: WIP {p3['wip_callers_ms']:.4f} ms, art {p3['art_callers_ms']:.4f} ms) | {'PASS' if p3['pass'] else 'FAIL'} |")
     p4 = p["P4"]
     nm = out["n_max"]
     nm_text = (f"≥ {nm['largest_size_run']:,} (every size passes)" if nm["every_size_passes"] else f"{nm['largest_passing_size']}") + \
@@ -587,6 +614,15 @@ def render(out):
     if out.get("repeatability"):
         r = out["repeatability"]
         lines += ["## Repeatability (seed 15100, n = 500, fed)", "", f"- mean tick {', '.join(f'{m:.4f}' for m in r['means_ms'])} ms; coefficient of variation {r['cv']:.4f}" if r["cv"] is not None else "- —", ""]
+    rr = out.get("rule_reference_slopes")
+    if rr and rr["runs"]:
+        lines += [f"## Reference slopes for the later passes' rule (seed {rr['seed']}, n = {', '.join(map(str, rr['sizes']))}, fed)", "",
+                  f"- whole tick: {fmt_fit(rr['whole_tick'])}", ""]
+        lines += ["| system | stress slope (rule design) |", "|---|---|"]
+        for name, f in sorted(rr["systems"].items(), key=lambda kv: -(out["slopes"].get(kv[0], {}).get("share_500") or 0.0)):
+            if not out["slopes"].get(name, {}).get("minor", True):
+                lines.append(f"| {name} | {fmt_fit(f)} |")
+        lines.append("")
     tr = out["part5_trigger"]
     lines += ["## Part 5 trigger", "", f"- P2 fails: {tr['p2_fails']}; near-quadratic system with ≥ 10 % at n = 500: {tr['near_quadratic_major'] or 'none'} → fix allowed: {tr['fix_allowed']}", ""]
     return "\n".join(lines) + "\n"
@@ -600,8 +636,10 @@ def main(argv=None):
     parser.add_argument("--overhead", default=None)
     parser.add_argument("--repeat", default=None)
     parser.add_argument("--extra", default=None, help="supplementary fed sizes (outside the P table)")
+    parser.add_argument("--sidecars", action="append", default=[], help="extra directory holding <subdir>/<stem>.tick_us.bin")
     parser.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    SIDECAR_DIRS[:] = args.sidecars
     natural, _ = load_runs(args.natural)
     stress, failures = load_runs(args.stress)
     map_runs, map_failures = load_runs(args.map)
@@ -622,7 +660,7 @@ def main(argv=None):
     text = render(out)
     if failures or map_failures:
         text += "## Runs that did not complete\n\n" + "\n".join(f"- {f.get('stem')}: {f.get('status')} {f.get('error', '')}".rstrip() for f in failures + map_failures) + "\n\n"
-    for extra in ("inventory.md", "audit.md"):
+    for extra in ("batches.md", "inventory.md", "audit.md"):
         path = os.path.join(args.out, extra)
         if os.path.exists(path):
             with open(path) as stream:

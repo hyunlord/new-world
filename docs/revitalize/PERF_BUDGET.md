@@ -1,5 +1,7 @@
 # WorldSim performance budget (Revitalize Pass 15)
 
+**Timed batches and load.** Section 1 asks for a 1-minute load < 4 before every timed batch. This Mac carried 2–13 of foreign load throughout (processes this run did not start). The overhead check (start load 3.33), the natural sweep (2.95) and the supplementary sizes (2.09) started below 4; the fed (13.41), repeatability (9.85), raw (9.85) and map (7.02) sweeps started above it inside one gated batch and are contended in that sense, although their JSON says `contended: false` (the gate was checked once for the batch; review round 1, M1). P2's fed n = 500 runs and the repeatability runs were therefore rerun with one gate each (section 1.1, "recheck").
+
 Measured 2026-10-15 on one Mac — a **MacBook Pro, Apple M4 Max (14 cores), 36 GiB, macOS 27.0, rustc 1.93.1**, release build — at code commit `8f052142` (behaviour-identical to `f5373ab2`: I1–I3 equal, METRICS Pass 15 Part 2). The simulation is single-threaded. Every number below is this machine's; for slower machines use a factor-2 margin (`N_max / 2`). Tables and per-run files: `docs/revitalize/probe/p15-4_scaling/scaling.md` (+ `scaling.json`), runs in `p15-1_natural/`, `p15-2_stress/`, `p15-3_map/`. The profiler's own cost is −0.22 % (natural seed 15000, 30 days, 3 + 3 alternating runs, same fingerprint each time), i.e. within noise.
 
 **Frame budget (4.3).** 60 FPS = 16.67 ms. The simulation may use half a frame at 4× speed (2 ticks per frame on average): **B1** mean tick ≤ 4.0 ms; **B2** p99.9 of tick times ≤ 8.0 ms (also the maximum and the ticks > 16.67 ms); **B3** one call of every per-frame snapshot getter (Rust side), summed, ≤ 2.0 ms. Target population 500 alive.
@@ -12,8 +14,8 @@ Measured 2026-10-15 on one Mac — a **MacBook Pro, Apple M4 Max (14 cores), 36 
 |---|---|---|---|---|
 | P1 | the game as it is (`game_v19`, natural, 32 worlds, 120 days) | every world meets B1 and B2 | worst world mean 0.129 ms, worst p99.9 0.304 ms, max 1.935 ms; no tick > 8 ms | **PASS** |
 | P2 | 500 people (fed stress, n = 500, 8 worlds, 2 days) | median world meets B1; pooled p99.9 meets B2 | median mean **0.303 ms**; pooled p99.9 **0.634 ms** (22,560 ticks); per-world max 0.785–0.827 ms; 0 ticks > 16.67 ms | **PASS** |
-| P3 | the UI's reads at 500 people | B3 on single calls | **0.026 ms** (both branches); ×callers 0.099 ms (this branch), 0.285 ms (art branch, two art-only getters untimed) | **PASS** |
-| P4 | headroom | N_max reported; comfortable if ≥ 1,000 | every size passes: **N_max ≥ 2,000**; fitted line reaches 4.0 ms at **5,142** alive (extrapolated; see 1.6) | **comfortable** |
+| P3 | the UI's reads at 500 people | B3 on single calls | **0.026 ms** on both branches (art figure partial: 2 art-only per-frame getters untimed); ×callers 0.099 ms (this branch), 0.285 ms (art branch) | **PASS** |
+| P4 | headroom | N_max reported; comfortable if ≥ 1,000 | every size passes: **N_max ≥ 2,000**; fitted line reaches 4.0 ms at **5,142** alive (extrapolated; the supplementary sizes measure ≈ 4,350 for B1 and ≈ 3,600 for B2, see 1.6) | **comfortable** |
 | P5 | growth | clean if no system whose natural slope is superlinear or worse has ≥ 5 % at n = 500 | no system has a superlinear natural slope; only `AgentMovementSystem`'s stress slope (1.21, 1.4 % of tick time) crosses 1.2 | **clean** |
 
 ### 1.1 Tick time per sweep
@@ -39,9 +41,9 @@ No tick of any planned run exceeded 8 ms (so none exceeded 16.67 ms). The natura
 | MemorySystem | 10.2 % | 6.4 % | 7.0 % | 5.8 % |
 | StockpileConsumeSystem | 1.2 % | 2.1 % | 2.4 % | 1.8 % |
 | CombatSystem | 1.4 % | 1.9 % | 1.7 % | 1.5 % |
-| AgentMovementSystem | 0.8 % | — | 1.4 % | 1.3 % |
+| AgentMovementSystem | 0.8 % | 0.9 % | 1.4 % | 1.3 % |
 | StarvationSystem | 2.2 % | 1.7 % | 0.7 % | 0.4 % |
-| InfluenceUpdateSystem | 1.8 % | 3.1 % | 0.5 % | — |
+| InfluenceUpdateSystem | 1.8 % | 3.1 % | 0.5 % | 0.1 % |
 | StaleSeekTargetSystem | 1.2 % | 1.1 % | 0.6 % | 0.4 % |
 | (the other 17 systems) | < 1.2 % each | | | |
 
@@ -85,7 +87,16 @@ Single calls summed: **26 µs** (limit 2,000 µs). Per frame with today's caller
 - Largest measured size whose median fed mean tick ≤ 4.0 ms: **≥ 2,000** (every pre-registered size passes; n = 2,000 uses 1.62 ms, 41 % of the budget).
 - The fitted whole-tick line (stress fed, mean alive ≥ 80) reaches 4.0 ms at **≈ 5,100 alive** — an extrapolation beyond the largest size.
 - With the factor-2 margin for slower machines: **≥ 1,000** measured, ≈ 2,600 extrapolated.
-- Supplementary sizes (3,000–8,000): pending — the batch is queued behind the load gate; filled in when it has run.
+- **Supplementary sizes (outside the pre-registered P table; seeds 15100–15107, fed, 2 days, gated batch started at load 2.09, not contended):**
+
+  | n | median mean tick | pooled p99.9 | max | ticks > 16.67 ms | µs per agent-tick |
+  |---:|---:|---:|---:|---:|---:|
+  | 3,000 | 2.54 ms | 5.91 ms | 9.17 ms | 0 | 0.85 |
+  | 4,000 | 3.65 ms | **9.52 ms** | 14.47 ms | 0 | 0.91 |
+  | 6,000 | **5.72 ms** | 16.79 ms | 30.69 ms | 24 | 0.95 |
+  | 8,000 | 8.17 ms | 27.11 ms | 52.32 ms | 35 | 1.02 |
+
+  Measured, the mean tick reaches 4.0 ms at **≈ 4,350 alive** (log-log between 4,000 and 6,000; the fit over all fed sizes, slope 1.12 [1.10, 1.13], says ≈ 4,480) — close to the pre-registered extrapolation's 5,142 but lower, because the cost per person keeps rising (0.61 µs at 500 → 1.02 µs at 8,000). **B2 fails first:** the pooled p99.9 crosses 8 ms between 3,000 (5.9 ms) and 4,000 (9.5 ms), ≈ **3,600** by log-log interpolation, because the 06:01 wake-up spike grows faster than the mean (p99.9 / mean 2.3 at 3,000, 2.6 at 4,000, 2.9 at 6,000, 3.3 at 8,000). From n = 6,000 single ticks exceed 16.67 ms (dropped frames at any speed). **Both budgets together hold up to ≈ 3,000–3,600 people on this Mac (≈ 1,500–1,800 with the factor-2 margin)** — all in the pessimistic one-camp stress world.
 
 So on this Mac the current code simulates the 500-person target in **0.30 ms per tick — 7.6 % of B1** and about 3.6 % of a 60 FPS frame at 4× speed.
 
@@ -95,7 +106,7 @@ Copy this into every future pass goal that adds or changes a simulation system:
 
 > **Performance rule (from Pass 15).** Before and after the change, on the same Mac, run `rust/target/release/worldsim_perf quick --out <dir>` (release build; seed 15100, n = 500 stress world, 64 × 64, 1 day, fed) through `tools/revitalize/perf_batch_p15.sh` (load < 4, no Godot / cargo running), and report:
 > (a) **the change in mean tick at n = 500 fed** (`tick_summary.mean_ms`). The pass **fails** if the mean tick rises by more than **15 %**, or rises above **4.0 ms**. (Pass 15 reference on this Mac: ≈ 0.30 ms; run-to-run variation 0.5 %.)
-> (b) **the new system's stress slope** from a three-size stress run, `worldsim_perf stress --seeds 15100..15101 --agents 100,500,1000 --side 64 --days 2 --feed fed`, fitted as in `tools/revitalize/perf_p15.py` (log mean µs per call on log mean alive), compared with this pass's stress slopes of comparable existing systems (decision 1.13, settlement 0.98, memory 1.03, movement 1.21, combat 0.97, stockpile 0.99). A near-quadratic slope (≥ 1.7) **fails** unless it is no steeper than the crowding-driven slopes measured here — Pass 15 measured **none**, so in practice any near-quadratic system fails unless the pass's goal accepts it explicitly.
+> (b) **the new system's stress slope** from a three-size stress run, `worldsim_perf stress --seeds 15100..15101 --agents 100,500,1000 --side 64 --days 2 --feed fed`, fitted as in `tools/revitalize/perf_p15.py` (log mean µs per call on log mean alive), compared with this pass's stress slopes of comparable existing systems **on the same design** (seed 15100, n = 100 / 500 / 1,000; `scaling.md`, "Reference slopes"): decision 1.06, settlement 0.96, memory 0.98, movement 1.23, combat 0.93, stockpile consumption 0.99; whole tick 1.00. (With three points the 95 % intervals are wide — e.g. decision [0.39, 1.73] — so compare slopes, not intervals; the eight-seed, five-size slopes of section 1.3 are the precise reference.) A near-quadratic slope (≥ 1.7) **fails** unless it is no steeper than the crowding-driven slopes measured here — Pass 15 measured **none**, so in practice any near-quadratic system fails unless the pass's goal accepts it explicitly.
 > The per-system table of the quick run's JSON (`systems[].share_of_tick_time`) names the new system's share; a new system above 10 % of tick time at n = 500 should say why.
 
 ## 3. For the art line

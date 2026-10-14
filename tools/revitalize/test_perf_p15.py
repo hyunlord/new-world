@@ -110,9 +110,11 @@ class Analysis(unittest.TestCase):
         self.assertTrue(out["p_table"]["P1"]["pass"])
         self.assertIn("B", out["p_table"]["P5"]["natural_superlinear_major"])
         self.assertFalse(out["p_table"]["P5"]["clean"])
-        # Pooled p99.9 needs sidecars; without them P2 fails safe.
+        # Pooled p99.9 needs sidecars; without them P2 is not computable (None), never FAIL.
         self.assertIsNone(out["fed_sizes"]["500"]["pooled_p999_ms"])
-        self.assertFalse(out["p_table"]["P2"]["pass"])
+        self.assertIsNone(out["p_table"]["P2"]["pass"])
+        self.assertFalse(out["part5_trigger"]["p2_fails"])
+        self.assertAlmostEqual(out["rule_reference_slopes"]["systems"]["B"]["b"], 2.2, delta=1e-9)
         # B3: every timed getter costs 1 µs.
         self.assertAlmostEqual(out["snapshots_500"]["wip"]["single_sum_us"], len(p.PER_FRAME_WIP))
         self.assertAlmostEqual(out["snapshots_500"]["wip"]["callers_sum_us"], 1 + 1 + 2 + 2 + 2 + 6 + 2 + 1 + 1 + 3)
