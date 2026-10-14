@@ -13,4 +13,6 @@ Start: 2026-10-14T01:12:55Z. Deadline rule: after 2026-10-14T11:12:55Z finish cu
 | 6 | A1–A33 measurements and boards | 2026-10-14T03:59:45Z | 2026-10-14T04:01:05Z | complete;22PASS/11FAIL, unchanged thresholds |
 | 7 | Localization completeness and duplicate audit | 2026-10-14T04:01:05Z | 2026-10-14T04:01:46+00:00 | complete;80checks,zero duplicates |
 | 8 | Independent final screen review | 2026-10-14T04:01:46+00:00 | 2026-10-14T04:02:13+00:00 | complete;independent NEEDS WORK verbatim |
-| 9 | Exact code gate, publication, Korean report, draft PR | 2026-10-14T04:02:13+00:00 | | in progress |
+| 9 | Exact code gate, publication, Korean report, draft PR | 2026-10-14T04:02:13+00:00 | 2026-10-14T04:12:22+00:00 | complete locally;65/65gate;immutable publication verification external |
+
+Part9 end marks the local report/evidence package. Exact publication-head gate, remote branch confirmations and PR readback continue in this same run; their terminal record is external `publication-verification.json` and the final response to avoid changing the commit being verified.
