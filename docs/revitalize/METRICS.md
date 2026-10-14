@@ -2782,3 +2782,11 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 
 - Review round 1 (0 High, 2 Medium, 7 Low) and round 2 (0 High, 1 Medium, 7 Low), all handled (`REVIEW_PASS15.md`); recomputations by the reviewers: one run from its sidecar, the settlement stress slope, P2 pooled p99.9, the recheck, the repeats' CV, the supplementary crossings.
 - **Gate green on `da8e45c7`** (`verification/p15_gate/gate.txt`): debug 2,134 / 0 failed, release 2,134 / 0, both clippy clean, forbidden-math clean, bridge build, Godot import, strict check, smoke without errors, Python revitalize 163 OK, worldmodel 49 OK (24 skipped, `WM_BIN`/`PROBE_BIN` = /nonexistent), `worldsim_perf quick` exit 0 (mean 0.302 ms), allowed paths OK. `codex/revitalize-2026-10` → `da8e45c7`.
+
+## Pass 16 — people who differ: temperament v1 (`game_v20`, `game_v20_inert`)
+
+### Part 0 — pins and the base identity
+
+- `game_v19` / `game_v19_nofission` pins (seeds 0–4; fingerprint and `state_digest` at 1,440 and 40,320 ticks; births by day 28 = 22, 15, 30, 8, 22; no fission by day 28) recorded on the unchanged code (`harness_revitalize_pass16_frozen.rs`).
+- Base `da8e45c7` identity vs Pass 15's final files: I1 (`game_v19`, 32 worlds, 120 days) 0 differences / 155,815 shared values; I3 (`game_v16`) 0 / 105,187; I2 (recorder `game_v19` 12000–12001) 20 / 20 array sha256 equal.
+
