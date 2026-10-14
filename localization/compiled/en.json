@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5217,
+    "active_key_count": 5221,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5222,
+    "key_count": 5226,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -5231,6 +5231,10 @@
     "VALUE_TRADITION": "Tradition",
     "VALUE_TRANQUILITY": "Tranquility",
     "VALUE_TRUTH": "Truth",
+    "VILLAGE_RESTLESS_CALM": "Calm",
+    "VILLAGE_RESTLESS_READY": "Ready to split",
+    "VILLAGE_RESTLESS_TITLE": "Restlessness",
+    "VILLAGE_RESTLESS_UNEASY": "Uneasy",
     "VIOLATION_DESENSITIZED": "{name} is becoming numb to these kinds of actions.",
     "VIOLATION_GUILT_MINOR": "{name} felt slightly uncomfortable about what they just did.",
     "VIOLATION_GUILT_MODERATE": "{name} is feeling guilty about their actions.",

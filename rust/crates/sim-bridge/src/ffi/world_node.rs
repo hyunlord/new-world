@@ -2386,6 +2386,8 @@ struct SocietySnapshot {
     parent_ids: Vec<i32>,
     founded_ticks: Vec<i64>,
     member_counts: Vec<i32>,
+    fission_pressures: Vec<i64>,
+    fission_thresholds: Vec<i64>,
     home_agent_ids: Vec<i64>,
     home_settlement_ids: Vec<i32>,
     founder_agent_ids: Vec<i64>,
@@ -2423,6 +2425,8 @@ fn collect_society_snapshot(world: &hecs::World, resources: &SimResources) -> So
         snapshot.parent_ids.push(settlement.parent.map_or(-1, |id| id as i32));
         snapshot.founded_ticks.push(settlement.founded_at as i64);
         snapshot.member_counts.push(settlement.member_agents.len() as i32);
+        snapshot.fission_pressures.push(i64::try_from(settlement.fission_pressure).unwrap_or(i64::MAX));
+        snapshot.fission_thresholds.push(i64::try_from(settlement.fission_threshold).unwrap_or(i64::MAX));
     }
     let mut homes: Vec<_> = resources.settlements.values()
         .flat_map(|settlement| settlement.member_agents.iter()
@@ -2488,6 +2492,8 @@ fn society_snapshot_to_dict(snapshot: &SocietySnapshot) -> VarDictionary {
     }
     for (key, values) in [
         ("founded_ticks", &snapshot.founded_ticks),
+        ("fission_pressures", &snapshot.fission_pressures),
+        ("fission_thresholds", &snapshot.fission_thresholds),
         ("home_agent_ids", &snapshot.home_agent_ids),
         ("founder_agent_ids", &snapshot.founder_agent_ids),
         ("founder_since_ticks", &snapshot.founder_since_ticks),
@@ -3421,6 +3427,8 @@ mod society_snapshot_tests {
         let agent_rows = collect_agent_snapshot(&engine.world);
         let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
         assert!(!snapshot.home_agent_ids.is_empty());
+        assert_eq!(snapshot.fission_pressures, vec![0; snapshot.settlement_ids.len()]);
+        assert_eq!(snapshot.fission_thresholds, vec![0; snapshot.settlement_ids.len()]);
         for (&agent_id, &home_id) in snapshot.home_agent_ids.iter().zip(&snapshot.home_settlement_ids) {
             assert!(agent_rows.iter().any(|row| row.agent_id as i64 == agent_id));
             assert!(engine.resources.settlements[&(home_id as u32)].member_agents.contains(&(agent_id as u64)));
@@ -3432,11 +3440,18 @@ mod society_snapshot_tests {
         let parent = snapshot.home_settlement_ids[0] as u32;
         let mut daughter = Settlement::new_with_id(20, 120);
         daughter.parent = Some(parent);
+        daughter.fission_pressure = 850;
+        daughter.fission_threshold = 1_200;
         daughter.add_member_agent(second);
-        engine.resources.settlements.get_mut(&parent).unwrap().member_agents.remove(&second);
+        let parent_settlement = engine.resources.settlements.get_mut(&parent).unwrap();
+        parent_settlement.member_agents.remove(&second);
+        parent_settlement.fission_pressure = 325;
+        parent_settlement.fission_threshold = 900;
         engine.resources.settlements.insert(20, daughter);
         let mut hidden = Settlement::new_with_id(30, 130);
         hidden.add_member_agent(u64::MAX);
+        hidden.fission_pressure = 777;
+        hidden.fission_threshold = 888;
         engine.resources.settlements.insert(30, hidden);
         let first_entity = engine.world.query::<&Agent>().iter()
             .find(|(_, agent)| agent.id == first).map(|(entity, _)| entity).unwrap();
@@ -3463,6 +3478,9 @@ mod society_snapshot_tests {
         assert_eq!(snapshot.settlement_ids, settlement_rows.iter().map(|row| row.settlement_id as i32).collect::<Vec<_>>());
         assert_eq!(snapshot.settlement_ids, vec![parent as i32, 20]);
         assert_eq!(snapshot.parent_ids, vec![-1, parent as i32]);
+        assert_eq!(snapshot.fission_pressures, [325, 850]);
+        assert_eq!(snapshot.fission_thresholds, [900, 1_200]);
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
         assert_eq!(snapshot.founded_ticks[1], 120);
         assert_eq!(snapshot.member_counts[0] as usize, engine.resources.settlements[&parent].member_agents.len());
         let member_index = snapshot.home_agent_ids.iter().position(|&id| id == first as i64).unwrap();
@@ -3489,6 +3507,36 @@ mod society_snapshot_tests {
         assert_eq!(snapshot.retired_hearth_ys, vec![5, 4]);
         assert_eq!(snapshot.current_tick, engine.resources.current_tick as i64);
     }
+
+    #[test]
+    fn society_pressure_columns_read_v19_values_and_saturate_without_mutation() {
+        let seed = 20_261_010;
+        let mut engine = build_world_with(
+            &WorldGenConfig::game_v19(seed), WorldRules::game_v19(seed),
+        );
+        advance_engine_ticks(&mut engine, 1_440);
+        let snapshot = collect_society_snapshot(&engine.world, &engine.resources);
+        assert!(!snapshot.settlement_ids.is_empty());
+        assert_eq!(snapshot.fission_pressures.len(), snapshot.settlement_ids.len());
+        assert_eq!(snapshot.fission_thresholds.len(), snapshot.settlement_ids.len());
+        for (index, &id) in snapshot.settlement_ids.iter().enumerate() {
+            let settlement = &engine.resources.settlements[&(id as u32)];
+            assert_eq!(snapshot.fission_pressures[index], i64::try_from(settlement.fission_pressure).unwrap());
+            assert_eq!(snapshot.fission_thresholds[index], i64::try_from(settlement.fission_threshold).unwrap());
+            assert!(snapshot.fission_thresholds[index] > 0);
+        }
+        assert_eq!(snapshot, collect_society_snapshot(&engine.world, &engine.resources));
+        let first = snapshot.settlement_ids[0] as u32;
+        let settlement = engine.resources.settlements.get_mut(&first).unwrap();
+        settlement.fission_pressure = u64::MAX;
+        settlement.fission_threshold = u64::MAX;
+        let saturated = collect_society_snapshot(&engine.world, &engine.resources);
+        assert_eq!(saturated.fission_pressures[0], i64::MAX);
+        assert_eq!(saturated.fission_thresholds[0], i64::MAX);
+        assert_eq!(engine.resources.settlements[&first].fission_pressure, u64::MAX);
+        assert_eq!(engine.resources.settlements[&first].fission_threshold, u64::MAX);
+    }
+
 }
 
 #[cfg(test)]

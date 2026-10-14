@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 5217,
+    "active_key_count": 5221,
     "categories_order": [
       "ui",
       "game",
@@ -24,7 +24,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 5222,
+    "key_count": 5226,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -5231,6 +5231,10 @@
     "VALUE_TRADITION": "전통",
     "VALUE_TRANQUILITY": "평온",
     "VALUE_TRUTH": "진실",
+    "VILLAGE_RESTLESS_CALM": "평온",
+    "VILLAGE_RESTLESS_READY": "갈라질 기세",
+    "VILLAGE_RESTLESS_TITLE": "술렁임 정도",
+    "VILLAGE_RESTLESS_UNEASY": "술렁임",
     "VIOLATION_DESENSITIZED": "{name}은(는) 이런 일에 점점 무감각해지고 있다.",
     "VIOLATION_GUILT_MINOR": "{name}은(는) 방금 한 행동에 작은 불편함을 느꼈다.",
     "VIOLATION_GUILT_MODERATE": "{name}은(는) 자신의 행동에 죄책감을 느끼고 있다.",

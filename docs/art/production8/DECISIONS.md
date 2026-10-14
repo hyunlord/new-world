@@ -17,3 +17,5 @@
 - Daily-summary text uses20px within the existing540px row so stored/eaten totals remain readable. Windowed day2 20:00 confirms the full Korean line (+19, stored83, eaten64) without clipping. The ordinary event font and panel geometry stay inherited.
 
 - Part2 arrow stays on the viewport-centre-to-target ray while top/bottom HUD bands inset its edge; no direction rotation to dodge individual panels. Actual viewport containment determines stake/arrow exclusivity. Window input QA uses forced rendering on macOS and preserves the interrupted first attempt. Final A32 blind evidence will use the final capture pipeline.
+
+- Part3 uses the existing selected-village God Hand panel as village inspector context. Labels show the same three-segment meter at zoom>=2. Getter integer values saturate at i64MAX; UI thirds use quotient/remainder boundaries to avoid multiplication overflow. No pressure is inferred for missing getter fields.

@@ -41,10 +41,14 @@ static func observe(society: Dictionary, settlements: Dictionary = {}) -> void:
 			_history[id] = {"parent_id": -1, "member_count": 0}
 	_alive.assign(Array(ids))
 	_alive.sort()
+	var pressures: PackedInt64Array = society.get("fission_pressures", PackedInt64Array())
+	var thresholds: PackedInt64Array = society.get("fission_thresholds", PackedInt64Array())
 	var parents: PackedInt32Array = society.get("parent_ids", PackedInt32Array())
 	var counts: PackedInt32Array = society.get("member_counts", settlements.get("member_counts", PackedInt32Array()))
 	for index: int in ids.size():
 		var row: Dictionary = _history[ids[index]]
+		row["pressure"] = int(pressures[index]) if index < pressures.size() else 0
+		row["threshold"] = int(thresholds[index]) if index < thresholds.size() and index < pressures.size() else 0
 		if index < parents.size():
 			row["parent_id"] = parents[index]
 		row["member_count"] = int(counts[index]) if index < counts.size() else 0
@@ -144,9 +148,25 @@ static func record_cast(tick: int, kind: String, target: int) -> void:
 static func cast_target(tick: int, kind: String) -> int:
 	return int(_casts.get("%d:%s" % [tick, kind], -1))
 
+static func restlessness_for(id: int) -> Dictionary:
+	var row: Dictionary = _history.get(id, {})
+	var pressure: int = int(row.get("pressure", 0))
+	var threshold: int = int(row.get("threshold", 0))
+	var stage: int = 0
+	if threshold > 0:
+		var third: int = threshold / 3
+		var remainder: int = threshold % 3
+		var first: int = third + (1 if remainder > 0 else 0)
+		var second: int = third * 2 + (1 if remainder == 1 else (2 if remainder == 2 else 0))
+		stage = 0 if pressure < first else (1 if pressure < second else 2)
+	var keys: Array[String] = ["VILLAGE_RESTLESS_CALM", "VILLAGE_RESTLESS_UNEASY", "VILLAGE_RESTLESS_READY"]
+	return {"visible": threshold > 0 and _alive.has(id), "pressure": pressure, "threshold": threshold, "ratio": float(pressure) / float(threshold) if threshold > 0 else 0.0, "stage": stage, "state_key": keys[stage]}
+
 static func capture_metadata(locale: Node = null) -> Dictionary:
 	var rows: Array[Dictionary] = []
 	for id: int in _numbers:
 		var tile: Vector2i = formation_for(id)
 		rows.append({"id": id, "number": number_for(id), "name": name_for(id, locale), "parent_id": int(_history[id].get("parent_id", -1)), "parent_number": number_for(int(_history[id].get("parent_id", -1))), "member_count": displayed_members(id), "tile": [tile.x, tile.y], "alive": _alive.has(id), "abandoned": is_abandoned(id), "color": color_for(id).to_html(false)})
+	for row: Dictionary in rows:
+		row["restlessness"] = restlessness_for(int(row["id"]))
 	return {"settlements": rows, "selected_id": selected_id}

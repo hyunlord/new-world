@@ -1,5 +1,6 @@
 extends Node2D
 ## Names and selection use persistent AgentId/SettlementId joins, never spatial membership.
+const Meter = preload("res://scripts/ui/restless_meter.gd")
 const Marker = preload("res://scripts/ui/offscreen_marker.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const FONT = preload("res://assets/fonts/galmuri/Galmuri9.ttf")
@@ -13,6 +14,7 @@ var _selected_marker: Dictionary = {}
 var _world: Node
 var _locale: Node
 var _labels: Dictionary = {}
+var _meters: Dictionary = {}
 var _drawn: Array[Dictionary] = []
 var _abandoned_material: ShaderMaterial
 var _last_tick: int = -1
@@ -39,6 +41,9 @@ func _reset() -> void:
 	for label: Label in _labels.values():
 		label.queue_free()
 	_labels.clear()
+	for meter: Control in _meters.values():
+		meter.queue_free()
+	_meters.clear()
 	_drawn.clear()
 	_selected_marker.clear()
 
@@ -106,11 +111,24 @@ func _update_labels() -> void:
 		var bounds := Rect2(screen - LABEL_PADDING, label.size + LABEL_PADDING * 2.0)
 		bounds = _clear_sprite_bounds(bounds)
 		label.position = get_global_transform_with_canvas().affine_inverse() * (bounds.position + LABEL_PADDING)
+		var meter: Control = _meters.get(id) as Control
+		if meter == null:
+			meter = Meter.new()
+			add_child(meter)
+			_meters[id] = meter
+		meter.scale = Vector2.ONE / zoom
+		meter.position = label.position + Vector2(label.size.x + LABEL_PADDING.x + 3.0, (label.size.y - Meter.SIZE.y) * 0.5) / zoom
+		var meter_state: Dictionary = Selection.restlessness_for(id)
+		meter_state["visible"] = bool(meter_state["visible"]) and zoom >= 2.0 and not abandoned
+		meter.call("display", meter_state, Selection.color_for(id))
 		_drawn.append({"id": id, "number": Selection.number_for(id), "parent_number": Selection.number_for(int(Selection._history[id].get("parent_id", -1))), "text": text, "tile": [tile.x, tile.y], "color": color.to_html(false), "abandoned": abandoned, "visible": get_viewport_rect().intersects(bounds), "screen_rect": [bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y], "screen_font_px": LABEL_FONT_PX, "backplate_alpha": LABEL_BACKPLATE.a, "padding_px": [LABEL_PADDING.x, LABEL_PADDING.y]})
 	for id: int in _labels.keys():
 		if not seen.has(id):
 			(_labels[id] as Label).queue_free()
 			_labels.erase(id)
+			if _meters.has(id):
+				(_meters[id] as Control).queue_free()
+				_meters.erase(id)
 	_selected_marker.clear()
 	if Selection.selected_id >= 0:
 		var tile: Vector2i = Selection.formation_for(Selection.selected_id)
@@ -240,6 +258,12 @@ func capture_metadata() -> Dictionary:
 	var result: Dictionary = Selection.capture_metadata(_locale)
 	result["labels"] = _drawn.duplicate(true)
 	result["selected_marker"] = _selected_marker.duplicate(true)
+	var meters: Array[Dictionary] = []
+	for id: int in _meters:
+		var row: Dictionary = _meters[id].call("capture_metadata")
+		row["id"] = id
+		meters.append(row)
+	result["meters"] = meters
 	var overview: Node = get_node_or_null("../SettlementOverviewRenderer")
 	if overview != null and overview.has_method("capture_metadata"):
 		result.merge(overview.call("capture_metadata"))

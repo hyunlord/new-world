@@ -1,11 +1,15 @@
 extends PanelContainer
 
+const Meter = preload("res://scripts/ui/restless_meter.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PRESETS: Dictionary = {"gift_food": 60, "spoil_food": 60, "gift_wood": 40, "rot_wood": 40, "rain": 13, "cold_snap": 1, "windfall": 20}
 var _world: Node
 var _locale: Node
 var _buttons: Dictionary = {}
+var _restless_row: HBoxContainer
+var _restless_label: Label
+var _restless_meter: Control
 var _title: Label
 var _toast: Label
 var _snap: Label
@@ -31,6 +35,13 @@ func _ready() -> void:
 	add_child(column)
 	_title = Label.new()
 	column.add_child(_title)
+	_restless_row = HBoxContainer.new()
+	column.add_child(_restless_row)
+	_restless_label = Label.new()
+	_restless_row.add_child(_restless_label)
+	_restless_meter = Meter.new()
+	_restless_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_restless_row.add_child(_restless_meter)
 	var grid := GridContainer.new()
 	grid.columns = 2
 	column.add_child(grid)
@@ -126,6 +137,10 @@ func refresh_state() -> void:
 	else:
 		Selection.observe({}, settlements)
 	_title.text = _loc("GOD_HAND_TARGET_FMT") % Selection.name_for(Selection.resolved_target(), _locale, false)
+	var restless: Dictionary = Selection.restlessness_for(Selection.selected_id)
+	_restless_row.visible = Selection.selected_id >= 0 and bool(restless["visible"])
+	_restless_label.text = _loc("VILLAGE_RESTLESS_TITLE") + ": " + _loc(str(restless["state_key"]))
+	_restless_meter.call("display", restless, Selection.color_for(Selection.selected_id))
 	var ready_to_cast: bool = not settlements.get("settlement_ids", PackedInt32Array()).is_empty()
 	for kind: String in _buttons:
 		var button: Button = _buttons[kind]
