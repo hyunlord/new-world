@@ -137,6 +137,17 @@ pub struct Settlement {
     /// settlement formed by the formation scan alone (all earlier worlds).
     #[serde(default)]
     pub parent: Option<SettlementId>,
+
+    /// Accumulated fission pressure P in thousandths of a hazard-day (Pass 13,
+    /// `game_v19`); 0 under v8–v18.
+    #[serde(default)]
+    pub fission_pressure: u64,
+
+    /// The hidden fission threshold θ in thousandths (Pass 13, `game_v19`; a
+    /// world draw made when the settlement forms and after each of its
+    /// splits); 0 under v8–v18 (never drawn).
+    #[serde(default)]
+    pub fission_threshold: u64,
 }
 
 impl Settlement {
@@ -152,6 +163,8 @@ impl Settlement {
             founded_at,
             stockpile: BTreeMap::new(),
             parent: None,
+            fission_pressure: 0,
+            fission_threshold: 0,
         }
     }
 

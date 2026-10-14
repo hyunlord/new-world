@@ -8,7 +8,7 @@ use sim_core::components::{Agent, Lineage};
 use sim_core::variety::WorldVariety;
 use sim_engine::{apply_noise_fork, NoiseFork, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
-use sim_test::scenes::game_v16_scene;
+use sim_test::scenes::{game_v16_scene, game_v18_nofission_scene, game_v18_scene};
 use sim_test::worldmodel::digest::state_digest;
 
 /// `state_digest` every 60 ticks over `0..=ticks`, with an optional fork
@@ -51,6 +51,19 @@ fn harness_v16_noise_fork_prefix_identity() {
     let prefix = (fork_tick / 60) as usize;
     assert_eq!(base[..=prefix], fork[..=prefix]);
     assert!(base[prefix + 1..].iter().zip(&fork[prefix + 1..]).any(|(a, b)| a != b));
+}
+
+/// Pass 12 J10: the same two fork properties for both v18 scenes.
+#[test]
+fn harness_v18_noise_fork_replicate0_and_prefix_identity() {
+    for make in [game_v18_scene as fn(u64) -> SimEngine, game_v18_nofission_scene] {
+        let base = digests(make(12_002), 4 * 1440, None);
+        assert_eq!(base, digests(make(12_002), 4 * 1440, Some((1440, 0, true))));
+        let fork = digests(make(12_002), 4 * 1440, Some((1440, 3, false)));
+        let prefix = 1440 / 60;
+        assert_eq!(base[..=prefix], fork[..=prefix]);
+        assert!(base[prefix + 1..].iter().zip(&fork[prefix + 1..]).any(|(a, b)| a != b));
+    }
 }
 
 #[test]

@@ -30,11 +30,12 @@ use super::sha256::sha256_hex;
 use crate::probe::fingerprint;
 
 /// Recorder format version written into `meta.json`.
-pub const SCHEMA_VERSION: u64 = 5;
+pub const SCHEMA_VERSION: u64 = 6;
 
 /// Scenes the recorder can build.
-pub const SCENES: [&str; 12] = [
+pub const SCENES: [&str; 16] = [
     "game", "game_v9", "game_v10", "game_v11", "game_v12", "game_v13", "game_v14", "game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17",
+    "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19",
 ];
 
 /// Build a fresh engine of `scene` and `seed`.
@@ -52,6 +53,10 @@ pub fn make_scene(scene: &str, seed: u64) -> Result<SimEngine, String> {
         "game_v16" => crate::scenes::game_v16_scene(seed),
         "game_v17_nofission" => crate::scenes::game_v17_nofission_scene(seed),
         "game_v17" => crate::scenes::game_v17_scene(seed),
+        "game_v18_nofission" => crate::scenes::game_v18_nofission_scene(seed),
+        "game_v18" => crate::scenes::game_v18_scene(seed),
+        "game_v19_nofission" => crate::scenes::game_v19_nofission_scene(seed),
+        "game_v19" => crate::scenes::game_v19_scene(seed),
         _ => return Err(format!("scene must be one of {}", SCENES.join(", "))),
     })
 }
@@ -91,7 +96,7 @@ impl EpisodeSpec {
 /// Every value of one row before the tables are assembled.
 struct Row {
     global: [f32; 39],
-    settlements: BTreeMap<SettlementId, [f32; 11]>,
+    settlements: BTreeMap<SettlementId, [f32; 14]>,
     agents: BTreeMap<u64, [f32; 20]>,
     keys: BTreeMap<u64, u64>,
     resources: BTreeMap<(u8, u32, u32), (f32, f32)>,
@@ -183,6 +188,10 @@ fn take_row(engine: &SimEngine, scene: &str, seed: u64, agents: bool, settlement
                 .and_then(|parent| settlement_order.iter().position(|p| *p == parent))
                 .map_or(-1.0, |index| index as f32),
             s.founded_at as f32,
+            // Schema 6: P and θ (hidden) and the founding group's departure.
+            s.fission_pressure as f32,
+            s.fission_threshold as f32,
+            r.fission_log.iter().find(|f| f.daughter == Some(*sid)).map_or(-1.0, |f| f.depart_tick as f32),
         ]);
     }
     let mut agent_rows = BTreeMap::new();
@@ -357,7 +366,7 @@ pub fn record(spec: &EpisodeSpec) -> Result<EpisodeFiles, String> {
     let mut table = Vec::with_capacity(t * s * SETTLEMENT.len());
     for row in &rows {
         for sid in &order {
-            table.extend(row.settlements.get(sid).copied().unwrap_or([f32::NAN; 11]));
+            table.extend(row.settlements.get(sid).copied().unwrap_or([f32::NAN; 14]));
         }
     }
     push("settlements.npy", npy::f32_file(&[t, s, SETTLEMENT.len()], &table), Dtype::F32, vec![t, s, SETTLEMENT.len()]);
@@ -593,7 +602,7 @@ pub struct WmArgs {
 }
 
 /// Usage text of `worldsim_wm`.
-pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
+pub const USAGE: &str = "usage: worldsim_wm --scene game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|game_v18_nofission|game_v18|game_v19_nofission|game_v19|... --seeds a..b --days N --every TICKS [--agents] [--schedule-dir DIR [--include-factual]] [--fork-tick T --replicates R] [--resume] --workers K --out DIR";
 
 impl WmArgs {
     /// Parse argv excluding the executable.
@@ -800,7 +809,7 @@ mod tests {
     #[test]
     fn schema_two_hides_the_weather_and_lists_observable_fields() {
         let files = record(&spec(1, true, None)).expect("record");
-        assert_eq!(files.meta["schema_version"], 5);
+        assert_eq!(files.meta["schema_version"], 6);
         let hidden = |array: &str, name: &str| {
             files.meta["fields"][array]
                 .as_array()
@@ -842,6 +851,13 @@ mod tests {
         assert_eq!(AGENT[19].name, "founding");
         assert!(hidden("agents.npy", "hardiness"));
         assert!(!hidden("agents.npy", "founding"));
+        // Schema 6 appends its columns after every earlier one.
+        assert_eq!(SETTLEMENT[11].name, "fission_pressure");
+        assert_eq!(SETTLEMENT[12].name, "fission_threshold");
+        assert_eq!(SETTLEMENT[13].name, "depart_tick");
+        assert!(hidden("settlements.npy", "fission_pressure"));
+        assert!(hidden("settlements.npy", "fission_threshold"));
+        assert!(!hidden("settlements.npy", "depart_tick"));
     }
 
     #[test]

@@ -57,6 +57,34 @@
 //! settlement.
 //!
 //! Every loop runs in SettlementId / AgentId / fission-id order.
+//!
+//! **Pass 12 (`game_v18`).** The season gate reads `allowed_seasons` (v17:
+//! spring and summer). With `hazard` set, the crowding gate is replaced, after
+//! the capacity and before the site choice, by a daily draw: in thousandths,
+//! g = clamp((members − size_lo) × 1000 / (size_hi − size_lo), 0, 1000),
+//! c = members × 1000 / max(capacity, 1), q = clamp((c − crowd_lo) × 1000 /
+//! (crowd_hi − crowd_lo), 0, 1000), need = max(1, floor(members ×
+//! adult_need_per_day × scarcity_days)), s = clamp(1000 − food × 1000 / need,
+//! 0, 1000) with food the settlement's own stockpile Food, h = max_daily × g ×
+//! (weight_crowd × q + weight_scarcity × s) / 10^9; the settlement splits when
+//! `keyed_below(seed, STREAM_FISSION_HAZARD, sid, tick, 0, r, 1000) < h`, r the
+//! noise replicate in force. Every check that reaches the draw is logged in
+//! `SimResources::fission_checks` (measurement only).
+//!
+//! **Pass 13 (`game_v19`).** With `pressure` set (it requires `hazard`) the
+//! daily draw is not made: on a morning every gate before the site choice
+//! passes (season, world cooldown, `max_settlements`, age, own cooldown,
+//! `min_members`, departed group, capacity), the settlement's pressure P
+//! (`Settlement::fission_pressure`, thousandths) grows by h, or, when h = 0,
+//! falls by `decay_permille` (floor 0); on a morning any gate fails —
+//! including the gates that end the check for every higher id (world
+//! cooldown, `max_settlements`, a lower id splitting that morning) — P
+//! neither grows nor decays. The settlement splits when P ≥ θ
+//! (`Settlement::fission_threshold`) and P > 0 and a site is free; a split
+//! blocked by no free site or by group formation keeps P and θ. After a
+//! split P returns to 0 (`reset_on_split`) and θ is redrawn with k = the
+//! parent's fission records (`fission_threshold`, a world draw: never the
+//! replicate). θ is drawn when the settlement forms (`SettlementSystem`).
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -66,10 +94,11 @@ use sim_core::components::{
     Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, SeekTarget,
     SettlementId, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
 };
-use sim_core::rng::{keyed_u64, STREAM_FISSION};
-use sim_core::rules::{BirthRule, FissionRule};
+use sim_core::fission_threshold::fission_threshold;
+use sim_core::rng::{keyed_below, keyed_u64, STREAM_FISSION, STREAM_FISSION_HAZARD};
+use sim_core::rules::{BirthRule, FissionHazard, FissionRule};
 use sim_core::TerrainType;
-use sim_engine::{BuildingPlacedEvent, FissionRecord, RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
+use sim_engine::{BuildingPlacedEvent, FissionCheck, FissionRecord, RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::resource_regen::season_at_tick;
 use crate::runtime::settlement::food_economy::{adult_need_per_day, annual_mean_supply};
@@ -143,6 +172,26 @@ pub fn sustain_capacity(resources: &SimResources, sid: SettlementId) -> Option<u
         return None;
     }
     Some((sustain.utilization * supply / need).floor().max(0.0) as u32)
+}
+
+/// Pass 12: the hazard terms (g, q, s, h) in thousandths for a settlement of
+/// `members` with `capacity` (`sustain_capacity`) and `food` in its store;
+/// `need_per_member` is `adult_need_per_day` (the only f64, floored once).
+pub fn hazard_terms(hazard: &FissionHazard, members: u32, capacity: u32, food: u32, need_per_member: f64) -> (i64, i64, i64, i64) {
+    let clamp = |x: i64| x.clamp(0, 1000);
+    let m = i64::from(members);
+    let g = clamp((m - i64::from(hazard.size_lo)) * 1000 / (i64::from(hazard.size_hi) - i64::from(hazard.size_lo)).max(1));
+    let c = m * 1000 / i64::from(capacity.max(1));
+    let q = clamp(
+        (c - i64::from(hazard.crowd_lo_permille)) * 1000
+            / (i64::from(hazard.crowd_hi_permille) - i64::from(hazard.crowd_lo_permille)).max(1),
+    );
+    let need = ((f64::from(members) * need_per_member * f64::from(hazard.scarcity_days)).floor() as i64).max(1);
+    let s = clamp(1000 - i64::from(food) * 1000 / need);
+    let h = i64::from(hazard.max_daily_permille) * g
+        * (i64::from(hazard.weight_crowd_permille) * q + i64::from(hazard.weight_scarcity_permille) * s)
+        / 1_000_000_000;
+    (g, q, s, h)
 }
 
 fn walkable(resources: &SimResources, p: (u32, u32)) -> bool {
@@ -391,20 +440,24 @@ impl FissionSystem {
     /// Daily 06:00 check, settlements in id order.
     fn check(&mut self, world: &mut World, resources: &mut SimResources, rule: &FissionRule, roster: &Roster, tick: u64) {
         let tpd = resources.ticks_per_day;
-        if season_at_tick(resources, tick).is_none_or(|(season, _)| season > 1) {
+        // Pass 12: the allowed seasons (v17: spring and summer, i.e. season <= 1).
+        if season_at_tick(resources, tick).is_none_or(|(season, _)| !rule.allowed_seasons.get(season).copied().unwrap_or(false)) {
             return;
         }
+        let mut checks: Vec<FissionCheck> = Vec::new();
         let cooldown = u64::from(rule.cooldown_days) * tpd;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         for sid in ids {
+            // Both ends of the check for every higher id (Pass 12: `break`
+            // so the logged checks are kept; nothing follows the loop).
             if self.world_last_fission.is_some_and(|last| tick < last + cooldown) {
-                return;
+                break;
             }
             let alive = resources.settlements.values().filter(|s| !s.member_agents.is_empty()).count() as u32
                 + self.groups.len() as u32;
             if alive >= rule.max_settlements {
-                return;
+                break;
             }
             let Some(settlement) = resources.settlements.get(&sid) else { continue };
             let members = settlement.member_agents.len() as u32;
@@ -416,9 +469,61 @@ impl FissionSystem {
                 continue;
             }
             let Some(capacity) = sustain_capacity(resources, sid) else { continue };
-            if f64::from(members) < rule.crowding * f64::from(capacity) {
-                continue;
+            // Pass 12: the hazard draw replaces the crowding gate.
+            let mut check = None;
+            match rule.hazard {
+                None => {
+                    if f64::from(members) < rule.crowding * f64::from(capacity) {
+                        continue;
+                    }
+                }
+                Some(hazard) => {
+                    let food = settlement.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0);
+                    let (g, q, s, h) = hazard_terms(&hazard, members, capacity, food, adult_need_per_day(tpd));
+                    let (draw, split, pressure, threshold) = match rule.pressure {
+                        None => {
+                            let replicate = resources.noise_replicate_for(tick);
+                            let draw = keyed_below(resources.world_seed, STREAM_FISSION_HAZARD, u64::from(sid), tick, 0, replicate, 1000);
+                            (draw, (draw as i64) < h, 0, 0)
+                        }
+                        // Pass 13: accumulate (every gate passed today), no draw.
+                        Some(law) => {
+                            let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
+                            let Some(settlement) = resources.settlements.get_mut(&sid) else { continue };
+                            if settlement.fission_threshold == 0 {
+                                // A settlement formed without its draw (e.g. deserialized
+                                // from before Pass 13) draws it now, with the same key.
+                                settlement.fission_threshold =
+                                    fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                            }
+                            settlement.fission_pressure = if h > 0 {
+                                settlement.fission_pressure.saturating_add(h as u64)
+                            } else {
+                                settlement.fission_pressure.saturating_sub(u64::from(law.decay_permille))
+                            };
+                            let (p, theta) = (settlement.fission_pressure, settlement.fission_threshold);
+                            (0, p > 0 && p >= theta, p, theta)
+                        }
+                    };
+                    check = Some(FissionCheck {
+                        tick,
+                        settlement: sid,
+                        members,
+                        capacity,
+                        food,
+                        g,
+                        q,
+                        s,
+                        h,
+                        draw,
+                        split,
+                        site_free: false,
+                        pressure,
+                        threshold,
+                    });
+                }
             }
+            let Some(settlement) = resources.settlements.get(&sid) else { continue };
             // Site: the free wild-region centre nearest the parent.
             let home = settlement.formation_tile;
             let site = resources
@@ -431,6 +536,13 @@ impl FissionSystem {
                 })
                 .min_by_key(|(index, region)| (chebyshev(region.centre, home), *index))
                 .map(|(_, region)| region.centre);
+            if let Some(mut check) = check {
+                check.site_free = site.is_some();
+                checks.push(check);
+                if !check.split {
+                    continue;
+                }
+            }
             let Some(site) = site else {
                 resources.tallies.fission_blocked_no_site += 1;
                 continue;
@@ -483,6 +595,8 @@ impl FissionSystem {
                 resources.haulers.remove(id);
             }
             let adults_in_group = group.iter().filter(|id| roster.get(id).is_some_and(|row| row.2)).count() as u32;
+            let (pressure_at_split, threshold_at_split) =
+                resources.settlements.get(&sid).map_or((0, 0), |s| (s.fission_pressure, s.fission_threshold));
             resources.fission_log.push(FissionRecord {
                 fission_id,
                 parent: sid,
@@ -496,7 +610,21 @@ impl FissionSystem {
                 food_taken: food,
                 wood_taken: wood,
                 settled_at_leader: false,
+                pressure_at_split,
+                threshold_at_split,
             });
+            // Pass 13: the parent's pressure resets and θ is redrawn (k now
+            // counts this record).
+            if let Some(law) = rule.pressure {
+                let k = resources.fission_log.iter().filter(|r| r.parent == sid).count() as u32;
+                let theta = fission_threshold(law.threshold_table, resources.world_seed, u64::from(sid), k);
+                if let Some(parent) = resources.settlements.get_mut(&sid) {
+                    if law.reset_on_split {
+                        parent.fission_pressure = 0;
+                    }
+                    parent.fission_threshold = theta;
+                }
+            }
             self.groups.insert(
                 fission_id,
                 Group { parent: sid, site, members: group, leader, since: tick, food, wood, placed: None, log: resources.fission_log.len() - 1 },
@@ -504,6 +632,7 @@ impl FissionSystem {
             self.last_fission.insert(sid, tick);
             self.world_last_fission = Some(tick);
         }
+        resources.fission_checks.extend(checks);
     }
 }
 
@@ -550,6 +679,31 @@ impl RuntimeSystem for FissionSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn hazard_terms_follow_the_formula() {
+        // The goal's start values (7.1), so the numbers do not move with tuning.
+        let hz = FissionHazard {
+            size_lo: 20,
+            size_hi: 40,
+            crowd_lo_permille: 850,
+            crowd_hi_permille: 1050,
+            scarcity_days: 2,
+            weight_crowd_permille: 500,
+            weight_scarcity_permille: 500,
+            max_daily_permille: 120,
+        };
+        // need per member 1.0: 30 members, 2 days -> need 60.
+        // g = (30 - 20) * 1000 / 20 = 500; c = 30000 / 30 = 1000; q = 150 * 1000 / 200 = 750;
+        // s = 1000 - 30 * 1000 / 60 = 500; h = 120 * 500 * (500 * 750 + 500 * 500) / 1e9 = 37.
+        assert_eq!(hazard_terms(&hz, 30, 30, 30, 1.0), (500, 750, 500, 37));
+        // Capacity 0 counts as 1 (q = 1000); an empty store s = 1000; size at size_hi.
+        assert_eq!(hazard_terms(&hz, 40, 0, 0, 1.0), (1000, 1000, 1000, 120));
+        // At or below size_lo the hazard is 0 whatever else.
+        assert_eq!(hazard_terms(&hz, 20, 1, 0, 1.0).3, 0);
+        // A full store and room: s = 0, q = 0.
+        assert_eq!(hazard_terms(&hz, 30, 100, 1000, 1.0), (500, 0, 0, 0));
+    }
 
     #[test]
     fn metadata() {

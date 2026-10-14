@@ -70,7 +70,7 @@ class ExportDeterminismTests(unittest.TestCase):
                 self.assertEqual(first, second)
                 self.assertEqual(first, single)
                 meta = json.loads(first["game_v14_s0_none/meta.json"])
-                self.assertEqual(meta["schema_version"], 5)
+                self.assertEqual(meta["schema_version"], 6)
 
     def test_v15_fork_families_are_byte_identical(self) -> None:
         # Pass 9 Y7: schema-3 game_v15 branch families (agents, lineage keys,
@@ -83,7 +83,7 @@ class ExportDeterminismTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first, single)
         meta = json.loads(first["game_v15_s2_a_r2/meta.json"])
-        self.assertEqual((meta["schema_version"], meta["keyed_draws"], meta["noise_fork"]), (5, True, {"tick": 1440, "replicate": 2}))
+        self.assertEqual((meta["schema_version"], meta["keyed_draws"], meta["noise_fork"]), (6, True, {"tick": 1440, "replicate": 2}))
         self.assertIn("game_v15_s2_a_r2/agent_keys.npy", first)
 
     def test_v16_fork_families_are_byte_identical(self) -> None:
@@ -98,7 +98,7 @@ class ExportDeterminismTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first, single)
         meta = json.loads(first["game_v16_s2_a_r2/meta.json"])
-        self.assertEqual((meta["schema_version"], meta["noise_fork"]), (5, {"tick": 1440, "replicate": 2}))
+        self.assertEqual((meta["schema_version"], meta["noise_fork"]), (6, {"tick": 1440, "replicate": 2}))
         self.assertIs(meta["world_variety"]["hidden"], True)
 
     def test_v17_fork_families_are_byte_identical(self) -> None:
@@ -113,8 +113,41 @@ class ExportDeterminismTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first, single)
         meta = json.loads(first["game_v17_s2_a_r2/meta.json"])
-        self.assertEqual((meta["schema_version"], meta["noise_fork"]), (5, {"tick": 1440, "replicate": 2}))
+        self.assertEqual((meta["schema_version"], meta["noise_fork"]), (6, {"tick": 1440, "replicate": 2}))
         self.assertIn("regions", meta["world_variety"])
+
+    def test_v18_fork_families_are_byte_identical(self) -> None:
+        # Pass 12 J10: schema-5 game_v18 and game_v18_nofission branch families (agents, noise
+        # forks at tick 1,440, R = 3), 4 days: two runs at 4 workers and one at 1.
+        extra = ("--agents", "--schedule-dir", str(self.schedules), "--include-factual", "--fork-tick", "1440", "--replicates", "3")
+        for scene in ("game_v18_nofission", "game_v18"):
+            first = tree(self.record(f"{scene}_fork_a", 4, *extra, scene=scene, days=4))
+            second = tree(self.record(f"{scene}_fork_b", 4, *extra, scene=scene, days=4))
+            single = tree(self.record(f"{scene}_fork_c", 1, *extra, scene=scene, days=4))
+            self.assertEqual(len({k.split("/")[0] for k in first}), 4 * 2 * 3)
+            self.assertEqual(first, second)
+            self.assertEqual(first, single)
+            meta = json.loads(first[f"{scene}_s2_a_r2/meta.json"])
+            self.assertEqual((meta["schema_version"], meta["noise_fork"]), (6, {"tick": 1440, "replicate": 2}))
+            self.assertIn("regions", meta["world_variety"])
+
+    def test_v19_fork_families_are_byte_identical(self) -> None:
+        # Pass 13 J10: schema-6 game_v19 and game_v19_nofission branch families (agents, noise
+        # forks at tick 1,440, R = 3), 4 days, two runs at 4 workers and one at 1; and plain
+        # 40-day game_v19 runs (pressure accumulating after day 10) at 4 and 1 workers.
+        extra = ("--agents", "--schedule-dir", str(self.schedules), "--include-factual", "--fork-tick", "1440", "--replicates", "3")
+        for scene in ("game_v19_nofission", "game_v19"):
+            first = tree(self.record(f"{scene}_fork_a", 4, *extra, scene=scene, days=4))
+            second = tree(self.record(f"{scene}_fork_b", 4, *extra, scene=scene, days=4))
+            single = tree(self.record(f"{scene}_fork_c", 1, *extra, scene=scene, days=4))
+            self.assertEqual(len({k.split("/")[0] for k in first}), 4 * 2 * 3)
+            self.assertEqual(first, second)
+            self.assertEqual(first, single)
+            meta = json.loads(first[f"{scene}_s2_a_r2/meta.json"])
+            self.assertEqual((meta["schema_version"], meta["noise_fork"]), (6, {"tick": 1440, "replicate": 2}))
+        many = tree(self.record("v19_long_a", 4, scene="game_v19", days=40))
+        one = tree(self.record("v19_long_b", 1, scene="game_v19", days=40))
+        self.assertEqual(many, one)
 
     def test_schedule_episodes_share_the_factual_prefix(self) -> None:
         import numpy as np
