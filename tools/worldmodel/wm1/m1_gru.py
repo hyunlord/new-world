@@ -13,6 +13,13 @@ usage:
 `config.json` stores the dataset and `final` reads it from there (a dataset without a counterfactual group skips
 T3 / T4 and runs the dataset's task list with the bias-removed T2 scores and their per-world scores).
 
+WM-2 (docs/worldmodel/wm2/GOAL.md 7.6): `--burn-in full` (M1-long) gives the GRU the teacher-forced state over every row
+from row 0: in training the rows before each window run as one batched no-grad pass (`burn_in_states`, packed
+sequences), then the window runs with gradient from those per-layer states (truncated BPTT); in evaluation the
+teacher-forced states of every row are computed once per episode and indexed by start. `--burn-in window` (default)
+is the behaviour of WM-1.3. `--val-frac F` (< 1) scores early stopping on a fixed subsample of the validation starts
+(`numpy.random.default_rng(0)`, the same for every run; 1 = every start, WM-1.3).
+
 GOAL_1_3.md 7.2-7.4: `--ramp-steps` decouples the k curriculum and the patience start from `--max-steps` (0 = half of
 it); every run evaluated on WM-1.2's grid (every 150 steps) also replays WM-1.2's stopping rule online and keeps that
 checkpoint as `best_wm12rule.pt` (`val_metrics.json` `wm12rule`). `final --ckpt best_wm12rule.pt --out DIR` scores it,
@@ -52,7 +59,9 @@ except ImportError:  # the Mac gate runs without torch; the torch tests skip
 
 DEFAULTS = dict(hidden=256, layers=2, lr=3e-4, weight_decay=1e-4, batch=64, window=168, k_max=24, roll_starts=8,
                 roll_weight=1.0, max_steps=12000, eval_every=400, patience=5, max_seconds=7200, warmup=168,
-                grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0, ramp_steps=0)
+                grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0, ramp_steps=0,
+                burn_in="window", val_frac=1.0)
+BURN_IN = ("window", "full")
 # `ramp_steps` (GOAL_1_3.md 7.2): the steps of the k curriculum and the start of patience; 0 = `max_steps // 2` (the
 # WM-1 / WM-1.2 behaviour). An int, so the parser builds `--ramp-steps` with `type=int`.
 # Recipe r1 = DEFAULTS. Recipe r2 (after r1 drifted at 168 h, DECISIONS D2.2): window 336, k_max 168,
@@ -146,13 +155,17 @@ class Stepper:
 
 
 class GRUPredictor(ev.Predictor):
-    """A trained M1 as a harness predictor."""
+    """A trained M1 as a harness predictor (`burn_in` "full": the teacher-forced state over rows 0 .. start)."""
     provides_t4 = True
 
     def __init__(self, model, lay: d.Layout, norm: d.Normalizer, variant: d.Variant, device: str, warmup: int = 168,
-                 name: str = "m1_gru", round_counts: bool = False, chunk: int = 4096, nonneg: bool = False):
+                 name: str = "m1_gru", round_counts: bool = False, chunk: int = 4096, nonneg: bool = False,
+                 burn_in: str = "window"):
+        if burn_in not in BURN_IN:
+            raise ValueError(f"burn_in {burn_in}")
         self.model, self.lay, self.norm, self.variant = model, lay, norm, variant
         self.device, self.warmup, self.name, self.round_counts, self.chunk = device, warmup, name, round_counts, chunk
+        self.burn_in = burn_in
         self.stepper = Stepper(lay, norm, device, nonneg)
 
     def rollout(self, ep, starts, horizon, actions):
@@ -173,17 +186,23 @@ class GRUPredictor(ev.Predictor):
         n = len(starts)
         hidden = None
         W = self.warmup
-        # Warm-up: rows start-W+1 .. start, from a zero state; windows cut at row 0 start later (masked).
-        for tau in range(W):
-            rows = starts_t - (W - 1) + tau
-            active = rows >= 0
-            r = rows.clamp(min=0)
-            inp = torch.cat([x_state[r], cal[r], act[r], sev[r]], dim=-1).unsqueeze(1)
-            mu, logvar, fl, h_new = self.model(inp, hidden)
-            if hidden is None:
-                hidden = torch.zeros_like(h_new)
-            hidden = torch.where(active.view(1, n, 1), h_new, hidden)
-        mu, fl = mu[:, 0], fl[:, 0]
+        if self.burn_in == "full":
+            # The teacher-forced states of every row, once per episode (one pass), indexed by start.
+            mu_all, _, fl_all, outs = self.model.run(torch.cat([x_state, cal, act, sev], dim=-1).unsqueeze(0))
+            hidden = outs[:, 0, starts_t].contiguous()
+            mu, fl = mu_all[0, starts_t], fl_all[0, starts_t]
+        else:
+            # Warm-up: rows start-W+1 .. start, from a zero state; windows cut at row 0 start later (masked).
+            for tau in range(W):
+                rows = starts_t - (W - 1) + tau
+                active = rows >= 0
+                r = rows.clamp(min=0)
+                inp = torch.cat([x_state[r], cal[r], act[r], sev[r]], dim=-1).unsqueeze(1)
+                mu, logvar, fl, h_new = self.model(inp, hidden)
+                if hidden is None:
+                    hidden = torch.zeros_like(h_new)
+                hidden = torch.where(active.view(1, n, 1), h_new, hidden)
+            mu, fl = mu[:, 0], fl[:, 0]
         cur = state_raw[starts_t]
         sev_hold = sev[starts_t]
         vs, probs, chs, des = [], [], [], []
@@ -222,6 +241,44 @@ def batch_tensors(win: dict, device: str) -> dict:
     return {k: torch.tensor(v, device=device) for k, v in win.items()}
 
 
+def burn_in_states(model, preps: list, which: np.ndarray, starts: np.ndarray, device: str):
+    """Per-layer teacher-forced GRU states [layers, B, H] after rows 0 .. start - 1 of each sampled window's episode
+    (zeros where start = 0): one batched no-grad pass through `proj` and every layer's `nn.GRU`, the different
+    lengths packed (`pack_padded_sequence`; zero padding is not neutral for a GRU, so it is never fed)."""
+    from torch.nn.utils.rnn import pack_padded_sequence
+    nl, hid = len(model.grus), model.grus[0].hidden_size
+    h = torch.zeros(nl, len(starts), hid, device=device)
+    nz = np.nonzero(np.asarray(starts) > 0)[0]
+    if len(nz) == 0:
+        return h
+    lengths = np.asarray(starts)[nz]
+    n_in = model.proj[0].in_features
+    x = np.zeros((len(nz), int(lengths.max()), n_in), np.float32)
+    for row, i in enumerate(nz):
+        p, ln = preps[which[i]], int(starts[i])
+        x[row, :ln] = d.model_input(p.x_state[:ln], p.calendar[:ln], p.actions[:ln], p.sev[:ln])
+    with torch.no_grad():
+        z = model.proj(torch.tensor(x, device=device))
+        packed = pack_padded_sequence(z, torch.tensor(lengths), batch_first=True, enforce_sorted=False)
+        for i, g in enumerate(model.grus):
+            packed, hn = g(packed)
+            h[i, torch.tensor(nz, device=device)] = hn[0]
+    return h
+
+
+def make_batch(preps: list, cfg: dict, rng: np.random.Generator, device: str, model=None, batch: int | None = None,
+               window: int | None = None) -> dict:
+    """One training batch: `d.sample_windows` tensors (`burn_in` "window": exactly WM-1.3's batch), plus for
+    `burn_in` "full" the per-layer burn-in state `h0` of every window (the same draws)."""
+    batch, window = batch or cfg["batch"], window or cfg["window"]
+    if cfg.get("burn_in", "window") == "window":
+        return batch_tensors(d.sample_windows(preps, window, batch, rng), device)
+    win, which, starts = d.sample_windows(preps, window, batch, rng, return_starts=True)
+    bt = batch_tensors(win, device)
+    bt["h0"] = burn_in_states(model, preps, which, starts, device)
+    return bt
+
+
 def roll_positions(L: int, k: int, cfg: dict, rng: np.random.Generator) -> np.ndarray:
     """Rollout start positions j (the last teacher-forced row) with j + k <= L and j >= roll_min_context when it fits."""
     lo = min(cfg.get("roll_min_context", 0), L - k)
@@ -233,7 +290,7 @@ def losses(model, stepper: Stepper, bt: dict, k: int, cfg: dict, rng: np.random.
     train-std-normalized continuous state + fire BCE, averaged over the k steps) from `roll_starts` positions."""
     L = bt["dtarget"].shape[1]
     inp = torch.cat([bt["x_state"], bt["calendar"], bt["actions"], bt["sev"]], dim=-1)
-    mu, logvar, fl, outs = model.run(inp[:, :L])
+    mu, logvar, fl, outs = model.run(inp[:, :L], bt.get("h0"))
     y = bt["dtarget"]
     nll = 0.5 * (logvar + (y - mu) ** 2 / logvar.exp()).mean()
     bce = F.binary_cross_entropy_with_logits(fl, bt["fire_next"])
@@ -269,19 +326,49 @@ def losses(model, stepper: Stepper, bt: dict, k: int, cfg: dict, rng: np.random.
     return tf, {"nll": nll.item(), "bce": bce.item(), "roll": roll.item()}, roll
 
 
-def val_score(pred: ev.Predictor, val: dict[str, list], stds: dict) -> tuple[float, dict]:
-    per = {n: ev.t2(pred, eps, stds[n], 24)["mean"] for n, eps in val.items()}
+def val_starts(val: dict[str, list], frac: float, horizon: int = 24) -> dict | None:
+    """A fixed subsample of the validation T2 starts (06:00 bench starts) per group and episode, or None (every
+    start) when `frac` >= 1: per episode in group order, ceil(frac x n) of its n starts chosen by one
+    `numpy.random.default_rng(0)` stream (the same for every run on the same validation set)."""
+    if frac >= 1.0:
+        return None
+    rng = np.random.default_rng(0)
+    out = {}
+    for n, eps in val.items():
+        for ep in eps:
+            s = ev.bench_starts(ep, horizon)
+            keep = np.sort(rng.permutation(len(s))[: int(np.ceil(frac * len(s)))])
+            key = (n, int(ep.seed), ep.eid)
+            if key in out:
+                raise ValueError(f"validation episode {key} is not unique: no start subsample")
+            out[key] = s[keep]
+    return out
+
+
+def val_score(pred: ev.Predictor, val: dict[str, list], stds: dict, keep: dict | None = None) -> tuple[float, dict]:
+    """Validation T2 24 h (06:00 starts) per group and their mean; `keep` (`val_starts`) restricts the starts."""
+    if keep is None:
+        per = {n: ev.t2(pred, eps, stds[n], 24)["mean"] for n, eps in val.items()}
+        return float(np.mean(list(per.values()))), per
+    per = {}
+    for n, eps in val.items():
+        preds, trues = [], []
+        for ep in eps:
+            s = keep[(n, int(ep.seed), ep.eid)]
+            preds.append(ev.run_rollouts(pred, ep, s, 24).v[:, -1])
+            trues.append(ep.bench.v[s + 24])
+        per[n] = float(np.nanmean(b.nmae(np.vstack(preds), np.vstack(trues), stds[n])))
     return float(np.mean(list(per.values()))), per
 
 
-def calibration(model, stepper, preps: list, device: str, window: int) -> dict:
+def calibration(model, stepper, preps: list, device: str, window: int, cfg: dict | None = None) -> dict:
     """Share of true normalized changes within +-2 sigma of the predicted mean (teacher forcing, val windows)."""
     rng = np.random.default_rng(123)
-    win = batch_tensors(d.sample_windows(preps, window, 64, rng), device)
+    win = make_batch(preps, cfg or {}, rng, device, model, batch=64, window=window)
     with torch.no_grad():
         L = win["dtarget"].shape[1]
         inp = torch.cat([win["x_state"], win["calendar"], win["actions"], win["sev"]], -1)[:, :L]
-        mu, logvar, fl, _ = model(inp)
+        mu, logvar, fl, _ = model(inp, win.get("h0"))
         inside = ((win["dtarget"] - mu).abs() <= 2 * (0.5 * logvar).exp()).float()
     per = inside.mean(dim=(0, 1)).cpu().numpy()
     return {"within_2sigma_mean": float(per.mean()), "within_2sigma": dict(zip(stepper.lay.variant.continuous_names, per.tolist()))}
@@ -300,7 +387,7 @@ def _gru_build(lay, cfg):
 
 def _gru_predictor(model, lay, norm, variant, device, cfg, round_counts=False):
     return GRUPredictor(model, lay, norm, variant, device, cfg["warmup"], round_counts=round_counts,
-                        nonneg=bool(cfg.get("clamp_nonneg", 0)))
+                        nonneg=bool(cfg.get("clamp_nonneg", 0)), burn_in=cfg.get("burn_in", "window"))
 
 
 KINDS = {"m1_gru": Kind("m1_gru", DEFAULTS, _gru_build, lambda *a: losses(*a), _gru_predictor)}
@@ -360,12 +447,12 @@ class Wm12Rule:
                 "stop_step": self.stop_step if self.stop else last_step, "checkpoint": WM12_CKPT}
 
 
-def choose_rounding(pred, val: dict, stds: dict) -> tuple[bool, dict]:
+def choose_rounding(pred, val: dict, stds: dict, keep: dict | None = None) -> tuple[bool, dict]:
     """Output rounding of count variables chosen on val (T2 24 h + 168 h, 06:00 starts)."""
     choice = {}
     for rc in (False, True):
         pred.round_counts = rc
-        s24, _ = val_score(pred, val, stds)
+        s24, _ = val_score(pred, val, stds, keep)
         s168 = float(np.mean([ev.t2(pred, eps, stds[n], 168)["mean"] for n, eps in val.items()]))
         choice[str(rc)] = {"t2_24": s24, "t2_168": s168}
     rc = choice["True"]["t2_24"] + choice["True"]["t2_168"] < choice["False"]["t2_24"] + choice["False"]["t2_168"]
@@ -377,6 +464,8 @@ def train(args, kind: Kind | None = None) -> int:
     kind = kind or KINDS["m1_gru"]
     cfg = dict(kind.defaults)
     cfg.update({k: v for k, v in vars(args).items() if k in kind.defaults and v is not None})
+    if cfg.get("burn_in", "window") not in BURN_IN:
+        raise SystemExit(f"--burn-in must be one of {BURN_IN}")
     ds = c.dataset(getattr(args, "dataset", "v0"))
     variant = dataset_variant(ds, args.variant)
     out = Path(args.out)
@@ -392,6 +481,7 @@ def train(args, kind: Kind | None = None) -> int:
         raise SystemExit(f"{ds.name}: an episode's feature table differs from the dataset's column list")
     val = {n: g[n] for n in ds.val}
     stds = c.split_stds(val)
+    keep = val_starts(val, float(cfg.get("val_frac", 1.0)))
     norm = d.Normalizer.fit(train_eps, variant)
     lay = d.Layout(variant)
     preps = [d.prepare(ep, variant, norm) for ep in train_eps]
@@ -404,7 +494,9 @@ def train(args, kind: Kind | None = None) -> int:
               "code_commit": c.git_commit(), "manifest_sha256": c.manifest_sha(ds.name), "train_groups": train_groups,
               "dataset": ds.name, "val_groups": list(ds.val), "train_episodes": len(train_eps),
               "input_names": list(variant.input_names()),
-              "normalizer": norm.to_json(), "data_root": str(args.root), "threads": torch.get_num_threads()}
+              "normalizer": norm.to_json(), "data_root": str(args.root), "threads": torch.get_num_threads(),
+              "val_episodes": sum(len(v) for v in val.values()),
+              "val_starts": None if keep is None else int(sum(len(x) for x in keep.values()))}
     c.write_json(out / "config.json", config)
     rng = np.random.default_rng(args.seed)
     log = (out / "train_log.jsonl").open("w")
@@ -415,7 +507,7 @@ def train(args, kind: Kind | None = None) -> int:
     for step in range(1, cfg["max_steps"] + 1):
         model.train()
         k = k_at(step, cfg)
-        bt = batch_tensors(d.sample_windows(preps, cfg["window"], cfg["batch"], rng), device)
+        bt = make_batch(preps, cfg, rng, device, model)
         tf, parts, roll = kind.loss(model, stepper, bt, k, cfg, rng)
         loss = tf + cfg["roll_weight"] * roll
         opt.zero_grad()
@@ -426,7 +518,9 @@ def train(args, kind: Kind | None = None) -> int:
             log.write(json.dumps({"step": step, "k": k, "loss": loss.item(), **parts, "t": time.time() - t0}) + "\n")
             log.flush()
         if step % cfg["eval_every"] == 0:
-            score, per = val_score(pred, val, stds)
+            te = time.time()
+            score, per = val_score(pred, val, stds, keep)
+            eval_s = time.time() - te
             improved = score < best - 1e-6
             if improved:
                 best, best_step, bad = score, step, 0
@@ -436,7 +530,7 @@ def train(args, kind: Kind | None = None) -> int:
             if wm12.update(step, score):
                 torch.save(model.state_dict(), out / WM12_CKPT)
             log.write(json.dumps({"step": step, "eval": True, "val_t2_24": score, "per_split": per, "best": best,
-                                  "k": k, "t": time.time() - t0}) + "\n")
+                                  "k": k, "t": time.time() - t0, "eval_s": eval_s}) + "\n")
             log.flush()
             print(f"step {step} k {k} loss {loss.item():.4f} val {score:.4f} best {best:.4f}@{best_step} "
                   f"{time.time() - t0:.0f}s", flush=True)
@@ -452,10 +546,10 @@ def train(args, kind: Kind | None = None) -> int:
     if wm12_summary is not None and (out / WM12_CKPT).exists():
         # The checkpoint WM-1.2's rule would have kept, with its own rounding choice on val.
         model.load_state_dict(torch.load(out / WM12_CKPT, map_location=device))
-        wm12_summary["round_counts"], wm12_summary["rounding_val"] = choose_rounding(pred, val, stds)
+        wm12_summary["round_counts"], wm12_summary["rounding_val"] = choose_rounding(pred, val, stds, keep)
     model.load_state_dict(torch.load(out / "best.pt", map_location=device))
     # Choose the output rounding of count variables on val (T2 24 h and 168 h).
-    round_counts, choice = choose_rounding(pred, val, stds)
+    round_counts, choice = choose_rounding(pred, val, stds, keep)
     if ds.tasks is None:
         val_metrics = ev.evaluate(pred, val, stds, cf_test=None, t3_split="none", any_hour=False, t1_on=True)
     else:
@@ -463,7 +557,7 @@ def train(args, kind: Kind | None = None) -> int:
     cal_preps = [d.prepare(ep, variant, norm) for n in ds.val for ep in val[n]]
     summary = {"best_val_t2_24": best, "best_step": best_step, "last_step": step, "stop": stop,
                "seconds": time.time() - t0, "round_counts": round_counts, "rounding_val": choice,
-               "calibration_val": calibration(model, stepper, cal_preps, device, cfg["window"]), "val": val_metrics,
+               "calibration_val": calibration(model, stepper, cal_preps, device, cfg["window"], cfg), "val": val_metrics,
                "ramp_steps": half, "wm12rule": wm12_summary}
     c.write_json(out / "val_metrics.json", summary)
     config.update({"round_counts": round_counts, "best_step": best_step, "stop": stop})

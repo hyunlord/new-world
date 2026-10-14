@@ -353,11 +353,14 @@ def model_input(x_state: np.ndarray, calendar: np.ndarray, actions: np.ndarray, 
     return np.concatenate([x_state, calendar, actions, sev], axis=-1)
 
 
-def sample_windows(preps: list[Prepared], length: int, batch: int, rng: np.random.Generator) -> dict[str, np.ndarray]:
+def sample_windows(preps: list[Prepared], length: int, batch: int, rng: np.random.Generator,
+                   return_starts: bool = False):
     """`batch` random contiguous windows of `length` + 1 rows from train episodes (episodes weighted by length).
 
     Returns inputs of rows start .. start+length (the last row's input feeds rollout losses only), the
-    normalized change and next fire of rows start .. start+length-1, and the raw states."""
+    normalized change and next fire of rows start .. start+length-1, and the raw states. With `return_starts`
+    (WM-2, GOAL.md 7.6: the full-history burn-in of M1-long) also the chosen episode indices and window starts, as
+    `(windows, which, starts)`; the draws are the same either way."""
     sizes = np.array([p.ep.rows - length - 1 for p in preps], dtype=np.float64)
     if (sizes < 1).any():
         raise ValueError("an episode is shorter than the window")
@@ -374,4 +377,5 @@ def sample_windows(preps: list[Prepared], length: int, batch: int, rng: np.rando
         out["state"].append(p.state[sl])
         out["dtarget"].append(p.dtarget[s:s + length])
         out["fire_next"].append(p.fire_next[s:s + length])
-    return {k: np.stack(v).astype(np.float32) for k, v in out.items()}
+    windows = {k: np.stack(v).astype(np.float32) for k, v in out.items()}
+    return (windows, which, starts) if return_starts else windows

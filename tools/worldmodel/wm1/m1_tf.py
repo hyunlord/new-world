@@ -32,7 +32,7 @@ if torch is not None:
 DEFAULTS = dict(d_model=256, layers=4, heads=4, context=168, lr=3e-4, weight_decay=1e-4, batch=64, window=168,
                 k_max=24, roll_starts=4, roll_weight=1.0, max_steps=6000, eval_every=300, patience=5, max_seconds=7200,
                 warmup=168, grad_clip=1.0, threads=16, roll_min_context=0, tf_l1=0.0, clamp_nonneg=0, v_weight=1.0,
-                ramp_steps=0)
+                ramp_steps=0, val_frac=1.0)
 
 
 if torch is not None:

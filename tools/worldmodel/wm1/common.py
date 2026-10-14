@@ -39,7 +39,11 @@ class Dataset:
     GOAL_1_3.md 4.2, 6.3: `train_seeds` (half-open [lo, hi), or None: every train episode) keeps only those seeds of
     the `train` group (nested training sets share one manifest; roles stay train / val / test); `extra_state` are the
     `global.npy` columns this dataset appends to the observable state table after `g.injured_members` (state
-    features, chosen per dataset, never per schema)."""
+    features, chosen per dataset, never per schema).
+
+    WM-2 (docs/worldmodel/wm2/GOAL.md 7.1): a group's split may be a tuple of manifest splits; the group is their
+    episodes in that order (`load_groups`), e.g. every member of the dataset-v2 families (factual and arms, both
+    replicates) as one training group."""
     name: str
     manifest: Path
     groups: dict = field(hash=False)
@@ -75,6 +79,19 @@ def _w13(name: str, scene: str, train_seeds: tuple[int, int], extra: tuple[str, 
                    train_seeds, extra)
 
 
+V2_MANIFEST = REPO / "docs/worldmodel/wm2/v2_manifest.json"
+# WM-2 (GOAL.md 6.5, 7.1): manifest splits of dataset v2. `v19_fact` = replicate 0 of `none` of every game_v19 family;
+# `v19_arm_r0` / `v19_none_r1` / `v19_arm_r1` = the other members; `v16` = the game_v16 control (factual only).
+V19_FACT, V19_ARM_R0, V19_NONE_R1, V19_ARM_R1 = "v19_fact", "v19_arm_r0", "v19_none_r1", "v19_arm_r1"
+V19_ALL = (V19_FACT, V19_ARM_R0, V19_NONE_R1, V19_ARM_R1)
+
+
+def _v2(name: str, train: str | tuple, val: str | tuple, test: str | tuple, extra: tuple[str, ...]) -> Dataset:
+    return Dataset(name, V2_MANIFEST, {"train": (train, "train"), "val": (val, "val"), "test": (test, "test")},
+                   ("train",), ("train",), ("val",), ("test",), None, None, None, ("T1", "T2", "T2_any"), True,
+                   None, extra)
+
+
 DATASETS = {
     "v0": Dataset("v0", MANIFEST, GROUPS, ("A_train",), ("A_train", "B_train"), VAL_SPLITS, TEST_SPLITS, "C_test",
                   "A_val", "A_test"),
@@ -85,6 +102,12 @@ DATASETS = {
     "w13_v16_n200": _w13("w13_v16_n200", "game_v16", (30000, 30200)),
     "w13_v16_n400": _w13("w13_v16_n400", "game_v16", (30000, 30400)),
     "w13_v17_n400": _w13("w13_v17_n400", "game_v17", (32000, 32400), V17_EXTRA),
+    # WM-2: training on every member of the train families (all arms, both replicates); validation on the
+    # replicate-0 members (factual and arms) of the val families; test = every member of the test families (the
+    # effect evaluation reads them through `wm2.effects`). The factual-only view and the game_v16 control.
+    "v2_v19": _v2("v2_v19", V19_ALL, (V19_FACT, V19_ARM_R0), V19_ALL, V17_EXTRA),
+    "v2_v19_fact": _v2("v2_v19_fact", V19_FACT, V19_FACT, V19_FACT, V17_EXTRA),
+    "v2_v16": _v2("v2_v16", "v16", "v16", "v16", ()),
 }
 
 
@@ -99,7 +122,7 @@ def manifest(ds: str = "v0") -> dict:
     spec = dataset(ds)
     m = json.loads(spec.manifest.read_text())
     if spec.name != "v0":
-        splits = {split for split, _ in spec.groups.values()}
+        splits = {x for split, _ in spec.groups.values() for x in split_names(split)}
         m["episodes"] = [e for e in m["episodes"] if e["split"] in splits]
     return m
 
@@ -107,6 +130,11 @@ def manifest(ds: str = "v0") -> dict:
 def manifest_sha(ds: str = "v0") -> str:
     """sha256 of the manifest file (the pilot datasets share one file)."""
     return hashlib.sha256(dataset(ds).manifest.read_bytes()).hexdigest()
+
+
+def split_names(split: str | tuple) -> tuple[str, ...]:
+    """The manifest splits of a group's split entry (a name or a tuple of names, WM-2)."""
+    return (split,) if isinstance(split, str) else tuple(split)
 
 
 def group_seeds(spec: Dataset, name: str) -> set[int] | None:
@@ -120,8 +148,9 @@ def load_groups(names, root: Path = DEFAULT_ROOT, ds: str = "v0") -> dict[str, l
     """Load the named groups of dataset `ds`; each episode is sha256-verified by `wm_data.load_episode`."""
     spec = dataset(ds)
     m = manifest(ds)
-    return {n: load_split(root, m, spec.groups[n][0], roles=(spec.groups[n][1],), seeds=group_seeds(spec, n),
-                          extra=spec.extra_state) for n in names}
+    return {n: [ep for split in split_names(spec.groups[n][0])
+                for ep in load_split(root, m, split, roles=(spec.groups[n][1],), seeds=group_seeds(spec, n),
+                                     extra=spec.extra_state)] for n in names}
 
 
 def split_stds(groups: dict[str, list[EpisodeData]]) -> dict[str, np.ndarray]:
