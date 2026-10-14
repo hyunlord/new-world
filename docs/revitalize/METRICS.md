@@ -2734,3 +2734,7 @@ Timeline: food line reproduces s on 3,996 of 3,996 checks; T_low for 51 of 64 se
 | J7 (Part 5 pilot, game_v19) | FAIL (J7b path-share band) | **PASS** on (a) | (a) food η² 0.624 / R²_abs 0.373, wood 0.317 / 0.681, alive 0.821 / 0.175; J7b reported: PS(alive) 0.019 [0.010, 0.030], PS(food) 0.024 [0.013, 0.040], PS(alive) v19 − v18 −0.257 [−0.331, −0.193] |
 
 The absolute Y9 bounds remain reported: v19n's work share at 15:00 is under 0.25 in both runs (held-out v16 too).
+
+## Pass 15 — how many people can this world hold? A performance baseline and a per-agent budget (no rule changes)
+
+Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark and `PERF_BUDGET.md`. Every number below is from one Mac (MacBook Pro, Apple M4 Max, 14 cores, 36 GiB, rustc 1.93.1); the simulation is single-threaded.
