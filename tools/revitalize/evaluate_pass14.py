@@ -30,14 +30,14 @@ def rescore_j6(report: dict) -> dict:
         if name in Y9:
             better, bound = Y9[name]
             obs = c["observed"]
-            mine = obs.get("v19") or obs.get("v16")
+            mine = obs.get("v19")
             ref = obs.get("game_v16")
             if mine is None or ref is None:
                 raise ValueError(f"J6 clause {name} lacks the v19n or game_v16 observation")
             gap = better * (float(ref["median"]) - float(mine["median"]))  # > 0: v19n worse than v16
             ok = gap <= TOLERANCE + 1e-12
             clauses[name] = {"pass13_passed": c["passed"], "v19n_median": mine["median"], "v16_median": ref["median"],
-                             "worse_by": gap, "passed": ok,
+                             "worse_by": gap, "passed": ok, "margin": TOLERANCE - gap,
                              "absolute_bound_reported": {"bound": bound, "v19n_meets": better * (float(mine["median"]) - bound) >= 0,
                                                          "v16_meets": better * (float(ref["median"]) - bound) >= 0}}
         else:
@@ -57,7 +57,8 @@ def j7(paths: dict, diversity: dict) -> dict:
                            "retired_band": {"alive": [0.10, 0.50], "food_stock": [0.10, 0.60]},
                            "band_met": {v: 0.10 <= ps[v]["PS_mean"] <= (0.50 if v == "alive" else 0.60) for v in ps},
                            "v19_below_v18": diff["ci90"]["PS"]["mean"][1] < 0},
-            "pass13_verdict": "FAIL ((b) path-share band)"}
+            "pass13_passed": bool(a["passed"] and all(0.10 <= ps[v]["PS_mean"] <= (0.50 if v == "alive" else 0.60) for v in ps)
+                                  and diff["ci90"]["PS"]["mean"][1] < 0)}
 
 
 def markdown(r: dict) -> str:
@@ -73,21 +74,22 @@ def markdown(r: dict) -> str:
                 continue
             ab = c["absolute_bound_reported"]
             L.append(f"| {label} | {'PASS' if j['pass13_passed'] else 'FAIL'} | {'PASS' if j['passed'] else 'FAIL'} | {name} | "
-                     f"{c['v19n_median']:.4f} | {c['v16_median']:.4f} | {c['worse_by']:+.4f} | {'PASS' if c['passed'] else 'FAIL'} | "
+                     f"{c['v19n_median']:.4f} | {c['v16_median']:.4f} | {c['worse_by']:+.4f} | {'PASS' if c['passed'] else 'FAIL'} (margin {c['margin']:.4f}) | "
                      f"{ab['bound']}: {'yes' if ab['v19n_meets'] else 'no'} / {'yes' if ab['v16_meets'] else 'no'} |")
         L.append(f"| {label} | | | other clauses: {len(j['clauses']) - 3}, failing in Pass 13 besides Y9: "
                  f"{[n for n in j['failing_clauses_pass13'] if n not in Y9] or 'none'} | | | | | |")
     j = r["J7"]
     b = j["b_reported"]
     L += ["", "## J7 with J7b reported, not gated (Pass 13 Part 5 replicate pilot, worlds 26000–26063, R = 4)", "",
-          f"- Pass 13 verdict: {j['pass13_verdict']}. Amended verdict: J7 = (a) = **{'PASS' if j['passed'] else 'FAIL'}** "
+          f"- Pass 13 verdict (recomputed from its rule): {'PASS' if j['pass13_passed'] else 'FAIL'}. Amended verdict: J7 = (a) = **{'PASS' if j['passed'] else 'FAIL'}** "
           f"(food η² {j['a_clauses']['food_stock']['eta2']:.3f} / R²_abs {j['a_clauses']['food_stock']['r2_abs']:.3f}, wood "
           f"{j['a_clauses']['wood_stock']['eta2']:.3f} / {j['a_clauses']['wood_stock']['r2_abs']:.3f}, alive "
           f"{j['a_clauses']['alive']['eta2']:.3f} / {j['a_clauses']['alive']['r2_abs']:.3f}).",
           f"- J7b reported: PS(alive) {b['PS']['alive']['PS_mean']:.3f} [{b['PS']['alive']['ci90'][0]:.3f}, {b['PS']['alive']['ci90'][1]:.3f}], "
           f"PS(food_stock) {b['PS']['food_stock']['PS_mean']:.3f} [{b['PS']['food_stock']['ci90'][0]:.3f}, {b['PS']['food_stock']['ci90'][1]:.3f}] "
-          f"(retired bands [0.10, 0.50] / [0.10, 0.60] not met); PS(alive) v19 − v18 {b['PS_alive_v19_minus_v18']['mean']:.3f} "
-          f"[{b['PS_alive_v19_minus_v18']['ci90'][0]:.3f}, {b['PS_alive_v19_minus_v18']['ci90'][1]:.3f}] (below 0)."]
+          f"(retired bands [0.10, 0.50] / [0.10, 0.60] {'met' if all(b['band_met'].values()) else 'not met'}); PS(alive) v19 − v18 "
+          f"{b['PS_alive_v19_minus_v18']['mean']:.3f} [{b['PS_alive_v19_minus_v18']['ci90'][0]:.3f}, {b['PS_alive_v19_minus_v18']['ci90'][1]:.3f}] "
+          f"({'below 0' if b['v19_below_v18'] else 'not below 0'})."]
     return "\n".join(L) + "\n"
 
 

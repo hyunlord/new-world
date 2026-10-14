@@ -168,7 +168,12 @@ def markdown(t: dict) -> str:
         ratio = "" if s["T_high_ratio"] is None else f" ({s['T_high_ratio']:.3f})"
         lines.append(f"| {s['seed']} | {len(pos)} / {len(zero)} | {first_pos} | {dep} | {len(s['departures'])} | "
                      f"{fmt_t(s['T_low'])} | {fmt_t(s['T_high'])}{ratio} | {fmt_t(s['T_eve'])} |")
-    lines += ["", "Per-seed lists of every eligible home check (display day, food, line, ratio, s) are in `timeline.json`."]
+    lines += ["", "Per-seed lists of every eligible home check (display day, food, line, ratio, s) are in `timeline.json`.", "",
+              "Rule notes (review round 1, L2): the after-first-departure clause also applies when shortfall checks exist but none "
+              "lies at least 3 days before the first departure; a candidate time outside [fork tick, end − 4 d) is skipped for the next "
+              "one; cancelled departures count as departures; a seed that never departs has no departure bound on T_high. The three "
+              "names are store states, not a time order: T_low falls on day 12 (the first eligible check) or day 29 (the first spring "
+              "check, after T_eve), and T_high often falls after T_low."]
     return "\n".join(lines) + "\n"
 
 

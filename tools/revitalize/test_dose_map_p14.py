@@ -88,6 +88,14 @@ class Pairs(unittest.TestCase):
         self.assertEqual(r["deaths35"], [0, 0, 0, 0, 2.0])
         self.assertEqual(r["deaths120"], [1.0, 0, 0, 0, 2.0])
 
+    def test_check_episode_flags_rows_out_of_order(self):
+        rows = [{"tick": 20_000, "kind": "rain", "settlement": "home", "amount": 1},
+                {"tick": 19_000, "kind": "rain", "settlement": "home", "amount": 1}]
+        recs = [dict(r, applied=1, soaked_wood=0) for r in rows]
+        facts = {"fork": {"tick": 14_280, "replicate": 0}, "interventions": recs, "schedule": rows, "rows": ROWS}
+        errs = dm.check_episode(facts, 14_280, 0, {"cast_tick": 20_000})
+        self.assertTrue(any("order" in e for e in errs))
+
     def test_stats_right_share_enr_and_noise_floor(self):
         pairs = [p(-4, "earlier"), p(None, "earlier"), p(2, "later"), p(0, "tie")]
         noise = [p(1, "later")] * 8
@@ -168,6 +176,7 @@ class EndToEnd(unittest.TestCase):
             self.assertEqual(u["meta_keys_differing"], [])
             self.assertIn("| `sp60L` |", dm.markdown(r))
             # A schedule row without its record is an error.
+            self.assertAlmostEqual(r["arms"]["sp60L"]["point"]["deaths35_total_minus_noise"], 1.0)
             bad = root / "game_v19_s2_sp60L_r1" / "interventions.json"
             bad.write_text("[]")
             self.assertTrue(dm.run(a)["checks"]["errors"])

@@ -25,6 +25,13 @@ class J6(unittest.TestCase):
         self.assertAlmostEqual(r["clauses"]["Y9_work_1500"]["worse_by"], 0.029)
         self.assertAlmostEqual(r["clauses"]["Y9_idle_1200"]["worse_by"], 0.029)
         self.assertFalse(r["clauses"]["Y9_work_1500"]["absolute_bound_reported"]["v19n_meets"])
+        self.assertAlmostEqual(r["clauses"]["Y9_work_1500"]["margin"], 0.001)
+
+    def test_missing_candidate_is_an_error(self):
+        rep = report(0.21, 0.62)
+        del rep["targets"]["J6"]["clauses"]["Y9_work_1500"]["observed"]["v19"]
+        with self.assertRaises(ValueError):
+            ev.rescore_j6(rep)
 
     def test_beyond_tolerance_fails_in_either_direction(self):
         self.assertFalse(ev.rescore_j6(report(0.205, 0.62))["passed"])
@@ -47,6 +54,7 @@ class J7(unittest.TestCase):
         self.assertTrue(r["passed"])
         self.assertFalse(r["b_reported"]["band_met"]["alive"])
         self.assertTrue(r["b_reported"]["v19_below_v18"])
+        self.assertFalse(r["pass13_passed"])  # the band clause failed in Pass 13
 
 
 if __name__ == "__main__":

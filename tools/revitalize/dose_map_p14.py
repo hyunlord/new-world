@@ -24,7 +24,8 @@ its first departure at a tick >= c (the cast is applied before tick c's systems 
   at the last row): mean signed Δ (arm - factual) and mean |Δ|; for noise the same with r1 - r0.
 - intervals: bootstrap over the arm's seeds (1,000 resamples, numpy default_rng(0), one index matrix per arm shared
   by every statistic, 90 % percentile interval; NaN resamples dropped).
-Every arm episode's `interventions.json` must hold one record per schedule row (tick, kind, amount); factual episodes
+- deaths, also: arm − noise = mean signed Δ (arm) − mean signed Δ (noise, r1 − r0), with the same seed bootstrap.
+Every arm episode's schedule rows must be in tick order and its `interventions.json` must hold one record per row (tick, kind, amount); factual episodes
 none; the fork tick and replicate of every episode must match. Applied amounts are reported.
 """
 from __future__ import annotations
@@ -136,6 +137,7 @@ def stats(pairs: list[dict], noise: list[dict], kind: str | None) -> dict:
         out[f"{w}_total_abs"] = _mean(np.abs(arm.sum(axis=1)))
         out[f"noise_{w}_total"] = _mean(nz.sum(axis=1))
         out[f"noise_{w}_total_abs"] = _mean(np.abs(nz.sum(axis=1)))
+        out[f"{w}_total_minus_noise"] = out[f"{w}_total"] - out[f"noise_{w}_total"]
     return out
 
 
@@ -201,6 +203,8 @@ def check_episode(facts: dict, fork_tick: int, k: int, sched: dict | None) -> li
             errors.append("factual episode has interventions or a schedule")
         return errors
     rows = facts["schedule"] or []
+    if any(b["tick"] < a["tick"] for a, b in zip(rows, rows[1:])):
+        errors.append("schedule rows out of tick order")
     if len(rows) != len(recs):
         errors.append(f"{len(rows)} schedule rows but {len(recs)} intervention records")
     for r, rec in zip(rows, recs):
@@ -303,14 +307,15 @@ def markdown(r: dict) -> str:
                  f"{fmt(p['settle_diff_118'] - p['noise_settle_diff_118'])} | {ci_s(a, 'alive_signed', 2)} | {fmt(p['alive_abs'], 2)} | "
                  f"{fmt(p['noise_alive_abs'], 2)} |")
     L += ["", "## Deaths (mean signed Δ arm − factual; noise r1 − r0)", "",
-          "| arm | within 35 d of the cast: total [90 %] / \\|Δ\\| / noise \\|Δ\\| | by cause (starv., dehyd., combat, old age, exposure) | "
-          "to day 120: total [90 %] / \\|Δ\\| / noise \\|Δ\\| | by cause |", "|---|---|---|---|---|"]
+          "| arm | within 35 d of the cast: total [90 %] / \\|Δ\\| / noise signed / noise \\|Δ\\| / arm − noise [90 %] | by cause (starv., dehyd., combat, old age, exposure) | "
+          "to day 120: total [90 %] / \\|Δ\\| / noise signed / noise \\|Δ\\| / arm − noise [90 %] | by cause |", "|---|---|---|---|---|"]
     for name, a in r["arms"].items():
         p = a["point"]
         by = lambda w: ", ".join(fmt(p[f"{w}_{c}"], 2) for c in CAUSES)
-        L.append(f"| `{name}` | {ci_s(a, 'deaths35_total', 2)} / {fmt(p['deaths35_total_abs'], 2)} / {fmt(p['noise_deaths35_total_abs'], 2)} | "
+        L.append(f"| `{name}` | {ci_s(a, 'deaths35_total', 2)} / {fmt(p['deaths35_total_abs'], 2)} / {fmt(p['noise_deaths35_total'], 2)} / "
+                 f"{fmt(p['noise_deaths35_total_abs'], 2)} / {ci_s(a, 'deaths35_total_minus_noise', 2)} | "
                  f"{by('deaths35')} | {ci_s(a, 'deaths120_total', 2)} / {fmt(p['deaths120_total_abs'], 2)} / "
-                 f"{fmt(p['noise_deaths120_total_abs'], 2)} | {by('deaths120')} |")
+                 f"{fmt(p['noise_deaths120_total'], 2)} / {fmt(p['noise_deaths120_total_abs'], 2)} / {ci_s(a, 'deaths120_total_minus_noise', 2)} | {by('deaths120')} |")
     L += ["", "## Applied amounts", "", "| arm | rows | requested | applied | rows applied < requested | min applied / requested |",
           "|---|---:|---:|---:|---:|---:|"]
     for name, a in r["arms"].items():
@@ -364,7 +369,9 @@ def k_targets(arms: dict, pairs: dict, seeds_of: dict, prereg: list[str] | None)
         if name in arms:
             a = arms[name]
             k5[name] = {w: {"signed": a["point"][f"{w}_total"], "ci90": a["ci90"][f"{w}_total"],
-                            "abs": a["point"][f"{w}_total_abs"], "noise_abs": a["point"][f"noise_{w}_total_abs"]}
+                            "abs": a["point"][f"{w}_total_abs"], "noise_signed": a["point"][f"noise_{w}_total"],
+                            "noise_abs": a["point"][f"noise_{w}_total_abs"],
+                            "minus_noise": a["point"][f"{w}_total_minus_noise"], "minus_noise_ci90": a["ci90"][f"{w}_total_minus_noise"]}
                         for w in ("deaths35", "deaths120")}
     if k5:
         k["K5"] = k5

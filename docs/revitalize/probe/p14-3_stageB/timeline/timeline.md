@@ -74,3 +74,5 @@ Seeds with T_low 51 / 64 (0.797; 5 from the after-first-departure clause), T_hig
 | 14063 | 18 / 17 | d12 (410 / 460) | 44520 (d32 06:00) | 2 | 15720 (d12 06:00) | 22920 (d17 06:00) (1.349) | 29400 (d21 18:00) |
 
 Per-seed lists of every eligible home check (display day, food, line, ratio, s) are in `timeline.json`.
+
+Rule notes (review round 1, L2): the after-first-departure clause also applies when shortfall checks exist but none lies at least 3 days before the first departure; a candidate time outside [fork tick, end − 4 d) is skipped for the next one; cancelled departures count as departures; a seed that never departs has no departure bound on T_high. The three names are store states, not a time order: T_low falls on day 12 (the first eligible check) or day 29 (the first spring check, after T_eve), and T_high often falls after T_low.
