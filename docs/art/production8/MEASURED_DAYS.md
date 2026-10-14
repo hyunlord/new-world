@@ -221,3 +221,101 @@ scarcity line = floor(members × 2.4 × 4); 2.4는 food_economy.rs adult_need_pe
 `world_node.rs` init/reset_world 모두 `WorldGenConfig::game_v19` + `WorldRules::game_v19`를 호출한다. 측정 원본 HEAD는 `6a808fb9af5004521327f9e19070b78d9cb0014b`이다.
 
 `get_tallies` 키: `births`, `deaths_starvation`, `deaths_dehydration`, `deaths_combat`, `deaths_old_age`, `deaths_exposure`, `fissions`, `fissions_cancelled`, `remnant_merges`, `wet_burn_wood` (Pass 12), `area_floor_placed` (Pass 13), `meals_from_store`, `ground_meals`, `wood_trips`, `wood_gathered`, `gather_preempted`, `cold_member_hours`.
+
+## 재현 명령
+
+```bash
+CARGO_BUILD_JOBS=6 cargo build --release --manifest-path rust/Cargo.toml -p sim-test --bin worldsim_probe
+WORLDSIM_GIT_SHA=6a808fb9af5004521327f9e19070b78d9cb0014b bash tools/art_pipeline/run_bounded.sh 1400 rust/target/release/worldsim_probe --scene game_v19 --seeds 20261010..20261043 --days 120 --sample-every 60 --clock-samples 07:15,19:15 --workers 4 --out /Users/rexxa/work/art-production8-evidence/probe-p0
+python3 tools/art_pipeline/measure_days_p8.py /Users/rexxa/work/art-production8-evidence/probe-p0
+bash tools/art_pipeline/run_bounded.sh 1400 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot --headless --path . --script scripts/test/art/measure_days_p8.gd -- --seed=20261010
+# Same headless command with --seed=20261013
+python3 tools/art_pipeline/crosscheck_days_p8.py /Users/rexxa/work/art-production8-evidence/probe-p0
+```
+
+release build 9.90초. 33시드 probe 완료(exit0); per-seed wall 중앙값22.871초, 최대35.457초. 이 수치는 날짜 측정 실행 시간이며 A30 성능 판정이 아니다.
+
+## 캡처 매핑
+
+| 용도 | 화면 시각 | 완료 tick |
+|---|---|---:|
+| 사회 출발 전날 저녁 | d32 22:00 | 45480 |
+| 첫 출발 +30분 FD | d33 06:30 | 45990 |
+| 첫 출발 +2시간 FD | d33 08:00 | 46080 |
+| 창립 +10분 FS | d33 08:59 | 46139 |
+| 사회 baseline 창립 +1시간 FV | d33 09:49 | 46189 |
+| 출발 +3시간 feed | d33 09:00 | 46140 |
+| 창립일 정오 FV | d33 12:00 | 46320 |
+| 딸의 첫 겨울 02:00 | d51 02:00 | 71640 |
+| 두 번째 출발 +30분 | d89 06:30 | 126630 |
+| 3마을 후보, getter 검증 별도 | d89 12:34 | 126994 |
+| live warm control | d26 07:15 | 35955 |
+
+사회 시드의 exposure 사망은 첫 분열 전 d29의 1건뿐이다. 120일 동안 딸 마을 exposure 사망이 없어 해당 캡처는 N/A이며 사건을 만들지 않는다.
+
+## 완료된 headless getter 교차검증
+
+### seed 20261010
+
+getter 482행, probe와 동일 tick 479행, cold·생존마을 불일치 0건.
+
+정확한 창립 직후 확인: `[]`; 최초 ≥3마을 tick `-1`.
+
+누적 cold 12시간 증가0 + 02:00 점화 + 아침 cold0 대조: `['d2 07:15', 'd3 07:15', 'd4 07:15', 'd5 07:15', 'd6 07:15', 'd7 07:15', 'd8 07:15', 'd9 07:15', 'd10 07:15', 'd11 07:15', 'd12 07:15', 'd13 07:15', 'd14 07:15', 'd15 07:15', 'd16 07:15', 'd17 07:15', 'd18 07:15', 'd19 07:15', 'd20 07:15', 'd21 07:15', 'd22 07:15', 'd23 07:15', 'd24 07:15', 'd25 07:15', 'd26 07:15', 'd30 07:15', 'd31 07:15', 'd32 07:15', 'd33 07:15', 'd34 07:15', 'd35 07:15', 'd36 07:15', 'd37 07:15', 'd38 07:15', 'd39 07:15', 'd40 07:15', 'd41 07:15', 'd42 07:15', 'd43 07:15', 'd44 07:15', 'd45 07:15', 'd46 07:15', 'd47 07:15', 'd48 07:15', 'd49 07:15', 'd50 07:15', 'd51 07:15', 'd52 07:15', 'd53 07:15', 'd54 07:15', 'd58 07:15', 'd59 07:15', 'd60 07:15']`.
+
+| 가을 화면일 15:00 | 실제 목재 운반 ID |
+|---|---|
+| 15 | (25, 13, 11, 10, 14, 3, 18, 22) |
+| 16 | (27, 22, 24, 10, 16) |
+| 17 | () |
+| 18 | () |
+| 19 | () |
+| 20 | () |
+| 21 | () |
+| 43 | (42, 37, 41, 34, 31) |
+| 44 | (40, 39) |
+| 45 | (47,) |
+| 46 | () |
+| 47 | (25,) |
+| 48 | () |
+| 49 | () |
+| 71 | (49, 51, 32, 33, 41, 40, 52) |
+| 72 | (54, 46, 35, 47, 49) |
+| 73 | (39,) |
+| 74 | () |
+| 75 | (45,) |
+| 76 | () |
+| 77 | () |
+### seed 20261013
+
+getter 482행, probe와 동일 tick 479행, cold·생존마을 불일치 0건.
+
+정확한 창립 직후 확인: `[{'tick': 46130, 'settlements_alive': 2}, {'tick': 126994, 'settlements_alive': 3}]`; 최초 ≥3마을 tick `126994`.
+
+누적 cold 12시간 증가0 + 02:00 점화 + 아침 cold0 대조: `['d2 07:15', 'd3 07:15', 'd4 07:15', 'd5 07:15', 'd6 07:15', 'd7 07:15', 'd8 07:15', 'd9 07:15', 'd10 07:15', 'd11 07:15', 'd12 07:15', 'd13 07:15', 'd14 07:15', 'd15 07:15', 'd16 07:15', 'd17 07:15', 'd18 07:15', 'd19 07:15', 'd20 07:15', 'd21 07:15', 'd22 07:15', 'd23 07:15', 'd24 07:15', 'd25 07:15', 'd26 07:15', 'd30 07:15', 'd31 07:15', 'd32 07:15', 'd33 07:15', 'd34 07:15', 'd35 07:15', 'd36 07:15', 'd37 07:15', 'd38 07:15', 'd39 07:15', 'd40 07:15', 'd41 07:15', 'd42 07:15', 'd43 07:15', 'd44 07:15', 'd45 07:15', 'd46 07:15', 'd47 07:15', 'd48 07:15', 'd49 07:15', 'd50 07:15', 'd51 07:15', 'd52 07:15', 'd53 07:15', 'd54 07:15', 'd55 07:15', 'd56 07:15', 'd57 07:15', 'd58 07:15', 'd59 07:15', 'd60 07:15']`.
+
+| 가을 화면일 15:00 | 실제 목재 운반 ID |
+|---|---|
+| 15 | (20, 33, 0, 29, 30, 17, 3, 32) |
+| 16 | () |
+| 17 | () |
+| 18 | () |
+| 19 | () |
+| 20 | () |
+| 21 | () |
+| 43 | (47, 54, 57, 39, 31, 29, 24, 26) |
+| 44 | (57, 43, 24, 32, 26, 27) |
+| 45 | () |
+| 46 | () |
+| 47 | () |
+| 48 | () |
+| 49 | () |
+| 71 | (45, 94, 43, 66, 82, 80, 40) |
+| 72 | (53, 47, 51, 100, 40) |
+| 73 | () |
+| 74 | () |
+| 75 | () |
+| 76 | () |
+| 77 | () |
+
+headless 원자료는 measurements/headless_<seed>.json.gz에 무손실 압축했고 외부 evidence 원본도 보존했다.

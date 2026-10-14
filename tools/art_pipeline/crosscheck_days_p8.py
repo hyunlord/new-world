@@ -48,7 +48,8 @@ def main(source: Path) -> None:
             night = indexed.get(tick - 315)
             if row.integer('minute') == 435 and row.integer('display_day') <= 60 and previous and night:
                 equal = row.nested('tallies').integer('cold_member_hours') == previous.nested('tallies').integer('cold_member_hours')
-                lit = any(n > 0 for n in night.nested('settlements').integers('fire_lit'))
+                fire = Fields.parse('{"values":' + night.nested('settlements').string('fire_lit') + '}')
+                lit = any(n > 0 for n in fire.integers('values'))
                 if equal and lit and not row.integers('cold_ids'):
                     warm.append(tick)
         foundings = [{'tick': row.integer('tick'), 'settlements_alive': row.integer('settlements_alive')}
