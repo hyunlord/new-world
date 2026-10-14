@@ -21,7 +21,9 @@ def fake_run(stem, mode, seed, agents, alive, tick_ms, systems, feed="fed", per_
             "ticks_per_day": 1440, "mean_alive_0600": alive, "mean_settlements_0600": 1.0, "contended": False,
             "steady_tick_ms_total": tick_ms * steady, "systems": rows, "per_day": per_day or [],
             "tick_summary": {"mean_ms": tick_ms, "p999_ms": tick_ms * 2, "max_ms": tick_ms * 3, "n_over_8ms": 0, "n_over_16_67ms": 0},
-            "snapshot_timings": snapshot}
+            "snapshot_timings": snapshot,
+            "slowest_ticks": [{"tick": 100, "display_day": 1, "clock": "06:01", "total_ms": tick_ms * 3,
+                               "top_systems": [{"name": systems[0][0], "ms": tick_ms * 2}], "due_periodic": []}]}
 
 
 class Statistics(unittest.TestCase):
@@ -115,8 +117,10 @@ class Analysis(unittest.TestCase):
         self.assertAlmostEqual(out["snapshots_500"]["wip"]["single_sum_us"], len(p.PER_FRAME_WIP))
         self.assertAlmostEqual(out["snapshots_500"]["wip"]["callers_sum_us"], 1 + 1 + 2 + 2 + 2 + 6 + 2 + 1 + 1 + 3)
         self.assertAlmostEqual(out["snapshots_500"]["art"]["callers_sum_us"], 2 + 1 + 4 + (13 + 10) + 2 + 2 + 9 + 4 + 5 + 3 + (10 + 4))
+        self.assertEqual(out["slow_tick_causes"]["natural"]["largest_system"], [("A", 3)])
         md = p.render(out)
         self.assertIn("| P1 |", md)
+        self.assertIn("Slow-tick causes", md)
         self.assertIn("near-quadratic", md)
 
     def test_n_max_and_interpolation(self):
@@ -126,6 +130,21 @@ class Analysis(unittest.TestCase):
         passing = [int(k) for k, v in means.items() if v <= p.B1_MS]
         self.assertEqual(out["n_max"]["largest_passing_size"], max(passing))
         self.assertIsNotNone(out["n_max"]["interpolated_alive"])
+
+    def test_supplementary_sizes_find_the_crossing(self):
+        natural, stress = self.build()
+        extra = {}
+        for seed in range(2):
+            for n in (4000, 8000):
+                extra[f"e{seed}_{n}"] = p.analyse.__globals__["json"].loads(p.analyse.__globals__["json"].dumps(
+                    {k: v for k, v in stress[f"s{seed}_1000"].items()}))
+                extra[f"e{seed}_{n}"].update({"agents_requested": n, "mean_alive_0600": n, "_stem": f"e{seed}_{n}", "_dir": "/nonexistent"})
+                extra[f"e{seed}_{n}"]["tick_summary"] = dict(extra[f"e{seed}_{n}"]["tick_summary"], mean_ms=n / 1100.0)
+        out = p.analyse(natural, stress, {}, extra=extra)
+        self.assertEqual(out["extra_n_max"]["largest_passing_size"], 4000)
+        c = out["extra_n_max"]["crossing_between_sizes"]
+        self.assertAlmostEqual(c, 4400.0, delta=1e-6)
+        self.assertIn("Supplementary fed sizes", p.render(out))
 
     def test_crowding_mark(self):
         natural, stress = self.build()

@@ -281,7 +281,22 @@ def callers_cost(runs, table):
     return single, total, rows, tiles, hearths
 
 
-def analyse(natural, stress, map_runs, overhead=None, repeat=None):
+def slow_causes(runs):
+    """Over every kept slow tick of `runs`: how often each system was the largest, and the clocks."""
+    tops, clocks, worst = {}, {}, None
+    for r in runs:
+        for t in r["slowest_ticks"]:
+            name = t["top_systems"][0]["name"] if t["top_systems"] else "—"
+            tops[name] = tops.get(name, 0) + 1
+            clocks[t["clock"]] = clocks.get(t["clock"], 0) + 1
+            if worst is None or t["total_ms"] > worst["total_ms"]:
+                worst = dict(t, seed=r["seed"])
+    n = sum(tops.values())
+    return {"ticks": n, "largest_system": sorted(tops.items(), key=lambda kv: -kv[1])[:5],
+            "clocks": sorted(clocks.items(), key=lambda kv: -kv[1])[:5], "worst": worst}
+
+
+def analyse(natural, stress, map_runs, overhead=None, repeat=None, extra=None):
     """Everything 7.4 and 7.5 need, as a dict."""
     out = {"n_runs": {"natural": len(natural), "stress": len(stress), "map": len(map_runs)}}
     fed = {k: r for k, r in stress.items() if r["feed"] == "fed"}
@@ -360,6 +375,13 @@ def analyse(natural, stress, map_runs, overhead=None, repeat=None):
                          "n_over_8ms": t["n_over_8ms"], "n_over_16_67ms": t["n_over_16_67ms"],
                          "mean_alive": r["mean_alive_0600"], "mean_settlements": r["mean_settlements_0600"],
                          "b1": t["mean_ms"] <= B1_MS, "b2": t["p999_ms"] <= B2_MS, "contended": r["contended"]})
+    for row, r in zip(nat_rows, sorted(natural.values(), key=lambda r: r["seed"])):
+        top = max(r["systems"], key=lambda s: s["share_of_tick_time"])
+        row["top_system"] = [top["name"], top["share_of_tick_time"]]
+        row["slowest"] = r["slowest_ticks"][0] if r["slowest_ticks"] else None
+    out["slow_tick_causes"] = {label: slow_causes(group) for label, group in (
+        ("natural", list(natural.values())), ("fed n = 500", sizes_fed.get(TARGET, [])),
+        ("fed n = 2,000", sizes_fed.get(2000, [])), ("map", list(map_runs.values())))}
     pooled_nat = pooled_steady(list(natural.values()))
     out["natural"] = {"worlds": nat_rows,
                       "pooled": {"ticks": len(pooled_nat), "mean_ms": sum(pooled_nat) / len(pooled_nat) / 1000.0,
@@ -421,6 +443,32 @@ def analyse(natural, stress, map_runs, overhead=None, repeat=None):
         means = [r["tick_summary"]["mean_ms"] for r in repeat.values()]
         out["repeatability"] = {"runs": len(means), "means_ms": means,
                                 "cv": statistics.stdev(means) / statistics.mean(means) if len(means) > 1 else None}
+    if extra:
+        rows = {}
+        for size, runs in by_size(extra).items():
+            pooled = pooled_steady(runs)
+            rows[str(size)] = {"seeds": len(runs), "median_mean_ms": statistics.median(r["tick_summary"]["mean_ms"] for r in runs),
+                               "mean_alive": statistics.mean(r["mean_alive_0600"] for r in runs),
+                               "pooled_p999_ms": percentile(pooled, 99.9) / 1000.0 if pooled else None,
+                               "max_ms": max(r["tick_summary"]["max_ms"] for r in runs),
+                               "n_over_16_67ms": sum(r["tick_summary"]["n_over_16_67ms"] for r in runs),
+                               "us_per_agent_tick": statistics.median(r["tick_summary"]["mean_ms"] * 1000.0 / r["mean_alive_0600"] for r in runs if r["mean_alive_0600"]),
+                               "contended": any(r["contended"] for r in runs)}
+        out["extra_sizes"] = rows
+        both = dict(fed)
+        both.update(extra)
+        _, pts = stress_points(both)
+        f = fit(pts)
+        sizes = {**{int(k): v["median_mean_ms"] for k, v in out["fed_sizes"].items()}, **{int(k): v["median_mean_ms"] for k, v in rows.items()}}
+        ordered = sorted(sizes.items())
+        crossing = None
+        for (n0, m0), (n1, m1) in zip(ordered, ordered[1:]):
+            if m0 <= B1_MS < m1:
+                crossing = math.exp(math.log(n0) + (math.log(B1_MS) - math.log(m0)) * (math.log(n1) - math.log(n0)) / (math.log(m1) - math.log(m0)))
+        out["extra_n_max"] = {"largest_passing_size": max((n for n, m in ordered if m <= B1_MS), default=None),
+                              "crossing_between_sizes": crossing,
+                              "fit_all_sizes": f,
+                              "interpolated_all_sizes": math.exp((math.log(B1_MS) - f["a"]) / f["b"]) if f and f["b"] > 0 else None}
     # Top 10 by share at the sizes the budget names.
     out["top10"] = {str(size): sorted(((n, sh) for n, sh in size_share[size].items()), key=lambda x: -x[1])[:10] for size in size_share}
     out["top10"]["natural"] = sorted(nat_share.items(), key=lambda x: -x[1])[:10]
@@ -472,6 +520,31 @@ def render(out):
             lines.append(f"| {label} | {int(size):,} | {r['seeds']} | {r['mean_alive']:.1f} | {r['median_mean_ms']:.4f} | {pooled} | {r['max_p999_ms']:.3f} | {r['max_ms']:.3f} | {r['n_over_8ms']} | {r['n_over_16_67ms']} | {r['us_per_agent_tick']:.3f} |")
     for side, r in out["map_sides"].items():
         lines.append(f"| map | side {side} | {r['seeds']} | {r['mean_alive']:.1f} | {r['median_mean_ms']:.4f} | — | — | {r['max_ms']:.3f} | — | — | — |")
+    lines += ["", "### Natural sweep per world", "", "| seed | mean ms | p99.9 ms | max ms | ticks > 8 ms | mean alive | mean settlements | B1 | B2 | top system | slowest tick (day clock: ms, largest systems) |", "|---:|---:|---:|---:|---:|---:|---:|---|---|---|---|"]
+    for w in nat["worlds"]:
+        sl = w.get("slowest")
+        slow_text = f"d{sl['display_day']} {sl['clock']}: {sl['total_ms']:.3f} ({', '.join(s['name'] + ' ' + format(s['ms'], '.3f') for s in sl['top_systems'][:2])})" if sl else "—"
+        lines.append(f"| {w['seed']} | {w['mean_ms']:.4f} | {w['p999_ms']:.3f} | {w['max_ms']:.3f} | {w['n_over_8ms']} | {w['mean_alive']:.1f} | {w['mean_settlements']:.2f} | {'ok' if w['b1'] else 'FAIL'} | {'ok' if w['b2'] else 'FAIL'} | {w['top_system'][0]} {w['top_system'][1] * 100:.0f} % | {slow_text} |")
+    r500 = out["fed_sizes"].get(str(TARGET))
+    if r500:
+        lines += ["", "### Fed n = 500 per world", "", "| seed | mean ms | p99.9 ms | max ms | ticks > 16.67 ms | mean alive | contended |", "|---:|---:|---:|---:|---:|---:|---|"]
+        for w in r500["per_world"]:
+            lines.append(f"| {w['seed']} | {w['mean_ms']:.4f} | {w['p999_ms']:.3f} | {w['max_ms']:.3f} | {w['n_over_16_67ms']} | {w['mean_alive']:.1f} | {w['contended']} |")
+    if out.get("extra_sizes"):
+        lines += ["", "### Supplementary fed sizes (outside the pre-registered P table)", "",
+                  "| size | worlds | mean alive | median mean ms | pooled p99.9 ms | max ms | ticks > 16.67 ms | µs per agent-tick | contended |", "|---:|---:|---:|---:|---:|---:|---:|---:|---|"]
+        for size, r in out["extra_sizes"].items():
+            lines.append(f"| {int(size):,} | {r['seeds']} | {r['mean_alive']:.1f} | {r['median_mean_ms']:.4f} | {fmt_ms(r['pooled_p999_ms'])} | {r['max_ms']:.3f} | {r['n_over_16_67ms']} | {r['us_per_agent_tick']:.3f} | {r['contended']} |")
+        e = out["extra_n_max"]
+        lines += ["", f"- largest size (planned + supplementary) whose median fed mean tick ≤ 4.0 ms: {e['largest_passing_size']:,}" if e["largest_passing_size"] else "- —",
+                  f"- 4.0 ms crossing interpolated between neighbouring measured sizes (log-log): {e['crossing_between_sizes']:,.0f}" if e["crossing_between_sizes"] else "- no crossing inside the measured sizes",
+                  f"- whole-tick fit over all fed sizes with mean alive ≥ 80: {fmt_fit(e['fit_all_sizes'])} → 4.0 ms at {e['interpolated_all_sizes']:,.0f}" if e["interpolated_all_sizes"] else ""]
+    lines += ["", "### Slow-tick causes (the 20 slowest steady ticks kept per run)", ""]
+    for label, c in out["slow_tick_causes"].items():
+        if not c["ticks"]:
+            continue
+        wst = c["worst"]
+        lines.append(f"- **{label}** ({c['ticks']} kept ticks): largest system {', '.join(f'{n} {k}' for n, k in c['largest_system'])}; commonest clocks {', '.join(f'{n} ({k})' for n, k in c['clocks'])}; worst {wst['total_ms']:.3f} ms (seed {wst['seed']}, day {wst['display_day']} {wst['clock']}, {', '.join(s['name'] + ' ' + format(s['ms'], '.3f') for s in wst['top_systems'][:3])}; due periodic: {', '.join(wst['due_periodic']) or 'none'})")
     lines += ["", "## Whole-tick slopes (log mean tick on log alive / log tiles)", "",
               f"- natural (ms per tick of a full day on alive at 06:00, days with alive ≥ 15): {fmt_fit(out['tick_slopes']['natural'])}",
               f"- stress fed (mean tick on mean alive, runs with mean alive ≥ 80): {fmt_fit(out['tick_slopes']['stress'])}",
@@ -526,6 +599,7 @@ def main(argv=None):
     parser.add_argument("--map", default=None)
     parser.add_argument("--overhead", default=None)
     parser.add_argument("--repeat", default=None)
+    parser.add_argument("--extra", default=None, help="supplementary fed sizes (outside the P table)")
     parser.add_argument("--out", required=True)
     args = parser.parse_args(argv)
     natural, _ = load_runs(args.natural)
@@ -536,7 +610,8 @@ def main(argv=None):
         with open(args.overhead) as stream:
             overhead = json.load(stream)
     repeat = load_runs(args.repeat)[0] if args.repeat else None
-    out = analyse(natural, stress, map_runs, overhead, repeat)
+    extra = load_runs(args.extra)[0] if args.extra else None
+    out = analyse(natural, stress, map_runs, overhead, repeat, extra)
     any_run = next(iter((natural or stress).values()))
     out["_intervals"] = {s["name"]: s["interval"] for s in any_run["systems"]}
     out["failures"] = {"stress": failures, "map": map_failures}
