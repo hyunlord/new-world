@@ -994,3 +994,5 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
 | 6 | 2026-10-15 10:45:31 | in progress | Register frozen Stage B criteria, then run the reserved paired32×120-day cohort. |
+
+- Part5 WIP publication `d2cde5e9d50d2650ec5f9b2745b636116295a754` is remotely confirmed; green remains `adfdecfece79ab019964729319389fd602685fab`. Stage B preregistration preserves the exact §7.7 table, original300 threshold and all frozen denominator/bootstrap conventions. F7/F8 are known PASS; F1–F6 held-out results remain unrun. Evaluator files exactly match producer47b and are hash-bound before reserved-seed launch.
