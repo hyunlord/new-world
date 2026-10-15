@@ -128,3 +128,18 @@ None is needed for the 500-person target on this machine. In order of share × s
 5. **UI reads** (outside the tick) — the duplicate getter calls of section 3.2, cheapest to fix and the only item the player's frame rate is likely to notice at 500 people.
 
 Part 5's optional fix was not triggered (P2 passes; no system is near-quadratic), so no candidate was attempted in this pass.
+
+## Pass 17 Stage A measured result
+
+Producer `50a73474e06d3a9abbb535729e9c7e1e134954b7`; unchanged original routine parameters. The complete section 6.6 protocol yields **R5 FAIL**. This is a valid measurement, not an execution error. All ten commands exited zero; raw outputs, hashes, command order and quiet-lock evidence are retained in [the performance report](perf/p17-a/perf.md), [machine-readable verdict](perf/p17-a/perf.json) and [raw evidence](perf/p17-a/raw/provenance.json).
+
+| Check | v20 | v21 | Comparison | Bar | Verdict |
+|---|---:|---:|---:|---|---|
+| Three-run median mean tick | 0.353189 ms | 0.469883 ms | +33.0401% | <= +15% | FAIL |
+| Absolute median mean tick | — | 0.469883 ms | — | <= 4.0 ms | PASS |
+| Three-run median p99.9 | 0.587 ms | 2.582 ms | +339.8637% | <= +35% | FAIL |
+| Decision-system slope | 1.051675 | 1.001316 | Historical reference 1.06 | new < 1.7 | PASS |
+
+The new slope interval is [0.321620, 1.681012], old [0.536635, 1.566716]; each fit uses all three observed populations (100, 500, 1000) and the inherited log-log OLS. The held-out acceptance bar applies to the point slope. Base/final quick means are 0.304749 / 0.303219 ms with identical `54ac4928a770f238` fingerprints. The independent medians use three interleaved same-build old/new pairs, seed 15100, 500 agents, one fed day; the slope uses two fed days.
+
+Apple M4 Max, 14 CPUs, 38,654,705,664 bytes RAM, rustc 1.93.1. Quiet hold 2026-10-15 08:20:08–08:20:23 UTC, 15.0 seconds, initial load 3.66, no contention and no lock wait. The relative mean and tail regressions remain failures despite the sub-millisecond mean and near-linear scaling. No favorable-repeat selection, retiming, parameter adjustment or threshold change follows this result. Stage A evaluation is still pending at this record.
