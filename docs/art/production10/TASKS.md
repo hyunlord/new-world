@@ -4,7 +4,7 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 
 | Part | Deliverable and verification | Status | Start UTC | End UTC |
 |---|---|---|---|---|
-| 0 | Preserve brief, merge P17, full gate, live getter census, rederived framings, base build, baseline matrix and A/Aprime | IN_PROGRESS | 2026-10-15T15:03:00Z | |
+| 0 | Preserve brief, merge P17, full gate, live getter census, rederived framings, base build, baseline matrix and A/Aprime | COMPLETE | 2026-10-15T15:03:00Z | 2026-10-15T18:34:24Z |
 | 1 | Section timers; measured pixel-identical optimizations; six framing identity plus 600-frame running equality | NOT_STARTED | | |
 | 2 | Activity getter/poses/icons/labels, exhaustive mapping tests, six live captures and sidecars, blind review | NOT_STARTED | | |
 | 3 | Temperament/family inspector, household rings, fake-world tests and parent capture | NOT_STARTED | | |
@@ -52,3 +52,4 @@ Started: 2026-10-15T15:03:00Z (2026-10-16 00:03 KST). Twelve-hour cutoff: 2026-1
 - 2026-10-15T17:08:15Z: Baseline W500 attempt1 exit0, independent validation PASS,676s hold after900s wait,contended=false. Raw SHA and all block/running-population summaries archived. W1 now waits mandatory cooldown in existing matrix28873. Diagnostic profile harness check-only previously passed exit0; runtime installation remains pending.
 - 2026-10-15T17:32:10Z: Baseline W1 attempt1 exit0 and independent validation PASS,835s hold,contended=false. Source hash and raw-derived blocks archived. Matrix28873 now waits600s cooldown for final required baseline W200.
 - 2026-10-15T18:06Z: Prepared future activity capture scaffold only: explicit six live cases, fixed-frame metadata sidecars, deadline-bounded quiet/window waits and independent structural validator. Leader rerun47 P10 unittests PASS. No Godot runtime or pose oracle yet; H7 NOT_VERIFIED. W200 baseline remains in existing quiet-wait session28873; no production edits.
+- 2026-10-15T18:34:24Z: Baseline W200 terminal exit0,131s hold after3603s wait,contended=true. All four required worlds independently validate; complete aggregate preserves raw samples. W200 frozenZ4 median29.028ms/p99 30.066ms. Part0 measurement finished; duration3h31m24s. W1000 optional/unmeasured. Production renderer remains unchanged.

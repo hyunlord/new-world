@@ -46,3 +46,27 @@
 <!-- art-p10-last-release 1792085530 -->
 - 2026-10-15T17:32:10Z pid=36285 WAIT_START owner=codex-art-pass10 purpose=baseline-W200-attempt1 hold_limit=3600
 - 2026-10-15T17:32:10Z pid=36285 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T17:42:11Z pid=36285 CHECK load=11.32 processes=66234 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe;66315 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=600s
+- 2026-10-15T17:42:11Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T17:47:11Z pid=36285 CHECK load=17.19 processes=78255 78214 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;66234 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe;66315 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=901s
+- 2026-10-15T17:47:11Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T17:52:11Z pid=36285 CHECK load=12.51 processes=66315 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe;93987 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=1201s
+- 2026-10-15T17:52:11Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T17:57:12Z pid=36285 CHECK load=11.40 processes=10096 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe;66315 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe waited=1501s
+- 2026-10-15T17:57:12Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:02:12Z pid=36285 CHECK load=11.44 processes=28397 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe;36687 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=1802s
+- 2026-10-15T18:02:12Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:07:12Z pid=36285 CHECK load=11.93 processes=28397 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe;36687 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=2102s
+- 2026-10-15T18:07:12Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:12:13Z pid=36285 CHECK load=12.31 processes=28397 66303 /Users/rexxa/work/p18-data/bin_p3f/worldsim_probe;36687 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=2402s
+- 2026-10-15T18:12:13Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:17:13Z pid=36285 CHECK load=7.80 processes=87666 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=2703s
+- 2026-10-15T18:17:13Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:22:13Z pid=36285 CHECK load=7.92 processes=87666 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=3003s
+- 2026-10-15T18:22:13Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:27:13Z pid=36285 CHECK load=7.71 processes=87666 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=3303s
+- 2026-10-15T18:27:13Z pid=36285 WAIT_BUSY next_poll=300s
+- 2026-10-15T18:32:13Z pid=36285 CHECK load=3.27 processes=87666 66224 /Users/rexxa/work/p18-data/bin_p2f/plain/worldsim_probe waited=3603s
+- 2026-10-15T18:32:13Z pid=36285 HOLD_START owner=codex-art-pass10 purpose=baseline-W200-attempt1 start=1792089133 load_before=3.27 contended=true waited=3603s
+- 2026-10-15T18:34:24Z pid=36285 HOLD_END owner=codex-art-pass10 purpose=baseline-W200-attempt1 start=1792089133 end=1792089264 elapsed=131 load_before=3.27 load_after=3.54 contended=true exit=0
+<!-- art-p10-last-release 1792089264 -->
