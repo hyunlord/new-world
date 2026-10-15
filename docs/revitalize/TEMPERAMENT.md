@@ -63,7 +63,16 @@ The spans are section 6.2's start values except P's: tuning round 1 (seeds
 truncation moves the wood load only at P = 0 or 1,000, and a pickup takes a
 bush's whole stock anyway — so round 2 raised food 2 → 3 and wood 1 → 2
 (ρ 0.331 food, 0.346 wood on the tuning seeds). NS, HA, RD and the departure
-weight were not tuned. Note the truncation: an axis moves its value by one
+weight were not tuned.
+
+**Evaluation (seeds 16000–16031, 120 days, pre-registered):** NS (ρ 0.338),
+HA (−0.578), RD (0.782) and the departure lean (+116 permille) pass; **P
+fails**: food ρ 0.217 [0.147, 0.285] < 0.25 (wood ρ 0.395, reported without a
+verdict). The food lean is clear among founders (ρ 0.334) and fades for
+people born later in the run (0.250 before day 60, 0.139 after) — a
+hypothesis, not a measured cause: later in the run the bushes near the
+village hold less, so a load is set by what a bush holds rather than by the
+threshold. The P lean is in the game but is weak for food. Note the truncation: an axis moves its value by one
 step only when `span × |d| ≥ 500`, so a span of 4 tiles changes the tether in
 steps of 125 permille, and the food span of 3 in steps of ≈ 167.
 

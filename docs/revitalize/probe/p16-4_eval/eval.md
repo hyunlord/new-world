@@ -4,23 +4,23 @@ Worlds: 16000–16031 (32). Statistics: Spearman's rho (average ranks) over non-
 
 ## T1 / T2 — rho per scene
 
-| measure | scene | rho | 95 % interval | n | valid draws |
-|---|---|---|---|---|---|
-| ns | v20 | 0.338 | [0.263, 0.428] | 4117 | 2000 |
-| ns | inert | 0.044 | [-0.007, 0.097] | 4136 | 2000 |
-| ns | v19 | 0.044 | [-0.007, 0.097] | 4136 | 2000 |
-| ha | v20 | -0.578 | [-0.630, -0.532] | 4108 | 2000 |
-| ha | inert | -0.058 | [-0.103, -0.007] | 4127 | 2000 |
-| ha | v19 | -0.058 | [-0.103, -0.007] | 4127 | 2000 |
-| rd | v20 | 0.782 | [0.739, 0.820] | 4117 | 2000 |
-| rd | inert | 0.008 | [-0.043, 0.056] | 4136 | 2000 |
-| rd | v19 | 0.008 | [-0.043, 0.056] | 4136 | 2000 |
-| p_food | v20 | 0.217 | [0.147, 0.285] | 4051 | 2000 |
-| p_food | inert | 0.031 | [-0.018, 0.077] | 4061 | 2000 |
-| p_food | v19 | 0.031 | [-0.018, 0.077] | 4061 | 2000 |
-| p_wood | v20 | 0.395 | [0.355, 0.435] | 3337 | 2000 |
-| p_wood | inert | 0.010 | [-0.034, 0.056] | 3318 | 2000 |
-| p_wood | v19 | 0.010 | [-0.034, 0.056] | 3318 | 2000 |
+| measure | scene | rho | 95 % interval | n | valid draws | mean per-world rho (sensitivity) |
+|---|---|---|---|---|---|---|
+| ns | v20 | 0.338 | [0.263, 0.428] | 4117 | 2000 | 0.467 |
+| ns | inert | 0.044 | [-0.007, 0.097] | 4136 | 2000 | 0.041 |
+| ns | v19 | 0.044 | [-0.007, 0.097] | 4136 | 2000 | 0.041 |
+| ha | v20 | -0.578 | [-0.630, -0.532] | 4108 | 2000 | -0.682 |
+| ha | inert | -0.058 | [-0.103, -0.007] | 4127 | 2000 | -0.012 |
+| ha | v19 | -0.058 | [-0.103, -0.007] | 4127 | 2000 | -0.012 |
+| rd | v20 | 0.782 | [0.739, 0.820] | 4117 | 2000 | 0.794 |
+| rd | inert | 0.008 | [-0.043, 0.056] | 4136 | 2000 | -0.023 |
+| rd | v19 | 0.008 | [-0.043, 0.056] | 4136 | 2000 | -0.023 |
+| p_food | v20 | 0.217 | [0.147, 0.285] | 4051 | 2000 | 0.283 |
+| p_food | inert | 0.031 | [-0.018, 0.077] | 4061 | 2000 | 0.034 |
+| p_food | v19 | 0.031 | [-0.018, 0.077] | 4061 | 2000 | 0.034 |
+| p_wood | v20 | 0.395 | [0.355, 0.435] | 3337 | 2000 | 0.388 |
+| p_wood | inert | 0.010 | [-0.034, 0.056] | 3318 | 2000 | 0.021 |
+| p_wood | v19 | 0.010 | [-0.034, 0.056] | 3318 | 2000 | 0.021 |
 
 | departure | scene | NS departers − stayers | 95 % interval | departers / stayers | completed / cancelled fissions | valid draws |
 |---|---|---|---|---|---|---|
@@ -156,8 +156,32 @@ T4 verdict: PASS
 | 16030 | 26 | 450 | 452 | 471 | 563 | 44 | None |
 | 16031 | 18 | 482 | 508 | 452 | 524 | 124 | 12 |
 
+## T1-P by birth cohort (sensitivity, no verdict)
+
+| scene | cohort | rho(P, food load) | n | mean load |
+|---|---|---|---|---|
+| v20 | founders | 0.334 | 657 | 3.12 |
+| v20 | born_before_day_60 | 0.250 | 1707 | 3.02 |
+| v20 | born_from_day_60 | 0.139 | 1687 | 2.75 |
+| inert | founders | 0.024 | 652 | 3.12 |
+| inert | born_before_day_60 | 0.018 | 1703 | 3.02 |
+| inert | born_from_day_60 | 0.032 | 1706 | 2.75 |
+| v19 | founders | 0.024 | 652 | 3.12 |
+| v19 | born_before_day_60 | 0.018 | 1703 | 3.02 |
+| v19 | born_from_day_60 | 0.032 | 1706 | 2.75 |
+
+## What the tuning rounds changed (seeds 16100–16115, 60 days)
+
+| round | spans (NS / HA / RD / P food, wood) | rho NS | rho HA | rho RD | rho P food | rho P wood | T3 |
+|---|---|---|---|---|---|---|---|
+| 1 | 4 / 60 / 500 / 2, 1 | 0.397 | -0.552 | 0.789 | 0.159 | -0.010 | PASS |
+| 2 | 4 / 60 / 500 / 3, 2 | 0.369 | -0.555 | 0.800 | 0.331 | 0.346 | PASS |
+
+Round 1 used section 6.2's start spans; T1-P (food) missed its bar, so round 2 raised only P's spans (food 2 → 3, wood 1 → 2) and the spans were frozen (8.3).
+
 ## Notes on the measures (review round 1)
 
+- Pooled rho also carries between-world differences in level (e.g. the placebo's HA rho −0.058 has an interval excluding 0, while its mean per-world rho is near 0); the mean per-world rho is listed as a sensitivity column.
 - Bootstrap draws whose statistic is undefined (fewer than 3 pairs, no departer) are dropped; the valid-draw count is listed with each interval.
 - T2 is judged on every T1 statistic including the wood rho (which has no verdict in T1); the reading without it is listed beside it.
 - Idle distance is measured from the hearth of the first settlement listing the person. Departers stay on the parent's roster while walking to the new site (up to 2 days), so an Idle departer on the trek is sampled far from the old hearth; in v20 departers lean high-NS, so these few samples add to T1-NS through departure rather than the tether (the placebo is unaffected).

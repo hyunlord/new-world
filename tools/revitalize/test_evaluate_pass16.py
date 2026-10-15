@@ -70,6 +70,28 @@ class Pass16Statistics(unittest.TestCase):
         self.assertEqual(ev.t1_pairs(world, "p_food"), [(600, 50 / 12)])
         self.assertEqual(ev.t1_pairs(world, "p_wood"), [(600, 2.0)])
 
+    def test_t2_readings_and_valid_draws(self):
+        t1 = {m: {"rho": 0.05} for m in ("ns", "ha", "rd", "p_food")}
+        t1["p_wood"] = {"rho": 0.2}
+        self.assertEqual(ev.t2_verdict(t1), "FAIL")
+        self.assertEqual(ev.t2_verdict(t1, with_wood=False), "PASS")
+        t1["dep"] = {"diff": 50.0}
+        self.assertEqual(ev.t2_verdict(t1, with_wood=False), "FAIL")
+        before = len(ev.VALID_DRAWS)
+        # Two worlds of one pair each: a draw picking the same world twice has < 3 pairs (nan).
+        ev.bootstrap([[(1, 1)], [(2, 2)], [(3, 3)]], ev.pooled_rho, b=200)
+        self.assertEqual(len(ev.VALID_DRAWS), before + 1)
+        self.assertLess(ev.VALID_DRAWS[-1], 200)
+        self.assertGreater(ev.VALID_DRAWS[-1], 0)
+
+    def test_mean_world_rho_and_cohorts(self):
+        self.assertAlmostEqual(ev.mean_world_rho([[(1, 1), (2, 2), (3, 3)], [(1, 3), (2, 2), (3, 1)], [(1, 1)]]), 0.0)
+        t = lambda v: {"ns": v, "ha": v, "rd": v, "p": v}
+        world = {"agents": [dict(agent(i, t(100 * i), (0, 0), [], 0, (10 * i + 20, 10)), founder=i < 4, born_tick=None if i < 4 else 1440 * (30 if i < 7 else 90)) for i in range(10)]}
+        cohorts = ev.cohort_rho([world], "p_food")
+        self.assertEqual([c["n"] for c in cohorts.values()], [4, 3, 3])
+        self.assertAlmostEqual(cohorts["founders"]["rho"], 1.0)
+
     def test_departure_difference_uses_completed_fissions_only(self):
         people = {i: person(i, {"ns": ns, "ha": 0, "rd": 0, "p": 0}) for i, ns in [(1, 900), (2, 800), (3, 100), (4, 200), (5, 999)]}
         world = {"people": people, "fissions": [

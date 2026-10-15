@@ -211,13 +211,36 @@ def quintile_table(worlds, measure):
     return rows
 
 
+def mean_world_rho(payloads):
+    """Sensitivity (review round 2, L4): the mean of per-world rho over worlds
+    with >= 3 pairs — free of between-world differences in level."""
+    rhos = [pooled_rho([p]) for p in payloads if len(p) >= 3]
+    rhos = [r for r in rhos if r == r]
+    return float(np.mean(rhos)) if rhos else float("nan")
+
+
+def cohort_rho(world_list, measure, ticks_per_day=1440, split_day=60):
+    """Sensitivity (review round 2, L3): pooled rho by birth cohort —
+    founders, born before ``split_day``, born on or after it."""
+    out = {}
+    for name, keep in (
+        ("founders", lambda a: a.get("founder")),
+        (f"born_before_day_{split_day}", lambda a: not a.get("founder") and a["born_tick"] < split_day * ticks_per_day),
+        (f"born_from_day_{split_day}", lambda a: not a.get("founder") and a["born_tick"] >= split_day * ticks_per_day),
+    ):
+        pairs = [p for w in world_list for p in t1_pairs({"agents": [a for a in w["agents"] if keep(a)]}, measure)]
+        out[name] = {"rho": pooled_rho([pairs]), "n": len(pairs), "mean_behaviour": float(np.mean([b for _, b in pairs])) if pairs else float("nan")}
+    return out
+
+
 def t1_block(worlds, with_dep=True):
     seeds = sorted(worlds)
     out = {}
     for measure in ("ns", "ha", "rd", "p_food", "p_wood"):
         payloads = [t1_pairs(worlds[s], measure) for s in seeds]
         rho, lo, hi = bootstrap(payloads, pooled_rho)
-        out[measure] = {"rho": rho, "lo": lo, "hi": hi, "n": sum(len(p) for p in payloads), "valid_draws": VALID_DRAWS[-1]}
+        out[measure] = {"rho": rho, "lo": lo, "hi": hi, "n": sum(len(p) for p in payloads), "valid_draws": VALID_DRAWS[-1],
+                        "mean_world_rho": mean_world_rho(payloads)}
     if with_dep:
         payloads = [departure_payload(worlds[s]) for s in seeds]
         diff, lo, hi = bootstrap(payloads, dep_diff)
@@ -390,12 +413,12 @@ def render(result):
     lines.append("")
     lines.append("## T1 / T2 — rho per scene")
     lines.append("")
-    lines.append("| measure | scene | rho | 95 % interval | n | valid draws |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| measure | scene | rho | 95 % interval | n | valid draws | mean per-world rho (sensitivity) |")
+    lines.append("|---|---|---|---|---|---|---|")
     for measure in ("ns", "ha", "rd", "p_food", "p_wood"):
         for scene, t1 in result["t1"].items():
             b = t1[measure]
-            lines.append(f"| {measure} | {scene} | {fmt(b['rho'])} | [{fmt(b['lo'])}, {fmt(b['hi'])}] | {b['n']} | {b.get('valid_draws')} |")
+            lines.append(f"| {measure} | {scene} | {fmt(b['rho'])} | [{fmt(b['lo'])}, {fmt(b['hi'])}] | {b['n']} | {b.get('valid_draws')} | {fmt(b.get('mean_world_rho'))} |")
     if any("dep" in t1 for t1 in result["t1"].values()):
         lines.append("")
         lines.append("| departure | scene | NS departers − stayers | 95 % interval | departers / stayers | completed / cancelled fissions | valid draws |")
@@ -469,9 +492,30 @@ def render(result):
         lines.append("|---|---|---|---|---|---|---|---|")
         for r in result["founders"]:
             lines.append(f"| {r['seed']} | {r['founders']} | {fmt(r['ns'], 0)} | {fmt(r['ha'], 0)} | {fmt(r['rd'], 0)} | {fmt(r['p'], 0)} | {r.get('alive_end')} | {r.get('first_split_day')} |")
+    if result.get("p_food_cohorts"):
+        lines.append("")
+        lines.append("## T1-P by birth cohort (sensitivity, no verdict)")
+        lines.append("")
+        lines.append("| scene | cohort | rho(P, food load) | n | mean load |")
+        lines.append("|---|---|---|---|---|")
+        for scene, cohorts in result["p_food_cohorts"].items():
+            for name, c in cohorts.items():
+                lines.append(f"| {scene} | {name} | {fmt(c['rho'])} | {c['n']} | {fmt(c['mean_behaviour'], 2)} |")
+    if result.get("tuning"):
+        lines.append("")
+        lines.append("## What the tuning rounds changed (seeds 16100–16115, 60 days)")
+        lines.append("")
+        lines.append("| round | spans (NS / HA / RD / P food, wood) | rho NS | rho HA | rho RD | rho P food | rho P wood | T3 |")
+        lines.append("|---|---|---|---|---|---|---|---|")
+        for row in result["tuning"]:
+            t = row["t1"]
+            lines.append(f"| {row['round']} | {row['spans']} | {fmt(t['ns']['rho'])} | {fmt(t['ha']['rho'])} | {fmt(t['rd']['rho'])} | {fmt(t['p_food']['rho'])} | {fmt(t['p_wood']['rho'])} | {row['t3']} |")
+        lines.append("")
+        lines.append("Round 1 used section 6.2's start spans; T1-P (food) missed its bar, so round 2 raised only P's spans (food 2 → 3, wood 1 → 2) and the spans were frozen (8.3).")
     lines.append("")
     lines.append("## Notes on the measures (review round 1)")
     lines.append("")
+    lines.append("- Pooled rho also carries between-world differences in level (e.g. the placebo's HA rho −0.058 has an interval excluding 0, while its mean per-world rho is near 0); the mean per-world rho is listed as a sensitivity column.")
     lines.append("- Bootstrap draws whose statistic is undefined (fewer than 3 pairs, no departer) are dropped; the valid-draw count is listed with each interval.")
     lines.append("- T2 is judged on every T1 statistic including the wood rho (which has no verdict in T1); the reading without it is listed beside it.")
     lines.append("- Idle distance is measured from the hearth of the first settlement listing the person. Departers stay on the parent's roster while walking to the new site (up to 2 days), so an Idle departer on the trek is sampled far from the old hearth; in v20 departers lean high-NS, so these few samples add to T1-NS through departure rather than the tether (the placebo is unaffected).")
@@ -485,7 +529,7 @@ def render(result):
     return "\n".join(lines) + "\n"
 
 
-def evaluate(v20_dir, inert_dir, v19_dir=None, tuning=False):
+def evaluate(v20_dir, inert_dir, v19_dir=None, tuning=False, tuning_json=()):
     scenes = {"v20": load_scene(v20_dir), "inert": load_scene(inert_dir)}
     if v19_dir:
         scenes["v19"] = load_scene(v19_dir)
@@ -515,6 +559,11 @@ def evaluate(v20_dir, inert_dir, v19_dir=None, tuning=False):
         verdicts["T4"] = result["t4"]["verdict"]
         result["t4_placebo"] = {name: t4_block(scenes[name][0]) for name in scenes if name != "v20"}
         result["founders"] = founders_table(scenes["v20"][0], h20)
+        result["p_food_cohorts"] = {name: cohort_rho([w for _, w in sorted(scenes[name][0].items())], "p_food") for name in scenes}
+    result["tuning"] = []
+    for i, (spans, path) in enumerate(tuning_json):
+        t = read_json(path)
+        result["tuning"].append({"round": i + 1, "spans": spans, "t1": t["t1"]["v20"], "t3": t["verdicts"]["T3"]})
     result["verdicts"] = verdicts
     return result
 
@@ -527,8 +576,11 @@ def main(argv):
     ap.add_argument("--tuning", action="store_true")
     ap.add_argument("--out-md", required=True)
     ap.add_argument("--out-json", required=True)
+    ap.add_argument("--tuning-json", action="append", default=[], metavar="SPANS=PATH",
+                    help="a tuning round's eval.json with its spans label, e.g. '4 / 60 / 500 / 2, 1=path'")
     args = ap.parse_args(argv)
-    result = evaluate(args.v20, args.inert, args.v19, args.tuning)
+    tuning_json = [tuple(item.rsplit("=", 1)) for item in args.tuning_json]
+    result = evaluate(args.v20, args.inert, args.v19, args.tuning, tuning_json)
     with open(args.out_json, "w") as f:
         json.dump(result, f, indent=1, sort_keys=True)
         f.write("\n")
