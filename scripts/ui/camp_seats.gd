@@ -157,7 +157,7 @@ static func spread_offsets(agents: Array[Dictionary], seated: Dictionary) -> Dic
 
 ## Rects are manifest canvas rectangles relative to each agent's feet.
 ## Only drawing targets change; simulation positions remain untouched.
-static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary) -> Dictionary:
+static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dictionary, terrain: Dictionary, blocked: Dictionary, rects: Dictionary, use_spatial_hash: bool = true) -> Dictionary:
 	var ordered: Array[Dictionary] = []
 	for row: Dictionary in rows:
 		var agent_id: int = int(row["id"])
@@ -169,6 +169,7 @@ static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dicti
 		return ay > by if ay != by else int(a["id"]) > int(b["id"])
 	)
 	var fronts: Array[Dictionary] = []
+	var spatial: SpatialIndex = SpatialIndex.new(_spatial_cell_size(rects)) if use_spatial_hash else null
 	var result: Dictionary = {}
 	for row: Dictionary in ordered:
 		var agent_id: int = int(row["id"])
@@ -176,7 +177,7 @@ static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dicti
 		var local_rect: Rect2 = rects[agent_id]
 		var offset := Vector2.ZERO
 		if not _walking(row):
-			if _covered(Rect2(target + local_rect.position, local_rect.size), fronts) >= 0.30:
+			if _covered(Rect2(target + local_rect.position, local_rect.size), fronts, spatial) >= 0.30:
 				var nearest: Vector2 = target
 				var distance: float = INF
 				for front: Dictionary in fronts:
@@ -188,14 +189,14 @@ static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dicti
 				var side: float = 1.0 if target.x > nearest.x else -1.0
 				if target.x == nearest.x:
 					side = 1.0 if posmod(agent_id, 2) == 0 else -1.0
-				var best_coverage: float = _covered(Rect2(target + local_rect.position, local_rect.size), fronts)
+				var best_coverage: float = _covered(Rect2(target + local_rect.position, local_rect.size), fronts, spatial)
 				var found: bool = false
 				for magnitude: int in range(1, 9):
 					for direction: float in [side, -side]:
 						var shift := Vector2(direction * magnitude, 0.0)
 						if not _declump_allowed(target + shift, terrain, blocked):
 							continue
-						var coverage: float = _covered(Rect2(target + shift + local_rect.position, local_rect.size), fronts)
+						var coverage: float = _covered(Rect2(target + shift + local_rect.position, local_rect.size), fronts, spatial)
 						if coverage < best_coverage:
 							best_coverage = coverage
 							offset = shift
@@ -205,13 +206,17 @@ static func declump(rows: Array[Dictionary], _seated: Dictionary, targets: Dicti
 					if found:
 						break
 			result[agent_id] = offset
+		if spatial != null:
+			spatial.insert(Rect2(target + offset + local_rect.position, local_rect.size), agent_id)
 		fronts.append({"target": target + offset, "rect": Rect2(target + offset + local_rect.position, local_rect.size)})
 	return result
 
-static func _covered(rect: Rect2, fronts: Array[Dictionary]) -> float:
+static func _covered(rect: Rect2, fronts: Array[Dictionary], spatial: SpatialIndex = null) -> float:
 	var area: float = rect.get_area()
 	if area <= 0.0:
 		return 0.0
+	if spatial != null:
+		return minf(spatial.overlap(rect) / area, 1.0)
 	var overlap: float = 0.0
 	for front: Dictionary in fronts:
 		overlap += rect.intersection(front["rect"]).get_area()
@@ -228,13 +233,19 @@ static func _declump_allowed(point: Vector2, terrain: Dictionary, blocked: Dicti
 	return tile.x >= 0 and tile.x < width and tile.y >= 0 and tile.y < height and index < cells.size() and cells[index] != 4
 
 ## Screen-pixel lateral relief uses the already rounded drawing positions.
-static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D) -> Dictionary:
+static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects: Dictionary, terrain: Dictionary, blocked: Dictionary, canvas: Transform2D, use_spatial_hash: bool = true) -> Dictionary:
 	var ordered: Array[Dictionary] = []
 	for row: Dictionary in rows:
 		var agent_id: int = int(row["id"])
 		if bool(row.get("visible", false)) and positions.has(agent_id) and rects.has(agent_id):
 			ordered.append(row)
 	ordered.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["id"]) < int(b["id"]))
+	var spatial: SpatialIndex = SpatialIndex.new(_spatial_cell_size(rects)) if use_spatial_hash else null
+	if spatial != null:
+		for row: Dictionary in ordered:
+			var agent_id: int = int(row["id"])
+			var local_rect: Rect2 = rects[agent_id]
+			spatial.insert(Rect2(Vector2(positions[agent_id]) + local_rect.position, local_rect.size), agent_id)
 	var result: Dictionary = {}
 	var inverse: Transform2D = canvas.affine_inverse()
 	for row: Dictionary in ordered:
@@ -247,12 +258,13 @@ static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects
 			continue
 		var local_rect: Rect2 = rects[agent_id]
 		var others: Array[Rect2] = []
-		for other: Dictionary in ordered:
-			var other_id: int = int(other["id"])
-			if other_id != agent_id:
-				var other_rect: Rect2 = rects[other_id]
-				others.append(Rect2(Vector2(positions[other_id]) + Vector2(result.get(other_id, Vector2.ZERO)) + other_rect.position, other_rect.size))
-		var best: float = _walker_overlap(Rect2(position + local_rect.position, local_rect.size), others)
+		if spatial == null:
+			for other: Dictionary in ordered:
+				var other_id: int = int(other["id"])
+				if other_id != agent_id:
+					var other_rect: Rect2 = rects[other_id]
+					others.append(Rect2(Vector2(positions[other_id]) + Vector2(result.get(other_id, Vector2.ZERO)) + other_rect.position, other_rect.size))
+		var best: float = _walker_overlap(Rect2(position + local_rect.position, local_rect.size), others, spatial, agent_id)
 		var offset := Vector2.ZERO
 		if best <= 0.0:
 			continue
@@ -266,15 +278,86 @@ static func walker_offsets(rows: Array[Dictionary], positions: Dictionary, rects
 				var shift: Vector2 = inverse.basis_xform(screen_shift)
 				if not _declump_allowed(position + shift, terrain, blocked):
 					continue
-				var overlap: float = _walker_overlap(Rect2(position + shift + local_rect.position, local_rect.size), others)
+				var overlap: float = _walker_overlap(Rect2(position + shift + local_rect.position, local_rect.size), others, spatial, agent_id)
 				if overlap < best - 0.00001:
 					best = overlap
 					offset = shift
 		result[agent_id] = offset
+		if spatial != null:
+			spatial.move_agent(agent_id, Rect2(position + offset + local_rect.position, local_rect.size))
 	return result
 
-static func _walker_overlap(rect: Rect2, others: Array[Rect2]) -> float:
+static func _walker_overlap(rect: Rect2, others: Array[Rect2], spatial: SpatialIndex = null, agent_id: int = 0) -> float:
+	if spatial != null:
+		return spatial.overlap(rect, agent_id, true)
 	var area: float = 0.0
 	for other: Rect2 in others:
 		area += rect.intersection(other).get_area()
 	return area
+
+static func _spatial_cell_size(rects: Dictionary) -> float:
+	var extent: float = 0.0
+	for rect: Rect2 in rects.values():
+		extent = maxf(extent, maxf(absf(rect.size.x), absf(rect.size.y)))
+	return maxf(8.0, ceilf(extent + 8.0))
+
+class SpatialIndex:
+	extends RefCounted
+	var cell_size: float
+	var rectangles: Array[Rect2] = []
+	var agent_ids: Array[int] = []
+	var buckets: Dictionary = {}
+	var ordinals_by_agent: Dictionary = {}
+
+	func _init(size: float) -> void:
+		cell_size = size
+
+	func cells(rect: Rect2) -> Array[Vector2i]:
+		var bounds: Rect2 = rect.abs()
+		var first := Vector2i(floori(bounds.position.x / cell_size), floori(bounds.position.y / cell_size))
+		var last := Vector2i(floori(bounds.end.x / cell_size), floori(bounds.end.y / cell_size))
+		var result: Array[Vector2i] = []
+		for y: int in range(first.y, last.y + 1):
+			for x: int in range(first.x, last.x + 1):
+				result.append(Vector2i(x, y))
+		return result
+
+	func insert(rect: Rect2, agent_id: int) -> void:
+		var ordinal: int = rectangles.size()
+		rectangles.append(rect)
+		agent_ids.append(agent_id)
+		if not ordinals_by_agent.has(agent_id):
+			ordinals_by_agent[agent_id] = []
+		ordinals_by_agent[agent_id].append(ordinal)
+		_add_cells(ordinal, rect)
+
+	func _add_cells(ordinal: int, rect: Rect2) -> void:
+		for cell: Vector2i in cells(rect):
+			if not buckets.has(cell):
+				buckets[cell] = []
+			buckets[cell].append(ordinal)
+
+	func move_agent(agent_id: int, rect: Rect2) -> void:
+		for ordinal: int in ordinals_by_agent[agent_id]:
+			for cell: Vector2i in cells(rectangles[ordinal]):
+				buckets[cell].erase(ordinal)
+				if buckets[cell].is_empty():
+					buckets.erase(cell)
+			rectangles[ordinal] = rect
+			_add_cells(ordinal, rect)
+
+	func query(rect: Rect2) -> Array:
+		var found: Dictionary = {}
+		for cell: Vector2i in cells(rect):
+			for ordinal: int in buckets.get(cell, []):
+				found[ordinal] = true
+		var ordered: Array = found.keys()
+		ordered.sort()
+		return ordered
+
+	func overlap(rect: Rect2, excluded_id: int = 0, exclude_agent: bool = false) -> float:
+		var area: float = 0.0
+		for ordinal: int in query(rect):
+			if not exclude_agent or agent_ids[ordinal] != excluded_id:
+				area += rect.intersection(rectangles[ordinal]).get_area()
+		return area

@@ -61,15 +61,17 @@ var _talk_xs := PackedInt32Array()
 var _talk_ys := PackedInt32Array()
 var _talk_deltas: Dictionary = {}
 var _base_looks: Dictionary = {}
+var _spatial_hash_enabled: bool = true
 
 func set_perf_candidate_p10(change_id: String, enabled: bool) -> bool:
-	if change_id != "seat-input-cache":
+	if change_id != "spatial-hash":
 		return false
-	_camp_seats.set_input_cache_enabled(enabled)
+	_camp_seats.set_input_cache_enabled(true)
+	_spatial_hash_enabled = enabled
 	return true
 
 func get_perf_candidate_p10() -> Dictionary:
-	return {"change_id": "seat-input-cache", "candidate_enabled": _camp_seats.input_cache_enabled()}
+	return {"change_id": "spatial-hash", "candidate_enabled": _spatial_hash_enabled}
 
 func _ready() -> void:
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
@@ -589,7 +591,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 			load_rect.position += load_layer.position
 			footprint = footprint.merge(load_rect)
 		rects[agent_id] = footprint
-	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects)
+	var declump: Dictionary = CampSeatsScript.declump(agents, seats, targets, terrain, blocked, rects, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var target: Vector2 = Vector2(targets[agent_id]) + Vector2(declump.get(agent_id, Vector2.ZERO))
@@ -615,7 +617,7 @@ func _apply_drawn_positions(agents: Array[Dictionary], context: Dictionary, delt
 		var agent_id: int = int(row["id"])
 		rounded[agent_id] = (_sprites[agent_id] as Sprite2D).position
 	var canvas: Transform2D = _objects.get_global_transform_with_canvas() if _objects != null else get_global_transform_with_canvas()
-	var lateral: Dictionary = CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas)
+	var lateral: Dictionary = CampSeatsScript.walker_offsets(agents, rounded, rects, terrain, blocked, canvas, _spatial_hash_enabled)
 	for row: Dictionary in agents:
 		var agent_id: int = int(row["id"])
 		var sprite: Sprite2D = _sprites[agent_id]
