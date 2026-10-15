@@ -1,6 +1,6 @@
 # Family v1 (`game_v22`)
 
-Pass 17 Stage B enables recorded parents, mutual partnerships and household-aware beds and fission. `WorldRules::game_v22(seed)` inherits every v21 rule and sets only `society.family`. Stage B starts after the committed Stage A verdict and I5 baseline in `44aebafa5acf5668d21418f611d8f0ce3a5d13d3`. Its own tuning, identity, performance and held-out verdicts remain pending during implementation.
+Pass 17 Stage B enables recorded parents, mutual partnerships and household-aware beds and fission. `WorldRules::game_v22(seed)` inherits every v21 rule and sets only `society.family`. Stage B starts after the committed Stage A verdict and I5 baseline in `44aebafa5acf5668d21418f611d8f0ce3a5d13d3`. Its 16-world tuning cohort is complete; final identity, performance and held-out verdicts follow the frozen configuration.
 
 ## Identity and kinship
 
@@ -16,7 +16,7 @@ Close-kin matching excludes direct parent/child links and any shared known paren
 
 ## Pairing and births
 
-Initial family settings are `min_familiarity_permille = 300` and `pair_minute = 1200`. The relationship threshold is the integer value divided by 1000.0, initially 0.300. The sole authorized tuning change is 300 to 200 if F1 misses on the prescribed tuning cohort; this document will record the final choice after tuning.
+Final family settings are `min_familiarity_permille = 300` and `pair_minute = 1200`. The relationship threshold is the integer value divided by 1000.0, giving 0.300. Round 1 on seeds 18100–18115 for 60 days gives F1 = 292/539 = 0.541744, so the original threshold is frozen with no second tuning round. F5 misses its bar at 9/80 = 0.1125; that measured failure is preserved and does not authorize any other tuning.
 
 `PairingSystem` has priority 144, registered immediately after MaturationSystem at the same priority, before BedAssignmentSystem at 145. It returns immediately when family is absent. At offset-adjusted 20:00 it clears living people's pointers to dead or missing partners, then processes settlements by id and unpaired adult females by AgentId. Candidates are living, unpaired, non-child, non-elder males of the same settlement, excluding recorded close kin. Highest familiarity wins, ties go to the lower AgentId, and the threshold must be met. Relationship keys are read in sorted order. Both partner pointers are set together. A partnership persists through aging and lasts until death; no separate divorce or remarriage policy is introduced.
 
