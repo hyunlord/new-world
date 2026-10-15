@@ -156,3 +156,17 @@
 - 2026-10-15T21:51:20Z pid=47983 HOLD_START owner=codex-art-pass10 purpose=pair-spatial-hash-W500 start=1792101080 load_before=1.77 contended=false waited=1424s
 - 2026-10-15T21:52:10Z pid=47983 HOLD_END owner=codex-art-pass10 purpose=pair-spatial-hash-W500 start=1792101080 end=1792101130 elapsed=50 load_before=1.77 load_after=2.64 contended=false exit=0
 <!-- art-p10-last-release 1792101130 -->
+- 2026-10-15T21:53:53Z pid=33957 WAIT_START owner=codex-art-pass10 purpose=pair-allocation-cache-W500 hold_limit=3600
+- 2026-10-15T21:53:53Z pid=33957 WAIT_COOLDOWN remaining=497s
+- 2026-10-15T21:55:09Z pid=38370 WAIT_START owner=codex-art-pass10 purpose=pair-allocation-cache-W500 hold_limit=3600
+- 2026-10-15T21:55:09Z pid=38370 WAIT_COOLDOWN remaining=421s
+- 2026-10-15T22:02:10Z pid=38370 CHECK load=2.77 processes=56837 56835 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=421s
+- 2026-10-15T22:02:10Z pid=38370 WAIT_BUSY next_poll=300s
+- 2026-10-15T22:07:10Z pid=38370 CHECK load=3.37 processes=56837 56835 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=721s
+- 2026-10-15T22:07:10Z pid=38370 WAIT_BUSY next_poll=300s
+- 2026-10-15T22:12:10Z pid=38370 CHECK load=2.30 processes=56837 56835 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1021s
+- 2026-10-15T22:12:10Z pid=38370 WAIT_BUSY next_poll=300s
+- 2026-10-15T22:17:10Z pid=38370 CHECK load=3.16 processes= waited=1321s
+- 2026-10-15T22:17:10Z pid=38370 HOLD_START owner=codex-art-pass10 purpose=pair-allocation-cache-W500 start=1792102630 load_before=3.16 contended=false waited=1321s
+- 2026-10-15T22:18:06Z pid=38370 HOLD_END owner=codex-art-pass10 purpose=pair-allocation-cache-W500 start=1792102630 end=1792102686 elapsed=56 load_before=3.16 load_after=3.37 contended=false exit=0
+<!-- art-p10-last-release 1792102686 -->
