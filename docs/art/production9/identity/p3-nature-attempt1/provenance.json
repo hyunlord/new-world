@@ -1,0 +1,15 @@
+{
+  "parent_commit": "126b0e1a55bc9785a7fbc6676e1ea8e5f8d8af19",
+  "candidate": "working tree row3 canopy opacity cache",
+  "source_sha256": {
+    "scripts/ui/agent_renderer.gd": "f733d2d355a7cdd5dee623e0b0bfde7d4a9aa574c88f407ea716bdbf634215fc",
+    "scripts/ui/building_renderer.gd": "614e4ea023ff227911686a8ba5d6f12158321007ae2239aabc77941045be1eae",
+    "scripts/ui/nature_renderer.gd": "e68b4101c489874866e23bdb9f1cc3fd98509687afce5848aa08b78206a3a796",
+    "scripts/test/art/test_nature_derived_cache_p9.gd": "3d6f5b4b72bd454414bb077ca628579efd7079eaa4c5e6771ecd9b443c2b0afd"
+  },
+  "external_B": "/Users/rexxa/work/art-production9-evidence/identity/p3-nature-attempt1/B",
+  "capture_exit": 0,
+  "comparison_exit": 0,
+  "all_six_differing_pixels": 0,
+  "all_six_max_channel_difference": 0
+}

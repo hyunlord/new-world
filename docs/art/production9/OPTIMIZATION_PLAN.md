@@ -27,3 +27,11 @@ Cache only SHELTER_COLD.sleeper_counts. Compare exact duplicated agent columns x
 ## Row 2 result
 
 The56-reference behavior test passed before and after; cache-reuse assertion, four existing focused tests and strict42-file/FFI checks passed. All six B frames remain exactly identical; independent review opened P2/P6 and decoded every framing. BuildingRenderer cost changed from0.2815ms in the preceding row1 session to0.0800ms in the row2 session, both admitted noncontended. Initial selection cost1.3675ms came from the earlier contended session and is retained separately. The modest measured reduction does not remove the dominant AgentRenderer cost.
+
+## Row 3 concrete boundary: NatureRenderer
+
+Build fresh agent-foot buckets every invocation, including interpolation and visibility. Reuse canopy opacity only if exact bucket contents and tree identity/art_kind/position/get_rect geometry are unchanged. Inspect geometry live so injected sprites and same-tick texture/region/offset changes remain visible. Clear cached geometry/results on refresh and successful reconcile; retire removed trees. Keep season tint resolution live and avoid only identical modulate assignments. Do not introduce tick-only or visibility-only process gating. Before editing, compare uncached alpha/tint for repeated input, same-tick agent movement/visibility, tree insertion/removal/position/rect changes, season change, reset and direct capture-style calls. Run existing canopy_fade,nature_density,nature_clearance tests, strict checks, six identity captures and a fresh alternating cost session before committing.
+
+## Row 3 result
+
+Twenty reference comparisons passed before/after, cache reuse/reset checks and three existing focused tests passed, and strict42-file/FFI checks passed. Six new B images remain exact RGBA matches, independently decoded and visually reviewed. NatureRenderer cost increased from1.0200ms in row2 to1.3425ms in row3 (saved=-0.3225ms); no measured optimization gain is claimed. Both sessions admitted noncontended. Retain the bounded input cache with the regression evidence; fresh-bucket comparison/cache overhead or run-to-run variation is a hypothesis, not an established cause. The final full matrix will judge whole-frame targets.

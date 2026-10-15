@@ -7,8 +7,8 @@ Start checkpoint: 2026-10-15T07:19:58+09:00 (GOAL.md filesystem birth epoch 1792
 | 0 | 2026-10-15T07:19:58+09:00 | 2026-10-15T13:04:29+09:00 | PASS: merge49bc0b7c; retry65/65 gate; required W0/W500/W1/W200 baseline validated; both mandatory23-row ablations retained; A30before receipt0, ON17.7680ms/OFF15.9655ms. Optional1000/2000 explicitly deferred. Elapsed includes overlap with Parts1–3 and quiet waits. |
 | 1 | 2026-10-15T08:19:00+09:00 | 2026-10-15T08:56:54.342109+09:00 | PASS: full retry70/70,2146 Rust tests, clean equivalence461assertions and600frames/world consumer checks; WIP a779e927 pushed; ls-remote matches |
 | 2 | 2026-10-15T08:32:03.123340+09:00 | 2026-10-15T09:09:31.091049+09:00 | PASS: six A/A-prime controls and six A/B comparisons all0pixels/0channel; two independent visual checks PASS; WIP2e16580e pushed/ls-remote matches |
-| 3 | 2026-10-15T10:18:28+09:00 | | In progress: initial ablation validated; selected AgentRenderer/BuildingRenderer/NatureRenderer. Row1 focused tests + six exact identity captures PASS; cost46.6435→45.6475ms with contention caveat;9f4a7eab pushed/remoteverified. Row2 BuildingRenderer tests + six exact captures PASS; cost0.2815→0.0800ms;126b0e1a pushed/remoteverified. Row3 NatureRenderer focused tests + six exact captures + independent visual review PASS; own cost session queued |
-| 4 | | | Queued: full after matrix, ablation, A30, F1-F7 |
+| 3 | 2026-10-15T10:18:28+09:00 | 2026-10-15T13:22:18+09:00 | DONE: all three selected rows implemented/tested; each six-frame exact identity PASS and alternating cost recorded. Agent46.6435→45.6475ms (contention differs); Building0.2815→0.0800ms; Nature1.0200→1.3425ms, no saving. Row3 ready for commit. |
+| 4 | 2026-10-15T13:23:00+09:00 | | In progress: final required four-world matrix with ablation and A30; F1–F7 pending. |
 | 5 | | | Queued: independent review, final gate, publish, report, remove base worktree |
 
 Re-read GOAL.md current Part at every Part transition and after compaction.

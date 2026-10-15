@@ -19,6 +19,8 @@ var _height: int = 0
 var _fingerprint: int = -1
 var _frame: int = 0
 var _clearings: Dictionary = {}
+var _canopy_heads: Dictionary = {}
+var _canopy_geometry: Dictionary = {}
 
 func _ready() -> void:
 	process_priority = get_node("../AgentRenderer").process_priority + 1
@@ -36,6 +38,8 @@ func _process(_delta: float) -> void:
 	_update_canopies()
 
 func refresh_snapshot() -> void:
+	_canopy_heads.clear()
+	_canopy_geometry.clear()
 	var terrain: Dictionary = SimReads.read(_world_sim, "get_terrain_snapshot")
 	_terrain = terrain.get("terrain", PackedByteArray())
 	_elevation = terrain.get("elevation", PackedByteArray())
@@ -95,6 +99,7 @@ func _reconcile() -> void:
 	var fingerprint: int = hash([buildings, sites, food.get("xs"), food.get("ys"), food.get("kinds"), settlements.get("formation_xs"), settlements.get("formation_ys")])
 	if fingerprint == _fingerprint:
 		return
+	_canopy_geometry.clear()
 	_fingerprint = fingerprint
 	_clearings = LAYOUT.clearings(buildings, sites, food, settlements)
 	var rocks: Dictionary = LAYOUT.rocks(_terrain,_width,_clearings)
@@ -163,7 +168,26 @@ func _understory(key: String, tile: Vector2i, jitter: Vector2i, h: int, seen: Di
 
 func _update_canopies() -> void:
 	var heads: Dictionary = CANOPY.buckets(_objects)
+	if heads != _canopy_heads:
+		_canopy_geometry.clear()
+		_canopy_heads = heads
 	var tint: Color = SEASON.resolve(SimReads.read(_world_sim, "get_time_snapshot"))
+	var seen: Dictionary = {}
 	for sprite: Sprite2D in _sprites.values():
-		var opacity: float = CANOPY.alpha(sprite,heads) if str(sprite.get_meta("art_kind")) == "tree" else 1.0
-		sprite.modulate = Color(tint.r,tint.g,tint.b,opacity)
+		var opacity: float = 1.0
+		if str(sprite.get_meta("art_kind")) == "tree":
+			var id: int = sprite.get_instance_id()
+			var rect: Rect2 = sprite.get_rect()
+			var cached: Array = _canopy_geometry.get(id, [])
+			if cached.is_empty() or cached[0] != sprite.position or cached[1] != rect:
+				opacity = CANOPY.alpha(sprite, heads)
+				_canopy_geometry[id] = [sprite.position, rect, opacity]
+			else:
+				opacity = float(cached[2])
+			seen[id] = true
+		var color := Color(tint.r, tint.g, tint.b, opacity)
+		if sprite.modulate != color:
+			sprite.modulate = color
+	for id: int in _canopy_geometry.keys():
+		if not seen.has(id):
+			_canopy_geometry.erase(id)
