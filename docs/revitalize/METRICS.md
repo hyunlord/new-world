@@ -3140,3 +3140,20 @@ Corrected F3=0.10492328730233096,95%CI[0.08279428448915346,0.1260843651055091],P
 The [structural comparison](verification/p17-f3_correction/evaluation_comparison.json) proves every non-F3 result and verdict unchanged. F1 remains527/1064=0.49530075187969924,CI[0.4544509821683466,0.5324089105339106],FAIL. F2=2969/3070=0.967100977198697,CI[0.9320753211719974,0.9937504867601247],PASS. F4=38875/39024=0.9961818368183681,CI[0.9939059517108126,0.998184814945897],PASS. F5=18/234=0.07692307692307693,CI[0.03895923520923521,0.12258064516129032],PASS. All six F6 bars, F7 and F8 pass. Overall remains FAIL. No post-result retuning is performed.
 
 The corresponding [corrected tuning report](probe/p17-b_tuning/r1-f3-corrected/eval.json) preserves the original tuning F5FAIL and all other non-F3 values. Its F3=0.09315138785721515,CI[0.0444767345396077,0.142244402043866],1790 siblings/27653 controls,PASS. This is a measurement correction on existing data, not a second tuning round. Independent raw-data audits verify all11 F3 descriptive/decision statistics for both cohorts with zero discrepancies; see [root-verified audit receipt](verification/p17-f3_correction/independent_f3_root_verified.json). The corrected analysis is explicitly distinguished from the original preregistered estimator.
+
+## Pass 18 — `game_v23`: easier pairing, elder partners follow (rule table, registered before evaluation)
+
+Registered under `PASS18_GOAL.md` 8.5 before the held-out evaluation runs. Producer: the Part 3 commit that adds `WorldRules::game_v23` (`FamilyRule { min_familiarity_permille: 200, pair_minute: 1200, elder_partner_follows: true }`); the paired control is `game_v22` (300, 1200, false), same generation inputs. Tuning (19100–19115, 60 days, traced) is separate evidence: round 1 at 200 had F1 = 0.675 [0.618, 0.724] ≥ 0.50, so the single allowed adjustment to 100 is not used and 200 is frozen. No other parameter was tuned.
+
+Evaluation population: seeds **19000–19031** (`--seeds 19000..19032`), 32 worlds per scene, **120 days**, `worldsim_probe --sample-every 120 --clock-samples` every display hour, `--agent-trace`, `--check-determinism`, four workers; paired by seed. Every metric uses Pass 17's definitions and code (`evaluate_pass17_stage_b`, `evaluate_pass17_stage_a.health_metrics`) and Pass 17's bootstrap (2,000 world resamples, 95 % percentile interval); `tools/revitalize/evaluate_pass18.py` only composes them, adds the G3 adult–elder census and the G4 daughter-village report.
+
+| # | rule |
+|---|---|
+| G1 | F1 (partnered share of non-elder adults at day 60, pooled living mutual couples) ≥ **0.50** (point estimate; interval reported) |
+| G2 | F2 (couple-parent births from simulation day 20) ≥ 0.90; F4 (bedded couple-nights at 20:00 in the same shelter) ≥ 0.90 |
+| G3 | F5 = couples split by completed fissions ÷ couples at departure ≤ **0.05**, and **adult–elder couples split = 0** except when the `group_min` top-up took the adult without their household (each such case listed: split pair with the adult departing in a group of exactly `group_min` = 6) |
+| G4 | health, Pass 17's R2 rules for `game_v23` − `game_v22`: alive ±10 %, non-old-age deaths ≤ +1.5 per world, completed shelters ≥ 0.9×, adult social rate ≥ 0.9×, noon food and wood stores ±15 %; plus mean daughter-village founders and survival to day 120 (never dissolved and ≥ 1 member at the day-118 checkpoint) reported for both scenes |
+| G5 | identity: I1–I6 and all pins identical on the final build |
+| G6 | performance: `game_v23` vs `game_v22` as 7.4 (three interleaved quiet-lock repeats, medians: mean tick ≤ +15 %, p99.9 ≤ +35 %, mean ≤ 4.0 ms, `AgentDecisionSystem` three-size slope < 1.7; `quick` before/after) |
+
+The adult–elder census is read from the family trace's departed rows (`elders_departed`, `adult_elder_couples`, `adult_elder_couples_split`, `adult_elder_split_pairs`; an adult–elder couple is a mutual couple in which exactly one partner carries `Elder` when the departure is observed). F5 and the census count completed fissions only (cancelled and pending departures are reported in the raw trace but not counted), as Pass 17's F5 did.
