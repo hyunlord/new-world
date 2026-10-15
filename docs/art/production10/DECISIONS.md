@@ -8,3 +8,5 @@
 - 2026-10-15T15:23Z: P9 final P6 PNG is byte-identical to P1 and visibly lacks the inspector. `agent_inspector_panel.gd` connects world_reset to close; P9 fixture opens before deferred reset delivery. P10 fixture retains world-state frame10/capture130 but opens inspector at frame12 after reset delivery, then requires visible-in-tree at capture. This is a new-baseline fixture repair, not a reinterpretation of P9's historical verdict or a production rendering change.
 
 - Part0 measurement review: bind baseline to exact merge HEAD, canonical checkout, dylib and collector hashes; require terminal exit0 before resume. Keep W0/W500 ablation mandatory for both phases and optional W1000 frozen Z4 only. No prior evidence changed.
+
+- After p0-attempt2 completes, third full gate will set CARGO_PROFILE_TEST_OPT_LEVEL=2 (CARGO_BUILD_JOBS remains6). Cargo.toml has no profile override, so the prior simulation suite was unoptimized. This changes test compilation optimization only, retains test debug assertions/overflow checks and all tests/assertions, leaves the debug sim-bridge rendering build and1800s limit unchanged. Preserve both earlier failed attempts.
