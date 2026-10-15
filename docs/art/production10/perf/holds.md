@@ -1,3 +1,34 @@
 # Quiet lock holds and waits
 
 - 2026-10-15T15:04Z: Quiet lock absent before starting Part 0 gate. Gate/build is not a measurement hold. CARGO_BUILD_JOBS=6.
+- 2026-10-15T15:38:01Z pid=20030 WAIT_START owner=codex-art-pass10 purpose=baseline-W0-attempt1 hold_limit=3600
+- 2026-10-15T15:38:02Z pid=20030 CHECK load=40.11 processes=53523 53522 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;14691 14690 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;21613 21605 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 9670  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;12269 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=0s
+- 2026-10-15T15:38:02Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T15:43:03Z pid=20030 CHECK load=27.14 processes=53523 53522 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;35642 35640 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 9670  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;12269 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=301s
+- 2026-10-15T15:43:03Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T15:48:04Z pid=20030 CHECK load=37.45 processes=53523 53522 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;57721 57714 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;45686 45685 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;12269 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe;42087  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=602s
+- 2026-10-15T15:48:04Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T15:53:04Z pid=20030 CHECK load=15.44 processes=45686 45685 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;75537 75536 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;12269 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe;69841  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=903s
+- 2026-10-15T15:53:04Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T15:58:05Z pid=20030 CHECK load=23.01 processes=93703 93702 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;94499 94301 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;94021 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;94239 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;94366 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;94489 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;94503 94499 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/rustc;94543 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;94553 93703 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;92549 92545 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;69841  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;92040 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=1203s
+- 2026-10-15T15:58:05Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:03:05Z pid=20030 CHECK load=30.12 processes=93703 93702 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;10516 10514 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 4022  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;92040 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=1504s
+- 2026-10-15T16:03:05Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:08:06Z pid=20030 CHECK load=30.25 processes=25758 25747 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;93703 93702 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;20123 20122 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 4022  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;92040 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=1804s
+- 2026-10-15T16:08:06Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:13:07Z pid=20030 CHECK load=63.07 processes=20123 20122 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 4022  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;38116 38093 /Users/rexxa/work/p18-data/bin_p3/worldsim_probe;92040 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=2105s
+- 2026-10-15T16:13:07Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:18:07Z pid=20030 CHECK load=32.98 processes=59272 59271 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;60903 60902 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot; 4022  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe;54437 38093 /Users/rexxa/work/p18-data/bin_p3/worldsim_probe;92040 98525 /Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_probe waited=2406s
+- 2026-10-15T16:18:07Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:23:07Z pid=20030 CHECK load=6.41 processes=76032  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=2706s
+- 2026-10-15T16:23:07Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:28:07Z pid=20030 CHECK load=8.47 processes=76032  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=3006s
+- 2026-10-15T16:28:07Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:33:07Z pid=20030 CHECK load=8.85 processes=76032  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=3306s
+- 2026-10-15T16:33:07Z pid=20030 WAIT_BUSY next_poll=300s
+- 2026-10-15T16:38:08Z pid=20030 CHECK load=6.26 processes=76032  9657 /Users/rexxa/work/p18-data/bin_p1/plain/worldsim_probe waited=3606s
+- 2026-10-15T16:38:08Z pid=20030 HOLD_START owner=codex-art-pass10 purpose=baseline-W0-attempt1 start=1792082288 load_before=6.26 contended=true waited=3607s
+- 2026-10-15T16:41:59Z pid=20030 HOLD_END owner=codex-art-pass10 purpose=baseline-W0-attempt1 start=1792082288 end=1792082519 elapsed=231 load_before=6.26 load_after=3.52 contended=true exit=0
+<!-- art-p10-last-release 1792082519 -->
+- 2026-10-15T16:41:59Z pid=52416 WAIT_START owner=codex-art-pass10 purpose=baseline-W500-attempt1 hold_limit=3600
+- 2026-10-15T16:41:59Z pid=52416 WAIT_COOLDOWN remaining=600s
