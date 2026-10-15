@@ -859,3 +859,25 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 | 5 | 2026-10-15 09:41 | 2026-10-15 10:22 | TEMPERAMENT.md draft (`38f75d4c`) and final with the evaluation result (`f005aae3`), overlapping Parts 3–4 |
 | 6 | 2026-10-15 09:43 | 2026-10-15 11:40 | review 1 09:43–09:52, review 2 10:08–10:15; final-commit DGX inert 10:07:59–10:22:18, Mac I1–I3 10:26–10:34; gate 10:34:33–11:31:14 green on `adfdecfe`; fast-forward 11:31; report, PR |
 - PR #510: a "Pass 16" section appended to its description at 11:4x KST (`gh pr edit 510 --body-file`; the earlier sections are unchanged).
+
+## Pass 17
+
+- Run: Codex, unattended, Mac-only, `/Users/rexxa/work/new-world-pass4`; first recorded timestamp 2026-10-15 06:01:55 UTC (15:01:55 KST). The supplied `PASS17_GOAL.md` overrides startup resets, main-branch publication and hook instructions. No owner questions; no DGX; no other checkouts except the authorized detached base.
+- Original attachment preserved byte-for-byte in `e6bde09c`. The pre-existing untracked owner copy differed only by a final newline; replaced with the exact attachment as explicitly requested. Starting WIP `2c079df265ef7c16baf8ee5bb119591091b5c3eb`, green `adfdecfece79ab019964729319389fd602685fab`; both remote refs fetched and verified. Local `.gitignore`, `.ignore`, historical untracked logs and skip-worktree `.claude/settings.json` remain untouched and unstaged. Commit hooks are disabled per command with `-c core.hooksPath=/dev/null`, not installed or edited.
+- Mac verified: Mac16,5, 14 logical CPUs, 38,654,705,664 bytes RAM. `CARGO_BUILD_JOBS=6`, Rust test threads 6, probe workers 4. Raw data and logs go to `/Users/rexxa/work/p17-data/`. Quiet lock absent before baseline commands; baseline probes do not measure performance, so they do not acquire the timing lock.
+- Plan workflow approval and `.omo/` artifacts are superseded by the owner's decision-complete unattended contract and allowed paths. Execution plan and resumable status live in `docs/revitalize/PLAN_PASS17.md`; old source is not broadly refactored for generic skill file-size preferences. No dependencies are added.
+- Part 0: detached base worktree at `adfdecfe` created at the authorized `/Users/rexxa/work/new-world-p17-base`; release build log `p17-data/base_build.log`. Pin collection uses unchanged production Rust before adding either optional rule field. Independent source audit is not one of the two final review rounds.
+- Identity cohorts will run sequentially, each with four workers; the two recorder seeds are the half-open range `12000..12002`. Full summaries must match after removing timing only, including key sets; the older shared-key comparison alone is insufficient proof.
+
+### RUNLOG
+
+| Part | start (UTC) | end (UTC) | notes |
+|---|---|---|---|
+| 0 | 2026-10-15 06:01:55 | in progress | Contract, standalone pins and opt-in rule fields committed; base I1/I3 complete, I4 and recorder running. |
+
+- Part 0 standalone pin commit `4f10de75`: seeds 0–4, v20/inert, 1,440 and 40,320 ticks, every pre-existing rule leaf separately asserted. Capture source unchanged from `adfdecfe`. Release 3/3 (12.91 s), debug 3/3 (221.44 s), scoped clippy clean; original pin artifact SHA256 `39d8a65f2a6fa479e72b3e76550aee43a3fad6babf1d5e6efaffe8d2015a8161`. The later optional-fields commit adds only `routine == None` and `family == None` assertions, not replacement expected values.
+- The optional-field change passed sim-core 309 tests, release v19/v20 frozen harnesses 6 tests, and workspace/all-target clippy with warnings denied. All previous full rule literals gained the corresponding `None` line; the two new rule types do not yet enable any behavior.
+- Stage A implementation choices, decided before code/evaluation: the supplied place rank has no tile-varying input, so equal-occupancy candidates share that rank and ties literally use `(y,x)`. No invented tile salt. A new `RoutineObservation` component carries only the most recent decision event (`Started{redrawn}`, `NoPlace{redrawn}`, `Ended{completed}`), with tick/kind; all cumulative counts remain observer-only. A stale activity uses the same one-tick re-entry guard as an interrupted activity, preventing same-tick event overwrite and archetype churn.
+- Stage A R2 social rate will use pooled adult completed interactions divided by pooled non-elder adult days, bootstrapping worlds; the mean of world rates is reported as sensitivity. Noon stores are sums across settlements, averaged per world/day. The final table will be committed before either evaluation arm runs.
+
+- Part 0 operations checks: strict identity comparator 10 tests pass; quiet-lock, wait, identity and performance command sequencing 9 mock-process checks pass. The initial macOS orphan-group cleanup failures are retained in `verification/p17-0/operations_initial_failure.txt`; reaping the exited group leader before the escalation check resolved them. Tests use isolated fake paths, never the real shared lock. Gate keeps inherited checks and treats its quick sample as untimed validation, separate from R5/F8.
