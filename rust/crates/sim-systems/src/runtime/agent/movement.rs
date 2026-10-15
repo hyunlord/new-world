@@ -42,17 +42,20 @@
 //! source one type-swap away if a later phase needs it.
 
 use sim_core::components::Lineage;
-use sim_core::rng::{keyed_step, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE};
+use sim_core::rng::{
+    keyed_step, keyed_unit_f64, STREAM_MOVE_DX, STREAM_MOVE_DY, STREAM_MOVE_PAUSE,
+    STREAM_ROUTINE_PLAY,
+};
 use std::collections::BTreeMap;
 
+use crate::runtime::decision::agent_decision::clock_in_window;
 use hecs::World;
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SeekTarget,
-    Temperament, SETTLEMENT_PROXIMITY_RADIUS,
+    Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,
+    Position, ResourceKind, SeekTarget, TargetKind, Temperament, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
-use crate::runtime::decision::agent_decision::clock_in_window;
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
 /// next Brownian step. Each agent owns its own `MovementRng`, so trajectories
@@ -189,9 +192,11 @@ impl RuntimeSystem for AgentMovementSystem {
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
         // Pass 4: elders keep to the camp at all hours. Pass 6: inside the
         // evening-gather window they follow the evening tether when it is tighter.
-        let elder_radius = resources.rules.society.aging.map(|rule| match (rule.elder_evening_tether, evening_radius) {
-            (true, Some(evening)) => rule.elder_tether_radius.min(evening),
-            _ => rule.elder_tether_radius,
+        let elder_radius = resources.rules.society.aging.map(|rule| {
+            match (rule.elder_evening_tether, evening_radius) {
+                (true, Some(evening)) => rule.elder_tether_radius.min(evening),
+                _ => rule.elder_tether_radius,
+            }
         });
         if rules.idle_tether_radius.is_some() || child_rule.is_some() || evening_radius.is_some()
             || forage.is_some() || elder_radius.is_some() || firewood.is_some()
@@ -219,6 +224,14 @@ impl RuntimeSystem for AgentMovementSystem {
         let seed = resources.world_seed;
         let tick = resources.current_tick;
         let replicate = resources.noise_replicate_for(tick);
+        let playing = rules.routine.map(|_| {
+            world
+                .query::<(&Agent, &Activity, &Child, &Lineage)>()
+                .iter()
+                .filter(|(_, (_, activity, _, _))| activity.kind == ActivityKind::Play)
+                .map(|(_, (agent, activity, _, lineage))| (agent.id, (activity.place, lineage.key)))
+                .collect::<BTreeMap<_, _>>()
+        });
         // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
         // (NS) and, for workers, its haul loads (P). None before v20.
         let temperament_rule = rules.temperament;
@@ -265,6 +278,44 @@ impl RuntimeSystem for AgentMovementSystem {
             //   3. `Idle` (or no `AgentState`) → BROWNIAN `{-1,0,+1}^2` step,
             //      consuming the per-agent RNG stream (unchanged).
             if let Some(s) = state {
+                if matches!(
+                    s,
+                    AgentState::Consuming {
+                        target: TargetKind::Activity
+                    }
+                ) {
+                    if let Some((place, key)) =
+                        agent.and_then(|agent| playing.as_ref()?.get(&agent.id))
+                    {
+                        let dx = i64::from(keyed_step(
+                            seed,
+                            STREAM_ROUTINE_PLAY,
+                            *key,
+                            tick,
+                            0,
+                            replicate,
+                        ));
+                        let dy = i64::from(keyed_step(
+                            seed,
+                            STREAM_ROUTINE_PLAY,
+                            *key,
+                            tick,
+                            1,
+                            replicate,
+                        ));
+                        let nx = (i64::from(pos.x) + dx).clamp(
+                            i64::from(place.0.saturating_sub(1)),
+                            i64::from(place.0.saturating_add(1)).min(max_x),
+                        );
+                        let ny = (i64::from(pos.y) + dy).clamp(
+                            i64::from(place.1.saturating_sub(1)),
+                            i64::from(place.1.saturating_add(1)).min(max_y),
+                        );
+                        pos.x = nx as u32;
+                        pos.y = ny as u32;
+                    }
+                    continue;
+                }
                 if matches!(s, AgentState::Consuming { .. }) {
                     continue;
                 }

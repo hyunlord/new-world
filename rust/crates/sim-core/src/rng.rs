@@ -87,8 +87,15 @@ pub const STREAM_FISSION_THRESHOLD: u64 = 0x4649_5353_5448_5253;
 /// 3}, replicate always 0 (an identity trait, not noise; "TEMPRMNT" in ASCII).
 pub const STREAM_TEMPERAMENT: u64 = 0x5445_4D50_524D_4E54;
 
+/// Routine kind choice, redraw and rest duration (slots zero, one and two).
+pub const STREAM_ROUTINE: u64 = 0x524F_5554_494E_455F;
+/// Routine place tie rank, keyed by lineage, decision tick and replicate.
+pub const STREAM_ROUTINE_PLACE: u64 = 0x5254_4E50_4C41_4345;
+/// Children's bounded play steps; slots zero and one are the two axes.
+pub const STREAM_ROUTINE_PLAY: u64 = 0x5254_4E50_4C41_595F;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 17] = [
+pub const STREAMS: [u64; 20] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -106,6 +113,9 @@ pub const STREAMS: [u64; 17] = [
     STREAM_REGION_FILL_WOOD,
     STREAM_FISSION_THRESHOLD,
     STREAM_TEMPERAMENT,
+    STREAM_ROUTINE,
+    STREAM_ROUTINE_PLACE,
+    STREAM_ROUTINE_PLAY,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

@@ -107,7 +107,7 @@ pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> 
 /// `_fissions.jsonl` (every fission) and `_trace_meta.json`.
 fn write_trace(args: &ProbeArgs, seed: u64, engine: &SimEngine, tracer: &AgentTracer, git_sha: &str) -> Result<(), String> {
     let (agents, people, fissions, mut meta) = tracer.finish(engine);
-    for (suffix, lines) in [("agents", agents), ("people", people), ("fissions", fissions)] {
+    for (suffix, lines) in [("agents", agents), ("people", people), ("fissions", fissions)].into_iter().chain(tracer.routine_output()) {
         let mut out = BufWriter::new(
             File::create(args.out.join(format!("{}_s{seed}_{suffix}.jsonl", args.scene))).map_err(|e| e.to_string())?,
         );
@@ -158,6 +158,7 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v19" => crate::scenes::game_v19_scene(seed),
         "game_v20_inert" => crate::scenes::game_v20_inert_scene(seed),
         "game_v20" => crate::scenes::game_v20_scene(seed),
+        "game_v21" => crate::scenes::game_v21_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
@@ -377,7 +378,9 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
             if twin_checked(&args.scene)
                 && (long_run::trace(&engine) != long_run::trace(twin)
                     || super::fingerprint::fingerprint(&engine)
-                        != super::fingerprint::fingerprint(twin))
+                        != super::fingerprint::fingerprint(twin)
+                    || (engine.resources.rules.agent.routine.is_some()
+                        && !super::pass17::twins_match(&engine, twin)))
             {
                 return Err(format!(
                     "{} tick trace mismatch seed={seed} tick={}",
@@ -446,7 +449,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20" | "game_v21")
         || super::ablation::is_ablation(scene)
 }
 
@@ -459,7 +462,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "abl_no_regions", "abl18_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "game_v21", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

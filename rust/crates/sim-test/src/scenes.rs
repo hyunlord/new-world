@@ -215,6 +215,17 @@ pub fn game_v20_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety)
     engine
 }
 
+/// Pass 17 fixture: the Pass 16 world with economy-neutral daily routines.
+pub fn game_v21_scene(seed: u64) -> SimEngine {
+    let variety = sim_core::variety::WorldVariety::draw_v18(seed);
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v21(seed),
+        sim_core::rules::WorldRules::game_v21(seed),
+    );
+    engine.resources.world_variety = Some(variety);
+    engine
+}
+
 /// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
 /// and stored, no lean acts — the same world as `game_v19`).
 pub fn game_v20_inert_scene(seed: u64) -> SimEngine {

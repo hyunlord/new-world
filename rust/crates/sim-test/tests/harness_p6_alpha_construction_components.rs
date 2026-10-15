@@ -293,6 +293,7 @@ fn harness_p6_alpha_a15_target_kind_four_variants() {
         TargetKind::Agent(0),
         TargetKind::GatherFood,
         TargetKind::GatherWood,
+        TargetKind::Activity,
     ];
     for k in kinds {
         match k {
@@ -303,6 +304,7 @@ fn harness_p6_alpha_a15_target_kind_four_variants() {
             TargetKind::Agent(_) => {}
             TargetKind::GatherFood => {}
             TargetKind::GatherWood => {}
+            TargetKind::Activity => {}
         }
     }
     assert_ne!(TargetKind::ConstructionSite, TargetKind::Sleep);

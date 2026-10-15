@@ -1,0 +1,27 @@
+   Compiling sim-systems v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-systems)
+   Compiling sim-bridge v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-bridge)
+   Compiling sim-test v0.7.0 (/Users/rexxa/work/new-world-pass4/rust/crates/sim-test)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.63s
+     Running tests/harness_revitalize_pass17_routine_invitations.rs (rust/target/debug/deps/harness_revitalize_pass17_routine_invitations-4586aa7541d451f2)
+
+running 4 tests
+test same_tick_start_and_invitation_keep_both_observations ... ok
+test bias_selected_nonlonely_activity_peer_exits_in_both_id_orders ... ok
+test invitation_replays_earlier_peers_real_combat_response_without_interrupting_uninvited_peers ... ok
+test mutual_activity_peers_start_once_and_complete_three_ticks_later ... FAILED
+
+failures:
+
+---- mutual_activity_peers_start_once_and_complete_three_ticks_later stdout ----
+
+thread 'mutual_activity_peers_start_once_and_complete_three_ticks_later' (111504539) panicked at crates/sim-test/tests/harness_revitalize_pass17_routine_invitations.rs:62:5:
+assertion failed: engine.resources.interaction_progress.is_empty()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    mutual_activity_peers_start_once_and_complete_three_ticks_later
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p sim-test --test harness_revitalize_pass17_routine_invitations`

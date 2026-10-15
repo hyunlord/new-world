@@ -111,6 +111,7 @@ pub(crate) struct AgentTracer {
     born_event_misses: u64,
     /// People whose computed temperament differs from their component.
     component_mismatches: u64,
+    routine: super::pass17::RoutineTracer,
 }
 
 /// The clock minute of the engine's last system tick.
@@ -139,7 +140,7 @@ impl AgentTracer {
     /// Starts the trace on a freshly built engine (tick 0): every person
     /// present is a founder.
     pub(crate) fn start(engine: &SimEngine) -> Self {
-        let mut tracer = Self { seed: engine.resources.world_seed, ..Self::default() };
+        let mut tracer = Self { seed: engine.resources.world_seed, routine: super::pass17::RoutineTracer::start(engine), ..Self::default() };
         for (_, (agent, lineage, temperament)) in
             engine.world.query::<(&Agent, Option<&Lineage>, Option<&Temperament>)>().iter()
         {
@@ -323,6 +324,7 @@ impl AgentTracer {
             self.fissions.push(FissionSeen { index, eligible });
         }
         self.record_prev(engine);
+        self.routine.after_tick(engine);
     }
 
     /// The output lines: (agents, people, fissions, meta).
@@ -372,6 +374,7 @@ impl AgentTracer {
                 "parent_temperaments": [axes(&p.parent_temperaments[0]), axes(&p.parent_temperaments[1])],
                 "alive_end": p.alive,
                 "ever_adult": p.adult_ticks > 0,
+                "routine": self.routine.person(*id, false),
             }));
             if p.adult_ticks == 0 {
                 continue;
@@ -384,6 +387,8 @@ impl AgentTracer {
                 "temperament": temperament,
                 "temperament_source": source,
                 "adult_days": p.adult_ticks as f64 / tpd,
+                "adult_ticks": p.adult_ticks,
+                "routine": self.routine.person(*id, true),
                 "idle_dist_sum": p.idle_dist_sum,
                 "idle_samples": p.idle_samples,
                 "bed_minutes": p.bed_minutes.values().collect::<Vec<_>>(),
@@ -404,8 +409,13 @@ impl AgentTracer {
             "fissions_cancelled": cancelled,
             "fissions_pending": pending,
             "end_tick": engine.current_tick(),
+            "pass17": self.routine.meta(engine),
         });
         (agents, people, fissions, meta)
+    }
+
+    pub(crate) fn routine_output(&self) -> [(&'static str, Vec<Value>); 2] {
+        self.routine.output()
     }
 }
 

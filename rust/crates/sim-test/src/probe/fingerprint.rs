@@ -18,6 +18,7 @@ fn feed(hash: &mut u64, bytes: &[u8]) {
 pub(super) const fn state_tag(state: Option<&AgentState>) -> u8 {
     match state {
         None | Some(AgentState::Idle) => 0,
+        Some(AgentState::Seeking { target: TargetKind::Activity } | AgentState::Consuming { target: TargetKind::Activity }) => 4,
         Some(AgentState::Seeking { .. }) => 1,
         Some(AgentState::Consuming {
             target: TargetKind::Agent(_),

@@ -49,6 +49,8 @@ use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
 use sim_systems::worldgen::{build_world_with, WorldGenConfig, DEFAULT_GAME_SEED};
 
+use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+
 /// Default grid extent until Godot configures it (Phase 2 default).
 const DEFAULT_W: u32 = 64;
 /// Default grid extent until Godot configures it (Phase 2 default).
@@ -489,6 +491,16 @@ impl WorldSimNode {
     #[func]
     fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
         agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
+    }
+
+    /// Pass 17 activities as five parallel packed arrays, ordered by AgentId.
+    /// `ids` are entity bits matching the agent snapshot. `kinds` use 0..6
+    /// (TendFire, Craft, Repair, HearthCircle, Explore, Play, SitByFire).
+    /// `place_x`, `place_y` identify the chosen place; `until_tick` is -1
+    /// until arrival. Existing agent snapshot and detail schemas stay unchanged.
+    #[func]
+    fn get_activity_snapshot(&self) -> VarDictionary {
+        activity_rows_to_dict(&collect_activity_snapshot(&self.engine.world))
     }
 
     /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the
@@ -1378,9 +1390,10 @@ fn event_views_to_variant_array(views: &[CausalEventView]) -> VarArray {
 ///
 /// Tag table (locked, §2-A-1):
 ///   - `0` = `AgentState::Idle`
-///   - `1` = `AgentState::Seeking { .. }` (any `TargetKind`)
+///   - `1` = `AgentState::Seeking { .. }` (non-Activity target)
 ///   - `2` = `AgentState::Consuming { target: TargetKind::Agent(_) }`
-///   - `3` = `AgentState::Consuming { .. }` (any non-`Agent` `TargetKind`)
+///   - `3` = `AgentState::Consuming { .. }` (non-Agent, non-Activity target)
+///   - `4` = Seeking or Consuming with `TargetKind::Activity` (Pass 17)
 // `Eq` intentionally NOT derived: viz-B added `f32` need fields (hunger/
 // thirst/sleep) which are not `Eq`. `PartialEq` (used by the harness
 // `assert_eq!` on `Vec<AgentSnapshotRow>`) is sufficient; no `HashSet`/
@@ -1440,7 +1453,7 @@ pub struct AgentSnapshotRow {
     /// `Inventory`. Read-only; drives a future stick-carry glyph.
     pub carried_wood: i32,
     /// Detail-compatible target: 0 none, 1 Food, 2 Water, 3 Sleep,
-    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood (Pass 5).
+    /// 4 ConstructionSite, 5 Agent, 6 GatherFood, 7 GatherWood, 8 Activity.
     pub target_kind: u8,
     /// Life stage: 0 adult, 1 child with a live Child component, 2 elder
     /// (Pass 4, live Elder component).
@@ -1511,6 +1524,8 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
     {
         let state_tag: u8 = match maybe_state {
             None | Some(AgentState::Idle) => 0,
+            Some(AgentState::Seeking { target: TargetKind::Activity }
+                | AgentState::Consuming { target: TargetKind::Activity }) => 4,
             Some(AgentState::Seeking { .. }) => 1,
             Some(AgentState::Consuming { target: TargetKind::Agent(_) }) => 2,
             Some(AgentState::Consuming { .. }) => 3,
@@ -1553,6 +1568,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Some(TargetKind::Agent(_)) => 5,
             Some(TargetKind::GatherFood) => 6,
             Some(TargetKind::GatherWood) => 7,
+            Some(TargetKind::Activity) => 8,
         };
         let life_stage = if maybe_child.is_some() {
             1
@@ -1731,16 +1747,16 @@ fn agent_rows_to_dict(rows: &[AgentSnapshotRow]) -> VarDictionary {
 /// - `agent_id` — `Agent.id` (AgentId domain, matches snapshot.agent_ids[i])
 /// - `x`, `y` — tile coordinates as `i32` (matches the snapshot's
 ///   `xs`/`ys` type contract — Bridge Identity Contract type lock)
-/// - `state_tag` — same locked Phase 4-γ A5 mapping as
+/// - `state_tag` — same mapping as
 ///   [`AgentSnapshotRow`] (0=Idle, 1=Seeking, 2=Consuming(Agent),
-///   3=Consuming(other))
+///   3=Consuming(other), 4=Seeking/Consuming(Activity))
 /// - `hunger` — `Hunger.value` (`f32`; `[0, SATURATION=100]`)
 /// - `thirst` — `Thirst.value` (`f64`; `[0, SATURATION=100]`)
 /// - `sleep` — `Sleep.fatigue` (`f64`; `[0, SATURATION=100]`)
 /// - `target_kind` — `i32` encoding of `Option<TargetKind>`:
 ///   0=None (Idle), 1=Food, 2=Water, 3=Sleep, 4=ConstructionSite,
-///   5=Agent (inner `AgentId` NOT surfaced in the Conservative scope;
-///   relationship surfacing deferred to Section 16+)
+///   5=Agent (inner `AgentId` not surfaced), 6=GatherFood, 7=GatherWood,
+///   8=Activity.
 ///
 /// The `found` field distinguishes "row populated" (entity is a live
 /// agent carrying the full component bundle) from "entity not found / not
@@ -1845,6 +1861,8 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
     };
     let state_tag: u8 = match state {
         AgentState::Idle => 0,
+        AgentState::Seeking { target: TargetKind::Activity }
+            | AgentState::Consuming { target: TargetKind::Activity } => 4,
         AgentState::Seeking { .. } => 1,
         AgentState::Consuming {
             target: TargetKind::Agent(_),
@@ -1862,6 +1880,7 @@ pub fn collect_agent_detail(world: &hecs::World, entity_bits: u64) -> AgentDetai
         Some(TargetKind::GatherFood) => 6,
         // Revitalize Pass 5 — firewood pickup target.
         Some(TargetKind::GatherWood) => 7,
+        Some(TargetKind::Activity) => 8,
     };
     AgentDetailRow {
         found: true,
@@ -3260,7 +3279,8 @@ mod pass3_agent_snapshot_tests {
         let mut world = hecs::World::new();
         let targets = [None, Some(TargetKind::Food), Some(TargetKind::Water),
             Some(TargetKind::Sleep), Some(TargetKind::ConstructionSite),
-            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood)];
+            Some(TargetKind::Agent(99)), Some(TargetKind::GatherFood), Some(TargetKind::GatherWood),
+            Some(TargetKind::Activity)];
         let mut expected = Vec::new();
         for (code, target) in targets.into_iter().enumerate() {
             for consuming in [false, true] {
@@ -3275,7 +3295,14 @@ mod pass3_agent_snapshot_tests {
                 if consuming {
                     world.insert_one(entity, Child { born_tick: 5 }).expect("child fixture");
                 }
-                expected.push((entity, code as u8, u8::from(consuming)));
+                let state_code = match (code, consuming) {
+                    (0, _) => 0,
+                    (8, _) => 4,
+                    (5, true) => 2,
+                    (_, false) => 1,
+                    (_, true) => 3,
+                };
+                expected.push((entity, code as u8, u8::from(consuming), state_code));
             }
         }
         let rows = collect_agent_snapshot(&world);
@@ -3285,13 +3312,15 @@ mod pass3_agent_snapshot_tests {
         assert_eq!(rows.len(), expected.len());
         assert_eq!([ids.len(), xs.len(), ys.len(), states.len(), target_kinds.len(),
             life_stages.len()], [expected.len(); 6]);
-        for (entity, target, stage) in expected {
+        for (entity, target, stage, state_code) in expected {
             let index = rows.iter().position(|row| row.entity_bits == entity.to_bits().get())
                 .expect("fixture row present across archetypes");
             let detail = collect_agent_detail(&world, entity.to_bits().get());
             assert!(detail.found);
             assert_eq!((target_kinds[index], life_stages[index]), (target, stage));
             assert_eq!(i32::from(target_kinds[index]), detail.target_kind);
+            assert_eq!(states[index], state_code);
+            assert_eq!(detail.state_tag, state_code);
         }
     }
 

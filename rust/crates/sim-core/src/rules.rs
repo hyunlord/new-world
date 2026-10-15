@@ -879,6 +879,27 @@ impl WorldRules {
         rules
     }
 
+    /// Routine defaults before the separately recorded Stage A tuning round.
+    pub const V21_ROUTINE: RoutineRule = RoutineRule {
+        day_start_minute: 420,
+        day_end_minute: 1080,
+        base_duration_minutes: 90,
+        duration_span_minutes: 60,
+        min_duration_minutes: 20,
+        walk_timeout_minutes: 150,
+        rest_minutes_min: 20,
+        rest_minutes_max: 60,
+        adult_weights: [180, 180, 140, 200, 120],
+        elder_weights: [500, 500],
+    };
+
+    /// Pass 17 Stage A: all v20 rules with daily routine enabled.
+    pub const fn game_v21(seed: u64) -> Self {
+        let mut rules = Self::game_v20(seed);
+        rules.agent.routine = Some(Self::V21_ROUTINE);
+        rules
+    }
+
     /// The placebo of [`Self::game_v20`]: temperament is drawn and stored but
     /// `effects` is false, so no choice leans with it (must equal `game_v19`).
     pub const fn game_v20_inert(seed: u64) -> Self {

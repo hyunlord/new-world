@@ -1,0 +1,6 @@
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 3.255s
+
+OK
+PASS: /private/var/folders/0w/j63n8j5s46j4dl79hrwn0m2w0000gn/T/tmpq2iauhbq/report/perf.json
