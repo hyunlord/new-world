@@ -26,3 +26,6 @@ All original seeds/ticks remain valid under game_v22 (P5 remains game_v19).
 | P6 | 29 | 1 | 0 |
 
 Raw census `framings-census.json`: complete=true, failures=[], elapsed1482.304s. P6 fixture capture exit0 and visually inspected: resident inspector and GodHand panels are visible.
+
+## Independent baseline repeat
+A and Aprime completed six independent launches each. `control-comparison.json` verifies equal fixed60FPS/120-frame settle schedules and exact RGBA equality for all six framings. Candidate Part1 captures therefore require exact equality for every framing. This control result is not H5 acceptance.
