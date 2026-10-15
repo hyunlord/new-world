@@ -97,3 +97,11 @@
 - 2026-10-15T03:33:04Z pid=42489 HOLD_START owner=codex-art-pass9 purpose=p3-building-W500-attempt1 start=1792035184 load_before=1.71 contended=false waited=556s
 - 2026-10-15T03:40:52Z pid=42489 HOLD_END owner=codex-art-pass9 purpose=p3-building-W500-attempt1 start=1792035184 end=1792035652 elapsed=468 load_before=1.71 load_after=3.43 contended=false exit=0
 <!-- art-p9-last-release 1792035652 -->
+- 2026-10-15T03:52:50Z pid=41098 CHECK load=7.11 processes= waited=1772s
+- 2026-10-15T03:52:50Z pid=41098 WAIT_BUSY next_poll=300s
+- 2026-10-15T03:57:50Z pid=41098 CHECK load=1.91 processes= waited=2072s
+- 2026-10-15T03:57:50Z pid=41098 HOLD_START owner=codex-art-pass9 purpose=a30-before start=1792036670 load_before=1.91 contended=false waited=2072s
+- 2026-10-15T04:04:29Z pid=41098 HOLD_END owner=codex-art-pass9 purpose=a30-before start=1792036670 end=1792037069 elapsed=399 load_before=1.91 load_after=5.13 contended=false exit=0
+<!-- art-p9-last-release 1792037069 -->
+- 2026-10-15T04:04:54Z pid=56833 WAIT_START owner=codex-art-pass9 purpose=p3-nature-W500-attempt1 hold_limit=3600
+- 2026-10-15T04:04:54Z pid=56833 WAIT_COOLDOWN remaining=575s
