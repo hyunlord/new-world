@@ -2790,3 +2790,22 @@ Measurement only: a profiled tick, a stress world, the `worldsim_perf` benchmark
 - `game_v19` / `game_v19_nofission` pins (seeds 0–4; fingerprint and `state_digest` at 1,440 and 40,320 ticks; births by day 28 = 22, 15, 30, 8, 22; no fission by day 28) recorded on the unchanged code (`harness_revitalize_pass16_frozen.rs`).
 - Base `da8e45c7` identity vs Pass 15's final files: I1 (`game_v19`, 32 worlds, 120 days) 0 differences / 155,815 shared values; I3 (`game_v16`) 0 / 105,187; I2 (recorder `game_v19` 12000–12001) 20 / 20 array sha256 equal.
 
+
+### Pre-registered T table (PASS16_GOAL.md section 9; committed before any `game_v20` probe on seeds 16000–16031)
+
+Evaluation seeds 16000–16031 (32 worlds, 120 days, `--agent-trace`, Pass 13 round 3's flags), scenes `game_v20`, `game_v20_inert`, `game_v19`; tuning seeds 16100–16115 only (60 days). Correlations are Spearman's ρ (average ranks) over **non-elder adults** pooled across the 32 worlds (≥ 10 non-elder adult days; idle distance ≥ 50 samples; bedtime ≥ 10 nights; loads ≥ 10 deposits of that kind), with a 95 % interval from a world-level bootstrap (B = 2,000, `numpy.random.default_rng(0)` fresh per statistic, percentile interval). Computed by `tools/revitalize/evaluate_pass16.py`.
+
+| # | question | rule |
+|---|---|---|
+| T1-NS | wanderers wander | ρ(NS, mean idle distance) ≥ **0.25**, interval excludes 0, in `game_v20` |
+| T1-HA | the cautious go to bed earlier | ρ(HA, mean bed minute) ≤ **−0.25**, interval excludes 0 |
+| T1-RD | the sociable socialise more | ρ(RD, social interactions per non-elder adult day) ≥ **0.25**, interval excludes 0 |
+| T1-P | the persistent bring fuller loads | ρ(P, mean food load at deposit) ≥ **0.25**, interval excludes 0; ρ(P, mean wood load at deposit) reported (no verdict) |
+| T1-dep | explorers leave | mean NS of departers − mean NS of eligible stayers (pooled over completed fissions) ≥ **80** permille, interval excludes 0 |
+| T2 | the placebo shows nothing | in `game_v20_inert` **and** in `game_v19` (probe-computed values) every T1 statistic has \|ρ\| ≤ **0.10** (departure difference \|·\| ≤ 40) |
+| T3 | the village stays healthy | paired over the 32 worlds, `game_v20` − `game_v19`: mean alive at day 120 within **±15 %** of v19's; non-old-age deaths per world ≤ **+1.5**; old-age deaths, fissions per world and first-split day reported with intervals |
+| T4 | inheritance works | slope of child on mid-parent (births with two known parents) within **[0.35, 0.65]** (each axis); each axis's SD over alive agents at day 120, pooled, within **±20 %** of the founders' |
+| T5 | the old worlds are untouched | I1–I3, the v19 pins and both inert checks identical |
+| T6 | the budget holds | 8.5 (a) `worldsim_perf stress --rules game_v20_inert` mean tick (seed 15100, n = 500, 1 day, fed) ≤ +15 % of `--rules game_v19` the same day; (a′) `game_v20` vs `game_v19` reported, fails only above 4.0 ms; (a″) `quick` before (base build) and after (final build) reported; (b) the three-size stress slope of `AgentDecisionSystem` under `game_v20` (seeds 15100..15101, n = 100 / 500 / 1,000, 2 days, fed; fitted as `perf_p15.py`) compared with Pass 15's 1.06 — fails only if near-quadratic (≥ 1.7, PERF_BUDGET.md section 2) |
+
+Operational definitions fixed before the evaluation: "non-elder adult" = neither `Child` nor `Elder`; idle distance = Chebyshev distance from the hearth (`formation_tile`) of the first settlement listing the person, sampled at system ticks divisible by 10 while Idle between 06:00 and 18:00; bed minute = the first system tick between 18:00 and 03:00 of each night at which the person is `Consuming{Sleep}` (after midnight as 1,440 + m); a completed social interaction = leaving `Consuming{Agent}` with a loneliness drop ≥ min(25, the loneliness before); a deposit = a drop of carried food (wood) within 5 tiles of the hearth, counted with the amount carried the tick before; "non-old-age deaths" = every recorded cause except `old_age`; T4's "known parents" = both `AgentBorn` parents found and alive with a temperament at the birth.
