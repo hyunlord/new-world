@@ -42,7 +42,7 @@ impl ProbeArgs {
                 continue;
             }
             if flag == "--help" {
-                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|game_v18_nofission|game_v18|game_v19_nofission|game_v19 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
+                return Err("usage: worldsim_probe --scene legacy|game|game_v9|game_v10|game_v11|game_v12|game_v13|game_v14|game_v15|game_v16_neutral|game_v16|game_v17_nofission|game_v17|game_v18_nofission|game_v18|game_v19_nofission|game_v19|game_v20_inert|game_v20 --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,HH:MM]".into());
             }
             let value = args
                 .next()
@@ -66,10 +66,10 @@ impl ProbeArgs {
                 _ => return Err(format!("unknown argument {flag}")),
             }
         }
-        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19")
+        if !matches!(parsed.scene.as_str(), "legacy" | "game" | "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20")
             && !super::ablation::is_ablation(&parsed.scene)
         {
-            return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19 or an abl_/fwd_/abl18_ bisection scene".into());
+            return Err("scene must be legacy, game, game_v9, game_v10, game_v11, game_v12, game_v13, game_v14, game_v15, game_v16_neutral, game_v16, game_v17_nofission, game_v17, game_v18_nofission, game_v18, game_v19_nofission, game_v19, game_v20_inert, game_v20 or an abl_/fwd_/abl18_ bisection scene".into());
         }
         if parsed.seeds.is_empty() {
             return Err("seeds must be a nonempty half-open range".into());
@@ -150,7 +150,10 @@ mod tests {
         // Pass 13: game_v19 is accepted (it was rejected through Pass 12).
         assert!(parse(&["--days", "150", "--scene", "game_v19_nofission"]).is_ok());
         assert!(parse(&["--days", "150", "--scene", "game_v19"]).is_ok());
-        assert!(parse(&["--scene", "game_v20"]).is_err());
+        // Pass 16: game_v20 and its placebo are accepted (game_v20 was rejected through Pass 15).
+        assert!(parse(&["--days", "150", "--scene", "game_v20_inert"]).is_ok());
+        assert!(parse(&["--days", "150", "--scene", "game_v20"]).is_ok());
+        assert!(parse(&["--scene", "game_v21"]).is_err());
         assert!(parse(&["--days", "151"]).is_err());
     }
     #[test]

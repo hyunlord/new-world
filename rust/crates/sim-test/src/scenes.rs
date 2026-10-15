@@ -199,6 +199,38 @@ pub fn game_v19_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety)
     engine
 }
 
+/// Pass 16 fixture: world `seed` under the v20 rules (`game_v19` with
+/// temperament: four heritable axes that lean four everyday choices).
+pub fn game_v20_scene(seed: u64) -> SimEngine {
+    game_v20_scene_with(seed, &sim_core::variety::WorldVariety::draw_v18(seed))
+}
+
+/// [`game_v20_scene`] for given hidden parameters.
+pub fn game_v20_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v20_with(seed, variety),
+        sim_core::rules::WorldRules::game_v20_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
+/// Pass 16 placebo: world `seed` under `game_v20_inert` (temperament drawn
+/// and stored, no lean acts — the same world as `game_v19`).
+pub fn game_v20_inert_scene(seed: u64) -> SimEngine {
+    game_v20_inert_scene_with(seed, &sim_core::variety::WorldVariety::draw_v18(seed))
+}
+
+/// [`game_v20_inert_scene`] for given hidden parameters.
+pub fn game_v20_inert_scene_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> SimEngine {
+    let mut engine = sim_systems::worldgen::build_world_with(
+        &sim_systems::worldgen::WorldGenConfig::game_v20_with(seed, variety),
+        sim_core::rules::WorldRules::game_v20_inert_with(variety),
+    );
+    engine.resources.world_variety = Some(*variety);
+    engine
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

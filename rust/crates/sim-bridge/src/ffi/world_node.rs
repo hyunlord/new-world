@@ -182,14 +182,43 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
+/// Revitalize Pass 16 — the live game's world of `seed`: `game_v20` (the
+/// `game_v19` world with temperament). Pure (no Godot) so the harness can
+/// check it; `WorldSimNode::init` and `reset_world` call it, while
+/// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
+pub fn build_game_engine(seed: u64) -> SimEngine {
+    build_world_with(&WorldGenConfig::game_v20(seed), WorldRules::game_v20(seed))
+}
+
+/// Revitalize Pass 16 — the temperament of the agent whose
+/// `hecs::Entity::to_bits()` is `entity_bits`, or `None` when the bits are
+/// not a live entity or it carries no `Temperament` (every scene before
+/// `game_v20`). Bridge Identity Contract: `WorldSimNode::get_agent_temperament`
+/// only forwards here.
+pub fn collect_agent_temperament(world: &hecs::World, entity_bits: u64) -> Option<sim_core::components::Temperament> {
+    let entity = hecs::Entity::from_bits(entity_bits)?;
+    world.get::<&sim_core::components::Temperament>(entity).ok().map(|t| *t)
+}
+
+/// Marshals [`collect_agent_temperament`] into `{found, ns, ha, rd, p}`
+/// (ints; `found: false` and zeros when missing).
+fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperament>) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let t = temperament.unwrap_or(sim_core::components::Temperament { ns: 0, ha: 0, rd: 0, p: 0 });
+    dict.set("found", temperament.is_some());
+    dict.set("ns", i64::from(t.ns));
+    dict.set("ha", i64::from(t.ha));
+    dict.set("rd", i64::from(t.rd));
+    dict.set("p", i64::from(t.p));
+    dict
+}
+
 #[godot_api]
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            engine: build_world_with(
-                &WorldGenConfig::game_v19(DEFAULT_GAME_SEED),
-                WorldRules::game_v19(DEFAULT_GAME_SEED),
-            ),
+            // Revitalize Pass 16: the live game runs `game_v20` (temperament).
+            engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
@@ -233,10 +262,7 @@ impl WorldSimNode {
     #[func]
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_world_with(
-            &WorldGenConfig::game_v19(self.world_seed),
-            WorldRules::game_v19(self.world_seed),
-        );
+        self.engine = build_game_engine(self.world_seed);
         self.accumulator = 0.0;
         self.base_mut().call_deferred("emit_signal", &["world_reset".to_variant()]);
         true
@@ -453,6 +479,16 @@ impl WorldSimNode {
     fn get_agent_detail(&self, entity_bits: i64) -> VarDictionary {
         let row = collect_agent_detail(&self.engine.world, entity_bits as u64);
         agent_detail_to_dict(row)
+    }
+
+    /// Revitalize Pass 16 FFI — one agent's temperament as
+    /// `{found: bool, ns, ha, rd, p}` (permille ints, 0–1,000; `found: false`
+    /// and zeros when the agent or the component is missing). A separate
+    /// getter: `get_agent_detail` keeps exactly its nine keys. Displaying
+    /// temperament is the art line's job.
+    #[func]
+    fn get_agent_temperament(&self, entity_bits: i64) -> VarDictionary {
+        agent_temperament_to_dict(collect_agent_temperament(&self.engine.world, entity_bits as u64))
     }
 
     /// V7 Phase 12-β.2 (A3) FFI — construction-site snapshot for the
@@ -2818,6 +2854,33 @@ mod revitalize_tooling_tests {
     use super::{advance_engine_ticks, collect_tallies, collect_time_snapshot};
     use sim_core::material::MaterialRegistry;
     use sim_engine::{SimEngine, Tallies};
+
+    #[test]
+    fn live_game_is_game_v20() {
+        // Pass 16 6.6: init and reset_world build game_v20; the stress world stays v19.
+        let engine = super::build_game_engine(20_261_010);
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v20(20_261_010));
+        assert_eq!(engine.resources.world_seed, 20_261_010);
+        assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
+    }
+
+    #[test]
+    fn collect_agent_temperament_reads_the_component() {
+        // Pass 16 6.6: every founder of game_v20 has one; stale bits and v19 agents give None.
+        let engine = super::build_game_engine(7);
+        let mut seen = 0;
+        for (entity, t) in engine.world.query::<&sim_core::components::Temperament>().iter() {
+            assert_eq!(super::collect_agent_temperament(&engine.world, entity.to_bits().get()), Some(*t));
+            seen += 1;
+        }
+        assert_eq!(seen, engine.world.query::<&sim_core::components::Agent>().iter().count());
+        assert_eq!(super::collect_agent_temperament(&engine.world, 0), None);
+        assert_eq!(super::collect_agent_temperament(&engine.world, u64::MAX), None);
+        let v19 = super::build_stress_engine(7, 3);
+        for (entity, _) in v19.world.query::<&sim_core::components::Agent>().iter() {
+            assert_eq!(super::collect_agent_temperament(&v19.world, entity.to_bits().get()), None);
+        }
+    }
 
     #[test]
     fn stress_engine_has_the_requested_founders() {

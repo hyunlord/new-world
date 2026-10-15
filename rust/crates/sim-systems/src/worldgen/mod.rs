@@ -112,6 +112,17 @@ impl WorldGenConfig {
         Self::game_v18_with(seed, variety)
     }
 
+    /// Pass 16 generator inputs of world `seed` (`game_v20` and
+    /// `game_v20_inert`): v19's world (no worldgen change).
+    pub const fn game_v20(seed: u64) -> Self {
+        Self::game_v19(seed)
+    }
+
+    /// [`Self::game_v20`] for given hidden parameters.
+    pub const fn game_v20_with(seed: u64, variety: &sim_core::variety::WorldVariety) -> Self {
+        Self::game_v19_with(seed, variety)
+    }
+
     /// Revitalize Pass 15 stress world: [`Self::game_v19`]`(seed)` with
     /// `agents` founders on a `side × side` map (run it under
     /// `WorldRules::game_v19(seed)`). Benchmark-only; not a game scene; never

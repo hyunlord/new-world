@@ -1,5 +1,6 @@
 //! A bounded scoped pool; each worker owns independent engines and output files.
 use super::{
+    agent_trace::{AgentTracer, ProbeOptions},
     args::{clock_tick, ProbeArgs},
     deaths::{Census, DeathTracker},
     long_run::{self, MaturationMonitor},
@@ -64,6 +65,12 @@ pub(super) struct RunResult {
 
 /// Execute a scoped pool, write raw JSONL and aggregate summaries, and check twins.
 pub fn run(args: &ProbeArgs) -> Result<(), String> {
+    run_with(args, &ProbeOptions::default())
+}
+
+/// [`run`] with this pass's options (Pass 16: `--agent-trace` writes the
+/// per-person files next to the usual outputs, which stay unchanged).
+pub fn run_with(args: &ProbeArgs, options: &ProbeOptions) -> Result<(), String> {
     fs::create_dir_all(&args.out).map_err(|e| e.to_string())?;
     let results = std::thread::scope(|scope| {
         let mut handles = Vec::new();
@@ -71,7 +78,7 @@ pub fn run(args: &ProbeArgs) -> Result<(), String> {
             handles.push(scope.spawn(move || {
                 let mut runs = Vec::new();
                 for seed in args.seeds.clone().skip(worker).step_by(args.workers) {
-                    runs.push(run_seed(args, seed)?);
+                    runs.push(run_seed(args, options, seed)?);
                 }
                 Ok::<_, String>(runs)
             }));
@@ -93,6 +100,31 @@ pub fn run(args: &ProbeArgs) -> Result<(), String> {
         println!("DETERMINISM PASS");
     }
     Ok(())
+}
+
+/// Pass 16: writes `<scene>_s<seed>_agents.jsonl` (one line per person who
+/// was ever a non-elder adult), `_people.jsonl` (every person),
+/// `_fissions.jsonl` (every fission) and `_trace_meta.json`.
+fn write_trace(args: &ProbeArgs, seed: u64, engine: &SimEngine, tracer: &AgentTracer, git_sha: &str) -> Result<(), String> {
+    let (agents, people, fissions, mut meta) = tracer.finish(engine);
+    for (suffix, lines) in [("agents", agents), ("people", people), ("fissions", fissions)] {
+        let mut out = BufWriter::new(
+            File::create(args.out.join(format!("{}_s{seed}_{suffix}.jsonl", args.scene))).map_err(|e| e.to_string())?,
+        );
+        for line in lines {
+            serde_json::to_writer(&mut out, &line).map_err(|e| e.to_string())?;
+            out.write_all(b"\n").map_err(|e| e.to_string())?;
+        }
+        out.flush().map_err(|e| e.to_string())?;
+    }
+    meta["scene"] = serde_json::json!(args.scene);
+    meta["seed"] = serde_json::json!(seed);
+    meta["git_sha"] = serde_json::json!(git_sha);
+    fs::write(
+        args.out.join(format!("{}_s{seed}_trace_meta.json", args.scene)),
+        serde_json::to_string_pretty(&meta).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())
 }
 
 fn check_sample(first: &Value, second: &Value, seed: u64) -> Result<(), String> {
@@ -124,16 +156,20 @@ pub(crate) fn scene_engine(scene: &str, seed: u64) -> SimEngine {
         "game_v18" => crate::scenes::game_v18_scene(seed),
         "game_v19_nofission" => crate::scenes::game_v19_nofission_scene(seed),
         "game_v19" => crate::scenes::game_v19_scene(seed),
+        "game_v20_inert" => crate::scenes::game_v20_inert_scene(seed),
+        "game_v20" => crate::scenes::game_v20_scene(seed),
         // Pass 12 Part 1: the test-only J6 bisection scenes.
         name if super::ablation::is_ablation(name) => super::ablation::engine(name, seed).unwrap_or_else(crate::scenes::legacy_scene),
         _ => crate::scenes::legacy_scene(),
     }
 }
 
-fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
+fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunResult, String> {
     let started = Instant::now();
     let make_scene = || scene_engine(&args.scene, seed);
     let mut engine = make_scene();
+    // Pass 16: the per-person observer (only with `--agent-trace`).
+    let mut tracer = options.agent_trace.then(|| AgentTracer::start(&engine));
     let initial_shelters = shelter_count(&engine);
     let seed_info = super::pass10::seed_info(&engine);
     let mut exposure_death_ticks = Vec::new();
@@ -287,6 +323,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
         engine.tick();
         let elapsed = tick_started.elapsed();
         let (records, observer_time) = deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
+        if let Some(tracer) = &mut tracer {
+            tracer.after_tick(&engine);
+        }
         tick_seconds += elapsed.saturating_sub(observer_time).as_secs_f64();
         for record in records {
             if record["cause"] == "exposure" {
@@ -350,6 +389,9 @@ fn run_seed(args: &ProbeArgs, seed: u64) -> Result<RunResult, String> {
     }
     output.flush().map_err(|e| e.to_string())?;
     death_output.flush().map_err(|e| e.to_string())?;
+    if let Some(tracer) = &tracer {
+        write_trace(args, seed, &engine, tracer, &git_sha)?;
+    }
     let agent_days = agent_ticks as f64 / ticks_per_day as f64;
     eprintln!(
         "PROBE seed={seed} shelter_plan_skips={}",
@@ -404,7 +446,7 @@ fn share(numerator: u64, denominator: u64) -> f64 {
 /// Whether `scene` takes the observable twin check and the trace/fingerprint
 /// twin check in `run_seed` (both read this one list; Pass 10 adds the v16 scenes).
 fn twin_checked(scene: &str) -> bool {
-    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19")
+    matches!(scene, "game_v9" | "game_v10" | "game_v11" | "game_v12" | "game_v13" | "game_v14" | "game_v15" | "game_v16_neutral" | "game_v16" | "game_v17_nofission" | "game_v17" | "game_v18_nofission" | "game_v18" | "game_v19_nofission" | "game_v19" | "game_v20_inert" | "game_v20")
         || super::ablation::is_ablation(scene)
 }
 
@@ -417,7 +459,7 @@ mod tests {
         let source = include_str!("runner.rs");
         assert_eq!(source.matches(&["if ", "twin_checked(&args.scene)"].concat()).count(), 2);
         assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
-        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "abl_no_regions", "abl18_no_regions"] {
+        for scene in ["game_v15", "game_v16_neutral", "game_v16", "game_v17_nofission", "game_v17", "game_v18_nofission", "game_v18", "game_v19_nofission", "game_v19", "game_v20_inert", "game_v20", "abl_no_regions", "abl18_no_regions"] {
             assert!(super::twin_checked(scene));
             assert_eq!(super::scene_engine(scene, 3).resources.world_seed, 3);
         }

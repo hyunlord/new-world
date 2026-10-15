@@ -152,6 +152,19 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
             if engine.resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
                 let _ = engine.world.insert_one(entity, sim_core::components::Hardiness::draw(cfg.seed, lineage.key));
             }
+            // Pass 16: under the temperament rule (`game_v20`) every founder
+            // carries its temperament, keyed on its lineage (replicate 0: an
+            // identity trait); with effects its loneliness rate leans with RD
+            // (a mutation of the `Social` inserted above: no archetype change).
+            if let Some(rule) = engine.resources.rules.agent.temperament {
+                let temperament = sim_core::components::Temperament::founder(cfg.seed, lineage.key);
+                let _ = engine.world.insert_one(entity, temperament);
+                if rule.effects {
+                    if let Ok(mut social) = engine.world.get::<&mut Social>(entity) {
+                        social.growth_rate = rule.social_rate(social.growth_rate, &temperament);
+                    }
+                }
+            }
         }
         // Pass 4: founders start already aged, from their own aging stream.
         if let Some(rule) = engine.resources.rules.society.aging {

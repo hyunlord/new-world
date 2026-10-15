@@ -59,9 +59,9 @@ use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Hunger, Inventory, Memory,
     Founding, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId, SettlementMigrant, Sleep, Social,
-    TargetKind, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
+    TargetKind, Temperament, Thirst, INVENTORY_CAPACITY, SALIENCE_FLOOR,
 };
-use sim_core::rules::{FirewoodRule, ForageRule};
+use sim_core::rules::{FirewoodRule, ForageRule, NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
 use crate::runtime::memory::MAX_RECENCY_TICKS;
@@ -236,6 +236,26 @@ pub fn clock_in_window(resources: &SimResources, start: u32, end: u32) -> bool {
         start,
         end,
     )
+}
+
+/// Pass 16 (`game_v20`, HA → bedtime): the night-rest rule in force for one
+/// person at day tick `day_tick` (`(tick + clock_offset_ticks) %
+/// ticks_per_day`; None when the day has no ticks): `rule` while the clock
+/// lies in the person's own window — their bedtime `lean.bedtime(start, t)` to
+/// the unchanged end — else None. Without a lean or a temperament the window
+/// is the rule's own, i.e. the global filtered rule.
+pub fn person_night_rest(
+    rule: Option<NightRestRule>,
+    lean: Option<TemperamentRule>,
+    temperament: Option<&Temperament>,
+    day_tick: Option<u64>,
+) -> Option<NightRestRule> {
+    let rule = rule?;
+    let start = match (lean, temperament) {
+        (Some(lean), Some(t)) => lean.bedtime(rule.start_minute, t),
+        _ => rule.start_minute,
+    };
+    day_tick.is_some_and(|minute| minute_in_window(minute, start, rule.end_minute)).then_some(rule)
 }
 
 /// Active fatigue threshold shared by simulation decisions and probe accounting.
@@ -638,6 +658,30 @@ impl RuntimeSystem for AgentDecisionSystem {
         let fatigue_threshold = fatigue_threshold_at(resources);
         let night_rest = resources.rules.agent.night_rest.filter(|rule|
             clock_in_window(resources, rule.start_minute, rule.end_minute));
+        // Pass 16 (`game_v20`): a resident's temperament gives it its own
+        // night window (HA → bedtime) and, for workers, its own haul loads
+        // (P). Without the rule or the component every person keeps the
+        // global `night_rest` / `fatigue_threshold` above (the old path).
+        let temperament_rule = resources.rules.agent.temperament;
+        let day_tick = (resources.ticks_per_day != 0).then(|| {
+            resources.current_tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day
+        });
+        let night_rule = resources.rules.agent.night_rest;
+        let rest_for = move |temperament: Option<&Temperament>| -> (Option<NightRestRule>, f64) {
+            match temperament_rule.zip(temperament) {
+                None => (night_rest, fatigue_threshold),
+                Some((lean, t)) => {
+                    let rest = person_night_rest(night_rule, Some(lean), Some(t), day_tick);
+                    (rest, rest.map_or(FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold))
+                }
+            }
+        };
+        let haul_for = move |worker: bool, temperament: Option<&Temperament>| -> (Option<TemperamentRule>, Option<Temperament>) {
+            match temperament_rule.zip(temperament.copied()).filter(|_| worker) {
+                Some((lean, t)) => (Some(lean), Some(t)),
+                None => (None, None),
+            }
+        };
         let children: BTreeSet<AgentId> = world.query::<(&Agent, &Child)>()
             .iter().map(|(_, (agent, _))| agent.id).collect();
         // Pass 4 — elders stay at the camp: no building, foraging, gathering or combat.
@@ -693,12 +737,18 @@ impl RuntimeSystem for AgentDecisionSystem {
             let mut agents: Vec<_> = world.query::<(
                 &Agent, &Position, &AgentState, Option<&SeekTarget>,
                 Option<&Hunger>, Option<&Thirst>, Option<&Sleep>, Option<&Social>, Option<&Inventory>,
-            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social, inv))| {
+                Option<&Temperament>,
+            )>().iter().map(|(_, (a, p, state, seek, h, t, sleep, social, inv, temperament))| {
+                // Pass 16: this person's own night threshold and haul loads.
+                let (_, fatigue_threshold) = rest_for(temperament);
+                let (lean, lean_t) = haul_for(!children.contains(&a.id) && !elders.contains(&a.id), temperament);
                 // Pass 4: a member carrying a full haul load delivers it before building.
                 let loaded = forage_rule.is_some_and(|rule| {
-                    inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= rule.haul_threshold)
+                    let load = match (lean, &lean_t) { (Some(lean), Some(t)) => lean.food_haul(rule.haul_threshold, t), _ => rule.haul_threshold };
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Food) >= load)
                 }) || firewood_rule.is_some_and(|rule| {
-                    inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= rule.haul_threshold)
+                    let load = match (lean, &lean_t) { (Some(lean), Some(t)) => lean.wood_haul(rule.haul_threshold, t), _ => rule.haul_threshold };
+                    inv.is_some_and(|inv| inv.get(ResourceKind::Wood) >= load)
                 });
                 (a.id, (p.x, p.y), *state, seek.map(|s| s.tile),
                  !children.contains(&a.id) && !elders.contains(&a.id) && !founding.contains_key(&a.id)
@@ -845,8 +895,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&Thirst>,
                 Option<&Sleep>,
                 Option<&Social>,
+                Option<&Temperament>,
             )>();
-            for (_, (a, pos, state, h, t, s, social_opt)) in q.iter() {
+            for (_, (a, pos, state, h, t, s, social_opt, temperament)) in q.iter() {
+                // Pass 16: this person's own night threshold.
+                let (_, fatigue_threshold) = rest_for(temperament);
                 if children.contains(&a.id) || !matches!(*state, AgentState::Idle)
                     || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
                 {
@@ -902,8 +955,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         // cascade.
         let social_partner_breached_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>, Option<&Sleep>)>();
-            for (_, (a, pos, state, social_opt, sleep)) in q.iter() {
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Social>, Option<&Sleep>, Option<&Temperament>)>();
+            for (_, (a, pos, state, social_opt, sleep, temperament)) in q.iter() {
+                // Pass 16: the peer's own night window.
+                let (night_rest, fatigue_threshold) = rest_for(temperament);
                 if children.contains(&a.id) || !matches!(*state, AgentState::Idle)
                     || (social_rule.is_some() && resources.social_retry_after.contains_key(&a.id))
                 {
@@ -924,8 +979,10 @@ impl RuntimeSystem for AgentDecisionSystem {
         // `loneliness > SOCIAL_THRESHOLD`.
         let all_idle_peers_by_pos: HashMap<(u32, u32), Vec<AgentId>> = {
             let mut map: HashMap<(u32, u32), Vec<AgentId>> = HashMap::new();
-            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Sleep>)>();
-            for (_, (a, pos, state, sleep)) in q.iter() {
+            let mut q = world.query::<(&Agent, &Position, &AgentState, Option<&Sleep>, Option<&Temperament>)>();
+            for (_, (a, pos, state, sleep, temperament)) in q.iter() {
+                // Pass 16: the peer's own night window.
+                let (night_rest, fatigue_threshold) = rest_for(temperament);
                 if !children.contains(&a.id) && matches!(*state, AgentState::Idle)
                     && (night_rest.is_none() || sleep.is_none_or(|s| s.fatigue <= fatigue_threshold))
                     && (social_rule.is_none() || !resources.social_retry_after.contains_key(&a.id))
@@ -991,6 +1048,7 @@ impl RuntimeSystem for AgentDecisionSystem {
             Option<&Memory>,
             Option<&mut Inventory>,
             Option<&SettlementMigrant>,
+            Option<&Temperament>,
         )>();
         // Pass 9: under keyed draws the agents are processed in AgentId order
         // (first-come claims, tile decrements and event ids no longer follow
@@ -1012,9 +1070,14 @@ impl RuntimeSystem for AgentDecisionSystem {
                 memory_opt,
                 mut inventory_opt,
                 migrant_marker,
+                temperament,
             ),
         ) in rows
         {
+            // Pass 16 (`game_v20`): this person's own night window (HA) — every
+            // clock-filtered night-rest read below — and, for a worker, its own
+            // haul loads (P). Without the rule or the component: the globals.
+            let (night_rest, fatigue_threshold) = rest_for(temperament);
             let tile_idx = pos.y * width + pos.x;
             // Pass 12: this member's food availability (see `local_food`).
             let availability = local_food
@@ -1022,14 +1085,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                 .map_or(availability, |food| NeedAvailability { food: *food && availability.food, ..availability });
             let adult = !children.contains(&agent.id);
             let worker = adult && !elders.contains(&agent.id);
+            let (haul_lean, haul_t) = haul_for(worker, temperament);
+            let food_haul = |base: u32| match (haul_lean, &haul_t) {
+                (Some(lean), Some(t)) => lean.food_haul(base, t),
+                _ => base,
+            };
+            let wood_haul = |base: u32| match (haul_lean, &haul_t) {
+                (Some(lean), Some(t)) => lean.wood_haul(base, t),
+                _ => base,
+            };
             let social_ready = adult && (social_rule.is_none()
                 || !resources.social_retry_after.contains_key(&agent.id));
             // Pass 5 — under the firewood rule a member carrying a full food
             // or wood load hauls it home before any work arm fires again.
             let loaded = firewood_rule.is_some_and(|rule| {
                 inventory_opt.as_ref().is_some_and(|inv| {
-                    inv.get(ResourceKind::Wood) >= rule.haul_threshold
-                        || forage_rule.is_some_and(|forage| inv.get(ResourceKind::Food) >= forage.haul_threshold)
+                    inv.get(ResourceKind::Wood) >= wood_haul(rule.haul_threshold)
+                        || forage_rule.is_some_and(|forage| inv.get(ResourceKind::Food) >= food_haul(forage.haul_threshold))
                 })
             });
             // Pass 5 — under gathering preemption a member whose hunger or
@@ -1500,7 +1572,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         let plan = forage_plans.get(sid)?;
                         let inv = inventory_opt.as_ref()?;
                         let room = inv.total() < INVENTORY_CAPACITY;
-                        let light = inv.get(ResourceKind::Food) < rule.haul_threshold;
+                        let light = inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold);
                         if !(room && light && (plan.in_hand as f64) < plan.target) {
                             return None;
                         }
@@ -1525,7 +1597,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         }
                         let inv = inventory_opt.as_ref()?;
                         let room = inv.total() < INVENTORY_CAPACITY;
-                        let light = inv.get(ResourceKind::Wood) < rule.haul_threshold;
+                        let light = inv.get(ResourceKind::Wood) < wood_haul(rule.haul_threshold);
                         if !(room && light && (plan.in_hand as f64) < plan.target) {
                             return None;
                         }
@@ -1557,7 +1629,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // also stops at a haul load and, for members, once the
                         // stock in hand reaches the hoard cap.
                         let bounded = forage_rule.is_none_or(|rule| {
-                            inventory_opt.as_ref().is_some_and(|inv| inv.get(ResourceKind::Food) < rule.haul_threshold)
+                            inventory_opt.as_ref().is_some_and(|inv| inv.get(ResourceKind::Food) < food_haul(rule.haul_threshold))
                                 && member_of.get(&agent.id).and_then(|sid| forage_plans.get(sid)).is_none_or(|plan| {
                                     let cap = resources.rules.society.stock_target.map_or(0.0, |r| r.hoard_cap_factor);
                                     (plan.in_hand as f64) < cap * plan.target
@@ -2036,7 +2108,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // remove an emptied spot (regrowth recreates it). The
                         // transition to Idle is unconditional (freeze-critical).
                         TargetKind::GatherWood => {
-                            let load = resources.rules.society.firewood.map_or(0, |rule| rule.haul_threshold);
+                            let load = resources.rules.society.firewood.map_or(0, |rule| wood_haul(rule.haul_threshold));
                             if let Some(inv) = inventory_opt.as_mut() {
                                 let carried = inv.get(ResourceKind::Wood);
                                 let room = INVENTORY_CAPACITY.saturating_sub(inv.total());
@@ -2681,5 +2753,97 @@ mod tests {
             }
             _ => unreachable!(),
         }
+    }
+
+    /// Pass 16: an engine at clock minute `minute` under v19's night rest and
+    /// v20's temperament rule, with one adult at (5, 5) of harm avoidance `ha`
+    /// (None: no `Temperament` component) in `state` with `fatigue`.
+    fn sleeper(minute: u64, ha: Option<u16>, state: AgentState, fatigue: f64) -> (SimEngine, hecs::Entity) {
+        let mut e = fresh_engine();
+        let v20 = sim_core::rules::WorldRules::game_v20(0);
+        e.resources.rules.agent.night_rest = v20.agent.night_rest;
+        e.resources.rules.agent.temperament = v20.agent.temperament;
+        e.resources.rules.clock_offset_ticks = minute;
+        let entity = e.spawn_agent(5, 5);
+        e.world.insert(entity, (state, Sleep::new(fatigue, 0.0))).unwrap();
+        if let Some(ha) = ha {
+            e.world.insert_one(entity, Temperament { ns: 500, ha, rd: 500, p: 500 }).unwrap();
+        }
+        e.resources.sleep_tiles.insert((5, 5), RESOURCE_SOURCE_INFINITE);
+        (e, entity)
+    }
+
+    #[test]
+    fn person_night_rest_is_the_own_window() {
+        let rule = sim_core::rules::WorldRules::game_v20(0).agent.night_rest;
+        let lean = sim_core::rules::WorldRules::game_v20(0).agent.temperament;
+        let cautious = Temperament { ns: 500, ha: 1000, rd: 500, p: 500 };
+        let bold = Temperament { ns: 500, ha: 0, rd: 500, p: 500 };
+        // 20:30 — only the cautious (bedtime 20:00) are in their night.
+        assert!(person_night_rest(rule, lean, Some(&cautious), Some(1230)).is_some());
+        assert!(person_night_rest(rule, lean, Some(&bold), Some(1230)).is_none());
+        assert!(person_night_rest(rule, lean, None, Some(1230)).is_none());
+        // 21:30 — the bold (bedtime 22:00) are still up; the mean person is not.
+        assert!(person_night_rest(rule, lean, Some(&bold), Some(1290)).is_none());
+        assert!(person_night_rest(rule, lean, None, Some(1290)).is_some());
+        // 22:00 to 06:00 everyone; the end is unchanged.
+        for minute in [1320, 0, 359] {
+            assert!(person_night_rest(rule, lean, Some(&bold), Some(minute)).is_some());
+            assert!(person_night_rest(rule, lean, Some(&cautious), Some(minute)).is_some());
+        }
+        assert!(person_night_rest(rule, lean, Some(&cautious), Some(360)).is_none());
+        // No day ticks, no rule: never.
+        assert!(person_night_rest(rule, lean, Some(&cautious), None).is_none());
+        assert!(person_night_rest(None, lean, Some(&cautious), Some(0)).is_none());
+    }
+
+    #[test]
+    fn cautious_sleeper_stays_asleep_from_twenty_hundred() {
+        // HA 1000: bedtime 20:00. Asleep at 20:00, it keeps sleeping (sustained
+        // recovery 0.12 a tick) through 21:00 — no one-shot rest, no nap cycle.
+        let (mut e, entity) = sleeper(1200, Some(1000), AgentState::Consuming { target: TargetKind::Sleep }, 40.0);
+        let mut sys = AgentDecisionSystem::new();
+        for step in 0..70u64 {
+            sys.tick(&mut e.world, &mut e.resources);
+            e.resources.current_tick += 1;
+            let state = *e.world.get::<&AgentState>(entity).unwrap();
+            assert_eq!(state, AgentState::Consuming { target: TargetKind::Sleep }, "tick {step}");
+        }
+        let fatigue = e.world.get::<&Sleep>(entity).unwrap().fatigue;
+        assert!((fatigue - (40.0 - 70.0 * 0.12)).abs() < 1e-9, "{fatigue}");
+    }
+
+    #[test]
+    fn before_bedtime_sleep_is_the_legacy_one_shot() {
+        // At 20:30 a bold person (bedtime 22:00) and a person without the
+        // component (21:00) are outside their nights: the legacy rest.
+        for ha in [Some(0), None] {
+            let (mut e, entity) = sleeper(1230, ha, AgentState::Consuming { target: TargetKind::Sleep }, 40.0);
+            AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+            assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle, "{ha:?}");
+            assert_eq!(e.world.get::<&Sleep>(entity).unwrap().fatigue, 40.0 - FATIGUE_CONSUME_AMOUNT, "{ha:?}");
+        }
+    }
+
+    #[test]
+    fn idle_cautious_person_seeks_bed_at_its_own_bedtime() {
+        // Fatigue 5 at 20:30: below the day threshold, above the night one (0).
+        for (ha, seeks) in [(Some(1000), true), (Some(0), false), (None, false), (Some(500), false)] {
+            let (mut e, entity) = sleeper(1230, ha, AgentState::Idle, 5.0);
+            AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+            let state = *e.world.get::<&AgentState>(entity).unwrap();
+            assert_eq!(state == (AgentState::Seeking { target: TargetKind::Sleep }), seeks, "{ha:?} {state:?}");
+        }
+    }
+
+    #[test]
+    fn inert_temperament_keeps_the_global_window() {
+        // effects false: a cautious person keeps the 21:00 window.
+        let (mut e, entity) = sleeper(1230, Some(1000), AgentState::Idle, 5.0);
+        if let Some(rule) = e.resources.rules.agent.temperament.as_mut() {
+            rule.effects = false;
+        }
+        AgentDecisionSystem::new().tick(&mut e.world, &mut e.resources);
+        assert_eq!(*e.world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
     }
 }

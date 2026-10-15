@@ -64,7 +64,9 @@ impl Feed {
 pub struct RunSpec {
     /// `natural`, `stress`, `map` or `quick`.
     pub mode: String,
-    /// The probe scene name, or `stress_v19` for the stress world.
+    /// The probe scene name, or the stress world's label: `stress_v19`
+    /// (`game_v19` rules), `stress_v20` or `stress_v20_inert` (Pass 16
+    /// `--rules`; the same world under `game_v20` / `game_v20_inert` rules).
     pub scene: String,
     /// World seed.
     pub seed: u64,
@@ -100,10 +102,30 @@ pub fn build_engine(spec: &RunSpec) -> Result<SimEngine, String> {
     let scene = spec.scene.clone();
     let (seed, agents, side) = (spec.seed, spec.agents, spec.side);
     std::panic::catch_unwind(move || match agents {
-        Some(n) => build_world_with(&WorldGenConfig::stress_v19(seed, n, side), WorldRules::game_v19(seed)),
+        Some(n) => build_world_with(&WorldGenConfig::stress_v19(seed, n, side), stress_rules(&scene, seed)),
         None => crate::probe::scene_engine(&scene, seed),
     })
     .map_err(|payload| panic_text(payload.as_ref()))
+}
+
+/// Pass 16: the rules of a stress world by its label (`stress_v20`,
+/// `stress_v20_inert`; anything else is today's `game_v19`).
+pub fn stress_rules(label: &str, seed: u64) -> WorldRules {
+    match label {
+        "stress_v20" => WorldRules::game_v20(seed),
+        "stress_v20_inert" => WorldRules::game_v20_inert(seed),
+        _ => WorldRules::game_v19(seed),
+    }
+}
+
+/// Pass 16: the stress label of the `--rules` choice stored in
+/// `PerfArgs::scene` for `stress` / `quick` / `map`.
+pub fn stress_label(rules: &str) -> &'static str {
+    match rules {
+        "game_v20" => "stress_v20",
+        "game_v20_inert" => "stress_v20_inert",
+        _ => "stress_v19",
+    }
 }
 
 fn panic_text(payload: &(dyn std::any::Any + Send)) -> String {
@@ -637,7 +659,7 @@ pub struct PerfArgs {
 }
 
 /// The usage line.
-pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
+pub const USAGE: &str = "usage: worldsim_perf natural --scene game_v19 --seeds A..B --days D --out DIR\n       worldsim_perf stress --seeds A..B --agents 25,50,... --side 64 --days 2 --feed fed|raw [--rules game_v19|game_v20|game_v20_inert] --out DIR\n       worldsim_perf map --seeds A..B --sides 64,128,256 --days 2 --out DIR\n       worldsim_perf overhead --seed S --days D --repeats 3 --out DIR\n       worldsim_perf quick --out DIR";
 
 impl PerfArgs {
     /// Parse `args` (without the program name).
@@ -655,11 +677,19 @@ impl PerfArgs {
             out: PathBuf::new(),
         };
         let list = |v: &str| v.split(',').map(|x| x.trim().parse::<u32>().map_err(|e| format!("{v}: {e}"))).collect::<Result<Vec<_>, _>>();
+        // Pass 16: `--rules` picks the stress world's rules (default game_v19).
+        let mut rules: Option<String> = None;
         let mut i = 1;
         while i < args.len() {
             let value = args.get(i + 1).ok_or_else(|| format!("{} needs a value", args[i]))?;
             match args[i].as_str() {
                 "--scene" => parsed.scene = value.clone(),
+                "--rules" => {
+                    if !matches!(value.as_str(), "game_v19" | "game_v20" | "game_v20_inert") {
+                        return Err(format!("--rules game_v19|game_v20|game_v20_inert, not {value}"));
+                    }
+                    rules = Some(value.clone());
+                }
                 "--seeds" => {
                     let (a, b) = value.split_once("..").ok_or("--seeds takes A..B")?;
                     parsed.seeds = a.parse::<u64>().map_err(|e| e.to_string())?..b.parse::<u64>().map_err(|e| e.to_string())?;
@@ -696,6 +726,13 @@ impl PerfArgs {
         }
         if parsed.out.as_os_str().is_empty() {
             return Err(format!("--out is required\n{USAGE}"));
+        }
+        // Stress, quick and map ignore `--scene` (as before); `--rules` is
+        // kept in `scene` for them, and only for them.
+        match (mode.as_str(), rules) {
+            ("stress" | "quick" | "map", rules) => parsed.scene = rules.unwrap_or_else(|| "game_v19".into()),
+            (_, Some(_)) => return Err(format!("--rules applies to stress, quick and map\n{USAGE}")),
+            (_, None) => {}
         }
         if matches!(mode.as_str(), "natural" | "overhead") && !parsed.scene.starts_with("game") {
             return Err(format!("--scene must be a game scene, not {}", parsed.scene));
@@ -735,7 +772,7 @@ impl PerfArgs {
                 let side = self.sides[0];
                 'sizes: for &agents in &self.agents {
                     for seed in self.seeds.clone() {
-                        let spec = RunSpec { mode: self.mode.clone(), scene: "stress_v19".into(), seed, agents: Some(agents), side, feed: self.feed, ticks };
+                        let spec = RunSpec { mode: self.mode.clone(), scene: stress_label(&self.scene).into(), seed, agents: Some(agents), side, feed: self.feed, ticks };
                         let entry = run_and_write(dir, &spec)?;
                         let slow = entry["wall_seconds"].as_f64().is_some_and(|w| w > SIZE_WALL_LIMIT_SECONDS);
                         record(entry)?;
@@ -751,7 +788,7 @@ impl PerfArgs {
                 for &side in &self.sides {
                     for seed in self.seeds.clone() {
                         let founders = WorldGenConfig::game_v19(seed).starting_agents;
-                        let spec = RunSpec { mode: "map".into(), scene: "stress_v19".into(), seed, agents: Some(founders), side, feed: Feed::Fed, ticks };
+                        let spec = RunSpec { mode: "map".into(), scene: stress_label(&self.scene).into(), seed, agents: Some(founders), side, feed: Feed::Fed, ticks };
                         record(run_and_write(dir, &spec)?)?;
                     }
                 }
@@ -897,5 +934,26 @@ mod tests {
         assert!(PerfArgs::parse(&a("stress --seeds 1..2 --frobnicate 3 --out z")).is_err());
         let o = PerfArgs::parse(&a("overhead --seed 15000 --days 30 --repeats 3 --out w")).expect("overhead");
         assert_eq!((o.seeds, o.days, o.repeats), (15000..15001, 30, 3));
+    }
+
+    #[test]
+    fn rules_flag_picks_the_stress_rules_and_label() {
+        // Pass 16 8.5: --rules (default game_v19, today's behaviour; --scene stays ignored by stress).
+        let a = |s: &str| s.split_whitespace().map(String::from).collect::<Vec<_>>();
+        for (flag, label) in [("", "stress_v19"), ("--rules game_v19", "stress_v19"), ("--rules game_v20", "stress_v20"), ("--rules game_v20_inert", "stress_v20_inert")] {
+            let p = PerfArgs::parse(&a(&format!("stress --seeds 1..2 {flag} --out x"))).expect("stress");
+            assert_eq!(stress_label(&p.scene), label, "{flag}");
+        }
+        let ignored = PerfArgs::parse(&a("stress --scene game_v16 --seeds 1..2 --out x")).expect("stress");
+        assert_eq!(stress_label(&ignored.scene), "stress_v19");
+        assert!(PerfArgs::parse(&a("stress --rules game_v18 --out x")).is_err());
+        assert!(PerfArgs::parse(&a("natural --rules game_v20 --seeds 0..1 --days 1 --out z")).is_err());
+        let q = PerfArgs::parse(&a("quick --out y")).expect("quick");
+        assert_eq!(stress_label(&q.scene), "stress_v19");
+        for (label, rules) in [("stress_v19", WorldRules::game_v19(9)), ("stress_v20", WorldRules::game_v20(9)), ("stress_v20_inert", WorldRules::game_v20_inert(9))] {
+            let spec = RunSpec { mode: "stress".into(), scene: label.into(), seed: 9, agents: Some(30), side: 64, feed: Feed::Fed, ticks: 1 };
+            assert_eq!(build_engine(&spec).expect("engine").resources.rules, rules);
+            assert!(spec.stem(30).starts_with(&format!("stress_{label}_s9_n30")));
+        }
     }
 }

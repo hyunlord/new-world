@@ -1,5 +1,6 @@
 //! Deterministic headless instrumentation; none of these measurements feeds simulation.
 pub mod ablation;
+mod agent_trace;
 mod args;
 mod deaths;
 mod deaths_observer;
@@ -18,9 +19,10 @@ pub(crate) mod pass13;
 mod runner;
 mod summary;
 
+pub use agent_trace::ProbeOptions;
 pub use args::ProbeArgs;
 pub use fingerprint::fingerprint;
-pub use runner::run;
+pub use runner::{run, run_with};
 pub(crate) use runner::scene_engine;
 
 #[cfg(test)]

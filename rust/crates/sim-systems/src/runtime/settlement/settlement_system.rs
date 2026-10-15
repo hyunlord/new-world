@@ -832,6 +832,22 @@ impl SettlementSystem {
                     births: 0,
                 })
             });
+            // Pass 16: the named parents' temperaments (`game_v20`; the two
+            // lowest-id members above — real couples are a later pass's job).
+            let parent_temperaments: [Option<sim_core::components::Temperament>; 2] =
+                if resources.rules.agent.temperament.is_some() && lineage.is_some() {
+                    let mut found = [None; 2];
+                    for (_, (agent, temperament)) in world.query::<(&Agent, &sim_core::components::Temperament)>().iter() {
+                        for (slot, id) in parent_ids.iter().take(2).enumerate() {
+                            if agent.id == *id {
+                                found[slot] = Some(*temperament);
+                            }
+                        }
+                    }
+                    found
+                } else {
+                    [None; 2]
+                };
             let new_agent_id = resources.issue_agent_id();
             let entity = world.spawn((
                 Position::new(spawn_pos.0, spawn_pos.1),
@@ -876,6 +892,18 @@ impl SettlementSystem {
                 // (replicate 0: an identity trait, not noise).
                 if resources.rules.society.exposure.is_some_and(|rule| rule.use_hardiness) {
                     let _ = world.insert_one(entity, sim_core::components::Hardiness::draw(resources.world_seed, lineage.key));
+                }
+                // Pass 16: a newborn's temperament from its lineage key and the
+                // named parents' (`game_v20`); with effects its loneliness rate
+                // leans with RD (a mutation: no archetype change).
+                if let Some(rule) = resources.rules.agent.temperament {
+                    let temperament = sim_core::components::Temperament::child(resources.world_seed, lineage.key, parent_temperaments);
+                    let _ = world.insert_one(entity, temperament);
+                    if rule.effects {
+                        if let Ok(mut social) = world.get::<&mut Social>(entity) {
+                            social.growth_rate = rule.social_rate(social.growth_rate, &temperament);
+                        }
+                    }
                 }
             }
             if resources.rules.society.life_stage.is_some() {

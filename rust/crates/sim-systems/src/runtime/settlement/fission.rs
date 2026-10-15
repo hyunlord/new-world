@@ -92,10 +92,10 @@ use hecs::World;
 use sim_core::causal::event::{CausalEvent, DissolutionCause};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingKind, Child, Elder, Founding, Lineage, Position, ResourceKind, SeekTarget,
-    SettlementId, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
+    SettlementId, Temperament, SETTLEMENT_FORMATION_AGENT_THRESHOLD, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::fission_threshold::fission_threshold;
-use sim_core::rng::{keyed_below, keyed_u64, STREAM_FISSION, STREAM_FISSION_HAZARD};
+use sim_core::rng::{keyed_below, keyed_u64, keyed_unit_f64, STREAM_FISSION, STREAM_FISSION_HAZARD};
 use sim_core::rules::{BirthRule, FissionHazard, FissionRule};
 use sim_core::TerrainType;
 use sim_engine::{BuildingPlacedEvent, FissionCheck, FissionRecord, RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
@@ -549,14 +549,43 @@ impl FissionSystem {
             };
             // Group: non-elders ranked by the keyed draw (replicate in force).
             let replicate = resources.noise_replicate_for(tick);
-            let mut ranked: Vec<(u64, AgentId, bool)> = settlement
-                .member_agents
-                .iter()
-                .filter_map(|id| roster.get(id).map(|row| (*id, row)))
-                .filter(|(_, row)| !row.3)
-                .map(|(id, row)| (keyed_u64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate), id, row.2))
-                .collect();
-            ranked.sort_unstable();
+            // Pass 16 (`game_v20`, NS → who leaves): with temperament effects
+            // the rank key is (unit draw − weight × ns / 1,000,000, AgentId),
+            // sorted with `total_cmp` and the id tie-break (a member without
+            // the component counts as NS 500); the u64 below is then the rank.
+            // Without effects the v17–v19 path stays as it was.
+            let departure = resources.rules.agent.temperament.filter(|rule| rule.effects);
+            let ranked: Vec<(u64, AgentId, bool)> = if let Some(lean) = departure {
+                let temperaments: BTreeMap<AgentId, Temperament> = world
+                    .query::<(&Agent, &Temperament)>()
+                    .iter()
+                    .filter(|(_, (agent, _))| settlement.member_agents.contains(&agent.id))
+                    .map(|(_, (agent, t))| (agent.id, *t))
+                    .collect();
+                let neutral = Temperament { ns: 500, ha: 500, rd: 500, p: 500 };
+                let mut keyed: Vec<(f64, AgentId, bool)> = settlement
+                    .member_agents
+                    .iter()
+                    .filter_map(|id| roster.get(id).map(|row| (*id, row)))
+                    .filter(|(_, row)| !row.3)
+                    .map(|(id, row)| {
+                        let unit = keyed_unit_f64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate);
+                        (lean.departure_key(unit, temperaments.get(&id).unwrap_or(&neutral)), id, row.2)
+                    })
+                    .collect();
+                keyed.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
+                keyed.into_iter().enumerate().map(|(rank, (_, id, adult))| (rank as u64, id, adult)).collect()
+            } else {
+                let mut ranked: Vec<(u64, AgentId, bool)> = settlement
+                    .member_agents
+                    .iter()
+                    .filter_map(|id| roster.get(id).map(|row| (*id, row)))
+                    .filter(|(_, row)| !row.3)
+                    .map(|(id, row)| (keyed_u64(resources.world_seed, STREAM_FISSION, row.4, tick, 0, replicate), id, row.2))
+                    .collect();
+                ranked.sort_unstable();
+                ranked
+            };
             let k = ((f64::from(members) * rule.group_share + 0.5).floor() as u32).clamp(rule.group_min, rule.group_max);
             let adults: Vec<AgentId> = ranked.iter().filter(|r| r.2).map(|r| r.1).collect();
             if (adults.len() as u32) < rule.min_adults || (ranked.len() as u32) < k {

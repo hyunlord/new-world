@@ -48,7 +48,7 @@ use std::collections::BTreeMap;
 use hecs::World;
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Founding, Inventory, Position, ResourceKind, SeekTarget,
-    SETTLEMENT_PROXIMITY_RADIUS,
+    Temperament, SETTLEMENT_PROXIMITY_RADIUS,
 };
 use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -219,7 +219,10 @@ impl RuntimeSystem for AgentMovementSystem {
         let seed = resources.world_seed;
         let tick = resources.current_tick;
         let replicate = resources.noise_replicate_for(tick);
-        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding)) in world
+        // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
+        // (NS) and, for workers, its haul loads (P). None before v20.
+        let temperament_rule = rules.temperament;
+        for (_, (pos, rng, state, seek, agent, child, inventory, elder, lineage, founding, temperament)) in world
             .query::<(
                 &mut Position,
                 &mut MovementRng,
@@ -231,9 +234,11 @@ impl RuntimeSystem for AgentMovementSystem {
                 Option<&Elder>,
                 Option<&Lineage>,
                 Option<&Founding>,
+                Option<&Temperament>,
             )>()
             .iter()
         {
+            let lean = temperament_rule.zip(temperament);
             // V7 Section 16-β: three movement branches keyed directly on the
             // FSM state (NOT via `suppresses_movement()` — that predicate
             // stays locked in `agent_state.rs` for the 5 external truth-table
@@ -289,7 +294,21 @@ impl RuntimeSystem for AgentMovementSystem {
                         0
                     };
                     let distance = pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1));
-                    if hauls_home(forage.as_ref(), firewood.as_ref(), carried, wood, forage_window, wood_window, distance) {
+                    // Pass 16 P → this worker's own haul loads (elders never haul).
+                    let (forage_p, firewood_p) = match lean.filter(|_| elder.is_none()) {
+                        Some((rule, t)) => (
+                            forage.map(|mut f| {
+                                f.haul_threshold = rule.food_haul(f.haul_threshold, t);
+                                f
+                            }),
+                            firewood.map(|mut w| {
+                                w.haul_threshold = rule.wood_haul(w.haul_threshold, t);
+                                w
+                            }),
+                        ),
+                        None => (forage, firewood),
+                    };
+                    if hauls_home(forage_p.as_ref(), firewood_p.as_ref(), carried, wood, forage_window, wood_window, distance) {
                         pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum()).clamp(0, max_x) as u32;
                         pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y) as u32;
                         haul_steps.push(agent.id);
@@ -337,7 +356,12 @@ impl RuntimeSystem for AgentMovementSystem {
                     // Pass 4: elders keep to the camp (Pass 6: evening tether inside its window).
                     elder_radius
                 } else {
-                    evening_radius.or(rules.idle_tether_radius)
+                    // Pass 16 NS → an adult's own fallback tether (the evening
+                    // gather radius, children and elders are unchanged).
+                    evening_radius.or(match (rules.idle_tether_radius, lean) {
+                        (Some(base), Some((rule, t))) => Some(rule.tether(base, t)),
+                        (base, _) => base,
+                    })
                 },
                 // Pass 11: no tether pulls a founder on its way back home.
                 agent.filter(|_| founding.is_none()).and_then(|a| home.get(&a.id)),
