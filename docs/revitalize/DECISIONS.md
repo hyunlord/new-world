@@ -909,3 +909,8 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
 | 2 | 2026-10-15 07:15:30 | in progress | Stage A tuning round 1, then frozen identity and performance proofs. |
+
+- Part 1 publication: WIP remote verified at `753b51942c20489538faac59c15c5ac45ab48075`; green remains `adfdecfece79ab019964729319389fd602685fab`. The detailed independent trace audit arrived immediately afterward and is retained with Part 2 evidence; the same verified hand result was already in the Part 1 commit. Stage A round 1 starts at 07:17:45 UTC with unchanged Rust and retained release binaries.
+
+- Stage A tuning round 1 completed: v21 07:17:45–07:20:56 UTC, v20 07:20:56–07:22:26 UTC, each 16 worlds × 60 days on 17100–17115, trace and twin determinism enabled. R1 = 0.136308 (v20 0.569667); R3 P = 0.888711, NS = 0.444882, RD = 0.351151, all positive 95% intervals. All R2 point-estimate bars pass. No-place redraws = 3,170. Every trace reports zero routine observation, birth-event and component mismatch counts.
+- Freeze the original Stage A defaults with no second tuning round: base duration 90, span 60, minimum 20, rest 20–60, walk timeout 150, day 420–1080, original kind weights and temperament multipliers. R1 is inside its lower bound; no speculative adjustment after a passing tuning result. R4/R5 remain PENDING until measured. Rust source is unchanged from `8de4073a`; copied final binaries must retain its verified hashes.
