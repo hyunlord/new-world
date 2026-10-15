@@ -47,3 +47,7 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.2 | 23:50:20 | 23:56:08 | its `final` on `v2_v16` from `b57ef7bb`, exit 0 |
 | 5 (W2) | 23:53:51 | 23:55:46 | `floor.py --scene game_v16` from `b57ef7bb` with the control run (`floor_v16`, exit 0): floor 24 h 0.0170, 168 h 0.0343; headroom (`an5_off` / `an5` − floor) +0.054 [+0.049, +0.060], +0.084 [+0.077, +0.091] |
 | 6 | 20:00 | 23:57 | WM2.md assembled from `runs/judge_wm2/` (final judge after the control run) |
+| 7 (review 1) | 20:00 | 20:14 | review round 1 (fresh subagent): no BLOCKING, 2 MAJOR, 7 MINOR, 5 NOTE; fixes `61f1b253` |
+| 7 (review 2) | 23:58 | 00:12 | review round 2 (fresh subagent): no BLOCKING, 1 MAJOR, 8 MINOR, 6 NOTE (wording / records); fixes `29644ff2` |
+| gate | 00:13 | 00:16 | `29644ff2`: Mac 167 OK / 26 skipped; DGX 167 OK / 0 skipped (`gate_29644ff2`, 136 s); allowed paths clean. `codex/worldmodel-2026-10` fast-forwarded `ce40bf3c..29644ff2`; PR #512 comment https://github.com/hyunlord/new-world/pull/512#issuecomment-6195748424 |
+| 7 | 00:17 | | REPORT.md (Korean, section 13 format); this record is a docs-only commit; the gate is re-run on it and the green branch moved to it |
