@@ -200,6 +200,8 @@ Required acceptance and artifacts:
 
 ## Part 6: Stage B pre-registration and evaluation
 
+Review finding added during the active cohort: the registered F3 control-stage filter exceeds the literal brief. Finish and preserve the original frozen run first. Then remove only that extra filter with regression evidence, retain original analysis files, and recompute the existing raw data into a separately source-bound corrected report. Record the post-launch methodology correction openly; do not rerun worlds or change any bar or parameter.
+
 1. Commit the exact section 7.7 rule table under METRICS Pass17 Stage B with final threshold and all statistical eligibility conventions, before either paired scene runs on `18000..18032`. Record the pre-registration SHA and producer SHA.
 2. Run v22 and v21 separately for 120 days with the Part 3 hourly/trace/determinism options and seeds `18000..18032`. Run the new evaluator with `--stage b --candidate DIR --baseline DIR --out-md docs/revitalize/probe/p17-b_eval/eval.md --out-json docs/revitalize/probe/p17-b_eval/eval.json`.
 3. F1: pooled partner share of non-elder adults at day 60 ≥0.50. F2: births from day 20 inclusive with couple parents ≥0.90, with daily total/fallback counts including earlier days. F3: mean of four Pearson sibling correlations minus analogous unrelated-pair mean ≥0.06, interval excludes zero; every eligible pair appears in both orders. F4: coupled alive bedded partner-nights at 20:00 sharing shelter ≥0.90. F5: split couples/completed-departure parent-settlement couples ≤0.10, with exact numerator/denominator. F6: all R2 health rules against v21. F7: I1–I5/pins. F8: performance.
