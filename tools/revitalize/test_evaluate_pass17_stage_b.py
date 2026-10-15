@@ -33,7 +33,7 @@ class StageBPairTests(unittest.TestCase):
         self.assertTrue(close_kin(first, second))
         self.assertFalse(full_siblings(first, second))
 
-    def test_unassigned_living_people_remain_in_f1_but_never_form_same_settlement_pairs(self) -> None:
+    def test_unassigned_people_remain_in_f1_and_siblings_but_never_form_control_pairs(self) -> None:
         from evaluate_pass17_family_pairs import collect_pairs
         from evaluate_pass17_family_rows import parse_members
         from evaluate_pass17_stage_b import partner_exposure
@@ -43,7 +43,9 @@ class StageBPairTests(unittest.TestCase):
         people = tuple(family_person(i, i * 100, 8, 9) for i in range(2))
         result = collect_pairs(FamilyWorld(0, people, (snapshot,), snapshot, (), ()))
         self.assertEqual(partner_exposure(snapshot), (2, 2))
-        self.assertEqual(result.siblings, ())
+        # Section 7.7 restricts residence only for controls; recorded siblings remain eligible.
+        self.assertEqual([(p.first.agent_id, p.second.agent_id) for p in result.siblings], [(0, 1)])
+        self.assertEqual((result.siblings[0].tick, result.siblings[0].settlement_id, result.siblings[0].stages), (None, None, None))
         self.assertEqual(result.unrelated, ())
 
     def test_full_siblings_require_both_known_parents_and_controls_exclude_close_kin(self) -> None:
@@ -61,7 +63,7 @@ class StageBPairTests(unittest.TestCase):
         self.assertIn((5, 6), unrelated)
         self.assertEqual(result.excluded_kin, 7)
 
-    def test_first_qualifying_shared_snapshot_controls_stage_categories_and_deduplicates(self) -> None:
+    def test_first_shared_snapshot_deduplicates_pairs_and_reports_sibling_categories(self) -> None:
         from evaluate_pass17_family_pairs import collect_pairs
         people = (family_person(0, 100, 10, 11), family_person(1, 200, 10, 11),
             family_person(2, 300), family_person(3, 400))
@@ -75,6 +77,69 @@ class StageBPairTests(unittest.TestCase):
         pair = next(p for p in result.unrelated if (p.first.agent_id, p.second.agent_id) == (2, 3))
         self.assertEqual(pair.tick, 0)
         self.assertEqual(len(result.unrelated), 5)
+        mixed = next(p for p in result.unrelated if (p.first.agent_id, p.second.agent_id) == (0, 2))
+        self.assertEqual((mixed.tick, mixed.stages), (0, ("adult", "child")))
+
+    def test_all_recorded_full_siblings_ignore_residence_and_coexistence(self) -> None:
+        from evaluate_pass17_family_pairs import collect_pairs
+        from evaluate_pass17_family_report import pair_json
+        # Given: immutable sibling ancestry, including worlds without shared observation.
+        people = (family_person(0, 100, 8, 9), family_person(1, 200, 8, 9))
+        cases = {
+            "children": (FamilySnapshot(0, 1, 0, (member(0), member(1))),),
+            "different_settlements": (FamilySnapshot(0, 1, 0, (member(0), member(1, settlement=1))),),
+            "noncontemporaneous": (FamilySnapshot(0, 1, 0, (member(0),)), FamilySnapshot(60, 1, 60, (member(1),))),
+            "all_unassigned": (FamilySnapshot(0, 1, 0, tuple(replace(member(i), settlement_id=None) for i in range(2))),),
+            "no_hourly_observation": (),
+        }
+        for label, snapshots in cases.items():
+            with self.subTest(label=label):
+                # When: eligibility is collected independently of reference context.
+                result = collect_pairs(FamilyWorld(0, people, snapshots, None, (), ()))
+                # Then: every recorded sibling pair is included exactly once.
+                self.assertEqual([(p.first.agent_id, p.second.agent_id) for p in result.siblings], [(0, 1)])
+                observed = label == "children"
+                self.assertEqual(pair_json(result.siblings[0]), {"ids": [0, 1],
+                    "tick": 0 if observed else None, "settlement": 0 if observed else None,
+                    "stages": ["child", "child"] if observed else None})
+                self.assertEqual(result.categories, (("child", "child"),) if observed else ())
+                self.assertEqual(result.unrelated, ())
+
+    def test_unknown_or_reversed_parents_never_create_full_siblings(self) -> None:
+        from evaluate_pass17_family_pairs import collect_pairs
+        people = (family_person(0, 100, 8), family_person(1, 200, 8),
+            family_person(2, 300, None, 9), family_person(3, 400, None, 9),
+            family_person(4, 500), family_person(5, 600),
+            family_person(6, 700, 10, 11), family_person(7, 800, 11, 10))
+        snapshot = FamilySnapshot(0, 1, 0, tuple(member(i) for i in range(8)))
+        result = collect_pairs(FamilyWorld(0, people, (snapshot,), None, (), ()))
+        self.assertEqual(result.siblings, ())
+        self.assertEqual(result.categories, ())
+        unrelated = {(p.first.agent_id, p.second.agent_id) for p in result.unrelated}
+        for pair in ((0, 1), (2, 3), (6, 7)):
+            self.assertNotIn(pair, unrelated)
+        self.assertIn((4, 5), unrelated)
+
+    def test_unrelated_founders_use_first_shared_snapshot_without_sibling_stage_match(self) -> None:
+        from evaluate_pass17_family_pairs import collect_pairs
+        siblings = (family_person(0, 100, 10, 11), family_person(1, 200, 10, 11))
+        founders = (family_person(2, 300), family_person(3, 400))
+        for include_siblings in (True, False):
+            with self.subTest(include_siblings=include_siblings):
+                # Given: adult founders absent from observed child-sibling categories.
+                people = siblings + founders if include_siblings else founders
+                residents = (member(0), member(1)) if include_siblings else ()
+                residents += (member(2, "adult"), member(3, "adult"))
+                snapshots = (FamilySnapshot(0, 1, 0, residents),
+                    FamilySnapshot(60, 1, 60, tuple(member(p.agent_id, "adult") for p in people)))
+                # When: the same founders co-reside at multiple recorded hours.
+                result = collect_pairs(FamilyWorld(0, people, snapshots, snapshots[0], (), ()))
+                unrelated = {(p.first.agent_id, p.second.agent_id): p for p in result.unrelated}
+                # Then: controls use their first snapshot without a sibling-category gate.
+                self.assertEqual(result.categories, (("child", "child"),) if include_siblings else ())
+                self.assertIn((2, 3), unrelated)
+                self.assertEqual((unrelated[(2, 3)].tick, unrelated[(2, 3)].stages), (0, ("adult", "adult")))
+                self.assertEqual(len(unrelated), 5 if include_siblings else 1)
 
     def test_symmetric_pearson_matches_explicit_both_orientations(self) -> None:
         from evaluate_pass17_family_pairs import axis_correlation, moments

@@ -21,34 +21,35 @@ def close_kin(first: FamilyPerson, second: FamilyPerson) -> bool:
 
 def collect_pairs(world: FamilyWorld) -> FamilyPairs:
     people = {person.agent_id: person for person in world.people}
-    siblings: dict[tuple[int, int], FamilyPair] = {}
+    # Sibling eligibility uses immutable ancestry, independent of residence or overlap.
+    siblings = {(first_id, second_id): FamilyPair(people[first_id], people[second_id], None, None, None)
+        for first_id, second_id in combinations(sorted(people), 2)
+        if full_siblings(people[first_id], people[second_id])}
     unrelated: dict[tuple[int, int], FamilyPair] = {}
     kin: set[tuple[int, int]] = set()
     categories: set[StagePair] = set()
-    for sibling_pass in (True, False):
-        for snapshot in world.snapshots:
-            settlements: dict[int, list[int]] = {}
-            members = {member.agent_id: member for member in snapshot.members}
-            for member in snapshot.members:
-                if member.settlement_id is not None:
-                    settlements.setdefault(member.settlement_id, []).append(member.agent_id)
-            for settlement_id, residents in settlements.items():
-                for first_id, second_id in combinations(sorted(residents), 2):
-                    key = first_id, second_id
-                    if key in siblings or key in unrelated or (not sibling_pass and key in kin):
-                        continue
-                    first, second = people[first_id], people[second_id]
-                    stages = tuple(sorted((members[first_id].stage, members[second_id].stage)))
-                    stage_pair: StagePair = stages[0], stages[1]
-                    pair = FamilyPair(first, second, snapshot.tick, settlement_id, stage_pair)
-                    if sibling_pass:
-                        if full_siblings(first, second):
-                            siblings[key] = pair
-                            categories.add(stage_pair)
-                        elif close_kin(first, second):
-                            kin.add(key)
-                    elif stage_pair in categories:
-                        unrelated[key] = pair
+    for snapshot in world.snapshots:
+        settlements: dict[int, list[int]] = {}
+        members = {member.agent_id: member for member in snapshot.members}
+        for member in snapshot.members:
+            if member.settlement_id is not None:
+                settlements.setdefault(member.settlement_id, []).append(member.agent_id)
+        for settlement_id, residents in settlements.items():
+            for first_id, second_id in combinations(sorted(residents), 2):
+                key = first_id, second_id
+                if key in unrelated or key in kin or (key in siblings and siblings[key].tick is not None):
+                    continue
+                first, second = people[first_id], people[second_id]
+                stages = tuple(sorted((members[first_id].stage, members[second_id].stage)))
+                stage_pair: StagePair = stages[0], stages[1]
+                pair = FamilyPair(first, second, snapshot.tick, settlement_id, stage_pair)
+                if key in siblings:
+                    siblings[key] = pair
+                    categories.add(stage_pair)
+                elif close_kin(first, second):
+                    kin.add(key)
+                else:
+                    unrelated[key] = pair
     return FamilyPairs(world.seed, tuple(siblings.values()), tuple(unrelated.values()), tuple(sorted(categories)), len(kin))
 
 

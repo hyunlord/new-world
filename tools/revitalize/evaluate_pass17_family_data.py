@@ -70,9 +70,9 @@ class FamilyWorld:
 class FamilyPair:
     first: FamilyPerson
     second: FamilyPerson
-    tick: int
-    settlement_id: int
-    stages: StagePair
+    tick: int | None
+    settlement_id: int | None
+    stages: StagePair | None
 
 
 @dataclass(frozen=True, slots=True)

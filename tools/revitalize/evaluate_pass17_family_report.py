@@ -13,7 +13,7 @@ from evaluate_pass17_stage_b import FamilyEvaluation, bed_exposure, birth_exposu
 
 def pair_json(pair: FamilyPair) -> JsonObject:
     return {"ids": [pair.first.agent_id, pair.second.agent_id], "tick": pair.tick,
-        "settlement": pair.settlement_id, "stages": list(pair.stages)}
+        "settlement": pair.settlement_id, "stages": list(pair.stages) if pair.stages is not None else None}
 
 
 def world_json(world: FamilyWorld, pairs: FamilyPairs) -> JsonObject:
@@ -62,7 +62,7 @@ def build_family_report(candidate: Cohort, baseline: Cohort, measured: FamilyEva
             "F1": "Pooled living nonelder adults at exact elapsed day60 (after tick86399); partner must be alive and mutual; dead partner pointers do not count",
             "F2": "Pooled births with fallback=false from one-based elapsed simulation day20; simulation_day=tick//1440+1, tick>=27360; display-clock offset does not change inclusion; all daily births/fallbacks retained",
             "F3": "Pooled Pearson for each temperament axis, then mean four axes for siblings minus unrelated; each unique unordered pair contributes both orientations; bar>=0.06 and lower95%CI>0; exact per-world integer sufficient statistics preserve whole-world bootstrap",
-            "F3_eligibility": "Full siblings have both known matching mother/father, including fallback births; first shared hourly snapshot fixes sibling life-stage pair. Unrelated controls exclude direct parent-child or any shared known parent across either slot, and use first shared hourly snapshot with a stage-pair category present among that world's eligible siblings. Unassigned settlement=null observations cannot form same-settlement pairs; their counts are reported. Unknown founder kinship is not inferred. Empty worlds remain in resampling; pair IDs/ticks/stages reported",
+            "F3_eligibility": "Full siblings are all recorded people with both known matching ordered mother/father, including fallback births, independent of residence or coexistence. Their first shared hourly snapshot in a non-null settlement supplies reference tick/settlement/stages when present; otherwise all three are null, without excluding the pair. Unrelated controls exclude direct parent-child or any shared known parent across either slot, and use their first shared hourly snapshot in the same non-null settlement regardless of life-stage categories. Sibling stage-pair categories describe observed shared context only and never filter either population. Unassigned settlement=null observations cannot form unrelated same-settlement pairs; their counts are reported. Unknown founder kinship is not inferred. Empty worlds remain in resampling; pair IDs/ticks/stages reported",
             "F4": "20:00 snapshots; each mutual living couple counted once if both have beds; same bed tile means shared shelter; bedless person-nights separately reported",
             "F5": "Only completed fissions; pooled split couples / mutual living couples in parent settlements at departure; raw membership and household partitions verify numerator; zero denominator ERROR",
             "F6": "Identical R2 definitions: equal-world alive/death/shelter means, noon settlement-summed stores averaged within worlds then across worlds; primary social rate pools adult completions/adult-days, mean world rate sensitivity",
