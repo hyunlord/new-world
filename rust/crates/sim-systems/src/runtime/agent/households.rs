@@ -66,16 +66,31 @@ pub fn households(world: &World, members: &BTreeSet<AgentId>) -> Vec<Vec<AgentId
     result
 }
 
+/// Who leaves on a split: whole households (their ranked members) seeded by
+/// the ranked adults, filled in rank order up to `k`, topped up to
+/// `group_min` with single ranked people.
+///
+/// Pass 18 (`game_v23`): with `elder_partners` (the settlement's mutual
+/// couples) a household also keeps an unranked member (an elder) who is the
+/// mutual partner of one of its ranked members; households without a ranked
+/// member stay behind whole. Kept elders count toward every size limit but
+/// never toward `min_adults`. Without it this is Pass 17's selection.
 pub(crate) fn select_departure(
     ranked: &[(u64, AgentId, bool)],
     households: &[Vec<AgentId>],
     rule: &FissionRule,
     k: u32,
+    elder_partners: Option<&[[AgentId; 2]]>,
 ) -> Option<BTreeSet<AgentId>> {
     let rank: BTreeMap<_, _> = ranked
         .iter()
         .enumerate()
         .map(|(i, row)| (row.1, (i, row.2)))
+        .collect();
+    let partner_of: BTreeMap<AgentId, AgentId> = elder_partners
+        .into_iter()
+        .flatten()
+        .flat_map(|&[a, b]| [(a, b), (b, a)])
         .collect();
     let groups: Vec<Vec<_>> = households
         .iter()
@@ -83,10 +98,15 @@ pub(crate) fn select_departure(
             group
                 .iter()
                 .copied()
-                .filter(|id| rank.contains_key(id))
+                .filter(|id| {
+                    rank.contains_key(id)
+                        || partner_of.get(id).is_some_and(|partner| {
+                            rank.contains_key(partner) && group.contains(partner)
+                        })
+                })
                 .collect()
         })
-        .filter(|group: &Vec<_>| !group.is_empty())
+        .filter(|group: &Vec<_>| group.iter().any(|id| rank.contains_key(id)))
         .collect();
     let group_of: BTreeMap<_, _> = groups
         .iter()
@@ -158,4 +178,83 @@ pub(crate) fn couples(world: &World, members: &BTreeSet<AgentId>) -> Vec<[AgentI
             .then_some([id, partner])
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::select_departure;
+    use sim_core::components::AgentId;
+    use sim_core::rules::{FissionRule, WorldRules};
+    use std::collections::BTreeSet;
+
+    fn rule() -> FissionRule {
+        WorldRules::game_v22(0).society.fission.expect("v22 splits")
+    }
+
+    /// Ranked rows (rank, id, adult) in order; ids >= 100 are children.
+    fn ranked(ids: &[AgentId]) -> Vec<(u64, AgentId, bool)> {
+        ids.iter()
+            .enumerate()
+            .map(|(rank, &id)| (rank as u64, id, id < 100))
+            .collect()
+    }
+
+    fn set(ids: &[AgentId]) -> BTreeSet<AgentId> {
+        ids.iter().copied().collect()
+    }
+
+    #[test]
+    fn an_elder_partner_leaves_with_the_departing_adult_only_when_following() {
+        // Adults 1..=6; 1 is partnered with elder 50; 2 with child 100.
+        let households = vec![vec![1, 50], vec![2, 100], vec![3], vec![4], vec![5], vec![6]];
+        let rows = ranked(&[1, 2, 3, 4, 5, 6, 100]);
+        let couples = [[1, 50]];
+        let old = select_departure(&rows, &households, &rule(), 7, None).expect("p17 group");
+        // Seed 1, 2+100, 3, 4 (four adults), fill 5 and 6 up to k = 7.
+        assert_eq!(old, set(&[1, 2, 3, 4, 5, 6, 100]));
+        // The elder takes a slot: seed 1+50, 2+100, 3, 4; fill 5; 6 no longer fits.
+        let new = select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("p18 group");
+        assert_eq!(new, set(&[1, 50, 2, 100, 3, 4, 5]));
+    }
+
+    #[test]
+    fn elder_only_households_widowed_elders_and_elder_couples_stay() {
+        // 60 lone elder; 61-62 elder couple; widowed elder 63 with child 101.
+        let households = vec![
+            vec![1],
+            vec![2],
+            vec![3],
+            vec![4],
+            vec![5],
+            vec![6],
+            vec![60],
+            vec![61, 62],
+            vec![63, 101],
+        ];
+        let rows = ranked(&[101, 1, 2, 3, 4, 5, 6]);
+        let couples = [[61, 62]];
+        let group = select_departure(&rows, &households, &rule(), 7, Some(&couples)).expect("group");
+        assert!(group.iter().all(|id| *id < 60 || *id == 101), "{group:?}");
+        assert_eq!(group, select_departure(&rows, &households, &rule(), 7, None).expect("p17"));
+    }
+
+    #[test]
+    fn kept_elders_count_toward_group_max_but_not_min_adults() {
+        let rule = rule();
+        // Seven adult-elder couples (adult i, elder 50 + i) and two lone adults.
+        let mut households: Vec<Vec<AgentId>> = (1..=7).map(|i| vec![i, 50 + i]).collect();
+        households.extend([vec![8], vec![9]]);
+        let couples: Vec<[AgentId; 2]> = (1..=7).map(|i| [i, 50 + i]).collect();
+        let rows = ranked(&[1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        for k in rule.group_min..=rule.group_max {
+            let group = select_departure(&rows, &households, &rule, k, Some(&couples)).expect("group");
+            assert!(group.len() <= rule.group_max as usize, "k {k}: {group:?}");
+            assert!(group.len() <= (k as usize).max(2 * rule.min_adults as usize), "k {k}: {group:?}");
+            let adults = group.iter().filter(|id| **id < 50).count();
+            assert!(adults >= rule.min_adults as usize, "k {k}: {group:?}");
+            for i in 1..=7 {
+                assert_eq!(group.contains(&i), group.contains(&(50 + i)), "k {k}: couple {i} split");
+            }
+        }
+    }
 }

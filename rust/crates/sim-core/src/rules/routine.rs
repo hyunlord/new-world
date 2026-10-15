@@ -101,6 +101,9 @@ pub struct FamilyRule {
     pub min_familiarity_permille: u16,
     /// Display-clock minute for pairing and clearing deceased partners.
     pub pair_minute: u32,
+    /// Pass 18 (`game_v23`): when a village splits, an elder leaves with a
+    /// departing mutual partner instead of staying behind.
+    pub elder_partner_follows: bool,
 }
 
 impl FamilyRule {
@@ -118,7 +121,11 @@ mod tests {
     #[test]
     fn family_familiarity_threshold_preserves_integer_extremes() {
         for value in [0, 200, 300, 1000, u16::MAX] {
-            let rule = FamilyRule { min_familiarity_permille: value, pair_minute: 1200 };
+            let rule = FamilyRule {
+                min_familiarity_permille: value,
+                pair_minute: 1200,
+                elder_partner_follows: false,
+            };
             assert_eq!(rule.familiarity_threshold(), f64::from(value) / 1000.0);
         }
     }

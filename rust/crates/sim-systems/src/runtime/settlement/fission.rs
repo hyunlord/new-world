@@ -598,9 +598,19 @@ impl FissionSystem {
                     crate::runtime::agent::households::couples(world, &members),
                 )
             });
-            let group = if let Some((households, _)) = &family {
+            // Pass 18 (`game_v23`): elder partners leave with their partner.
+            let follows = resources
+                .rules
+                .society
+                .family
+                .is_some_and(|family| family.elder_partner_follows);
+            let group = if let Some((households, couples)) = &family {
                 let Some(group) = crate::runtime::agent::households::select_departure(
-                    &ranked, households, rule, k,
+                    &ranked,
+                    households,
+                    rule,
+                    k,
+                    follows.then_some(couples.as_slice()),
                 ) else {
                     continue;
                 };

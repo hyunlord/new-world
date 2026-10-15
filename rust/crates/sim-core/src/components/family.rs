@@ -152,5 +152,19 @@ mod tests {
         }
         assert_eq!(WorldRules::V22_FAMILY.min_familiarity_permille, 300);
         assert_eq!(WorldRules::V22_FAMILY.pair_minute, 1200);
+        const { assert!(!WorldRules::V22_FAMILY.elder_partner_follows) };
+    }
+
+    #[test]
+    fn v23_changes_only_the_family_rule_of_v22() {
+        for seed in 0..5 {
+            let mut v23 = WorldRules::game_v23(seed);
+            assert_eq!(v23.society.family, Some(WorldRules::V23_FAMILY));
+            v23.society.family = Some(WorldRules::V22_FAMILY);
+            assert_eq!(v23, WorldRules::game_v22(seed));
+        }
+        assert_eq!(WorldRules::V23_FAMILY.min_familiarity_permille, 200);
+        assert_eq!(WorldRules::V23_FAMILY.pair_minute, 1200);
+        const { assert!(WorldRules::V23_FAMILY.elder_partner_follows) };
     }
 }

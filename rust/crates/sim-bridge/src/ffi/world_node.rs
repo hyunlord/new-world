@@ -185,12 +185,12 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
     build_world_with(&WorldGenConfig::stress_v19(seed, agents, 64), WorldRules::game_v19(seed))
 }
 
-/// Revitalize Pass 17 — the live game's world of `seed`: `game_v22`, with
-/// temperament, routines and families. Pure (no Godot) so the harness can
+/// Revitalize Pass 18 — the live game's world of `seed`: `game_v23`, with
+/// temperament, routines and families (elder partners follow on a split). Pure (no Godot) so the harness can
 /// check it; `WorldSimNode::init` and `reset_world` call it, while
 /// `reset_world_stress` stays on `game_v19` (Pass 15's benchmark).
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::game_v22(seed), WorldRules::game_v22(seed))
+    build_world_with(&WorldGenConfig::game_v23(seed), WorldRules::game_v23(seed))
 }
 
 /// Revitalize Pass 16 — the temperament of the agent whose
@@ -220,7 +220,7 @@ fn agent_temperament_to_dict(temperament: Option<sim_core::components::Temperame
 impl INode for WorldSimNode {
     fn init(base: Base<Node>) -> Self {
         Self {
-            // Revitalize Pass 17: the live game runs `game_v22` (families).
+            // Revitalize Pass 18: the live game runs `game_v23` (families).
             engine: build_game_engine(DEFAULT_GAME_SEED),
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
@@ -2889,10 +2889,10 @@ mod revitalize_tooling_tests {
     use sim_engine::{SimEngine, Tallies};
 
     #[test]
-    fn live_game_is_game_v22() {
-        // Pass 17 7.5: init and reset_world build game_v22; the stress world stays v19.
+    fn live_game_is_game_v23() {
+        // Pass 18 8.1: init and reset_world build game_v23; the stress world stays v19.
         let engine = super::build_game_engine(20_261_010);
-        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v22(20_261_010));
+        assert_eq!(engine.resources.rules, sim_core::rules::WorldRules::game_v23(20_261_010));
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
     }

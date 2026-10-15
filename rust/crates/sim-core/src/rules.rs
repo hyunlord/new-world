@@ -904,12 +904,28 @@ impl WorldRules {
     pub const V22_FAMILY: FamilyRule = FamilyRule {
         min_familiarity_permille: 300,
         pair_minute: 1200,
+        elder_partner_follows: false,
     };
 
     /// Pass 17 Stage B: all v21 rules with family formation enabled.
     pub const fn game_v22(seed: u64) -> Self {
         let mut rules = Self::game_v21(seed);
         rules.society.family = Some(Self::V22_FAMILY);
+        rules
+    }
+
+    /// Pass 18 family settings: pairing after two completed interactions
+    /// (familiarity 0.200) and elder partners leaving with their partner.
+    pub const V23_FAMILY: FamilyRule = FamilyRule {
+        min_familiarity_permille: 200,
+        pair_minute: 1200,
+        elder_partner_follows: true,
+    };
+
+    /// Pass 18: all v22 rules with the family rule changed to `V23_FAMILY`.
+    pub const fn game_v23(seed: u64) -> Self {
+        let mut rules = Self::game_v22(seed);
+        rules.society.family = Some(Self::V23_FAMILY);
         rules
     }
 
