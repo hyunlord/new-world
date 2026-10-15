@@ -1,10 +1,10 @@
 use super::{is_activity, Change, PlacesCache, RoutineTick};
 use hecs::{Entity, World};
-use sim_core::components::{Agent, SettlementId};
 use sim_core::components::{
     ActivityRest, AgentId, AgentState, RoutineObservation, RoutineObservationBatch, RoutineOutcome,
     Temperament,
 };
+use sim_core::components::{Agent, SettlementId};
 
 pub(super) fn apply(world: &mut World, mut pending: Vec<(AgentId, Entity, Change)>) {
     pending.sort_by_key(|(id, _, _)| *id);
@@ -29,36 +29,44 @@ pub(super) fn apply(world: &mut World, mut pending: Vec<(AgentId, Entity, Change
     if let Some(batch) = current {
         batches.push(batch);
     }
-    for (_, entity, change) in pending {
-        match change {
-            Change::Activity(Some(activity)) => {
+    let mut index = 0;
+    while index < pending.len() {
+        let (id, entity, _) = pending[index];
+        let end = index
+            + pending[index..]
+                .iter()
+                .take_while(|row| row.0 == id)
+                .count();
+        // Pass 18: an activity ending into a rest (the 18:00 edge, mass
+        // exits) is one archetype move instead of two. `exchange` creates the
+        // same intermediate archetype and leaves every entity where
+        // remove-then-insert would; the observation is a replacement because
+        // the entity already carries one.
+        if let [(_, _, Change::Activity(None)), (_, _, Change::Observation(observation)), (_, _, Change::Rest(Some(rest)))] =
+            &pending[index..end]
+        {
+            if world.entity(entity).is_ok_and(|e| {
+                e.has::<sim_core::components::Activity>()
+                    && e.has::<RoutineObservation>()
+                    && !e.has::<ActivityRest>()
+            }) {
                 #[cfg(feature = "subprofile")]
-                note_insert::<sim_core::components::Activity>(world, entity);
-                let _ = world.insert_one(entity, activity);
-            }
-            Change::Activity(None) => {
-                let removed = world.remove_one::<sim_core::components::Activity>(entity);
-                #[cfg(feature = "subprofile")]
-                crate::subprofile::note_move(removed.is_ok());
-                let _ = removed;
-            }
-            Change::Rest(Some(rest)) => {
-                #[cfg(feature = "subprofile")]
-                note_insert::<ActivityRest>(world, entity);
-                let _ = world.insert_one(entity, rest);
-            }
-            Change::Rest(None) => {
-                let removed = world.remove_one::<ActivityRest>(entity);
-                #[cfg(feature = "subprofile")]
-                crate::subprofile::note_move(removed.is_ok());
-                let _ = removed;
-            }
-            Change::Observation(observation) => {
-                #[cfg(feature = "subprofile")]
-                note_insert::<RoutineObservation>(world, entity);
-                let _ = world.insert_one(entity, observation);
+                {
+                    crate::subprofile::note_move(true);
+                    crate::subprofile::count("routine_fused_moves", 1);
+                }
+                let _ = world.exchange::<(sim_core::components::Activity,), _>(
+                    entity,
+                    (*observation, *rest),
+                );
+                index = end;
+                continue;
             }
         }
+        for (_, entity, change) in &pending[index..end] {
+            apply_one(world, *entity, *change);
+        }
+        index = end;
     }
     for (_, entity, events) in batches {
         if events.len() > 1 {
@@ -66,6 +74,39 @@ pub(super) fn apply(world: &mut World, mut pending: Vec<(AgentId, Entity, Change
             #[cfg(feature = "subprofile")]
             note_insert::<RoutineObservationBatch>(world, entity);
             let _ = world.insert_one(entity, RoutineObservationBatch { tick, events });
+        }
+    }
+}
+
+/// One pending component change, as Pass 17 applied it.
+fn apply_one(world: &mut World, entity: Entity, change: Change) {
+    match change {
+        Change::Activity(Some(activity)) => {
+            #[cfg(feature = "subprofile")]
+            note_insert::<sim_core::components::Activity>(world, entity);
+            let _ = world.insert_one(entity, activity);
+        }
+        Change::Activity(None) => {
+            let removed = world.remove_one::<sim_core::components::Activity>(entity);
+            #[cfg(feature = "subprofile")]
+            crate::subprofile::note_move(removed.is_ok());
+            let _ = removed;
+        }
+        Change::Rest(Some(rest)) => {
+            #[cfg(feature = "subprofile")]
+            note_insert::<ActivityRest>(world, entity);
+            let _ = world.insert_one(entity, rest);
+        }
+        Change::Rest(None) => {
+            let removed = world.remove_one::<ActivityRest>(entity);
+            #[cfg(feature = "subprofile")]
+            crate::subprofile::note_move(removed.is_ok());
+            let _ = removed;
+        }
+        Change::Observation(observation) => {
+            #[cfg(feature = "subprofile")]
+            note_insert::<RoutineObservation>(world, entity);
+            let _ = world.insert_one(entity, observation);
         }
     }
 }

@@ -29,6 +29,7 @@ pub(super) const fn idle_equivalent(state: AgentState, enabled: bool) -> bool {
     matches!(state, AgentState::Idle) || (enabled && is_activity(state))
 }
 
+#[derive(Clone, Copy)]
 enum Change {
     Activity(Option<Activity>),
     Rest(Option<ActivityRest>),

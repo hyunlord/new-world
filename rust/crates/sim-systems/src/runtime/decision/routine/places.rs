@@ -29,7 +29,11 @@ const fn distance(a: Tile, b: Tile) -> u32 {
 }
 
 /// Inclusive scan bounds of the 29 × 29 area around `home`.
-fn scan_area(home: Tile, width: u32, height: u32) -> (std::ops::RangeInclusive<u32>, std::ops::RangeInclusive<u32>) {
+fn scan_area(
+    home: Tile,
+    width: u32,
+    height: u32,
+) -> (std::ops::RangeInclusive<u32>, std::ops::RangeInclusive<u32>) {
     (
         home.0.saturating_sub(14)..=home.0.saturating_add(14).min(width - 1),
         home.1.saturating_sub(14)..=home.1.saturating_add(14).min(height - 1),
@@ -166,9 +170,9 @@ impl Inputs {
             || self.registry != resources.building_registry
             || self.settlements.len() != resources.settlements.len()
             || !resources.settlements.iter().all(|(sid, s)| {
-                self.settlements
-                    .get(sid)
-                    .is_some_and(|(home, buildings)| *home == s.formation_tile && *buildings == s.member_buildings)
+                self.settlements.get(sid).is_some_and(|(home, buildings)| {
+                    *home == s.formation_tile && *buildings == s.member_buildings
+                })
             })
         {
             return false;
@@ -198,7 +202,11 @@ pub(in crate::runtime::decision) struct PlacesCache {
 impl PlacesCache {
     /// Recompute the places of `resources` only when an input changed.
     pub(super) fn refresh(&mut self, resources: &SimResources) {
-        if !self.inputs.as_ref().is_some_and(|inputs| inputs.matches(resources)) {
+        if !self
+            .inputs
+            .as_ref()
+            .is_some_and(|inputs| inputs.matches(resources))
+        {
             self.places = scope!("routine_places_collect", { collect(resources) });
             self.inputs = Some(Inputs::of(resources));
         }
@@ -246,13 +254,19 @@ impl Cursor {
     /// The same tile as [`choose`]`(candidates, occupancy)`.
     pub(super) fn choose(&mut self, candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
         let count = |tile: &Tile| occupancy.get(tile).copied().unwrap_or(0);
-        while candidates.get(self.zero).is_some_and(|tile| count(tile) != 0) {
+        while candidates
+            .get(self.zero)
+            .is_some_and(|tile| count(tile) != 0)
+        {
             self.zero += 1;
         }
         if let Some(tile) = candidates.get(self.zero) {
             return Some(*tile);
         }
-        while candidates.get(self.one).is_some_and(|tile| count(tile) != 1) {
+        while candidates
+            .get(self.one)
+            .is_some_and(|tile| count(tile) != 1)
+        {
             self.one += 1;
         }
         candidates.get(self.one).copied()
@@ -273,13 +287,26 @@ mod tests {
     use sim_core::rng::{keyed_u64, STREAM_ROUTINE_PLACE};
 
     /// Pass 17's `choose`, kept to prove the short-circuit equal to it.
-    fn choose_p17(candidates: &[Tile], occupancy: &Occupancy, seed: u64, key: u64, tick: u64) -> Option<Tile> {
+    fn choose_p17(
+        candidates: &[Tile],
+        occupancy: &Occupancy,
+        seed: u64,
+        key: u64,
+        tick: u64,
+    ) -> Option<Tile> {
         let rank = keyed_u64(seed, STREAM_ROUTINE_PLACE, key, tick, 0, 0);
         candidates
             .iter()
             .copied()
             .filter(|tile| occupancy.get(tile).copied().unwrap_or(0) < 2)
-            .min_by_key(|tile| (occupancy.get(tile).copied().unwrap_or(0), rank, tile.1, tile.0))
+            .min_by_key(|tile| {
+                (
+                    occupancy.get(tile).copied().unwrap_or(0),
+                    rank,
+                    tile.1,
+                    tile.0,
+                )
+            })
     }
 
     #[test]
@@ -296,14 +323,19 @@ mod tests {
                 }
             }
             for key in [0, 7, u64::MAX] {
-                assert_eq!(choose(&candidates, &occupancy), choose_p17(&candidates, &occupancy, 3, key, pattern));
+                assert_eq!(
+                    choose(&candidates, &occupancy),
+                    choose_p17(&candidates, &occupancy, 3, key, pattern)
+                );
             }
         }
     }
 
     #[test]
     fn cursor_matches_choose_under_starts_and_ends() {
-        let candidates: Vec<Tile> = (0..5).flat_map(|y| (0..5).map(move |x| (x * 2, y))).collect();
+        let candidates: Vec<Tile> = (0..5)
+            .flat_map(|y| (0..5).map(move |x| (x * 2, y)))
+            .collect();
         for run in 0_u64..300 {
             let mut occupancy = Occupancy::new();
             let mut cursor = Cursor::default();
@@ -313,7 +345,11 @@ mod tests {
                 state ^= state << 13;
                 state ^= state >> 7;
                 state ^= state << 17;
-                assert_eq!(cursor.choose(&candidates, &occupancy), choose(&candidates, &occupancy), "run {run}");
+                assert_eq!(
+                    cursor.choose(&candidates, &occupancy),
+                    choose(&candidates, &occupancy),
+                    "run {run}"
+                );
                 if state % 4 == 0 && !held.is_empty() {
                     let tile = held.swap_remove((state as usize / 4) % held.len());
                     if let Some(count) = occupancy.get_mut(&tile) {
