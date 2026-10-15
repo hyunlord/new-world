@@ -1021,3 +1021,16 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 - Part8 documentation seal: this R snapshot freezes the mechanics documents, Korean report, historical evidence and the two review rounds' findings. R means the commit containing this snapshot; its future SHA and the Part8 end time are intentionally absent here. The same second reviewer may append terminal-gate verification without starting a third round. The same second round's C gate supplement is sealed with REVIEW_PASS17.md. A complete exact-R gate, two actual remote-head receipts, draft/unmerged PR #510 update and authorized base-worktree cleanup must be verified after the seal. Record the resulting R SHA, commands, timestamps, hashes, cleanup result and actual completion time in `/Users/rexxa/work/p17-data/final_publication_pass17.complete.json`; preserve the separate PENDING template unchanged. Until that immutable completion receipt exists and verifies those results, Part8 is docs-sealed, not complete. C's green gate cannot certify a later R commit, and this snapshot does not claim future publication or cleanup success.
 
 - Part8 preserves original whitespace in five hash-bound generated artifacts: ledger_c/commit_files.md, measurement_tables.md and canonical python_unittest/test_debug/test_release logs. The unfiltered whitespace report and exact exception hashes are retained in verification/p17-report/whitespace_raw_preservation.json; authored staged paths pass with only those five raw artifacts excluded. Canonical gate bytes are not normalized after hashing.
+
+## Pass 18
+
+Run by Claude Code (Opus 5.5) unattended in `/Users/rexxa/work/new-world-pass4`, brief `docs/revitalize/PASS18_GOAL.md` (committed unchanged). Base `8cbb697c97aac800935813d2c79c34195ebef6a3` (both branches, verified by `git rev-parse` after `git fetch` at 2026-10-16 00:05 KST). Art Pass 10 (Codex) shares the Mac in `/Users/rexxa/work/new-world-art-prod`; at start its `cargo test --workspace` was running and no quiet lock existed.
+
+- Start checks: `.git/hooks/pre-commit` and `post-commit` absent; `.claude/settings.json` is `S` (skip-worktree) and `{}`; never staged.
+- Shared-Mac tools are Pass 17's with only the owner string (`pass18-sim (Claude Code, new-world-pass4)`), the environment prefix (`P18_QUIET_*`) and the spacing stamp (`/Users/rexxa/work/p18-data/quiet_lock_last_release`) changed: `wait_mac_p18.sh`, `quiet_lock_p18.sh`. `identity_p18.sh` = `identity_p17.sh` + I6 (`game_v22`); modes `all` (I1–I6), `--i56-only`, `--no-i56`.
+- Base worktree `../new-world-p18-base` (detached at `8cbb697c`) got the main clone's `rust/Cargo.lock` copied before its first build; `cargo tree -i hecs` = `hecs v0.10.5` in both.
+
+### RUNLOG
+
+| Part | start (KST) | end (KST) | notes |
+|---|---|---|---|
