@@ -1,0 +1,6 @@
+Initialize godot-rust (API v4.5.stable.official, runtime v4.6.stable.official, safeguards strict)
+Godot Engine v4.6.stable.official.89cea1439 - https://godotengine.org
+
+settle_before=false before={ "change_id": "seat-input-cache", "candidate_enabled": false } after={ "change_id": "seat-input-cache", "candidate_enabled": true }
+settle_before=true before={ "change_id": "seat-input-cache", "candidate_enabled": false } after={ "change_id": "seat-input-cache", "candidate_enabled": false }
+settle_before=false before={ "change_id": "seat-input-cache", "candidate_enabled": false } after={ "change_id": "seat-input-cache", "candidate_enabled": true }

@@ -67,6 +67,9 @@ func _run() -> void:
 	_camera.zoom = Vector2(4, 4)
 	_camera.reset_smoothing()
 	_camera.force_update_scroll()
+	# Deferred world_reset replaces renderer helpers; settle before setting controls.
+	await process_frame
+	await process_frame
 	var previous_fps: int = Engine.max_fps
 	Engine.max_fps = 0
 	_runtime = Session.Runtime.new()

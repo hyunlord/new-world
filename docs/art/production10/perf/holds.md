@@ -98,3 +98,33 @@
 - 2026-10-15T19:39:25Z pid=54445 HOLD_START owner=codex-art-pass10 purpose=agent-sections-W500 start=1792093165 load_before=4.38 contended=true waited=3753s
 - 2026-10-15T19:39:56Z pid=54445 HOLD_END owner=codex-art-pass10 purpose=agent-sections-W500 start=1792093165 end=1792093196 elapsed=31 load_before=4.38 load_after=5.00 contended=true exit=0
 <!-- art-p10-last-release 1792093196 -->
+- 2026-10-15T19:45:39Z pid=1269 WAIT_START owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 hold_limit=3600
+- 2026-10-15T19:45:39Z pid=1269 WAIT_COOLDOWN remaining=257s
+- 2026-10-15T19:49:57Z pid=1269 CHECK load=5.27 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;12903 12901 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=257s
+- 2026-10-15T19:49:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:54:57Z pid=1269 CHECK load=7.81 processes=14165 14164 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;23168 23166 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;35403 35402 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=558s
+- 2026-10-15T19:54:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T19:59:57Z pid=1269 CHECK load=4.87 processes=48413 48412 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;23168 23166 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=858s
+- 2026-10-15T19:59:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:04:57Z pid=1269 CHECK load=8.13 processes=68592 68583 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;68771 68768 rust/target/release/worldsim_probe waited=1158s
+- 2026-10-15T20:04:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:09:57Z pid=1269 CHECK load=4.10 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1458s
+- 2026-10-15T20:09:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:14:57Z pid=1269 CHECK load=5.36 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1758s
+- 2026-10-15T20:14:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:19:57Z pid=1269 CHECK load=4.77 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2058s
+- 2026-10-15T20:19:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:24:57Z pid=1269 CHECK load=5.92 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2358s
+- 2026-10-15T20:24:57Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:29:58Z pid=1269 CHECK load=5.07 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2658s
+- 2026-10-15T20:29:58Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:34:58Z pid=1269 CHECK load=5.73 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2959s
+- 2026-10-15T20:34:58Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:39:58Z pid=1269 CHECK load=3.92 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3259s
+- 2026-10-15T20:39:58Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:44:58Z pid=1269 CHECK load=3.17 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3559s
+- 2026-10-15T20:44:58Z pid=1269 WAIT_BUSY next_poll=300s
+- 2026-10-15T20:49:58Z pid=1269 CHECK load=5.49 processes=80940 80939 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3859s
+- 2026-10-15T20:49:58Z pid=1269 HOLD_START owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792097398 load_before=5.49 contended=true waited=3859s
+- 2026-10-15T20:50:17Z pid=1269 HOLD_END owner=codex-art-pass10 purpose=pair-seat-input-cache-W500 start=1792097398 end=1792097417 elapsed=19 load_before=5.49 load_after=6.27 contended=true exit=1
+<!-- art-p10-last-release 1792097417 -->
