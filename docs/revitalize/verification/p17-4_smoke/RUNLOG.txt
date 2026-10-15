@@ -1,0 +1,11 @@
+2026-10-15T09:48:46Z game_v21 plain start
+2026-10-15T09:48:48Z game_v21 plain end
+2026-10-15T09:48:48Z game_v21 trace start
+2026-10-15T09:48:48Z game_v21 trace end
+2026-10-15T09:48:49Z game_v22 plain start
+2026-10-15T09:48:50Z game_v22 plain end
+2026-10-15T09:48:50Z game_v22 trace start
+2026-10-15T09:48:51Z game_v22 trace end
+2026-10-15T09:48:51Z v22 day60 smoke start
+2026-10-15T09:49:38Z v22 day60 smoke end
+2026-10-15T09:49:39Z smoke runner end exit=0

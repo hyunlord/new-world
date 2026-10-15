@@ -951,7 +951,7 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 
 | Part | start (UTC) | end (UTC) | notes |
 |---|---|---|---|
-| 4 | 2026-10-15 09:20:29 | in progress | Transition boundary from Part 3 closure; family source work begins only after verdict/I5 commit and verified WIP publication below. |
+| 4 | 2026-10-15 09:20:29 | 2026-10-15 09:59:08 | Complete family implementation and actual bridge/trace QA; no quiet hold or wait. |
 
 - Stage A verdict and I5 baseline were committed as `44aebafa5acf5668d21418f611d8f0ce3a5d13d3` and remote WIP matched that SHA before Part 4 implementation. The green branch remains `adfdecfece79ab019964729319389fd602685fab`. The bounded completed-cohort audit arrived after closure and is preserved as `verification/p17-a_eval_observerfix/cohort_audit.md`; it is not a fresh Part 8 review. Its measured registration-to-launch interval is 16.982376 seconds, with all 64 held-out trace metadata files bound to the producer and zero miss counters.
 - Stage B ownership: coordinator owns core family types, stream, rules and registration; separate executors own runtime pairing/births/households, optional trace and scene wiring, bridge, evaluator, and external runners. No Stage B evaluation seed runs before its own registration. No authorized Stage B feature has been dropped.
@@ -967,3 +967,12 @@ Run by Claude Code (Opus 5.5, 1M context) from `docs/revitalize/PASS5_GOAL.md`, 
 - Actual live-v22 Godot bridge smoke passes 13,563 checks through tick 3660: 286 activity rows join state 4/target 8, a mutual pair (AgentIds 0 and 1) is observed, and newborn 25 links to living parents whose children arrays include it. That first newborn is an early fallback (mother slot 0 is male, father slot 1 female), explicitly preserving the old fallback identity semantics; later real-couple parent selection is checked separately in runtime/trace evidence. No art-rendering acceptance is inferred from this API smoke.
 - Family traces represent living unassigned/traveling people with settlement `null`. The evaluator retains those people in living F1/F4 populations and excludes only their unassigned observations from same-settlement F3 pairing; it reports unassigned exposure, and never invents a settlement id.
 - Part 4 implementation freeze: all 14 family integration cases pass, along with 42 metric-evaluator tests (25 existing A plus 17 B). Workspace all-target Clippy completes in 58.04 seconds with exit 0 and warnings denied. The implementation is ready for a source-bound release archive and small-seed real-trace QA before tuning; no Stage B held-out or tuning seed has run.
+
+- Part 4 frozen producer `47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21` was pushed and remotely verified before release smoke. Both v21/v22 trace-on/off strict summaries match; the full 60-day small-seed trace has 76 people, 57 births (50 real and seven fallback), 23 pair events and one completed fission. All 89 raw hashes and all miss counters verify. Independent family reconstruction performs 628,178 checks across the three worlds with zero discrepancies; independent routine reconstruction matches all 5,651 day60 completions. Actual evaluator integration passes all eight checks without assigning cohort verdicts. Detailed hand family 29/30/50 and its adult-child departure are preserved in `verification/p17-4_smoke/README.md`.
+- Part 4 has no tuning/evaluation seed use. Original threshold 300 remains unchanged for round 1. No Stage B feature is dropped. The smoke runner's optional wait log was absent because every lock guard returned immediately; a completion note records that fact without inventing historical wait timestamps.
+
+| Part | start (UTC) | end (UTC) | notes |
+|---|---|---|---|
+| 5 | 2026-10-15 09:59:08 | in progress | Stage B tuning, identity I1–I5 and performance; original 300 threshold starts round 1. |
+
+- Part 4 closure preserves the two literal trailing spaces in `verification/p17-4_smoke/build/commands.txt`, produced by the command recorder. The normal staged whitespace check passes with only that exact generated receipt excluded; no authored source whitespace exception is used.

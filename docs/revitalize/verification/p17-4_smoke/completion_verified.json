@@ -1,0 +1,68 @@
+{
+  "producer_commit": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+  "verified_at_utc": "2026-10-15T09:51:02.839710+00:00",
+  "runner_exit": 0,
+  "runs": [
+    {
+      "name": "game_v21_plain",
+      "days": 3,
+      "seeds": [
+        42,
+        43
+      ],
+      "metadata_verified": [],
+      "summary_sha256": "bebb53bd07ee73d6c0fdb2773b488635906bd69a9a565e1c7f863f89b05dee66"
+    },
+    {
+      "name": "game_v21_trace",
+      "days": 3,
+      "seeds": [
+        42,
+        43
+      ],
+      "metadata_verified": [
+        "game_v21_s42_trace_meta.json",
+        "game_v21_s43_trace_meta.json"
+      ],
+      "summary_sha256": "7f113125168d269866efb16a51cd7aa5111d13d45c1dc2185346a444c4520c61"
+    },
+    {
+      "name": "game_v22_plain",
+      "days": 3,
+      "seeds": [
+        42,
+        43
+      ],
+      "metadata_verified": [],
+      "summary_sha256": "9cd53e01149a68f30bc0387a740167563d366ae2b6f45f53634727efcc86d023"
+    },
+    {
+      "name": "game_v22_trace",
+      "days": 3,
+      "seeds": [
+        42,
+        43
+      ],
+      "metadata_verified": [
+        "game_v22_s42_trace_meta.json",
+        "game_v22_s43_trace_meta.json",
+        "game_v22_s43_family_meta.json",
+        "game_v22_s42_family_meta.json"
+      ],
+      "summary_sha256": "7c25a47c2ae736f4e56333aa57e4a05efd19820c6ea2e5e098ed69b0a6d8aa16"
+    },
+    {
+      "name": "game_v22_day60",
+      "days": 60,
+      "seeds": [
+        42
+      ],
+      "metadata_verified": [
+        "game_v22_s42_trace_meta.json",
+        "game_v22_s42_family_meta.json"
+      ],
+      "summary_sha256": "2884cafcf61bbdd9d541c2f8906c697fa3d804c135ab23319f913358c32422a7"
+    }
+  ],
+  "raw_file_count": 89
+}
