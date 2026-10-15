@@ -128,10 +128,18 @@ impl RoutineTick {
             .map(|(_, (agent, activity))| (agent.id, *activity))
             .collect();
         active_rows.sort_by_key(|row| row.0);
-        let mut occupancy = BTreeMap::new();
-        for (_, activity) in &active_rows {
-            *occupancy.entry(activity.place).or_default() += 1;
+        // Pass 18: the same per-tile counts, built from sorted places in one
+        // pass instead of one map insertion per activity.
+        let mut held: Vec<Tile> = active_rows.iter().map(|(_, activity)| activity.place).collect();
+        held.sort_unstable();
+        let mut counts: Vec<(Tile, u32)> = Vec::new();
+        for place in held {
+            match counts.last_mut() {
+                Some((last, count)) if *last == place => *count += 1,
+                _ => counts.push((place, 1)),
+            }
         }
+        let occupancy: Occupancy = counts.into_iter().collect();
         #[cfg(feature = "subprofile")]
         timer.stop("routine_new_maps");
         Self {
