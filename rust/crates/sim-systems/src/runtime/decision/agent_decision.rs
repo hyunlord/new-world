@@ -1269,7 +1269,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // the person's position or rank), and run only after the
                         // cheap predicates are false. All are pure, so the verdict
                         // is the eager OR of Pass 17.
-                        let forage = || {
+                        let forage = || scope!("exit_forage", {
                             forage_rule
                                 .filter(|_| forage_window && worker && !no_trips)
                                 .and_then(|rule| {
@@ -1286,8 +1286,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         .then_some(())
                                 })
                                 .is_some()
-                        };
-                        let firewood = || {
+                        });
+                        let firewood = || scope!("exit_firewood", {
                             firewood_rule
                                 .filter(|_| worker && !no_trips)
                                 .and_then(|rule| {
@@ -1312,8 +1312,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         .then_some(())
                                 })
                                 .is_some()
-                        };
-                        let gather = || {
+                        });
+                        let gather = || scope!("exit_gather", {
                             let has_room = inventory_opt
                                 .as_ref()
                                 .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
@@ -1342,7 +1342,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     GATHER_SCAN_RADIUS,
                                     local_home.get(&agent.id).map(|home| (*home, catchment)),
                                 )
-                        };
+                        });
                         let social = social_ready
                             && social_eligible_by_pos
                                 .get(&(pos.x, pos.y))
