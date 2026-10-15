@@ -1,0 +1,2471 @@
+{
+  "acceptance_verdicts_assigned": false,
+  "aggregate": {
+    "birth_totals": {
+      "births": 838,
+      "couple_births": 732,
+      "fallback_births": 106
+    },
+    "births_by_day": [
+      {
+        "births": 16,
+        "couple_births": 0,
+        "day": 1,
+        "fallback_births": 16,
+        "worlds": 16
+      },
+      {
+        "births": 29,
+        "couple_births": 0,
+        "day": 2,
+        "fallback_births": 29,
+        "worlds": 16
+      },
+      {
+        "births": 26,
+        "couple_births": 0,
+        "day": 3,
+        "fallback_births": 26,
+        "worlds": 16
+      },
+      {
+        "births": 26,
+        "couple_births": 6,
+        "day": 4,
+        "fallback_births": 20,
+        "worlds": 16
+      },
+      {
+        "births": 23,
+        "couple_births": 14,
+        "day": 5,
+        "fallback_births": 9,
+        "worlds": 16
+      },
+      {
+        "births": 21,
+        "couple_births": 19,
+        "day": 6,
+        "fallback_births": 2,
+        "worlds": 16
+      },
+      {
+        "births": 20,
+        "couple_births": 20,
+        "day": 7,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 18,
+        "couple_births": 18,
+        "day": 8,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 15,
+        "couple_births": 15,
+        "day": 9,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 11,
+        "couple_births": 11,
+        "day": 10,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 10,
+        "couple_births": 10,
+        "day": 11,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 6,
+        "couple_births": 6,
+        "day": 12,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 3,
+        "couple_births": 3,
+        "day": 13,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 2,
+        "couple_births": 2,
+        "day": 14,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 2,
+        "couple_births": 2,
+        "day": 15,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 4,
+        "couple_births": 4,
+        "day": 16,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 2,
+        "couple_births": 2,
+        "day": 17,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 3,
+        "couple_births": 3,
+        "day": 18,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 4,
+        "couple_births": 4,
+        "day": 19,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 5,
+        "couple_births": 5,
+        "day": 20,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 5,
+        "couple_births": 5,
+        "day": 21,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 11,
+        "couple_births": 11,
+        "day": 22,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 12,
+        "couple_births": 12,
+        "day": 23,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 7,
+        "couple_births": 7,
+        "day": 24,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 10,
+        "couple_births": 10,
+        "day": 25,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 13,
+        "couple_births": 13,
+        "day": 26,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 12,
+        "couple_births": 12,
+        "day": 27,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 8,
+        "couple_births": 8,
+        "day": 28,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 13,
+        "couple_births": 13,
+        "day": 29,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 18,
+        "couple_births": 18,
+        "day": 30,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 23,
+        "couple_births": 22,
+        "day": 31,
+        "fallback_births": 1,
+        "worlds": 16
+      },
+      {
+        "births": 18,
+        "couple_births": 18,
+        "day": 32,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 23,
+        "couple_births": 22,
+        "day": 33,
+        "fallback_births": 1,
+        "worlds": 16
+      },
+      {
+        "births": 19,
+        "couple_births": 19,
+        "day": 34,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 20,
+        "couple_births": 20,
+        "day": 35,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 29,
+        "couple_births": 29,
+        "day": 36,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 20,
+        "couple_births": 20,
+        "day": 37,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 23,
+        "couple_births": 23,
+        "day": 38,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 28,
+        "couple_births": 28,
+        "day": 39,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 19,
+        "couple_births": 19,
+        "day": 40,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 17,
+        "couple_births": 17,
+        "day": 41,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 21,
+        "couple_births": 21,
+        "day": 42,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 20,
+        "couple_births": 20,
+        "day": 43,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 18,
+        "couple_births": 17,
+        "day": 44,
+        "fallback_births": 1,
+        "worlds": 16
+      },
+      {
+        "births": 21,
+        "couple_births": 21,
+        "day": 45,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 12,
+        "couple_births": 12,
+        "day": 46,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 16,
+        "couple_births": 16,
+        "day": 47,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 12,
+        "couple_births": 11,
+        "day": 48,
+        "fallback_births": 1,
+        "worlds": 16
+      },
+      {
+        "births": 13,
+        "couple_births": 13,
+        "day": 49,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 17,
+        "couple_births": 17,
+        "day": 50,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 5,
+        "couple_births": 5,
+        "day": 51,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 4,
+        "couple_births": 4,
+        "day": 52,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 6,
+        "couple_births": 6,
+        "day": 53,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 4,
+        "couple_births": 4,
+        "day": 54,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 6,
+        "couple_births": 6,
+        "day": 55,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 3,
+        "couple_births": 3,
+        "day": 56,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 13,
+        "couple_births": 13,
+        "day": 57,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 10,
+        "couple_births": 10,
+        "day": 58,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 17,
+        "couple_births": 17,
+        "day": 59,
+        "fallback_births": 0,
+        "worlds": 16
+      },
+      {
+        "births": 26,
+        "couple_births": 26,
+        "day": 60,
+        "fallback_births": 0,
+        "worlds": 16
+      }
+    ],
+    "complete_cohort": true,
+    "female": 620,
+    "fissions_by_status": {
+      "cancelled": {
+        "couples_split": 0,
+        "couples_total": 0,
+        "fissions": 0,
+        "households_departed_whole": 0,
+        "households_split": 0,
+        "households_total": 0
+      },
+      "completed": {
+        "couples_split": 9,
+        "couples_total": 80,
+        "fissions": 8,
+        "households_departed_whole": 57,
+        "households_split": 9,
+        "households_total": 220
+      },
+      "pending": {
+        "couples_split": 1,
+        "couples_total": 9,
+        "fissions": 1,
+        "households_departed_whole": 9,
+        "households_split": 2,
+        "households_total": 28
+      }
+    },
+    "hourly_totals": {
+      "bedless": 9997,
+      "people": 921137,
+      "people_with_bed": 911140,
+      "unused_slots": 209412,
+      "world_hour_samples": 23040
+    },
+    "lifetime_people": 1208,
+    "male": 588,
+    "night_totals": {
+      "bedless": 49,
+      "both_bedded_denominator": 7493,
+      "different_bed": 34,
+      "mutual_living_couples": 7493,
+      "neither_bed_excluded": 0,
+      "one_bed_excluded": 0,
+      "same_bed_numerator": 7459,
+      "unused_slots": 8350,
+      "world_night_samples": 960
+    },
+    "nights_by_day": [
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 0,
+        "day": 1,
+        "different_bed": 0,
+        "mutual_living_couples": 0,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 0,
+        "unused_slots": 99,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 0,
+        "day": 2,
+        "different_bed": 0,
+        "mutual_living_couples": 0,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 0,
+        "unused_slots": 95,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 1,
+        "day": 3,
+        "different_bed": 0,
+        "mutual_living_couples": 1,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 1,
+        "unused_slots": 116,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 17,
+        "day": 4,
+        "different_bed": 0,
+        "mutual_living_couples": 17,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 17,
+        "unused_slots": 98,
+        "world_samples": 16
+      },
+      {
+        "bedless": 3,
+        "both_bedded_denominator": 26,
+        "day": 5,
+        "different_bed": 0,
+        "mutual_living_couples": 26,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 26,
+        "unused_slots": 108,
+        "world_samples": 16
+      },
+      {
+        "bedless": 9,
+        "both_bedded_denominator": 44,
+        "day": 6,
+        "different_bed": 0,
+        "mutual_living_couples": 44,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 44,
+        "unused_slots": 101,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 54,
+        "day": 7,
+        "different_bed": 0,
+        "mutual_living_couples": 54,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 54,
+        "unused_slots": 104,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 65,
+        "day": 8,
+        "different_bed": 0,
+        "mutual_living_couples": 65,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 65,
+        "unused_slots": 94,
+        "world_samples": 16
+      },
+      {
+        "bedless": 3,
+        "both_bedded_denominator": 71,
+        "day": 9,
+        "different_bed": 0,
+        "mutual_living_couples": 71,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 71,
+        "unused_slots": 96,
+        "world_samples": 16
+      },
+      {
+        "bedless": 5,
+        "both_bedded_denominator": 75,
+        "day": 10,
+        "different_bed": 0,
+        "mutual_living_couples": 75,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 75,
+        "unused_slots": 94,
+        "world_samples": 16
+      },
+      {
+        "bedless": 8,
+        "both_bedded_denominator": 82,
+        "day": 11,
+        "different_bed": 0,
+        "mutual_living_couples": 82,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 82,
+        "unused_slots": 111,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 90,
+        "day": 12,
+        "different_bed": 0,
+        "mutual_living_couples": 90,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 90,
+        "unused_slots": 105,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 98,
+        "day": 13,
+        "different_bed": 0,
+        "mutual_living_couples": 98,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 98,
+        "unused_slots": 102,
+        "world_samples": 16
+      },
+      {
+        "bedless": 2,
+        "both_bedded_denominator": 99,
+        "day": 14,
+        "different_bed": 0,
+        "mutual_living_couples": 99,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 99,
+        "unused_slots": 102,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 103,
+        "day": 15,
+        "different_bed": 0,
+        "mutual_living_couples": 103,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 103,
+        "unused_slots": 106,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 108,
+        "day": 16,
+        "different_bed": 0,
+        "mutual_living_couples": 108,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 108,
+        "unused_slots": 105,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 115,
+        "day": 17,
+        "different_bed": 0,
+        "mutual_living_couples": 115,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 115,
+        "unused_slots": 104,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 119,
+        "day": 18,
+        "different_bed": 0,
+        "mutual_living_couples": 119,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 119,
+        "unused_slots": 104,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 127,
+        "day": 19,
+        "different_bed": 0,
+        "mutual_living_couples": 127,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 127,
+        "unused_slots": 104,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 129,
+        "day": 20,
+        "different_bed": 0,
+        "mutual_living_couples": 129,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 129,
+        "unused_slots": 105,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 134,
+        "day": 21,
+        "different_bed": 0,
+        "mutual_living_couples": 134,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 105,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 133,
+        "day": 22,
+        "different_bed": 0,
+        "mutual_living_couples": 133,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 133,
+        "unused_slots": 107,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 134,
+        "day": 23,
+        "different_bed": 0,
+        "mutual_living_couples": 134,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 104,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 134,
+        "day": 24,
+        "different_bed": 0,
+        "mutual_living_couples": 134,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 106,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 134,
+        "day": 25,
+        "different_bed": 0,
+        "mutual_living_couples": 134,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 106,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 129,
+        "day": 26,
+        "different_bed": 0,
+        "mutual_living_couples": 129,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 129,
+        "unused_slots": 110,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 133,
+        "day": 27,
+        "different_bed": 0,
+        "mutual_living_couples": 133,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 133,
+        "unused_slots": 108,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 136,
+        "day": 28,
+        "different_bed": 0,
+        "mutual_living_couples": 136,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 136,
+        "unused_slots": 105,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 136,
+        "day": 29,
+        "different_bed": 0,
+        "mutual_living_couples": 136,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 136,
+        "unused_slots": 132,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 137,
+        "day": 30,
+        "different_bed": 3,
+        "mutual_living_couples": 137,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 167,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 134,
+        "day": 31,
+        "different_bed": 3,
+        "mutual_living_couples": 134,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 131,
+        "unused_slots": 166,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 135,
+        "day": 32,
+        "different_bed": 3,
+        "mutual_living_couples": 135,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 132,
+        "unused_slots": 157,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 133,
+        "day": 33,
+        "different_bed": 2,
+        "mutual_living_couples": 133,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 131,
+        "unused_slots": 159,
+        "world_samples": 16
+      },
+      {
+        "bedless": 2,
+        "both_bedded_denominator": 136,
+        "day": 34,
+        "different_bed": 2,
+        "mutual_living_couples": 136,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 134,
+        "unused_slots": 157,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 138,
+        "day": 35,
+        "different_bed": 3,
+        "mutual_living_couples": 138,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 135,
+        "unused_slots": 171,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 143,
+        "day": 36,
+        "different_bed": 2,
+        "mutual_living_couples": 143,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 141,
+        "unused_slots": 170,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 143,
+        "day": 37,
+        "different_bed": 3,
+        "mutual_living_couples": 143,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 140,
+        "unused_slots": 189,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 142,
+        "day": 38,
+        "different_bed": 2,
+        "mutual_living_couples": 142,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 140,
+        "unused_slots": 183,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 137,
+        "day": 39,
+        "different_bed": 1,
+        "mutual_living_couples": 137,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 136,
+        "unused_slots": 181,
+        "world_samples": 16
+      },
+      {
+        "bedless": 3,
+        "both_bedded_denominator": 138,
+        "day": 40,
+        "different_bed": 1,
+        "mutual_living_couples": 138,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 137,
+        "unused_slots": 179,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 139,
+        "day": 41,
+        "different_bed": 1,
+        "mutual_living_couples": 139,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 138,
+        "unused_slots": 184,
+        "world_samples": 16
+      },
+      {
+        "bedless": 2,
+        "both_bedded_denominator": 146,
+        "day": 42,
+        "different_bed": 1,
+        "mutual_living_couples": 146,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 145,
+        "unused_slots": 185,
+        "world_samples": 16
+      },
+      {
+        "bedless": 3,
+        "both_bedded_denominator": 142,
+        "day": 43,
+        "different_bed": 1,
+        "mutual_living_couples": 142,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 141,
+        "unused_slots": 178,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 145,
+        "day": 44,
+        "different_bed": 1,
+        "mutual_living_couples": 145,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 144,
+        "unused_slots": 168,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 146,
+        "day": 45,
+        "different_bed": 1,
+        "mutual_living_couples": 146,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 145,
+        "unused_slots": 171,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 150,
+        "day": 46,
+        "different_bed": 1,
+        "mutual_living_couples": 150,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 149,
+        "unused_slots": 164,
+        "world_samples": 16
+      },
+      {
+        "bedless": 2,
+        "both_bedded_denominator": 151,
+        "day": 47,
+        "different_bed": 1,
+        "mutual_living_couples": 151,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 150,
+        "unused_slots": 167,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 153,
+        "day": 48,
+        "different_bed": 0,
+        "mutual_living_couples": 153,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 153,
+        "unused_slots": 164,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 162,
+        "day": 49,
+        "different_bed": 0,
+        "mutual_living_couples": 162,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 162,
+        "unused_slots": 163,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 166,
+        "day": 50,
+        "different_bed": 0,
+        "mutual_living_couples": 166,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 166,
+        "unused_slots": 162,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 166,
+        "day": 51,
+        "different_bed": 0,
+        "mutual_living_couples": 166,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 166,
+        "unused_slots": 160,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 175,
+        "day": 52,
+        "different_bed": 0,
+        "mutual_living_couples": 175,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 175,
+        "unused_slots": 160,
+        "world_samples": 16
+      },
+      {
+        "bedless": 1,
+        "both_bedded_denominator": 176,
+        "day": 53,
+        "different_bed": 0,
+        "mutual_living_couples": 176,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 176,
+        "unused_slots": 161,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 177,
+        "day": 54,
+        "different_bed": 0,
+        "mutual_living_couples": 177,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 177,
+        "unused_slots": 162,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 184,
+        "day": 55,
+        "different_bed": 0,
+        "mutual_living_couples": 184,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 184,
+        "unused_slots": 160,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 190,
+        "day": 56,
+        "different_bed": 0,
+        "mutual_living_couples": 190,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 190,
+        "unused_slots": 160,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 195,
+        "day": 57,
+        "different_bed": 0,
+        "mutual_living_couples": 195,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 195,
+        "unused_slots": 160,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 195,
+        "day": 58,
+        "different_bed": 0,
+        "mutual_living_couples": 195,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 195,
+        "unused_slots": 175,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 196,
+        "day": 59,
+        "different_bed": 0,
+        "mutual_living_couples": 196,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 196,
+        "unused_slots": 206,
+        "world_samples": 16
+      },
+      {
+        "bedless": 0,
+        "both_bedded_denominator": 197,
+        "day": 60,
+        "different_bed": 2,
+        "mutual_living_couples": 197,
+        "neither_bed_excluded": 0,
+        "one_bed_excluded": 0,
+        "same_bed_numerator": 195,
+        "unused_slots": 225,
+        "world_samples": 16
+      }
+    ],
+    "pair_events": 378,
+    "raw_exposures": {
+      "couple_births_from_day20": {
+        "denominator": 597,
+        "numerator": 593,
+        "ratio": 0.9932998324958124,
+        "worlds_with_exposure_record": 16,
+        "zero_denominator_worlds": 0
+      },
+      "partnered_adults_at_day60": {
+        "denominator": 539,
+        "numerator": 292,
+        "ratio": 0.5417439703153989,
+        "worlds_with_exposure_record": 16,
+        "zero_denominator_worlds": 0
+      },
+      "same_bed_couple_nights": {
+        "denominator": 7493,
+        "numerator": 7459,
+        "ratio": 0.9954624316028293,
+        "worlds_with_exposure_record": 16,
+        "zero_denominator_worlds": 0
+      },
+      "split_couples_completed_fissions": {
+        "denominator": 80,
+        "numerator": 9,
+        "ratio": 0.1125,
+        "worlds_with_exposure_record": 16,
+        "zero_denominator_worlds": 8
+      }
+    },
+    "worlds_aggregated": 16
+  },
+  "audit_status": "CONSISTENT",
+  "checker_sha256": "4f6902c44ac7cdd64c6ab426887a5d894ad177168ffce39661f6020948939df9",
+  "checks": 8333090,
+  "days": 60,
+  "discrepancies": [],
+  "evidence_limits": [
+    "Raw consistency and evidence extraction only; no F1-F8 acceptance verdicts.",
+    "Pooled fractions below are descriptive raw exposures, not confidence intervals.",
+    "Bedless counts are person-samples; unused-slot counts are slot-samples. Neither measures distinct people, elapsed sleep time, or actual nearest-tile sleeping.",
+    "No death/unpair events: partnership continuity and parent liveness between samples are not independently observable. Pair events, sampled reciprocity, pairing ticks, and final living reciprocity are checked.",
+    "No per-shelter capacity inventory: housing_capacity is an input aggregate. Bedded people, bedless people, unused slots and couple-night denominators are recomputed.",
+    "Night bed rows show assigned beds, not actual sleep state or nearest-tile sleeping. No claim about realized sleep follows from this checker.",
+    "Departure household/couple arrays are raw snapshots; their counts and membership splits are recomputed. Unsampled departures cannot independently prove the full living settlement census or individual ranking decisions.",
+    "This checker does not implement F3 resemblance, confidence intervals, health gates, cohort seed policy, or final acceptance verdicts."
+  ],
+  "expected_seeds": [
+    18100,
+    18101,
+    18102,
+    18103,
+    18104,
+    18105,
+    18106,
+    18107,
+    18108,
+    18109,
+    18110,
+    18111,
+    18112,
+    18113,
+    18114,
+    18115
+  ],
+  "expected_worlds": 16,
+  "generated_at_utc": "2026-10-15T10:11:02.270819+00:00",
+  "handexample": {
+    "coverage": 4,
+    "father": 21,
+    "missing": [],
+    "mother": 4,
+    "rows": [
+      {
+        "kind": "pair",
+        "raw": {
+          "display_day": 15,
+          "event": "paired",
+          "father": 21,
+          "minute": 1200,
+          "mother": 4,
+          "simulation_day": 15,
+          "tick": 20880
+        },
+        "source": "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_events.jsonl:28"
+      },
+      {
+        "kind": "birth",
+        "raw": {
+          "child": 41,
+          "display_day": 20,
+          "event": "born",
+          "fallback": false,
+          "father": 21,
+          "female": true,
+          "lineage_key": 7871023462000237131,
+          "minute": 265,
+          "mother": 4,
+          "simulation_day": 19,
+          "temperament": {
+            "ha": 500,
+            "ns": 509,
+            "p": 623,
+            "rd": 877
+          },
+          "tick": 27145
+        },
+        "source": "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_events.jsonl:32"
+      },
+      {
+        "kind": "night",
+        "raw": {
+          "bedless": 0,
+          "display_day": 20,
+          "housing_capacity": 48,
+          "minute": 1200,
+          "people": [
+            {
+              "bed": [
+                37,
+                39
+              ],
+              "household_key": 4,
+              "id": 4,
+              "life_stage": "adult",
+              "pairing_tick": 20880,
+              "partner": 21,
+              "settlement": 1
+            },
+            {
+              "bed": [
+                37,
+                39
+              ],
+              "household_key": 4,
+              "id": 21,
+              "life_stage": "adult",
+              "pairing_tick": 20880,
+              "partner": 4,
+              "settlement": 1
+            },
+            {
+              "bed": [
+                37,
+                39
+              ],
+              "household_key": 4,
+              "id": 41,
+              "life_stage": "child",
+              "pairing_tick": null,
+              "partner": null,
+              "settlement": 1
+            }
+          ],
+          "simulation_day": 20,
+          "tick": 28080,
+          "unused_slots": 7
+        },
+        "source": "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_hours.jsonl:469"
+      },
+      {
+        "kind": "fission",
+        "raw": {
+          "cancelled_tick": null,
+          "couples": [
+            [
+              1,
+              9
+            ],
+            [
+              4,
+              21
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              16,
+              23
+            ],
+            [
+              20,
+              43
+            ],
+            [
+              22,
+              30
+            ],
+            [
+              25,
+              27
+            ],
+            [
+              29,
+              34
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              35,
+              36
+            ],
+            [
+              37,
+              38
+            ],
+            [
+              39,
+              41
+            ]
+          ],
+          "couples_split": 1,
+          "couples_total": 13,
+          "daughter": 2,
+          "depart_tick": 51720,
+          "event": "departed",
+          "fission_id": 1,
+          "founded_tick": 51841,
+          "households": [
+            [
+              0
+            ],
+            [
+              1,
+              9
+            ],
+            [
+              4,
+              21
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              8
+            ],
+            [
+              10,
+              11
+            ],
+            [
+              13
+            ],
+            [
+              16,
+              23,
+              45
+            ],
+            [
+              17
+            ],
+            [
+              20,
+              43,
+              47
+            ],
+            [
+              22,
+              30
+            ],
+            [
+              24
+            ],
+            [
+              25,
+              27,
+              46
+            ],
+            [
+              26
+            ],
+            [
+              28
+            ],
+            [
+              29,
+              34
+            ],
+            [
+              31,
+              32
+            ],
+            [
+              33
+            ],
+            [
+              35,
+              36
+            ],
+            [
+              37,
+              38
+            ],
+            [
+              39,
+              41
+            ],
+            [
+              40
+            ],
+            [
+              42
+            ],
+            [
+              44
+            ]
+          ],
+          "households_departed_whole": 6,
+          "households_split": 1,
+          "households_total": 24,
+          "leader": 5,
+          "members": [
+            5,
+            20,
+            25,
+            26,
+            27,
+            29,
+            31,
+            32,
+            34,
+            39,
+            41,
+            43,
+            46,
+            47
+          ],
+          "parent": 1,
+          "status": "completed"
+        },
+        "selected_pair_members": [],
+        "source": "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_fissions.jsonl:1"
+      }
+    ],
+    "seed": 18100
+  },
+  "input_sha256": {
+    "/Users/rexxa/work/new-world-pass4/docs/revitalize/probe/p17-b_tuning/r1/eval.json": "b58681d3eff1954b920f7a779e4299461e43702865a6b8a84f84a3b1f45ddb51",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/RUNLOG.txt": "eb719d7a9b971b245e2f3395527d5e9d57e9f804aa93b444c4c77b2cd92b9769",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/evaluate.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v21.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v21/summary.json": "39d1d358e0f4c1be35e4e3867de7078d8f6d8462833ecb9f5828233030d5d5af",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_events.jsonl": "f9fa654dad34874cab4cd4ba4c2f62dbb74c46e20e8dcba9f89f8182302fee21",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_fissions.jsonl": "d26d0aee6c8dde1f4af3227c0babe4870db6bffecf452483710ab4d259a394ea",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_hours.jsonl": "8072053781d7af8f5131c388d611c7e42140140d27731b16f2f522b5eae75047",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_meta.json": "8f05c6123b59b24437a70a98c90d9d6fb0c202a08b4ad816656a3ca0a1ee185f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_family_people.jsonl": "72b1d0d6713f1089bcc895c6769f3befa75932f22de8253c1a92485bd1fd37e0",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_fissions.jsonl": "920e68030d544b38bba1afc23cec1cc3df0e19b37f3462fa151736f561404dd9",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_people.jsonl": "a2796c93cf3055f69a9a3c4815ca6f01c071c3ca5e4528911c71a410197693a8",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18100_trace_meta.json": "0892eefe0922125860cb0a90ae49f72ef9fbf9a14c154cb43c9529a942be294e",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_family_events.jsonl": "f536d4f8e93b33e2465f6691d1500762adc86790e15df1e885045a5a4cced8c7",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_family_fissions.jsonl": "1dd5f9e1af87c148ad755223c653db3e5b4f752e597b109ee13015dc86857087",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_family_hours.jsonl": "481dbb04480258f46eaee93b6e91e73381f057d754377590f69664928d4674b7",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_family_meta.json": "16f1114b5fc46cce810beebcb24bfad8fb74c395522df32aa1d82f08775aa976",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_family_people.jsonl": "71fba4542dd55111af3df899b7253a16ff1bedda44bcc14bece6137c62b27ee2",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_fissions.jsonl": "25dc5d2c545d356d16e35704d44d4ba6ddaaaf1761a8251992db67d9f1b61c91",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_people.jsonl": "57a4e1544b3e2b4adff0f1ee57354e27dfd4f70fde463ef69cb0601d69719202",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18101_trace_meta.json": "4bf0c96873376dc8f6c27de31dacc305c30a79f8a8dcc3080d9a3f508def893c",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_family_events.jsonl": "7d5c66307c3889c0c0ab67541715f66b693715750a369a147692421fd12b645e",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_family_hours.jsonl": "5452b31dbef23417d3fbb6f29b1c95472506818eff265a59dc93161c63de3d1a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_family_meta.json": "71399852776eb956a00b7c1dbbf5caf6cd274315af6dfa3b655831de4609008d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_family_people.jsonl": "b32a5652b1203b7fa8d14de12ca7260e2d41d651afbc1b57c816315743c3ad6d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_people.jsonl": "959f7923e608ab574586217df2527924758cf177e1e35efd7d1b0b6bf65d9155",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18102_trace_meta.json": "c209a35de937246049613f13b78106a1ff53217c19a130468354168322c696b5",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_family_events.jsonl": "074ade8b0dff0dc38c0f19a427cc3044fccdadfea79725c4d9ceb76dac9c4807",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_family_fissions.jsonl": "dd4b8f61387901039ccbd8db4156d47d35901602b34d1208fda4925a7edd7d29",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_family_hours.jsonl": "29b8dd83e2aa4a860746d488a249916db287752685c7e2e1c3cb3e70e99a275f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_family_meta.json": "87f03e4df87f243a3217fde1acde8550a37aaf3fbfb169404ca3b6a6d8825b5a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_family_people.jsonl": "af57fe8f4e4205c590d6b898e6cb0765bbb5d2ed29681f1413d39b1e1ef8c4ef",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_fissions.jsonl": "bb741cf7e4ded8cc24243c2a9c31801d596fb1b4c1acf8ff1cf6e91915fe660d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_people.jsonl": "5311dcca1b9fc5540852b5cd624848cdbc4b8214b78298ad60bb227781b64c54",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18103_trace_meta.json": "4658a67f1e0dad90a811b05943e48a219ece7b6143e6c90f02e8712a21df0281",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_family_events.jsonl": "3fce3e4a3de516ae0fb00129876f67c3406ffac52c501b48c8d29d88113b678f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_family_hours.jsonl": "87ea7445a616a0266d7ef0ef1f6f60dc9dde34f73d96a3a278fc510eea030514",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_family_meta.json": "22274d49417bec09d76de02fd61264de5f5a7fcd84843b080226af5cc8bf56a2",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_family_people.jsonl": "b7f0b1da9d290d0ff57b6f69a068e88ea6a5711cdad130b170ab239ed6624425",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_people.jsonl": "86d0d6105ee0077d4da25f4170efe349d27289eb46fd772703775e20a7be6979",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18104_trace_meta.json": "0e84cee423118f2ae888e62ff65b273ca14febd7b0fcc6f405ac881ded62b91c",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_family_events.jsonl": "df48a690ab0dfbb357bd8d3e9e67271edbd1eeddc8d9ff42e9cc4722b48e50e6",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_family_hours.jsonl": "e9cb224e7d9c2b4740cae36dc8b21b9f73cff6ed49e2b79451bb653b08da789c",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_family_meta.json": "e96bfb9a6ef1e15f909584bea2d27c013931346be705e04193aa5d79ee2557ff",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_family_people.jsonl": "61a079679623d3cbbd7d3bd6edb1dc47a3ff1fc2670c24c42f253478e4ac4421",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_people.jsonl": "bd45637b7ab29d2fca3bfc1295e443a96f901593476526a5b85460524839326f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18105_trace_meta.json": "339a38ca4139d12cda881f058bc5eb1b121332eac2fe6f0fe36e95103f9dbe40",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_family_events.jsonl": "52bb8abf927eb6de7b4d1e5ed689448d8e562a92c4a43745c3c9f137b4a19229",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_family_hours.jsonl": "955a3c7f3a8445fc925deb0c2807bab9fdd7273a8f7a08b3a6224ed12ae148ea",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_family_meta.json": "eedb06d5b7e5aa62f5bfbc9b01e6f4640b450a81a1bf2534de39bddc7da3cb96",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_family_people.jsonl": "f04e2f52fb8ea72776a10d921b9d96220915eb7502ff3a878ac6d7c4e8905bc2",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_people.jsonl": "f20015dcc15ace2840ec8fb9b0a743703295714a887cededcb5d0d1903bda37a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18106_trace_meta.json": "6f9d7f68b4e85aaf4325ee1a1160171eca1909f99d5f57cddfce4039c56989fa",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_family_events.jsonl": "15a355b90daec5e63506b03d87a54eb547d81b771ed42c582e63f8c4f8d8908a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_family_fissions.jsonl": "52ec4011b7d9c5450f570e8e1ec0096801f95d0ac7883484f23242f926e31a7a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_family_hours.jsonl": "f2fba687fe44aa4455606fd0e5a30b5e0dad1c08b68ae6a0842685967995e547",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_family_meta.json": "37d2964cc6e1ae9426dc2b9678be5db50832f9293bacfc98da64829a314b86ba",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_family_people.jsonl": "0e142ee944b8bc49818675f1b61fb35ca3245bdfbd6a3ac18e0ba75522c762e3",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_fissions.jsonl": "39fbc919be227299780747c58d874aff0056230eae367ab703519f04c2cfed6c",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_people.jsonl": "90cf257a21d47b0887dc32bd24f902542af8810c5fa201874fcac54302ef5522",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18107_trace_meta.json": "01c0b5f5c86f1b80352c8767cc89f0f50f19d3dba343049d1b4e3a8e6bc209be",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_family_events.jsonl": "6e0623a2689eb34bc3d6abbac84d4d4eadea3c74a0727af7d13f763e0e1b4a7d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_family_fissions.jsonl": "0d804950f05d4bf09a74db4ce6de6b52a102863f5644d34c1536276430f6b9da",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_family_hours.jsonl": "625f903586215c401c0426ac8e24af6e7c93fea987602a3e55390ef963e9bda7",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_family_meta.json": "e90a915d6b2cff05a6866a2c5ea3136e3f46749b1d9e3075a3ac47710fab1bca",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_family_people.jsonl": "55111afdd6aec55c44a76d2599245a19cfe7be8d616d4408ad61edeb6fb4acce",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_fissions.jsonl": "af19880ae04f168878d493ced61a68e5a5565046ba6caa658aa5bcdff213bf1c",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_people.jsonl": "32580a7e354f6902749aaefaab08b195079a403e34f5fb981007dd912dac2d74",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18108_trace_meta.json": "dc3d9fa6180219201ac9a8315b959551ca3b68608487395350f5c8b46b31ff5a",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_family_events.jsonl": "99e38b17f6ab759c415db32b1470920d3fee0376b8e85a473db06b990f057806",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_family_fissions.jsonl": "8fab156bfb8513464c4b15b89b6fbf21b14b6aab5a5ac00b427ea9d8593cf139",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_family_hours.jsonl": "2c7d88c5d76019ae1ef0887f22fa4eaba353cccdc0fb6935168492e305c88c07",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_family_meta.json": "ed42819a12b96398ab6fd413ddc93c21334e0780ce8e02fbb74ac42818fd1025",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_family_people.jsonl": "84a9c66991dd4e41d7c9f471fe9ef1655c314577cd3298a72fc2ea6197d9533e",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_fissions.jsonl": "390395eaf6ceb31cd186806f0c43b20a0beccb9d26d55fc3ed018f44351bbe8d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_people.jsonl": "e7536d63fbeb006f37e65138ba0d5f07f3d0470d3b971f2d8f3e115c4221453d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18109_trace_meta.json": "d548f58b200cd2d63a7268b5378a0fc9cad7a11e67222796aba94036f226f51e",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_family_events.jsonl": "dd9db5ccf4531bff2113bf0801fb7a3e58b9d3eed699ef4c9b33a5cde33dce13",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_family_hours.jsonl": "f831f18ba4c89bbf3f8e08bf332b42223a3f80895e5c43a16fbcd3b35f1a74e9",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_family_meta.json": "24f2035f961bb85b8d016839886705e766abc429ba7651e53973c1cc468555a0",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_family_people.jsonl": "26862c97f19beb2c24d9444e5451cb122d90bba68c763641832288e85dcad74b",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_people.jsonl": "56811e0654c3ca397f973d99f2769cf6d6562e1506d33af5da829f077b1ed0b3",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18110_trace_meta.json": "1d600612bba9d195460b9a7cea0512f55a74facda6cc9ce4b2287dd8130175d8",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_family_events.jsonl": "c8d6beec797cec2fa6e6d32007e52557e722e2de5a3570c4bb629e9f91027d68",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_family_fissions.jsonl": "8567955d9e89be98b823d2453122b5b6b90751dd85f6d7bb9ca9a071f93ee940",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_family_hours.jsonl": "004d87e46142171f624388e4bd32b920397383eda154b533538dc7d69f61d6e7",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_family_meta.json": "68296456d5d4f74eccfc3c23a23371574d15a37cbead4e1f0fc5bbb91516a067",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_family_people.jsonl": "1f0e191f6806b5040d90994a8bdcff163fb6e7782e2f665abf9f7c9578cb8cea",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_fissions.jsonl": "aa83c6cb9bafb0df01e95b70fe8859d31a4cda186a950f504b77215eaf8f1983",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_people.jsonl": "5350beab766cb5eb80bbc41f73ec7707f52b3b10e19132aa8dfac07ecee25413",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18111_trace_meta.json": "728480778fb5860a4d8ccf14be9f9b5db0180e8ea3ce98ef18f7b8e4af637ddf",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_family_events.jsonl": "400279fb258997b0a7efd41f8de91f9cd73088417e68afd7875137432aaa7752",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_family_fissions.jsonl": "bb5662f96cdffed6cf982b67b2ee5d8fae6a6e01522e60ee887fd15a125d7103",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_family_hours.jsonl": "fff36b229e2dbd6a8a2fe6403a390538653ba238f801372c6c9fdab0d7e4af5d",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_family_meta.json": "271e3438fd490cd64aa1ea034f524b75bfea1a9424ba0c736bdd853a13b3ab67",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_family_people.jsonl": "346ec242b517e64eb0869de1aea7347fb1a7a9251c7b85a92350f7905d0cf971",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_fissions.jsonl": "58a1a01d19b5908ac4f3a84256306cfa0427503358a8698c11c574f9179d7306",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_people.jsonl": "d6828672b1e8bab3cc53f6bead93a92aebb9cd8d3b4f1f03a6eaa5197f4d7cdb",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18112_trace_meta.json": "e2c71903738647ef78da81b3ff0eaba28bb11a3e48fec27e338bf55500f93c4f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_family_events.jsonl": "87c0b9d39a88528c1c5695a2eea1120a94e0f81b8f60369b6d2b85ecd651cdb5",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_family_fissions.jsonl": "9e5dfcc62df89dd38c616615603b5508ce6f4cbe9bd8b7330268a1d40da7ae73",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_family_hours.jsonl": "5ed2e827dd4eba847bde9141666f14d5df2885a4aee2130b8a769b8e508f8523",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_family_meta.json": "1e0ae8c3a575a5adb8c0cd3933dc3f2366ba3c0067fe0f01719b40abbeb8008f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_family_people.jsonl": "2623d965fee5bf5821191c35bbd32cd017fa3822cb827e9a35e56fa60a8f5106",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_fissions.jsonl": "ebbfcbd62e383782d4dc4692509e335daf14a4e8dcdaa0407f6969ffeaaa5d8b",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_people.jsonl": "d1eee8c028d55386c52c19d715343335d6b0a46cb35186c9198a182d21f12bc0",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18113_trace_meta.json": "a2eaa2330b86f0fb8dd84c88ea194aed54499a0c7cdff9fa83ab7070f9916c65",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_family_events.jsonl": "eca961bba15f59cca5b648001f3f2e2eb8aa5771da1852e0ad7f5a7d1037fd76",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_family_hours.jsonl": "78460f61094993cb8b67c8a0aaea2d46a9482e5b63a541df9e44c1ff949aba5f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_family_meta.json": "d4feb1179aaecd5b11856e3bf7686ab22cee1e6739b09e9c9d850675e72adf3f",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_family_people.jsonl": "edcfaec76172a313bcf1f2349c87c30ca3e140ebe0dd506db6c6bb7f2da6f587",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_people.jsonl": "89210c6d2b955d7af15f85f257df2a7d8147dad57a79f7e6817bc41e073dfdf9",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18114_trace_meta.json": "0c688a752c1a95ecd9d8ffb294c00b7cf7c185d2986aca49a18de84bb48d5c11",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_family_events.jsonl": "85ab188f6eb5e750f97ff0f9dd0305527de0d5de87fe057cc789462a5f0077db",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_family_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_family_hours.jsonl": "a76de4db0f4242e13b9eaba9c8faf635083603150d25fa616a536b9d928e9bd6",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_family_meta.json": "e530157545383e90046b1876b140b16a6171032bb6afd0a7446e80ad8e6de7da",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_family_people.jsonl": "85c42f6b2e871d56f1a9bcbbbe7b5cf8d4dc7276fa6c404b9017df8cc1fd7cae",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_fissions.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_people.jsonl": "e452f04b7840d42c83e034189044d774dc815add54dc81214973175da9331da7",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/game_v22_s18115_trace_meta.json": "600dda42495792ca99915a7de32ecb2e86b37ca8f9b6bd0c630e4b6928952b63",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/summary.json": "b1bcf5aa75074682b4c96c3d05c2c04b4186e92a80d029a58bf67630ba9da643",
+    "/Users/rexxa/work/p17-data/b-tuning/r1/source_commit.txt": "61e740891458edbfd6fe0b973905ece143136bee02134eee967a370c21f9fec4",
+    "/Users/rexxa/work/p17-data/family_trace_audit_runner.py": "5faafff0b6c51381953e82bfbe25fe48b8065c47d52b978da1cf546f812f56cc",
+    "/Users/rexxa/work/p17-data/family_trace_recompute.py": "4f6902c44ac7cdd64c6ab426887a5d894ad177168ffce39661f6020948939df9"
+  },
+  "mode": "tuning",
+  "purpose": "independent raw family evidence extraction; not Part8 review",
+  "run_root": "/Users/rexxa/work/p17-data/b-tuning/r1",
+  "schema_version": 1,
+  "terminal_provenance": {
+    "evaluator_report": "/Users/rexxa/work/new-world-pass4/docs/revitalize/probe/p17-b_tuning/r1/eval.json",
+    "evaluator_rules": {
+      "F1": "PASS",
+      "F2": "PASS",
+      "F3": "PASS",
+      "F4": "PASS",
+      "F5": "FAIL",
+      "F6": "PASS",
+      "F7": "PENDING",
+      "F8": "PENDING"
+    },
+    "evaluator_verdict": "FAIL",
+    "input_sha256": {
+      "/Users/rexxa/work/new-world-pass4/docs/revitalize/probe/p17-b_tuning/r1/eval.json": "b58681d3eff1954b920f7a779e4299461e43702865a6b8a84f84a3b1f45ddb51",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/RUNLOG.txt": "eb719d7a9b971b245e2f3395527d5e9d57e9f804aa93b444c4c77b2cd92b9769",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/evaluate.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/game_v21.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/game_v21/summary.json": "39d1d358e0f4c1be35e4e3867de7078d8f6d8462833ecb9f5828233030d5d5af",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/game_v22/summary.json": "b1bcf5aa75074682b4c96c3d05c2c04b4186e92a80d029a58bf67630ba9da643",
+      "/Users/rexxa/work/p17-data/b-tuning/r1/source_commit.txt": "61e740891458edbfd6fe0b973905ece143136bee02134eee967a370c21f9fec4"
+    },
+    "producer_commit": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+    "terminal_log_row": "2026-10-15T10:06:39.500308Z workloads end exit=1",
+    "workloads_exit": 1
+  },
+  "worlds": [
+    {
+      "F1_raw_day60": {
+        "denominator": 54,
+        "numerator": 35,
+        "ratio": 0.6481481481481481
+      },
+      "F2_raw": {
+        "denominator": 56,
+        "numerator": 56,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 658,
+        "numerator": 656,
+        "ratio": 0.9969604863221885
+      },
+      "F5_raw": {
+        "denominator": 13,
+        "numerator": 1,
+        "ratio": 0.07692307692307693
+      },
+      "checks": 650790,
+      "female": 53,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 1,
+          "couples_at_departure": 13,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 98,
+      "male": 45,
+      "pair_events": 36,
+      "seed": 18100
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 18,
+        "numerator": 5,
+        "ratio": 0.2777777777777778
+      },
+      "F2_raw": {
+        "denominator": 22,
+        "numerator": 22,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 455,
+        "numerator": 455,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 503939,
+      "female": 30,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 1,
+          "couples_at_departure": 9,
+          "fissions": 1
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 63,
+      "male": 33,
+      "pair_events": 18,
+      "seed": 18101
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 19,
+        "numerator": 11,
+        "ratio": 0.5789473684210527
+      },
+      "F2_raw": {
+        "denominator": 24,
+        "numerator": 24,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 394,
+        "numerator": 394,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 450191,
+      "female": 26,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 60,
+      "male": 34,
+      "pair_events": 18,
+      "seed": 18102
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 30,
+        "numerator": 16,
+        "ratio": 0.5333333333333333
+      },
+      "F2_raw": {
+        "denominator": 38,
+        "numerator": 38,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 502,
+        "numerator": 502,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 11,
+        "numerator": 1,
+        "ratio": 0.09090909090909091
+      },
+      "checks": 560275,
+      "female": 45,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 1,
+          "couples_at_departure": 11,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 84,
+      "male": 39,
+      "pair_events": 23,
+      "seed": 18103
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 21,
+        "numerator": 5,
+        "ratio": 0.23809523809523808
+      },
+      "F2_raw": {
+        "denominator": 20,
+        "numerator": 17,
+        "ratio": 0.85
+      },
+      "F4_raw": {
+        "denominator": 213,
+        "numerator": 213,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 298224,
+      "female": 18,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 44,
+      "male": 26,
+      "pair_events": 11,
+      "seed": 18104
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 23,
+        "numerator": 15,
+        "ratio": 0.6521739130434783
+      },
+      "F2_raw": {
+        "denominator": 25,
+        "numerator": 25,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 550,
+        "numerator": 550,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 595315,
+      "female": 37,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 75,
+      "male": 38,
+      "pair_events": 26,
+      "seed": 18105
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 21,
+        "numerator": 12,
+        "ratio": 0.5714285714285714
+      },
+      "F2_raw": {
+        "denominator": 21,
+        "numerator": 21,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 313,
+        "numerator": 313,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 296966,
+      "female": 21,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 45,
+      "male": 24,
+      "pair_events": 16,
+      "seed": 18106
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 23,
+        "numerator": 14,
+        "ratio": 0.6086956521739131
+      },
+      "F2_raw": {
+        "denominator": 30,
+        "numerator": 30,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 560,
+        "numerator": 558,
+        "ratio": 0.9964285714285714
+      },
+      "F5_raw": {
+        "denominator": 10,
+        "numerator": 2,
+        "ratio": 0.2
+      },
+      "checks": 502737,
+      "female": 34,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 2,
+          "couples_at_departure": 10,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 69,
+      "male": 35,
+      "pair_events": 23,
+      "seed": 18107
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 30,
+        "numerator": 18,
+        "ratio": 0.6
+      },
+      "F2_raw": {
+        "denominator": 42,
+        "numerator": 42,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 407,
+        "numerator": 407,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 9,
+        "numerator": 0,
+        "ratio": 0.0
+      },
+      "checks": 479331,
+      "female": 35,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 9,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 80,
+      "male": 45,
+      "pair_events": 22,
+      "seed": 18108
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 68,
+        "numerator": 33,
+        "ratio": 0.4852941176470588
+      },
+      "F2_raw": {
+        "denominator": 72,
+        "numerator": 72,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 595,
+        "numerator": 592,
+        "ratio": 0.9949579831932773
+      },
+      "F5_raw": {
+        "denominator": 10,
+        "numerator": 1,
+        "ratio": 0.1
+      },
+      "checks": 742545,
+      "female": 61,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 1,
+          "couples_at_departure": 10,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 118,
+      "male": 57,
+      "pair_events": 35,
+      "seed": 18109
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 20,
+        "numerator": 12,
+        "ratio": 0.6
+      },
+      "F2_raw": {
+        "denominator": 22,
+        "numerator": 22,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 387,
+        "numerator": 387,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 368294,
+      "female": 26,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 51,
+      "male": 25,
+      "pair_events": 19,
+      "seed": 18110
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 54,
+        "numerator": 23,
+        "ratio": 0.42592592592592593
+      },
+      "F2_raw": {
+        "denominator": 56,
+        "numerator": 55,
+        "ratio": 0.9821428571428571
+      },
+      "F4_raw": {
+        "denominator": 440,
+        "numerator": 424,
+        "ratio": 0.9636363636363636
+      },
+      "F5_raw": {
+        "denominator": 7,
+        "numerator": 2,
+        "ratio": 0.2857142857142857
+      },
+      "checks": 554697,
+      "female": 40,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 2,
+          "couples_at_departure": 7,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 91,
+      "male": 51,
+      "pair_events": 24,
+      "seed": 18111
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 61,
+        "numerator": 32,
+        "ratio": 0.5245901639344263
+      },
+      "F2_raw": {
+        "denominator": 67,
+        "numerator": 67,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 672,
+        "numerator": 672,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 11,
+        "numerator": 0,
+        "ratio": 0.0
+      },
+      "checks": 766321,
+      "female": 71,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 11,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 113,
+      "male": 42,
+      "pair_events": 38,
+      "seed": 18112
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 48,
+        "numerator": 29,
+        "ratio": 0.6041666666666666
+      },
+      "F2_raw": {
+        "denominator": 51,
+        "numerator": 51,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 490,
+        "numerator": 479,
+        "ratio": 0.9775510204081632
+      },
+      "F5_raw": {
+        "denominator": 9,
+        "numerator": 2,
+        "ratio": 0.2222222222222222
+      },
+      "checks": 606957,
+      "female": 51,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 2,
+          "couples_at_departure": 9,
+          "fissions": 1
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 88,
+      "male": 37,
+      "pair_events": 28,
+      "seed": 18113
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 19,
+        "numerator": 14,
+        "ratio": 0.7368421052631579
+      },
+      "F2_raw": {
+        "denominator": 19,
+        "numerator": 19,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 508,
+        "numerator": 508,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 529776,
+      "female": 36,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 64,
+      "male": 28,
+      "pair_events": 21,
+      "seed": 18114
+    },
+    {
+      "F1_raw_day60": {
+        "denominator": 30,
+        "numerator": 18,
+        "ratio": 0.6
+      },
+      "F2_raw": {
+        "denominator": 32,
+        "numerator": 32,
+        "ratio": 1.0
+      },
+      "F4_raw": {
+        "denominator": 349,
+        "numerator": 349,
+        "ratio": 1.0
+      },
+      "F5_raw": {
+        "denominator": 0,
+        "numerator": 0,
+        "ratio": null
+      },
+      "checks": 426732,
+      "female": 36,
+      "fissions_by_status": {
+        "cancelled": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "completed": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        },
+        "pending": {
+          "couple_splits": 0,
+          "couples_at_departure": 0,
+          "fissions": 0
+        }
+      },
+      "git_sha": "47b7244052fcf616bf2efbe7e3f3f9e11aa6fc21",
+      "issues": [],
+      "lifetime_people": 65,
+      "male": 29,
+      "pair_events": 20,
+      "seed": 18115
+    }
+  ]
+}
