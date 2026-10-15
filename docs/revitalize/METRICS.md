@@ -3122,3 +3122,11 @@ Formal evaluation omits `--tuning`. Output reports retain all numeric results, c
 Evaluation status at registration: F1–F6 are PENDING because the reserved cohort has not run. F7 is PASS from completed identity proofs; F8 is PASS from completed quiet-held performance measurements. Stage B tuning F5FAIL remains a separate retained result.
 
 No Stage B evaluation-seed result is available or inferred at registration.
+
+### Stage B original registered result and post-launch correction boundary
+
+The registration above is historical and unchanged. Both evaluation arms completed with32 deterministic120-day worlds. The original evaluator finished2026-10-15T11:21:00.254612Z and the runner ended11:21:00.456354Z. Original overall verdict is FAIL: F1=527/1064=0.49530075187969924,95%CI[0.4544509821683466,0.5324089105339106], below0.50; F2–F8 are PASS under the original estimator. Do not retune the frozen familiarity300 after this result.
+
+Original F3 is0.10862373982554437,95%CI[0.08622829572041106,0.1300783122066738],6783 sibling pairs and78583 unrelated pairs. [Original JSON](probe/p17-b_eval/original_registered/eval.json), SHA256 `80ab9b5c24c4da35df65547fba0e4e17bf68f42a949f1ca12ab396ba45f7a43c`, and [original Markdown](probe/p17-b_eval/original_registered/eval.md) are preserved byte-for-byte with their source, launch, registration and raw-input receipts. The root completion audit verifies690 raw hashes and no missing/incorrect worlds or observation misses.
+
+Fresh review found two extra F3 population restrictions before the original metric report existed, recorded at10:53:13.607460Z and11:08:18Z in commits32e2a009 and9a06b111. The literal brief requires all recorded full siblings with two known matching ordered parents, without residence/coexistence filtering; unrelated controls require the first shared non-null-settlement observation but no sibling stage-category filter. Missing sibling shared-snapshot context stays null. The correction will change only evaluator population selection and nullable reference serialization, retaining numeric functions, bootstrap, bars, simulation parameters and raw inputs. Both original and corrected results will be reported. This is explicitly a post-launch methodological correction, never an unchanged preregistered analysis or another tuning round.
