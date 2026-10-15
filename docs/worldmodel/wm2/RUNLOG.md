@@ -35,6 +35,6 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 08:03:11 | 13:03:14 | `wm2_m1bact_v19_s1`: stop `patience` at step 11,700, best step 9,900 (val 0.0603) → converged, 17,966 s; one transient validation spike (0.206 at step 6,600) |
 | 4.2 | 13:03:14 | 13:20:48 | its finals from `b57ef7bb`: `_fact` 13:11:35, `_effects` 13:20:30, `_split` 13:20:48, exit 0 |
 | 4.1 | 13:03:14 | | `wm2_m1long_v19_s1` started |
-| 4.1 | 13:03:14 | 14:24:15 | `wm2_m1long_v19_s1`: stop `max_steps` (12,000), best step 10,200 (val 0.0804) → converged by the 10 % rule (10,200 < 10,800), ≈ 4,800 s |
+| 4.1 | 13:03:14 | 14:24:15 | `wm2_m1long_v19_s1`: stop `max_steps` (12,000), best step 11,700 (val 0.0782) → not converged, 4,841 s |
 | 4.2 | 14:24:15 | 14:28:21 | its finals from `b57ef7bb`, exit 0 |
 | 4.1 | 14:24:15 | | `wm2_m1bact_v19_s2` started |
