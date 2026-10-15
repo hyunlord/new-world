@@ -2835,7 +2835,7 @@ Placebo (`game_v20_inert`, round 1, valid for both rounds): every |ρ| ≤ 0.074
 | T2 | inert = v19 exactly: NS 0.044, HA −0.058, RD 0.008, P food 0.031, P wood 0.010; dep −15.6 | \|ρ\| ≤ 0.10, \|dep\| ≤ 40 | PASS (with and without the wood ρ) |
 | T3 | alive at day 120 62.53 vs 62.47 (+0.1 %, paired +0.06 [−0.34, 0.47]); non-old-age deaths 1.75 vs 1.44 per world (+0.31 [−0.22, 0.91]); old-age 80.16 vs 80.09; fissions 0.78 vs 0.78; first split day +0.28 [−3.22, 3.56] (18 worlds split in both) | ±15 %, ≤ +1.5 | PASS |
 | T4 | slopes NS 0.500, HA 0.485, RD 0.487, P 0.498 (pooled 0.493 [0.477, 0.508]; 3,845 births with two known parents); SD alive at day 120 vs founders −1.5 / −0.5 / −1.1 / −4.9 % | [0.35, 0.65]; ±20 % | PASS |
-| T5 | see Part 2 and Part 6 | identical | PASS (Part 6 reruns on the final commit) |
-| T6 | see Part 3 performance | | pending |
+| T5 | final commit `9eb221d3`: I1 0 / 155,815, I3 0 / 105,187, I2 20 / 20 vs base; v19 pins and 40,320-tick inert test pass (gate); 120-day inert = v19 except `scene` (twice: `7ee8b86c` and `9eb221d3`) | identical | PASS |
+| T6 | (a) inert +1.9 %; (a′) v20 0.3145 ms (+2.7 %); (a″) quick 0.3038 → 0.3044 ms; (b) decision stress slope 1.094 (ref 1.06) | ≤ +15 %; ≤ 4.0 ms; < 1.7 | PASS |
 
 Trace bookkeeping (all three scenes): 0 born-event misses, 0 component mismatches, 0 cancelled fissions. On the evaluation seeds `game_v20_inert` = `game_v19` too (154,491 shared values, only `scene` differs).
