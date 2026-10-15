@@ -1,0 +1,663 @@
+# Pass 18 stage b performance: PASS
+
+| Check | Value | Limit | Pass |
+|---|---:|---:|---|
+| mean_relative | 0.02587192848917765 | <= 0.15 | True |
+| mean_absolute | 0.3808884057971014 | <= 4.0 | True |
+| p999_relative | 0.32608695652173914 | <= 0.35 | True |
+| slope | 1.0102383716430616 | < 1.7 | True |
+
+AgentDecisionSystem: inherited log-log OLS of observed mean alive at 06:00 versus mean microseconds per call; historical slope 1.06.
+
+## repeats
+
+```json
+{
+  "old": [
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r1/stress_stress_v21_s15100_n500_side64_fed.json",
+      "sha256": "2dee514563e7e4269089c197390bd8d5eeee7d6e7a277defa5a98a0fecfd2fca",
+      "mean_ms": 0.3904195652173913,
+      "p999_ms": 1.203,
+      "max_ms": 4.296,
+      "alive": 500.0,
+      "decision_us": 258.7902811594203,
+      "decision_share": 0.6628517221346786,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r2/stress_stress_v21_s15100_n500_side64_fed.json",
+      "sha256": "9f16c1eb53f60ab28cb3ace18743b7eb24a910e7350e7dab5d847fd6c92b7d58",
+      "mean_ms": 0.3645717391304348,
+      "p999_ms": 0.828,
+      "max_ms": 0.907,
+      "alive": 500.0,
+      "decision_us": 240.76375797101448,
+      "decision_share": 0.6604015948830174,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r3/stress_stress_v21_s15100_n500_side64_fed.json",
+      "sha256": "9f7913c442220483e58bc31903ccad15da99ce2b2a588d7b63fe5536fc27bbbe",
+      "mean_ms": 0.37128260869565216,
+      "p999_ms": 0.807,
+      "max_ms": 0.914,
+      "alive": 500.0,
+      "decision_us": 246.55815579710145,
+      "decision_share": 0.6640713839608096,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    }
+  ],
+  "new": [
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r1/stress_stress_v22_s15100_n500_side64_fed.json",
+      "sha256": "061d912513589998766fc5707c59b3fd2492ffd343dd7e7bc644782f7e493c27",
+      "mean_ms": 0.3808884057971014,
+      "p999_ms": 1.098,
+      "max_ms": 1.393,
+      "alive": 500.0,
+      "decision_us": 252.46387246376813,
+      "decision_share": 0.6628289772575938,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r2/stress_stress_v22_s15100_n500_side64_fed.json",
+      "sha256": "2059bd156ac0593643bf58b9a40c2f70ad6dc3cfe49a631dd26cd1fa2c95ff65",
+      "mean_ms": 0.3706340579710145,
+      "p999_ms": 0.85,
+      "max_ms": 0.893,
+      "alive": 500.0,
+      "decision_us": 244.94244782608695,
+      "decision_share": 0.6608740955080894,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r3/stress_stress_v22_s15100_n500_side64_fed.json",
+      "sha256": "b5b4f0c2dd89ef65e5001720c4bb17def96cb3ca7b4177ba243a591c71a8f11e",
+      "mean_ms": 0.38504202898550727,
+      "p999_ms": 1.299,
+      "max_ms": 1.925,
+      "alive": 500.0,
+      "decision_us": 255.1654572463768,
+      "decision_share": 0.6626950775183587,
+      "fingerprint": "14458e1fa711de0c",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    }
+  ]
+}
+```
+
+## medians
+
+```json
+{
+  "old": {
+    "mean_ms": 0.37128260869565216,
+    "p999_ms": 0.828
+  },
+  "new": {
+    "mean_ms": 0.3808884057971014,
+    "p999_ms": 1.098
+  }
+}
+```
+
+## slopes
+
+```json
+{
+  "old": {
+    "b": 1.0045708845843782,
+    "a": -0.598593158657291,
+    "n": 3,
+    "se": 0.060342195029351564,
+    "ci": [
+      0.23785060031125638,
+      1.7712911688575
+    ],
+    "r2": 0.9964048512183632
+  },
+  "new": {
+    "b": 1.0102383716430616,
+    "a": -0.6093917436339868,
+    "n": 3,
+    "se": 0.061164914419550985,
+    "ci": [
+      0.23306444635764523,
+      1.787412296928478
+    ],
+    "r2": 0.9963476873999398
+  },
+  "reference": 1.06,
+  "old_points": [
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json",
+      "sha256": "0caa55ad61f1d5671cfb76e455dd8f8175df7ea25786e0ec53a26b110e1d7de1",
+      "mean_ms": 0.09195744680851065,
+      "p999_ms": 0.338,
+      "max_ms": 0.996,
+      "alive": 100.0,
+      "decision_us": 57.499427659574465,
+      "decision_share": 0.6252829939842666,
+      "fingerprint": "bea6a0b9ada4edc7",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json",
+      "sha256": "ef23b4432e5ef54a8fa8f0122e49852c35320627b905ebef3c8bcddd25586fe8",
+      "mean_ms": 0.3942471631205674,
+      "p999_ms": 0.879,
+      "max_ms": 0.892,
+      "alive": 500.0,
+      "decision_us": 260.9170120567376,
+      "decision_share": 0.6618107534154781,
+      "fingerprint": "7ce50f96939b36b6",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json",
+      "sha256": "2b6873ac3dab6eb0454c1da9390997d96978cbe9c1c17fa92a81bbfbb3e97ba7",
+      "mean_ms": 0.8653843971631205,
+      "p999_ms": 1.829,
+      "max_ms": 1.892,
+      "alive": 1000.0,
+      "decision_us": 599.9265361702128,
+      "decision_share": 0.6932486166111563,
+      "fingerprint": "fbf486f2e08c29ff",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    }
+  ],
+  "new_points": [
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json",
+      "sha256": "840875ff614b5e98a672c8ad3465bb700c13b72be61bdc096c799fcb580e0a60",
+      "mean_ms": 0.09332269503546099,
+      "p999_ms": 0.211,
+      "max_ms": 0.223,
+      "alive": 100.0,
+      "decision_us": 58.40522730496454,
+      "decision_share": 0.6258416270851541,
+      "fingerprint": "bea6a0b9ada4edc7",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json",
+      "sha256": "40249279738651946bf6f7cca4f3da5a8f5dcaee53c2440e89893915ee921b3e",
+      "mean_ms": 0.40199290780141844,
+      "p999_ms": 0.933,
+      "max_ms": 0.935,
+      "alive": 500.0,
+      "decision_us": 267.0754758865248,
+      "decision_share": 0.6643785765953317,
+      "fingerprint": "7ce50f96939b36b6",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    },
+    {
+      "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json",
+      "sha256": "f89bd297777d757acdafba1b9c8c6742be7eca8598ca417dd8bb81a3300905c6",
+      "mean_ms": 0.8858319148936171,
+      "p999_ms": 2.005,
+      "max_ms": 2.087,
+      "alive": 1000.0,
+      "decision_us": 617.650470212766,
+      "decision_share": 0.6972547046771757,
+      "fingerprint": "fbf486f2e08c29ff",
+      "machine": {
+        "cpu": "Apple M4 Max",
+        "memsize": "38654705664",
+        "ncpu": "14",
+        "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+        "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+      }
+    }
+  ]
+}
+```
+
+## quick
+
+```json
+{
+  "base": {
+    "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/quick_base/quick_stress_v19_s15100_n500_side64_fed.json",
+    "sha256": "14cb58396dd8e0b55745cc08d0ca20f08984caa01f5dd84cb01aa6c5ecb603af",
+    "mean_ms": 0.3104731884057971,
+    "p999_ms": 0.628,
+    "max_ms": 0.819,
+    "alive": 500.0,
+    "decision_us": 190.81174420289855,
+    "decision_share": 0.6145836462809223,
+    "fingerprint": "54ac4928a770f238",
+    "machine": {
+      "cpu": "Apple M4 Max",
+      "memsize": "38654705664",
+      "ncpu": "14",
+      "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+      "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+    }
+  },
+  "final": {
+    "file": "/Users/rexxa/work/p18-data/perf/p18-2_b/quick_final/quick_stress_v19_s15100_n500_side64_fed.json",
+    "sha256": "e860b53b94f436daac1f78c22f20bea7681aebecd19593fcefb231e58ffedd93",
+    "mean_ms": 0.3264427536231884,
+    "p999_ms": 0.572,
+    "max_ms": 0.94,
+    "alive": 500.0,
+    "decision_us": 205.6306695652174,
+    "decision_share": 0.6299134144744291,
+    "fingerprint": "54ac4928a770f238",
+    "machine": {
+      "cpu": "Apple M4 Max",
+      "memsize": "38654705664",
+      "ncpu": "14",
+      "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)",
+      "uname": "Darwin hyunlordui-MacBookPro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64"
+    }
+  }
+}
+```
+
+## provenance
+
+```json
+{
+  "schema_version": 1,
+  "stage": "b",
+  "status": 0,
+  "builds": {
+    "final": {
+      "path": "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+      "commit": "f11301eeffb22931cda45983d9024832177c695d",
+      "sha256": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44"
+    },
+    "baseline": {
+      "path": "/Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_perf",
+      "commit": "8cbb697c97aac800935813d2c79c34195ebef6a3",
+      "sha256": "216cd0b6c40c246cacf1e1fa7a0e4b2fdcf14672eed38431b8cad7032a85ff25"
+    }
+  },
+  "quiet": {
+    "owner": "pass18-sim (Claude Code, new-world-pass4)",
+    "pid": "81284",
+    "purpose": "p18 parts 1-2: attribution and R5/F8",
+    "started": "2026-10-15T16:42:44Z",
+    "log": "/Users/rexxa/work/p18-data/perf/quiet.log",
+    "prefix_bytes": 689,
+    "prefix_sha256": "44d0f47f1cae93bf18ef1bacea5c64f3e615507f30f8c885a5e2471d892ce9da",
+    "contended": false
+  },
+  "commands": {
+    "file": "commands.jsonl",
+    "sha256": "2bce0ac785664532aa2f97938c5adfc2c30f6422a0ea6c03f1b36385cd86d09c"
+  },
+  "runlog": {
+    "file": "RUNLOG.txt",
+    "sha256": "2414a5af58b2a9b26349243454ac3bcc58317e4236063265367de96978070ed0"
+  },
+  "indexes": {
+    "quick_final/runs.json": "eb3d24781ac29b645560052fa04e9a76a8d77b5b955a51f785f51e3bf03552e9",
+    "b_game_v21/runs.json": "e124998da00059c1f599780addb830e9f0378652a03669ba7576d377e183e799",
+    "b_game_v22/runs.json": "ed71cb4332af6414c36e86a383bb861522cba493b3a33f846ba9489dea3681d2",
+    "quick_base/runs.json": "63907d3f242c7fd310008591861bc03b24a5e180154314df9f6c28d31b280e6c",
+    "a/r1/runs.json": "834542acc620c1413ccee749da7945b834a5ff73ce40b23f79472d58adaaf265",
+    "a/r3/runs.json": "82e3ac362751f465220e4c6e64296db570456ed6850946a961209fadf1d86258",
+    "a/r2/runs.json": "fdf24f70ec61c16215cb754b4306190b7fc18d255f18641d659ed4b869f61e35"
+  },
+  "manifest_sha256": "08b347a181d0ecc78ad70c8214d92c74c6d506328586f0a2924a2ff5cbd7fb77",
+  "quiet_log_sha256": "98256251d9371a3ca25d524bce003092befa4210960585ea0951fd43c805bb0c",
+  "input_directory": "/Users/rexxa/work/p18-data/perf/p18-2_b",
+  "command_records": [
+    {
+      "index": 0,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r1"
+      ],
+      "started": 1792082603.1357949,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082603.817251,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r1/stress_stress_v21_s15100_n500_side64_fed.json": "2dee514563e7e4269089c197390bd8d5eeee7d6e7a277defa5a98a0fecfd2fca"
+      }
+    },
+    {
+      "index": 1,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r1"
+      ],
+      "started": 1792082603.8990889,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082604.566925,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r1/stress_stress_v22_s15100_n500_side64_fed.json": "061d912513589998766fc5707c59b3fd2492ffd343dd7e7bc644782f7e493c27"
+      }
+    },
+    {
+      "index": 2,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r2"
+      ],
+      "started": 1792082604.6377459,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082605.2507389,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r2/stress_stress_v21_s15100_n500_side64_fed.json": "9f16c1eb53f60ab28cb3ace18743b7eb24a910e7350e7dab5d847fd6c92b7d58"
+      }
+    },
+    {
+      "index": 3,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r2"
+      ],
+      "started": 1792082605.328282,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082605.949335,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r2/stress_stress_v22_s15100_n500_side64_fed.json": "2059bd156ac0593643bf58b9a40c2f70ad6dc3cfe49a631dd26cd1fa2c95ff65"
+      }
+    },
+    {
+      "index": 4,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r3"
+      ],
+      "started": 1792082606.021815,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082606.643025,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r3/stress_stress_v21_s15100_n500_side64_fed.json": "9f7913c442220483e58bc31903ccad15da99ce2b2a588d7b63fe5536fc27bbbe"
+      }
+    },
+    {
+      "index": 5,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "500",
+        "--side",
+        "64",
+        "--days",
+        "1",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/a/r3"
+      ],
+      "started": 1792082606.715753,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082607.357408,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "a/r3/stress_stress_v22_s15100_n500_side64_fed.json": "b5b4f0c2dd89ef65e5001720c4bb17def96cb3ca7b4177ba243a591c71a8f11e"
+      }
+    },
+    {
+      "index": 6,
+      "build": "baseline",
+      "argv": [
+        "/Users/rexxa/work/new-world-p18-base/rust/target/release/worldsim_perf",
+        "quick",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/quick_base"
+      ],
+      "started": 1792082607.4317691,
+      "binary_sha256_before": "216cd0b6c40c246cacf1e1fa7a0e4b2fdcf14672eed38431b8cad7032a85ff25",
+      "finished": 1792082607.9594839,
+      "exit_code": 0,
+      "binary_sha256_after": "216cd0b6c40c246cacf1e1fa7a0e4b2fdcf14672eed38431b8cad7032a85ff25",
+      "outputs": {
+        "quick_base/quick_stress_v19_s15100_n500_side64_fed.json": "14cb58396dd8e0b55745cc08d0ca20f08984caa01f5dd84cb01aa6c5ecb603af"
+      }
+    },
+    {
+      "index": 7,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "quick",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/quick_final"
+      ],
+      "started": 1792082608.027305,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082608.581593,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "quick_final/quick_stress_v19_s15100_n500_side64_fed.json": "e860b53b94f436daac1f78c22f20bea7681aebecd19593fcefb231e58ffedd93"
+      }
+    },
+    {
+      "index": 8,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "100,500,1000",
+        "--side",
+        "64",
+        "--days",
+        "2",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v22",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v22"
+      ],
+      "started": 1792082608.653244,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082612.737321,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "b_game_v22/stress_stress_v22_s15100_n100_side64_fed.json": "840875ff614b5e98a672c8ad3465bb700c13b72be61bdc096c799fcb580e0a60",
+        "b_game_v22/stress_stress_v22_s15100_n500_side64_fed.json": "40249279738651946bf6f7cca4f3da5a8f5dcaee53c2440e89893915ee921b3e",
+        "b_game_v22/stress_stress_v22_s15100_n1000_side64_fed.json": "f89bd297777d757acdafba1b9c8c6742be7eca8598ca417dd8bb81a3300905c6"
+      }
+    },
+    {
+      "index": 9,
+      "build": "final",
+      "argv": [
+        "/Users/rexxa/work/p18-data/bin_p2/plain/worldsim_perf",
+        "stress",
+        "--seeds",
+        "15100..15101",
+        "--agents",
+        "100,500,1000",
+        "--side",
+        "64",
+        "--days",
+        "2",
+        "--feed",
+        "fed",
+        "--rules",
+        "game_v21",
+        "--out",
+        "/Users/rexxa/work/p18-data/perf/p18-2_b/b_game_v21"
+      ],
+      "started": 1792082612.8093262,
+      "binary_sha256_before": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "finished": 1792082616.815187,
+      "exit_code": 0,
+      "binary_sha256_after": "01e3687791e938cb9c25cfc5cec4dfebf15df177eda92d829dc70875c3d4ac44",
+      "outputs": {
+        "b_game_v21/stress_stress_v21_s15100_n100_side64_fed.json": "0caa55ad61f1d5671cfb76e455dd8f8175df7ea25786e0ec53a26b110e1d7de1",
+        "b_game_v21/stress_stress_v21_s15100_n500_side64_fed.json": "ef23b4432e5ef54a8fa8f0122e49852c35320627b905ebef3c8bcddd25586fe8",
+        "b_game_v21/stress_stress_v21_s15100_n1000_side64_fed.json": "2b6873ac3dab6eb0454c1da9390997d96978cbe9c1c17fa92a81bbfbb3e97ba7"
+      }
+    }
+  ]
+}
+```
