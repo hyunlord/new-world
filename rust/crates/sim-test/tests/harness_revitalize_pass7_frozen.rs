@@ -43,8 +43,10 @@ fn pass6_v12_literal() -> WorldRules {
             keyed_draws: false,
             local_food_availability: false,
             temperament: None,
+            routine: None,
         },
         society: SocietyRules {
+            family: None,
             birth: BirthRule::Provisioned {
                 cooldown_ticks: 720,
                 food_cost: 10,

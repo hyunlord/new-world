@@ -30,6 +30,7 @@ const V20_REGEN: [[u16; 4]; 5] = [
 )]
 fn assert_v20_fields(seed: usize, r: &WorldRules, effects: bool) {
     let a = &r.agent;
+    assert_eq!(a.routine, None, "seed {seed}");
     assert_eq!(a.move_interval_ticks, 8, "seed {seed}");
     assert_eq!(a.idle_pause_chance, 0.4, "seed {seed}");
     assert_eq!(a.idle_tether_radius, Some(8), "seed {seed}");
@@ -69,6 +70,7 @@ fn assert_v20_fields(seed: usize, r: &WorldRules, effects: bool) {
     assert_eq!(temperament.ns_departure_weight, 1000, "seed {seed}");
 
     let s = &r.society;
+    assert_eq!(s.family, None, "seed {seed}");
     let BirthRule::Provisioned {
         cooldown_ticks,
         food_cost,

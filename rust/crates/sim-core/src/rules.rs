@@ -1,6 +1,9 @@
 //! Opt-in rules for generated worlds; defaults preserve the legacy fixture.
 use serde::{Deserialize, Serialize};
 
+mod routine;
+pub use routine::{FamilyRule, RoutineRule};
+
 /// Rules selected once when a world is constructed.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct WorldRules {
@@ -53,6 +56,8 @@ pub struct AgentRules {
     /// heritable axes) and, with `effects`, four everyday choices lean with
     /// it. None = v8–v19 (no temperament is drawn or stored).
     pub temperament: Option<TemperamentRule>,
+    /// Pass 17 daytime activities; absent preserves every older scene.
+    pub routine: Option<RoutineRule>,
 }
 /// Pass 16 (`game_v20`): how temperament leans everyday choices. Each axis
 /// moves one value the code already has, per person, by `span × d / 500`
@@ -169,6 +174,8 @@ pub struct SocialSeekRule {
 /// Settlement birth and construction policy.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct SocietyRules {
+    /// Pass 17 pairing and household policy; absent preserves old parent selection.
+    pub family: Option<FamilyRule>,
     /// Conditions for a new resident.
     pub birth: BirthRule,
     /// Automatic shelter planning; absent in legacy worlds.
@@ -619,8 +626,10 @@ impl Default for WorldRules {
                 keyed_draws: false,
                 local_food_availability: false,
                 temperament: None,
+                routine: None,
             },
             society: SocietyRules {
+                family: None,
                 birth: BirthRule::Legacy,
                 shelter_planning: None,
                 settlement_anchor: SettlementAnchor::AnyCluster,
@@ -1197,8 +1206,10 @@ impl WorldRules {
                 keyed_draws: false,
                 local_food_availability: false,
                 temperament: None,
+                routine: None,
             },
             society: SocietyRules {
+                family: None,
                 birth: BirthRule::Provisioned {
                     cooldown_ticks: 1440,
                     food_cost: 10,
@@ -1553,11 +1564,13 @@ mod tests {
                 keyed_draws: false,
                 local_food_availability: false,
                 temperament: None,
+                routine: None,
             }
         );
         assert_eq!(
             r.society,
             SocietyRules {
+                family: None,
                 birth: BirthRule::Legacy,
                 shelter_planning: None,
                 settlement_anchor: SettlementAnchor::AnyCluster,
