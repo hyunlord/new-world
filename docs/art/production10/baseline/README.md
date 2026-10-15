@@ -12,3 +12,17 @@ P6 fixture correction: previous P9 final P6 image was identical to P1 and had no
 
 ## Running harness control
 W200 baseline versus unchanged-renderer control: PASS, 600 frames and 300 mutations (1440→1740). Raw evidence: `/Users/rexxa/work/art-production10-evidence/running/{base,control}/W200.jsonl`; comparison: `running/control-W200-comparison.json`. This validates the harness, not the final Part1 optimization.
+
+## Six-framing census completed
+All original seeds/ticks remain valid under game_v22 (P5 remains game_v19).
+
+| Framing | Population | Settlements | Lit fires |
+|---|---:|---:|---:|
+| P1 | 29 | 1 | 0 |
+| P2 | 29 | 1 | 1 |
+| P3 | 37 | 2 | 0 |
+| P4 | 66 | 3 | 0 |
+| P5 | 500 | 1 | 0 |
+| P6 | 29 | 1 | 0 |
+
+Raw census `framings-census.json`: complete=true, failures=[], elapsed1482.304s. P6 fixture capture exit0 and visually inspected: resident inspector and GodHand panels are visible.
