@@ -1,6 +1,6 @@
 # Art Pass 9 independent review — round 1, preparation
 
-Status: SOURCE PREPARATION COMPLETE; FINAL REVIEW PENDING. No confirmed production defect found in the reviewed source. This is not full-gate, pixel-identity, performance, or publication approval.
+Status: SOURCE PREPARATION AND PIXEL IDENTITY REVIEW COMPLETE; FINAL REVIEW PENDING. No confirmed production defect found in the reviewed source. Six-framing pixel identity passes. Performance and publication approval remain pending.
 
 ## Independence and scope
 
@@ -42,4 +42,14 @@ These establish only the available baseline controls. They do not establish A/B 
 
 ## Pending before final verdict
 
-All-six-framing A/A′/B identity evidence; direct inspection of the required image pairs; independent block-median recomputation for each performance phase; F1–F7 verdict audit; quiet-lock/hold provenance; completed final gates bound to actual source; final allowed-path audit. These remain round 1 work when artifacts arrive. No complete independent review is claimed yet.
+Independent block-median recomputation for each performance phase; F1–F7 verdict audit; quiet-lock/hold provenance; completed final publication gates bound to actual source; final allowed-path audit. These remain round 1 work when artifacts arrive. No complete independent review is claimed yet.
+
+## Round 1 artifact continuation — six-framing identity
+
+The implementation owner supplied source commit `a779e9270a54579e1e0c30c46fa3913100a7f784` and the completed `identity/attempt2/{A,Aprime,B,comparison}` evidence under `/Users/rexxa/work/art-production9-evidence`. The prior running-gate observation above is historical: the reviewer subsequently read all 70 results.tsv rows in p1-full-attempt2 and found zero nonzero exit statuses. This integration gate is separate from final publication checks.
+
+Independently opened the full A/P1.png and B/P1.png pair, then the full A/P4.png and B/P4.png pair. P1 preserves the close village scene, river edge, residents, shelters/hearth/storage, top HUD, lower-left feed, and lower-right GodHand controls. P4 preserves the wide view with three settlement labels, terrain footprint and grey outside-map area, distributed residents/vegetation, and HUD/panels. No visible A/B change was observed in either pair. This is preservation approval for the optimization; pre-existing crowding and grey exterior in P4 are present in both images and are not newly introduced defects.
+
+Read comparison/comparison.json and independently recomputed all six pairs using RGBA differences, including alpha, with no masks. Every image is 1920×1080. P1, P2, P3, P4, P5, and P6 each have A/A′ = 0 differing pixels / 0 maximum channel difference and A/B = 0 differing pixels / 0 maximum channel difference. These independent results agree with all six official comparison rows. F5 pixel identity is supported as PASS for these captured states. Timing/performance conclusions are not inferred from image equality.
+
+No additional graft calls were needed; cumulative call count remains one and reported savings remain approximately 1,857,527 tokens.
