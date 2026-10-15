@@ -88,9 +88,14 @@ def ols_slope(x, y):
     return float((dx * (y - y.mean())).sum() / den) if den > 0 else float("nan")
 
 
+VALID_DRAWS = []  # valid (non-nan) bootstrap draws of each call, in call order
+
+
 def bootstrap(per_world, statistic, b=BOOTSTRAP):
     """World-level bootstrap: (point, lo, hi). ``per_world`` is a list of
-    per-world payloads; ``statistic`` maps a list of payloads to a number."""
+    per-world payloads; ``statistic`` maps a list of payloads to a number.
+    Draws whose statistic is undefined (nan: fewer than 3 pairs, no departer)
+    are dropped; the number of valid draws is appended to ``VALID_DRAWS``."""
     point = statistic(per_world)
     rng = np.random.default_rng(0)
     n = len(per_world)
@@ -100,6 +105,7 @@ def bootstrap(per_world, statistic, b=BOOTSTRAP):
         v = statistic([per_world[i] for i in idx])
         if v == v:  # drop nan draws
             values.append(v)
+    VALID_DRAWS.append(len(values))
     if not values:
         return point, float("nan"), float("nan")
     lo, hi = np.percentile(values, [2.5, 97.5])
@@ -211,11 +217,12 @@ def t1_block(worlds, with_dep=True):
     for measure in ("ns", "ha", "rd", "p_food", "p_wood"):
         payloads = [t1_pairs(worlds[s], measure) for s in seeds]
         rho, lo, hi = bootstrap(payloads, pooled_rho)
-        out[measure] = {"rho": rho, "lo": lo, "hi": hi, "n": sum(len(p) for p in payloads)}
+        out[measure] = {"rho": rho, "lo": lo, "hi": hi, "n": sum(len(p) for p in payloads), "valid_draws": VALID_DRAWS[-1]}
     if with_dep:
         payloads = [departure_payload(worlds[s]) for s in seeds]
         diff, lo, hi = bootstrap(payloads, dep_diff)
         out["dep"] = {
+            "valid_draws": VALID_DRAWS[-1],
             "diff": diff,
             "lo": lo,
             "hi": hi,
@@ -246,8 +253,12 @@ def t1_verdicts(t1):
     return v
 
 
-def t2_verdict(t1):
-    rhos = [abs(t1[m]["rho"]) for m in ("ns", "ha", "rd", "p_food", "p_wood")]
+def t2_verdict(t1, with_wood=True):
+    """Section 9: every T1 statistic |rho| <= 0.10 and |dep| <= 40. The wood
+    rho has no verdict in T1; ``with_wood`` decides whether it counts here
+    (the primary, stricter reading includes it; both are reported)."""
+    measures = ("ns", "ha", "rd", "p_food", "p_wood") if with_wood else ("ns", "ha", "rd", "p_food")
+    rhos = [abs(t1[m]["rho"]) for m in measures]
     ok = all(r == r and r <= T2_RHO for r in rhos)
     if "dep" in t1 and t1["dep"]["diff"] == t1["dep"]["diff"]:
         ok = ok and abs(t1["dep"]["diff"]) <= T2_DEP
@@ -379,20 +390,20 @@ def render(result):
     lines.append("")
     lines.append("## T1 / T2 — rho per scene")
     lines.append("")
-    lines.append("| measure | scene | rho | 95 % interval | n |")
-    lines.append("|---|---|---|---|---|")
+    lines.append("| measure | scene | rho | 95 % interval | n | valid draws |")
+    lines.append("|---|---|---|---|---|---|")
     for measure in ("ns", "ha", "rd", "p_food", "p_wood"):
         for scene, t1 in result["t1"].items():
             b = t1[measure]
-            lines.append(f"| {measure} | {scene} | {fmt(b['rho'])} | [{fmt(b['lo'])}, {fmt(b['hi'])}] | {b['n']} |")
+            lines.append(f"| {measure} | {scene} | {fmt(b['rho'])} | [{fmt(b['lo'])}, {fmt(b['hi'])}] | {b['n']} | {b.get('valid_draws')} |")
     if any("dep" in t1 for t1 in result["t1"].values()):
         lines.append("")
-        lines.append("| departure | scene | NS departers − stayers | 95 % interval | departers / stayers | completed / cancelled fissions |")
-        lines.append("|---|---|---|---|---|---|")
+        lines.append("| departure | scene | NS departers − stayers | 95 % interval | departers / stayers | completed / cancelled fissions | valid draws |")
+        lines.append("|---|---|---|---|---|---|---|")
         for scene, t1 in result["t1"].items():
             if "dep" in t1:
                 b = t1["dep"]
-                lines.append(f"| T1-dep | {scene} | {fmt(b['diff'], 1)} | [{fmt(b['lo'], 1)}, {fmt(b['hi'], 1)}] | {b['departers']} / {b['stayers']} | {b['completed_fissions']} / {b['cancelled_fissions']} |")
+                lines.append(f"| T1-dep | {scene} | {fmt(b['diff'], 1)} | [{fmt(b['lo'], 1)}, {fmt(b['hi'], 1)}] | {b['departers']} / {b['stayers']} | {b['completed_fissions']} / {b['cancelled_fissions']} | {b.get('valid_draws')} |")
     lines.append("")
     lines.append("## Verdicts")
     lines.append("")
@@ -459,6 +470,14 @@ def render(result):
         for r in result["founders"]:
             lines.append(f"| {r['seed']} | {r['founders']} | {fmt(r['ns'], 0)} | {fmt(r['ha'], 0)} | {fmt(r['rd'], 0)} | {fmt(r['p'], 0)} | {r.get('alive_end')} | {r.get('first_split_day')} |")
     lines.append("")
+    lines.append("## Notes on the measures (review round 1)")
+    lines.append("")
+    lines.append("- Bootstrap draws whose statistic is undefined (fewer than 3 pairs, no departer) are dropped; the valid-draw count is listed with each interval.")
+    lines.append("- T2 is judged on every T1 statistic including the wood rho (which has no verdict in T1); the reading without it is listed beside it.")
+    lines.append("- Idle distance is measured from the hearth of the first settlement listing the person. Departers stay on the parent's roster while walking to the new site (up to 2 days), so an Idle departer on the trek is sampled far from the old hearth; in v20 departers lean high-NS, so these few samples add to T1-NS through departure rather than the tether (the placebo is unaffected).")
+    lines.append("- A deposit's load is the amount carried on the tick before the drop (section 6.5); a pickup inside the deposit radius on the same tick as the drain is not included, so loads are slightly undercounted alike in every scene.")
+    lines.append("- Would-be (v19) temperaments use the AgentBorn parents alive at the end of the previous tick; in v20 the observer's computation is compared with the component (`component_mismatches`).")
+    lines.append("")
     lines.append("## Trace bookkeeping")
     lines.append("")
     for scene, m in result["trace_meta"].items():
@@ -484,6 +503,7 @@ def evaluate(v20_dir, inert_dir, v19_dir=None, tuning=False):
     for name in scenes:
         if name != "v20":
             verdicts[f"T2-{name}"] = t2_verdict(result["t1"][name])
+            verdicts[f"T2-{name} (without the wood rho)"] = t2_verdict(result["t1"][name], with_wood=False)
     ref_name = "inert" if tuning or "v19" not in scenes else "v19"
     h20 = health(scenes["v20"][1])
     href = health(scenes[ref_name][1])

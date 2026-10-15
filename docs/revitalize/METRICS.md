@@ -2809,3 +2809,33 @@ Evaluation seeds 16000–16031 (32 worlds, 120 days, `--agent-trace`, Pass 13 ro
 | T6 | the budget holds | 8.5 (a) `worldsim_perf stress --rules game_v20_inert` mean tick (seed 15100, n = 500, 1 day, fed) ≤ +15 % of `--rules game_v19` the same day; (a′) `game_v20` vs `game_v19` reported, fails only above 4.0 ms; (a″) `quick` before (base build) and after (final build) reported; (b) the three-size stress slope of `AgentDecisionSystem` under `game_v20` (seeds 15100..15101, n = 100 / 500 / 1,000, 2 days, fed; fitted as `perf_p15.py`) compared with Pass 15's 1.06 — fails only if near-quadratic (≥ 1.7, PERF_BUDGET.md section 2) |
 
 Operational definitions fixed before the evaluation: "non-elder adult" = neither `Child` nor `Elder`; idle distance = Chebyshev distance from the hearth (`formation_tile`) of the first settlement listing the person, sampled at system ticks divisible by 10 while Idle between 06:00 and 18:00; bed minute = the first system tick between 18:00 and 03:00 of each night at which the person is `Consuming{Sleep}` (after midnight as 1,440 + m); a completed social interaction = leaving `Consuming{Agent}` with a loneliness drop ≥ min(25, the loneliness before); a deposit = a drop of carried food (wood) within 5 tiles of the hearth, counted with the amount carried the tick before; "non-old-age deaths" = every recorded cause except `old_age`; T4's "known parents" = both `AgentBorn` parents found and alive with a temperament at the birth.
+
+### Part 2 — proofs
+
+- Final-build identity (`7ee8b86c`) vs base: I1 0 / 155,815, I3 0 / 105,187, I2 20 / 20. 120-day inert check (DGX, 32 worlds): `game_v20_inert` vs `game_v19` 155,815 shared values, only `scene` differs; DGX `game_v19` = Mac I1 (0 differences).
+
+### Part 3 — tuning (seeds 16100–16115, 60 days)
+
+| round | spans (NS tether / HA min / RD ‰ / P food, wood) | ρ NS | ρ HA | ρ RD | ρ P food | ρ P wood | alive at day 60 v20 / inert | non-old-age deaths per world v20 / inert |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 4 / 60 / 500 / 2, 1 | 0.397 [0.248, 0.532] | −0.552 [−0.680, −0.441] | 0.789 [0.746, 0.824] | **0.159** [0.062, 0.243] | −0.010 | 46.75 / 46.56 | 0.50 / 0.44 |
+| 2 | 4 / 60 / 500 / **3, 2** | 0.369 [0.220, 0.504] | −0.555 [−0.677, −0.450] | 0.800 [0.768, 0.832] | 0.331 [0.267, 0.399] | 0.346 | 46.56 / 46.56 | 0.56 / 0.44 |
+
+Placebo (`game_v20_inert`, round 1, valid for both rounds): every |ρ| ≤ 0.074. Spans frozen after round 2.
+
+### Part 3/4 — evaluation (seeds 16000–16031, 120 days; `probe/p16-4_eval/eval.md`)
+
+| # | value (95 % world bootstrap) | bar | verdict |
+|---|---|---|---|
+| T1-NS | ρ 0.338 [0.263, 0.428] (n 4,117) | ≥ 0.25, excl. 0 | PASS |
+| T1-HA | ρ −0.578 [−0.630, −0.532] (n 4,108) | ≤ −0.25, excl. 0 | PASS |
+| T1-RD | ρ 0.782 [0.739, 0.820] (n 4,117) | ≥ 0.25, excl. 0 | PASS |
+| T1-P | food ρ 0.217 [0.147, 0.285] (n 4,051); wood ρ 0.395 [0.355, 0.435] (reported) | food ≥ 0.25, excl. 0 | **FAIL** |
+| T1-dep | NS departers − stayers +115.8 [94.7, 136.7] (326 departers / 483 stayers, 25 completed fissions) | ≥ 80, excl. 0 | PASS |
+| T2 | inert = v19 exactly: NS 0.044, HA −0.058, RD 0.008, P food 0.031, P wood 0.010; dep −15.6 | \|ρ\| ≤ 0.10, \|dep\| ≤ 40 | PASS (with and without the wood ρ) |
+| T3 | alive at day 120 62.53 vs 62.47 (+0.1 %, paired +0.06 [−0.34, 0.47]); non-old-age deaths 1.75 vs 1.44 per world (+0.31 [−0.22, 0.91]); old-age 80.16 vs 80.09; fissions 0.78 vs 0.78; first split day +0.28 [−3.22, 3.56] (18 worlds split in both) | ±15 %, ≤ +1.5 | PASS |
+| T4 | slopes NS 0.500, HA 0.485, RD 0.487, P 0.498 (pooled 0.493 [0.477, 0.508]; 3,845 births with two known parents); SD alive at day 120 vs founders −1.5 / −0.5 / −1.1 / −4.9 % | [0.35, 0.65]; ±20 % | PASS |
+| T5 | see Part 2 and Part 6 | identical | PASS (Part 6 reruns on the final commit) |
+| T6 | see Part 3 performance | | pending |
+
+Trace bookkeeping (all three scenes): 0 born-event misses, 0 component mismatches, 0 cancelled fissions. On the evaluation seeds `game_v20_inert` = `game_v19` too (154,491 shared values, only `scene` differs).

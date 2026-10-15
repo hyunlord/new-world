@@ -1652,6 +1652,8 @@ mod tests {
                 );
             }
             assert_eq!(v19.agent.temperament, None);
+            assert_eq!(WorldRules::game_v19_nofission(seed).agent.temperament, None);
+            assert_eq!(WorldRules::game_v18(seed).agent.temperament, None);
         }
         assert_eq!(WorldRules::default().agent.temperament, None);
         assert_eq!(WorldRules::game_v8().agent.temperament, None);

@@ -4,18 +4,18 @@ Worlds: 16100–16115 (16). Statistics: Spearman's rho (average ranks) over non-
 
 ## T1 / T2 — rho per scene
 
-| measure | scene | rho | 95 % interval | n |
-|---|---|---|---|---|
-| ns | v20 | 0.369 | [0.220, 0.504] | 1009 |
-| ns | inert | -0.024 | [-0.135, 0.103] | 1010 |
-| ha | v20 | -0.555 | [-0.677, -0.450] | 1008 |
-| ha | inert | 0.012 | [-0.061, 0.089] | 1010 |
-| rd | v20 | 0.800 | [0.768, 0.832] | 1009 |
-| rd | inert | -0.013 | [-0.091, 0.055] | 1010 |
-| p_food | v20 | 0.331 | [0.267, 0.399] | 953 |
-| p_food | inert | 0.074 | [-0.024, 0.158] | 962 |
-| p_wood | v20 | 0.346 | [0.264, 0.431] | 722 |
-| p_wood | inert | -0.017 | [-0.097, 0.062] | 713 |
+| measure | scene | rho | 95 % interval | n | valid draws |
+|---|---|---|---|---|---|
+| ns | v20 | 0.369 | [0.220, 0.504] | 1009 | 2000 |
+| ns | inert | -0.024 | [-0.135, 0.103] | 1010 | 2000 |
+| ha | v20 | -0.555 | [-0.677, -0.450] | 1008 | 2000 |
+| ha | inert | 0.012 | [-0.061, 0.089] | 1010 | 2000 |
+| rd | v20 | 0.800 | [0.768, 0.832] | 1009 | 2000 |
+| rd | inert | -0.013 | [-0.091, 0.055] | 1010 | 2000 |
+| p_food | v20 | 0.331 | [0.267, 0.399] | 953 | 2000 |
+| p_food | inert | 0.074 | [-0.024, 0.158] | 962 | 2000 |
+| p_wood | v20 | 0.346 | [0.264, 0.431] | 722 | 2000 |
+| p_wood | inert | -0.017 | [-0.097, 0.062] | 713 | 2000 |
 
 ## Verdicts
 
@@ -24,6 +24,7 @@ Worlds: 16100–16115 (16). Statistics: Spearman's rho (average ranks) over non-
 - T1-rd: PASS
 - T1-p_food: PASS
 - T2-inert: PASS
+- T2-inert (without the wood rho): PASS
 - T3: PASS
 
 ## Axis quintile → behaviour mean
@@ -88,6 +89,14 @@ Worlds: 16100–16115 (16). Statistics: Spearman's rho (average ranks) over non-
 - first split day (reported, worlds where both split: 4; v20 4, reference 4): paired diff -0.25 [-0.75, 0.00]
 - deaths by cause: v20 {"exposure": 9, "old_age": 455}; reference {"exposure": 7, "old_age": 455}
 - T3 verdict: PASS
+
+## Notes on the measures (review round 1)
+
+- Bootstrap draws whose statistic is undefined (fewer than 3 pairs, no departer) are dropped; the valid-draw count is listed with each interval.
+- T2 is judged on every T1 statistic including the wood rho (which has no verdict in T1); the reading without it is listed beside it.
+- Idle distance is measured from the hearth of the first settlement listing the person. Departers stay on the parent's roster while walking to the new site (up to 2 days), so an Idle departer on the trek is sampled far from the old hearth; in v20 departers lean high-NS, so these few samples add to T1-NS through departure rather than the tether (the placebo is unaffected).
+- A deposit's load is the amount carried on the tick before the drop (section 6.5); a pickup inside the deposit radius on the same tick as the drain is not included, so loads are slightly undercounted alike in every scene.
+- Would-be (v19) temperaments use the AgentBorn parents alive at the end of the previous tick; in v20 the observer's computation is compared with the component (`component_mismatches`).
 
 ## Trace bookkeeping
 
