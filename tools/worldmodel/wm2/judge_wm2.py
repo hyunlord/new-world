@@ -116,6 +116,11 @@ def effects_block(runs: Path, fact_seeds: dict[str, list[str]]) -> dict:
            "distribution_train": base["distribution"]["train"], "tables": {}, "W": {}}
     for n in preds:
         out["tables"][n] = ef.score(cases, preds[n], stds)
+        # Analysis only: the mean predicted and mean true effect of every cell (how much of the effect is predicted).
+        for cell, rows in errs[n].items():
+            key = "|".join(cell)
+            out["tables"][n]["cells"][key]["mean_pred"] = float(np.mean([r[4] for r in rows]))
+            out["tables"][n]["cells"][key]["mean_true"] = float(np.mean([r[3] for r in rows]))
     spread = base["spread"]["test"]
     for label, names in fact_seeds.items():
         have = [r for r in names if r in errs]
