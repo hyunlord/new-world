@@ -134,6 +134,10 @@ fn bush_exists(
         .any(|(tile, amount)| bush_eligible(rule, home, claims, None, *tile, *amount))
 }
 
+/// Pass 18: a per-tick trip-existence answer with the versions of the two
+/// maps (claims, tiles) it was computed from.
+type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
+
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
 #[derive(Debug, Clone)]
 struct WoodPlan {
@@ -1149,6 +1153,16 @@ impl RuntimeSystem for AgentDecisionSystem {
             && forage_rule.is_none())
         .then(|| super::routine::members_of(resources));
         let routine_members = routine_members_own.as_ref().unwrap_or(&member_of);
+        // Pass 18: the exit test's "does a bush / deadwood spot exist" answers
+        // depend on the home tile (and urgency) plus the claims and tiles
+        // maps; each answer is kept with the versions of the maps it read,
+        // and every write to those maps below bumps the version.
+        let mut claims_version = 0_u64;
+        let mut food_version = 0_u64;
+        let mut wood_claims_version = 0_u64;
+        let mut wood_version = 0_u64;
+        let mut bush_memo: TripMemo<(u32, u32)> = BTreeMap::new();
+        let mut spot_memo: TripMemo<((u32, u32), bool)> = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
         loop {
             #[cfg(feature = "subprofile")]
@@ -1269,7 +1283,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         // the person's position or rank), and run only after the
                         // cheap predicates are false. All are pure, so the verdict
                         // is the eager OR of Pass 17.
-                        let forage = || scope!("exit_forage", {
+                        let mut forage = || scope!("exit_forage", {
                             forage_rule
                                 .filter(|_| forage_window && worker && !no_trips)
                                 .and_then(|rule| {
@@ -1282,12 +1296,25 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     if !(room && light && (plan.in_hand as f64) < plan.target) {
                                         return None;
                                     }
-                                    bush_exists(&rule, plan.home, &resources.food_tiles, &claims)
-                                        .then_some(())
+                                    let versions = (claims_version, food_version);
+                                    let exists = match bush_memo.get(&plan.home) {
+                                        Some(&(c, f, exists)) if (c, f) == versions => exists,
+                                        _ => {
+                                            let exists = bush_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.food_tiles,
+                                                &claims,
+                                            );
+                                            bush_memo.insert(plan.home, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
                                 })
                                 .is_some()
                         });
-                        let firewood = || scope!("exit_firewood", {
+                        let mut firewood = || scope!("exit_firewood", {
                             firewood_rule
                                 .filter(|_| worker && !no_trips)
                                 .and_then(|rule| {
@@ -1308,8 +1335,22 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         return None;
                                     }
                                     let rule = urgent_rule(rule, plan.urgent);
-                                    spot_exists(&rule, plan.home, &resources.wood_tiles, &wood_claims)
-                                        .then_some(())
+                                    let key = (plan.home, plan.urgent);
+                                    let versions = (wood_claims_version, wood_version);
+                                    let exists = match spot_memo.get(&key) {
+                                        Some(&(c, w, exists)) if (c, w) == versions => exists,
+                                        _ => {
+                                            let exists = spot_exists(
+                                                &rule,
+                                                plan.home,
+                                                &resources.wood_tiles,
+                                                &wood_claims,
+                                            );
+                                            spot_memo.insert(key, (versions.0, versions.1, exists));
+                                            exists
+                                        }
+                                    };
+                                    exists.then_some(())
                                 })
                                 .is_some()
                         });
@@ -1893,6 +1934,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             })
                         {
                             *claims.entry(bush).or_default() += 1;
+                            claims_version += 1;
                             forage_targets.insert(entity, bush);
                             resources.tallies.forage_trips += 1;
                             *state = AgentState::Seeking {
@@ -1935,6 +1977,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                             })
                         {
                             *wood_claims.entry(spot).or_default() += 1;
+                            wood_claims_version += 1;
                             wood_targets.insert(entity, spot);
                             resources.tallies.wood_trips += 1;
                             // Display-only (Pass 6): trips started in urgent mode.
@@ -2521,6 +2564,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     continue;
                                 }
                                 if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                    food_version += 1;
                                     if *counter != RESOURCE_SOURCE_INFINITE {
                                         resources.tallies.food_harvested += u64::from(*counter > 0);
                                         *counter = counter.saturating_sub(1);
@@ -2553,6 +2597,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 );
                                 if want > 0 {
                                     if let Some(counter) = resources.food_tiles.get_mut(&key) {
+                                        food_version += 1;
                                         if *counter == RESOURCE_SOURCE_INFINITE {
                                             // Infinite source: take freely, no decrement.
                                             if let Some(inv) = inventory_opt.as_mut() {
@@ -2598,6 +2643,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         .min(load.saturating_sub(carried))
                                         .min(room);
                                     if take > 0 {
+                                        wood_version += 1;
                                         let overflow = inv.add(ResourceKind::Wood, take);
                                         let actually = take - overflow;
                                         let left = amount.saturating_sub(actually as u8);
