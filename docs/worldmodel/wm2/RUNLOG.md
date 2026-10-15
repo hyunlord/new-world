@@ -42,3 +42,4 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.2 | 19:29:17 | 19:52:06 | its finals from `b57ef7bb`: `_fact` 19:41:32, `_effects` 19:51:46, `_split` 19:52:06, exit 0 |
 | 4.1 | 19:29:17 | | `wm2_m1b_v16_s0` (control, action-blind, `v2_v16`) started (`--max-seconds 21600`) |
 | 5 (W2) | 19:31 | 19:53 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
+| 5 (7.7) | 19:53:05 | 19:53:30 | `split_task.py explain` from `b57ef7bb`, after every test split prediction existed (latest `split.json` 19:52:05): θ (home settlement's `fission_threshold` at row 574) read for the 80 test worlds |
