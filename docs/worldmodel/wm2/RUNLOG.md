@@ -38,3 +38,7 @@ Times are KST (Mac clock). The 50-hour training deadline (GOAL.md 0.3.5) is 2026
 | 4.1 | 13:03:14 | 14:24:15 | `wm2_m1long_v19_s1`: stop `max_steps` (12,000), best step 11,700 (val 0.0782) → not converged, 4,841 s |
 | 4.2 | 14:24:15 | 14:28:21 | its finals from `b57ef7bb`, exit 0 |
 | 4.1 | 14:24:15 | | `wm2_m1bact_v19_s2` started |
+| 4.1 | 14:24:15 | 19:29:17 | `wm2_m1bact_v19_s2`: stop `max_steps` (12,000), best step 10,950 (val 0.0589) → not converged, 18,288 s |
+| 4.2 | 19:29:17 | 19:52:06 | its finals from `b57ef7bb`: `_fact` 19:41:32, `_effects` 19:51:46, `_split` 19:52:06, exit 0 |
+| 4.1 | 19:29:17 | | `wm2_m1b_v16_s0` (control, action-blind, `v2_v16`) started (`--max-seconds 21600`) |
+| 5 (W2) | 19:31 | 19:53 | `floor.py --scene game_v19` from `b57ef7bb` with the five `game_v19` runs (`floor_v19`, 1,292 s, exit 0): floor 24 h 0.0084, 168 h 0.0203; headroom (`an5_off` − floor) +0.032 [+0.029, +0.035] and +0.059 [+0.051, +0.067] |
