@@ -40,3 +40,9 @@
 <!-- art-p10-last-release 1792084095 -->
 - 2026-10-15T17:08:16Z pid=56164 WAIT_START owner=codex-art-pass10 purpose=baseline-W1-attempt1 hold_limit=3600
 - 2026-10-15T17:08:16Z pid=56164 WAIT_COOLDOWN remaining=599s
+- 2026-10-15T17:18:15Z pid=56164 CHECK load=2.56 processes= waited=599s
+- 2026-10-15T17:18:15Z pid=56164 HOLD_START owner=codex-art-pass10 purpose=baseline-W1-attempt1 start=1792084695 load_before=2.56 contended=false waited=599s
+- 2026-10-15T17:32:10Z pid=56164 HOLD_END owner=codex-art-pass10 purpose=baseline-W1-attempt1 start=1792084695 end=1792085530 elapsed=835 load_before=2.56 load_after=4.49 contended=false exit=0
+<!-- art-p10-last-release 1792085530 -->
+- 2026-10-15T17:32:10Z pid=36285 WAIT_START owner=codex-art-pass10 purpose=baseline-W200-attempt1 hold_limit=3600
+- 2026-10-15T17:32:10Z pid=36285 WAIT_COOLDOWN remaining=600s
