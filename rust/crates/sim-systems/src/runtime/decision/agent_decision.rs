@@ -138,6 +138,10 @@ fn bush_exists(
 /// maps (claims, tiles) it was computed from.
 type TripMemo<K> = BTreeMap<K, (u64, u64, bool)>;
 
+/// Pass 18: per-tick `gather_tile_exists` answers by (tile, catchment) with
+/// the food-tiles version they were computed from.
+type GatherMemo = BTreeMap<((u32, u32), Option<((u32, u32), u32)>), (u64, bool)>;
+
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
 #[derive(Debug, Clone)]
 struct WoodPlan {
@@ -1163,6 +1167,8 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut wood_version = 0_u64;
         let mut bush_memo: TripMemo<(u32, u32)> = BTreeMap::new();
         let mut spot_memo: TripMemo<((u32, u32), bool)> = BTreeMap::new();
+        // The gather predicate also depends on the person's tile and catchment.
+        let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
         loop {
             #[cfg(feature = "subprofile")]
@@ -1354,7 +1360,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 })
                                 .is_some()
                         });
-                        let gather = || scope!("exit_gather", {
+                        let mut gather = || scope!("exit_gather", {
                             let has_room = inventory_opt
                                 .as_ref()
                                 .is_some_and(|inv| inv.total() < INVENTORY_CAPACITY);
@@ -1377,12 +1383,23 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 && has_room
                                 && bounded
                                 && !no_trips
-                                && gather_tile_exists(
-                                    pos,
-                                    &resources.food_tiles,
-                                    GATHER_SCAN_RADIUS,
-                                    local_home.get(&agent.id).map(|home| (*home, catchment)),
-                                )
+                                && {
+                                    let local = local_home.get(&agent.id).map(|home| (*home, catchment));
+                                    let key = ((pos.x, pos.y), local);
+                                    match gather_memo.get(&key) {
+                                        Some(&(version, exists)) if version == food_version => exists,
+                                        _ => {
+                                            let exists = gather_tile_exists(
+                                                pos,
+                                                &resources.food_tiles,
+                                                GATHER_SCAN_RADIUS,
+                                                local,
+                                            );
+                                            gather_memo.insert(key, (food_version, exists));
+                                            exists
+                                        }
+                                    }
+                                }
                         });
                         let social = social_ready
                             && social_eligible_by_pos
