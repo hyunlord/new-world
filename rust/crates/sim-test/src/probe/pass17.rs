@@ -129,6 +129,33 @@ impl RoutineTracer {
         }
     }
 
+    pub(super) fn recover_disappeared(
+        &mut self,
+        engine: &SimEngine,
+        snapshot: super::routine_observer::CapturedRoutine,
+    ) {
+        let alive: BTreeSet<_> = engine
+            .world
+            .query::<&Agent>()
+            .iter()
+            .map(|(_, agent)| agent.id)
+            .collect();
+        for (id, observation) in snapshot.people {
+            if alive.contains(&id) {
+                continue;
+            }
+            for mut row in self
+                .people
+                .entry(id)
+                .or_default()
+                .observe_disappeared(observation)
+            {
+                row["id"] = json!(id);
+                self.events.push(row);
+            }
+        }
+    }
+
     pub(super) fn person(&self, id: AgentId, adult_only: bool) -> Value {
         self.people.get(&id).map_or_else(
             || Counts::default().json(),
@@ -177,3 +204,7 @@ mod tests;
 #[cfg(test)]
 #[path = "pass17_batch_tests.rs"]
 mod batch_tests;
+
+#[cfg(test)]
+#[path = "pass17_death_tests.rs"]
+mod death_tests;

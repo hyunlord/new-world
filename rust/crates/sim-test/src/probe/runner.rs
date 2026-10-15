@@ -171,6 +171,11 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
     let mut engine = make_scene();
     // Pass 16: the per-person observer (only with `--agent-trace`).
     let mut tracer = options.agent_trace.then(|| AgentTracer::start(&engine));
+    let routine_observer = if options.agent_trace {
+        super::routine_observer::install(&mut engine)
+    } else {
+        None
+    };
     let initial_shelters = shelter_count(&engine);
     let seed_info = super::pass10::seed_info(&engine);
     let mut exposure_death_ticks = Vec::new();
@@ -324,10 +329,23 @@ fn run_seed(args: &ProbeArgs, options: &ProbeOptions, seed: u64) -> Result<RunRe
         engine.tick();
         let elapsed = tick_started.elapsed();
         let (records, observer_time) = deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
+        let routine_snapshot = routine_observer
+            .as_ref()
+            .map(|shared| super::routine_observer::take(shared, engine.resources.current_tick))
+            .transpose()?;
+        let routine_observer_time = routine_snapshot
+            .as_ref()
+            .map_or(std::time::Duration::ZERO, |snapshot| snapshot.elapsed);
         if let Some(tracer) = &mut tracer {
+            if let Some(snapshot) = routine_snapshot {
+                tracer.recover_routine(&engine, snapshot);
+            }
             tracer.after_tick(&engine);
         }
-        tick_seconds += elapsed.saturating_sub(observer_time).as_secs_f64();
+        tick_seconds += elapsed
+            .saturating_sub(observer_time)
+            .saturating_sub(routine_observer_time)
+            .as_secs_f64();
         for record in records {
             if record["cause"] == "exposure" {
                 exposure_death_ticks.push(record["tick"].as_u64().unwrap_or(0).saturating_sub(1));

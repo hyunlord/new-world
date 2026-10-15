@@ -70,13 +70,30 @@ pub(super) struct Person {
 
 impl Person {
     pub(super) fn observe(&mut self, o: Observation) -> Vec<Value> {
+        self.observe_inner(o, true)
+    }
+
+    pub(super) fn observe_disappeared(&mut self, o: Observation) -> Vec<Value> {
+        let tick = o.tick;
+        let state = o.state;
+        let mut rows = self.observe_inner(o, false);
+        rows.extend(self.disappeared(tick));
+        Self::record_state(&mut rows, state);
+        for row in &mut rows {
+            row["observation_boundary"] = json!("pre_lethal");
+        }
+        rows
+    }
+
+    fn observe_inner(&mut self, o: Observation, count_consuming_tick: bool) -> Vec<Value> {
         let mut rows = Vec::new();
-        let consuming = matches!(
-            o.state,
-            AgentState::Consuming {
-                target: TargetKind::Activity
-            }
-        );
+        let consuming = count_consuming_tick
+            && matches!(
+                o.state,
+                AgentState::Consuming {
+                    target: TargetKind::Activity
+                }
+            );
         let same = self.episode.is_some_and(|old| {
             o.activity
                 .is_some_and(|a| a.chosen_tick == old.chosen_tick && a.kind == old.kind)
@@ -189,11 +206,16 @@ impl Person {
                 self.misses += 1;
             }
         }
-        let tag = super::fingerprint::state_tag(Some(&o.state));
-        for row in &mut rows {
+        Self::record_state(&mut rows, o.state);
+        rows
+    }
+
+    fn record_state(rows: &mut [Value], state: AgentState) {
+        let tag = super::fingerprint::state_tag(Some(&state));
+        for row in rows {
             row["current_state_tag"] = json!(tag);
             row["current_target_kind"] = json!(if matches!(
-                o.state,
+                state,
                 AgentState::Seeking {
                     target: TargetKind::Activity
                 } | AgentState::Consuming {
@@ -204,9 +226,8 @@ impl Person {
             } else {
                 None
             });
-            row["current_state"] = json!(o.state);
+            row["current_state"] = json!(state);
         }
-        rows
     }
 
     fn end_episode(&mut self, tick: u64, completed: bool, source: &str, rows: &mut Vec<Value>) {

@@ -2,7 +2,7 @@
 
 Pass 17 Stage A gives need-satisfied residents visible daytime activities near their home. Activities are economy-neutral: tending a fire burns no extra fuel, crafting produces no item, repairing changes no building, and exploring harvests nothing. Existing work and needs take priority.
 
-The values below are **frozen at their original defaults** after the sixteen-world Stage A tuning round passed R1–R3 and all R2 point-estimate bars. No second parameter-tuning round was used. The initial freeze `9a0bd85470f4ddbe26d51b8c5062107bf5c1f371` passed I1–I4 and both pin suites. A subsequent audit identified a same-tick death observation gap; its probe-only correction and unchanged-parameter rerun are pending. The reserved R1–R5 evaluation, corrected-build identity proofs and performance verdicts are still pending; tuning does not establish those verdicts. The governing requirements are [PASS17_GOAL.md](PASS17_GOAL.md), section 6. Final measurements belong in the Pass 17 report and evaluation artifacts.
+The values below are **frozen at their original defaults** after the sixteen-world Stage A tuning round passed R1–R3 and all R2 point-estimate bars. No second parameter-tuning round was used. The initial freeze `9a0bd85470f4ddbe26d51b8c5062107bf5c1f371` passed I1–I4 and both pin suites. A subsequent audit identified a same-tick death observation gap; the probe-only correction passes focused regressions and its unchanged-parameter cohort rerun is pending. The reserved R1–R5 evaluation, corrected-build identity proofs and performance verdicts are still pending; tuning does not establish those verdicts. The governing requirements are [PASS17_GOAL.md](PASS17_GOAL.md), section 6. Final measurements belong in the Pass 17 report and evaluation artifacts.
 
 ## Scene and components
 
@@ -85,6 +85,8 @@ Adult and elder activity consumption remains stationary. A child consuming Play 
 ## Trace contract and time basis
 
 `worldsim_probe --agent-trace` observes after every `engine.tick()`. The system tick is `resources.current_tick`; the first observation is tick 0 after the first engine tick. There is no duplicate initial observation. With 1,440 ticks per day, every consuming tick represents one game minute.
+
+For traced routine-enabled worlds only, a private read-only observer at priority 136 copies the current activity and ordered lifecycle events before lethal systems can despawn their holder. After the tick, the trace recovers those copies only for missing people; surviving people still use the normal final-world query. Recovered rows carry `observation_boundary: "pre_lethal"` and retain the captured state and life stage. Recovery adds no consuming minute for the death tick. An explicit completion before death remains completed, while an unfinished episode ends as interrupted. The snapshot is drained once and its system tick is checked. Observer execution time is subtracted from probe tick timing; the standalone performance runner never installs this observer.
 
 Existing no-trace summaries keep their schema and values for older scenes. The optional trace writes these files for every scene, including v20 comparison runs:
 

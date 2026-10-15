@@ -199,6 +199,14 @@ impl AgentTracer {
         }
     }
 
+    pub(super) fn recover_routine(
+        &mut self,
+        engine: &SimEngine,
+        snapshot: super::routine_observer::CapturedRoutine,
+    ) {
+        self.routine.recover_disappeared(engine, snapshot);
+    }
+
     /// Observes the engine right after one `engine.tick()`.
     pub(crate) fn after_tick(&mut self, engine: &SimEngine) {
         let r = &engine.resources;
