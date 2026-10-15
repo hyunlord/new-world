@@ -6,7 +6,7 @@ pub(in crate::runtime::decision) use places::PlacesCache;
 use hecs::{Entity, World};
 use places::{Occupancy, Tile, KINDS};
 use sim_core::components::{
-    Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, Lineage, RoutineObservation,
+    Activity, ActivityKind, ActivityRest, Agent, AgentId, AgentState, RoutineObservation,
     RoutineOutcome, SettlementId, TargetKind, Temperament,
 };
 use sim_core::rng::{keyed_below, STREAM_ROUTINE};
@@ -42,9 +42,10 @@ pub(super) struct RoutineTick {
     replicate: u32,
     minute: Option<u64>,
     active: BTreeMap<AgentId, Activity>,
-    entities: BTreeMap<AgentId, Entity>,
-    keys: BTreeMap<AgentId, u64>,
-    members: BTreeMap<AgentId, SettlementId>,
+    /// Pass 18: every agent's entity, built on the first invitation of a
+    /// tick (agents are neither spawned nor despawned during the decision
+    /// system). Lineage keys and settlement membership come from the caller.
+    entities: Option<BTreeMap<AgentId, Entity>>,
     rests: BTreeMap<AgentId, u64>,
     interrupted: BTreeSet<AgentId>,
     invitations: BTreeSet<AgentId>,
@@ -58,6 +59,21 @@ pub(super) struct RoutineTick {
     memo: BTreeMap<(SettlementId, usize), Option<Tile>>,
     occupancy: Occupancy,
     pending: Vec<(AgentId, Entity, Change)>,
+}
+
+/// Each settlement member's settlement (settlement id order; the first
+/// settlement listing a person wins). The decision system's `member_of` is
+/// this same map whenever the firewood or forage rule built it.
+pub(super) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
+    let mut members = BTreeMap::new();
+    let mut settlements: Vec<_> = resources.settlements.iter().collect();
+    settlements.sort_by_key(|(id, _)| **id);
+    for (&sid, settlement) in settlements {
+        for &id in &settlement.member_agents {
+            members.entry(id).or_insert(sid);
+        }
+    }
+    members
 }
 
 impl RoutineTick {
@@ -116,24 +132,6 @@ impl RoutineTick {
         for (_, activity) in &active_rows {
             *occupancy.entry(activity.place).or_default() += 1;
         }
-        let mut members = BTreeMap::new();
-        let mut settlements: Vec<_> = resources.settlements.iter().collect();
-        settlements.sort_by_key(|(id, _)| **id);
-        for (&sid, settlement) in settlements {
-            for &id in &settlement.member_agents {
-                members.entry(id).or_insert(sid);
-            }
-        }
-        let entities = world
-            .query::<&Agent>()
-            .iter()
-            .map(|(entity, agent)| (agent.id, entity))
-            .collect();
-        let keys = world
-            .query::<(&Agent, &Lineage)>()
-            .iter()
-            .map(|(_, (agent, lineage))| (agent.id, lineage.key))
-            .collect();
         #[cfg(feature = "subprofile")]
         timer.stop("routine_new_maps");
         Self {
@@ -145,9 +143,7 @@ impl RoutineTick {
                 tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day
             }),
             active: active_rows.into_iter().collect(),
-            entities,
-            keys,
-            members,
+            entities: None,
             rests,
             interrupted,
             invitations: BTreeSet::new(),
@@ -163,21 +159,31 @@ impl RoutineTick {
         self.active.get(&id).copied()
     }
 
-    pub(super) fn can_enter(&self, id: AgentId) -> bool {
-        self.members.contains_key(&id)
+    /// `key` is the person's lineage key, `member` its settlement (see
+    /// [`members_of`]).
+    pub(super) fn can_enter(
+        &self,
+        id: AgentId,
+        key: Option<u64>,
+        member: Option<SettlementId>,
+    ) -> bool {
+        member.is_some()
             && !self.rests.contains_key(&id)
-            && self.keys.get(&id).is_some_and(|key| {
+            && key.is_some_and(|key| {
                 self.minute.is_some_and(|minute| {
-                    minute >= u64::from(self.rule.start_minute(*key))
+                    minute >= u64::from(self.rule.start_minute(key))
                         && minute < u64::from(self.rule.day_end_minute)
                 })
             })
     }
 
+    #[allow(clippy::too_many_arguments, reason = "the caller's row fields, passed instead of per-tick maps")]
     pub(super) fn start(
         &mut self,
         id: AgentId,
         entity: Entity,
+        key: Option<u64>,
+        member: Option<SettlementId>,
         child: bool,
         elder: bool,
         temperament: Option<&Temperament>,
@@ -187,7 +193,7 @@ impl RoutineTick {
             self.rest(id, entity, 1);
             return false;
         }
-        let Some((&key, &sid)) = self.keys.get(&id).zip(self.members.get(&id)) else {
+        let Some((key, sid)) = key.zip(member) else {
             return false;
         };
         let neutral = Temperament::from_axes([500; 4]);

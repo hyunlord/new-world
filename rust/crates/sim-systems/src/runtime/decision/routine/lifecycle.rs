@@ -1,5 +1,6 @@
 use super::{is_activity, Change, PlacesCache, RoutineTick};
 use hecs::{Entity, World};
+use sim_core::components::{Agent, SettlementId};
 use sim_core::components::{
     ActivityRest, AgentId, AgentState, RoutineObservation, RoutineObservationBatch, RoutineOutcome,
     Temperament,
@@ -86,15 +87,24 @@ impl RoutineTick {
     }
 
     pub(in crate::runtime::decision) fn interrupt(&mut self, id: AgentId, entity: Entity) {
-        self.end(id, entity, false, false);
+        self.end(id, entity, false, None);
         self.interrupted.insert(id);
     }
 
-    pub(in crate::runtime::decision) fn invite(&mut self, id: AgentId) {
+    /// Interrupt `id`'s activity for a social or combat invitation; the
+    /// entity map is built from `world` on the tick's first invitation.
+    pub(in crate::runtime::decision) fn invite(&mut self, id: AgentId, world: &World) {
         if !self.active.contains_key(&id) {
             return;
         }
-        if let Some(entity) = self.entities.get(&id).copied() {
+        let entities = self.entities.get_or_insert_with(|| {
+            world
+                .query::<&Agent>()
+                .iter()
+                .map(|(entity, agent)| (agent.id, entity))
+                .collect()
+        });
+        if let Some(entity) = entities.get(&id).copied() {
             self.interrupt(id, entity);
             self.invitations.insert(id);
         }
@@ -110,7 +120,12 @@ impl RoutineTick {
     ) -> Vec<(AgentId, Entity)> {
         let mut replay = Vec::new();
         for id in std::mem::take(&mut self.invitations) {
-            let Some(entity) = self.entities.get(&id).copied() else {
+            let Some(entity) = self
+                .entities
+                .as_ref()
+                .and_then(|entities| entities.get(&id))
+                .copied()
+            else {
                 continue;
             };
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
@@ -123,13 +138,15 @@ impl RoutineTick {
         replay
     }
 
+    /// `member` is the person's settlement (see [`super::members_of`]).
     pub(in crate::runtime::decision) fn deadline(
         &self,
         id: AgentId,
+        member: Option<SettlementId>,
         walking: bool,
     ) -> Option<bool> {
         let activity = self.active.get(&id)?;
-        if self.members.get(&id) != Some(&activity.settlement) {
+        if member != Some(activity.settlement) {
             return Some(false);
         }
         if activity.until_tick.is_some_and(|until| self.tick >= until)
@@ -148,12 +165,14 @@ impl RoutineTick {
         None
     }
 
+    /// End `id`'s activity; `rest` = `Some(lineage key)` starts the rest
+    /// pause (`None` inside means no key: the id stands in, as in Pass 17).
     pub(in crate::runtime::decision) fn end(
         &mut self,
         id: AgentId,
         entity: Entity,
         completed: bool,
-        resting: bool,
+        rest: Option<Option<u64>>,
     ) {
         let Some(activity) = self.active.remove(&id) else {
             return;
@@ -169,8 +188,8 @@ impl RoutineTick {
             Some(activity.kind),
             RoutineOutcome::Ended { completed },
         );
-        if resting {
-            let key = self.keys.get(&id).copied().unwrap_or(id);
+        if let Some(key) = rest {
+            let key = key.unwrap_or(id);
             let duration = self
                 .rule
                 .rest_minutes(self.seed, key, self.tick, self.replicate);

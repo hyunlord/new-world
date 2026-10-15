@@ -58,7 +58,7 @@ use hecs::World;
 use sim_core::causal::{CausalEvent, DecisionReason, EventId, MemoryRecallTrigger};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, Child, ConstructionSite, Elder, Founding,
-    Hunger, Inventory, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
+    Hunger, Inventory, Lineage, Memory, MemoryArm, Position, ResourceKind, SeekTarget, SettlementId,
     SettlementMigrant, Sleep, Social, TargetKind, Temperament, Thirst, INVENTORY_CAPACITY,
     SALIENCE_FLOOR,
 };
@@ -1141,6 +1141,14 @@ impl RuntimeSystem for AgentDecisionSystem {
         let mut settlement_migrant_tag: HashSet<hecs::Entity> = HashSet::new();
         let mut migrant_clear: Vec<hecs::Entity> = Vec::new();
         let mut preempt_clear_seek: Vec<hecs::Entity> = Vec::new();
+        // Pass 18: the routine's settlement lookup is the `member_of` map above
+        // whenever the firewood or forage rule built it (the same construction:
+        // settlement id order, first wins), else built here as Pass 17 did.
+        let routine_members_own = (routine.is_some()
+            && firewood_rule.is_none()
+            && forage_rule.is_none())
+        .then(|| super::routine::members_of(resources));
+        let routine_members = routine_members_own.as_ref().unwrap_or(&member_of);
         let mut routine_replay: Option<Vec<AgentId>> = None;
         loop {
             #[cfg(feature = "subprofile")]
@@ -1159,6 +1167,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                 Option<&mut Inventory>,
                 Option<&SettlementMigrant>,
                 Option<&Temperament>,
+                Option<&Lineage>,
             )>();
             // Pass 9: under keyed draws the agents are processed in AgentId order
             // (first-come claims, tile decrements and event ids no longer follow
@@ -1184,6 +1193,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                     mut inventory_opt,
                     migrant_marker,
                     temperament,
+                    lineage,
                 ),
             ) in rows
             {
@@ -1566,7 +1576,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     };
                                     resources.combat_pairs.insert(canonical);
                                     if let Some(routine) = routine.as_mut() {
-                                        routine.invite(enemy_id);
+                                        routine.invite(enemy_id, world);
                                     }
                                 }
                                 continue;
@@ -1853,7 +1863,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 } = *state
                                 {
                                     if let Some(routine) = routine.as_mut() {
-                                        routine.invite(peer);
+                                        routine.invite(peer, world);
                                     }
                                 }
                             }
@@ -1984,12 +1994,20 @@ impl RuntimeSystem for AgentDecisionSystem {
                         } else if !no_trips
                             && routine
                                 .as_ref()
-                                .is_some_and(|routine| routine.can_enter(agent.id))
+                                .is_some_and(|routine| {
+                                    routine.can_enter(
+                                        agent.id,
+                                        lineage.map(|lineage| lineage.key),
+                                        routine_members.get(&agent.id).copied(),
+                                    )
+                                })
                         {
                             if routine.as_mut().is_some_and(|routine| {
                                 scope!("routine_start", { routine.start(
                                     agent.id,
                                     entity,
+                                    lineage.map(|lineage| lineage.key),
+                                    routine_members.get(&agent.id).copied(),
                                     !adult,
                                     elders.contains(&agent.id),
                                     temperament,
@@ -2116,10 +2134,17 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 *state = AgentState::Idle;
                                 continue;
                             };
-                            if let Some(completed) =
-                                routine.deadline(agent.id, (pos.x, pos.y) != activity.place)
-                            {
-                                routine.end(agent.id, entity, completed, true);
+                            if let Some(completed) = routine.deadline(
+                                agent.id,
+                                routine_members.get(&agent.id).copied(),
+                                (pos.x, pos.y) != activity.place,
+                            ) {
+                                routine.end(
+                                    agent.id,
+                                    entity,
+                                    completed,
+                                    Some(lineage.map(|lineage| lineage.key)),
+                                );
                                 *state = AgentState::Idle;
                                 continue;
                             }
@@ -2468,8 +2493,17 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     *state = AgentState::Idle;
                                     continue;
                                 }
-                                if let Some(completed) = routine.deadline(agent.id, false) {
-                                    routine.end(agent.id, entity, completed, true);
+                                if let Some(completed) = routine.deadline(
+                                    agent.id,
+                                    routine_members.get(&agent.id).copied(),
+                                    false,
+                                ) {
+                                    routine.end(
+                                        agent.id,
+                                        entity,
+                                        completed,
+                                        Some(lineage.map(|lineage| lineage.key)),
+                                    );
                                     *state = AgentState::Idle;
                                 }
                             }
