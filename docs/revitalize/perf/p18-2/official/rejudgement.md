@@ -14,14 +14,16 @@
 
 Repeats (mean ms / p99.9 ms): v20 0.3174 / 1.272, 0.3118 / 0.607, 0.3165 / 0.569; v21 0.3583 / 0.815, 0.3630 / 0.751, 0.3603 / 0.825. `quick` (game_v19 stress world): base 0.3037 ms, final 0.3049 ms (+0.4 %), identical fingerprint `54ac4928a770f238`.
 
-**How firm the pass is.** The mean passes with a 1.2-point margin. The p99.9 passes with a 0.7-point margin that is within run-to-run noise: v20's p99.9 is the second-largest of 1,380 ordinary ticks and varied 0.553–0.607 ms across this pass's quiet repeats (one repeat here read 1.272 ms), so the bar itself moves by ±0.05 ms. In the same hold, the attribution runs (same build, same workload, run just before) gave v21/v20 = 1.144 (mean) and 1.488 (p99.9, 0.823 / 0.553 ms); the three development runs of earlier Part 2 builds gave p99.9 ratios 1.38–1.52 ([development](../development/README.md)). The honest reading: **the mean regression is fixed (≈ +14 %, from +34 %); the tail is at the bar, not comfortably under it.**
+**How firm the pass is — it is not, for the tail.** The p99.9 pass rests on `game_v20` repeat r1, whose one-off 1.44 ms tick at 05:56 (AgentDecisionSystem 1.30 ms; the simulation is deterministic, so this is a machine hiccup) made that repeat's p99.9 1.272 ms and lifted the v20 median to 0.607 ms. With r1 at the hold's ordinary level (the other plain v20 repeats of this hold read 0.553, 0.553, 0.555, 0.569, 0.607 ms) the median would be at most 0.569 ms and the check +43–47 % — FAIL. Across all of this pass's quiet holds the plain-build v20 p99.9 ranged **0.533–1.272 ms** (7 of 27 repeats above 0.62 ms). Of the eight post-fix v21/v20 triplets (stage a and attribution runs of the development and official holds), only the two whose v20 set contained an outlier met 35 % (this one, 1.343, and development 1's attribution, 0.80); the other six read 1.37–1.63. The mean ratio of the same eight ranged 1.137–1.177, i.e. at the 15 % bar. In this hold the attribution runs (same build, run just before) gave 1.144 (mean) and 1.488 (p99.9, 0.823 / 0.553 ms); the three development runs are in [development](../development/README.md). The re-judgement was declared as one run and is not repeated; **the honest reading is: the mean regression is down to +14–18 % (at the bar) and the tail regression (typically +37–63 %) is not solved.**
+
+During this hold the round-1 review subagent, started by the main session 45 s after the hold was queued, ran a dozen light shell commands (a ~1 s `git diff` over the committed JSON, small `cat`/`grep`/`ls`); one coincides with stage c's v23 r2 spike (2.1 ms at 16:37). None overlaps stage a's v20 r1, so they do not explain the outlier above. This was not foreseen when the hold was queued and is recorded in DECISIONS.md.
 
 ## Where the time went, before and after (subprofile builds, µs per tick, v21 − v20, medians of three)
 
 | scope | Part 1 (`5b09dee7`) | final (`d3fc22f7`) | change |
 |---|---|---|---|
 | `RoutineTick::new` map rebuilds | +32.96 | +4.60 | keys/members/entities no longer rebuilt; occupancy in one pass |
-| `places::collect` | +8.67 | +0.10 | cached across ticks, computed lazily (0.01 recomputations per tick) |
+| `places::collect` | +8.67 | +0.10 | cached across ticks, computed lazily (0.005 recomputations per tick) |
 | cleanup | +2.15 | +2.02 | unchanged by design |
 | start arm | +22.28 | +2.72 | per-list cursors: storms no longer rescan occupied fronts |
 | exit test | +19.85 | +26.99* | *the final build times three nested sub-scopes per call (≈ 6 extra clock reads × 123 calls); the plain-build decision cost fell, see below |

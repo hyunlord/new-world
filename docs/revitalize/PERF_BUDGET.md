@@ -144,17 +144,29 @@ The new slope interval is [0.321620, 1.681012], old [0.536635, 1.566716]; each f
 
 Apple M4 Max, 14 CPUs, 38,654,705,664 bytes RAM, rustc 1.93.1. Quiet hold 2026-10-15 08:20:08–08:20:23 UTC, 15.0 seconds, initial load 3.66, no contention and no lock wait. The relative mean and tail regressions remain failures despite the sub-millisecond mean and near-linear scaling. No favorable-repeat selection, retiming, parameter adjustment or threshold change follows this result. Stage A evaluation is still pending at this record.
 
-## Pass 18 — the routine's cost fixed without changing behaviour (new references)
+## Pass 18 — the routine's cost cut without changing behaviour (new references)
 
-Pass 18 made the Pass 17 routine cheap while keeping every result bit-identical (I1–I6 and all pins; [DECISIONS.md](DECISIONS.md) Pass 18, [ROUTINE.md](ROUTINE.md) "Performance structure"). Official quiet-lock re-judgement on the final Part 2 build `d3fc22f7`, Pass 17's procedure ([rejudgement](perf/p18-2/official/rejudgement.md)):
+Pass 18 made the Pass 17 routine cheaper while keeping every result bit-identical (I1–I6 and all pins; [DECISIONS.md](DECISIONS.md) Pass 18, [ROUTINE.md](ROUTINE.md) "Performance structure"). The official quiet-lock re-judgement (one declared run, Pass 17's procedure; [rejudgement](perf/p18-2/official/rejudgement.md)) reads **R5 PASS, F8 PASS, G6 PASS** — but the R5 pass is not robust:
 
-| rules (500 agents, 64 × 64, fed, seed 15100; medians of three) | mean tick | p99.9 | decision µs/call (attribution runs) | slope (100/500/1000) |
-|---|---:|---:|---:|---:|
-| `game_v20` | 0.3165 ms | 0.607 ms | 194.9 | 1.06 |
-| `game_v21` | 0.3603 ms (+13.9 %) | 0.815 ms (+34.3 %) | 235.6 | 1.00 |
-| `game_v22` | 0.3649 ms | 0.859 ms | 236.9 | 1.00 |
-| `game_v23` (Part 3) | 0.3683 ms | 0.859 ms | — | 0.97 |
+| stage a run (v21 vs v20, medians of three) | build | mean | p99.9 | verdict |
+|---|---|---:|---:|---|
+| development 1 | `59c92f70` (C1–C4) | +16.6 % | +49.0 % | FAIL |
+| development 2 | `7e6b0c31` (+C5) | +15.03 % | +38.0 % | FAIL |
+| development 3 | `2b5bdfd3` (+C6) | +16.7 % | +52.4 % | FAIL |
+| **official** | `d3fc22f7` (+C7) | **+13.85 %** | **+34.27 %** | **PASS** |
 
-R5 (v21 vs v20) and F8 (v22 vs v21) now pass (Pass 17: +33.0 % / ×4.40 for R5); G6 (v23 vs v22: mean −1.1 %, p99.9 −1.6 %) passes. `quick` (v19 stress) 0.304 → 0.305 ms, same fingerprint. The p99.9 margin (0.7 points) is inside run-to-run noise — v20's p99.9 moved 0.553–0.607 ms between repeats — and is set by the **18:00 edge** (all daytime activities end in one tick: 0.82–0.84 ms vs v20's 0.49 ms; 06:01's wake-up spike, 0.81–0.84 ms, is shared with v20 and is the largest tick in both). **References for later passes:** use the rows above (same workload) and, for a routine/family change, compare against `game_v23`.
+The official p99.9 pass rests on one `game_v20` repeat (r1) with a one-off 1.44 ms tick at 05:56 (a machine hiccup; the simulation is deterministic) that lifted the v20 median to 0.607 ms; with r1 at that hold's ordinary 0.553–0.569 ms the check reads +43–47 % (FAIL). Across all of this pass's quiet holds the plain-build v20 p99.9 ranged 0.533–1.272 ms (7 of 27 repeats above 0.62 ms); of the eight post-fix v21/v20 triplets only the two whose v20 set held an outlier met 35 %, the other six read 1.37–1.63×. The mean ratio of post-fix runs ranged 1.137–1.177. **Reading: the mean regression fell from +34 % to +14–18 % (at the 15 % bar); the tail regression is typically +37–63 % and is not solved.** Its cause is the 18:00 edge — all daytime activities end in one tick (0.82–0.84 ms vs v20's 0.49 ms); 06:01's wake-up spike (0.81–0.84 ms) is shared with v20 and is the largest tick in both.
+
+Reference values (500 agents, 64 × 64, fed, seed 15100, one day; medians of three; each row names its stage and build):
+
+| rules | mean tick | p99.9 | decision µs/call | decision slope (100/500/1000) | source |
+|---|---:|---:|---:|---:|---|
+| `game_v20` | 0.3165 ms | 0.607 ms (same hold's attribution median 0.553) | 194.9 | 1.06 | stage a, `d3fc22f7` |
+| `game_v21` | 0.3603 ms | 0.815 ms | 235.6 | 1.00 | stage a, `d3fc22f7` |
+| `game_v22` | 0.3649 ms | 0.859 ms | 236.9 | 1.00 | stage b, `d3fc22f7` |
+| `game_v22` | 0.3724 ms | 0.873 ms | — | 0.98 | stage c, `57c47981` |
+| `game_v23` | 0.3683 ms | 0.859 ms | — | 0.97 | stage c, `57c47981` |
+
+`quick` (v19 stress): base 0.304 ms, final 0.305 ms, same fingerprint. G6 (v23 vs v22 in stage c: mean −1.1 %, p99.9 −1.6 %) and F8 (v22 vs v21: −0.2 %, +2.4 %) are far from their bars. **For later passes:** compare a routine/family change against `game_v23` on the same build in the same hold, and read p99.9 with this pass's noise in mind (one hiccup in three repeats moves the median).
 
 To see where a tick's time goes, build `worldsim_perf` with `--features subprofile` in a separate target directory (`CARGO_TARGET_DIR=target/subprofile cargo build --release -p sim-test --features subprofile`); its JSON gains a `subprofile` block (per-scope totals, the slowest ticks' scope breakdown, per-tick arrays). The feature costs ~1 % on v20 and ~4–6 % on v21/v22 and is never used for identity runs or the gate.
