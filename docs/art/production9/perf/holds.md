@@ -1,3 +1,87 @@
 - 2026-10-14T23:17:07Z pid=17053 WAIT_START owner=codex-art-pass9 purpose=baseline-W0-attempt1 hold_limit=3600
 - 2026-10-14T23:17:07Z pid=17053 CHECK load=6.31 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=0s
 - 2026-10-14T23:17:07Z pid=17053 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:29:38Z pid=99876 WAIT_START owner=codex-art-pass9 purpose=baseline-W0-attempt2 hold_limit=3600
+- 2026-10-14T23:29:38Z pid=99876 CHECK load=7.48 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;98743 98742 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=0s
+- 2026-10-14T23:29:38Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:34:39Z pid=99876 CHECK load=12.07 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;15176 15174 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;17626 17616 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=300s
+- 2026-10-14T23:34:39Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:39:40Z pid=99876 CHECK load=9.67 processes=32042 32041 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;32598 32042 (rustc);32682 32042 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;32729 32042 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;32730 32042 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;32731 32042 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;32732 32042 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc;26462 26460 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=601s
+- 2026-10-14T23:39:40Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:44:40Z pid=99876 CHECK load=8.26 processes=32042 32041 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;46959 46956 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=902s
+- 2026-10-14T23:44:40Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:49:41Z pid=99876 CHECK load=7.34 processes=32042 32041 /Users/rexxa/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo;99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;59343 59339 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1202s
+- 2026-10-14T23:49:41Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:54:41Z pid=99876 CHECK load=7.89 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;64609 64608 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot;77698 77697 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1503s
+- 2026-10-14T23:54:41Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-14T23:59:41Z pid=99876 CHECK load=10.72 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;91880 91878 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=1803s
+- 2026-10-14T23:59:41Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:04:41Z pid=99876 CHECK load=7.14 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo;97198 97187 /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot waited=2103s
+- 2026-10-15T00:04:41Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:09:41Z pid=99876 CHECK load=5.88 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2403s
+- 2026-10-15T00:09:41Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:14:42Z pid=99876 CHECK load=4.45 processes=99781 75626 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2703s
+- 2026-10-15T00:14:42Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:19:42Z pid=99876 CHECK load=9.83 processes=41898 41894 rust/target/release/worldsim_probe;41899 41894 rust/target/release/worldsim_probe waited=3004s
+- 2026-10-15T00:19:42Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:24:42Z pid=99876 CHECK load=8.35 processes=41898 41894 rust/target/release/worldsim_probe waited=3304s
+- 2026-10-15T00:24:42Z pid=99876 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:29:42Z pid=99876 CHECK load=3.43 processes= waited=3604s
+- 2026-10-15T00:29:42Z pid=99876 HOLD_START owner=codex-art-pass9 purpose=baseline-W0-attempt2 start=1792024182 load_before=3.43 contended=false waited=3604s
+- 2026-10-15T00:36:59Z pid=99876 HOLD_END owner=codex-art-pass9 purpose=baseline-W0-attempt2 start=1792024182 end=1792024619 elapsed=437 load_before=3.43 load_after=13.05 contended=false exit=0
+<!-- art-p9-last-release 1792024619 -->
+- 2026-10-15T00:42:11Z pid=7082 WAIT_START owner=codex-art-pass9 purpose=baseline-W500-attempt1 hold_limit=3600
+- 2026-10-15T00:42:11Z pid=7082 WAIT_COOLDOWN remaining=288s
+- 2026-10-15T00:46:59Z pid=7082 CHECK load=24.07 processes= waited=288s
+- 2026-10-15T00:46:59Z pid=7082 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:52:00Z pid=7082 CHECK load=5.64 processes= waited=588s
+- 2026-10-15T00:52:00Z pid=7082 WAIT_BUSY next_poll=300s
+- 2026-10-15T00:57:00Z pid=7082 CHECK load=9.54 processes= waited=889s
+- 2026-10-15T00:57:00Z pid=7082 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:02:00Z pid=7082 CHECK load=3.98 processes= waited=1189s
+- 2026-10-15T01:02:00Z pid=7082 HOLD_START owner=codex-art-pass9 purpose=baseline-W500-attempt1 start=1792026120 load_before=3.98 contended=false waited=1189s
+- 2026-10-15T01:17:34Z pid=7082 HOLD_END owner=codex-art-pass9 purpose=baseline-W500-attempt1 start=1792026120 end=1792027054 elapsed=934 load_before=3.98 load_after=12.98 contended=false exit=0
+<!-- art-p9-last-release 1792027054 -->
+- 2026-10-15T01:18:28Z pid=44332 WAIT_START owner=codex-art-pass9 purpose=p3-initial-W500-attempt1 hold_limit=3600
+- 2026-10-15T01:18:28Z pid=44332 WAIT_COOLDOWN remaining=546s
+- 2026-10-15T01:27:34Z pid=44332 CHECK load=14.74 processes=72032 72028 rust/target/release/worldsim_probe;72033 72028 rust/target/release/worldsim_probe waited=546s
+- 2026-10-15T01:27:34Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:32:34Z pid=44332 CHECK load=12.95 processes=72032 72028 rust/target/release/worldsim_probe waited=846s
+- 2026-10-15T01:32:34Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:37:34Z pid=44332 CHECK load=14.44 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1146s
+- 2026-10-15T01:37:34Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:42:34Z pid=44332 CHECK load=9.60 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1446s
+- 2026-10-15T01:42:34Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:47:35Z pid=44332 CHECK load=7.21 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=1746s
+- 2026-10-15T01:47:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:52:35Z pid=44332 CHECK load=7.68 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2047s
+- 2026-10-15T01:52:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T01:57:35Z pid=44332 CHECK load=12.11 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2347s
+- 2026-10-15T01:57:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T02:02:35Z pid=44332 CHECK load=7.32 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2647s
+- 2026-10-15T02:02:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T02:07:35Z pid=44332 CHECK load=8.08 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=2947s
+- 2026-10-15T02:07:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T02:12:35Z pid=44332 CHECK load=3.86 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3247s
+- 2026-10-15T02:12:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T02:17:35Z pid=44332 CHECK load=12.49 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3547s
+- 2026-10-15T02:17:35Z pid=44332 WAIT_BUSY next_poll=300s
+- 2026-10-15T02:22:35Z pid=44332 CHECK load=7.52 processes= 6458  6457 /Users/rexxa/.rustup/toolchains/1.93-aarch64-apple-darwin/bin/cargo waited=3847s
+- 2026-10-15T02:22:35Z pid=44332 HOLD_START owner=codex-art-pass9 purpose=p3-initial-W500-attempt1 start=1792030955 load_before=7.52 contended=true waited=3847s
+- 2026-10-15T02:30:39Z pid=44332 HOLD_END owner=codex-art-pass9 purpose=p3-initial-W500-attempt1 start=1792030955 end=1792031439 elapsed=484 load_before=7.52 load_after=6.95 contended=true exit=0
+<!-- art-p9-last-release 1792031439 -->
+- 2026-10-15T02:31:57Z pid=99072 WAIT_START owner=codex-art-pass9 purpose=baseline-W1-attempt1 hold_limit=3600
+- 2026-10-15T02:31:57Z pid=99072 WAIT_COOLDOWN remaining=522s
+- 2026-10-15T02:43:32Z pid=99072 CHECK load=3.24 processes= waited=695s
+- 2026-10-15T02:43:32Z pid=99072 HOLD_START owner=codex-art-pass9 purpose=baseline-W1-attempt1 start=1792032212 load_before=3.24 contended=false waited=695s
+- 2026-10-15T02:49:03Z pid=99072 HOLD_END owner=codex-art-pass9 purpose=baseline-W1-attempt1 start=1792032212 end=1792032543 elapsed=331 load_before=3.24 load_after=2.63 contended=false exit=0
+<!-- art-p9-last-release 1792032543 -->
+- 2026-10-15T02:49:03Z pid=47536 WAIT_START owner=codex-art-pass9 purpose=baseline-W200-attempt1 hold_limit=3600
+- 2026-10-15T02:49:03Z pid=47536 WAIT_COOLDOWN remaining=600s
+- 2026-10-15T02:49:28Z pid=48646 WAIT_START owner=codex-art-pass9 purpose=p3-agent-W500-attempt1 hold_limit=3600
+- 2026-10-15T02:49:28Z pid=48646 WAIT_COOLDOWN remaining=575s
+- 2026-10-15T02:59:03Z pid=48646 CHECK load=3.84 processes= waited=575s
+- 2026-10-15T02:59:03Z pid=48646 HOLD_START owner=codex-art-pass9 purpose=p3-agent-W500-attempt1 start=1792033143 load_before=3.84 contended=false waited=575s
+- 2026-10-15T03:06:50Z pid=48646 HOLD_END owner=codex-art-pass9 purpose=p3-agent-W500-attempt1 start=1792033143 end=1792033610 elapsed=467 load_before=3.84 load_after=2.90 contended=false exit=0
+<!-- art-p9-last-release 1792033610 -->
+- 2026-10-15T03:08:02Z pid=47536 WAIT_COOLDOWN remaining=528s

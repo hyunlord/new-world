@@ -57,6 +57,10 @@ var _seen_recall_event_ids: Dictionary = {}
 var _seen_combat_event_ids: Dictionary = {}
 var _last_causal_tick: int = -1
 var _causal_rearm: bool = false
+var _talk_xs := PackedInt32Array()
+var _talk_ys := PackedInt32Array()
+var _talk_deltas: Dictionary = {}
+var _base_looks: Dictionary = {}
 
 func _ready() -> void:
 	_objects = SpriteLibrary.shared_layer(self, "WorldObjects", 4, true)
@@ -90,6 +94,7 @@ func _process(delta: float) -> void:
 	if xs.size() != n or ys.size() != n or agent_ids.size() != n:
 		push_error("AgentRenderer: parallel-array length mismatch")
 		return
+	_prepare_talk_cache(xs, ys)
 	var new_checksum: int = _snapshot_checksum_from(agent_ids, xs, ys, n)
 	if new_checksum != _snapshot_checksum:
 		_snapshot_checksum = new_checksum
@@ -100,7 +105,7 @@ func _process(delta: float) -> void:
 			_prev_positions[moving_id] = previous_origin.lerp(previous_target, previous_blend)
 		_curr_positions.clear()
 		for i in n:
-			var look: Dictionary = ArtHashScript.look(int(agent_ids[i]))
+			var look: Dictionary = _base_look(int(agent_ids[i]))
 			_curr_positions[int(agent_ids[i])] = Vector2(SPRITE_ORIGIN_X + xs[i] * TILE_SIZE + 8 + int(look["jx"]), SPRITE_ORIGIN_Y + ys[i] * TILE_SIZE + 14 + int(look["jy"]))
 		for old_id: int in _prev_positions.keys():
 			if not _curr_positions.has(old_id):
@@ -109,6 +114,7 @@ func _process(delta: float) -> void:
 	var lerp_t: float = clampf(_lerp_accumulator / _move_duration, 0.0, 1.0)
 	var live: Dictionary = {}
 	var context: Dictionary = _activity_context()
+	var tile_contexts: Dictionary = {}
 	var time: Dictionary = SimReads.read(world_sim, "get_time_snapshot")
 	var tick: int = int(time.get("tick", 0))
 	ingest_chill_snapshot(snap, tick)
@@ -121,7 +127,7 @@ func _process(delta: float) -> void:
 		var prev_pos: Vector2 = _prev_positions.get(agent_id, curr_pos)
 		var ipos: Vector2 = prev_pos.lerp(curr_pos, lerp_t)
 		var sprite: Sprite2D = _ensure_agent(agent_id)
-		var look: Dictionary = ArtHashScript.look(agent_id)
+		var look: Dictionary = _base_look(agent_id)
 		var life_stage: int = int(life_stages[i]) if i < life_stages.size() else 0
 		look = Activity.elder_look(look, agent_id, life_stage)
 		var child: bool = life_stage == 1
@@ -132,7 +138,10 @@ func _process(delta: float) -> void:
 			_walking_directions[agent_id] = movement.normalized()
 		_stationary_seconds[agent_id] = 0.0 if moving else float(_stationary_seconds.get(agent_id, 0.0)) + delta
 		_render_positions[agent_id] = ipos
-		var tile: Dictionary = _tile_context(Vector2i(xs[i], ys[i]), context)
+		var tile_position := Vector2i(xs[i], ys[i])
+		if not tile_contexts.has(tile_position):
+			tile_contexts[tile_position] = _tile_context(tile_position, context)
+		var tile: Dictionary = tile_contexts[tile_position]
 		var state: int = int(states[i]) if i < states.size() else 0
 		var target: int = Activity.snapshot_target(snap, i)
 		var has_targets: bool = target >= 0
@@ -143,7 +152,7 @@ func _process(delta: float) -> void:
 		if bool(moments["pickup"]):
 			activity = "gather_wood"
 		_idle_seconds[agent_id] = Activity.idle_elapsed(activity, movement, float(_idle_seconds.get(agent_id, 0.0)), delta)
-		var partner_delta: Vector2 = _talk_delta(i, xs, ys) if activity == "talk" else Vector2.ZERO
+		var partner_delta: Vector2 = _cached_talk_delta(i, xs, ys) if activity == "talk" else Vector2.ZERO
 		var facing: String = Activity.render_facing(activity, movement, partner_delta, str(sprite.get_meta("facing", "S")), float(_idle_seconds[agent_id]))
 		var pose: String = Activity.camp_pose(activity, life_stage, agent_id, int(time.get("day_index", 0)), hour, bool(tile.get("near_camp", false)))
 		if bool(moments["meal"]):
@@ -237,6 +246,9 @@ func _update_cue(agent_id: int, feet: Vector2, recalling: bool, combating: bool)
 	cue.visible = _capture_visible
 
 func _retire_missing(live: Dictionary) -> void:
+	for agent_id: int in _base_looks.keys():
+		if not live.has(agent_id):
+			_base_looks.erase(agent_id)
 	for agent_id: int in _sprites.keys():
 		if live.has(agent_id):
 			continue
@@ -293,6 +305,10 @@ func head_icon_position(world_pos: Vector2) -> Vector2:
 	return world_pos + ICON_OFFSET_PX
 
 func _on_world_reset() -> void:
+	_talk_xs = PackedInt32Array()
+	_talk_ys = PackedInt32Array()
+	_talk_deltas.clear()
+	_base_looks.clear()
 	_morning_chill.clear()
 	_render_positions.clear()
 	_drawn_positions.clear()
@@ -492,6 +508,24 @@ func _tile_context(tile: Vector2i, context: Dictionary) -> Dictionary:
 		if t.x >= 0 and t.x < width and t.y >= 0 and t.y < height and index < cells.size() and cells[index] == 4:
 			water = true
 	return {"shelter": context["shelters"].has(tile), "construction": context["sites"].has(tile), "food": context["food"].has(tile), "wood": context.get("wood", {}).has(tile), "water": water, "near_hearth": near, "near_camp": near_camp}
+
+func _base_look(agent_id: int) -> Dictionary:
+	if not _base_looks.has(agent_id):
+		var look: Dictionary = ArtHashScript.look(agent_id)
+		look.make_read_only()
+		_base_looks[agent_id] = look
+	return _base_looks[agent_id]
+
+func _prepare_talk_cache(xs: PackedInt32Array, ys: PackedInt32Array) -> void:
+	if xs != _talk_xs or ys != _talk_ys:
+		_talk_xs = xs.duplicate()
+		_talk_ys = ys.duplicate()
+		_talk_deltas.clear()
+
+func _cached_talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vector2:
+	if not _talk_deltas.has(index):
+		_talk_deltas[index] = _talk_delta(index, xs, ys)
+	return _talk_deltas[index]
 
 func _talk_delta(index: int, xs: PackedInt32Array, ys: PackedInt32Array) -> Vector2:
 	var nearest: Vector2 = Vector2.ZERO
